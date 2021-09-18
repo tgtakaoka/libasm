@@ -48,20 +48,21 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
         Config::ptrdiff_t offset = 0;
         char prefix = 0;
         if (spec.size == 5) {
-            offset = post & 0x1F;
-            if (post & 0x10)
-                offset |= 0xFFE0;
+            // Sign extends 5-bit number as 0x10 is a sign bit.
+            offset = (post & 0xF) - (post & 0x10);
             if (offset == 0)
                 prefix = '{';
         } else if (spec.size == 8) {
             offset = static_cast<int8_t>(insn.readByte(memory));
             if (spec.indir && offset == 0)
                 prefix = '<';
-            if (!spec.indir && offset >= -16 && offset < 16)
+            // Check offset is in 5-bit integer range.
+            if (!spec.indir && static_cast<uint16_t>(offset + 16) < 32)
                 prefix = '<';
         } else {
             offset = static_cast<int16_t>(insn.readUint16(memory));
-            if (offset >= -128 && offset < 128)
+            // Check offset is in 8-bit integer range.
+            if (static_cast<uint16_t>(offset + 128) < 256)
                 prefix = '>';
         }
         if (spec.base == REG_PCR) {

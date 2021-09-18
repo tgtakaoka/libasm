@@ -16,11 +16,12 @@
 
 #include "value_formatter.h"
 
+#include <stdlib.h>
+
 namespace libasm {
 
-
 StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) const {
-    const char hexBase = (_uppercase ? 'A' : 'a') - 10;
+    const char hexBase = _uppercase - 10;
     char *start = out.mark();
     while (val) {
         const uint8_t digit = val & 0xF;
@@ -30,7 +31,7 @@ StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) con
             out.letter(digit + hexBase);
         val >>= 4;
     }
-    const uint8_t bw = (bits < 0) ? -bits : bits;
+    const uint8_t bw = abs(bits);
     const int8_t width = bw / 4 + (bw % 4 ? 1 : 0);
     while (out.mark() - start < width && out.isOK())
         out.letter('0');
@@ -53,14 +54,14 @@ uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits)
     uint8_t bw = bits;
     if (bits < 0) {
         bw = -bits;
-        if (val & (1 << (bw - 1))) {
+        if (val & (1UL << (bw - 1))) {
             val = ~val + 1;
             out.letter('-');
         }
     }
     if (bw >= 32)
         return val;
-    return val & ~(0xFFFFFFFF << bw);
+    return val & ((1UL << bw) - 1);
 }
 
 StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
@@ -96,7 +97,7 @@ StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, 
     char *top = outHex(out, val, bits).mark();
     if (top[-1] > '9')
         out.letter('0');
-    return out.reverse(start).letter(_uppercase ? 'H' : 'h');
+    return out.reverse(start).letter(_uppercase + 'H' - 'A');
 }
 
 }  // namespace libasm

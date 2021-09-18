@@ -186,18 +186,17 @@ Error DisZ8000::decodeRelativeAddressing(
         delta = static_cast<int16_t>(insn.readUint16(memory));
     }
     if (mode == M_RA12) {
-        uint16_t ra12 = insn.opCode() & 0xFFF;
-        if (ra12 & 0x800)
-            ra12 |= 0xF000;
-        delta = -static_cast<int16_t>(ra12) * 2;
+        // Sign extends 12-bit number as 0x800 is a sign bit.
+        const int16_t ra12 = (insn.opCode() & 0x7FF) - (insn.opCode() & 0x800);
+        delta = -ra12 * 2;
     }
     if (mode == M_RA8) {
-        uint16_t ra8 = insn.opCode() & 0xFF;
-        if (ra8 & 0x80)
-            ra8 |= 0xFF00;
-        delta = static_cast<int16_t>(ra8) * 2;
+        // Sign extends 8-bit number as 0x80 is a sign bit
+        const int16_t ra8 = (insn.opCode() & 0x7F) - (insn.opCode() & 0x80);
+        delta = ra8 * 2;
     }
     if (mode == M_RA7) {
+        // Unsigned 7-bit as always negative offset.
         const uint16_t ra7 = insn.opCode() & 0x7F;
         delta = -static_cast<int16_t>(ra7) * 2;
     }

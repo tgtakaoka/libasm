@@ -107,9 +107,8 @@ Error DisTms32010::decodeOperand(
         outDec(out, static_cast<uint8_t>(opc), 8);
         break;
     case M_IM13: {
-        int16_t im13 = opc & 0x1FFF;
-        if (im13 & 0x1000)
-            im13 |= 0xE000;
+        // Sign extends 13-bit number as 0x1000 is a sign bit.
+        const int16_t im13 = (opc & 0xFFF) - (opc & 0x1000);
         outDec(out, im13, -13);
         break;
     }

@@ -26,10 +26,10 @@ namespace libasm {
 class ValueFormatter {
 public:
     ValueFormatter(char curSym = '.', bool cstyle = true)
-        : _curSym(curSym), _cstyle(cstyle), _uppercase(false) {}
+        : _curSym(curSym), _cstyle(cstyle), _uppercase('a') {}
 
     void setCStyleHex(bool enable) { _cstyle = enable; }
-    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    void setUppercase(bool uppercase) { _uppercase = uppercase ? 'A' : 'a'; }
     void setCurrentOriginSymbol(char c) { _curSym = c; }
     char currentOriginSymbol() const { return _curSym; }
 
@@ -51,7 +51,7 @@ public:
 protected:
     char _curSym;
     bool _cstyle;
-    bool _uppercase;
+    char _uppercase;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const
             __attribute__((noinline));

@@ -36,11 +36,11 @@ static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
     if (pos == P_REG)
         return (insn.opCode() >> 3) & 0x7;
     if (pos == P_SHORT && insn.hasPost()) {
-        uint8_t val8 = (insn.post() << 1) & 0x0f;
+        uint8_t val8 = (insn.post() & 7) << 1;
         if (insn.opCode() & 0x80)
             val8 |= 1;
-        if (val8 & 0x8)
-            val8 |= 0xF0;
+        // Sign extends 4-bit number.
+        val8 = (val8 & 7) - (val8 & 8);
         return val8;
     }
     return 0;
@@ -71,11 +71,13 @@ Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displac
     const uint8_t head = insn.readByte(memory);
     if ((head & 0x80) == 0) {
         // 0xxx|xxxx
-        const int8_t val8 = (head & 0x40) ? (head | 0x80) : head;
+        // Sign extends 7-bit number as 0x40 is a sign bit.
+        const int8_t val8 = (head & 0x3F) - (head & 0x40);
         disp.val32 = val8;
         disp.bits = 7;
     } else {
-        const int8_t val8 = (head & 0x20) ? (head | 0xC0) : (head & ~0xC0);
+        // Sign extends 14-bit number as 0x2000 is a sign bit.
+        const int8_t val8 = (head & 0x1F) - (head & 0x20);
         const int16_t val16 = (static_cast<int16_t>(val8) << 8) | insn.readByte(memory);
         if ((head & 0x40) == 0) {
             // 10xx|xxxx
@@ -184,7 +186,8 @@ Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn, StrBuffer
     if (readDisplacement(memory, insn, disp))
         return getError();
     const Config::uintptr_t target = insn.address() + disp.val32;
-    if (target >= static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
+    const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
+    if (target >= max)
         return setError(OVERFLOW_RANGE);
     outRelAddr(out, target, insn.address(), disp.bits);
     return OK;
@@ -306,14 +309,15 @@ Error DisNs32000::decodeGeneric(
             return setError(OPERAND_NOT_ALLOWED);
         return decodeImmediate(memory, insn, out, mode);
     case 0x15:  // M_ABS
-        if (readDisplacement(memory, insn, disp))
+        if (readDisplacement(memory, insn, disp)) {
             return getError();
-        // Check absolute address is in 24bit integer range.
-        if (disp.val32 >= (int32_t(1) << uint8_t(addressWidth() - 1)) ||
-                disp.val32 < (int32_t(-1) << uint8_t(addressWidth() - 1))) {
-            return setError(OVERFLOW_RANGE);
+        } else {
+            // Check absolute address is in 24bit integer range.
+            const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
+            if (static_cast<uint32_t>(disp.val32 + (max >> 1)) > max - 1)
+                return setError(OVERFLOW_RANGE);
+            outAbsAddr(out.letter('@'), disp.val32, addressWidth());
         }
-        outAbsAddr(out.letter('@'), disp.val32, addressWidth());
         break;
     case 0x16:  // M_EXT
         if (_externalParen) {
@@ -352,7 +356,8 @@ Error DisNs32000::decodeGeneric(
             return getError();
         if (reg == REG_PC) {
             const Config::uintptr_t target = insn.address() + disp.val32;
-            if (target >= static_cast<Config::uintptr_t>(1) << uint8_t(addressWidth()))
+            const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
+            if (target >= max)
                 return setError(OVERFLOW_RANGE);
             if (_pcRelativeParen) {
                 outAbsAddr(out, target, addressWidth());
