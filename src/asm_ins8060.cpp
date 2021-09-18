@@ -24,7 +24,9 @@ namespace ins8060 {
 Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
     Config::ptrdiff_t delta;
     if (op.mode == DISP) {
-        delta = op.val16;  // E(Pn)
+        delta = static_cast<Config::ptrdiff_t>(op.val16);
+        if (overflowRel8(delta))
+            return setError(OVERFLOW_RANGE);
         insn.embed(RegIns8060::encodePointerReg(op.reg));
     } else {
         // PC points the last byte of instruction.
@@ -36,7 +38,7 @@ Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
                 op.getError() ? base : ((op.val16 & 0xFFF) | (base & ~0xFFF)) - fetch;
         delta = target - base;
         // delta -128 is for E reg.
-        if (delta <= -128 || delta >= 128)
+        if (delta == -128 || overflowRel8(delta))
             return setError(OPERAND_TOO_FAR);
         insn.embed(RegIns8060::encodePointerReg(REG_PC));
     }
@@ -54,6 +56,8 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
             return setError(OPERAND_NOT_ALLOWED);
         insn.embed(4);
     }
+    if (overflowRel8(static_cast<int16_t>(op.val16)))
+        return setError(OVERFLOW_RANGE);
     insn.emitInsn();
     insn.emitByte(op.val16);
     return getError();
@@ -74,7 +78,7 @@ Error AsmIns8060::parseOperand(const char *scan, Operand &op) {
     const RegName reg = RegIns8060::parseRegName(p);
     if (reg == REG_E) {
         p += RegIns8060::regNameLen(reg);
-        op.val16 = 0x80;
+        op.val16 = -128;
     } else if (reg != REG_UNDEF) {
         _scan = p + RegIns8060::regNameLen(reg);
         op.mode = PNTR;
@@ -142,6 +146,8 @@ Error AsmIns8060::encode(Insn &_insn) {
         encodeIndx(insn, op);
         break;
     case IMM8:
+        if (overflowUint8(op.val16))
+            return setError(OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(op.val16);
         break;

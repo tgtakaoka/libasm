@@ -97,9 +97,15 @@ static void test_jump() {
     ATEST(0x1000, "JNZ E(PC)", 0x9C, 0x80);
 
     TEST("JMP E(PC)",    0x90, 0x80);
+    TEST("JMP -128(PC)", 0x90, 0x80);
     TEST("JMP E(P1)",    0x91, 0x80);
-    TEST("JMP 127(P2)",  0x92, 0x7F);
-    TEST("JMP -127(P3)", 0x93, 0x81);
+    TEST("JMP -128(P1)", 0x91, 0x80);
+    TEST("JMP 127(PC)",  0x90, 0x7F);
+    TEST("JMP 127(P3)",  0x93, 0x7F);
+    ERRT("JMP 128(PC)",  OVERFLOW_RANGE);
+    ERRT("JMP 128(P3)",  OVERFLOW_RANGE);
+    ERRT("JMP -129(PC)", OVERFLOW_RANGE);
+    ERRT("JMP -129(P3)", OVERFLOW_RANGE);
 
     symtab.intern(0x0FF0, "label0FF0");
     symtab.intern(0x1000, "label1000");
@@ -159,10 +165,14 @@ static void test_alu() {
     TEST("LD E(PC)",     0xC0, 0x80);
     TEST("LD E(P1)",     0xC1, 0x80);
     TEST("LD 127(P2)",   0xC2, 0x7F);
-    TEST("LD -127(P3)",  0xC3, 0x81);
+    TEST("LD -128(P3)",  0xC3, 0x80);
+    ERRT("LD 128(P2)",   OVERFLOW_RANGE);
+    ERRT("LD -129(P3)",  OVERFLOW_RANGE);
     TEST("LD @E(P1)",    0xC5, 0x80);
     TEST("LD @127(P2)",  0xC6, 0x7F);
-    TEST("LD @-127(P3)", 0xC7, 0x81);
+    TEST("LD @-128(P3)", 0xC7, 0x80);
+    ERRT("LD @128(P2)",  OVERFLOW_RANGE);
+    ERRT("LD @-129(P3)", OVERFLOW_RANGE);
 
     ATEST(0x1000, "ST  0x1000", 0xC8, 0xFF);
     // 4kB page boundary
@@ -188,6 +198,10 @@ static void test_alu() {
 
 static void test_alu_immediate() {
     TEST("LDI 0",    0xC4, 0x00);
+    TEST("LDI -128", 0xC4, 0x80);
+    TEST("LDI 255",  0xC4, 0xFF);
+    ERRT("LDI -129", OVERFLOW_RANGE);
+    ERRT("LDI 256",  OVERFLOW_RANGE);
     TEST("ANI 0xFF", 0xD4, 0xFF);
     TEST("ORI 1",    0xDC, 0x01);
     TEST("XRI 0x80", 0xE4, 0x80);
