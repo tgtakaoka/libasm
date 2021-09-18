@@ -31,8 +31,11 @@ Error AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {
 Error AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
     if (insn.oprSize() == SZ_WORD)
         insn.emitOperand16(op.val16);
-    if (insn.oprSize() == SZ_BYTE)
+    if (insn.oprSize() == SZ_BYTE) {
+        if (overflowUint8(op.val16))
+            return setError(OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
+    }
     return OK;
 }
 
@@ -42,7 +45,7 @@ Error AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
     const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
     const Config::uintptr_t target = (op.getError() ? base + fetch : op.val16) - fetch;
     const Config::ptrdiff_t offset = target - base;
-    if (offset < -128 || offset >= 128)
+    if (overflowRel8(offset))
         return setError(OPERAND_TOO_FAR);
     insn.emitOperand8(static_cast<uint8_t>(offset));
     return OK;
@@ -65,7 +68,7 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
         return emitRelative(insn, op);
 
     const Config::ptrdiff_t offset = static_cast<Config::uintptr_t>(op.val16);
-    if (offset < -128 || offset >= 128)
+    if (overflowRel8(offset))
         return setError(OVERFLOW_RANGE);
     insn.embed(RegIns8070::encodePointerReg(op.reg));
     if (op.autoIndex)

@@ -70,6 +70,8 @@ static void test_implied() {
     TEST("CALL 13",    0x1D);
     TEST("CALL 14",    0x1E);
     TEST("CALL 15",    0x1F);
+    ERRT("CALL -1",    OPERAND_NOT_ALLOWED);
+    ERRT("CALL 16",    OPERAND_NOT_ALLOWED);
     TEST("MPY  EA,T",  0x2C);
     TEST("SSM  P2",    0x2E);
     TEST("SSM  P3",    0x2F);
@@ -106,14 +108,18 @@ static void test_implied() {
 }
 
 static void test_immediate() {
-    TEST("AND S,=0x12",    0x39, 0x12);
-    TEST("OR  S,=0x34",    0x3B, 0x34);
-    TEST("LD  A,=0x12",    0xC4, 0x12);
-    TEST("AND A,=0x12",    0xD4, 0x12);
-    TEST("OR  A,=0x12",    0xDC, 0x12);
-    TEST("XOR A,=0x12",    0xE4, 0x12);
-    TEST("ADD A,=0x12",    0xF4, 0x12);
-    TEST("SUB A,=0x12",    0xFC, 0x12);
+    TEST("AND S,=0x12", 0x39, 0x12);
+    TEST("AND S,=-128", 0x39, 0x80);
+    TEST("AND S,=255",  0x39, 0xFF);
+    ERRT("AND S,=-129", OVERFLOW_RANGE);
+    ERRT("AND S,=256",  OVERFLOW_RANGE);
+    TEST("OR  S,=0x34", 0x3B, 0x34);
+    TEST("LD  A,=0x12", 0xC4, 0x12);
+    TEST("AND A,=0x12", 0xD4, 0x12);
+    TEST("OR  A,=0x12", 0xDC, 0x12);
+    TEST("XOR A,=0x12", 0xE4, 0x12);
+    TEST("ADD A,=0x12", 0xF4, 0x12);
+    TEST("SUB A,=0x12", 0xFC, 0x12);
 
     TEST("PLI P2,=0x1234", 0x22, 0x34, 0x12);
     TEST("PLI P3,=0x1234", 0x23, 0x34, 0x12);
@@ -206,11 +212,19 @@ static void test_indexed() {
     TEST("BRA 3,P3",    0x77, 0x03);
     TEST("BNZ -2,P2",   0x7E, 0xFE);
     TEST("BNZ -3,P3",   0x7F, 0xFD);
+    ERRT("BRA -129,P2", OVERFLOW_RANGE);
+    ERRT("BRA 128,P3",  OVERFLOW_RANGE);
 
     ATEST(0x1000, "LD  EA,0x1000,PC", 0x80, 0xFF);
+    ATEST(0x1000, "LD  EA,0x0F81,PC", 0x80, 0x80);
+    ATEST(0x1000, "LD  EA,0x1080,PC", 0x80, 0x7F);
+    AERRT(0x1000, "LD  EA,0x0F80,PC", OPERAND_TOO_FAR);
+    AERRT(0x1000, "LD  EA,0x1081,PC", OPERAND_TOO_FAR);
     TEST(         "LD  EA,0,SP",      0x81, 0x00);
     TEST(         "LD  EA,-128,P2",   0x82, 0x80);
     TEST(         "LD  EA,127,P3",    0x83, 0x7F);
+    ERRT(         "LD  EA,-129,P2",   OVERFLOW_RANGE);
+    ERRT(         "LD  EA,128,P3",    OVERFLOW_RANGE);
     ATEST(0x1100, "ST  EA,0x1081,PC", 0x88, 0x80);
     TEST(         "ST  EA,0,SP",      0x89, 0x00);
     TEST(         "ST  EA,-128,P2",   0x8A, 0x80);
@@ -285,6 +299,8 @@ static void test_indexed() {
 static void test_auto_indexed() {
     TEST("LD  EA,@-128,P2", 0x86, 0x80);
     TEST("LD  EA,@127,P3",  0x87, 0x7F);
+    ERRT("LD  EA,@-129,P2", OVERFLOW_RANGE);
+    ERRT("LD  EA,@128,P3",  OVERFLOW_RANGE);
     TEST("ST  EA,@-128,P2", 0x8E, 0x80);
     TEST("ST  EA,@127,P3",  0x8F, 0x7F);
     TEST("LD  T,@-128,P2",  0xA6, 0x80);
