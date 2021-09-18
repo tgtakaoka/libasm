@@ -39,6 +39,10 @@ enum RegName : int8_t {
 class RegTms32010 : public RegBase {
 public:
     StrBuffer &outRegName(StrBuffer &out, RegName name) const;
+    static RegName parseRegName(const char *scan);
+    static uint8_t regNameLen(RegName name);
+    static bool isAuxiliary(RegName name);
+    static bool isPortAddress(RegName name);
 };
 
 }  // namespace tms32010

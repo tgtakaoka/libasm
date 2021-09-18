@@ -39,6 +39,39 @@ StrBuffer &RegTms32010::outRegName(StrBuffer &out, RegName name) const {
     return out;
 }
 
+RegName RegTms32010::parseRegName(const char *scan) {
+    const char c1 = toupper(*scan++);
+    if (c1 == 'A') {
+        const char c2 = toupper(*scan++);
+        if (c2 == 'R') {
+            const char c3 = *scan++;
+            if ((c3 == '0' || c3 == '1') && !isidchar(*scan))
+                return RegName(c3 - '0');
+        }
+    } else if (c1 == 'P') {
+        const char c2 = toupper(*scan++);
+        if (c2 == 'A') {
+            const char c3 = *scan++;
+            if ((c3 >= '0' && c3 < '8') && !isidchar(*scan))
+                return RegName(c3 - '0' + int8_t(REG_PA0));
+        }
+    }
+    return REG_UNDEF;
+}
+
+uint8_t RegTms32010::regNameLen(RegName name) {
+    return 3;
+}
+
+bool RegTms32010::isAuxiliary(RegName name) {
+    return name == REG_AR0 || name == REG_AR1;
+}
+
+bool RegTms32010::isPortAddress(RegName name) {
+    const int8_t num = int8_t(name);
+    return num >= int8_t(REG_PA0) && num <= int8_t(REG_PA7);
+}
+
 }  // namespace tms32010
 }  // namespace libasm
 

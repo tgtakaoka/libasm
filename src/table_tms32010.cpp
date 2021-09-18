@@ -100,12 +100,20 @@ static constexpr Entry TABLE_TMS32010[] PROGMEM = {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
-    if (opr == M_LS0)
-        return table == M_LS4 || table == M_NO;
-    if (opr == M_LS3)
-        return table == M_LS4 || table == M_NO;
-    if (table == M_LS4 || table == M_LS3 || table == M_LS0 || table == M_NARP)
-        return opr == M_NO;
+    if (opr == M_NO)  // These can be ommitted.
+        return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_NARP;
+    if (opr == M_AR)  // ARn can be used as 0,1
+        return table == M_ARK || table == M_NARP;
+    if (opr == M_PA)  // PAn can not match other than itself.
+        return false;
+    if (opr == M_ARP || opr == M_INC || opr == M_DEC)
+        return table == M_MAM;
+    // Compare constant range.
+    const uint8_t tv = uint8_t(table);
+    if (tv >= uint8_t(M_LS0) && tv <= uint8_t(M_IM13)) {
+        const uint8_t ov = uint8_t(opr);
+        return tv >= ov;
+    }
     return false;
 }
 
@@ -135,9 +143,9 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
         mask |= 0xFF;
     if (op1 == M_MAM || op2 == M_MAM) {
         if ((opCode & (1 << 7)) == 0) {
-            mask |= 0x7F;       // Direct addressing
+            mask |= 0x7F;  // Direct addressing
         } else {
-            mask |= 0xB9;       // Indirect addressing
+            mask |= 0xB9;  // Indirect addressing
         }
     }
     if (op1 == M_IM13)
