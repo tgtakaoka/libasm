@@ -23,8 +23,13 @@ namespace i8080 {
 
 Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
-    case M_IM8:
     case M_IOA:
+        if (op.val16 >= 0x100)
+            return setError(OVERFLOW_RANGE);
+        /* Fall-through */
+    case M_IM8:
+        if (overflowUint8(op.val16))
+            return setError(OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
     case M_IM16:
