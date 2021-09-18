@@ -30,6 +30,8 @@ class DisMc6800 : public Disassembler, public Config {
 public:
     DisMc6800() : Disassembler(_formatter, _regs, TableMc6800) {}
 
+    AddressWidth addressWidth() const override { return TableMc6800.addressWidth(); }
+
 private:
     MotoValueFormatter _formatter;
     RegMc6800 _regs;

@@ -30,6 +30,8 @@ class AsmMc6800 : public Assembler, public Config {
 public:
     AsmMc6800() : Assembler(_parser, TableMc6800) {}
 
+    AddressWidth addressWidth() const override { return TableMc6800.addressWidth(); }
+
 private:
     MotoValueParser _parser;
 

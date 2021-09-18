@@ -16,6 +16,7 @@
 
 #include "asm_mc6800.h"
 
+#include "error_reporter.h"
 #include "table_mc6800.h"
 
 namespace libasm {
@@ -68,8 +69,6 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
             _scan = p + RegMc6800::regNameLen(reg);
             if (reg == REG_X) {
                 if (op.size == SZ_BYTE) {
-                    if (op.val16 >= 0x100)
-                        return setError(OVERFLOW_RANGE);
                     op.mode = M_IDX;
                 } else if (op.size == SZ_WORD) {
                     op.mode = M_IX2;
@@ -96,24 +95,28 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     } else {
         op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
     }
-    if (TableMc6800.addressWidth() == ADDRESS_12BIT && op.mode == M_EXT && op.val16 >= 0x2000)
-        return setError(OVERFLOW_RANGE);
     return OK;
 }
 
 Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
+    // TODO: ADDRESS_13BIT
+    if (addressWidth() == ADDRESS_12BIT && target >= 0x2000)
+        return setError(OVERFLOW_RANGE);                
     const Config::ptrdiff_t delta = target - base;
-    if (delta >= 128 || delta < -128)
+    if (overflowRel8(delta))
         return setError(OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
     return OK;
 }
 
 Error AsmMc6800::emitImmediate(InsnMc6800 &insn, const Operand &op) {
-    if (insn.size() == SZ_BYTE)
+    if (insn.size() == SZ_BYTE) {
+        if (overflowUint8(op.val16))
+            return setError(OVERFLOW_RANGE);
         insn.emitByte(static_cast<uint8_t>(op.val16));
+    }
     if (insn.size() == SZ_WORD)
         insn.emitUint16(op.val16);
     return OK;
@@ -131,12 +134,17 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
     case M_DIR:
     case M_IDX:
     case M_IDY:
+        if (op.val16 >= 256)
+            return setError(OVERFLOW_RANGE);
         insn.emitByte(static_cast<uint8_t>(op.val16));
         return OK;
     case M_IX2:
         insn.emitUint16(op.val16);
         return OK;
     case M_EXT:
+        // TODO: ADDRESS_13BIT
+        if (addressWidth() == ADDRESS_12BIT && op.val16 >= 0x2000)
+            return setError(OVERFLOW_RANGE);
         insn.emitUint16(op.val16);
         return OK;
     case M_REL:
@@ -185,11 +193,14 @@ Error AsmMc6800::encode(Insn &_insn) {
         insn.embed((op1.val16 & 7) << 1);
     insn.emitInsn();
     if (emitOperand(insn, insn.mode1(), op1))
-        return getError();
+        goto error;
     if (emitOperand(insn, insn.mode2(), op2))
+        goto error;
+    if (emitOperand(insn, insn.mode3(), op3)) {
+    error:
+        insn.resetAddress(insn.address());
         return getError();
-    if (emitOperand(insn, insn.mode3(), op3))
-        return getError();
+    }
     return getError();
 }
 

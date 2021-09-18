@@ -346,6 +346,8 @@ static void test_indexed_y() {
         TEST("TST 128,Y", 0x18, 0x6D, 0x80);
         TEST("JMP 254,Y", 0x18, 0x6E, 0xFE);
         TEST("CLR 255,Y", 0x18, 0x6F, 0xFF);
+        ERRT("CLR 256,Y", OVERFLOW_RANGE);
+        ERRT("CLR -1,Y",  OVERFLOW_RANGE);
 
         TEST("SUBA   0,Y", 0x18, 0xA0, 0x00);
         TEST("CMPA   0,Y", 0x18, 0xA1, 0x00);
@@ -513,13 +515,15 @@ static void test_indexed_y() {
 static void test_relative() {
     ATEST(0x1000, "BRA $1002", 0x20, 0x00);
     ATEST(0x1000, "BHI $1004", 0x22, 0x02);
-    ATEST(0x1000, "BLS $1002", 0x23, 0x00);
-    ATEST(0x1000, "BHS $1002", 0x24, 0x00);
+    ATEST(0x1000, "BLS $0F82", 0x23, 0x80);
+    ATEST(0x1000, "BHS $1081", 0x24, 0x7F);
     ATEST(0x1000, "BLO $1002", 0x25, 0x00);
     ATEST(0x1000, "BNE $1002", 0x26, 0x00);
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
     ATEST(0x1000, "BPL $1002", 0x2A, 0x00);
     ATEST(0x1000, "BMI $1002", 0x2B, 0x00);
+    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR);
+    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR);
 
     if (m6805()) {
         // MC6805
@@ -530,6 +534,8 @@ static void test_relative() {
         ATEST(0x1000, "BIL $1002", 0x2E, 0x00);
         ATEST(0x1000, "BIH $1002", 0x2F, 0x00);
         ATEST(0x1000, "BSR $1042", 0xAD, 0x40);
+
+        AERRT(0x1FF0, "BRA $2000", OVERFLOW_RANGE);
     } else {
         ATEST(0x1000, "BVC $1002", 0x28, 0x00);
         ATEST(0x1000, "BVS $1002", 0x29, 0x00);
@@ -549,8 +555,6 @@ static void test_relative() {
 
     symtab.intern(0x0F82, "sub0F82");
     symtab.intern(0x1081, "sub1081");
-    symtab.intern(0x9002, "sub9002");
-    symtab.intern(0x9003, "sub9003");
 
     if (m6805()) {
         // MC6805
@@ -569,16 +573,18 @@ static void test_relative() {
 
 static void test_immediate() {
     if (m6805()) {
-        TEST("SUB #$90", 0xA0, 0x90);
-        TEST("CMP #$90", 0xA1, 0x90);
-        TEST("SBC #$90", 0xA2, 0x90);
-        TEST("AND #$90", 0xA4, 0x90);
-        TEST("BIT #$90", 0xA5, 0x90);
-        TEST("LDA #$90", 0xA6, 0x90);
-        TEST("EOR #$90", 0xA8, 0x90);
-        TEST("ADC #$90", 0xA9, 0x90);
-        TEST("ORA #$90", 0xAA, 0x90);
-        TEST("ADD #$90", 0xAB, 0x90);
+        TEST("SUB #$90",  0xA0, 0x90);
+        TEST("CMP #$90",  0xA1, 0x90);
+        TEST("SBC #$90",  0xA2, 0x90);
+        TEST("AND #$90",  0xA4, 0x90);
+        TEST("BIT #$90",  0xA5, 0x90);
+        TEST("LDA #$90",  0xA6, 0x90);
+        TEST("EOR #$90",  0xA8, 0x90);
+        TEST("ADC #-1",   0xA9, 0xFF);
+        TEST("ORA #255",  0xAA, 0xFF);
+        TEST("ADD #-128", 0xAB, 0x80);
+        ERRT("ADD #256",  OVERFLOW_RANGE);
+        ERRT("ADD #-129", OVERFLOW_RANGE);
 
         ERRT("SUBA #$90", UNKNOWN_INSTRUCTION);
         ERRT("CMPA #$90", UNKNOWN_INSTRUCTION);
@@ -617,16 +623,18 @@ static void test_immediate() {
         ERRT("ORA #$90", UNKNOWN_INSTRUCTION);
         ERRT("ADD #$90", UNKNOWN_INSTRUCTION);
 
-        TEST("SUBA #$90", 0x80, 0x90);
-        TEST("CMPA #$90", 0x81, 0x90);
-        TEST("SBCA #$90", 0x82, 0x90);
-        TEST("ANDA #$90", 0x84, 0x90);
-        TEST("BITA #$90", 0x85, 0x90);
-        TEST("LDAA #$90", 0x86, 0x90);
-        TEST("EORA #$90", 0x88, 0x90);
-        TEST("ADCA #$90", 0x89, 0x90);
-        TEST("ORAA #$90", 0x8A, 0x90);
-        TEST("ADDA #$90", 0x8B, 0x90);
+        TEST("SUBA #$90",  0x80, 0x90);
+        TEST("CMPA #$90",  0x81, 0x90);
+        TEST("SBCA #$90",  0x82, 0x90);
+        TEST("ANDA #$90",  0x84, 0x90);
+        TEST("BITA #$90",  0x85, 0x90);
+        TEST("LDAA #$90",  0x86, 0x90);
+        TEST("EORA #$90",  0x88, 0x90);
+        TEST("ADCA #-1",   0x89, 0xFF);
+        TEST("ORAA #255",  0x8A, 0xFF);
+        TEST("ADDA #-128", 0x8B, 0x80);
+        ERRT("ADDA #256",  OVERFLOW_RANGE);
+        ERRT("ADDA #-129", OVERFLOW_RANGE);
 
         TEST("SUBB #$90", 0xC0, 0x90);
         TEST("CMPB #$90", 0xC1, 0x90);
@@ -889,9 +897,8 @@ static void test_extended() {
         TEST("EOR >$0090", 0xC8, 0x00, 0x90);
         TEST("ADC >$0090", 0xC9, 0x00, 0x90);
         TEST("ORA >$0090", 0xCA, 0x00, 0x90);
-        TEST("ADD >$0090", 0xCB, 0x00, 0x90);
-
-        ERRT("SUB $2000", OVERFLOW_RANGE);
+        TEST("ADD  $1FFF", 0xCB, 0x1F, 0xFF);
+        ERRT("SUB  $2000", OVERFLOW_RANGE);
 
         ERRT("SUBA >$0090", UNKNOWN_INSTRUCTION);
         ERRT("CMPA >$0090", UNKNOWN_INSTRUCTION);
@@ -1327,34 +1334,58 @@ static void test_indexed() {
 static void test_bit_ops() {
     if (m68hc11()) {
         // MC68HC11
-        TEST("BSET   $90,#$88", 0x14, 0x90, 0x88);
-        TEST("BCLR   $90,#$88", 0x15, 0x90, 0x88);
-        TEST("BSET   0,X,#$88", 0x1C, 0x00, 0x88);
-        TEST("BCLR   0,X,#$88", 0x1D, 0x00, 0x88);
+        TEST("BSET  $90,#$88",  0x14, 0x90, 0x88);
+        TEST("BCLR  $90,#$88",  0x15, 0x90, 0x88);
+        TEST("BCLR  $90,#-128", 0x15, 0x90, 0x80);
+        ERRT("BCLR  $190,#$88", OPERAND_NOT_ALLOWED);
+        ERRT("BCLR  $90,#256",  OVERFLOW_RANGE);
+        ERRT("BCLR  $90,#256",  OVERFLOW_RANGE);
+        TEST("BSET  0,X,#$88",  0x1C, 0x00, 0x88);
+        TEST("BCLR  0,X,#$88",  0x1D, 0x00, 0x88);
         TEST("BSET 255,Y,#$88", 0x18, 0x1C, 0xFF, 0x88);
-        TEST("BCLR   0,Y,#$88", 0x18, 0x1D, 0x00, 0x88);
+        TEST("BCLR  0,Y,#$88",  0x18, 0x1D, 0x00, 0x88);
+        ERRT("BCLR -1,Y,#$88",  OVERFLOW_RANGE);
+        ERRT("BCLR  0,Y,#256",  OVERFLOW_RANGE);
 
         ATEST(0x1000, "BRSET   $90,#$88,$1083", 0x12, 0x90, 0x88, 0x7F);
         ATEST(0x1000, "BRCLR   $90,#$88,$0F84", 0x13, 0x90, 0x88, 0x80);
         ATEST(0x1000, "BRSET 127,X,#$88,$1000", 0x1E, 0x7F, 0x88, 0xFC);
         ATEST(0x1000, "BRCLR 128,X,#$88,$1006", 0x1F, 0x80, 0x88, 0x02);
+        AERRT(0x1000, "BRCLR 128,X,#$88,$1084", OPERAND_TOO_FAR);
+        AERRT(0x1000, "BRCLR 128,X,#$88,$0F83", OPERAND_TOO_FAR);
         ATEST(0x1000, "BRSET 255,Y,#$88,$0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
         ATEST(0x1000, "BRCLR   0,Y,#$88,$1084", 0x18, 0x1F, 0x00, 0x88, 0x7F);
+        AERRT(0x1000, "BRSET 255,Y,#$88,$0F84", OPERAND_TOO_FAR);
+        AERRT(0x1000, "BRCLR   0,Y,#$88,$1085", OPERAND_TOO_FAR);
+    } else if (m6805()) {
+        TEST("BSET 0, $23", 0x10, 0x23);
+        TEST("BSET 7, $89", 0x1E, 0x89);
+        TEST("BCLR 0, $23", 0x11, 0x23);
+        TEST("BCLR 7, $89", 0x1F, 0x89);
+        ERRT("BSET -1, $23", OPERAND_NOT_ALLOWED);
+        ERRT("BCLR 8, $89",  OPERAND_NOT_ALLOWED);
+
+        ATEST(0x1000, "BRSET 0,$23,$1082", 0x00, 0x23, 0x7F);
+        ATEST(0x1000, "BRSET 7,$89,$0F83", 0x0E, 0x89, 0x80);
+        ATEST(0x1000, "BRCLR 0,$23,$1082", 0x01, 0x23, 0x7F);
+        ATEST(0x1000, "BRCLR 7,$89,$0F83", 0x0F, 0x89, 0x80);
+        AERRT(0x1000, "BRSET 7,$89,$0F82", OPERAND_TOO_FAR);
+        AERRT(0x1000, "BRCLR 0,$23,$1083", OPERAND_TOO_FAR);
+
+        ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED);
+        ERRT("BCLR $90,#$88", OPERAND_NOT_ALLOWED);
+        ERRT("BRSET $90,#$88,$1083", OPERAND_NOT_ALLOWED);
+        ERRT("BRCLR $90,#$88,$1F84", OPERAND_NOT_ALLOWED);
     } else {
-        if (hd6301() || m6805()) {
+        if (hd6301()) {
             ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED);
             ERRT("BCLR $90,#$88", OPERAND_NOT_ALLOWED);
         } else {
             ERRT("BSET $90,#$88", UNKNOWN_INSTRUCTION);
             ERRT("BCLR $90,#$88", UNKNOWN_INSTRUCTION);
         }
-        if (m6805()) {
-            ERRT("BRSET $90,#$88,$1083", OPERAND_NOT_ALLOWED);
-            ERRT("BRCLR $90,#$88,$0F84", OPERAND_NOT_ALLOWED);
-        } else {
-            ERRT("BRSET $90,#$88,$1083", UNKNOWN_INSTRUCTION);
-            ERRT("BRCLR $90,#$88,$0F84", UNKNOWN_INSTRUCTION);
-        }
+        ERRT("BRSET $90,#$88,$1083", UNKNOWN_INSTRUCTION);
+        ERRT("BRCLR $90,#$88,$1F84", UNKNOWN_INSTRUCTION);
     }
 
     if (hd6301()) {
@@ -1362,11 +1393,15 @@ static void test_bit_ops() {
         TEST("AIM   #$88,0,X", 0x61, 0x88, 0x00);
         TEST("OIM   #$44,1,X", 0x62, 0x44, 0x01);
         TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
-        TEST("TIM #$11,255,X", 0x6B, 0x11, 0xFF);
+        TEST("TIM #-128,12,X", 0x6B, 0x80, 0x0C);
+        TEST("TIM #255,128,X", 0x6B, 0xFF, 0x80);
+        ERRT("TIM #256,255,X", OVERFLOW_RANGE);
+        ERRT("TIM #255,256,X", OPERAND_NOT_ALLOWED);
         TEST("BCLR     0,1,X", 0x61, 0xFE, 0x01);
         TEST("BSET   1,128,X", 0x62, 0x02, 0x80);
         TEST("BTGL   6,255,X", 0x65, 0x40, 0xFF);
         TEST("BTST     7,0,X", 0x6B, 0x80, 0x00);
+        ERRT("BTST     8,0,X", OPERAND_NOT_ALLOWED);
 
         TEST("AIM #$88,$90", 0x71, 0x88, 0x90);
         TEST("OIM #$44,$90", 0x72, 0x44, 0x90);

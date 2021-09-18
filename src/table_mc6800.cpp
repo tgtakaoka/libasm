@@ -762,6 +762,7 @@ bool TableMc6800::setCpu(CpuType cpuType) {
 }
 
 AddressWidth TableMc6800::addressWidth() const {
+    // TODO: ADDRESS_13BIT
     return is6805() ? ADDRESS_12BIT : ADDRESS_16BIT;
 }
 
