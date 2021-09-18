@@ -52,7 +52,7 @@ enum AddrMode : uint8_t {
     M_WMEM = 11,  // Word memory: WORD PTR [addr]
     M_BDIR = 12,  // Byte Direct mode: BYTE PTR [nnnn]
     M_WDIR = 13,  // Word Direct mode: WORD PTR [nnnn]
-    M_IMM = 14,   // Immediate Constant
+    M_IMM = 14,   // 16-bit Immediate Constant
     M_IMM8 = 15,  // Sign-extended 8-bit Immediate
     M_VAL1 = 16,  // Constant 1: for bit counter
     M_VAL3 = 17,  // Constant 3: for INT type
@@ -64,6 +64,7 @@ enum AddrMode : uint8_t {
     M_MEM = 23,   // Memory address: [addr]
     M_DIR = 24,   // Direct mode: [nnnn]
     M_CS = 25,    // Code Segment Register: CS
+    M_UI16 = 26,  // 16-bit unsigned immediate
 };
 
 enum OprPos : uint8_t {

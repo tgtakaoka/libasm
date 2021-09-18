@@ -74,7 +74,7 @@ Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &ou
 }
 
 Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
-    if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
+    if ((mode == M_IMM || mode == M_UI16) && insn.oprSize() == SZ_WORD) {
         outHex(out, insn.readUint16(memory), 16);
     } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
         outHex(out, insn.readByte(memory), 8);
@@ -262,6 +262,7 @@ Error DisI8086::decodeOperand(
         outHex(out, 3, 3);
         break;
     case M_IMM:
+    case M_UI16:
     case M_IMM8:
     case M_FAR:
     case M_IOA:

@@ -16,6 +16,7 @@
 
 #include "asm_i8086.h"
 
+#include "error_reporter.h"
 #include "reg_i8086.h"
 #include "table_i8086.h"
 
@@ -104,8 +105,14 @@ const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
         }
     }
     op.val32 = parseExpr32(p);
-    if (parserError())
+    if (parserError()) {
+        setError(parserError());
         return nullptr;
+    }
+    if (overflowUint16(static_cast<int32_t>(op.val32))) {
+        setError(OVERFLOW_RANGE);
+        return nullptr;
+    }
     op.setError(getError());
     op.hasVal = true;
     return skipSpaces(_scan);
@@ -186,8 +193,12 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
     op.setError(getError());
     p = skipSpaces(_scan);
     if (*p == ':') {
+        if (op.val32 >= 0x10000UL)
+            return setError(OVERFLOW_RANGE);
         op.seg16 = op.val32;
         op.val32 = parseExpr32(p + 1);
+        if (op.val32 >= 0x10000UL)
+            return setError(OVERFLOW_RANGE);
         if (parserError())
             return getError();
         op.setErrorIf(getError());
@@ -195,6 +206,8 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
         return OK;
     }
     op.mode = op.immediateMode();
+    if (op.mode == M_NONE)
+        return setError(OVERFLOW_RANGE);
     return OK;
 }
 
@@ -205,15 +218,24 @@ AddrMode AsmI8086::Operand::immediateMode() const {
         return M_VAL1;
     if (val32 == 3)
         return M_VAL3;
-    const int32_t val = static_cast<int32_t>(val32);
-    return (val >= -0x80 && val < 0x80) ? M_IMM8 : M_IMM;
+    if (!overflowUint8(val32))
+        return M_IMM8;
+    if (!overflowUint16(val32))
+        return M_IMM;
+    return M_NONE;
 }
 
-Error AsmI8086::emitImmediate(InsnI8086 &insn, OprSize size, uint16_t val) {
-    if (size == SZ_BYTE)
+Error AsmI8086::emitImmediate(InsnI8086 &insn, OprSize size, uint32_t val) {
+    if (size == SZ_BYTE) {
+        if (overflowUint8(val))
+            return setError(OVERFLOW_RANGE);
         insn.emitOperand8(val);
-    if (size == SZ_WORD)
+    }
+    if (size == SZ_WORD) {
+        if (overflowUint16(val))
+            return setError(OVERFLOW_RANGE);
         insn.emitOperand16(val);
+    }
     return OK;
 }
 
@@ -327,10 +349,15 @@ Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
         } else {
             insn.embedModReg(modReg);
         }
-        if (mod == 1)
+        if (mod == 1) {
+            if (overflowRel8(static_cast<int32_t>(op.val32)))
+                return setError(OVERFLOW_RANGE);
             insn.emitOperand8(op.val32);
-        if (mod == 2)
+        } else if (mod == 2) {
+            if (overflowUint16(static_cast<int32_t>(op.val32)))
+                return setError(OVERFLOW_RANGE);
             insn.emitOperand16(op.val32);
+        }
         break;
     default:
         break;
@@ -365,6 +392,11 @@ Error AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, O
     case M_BDIR:
     case M_WDIR:
         return emitDirect(insn, op, P_OPR);
+    case M_UI16:
+        if (static_cast<int32_t>(op.val32) >= 0x10000 || static_cast<int32_t>(op.val32) < 0)
+            return setError(OVERFLOW_RANGE);
+        insn.emitOperand16(op.val32);
+        return OK;
     case M_IMM:
         return emitImmediate(insn, insn.oprSize(), op.val32);
     case M_IOA:

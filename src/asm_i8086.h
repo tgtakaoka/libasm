@@ -70,7 +70,7 @@ private:
     const char *parseDisplacement(const char *scan, Operand &op);
     Error parseOperand(const char *scan, Operand &opr);
 
-    Error emitImmediate(InsnI8086 &insn, OprSize size, uint16_t val);
+    Error emitImmediate(InsnI8086 &insn, OprSize size, uint32_t val);
     Error emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);
     Error emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos);
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);

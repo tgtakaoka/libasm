@@ -48,7 +48,17 @@ static void test_data_transfer() {
     TEST("MOV [SI],DH",          0x88, 0064);
     TEST("MOV [SI+0],DH",        0x88, 0064);
     TEST("MOV [1234H],BH",       0x88, 0076, 0x34, 0x12);
+    ERRT("MOV [10000H],BH",      OVERFLOW_RANGE);
     TEST("MOV [DI+52],AL",       0x88, 0105, 0x34);
+    TEST("MOV [DI+127],AL",      0x88, 0105, 0x7F);
+    TEST("MOV [DI+128],AL",      0x88, 0205, 0x80, 0x00);
+    TEST("MOV [DI+7FFFH],AL",    0x88, 0205, 0xFF, 0x7F);
+    TEST("MOV [DI+8000H],AL",    0x88, 0205, 0x00, 0x80);
+    TEST("MOV [DI+0FFFFH],AL",   0x88, 0205, 0xFF, 0xFF);
+    TEST("MOV [DI-128],AL",      0x88, 0105, 0x80);
+    TEST("MOV [DI-129],AL",      0x88, 0205, 0x7F, 0xFF);
+    TEST("MOV [DI-8000H],AL",    0x88, 0205, 0x00, 0x80);
+    ERRT("MOV [DI-8001H],AL",    OVERFLOW_RANGE);
     TEST("MOV [BP+1234H],CL",    0x88, 0216, 0x34, 0x12);
     TEST("MOV [BP],CL",          0x88, 0116, 0x00);
     TEST("MOV [BP+0],CL",        0x88, 0116, 0x00);
@@ -99,20 +109,32 @@ static void test_data_transfer() {
     TEST("MOV WORD PTR [BP+SI+89ABH],5678H", 0xC7, 0202, 0xAB, 0x89, 0x78, 0x56);
 
     TEST("MOV AL,56H",   0260, 0x56);
+    TEST("MOV AL,-1",    0260, 0xFF);
+    TEST("MOV AL,255",   0260, 0xFF);
+    ERRT("MOV AL,256",   OVERFLOW_RANGE);
     TEST("MOV CH,56H",   0265, 0x56);
-    TEST("MOV AX,5678H", 0270, 0x78, 0x56);
-    TEST("MOV BP,5678H", 0275, 0x78, 0x56);
+    TEST("MOV AX,5678H",  0270, 0x78, 0x56);
+    TEST("MOV AX,-1",     0270, 0xFF, 0xFF);
+    TEST("MOV AX,-32768", 0270, 0x00, 0x80);
+    ERRT("MOV AX,-32769", OVERFLOW_RANGE);
+    TEST("MOV AX,65535",  0270, 0xFF, 0xFF);
+    ERRT("MOV AX,65536",  OVERFLOW_RANGE);
+    TEST("MOV BP,5678H",  0275, 0x78, 0x56);
 
     TEST("MOV AL,[1234H]", 0xA0, 0x34, 0x12);
     TEST("MOV AX,[1234H]", 0xA1, 0x34, 0x12);
+    ERRT("MOV AX,[10000H]", OVERFLOW_RANGE);
     TEST("MOV [1234H],AL", 0xA2, 0x34, 0x12);
     TEST("MOV [1234H],AX", 0xA3, 0x34, 0x12);
 
-    // 1 and 3 are special values for rotate/shift and INT.
     TEST("MOV BL,1", 0263, 0x01);
     TEST("MOV CL,3", 0261, 0x03);
     TEST("IN  AL,1", 0xE4, 0x01);
     TEST("OUT 3,AL", 0xE6, 0x03);
+    ERRT("IN  AL,-1",  OVERFLOW_RANGE);
+    ERRT("IN  AL,256", OVERFLOW_RANGE);
+    ERRT("OUT -1,AL",  OVERFLOW_RANGE);
+    ERRT("OUT 256,AL", OVERFLOW_RANGE);
 
     TEST("MOV AX,ES",            0x8C, 0300);
     TEST("MOV [SI],CS",          0x8C, 0014);
@@ -714,6 +736,8 @@ static void test_logic() {
     TEST("NOT WORD PTR [BP+SI+1234H]", 0xF7, 0222, 0x34, 0x12);
 
     TEST("SHL CH,1",                      0xD0, 0345);
+    ERRT("SHL CH,0",                      OPERAND_NOT_ALLOWED);
+    ERRT("SHL CH,2",                      OPERAND_NOT_ALLOWED);
     TEST("SHL BYTE PTR [SI],1",           0xD0, 0044);
     TEST("SHL BYTE PTR [1234H],1",        0xD0, 0046, 0x34, 0x12);
     TEST("SHL BYTE PTR [DI-52],1",        0xD0, 0145, 0xCC);
@@ -1289,10 +1313,13 @@ static void test_control_transfer() {
     TEST("JMPF [BX+DI+52]",    0xFF, 0151, 0x34);
     TEST("JMPF [BP+SI+1234H]", 0xFF, 0252, 0x34, 0x12);
 
-    TEST("RET",     0xC3);
-    TEST("RET 16",  0xC2, 0x10, 0x00);
-    TEST("RETF",    0xCB);
-    TEST("RETF 16", 0xCA, 0x10, 0x00);
+    TEST("RET",       0xC3);
+    TEST("RET 16",    0xC2, 0x10, 0x00);
+    TEST("RET 65535", 0xC2, 0xFF, 0xFF);
+    ERRT("RET -1",    OVERFLOW_RANGE);
+    TEST("RETF",      0xCB);
+    TEST("RETF 16",   0xCA, 0x10, 0x00);
+    ERRT("RETF -1",   OVERFLOW_RANGE);
 
     TEST("JE  $", 0x74, 0xFE);
     TEST("JL  $", 0x7C, 0xFE);
@@ -1316,10 +1343,14 @@ static void test_control_transfer() {
     TEST("LOOPNE $", 0xE0, 0xFE);
     TEST("JCXZ   $", 0xE3, 0xFE);
 
-    TEST("INT  2", 0xCD, 0x02);
-    TEST("INT  3", 0xCC);
-    TEST("INTO",  0xCE);
-    TEST("IRET",  0xCF);
+    // 3 is special values for INT.
+    TEST("INT  0",  0xCD, 0x00);
+    TEST("INT  2",  0xCD, 0x02);
+    TEST("INT  3",  0xCC);
+    TEST("INT 255", 0xCD, 0xFF);
+    ERRT("INT 256", OVERFLOW_RANGE);
+    TEST("INTO", 0xCE);
+    TEST("IRET", 0xCF);
 }
 
 static void test_processor_control() {

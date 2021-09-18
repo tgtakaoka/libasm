@@ -192,11 +192,11 @@ static const Entry TABLE_00[] PROGMEM = {
     S(0xAF, TEXT_SCAS,   WORD, M_WMEM, M_NONE, P_NONE, P_NONE),
     E(0xB0, TEXT_MOV,    BYTE, M_BREG, M_IMM,  P_OREG, P_OPR),
     E(0xB8, TEXT_MOV,    WORD, M_WREG, M_IMM,  P_OREG, P_OPR),
-    E(0xC2, TEXT_RET,    WORD, M_IMM,  M_NONE, P_OPR,  P_NONE),
+    E(0xC2, TEXT_RET,    WORD, M_UI16, M_NONE, P_OPR,  P_NONE),
     E(0xC3, TEXT_RET,    NONE, M_NONE, M_NONE, P_NONE, P_NONE),
     E(0xC4, TEXT_LES,    WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
     E(0xC5, TEXT_LDS,    WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
-    E(0xCA, TEXT_RETF,   WORD, M_IMM,  M_NONE, P_OPR,  P_NONE),
+    E(0xCA, TEXT_RETF,   WORD, M_UI16, M_NONE, P_OPR,  P_NONE),
     E(0xCB, TEXT_RETF,   NONE, M_NONE, M_NONE, P_NONE, P_NONE),
     E(0xCC, TEXT_INT,    NONE, M_VAL3, M_NONE, P_NONE, P_NONE),
     E(0xCD, TEXT_INT,    BYTE, M_IMM,  M_NONE, P_OPR,  P_NONE),
@@ -214,8 +214,8 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0xE6, TEXT_OUT,    BYTE, M_IOA,  M_AL,   P_OPR,  P_NONE),
     E(0xE7, TEXT_OUT,    WORD, M_IOA,  M_AX,   P_OPR,  P_NONE),
     E(0xE8, TEXT_CALL,   NONE, M_REL,  M_NONE, P_OPR,  P_NONE),
-    E(0xEB, TEXT_JMP,    NONE, M_REL8, M_NONE, P_OPR,  P_NONE), // M_REL8
-    E(0xE9, TEXT_JMP,    NONE, M_REL,  M_NONE, P_OPR,  P_NONE), // M_REL
+    E(0xEB, TEXT_JMP,    NONE, M_REL8, M_NONE, P_OPR,  P_NONE),
+    E(0xE9, TEXT_JMP,    NONE, M_REL,  M_NONE, P_OPR,  P_NONE),
     E(0xEA, TEXT_JMPF,   NONE, M_FAR,  M_NONE, P_OPR,  P_NONE),
     E(0xEC, TEXT_IN,     BYTE, M_AL,   M_DX,   P_NONE, P_NONE),
     E(0xED, TEXT_IN,     WORD, M_AX,   M_DX,   P_NONE, P_NONE),
@@ -340,7 +340,7 @@ static const Entry TABLE_D5[] PROGMEM = {
 };
 
 static const Entry TABLE_F6[] PROGMEM = {
-    E(000, TEXT_TEST, BYTE, M_BMOD, M_IMM,  P_OMOD, P_OPR),
+    E(000, TEXT_TEST, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E(020, TEXT_NOT,  BYTE, M_BMOD, M_NONE, P_OMOD, P_NONE),
     E(030, TEXT_NEG,  BYTE, M_BMOD, M_NONE, P_OMOD, P_NONE),
     E(040, TEXT_MUL,  BYTE, M_BMOD, M_NONE, P_OMOD, P_NONE),
@@ -350,7 +350,7 @@ static const Entry TABLE_F6[] PROGMEM = {
 };
 
 static const Entry TABLE_F7[] PROGMEM = {
-    E(000, TEXT_TEST, WORD, M_WMOD, M_IMM,  P_OMOD, P_OPR),
+    E(000, TEXT_TEST, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
     E(020, TEXT_NOT,  WORD, M_WMOD, M_NONE, P_OMOD, P_NONE),
     E(030, TEXT_NEG,  WORD, M_WMOD, M_NONE, P_OMOD, P_NONE),
     E(040, TEXT_MUL,  WORD, M_WMOD, M_NONE, P_OMOD, P_NONE),
@@ -423,7 +423,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_BMOD || table == M_BMEM || table == M_BDIR || table == M_WMOD ||
                table == M_WMEM || table == M_WDIR;
     if (opr == M_IMM || opr == M_IMM8 || opr == M_VAL1 || opr == M_VAL3)
-        return table == M_IMM || table == M_IOA || table == M_REL8 || table == M_REL;
+        return table == M_IMM || table == M_IOA || table == M_UI16 || table == M_REL8 ||
+               table == M_REL;
     if (opr == M_BMEM)
         return table == M_BMOD;
     if (opr == M_WMEM)
