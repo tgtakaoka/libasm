@@ -65,6 +65,12 @@ protected:
     Error parserError() { return _parser.error(); }
 
     static const char *skipSpaces(const char *scan);
+    static bool overflowRel8(int16_t s16);
+    static bool overflowRel8(int32_t s32);
+    static bool overflowUint8(uint16_t u16);
+    static bool overflowUint8(uint32_t u32);
+    static bool overflowRel16(int32_t s32);
+    static bool overflowUint16(uint32_t u32);
 
 private:
     virtual Error encode(Insn &insn) = 0;
