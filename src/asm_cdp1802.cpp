@@ -48,8 +48,7 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
         insn.emitInsn();
         return OK;
     case IMM8:
-        if (static_cast<int16_t>(val16) < -128 ||
-                (static_cast<int16_t>(val16) >= 0 && val16 >= 0x100))
+        if (overflowUint8(val16))
             return setError(OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
