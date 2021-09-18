@@ -131,6 +131,20 @@ void CliMemory::swap(CliMemory &other) {
     other.invalidateWriteCache();
 }
 
+uint32_t CliMemory::startAddress() const {
+    if (_segments.empty())
+        return 0;
+    const auto it = _segments.cbegin();
+    return it->first;
+}
+
+uint32_t CliMemory::endAddress() const {
+    if (_segments.empty())
+        return 0;
+    const auto it = _segments.crbegin();
+    return it->first + it->second.size() - 1;
+}
+
 void CliMemory::invalidateWriteCache() {
     _write_cache = _segments.end();
 }
