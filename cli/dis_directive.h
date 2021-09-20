@@ -68,7 +68,9 @@ private:
     bool hasComment() const override;
     std::string getComment() const override;
     AddressWidth addressWidth() const override;
+    AddressUnit addressUnit() const override;
     OpCodeWidth opCodeWidth() const override;
+    Endian endian() const override;
     int maxBytes() const override;
     int labelWidth() const override;
     int instructionWidth() const override;

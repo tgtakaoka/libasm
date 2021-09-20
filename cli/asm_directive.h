@@ -135,10 +135,13 @@ public:
 
 public:
     AddressWidth addressWidth() const override;
+    uint8_t addrUnit() const;
 
 private:
     AsmDirective *switchDirective(AsmDirective *);
+    AddressUnit addressUnit() const override;
     OpCodeWidth opCodeWidth() const override;
+    Endian endian() const override;
     int maxBytes() const override;
     int labelWidth() const override;
     int instructionWidth() const override;

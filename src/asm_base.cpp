@@ -26,7 +26,8 @@ namespace libasm {
 Error Assembler::encode(const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab) {
     _symtab = symtab;
     resetError();
-    insn.resetAddress(addr);
+    const uint8_t addrUnit = static_cast<uint8_t>(addressUnit());
+    insn.resetAddress(addr / addrUnit);
     const char *scan = skipSpaces(line);
     if (endOfLine(scan))
         return OK;

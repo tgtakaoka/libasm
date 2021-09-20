@@ -22,7 +22,7 @@
 namespace libasm {
 namespace tms32010 {
 
-struct Config : ConfigImpl<ADDRESS_12BIT, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_12BIT, OPCODE_16BIT, ENDIAN_BIG, 4, 4, ADDRESS_BYTE2> {};
 
 }  // namespace tms32010
 }  // namespace libasm

@@ -18,8 +18,6 @@
 
 #include "table_tms32010.h"
 
-#include <stdio.h>
-
 namespace libasm {
 namespace tms32010 {
 
@@ -130,10 +128,8 @@ Error DisTms32010::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    // printf("@@ opcode=%04X\n", insn.opCode());
     if (TableTms32010.searchOpCode(insn))
         return setError(TableTms32010.getError());
-    // printf("@@     found name=%4s opcode=%04X\n", insn.name(), insn.opCode());
 
     const AddrMode op1 = insn.op1();
     if (op1 == M_NO)

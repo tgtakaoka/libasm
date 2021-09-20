@@ -108,7 +108,7 @@ private:
     // TestGenerator<Addr>::Printer
     void print(const Insn &insn, const char *operands) override {
         _insn = &insn;
-        _address = insn.address();
+        _address = insn.address() * addrUnit();
         _generated_size = insn.length();
         print(insn.name(), operands);
     }
@@ -118,7 +118,8 @@ private:
             return;
         char operands[40];
         StrBuffer buffer(operands, sizeof(operands));
-        _disassembler.getFormatter().formatHex(buffer, addr, _disassembler.addressWidth(), false);
+        _disassembler.getFormatter().formatHex(
+                buffer, addr / addrUnit(), _disassembler.addressWidth(), false);
         _address = addr;
         _generated_size = 0;
         print("ORG", operands);
@@ -146,7 +147,9 @@ private:
 
     // ListingLine
     AddressWidth addressWidth() const override { return _disassembler.addressWidth(); }
+    AddressUnit addressUnit() const override { return _disassembler.addressUnit(); }
     OpCodeWidth opCodeWidth() const override { return _disassembler.opCodeWidth(); }
+    Endian endian() const override { return _disassembler.endian(); }
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
     uint32_t startAddress() const override { return _address; }
@@ -166,6 +169,7 @@ private:
     int labelWidth() const override { return 6; }
     int instructionWidth() const override { return Conf::MAX_NAME + 1; }
     int operandWidth() const override { return 40; }
+    uint8_t addrUnit() const { return static_cast<uint8_t>(addressUnit()); }
 
     int parseOption(int argc, const char **argv) {
         _output_name = nullptr;

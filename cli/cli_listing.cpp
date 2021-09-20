@@ -120,6 +120,8 @@ void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
+    const uint8_t addrUnit = static_cast<uint8_t>(_line->addressUnit());
+    addr /= addrUnit;
     switch (_line->addressWidth()) {
     case ADDRESS_12BIT:
         formatUint16(addr, fixedWidth, zeroSuppress);
@@ -143,19 +145,23 @@ void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress
 int CliListing::formatBytes(int base) {
     const int maxBytes = _line->maxBytes();
     int i = 0;
-    while (base + i < _line->generatedSize() && i < maxBytes) {
-        uint8_t val = _line->getByte(base + i);
-        switch (_line->opCodeWidth()) {
-        case OPCODE_8BIT:
+    if (_line->opCodeWidth() == OPCODE_8BIT) {
+        while (base + i < _line->generatedSize() && i < maxBytes) {
+            const uint8_t val = _line->getByte(base + i);
             _out += ' ';
-            break;
-        case OPCODE_16BIT:
-            if (i % 2 == 0)
-                _out += ' ';
-            break;
+            formatUint8(val);
+            i++;
         }
-        formatUint8(val);
-        i++;
+    }
+    if (_line->opCodeWidth() == OPCODE_16BIT) {
+        while (base + i < _line->generatedSize() && i < maxBytes) {
+            const int high = base + i + (_line->endian() == ENDIAN_BIG ? 0 : 1);
+            const int low = base + i + (_line->endian() == ENDIAN_BIG ? 1 : 0);
+            const uint16_t val = _line->getByte(low) + (static_cast<uint16_t>(_line->getByte(high)) << 8);
+            _out += ' ';
+            formatUint16(val);
+            i += 2;
+        }
     }
     return i;
 }

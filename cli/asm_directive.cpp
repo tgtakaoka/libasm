@@ -177,7 +177,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
             skipSpaces();
             _list.comment = _scan;
             if (label)
-                internSymbol(origin, label);
+                internSymbol(origin / addrUnit(), label);
             if (getError()) {
                 _scan = _list.label;
             } else {
@@ -188,7 +188,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     }
 
     if (label) {
-        internSymbol(_origin, label);
+        internSymbol(_origin / addrUnit(), label);
         if (getError()) {
             _scan = _list.label;
             return getError();
@@ -209,8 +209,9 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         skipSpaces();
         _list.comment = _scan;
         if (insn.length() > 0) {
-            memory.writeBytes(insn.address(), insn.bytes(), insn.length());
-            _list.address = insn.address();
+            const uint32_t addr = insn.address() * addrUnit();
+            memory.writeBytes(addr, insn.bytes(), insn.length());
+            _list.address = addr;
             _list.length = insn.length();
             _origin += insn.length();
         }
@@ -220,7 +221,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 }
 
 void AsmCommonDirective::setOrigin(uint32_t origin) {
-    _origin = origin;
+    _origin = origin * addrUnit();
 }
 
 const char *AsmCommonDirective::errorAt() const {
@@ -365,7 +366,7 @@ Error AsmCommonDirective::defineOrigin() {
         return setError(UNDEFINED_SYMBOL);
     _scan = scan;
     // TODO line end check
-    _list.address = _origin = value.getUnsigned();
+    _list.address = _origin = value.getUnsigned() * addrUnit();
     return setError(OK);
 }
 
@@ -641,8 +642,16 @@ AddressWidth AsmCommonDirective::addressWidth() const {
     return _assembler->addressWidth();
 }
 
+AddressUnit AsmCommonDirective::addressUnit() const {
+    return _assembler->addressUnit();
+}
+
 OpCodeWidth AsmCommonDirective::opCodeWidth() const {
     return _assembler->opCodeWidth();
+}
+
+Endian AsmCommonDirective::endian() const {
+    return _assembler->endian();
 }
 
 int AsmCommonDirective::maxBytes() const {
@@ -660,6 +669,10 @@ int AsmCommonDirective::instructionWidth() const {
 
 int AsmCommonDirective::operandWidth() const {
     return _operandWidth;
+}
+
+uint8_t AsmCommonDirective::addrUnit() const {
+    return static_cast<uint8_t>(addressUnit());
 }
 
 // Motorola type directives

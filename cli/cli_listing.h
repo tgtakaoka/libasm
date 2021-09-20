@@ -49,7 +49,9 @@ public:
 
     // configuration
     virtual AddressWidth addressWidth() const = 0;
+    virtual AddressUnit addressUnit() const = 0;
     virtual OpCodeWidth opCodeWidth() const = 0;
+    virtual Endian endian() const = 0;
     virtual int maxBytes() const = 0;
     virtual int labelWidth() const = 0;
     virtual int instructionWidth() const = 0;

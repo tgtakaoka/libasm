@@ -119,12 +119,12 @@ int DisDriver::disassemble() {
     if (readInput(input, _input_name, memory) != 0)
         return 1;
     fclose(input);
-    const uint32_t mem_start = memory.startAddress();
-    const uint32_t mem_end = memory.endAddress();
+    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->addressUnit());
+    const uint32_t mem_start = memory.startAddress() / addrUnit;
+    const uint32_t mem_end = memory.endAddress() / addrUnit;
     if ((_addr_start != 0 || _addr_end != UINT32_MAX) &&
             (mem_end < _addr_start || mem_start > _addr_end)) {
-        if (!_verbose)
-            fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
+        fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
         fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _addr_start, _addr_end);
         return 1;
     }
@@ -154,15 +154,17 @@ int DisDriver::disassemble() {
         fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump([this, output, list, &listing](uint32_t base, const uint8_t *data, size_t size) {
-        const uint32_t end = base + size - 1;
+        const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->addressUnit());
+        uint32_t start = base / addrUnit;
+        const uint32_t end = start + (size - 1) / addrUnit;
         if (base > _addr_end || end < _addr_start)
             return;
         if (base < _addr_start) {
-            size -= _addr_start - base;
+            size -= (_addr_start - base) * addrUnit;
             base = _addr_start;
         }
         if (end > _addr_end)
-            size -= end - _addr_end;
+            size -= (end - _addr_end) * addrUnit;
         if (list) {
             fprintf(list, "%s\n", listing.origin(base, true));
             fflush(list);
@@ -173,15 +175,15 @@ int DisDriver::disassemble() {
         }
         Insn insn;
         for (size_t pc = 0; pc < size; pc += insn.length()) {
-            uint32_t address = base + pc;
+            const uint32_t address = base + pc;
             listing.disassemble(address, insn);
             const Error error = _disassembler->getError();
             if (error)
-                fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, address,
+                fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
                         _disassembler->errorText());
             if (list) {
                 if (error)
-                    fprintf(list, "%s:0x%04x: error: %s\n", _input_name, address,
+                    fprintf(list, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
                             _disassembler->errorText());
                 do {
                     fprintf(list, "%s\n", listing.getLine());
@@ -190,7 +192,7 @@ int DisDriver::disassemble() {
             }
             if (output) {
                 if (error)
-                    fprintf(output, "; %s:0x%04x: error: %s\n", _input_name, address,
+                    fprintf(output, "; %s:0x%04x: error: %s\n", _input_name, insn.address(),
                             _disassembler->errorText());
                 do {
                     fprintf(output, "%s\n", listing.getContent());
@@ -213,6 +215,7 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
     size_t line_len = 128;
     char *line = static_cast<char *>(malloc(line_len));
     int len;
+    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->addressUnit());
     uint32_t start = 0, end = 0;
     while ((len = getLine(line, line_len, input)) > 0) {
         lineno++;
@@ -234,7 +237,7 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
             if (addr != end) {
                 if (_verbose)
                     fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start,
-                            start, end - 1);
+                            start / addrUnit, (end - 1) / addrUnit);
                 start = addr;
             }
             end = addr + size;
@@ -242,8 +245,8 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
         }
     }
     if (start != end && _verbose)
-        fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start, start,
-                end - 1);
+        fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start,
+                start / addrUnit, (end - 1) / addrUnit);
     free(line);
     return errors;
 }

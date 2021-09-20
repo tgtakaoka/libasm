@@ -138,8 +138,16 @@ AddressWidth DisDirective::addressWidth() const {
     return _disassembler.addressWidth();
 }
 
+AddressUnit DisDirective::addressUnit() const {
+    return _disassembler.addressUnit();
+}
+
 OpCodeWidth DisDirective::opCodeWidth() const {
     return _disassembler.opCodeWidth();
+}
+
+Endian DisDirective::endian() const {
+    return _disassembler.endian();
 }
 
 int DisDirective::maxBytes() const {

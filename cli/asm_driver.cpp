@@ -80,7 +80,7 @@ int AsmDriver::assemble() {
             return 1;
         }
         AsmDirective *directive = _commonDir.currentDirective();
-        const AddressWidth addrWidth = directive->assembler().addressWidth();
+        const AddressWidth addrWidth = _commonDir.addressWidth();
         BinFormatter *formatter;
         if (_formatter == 'S') {
             formatter = new MotoSrec(addrWidth);
@@ -93,9 +93,11 @@ int AsmDriver::assemble() {
         formatter->begin(output);
         memory.dump(
                 [this, output, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
-                    if (_verbose)
+                    if (_verbose) {
+                        const uint8_t addrUnit = _commonDir.addrUnit();
                         fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
-                                addr, (uint32_t)(addr + data_size - 1));
+                                addr / addrUnit, (uint32_t)(addr + data_size - 1) / addrUnit);
+                    }
                     for (size_t i = 0; i < data_size; i += _record_bytes) {
                         auto size = std::min(_record_bytes, data_size - i);
                         formatter->encode(addr + i, data + i, size);

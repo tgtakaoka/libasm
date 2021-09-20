@@ -193,7 +193,7 @@ public:
     TestGenerator(Disassembler &disassembler, typename Conf::uintptr_t addr = 0)
         : _disassembler(disassembler), _memorySize(Conf::MAX_CODE), _endian(Conf::ENDIAN) {
         _memory = new uint8_t[_memorySize];
-        _addr = addr;
+        _addr = addr * static_cast<uint8_t>(disassembler.addressUnit());
     }
 
     virtual ~TestGenerator() { delete[] _memory; }

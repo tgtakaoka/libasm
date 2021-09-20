@@ -31,6 +31,11 @@ enum AddressWidth : uint8_t {
     ADDRESS_32BIT = 32,
 };
 
+enum AddressUnit : uint8_t {
+    ADDRESS_BYTE1 = 1,
+    ADDRESS_BYTE2 = 2,
+};
+
 enum OpCodeWidth : uint8_t {
     OPCODE_8BIT = 8,
     OPCODE_16BIT = 16,
@@ -43,6 +48,7 @@ enum Endian : uint8_t {
 
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
+    virtual AddressUnit addressUnit() const = 0;
     virtual OpCodeWidth opCodeWidth() const = 0;
     virtual Endian endian() const = 0;
     virtual uint8_t codeMax() const = 0;
@@ -80,7 +86,8 @@ template <>
 struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 }  // namespace
 
-template <AddressWidth AddrWE, OpCodeWidth CodeWE, Endian EndianE, uint8_t MaxCode, uint8_t MaxName>
+template <AddressWidth AddrWE, OpCodeWidth CodeWE, Endian EndianE, uint8_t MaxCode, uint8_t MaxName,
+        AddressUnit AddrUE = ADDRESS_BYTE1>
 struct ConfigImpl : virtual public ConfigBase {
     typedef typename __address_type<AddrWE>::uintptr_t uintptr_t;
     typedef typename __address_type<AddrWE>::ptrdiff_t ptrdiff_t;
@@ -90,6 +97,7 @@ struct ConfigImpl : virtual public ConfigBase {
     static constexpr uint8_t MAX_NAME = MaxName;
 
     AddressWidth addressWidth() const override { return AddrWE; }
+    AddressUnit addressUnit() const override { return AddrUE; }
     OpCodeWidth opCodeWidth() const override { return CodeWE; }
     Endian endian() const override { return EndianE; }
     uint8_t codeMax() const override { return MaxCode; }

@@ -16,7 +16,6 @@
 
 #include "dis_ns32000.h"
 
-#include <stdio.h>
 #include "table_ns32000.h"
 
 namespace libasm {

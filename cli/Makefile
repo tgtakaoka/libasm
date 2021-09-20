@@ -30,7 +30,7 @@ clean: clean-objs
 	-rm -f $(BINS) *.d *~
 
 VPATH = ../src
-CXXFLAGS = -Wall -O -std=c++14 -I../src
+CXXFLAGS = -Wall -O -std=c++14 -I../src $(DEBUG_FLAGS)
 CPPFLAGS = -MMD
 
 OBJS_com = cli_listing.o cli_memory.o error_reporter.o file_util.o \
