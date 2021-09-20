@@ -16,6 +16,7 @@
 
 #include "dis_tms9900.h"
 #include "test_dis_helper.h"
+#include "test_memory.h"
 
 using namespace libasm;
 using namespace libasm::tms9900;
@@ -379,6 +380,7 @@ static uint16_t validPostWord(uint16_t opCode) {
 static void assert_mid(
     const mid_range *ranges, const mid_range *end,
     const uint16_t prefix = 0, const mid_hole *hole = nullptr) {
+    TestMemory memory;
     uint8_t bytes[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     Insn insn;
     char operands[40], message[40];

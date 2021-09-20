@@ -16,6 +16,7 @@
 
 #include "dis_tms32010.h"
 #include "test_dis_helper.h"
+#include "test_memory.h"
 
 using namespace libasm;
 using namespace libasm::tms32010;
@@ -514,6 +515,7 @@ static bool in_array(uint8_t v, const uint8_t *begin, const uint8_t *end) {
 }
 
 static void assert_ok(Config::opcode_t opc) {
+    TestMemory memory;
     uint8_t bytes[4] = { 0, 0, 0, 0 };
     Insn insn;
     char operands[40], message[40];
@@ -529,6 +531,7 @@ static void assert_ok(Config::opcode_t opc) {
 }
 
 static void assert_illegal(Config::opcode_t opc, Error err, const char *message) {
+    TestMemory memory;
     uint8_t bytes[4] = { 0, 0, 0, 0 };
     Insn insn;
     char operands[40];

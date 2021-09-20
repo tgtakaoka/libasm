@@ -22,21 +22,49 @@
 #include <string>
 #include <vector>
 
+#include "test_memory.h"
+
 namespace libasm {
 namespace test {
 
 TestAsserter asserter;
-TestMemory memory;
 TestSymtab symtab;
 
+static TestMemory memory;
 static char actual_opr[128];
 static char message[256];
 
-void dis_assert(const char *file, int line, Error error, const char *expected_name,
-        const char *expected_opr, Disassembler &disassembler) {
+void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint8_t *src,
+        uint8_t src_size, const char *expected_name, const char *expected_opr,
+        Disassembler &disassembler) {
+    memory.setAddress(addr);
+    memory.setMemory(src, src_size);
+
     Insn insn;
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, actual_opr, sizeof(actual_opr), &symtab);
+
+    strcpy(message, expected_name);
+    memory.dump(message + strlen(message));
+    asserter.equals(file, line, expected_name, error, disassembler);
+    if (error == OK) {
+        asserter.equals(file, line, expected_name, expected_name, insn.name());
+        asserter.equals(file, line, expected_name, expected_opr, actual_opr);
+        asserter.equals(file, line, expected_name, memory.bytes(), memory.length(), insn.bytes(),
+                insn.length());
+    }
+}
+
+void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint16_t *src,
+        uint8_t src_size, const char *expected_name, const char *expected_opr,
+        Disassembler &disassembler) {
+    memory.setAddress(addr);
+    memory.setMemory(src, src_size);
+
+    Insn insn;
+    disassembler.setUppercase(true);
+    disassembler.decode(memory, insn, actual_opr, sizeof(actual_opr), &symtab);
+
     strcpy(message, expected_name);
     memory.dump(message + strlen(message));
     asserter.equals(file, line, expected_name, error, disassembler);

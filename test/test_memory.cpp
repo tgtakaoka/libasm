@@ -23,7 +23,8 @@
 namespace libasm {
 namespace test {
 
-TestMemory::TestMemory() : DisMemory(0) {
+TestMemory::TestMemory()
+    : DisMemory(0), _size(0), _bytes(nullptr), _origin(0), _length(0), _index(0), _words(nullptr) {
     ensureBytes(16);
 }
 
