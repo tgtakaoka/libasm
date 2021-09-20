@@ -57,6 +57,8 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
             insn.embed(0x98);
             break;
         default:
+            if (op.val16 > TableTms32010.dataMemoryLimit())
+                return setError(OVERFLOW_RANGE);
             if (insn.opCode() == SST && op.val16 < 0x80)
                 return setError(OVERFLOW_RANGE);
             insn.embed(op.val16 & 0x7F);

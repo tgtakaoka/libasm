@@ -21,9 +21,10 @@ namespace libasm {
 namespace tms32010 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "TMS32010";
+static const char TEXT_CPU_LIST[] PROGMEM = "TMS32010, TMS32015";
 static constexpr const char *TEXT_CPU_TMS   = TEXT_CPU_LIST;
-static constexpr const char *TEXT_CPU_32010 = (TEXT_CPU_LIST + 3);
+static const char TEXT_CPU_32010[] PROGMEM = "32010";
+static constexpr const char *TEXT_CPU_32015 = (TEXT_CPU_LIST + 13);
 
 // TMS32010
 static const char TEXT_ABS[]  PROGMEM = "ABS";

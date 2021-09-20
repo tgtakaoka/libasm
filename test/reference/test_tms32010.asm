@@ -32,12 +32,12 @@
 ;;; 0x3
         sar     ar0, 24H
         sar     1, *, ar1
-        lar     ar1, 9AH
+        lar     ar1, 8AH
         lar     ar0, *-, 0
 ;;; 0x4
         in      67H, 5
         in      *, 7, ar1
-        out     0C0H, 0
+        out     080H, 0
         out     *+, 1, ar0
 ;;; 0x5
         sacl    61H

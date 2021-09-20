@@ -27,8 +27,11 @@ Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
     // Store Status Register can access Data Page 1 only.
     static constexpr uint8_t SST = 0x7C;
     uint8_t dma = static_cast<uint8_t>(opc) & 0x7F;
-    if ((opc >> 8) == SST)
+    if ((opc >> 8) == SST) {
         dma |= (1 << 7);
+        if (dma > TableTms32010.dataMemoryLimit())
+            return setError(OVERFLOW_RANGE);
+    }
     outAbsAddr(out, dma, 8);
     return OK;
 }

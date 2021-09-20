@@ -172,18 +172,31 @@ Error TableTms32010::searchOpCode(InsnTms32010 &insn) const {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
+uint16_t TableTms32010::dataMemoryLimit() const {
+    return _cpuType == TMS32010 ? 0x8F : 0xFF;
+}
+
+bool TableTms32010::setCpu(CpuType cpuType) {
+    _cpuType = cpuType;
+    return true;
+}
+
 const char *TableTms32010::listCpu() const {
     return TEXT_CPU_LIST;
 }
 
 const char *TableTms32010::getCpu() const {
-    return TEXT_CPU_32010;
+    return (_cpuType == TMS32010) ? TEXT_CPU_32010 : TEXT_CPU_32015;
 }
 
 bool TableTms32010::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_TMS, 3) == 0)
         cpu += 3;
-    return strcmp_P(cpu, TEXT_CPU_32010) == 0;
+    if (strcmp_P(cpu, TEXT_CPU_32010) == 0)
+        return setCpu(TMS32010);
+    if (strcmp_P(cpu, TEXT_CPU_32015) == 0)
+        return setCpu(TMS32015);
+    return false;
 }
 
 class TableTms32010 TableTms32010;

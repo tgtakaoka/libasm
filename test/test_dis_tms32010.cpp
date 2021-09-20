@@ -25,6 +25,10 @@ using namespace libasm::test;
 DisTms32010 dis32010;
 Disassembler &disassembler(dis32010);
 
+static bool is32010() {
+    return strcmp(disassembler.getCpu(), "32010") == 0;
+}
+
 static void set_up() {
     disassembler.reset();
     disassembler.setRelativeTarget(false);
@@ -39,8 +43,14 @@ static void test_cpu() {
     EQUALS("cpu 32010", true,   disassembler.setCpu("32010"));
     EQUALS("cpu 32010", "32010", disassembler.getCpu());
 
+    EQUALS("cpu 32015", true,   disassembler.setCpu("32015"));
+    EQUALS("cpu 32015", "32015", disassembler.getCpu());
+
     EQUALS("cpu TMS32010", true,   disassembler.setCpu("TMS32010"));
     EQUALS("cpu TMS32010", "32010", disassembler.getCpu());
+
+    EQUALS("cpu TMS32015", true,   disassembler.setCpu("TMS32015"));
+    EQUALS("cpu TMS32015", "32015", disassembler.getCpu());
 }
 
 static void test_accumrator() {
@@ -417,7 +427,12 @@ static void test_control() {
     TEST(LST, "*+, AR0", 0x7BA0);
 
     TEST(SST, "80H",     0x7C00);
-    TEST(SST, "0F0H",    0x7C70);
+    TEST(SST, "8FH",     0x7C0F);
+    if (is32010()) {
+        ERVR(SST, "90H", 0x7C10);
+    } else {
+        TEST(SST, "90H", 0x7C10);
+    }
     TEST(SST, "*",       0x7C88);
     TEST(SST, "*-",      0x7C98);
     TEST(SST, "*+",      0x7CA8);

@@ -24,6 +24,10 @@ using namespace libasm::test;
 AsmTms32010 asm32010;
 Assembler &assembler(asm32010);
 
+static bool is32010() {
+    return strcmp(assembler.getCpu(), "32010") == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -45,7 +49,12 @@ static void test_accumrator() {
     TEST("ABS", 0x7F88);
 
     TEST("ADD 70H",         0x0070);
-    TEST("ADD 0F0H",        0x0070);
+    TEST("ADD 8FH",         0x000F);
+    if (is32010()) {
+        ERRT("ADD 090H",    OVERFLOW_RANGE);
+    } else {
+        TEST("ADD 090H",    0x0010);
+    }
     ERRT("ADD 0100H",       OPERAND_NOT_ALLOWED);
     ERUS("ADD UNDEF",       0x0000);
     TEST("ADD 70H, 15",     0x0F70);
@@ -400,7 +409,12 @@ static void test_control() {
     ERRT("SST 00H",     OVERFLOW_RANGE);
     ERRT("SST 7FH",     OVERFLOW_RANGE);
     TEST("SST 80H",     0x7C00);
-    TEST("SST 0F0H",    0x7C70);
+    TEST("SST 8FH",     0x7C0F);
+    if (is32010()) {
+        ERRT("SST 090H", OVERFLOW_RANGE);
+    } else {
+        TEST("SST 090H", 0x7C10);
+    }
     TEST("SST *",       0x7C88);
     TEST("SST *-",      0x7C98);
     TEST("SST *+",      0x7CA8);

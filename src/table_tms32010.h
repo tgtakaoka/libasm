@@ -32,6 +32,12 @@ public:
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
     const char *getCpu() const override;
+    uint16_t dataMemoryLimit() const;
+
+private:
+    CpuType _cpuType;
+
+    bool setCpu(CpuType cpuType);
 };
 
 extern TableTms32010 TableTms32010;
