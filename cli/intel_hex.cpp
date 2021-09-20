@@ -48,7 +48,7 @@ void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
         if (size == 0) return;
     }
     // If |addr| is discontinued or |addr| has different ELA than last
-    if (addr != _next_addr || ((addr ^ _last_addr) & ~0xFFFF))
+    if (addr != _next_addr || ((addr ^ _last_addr) >> 16) != 0)
         formatEla(addr);
     encodeLine(addr, data, size);
     _last_addr = addr;
@@ -57,7 +57,7 @@ void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
 
 // Output Type "04" Extended Linear Address.
 void IntelHex::formatEla(uint32_t addr) {
-    if (_addrWidth == ADDRESS_16BIT)
+    if (uint8_t(_addrWidth) <= 16)
         return;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
     const uint8_t len = sizeof(ela);
