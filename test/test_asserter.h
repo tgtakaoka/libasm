@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "config_base.h"
 #include "error_reporter.h"
 
 namespace libasm {
@@ -43,7 +44,7 @@ public:
     void equals(const char *file, const int line, const char *message, const uint8_t expected[],
             size_t expected_len, const uint8_t actual[], size_t actual_len);
     void equals(const char *file, const int line, const char *message, const uint16_t expected[],
-            size_t expected_len, const uint8_t actual[], size_t actual_len);
+            size_t expected_len, const uint8_t actual[], size_t actual_len, Endian endian);
     void not_equals(const char *file, const int line, const char *message, const char *expected,
             const char *actual);
 

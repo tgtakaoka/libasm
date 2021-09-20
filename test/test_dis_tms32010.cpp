@@ -516,15 +516,12 @@ static bool in_array(uint8_t v, const uint8_t *begin, const uint8_t *end) {
 
 static void assert_ok(Config::opcode_t opc) {
     TestMemory memory;
-    uint8_t bytes[4] = { 0, 0, 0, 0 };
+    uint16_t words[2] = { opc, 0 };
     Insn insn;
     char operands[40], message[40];
     sprintf(message, "%04X must be LEGAL", opc);
 
-    memory.setAddress(0x100);
-    bytes[0] = opc >> 8;
-    bytes[1] = opc;
-    memory.setMemory(bytes, sizeof(bytes));
+    memory.setMemory(0x100, words, sizeof(words), disassembler.endian());
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, operands, sizeof(operands));
     EQUALS(message, OK, disassembler.getError());
@@ -532,14 +529,11 @@ static void assert_ok(Config::opcode_t opc) {
 
 static void assert_illegal(Config::opcode_t opc, Error err, const char *message) {
     TestMemory memory;
-    uint8_t bytes[4] = { 0, 0, 0, 0 };
+    uint16_t words[2] = { opc, 0 };
     Insn insn;
     char operands[40];
 
-    memory.setAddress(0x100);
-    bytes[0] = opc >> 8;
-    bytes[1] = opc;
-    memory.setMemory(bytes, sizeof(bytes));
+    memory.setMemory(0x100, words, sizeof(words), disassembler.endian());
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, operands, sizeof(operands));
     EQUALS(message, err, disassembler.getError());

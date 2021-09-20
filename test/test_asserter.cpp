@@ -98,24 +98,22 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     printf("]\n");
 }
 
-static void convert(const uint8_t *bytes, size_t blen, uint16_t *words, size_t wlen) {
-    uint16_t msb = 0;
-    for (size_t idx = 0; idx < blen; idx++) {
-        if (idx % 2 == 0) {
-            msb = bytes[idx];
-        } else {
-            words[idx / 2] = (msb << 8) | bytes[idx];
-        }
+static void convert(
+        const uint8_t *bytes, size_t blen, uint16_t *words, size_t wlen, Endian endian) {
+    const uint8_t hi = (endian == ENDIAN_BIG) ? 0 : 1;
+    const uint8_t lo = (endian == ENDIAN_BIG) ? 1 : 0;
+    for (size_t idx = 0; idx < blen; idx += 2) {
+        words[idx / 2] = (static_cast<uint16_t>(bytes[idx + hi]) << 8) | bytes[idx + lo];
     }
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
         const uint16_t expected[], size_t expected_len_b, const uint8_t actual_b[],
-        size_t actual_len_b) {
+        size_t actual_len_b, Endian endian) {
     const size_t expected_len = (expected_len_b + 1) / 2;
     const size_t actual_len = (actual_len_b + 1) / 2;
     uint16_t actual[actual_len];
-    convert(actual_b, actual_len_b, actual, actual_len);
+    convert(actual_b, actual_len_b, actual, actual_len, endian);
     if (expected_len == actual_len) {
         size_t i;
         for (i = 0; i < expected_len; i++)

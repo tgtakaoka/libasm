@@ -381,45 +381,39 @@ static void assert_mid(
     const mid_range *ranges, const mid_range *end,
     const uint16_t prefix = 0, const mid_hole *hole = nullptr) {
     TestMemory memory;
-    uint8_t bytes[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    uint16_t words[4] = { 0, 0, 0, 0 };
     Insn insn;
     char operands[40], message[40];
     const mid_range *m = ranges;
-    if (prefix) {
-        bytes[0] = prefix >> 8;
-        bytes[1] = prefix;
-    }
-    const uint8_t pos = prefix ? 2 : 0;
+    if (prefix) words[0] = prefix;
+    const uint8_t pos = prefix ? 1 : 0;
 
-    for (uint16_t h = 0; h < 0x100; h++) {
-        for (uint16_t l = 0; l < 0x100; l++) {
-            const uint16_t i = (h << 8) | l;
-            memory.setAddress(0x1000);
-            bytes[pos] = h; bytes[pos + 1] = l;
-            const uint16_t opCode = (h << 8) | l;
-            const uint16_t post = validPostWord(prefix ? prefix : opCode);
-            bytes[pos + 2] = post >> 8;
-            bytes[pos + 3] = post;
-            memory.setMemory(bytes, sizeof(bytes));
+    for (uint16_t hi = 0; hi < 0x100; hi++) {
+        for (uint16_t lo = 0; lo < 0x100; lo++) {
+            const uint16_t code = (hi << 8) | lo;
+            const uint16_t post = validPostWord(prefix ? prefix : code);
+            words[pos] = code;
+            words[pos + 1] = post;
+            memory.setMemory(0x1000, words, sizeof(words), disassembler.endian());
             disassembler.setUppercase(true);
             disassembler.decode(memory, insn, operands, sizeof(operands));
-            if (m && i > m->end) {
+            if (m && code > m->end) {
                 if (++m >= end)
                     m = nullptr;
             }
-            if (m && ((i >= m->start && i <= m->end) || (hole && hole->contains(i)))) {
+            if (m && ((code >= m->start && code <= m->end) || (hole && hole->contains(code)))) {
                 if (prefix) {
-                    sprintf(message, "%04X,%04X is MID", prefix, i);
+                    sprintf(message, "%04X,%04X is MID", prefix, code);
                 } else {
-                    sprintf(message, "%04X is MID", i);
+                    sprintf(message, "%04X is MID", code);
                 }
                 EQUALS(message, UNKNOWN_INSTRUCTION, disassembler.getError());
                 EQUALS(message, "MID", insn.name());
             } else {
                 if (prefix) {
-                    sprintf(message, "%04X,%04X is not MID", prefix, i);
+                    sprintf(message, "%04X,%04X is not MID", prefix, code);
                 } else {
-                    sprintf(message, "%04X is not MID", i);
+                    sprintf(message, "%04X is not MID", code);
                 }
                 EQUALS(message, OK, disassembler.getError());
                 NOT_EQUALS(message, "MID", insn.name());

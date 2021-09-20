@@ -37,8 +37,7 @@ static char message[256];
 void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint8_t *src,
         uint8_t src_size, const char *expected_name, const char *expected_opr,
         Disassembler &disassembler) {
-    memory.setAddress(addr);
-    memory.setMemory(src, src_size);
+    memory.setMemory(addr, src, src_size);
 
     Insn insn;
     disassembler.setUppercase(true);
@@ -58,8 +57,7 @@ void dis_assert(const char *file, int line, Error error, uint32_t addr, const ui
 void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint16_t *src,
         uint8_t src_size, const char *expected_name, const char *expected_opr,
         Disassembler &disassembler) {
-    memory.setAddress(addr);
-    memory.setMemory(src, src_size);
+    memory.setMemory(addr, src, src_size, disassembler.endian());
 
     Insn insn;
     disassembler.setUppercase(true);

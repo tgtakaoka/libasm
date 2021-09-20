@@ -24,7 +24,13 @@ namespace libasm {
 namespace test {
 
 TestMemory::TestMemory()
-    : DisMemory(0), _size(0), _bytes(nullptr), _origin(0), _length(0), _index(0), _words(nullptr) {
+    : DisMemory(0),
+      _size(0),
+      _bytes(nullptr),
+      _origin(0),
+      _length(0),
+      _index(0),
+      _words(nullptr) {
     ensureBytes(16);
 }
 
@@ -40,34 +46,34 @@ void TestMemory::ensureBytes(size_t size) {
     _size = size;
 }
 
-void TestMemory::setMemory(const uint8_t *data, uint8_t size) {
+void TestMemory::setMemory(uint32_t addr, const uint8_t *data, uint8_t size) {
     _words = nullptr;
     ensureBytes(size);
     memcpy(_bytes, data, size);
+    _origin = addr;
+    resetAddress(addr);
     _length = size;
     _index = 0;
 }
 
-void TestMemory::setMemory(const uint16_t *data, uint8_t size) {
+void TestMemory::setMemory(uint32_t addr, const uint16_t *data, uint8_t size, Endian endian) {
     _words = data;
+    const uint8_t hi = (endian == ENDIAN_BIG) ? 0 : 1;
+    const uint8_t lo = (endian == ENDIAN_BIG) ? 1 : 0;
     ensureBytes(size);
     for (uint8_t i = 0; i < size; i += 2) {
         const uint16_t d = *data++;
-        // Big-endian word. Most significant byte is in lowest address.
-        _bytes[i + 0] = static_cast<uint8_t>(d >> 8);
-        _bytes[i + 1] = static_cast<uint8_t>(d);
+        _bytes[i + hi] = static_cast<uint8_t>(d >> 8);
+        _bytes[i + lo] = static_cast<uint8_t>(d);
     }
+    _origin = addr;
+    resetAddress(addr);
     _length = size;
     _index = 0;
 }
 
 bool TestMemory::hasNext() const {
     return _index < _length;
-}
-
-void TestMemory::setAddress(uint32_t addr) {
-    _origin = addr;
-    resetAddress(addr);
 }
 
 const uint8_t *TestMemory::bytes() const {

@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 
+#include "config_base.h"
 #include "config_host.h"
 #include "dis_memory.h"
 
@@ -30,10 +31,9 @@ public:
     TestMemory();
     virtual ~TestMemory();
 
-    void setMemory(const uint8_t *data, uint8_t size);
-    void setMemory(const uint16_t *data, uint8_t size);
+    void setMemory(uint32_t addr, const uint8_t *data, uint8_t size);
+    void setMemory(uint32_t addr, const uint16_t *data, uint8_t size, Endian endian);
     bool hasNext() const override;
-    void setAddress(uint32_t addr);
     const uint8_t *bytes() const;
     uint8_t length() const;
     uint32_t origin() const;

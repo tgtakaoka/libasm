@@ -41,7 +41,7 @@ void asm_assert(const char *file, int line, Error error, uint32_t addr, const ch
     symtab.setCurrentOrigin(addr);
     assembler.encode(src, insn, addr, &symtab);
     asserter.equals(file, line, src, error, assembler);
-    asserter.equals(file, line, src, expected, length, insn.bytes(), insn.length());
+    asserter.equals(file, line, src, expected, length, insn.bytes(), insn.length(), assembler.endian());
 }
 
 bool test_failed;
