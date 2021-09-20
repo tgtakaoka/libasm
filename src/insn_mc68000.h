@@ -35,6 +35,7 @@ public:
     bool alias() const { return flags().alias(); }
     OprSize oprSize() const { return flags().oprSize(); }
     InsnSize insnSize() const { return flags().insnSize(); }
+    bool withSize() const { return flags().withSize(); }
     void setAddrMode(AddrMode src, AddrMode dst) {
         flags().setSrcMode(src);
         flags().setDstMode(dst);

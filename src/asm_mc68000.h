@@ -60,7 +60,6 @@ private:
     Error emitBriefExtension(
             InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp);
     Error emitDisplacement(InsnMc68000 &insn, Config::ptrdiff_t disp);
-    Error emitAbsoluteAddr(InsnMc68000 &insn, OprSize size, AddrMode mode, Config::uintptr_t addr);
     Error emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
     Error emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t data);
     Error emitEffectiveAddr(

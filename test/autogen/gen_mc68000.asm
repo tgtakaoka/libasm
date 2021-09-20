@@ -1039,17 +1039,17 @@
       NEGX.L  (0,A7,A3.L)
       NEGX.L  ($FFBBBC).W
       NEGX.L  ($BEBFC0).L
-      MOVE    SR, D0
-      MOVE    SR, (A0)
-      MOVE    SR, (A0)+
-      MOVE    SR, -(A0)
-      MOVE    SR, (-$1616,A0)
-      MOVE    SR, (-14,A0,A7.W)
-      MOVE    SR, (0,A0,A7.W)
-      MOVE    SR, (-7,A7,A7.L)
-      MOVE    SR, (0,A7,A7.L)
-      MOVE    SR, ($FFF9FA).W
-      MOVE    SR, ($FCFDFE).L
+      MOVE.W  SR, D0
+      MOVE.W  SR, (A0)
+      MOVE.W  SR, (A0)+
+      MOVE.W  SR, -(A0)
+      MOVE.W  SR, (-$1616,A0)
+      MOVE.W  SR, (-14,A0,A7.W)
+      MOVE.W  SR, (0,A0,A7.W)
+      MOVE.W  SR, (-7,A7,A7.L)
+      MOVE.W  SR, (0,A7,A7.L)
+      MOVE.W  SR, ($FFF9FA).W
+      MOVE.W  SR, ($FCFDFE).L
       CHK.W   D0, D0
       CHK.W   (A0), D0
       CHK.W   (A0)+, D0
@@ -1151,27 +1151,27 @@
       NEG.L   (0,A7,A3.L)
       NEG.L   ($FFBBBC).W
       NEG.L   ($BEBFC0).L
-      MOVE    D0, CCR
-      MOVE    (A0), CCR
-      MOVE    (A0)+, CCR
-      MOVE    -(A0), CCR
-      MOVE    (-$1616,A0), CCR
-      MOVE    (-14,A0,A7.W), CCR
-      MOVE    (0,A0,A7.W), CCR
-      MOVE    (-7,A7,A7.L), CCR
-      MOVE    (0,A7,A7.L), CCR
-      MOVE    ($FFF9FA).W, CCR
-      MOVE    ($FCFDFE).L, CCR
-      MOVE    (*-$0402,PC), CCR
-      MOVE    (*,PC), CCR
-      MOVE    (*+$0104,PC), CCR
-      MOVE    (*-1,PC,A7.L), CCR
-      MOVE    (*,PC,A7.L), CCR
-      MOVE    (*+1,PC,A7.L), CCR
-      MOVE    (*+3,PC,D0.W), CCR
-      MOVE    (*-126,PC,D0.W), CCR
-      MOVE    (*,PC,D0.W), CCR
-      MOVE    #$FE, CCR
+      MOVE.W  D0, CCR
+      MOVE.W  (A0), CCR
+      MOVE.W  (A0)+, CCR
+      MOVE.W  -(A0), CCR
+      MOVE.W  (-$1616,A0), CCR
+      MOVE.W  (-14,A0,A7.W), CCR
+      MOVE.W  (0,A0,A7.W), CCR
+      MOVE.W  (-7,A7,A7.L), CCR
+      MOVE.W  (0,A7,A7.L), CCR
+      MOVE.W  ($FFF9FA).W, CCR
+      MOVE.W  ($FCFDFE).L, CCR
+      MOVE.W  (*-$0402,PC), CCR
+      MOVE.W  (*,PC), CCR
+      MOVE.W  (*+$0104,PC), CCR
+      MOVE.W  (*-1,PC,A7.L), CCR
+      MOVE.W  (*,PC,A7.L), CCR
+      MOVE.W  (*+1,PC,A7.L), CCR
+      MOVE.W  (*+3,PC,D0.W), CCR
+      MOVE.W  (*-126,PC,D0.W), CCR
+      MOVE.W  (*,PC,D0.W), CCR
+      MOVE.W  #$FE, CCR
       NOT.B   D0
       NOT.B   (A0)
       NOT.B   (A0)+
@@ -1205,27 +1205,27 @@
       NOT.L   (0,A7,A3.L)
       NOT.L   ($FFBBBC).W
       NOT.L   ($BEBFC0).L
-      MOVE    D0, SR
-      MOVE    (A0), SR
-      MOVE    (A0)+, SR
-      MOVE    -(A0), SR
-      MOVE    (-$1616,A0), SR
-      MOVE    (-14,A0,A7.W), SR
-      MOVE    (0,A0,A7.W), SR
-      MOVE    (-7,A7,A7.L), SR
-      MOVE    (0,A7,A7.L), SR
-      MOVE    ($FFF9FA).W, SR
-      MOVE    ($FCFDFE).L, SR
-      MOVE    (*-$0402,PC), SR
-      MOVE    (*,PC), SR
-      MOVE    (*+$0104,PC), SR
-      MOVE    (*-1,PC,A7.L), SR
-      MOVE    (*,PC,A7.L), SR
-      MOVE    (*+1,PC,A7.L), SR
-      MOVE    (*+3,PC,D0.W), SR
-      MOVE    (*-126,PC,D0.W), SR
-      MOVE    (*,PC,D0.W), SR
-      MOVE    #$FDFE, SR
+      MOVE.W  D0, SR
+      MOVE.W  (A0), SR
+      MOVE.W  (A0)+, SR
+      MOVE.W  -(A0), SR
+      MOVE.W  (-$1616,A0), SR
+      MOVE.W  (-14,A0,A7.W), SR
+      MOVE.W  (0,A0,A7.W), SR
+      MOVE.W  (-7,A7,A7.L), SR
+      MOVE.W  (0,A7,A7.L), SR
+      MOVE.W  ($FFF9FA).W, SR
+      MOVE.W  ($FCFDFE).L, SR
+      MOVE.W  (*-$0402,PC), SR
+      MOVE.W  (*,PC), SR
+      MOVE.W  (*+$0104,PC), SR
+      MOVE.W  (*-1,PC,A7.L), SR
+      MOVE.W  (*,PC,A7.L), SR
+      MOVE.W  (*+1,PC,A7.L), SR
+      MOVE.W  (*+3,PC,D0.W), SR
+      MOVE.W  (*-126,PC,D0.W), SR
+      MOVE.W  (*,PC,D0.W), SR
+      MOVE.W  #$FDFE, SR
       NBCD    D0
       NBCD    (A0)
       NBCD    (A0)+
@@ -10533,16 +10533,16 @@
       LSR.L   D0, D0
       ROXR.L  D0, D0
       ROR.L   D0, D0
-      ASR     (A0)
-      ASR     (A0)+
-      ASR     -(A0)
-      ASR     (-$1616,A0)
-      ASR     (-14,A0,A7.W)
-      ASR     (0,A0,A7.W)
-      ASR     (-7,A7,A7.L)
-      ASR     (0,A7,A7.L)
-      ASR     ($FFF9FA).W
-      ASR     ($FCFDFE).L
+      ASR.W   (A0)
+      ASR.W   (A0)+
+      ASR.W   -(A0)
+      ASR.W   (-$1616,A0)
+      ASR.W   (-14,A0,A7.W)
+      ASR.W   (0,A0,A7.W)
+      ASR.W   (-7,A7,A7.L)
+      ASR.W   (0,A7,A7.L)
+      ASR.W   ($FFF9FA).W
+      ASR.W   ($FCFDFE).L
       ASL.B   #8, D0
       LSL.B   #8, D0
       ROXL.B  #8, D0
@@ -10567,73 +10567,73 @@
       LSL.L   D0, D0
       ROXL.L  D0, D0
       ROL.L   D0, D0
-      ASL     (A0)
-      ASL     (A0)+
-      ASL     -(A0)
-      ASL     (-$1616,A0)
-      ASL     (-14,A0,A7.W)
-      ASL     (0,A0,A7.W)
-      ASL     (-7,A7,A7.L)
-      ASL     (0,A7,A7.L)
-      ASL     ($FFF9FA).W
-      ASL     ($FCFDFE).L
-      LSR     (A0)
-      LSR     (A0)+
-      LSR     -(A0)
-      LSR     (-$1616,A0)
-      LSR     (-14,A0,A7.W)
-      LSR     (0,A0,A7.W)
-      LSR     (-7,A7,A7.L)
-      LSR     (0,A7,A7.L)
-      LSR     ($FFF9FA).W
-      LSR     ($FCFDFE).L
-      LSL     (A0)
-      LSL     (A0)+
-      LSL     -(A0)
-      LSL     (-$1616,A0)
-      LSL     (-14,A0,A7.W)
-      LSL     (0,A0,A7.W)
-      LSL     (-7,A7,A7.L)
-      LSL     (0,A7,A7.L)
-      LSL     ($FFF9FA).W
-      LSL     ($FCFDFE).L
-      ROXR    (A0)
-      ROXR    (A0)+
-      ROXR    -(A0)
-      ROXR    (-$1616,A0)
-      ROXR    (-14,A0,A7.W)
-      ROXR    (0,A0,A7.W)
-      ROXR    (-7,A7,A7.L)
-      ROXR    (0,A7,A7.L)
-      ROXR    ($FFF9FA).W
-      ROXR    ($FCFDFE).L
-      ROXL    (A0)
-      ROXL    (A0)+
-      ROXL    -(A0)
-      ROXL    (-$1616,A0)
-      ROXL    (-14,A0,A7.W)
-      ROXL    (0,A0,A7.W)
-      ROXL    (-7,A7,A7.L)
-      ROXL    (0,A7,A7.L)
-      ROXL    ($FFF9FA).W
-      ROXL    ($FCFDFE).L
-      ROR     (A0)
-      ROR     (A0)+
-      ROR     -(A0)
-      ROR     (-$1616,A0)
-      ROR     (-14,A0,A7.W)
-      ROR     (0,A0,A7.W)
-      ROR     (-7,A7,A7.L)
-      ROR     (0,A7,A7.L)
-      ROR     ($FFF9FA).W
-      ROR     ($FCFDFE).L
-      ROL     (A0)
-      ROL     (A0)+
-      ROL     -(A0)
-      ROL     (-$1616,A0)
-      ROL     (-14,A0,A7.W)
-      ROL     (0,A0,A7.W)
-      ROL     (-7,A7,A7.L)
-      ROL     (0,A7,A7.L)
-      ROL     ($FFF9FA).W
-      ROL     ($FCFDFE).L
+      ASL.W   (A0)
+      ASL.W   (A0)+
+      ASL.W   -(A0)
+      ASL.W   (-$1616,A0)
+      ASL.W   (-14,A0,A7.W)
+      ASL.W   (0,A0,A7.W)
+      ASL.W   (-7,A7,A7.L)
+      ASL.W   (0,A7,A7.L)
+      ASL.W   ($FFF9FA).W
+      ASL.W   ($FCFDFE).L
+      LSR.W   (A0)
+      LSR.W   (A0)+
+      LSR.W   -(A0)
+      LSR.W   (-$1616,A0)
+      LSR.W   (-14,A0,A7.W)
+      LSR.W   (0,A0,A7.W)
+      LSR.W   (-7,A7,A7.L)
+      LSR.W   (0,A7,A7.L)
+      LSR.W   ($FFF9FA).W
+      LSR.W   ($FCFDFE).L
+      LSL.W   (A0)
+      LSL.W   (A0)+
+      LSL.W   -(A0)
+      LSL.W   (-$1616,A0)
+      LSL.W   (-14,A0,A7.W)
+      LSL.W   (0,A0,A7.W)
+      LSL.W   (-7,A7,A7.L)
+      LSL.W   (0,A7,A7.L)
+      LSL.W   ($FFF9FA).W
+      LSL.W   ($FCFDFE).L
+      ROXR.W  (A0)
+      ROXR.W  (A0)+
+      ROXR.W  -(A0)
+      ROXR.W  (-$1616,A0)
+      ROXR.W  (-14,A0,A7.W)
+      ROXR.W  (0,A0,A7.W)
+      ROXR.W  (-7,A7,A7.L)
+      ROXR.W  (0,A7,A7.L)
+      ROXR.W  ($FFF9FA).W
+      ROXR.W  ($FCFDFE).L
+      ROXL.W  (A0)
+      ROXL.W  (A0)+
+      ROXL.W  -(A0)
+      ROXL.W  (-$1616,A0)
+      ROXL.W  (-14,A0,A7.W)
+      ROXL.W  (0,A0,A7.W)
+      ROXL.W  (-7,A7,A7.L)
+      ROXL.W  (0,A7,A7.L)
+      ROXL.W  ($FFF9FA).W
+      ROXL.W  ($FCFDFE).L
+      ROR.W   (A0)
+      ROR.W   (A0)+
+      ROR.W   -(A0)
+      ROR.W   (-$1616,A0)
+      ROR.W   (-14,A0,A7.W)
+      ROR.W   (0,A0,A7.W)
+      ROR.W   (-7,A7,A7.L)
+      ROR.W   (0,A7,A7.L)
+      ROR.W   ($FFF9FA).W
+      ROR.W   ($FCFDFE).L
+      ROL.W   (A0)
+      ROL.W   (A0)+
+      ROL.W   -(A0)
+      ROL.W   (-$1616,A0)
+      ROL.W   (-14,A0,A7.W)
+      ROL.W   (0,A0,A7.W)
+      ROL.W   (-7,A7,A7.L)
+      ROL.W   (0,A7,A7.L)
+      ROL.W   ($FFF9FA).W
+      ROL.W   ($FCFDFE).L

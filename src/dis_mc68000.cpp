@@ -379,7 +379,7 @@ Error DisMc68000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         opr16 = insn.readUint16(memory);
 
     const InsnSize iSize = insn.insnSize();
-    const OprSize oSize = (iSize == ISZ_DATA) ? size : OprSize(iSize);
+    const OprSize oSize = (iSize == ISZ_DATA || insn.withSize()) ? size : OprSize(iSize);
     const char suffix = _regs.sizeSuffix(oSize);
     if (suffix) {
         insn.appendName('.');

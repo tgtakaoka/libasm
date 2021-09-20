@@ -25,17 +25,19 @@
 namespace libasm {
 namespace mc68000 {
 
-#define X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _alias)                        \
-    {                                                                                           \
-        _opc,                                                                                   \
-                Entry::Flags::create(                                                           \
-                        _src, _dst, OP_##_srcp, OP_##_dstp, SZ_##_osize, ISZ_##_isize, _alias), \
-                _name                                                                           \
+#define X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _with, _alias)       \
+    {                                                                                 \
+        _opc,                                                                         \
+                Entry::Flags::create(_src, _dst, OP_##_srcp, OP_##_dstp, SZ_##_osize, \
+                        ISZ_##_isize, _with, _alias),                                 \
+                _name                                                                 \
     }
 #define E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
+    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false, false)
+#define W(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
+    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, true, false)
 #define A(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, true)
+    X(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false, true)
 
 // clang-format off
 static constexpr Entry MC68000_TABLE[] PROGMEM = {
@@ -51,32 +53,32 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0005174, TEXT_EORI,  NONE, M_IMDAT, M_SR,    __, __, WORD),
     E(0005000, TEXT_EORI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA),
     E(0006000, TEXT_CMPI,  DATA, M_IMDAT, M_WDATA, __, 10, DATA),
-    E(0004000, TEXT_BTST,  LONG, M_IMBIT, M_DREG,  __, _0, LONG),
-    E(0004000, TEXT_BTST,  BYTE, M_IMBIT, M_RMEM,  __, 10, BYTE),
-    E(0004100, TEXT_BCHG,  LONG, M_IMBIT, M_DREG,  __, _0, LONG),
-    E(0004100, TEXT_BCHG,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE),
-    E(0004200, TEXT_BCLR,  LONG, M_IMBIT, M_DREG,  __, _0, LONG),
-    E(0004200, TEXT_BCLR,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE),
-    E(0004300, TEXT_BSET,  LONG, M_IMBIT, M_DREG,  __, _0, LONG),
-    E(0004300, TEXT_BSET,  BYTE, M_IMBIT, M_WDATA, __, 10, BYTE),
+    W(0004000, TEXT_BTST,  NONE, M_IMBIT, M_DREG,  __, _0, LONG),
+    W(0004000, TEXT_BTST,  NONE, M_IMBIT, M_RMEM,  __, 10, BYTE),
+    W(0004100, TEXT_BCHG,  NONE, M_IMBIT, M_DREG,  __, _0, LONG),
+    W(0004100, TEXT_BCHG,  NONE, M_IMBIT, M_WMEM,  __, 10, BYTE),
+    W(0004200, TEXT_BCLR,  NONE, M_IMBIT, M_DREG,  __, _0, LONG),
+    W(0004200, TEXT_BCLR,  NONE, M_IMBIT, M_WMEM,  __, 10, BYTE),
+    W(0004300, TEXT_BSET,  NONE, M_IMBIT, M_DREG,  __, _0, LONG),
+    W(0004300, TEXT_BSET,  NONE, M_IMBIT, M_WMEM,  __, 10, BYTE),
     E(0000410, TEXT_MOVEP, DATA, M_DISP,  M_DREG,  _0, _3, ADR6),
     E(0000610, TEXT_MOVEP, DATA, M_DREG,  M_DISP,  _3, _0, ADR6),
-    E(0000400, TEXT_BTST,  LONG, M_DREG,  M_DREG,  _3, _0, LONG),
-    E(0000400, TEXT_BTST,  BYTE, M_DREG,  M_RMEM,  _3, 10, BYTE),
-    E(0000500, TEXT_BCHG,  LONG, M_DREG,  M_DREG,  _3, _0, LONG),
-    E(0000500, TEXT_BCHG,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE),
-    E(0000600, TEXT_BCLR,  LONG, M_DREG,  M_DREG,  _3, _0, LONG),
-    E(0000600, TEXT_BCLR,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE),
-    E(0000700, TEXT_BSET,  LONG, M_DREG,  M_DREG,  _3, _0, LONG),
-    E(0000700, TEXT_BSET,  BYTE, M_DREG,  M_WDATA, _3, 10, BYTE),
+    W(0000400, TEXT_BTST,  NONE, M_DREG,  M_DREG,  _3, _0, LONG),
+    W(0000400, TEXT_BTST,  NONE, M_DREG,  M_RMEM,  _3, 10, BYTE),
+    W(0000500, TEXT_BCHG,  NONE, M_DREG,  M_DREG,  _3, _0, LONG),
+    W(0000500, TEXT_BCHG,  NONE, M_DREG,  M_WMEM,  _3, 10, BYTE),
+    W(0000600, TEXT_BCLR,  NONE, M_DREG,  M_DREG,  _3, _0, LONG),
+    W(0000600, TEXT_BCLR,  NONE, M_DREG,  M_WMEM,  _3, 10, BYTE),
+    W(0000700, TEXT_BSET,  NONE, M_DREG,  M_DREG,  _3, _0, LONG),
+    W(0000700, TEXT_BSET,  NONE, M_DREG,  M_WMEM,  _3, 10, BYTE),
     E(0020100, TEXT_MOVEA, LONG, M_RADDR, M_AREG,  10, _3, LONG),
     E(0030100, TEXT_MOVEA, WORD, M_RADDR, M_AREG,  10, _3, WORD),
     E(0030100, TEXT_MOVEA, NONE, M_RADDR, M_AREG,  10, _3, WORD),
     A(0020100, TEXT_MOVE,  LONG, M_RADDR, M_AREG,  10, _3, LONG),
     A(0030100, TEXT_MOVE,  WORD, M_RADDR, M_AREG,  10, _3, WORD),
-    E(0042300, TEXT_MOVE,  NONE, M_RDATA, M_CCR,   10, __, WORD),
-    E(0040300, TEXT_MOVE,  NONE, M_SR,    M_WDATA, __, 10, WORD),
-    E(0043300, TEXT_MOVE,  NONE, M_RDATA, M_SR,    10, __, WORD),
+    W(0042300, TEXT_MOVE,  NONE, M_RDATA, M_CCR,   10, __, WORD),
+    W(0040300, TEXT_MOVE,  NONE, M_SR,    M_WDATA, __, 10, WORD),
+    W(0043300, TEXT_MOVE,  NONE, M_RDATA, M_SR,    10, __, WORD),
     E(0010000, TEXT_MOVE,  BYTE, M_RDATA, M_WDATA, 10, 23, BYTE),
     E(0020000, TEXT_MOVE,  LONG, M_RADDR, M_WDATA, 10, 23, LONG),
     E(0030000, TEXT_MOVE,  WORD, M_RADDR, M_WDATA, 10, 23, WORD),
@@ -222,14 +224,14 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0150410, TEXT_ADDX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA),
     E(0150000, TEXT_ADD,   DATA, M_RADDR, M_DREG,  10, _3, DATA),
     E(0150400, TEXT_ADD,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA),
-    E(0160300, TEXT_ASR,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0160700, TEXT_ASL,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0161300, TEXT_LSR,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0161700, TEXT_LSL,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0162300, TEXT_ROXR,  NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0162700, TEXT_ROXL,  NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0163300, TEXT_ROR,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
-    E(0163700, TEXT_ROL,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0160300, TEXT_ASR,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0160700, TEXT_ASL,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0161300, TEXT_LSR,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0161700, TEXT_LSL,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0162300, TEXT_ROXR,  NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0162700, TEXT_ROXL,  NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0163300, TEXT_ROR,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
+    W(0163700, TEXT_ROL,   NONE, M_WMEM,  M_NONE,  10, __, WORD),
     E(0160000, TEXT_ASR,   DATA, M_IM3,   M_DREG,  __, _0, DATA),
     E(0160040, TEXT_ASR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA),
     E(0160400, TEXT_ASL,   DATA, M_IM3,   M_DREG,  __, _0, DATA),
@@ -254,7 +256,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return true;
     if (opr == M_DREG)
         return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
-               table == M_RMEM || table == M_MULT;
+               table == M_MULT;
     if (opr == M_AREG)
         return table == M_RADDR || table == M_WADDR || table == M_MULT;
     if (opr == M_AIND || opr == M_DISP || opr == M_INDX || opr == M_AWORD || opr == M_ALONG)

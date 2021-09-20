@@ -1501,18 +1501,18 @@ static void test_shift_rotate() {
     TEST(ASL_L, "#8, D7", 0160607);
 
     // ASL dst: 01607|M|Rn
-    EROA(ASL, "D2",            0160702);
-    EROA(ASL, "A2",            0160712);
-    TEST(ASL, "(A2)",          0160722);
-    TEST(ASL, "(A2)+",         0160732);
-    TEST(ASL, "-(A2)",         0160742);
-    TEST(ASL, "($2345,A2)",    0160752, 0x2345);
-    TEST(ASL, "($23,A2,D3.L)", 0160762, 0x3823);
-    TEST(ASL, "($002346).W",   0160770, 0x2346);
-    TEST(ASL, "($234568).L",   0160771, 0x0023, 0x4568);
-    EROA(ASL, "(d16,PC)",      0160772);
-    EROA(ASL, "(d8,PC,Xn)",    0160773);
-    EROA(ASL, "#nnnn",         0160774);
+    EROA(ASL,   "D2",            0160702);
+    EROA(ASL,   "A2",            0160712);
+    TEST(ASL_W, "(A2)",          0160722);
+    TEST(ASL_W, "(A2)+",         0160732);
+    TEST(ASL_W, "-(A2)",         0160742);
+    TEST(ASL_W, "($2345,A2)",    0160752, 0x2345);
+    TEST(ASL_W, "($23,A2,D3.L)", 0160762, 0x3823);
+    TEST(ASL_W, "($002346).W",   0160770, 0x2346);
+    TEST(ASL_W, "($234568).L",   0160771, 0x0023, 0x4568);
+    EROA(ASL_W, "(d16,PC)",      0160772);
+    EROA(ASL,   "(d8,PC,Xn)",    0160773);
+    EROA(ASL,   "#nnnn",         0160774);
 
     // ASR Dx,Dy: 016|Dx|Sz|4|Dy, Sz:B=0/W=1/L=2
     TEST(ASR_B, "D2, D7", 0162047);
@@ -1525,18 +1525,18 @@ static void test_shift_rotate() {
     TEST(ASR_L, "#8, D7", 0160207);
 
     // ASR dst: 01603|M|Rn
-    EROA(ASR, "D2",            0160302);
-    EROA(ASR, "A2",            0160312);
-    TEST(ASR, "(A2)",          0160322);
-    TEST(ASR, "(A2)+",         0160332);
-    TEST(ASR, "-(A2)",         0160342);
-    TEST(ASR, "($2345,A2)",    0160352, 0x2345);
-    TEST(ASR, "($23,A2,D3.L)", 0160362, 0x3823);
-    TEST(ASR, "($002346).W",   0160370, 0x2346);
-    TEST(ASR, "($234568).L",   0160371, 0x0023, 0x4568);
-    EROA(ASR, "(d16,PC)",      0160372);
-    EROA(ASR, "(d8,PC,Xn)",    0160373);
-    EROA(ASR, "#nnnn",         0160374);
+    EROA(ASR,   "D2",            0160302);
+    EROA(ASR,   "A2",            0160312);
+    TEST(ASR_W, "(A2)",          0160322);
+    TEST(ASR_W, "(A2)+",         0160332);
+    TEST(ASR_W, "-(A2)",         0160342);
+    TEST(ASR_W, "($2345,A2)",    0160352, 0x2345);
+    TEST(ASR_W, "($23,A2,D3.L)", 0160362, 0x3823);
+    TEST(ASR_W, "($002346).W",   0160370, 0x2346);
+    TEST(ASR_W, "($234568).L",   0160371, 0x0023, 0x4568);
+    EROA(ASR,   "(d16,PC)",      0160372);
+    EROA(ASR,   "(d8,PC,Xn)",    0160373);
+    EROA(ASR,   "#nnnn",         0160374);
 
     // LSL Dx,Dy: 016|Dx|Sz|5|Dy, Sz:B=4/W=5/L=6
     TEST(LSL_B, "D2, D7", 0162457);
@@ -1549,18 +1549,18 @@ static void test_shift_rotate() {
     TEST(LSL_L, "#8, D7", 0160617);
 
     // LSL dst: 01617|M|Rn
-    EROA(LSL, "D2",            0161702);
-    EROA(LSL, "A2",            0161712);
-    TEST(LSL, "(A2)",          0161722);
-    TEST(LSL, "(A2)+",         0161732);
-    TEST(LSL, "-(A2)",         0161742);
-    TEST(LSL, "($2345,A2)",    0161752, 0x2345);
-    TEST(LSL, "($23,A2,D3.L)", 0161762, 0x3823);
-    TEST(LSL, "($002346).W",   0161770, 0x2346);
-    TEST(LSL, "($234568).L",   0161771, 0x0023, 0x4568);
-    EROA(LSL, "(d16,PC)",      0161772);
-    EROA(LSL, "(d8,PC,Xn)",    0161773);
-    EROA(LSL, "#nnnn",         0161774);
+    EROA(LSL,   "D2",            0161702);
+    EROA(LSL,   "A2",            0161712);
+    TEST(LSL_W, "(A2)",          0161722);
+    TEST(LSL_W, "(A2)+",         0161732);
+    TEST(LSL_W, "-(A2)",         0161742);
+    TEST(LSL_W, "($2345,A2)",    0161752, 0x2345);
+    TEST(LSL_W, "($23,A2,D3.L)", 0161762, 0x3823);
+    TEST(LSL_W, "($002346).W",   0161770, 0x2346);
+    TEST(LSL_W, "($234568).L",   0161771, 0x0023, 0x4568);
+    EROA(LSL,   "(d16,PC)",      0161772);
+    EROA(LSL,   "(d8,PC,Xn)",    0161773);
+    EROA(LSL,   "#nnnn",         0161774);
 
     // LSR Dx,Dy: 016|Dx|Sz|5|Dy, Sz:B=0/W=1/L=2
     TEST(LSR_B, "D2, D7", 0162057);
@@ -1573,18 +1573,18 @@ static void test_shift_rotate() {
     TEST(LSR_L, "#8, D7", 0160217);
 
     // LSR dst: 01613|M|Rn
-    EROA(LSR, "D2",            0161302);
-    EROA(LSR, "A2",            0161312);
-    TEST(LSR, "(A2)",          0161322);
-    TEST(LSR, "(A2)+",         0161332);
-    TEST(LSR, "-(A2)",         0161342);
-    TEST(LSR, "($2345,A2)",    0161352, 0x2345);
-    TEST(LSR, "($23,A2,D3.L)", 0161362, 0x3823);
-    TEST(LSR, "($002346).W",   0161370, 0x2346);
-    TEST(LSR, "($234568).L",   0161371, 0x0023, 0x4568);
-    EROA(LSR, "(d16,PC)",      0161372);
-    EROA(LSR, "(d8,PC,Xn)",    0161373);
-    EROA(LSR, "#nnnn",         0161374);
+    EROA(LSR,   "D2",            0161302);
+    EROA(LSR,   "A2",            0161312);
+    TEST(LSR_W, "(A2)",          0161322);
+    TEST(LSR_W, "(A2)+",         0161332);
+    TEST(LSR_W, "-(A2)",         0161342);
+    TEST(LSR_W, "($2345,A2)",    0161352, 0x2345);
+    TEST(LSR_W, "($23,A2,D3.L)", 0161362, 0x3823);
+    TEST(LSR_W, "($002346).W",   0161370, 0x2346);
+    TEST(LSR_W, "($234568).L",   0161371, 0x0023, 0x4568);
+    EROA(LSR,   "(d16,PC)",      0161372);
+    EROA(LSR,   "(d8,PC,Xn)",    0161373);
+    EROA(LSR,   "#nnnn",         0161374);
 
     // ROL Dx,Dy: 016|Dx|Sz|7|Dy, Sz:B=4/W=5/L=6
     TEST(ROL_B, "D2, D7", 0162477);
@@ -1597,18 +1597,18 @@ static void test_shift_rotate() {
     TEST(ROL_L, "#8, D7", 0160637);
 
     // ROL dst: 01637|M|Rn
-    EROA(ROL, "D2",            0163702);
-    EROA(ROL, "A2",            0163712);
-    TEST(ROL, "(A2)",          0163722);
-    TEST(ROL, "(A2)+",         0163732);
-    TEST(ROL, "-(A2)",         0163742);
-    TEST(ROL, "($2345,A2)",    0163752, 0x2345);
-    TEST(ROL, "($23,A2,D3.L)", 0163762, 0x3823);
-    TEST(ROL, "($002346).W",   0163770, 0x2346);
-    TEST(ROL, "($234568).L",   0163771, 0x0023, 0x4568);
-    EROA(ROL, "(d16,PC)",      0163772);
-    EROA(ROL, "(d8,PC,Xn)",    0163773);
-    EROA(ROL, "#nnnn",         0163774);
+    EROA(ROL,   "D2",            0163702);
+    EROA(ROL,   "A2",            0163712);
+    TEST(ROL_W, "(A2)",          0163722);
+    TEST(ROL_W, "(A2)+",         0163732);
+    TEST(ROL_W, "-(A2)",         0163742);
+    TEST(ROL_W, "($2345,A2)",    0163752, 0x2345);
+    TEST(ROL_W, "($23,A2,D3.L)", 0163762, 0x3823);
+    TEST(ROL_W, "($002346).W",   0163770, 0x2346);
+    TEST(ROL_W, "($234568).L",   0163771, 0x0023, 0x4568);
+    EROA(ROL,   "(d16,PC)",      0163772);
+    EROA(ROL,   "(d8,PC,Xn)",    0163773);
+    EROA(ROL,   "#nnnn",         0163774);
 
     // ROR Dx,Dy: 016|Dx|Sz|7|Dy, Sz:B=0/W=1/L=2
     TEST(ROR_B, "D2, D7", 0162077);
@@ -1621,18 +1621,18 @@ static void test_shift_rotate() {
     TEST(ROR_L, "#8, D7", 0160237);
 
     // ROR dst: 01633|M|Rn
-    EROA(ROR, "D2",            0163302);
-    EROA(ROR, "A2",            0163312);
-    TEST(ROR, "(A2)",          0163322);
-    TEST(ROR, "(A2)+",         0163332);
-    TEST(ROR, "-(A2)",         0163342);
-    TEST(ROR, "($2345,A2)",    0163352, 0x2345);
-    TEST(ROR, "($23,A2,D3.L)", 0163362, 0x3823);
-    TEST(ROR, "($002346).W",   0163370, 0x2346);
-    TEST(ROR, "($234568).L",   0163371, 0x0023, 0x4568);
-    EROA(ROR, "(d16,PC)",      0163372);
-    EROA(ROR, "(d8,PC,Xn)",    0163373);
-    EROA(ROR, "#nnnn",         0163374);
+    EROA(ROR,   "D2",            0163302);
+    EROA(ROR,   "A2",            0163312);
+    TEST(ROR_W, "(A2)",          0163322);
+    TEST(ROR_W, "(A2)+",         0163332);
+    TEST(ROR_W, "-(A2)",         0163342);
+    TEST(ROR_W, "($2345,A2)",    0163352, 0x2345);
+    TEST(ROR_W, "($23,A2,D3.L)", 0163362, 0x3823);
+    TEST(ROR_W, "($002346).W",   0163370, 0x2346);
+    TEST(ROR_W, "($234568).L",   0163371, 0x0023, 0x4568);
+    EROA(ROR,   "(d16,PC)",      0163372);
+    EROA(ROR,   "(d8,PC,Xn)",    0163373);
+    EROA(ROR,   "#nnnn",         0163374);
 
     // ROXL Dx,Dy: 016|Dx|Sz|6|Dy, Sz:B=4/W=5/L=6
     TEST(ROXL_B, "D2, D7", 0162467);
@@ -1645,18 +1645,18 @@ static void test_shift_rotate() {
     TEST(ROXL_L, "#8, D7", 0160627);
 
     // ROXL dst: 01627|M|Rn
-    EROA(ROXL, "D2",            0162702);
-    EROA(ROXL, "A2",            0162712);
-    TEST(ROXL, "(A2)",          0162722);
-    TEST(ROXL, "(A2)+",         0162732);
-    TEST(ROXL, "-(A2)",         0162742);
-    TEST(ROXL, "($2345,A2)",    0162752, 0x2345);
-    TEST(ROXL, "($23,A2,D3.L)", 0162762, 0x3823);
-    TEST(ROXL, "($002346).W",   0162770, 0x2346);
-    TEST(ROXL, "($234568).L",   0162771, 0x0023, 0x4568);
-    EROA(ROXL, "(d16,PC)",      0162772);
-    EROA(ROXL, "(d8,PC,Xn)",    0162773);
-    EROA(ROXL, "#nnnn",         0162774);
+    EROA(ROXL,   "D2",            0162702);
+    EROA(ROXL,   "A2",            0162712);
+    TEST(ROXL_W, "(A2)",          0162722);
+    TEST(ROXL_W, "(A2)+",         0162732);
+    TEST(ROXL_W, "-(A2)",         0162742);
+    TEST(ROXL_W, "($2345,A2)",    0162752, 0x2345);
+    TEST(ROXL_W, "($23,A2,D3.L)", 0162762, 0x3823);
+    TEST(ROXL_W, "($002346).W",   0162770, 0x2346);
+    TEST(ROXL_W, "($234568).L",   0162771, 0x0023, 0x4568);
+    EROA(ROXL,   "(d16,PC)",      0162772);
+    EROA(ROXL,   "(d8,PC,Xn)",    0162773);
+    EROA(ROXL,   "#nnnn",         0162774);
 
     // ROXR Dx,Dy: 016|Dx|Sz|6|Dy, Sz:B=0/W=1/L=2
     TEST(ROXR_B, "D2, D7", 0162067);
@@ -1669,18 +1669,18 @@ static void test_shift_rotate() {
     TEST(ROXR_L, "#8, D7", 0160227);
 
     // ROXR dst: 01623|M|Rn
-    EROA(ROXR, "D2",            0162302);
-    EROA(ROXR, "A2",            0162312);
-    TEST(ROXR, "(A2)",          0162322);
-    TEST(ROXR, "(A2)+",         0162332);
-    TEST(ROXR, "-(A2)",         0162342);
-    TEST(ROXR, "($2345,A2)",    0162352, 0x2345);
-    TEST(ROXR, "($23,A2,D3.L)", 0162362, 0x3823);
-    TEST(ROXR, "($002346).W",   0162370, 0x2346);
-    TEST(ROXR, "($234568).L",   0162371, 0x0023, 0x4568);
-    EROA(ROXR, "(d16,PC)",      0162372);
-    EROA(ROXR, "(d8,PC,Xn)",    0162373);
-    EROA(ROXR, "#nnnn",         0162374);
+    EROA(ROXR,   "D2",            0162302);
+    EROA(ROXR,   "A2",            0162312);
+    TEST(ROXR_W, "(A2)",          0162322);
+    TEST(ROXR_W, "(A2)+",         0162332);
+    TEST(ROXR_W, "-(A2)",         0162342);
+    TEST(ROXR_W, "($2345,A2)",    0162352, 0x2345);
+    TEST(ROXR_W, "($23,A2,D3.L)", 0162362, 0x3823);
+    TEST(ROXR_W, "($002346).W",   0162370, 0x2346);
+    TEST(ROXR_W, "($234568).L",   0162371, 0x0023, 0x4568);
+    EROA(ROXR,   "(d16,PC)",      0162372);
+    EROA(ROXR,   "(d8,PC,Xn)",    0162373);
+    EROA(ROXR,   "#nnnn",         0162374);
 
     // SWAP Dn: 004410|Dn
     TEST(SWAP, "D0", 0044100);
@@ -2190,37 +2190,37 @@ static void test_system() {
     TEST(EORI, "#$1234, SR", 0005174, 0x1234);
 
     // MOVE src,SR: 00433|M|Rn
-    TEST(MOVE, "D2, SR",             0043302);
-    EROA(MOVE, "A2, SR",             0043312);
-    TEST(MOVE, "(A2), SR",           0043322);
-    TEST(MOVE, "(A2)+, SR",          0043332);
-    TEST(MOVE, "-(A2), SR",          0043342);
-    TEST(MOVE, "($1234,A2), SR",     0043352, 0x1234);
-    TEST(MOVE, "(18,A2,D3.W), SR",   0043362, 0x3012);
-    TEST(MOVE, "($001234).W, SR",    0043370, 0x1234);
-    ERNA(MOVE, "($001233).W, SR",    0043370, 0x1233);
-    TEST(MOVE, "($234568).L, SR",    0043371, 0x0023, 0x4568);
-    ERNA(MOVE, "($234567).L, SR",    0043371, 0x0023, 0x4567);
-    TEST(MOVE, "(*+$1234,PC), SR",   0043372, 0x1232);
-    ERNA(MOVE, "(*+$1235,PC), SR",   0043372, 0x1233);
-    TEST(MOVE, "(*-16,PC,D3.L), SR", 0043373, 0x38EE);
-    TEST(MOVE, "#$3456, SR",         0043374, 0x3456);
+    TEST(MOVE_W, "D2, SR",             0043302);
+    EROA(MOVE_W, "A2, SR",             0043312);
+    TEST(MOVE_W, "(A2), SR",           0043322);
+    TEST(MOVE_W, "(A2)+, SR",          0043332);
+    TEST(MOVE_W, "-(A2), SR",          0043342);
+    TEST(MOVE_W, "($1234,A2), SR",     0043352, 0x1234);
+    TEST(MOVE_W, "(18,A2,D3.W), SR",   0043362, 0x3012);
+    TEST(MOVE_W, "($001234).W, SR",    0043370, 0x1234);
+    ERNA(MOVE_W, "($001233).W, SR",    0043370, 0x1233);
+    TEST(MOVE_W, "($234568).L, SR",    0043371, 0x0023, 0x4568);
+    ERNA(MOVE_W, "($234567).L, SR",    0043371, 0x0023, 0x4567);
+    TEST(MOVE_W, "(*+$1234,PC), SR",   0043372, 0x1232);
+    ERNA(MOVE_W, "(*+$1235,PC), SR",   0043372, 0x1233);
+    TEST(MOVE_W, "(*-16,PC,D3.L), SR", 0043373, 0x38EE);
+    TEST(MOVE_W, "#$3456, SR",         0043374, 0x3456);
 
     // MOVE SR,dst: 00403|M|Rn
-    TEST(MOVE, "SR, D2",           0040302);
-    EROA(MOVE, "SR, A2",           0040312);
-    TEST(MOVE, "SR, (A2)",         0040322);
-    TEST(MOVE, "SR, (A2)+",        0040332);
-    TEST(MOVE, "SR, -(A2)",        0040342);
-    TEST(MOVE, "SR, ($1234,A2)",   0040352, 0x1234);
-    TEST(MOVE, "SR, (18,A2,D3.W)", 0040362, 0x3012);
-    TEST(MOVE, "SR, ($001234).W",  0040370, 0x1234);
-    ERNA(MOVE, "SR, ($001233).W",  0040370, 0x1233);
-    TEST(MOVE, "SR, ($234568).L",  0040371, 0x0023, 0x4568);
-    ERNA(MOVE, "SR, ($234567).L",  0040371, 0x0023, 0x4567);
-    EROA(MOVE, "SR, (d16,PC)",     0040372, 0x1232);
-    EROA(MOVE, "SR, (d8,PC,Xn)",   0040373);
-    EROA(MOVE, "SR, #nnnn",        0040374);
+    TEST(MOVE_W, "SR, D2",           0040302);
+    EROA(MOVE_W, "SR, A2",           0040312);
+    TEST(MOVE_W, "SR, (A2)",         0040322);
+    TEST(MOVE_W, "SR, (A2)+",        0040332);
+    TEST(MOVE_W, "SR, -(A2)",        0040342);
+    TEST(MOVE_W, "SR, ($1234,A2)",   0040352, 0x1234);
+    TEST(MOVE_W, "SR, (18,A2,D3.W)", 0040362, 0x3012);
+    TEST(MOVE_W, "SR, ($001234).W",  0040370, 0x1234);
+    ERNA(MOVE_W, "SR, ($001233).W",  0040370, 0x1233);
+    TEST(MOVE_W, "SR, ($234568).L",  0040371, 0x0023, 0x4568);
+    ERNA(MOVE_W, "SR, ($234567).L",  0040371, 0x0023, 0x4567);
+    EROA(MOVE_W, "SR, (d16,PC)",     0040372, 0x1232);
+    EROA(MOVE_W, "SR, (d8,PC,Xn)",   0040373);
+    EROA(MOVE_W, "SR, #nnnn",        0040374);
 
     // MOVE USP,An: 004715|An
     TEST(MOVE, "USP, A2", 0047152);
@@ -2271,21 +2271,21 @@ static void test_system() {
     TEST(EORI, "#$34, CCR", 0005074, 0x0034);
 
     // MOVE src,CCR: 00423|M|R
-    TEST(MOVE, "D2, CCR",             0042302);
-    EROA(MOVE, "A2, CCR",             0042312);
-    TEST(MOVE, "(A2), CCR",           0042322);
-    TEST(MOVE, "(A2)+, CCR",          0042332);
-    TEST(MOVE, "-(A2), CCR",          0042342);
-    TEST(MOVE, "($1234,A2), CCR",     0042352, 0x1234);
-    TEST(MOVE, "(18,A2,D3.W), CCR",   0042362, 0x3012);
-    TEST(MOVE, "($001234).W, CCR",    0042370, 0x1234);
-    ERNA(MOVE, "($001233).W, CCR",    0042370, 0x1235);
-    TEST(MOVE, "($234568).L, CCR",    0042371, 0x0023, 0x4568);
-    ERNA(MOVE, "($234567).L, CCR",    0042371, 0x0023, 0x4569);
-    TEST(MOVE, "(*+$1234,PC), CCR",   0042372, 0x1232);
-    ERNA(MOVE, "(*+$1233,PC), CCR",   0042372, 0x1233);
-    TEST(MOVE, "(*-16,PC,D3.L), CCR", 0042373, 0x38EE);
-    TEST(MOVE, "#$34, CCR",           0042374, 0x0034);
+    TEST(MOVE_W, "D2, CCR",             0042302);
+    EROA(MOVE_W, "A2, CCR",             0042312);
+    TEST(MOVE_W, "(A2), CCR",           0042322);
+    TEST(MOVE_W, "(A2)+, CCR",          0042332);
+    TEST(MOVE_W, "-(A2), CCR",          0042342);
+    TEST(MOVE_W, "($1234,A2), CCR",     0042352, 0x1234);
+    TEST(MOVE_W, "(18,A2,D3.W), CCR",   0042362, 0x3012);
+    TEST(MOVE_W, "($001234).W, CCR",    0042370, 0x1234);
+    ERNA(MOVE_W, "($001233).W, CCR",    0042370, 0x1235);
+    TEST(MOVE_W, "($234568).L, CCR",    0042371, 0x0023, 0x4568);
+    ERNA(MOVE_W, "($234567).L, CCR",    0042371, 0x0023, 0x4569);
+    TEST(MOVE_W, "(*+$1234,PC), CCR",   0042372, 0x1232);
+    ERNA(MOVE_W, "(*+$1233,PC), CCR",   0042372, 0x1233);
+    TEST(MOVE_W, "(*-16,PC,D3.L), CCR", 0042373, 0x38EE);
+    TEST(MOVE_W, "#$34, CCR",           0042374, 0x0034);
 
     // ORI #nn,CCR
     TEST(ORI, "#$34, CCR", 0000074, 0x0034);
