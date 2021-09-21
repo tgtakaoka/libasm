@@ -1,0 +1,56 @@
+name: PlatformIO CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        prog: [ asm, dis ]
+        arch:
+          - cdp1802
+          - i8051
+          - i8080
+          - i8086
+          - ins8060
+          - ins8070
+          - mc6800
+          - mc6809
+          - mc68000
+          - mos6502
+          - ns32000
+          - tlcs90
+          - tms9900
+          - tms32010
+          - z8
+          - z80
+          - z8000
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Cache PlatformIO
+        uses: actions/cache@v2
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
+      - name: Install library dependency
+        run: pio lib -g install libcli@1.0.4
+      - name: Run PlatformIO
+        run: pio ci --lib="." --board=sparkfun_promicro16 --board=nano_every --board=nano_33_iot
+        env:
+          PLATFORMIO_CI_SRC: ./examples/${{ matrix.prog }}_${{ matrix.arch }}/${{ matrix.prog }}_${{ matrix.arch }}.ino

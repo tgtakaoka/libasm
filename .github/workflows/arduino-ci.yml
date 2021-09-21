@@ -1,0 +1,31 @@
+name: Arduino CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  compile-examples:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        fqbn:
+          - arduino:megaavr:nona4809
+
+#         - arduino:avr:nano
+#         - arduino:samd:nano_33_iot
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Compile Example
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.fqbn }}
+          sketch-paths: |
+            - examples
+          libraries: |
+            - source-path: ./
+            - name: libcli
+              version: 1.0.4

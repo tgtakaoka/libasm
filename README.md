@@ -1,4 +1,6 @@
 [![C/C++ CI](https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml/badge.svg)](https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml)
+[![Compile Examples](https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml/badge.svg)](https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml)
+[![PlatformIO CI](https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml/badge.svg)](https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml)
 
 # libasm: cross assemble/disassemble library
 

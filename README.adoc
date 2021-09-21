@@ -1,4 +1,6 @@
 image:https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml/badge.svg[link="https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml"]
+image:https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml/badge.svg[https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml]
+image:https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml/badge.svg[https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml]
 
 = libasm: cross assemble/disassemble library =
 
