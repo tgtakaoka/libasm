@@ -16,7 +16,7 @@
 
 #include "dis_tms32010.h"
 #include "test_dis_helper.h"
-#include "test_memory.h"
+#include "array_memory.h"
 
 using namespace libasm;
 using namespace libasm::tms32010;
@@ -530,25 +530,23 @@ static bool in_array(uint8_t v, const uint8_t *begin, const uint8_t *end) {
 }
 
 static void assert_ok(Config::opcode_t opc) {
-    TestMemory memory;
     uint16_t words[2] = { opc, 0 };
     Insn insn;
     char operands[40], message[40];
-    sprintf(message, "%04X must be LEGAL", opc);
+    ArrayMemory memory(0x100, words, sizeof(words), disassembler.endian());
 
-    memory.setMemory(0x100, words, sizeof(words), disassembler.endian());
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, operands, sizeof(operands));
+    sprintf(message, "%04X must be LEGAL", opc);
     EQUALS(message, OK, disassembler.getError());
 }
 
 static void assert_illegal(Config::opcode_t opc, Error err, const char *message) {
-    TestMemory memory;
     uint16_t words[2] = { opc, 0 };
     Insn insn;
     char operands[40];
+    ArrayMemory memory(0x100, words, sizeof(words), disassembler.endian());
 
-    memory.setMemory(0x100, words, sizeof(words), disassembler.endian());
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, operands, sizeof(operands));
     EQUALS(message, err, disassembler.getError());

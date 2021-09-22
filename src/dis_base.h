@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 
+#include "array_memory.h"
 #include "config_base.h"
 #include "dis_memory.h"
 #include "error_reporter.h"

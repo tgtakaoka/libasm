@@ -20,28 +20,21 @@
 #include <string>
 #include <vector>
 
+#include "array_memory.h"
+
 namespace libasm {
 namespace test {
 
 TestAsserter asserter;
 TestSymtab symtab;
 
-void asm_assert(const char *file, int line, Error error, uint32_t addr, const char *src,
-        const uint8_t *expected, uint8_t length, Assembler &assembler) {
+void asm_assert(const char *file, int line, Error error, const char *src, ArrayMemory &memory,
+        Assembler &assembler) {
     Insn insn;
-    symtab.setCurrentOrigin(addr);
-    assembler.encode(src, insn, addr, &symtab);
+    symtab.setCurrentOrigin(memory.origin());
+    assembler.encode(src, insn, memory.origin(), &symtab);
     asserter.equals(file, line, src, error, assembler);
-    asserter.equals(file, line, src, expected, length, insn.bytes(), insn.length());
-}
-
-void asm_assert(const char *file, int line, Error error, uint32_t addr, const char *src,
-        const uint16_t *expected, uint8_t length, Assembler &assembler) {
-    Insn insn;
-    symtab.setCurrentOrigin(addr);
-    assembler.encode(src, insn, addr, &symtab);
-    asserter.equals(file, line, src, error, assembler);
-    asserter.equals(file, line, src, expected, length, insn.bytes(), insn.length(), assembler.endian());
+    asserter.equals(file, line, src, memory, insn.bytes(), insn.length());
 }
 
 bool test_failed;

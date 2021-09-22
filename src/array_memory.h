@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,46 +14,38 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_MEMORY_H__
-#define __TEST_MEMORY_H__
+#ifndef __ARRAY_MEMORY_H__
+#define __ARRAY_MEMORY_H__
 
 #include <stdint.h>
 
 #include "config_base.h"
-#include "config_host.h"
 #include "dis_memory.h"
 
 namespace libasm {
-namespace test {
 
-class TestMemory : public DisMemory {
+class ArrayMemory : public DisMemory {
 public:
-    TestMemory();
-    virtual ~TestMemory();
+    ArrayMemory(uint32_t origin, const uint8_t *bytes, size_t size, Endian endian = ENDIAN_BIG);
+    ArrayMemory(uint32_t origin, const uint16_t *words, size_t size, Endian endian);
 
-    void setMemory(uint32_t addr, const uint8_t *data, uint8_t size);
-    void setMemory(uint32_t addr, const uint16_t *data, uint8_t size, Endian endian);
-    bool hasNext() const override;
-    const uint8_t *bytes() const;
-    uint8_t length() const;
     uint32_t origin() const;
-    char *dump(char *out) const;
+    size_t size() const;
+    void rewind();
+    bool hasNext() const override;
 
 protected:
     uint8_t nextByte() override;
 
 private:
-    size_t _size;
-    uint8_t *_bytes;
-    uint32_t _origin;
-    uint8_t _length;
-    uint8_t _index;
+    const uint32_t _origin;
+    const uint8_t *_bytes;
     const uint16_t *_words;
-
-    void ensureBytes(size_t size);
+    const size_t _size;
+    const Endian _endian;
+    size_t _index;
 };
 
-}  // namespace test
 }  // namespace libasm
 
 #endif

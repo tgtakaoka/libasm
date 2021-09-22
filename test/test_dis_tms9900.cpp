@@ -16,7 +16,7 @@
 
 #include "dis_tms9900.h"
 #include "test_dis_helper.h"
-#include "test_memory.h"
+#include "array_memory.h"
 
 using namespace libasm;
 using namespace libasm::tms9900;
@@ -380,7 +380,6 @@ static uint16_t validPostWord(uint16_t opCode) {
 static void assert_mid(
     const mid_range *ranges, const mid_range *end,
     const uint16_t prefix = 0, const mid_hole *hole = nullptr) {
-    TestMemory memory;
     uint16_t words[4] = { 0, 0, 0, 0 };
     Insn insn;
     char operands[40], message[40];
@@ -394,7 +393,8 @@ static void assert_mid(
             const uint16_t post = validPostWord(prefix ? prefix : code);
             words[pos] = code;
             words[pos + 1] = post;
-            memory.setMemory(0x1000, words, sizeof(words), disassembler.endian());
+            ArrayMemory memory(0x1000, words, sizeof(words), disassembler.endian());
+
             disassembler.setUppercase(true);
             disassembler.decode(memory, insn, operands, sizeof(operands));
             if (m && code > m->end) {

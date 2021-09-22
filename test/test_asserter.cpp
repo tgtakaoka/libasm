@@ -71,71 +71,28 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
-        const uint8_t expected[], size_t expected_len, const uint8_t actual[], size_t actual_len) {
-    if (expected_len == actual_len) {
-        size_t i;
-        for (i = 0; i < expected_len; i++)
-            if (expected[i] != actual[i])
-                break;
-        if (i == expected_len) {
-            _pass_count++;
-            return;
-        }
+        ArrayMemory &memory, const uint8_t actual[], size_t actual_len) {
+    size_t i;
+    for (i = 0, memory.rewind(); i < actual_len && memory.hasNext(); i++) {
+        if (memory.readByte() != actual[i])
+            break;
+    }
+    if (i == memory.size()) {
+        _pass_count++;
+        return;
     }
     _fail_count++;
     printf("%s:%d: %s: expected [", file, line, message);
-    for (size_t i = 0; i < expected_len; i++) {
+    for (i = 0, memory.rewind(); memory.hasNext(); i++) {
         if (i)
             printf(" ");
-        printf("%02" PRIX8, expected[i]);
+        printf("%02" PRIX8, memory.readByte());
     }
     printf("]: actual [");
-    for (size_t i = 0; i < actual_len; i++) {
+    for (i = 0; i < actual_len; i++) {
         if (i)
             printf(" ");
         printf("%02" PRIX8, actual[i]);
-    }
-    printf("]\n");
-}
-
-static void convert(
-        const uint8_t *bytes, size_t blen, uint16_t *words, size_t wlen, Endian endian) {
-    const uint8_t hi = (endian == ENDIAN_BIG) ? 0 : 1;
-    const uint8_t lo = (endian == ENDIAN_BIG) ? 1 : 0;
-    for (size_t idx = 0; idx < blen; idx += 2) {
-        words[idx / 2] = (static_cast<uint16_t>(bytes[idx + hi]) << 8) | bytes[idx + lo];
-    }
-}
-
-void TestAsserter::equals(const char *file, const int line, const char *message,
-        const uint16_t expected[], size_t expected_len_b, const uint8_t actual_b[],
-        size_t actual_len_b, Endian endian) {
-    const size_t expected_len = (expected_len_b + 1) / 2;
-    const size_t actual_len = (actual_len_b + 1) / 2;
-    uint16_t actual[actual_len];
-    convert(actual_b, actual_len_b, actual, actual_len, endian);
-    if (expected_len == actual_len) {
-        size_t i;
-        for (i = 0; i < expected_len; i++)
-            if (expected[i] != actual[i])
-                break;
-        if (i == expected_len) {
-            _pass_count++;
-            return;
-        }
-    }
-    _fail_count++;
-    printf("%s:%d: %s: expected [", file, line, message);
-    for (size_t i = 0; i < expected_len; i++) {
-        if (i)
-            printf(" ");
-        printf("%04" PRIX16, expected[i]);
-    }
-    printf("]: actual [");
-    for (size_t i = 0; i < actual_len; i++) {
-        if (i)
-            printf(" ");
-        printf("%04" PRIX16, actual[i]);
     }
     printf("]\n");
 }

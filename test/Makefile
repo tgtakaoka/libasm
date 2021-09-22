@@ -35,11 +35,11 @@ INCLUDES = -I ../src -I ../cli
 CXXFLAGS = -Wall -std=c++14 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS = -MMD
 
-OBJS_test = test_asserter.o error_reporter.o
-OBJS_gen  = dis_base.o value_formatter.o test_memory.o text_buffer.o \
+OBJS_test = array_memory.o test_asserter.o error_reporter.o
+OBJS_gen  = dis_base.o value_formatter.o array_memory.o text_buffer.o \
 	    cli_listing.o error_reporter.o str_buffer.o
 OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o str_buffer.o
-OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o str_buffer.o test_memory.o
+OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o str_buffer.o array_memory.o
 OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \
             value_parser.o value_formatter.o str_buffer.o
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
