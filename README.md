@@ -63,7 +63,7 @@ interface.
     dis68k.decode(memory, insn, opr, sizeof(opr), /*SymbolTable*/nullptr);
     assert(std::string(insn.name()) == "jmp");
     assert(std::string(opr) == "(*+$1234,pc)");
-    ```
+```
 
 ## Assembler command line interface
 
