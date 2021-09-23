@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-all:
+help:
 	@echo '"make test"     run tests of libasm'
 	@echo '"make gen"      build auto test source generator'
 	@echo '"make generate" generate auto test sources'
 
 -include ../src/Makefile.arch
 
-.PHONY: all test gen generate clean clean-objs
+.PHONY: help test gen generate clean clean-objs
 
 generate: gen
 	$(MAKE) -C autogen clean-gen

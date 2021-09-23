@@ -14,7 +14,7 @@
 
 PATH+=:../cli
 
-all:
+help:
 	@echo '"make asm-test" assemble with "asm" command'
 	@echo '"make asl-test" assemble with "asl" command'
 	@echo '"make gas-test" assemble with "gas" command'

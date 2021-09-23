@@ -14,4 +14,4 @@ jobs:
     - name: test generator
       run: cd test; make generate
     - name: command line interface
-      run: cd cli; make
+      run: cd cli; make cli

@@ -15,11 +15,17 @@
 BINS = asm dis
 INSTALL_DIR ?= $(HOME)/.local/bin
 
-all: $(BINS)
+help:
+	@echo '"make cli"    build '"${BINS}"
+	@echo '"make install [INSTALL_DIR='"${INSTALL_DIR}"']"'
+	@echo '              install ${BINS} to INSTALL_DIR'
+	@echo '"make clean"  remove unnecessary files'
 
 -include ../src/Makefile.arch
 
-.PHONY: all install clean-objs clean
+.PHONY: help install clean-objs clean
+
+cli: $(BINS)
 
 install: $(BINS)
 	install -s $(BINS) ${INSTALL_DIR}
