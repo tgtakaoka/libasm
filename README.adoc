@@ -8,29 +8,11 @@ The libasm allows assembling and disassembling supported retro CPUs on
 a small environment (less than 9kB-17kB Flash and 350B RAM on AVR
 Arduino).
 
-== Supported target CPUs ==
-
-* MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05
-* MC6809, HD6309, MC68HC11
-* MOS6502, G65SC02, R65C02, W65C02S, W65C816S
-* i8051
-* i8080, i8085 (Intel or Zilog syntax)
-* Z80
-* Z8 (Z86), Z86C, Z88 (Super8)
-* TLCS90
-* INS8060 (SC/MP), INS8070
-* CDP1802, CDP1804, CDP1804A
-* TMS32010, TMS32015
-* TMS9900, TMS9995, TMS99105
-* i8086
-* MC68000
-* Z8001, Z8002
-* NS32032
-
 == Assembler library interface ==
 
 Assembling MC68HC11 instruction in string to binary can be done in a
-minutes. You can also add symbols table lookup via `SymbolTable`
+minutes. You can also add symbols table lookup via
+https://github.com/tgtakaoka/libasm/blob/main/src/array_memory.h[`SymbolTable`]
 interface.
 
     #include <asm_mc6800.h>
@@ -47,8 +29,11 @@ interface.
 == Disassembler library interface ==
 
 To disassemble MC68000 binaries, you need to wrap memory by
-`ArrayMemory` or implements your own `DisMemory` interface to feed
-binaries. You can also add symbol table lookup via `SymbolTable`
+https://github.com/tgtakaoka/libasm/blob/main/src/array_memory.h[`ArrayMemory`]
+or implements your own
+https://github.com/tgtakaoka/libasm/blob/main/src/dis_memory.h[`DisMemory`]
+interface to feed binaries. You can also add symbol table lookup via
+https://github.com/tgtakaoka/libasm/blob/main/src/array_memory.h[`SymbolTable`]
 interface.
 
     #include <dis_mc68000.h>
@@ -63,6 +48,9 @@ interface.
     assert(std::string(opr) == "(*+$1234,pc)");
 
 == Assembler command line interface ==
+
+On POSIX environment, assembler command line interface is provided.
+It can generate Intel HEX or Motorola S-Record output.
 
     libasm assembler (version 1.6.12)
     usage: asm [-o <output>] [-l <list>] <input>
@@ -83,6 +71,9 @@ interface.
       -v          : print progress verbosely
 
 == Disassembler command line interface ==
+
+On POSIX environment, disassembler command line interface is provided.
+It can read Intel HEX or Motorola S-Record input.
 
     libasm disassembler (version 1.6.12)
     usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
