@@ -193,6 +193,11 @@ static void test_move_immediate() {
     TEST("LD L,0F6H", 0x2E, 0xF6);
     TEST("LD (HL),0F6H", 0x36, 0xF6);
     TEST("LD A,0FEH", 0x3E, 0xFE);
+    TEST("LD A,-1",   0x3E, 0xFF);
+    TEST("LD A,255",  0x3E, 0xFF);
+    ERRT("LD A,256",  OVERFLOW_RANGE);
+    TEST("LD A,-128", 0x3E, 0x80);
+    ERRT("LD A,-129", OVERFLOW_RANGE);
 
     TEST("LD BC,0BEEFH", 0x01, 0xEF, 0xBE);
     TEST("LD DE,1234H",  0x11, 0x34, 0x12);
@@ -291,6 +296,8 @@ static void test_jump_call() {
         TEST("IM 0", 0xED, 0x46);
         TEST("IM 1", 0xED, 0x56);
         TEST("IM 2", 0xED, 0x5E);
+        ERRT("IM 3",  ILLEGAL_OPERAND);
+        ERRT("IM -1", ILLEGAL_OPERAND);
     } else {
         ERRT("RETN", UNKNOWN_INSTRUCTION);
         ERRT("RETI", UNKNOWN_INSTRUCTION);
@@ -486,6 +493,8 @@ static void test_alu_immediate() {
 static void test_io() {
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
     TEST("IN A,(0F0H)",  0xDB, 0xF0);
+    ERRT("IN A,(-1)",    OVERFLOW_RANGE);
+    ERRT("IN A,(256)",   OVERFLOW_RANGE);
 
     if (isZ80()) {
         // Z80
@@ -553,6 +562,9 @@ static void test_restart() {
     TEST("RST 28H", 0xEF);
     TEST("RST 30H", 0xF7);
     TEST("RST 38H", 0xFF);
+    ERRT("RST 39H", ILLEGAL_OPERAND);
+    ERRT("RST 40H", ILLEGAL_OPERAND);
+    ERRT("RST -1",  ILLEGAL_OPERAND);
 }
 
 static void test_relative() {
@@ -847,6 +859,9 @@ static void test_shift_indexed() {
         TEST("SLA (IX+127)", 0xDD, 0xCB, 0x7F, 0x26);
         TEST("SRA (IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
         TEST("SRL (IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
+        TEST("SRL (IX-128)", 0xDD, 0xCB, 0x80, 0x3E);
+        ERRT("SRL (IX+128)", OVERFLOW_RANGE);
+        ERRT("SRL (IX-129)", OVERFLOW_RANGE);
 
         TEST("RLC (IY-128)", 0xFD, 0xCB, 0x80, 0x06);
         TEST("RRC (IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
@@ -872,6 +887,10 @@ static void test_bitop_indexed() {
         TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
         TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
         TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
+        ERRT("SET 8,(IX-128)", ILLEGAL_BIT_NUMBER);
+        ERRT("SET -1,(IX+1)",  ILLEGAL_BIT_NUMBER);
+        ERRT("SET 2,(IX-129)", OVERFLOW_RANGE);
+        ERRT("SET 2,(IX+128)", OVERFLOW_RANGE);
 
         TEST("BIT 5,(IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
         TEST("RES 6,(IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);

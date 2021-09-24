@@ -26,7 +26,7 @@ Error AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
-    if (delta < -128 || delta >= 128)
+    if (overflowRel8(delta))
         return setError(OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
     return OK;
@@ -46,18 +46,17 @@ Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, con
     uint16_t val16 = op.val16;
     switch (mode) {
     case M_IM8:
-        if (static_cast<int16_t>(val16) < -128 ||
-                (static_cast<int16_t>(val16) >= 0 && val16 >= 256))
+        if (overflowUint8(val16))
             return setError(OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return OK;
     case M_IOA:
-        if (val16 >= 256)
+        if (val16 >= 0x100)
             return setError(OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return OK;
     case M_INDX:
-        if (static_cast<int16_t>(val16) < -128 || static_cast<int16_t>(val16) >= 128)
+        if (overflowRel8(static_cast<int16_t>(val16)))
             return setError(OVERFLOW_RANGE);
         if (insn.indexBit())
             return encodeIndexedBitOp(insn, op);
