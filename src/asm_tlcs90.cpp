@@ -25,67 +25,6 @@
 namespace libasm {
 namespace tlcs90 {
 
-const char *aMode(AddrMode mode) {
-    switch (mode) {
-    case M_NO:
-        return "M_NO";
-    case M_IMM8:
-        return "M_IMM8";
-    case M_IMM16:
-        return "M_IMM16";
-    case M_BIT:
-        return "M_BIT";
-    case M_EXT:
-        return "M_EXT";
-    case M_DIR:
-        return "M_DIR";
-    case M_REL8:
-        return "M_REL8";
-    case M_REL16:
-        return "M_REL16";
-    case M_IND:
-        return "M_IND";
-    case M_IDX:
-        return "M_IDX";
-    case M_BASE:
-        return "M_BASE";
-    case M_CC:
-        return "M_CC";
-    case M_STACK:
-        return "M_STACK";
-    case M_REG8:
-        return "M_REG8";
-    case M_REG16:
-        return "M_REG16";
-    case M_REGIX:
-        return "M_REGIX";
-    case R_BC:
-        return "R_BC";
-    case R_DE:
-        return "R_DE";
-    case R_HL:
-        return "R_HL";
-    case R_SP:
-        return "R_SP";
-    case R_AF:
-        return "R_AF";
-    case R_AFP:
-        return "R_AFP";
-    case R_C:
-        return "R_C";
-    case R_A:
-        return "R_A";
-    case M_SRC16:
-        return "M_SRC16";
-    case M_SRC:
-        return "M_SRC";
-    case M_DST:
-        return "M_DST";
-    default:
-        return "M_UNKI";
-    }
-}
-
 Error AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
@@ -94,7 +33,7 @@ Error AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &
         insn.emitUint16(delta);
         return OK;
     }
-    if (delta < -128 || delta >= 128)
+    if (overflowRel8(delta))
         return setError(OPERAND_TOO_FAR);
     insn.emitByte(delta);
     return OK;
@@ -104,6 +43,9 @@ Error AsmTlcs90::encodeOperand(
         InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) {
     switch (mode) {
     case M_IMM8:
+        if (overflowUint8(op.val16))
+            return setError(OVERFLOW_RANGE);
+        /* Fall-through */
     case M_DIR:
         insn.emitInsn(opc);
         insn.emitByte(op.val16);
@@ -114,6 +56,8 @@ Error AsmTlcs90::encodeOperand(
         insn.emitUint16(op.val16);
         return OK;
     case M_BIT:
+        if (op.val16 >= 8)
+            return setError(OVERFLOW_RANGE);
         insn.emitInsn(opc | (op.val16 & 7));
         return OK;
     case M_REL8:
