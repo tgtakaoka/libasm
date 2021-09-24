@@ -16,6 +16,7 @@
 
 #include "asm_z8.h"
 
+#include "error_reporter.h"
 #include "reg_z8.h"
 #include "table_z8.h"
 
@@ -61,10 +62,11 @@ Error AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op)
         insn.emitByte(RegZ8::encodeWorkRegAddr(op.reg));
         return getError();
     }
-    if (op.val16 >= 0x100)
-        return setError(OVERFLOW_RANGE);
-    insn.emitByte(op.val16);
-    return getError();
+    if ((mode == M_IM && !overflowUint8(op.val16)) || op.val16 < 0x100) {
+        insn.emitByte(op.val16);
+        return getError();
+    }
+    return setError(OVERFLOW_RANGE);
 }
 
 Error AsmZ8::encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
@@ -81,7 +83,7 @@ Error AsmZ8::encodeRelative(InsnZ8 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
-    if (delta < -128 || delta >= 128)
+    if (overflowRel8(delta))
         return setErrorIf(OPERAND_TOO_FAR);
     insn.emitByte(delta);
     return op.getError();
@@ -92,7 +94,7 @@ Error AsmZ8::encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &sr
     const RegName index = (dst == M_X) ? dstOp.reg : srcOp.reg;
     const int16_t disp16 = static_cast<int16_t>((dst == M_X) ? dstOp.val16 : srcOp.val16);
     const RegName reg = (dst == M_X) ? srcOp.reg : dstOp.reg;
-    if (disp16 < -128 || disp16 >= 0x100)
+    if (overflowUint8(static_cast<uint16_t>(disp16)))
         return setError(OVERFLOW_RANGE);
     const uint8_t opr1 = RegZ8::encodeRegName(index) | (RegZ8::encodeRegName(reg) << 4);
     insn.emitInsn();
@@ -156,6 +158,8 @@ Error AsmZ8::encodeMultiOperands(
     const uint8_t srcVal = (srcOp.reg == REG_UNDEF || src == M_IM)
                                    ? srcOp.val16
                                    : RegZ8::encodeWorkRegAddr(srcOp.reg);
+    if (src == M_IM && overflowUint8(srcOp.val16))
+        return setError(OVERFLOW_RANGE);
     insn.emitByte(dstSrc ? dstVal : srcVal);
     insn.emitByte(dstSrc ? srcVal : dstVal);
     return getError();
@@ -167,6 +171,8 @@ Error AsmZ8::encodePostByte(
     const AddrMode src = insn.srcMode();
     const PostFormat post = insn.postFormat();
     if (dst == M_IM) {  // P2: SRP, SRP0, SPR1
+        if (dstOp.val16 >= 0x100)
+            return setError(OVERFLOW_RANGE);
         uint8_t srp = dstOp.val16;
         if (post == P2_0) {  // SRP
             if (srp & 0xf)

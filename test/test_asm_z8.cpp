@@ -238,6 +238,11 @@ static void test_operand_in_opcode() {
     TEST("LD R13,#0DDH", 0xDC, 0xDD);
     TEST("LD R14,#0EDH", 0xEC, 0xED);
     TEST("LD R15,#0FDH", 0xFC, 0xFD);
+    TEST("LD R15,#-128", 0xFC, 0x80);
+    TEST("LD R15,#-1",   0xFC, 0xFF);
+    TEST("LD R15,#255",  0xFC, 0xFF);
+    ERRT("LD R15,#-129", OVERFLOW_RANGE);
+    ERRT("LD R15,#256",  OVERFLOW_RANGE);
 
     TEST("INC  R0", 0x0E);
     TEST("INC  R1", 0x1E);
@@ -259,6 +264,8 @@ static void test_operand_in_opcode() {
 
 static void test_one_operand() {
     TEST("DEC >01H", 0x00, 0x01);
+    ERRT("DEC -1",   OVERFLOW_RANGE);
+    ERRT("DEC 256",  OPERAND_NOT_ALLOWED);
     TEST("DEC R1",   0x00, R(1));
     TEST("DEC @15H", 0x01, 0x15);
     TEST("DEC @R2",  0x01, R(2));
@@ -351,6 +358,7 @@ static void test_one_operand() {
     TZ88("SRP0 #30H",  0x31, 0x32);
     EZ86("SRP1 #38H",  UNKNOWN_INSTRUCTION);
     TZ88("SRP1 #38H",  0x31, 0x39);
+    ERRT("SRP #100H",  OVERFLOW_RANGE);
 }
 
 static void test_two_operands() {
@@ -368,6 +376,11 @@ static void test_two_operands() {
     EZ88("ADD @18H,#9",   OPERAND_NOT_ALLOWED);
     TZ86("ADD @R8,#9",    0x07, R(8), 0x09);
     EZ88("ADD @R8,#9",    OPERAND_NOT_ALLOWED);
+    TEST("ADD R7,#-128",  0x06, R(7), 0x80);
+    TEST("ADD R7,#-1",    0x06, R(7), 0xFF);
+    TEST("ADD R7,#255",   0x06, R(7), 0xFF);
+    ERRT("ADD R7,#256",   OVERFLOW_RANGE);
+    ERRT("ADD R7,#-129",  OVERFLOW_RANGE);
 
     TEST("ADC R3,R4",     0x12, 0x34);
     TEST("ADC R1,@R4",    0x13, 0x14);
