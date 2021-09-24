@@ -54,20 +54,28 @@ static void test_load_and_exchange() {
         TEST("CLR  @RR2",         0x0D28);
         TEST("CLR  0x120034",     0x4D08, 0x1234);
         TEST("CLR  0x561234",     0x4D08, 0xD600, 0x1234);
+        TEST("CLR  0x7FFFFF",     0x4D08, 0xFF00, 0xFFFF);
+        ERRT("CLR  0x800000",     OVERFLOW_RANGE);
         TEST("CLR  0x120034(R2)", 0x4D28, 0x1234);
         TEST("CLR  0x561234(R2)", 0x4D28, 0xD600, 0x1234);
+        TEST("CLR  0x7FFFFF(R2)", 0x4D28, 0xFF00, 0xFFFF);
+        ERRT("CLR  0x800000(R2)", OVERFLOW_RANGE);
         TEST("CLRB @RR2",         0x0C28);
         TEST("CLRB 0x120034",     0x4C08, 0x1234);
         TEST("CLRB 0x561234",     0x4C08, 0xD600, 0x1234);
         TEST("CLRB 0x120034(R2)", 0x4C28, 0x1234);
         TEST("CLRB 0x561234(R2)", 0x4C28, 0xD600, 0x1234);
     } else {
-        TEST("CLR  @R2",        0x0D28);
-        TEST("CLR  0x1234",     0x4D08, 0x1234);
-        TEST("CLR  0x1234(R2)", 0x4D28, 0x1234);
-        TEST("CLRB @R2",        0x0C28);
-        TEST("CLRB 0x1234",     0x4C08, 0x1234);
-        TEST("CLRB 0x1234(R2)", 0x4C28, 0x1234);
+        TEST("CLR  @R2",         0x0D28);
+        TEST("CLR  0x1234",      0x4D08, 0x1234);
+        TEST("CLR  0xFFFF",      0x4D08, 0xFFFF);
+        ERRT("CLR  0x10000",     OVERFLOW_RANGE);
+        TEST("CLR  0x1234(R2)",  0x4D28, 0x1234);
+        TEST("CLR  0xFFFF(R2)",  0x4D28, 0xFFFF);
+        ERRT("CLR  0x10000(R2)", OVERFLOW_RANGE);
+        TEST("CLRB @R2",         0x0C28);
+        TEST("CLRB 0x1234",      0x4C08, 0x1234);
+        TEST("CLRB 0x1234(R2)",  0x4C28, 0x1234);
     }
 
     // Exchange
@@ -107,6 +115,11 @@ static void test_load_and_exchange() {
         TEST("LD  R9,0x120034(R2)",  0x6129, 0x1234);
         TEST("LD  R9,0x561234(R2)",  0x6129, 0xD600, 0x1234);
         TEST("LD  R9,RR2(#0x1234)",  0x3129, 0x1234);
+        TEST("LD  R9,RR2(#-1)",      0x3129, 0xFFFF);
+        TEST("LD  R9,RR2(#32767)",   0x3129, 0x7FFF);
+        TEST("LD  R9,RR2(#-32768)",  0x3129, 0x8000);
+        ERRT("LD  R9,RR2(#32768)",   OVERFLOW_RANGE);
+        ERRT("LD  R9,RR2(#-32769)",  OVERFLOW_RANGE);
         TEST("LD  R9,RR2(R4)",       0x7129, 0x0400);
         TEST("LDB RL1,@RR2",         0x2029);
         TEST("LDB RL1,0x120034",     0x6009, 0x1234);
@@ -267,6 +280,10 @@ static void test_load_and_exchange() {
     if (z8001()) {
         ATEST(0x2000, "LDR  R1,0x002000",  0x3101, 0xFFFC);
         ATEST(0x2000, "LDR  0x002000,R1",  0x3301, 0xFFFC);
+        ATEST(0xA000, "LDR  0x002004,R1",  0x3301, 0x8000);
+        AERRT(0xA000, "LDR  0x002003,R1",  OPERAND_TOO_FAR);
+        ATEST(0x2000, "LDR  0x00A003,R1",  0x3301, 0x7FFF);
+        AERRT(0x2000, "LDR  0x00A004,R1",  OPERAND_TOO_FAR);
         ATEST(0x2000, "LDRB RH1,0x002000", 0x3001, 0xFFFC);
         ATEST(0x2000, "LDRB 0x002000,RH1", 0x3201, 0xFFFC);
         ATEST(0x2000, "LDRL RR2,0x002000", 0x3502, 0xFFFC);
@@ -274,6 +291,10 @@ static void test_load_and_exchange() {
     } else {
         ATEST(0x2000, "LDR  R1,0x2000",  0x3101, 0xFFFC);
         ATEST(0x2000, "LDR  0x2000,R1",  0x3301, 0xFFFC);
+        ATEST(0xA000, "LDR  0x2004,R1",  0x3301, 0x8000);
+        AERRT(0xA000, "LDR  0x2003,R1",  OPERAND_TOO_FAR);
+        ATEST(0x2000, "LDR  0xA003,R1",  0x3301, 0x7FFF);
+        AERRT(0x2000, "LDR  0xA004,R1",  OPERAND_TOO_FAR);
         ATEST(0x2000, "LDRB RH1,0x2000", 0x3001, 0xFFFC);
         ATEST(0x2000, "LDRB 0x2000,RH1", 0x3201, 0xFFFC);
         ATEST(0x2000, "LDRL RR2,0x2000", 0x3502, 0xFFFC);
@@ -761,12 +782,22 @@ static void test_program_control() {
     TEST("CALR $+10",     0xDFFC);
     TEST("CALR $+0x1002", 0xD800);
     TEST("CALR $-0x0FFC", 0xD7FF);
+    ERRT("CALR $+0x1004", OPERAND_TOO_FAR);
+    ERRT("CALR $-0x0FFE", OPERAND_TOO_FAR);
     TEST("CALR $-10",     0xD006);
     TEST("CALR $",        0xD001);
+    ERRT("CALR $+13",     OPERAND_NOT_ALIGNED);
+    ERRT("CALR $-13",     OPERAND_NOT_ALIGNED);
 
     // Decrement and Jump if Not Zero
-    TEST("DJNZ  R2,$",  0xF281);
-    TEST("DBJNZ RL0,$", 0xF801);
+    TEST("DJNZ  R2,$",      0xF281);
+    TEST("DBJNZ RL0,$",     0xF801);
+    TEST("DBJNZ RL0,$+2",   0xF800);
+    ERRT("DBJNZ RL0,$+3",   OPERAND_NOT_ALIGNED);
+    ERRT("DBJNZ RL0,$+4",   OPERAND_TOO_FAR);
+    TEST("DBJNZ RL0,$-252", 0xF87F);
+    ERRT("DBJNZ RL0,$-253", OPERAND_NOT_ALIGNED);
+    ERRT("DBJNZ RL0,$-254", OPERAND_TOO_FAR);
 
     // Interrupt Return
     TEST("IRET  ", 0x7B00);
@@ -970,6 +1001,12 @@ static void test_program_control() {
     TEST("JR ULT,$", 0xE7FF);
     TEST("JR NE,$",  0xEEFF);
     TEST("JR UGE,$", 0xEFFF);
+    TEST("JR $-254", 0xE880);
+    ERRT("JR $-255", OPERAND_NOT_ALIGNED);
+    ERRT("JR $-256", OPERAND_TOO_FAR);
+    TEST("JR $+256", 0xE87F);
+    ERRT("JR $+257", OPERAND_NOT_ALIGNED);
+    ERRT("JR $+258", OPERAND_TOO_FAR);
 
     // Return from Procedure
     TEST("RET F",   0x9E00);
@@ -1142,6 +1179,8 @@ static void test_rotate() {
     // Rotate Left
     TEST("RL  R1,#1",  0xB310);
     TEST("RL  R8,#2",  0xB382);
+    ERRT("RL  R8,#0",  OPERAND_NOT_ALLOWED);
+    ERRT("RL  R8,#3",  OVERFLOW_RANGE);
     TEST("RLB RH1,#1", 0xB210);
     TEST("RLB RL0,#2", 0xB282);
 
@@ -1182,20 +1221,32 @@ static void test_shift() {
     TEST("SDLL RR2,R8",  0xB327, 0x0800);
 
     // Shift Left Arithmetic
-    TEST("SLA  R2,#16",  0xB329, 0x0010);
-    TEST("SLAB RH2,#8",  0xB229, 0x0008);
-    TEST("SLAL RR2,#32", 0xB32D, 0x0020);
-    ERRT("SLA  R2,#17",  OVERFLOW_RANGE);
-    ERRT("SLAB R2,#9",   OVERFLOW_RANGE);
-    ERRT("SLAL R2,#33",  OVERFLOW_RANGE);
+    TEST("SLA  R2,#16" ,  0xB329, 0x0010);
+    TEST("SLAB RH2,#8",   0xB229, 0x0008);
+    TEST("SLAL RR2,#32",  0xB32D, 0x0020);
+    TEST("SLA  R2,#0",    0xB329, 0x0000);
+    TEST("SLAB RH2,#0",   0xB229, 0x0000);
+    TEST("SLAL RR2,#0",   0xB32D, 0x0000);
+    ERRT("SLA  R2,#17",   OVERFLOW_RANGE);
+    ERRT("SLAB R2,#9",    OVERFLOW_RANGE);
+    ERRT("SLAL R2,#33",   OVERFLOW_RANGE);
+    ERRT("SLA  R2,#-1",   OVERFLOW_RANGE);
+    ERRT("SLAB RH2,#-1",  OVERFLOW_RANGE);
+    ERRT("SLAL RR2,#-1",  OVERFLOW_RANGE);
 
     // Shift Right Arithmetic
-    TEST("SRA  R2,#16",  0xB329, 0xFFF0);
-    TEST("SRAB RH2,#8",  0xB229, 0x00F8);
-    TEST("SRAL RR2,#32", 0xB32D, 0xFFE0);
-    ERRT("SRA  R2,#17",  OVERFLOW_RANGE);
-    ERRT("SRAB R2,#9",   OVERFLOW_RANGE);
-    ERRT("SRAL R2,#33",  OVERFLOW_RANGE);
+    TEST("SRA  R2,#16",   0xB329, 0xFFF0);
+    TEST("SRAB RH2,#8",   0xB229, 0x00F8);
+    TEST("SRAL RR2,#32",  0xB32D, 0xFFE0);
+    TEST("SRA  R2,#0",    0xB329, 0x0000);
+    TEST("SRAB RH2,#0",   0xB229, 0x0000);
+    TEST("SRAL RR2,#0",   0xB32D, 0x0000);
+    ERRT("SRA  R2,#17",   OVERFLOW_RANGE);
+    ERRT("SRAB R2,#9",    OVERFLOW_RANGE);
+    ERRT("SRAL R2,#33",   OVERFLOW_RANGE);
+    ERRT("SRA  R2,#-1",   OVERFLOW_RANGE);
+    ERRT("SRAB RH2,#-1",  OVERFLOW_RANGE);
+    ERRT("SRAL RR2,#-1",  OVERFLOW_RANGE);
 
     // Shift Left Logical
     TEST("SLL  R2,#16",  0xB321, 0x0010);
@@ -1509,6 +1560,8 @@ static void test_input() {
     ERRT("INB RH1,@R0",     REGISTER_NOT_ALLOWED);
     TEST("IN  R1, 0x1234",  0x3B14, 0x1234);
     TEST("INB RH1, 0x1234", 0x3A14, 0x1234);
+    TEST("IN  R1, 0xFFFF",  0x3B14, 0xFFFF);
+    ERRT("IN  R1, 0x10000", OVERFLOW_RANGE);
     // GNU as compatibility
     TEST("IN  R1,#0x1234",  0x3B14, 0x1234);
     TEST("INB RH1,#0x1234", 0x3A14, 0x1234);
@@ -1665,6 +1718,8 @@ static void test_output() {
     ERRT("OUTB @R0,RH1",     REGISTER_NOT_ALLOWED);
     TEST("OUT   0x1234,R1",  0x3B16, 0x1234);
     TEST("OUTB  0x1234,RH1", 0x3A16, 0x1234);
+    TEST("OUT   0xFFFF,R1",  0x3B16, 0xFFFF);
+    ERRT("OUT  0x10000,R1",  OVERFLOW_RANGE);
     // GNU as compatibility
     TEST("OUT  #0x1234,R1",  0x3B16, 0x1234);
     TEST("OUTB #0x1234,RH1", 0x3A16, 0x1234);
@@ -1978,33 +2033,43 @@ static void test_short_direct() {
     symtab.intern(0x1234, "loff");
     symtab.intern(0x560000, "seg");
 
-    TEST("CLR 0x560034     ; auto short",  0x4D08, 0x5634);
-    TEST("CLR 0x561234     ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR 0x560034(R2) ; auto short",  0x4D28, 0x5634);
-    TEST("CLR 0x561234(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
-    TEST("CLR seg+soff     ; auto short",  0x4D08, 0x5634);
-    TEST("CLR seg+loff     ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR seg+soff(R2) ; auto short",  0x4D28, 0x5634);
-    TEST("CLR seg+loff(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR 0x560034       ; auto short",  0x4D08, 0x5634);
+    TEST("CLR 0x561234       ; long offset", 0x4D08, 0xD600, 0x1234);
+    TEST("CLR 0x560034(R2)   ; auto short",  0x4D28, 0x5634);
+    TEST("CLR 0x561234(R2)   ; long offset", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR seg|soff       ; auto short",  0x4D08, 0x5634);
+    TEST("CLR seg+soff(R2)   ; auto short",  0x4D28, 0x5634);
+    TEST("CLR (seg+soff)     ; auto short",  0x4D08, 0x5634);
+    TEST("CLR (seg|soff)(R2) ; auto short",  0x4D28, 0x5634);
+    TEST("CLR seg+loff       ; long offset", 0x4D08, 0xD600, 0x1234);
+    TEST("CLR seg|loff(R2)   ; long offset", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR (seg|loff)     ; long offset", 0x4D08, 0xD600, 0x1234);
+    TEST("CLR (seg+loff)(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
 
     asm8000.setAutoShortDirect(false);
 
-    TEST("CLR 0x560034",     0x4D08, 0xD600, 0x0034);
-    TEST("CLR 0x561234",     0x4D08, 0xD600, 0x1234);
-    TEST("CLR 0x560034(R2)", 0x4D28, 0xD600, 0x0034);
-    TEST("CLR 0x561234(R2)", 0x4D28, 0xD600, 0x1234);
-    TEST("CLR seg+soff",     0x4D08, 0xD600, 0x0034);
-    TEST("CLR seg+loff",     0x4D08, 0xD600, 0x1234);
-    TEST("CLR seg+soff(R2)", 0x4D28, 0xD600, 0x0034);
-    TEST("CLR seg+loff(R2)", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR 0x560034",       0x4D08, 0xD600, 0x0034);
+    TEST("CLR 0x561234",       0x4D08, 0xD600, 0x1234);
+    TEST("CLR 0x560034(R2)",   0x4D28, 0xD600, 0x0034);
+    TEST("CLR 0x561234(R2)",   0x4D28, 0xD600, 0x1234);
+    TEST("CLR seg+soff",       0x4D08, 0xD600, 0x0034);
+    TEST("CLR seg|soff(R2)",   0x4D28, 0xD600, 0x0034);
+    TEST("CLR seg|loff",       0x4D08, 0xD600, 0x1234);
+    TEST("CLR seg+loff(R2)",   0x4D28, 0xD600, 0x1234);
+    TEST("CLR (seg|soff)",     0x4D08, 0xD600, 0x0034);
+    TEST("CLR (seg+loff)",     0x4D08, 0xD600, 0x1234);
+    TEST("CLR (seg+soff)(R2)", 0x4D28, 0xD600, 0x0034);
+    TEST("CLR (seg|loff)(R2)", 0x4D28, 0xD600, 0x1234);
 
     TEST("CLR |0x560034|       ; short direct", 0x4D08, 0x5634);
     TEST("CLR |0x560034|(R2)   ; short direct", 0x4D28, 0x5634);
-    TEST("CLR |(seg|soff)|     ; short direct", 0x4D08, 0x5634);
     TEST("CLR |seg+soff|(R2)   ; short direct", 0x4D28, 0x5634);
+    TEST("CLR |(seg|soff)|     ; short direct", 0x4D08, 0x5634);
+    TEST("CLR |(seg+soff)|(R2) ; short direct", 0x4D28, 0x5634);
     ERRT("CLR |0x561234|       ; long offset",  OVERFLOW_RANGE);
     ERRT("CLR |0x561234|(R2)   ; long offset",  OVERFLOW_RANGE);
     ERRT("CLR |seg+loff|       ; long offset",  OVERFLOW_RANGE);
+    ERRT("CLR |(seg+loff)|     ; long offset",  OVERFLOW_RANGE);
     ERRT("CLR |(seg|loff)|(R2) ; long offset",  OVERFLOW_RANGE);
 }
 

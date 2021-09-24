@@ -16,6 +16,8 @@
 
 #include "asm_z8000.h"
 
+#include "entry_z8000.h"
+#include "error_reporter.h"
 #include "reg_z8000.h"
 #include "table_z8000.h"
 
@@ -55,13 +57,11 @@ Error AsmZ8000::emitIndirectRegister(InsnZ8000 &insn, ModeField field, RegName r
 
 Error AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op) {
     if (mode == M_IM8) {
-        const int32_t sval = static_cast<int32_t>(op.val32);
-        if ((sval >= -0x80 && sval < 0x80) || op.val32 < 0x100) {
-            const uint8_t val8 = static_cast<uint8_t>(op.val32);
-            insn.embed(val8);
-            return OK;
-        }
-        return setError(OVERFLOW_RANGE);
+        if (overflowUint8(op.val32))
+            return setError(OVERFLOW_RANGE);
+        const uint8_t val8 = static_cast<uint8_t>(op.val32);
+        insn.embed(val8);
+        return OK;
     }
     if (mode == M_BIT) {
         if (op.val32 >= (insn.oprSize() == SZ_BYTE ? 8 : 16))
@@ -77,42 +77,30 @@ Error AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, c
     if (mode == M_QCNT) {
         if (op.val32 == 1 || op.getError())
             return OK;
+        if (op.val32 == 0)
+            return setError(OPERAND_NOT_ALLOWED);
         if (op.val32 == 2)
             return emitData(insn, field, 2);
         return setError(OVERFLOW_RANGE);
     }
     if (mode == M_SCNT || mode == M_NCNT) {
-        int32_t sval = static_cast<int32_t>(op.val32);
+        if (op.val32 > 32)
+            return setError(OVERFLOW_RANGE);
+        int16_t count = static_cast<int16_t>(op.val32);
+        const OprSize sz = insn.oprSize();
+        if (count < 0 || (sz == SZ_BYTE && count > 8) || (sz == SZ_WORD && op.val32 > 16))
+            return setError(OVERFLOW_RANGE);
         if (mode == M_NCNT)
-            sval = -sval;
-        uint16_t val16 = 0;
-        switch (insn.oprSize()) {
-        case SZ_BYTE:
-            if (sval < -8 || sval > 8)
-                return setError(OVERFLOW_RANGE);
-            val16 = static_cast<uint8_t>(sval);
-            break;
-        case SZ_WORD:
-            if (sval < -16 || sval > 16)
-                return setError(OVERFLOW_RANGE);
-            val16 = static_cast<uint16_t>(sval);
-            break;
-        case SZ_LONG:
-            if (sval < -32 || sval > 32)
-                return setError(OVERFLOW_RANGE);
-            val16 = static_cast<uint16_t>(sval);
-            break;
-        default:
-            return setError(UNKNOWN_OPERAND);
-        }
-        insn.emitOperand16(val16);
+            count = -count;
+        if (sz == SZ_BYTE)
+            count = static_cast<uint8_t>(count);
+        insn.emitOperand16(static_cast<uint16_t>(count));
         return OK;
     }
     // M_IM
-    const int32_t sval = static_cast<int32_t>(op.val32);
     switch (insn.oprSize()) {
     case SZ_BYTE:
-        if ((sval >= -0x80 && sval < 0x80) || op.val32 < 0x100) {
+        if (!overflowUint8(op.val32)) {
             uint16_t val16 = static_cast<uint8_t>(op.val32);
             val16 |= (val16 << 8);
             insn.emitOperand16(val16);
@@ -120,7 +108,7 @@ Error AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, c
         }
         break;
     case SZ_WORD:
-        if ((sval >= -0x8000 && sval < 0x8000) || op.val32 < 0x10000) {
+        if (!overflowUint16(op.val32)) {
             const uint16_t val16 = static_cast<uint16_t>(op.val32);
             insn.emitOperand16(val16);
             return OK;
@@ -166,7 +154,7 @@ Error AsmZ8000::emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op) 
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     Config::ptrdiff_t delta = target - base;
     if (mode == M_RA) {
-        if (delta < -0x8000 || delta >= 0x8000)
+        if (overflowRel16(delta))
             return setError(OPERAND_TOO_FAR);
         insn.emitOperand16(static_cast<uint16_t>(delta));
         return OK;
@@ -182,7 +170,7 @@ Error AsmZ8000::emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op) 
         return OK;
     }
     if (mode == M_RA8) {
-        if (delta < -0x80 || delta >= 0x80)
+        if (overflowRel8(delta))
             return setError(OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFF));
         return OK;
@@ -204,7 +192,7 @@ Error AsmZ8000::emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op)
 
 Error AsmZ8000::emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op) {
     const int32_t disp = static_cast<int32_t>(op.val32);
-    if (disp < -0x8000 || disp >= 0x8000)
+    if (overflowRel16(disp))
         return setError(OVERFLOW_RANGE);
     if (emitIndirectRegister(insn, field, op.base))
         return getError();
