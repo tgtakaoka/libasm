@@ -317,16 +317,9 @@ Error AsmNs32000::parseOperand(const char *scan, Operand &op) {
 }
 
 static uint16_t reverseBits(uint8_t bits) {
-    uint8_t reverse = 0;
-    for (uint8_t i = 0;; i++) {
-        if (bits & 1)
-            reverse |= 1;
-        if (i == 7)
-            break;
-        bits >>= 1;
-        reverse <<= 1;
-    }
-    return reverse;
+    bits = (bits & 0x55) << 1 | (bits & 0xAA) >> 1;
+    bits = (bits & 0x33) << 2 | (bits & 0xCC) >> 2;
+    return bits << 4 | bits >> 4;
 }
 
 static uint8_t encodeScaledIndex(OprSize indexSize) {
@@ -511,16 +504,15 @@ Error AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &o
                                                   : encodeScaledIndex(op.size);
     embedOprField(insn, pos, field);
     switch (op.mode) {
-    case M_ABS:
-        if (op.val32 < uint32_t(1) << uint8_t(addressWidth())) {
-            // Convert negative 24 bit address into negative 32bit value.
-            uint32_t val32 = op.val32;
-            if (val32 & (uint32_t(1) << uint8_t(addressWidth() - 1))) {
-                val32 |= ~((uint32_t(1) << uint8_t(addressWidth())) - 1);
-            }
-            return emitDisplacement(insn, val32);
-        }
-        return setError(OVERFLOW_RANGE);
+    case M_ABS: {
+        const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
+        if (op.val32 >= max)
+            return setError(OVERFLOW_RANGE);
+        // Sign extends 24 bit address into 32 bit.
+        const uint32_t sign = max >> 1;
+        const int32_t val32 = (op.val32 & (sign - 1)) - (op.val32 & sign);
+        return emitDisplacement(insn, val32);
+    }
     case M_RREL:
     case M_MEM:
         if (op.mode == M_MEM && op.reg == REG_PC)
