@@ -315,6 +315,10 @@ static void test_rel() {
     ATEST(0x1000, "JOP 0FF6H", 0x1CFA);
 
     ERRT("JMP 1001H", OPERAND_NOT_ALIGNED);
+    ATEST(0x1000, "JMP $+256", 0x107F);
+    ATEST(0x1000, "JMP $-254", 0x1080);
+    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR);
+    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR);
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");

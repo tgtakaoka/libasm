@@ -28,7 +28,7 @@ Error AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
     if (target % 2)
         return setError(OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t delta = (target - base) >> 1;
-    if (delta >= 128 || delta < -128)
+    if (overflowRel8(delta))
         return setError(OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
     return OK;
@@ -36,9 +36,9 @@ Error AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
 
 Error AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
     const int16_t offset = static_cast<int16_t>(op.val16);
-    if (offset < -128 || offset >= 128)
+    if (overflowRel16(offset))
         return setError(OVERFLOW_RANGE);
-    insn.embed(offset & 0xFF);
+    insn.embed(static_cast<uint8_t>(offset));
     return OK;
 }
 
@@ -145,7 +145,8 @@ Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode m
         insn.embedPost(val16 << 6);
         return OK;
     case M_RTWP:
-        if ((val16 == 0 || val16 == 1 || val16 == 2 || val16 == 4) && op.isOK()) {
+        // 0,1,2,4 are acceptable.
+        if (val16 != 3 && val16 <= 4 && op.isOK()) {
             insn.embed(val16 & 7);
             return OK;
         }
