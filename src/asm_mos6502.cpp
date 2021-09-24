@@ -32,11 +32,11 @@ Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand
         return setError(OPERAND_TOO_FAR);
     }
     if (mode == REL) {
-        if (delta >= 128 || delta < -128)
+        if (overflowRel8(delta))
             goto too_far;
-        insn.emitByte(static_cast<uint8_t>(delta));
+        insn.emitByte(delta);
     } else {
-        insn.emitUint16(static_cast<uint16_t>(delta));
+        insn.emitUint16(delta);
     }
     return OK;
 }
@@ -277,13 +277,12 @@ Error AsmMos6502::encode(Insn &_insn) {
         break;
     case ZPG_REL:
         insn.emitInsn();
-        insn.emitByte(static_cast<uint8_t>(op.val32));
+        insn.emitByte(op.val32);
         encodeRelative(insn, REL, extra);
         break;
     case BLOCK_MOVE:
         insn.emitInsn();
         insn.emitByte(extra.val32 >> 16);
-        ;
         insn.emitByte(op.val32 >> 16);
         break;
     case IMMA:
