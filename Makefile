@@ -14,6 +14,10 @@
 
 help:
 	@echo '"make clean"  remove unnecessary files'
+	@echo '"make pio"    run PlatformIO CI'
+
+pio: examples
+	$(MAKE) -C examples pio
 
 clean: 
 	$(MAKE) -C cli clean
@@ -23,7 +27,7 @@ clean:
 	$(MAKE) -C examples clean
 	rm -f $$(find . -type f -a -name '*~')
 
-.PHONY: help clean
+.PHONY: help clean pio
 
 # Local Variables:
 # mode: makefile-gmake

@@ -12,18 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-all:
+help:
 	@echo '"make clean"  remove unnecessary files'
-	@echo '"make update" propagate platformio.common to sketches'
+	@echo '"make pio"    run PlatformIO CI'
+	@echo '"make update" propagate common files to sketches'
 
-update: platformio.common
-	@for dir in asm_* dis_*; do \
-	    echo cp -f platformio.common $${dir}/platformio.ini; \
-	    cp -f platformio.common $${dir}/platformio.ini; \
+EXAMPLES = $(wildcard asm_* dis_*)
+
+pio: update $(EXAMPLES)
+	for ex in $(EXAMPLES); do \
+	    $(MAKE) -C $${ex} pio PIO_RUN_FLAGS=--silent; \
 	done
 
-clean: 
-	rm -rf $$(find . -type d -a -name .pio)
+update: Makefile.common platformio.common
+	for ex in $(EXAMPLES); do \
+	    cp -f Makefile.common $${ex}/Makefile; \
+	    cp -f platformio.common $${ex}/platformio.ini; \
+	done
+
+clean: $(EXAMPLES)
+	@for ex in $(EXAMPLES); do \
+	    $(MAKE) -C $${ex} clean; \
+	done
 
 .PHONY: all clean update
 
