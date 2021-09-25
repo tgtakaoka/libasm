@@ -60,6 +60,8 @@ RegName RegTms32010::parseRegName(const char *scan) {
 }
 
 uint8_t RegTms32010::regNameLen(RegName name) {
+    if (name == REG_UNDEF)
+        return 0;
     return 3;
 }
 
