@@ -39,11 +39,11 @@ public:
 
 protected:
     /* command line interface: libcli */
-    libcli::Cli _cli;
+    libcli::Cli &_cli;
     const ConfigBase &_config;
     uint32_t _origin;
 
-    BaseExample(ConfigBase &config) : _cli(), _config(config) {}
+    BaseExample(ConfigBase &config) : _cli(libcli::Cli::instance()), _config(config) {}
 
     virtual const /*PROGMEM*/ char *prompt() const = 0;
     virtual const /*PROGMEM*/ char *getCpu() const = 0;
@@ -51,27 +51,18 @@ protected:
 
     uint32_t addrMax() const { return 1UL << uint8_t(_config.addressWidth()); }
     uint8_t addrUnit() const { return uint8_t(_config.addressUnit()); }
+    uint8_t addrDigits() const { return ((uint8_t(_config.addressWidth()) + 3) & -4) / 4; }
 
-    void printPrompt(void (*handler)(char *, uintptr_t, State)) {
+    void printPrompt(void (*callback)(const char *, uintptr_t, State)) {
         _cli.print(FSTR(prompt()));
         _cli.print(FSTR(getCpu()));
         _cli.print(':');
         printAddress(_origin);
         _cli.print(F("> "));
-        _cli.readString(handler, reinterpret_cast<uintptr_t>(this));
+        _cli.readLine(callback, reinterpret_cast<uintptr_t>(this));
     }
 
-    void printAddress(uint32_t addr) {
-        const AddressWidth width = _config.addressWidth();
-        if (width == ADDRESS_16BIT || width == ADDRESS_12BIT)
-            _cli.printHex16(addr);
-        if (width == ADDRESS_20BIT)
-            _cli.printHex20(addr);
-        if (width == ADDRESS_24BIT)
-            _cli.printHex24(addr);
-        if (width == ADDRESS_32BIT)
-            _cli.printHex32(addr);
-    }
+    void printAddress(uint32_t addr) { _cli.printHex(addr, addrDigits()); }
 
     void printBytes(const uint8_t *bytes, uint8_t length) {
         const OpCodeWidth width = _config.opCodeWidth();
@@ -79,14 +70,14 @@ protected:
         for (uint8_t i = 0; i < length;) {
             _cli.print(' ');
             if (width == OPCODE_8BIT) {
-                _cli.printHex8(bytes[i]);
+                _cli.printHex(bytes[i], 2);
                 i += 1;
             } else {  // OPCODE_16BIT
                 const uint8_t hi = (endian == ENDIAN_BIG) ? 0 : 1;
                 const uint8_t lo = (endian == ENDIAN_BIG) ? 1 : 0;
                 uint16_t val = static_cast<uint16_t>(bytes[i + hi]) << 8;
                 val |= bytes[i + lo];
-                _cli.printHex16(val);
+                _cli.printHex(val, 4);
                 i += 2;
             }
         }
@@ -119,20 +110,25 @@ protected:
                 _cli.println(F("unknown CPU"));
             return true;
         }
-        if (strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
-            const char *org = line + 4;
-            uint32_t addr;
-            const char *p = StrMemory::readNumber(org, &addr);
-            if (p == org) {
-                _cli.println(F("illegal ORG address"));
-                return true;
+        if (strcasecmp_P(line, PSTR("ORG")) == 0 ||
+            strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
+            const char *org = skipSpaces(line + 3);
+            if (*org) {
+                uint32_t addr;
+                const char *p = StrMemory::readNumber(org, &addr);
+                if (p == org) {
+                    _cli.println(F("illegal ORG address"));
+                    return true;
+                }
+                const uint32_t max = addrMax();
+                if (max && addr >= max) {
+                    _cli.println(F("ORG overflow range"));
+                    return true;
+                }
+                _origin = addr;
             }
-            const uint32_t max = addrMax();
-            if (max && addr >= max) {
-                _cli.println(F("ORG overflow range"));
-                return true;
-            }
-            _origin = addr;
+            printAddress(_origin);
+            _cli.println();
             return true;
         }
         return false;
@@ -250,7 +246,7 @@ private:
         }
     }
 
-    static void handleLine(char *line, uintptr_t extra, State state) {
+    static void handleLine(const char *line, uintptr_t extra, State state) {
         (void)state;
         AsmExample &example = *reinterpret_cast<AsmExample *>(extra);
         const char *scan = skipSpaces(line);
@@ -316,7 +312,7 @@ private:
         }
     }
 
-    static void handleLine(char *line, uintptr_t extra, State state) {
+    static void handleLine(const char *line, uintptr_t extra, State state) {
         (void)state;
         DisExample &example = *reinterpret_cast<DisExample *>(extra);
         const char *scan = skipSpaces(line);
