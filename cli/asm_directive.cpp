@@ -487,7 +487,7 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
         if (value.overflowUint16())
             return setError(OVERFLOW_RANGE);
         const uint16_t val16 = value.getUnsigned();
-        if (_assembler->endian() == ENDIAN_BIG) {
+        if (_assembler->config().endian() == ENDIAN_BIG) {
             memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
             memory.writeByte(_origin++, static_cast<uint8_t>(val16));
         } else {
@@ -636,23 +636,23 @@ std::string AsmCommonDirective::getComment() const {
 }
 
 AddressWidth AsmCommonDirective::addressWidth() const {
-    return _assembler->addressWidth();
+    return _assembler->config().addressWidth();
 }
 
 AddressUnit AsmCommonDirective::addressUnit() const {
-    return _assembler->addressUnit();
+    return _assembler->config().addressUnit();
 }
 
 OpCodeWidth AsmCommonDirective::opCodeWidth() const {
-    return _assembler->opCodeWidth();
+    return _assembler->config().opCodeWidth();
 }
 
 Endian AsmCommonDirective::endian() const {
-    return _assembler->endian();
+    return _assembler->config().endian();
 }
 
 int AsmCommonDirective::maxBytes() const {
-    const uint8_t codeMax = _assembler->codeMax();
+    const uint8_t codeMax = _assembler->config().codeMax();
     return codeMax < 6 ? codeMax : 6;
 }
 
@@ -661,7 +661,7 @@ int AsmCommonDirective::labelWidth() const {
 }
 
 int AsmCommonDirective::instructionWidth() const {
-    return _assembler->nameMax() + 1;
+    return _assembler->config().nameMax() + 1;
 }
 
 int AsmCommonDirective::operandWidth() const {
@@ -677,7 +677,7 @@ uint8_t AsmCommonDirective::addrUnit() const {
 AsmMotoDirective::AsmMotoDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinFormatter *AsmMotoDirective::defaultFormatter() const {
-    return new MotoSrec(_assembler.addressWidth());
+    return new MotoSrec(_assembler.config().addressWidth());
 }
 
 Error AsmMotoDirective::processDirective(
@@ -696,7 +696,7 @@ Error AsmMotoDirective::processDirective(
 AsmMostekDirective::AsmMostekDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinFormatter *AsmMostekDirective::defaultFormatter() const {
-    return new MotoSrec(_assembler.addressWidth());
+    return new MotoSrec(_assembler.config().addressWidth());
 }
 
 Error AsmMostekDirective::processDirective(
@@ -717,7 +717,7 @@ Error AsmMostekDirective::processDirective(
 AsmIntelDirective::AsmIntelDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinFormatter *AsmIntelDirective::defaultFormatter() const {
-    return new IntelHex(_assembler.addressWidth());
+    return new IntelHex(_assembler.config().addressWidth());
 }
 
 Error AsmIntelDirective::processDirective(

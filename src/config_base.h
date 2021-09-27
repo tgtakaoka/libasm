@@ -88,7 +88,7 @@ struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 
 template <AddressWidth AddrWE, OpCodeWidth CodeWE, Endian EndianE, uint8_t MaxCode, uint8_t MaxName,
         AddressUnit AddrUE = ADDRESS_BYTE1>
-struct ConfigImpl : virtual public ConfigBase {
+struct ConfigImpl : public ConfigBase {
     typedef typename __address_type<AddrWE>::uintptr_t uintptr_t;
     typedef typename __address_type<AddrWE>::ptrdiff_t ptrdiff_t;
     typedef typename __opcode_type<CodeWE>::opcode_t opcode_t;

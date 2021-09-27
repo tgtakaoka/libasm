@@ -119,7 +119,7 @@ private:
         char operands[40];
         StrBuffer buffer(operands, sizeof(operands));
         _disassembler.getFormatter().formatHex(
-                buffer, addr / addrUnit(), _disassembler.addressWidth(), false);
+                buffer, addr / addrUnit(), _disassembler.config().addressWidth(), false);
         _address = addr;
         _generated_size = 0;
         print("ORG", operands);
@@ -146,10 +146,10 @@ private:
     FILE *dumpOut() { return _dump ? _list : nullptr; }
 
     // ListingLine
-    AddressWidth addressWidth() const override { return _disassembler.addressWidth(); }
-    AddressUnit addressUnit() const override { return _disassembler.addressUnit(); }
-    OpCodeWidth opCodeWidth() const override { return _disassembler.opCodeWidth(); }
-    Endian endian() const override { return _disassembler.endian(); }
+    AddressWidth addressWidth() const override { return _disassembler.config().addressWidth(); }
+    AddressUnit addressUnit() const override { return _disassembler.config().addressUnit(); }
+    OpCodeWidth opCodeWidth() const override { return _disassembler.config().opCodeWidth(); }
+    Endian endian() const override { return _disassembler.config().endian(); }
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
     uint32_t startAddress() const override { return _address; }

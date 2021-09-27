@@ -119,7 +119,7 @@ int DisDriver::disassemble() {
     if (readInput(input, _input_name, memory) != 0)
         return 1;
     fclose(input);
-    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->addressUnit());
+    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
     const uint32_t mem_start = memory.startAddress() / addrUnit;
     const uint32_t mem_end = memory.endAddress() / addrUnit;
     if ((_addr_start != 0 || _addr_end != UINT32_MAX) &&
@@ -154,7 +154,7 @@ int DisDriver::disassemble() {
         fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump([this, output, list, &listing](uint32_t base, const uint8_t *data, size_t size) {
-        const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->addressUnit());
+        const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
         uint32_t start = base / addrUnit;
         const uint32_t end = start + (size - 1) / addrUnit;
         if (base > _addr_end || end < _addr_start)
@@ -215,7 +215,7 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
     size_t line_len = 128;
     char *line = static_cast<char *>(malloc(line_len));
     int len;
-    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->addressUnit());
+    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
     uint32_t start = 0, end = 0;
     while ((len = getLine(line, line_len, input)) > 0) {
         lineno++;
@@ -265,7 +265,7 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
     const char c = (len > 0) ? *line : 0;
     free(line);
 
-    const AddressWidth addrWidth = _disassembler->addressWidth();
+    const AddressWidth addrWidth = _disassembler->config().addressWidth();
     if (c == 'S')
         return new MotoSrec(addrWidth);
     if (c == ':')

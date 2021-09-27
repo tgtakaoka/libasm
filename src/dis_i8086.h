@@ -29,11 +29,12 @@ namespace i8086 {
 class DisI8086 : public Disassembler, public Config {
 public:
     DisI8086() : Disassembler(_formatter, _regs, TableI8086, '$') {}
-
+    ConfigBase &config() override { return *this; }
     void reset() override {
         setSeparateSegOverride(true);
         setRepeatHasStringInstruction(false);
     }
+
     void setSeparateSegOverride(bool yes) { _separateSegOverride = yes; }
     void setRepeatHasStringInstruction(bool yes) { _repeatHasStringInst = yes; }
 

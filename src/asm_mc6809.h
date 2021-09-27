@@ -29,7 +29,7 @@ namespace mc6809 {
 class AsmMc6809 : public Assembler, public Config {
 public:
     AsmMc6809() : Assembler(_parser, TableMc6809) {}
-
+    ConfigBase &config() override { return *this; }
     void reset() override { _direct_page = 0; }
 
 private:

@@ -29,7 +29,7 @@ namespace mc6800 {
 class DisMc6800 : public Disassembler, public Config {
 public:
     DisMc6800() : Disassembler(_formatter, _regs, TableMc6800, '*') {}
-
+    ConfigBase &config() override { return *this; }
     AddressWidth addressWidth() const override { return TableMc6800.addressWidth(); }
 
 private:

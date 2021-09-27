@@ -30,6 +30,7 @@ namespace mc6809 {
 class DisMc6809 : public Disassembler, public Config {
 public:
     DisMc6809() : Disassembler(_formatter, _regs, TableMc6809, '*') {}
+    ConfigBase &config() override { return *this; }
 
 private:
     MotoValueFormatter _formatter;

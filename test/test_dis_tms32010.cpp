@@ -533,7 +533,7 @@ static void assert_ok(Config::opcode_t opc) {
     uint16_t words[2] = { opc, 0 };
     Insn insn;
     char operands[40], message[40];
-    ArrayMemory memory(0x100, words, sizeof(words), disassembler.endian());
+    ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
 
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, operands, sizeof(operands));
@@ -545,7 +545,7 @@ static void assert_illegal(Config::opcode_t opc, Error err, const char *message)
     uint16_t words[2] = { opc, 0 };
     Insn insn;
     char operands[40];
-    ArrayMemory memory(0x100, words, sizeof(words), disassembler.endian());
+    ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
 
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, operands, sizeof(operands));

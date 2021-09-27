@@ -28,6 +28,7 @@ namespace cdp1802 {
 class AsmCdp1802 : public Assembler, public Config {
 public:
     AsmCdp1802() : Assembler(_parser, TableCdp1802) {}
+    ConfigBase &config() override { return *this; }
 
 private:
     IntelValueParser _parser;

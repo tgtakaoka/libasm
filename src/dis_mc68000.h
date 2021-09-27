@@ -29,6 +29,7 @@ namespace mc68000 {
 class DisMc68000 : public Disassembler, public Config {
 public:
     DisMc68000() : Disassembler(_formatter, _regs, TableMc68000, '*') {}
+    ConfigBase &config() override { return *this; }
 
 private:
     MotoValueFormatter _formatter;

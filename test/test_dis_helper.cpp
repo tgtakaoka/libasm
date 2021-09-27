@@ -52,7 +52,7 @@ void dis_assert(const char *file, int line, Error error, uint32_t addr, const ui
 void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint16_t *src,
         uint8_t src_size, const char *expected_name, const char *expected_opr,
         Disassembler &disassembler) {
-    ArrayMemory memory(addr, src, src_size, disassembler.endian());
+    ArrayMemory memory(addr, src, src_size, disassembler.config().endian());
 
     Insn insn;
     disassembler.setUppercase(true);

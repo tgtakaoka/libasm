@@ -33,15 +33,17 @@
 
 namespace libasm {
 
-class Disassembler : public ErrorReporter, virtual public ConfigBase {
+class Disassembler : public ErrorReporter {
 public:
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
+    virtual ConfigBase &config() = 0;
+    virtual void reset() {}
+
     ValueFormatter &getFormatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase);
     void setCurrentOriginSymbol(char curSym) { _curSym = curSym; }
-    virtual void reset() {}
 
     const char *listCpu() const { return _table.listCpu(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
@@ -124,7 +126,7 @@ protected:
     template <typename Addr>
     StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
-            return outAbsAddr(out, target, addressWidth());
+            return outAbsAddr(out, target, config().addressWidth());
         out.letter(_curSym);
         const auto delta = static_cast<typename make_signed<Addr>::type>(target - origin);
         if (delta == 0)

@@ -29,6 +29,7 @@ namespace cdp1802 {
 class DisCdp1802 : public Disassembler, public Config {
 public:
     DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802, '$') {}
+    ConfigBase &config() override { return *this; }
 
 private:
     IntelValueFormatter _formatter;

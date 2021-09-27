@@ -28,15 +28,16 @@
 
 namespace libasm {
 
-class Assembler : public ErrorReporter, virtual public ConfigBase {
+class Assembler : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn, uint32_t addr, SymbolTable *symtab = nullptr);
+    virtual ConfigBase &config() = 0;
+    virtual void reset() {}
 
     void setCommentChar(char commentChar) { _commentChar = commentChar; }
     ValueParser &getParser() const { return _parser; }
     const char *errorAt() const { return _scan; }
     bool endOfLine(const char *scan) const;
-    virtual void reset() {}
 
     const char *listCpu() const { return _table.listCpu(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
@@ -51,6 +52,8 @@ protected:
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
         : _parser(parser), _table(table), _commentChar(commentChar) {}
+
+    uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
 
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;

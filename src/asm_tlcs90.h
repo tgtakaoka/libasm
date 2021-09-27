@@ -29,6 +29,7 @@ namespace tlcs90 {
 class AsmTlcs90 : public Assembler, public Config {
 public:
     AsmTlcs90() : Assembler(_parser, TableTlcs90) {}
+    ConfigBase &config() override { return *this; }
 
 private:
     IntelValueParser _parser;

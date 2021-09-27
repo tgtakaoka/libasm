@@ -393,7 +393,7 @@ static void assert_mid(
             const uint16_t post = validPostWord(prefix ? prefix : code);
             words[pos] = code;
             words[pos + 1] = post;
-            ArrayMemory memory(0x1000, words, sizeof(words), disassembler.endian());
+            ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
 
             disassembler.setUppercase(true);
             disassembler.decode(memory, insn, operands, sizeof(operands));

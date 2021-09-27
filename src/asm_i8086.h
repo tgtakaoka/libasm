@@ -29,6 +29,7 @@ namespace i8086 {
 class AsmI8086 : public Assembler, public Config {
 public:
     AsmI8086() : Assembler(_parser, TableI8086) {}
+    ConfigBase &config() override { return *this; }
 
     void reset() override { setOptimizeSegment(false); }
     void setOptimizeSegment(bool enable) { _optimizeSegment = enable; }

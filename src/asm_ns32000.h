@@ -29,11 +29,12 @@ namespace ns32000 {
 class AsmNs32000 : public Assembler, public Config {
 public:
     AsmNs32000() : Assembler(_parser, TableNs32000) {}
-
+    ConfigBase &config() override { return *this; }
     void reset() override {
         setFpu(FPU_NONE);
         setMmu(MMU_NONE);
     }
+
     void setFpu(FpuType fpuType) { TableNs32000.setFpu(fpuType); }
     void setMmu(MmuType mmuType) { TableNs32000.setMmu(mmuType); }
 

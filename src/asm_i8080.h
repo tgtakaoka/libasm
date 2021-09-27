@@ -29,6 +29,7 @@ namespace i8080 {
 class AsmI8080 : public Assembler, public Config {
 public:
     AsmI8080() : Assembler(_parser, TableI8080) {}
+    ConfigBase &config() override { return *this; }
 
 private:
     IntelValueParser _parser;

@@ -38,13 +38,13 @@ protected:
     Cli _cli;
     uint32_t _origin;
 
-    BaseExample(ConfigBase *config) : _cli(), _config(config) {}
+    BaseExample(ConfigBase &config) : _cli(), _config(config) {}
 
     virtual const /*PROGMEM*/ char *getCpu() const = 0;
     virtual bool setCpu(const char *) = 0;
 
     void printAddress(uint32_t addr) {
-        const AddressWidth width = _config->addressWidth();
+        const AddressWidth width = _config.addressWidth();
         if (width == ADDRESS_16BIT || width == ADDRESS_12BIT)
             _cli.printHex16(addr);
         if (width == ADDRESS_20BIT)
@@ -56,8 +56,8 @@ protected:
     }
 
     void printBytes(const uint8_t *bytes, uint8_t length) {
-        const OpCodeWidth width = _config->opCodeWidth();
-        const Endian endian = _config->endian();
+        const OpCodeWidth width = _config.opCodeWidth();
+        const Endian endian = _config.endian();
         for (uint8_t i = 0; i < length;) {
             _cli.print(' ');
             if (width == OPCODE_8BIT)
@@ -73,7 +73,7 @@ protected:
                 _cli.printHex16(val);
             }
         }
-        const uint8_t codeMax = _config->codeMax();
+        const uint8_t codeMax = _config.codeMax();
         for (uint8_t i = length; i < codeMax;) {
             if (width == OPCODE_8BIT) {
                 _cli.print(F("   "));
@@ -87,7 +87,7 @@ protected:
     }
 
     void printInsn(const Insn &insn, const char *operands) {
-        const uint8_t nameMax = _config->nameMax();
+        const uint8_t nameMax = _config.nameMax();
         uint8_t n = _cli.print(insn.name());
         if (operands && *operands) {
             while (n++ <= nameMax)
@@ -126,12 +126,12 @@ protected:
     }
 
 private:
-    ConfigBase *_config;
+    ConfigBase &_config;
 };
 
 class AsmExample : public BaseExample {
 public:
-    AsmExample(Assembler &assembler) : BaseExample(&assembler), _assembler(assembler) {}
+    AsmExample(Assembler &assembler) : BaseExample(assembler.config()), _assembler(assembler) {}
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
@@ -181,7 +181,7 @@ private:
 class DisExample : public BaseExample {
 public:
     DisExample(Disassembler &disassembler)
-        : BaseExample(&disassembler), _disassembler(disassembler) {
+        : BaseExample(disassembler.config()), _disassembler(disassembler) {
         _disassembler.setUppercase(true);
     }
 

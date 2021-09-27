@@ -29,6 +29,7 @@ namespace z80 {
 class AsmZ80 : public Assembler, public Config {
 public:
     AsmZ80() : Assembler(_parser, TableZ80) {}
+    ConfigBase &config() override { return *this; }
 
 private:
     IntelValueParser _parser;

@@ -29,6 +29,7 @@ namespace tms32010 {
 class AsmTms32010 : public Assembler, public Config {
 public:
     AsmTms32010() : Assembler(_parser, TableTms32010) {}
+    ConfigBase &config() override { return *this; }
 
 private:
     IntelValueParser _parser;

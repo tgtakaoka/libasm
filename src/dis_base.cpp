@@ -29,7 +29,7 @@ Error Disassembler::decode(
 
     resetError();
     StrBuffer out(operands, size);
-    const uint8_t addrUnit = static_cast<uint8_t>(addressUnit());
+    const uint8_t addrUnit = static_cast<uint8_t>(config().addressUnit());
     insn.resetAddress(memory.address() / addrUnit);
     decode(memory, insn, out);
     if (!_regBase.isUppercase())
