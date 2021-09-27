@@ -20,15 +20,17 @@
 #include <libcli.h>
 
 #include "asm_base.h"
-#include "dis_base.h"
 #include "config_base.h"
-#include "str_memory.h"
+#include "dis_base.h"
+
+typedef libcli::Cli::State State;
 
 namespace libasm {
 namespace arduino {
 
-using libcli::Cli;
-
+/**
+ * Base class for assembler and disassembler example for Arduino.
+ */
 class BaseExample {
 public:
     virtual void begin(Stream &console) { _cli.begin(console); }
@@ -36,16 +38,28 @@ public:
     void loop() { _cli.loop(); }
 
 protected:
-    Cli _cli;
+    /* command line interface: libcli */
+    libcli::Cli _cli;
     const ConfigBase &_config;
     uint32_t _origin;
 
     BaseExample(ConfigBase &config) : _cli(), _config(config) {}
 
+    virtual const /*PROGMEM*/ char *prompt() const = 0;
     virtual const /*PROGMEM*/ char *getCpu() const = 0;
     virtual bool setCpu(const char *) = 0;
 
+    uint32_t addrMax() const { return 1UL << uint8_t(_config.addressWidth()); }
     uint8_t addrUnit() const { return uint8_t(_config.addressUnit()); }
+
+    void printPrompt(void (*handler)(char *, uintptr_t, State)) {
+        _cli.print(FSTR(prompt()));
+        _cli.print(FSTR(getCpu()));
+        _cli.print(':');
+        printAddress(_origin);
+        _cli.print(F("> "));
+        _cli.readString(handler, reinterpret_cast<uintptr_t>(this));
+    }
 
     void printAddress(uint32_t addr) {
         const AddressWidth width = _config.addressWidth();
@@ -64,17 +78,16 @@ protected:
         const Endian endian = _config.endian();
         for (uint8_t i = 0; i < length;) {
             _cli.print(' ');
-            if (width == OPCODE_8BIT)
-                _cli.printHex8(bytes[i++]);
-            if (width == OPCODE_16BIT && endian == ENDIAN_BIG) {
-                uint16_t val = static_cast<uint16_t>(bytes[i++]) << 8;
-                val |= bytes[i++];
+            if (width == OPCODE_8BIT) {
+                _cli.printHex8(bytes[i]);
+                i += 1;
+            } else {  // OPCODE_16BIT
+                const uint8_t hi = (endian == ENDIAN_BIG) ? 0 : 1;
+                const uint8_t lo = (endian == ENDIAN_BIG) ? 1 : 0;
+                uint16_t val = static_cast<uint16_t>(bytes[i + hi]) << 8;
+                val |= bytes[i + lo];
                 _cli.printHex16(val);
-            }
-            if (width == OPCODE_16BIT && endian == ENDIAN_LITTLE) {
-                uint16_t val = bytes[i++];
-                val = static_cast<uint16_t>(bytes[i++]) << 8;
-                _cli.printHex16(val);
+                i += 2;
             }
         }
         const uint8_t codeMax = _config.codeMax();
@@ -82,8 +95,7 @@ protected:
             if (width == OPCODE_8BIT) {
                 _cli.print(F("   "));
                 i += 1;
-            }
-            if (width == OPCODE_16BIT) {
+            } else {  // OPCODE_16BIT
                 _cli.print(F("     "));
                 i += 2;
             }
@@ -109,15 +121,22 @@ protected:
         }
         if (strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
             const char *org = line + 4;
-            const char *p = StrMemory::readNumber(org, &_origin);
-            if (p == org)
-                _cli.println(F("unknown ORG"));
+            uint32_t addr;
+            const char *p = StrMemory::readNumber(org, &addr);
+            if (p == org) {
+                _cli.println(F("illegal ORG address"));
+                return true;
+            }
+            const uint32_t max = addrMax();
+            if (max && addr >= max) {
+                _cli.println(F("ORG overflow range"));
+                return true;
+            }
+            _origin = addr;
             return true;
         }
         return false;
     }
-
-    static bool isSpace(char c) { return c == ' ' || c == '\t'; }
 
     static const char *skipSpaces(const char *p) {
         while (isSpace(*p))
@@ -125,21 +144,88 @@ protected:
         return p;
     }
 
-    static const __FlashStringHelper *FSTR(const /*PROGMEM*/ char *pstr) {
+    static constexpr const __FlashStringHelper *FSTR(const /*PROGMEM*/ char *pstr) {
         return reinterpret_cast<const __FlashStringHelper *>(pstr);
     }
+
+    /**
+     * Memory interface for disassembler on string of hexadecimal number list.
+     */
+    class StrMemory : public DisMemory {
+    public:
+        StrMemory(uint32_t origin, const char *line, const ConfigBase &config)
+            : DisMemory(origin), _origin(origin), _line(line), _next(line), _config(config) {}
+
+        bool hasNext() const override { return parseNumber(_next) != _next; }
+        void rewind() {
+            resetAddress(_origin);
+            _next = _line;
+        }
+
+        static const char *readNumber(const char *scan, uint32_t *val) {
+            return parseNumber(scan, val);
+        }
+
+    protected:
+        uint8_t nextByte() override {
+            uint32_t val32 = 0;
+            const char *p = parseNumber(_next, &val32);
+            if (_config.opCodeWidth() == OPCODE_8BIT) {
+                _next = p;
+                return val32;
+            } else {  // OPCODE_16BIT
+                if (address() % 2 == 0)
+                    return _config.endian() == ENDIAN_BIG ? val32 >> 8 : val32;
+                _next = p;
+                return _config.endian() == ENDIAN_BIG ? val32 : val32 >> 8;
+            }
+        }
+
+    private:
+        const uint32_t _origin;
+        const char *const _line;
+        const char *_next;
+        const ConfigBase &_config;
+
+        static const char *parseNumber(const char *scan, uint32_t *val = nullptr) {
+            const char *p = skipSpaces(scan);
+            char c;
+            if ((c = *p) == 0 || !isHexadecimalDigit(c))
+                return scan;  // no valid hexadecimal number found.
+
+            uint32_t v = 0;
+            while (isHexadecimalDigit(c = *p)) {
+                v <<= 4;
+                uint8_t n;
+                if (isDigit(c)) {
+                    n = c - '0';
+                } else {
+                    n = (c & ~0x20) - 'A' + 10;
+                }
+                v += n;
+                p++;
+            }
+            if (val)
+                *val = v;
+            return p;
+        }
+    };
 };
 
+/**
+ * Assembler example class.
+ */
 class AsmExample : public BaseExample {
 public:
     AsmExample(Assembler &assembler) : BaseExample(assembler.config()), _assembler(assembler) {}
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
-        printPrompt();
+        printPrompt(handleLine);
     }
 
 protected:
+    const /*PROGMEM*/ char *prompt() const override { return PSTR("ASM:"); }
     const /*PROGMEM */ char *getCpu() const override { return _assembler.getCpu(); }
     bool setCpu(const char *cpu) override { return _assembler.setCpu(cpu); }
 
@@ -147,38 +233,36 @@ private:
     Assembler &_assembler;
 
     void assemble(const char *line) {
+        const uint32_t max = addrMax();
         Insn insn(_origin);
         if (_assembler.encode(line, insn)) {
             _cli.print(F("Error: "));
             _cli.println(FSTR(_assembler.errorText()));
+        } else if (max && insn.address() + insn.length() / addrUnit() > max) {
+            _cli.println(F("address range overflow"));
         } else {
             printAddress(insn.address());
             _cli.print(':');
             printBytes(insn.bytes(), insn.length());
             _cli.println();
             _origin += insn.length() / addrUnit();
+            _origin &= max - 1;
         }
     }
 
-    void printPrompt() {
-        _cli.print(F("ASM:"));
-        _cli.print(FSTR(_assembler.getCpu()));
-        _cli.print(F("> "));
-        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
-    }
-
-    static void handleLine(char *line, uintptr_t extra, Cli::State state) {
+    static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
-        AsmExample *example = reinterpret_cast<AsmExample *>(extra);
+        AsmExample &example = *reinterpret_cast<AsmExample *>(extra);
         const char *scan = skipSpaces(line);
-        if (*scan) {
-            if (!example->processPseudo(scan))
-                example->assemble(scan);
-        }
-        example->printPrompt();
+        if (*scan && !example.processPseudo(scan))
+            example.assemble(scan);
+        example.printPrompt(handleLine);
     }
 };
 
+/**
+ * Disassembler example class.
+ */
 class DisExample : public BaseExample {
 public:
     DisExample(Disassembler &disassembler)
@@ -188,19 +272,31 @@ public:
 
     void begin(Stream &console) override {
         BaseExample::begin(console);
-        printPrompt();
+        printPrompt(handleLine);
     }
 
 protected:
+    const /*PROGMEM*/ char *prompt() const override { return PSTR("DIS:"); }
     const /*PROGMEM*/ char *getCpu() const override { return _disassembler.getCpu(); }
     bool setCpu(const char *cpu) override { return _disassembler.setCpu(cpu); }
 
 private:
     Disassembler &_disassembler;
 
-    void disassemble(DisMemory &memory) {
-        char operands[80];
+    void disassemble(StrMemory &memory) {
+        const uint32_t max = addrMax();
         const uint32_t origin = memory.address();
+        while (memory.hasNext()) {
+            const uint32_t delta = (memory.address() - origin) / addrUnit();
+            if (max && origin + delta >= max) {
+                _cli.println(F("address range overflow"));
+                return;
+            }
+            memory.readByte();
+        }
+        memory.rewind();
+
+        char operands[80];
         while (memory.hasNext()) {
             const uint32_t delta = (memory.address() - origin) / addrUnit();
             Insn insn(origin + delta);
@@ -215,28 +311,20 @@ private:
                 printInsn(insn, operands);
                 _cli.println();
                 _origin += insn.length() / addrUnit();
+                _origin &= max - 1;
             }
         }
     }
 
-    void printPrompt() {
-        _cli.print(F("DIS:"));
-        _cli.print(FSTR(_disassembler.getCpu()));
-        _cli.print(F("> "));
-        _cli.readString(handleLine, reinterpret_cast<uintptr_t>(this));
-    }
-
-    static void handleLine(char *line, uintptr_t extra, Cli::State state) {
+    static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
-        DisExample *example = reinterpret_cast<DisExample *>(extra);
+        DisExample &example = *reinterpret_cast<DisExample *>(extra);
         const char *scan = skipSpaces(line);
-        if (*scan) {
-            if (!example->processPseudo(scan)) {
-                StrMemory memory(example->_origin, scan);
-                example->disassemble(memory);
-            }
+        if (*scan && !example.processPseudo(scan)) {
+            StrMemory memory(example._origin, scan, example._config);
+            example.disassemble(memory);
         }
-        example->printPrompt();
+        example.printPrompt(handleLine);
     }
 };
 
