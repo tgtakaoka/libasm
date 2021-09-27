@@ -124,6 +124,7 @@ void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress
     case ADDRESS_12BIT:
         formatUint12(addr, fixedWidth, zeroSuppress);
         break;
+    case ADDRESS_13BIT:
     case ADDRESS_16BIT:
         formatUint16(addr, fixedWidth, zeroSuppress);
         break;

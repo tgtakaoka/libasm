@@ -39,7 +39,7 @@ public:
     virtual uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) = 0;
 
 protected:
-    AddressWidth _addrWidth;
+    const uint8_t _addrSize;
     FILE *_out = nullptr;
     char *_line;
     uint8_t _line_len;

@@ -25,6 +25,7 @@ namespace libasm {
 
 enum AddressWidth : uint8_t {
     ADDRESS_12BIT = 12,
+    ADDRESS_13BIT = 13,
     ADDRESS_16BIT = 16,
     ADDRESS_20BIT = 20,
     ADDRESS_24BIT = 24,

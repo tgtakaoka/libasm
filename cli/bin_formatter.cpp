@@ -22,8 +22,21 @@
 namespace libasm {
 namespace cli {
 
+static uint8_t addressSize(AddressWidth addrWidth) {
+    const uint8_t bits = uint8_t(addrWidth);
+    if (bits <= 16)
+        return 2;
+    if (bits <= 24)
+        return 3;
+    return 4;
+}
+
 BinFormatter::BinFormatter(AddressWidth addrWidth)
-    : _addrWidth(addrWidth), _line(nullptr), _line_len(0), _data(nullptr), _data_len(0) {}
+    : _addrSize(addressSize(addrWidth)),
+      _line(nullptr),
+      _line_len(0),
+      _data(nullptr),
+      _data_len(0) {}
 
 BinFormatter::~BinFormatter() {
     if (_line)

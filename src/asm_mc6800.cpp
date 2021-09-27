@@ -101,8 +101,7 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
 Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
-    // TODO: ADDRESS_13BIT
-    if (addressWidth() == ADDRESS_12BIT && target >= 0x2000)
+    if (addressWidth() == ADDRESS_13BIT && target >= 0x2000)
         return setError(OVERFLOW_RANGE);                
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
@@ -142,8 +141,7 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
         insn.emitUint16(op.val16);
         return OK;
     case M_EXT:
-        // TODO: ADDRESS_13BIT
-        if (addressWidth() == ADDRESS_12BIT && op.val16 >= 0x2000)
+        if (addressWidth() == ADDRESS_13BIT && op.val16 >= 0x2000)
             return setError(OVERFLOW_RANGE);
         insn.emitUint16(op.val16);
         return OK;

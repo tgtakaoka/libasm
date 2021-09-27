@@ -57,7 +57,7 @@ void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
 
 // Output Type "04" Extended Linear Address.
 void IntelHex::formatEla(uint32_t addr) {
-    if (uint8_t(_addrWidth) <= 16)
+    if (_addrSize <= 2)
         return;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
     const uint8_t len = sizeof(ela);
