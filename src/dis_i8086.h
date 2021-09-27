@@ -28,7 +28,7 @@ namespace i8086 {
 
 class DisI8086 : public Disassembler, public Config {
 public:
-    DisI8086() : Disassembler(_formatter, _regs, TableI8086) {}
+    DisI8086() : Disassembler(_formatter, _regs, TableI8086, '$') {}
 
     void reset() override {
         setSeparateSegOverride(true);

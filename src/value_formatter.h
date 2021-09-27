@@ -25,13 +25,10 @@ namespace libasm {
 
 class ValueFormatter {
 public:
-    ValueFormatter(char curSym = '.', bool cstyle = true)
-        : _curSym(curSym), _cstyle(cstyle), _uppercase('a') {}
+    ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _uppercase('a') {}
 
     void setCStyleHex(bool enable) { _cstyle = enable; }
     void setUppercase(bool uppercase) { _uppercase = uppercase ? 'A' : 'a'; }
-    void setCurrentOriginSymbol(char c) { _curSym = c; }
-    char currentOriginSymbol() const { return _curSym; }
 
     /*
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed
@@ -49,7 +46,6 @@ public:
     StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax = true) const;
 
 protected:
-    char _curSym;
     bool _cstyle;
     char _uppercase;
 
@@ -62,7 +58,7 @@ protected:
 
 class MotoValueFormatter : public ValueFormatter {
 public:
-    MotoValueFormatter() : ValueFormatter('*', false) {}
+    MotoValueFormatter() : ValueFormatter(false) {}
 
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
@@ -70,7 +66,7 @@ protected:
 
 class IntelValueFormatter : public ValueFormatter {
 public:
-    IntelValueFormatter() : ValueFormatter('$', false) {}
+    IntelValueFormatter() : ValueFormatter(false) {}
 
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;

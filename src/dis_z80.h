@@ -28,7 +28,7 @@ namespace z80 {
 
 class DisZ80 : public Disassembler, public Config {
 public:
-    DisZ80() : Disassembler(_formatter, _regs, TableZ80) {}
+    DisZ80() : Disassembler(_formatter, _regs, TableZ80, '$') {}
 
 private:
     IntelValueFormatter _formatter;

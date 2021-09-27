@@ -28,7 +28,7 @@ namespace i8080 {
 
 class DisI8080 : public Disassembler, public Config {
 public:
-    DisI8080() : Disassembler(_formatter, _regs, TableI8080) {}
+    DisI8080() : Disassembler(_formatter, _regs, TableI8080, '$') {}
 
 private:
     IntelValueFormatter _formatter;

@@ -28,7 +28,7 @@ namespace z8 {
 
 class DisZ8 : public Disassembler, public Config {
 public:
-    DisZ8() : Disassembler(_formatter, _regs, TableZ8) {}
+    DisZ8() : Disassembler(_formatter, _regs, TableZ8, '$') {}
 
     void reset() override { preferWorkRegister(true); }
     void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }

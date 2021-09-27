@@ -28,7 +28,7 @@ namespace i8051 {
 
 class DisI8051 : public Disassembler, public Config {
 public:
-    DisI8051() : Disassembler(_formatter, _regs, TableI8051) {}
+    DisI8051() : Disassembler(_formatter, _regs, TableI8051, '$') {}
 
 private:
     IntelValueFormatter _formatter;

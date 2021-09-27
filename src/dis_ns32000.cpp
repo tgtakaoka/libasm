@@ -362,7 +362,7 @@ Error DisNs32000::decodeGeneric(
             if (_pcRelativeParen) {
                 outAbsAddr(out, target, addressWidth());
             } else {
-                out.letter(_formatter.currentOriginSymbol());
+                out.letter(_curSym);
                 if (disp.val32 > 0)
                     out.letter('+');
                 if (disp.val32)

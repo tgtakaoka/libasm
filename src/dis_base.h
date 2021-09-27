@@ -40,6 +40,7 @@ public:
     ValueFormatter &getFormatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase);
+    void setCurrentOriginSymbol(char curSym) { _curSym = curSym; }
     virtual void reset() {}
 
     const char *listCpu() const { return _table.listCpu(); }
@@ -51,10 +52,11 @@ protected:
     RegBase &_regBase;
     TableBase &_table;
     SymbolTable *_symtab;
+    char _curSym;
     bool _relativeTarget = false;
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table)
-        : _formatter(formatter), _regBase(regs), _table(table) {}
+    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym)
+        : _formatter(formatter), _regBase(regs), _table(table), _curSym(curSym) {}
 
     /** Lookup |addr| value and returns symbol. */
     template <typename Addr>
@@ -123,7 +125,7 @@ protected:
     StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
             return outAbsAddr(out, target, addressWidth());
-        out.letter(_formatter.currentOriginSymbol());
+        out.letter(_curSym);
         const auto delta = static_cast<typename make_signed<Addr>::type>(target - origin);
         if (delta == 0)
             return out;

@@ -28,7 +28,7 @@ namespace tms32010 {
 
 class DisTms32010 : public Disassembler, public Config {
 public:
-    DisTms32010() : Disassembler(_formatter, _regs, TableTms32010) {}
+    DisTms32010() : Disassembler(_formatter, _regs, TableTms32010, '$') {}
 
 private:
     IntelValueFormatter _formatter;

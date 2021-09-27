@@ -28,7 +28,7 @@ namespace cdp1802 {
 
 class DisCdp1802 : public Disassembler, public Config {
 public:
-    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802) {}
+    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802, '$') {}
 
 private:
     IntelValueFormatter _formatter;

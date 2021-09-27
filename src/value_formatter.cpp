@@ -59,8 +59,6 @@ uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits)
             out.letter('-');
         }
     }
-    if (bw >= 32)
-        return val;
     return val & ((1UL << bw) - 1);
 }
 

@@ -28,7 +28,7 @@ namespace ns32000 {
 
 class DisNs32000 : public Disassembler, public Config {
 public:
-    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000) {}
+    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '*') {}
 
     void reset() override {
         stringOptionBraket(false);
@@ -38,10 +38,9 @@ public:
     void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
     void pcRelativeParen(bool paren) { _pcRelativeParen = paren; }
     void externalParen(bool paren) { _externalParen = paren; }
-    void setCurrentOriginSymbol(char c) { _formatter.setCurrentOriginSymbol(c); }
 
 private:
-    ValueFormatter _formatter{'*'};
+    ValueFormatter _formatter;
     RegNs32000 _regs;
     bool _stringOptionBraket = false;
     bool _pcRelativeParen = false;

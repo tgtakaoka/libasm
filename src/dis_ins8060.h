@@ -28,10 +28,10 @@ namespace ins8060 {
 
 class DisIns8060 : public Disassembler, public Config {
 public:
-    DisIns8060() : Disassembler(_formatter, _regs, TableIns8060) {}
+    DisIns8060() : Disassembler(_formatter, _regs, TableIns8060, '$') {}
 
 private:
-    ValueFormatter _formatter{'$'};
+    ValueFormatter _formatter;
     RegIns8060 _regs;
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);

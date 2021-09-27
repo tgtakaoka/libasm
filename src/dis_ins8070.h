@@ -28,13 +28,13 @@ namespace ins8070 {
 
 class DisIns8070 : public Disassembler, public Config {
 public:
-    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070) {}
+    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070, '$') {}
 
     void reset() override { setImmediateSymbol(false); }
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
 
 private:
-    ValueFormatter _formatter{'$'};
+    ValueFormatter _formatter;
     RegIns8070 _regs;
     bool _immSym = false;
 

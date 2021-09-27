@@ -28,7 +28,7 @@ namespace tms9900 {
 
 class DisTms9900 : public Disassembler, public Config {
 public:
-    DisTms9900() : Disassembler(_formatter, _regs, TableTms9900) {}
+    DisTms9900() : Disassembler(_formatter, _regs, TableTms9900, '$') {}
 
 private:
     IntelValueFormatter _formatter;
