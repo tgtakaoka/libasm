@@ -39,7 +39,6 @@ public:
     uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) override {
         return end ? lookup(std::string(symbol, end)) : lookup(std::string(symbol));
     }
-    uint32_t currentOrigin() override { return _current_origin; }
 
     void intern(uint32_t value, const char *symbol, const char *end = nullptr) {
         intern(value, end ? std::string(symbol, end) : std::string(symbol));
@@ -48,15 +47,11 @@ public:
     void reset() {
         _symbol_to_value.clear();
         _value_to_symbol.clear();
-        _current_origin = 0;
     }
-
-    void setCurrentOrigin(uint32_t value) { _current_origin = value; }
 
 private:
     std::map<std::string, uint32_t, std::less<>> _symbol_to_value;
     std::map<uint32_t, std::string> _value_to_symbol;
-    uint32_t _current_origin;
 
     bool hasSymbol(const std::string &key) const {
         return _symbol_to_value.find(key) != _symbol_to_value.end();

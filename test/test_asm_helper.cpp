@@ -31,7 +31,6 @@ TestSymtab symtab;
 void asm_assert(const char *file, int line, Error error, const char *src, ArrayMemory &memory,
         Assembler &assembler) {
     Insn insn;
-    symtab.setCurrentOrigin(memory.origin());
     assembler.encode(src, insn, memory.origin(), &symtab);
     asserter.equals(file, line, src, error, assembler);
     asserter.equals(file, line, src, memory, insn.bytes(), insn.length());

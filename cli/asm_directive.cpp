@@ -144,6 +144,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     std::string label_buf;
     _list.label_len = 0;
     ValueParser &parser = _assembler->getParser();
+    parser.setCurrentOrigin(_origin);
     if (parser.isSymbolLetter(*_scan, true)) {
         _list.label = _scan;
         const char *end = parser.scanSymbol(_list.label);
@@ -533,10 +534,6 @@ bool AsmCommonDirective::hasSymbol(const char *symbol, const char *end) {
 uint32_t AsmCommonDirective::lookupSymbol(const char *symbol, const char *end) {
     return end ? symbolLookup(std::string(symbol, end - symbol))
                : symbolLookup(std::string(symbol));
-}
-
-uint32_t AsmCommonDirective::currentOrigin() {
-    return _origin;
 }
 
 Error AsmCommonDirective::internSymbol(uint32_t value, const char *symbol, const char *end) {

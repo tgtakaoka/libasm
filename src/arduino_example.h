@@ -130,7 +130,6 @@ protected:
         (void)end;
         return 0;
     }
-    uint32_t currentOrigin() override { return _origin; }
 
     static bool isSpace(char c) { return c == ' ' || c == '\t'; }
 

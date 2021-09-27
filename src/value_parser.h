@@ -34,7 +34,8 @@ public:
     static Value makeUnsigned(uint32_t value) { return Value(value, UNSIGNED); }
 
     Value() : _value(0), _type(UNDEFINED) {}
-    Value(uint32_t uval) : _value(uval), _type(static_cast<int32_t>(uval) >= 0 ? SIGNED : UNSIGNED) {}
+    Value(uint32_t uval)
+        : _value(uval), _type(static_cast<int32_t>(uval) >= 0 ? SIGNED : UNSIGNED) {}
 
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned() const { return _type == SIGNED; }
@@ -82,7 +83,7 @@ private:
 
 class ValueParser : protected ErrorReporter {
 public:
-    ValueParser(char curSym = '.') : ErrorReporter(), _curSym(curSym) {}
+    ValueParser(char curSym = '.') : ErrorReporter(), _origin(0), _curSym(curSym) {}
 
     Error error() const { return getError(); }
     /*
@@ -97,6 +98,7 @@ public:
      */
     const char *readChar(const char *expr, char &val);
 
+    void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     bool isSymbolLetter(char c, bool head = false) const;
     const char *scanSymbol(const char *scan) const;
 
@@ -106,6 +108,7 @@ protected:
     Error scanNumberEnd(const char *scan, const uint8_t base, char suffix = 0);
 
 private:
+    uint32_t _origin;
     const char _curSym;
     const char *_next;
     const char *_end;

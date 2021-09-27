@@ -108,7 +108,7 @@ static void test_bin_constant() {
 }
 
 static void test_current_address() {
-    symtab.setCurrentOrigin(0x1000);
+    parser.setCurrentOrigin(0x1000);
     E16("*",       0x1000, OK);
     E16("*+2",     0x1002, OK);
     E16("*-2",     0x0FFE, OK);
@@ -125,7 +125,7 @@ static void test_current_address() {
     E32(".-0x1001", 0xFFFFFFFF, OK);
 
     symtab.intern(0x1000, "table");
-    symtab.setCurrentOrigin(0x1100);
+    parser.setCurrentOrigin(0x1100);
     E16("*-table",     0x100, OK);
     E16("(*-table)/2", 0x80,  OK);
     E16(".-table",     0x100, OK);
