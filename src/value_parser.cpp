@@ -235,7 +235,7 @@ Value ValueParser::readAtom(const char *scan) {
         }
         return value;
     }
-    if (_symtab && (c == _curSym || c == '.')) {
+    if (c == _curSym || c == '.') {
         _next = p;
         return Value::makeUnsigned(_origin);
     }

@@ -28,7 +28,7 @@ namespace arduino {
 
 using libcli::Cli;
 
-class BaseExample : protected SymbolTable {
+class BaseExample {
 public:
     virtual void begin(Stream &console) { _cli.begin(console); }
 
@@ -113,24 +113,6 @@ protected:
         return false;
     }
 
-    // SymbolTable
-    const char *lookupValue(uint32_t value) override {
-        (void)value;
-        return nullptr;
-    }
-
-    bool hasSymbol(const char *symbol, const char *end) override {
-        (void)symbol;
-        (void)end;
-        return false;
-    }
-
-    uint32_t lookupSymbol(const char *symbol, const char *end) override {
-        (void)symbol;
-        (void)end;
-        return 0;
-    }
-
     static bool isSpace(char c) { return c == ' ' || c == '\t'; }
 
     static const char *skipSpaces(const char *p) {
@@ -165,7 +147,7 @@ private:
 
     void assemble(const char *line) {
         Insn insn;
-        if (_assembler.encode(line, insn, _origin, this)) {
+        if (_assembler.encode(line, insn, _origin)) {
             _cli.print(F("Error: "));
             _cli.println(FSTR(_assembler.errorText()));
         } else {
@@ -219,7 +201,7 @@ private:
         char operands[80];
         Insn insn;
         while (memory.hasNext()) {
-            if (_disassembler.decode(memory, insn, operands, sizeof(operands), this)) {
+            if (_disassembler.decode(memory, insn, operands, sizeof(operands))) {
                 _cli.print(F("Error: "));
                 _cli.println(FSTR(_disassembler.errorText()));
             } else {

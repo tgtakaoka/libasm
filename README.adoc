@@ -20,7 +20,7 @@ interface.
     asm6800.setCpu("68HC11");
     const char *text = "SUBD $90";
     libasm::Insn insn;
-    asm6800.encode(text, insn, 0x1000, /*SymbolTable*/nullptr);
+    asm6800.encode(text, insn, 0x1000);
     assert(insn.address()  == 0x1000);
     assert(insn.length()   == 2);    // direct addressing
     assert(insn.bytes()[0] == 0x93); // SUBD
@@ -43,7 +43,7 @@ interface.
     dis68k.setRelativeTarget(true);
     libasm::Insn insn;
     char opr[80];
-    dis68k.decode(memory, insn, opr, sizeof(opr), /*SymbolTable*/nullptr);
+    dis68k.decode(memory, insn, opr, sizeof(opr));
     assert(std::string(insn.name()) == "jmp");
     assert(std::string(opr) == "(*+$1234,pc)");
 
@@ -52,7 +52,7 @@ interface.
 On POSIX environment, assembler command line interface is provided.
 It can generate Intel HEX or Motorola S-Record output.
 
-    libasm assembler (version 1.6.12)
+    libasm assembler (version 1.6.13)
     usage: asm [-o <output>] [-l <list>] <input>
       -C <CPU>    : target CPU
                     MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11
@@ -75,7 +75,7 @@ It can generate Intel HEX or Motorola S-Record output.
 On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
-    libasm disassembler (version 1.6.12)
+    libasm disassembler (version 1.6.13)
     usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
       -C <CPU>    : target CPU
                     MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11
