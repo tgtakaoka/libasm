@@ -24,17 +24,23 @@ namespace libasm {
 
 class Value {
 public:
+    static bool overflowRel8(int16_t s16);
+    static bool overflowRel8(int32_t s32);
+    static bool overflowRel16(int32_t s32);
+    static bool overflowUint8(uint16_t u16);
+    static bool overflowUint8(uint32_t u32);
+    static bool overflowUint16(uint32_t u32);
     static Value makeSigned(int32_t value) { return Value(value, SIGNED); }
-
     static Value makeUnsigned(uint32_t value) { return Value(value, UNSIGNED); }
 
     Value() : _value(0), _type(UNDEFINED) {}
+    Value(uint32_t uval) : _value(uval), _type(static_cast<int32_t>(uval) >= 0 ? SIGNED : UNSIGNED) {}
 
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned() const { return _type == SIGNED; }
     bool isUnsigned() const { return _type == UNSIGNED; }
-    bool overflowUint8() const;
-    bool overflowUint16() const;
+    bool overflowUint8() const { return overflowUint8(_value); }
+    bool overflowUint16() const { return overflowUint16(_value); }
 
     void setSigned(int32_t value) {
         _value = value;

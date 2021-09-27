@@ -19,12 +19,32 @@
 
 namespace libasm {
 
-bool Value::overflowUint8() const {
-    return getSigned() < -128 || (getSigned() >= 0 && getUnsigned() >= 0x100);
+
+bool Value::overflowRel8(int16_t s16) {
+    return s16 < -128 || s16 >= 128;
 }
 
-bool Value::overflowUint16() const {
-    return getSigned() < -32768L || (getSigned() >= 0 && getUnsigned() >= 0x10000L);
+bool Value::overflowRel8(int32_t s32) {
+    return s32 < -128 || s32 >= 128;
+}
+
+bool Value::overflowRel16(int32_t s32) {
+    return s32 < -32768L || s32 >= 32768L;
+}
+
+bool Value::overflowUint8(uint16_t u16) {
+    const int16_t s16 = static_cast<int16_t>(u16);
+    return s16 < -128 || (s16 >= 0 && u16 >= 256);
+}
+
+bool Value::overflowUint8(uint32_t u32) {
+    const int32_t s32 = static_cast<int32_t>(u32);
+    return s32 < -128 || (s32 >= 0 && u32 >= 0x100);
+}
+
+bool Value::overflowUint16(uint32_t u32) {
+    const int32_t s32 = static_cast<int32_t>(u32);
+    return s32 < -32768L || (s32 >= 0 && u32 >= 0x10000L);
 }
 
 const char *ValueParser::readChar(const char *expr, char &val) {
@@ -227,11 +247,7 @@ Value ValueParser::readAtom(const char *scan) {
         _next = end;
         if (_symtab->hasSymbol(symbol, end)) {
             const uint32_t v = _symtab->lookupSymbol(symbol, end);
-            if (v & 0x80000000) {
-                return Value::makeSigned(v);
-            } else {
-                return Value::makeUnsigned(v);
-            }
+            return Value(v);
         }
         return Value();
     }

@@ -94,33 +94,6 @@ const char *Assembler::skipSpaces(const char *scan) {
     return scan;
 }
 
-bool Assembler::overflowRel8(int16_t s16) {
-    return s16 < -128 || s16 >= 128;
-}
-
-bool Assembler::overflowRel8(int32_t sval32) {
-    return sval32 < -128 || sval32 >= 128;
-}
-
-bool Assembler::overflowUint8(uint16_t u16) {
-    const int16_t s16 = static_cast<int16_t>(u16);
-    return s16 < -128 || (s16 >= 0 && u16 >= 256);
-}
-
-bool Assembler::overflowUint8(uint32_t u32) {
-    const int32_t s32 = static_cast<int32_t>(u32);
-    return s32 < -128 || (s32 >= 0 && u32 >= 256);
-}
-
-bool Assembler::overflowRel16(int32_t s32) {
-    return s32 < -32768L || s32 >= 32768L;
-}
-
-bool Assembler::overflowUint16(uint32_t u32) {
-    const int32_t s32 = static_cast<int32_t>(u32);
-    return s32 < -32768L || (s32 >= 0 && u32 >= 65536UL);
-}
-
 }  // namespace libasm
 
 // Local Variables:
