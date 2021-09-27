@@ -120,11 +120,9 @@ void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t addrUnit = static_cast<uint8_t>(_line->addressUnit());
-    addr /= addrUnit;
     switch (_line->addressWidth()) {
     case ADDRESS_12BIT:
-        formatUint16(addr, fixedWidth, zeroSuppress);
+        formatUint12(addr, fixedWidth, zeroSuppress);
         break;
     case ADDRESS_16BIT:
         formatUint16(addr, fixedWidth, zeroSuppress);
@@ -157,7 +155,8 @@ int CliListing::formatBytes(int base) {
         while (base + i < _line->generatedSize() && i < maxBytes) {
             const int high = base + i + (_line->endian() == ENDIAN_BIG ? 0 : 1);
             const int low = base + i + (_line->endian() == ENDIAN_BIG ? 1 : 0);
-            const uint16_t val = _line->getByte(low) + (static_cast<uint16_t>(_line->getByte(high)) << 8);
+            const uint16_t val =
+                    _line->getByte(low) + (static_cast<uint16_t>(_line->getByte(high)) << 8);
             _out += ' ';
             formatUint16(val);
             i += 2;

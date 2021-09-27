@@ -24,7 +24,7 @@ namespace libasm {
 namespace i8086 {
 
 bool AsmI8086::parseStringInst(const char *scan, Operand &op) {
-    Insn _insn;
+    Insn _insn(0);
     InsnI8086 insn(_insn);
     const char *endName = _parser.scanSymbol(scan);
     insn.setName(scan, endName);

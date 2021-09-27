@@ -245,7 +245,7 @@ Error AsmTms9900::encode(Insn &_insn) {
         return getError();
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO && encodeOperand(insn, dstOp, dst)) {
-        insn.resetAddress(insn.address());
+        insn.reset();
         return getError();
     }
     insn.emitInsn();

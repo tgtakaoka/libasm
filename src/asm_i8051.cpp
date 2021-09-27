@@ -218,11 +218,11 @@ Error AsmI8051::encode(Insn &_insn) {
         if (dst && encodeOperand(insn, dst, dstOp))
             return getError();
         if (src && encodeOperand(insn, src, srcOp)) {
-            insn.resetAddress(insn.address());
+            insn.reset();
             return getError();
         }
         if (ext && encodeOperand(insn, ext, extOp)) {
-            insn.resetAddress(insn.address());
+            insn.reset();
             return getError();
         }
     }

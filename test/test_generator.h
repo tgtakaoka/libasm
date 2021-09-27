@@ -23,8 +23,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "array_memory.h"
 #include "dis_base.h"
-#include "dis_memory.h"
 #include "text_buffer.h"
 
 namespace libasm {
@@ -156,33 +156,33 @@ private:
 };
 
 template <typename Conf>
-class TestData : private DisMemory {
+class TestData {
 public:
-    TestData() : DisMemory(0), _textBuffer(256) {}
+    TestData() : _textBuffer(256) {}
 
-    const Insn &insn() const { return _insn; }
-    const char *name() const { return _insn.name(); }
-    const uint8_t length() const { return _insn.length(); }
+    const typename Conf::uintptr_t address() const { return _address; }
+    const char *name() const { return _name.c_str(); }
+    const uint8_t length() const { return _length; }
+    const uint8_t *bytes() const { return _bytes; }
     const char *operands() const { return _textBuffer.buffer(); }
-    Error tryGenerate(Disassembler &dis, typename Conf::uintptr_t addr, uint8_t *memory, int size) {
-        resetAddress(addr);
-        _memory = memory;
-        _memorySize = size;
-        _memoryIndex = 0;
 
-        return dis.decode(*this, _insn, _textBuffer.buffer(), _textBuffer.size());;
+    Error tryGenerate(Disassembler &dis, typename Conf::uintptr_t addr, uint8_t *memory, int size) {
+        _address = addr;
+        _bytes = memory;
+        ArrayMemory mem(addr, memory, size);
+        Insn insn(addr);
+        const Error error = dis.decode(mem, insn, _textBuffer.buffer(), _textBuffer.size());
+        _name = std::string(insn.name());
+        _length = insn.length();
+        return error;
     }
 
 private:
     TextBuffer _textBuffer;
-    uint8_t *_memory;
-    int _memorySize;
-    int _memoryIndex;
-    Insn _insn;
-
-    // DisMemory
-    bool hasNext() const override { return _memoryIndex < _memorySize; }
-    uint8_t nextByte() override { return _memory[_memoryIndex++]; }
+    typename Conf::uintptr_t _address;
+    const uint8_t *_bytes;
+    std::string _name;
+    uint8_t _length;
 };
 
 template <typename Conf>
@@ -200,7 +200,7 @@ public:
 
     class Printer {
     public:
-        virtual void print(const Insn &insn, const char *operands) = 0;
+        virtual void print(const TestData<Conf> &data);
         virtual void origin(typename Conf::uintptr_t addr) = 0;
         virtual FILE *dumpOut() = 0;
     };
@@ -267,7 +267,7 @@ private:
     }
 
     void printInsn(const TestData<Conf> &data) {
-        _printer->print(data.insn(), data.operands());
+        _printer->print(data);
         _addr += data.length();
     }
 

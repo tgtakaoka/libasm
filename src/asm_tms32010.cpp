@@ -175,12 +175,12 @@ Error AsmTms32010::encode(Insn &_insn) {
         return getError();
     const AddrMode mode2 = insn.op2();
     if (mode2 != M_NO && encodeOperand(insn, op2, mode2)) {
-        insn.resetAddress(insn.address());
+        insn.reset();
         return getError();
     }
     const AddrMode mode3 = insn.op3();
     if (mode3 != M_NO && encodeOperand(insn, op3, mode3)) {
-        insn.resetAddress(insn.address());
+        insn.reset();
         return getError();
     }
     insn.emitInsn();

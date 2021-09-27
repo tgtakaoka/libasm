@@ -166,18 +166,19 @@ int DisDriver::disassemble() {
         if (end > _addr_end)
             size -= (end - _addr_end) * addrUnit;
         if (list) {
-            fprintf(list, "%s\n", listing.origin(base, true));
+            fprintf(list, "%s\n", listing.origin(start, true));
             fflush(list);
         }
         if (output) {
-            fprintf(output, "%s\n", listing.origin(base));
+            fprintf(output, "%s\n", listing.origin(start));
             fflush(output);
         }
-        Insn insn;
-        for (size_t pc = 0; pc < size; pc += insn.length()) {
-            const uint32_t address = base + pc;
-            listing.disassemble(address, insn);
+        for (size_t pc = 0; pc < size; ) {
+            const uint32_t address = start + pc / addrUnit;
+            Insn insn(address);
+            listing.disassemble(base + pc, insn);
             const Error error = _disassembler->getError();
+            pc += insn.length();
             if (error)
                 fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
                         _disassembler->errorText());

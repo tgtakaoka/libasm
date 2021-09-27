@@ -198,7 +198,7 @@ Error AsmMc6800::encode(Insn &_insn) {
         goto error;
     if (emitOperand(insn, insn.mode3(), op3)) {
     error:
-        insn.resetAddress(insn.address());
+        insn.reset();
         return getError();
     }
     return getError();

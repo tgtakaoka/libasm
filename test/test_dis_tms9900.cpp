@@ -381,7 +381,7 @@ static void assert_mid(
     const mid_range *ranges, const mid_range *end,
     const uint16_t prefix = 0, const mid_hole *hole = nullptr) {
     uint16_t words[4] = { 0, 0, 0, 0 };
-    Insn insn;
+    Insn insn(0x1000);
     char operands[40], message[40];
     const mid_range *m = ranges;
     if (prefix) words[0] = prefix;

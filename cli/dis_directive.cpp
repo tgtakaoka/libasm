@@ -34,7 +34,7 @@ Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
     _memory.setAddress(addr);
     const Error error = _disassembler.decode(_memory, insn, _operands, sizeof(_operands));
     _listing.reset(*this);
-    _address = addr;
+    _address = insn.address();
     _generated_size = insn.length();
     _instruction = insn.name();
     return error;
@@ -82,8 +82,9 @@ int DisDirective::generatedSize() const {
 }
 
 uint8_t DisDirective::getByte(int offset) const {
+    const uint32_t base = _address * uint8_t(_disassembler.config().addressUnit());
     uint8_t val = 0;
-    _memory.readByte(_address + offset, val);
+    _memory.readByte(base + offset, val);
     return val;
 }
 

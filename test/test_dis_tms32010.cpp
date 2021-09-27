@@ -531,7 +531,7 @@ static bool in_array(uint8_t v, const uint8_t *begin, const uint8_t *end) {
 
 static void assert_ok(Config::opcode_t opc) {
     uint16_t words[2] = { opc, 0 };
-    Insn insn;
+    Insn insn(0x100);
     char operands[40], message[40];
     ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
 
@@ -543,7 +543,7 @@ static void assert_ok(Config::opcode_t opc) {
 
 static void assert_illegal(Config::opcode_t opc, Error err, const char *message) {
     uint16_t words[2] = { opc, 0 };
-    Insn insn;
+    Insn insn(0x100);
     char operands[40];
     ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
 

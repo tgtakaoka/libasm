@@ -21,6 +21,7 @@
 
 #include "asm_base.h"
 #include "dis_base.h"
+#include "config_base.h"
 #include "str_memory.h"
 
 namespace libasm {
@@ -36,12 +37,15 @@ public:
 
 protected:
     Cli _cli;
+    const ConfigBase &_config;
     uint32_t _origin;
 
     BaseExample(ConfigBase &config) : _cli(), _config(config) {}
 
     virtual const /*PROGMEM*/ char *getCpu() const = 0;
     virtual bool setCpu(const char *) = 0;
+
+    uint8_t addrUnit() const { return uint8_t(_config.addressUnit()); }
 
     void printAddress(uint32_t addr) {
         const AddressWidth width = _config.addressWidth();
@@ -124,9 +128,6 @@ protected:
     static const __FlashStringHelper *FSTR(const /*PROGMEM*/ char *pstr) {
         return reinterpret_cast<const __FlashStringHelper *>(pstr);
     }
-
-private:
-    ConfigBase &_config;
 };
 
 class AsmExample : public BaseExample {
@@ -146,8 +147,8 @@ private:
     Assembler &_assembler;
 
     void assemble(const char *line) {
-        Insn insn;
-        if (_assembler.encode(line, insn, _origin)) {
+        Insn insn(_origin);
+        if (_assembler.encode(line, insn)) {
             _cli.print(F("Error: "));
             _cli.println(FSTR(_assembler.errorText()));
         } else {
@@ -155,7 +156,7 @@ private:
             _cli.print(':');
             printBytes(insn.bytes(), insn.length());
             _cli.println();
-            _origin += insn.length();
+            _origin += insn.length() / addrUnit();
         }
     }
 
@@ -199,8 +200,10 @@ private:
 
     void disassemble(DisMemory &memory) {
         char operands[80];
-        Insn insn;
+        const uint32_t origin = memory.address();
         while (memory.hasNext()) {
+            const uint32_t delta = (memory.address() - origin) / addrUnit();
+            Insn insn(origin + delta);
             if (_disassembler.decode(memory, insn, operands, sizeof(operands))) {
                 _cli.print(F("Error: "));
                 _cli.println(FSTR(_disassembler.errorText()));
@@ -211,7 +214,7 @@ private:
                 _cli.print(' ');
                 printInsn(insn, operands);
                 _cli.println();
-                _origin += insn.length();
+                _origin += insn.length() / addrUnit();
             }
         }
     }

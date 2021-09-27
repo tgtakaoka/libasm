@@ -19,8 +19,8 @@ interface.
     libasm::mc6800::AsmMc6800 asm6800;
     asm6800.setCpu("68HC11");
     const char *text = "SUBD $90";
-    libasm::Insn insn;
-    asm6800.encode(text, insn, 0x1000);
+    libasm::Insn insn(0x1000);
+    asm6800.encode(text, insn);
     assert(insn.address()  == 0x1000);
     assert(insn.length()   == 2);    // direct addressing
     assert(insn.bytes()[0] == 0x93); // SUBD
@@ -41,9 +41,10 @@ interface.
     libasm::ArrayMemory memory(0x100, words, sizeof(words));
     libasm::mc68000::DisMc68000 dis68k;
     dis68k.setRelativeTarget(true);
-    libasm::Insn insn;
+    libasm::Insn insn(0x100);
     char opr[80];
     dis68k.decode(memory, insn, opr, sizeof(opr));
+    assert(insn.address() == 0x100);
     assert(std::string(insn.name()) == "jmp");
     assert(std::string(opr) == "(*+$1234,pc)");
 

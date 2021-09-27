@@ -99,18 +99,20 @@ private:
     bool _dump;
     FILE *_output;
     FILE *_list;
-    const Insn *_insn;
+    const char *_name;
     const char *_operands;
     typename Conf::uintptr_t _address;
+    const uint8_t *_bytes;
     size_t _generated_size;
     const char *_instruction;
 
     // TestGenerator<Addr>::Printer
-    void print(const Insn &insn, const char *operands) override {
-        _insn = &insn;
-        _address = insn.address() * addrUnit();
-        _generated_size = insn.length();
-        print(insn.name(), operands);
+    void print(const TestData<Conf> &data) override {
+        _name = data.name();
+        _address = data.address();
+        _bytes = data.bytes();
+        _generated_size = data.length();
+        print(data.name(), data.operands());
     }
 
     void origin(typename Conf::uintptr_t addr) override {
@@ -154,7 +156,7 @@ private:
     uint16_t includeNest() const override { return 0; }
     uint32_t startAddress() const override { return _address; }
     int generatedSize() const override { return _generated_size; }
-    uint8_t getByte(int offset) const override { return _insn->bytes()[offset]; }
+    uint8_t getByte(int offset) const override { return _bytes[offset]; }
     bool hasValue() const override { return false; }
     uint32_t value() const override { return 0; }
     bool hasLabel() const override { return false; }

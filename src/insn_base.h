@@ -31,18 +31,21 @@ namespace libasm {
  */
 class Insn {
 public:
+    Insn(uint32_t addr) : _address(addr), _length(0) { _name[0] = 0; }
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
+    void clear() { _length = 0; }
+    void reset() { clear(); _name[0] = 0; }
 
-    void resetAddress(uint32_t addr) {
-        _address = addr;
-        _length = 0;
-    }
+    /** No copy constructor. */
+    Insn(Insn const &) = delete;
+    /** No assignment operator. */
+    void operator=(Insn const &) = delete;
 
 private:
-    uint32_t _address;
+    const uint32_t _address;
     uint8_t _length;
     static constexpr size_t MAX_CODE = 24;
     uint8_t _bytes[MAX_CODE];
@@ -243,10 +246,11 @@ protected:
 
     uint32_t address() const { return _insn.address(); }
 
-    void resetAddress(uint32_t addr) {
-        _insn.resetAddress(addr);
+    void clear() {
+        _insn.clear();
         resetError();
     }
+    void reset() { clear(); _insn.reset(); }
 
 private:
     Insn &_insn;
@@ -257,7 +261,8 @@ class InsnImpl : public InsnBase {
 public:
     typename Conf::uintptr_t address() const { return InsnBase::address(); }
 
-    void resetAddress(typename Conf::uintptr_t addr) { InsnBase::resetAddress(addr); }
+    void clear() { InsnBase::clear(); }
+    void reset() { InsnBase::reset(); }
 
     void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
         _opCode = opCode;
@@ -277,7 +282,7 @@ public:
     typename Conf::opcode_t post() const { return _post; }
     void setFlags(typename Entry::Flags flags) { _flags = flags; }
     typename Entry::Flags flags() const { return _flags; }
-    typename Entry::Flags& flags() { return _flags; }
+    typename Entry::Flags &flags() { return _flags; }
 
     /* Generate 16 bit |data| (Assembler). */
     void emitUint16(uint16_t data) {

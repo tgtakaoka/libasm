@@ -189,7 +189,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     }
 
     if (label) {
-        internSymbol(_origin / addrUnit(), label);
+        internSymbol(_origin, label);
         if (getError()) {
             _scan = _list.label;
             return getError();
@@ -201,8 +201,8 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         return setError(OK);  // skip comment
     }
 
-    Insn insn;
-    const Error error = _assembler->encode(_scan, insn, _origin, this);
+    Insn insn(_origin);
+    const Error error = _assembler->encode(_scan, insn, this);
     const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
     _scan = _assembler->errorAt();
     if (error == OK || allowUndef) {
@@ -214,7 +214,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
             memory.writeBytes(addr, insn.bytes(), insn.length());
             _list.address = addr;
             _list.length = insn.length();
-            _origin += insn.length();
+            _origin += insn.length() / addrUnit();
         }
         return setError(OK);
     }
@@ -222,7 +222,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 }
 
 void AsmCommonDirective::setOrigin(uint32_t origin) {
-    _origin = origin * addrUnit();
+    _origin = origin;
 }
 
 const char *AsmCommonDirective::errorAt() const {
@@ -367,7 +367,7 @@ Error AsmCommonDirective::defineOrigin() {
         return setError(UNDEFINED_SYMBOL);
     _scan = scan;
     // TODO line end check
-    _list.address = _origin = value.getUnsigned() * addrUnit();
+    _list.address = _origin = value.getUnsigned();
     return setError(OK);
 }
 
@@ -430,6 +430,7 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
     _list.address = _origin;
     _list.length = 0;
     ValueParser &parser = _assembler->getParser();
+    const uint32_t base = _origin * addrUnit();
     do {
         skipSpaces();
         if (terminator || *_scan == '"') {
@@ -446,7 +447,7 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
                     _scan = p;
                     return getError();
                 }
-                memory.writeByte(_origin++, c);
+                memory.writeByte(base + _list.length, c);
                 _list.length++;
             }
             _scan = p + 1;
@@ -459,7 +460,7 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
                 return setError(UNDEFINED_SYMBOL);
             if (value.overflowUint8())
                 return setError(OVERFLOW_RANGE);
-            memory.writeByte(_origin++, value.getUnsigned());
+            memory.writeByte(base + _list.length, value.getUnsigned());
             _list.length++;
         }
         const char *save = _scan;
@@ -469,6 +470,7 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
         _scan = save;
         break;
     } while (true);
+    _origin += ((_list.length + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
@@ -476,6 +478,9 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
     _list.address = _origin;
     _list.length = 0;
     ValueParser &parser = _assembler->getParser();
+    const Endian endian = _assembler->config().endian();
+    const uint8_t hi = endian == ENDIAN_BIG ? 0 : 1;
+    const uint8_t lo = endian == ENDIAN_BIG ? 1 : 0;
     do {
         skipSpaces();
         Value value;
@@ -487,13 +492,10 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
         if (value.overflowUint16())
             return setError(OVERFLOW_RANGE);
         const uint16_t val16 = value.getUnsigned();
-        if (_assembler->config().endian() == ENDIAN_BIG) {
-            memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
-            memory.writeByte(_origin++, static_cast<uint8_t>(val16));
-        } else {
-            memory.writeByte(_origin++, static_cast<uint8_t>(val16));
-            memory.writeByte(_origin++, static_cast<uint8_t>(val16 >> 8));
-        }
+        uint32_t addr = _origin * addrUnit();
+        memory.writeByte(addr + hi, static_cast<uint8_t>(val16 >> 8));
+        memory.writeByte(addr + lo, static_cast<uint8_t>(val16));
+        addr += 2 / addrUnit();
         _list.length += 2;
         const char *save = _scan;
         skipSpaces();

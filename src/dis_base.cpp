@@ -26,11 +26,8 @@ void Disassembler::setUppercase(bool uppercase) {
 Error Disassembler::decode(
         DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {
     _symtab = symtab;
-
     resetError();
     StrBuffer out(operands, size);
-    const uint8_t addrUnit = static_cast<uint8_t>(config().addressUnit());
-    insn.resetAddress(memory.address() / addrUnit);
     decode(memory, insn, out);
     if (!_regBase.isUppercase())
         insn.toLowerName();

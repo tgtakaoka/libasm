@@ -210,7 +210,7 @@ Error DisI8086::decodeMemReg(
 
 Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &out) {
     if (_repeatHasStringInst) {
-        Insn _istr;
+        Insn _istr(0);
         InsnI8086 istr(_istr);
         const Config::opcode_t opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
