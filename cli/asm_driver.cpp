@@ -80,7 +80,7 @@ int AsmDriver::assemble() {
             return 1;
         }
         AsmDirective *directive = _commonDir.currentDirective();
-        const AddressWidth addrWidth = _commonDir.addressWidth();
+        const AddressWidth addrWidth = _commonDir.config().addressWidth();
         BinFormatter *formatter;
         if (_formatter == 'S') {
             formatter = new MotoSrec(addrWidth);

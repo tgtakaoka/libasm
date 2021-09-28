@@ -62,11 +62,9 @@ uint8_t ArrayMemory::nextByte() {
     } else {
         const uint16_t word = _words[_index / 2];
         const uint8_t pos = _index % 2;
-        if (_endian == ENDIAN_BIG) {
-            byte = (pos == 0) ? word >> 8 : word;
-        } else {
-            byte = (pos == 0) ? word : word >> 8;
-        }
+        const uint8_t hi = word >> 8;
+        const uint8_t lo = word;
+        byte = (uint8_t(_endian) == pos) ? hi : lo;
     }
     _index++;
     return byte;

@@ -134,14 +134,11 @@ public:
     }
 
     void outWord(uint16_t data, int off = 0) {
-        int pos = _start + off;
-        if (_endian == ENDIAN_BIG) {
-            _buffer[pos++] = data >> 8;
-            _buffer[pos] = data;
-        } else {
-            _buffer[pos++] = data;
-            _buffer[pos] = data >> 8;
-        }
+        const int hi = int(_endian);
+        const int lo = 1 - hi;
+        const int pos = _start + off;
+        _buffer[pos + hi] = data >> 8;
+        _buffer[pos + lo] = data;
     }
 
 private:
@@ -150,8 +147,9 @@ private:
 
     uint16_t initData() const {
         const uint8_t data = (_start > 0) ? _buffer[_start - 1] + 1 : 0;
-        return (_endian == ENDIAN_BIG) ? (static_cast<uint16_t>(data) << 8) + (data + 1)
-                                       : data + (static_cast<uint16_t>(data + 1) << 8);
+        const uint8_t hi = uint8_t(_endian);
+        const uint8_t lo = 1 - hi;
+        return (static_cast<uint16_t>(data + hi) << 8) | (data + lo);
     }
 };
 

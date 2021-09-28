@@ -66,17 +66,15 @@ protected:
 
     void printBytes(const uint8_t *bytes, uint8_t length) {
         const OpCodeWidth width = _config.opCodeWidth();
-        const Endian endian = _config.endian();
         for (uint8_t i = 0; i < length;) {
             _cli.print(' ');
             if (width == OPCODE_8BIT) {
                 _cli.printHex(bytes[i], 2);
                 i += 1;
             } else {  // OPCODE_16BIT
-                const uint8_t hi = (endian == ENDIAN_BIG) ? 0 : 1;
-                const uint8_t lo = (endian == ENDIAN_BIG) ? 1 : 0;
-                uint16_t val = static_cast<uint16_t>(bytes[i + hi]) << 8;
-                val |= bytes[i + lo];
+                const uint8_t hi = uint8_t(_config.endian());
+                const uint8_t lo = 1 - hi;
+                const uint16_t val = (static_cast<uint16_t>(bytes[i + hi]) << 8) | bytes[i + lo];
                 _cli.printHex(val, 4);
                 i += 2;
             }
@@ -110,8 +108,7 @@ protected:
                 _cli.println(F("unknown CPU"));
             return true;
         }
-        if (strcasecmp_P(line, PSTR("ORG")) == 0 ||
-            strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
+        if (strcasecmp_P(line, PSTR("ORG")) == 0 || strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
             const char *org = skipSpaces(line + 3);
             if (*org) {
                 uint32_t addr;
@@ -170,10 +167,12 @@ protected:
                 _next = p;
                 return val32;
             } else {  // OPCODE_16BIT
+                const uint8_t hi = val32 >> 8;
+                const uint8_t lo = val32;
                 if (address() % 2 == 0)
-                    return _config.endian() == ENDIAN_BIG ? val32 >> 8 : val32;
+                    return _config.endian() == ENDIAN_BIG ? hi : lo;
                 _next = p;
-                return _config.endian() == ENDIAN_BIG ? val32 : val32 >> 8;
+                return _config.endian() == ENDIAN_BIG ? lo : hi;
             }
         }
 

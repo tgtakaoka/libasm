@@ -121,7 +121,7 @@ private:
         char operands[40];
         StrBuffer buffer(operands, sizeof(operands));
         _disassembler.getFormatter().formatHex(
-                buffer, addr / addrUnit(), _disassembler.config().addressWidth(), false);
+                buffer, addr / addrUnit(), config().addressWidth(), false);
         _address = addr;
         _generated_size = 0;
         print("ORG", operands);
@@ -148,10 +148,6 @@ private:
     FILE *dumpOut() { return _dump ? _list : nullptr; }
 
     // ListingLine
-    AddressWidth addressWidth() const override { return _disassembler.config().addressWidth(); }
-    AddressUnit addressUnit() const override { return _disassembler.config().addressUnit(); }
-    OpCodeWidth opCodeWidth() const override { return _disassembler.config().opCodeWidth(); }
-    Endian endian() const override { return _disassembler.config().endian(); }
     uint16_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
     uint32_t startAddress() const override { return _address; }
@@ -167,11 +163,12 @@ private:
     std::string getInstruction() const override { return std::string(_instruction); }
     std::string getOperand() const override { return std::string(_operands); }
     std::string getComment() const override { return ""; }
-    int maxBytes() const override { return 6; }
+    const ConfigBase &config() const override { return _disassembler.config(); }
     int labelWidth() const override { return 6; }
-    int instructionWidth() const override { return Conf::MAX_NAME + 1; }
+    int codeBytes() const override { return 6; }
+    int nameWidth() const override { return config().nameMax() + 1; }
     int operandWidth() const override { return 40; }
-    uint8_t addrUnit() const { return static_cast<uint8_t>(addressUnit()); }
+    uint8_t addrUnit() const { return static_cast<uint8_t>(config().addressUnit()); }
 
     int parseOption(int argc, const char **argv) {
         _output_name = nullptr;

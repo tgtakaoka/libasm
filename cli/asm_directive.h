@@ -131,20 +131,16 @@ public:
     std::string getLabel() const override;
     bool hasComment() const override;
     std::string getComment() const override;
+    const ConfigBase &config() const override;
+    int nameWidth() const override;
+    int codeBytes() const override;
+    int labelWidth() const override;
+    int operandWidth() const override;
 
-public:
-    AddressWidth addressWidth() const override;
     uint8_t addrUnit() const;
 
 private:
     AsmDirective *switchDirective(AsmDirective *);
-    AddressUnit addressUnit() const override;
-    OpCodeWidth opCodeWidth() const override;
-    Endian endian() const override;
-    int maxBytes() const override;
-    int labelWidth() const override;
-    int instructionWidth() const override;
-    int operandWidth() const override;
 
     static int trimRight(const char *str, int len);
 };

@@ -48,13 +48,10 @@ public:
     virtual std::string getComment() const = 0;
 
     // configuration
-    virtual AddressWidth addressWidth() const = 0;
-    virtual AddressUnit addressUnit() const = 0;
-    virtual OpCodeWidth opCodeWidth() const = 0;
-    virtual Endian endian() const = 0;
-    virtual int maxBytes() const = 0;
+    virtual const ConfigBase &config() const = 0;
     virtual int labelWidth() const = 0;
-    virtual int instructionWidth() const = 0;
+    virtual int nameWidth() const = 0;
+    virtual int codeBytes() const = 0;
     virtual int operandWidth() const = 0;
 };
 

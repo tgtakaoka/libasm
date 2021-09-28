@@ -120,7 +120,7 @@ void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
-    switch (_line->addressWidth()) {
+    switch (_line->config().addressWidth()) {
     case ADDRESS_12BIT:
         formatUint12(addr, fixedWidth, zeroSuppress);
         break;
@@ -142,22 +142,21 @@ void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress
 }
 
 int CliListing::formatBytes(int base) {
-    const int maxBytes = _line->maxBytes();
+    const int codeBytes = _line->codeBytes();
     int i = 0;
-    if (_line->opCodeWidth() == OPCODE_8BIT) {
-        while (base + i < _line->generatedSize() && i < maxBytes) {
+    if (_line->config().opCodeWidth() == OPCODE_8BIT) {
+        while (base + i < _line->generatedSize() && i < codeBytes) {
             const uint8_t val = _line->getByte(base + i);
             _out += ' ';
             formatUint8(val);
             i++;
         }
-    }
-    if (_line->opCodeWidth() == OPCODE_16BIT) {
-        while (base + i < _line->generatedSize() && i < maxBytes) {
-            const int high = base + i + (_line->endian() == ENDIAN_BIG ? 0 : 1);
-            const int low = base + i + (_line->endian() == ENDIAN_BIG ? 1 : 0);
-            const uint16_t val =
-                    _line->getByte(low) + (static_cast<uint16_t>(_line->getByte(high)) << 8);
+    } else {  // OPCODE_16BIT
+        const int hi = int(_line->config().endian());
+        const int lo = 1 - hi;
+        while (base + i < _line->generatedSize() && i < codeBytes) {
+            const uint16_t val = (static_cast<uint16_t>(_line->getByte(base + i + hi)) << 8) |
+                                 _line->getByte(base + i + lo);
             _out += ' ';
             formatUint16(val);
             i += 2;
@@ -193,16 +192,19 @@ void CliListing::formatContent(int pos) {
         formatTab(pos);
         _out += _line->getLabel();
     }
+    pos += _line->labelWidth();
     if (_line->hasInstruction()) {
-        formatTab(pos + _line->labelWidth(), 8);
+        formatTab(pos, 8);
         convertCase(_line->getInstruction(), _out, _uppercase);
     }
+    pos += _line->nameWidth();
     if (_line->hasOperand()) {
-        formatTab(pos + _line->labelWidth() + _line->instructionWidth());
+        formatTab(pos);
         _out += _line->getOperand();
     }
+    pos += _line->operandWidth();
     if (_line->hasComment()) {
-        formatTab(pos + _line->labelWidth() + _line->instructionWidth() + _line->operandWidth());
+        formatTab(pos);
         _out += _line->getComment();
     }
 }
@@ -230,8 +232,9 @@ void CliListing::formatLine() {
     } else {
         formattedBytes = formatBytes(_next);
     }
-    const int dataTextLen = _line->opCodeWidth() == OPCODE_8BIT ? (_line->maxBytes() * 3)
-                                                                : (_line->maxBytes() / 2) * 5;
+    const int codeBytes = _line->codeBytes();
+    const int dataTextLen =
+            _line->config().opCodeWidth() == OPCODE_8BIT ? (codeBytes * 3) : (codeBytes / 2) * 5;
     if (_next == 0)
         formatContent(pos + dataTextLen + 1);
     _next += formattedBytes;

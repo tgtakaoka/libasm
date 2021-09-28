@@ -478,9 +478,8 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
     _list.address = _origin;
     _list.length = 0;
     ValueParser &parser = _assembler->getParser();
-    const Endian endian = _assembler->config().endian();
-    const uint8_t hi = endian == ENDIAN_BIG ? 0 : 1;
-    const uint8_t lo = endian == ENDIAN_BIG ? 1 : 0;
+    const uint8_t hi = uint8_t(config().endian());
+    const uint8_t lo = 1 - hi;
     do {
         skipSpaces();
         Value value;
@@ -637,24 +636,12 @@ std::string AsmCommonDirective::getComment() const {
     return std::string(_list.comment);
 }
 
-AddressWidth AsmCommonDirective::addressWidth() const {
-    return _assembler->config().addressWidth();
+const ConfigBase &AsmCommonDirective::config() const {
+    return _assembler->config();
 }
 
-AddressUnit AsmCommonDirective::addressUnit() const {
-    return _assembler->config().addressUnit();
-}
-
-OpCodeWidth AsmCommonDirective::opCodeWidth() const {
-    return _assembler->config().opCodeWidth();
-}
-
-Endian AsmCommonDirective::endian() const {
-    return _assembler->config().endian();
-}
-
-int AsmCommonDirective::maxBytes() const {
-    const uint8_t codeMax = _assembler->config().codeMax();
+int AsmCommonDirective::codeBytes() const {
+    const uint8_t codeMax = config().codeMax();
     return codeMax < 6 ? codeMax : 6;
 }
 
@@ -662,8 +649,8 @@ int AsmCommonDirective::labelWidth() const {
     return _labelWidth;
 }
 
-int AsmCommonDirective::instructionWidth() const {
-    return _assembler->config().nameMax() + 1;
+int AsmCommonDirective::nameWidth() const {
+    return config().nameMax() + 1;
 }
 
 int AsmCommonDirective::operandWidth() const {
@@ -671,7 +658,7 @@ int AsmCommonDirective::operandWidth() const {
 }
 
 uint8_t AsmCommonDirective::addrUnit() const {
-    return static_cast<uint8_t>(addressUnit());
+    return static_cast<uint8_t>(config().addressUnit());
 }
 
 // Motorola type directives

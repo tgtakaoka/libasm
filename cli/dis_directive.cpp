@@ -50,8 +50,7 @@ const char *DisDirective::getCpu(bool withBytes) {
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {
     StrBuffer buf(_operands, sizeof(_operands));
-    _disassembler.getFormatter().formatHex(
-            buf, origin, _disassembler.config().addressWidth(), false);
+    _disassembler.getFormatter().formatHex(buf, origin, config().addressWidth(), false);
     _listing.reset(*this);
     _address = origin;
     _generated_size = 0;
@@ -136,33 +135,21 @@ std::string DisDirective::getComment() const {
     return "";
 }
 
-AddressWidth DisDirective::addressWidth() const {
-    return _disassembler.config().addressWidth();
+const ConfigBase &DisDirective::config() const {
+    return _disassembler.config();
 }
 
-AddressUnit DisDirective::addressUnit() const {
-    return _disassembler.config().addressUnit();
-}
-
-OpCodeWidth DisDirective::opCodeWidth() const {
-    return _disassembler.config().opCodeWidth();
-}
-
-Endian DisDirective::endian() const {
-    return _disassembler.config().endian();
-}
-
-int DisDirective::maxBytes() const {
-    const uint8_t codeMax = _disassembler.config().codeMax();
+int DisDirective::codeBytes() const {
+    const uint8_t codeMax = config().codeMax();
     return codeMax < 6 ? codeMax : 6;
+}
+
+int DisDirective::nameWidth() const {
+    return config().nameMax() + 1;
 }
 
 int DisDirective::labelWidth() const {
     return _labelWidth;
-}
-
-int DisDirective::instructionWidth() const {
-    return _disassembler.config().nameMax() + 1;
 }
 
 int DisDirective::operandWidth() const {

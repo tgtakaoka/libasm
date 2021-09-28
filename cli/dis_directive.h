@@ -67,13 +67,10 @@ private:
     std::string getLabel() const override;
     bool hasComment() const override;
     std::string getComment() const override;
-    AddressWidth addressWidth() const override;
-    AddressUnit addressUnit() const override;
-    OpCodeWidth opCodeWidth() const override;
-    Endian endian() const override;
-    int maxBytes() const override;
+    const ConfigBase &config() const override;
     int labelWidth() const override;
-    int instructionWidth() const override;
+    int codeBytes() const override;
+    int nameWidth() const override;
     int operandWidth() const override;
 };
 
