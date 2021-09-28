@@ -17,6 +17,7 @@
 #ifndef __TEST_DIS_HELPER_H__
 #define __TEST_DIS_HELPER_H__
 
+#include "array_memory.h"
 #include "dis_base.h"
 #include "test_asserter.h"
 #include "test_symtab.h"
@@ -30,12 +31,8 @@ namespace test {
 extern TestAsserter asserter;
 extern TestSymtab symtab;
 
-void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint8_t *src,
-        uint8_t src_size, const char *expected_name, const char *expected_opr,
-        Disassembler &disassembler);
-void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint16_t *src,
-        uint8_t src_size, const char *expected_name, const char *expected_opr,
-        Disassembler &disassembler);
+void dis_assert(const char *file, int line, Error error, ArrayMemory &src,
+        const char *expected_name, const char *expected_opr);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -45,10 +42,11 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define EQUALS(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
-#define __VASSERT(file, line, error, addr, name, opr, ...)                               \
-    do {                                                                                 \
-        const Config::opcode_t src[] = {__VA_ARGS__};                                    \
-        dis_assert(file, line, error, addr, src, sizeof(src), #name, opr, disassembler); \
+#define __VASSERT(file, line, error, addr, name, opr, ...)                            \
+    do {                                                                              \
+        const Config::opcode_t name[] = {__VA_ARGS__};                                \
+        ArrayMemory memory(addr, name, sizeof(name), disassembler.config().endian()); \
+        dis_assert(file, line, error, memory, #name, opr);                            \
     } while (0)
 #define VASSERT(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)

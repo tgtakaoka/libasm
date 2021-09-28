@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include "array_memory.h"
+extern libasm::Disassembler &disassembler;
 
 namespace libasm {
 namespace test {
@@ -32,27 +32,9 @@ TestSymtab symtab;
 
 static char actual_opr[128];
 
-void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint8_t *src,
-        uint8_t src_size, const char *expected_name, const char *expected_opr,
-        Disassembler &disassembler) {
-    ArrayMemory memory(addr, src, src_size);
-    Insn insn(addr);
-    disassembler.setUppercase(true);
-    disassembler.decode(memory, insn, actual_opr, sizeof(actual_opr), &symtab);
-
-    asserter.equals(file, line, expected_name, error, disassembler);
-    if (error == OK) {
-        asserter.equals(file, line, expected_name, expected_name, insn.name());
-        asserter.equals(file, line, expected_name, expected_opr, actual_opr);
-        asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length());
-    }
-}
-
-void dis_assert(const char *file, int line, Error error, uint32_t addr, const uint16_t *src,
-        uint8_t src_size, const char *expected_name, const char *expected_opr,
-        Disassembler &disassembler) {
-    ArrayMemory memory(addr, src, src_size, disassembler.config().endian());
-    Insn insn(addr);
+void dis_assert(const char *file, int line, Error error, ArrayMemory &memory,
+        const char *expected_name, const char *expected_opr) {
+    Insn insn(memory.origin());
     disassembler.setUppercase(true);
     disassembler.decode(memory, insn, actual_opr, sizeof(actual_opr), &symtab);
 
