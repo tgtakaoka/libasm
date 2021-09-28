@@ -18,14 +18,43 @@
 
 #include "str_buffer.h"
 
+extern libasm::ValueParser parser;
+extern libasm::ValueFormatter formatter;
+
 namespace libasm {
 namespace test {
 
 TestAsserter asserter;
 TestSymtab symtab;
 
+void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
+        const Error expected_error, size_t size) {
+    Value val;
+    ErrorReporter error;
+    parser.eval(expr, nullptr, val, &symtab);
+    uint32_t actual = val.getUnsigned();
+    error.setError(parser.error());
+    if (size == 1) {
+        if (val.overflowUint8())
+            error.setErrorIf(OVERFLOW_RANGE);
+        actual = static_cast<uint8_t>(actual);
+        expected = static_cast<uint8_t>(expected);
+    }
+    if (size == 2) {
+        if (val.overflowUint16())
+            error.setErrorIf(OVERFLOW_RANGE);
+        actual = static_cast<uint16_t>(actual);
+        expected = static_cast<uint16_t>(expected);
+    }
+    if (val.isUndefined())
+        error.setErrorIf(UNDEFINED_SYMBOL);
+    asserter.equals(file, line, expr, expected_error, error);
+    if (error.isOK())
+        asserter.equals(file, line, expr, expected, actual);
+}
+
 void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const char *expected, ValueFormatter &formatter) {
+        const char *expected) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
@@ -35,7 +64,7 @@ void dec_assert(const char *file, const int line, const uint32_t value, int8_t b
 }
 
 void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const bool relax, const char *expected, ValueFormatter &formatter) {
+        const bool relax, const char *expected) {
     char msg[80];
     sprintf(msg, "%#x", value);
     char actual[80];

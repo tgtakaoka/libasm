@@ -30,30 +30,12 @@ namespace test {
 extern TestSymtab symtab;
 extern TestAsserter asserter;
 
-template <typename T>
-void val_assert(const char *file, const int line, const char *expr, const T expected,
-        const Error expected_error, ValueParser &parser) {
-    Value val;
-    ErrorReporter error;
-    parser.eval(expr, nullptr, val, &symtab);
-    error.setError(parser.error());
-    if (sizeof(T) == 1 && val.overflowUint8())
-        error.setErrorIf(OVERFLOW_RANGE);
-    if (sizeof(T) == 2 && val.overflowUint16())
-        error.setErrorIf(OVERFLOW_RANGE);
-    if (val.isUndefined())
-        error.setErrorIf(UNDEFINED_SYMBOL);
-    asserter.equals(file, line, expr, expected_error, error);
-    if (error.isOK())
-        asserter.equals(file, line, expr, static_cast<uint32_t>(expected),
-                static_cast<T>(val.getUnsigned()));
-}
-
+void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
+        const Error expected_error, size_t size);
 void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const char *expected, ValueFormatter &formatter);
-
+        const char *expected);
 void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const bool relax, const char *expected, ValueFormatter &formatter);
+        const bool relax, const char *expected);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -61,15 +43,15 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 }  // namespace libasm
 
 #define E8(expr, expected, expected_error) \
-    val_assert<uint8_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint8_t))
 #define E16(expr, expected, expected_error) \
-    val_assert<uint16_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint16_t))
 #define E32(expr, expected, expected_error) \
-    val_assert<uint32_t>(__FILE__, __LINE__, expr, expected, expected_error, parser)
+    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint32_t))
 
-#define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
+#define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected)
 #define HEX(value, bits, relax, expected) \
-    hex_assert(__FILE__, __LINE__, value, bits, relax, expected, formatter)
+    hex_assert(__FILE__, __LINE__, value, bits, relax, expected)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 
