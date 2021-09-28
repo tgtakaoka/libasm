@@ -22,14 +22,15 @@
 
 #include "array_memory.h"
 
+extern libasm::Assembler &assembler;
+
 namespace libasm {
 namespace test {
 
 TestAsserter asserter;
 TestSymtab symtab;
 
-void asm_assert(const char *file, int line, Error error, const char *src, ArrayMemory &memory,
-        Assembler &assembler) {
+void asm_assert(const char *file, int line, Error error, const char *src, ArrayMemory &memory) {
     Insn insn(memory.origin());
     assembler.encode(src, insn, &symtab);
     asserter.equals(file, line, src, error, assembler);
