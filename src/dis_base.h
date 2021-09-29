@@ -92,11 +92,11 @@ protected:
      * |val| is in symbol table.
      */
     template <typename T>
-    StrBuffer &outHex(StrBuffer &out, T val, int8_t bits) {
+    StrBuffer &outHex(StrBuffer &out, T val, int8_t bits, bool relax = true) {
         const char *label = lookup(val);
         if (label)
             return out.text(label);
-        return _formatter.formatHex(out, val, bits, /*relax*/ true);
+        return _formatter.formatHex(out, val, bits, relax);
     }
 
     /**

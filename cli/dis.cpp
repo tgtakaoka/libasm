@@ -18,6 +18,7 @@
 
 #include "dis_cdp1802.h"
 #include "dis_driver.h"
+#include "dis_i8048.h"
 #include "dis_i8051.h"
 #include "dis_i8080.h"
 #include "dis_i8086.h"
@@ -41,6 +42,7 @@ using namespace libasm::cli;
 mos6502::DisMos6502 dis6502;
 mc6800::DisMc6800 dis6800;
 mc6809::DisMc6809 dis6809;
+i8048::DisI8048 dis8048;
 i8051::DisI8051 dis8051;
 i8080::DisI8080 dis8080;
 z80::DisZ80 disz80;
@@ -60,6 +62,7 @@ std::vector<Disassembler *> disassemblers = {
         &dis6800,
         &dis6809,
         &dis6502,
+        &dis8048,
         &dis8051,
         &dis8080,
         &disz80,

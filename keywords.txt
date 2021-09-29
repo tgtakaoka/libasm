@@ -16,6 +16,7 @@ AsmMc6800       KEYWORD1        libasm
 DisMc6800       KEYWORD1        libasm
 AsmMos6502      KEYWORD1        libasm
 DisMos6502      KEYWORD1        libasm
+DisI8048        KEYWORD1        libasm
 AsmI8051        KEYWORD1        libasm
 DisI8051        KEYWORD1        libasm
 AsmI8080        KEYWORD1        libasm
