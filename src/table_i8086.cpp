@@ -439,7 +439,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptMode(flags.srcMode(), table.srcMode());
 }
@@ -450,24 +450,23 @@ static bool hasSize(AddrMode mode) {
 }
 
 static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
-    const Entry::Flags flags = entry->flags();
-    const bool strInst = flags.strInst();
+    auto dst = insn.dstMode();
+    auto src = insn.srcMode();
+    auto flags = entry->flags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
             return flags.size() == SZ_NONE;
-        return hasSize(src) || strInst;
+        return hasSize(src) || flags.strInst();
     }
     if (src == M_MEM || src == M_DIR)
-        return hasSize(dst) || strInst;
+        return hasSize(dst) || flags.strInst();
     return true;
 }
 
 Error TableI8086::searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        for (const Entry *entry = page->table();
+    for (auto page = pages; page < end; page++) {
+        for (auto entry = page->table();
                 entry < page->end() &&
                 (entry = TableBase::searchName<Entry, Entry::Flags>(
                          insn.name(), insn.flags(), entry, page->end(), acceptModes, count));
@@ -521,8 +520,8 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 }
 
 bool TableI8086::isPrefix(Config::opcode_t opCode) const {
-    for (const EntryPage *page = ARRAY_BEGIN(I8086_PAGES); page < ARRAY_END(I8086_PAGES); page++) {
-        const Config::opcode_t prefix = page->prefix();
+    for (auto page = ARRAY_BEGIN(I8086_PAGES); page < ARRAY_END(I8086_PAGES); page++) {
+        auto prefix = page->prefix();
         if (prefix == 0)
             continue;
         if (prefix == opCode)
@@ -532,8 +531,8 @@ bool TableI8086::isPrefix(Config::opcode_t opCode) const {
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
-    const OprPos dstPos = entry->flags().dstPos();
-    const OprPos srcPos = entry->flags().srcPos();
+    auto dstPos = entry->flags().dstPos();
+    auto srcPos = entry->flags().srcPos();
     Config::opcode_t mask = 0;
     if (dstPos == P_OREG || srcPos == P_OREG)
         mask |= 0007;
@@ -546,10 +545,10 @@ static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
 
 Error TableI8086::searchOpCode(
         InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
+    for (auto page = pages; page < end; page++) {
         if (insn.prefix() != page->prefix())
             continue;
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());

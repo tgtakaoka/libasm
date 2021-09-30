@@ -328,9 +328,8 @@ static constexpr TableTlcs90::EntryPage PAGES_TLCS90[] PROGMEM = {
 };
 
 Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
-    Config::opcode_t code = insn.readByte(memory);
-    for (const EntryPage *page = ARRAY_BEGIN(PAGES_TLCS90) + 1; page < ARRAY_END(PAGES_TLCS90);
-            page++) {
+    auto code = insn.readByte(memory);
+    for (auto page = ARRAY_BEGIN(PAGES_TLCS90) + 1; page < ARRAY_END(PAGES_TLCS90); page++) {
         if (!page->prefixMatch(code))
             continue;
         op.mode = page->mode();
@@ -387,12 +386,11 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
-    const AddrMode tableDst = table.dstMode();
-    const AddrMode tableSrc = table.srcMode();
-    const AddrMode dst = (tableDst == M_DST) ? insn.preMode() : tableDst;
-    const AddrMode src =
-            (tableSrc == M_SRC) ? insn.preMode() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    auto table = entry->flags();
+    auto tableDst = table.dstMode();
+    auto tableSrc = table.srcMode();
+    auto dst = (tableDst == M_DST) ? insn.preMode() : tableDst;
+    auto src = (tableSrc == M_SRC) ? insn.preMode() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
     if (acceptMode(insn.dstMode(), dst) && acceptMode(insn.srcMode(), src)) {
         insn.setAddrMode(dst, src, table.emit());
         // Update prefix mode.
@@ -411,9 +409,9 @@ static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
 Error TableTlcs90::searchName(
         InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
+    for (auto page = pages; page < end; page++) {
         insn.setPreMode(page->mode());
-        const Entry *entry = TableBase::searchName<Entry, InsnTlcs90 &>(
+        auto entry = TableBase::searchName<Entry, InsnTlcs90 &>(
                 insn.name(), insn, page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
@@ -424,9 +422,8 @@ Error TableTlcs90::searchName(
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode dst = entry->flags().dstMode();
     Config::opcode_t mask = 0;
-    switch (dst) {
+    switch (entry->flags().dstMode()) {
     case M_REGIX:
         mask |= 3;
         break;
@@ -442,8 +439,7 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     default:
         break;
     }
-    const AddrMode src = entry->flags().srcMode();
-    switch (src) {
+    switch (entry->flags().srcMode()) {
     case M_REG8:
     case M_REG16:
         mask |= 7;
@@ -455,10 +451,10 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableTlcs90::searchOpCode(
         InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
+    for (auto page = pages; page < end; page++) {
         if (!page->prefixMatch(insn.prefix()))
             continue;
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());

@@ -109,7 +109,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_ARP || opr == M_INC || opr == M_DEC)
         return table == M_MAM;
     // Compare constant range.
-    const uint8_t tv = uint8_t(table);
+    auto tv = uint8_t(table);
     if (tv >= uint8_t(M_LS0) && tv <= uint8_t(M_IM13)) {
         const uint8_t ov = uint8_t(opr);
         return tv >= ov;
@@ -118,14 +118,14 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.op1(), table.op1()) && acceptMode(flags.op2(), table.op2()) &&
            acceptMode(flags.op3(), table.op3());
 }
 
 Error TableTms32010::searchName(InsnTms32010 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    auto entry = TableBase::searchName<Entry, Entry::Flags>(
             insn.name(), insn.flags(), ARRAY_RANGE(TABLE_TMS32010), acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
@@ -136,8 +136,8 @@ Error TableTms32010::searchName(InsnTms32010 &insn) const {
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode op1 = entry->flags().op1();
-    const AddrMode op2 = entry->flags().op2();
+    auto op1 = entry->flags().op1();
+    auto op2 = entry->flags().op2();
     Config::opcode_t mask = 0;
     if (op1 == M_IM8 || op2 == M_IM8)
         mask |= 0xFF;
@@ -162,7 +162,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 Error TableTms32010::searchOpCode(InsnTms32010 &insn) const {
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
     if (entry) {
         insn.setFlags(entry->flags());

@@ -295,7 +295,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptMode(flags.srcMode(), table.srcMode()) &&
            acceptMode(flags.ex1Mode(), table.ex1Mode()) &&
@@ -304,7 +304,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableZ8000::searchName(InsnZ8000 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    auto entry = TableBase::searchName<Entry, Entry::Flags>(
             insn.name(), insn.flags(), ARRAY_RANGE(Z8000_TABLE), acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
@@ -319,13 +319,12 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 static bool matchPostWord(const InsnZ8000 &insn) {
-    const uint16_t post = insn.post() & insn.postMask();
-    return post == insn.postVal();
+    return (insn.post() & insn.postMask()) == insn.postVal();
 }
 
 const Entry *TableZ8000::searchOpCode(
         InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const {
-    for (const Entry *entry = table;
+    for (auto entry = table;
             entry < end && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
                                     insn.opCode(), entry, end, tableCode)) != nullptr;
             entry++) {
@@ -346,12 +345,12 @@ const Entry *TableZ8000::searchOpCode(
 }
 
 Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) const {
-    const Entry *entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
+    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
-    const Entry *entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
+    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
     if (entry) {
         entry++;
         insn.setFlags(entry->flags());

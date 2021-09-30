@@ -297,7 +297,7 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
 }
 
 static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.srcMode(), table.srcMode()) &&
            acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
@@ -305,8 +305,8 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableMc68000::searchName(InsnMc68000 &insn) const {
     uint8_t count = 0;
-    const Entry *const end = ARRAY_END(MC68000_TABLE);
-    for (const Entry *entry = ARRAY_BEGIN(MC68000_TABLE);
+    auto end = ARRAY_END(MC68000_TABLE);
+    for (auto entry = ARRAY_BEGIN(MC68000_TABLE);
             entry < end && (entry = TableBase::searchName<Entry, Entry::Flags>(
                                     insn.name(), insn.flags(), entry, end, matchAddrMode, count));
             entry++) {
@@ -363,13 +363,13 @@ static Config::opcode_t getInsnMask(Entry::Flags flags) {
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const Config::opcode_t mask = getInsnMask(entry->flags());
+    auto mask = getInsnMask(entry->flags());
     return opCode & ~mask;
 }
 
 Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    auto opCode = insn.opCode();
+    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
     if (entry) {
         insn.setFlags(entry->flags());
@@ -390,7 +390,7 @@ const char *TableMc68000::getCpu() const {
 }
 
 bool TableMc68000::setCpu(const char *cpu) {
-    const char *p = cpu;
+    auto p = cpu;
     if (strncasecmp_P(cpu, TEXT_CPU_MC, 2) == 0)
         p += 2;
     return strcmp_P(p, TEXT_CPU_68000) == 0;

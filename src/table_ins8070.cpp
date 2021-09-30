@@ -121,14 +121,14 @@ static bool acceptOprFormat(OprFormat opr, OprFormat table) {
 }
 
 static bool acceptOprFormats(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptOprFormat(flags.dstOpr(), table.dstOpr()) &&
            acceptOprFormat(flags.srcOpr(), table.srcOpr());
 }
 
 Error TableIns8070::searchName(InsnIns8070 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    auto entry = TableBase::searchName<Entry, Entry::Flags>(
             insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8070), acceptOprFormats, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
@@ -155,14 +155,14 @@ static Config::opcode_t maskCode(OprFormat format) {
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const Entry::Flags flags = entry->flags();
+    auto flags = entry->flags();
     opCode &= ~maskCode(flags.dstOpr());
     opCode &= ~maskCode(flags.srcOpr());
     return opCode;
 }
 
 Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);

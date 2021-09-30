@@ -82,8 +82,8 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
 // clang-format on
 
 static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
-    const AddrMode opr = flags.mode();
-    const AddrMode table = entry->flags().mode();
+    auto opr = flags.mode();
+    auto table = entry->flags().mode();
     if (opr == table)
         return true;
     if (opr == REL8)
@@ -95,7 +95,7 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8060::searchName(InsnIns8060 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    auto entry = TableBase::searchName<Entry, Entry::Flags>(
             insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8060), acceptAddrMode, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
@@ -119,7 +119,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);

@@ -660,7 +660,7 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptAddrMode(flags.mode1(), table.mode1()) &&
            acceptAddrMode(flags.mode2(), table.mode2()) &&
            acceptAddrMode(flags.mode3(), table.mode3());
@@ -669,8 +669,8 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 Error TableMc6800::searchName(
         InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchName<Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page->table(), page->end(), acceptAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
@@ -687,11 +687,11 @@ static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {
 
 const Entry *TableMc6800::searchOpCode(
         InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Config::opcode_t prefix = page->prefix();
+    for (auto page = pages; page < end; page++) {
+        auto prefix = page->prefix();
         if (insn.prefix() != prefix)
             continue;
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
@@ -707,12 +707,12 @@ Error TableMc6800::searchName(InsnMc6800 &insn) const {
 }
 
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
-    const Entry *entry = searchOpCode(insn, _table, _end);
+    auto entry = searchOpCode(insn, _table, _end);
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
-    const Entry *entry = searchOpCode(insn, _table, _end);
+    auto entry = searchOpCode(insn, _table, _end);
     if (!entry)
         return setError(INTERNAL_ERROR);
     entry += 1;
@@ -723,42 +723,35 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     return setOK();
 }
 
+class CpuTable : public CpuTableBase<CpuType, TableMc6800::EntryPage> {
+public:
+    constexpr CpuTable(CpuType cpuType, const char *name, const TableMc6800::EntryPage *table,
+            const TableMc6800::EntryPage *end)
+        : CpuTableBase(cpuType, name, table, end) {}
+};
+
+static constexpr CpuTable CPU_TABLES[] PROGMEM = {
+        {MC6800, TEXT_CPU_6800, ARRAY_RANGE(MC6800_PAGES)},
+        {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
+        {HD6301, TEXT_CPU_6301, ARRAY_RANGE(HD6301_PAGES)},
+        {MC6805, TEXT_CPU_6805, ARRAY_RANGE(MC6805_PAGES)},
+        {MC146805, TEXT_CPU_146805, ARRAY_RANGE(MC146805_PAGES)},
+        {MC68HC05, TEXT_CPU_68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
+        {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},
+};
+
 TableMc6800::TableMc6800() {
     setCpu(MC6800);
 }
 
-class CpuTable : public EntryPageBase<TableMc6800::EntryPage> {
-public:
-    constexpr CpuTable(
-            CpuType cpuType, const TableMc6800::EntryPage *table, const TableMc6800::EntryPage *end)
-        : EntryPageBase(table, end), _cpuType(cpuType) {}
-
-    CpuType cpuType() const { return static_cast<CpuType>(pgm_read_byte(&_cpuType)); }
-
-private:
-    CpuType _cpuType;
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {MC6800, ARRAY_RANGE(MC6800_PAGES)},
-        {MC6801, ARRAY_RANGE(MC6801_PAGES)},
-        {HD6301, ARRAY_RANGE(HD6301_PAGES)},
-        {MC6805, ARRAY_RANGE(MC6805_PAGES)},
-        {MC146805, ARRAY_RANGE(MC146805_PAGES)},
-        {MC68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
-        {MC68HC11, ARRAY_RANGE(MC68HC11_PAGES)},
-};
-
 bool TableMc6800::setCpu(CpuType cpuType) {
+    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    if (t == nullptr)
+        return false;
     _cpuType = cpuType;
-    for (const CpuTable *t = ARRAY_BEGIN(CPU_TABLES); t < ARRAY_END(CPU_TABLES); t++) {
-        if (cpuType == t->cpuType()) {
-            _table = t->table();
-            _end = t->end();
-            return true;
-        }
-    }
-    return false;
+    _table = t->table();
+    _end = t->end();
+    return true;
 }
 
 AddressWidth TableMc6800::addressWidth() const {
@@ -774,38 +767,19 @@ const char *TableMc6800::listCpu() const {
 }
 
 const char *TableMc6800::getCpu() const {
-    if (_cpuType == MC6800)
-        return TEXT_CPU_6800;
-    if (_cpuType == MC6805)
-        return TEXT_CPU_6805;
-    if (_cpuType == MC146805)
-        return TEXT_CPU_146805;
-    if (_cpuType == MC68HC05)
-        return TEXT_CPU_68HC05;
-    if (_cpuType == MC68HC11)
-        return TEXT_CPU_6811;
-    return _cpuType == MC6801 ? TEXT_CPU_6801 : TEXT_CPU_6301;
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
-    const char *p;
-    p = cpu;
+    auto p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_MC, 2) == 0)
         p += 2;
-    if (strcasecmp_P(p, TEXT_CPU_6800) == 0)
-        return setCpu(MC6800);
-    if (strcasecmp_P(p, TEXT_CPU_6801) == 0)
-        return setCpu(MC6801);
-    if (strcasecmp_P(p, TEXT_CPU_6805) == 0)
-        return setCpu(MC6805);
-    if (strcasecmp_P(p, TEXT_CPU_146805) == 0)
-        return setCpu(MC146805);
-    if (strcasecmp_P(p, TEXT_CPU_68HC05) == 0)
-        return setCpu(MC68HC05);
-    if (strcasecmp_P(p, TEXT_CPU_6811) == 0)
-        return setCpu(MC68HC11);
+    auto t = CpuTable::search(p, ARRAY_RANGE(CPU_TABLES));
+    if (t)
+        return setCpu(t->cpuType());
     if (strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
         return setCpu(MC68HC11);
+
     p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_HD, 2) == 0)
         p += 2;

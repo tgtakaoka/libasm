@@ -476,8 +476,8 @@ static const TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
 
 static bool isPrefix(Config::opcode_t opCode, const TableNs32000::EntryPage *page,
         const TableNs32000::EntryPage *end) {
-    for (const TableNs32000::EntryPage *entry = page; entry < end; entry++) {
-        const Config::opcode_t prefix = entry->prefix();
+    for (auto entry = page; entry < end; entry++) {
+        auto prefix = entry->prefix();
         if (prefix == 0)
             continue;
         if (prefix == opCode)
@@ -513,7 +513,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(const Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.srcMode(), table.srcMode()) &&
            acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptMode(flags.ex1Mode(), table.ex1Mode()) &&
@@ -523,9 +523,9 @@ static bool acceptModes(const Entry::Flags flags, const Entry *entry) {
 Error TableNs32000::searchName(
         InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        const uint8_t post = page->post();
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    for (auto page = pages; page < end; page++) {
+        auto post = page->post();
+        auto entry = TableBase::searchName<Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
@@ -539,11 +539,11 @@ Error TableNs32000::searchName(
 
 Error TableNs32000::searchOpCode(
         InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
+    for (auto page = pages; page < end; page++) {
         if (insn.prefix() != page->prefix())
             continue;
-        const auto post = page->post();
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        auto post = page->post();
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode() & ~page->mask(), page->table(), page->end());
         if (entry) {
             insn.setFlags(entry->flags());
@@ -560,7 +560,7 @@ Error TableNs32000::searchOpCode(
 }
 
 Error TableNs32000::searchName(InsnNs32000 &insn) const {
-    Error error = searchName(insn, ARRAY_RANGE(NS32032_PAGES));
+    auto error = searchName(insn, ARRAY_RANGE(NS32032_PAGES));
     if (error == UNKNOWN_INSTRUCTION && _fpuType == FPU_NS32081)
         error = searchName(insn, ARRAY_RANGE(NS32081_PAGES));
     if (error == UNKNOWN_INSTRUCTION && _mmuType == MMU_NS32082)

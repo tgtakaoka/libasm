@@ -551,7 +551,7 @@ static bool matchAddrMode(AddrMode opr, AddrMode table) {
 }
 
 static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return matchAddrMode(flags.mode1(), table.mode1()) &&
            matchAddrMode(flags.mode2(), table.mode2());
 }
@@ -559,8 +559,8 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
 Error TableMc6809::searchName(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchName<Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page->table(), page->end(), matchAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
@@ -573,10 +573,10 @@ Error TableMc6809::searchName(
 
 Error TableMc6809::searchOpCode(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
+    for (auto page = pages; page < end; page++) {
         if (insn.prefix() != page->prefix())
             continue;
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end());
         if (entry) {
             insn.setFlags(entry->flags());
@@ -637,9 +637,9 @@ static const TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
 
 Error TableMc6809::searchPostByte(
         const uint8_t post, PostSpec &spec, const PostEntry *table, const PostEntry *end) const {
-    for (const PostEntry *entry = table; entry < end; entry++) {
-        const uint8_t mask = pgm_read_byte(&entry->mask);
-        const uint8_t byte = post & mask;
+    for (auto entry = table; entry < end; entry++) {
+        auto mask = pgm_read_byte(&entry->mask);
+        auto byte = post & mask;
         if (byte == pgm_read_byte(&entry->byte)) {
             spec.index = RegName(pgm_read_byte(&entry->index));
             spec.base = RegName(pgm_read_byte(&entry->base));
@@ -663,13 +663,13 @@ static RegName baseRegName(const RegName base) {
 
 int16_t TableMc6809::searchPostSpec(
         PostSpec &spec, const PostEntry *table, const PostEntry *end) const {
-    const RegName specBase = baseRegName(spec.base);
-    for (const PostEntry *entry = table; entry < end; entry++) {
-        const RegName base = RegName(pgm_read_byte(&entry->base));
-        const int8_t size = static_cast<int8_t>(pgm_read_byte(&entry->size));
+    auto specBase = baseRegName(spec.base);
+    for (auto entry = table; entry < end; entry++) {
+        auto base = RegName(pgm_read_byte(&entry->base));
+        auto size = static_cast<int8_t>(pgm_read_byte(&entry->size));
         if (specBase == base && spec.size == size &&
                 spec.index == RegName(pgm_read_byte(&entry->index))) {
-            uint8_t byte = pgm_read_byte(&entry->byte);
+            auto byte = pgm_read_byte(&entry->byte);
             if (spec.indir) {
                 if (pgm_read_byte(&entry->indir) == 0)
                     continue;
@@ -689,25 +689,35 @@ Error TableMc6809::searchPostByte(const uint8_t post, PostSpec &spec) const {
 }
 
 int16_t TableMc6809::searchPostSpec(PostSpec &spec) const {
-    int16_t post = searchPostSpec(spec, ARRAY_RANGE(MC6809_POSTBYTE));
+    auto post = searchPostSpec(spec, ARRAY_RANGE(MC6809_POSTBYTE));
     if (post < 0 && _cpuType == HD6309)
         post = searchPostSpec(spec, ARRAY_RANGE(HD6309_POSTBYTE));
     return post;
 }
+
+class CpuTable : public CpuTableBase<CpuType, TableMc6809::EntryPage> {
+public:
+    constexpr CpuTable(CpuType cpuType, const char *name, const TableMc6809::EntryPage *table,
+            const TableMc6809::EntryPage *end)
+        : CpuTableBase(cpuType, name, table, end) {}
+};
+
+static constexpr CpuTable CPU_TABLES[] PROGMEM = {
+        {MC6809, TEXT_CPU_6809, ARRAY_RANGE(MC6809_PAGES)},
+        {HD6309, TEXT_CPU_6309, ARRAY_RANGE(HD6309_PAGES)},
+};
 
 TableMc6809::TableMc6809() {
     setCpu(MC6809);
 }
 
 bool TableMc6809::setCpu(CpuType cpuType) {
+    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    if (t == nullptr)
+        return false;
     _cpuType = cpuType;
-    if (cpuType == MC6809) {
-        _table = ARRAY_BEGIN(MC6809_PAGES);
-        _end = ARRAY_END(MC6809_PAGES);
-        return true;
-    }
-    _table = ARRAY_BEGIN(HD6309_PAGES);
-    _end = ARRAY_END(HD6309_PAGES);
+    _table = t->table();
+    _end = t->end();
     return true;
 }
 
@@ -716,13 +726,16 @@ const char *TableMc6809::listCpu() const {
 }
 
 const char *TableMc6809::getCpu() const {
-    return _cpuType == MC6809 ? TEXT_CPU_6809 : TEXT_CPU_6309;
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
 }
 
 bool TableMc6809::setCpu(const char *cpu) {
-    if (strcasecmp_P(cpu, TEXT_CPU_MC6809) == 0 || strcasecmp_P(cpu, TEXT_CPU_6809) == 0)
+    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    if (t)
+        return setCpu(t->cpuType());
+    if (strcasecmp_P(cpu, TEXT_CPU_MC6809) == 0)
         return setCpu(MC6809);
-    if (strcasecmp_P(cpu, TEXT_CPU_HD6309) == 0 || strcasecmp_P(cpu, TEXT_CPU_6309) == 0)
+    if (strcasecmp_P(cpu, TEXT_CPU_HD6309) == 0)
         return setCpu(HD6309);
     return false;
 }

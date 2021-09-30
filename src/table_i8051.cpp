@@ -157,7 +157,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptMode(flags.srcMode(), table.srcMode()) &&
            acceptMode(flags.extMode(), table.extMode());
@@ -165,7 +165,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableI8051::searchName(InsnI8051 &insn) const {
     uint8_t count = 0;
-    const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    auto entry = TableBase::searchName<Entry, Entry::Flags>(
             insn.name(), insn.flags(), ARRAY_RANGE(TABLE_I8051), acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
@@ -176,9 +176,9 @@ Error TableI8051::searchName(InsnI8051 &insn) const {
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const Entry::Flags flags = entry->flags();
-    const AddrMode dst = flags.dstMode();
-    const AddrMode src = flags.srcMode();
+    auto flags = entry->flags();
+    auto dst = flags.dstMode();
+    auto src = flags.srcMode();
     if (dst == RREG || src == RREG)
         return opCode & ~7;
     if (dst == IDIRR || src == IDIRR)
@@ -189,8 +189,8 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 Error TableI8051::searchOpCode(InsnI8051 &insn) const {
-    const Config::opcode_t opCode = insn.opCode();
-    const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    auto opCode = insn.opCode();
+    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);

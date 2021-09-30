@@ -307,7 +307,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptMode(flags.srcMode(), table.srcMode()) &&
            acceptMode(flags.extMode(), table.extMode());
@@ -315,8 +315,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableZ8::searchName(InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchName<Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
@@ -328,12 +328,12 @@ Error TableZ8::searchName(InsnZ8 &insn, const EntryPage *pages, const EntryPage 
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const Config::opcode_t table = entry->opCode();
+    auto table = entry->opCode();
     return InsnZ8::operandInOpCode(table) ? opCode & 0x0f : opCode;
 }
 
 static bool matchPostByte(const InsnZ8 &insn) {
-    const uint8_t post = insn.post();
+    auto post = insn.post();
     switch (insn.postFormat()) {
     case P1_0:
         return (post & 1) == 0;
@@ -356,9 +356,9 @@ static bool matchPostByte(const InsnZ8 &insn) {
 
 Error TableZ8::searchOpCode(
         InsnZ8 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *end = page->end();
-        for (const Entry *entry = page->table();
+    for (auto page = pages; page < end; page++) {
+        auto end = page->end();
+        for (auto entry = page->table();
                 entry < end && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
                                         insn.opCode(), entry, end, maskCode)) != nullptr;
                 entry++) {
@@ -387,6 +387,19 @@ Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) const {
     return setError(searchOpCode(insn, memory, _table, _end));
 }
 
+class CpuTable : public CpuTableBase<CpuType, TableZ8::EntryPage> {
+public:
+    constexpr CpuTable(CpuType cpuType, const char *name, const TableZ8::EntryPage *table,
+            const TableZ8::EntryPage *end)
+        : CpuTableBase(cpuType, name, table, end) {}
+};
+
+static constexpr CpuTable CPU_TABLES[] PROGMEM = {
+        {Z8, TEXT_CPU_Z8, ARRAY_RANGE(Z8_PAGES)},
+        {Z86C, TEXT_CPU_Z86C, ARRAY_RANGE(Z86C_PAGES)},
+        {SUPER8, TEXT_CPU_Z88, ARRAY_RANGE(SUPER8_PAGES)},
+};
+
 TableZ8::TableZ8() {
     setCpu(Z8);
 }
@@ -396,23 +409,13 @@ bool TableZ8::isSuper8() const {
 }
 
 bool TableZ8::setCpu(CpuType cpuType) {
+    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    if (t == nullptr)
+        return false;
     _cpuType = cpuType;
-    if (cpuType == Z8) {
-        _table = ARRAY_BEGIN(Z8_PAGES);
-        _end = ARRAY_END(Z8_PAGES);
-        return true;
-    }
-    if (cpuType == Z86C) {
-        _table = ARRAY_BEGIN(Z86C_PAGES);
-        _end = ARRAY_END(Z86C_PAGES);
-        return true;
-    }
-    if (cpuType == SUPER8) {
-        _table = ARRAY_BEGIN(SUPER8_PAGES);
-        _end = ARRAY_END(SUPER8_PAGES);
-        return true;
-    }
-    return false;
+    _table = t->table();
+    _end = t->end();
+    return true;
 }
 
 const char *TableZ8::listCpu() const {
@@ -420,15 +423,16 @@ const char *TableZ8::listCpu() const {
 }
 
 const char *TableZ8::getCpu() const {
-    if (_cpuType == SUPER8)
-        return TEXT_CPU_Z88;
-    return _cpuType == Z8 ? TEXT_CPU_Z8 : TEXT_CPU_Z86C;
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
 }
 
 bool TableZ8::setCpu(const char *cpu) {
+    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    if (t)
+        return setCpu(t->cpuType());
     if (strncasecmp_P(cpu, TEXT_CPU_Z86C, 4) == 0)
         return setCpu(Z86C);
-    if (strncasecmp_P(cpu, TEXT_CPU_Z86, 3) == 0 || strcasecmp_P(cpu, TEXT_CPU_Z8) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_Z86, 3) == 0)
         return setCpu(Z8);
     if (strncasecmp_P(cpu, TEXT_CPU_Z88, 3) == 0 || strcasecmp_P(cpu, TEXT_CPU_SUPER8) == 0)
         return setCpu(SUPER8);

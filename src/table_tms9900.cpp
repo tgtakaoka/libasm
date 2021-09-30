@@ -159,7 +159,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.srcMode(), table.srcMode()) &&
            acceptMode(flags.dstMode(), table.dstMode());
 }
@@ -167,8 +167,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableTms9900::searchName(
         InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchName<Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
@@ -180,8 +180,8 @@ Error TableTms9900::searchName(
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const AddrMode src = entry->flags().srcMode();
-    const AddrMode dst = entry->flags().dstMode();
+    auto src = entry->flags().srcMode();
+    auto dst = entry->flags().dstMode();
     Config::opcode_t mask = 0;
     if (src == M_REG || dst == M_REG)
         mask |= 0xF;
@@ -202,8 +202,8 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableTms9900::searchOpCode(
         InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
@@ -222,28 +222,31 @@ Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
     return setError(searchOpCode(insn, _table, _end));
 }
 
+class CpuTable : public CpuTableBase<CpuType, TableTms9900::EntryPage> {
+public:
+    constexpr CpuTable(CpuType cpuType, const char *name, const TableTms9900::EntryPage *table,
+            const TableTms9900::EntryPage *end)
+        : CpuTableBase(cpuType, name, table, end) {}
+};
+
+static constexpr CpuTable CPU_TABLES[] PROGMEM = {
+        {TMS9900, TEXT_CPU_9900, ARRAY_RANGE(TMS9900_PAGES)},
+        {TMS9995, TEXT_CPU_9995, ARRAY_RANGE(TMS9995_PAGES)},
+        {TMS99105, TEXT_CPU_99105, ARRAY_RANGE(TMS99105_PAGES)},
+};
+
 TableTms9900::TableTms9900() {
     setCpu(TMS9900);
 }
 
 bool TableTms9900::setCpu(CpuType cpuType) {
+    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    if (t == nullptr)
+        return false;
     _cpuType = cpuType;
-    if (cpuType == TMS9900) {
-        _table = ARRAY_BEGIN(TMS9900_PAGES);
-        _end = ARRAY_END(TMS9900_PAGES);
-        return true;
-    }
-    if (cpuType == TMS9995) {
-        _table = ARRAY_BEGIN(TMS9995_PAGES);
-        _end = ARRAY_END(TMS9995_PAGES);
-        return true;
-    }
-    if (cpuType == TMS99105) {
-        _table = ARRAY_BEGIN(TMS99105_PAGES);
-        _end = ARRAY_END(TMS99105_PAGES);
-        return true;
-    }
-    return false;
+    _table = t->table();
+    _end = t->end();
+    return true;
 }
 
 const char *TableTms9900::listCpu() const {
@@ -251,20 +254,15 @@ const char *TableTms9900::listCpu() const {
 }
 
 const char *TableTms9900::getCpu() const {
-    if (_cpuType == TMS99105)
-        return TEXT_CPU_99105;
-    return _cpuType == TMS9900 ? TEXT_CPU_9900 : TEXT_CPU_9995;
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
 }
 
 bool TableTms9900::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_TMS, 3) == 0)
         cpu += 3;
-    if (strcmp_P(cpu, TEXT_CPU_9900) == 0)
-        return setCpu(TMS9900);
-    if (strcmp_P(cpu, TEXT_CPU_9995) == 0)
-        return setCpu(TMS9995);
-    if (strcmp_P(cpu, TEXT_CPU_99105) == 0)
-        return setCpu(TMS99105);
+    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    if (t)
+        return setCpu(t->cpuType());
     return false;
 }
 

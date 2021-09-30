@@ -143,15 +143,15 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+    auto table = entry->flags();
     return acceptMode(flags.dstMode(), table.dstMode()) &&
            acceptMode(flags.srcMode(), table.srcMode());
 }
 
 Error TableI8080::searchName(InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchName<Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
@@ -163,9 +163,9 @@ Error TableI8080::searchName(InsnI8080 &insn, const EntryPage *pages, const Entr
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const Entry::Flags flags = entry->flags();
-    const AddrMode dst = flags.dstMode();
-    const AddrMode src = flags.srcMode();
+    auto flags = entry->flags();
+    auto dst = flags.dstMode();
+    auto src = flags.srcMode();
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
         mask |= 07;
@@ -180,8 +180,8 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableI8080::searchOpCode(
         InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const EntryPage *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
+    for (auto page = pages; page < end; page++) {
+        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
@@ -200,14 +200,29 @@ Error TableI8080::searchOpCode(InsnI8080 &insn) const {
     return setError(searchOpCode(insn, _table, _end));
 }
 
+class CpuTable : public CpuTableBase<CpuType, TableI8080::EntryPage> {
+public:
+    constexpr CpuTable(CpuType cpuType, const char *name, const TableI8080::EntryPage *table,
+            const TableI8080::EntryPage *end)
+        : CpuTableBase(cpuType, name, table, end) {}
+};
+
+static constexpr CpuTable CPU_TABLES[] PROGMEM = {
+        {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
+        {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
+};
+
 TableI8080::TableI8080() {
     setCpu(I8080);
 }
 
 bool TableI8080::setCpu(CpuType cpuType) {
+    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    if (t == nullptr)
+        return false;
     _cpuType = cpuType;
-    _table = (cpuType == I8080) ? ARRAY_BEGIN(I8080_PAGES) : ARRAY_BEGIN(I8085_PAGES);
-    _end = (cpuType == I8080) ? ARRAY_END(I8080_PAGES) : ARRAY_END(I8085_PAGES);
+    _table = t->table();
+    _end = t->end();
     return true;
 }
 
@@ -216,16 +231,15 @@ const char *TableI8080::listCpu() const {
 }
 
 const char *TableI8080::getCpu() const {
-    return _cpuType == I8080 ? TEXT_CPU_8080 : TEXT_CPU_8085;
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
 }
 
 bool TableI8080::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I')
         cpu++;
-    if (strcmp_P(cpu, TEXT_CPU_8080) == 0)
-        return setCpu(I8080);
-    if (strcmp_P(cpu, TEXT_CPU_8085) == 0)
-        return setCpu(I8085);
+    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    if (t)
+        return setCpu(t->cpuType());
     return false;
 }
 
