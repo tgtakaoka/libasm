@@ -204,7 +204,7 @@ Error AsmI8051::encode(Insn &_insn) {
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
     if (TableI8051.searchName(insn))
-        return setError(UNKNOWN_INSTRUCTION);
+        return setError(TableI8051.getError());
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
