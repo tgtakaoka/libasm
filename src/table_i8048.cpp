@@ -23,6 +23,8 @@
 #include "entry_i8048.h"
 #include "text_i8048.h"
 
+#include <stdio.h>
+
 namespace libasm {
 namespace i8048 {
 
@@ -189,6 +191,14 @@ static constexpr TableI8048::EntryPage MSM80C48_PAGES[] PROGMEM = {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
+    if (opr == M_IMM8)
+        return table == M_BIT8;
+    if (opr == M_AD11)
+        return table == M_AD08 || table == M_BITN;
+    if (opr == M_IR3)
+        return table == M_IR;
+    if (opr == M_P1 || opr == M_P2)
+        return table == M_P12;
     return false;
 }
 

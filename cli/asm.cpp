@@ -19,6 +19,7 @@
 #include "asm_cdp1802.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
+#include "asm_i8048.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
 #include "asm_i8086.h"
@@ -42,6 +43,7 @@ using namespace libasm::cli;
 mos6502::AsmMos6502 asm6502;
 mc6800::AsmMc6800 asm6800;
 mc6809::AsmMc6809 asm6809;
+i8048::AsmI8048 asm8048;
 i8051::AsmI8051 asm8051;
 i8080::AsmI8080 asm8080;
 z80::AsmZ80 asmz80;
@@ -60,6 +62,7 @@ ns32000::AsmNs32000 asm32000;
 AsmMostekDirective dir6502(asm6502);
 AsmMotoDirective dir6800(asm6800);
 AsmMotoDirective dir6809(asm6809);
+AsmIntelDirective dir8048(asm8048);
 AsmIntelDirective dir8051(asm8051);
 AsmIntelDirective dir8080(asm8080);
 AsmIntelDirective dirz80(asmz80);
@@ -79,6 +82,7 @@ std::vector<AsmDirective *> directives = {
         &dir6800,
         &dir6809,
         &dir6502,
+        &dir8048,
         &dir8051,
         &dir8080,
         &dirz80,
