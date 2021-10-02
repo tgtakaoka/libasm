@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,21 @@
  */
 
 #include <arduino_example.h>
-#include <asm_z80.h>
+#include <asm_i8048.h>
+#include <asm_i8051.h>
+#include <asm_i8080.h>
 
-using libasm::arduino::AsmExample;
-using libasm::z80::AsmZ80;
+libasm::i8080::AsmI8080 asm8080;
+libasm::i8048::AsmI8048 asm8048;
+libasm::i8051::AsmI8051 asm8051;
 
-AsmZ80 asmz80;
-AsmExample example(asmz80);
+libasm::Assembler *disassemblers[] = {
+        &asm8080,
+        &asm8048,
+        &asm8051,
+};
+
+libasm::arduino::AsmExample example(ARRAY_RANGE(disassemblers));
 
 void setup() {
     Serial.begin(9600);

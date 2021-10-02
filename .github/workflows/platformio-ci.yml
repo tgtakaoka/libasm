@@ -10,22 +10,17 @@ jobs:
       matrix:
         prog: [ asm, dis ]
         arch:
-          - cdp1802
-          - i8051
-          - i8080
-          - i8086
-          - ins8060
-          - ins8070
-          - mc6800
-          - mc6809
-          - mc68000
+          - motorola
+          - intel
+          - zilog
+          - scmp
           - mos6502
-          - ns32000
-          - tlcs90
-          - tms9900
+          - cdp1802
           - tms32010
-          - z8
-          - z80
+          - tms9900
+          - i8086
+          - mc68000
+          - ns32000
           - z8000
 
     steps:

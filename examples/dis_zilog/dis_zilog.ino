@@ -15,13 +15,21 @@
  */
 
 #include <arduino_example.h>
-#include <asm_i8048.h>
+#include <dis_tlcs90.h>
+#include <dis_z8.h>
+#include <dis_z80.h>
 
-using libasm::arduino::AsmExample;
-using libasm::i8048::AsmI8048;
+libasm::tlcs90::DisTlcs90 dis90;
+libasm::z80::DisZ80 disz80;
+libasm::z8::DisZ8 disz8;
 
-AsmI8048 asm8048;
-AsmExample example(asm8048);
+libasm::Disassembler *disassemblers[] = {
+        &disz80,
+        &dis90,
+        &disz8,
+};
+
+libasm::arduino::DisExample example(ARRAY_RANGE(disassemblers));
 
 void setup() {
     Serial.begin(9600);

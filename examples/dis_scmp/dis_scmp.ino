@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,18 @@
  */
 
 #include <arduino_example.h>
-#include <asm_mc6809.h>
+#include <dis_ins8060.h>
+#include <dis_ins8070.h>
 
-using libasm::arduino::AsmExample;
-using libasm::mc6809::AsmMc6809;
+libasm::ins8060::DisIns8060 dis8060;
+libasm::ins8070::DisIns8070 dis8070;
 
-AsmMc6809 asm6809;
-AsmExample example(asm6809);
+libasm::Disassembler *disassemblers[] = {
+        &dis8060,
+        &dis8070,
+};
+
+libasm::arduino::DisExample example(ARRAY_RANGE(disassemblers));
 
 void setup() {
     Serial.begin(9600);
