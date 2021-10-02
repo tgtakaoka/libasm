@@ -23,7 +23,7 @@ namespace libasm {
 namespace cli {
 
 static uint8_t addressSize(AddressWidth addrWidth) {
-    const uint8_t bits = uint8_t(addrWidth);
+    const auto bits = uint8_t(addrWidth);
     if (bits <= 16)
         return 2;
     if (bits <= 24)

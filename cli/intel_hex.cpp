@@ -35,7 +35,7 @@ void IntelHex::begin(FILE *out) {
 }
 
 void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
-    const uint32_t end = addr + size;
+    const auto end = addr + size;
     // If this block overwarp ELA boundary.
     if ((addr ^ end) & ~0xFFFF) {
         const uint8_t chunk = (end & ~0xFFFF) - addr;
@@ -78,7 +78,7 @@ void IntelHex::encodeLine(uint16_t addr, const uint8_t *data, uint8_t size) {
     const uint8_t type = 0;
     // :LLaaaa00dd....ddSS
     ensureLine(1 + (1 + sizeof(addr) + 1 + size + 1) * 2);
-    char *p = _line;
+    auto p = _line;
     p += sprintf(p, ":%02X%04X%02X", size, addr, type);
     resetSum();
     addSum(size);

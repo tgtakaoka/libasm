@@ -32,7 +32,7 @@ void CliMemory::setAddress(uint32_t addr) {
 }
 
 bool CliMemory::hasNext() const {
-    const uint32_t addr = address();
+    const auto addr = address();
     if (insideOf(_read_cache, addr))
         return true;
     for (auto segment = _segments.cbegin(); segment != _segments.cend(); segment++) {
@@ -52,12 +52,12 @@ uint8_t CliMemory::nextByte() {
 }
 
 void CliMemory::writeBytes(uint32_t addr, const uint8_t *p, size_t size) {
-    for (const uint8_t *end = p + size; p < end; p++)
+    for (const auto end = p + size; p < end; p++)
         writeByte(addr++, *p);
 }
 
 bool CliMemory::readBytes(uint32_t addr, uint8_t *p, size_t size) const {
-    for (uint8_t *end = p + size; p < end; p++) {
+    for (const auto end = p + size; p < end; p++) {
         if (!readByte(addr, *p))
             return false;
     }
@@ -192,7 +192,7 @@ void CliMemory::createSegment(uint32_t addr, uint8_t val) {
 void CliMemory::aggregate(Segment hint) {
     Segment prev = hint;
     // Check following segment whether it is adjacent to.
-    for (Segment next = ++hint; next != _segments.end() && atEndOf(prev, next->first);
+    for (auto next = ++hint; next != _segments.end() && atEndOf(prev, next->first);
             next = _segments.erase(next)) {
         // Append next segment.
         prev->second.reserve(prev->second.size() + next->second.size());

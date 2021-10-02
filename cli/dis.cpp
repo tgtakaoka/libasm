@@ -58,7 +58,7 @@ mc68000::DisMc68000 dis68000;
 z8000::DisZ8000 disz8000;
 ns32000::DisNs32000 dis32000;
 
-std::vector<Disassembler *> disassemblers = {
+const std::vector<Disassembler *> disassemblers = {
         &dis6800,
         &dis6809,
         &dis6502,

@@ -55,7 +55,7 @@ void CliListing::formatHex(uint8_t val) {
 }
 
 void CliListing::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msd = (val >> 4);
+    const auto msd = (val >> 4);
     if (msd || !zeroSuppress) {
         formatHex(msd);
     } else if (fixedWidth) {
@@ -65,7 +65,7 @@ void CliListing::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
 }
 
 void CliListing::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 8) & 0xF;
+    const auto msb = static_cast<uint8_t>(val >> 8) & 0xF;
     if (msb || !zeroSuppress) {
         formatHex(msb);
         zeroSuppress = false;
@@ -76,7 +76,7 @@ void CliListing::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 8);
+    const auto msb = static_cast<uint8_t>(val >> 8);
     if (msb || !zeroSuppress) {
         formatUint8(msb, fixedWidth, zeroSuppress);
         zeroSuppress = false;
@@ -87,7 +87,7 @@ void CliListing::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatUint20(uint32_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 16) & 0xF;
+    const auto msb = static_cast<uint8_t>(val >> 16) & 0xF;
     if (msb || !zeroSuppress) {
         formatHex(msb);
         zeroSuppress = false;
@@ -98,7 +98,7 @@ void CliListing::formatUint20(uint32_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatUint24(uint32_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 16);
+    const auto msb = static_cast<uint8_t>(val >> 16);
     if (msb || !zeroSuppress) {
         formatUint8(msb, fixedWidth, zeroSuppress);
         zeroSuppress = false;
@@ -109,7 +109,7 @@ void CliListing::formatUint24(uint32_t val, bool fixedWidth, bool zeroSuppress) 
 }
 
 void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint16_t msw = static_cast<uint16_t>(val >> 16);
+    const auto msw = static_cast<uint16_t>(val >> 16);
     if (msw || !zeroSuppress) {
         formatUint16(msw, fixedWidth, zeroSuppress);
         zeroSuppress = false;
@@ -142,7 +142,7 @@ void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress
 }
 
 int CliListing::formatBytes(int base) {
-    const int codeBytes = _line->codeBytes();
+    const auto codeBytes = _line->codeBytes();
     int i = 0;
     if (_line->config().opCodeWidth() == OPCODE_8BIT) {
         while (base + i < _line->generatedSize() && i < codeBytes) {
@@ -152,11 +152,11 @@ int CliListing::formatBytes(int base) {
             i++;
         }
     } else {  // OPCODE_16BIT
-        const int hi = int(_line->config().endian());
-        const int lo = 1 - hi;
+        const auto hi = int(_line->config().endian());
+        const auto lo = 1 - hi;
         while (base + i < _line->generatedSize() && i < codeBytes) {
-            const uint16_t val = (static_cast<uint16_t>(_line->getByte(base + i + hi)) << 8) |
-                                 _line->getByte(base + i + lo);
+            const auto val = (static_cast<uint16_t>(_line->getByte(base + i + hi)) << 8) |
+                             _line->getByte(base + i + lo);
             _out += ' ';
             formatUint16(val);
             i += 2;
@@ -173,7 +173,7 @@ void CliListing::formatTab(size_t pos, int delta) {
 }
 
 static void convertCase(const std::string &src, std::string &out, bool uppercase) {
-    for (char c : src) {
+    for (auto c : src) {
         if (uppercase)
             c = toupper(c);
         else
@@ -212,7 +212,7 @@ void CliListing::formatContent(int pos) {
 void CliListing::formatLine() {
     if (_lineNumber) {
         char buf[12];
-        uint16_t nest = _line->includeNest();
+        const auto nest = _line->includeNest();
         if (nest) {
             sprintf(buf, "(%d)", nest);
             _out += buf;
@@ -223,7 +223,7 @@ void CliListing::formatLine() {
         _out += buf;
     }
     formatAddress(_line->startAddress() + _next, true, true);
-    const int pos = _out.size();
+    const auto pos = _out.size();
     int formattedBytes = 0;
     if (_line->hasValue()) {
         _out += " =$";
@@ -232,8 +232,8 @@ void CliListing::formatLine() {
     } else {
         formattedBytes = formatBytes(_next);
     }
-    const int codeBytes = _line->codeBytes();
-    const int dataTextLen =
+    const auto codeBytes = _line->codeBytes();
+    const auto dataTextLen =
             _line->config().opCodeWidth() == OPCODE_8BIT ? (codeBytes * 3) : (codeBytes / 2) * 5;
     if (_next == 0)
         formatContent(pos + dataTextLen + 1);

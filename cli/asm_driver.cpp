@@ -22,16 +22,16 @@
 namespace libasm {
 namespace cli {
 
-AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives) : _commonDir(directives) {}
+AsmDriver::AsmDriver(const std::vector<AsmDirective *> &directives) : _commonDir(directives) {}
 
 int AsmDriver::usage() {
     std::string cpuList;
-    AsmDirective *directive = defaultDirective();
+    auto directive = defaultDirective();
     if (directive) {
         cpuList = ": ";
         cpuList += directive->assembler().listCpu();
     } else {
-        const char *cpuSep = "\n                ";
+        const auto cpuSep = "\n                ";
         cpuList = _commonDir.listCpu(cpuSep);
     }
     fprintf(stderr,
@@ -74,13 +74,13 @@ int AsmDriver::assemble() {
     } while (true);
 
     if (_output_name) {
-        FILE *output = fopen(_output_name, "w");
+        auto output = fopen(_output_name, "w");
         if (output == nullptr) {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
-        AsmDirective *directive = _commonDir.currentDirective();
-        const AddressWidth addrWidth = _commonDir.config().addressWidth();
+        auto directive = _commonDir.currentDirective();
+        const auto addrWidth = _commonDir.config().addressWidth();
         BinFormatter *formatter;
         if (_formatter == 'S') {
             formatter = new MotoSrec(addrWidth);
@@ -94,7 +94,7 @@ int AsmDriver::assemble() {
         memory.dump(
                 [this, output, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
                     if (_verbose) {
-                        const uint8_t addrUnit = _commonDir.addrUnit();
+                        const auto addrUnit = _commonDir.addrUnit();
                         fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
                                 addr / addrUnit, (uint32_t)(addr + data_size - 1) / addrUnit);
                     }
@@ -138,7 +138,7 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
     const char *line;
     while ((line = _commonDir.readSourceLine()) != nullptr) {
         if (_commonDir.assembleLine(line, memory) && reportError) {
-            const char *filename = _commonDir.currentSource();
+            const auto filename = _commonDir.currentSource();
             const int lineno = _commonDir.currentLineno();
             const int column = _commonDir.errorAt() - line + 1;
             fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,
@@ -169,7 +169,7 @@ void AsmDriver::printListing(CliMemory &memory, FILE *out) {
 }
 
 AsmDirective *AsmDriver::defaultDirective() {
-    const size_t prefix_len = strlen(PROG_PREFIX);
+    const auto prefix_len = strlen(PROG_PREFIX);
     AsmDirective *directive = nullptr;
     if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
         const char *cpu = _progname + prefix_len;
@@ -212,7 +212,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                 _formatter = *opt++;
                 if (*opt) {
                     char *end;
-                    unsigned long v = strtoul(opt, &end, 10);
+                    auto v = strtoul(opt, &end, 10);
                     if (*end || v > 64) {
                         fprintf(stderr, "invalid record length: %s\n", argv[i]);
                         return 3;
@@ -268,7 +268,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
 }
 
 const char *AsmDriver::basename(const char *str, char sep_char) {
-    const char *sep = strrchr(str, sep_char);
+    const auto sep = strrchr(str, sep_char);
     return sep ? sep + 1 : str;
 }
 
