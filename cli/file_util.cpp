@@ -23,8 +23,8 @@ namespace libasm {
 namespace cli {
 
 int getLine(char *&lineptr, size_t &n, FILE *input) {
-    auto p = lineptr;
-    auto max = n - 1;
+    char *p = lineptr;
+    int max = n - 1;
     while (fgets(p, max, input)) {
         int len = strlen(lineptr);
         if (len > 0 && lineptr[len - 1] == '\n') {

@@ -37,7 +37,7 @@ void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
     const uint8_t len = _addrSize + size + 1;
     resetSum();
     addSum(len);
-    auto p = _line;
+    char *p = _line;
     switch (_addrSize) {
     case 2:
         addr &= ((uint32_t)1 << 16) - 1;
@@ -53,7 +53,7 @@ void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
         break;
     }
     addSum(addr);
-    for (auto i = 0; i < size; i++) {
+    for (uint8_t i = 0; i < size; i++) {
         p += sprintf(p, "%02X", data[i]);
         addSum(data[i]);
     }
@@ -78,7 +78,7 @@ void MotoSrec::end() {
 uint8_t *MotoSrec::decode(const char *line, uint32_t &addr, uint8_t &size) {
     if (*line++ != 'S')
         return nullptr;
-    const auto type = *line++;
+    const char type = *line++;
     ensureData(16);
     size = 0;
     if (type == '0')

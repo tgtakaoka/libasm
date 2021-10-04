@@ -34,7 +34,7 @@ class AsmDirective;
 
 class AsmCommonDirective : public ErrorReporter, public ListingLine, protected SymbolTable {
 public:
-    AsmCommonDirective(const std::vector<AsmDirective *> &directives);
+    AsmCommonDirective(std::vector<AsmDirective *> &directives);
     virtual ~AsmCommonDirective();
 
     AsmDirective *restrictCpu(const char *cpu);

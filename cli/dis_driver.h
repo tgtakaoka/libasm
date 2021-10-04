@@ -33,7 +33,7 @@ namespace cli {
 
 class DisDriver {
 public:
-    DisDriver(const std::vector<Disassembler *> &disassemblers);
+    DisDriver(std::vector<Disassembler *> &disassemblers);
     virtual ~DisDriver();
 
     int usage();

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cli {
 
-AsmCommonDirective::AsmCommonDirective(const std::vector<AsmDirective *> &directives) {
+AsmCommonDirective::AsmCommonDirective(std::vector<AsmDirective *> &directives) {
     _directives.reserve(directives.size());
     _directives.insert(_directives.begin(), directives.begin(), directives.end());
     _asmZ80 = _asmI8080 = nullptr;
@@ -86,7 +86,7 @@ static void appendTo(const std::string &cpu, std::list<std::string> &list) {
 
 static void filter(const char *text, std::list<std::string> &list) {
     while (*text) {
-        const auto del = strchr(text, ',');
+        const char *del = strchr(text, ',');
         if (del == nullptr) {
             appendTo(std::string(text), list);
             return;
@@ -126,8 +126,9 @@ AsmDirective *AsmCommonDirective::currentDirective() {
 
 Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     _scan = line;
-    if (_scan == nullptr)
+    if (_scan == nullptr) {
         return OK;
+    }
 
     _list.line_number = currentLineno();
     _list.include_nest = _sources.size() - 1;
@@ -142,11 +143,11 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     const char *label = nullptr;
     std::string label_buf;
     _list.label_len = 0;
-    auto parser = _assembler->getParser();
+    ValueParser &parser = _assembler->getParser();
     parser.setCurrentOrigin(_origin);
     if (parser.isSymbolLetter(*_scan, true)) {
         _list.label = _scan;
-        auto end = parser.scanSymbol(_list.label);
+        const char *end = parser.scanSymbol(_list.label);
         label_buf = std::string(_list.label, end);
         if (*end == ':')
             end++;  // optional trailing ':' for label.
@@ -158,7 +159,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 
     if (!_assembler->endOfLine(_scan)) {
         _list.instruction = _scan;
-        auto end = _list.instruction;
+        const char *end = _list.instruction;
         while (*end && !isspace(*end))
             end++;
         std::string directive(_list.instruction, end);
@@ -166,8 +167,8 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         _scan = end;
         skipSpaces();
         _list.operand = _scan;
-        const auto origin = _origin;
-        const auto error = processPseudo(directive.c_str(), label, memory);
+        const uint32_t origin = _origin;
+        const Error error = processPseudo(directive.c_str(), label, memory);
         if (error == UNKNOWN_DIRECTIVE) {
             _scan = _list.instruction;
         } else if (error) {
@@ -201,15 +202,15 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     }
 
     Insn insn(_origin);
-    const auto error = _assembler->encode(_scan, insn, this);
-    const auto allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
+    const Error error = _assembler->encode(_scan, insn, this);
+    const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
     _scan = _assembler->errorAt();
     if (error == OK || allowUndef) {
         _list.operand_len = _scan - _list.operand;
         skipSpaces();
         _list.comment = _scan;
         if (insn.length() > 0) {
-            const auto addr = insn.address() * addrUnit();
+            const uint32_t addr = insn.address() * addrUnit();
             memory.writeBytes(addr, insn.bytes(), insn.length());
             _list.address = addr;
             _list.length = insn.length();
@@ -257,8 +258,8 @@ Error AsmCommonDirective::openSource(const char *input_name, const char *end) {
         return setError(TOO_MANY_INCLUDE);
     if (end == nullptr)
         end = input_name + strlen(input_name);
-    const auto parent = _sources.empty() ? nullptr : _sources.back();
-    const auto pos = parent ? parent->name.find_last_of('/') : std::string::npos;
+    const Source *parent = _sources.empty() ? nullptr : _sources.back();
+    const size_t pos = parent ? parent->name.find_last_of('/') : std::string::npos;
     Source *source;
     if (pos == std::string::npos || *input_name == '/') {
         source = new Source(input_name, end, parent);
@@ -277,7 +278,7 @@ Error AsmCommonDirective::openSource(const char *input_name, const char *end) {
 
 const char *AsmCommonDirective::readSourceLine() {
     while (!_sources.empty()) {
-        auto source = _sources.back();
+        Source *source = _sources.back();
         source->lineno++;
         if (getLine(_line, _line_len, source->fp) >= 0)
             return _line;
@@ -287,7 +288,7 @@ const char *AsmCommonDirective::readSourceLine() {
 }
 
 Error AsmCommonDirective::closeSource() {
-    auto source = _sources.back();
+    Source *source = _sources.back();
     fclose(source->fp);
     delete source;
     _sources.pop_back();
@@ -324,7 +325,7 @@ Error AsmCommonDirective::processPseudo(
     if (compareDirective(directive, ".space"))
         return defineSpaces();
     if (compareDirective(directive, ".cpu")) {
-        auto p = _scan;
+        const char *p = _scan;
         while (*p && !isspace(*p))
             p++;
         std::string cpu(_scan, p);
@@ -334,12 +335,12 @@ Error AsmCommonDirective::processPseudo(
         return setError(OK);
     }
     if (compareDirective(directive, ".z80syntax")) {
-        const auto cpu = _assembler->getCpu();
+        const char *cpu = _assembler->getCpu();
         if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
             return setError(UNKNOWN_DIRECTIVE);
-        auto p = _assembler->getParser().scanSymbol(_scan);
+        const char *p = _assembler->getParser().scanSymbol(_scan);
         std::string val(_scan, p);
-        auto value = false;
+        bool value = false;
         if (strcasecmp(val.c_str(), "on") == 0) {
             value = true;
         } else if (strcasecmp(val.c_str(), "off") == 0) {
@@ -357,9 +358,9 @@ Error AsmCommonDirective::processPseudo(
 }
 
 Error AsmCommonDirective::defineOrigin() {
-    auto parser = _assembler->getParser();
+    ValueParser &parser = _assembler->getParser();
     Value value;
-    const auto scan = parser.eval(_scan, nullptr, value, this);
+    const char *scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -371,9 +372,9 @@ Error AsmCommonDirective::defineOrigin() {
 }
 
 Error AsmCommonDirective::alignOrigin() {
-    auto parser = _assembler->getParser();
+    ValueParser &parser = _assembler->getParser();
     Value value;
-    const auto scan = parser.eval(_scan, nullptr, value, this);
+    const char *scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -396,9 +397,9 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
         return setError(MISSING_LABEL);
     if (_reportDuplicate && hasSymbol(label))
         return setError(DUPLICATE_LABEL);
-    auto parser = _assembler->getParser();
+    ValueParser &parser = _assembler->getParser();
     Value value;
-    const auto scan = parser.eval(_scan, nullptr, value, this);
+    const char *scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -413,11 +414,11 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
 }
 
 Error AsmCommonDirective::includeFile() {
-    auto filename = _scan;
+    const char *filename = _scan;
     char c = 0;
     if (*filename == '"' || *filename == '\'')
         c = *filename++;
-    auto end = filename;
+    const char *end = filename;
     while (*end && (!c || *end != c) && !isspace(*end))
         end++;
     if (c && *end != c)
@@ -428,13 +429,13 @@ Error AsmCommonDirective::includeFile() {
 Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
     _list.address = _origin;
     _list.length = 0;
-    auto parser = _assembler->getParser();
-    const auto base = _origin * addrUnit();
+    ValueParser &parser = _assembler->getParser();
+    const uint32_t base = _origin * addrUnit();
     do {
         skipSpaces();
         if (terminator || *_scan == '"') {
-            const auto delim = *_scan;
-            auto p = _scan + 1;
+            const char delim = *_scan;
+            const char *p = _scan + 1;
             for (;;) {
                 if (*p == 0)
                     return setError(MISSING_CLOSING_DQUOTE);
@@ -462,7 +463,7 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
             memory.writeByte(base + _list.length, value.getUnsigned());
             _list.length++;
         }
-        const auto save = _scan;
+        const char *save = _scan;
         skipSpaces();
         if (*_scan++ == ',')
             continue;
@@ -476,9 +477,9 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
 Error AsmCommonDirective::defineWords(CliMemory &memory) {
     _list.address = _origin;
     _list.length = 0;
-    auto parser = _assembler->getParser();
-    const auto hi = uint8_t(config().endian());
-    const auto lo = 1 - hi;
+    ValueParser &parser = _assembler->getParser();
+    const uint8_t hi = uint8_t(config().endian());
+    const uint8_t lo = 1 - hi;
     do {
         skipSpaces();
         Value value;
@@ -490,12 +491,12 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
         if (value.overflowUint16())
             return setError(OVERFLOW_RANGE);
         const uint16_t val16 = value.getUnsigned();
-        auto addr = _origin * addrUnit();
+        uint32_t addr = _origin * addrUnit();
         memory.writeByte(addr + hi, static_cast<uint8_t>(val16 >> 8));
         memory.writeByte(addr + lo, static_cast<uint8_t>(val16));
         addr += 2 / addrUnit();
         _list.length += 2;
-        const auto save = _scan;
+        const char *save = _scan;
         skipSpaces();
         if (*_scan++ == ',')
             continue;
@@ -506,7 +507,7 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
 }
 
 Error AsmCommonDirective::defineSpaces() {
-    auto parser = _assembler->getParser();
+    ValueParser &parser = _assembler->getParser();
     Value value;
     _scan = parser.eval(_scan, nullptr, value, this);
     if (setError(parser.error()))

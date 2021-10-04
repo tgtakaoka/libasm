@@ -32,7 +32,7 @@ DisDirective::DisDirective(Disassembler &disassembler, CliMemory &memory, bool u
 
 Error DisDirective::disassemble(uint32_t addr, Insn &insn) {
     _memory.setAddress(addr);
-    const auto  error = _disassembler.decode(_memory, insn, _operands, sizeof(_operands));
+    const Error error = _disassembler.decode(_memory, insn, _operands, sizeof(_operands));
     _listing.reset(*this);
     _address = insn.address();
     _generated_size = insn.length();
@@ -81,7 +81,7 @@ int DisDirective::generatedSize() const {
 }
 
 uint8_t DisDirective::getByte(int offset) const {
-    const auto base = _address * uint8_t(_disassembler.config().addressUnit());
+    const uint32_t base = _address * uint8_t(_disassembler.config().addressUnit());
     uint8_t val = 0;
     _memory.readByte(base + offset, val);
     return val;
@@ -140,7 +140,7 @@ const ConfigBase &DisDirective::config() const {
 }
 
 int DisDirective::codeBytes() const {
-    const auto codeMax = config().codeMax();
+    const uint8_t codeMax = config().codeMax();
     return codeMax < 6 ? codeMax : 6;
 }
 

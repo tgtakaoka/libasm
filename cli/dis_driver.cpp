@@ -26,7 +26,7 @@
 namespace libasm {
 namespace cli {
 
-DisDriver::DisDriver(const std::vector<Disassembler *> &disassemblers) {
+DisDriver::DisDriver(std::vector<Disassembler *> &disassemblers) {
     _disassemblers.reserve(disassemblers.size());
     _disassemblers.insert(_disassemblers.end(), disassemblers.begin(), disassemblers.end());
 }
@@ -43,7 +43,7 @@ static void appendTo(const std::string &cpu, std::list<std::string> &list) {
 
 static void filter(const char *text, std::list<std::string> &list) {
     while (*text) {
-        const auto del = strchr(text, ',');
+        const char *del = strchr(text, ',');
         if (del == nullptr) {
             appendTo(std::string(text), list);
             return;
@@ -79,15 +79,15 @@ static std::string listCpu(
 }
 
 int DisDriver::usage() {
-    auto cpuOption = "";
+    const char *cpuOption = "";
     std::string cpuList;
-    auto dis = defaultDisassembler();
+    Disassembler *dis = defaultDisassembler();
     if (dis) {
         cpuList = ": ";
         cpuList += dis->listCpu();
     } else {
         cpuOption = " -C <CPU>";
-        const auto cpuSep = "\n                ";
+        const char *cpuSep = "\n                ";
         cpuList = listCpu(cpuSep, _disassemblers);
     }
     fprintf(stderr,
@@ -110,7 +110,7 @@ int DisDriver::usage() {
 int DisDriver::disassemble() {
     if (_verbose)
         fprintf(stderr, "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
-    auto input = fopen(_input_name, "r");
+    FILE *input = fopen(_input_name, "r");
     if (input == nullptr) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
@@ -119,9 +119,9 @@ int DisDriver::disassemble() {
     if (readInput(input, _input_name, memory) != 0)
         return 1;
     fclose(input);
-    const auto addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
-    const auto mem_start = memory.startAddress() / addrUnit;
-    const auto mem_end = memory.endAddress() / addrUnit;
+    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
+    const uint32_t mem_start = memory.startAddress() / addrUnit;
+    const uint32_t mem_end = memory.endAddress() / addrUnit;
     if ((_addr_start != 0 || _addr_end != UINT32_MAX) &&
             (mem_end < _addr_start || mem_start > _addr_end)) {
         fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
@@ -154,9 +154,9 @@ int DisDriver::disassemble() {
         fprintf(list, "%s\n", listing.getCpu(true));
     }
     memory.dump([this, output, list, &listing](uint32_t base, const uint8_t *data, size_t size) {
-        const auto addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
-        auto start = base / addrUnit;
-        const auto end = start + (size - 1) / addrUnit;
+        const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
+        uint32_t start = base / addrUnit;
+        const uint32_t end = start + (size - 1) / addrUnit;
         if (base > _addr_end || end < _addr_start)
             return;
         if (base < _addr_start) {
@@ -174,10 +174,10 @@ int DisDriver::disassemble() {
             fflush(output);
         }
         for (size_t pc = 0; pc < size; ) {
-            const auto address = start + pc / addrUnit;
+            const uint32_t address = start + pc / addrUnit;
             Insn insn(address);
             listing.disassemble(base + pc, insn);
-            const auto error = _disassembler->getError();
+            const Error error = _disassembler->getError();
             pc += insn.length();
             if (error)
                 fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
@@ -214,15 +214,15 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
     int lineno = 0;
     int errors = 0;
     size_t line_len = 128;
-    auto line = static_cast<char *>(malloc(line_len));
+    char *line = static_cast<char *>(malloc(line_len));
     int len;
-    const auto addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
+    const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
     uint32_t start = 0, end = 0;
     while ((len = getLine(line, line_len, input)) > 0) {
         lineno++;
         uint32_t addr;
         uint8_t size;
-        const auto data = _formatter->decode(line, addr, size);
+        uint8_t *data = _formatter->decode(line, addr, size);
         if (data == nullptr) {
             if (errors < 3) {
                 fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno, line);
@@ -253,20 +253,20 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
 }
 
 BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
-    auto input = fopen(input_name, "r");
+    FILE *input = fopen(input_name, "r");
     if (input == nullptr) {
         fprintf(stderr, "Can't open input file %s\n", input_name);
         return nullptr;
     }
 
     size_t line_len = 128;
-    auto line = static_cast<char *>(malloc(line_len));
-    const auto len = getLine(line, line_len, input);
+    char *line = static_cast<char *>(malloc(line_len));
+    const int len = getLine(line, line_len, input);
     fclose(input);
     const char c = (len > 0) ? *line : 0;
     free(line);
 
-    const auto addrWidth = _disassembler->config().addressWidth();
+    const AddressWidth addrWidth = _disassembler->config().addressWidth();
     if (c == 'S')
         return new MotoSrec(addrWidth);
     if (c == ':')
@@ -275,9 +275,9 @@ BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
 }
 
 Disassembler *DisDriver::defaultDisassembler() {
-    const auto prefix_len = strlen(PROG_PREFIX);
+    const size_t prefix_len = strlen(PROG_PREFIX);
     if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
-        const auto cpu = _progname + prefix_len;
+        const char *cpu = _progname + prefix_len;
         for (auto dis : _disassemblers) {
             if (dis->setCpu(cpu)) {
                 _disassemblers.clear();
@@ -302,7 +302,7 @@ int DisDriver::parseOption(int argc, const char **argv) {
     _disassembler = defaultDisassembler();
     _formatter = nullptr;
     for (int i = 1; i < argc; i++) {
-        auto opt = argv[i];
+        const char *opt = argv[i];
         if (*opt == '-') {
             switch (*++opt) {
             case 'o':
@@ -415,7 +415,7 @@ int DisDriver::parseOption(int argc, const char **argv) {
 }
 
 const char *DisDriver::basename(const char *str, char sep_char) {
-    const auto sep = strrchr(str, sep_char);
+    const char *sep = strrchr(str, sep_char);
     return sep ? sep + 1 : str;
 }
 

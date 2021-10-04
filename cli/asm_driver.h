@@ -28,7 +28,7 @@ namespace cli {
 
 class AsmDriver {
 public:
-    AsmDriver(const std::vector<AsmDirective *> &directives);
+    AsmDriver(std::vector<AsmDirective *> &directives);
 
     int usage();
     int parseOption(int argc, const char **argv);

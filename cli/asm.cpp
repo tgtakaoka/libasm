@@ -78,7 +78,7 @@ AsmMotoDirective dir68000(asm68000);
 AsmIntelDirective dirz8000(asmz8000);
 AsmIntelDirective dir32000(asm32000);
 
-const std::vector<AsmDirective *> directives = {
+std::vector<AsmDirective *> directives = {
         &dir6800,
         &dir6809,
         &dir6502,
