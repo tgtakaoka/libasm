@@ -57,6 +57,7 @@ typedef union {
 #include <strings.h>
 #define strcasecmp_P(d, s) strcasecmp((d), (s))
 #define strncasecmp_P(d, s, n) strncasecmp((d), (s), (n))
+#define snprintf_P(s, n, f, ...) snprintf((s), (n), (f), __VA_ARGS__)
 
 #endif  // !defined(pgm_read_byte)
 

@@ -153,10 +153,10 @@ Error DisNs32000::decodeImmediate(
         outHex(out, insn.readUint32(memory), 32);
         break;
     case SZ_FLOAT:
-        out.format("%.8g", insn.readFloat32(memory));
+        out.format_P(PSTR("%.8g"), insn.readFloat32(memory));
         break;
     case SZ_LONG:
-        out.format("%.16lg", insn.readFloat64(memory));
+        out.format_P(PSTR("%.16lg"), insn.readFloat64(memory));
         break;
     default:
         break;

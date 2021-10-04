@@ -29,8 +29,8 @@ public:
 
     StrBuffer &letter(char letter);
     StrBuffer &text(const char *text);
-    StrBuffer &pstr(const /*PROGMEM*/ char *pstr);
-    StrBuffer &format(const char *fmt, double val);
+    StrBuffer &text_P(const /*PROGMEM*/ char *pstr);
+    StrBuffer &format_P(const /*PROGMEM*/ char *fmt, double val);
     StrBuffer &comma();
 
     char *mark() const { return _out; }

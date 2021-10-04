@@ -109,11 +109,11 @@ protected:
         const char *label = lookup(val);
         if (label) {
             if (prefix)
-                out.pstr(prefix);
+                out.text_P(prefix);
             return out.text(label);
         }
         if (needPrefix && prefix)
-            out.pstr(prefix);
+            out.text_P(prefix);
         if (addrWidth == 0)
             addrWidth = sizeof(Addr) * 8;
         return _formatter.formatHex(out, val, addrWidth, false);

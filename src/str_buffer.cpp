@@ -46,15 +46,15 @@ StrBuffer &StrBuffer::text(const char *text) {
     return *this;
 }
 
-StrBuffer &StrBuffer::pstr(const /*PROGMEM*/ char *pstr) {
+StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *pstr) {
     uint8_t c;
     while ((c = pgm_read_byte(pstr++)) != 0)
         letter(c);
     return *this;
 }
 
-StrBuffer &StrBuffer::format(const char *fmt, double val) {
-    char *end = _out + snprintf(_out, _end - _out, fmt, val);
+StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, double val) {
+    char *end = _out + snprintf_P(_out, _end - _out, fmt, val);
     if (end < _end) {
         _out = end;
     } else {
@@ -64,7 +64,7 @@ StrBuffer &StrBuffer::format(const char *fmt, double val) {
 }
 
 StrBuffer &StrBuffer::comma() {
-    return pstr(TEXT_COMMA);
+    return text_P(TEXT_COMMA);
 }
 
 StrBuffer &StrBuffer::reverse(char *start) {
