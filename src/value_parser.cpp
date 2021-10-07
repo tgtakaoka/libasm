@@ -19,7 +19,6 @@
 
 namespace libasm {
 
-
 bool Value::overflowRel8(int16_t s16) {
     return s16 < -128 || s16 >= 128;
 }
@@ -129,11 +128,7 @@ Error ValueParser::parseNumber(const char *p, Value &val, const uint8_t base, co
     if (isSymbolLetter(*p))
         return setError(ILLEGAL_CONSTANT);
     _next = p;
-    if (v & 0x80000000) {
-        val.setUnsigned(v);
-    } else {
-        val.setSigned(v);
-    }
+    val.setValue(v);
     return setOK();
 }
 
@@ -216,8 +211,8 @@ Value ValueParser::readAtom(const char *scan) {
     }
     if (c == '~') {
         Value value(readAtom(p));
-        if (isOK())
-            return value.complement();
+        if (!value.isUndefined())
+            return value.setValue(~value.getUnsigned());
         return value;
     }
     if (c == '-' || c == '+') {
@@ -225,13 +220,11 @@ Value ValueParser::readAtom(const char *scan) {
             setError(UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
-        if (c == '+')
-            return readAtom(p);
         Value value(readAtom(p));
-        if (isOK()) {
+        if (c == '-' && !value.isUndefined()) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(OVERFLOW_RANGE);
-            return value.negate();
+            return Value::makeSigned(-value.getSigned());
         }
         return value;
     }
@@ -247,7 +240,7 @@ Value ValueParser::readAtom(const char *scan) {
         _next = end;
         if (_symtab->hasSymbol(symbol, end)) {
             const uint32_t v = _symtab->lookupSymbol(symbol, end);
-            return Value(v);
+            return Value().setValue(v);
         }
         return Value();
     }
@@ -332,11 +325,16 @@ static uint32_t shift_left(uint32_t value, uint8_t count) {
     return value;
 }
 
-static uint32_t shift_right(uint32_t value, uint8_t count, bool sign) {
+static uint32_t shift_right(uint32_t value, uint8_t count) {
+    for (unsigned i = 0; i <= 32 && i < count; i++)
+        value >>= 1;
+    return value;
+}
+
+static int32_t shift_right_negative(int32_t value, uint8_t count) {
     for (unsigned i = 0; i <= 32 && i < count; i++) {
         value >>= 1;
-        if (sign)
-            value |= 0x80000000;
+        value |= 0x80000000;
     }
     return value;
 }
@@ -344,56 +342,43 @@ static uint32_t shift_right(uint32_t value, uint8_t count, bool sign) {
 Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
     if (lhs.isUndefined() || rhs.isUndefined())
         return Value();
+
+    const bool bsigned = lhs.isSigned() && rhs.isSigned();
+
     switch (op) {
     case OP_ADD:
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() + rhs.getSigned());
-        return Value::makeUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
+        return Value::makeUnsigned(lhs.getUnsigned() + rhs.getUnsigned()).setSign(bsigned);
     case OP_SUB:
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() - rhs.getSigned());
-        return Value::makeUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
+        return Value::makeUnsigned(lhs.getUnsigned() - rhs.getUnsigned()).setSign(bsigned);
     case OP_MUL:
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() * rhs.getSigned());
-        return Value::makeUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
+        return bsigned ? Value::makeSigned(lhs.getSigned() * rhs.getSigned())
+                       : Value::makeUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
     case OP_DIV:
         if (rhs.getUnsigned() == 0) {
             setError(DIVIDE_BY_ZERO);
             return Value();
         }
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() / rhs.getSigned());
-        return Value::makeUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
+        return bsigned ? Value::makeSigned(lhs.getSigned() / rhs.getSigned())
+                       : Value::makeUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
     case OP_MOD:
         if (rhs.getUnsigned() == 0) {
             setError(DIVIDE_BY_ZERO);
             return Value();
         }
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() % rhs.getSigned());
-        return Value::makeUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
+        return bsigned ? Value::makeSigned(lhs.getSigned() % rhs.getSigned())
+                       : Value::makeUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
     case OP_BIT_AND:
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() & rhs.getSigned());
         return Value::makeUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
     case OP_BIT_XOR:
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() ^ rhs.getSigned());
         return Value::makeUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
     case OP_BIT_OR:
-        if (lhs.isSigned() && rhs.isSigned())
-            return Value::makeSigned(lhs.getSigned() | rhs.getSigned());
         return Value::makeUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
     case OP_BIT_SHL:
-        if (lhs.isSigned())
-            return Value::makeSigned(shift_left(lhs.getSigned(), rhs.getUnsigned()));
         return Value::makeUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
     case OP_BIT_SHR:
-        if (lhs.isSigned())
-            return Value::makeSigned(
-                    shift_right(lhs.getSigned(), rhs.getUnsigned(), lhs.getSigned() & 0x80000000));
-        return Value::makeUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned(), false));
+        if (lhs.isSigned() && lhs.getSigned() < 0)
+            return Value::makeSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
+        return Value::makeUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
     default:
         return Value();
     }

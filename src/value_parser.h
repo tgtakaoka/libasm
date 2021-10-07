@@ -34,8 +34,6 @@ public:
     static Value makeUnsigned(uint32_t value) { return Value(value, UNSIGNED); }
 
     Value() : _value(0), _type(UNDEFINED) {}
-    Value(uint32_t uval)
-        : _value(uval), _type(static_cast<int32_t>(uval) >= 0 ? SIGNED : UNSIGNED) {}
 
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned() const { return _type == SIGNED; }
@@ -43,30 +41,16 @@ public:
     bool overflowUint8() const { return overflowUint8(_value); }
     bool overflowUint16() const { return overflowUint16(_value); }
 
-    void setSigned(int32_t value) {
-        _value = value;
-        _type = SIGNED;
+    Value &setSign(bool sign) {
+        _type = sign ? SIGNED : UNSIGNED;
+        return *this;
     }
 
-    void setUnsigned(uint32_t value) {
-        _value = value;
-        _type = UNSIGNED;
-    }
+    Value &setValue(uint32_t value) { return setSign(static_cast<int32_t>(_value = value) >= 0); }
 
     int32_t getSigned() const { return static_cast<int32_t>(_value); }
 
     uint32_t getUnsigned() const { return _value; }
-
-    Value &complement() {
-        _value = ~_value;
-        return *this;
-    }
-
-    Value &negate() {
-        if (!isUndefined())
-            setSigned(-getSigned());
-        return *this;
-    }
 
 private:
     enum ValueType : uint8_t {
