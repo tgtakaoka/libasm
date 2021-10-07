@@ -33,8 +33,8 @@ enum AddressWidth : uint8_t {
 };
 
 enum AddressUnit : uint8_t {
-    ADDRESS_BYTE1 = 1,
-    ADDRESS_BYTE2 = 2,
+    ADDRESS_BYTE = 1,  // Instruction is byte addressable.
+    ADDRESS_WORD = 2,  // Instruction is word addressable.
 };
 
 enum OpCodeWidth : uint8_t {
@@ -87,8 +87,8 @@ template <>
 struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 }  // namespace
 
-template <AddressWidth AddrWE, OpCodeWidth CodeWE, Endian EndianE, uint8_t MaxCode, uint8_t MaxName,
-        AddressUnit AddrUE = ADDRESS_BYTE1>
+template <AddressWidth AddrWE, AddressUnit AddrUE, OpCodeWidth CodeWE, Endian EndianE,
+        uint8_t MaxCode, uint8_t MaxName>
 struct ConfigImpl : public ConfigBase {
     typedef typename __address_type<AddrWE>::uintptr_t uintptr_t;
     typedef typename __address_type<AddrWE>::ptrdiff_t ptrdiff_t;

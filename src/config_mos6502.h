@@ -22,7 +22,7 @@
 namespace libasm {
 namespace mos6502 {
 
-struct Config : ConfigImpl<ADDRESS_24BIT, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4> {};
 
 }  // namespace mos6502
 }  // namespace libasm

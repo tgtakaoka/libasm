@@ -22,7 +22,7 @@
 namespace libasm {
 namespace i8048 {
 
-struct Config : ConfigImpl<ADDRESS_12BIT, OPCODE_8BIT, ENDIAN_BIG, 2, 5> {};
+struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 2, 5> {};
 
 }  // namespace i8048
 }  // namespace libasm

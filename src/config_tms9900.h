@@ -22,7 +22,7 @@
 namespace libasm {
 namespace tms9900 {
 
-struct Config : ConfigImpl<ADDRESS_16BIT, OPCODE_16BIT, ENDIAN_BIG, 8, 4> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 8, 4> {};
 
 }  // namespace tms9900
 }  // namespace libasm

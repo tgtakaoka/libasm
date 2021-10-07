@@ -22,7 +22,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-struct Config : ConfigImpl<ADDRESS_16BIT, OPCODE_8BIT, ENDIAN_BIG, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 4> {};
 
 }  // namespace cdp1802
 }  // namespace libasm
