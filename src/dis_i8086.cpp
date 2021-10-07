@@ -84,8 +84,8 @@ Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &o
         // M_FAR
         const uint16_t offset = insn.readUint16(memory);
         const uint16_t segment = insn.readUint16(memory);
-        outAbsAddr(out, segment).letter(':');
-        outAbsAddr(out, offset);
+        outAbsAddr(out, segment, 16).letter(':');
+        outAbsAddr(out, offset, 16);
     }
     return setError(insn);
 }
@@ -188,7 +188,7 @@ Error DisI8086::outMemReg(
     if (mod == 2 || (mod == 0 && r_m == 6)) {
         if (sep)
             out.letter(sep);
-        outAbsAddr(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory), 16);
     }
     out.letter(']');
     return setError(insn);

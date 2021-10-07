@@ -93,7 +93,7 @@ Error DisMc68000::decodeEffectiveAddr(
             return setError(OPERAND_NOT_ALIGNED);
         if (ea.size == SZ_LONG && (target % 4) != 0)
             return setError(OPERAND_NOT_ALIGNED);
-        outAbsAddr(out, target, addressWidth());
+        outAbsAddr(out, target);
     }
     if (mode == M_INDX || mode == M_PCIDX) {
         const RegName base = (mode == M_INDX) ? ea.reg : REG_PC;

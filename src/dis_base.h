@@ -100,33 +100,27 @@ protected:
     }
 
     /**
-     * Convert |val| as |addrWidth| bit absolute address. Output
+     * Convert |val| as |addrWidth| bit absolute address. Use default
+     * configured address width when |addrWdith| is ommitted. Output
      * symbol label when |val| is in symbol table.
      */
     template <typename Addr>
-    StrBuffer &outAbsAddr(StrBuffer &out, Addr val, uint8_t addrWidth = 0,
-            const /*PROGMEM*/ char *prefix = nullptr, bool needPrefix = false) {
+    StrBuffer &outAbsAddr(StrBuffer &out, Addr val, uint8_t addrWidth = 0) {
         const char *label = lookup(val);
-        if (label) {
-            if (prefix)
-                out.text_P(prefix);
+        if (label)
             return out.text(label);
-        }
-        if (needPrefix && prefix)
-            out.text_P(prefix);
         if (addrWidth == 0)
-            addrWidth = sizeof(Addr) * 8;
+            addrWidth = uint8_t(config().addressWidth());
         return _formatter.formatHex(out, val, addrWidth, false);
     }
 
     /**
-     * Convert |target| as relative |deltaBits| offset from
-     * |origin|.
+     * Convert |target| as relative |deltaBits| offset from |origin|.
      */
     template <typename Addr>
     StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) {
         if (!_relativeTarget)
-            return outAbsAddr(out, target, config().addressWidth());
+            return outAbsAddr(out, target);
         out.letter(_curSym);
         const auto delta = static_cast<typename make_signed<Addr>::type>(target - origin);
         if (delta == 0)

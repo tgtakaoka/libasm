@@ -27,13 +27,25 @@ StrBuffer &DisMc6809::outRegister(StrBuffer &out, RegName regName) {
 
 Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
-    outAbsAddr(out, dir, 8, PSTR("<"));
+    const char *label = lookup(dir);
+    if (label) {
+        out.letter('<').text(label);
+    } else {
+        outAbsAddr(out, dir, 8);
+    }
     return setError(insn);
 }
 
 Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
+    const char *label = lookup(addr);
+    if (label) {
+        out.letter('>').text(label);
+    } else {
+        if (addr < 0x100)
+            out.letter('>');
+        outAbsAddr(out, addr);
+    }
     return setError(insn);
 }
 

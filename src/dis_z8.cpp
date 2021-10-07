@@ -47,7 +47,12 @@ StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
         return outWorkReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
-    return outAbsAddr(out, addr, 8, PSTR(">"), addr < 16 && !indir);
+    const char *label = lookup(addr);
+    if (label)
+        return out.letter('>').text(label);
+    if (addr < 16 && !indir)
+        out.letter('>');
+    return outAbsAddr(out, addr, 8);
 }
 
 StrBuffer &DisZ8::outPairAddr(StrBuffer &out, uint8_t addr, bool indir) {
@@ -55,7 +60,12 @@ StrBuffer &DisZ8::outPairAddr(StrBuffer &out, uint8_t addr, bool indir) {
         return outPairReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
-    return outAbsAddr(out, addr, 8, PSTR(">"), addr < 16 && !indir);
+    const char *label = lookup(addr);
+    if (label)
+        return out.letter('>').text(label);
+    if (addr < 16 && !indir)
+        out.letter('>');
+    return outAbsAddr(out, addr, 8);
 }
 
 StrBuffer &DisZ8::outBitPos(StrBuffer &out, uint8_t bitPos) {

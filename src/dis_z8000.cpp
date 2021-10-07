@@ -170,7 +170,7 @@ Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, StrBuffe
         const uint32_t linear = seg | off;
         if (shortDirect)
             out.letter('|');
-        outAbsAddr(out, linear, addressWidth());
+        outAbsAddr(out, linear);
         if (shortDirect)
             out.letter('|');
     } else {
@@ -249,7 +249,7 @@ Error DisZ8000::decodeOperand(
     case M_IO:
         if (_ioAddressPrefix)
             out.letter(_ioAddressPrefix);
-        outAbsAddr(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16(memory), 16);
         return OK;
     case M_IRIO:
         if (num == 0)

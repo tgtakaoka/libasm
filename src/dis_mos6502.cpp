@@ -56,12 +56,26 @@ Error DisMos6502::decodeAbsolute(
         target |= static_cast<uint32_t>(bank) << 16;
         // JSL has only ABS_LONG addressing
         if (insn.opCode() == TableMos6502::JSL) {
-            outAbsAddr(out, target, addressWidth());
+            outAbsAddr(out, target);
         } else {
-            outAbsAddr(out, target, addressWidth(), PSTR(">>"), target < 0x10000);
+            const char *label = lookup(target);
+            if (label) {
+                out.letter('>').letter('>').text(label);
+            } else {
+                if (target < 0x10000)
+                    out.letter('>').letter('>');
+                outAbsAddr(out, target);
+            }
         }
     } else {
-        outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
+        const char *label = lookup(addr);
+        if (label) {
+            out.letter('>').text(label);
+        } else {
+            if (addr < 0x100)
+                out.letter('>');
+            outAbsAddr(out, addr, 16);
+        }
     }
     if (index != REG_UNDEF) {
         out.letter(',');
@@ -100,7 +114,12 @@ Error DisMos6502::decodeZeroPage(
     const uint8_t zp = insn.readByte(memory);
     if (indirect)
         out.letter(zpLong ? '[' : '(');
-    outAbsAddr(out, zp, 8, PSTR("<"));
+    const char *label = lookup(zp);
+    if (label) {
+        out.letter('<').text(label);
+    } else {
+        outAbsAddr(out, zp, 8);
+    }
     if (indirect && index == REG_Y)
         out.letter(zpLong ? ']' : ')');
     if (index != REG_UNDEF) {
@@ -151,8 +170,8 @@ Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffe
     const uint8_t sbank = insn.readByte(memory);
     const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
-    outAbsAddr(out, src, addressWidth()).comma();
-    outAbsAddr(out, dst, addressWidth());
+    outAbsAddr(out, src).comma();
+    outAbsAddr(out, dst);
     return setOK();
 }
 

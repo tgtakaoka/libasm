@@ -316,7 +316,7 @@ Error DisNs32000::decodeGeneric(
             const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
             if (static_cast<uint32_t>(disp.val32 + (max >> 1)) > max - 1)
                 return setError(OVERFLOW_RANGE);
-            outAbsAddr(out.letter('@'), disp.val32, addressWidth());
+            outAbsAddr(out.letter('@'), disp.val32);
         }
         break;
     case 0x16:  // M_EXT
@@ -360,7 +360,7 @@ Error DisNs32000::decodeGeneric(
             if (target >= max)
                 return setError(OVERFLOW_RANGE);
             if (_pcRelativeParen) {
-                outAbsAddr(out, target, addressWidth());
+                outAbsAddr(out, target);
             } else {
                 out.letter(_curSym);
                 if (disp.val32 > 0)

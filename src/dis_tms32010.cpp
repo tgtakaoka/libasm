@@ -116,7 +116,7 @@ Error DisTms32010::decodeOperand(
         uint16_t pma = insn.readUint16(memory);
         if (pma & 0xF000)
             return setError(OVERFLOW_RANGE);
-        outAbsAddr(out, pma, addressWidth());
+        outAbsAddr(out, pma);
         break;
     }
     default:

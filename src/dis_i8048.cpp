@@ -60,11 +60,10 @@ Error DisI8048::decodeOperand(
         _regs.outRegName(out, REG_P2);
         break;
     case M_AD08:
-        outAbsAddr(out, ((insn.address() + 1) & ~0xFF) | insn.readByte(memory), addressWidth());
+        outAbsAddr(out, ((insn.address() + 1) & ~0xFF) | insn.readByte(memory));
         break;
     case M_AD11:
-        outAbsAddr(out, (static_cast<Config::uintptr_t>(opc & 0xE0) << 3) | insn.readByte(memory),
-                addressWidth());
+        outAbsAddr(out, (static_cast<Config::uintptr_t>(opc & 0xE0) << 3) | insn.readByte(memory));
         break;
     case M_BITN:
         outDec(out, (opc & 0xE0) >> 5, 3);

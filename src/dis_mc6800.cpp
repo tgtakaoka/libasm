@@ -27,7 +27,12 @@ StrBuffer &DisMc6800::outRegister(StrBuffer &out, RegName regName) {
 
 Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
-    outAbsAddr(out, dir, 8, PSTR("<"));
+    const char *label = lookup(dir);
+    if (label) {
+        out.letter('<').text(label);
+    } else {
+        outAbsAddr(out, dir, 8);
+    }
     return setError(insn);
 }
 
@@ -35,7 +40,14 @@ Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &
     const Config::uintptr_t addr = insn.readUint16(memory);
     if (addressWidth() == ADDRESS_13BIT && addr >= 0x2000)
         return setError(OVERFLOW_RANGE);
-    outAbsAddr(out, addr, 16, PSTR(">"), addr < 0x100);
+    const char *label = lookup(addr);
+    if (label) {
+        out.letter('>').text(label);
+    } else {
+        if (addr < 0x100)
+            out.letter('>');
+        outAbsAddr(out, addr);
+    }
     return setError(insn);
 }
 

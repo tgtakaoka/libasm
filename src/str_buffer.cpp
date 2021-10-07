@@ -22,8 +22,6 @@
 
 namespace libasm {
 
-static const char TEXT_COMMA[] PROGMEM = ", ";
-
 StrBuffer::StrBuffer(char *buffer, size_t size)
     : ErrorReporter(), _out(buffer), _end(buffer + (size - 1)) {
     *_out = 0;
@@ -46,13 +44,6 @@ StrBuffer &StrBuffer::text(const char *text) {
     return *this;
 }
 
-StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *pstr) {
-    uint8_t c;
-    while ((c = pgm_read_byte(pstr++)) != 0)
-        letter(c);
-    return *this;
-}
-
 StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, double val) {
     char *end = _out + snprintf_P(_out, _end - _out, fmt, val);
     if (end < _end) {
@@ -64,7 +55,7 @@ StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, double val) {
 }
 
 StrBuffer &StrBuffer::comma() {
-    return text_P(TEXT_COMMA);
+    return letter(',').letter(' ');
 }
 
 StrBuffer &StrBuffer::reverse(char *start) {
