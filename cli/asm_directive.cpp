@@ -523,16 +523,16 @@ Error AsmCommonDirective::defineSpaces() {
     return setError(OK);
 }
 
-const char *AsmCommonDirective::lookupValue(uint32_t address) {
+const char *AsmCommonDirective::lookupValue(uint32_t address) const {
     return nullptr;
 }
 
-bool AsmCommonDirective::hasSymbol(const char *symbol, const char *end) {
+bool AsmCommonDirective::hasSymbol(const char *symbol, const char *end) const {
     return end ? symbolExists(std::string(symbol, end - symbol))
                : symbolExists(std::string(symbol));
 }
 
-uint32_t AsmCommonDirective::lookupSymbol(const char *symbol, const char *end) {
+uint32_t AsmCommonDirective::lookupSymbol(const char *symbol, const char *end) const {
     return end ? symbolLookup(std::string(symbol, end - symbol))
                : symbolLookup(std::string(symbol));
 }

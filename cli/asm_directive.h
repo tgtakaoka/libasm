@@ -101,9 +101,9 @@ private:
     Error processPseudo(const char *directive, const char *&label, CliMemory &memory);
 
     // SymbolTable
-    const char *lookupValue(uint32_t address) override;
-    bool hasSymbol(const char *symbol, const char *end = nullptr) override;
-    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) override;
+    const char *lookupValue(uint32_t address) const override;
+    bool hasSymbol(const char *symbol, const char *end = nullptr) const override;
+    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) const override;
     Error internSymbol(uint32_t value, const char *symbol, const char *end = nullptr);
 
     void skipSpaces();
