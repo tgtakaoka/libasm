@@ -99,7 +99,7 @@ clean-gen:
 	-rm -f $(GEN_OUTS)
 
 clean: clean-asm clean-asl clean-gas
-	-rm -f *.p *.o *.lst
+	-rm -f *.p *.o *.lst *.dis
 
 # Local Variables:
 # mode: makefile-gmake

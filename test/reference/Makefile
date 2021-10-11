@@ -59,7 +59,7 @@ clean-gas:
 	-rm -f $(GAS_OUTS)
 
 clean:
-	-rm -f *.o *.p *.lst
+	-rm -f *.o *.p *.lst *.dis
 
 # Local Variables:
 # mode: makefile-gmake
