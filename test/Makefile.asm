@@ -1,4 +1,4 @@
-# Copyright 2020 Tadashi G. Takaoka
+# Copyright 2021 Tadashi G. Takaoka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Macro Assembler asl target
+# Macro Assembler asm target
 
-ASL_FLAGS = -gnuerrors -L +t 0x1e -q -w -relaxed -supmode
-P2HEX_FLAGS = -q -k -r \$$-\$$ -l 16
-
-define __asl-opt # target
-$(if $(filter $(1),$(I32_OUTS)),-F Intel32,$(if $(filter $(1),$(S19_OUTS) $(S28_OUTS)),-F Moto +5,-F Intel))
+define __asm-opt # target
+$(if $(filter $(1),$(S19_OUTS) $(S28_OUTS)),-S16,-H16)
 endef
-define asl-opt # file
-$(call __asl-opt,$(subst gen_,,$(subst test_,,$(1))))
+define asm-opt # file
+$(call __asm-opt,$(subst gen_,,$(subst test_,,$(1))))
 endef
 
 # Local Variables:

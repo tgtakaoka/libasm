@@ -21,6 +21,7 @@ help:
 	@echo '"make gas-test" assemble with "gas" command'
 
 -include ../../src/Makefile.arch
+-include ../Makefile.asm
 -include ../Makefile.asl
 -include ../Makefile.gas
 
@@ -60,12 +61,12 @@ generate: $(GEN_OUTS)
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
 ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
-define asm-rule # source stem fmt
+define asm-rule # source stem suffix option
 asm-$(2).$(3): $(1)
-	asm -o $(2).$(3) -l $(2).lst $$^
+	asm $(4) -o $(2).$(3) -l $(2).lst $$^
 
 endef
-$(eval $(foreach f,$(ASM_TESTS),$(call asm-rule,$(f).asm,$(f),$(call out-ext,$(f)))))
+$(eval $(foreach f,$(ASM_TESTS),$(call asm-rule,$(f).asm,$(f),$(call out-ext,$(f)),$(call asm-opt,$(f)))))
 
 asm-test: clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
@@ -77,12 +78,12 @@ ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
 define asl-file # stem
 $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
 endef
-define asl-rule # source stem suffix format
+define asl-rule # source stem suffix option
 asl-$(2).$(3): $(1)
-	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) -F $(4) $(2).p $(2).$(3)
+	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(4) $(2).p $(2).$(3)
 
 endef
-$(eval $(foreach f,$(ASL_TESTS),$(call asl-rule,$(call asl-file,$(f)),$(f),$(call out-ext,$(f)),$(call out-fmt,$(f)))))
+$(eval $(foreach f,$(ASL_TESTS),$(call asl-rule,$(call asl-file,$(f)),$(f),$(call out-ext,$(f)),$(call asl-opt,$(f)))))
 
 asl-test: clean-asl $(ASL_OUTS:%=asl-%)
 clean-asl:

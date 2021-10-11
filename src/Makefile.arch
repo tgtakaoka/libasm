@@ -118,12 +118,6 @@ endef
 define out-ext # file
 $(call __out-ext,$(subst gen_,,$(subst test_,,$(1))))
 endef
-define __out-fmt # target
-$(if $(filter $(1),$(I32_OUTS)),Intel32,$(if $(filter $(1),$(S19_OUTS) $(S28_OUTS)),Moto +5,Intel))
-endef
-define out-fmt # file
-$(call __out-fmt,$(subst gen_,,$(subst test_,,$(1))))
-endef
 
 # Local Variables:
 # mode: makefile-gmake
