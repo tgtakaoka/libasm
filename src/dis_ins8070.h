@@ -28,7 +28,7 @@ namespace ins8070 {
 
 class DisIns8070 : public Disassembler, public Config {
 public:
-    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070, '$') {}
+    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070, '$') { reset(); }
     ConfigBase &config() override { return *this; }
     void reset() override { setImmediateSymbol(false); }
 
@@ -37,7 +37,7 @@ public:
 private:
     ValueFormatter _formatter;
     RegIns8070 _regs;
-    bool _immSym = false;
+    bool _immSym;
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
     StrBuffer &outOperand(StrBuffer &out, OprFormat opr, uint8_t value = 0);

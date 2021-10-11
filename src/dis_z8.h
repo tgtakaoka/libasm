@@ -28,7 +28,7 @@ namespace z8 {
 
 class DisZ8 : public Disassembler, public Config {
 public:
-    DisZ8() : Disassembler(_formatter, _regs, TableZ8, '$') {}
+    DisZ8() : Disassembler(_formatter, _regs, TableZ8, '$') { reset(); }
     ConfigBase &config() override { return *this; }
     void reset() override { preferWorkRegister(true); }
 
@@ -37,7 +37,7 @@ public:
 private:
     IntelValueFormatter _formatter;
     RegZ8 _regs;
-    bool _preferWorkRegister = true;
+    bool _preferWorkRegister;
 
     StrBuffer &outCcName(StrBuffer &out, Config::opcode_t opCode);
     StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);

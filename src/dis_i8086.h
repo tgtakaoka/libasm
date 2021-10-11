@@ -28,7 +28,7 @@ namespace i8086 {
 
 class DisI8086 : public Disassembler, public Config {
 public:
-    DisI8086() : Disassembler(_formatter, _regs, TableI8086, '$') {}
+    DisI8086() : Disassembler(_formatter, _regs, TableI8086, '$') { reset(); }
     ConfigBase &config() override { return *this; }
     void reset() override {
         setSeparateSegOverride(true);
@@ -41,8 +41,8 @@ public:
 private:
     IntelValueFormatter _formatter;
     RegI8086 _regs;
-    bool _separateSegOverride = true;
-    bool _repeatHasStringInst = false;
+    bool _separateSegOverride;
+    bool _repeatHasStringInst;
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
     Error outMemReg(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mode,

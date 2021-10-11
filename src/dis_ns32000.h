@@ -28,7 +28,7 @@ namespace ns32000 {
 
 class DisNs32000 : public Disassembler, public Config {
 public:
-    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '*') {}
+    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '*') { reset(); }
     ConfigBase &config() override { return *this; }
     void reset() override {
         stringOptionBraket(false);
@@ -43,9 +43,9 @@ public:
 private:
     ValueFormatter _formatter;
     RegNs32000 _regs;
-    bool _stringOptionBraket = false;
-    bool _pcRelativeParen = false;
-    bool _externalParen = false;
+    bool _stringOptionBraket;
+    bool _pcRelativeParen;
+    bool _externalParen;
 
     struct Displacement {
         int32_t val32;

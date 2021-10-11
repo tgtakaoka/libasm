@@ -28,15 +28,15 @@ namespace mos6502 {
 
 class AsmMos6502 : public Assembler, public Config {
 public:
-    AsmMos6502() : Assembler(_parser, TableMos6502) {}
+    AsmMos6502() : Assembler(_parser, TableMos6502) { reset(); }
     ConfigBase &config() override { return *this; }
-    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override { _long_acc = _long_idx = false; }
+    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
 
 private:
     MotoValueParser _parser;
-    bool _long_acc = false;
-    bool _long_idx = false;
+    bool _long_acc;
+    bool _long_idx;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
