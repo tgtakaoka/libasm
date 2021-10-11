@@ -34,11 +34,13 @@ public:
         stringOptionBraket(false);
         pcRelativeParen(false);
         externalParen(false);
+        floatPrefix();
     }
 
     void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
     void pcRelativeParen(bool paren) { _pcRelativeParen = paren; }
     void externalParen(bool paren) { _externalParen = paren; }
+    void floatPrefix(const char *prefix = nullptr) { _floatPrefix = prefix; }
 
 private:
     ValueFormatter _formatter;
@@ -46,6 +48,7 @@ private:
     bool _stringOptionBraket;
     bool _pcRelativeParen;
     bool _externalParen;
+    const char *_floatPrefix;
 
     struct Displacement {
         int32_t val32;

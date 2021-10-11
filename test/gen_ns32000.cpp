@@ -31,6 +31,7 @@ int main(int argc, const char **argv) {
         dis32000.stringOptionBraket(true);
         dis32000.setCurrentOriginSymbol('.');
         dis32000.pcRelativeParen(true);
+        dis32000.floatPrefix("0f");
     }
     TestGenerator<Config> generator(dis32000, 0x10000);
     generator.generate(driver);

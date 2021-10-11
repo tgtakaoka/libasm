@@ -506,7 +506,7 @@ Error AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &o
     switch (op.mode) {
     case M_ABS: {
         const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
-        if (op.val32 >= max)
+        if (max && op.val32 >= max)
             return setError(OVERFLOW_RANGE);
         // Sign extends 24 bit address into 32 bit.
         const uint32_t sign = max >> 1;
