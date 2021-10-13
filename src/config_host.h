@@ -17,6 +17,7 @@
 #ifndef __CONFIG_HOST_H__
 #define __CONFIG_HOST_H__
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include "version.h"
@@ -25,16 +26,16 @@
 #define ARRAY_END(array) (&(array)[sizeof(array) / sizeof(array[0])])
 #define ARRAY_RANGE(array) ARRAY_BEGIN(array), ARRAY_END(array)
 
-#ifdef AVR
+#if defined(AVR)
 #include <avr/pgmspace.h>
+
+#elif defined(TEENSYDUINO)
+#include <avr/pgmspace.h>
+#include <string.h>
+#include <strings.h>
 
 #else  // AVR
 
-// Teensy (ARM) predefined following macros.
-#if !defined(pgm_read_byte)
-#include <string.h>
-
-#define PROGMEM
 namespace libasm {
 namespace host {
 typedef union {
@@ -48,8 +49,10 @@ typedef union {
 #define pgm_read_word(p) *(p)
 #define pgm_read_dword(p) *(p)
 #define pgm_read_ptr(p) ((libasm::host::read_ptr_t *)(p))->i
+#define PROGMEM
 #define PSTR(text) (text)
 #define F(text) (text)
+#include <string.h>
 #define strlen_P(s) strlen((s))
 #define strcpy_P(d, s) strcpy((d), (s))
 #define strncpy_P(d, s, n) strncpy((d), (s), (n))
@@ -58,8 +61,6 @@ typedef union {
 #define strcasecmp_P(d, s) strcasecmp((d), (s))
 #define strncasecmp_P(d, s, n) strncasecmp((d), (s), (n))
 #define snprintf_P(s, n, f, ...) snprintf((s), (n), (f), __VA_ARGS__)
-
-#endif  // !defined(pgm_read_byte)
 
 #endif  // AVR
 
