@@ -18,6 +18,8 @@
 #define __INSN_BASE_H__
 
 #include <ctype.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 
 #include "config_base.h"
@@ -37,7 +39,10 @@ public:
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
     void clear() { _length = 0; }
-    void reset() { clear(); _name[0] = 0; }
+    void reset() {
+        clear();
+        _name[0] = 0;
+    }
 
     /** No copy constructor. */
     Insn(Insn const &) = delete;
@@ -250,7 +255,10 @@ protected:
         _insn.clear();
         resetError();
     }
-    void reset() { clear(); _insn.reset(); }
+    void reset() {
+        clear();
+        _insn.reset();
+    }
 
 private:
     Insn &_insn;

@@ -17,7 +17,8 @@
 #ifndef __DIS_BASE_H__
 #define __DIS_BASE_H__
 
-#include <ctype.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #include "array_memory.h"
 #include "config_base.h"

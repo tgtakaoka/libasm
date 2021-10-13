@@ -17,6 +17,7 @@
 #ifndef __ARRAY_MEMORY_H__
 #define __ARRAY_MEMORY_H__
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include "config_base.h"
