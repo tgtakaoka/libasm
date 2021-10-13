@@ -52,7 +52,7 @@ public:
             return Flags{static_cast<uint8_t>((static_cast<uint8_t>(dst) << dstMode_gp) |
                                               (static_cast<uint8_t>(src) << srcMode_gp))};
         }
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 
         AddrMode dstMode() const { return AddrMode((_attr >> dstMode_gp) & addrMode_gm); }
         AddrMode srcMode() const { return AddrMode((_attr >> srcMode_gp) & addrMode_gm); }
