@@ -18,8 +18,10 @@ interface.
     #include <asm_mc6800.h>
     libasm::mc6800::AsmMc6800 asm6800;
     asm6800.setCpu("68HC11");
+
     const char *text = "SUBD $90";
     libasm::Insn insn(0x1000);
+
     asm6800.encode(text, insn);
     assert(insn.address()  == 0x1000);
     assert(insn.length()   == 2);    // direct addressing
@@ -37,12 +39,14 @@ https://github.com/tgtakaoka/libasm/blob/main/src/array_memory.h[`SymbolTable`]
 interface.
 
     #include <dis_mc68000.h>
-    const uint16_t words[0047372, 0x1232]
-    libasm::ArrayMemory memory(0x100, words, sizeof(words));
     libasm::mc68000::DisMc68000 dis68k;
     dis68k.setRelativeTarget(true);
+
+    const uint16_t words[] = {0047372, 0x1232};
+    libasm::ArrayMemory memory(0x100, words, sizeof(words));
     libasm::Insn insn(0x100);
     char opr[80];
+
     dis68k.decode(memory, insn, opr, sizeof(opr));
     assert(insn.address() == 0x100);
     assert(std::string(insn.name()) == "jmp");
