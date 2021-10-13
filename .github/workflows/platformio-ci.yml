@@ -44,7 +44,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
       - name: Install library dependency
-        run: pio lib -g install libcli@1.1.0
+        run: pio lib -g install libcli@1.1.1
       - name: Run PlatformIO
         run: pio ci --lib="." --board=sparkfun_promicro16 --board=nano_every --board=nano_33_iot
         env:
