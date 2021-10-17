@@ -45,6 +45,7 @@ protected:
     Base ** _begin;
     Base ** _end;
     uint32_t _origin;
+    char buffer[60];
 
     BaseExample(Base &current)
         : _cli(libcli::Cli::instance()), _current(&current), _begin(&_current), _end(_begin + 1) {}
@@ -58,13 +59,13 @@ protected:
     uint8_t addrUnit() const { return uint8_t(config().addressUnit()); }
     uint8_t addrDigits() const { return ((uint8_t(config().addressWidth()) + 3) & -4) / 4; }
 
-    void printPrompt(void (*callback)(const char *, uintptr_t, State)) {
+    void printPrompt(libcli::Cli::StringCallback callback) {
         _cli.print(FSTR(prompt()));
         _cli.print(FSTR(_current->getCpu()));
         _cli.print(':');
         printAddress(_origin);
         _cli.print(F("> "));
-        _cli.readLine(callback, reinterpret_cast<uintptr_t>(this));
+        _cli.readLine(callback, reinterpret_cast<uintptr_t>(this), buffer, sizeof(buffer));
     }
 
     void printAddress(uint32_t addr) { _cli.printHex(addr, addrDigits()); }
@@ -263,7 +264,7 @@ private:
         }
     }
 
-    static void handleLine(const char *line, uintptr_t extra, State state) {
+    static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
         auto example = reinterpret_cast<AsmExample *>(extra);
         const auto scan = skipSpaces(line);
@@ -327,7 +328,7 @@ private:
         }
     }
 
-    static void handleLine(const char *line, uintptr_t extra, State state) {
+    static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
         auto example = reinterpret_cast<DisExample *>(extra);
         const auto scan = skipSpaces(line);

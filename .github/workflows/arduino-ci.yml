@@ -28,4 +28,4 @@ jobs:
           libraries: |
             - source-path: ./
             - name: libcli
-              version: 1.1.1
+              version: 1.2.1
