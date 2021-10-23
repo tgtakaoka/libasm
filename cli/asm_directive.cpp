@@ -316,14 +316,20 @@ Error AsmCommonDirective::processPseudo(
         return closeSource();
     if (compareDirective(directive, ".align"))
         return alignOrigin();
-    if (compareDirective(directive, ".byte"))
-        return defineBytes(memory);
-    if (compareDirective(directive, ".ascii"))
-        return defineBytes(memory, /* terminator */ true);
-    if (compareDirective(directive, ".word"))
-        return defineWords(memory);
-    if (compareDirective(directive, ".space"))
-        return defineSpaces();
+    if (compareDirective(directive, ".string") || compareDirective(directive, ".ascii"))
+        return defineUint8s(memory, /* terminator */ true);
+    if (compareDirective(directive, ".byte") || compareDirective(directive, "dc.b"))
+        return defineUint8s(memory);
+    if (compareDirective(directive, ".word") || compareDirective(directive, "dc.w"))
+        return defineUint16s(memory);
+    if (compareDirective(directive, ".long") || compareDirective(directive, "dc.l"))
+        return defineUint32s(memory);
+    if (compareDirective(directive, "ds.b"))
+        return defineSpaces(1);
+    if (compareDirective(directive, "ds.w"))
+        return defineSpaces(2);
+    if (compareDirective(directive, "ds.l"))
+        return defineSpaces(4);
     if (compareDirective(directive, ".cpu")) {
         const char *p = _scan;
         while (*p && !isspace(*p))
@@ -426,11 +432,12 @@ Error AsmCommonDirective::includeFile() {
     return openSource(filename, end);
 }
 
-Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
+Error AsmCommonDirective::defineUint8s(CliMemory &memory, bool terminator) {
     _list.address = _origin;
-    _list.length = 0;
     ValueParser &parser = _assembler->getParser();
     const uint32_t base = _origin * addrUnit();
+    auto &len = _list.length;
+    len = 0;
     do {
         skipSpaces();
         if (terminator || *_scan == '"') {
@@ -447,8 +454,8 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
                     _scan = p;
                     return getError();
                 }
-                memory.writeByte(base + _list.length, c);
-                _list.length++;
+                memory.writeByte(base + len, c);
+                len++;
             }
             _scan = p + 1;
         } else {
@@ -460,8 +467,9 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
                 return setError(UNDEFINED_SYMBOL);
             if (value.overflowUint8())
                 return setError(OVERFLOW_RANGE);
-            memory.writeByte(base + _list.length, value.getUnsigned());
-            _list.length++;
+            const uint8_t val8 = value.getUnsigned();
+            memory.writeByte(base + len, val8);
+            len++;
         }
         const char *save = _scan;
         skipSpaces();
@@ -470,14 +478,16 @@ Error AsmCommonDirective::defineBytes(CliMemory &memory, bool terminator) {
         _scan = save;
         break;
     } while (true);
-    _origin += ((_list.length + addrUnit() - 1) & -addrUnit()) / addrUnit();
+    _origin += ((len + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineWords(CliMemory &memory) {
+Error AsmCommonDirective::defineUint16s(CliMemory &memory) {
     _list.address = _origin;
-    _list.length = 0;
     ValueParser &parser = _assembler->getParser();
+    const uint32_t base = _origin * addrUnit();
+    auto &len = _list.length;
+    len = 0;
     const uint8_t hi = uint8_t(config().endian());
     const uint8_t lo = 1 - hi;
     do {
@@ -491,11 +501,11 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
         if (value.overflowUint16())
             return setError(OVERFLOW_RANGE);
         const uint16_t val16 = value.getUnsigned();
-        uint32_t addr = _origin * addrUnit();
-        memory.writeByte(addr + hi, static_cast<uint8_t>(val16 >> 8));
-        memory.writeByte(addr + lo, static_cast<uint8_t>(val16));
-        addr += 2 / addrUnit();
-        _list.length += 2;
+        const uint8_t val8lo = val16;
+        const uint8_t val8hi = val16 >> 8;
+        memory.writeByte(base + len + hi, val8hi);
+        memory.writeByte(base + len + lo, val8lo);
+        len += 2;
         const char *save = _scan;
         skipSpaces();
         if (*_scan++ == ',')
@@ -503,10 +513,43 @@ Error AsmCommonDirective::defineWords(CliMemory &memory) {
         _scan = save;
         break;
     } while (true);
+    _origin += ((len + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineSpaces() {
+Error AsmCommonDirective::defineUint32s(CliMemory &memory) {
+    _list.address = _origin;
+    ValueParser &parser = _assembler->getParser();
+    const uint32_t base = _origin * addrUnit();
+    auto &len = _list.length;
+    len = 0;
+    do {
+        skipSpaces();
+        Value value;
+        _scan = parser.eval(_scan, nullptr, value, this);
+        if (setError(parser.error()))
+            return getError();
+        if (_reportUndef && value.isUndefined())
+            return setError(UNDEFINED_SYMBOL);
+        uint32_t val32 = value.getUnsigned();
+        for (auto i = 0; i < 4; i++) {
+            const auto pos = config().endian() == ENDIAN_LITTLE ? i : 3 - i;
+            memory.writeByte(base + len + pos, val32);
+            val32 >>= 8;
+        }
+        len += 4;
+        const char *save = _scan;
+        skipSpaces();
+        if (*_scan++ == ',')
+            continue;
+        _scan = save;
+        break;
+    } while (true);
+    _origin += ((len + addrUnit() - 1) & -addrUnit()) / addrUnit();
+    return setError(OK);
+}
+
+Error AsmCommonDirective::defineSpaces(const uint8_t unit) {
     ValueParser &parser = _assembler->getParser();
     Value value;
     _scan = parser.eval(_scan, nullptr, value, this);
@@ -516,10 +559,10 @@ Error AsmCommonDirective::defineSpaces() {
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
-    const uint16_t val16 = value.getUnsigned();
-    if (_origin + val16 < _origin)
+    const auto size = value.getUnsigned() * unit;
+    if (_origin + size < _origin)
         return setError(OVERFLOW_RANGE);
-    _origin += val16;
+    _origin += ((size + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
@@ -584,7 +627,8 @@ int AsmCommonDirective::generatedSize() const {
 
 uint8_t AsmCommonDirective::getByte(int offset) const {
     uint8_t val = 0;
-    _list.memory->readByte(_list.address + offset, val);
+    auto addr = _list.address * addrUnit() + offset;
+    _list.memory->readByte(addr, val);
     return val;
 }
 
@@ -671,34 +715,13 @@ BinFormatter *AsmMotoDirective::defaultFormatter() const {
 
 Error AsmMotoDirective::processDirective(
         const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
-    if (common.compareDirective(directive, ".fcb"))
-        return common.defineBytes(memory);
-    if (common.compareDirective(directive, ".fcc"))
-        return common.defineBytes(memory, /* terminator */ true);
-    if (common.compareDirective(directive, ".fdb"))
-        return common.defineWords(memory);
-    if (common.compareDirective(directive, ".rmb"))
-        return common.defineSpaces();
-    return UNKNOWN_DIRECTIVE;
-}
-
-AsmMostekDirective::AsmMostekDirective(Assembler &assembler) : AsmDirective(assembler) {}
-
-BinFormatter *AsmMostekDirective::defaultFormatter() const {
-    return new MotoSrec(_assembler.config().addressWidth());
-}
-
-Error AsmMostekDirective::processDirective(
-        const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
-    if (common.compareDirective(directive, ":=") || common.compareDirective(directive, "="))
-        return common.defineLabel(label, memory);
-    if (common.compareDirective(directive, ".fcb"))
-        return common.defineBytes(memory);
-    if (common.compareDirective(directive, ".fcc"))
-        return common.defineBytes(memory, /* terminator */ true);
-    if (common.compareDirective(directive, ".fdb"))
-        return common.defineWords(memory);
-    if (common.compareDirective(directive, ".rmb"))
+    if (common.compareDirective(directive, "fcb"))
+        return common.defineUint8s(memory);
+    if (common.compareDirective(directive, "fcc"))
+        return common.defineUint8s(memory, /* terminator */ true);
+    if (common.compareDirective(directive, "fdb"))
+        return common.defineUint16s(memory);
+    if (common.compareDirective(directive, "rmb") || common.compareDirective(directive, "dfs"))
         return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }
@@ -711,11 +734,13 @@ BinFormatter *AsmIntelDirective::defaultFormatter() const {
 
 Error AsmIntelDirective::processDirective(
         const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
-    if (common.compareDirective(directive, ".db"))
-        return common.defineBytes(memory);
-    if (common.compareDirective(directive, ".dw"))
-        return common.defineWords(memory);
-    if (common.compareDirective(directive, ".ds"))
+    if (common.compareDirective(directive, "db"))
+        return common.defineUint8s(memory);
+    if (common.compareDirective(directive, "dw"))
+        return common.defineUint16s(memory);
+    if (common.compareDirective(directive, "dd"))
+        return common.defineUint32s(memory);
+    if (common.compareDirective(directive, "ds"))
         return common.defineSpaces();
     return UNKNOWN_DIRECTIVE;
 }

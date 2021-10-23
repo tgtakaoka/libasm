@@ -57,9 +57,10 @@ public:
     Error alignOrigin();
     Error defineLabel(const char *&label, CliMemory &memory);
     Error includeFile();
-    Error defineBytes(CliMemory &memory, bool terminator = false);
-    Error defineWords(CliMemory &memory);
-    Error defineSpaces();
+    Error defineUint8s(CliMemory &memory, bool terminator = false);
+    Error defineUint16s(CliMemory &memory);
+    Error defineUint32s(CliMemory &memory);
+    Error defineSpaces(const uint8_t unit = 1);
 
 private:
     std::vector<AsmDirective *> _directives;
@@ -161,14 +162,6 @@ protected:
 class AsmMotoDirective : public AsmDirective {
 public:
     AsmMotoDirective(Assembler &assembler);
-    BinFormatter *defaultFormatter() const override;
-    Error processDirective(const char *directive, const char *&label, CliMemory &memory,
-            AsmCommonDirective &common) override;
-};
-
-class AsmMostekDirective : public AsmDirective {
-public:
-    AsmMostekDirective(Assembler &assembler);
     BinFormatter *defaultFormatter() const override;
     Error processDirective(const char *directive, const char *&label, CliMemory &memory,
             AsmCommonDirective &common) override;

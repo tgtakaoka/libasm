@@ -59,7 +59,7 @@ mc68000::AsmMc68000 asm68000;
 z8000::AsmZ8000 asmz8000;
 ns32000::AsmNs32000 asm32000;
 
-AsmMostekDirective dir6502(asm6502);
+AsmMotoDirective dir6502(asm6502);
 AsmMotoDirective dir6800(asm6800);
 AsmMotoDirective dir6809(asm6809);
 AsmIntelDirective dir8048(asm8048);

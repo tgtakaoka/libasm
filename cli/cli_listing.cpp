@@ -142,23 +142,25 @@ void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress
 }
 
 int CliListing::formatBytes(int base) {
-    const int codeBytes = _line->codeBytes();
+    const auto generated = _line->generatedSize();
+    const auto codeBytes = _line->codeBytes();
     int i = 0;
     if (_line->config().opCodeWidth() == OPCODE_8BIT) {
-        while (base + i < _line->generatedSize() && i < codeBytes) {
-            const uint8_t val = _line->getByte(base + i);
+        while (base + i < generated && i < codeBytes) {
+            const uint8_t val8 = _line->getByte(base + i);
             _out += ' ';
-            formatUint8(val);
+            formatUint8(val8);
             i++;
         }
     } else {  // OPCODE_16BIT
         const int hi = int(_line->config().endian());
         const int lo = 1 - hi;
-        while (base + i < _line->generatedSize() && i < codeBytes) {
-            const uint16_t val = (static_cast<uint16_t>(_line->getByte(base + i + hi)) << 8) |
-                                 _line->getByte(base + i + lo);
+        while (base + i < generated && i < codeBytes) {
+            const uint8_t val8hi = _line->getByte(base + i + hi);
+            const uint8_t val8lo = _line->getByte(base + i + lo);
+            const uint16_t val16 = (static_cast<uint16_t>(val8hi) << 8) | val8lo;
             _out += ' ';
-            formatUint16(val);
+            formatUint16(val16);
             i += 2;
         }
     }
