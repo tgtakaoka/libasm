@@ -59,7 +59,7 @@ interface.
 On POSIX environment, assembler command line interface is provided.
 It can generate Intel HEX or Motorola S-Record output.
 
-    libasm assembler (version 1.6.16)
+    libasm assembler (version 1.6.17)
     usage: asm [-o <output>] [-l <list>] <input>
       -C <CPU>    : target CPU
                     MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11
@@ -82,7 +82,7 @@ It can generate Intel HEX or Motorola S-Record output.
 On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
-    libasm disassembler (version 1.6.16)
+    libasm disassembler (version 1.6.17)
     usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
       -C <CPU>    : target CPU
                     MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11
