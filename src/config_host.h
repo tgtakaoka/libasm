@@ -29,12 +29,7 @@
 #if defined(AVR)
 #include <avr/pgmspace.h>
 
-#elif defined(TEENSYDUINO)
-#include <avr/pgmspace.h>
-#include <string.h>
-#include <strings.h>
-
-#else  // AVR
+#elif !defined(PROGMEM)  // AVR
 
 namespace libasm {
 namespace host {
