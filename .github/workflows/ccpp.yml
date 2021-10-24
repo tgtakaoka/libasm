@@ -1,6 +1,18 @@
 name: C/C++ CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '*.*.*'
+    paths-ignore:
+      - ".github/**"
+      - "**/*.adoc"
+      - "**/*.md"
+      - "**/*.txt"
+      - "library.*"
+  pull_request:
 
 jobs:
   build:

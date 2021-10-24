@@ -1,8 +1,18 @@
 name: Arduino CI
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '*.*.*'
+    paths-ignore:
+      - ".github/**"
+      - "**/*.adoc"
+      - "**/*.md"
+      - "**/*.txt"
+      - "library.*"
+  pull_request:
 
 jobs:
   compile-examples:
@@ -28,4 +38,4 @@ jobs:
           libraries: |
             - source-path: ./
             - name: libcli
-              version: 1.2.1
+              version: 1.2.2
