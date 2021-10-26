@@ -14,35 +14,28 @@
  * limitations under the License.
  */
 
-#include <arduino_example.h>
-#include <dis_mc6800.h>
-#include <dis_mc6805.h>
-#include <dis_mc6809.h>
+#include "dis_mc6805.h"
+#include "gen_driver.h"
 
-libasm::mc6800::DisMc6800 dis6800;
-libasm::mc6805::DisMc6805 dis6805;
-libasm::mc6809::DisMc6809 dis6809;
+using namespace libasm::mc6805;
+using namespace libasm::test;
 
-libasm::Disassembler *disassemblers[] = {
-        &dis6800,
-        &dis6805,
-        &dis6809,
-};
+int main(int argc, const char **argv) {
+    DisMc6805 dis6805;
+    dis6805.setRelativeTarget(true);
+    GenDriver<Config> driver(dis6805);
+    if (driver.main(argc, argv))
+        return 1;
 
-libasm::arduino::DisExample example(ARRAY_RANGE(disassemblers));
+    TestGenerator<Config> generator(dis6805, 0x0100);
+    generator.generate(driver);
 
-void setup() {
-    Serial.begin(9600);
-    example.begin(Serial);
-}
-
-void loop() {
-    example.loop();
+    return driver.close();
 }
 
 // Local Variables:
 // mode: c++
-// c-basic-offset: 2
-// tab-width: 2
+// c-basic-offset: 4
+// tab-width: 4
 // End:
-// vim: set ft=cpp et ts=2 sw=2:
+// vim: set ft=cpp et ts=4 sw=4:

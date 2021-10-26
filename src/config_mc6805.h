@@ -14,35 +14,24 @@
  * limitations under the License.
  */
 
-#include <arduino_example.h>
-#include <dis_mc6800.h>
-#include <dis_mc6805.h>
-#include <dis_mc6809.h>
+#ifndef __CONFIG_MC6805_H__
+#define __CONFIG_MC6805_H__
 
-libasm::mc6800::DisMc6800 dis6800;
-libasm::mc6805::DisMc6805 dis6805;
-libasm::mc6809::DisMc6809 dis6809;
+#include "config_base.h"
 
-libasm::Disassembler *disassemblers[] = {
-        &dis6800,
-        &dis6805,
-        &dis6809,
-};
+namespace libasm {
+namespace mc6805 {
 
-libasm::arduino::DisExample example(ARRAY_RANGE(disassemblers));
+struct Config : public ConfigImpl<ADDRESS_13BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5> {};
 
-void setup() {
-    Serial.begin(9600);
-    example.begin(Serial);
-}
+}  // namespace mc6805
+}  // namespace libasm
 
-void loop() {
-    example.loop();
-}
+#endif  // __CONFIG_MC6805_H__
 
 // Local Variables:
 // mode: c++
-// c-basic-offset: 2
-// tab-width: 2
+// c-basic-offset: 4
+// tab-width: 4
 // End:
-// vim: set ft=cpp et ts=2 sw=2:
+// vim: set ft=cpp et ts=4 sw=4:

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_MC6800_H__
-#define __TABLE_MC6800_H__
+#ifndef __TABLE_MC6805_H__
+#define __TABLE_MC6805_H__
 
-#include "config_mc6800.h"
-#include "entry_mc6800.h"
-#include "insn_mc6800.h"
+#include "config_mc6805.h"
+#include "entry_mc6805.h"
+#include "insn_mc6805.h"
 #include "table_base.h"
 
 namespace libasm {
-namespace mc6800 {
+namespace mc6805 {
 
-class TableMc6800 : public TableBase {
+class TableMc6805 : public TableBase {
 public:
-    TableMc6800();
+    TableMc6805();
 
-    Error searchName(InsnMc6800 &insn) const;
-    Error searchOpCode(InsnMc6800 &insn) const;
-    Error searchOpCodeAlias(InsnMc6800 &insn) const;
-    bool isPrefix(Config::opcode_t opCode) const;
+    Error searchName(InsnMc6805 &insn) const;
+    Error searchOpCode(InsnMc6805 &insn) const;
 
     const char *listCpu() const override;
     bool setCpu(const char *cpu) override;
@@ -47,16 +45,16 @@ private:
     const EntryPage *_end;
 
     bool setCpu(CpuType cpuType);
-    Error searchName(InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const;
-    const Entry *searchOpCode(InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const;
+    Error searchName(InsnMc6805 &insn, const EntryPage *pages, const EntryPage *end) const;
+    const Entry *searchOpCode(InsnMc6805 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
-extern TableMc6800 TableMc6800;
+extern TableMc6805 TableMc6805;
 
-}  // namespace mc6800
+}  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __TABLE_MC6800_H__
+#endif  // __TABLE_MC6805_H__
 
 // Local Variables:
 // mode: c++

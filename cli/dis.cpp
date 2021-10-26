@@ -25,6 +25,7 @@
 #include "dis_ins8060.h"
 #include "dis_ins8070.h"
 #include "dis_mc6800.h"
+#include "dis_mc6805.h"
 #include "dis_mc68000.h"
 #include "dis_mc6809.h"
 #include "dis_mos6502.h"
@@ -41,6 +42,7 @@ using namespace libasm::cli;
 
 mos6502::DisMos6502 dis6502;
 mc6800::DisMc6800 dis6800;
+mc6805::DisMc6805 dis6805;
 mc6809::DisMc6809 dis6809;
 i8048::DisI8048 dis8048;
 i8051::DisI8051 dis8051;
@@ -60,6 +62,7 @@ ns32000::DisNs32000 dis32000;
 
 std::vector<Disassembler *> disassemblers = {
         &dis6800,
+        &dis6805,
         &dis6809,
         &dis6502,
         &dis8048,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_MC6800_H__
-#define __ENTRY_MC6800_H__
+#ifndef __ENTRY_MC6805_H__
+#define __ENTRY_MC6805_H__
 
-#include "config_mc6800.h"
+#include "config_mc6805.h"
 #include "entry_base.h"
 
 namespace libasm {
-namespace mc6800 {
+namespace mc6805 {
 
 enum CpuType : uint8_t {
-    MC6800,
-    MC6801,
-    HD6301,
-    MC68HC11,
+    MC6805,
+    MC146805,
+    MC68HC05,
 };
 
 enum AddrMode : uint8_t {
@@ -37,11 +36,9 @@ enum AddrMode : uint8_t {
     M_IDX = 3,  // Indexed
     M_REL = 4,  // Relative
     M_IMM = 5,  // Immediate
-    // HD6301
-    M_BMM = 6,  // Bit number or Immediate (for disassembler)
-    M_BIT = 7,  // Bit number (for assembler)
-    // MC68HC11
-    M_IDY = 8,  // Indexed Y
+    M_IX0 = 6,  // Indexed X with no offset
+    M_IX2 = 7,  // Indexed X with 16bit offset
+    M_BNO = 8,  // Bit number in opcode
 };
 
 enum OprSize : uint8_t {
@@ -85,10 +82,10 @@ private:
     static constexpr uint8_t size_gm = 0x3;
 };
 
-}  // namespace mc6800
+}  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __ENTRY_MC6800_H__
+#endif  // __ENTRY_MC6805_H__
 
 // Local Variables:
 // mode: c++

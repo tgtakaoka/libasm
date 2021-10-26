@@ -16,13 +16,16 @@
 
 #include <arduino_example.h>
 #include <asm_mc6800.h>
+#include <asm_mc6805.h>
 #include <asm_mc6809.h>
 
 libasm::mc6800::AsmMc6800 asm6800;
+libasm::mc6805::AsmMc6805 asm6805;
 libasm::mc6809::AsmMc6809 asm6809;
 
 libasm::Assembler *disassemblers[] = {
         &asm6800,
+        &asm6805,
         &asm6809,
 };
 

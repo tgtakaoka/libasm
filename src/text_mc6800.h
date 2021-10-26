@@ -23,17 +23,14 @@ namespace libasm {
 namespace mc6800 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC6805, MC146805, MC68HC05, MC68HC11";
+static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC68HC11";
 static const char TEXT_CPU_6800[] PROGMEM = "6800";
 static const char TEXT_CPU_6801[] PROGMEM = "6801";
-static const char TEXT_CPU_6805[] PROGMEM = "6805";
-static const char TEXT_CPU_146805[] PROGMEM = "146805";
-static const char TEXT_CPU_68HC05[] PROGMEM = "68HC05";
 static const char TEXT_CPU_6301[] PROGMEM = "6301";
 static const char TEXT_CPU_6811[] PROGMEM = "6811";
 static constexpr const char *TEXT_CPU_MC   = TEXT_CPU_LIST;
 static constexpr const char *TEXT_CPU_HD   = (TEXT_CPU_LIST + 16);
-static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 54);
+static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 26);
 
 // MC6800
 static const char TEXT_ABA[]  PROGMEM = "ABA";
@@ -187,30 +184,6 @@ static const char TEXT_OIM[]  PROGMEM = "OIM";
 static const char TEXT_SLP[]  PROGMEM = "SLP";
 static const char TEXT_TIM[]  PROGMEM = "TIM";
 static const char TEXT_XGDX[] PROGMEM = "XGDX";
-
-// MC6805
-static const char TEXT_ASRX[] PROGMEM = "ASRX";
-static const char TEXT_ASLX[] PROGMEM = "ASLX";
-static const char TEXT_BHCC[] PROGMEM = "BHCC";
-static const char TEXT_BHCS[] PROGMEM = "BHCS";
-static const char TEXT_BIH[]  PROGMEM = "BIH";
-static const char TEXT_BIL[]  PROGMEM = "BIL";
-static const char TEXT_BMC[]  PROGMEM = "BMC";
-static const char TEXT_BMS[]  PROGMEM = "BMS";
-static const char TEXT_CLRX[] PROGMEM = "CLRX";
-static const char TEXT_COMX[] PROGMEM = "COMX";
-static const char TEXT_DECX[] PROGMEM = "DECX";
-static const char TEXT_INCX[] PROGMEM = "INCX";
-static const char TEXT_LSLX[] PROGMEM = "LSLX";
-static const char TEXT_LSRX[] PROGMEM = "LSRX";
-static const char TEXT_NEGX[] PROGMEM = "NEGX";
-static const char TEXT_ROLX[] PROGMEM = "ROLX";
-static const char TEXT_RORX[] PROGMEM = "RORX";
-static const char TEXT_RSP[]  PROGMEM = "RSP";
-static const char TEXT_TAX[]  PROGMEM = "TAX";
-static const char TEXT_TSTX[] PROGMEM = "TSTX";
-static const char TEXT_TXA[]  PROGMEM = "TXA";
-static const char TEXT_WAIT[] PROGMEM = "WAIT";
 
 // MC68HC11
 static const char TEXT_ABY[]   PROGMEM = "ABY";

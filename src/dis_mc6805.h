@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,42 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_MC6800_H__
-#define __DIS_MC6800_H__
+#ifndef __DIS_MC6805_H__
+#define __DIS_MC6805_H__
 
-#include "config_mc6800.h"
+#include "config_mc6805.h"
 #include "dis_base.h"
-#include "insn_mc6800.h"
-#include "reg_mc6800.h"
-#include "table_mc6800.h"
+#include "insn_mc6805.h"
+#include "reg_mc6805.h"
+#include "table_mc6805.h"
 
 namespace libasm {
-namespace mc6800 {
+namespace mc6805 {
 
-class DisMc6800 : public Disassembler, public Config {
+class DisMc6805 : public Disassembler, public Config {
 public:
-    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800, '*') {}
+    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*') {}
     ConfigBase &config() override { return *this; }
 
 private:
     MotoValueFormatter _formatter;
-    RegMc6800 _regs;
+    RegMc6805 _regs;
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
-    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeIndexed(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeImmediate(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
+    Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
+    Error decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
+    Error decodeImmediate(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
+    Error decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
-}  // namespace mc6800
+}  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __DIS_MC6800_H__
+#endif  // __DIS_MC6805_H__
 
 // Local Variables:
 // mode: c++

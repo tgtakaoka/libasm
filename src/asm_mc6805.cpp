@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-#include "asm_mc6800.h"
+#include "asm_mc6805.h"
 
 #include "error_reporter.h"
-#include "table_mc6800.h"
+#include "table_mc6805.h"
 
 namespace libasm {
-namespace mc6800 {
+namespace mc6805 {
 
-Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
+Error AsmMc6805::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
-    if (endOfLine(p) || *p == ',') {
+    if (endOfLine(p)) {
+        op.mode = M_NO;
+        return OK;
+    }
+
+    if (*p == ',') {
+        const RegName reg = RegMc6805::parseRegName(p + 1);
+        if (reg == REG_X) {
+            _scan += RegMc6805::regNameLen(reg) + 1;
+            op.mode = M_IX0;
+            return OK;
+        }
         op.mode = M_NO;
         return OK;
     }
@@ -53,13 +64,19 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     p = skipSpaces(_scan);
     if (*p == ',') {
         p = skipSpaces(p + 1);
-        const RegName reg = RegMc6800::parseRegName(p);
+        const RegName reg = RegMc6805::parseRegName(p);
         if (reg != REG_UNDEF) {
-            _scan = p + RegMc6800::regNameLen(reg);
+            _scan = p + RegMc6805::regNameLen(reg);
             if (reg == REG_X) {
-                op.mode = M_IDX;
-            } else if (reg == REG_Y) {
-                op.mode = M_IDY;
+                if (op.size == SZ_BYTE) {
+                    op.mode = M_IDX;
+                } else if (op.size == SZ_WORD) {
+                    op.mode = M_IX2;
+                } else if (op.val16 == 0) {
+                    op.mode = M_IX0;
+                } else {
+                    op.mode = (op.val16 < 0x100) ? M_IDX : M_IX2;
+                }
             } else {
                 return setError(REGISTER_NOT_ALLOWED);
             }
@@ -68,7 +85,7 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     }
     if (op.size == SZ_NONE) {
         if (op.val16 < 8)
-            op.mode = M_BIT;
+            op.mode = M_BNO;
         else if (op.val16 < 0x100)
             op.mode = M_DIR;
         else
@@ -79,7 +96,7 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     return OK;
 }
 
-Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
+Error AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     if (addressWidth() == ADDRESS_13BIT && target >= 0x2000)
@@ -91,7 +108,7 @@ Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmMc6800::emitImmediate(InsnMc6800 &insn, const Operand &op) {
+Error AsmMc6805::emitImmediate(InsnMc6805 &insn, const Operand &op) {
     if (insn.size() == SZ_BYTE) {
         if (overflowUint8(op.val16))
             return setError(OVERFLOW_RANGE);
@@ -102,21 +119,23 @@ Error AsmMc6800::emitImmediate(InsnMc6800 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
+Error AsmMc6805::emitBitNumber(InsnMc6805 &insn, const Operand &op) {
     const uint8_t imm = 1 << op.val16;
     const bool aim = (insn.opCode() & 0xF) == 1;
     insn.emitByte(aim ? ~imm : imm);
     return OK;
 }
 
-Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_DIR:
     case M_IDX:
-    case M_IDY:
         if (op.val16 >= 256)
             return setError(OVERFLOW_RANGE);
         insn.emitByte(static_cast<uint8_t>(op.val16));
+        return OK;
+    case M_IX2:
+        insn.emitUint16(op.val16);
         return OK;
     case M_EXT:
         if (addressWidth() == ADDRESS_13BIT && op.val16 >= 0x2000)
@@ -126,17 +145,15 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
     case M_REL:
         return emitRelative(insn, op);
     case M_IMM:
-    case M_BMM:
         return emitImmediate(insn, op);
-    case M_BIT:
-        return emitBitNumber(insn, op);
+    case M_BNO: // handled in encode(Insn)
     default:
         return OK;
     }
 }
 
-Error AsmMc6800::encode(Insn &_insn) {
-    InsnMc6800 insn(_insn);
+Error AsmMc6805::encode(Insn &_insn) {
+    InsnMc6805 insn(_insn);
     const char *endName = _parser.scanSymbol(_scan);
     insn.setName(_scan, endName);
 
@@ -161,9 +178,11 @@ Error AsmMc6800::encode(Insn &_insn) {
     setErrorIf(op3.getError());
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableMc6800.searchName(insn))
-        return setError(TableMc6800.getError());
+    if (TableMc6805.searchName(insn))
+        return setError(TableMc6805.getError());
 
+    if (insn.mode1() == M_BNO)
+        insn.embed((op1.val16 & 7) << 1);
     insn.emitInsn();
     if (emitOperand(insn, insn.mode1(), op1))
         goto error;
@@ -177,7 +196,7 @@ Error AsmMc6800::encode(Insn &_insn) {
     return getError();
 }
 
-}  // namespace mc6800
+}  // namespace mc6805
 }  // namespace libasm
 
 // Local Variables:

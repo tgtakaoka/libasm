@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2021 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_MC6800_H__
-#define __ASM_MC6800_H__
+#ifndef __ASM_MC6805_H__
+#define __ASM_MC6805_H__
 
 #include "asm_base.h"
-#include "config_mc6800.h"
-#include "insn_mc6800.h"
-#include "reg_mc6800.h"
-#include "table_mc6800.h"
+#include "config_mc6805.h"
+#include "insn_mc6805.h"
+#include "reg_mc6805.h"
+#include "table_mc6805.h"
 
 namespace libasm {
-namespace mc6800 {
+namespace mc6805 {
 
-class AsmMc6800 : public Assembler, public Config {
+class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6800() : Assembler(_parser, TableMc6800) {}
+    AsmMc6805() : Assembler(_parser, TableMc6805) {}
     ConfigBase &config() override { return *this; }
 
 private:
@@ -42,17 +42,17 @@ private:
     };
 
     Error parseOperand(const char *scan, Operand &op);
-    Error emitRelative(InsnMc6800 &insn, const Operand &op);
-    Error emitImmediate(InsnMc6800 &insn, const Operand &op);
-    Error emitBitNumber(InsnMc6800 &insn, const Operand &op);
-    Error emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
+    Error emitRelative(InsnMc6805 &insn, const Operand &op);
+    Error emitImmediate(InsnMc6805 &insn, const Operand &op);
+    Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
+    Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 
-}  // namespace mc6800
+}  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __ASM_MC6800_H__
+#endif  // __ASM_MC6805_H__
 
 // Local Variables:
 // mode: c++

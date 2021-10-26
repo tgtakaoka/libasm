@@ -13,6 +13,8 @@ Error           KEYWORD1        libasm
 AsmMc6809       KEYWORD1        libasm
 DisMc6809       KEYWORD1        libasm
 AsmMc6800       KEYWORD1        libasm
+DisMc6805       KEYWORD1        libasm
+AsmMc6805       KEYWORD1        libasm
 DisMc6800       KEYWORD1        libasm
 AsmMos6502      KEYWORD1        libasm
 DisMos6502      KEYWORD1        libasm

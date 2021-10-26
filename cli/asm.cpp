@@ -27,6 +27,7 @@
 #include "asm_ins8070.h"
 #include "asm_mc6800.h"
 #include "asm_mc68000.h"
+#include "asm_mc6805.h"
 #include "asm_mc6809.h"
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
@@ -42,6 +43,7 @@ using namespace libasm::cli;
 
 mos6502::AsmMos6502 asm6502;
 mc6800::AsmMc6800 asm6800;
+mc6805::AsmMc6805 asm6805;
 mc6809::AsmMc6809 asm6809;
 i8048::AsmI8048 asm8048;
 i8051::AsmI8051 asm8051;
@@ -61,6 +63,7 @@ ns32000::AsmNs32000 asm32000;
 
 AsmMotoDirective dir6502(asm6502);
 AsmMotoDirective dir6800(asm6800);
+AsmMotoDirective dir6805(asm6805);
 AsmMotoDirective dir6809(asm6809);
 AsmIntelDirective dir8048(asm8048);
 AsmIntelDirective dir8051(asm8051);
@@ -80,6 +83,7 @@ AsmIntelDirective dir32000(asm32000);
 
 std::vector<AsmDirective *> directives = {
         &dir6800,
+        &dir6805,
         &dir6809,
         &dir6502,
         &dir8048,

@@ -67,6 +67,8 @@ struct __address_type;
 template <>
 struct __address_type<ADDRESS_12BIT> : public __address_helper<uint16_t> {};
 template <>
+struct __address_type<ADDRESS_13BIT> : public __address_helper<uint16_t> {};
+template <>
 struct __address_type<ADDRESS_16BIT> : public __address_helper<uint16_t> {};
 template <>
 struct __address_type<ADDRESS_20BIT> : public __address_helper<uint32_t> {};
