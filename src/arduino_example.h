@@ -267,6 +267,7 @@ private:
     static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
         auto example = reinterpret_cast<AsmExample *>(extra);
+        example->_cli.println();
         const auto scan = skipSpaces(line);
         if (*scan && !example->processPseudo(scan))
             example->assemble(scan);
@@ -331,6 +332,7 @@ private:
     static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
         auto example = reinterpret_cast<DisExample *>(extra);
+        example->_cli.println();
         const auto scan = skipSpaces(line);
         if (*scan && !example->processPseudo(scan)) {
             StrMemory memory(example->_origin, scan, example->config());
