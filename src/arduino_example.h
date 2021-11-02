@@ -42,10 +42,10 @@ protected:
     /* command line interface: libcli */
     libcli::Cli &_cli;
     Base *_current;
-    Base ** _begin;
-    Base ** _end;
+    Base **_begin;
+    Base **_end;
     uint32_t _origin;
-    char buffer[60];
+    char buffer[80];
 
     BaseExample(Base &current)
         : _cli(libcli::Cli::instance()), _current(&current), _begin(&_current), _end(_begin + 1) {}
@@ -68,33 +68,10 @@ protected:
         _cli.readLine(callback, reinterpret_cast<uintptr_t>(this), buffer, sizeof(buffer));
     }
 
-    void printAddress(uint32_t addr) { _cli.printHex(addr, addrDigits()); }
-
-    void printBytes(const uint8_t *bytes, uint8_t length) {
-        const auto width = config().opCodeWidth();
-        for (auto i = 0; i < length;) {
-            _cli.print(' ');
-            if (width == OPCODE_8BIT) {
-                _cli.printHex(bytes[i], 2);
-                i += 1;
-            } else {  // OPCODE_16BIT
-                const auto hi = uint8_t(config().endian());
-                const auto lo = 1 - hi;
-                const auto val = (static_cast<uint16_t>(bytes[i + hi]) << 8) | bytes[i + lo];
-                _cli.printHex(val, 4);
-                i += 2;
-            }
-        }
-        const auto codeMax = config().codeMax();
-        for (auto i = length; i < codeMax;) {
-            if (width == OPCODE_8BIT) {
-                _cli.print(F("   "));
-                i += 1;
-            } else {  // OPCODE_16BIT
-                _cli.print(F("     "));
-                i += 2;
-            }
-        }
+    void printAddress(uint32_t addr, char suffix = 0) {
+        _cli.printHex(addr, addrDigits());
+        if (suffix)
+            _cli.print(suffix);
     }
 
     void printInsn(const Insn &insn, const char *operands) {
@@ -105,6 +82,69 @@ protected:
                 _cli.print(' ');
             _cli.print(operands);
         }
+    }
+
+    uint8_t printData(const uint8_t *bytes, uint8_t pos, uint8_t max) {
+        _cli.print(' ');
+        if (config().opCodeWidth() == OPCODE_8BIT) {
+            if (pos < max) {
+                _cli.printHex(bytes[pos], 2);
+            } else {
+                _cli.print(F("  "));
+            }
+            return 1;
+        }
+        // OPCODE_16BIT
+        const auto hi = uint8_t(config().endian());
+        const auto lo = 1 - hi;
+        if (pos < max) {
+            const auto val = (static_cast<uint16_t>(bytes[pos + hi]) << 8) | bytes[pos + lo];
+            _cli.printHex(val, 4);
+        } else {
+            _cli.print(F("    "));
+        }
+        return 2;
+    }
+
+    void printBytes(const uint8_t *bytes, uint8_t length) {
+        for (auto i = 0; i < length;) {
+            i += printData(bytes, i, length);
+        }
+    }
+
+    void printBytes(const Insn &insn, const char *operands) {
+        auto addr = insn.address();
+        printAddress(addr, ':');
+        const auto *bytes = insn.bytes();
+        auto length = insn.length();
+        const auto bytesPerLine = 6;
+        if (length < bytesPerLine) {
+            printBytes(bytes, length);
+            for (auto i = length; i < bytesPerLine;) {
+                i += printData(bytes, i, length);
+            }
+        } else {
+            printBytes(bytes, bytesPerLine);
+        }
+        _cli.print(' ');
+        printInsn(insn, operands);
+        _cli.println();
+        if (length <= bytesPerLine)
+            return;
+        length -= bytesPerLine;
+        do {
+            addr += bytesPerLine / addrUnit();
+            bytes += bytesPerLine;
+            printAddress(addr, ':');
+            if (length < bytesPerLine) {
+                printBytes(bytes, length);
+                length = 0;
+            } else {
+                printBytes(bytes, bytesPerLine);
+                length -= bytesPerLine;
+            }
+            _cli.println();
+        } while (length);
     }
 
     bool processPseudo(const char *line) {
@@ -164,17 +204,24 @@ protected:
     }
 
     /**
-     * Memory interface for disassembler on string of hexadecimal number list.
+     * Memory interface for disassmbeler on string of hexadecimal number list.
      */
     class StrMemory : public DisMemory {
     public:
         StrMemory(uint32_t origin, const char *line, const ConfigBase &config)
-            : DisMemory(origin), _origin(origin), _line(line), _next(line), _config(config) {}
+            : DisMemory(origin),
+              _origin(origin),
+              _line(line),
+              _next(line),
+              _config(config),
+              _odd(false) {}
 
         bool hasNext() const override { return parseNumber(_next) != _next; }
+
         void rewind() {
             resetAddress(_origin);
             _next = _line;
+            _odd = false;
         }
 
         static const char *readNumber(const char *scan, uint32_t *val) {
@@ -184,18 +231,20 @@ protected:
     protected:
         uint8_t nextByte() override {
             uint32_t val32 = 0;
-            const auto p = parseNumber(_next, &val32);
+            const auto *p = parseNumber(_next, &val32);
             if (_config.opCodeWidth() == OPCODE_8BIT) {
                 _next = p;
                 return val32;
-            } else {  // OPCODE_16BIT
-                const uint8_t hi = val32 >> 8;
-                const uint8_t lo = val32;
-                if (address() % 2 == 0)
-                    return _config.endian() == ENDIAN_BIG ? hi : lo;
-                _next = p;
-                return _config.endian() == ENDIAN_BIG ? lo : hi;
             }
+            // OPCODE_16BIT
+            const uint8_t hi = val32 >> 8;
+            const uint8_t lo = val32;
+            const uint8_t val =
+                    (_config.endian() == ENDIAN_BIG) ? (_odd ? lo : hi) : (_odd ? hi : lo);
+            if (_odd)
+                _next = p;
+            _odd = !_odd;
+            return val;
         }
 
     private:
@@ -203,16 +252,31 @@ protected:
         const char *const _line;
         const char *_next;
         const ConfigBase &_config;
+        bool _odd;
 
         static const char *parseNumber(const char *scan, uint32_t *val = nullptr) {
             auto p = skipSpaces(scan);
-            char c;
-            if ((c = *p) == 0 || !isHexadecimalDigit(c))
+            if (*p == 0)
+                return scan;
+            const bool octal = (*p == '@');
+            if (octal) {
+                p++;
+                if (*p < '0' || *p >= '8')
+                    return scan;  // no valid octal number found.
+            } else if (!isHexadecimalDigit(*p)) {
                 return scan;  // no valid hexadecimal number found.
+            }
 
             uint32_t v = 0;
+            char c;
             while (isHexadecimalDigit(c = *p)) {
-                v <<= 4;
+                if (octal) {
+                    if (c >= '8')
+                        break;
+                    v <<= 3;
+                } else {
+                    v <<= 4;
+                }
                 uint8_t n;
                 if (isDigit(c)) {
                     n = c - '0';
@@ -255,8 +319,7 @@ private:
         } else if (max && insn.address() + insn.length() / addrUnit() > max) {
             _cli.println(F("address range overflow"));
         } else {
-            printAddress(insn.address());
-            _cli.print(':');
+            printAddress(insn.address(), ':');
             printBytes(insn.bytes(), insn.length());
             _cli.println();
             _origin += insn.length() / addrUnit();
@@ -317,12 +380,7 @@ private:
                 _cli.print(F("Error: "));
                 _cli.println(FSTR(_current->errorText()));
             } else {
-                printAddress(insn.address());
-                _cli.print(':');
-                printBytes(insn.bytes(), insn.length());
-                _cli.print(' ');
-                printInsn(insn, operands);
-                _cli.println();
+                printBytes(insn, operands);
                 _origin += insn.length() / addrUnit();
                 _origin &= max - 1;
             }
