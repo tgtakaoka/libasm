@@ -1019,7 +1019,9 @@ static void test_error() {
         ERRT("ORA  ($10,Y),X", REGISTER_NOT_ALLOWED);
         ERRT("ORA  ($10,Y),Y", REGISTER_NOT_ALLOWED);
         ERRT("ORA  $123456,Y", OPERAND_NOT_ALLOWED);
+        ERRT("ORA  [$10,$20]", UNKNOWN_OPERAND);
     }
+    ERRT("ORA ($10,$20)", UNKNOWN_OPERAND);
     ERRT("ORA ($10,Y)", REGISTER_NOT_ALLOWED);
     ERRT("ORA ($10),X", REGISTER_NOT_ALLOWED);
     if (m6502()) {

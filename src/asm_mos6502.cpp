@@ -156,17 +156,18 @@ Error AsmMos6502::parseOperand(const char *scan, Operand &op, Operand &extra) {
     _scan = p;
     if (base == REG_UNDEF) {
         if (index == REG_UNDEF) {
+            if (hasExtra) {
+                if (indir)
+                    return setError(UNKNOWN_OPERAND);
+                op.mode = ZPG_REL;  // zp,rel
+                return OK;
+            }
             switch (indir) {
             case ')':  // (abs) (zp)
                 return selectMode(size, op, ZPG_IDIR, ABS_IDIR);
             case ']':  // [abs] [zp]
                 return selectMode(size, op, ZPG_IDIR_LONG, ABS_IDIR_LONG);
-            default:
-                if (hasExtra) {
-                    op.mode = ZPG_REL;  // zp,rel
-                    return OK;
-                }
-                // labs abs zp
+            default:  // labs abs zp
                 return selectMode(size, op, ZPG, ABS, ABS_LONG);
             }
         }
