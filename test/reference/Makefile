@@ -37,7 +37,9 @@ asm-test: clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_TESTS = $(ASM_TESTS)
+ASL_SRCS = $(patsubst %.asl,%,$(wildcard test_*.asl))
+ASL_TESTS = $(ASM_TESTS) \
+	$(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t)))
 ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
 define asl-rule # test suffix option source
 asl-$(1).$(2): $(4)
