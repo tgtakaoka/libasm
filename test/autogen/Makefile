@@ -26,7 +26,8 @@ help:
 -include ../Makefile.gas
 
 # target which has ".inc" suffix for output.
-INC_targets  = w65c816 tlcs90 i8080_z80syn i8085_z80syn z8001 z8002 z8k1 z8k2 ns32000 ns32k
+INC_targets  = w65c816 tlcs90 i8080_z80syn i8085_z80syn \
+	       z8001 z8002 z8k1 z8k2 ns32000 ns32k mn1610 mn1613
 # target which for GNU assembler
 GAS_targets  = z8k1 z8k2 ns32k
 
@@ -73,7 +74,9 @@ clean-asm:
 	-rm -f $(ASM_OUTS)
 
 ASL_exclude = gen_i8086
-ASL_TESTS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
+ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
+ASL_TESTS = $(ASL_SRCS) \
+	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),$(if $(filter $(t),$(ASL_SRCS)),,$(t)))
 ASL_OUTS  = $(foreach f,$(ASL_TESTS),$(f).$(call out-ext,$(f)))
 define asl-file # stem
 $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)

@@ -29,7 +29,7 @@ ARCHS = \
 	cdp1802 \
 	i8086   \
 	tms9900 \
-	tms32010\
+	tms32010 \
 	mc68000 \
 	z8000   \
 	ns32000 \
@@ -109,8 +109,8 @@ CPU_z8k1     = Z8001
 CPU_z8k2     = Z8002
 CPU_ns32000  = ns32032
 CPU_ns32k    = ns32032
-CPU_mn1610   = mn1610
-CPU_mn1613   = mn1613
+CPU_mn1610   = MN1610
+CPU_mn1613   = MN1613
 
 # targets with Motorola S19 format
 S19_OUTS = $(TGT_mc6809) $(TGT_mc6800) $(TGT_mc6805) mos6502 g65sc02 r65c02 w65c02s m6811
