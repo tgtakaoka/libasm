@@ -41,12 +41,12 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     default:
         return OK;
     }
-    return decodeMactoInstructionDetect(insn);
+    return decodeMacroInstructionDetect(insn);
 }
 
 static const char TEXT_MID[] PROGMEM = "MID";
 
-Error DisTms9900::decodeMactoInstructionDetect(InsnTms9900 &insn) {
+Error DisTms9900::decodeMacroInstructionDetect(InsnTms9900 &insn) {
     insn.setName_P(TEXT_MID);
     return setError(UNKNOWN_INSTRUCTION);
 }
@@ -142,7 +142,7 @@ Error DisTms9900::decodeOperand(
                 outHex(out, val8, 7);
             return OK;
         }
-        return decodeMactoInstructionDetect(insn);
+        return decodeMacroInstructionDetect(insn);
     default:
         return OK;
     }
@@ -154,7 +154,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     insn.setOpCode(opCode);
     if (TableTms9900.searchOpCode(insn))
-        return decodeMactoInstructionDetect(insn);
+        return decodeMacroInstructionDetect(insn);
     insn.readPost(memory);
     if (setError(insn))
         return getError();
