@@ -1,0 +1,6 @@
+-I../src
+-I../cli
+-Wall
+-O
+-std=c++14
+
