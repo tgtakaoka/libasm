@@ -38,4 +38,4 @@ jobs:
           libraries: |
             - source-path: ./
             - name: libcli
-              version: 1.2.2
+              version: 1.2.3

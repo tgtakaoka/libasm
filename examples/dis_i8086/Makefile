@@ -36,7 +36,7 @@ pio-envs: platformio.ini
 pio-boards: platformio.init
 	@echo $(PIO_BOARDS)
 
-clean: 
+clean:
 	rm -rf $$(find . -type d -a -name .pio)
 
 .PHONY: help clean pio pio-boards pio-envs install-local-lib
