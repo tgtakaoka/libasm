@@ -32,6 +32,12 @@ public:
     AddrMode op2() const { return flags().op2(); }
     AddrMode op3() const { return flags().op3(); }
     AddrMode op4() const { return flags().op4(); }
+    void setAddrMode(AddrMode op1, AddrMode op2, AddrMode op3, AddrMode op4) {
+        setFlags(Entry::Flags::create(op1, op2, op3, op4));
+    }
+
+    void emitInsn() { emitUint16(opCode(), 0); }
+    void emitOperand16(uint16_t val) { emitUint16(val, sizeof(Config::opcode_t)); }
 };
 
 }  // namespace mn1610

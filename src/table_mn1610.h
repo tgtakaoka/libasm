@@ -36,6 +36,7 @@ public:
     const char *getCpu() const override;
 
     AddressWidth addressWidth() const;
+    Error checkAddressRange(Config::uintptr_t addr) const;
 
     struct EntryPage;
 

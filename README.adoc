@@ -68,6 +68,7 @@ It can generate Intel HEX or Motorola S-Record output.
                     i8080, i8085, Z80, Z8, Z86C, Z88, TLCS90, INS8060, INS8070
                     CDP1802, CDP1804, CDP1804A, TMS32010, TMS32015, i8086
                     MC68000, TMS9900, TMS9995, TMS99105, Z8001, Z8002, NS32032
+                    MN1610, MN1613, MN1613A
       -o <output> : output file
       -l <list>   : list file
       -S[<bytes>] : output Motorola S-Record format

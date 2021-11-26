@@ -47,7 +47,9 @@ static constexpr Entry TABLE_MN1610[] PROGMEM = {
         E2(0x1000, TEXT_WT,   M_RD,   M_IOA),
         E2(0x1800, TEXT_RD,   M_RD,   M_IOA),
         E3(0x2008, TEXT_SR,   M_RD,   M_EOP, M_SKIP),
+        E2(0x2008, TEXT_SR,   M_RD,   M_SKIP),
         E3(0x200C, TEXT_SL,   M_RD,   M_EOP, M_SKIP),
+        E2(0x200C, TEXT_SL,   M_RD,   M_SKIP),
         E3(0x2800, TEXT_TBIT, M_RD,   M_BIT, M_SKIP),
         E3(0x3000, TEXT_RBIT, M_RD,   M_BIT, M_SKIP),
         E3(0x3800, TEXT_SBIT, M_RD,   M_BIT, M_SKIP),
@@ -89,6 +91,7 @@ static constexpr Entry TABLE_MN1613[] PROGMEM = {
         E3(0x1F07, TEXT_FLT,  M_DR0,  M_R0,   M_SKIP),
         E3(0x1F0F, TEXT_FIX,  M_R0,   M_DR0,  M_SKIP),
         E3(0x1F00, TEXT_NEG,  M_RS,   M_COP,  M_SKIP),
+        E2(0x1F00, TEXT_NEG,  M_RS,   M_SKIP),
         E1(0x2607, TEXT_BD,   M_ABS),
         E1(0x2617, TEXT_BALD, M_ABS),
         E1(0x270F, TEXT_BL,   M_IABS),
@@ -96,11 +99,15 @@ static constexpr Entry TABLE_MN1613[] PROGMEM = {
         E1(0x271F, TEXT_BALL, M_IABS),
         E1(0x2714, TEXT_BALR, M_RI),
         E3(0x2708, TEXT_LD,   M_RSG,  M_SB,   M_ABS),
+        E2(0x2708, TEXT_LD,   M_RSG,  M_ABS),
         E3(0x2748, TEXT_STD,  M_RSG,  M_SB,   M_ABS),
+        E2(0x2748, TEXT_STD,  M_RSG,  M_ABS),
         E2(0x2010, TEXT_WTR,  M_RDG,  M_RI),
         E2(0x2014, TEXT_RDR,  M_RDG,  M_RI),
         E3(0x2000, TEXT_LR,   M_RDG,  M_SB,   M_RIAU),
+        E2(0x2000, TEXT_LR,   M_RDG,  M_RIAU),
         E3(0x2004, TEXT_STR,  M_RDG,  M_SB,   M_RIAU),
+        E2(0x2004, TEXT_STR,  M_RDG,  M_RIAU),
         E0(0x3F07, TEXT_RETL),
         E3(0x3F17, TEXT_BLK,  M_RI2,  M_RI1,  M_R0),
         E2(0x3F70, TEXT_SRBT, M_R0,   M_RS),
@@ -108,13 +115,17 @@ static constexpr Entry TABLE_MN1613[] PROGMEM = {
         E2(0x3FF0, TEXT_DEBP, M_RS,   M_R0),
         E2(0x3F80, TEXT_CPYH, M_RS,   M_RHR),
         E4(0x4704, TEXT_SD,   M_DR0,  M_RI,   M_COP,  M_SKIP),
+        E3(0x4704, TEXT_SD,   M_DR0,  M_RI,   M_SKIP),
         E4(0x4F04, TEXT_AD,   M_DR0,  M_RI,   M_COP,  M_SKIP),
+        E3(0x4F04, TEXT_AD,   M_DR0,  M_RI,   M_SKIP),
         E4(0x5704, TEXT_DAS,  M_R0,   M_RI,   M_COP,  M_SKIP),
+        E3(0x5704, TEXT_DAS,  M_R0,   M_RI,   M_SKIP),
         E3(0x5700, TEXT_CBR,  M_R0,   M_RI,   M_SKIP),
         E3(0x5708, TEXT_CWR,  M_R0,   M_RI,   M_SKIP),
         E3(0x5007, TEXT_CBI,  M_RD,   M_IM8W, M_SKIP),
         E3(0x500F, TEXT_CWI,  M_RD,   M_IM16, M_SKIP),
         E4(0x5F04, TEXT_DAA,  M_R0,   M_RI,   M_COP,  M_SKIP),
+        E3(0x5F04, TEXT_DAA,  M_R0,   M_RI,   M_SKIP),
         E3(0x5F00, TEXT_SWR,  M_R0,   M_RI,   M_SKIP),
         E3(0x5F08, TEXT_AWR,  M_R0,   M_RI,   M_SKIP),
         E3(0x5807, TEXT_SWI,  M_RD,   M_IM16, M_SKIP),
@@ -160,7 +171,42 @@ static constexpr TableMn1610::EntryPage MN1613_PAGES[] PROGMEM = {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (table == opr)
         return true;
-    return false;
+    switch (table) {
+    case M_SKIP:
+        return opr == M_NO;
+    case M_RD:
+        return opr == M_R0 || opr == M_RDG;
+    case M_RDG:
+        return opr == M_R0;
+    case M_RS:
+        return opr == M_R0 || opr == M_RDG || opr == M_RD;
+    case M_RSG:
+        return opr == M_R0 || opr == M_RDG;
+    case M_RI:
+        return opr == M_RI1 || opr == M_RI2;
+    case M_RIAU:
+        return opr == M_RI1 || opr == M_RI2 || opr == M_RI;
+    case M_COP:
+    case M_ILVL:
+    case M_BIT:
+    case M_IM4:
+    case M_IM8:
+    case M_IM8W:
+    case M_IM16:
+    case M_IOA:
+    case M_ABS:
+        return opr == M_IM8 || opr == M_IM16 || opr == M_ABS;
+    case M_RB:
+    case M_RBW:
+        return opr == M_SB || opr == M_RB;
+    case M_RHW:
+        return opr == M_RHR;
+    case M_GEN:
+        return opr == M_IM8 || opr == M_IM16 || opr == M_ABS || opr == M_IABS || opr == M_INDX ||
+               opr == M_IXID || opr == M_IDIX;
+    default:
+        return false;
+    }
 }
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
@@ -262,6 +308,16 @@ TableMn1610::TableMn1610() {
 
 AddressWidth TableMn1610::addressWidth() const {
     return (_cpuType == MN1610) ? ADDRESS_16BIT : ADDRESS_20BIT;
+}
+
+Error TableMn1610::checkAddressRange(Config::uintptr_t addr) const {
+    if (_cpuType == MN1610 && addr >= 0x10000)
+        return OVERFLOW_RANGE;
+    if (_cpuType == MN1613 && addr >= 0x40000)
+        return OVERFLOW_RANGE;
+    if (_cpuType == MN1613A && addr >= 0x100000)
+        return OVERFLOW_RANGE;
+    return OK;
 }
 
 bool TableMn1610::setCpu(CpuType cpuType) {

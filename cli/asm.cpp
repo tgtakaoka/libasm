@@ -29,6 +29,7 @@
 #include "asm_mc68000.h"
 #include "asm_mc6805.h"
 #include "asm_mc6809.h"
+#include "asm_mn1610.h"
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
 #include "asm_tlcs90.h"
@@ -60,6 +61,7 @@ tms32010::AsmTms32010 asm32010;
 mc68000::AsmMc68000 asm68000;
 z8000::AsmZ8000 asmz8000;
 ns32000::AsmNs32000 asm32000;
+mn1610::AsmMn1610 asm1610;
 
 AsmMotoDirective dir6502(asm6502);
 AsmMotoDirective dir6800(asm6800);
@@ -80,6 +82,7 @@ AsmIntelDirective dir32010(asm32010);
 AsmMotoDirective dir68000(asm68000);
 AsmIntelDirective dirz8000(asmz8000);
 AsmIntelDirective dir32000(asm32000);
+AsmIntelDirective dir1610(asm1610);
 
 std::vector<AsmDirective *> directives = {
         &dir6800,
@@ -101,6 +104,7 @@ std::vector<AsmDirective *> directives = {
         &dir9900,
         &dirz8000,
         &dir32000,
+        &dir1610,
 };
 
 int main(int argc, const char **argv) {

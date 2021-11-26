@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "reg_mn1610.h"
 
 #include <ctype.h>
@@ -69,6 +68,9 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
         // Register alias
         NAME_ENTRY(REG_X0),
         NAME_ENTRY(REG_X1),
+        // none generic register
+        NAME_ENTRY(REG_IC),
+        NAME_ENTRY(REG_DR0),
         // Segment base register
         NAME_ENTRY(REG_CSBR),
         NAME_ENTRY(REG_SSBR),
@@ -93,6 +95,85 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_NPP),
 };
 // clang-format on
+
+RegName RegMn1610::parseRegName(const char *line) {
+    const auto *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
+}
+
+uint8_t RegMn1610::regNameLen(RegName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+}
+
+bool RegMn1610::isGeneric(RegName name) {
+    if (name == REG_X0 || name == REG_X1)
+        return true;
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_R0) && n <= int8_t(REG_STR);
+}
+
+bool RegMn1610::isIndex(RegName name) {
+    return name == REG_X0 || name == REG_X1 || name == REG_R3 || name == REG_R4;
+}
+
+bool RegMn1610::isIndirect(RegName name) {
+    if (name == REG_X0 || name == REG_X1)
+        return true;
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_R1) && n <= int8_t(REG_R4);
+}
+
+bool RegMn1610::isSegmentBase(RegName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_CSBR) && n <= int8_t(REG_TSR1);
+}
+
+bool RegMn1610::isSegment(RegName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_CSBR) && n <= int8_t(REG_OSR3);
+}
+
+bool RegMn1610::isHardware(RegName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_TCR) && n <= int8_t(REG_SOR);
+}
+
+bool RegMn1610::isSpecial(RegName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(REG_SBRB) && n <= int8_t(REG_NPP);
+}
+
+uint16_t RegMn1610::encodeGeneric(RegName name) {
+    uint8_t n = int8_t(name);
+    if (name == REG_X0 || name == REG_X1)
+        n -= 8;
+    return n;
+}
+
+uint16_t RegMn1610::encodeIndex(RegName name) {
+    return (name == REG_X0 || name == REG_R3) ? 4 : 5;
+}
+
+uint16_t RegMn1610::encodeIndirect(RegName name) {
+    uint8_t n = int8_t(name);
+    if (name == REG_X0 || name == REG_X1)
+        n -= 8;
+    return n - 1;
+}
+
+uint16_t RegMn1610::encodeSegment(RegName name) {
+    return int8_t(name) - 16;
+}
+
+uint16_t RegMn1610::encodeHardware(RegName name) {
+    if (name == REG_SOR)
+        return 5;
+    return int8_t(name) - 24;
+}
+
+uint16_t RegMn1610::encodeSpecial(RegName name) {
+    return int8_t(name) - 32;
+}
 
 RegName RegMn1610::decodeRegNum(uint8_t num) {
     const auto r = num & 7;
@@ -176,6 +257,42 @@ static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
         // Empty text.
         NAME_ENTRY(CC_NONE),
 };
+
+CcName RegMn1610::parseCcName(const char *line) {
+    const auto *entry = searchText(line, ARRAY_RANGE(CC_TABLE));
+    const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
+    return name == CC_NONE ? CC_UNDEF : name;
+}
+
+uint8_t RegMn1610::ccNameLen(CcName name) {
+    return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
+}
+
+bool RegMn1610::isSkip(CcName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(CC_SKP) && n <= int8_t(CC_NE);
+}
+
+bool RegMn1610::isCop(CcName name) {
+    return name == CC_C;
+}
+
+bool RegMn1610::isEop(CcName name) {
+    const auto n = int8_t(name);
+    return n >= int8_t(CC_RE);
+}
+
+uint16_t RegMn1610::encodeSkip(CcName name) {
+    return int8_t(name) & 0x0F;
+}
+
+uint16_t RegMn1610::encodeCop(CcName name) {
+    return name == CC_NONE ? 0 : 1;
+}
+
+uint16_t RegMn1610::encodeEop(CcName name) {
+    return name == CC_NONE ? 0 : int8_t(name) - 48;
+}
 
 CcName RegMn1610::decodeSkip(uint8_t num) {
     return CcName(num & 0xF);

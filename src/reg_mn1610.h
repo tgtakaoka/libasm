@@ -93,6 +93,21 @@ enum CcName : int8_t {
 
 class RegMn1610 : public RegBase {
 public:
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    static bool isGeneric(RegName name);
+    static bool isIndex(RegName name);
+    static bool isIndirect(RegName name);
+    static bool isSegmentBase(RegName name);
+    static bool isSegment(RegName name);
+    static bool isHardware(RegName name);
+    static bool isSpecial(RegName name);
+    static uint16_t encodeGeneric(RegName name);
+    static uint16_t encodeIndex(RegName name);
+    static uint16_t encodeIndirect(RegName name);
+    static uint16_t encodeSegment(RegName name);
+    static uint16_t encodeHardware(RegName name);
+    static uint16_t encodeSpecial(RegName name);
     static RegName decodeRegNum(uint8_t num);
     static RegName decodeIndirect(uint8_t num);
     static RegName decodeSegment(uint8_t num);
@@ -100,6 +115,14 @@ public:
     static RegName decodeSpecial(uint8_t num);
     StrBuffer &outRegName(StrBuffer &out, RegName name) const;
 
+    static CcName parseCcName(const char *line);
+    static uint8_t ccNameLen(CcName name);
+    static bool isSkip(CcName name);
+    static bool isCop(CcName name);
+    static bool isEop(CcName name);
+    static uint16_t encodeSkip(CcName name);
+    static uint16_t encodeCop(CcName name);
+    static uint16_t encodeEop(CcName name);
     static CcName decodeSkip(uint8_t num);
     static CcName decodeCop(uint8_t num);
     static CcName decodeEop(uint8_t num);

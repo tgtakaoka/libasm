@@ -56,6 +56,9 @@ enum AddrMode : uint8_t {
     M_RI1 = 27,   // (R1)
     M_RI2 = 28,   // (R2)
     M_GEN = 29,   // Generic addressing: D, d(IC), (D), (d(IC)), D(Xn), (D)(Xn)
+    M_INDX = 30,  // v(r)
+    M_IXID = 31,  // (v(r))
+    M_IDIX = 32,  // (v)(r)
 };
 
 class Entry : public EntryBase<Config> {
