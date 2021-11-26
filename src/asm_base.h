@@ -59,7 +59,7 @@ protected:
     uint32_t lookupSymbol(const char *symbol) const;
 
     /** Scan |expr| text to find |delim| letter. */
-    const char *scanExpr(const char *expr, char delim, uint16_t nesting = 0) const;
+    const char *scanExpr(const char *expr, char delim) const;
     /** Parse |expr| text and get value as unsigned 16 bit. */
     uint16_t parseExpr16(const char *expr, const char *end = nullptr);
     /** Parse |expr| text and get value as unsigned 32 bit. */

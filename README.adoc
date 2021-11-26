@@ -95,7 +95,7 @@ It can read Intel HEX or Motorola S-Record input.
       -l <list>   : list file
       <input>     : file can be Motorola S-Record or Intel HEX format
       -A start[,end]
-                  : disasseble start address and optional end address
+                  : disassemble start address and optional end address
       -r          : use program counter relative notation
       -u          : use uppercase letter for output
       -v          : print progress verbosely

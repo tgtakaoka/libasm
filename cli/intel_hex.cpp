@@ -45,7 +45,8 @@ void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
         _next_addr = addr;
         data += chunk;
         size -= chunk;
-        if (size == 0) return;
+        if (size == 0)
+            return;
     }
     // If |addr| is discontinued or |addr| has different ELA than last
     if (addr != _next_addr || ((addr ^ _last_addr) >> 16) != 0)

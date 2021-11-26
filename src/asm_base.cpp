@@ -66,17 +66,16 @@ uint32_t Assembler::parseExpr32(const char *expr, const char *end) {
     return value.getUnsigned();
 }
 
-const char *Assembler::scanExpr(const char *expr, char delim, uint16_t nesting) const {
-    nesting++;
+const char *Assembler::scanExpr(const char *expr, char delim) const {
     while (!endOfLine(expr)) {
         const char c = *expr;
         if (c == delim)
             return expr;
         expr++;
         if (c == '(') {
-            expr = scanExpr(expr, ')', nesting);
+            expr = scanExpr(expr, ')');
         } else if (c == '[') {
-            expr = scanExpr(expr, ']', nesting);
+            expr = scanExpr(expr, ']');
         } else if (c == '\'') {
             char val;
             expr = _parser.readChar(expr, val);

@@ -99,7 +99,7 @@ int DisDriver::usage() {
             "  -l <list>   : list file\n"
             "  <input>     : file can be Motorola S-Record or Intel HEX format\n"
             "  -A start[,end]\n"
-            "              : disasseble start address and optional end address\n"
+            "              : disassemble start address and optional end address\n"
             "  -r          : use program counter relative notation\n"
             "  -u          : use uppercase letter for output\n"
             "  -v          : print progress verbosely\n",
@@ -173,7 +173,7 @@ int DisDriver::disassemble() {
             fprintf(output, "%s\n", listing.origin(start));
             fflush(output);
         }
-        for (size_t pc = 0; pc < size; ) {
+        for (size_t pc = 0; pc < size;) {
             const uint32_t address = start + pc / addrUnit;
             Insn insn(address);
             listing.disassemble(base + pc, insn);
