@@ -48,6 +48,8 @@ AsmZ8000        KEYWORD1        libasm
 DisZ8000        KEYWORD1        libasm
 AsmNs32000      KEYWORD1        libasm
 DisNs32000      KEYWORD1        libasm
+AsmMn1610       KEYWORD1        libasm
+DisMn1610       KEYWORD1        libasm
 
 #######################################
 # Methods and Functions (KEYWORD2)
