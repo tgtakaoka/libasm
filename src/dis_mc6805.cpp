@@ -25,6 +25,14 @@ StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
+Error DisMc6805::checkAddressRange(Config::uintptr_t addr) {
+    const uint8_t pc_bits = (_pc_bits > 0 && _pc_bits <= 16) ? _pc_bits : 13;
+    const Config::uintptr_t max = (1 << pc_bits);
+    if (max && addr >= max)
+        return setError(OVERFLOW_RANGE);
+    return OK;
+}
+
 Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
     const char *label = lookup(dir);
@@ -38,8 +46,8 @@ Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer
 
 Error DisMc6805::decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    if (addressWidth() == ADDRESS_13BIT && addr >= 0x2000)
-        return setError(OVERFLOW_RANGE);
+    if (checkAddressRange(addr))
+        return getError();
     const char *label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
@@ -74,8 +82,8 @@ Error DisMc6805::decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &
     const int8_t delta8 = static_cast<int8_t>(insn.readByte(memory));
     const Config::uintptr_t base = insn.address() + insn.length();
     const Config::uintptr_t target = base + delta8;
-    if (addressWidth() == ADDRESS_13BIT && target >= 0x2000)
-        return setError(OVERFLOW_RANGE);
+    if (checkAddressRange(target))
+        return getError();
     outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }

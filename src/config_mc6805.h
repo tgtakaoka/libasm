@@ -22,7 +22,7 @@
 namespace libasm {
 namespace mc6805 {
 
-struct Config : public ConfigImpl<ADDRESS_13BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5> {};
+struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5> {};
 
 }  // namespace mc6805
 }  // namespace libasm

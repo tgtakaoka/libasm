@@ -28,11 +28,15 @@ namespace mc6805 {
 
 class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6805() : Assembler(_parser, TableMc6805) {}
+    AsmMc6805() : Assembler(_parser, TableMc6805), _pc_bits(0) {}
     ConfigBase &config() override { return *this; }
+    void reset() override { setProgramCounterBits(0); }
+
+    void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }
 
 private:
     MotoValueParser _parser;
+    uint8_t _pc_bits;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
@@ -41,6 +45,7 @@ private:
         Operand() : ErrorReporter(), mode(M_NO), size(SZ_NONE), val16(0) {}
     };
 
+    Error checkAddressRange(Config::uintptr_t addr);
     Error parseOperand(const char *scan, Operand &op);
     Error emitRelative(InsnMc6805 &insn, const Operand &op);
     Error emitImmediate(InsnMc6805 &insn, const Operand &op);

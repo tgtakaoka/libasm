@@ -25,7 +25,6 @@ namespace libasm {
 
 enum AddressWidth : uint8_t {
     ADDRESS_12BIT = 12,
-    ADDRESS_13BIT = 13,
     ADDRESS_16BIT = 16,
     ADDRESS_20BIT = 20,
     ADDRESS_24BIT = 24,
@@ -66,8 +65,6 @@ template <AddressWidth width>
 struct __address_type;
 template <>
 struct __address_type<ADDRESS_12BIT> : public __address_helper<uint16_t> {};
-template <>
-struct __address_type<ADDRESS_13BIT> : public __address_helper<uint16_t> {};
 template <>
 struct __address_type<ADDRESS_16BIT> : public __address_helper<uint16_t> {};
 template <>

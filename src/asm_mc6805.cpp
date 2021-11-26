@@ -22,6 +22,14 @@
 namespace libasm {
 namespace mc6805 {
 
+Error AsmMc6805::checkAddressRange(Config::uintptr_t addr) {
+    const uint8_t pc_bits = (_pc_bits > 0 && _pc_bits <= 16) ? _pc_bits : 13;
+    const Config::uintptr_t max = (1 << pc_bits);
+    if (max && addr >= max)
+        return setError(OVERFLOW_RANGE);
+    return OK;
+}
+
 Error AsmMc6805::parseOperand(const char *scan, Operand &op) {
     const char *p = skipSpaces(scan);
     _scan = p;
@@ -99,8 +107,8 @@ Error AsmMc6805::parseOperand(const char *scan, Operand &op) {
 Error AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + 1;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
-    if (addressWidth() == ADDRESS_13BIT && target >= 0x2000)
-        return setError(OVERFLOW_RANGE);                
+    if (checkAddressRange(target))
+        return getError();
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
         return setError(OPERAND_TOO_FAR);
@@ -138,15 +146,15 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
         insn.emitUint16(op.val16);
         return OK;
     case M_EXT:
-        if (addressWidth() == ADDRESS_13BIT && op.val16 >= 0x2000)
-            return setError(OVERFLOW_RANGE);
+        if (checkAddressRange(op.val16))
+            return getError();
         insn.emitUint16(op.val16);
         return OK;
     case M_REL:
         return emitRelative(insn, op);
     case M_IMM:
         return emitImmediate(insn, op);
-    case M_BNO: // handled in encode(Insn)
+    case M_BNO:  // handled in encode(Insn)
     default:
         return OK;
     }

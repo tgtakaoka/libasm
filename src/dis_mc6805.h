@@ -28,15 +28,20 @@ namespace mc6805 {
 
 class DisMc6805 : public Disassembler, public Config {
 public:
-    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*') {}
+    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*'), _pc_bits(0) {}
     ConfigBase &config() override { return *this; }
+    void reset() override { setProgramCounterBits(0); }
+
+    void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }
 
 private:
     MotoValueFormatter _formatter;
     RegMc6805 _regs;
+    uint8_t _pc_bits;
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
+    Error checkAddressRange(Config::uintptr_t addr);
     Error decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
