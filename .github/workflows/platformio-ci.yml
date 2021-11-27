@@ -22,18 +22,19 @@ jobs:
       matrix:
         prog: [ asm, dis ]
         arch:
-          - motorola
-          - intel
-          - zilog
-          - scmp
-          - mos6502
           - cdp1802
+          - i8086
+          - intel
+          - mc68000
+          - mn1610
+          - mos6502
+          - motorola
+          - ns32000
+          - scmp
           - tms32010
           - tms9900
-          - i8086
-          - mc68000
-          - ns32000
           - z8000
+          - zilog
 
     steps:
       - uses: actions/checkout@v2

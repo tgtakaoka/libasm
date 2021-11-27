@@ -59,7 +59,7 @@ Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::ui
         break;
     case 3:
         out.letter('(');
-        // Fall-thourgh
+        // Fall-through
     case 1:
         if (_relativeTarget) {
             outRelAddr(out, target, base, 8);
