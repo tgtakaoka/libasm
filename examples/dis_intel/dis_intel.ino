@@ -18,15 +18,18 @@
 #include <dis_i8048.h>
 #include <dis_i8051.h>
 #include <dis_i8080.h>
+#include <dis_i8086.h>
 
 libasm::i8080::DisI8080 dis8080;
 libasm::i8048::DisI8048 dis8048;
 libasm::i8051::DisI8051 dis8051;
+libasm::i8086::DisI8086 dis8086;
 
 libasm::Disassembler *disassemblers[] = {
         &dis8080,
         &dis8048,
         &dis8051,
+        &dis8086,
 };
 
 libasm::arduino::DisExample example(ARRAY_RANGE(disassemblers));

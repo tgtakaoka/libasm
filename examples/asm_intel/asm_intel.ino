@@ -18,15 +18,18 @@
 #include <asm_i8048.h>
 #include <asm_i8051.h>
 #include <asm_i8080.h>
+#include <asm_i8086.h>
 
 libasm::i8080::AsmI8080 asm8080;
 libasm::i8048::AsmI8048 asm8048;
 libasm::i8051::AsmI8051 asm8051;
+libasm::i8086::AsmI8086 asm8086;
 
 libasm::Assembler *disassemblers[] = {
         &asm8080,
         &asm8048,
         &asm8051,
+        &asm8086,
 };
 
 libasm::arduino::AsmExample example(ARRAY_RANGE(disassemblers));
