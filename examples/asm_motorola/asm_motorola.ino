@@ -23,13 +23,13 @@ libasm::mc6800::AsmMc6800 asm6800;
 libasm::mc6805::AsmMc6805 asm6805;
 libasm::mc6809::AsmMc6809 asm6809;
 
-libasm::Assembler *disassemblers[] = {
+libasm::Assembler *assemblers[] = {
         &asm6800,
         &asm6805,
         &asm6809,
 };
 
-libasm::arduino::AsmExample example(ARRAY_RANGE(disassemblers));
+libasm::arduino::AsmExample example(ARRAY_RANGE(assemblers));
 
 void setup() {
     Serial.begin(9600);

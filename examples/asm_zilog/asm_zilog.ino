@@ -23,13 +23,13 @@ libasm::tlcs90::AsmTlcs90 asm90;
 libasm::z80::AsmZ80 asmz80;
 libasm::z8::AsmZ8 asmz8;
 
-libasm::Assembler *disassemblers[] = {
+libasm::Assembler *assemblers[] = {
         &asmz80,
         &asm90,
         &asmz8,
 };
 
-libasm::arduino::AsmExample example(ARRAY_RANGE(disassemblers));
+libasm::arduino::AsmExample example(ARRAY_RANGE(assemblers));
 
 void setup() {
     Serial.begin(9600);

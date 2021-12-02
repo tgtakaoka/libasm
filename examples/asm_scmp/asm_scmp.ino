@@ -21,12 +21,12 @@
 libasm::ins8060::AsmIns8060 asm8060;
 libasm::ins8070::AsmIns8070 asm8070;
 
-libasm::Assembler *disassemblers[] = {
+libasm::Assembler *assemblers[] = {
         &asm8060,
         &asm8070,
 };
 
-libasm::arduino::AsmExample example(ARRAY_RANGE(disassemblers));
+libasm::arduino::AsmExample example(ARRAY_RANGE(assemblers));
 
 void setup() {
     Serial.begin(9600);
