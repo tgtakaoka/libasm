@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <asm_cdp1802.h>
 
-using libasm::arduino::AsmExample;
+using libasm::arduino::Example;
 using libasm::cdp1802::AsmCdp1802;
 
 AsmCdp1802 asm1802;
-AsmExample example(asm1802);
+Example example(asm1802);
 
 void setup() {
     Serial.begin(9600);

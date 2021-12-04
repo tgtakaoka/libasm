@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <dis_z8000.h>
 
-using libasm::arduino::DisExample;
+using libasm::arduino::Example;
 using libasm::z8000::DisZ8000;
 
 DisZ8000 disz8000;
-DisExample example(disz8000);
+Example example(disz8000);
 
 void setup() {
     Serial.begin(9800);

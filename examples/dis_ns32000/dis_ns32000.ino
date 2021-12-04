@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <dis_ns32000.h>
 
-using libasm::arduino::DisExample;
+using libasm::arduino::Example;
 using libasm::ns32000::DisNs32000;
 
 DisNs32000 dis32000;
-DisExample example(dis32000);
+Example example(dis32000);
 
 void setup() {
     Serial.begin(9800);

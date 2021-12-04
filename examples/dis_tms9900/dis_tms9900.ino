@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <dis_tms9900.h>
 
-using libasm::arduino::DisExample;
+using libasm::arduino::Example;
 using libasm::tms9900::DisTms9900;
 
 DisTms9900 dis9900;
-DisExample example(dis9900);
+Example example(dis9900);
 
 void setup() {
     Serial.begin(9800);

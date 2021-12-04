@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <asm_z8000.h>
 
-using libasm::arduino::AsmExample;
+using libasm::arduino::Example;
 using libasm::z8000::AsmZ8000;
 
 AsmZ8000 asmz8000;
-AsmExample example(asmz8000);
+Example example(asmz8000);
 
 void setup() {
     Serial.begin(9600);

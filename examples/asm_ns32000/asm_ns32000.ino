@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <asm_ns32000.h>
 
-using libasm::arduino::AsmExample;
+using libasm::arduino::Example;
 using libasm::ns32000::AsmNs32000;
 
 AsmNs32000 asm32000;
-AsmExample example(asm32000);
+Example example(asm32000);
 
 void setup() {
     Serial.begin(9600);

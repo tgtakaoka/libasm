@@ -32,7 +32,7 @@ libasm::Disassembler *disassemblers[] = {
         &dis8086,
 };
 
-libasm::arduino::DisExample example(ARRAY_RANGE(disassemblers));
+libasm::arduino::Example example(ARRAY_RANGE(disassemblers));
 
 void setup() {
     Serial.begin(9600);

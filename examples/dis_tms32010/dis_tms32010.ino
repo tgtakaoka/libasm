@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <dis_tms32010.h>
 
-using libasm::arduino::DisExample;
+using libasm::arduino::Example;
 using libasm::tms32010::DisTms32010;
 
 DisTms32010 dis32010;
-DisExample example(dis32010);
+Example example(dis32010);
 
 void setup() {
     Serial.begin(9800);

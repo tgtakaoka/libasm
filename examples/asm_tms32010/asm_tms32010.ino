@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <asm_tms32010.h>
 
-using libasm::arduino::AsmExample;
+using libasm::arduino::Example;
 using libasm::tms32010::AsmTms32010;
 
 AsmTms32010 asm32010;
-AsmExample example(asm32010);
+Example example(asm32010);
 
 void setup() {
     Serial.begin(9600);

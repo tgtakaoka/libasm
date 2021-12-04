@@ -29,43 +29,117 @@ namespace libasm {
 namespace arduino {
 
 /**
- * Base class for assembler and disassembler example for Arduino.
+ * Assembler and disassembler example for Arduino.
  */
-template <typename Base>
-class BaseExample {
+class Example {
 public:
-    virtual void begin(Stream &console) { _cli.begin(console); }
+    Example(Assembler &current)
+        : _asm(&current),
+          _dis(nullptr),
+          _abegin(&_asm),
+          _aend(_abegin + 1),
+          _dbegin(nullptr),
+          _dend(nullptr),
+          _current(Prog::ASM),
+          _cli(libcli::Cli::instance()) {}
+    Example(Disassembler &current)
+        : _asm(nullptr),
+          _dis(&current),
+          _abegin(nullptr),
+          _aend(nullptr),
+          _dbegin(&_dis),
+          _dend(_dbegin + 1),
+          _current(Prog::DIS),
+          _cli(libcli::Cli::instance()) {}
+    Example(Assembler **abegin, Assembler **aend)
+        : _asm(*abegin),
+          _dis(nullptr),
+          _abegin(abegin),
+          _aend(aend),
+          _dbegin(nullptr),
+          _dend(nullptr),
+          _current(Prog::ASM),
+          _cli(libcli::Cli::instance()) {}
+    Example(Disassembler **dbegin, Disassembler **dend)
+        : _asm(nullptr),
+          _dis(*dbegin),
+          _abegin(nullptr),
+          _aend(nullptr),
+          _dbegin(dbegin),
+          _dend(dend),
+          _current(Prog::DIS),
+          _cli(libcli::Cli::instance()) {}
+    Example(Assembler &assembler, Disassembler &disassembler)
+        : _asm(&assembler),
+          _dis(&disassembler),
+          _abegin(&_asm),
+          _aend(_abegin + 1),
+          _dbegin(&_dis),
+          _dend(_dbegin + 1),
+          _current(Prog::ASM),
+          _cli(libcli::Cli::instance()) {}
+    Example(Assembler **abegin, Assembler **aend, Disassembler **dbegin, Disassembler **dend)
+        : _asm(*abegin),
+          _dis(*dbegin),
+          _abegin(abegin),
+          _aend(aend),
+          _dbegin(dbegin),
+          _dend(dend),
+          _current(Prog::ASM),
+          _cli(libcli::Cli::instance()) {}
+
+    void begin(Stream &console) {
+        _cli.begin(console);
+        printPrompt();
+    }
 
     void loop() { _cli.loop(); }
 
-protected:
+private:
+    Assembler *_asm;
+    Disassembler *_dis;
+    Assembler **_abegin;
+    Assembler **_aend;
+    Disassembler **_dbegin;
+    Disassembler **_dend;
+    enum Prog : uint8_t { ASM, DIS } _current;
     /* command line interface: libcli */
     libcli::Cli &_cli;
-    Base *_current;
-    Base **_begin;
-    Base **_end;
     uint32_t _origin;
     char buffer[80];
 
-    BaseExample(Base &current)
-        : _cli(libcli::Cli::instance()), _current(&current), _begin(&_current), _end(_begin + 1) {}
-    BaseExample(Base **begin, Base **end)
-        : _cli(libcli::Cli::instance()), _current(*begin), _begin(begin), _end(end) {}
-
-    virtual const /*PROGMEM*/ char *prompt() const = 0;
-
-    const ConfigBase &config() const { return _current->config(); }
+    bool isAsm() const { return _current == Prog::ASM; }
+    const ConfigBase &config() const { return isAsm() ? _asm->config() : _dis->config(); }
     uint32_t addrMax() const { return 1UL << uint8_t(config().addressWidth()); }
     uint8_t addrUnit() const { return uint8_t(config().addressUnit()); }
     uint8_t addrDigits() const { return ((uint8_t(config().addressWidth()) + 3) & -4) / 4; }
+    const char *getCpu() const { return isAsm() ? _asm->getCpu() : _dis->getCpu(); }
 
-    void printPrompt(libcli::Cli::StringCallback callback) {
-        _cli.print(FSTR(prompt()));
-        _cli.print(FSTR(_current->getCpu()));
+    static void handleLine(char *line, uintptr_t extra, State state) {
+        (void)state;
+        reinterpret_cast<Example *>(extra)->processLine(line, state);
+    }
+
+    void processLine(char *line, State state) {
+        _cli.println();
+        auto *scan = skipSpaces(line);
+        if (*scan && !processPseudo(line)) {
+            if (isAsm()) {
+                assemble(_asm, scan);
+            } else {
+                disassemble(_dis, scan);
+            }
+        }
+        printPrompt();
+    }
+
+    void printPrompt() {
+        _cli.print(isAsm() ? F("ASM:") : F("DIS:"));
+        _cli.print(FSTR(getCpu()));
         _cli.print(':');
         printAddress(_origin);
         _cli.print(F("> "));
-        _cli.readLine(callback, reinterpret_cast<uintptr_t>(this), buffer, sizeof(buffer));
+        _cli.readLine(handleLine, reinterpret_cast<uintptr_t>(this), buffer, sizeof(buffer));
     }
 
     void printAddress(uint32_t addr, char suffix = 0) {
@@ -147,23 +221,105 @@ protected:
         } while (length);
     }
 
+    void assemble(Assembler *assembler, const char *line) {
+        const auto max = addrMax();
+        Insn insn(_origin);
+        if (assembler->encode(line, insn)) {
+            _cli.print(F("Error: "));
+            _cli.println(FSTR(assembler->errorText()));
+        } else if (max && insn.address() + insn.length() / addrUnit() > max) {
+            _cli.println(F("address range overflow"));
+        } else {
+            printAddress(insn.address(), ':');
+            printBytes(insn.bytes(), insn.length());
+            _cli.println();
+            _origin += insn.length() / addrUnit();
+            _origin &= max - 1;
+        }
+    }
+
+    void disassemble(Disassembler *disassembler, char *line) {
+        StrMemory memory(_origin, line, config());
+        const auto max = addrMax();
+        const auto origin = memory.address();
+        while (memory.hasNext()) {
+            const auto delta = (memory.address() - origin) / addrUnit();
+            if (max && origin + delta >= max) {
+                _cli.println(F("address range overflow"));
+                return;
+            }
+            memory.readByte();
+        }
+        memory.rewind();
+
+        char operands[80];
+        while (memory.hasNext()) {
+            const auto delta = (memory.address() - origin) / addrUnit();
+            Insn insn(origin + delta);
+            if (disassembler->decode(memory, insn, operands, sizeof(operands))) {
+                _cli.print(F("Error: "));
+                _cli.println(FSTR(disassembler->errorText()));
+            } else {
+                printBytes(insn, operands);
+                _origin += insn.length() / addrUnit();
+                _origin &= max - 1;
+            }
+        }
+    }
+
+    template <class Prog>
+    bool printCpuList(Prog **begin, Prog **end) {
+        for (auto p = begin; p < end; p++) {
+            if (p != begin)
+                _cli.print(F(", "));
+            _cli.print(FSTR((*p)->listCpu()));
+        }
+        _cli.println();
+        return true;
+    }
+
+    template <class Prog>
+    Prog *searchCpu(const char *cpu, Prog **begin, Prog **end) {
+        for (auto p = begin; p < end; p++) {
+            if ((*p)->setCpu(cpu))
+                return *p;
+        }
+        return nullptr;
+    }
+
     bool processPseudo(const char *line) {
+        if (strcasecmp_P(line, PSTR("ASM")) == 0) {
+            if (_abegin) {
+                _current = Prog::ASM;
+            } else {
+                _cli.println(F("No assembler"));
+            }
+            return true;
+        }
+        if (strcasecmp_P(line, PSTR("DIS")) == 0) {
+            if (_dbegin) {
+                _current = Prog::DIS;
+            } else {
+                _cli.println(F("No disassembler"));
+            }
+            return true;
+        }
         if (strcasecmp_P(line, PSTR("CPU")) == 0 || strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
             const auto cpu = skipSpaces(line + 3);
-            if (*cpu == 0) {
-                for (auto p = _begin; p < _end; p++) {
-                    if (p != _begin)
-                        _cli.print(F(", "));
-                    _cli.print(FSTR((*p)->listCpu()));
+            if (*cpu == 0)
+                return isAsm() ? printCpuList<>(_abegin, _aend) : printCpuList<>(_dbegin, _dend);
+            if (isAsm() ? _asm->setCpu(cpu) : _dis->setCpu(cpu))
+                return true;
+            if (isAsm()) {
+                auto *a = searchCpu<>(cpu, _abegin, _aend);
+                if (a) {
+                    _asm = a;
+                    return true;
                 }
-                _cli.println();
-                return true;
-            }
-            if (_current->setCpu(cpu))
-                return true;
-            for (auto p = _begin; p < _end; p++) {
-                if ((*p)->setCpu(cpu)) {
-                    _current = *p;
+            } else {
+                auto *d = searchCpu<>(cpu, _dbegin, _dend);
+                if (d) {
+                    _dis = d;
                     return true;
                 }
             }
@@ -199,7 +355,13 @@ protected:
         return p;
     }
 
-    static constexpr const __FlashStringHelper *FSTR(const /*PROGMEM*/ char *pstr) {
+    static char *skipSpaces(char *p) {
+        while (isSpace(*p))
+            p++;
+        return p;
+    }
+
+    static const __FlashStringHelper *FSTR(const /*PROGMEM*/ char *pstr) {
         return reinterpret_cast<const __FlashStringHelper *>(pstr);
     }
 
@@ -291,113 +453,6 @@ protected:
             return p;
         }
     };
-};
-
-/**
- * Assembler example class.
- */
-class AsmExample : public BaseExample<Assembler> {
-public:
-    AsmExample(Assembler &assembler) : BaseExample(assembler) {}
-    AsmExample(Assembler **begin, Assembler **end) : BaseExample(begin, end) {}
-
-    void begin(Stream &console) override {
-        BaseExample::begin(console);
-        printPrompt(handleLine);
-    }
-
-protected:
-    const /*PROGMEM*/ char *prompt() const override { return PSTR("ASM:"); }
-
-private:
-    void assemble(const char *line) {
-        const auto max = addrMax();
-        Insn insn(_origin);
-        if (_current->encode(line, insn)) {
-            _cli.print(F("Error: "));
-            _cli.println(FSTR(_current->errorText()));
-        } else if (max && insn.address() + insn.length() / addrUnit() > max) {
-            _cli.println(F("address range overflow"));
-        } else {
-            printAddress(insn.address(), ':');
-            printBytes(insn.bytes(), insn.length());
-            _cli.println();
-            _origin += insn.length() / addrUnit();
-            _origin &= max - 1;
-        }
-    }
-
-    static void handleLine(char *line, uintptr_t extra, State state) {
-        (void)state;
-        auto example = reinterpret_cast<AsmExample *>(extra);
-        example->_cli.println();
-        const auto scan = skipSpaces(line);
-        if (*scan && !example->processPseudo(scan))
-            example->assemble(scan);
-        example->printPrompt(handleLine);
-    }
-};
-
-/**
- * Disassembler example class.
- */
-class DisExample : public BaseExample<Disassembler> {
-public:
-    DisExample(Disassembler &disassembler) : BaseExample(disassembler) {
-        _current->setUppercase(true);
-    }
-    DisExample(Disassembler **begin, Disassembler **end) : BaseExample(begin, end) {
-        _current->setUppercase(true);
-    }
-
-    void begin(Stream &console) override {
-        BaseExample::begin(console);
-        printPrompt(handleLine);
-    }
-
-protected:
-    const /*PROGMEM*/ char *prompt() const override { return PSTR("DIS:"); }
-
-private:
-    void disassemble(StrMemory &memory) {
-        const auto max = addrMax();
-        const auto origin = memory.address();
-        while (memory.hasNext()) {
-            const auto delta = (memory.address() - origin) / addrUnit();
-            if (max && origin + delta >= max) {
-                _cli.println(F("address range overflow"));
-                return;
-            }
-            memory.readByte();
-        }
-        memory.rewind();
-
-        char operands[80];
-        while (memory.hasNext()) {
-            const auto delta = (memory.address() - origin) / addrUnit();
-            Insn insn(origin + delta);
-            if (_current->decode(memory, insn, operands, sizeof(operands))) {
-                _cli.print(F("Error: "));
-                _cli.println(FSTR(_current->errorText()));
-            } else {
-                printBytes(insn, operands);
-                _origin += insn.length() / addrUnit();
-                _origin &= max - 1;
-            }
-        }
-    }
-
-    static void handleLine(char *line, uintptr_t extra, State state) {
-        (void)state;
-        auto example = reinterpret_cast<DisExample *>(extra);
-        example->_cli.println();
-        const auto scan = skipSpaces(line);
-        if (*scan && !example->processPseudo(scan)) {
-            StrMemory memory(example->_origin, scan, example->config());
-            example->disassemble(memory);
-        }
-        example->printPrompt(handleLine);
-    }
 };
 
 }  // namespace arduino

@@ -14,7 +14,7 @@
 
 help:
 	@echo '"make clean"  remove unnecessary files'
-	@echo '"make pio"    run PlatformIO CI'
+	@echo '"make pio"    build sketches using PlatformIO'
 	@echo '"make update" propagate common files to sketches'
 
 EXAMPLES = $(wildcard asm_* dis_*)
@@ -29,6 +29,9 @@ update: Makefile.common platformio.common
 	    cp -f Makefile.common $${ex}/Makefile; \
 	    cp -f platformio.common $${ex}/platformio.ini; \
 	done
+
+examples:
+	@echo $(EXAMPLES)
 
 clean: $(EXAMPLES)
 	@for ex in $(EXAMPLES); do \

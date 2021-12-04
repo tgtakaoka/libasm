@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <dis_mos6502.h>
 
-using libasm::arduino::DisExample;
+using libasm::arduino::Example;
 using libasm::mos6502::DisMos6502;
 
 DisMos6502 dis6502;
-DisExample example(dis6502);
+Example example(dis6502);
 
 void setup() {
     Serial.begin(9800);

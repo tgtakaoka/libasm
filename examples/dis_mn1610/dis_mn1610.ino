@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <dis_mn1610.h>
 
-using libasm::arduino::DisExample;
+using libasm::arduino::Example;
 using libasm::mn1610::DisMn1610;
 
 DisMn1610 dis1610;
-DisExample example(dis1610);
+Example example(dis1610);
 
 void setup() {
     Serial.begin(9800);

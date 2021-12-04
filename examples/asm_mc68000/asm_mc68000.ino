@@ -17,11 +17,11 @@
 #include <arduino_example.h>
 #include <asm_mc68000.h>
 
-using libasm::arduino::AsmExample;
+using libasm::arduino::Example;
 using libasm::mc68000::AsmMc68000;
 
 AsmMc68000 asm68000;
-AsmExample example(asm68000);
+Example example(asm68000);
 
 void setup() {
     Serial.begin(9600);

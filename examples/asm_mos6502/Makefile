@@ -14,7 +14,7 @@
 
 help:
 	@echo '"make clean"    remove unnecessary files'
-	@echo '"make pio"      run PlatformIO CI'
+	@echo '"make pio"      build sketch using PlatformIO'
 
 PIO_FLAGS ?= --no-ansi
 PIO_ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)

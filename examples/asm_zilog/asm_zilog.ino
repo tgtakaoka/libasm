@@ -29,7 +29,7 @@ libasm::Assembler *assemblers[] = {
         &asmz8,
 };
 
-libasm::arduino::AsmExample example(ARRAY_RANGE(assemblers));
+libasm::arduino::Example example(ARRAY_RANGE(assemblers));
 
 void setup() {
     Serial.begin(9600);
