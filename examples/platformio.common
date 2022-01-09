@@ -10,7 +10,7 @@
 
 [platformio]
 src_dir = .
-default_envs = promicro16, nano_every, nano_33_iot, pico
+default_envs = nano_every, nano_33_iot, pico
 
 [env]
 lib_deps =

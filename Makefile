@@ -16,7 +16,7 @@ help:
 	@echo '"make clean"  remove unnecessary files'
 	@echo '"make pio"    run PlatformIO CI'
 
-PIO_CI_FLAGS=--board=sparkfun_promicro16 --board=nano_every --board=nano_33_iot --board=pico
+PIO_CI_FLAGS=--board=nano_every --board=nano_33_iot --board=pico
 
 pio: examples
 	@for ex in $(shell make -s -C examples examples); do \

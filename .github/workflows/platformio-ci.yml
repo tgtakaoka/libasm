@@ -20,20 +20,26 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        prog: [ asm, dis ]
         arch:
           - cdp1802
-          - intel
+          - i8048
+          - i8051
+          - i8080
+          - i8086
+          - mc6800
           - mc68000
+          - mc6809
           - mn1610
           - mos6502
-          - motorola
           - ns32000
-          - scmp
+          - ins8060
+          - ins8070
+          - tlcs90
           - tms32010
           - tms9900
+          - z8
+          - z80
           - z8000
-          - zilog
 
     steps:
       - uses: actions/checkout@v2
@@ -58,6 +64,6 @@ jobs:
       - name: Install library dependency
         run: pio lib -g install libcli@1.2.3
       - name: Run PlatformIO
-        run: pio ci --lib="." --board=sparkfun_promicro16 --board=nano_every --board=nano_33_iot --board=pico
+        run: pio ci --lib="." --board=nano_every --board=nano_33_iot --board=pico
         env:
-          PLATFORMIO_CI_SRC: ./examples/${{ matrix.prog }}_${{ matrix.arch }}/${{ matrix.prog }}_${{ matrix.arch }}.ino
+          PLATFORMIO_CI_SRC: ./examples/${{ matrix.arch }}/${{ matrix.arch }}.ino
