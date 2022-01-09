@@ -15,7 +15,7 @@ default_envs = nano_every, nano_33_iot, pico
 [env]
 lib_deps =
          tgtakaoka/libcli@1.2.3
-         tgtakaoka/libasm@1.6.20
+         tgtakaoka/libasm@1.6.21
 
 [env:promicro16]
 platform = atmelavr
