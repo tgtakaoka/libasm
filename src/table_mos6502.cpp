@@ -254,8 +254,6 @@ static constexpr Entry W65C02S_TABLE[] PROGMEM = {
 };
 
 static constexpr Entry W65C816_TABLE[] PROGMEM = {
-    E(0xCB, TEXT_WAI, IMPL),
-    E(0xDB, TEXT_STP, IMPL),
     E(0x0B, TEXT_PHD, IMPL),
     E(0x1B, TEXT_TCS, IMPL),
     E(0x2B, TEXT_PLD, IMPL),
