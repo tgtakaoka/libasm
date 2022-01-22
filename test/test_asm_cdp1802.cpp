@@ -69,7 +69,7 @@ static void test_mem_ref() {
     ERRT("LDI -129", OVERFLOW_RANGE);
     ERRT("LDI 256",  OVERFLOW_RANGE);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register Load Immediate
         TEST("RLDI  0,1234H",  0x68, 0xC0, 0x12, 0x34);
         TEST("RLDI  0,-32768", 0x68, 0xC0, 0x80, 0x00);
@@ -139,7 +139,7 @@ static void test_mem_ref() {
     // Load via X and Advance
     TEST("LDXA", 0x72);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register Load via X and Advance
         TEST("RLXA  0", 0x68, 0x60);
         TEST("RLXA  1", 0x68, 0x61);
@@ -184,7 +184,7 @@ static void test_mem_ref() {
     // Store via X and Decrement
     TEST("STXD", 0x73);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register Store via X and Decrement
         TEST("RSXD  0", 0x68, 0xA0);
         TEST("RSXD  1", 0x68, 0xA1);
@@ -360,7 +360,7 @@ static void test_reg_op() {
     ERRT("PHI 16", ILLEGAL_REGISTER);
     ERRT("PHI -1", ILLEGAL_REGISTER);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register N to register X copy
         TEST("RNX  0", 0x68, 0xB0);
         TEST("RNX  1", 0x68, 0xB1);
@@ -458,7 +458,7 @@ static void test_branch() {
     ATEST(0x1000, "BN3 103FH", 0x3E, 0x3F);
     ATEST(0x1000, "B4  1038H", 0x37, 0x38);
     ATEST(0x1000, "BN4 1040H", 0x3F, 0x40);
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         ATEST(0x1000, "BCI 1041H", 0x68, 0x3E, 0x41);
         ATEST(0x1000, "BXI 1042H", 0x68, 0x3F, 0x42);
     }
@@ -534,8 +534,8 @@ static void test_control() {
     TEST("SEX 13", 0xED);
     TEST("SEX 14", 0xEE);
     TEST("SEX 15", 0xEF);
-    ERRT("SEX 16", ILLEGAL_REGISTER);
-    ERRT("SEX -1", ILLEGAL_REGISTER);
+    ERRT("SEX R16", UNDEFINED_SYMBOL);
+    ERRT("SEX R-1", UNDEFINED_SYMBOL);
 
     TEST("SEQ",  0x7B);
     TEST("REQ",  0x7A);
@@ -671,6 +671,72 @@ static void test_undefined_symbol() {
 
     AERRU(0x1234, "LBR UNDEF", 0xC0, 0x00, 0x00);
 }
+
+static void test_usereg() {
+    symtab.intern(10, "R10");
+
+    asm1802.useRegister(false);
+
+    // default working register is R7, see reg_cdp1802.h SCRT.
+    ERUS("LDN R0",  0x07);
+    ERUS("LDN R1",  0x07);
+    ERUS("LDA R0",  0x47);
+    ERUS("STR R15", 0x57);
+    ERUS("INC R14", 0x17);
+    ERUS("DEC R13", 0x27);
+    ERUS("GLO R12", 0x87);
+    ERUS("PLO R11", 0xA7);
+    TEST("GHI R10", 0x9A);
+    ERUS("PHI R9",  0xB7);
+    ERUS("SEP R8",  0xD7);
+    ERUS("SEX R7",  0xE7);
+
+    if (cdp1804() || cdp1804a()) {
+        ERUS("RLDI R0,1234H", 0x68, 0xC7, 0x12, 0x34);
+        ERUS("SCAL R2,1234H", 0x68, 0x87, 0x12, 0x34);
+        ERUS("RLXA R15", 0x68, 0x67);
+        TEST("RLXA R10", 0x68, 0x6A);
+        ERUS("RSXD R0",  0x68, 0xA7);
+        ERUS("RNX  R1",  0x68, 0xB7);
+        ERUS("SRET R3",  0x68, 0x97);
+    }
+
+    if (cdp1804a()) {
+        ERUS("DBNZ R8, 1234H", 0x68, 0x27, 0x12, 0x34);
+        TEST("DBNZ R10,1234H", 0x68, 0x2A, 0x12, 0x34);
+    }
+
+    asm1802.useRegister(true);
+
+    ERRT("LDN R0",  REGISTER_NOT_ALLOWED);
+    TEST("LDN R1",  0x01);
+    TEST("LDA R0",  0x40);
+    TEST("STR R15", 0x5F);
+    TEST("INC R14", 0x1E);
+    TEST("DEC R13", 0x2D);
+    TEST("GLO R12", 0x8C);
+    TEST("PLO R11", 0xAB);
+    TEST("GHI R10", 0x9A);
+    TEST("PHI R9",  0xB9);
+    TEST("SEP R8",  0xD8);
+    TEST("SEX R7",  0xE7);
+
+    if (cdp1804() || cdp1804a()) {
+        TEST("RLDI R0,1234H", 0x68, 0xC0, 0x12, 0x34);
+        TEST("SCAL R2,1234H", 0x68, 0x82, 0x12, 0x34);
+        TEST("RLXA R15", 0x68, 0x6F);
+        TEST("RLXA R10", 0x68, 0x6A);
+        TEST("RSXD R0",  0x68, 0xA0);
+        TEST("RNX  R1",  0x68, 0xB1);
+        TEST("SRET R3",  0x68, 0x93);
+    }
+
+    if (cdp1804a()) {
+        TEST("DBNZ R8, 1234H", 0x68, 0x28, 0x12, 0x34);
+        TEST("DBNZ R10,1234H", 0x68, 0x2A, 0x12, 0x34);
+    }
+}
+
 // clang-format on
 
 const char *run_cpu_test() {
@@ -688,12 +754,13 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control);
     RUN_TEST(test_intr);
     RUN_TEST(test_io);
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         RUN_TEST(test_timer);
         RUN_TEST(test_call);
     }
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_usereg);
 }
 
 // Local Variables:

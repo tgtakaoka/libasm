@@ -22,8 +22,8 @@
 namespace libasm {
 namespace cdp1802 {
 
-/*
- * SCRT (Standard CALL and RETURN Techinique.
+/**
+ * SCRT (Standard CALL and RETURN Technique (Fig. 75 of CDP1802 Users Manual).
  * R0: Direct Memory Access
  * R1: Interrupt
  * R2: Stack Pointer
@@ -34,7 +34,32 @@ namespace cdp1802 {
  * R7-R15: Working register
  */
 
-class RegCdp1802 : public RegBase {};
+enum RegName : int8_t {
+    REG_UNDEF = -1,
+    REG_R0 = 0,
+    REG_R1 = 1,
+    REG_R2 = 2,
+    REG_R3 = 3,
+    REG_R4 = 4,
+    REG_R5 = 5,
+    REG_R6 = 6,
+    REG_R7 = 7,
+    REG_R8 = 8,
+    REG_R9 = 9,
+    REG_R10 = 10,
+    REG_R11 = 11,
+    REG_R12 = 12,
+    REG_R13 = 13,
+    REG_R14 = 14,
+    REG_R15 = 15,
+};
+
+class RegCdp1802 : public RegBase {
+public:
+    static RegName parseRegName(const char *line);
+    static uint8_t regNameLen(RegName name);
+    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+};
 
 }  // namespace cdp1802
 }  // namespace libasm

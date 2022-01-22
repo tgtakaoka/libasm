@@ -16,6 +16,7 @@
 
 #include "asm_cdp1802.h"
 
+#include "reg_cdp1802.h"
 #include "table_cdp1802.h"
 
 namespace libasm {
@@ -42,6 +43,8 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
             return setError(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case REGN:
+        if (op.getError())
+            val16 = 7;  // default work register.
         if (val16 >= 16)
             return setError(ILLEGAL_REGISTER);
         insn.embed(val16);
@@ -79,6 +82,15 @@ Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
     if (endOfLine(p))
         return OK;
 
+    if (_useReg) {
+        const RegName reg = RegCdp1802::parseRegName(p);
+        if (reg != REG_UNDEF) {
+            _scan = p + RegCdp1802::regNameLen(reg);
+            op.val16 = int8_t(reg);
+            op.mode = REGN;
+            return OK;
+        }
+    }
     op.val16 = parseExpr16(p);
     if (parserError())
         return getError();

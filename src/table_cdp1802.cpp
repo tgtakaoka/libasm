@@ -193,6 +193,8 @@ bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
+    if (opr == REGN)
+        return table == REG1;
     if (opr == ADDR)
         return table == REGN || table == REG1 || table == IMM8 || table == PAGE || table == IOAD;
     return false;

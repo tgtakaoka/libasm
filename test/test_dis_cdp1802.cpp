@@ -65,7 +65,7 @@ static void test_mem_ref() {
     // Load Immediate
     TEST(LDI, "18",   0xF8, 0x12);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register Load Immediate
         TEST(RLDI, "0, 1234H",  0x68, 0xC0, 0x12, 0x34);
         TEST(RLDI, "1, 1234H",  0x68, 0xC1, 0x12, 0x34);
@@ -126,7 +126,7 @@ static void test_mem_ref() {
     // Load via X and Advance
     TEST(LDXA, "", 0x72);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register Load via X and Advance
         TEST(RLXA, "0",  0x68, 0x60);
         TEST(RLXA, "1",  0x68, 0x61);
@@ -167,10 +167,10 @@ static void test_mem_ref() {
     // Store via X and Decrement
     TEST(STXD, "", 0x73);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register Store via X and Decrement
         TEST(RSXD, "0",  0x68, 0xA0);
-        TEST(RSXD, "1",  0x68, 0xA1);
+        TEST(RSXD, "1", 0x68, 0xA1);
         TEST(RSXD, "2",  0x68, 0xA2);
         TEST(RSXD, "3",  0x68, 0xA3);
         TEST(RSXD, "4",  0x68, 0xA4);
@@ -325,7 +325,7 @@ static void test_reg_op() {
     TEST(PHI, "14", 0xBE);
     TEST(PHI, "15", 0xBF);
 
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         // Register N to register X copy
         TEST(RNX, "0",  0x68, 0xB0);
         TEST(RNX, "1",  0x68, 0xB1);
@@ -406,7 +406,7 @@ static void test_branch() {
     ATEST(0x1000, BN3, "103FH", 0x3E, 0x3F);
     ATEST(0x1000, B4,  "1038H", 0x37, 0x38);
     ATEST(0x1000, BN4, "1040H", 0x3F, 0x40);
-    if (cdp1804()) {
+    if (cdp1804() || cdp1804a()) {
         ATEST(0x1000, BCI, "1041H", 0x68, 0x3E, 0x41);
         ATEST(0x1000, BXI, "1042H", 0x68, 0x3F, 0x42);
     }
@@ -572,6 +572,34 @@ static void test_call() {
     TEST(SRET, "15", 0x68, 0x9F);
 }
 
+static void test_reg() {
+    dis1802.useRegister(true);
+
+    TEST(LDN, "R1",  0x01);
+    TEST(LDA, "R0",  0x40);
+    TEST(STR, "R15", 0x5F);
+    TEST(INC, "R14", 0x1E);
+    TEST(DEC, "R13", 0x2D);
+    TEST(GLO, "R12", 0x8C);
+    TEST(PLO, "R11", 0xAB);
+    TEST(GHI, "R10", 0x9A);
+    TEST(PHI, "R9",  0xB9);
+    TEST(SEP, "R8",  0xD8);
+    TEST(SEX, "R7",  0xE7);
+
+    if (cdp1804()) {
+        TEST(RLDI, "R0, 1234H", 0x68, 0xC0, 0x12, 0x34);
+        TEST(RLXA, "R15",       0x68, 0x6F);
+        TEST(RSXD, "R14",       0x68, 0xAE);
+        TEST(RNX,  "R12",       0x68, 0xBC);
+        TEST(SCAL, "R11, 1234H", 0x68, 0x8B, 0x12, 0x34);
+        TEST(SRET, "R10",       0x68, 0x9A);
+    }
+    if (cdp1804a()) {
+        TEST(DBNZ, "R13, 1234H", 0x68, 0x2D, 0x12, 0x34);
+    }
+}
+
 static void test_illegal_cdp1802() {
     ERRI(0x68);
 }
@@ -645,6 +673,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control);
     RUN_TEST(test_intr);
     RUN_TEST(test_io);
+    RUN_TEST(test_reg);
     if (cdp1804()) {
         RUN_TEST(test_timer);
         RUN_TEST(test_call);

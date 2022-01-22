@@ -28,12 +28,16 @@ namespace cdp1802 {
 
 class DisCdp1802 : public Disassembler, public Config {
 public:
-    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802, '$') {}
+    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802, '$') { reset(); }
     ConfigBase &config() override { return *this; }
+    void reset() override { useRegister(false); }
+
+    void useRegister(bool enable) { _useReg = enable; }
 
 private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
+    bool _useReg;
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;

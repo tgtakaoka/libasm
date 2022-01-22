@@ -23,7 +23,38 @@
 
 namespace libasm {
 namespace cdp1802 {
-// empty
+
+RegName RegCdp1802::parseRegName(const char *line) {
+    if (toupper(*line++) == 'R' && isdigit(*line)) {
+        int8_t num = *line++ - '0';
+        if (num == 1 && isdigit(*line))
+            num = *line++ - '0' + 10;
+        if (num < 16 && !isidchar(*line))
+            return RegName(num);
+    }
+    return REG_UNDEF;
+}
+
+uint8_t RegCdp1802::regNameLen(RegName name) {
+    const int8_t num = int8_t(name);
+    if (num >= 0)
+        return num < 10 ? 2 : 3;
+    return 0;
+}
+
+StrBuffer &RegCdp1802::outRegName(StrBuffer &out, RegName name) const {
+    int8_t num = int8_t(name);
+    if (num >= 0) {
+        outChar(out, 'R');
+        if (num >= 10) {
+            outChar(out, '1');
+            num -= 10;
+        }
+        outChar(out, num + '0');
+    }
+    return out;
+}
+
 }  // namespace cdp1802
 }  // namespace libasm
 

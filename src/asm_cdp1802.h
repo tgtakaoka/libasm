@@ -27,11 +27,15 @@ namespace cdp1802 {
 
 class AsmCdp1802 : public Assembler, public Config {
 public:
-    AsmCdp1802() : Assembler(_parser, TableCdp1802) {}
+    AsmCdp1802() : Assembler(_parser, TableCdp1802) { reset(); }
     ConfigBase &config() override { return *this; }
+    void reset() override { useRegister(false); }
+
+    void useRegister(bool enable) { _useReg = enable; }
 
 private:
     IntelValueParser _parser;
+    bool _useReg;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

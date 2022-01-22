@@ -30,7 +30,11 @@ Error DisCdp1802::decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer 
     switch (mode) {
     case REG1:
     case REGN:
-        outDec(out, opCode & 0xF, 4);
+        if (_useReg) {
+            _regs.outRegName(out, RegName(opCode & 0x0F));
+        } else {
+            outDec(out, opCode & 0xF, 4);
+        }
         return OK;
     case IMM8:
         outHex(out, insn.readByte(memory), 8);
