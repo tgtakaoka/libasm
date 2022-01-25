@@ -162,6 +162,7 @@ int DisDriver::disassemble() {
         if (base < _addr_start) {
             size -= (_addr_start - base) * addrUnit;
             base = _addr_start;
+            start = base / addrUnit;
         }
         if (end > _addr_end)
             size -= (end - _addr_end) * addrUnit;
