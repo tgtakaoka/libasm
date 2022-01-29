@@ -340,6 +340,14 @@ static void test_auto_indexed() {
     TEST("SUB A,@neg1,P3",   0xFF, 0xFF);
 }
 
+static void test_predefined_fun() {
+    symtab.intern(0x1000, "main");
+    symtab.intern(0x3210, "func");
+
+    TEST("pli p2, =addr(main)", 0x22, 0xFF, 0x0F); // addr(main) == 0x0FFF
+    TEST("pli p3, =addr(func)", 0x23, 0x0F, 0x32); // addr(func) == 0x320F
+}
+
 static void test_comment() {
     TEST("NOP        ; comment", 0x00);
     TEST("XCH  A , E ; comment", 0x01);
@@ -400,6 +408,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_relative);
     RUN_TEST(test_indexed);
     RUN_TEST(test_auto_indexed);
+    RUN_TEST(test_predefined_fun);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_error);

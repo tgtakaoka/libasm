@@ -32,7 +32,15 @@ public:
     ConfigBase &config() override { return *this; }
 
 private:
-    ValueParser _parser{'$'};
+    class Ins8070Parser : public ValueParser {
+    public:
+        Ins8070Parser() : ValueParser('$') {}
+    protected:
+        uint16_t isFunction(const char *name, const char *end) const override;
+        Error evalFunction(const uint16_t funid, const Value &arg, Value &val) const override;
+    private:
+        static constexpr uint16_t FUNID_ADDR = EXTENDED_FUNID_BASE;
+    } _parser;
 
     struct Operand : public ErrorReporter {
         OprFormat format;

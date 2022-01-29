@@ -21,6 +21,26 @@
 namespace libasm {
 namespace ins8070 {
 
+static constexpr char TEXT_ADDR[] PROGMEM = "addr";
+
+uint16_t AsmIns8070::Ins8070Parser::isFunction(const char *name, const char *end) const {
+    const auto len = end - name;
+    if (len == 4 && strncasecmp_P(name, TEXT_ADDR, len) == 0)
+        return FUNID_ADDR;
+    return ValueParser::isFunction(name, end);
+}
+
+Error AsmIns8070::Ins8070Parser::evalFunction(
+        const uint16_t funid, const Value &arg, Value &val) const {
+    if (funid == FUNID_ADDR) {
+        const auto v = arg.getUnsigned();
+        const auto a = v - 1;
+        val.setValue(a & 0xFFFF);
+        return getError();
+    }
+    return ValueParser::evalFunction(funid, arg, val);
+}
+
 Error AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {
     // PC will be +1 before fetching instruction.
     const Config::uintptr_t target = op.getError() ? 0 : op.val16 - 1;
