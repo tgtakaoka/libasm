@@ -228,6 +228,19 @@ static void test_page_boundary() {
     AERRT(0x1FF0, "JZ 0x1072", OPERAND_TOO_FAR);
 }
 
+static void test_predefined_fun() {
+    symtab.intern(0x1FFF, "stack");
+    symtab.intern(0x1000, "main");
+    symtab.intern(0x3210, "func");
+
+    TEST("LDI lo(stack)", 0xC4, 0xFF);
+    TEST("LDI hi(stack)", 0xC4, 0x1F);
+    TEST("LDI lo(addr(main))", 0xC4, 0xFF); // addr(main) == 0x1FFF
+    TEST("LDI hi(addr(main))", 0xC4, 0x1F);
+    TEST("LDI lo(addr(func))", 0xC4, 0x0F); // addr(func) == 0x320F
+    TEST("LDI hi(addr(func))", 0xC4, 0x32);
+}
+
 static void test_comment() {
     symtab.intern(-127, "m127");
     symtab.intern(127,  "p127");
@@ -278,6 +291,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_alu);
     RUN_TEST(test_alu_immediate);
     RUN_TEST(test_page_boundary);
+    RUN_TEST(test_predefined_fun);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_error);

@@ -21,6 +21,26 @@
 namespace libasm {
 namespace ins8060 {
 
+static constexpr char TEXT_ADDR[] PROGMEM = "addr";
+
+uint16_t AsmIns8060::Ins8060Parser::isFunction(const char *name, const char *end) const {
+    const auto len = end - name;
+    if (len == 4 && strncasecmp_P(name, TEXT_ADDR, len) == 0)
+        return FUNID_ADDR;
+    return ValueParser::isFunction(name, end);
+}
+
+Error AsmIns8060::Ins8060Parser::evalFunction(
+        const uint16_t funid, const Value &arg, Value &val) const {
+    if (funid == FUNID_ADDR) {
+        const auto v = arg.getUnsigned();
+        const auto a = v - 1;
+        val.setValue((v & 0xF000) | (a & 0x0FFF));
+        return getError();
+    }
+    return ValueParser::evalFunction(funid, arg, val);
+}
+
 Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
     Config::ptrdiff_t delta;
     if (op.mode == DISP) {

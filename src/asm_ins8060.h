@@ -32,18 +32,15 @@ public:
     ConfigBase &config() override { return *this; }
 
 private:
-<<<<<<< HEAD
-    ValueParser _parser{'$'};
-=======
     class Ins8060Parser : public ValueParser {
     public:
         Ins8060Parser() : ValueParser('$') {}
     protected:
         uint16_t isFunction(const char *name, const char *end) const override;
-        Error evalFunction(const uint16_t id, const Value &arg, Value &val) const override;
-    };
-    Ins8060Parser _parser;
->>>>>>> 7d7c59b... 60
+        Error evalFunction(const uint16_t funid, const Value &arg, Value &val) const override;
+    private:
+        static constexpr uint16_t FUNID_ADDR = EXTENDED_FUNID_BASE;
+    } _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
