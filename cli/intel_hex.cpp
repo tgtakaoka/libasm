@@ -111,8 +111,6 @@ uint8_t *IntelHex::decode(const char *line, uint32_t &ela_addr, uint8_t &size) {
     uint8_t type;
     if (parseByte(line, type))
         return nullptr;
-    if (type == 0x01)
-        return _data;    // terminator
     if (type == 0x04) {  // Extended Linear Address
         uint16_t ela = 0;
         if (parseUint16(line, ela))
@@ -126,7 +124,7 @@ uint8_t *IntelHex::decode(const char *line, uint32_t &ela_addr, uint8_t &size) {
         return _data;
     }
     if (type != 0x00)
-        return nullptr;
+        return _data;  // ignore 01, 03, 05 record
 
     ela_addr = _next_addr | addr;
     size = len;
