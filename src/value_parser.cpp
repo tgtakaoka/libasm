@@ -234,15 +234,25 @@ Value ValueParser::readAtom(const char *scan) {
     }
 
     p--;
-    if (_symtab && isSymbolLetter(c, true)) {
+    if (isSymbolLetter(c, true)) {
         const char *symbol = p;
         const char *end = scanSymbol(symbol);
-        _next = end;
-        if (_symtab->hasSymbol(symbol, end)) {
-            const uint32_t v = _symtab->lookupSymbol(symbol, end);
-            return Value().setValue(v);
+        const auto funid = isFunction(symbol, end);
+        const char *a = skipSpaces(end);
+        if (a && *a == '(' && funid != NOT_A_FUN) {
+            Value val;
+            if (parseFunction(funid, a + 1, val))
+                return Value();
+            return val;
         }
-        return Value();
+        if (_symtab) {
+            _next = end;
+            if (_symtab->hasSymbol(symbol, end)) {
+                const uint32_t v = _symtab->lookupSymbol(symbol, end);
+                return Value().setValue(v);
+            }
+            return Value();
+        }
     }
 
     Value val;
@@ -303,6 +313,40 @@ ValueParser::Operator ValueParser::readOperator(const char *scan) {
     }
     _next = scan;
     return Operator(OP_NONE, 0);
+}
+
+static constexpr char TEXT_HI[] PROGMEM = "hi";
+static constexpr char TEXT_LO[] PROGMEM = "lo";
+
+uint16_t ValueParser::isFunction(const char *name, const char *end) const {
+    const auto len = end - name;
+    if (len == 2) {
+        if (strncasecmp_P(name, TEXT_HI, len) == 0)
+            return FUNID_HI;
+        if (strncasecmp_P(name, TEXT_LO, len) == 0)
+            return FUNID_LO;
+    }
+    return 0;
+}
+
+Error ValueParser::parseFunction(const uint16_t funid, const char *args, Value &val) {
+    // TODO: Suppoer multiple arguments function parsing.
+    const Value a1 = parseExpr(args);
+    const char *p = skipSpaces(_next);
+    if (p == nullptr || *p++ != ')')
+        return MISSING_CLOSING_PAREN;
+    _next = p;
+    return evalFunction(funid, a1, val);
+}
+
+Error ValueParser::evalFunction(const uint16_t funid, const Value &arg, Value &val) const {
+    auto v = arg.getUnsigned();
+    if (funid == FUNID_HI)
+        v = (v >> 8) & 0xFF;
+    if (funid == FUNID_LO)
+        v &= 0xFF;
+    val.setValue(v);
+    return getError();
 }
 
 bool ValueParser::isSymbolLetter(char c, bool head) const {

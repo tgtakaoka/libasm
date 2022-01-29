@@ -340,6 +340,13 @@ static void test_current_address() {
     E16("(.-table)/2", 0x80,  OK);
 }
 
+static void test_predefined_fun() {
+    E16("hi(0x1234)",  0x12, OK);
+    E16("lo(0x1234)",  0x34, OK);
+    E16("hi( 0x1234 ) + 1",  0x13, OK);
+    E16("1 + lo( 0x1234 )",  0x35, OK);
+}
+
 static void test_errors() {
     E32("undef",   0, UNDEFINED_SYMBOL);
     E32("+undef",  0, UNDEFINED_SYMBOL);
@@ -733,6 +740,7 @@ void run_tests() {
     RUN_TEST(test_overflow);
     RUN_TEST(test_precedence);
     RUN_TEST(test_current_address);
+    RUN_TEST(test_predefined_fun);
     RUN_TEST(test_errors);
     RUN_TEST(test_spaces);
     RUN_TEST(test_formatter_8bit);
