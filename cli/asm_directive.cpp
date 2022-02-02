@@ -309,6 +309,10 @@ Error AsmCommonDirective::processPseudo(
         return defineOrigin();
     if (compareDirective(directive, ".equ"))
         return defineLabel(label, memory);
+    if (compareDirective(directive, ":="))
+        return defineLabel(label, memory);
+    if (compareDirective(directive, "="))
+        return defineLabel(label, memory);
     if (compareDirective(directive, ".include"))
         return includeFile();
     // TODO: implement listing after "end".
