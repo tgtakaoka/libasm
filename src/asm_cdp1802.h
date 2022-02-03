@@ -29,13 +29,18 @@ class AsmCdp1802 : public Assembler, public Config {
 public:
     AsmCdp1802() : Assembler(_parser, TableCdp1802) { reset(); }
     ConfigBase &config() override { return *this; }
-    void reset() override { useRegister(false); }
+    void reset() override {
+        useRegister(false);
+        smartBranch(false);
+    }
 
     void useRegister(bool enable) { _useReg = enable; }
+    void smartBranch(bool enable) { _smartBranch = enable; }
 
 private:
     IntelValueParser _parser;
     bool _useReg;
+    bool _smartBranch;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
@@ -46,7 +51,7 @@ private:
     Error parseOperand(const char *scan, Operand &op);
 
     Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
-    Error encodePage(InsnCdp1802 &insn, const Operand &op);
+    Error encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encode(Insn &insn) override;
 };
 

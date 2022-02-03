@@ -22,14 +22,26 @@
 namespace libasm {
 namespace cdp1802 {
 
-Error AsmCdp1802::encodePage(InsnCdp1802 &insn, const Operand &op) {
+Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::uintptr_t page = base & ~0xFF;
-    if ((target & ~0xFF) != page)
-        return setError(OPERAND_TOO_FAR);
+    if (mode == PAGE) {
+        if ((target & ~0xFF) != page)
+            return setError(OPERAND_TOO_FAR);
+        insn.emitInsn();
+        insn.emitByte(target);
+        return OK;
+    }
+    if ((target & ~0xFF) == page && _smartBranch) {
+        const auto opc = insn.opCode();
+        insn.setOpCode(0x30 | (opc & 0xF)); // convert to in-page branch
+        insn.emitInsn();
+        insn.emitByte(target);
+        return OK;
+    }
     insn.emitInsn();
-    insn.emitByte(target);
+    insn.emitUint16(op.val16);
     return OK;
 }
 
@@ -57,10 +69,8 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
         insn.emitByte(val16);
         return OK;
     case PAGE:
-        return encodePage(insn, op);
     case ADDR:
-        insn.emitInsn();
-        insn.emitUint16(val16);
+        return encodePage(insn, mode, op);
         return OK;
     case IOAD:
         if (op.getError())
