@@ -46,6 +46,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Illegal segment override");
     case BUFFER_OVERFLOW:
         return PSTR("Buffer overflow");
+    case OVERWRAP_PAGE:
+        return PSTR("Overwarp page boundary");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:

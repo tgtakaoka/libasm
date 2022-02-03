@@ -36,6 +36,7 @@ enum Error : uint8_t {
     ILLEGAL_OPERAND_MODE = 8,
     ILLEGAL_SEGMENT = 9,
     BUFFER_OVERFLOW = 10,
+    OVERWRAP_PAGE = 11,
 
     // Assembler
     UNKNOWN_INSTRUCTION = 21,

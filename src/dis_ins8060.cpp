@@ -42,18 +42,17 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
         out.letter('@');
     if (reg == REG_PC && opr != 0x80) {  // PC relative
         // PC points the last byte of instruction.
-        const Config::uintptr_t base = insn.address() + 1;
-        const Config::uintptr_t page = (base & ~0xFFF);
-        const int8_t disp = static_cast<int8_t>(opr);
+        const auto base = insn.address() + 1;
+        const auto disp = static_cast<int8_t>(opr);
         // PC will be incremented before fetching next instruction.
         const int8_t fetch = insn.addrMode() == REL8 ? 1 : 0;
         // Program space is paged by 4kB.
-        Config::uintptr_t target = base + disp + fetch;
-        if ((target & ~0xFFF) == page) {
+        const auto toff = offset(offset(base) + disp + fetch);
+        const Config::uintptr_t target = page(base) | toff;
+        const auto diff = target - base - fetch;
+        if (diff >= -127 && diff < 128) {
             outRelAddr(out, target, insn.address(), 8);
         } else {
-            target &= 0xFFF;
-            target |= page;
             outAbsAddr(out, target);
         }
     } else {
@@ -79,18 +78,26 @@ Error DisIns8060::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableIns8060.getError());
 
     switch (insn.addrMode()) {
-    default:
-        return setOK();
     case PNTR:
-        return decodePntr(insn, out);
+        decodePntr(insn, out);
+        break;
     case IMM8:
-        return decodeImm8(memory, insn, out);
+        decodeImm8(memory, insn, out);
+        break;
     case REL8:
     case DISP:
-        return decodeIndx(memory, insn, out, false);
+        decodeIndx(memory, insn, out, false);
+        break;
     case INDX:
-        return decodeIndx(memory, insn, out, true);
+        decodeIndx(memory, insn, out, true);
+        break;
+    default:
+        setOK();
+        break;
     }
+    if (page(insn.address()) != page(insn.address() + insn.length() - 1))
+        setErrorIf(OVERWRAP_PAGE);
+    return getError();
 }
 
 }  // namespace ins8060

@@ -30,16 +30,21 @@ Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
         insn.embed(RegIns8060::encodePointerReg(op.reg));
     } else {
         // PC points the last byte of instruction.
-        const Config::uintptr_t base = insn.address() + 1;
+        const auto base = insn.address() + 1;
         // PC will be incremented before fetching next instruction.
         const uint8_t fetch = (insn.addrMode() == REL8) ? 1 : 0;
+        const auto target = op.getError() ? base : op.val16;
         // Program space is paged by 4kB.
-        const Config::uintptr_t target =
-                op.getError() ? base : ((op.val16 & 0xFFF) | (base & ~0xFFF)) - fetch;
-        delta = target - base;
+        if (page(target) != page(base))
+            return setError(OVERWRAP_PAGE);
+        const int16_t diff = offset(target - fetch) - offset(base);
+        // Sign extends 12-bit number.
+        delta = (diff & 0x7FF) - (diff & 0x800);
         // delta -128 is for E reg.
         if (delta == -128 || overflowRel8(delta))
             return setError(OPERAND_TOO_FAR);
+        if (op.getError())
+            delta = 0;
         insn.embed(RegIns8060::encodePointerReg(REG_PC));
     }
     insn.emitInsn();
@@ -153,6 +158,10 @@ Error AsmIns8060::encode(Insn &_insn) {
         break;
     default:
         return setError(INTERNAL_ERROR);
+    }
+    if (page(insn.address()) != page(insn.address() + insn.length() - 1)) {
+        setErrorIf(OVERWRAP_PAGE);
+        insn.reset();
     }
     return getError();
 }
