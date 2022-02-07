@@ -61,17 +61,16 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
             return setError(ILLEGAL_REGISTER);
         insn.embed(val16);
         insn.emitInsn();
-        return OK;
+        break;
     case IMM8:
         if (overflowUint8(val16))
             return setError(OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
-        return OK;
+        break;
     case PAGE:
     case ADDR:
         return encodePage(insn, mode, op);
-        return OK;
     case IOAD:
         if (op.getError())
             val16 = 1;  // default IO address
@@ -79,11 +78,12 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
             return setError(OPERAND_NOT_ALLOWED);
         insn.embed(val16);
         insn.emitInsn();
-        return OK;
+        break;
     default:
         insn.emitInsn();
-        return OK;
+        break;
     }
+    return getError();
 }
 
 Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
@@ -132,12 +132,10 @@ Error AsmCdp1802::encode(Insn &_insn) {
     if (TableCdp1802.searchName(insn))
         return setError(TableCdp1802.getError());
 
-    if (emitOperand(insn, insn.mode1(), op1))
-        return getError();
-    if (insn.mode2() == ADDR) {
+    emitOperand(insn, insn.mode1(), op1);
+    if (insn.mode2() == ADDR)
         insn.emitUint16(op2.val16);
-    }
-    return OK;
+    return getError();
 }
 
 }  // namespace cdp1802
