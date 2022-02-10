@@ -32,6 +32,27 @@ public:
     AddrMode dst() const { return flags().dst(); }
     AddrMode src1() const { return flags().src1(); }
     AddrMode src2() const { return flags().src2(); }
+    void embedAa(AaMode aa) { embed(uint8_t(aa)); }
+    void setAddrMode(AddrMode dst, AddrMode src1, AddrMode src2) {
+        setFlags(Entry::Flags::create(dst, src1, src2));
+    }
+
+    void emitInsn() {
+        uint8_t pos = 0;
+        if (hasPrefix())
+            emitByte(prefix(), pos++);
+        emitByte(opCode(), pos);
+    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+
+private:
+    uint8_t operandPos() {
+        uint8_t pos = length();
+        if (pos == 0)
+            pos = hasPrefix() ? 2 : 1;
+        return pos;
+    }
 };
 
 }  // namespace i8096

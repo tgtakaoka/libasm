@@ -161,6 +161,16 @@ static const TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
+    if (opr == M_ADDR)
+        return table == M_BREG || table == M_WREG || table == M_LREG || table == M_BAOP ||
+               table == M_WAOP || table == M_REL8 || table == M_REL11 || table == M_REL16 ||
+               table == M_COUNT || table == M_BITNO;
+    if (opr == M_IMM16)
+        return table == M_BAOP || table == M_WAOP || table == M_COUNT;
+    if (opr == M_INDIR)
+        return table == M_BAOP || table == M_WAOP;
+    if (opr == M_IDX16)
+        return table == M_BAOP || table == M_WAOP;
     return false;
 }
 

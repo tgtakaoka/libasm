@@ -40,6 +40,7 @@ AsmTms32010     KEYWORD1        libasm
 DisTms32010     KEYWORD1        libasm
 AsmI8086        KEYWORD1        libasm
 DisI8086        KEYWORD1        libasm
+AsmI8096        KEYWORD1        libasm
 DisI8096        KEYWORD1        libasm
 AsmTms9900      KEYWORD1        libasm
 DisTms9900      KEYWORD1        libasm

@@ -23,6 +23,7 @@
 #include "asm_i8051.h"
 #include "asm_i8080.h"
 #include "asm_i8086.h"
+#include "asm_i8096.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
 #include "asm_mc6800.h"
@@ -55,6 +56,7 @@ ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
 cdp1802::AsmCdp1802 asm1802;
 i8086::AsmI8086 asm8086;
+i8096::AsmI8096 asm8096;
 tlcs90::AsmTlcs90 asm90;
 tms9900::AsmTms9900 asm9900;
 tms32010::AsmTms32010 asm32010;
@@ -76,6 +78,7 @@ AsmIntelDirective dir8060(asm8060);
 AsmIntelDirective dir8070(asm8070);
 AsmIntelDirective dir1802(asm1802);
 AsmIntelDirective dir8086(asm8086);
+AsmIntelDirective dir8096(asm8096);
 AsmIntelDirective dir90(asm90);
 AsmIntelDirective dir9900(asm9900);
 AsmIntelDirective dir32010(asm32010);
@@ -100,6 +103,7 @@ std::vector<AsmDirective *> directives = {
         &dir1802,
         &dir32010,
         &dir8086,
+        &dir8096,
         &dir68000,
         &dir9900,
         &dirz8000,

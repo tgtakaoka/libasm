@@ -48,6 +48,7 @@ enum AddrMode : uint8_t {
     M_IMM16 = 13,  // 16-bit immediate (M_WAOP:1)
     M_IDX8 = 14,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
     M_IDX16 = 15,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
+    M_ADDR = 16,   // 16-bit address or register number
     M_UNDEF = 31,  // undefiuned instruction
 };
 
