@@ -28,8 +28,8 @@ namespace mc6800 {
 
 class DisMc6800 : public Disassembler, public Config {
 public:
-    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800, '*') {}
-    ConfigBase &config() override { return *this; }
+    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800, '*') { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     MotoValueFormatter _formatter;

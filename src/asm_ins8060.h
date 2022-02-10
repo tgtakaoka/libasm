@@ -28,8 +28,8 @@ namespace ins8060 {
 
 class AsmIns8060 : public Assembler, public Config {
 public:
-    AsmIns8060() : Assembler(_parser, TableIns8060) {}
-    ConfigBase &config() override { return *this; }
+    AsmIns8060() : Assembler(_parser, TableIns8060) { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     class Ins8060Parser : public ValueParser {

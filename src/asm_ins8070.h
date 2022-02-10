@@ -28,8 +28,8 @@ namespace ins8070 {
 
 class AsmIns8070 : public Assembler, public Config {
 public:
-    AsmIns8070() : Assembler(_parser, TableIns8070) {}
-    ConfigBase &config() override { return *this; }
+    AsmIns8070() : Assembler(_parser, TableIns8070) { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     class Ins8070Parser : public ValueParser {

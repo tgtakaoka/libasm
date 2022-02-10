@@ -29,7 +29,7 @@ namespace z8000 {
 class AsmZ8000 : public Assembler, public Config {
 public:
     AsmZ8000() : Assembler(_parser, TableZ8000) { reset(); }
-    ConfigBase &config() override { return *this; }
+    const ConfigBase &config() const override { return *this; }
     void reset() override { setAutoShortDirect(false); }
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
 

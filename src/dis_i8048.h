@@ -28,8 +28,8 @@ namespace i8048 {
 
 class DisI8048 : public Disassembler, public Config {
 public:
-    DisI8048() : Disassembler(_formatter, _regs, TableI8048, '$') {}
-    ConfigBase &config() override { return *this; }
+    DisI8048() : Disassembler(_formatter, _regs, TableI8048, '$') { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;

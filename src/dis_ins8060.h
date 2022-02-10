@@ -28,8 +28,8 @@ namespace ins8060 {
 
 class DisIns8060 : public Disassembler, public Config {
 public:
-    DisIns8060() : Disassembler(_formatter, _regs, TableIns8060, '$') {}
-    ConfigBase &config() override { return *this; }
+    DisIns8060() : Disassembler(_formatter, _regs, TableIns8060, '$') { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     ValueFormatter _formatter;

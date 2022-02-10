@@ -29,7 +29,7 @@ namespace z8 {
 class AsmZ8 : public Assembler, public Config {
 public:
     AsmZ8() : Assembler(_parser, TableZ8) { reset(); }
-    ConfigBase &config() override { return *this; }
+    const ConfigBase &config() const override { return *this; }
     void reset() override { setRegPointer(-1); }
 
     bool setRegPointer(int16_t rp);

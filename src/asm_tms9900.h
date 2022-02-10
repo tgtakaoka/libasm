@@ -28,8 +28,8 @@ namespace tms9900 {
 
 class AsmTms9900 : public Assembler, public Config {
 public:
-    AsmTms9900() : Assembler(_parser, TableTms9900) {}
-    ConfigBase &config() override { return *this; }
+    AsmTms9900() : Assembler(_parser, TableTms9900) { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;

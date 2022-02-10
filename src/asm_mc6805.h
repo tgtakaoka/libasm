@@ -28,8 +28,8 @@ namespace mc6805 {
 
 class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6805() : Assembler(_parser, TableMc6805), _pc_bits(0) {}
-    ConfigBase &config() override { return *this; }
+    AsmMc6805() : Assembler(_parser, TableMc6805) { reset(); }
+    const ConfigBase &config() const override { return *this; }
     void reset() override { setProgramCounterBits(0); }
 
     void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }

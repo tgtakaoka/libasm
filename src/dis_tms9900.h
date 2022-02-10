@@ -28,8 +28,8 @@ namespace tms9900 {
 
 class DisTms9900 : public Disassembler, public Config {
 public:
-    DisTms9900() : Disassembler(_formatter, _regs, TableTms9900, '$') {}
-    ConfigBase &config() override { return *this; }
+    DisTms9900() : Disassembler(_formatter, _regs, TableTms9900, '$') { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;

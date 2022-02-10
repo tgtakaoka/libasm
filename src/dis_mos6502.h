@@ -29,7 +29,7 @@ namespace mos6502 {
 class DisMos6502 : public Disassembler, public Config {
 public:
     DisMos6502() : Disassembler(_formatter, _regs, TableMos6502, '*') { reset(); }
-    ConfigBase &config() override { return *this; }
+    const ConfigBase &config() const override { return *this; }
     void reset() override;
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
 

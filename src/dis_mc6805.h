@@ -28,8 +28,8 @@ namespace mc6805 {
 
 class DisMc6805 : public Disassembler, public Config {
 public:
-    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*'), _pc_bits(0) {}
-    ConfigBase &config() override { return *this; }
+    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*') { reset(); }
+    const ConfigBase &config() const override { return *this; }
     void reset() override { setProgramCounterBits(0); }
 
     void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }

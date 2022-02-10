@@ -29,7 +29,7 @@ namespace z8 {
 class DisZ8 : public Disassembler, public Config {
 public:
     DisZ8() : Disassembler(_formatter, _regs, TableZ8, '$') { reset(); }
-    ConfigBase &config() override { return *this; }
+    const ConfigBase &config() const override { return *this; }
     void reset() override { preferWorkRegister(true); }
 
     void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }

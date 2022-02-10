@@ -28,8 +28,8 @@ namespace mn1610 {
 
 class AsmMn1610 : public Assembler, public Config {
 public:
-    AsmMn1610() : Assembler(_parser, TableMn1610) {}
-    ConfigBase &config() override { return *this; }
+    AsmMn1610() : Assembler(_parser, TableMn1610) { reset(); }
+    const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMn1610.addressWidth(); }
 
 private:

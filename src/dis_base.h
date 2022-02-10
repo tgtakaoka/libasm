@@ -38,7 +38,7 @@ class Disassembler : public ErrorReporter {
 public:
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
-    virtual ConfigBase &config() = 0;
+    virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
 
     ValueFormatter &getFormatter() { return _formatter; }
@@ -80,7 +80,7 @@ protected:
      * integer when |bits| is negative.
      */
     template <typename T>
-    StrBuffer &outDec(StrBuffer &out, T val, int8_t bits) {
+    StrBuffer &outDec(StrBuffer &out, T val, int8_t bits) const {
         const char *label = lookup(val);
         if (label)
             return out.text(label);
@@ -93,7 +93,7 @@ protected:
      * |val| is in symbol table.
      */
     template <typename T>
-    StrBuffer &outHex(StrBuffer &out, T val, int8_t bits, bool relax = true) {
+    StrBuffer &outHex(StrBuffer &out, T val, int8_t bits, bool relax = true) const {
         const char *label = lookup(val);
         if (label)
             return out.text(label);
@@ -106,7 +106,7 @@ protected:
      * symbol label when |val| is in symbol table.
      */
     template <typename Addr>
-    StrBuffer &outAbsAddr(StrBuffer &out, Addr val, uint8_t addrWidth = 0) {
+    StrBuffer &outAbsAddr(StrBuffer &out, Addr val, uint8_t addrWidth = 0) const {
         const char *label = lookup(val);
         if (label)
             return out.text(label);
@@ -119,7 +119,7 @@ protected:
      * Convert |target| as relative |deltaBits| offset from |origin|.
      */
     template <typename Addr>
-    StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) {
+    StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) const {
         if (!_relativeTarget)
             return outAbsAddr(out, target);
         out.letter(_curSym);

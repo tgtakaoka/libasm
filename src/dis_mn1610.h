@@ -29,7 +29,7 @@ namespace mn1610 {
 class DisMn1610 : public Disassembler, public Config {
 public:
     DisMn1610() : Disassembler(_formatter, _regs, TableMn1610, '*') { reset(); }
-    ConfigBase &config() override { return *this; }
+    const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMn1610.addressWidth(); }
 
 private:

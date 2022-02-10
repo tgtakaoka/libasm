@@ -31,7 +31,7 @@ namespace libasm {
 class Assembler : public ErrorReporter {
 public:
     Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
-    virtual ConfigBase &config() = 0;
+    virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
 
     void setCommentChar(char commentChar) { _commentChar = commentChar; }

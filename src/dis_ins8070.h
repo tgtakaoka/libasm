@@ -29,7 +29,7 @@ namespace ins8070 {
 class DisIns8070 : public Disassembler, public Config {
 public:
     DisIns8070() : Disassembler(_formatter, _regs, TableIns8070, '$') { reset(); }
-    ConfigBase &config() override { return *this; }
+    const ConfigBase &config() const override { return *this; }
     void reset() override { setImmediateSymbol(false); }
 
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }

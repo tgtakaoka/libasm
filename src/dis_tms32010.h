@@ -28,8 +28,8 @@ namespace tms32010 {
 
 class DisTms32010 : public Disassembler, public Config {
 public:
-    DisTms32010() : Disassembler(_formatter, _regs, TableTms32010, '$') {}
-    ConfigBase &config() override { return *this; }
+    DisTms32010() : Disassembler(_formatter, _regs, TableTms32010, '$') { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;

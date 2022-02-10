@@ -28,8 +28,8 @@ namespace i8048 {
 
 class AsmI8048 : public Assembler, public Config {
 public:
-    AsmI8048() : Assembler(_parser, TableI8048) {}
-    ConfigBase &config() override { return *this; }
+    AsmI8048() : Assembler(_parser, TableI8048) { reset(); }
+    const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;
