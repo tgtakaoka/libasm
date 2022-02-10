@@ -130,7 +130,7 @@ Error AsmMos6502::parseOperand(const char *scan, Operand &op, Operand &extra) {
         }
         if (indir) {
             if (*p != indir)
-                return setError(MISSING_CLOSING_PAREN);
+                return setError(indir == ')' ? MISSING_CLOSING_PAREN : MISSING_CLOSING_BRACKET);
             p = skipSpaces(p + 1);
         }
         if (*p == ',') {
@@ -142,7 +142,7 @@ Error AsmMos6502::parseOperand(const char *scan, Operand &op, Operand &extra) {
         }
     } else if (indir) {  // (val) (val),index
         if (*p != indir)
-            return setError(MISSING_CLOSING_PAREN);
+            return setError(indir == ')' ? MISSING_CLOSING_PAREN : MISSING_CLOSING_BRACKET);
         p = skipSpaces(p + 1);
         if (*p == ',') {
             p = skipSpaces(p + 1);

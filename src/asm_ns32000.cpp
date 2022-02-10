@@ -130,7 +130,7 @@ Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
             return getError();
         if (parseStrOptNames(p, op, true) != UNKNOWN_OPERAND)
             return getError();
-        return setError(MISSING_CLOSING_PAREN);
+        return setError(MISSING_CLOSING_BRACKET);
     }
     if (parseStrOptNames(p, op) == OK)
         return OK;
@@ -308,7 +308,7 @@ Error AsmNs32000::parseOperand(const char *scan, Operand &op) {
             return setError(UNKNOWN_OPERAND);
         p += RegNs32000::indexSizeLen(indexSize);
         if (*p++ != ']')
-            return setError(MISSING_CLOSING_PAREN);
+            return setError(MISSING_CLOSING_BRACKET);
         _scan = p;
         op.index = index;
         op.size = indexSize;

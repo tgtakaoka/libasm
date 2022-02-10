@@ -76,6 +76,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Opcode has no effect");
     case REGISTERS_OVERWRAPPED:
         return PSTR("Registers overwrapped");
+    case MISSING_CLOSING_BRACKET:
+        return PSTR("Missing closing bracket");
 
     // ValueParser
     case ILLEGAL_CONSTANT:

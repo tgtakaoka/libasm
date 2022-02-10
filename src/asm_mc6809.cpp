@@ -252,7 +252,7 @@ bool AsmMc6809::parsePointerMode(const char *p, Operand &op, bool indir) {
         if (*p == ']') {
             p++;
         } else {
-            setError(MISSING_CLOSING_PAREN);
+            setError(MISSING_CLOSING_BRACKET);
         }
     }
     _scan = p;
@@ -273,7 +273,7 @@ bool AsmMc6809::parseIndexedMode(const char *scan, Operand &op, bool indir) {
         if (*p == ']') {
             p++;
         } else {
-            setError(MISSING_CLOSING_PAREN);
+            setError(MISSING_CLOSING_BRACKET);
         }
     }
     _scan = p;
@@ -363,7 +363,7 @@ bool AsmMc6809::parseRegisterList(const char *p, Operand &op, bool indir) {
         if (*p == ']') {
             p++;
         } else {
-            setError(MISSING_CLOSING_PAREN);
+            setError(MISSING_CLOSING_BRACKET);
         }
         if (n != 2)
             setErrorIf(UNKNOWN_OPERAND);
@@ -466,7 +466,7 @@ Error AsmMc6809::parseOperand(const char *scan, Operand &op) {
         } else if (*p == ',') {
             return setError(UNKNOWN_OPERAND);
         } else {
-            return setError(MISSING_CLOSING_PAREN);
+            return setError(MISSING_CLOSING_BRACKET);
         }
         _scan = p;
         op.mode = IDX;  // [nnnn]

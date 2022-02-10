@@ -1419,7 +1419,7 @@ static void test_error() {
     ERRT("LDA ,-- X", UNKNOWN_OPERAND);
     ERRT("LDA ,- -X", UNKNOWN_OPERAND);
     ERRT("LDA ,X]",   GARBAGE_AT_END);
-    ERRT("LDA [,X",   MISSING_CLOSING_PAREN);
+    ERRT("LDA [,X",   MISSING_CLOSING_BRACKET);
 
     if (is6309()) {
         // HD6309

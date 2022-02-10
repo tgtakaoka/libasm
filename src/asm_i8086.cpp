@@ -150,7 +150,7 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
             op.mode = (op.ptr == REG_UNDEF) ? M_MEM : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
             return OK;
         }
-        return setError(MISSING_CLOSING_PAREN);
+        return setError(MISSING_CLOSING_BRACKET);
     }
     if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
         return setError(UNKNOWN_OPERAND);
