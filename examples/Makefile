@@ -18,8 +18,8 @@ help:
 	@echo '"make update" propagate common files to sketches'
 
 EXAMPLES = mc6800 mc6809 mos6502 i8048 i8051 i8080 z80 z8 tlcs90 \
-	   ins8060 ins8070 cdp1802 tms32010 i8086 mc68000 tms9900 \
-	   z8000 ns32000 mn1610
+	   ins8060 ins8070 cdp1802 tms32010 i8086 i8096 mc68000 \
+           tms9900 z8000 ns32000 mn1610
 
 pio: update $(EXAMPLES)
 	for ex in $(EXAMPLES); do \
