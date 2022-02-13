@@ -16,12 +16,47 @@
 
 #include <arduino_example.h>
 #include <asm_i8080.h>
+#include <asm_z80.h>
 #include <dis_i8080.h>
+#include <dis_z80.h>
 
 libasm::i8080::AsmI8080 asm8080;
 libasm::i8080::DisI8080 dis8080;
+libasm::z80::AsmZ80 asmz80;
+libasm::z80::DisZ80 disz80;
 
-libasm::arduino::Example example(asm8080, dis8080);
+class Example : public libasm::arduino::Example {
+public:
+    Example() : libasm::arduino::Example(asm8080, dis8080) {}
+
+protected:
+    bool processPseudo(const char *line) override {
+        if (strcasecmp_P(line, PSTR("INTEL")) == 0) {
+            switchSyntax(asm8080, dis8080);
+            return true;
+        }
+        if (strcasecmp_P(line, PSTR("ZILOG")) == 0) {
+            switchSyntax(asmz80, disz80);
+            return true;
+        }
+        return libasm::arduino::Example::processPseudo(line);
+    }
+
+private:
+    void switchSyntax(libasm::Assembler &assembler, libasm::Disassembler &disassembler) {
+        char cpu[10];
+        strcpy_P(cpu, getCpu());
+        _asm = &assembler;
+        _dis = &disassembler;
+        if (isAsm()) {
+            _asm->setCpu(cpu);
+        } else {
+            _dis->setCpu(cpu);
+        }
+    }
+};
+
+Example example;
 
 void setup() {
     Serial.begin(9600);

@@ -95,9 +95,76 @@ public:
 
     void loop() { _cli.loop(); }
 
-private:
+protected:
     Assembler *_asm;
     Disassembler *_dis;
+
+    bool isAsm() const { return _current == Prog::ASM; }
+    const char *getCpu() const { return isAsm() ? _asm->getCpu() : _dis->getCpu(); }
+
+    virtual bool processPseudo(const char *line) {
+        if (strcasecmp_P(line, PSTR("ASM")) == 0) {
+            if (_abegin) {
+                _current = Prog::ASM;
+            } else {
+                _cli.println(F("No assembler"));
+            }
+            return true;
+        }
+        if (strcasecmp_P(line, PSTR("DIS")) == 0) {
+            if (_dbegin) {
+                _current = Prog::DIS;
+            } else {
+                _cli.println(F("No disassembler"));
+            }
+            return true;
+        }
+        if (strcasecmp_P(line, PSTR("CPU")) == 0 || strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
+            const auto cpu = skipSpaces(line + 3);
+            if (*cpu == 0)
+                return isAsm() ? printCpuList<>(_abegin, _aend) : printCpuList<>(_dbegin, _dend);
+            if (isAsm() ? _asm->setCpu(cpu) : _dis->setCpu(cpu))
+                return true;
+            if (isAsm()) {
+                auto *a = searchCpu<>(cpu, _abegin, _aend);
+                if (a) {
+                    _asm = a;
+                    return true;
+                }
+            } else {
+                auto *d = searchCpu<>(cpu, _dbegin, _dend);
+                if (d) {
+                    _dis = d;
+                    return true;
+                }
+            }
+            _cli.println(F("unknown CPU"));
+            return true;
+        }
+        if (strcasecmp_P(line, PSTR("ORG")) == 0 || strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
+            const auto org = skipSpaces(line + 3);
+            if (*org) {
+                uint32_t addr;
+                const auto p = StrMemory::readNumber(org, &addr);
+                if (p == org) {
+                    _cli.println(F("illegal ORG address"));
+                    return true;
+                }
+                const auto max = addrMax();
+                if (max && addr >= max) {
+                    _cli.println(F("ORG overflow range"));
+                    return true;
+                }
+                _origin = addr;
+            }
+            printAddress(_origin);
+            _cli.println();
+            return true;
+        }
+        return false;
+    }
+
+private:
     Assembler **_abegin;
     Assembler **_aend;
     Disassembler **_dbegin;
@@ -108,12 +175,10 @@ private:
     uint32_t _origin;
     char buffer[80];
 
-    bool isAsm() const { return _current == Prog::ASM; }
     const ConfigBase &config() const { return isAsm() ? _asm->config() : _dis->config(); }
     uint32_t addrMax() const { return 1UL << uint8_t(config().addressWidth()); }
     uint8_t addrUnit() const { return uint8_t(config().addressUnit()); }
     uint8_t addrDigits() const { return ((uint8_t(config().addressWidth()) + 3) & -4) / 4; }
-    const char *getCpu() const { return isAsm() ? _asm->getCpu() : _dis->getCpu(); }
 
     static void handleLine(char *line, uintptr_t extra, State state) {
         (void)state;
@@ -285,68 +350,6 @@ private:
                 return *p;
         }
         return nullptr;
-    }
-
-    bool processPseudo(const char *line) {
-        if (strcasecmp_P(line, PSTR("ASM")) == 0) {
-            if (_abegin) {
-                _current = Prog::ASM;
-            } else {
-                _cli.println(F("No assembler"));
-            }
-            return true;
-        }
-        if (strcasecmp_P(line, PSTR("DIS")) == 0) {
-            if (_dbegin) {
-                _current = Prog::DIS;
-            } else {
-                _cli.println(F("No disassembler"));
-            }
-            return true;
-        }
-        if (strcasecmp_P(line, PSTR("CPU")) == 0 || strncasecmp_P(line, PSTR("CPU "), 4) == 0) {
-            const auto cpu = skipSpaces(line + 3);
-            if (*cpu == 0)
-                return isAsm() ? printCpuList<>(_abegin, _aend) : printCpuList<>(_dbegin, _dend);
-            if (isAsm() ? _asm->setCpu(cpu) : _dis->setCpu(cpu))
-                return true;
-            if (isAsm()) {
-                auto *a = searchCpu<>(cpu, _abegin, _aend);
-                if (a) {
-                    _asm = a;
-                    return true;
-                }
-            } else {
-                auto *d = searchCpu<>(cpu, _dbegin, _dend);
-                if (d) {
-                    _dis = d;
-                    return true;
-                }
-            }
-            _cli.println(F("unknown CPU"));
-            return true;
-        }
-        if (strcasecmp_P(line, PSTR("ORG")) == 0 || strncasecmp_P(line, PSTR("ORG "), 4) == 0) {
-            const auto org = skipSpaces(line + 3);
-            if (*org) {
-                uint32_t addr;
-                const auto p = StrMemory::readNumber(org, &addr);
-                if (p == org) {
-                    _cli.println(F("illegal ORG address"));
-                    return true;
-                }
-                const auto max = addrMax();
-                if (max && addr >= max) {
-                    _cli.println(F("ORG overflow range"));
-                    return true;
-                }
-                _origin = addr;
-            }
-            printAddress(_origin);
-            _cli.println();
-            return true;
-        }
-        return false;
     }
 
     static const char *skipSpaces(const char *p) {
