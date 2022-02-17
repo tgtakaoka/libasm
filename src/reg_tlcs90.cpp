@@ -16,11 +16,6 @@
 
 #include "reg_tlcs90.h"
 
-#include <ctype.h>
-
-#include "config_tlcs90.h"
-#include "table_tlcs90.h"
-
 namespace libasm {
 namespace tlcs90 {
 
@@ -59,13 +54,9 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_L),
 };
 
-RegName RegTlcs90::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegTlcs90::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegTlcs90::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegTlcs90::outRegName(StrBuffer &out, RegName name) const {
@@ -186,14 +177,10 @@ static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_T),
 };
 
-CcName RegTlcs90::parseCcName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(CC_TABLE));
+CcName RegTlcs90::parseCcName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     const CcName name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
-}
-
-uint8_t RegTlcs90::ccNameLen(const CcName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
 StrBuffer &RegTlcs90::outCcName(StrBuffer &out, const CcName name) const {

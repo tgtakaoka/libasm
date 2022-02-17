@@ -36,8 +36,7 @@ public:
 
     void setCommentChar(char commentChar) { _commentChar = commentChar; }
     ValueParser &getParser() const { return _parser; }
-    const char *errorAt() const { return _scan; }
-    bool endOfLine(const char *scan) const;
+    bool endOfLine(char letter) const;
 
     const char *listCpu() const { return _table.listCpu(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
@@ -47,7 +46,6 @@ protected:
     ValueParser &_parser;
     TableBase &_table;
     char _commentChar;
-    const char *_scan;
     SymbolTable *_symtab;
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
@@ -58,16 +56,15 @@ protected:
     bool hasSymbol(const char *symbol) const;
     uint32_t lookupSymbol(const char *symbol) const;
 
-    /** Scan |expr| text to find |delim| letter. */
-    const char *scanExpr(const char *expr, char delim) const;
+    /** Scan |expr| text to find |delim| letter, return an empty if not found. */
+    StrScanner scanExpr(const StrScanner &expr, char delim) const;
     /** Parse |expr| text and get value as unsigned 16 bit. */
-    uint16_t parseExpr16(const char *expr, const char *end = nullptr);
+    uint16_t parseExpr16(StrScanner &expr, ErrorReporter &error);
     /** Parse |expr| text and get value as unsigned 32 bit. */
-    uint32_t parseExpr32(const char *expr, const char *end = nullptr);
+    uint32_t parseExpr32(StrScanner &expr, ErrorReporter &error);
     /** Return error caused by |parseExpr16| and |parseExpr32|. */
-    Error parserError() { return _parser.error(); }
+    Error parserError() { return _parser.getError(); }
 
-    static const char *skipSpaces(const char *scan);
     static bool overflowRel8(int16_t s16) { return Value::overflowRel8(s16); }
     static bool overflowRel8(int32_t s32) { return Value::overflowRel8(s32); }
     static bool overflowRel16(int32_t s32) { return Value::overflowRel16(s32); }
@@ -76,7 +73,7 @@ protected:
     static bool overflowUint16(uint32_t u32) { return Value::overflowUint16(u32); }
 
 private:
-    virtual Error encode(Insn &insn) = 0;
+    virtual Error encode(StrScanner &scan, Insn &insn) = 0;
 };
 
 }  // namespace libasm

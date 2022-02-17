@@ -18,26 +18,24 @@
 
 #include <ctype.h>
 
-#include "config_tms9900.h"
-
 namespace libasm {
 namespace tms9900 {
 
-RegName RegTms9900::parseRegName(const char *line) {
-    if (toupper(*line++) != 'R')
+RegName RegTms9900::parseRegName(StrScanner &scan) {
+    StrScanner p(scan);
+    if (toupper(*p++) != 'R')
         return REG_UNDEF;
-    if (isdigit(*line) && !isidchar(line[1]))
-        return RegName(*line - '0');
-    if (*line++ == '1' && (*line >= '0' && *line < '6') && !isidchar(line[1]))
-        return RegName((*line - '0') + 10);
+    const char c1 = *p++;
+    const char c2 = *p;
+    if (isdigit(c1) && !isidchar(c2)) {
+        scan = p;
+        return RegName(c1 - '0');
+    }
+    if (c1 == '1' && (c2 >= '0' && c2 < '6') && !isidchar(*++p)) {
+        scan = p;
+        return RegName((c2 - '0') + 10);
+    }
     return REG_UNDEF;
-}
-
-uint8_t RegTms9900::regNameLen(RegName name) {
-    if (name == REG_UNDEF)
-        return 0;
-    const uint8_t r = uint8_t(name);
-    return r < 10 ? 2 : 3;
 }
 
 StrBuffer &RegTms9900::outRegName(StrBuffer &out, uint8_t num) const {

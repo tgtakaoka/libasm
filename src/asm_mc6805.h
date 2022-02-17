@@ -46,12 +46,12 @@ private:
     };
 
     Error checkAddressRange(Config::uintptr_t addr);
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
     Error emitRelative(InsnMc6805 &insn, const Operand &op);
     Error emitImmediate(InsnMc6805 &insn, const Operand &op);
     Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
     Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mc6805

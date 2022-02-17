@@ -16,10 +16,9 @@
 
 #include "reg_z8.h"
 
-#include <ctype.h>
-
-#include "config_z8.h"
 #include "table_z8.h"
+
+#include <ctype.h>
 
 namespace libasm {
 namespace z8 {
@@ -32,38 +31,40 @@ uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
     return encodeRegName(name) | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
 }
 
-int8_t RegZ8::parseRegNum(const char *line) {
-    if (isdigit(*line) && !isidchar(line[1]))
-        return *line - '0';
-    if (*line++ == '1' && *line >= '0' && *line < '6' && !isidchar(line[1]))
-        return *line - '0' + 10;
-    return -1;
+int8_t RegZ8::parseRegNum(StrScanner &scan) {
+    const char c1 = *scan;
+    if (!isdigit(c1))
+        return -1;
+    StrScanner p(scan);
+    const char c2 = *++p;
+    if (!isidchar(c2)) {
+        scan = p;
+        return c1 - '0';
+    }
+    if (c1 != '1' || c2 < '0' || c2 >= '7' || isidchar(*++p))
+        return -1;
+    scan = p;
+    return c2 - '0' + 10;
 }
 
-RegName RegZ8::parseRegName(const char *line) {
-    if (toupper(*line++) == 'R') {
-        if (toupper(*line) == 'R') {
-            const int8_t regNum = parseRegNum(line + 1);
-            if (regNum >= 0 && regNum % 2 == 0)
+RegName RegZ8::parseRegName(StrScanner &scan) {
+    StrScanner p(scan);
+    if (toupper(*p++) == 'R') {
+        if (toupper(*p) == 'R') {
+            const int8_t regNum = parseRegNum(++p);
+            if (regNum >= 0 && regNum % 2 == 0) {
+                scan = p;
                 return RegName(regNum + 16);
-        } else {
-            const int8_t regNum = parseRegNum(line);
-            if (regNum >= 0)
+            }
+        } else if (isdigit(*p)) {
+            const int8_t regNum = parseRegNum(p);
+            if (regNum >= 0) {
+                scan = p;
                 return RegName(regNum);
+            }
         }
     }
     return REG_UNDEF;
-}
-
-uint8_t RegZ8::regNameLen(RegName name) {
-    const int8_t num = int8_t(name);
-    if (num >= 16 + 10)
-        return 4;  // RR1n
-    if (num >= 10)
-        return 3;  // RRn, R1n
-    if (num >= 0)
-        return 2;  // Rn
-    return 0;
 }
 
 uint8_t RegZ8::encodeRegName(RegName name) {
@@ -146,14 +147,10 @@ static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_T),
 };
 
-CcName RegZ8::parseCcName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(CC_TABLE));
+CcName RegZ8::parseCcName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     const CcName name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
-}
-
-uint8_t RegZ8::ccNameLen(const CcName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
 StrBuffer &RegZ8::outCcName(StrBuffer &out, CcName name) const {

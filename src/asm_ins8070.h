@@ -42,14 +42,14 @@ private:
         Operand() : ErrorReporter(), format(OPR_NO), reg(REG_UNDEF), autoIndex(false), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
 
     Error emitAbsolute(InsnIns8070 &insn, const Operand &op);
     Error emitImmediate(InsnIns8070 &insn, const Operand &op);
     Error emitRelative(InsnIns8070 &insn, const Operand &op);
     Error emitGeneric(InsnIns8070 &insn, const Operand &op);
     Error emitOperand(InsnIns8070 &insn, OprFormat format, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace ins8070

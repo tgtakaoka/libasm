@@ -16,33 +16,33 @@
 
 #include "reg_mos6502.h"
 
-#include <ctype.h>
-
-#include "config_mos6502.h"
-
 namespace libasm {
 namespace mos6502 {
 
-RegName RegMos6502::parseRegName(const char *line) {
-    const char r = *line++;
-    if (isidchar(*line))
+RegName RegMos6502::parseRegName(StrScanner &scan) {
+    StrScanner p(scan);
+    const char r = *p++;
+    if (isidchar(*p))
         return REG_UNDEF;
+    RegName reg = REG_UNDEF;
     switch (toupper(r)) {
     case 'A':
-        return REG_A;
+        reg = REG_A;
+        break;
     case 'X':
-        return REG_X;
+        reg = REG_X;
+        break;
     case 'Y':
-        return REG_Y;
+        reg = REG_Y;
+        break;
     case 'S':
-        return REG_S;
+        reg = REG_S;
+        break;
     default:
         return REG_UNDEF;
     }
-}
-
-uint8_t RegMos6502::regNameLen(RegName name) {
-    return name == REG_UNDEF ? 0 : 1;
+    scan = p;
+    return reg;
 }
 
 StrBuffer &RegMos6502::outRegName(StrBuffer &out, const RegName name) const {

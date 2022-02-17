@@ -52,8 +52,7 @@ enum RegName : int8_t {
 
 class RegMc68000 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, RegName name);
     static bool isDataReg(RegName name);
     static bool isAddrReg(RegName name);
@@ -64,7 +63,7 @@ public:
     static RegName decodeDataReg(uint8_t regno);
     static RegName decodeAddrReg(uint8_t regno);
 
-    static OprSize parseSize(const char *line);
+    static OprSize parseSize(StrScanner &scan);
     static uint8_t sizeNameLen(OprSize size);
     char sizeSuffix(OprSize size) const;
 };

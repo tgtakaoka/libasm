@@ -16,9 +16,7 @@
 
 #include "asm_z8.h"
 
-#include "error_reporter.h"
-#include "reg_z8.h"
-#include "table_z8.h"
+#include <ctype.h>
 
 namespace libasm {
 namespace z8 {
@@ -66,7 +64,7 @@ Error AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op)
         insn.emitByte(op.val16);
         return getError();
     }
-    return setError(OVERFLOW_RANGE);
+    return setError(op, OVERFLOW_RANGE);
 }
 
 Error AsmZ8::encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
@@ -84,22 +82,21 @@ Error AsmZ8::encodeRelative(InsnZ8 &insn, const Operand &op) {
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
-        return setErrorIf(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     insn.emitByte(delta);
     return op.getError();
 }
 
 Error AsmZ8::encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
     const AddrMode dst = insn.dstMode();
-    const RegName index = (dst == M_X) ? dstOp.reg : srcOp.reg;
-    const int16_t disp16 = static_cast<int16_t>((dst == M_X) ? dstOp.val16 : srcOp.val16);
+    const Operand &op = (dst == M_X) ? dstOp : srcOp;
     const RegName reg = (dst == M_X) ? srcOp.reg : dstOp.reg;
-    if (overflowUint8(static_cast<uint16_t>(disp16)))
-        return setError(OVERFLOW_RANGE);
-    const uint8_t opr1 = RegZ8::encodeRegName(index) | (RegZ8::encodeRegName(reg) << 4);
+    if (overflowUint8(static_cast<uint16_t>(op.val16)))
+        return setError(op, OVERFLOW_RANGE);
+    const uint8_t opr1 = RegZ8::encodeRegName(op.reg) | (RegZ8::encodeRegName(reg) << 4);
     insn.emitInsn();
     insn.emitByte(opr1);
-    insn.emitByte(disp16);
+    insn.emitByte(op.val16);
     return getError();
 }
 
@@ -159,7 +156,7 @@ Error AsmZ8::encodeMultiOperands(
                                    ? srcOp.val16
                                    : RegZ8::encodeWorkRegAddr(srcOp.reg);
     if (src == M_IM && overflowUint8(srcOp.val16))
-        return setError(OVERFLOW_RANGE);
+        return setError(srcOp, OVERFLOW_RANGE);
     insn.emitByte(dstSrc ? dstVal : srcVal);
     insn.emitByte(dstSrc ? srcVal : dstVal);
     return getError();
@@ -172,14 +169,14 @@ Error AsmZ8::encodePostByte(
     const PostFormat post = insn.postFormat();
     if (dst == M_IM) {  // P2: SRP, SRP0, SPR1
         if (dstOp.val16 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(dstOp, OVERFLOW_RANGE);
         uint8_t srp = dstOp.val16;
         if (post == P2_0) {  // SRP
             if (srp & 0xf)
-                return setError(OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
-        } else {                                       // SRP0, SRP1
+                return setError(srcOp, OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
+        } else {                                              // SRP0, SRP1
             if (srp & 0x7)
-                return setError(OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
+                return setError(srcOp, OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
             if (post == P2_1)
                 srp |= 1;
             if (post == P2_2)
@@ -226,7 +223,7 @@ Error AsmZ8::encodePostByte(
     }
     if (dst == M_RA) {  // P1: BTFRF, BTJRT
         if (extOp.val16 >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(extOp, ILLEGAL_BIT_NUMBER);
         uint8_t opr1 = (RegZ8::encodeRegName(srcOp.reg) << 4) | (extOp.val16 << 1);
         if (post == P1_1)
             opr1 |= 1;
@@ -237,7 +234,7 @@ Error AsmZ8::encodePostByte(
     const AddrMode ext = insn.extMode();
     if (ext == M_NO) {  // P1: BITC, BITR, BITS
         if (srcOp.val16 >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(srcOp, ILLEGAL_BIT_NUMBER);
         uint8_t opr1 = (RegZ8::encodeRegName(dstOp.reg) << 4) | (srcOp.val16 << 1);
         if (post == P1_1)
             opr1 |= 1;
@@ -248,10 +245,10 @@ Error AsmZ8::encodePostByte(
     // P1: LDB, BAND, BOR, BXOR
     const RegName reg = (dst == M_r) ? dstOp.reg : extOp.reg;
     const uint8_t regAddr = (dst == M_r) ? srcOp.val16 : dstOp.val16;
-    const uint8_t bitPos = (dst == M_r) ? extOp.val16 : srcOp.val16;
-    if (bitPos >= 8)
-        return setError(ILLEGAL_BIT_NUMBER);
-    uint8_t opr1 = (RegZ8::encodeRegName(reg) << 4) | (bitPos << 1);
+    const Operand &bitOp = (dst == M_r) ? extOp : srcOp;
+    if (bitOp.val16 >= 8)
+        return setError(bitOp, ILLEGAL_BIT_NUMBER);
+    uint8_t opr1 = (RegZ8::encodeRegName(reg) << 4) | (bitOp.val16 << 1);
     if (post == P1_1)
         opr1 |= 1;
     insn.emitInsn();
@@ -260,68 +257,60 @@ Error AsmZ8::encodePostByte(
     return getError();
 }
 
-Error AsmZ8::setRp(
-        const char *scan, InsnZ8 &insn, const /*PROGMEM*/ char *name, bool (AsmZ8::*set)(int16_t)) {
-    if (strcasecmp_P(insn.name(), name))
-        return UNKNOWN_INSTRUCTION;
-    const uint16_t rp = parseExpr16(scan);
-    if (hasError() || !(this->*set)(rp))
-        setError(OPERAND_NOT_ALLOWED);
+Error AsmZ8::setRp(StrScanner &scan, bool (AsmZ8::*set)(int16_t)) {
+    StrScanner p(scan.skipSpaces());
+    const uint16_t rp = parseExpr16(p, *this);
+    if (isOK() && (this->*set)(rp)) {
+        scan = p;
+        return OK;
+    }
+    setError(scan, OPERAND_NOT_ALLOWED);
     return OK;
 }
 
-static const char TEXT_SETRP[] PROGMEM = "SETRP";
-static const char TEXT_SETRP0[] PROGMEM = "SETRP0";
-static const char TEXT_SETRP1[] PROGMEM = "SETRP1";
-
-Error AsmZ8::processPseudo(const char *scan, InsnZ8 &insn) {
+Error AsmZ8::processPseudo(StrScanner &scan, InsnZ8 &insn) {
     insn.clear();  // make generated bytes zero.
-    const char *p = skipSpaces(scan);
-    if (setRp(p, insn, TEXT_SETRP, &AsmZ8::setRegPointer) == OK)
-        return OK;
+    if (strcasecmp_P(insn.name(), PSTR("setrp")) == 0)
+        return setRp(scan, &AsmZ8::setRegPointer);
     if (TableZ8.isSuper8()) {
-        if (setRp(p, insn, TEXT_SETRP0, &AsmZ8::setRegPointer0) == OK)
-            return OK;
-        if (setRp(p, insn, TEXT_SETRP1, &AsmZ8::setRegPointer1) == OK)
-            return OK;
+        if (strcasecmp_P(insn.name(), PSTR("setrp0")) == 0)
+            return setRp(scan, &AsmZ8::setRegPointer0);
+        if (strcasecmp_P(insn.name(), PSTR("setrp1")) == 0)
+            return setRp(scan, &AsmZ8::setRegPointer1);
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-Error AsmZ8::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p)) {
+Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p)) {
         op.mode = M_NO;
         return OK;
     }
 
     op.cc = RegZ8::parseCcName(p);
     if (op.cc != CC_UNDEF) {
-        _scan = p + RegZ8::ccNameLen(op.cc);
         op.mode = M_cc;
+        scan = p;
         return OK;
     }
 
-    if (*p == '#') {
-        op.val16 = parseExpr16(p + 1);
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
         op.mode = M_IM;
+        scan = p;
         return OK;
     }
 
-    const bool indir = (*p == '@');
-    if (indir) {
-        p++;
-        if (isspace(*p))
-            return setError(UNKNOWN_OPERAND);
-    }
+    const bool indir = p.expect('@');
+    if (indir && isspace(*p))
+        return setError(p, UNKNOWN_OPERAND);
 
     op.reg = RegZ8::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        _scan = p + RegZ8::regNameLen(op.reg);
         const bool pair = RegZ8::isPairReg(op.reg);
         if (indir) {
             op.mode = pair ? M_Irr : M_Ir;
@@ -329,40 +318,31 @@ Error AsmZ8::parseOperand(const char *scan, Operand &op) {
             op.mode = pair ? M_rr : M_r;
         }
         op.val16 = RegZ8::encodeWorkRegAddr(op.reg);
+        scan = p;
         return OK;
     }
 
-    const bool forceRegAddr = (*p == '>');
-    if (forceRegAddr) {
-        p++;
-        if (isspace(*p))
-            return setError(UNKNOWN_OPERAND);
-    }
-    const int32_t val32 = parseExpr32(p);
+    const bool forceRegAddr = p.expect('>');
+    if (forceRegAddr && isspace(*p))
+        return setError(p, UNKNOWN_OPERAND);
+    const int32_t val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
-    p = skipSpaces(_scan);
-    if (*p == '(') {
+    if (p.skipSpaces().expect('(')) {
         if (indir || forceRegAddr)
-            setError(UNKNOWN_OPERAND);
-        p++;
+            setError(p, UNKNOWN_OPERAND);
         op.reg = RegZ8::parseRegName(p);
-        if (op.reg != REG_UNDEF) {
-            p += RegZ8::regNameLen(op.reg);
-        } else {
-            const uint16_t val16 = parseExpr16(p);
+        if (op.reg == REG_UNDEF) {
+            const uint16_t val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
             if (!isWorkReg(val16))
-                return setError(UNKNOWN_OPERAND);
-            p = _scan;
+                return setError(op, UNKNOWN_OPERAND);
             op.reg = RegZ8::decodeRegNum(val16 & 0xF);
         }
-        p = skipSpaces(p);
-        if (*p != ')')
-            return setError(MISSING_CLOSING_PAREN);
-        _scan = p + 1;
+        if (!p.skipSpaces().expect(')'))
+            return setError(p, MISSING_CLOSING_PAREN);
+        scan = p;
         if (val32 >= -128 && val32 < 128) {
             op.mode = M_XS;
         } else {
@@ -372,11 +352,12 @@ Error AsmZ8::parseOperand(const char *scan, Operand &op) {
         return OK;
     }
     if (val32 < 0)
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
+    scan = p;
     op.val16 = val32;
     if (indir) {
         if (op.val16 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         if (!forceRegAddr && isWorkReg(op.val16)) {
             op.mode = (op.val16 & 1) == 0 ? M_IWW : M_IW;
             op.reg = RegZ8::decodeRegNum(op.val16 & 0xF);
@@ -387,7 +368,7 @@ Error AsmZ8::parseOperand(const char *scan, Operand &op) {
     }
     if (forceRegAddr) {
         if (op.val16 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         op.mode = (op.val16 & 1) == 0 ? M_RR : M_R;
         return OK;
     }
@@ -404,33 +385,31 @@ Error AsmZ8::parseOperand(const char *scan, Operand &op) {
     return OK;
 }
 
-Error AsmZ8::encode(Insn &_insn) {
+Error AsmZ8::encode(StrScanner &scan, Insn &_insn) {
     InsnZ8 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
-    if (processPseudo(endName, insn) == OK)
+    if (processPseudo(scan, insn) == OK)
         return getError();
 
     Operand dstOp, srcOp, extOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, extOp))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, extOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setError(dstOp.getError());
-    setErrorIf(srcOp.getError());
-    setErrorIf(extOp.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
+    setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
     if (TableZ8.searchName(insn))
@@ -446,7 +425,7 @@ Error AsmZ8::encode(Insn &_insn) {
         return encodePostByte(insn, dstOp, srcOp, extOp);
     // TODO: This should be warning
     if (insn.opCode() == TableZ8::SRP && (dstOp.val16 & 0xF) != 0)
-        return setError(OPERAND_NOT_ALLOWED);
+        return setError(dstOp, OPERAND_NOT_ALLOWED);
     if (dst == M_DA || src == M_DA)
         return encodeAbsolute(insn, dstOp, srcOp);
     if (dst == M_RA || src == M_RA) {

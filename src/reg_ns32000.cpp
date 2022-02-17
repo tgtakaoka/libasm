@@ -18,9 +18,6 @@
 
 #include <ctype.h>
 
-#include "config_ns32000.h"
-#include "table_ns32000.h"
-
 namespace libasm {
 namespace ns32000 {
 
@@ -79,21 +76,9 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_EXT),
 };
 
-RegName RegNs32000::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegNs32000::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegNs32000::regNameLen(RegName name) {
-    switch (name) {
-    case REG_UNDEF:
-        return 0;
-    case REG_TOS:
-    case REG_EXT:
-        return 3;
-    default:
-        return 2;
-    }
 }
 
 StrBuffer &RegNs32000::outRegName(StrBuffer &out, RegName name) const {
@@ -146,13 +131,9 @@ static const RegBase::NameEntry PREG_TABLE[] PROGMEM = {
         NAME_ENTRY(PREG_MOD),
 };
 
-PregName RegNs32000::parsePregName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(PREG_TABLE));
+PregName RegNs32000::parsePregName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(PREG_TABLE));
     return entry ? PregName(entry->name()) : PREG_UNDEF;
-}
-
-uint8_t RegNs32000::pregNameLen(PregName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
 }
 
 StrBuffer &RegNs32000::outPregName(StrBuffer &out, PregName name) const {
@@ -195,13 +176,9 @@ static const RegBase::NameEntry MREG_TABLE[] PROGMEM = {
         NAME_ENTRY(MREG_EIA),
 };
 
-MregName RegNs32000::parseMregName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(MREG_TABLE));
+MregName RegNs32000::parseMregName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(MREG_TABLE));
     return entry ? MregName(entry->name()) : MREG_UNDEF;
-}
-
-uint8_t RegNs32000::mregNameLen(MregName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
 }
 
 StrBuffer &RegNs32000::outMregName(StrBuffer &out, MregName name) const {
@@ -233,13 +210,9 @@ static const RegBase::NameEntry CONFIG_TABLE[] PROGMEM = {
         NAME_ENTRY(CONFIG_C),
 };
 
-ConfigName RegNs32000::parseConfigName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(CONFIG_TABLE));
+ConfigName RegNs32000::parseConfigName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CONFIG_TABLE));
     return entry ? ConfigName(entry->name()) : CONFIG_UNDEF;
-}
-
-uint8_t RegNs32000::configNameLen(ConfigName name) {
-    return name == CONFIG_UNDEF ? 0 : 1;
 }
 
 StrBuffer &RegNs32000::outConfigNames(StrBuffer &out, uint8_t configs) const {
@@ -266,13 +239,9 @@ static const RegBase::NameEntry STROPT_TABLE[] PROGMEM = {
         NAME_ENTRY(STROPT_U),
 };
 
-StrOptName RegNs32000::parseStrOptName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(STROPT_TABLE));
+StrOptName RegNs32000::parseStrOptName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(STROPT_TABLE));
     return entry ? StrOptName(entry->name()) : STROPT_UNDEF;
-}
-
-uint8_t RegNs32000::strOptNameLen(StrOptName name) {
-    return name == STROPT_UNDEF ? 0 : 1;
 }
 
 StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
@@ -290,9 +259,10 @@ StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
     return out;
 }
 
-OprSize RegNs32000::parseIndexSize(const char *line) {
+OprSize RegNs32000::parseIndexSize(StrScanner &scan) {
     OprSize size = SZ_NONE;
-    switch (toupper(*line)) {
+    StrScanner p(scan);
+    switch (toupper(*p++)) {
     case 'B':
         size = SZ_BYTE;
         break;
@@ -306,13 +276,12 @@ OprSize RegNs32000::parseIndexSize(const char *line) {
         size = SZ_QUAD;
         break;
     default:
-        return size;
+        return SZ_NONE;
     }
-    return isidchar(line[1]) ? SZ_NONE : size;
-}
-
-uint8_t RegNs32000::indexSizeLen(OprSize size) {
-    return size == SZ_NONE ? 0 : 1;
+    if (isidchar(*p))
+        return SZ_NONE;
+    scan = p;
+    return size;
 }
 
 char RegNs32000::indexSizeChar(OprSize size) const {
@@ -331,8 +300,7 @@ char RegNs32000::indexSizeChar(OprSize size) const {
         c = 'Q';
         break;
     default:
-        c = 0;
-        break;
+        return 0;
     }
     return _uppercase ? c : tolower(c);
 }

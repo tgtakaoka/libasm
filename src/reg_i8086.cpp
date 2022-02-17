@@ -16,11 +16,6 @@
 
 #include "reg_i8086.h"
 
-#include <ctype.h>
-
-#include "config_i8086.h"
-#include "table_i8086.h"
-
 namespace libasm {
 namespace i8086 {
 
@@ -75,13 +70,9 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_WORD),
 };
 
-RegName RegI8086::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegI8086::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegI8086::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegI8086::outRegName(StrBuffer &out, RegName name) const {

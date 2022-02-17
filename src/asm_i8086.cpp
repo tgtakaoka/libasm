@@ -16,148 +16,129 @@
 
 #include "asm_i8086.h"
 
-#include "error_reporter.h"
-#include "reg_i8086.h"
-#include "table_i8086.h"
-
 namespace libasm {
 namespace i8086 {
 
-bool AsmI8086::parseStringInst(const char *scan, Operand &op) {
+Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     InsnI8086 insn(_insn);
-    const char *endName = _parser.scanSymbol(scan);
-    insn.setName(scan, endName);
+    StrScanner p(scan);
+    insn.setName(_parser.readSymbol(p));
     insn.setAddrMode(M_NONE, M_NONE);
     if (TableI8086.searchName(insn))
-        return false;
+        return UNKNOWN_INSTRUCTION;
     if (!insn.stringInst())
-        return false;
-    _scan = skipSpaces(endName);
+        return UNKNOWN_INSTRUCTION;
+    scan = p.skipSpaces();
     op.val32 = insn.opCode();
     op.mode = M_ISTR;
-    return true;
+    return OK;
 }
 
-const char *AsmI8086::parsePointerSize(const char *scan, Operand &op) {
-    const char *p = scan;
+Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) {
+    StrScanner p(scan);
     const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_BYTE || reg == REG_WORD) {
-        p = skipSpaces(p + RegI8086::regNameLen(reg));
         // Pointer size override
-        if (RegI8086::parseRegName(p) == REG_PTR) {
+        if (RegI8086::parseRegName(p.skipSpaces()) == REG_PTR) {
             op.ptr = reg;
-            return skipSpaces(p + RegI8086::regNameLen(REG_PTR));
+            scan = p.skipSpaces();
+            return OK;
         }
-        setError(UNKNOWN_OPERAND);
-        return nullptr;
+        return setError(p, UNKNOWN_OPERAND);
     }
-    return scan;
+    return OK;
 }
 
-const char *AsmI8086::parseSegmentOverride(const char *scan, Operand &op) {
-    const char *p = scan;
+void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
+    StrScanner p(scan);
     const RegName reg = RegI8086::parseRegName(p);
     if (RegI8086::isSegmentReg(reg)) {
-        p = skipSpaces(p + RegI8086::regNameLen(reg));
         // Segment Override
-        if (*p == ':') {
+        if (p.skipSpaces().expect(':')) {
             op.seg = reg;
-            return skipSpaces(p + 1);
+            scan = p;
         }
     }
-    return scan;
 }
 
-const char *AsmI8086::parseBaseRegister(const char *scan, Operand &op) {
-    const char *p = scan;
+void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
+    StrScanner p(scan);
     const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
-        return skipSpaces(p + RegI8086::regNameLen(reg));
+        scan = p.skipSpaces();
     }
-    return scan;
 }
 
-const char *AsmI8086::parseIndexRegister(const char *scan, Operand &op) {
-    const char *p = scan;
+void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
+    StrScanner p(scan);
     if (op.reg != REG_UNDEF) {
-        if (*p != '+')
-            return scan;
-        p = skipSpaces(p + 1);
+        if (!p.expect('+'))
+            return;
+        p.skipSpaces();
     }
     const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
-        return skipSpaces(p + RegI8086::regNameLen(reg));
+        scan = p.skipSpaces();
     }
-    return scan;
 }
 
-const char *AsmI8086::parseDisplacement(const char *scan, Operand &op) {
-    const char *p = scan;
-    if (endOfLine(p) || *p == ']')
-        return scan;
+Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) {
+    StrScanner p(scan);
+    if (endOfLine(*p) || *p == ']')
+        return OK;
     if (op.reg != REG_UNDEF || op.index != REG_UNDEF) {
-        if (*p != '+' && *p != '-') {
-            setError(UNKNOWN_OPERAND);
-            return nullptr;
-        }
+        if (*p != '+' && *p != '-')
+            return setError(p, UNKNOWN_OPERAND);
     }
-    op.val32 = parseExpr32(p);
-    if (parserError()) {
-        setError(parserError());
-        return nullptr;
-    }
-    if (overflowUint16(static_cast<int32_t>(op.val32))) {
-        setError(OVERFLOW_RANGE);
-        return nullptr;
-    }
-    op.setError(getError());
+    op.val32 = parseExpr32(p, op);
+    if (parserError())
+        return getError();
+    if (overflowUint16(static_cast<int32_t>(op.val32)))
+        return setError(op, OVERFLOW_RANGE);
     op.hasVal = true;
-    return skipSpaces(_scan);
+    scan = p.skipSpaces();
+    return OK;
 }
 
-Error AsmI8086::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p))
         return OK;
 
-    if (parseStringInst(p, op))
+    if (parseStringInst(p, op) == OK) {
+        scan = p;
         return OK;
-    p = parsePointerSize(p, op);
-    if (p == nullptr)
+    }
+    if (parsePointerSize(p, op))
         return getError();
-    p = parseSegmentOverride(p, op);
-    if (*p == '[') {
-        p = skipSpaces(p + 1);
-        p = parseBaseRegister(p, op);
-        p = parseIndexRegister(p, op);
-        p = parseDisplacement(p, op);
-        if (p == nullptr)
+    parseSegmentOverride(p, op);
+    if (p.skipSpaces().expect('[')) {
+        parseBaseRegister(p.skipSpaces(), op);
+        parseIndexRegister(p, op);
+        if (parseDisplacement(p, op))
             return getError();
-        if (*p == ']') {
-            _scan = p + 1;
-            if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
-                if (op.hasVal) {
-                    op.mode =
-                            (op.ptr == REG_UNDEF) ? M_DIR : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
-                    return OK;
-                }
-                return setError(UNKNOWN_OPERAND);
-            }
-            op.mode = (op.ptr == REG_UNDEF) ? M_MEM : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
+        if (!p.skipSpaces().expect(']'))
+            return setError(p, MISSING_CLOSING_BRACKET);
+        scan = p;
+        if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
+            if (!op.hasVal)
+                return setError(op, UNKNOWN_OPERAND);
+            op.mode = (op.ptr == REG_UNDEF) ? M_DIR : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
             return OK;
         }
-        return setError(MISSING_CLOSING_BRACKET);
+        op.mode = (op.ptr == REG_UNDEF) ? M_MEM : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
+        return OK;
     }
     if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
-        return setError(UNKNOWN_OPERAND);
+        return setError(op, UNKNOWN_OPERAND);
 
-    const RegName reg = RegI8086::parseRegName(p);
+    StrScanner a(p);
+    const RegName reg = RegI8086::parseRegName(a);
     if (RegI8086::isGeneralReg(reg)) {
-        _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
         switch (reg) {
         case REG_AL:
@@ -176,38 +157,38 @@ Error AsmI8086::parseOperand(const char *scan, Operand &op) {
             op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
             break;
         }
+        scan = a;
         return OK;
     }
     if (RegI8086::isSegmentReg(reg)) {
-        _scan = p + RegI8086::regNameLen(reg);
         op.reg = reg;
         op.mode = (reg == REG_CS) ? M_CS : M_SREG;
+        scan = a;
         return OK;
     }
     if (reg != REG_UNDEF)
-        return setError(UNKNOWN_OPERAND);
+        return setError(p, UNKNOWN_OPERAND);
 
-    op.val32 = parseExpr32(p);
+    op.val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
-    p = skipSpaces(_scan);
-    if (*p == ':') {
+    if (p.skipSpaces().expect(':')) {
         if (op.val32 >= 0x10000UL)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         op.seg16 = op.val32;
-        op.val32 = parseExpr32(p + 1);
+        op.val32 = parseExpr32(p, op);
         if (op.val32 >= 0x10000UL)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         if (parserError())
             return getError();
-        op.setErrorIf(getError());
         op.mode = M_FAR;
+        scan = p;
         return OK;
     }
     op.mode = op.immediateMode();
     if (op.mode == M_NONE)
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
+    scan = p;
     return OK;
 }
 
@@ -225,15 +206,15 @@ AddrMode AsmI8086::Operand::immediateMode() const {
     return M_NONE;
 }
 
-Error AsmI8086::emitImmediate(InsnI8086 &insn, OprSize size, uint32_t val) {
+Error AsmI8086::emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val) {
     if (size == SZ_BYTE) {
         if (overflowUint8(val))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(val);
     }
     if (size == SZ_WORD) {
         if (overflowUint16(val))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand16(val);
     }
     return OK;
@@ -250,13 +231,13 @@ Error AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) 
             return emitRelative(insn, op, M_REL);
         }
         if (overflow)
-            return setError(OPERAND_TOO_FAR);
+            return setError(op, OPERAND_TOO_FAR);
         insn.emitOperand8(static_cast<uint8_t>(delta));
         return OK;
     }
     // M_REL
     if (delta < -0x8000 || delta >= 0x8000)
-        return setError(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     insn.emitOperand16(static_cast<uint16_t>(delta));
     return OK;
 }
@@ -351,11 +332,11 @@ Error AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
         }
         if (mod == 1) {
             if (overflowRel8(static_cast<int32_t>(op.val32)))
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             insn.emitOperand8(op.val32);
         } else if (mod == 2) {
             if (overflowUint16(static_cast<int32_t>(op.val32)))
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             insn.emitOperand16(op.val32);
         }
         break;
@@ -371,14 +352,14 @@ Error AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
         insn.embedModReg(0006);
     if (pos == P_OMOD)
         insn.embed(0006);
-    return emitImmediate(insn, SZ_WORD, op.val32);
+    return emitImmediate(insn, op, SZ_WORD, op.val32);
 }
 
 Error AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
     switch (mode) {
     case M_CS:
         if (pos == P_NONE)  // POP CS
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_BREG:
     case M_WREG:
@@ -394,25 +375,25 @@ Error AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, O
         return emitDirect(insn, op, P_OPR);
     case M_UI16:
         if (static_cast<int32_t>(op.val32) >= 0x10000 || static_cast<int32_t>(op.val32) < 0)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val32);
         return OK;
     case M_IMM:
-        return emitImmediate(insn, insn.oprSize(), op.val32);
+        return emitImmediate(insn, op, insn.oprSize(), op.val32);
     case M_IOA:
         if (op.val32 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IMM8:
-        return emitImmediate(insn, SZ_BYTE, op.val32);
+        return emitImmediate(insn, op, SZ_BYTE, op.val32);
     case M_REL:
     case M_REL8:
         return emitRelative(insn, op, mode);
     case M_FAR:
         if (op.val32 >= 0x10000)
-            return setError(OVERFLOW_RANGE);
-        emitImmediate(insn, SZ_WORD, op.val32);
-        return emitImmediate(insn, SZ_WORD, op.seg16);
+            return setError(op, OVERFLOW_RANGE);
+        emitImmediate(insn, op, SZ_WORD, op.val32);
+        return emitImmediate(insn, op, SZ_WORD, op.seg16);
     case M_ISTR:
         insn.emitOperand8(op.val32);
         return OK;
@@ -425,9 +406,9 @@ Error AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName se
     if (op.mode == M_NONE)
         return OK;
     if (op.reg != REG_UNDEF || op.index != index || op.hasVal)
-        return setError(ILLEGAL_OPERAND);
+        return setError(op, ILLEGAL_OPERAND);
     if (seg == REG_ES && op.seg != REG_ES)
-        return setError(ILLEGAL_SEGMENT);
+        return setError(op, ILLEGAL_SEGMENT);
     if (seg == REG_DS && op.seg != REG_UNDEF && op.seg != REG_DS)
         insn.setSegment(TableI8086.segOverridePrefix(op.seg));
     return OK;
@@ -459,24 +440,22 @@ Error AsmI8086::encodeStringInst(InsnI8086 &insn, const Operand &dst, const Oper
     return setOK();
 }
 
-Error AsmI8086::encode(Insn &_insn) {
+Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
     InsnI8086 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setError(dstOp.getError());
-    setErrorIf(srcOp.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableI8086.searchName(insn))

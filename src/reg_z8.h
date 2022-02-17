@@ -17,7 +17,6 @@
 #ifndef __REG_Z8_H__
 #define __REG_Z8_H__
 
-#include "insn_z8.h"
 #include "reg_base.h"
 
 namespace libasm {
@@ -80,17 +79,15 @@ enum CcName : int8_t {
 
 class RegZ8 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, RegName name) const;
     static bool isPairReg(RegName);
     static uint8_t encodeRegName(RegName name);
     static RegName decodeRegNum(uint8_t num);
     static RegName decodePairRegNum(uint8_t num);
 
-    static CcName parseCcName(const char *line);
+    static CcName parseCcName(StrScanner &scan);
     StrBuffer &outCcName(StrBuffer &out, CcName name) const;
-    static uint8_t ccNameLen(const CcName name);
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcNum(uint8_t num);
 
@@ -98,7 +95,7 @@ public:
     static uint8_t encodeWorkRegAddr(RegName name);
 
 private:
-    static int8_t parseRegNum(const char *line);
+    static int8_t parseRegNum(StrScanner &scan);
 };
 
 }  // namespace z8

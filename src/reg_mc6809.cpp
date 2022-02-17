@@ -16,8 +16,6 @@
 
 #include "reg_mc6809.h"
 
-#include <ctype.h>
-
 #include "config_mc6809.h"
 #include "table_mc6809.h"
 
@@ -63,13 +61,9 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_0),
 };
 
-RegName RegMc6809::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegMc6809::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegMc6809::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 RegSize RegMc6809::regSize(RegName name) {

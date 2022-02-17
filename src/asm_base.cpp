@@ -16,22 +16,20 @@
 
 #include "asm_base.h"
 
-#include <ctype.h>
-
-#include "symbol_table.h"
-#include "value_parser.h"
-
 namespace libasm {
 
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
-    resetError();
     _parser.setCurrentOrigin(insn.address());
-    const char *scan = skipSpaces(line);
-    if (endOfLine(scan))
+    resetError();
+    StrScanner scan(line);
+    setAt(scan.skipSpaces());
+    if (endOfLine(*scan))
         return OK;
-    _scan = scan;
-    return encode(insn);
+    const auto error = encode(scan, insn);
+    if (error == OK)
+        setAt(scan);
+    return error;
 }
 
 bool Assembler::hasSymbol(const char *symbol) const {
@@ -42,54 +40,48 @@ uint32_t Assembler::lookupSymbol(const char *symbol) const {
     return _symtab ? _symtab->lookupSymbol(symbol) : 0;
 }
 
-bool Assembler::endOfLine(const char *scan) const {
-    return *scan == 0 || *scan == ';' || *scan == _commentChar;
+bool Assembler::endOfLine(char letter) const {
+    return letter == 0 || letter == ';' || letter == _commentChar;
 }
 
-uint16_t Assembler::parseExpr16(const char *expr, const char *end) {
-    Value value;
-    _scan = _parser.eval(expr, end, value, _symtab);
-    setError(_parser.error());
+uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorReporter &error) {
+    Value value = _parser.eval(expr, _symtab);
+    setError(_parser);
     if (value.overflowUint16())
-        setErrorIf(OVERFLOW_RANGE);
+        error.setErrorIf(expr, OVERFLOW_RANGE);
     if (value.isUndefined())
-        setErrorIf(UNDEFINED_SYMBOL);
+        error.setErrorIf(expr, UNDEFINED_SYMBOL);
     return value.getUnsigned();
 }
 
-uint32_t Assembler::parseExpr32(const char *expr, const char *end) {
-    Value value;
-    _scan = _parser.eval(expr, end, value, _symtab);
-    setError(_parser.error());
+uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorReporter &error) {
+    Value value = _parser.eval(expr, _symtab);
+    setError(_parser);
     if (value.isUndefined())
-        setErrorIf(UNDEFINED_SYMBOL);
+        error.setErrorIf(expr, UNDEFINED_SYMBOL);
     return value.getUnsigned();
 }
 
-const char *Assembler::scanExpr(const char *expr, char delim) const {
-    while (!endOfLine(expr)) {
-        const char c = *expr;
-        if (c == delim)
-            return expr;
-        expr++;
-        if (c == '(') {
-            expr = scanExpr(expr, ')');
-        } else if (c == '[') {
-            expr = scanExpr(expr, ']');
-        } else if (c == '\'') {
-            char val;
-            expr = _parser.readChar(expr, val);
-            if (*expr == '\'')
-                expr++;
+StrScanner Assembler::scanExpr(const StrScanner &expr, char delim) const {
+    StrScanner p(expr);
+    while (!endOfLine(*p)) {
+        if (*p == delim)
+            return StrScanner(expr, p);
+        if (p.expect('\'')) {
+            _parser.readChar(p);
+            if (!p.expect('\''))
+                break;
+        } else if (*p == '(' || *p == '[') {
+            const char close = (*p++ == '(') ? ')' : ']';
+            const StrScanner atom = scanExpr(p, close);
+            if (atom.size() == 0)
+                break;
+            p += atom.size() + 1;
+        } else {
+            ++p;
         }
     }
-    return expr;
-}
-
-const char *Assembler::skipSpaces(const char *scan) {
-    while (*scan == ' ' || *scan == '\t')
-        scan++;
-    return scan;
+    return StrScanner::EMPTY;
 }
 
 }  // namespace libasm

@@ -16,53 +16,40 @@
 
 #include "asm_mc6800.h"
 
-#include "error_reporter.h"
-#include "table_mc6800.h"
-
 namespace libasm {
 namespace mc6800 {
 
-Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p) || *p == ',') {
+Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p) || *p == ',') {
         op.mode = M_NO;
+        scan = p;
         return OK;
     }
 
-    const bool immediate = (*p == '#');
-    if (immediate)
-        p++;
+    const bool immediate = p.expect('#');
     op.size = SZ_NONE;
-    if (*p == '<') {
-        p++;
+    if (p.expect('<')) {
         op.size = SZ_BYTE;
-    } else if (*p == '>') {
-        p++;
+    } else if (p.expect('>')) {
         op.size = SZ_WORD;
     }
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     if (immediate) {
         op.mode = M_IMM;
+        scan = p;
         return OK;
     }
 
-    p = skipSpaces(_scan);
-    if (*p == ',') {
-        p = skipSpaces(p + 1);
-        const RegName reg = RegMc6800::parseRegName(p);
+    StrScanner a(p);
+    if (a.skipSpaces().expect(',')) {
+        const RegName reg = RegMc6800::parseRegName(a.skipSpaces());
         if (reg != REG_UNDEF) {
-            _scan = p + RegMc6800::regNameLen(reg);
-            if (reg == REG_X) {
-                op.mode = M_IDX;
-            } else if (reg == REG_Y) {
-                op.mode = M_IDY;
-            } else {
-                return setError(REGISTER_NOT_ALLOWED);
-            }
+            op.mode = (reg == REG_X) ? M_IDX : M_IDY;
+            scan = a;
             return OK;
         }
     }
@@ -76,6 +63,7 @@ Error AsmMc6800::parseOperand(const char *scan, Operand &op) {
     } else {
         op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
     }
+    scan = p;
     return OK;
 }
 
@@ -84,7 +72,7 @@ Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
-        return setError(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
     return OK;
 }
@@ -92,7 +80,7 @@ Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
 Error AsmMc6800::emitImmediate(InsnMc6800 &insn, const Operand &op) {
     if (insn.size() == SZ_BYTE) {
         if (overflowUint8(op.val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitByte(static_cast<uint8_t>(op.val16));
     }
     if (insn.size() == SZ_WORD)
@@ -113,7 +101,7 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
     case M_IDX:
     case M_IDY:
         if (op.val16 >= 256)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitByte(static_cast<uint8_t>(op.val16));
         return OK;
     case M_EXT:
@@ -131,30 +119,28 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
     }
 }
 
-Error AsmMc6800::encode(Insn &_insn) {
+Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
     InsnMc6800 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
-    if (parseOperand(endName, op1))
+    if (parseOperand(scan, op1))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, op2))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, op2))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, op3))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, op3))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(op1.getError());
-    setErrorIf(op2.getError());
-    setErrorIf(op3.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(op1);
+    setErrorIf(op2);
+    setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
     if (TableMc6800.searchName(insn))

@@ -63,15 +63,15 @@ private:
         void print(const char *) const;
     };
 
-    bool parseStringInst(const char *scan, Operand &op);
-    const char *parsePointerSize(const char *scan, Operand &op);
-    const char *parseSegmentOverride(const char *scan, Operand &op);
-    const char *parseBaseRegister(const char *scan, Operand &op);
-    const char *parseIndexRegister(const char *scan, Operand &op);
-    const char *parseDisplacement(const char *scan, Operand &op);
-    Error parseOperand(const char *scan, Operand &opr);
+    Error parseStringInst(StrScanner &scan, Operand &op) const;
+    Error parsePointerSize(StrScanner &scan, Operand &op);
+    void parseSegmentOverride(StrScanner &scan, Operand &op) const;
+    void parseBaseRegister(StrScanner &scan, Operand &op) const;
+    void parseIndexRegister(StrScanner &scan, Operand &op) const;
+    Error parseDisplacement(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &opr);
 
-    Error emitImmediate(InsnI8086 &insn, OprSize size, uint32_t val);
+    Error emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val);
     Error emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);
     Error emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos);
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);
@@ -80,7 +80,7 @@ private:
     Error emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
     Error emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
     Error encodeStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace i8086

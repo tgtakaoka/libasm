@@ -96,7 +96,7 @@ Error DisIns8060::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         break;
     }
     if (page(insn.address()) != page(insn.address() + insn.length() - 1))
-        setErrorIf(OVERWRAP_PAGE);
+        setError(OVERWRAP_PAGE);
     return getError();
 }
 

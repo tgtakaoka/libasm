@@ -17,14 +17,15 @@
 #ifndef __INSN_BASE_H__
 #define __INSN_BASE_H__
 
+#include "config_base.h"
+#include "dis_memory.h"
+#include "error_reporter.h"
+#include "str_scanner.h"
+
 #include <ctype.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-
-#include "config_base.h"
-#include "dis_memory.h"
-#include "error_reporter.h"
 
 namespace libasm {
 
@@ -75,8 +76,16 @@ private:
         _name[MAX_NAME] = 0;
     }
 
-    void setName(const char *name, const char *end) {
-        uint8_t len = end - name;
+    void setName(const StrScanner &name) {
+        uint8_t len = name.size();
+        if (len >= MAX_NAME)
+            len = MAX_NAME;
+        strncpy(_name, name, len);
+        _name[len] = 0;
+    }
+
+    void setName(const char *name) {
+        uint8_t len = strlen(name);
         if (len >= MAX_NAME)
             len = MAX_NAME;
         strncpy(_name, name, len);
@@ -110,7 +119,10 @@ public:
     void setName_P(const /*PROGMEM*/ char *name) { _insn.setName_P(name); }
 
     /** Set instruction name from text (Assembler). */
-    void setName(const char *name, const char *end) { _insn.setName(name, end); }
+    void setName(const char *name) { _insn.setName(name); }
+
+    /** Set instruction name from text (Assembler). */
+    void setName(const StrScanner &name) { _insn.setName(name); }
 
     /** Append a letter to instruction name. */
     void appendName(const char c) { _insn.appendName(c); }

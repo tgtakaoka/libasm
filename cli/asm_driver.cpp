@@ -81,13 +81,13 @@ int AsmDriver::assemble() {
         }
         AsmDirective *directive = _commonDir.currentDirective();
         const AddressWidth addrWidth = _commonDir.config().addressWidth();
-        BinFormatter *formatter;
+        BinFormatter *formatter = &directive->defaultFormatter();
+        MotoSrec srecord{addrWidth};
+        IntelHex intelHex{addrWidth};
         if (_formatter == 'S') {
-            formatter = new MotoSrec(addrWidth);
+            formatter = &srecord;
         } else if (_formatter == 'H') {
-            formatter = new IntelHex(addrWidth);
-        } else {
-            formatter = &directive->defaultFormatter();
+            formatter = &intelHex;
         }
 
         formatter->begin(output);
@@ -105,7 +105,6 @@ int AsmDriver::assemble() {
                 });
         formatter->end();
         fclose(output);
-        delete formatter;
     }
     FILE *list = nullptr;
     if (_list_name) {
@@ -133,8 +132,7 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
     }
 
     int errors = 0;
-    _commonDir.currentDirective()->assembler().reset();
-    _commonDir.setOrigin(0);
+    _commonDir.reset();
     const char *line;
     while ((line = _commonDir.readSourceLine()) != nullptr) {
         if (_commonDir.assembleLine(line, memory) && reportError) {

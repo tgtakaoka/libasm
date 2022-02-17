@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "reg_mn1610.h"
-
-#include <ctype.h>
-
-#include "config_mn1610.h"
-#include "table_mn1610.h"
 
 namespace libasm {
 namespace mn1610 {
@@ -31,7 +27,7 @@ static const char TEXT_REG_R3[]   PROGMEM = "R3";
 static const char TEXT_REG_R4[]   PROGMEM = "R4";
 static const char TEXT_REG_SP[]   PROGMEM = "SP";
 static const char TEXT_REG_STR[]  PROGMEM = "STR";
-static const char TEXT_REG_IC[]  PROGMEM = "IC";
+static const char TEXT_REG_IC[]   PROGMEM = "IC";
 static const char TEXT_REG_DR0[]  PROGMEM = "DR0";
 static const char TEXT_REG_X0[]   PROGMEM = "X0";
 static const char TEXT_REG_X1[]   PROGMEM = "X1";
@@ -96,13 +92,9 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 // clang-format on
 
-RegName RegMn1610::parseRegName(const char *line) {
-    const auto *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegMn1610::parseRegName(StrScanner &scan) {
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegMn1610::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 bool RegMn1610::isGeneric(RegName name) {
@@ -258,14 +250,10 @@ static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_NONE),
 };
 
-CcName RegMn1610::parseCcName(const char *line) {
-    const auto *entry = searchText(line, ARRAY_RANGE(CC_TABLE));
+CcName RegMn1610::parseCcName(StrScanner &scan) {
+    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_NONE ? CC_UNDEF : name;
-}
-
-uint8_t RegMn1610::ccNameLen(CcName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
 bool RegMn1610::isSkip(CcName name) {

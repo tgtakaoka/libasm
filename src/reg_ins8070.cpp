@@ -16,10 +16,6 @@
 
 #include "reg_ins8070.h"
 
-#include <ctype.h>
-
-#include "config_ins8070.h"
-
 namespace libasm {
 namespace ins8070 {
 
@@ -46,13 +42,9 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_P3),
 };
 
-RegName RegIns8070::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegIns8070::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegIns8070::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegIns8070::outRegName(StrBuffer &out, const RegName name) const {

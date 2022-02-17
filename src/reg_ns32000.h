@@ -90,8 +90,7 @@ enum StrOptName : uint8_t {
 
 class RegNs32000 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
     static uint8_t encodeRegName(RegName name);
     static bool isGeneric(RegName name);
@@ -99,28 +98,23 @@ public:
     static bool isFloat(RegName name);
     static bool isRegPair(RegName name);
 
-    static PregName parsePregName(const char *line);
-    static uint8_t pregNameLen(PregName name);
+    static PregName parsePregName(StrScanner &scan);
     StrBuffer &outPregName(StrBuffer &out, PregName name) const;
     static PregName decodePregName(uint8_t num);
     static uint8_t encodePregName(PregName name);
 
-    static MregName parseMregName(const char *line);
-    static uint8_t mregNameLen(MregName name);
+    static MregName parseMregName(StrScanner &scan);
     StrBuffer &outMregName(StrBuffer &out, MregName name) const;
     static MregName decodeMregName(uint8_t num);
     static uint8_t encodeMregName(MregName name);
 
-    static ConfigName parseConfigName(const char *line);
-    static uint8_t configNameLen(ConfigName name);
+    static ConfigName parseConfigName(StrScanner &scan);
     StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs) const;
 
-    static StrOptName parseStrOptName(const char *line);
-    static uint8_t strOptNameLen(StrOptName name);
+    static StrOptName parseStrOptName(StrScanner &scan);
     StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts) const;
 
-    static OprSize parseIndexSize(const char *line);
-    static uint8_t indexSizeLen(OprSize size);
+    static OprSize parseIndexSize(StrScanner &scan);
     char indexSizeChar(OprSize size) const;
 };
 

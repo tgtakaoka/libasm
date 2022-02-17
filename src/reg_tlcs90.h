@@ -77,8 +77,7 @@ enum CcName : int8_t {
 
 class RegTlcs90 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(const RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
     static bool isReg16(RegName name);
     static bool isRegIndex(RegName name);
@@ -95,8 +94,7 @@ public:
     static uint8_t encodeStackReg(RegName name);
     static RegName decodeStackReg(uint8_t num);
 
-    static CcName parseCcName(const char *line);
-    static uint8_t ccNameLen(const CcName name);
+    static CcName parseCcName(StrScanner &scan);
     StrBuffer &outCcName(StrBuffer &out, CcName cc) const;
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcName(uint8_t num);

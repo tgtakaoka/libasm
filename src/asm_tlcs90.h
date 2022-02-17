@@ -34,11 +34,11 @@ public:
 private:
     IntelValueParser _parser;
 
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
     Error encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
     Error encodeOperand(
             InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace tlcs90

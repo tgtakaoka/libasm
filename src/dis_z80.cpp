@@ -54,8 +54,7 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     ixBit.setOpCode(opc, insn.opCode());
     if (TableZ80.searchOpCode(ixBit))
         return setError(TableZ80.getError());
-    const char *name = ixBit.name();
-    insn.setName(name, name + strlen(name));
+    insn.setName(ixBit.name());
 
     const RegName reg = RegZ80::decodeDataReg(opc);
     if (reg != REG_HL)

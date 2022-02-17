@@ -16,37 +16,31 @@
 
 #include "asm_i8048.h"
 
-#include "error_reporter.h"
-#include "table_i8048.h"
+#include <ctype.h>
 
 namespace libasm {
 namespace i8048 {
 
-Error AsmI8048::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
 
-    if (*p == '#') {
-        op.val16 = parseExpr16(p + 1);
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
         op.mode = M_IMM8;
+        scan = p;
         return OK;
     }
 
-    const bool indir = (*p == '@');
-    if (indir) {
-        p++;
-        if (isspace(*p))
-            return setError(UNKNOWN_OPERAND);
-    }
+    const bool indir = p.expect('@');
+    if (indir && isspace(*p))
+        return setError(p, UNKNOWN_OPERAND);
 
     op.reg = RegI8048::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        p += RegI8048::regNameLen(op.reg);
         if (indir) {
             switch (op.reg) {
             case REG_A:
@@ -60,9 +54,9 @@ Error AsmI8048::parseOperand(const char *scan, Operand &op) {
                 op.mode = M_IR3;
                 break;
             default:
-                return setError(REGISTER_NOT_ALLOWED);
+                return setError(scan, REGISTER_NOT_ALLOWED);
             }
-            _scan = p;
+            scan = p;
             return OK;
         }
         switch (op.reg) {
@@ -130,17 +124,16 @@ Error AsmI8048::parseOperand(const char *scan, Operand &op) {
                 return setError(UNKNOWN_OPERAND);
             }
         }
-        _scan = p;
+        scan = p;
         return OK;
     }
     if (indir)
         return setError(UNKNOWN_OPERAND);
 
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
-    p = _scan;
+    scan = p;
     op.mode = M_AD11;
     return OK;
 }
@@ -200,24 +193,22 @@ Error AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operan
     }
 }
 
-Error AsmI8048::encode(Insn &_insn) {
+Error AsmI8048::encode(StrScanner &scan, Insn &_insn) {
     InsnI8048 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
+    if (!endOfLine(*scan))
         return setError(GARBAGE_AT_END);
-    setError(dstOp.getError());
-    setErrorIf(srcOp.getError());
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableI8048.searchName(insn))

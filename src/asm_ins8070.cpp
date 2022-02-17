@@ -16,8 +16,6 @@
 
 #include "asm_ins8070.h"
 
-#include "table_ins8070.h"
-
 namespace libasm {
 namespace ins8070 {
 
@@ -25,13 +23,13 @@ static constexpr ValueParser::FuncParser::FuncId FUNC_ADDR{
         ValueParser::FuncParser::EXTENDED_ID_BASE};
 
 struct Ins8070FuncParser : ValueParser::FuncParser {
-    ValueParser::FuncParser::FuncId isFunc(const char *name, size_t len) const override {
-        if (len == 4 && strncasecmp_P(name, PSTR("addr"), len) == 0)
+    ValueParser::FuncParser::FuncId isFunc(const StrScanner &symbol) const override {
+        if (symbol.iequals_P(PSTR("addr")))
             return FUNC_ADDR;
-        return ValueParser::FuncParser::isFunc(name, len);
+        return ValueParser::FuncParser::isFunc(symbol);
     }
 
-    Error parseFunc(ValueParser &parser, const FuncId id, const char *scan, Value &val) override {
+    Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val) override {
         if (id == FUNC_ADDR) {
             const auto arg = parseArg(parser, scan);
             const auto v = arg.getUnsigned();
@@ -61,7 +59,7 @@ Error AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
         insn.emitOperand16(op.val16);
     if (insn.oprSize() == SZ_BYTE) {
         if (overflowUint8(op.val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
     }
     return OK;
@@ -74,7 +72,7 @@ Error AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
     const Config::uintptr_t target = (op.getError() ? base + fetch : op.val16) - fetch;
     const Config::ptrdiff_t offset = target - base;
     if (overflowRel8(offset))
-        return setError(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     insn.emitOperand8(static_cast<uint8_t>(offset));
     return OK;
 }
@@ -87,7 +85,7 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     if ((op.format == OPR_16 || op.format == OPR_4) && op.reg == REG_UNDEF) {
         const Config::uintptr_t target = op.getError() ? 0xFF00 : op.val16;
         if (target < 0xFF00)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.embed(5);
         insn.emitOperand8(static_cast<uint8_t>(target));
         return OK;
@@ -97,7 +95,7 @@ Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
 
     const Config::ptrdiff_t offset = static_cast<Config::uintptr_t>(op.val16);
     if (overflowRel8(offset))
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
     insn.embed(RegIns8070::encodePointerReg(op.reg));
     if (op.autoIndex)
         insn.embed(4);
@@ -129,24 +127,23 @@ Error AsmIns8070::emitOperand(InsnIns8070 &insn, OprFormat format, const Operand
     return OK;
 }
 
-Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p) || *p == ',')
+Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p))
         return OK;
 
-    if (*p == '#' || *p == '=') {
-        op.val16 = parseExpr16(p + 1);
+    if (p.expect('#') || p.expect('=')) {
+        op.val16 = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
         op.format = OPR_IM;
+        scan = p;
         return OK;
     }
 
     const RegName reg = RegIns8070::parseRegName(p);
     if (reg != REG_UNDEF) {
-        _scan = p + RegIns8070::regNameLen(reg);
         OprFormat opr;
         switch (reg) {
         case REG_A:
@@ -176,60 +173,54 @@ Error AsmIns8070::parseOperand(const char *scan, Operand &op) {
         }
         op.reg = reg;
         op.format = opr;
+        scan = p;
         return OK;
     }
 
-    bool autoIndex = (*p == '@');
-    if (autoIndex)
-        p++;
-    op.val16 = parseExpr16(p);
+    bool autoIndex = p.expect('@');
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
-    p = skipSpaces(_scan);
 
-    if (*p == '(')  // SC/MP style
-        return setError(MISSING_COMMA);
-    if (*p == ',') {
-        p = skipSpaces(p + 1);
-        if (!autoIndex && *p == '@') {
+    if (*p.skipSpaces() == '(')  // SC/MP style
+        return setError(p, MISSING_COMMA);
+    if (p.expect(',')) {
+        p.skipSpaces();
+        if (!autoIndex && p.expect('@'))
             autoIndex = true;
-            p++;
-        }
         const RegName ptr = RegIns8070::parseRegName(p);
         if (!RegIns8070::isPointerReg(ptr))
-            setError(UNKNOWN_OPERAND);
+            setError(p, UNKNOWN_OPERAND);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
-            return setError(REGISTER_NOT_ALLOWED);
-        _scan = p + RegIns8070::regNameLen(ptr);
+            return setError(p, REGISTER_NOT_ALLOWED);
         op.reg = ptr;
         op.autoIndex = autoIndex;
         op.format = (autoIndex || ptr == REG_SP || ptr == REG_PC) ? OPR_GN : OPR_PR;
+        scan = p;
         return OK;
     }
 
     op.format = (op.val16 < 0x10) ? OPR_4 : OPR_16;
+    scan = p;
     return OK;
 }
 
-Error AsmIns8070::encode(Insn &_insn) {
+Error AsmIns8070::encode(StrScanner &scan, Insn &_insn) {
     InsnIns8070 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dst, src;
-    if (parseOperand(endName, dst))
+    if (parseOperand(scan, dst))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, src))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, src))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(dst.getError());
-    setErrorIf(src.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(dst);
+    setErrorIf(src);
 
     insn.setOprFormats(dst.format, src.format);
     if (TableIns8070.searchName(insn))

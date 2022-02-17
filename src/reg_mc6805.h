@@ -29,8 +29,7 @@ enum RegName : char {
 
 class RegMc6805 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 };
 

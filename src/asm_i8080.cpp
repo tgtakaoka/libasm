@@ -16,8 +16,6 @@
 
 #include "asm_i8080.h"
 
-#include "table_i8080.h"
-
 namespace libasm {
 namespace i8080 {
 
@@ -61,15 +59,13 @@ Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode)
     }
 }
 
-Error AsmI8080::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
 
     op.reg = RegI8080::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        _scan = p + RegI8080::regNameLen(op.reg);
         switch (op.reg) {
         case REG_H:
             op.mode = M_REGH;
@@ -88,34 +84,33 @@ Error AsmI8080::parseOperand(const char *scan, Operand &op) {
             op.mode = M_REG;
             break;
         }
+        scan = p;
         return OK;
     }
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     op.mode = M_IM16;
+    scan = p;
     return OK;
 }
 
-Error AsmI8080::encode(Insn &_insn) {
+Error AsmI8080::encode(StrScanner &scan, Insn &_insn) {
     InsnI8080 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
+    if (!endOfLine(*scan))
         return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp.getError());
-    setErrorIf(srcOp.getError());
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableI8080.searchName(insn))

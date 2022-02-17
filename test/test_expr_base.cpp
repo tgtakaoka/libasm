@@ -31,6 +31,8 @@ static void tear_down() {
 // clang-format off
 static void test_char_constant() {
     E8("'a'",    0x61, OK);
+    E8("'a'+5",  0x66, OK);
+    E8("5+'a'",  0x66, OK);
     E8("'\\''",  0x27, OK);
     E8("'\\\"'", 0x22, OK);
     E8("'\\?'",  0x3F, OK);

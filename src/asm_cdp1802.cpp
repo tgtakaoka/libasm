@@ -17,7 +17,6 @@
 #include "asm_cdp1802.h"
 
 #include "reg_cdp1802.h"
-#include "table_cdp1802.h"
 
 namespace libasm {
 namespace cdp1802 {
@@ -28,7 +27,7 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op
     const Config::uintptr_t page = base & ~0xFF;
     if (mode == PAGE) {
         if ((target & ~0xFF) != page)
-            return setError(OPERAND_TOO_FAR);
+            return setError(op, OPERAND_TOO_FAR);
         insn.emitInsn();
         insn.emitByte(target);
         return OK;
@@ -52,19 +51,19 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
         if (op.getError())
             val16 = 7;  // default work register.
         if (val16 == 0)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case REGN:
         if (op.getError())
             val16 = 7;  // default work register.
         if (val16 >= 16)
-            return setError(ILLEGAL_REGISTER);
+            return setError(op, ILLEGAL_REGISTER);
         insn.embed(val16);
         insn.emitInsn();
         break;
     case IMM8:
         if (overflowUint8(val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
         break;
@@ -75,7 +74,7 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
         if (op.getError())
             val16 = 1;  // default IO address
         if (val16 == 0 || val16 >= 8)
-            return setError(OPERAND_NOT_ALLOWED);
+            return setError(op, OPERAND_NOT_ALLOWED);
         insn.embed(val16);
         insn.emitInsn();
         break;
@@ -86,51 +85,51 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
     return getError();
 }
 
-Error AsmCdp1802::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p))
         return OK;
 
     if (_useReg) {
         const RegName reg = RegCdp1802::parseRegName(p);
         if (reg != REG_UNDEF) {
-            _scan = p + RegCdp1802::regNameLen(reg);
             op.val16 = int8_t(reg);
             op.mode = REGN;
+            scan = p;
             return OK;
         }
     }
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     op.mode = ADDR;
+    scan = p;
     return OK;
 }
 
-Error AsmCdp1802::encode(Insn &_insn) {
+Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
     InsnCdp1802 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand op1, op2;
-    if (parseOperand(endName, op1))
+    if (parseOperand(scan, op1))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, op2))
+    const StrScanner op1p(scan);
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, op2))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(op1.getError());
-    setErrorIf(op2.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(op1);
+    setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
     if (TableCdp1802.searchName(insn))
         return setError(TableCdp1802.getError());
+
 
     emitOperand(insn, insn.mode1(), op1);
     if (insn.mode2() == ADDR)

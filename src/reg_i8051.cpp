@@ -16,10 +16,6 @@
 
 #include "reg_i8051.h"
 
-#include <ctype.h>
-
-#include "config_i8051.h"
-
 namespace libasm {
 namespace i8051 {
 
@@ -54,13 +50,9 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_DPTR),
 };
 
-RegName RegI8051::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegI8051::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegI8051::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegI8051::outRegName(StrBuffer &out, const RegName name) const {

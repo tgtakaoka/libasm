@@ -16,10 +16,6 @@
 
 #include "reg_i8096.h"
 
-#include <ctype.h>
-
-#include "config_i8096.h"
-
 namespace libasm {
 namespace i8096 {
 

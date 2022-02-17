@@ -45,12 +45,12 @@ private:
               val16(0) {}
     };
 
-    Error parseIndirect(const char *scan, Operand &opr);
-    Error parseOperand(const char *scan, Operand &opr);
+    Error parseIndirect(StrScanner &scan, Operand &opr);
+    Error parseOperand(StrScanner &scan, Operand &opr);
     Error emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace i8096

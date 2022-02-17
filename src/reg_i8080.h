@@ -40,8 +40,7 @@ enum RegName : int8_t {
 
 class RegI8080 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName regName);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 
     static bool isPointerReg(RegName name);

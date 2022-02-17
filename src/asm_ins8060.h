@@ -41,12 +41,12 @@ private:
         Operand() : ErrorReporter(), mode(UNDEF), reg(REG_UNDEF), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &opr);
+    Error parseOperand(StrScanner &scan, Operand &opr);
 
     Error encodeRel8(InsnIns8060 &insn, const Operand &opr);
     Error encodeIndx(InsnIns8060 &insn, const Operand &opr);
 
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 
     static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }
     static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }

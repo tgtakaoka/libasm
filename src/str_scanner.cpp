@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2022 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef __REG_MOS6502_H__
-#define __REG_MOS6502_H__
+#include "str_scanner.h"
 
-#include "reg_base.h"
+#include "config_host.h"
 
 namespace libasm {
-namespace mos6502 {
 
-enum RegName : char {
-    REG_UNDEF = 0,
-    REG_A = 'A',
-    REG_X = 'X',
-    REG_Y = 'Y',
-    REG_S = 'S',
-};
+StrScanner StrScanner::EMPTY("");
 
-class RegMos6502 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-};
+bool StrScanner::iequals_P(const char *str) const {
+    const auto len = strlen_P(str);
+    return size() == len && strncasecmp_P(_str, str, len) == 0;
+}
 
-}  // namespace mos6502
+bool StrScanner::istarts_P(const char *str, size_t len) const {
+    if (len == 0)
+        len = strlen_P(str);
+    return strncasecmp_P(_str, str, len) == 0;
+}
+
 }  // namespace libasm
-
-#endif  // __REG_MOS6502_H__
 
 // Local Variables:
 // mode: c++

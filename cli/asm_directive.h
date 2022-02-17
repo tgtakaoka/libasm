@@ -30,6 +30,12 @@
 namespace libasm {
 namespace cli {
 
+struct icasecmp {
+    bool operator()(const std::string &lhs, const std::string &rhs) const {
+        return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
+    }
+};
+
 class AsmDirective;
 
 class AsmCommonDirective : public ErrorReporter, public ListingLine, protected SymbolTable {
@@ -44,7 +50,7 @@ public:
 
     Error assembleLine(const char *line, CliMemory &memory);
 
-    void setOrigin(uint32_t origin);
+    void reset();
     const char *errorAt() const;
     void setSymbolMode(bool reportUndef, bool reportDuplicate);
     const char *currentSource() const;
@@ -114,7 +120,7 @@ private:
         const char *comment;
     } _list;
 
-    std::map<std::string, Error (AsmCommonDirective::*)()> _pseudos;
+    std::map<std::string, Error (AsmCommonDirective::*)(), icasecmp> _pseudos;
     void registerPseudo(const char *name, Error (AsmCommonDirective::*handler)());
     Error processPseudo(const char *name);
 
@@ -174,7 +180,7 @@ public:
 
 protected:
     Assembler &_assembler;
-    std::map<std::string, Error (AsmCommonDirective::*)()> _pseudos;
+    std::map<std::string, Error (AsmCommonDirective::*)(), icasecmp> _pseudos;
 
     AsmDirective(Assembler &assembler) : _assembler(assembler) {}
     void registerPseudo(const char *name, Error (AsmCommonDirective::*handler)()) {
@@ -186,6 +192,7 @@ class AsmMotoDirective : public AsmDirective {
 public:
     AsmMotoDirective(Assembler &assembler);
     BinFormatter &defaultFormatter() override { return _formatter; }
+
 private:
     MotoSrec _formatter;
 };
@@ -194,6 +201,7 @@ class AsmIntelDirective : public AsmDirective {
 public:
     AsmIntelDirective(Assembler &assembler);
     BinFormatter &defaultFormatter() override { return _formatter; }
+
 private:
     IntelHex _formatter;
 };

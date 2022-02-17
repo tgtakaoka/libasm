@@ -58,9 +58,9 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
             break;
         default:
             if (op.val16 > TableTms32010.dataMemoryLimit())
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             if (insn.opCode() == SST && op.val16 < 0x80)
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             insn.embed(op.val16 & 0x7F);
             break;
         }
@@ -98,29 +98,25 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
     return OK;
 }
 
-Error AsmTms32010::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p))
         return OK;
 
-    if (*p == '*') {
-        p++;
-        if (*p == '+') {
-            p++;
+    if (p.expect('*')) {
+        if (p.expect('+')) {
             op.mode = M_INC;
-        } else if (*p == '-') {
-            p++;
+        } else if (p.expect('-')) {
             op.mode = M_DEC;
         } else {
             op.mode = M_ARP;
         }
-        _scan = p;
+        scan = p;
         return OK;
     }
     op.reg = RegTms32010::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        _scan = p + RegTms32010::regNameLen(op.reg);
         if (RegTms32010::isAuxiliary(op.reg)) {
             op.mode = M_AR;
             op.val16 = int8_t(op.reg) - int8_t(REG_AR0);
@@ -128,43 +124,42 @@ Error AsmTms32010::parseOperand(const char *scan, Operand &op) {
             op.mode = M_PA;
             op.val16 = int8_t(op.reg) - int8_t(REG_PA0);
         }
+        scan = p;
         return OK;
     }
 
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     op.mode = constantType(op.val16);
     if (op.mode == M_NO)
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
+    scan = p;
     return OK;
 }
 
-Error AsmTms32010::encode(Insn &_insn) {
+Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
     InsnTms32010 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
-    if (parseOperand(endName, op1))
+    if (parseOperand(scan, op1))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, op2))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, op2))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, op3))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, op3))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(op1.getError());
-    setErrorIf(op2.getError());
-    setErrorIf(op3.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(op1);
+    setErrorIf(op2);
+    setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
     if (TableTms32010.searchName(insn))

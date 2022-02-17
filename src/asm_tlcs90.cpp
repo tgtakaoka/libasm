@@ -16,12 +16,6 @@
 
 #include "asm_tlcs90.h"
 
-#include "entry_tlcs90.h"
-#include "error_reporter.h"
-#include "insn_tlcs90.h"
-#include "reg_tlcs90.h"
-#include "table_tlcs90.h"
-
 namespace libasm {
 namespace tlcs90 {
 
@@ -34,7 +28,7 @@ Error AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &
         return OK;
     }
     if (overflowRel8(delta))
-        return setError(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     insn.emitByte(delta);
     return OK;
 }
@@ -44,7 +38,7 @@ Error AsmTlcs90::encodeOperand(
     switch (mode) {
     case M_IMM8:
         if (overflowUint8(op.val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_DIR:
         insn.emitInsn(opc);
@@ -57,7 +51,7 @@ Error AsmTlcs90::encodeOperand(
         return OK;
     case M_BIT:
         if (op.val16 >= 8)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | (op.val16 & 7));
         return OK;
     case M_REL8:
@@ -95,15 +89,14 @@ Error AsmTlcs90::encodeOperand(
     }
 }
 
-Error AsmTlcs90::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p))
         return OK;
 
     const CcName cc = RegTlcs90::parseCcName(p);
     if (cc != CC_UNDEF) {
-        _scan = p + RegTlcs90::ccNameLen(cc);
         op.mode = M_CC;
         op.cc = cc;
         if (cc == CC_C) {
@@ -111,12 +104,12 @@ Error AsmTlcs90::parseOperand(const char *scan, Operand &op) {
             op.mode = R_C;
             op.reg = REG_C;
         }
+        scan = p;
         return OK;
     }
 
     RegName reg = RegTlcs90::parseRegName(p);
     if (reg != REG_UNDEF) {
-        _scan = p + RegTlcs90::regNameLen(reg);
         switch (reg) {
         case REG_IX:
         case REG_IY:
@@ -134,90 +127,82 @@ Error AsmTlcs90::parseOperand(const char *scan, Operand &op) {
             break;
         }
         op.reg = reg;
+        scan = p;
         return OK;
     }
-    if (*p == '(') {
-        p = skipSpaces(p + 1);
-        reg = RegTlcs90::parseRegName(p);
+    if (p.expect('(')) {
+        reg = RegTlcs90::parseRegName(p.skipSpaces());
         if (reg == REG_UNDEF) {  // (nnnn)
-            op.val16 = parseExpr16(p);
+            op.val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
-            op.setError(getError());
-            p = skipSpaces(_scan);
-            if (*p != ')')
-                return setError(MISSING_CLOSING_PAREN);
+            if (!p.skipSpaces().expect(')'))
+                return setError(p, MISSING_CLOSING_PAREN);
             op.mode = op.getError() ? M_UNDEF : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
-            _scan = p + 1;
+            scan = p;
             return OK;
         }
-        p = skipSpaces(p + RegTlcs90::regNameLen(reg));
         op.reg = reg;
-        if (*p == ')') {  // (rr)
+        if (p.skipSpaces().expect(')')) {  // (rr)
             if (RegTlcs90::isReg16(reg)) {
                 op.mode = M_IND;
-                _scan = p + 1;
+                scan = p;
                 return OK;
             }
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(p, REGISTER_NOT_ALLOWED);
         }
-        if (reg == REG_HL && *p == '+') {
-            const char *a = skipSpaces(p + 1);
-            const RegName idx = RegTlcs90::parseRegName(a);
+        StrScanner a(p);
+        if (reg == REG_HL && a.expect('+')) {
+            const RegName idx = RegTlcs90::parseRegName(a.skipSpaces());
             if (idx != REG_UNDEF) {
                 if (idx != REG_A)
-                    return setError(REGISTER_NOT_ALLOWED);
-                a = skipSpaces(a + RegTlcs90::regNameLen(REG_A));
-                if (*a != ')')
-                    return setError(MISSING_CLOSING_PAREN);
-                _scan = a + 1;
+                    return setError(p, REGISTER_NOT_ALLOWED);
+                if (!a.skipSpaces().expect(')'))
+                    return setError(a, MISSING_CLOSING_PAREN);
+                scan = a;
                 op.mode = M_BASE;  // (HL+A)
                 return OK;
             }
         }
         if (*p == '+' || *p == '-') {  // (rr+n)
-            op.val16 = parseExpr16(p);
+            op.val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
-            op.setError(getError());
-            p = skipSpaces(_scan);
-            if (*p != ')')
-                return setError(MISSING_CLOSING_PAREN);
+            if (!p.skipSpaces().expect(')'))
+                return setError(p, MISSING_CLOSING_PAREN);
             if (RegTlcs90::isRegIndex(reg)) {
-                _scan = p + 1;
+                scan = p;
                 op.mode = M_IDX;
                 return OK;
             }
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(p, REGISTER_NOT_ALLOWED);
         }
-        return setError(UNKNOWN_OPERAND);
+        return setError(p, UNKNOWN_OPERAND);
     }
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     op.mode = M_IMM16;
+    scan = p;
     return OK;
 }
 
-Error AsmTlcs90::encode(Insn &_insn) {
+Error AsmTlcs90::encode(StrScanner &scan, Insn &_insn) {
     InsnTlcs90 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp.getError());
-    setErrorIf(srcOp.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableTlcs90.searchName(insn))

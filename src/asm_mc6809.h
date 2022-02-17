@@ -53,12 +53,12 @@ private:
               val32(0) {}
     };
 
-    bool parsePointerMode(const char *scan, Operand &op, bool indir) __attribute__((noinline));
-    bool parseIndexedMode(const char *scan, Operand &op, bool indir);
-    bool parseBitPosition(const char *scan, Operand &op);
-    bool parseRegisterList(const char *scan, Operand &op, bool indir);
-    Error parseOperand(const char *scan, Operand &op);
-    Error processPseudo(const char *scan, InsnMc6809 &insn);
+    bool parsePointerMode(StrScanner &scan, Operand &op, bool indir) __attribute__((noinline));
+    bool parseIndexedMode(StrScanner &scan, Operand &op, bool indir);
+    bool parseBitPosition(StrScanner &scan, Operand &op);
+    bool parseRegisterList(StrScanner &scan, Operand &op, bool indir);
+    Error parseOperand(StrScanner &scan, Operand &op);
+    Error processPseudo(StrScanner &scan, InsnMc6809 &insn);
 
     Error encodePushPull(InsnMc6809 &insn, const Operand &op);
     Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
@@ -68,7 +68,7 @@ private:
     char transferMemoryMode(const Operand &op);
     Error encodeTransferMemory(InsnMc6809 &insn, const Operand &op1, const Operand &op2);
     Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mc6809

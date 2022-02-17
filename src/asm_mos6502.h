@@ -44,13 +44,13 @@ private:
         Operand() : ErrorReporter(), mode(IMPL), val32(0) {}
     };
 
-    Error parseOnOff(const char *scan, bool &val);
-    Error processPseudo(const char *scan, InsnMos6502 &insn);
+    Error parseOnOff(StrScanner &scan, bool &val);
+    Error processPseudo(StrScanner &scan, InsnMos6502 &insn);
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
-    Error parseOperand(const char *scan, Operand &op, Operand &extra);
+    Error parseOperand(StrScanner &scan, Operand &op, Operand &extra);
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mos6502

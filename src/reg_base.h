@@ -21,6 +21,7 @@
 
 #include "config_host.h"
 #include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 
@@ -69,7 +70,7 @@ protected:
         return out;
     }
 
-    static bool isidchar(const char c) { return isalnum(c) || c == '_'; }
+    static bool isidchar(char c) { return isalnum(c) || c == '_'; }
 
     static const NameEntry *searchName(uint8_t name, const NameEntry *begin, const NameEntry *end) {
         for (const NameEntry *entry = begin; entry < end; entry++) {
@@ -85,12 +86,14 @@ protected:
     }
 
     static const NameEntry *searchText(
-            const char *str, const NameEntry *begin, const NameEntry *end) {
+            StrScanner &scan, const NameEntry *begin, const NameEntry *end) {
         for (const NameEntry *entry = begin; entry < end; entry++) {
             const /*PROGMEM*/ char *text = entry->text();
             const uint8_t len = entry->len();
-            if (strncasecmp_P(str, text, len) == 0 && !isidchar(str[len]))
+            if (scan.istarts_P(text, len) && !isidchar(scan[len])) {
+                scan += len;
                 return entry;
+            }
         }
         return nullptr;
     }

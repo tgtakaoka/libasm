@@ -48,11 +48,11 @@ private:
         Operand() : ErrorReporter(), mode(NONE), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
 
     Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace cdp1802

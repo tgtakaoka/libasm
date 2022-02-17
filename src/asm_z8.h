@@ -51,10 +51,9 @@ private:
         Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &op);
-    Error setRp(
-            const char *scan, InsnZ8 &insn, const /*PROGMEM*/ char *name, bool (AsmZ8::*)(int16_t));
-    Error processPseudo(const char *scan, InsnZ8 &insn);
+    Error parseOperand(StrScanner &scan, Operand &op);
+    Error setRp(StrScanner &scan, bool (AsmZ8::*)(int16_t));
+    Error processPseudo(StrScanner &scan, InsnZ8 &insn);
 
     Error encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
     Error encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
@@ -66,7 +65,7 @@ private:
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
     Error encodePostByte(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace z8

@@ -18,28 +18,21 @@
 
 #include <ctype.h>
 
-#include "config_cdp1802.h"
-#include "table_cdp1802.h"
-
 namespace libasm {
 namespace cdp1802 {
 
-RegName RegCdp1802::parseRegName(const char *line) {
-    if (toupper(*line++) == 'R' && isdigit(*line)) {
-        int8_t num = *line++ - '0';
-        if (num == 1 && isdigit(*line))
-            num = *line++ - '0' + 10;
-        if (num < 16 && !isidchar(*line))
+RegName RegCdp1802::parseRegName(StrScanner &scan) {
+    StrScanner p(scan);
+    if (toupper(*p++) == 'R' && isdigit(*p)) {
+        int8_t num = *p++ - '0';
+        if (num == 1 && isdigit(*p))
+            num = *p++ - '0' + 10;
+        if (num < 16 && !isidchar(*p)) {
+            scan = p;
             return RegName(num);
+        }
     }
     return REG_UNDEF;
-}
-
-uint8_t RegCdp1802::regNameLen(RegName name) {
-    const int8_t num = int8_t(name);
-    if (num >= 0)
-        return num < 10 ? 2 : 3;
-    return 0;
 }
 
 StrBuffer &RegCdp1802::outRegName(StrBuffer &out, RegName name) const {

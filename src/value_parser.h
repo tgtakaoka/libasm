@@ -18,6 +18,7 @@
 #define __VALUE_PARSER_H__
 
 #include "error_reporter.h"
+#include "str_scanner.h"
 #include "symbol_table.h"
 
 namespace libasm {
@@ -65,52 +66,51 @@ private:
     Value(uint32_t value, ValueType type) : _value(value), _type(type) {}
 };
 
-class ValueParser : protected ErrorReporter {
+class ValueParser : public ErrorReporter {
 public:
     ValueParser(char curSym = '.')
         : ErrorReporter(), _origin(0), _curSym(curSym), _funcParser(nullptr) {}
 
-    Error error() const { return getError(); }
     /*
-     * Parse |expr| text until |end| and convert expression to |val|.
-     * Undefined symbol reference in expression should be checked by
-     * |val.isUndefined()|. Other error should be checked by |error()|.
+     * Parse |scan| text and return expression |value|.  Undefined
+     * symbol reference in expression should be checked by
+     * |value.isUndefined()|. Other error should be checked by
+     * |getError()|.
      */
-    const char *eval(const char *expr, const char *end, Value &val, SymbolTable *symtab);
+    Value eval(StrScanner &scan, const SymbolTable *symtab);
+
     /*
-     * Parse |expr| text and convert character constant to |val|.
-     * Error should be checked by |error()|.
+     * Parse |scan| text and convert character constant to |val|.
+     * Error should be checked by |getError()|.
      */
-    const char *readChar(const char *expr, char &val);
+    char readChar(StrScanner &scan);
 
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
-    bool isSymbolLetter(char c, bool head = false) const;
-    const char *scanSymbol(const char *scan) const;
+    static bool isSymbolLetter(char c, bool head = false);
+    StrScanner readSymbol(StrScanner &scan) const;
 
     class FuncParser : public ErrorReporter {
     public:
         typedef uint16_t FuncId;
         static constexpr FuncId EXTENDED_ID_BASE = 100;
-        virtual FuncId isFunc(const char *name, size_t len) const;
-        virtual Error parseFunc(ValueParser &parser, const FuncId id, const char *scan, Value &val);
+        virtual FuncId isFunc(const StrScanner &symbol) const;
+        virtual Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val);
 
     protected:
-        Value parseArg(ValueParser &parser, const char *scan, char expect = ')');
+        Value parseArg(ValueParser &parser, StrScanner &scan, char expect = ')');
     };
     void setFuncParser(FuncParser *parser) { _funcParser = parser; }
 
 protected:
-    virtual Error readNumber(const char *scan, Value &val);
-    Error parseNumber(const char *scan, Value &val, const uint8_t base, const char suffix = 0);
-    Error scanNumberEnd(const char *scan, const uint8_t base, char suffix = 0);
+    virtual Error readNumber(StrScanner &scan, Value &val);
+    Error parseNumber(StrScanner &scan, Value &val, const uint8_t base, const char suffix = 0);
+    Error scanNumberEnd(const StrScanner &scan, const uint8_t base, char suffix = 0);
 
 private:
     friend class FuncParser;
     uint32_t _origin;
     const char _curSym;
     FuncParser *_funcParser;
-    const char *_next;
-    const char *_end;
 
     enum Op : uint8_t {
         OP_NONE,
@@ -158,15 +158,15 @@ private:
         E _values[capacity];
     };
 
-    SymbolTable *_symtab;
+    const SymbolTable *_symtab;
     Stack<OprAndLval> _stack;
 
-    const char *skipSpaces(const char *scan) const;
-    Value parseExpr(const char *scan);
+    Value parseExpr(StrScanner &scan);
     FuncParser &getFuncParser() const;
-    Value readAtom(const char *scan);
-    Value readCharacterConstant(const char *scan);
-    Operator readOperator(const char *scan);
+    Error parseFunction(const uint16_t funid, StrScanner &scan, Value &val);
+    Value readAtom(StrScanner &scan);
+    Value readCharacterConstant(StrScanner &scan);
+    Operator readOperator(StrScanner &scan);
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
 };
 
@@ -175,7 +175,7 @@ public:
     MotoValueParser() : ValueParser('*') {}
 
 protected:
-    Error readNumber(const char *scan, Value &val) override;
+    Error readNumber(StrScanner &scan, Value &val) override;
 };
 
 class IntelValueParser : public ValueParser {
@@ -183,7 +183,7 @@ public:
     IntelValueParser() : ValueParser('$') {}
 
 protected:
-    Error readNumber(const char *scan, Value &val) override;
+    Error readNumber(StrScanner &scan, Value &val) override;
 };
 
 }  // namespace libasm

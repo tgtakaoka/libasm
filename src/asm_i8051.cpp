@@ -16,47 +16,41 @@
 
 #include "asm_i8051.h"
 
-#include "table_i8051.h"
+#include <ctype.h>
 
 namespace libasm {
 namespace i8051 {
 
-Error AsmI8051::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
 
-    if (*p == '#') {
-        op.val16 = parseExpr16(p + 1);
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
         op.mode = IMM16;
+        scan = p;
         return OK;
     }
 
-    const bool indir = (*p == '@');
-    if (indir) {
-        p++;
-        if (isspace(*p))
-            return setError(UNKNOWN_OPERAND);
-    }
+    const bool indir = p.expect('@');
+    if (indir && isspace(*p))
+        return setError(p, UNKNOWN_OPERAND);
 
     op.reg = RegI8051::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        p += RegI8051::regNameLen(op.reg);
-        if (indir && op.reg == REG_A && *p == '+') {
-            p++;
+        if (indir && op.reg == REG_A && p.expect('+')) {
             const RegName base = RegI8051::parseRegName(p);
             if (base == REG_DPTR || base == REG_PC) {
-                _scan = p + RegI8051::regNameLen(base);
                 op.mode = (base == REG_DPTR) ? INDXD : INDXP;
+                scan = p;
                 return OK;
             }
-            return setError(UNKNOWN_OPERAND);
+            return setError(p, UNKNOWN_OPERAND);
         }
-        _scan = p;
+        scan = p;
         if (indir) {
             if (op.reg == REG_R0 || op.reg == REG_R1) {
                 op.mode = IDIRR;
@@ -66,7 +60,7 @@ Error AsmI8051::parseOperand(const char *scan, Operand &op) {
                 op.mode = IDIRD;
                 return OK;
             }
-            return setError(UNKNOWN_OPERAND);
+            return setError(p, UNKNOWN_OPERAND);
         }
         if (RegI8051::isRReg(op.reg)) {
             op.mode = RREG;
@@ -86,41 +80,37 @@ Error AsmI8051::parseOperand(const char *scan, Operand &op) {
             op.mode = ABREG;
             return OK;
         default:
-            return setError(UNKNOWN_OPERAND);
+            return setError(p, UNKNOWN_OPERAND);
         }
     }
     if (indir)
-        return setError(UNKNOWN_OPERAND);
+        return setError(p, UNKNOWN_OPERAND);
 
-    const bool bitNot = (*p == '/');
-    if (bitNot)
-        p = skipSpaces(p + 1);
-
-    op.val16 = parseExpr16(p);
+    const bool bitNot = p.expect('/');
+    op.val16 = parseExpr16(p.skipSpaces(), op);
     if (parserError())
         return getError();
-    op.setError(getError());
-    p = _scan;
-    if (*p == '.') {
+    if (p.expect('.')) {
         if (op.getError())
             op.val16 = 0x20;
-        uint16_t bitNo = parseExpr16(p + 1);
+        uint16_t bitNo = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setErrorIf(getError());
         if (bitNo >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(p, ILLEGAL_BIT_NUMBER);
         uint16_t val16 = op.val16;
         if ((val16 & ~0x0F) == 0x20 || (val16 & ~0x78) == 0x80) {
             op.mode = bitNot ? NOTAD : BITAD;
             if ((val16 & 0x80) == 0)
                 op.val16 = (val16 & 0xF) << 3;
             op.val16 |= bitNo;
+            scan = p;
             return OK;
         }
-        return setError(NOT_BIT_ADDRESSABLE);
+        return setError(p, NOT_BIT_ADDRESSABLE);
     }
     op.mode = bitNot ? NOTAD : ADR16;
+    scan = p;
     return OK;
 }
 
@@ -177,30 +167,28 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
     }
 }
 
-Error AsmI8051::encode(Insn &_insn) {
+Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
     InsnI8051 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp, extOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, extOp))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, extOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
+    if (!endOfLine(*scan))
         return setError(GARBAGE_AT_END);
-    setError(dstOp.getError());
-    setErrorIf(srcOp.getError());
-    setErrorIf(extOp.getError());
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
+    setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
     if (TableI8051.searchName(insn))

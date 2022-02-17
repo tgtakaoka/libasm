@@ -41,12 +41,12 @@ private:
         Operand() : ErrorReporter(), mode(M_NO), size(SZ_NONE), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
     Error emitRelative(InsnMc6800 &insn, const Operand &op);
     Error emitImmediate(InsnMc6800 &insn, const Operand &op);
     Error emitBitNumber(InsnMc6800 &insn, const Operand &op);
     Error emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mc6800

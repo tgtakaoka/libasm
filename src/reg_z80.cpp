@@ -16,10 +16,6 @@
 
 #include "reg_z80.h"
 
-#include <ctype.h>
-
-#include "config_z80.h"
-#include "reg_z80.h"
 #include "table_z80.h"
 
 namespace libasm {
@@ -66,13 +62,9 @@ static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_I),
 };
 
-RegName RegZ80::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegZ80::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegZ80::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegZ80::outRegName(StrBuffer &out, RegName name) const {
@@ -177,13 +169,9 @@ static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_M),
 };
 
-CcName RegZ80::parseCcName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(CC_TABLE));
+CcName RegZ80::parseCcName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     return entry ? CcName(entry->name()) : CC_UNDEF;
-}
-
-uint8_t RegZ80::ccNameLen(const CcName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(CC_TABLE));
 }
 
 StrBuffer &RegZ80::outCcName(StrBuffer &out, const CcName name) const {

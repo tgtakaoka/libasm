@@ -16,10 +16,6 @@
 
 #include "reg_i8080.h"
 
-#include <ctype.h>
-
-#include "config_i8080.h"
-
 namespace libasm {
 namespace i8080 {
 
@@ -48,13 +44,9 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_PSW),
 };
 
-RegName RegI8080::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegI8080::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegI8080::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegI8080::outRegName(StrBuffer &out, const RegName name) const {

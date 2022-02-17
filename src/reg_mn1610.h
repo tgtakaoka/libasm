@@ -93,8 +93,7 @@ enum CcName : int8_t {
 
 class RegMn1610 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     static bool isGeneric(RegName name);
     static bool isIndex(RegName name);
     static bool isIndirect(RegName name);
@@ -115,8 +114,7 @@ public:
     static RegName decodeSpecial(uint8_t num);
     StrBuffer &outRegName(StrBuffer &out, RegName name) const;
 
-    static CcName parseCcName(const char *line);
-    static uint8_t ccNameLen(CcName name);
+    static CcName parseCcName(StrScanner &scan);
     static bool isSkip(CcName name);
     static bool isCop(CcName name);
     static bool isEop(CcName name);

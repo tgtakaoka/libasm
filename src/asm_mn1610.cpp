@@ -16,8 +16,6 @@
 
 #include "asm_mn1610.h"
 
-#include "table_mn1610.h"
-
 namespace libasm {
 namespace mn1610 {
 
@@ -40,7 +38,7 @@ Error AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
 Error AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
     switch (op.mode) {
     case M_IABS:
-        if (op.val32 < 0x100) { // Zero-page indirect: (D)
+        if (op.val32 < 0x100) {  // Zero-page indirect: (D)
             insn.embed(2 << 11);
             insn.embed(static_cast<uint8_t>(op.val32));
             return OK;
@@ -48,7 +46,7 @@ Error AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
         // Relative indirect: (abs)
         // Fall-through
     case M_ABS:
-    case M_IM16: // Relative: abs
+    case M_IM16:  // Relative: abs
         return encodeIcRelative(insn, op);
     case M_IXID:
     case M_INDX:
@@ -188,15 +186,13 @@ Error AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mod
     return OK;
 }
 
-Error AsmMn1610::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
 
     op.cc = RegMn1610::parseCcName(p);
     if (op.cc != CC_UNDEF) {
-        p += RegMn1610::ccNameLen(op.cc);
         if (RegMn1610::isSkip(op.cc)) {
             op.mode = M_SKIP;
         } else if (RegMn1610::isCop(op.cc)) {
@@ -204,19 +200,20 @@ Error AsmMn1610::parseOperand(const char *scan, Operand &op) {
         } else if (RegMn1610::isEop(op.cc)) {
             op.mode = M_EOP;
         }
-        _scan = p;
+        scan = p;
         return OK;
     }
 
-    const bool indir = (*p == '(');
-    const bool preDec = (*p == '-' && p[1] == '(');
-    const char *save = p;
+    StrScanner t(p);
+    const bool indir = p.expect('(');
+    const bool preDec = (*t == '-' && *++t == '(');
     if (indir || preDec)
-        p = skipSpaces(p + (preDec ? 2 : 1));
-    op.reg = RegMn1610::parseRegName(p);
+        ++t;
+    const StrScanner r(t);
+    op.reg = RegMn1610::parseRegName(t);
     if (op.reg != REG_UNDEF) {
         // r, (r), -(r), (r)+
-        p = skipSpaces(p + RegMn1610::regNameLen(op.reg));
+        t.skipSpaces();
         if (indir || preDec) {
             if (op.reg == REG_R1) {
                 op.mode = M_RI1;
@@ -225,15 +222,14 @@ Error AsmMn1610::parseOperand(const char *scan, Operand &op) {
             } else if (RegMn1610::isIndirect(op.reg)) {
                 op.mode = M_RI;
             } else {
-                return setError(REGISTER_NOT_ALLOWED);
+                return setError(r, REGISTER_NOT_ALLOWED);
             }
-            if (*p++ != ')')
-                return setError(MISSING_CLOSING_PAREN);
+            if (!t.expect(')'))
+                return setError(t, MISSING_CLOSING_PAREN);
             if (preDec) {
                 op.mode = M_RIAU;
                 op.val32 = -1;
-            } else if (*p == '+') {
-                p++;
+            } else if (t.expect('+')) {
                 op.mode = M_RIAU;
                 op.val32 = 1;
             }
@@ -254,17 +250,15 @@ Error AsmMn1610::parseOperand(const char *scan, Operand &op) {
                 op.mode = M_RHR;
             }
         }
-        _scan = p;
+        scan = t;
         return OK;
     }
 
     // v, (v), (v)(r), v(r), (v(r))
-    p = indir ? save + 1 : save;
-    op.val32 = parseExpr32(p);
+    op.val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
-    p = skipSpaces(_scan);
-    if (endOfLine(p) || *p == ',') {
+    if (endOfLine(*p.skipSpaces()) || *p == ',') {
         // v
         if (overflowUint16(op.val32)) {
             op.mode = M_ABS;
@@ -273,81 +267,73 @@ Error AsmMn1610::parseOperand(const char *scan, Operand &op) {
         } else {
             op.mode = M_IM8;
         }
-        _scan = p;
+        scan = p;
         return OK;
     }
-    if (*p == '(') {
+    if (p.expect('(')) {
         // v(r), (v(r))
-        p = skipSpaces(p + 1);
-        op.reg = RegMn1610::parseRegName(p);
+        op.reg = RegMn1610::parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_OPERAND);
-        p = skipSpaces(p + RegMn1610::regNameLen(op.reg));
-        if (*p++ != ')')
-            return setError(MISSING_CLOSING_PAREN);
-        p = skipSpaces(p);
-        if (indir && *p++ != ')')
-            return setError(MISSING_CLOSING_PAREN);
-        _scan = p;
+            return setError(p, UNKNOWN_OPERAND);
+        if (!p.skipSpaces().expect(')'))
+            return setError(p, MISSING_CLOSING_PAREN);
+        p.skipSpaces();
+        if (indir && !p.expect(')'))
+            return setError(p, MISSING_CLOSING_PAREN);
         op.mode = indir ? M_IXID : M_INDX;
+        scan = p;
         return OK;
     }
-    if (indir && *p++ == ')') {
-        // (v), (v)(r)
-        p = skipSpaces(p);
-        if (endOfLine(p) || *p == ',') {
-            op.mode = M_IABS;
-            _scan = p;
+    if (indir && !p.expect(')'))
+        return setError(MISSING_CLOSING_PAREN);
+    // (v), (v)(r)
+    if (endOfLine(*p.skipSpaces()) || *p == ',') {
+        op.mode = M_IABS;
+        scan = p;
+        return OK;
+    }
+    if (p.expect('(')) {
+        // (v)(r)
+        op.reg = RegMn1610::parseRegName(p.skipSpaces());
+        if (op.reg != REG_UNDEF) {
+            if (!p.skipSpaces().expect(')'))
+                return setError(MISSING_CLOSING_PAREN);
+            op.mode = M_IDIX;
+            scan = p;
             return OK;
         }
-        if (*p++ == '(') {
-            // (v)(r)
-            p = skipSpaces(p);
-            op.reg = RegMn1610::parseRegName(p);
-            if (op.reg != REG_UNDEF) {
-                p = skipSpaces(p + RegMn1610::regNameLen(op.reg));
-                if (*p++ == ')') {
-                    _scan = p;
-                    op.mode = M_IDIX;
-                    return OK;
-                }
-            }
-        }
-        // Fall-throgh to MISSING_CLOSING_PAREN error
     }
-    return setError(indir ? MISSING_CLOSING_PAREN : UNKNOWN_OPERAND);
+    return setError(p, UNKNOWN_OPERAND);
 }
 
-Error AsmMn1610::encode(Insn &_insn) {
+Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     InsnMn1610 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand opr1, opr2, opr3, opr4;
-    if (parseOperand(endName, opr1))
+    if (parseOperand(scan, opr1))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, opr2))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, opr2))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, opr3))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, opr3))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, opr4))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, opr4))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(opr1.getError());
-    setErrorIf(opr2.getError());
-    setErrorIf(opr3.getError());
-    setErrorIf(opr4.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(opr1);
+    setErrorIf(opr2);
+    setErrorIf(opr3);
+    setErrorIf(opr4);
 
     insn.setAddrMode(opr1.mode, opr2.mode, opr3.mode, opr4.mode);
     if (TableMn1610.searchName(insn))

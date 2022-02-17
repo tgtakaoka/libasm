@@ -16,9 +16,6 @@
 
 #include "asm_z80.h"
 
-#include "reg_z80.h"
-#include "table_z80.h"
-
 namespace libasm {
 namespace z80 {
 
@@ -126,33 +123,32 @@ Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, con
     }
 }
 
-Error AsmZ80::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
 
     // 'C' is either C-reg or C-condition
-    const RegName reg = RegZ80::parseRegName(p);
+    StrScanner a(p);
+    const RegName reg = RegZ80::parseRegName(a);
     if (reg == REG_C) {
-        _scan = p + RegZ80::regNameLen(REG_C);
         op.mode = R_C;
         op.reg = REG_C;
         op.val16 = RegZ80::encodeCcName(CC_C);
+        scan = a;
         return OK;
     }
 
     const CcName cc = RegZ80::parseCcName(p);
     if (cc != CC_UNDEF) {
-        _scan = p + RegZ80::ccNameLen(cc);
         op.mode = RegZ80::isCc4Name(cc) ? M_CC4 : M_CC8;
         op.val16 = RegZ80::encodeCcName(cc);
+        scan = p;
         return OK;
     }
 
     op.reg = RegZ80::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        _scan = p + RegZ80::regNameLen(op.reg);
         switch (op.reg) {
         case REG_IX:
         case REG_IY:
@@ -173,25 +169,22 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
             op.mode = AddrMode(int8_t(op.reg) + 26);
             break;
         }
+        scan = p;
         return OK;
     }
-    if (*p == '(') {
-        p = skipSpaces(p + 1);
-        op.reg = RegZ80::parseRegName(p);
+    if (p.expect('(')) {
+        op.reg = RegZ80::parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF) {
-            op.val16 = parseExpr16(p);
+            op.val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
-            op.setError(getError());
-            p = skipSpaces(_scan);
-            if (*p != ')')
-                return setError(MISSING_CLOSING_PAREN);
+            if (!p.skipSpaces().expect(')'))
+                return setError(p, MISSING_CLOSING_PAREN);
             op.mode = M_ABS;
-            _scan = p + 1;
+            scan = p;
             return OK;
         }
-        p = skipSpaces(p + RegZ80::regNameLen(op.reg));
-        if (*p == ')') {
+        if (p.skipSpaces().expect(')')) {
             switch (op.reg) {
             case REG_BC:
             case REG_DE:
@@ -213,52 +206,47 @@ Error AsmZ80::parseOperand(const char *scan, Operand &op) {
             default:
                 return setError(REGISTER_NOT_ALLOWED);
             }
-            _scan = p + 1;
+            scan = p;
             return OK;
         }
         if (*p == '+' || *p == '-') {
             if (op.reg == REG_IX || op.reg == REG_IY) {
-                op.val16 = parseExpr16(p);
+                op.val16 = parseExpr16(p, op);
                 if (parserError())
                     return getError();
-                op.setError(getError());
-                p = skipSpaces(_scan);
-                if (*p != ')')
+                if (!p.skipSpaces().expect(')'))
                     return setError(MISSING_CLOSING_PAREN);
-                _scan = p + 1;
+                scan = p;
                 op.mode = M_INDX;
                 return OK;
             }
         }
         return setError(UNKNOWN_OPERAND);
     }
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     op.mode = M_IM16;
+    scan = p;
     return OK;
-    ;
 }
 
-Error AsmZ80::encode(Insn &_insn) {
+Error AsmZ80::encode(StrScanner &scan, Insn &_insn) {
     InsnZ80 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(endName, dstOp))
+    if (parseOperand(scan, dstOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, srcOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, srcOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
+    if (!endOfLine(*scan))
         return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp.getError());
-    setErrorIf(srcOp.getError());
+    setErrorIf(dstOp);
+    setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
     if (TableZ80.searchName(insn))

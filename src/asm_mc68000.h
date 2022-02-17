@@ -54,9 +54,9 @@ private:
         Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
 
-    Error parseMoveMultiRegList(const char *scan, Operand &opr);
-    Error parseOperand(const char *scan, Operand &opr);
-    Error checkAlignment(OprSize size, Config::uintptr_t addr);
+    Error parseMoveMultiRegList(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
+    Error checkAlignment(OprSize size, const Operand &op);
 
     Error emitBriefExtension(
             InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp);
@@ -65,7 +65,7 @@ private:
     Error emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t data);
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mc68000

@@ -16,30 +16,27 @@
 
 #include "reg_mc6800.h"
 
-#include <ctype.h>
-
 #include "config_mc6800.h"
 #include "table_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
 
-RegName RegMc6800::parseRegName(const char *line) {
-    const char r = *line++;
-    if (isidchar(*line))
+RegName RegMc6800::parseRegName(StrScanner &scan) {
+    StrScanner p(scan);
+    const char r = *p++;
+    if (isidchar(*p))
         return REG_UNDEF;
     switch (toupper(r)) {
     case 'X':
+        scan = p;
         return REG_X;
     case 'Y':
+        scan = p;
         return REG_Y;
     default:
         return REG_UNDEF;
     }
-}
-
-uint8_t RegMc6800::regNameLen(RegName name) {
-    return name == REG_UNDEF ? 0 : 1;
 }
 
 StrBuffer &RegMc6800::outRegName(StrBuffer &out, const RegName name) const {

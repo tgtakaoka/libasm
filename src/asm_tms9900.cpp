@@ -16,8 +16,6 @@
 
 #include "asm_tms9900.h"
 
-#include "table_tms9900.h"
-
 namespace libasm {
 namespace tms9900 {
 
@@ -26,10 +24,10 @@ Error AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     ;
     if (target % 2)
-        return setError(OPERAND_NOT_ALIGNED);
+        return setError(op, OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t delta = (target - base) >> 1;
     if (overflowRel8(delta))
-        return setError(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
     return OK;
 }
@@ -37,14 +35,14 @@ Error AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
 Error AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
     const int16_t offset = static_cast<int16_t>(op.val16);
     if (overflowRel16(offset))
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
     insn.embed(static_cast<uint8_t>(offset));
     return OK;
 }
 
 Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
     if (mode == M_SRC2 && insn.dstMode() == M_BIT2 && op.mode == M_INCR)
-        return setError(OPERAND_NOT_ALLOWED);
+        return setError(op, OPERAND_NOT_ALLOWED);
     Config::opcode_t opc = RegTms9900::encodeRegNumber(op.reg);
     switch (op.mode) {
     case M_REG:
@@ -61,7 +59,7 @@ Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode m
         break;
     default:  // M_INDX
         if (op.reg == REG_R0)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         opc |= (2 << 4);
         insn.emitOperand16(op.val16);
         break;
@@ -108,25 +106,25 @@ Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode m
         return encodeCruOffset(insn, op);
     case M_CNT:
         if (val16 == 0 && !op.getError())
-            return setError(OPERAND_NOT_ALLOWED);
+            return setError(op, OPERAND_NOT_ALLOWED);
         if (val16 == 16)
             val16 = 0;
         /* Fall-through */
     case M_XOP:
         if (val16 >= 16)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.embed(val16 << 6);
         return OK;
     case M_SCNT:
         if (op.mode == M_REG) {
             if (op.reg == REG_R0)
                 return OK;
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         }
         if (val16 == 0 && !op.getError())
-            return setError(OPERAND_NOT_ALLOWED);
+            return setError(op, OPERAND_NOT_ALLOWED);
         if (val16 >= 16)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.embed(val16 << 4);
         return OK;
     case M_CNT2:
@@ -134,14 +132,14 @@ Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode m
         if (op.mode == M_REG) {
             if (op.reg == REG_R0)
                 return OK;
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         }
         if (val16 == 0 && !op.getError())
-            return setError(OPERAND_NOT_ALLOWED);
+            return setError(op, OPERAND_NOT_ALLOWED);
         /* Fall-through */
     case M_BIT2:
         if (val16 >= 16)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.embedPost(val16 << 6);
         return OK;
     case M_RTWP:
@@ -150,91 +148,76 @@ Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode m
             insn.embed(val16 & 7);
             return OK;
         }
-        return setError(OPERAND_NOT_ALLOWED);
+        return setError(op, OPERAND_NOT_ALLOWED);
     default:
         return OK;
     }
 }
 
-Error AsmTms9900::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    op.setAt(p);
+    if (endOfLine(*p))
         return OK;
 
-    if (*p == '*') {
-        p++;
+    if (p.expect('*')) {
         op.reg = RegTms9900::parseRegName(p);
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_OPERAND);
-        p += RegTms9900::regNameLen(op.reg);
-        if (*p == '+') {
-            p++;
-            op.mode = M_INCR;
-        } else {
-            op.mode = M_IREG;
-        }
-        _scan = p;
+            return setError(p, UNKNOWN_OPERAND);
+        op.mode = p.expect('+') ? M_INCR : M_IREG;
+        scan = p;
         return OK;
     }
-    if (*p == '@') {
-        op.val16 = parseExpr16(p + 1);
+    if (p.expect('@')) {
+        op.val16 = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
-        p = skipSpaces(_scan);
-        if (*p == '(') {
-            p = skipSpaces(p + 1);
-            op.reg = RegTms9900::parseRegName(p);
+        if (p.skipSpaces().expect('(')) {
+            op.reg = RegTms9900::parseRegName(p.skipSpaces());
             if (op.reg == REG_UNDEF)
-                return setError(UNKNOWN_OPERAND);
+                return setError(p, UNKNOWN_OPERAND);
             if (op.reg == REG_R0)
-                return setError(REGISTER_NOT_ALLOWED);
-            p += RegTms9900::regNameLen(op.reg);
-            p = skipSpaces(p);
-            if (*p != ')')
-                return setError(MISSING_CLOSING_PAREN);
-            p++;
+                return setError(p, REGISTER_NOT_ALLOWED);
+            if (!p.skipSpaces().expect(')'))
+                return setError(p, MISSING_CLOSING_PAREN);
             op.mode = M_INDX;
         } else {
             op.mode = M_SYBL;
         }
-        _scan = p;
+        scan = p;
         return OK;
     }
     op.reg = RegTms9900::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        _scan = p + RegTms9900::regNameLen(op.reg);
         op.mode = M_REG;
+        scan = p;
         return OK;
     }
 
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    op.setError(getError());
     op.mode = M_IMM;
+    scan = p;
     return OK;
 }
 
-Error AsmTms9900::encode(Insn &_insn) {
+Error AsmTms9900::encode(StrScanner &scan, Insn &_insn) {
     InsnTms9900 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand srcOp, dstOp;
-    if (parseOperand(endName, srcOp))
+    if (parseOperand(scan, srcOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, dstOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, dstOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp.getError());
-    setErrorIf(srcOp.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(srcOp);
+    setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
     if (TableTms9900.searchName(insn))

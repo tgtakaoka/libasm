@@ -16,57 +16,62 @@
 
 #include "reg_mc68000.h"
 
-#include <ctype.h>
-
-#include "config_mc68000.h"
-
 namespace libasm {
 namespace mc68000 {
 
-RegName RegMc68000::parseRegName(const char *line) {
-    const char c1 = toupper(*line++);
-    const char c2 = toupper(*line++);
-    if (c1 == 'A' || c1 == 'D') {
-        if (c2 < '0' || c2 >= '8' || isidchar(*line))
-            return REG_UNDEF;
-        return c1 == 'D' ? decodeDataReg(c2 - '0') : decodeAddrReg(c2 - '0');
-    }
-    const char c3 = toupper(*line++);
-    if (c1 == 'P' && c2 == 'C' && !isidchar(c3))
-        return REG_PC;
-    if (c1 == 'S' && c2 == 'R' && !isidchar(c3))
-        return REG_SR;
-    if (c1 == 'C' && c2 == 'C' && c3 == 'R' && !isidchar(*line))
-        return REG_CCR;
-    if (c1 == 'U' && c2 == 'S' && c3 == 'P' && !isidchar(*line))
-        return REG_USP;
-    return REG_UNDEF;
-}
-
-uint8_t RegMc68000::regNameLen(RegName name) {
-    if (name == REG_UNDEF)
-        return 0;
-    return (name == REG_CCR || name == REG_USP) ? 3 : 2;
-}
-
+static const char TEXT_REG_D0[] PROGMEM = "D0";
+static const char TEXT_REG_D1[] PROGMEM = "D1";
+static const char TEXT_REG_D2[] PROGMEM = "D2";
+static const char TEXT_REG_D3[] PROGMEM = "D3";
+static const char TEXT_REG_D4[] PROGMEM = "D4";
+static const char TEXT_REG_D5[] PROGMEM = "D5";
+static const char TEXT_REG_D6[] PROGMEM = "D6";
+static const char TEXT_REG_D7[] PROGMEM = "D7";
+static const char TEXT_REG_A0[] PROGMEM = "A0";
+static const char TEXT_REG_A1[] PROGMEM = "A1";
+static const char TEXT_REG_A2[] PROGMEM = "A2";
+static const char TEXT_REG_A3[] PROGMEM = "A3";
+static const char TEXT_REG_A4[] PROGMEM = "A4";
+static const char TEXT_REG_A5[] PROGMEM = "A5";
+static const char TEXT_REG_A6[] PROGMEM = "A6";
+static const char TEXT_REG_A7[] PROGMEM = "A7";
 static const char TEXT_REG_PC[] PROGMEM = "PC";
 static const char TEXT_REG_SR[] PROGMEM = "SR";
 static const char TEXT_REG_CCR[] PROGMEM = "CCR";
 static const char TEXT_REG_USP[] PROGMEM = "USP";
 
+static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
+        NAME_ENTRY(REG_D0),
+        NAME_ENTRY(REG_D1),
+        NAME_ENTRY(REG_D2),
+        NAME_ENTRY(REG_D3),
+        NAME_ENTRY(REG_D4),
+        NAME_ENTRY(REG_D5),
+        NAME_ENTRY(REG_D6),
+        NAME_ENTRY(REG_D7),
+        NAME_ENTRY(REG_A0),
+        NAME_ENTRY(REG_A1),
+        NAME_ENTRY(REG_A2),
+        NAME_ENTRY(REG_A3),
+        NAME_ENTRY(REG_A4),
+        NAME_ENTRY(REG_A5),
+        NAME_ENTRY(REG_A6),
+        NAME_ENTRY(REG_A7),
+        NAME_ENTRY(REG_PC),
+        NAME_ENTRY(REG_SR),
+        NAME_ENTRY(REG_CCR),
+        NAME_ENTRY(REG_USP),
+};
+
+RegName RegMc68000::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    return entry ? RegName(entry->name()) : REG_UNDEF;
+}
+
 StrBuffer &RegMc68000::outRegName(StrBuffer &out, RegName name) {
-    if (isDataReg(name))
-        outChar(out, 'D').letter('0' + int8_t(name));
-    if (isAddrReg(name))
-        return outChar(out, 'A').letter('0' + int8_t(name) - 8);
-    if (name == REG_CCR)
-        return outText(out, TEXT_REG_CCR);
-    if (name == REG_PC)
-        return outText(out, TEXT_REG_PC);
-    if (name == REG_SR)
-        return outText(out, TEXT_REG_SR);
-    if (name == REG_USP)
-        return outText(out, TEXT_REG_USP);
+    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    if (entry)
+        outText(out, entry->text());
     return out;
 }
 
@@ -105,22 +110,29 @@ RegName RegMc68000::decodeAddrReg(uint8_t regno) {
     return RegName((regno & 7) + 8);
 }
 
-OprSize RegMc68000::parseSize(const char *line) {
-    if (*line++ != '.')
+OprSize RegMc68000::parseSize(StrScanner &scan) {
+    StrScanner p(scan);
+    if (!p.expect('.'))
         return SZ_NONE;
-    const char c = *line++;
-    if (isidchar(*line))
+    const char c = *p++;
+    if (isidchar(*p))
         return SZ_ERROR;
+    OprSize size;
     switch (c & ~0x20) {
     case 'B':
-        return SZ_BYTE;
+        size = SZ_BYTE;
+        break;
     case 'W':
-        return SZ_WORD;
+        size = SZ_WORD;
+        break;
     case 'L':
-        return SZ_LONG;
+        size = SZ_LONG;
+        break;
     default:
         return SZ_ERROR;
     }
+    scan = p;
+    return size;
 }
 
 uint8_t RegMc68000::sizeNameLen(OprSize size) {

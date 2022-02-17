@@ -54,13 +54,13 @@ private:
               val32(0) {}
     };
 
-    int8_t parseIntrNames(const char *scan);
-    int8_t parseFlagNames(const char *scan);
-    Error parseOperand(const char *scan, Operand &opr);
+    int8_t parseIntrNames(StrScanner &scan);
+    int8_t parseFlagNames(StrScanner &scan);
+    Error parseOperand(StrScanner &scan, Operand &opr);
 
     Error emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
     Error emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);
-    Error emitIndirectRegister(InsnZ8000 &insn, ModeField field, RegName reg);
+    Error emitIndirectRegister(InsnZ8000 &insn, const Operand &op, ModeField field, RegName reg);
     Error emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
     Error emitDirectAddress(InsnZ8000 &insn, const Operand &op);
     Error emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op);
@@ -72,7 +72,7 @@ private:
     Error emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
     Error checkRegisterOverwrap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
             const Operand &cntOp);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace z8000

@@ -63,23 +63,23 @@ private:
               size(SZ_NONE) {}
     };
 
-    Error parseStrOptNames(const char *scan, Operand &op, bool braket = false);
-    Error parseConfigNames(const char *scan, Operand &op);
-    Error parseRegisterList(const char *scan, Operand &op);
-    Error parseBaseOperand(const char *scan, Operand &op);
-    Error parseOperand(const char *scan, Operand &op);
-    Error processPseudo(const char *scan, const InsnNs32000 &insn);
-    Error emitDisplacement(InsnNs32000 &insn, uint32_t val32);
+    Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false);
+    Error parseConfigNames(StrScanner &scan, Operand &op);
+    Error parseRegisterList(StrScanner &scan, Operand &op);
+    Error parseBaseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
+    Error processPseudo(StrScanner &scan, const InsnNs32000 &insn);
+    Error emitDisplacement(InsnNs32000 &insn, const Operand &op, uint32_t val32);
     Error emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
-    Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand *off, const Operand &len);
+    Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len);
     Error emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);
     Error emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
     Error emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
     Error emitRelative(InsnNs32000 &insn, const Operand &op);
     Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
-            const Operand *prevOp = nullptr);
-    Error encode(Insn &insn) override;
+            const Operand &prevOp);
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace ns32000

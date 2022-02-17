@@ -31,7 +31,7 @@ Error Disassembler::decode(
     decode(memory, insn, out);
     if (!_regBase.isUppercase())
         insn.toLowerName();
-    setErrorIf(out.getError());
+    setErrorIf(out);
     return getError();
 }
 

@@ -54,7 +54,6 @@ enum Error : uint8_t {
     OPCODE_HAS_NO_EFFECT = 33,
     REGISTERS_OVERWRAPPED = 34,
     MISSING_CLOSING_BRACKET = 35,
-    MISSING_FUNC_ARGUMENT = 36,
 
     // ValueParser
     ILLEGAL_CONSTANT = 100,
@@ -66,6 +65,7 @@ enum Error : uint8_t {
     DIVIDE_BY_ZERO = 106,
     UNDEFINED_SYMBOL = 107,
     TOO_COMPLEX_EXPRESSION = 108,
+    MISSING_FUNC_ARGUMENT = 109,
 
     // AsmDirective
     UNKNOWN_DIRECTIVE = 150,
@@ -80,27 +80,36 @@ enum Error : uint8_t {
 
 class ErrorReporter {
 public:
-    ErrorReporter() : _error(OK) {}
+    ErrorReporter() : _error(OK), _at(nullptr) {}
 
     bool isOK() const { return _error == OK; }
-    bool hasError() const { return !isOK(); }
     Error getError() const { return _error; }
 
     Error resetError() { return setOK(); }
     Error setOK() { return setError(OK); }
     Error setError(Error error) { return _error = error; }
-    Error setError(const ErrorReporter &other) { return setError(other.getError()); }
-    Error setErrorIf(Error error) {
-        if (_error == OK)
-            _error = error;
-        return _error;
+    Error setError(const char *at, Error error) {
+        setAt(at);
+        return setError(error);
     }
+    Error setError(const ErrorReporter &o) { return setError(o._at, o._error); }
+    Error setError(const ErrorReporter &o, Error error) { return setError(o._at, error); }
+    Error setErrorIf(const char *at, Error error) {
+        if (_error)
+            return _error;
+        return setError(at, error);
+    }
+    Error setErrorIf(const ErrorReporter &o) { return setErrorIf(o._at, o._error); }
+
+    void setAt(const char *at) { _at = at; }
+    const char *errorAt() const { return _at ? _at : ""; }
 
     const /*PROGMEM*/ char *errorText() const;
     static const /*PROGMEM*/ char *errorText(Error error);
 
 private:
     Error _error;
+    const char *_at;
 };
 
 }  // namespace libasm

@@ -17,7 +17,7 @@
 #ifndef __REG_Z8000_H__
 #define __REG_Z8000_H__
 
-#include "insn_z8000.h"
+#include "entry_z8000.h"
 #include "reg_base.h"
 
 namespace libasm {
@@ -129,8 +129,7 @@ enum IntrName : int8_t {
 
 class RegZ8000 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, RegName name) const;
     static uint8_t encodeGeneralRegName(RegName name);
     static RegName decodeRegNum(uint8_t num, OprSize size);
@@ -143,24 +142,21 @@ public:
     static bool isLongReg(RegName name);
     static bool isQuadReg(RegName name);
 
-    static RegName parseCtlReg(const char *line);
+    static RegName parseCtlReg(StrScanner &scan);
     static RegName decodeCtlReg(uint8_t num);
     static bool isCtlReg(RegName name);
     static int8_t encodeCtlReg(RegName name);
 
-    static CcName parseCcName(const char *line);
-    static uint8_t ccNameLen(const CcName name);
+    static CcName parseCcName(StrScanner &scan);
     StrBuffer &outCcName(StrBuffer &out, CcName name) const;
     static uint8_t encodeCcName(CcName name);
     static CcName decodeCcNum(uint8_t num);
 
-    static FlagName parseFlagName(const char *line);
-    static uint8_t flagNameLen(FlagName name);
+    static FlagName parseFlagName(StrScanner &scan);
     StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags) const;
     static uint8_t encodeFlagName(FlagName name);
 
-    static IntrName parseIntrName(const char *line);
-    static uint8_t intrNameLen(IntrName name);
+    static IntrName parseIntrName(StrScanner &scan);
     StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs) const;
     static uint8_t encodeIntrName(IntrName name);
 
@@ -168,7 +164,7 @@ public:
 
 private:
     StrBuffer &outCtlName(StrBuffer &out, RegName name) const;
-    static int8_t parseRegNum(const char *line);
+    static int8_t parseRegNum(StrScanner &scan);
     static uint8_t ctlRegLen(RegName name);
 };
 

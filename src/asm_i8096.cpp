@@ -16,57 +16,50 @@
 
 #include "asm_i8096.h"
 
-#include "error_reporter.h"
-#include "reg_i8096.h"
-#include "table_i8096.h"
-
 namespace libasm {
 namespace i8096 {
 
-Error AsmI8096::parseIndirect(const char *scan, Operand &op) {
-    op.regno = parseExpr16(scan + 1);
+Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) {
+    op.regno = parseExpr16(scan, op);
     if (parserError())
         return getError();
-    op.setError(getError());
-    const char *p = skipSpaces(_scan);
-    if (*p != ']')
-        return setError(MISSING_CLOSING_BRACKET);
-    _scan = p + 1;
-    return OK;
+    if (scan.skipSpaces().expect(']'))
+        return OK;
+    return setError(scan, MISSING_CLOSING_BRACKET);
 }
 
-Error AsmI8096::parseOperand(const char *scan, Operand &op) {
-    const char *p = skipSpaces(scan);
-    _scan = p;
-    if (endOfLine(p))
+Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
 
-    if (*p == '#') {
-        op.val16 = parseExpr16(p + 1);
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
         op.mode = M_IMM16;
+        scan = p;
         return OK;
     }
-    if (*p == '[') {
+    if (p.expect('[')) {
         if (parseIndirect(p, op))
             return getError();
         op.val16 = op.regno;
         op.mode = M_INDIR;
+        scan = p;
         return OK;
     }
-    op.val16 = parseExpr16(p);
+    op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
-    p = skipSpaces(_scan);
-    if (*p == '[') {
+    if (p.skipSpaces().expect('[')) {
         if (parseIndirect(p, op))
             return getError();
         op.mode = M_IDX16;
-        return OK;
+    } else {
+        op.mode = M_ADDR;
     }
-    op.mode = M_ADDR;
+    scan = p;
     return OK;
 }
 
@@ -176,30 +169,28 @@ Error AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
     }
 }
 
-Error AsmI8096::encode(Insn &_insn) {
+Error AsmI8096::encode(StrScanner &scan, Insn &_insn) {
     InsnI8096 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
     Operand dst, src1, src2;
-    if (parseOperand(endName, dst))
+    if (parseOperand(scan, dst))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, src1))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, src1))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, src2))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, src2))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setError(dst.getError());
-    setErrorIf(src1.getError());
-    setErrorIf(src2.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(dst);
+    setErrorIf(src1);
+    setErrorIf(src2);
 
     insn.setAddrMode(dst.mode, src1.mode, src2.mode);
     if (TableI8096.searchName(insn))

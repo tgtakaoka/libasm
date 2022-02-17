@@ -17,8 +17,9 @@
 #ifndef __REG_I8086_H__
 #define __REG_I8086_H__
 
-#include "entry_i8086.h"
 #include "reg_base.h"
+
+#include "entry_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -56,8 +57,7 @@ enum RegName : int8_t {
 
 class RegI8086 : public RegBase {
 public:
-    static RegName parseRegName(const char *line);
-    static uint8_t regNameLen(RegName name);
+    static RegName parseRegName(StrScanner &scan);
     StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 
     static RegName decodeByteReg(uint8_t num);

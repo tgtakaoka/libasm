@@ -41,10 +41,10 @@ private:
         Operand() : ErrorReporter(), mode(NONE), reg(REG_UNDEF), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
 
     Error encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace i8051

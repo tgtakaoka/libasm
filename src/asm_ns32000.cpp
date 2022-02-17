@@ -17,71 +17,58 @@
 #include "asm_ns32000.h"
 
 #include <stdlib.h>
-#include "reg_ns32000.h"
-#include "table_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
 
-Error AsmNs32000::parseStrOptNames(const char *p, Operand &op, bool braket) {
+Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) {
+    StrScanner p(scan);
     uint8_t strOpt = 0;
     while (true) {
         const StrOptName name = RegNs32000::parseStrOptName(p);
         if (name == STROPT_UNDEF)
             return UNKNOWN_OPERAND;
-        p += RegNs32000::strOptNameLen(name);
         if (strOpt & uint8_t(name))
-            return setError(ILLEGAL_OPERAND);
+            return setError(op, ILLEGAL_OPERAND);
         strOpt |= uint8_t(name);
-        p = skipSpaces(p);
-        if (*p == ',' || (!braket && *p == '/')) {
-            p++;
-        } else if (*p == ']') {
-            p++;
+        if (p.skipSpaces().expect(']') || (!braket && endOfLine(*p)))
             break;
-        } else if (!braket && endOfLine(p)) {
-            break;
-        } else {
-            return UNKNOWN_OPERAND;
+        if (p.expect(',') || (!braket && p.expect('/'))) {
+            p.skipSpaces();
+            continue;
         }
-        p = skipSpaces(p);
+        return UNKNOWN_OPERAND;
     }
-    _scan = p;
     op.val32 = strOpt;
     op.mode = M_SOPT;
+    scan = p;
     return setOK();
 }
 
-Error AsmNs32000::parseConfigNames(const char *p, Operand &op) {
+Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) {
+    StrScanner p(scan);
     uint8_t configs = 0;
     while (true) {
-        if (*p == ']') {
-            p++;
+        if (p.expect(']'))
             break;
-        }
         const ConfigName name = RegNs32000::parseConfigName(p);
         if (name == CONFIG_UNDEF)
             return UNKNOWN_OPERAND;
-        p += RegNs32000::configNameLen(name);
         configs |= uint8_t(name);
-        p = skipSpaces(p);
-        if (*p == ',') {
-            p++;
-        } else if (*p == ']') {
-            p++;
+        if (p.skipSpaces().expect(']'))
             break;
-        } else {
+        if (!p.expect(','))
             return UNKNOWN_OPERAND;
-        }
-        p = skipSpaces(p);
+        p.skipSpaces();
     }
-    _scan = p;
     op.val32 = configs;
     op.mode = configs ? M_CONF : M_NONE;
+    scan = p;
     return setOK();
 }
 
-Error AsmNs32000::parseRegisterList(const char *p, Operand &op) {
+Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) {
+    StrScanner p(scan);
     uint8_t list = 0;
     uint8_t n = 0;
     while (true) {
@@ -90,226 +77,217 @@ Error AsmNs32000::parseRegisterList(const char *p, Operand &op) {
             return UNKNOWN_OPERAND;
         list |= (1 << RegNs32000::encodeRegName(name));
         n++;
-        p = skipSpaces(p + RegNs32000::regNameLen(name));
-        if (*p == ',') {
-            p++;
-        } else if (*p == ']') {
-            p++;
+        if (p.skipSpaces().expect(']'))
             break;
-        } else {
+        if (!p.expect(','))
             return UNKNOWN_OPERAND;
-        }
-        p = skipSpaces(p);
+        p.skipSpaces();
     }
-    _scan = p;
     op.val32 = list;
     op.mode = M_RLST;
+    scan = p;
     return setOK();
 }
 
-Error AsmNs32000::parseBaseOperand(const char *scan, Operand &op) {
-    const char *p = scan;
-    _scan = p;
-    if (endOfLine(p))
+Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
+    StrScanner p(scan.skipSpaces());
+    if (endOfLine(*p))
         return OK;
-    if (*p == '@') {
-        op.val32 = parseExpr32(p + 1);
+    if (p.expect('@')) {
+        op.val32 = parseExpr32(p, op);
         if (parserError())
             return getError();
-        op.setError(getError());
         op.mode = M_ABS;
+        scan = p;
         return OK;
     }
 
-    if (*p == '[') {
-        p = skipSpaces(p + 1);
+    if (p.expect('[')) {
+        p.skipSpaces();
         // parseConfigName can handle empty list "[]".
-        if (parseConfigNames(p, op) != UNKNOWN_OPERAND)
+        if (parseConfigNames(p, op) != UNKNOWN_OPERAND ||
+                parseRegisterList(p, op) != UNKNOWN_OPERAND ||
+                parseStrOptNames(p, op, true) != UNKNOWN_OPERAND) {
+            scan = p;
             return getError();
-        if (parseRegisterList(p, op) != UNKNOWN_OPERAND)
-            return getError();
-        if (parseStrOptNames(p, op, true) != UNKNOWN_OPERAND)
-            return getError();
-        return setError(MISSING_CLOSING_BRACKET);
+        }
+        return setError(p, MISSING_CLOSING_BRACKET);
     }
-    if (parseStrOptNames(p, op) == OK)
+    if (parseStrOptNames(p, op) == OK) {
+        scan = p;
         return OK;
+    }
 
     if (*p == '*' || *p == '.') {
-        const char *t = skipSpaces(p + 1);
-        if (*t == '+' || *t == '-' || endOfLine(t) || *t == '[' || *t == ',') {
-            const char *end = scanExpr(t, '[');
-            op.val32 = parseExpr32(p, end);
-            if (parserError() == OK) {
-                op.setError(getError());
-                op.mode = M_REL;
-                op.reg = REG_PC;
-                return OK;
+        StrScanner t(p);
+        ++t;
+        if (*t.skipSpaces() == '+' || *t == '-' || endOfLine(*t) || *t == '[' || *t == ',') {
+            StrScanner base = scanExpr(p, '[');
+            const auto size = base.size();
+            if (size) {
+                op.val32 = parseExpr32(base, op);
+                p += size;
+            } else {
+                op.val32 = parseExpr32(p, op);
             }
-            return setError(UNKNOWN_OPERAND);
+            if (parserError())
+                return getError();
+            op.mode = M_REL;
+            op.reg = REG_PC;
+            scan = p;
+            return OK;
         }
     }
 
     const PregName preg = RegNs32000::parsePregName(p);
     if (preg != PREG_UNDEF) {
-        _scan = p + RegNs32000::pregNameLen(preg);
         op.val32 = RegNs32000::encodePregName(preg);
         op.mode = M_PREG;
+        scan = p;
         return OK;
     }
 
     const MregName mreg = RegNs32000::parseMregName(p);
     if (mreg != MREG_UNDEF) {
-        _scan = p + RegNs32000::mregNameLen(mreg);
         op.val32 = RegNs32000::encodeMregName(mreg);
         op.mode = M_MREG;
+        scan = p;
         return OK;
     }
 
+    StrScanner a(p);
     RegName reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += RegNs32000::regNameLen(reg);
         if (RegNs32000::isGeneric(reg)) {
-            _scan = p;
             op.reg = reg;
             op.mode = M_GREG;
+            scan = p;
             return OK;
         }
 
         if (RegNs32000::isFloat(reg)) {
-            _scan = p;
             op.reg = reg;
             op.mode = M_FREG;
+            scan = p;
             return OK;
         }
 
         if (reg == REG_TOS) {
-            _scan = p;
             op.mode = M_TOS;
+            scan = p;
             return OK;
         }
         if (reg == REG_EXT) {
-            if (*p != '(')
-                return setError(UNKNOWN_OPERAND);
-            op.val32 = parseExpr32(p + 1);
+            if (!p.expect('('))
+                return setError(p, UNKNOWN_OPERAND);
+            op.val32 = parseExpr32(p, op);
             if (parserError())
                 return getError();
-            op.setError(getError());
-            p = skipSpaces(_scan);
-            if (*p != ')')
-                return setError(MISSING_CLOSING_PAREN);
-            p = skipSpaces(p + 1);
-            if (*p == '+' || *p == '-') {
-                op.disp2 = parseExpr32(p);
+            if (!p.skipSpaces().expect(')'))
+                return setError(p, MISSING_CLOSING_PAREN);
+            if (*p.skipSpaces() == '+' || *p == '-') {
+                op.disp2 = parseExpr32(p, op);
                 if (parserError())
                     return getError();
-                op.setErrorIf(getError());
-                p = skipSpaces(_scan);
+                p.skipSpaces();
             }
-            if (*p == '[' || endOfLine(p) || *p == ',') {
+            if (*p == '[' || endOfLine(*p) || *p == ',') {
                 op.mode = M_EXT;
-                _scan = p;
+                scan = p;
                 return OK;
             }
-            return setError(UNKNOWN_OPERAND);
+            return setError(p, UNKNOWN_OPERAND);
         }
-        return setError(UNKNOWN_REGISTER);
+        return setError(a, UNKNOWN_REGISTER);
     }
 
-    op.val32 = parseExpr32(p);
-    const char *t = _scan;
+    op.val32 = parseExpr32(p, op);
+    StrScanner t(p);
     if (*t == '.' || *t == 'e' || *t == 'E' || parserError() == OVERFLOW_RANGE ||
-            getError() == UNDEFINED_SYMBOL) {
+            op.getError() == UNDEFINED_SYMBOL) {
         char *e;
-        op.float64 = strtod(p, &e);
-        t = skipSpaces(e);
-        if (p != e && (*t == ',' || endOfLine(t))) {
-            _scan = e;
+        op.float64 = strtod(a, &e);
+        StrScanner end(e);
+        if (a != e && (*end == ',' || endOfLine(*end))) {
             op.mode = M_IMM;
             op.size = SZ_LONG;
-            return setOK();
+            scan = end;
+            return op.setOK();
         }
     }
     if (parserError())
         return getError();
-    op.setError(getError());
-    p = skipSpaces(_scan);
     op.size = SZ_DOUBLE;
-    if (endOfLine(p) || *p == ',') {
-        _scan = p;
+    if (*p.skipSpaces() == ',' || endOfLine(*p)) {
         op.mode = M_IMM;  // M_REL
+        scan = p;
         return OK;
     }
-    if (*p++ != '(')
-        return setError(UNKNOWN_OPERAND);
+    if (!p.expect('('))
+        return setError(p, UNKNOWN_OPERAND);
+    const StrScanner r(p);
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += RegNs32000::regNameLen(reg);
-        if (*p++ != ')')
-            return setError(MISSING_CLOSING_PAREN);
+        if (!p.expect(')'))
+            return setError(p, MISSING_CLOSING_PAREN);
         if (RegNs32000::isGeneric(reg)) {
-            _scan = p;
             op.reg = reg;
             op.mode = M_RREL;
+            scan = p;
             return OK;
         }
         if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_PC || reg == REG_EXT) {
-            _scan = p;
             op.reg = reg;
             op.mode = (reg == REG_EXT) ? M_EXT : M_MEM;
+            scan = p;
             return OK;
         }
-        return setError(UNKNOWN_OPERAND);
+        return setError(r, UNKNOWN_OPERAND);
     }
 
     op.disp2 = op.val32;
-    op.val32 = parseExpr32(p);
+    op.val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
-    op.setErrorIf(getError());
-    p = skipSpaces(_scan);
-    if (*p++ != '(')
-        return setError(UNKNOWN_OPERAND);
+    if (!p.skipSpaces().expect('('))
+        return setError(p, UNKNOWN_OPERAND);
+    const StrScanner x(p);
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
-        p += RegNs32000::regNameLen(reg);
-        if (*p++ != ')')
-            return setError(MISSING_CLOSING_PAREN);
-        if (*(p = skipSpaces(p)) != ')')
-            return setError(MISSING_CLOSING_PAREN);
+        if (!p.expect(')'))
+            return setError(p, MISSING_CLOSING_PAREN);
+        if (!p.skipSpaces().expect(')'))
+            return setError(p, MISSING_CLOSING_PAREN);
         if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_EXT) {
-            _scan = p + 1;
             op.reg = reg;
             op.mode = (reg == REG_EXT) ? M_EXT : M_MREL;
+            scan = p;
             return OK;
         }
-        return setError(UNKNOWN_OPERAND);
     }
 
-    return setError(UNKNOWN_OPERAND);
+    return setError(x, UNKNOWN_OPERAND);
 }
 
-Error AsmNs32000::parseOperand(const char *scan, Operand &op) {
-    if (parseBaseOperand(skipSpaces(scan), op))
+Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {
+    if (parseBaseOperand(scan, op))
         return getError();
     if (op.mode == M_GREG || op.mode == M_RREL || op.mode == M_MREL || op.mode == M_ABS ||
             op.mode == M_EXT || op.mode == M_TOS || op.mode == M_MEM || op.mode == M_REL) {
-        const char *p = skipSpaces(_scan);
-        if (*p++ != '[')
+        StrScanner p(scan);
+        if (!p.skipSpaces().expect('['))
             return OK;
         const RegName index = RegNs32000::parseRegName(p);
         if (!RegNs32000::isGeneric(index))
-            return setError(UNKNOWN_OPERAND);
-        p += RegNs32000::regNameLen(index);
-        if (*p++ != ':')
-            return setError(UNKNOWN_OPERAND);
+            return setError(scan, UNKNOWN_OPERAND);
+        if (!p.skipSpaces().expect(':'))
+            return setError(scan, UNKNOWN_OPERAND);
         const OprSize indexSize = RegNs32000::parseIndexSize(p);
         if (indexSize == SZ_NONE)
-            return setError(UNKNOWN_OPERAND);
-        p += RegNs32000::indexSizeLen(indexSize);
-        if (*p++ != ']')
-            return setError(MISSING_CLOSING_BRACKET);
-        _scan = p;
+            return setError(scan, UNKNOWN_OPERAND);
+        if (!p.skipSpaces().expect(']'))
+            return setError(p, MISSING_CLOSING_BRACKET);
+        scan = p;
         op.index = index;
         op.size = indexSize;
     }
@@ -362,7 +340,7 @@ static void embedOprField(InsnNs32000 &insn, OprPos pos, uint8_t opr) {
     }
 }
 
-Error AsmNs32000::emitDisplacement(InsnNs32000 &insn, uint32_t val32) {
+Error AsmNs32000::emitDisplacement(InsnNs32000 &insn, const Operand &op, uint32_t val32) {
     const int32_t val = static_cast<int32_t>(val32);
     if (val >= -0x40 && val < 0x40) {
         const uint8_t disp = static_cast<uint8_t>(val) & 0x7F;
@@ -379,7 +357,7 @@ Error AsmNs32000::emitDisplacement(InsnNs32000 &insn, uint32_t val32) {
         insn.emitOperand32(disp);
         return OK;
     }
-    return setError(OVERFLOW_RANGE);
+    return setError(op, OVERFLOW_RANGE);
 }
 
 Error AsmNs32000::emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op) {
@@ -387,42 +365,42 @@ Error AsmNs32000::emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op
     if (op.isOK()) {
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val <= 0)
-            return setError(ILLEGAL_CONSTANT);
+            return setError(op, ILLEGAL_CONSTANT);
         if (val > 16)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         if (mode == M_LEN4) {
             if (len > 4)
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             len -= 1;
             len *= 4;
         }
         if (mode == M_LEN8) {
             if (len > 8)
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             len -= 1;
             len *= 2;
         }
         if (mode == M_LEN16) {
             if (len > 16)
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             len -= 1;
         }
     }
-    return emitDisplacement(insn, len);
+    return emitDisplacement(insn, op, len);
 }
 
 Error AsmNs32000::emitBitField(
-        InsnNs32000 &insn, AddrMode mode, const Operand *offOp, const Operand &lenOp) {
+        InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len) {
     if (mode == M_BFOFF)
         return OK;
-    if (offOp->val32 >= 8)
-        return setError(ILLEGAL_BIT_NUMBER);
-    if (lenOp.isOK() && lenOp.val32 == 0)
-        return setError(ILLEGAL_CONSTANT);
-    if (lenOp.val32 > 32)
-        return setError(OVERFLOW_RANGE);
-    const uint8_t len = lenOp.getError() ? 0 : lenOp.val32 - 1;
-    const uint8_t data = (static_cast<uint8_t>(offOp->val32) << 5) | len;
+    if (off.val32 >= 8)
+        return setError(off, ILLEGAL_BIT_NUMBER);
+    if (len.isOK() && len.val32 == 0)
+        return setError(len, ILLEGAL_CONSTANT);
+    if (len.val32 > 32)
+        return setError(len, OVERFLOW_RANGE);
+    const uint8_t length = len.getError() ? 0 : len.val32 - 1;
+    const uint8_t data = (static_cast<uint8_t>(off.val32) << 5) | length;
     insn.emitOperand8(data);
     return OK;
 }
@@ -446,7 +424,7 @@ Error AsmNs32000::emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize si
         insn.emitOpFloat64(op.size == SZ_LONG ? op.float64 : static_cast<double>(op.val32));
         break;
     default:
-        return setError(INTERNAL_ERROR);
+        break;
     }
     return OK;
 }
@@ -507,24 +485,24 @@ Error AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &o
     case M_ABS: {
         const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
         if (max && op.val32 >= max)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         // Sign extends 24 bit address into 32 bit.
         const uint32_t sign = max >> 1;
         const int32_t val32 = (op.val32 & (sign - 1)) - (op.val32 & sign);
-        return emitDisplacement(insn, val32);
+        return emitDisplacement(insn, op, val32);
     }
     case M_RREL:
     case M_MEM:
         if (op.mode == M_MEM && op.reg == REG_PC)
             return emitRelative(insn, op);
-        return emitDisplacement(insn, op.val32);
+        return emitDisplacement(insn, op, op.val32);
     case M_REL:
         return emitRelative(insn, op);
     case M_MREL:
     case M_EXT:
-        if (emitDisplacement(insn, op.val32))
+        if (emitDisplacement(insn, op, op.val32))
             return getError();
-        return emitDisplacement(insn, op.disp2);
+        return emitDisplacement(insn, op, op.disp2);
     case M_IMM:
         return emitImmediate(insn, op, mode == M_GENC ? SZ_BYTE : insn.oprSize());
     default:
@@ -535,13 +513,13 @@ Error AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &o
 Error AsmNs32000::emitRelative(InsnNs32000 &insn, const Operand &op) {
     const Config::uintptr_t target = op.getError() ? insn.address() : op.val32;
     const Config::ptrdiff_t disp = target - insn.address();
-    if (emitDisplacement(insn, disp))
-        return setError(OPERAND_TOO_FAR);
+    if (emitDisplacement(insn, op, disp))
+        return setError(op, OPERAND_TOO_FAR);
     return OK;
 }
 
 Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op,
-        OprPos pos, const Operand *prevOp) {
+        OprPos pos, const Operand &prevOp) {
     switch (mode) {
     case M_GREG:
         embedOprField(insn, pos, RegNs32000::encodeRegName(op.reg));
@@ -554,7 +532,7 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
         break;
     case M_RLST:
         if (op.val32 == 0)
-            return setError(OPCODE_HAS_NO_EFFECT);
+            return setError(op, OPCODE_HAS_NO_EFFECT);
         if (size == SZ_NONE) {  // PUSH
             insn.emitOperand8(op.val32);
         } else {  // POP
@@ -566,14 +544,14 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
         if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) &&
                 !RegNs32000::isRegPair(op.reg)) {
             insn.reset();
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         }
         goto emit_generic;
     case M_GENR:
     case M_GENW:
         if (op.mode == M_GREG && size == SZ_QUAD && !RegNs32000::isRegPair(op.reg)) {
             insn.reset();
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         }
         goto emit_generic;
     case M_GENC:
@@ -583,7 +561,7 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
     case M_INT4: {
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val < -8 || val >= 8)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         embedOprField(insn, pos, op.val32);
         break;
     }
@@ -595,89 +573,83 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
     case M_LEN32: {
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val < 0)
-            return setError(ILLEGAL_CONSTANT);
+            return setError(op, ILLEGAL_CONSTANT);
         if (op.isOK() && val == 0)
-            setError(ILLEGAL_CONSTANT);
+            setError(op, ILLEGAL_CONSTANT);
         if (val > 32)
-            return setError(OVERFLOW_RANGE);
-        return emitDisplacement(insn, val);
+            return setError(op, OVERFLOW_RANGE);
+        return emitDisplacement(insn, op, val);
     }
     case M_DISP:
-        return emitDisplacement(insn, op.val32);
+        return emitDisplacement(insn, op, op.val32);
     case M_LEN4:
     case M_LEN8:
     case M_LEN16:
         return emitLength(insn, mode, op);
     default:
-        return setError(INTERNAL_ERROR);
+        break;
     }
     return OK;
 }
 
-static const char TEXT_FPU[] PROGMEM = "FPU";
-static const char TEXT_PMMU[] PROGMEM = "PMMU";
-static const char TEXT_FPU_NS32081[] PROGMEM = "NS32081";
-static const char TEXT_MMU_NS32082[] PROGMEM = "NS32082";
-static const char TEXT_NONE[] PROGMEM = "NONE";
-
-Error AsmNs32000::processPseudo(const char *scan, const InsnNs32000 &insn) {
-    const char *p = skipSpaces(scan);
-    const char *end = _parser.scanSymbol(p);
-    const bool none = strcasecmp_P(p, TEXT_NONE) == 0;
-    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        if (strcasecmp_P(p, TEXT_FPU_NS32081) == 0 || none) {
+Error AsmNs32000::processPseudo(StrScanner &scan, const InsnNs32000 &insn) {
+    StrScanner p(scan.skipSpaces());
+    if (strcasecmp_P(insn.name(), PSTR("fpu")) == 0) {
+        const StrScanner option = _parser.readSymbol(p);
+        const bool none = option.iequals_P(PSTR("none"));
+        if (option.iequals_P(PSTR("ns32081")) || none) {
             setFpu(none ? FPU_NONE : FPU_NS32081);
-            _scan = end;
-        } else {
-            setError(UNKNOWN_OPERAND);
+            scan = p;
+            return OK;
         }
+        setError(scan, UNKNOWN_OPERAND);
         return OK;
     }
-    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
-        if (strcasecmp_P(p, TEXT_MMU_NS32082) == 0 || none) {
+    if (strcasecmp_P(insn.name(), PSTR("pmmu")) == 0) {
+        const StrScanner option = _parser.readSymbol(p);
+        const bool none = option.iequals_P(PSTR("none"));
+        if (option.iequals_P(PSTR("ns32082")) || none) {
             setMmu(none ? MMU_NONE : MMU_NS32082);
-            _scan = end;
-        } else {
-            setError(UNKNOWN_OPERAND);
+            scan = p;
+            return OK;
         }
+        setError(scan, UNKNOWN_OPERAND);
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
 }
 
-Error AsmNs32000::encode(Insn &_insn) {
+Error AsmNs32000::encode(StrScanner &scan, Insn &_insn) {
     InsnNs32000 insn(_insn);
-    const char *endName = _parser.scanSymbol(_scan);
-    insn.setName(_scan, endName);
+    insn.setName(_parser.readSymbol(scan));
 
-    if (processPseudo(endName, insn) == OK)
+    if (processPseudo(scan, insn) == OK)
         return getError();
 
     Operand srcOp, dstOp, ex1Op, ex2Op;
-    if (parseOperand(endName, srcOp))
+    if (parseOperand(scan, srcOp))
         return getError();
-    const char *p = skipSpaces(_scan);
-    if (*p == ',') {
-        if (parseOperand(p + 1, dstOp))
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, dstOp))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, ex1Op))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, ex1Op))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (*p == ',') {
-        if (parseOperand(p + 1, ex2Op))
+    if (scan.expect(',')) {
+        if (parseOperand(scan, ex2Op))
             return getError();
-        p = skipSpaces(_scan);
+        scan.skipSpaces();
     }
-    if (!endOfLine(p))
-        return setError(GARBAGE_AT_END);
-    setErrorIf(srcOp.getError());
-    setErrorIf(dstOp.getError());
-    setErrorIf(ex1Op.getError());
-    setErrorIf(ex2Op.getError());
+    if (!endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    setErrorIf(srcOp);
+    setErrorIf(dstOp);
+    setErrorIf(ex1Op);
+    setErrorIf(ex2Op);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode, ex1Op.mode, ex2Op.mode);
     if (TableNs32000.searchName(insn))
@@ -695,21 +667,20 @@ Error AsmNs32000::encode(Insn &_insn) {
     const OprSize size = insn.oprSize();
     if (src != M_NONE) {
         const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
-        if (emitOperand(insn, src, srcSize, srcOp, insn.srcPos()))
+        if (emitOperand(insn, src, srcSize, srcOp, insn.srcPos(), srcOp))
             return getError();
     }
     if (dst != M_NONE) {
         const OprSize dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
-        if (emitOperand(insn, dst, dstSize, dstOp, insn.dstPos()))
+        if (emitOperand(insn, dst, dstSize, dstOp, insn.dstPos(), srcOp))
             return getError();
     }
     if (ex1 != M_NONE) {
-        if (emitOperand(insn, ex1, size, ex1Op, insn.ex1Pos()))
+        if (emitOperand(insn, ex1, size, ex1Op, insn.ex1Pos(), dstOp))
             return getError();
     }
     if (ex2 != M_NONE) {
-        const Operand *prevOp = (ex2 == M_BFLEN) ? &ex1Op : nullptr;
-        if (emitOperand(insn, ex2, size, ex2Op, insn.ex2Pos(), prevOp))
+        if (emitOperand(insn, ex2, size, ex2Op, insn.ex2Pos(), ex1Op))
             return getError();
     }
     insn.emitInsn();

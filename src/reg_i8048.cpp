@@ -16,11 +16,6 @@
 
 #include "reg_i8048.h"
 
-#include <ctype.h>
-
-#include "config_i8048.h"
-#include "reg_base.h"
-
 namespace libasm {
 namespace i8048 {
 
@@ -92,13 +87,9 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_TCNTI),
 };
 
-RegName RegI8048::parseRegName(const char *line) {
-    const NameEntry *entry = searchText(line, ARRAY_RANGE(REG_TABLE));
+RegName RegI8048::parseRegName(StrScanner &scan) {
+    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
-}
-
-uint8_t RegI8048::regNameLen(RegName name) {
-    return nameLen(uint8_t(name), ARRAY_RANGE(REG_TABLE));
 }
 
 StrBuffer &RegI8048::outRegName(StrBuffer &out, const RegName name) const {

@@ -41,13 +41,13 @@ private:
         Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), val16(0) {}
     };
 
-    Error parseOperand(const char *scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op);
 
     Error encodeRelative(InsnTms9900 &insn, const Operand &op);
     Error encodeCruOffset(InsnTms9900 &insn, const Operand &op);
     Error encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
     Error encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
-    Error encode(Insn &insn) override;
+    Error encode(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace tms9900

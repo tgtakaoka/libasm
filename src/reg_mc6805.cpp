@@ -16,28 +16,21 @@
 
 #include "reg_mc6805.h"
 
-#include <ctype.h>
-
-#include "config_mc6805.h"
-#include "table_mc6805.h"
-
 namespace libasm {
 namespace mc6805 {
 
-RegName RegMc6805::parseRegName(const char *line) {
-    const char r = *line++;
-    if (isidchar(*line))
+RegName RegMc6805::parseRegName(StrScanner &scan) {
+    StrScanner p(scan);
+    const char r = *p++;
+    if (isidchar(*p))
         return REG_UNDEF;
     switch (toupper(r)) {
     case 'X':
+        scan = p;
         return REG_X;
     default:
         return REG_UNDEF;
     }
-}
-
-uint8_t RegMc6805::regNameLen(RegName name) {
-    return name == REG_UNDEF ? 0 : 1;
 }
 
 StrBuffer &RegMc6805::outRegName(StrBuffer &out, const RegName name) const {
