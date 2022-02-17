@@ -78,6 +78,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Registers overwrapped");
     case MISSING_CLOSING_BRACKET:
         return PSTR("Missing closing bracket");
+    case MISSING_FUNC_ARGUMENT:
+        return PSTR("Missing function argument");
 
     // ValueParser
     case ILLEGAL_CONSTANT:

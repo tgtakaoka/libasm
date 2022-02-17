@@ -237,12 +237,14 @@ Value ValueParser::readAtom(const char *scan) {
     if (isSymbolLetter(c, true)) {
         const char *symbol = p;
         const char *end = scanSymbol(symbol);
-        const auto funid = isFunction(symbol, end);
-        const char *a = skipSpaces(end);
-        if (a && *a == '(' && funid != NOT_A_FUN) {
+        const auto id = getFuncParser().isFunc(symbol, end - symbol);
+        const char *args = skipSpaces(end);
+        if (args && *args++ == '(' && id) {
             Value val;
-            if (parseFunction(funid, a + 1, val))
+            if (getFuncParser().parseFunc(*this, id, args, val)) {
+                setError(getFuncParser());
                 return Value();
+            }
             return val;
         }
         if (_symtab) {
@@ -317,33 +319,44 @@ ValueParser::Operator ValueParser::readOperator(const char *scan) {
 
 static constexpr char TEXT_HI[] PROGMEM = "hi";
 static constexpr char TEXT_LO[] PROGMEM = "lo";
+static constexpr ValueParser::FuncParser::FuncId FUNC_HI{1};
+static constexpr ValueParser::FuncParser::FuncId FUNC_LO{2};
 
-uint16_t ValueParser::isFunction(const char *name, const char *end) const {
-    const auto len = end - name;
+ValueParser::FuncParser::FuncId ValueParser::FuncParser::isFunc(
+        const char *name, const size_t len) const {
     if (len == 2) {
         if (strncasecmp_P(name, TEXT_HI, len) == 0)
-            return FUNID_HI;
+            return FUNC_HI;
         if (strncasecmp_P(name, TEXT_LO, len) == 0)
-            return FUNID_LO;
+            return FUNC_LO;
     }
-    return 0;
+    return FuncId();
 }
 
-Error ValueParser::parseFunction(const uint16_t funid, const char *args, Value &val) {
-    // TODO: Suppoer multiple arguments function parsing.
-    const Value a1 = parseExpr(args);
-    const char *p = skipSpaces(_next);
-    if (p == nullptr || *p++ != ')')
-        return MISSING_CLOSING_PAREN;
-    _next = p;
-    return evalFunction(funid, a1, val);
+ValueParser::FuncParser &ValueParser::getFuncParser() const {
+    static FuncParser baseFuncParser;
+    return _funcParser ? *_funcParser : baseFuncParser;
 }
 
-Error ValueParser::evalFunction(const uint16_t funid, const Value &arg, Value &val) const {
+Value ValueParser::FuncParser::parseArg(ValueParser &parser, const char *scan, char expect) {
+    const auto val = parser.parseExpr(scan);
+    const char *p = parser.skipSpaces(parser._next);
+    if (p == nullptr || *p++ != expect) {
+        setError(expect == ',' ? MISSING_FUNC_ARGUMENT : MISSING_CLOSING_PAREN);
+        return val;
+    }
+    parser._next = p;
+    return val;
+}
+
+Error ValueParser::FuncParser::parseFunc(
+        ValueParser &parser, const FuncParser::FuncId id, const char *scan, Value &val) {
+    // Multiple arguments function parsing can be implemented by using extended FuncParser.
+    const Value arg = parseArg(parser, scan);
     auto v = arg.getUnsigned();
-    if (funid == FUNID_HI)
+    if (id == FUNC_HI)
         v = (v >> 8) & 0xFF;
-    if (funid == FUNID_LO)
+    if (id == FUNC_LO)
         v &= 0xFF;
     val.setValue(v);
     return getError();

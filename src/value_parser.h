@@ -67,7 +67,8 @@ private:
 
 class ValueParser : protected ErrorReporter {
 public:
-    ValueParser(char curSym = '.') : ErrorReporter(), _origin(0), _curSym(curSym) {}
+    ValueParser(char curSym = '.')
+        : ErrorReporter(), _origin(0), _curSym(curSym), _funcParser(nullptr) {}
 
     Error error() const { return getError(); }
     /*
@@ -86,21 +87,27 @@ public:
     bool isSymbolLetter(char c, bool head = false) const;
     const char *scanSymbol(const char *scan) const;
 
+    struct FuncParser : public ErrorReporter {
+        typedef uint16_t FuncId;
+        static constexpr FuncId EXTENDED_ID_BASE = 100;
+        virtual FuncId isFunc(const char *name, size_t len) const;
+        virtual Error parseFunc(ValueParser &parser, const FuncId id, const char *scan, Value &val);
+
+    protected:
+        Value parseArg(ValueParser &parser, const char *scan, char expect = ')');
+    };
+    void setFuncParser(FuncParser *parser) { _funcParser = parser; }
+
 protected:
     virtual Error readNumber(const char *scan, Value &val);
     Error parseNumber(const char *scan, Value &val, const uint8_t base, const char suffix = 0);
     Error scanNumberEnd(const char *scan, const uint8_t base, char suffix = 0);
-    virtual uint16_t isFunction(const char *name, const char *end) const;
-    virtual Error evalFunction(const uint16_t funid, const Value &arg, Value &value) const;
-
-    static constexpr uint16_t NOT_A_FUN = 0;
-    static constexpr uint16_t FUNID_HI = 1;
-    static constexpr uint16_t FUNID_LO = 2;
-    static constexpr uint16_t EXTENDED_FUNID_BASE = 100;
 
 private:
+    friend class FuncParser;
     uint32_t _origin;
     const char _curSym;
+    FuncParser *_funcParser;
     const char *_next;
     const char *_end;
 
@@ -155,7 +162,7 @@ private:
 
     const char *skipSpaces(const char *scan) const;
     Value parseExpr(const char *scan);
-    Error parseFunction(const uint16_t funid, const char *args, Value &val);
+    FuncParser &getFuncParser() const;
     Value readAtom(const char *scan);
     Value readCharacterConstant(const char *scan);
     Operator readOperator(const char *scan);

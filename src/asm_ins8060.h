@@ -28,19 +28,11 @@ namespace ins8060 {
 
 class AsmIns8060 : public Assembler, public Config {
 public:
-    AsmIns8060() : Assembler(_parser, TableIns8060) { reset(); }
+    AsmIns8060();
     const ConfigBase &config() const override { return *this; }
 
 private:
-    class Ins8060Parser : public ValueParser {
-    public:
-        Ins8060Parser() : ValueParser('$') {}
-    protected:
-        uint16_t isFunction(const char *name, const char *end) const override;
-        Error evalFunction(const uint16_t funid, const Value &arg, Value &val) const override;
-    private:
-        static constexpr uint16_t FUNID_ADDR = EXTENDED_FUNID_BASE;
-    } _parser;
+    ValueParser _parser{'$'};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

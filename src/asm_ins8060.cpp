@@ -22,23 +22,32 @@ namespace libasm {
 namespace ins8060 {
 
 static constexpr char TEXT_ADDR[] PROGMEM = "addr";
+static constexpr ValueParser::FuncParser::FuncId FUNC_ADDR{
+        ValueParser::FuncParser::EXTENDED_ID_BASE};
 
-uint16_t AsmIns8060::Ins8060Parser::isFunction(const char *name, const char *end) const {
-    const auto len = end - name;
-    if (len == 4 && strncasecmp_P(name, TEXT_ADDR, len) == 0)
-        return FUNID_ADDR;
-    return ValueParser::isFunction(name, end);
-}
-
-Error AsmIns8060::Ins8060Parser::evalFunction(
-        const uint16_t funid, const Value &arg, Value &val) const {
-    if (funid == FUNID_ADDR) {
-        const auto v = arg.getUnsigned();
-        const auto a = v - 1;
-        val.setValue((v & 0xF000) | (a & 0x0FFF));
-        return getError();
+struct Ins8060FuncParser : ValueParser::FuncParser {
+    FuncId isFunc(const char *name, const size_t len) const override {
+        if (len == 4 && strncasecmp_P(name, TEXT_ADDR, len) == 0)
+            return FUNC_ADDR;
+        return ValueParser::FuncParser::isFunc(name, len);
     }
-    return ValueParser::evalFunction(funid, arg, val);
+
+    Error parseFunc(ValueParser &parser, const FuncId id, const char *scan, Value &val) override {
+        if (id == FUNC_ADDR) {
+            const auto arg = parseArg(parser, scan);
+            const auto v = arg.getUnsigned();
+            const auto a = v - 1;
+            val.setValue((v & 0xF000) | (a & 0x0FFF));
+            return getError();
+        }
+        return ValueParser::FuncParser::parseFunc(parser, id, scan, val);
+    }
+};
+
+AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060) {
+    static Ins8060FuncParser functionParser;
+    reset();
+    _parser.setFuncParser(&functionParser);
 }
 
 Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
