@@ -23,8 +23,6 @@
 #include "entry_i8048.h"
 #include "text_i8048.h"
 
-#include <stdio.h>
-
 namespace libasm {
 namespace i8048 {
 
