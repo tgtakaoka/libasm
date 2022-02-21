@@ -188,8 +188,8 @@ Error AsmIns8060::encode(Insn &_insn) {
     default:
         return setError(INTERNAL_ERROR);
     }
-    if (page(insn.address()) != page(insn.address() + insn.length() - 1)) {
-        setErrorIf(OVERWRAP_PAGE);
+    if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1)) {
+        setError(OVERWRAP_PAGE);
         insn.reset();
     }
     return getError();
