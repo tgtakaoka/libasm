@@ -145,7 +145,7 @@ private:
         }
     }
 
-    FILE *dumpOut() { return _dump ? _list : nullptr; }
+    FILE *dumpOut() override { return _dump ? _list : nullptr; }
 
     // ListingLine
     uint16_t lineNumber() const override { return 0; }

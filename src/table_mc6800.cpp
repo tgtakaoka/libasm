@@ -398,8 +398,7 @@ bool TableMc6800::isPrefix(Config::opcode_t opCode) const {
     return opCode == PREFIX_P18 || opCode == PREFIX_P1A || opCode == PREFIX_PCD;
 }
 
-class TableMc6800::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableMc6800::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 

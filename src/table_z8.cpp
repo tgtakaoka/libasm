@@ -247,8 +247,7 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
 };
 // clang-format on
 
-class TableZ8::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableZ8::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 

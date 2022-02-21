@@ -92,7 +92,7 @@ int AsmDriver::assemble() {
 
         formatter->begin(output);
         memory.dump(
-                [this, output, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
+                [this, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
                     if (_verbose) {
                         const uint8_t addrUnit = _commonDir.addrUnit();
                         fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,

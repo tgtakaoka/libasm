@@ -164,8 +164,7 @@ static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
 };
 // clang-format on
 
-class TableCdp1802::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableCdp1802::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 

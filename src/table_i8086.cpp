@@ -375,8 +375,7 @@ static const Entry TABLE_FF[] PROGMEM = {
 };
 // clang-format on
 
-class TableI8086::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableI8086::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 

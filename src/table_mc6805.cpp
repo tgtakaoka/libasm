@@ -234,8 +234,7 @@ static constexpr Entry MC68HC05_TABLE[] PROGMEM = {
 };
 // clang-format on
 
-class TableMc6805::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableMc6805::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 

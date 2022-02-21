@@ -27,8 +27,7 @@ namespace libasm {
  * Base class for instruction page table entry.
  */
 template <typename ENTRY_T>
-class EntryPageBase {
-public:
+struct EntryPageBase {
     const ENTRY_T *table() const {
         return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_table));
     }

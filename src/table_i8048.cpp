@@ -148,8 +148,7 @@ static constexpr Entry TABLE_MSM80C48[] PROGMEM = {
 };
 // clang-format on
 
-class TableI8048::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableI8048::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 

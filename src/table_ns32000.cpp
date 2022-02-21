@@ -420,8 +420,7 @@ static const Entry FORMAT_14_2[] PROGMEM = {
 };
 // clang-format on
 
-class TableNs32000::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableNs32000::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
             const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix), _mask(mask), _post(post) {}

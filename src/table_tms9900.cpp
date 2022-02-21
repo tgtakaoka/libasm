@@ -124,8 +124,7 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
 };
 // clang-format on
 
-class TableTms9900::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableTms9900::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
 };
 

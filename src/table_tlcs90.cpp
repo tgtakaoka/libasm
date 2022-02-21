@@ -274,8 +274,7 @@ static constexpr Entry TABLE_BLOCK[] PROGMEM = {
 
 // clang-format on
 
-class TableTlcs90::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableTlcs90::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(
             Config::opcode_t prefix, AddrMode mode, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix), _mode(uint8_t(mode)) {}

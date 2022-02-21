@@ -503,8 +503,7 @@ bool TableMc6809::isPrefix(Config::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
-class TableMc6809::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableMc6809::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 
@@ -595,7 +594,7 @@ Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
     return setError(searchOpCode(insn, _table, _end));
 }
 
-struct TableMc6809::PostEntry : public PostSpec {
+struct TableMc6809::PostEntry : PostSpec {
     uint8_t mask;
     uint8_t byte;
 

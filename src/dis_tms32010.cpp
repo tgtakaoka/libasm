@@ -21,8 +21,6 @@
 namespace libasm {
 namespace tms32010 {
 
-static const char COMMA[] PROGMEM = ", ";
-
 Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
     // Store Status Register can access Data Page 1 only.
     static constexpr uint8_t SST = 0x7C;

@@ -351,8 +351,7 @@ static constexpr Entry W65C816_TABLE[] PROGMEM = {
 };
 // clang-format off
 
-class TableMos6502::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableMos6502::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(const Entry *table, const Entry *end)
         : EntryPageBase(table, end) {}
 };

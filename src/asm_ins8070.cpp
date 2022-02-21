@@ -21,13 +21,12 @@
 namespace libasm {
 namespace ins8070 {
 
-static constexpr char TEXT_ADDR[] PROGMEM = "addr";
 static constexpr ValueParser::FuncParser::FuncId FUNC_ADDR{
         ValueParser::FuncParser::EXTENDED_ID_BASE};
 
 struct Ins8070FuncParser : ValueParser::FuncParser {
     ValueParser::FuncParser::FuncId isFunc(const char *name, size_t len) const override {
-        if (len == 4 && strncasecmp_P(name, TEXT_ADDR, len) == 0)
+        if (len == 4 && strncasecmp_P(name, PSTR("addr"), len) == 0)
             return FUNC_ADDR;
         return ValueParser::FuncParser::isFunc(name, len);
     }

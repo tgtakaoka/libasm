@@ -212,8 +212,7 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
 };
 // clang-format on
 
-class TableZ80::EntryPage : public EntryPageBase<Entry> {
-public:
+struct TableZ80::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
         : EntryPageBase(table, end), _prefix(prefix) {}
 

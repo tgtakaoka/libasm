@@ -87,7 +87,8 @@ public:
     bool isSymbolLetter(char c, bool head = false) const;
     const char *scanSymbol(const char *scan) const;
 
-    struct FuncParser : public ErrorReporter {
+    class FuncParser : public ErrorReporter {
+    public:
         typedef uint16_t FuncId;
         static constexpr FuncId EXTENDED_ID_BASE = 100;
         virtual FuncId isFunc(const char *name, size_t len) const;
