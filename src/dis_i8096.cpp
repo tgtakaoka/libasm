@@ -92,12 +92,12 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
     case M_INDIR:
         regno = insn.readByte(memory);
         if (!RegI8096::isWreg(regno))
-            setError(REGISTER_NOT_ALLOWED);
+            return setError(REGISTER_NOT_ALLOWED);
         break;
     case M_LREG:
         regno = insn.readByte(memory);
         if (!RegI8096::isLreg(regno))
-            setError(REGISTER_NOT_ALLOWED);
+            return setError(REGISTER_NOT_ALLOWED);
         break;
     case M_BAOP:
         switch (insn.aa()) {
@@ -112,7 +112,7 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
         case AA_INDIR:
             regno = insn.readByte(memory);
             if (!RegI8096::isWreg(regno))
-                setError(REGISTER_NOT_ALLOWED);
+                return setError(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
@@ -133,7 +133,7 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
         case AA_REG:
             regno = insn.readByte(memory);
             if (!RegI8096::isWreg(regno))
-                setError(REGISTER_NOT_ALLOWED);
+                return setError(REGISTER_NOT_ALLOWED);
             mode = M_WREG;
             break;
         case AA_IMM:
@@ -143,7 +143,7 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
         case AA_INDIR:
             regno = insn.readByte(memory);
             if (!RegI8096::isWreg(regno))
-                setError(REGISTER_NOT_ALLOWED);
+                return setError(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
