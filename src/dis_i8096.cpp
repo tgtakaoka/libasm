@@ -56,19 +56,19 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, const InsnI8096 &insn, const Ope
         base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
         offset = static_cast<int8_t>(op.val16);
         target = base + offset;
-        return outRelAddr(out, target, base, 8);
+        return outRelAddr(out, target, insn.address(), 8);
     case M_REL11:
         base = insn.address() + 2;
         // Sign exetends 11-bit number.
         offset = (op.val16 & 0x3FF) - (op.val16 & 0x400);
         target = base + offset;
-        return outRelAddr(out, target, base, 11);
+        return outRelAddr(out, target, insn.address(), 11);
     case M_REL16:
         base = insn.address() + 3;
         offset = static_cast<int16_t>(op.val16);
         if (_relativeTarget) {
             target = base + offset;
-            return outRelAddr(out, target, base, 16);
+            return outRelAddr(out, target, insn.address(), 16);
         }
         return outAbsAddr(out, base + offset);
     case M_BITNO:

@@ -31,17 +31,15 @@
       SHRB  26, 25
       SHLB  27, 26
       SHRAB 28, 27
-      SJMP  $+33
-      SJMP  $
-      SJMP  $-987
-      SCALL $+41
-      SCALL $
-      SCALL $-979
-      JBC   49, 0, $+50
-      JBC   49, 0, $-128
+      SJMP  $+35
+      SJMP  $-985
+      SCALL $+43
+      SCALL $-977
+      JBC   49, 0, $+53
+      JBC   49, 0, $-125
       JBC   49, 0, $
-      JBS   57, 0, $+58
-      JBS   57, 0, $-128
+      JBS   57, 0, $+61
+      JBS   57, 0, $-125
       JBS   57, 0, $
       ANDB  83, 82, 81
       ANDB  84, 83, #52H
@@ -201,62 +199,62 @@
       POP   -47[208]
       POP   0[208]
       POP   0D3D2H[208]
-      JNST  $-47
+      JNST  $-45
       JNST  $
       JNST  $+1
-      JNH   $-46
+      JNH   $-44
       JNH   $
       JNH   $+1
-      JGT   $-45
+      JGT   $-43
       JGT   $
       JGT   $+1
-      JNC   $-44
+      JNC   $-42
       JNC   $
       JNC   $+1
-      JNVT  $-43
+      JNVT  $-41
       JNVT  $
       JNVT  $+1
-      JNV   $-42
+      JNV   $-40
       JNV   $
       JNV   $+1
-      JGE   $-41
+      JGE   $-39
       JGE   $
       JGE   $+1
-      JNE   $-40
+      JNE   $-38
       JNE   $
       JNE   $+1
-      JST   $-39
+      JST   $-37
       JST   $
       JST   $+1
-      JH    $-38
+      JH    $-36
       JH    $
       JH    $+1
-      JLE   $-37
+      JLE   $-35
       JLE   $
       JLE   $+1
-      JC    $-36
+      JC    $-34
       JC    $
       JC    $+1
-      JVT   $-35
+      JVT   $-33
       JVT   $
       JVT   $+1
-      JV    $-34
+      JV    $-32
       JV    $
       JV    $+1
-      JLT   $-33
+      JLT   $-31
       JLT   $
       JLT   $+1
-      JE    $-32
+      JE    $-30
       JE    $
       JE    $+1
-      DJNZ  225, $-30
+      DJNZ  225, $-27
       DJNZ  225, $
       DJNZ  225, $+1
       BR    [228]
-      LJMP  $-1618H
-      LJMP  $+00E8H
-      LCALL $-0E10H
-      LCALL $+00F0H
+      LJMP  $-1615H
+      LJMP  $+00EBH
+      LCALL $-0E0DH
+      LCALL $+00F3H
       RET
       PUSHF
       POPF
