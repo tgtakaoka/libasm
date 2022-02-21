@@ -45,6 +45,28 @@ AsmCommonDirective::AsmCommonDirective(std::vector<AsmDirective *> &directives) 
     _reportDuplicate = true;
     _labelWidth = 16;
     _operandWidth = 16;
+
+    registerPseudo(".cpu", &AsmCommonDirective::switchCpu);
+    registerPseudo(".include", &AsmCommonDirective::includeFile);
+    // TODO: implement listing after "end".
+    registerPseudo(".end", &AsmCommonDirective::closeSource);
+    registerPseudo(".equ", &AsmCommonDirective::defineSymbol);
+    registerPseudo(":=", &AsmCommonDirective::defineSymbol);
+    registerPseudo("=", &AsmCommonDirective::defineSymbol);
+    registerPseudo(".org", &AsmCommonDirective::defineOrigin);
+    registerPseudo(".align", &AsmCommonDirective::alignOrigin);
+    registerPseudo(".string", &AsmCommonDirective::defineUint8WithTerminator);
+    registerPseudo(".ascii", &AsmCommonDirective::defineUint8WithTerminator);
+    registerPseudo(".byte", &AsmCommonDirective::defineUint8);
+    registerPseudo(".word", &AsmCommonDirective::defineUint16);
+    registerPseudo(".long", &AsmCommonDirective::defineUint32);
+    registerPseudo("dc.b", &AsmCommonDirective::defineUint8);
+    registerPseudo("dc.w", &AsmCommonDirective::defineUint16);
+    registerPseudo("dc.l", &AsmCommonDirective::defineUint32);
+    registerPseudo("ds.b", &AsmCommonDirective::allocateUint8);
+    registerPseudo("ds.w", &AsmCommonDirective::allocateUint16);
+    registerPseudo("ds.l", &AsmCommonDirective::allocateUint32);
+    registerPseudo(".z80syntax", &AsmCommonDirective::switchIntelZilog);
 }
 
 AsmCommonDirective::~AsmCommonDirective() {
@@ -168,7 +190,11 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         skipSpaces();
         _list.operand = _scan;
         const uint32_t origin = _origin;
-        const Error error = processPseudo(directive.c_str(), label, memory);
+        // setup context
+        _label = label;
+        _memory = &memory;
+        const Error error = processPseudo(directive.c_str());
+        label = _label;
         if (error == UNKNOWN_DIRECTIVE) {
             _scan = _list.instruction;
         } else if (error) {
@@ -295,77 +321,22 @@ Error AsmCommonDirective::closeSource() {
     return setError(OK);
 }
 
-bool AsmCommonDirective::compareDirective(const char *name, const char *directive_name) const {
-    if (strcasecmp(name, directive_name) == 0)
-        return true;
-    return *directive_name == '.' && strcasecmp(name, directive_name + 1) == 0;
+void AsmCommonDirective::registerPseudo(const char *name, Error (AsmCommonDirective::*handler)()) {
+    _pseudos.emplace(std::make_pair(std::string(name), handler));
+    if (*name == '.')
+        _pseudos.emplace(std::make_pair(std::string(name + 1), handler));
 }
 
-Error AsmCommonDirective::processPseudo(
-        const char *directive, const char *&label, CliMemory &memory) {
-    if (_directive->processDirective(directive, label, memory, *this) != UNKNOWN_DIRECTIVE)
+Error AsmCommonDirective::processPseudo(const char *name) {
+    if (_directive->processPseudo(name, *this) != UNKNOWN_DIRECTIVE)
         return getError();
-    if (compareDirective(directive, ".org"))
-        return defineOrigin();
-    if (compareDirective(directive, ".equ"))
-        return defineLabel(label, memory);
-    if (compareDirective(directive, ":="))
-        return defineLabel(label, memory);
-    if (compareDirective(directive, "="))
-        return defineLabel(label, memory);
-    if (compareDirective(directive, ".include"))
-        return includeFile();
-    // TODO: implement listing after "end".
-    if (compareDirective(directive, ".end"))
-        return closeSource();
-    if (compareDirective(directive, ".align"))
-        return alignOrigin();
-    if (compareDirective(directive, ".string") || compareDirective(directive, ".ascii"))
-        return defineUint8s(memory, /* terminator */ true);
-    if (compareDirective(directive, ".byte") || compareDirective(directive, "dc.b"))
-        return defineUint8s(memory);
-    if (compareDirective(directive, ".word") || compareDirective(directive, "dc.w"))
-        return defineUint16s(memory);
-    if (compareDirective(directive, ".long") || compareDirective(directive, "dc.l"))
-        return defineUint32s(memory);
-    if (compareDirective(directive, "ds.b"))
-        return defineSpaces(1);
-    if (compareDirective(directive, "ds.w"))
-        return defineSpaces(2);
-    if (compareDirective(directive, "ds.l"))
-        return defineSpaces(4);
-    if (compareDirective(directive, ".cpu")) {
-        const char *p = _scan;
-        while (*p && !isspace(*p))
-            p++;
-        std::string cpu(_scan, p);
-        if (setCpu(cpu.c_str()) == nullptr)
-            return setError(UNSUPPORTED_CPU);
-        _scan = p;
-        return setError(OK);
-    }
-    if (compareDirective(directive, ".z80syntax")) {
-        const char *cpu = _assembler->getCpu();
-        if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
-            return setError(UNKNOWN_DIRECTIVE);
-        const char *p = _assembler->getParser().scanSymbol(_scan);
-        std::string val(_scan, p);
-        bool value = false;
-        if (strcasecmp(val.c_str(), "on") == 0) {
-            value = true;
-        } else if (strcasecmp(val.c_str(), "off") == 0) {
-            value = false;
-        } else
-            return setError(UNKNOWN_OPERAND);
-        _scan = p;
-        if (_directive == _asmI8080 && value)
-            switchDirective(_asmZ80)->assembler().setCpu(cpu);
-        if (_directive == _asmZ80 && !value)
-            switchDirective(_asmI8080)->assembler().setCpu(cpu);
-        return setError(OK);
-    }
+    auto it = _pseudos.find(name);
+    if (it != _pseudos.end())
+        return (this->*it->second)();
     return setError(UNKNOWN_DIRECTIVE);
 }
+
+// PseudoHandler
 
 Error AsmCommonDirective::defineOrigin() {
     ValueParser &parser = _assembler->getParser();
@@ -402,6 +373,83 @@ Error AsmCommonDirective::alignOrigin() {
     return setError(OK);
 }
 
+Error AsmCommonDirective::defineSymbol() {
+    return defineLabel(_label, *_memory);
+}
+
+Error AsmCommonDirective::includeFile() {
+    const char *filename = _scan;
+    char c = 0;
+    if (*filename == '"' || *filename == '\'')
+        c = *filename++;
+    const char *end = filename;
+    while (*end && (!c || *end != c) && !isspace(*end))
+        end++;
+    if (c && *end != c)
+        return setError(c == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+    return openSource(filename, end);
+}
+
+Error AsmCommonDirective::defineUint8() {
+    return defineUint8s(*_memory, false);
+}
+
+Error AsmCommonDirective::defineUint8WithTerminator() {
+    return defineUint8s(*_memory, true);
+}
+
+Error AsmCommonDirective::defineUint16() {
+    return defineUint16s(*_memory);
+}
+
+Error AsmCommonDirective::defineUint32() {
+    return defineUint32s(*_memory);
+}
+
+Error AsmCommonDirective::allocateUint8() {
+    return allocateSpaces(sizeof(uint8_t));
+}
+
+Error AsmCommonDirective::allocateUint16() {
+    return allocateSpaces(sizeof(uint16_t));
+}
+
+Error AsmCommonDirective::allocateUint32() {
+    return allocateSpaces(sizeof(uint32_t));
+}
+
+Error AsmCommonDirective::switchCpu() {
+    const char *p = _scan;
+    while (*p && !isspace(*p))
+        p++;
+    std::string cpu(_scan, p);
+    if (setCpu(cpu.c_str()) == nullptr)
+        return setError(UNSUPPORTED_CPU);
+    _scan = p;
+    return setError(OK);
+}
+
+Error AsmCommonDirective::switchIntelZilog() {
+    const char *cpu = _assembler->getCpu();
+    if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
+        return setError(UNKNOWN_DIRECTIVE);
+    const char *p = _assembler->getParser().scanSymbol(_scan);
+    std::string val(_scan, p);
+    bool value = false;
+    if (strcasecmp(val.c_str(), "on") == 0) {
+        value = true;
+    } else if (strcasecmp(val.c_str(), "off") == 0) {
+        value = false;
+    } else
+        return setError(UNKNOWN_OPERAND);
+    _scan = p;
+    if (_directive == _asmI8080 && value)
+        switchDirective(_asmZ80)->assembler().setCpu(cpu);
+    if (_directive == _asmZ80 && !value)
+        switchDirective(_asmI8080)->assembler().setCpu(cpu);
+    return setError(OK);
+}
+
 Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
     if (label == nullptr)
         return setError(MISSING_LABEL);
@@ -421,19 +469,6 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
     _list.value_defined = true;
     label = nullptr;
     return getError();
-}
-
-Error AsmCommonDirective::includeFile() {
-    const char *filename = _scan;
-    char c = 0;
-    if (*filename == '"' || *filename == '\'')
-        c = *filename++;
-    const char *end = filename;
-    while (*end && (!c || *end != c) && !isspace(*end))
-        end++;
-    if (c && *end != c)
-        return setError(c == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-    return openSource(filename, end);
 }
 
 Error AsmCommonDirective::defineUint8s(CliMemory &memory, bool terminator) {
@@ -553,7 +588,7 @@ Error AsmCommonDirective::defineUint32s(CliMemory &memory) {
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineSpaces(const uint8_t unit) {
+Error AsmCommonDirective::allocateSpaces(const uint8_t unit) {
     ValueParser &parser = _assembler->getParser();
     Value value;
     _scan = parser.eval(_scan, nullptr, value, this);
@@ -709,44 +744,22 @@ uint8_t AsmCommonDirective::addrUnit() const {
     return static_cast<uint8_t>(config().addressUnit());
 }
 
-// Motorola type directives
-
-AsmMotoDirective::AsmMotoDirective(Assembler &assembler) : AsmDirective(assembler) {}
-
-BinFormatter *AsmMotoDirective::defaultFormatter() const {
-    return new MotoSrec(_assembler.config().addressWidth());
+AsmMotoDirective::AsmMotoDirective(Assembler &assembler)
+    : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
+    registerPseudo("fcb", &AsmCommonDirective::defineUint8);
+    registerPseudo("fcc", &AsmCommonDirective::defineUint8WithTerminator);
+    registerPseudo("fdb", &AsmCommonDirective::defineUint16);
+    registerPseudo("fdb", &AsmCommonDirective::defineUint16);
+    registerPseudo("rmb", &AsmCommonDirective::allocateUint8);
+    registerPseudo("dfs", &AsmCommonDirective::allocateUint8);
 }
 
-Error AsmMotoDirective::processDirective(
-        const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
-    if (common.compareDirective(directive, "fcb"))
-        return common.defineUint8s(memory);
-    if (common.compareDirective(directive, "fcc"))
-        return common.defineUint8s(memory, /* terminator */ true);
-    if (common.compareDirective(directive, "fdb"))
-        return common.defineUint16s(memory);
-    if (common.compareDirective(directive, "rmb") || common.compareDirective(directive, "dfs"))
-        return common.defineSpaces();
-    return UNKNOWN_DIRECTIVE;
-}
-
-AsmIntelDirective::AsmIntelDirective(Assembler &assembler) : AsmDirective(assembler) {}
-
-BinFormatter *AsmIntelDirective::defaultFormatter() const {
-    return new IntelHex(_assembler.config().addressWidth());
-}
-
-Error AsmIntelDirective::processDirective(
-        const char *directive, const char *&label, CliMemory &memory, AsmCommonDirective &common) {
-    if (common.compareDirective(directive, "db"))
-        return common.defineUint8s(memory);
-    if (common.compareDirective(directive, "dw"))
-        return common.defineUint16s(memory);
-    if (common.compareDirective(directive, "dd"))
-        return common.defineUint32s(memory);
-    if (common.compareDirective(directive, "ds"))
-        return common.defineSpaces();
-    return UNKNOWN_DIRECTIVE;
+AsmIntelDirective::AsmIntelDirective(Assembler &assembler)
+    : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
+    registerPseudo("db", &AsmCommonDirective::defineUint8);
+    registerPseudo("dw", &AsmCommonDirective::defineUint16);
+    registerPseudo("dd", &AsmCommonDirective::defineUint32);
+    registerPseudo("ds", &AsmCommonDirective::allocateUint8);
 }
 
 }  // namespace cli

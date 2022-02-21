@@ -52,15 +52,27 @@ public:
     Error openSource(const char *input_name, const char *end = nullptr);
     const char *readSourceLine();
 
-    bool compareDirective(const char *name, const char *directive_name) const;
+    // pseudoHandlers
     Error defineOrigin();
     Error alignOrigin();
-    Error defineLabel(const char *&label, CliMemory &memory);
+    Error defineSymbol();
     Error includeFile();
+    Error defineUint8();
+    Error defineUint8WithTerminator();
+    Error defineUint16();
+    Error defineUint32();
+    Error allocateUint8();
+    Error allocateUint16();
+    Error allocateUint32();
+    Error closeSource();
+    Error switchCpu();
+    Error switchIntelZilog();
+
+    Error defineLabel(const char *&label, CliMemory &memory);
     Error defineUint8s(CliMemory &memory, bool terminator = false);
     Error defineUint16s(CliMemory &memory);
     Error defineUint32s(CliMemory &memory);
-    Error defineSpaces(const uint8_t unit = 1);
+    Error allocateSpaces(const uint8_t unit = 1);
 
 private:
     std::vector<AsmDirective *> _directives;
@@ -76,6 +88,10 @@ private:
     bool _reportDuplicate;
     int _labelWidth;
     int _operandWidth;
+
+    // pseudoHandler's context
+    const char *_label;
+    CliMemory *_memory;
 
     static constexpr int max_includes = 4;
     struct Source;
@@ -98,8 +114,9 @@ private:
         const char *comment;
     } _list;
 
-    Error closeSource();
-    Error processPseudo(const char *directive, const char *&label, CliMemory &memory);
+    std::map<std::string, Error (AsmCommonDirective::*)()> _pseudos;
+    void registerPseudo(const char *name, Error (AsmCommonDirective::*handler)());
+    Error processPseudo(const char *name);
 
     // SymbolTable
     const char *lookupValue(uint32_t address) const override;
@@ -149,30 +166,36 @@ private:
 class AsmDirective {
 public:
     Assembler &assembler() { return _assembler; }
-    virtual BinFormatter *defaultFormatter() const = 0;
-    virtual Error processDirective(const char *directive, const char *&label, CliMemory &memory,
-            AsmCommonDirective &common) = 0;
+    Error processPseudo(const char *name, AsmCommonDirective &common) const {
+        auto it = _pseudos.find(name);
+        return it == _pseudos.end() ? UNKNOWN_DIRECTIVE : (common.*it->second)();
+    }
+    virtual BinFormatter &defaultFormatter() = 0;
 
 protected:
     Assembler &_assembler;
+    std::map<std::string, Error (AsmCommonDirective::*)()> _pseudos;
 
     AsmDirective(Assembler &assembler) : _assembler(assembler) {}
+    void registerPseudo(const char *name, Error (AsmCommonDirective::*handler)()) {
+        _pseudos.emplace(std::make_pair(std::string(name), handler));
+    }
 };
 
 class AsmMotoDirective : public AsmDirective {
 public:
     AsmMotoDirective(Assembler &assembler);
-    BinFormatter *defaultFormatter() const override;
-    Error processDirective(const char *directive, const char *&label, CliMemory &memory,
-            AsmCommonDirective &common) override;
+    BinFormatter &defaultFormatter() override { return _formatter; }
+private:
+    MotoSrec _formatter;
 };
 
 class AsmIntelDirective : public AsmDirective {
 public:
     AsmIntelDirective(Assembler &assembler);
-    BinFormatter *defaultFormatter() const override;
-    Error processDirective(const char *directive, const char *&label, CliMemory &memory,
-            AsmCommonDirective &common) override;
+    BinFormatter &defaultFormatter() override { return _formatter; }
+private:
+    IntelHex _formatter;
 };
 
 }  // namespace cli

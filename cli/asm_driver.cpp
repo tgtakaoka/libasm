@@ -87,7 +87,7 @@ int AsmDriver::assemble() {
         } else if (_formatter == 'H') {
             formatter = new IntelHex(addrWidth);
         } else {
-            formatter = directive->defaultFormatter();
+            formatter = &directive->defaultFormatter();
         }
 
         formatter->begin(output);
