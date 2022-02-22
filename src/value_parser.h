@@ -94,10 +94,8 @@ public:
         typedef uint16_t FuncId;
         static constexpr FuncId EXTENDED_ID_BASE = 100;
         virtual FuncId isFunc(const StrScanner &symbol) const;
-        virtual Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val);
-
-    protected:
-        Value parseArg(ValueParser &parser, StrScanner &scan, char expect = ')');
+        virtual Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val,
+                const SymbolTable *symtab);
     };
     void setFuncParser(FuncParser *parser) { _funcParser = parser; }
 
@@ -143,28 +141,24 @@ private:
     };
 
     template <typename E>
-    class Stack {
-    public:
-        void clear() { _top = 0; }
-        bool empty() const { return _top <= 0; }
-        bool full() const { return _top >= capacity; }
-        const E &top() const { return _values[_top - 1]; }
-        void push(const E v) { _values[_top++] = v; }
-        void pop() { _top--; }
-        uint8_t _top;
+    struct Stack {
+        Stack() : _size(0) {}
+        bool empty() const { return _size == 0; }
+        bool full() const { return _size >= capacity; }
+        const E &top() const { return _values[_size - 1]; }
+        void push(const E v) { _values[_size++] = v; }
+        void pop() { _size--; }
 
     private:
         static constexpr uint8_t capacity = 8;
+        uint8_t _size;
         E _values[capacity];
     };
 
-    const SymbolTable *_symtab;
-    Stack<OprAndLval> _stack;
-
-    Value parseExpr(StrScanner &scan);
+    Value parseExpr(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
     FuncParser &getFuncParser() const;
     Error parseFunction(const uint16_t funid, StrScanner &scan, Value &val);
-    Value readAtom(StrScanner &scan);
+    Value readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
     Value readCharacterConstant(StrScanner &scan);
     Operator readOperator(StrScanner &scan);
     Value evalExpr(const Op op, const Value lhs, const Value rhs);

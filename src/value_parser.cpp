@@ -135,40 +135,44 @@ Error ValueParser::parseNumber(
 }
 
 Value ValueParser::eval(StrScanner &expr, const SymbolTable *symtab) {
-    _symtab = symtab;
-    _stack.clear();
     setOK();
-    return parseExpr(expr);
+    Stack<OprAndLval> stack;
+    return parseExpr(expr, stack, symtab);
 }
 
-Value ValueParser::parseExpr(StrScanner &scan) {
-    Value value(readAtom(scan));
-    if (getError())
-        return Value();
-    if (_stack.full()) {
+Value ValueParser::parseExpr(
+        StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab) {
+    if (stack.full()) {
         setError(scan, TOO_COMPLEX_EXPRESSION);
         return Value();
     }
-    _stack.push(OprAndLval());
-    while (!_stack.empty()) {
+    stack.push(OprAndLval());
+    Value value(readAtom(scan, stack, symtab));
+    if (getError())
+        return Value();
+    while (!stack.empty()) {
         Operator opr(readOperator(scan));
-        while (opr._precedence <= _stack.top().precedence()) {
-            if (_stack.top().isEnd()) {
-                _stack.pop();
+        while (opr._precedence <= stack.top().precedence()) {
+            if (stack.top().isEnd()) {
+                stack.pop();
                 return value;
             }
-            value = evalExpr(_stack.top()._opr._op, _stack.top()._value, value);
-            _stack.pop();
+            value = evalExpr(stack.top()._opr._op, stack.top()._value, value);
+            stack.pop();
         }
-        _stack.push(OprAndLval(opr, value));
-        value = readAtom(scan);
+        if (stack.full()) {
+            setError(scan, TOO_COMPLEX_EXPRESSION);
+            return Value();
+        }
+        stack.push(OprAndLval(opr, value));
+        value = readAtom(scan, stack, symtab);
         if (getError())
             return Value();
     }
     return Value();
 }
 
-Value ValueParser::readAtom(StrScanner &scan) {
+Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab) {
     StrScanner p(scan);
     if (*p.skipSpaces() == 0) {
         setError(scan, ILLEGAL_CONSTANT);
@@ -176,7 +180,7 @@ Value ValueParser::readAtom(StrScanner &scan) {
     }
     const char c = *p++;
     if (c == '(') {
-        Value value(parseExpr(p));
+        Value value(parseExpr(p, stack, symtab));
         if (isOK()) {
             if (!p.skipSpaces().expect(')')) {
                 setError(p, MISSING_CLOSING_PAREN);
@@ -195,7 +199,7 @@ Value ValueParser::readAtom(StrScanner &scan) {
         return value;
     }
     if (c == '~') {
-        Value value(readAtom(p));
+        Value value(readAtom(p, stack, symtab));
         scan = p;
         if (!value.isUndefined())
             return value.setValue(~value.getUnsigned());
@@ -206,7 +210,7 @@ Value ValueParser::readAtom(StrScanner &scan) {
             setError(scan, UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
-        Value value(readAtom(p));
+        Value value(readAtom(p, stack, symtab));
         if (c == '-' && !value.isUndefined()) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(scan, OVERFLOW_RANGE);
@@ -227,17 +231,17 @@ Value ValueParser::readAtom(StrScanner &scan) {
         const auto id = getFuncParser().isFunc(symbol);
         if (id && p.skipSpaces().expect('(')) {
             Value val;
-            if (getFuncParser().parseFunc(*this, id, p, val)) {
+            if (getFuncParser().parseFunc(*this, id, p, val, symtab)) {
                 setError(getFuncParser());
                 return Value();
             }
             scan = p;
             return val;
         }
-        if (_symtab) {
+        if (symtab) {
             scan = p;
-            if (_symtab->hasSymbol(symbol, symbol + symbol.size())) {
-                const uint32_t v = _symtab->lookupSymbol(symbol, symbol + symbol.size());
+            if (symtab->hasSymbol(symbol, symbol + symbol.size())) {
+                const uint32_t v = symtab->lookupSymbol(symbol, symbol + symbol.size());
                 return Value().setValue(v);
             }
             return Value();
@@ -314,21 +318,12 @@ ValueParser::FuncParser &ValueParser::getFuncParser() const {
     return _funcParser ? *_funcParser : baseFuncParser;
 }
 
-Value ValueParser::FuncParser::parseArg(ValueParser &parser, StrScanner &scan, char expect) {
-    StrScanner p(scan);
-    const auto val = parser.parseExpr(p);
-    if (p.skipSpaces().expect(expect)) {
-        scan = p;
-    } else {
-        setError(p, expect == ',' ? MISSING_FUNC_ARGUMENT : MISSING_CLOSING_PAREN);
-    }
-    return val;
-}
-
-Error ValueParser::FuncParser::parseFunc(
-        ValueParser &parser, const FuncParser::FuncId id, StrScanner &scan, Value &val) {
+Error ValueParser::FuncParser::parseFunc(ValueParser &parser, const FuncParser::FuncId id,
+        StrScanner &scan, Value &val, const SymbolTable *symtab) {
     // Multiple arguments function parsing can be implemented by using extended FuncParser.
-    const Value arg = parseArg(parser, scan);
+    const Value arg = parser.eval(scan, symtab);
+    if (!scan.expect(')'))
+        return setError(MISSING_CLOSING_PAREN);
     auto v = arg.getUnsigned();
     if (id == FUNC_HI)
         v = (v >> 8) & 0xFF;

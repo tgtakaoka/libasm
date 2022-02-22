@@ -364,10 +364,13 @@ static void test_errors() {
     E32("456789A", 0, ILLEGAL_CONSTANT);
     E32("2*(1+3",  0, MISSING_CLOSING_PAREN);
     E32("2*(1+3]", 0, MISSING_CLOSING_PAREN);
-    E32("(((0)))",            0, OK);
-    E32("1+(2+(3))",          6, OK);
-    E32("1+(2+(3+(4)))",     10, OK);
-    E32("1+(2+(3+(4+(5))))", 15, TOO_COMPLEX_EXPRESSION);
+    E32(" (((((((0)))))))",     0, OK);
+    E32("((((((((0))))))))",    0, TOO_COMPLEX_EXPRESSION);
+    E32("   1+(2+(3+(4+5))))", 15, OK);
+    E32("0+(1+(2+(3+(4+5))))", 15, TOO_COMPLEX_EXPRESSION);
+    E32("8 | 7 ^ 3 & 4 >> 1",         13, OK);
+    E32("8 | 7 ^ 3 & 4 >> 1 + 1",     14, OK);
+    E32("8 | 7 ^ 3 & 4 >> 1 + 1 * 2", 15, OK);
     E32("'a",      0, MISSING_CLOSING_QUOTE);
     E32("'\\'",    0, MISSING_CLOSING_QUOTE);
     E32("'\\x20",  0, MISSING_CLOSING_QUOTE);

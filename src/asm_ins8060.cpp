@@ -29,15 +29,18 @@ struct Ins8060FuncParser : ValueParser::FuncParser {
         return ValueParser::FuncParser::isFunc(symbol);
     }
 
-    Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val) override {
+    Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val,
+            const SymbolTable *symtab) override {
         if (id == FUNC_ADDR) {
-            const auto arg = parseArg(parser, scan);
+            const auto arg = parser.eval(scan, symtab);
+            if (!scan.expect(')'))
+                return setError(scan, MISSING_CLOSING_PAREN);
             const auto v = arg.getUnsigned();
             const auto a = v - 1;
             val.setValue((v & 0xF000) | (a & 0x0FFF));
             return getError();
         }
-        return ValueParser::FuncParser::parseFunc(parser, id, scan, val);
+        return ValueParser::FuncParser::parseFunc(parser, id, scan, val, symtab);
     }
 };
 
