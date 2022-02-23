@@ -19,33 +19,24 @@
 namespace libasm {
 namespace ins8060 {
 
-static constexpr ValueParser::FuncParser::FuncId FUNC_ADDR{
-        ValueParser::FuncParser::EXTENDED_ID_BASE};
-
-struct Ins8060FuncParser : ValueParser::FuncParser {
-    FuncId isFunc(const StrScanner &symbol) const override {
-        if (symbol.iequals_P(PSTR("addr")))
-            return FUNC_ADDR;
-        return ValueParser::FuncParser::isFunc(symbol);
-    }
-
-    Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val,
+static struct : public ValueParser::FuncParser {
+    Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
             const SymbolTable *symtab) override {
-        if (id == FUNC_ADDR) {
-            const auto arg = parser.eval(scan, symtab);
-            if (!scan.expect(')'))
-                return setError(scan, MISSING_CLOSING_PAREN);
-            const auto v = arg.getUnsigned();
-            const auto a = v - 1;
-            val.setValue((v & 0xF000) | (a & 0x0FFF));
-            return getError();
+        const auto v = parser.eval(scan, symtab).getUnsigned();
+        if (name.iequals_P(PSTR("h"))) {
+            val.setValue((v >> 8) & 0xFF);
+        } else if (name.iequals_P(PSTR("l"))) {
+            val.setValue(v & 0xFF);
+        } else if (name.iequals_P(PSTR("addr"))) {
+            val.setValue(AsmIns8060::page(v) | AsmIns8060::offset(v - 1));
+        } else {
+            return setError(UNKNOWN_FUNCTION);
         }
-        return ValueParser::FuncParser::parseFunc(parser, id, scan, val, symtab);
+        return OK;
     }
-};
+} functionParser;
 
 AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060) {
-    static Ins8060FuncParser functionParser;
     reset();
     _parser.setFuncParser(&functionParser);
 }

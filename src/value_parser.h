@@ -89,15 +89,11 @@ public:
     static bool isSymbolLetter(char c, bool head = false);
     StrScanner readSymbol(StrScanner &scan) const;
 
-    class FuncParser : public ErrorReporter {
-    public:
-        typedef uint16_t FuncId;
-        static constexpr FuncId EXTENDED_ID_BASE = 100;
-        virtual FuncId isFunc(const StrScanner &symbol) const;
-        virtual Error parseFunc(ValueParser &parser, const FuncId id, StrScanner &scan, Value &val,
-                const SymbolTable *symtab);
+    struct FuncParser : public ErrorReporter {
+        virtual Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
+                Value &val, const SymbolTable *symtab) = 0;
     };
-    void setFuncParser(FuncParser *parser) { _funcParser = parser; }
+    void setFuncParser(FuncParser *parser = nullptr) { _funcParser = parser; }
 
 protected:
     virtual Error readNumber(StrScanner &scan, Value &val);
@@ -105,7 +101,6 @@ protected:
     Error scanNumberEnd(const StrScanner &scan, const uint8_t base, char suffix = 0);
 
 private:
-    friend class FuncParser;
     uint32_t _origin;
     const char _curSym;
     FuncParser *_funcParser;
@@ -156,7 +151,6 @@ private:
     };
 
     Value parseExpr(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
-    FuncParser &getFuncParser() const;
     Error parseFunction(const uint16_t funid, StrScanner &scan, Value &val);
     Value readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
     Value readCharacterConstant(StrScanner &scan);

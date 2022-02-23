@@ -66,6 +66,7 @@ enum Error : uint8_t {
     UNDEFINED_SYMBOL = 107,
     TOO_COMPLEX_EXPRESSION = 108,
     MISSING_FUNC_ARGUMENT = 109,
+    UNKNOWN_FUNCTION = 110,
 
     // AsmDirective
     UNKNOWN_DIRECTIVE = 150,

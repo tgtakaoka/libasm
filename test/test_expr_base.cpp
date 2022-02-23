@@ -26,6 +26,7 @@ static void set_up() {}
 
 static void tear_down() {
     symtab.reset();
+    parser.setFuncParser();
 }
 
 // clang-format off
@@ -342,11 +343,28 @@ static void test_current_address() {
     E16("(.-table)/2", 0x80,  OK);
 }
 
-static void test_predefined_fun() {
+static void test_function() {
+    struct : public ValueParser::FuncParser {
+        Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
+                        const SymbolTable *symtab) override {
+            const auto v = parser.eval(scan, symtab).getUnsigned();
+            if (name.iequals_P(PSTR("hi"))) {
+                val.setValue((v >> 8) & 0xFF);
+            } else if (name.iequals_P(PSTR("lo"))) {
+                val.setValue(v & 0xFF);
+            } else {
+                return setError(UNKNOWN_FUNCTION);
+            }
+            return OK;
+        }
+    } funcParser;
+    parser.setFuncParser(&funcParser);
     E16("hi(0x1234)",  0x12, OK);
     E16("lo(0x1234)",  0x34, OK);
     E16("hi( 0x1234 ) + 1",  0x13, OK);
     E16("1 + lo( 0x1234 )",  0x35, OK);
+    E16("1 + lo (0x1234 )",  0x35, OK);
+    E16("1 + lo (0x1234  ",  0x35, MISSING_CLOSING_PAREN);
 }
 
 static void test_errors() {
@@ -745,7 +763,7 @@ void run_tests() {
     RUN_TEST(test_overflow);
     RUN_TEST(test_precedence);
     RUN_TEST(test_current_address);
-    RUN_TEST(test_predefined_fun);
+    RUN_TEST(test_function);
     RUN_TEST(test_errors);
     RUN_TEST(test_spaces);
     RUN_TEST(test_formatter_8bit);

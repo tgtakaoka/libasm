@@ -227,16 +227,23 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
 
     --p;
     if (isSymbolLetter(c, true)) {
+        if (_funcParser)
+            _funcParser->setAt(p);
         const StrScanner symbol = readSymbol(p);
-        const auto id = getFuncParser().isFunc(symbol);
-        if (id && p.skipSpaces().expect('(')) {
+        if (*p.skipSpaces() == '(' && _funcParser) {
+            StrScanner f(p);
             Value val;
-            if (getFuncParser().parseFunc(*this, id, p, val, symtab)) {
-                setError(getFuncParser());
+            if (_funcParser->parseFunc(*this, symbol, ++f, val, symtab) == OK) {
+                if (!f.expect(')')) {
+                    setError(p, MISSING_CLOSING_PAREN);
+                    return Value();
+                }
+                scan = f;
+                return val;
+            } else if (_funcParser->getError() != UNKNOWN_FUNCTION) {
+                setError(*_funcParser);
                 return Value();
             }
-            scan = p;
-            return val;
         }
         if (symtab) {
             scan = p;
@@ -300,37 +307,6 @@ ValueParser::Operator ValueParser::readOperator(StrScanner &scan) {
     }
     --scan;
     return Operator(OP_NONE, 0);
-}
-
-static constexpr ValueParser::FuncParser::FuncId FUNC_HI{1};
-static constexpr ValueParser::FuncParser::FuncId FUNC_LO{2};
-
-ValueParser::FuncParser::FuncId ValueParser::FuncParser::isFunc(const StrScanner &symbol) const {
-    if (symbol.iequals_P(PSTR("hi")))
-        return FUNC_HI;
-    if (symbol.iequals_P(PSTR("lo")))
-        return FUNC_LO;
-    return FuncId();
-}
-
-ValueParser::FuncParser &ValueParser::getFuncParser() const {
-    static FuncParser baseFuncParser;
-    return _funcParser ? *_funcParser : baseFuncParser;
-}
-
-Error ValueParser::FuncParser::parseFunc(ValueParser &parser, const FuncParser::FuncId id,
-        StrScanner &scan, Value &val, const SymbolTable *symtab) {
-    // Multiple arguments function parsing can be implemented by using extended FuncParser.
-    const Value arg = parser.eval(scan, symtab);
-    if (!scan.expect(')'))
-        return setError(MISSING_CLOSING_PAREN);
-    auto v = arg.getUnsigned();
-    if (id == FUNC_HI)
-        v = (v >> 8) & 0xFF;
-    if (id == FUNC_LO)
-        v &= 0xFF;
-    val.setValue(v);
-    return getError();
 }
 
 bool ValueParser::isSymbolLetter(char c, bool head) {

@@ -72,14 +72,14 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Missing comma");
     case NOT_BIT_ADDRESSABLE:
         return PSTR("Not bit addressable address");
+    case OPERAND_NOT_ALIGNED:
+        return PSTR("Operand not aligned");
     case OPCODE_HAS_NO_EFFECT:
         return PSTR("Opcode has no effect");
     case REGISTERS_OVERWRAPPED:
         return PSTR("Registers overwrapped");
     case MISSING_CLOSING_BRACKET:
         return PSTR("Missing closing bracket");
-    case MISSING_FUNC_ARGUMENT:
-        return PSTR("Missing function argument");
 
     // ValueParser
     case ILLEGAL_CONSTANT:
@@ -100,8 +100,10 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Undefined symbol");
     case TOO_COMPLEX_EXPRESSION:
         return PSTR("Too complex expression");
-    case OPERAND_NOT_ALIGNED:
-        return PSTR("Operand not aligned");
+    case UNKNOWN_FUNCTION:
+        return PSTR("Unknown function");
+    case MISSING_FUNC_ARGUMENT:
+        return PSTR("Missing function argument");
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:
