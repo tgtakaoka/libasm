@@ -74,8 +74,8 @@ IntelDirective dir8051(asm8051);
 IntelDirective dir8080(asm8080);
 IntelDirective dirz80(asmz80);
 IntelDirective dirz8(asmz8);
-IntelDirective dir8060(asm8060);
-IntelDirective dir8070(asm8070);
+NationalDirective dir8060(asm8060);
+NationalDirective dir8070(asm8070);
 IntelDirective dir1802(asm1802);
 IntelDirective dir8086(asm8086);
 IntelDirective dir8096(asm8096);
@@ -84,8 +84,8 @@ IntelDirective dir9900(asm9900);
 IntelDirective dir32010(asm32010);
 MotorolaDirective dir68000(asm68000);
 IntelDirective dirz8000(asmz8000);
-IntelDirective dir32000(asm32000);
-IntelDirective dir1610(asm1610);
+NationalDirective dir32000(asm32000);
+NationalDirective dir1610(asm1610);
 
 std::vector<AsmDirective *> directives = {
         &dir6800,

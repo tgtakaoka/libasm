@@ -773,6 +773,10 @@ IntelDirective::IntelDirective(Assembler &assembler)
     registerPseudo("ds", &AsmCommonDirective::allocateUint8);
 }
 
+NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
+    registerPseudo(".dbyte", &AsmCommonDirective::defineUint16);
+}
+
 }  // namespace cli
 }  // namespace libasm
 

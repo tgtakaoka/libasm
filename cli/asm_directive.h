@@ -204,6 +204,11 @@ private:
     IntelHex _formatter;
 };
 
+class NationalDirective : public IntelDirective {
+public:
+    NationalDirective(Assembler &assembler);
+};
+
 }  // namespace cli
 }  // namespace libasm
 
