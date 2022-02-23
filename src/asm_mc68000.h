@@ -35,7 +35,7 @@ public:
     void setAlias(bool enable) { TableMc68000.setAlias(enable); }
 
 private:
-    MotoValueParser _parser;
+    MotorolaValueParser _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

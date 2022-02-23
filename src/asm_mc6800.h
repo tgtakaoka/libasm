@@ -32,7 +32,7 @@ public:
     const ConfigBase &config() const override { return *this; }
 
 private:
-    MotoValueParser _parser;
+    MotorolaValueParser _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

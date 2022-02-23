@@ -33,7 +33,7 @@ public:
     void reset() override { _direct_page = 0; }
 
 private:
-    MotoValueParser _parser;
+    MotorolaValueParser _parser;
     uint8_t _direct_page;
 
     struct Operand : public ErrorReporter {

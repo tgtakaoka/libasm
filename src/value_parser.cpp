@@ -422,7 +422,7 @@ Error ValueParser::readNumber(StrScanner &scan, Value &val) {
     return setError(scan, ILLEGAL_CONSTANT);
 }
 
-Error MotoValueParser::readNumber(StrScanner &scan, Value &val) {
+Error MotorolaValueParser::readNumber(StrScanner &scan, Value &val) {
     if (ValueParser::readNumber(scan, val) != ILLEGAL_CONSTANT)
         return getError();
     const StrScanner save(scan);

@@ -34,7 +34,7 @@ public:
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
 
 private:
-    MotoValueParser _parser;
+    MotorolaValueParser _parser;
     bool _long_acc;
     bool _long_idx;
 

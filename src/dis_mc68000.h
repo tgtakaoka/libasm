@@ -32,7 +32,7 @@ public:
     const ConfigBase &config() const override { return *this; }
 
 private:
-    MotoValueFormatter _formatter;
+    MotorolaValueFormatter _formatter;
     RegMc68000 _regs;
 
     StrBuffer &outRegName(StrBuffer &out, RegName regName);

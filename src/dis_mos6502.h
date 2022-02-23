@@ -38,7 +38,7 @@ public:
     void longIndex(bool on) { TableMos6502.longIndex(on); }
 
 private:
-    MotoValueFormatter _formatter;
+    MotorolaValueFormatter _formatter;
     RegMos6502 _regs;
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);

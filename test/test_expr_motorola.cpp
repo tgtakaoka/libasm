@@ -19,8 +19,8 @@
 using namespace libasm;
 using namespace libasm::test;
 
-MotoValueParser parser;
-MotoValueFormatter formatter;
+MotorolaValueParser parser;
+MotorolaValueFormatter formatter;
 
 static void set_up() {}
 

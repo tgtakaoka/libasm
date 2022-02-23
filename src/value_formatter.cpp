@@ -84,7 +84,7 @@ StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_
     return outHex(out, val, bits).reverse(start);
 }
 
-StrBuffer &MotoValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+StrBuffer &MotorolaValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
     out.letter('$');
     char *start = out.mark();
     return outHex(out, val, bits).reverse(start);

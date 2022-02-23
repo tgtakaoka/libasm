@@ -46,7 +46,7 @@ OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
-EXPR_OBJS = test_expr_moto.o test_expr_intel.o test_expr_base.o
+EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
 GEN_OBJS  = $(ARCHS:%=gen_%.o)
 OBJS = 	$(TEST_OBJS) $(GEN_OBJS) $(OBJS_test) $(OBJS_gen) \
 	$(OBJS_asm) $(OBJS_dis) $(OBJS_expr) \
@@ -70,7 +70,7 @@ endef
 $(eval $(foreach a,$(ARCHS),$(call test-rule,$(a))))
 
 # make rule for testing expression.
-EXPRS = base moto intel
+EXPRS = base motorola intel
 define test-expr # expr
 test_expr_$(1): test_expr_$(1).o $$(OBJS_expr) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
@@ -78,11 +78,12 @@ test_expr_$(1): test_expr_$(1).o $$(OBJS_expr) $$(OBJS_test)
 endef
 $(eval $(foreach e,$(EXPRS),$(call test-expr,$(e))))
 
-test_expr: $(EXPRS:%=test_expr_%)
-	./test_expr_base
-	./test_expr_moto
-	./test_expr_intel
-test: $(foreach a,$(ARCHS),test_$(a)) test_expr
+define exec-test # test
+test_expr:: test_expr_$(1)
+	./test_expr_$(1)
+
+endef
+$(eval $(foreach e,$(EXPRS),$(call exec-test,$(e))))
 
 define gen-rule
 gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen)

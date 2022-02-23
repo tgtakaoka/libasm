@@ -35,7 +35,7 @@ public:
     void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }
 
 private:
-    MotoValueFormatter _formatter;
+    MotorolaValueFormatter _formatter;
     RegMc6805 _regs;
     uint8_t _pc_bits;
 

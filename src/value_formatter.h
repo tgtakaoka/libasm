@@ -56,9 +56,9 @@ protected:
     StrBuffer &outDec(StrBuffer &out, uint32_t val) const __attribute__((noinline));
 };
 
-class MotoValueFormatter : public ValueFormatter {
+class MotorolaValueFormatter : public ValueFormatter {
 public:
-    MotoValueFormatter() : ValueFormatter(false) {}
+    MotorolaValueFormatter() : ValueFormatter(false) {}
 
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;

@@ -158,9 +158,9 @@ private:
     Value evalExpr(const Op op, const Value lhs, const Value rhs);
 };
 
-class MotoValueParser : public ValueParser {
+class MotorolaValueParser : public ValueParser {
 public:
-    MotoValueParser() : ValueParser('*') {}
+    MotorolaValueParser() : ValueParser('*') {}
 
 protected:
     Error readNumber(StrScanner &scan, Value &val) override;

@@ -35,7 +35,7 @@ public:
     void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }
 
 private:
-    MotoValueParser _parser;
+    MotorolaValueParser _parser;
     uint8_t _pc_bits;
 
     struct Operand : public ErrorReporter {
