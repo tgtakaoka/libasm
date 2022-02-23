@@ -65,27 +65,27 @@ z8000::AsmZ8000 asmz8000;
 ns32000::AsmNs32000 asm32000;
 mn1610::AsmMn1610 asm1610;
 
-AsmMotoDirective dir6502(asm6502);
-AsmMotoDirective dir6800(asm6800);
-AsmMotoDirective dir6805(asm6805);
-AsmMotoDirective dir6809(asm6809);
-AsmIntelDirective dir8048(asm8048);
-AsmIntelDirective dir8051(asm8051);
-AsmIntelDirective dir8080(asm8080);
-AsmIntelDirective dirz80(asmz80);
-AsmIntelDirective dirz8(asmz8);
-AsmIntelDirective dir8060(asm8060);
-AsmIntelDirective dir8070(asm8070);
-AsmIntelDirective dir1802(asm1802);
-AsmIntelDirective dir8086(asm8086);
-AsmIntelDirective dir8096(asm8096);
-AsmIntelDirective dir90(asm90);
-AsmIntelDirective dir9900(asm9900);
-AsmIntelDirective dir32010(asm32010);
-AsmMotoDirective dir68000(asm68000);
-AsmIntelDirective dirz8000(asmz8000);
-AsmIntelDirective dir32000(asm32000);
-AsmIntelDirective dir1610(asm1610);
+MotorolaDirective dir6502(asm6502);
+MotorolaDirective dir6800(asm6800);
+MotorolaDirective dir6805(asm6805);
+MotorolaDirective dir6809(asm6809);
+IntelDirective dir8048(asm8048);
+IntelDirective dir8051(asm8051);
+IntelDirective dir8080(asm8080);
+IntelDirective dirz80(asmz80);
+IntelDirective dirz8(asmz8);
+IntelDirective dir8060(asm8060);
+IntelDirective dir8070(asm8070);
+IntelDirective dir1802(asm1802);
+IntelDirective dir8086(asm8086);
+IntelDirective dir8096(asm8096);
+IntelDirective dir90(asm90);
+IntelDirective dir9900(asm9900);
+IntelDirective dir32010(asm32010);
+MotorolaDirective dir68000(asm68000);
+IntelDirective dirz8000(asmz8000);
+IntelDirective dir32000(asm32000);
+IntelDirective dir1610(asm1610);
 
 std::vector<AsmDirective *> directives = {
         &dir6800,

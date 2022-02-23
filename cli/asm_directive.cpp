@@ -328,8 +328,8 @@ Error AsmCommonDirective::closeSource() {
 
 void AsmCommonDirective::registerPseudo(const char *name, Error (AsmCommonDirective::*handler)()) {
     _pseudos.emplace(std::make_pair(std::string(name), handler));
-    if (*name == '.')
-        _pseudos.emplace(std::make_pair(std::string(name + 1), handler));
+    if (*name++ == '.')
+        _pseudos.emplace(std::make_pair(std::string(name), handler));
 }
 
 Error AsmCommonDirective::processPseudo(const char *name) {
@@ -755,7 +755,7 @@ uint8_t AsmCommonDirective::addrUnit() const {
     return static_cast<uint8_t>(config().addressUnit());
 }
 
-AsmMotoDirective::AsmMotoDirective(Assembler &assembler)
+MotorolaDirective::MotorolaDirective(Assembler &assembler)
     : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
     registerPseudo("fcb", &AsmCommonDirective::defineUint8);
     registerPseudo("fcc", &AsmCommonDirective::defineUint8WithTerminator);
@@ -765,7 +765,7 @@ AsmMotoDirective::AsmMotoDirective(Assembler &assembler)
     registerPseudo("dfs", &AsmCommonDirective::allocateUint8);
 }
 
-AsmIntelDirective::AsmIntelDirective(Assembler &assembler)
+IntelDirective::IntelDirective(Assembler &assembler)
     : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
     registerPseudo("db", &AsmCommonDirective::defineUint8);
     registerPseudo("dw", &AsmCommonDirective::defineUint16);

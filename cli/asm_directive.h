@@ -188,20 +188,18 @@ protected:
     }
 };
 
-class AsmMotoDirective : public AsmDirective {
+class MotorolaDirective : public AsmDirective {
 public:
-    AsmMotoDirective(Assembler &assembler);
+    MotorolaDirective(Assembler &assembler);
     BinFormatter &defaultFormatter() override { return _formatter; }
-
 private:
     MotoSrec _formatter;
 };
 
-class AsmIntelDirective : public AsmDirective {
+class IntelDirective : public AsmDirective {
 public:
-    AsmIntelDirective(Assembler &assembler);
+    IntelDirective(Assembler &assembler);
     BinFormatter &defaultFormatter() override { return _formatter; }
-
 private:
     IntelHex _formatter;
 };
