@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-PATH+=:../cli
-
 help:
 	@echo '"make asm-test" assemble with "asm" command'
 	@echo '"make asl-test" assemble with "asl" command'
@@ -24,16 +22,21 @@ help:
 -include ../Makefile.asl
 -include ../Makefile.gas
 
+ASM=../../cli/asm
+$(ASM):
+	+$(MAKE) -C ../../cli cli
+
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
 ASM_OUTS  = $(foreach t,$(ASM_TESTS),$(t).$(call out-ext,$(t)))
 define asm-rule # test suffix option
-asm-$(1).$(2): $(1).asm
-	asm $(3) -o $(1).$(2) -l $(1).lst $$^
+asm-$(1).$(2):: $(ASM)
+asm-$(1).$(2):: $(1).asm
+	$(ASM) $(3) -o $(1).$(2) -l $(1).lst $$^
 
 endef
 $(eval $(foreach t,$(ASM_TESTS),$(call asm-rule,$(t),$(call out-ext,$(t)),$(call asm-opt,$(t)))))
 
-asm-test: clean-asm $(ASM_OUTS:%=asm-%)
+asm-test: $(ASM) clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 

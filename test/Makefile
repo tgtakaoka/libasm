@@ -21,9 +21,9 @@ help:
 
 .PHONY: help test gen generate clean clean-objs
 
-generate: gen
+generate:
 	$(MAKE) -C autogen clean-gen
-	$(MAKE) -C autogen generate
+	+$(MAKE) -C autogen generate
 
 clean: clean-objs
 	-rm -f $(BINS)

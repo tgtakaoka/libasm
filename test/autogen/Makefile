@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-PATH+=:..:../../cli
-
 help:
 	@echo '"make generate" auto generate test sources'
 	@echo '"make asm-test" assemble with "asm" command'
@@ -38,6 +36,11 @@ endef
 define gen-out # target
 $(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm)
 endef
+define generator-rule # arch
+../gen_$(1):
+	+$(MAKE) --no-print-directory -C .. gen_$(1)
+
+endef
 # generator options
 define gas-out
 $(filter $(1),$(GAS_targets))
@@ -47,29 +50,35 @@ $(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-c -u,-u))
 endef
 # make rule for auto generation file
 define gen-rule # arch target out opt
-$(3):
-	gen_$(1) $(4) -C $(CPU_$(2)) -o $$@ -l gen_$(2).lst
+$(3): ../gen_$(1)
+	../gen_$(1) $(4) -C $(CPU_$(2)) -o $$@ -l gen_$(2).lst
 
 endef
 
 GEN_OUTS = $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),$(call gen-out,$(t))))
 
 # rules for auto generations
+$(eval $(foreach a,$(ARCHS),$(call generator-rule,$(a))))
+
 $(eval $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),\
 	$(call gen-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
 
 generate: $(GEN_OUTS)
 
+ASM=../../cli/asm
+$(ASM):
+	+$(MAKE) -C ../../cli cli
+
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
 ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
 define asm-rule # source stem suffix option
 asm-$(2).$(3): $(1)
-	asm $(4) -o $(2).$(3) -l $(2).lst $$^
+	$(ASM) $(4) -o $(2).$(3) -l $(2).lst $$^
 
 endef
 $(eval $(foreach f,$(ASM_TESTS),$(call asm-rule,$(f).asm,$(f),$(call out-ext,$(f)),$(call asm-opt,$(f)))))
 
-asm-test: clean-asm $(ASM_OUTS:%=asm-%)
+asm-test: $(ASM) clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
