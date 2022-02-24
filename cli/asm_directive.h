@@ -26,15 +26,10 @@
 #include "cli_listing.h"
 #include "cli_memory.h"
 #include "error_reporter.h"
+#include "function_store.h"
 
 namespace libasm {
 namespace cli {
-
-struct icasecmp {
-    bool operator()(const std::string &lhs, const std::string &rhs) const {
-        return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
-    }
-};
 
 class AsmDirective;
 
@@ -75,6 +70,7 @@ public:
     Error switchCpu(StrScanner &scan, StrScanner &label, CliMemory &memory);
     Error switchIntelZilog(StrScanner &scan, StrScanner &label, CliMemory &memory);
     Error endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineFunction(StrScanner &scan, StrScanner &label, CliMemory &memory);
 
     Error defineUint8s(StrScanner &scan, CliMemory &memory, bool terminator);
     Error allocateSpaces(StrScanner &scan, size_t unit);
@@ -82,6 +78,7 @@ public:
 private:
     struct Directives {
         Directives(AsmDirective **begin, AsmDirective **end);
+        void setFunctionStore(FunctionStore *functionStore);
         AsmDirective *current() const { return _current; }
         Assembler &assembler() const;
         ValueParser &parser() const { return assembler().parser(); }
@@ -94,6 +91,8 @@ private:
     private:
         std::list<AsmDirective *> _directives;
         AsmDirective *_current;
+        ValueParser::FuncParser *_savedFuncParser;
+        FunctionStore *_functionStore;
         AsmDirective *switchDirective(AsmDirective *dir);
     };
     Directives _directives;
@@ -105,6 +104,8 @@ private:
     bool _reportDuplicate;
     int _labelWidth;
     int _operandWidth;
+
+    FunctionStore _functions;
 
     static constexpr int max_includes = 4;
     struct Source;

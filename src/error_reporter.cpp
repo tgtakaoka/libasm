@@ -100,10 +100,14 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Undefined symbol");
     case TOO_COMPLEX_EXPRESSION:
         return PSTR("Too complex expression");
-    case UNKNOWN_FUNCTION:
-        return PSTR("Unknown function");
     case MISSING_FUNC_ARGUMENT:
         return PSTR("Missing function argument");
+    case UNKNOWN_FUNCTION:
+        return PSTR("Unknown function");
+    case DUPLICATE_FUNCTION:
+        return PSTR("Duplicate function");
+    case SYMBOL_REQUIRE:
+        return PSTR("Symbol name required");
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:

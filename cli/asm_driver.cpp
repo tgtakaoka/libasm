@@ -138,13 +138,24 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
             const char *filename = _commonDir.currentSource();
             const char *line = *scan;
             const int lineno = _commonDir.currentLineno();
-            const int column = _commonDir.errorAt() - line + 1;
-            fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,
-                    _commonDir.errorText());
+            const char *at = _commonDir.errorAt();
+            const int column = (at >= line && at < line + scan->size()) ? at - line + 1 : -1;
+            if (column >= 0) {
+                fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,
+                        _commonDir.errorText());
+            } else {
+                fprintf(stderr, "%s:%d: error: %s at '%s'\n", filename, lineno,
+                        _commonDir.errorText(), at);
+            }
             fprintf(stderr, "%s:%d %s\n", filename, lineno, line);
             if (list) {
-                fprintf(list, "%s:%d:%d: error: %s\n", filename, lineno, column,
-                        _commonDir.errorText());
+                if (column >= 0) {
+                    fprintf(list, "%s:%d:%d: error: %s\n", filename, lineno, column,
+                            _commonDir.errorText());
+                } else {
+                    fprintf(list, "%s:%d: error: %s at '%s'\n", filename, lineno,
+                            _commonDir.errorText(), at);
+                }
                 fprintf(list, "%s:%d %s\n", filename, lineno, line);
             }
             errors++;

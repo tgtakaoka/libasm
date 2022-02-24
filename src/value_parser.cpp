@@ -278,6 +278,8 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
                 const uint32_t v = symtab->lookupSymbol(symbol);
                 return Value().setValue(v);
             }
+            setAt(symbol);
+            return Value();
         }
         return Value();
     }
@@ -293,6 +295,12 @@ read_number:
     }
 
     return Value();
+}
+
+ValueParser::FuncParser *ValueParser::setFuncParser(FuncParser *parser) {
+    auto prev = _funcParser;
+    _funcParser = parser;
+    return prev;
 }
 
 Value ValueParser::readCharacterConstant(StrScanner &scan) {

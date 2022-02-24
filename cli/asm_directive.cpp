@@ -26,7 +26,7 @@ namespace libasm {
 namespace cli {
 
 AsmCommonDirective::Directives::Directives(AsmDirective **begin, AsmDirective **end)
-    : _current(nullptr) {
+    : _current(nullptr), _savedFuncParser(nullptr), _functionStore(nullptr) {
     _directives.insert(_directives.begin(), begin, end);
     switchDirective(_directives.front());
 }
@@ -97,14 +97,29 @@ AsmDirective *AsmCommonDirective::Directives::restrictCpu(const char *cpu) {
     return dir;
 }
 
+void AsmCommonDirective::Directives::setFunctionStore(FunctionStore *functionStore) {
+    _functionStore = functionStore;
+    _savedFuncParser =
+            parser().setFuncParser(reinterpret_cast<ValueParser::FuncParser *>(functionStore));
+    _functionStore->setParent(_savedFuncParser);
+}
+
 AsmDirective *AsmCommonDirective::Directives::switchDirective(AsmDirective *dir) {
+    if (_current)
+        parser().setFuncParser(_savedFuncParser);
     _current = dir;
+    if (_functionStore == nullptr) {
+        ;  // defer setting FunctionStore until |_functionStore| is set.
+    } else {
+        setFunctionStore(_functionStore);
+    }
     assembler().reset();
     return dir;
 }
 
 AsmCommonDirective::AsmCommonDirective(AsmDirective **begin, AsmDirective **end)
     : _directives(begin, end) {
+    _directives.setFunctionStore(&_functions);
     _line_len = 128;
     _line = static_cast<char *>(malloc(_line_len));
     _origin = 0;
@@ -134,6 +149,7 @@ AsmCommonDirective::AsmCommonDirective(AsmDirective **begin, AsmDirective **end)
     registerPseudo("ds.w", &AsmCommonDirective::allocateUint16s);
     registerPseudo("ds.l", &AsmCommonDirective::allocateUint32s);
     registerPseudo(".z80syntax", &AsmCommonDirective::switchIntelZilog);
+    registerPseudo(".function", &AsmCommonDirective::defineFunction);
 }
 
 AsmCommonDirective::~AsmCommonDirective() {
@@ -242,6 +258,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 
 void AsmCommonDirective::reset() {
     current()->assembler().reset();
+    _functions.reset();
     _origin = 0;
 }
 
@@ -525,6 +542,30 @@ Error AsmCommonDirective::allocateSpaces(StrScanner &scan, size_t unit) {
         return setError(OVERFLOW_RANGE);
     _origin += ((size + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
+}
+
+Error AsmCommonDirective::defineFunction(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    ValueParser &parser = _directives.parser();
+    std::list<StrScanner> params;
+    for (;;) {
+        const StrScanner expr = parser.scanExpr(scan.skipSpaces(), ',');
+        if (expr.size() == 0) {
+            const auto error = _functions.internFunction(label, params, StrScanner(scan, expr));
+            scan = expr;
+            label = StrScanner::EMPTY;
+            return error;
+        }
+        StrScanner p(expr);
+        bool head = true;
+        while (p.size()) {
+            if (!parser.isSymbolLetter(*p, head))
+                return setError(expr, SYMBOL_REQUIRE);
+            head = false;
+            ++p;
+        }
+        params.emplace_back(expr);
+        scan += expr.size() + 1;
+    }
 }
 
 Error AsmCommonDirective::switchCpu(StrScanner &scan, StrScanner &label, CliMemory &memory) {

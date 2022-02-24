@@ -105,7 +105,7 @@ public:
         virtual Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
                 Value &val, const SymbolTable *symtab) = 0;
     };
-    void setFuncParser(FuncParser *parser = nullptr) { _funcParser = parser; }
+    FuncParser *setFuncParser(FuncParser *parser = nullptr);
 
 protected:
     virtual bool numberPrefix(const StrScanner &scan) const;
