@@ -25,23 +25,23 @@ DisMos6502 dis6502;
 Disassembler &disassembler(dis6502);
 
 static bool m6502() {
-    return strcmp(disassembler.getCpu(), "6502") == 0;
+    return strcmp_P("6502", disassembler.cpu_P()) == 0;
 }
 
 static bool g65sc02() {
-    return strcmp(disassembler.getCpu(), "65SC02") == 0;
+    return strcmp_P("65SC02", disassembler.cpu_P()) == 0;
 }
 
 static bool r65c02() {
-    return strcmp(disassembler.getCpu(), "65C02") == 0;
+    return strcmp_P("65C02", disassembler.cpu_P()) == 0;
 }
 
 static bool w65c02s() {
-    return strcmp(disassembler.getCpu(), "W65C02S") == 0;
+    return strcmp_P("W65C02S", disassembler.cpu_P()) == 0;
 }
 
 static bool w65c816() {
-    return strcmp(disassembler.getCpu(), "65816") == 0;
+    return strcmp_P("65816", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -54,39 +54,39 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 6502", true,   disassembler.setCpu("6502"));
-    EQUALS("cpu 6502", "6502", disassembler.getCpu());
+    EQUALS_P("cpu 6502", "6502", disassembler.cpu_P());
 
     EQUALS("cpu 65SC02", true,     disassembler.setCpu("65SC02"));
-    EQUALS("cpu 65SC02", "65SC02", disassembler.getCpu());
+    EQUALS_P("cpu 65SC02", "65SC02", disassembler.cpu_P());
 
     EQUALS("cpu 65C02", true,    disassembler.setCpu("65C02"));
-    EQUALS("cpu 65C02", "65C02", disassembler.getCpu());
+    EQUALS_P("cpu 65C02", "65C02", disassembler.cpu_P());
 
     EQUALS("cpu MOS6502", true,   disassembler.setCpu("MOS6502"));
-    EQUALS("cpu MOS6502", "6502", disassembler.getCpu());
+    EQUALS_P("cpu MOS6502", "6502", disassembler.cpu_P());
 
     EQUALS("cpu G65SC02", true,     disassembler.setCpu("G65SC02"));
-    EQUALS("cpu G65SC02", "65SC02", disassembler.getCpu());
+    EQUALS_P("cpu G65SC02", "65SC02", disassembler.cpu_P());
 
     EQUALS("cpu R65C02", true,    disassembler.setCpu("R65C02"));
-    EQUALS("cpu R65C02", "65C02", disassembler.getCpu());
+    EQUALS_P("cpu R65C02", "65C02", disassembler.cpu_P());
 
     EQUALS("cpu W65C02S", true,      disassembler.setCpu("W65C02S"));
-    EQUALS("cpu W65C02S", "W65C02S", disassembler.getCpu());
+    EQUALS_P("cpu W65C02S", "W65C02S", disassembler.cpu_P());
 
     EQUALS("cpu 65816", true,    disassembler.setCpu("65816"));
-    EQUALS("cpu 65816", "65816", disassembler.getCpu());
+    EQUALS_P("cpu 65816", "65816", disassembler.cpu_P());
 
     EQUALS("cpu W65816", true,    disassembler.setCpu("W65816"));
-    EQUALS("cpu W65816", "65816", disassembler.getCpu());
+    EQUALS_P("cpu W65816", "65816", disassembler.cpu_P());
 
     EQUALS("cpu W65C816", true,    disassembler.setCpu("W65C816"));
-    EQUALS("cpu W65C816", "65816", disassembler.getCpu());
+    EQUALS_P("cpu W65C816", "65816", disassembler.cpu_P());
 
     EQUALS("cpu W65C816S", true,    disassembler.setCpu("W65C816S"));
-    EQUALS("cpu W65C816S", "65816", disassembler.getCpu());
+    EQUALS_P("cpu W65C816S", "65816", disassembler.cpu_P());
 }
 
 static void test_impl() {
@@ -977,11 +977,6 @@ static void test_illegal_w65c02s() {
         ERRI(illegals[idx]);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

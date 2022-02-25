@@ -371,7 +371,7 @@ Error TableZ8::searchOpCode(
                 if (!matchPostByte(insn))
                     continue;
             }
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -417,12 +417,12 @@ bool TableZ8::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableZ8::listCpu() const {
+const /* PROGMEM */ char *TableZ8::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableZ8::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableZ8::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableZ8::setCpu(const char *cpu) {

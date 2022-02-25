@@ -45,9 +45,9 @@ public:
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     int16_t searchPostSpec(PostSpec &spec) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
     CpuType cpuType() const { return _cpuType; }
 
     static bool isPrefix(Config::opcode_t opCode);

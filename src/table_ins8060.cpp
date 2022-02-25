@@ -126,15 +126,15 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
     insn.setFlags(entry->flags());
     if (insn.addrMode() == UNDEF)
         return setError(UNKNOWN_INSTRUCTION);
-    insn.setName_P(entry->name());
+    insn.setName_P(entry->name_P());
     return setOK();
 }
 
-const char *TableIns8060::listCpu() const {
+const /* PROGMEM */ char *TableIns8060::listCpu_P() const {
     return TEXT_CPU_INS8060;
 }
 
-const char *TableIns8060::getCpu() const {
+const /* PROGMEM */ char *TableIns8060::cpu_P() const {
     return TEXT_CPU_SCMP;
 }
 

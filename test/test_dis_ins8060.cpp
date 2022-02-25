@@ -35,15 +35,15 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu sc/mp", true,    disassembler.setCpu("SC/MP"));
-    EQUALS("cpu sc/mp", "SC/MP", disassembler.getCpu());
+    EQUALS_P("cpu sc/mp", "SC/MP", disassembler.cpu_P());
 
     EQUALS("cpu 8060", true,    disassembler.setCpu("8060"));
-    EQUALS("cpu 8060", "SC/MP", disassembler.getCpu());
+    EQUALS_P("cpu 8060", "SC/MP", disassembler.cpu_P());
 
     EQUALS("cpu INS8060", true,    disassembler.setCpu("INS8060"));
-    EQUALS("cpu INS8060", "SC/MP", disassembler.getCpu());
+    EQUALS_P("cpu INS8060", "SC/MP", disassembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -264,11 +264,6 @@ static void test_illegal() {
         ERRI(illegals[idx]);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

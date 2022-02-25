@@ -49,7 +49,7 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
         // Program space is paged by 4kB.
         const auto toff = offset(offset(base) + disp + fetch);
         const Config::uintptr_t target = page(base) | toff;
-        const auto diff = target - base - fetch;
+        const Config::ptrdiff_t diff = target - base - fetch;
         if (diff >= -127 && diff < 128) {
             outRelAddr(out, target, insn.address(), 8);
         } else {

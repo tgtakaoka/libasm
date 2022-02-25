@@ -551,7 +551,7 @@ Error TableNs32000::searchOpCode(
                 if (setError(insn))
                     return getError();
             }
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -576,11 +576,11 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
     return setError(error);
 }
 
-const char *TableNs32000::listCpu() const {
+const /* PROGMEM */ char *TableNs32000::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableNs32000::getCpu() const {
+const /* PROGMEM */ char *TableNs32000::cpu_P() const {
     return TEXT_CPU_32032;
 }
 

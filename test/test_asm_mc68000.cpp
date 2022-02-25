@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 68000", true,    assembler.setCpu("68000"));
-    EQUALS("cpu 68000", "68000", assembler.getCpu());
+    EQUALS_P("cpu 68000", "68000", assembler.cpu_P());
 
     EQUALS("cpu mc68000", true,    assembler.setCpu("mc68000"));
-    EQUALS("cpu mc68000", "68000", assembler.getCpu());
+    EQUALS_P("cpu mc68000", "68000", assembler.cpu_P());
 }
 
 static void test_data_move() {
@@ -2841,11 +2841,6 @@ static void test_undefined_symbol() {
     AERRU(0x1000, "MOVEA (UNDEF,PC,D1.L),A1", 0031173, 0x1800);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

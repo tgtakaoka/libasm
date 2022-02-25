@@ -166,7 +166,7 @@ Error TableTms32010::searchOpCode(InsnTms32010 &insn) const {
             insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
     if (entry) {
         insn.setFlags(entry->flags());
-        insn.setName_P(entry->name());
+        insn.setName_P(entry->name_P());
         return setOK();
     }
     return setError(UNKNOWN_INSTRUCTION);
@@ -181,11 +181,11 @@ bool TableTms32010::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableTms32010::listCpu() const {
+const /* PROGMEM */ char *TableTms32010::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableTms32010::getCpu() const {
+const /* PROGMEM */ char *TableTms32010::cpu_P() const {
     return (_cpuType == TMS32010) ? TEXT_CPU_32010 : TEXT_CPU_32015;
 }
 

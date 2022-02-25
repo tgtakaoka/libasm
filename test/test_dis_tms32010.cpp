@@ -26,7 +26,7 @@ DisTms32010 dis32010;
 Disassembler &disassembler(dis32010);
 
 static bool is32010() {
-    return strcmp(disassembler.getCpu(), "32010") == 0;
+    return strcmp_P("32010", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -39,18 +39,18 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 32010", true,   disassembler.setCpu("32010"));
-    EQUALS("cpu 32010", "32010", disassembler.getCpu());
+    EQUALS_P("cpu 32010", "32010", disassembler.cpu_P());
 
     EQUALS("cpu 32015", true,   disassembler.setCpu("32015"));
-    EQUALS("cpu 32015", "32015", disassembler.getCpu());
+    EQUALS_P("cpu 32015", "32015", disassembler.cpu_P());
 
     EQUALS("cpu TMS32010", true,   disassembler.setCpu("TMS32010"));
-    EQUALS("cpu TMS32010", "32010", disassembler.getCpu());
+    EQUALS_P("cpu TMS32010", "32010", disassembler.cpu_P());
 
     EQUALS("cpu TMS32015", true,   disassembler.setCpu("TMS32015"));
-    EQUALS("cpu TMS32015", "32015", disassembler.getCpu());
+    EQUALS_P("cpu TMS32015", "32015", disassembler.cpu_P());
 }
 
 static void test_accumrator() {
@@ -697,11 +697,6 @@ static void test_illegal() {
 }
 
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

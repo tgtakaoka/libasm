@@ -25,11 +25,11 @@ AsmMc6805 as6805;
 Assembler &assembler(as6805);
 
 static bool m146805() {
-    return strcmp(assembler.getCpu(), "146805") == 0;
+    return strcmp_P("146805", assembler.cpu_P()) == 0;
 }
 
 static bool m68hc05() {
-    return strcmp(assembler.getCpu(), "68HC05") == 0;
+    return strcmp_P("68HC05", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -41,24 +41,24 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 6805", true,   assembler.setCpu("6805"));
-    EQUALS("cpu 6805", "6805", assembler.getCpu());
+    EQUALS_P("cpu 6805", "6805", assembler.cpu_P());
 
     EQUALS("cpu 146805", true,   assembler.setCpu("146805"));
-    EQUALS("cpu 146805", "146805", assembler.getCpu());
+    EQUALS_P("cpu 146805", "146805", assembler.cpu_P());
 
     EQUALS("cpu 68HC05", true,   assembler.setCpu("68hc05"));
-    EQUALS("cpu 68HC05", "68HC05", assembler.getCpu());
+    EQUALS_P("cpu 68HC05", "68HC05", assembler.cpu_P());
 
     EQUALS("cpu MC6805", true,   assembler.setCpu("mc6805"));
-    EQUALS("cpu MC6805", "6805", assembler.getCpu());
+    EQUALS_P("cpu MC6805", "6805", assembler.cpu_P());
 
     EQUALS("cpu MC146805", true,   assembler.setCpu("mc146805"));
-    EQUALS("cpu MC146805", "146805", assembler.getCpu());
+    EQUALS_P("cpu MC146805", "146805", assembler.cpu_P());
 
     EQUALS("cpu MC68HC05", true,   assembler.setCpu("mc68hc05"));
-    EQUALS("cpu MC68HC05", "68HC05", assembler.getCpu());
+    EQUALS_P("cpu MC68HC05", "68HC05", assembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -433,11 +433,6 @@ static void test_undefined_symbol() {
     ERUS("BSR UNDEF", 0xAD, 0x00);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

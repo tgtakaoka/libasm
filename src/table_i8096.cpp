@@ -229,7 +229,7 @@ Error TableI8096::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -244,11 +244,11 @@ Error TableI8096::searchOpCode(InsnI8096 &insn) const {
     return setError(searchOpCode(insn, ARRAY_RANGE(I8096_PAGES)));
 }
 
-const char *TableI8096::listCpu() const {
+const /* PROGMEM */ char *TableI8096::listCpu_P() const {
     return TEXT_CPU_I8096;
 }
 
-const char *TableI8096::getCpu() const {
+const /* PROGMEM */ char *TableI8096::cpu_P() const {
     return TEXT_CPU_8096;
 }
 

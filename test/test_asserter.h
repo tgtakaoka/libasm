@@ -40,6 +40,8 @@ public:
             const uint32_t actual);
     void equals(const char *file, const int line, const char *message, const char *expected,
             const char *actual);
+    void equals_P(const char *file, const int line, const char *message, const char *expected,
+            const /* PROGMEM */ char *actual_P);
     void equals(const char *file, const int line, const char *message, Error expected,
             const ErrorReporter &actual);
     void equals(const char *file, const int line, const char *message, ArrayMemory &memory,

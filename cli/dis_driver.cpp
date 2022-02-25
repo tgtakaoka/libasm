@@ -58,10 +58,10 @@ static std::string listCpu(
         const char *separator, const std::list<Disassembler *> &disassemblers) {
     std::list<std::string> list;
     for (auto dis : disassemblers) {
-        const char *list_P = dis->listCpu();
-        char buffer[strlen_P(list_P) + 1];
-        strcpy_P(buffer, list_P);
-        filter(buffer, list);
+        const /* PROGMEM */ char *list_P = dis->listCpu_P();
+        char listCpu[strlen_P(list_P) + 1];
+        strcpy_P(listCpu, list_P);
+        filter(listCpu, list);
     }
     std::string cpuList;
     std::string buf;
@@ -85,8 +85,11 @@ int DisDriver::usage() {
     std::string cpuList;
     Disassembler *dis = defaultDisassembler();
     if (dis) {
+        const /* PROGMEM */ auto list_P = dis->listCpu_P();
+        char listCpu[strlen_P(list_P) + 1];
+        strcpy(listCpu, list_P);
         cpuList = ": ";
-        cpuList += dis->listCpu();
+        cpuList += listCpu;
     } else {
         cpuOption = " -C <CPU>";
         const char *cpuSep = "\n                ";

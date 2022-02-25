@@ -33,9 +33,9 @@ public:
     Error searchOpCode(InsnZ8000 &insn, DisMemory &memory) const;
     Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
     bool segmentedModel() const;
     AddressWidth addressWidth() const;
 

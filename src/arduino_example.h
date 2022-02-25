@@ -100,7 +100,7 @@ protected:
     Disassembler *_dis;
 
     bool isAsm() const { return _current == Prog::ASM; }
-    const char *getCpu() const { return isAsm() ? _asm->getCpu() : _dis->getCpu(); }
+    const char *cpu_P() const { return isAsm() ? _asm->cpu_P() : _dis->cpu_P(); }
 
     virtual bool processPseudo(const char *line) {
         if (strcasecmp_P(line, PSTR("ASM")) == 0) {
@@ -200,7 +200,7 @@ private:
 
     void printPrompt() {
         _cli.print(isAsm() ? F("ASM:") : F("DIS:"));
-        _cli.print(FSTR(getCpu()));
+        _cli.print(FSTR(cpu_P()));
         _cli.print(':');
         printAddress(_origin);
         _cli.print(F("> "));
@@ -337,7 +337,7 @@ private:
         for (auto p = begin; p < end; p++) {
             if (p != begin)
                 _cli.print(F(", "));
-            _cli.print(FSTR((*p)->listCpu()));
+            _cli.print(FSTR((*p)->listCpu_P()));
         }
         _cli.println();
         return true;

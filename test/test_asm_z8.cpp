@@ -25,15 +25,15 @@ AsmZ8 asmz8;
 Assembler &assembler(asmz8);
 
 static bool z86c() {
-    return strcmp(assembler.getCpu(), "Z86C") == 0;
+    return strcmp_P("Z86C", assembler.cpu_P()) == 0;
 }
 
 static bool z86() {
-    return strcmp(assembler.getCpu(), "Z8") == 0 || z86c();
+    return strcmp_P("Z8", assembler.cpu_P()) == 0 || z86c();
 }
 
 static bool z88() {
-    return strcmp(assembler.getCpu(), "Z88") == 0;
+    return strcmp_P("Z88", assembler.cpu_P()) == 0;
 }
 
 #define TZ86(src, ...) \
@@ -64,21 +64,21 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+ void test_cpu() {
     EQUALS("cpu z8", true, assembler.setCpu("z8"));
-    EQUALS("cpu z8", "Z8", assembler.getCpu());
+    EQUALS_P("cpu z8", "Z8", assembler.cpu_P());
 
     EQUALS("cpu Z8601", true, assembler.setCpu("Z8601"));
-    EQUALS("cpu Z8601", "Z8", assembler.getCpu());
+    EQUALS_P("cpu Z8601", "Z8", assembler.cpu_P());
 
     EQUALS("cpu Z86C91", true,   assembler.setCpu("Z86C91"));
-    EQUALS("cpu Z86C91", "Z86C", assembler.getCpu());
+    EQUALS_P("cpu Z86C91", "Z86C", assembler.cpu_P());
 
     EQUALS("cpu Super8", true,  assembler.setCpu("Super8"));
-    EQUALS("cpu Super8", "Z88", assembler.getCpu());
+    EQUALS_P("cpu Super8", "Z88", assembler.cpu_P());
 
     EQUALS("cpu Z88C00", true,  assembler.setCpu("Z88C00"));
-    EQUALS("cpu Z88C00", "Z88", assembler.getCpu());
+    EQUALS_P("cpu Z88C00", "Z88", assembler.cpu_P());
 }
 
 static void test_implied() {
@@ -885,11 +885,6 @@ static void test_error() {
     EZ88("BXOR R2,R8,#8", ILLEGAL_BIT_NUMBER);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

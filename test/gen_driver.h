@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <string>
+
 #include "cli_listing.h"
 #include "dis_base.h"
 #include "test_generator.h"
@@ -66,7 +68,7 @@ public:
             printCommandLine(_list, commentStr, _progname, argc, argv);
         }
         if (_generateCpu && !_generateGas)
-            pseudo("CPU", _cpu);
+            pseudo("CPU", _cpu.c_str());
         return 0;
     }
 
@@ -93,7 +95,7 @@ private:
     const char *_output_name;
     const char *_list_name;
     bool _uppercase;
-    const char *_cpu;
+    std::string _cpu;
     bool _generateCpu;
     bool _generateGas;
     bool _dump;
@@ -174,7 +176,6 @@ private:
         _output_name = nullptr;
         _list_name = nullptr;
         _uppercase = false;
-        _cpu = nullptr;
         _generateCpu = true;
         _generateGas = false;
         _dump = false;
@@ -225,12 +226,19 @@ private:
                 }
             }
         }
-        if (_cpu == nullptr)
-            _cpu = _disassembler.getCpu();
+        if (_cpu.empty()) {
+            const /* PROGMEM */ auto cpu_P = _disassembler.cpu_P();
+            char cpu[strlen_P(cpu_P) + 1];
+            strcpy_P(cpu, cpu_P);
+            _cpu = cpu;
+        }
         return 0;
     }
 
     int usage() {
+        const /* PROGMEM */ auto list_P = _disassembler.listCpu_P();
+        char listCpu[strlen_P(list_P) + 1];
+        strcpy_P(listCpu, list_P);
         fprintf(stderr,
                 "usage: %s [-o <output>] [-l <list>]\n"
                 " options:\n"
@@ -241,7 +249,7 @@ private:
                 "  -g          : output GNU as compatible\n"
                 "  -u          : use uppercase letter for output\n"
                 "  -d          : dump debug info\n",
-                _progname, _disassembler.listCpu());
+                _progname, listCpu);
         return 2;
     }
 

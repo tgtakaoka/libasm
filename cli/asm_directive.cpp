@@ -57,19 +57,19 @@ static void filter(const char *text, std::list<std::string> &list) {
 std::list<std::string> AsmCommonDirective::Directives::listCpu() const {
     std::list<std::string> list;
     for (auto dir : _directives) {
-        const char *list_P = dir->assembler().listCpu();
-        char buffer[strlen_P(list_P) + 1];
-        strcpy_P(buffer, list_P);
-        filter(buffer, list);
+        const /* PROGMEM */ char *list_P = dir->assembler().listCpu_P();
+        char cpuList[strlen_P(list_P) + 1];
+        strcpy_P(cpuList, list_P);
+        filter(cpuList, list);
     }
     return list;
 }
 
 std::string AsmCommonDirective::Directives::currentCpu() const {
-    const char *cpu_P = assembler().getCpu();
-    char buffer[strlen_P(cpu_P) + 1];
-    strcpy_P(buffer, cpu_P);
-    return std::string(buffer);
+    const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
+    char cpu[strlen_P(cpu_P) + 1];
+    strcpy_P(cpu, cpu_P);
+    return std::string(cpu);
 }
 
 bool AsmCommonDirective::Directives::is8080() const {

@@ -26,12 +26,12 @@ DisMn1610 dis1610;
 Disassembler &disassembler(dis1610);
 
 static bool is1610() {
-    return strcasecmp(disassembler.getCpu(), "mn1610") == 0;
+    return strcmp_P("MN1610", disassembler.cpu_P()) == 0;
 }
 
 static bool is1613() {
-    return strcasecmp(disassembler.getCpu(), "mn1613") == 0 ||
-           strcasecmp(disassembler.getCpu(), "mn1613a") == 0;
+    return strcmp_P("MN1613", disassembler.cpu_P()) == 0 ||
+        strcmp_P("MN1613A", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -45,24 +45,24 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 1610", true,     disassembler.setCpu("1610"));
-    EQUALS("cpu 1610", "MN1610", disassembler.getCpu());
+    EQUALS_P("cpu 1610", "MN1610", disassembler.cpu_P());
 
     EQUALS("cpu 1613", true,     disassembler.setCpu("1613"));
-    EQUALS("cpu 1613", "MN1613", disassembler.getCpu());
+    EQUALS_P("cpu 1613", "MN1613", disassembler.cpu_P());
 
     EQUALS("cpu 1613A", true,      disassembler.setCpu("1613A"));
-    EQUALS("cpu 1613A", "MN1613A", disassembler.getCpu());
+    EQUALS_P("cpu 1613A", "MN1613A", disassembler.cpu_P());
 
     EQUALS("cpu MN1610", true,     disassembler.setCpu("mn1610"));
-    EQUALS("cpu MN1610", "MN1610", disassembler.getCpu());
+    EQUALS_P("cpu MN1610", "MN1610", disassembler.cpu_P());
 
     EQUALS("cpu MN1613", true,     disassembler.setCpu("mn1613"));
-    EQUALS("cpu MN1613", "MN1613", disassembler.getCpu());
+    EQUALS_P("cpu MN1613", "MN1613", disassembler.cpu_P());
 
     EQUALS("cpu MN1613A", true,      disassembler.setCpu("mn1613a"));
-    EQUALS("cpu MN1613A", "MN1613A", disassembler.getCpu());
+    EQUALS_P("cpu MN1613A", "MN1613A", disassembler.cpu_P());
 }
 
 static void test_transfer() {
@@ -934,11 +934,6 @@ static void test_illegal_mn1613() {
             ERROR_T(ILLEGAL_REGISTER, opc);
         }
     }
-}
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
 }
 
 void run_tests(const char *cpu) {

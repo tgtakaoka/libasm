@@ -32,9 +32,9 @@ public:
     Error searchOpCode(InsnCdp1802 &insn) const;
     bool isPrefix(Config::opcode_t opCode) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
 
     struct EntryPage;
 

@@ -71,8 +71,8 @@ private:
         }
     }
 
-    void setName_P(const /*PROGMEM*/ char *name) {
-        strncpy_P(_name, name, MAX_NAME);
+    void setName_P(const /*PROGMEM*/ char *name_P) {
+        strncpy_P(_name, name_P, MAX_NAME);
         _name[MAX_NAME] = 0;
     }
 
@@ -116,7 +116,7 @@ public:
     const char *name() const { return _insn.name(); }
 
     /** Set instruction name from readonly text (Disassembler). */
-    void setName_P(const /*PROGMEM*/ char *name) { _insn.setName_P(name); }
+    void setName_P(const /*PROGMEM*/ char *name_P) { _insn.setName_P(name_P); }
 
     /** Set instruction name from text (Assembler). */
     void setName(const char *name) { _insn.setName(name); }

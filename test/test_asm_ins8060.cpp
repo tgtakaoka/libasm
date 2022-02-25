@@ -33,15 +33,15 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu sc/mp", true,    assembler.setCpu("SC/MP"));
-    EQUALS("cpu sc/mp", "SC/MP", assembler.getCpu());
+    EQUALS_P("cpu sc/mp", "SC/MP", assembler.cpu_P());
 
     EQUALS("cpu 8060", true,    assembler.setCpu("8060"));
-    EQUALS("cpu 8060", "SC/MP", assembler.getCpu());
+    EQUALS_P("cpu 8060", "SC/MP", assembler.cpu_P());
 
     EQUALS("cpu INS8060", true,    assembler.setCpu("INS8060"));
-    EQUALS("cpu INS8060", "SC/MP", assembler.getCpu());
+    EQUALS_P("cpu INS8060", "SC/MP", assembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -284,11 +284,6 @@ static void test_error() {
     ERRT("LDI #1",  ILLEGAL_CONSTANT);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

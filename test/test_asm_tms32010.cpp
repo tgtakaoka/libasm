@@ -25,7 +25,7 @@ AsmTms32010 asm32010;
 Assembler &assembler(asm32010);
 
 static bool is32010() {
-    return strcmp(assembler.getCpu(), "32010") == 0;
+    return strcmp_P("32010", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -37,12 +37,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 32010", true,   assembler.setCpu("32010"));
-    EQUALS("cpu 32010", "32010", assembler.getCpu());
+    EQUALS_P("cpu 32010", "32010", assembler.cpu_P());
 
     EQUALS("cpu TMS32010", true,   assembler.setCpu("TMS32010"));
-    EQUALS("cpu TMS32010", "32010", assembler.getCpu());
+    EQUALS_P("cpu TMS32010", "32010", assembler.cpu_P());
 }
 
 static void test_accumrator() {
@@ -496,11 +496,6 @@ static void test_dataio() {
     ERUS("OUT *+, PA7, UNDEF", 0x4FA0);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

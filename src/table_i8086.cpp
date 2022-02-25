@@ -551,7 +551,7 @@ Error TableI8086::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -566,11 +566,11 @@ Error TableI8086::searchOpCode(InsnI8086 &insn) const {
     return setError(searchOpCode(insn, ARRAY_RANGE(I8086_PAGES)));
 }
 
-const char *TableI8086::listCpu() const {
+const /* PROGMEM */ char *TableI8086::listCpu_P() const {
     return TEXT_CPU_I8086;
 }
 
-const char *TableI8086::getCpu() const {
+const /* PROGMEM */ char *TableI8086::cpu_P() const {
     return TEXT_CPU_8086;
 }
 

@@ -273,7 +273,7 @@ Error TableMn1610::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -329,12 +329,12 @@ bool TableMn1610::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableMn1610::listCpu() const {
+const /* PROGMEM */ char *TableMn1610::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableMn1610::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableMn1610::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableMn1610::setCpu(const char *cpu) {

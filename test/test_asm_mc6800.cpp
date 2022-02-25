@@ -25,19 +25,19 @@ AsmMc6800 as6800;
 Assembler &assembler(as6800);
 
 static bool m6800() {
-    return strcmp(assembler.getCpu(), "6800") == 0;
+    return strcmp_P("6800", assembler.cpu_P()) == 0;
 }
 
 static bool hd6301() {
-    return strcmp(assembler.getCpu(), "6301") == 0;
+    return strcmp_P("6301", assembler.cpu_P()) == 0;
 }
 
 static bool m68hc11() {
-    return strcmp(assembler.getCpu(), "6811") == 0;
+    return strcmp_P("6811", assembler.cpu_P()) == 0;
 }
 
 static bool m6801() {
-    return strcmp(assembler.getCpu(), "6801") == 0 || hd6301() || m68hc11();
+    return strcmp_P("6801", assembler.cpu_P()) == 0 || hd6301() || m68hc11();
 }
 
 static void set_up() {
@@ -49,33 +49,33 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 6800", true,   assembler.setCpu("6800"));
-    EQUALS("cpu 6800", "6800", assembler.getCpu());
+    EQUALS_P("cpu 6800", "6800", assembler.cpu_P());
 
     EQUALS("cpu 6801", true,   assembler.setCpu("6801"));
-    EQUALS("cpu 6801", "6801", assembler.getCpu());
+    EQUALS_P("cpu 6801", "6801", assembler.cpu_P());
 
     EQUALS("cpu 6301", true,   assembler.setCpu("6301"));
-    EQUALS("cpu 6301", "6301", assembler.getCpu());
+    EQUALS_P("cpu 6301", "6301", assembler.cpu_P());
 
     EQUALS("cpu 6811", true,   assembler.setCpu("6811"));
-    EQUALS("cpu 6811", "6811", assembler.getCpu());
+    EQUALS_P("cpu 6811", "6811", assembler.cpu_P());
 
     EQUALS("cpu MC6800", true,   assembler.setCpu("mc6800"));
-    EQUALS("cpu MC6800", "6800", assembler.getCpu());
+    EQUALS_P("cpu MC6800", "6800", assembler.cpu_P());
 
     EQUALS("cpu MC6801", true,   assembler.setCpu("mc6801"));
-    EQUALS("cpu MC6801", "6801", assembler.getCpu());
+    EQUALS_P("cpu MC6801", "6801", assembler.cpu_P());
 
     EQUALS("cpu HD6301", true,   assembler.setCpu("hd6301"));
-    EQUALS("cpu HD6301", "6301", assembler.getCpu());
+    EQUALS_P("cpu HD6301", "6301", assembler.cpu_P());
 
     EQUALS("cpu MC6811", true,   assembler.setCpu("mc6811"));
-    EQUALS("cpu MC6811", "6811", assembler.getCpu());
+    EQUALS_P("cpu MC6811", "6811", assembler.cpu_P());
 
     EQUALS("cpu MC68HC11", true,   assembler.setCpu("mc68hc11"));
-    EQUALS("cpu MC68HC11", "6811", assembler.getCpu());
+    EQUALS_P("cpu MC68HC11", "6811", assembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -993,11 +993,6 @@ static void test_undefined_symbol() {
     }
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

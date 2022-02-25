@@ -25,11 +25,11 @@ AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
 static bool is99105() {
-    return strcmp(assembler.getCpu(), "99105") == 0;
+    return strcmp_P("99105", assembler.cpu_P()) == 0;
 }
 
 static bool is9995() {
-    return strcmp(assembler.getCpu(), "9995") == 0 || is99105();
+    return strcmp_P("9995", assembler.cpu_P()) == 0 || is99105();
 }
 
 static void set_up() {
@@ -41,24 +41,24 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 9900", true,   assembler.setCpu("9900"));
-    EQUALS("cpu 9900", "9900", assembler.getCpu());
+    EQUALS_P("cpu 9900", "9900", assembler.cpu_P());
 
     EQUALS("cpu 9995", true,   assembler.setCpu("9995"));
-    EQUALS("cpu 9995", "9995", assembler.getCpu());
+    EQUALS_P("cpu 9995", "9995", assembler.cpu_P());
 
     EQUALS("cpu 99105", true,    assembler.setCpu("99105"));
-    EQUALS("cpu 99105", "99105", assembler.getCpu());
+    EQUALS_P("cpu 99105", "99105", assembler.cpu_P());
 
     EQUALS("cpu tms9900", true,   assembler.setCpu("tms9900"));
-    EQUALS("cpu tms9900", "9900", assembler.getCpu());
+    EQUALS_P("cpu tms9900", "9900", assembler.cpu_P());
 
     EQUALS("cpu tms9995", true,   assembler.setCpu("tms9995"));
-    EQUALS("cpu tms9995", "9995", assembler.getCpu());
+    EQUALS_P("cpu tms9995", "9995", assembler.cpu_P());
 
     EQUALS("cpu tms99105", true,    assembler.setCpu("tms99105"));
-    EQUALS("cpu tms99105", "99105", assembler.getCpu());
+    EQUALS_P("cpu tms99105", "99105", assembler.cpu_P());
 }
 
 static void test_inh() {
@@ -387,11 +387,6 @@ static void test_undefined_symbol() {
     AERRU(0x1000, "JNE UNDEF", 0x1600);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

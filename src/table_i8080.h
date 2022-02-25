@@ -31,9 +31,9 @@ public:
     Error searchName(InsnI8080 &insn) const;
     Error searchOpCode(InsnI8080 &insn) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
 
     class EntryPage;
 

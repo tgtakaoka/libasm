@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8086", true,   disassembler.setCpu("8086"));
-    EQUALS("cpu 8086", "8086", disassembler.getCpu());
+    EQUALS_P("cpu 8086", "8086", disassembler.cpu_P());
 
     EQUALS("cpu i8086", true,   disassembler.setCpu("i8086"));
-    EQUALS("cpu i8086", "8086", disassembler.getCpu());
+    EQUALS_P("cpu i8086", "8086", disassembler.cpu_P());
 }
 
 static void test_data_transfer() {
@@ -1429,11 +1429,6 @@ static void test_illegal() {
     ERRI(0xDF);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

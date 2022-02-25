@@ -25,7 +25,7 @@ DisZ8000 dis8000;
 Disassembler &disassembler(dis8000);
 
 static bool z8001() {
-    return strcmp(disassembler.getCpu(), "Z8001") == 0;
+    return strcmp_P("Z8001", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -38,12 +38,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8001", true,    disassembler.setCpu("Z8001"));
-    EQUALS("cpu 8001", "Z8001", disassembler.getCpu());
+    EQUALS_P("cpu 8001", "Z8001", disassembler.cpu_P());
 
     EQUALS("cpu Z8002", true,    disassembler.setCpu("Z8002"));
-    EQUALS("cpu Z8002", "Z8002", disassembler.getCpu());
+    EQUALS_P("cpu Z8002", "Z8002", disassembler.cpu_P());
 }
 
 static void test_load_and_exchange() {
@@ -1978,11 +1978,6 @@ static void test_short_direct() {
 }
 
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

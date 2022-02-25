@@ -31,9 +31,9 @@ public:
     Error searchName(InsnMn1610 &insn) const;
     Error searchOpCode(InsnMn1610 &insn) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
 
     AddressWidth addressWidth() const;
     Error checkAddressRange(Config::uintptr_t addr) const;

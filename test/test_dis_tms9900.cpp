@@ -26,15 +26,15 @@ DisTms9900 dis9900;
 Disassembler &disassembler(dis9900);
 
 static bool is9900() {
-    return strcmp(disassembler.getCpu(), "9900") == 0;
+    return strcmp_P("9900", disassembler.cpu_P()) == 0;
 }
 
 static bool is9995() {
-    return strcmp(disassembler.getCpu(), "9995") == 0;
+    return strcmp_P("9995", disassembler.cpu_P()) == 0;
 }
 
 static bool is99105() {
-    return strcmp(disassembler.getCpu(), "99105") == 0;
+    return strcmp_P("99105", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -47,24 +47,24 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 9900", true,   disassembler.setCpu("9900"));
-    EQUALS("cpu 9900", "9900", disassembler.getCpu());
+    EQUALS_P("cpu 9900", "9900", disassembler.cpu_P());
 
     EQUALS("cpu 9995", true,   disassembler.setCpu("9995"));
-    EQUALS("cpu 9995", "9995", disassembler.getCpu());
+    EQUALS_P("cpu 9995", "9995", disassembler.cpu_P());
 
     EQUALS("cpu 99105", true,    disassembler.setCpu("99105"));
-    EQUALS("cpu 99105", "99105", disassembler.getCpu());
+    EQUALS_P("cpu 99105", "99105", disassembler.cpu_P());
 
     EQUALS("cpu TMS9900", true,   disassembler.setCpu("TMS9900"));
-    EQUALS("cpu TMS9900", "9900", disassembler.getCpu());
+    EQUALS_P("cpu TMS9900", "9900", disassembler.cpu_P());
 
     EQUALS("cpu TMS9995", true,   disassembler.setCpu("TMS9995"));
-    EQUALS("cpu TMS9995", "9995", disassembler.getCpu());
+    EQUALS_P("cpu TMS9995", "9995", disassembler.cpu_P());
 
     EQUALS("cpu TMS99105", true,    disassembler.setCpu("TMS99105"));
-    EQUALS("cpu TMS99105", "99105", disassembler.getCpu());
+    EQUALS_P("cpu TMS99105", "99105", disassembler.cpu_P());
 }
 
 static void test_inh() {
@@ -482,11 +482,6 @@ static void test_mid_tms99105() {
     assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TSMB, &dp_bit_hole);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

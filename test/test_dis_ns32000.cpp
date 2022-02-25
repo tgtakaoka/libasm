@@ -35,12 +35,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu ns32032", true,    disassembler.setCpu("NS32032"));
-    EQUALS("cpu ns32032", "32032", disassembler.getCpu());
+    EQUALS_P("cpu ns32032", "32032", disassembler.cpu_P());
 
     EQUALS("cpu 32032", true,    disassembler.setCpu("32032"));
-    EQUALS("cpu 32032", "32032", disassembler.getCpu());
+    EQUALS_P("cpu 32032", "32032", disassembler.cpu_P());
 }
 
 static void test_format_0() {
@@ -850,11 +850,6 @@ static void test_illegal() {
     for (uint8_t nnn = 0; nnn <= 7; nnn++) {
         ILLEGAL((nnn << 5) | 0x16);
     }
-}
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
 }
 
 void run_tests(const char *cpu) {

@@ -27,10 +27,12 @@ namespace libasm {
 template <typename Conf>
 class EntryBase {
 public:
-    constexpr EntryBase(const char *name, typename Conf::opcode_t opCode)
-        : _name(name), _opCode(opCode) {}
+    constexpr EntryBase(const /* PROGMEM */ char *name_P, typename Conf::opcode_t opCode)
+        : _name_P(name_P), _opCode(opCode) {}
 
-    const char *name() const { return reinterpret_cast<const char *>(pgm_read_ptr(&_name)); }
+    const /* PROGMEM */ char *name_P() const {
+        return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
+    }
 
     typename Conf::opcode_t opCode() const {
         if (sizeof(typename Conf::opcode_t) == 1) {
@@ -41,7 +43,7 @@ public:
     }
 
 private:
-    const char *_name;
+    const /* PROGMEM */ char *_name_P;
     typename Conf::opcode_t _opCode;
 };
 

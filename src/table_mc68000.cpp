@@ -373,7 +373,7 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
             opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
     if (entry) {
         insn.setFlags(entry->flags());
-        insn.setName_P(entry->name());
+        insn.setName_P(entry->name_P());
         return setOK();
     }
     return setError(UNKNOWN_INSTRUCTION);
@@ -381,11 +381,11 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
 
 TableMc68000::TableMc68000() : _aliasEnabled(false) {}
 
-const char *TableMc68000::listCpu() const {
+const /* PROGMEM */ char *TableMc68000::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableMc68000::getCpu() const {
+const /* PROGMEM */ char *TableMc68000::cpu_P() const {
     return TEXT_CPU_68000;
 }
 

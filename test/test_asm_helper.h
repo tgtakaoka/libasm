@@ -22,7 +22,7 @@
 #include "test_asserter.h"
 #include "test_symtab.h"
 
-const char *run_cpu_test();
+void test_cpu();
 void run_tests(const char *cpu);
 
 namespace libasm {
@@ -39,6 +39,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 }  // namespace libasm
 
 #define EQUALS(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
+#define EQUALS_P(msg, expected, /* PROGMEM */ actual_P) \
+    asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define __VASSERT(file, line, error, addr, src, ...)                                       \
     do {                                                                                   \
         const Config::opcode_t expected[] = {__VA_ARGS__};                                 \

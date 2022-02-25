@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8086", true,   assembler.setCpu("8086"));
-    EQUALS("cpu 8086", "8086", assembler.getCpu());
+    EQUALS_P("cpu 8086", "8086", assembler.cpu_P());
 
     EQUALS("cpu i8086", true,   assembler.setCpu("i8086"));
-    EQUALS("cpu i8086", "8086", assembler.getCpu());
+    EQUALS_P("cpu i8086", "8086", assembler.cpu_P());
 }
 
 static void test_data_transfer() {
@@ -1580,11 +1580,6 @@ static void test_error() {
     ERRT("STOSB ES:[BX]",   ILLEGAL_OPERAND);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

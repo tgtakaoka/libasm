@@ -169,14 +169,15 @@ Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
     insn.setFlags(entry->flags());
     if (insn.addrMode() == UNDEF)
         return setError(UNKNOWN_INSTRUCTION);
-    insn.setName_P(entry->name());
+    insn.setName_P(entry->name_P());
     return setOK();
 }
 
-const char *TableIns8070::listCpu() const {
+const /* PROGMEM */ char *TableIns8070::listCpu_P() const {
     return TEXT_CPU_INS8070;
 }
-const char *TableIns8070::getCpu() const {
+
+const /* PROGMEM */ char *TableIns8070::cpu_P() const {
     return TEXT_CPU_8070;
 }
 

@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8051", true,   assembler.setCpu("8051"));
-    EQUALS("cpu 8051", "8051", assembler.getCpu());
+    EQUALS_P("cpu 8051", "8051", assembler.cpu_P());
 
     EQUALS("cpu I8051", true,   assembler.setCpu("I8051"));
-    EQUALS("cpu I8051", "8051", assembler.getCpu());
+    EQUALS_P("cpu I8051", "8051", assembler.cpu_P());
 }
 
 static void test_implied() {
@@ -528,11 +528,6 @@ static void test_undefined_symbol() {
     ERUS("LCALL UNDEF", 0x12, 0x00, 0x00);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

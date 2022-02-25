@@ -25,11 +25,11 @@ DisMc6809 dis6809;
 Disassembler &disassembler(dis6809);
 
 static bool is6809() {
-    return strcmp(disassembler.getCpu(), "6809") == 0;
+    return strcmp_P("6809", disassembler.cpu_P()) == 0;
 }
 
 static bool is6309() {
-    return strcmp(disassembler.getCpu(), "6309") == 0;
+    return strcmp("6309", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -42,18 +42,18 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 6809", true,   disassembler.setCpu("6809"));
-    EQUALS("cpu 6809", "6809", disassembler.getCpu());
+    EQUALS_P("cpu 6809", "6809", disassembler.cpu_P());
 
     EQUALS("cpu 6309", true,   disassembler.setCpu("6309"));
-    EQUALS("cpu 6309", "6309", disassembler.getCpu());
+    EQUALS_P("cpu 6309", "6309", disassembler.cpu_P());
 
     EQUALS("cpu MC6809", true,   disassembler.setCpu("MC6809"));
-    EQUALS("cpu MC6809", "6809", disassembler.getCpu());
+    EQUALS_P("cpu MC6809", "6809", disassembler.cpu_P());
 
     EQUALS("cpu HD6309", true,   disassembler.setCpu("HD6309"));
-    EQUALS("cpu HD6309", "6309", disassembler.getCpu());
+    EQUALS_P("cpu HD6309", "6309", disassembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -1182,11 +1182,6 @@ static void test_illegal_hd6309() {
         ERRP(0xA6, post_illegals[idx], 0, 0);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

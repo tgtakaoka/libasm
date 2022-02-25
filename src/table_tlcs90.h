@@ -38,9 +38,9 @@ public:
     Error searchName(InsnTlcs90 &insn) const;
     Error searchOpCode(InsnTlcs90 &insn) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
 
     Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const;
     struct EntryPage;

@@ -33,9 +33,9 @@ public:
     Error searchOpCode(InsnZ8 &insn, DisMemory &memory) const;
     bool isSuper8() const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
 
     static constexpr Config::opcode_t SRP = 0x31;
 

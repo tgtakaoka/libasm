@@ -25,11 +25,11 @@ AsmZ80 asz80;
 Assembler &assembler(asz80);
 
 static bool isZ80() {
-    return strcmp(assembler.getCpu(), "Z80") == 0;
+    return strcmp_P("Z80", assembler.cpu_P()) == 0;
 }
 
 static bool is8085() {
-    return strcmp(assembler.getCpu(), "8085") == 0;
+    return strcmp_P("8085", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -41,21 +41,21 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8080", true, assembler.setCpu("8080"));
-    EQUALS("get cpu", "8080", assembler.getCpu());
+    EQUALS_P("get cpu", "8080", assembler.cpu_P());
 
     EQUALS("cpu 8085", true, assembler.setCpu("8085"));
-    EQUALS("get cpu", "8085", assembler.getCpu());
+    EQUALS_P("get cpu", "8085", assembler.cpu_P());
 
     EQUALS("cpu i8080", true, assembler.setCpu("i8080"));
-    EQUALS("get cpu", "8080", assembler.getCpu());
+    EQUALS_P("get cpu", "8080", assembler.cpu_P());
 
     EQUALS("cpu i8085", true, assembler.setCpu("i8085"));
-    EQUALS("get cpu", "8085", assembler.getCpu());
+    EQUALS_P("get cpu", "8085", assembler.cpu_P());
 
     EQUALS("cpu z80", true, assembler.setCpu("z80"));
-    EQUALS("get cpu", "Z80", assembler.getCpu());
+    EQUALS_P("get cpu", "Z80", assembler.cpu_P());
 }
 
 static void test_move_inherent() {
@@ -969,11 +969,6 @@ static void test_undefined_symbol() {
     }
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

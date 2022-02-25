@@ -246,7 +246,7 @@ const Entry *TableI8048::searchOpCode(
                 insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return entry;
         }
     }
@@ -292,12 +292,12 @@ bool TableI8048::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableI8048::listCpu() const {
+const /* PROGMEM */ char *TableI8048::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableI8048::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableI8048::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableI8048::setCpu(const char *cpu) {

@@ -49,7 +49,9 @@ template <typename CPU_T, typename ENTRY_T>
 class CpuTableBase : public EntryPageBase<ENTRY_T> {
 public:
     CPU_T cpuType() const { return static_cast<CPU_T>(pgm_read_byte(&_cpuType)); }
-    const char *name() const { return reinterpret_cast<const char *>(pgm_read_ptr(&_name)); }
+    const /* PROGMEM */ char *name_P() const {
+        return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
+    }
 
     static const CpuTableBase<CPU_T, ENTRY_T> *search(CPU_T cpuType,
             const CpuTableBase<CPU_T, ENTRY_T> *table, const CpuTableBase<CPU_T, ENTRY_T> *end) {
@@ -63,20 +65,20 @@ public:
     static const CpuTableBase<CPU_T, ENTRY_T> *search(const char *name,
             const CpuTableBase<CPU_T, ENTRY_T> *table, const CpuTableBase<CPU_T, ENTRY_T> *end) {
         for (const auto *t = table; t < end; t++) {
-            if (strcasecmp_P(name, t->name()) == 0)
+            if (strcasecmp_P(name, t->name_P()) == 0)
                 return t;
         }
         return nullptr;
     }
 
 protected:
-    constexpr CpuTableBase(
-            CPU_T cpuType, const char *name, const ENTRY_T *table, const ENTRY_T *end)
-        : EntryPageBase<ENTRY_T>(table, end), _cpuType(cpuType), _name(name) {}
+    constexpr CpuTableBase(CPU_T cpuType, const /* PROGMEM */ char *name_P, const ENTRY_T *table,
+            const ENTRY_T *end)
+        : EntryPageBase<ENTRY_T>(table, end), _cpuType(cpuType), _name_P(name_P) {}
 
 private:
     CPU_T _cpuType;
-    const char *_name;
+    const /* PROGMEM */ char *_name_P;
 };
 
 /**
@@ -84,9 +86,9 @@ private:
  */
 class TableBase {
 public:
-    virtual const char *listCpu() const = 0;
+    virtual /* PROGMEM */ const char *listCpu_P() const = 0;
+    virtual /* PROGMEM */ const char *cpu_P() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
-    virtual const char *getCpu() const = 0;
     Error getError() const { return _error.getError(); }
 
 protected:
@@ -103,7 +105,7 @@ protected:
     template <typename E>
     static const E *searchName(const char *name, const E *begin, const E *end) {
         for (const auto *entry = begin; entry < end; entry++) {
-            if (strcasecmp_P(name, entry->name()) == 0)
+            if (strcasecmp_P(name, entry->name_P()) == 0)
                 return entry;
         }
         return nullptr;

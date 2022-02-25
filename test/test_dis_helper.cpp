@@ -62,9 +62,12 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 
 using namespace libasm::test;
 
-std::vector<std::string> cpu_list(const char *cpu_list) {
+std::vector<std::string> cpu_list() {
+    const /* PROGMEM */ char *list_P = disassembler.listCpu_P();
+    char buffer[strlen_P(list_P) + 1];
+    strcpy_P(buffer, list_P);
     std::vector<std::string> list;
-    const char *s = cpu_list;
+    const char *s = buffer;
     while (true) {
         const char *e = strchr(s, ',');
         if (e == nullptr) {
@@ -79,7 +82,8 @@ std::vector<std::string> cpu_list(const char *cpu_list) {
 
 int main(int argc, char **argv) {
     test_failed = false;
-    for (const auto &cpu : cpu_list(run_cpu_test())) {
+    test_cpu();
+    for (const auto &cpu : cpu_list()) {
         printf("  TEST %s disassembler\n", cpu.c_str());
         run_tests(cpu.c_str());
     }

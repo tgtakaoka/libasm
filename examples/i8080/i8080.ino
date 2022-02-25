@@ -45,7 +45,7 @@ protected:
 private:
     void switchSyntax(libasm::Assembler &assembler, libasm::Disassembler &disassembler) {
         char cpu[10];
-        strcpy_P(cpu, getCpu());
+        strcpy_P(cpu, cpu_P());
         _asm = &assembler;
         _dis = &disassembler;
         if (isAsm()) {

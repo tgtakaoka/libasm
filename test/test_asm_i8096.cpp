@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8096", true,   assembler.setCpu("8096"));
-    EQUALS("cpu 8096", "8096", assembler.getCpu());
+    EQUALS_P("cpu 8096", "8096", assembler.cpu_P());
 
     EQUALS("cpu i8096", true,   assembler.setCpu("i8096"));
-    EQUALS("cpu i8096", "8096", assembler.getCpu());
+    EQUALS_P("cpu i8096", "8096", assembler.cpu_P());
 }
 
 
@@ -461,11 +461,6 @@ static void test_control() {
     TEST("TRAP  ",  0xF7);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

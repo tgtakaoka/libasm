@@ -25,15 +25,15 @@ DisZ8 disz8;
 Disassembler &disassembler(disz8);
 
 static bool z86c() {
-    return strcmp(disassembler.getCpu(), "Z86C") == 0;
+    return strcmp_P("Z86C", disassembler.cpu_P()) == 0;
 }
 
 static bool z86() {
-    return strcmp(disassembler.getCpu(), "Z8") == 0 || z86c();
+    return strcmp_P("Z8", disassembler.cpu_P()) == 0 || z86c();
 }
 
 static bool z88() {
-    return strcmp(disassembler.getCpu(), "Z88") == 0;
+    return strcmp_P("Z88", disassembler.cpu_P()) == 0;
 }
 
 #define TZ86(name, opr, ...) \
@@ -67,21 +67,21 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu z8", true, disassembler.setCpu("z8"));
-    EQUALS("cpu z8", "Z8", disassembler.getCpu());
+    EQUALS_P("cpu z8", "Z8", disassembler.cpu_P());
 
     EQUALS("cpu Z8601", true, disassembler.setCpu("Z8601"));
-    EQUALS("cpu Z8601", "Z8", disassembler.getCpu());
+    EQUALS_P("cpu Z8601", "Z8", disassembler.cpu_P());
 
     EQUALS("cpu Z86C91", true,   disassembler.setCpu("Z86C91"));
-    EQUALS("cpu Z86C91", "Z86C", disassembler.getCpu());
+    EQUALS_P("cpu Z86C91", "Z86C", disassembler.cpu_P());
 
     EQUALS("cpu Super8", true,  disassembler.setCpu("Super8"));
-    EQUALS("cpu Super8", "Z88", disassembler.getCpu());
+    EQUALS_P("cpu Super8", "Z88", disassembler.cpu_P());
 
     EQUALS("cpu Z88C00", true,  disassembler.setCpu("Z88C00"));
-    EQUALS("cpu Z88C00", "Z88", disassembler.getCpu());
+    EQUALS_P("cpu Z88C00", "Z88", disassembler.cpu_P());
 }
 
 static void test_implied() {
@@ -666,11 +666,6 @@ static void test_illegal_z88() {
         ERRI(illegals[idx]);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

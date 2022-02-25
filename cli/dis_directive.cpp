@@ -44,7 +44,7 @@ const char *DisDirective::getCpu(bool withBytes) {
     _listing.reset(*this);
     _generated_size = 0;
     _instruction = "CPU";
-    strcpy_P(_operands, _disassembler.getCpu());
+    strcpy_P(_operands, _disassembler.cpu_P());
     return withBytes ? _listing.getLine() : _listing.getContent();
 }
 

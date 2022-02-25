@@ -38,9 +38,9 @@ public:
     ValueParser &parser() const { return _parser; }
     bool endOfLine(char letter) const;
 
-    const char *listCpu() const { return _table.listCpu(); }
+    const /* PROGMEM */ char *listCpu_P() const { return _table.listCpu_P(); }
+    const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
-    const char *getCpu() const { return _table.getCpu(); }
 
 private:
     ValueParser &_parser;

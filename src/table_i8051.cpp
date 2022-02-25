@@ -195,15 +195,15 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) const {
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
-    insn.setName_P(entry->name());
+    insn.setName_P(entry->name_P());
     return setOK();
 }
 
-const char *TableI8051::listCpu() const {
+const /* PROGMEM */ char *TableI8051::listCpu_P() const {
     return TEXT_CPU_I8051;
 }
 
-const char *TableI8051::getCpu() const {
+const /* PROGMEM */ char *TableI8051::cpu_P() const {
     return TEXT_CPU_8051;
 }
 

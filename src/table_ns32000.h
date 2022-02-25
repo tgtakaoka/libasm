@@ -31,9 +31,9 @@ public:
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory) const;
     bool isPrefixCode(Config::opcode_t opCode) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
     void setFpu(FpuType fpuType) { _fpuType = fpuType; }
     FpuType getFpu() const { return _fpuType; }
     void setMmu(MmuType mmuType) { _mmuType = mmuType; }

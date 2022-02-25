@@ -478,7 +478,7 @@ const Entry *TableMc6800::searchOpCode(
                 insn.opCode(), page->table(), page->end());
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return entry;
         }
     }
@@ -502,7 +502,7 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     if (entry->opCode() != insn.opCode())
         return setError(INTERNAL_ERROR);
     insn.setFlags(entry->flags());
-    insn.setName_P(entry->name());
+    insn.setName_P(entry->name_P());
     return setOK();
 }
 
@@ -534,12 +534,12 @@ bool TableMc6800::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableMc6800::listCpu() const {
+const /* PROGMEM */ char *TableMc6800::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableMc6800::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableMc6800::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableMc6800::setCpu(const char *cpu) {

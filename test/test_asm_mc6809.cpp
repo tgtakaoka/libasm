@@ -25,7 +25,7 @@ AsmMc6809 as6809;
 Assembler &assembler(as6809);
 
 static bool is6309() {
-    return strcmp(assembler.getCpu(), "6309") == 0;
+    return strcmp_P("6309", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -37,18 +37,18 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 6809", true,   assembler.setCpu("6809"));
-    EQUALS("cpu 6809", "6809", assembler.getCpu());
+    EQUALS_P("cpu 6809", "6809", assembler.cpu_P());
 
     EQUALS("cpu 6309", true,   assembler.setCpu("6309"));
-    EQUALS("cpu 6309", "6309", assembler.getCpu());
+    EQUALS_P("cpu 6309", "6309", assembler.cpu_P());
 
     EQUALS("cpu mc6809", true,   assembler.setCpu("mc6809"));
-    EQUALS("cpu mc6809", "6809", assembler.getCpu());
+    EQUALS_P("cpu mc6809", "6809", assembler.cpu_P());
 
     EQUALS("cpu hd6309", true,   assembler.setCpu("hd6309"));
-    EQUALS("cpu hd6309", "6309", assembler.getCpu());
+    EQUALS_P("cpu hd6309", "6309", assembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -1493,11 +1493,6 @@ static void test_undefined_symbol() {
     }
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

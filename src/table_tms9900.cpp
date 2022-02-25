@@ -206,7 +206,7 @@ Error TableTms9900::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -248,12 +248,12 @@ bool TableTms9900::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableTms9900::listCpu() const {
+const /* PROGMEM */ char *TableTms9900::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableTms9900::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableTms9900::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableTms9900::setCpu(const char *cpu) {

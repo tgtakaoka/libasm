@@ -34,12 +34,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 68000", true,    disassembler.setCpu("68000"));
-    EQUALS("cpu 68000", "68000", disassembler.getCpu());
+    EQUALS_P("cpu 68000", "68000", disassembler.cpu_P());
 
     EQUALS("cpu MC68000", true,    disassembler.setCpu("MC68000"));
-    EQUALS("cpu MC68000", "68000", disassembler.getCpu());
+    EQUALS_P("cpu MC68000", "68000", disassembler.cpu_P());
 }
 
 static void test_data_move() {
@@ -2307,11 +2307,6 @@ static void test_multiproc() {
     TEST(ILLEGAL, "",         0045374); // ILLEGAL
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

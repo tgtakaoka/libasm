@@ -25,15 +25,15 @@ DisZ80 disz80;
 Disassembler &disassembler(disz80);
 
 static bool isZ80() {
-    return strcmp(disassembler.getCpu(), "Z80") == 0;
+    return strcmp_P("Z80", disassembler.cpu_P()) == 0;
 }
 
 static bool is8085() {
-    return strcmp(disassembler.getCpu(), "8085") == 0;
+    return strcmp_P("8085", disassembler.cpu_P()) == 0;
 }
 
 static bool is8080() {
-    return strcmp(disassembler.getCpu(), "8080") == 0;
+    return strcmp_P("8080", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -45,21 +45,21 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8080", true, disassembler.setCpu("8080"));
-    EQUALS("get cpu", "8080", disassembler.getCpu());
+    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
 
     EQUALS("cpu 8085", true, disassembler.setCpu("8085"));
-    EQUALS("get cpu", "8085", disassembler.getCpu());
+    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
 
     EQUALS("cpu I8080", true, disassembler.setCpu("I8080"));
-    EQUALS("get cpu", "8080", disassembler.getCpu());
+    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
 
     EQUALS("cpu I8085", true, disassembler.setCpu("I8085"));
-    EQUALS("get cpu", "8085", disassembler.getCpu());
+    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
 
-    EQUALS("cpu Z80", true, disassembler.setCpu("Z80"));
-    EQUALS("get cpu", "Z80", disassembler.getCpu());
+    EQUALS("cpu Z80", true, disassembler.setCpu("z80"));
+    EQUALS_P("get cpu", "Z80", disassembler.cpu_P());
 }
 
 static void test_move_inherent() {
@@ -832,11 +832,6 @@ static void test_illegal_z80() {
     }
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

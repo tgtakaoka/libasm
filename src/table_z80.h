@@ -31,9 +31,9 @@ public:
     Error searchName(InsnZ80 &insn) const;
     Error searchOpCode(InsnZ80 &insn) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
     CpuType cpuType() const { return _cpuType; }
 
     bool isPrefix(Config::opcode_t opCode) const;

@@ -315,7 +315,7 @@ Error TableZ80::searchOpCode(InsnZ80 &insn, const EntryPage *pages, const EntryP
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -364,12 +364,12 @@ bool TableZ80::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableZ80::listCpu() const {
+const /* PROGMEM */ char *TableZ80::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableZ80::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableZ80::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableZ80::setCpu(const char *cpu) {

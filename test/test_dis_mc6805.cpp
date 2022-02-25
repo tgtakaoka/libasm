@@ -26,11 +26,11 @@ DisMc6805 dis6805;
 Disassembler &disassembler(dis6805);
 
 static bool m146805() {
-    return strcmp(disassembler.getCpu(), "146805") == 0;
+    return strcmp_P("146805", disassembler.cpu_P()) == 0;
 }
 
 static bool m68hc05() {
-    return strcmp(disassembler.getCpu(), "68HC05") == 0;
+    return strcmp_P("68HC05", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -43,24 +43,24 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 6805", true, disassembler.setCpu("6805"));
-    EQUALS("cpu 6805", "6805", disassembler.getCpu());
+    EQUALS_P("cpu 6805", "6805", disassembler.cpu_P());
 
     EQUALS("cpu 146805", true, disassembler.setCpu("146805"));
-    EQUALS("cpu 146805", "146805", disassembler.getCpu());
+    EQUALS_P("cpu 146805", "146805", disassembler.cpu_P());
 
     EQUALS("cpu 68HC05", true, disassembler.setCpu("68HC05"));
-    EQUALS("cpu 68GC05", "68HC05", disassembler.getCpu());
+    EQUALS_P("cpu 68GC05", "68HC05", disassembler.cpu_P());
 
     EQUALS("cpu MC6805", true, disassembler.setCpu("MC6805"));
-    EQUALS("cpu MC6805", "6805", disassembler.getCpu());
+    EQUALS_P("cpu MC6805", "6805", disassembler.cpu_P());
 
     EQUALS("cpu MC146805", true, disassembler.setCpu("MC146805"));
-    EQUALS("cpu MC146805", "146805", disassembler.getCpu());
+    EQUALS_P("cpu MC146805", "146805", disassembler.cpu_P());
 
     EQUALS("cpu MC68HC05", true, disassembler.setCpu("MC68HC05"));
-    EQUALS("cpu MC68GC05", "68HC05", disassembler.getCpu());
+    EQUALS_P("cpu MC68GC05", "68HC05", disassembler.cpu_P());
 }
 
 static void test_inherent() {
@@ -377,11 +377,6 @@ static void test_illegal() {
     }
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+ void test_cpu() {
     EQUALS("cpu NS32032", true,    assembler.setCpu("NS32032"));
-    EQUALS("cpu NS32032", "32032", assembler.getCpu());
+    EQUALS_P("cpu NS32032", "32032", assembler.cpu_P());
 
     EQUALS("cpu 32032", true,    assembler.setCpu("32032"));
-    EQUALS("cpu 32032", "32032", assembler.getCpu());
+    EQUALS_P("cpu 32032", "32032", assembler.cpu_P());
 
     TEST("fpu ns32081");
     TEST("fpu none");
@@ -697,11 +697,6 @@ static void test_undefined_symbol() {
     ERUS("CMPL F0, UNDEF", 0xBE, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);

@@ -338,7 +338,7 @@ const Entry *TableZ8000::searchOpCode(
             if (!matchPostWord(insn))
                 continue;
         }
-        insn.setName_P(entry->name());
+        insn.setName_P(entry->name_P());
         return entry;
     }
     return nullptr;
@@ -354,18 +354,18 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
     if (entry) {
         entry++;
         insn.setFlags(entry->flags());
-        insn.setName_P(entry->name());
+        insn.setName_P(entry->name_P());
     }
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableZ8000::TableZ8000() : _cpuType(Z8001) {}
 
-const char *TableZ8000::listCpu() const {
+const /* PROGMEM */ char *TableZ8000::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableZ8000::getCpu() const {
+const /* PROGMEM */ char *TableZ8000::cpu_P() const {
     return _cpuType == Z8001 ? TEXT_CPU_Z8001 : TEXT_CPU_Z8002;
 }
 

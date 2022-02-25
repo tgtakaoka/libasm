@@ -298,7 +298,7 @@ const Entry *TableMc6805::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return entry;
         }
     }
@@ -341,12 +341,12 @@ bool TableMc6805::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableMc6805::listCpu() const {
+const /* PROGMEM */ char *TableMc6805::listCpu_P() const {
     return TEXT_CPU_LIST_6805;
 }
 
-const char *TableMc6805::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableMc6805::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableMc6805::setCpu(const char *cpu) {

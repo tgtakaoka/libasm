@@ -24,17 +24,12 @@ using namespace libasm::test;
 AsmMn1610 as1610;
 Assembler &assembler(as1610);
 
-static bool is1610() __attribute__((unused));
-static bool is1610() {
-    return strcasecmp(assembler.getCpu(), "mn1610") == 0;
-}
-
 static bool is1613() {
-    return strcasecmp(assembler.getCpu(), "mn1613") == 0;
+    return strcmp_P("MN1613", assembler.cpu_P()) == 0;
 }
 
 static bool is1613a() {
-    return strcasecmp(assembler.getCpu(), "mn1613a") == 0;
+    return strcmp_P("MN1613A", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -46,24 +41,24 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 1610", true,     assembler.setCpu("1610"));
-    EQUALS("cpu 1610", "MN1610", assembler.getCpu());
+    EQUALS_P("cpu 1610", "MN1610", assembler.cpu_P());
 
     EQUALS("cpu 1613", true,     assembler.setCpu("1613"));
-    EQUALS("cpu 1613", "MN1613", assembler.getCpu());
+    EQUALS_P("cpu 1613", "MN1613", assembler.cpu_P());
 
     EQUALS("cpu 1613A", true,      assembler.setCpu("1613A"));
-    EQUALS("cpu 1613A", "MN1613A", assembler.getCpu());
+    EQUALS_P("cpu 1613A", "MN1613A", assembler.cpu_P());
 
     EQUALS("cpu MN1610", true,     assembler.setCpu("mn1610"));
-    EQUALS("cpu MN1610", "MN1610", assembler.getCpu());
+    EQUALS_P("cpu MN1610", "MN1610", assembler.cpu_P());
 
     EQUALS("cpu MN1613", true,     assembler.setCpu("mn1613"));
-    EQUALS("cpu MN1613", "MN1613", assembler.getCpu());
+    EQUALS_P("cpu MN1613", "MN1613", assembler.cpu_P());
 
     EQUALS("cpu MN1613A", true,      assembler.setCpu("mn1613a"));
-    EQUALS("cpu MN1613A", "MN1613A", assembler.getCpu());
+    EQUALS_P("cpu MN1613A", "MN1613A", assembler.cpu_P());
 }
 
 static void test_transfer() {
@@ -760,11 +755,6 @@ static void test_undefined_symbol() {
         ERUS("TSET R0, UNDEF",    0x1708|(0<<4)|0, 0x0000);
         ERUS("TRST R2, UNDEF, Z", 0x1700|(4<<4)|2, 0x0000);
     }
-}
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
 }
 
 void run_tests(const char *cpu) {

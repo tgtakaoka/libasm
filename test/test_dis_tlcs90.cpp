@@ -33,9 +33,9 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu tlcs90", true, disassembler.setCpu("tlcs90"));
-    EQUALS("get cpu", "TLCS90", disassembler.getCpu());
+    EQUALS_P("get cpu", "TLCS90", disassembler.cpu_P());
 }
 
 static void test_8bit_transfer() {
@@ -1901,11 +1901,6 @@ static void test_illegal() {
     }
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return disassembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

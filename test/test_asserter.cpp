@@ -59,6 +59,13 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message, expected, actual);
 }
 
+void TestAsserter::equals_P(const char *file, const int line, const char *message,
+        const char *expected, const /* PROGMEM */ char *actual_P) {
+    char buffer[strlen_P(actual_P) + 1];
+    strcpy_P(buffer, actual_P);
+    return equals(file, line, message, expected, buffer);
+}
+
 void TestAsserter::equals(const char *file, const int line, const char *message, Error expected,
         const ErrorReporter &actual) {
     if (expected == actual.getError()) {

@@ -32,9 +32,9 @@ public:
     Error searchName(InsnMc6805 &insn) const;
     Error searchOpCode(InsnMc6805 &insn) const;
 
-    const char *listCpu() const override;
+    const /* PROGMEM */ char *listCpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    const char *getCpu() const override;
     CpuType cpuType() const { return _cpuType; }
 
     struct EntryPage;

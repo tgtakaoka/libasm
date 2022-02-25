@@ -444,7 +444,7 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn, bool useIndirectLong,
             insn.setFlags(entry->flags());
             if (!acceptAddrMode(insn.addrMode(), useIndirectLong))
                 continue;
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -494,12 +494,12 @@ AddressWidth TableMos6502::addressWidth() const {
     return _cpuType == W65C816 ? ADDRESS_24BIT : ADDRESS_16BIT;
 }
 
-const char *TableMos6502::listCpu() const {
+const /* PROGMEM */ char *TableMos6502::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableMos6502::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableMos6502::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableMos6502::setCpu(const char *cpu) {

@@ -33,12 +33,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8096", true,   disassembler.setCpu("8096"));
-    EQUALS("cpu 8096", "8096", disassembler.getCpu());
+    EQUALS_P("cpu 8096", "8096", disassembler.cpu_P());
 
     EQUALS("cpu i8096", true,   disassembler.setCpu("i8096"));
-    EQUALS("cpu i8096", "8096", disassembler.getCpu());
+    EQUALS_P("cpu i8096", "8096", disassembler.cpu_P());
 }
 
 static void test_2_operands() {
@@ -599,8 +599,8 @@ static void test_illegal() {
 }
 // clang-format on
 
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
+void run_tests(const char *cpu) {
+    disassembler.setCpu(cpu);
     RUN_TEST(test_2_operands);
     RUN_TEST(test_3_operands);
     RUN_TEST(test_move);
@@ -609,11 +609,6 @@ const char *run_cpu_test() {
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
     RUN_TEST(test_illegal);
-    return disassembler.listCpu();
-}
-
-void run_tests(const char *cpu) {
-    disassembler.setCpu(cpu);
 }
 
 // Local Variables:

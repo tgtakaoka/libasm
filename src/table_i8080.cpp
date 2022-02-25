@@ -185,7 +185,7 @@ Error TableI8080::searchOpCode(
                 insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             return OK;
         }
     }
@@ -226,12 +226,12 @@ bool TableI8080::setCpu(CpuType cpuType) {
     return true;
 }
 
-const char *TableI8080::listCpu() const {
+const /* PROGMEM */ char *TableI8080::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const char *TableI8080::getCpu() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name();
+const /* PROGMEM */ char *TableI8080::cpu_P() const {
+    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
 }
 
 bool TableI8080::setCpu(const char *cpu) {

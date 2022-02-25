@@ -457,7 +457,7 @@ Error TableTlcs90::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name());
+            insn.setName_P(entry->name_P());
             if (insn.srcMode() == M_UNKI)
                 return UNKNOWN_INSTRUCTION;
             return OK;
@@ -474,11 +474,11 @@ Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) const {
     return setError(searchOpCode(insn, ARRAY_RANGE(PAGES_TLCS90)));
 }
 
-const char *TableTlcs90::listCpu() const {
-    return getCpu();
+const /* PROGMEM */ char *TableTlcs90::listCpu_P() const {
+    return TEXT_CPU_TLCS90;
 }
 
-const char *TableTlcs90::getCpu() const {
+const /* PROGMEM */ char *TableTlcs90::cpu_P() const {
     return TEXT_CPU_TLCS90;
 }
 

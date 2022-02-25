@@ -25,7 +25,7 @@ AsmZ8000 asm8000;
 Assembler &assembler(asm8000);
 
 static bool z8001() {
-    return strcmp(assembler.getCpu(), "Z8001") == 0;
+    return strcmp_P("Z8001", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -38,12 +38,12 @@ static void tear_down() {
 }
 
 // clang-format off
-static void test_cpu() {
+void test_cpu() {
     EQUALS("cpu 8001", true,    assembler.setCpu("Z8001"));
-    EQUALS("cpu 8001", "Z8001", assembler.getCpu());
+    EQUALS_P("cpu 8001", "Z8001", assembler.cpu_P());
 
     EQUALS("cpu Z8002", true,    assembler.setCpu("Z8002"));
-    EQUALS("cpu Z8002", "Z8002", assembler.getCpu());
+    EQUALS_P("cpu Z8002", "Z8002", assembler.cpu_P());
 }
 
 static void test_load_and_exchange() {
@@ -2176,11 +2176,6 @@ static void test_undefined_symbol() {
     ERUS("OUT #UNDEF,R1", 0x3B16, 0x0000);
 }
 // clang-format on
-
-const char *run_cpu_test() {
-    RUN_TEST(test_cpu);
-    return assembler.listCpu();
-}
 
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
