@@ -26,9 +26,8 @@
 namespace libasm {
 namespace cli {
 
-DisDriver::DisDriver(std::vector<Disassembler *> &disassemblers) {
-    _disassemblers.reserve(disassemblers.size());
-    _disassemblers.insert(_disassemblers.end(), disassemblers.begin(), disassemblers.end());
+DisDriver::DisDriver(Disassembler **begin, Disassembler **end) {
+    _disassemblers.insert(_disassemblers.end(), begin, end);
 }
 
 DisDriver::~DisDriver() {
@@ -56,10 +55,13 @@ static void filter(const char *text, std::list<std::string> &list) {
 }
 
 static std::string listCpu(
-        const char *separator, const std::vector<Disassembler *> &disassemblers) {
+        const char *separator, const std::list<Disassembler *> &disassemblers) {
     std::list<std::string> list;
     for (auto dis : disassemblers) {
-        filter(dis->listCpu(), list);
+        const char *list_P = dis->listCpu();
+        char buffer[strlen_P(list_P) + 1];
+        strcpy_P(buffer, list_P);
+        filter(buffer, list);
     }
     std::string cpuList;
     std::string buf;

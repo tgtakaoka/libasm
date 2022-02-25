@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <vector>
-
 #include "dis_cdp1802.h"
 #include "dis_driver.h"
 #include "dis_i8048.h"
@@ -64,7 +62,7 @@ z8000::DisZ8000 disz8000;
 ns32000::DisNs32000 dis32000;
 mn1610::DisMn1610 dis1610;
 
-std::vector<Disassembler *> disassemblers = {
+Disassembler * disassemblers[] = {
         &dis6800,
         &dis6805,
         &dis6809,
@@ -89,7 +87,7 @@ std::vector<Disassembler *> disassemblers = {
 };
 
 int main(int argc, const char **argv) {
-    DisDriver driver(disassemblers);
+    DisDriver driver(ARRAY_RANGE(disassemblers));
     if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.disassemble();

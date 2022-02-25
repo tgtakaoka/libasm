@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <vector>
+#include <list>
 
 #include "cli_memory.h"
 #include "dis_base.h"
@@ -33,7 +33,7 @@ namespace cli {
 
 class DisDriver {
 public:
-    DisDriver(std::vector<Disassembler *> &disassemblers);
+    DisDriver(Disassembler **begin, Disassembler **end);
     virtual ~DisDriver();
 
     int usage();
@@ -46,7 +46,7 @@ private:
     bool _verbose;
     uint32_t _addr_start;
     uint32_t _addr_end;
-    std::vector<Disassembler *> _disassemblers;
+    std::list<Disassembler *> _disassemblers;
     Disassembler *_disassembler;
     const char *_progname;
     const char *_input_name;
