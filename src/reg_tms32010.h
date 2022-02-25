@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "reg_base.h"
-
 #ifndef __REG_TMS32010_H__
 #define __REG_TMS32010_H__
+
+#include "reg_base.h"
 
 namespace libasm {
 namespace tms32010 {

@@ -17,6 +17,8 @@
 #ifndef __VALUE_PARSER_H__
 #define __VALUE_PARSER_H__
 
+#include <stdint.h>
+
 #include "error_reporter.h"
 #include "str_scanner.h"
 #include "symbol_table.h"

@@ -17,6 +17,8 @@
 #ifndef __ENTRY_TMS32010_H__
 #define __ENTRY_TMS32010_H__
 
+#include <stdint.h>
+
 #include "config_tms32010.h"
 #include "entry_base.h"
 

@@ -18,7 +18,6 @@
 #define __TABLE_MC6809_H__
 
 #include "config_mc6809.h"
-#include "error_reporter.h"
 #include "insn_mc6809.h"
 #include "reg_mc6809.h"
 #include "table_base.h"

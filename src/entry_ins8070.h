@@ -17,6 +17,8 @@
 #ifndef __ENTRY_INS8070_H__
 #define __ENTRY_INS8070_H__
 
+#include <stdint.h>
+
 #include "config_ins8070.h"
 #include "entry_base.h"
 

@@ -17,6 +17,8 @@
 #ifndef __ENTRY_MC6805_H__
 #define __ENTRY_MC6805_H__
 
+#include <stdint.h>
+
 #include "config_mc6805.h"
 #include "entry_base.h"
 

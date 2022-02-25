@@ -17,8 +17,9 @@
 #ifndef __REG_NS32000_H__
 #define __REG_NS32000_H__
 
-#include "entry_ns32000.h"
 #include "reg_base.h"
+
+#include "entry_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {

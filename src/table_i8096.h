@@ -18,9 +18,7 @@
 #define __TABLE_I8096_H__
 
 #include "config_i8096.h"
-#include "dis_memory.h"
 #include "insn_i8096.h"
-#include "reg_i8096.h"
 #include "table_base.h"
 
 namespace libasm {

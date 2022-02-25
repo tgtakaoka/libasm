@@ -17,6 +17,8 @@
 #ifndef __ENTRY_MC68000_H__
 #define __ENTRY_MC68000_H__
 
+#include <stdint.h>
+
 #include "config_mc68000.h"
 #include "entry_base.h"
 

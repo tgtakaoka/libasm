@@ -17,8 +17,9 @@
 #ifndef __CONFIG_BASE_H__
 #define __CONFIG_BASE_H__
 
-#include "config_host.h"
+#include <stdint.h>
 
+#include "config_host.h"
 #include "type_traits.h"
 
 namespace libasm {

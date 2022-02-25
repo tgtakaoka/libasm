@@ -19,8 +19,6 @@
 
 #include "error_reporter.h"
 
-#include <stddef.h>
-
 namespace libasm {
 
 class StrBuffer : public ErrorReporter {

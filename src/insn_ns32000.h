@@ -20,7 +20,6 @@
 #include "config_ns32000.h"
 #include "entry_ns32000.h"
 #include "insn_base.h"
-#include "reg_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {

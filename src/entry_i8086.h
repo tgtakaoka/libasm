@@ -17,6 +17,8 @@
 #ifndef __ENTRY_I8086_H__
 #define __ENTRY_I8086_H__
 
+#include <stdint.h>
+
 #include "config_i8086.h"
 #include "entry_base.h"
 

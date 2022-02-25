@@ -20,7 +20,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "array_memory.h"
 #include "config_base.h"
 #include "dis_memory.h"
 #include "error_reporter.h"
@@ -52,6 +51,7 @@ public:
 
 private:
     ValueFormatter &_formatter;
+
 protected:
     RegBase &_regBase;
     TableBase &_table;

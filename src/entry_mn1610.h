@@ -17,6 +17,8 @@
 #ifndef __ENTRY_MN1610_H__
 #define __ENTRY_MN1610_H__
 
+#include <stdint.h>
+
 #include "config_mn1610.h"
 #include "entry_base.h"
 

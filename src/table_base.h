@@ -17,9 +17,10 @@
 #ifndef __TABLE_BASE_H__
 #define __TABLE_BASE_H__
 
+#include <string.h>
+
 #include "config_host.h"
 #include "error_reporter.h"
-#include "insn_base.h"
 
 namespace libasm {
 

@@ -17,8 +17,9 @@
 #ifndef __REG_Z80_H__
 #define __REG_Z80_H__
 
-#include "insn_z80.h"
 #include "reg_base.h"
+
+#include "insn_z80.h"
 
 namespace libasm {
 namespace z80 {

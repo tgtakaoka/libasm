@@ -18,6 +18,8 @@
 #ifndef __ENTRY_INS8060_H__
 #define __ENTRY_INS8060_H__
 
+#include <stdint.h>
+
 #include "config_ins8060.h"
 #include "entry_base.h"
 

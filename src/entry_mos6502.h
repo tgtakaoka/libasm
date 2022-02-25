@@ -17,6 +17,8 @@
 #ifndef __ENTRY_MOS6502_H__
 #define __ENTRY_MOS6502_H__
 
+#include <stdint.h>
+
 #include "config_mos6502.h"
 #include "entry_base.h"
 

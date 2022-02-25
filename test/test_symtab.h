@@ -17,6 +17,7 @@
 #ifndef __TEST_SYMTAB_H__
 #define __TEST_SYMTAB_H__
 
+#include <stdint.h>
 #include <string.h>
 
 #include <map>

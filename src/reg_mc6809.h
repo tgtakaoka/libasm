@@ -17,8 +17,9 @@
 #ifndef __REG_MC6809_H__
 #define __REG_MC6809_H__
 
-#include "entry_mc6809.h"
 #include "reg_base.h"
+
+#include "entry_mc6809.h"
 
 namespace libasm {
 namespace mc6809 {

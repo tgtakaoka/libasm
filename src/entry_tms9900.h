@@ -17,6 +17,8 @@
 #ifndef __ENTRY_TMS9900_H__
 #define __ENTRY_TMS9900_H__
 
+#include <stdint.h>
+
 #include "config_tms9900.h"
 #include "entry_base.h"
 

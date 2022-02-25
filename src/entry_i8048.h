@@ -17,6 +17,8 @@
 #ifndef __ENTRY_I8048_H__
 #define __ENTRY_I8048_H__
 
+#include <stdint.h>
+
 #include "config_i8048.h"
 #include "entry_base.h"
 

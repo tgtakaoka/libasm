@@ -17,6 +17,8 @@
 #ifndef __ENTRY_Z80_H__
 #define __ENTRY_Z80_H__
 
+#include <stdint.h>
+
 #include "config_z80.h"
 #include "entry_base.h"
 

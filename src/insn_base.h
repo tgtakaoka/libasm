@@ -17,15 +17,15 @@
 #ifndef __INSN_BASE_H__
 #define __INSN_BASE_H__
 
-#include "config_base.h"
-#include "dis_memory.h"
-#include "error_reporter.h"
-#include "str_scanner.h"
-
 #include <ctype.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+
+#include "config_base.h"
+#include "dis_memory.h"
+#include "error_reporter.h"
+#include "str_scanner.h"
 
 namespace libasm {
 

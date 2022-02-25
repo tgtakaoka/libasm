@@ -20,7 +20,6 @@
 #include "config_mc6805.h"
 #include "entry_mc6805.h"
 #include "insn_base.h"
-#include "reg_mc6805.h"
 
 namespace libasm {
 namespace mc6805 {

@@ -17,6 +17,8 @@
 #ifndef __ENTRY_CDP1802_H__
 #define __ENTRY_CDP1802_H__
 
+#include <stdint.h>
+
 #include "config_cdp1802.h"
 #include "entry_base.h"
 

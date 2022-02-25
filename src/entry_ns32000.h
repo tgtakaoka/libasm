@@ -17,6 +17,8 @@
 #ifndef __ENTRY_NS32000_H__
 #define __ENTRY_NS32000_H__
 
+#include <stdint.h>
+
 #include "config_ns32000.h"
 #include "entry_base.h"
 

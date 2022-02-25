@@ -17,7 +17,6 @@
 #ifndef __REG_TLCS90_H__
 #define __REG_TLCS90_H__
 
-#include "insn_tlcs90.h"
 #include "reg_base.h"
 
 namespace libasm {
