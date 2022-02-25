@@ -87,7 +87,7 @@ Disassembler * disassemblers[] = {
 };
 
 int main(int argc, const char **argv) {
-    DisDriver driver(ARRAY_RANGE(disassemblers));
+    DisDriver driver(disassemblers, std::end(disassemblers));
     if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.disassemble();

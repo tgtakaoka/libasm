@@ -110,7 +110,7 @@ AsmDirective *directives[] = {
 };
 
 int main(int argc, const char **argv) {
-    AsmDriver driver(ARRAY_RANGE(directives));
+    AsmDriver driver(directives, std::end(directives));
     if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.assemble();

@@ -432,7 +432,7 @@ static void test_mid_tms9900() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
 
-    assert_mid(ARRAY_RANGE(mids));
+    assert_mid(mids, std::end(mids));
 }
 
 static void test_mid_tms9995() {
@@ -445,7 +445,7 @@ static void test_mid_tms9995() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
 
-    assert_mid(ARRAY_RANGE(mids));
+    assert_mid(mids, std::end(mids));
 }
 
 static void test_mid_tms99105() {
@@ -459,27 +459,27 @@ static void test_mid_tms99105() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0c08 }, { 0x0c0c, 0x0fff }
     };
 
-    assert_mid(ARRAY_RANGE(mids));
+    assert_mid(mids, std::end(mids));
 
     static const mid_range dp_arith_2nd[] = {
         { 0x0000, 0x3fff}, {0x5000, 0xffff }
     };
-    assert_mid(ARRAY_RANGE(dp_arith_2nd), SM);
-    assert_mid(ARRAY_RANGE(dp_arith_2nd), AM);
+    assert_mid(dp_arith_2nd, std::end(dp_arith_2nd), SM);
+    assert_mid(dp_arith_2nd, std::end(dp_arith_2nd), AM);
 
     static const mid_range dp_shift_2nd[] = {
         { 0x0000, 0x3fff}, { 0x4400, 0xffff }
     };
-    assert_mid(ARRAY_RANGE(dp_shift_2nd), SRAM);
-    assert_mid(ARRAY_RANGE(dp_shift_2nd), SLAM);
+    assert_mid(dp_shift_2nd, std::end(dp_shift_2nd), SRAM);
+    assert_mid(dp_shift_2nd, std::end(dp_shift_2nd), SLAM);
 
     static const mid_range dp_bit_2nd[] = {
         { 0x0400, 0xffff },
     };
     static const mid_hole dp_bit_hole = { 0x003F, 0x0030, 0x003F };
-    assert_mid(ARRAY_RANGE(dp_bit_2nd), TMB,  &dp_bit_hole);
-    assert_mid(ARRAY_RANGE(dp_bit_2nd), TCMB, &dp_bit_hole);
-    assert_mid(ARRAY_RANGE(dp_bit_2nd), TSMB, &dp_bit_hole);
+    assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TMB,  &dp_bit_hole);
+    assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TCMB, &dp_bit_hole);
+    assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TSMB, &dp_bit_hole);
 }
 // clang-format on
 

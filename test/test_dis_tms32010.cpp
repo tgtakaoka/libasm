@@ -582,7 +582,7 @@ static void assert_indirect(Config::opcode_t base) {
 
     for (Config::opcode_t indir = 0x80; indir < 0x100; indir++) {
         const Config::opcode_t opc = base | indir;
-        if (in_array(indir, ARRAY_RANGE(valids))) {
+        if (in_array(indir, valids, std::end(valids))) {
             assert_ok(opc);
         } else {
             assert_unknown(opc);
@@ -669,7 +669,7 @@ static void test_illegal() {
         0x90, 0x9C, 0x9D,
     };
     for (Config::opcode_t opc = 0; opc < 0x100; opc++) {
-        if (in_array(opc, ARRAY_RANGE(low8))) {
+        if (in_array(opc, low8, std::end(low8))) {
             assert_ok(0x7F00 | opc);
         } else {
             assert_unknown(0x7F00 | opc);
