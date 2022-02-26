@@ -28,7 +28,8 @@ namespace i8096 {
 
 class AsmI8096 : public Assembler, public Config {
 public:
-    AsmI8096() : Assembler(_parser, TableI8096) { reset(); }
+    AsmI8096() : Assembler(_parser, TableI8096), _parser() {}
+
     const ConfigBase &config() const override { return *this; }
 
 private:
@@ -38,11 +39,7 @@ private:
         AddrMode mode;
         uint8_t regno;
         uint16_t val16;
-        Operand()
-            : ErrorReporter(),
-              mode(M_NONE),
-              regno(0),
-              val16(0) {}
+        Operand() : ErrorReporter(), mode(M_NONE), regno(0), val16(0) {}
     };
 
     Error parseIndirect(StrScanner &scan, Operand &opr);

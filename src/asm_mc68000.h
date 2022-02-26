@@ -28,7 +28,8 @@ namespace mc68000 {
 
 class AsmMc68000 : public Assembler, public Config {
 public:
-    AsmMc68000() : Assembler(_parser, TableMc68000) { reset(); }
+    AsmMc68000() : Assembler(_parser, TableMc68000), _parser() { setAlias(true); }
+
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
 

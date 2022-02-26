@@ -28,7 +28,8 @@ namespace tlcs90 {
 
 class DisTlcs90 : public Disassembler, public Config {
 public:
-    DisTlcs90() : Disassembler(_formatter, _regs, TableTlcs90, '$') { reset(); }
+    DisTlcs90() : Disassembler(_formatter, _regs, TableTlcs90, '$'), _formatter(), _regs() {}
+
     const ConfigBase &config() const override { return *this; }
 
 private:

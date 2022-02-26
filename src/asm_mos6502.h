@@ -28,10 +28,12 @@ namespace mos6502 {
 
 class AsmMos6502 : public Assembler, public Config {
 public:
-    AsmMos6502() : Assembler(_parser, TableMos6502) { reset(); }
+    AsmMos6502()
+        : Assembler(_parser, TableMos6502), _parser(), _long_acc(false), _long_idx(false) {}
+
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _long_acc = _long_idx = false; }
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
+    void reset() override { _long_acc = _long_idx = false; }
 
 private:
     MotorolaValueParser _parser;

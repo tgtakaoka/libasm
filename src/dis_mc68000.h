@@ -28,7 +28,8 @@ namespace mc68000 {
 
 class DisMc68000 : public Disassembler, public Config {
 public:
-    DisMc68000() : Disassembler(_formatter, _regs, TableMc68000, '*') { reset(); }
+    DisMc68000() : Disassembler(_formatter, _regs, TableMc68000, '*'), _formatter(), _regs() {}
+
     const ConfigBase &config() const override { return *this; }
 
 private:

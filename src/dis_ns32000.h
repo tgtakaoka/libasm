@@ -28,7 +28,15 @@ namespace ns32000 {
 
 class DisNs32000 : public Disassembler, public Config {
 public:
-    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '*') { reset(); }
+    DisNs32000()
+        : Disassembler(_formatter, _regs, TableNs32000, '*'),
+          _formatter(),
+          _regs(),
+          _stringOptionBraket(false),
+          _pcRelativeParen(false),
+          _externalParen(false),
+          _floatPrefix(nullptr) {}
+
     const ConfigBase &config() const override { return *this; }
     void reset() override {
         stringOptionBraket(false);

@@ -29,10 +29,11 @@ namespace ins8070 {
 class AsmIns8070 : public Assembler, public Config {
 public:
     AsmIns8070();
+
     const ConfigBase &config() const override { return *this; }
 
 private:
-    NationalValueParser _parser{'$'};
+    NationalValueParser _parser;
 
     struct Operand : public ErrorReporter {
         OprFormat format;

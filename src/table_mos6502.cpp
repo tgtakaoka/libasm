@@ -476,8 +476,9 @@ static constexpr CpuTable CPU_TABLES[] PROGMEM = {
 
 TableMos6502::TableMos6502() {
     setCpu(MOS6502);
-    _useIndirectLong = true;
-    _longAccumulator = _longIndex = false;
+    useIndirectLong(true);
+    longAccumlator(false);
+    longIndex(false);
 }
 
 bool TableMos6502::setCpu(CpuType cpuType) {

@@ -36,8 +36,7 @@ static struct : public ValueParser::FuncParser {
     }
 } functionParser;
 
-AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060) {
-    reset();
+AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060), _parser('$') {
     _parser.setFuncParser(&functionParser);
 }
 

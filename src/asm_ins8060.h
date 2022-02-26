@@ -29,13 +29,14 @@ namespace ins8060 {
 class AsmIns8060 : public Assembler, public Config {
 public:
     AsmIns8060();
+
     const ConfigBase &config() const override { return *this; }
 
     static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }
     static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }
 
 private:
-    NationalValueParser _parser{'$'};
+    NationalValueParser _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

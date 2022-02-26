@@ -23,6 +23,9 @@ help:
 -include ../Makefile.asl
 -include ../Makefile.gas
 
+.PHONY:: generate asm-test asl-test gas-test
+.PHONY:: clean clean-gen clean-asm clean-asl clean-gas
+
 # target which has ".inc" suffix for output.
 INC_targets  = w65c816 tlcs90 i8080_z80syn i8085_z80syn \
 	       z8001 z8002 z8k1 z8k2 ns32000 ns32k mn1610 mn1613
@@ -72,6 +75,7 @@ $(ASM):
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
 ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
 define asm-rule # source stem suffix option
+.PHONY:: asm-$(2).$(3)
 asm-$(2).$(3): $(1)
 	$(ASM) $(4) -o $(2).$(3) -l $(2).lst $$^
 
@@ -91,6 +95,7 @@ define asl-file # stem
 $(if $(wildcard $(1).asl),$(1).asl,$(1).asm)
 endef
 define asl-rule # source stem suffix option
+.PHONY:: asl-$(2).$(3)
 asl-$(2).$(3): $(1)
 	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(4) $(2).p $(2).$(3)
 

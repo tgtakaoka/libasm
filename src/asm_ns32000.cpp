@@ -598,7 +598,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, const InsnNs32000 &insn) {
         const StrScanner option = _parser.readSymbol(p);
         const bool none = option.iequals_P(PSTR("none"));
         if (option.iequals_P(PSTR("ns32081")) || none) {
-            setFpu(none ? FPU_NONE : FPU_NS32081);
+            TableNs32000.setFpu(none ? FPU_NONE : FPU_NS32081);
             scan = p;
             return OK;
         }
@@ -609,7 +609,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, const InsnNs32000 &insn) {
         const StrScanner option = _parser.readSymbol(p);
         const bool none = option.iequals_P(PSTR("none"));
         if (option.iequals_P(PSTR("ns32082")) || none) {
-            setMmu(none ? MMU_NONE : MMU_NS32082);
+            TableNs32000.setMmu(none ? MMU_NONE : MMU_NS32082);
             scan = p;
             return OK;
         }

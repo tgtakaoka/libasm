@@ -22,6 +22,9 @@ help:
 -include ../Makefile.asl
 -include ../Makefile.gas
 
+.PHONY:: asm-test asl-test gas-test
+.PHONY:: clean clean-asm clean-asl clean-gas
+
 ASM=../../cli/asm
 $(ASM):
 	+$(MAKE) -C ../../cli cli
@@ -29,6 +32,7 @@ $(ASM):
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
 ASM_OUTS  = $(foreach t,$(ASM_TESTS),$(t).$(call out-ext,$(t)))
 define asm-rule # test suffix option
+.PHONY:: asm-$(1).$(2)
 asm-$(1).$(2):: $(ASM)
 asm-$(1).$(2):: $(1).asm
 	$(ASM) $(3) -o $(1).$(2) -l $(1).lst $$^
@@ -45,6 +49,7 @@ ASL_TESTS = $(ASM_TESTS) \
 	$(foreach t,$(patsubst %.asl,%,$(wildcard test_*.asl)),$(if $(filter $(t),$(ASM_TESTS)),,$(t)))
 ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
 define asl-rule # test suffix option source
+.PHONY:: asl-$(1).$(2)
 asl-$(1).$(2): $(4)
 	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(3) $(1).p $(1).$(2)
 

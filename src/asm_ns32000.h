@@ -28,18 +28,19 @@ namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000) { reset(); }
-    const ConfigBase &config() const override { return *this; }
-    void reset() override {
-        setFpu(FPU_NONE);
-        setMmu(MMU_NONE);
+    AsmNs32000() : Assembler(_parser, TableNs32000), _parser('*') {
+        TableNs32000.setFpu(FPU_NONE);
+        TableNs32000.setMmu(MMU_NONE);
     }
 
-    void setFpu(FpuType fpuType) { TableNs32000.setFpu(fpuType); }
-    void setMmu(MmuType mmuType) { TableNs32000.setMmu(mmuType); }
+    const ConfigBase &config() const override { return *this; }
+    void reset() override {
+        TableNs32000.setFpu(FPU_NONE);
+        TableNs32000.setMmu(MMU_NONE);
+    }
 
 private:
-    NationalValueParser _parser{'*'};
+    NationalValueParser _parser;
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

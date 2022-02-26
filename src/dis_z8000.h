@@ -28,13 +28,19 @@ namespace z8000 {
 
 class DisZ8000 : public Disassembler, public Config {
 public:
-    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000, '$') { reset(); }
+    DisZ8000()
+        : Disassembler(_formatter, _regs, TableZ8000, '$'),
+          _formatter(),
+          _regs(),
+          _ioAddressPrefix(0),
+          _shortDirect(true) {}
+
     const ConfigBase &config() const override { return *this; }
+    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
     void reset() override {
         setIoAddressPrefix(0);
         setShortDirect(true);
     }
-    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
 
     void setIoAddressPrefix(char prefix) { _ioAddressPrefix = prefix; }
     void setShortDirect(bool enable) { _shortDirect = enable; }

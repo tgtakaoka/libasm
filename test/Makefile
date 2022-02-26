@@ -19,18 +19,18 @@ help:
 
 -include ../src/Makefile.arch
 
-.PHONY: help test gen generate clean clean-objs
+.PHONY:: help test gen generate clean clean-objs tidy
 
-generate:
+generate: gen
 	$(MAKE) -C autogen clean-gen
-	+$(MAKE) -C autogen generate
+	$(MAKE) -C autogen generate
 
 clean: clean-objs
-	-rm -f $(BINS)
+	-rm -f $(BINS) compile_commands.json
 clean-objs:
 	-rm -f $(OBJS) *.d *~
 
-VPATH = ../src:../cli
+VPATH = ../src
 INCLUDES = -I ../src -I ../cli
 CXXFLAGS = -Wall -std=c++14 -O $(INCLUDES) $(DEBUG_FLAGS)
 CPPFLAGS = -MMD
@@ -53,6 +53,9 @@ OBJS = 	$(TEST_OBJS) $(GEN_OBJS) $(OBJS_test) $(OBJS_gen) \
 	$(ARCHS:%=asm_%.o) $(ARCHS:%=dis_%.o) $(EXPR_OBJS) \
 	$(foreach a,$(ARCHS),$(OBJS_$(a)))
 BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
+
+cli_listing.o: ../cli/cli_listing.cpp
+	$(CXX) $(CXX_FLAGS) $(INCLUDES) $(CPPFLAGS) -c -o $@ $^
 
 -include $(OBJS:.o=.d)
 
@@ -95,6 +98,18 @@ endef
 $(eval $(foreach a,$(ARCHS),$(call gen-rule,$(a))))
 
 gen: $(GEN_OBJS:.o=)
+
+compile_commands.json:
+	bear $(MAKE) $(BINS:%=%.o)
+define tidy-rule # target
+.PHONY:: $(1).tidy
+$(1).tidy: compile_commands.json $(1).cpp
+	clang-tidy $(1).cpp
+
+endef
+SRCS=$(wildcard *.cpp)
+$(eval $(foreach t,$(SRCS:%.cpp=%),$(call tidy-rule,$(t))))
+tidy: $(SRCS:%.cpp=%.tidy)
 
 # Local Variables:
 # mode: makefile-gmake

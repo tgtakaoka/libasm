@@ -52,7 +52,7 @@ public:
 protected:
     bool _uppercase;
 
-    RegBase() {}
+    RegBase() : _uppercase(false) {}
 
     StrBuffer &outChar(StrBuffer &out, char c) const {
         return out.letter(_uppercase ? toupper(c) : tolower(c));

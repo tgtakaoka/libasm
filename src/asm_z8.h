@@ -28,19 +28,19 @@ namespace z8 {
 
 class AsmZ8 : public Assembler, public Config {
 public:
-    AsmZ8() : Assembler(_parser, TableZ8) { reset(); }
+    AsmZ8() : Assembler(_parser, TableZ8), _parser(), _regPointer0(-1), _regPointer1(-1) {}
+
     const ConfigBase &config() const override { return *this; }
     void reset() override { setRegPointer(-1); }
-
-    bool setRegPointer(int16_t rp);
-    bool setRegPointer0(int16_t rp0);
-    bool setRegPointer1(int16_t rp1);
 
 private:
     IntelValueParser _parser;
     int16_t _regPointer0;
     int16_t _regPointer1;
 
+    bool setRegPointer(int16_t rp);
+    bool setRegPointer0(int16_t rp);
+    bool setRegPointer1(int16_t rp);
     bool isWorkReg(uint8_t regAddr) const;
 
     struct Operand : public ErrorReporter {

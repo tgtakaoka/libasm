@@ -28,7 +28,12 @@ namespace i8096 {
 
 class DisI8096 : public Disassembler, public Config {
 public:
-    DisI8096() : Disassembler(_formatter, _regs, TableI8096, '$') { reset(); }
+    DisI8096()
+        : Disassembler(_formatter, _regs, TableI8096, '$'),
+          _formatter(),
+          _regs(),
+          _useAbsolute(false) {}
+
     const ConfigBase &config() const override { return *this; }
     void reset() override { useAbsolute(false); }
 

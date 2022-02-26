@@ -23,7 +23,7 @@ help:
 
 -include ../src/Makefile.arch
 
-.PHONY: help install clean-objs clean
+.PHONY:: help install clean-objs clean tidy
 
 cli: $(BINS)
 
@@ -33,7 +33,7 @@ install: $(BINS)
 clean-objs:
 	-rm -f $(OBJS)
 clean: clean-objs
-	-rm -f $(BINS) *.d *~
+	-rm -f $(BINS) *.d *~ compile_commands.json
 
 VPATH = ../src
 CXXFLAGS = -Wall -O -std=c++14 -I../src $(DEBUG_FLAGS)
@@ -58,6 +58,18 @@ $(1): $(OBJS_com) $(OBJS_$(1))
 
 endef
 $(eval $(foreach b,$(BINS),$(call bin-rule,$(b))))
+
+compile_commands.json:
+	bear $(MAKE) cli
+SRCS=$(foreach s,$(sort $(OBJS:%.o=%.cpp)),$(if $(wildcard $(s)),$(s),../src/$(s)))
+define tidy-rule # target
+.PHONY:: $(1).tidy
+$(1).tidy: compile_commands.json $(1).cpp
+	clang-tidy $(1).cpp
+
+endef
+$(eval $(foreach t,$(SRCS:%.cpp=%),$(call tidy-rule,$(t))))
+tidy: $(SRCS:%.cpp=%.tidy)
 
 -include $(OBJS:.o=.d)
 

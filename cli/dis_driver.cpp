@@ -221,10 +221,9 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
     int errors = 0;
     size_t line_len = 128;
     char *line = static_cast<char *>(malloc(line_len));
-    int len;
     const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
     uint32_t start = 0, end = 0;
-    while ((len = getLine(line, line_len, input)) > 0) {
+    while (getLine(line, line_len, input) > 0) {
         lineno++;
         uint32_t addr;
         uint8_t size;

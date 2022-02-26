@@ -55,8 +55,8 @@ private:
 protected:
     RegBase &_regBase;
     TableBase &_table;
-    SymbolTable *_symtab;
     char _curSym;
+    SymbolTable *_symtab = nullptr;
     bool _relativeTarget = false;
 
     Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym)

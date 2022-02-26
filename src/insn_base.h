@@ -462,7 +462,7 @@ public:
     }
 
 protected:
-    InsnImpl(Insn &insn) : InsnBase(insn) {}
+    InsnImpl(Insn &insn) : InsnBase(insn), _opCode(0), _prefix(0), _post(0), _hasPost(false), _flags() {}
 
 private:
     typename Conf::opcode_t _opCode;

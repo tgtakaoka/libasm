@@ -28,7 +28,8 @@ namespace tms9900 {
 
 class AsmTms9900 : public Assembler, public Config {
 public:
-    AsmTms9900() : Assembler(_parser, TableTms9900) { reset(); }
+    AsmTms9900() : Assembler(_parser, TableTms9900), _parser() {}
+
     const ConfigBase &config() const override { return *this; }
 
 private:

@@ -186,7 +186,6 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _uppercase = false;
     _line_number = false;
     _verbose = false;
-    AsmDirective *directive = defaultDirective();
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -223,8 +222,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                directive = _commonDir.setCpu(argv[i]);
-                if (directive == nullptr) {
+                if (_commonDir.setCpu(argv[i]) == nullptr) {
                     fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
                     return 4;
                 }

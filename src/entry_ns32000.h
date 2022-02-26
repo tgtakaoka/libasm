@@ -149,12 +149,10 @@ private:
         EP2_DISP = 2,
         EP2_ERROR = 3,
     };
+    // clang-format off
     static constexpr Ex2Mode toEx2Mode(AddrMode mode) {
-        return mode == M_NONE ? EM2_NONE
-                              : (mode == M_IMM ? EM2_IMM
-                                               : (mode == M_BFLEN ? EM2_BFLEN
-                                                                  : (mode == M_LEN32 ? EM2_LEN32
-                                                                                     : EM2_ERROR)));
+        return mode == M_NONE ? EM2_NONE : (mode == M_IMM ? EM2_IMM
+               : (mode == M_BFLEN ? EM2_BFLEN : (mode == M_LEN32 ? EM2_LEN32 : EM2_ERROR)));
         /*
         switch (mode) {
         case M_NONE:  return EM2_NONE;
@@ -167,7 +165,7 @@ private:
     }
     static constexpr Ex2Pos toEx2Pos(OprPos pos) {
         return pos == P_NONE ? EP2_NONE
-                             : (pos == P_IMPL ? EP2_IMPL : (pos == P_DISP ? EP2_DISP : EP2_ERROR));
+            : (pos == P_IMPL ? EP2_IMPL : (pos == P_DISP ? EP2_DISP : EP2_ERROR));
         /*
         switch (pos) {
         case P_NONE: return EP2_NONE;
@@ -177,6 +175,7 @@ private:
         }
         */
     }
+    // clang-format on
     static inline AddrMode toAddrMode(Ex2Mode mode) {
         switch (mode) {
         case EM2_NONE:

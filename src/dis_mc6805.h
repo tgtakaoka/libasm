@@ -28,7 +28,9 @@ namespace mc6805 {
 
 class DisMc6805 : public Disassembler, public Config {
 public:
-    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*') { reset(); }
+    DisMc6805()
+        : Disassembler(_formatter, _regs, TableMc6805, '*'), _formatter(), _regs(), _pc_bits(0) {}
+
     const ConfigBase &config() const override { return *this; }
     void reset() override { setProgramCounterBits(0); }
 
