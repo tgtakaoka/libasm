@@ -227,7 +227,7 @@ void CliListing::formatLine() {
     const int pos = _out.size();
     int formattedBytes = 0;
     if (_line->hasValue()) {
-        _out += " =$";
+        _out += " =0x";
         formatUint32(_line->value(), false, true);
         formattedBytes = 0;
     } else {
