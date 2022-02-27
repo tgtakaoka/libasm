@@ -122,7 +122,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         StrScanner t(p);
         ++t;
         if (*t.skipSpaces() == '+' || *t == '-' || endOfLine(*t) || *t == '[' || *t == ',') {
-            StrScanner base = scanExpr(p, '[');
+            StrScanner base = _parser.scanExpr(p, '[');
             const auto size = base.size();
             if (size) {
                 op.val32 = parseExpr32(base, op);

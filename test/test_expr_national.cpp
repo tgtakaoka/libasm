@@ -19,7 +19,8 @@
 using namespace libasm;
 using namespace libasm::test;
 
-NationalValueParser parser;
+NationalValueParser national_parser;
+ValueParser &parser = national_parser;
 NationalValueFormatter formatter;
 
 static void set_up() {}
@@ -153,6 +154,24 @@ static void test_current_address() {
     parser.setCurrentOrigin(0x1100);
     E16(".-table",     0x100, OK);
     E16("(.-table)/2", 0x80,  OK);
+}
+
+static void test_scan() {
+    SCAN('|', "|a+b|c+d",     "");
+    SCAN('|', "a+b|c+d",      "a+b");
+    SCAN('|', "a+(b|c)+d|e",  "a+(b|c)+d");
+    SCAN('|', "a+'|'+d|e",    "a+'|'+d");
+    SCAN(',', "|a+b|c+d",     "");
+    SCAN(',', "','+'\'',abc", "','+'\''");
+    SCAN('x', "0x1230xG",     "0x1230");
+    SCAN('b', "0b1010b0",     "0b1010");
+    SCAN('H', "1AB0HHX",      "1AB0H");
+    SCAN('O', "1230OOX",      "1230O");
+    SCAN('O', "1239OOX",      "1239");
+    SCAN('B', "1010BBX",      "1010B");
+    SCAN('B', "1012BBX",      "1012");
+    SCAN(',', "X'1230,",      "X'1230");
+    SCAN(',', "X'1230',",     "X'1230'");
 }
 
 static void test_errors() {
@@ -504,6 +523,7 @@ void run_tests() {
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_current_address);
+    RUN_TEST(test_scan);
     RUN_TEST(test_errors);
     RUN_TEST(test_formatter_8bit);
     RUN_TEST(test_formatter_16bit);

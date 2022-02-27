@@ -463,7 +463,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (*p == '|') {
-        StrScanner expr = scanExpr(++a, '|');
+        StrScanner expr = _parser.scanExpr(++a, '|');
         const auto size = expr.size();
         if (size == 0) {
             op.val32 = parseExpr32(p, op);

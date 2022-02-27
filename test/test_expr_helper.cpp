@@ -18,7 +18,7 @@
 
 #include "str_buffer.h"
 
-extern libasm::ValueParser parser;
+extern libasm::ValueParser &parser;
 extern libasm::ValueFormatter formatter;
 
 namespace libasm {

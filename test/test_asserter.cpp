@@ -59,6 +59,17 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message, expected, actual);
 }
 
+void TestAsserter::equals(const char *file, const int line, const char *message,
+        const char *expected, const StrScanner &actual) {
+    if (strlen(expected) == actual.size() && strncmp(expected, actual, actual.size()) == 0) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s:%d: %s: expected '%s': actual '%.*s'\n", file, line, message, expected,
+            (int)actual.size(), (const char *)actual);
+}
+
 void TestAsserter::equals_P(const char *file, const int line, const char *message,
         const char *expected, const /* PROGMEM */ char *actual_P) {
     char buffer[strlen_P(actual_P) + 1];

@@ -73,7 +73,7 @@ private:
 class ValueParser : public ErrorReporter {
 public:
     ValueParser(char curSym = '.')
-        : ErrorReporter(), _origin(0), _curSym(curSym), _funcParser(nullptr) {}
+        : ErrorReporter(), _origin(0), _curSym(curSym), _funcParser(nullptr), _commentChar(0) {}
 
     /*
      * Parse |scan| text and return expression |value|.  Undefined
@@ -84,6 +84,12 @@ public:
     Value eval(StrScanner &scan, const SymbolTable *symtab);
 
     /*
+     * Scan |scan| text, and find |delim| letter.  Return
+     * StrScanner::EMPTY if not found.
+     */
+    StrScanner scanExpr(const StrScanner &scan, char delim);
+
+    /*
      * Parse |scan| text and convert character constant to |val|.
      * Error should be checked by |getError()|.
      */
@@ -92,6 +98,8 @@ public:
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     virtual bool isSymbolLetter(char c, bool head = false) const;
     StrScanner readSymbol(StrScanner &scan) const;
+    void setCommentChar(char c) { _commentChar = c; }
+    bool endOfLine(char c) const { return c == 0 || c == ';' || c == _commentChar; }
 
     struct FuncParser : public ErrorReporter {
         virtual Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
@@ -102,13 +110,15 @@ public:
 protected:
     virtual bool numberPrefix(const StrScanner &scan) const;
     virtual Error readNumber(StrScanner &scan, Value &val);
-    Error parseNumber(StrScanner &scan, Value &val, const uint8_t base, const char suffix = 0);
+    Error parseNumber(StrScanner &scan, Value &val, const uint8_t base);
     Error scanNumberEnd(const StrScanner &scan, const uint8_t base, char suffix = 0);
+    Error expectNumberSuffix(StrScanner &scan, char suffux = 0);
 
 private:
     uint32_t _origin;
     const char _curSym;
     FuncParser *_funcParser;
+    char _commentChar;
 
     enum Op : uint8_t {
         OP_NONE,
@@ -177,6 +187,7 @@ public:
     IntelValueParser(char curSym = '$') : ValueParser(curSym) {}
 
 protected:
+    bool numberPrefix(const StrScanner &scan) const override;
     Error readNumber(StrScanner &scan, Value &val) override;
 };
 

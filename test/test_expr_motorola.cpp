@@ -19,7 +19,8 @@
 using namespace libasm;
 using namespace libasm::test;
 
-MotorolaValueParser parser;
+MotorolaValueParser moto_parser;
+ValueParser &parser = moto_parser;
 MotorolaValueFormatter formatter;
 
 static void set_up() {}
@@ -130,6 +131,20 @@ static void test_current_address() {
     E16("(*-table)/2", 0x80,  OK);
     E16(".-table",     0x100, OK);
     E16("(.-table)/2", 0x80,  OK);
+}
+
+static void test_scan() {
+    SCAN('|', "|a+b|c+d",     "");
+    SCAN('|', "a+b|c+d",      "a+b");
+    SCAN('|', "a+(b|c)+d|e",  "a+(b|c)+d");
+    SCAN('|', "a+'|'+d|e",    "a+'|'+d");
+    SCAN(',', "|a+b|c+d",     "");
+    SCAN(',', "','+'\'',abc", "','+'\''");
+    SCAN('x', "0x1230xG",     "0x1230");
+    SCAN('b', "0b1010b0",     "0b1010");
+    SCAN('$', "$1230$X230",   "$1230");
+    SCAN('@', "@1230@8230",   "@1230");
+    SCAN('%', "%1010%2010",   "%1010");
 }
 
 static void test_errors() {
@@ -473,6 +488,7 @@ void run_tests() {
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_current_address);
+    RUN_TEST(test_scan);
     RUN_TEST(test_errors);
     RUN_TEST(test_formatter_8bit);
     RUN_TEST(test_formatter_16bit);

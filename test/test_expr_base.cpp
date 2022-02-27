@@ -19,7 +19,8 @@
 using namespace libasm;
 using namespace libasm::test;
 
-ValueParser parser;
+ValueParser base_parser;
+ValueParser &parser = base_parser;
 ValueFormatter formatter;
 
 static void set_up() {}
@@ -365,6 +366,17 @@ static void test_function() {
     E16("1 + lo( 0x1234 )",  0x35, OK);
     E16("1 + lo (0x1234 )",  0x35, OK);
     E16("1 + lo (0x1234  ",  0x35, MISSING_CLOSING_PAREN);
+}
+
+static void test_scan() {
+    SCAN('|', "|a+b|c+d",     "");
+    SCAN('|', "a+b|c+d",      "a+b");
+    SCAN('|', "a+(b|c)+d|e",  "a+(b|c)+d");
+    SCAN('|', "a+'|'+d|e",    "a+'|'+d");
+    SCAN(',', "|a+b|c+d",     "");
+    SCAN(',', "','+'\'',abc", "','+'\''");
+    SCAN('x', "0x1230xG",     "0x1230");
+    SCAN('b', "0b1010b0",     "0b1010");
 }
 
 static void test_errors() {
@@ -764,6 +776,7 @@ void run_tests() {
     RUN_TEST(test_precedence);
     RUN_TEST(test_current_address);
     RUN_TEST(test_function);
+    RUN_TEST(test_scan);
     RUN_TEST(test_errors);
     RUN_TEST(test_spaces);
     RUN_TEST(test_formatter_8bit);

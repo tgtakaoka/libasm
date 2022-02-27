@@ -34,7 +34,7 @@ public:
     virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
 
-    void setCommentChar(char commentChar) { _commentChar = commentChar; }
+    void setCommentChar(char commentChar) { _parser.setCommentChar(_commentChar = commentChar); }
     ValueParser &parser() const { return _parser; }
     bool endOfLine(char letter) const;
 
@@ -57,8 +57,6 @@ protected:
     bool hasSymbol(const StrScanner &symbol) const;
     uint32_t lookupSymbol(const StrScanner &symbol) const;
 
-    /** Scan |expr| text to find |delim| letter, return an empty if not found. */
-    StrScanner scanExpr(const StrScanner &expr, char delim) const;
     /** Parse |expr| text and get value as unsigned 16 bit. */
     uint16_t parseExpr16(StrScanner &expr, ErrorReporter &error);
     /** Parse |expr| text and get value as unsigned 32 bit. */

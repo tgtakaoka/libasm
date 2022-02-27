@@ -24,6 +24,8 @@
 
 void run_tests();
 
+extern libasm::ValueParser &parser;
+
 namespace libasm {
 namespace test {
 
@@ -42,6 +44,8 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 }  // namespace test
 }  // namespace libasm
 
+#define SCAN(delim, text, expected) \
+    asserter.equals(__FILE__, __LINE__, "scan " text, expected, parser.scanExpr(text, delim))
 #define E8(expr, expected, expected_error) \
     val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint8_t))
 #define E16(expr, expected, expected_error) \

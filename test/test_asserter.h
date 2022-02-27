@@ -23,6 +23,7 @@
 #include "array_memory.h"
 #include "config_base.h"
 #include "error_reporter.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace test {
@@ -40,6 +41,8 @@ public:
             const uint32_t actual);
     void equals(const char *file, const int line, const char *message, const char *expected,
             const char *actual);
+    void equals(const char *file, const int line, const char *message, const char *expected,
+            const StrScanner &actual);
     void equals_P(const char *file, const int line, const char *message, const char *expected,
             const /* PROGMEM */ char *actual_P);
     void equals(const char *file, const int line, const char *message, Error expected,

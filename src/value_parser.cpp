@@ -113,8 +113,7 @@ static uint8_t toNumber(const char c, const uint8_t base) {
     return c - '0';
 }
 
-Error ValueParser::parseNumber(
-        StrScanner &scan, Value &val, const uint8_t base, const char suffix) {
+Error ValueParser::parseNumber(StrScanner &scan, Value &val, const uint8_t base) {
     StrScanner p(scan);
     if (!isValidDigit(*p, base))
         return setError(scan, ILLEGAL_CONSTANT);
@@ -127,16 +126,6 @@ Error ValueParser::parseNumber(
             return setError(scan, OVERFLOW_RANGE);
         ++p;
     }
-    if (isalpha(suffix)) {
-        // Alphabet suffix is mandatory
-        if (toupper(*p++) != suffix)
-            return setError(scan, ILLEGAL_CONSTANT);
-    } else if (suffix) {
-        // Non-laphabet suffix is optional, such as H'xx'
-        p.expect(suffix);
-    }
-    if (isSymbolLetter(*p))
-        return setError(scan, ILLEGAL_CONSTANT);
     scan = p;
     val.setValue(v);
     return setOK();
@@ -148,6 +137,33 @@ Value ValueParser::eval(StrScanner &expr, const SymbolTable *symtab) {
     return parseExpr(expr, stack, symtab);
 }
 
+StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
+    StrScanner p(scan);
+    while (!endOfLine(*p)) {
+        if (numberPrefix(p)) {
+            Value val;
+            if (readNumber(p, val) == OK)
+                continue;
+        }
+        if (p.expect('\'')) {
+            readChar(p);
+            if (isOK() && p.expect('\''))
+                continue;
+        }
+        if (*p == delim)
+            return StrScanner(scan, p);
+        if (*p == '(' || *p == '[') {
+            const char close = (*p++ == '(') ? ')' : ']';
+            const StrScanner atom = scanExpr(p, close);
+            if (atom.size() == 0)
+                break;
+            p += atom.size() + 1;
+        } else {
+            ++p;
+        }
+    }
+    return StrScanner(p, p);
+}
 Value ValueParser::parseExpr(
         StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab) {
     if (stack.full()) {
@@ -182,7 +198,7 @@ Value ValueParser::parseExpr(
 
 Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab) {
     StrScanner p(scan);
-    if (*p.skipSpaces() == 0) {
+    if (endOfLine(*p.skipSpaces())) {
         setError(scan, ILLEGAL_CONSTANT);
         return Value();
     }
@@ -235,13 +251,8 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
     }
 
     Value val;
-    if (numberPrefix(p)) {
-        if (readNumber(p, val) == OK) {
-            scan = p;
-            return val;
-        }
-        return Value();
-    }
+    if (numberPrefix(p))
+        goto read_number;
 
     if (isSymbolLetter(*p, true)) {
         if (_funcParser)
@@ -261,19 +272,24 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
                 return Value();
             }
         }
+        scan = p;
         if (symtab) {
-            scan = p;
             if (symtab->hasSymbol(symbol)) {
                 const uint32_t v = symtab->lookupSymbol(symbol);
                 return Value().setValue(v);
             }
-            return Value();
         }
+        return Value();
     }
 
+read_number:
     if (readNumber(p, val) == OK) {
-        scan = p;
-        return val;
+        if (isSymbolLetter(*p)) {
+            setError(ILLEGAL_CONSTANT);
+        } else {
+            scan = p;
+            return val;
+        }
     }
 
     return Value();
@@ -289,7 +305,7 @@ Value ValueParser::readCharacterConstant(StrScanner &scan) {
 // Operator precedence (larger value means higher precedence).
 // The same order of C/C++ language.
 ValueParser::Operator ValueParser::readOperator(StrScanner &scan) {
-    if (*scan.skipSpaces() == 0)
+    if (endOfLine(*scan.skipSpaces()))
         return Operator(OP_NONE, 0);
     const char c = *scan++;
     switch (c) {
@@ -411,73 +427,116 @@ Error ValueParser::scanNumberEnd(const StrScanner &scan, const uint8_t base, cha
     StrScanner p(scan);
     if (suffix == 'B') {
         // Check whether intel binary or C-style binary
-        if (*p++ == '0' && toupper(*p++) == 'B' && (*p == '0' || *p == '1'))
+        if (*p == '0' && toupper(*++p) == 'B' && (*++p == '0' || *p == '1'))
             return ILLEGAL_CONSTANT;  // expect intel but found C-style
         p = scan;
     }
-    p.trimStart([base](char c) { return isValidDigit(c, base); });
-    if (suffix && toupper(*p) != suffix)
-        return ILLEGAL_CONSTANT;
-    return OK;
+    if (isValidDigit(*p, base)) {
+        p.trimStart([base](char c) { return isValidDigit(c, base); });
+        if (suffix == 0)
+            return OK;
+        if (toupper(*p) == suffix)
+            return OK;
+    }
+    return ILLEGAL_CONSTANT;
 }
 
 bool ValueParser::numberPrefix(const StrScanner &scan) const {
-    return isdigit(*scan);
+    StrScanner p(scan);
+    return p.expect('0') && (p.iexpect('X') || p.iexpect('B'));
+}
+
+Error ValueParser::expectNumberSuffix(StrScanner &scan, char suffix) {
+    if (getError())
+        return getError();
+    StrScanner p(scan);
+    if (isalpha(suffix)) {
+        // Alphabet suffix is mandatory
+        if (toupper(*p++) != suffix)
+            return setError(scan, ILLEGAL_CONSTANT);
+    } else if (suffix) {
+        // Non-alphabet suffix is optional, such as H'xx'
+        p.expect(suffix);
+    }
+    scan = p;
+    return OK;
 }
 
 Error ValueParser::readNumber(StrScanner &scan, Value &val) {
-    const StrScanner save(scan);
-    if (scan.expect('0')) {
-        const char c = toupper(*scan);
-        if (isoctal(c) && scanNumberEnd(scan, 8) == OK)
-            return parseNumber(scan, val, 8);
-        ++scan;
-        if (c == 'X' && scanNumberEnd(scan, 16) == OK)
-            return parseNumber(scan, val, 16);
-        if (c == 'B' && scanNumberEnd(scan, 2) == OK)
-            return parseNumber(scan, val, 2);
-        scan = save;
+    StrScanner p(scan);
+    uint8_t base = 0;
+    if (p.expect('0')) {
+        if (isoctal(*p)) {
+            if (scanNumberEnd(p, 8) == OK)
+                base = 8;
+        } else if (p.iexpect('X')) {
+            if (scanNumberEnd(p, 16) == OK)
+                base = 16;
+        } else if (p.iexpect('B')) {
+            if (scanNumberEnd(p, 2) == OK)
+                base = 2;
+        } else {
+            p = scan;
+        }
     }
-    if (isdigit(*scan) && scanNumberEnd(scan, 10) == OK)
-        return parseNumber(scan, val, 10);
-    return setError(scan, ILLEGAL_CONSTANT);
+    if (base == 0 && isdigit(*p) && scanNumberEnd(p, 10) == OK)
+        base = 10;
+    if (base == 0)
+        setError(scan, ILLEGAL_CONSTANT);
+    parseNumber(p, val, base);
+    return expectNumberSuffix(scan = p);
 }
-
 
 bool MotorolaValueParser::numberPrefix(const StrScanner &scan) const {
     const char c = *scan;
-    if (c == '$' || c == '@' || c == '%')
-        return true;
-    return ValueParser::numberPrefix(scan);
+    return c == '$' || c == '@' || c == '%' || ValueParser::numberPrefix(scan);
 }
 
 Error MotorolaValueParser::readNumber(StrScanner &scan, Value &val) {
-    const StrScanner save(scan);
-    const char c = *scan++;
-    if (c == '$' && scanNumberEnd(scan, 16) == OK)
-        return parseNumber(scan, val, 16);
-    if (c == '@' && scanNumberEnd(scan, 8) == OK)
-        return parseNumber(scan, val, 8);
-    if (c == '%' && scanNumberEnd(scan, 2) == OK)
-        return parseNumber(scan, val, 2);
-    scan = save;
+    StrScanner p(scan);
+    uint8_t base = 0;
+    if (p.expect('$')) {
+        if (scanNumberEnd(p, 16) == OK)
+            base = 16;
+    } else if (p.expect('@')) {
+        if (scanNumberEnd(p, 8) == OK)
+            base = 8;
+    } else if (p.expect('%')) {
+        if (scanNumberEnd(p, 2) == OK)
+            base = 2;
+    }
+    if (base) {
+        parseNumber(p, val, base);
+        return expectNumberSuffix(scan = p);
+    }
     return ValueParser::readNumber(scan, val);
 }
 
+bool IntelValueParser::numberPrefix(const StrScanner &scan) const {
+    return isdigit(*scan) || ValueParser::numberPrefix(scan);
+}
+
 Error IntelValueParser::readNumber(StrScanner &scan, Value &val) {
-    if (scanNumberEnd(scan, 16, 'H') == OK)
-        return parseNumber(scan, val, 16, 'H');
-    if (scanNumberEnd(scan, 8, 'O') == OK)
-        return parseNumber(scan, val, 8, 'O');
-    if (scanNumberEnd(scan, 2, 'B') == OK)
-        return parseNumber(scan, val, 2, 'B');
+    uint8_t base = 0;
+    char suffix = 0;
+    if (scanNumberEnd(scan, 16, suffix = 'H') == OK) {
+        base = 16;
+    } else if (scanNumberEnd(scan, 8, suffix = 'O') == OK) {
+        base = 8;
+    } else if (scanNumberEnd(scan, 2, suffix = 'B') == OK) {
+        base = 2;
+    }
+    if (base) {
+        parseNumber(scan, val, base);
+        return expectNumberSuffix(scan, suffix);
+    }
     return ValueParser::readNumber(scan, val);
 }
 
 bool NationalValueParser::isSymbolLetter(char c, bool head) const {
     if (head && c == '$')
         return true;
-    return ValueParser::isSymbolLetter(c, head);
+    return IntelValueParser::isSymbolLetter(c, head);
 }
 
 bool NationalValueParser::numberPrefix(const StrScanner &scan) const {
@@ -485,25 +544,32 @@ bool NationalValueParser::numberPrefix(const StrScanner &scan) const {
     const char q = scan[1];
     if (q == '\'')
         return c == 'H' || c == 'X' || c == 'D' || c == 'O' || c == 'Q' || c == 'B';
-    return ValueParser::numberPrefix(scan);
+    return IntelValueParser::numberPrefix(scan);
 }
 
 Error NationalValueParser::readNumber(StrScanner &scan, Value &val) {
-    const StrScanner save(scan);
-    const char c = toupper(*scan++);
-    const char q = *scan++;
-    if (q == '\'') {
-        if ((c == 'H' || c == 'X') && scanNumberEnd(scan, 16) == OK)
-            return parseNumber(scan, val, 16, '\'');
-        if (c == 'D' && scanNumberEnd(scan, 10) == OK)
-            return parseNumber(scan, val, 10, '\'');
-        if ((c == 'O' || c == 'Q') && scanNumberEnd(scan, 8) == OK)
-            return parseNumber(scan, val, 8, '\'');
-        if (c == 'B' && scanNumberEnd(scan, 2) == OK)
-            return parseNumber(scan, val, 2, '\'');
+    StrScanner p(scan);
+    uint8_t base = 0;
+    constexpr char quote = '\'';
+    if ((p.iexpect('X') || p.iexpect('H')) && p.expect(quote)) {
+        if (scanNumberEnd(p, 16) == OK)
+            base = 16;
+    } else if (p.iexpect('D') && p.expect(quote)) {
+        if (scanNumberEnd(p, 10) == OK)
+            base = 10;
+    } else if ((p.iexpect('O') || p.iexpect('Q')) && p.expect(quote)) {
+        if (scanNumberEnd(p, 8) == OK)
+            base = 8;
+    } else if (p.iexpect('B') && p.expect(quote)) {
+        if (scanNumberEnd(p, 2) == OK)
+            base = 2;
+    }
+
+    if (base) {
+        parseNumber(p, val, base);
+        return expectNumberSuffix(scan = p, quote);
     }
     // TODO: Support Decimal(0[fFlL]) and Hexadecimal([fFlL]'/0[yYzZ]) floating ponit constant
-    scan = save;
     return IntelValueParser::readNumber(scan, val);
 }
 

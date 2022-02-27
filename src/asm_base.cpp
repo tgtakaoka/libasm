@@ -62,28 +62,6 @@ uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorReporter &error) {
     return value.getUnsigned();
 }
 
-StrScanner Assembler::scanExpr(const StrScanner &expr, char delim) const {
-    StrScanner p(expr);
-    while (!endOfLine(*p)) {
-        if (*p == delim)
-            return StrScanner(expr, p);
-        if (p.expect('\'')) {
-            _parser.readChar(p);
-            if (!p.expect('\''))
-                break;
-        } else if (*p == '(' || *p == '[') {
-            const char close = (*p++ == '(') ? ')' : ']';
-            const StrScanner atom = scanExpr(p, close);
-            if (atom.size() == 0)
-                break;
-            p += atom.size() + 1;
-        } else {
-            ++p;
-        }
-    }
-    return StrScanner::EMPTY;
-}
-
 }  // namespace libasm
 
 // Local Variables:
