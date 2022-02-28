@@ -157,6 +157,7 @@ static void test_immediate() {
     TEST("AND #$90",  0xA4, 0x90);
     TEST("BIT #$90",  0xA5, 0x90);
     TEST("LDA #$90",  0xA6, 0x90);
+    ERRT("STA #$90",  OPERAND_NOT_ALLOWED);
     TEST("EOR #$90",  0xA8, 0x90);
     TEST("ADC #-1",   0xA9, 0xFF);
     TEST("ORA #255",  0xAA, 0xFF);
@@ -166,6 +167,11 @@ static void test_immediate() {
 
     TEST("CPX #$90", 0xA3, 0x90);
     TEST("LDX #$90", 0xAE, 0x90);
+    ERRT("STX #$90", OPERAND_NOT_ALLOWED);
+
+    ERRT("BSR #$90", OPERAND_NOT_ALLOWED);
+    ERRT("JSR #$90", OPERAND_NOT_ALLOWED);
+    ERRT("JMP #$90", OPERAND_NOT_ALLOWED);
 
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");

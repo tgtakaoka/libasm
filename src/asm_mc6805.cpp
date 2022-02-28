@@ -93,46 +93,90 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
 }
 
 Error AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + insn.length() + 1;
+    const Config::uintptr_t base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     if (checkAddressRange(target))
         return getError();
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
         return setError(op, OPERAND_TOO_FAR);
-    insn.emitByte(static_cast<uint8_t>(delta));
+    insn.emitOperand8(delta);
     return OK;
 }
 
 Error AsmMc6805::emitBitNumber(InsnMc6805 &insn, const Operand &op) {
     const uint8_t imm = 1 << op.val16;
     const bool aim = (insn.opCode() & 0xF) == 1;
-    insn.emitByte(aim ? ~imm : imm);
+    insn.emitOperand8(aim ? ~imm : imm);
     return OK;
 }
 
 Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
+    case M_GEN:
+        insn.setOpCode(insn.opCode() & 0x0F);
+        switch (op.mode) {
+        case M_IMM:
+            insn.embed(0xA0);
+            goto imm;
+        case M_DIR:
+        case M_BNO:
+            insn.embed(0xB0);
+            goto dir;
+        case M_EXT:
+            insn.embed(0xC0);
+            goto ext;
+        case M_IX2:
+            insn.embed(0xD0);
+            goto ix2;
+        case M_IDX:
+            insn.embed(0xE0);
+            goto idx;
+        default: // M_IX0
+            insn.embed(0xF0);
+            break;
+        }
+        return OK;
+    case M_MEM:
+        insn.setOpCode(insn.opCode() & 0x0F);
+        switch (op.mode) {
+        case M_DIR:
+        case M_BNO:
+            insn.embed(0x30);
+            goto dir;
+        case M_IDX:
+            insn.embed(0x60);
+            goto idx;
+        default: // M_IX0
+            insn.embed(0x70);
+            break;
+        }
+        return OK;
     case M_DIR:
+    dir:
     case M_IDX:
+    idx:
         if (op.val16 >= 256)
             return setError(op, OVERFLOW_RANGE);
-        insn.emitByte(static_cast<uint8_t>(op.val16));
+        insn.emitOperand8(op.val16);
         return OK;
     case M_IX2:
-        insn.emitUint16(op.val16);
+    ix2:
+        insn.emitOperand16(op.val16);
         return OK;
     case M_EXT:
+    ext:
         if (checkAddressRange(op.val16))
             return getError();
-        insn.emitUint16(op.val16);
+        insn.emitOperand16(op.val16);
         return OK;
     case M_REL:
         return emitRelative(insn, op);
     case M_IMM:
+    imm:
         if (overflowUint8(op.val16))
             return setError(op, OVERFLOW_RANGE);
-        insn.emitByte(op.val16);
+        insn.emitOperand8(op.val16);
         return OK;
     case M_BNO:  // handled in encode(Insn)
     default:
@@ -169,7 +213,6 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
 
     if (insn.mode1() == M_BNO)
         insn.embed((op1.val16 & 7) << 1);
-    insn.emitInsn();
     if (emitOperand(insn, insn.mode1(), op1))
         goto error;
     if (emitOperand(insn, insn.mode2(), op2))
@@ -179,6 +222,7 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
         insn.reset();
         return getError();
     }
+    insn.emitInsn();
     return getError();
 }
 

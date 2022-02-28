@@ -35,12 +35,14 @@ enum AddrMode : uint8_t {
     M_NO = 0,
     M_DIR = 1,  // Direct page
     M_EXT = 2,  // Extended
-    M_IDX = 3,  // Indexed
+    M_IDX = 3,  // Indexed X with 8-bit offset
     M_REL = 4,  // Relative
     M_IMM = 5,  // Immediate
     M_IX0 = 6,  // Indexed X with no offset
-    M_IX2 = 7,  // Indexed X with 16bit offset
+    M_IX2 = 7,  // Indexed X with 16-bit offset
     M_BNO = 8,  // Bit number in opcode
+    M_GEN = 9,  // Generic: M_IMM/M_DIR/M_EXT/M_IDX/M_IX2/M_IX0
+    M_MEM = 10, // Generic memory, M_DIR/M_IDX/M_IX0
 };
 
 class Entry : public EntryBase<Config> {
@@ -48,16 +50,19 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3) {
+        static constexpr Flags create(
+                AddrMode op1, AddrMode op2, AddrMode op3, bool undef = false) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(op1) << op1_gp) |
                                                (static_cast<uint16_t>(op2) << op2_gp) |
-                                               (static_cast<uint16_t>(op3) << op3_gp))};
+                                               (static_cast<uint16_t>(op3) << op3_gp) |
+                                               (static_cast<uint16_t>(undef ? 1 : 0) << undef_bp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
         AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
         AddrMode mode3() const { return AddrMode((_attr >> op3_gp) & mode_gm); }
+        bool undefined() const { return (_attr & (1 << undef_bp)) != 0; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -72,6 +77,7 @@ private:
     static constexpr int op2_gp = 4;
     static constexpr int op3_gp = 8;
     static constexpr uint8_t mode_gm = 0xF;
+    static constexpr int undef_bp = 15;
 };
 
 }  // namespace mc6805

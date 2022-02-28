@@ -89,6 +89,25 @@ Error DisMc6805::decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &
 }
 
 Error DisMc6805::decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode) {
+    if (mode == M_GEN || mode == M_MEM) {
+        switch (insn.opCode() & 0xF0) {
+        case 0xA0:
+            outHex(out.letter('#'), insn.readByte(memory), 8);
+            return OK;
+        case 0x30:
+        case 0xB0:
+            return decodeDirectPage(memory, insn, out);
+        case 0xC0:
+            return decodeExtended(memory, insn, out);
+        case 0xD0:
+            return decodeIndexed(memory, insn, out, M_IX2);
+        case 0x60:
+        case 0xE0:
+            return decodeIndexed(memory, insn, out, M_IDX);
+        default:
+            return decodeIndexed(memory, insn, out, M_IX0);
+        }
+    }
     switch (mode) {
     case M_DIR:
         return decodeDirectPage(memory, insn, out);
