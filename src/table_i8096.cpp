@@ -97,7 +97,7 @@ static const Entry TABLE_00[] PROGMEM = {
     E1(0x12, TEXT_NOTB,  M_BREG),
     E2(0x80, TEXT_OR,    M_WREG,  M_WAOP),
     E2(0x90, TEXT_ORB,   M_BREG,  M_BAOP),
-    E1(0xCD, TEXT_CLR,   M_UNDEF), // reuse CLR for undefined POP immediate instruction
+    E3(0xCD, TEXT_POP,   M_IMM16, M_NONE,  M_UNDEF), // undefined POP immediate instruction
     E1(0xCC, TEXT_POP,   M_WAOP),
     E0(0xF3, TEXT_POPF),
     E1(0xC8, TEXT_PUSH,  M_WAOP),
@@ -117,9 +117,9 @@ static const Entry TABLE_00[] PROGMEM = {
     E2(0x0C, TEXT_SHRL,  M_LREG,  M_COUNT),
     E1(0x20, TEXT_SJMP,  M_REL11),
     E1(0x00, TEXT_SKIP,  M_BREG),
-    E1(0xC1, TEXT_CLR,   M_UNDEF), // reuse CLR for undefined ST immediate instruction
+    E3(0xC1, TEXT_ST,    M_WREG,  M_IMM16, M_UNDEF), // undefined ST immediate instruction
     E2(0xC0, TEXT_ST,    M_WREG,  M_WAOP),
-    E1(0xC5, TEXT_CLR,   M_UNDEF), // reuse CLR for undefined STB immediate instruction
+    E3(0xC5, TEXT_STB,   M_BREG,  M_IMM8,  M_UNDEF), // undefined STB immediate instruction
     E2(0xC4, TEXT_STB,   M_BREG,  M_BAOP),
     E2(0x68, TEXT_SUB,   M_WREG,  M_WAOP),
     E3(0x48, TEXT_SUB,   M_WREG,  M_WREG,  M_WAOP),
@@ -158,7 +158,7 @@ static const TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
-    if (opr == table)
+    if (opr == table || table == M_UNDEF)
         return true;
     if (opr == M_ADDR)
         return table == M_BREG || table == M_WREG || table == M_LREG || table == M_BAOP ||
@@ -189,6 +189,8 @@ Error TableI8096::searchName(InsnI8096 &insn, const EntryPage *pages, const Entr
                 entry++) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
+            if (insn.src2() == M_UNDEF)
+                return OPERAND_NOT_ALLOWED;
             return OK;
         }
     }
@@ -229,6 +231,8 @@ Error TableI8096::searchOpCode(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
+            if (insn.src2() == M_UNDEF)
+                return UNKNOWN_INSTRUCTION;
             insn.setName_P(entry->name_P());
             return OK;
         }

@@ -64,14 +64,9 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) {
 }
 
 Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
-    static constexpr auto ST = 0xC0;
-    static constexpr auto STB = 0xC4;
-    static constexpr auto POP = 0xCC;
     const bool waop = (mode == M_WAOP);
     switch (op.mode) {
     case M_IMM16:
-        if (insn.opCode() == ST || insn.opCode() == STB || insn.opCode() == POP)
-            return setError(OPERAND_NOT_ALLOWED);
         insn.embedAa(AA_IMM);
         if (waop) {
             insn.emitOperand16(op.val16);

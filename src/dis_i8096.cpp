@@ -188,8 +188,6 @@ Error DisI8096::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (TableI8096.searchOpCode(insn))
         return setError(TableI8096.getError());
-    if (insn.dst() == M_UNDEF)
-        return setError(UNKNOWN_INSTRUCTION);
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (jbx_djnz) {
