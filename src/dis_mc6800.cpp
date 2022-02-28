@@ -80,23 +80,47 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
 }
 
 Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
+    const auto gn = insn.opCode() & 0x30;
     switch (mode) {
     case M_DIR:
+    dir:
         decodeDirectPage(memory, insn, out);
         break;
+    case M_GMEM:
+        if ((insn.opCode() & 0xF0) == 0x60)
+            goto idx;
+        // Fall-through
     case M_EXT:
+    ext:
         decodeExtended(memory, insn, out);
         break;
     case M_IDX:
     case M_IDY:
+    idx:
         outRegister(outDec(out, insn.readByte(memory), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
         break;
     case M_REL:
         decodeRelative(memory, insn, out);
         break;
+    case M_GN8:
+        if (gn == 0x10)
+            goto dir;
+        if (gn == 0x20)
+            goto idx;
+        if (gn == 0x30)
+            goto ext;
+        // Fall-though
     case M_IM8:
         outHex(out.letter('#'), insn.readByte(memory), 8);
         break;
+    case M_GN16:
+        if (gn == 0x10)
+            goto dir;
+        if (gn == 0x20)
+            goto idx;
+        if (gn == 0x30)
+            goto ext;
+        // Fall-though
     case M_IM16:
         outHex(out.letter('#'), insn.readUint16(memory), 16);
         break;

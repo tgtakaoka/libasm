@@ -40,11 +40,14 @@ enum AddrMode : uint8_t {
     M_REL = 4,   // Relative
     M_IM8 = 5,   // 8-bit Immediate
     M_IM16 = 6,  // 16-bit Immediate
+    M_GN8 = 7,   // Generic, M_IM8/M_DIR/M_IDX/M_EXT
+    M_GN16 = 8,  // Generic, M_IM16/M_DIR/M_IDX/M_EXT
+    M_GMEM = 9,  // Generic memory, M_IDX/M_EXT
     // HD6301
-    M_BMM = 7,  // Bit number or Immediate (for disassembler)
-    M_BIT = 8,  // Bit number (for assembler)
+    M_BMM = 10,   // Bit number or Immediate (for disassembler)
+    M_BIT = 11,  // Bit number (for assembler)
     // MC68HC11
-    M_IDY = 9,  // Indexed Y
+    M_IDY = 12,    // Indexed Y
 };
 
 class Entry : public EntryBase<Config> {
@@ -52,16 +55,18 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3) {
+        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3, bool undef = false) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(op1) << op1_gp) |
                                                (static_cast<uint16_t>(op2) << op2_gp) |
-                                               (static_cast<uint16_t>(op3) << op3_gp))};
+                                               (static_cast<uint16_t>(op3) << op3_gp) |
+                                               (static_cast<uint16_t>(undef ? 1 : 0) << undef_bp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
         AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
         AddrMode mode3() const { return AddrMode((_attr >> op3_gp) & mode_gm); }
+        bool undefined() const { return (_attr & (1 << undef_bp)) != 0; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -76,6 +81,7 @@ private:
     static constexpr int op2_gp = 4;
     static constexpr int op3_gp = 8;
     static constexpr uint8_t mode_gm = 0xF;
+    static constexpr int undef_bp = 15;
 };  // namespace mc6800
 
 }  // namespace mc6800

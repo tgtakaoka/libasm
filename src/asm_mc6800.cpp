@@ -68,22 +68,22 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
 }
 
 Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + insn.length() + 1;
+    const Config::uintptr_t base = insn.address() + (insn.length() == 0 ? 2 : insn.length() + 1);
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
         return setError(op, OPERAND_TOO_FAR);
-    insn.emitByte(static_cast<uint8_t>(delta));
+    insn.emitOperand8(delta);
     return OK;
 }
 
 Error AsmMc6800::emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
-    if (mode == M_IM16) {
-        insn.emitUint16(op.val16);
+    if (mode == M_GN16 || mode == M_IM16) {
+        insn.emitOperand16(op.val16);
     } else {
         if (overflowUint8(op.val16))
             return setError(op, OVERFLOW_RANGE);
-        insn.emitByte(static_cast<uint8_t>(op.val16));
+        insn.emitOperand8(op.val16);
     }
     return OK;
 }
@@ -91,21 +91,48 @@ Error AsmMc6800::emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &o
 Error AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
     const uint8_t imm = 1 << op.val16;
     const bool aim = (insn.opCode() & 0xF) == 1;
-    insn.emitByte(aim ? ~imm : imm);
+    insn.emitOperand8(aim ? ~imm : imm);
     return OK;
 }
 
 Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
+    case M_GN8:
+    case M_GN16:
+        if (op.mode == M_DIR || op.mode == M_BIT) {
+            insn.embed(0x10);
+            insn.emitOperand8(op.val16);
+        } else if (op.mode == M_IDX || op.mode == M_IDY) {
+            if (op.val16 >= 256)
+                return setError(op, OVERFLOW_RANGE);
+            insn.embed(0x20);
+            insn.emitOperand8(op.val16);
+        } else if (op.mode == M_EXT) {
+            insn.embed(0x30);
+            insn.emitOperand16(op.val16);
+        } else {
+            emitImmediate(insn, mode, op);
+        }
+        return OK;
+    case M_GMEM:
+        if (op.mode == M_IDX) {
+            if (op.val16 >= 256)
+                return setError(op, OVERFLOW_RANGE);
+            insn.emitOperand8(op.val16);
+        } else {
+            insn.embed(0x70);
+            insn.emitOperand16(op.val16);
+        }
+        return OK;
     case M_DIR:
     case M_IDX:
     case M_IDY:
         if (op.val16 >= 256)
             return setError(op, OVERFLOW_RANGE);
-        insn.emitByte(static_cast<uint8_t>(op.val16));
+        insn.emitOperand8(op.val16);
         return OK;
     case M_EXT:
-        insn.emitUint16(op.val16);
+        insn.emitOperand16(op.val16);
         return OK;
     case M_REL:
         return emitRelative(insn, op);
@@ -147,7 +174,6 @@ Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
     if (TableMc6800.searchName(insn))
         return setError(TableMc6800.getError());
 
-    insn.emitInsn();
     if (emitOperand(insn, insn.mode1(), op1))
         goto error;
     if (emitOperand(insn, insn.mode2(), op2))
@@ -157,6 +183,7 @@ Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
         insn.reset();
         return getError();
     }
+    insn.emitInsn();
     return getError();
 }
 

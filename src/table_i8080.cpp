@@ -163,9 +163,9 @@ Error TableI8080::searchName(InsnI8080 &insn, const EntryPage *pages, const Entr
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    auto flags = entry->flags();
-    auto dst = flags.dstMode();
-    auto src = flags.srcMode();
+    const auto &flags = entry->flags();
+    const auto dst = flags.dstMode();
+    const auto src = flags.srcMode();
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
         mask |= 07;

@@ -30,6 +30,8 @@ namespace mc6800 {
 #define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NO)
 #define E1(_opc, _name, _op1) E3(_opc, _name, _op1, M_NO, M_NO)
 #define E0(_opc, _name) E3(_opc, _name, M_NO, M_NO, M_NO)
+#define U1(_opc, _name, _op1) \
+    { _opc, Entry::Flags::create(_op1, M_NO, M_NO, true), _name }
 
 // clang-format off
 static constexpr Entry MC6800_TABLE[] PROGMEM = {
@@ -103,139 +105,53 @@ static constexpr Entry MC6800_TABLE[] PROGMEM = {
     E0(0x5D, TEXT_TSTB),
     E0(0x4F, TEXT_CLRA),
     E0(0x5F, TEXT_CLRB),
-    E1(0x60, TEXT_NEG,  M_IDX),
-    E1(0x63, TEXT_COM,  M_IDX),
-    E1(0x64, TEXT_LSR,  M_IDX),
-    E1(0x66, TEXT_ROR,  M_IDX),
-    E1(0x67, TEXT_ASR,  M_IDX),
-    E1(0x68, TEXT_ASL,  M_IDX),
-    E1(0x68, TEXT_LSL,  M_IDX),
-    E1(0x69, TEXT_ROL,  M_IDX),
-    E1(0x6A, TEXT_DEC,  M_IDX),
-    E1(0x6C, TEXT_INC,  M_IDX),
-    E1(0x6D, TEXT_TST,  M_IDX),
-    E1(0x6E, TEXT_JMP,  M_IDX),
-    E1(0x6F, TEXT_CLR,  M_IDX),
-    E1(0x70, TEXT_NEG,  M_EXT),
-    E1(0x73, TEXT_COM,  M_EXT),
-    E1(0x74, TEXT_LSR,  M_EXT),
-    E1(0x76, TEXT_ROR,  M_EXT),
-    E1(0x77, TEXT_ASR,  M_EXT),
-    E1(0x78, TEXT_ASL,  M_EXT),
-    E1(0x78, TEXT_LSL,  M_EXT),
-    E1(0x79, TEXT_ROL,  M_EXT),
-    E1(0x7A, TEXT_DEC,  M_EXT),
-    E1(0x7C, TEXT_INC,  M_EXT),
-    E1(0x7D, TEXT_TST,  M_EXT),
-    E1(0x7E, TEXT_JMP,  M_EXT),
-    E1(0x7F, TEXT_CLR,  M_EXT),
-    E1(0x80, TEXT_SUBA, M_IM8),
-    E1(0xC0, TEXT_SUBB, M_IM8),
-    E1(0x81, TEXT_CMPA, M_IM8),
-    E1(0xC1, TEXT_CMPB, M_IM8),
-    E1(0x82, TEXT_SBCA, M_IM8),
-    E1(0xC2, TEXT_SBCB, M_IM8),
-    E1(0x84, TEXT_ANDA, M_IM8),
-    E1(0xC4, TEXT_ANDB, M_IM8),
-    E1(0x85, TEXT_BITA, M_IM8),
-    E1(0xC5, TEXT_BITB, M_IM8),
-    E1(0x86, TEXT_LDAA, M_IM8),
-    E1(0xC6, TEXT_LDAB, M_IM8),
-    E1(0x88, TEXT_EORA, M_IM8),
-    E1(0xC8, TEXT_EORB, M_IM8),
-    E1(0x89, TEXT_ADCA, M_IM8),
-    E1(0xC9, TEXT_ADCB, M_IM8),
-    E1(0x8A, TEXT_ORAA, M_IM8),
-    E1(0xCA, TEXT_ORAB, M_IM8),
-    E1(0x8B, TEXT_ADDA, M_IM8),
-    E1(0xCB, TEXT_ADDB, M_IM8),
-    E1(0x8C, TEXT_CPX,  M_IM16),
+    E1(0x60, TEXT_NEG,  M_GMEM),
+    E1(0x63, TEXT_COM,  M_GMEM),
+    E1(0x64, TEXT_LSR,  M_GMEM),
+    E1(0x66, TEXT_ROR,  M_GMEM),
+    E1(0x67, TEXT_ASR,  M_GMEM),
+    E1(0x68, TEXT_ASL,  M_GMEM),
+    E1(0x68, TEXT_LSL,  M_GMEM),
+    E1(0x69, TEXT_ROL,  M_GMEM),
+    E1(0x6A, TEXT_DEC,  M_GMEM),
+    E1(0x6C, TEXT_INC,  M_GMEM),
+    E1(0x6D, TEXT_TST,  M_GMEM),
+    E1(0x6E, TEXT_JMP,  M_GMEM),
+    E1(0x6F, TEXT_CLR,  M_GMEM),
+    E1(0x80, TEXT_SUBA, M_GN8),
+    E1(0xC0, TEXT_SUBB, M_GN8),
+    E1(0x81, TEXT_CMPA, M_GN8),
+    E1(0xC1, TEXT_CMPB, M_GN8),
+    E1(0x82, TEXT_SBCA, M_GN8),
+    E1(0xC2, TEXT_SBCB, M_GN8),
+    E1(0x84, TEXT_ANDA, M_GN8),
+    E1(0xC4, TEXT_ANDB, M_GN8),
+    E1(0x85, TEXT_BITA, M_GN8),
+    E1(0xC5, TEXT_BITB, M_GN8),
+    E1(0x86, TEXT_LDAA, M_GN8),
+    E1(0xC6, TEXT_LDAB, M_GN8),
+    U1(0x87, TEXT_STAA, M_IM8), // undefined STAA #
+    U1(0xC7, TEXT_STAB, M_IM8), // undefined STAB #
+    E1(0x87, TEXT_STAA, M_GN8),
+    E1(0xC7, TEXT_STAB, M_GN8),
+    E1(0x88, TEXT_EORA, M_GN8),
+    E1(0xC8, TEXT_EORB, M_GN8),
+    E1(0x89, TEXT_ADCA, M_GN8),
+    E1(0xC9, TEXT_ADCB, M_GN8),
+    E1(0x8A, TEXT_ORAA, M_GN8),
+    E1(0xCA, TEXT_ORAB, M_GN8),
+    E1(0x8B, TEXT_ADDA, M_GN8),
+    E1(0xCB, TEXT_ADDB, M_GN8),
+    E1(0x8C, TEXT_CPX,  M_GN16),
     E1(0x8D, TEXT_BSR,  M_REL),
-    E1(0x8E, TEXT_LDS,  M_IM16),
-    E1(0x90, TEXT_SUBA, M_DIR),
-    E1(0xD0, TEXT_SUBB, M_DIR),
-    E1(0x91, TEXT_CMPA, M_DIR),
-    E1(0xD1, TEXT_CMPB, M_DIR),
-    E1(0x92, TEXT_SBCA, M_DIR),
-    E1(0xD2, TEXT_SBCB, M_DIR),
-    E1(0x94, TEXT_ANDA, M_DIR),
-    E1(0xD4, TEXT_ANDB, M_DIR),
-    E1(0x95, TEXT_BITA, M_DIR),
-    E1(0xD5, TEXT_BITB, M_DIR),
-    E1(0x96, TEXT_LDAA, M_DIR),
-    E1(0xD6, TEXT_LDAB, M_DIR),
-    E1(0x97, TEXT_STAA, M_DIR),
-    E1(0xD7, TEXT_STAB, M_DIR),
-    E1(0x98, TEXT_EORA, M_DIR),
-    E1(0xD8, TEXT_EORB, M_DIR),
-    E1(0x99, TEXT_ADCA, M_DIR),
-    E1(0xD9, TEXT_ADCB, M_DIR),
-    E1(0x9A, TEXT_ORAA, M_DIR),
-    E1(0xDA, TEXT_ORAB, M_DIR),
-    E1(0x9B, TEXT_ADDA, M_DIR),
-    E1(0xDB, TEXT_ADDB, M_DIR),
-    E1(0x9C, TEXT_CPX,  M_DIR),
-    E1(0x9E, TEXT_LDS,  M_DIR),
-    E1(0x9F, TEXT_STS,  M_DIR),
-    E1(0xA0, TEXT_SUBA, M_IDX),
-    E1(0xE0, TEXT_SUBB, M_IDX),
-    E1(0xA1, TEXT_CMPA, M_IDX),
-    E1(0xE1, TEXT_CMPB, M_IDX),
-    E1(0xA2, TEXT_SBCA, M_IDX),
-    E1(0xE2, TEXT_SBCB, M_IDX),
-    E1(0xA4, TEXT_ANDA, M_IDX),
-    E1(0xE4, TEXT_ANDB, M_IDX),
-    E1(0xA5, TEXT_BITA, M_IDX),
-    E1(0xE5, TEXT_BITB, M_IDX),
-    E1(0xA6, TEXT_LDAA, M_IDX),
-    E1(0xE6, TEXT_LDAB, M_IDX),
-    E1(0xA7, TEXT_STAA, M_IDX),
-    E1(0xE7, TEXT_STAB, M_IDX),
-    E1(0xA8, TEXT_EORA, M_IDX),
-    E1(0xE8, TEXT_EORB, M_IDX),
-    E1(0xA9, TEXT_ADCA, M_IDX),
-    E1(0xE9, TEXT_ADCB, M_IDX),
-    E1(0xAA, TEXT_ORAA, M_IDX),
-    E1(0xEA, TEXT_ORAB, M_IDX),
-    E1(0xAB, TEXT_ADDA, M_IDX),
-    E1(0xEB, TEXT_ADDB, M_IDX),
-    E1(0xAC, TEXT_CPX,  M_IDX),
+    E1(0x8E, TEXT_LDS,  M_GN16),
+    U1(0x8F, TEXT_STS,  M_IM16), // undefined STS #
+    E1(0x8F, TEXT_STS,  M_GN16),
     E1(0xAD, TEXT_JSR,  M_IDX),
-    E1(0xAE, TEXT_LDS,  M_IDX),
-    E1(0xAF, TEXT_STS,  M_IDX),
-    E1(0xB0, TEXT_SUBA, M_EXT),
-    E1(0xF0, TEXT_SUBB, M_EXT),
-    E1(0xB1, TEXT_CMPA, M_EXT),
-    E1(0xF1, TEXT_CMPB, M_EXT),
-    E1(0xB2, TEXT_SBCA, M_EXT),
-    E1(0xF2, TEXT_SBCB, M_EXT),
-    E1(0xB4, TEXT_ANDA, M_EXT),
-    E1(0xF4, TEXT_ANDB, M_EXT),
-    E1(0xB5, TEXT_BITA, M_EXT),
-    E1(0xF5, TEXT_BITB, M_EXT),
-    E1(0xB6, TEXT_LDAA, M_EXT),
-    E1(0xF6, TEXT_LDAB, M_EXT),
-    E1(0xB7, TEXT_STAA, M_EXT),
-    E1(0xF7, TEXT_STAB, M_EXT),
-    E1(0xB8, TEXT_EORA, M_EXT),
-    E1(0xF8, TEXT_EORB, M_EXT),
-    E1(0xB9, TEXT_ADCA, M_EXT),
-    E1(0xF9, TEXT_ADCB, M_EXT),
-    E1(0xBA, TEXT_ORAA, M_EXT),
-    E1(0xFA, TEXT_ORAB, M_EXT),
-    E1(0xBB, TEXT_ADDA, M_EXT),
-    E1(0xFB, TEXT_ADDB, M_EXT),
-    E1(0xBC, TEXT_CPX,  M_EXT),
     E1(0xBD, TEXT_JSR,  M_EXT),
-    E1(0xBE, TEXT_LDS,  M_EXT),
-    E1(0xBF, TEXT_STS,  M_EXT),
-    E1(0xCE, TEXT_LDX,  M_IM16),
-    E1(0xDE, TEXT_LDX,  M_DIR),
-    E1(0xDF, TEXT_STX,  M_DIR),
-    E1(0xEE, TEXT_LDX,  M_IDX),
-    E1(0xEF, TEXT_STX,  M_IDX),
-    E1(0xFE, TEXT_LDX,  M_EXT),
-    E1(0xFF, TEXT_STX,  M_EXT),
+    E1(0xCE, TEXT_LDX,  M_GN16),
+    U1(0xCF, TEXT_STX,  M_IM16), // undefined STX #
+    E1(0xCF, TEXT_STX,  M_GN16),
 };
 
 static constexpr Entry MC6801_TABLE[] PROGMEM = {
@@ -247,22 +163,12 @@ static constexpr Entry MC6801_TABLE[] PROGMEM = {
     E0(0x3A, TEXT_ABX),
     E0(0x3C, TEXT_PSHX),
     E0(0x3D, TEXT_MUL),
-    E1(0x83, TEXT_SUBD, M_IM16),
-    E1(0x93, TEXT_SUBD, M_DIR),
+    E1(0x83, TEXT_SUBD, M_GN16),
     E1(0x9D, TEXT_JSR,  M_DIR),
-    E1(0xA3, TEXT_SUBD, M_IDX),
-    E1(0xB3, TEXT_SUBD, M_EXT),
-    E1(0xC3, TEXT_ADDD, M_IM16),
-    E1(0xCC, TEXT_LDD,  M_IM16),
-    E1(0xD3, TEXT_ADDD, M_DIR),
-    E1(0xDC, TEXT_LDD,  M_DIR),
-    E1(0xDD, TEXT_STD,  M_DIR),
-    E1(0xE3, TEXT_ADDD, M_IDX),
-    E1(0xEC, TEXT_LDD,  M_IDX),
-    E1(0xED, TEXT_STD,  M_IDX),
-    E1(0xF3, TEXT_ADDD, M_EXT),
-    E1(0xFC, TEXT_LDD,  M_EXT),
-    E1(0xFD, TEXT_STD,  M_EXT),
+    E1(0xC3, TEXT_ADDD, M_GN16),
+    E1(0xCC, TEXT_LDD,  M_GN16),
+    U1(0xCD, TEXT_STD,  M_IM16), // undefined STD #
+    E1(0xCD, TEXT_STD,  M_GN16),
 };
 
 static constexpr Entry HD6301_TABLE[] PROGMEM = {
@@ -370,11 +276,8 @@ static constexpr Entry MC68HC11_P18[] PROGMEM = {
 };
 
 static constexpr Entry MC68HC11_P1A[] PROGMEM = {
-    E1(0x83, TEXT_CPD,   M_IM16),
-    E1(0x93, TEXT_CPD,   M_DIR),
-    E1(0xA3, TEXT_CPD,   M_IDX),
+    E1(0x83, TEXT_CPD,   M_GN16),
     E1(0xAC, TEXT_CPY,   M_IDX),
-    E1(0xB3, TEXT_CPD,   M_EXT),
     E1(0xEE, TEXT_LDY,   M_IDX),
     E1(0xEF, TEXT_STY,   M_IDX),
 };
@@ -424,9 +327,9 @@ static constexpr TableMc6800::EntryPage HD6301_PAGES[] PROGMEM = {
 };
 
 static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
+        {PREFIX_P00, ARRAY_RANGE(MC68HC11_P00)},
         {PREFIX_P00, ARRAY_RANGE(MC6801_TABLE)},
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE)},
-        {PREFIX_P00, ARRAY_RANGE(MC68HC11_P00)},
         {PREFIX_P18, ARRAY_RANGE(MC68HC11_P18)},
         {PREFIX_P1A, ARRAY_RANGE(MC68HC11_P1A)},
         {PREFIX_PCD, ARRAY_RANGE(MC68HC11_PCD)},
@@ -435,6 +338,10 @@ static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
 static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
+    if (table == M_GN8 || table == M_GN16)
+        return opr == M_EXT || opr == M_DIR || opr == M_BIT || opr == M_IM16 || opr == M_IDX;
+    if (table == M_GMEM)
+        return opr == M_EXT || opr == M_DIR || opr == M_BIT || opr == M_IDX;
     if (opr == M_EXT)
         return table == M_REL;
     if (opr == M_DIR)
@@ -462,10 +369,25 @@ Error TableMc6800::searchName(
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
+            if (insn.undefined())
+                return OPERAND_NOT_ALLOWED;
             return OK;
         }
     }
     return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+}
+
+static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
+    const auto &flags = entry->flags();
+    const auto mode1 = flags.mode1();
+    if (mode1 == M_GN8 || mode1 == M_GN16)
+        return opCode & ~0x30;
+    if (mode1 == M_GMEM || flags.mode2() == M_GMEM) {
+        const auto opc = opCode & 0xF0;
+        if (opc == 0x60 || opc == 0x70)
+            return opCode & ~0x10;
+    }
+    return opCode;
 }
 
 const Entry *TableMc6800::searchOpCode(
@@ -475,10 +397,12 @@ const Entry *TableMc6800::searchOpCode(
         if (insn.prefix() != prefix)
             continue;
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end());
+                insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
+            if (insn.undefined())
+                return nullptr;
             return entry;
         }
     }

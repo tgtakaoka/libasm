@@ -399,6 +399,7 @@ static void test_immediate() {
     TEST("ANDA #$90",  0x84, 0x90);
     TEST("BITA #$90",  0x85, 0x90);
     TEST("LDAA #$90",  0x86, 0x90);
+    ERRT("STAA #$90",  OPERAND_NOT_ALLOWED);
     TEST("EORA #$90",  0x88, 0x90);
     TEST("ADCA #-1",   0x89, 0xFF);
     TEST("ORAA #255",  0x8A, 0xFF);
@@ -412,6 +413,7 @@ static void test_immediate() {
     TEST("ANDB #$90", 0xC4, 0x90);
     TEST("BITB #$90", 0xC5, 0x90);
     TEST("LDAB #$90", 0xC6, 0x90);
+    ERRT("STAB #$90", OPERAND_NOT_ALLOWED);
     TEST("EORB #$90", 0xC8, 0x90);
     TEST("ADCB #$90", 0xC9, 0x90);
     TEST("ORAB #$90", 0xCA, 0x90);
@@ -419,17 +421,21 @@ static void test_immediate() {
 
     TEST("CPX #$90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX #$90A0", 0xCE, 0x90, 0xA0);
+    ERRT("STX #$90A0", OPERAND_NOT_ALLOWED);
     TEST("LDS #$90A0", 0x8E, 0x90, 0xA0);
+    ERRT("STS #$90A0", OPERAND_NOT_ALLOWED);
 
     if (m6801()) {
         // MC6801
         TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
         TEST("ADDD #$90A0", 0xC3, 0x90, 0xA0);
         TEST("LDD  #$90A0", 0xCC, 0x90, 0xA0);
+        ERRT("STD  #$90A0", OPERAND_NOT_ALLOWED);
     } else {
         ERRT("SUBD #$90A0", UNKNOWN_INSTRUCTION);
         ERRT("ADDD #$90A0", UNKNOWN_INSTRUCTION);
         ERRT("LDD  #$90A0", UNKNOWN_INSTRUCTION);
+        ERRT("STD  #$90A0", UNKNOWN_INSTRUCTION);
     }
 
     if (m68hc11()) {
@@ -437,10 +443,12 @@ static void test_immediate() {
         TEST("CPY #$90A0", 0x18, 0x8C, 0x90, 0xA0);
         TEST("LDY #$90A0", 0x18, 0xCE, 0x90, 0xA0);
         TEST("CPD #$90A0", 0x1A, 0x83, 0x90, 0xA0);
+        ERRT("STY #$90A0", OPERAND_NOT_ALLOWED);
     } else {
         ERRT("CPY #$90A0", UNKNOWN_INSTRUCTION);
         ERRT("LDY #$90A0", UNKNOWN_INSTRUCTION);
         ERRT("CPD #$90A0", UNKNOWN_INSTRUCTION);
+        ERRT("STY #$90A0", UNKNOWN_INSTRUCTION);
     }
 
     symtab.intern(0x90, "dir90");
