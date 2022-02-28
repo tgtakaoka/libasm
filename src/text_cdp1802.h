@@ -26,8 +26,9 @@ namespace cdp1802 {
 static const char TEXT_CPU_LIST[] PROGMEM  = "CDP1802, CDP1804, CDP1804A";
 static const char TEXT_CPU_1802[] PROGMEM  = "1802";
 static const char TEXT_CPU_1804[] PROGMEM  = "1804";
-static constexpr const char* TEXT_CPU_CDP  = &TEXT_CPU_LIST[0];
-static constexpr const char* TEXT_CPU_1804A = &TEXT_CPU_LIST[21];
+static constexpr const char *TEXT_CPU_CDP  = &TEXT_CPU_LIST[0];
+static constexpr const char *TEXT_CPU_1804A = &TEXT_CPU_LIST[21];
+static constexpr const char *TEXT_null = &TEXT_CPU_1802[4];
 
 // CDP1802
 static const char TEXT_ADC[]  PROGMEM = "ADC";

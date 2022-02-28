@@ -64,7 +64,7 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E(0xB8, TEXT_DLD,  DISP),
     E(0xC4, TEXT_LDI,  IMM8),
     E(0xC0, TEXT_LD,   INDX),
-    E(0xCC, TEXT_NOP,  UNDEF),        // Use NOP as dummy name
+    E(0xCC, TEXT_null, UNDEF),  // undefined ST immediate instruction
     E(0xC8, TEXT_ST,   INDX),
     E(0xD4, TEXT_ANI,  IMM8),
     E(0xD0, TEXT_AND,  INDX),

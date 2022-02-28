@@ -61,7 +61,7 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0x50, TEXT_STR,  REGN),
     E(0x60, TEXT_IRX,  NONE),
     E(0x60, TEXT_OUT,  IOAD),
-    E(0x68, TEXT_IDL,  UNDF),   // reuse IDL for undefined instruction
+    E(0x68, TEXT_null, UNDF),   // undefined
     E(0x68, TEXT_INP,  IOAD),
     E(0x70, TEXT_RET,  NONE),
     E(0x71, TEXT_DIS,  NONE),
