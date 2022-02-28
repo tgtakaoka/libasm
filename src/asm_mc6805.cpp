@@ -46,11 +46,11 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
     }
 
     const bool immediate = p.expect('#');
-    op.size = SZ_NONE;
+    op.size = 0;
     if (p.expect('<')) {
-        op.size = SZ_BYTE;
+        op.size = 8;
     } else if (p.expect('>')) {
-        op.size = SZ_WORD;
+        op.size = 16;
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
@@ -65,9 +65,9 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
     if (a.skipSpaces().expect(',')) {
         const RegName reg = RegMc6805::parseRegName(a.skipSpaces());
         if (reg == REG_X) {
-            if (op.size == SZ_BYTE) {
+            if (op.size == 8) {
                 op.mode = M_IDX;
-            } else if (op.size == SZ_WORD) {
+            } else if (op.size == 16) {
                 op.mode = M_IX2;
             } else if (op.val16 == 0) {
                 op.mode = M_IX0;
@@ -78,7 +78,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
             return OK;
         }
     }
-    if (op.size == SZ_NONE) {
+    if (op.size == 0) {
         if (op.val16 < 8)
             op.mode = M_BNO;
         else if (op.val16 < 0x100)
@@ -86,7 +86,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
         else
             op.mode = M_EXT;
     } else {
-        op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
+        op.mode = (op.size == 8) ? M_DIR : M_EXT;
     }
     scan = p;
     return OK;
@@ -101,17 +101,6 @@ Error AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
     if (overflowRel8(delta))
         return setError(op, OPERAND_TOO_FAR);
     insn.emitByte(static_cast<uint8_t>(delta));
-    return OK;
-}
-
-Error AsmMc6805::emitImmediate(InsnMc6805 &insn, const Operand &op) {
-    if (insn.size() == SZ_BYTE) {
-        if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
-        insn.emitByte(static_cast<uint8_t>(op.val16));
-    }
-    if (insn.size() == SZ_WORD)
-        insn.emitUint16(op.val16);
     return OK;
 }
 
@@ -141,7 +130,10 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
     case M_REL:
         return emitRelative(insn, op);
     case M_IMM:
-        return emitImmediate(insn, op);
+        if (overflowUint8(op.val16))
+            return setError(op, OVERFLOW_RANGE);
+        insn.emitByte(op.val16);
+        return OK;
     case M_BNO:  // handled in encode(Insn)
     default:
         return OK;

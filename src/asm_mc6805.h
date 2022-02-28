@@ -41,15 +41,14 @@ private:
 
     struct Operand : public ErrorReporter {
         AddrMode mode;
-        OprSize size;
+        int8_t size;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(M_NO), size(SZ_NONE), val16(0) {}
+        Operand() : ErrorReporter(), mode(M_NO), size(0), val16(0) {}
     };
 
     Error checkAddressRange(Config::uintptr_t addr);
     Error parseOperand(StrScanner &scan, Operand &op);
     Error emitRelative(InsnMc6805 &insn, const Operand &op);
-    Error emitImmediate(InsnMc6805 &insn, const Operand &op);
     Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
     Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
     Error encode(StrScanner &scan, Insn &insn) override;

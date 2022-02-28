@@ -48,7 +48,6 @@ private:
     Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
-    Error decodeImmediate(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };

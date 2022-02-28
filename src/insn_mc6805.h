@@ -31,9 +31,8 @@ public:
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
-    OprSize size() const { return flags().size(); }
     void setAddrMode(const AddrMode op1, const AddrMode op2, const AddrMode op3) {
-        setFlags(Entry::Flags::create(op1, op2, op3, SZ_NONE));
+        setFlags(Entry::Flags::create(op1, op2, op3));
     }
 
     void emitInsn() { emitByte(opCode()); }

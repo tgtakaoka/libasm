@@ -88,16 +88,6 @@ Error DisMc6805::decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &
     return setError(insn);
 }
 
-Error DisMc6805::decodeImmediate(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
-    out.letter('#');
-    if (insn.size() == SZ_BYTE) {
-        outHex(out, insn.readByte(memory), 8);
-    } else {  // SZ_WORD
-        outHex(out, insn.readUint16(memory), 16);
-    }
-    return setError(insn);
-}
-
 Error DisMc6805::decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_DIR:
@@ -111,7 +101,8 @@ Error DisMc6805::decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &o
     case M_REL:
         return decodeRelative(memory, insn, out);
     case M_IMM:
-        return decodeImmediate(memory, insn, out);
+        outHex(out.letter('#'), insn.readByte(memory), 8);
+        return OK;
     case M_BNO:
         outHex(out, (insn.opCode() >> 1) & 7, 3);
         return OK;
