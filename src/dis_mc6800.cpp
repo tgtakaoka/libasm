@@ -33,7 +33,7 @@ Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer
     } else {
         outAbsAddr(out, dir, 8);
     }
-    return setError(insn);
+    return OK;
 }
 
 Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
@@ -46,14 +46,7 @@ Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &
             out.letter('>');
         outAbsAddr(out, addr);
     }
-    return setError(insn);
-}
-
-Error DisMc6800::decodeIndexed(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
-    const uint8_t disp8 = insn.readByte(memory);
-    outDec(out, disp8, 8).letter(',');
-    outRegister(out, mode == M_IDY ? REG_Y : REG_X);
-    return setError(insn);
+    return OK;
 }
 
 Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
@@ -61,17 +54,7 @@ Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &
     const Config::uintptr_t base = insn.address() + insn.length();
     const Config::uintptr_t target = base + delta8;
     outRelAddr(out, target, insn.address(), 8);
-    return setError(insn);
-}
-
-Error DisMc6800::decodeImmediate(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
-    out.letter('#');
-    if (insn.size() == SZ_BYTE) {
-        outHex(out, insn.readByte(memory), 8);
-    } else {  // SZ_WORD
-        outHex(out, insn.readUint16(memory), 16);
-    }
-    return setError(insn);
+    return OK;
 }
 
 static int8_t bitNumber(uint8_t val) {
@@ -93,27 +76,37 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
     } else {
         outHex(out.letter('#'), val8, 8);
     }
-    return setError(insn);
+    return OK;
 }
 
 Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_DIR:
-        return decodeDirectPage(memory, insn, out);
+        decodeDirectPage(memory, insn, out);
+        break;
     case M_EXT:
-        return decodeExtended(memory, insn, out);
+        decodeExtended(memory, insn, out);
+        break;
     case M_IDX:
     case M_IDY:
-        return decodeIndexed(memory, insn, out, mode);
+        outRegister(outDec(out, insn.readByte(memory), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
+        break;
     case M_REL:
-        return decodeRelative(memory, insn, out);
-    case M_IMM:
-        return decodeImmediate(memory, insn, out);
+        decodeRelative(memory, insn, out);
+        break;
+    case M_IM8:
+        outHex(out.letter('#'), insn.readByte(memory), 8);
+        break;
+    case M_IM16:
+        outHex(out.letter('#'), insn.readUint16(memory), 16);
+        break;
     case M_BMM:
-        return decodeBitNumber(memory, insn, out);
+        decodeBitNumber(memory, insn, out);
+        break;
     default:
         return OK;
     }
+    return setErrorIf(insn);
 }
 
 Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {

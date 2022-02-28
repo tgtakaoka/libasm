@@ -29,17 +29,17 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
     }
 
     const bool immediate = p.expect('#');
-    op.size = SZ_NONE;
+    op.size = 0;
     if (p.expect('<')) {
-        op.size = SZ_BYTE;
+        op.size = 8;
     } else if (p.expect('>')) {
-        op.size = SZ_WORD;
+        op.size = 16;
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return getError();
     if (immediate) {
-        op.mode = M_IMM;
+        op.mode = M_IM16;
         scan = p;
         return OK;
     }
@@ -53,7 +53,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
             return OK;
         }
     }
-    if (op.size == SZ_NONE) {
+    if (op.size == 0) {
         if (op.val16 < 8)
             op.mode = M_BIT;
         else if (op.val16 < 0x100)
@@ -61,7 +61,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
         else
             op.mode = M_EXT;
     } else {
-        op.mode = (op.size == SZ_BYTE) ? M_DIR : M_EXT;
+        op.mode = (op.size == 8) ? M_DIR : M_EXT;
     }
     scan = p;
     return OK;
@@ -77,14 +77,14 @@ Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     return OK;
 }
 
-Error AsmMc6800::emitImmediate(InsnMc6800 &insn, const Operand &op) {
-    if (insn.size() == SZ_BYTE) {
+Error AsmMc6800::emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+    if (mode == M_IM16) {
+        insn.emitUint16(op.val16);
+    } else {
         if (overflowUint8(op.val16))
             return setError(op, OVERFLOW_RANGE);
         insn.emitByte(static_cast<uint8_t>(op.val16));
     }
-    if (insn.size() == SZ_WORD)
-        insn.emitUint16(op.val16);
     return OK;
 }
 
@@ -109,9 +109,10 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
         return OK;
     case M_REL:
         return emitRelative(insn, op);
-    case M_IMM:
+    case M_IM8:
+    case M_IM16:
     case M_BMM:
-        return emitImmediate(insn, op);
+        return emitImmediate(insn, mode, op);
     case M_BIT:
         return emitBitNumber(insn, op);
     default:
