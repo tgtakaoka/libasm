@@ -96,6 +96,7 @@ static void test_implied() {
     TEST("XCH  EA,P2", 0x4E);
     TEST("XCH  EA,P3", 0x4F);
     TEST("PUSH PC",    0x54);
+    ERRT("PUSH SP",    OPERAND_NOT_ALLOWED);
     TEST("PUSH P2",    0x56);
     TEST("PUSH P3",    0x57);
     TEST("OR   A,E",   0x58);
@@ -115,6 +116,7 @@ static void test_immediate() {
     ERRT("AND S,=256",  OVERFLOW_RANGE);
     TEST("OR  S,=0x34", 0x3B, 0x34);
     TEST("LD  A,=0x12", 0xC4, 0x12);
+    ERRT("ST  A,=0x12", OPERAND_NOT_ALLOWED);
     TEST("AND A,=0x12", 0xD4, 0x12);
     TEST("OR  A,=0x12", 0xDC, 0x12);
     TEST("XOR A,=0x12", 0xE4, 0x12);
@@ -127,9 +129,13 @@ static void test_immediate() {
     TEST("LD  P2,=0x1234", 0x26, 0x34, 0x12);
     TEST("LD  P3,=0x1234", 0x27, 0x34, 0x12);
     TEST("LD  EA,=0x1234", 0x84, 0x34, 0x12);
+    ERRT("ST  EA,=0x1234", OPERAND_NOT_ALLOWED);
     TEST("LD  T,=0x1234",  0xA4, 0x34, 0x12);
     TEST("ADD EA,=0x1234", 0xB4, 0x34, 0x12);
     TEST("SUB EA,=0x1234", 0xBC, 0x34, 0x12);
+
+    ERRT("ILD =0x1234", OPERAND_NOT_ALLOWED);
+    ERRT("DLD =0x1234", OPERAND_NOT_ALLOWED);
 
     symtab.intern(0x12,   "sym12");
     symtab.intern(0x1234, "sym1234");

@@ -65,7 +65,7 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0x48, TEXT_LD,   OPR_E,  OPR_A,  BYTE, IMPLIED),
     E(0x4C, TEXT_XCH,  OPR_EA, OPR_BR, WORD, IMPLIED),
     E(0x50, TEXT_AND,  OPR_A,  OPR_E,  BYTE, IMPLIED),
-    E(0x55, TEXT_PUSH, OPR_SP, OPR_NO, NONE, UNDEF),
+    E(0x55, TEXT_PUSH, OPR_SP, OPR_NO, NONE, UNDEF), // undefined PUSH SP
     E(0x54, TEXT_PUSH, OPR_BR, OPR_NO, WORD, IMPLIED),
     E(0x58, TEXT_OR,   OPR_A,  OPR_E,  BYTE, IMPLIED),
     E(0x5C, TEXT_RET,  OPR_NO, OPR_NO, NONE, IMPLIED),
@@ -82,17 +82,17 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0x7C, TEXT_BNZ,  OPR_RL, OPR_NO, NONE, RELATIVE),
     E(0x7E, TEXT_BNZ,  OPR_PR, OPR_NO, NONE, RELATIVE),
     E(0x80, TEXT_LD,   OPR_EA, OPR_GN, WORD, GENERIC),
-    E(0x8C, TEXT_ST,   OPR_EA, OPR_IM, NONE, UNDEF),
+    E(0x8C, TEXT_ST,   OPR_EA, OPR_IM, NONE, UNDEF), // undefined ST EA immediate
     E(0x88, TEXT_ST,   OPR_EA, OPR_GN, WORD, GENERIC),
-    E(0x94, TEXT_ILD,  OPR_A,  OPR_IM, NONE, UNDEF),
+    E(0x94, TEXT_ILD,  OPR_A,  OPR_IM, NONE, UNDEF), // undefined ILD immediate
     E(0x90, TEXT_ILD,  OPR_A,  OPR_GN, BYTE, GENERIC),
-    E(0x9C, TEXT_DLD,  OPR_A,  OPR_IM, NONE, UNDEF),
+    E(0x9C, TEXT_DLD,  OPR_A,  OPR_IM, NONE, UNDEF), // undefined DLD immediate
     E(0x98, TEXT_DLD,  OPR_A,  OPR_GN, BYTE, GENERIC),
     E(0xA0, TEXT_LD,   OPR_T,  OPR_GN, WORD, GENERIC),
     E(0xB0, TEXT_ADD,  OPR_EA, OPR_GN, WORD, GENERIC),
     E(0xB8, TEXT_SUB,  OPR_EA, OPR_GN, WORD, GENERIC),
     E(0xC0, TEXT_LD,   OPR_A,  OPR_GN, BYTE, GENERIC),
-    E(0xCC, TEXT_ST,   OPR_A,  OPR_IM, NONE, UNDEF),
+    E(0xCC, TEXT_ST,   OPR_A,  OPR_IM, NONE, UNDEF), // undefined ST A immediate
     E(0xC8, TEXT_ST,   OPR_A,  OPR_GN, BYTE, GENERIC),
     E(0xD0, TEXT_AND,  OPR_A,  OPR_GN, BYTE, GENERIC),
     E(0xD8, TEXT_OR,   OPR_A,  OPR_GN, BYTE, GENERIC),
@@ -133,6 +133,8 @@ Error TableIns8070::searchName(InsnIns8070 &insn) const {
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
+        if (insn.addrMode() == UNDEF)
+            return setError(OPERAND_NOT_ALLOWED);
         return setOK();
     }
     return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
