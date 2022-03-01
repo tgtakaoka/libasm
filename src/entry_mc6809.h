@@ -32,19 +32,21 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
-    M_DIR = 1,    // Direct Page
-    M_EXT = 2,    // Extended
-    M_IDX = 3,    // Indexed
-    M_REL = 4,    // Relative
-    M_LREL = 5,   // Long Relative
-    M_IM8 = 6,    // Immediate 8-bit
-    M_IM16 = 7,   // Immediate 16-bit
-    M_IM32 = 8,   // Immediate 32-bit
-    M_PAIR = 9,   // Register pair
-    M_LIST = 10,  // Register list
-    M_RBIT = 11,  // Register bit
-    M_DBIT = 12,  // Direct Page bit
-    M_RTFM = 13,  // Transfer Memory Register
+    M_DIR = 1,     // Direct Page
+    M_EXT = 2,     // Extended
+    M_IDX = 3,     // Indexed
+    M_REL = 4,     // Relative
+    M_LREL = 5,    // Long Relative
+    M_IM8 = 6,     // Immediate 8-bit
+    M_IM32 = 7,    // Immediate 32-bit
+    M_PAIR = 8,    // Register pair
+    M_LIST = 9,    // Register list; means Undefined when in op2
+    M_RBIT = 10,   // Register bit
+    M_DBIT = 11,   // Direct Page bit
+    M_RTFM = 12,   // Transfer Memory Register
+    M_GEN8 = 13,   // Generic: M_IM8/M_DIR/M_IDX/M_EXT
+    M_GEN16 = 14,  // Generic: M_IM16/M_DIR/M_IDX/M_EXT
+    M_GMEM = 15,   // Generic memory: M_DIR/M_IDX/M_EXT
 };
 
 class Entry : public EntryBase<Config> {
@@ -60,6 +62,7 @@ public:
 
         AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
+        bool undefined() const { return mode2() == M_LIST; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

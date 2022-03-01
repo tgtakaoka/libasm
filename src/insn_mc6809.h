@@ -30,6 +30,7 @@ public:
 
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
+    bool undefined() const { return flags().undefined(); }
     void setAddrMode(AddrMode op1, AddrMode op2) { setFlags(Entry::Flags::create(op1, op2)); }
 
     Config::opcode_t readPost(DisMemory &memory) {
@@ -39,9 +40,21 @@ public:
     }
 
     void emitInsn() {
+        uint8_t pos = 0;
         if (hasPrefix())
-            emitByte(prefix());
-        emitByte(opCode());
+            emitByte(prefix(), pos++);
+        emitByte(opCode(), pos);
+    }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
+
+private:
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        if (pos == 0)
+            pos = hasPrefix() ? 2 : 1;
+        return pos;
     }
 };
 

@@ -141,9 +141,9 @@ Error DisMc6809::decodeRelative(
 Error DisMc6809::decodeImmediate(
         DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
     out.letter('#');
-    if (mode == M_IM8) {
+    if (mode == M_IM8 || mode == M_GEN8) {
         outHex(out, insn.readByte(memory), 8);
-    } else if (mode == M_IM16) {
+    } else if (mode == M_GEN16) {
         outHex(out, insn.readUint16(memory), 16);
     } else {
         outHex(out, insn.readUint32(memory), 32);
@@ -238,8 +238,29 @@ Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
     case M_REL:
     case M_LREL:
         return decodeRelative(memory, insn, out, mode);
+    case M_GMEM:
+        switch (insn.opCode() & 0xF0) {
+        case 0x60:
+            return decodeIndexed(memory, insn, out);
+        case 0x70:
+            return decodeExtended(memory, insn, out);
+        default:
+            return decodeDirectPage(memory, insn, out);
+        }
+    case M_GEN8:
+    case M_GEN16:
+        switch (insn.opCode() & 0x30) {
+        case 0x10:
+            return decodeDirectPage(memory, insn, out);
+        case 0x20:
+            return decodeIndexed(memory, insn, out);
+        case 0x30:
+            return decodeExtended(memory, insn, out);
+        default:
+            break;
+        }
+        // Fall-through
     case M_IM8:
-    case M_IM16:
     case M_IM32:
         return decodeImmediate(memory, insn, out, mode);
     case M_LIST:

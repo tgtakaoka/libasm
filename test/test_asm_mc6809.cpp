@@ -387,6 +387,7 @@ static void test_immediate() {
     TEST("ANDA #@177", 0x84, 0x7F);
     TEST("BITA #$90",  0x85, 0x90);
     TEST("LDA  #$90",  0x86, 0x90);
+    ERRT("STA  #$90",  OPERAND_NOT_ALLOWED);
     TEST("EORA #$90",  0x88, 0x90);
     TEST("ADCA #$90",  0x89, 0x90);
     TEST("ORA  #$90",  0x8A, 0x90);
@@ -398,6 +399,7 @@ static void test_immediate() {
     TEST("ANDB #$90", 0xC4, 0x90);
     TEST("BITB #$90", 0xC5, 0x90);
     TEST("LDB  #$90", 0xC6, 0x90);
+    ERRT("STB  #$90", OPERAND_NOT_ALLOWED);
     TEST("EORB #$90", 0xC8, 0x90);
     TEST("ADCB #$90", 0xC9, 0x90);
     TEST("ORB  #$90", 0xCA, 0x90);
@@ -406,19 +408,24 @@ static void test_immediate() {
     TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
     TEST("ADDD #$90A0", 0xC3, 0x90, 0xA0);
     TEST("LDD  #$90A0", 0xCC, 0x90, 0xA0);
+    ERRT("STD  #$90A0", OPERAND_NOT_ALLOWED);
     TEST("CMPD #$90A0", 0x10, 0x83, 0x90, 0xA0);
 
     TEST("CMPX #$90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX  #$90A0", 0x8E, 0x90, 0xA0);
+    ERRT("STX  #$90A0", OPERAND_NOT_ALLOWED);
 
     TEST("CMPY #$90A0", 0x10, 0x8C, 0x90, 0xA0);
     TEST("LDY  #$90A0", 0x10, 0x8E, 0x90, 0xA0);
+    ERRT("STY  #$90A0", OPERAND_NOT_ALLOWED);
 
     TEST("CMPU #$90A0", 0x11, 0x83, 0x90, 0xA0);
     TEST("LDU  #$90A0", 0xCE, 0x90, 0xA0);
+    ERRT("STU  #$90A0", OPERAND_NOT_ALLOWED);
 
     TEST("CMPS #$90A0", 0x11, 0x8C, 0x90, 0xA0);
     TEST("LDS  #$90A0", 0x10, 0xCE, 0x90, 0xA0);
+    ERRT("StS  #$90A0", OPERAND_NOT_ALLOWED);
 
     if (is6309()) {
         // HD6309
@@ -435,19 +442,23 @@ static void test_immediate() {
         TEST("SUBE #$90", 0x11, 0x80, 0x90);
         TEST("ADDE #$90", 0x11, 0x8B, 0x90);
         TEST("LDE  #$90", 0x11, 0x86, 0x90);
+        ERRT("STE  #$90", OPERAND_NOT_ALLOWED);
         TEST("CMPE #$90", 0x11, 0x81, 0x90);
 
         TEST("SUBF #$90", 0x11, 0xC0, 0x90);
         TEST("ADDF #$90", 0x11, 0xCB, 0x90);
         TEST("LDF  #$90", 0x11, 0xC6, 0x90);
+        ERRT("STF  #$90", OPERAND_NOT_ALLOWED);
         TEST("CMPF #$90", 0x11, 0xC1, 0x90);
 
         TEST("SUBW #$90A0", 0x10, 0x80, 0x90, 0xA0);
         TEST("ADDW #$90A0", 0x10, 0x8B, 0x90, 0xA0);
         TEST("LDW  #$90A0", 0x10, 0x86, 0x90, 0xA0);
+        ERRT("STW  #$90A0", OPERAND_NOT_ALLOWED);
         TEST("CMPW #$90A0", 0x10, 0x81, 0x90, 0xA0);
 
         TEST("LDQ  #$12345678", 0xCD, 0x12, 0x34, 0x56, 0x78);
+        ERRT("STQ  #$12345678", OPERAND_NOT_ALLOWED);
 
         TEST("MULD #$90A0", 0x11, 0x8F, 0x90, 0xA0);
         TEST("DIVD #$90A0", 0x11, 0x8D, 0x90, 0xA0);
