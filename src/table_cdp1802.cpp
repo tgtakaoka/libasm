@@ -126,6 +126,101 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E(0xFF, TEXT_SMI,  IMM8),
 };
 
+static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
+     29,  // TEXT_null
+     35,  // TEXT_ADC
+     44,  // TEXT_ADCI
+     80,  // TEXT_ADD
+     88,  // TEXT_ADI
+     78,  // TEXT_AND
+     86,  // TEXT_ANI
+     10,  // TEXT_B1
+     11,  // TEXT_B2
+     12,  // TEXT_B3
+     13,  // TEXT_B4
+      7,  // TEXT_BDF
+      9,  // TEXT_BGE
+     20,  // TEXT_BL
+     19,  // TEXT_BM
+     21,  // TEXT_BN1
+     22,  // TEXT_BN2
+     23,  // TEXT_BN3
+     24,  // TEXT_BN4
+     18,  // TEXT_BNF
+     16,  // TEXT_BNQ
+     17,  // TEXT_BNZ
+      8,  // TEXT_BPZ
+      5,  // TEXT_BQ
+      4,  // TEXT_BR
+      6,  // TEXT_BZ
+      3,  // TEXT_DEC
+     32,  // TEXT_DIS
+     50,  // TEXT_GHI
+     49,  // TEXT_GLO
+      0,  // TEXT_IDL
+      2,  // TEXT_INC
+     30,  // TEXT_INP
+     27,  // TEXT_IRX
+     56,  // TEXT_LBDF
+     58,  // TEXT_LBGE
+     69,  // TEXT_LBL
+     68,  // TEXT_LBM
+     67,  // TEXT_LBNF
+     65,  // TEXT_LBNQ
+     66,  // TEXT_LBNZ
+     57,  // TEXT_LBPZ
+     54,  // TEXT_LBQ
+     53,  // TEXT_LBR
+     55,  // TEXT_LBZ
+     25,  // TEXT_LDA
+     84,  // TEXT_LDI
+      1,  // TEXT_LDN
+     76,  // TEXT_LDX
+     33,  // TEXT_LDXA
+     73,  // TEXT_LSDF
+     70,  // TEXT_LSIE
+     63,  // TEXT_LSKP
+     62,  // TEXT_LSNF
+     60,  // TEXT_LSNQ
+     61,  // TEXT_LSNZ
+     71,  // TEXT_LSQ
+     72,  // TEXT_LSZ
+     41,  // TEXT_MARK
+     15,  // TEXT_NBR
+     64,  // TEXT_NLBR
+     59,  // TEXT_NOP
+     77,  // TEXT_OR
+     85,  // TEXT_ORI
+     28,  // TEXT_OUT
+     52,  // TEXT_PHI
+     51,  // TEXT_PLO
+     42,  // TEXT_REQ
+     31,  // TEXT_RET
+     47,  // TEXT_RSHL
+     38,  // TEXT_RSHR
+     40,  // TEXT_SAV
+     81,  // TEXT_SD
+     36,  // TEXT_SDB
+     45,  // TEXT_SDBI
+     89,  // TEXT_SDI
+     74,  // TEXT_SEP
+     43,  // TEXT_SEQ
+     75,  // TEXT_SEX
+     90,  // TEXT_SHL
+     46,  // TEXT_SHLC
+     82,  // TEXT_SHR
+     37,  // TEXT_SHRC
+     14,  // TEXT_SKP
+     83,  // TEXT_SM
+     39,  // TEXT_SMB
+     48,  // TEXT_SMBI
+     91,  // TEXT_SMI
+     26,  // TEXT_STR
+     34,  // TEXT_STXD
+     79,  // TEXT_XOR
+     87,  // TEXT_XRI
+};
+
 static constexpr Entry TABLE_CDP1804[] PROGMEM = {
     E(0x00, TEXT_STPC, NONE),
     E(0x01, TEXT_DTC,  NONE),
@@ -150,6 +245,32 @@ static constexpr Entry TABLE_CDP1804[] PROGMEM = {
     E(0xB0, TEXT_RNX,  REGN),
     X(0xC0, TEXT_RLDI, REGN, ADDR),
 };
+
+static constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
+     14,  // TEXT_BCI
+     15,  // TEXT_BXI
+     13,  // TEXT_CID
+     12,  // TEXT_CIE
+      1,  // TEXT_DTC
+      9,  // TEXT_ETQ
+      8,  // TEXT_GEC
+      6,  // TEXT_LDC
+     21,  // TEXT_RLDI
+     16,  // TEXT_RLXA
+     20,  // TEXT_RNX
+     19,  // TEXT_RSXD
+     17,  // TEXT_SCAL
+      5,  // TEXT_SCM1
+      3,  // TEXT_SCM2
+      4,  // TEXT_SPM1
+      2,  // TEXT_SPM2
+     18,  // TEXT_SRET
+      7,  // TEXT_STM
+      0,  // TEXT_STPC
+     11,  // TEXT_XID
+     10,  // TEXT_XIE
+};
+
 static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
     X(0x20, TEXT_DBNZ, REGN, ADDR),
     E(0x74, TEXT_DADC, NONE),
@@ -162,11 +283,25 @@ static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
     E(0xFC, TEXT_DADI, IMM8),
     E(0xFF, TEXT_DSMI, IMM8),
 };
+
+static constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
+      4,  // TEXT_DACI
+      1,  // TEXT_DADC
+      6,  // TEXT_DADD
+      8,  // TEXT_DADI
+      0,  // TEXT_DBNZ
+      2,  // TEXT_DSAV
+      5,  // TEXT_DSBI
+      7,  // TEXT_DSM
+      3,  // TEXT_DSMB
+      9,  // TEXT_DSMI
+};
 // clang-format on
 
 struct TableCdp1802::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix) {}
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
+            const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
 
@@ -175,18 +310,18 @@ private:
 };
 
 static constexpr TableCdp1802::EntryPage CDP1802_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_CDP1802)},
+        {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
 };
 
 static constexpr TableCdp1802::EntryPage CDP1804_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_CDP1802)},
-        {0x68, ARRAY_RANGE(TABLE_CDP1804)},
+        {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
 };
 
 static constexpr TableCdp1802::EntryPage CDP1804A_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_CDP1802)},
-        {0x68, ARRAY_RANGE(TABLE_CDP1804)},
-        {0x68, ARRAY_RANGE(TABLE_CDP1804A)},
+        {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
+        {0x68, ARRAY_RANGE(TABLE_CDP1804A), ARRAY_RANGE(INDEX_CDP1804A)},
 };
 
 bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
@@ -212,8 +347,8 @@ Error TableCdp1802::searchName(
         InsnCdp1802 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());

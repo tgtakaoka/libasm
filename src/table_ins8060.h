@@ -32,6 +32,8 @@ public:
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
+
+    struct EntryPage;
 };
 
 extern TableIns8060 TableIns8060;

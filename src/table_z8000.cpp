@@ -98,7 +98,7 @@ uint16_t Entry::codeMask(uint8_t size) {
     X(_opc, _name, _cm, _sz, _dst, _src, _dstf, _srcf, E1_NO, E2_NO, P_NO)
 
 // clang-format off
-static const Entry Z8000_TABLE[] PROGMEM = {
+static const Entry TABLE_Z8000[] PROGMEM = {
     E(0xC000, TEXT_LDB,    0x0FFF, BYTE, M_R,    M_IM8,  C8, C0),
     E(0xD000, TEXT_CALR,   0x0FFF, NONE, M_RA12, M_NO,   C0, NO),
     E(0xE000, TEXT_JR,     0x0FFF, NONE, M_CC,   M_RA8,  C8, C0),
@@ -332,7 +332,251 @@ static const Entry Z8000_TABLE[] PROGMEM = {
     E(0x2F00, TEXT_LD,     0xC0FF, WORD, M_GENA, M_R,    C4, C0),
     E(0x3900, TEXT_LDPS,   0xC0F0, WORD, M_GENA, M_NO,   C4, NO),
 };
+static const uint8_t INDEX_Z8000[] PROGMEM = {
+     92,  // TEXT_ADC
+     91,  // TEXT_ADCB
+    171,  // TEXT_ADD
+    170,  // TEXT_ADDB
+    196,  // TEXT_ADDL
+    177,  // TEXT_AND
+    176,  // TEXT_ANDB
+    221,  // TEXT_BIT
+    222,  // TEXT_BIT
+    219,  // TEXT_BITB
+    220,  // TEXT_BITB
+    208,  // TEXT_CALL
+      1,  // TEXT_CALR
+    188,  // TEXT_CLR
+     51,  // TEXT_CLRB
+    182,  // TEXT_COM
+     45,  // TEXT_COMB
+     54,  // TEXT_COMFLG
+    181,  // TEXT_CP
+    183,  // TEXT_CP
+     46,  // TEXT_CPB
+    180,  // TEXT_CPB
+    164,  // TEXT_CPD
+    152,  // TEXT_CPDB
+    168,  // TEXT_CPDR
+    156,  // TEXT_CPDRB
+    158,  // TEXT_CPI
+    146,  // TEXT_CPIB
+    162,  // TEXT_CPIR
+    150,  // TEXT_CPIRB
+    190,  // TEXT_CPL
+    167,  // TEXT_CPSD
+    155,  // TEXT_CPSDB
+    169,  // TEXT_CPSDR
+    157,  // TEXT_CPSDRB
+    161,  // TEXT_CPSI
+    149,  // TEXT_CPSIB
+    163,  // TEXT_CPSIR
+    151,  // TEXT_CPSIRB
+     61,  // TEXT_DAB
+      4,  // TEXT_DBJNZ
+    226,  // TEXT_DEC
+    225,  // TEXT_DECB
+     38,  // TEXT_DI
+    201,  // TEXT_DIV
+    200,  // TEXT_DIVL
+      5,  // TEXT_DJNZ
+     39,  // TEXT_EI
+    228,  // TEXT_EX
+    227,  // TEXT_EXB
+     64,  // TEXT_EXTS
+     62,  // TEXT_EXTSB
+     63,  // TEXT_EXTSL
+     32,  // TEXT_HALT
+     21,  // TEXT_IN
+    102,  // TEXT_IN
+     20,  // TEXT_INB
+     98,  // TEXT_INB
+    224,  // TEXT_INC
+    223,  // TEXT_INCB
+    131,  // TEXT_IND
+    115,  // TEXT_INDB
+    130,  // TEXT_INDR
+    114,  // TEXT_INDRB
+    123,  // TEXT_INI
+    107,  // TEXT_INIB
+    122,  // TEXT_INIR
+    106,  // TEXT_INIRB
+     33,  // TEXT_IRET
+    206,  // TEXT_JP
+    207,  // TEXT_JP
+      2,  // TEXT_JR
+      3,  // TEXT_JR
+      9,  // TEXT_LD
+     13,  // TEXT_LD
+     25,  // TEXT_LD
+     27,  // TEXT_LD
+    186,  // TEXT_LD
+    210,  // TEXT_LD
+    230,  // TEXT_LD
+     15,  // TEXT_LDA
+     28,  // TEXT_LDA
+     30,  // TEXT_LDA
+     14,  // TEXT_LDAR
+      0,  // TEXT_LDB
+      7,  // TEXT_LDB
+     11,  // TEXT_LDB
+     24,  // TEXT_LDB
+     26,  // TEXT_LDB
+     49,  // TEXT_LDB
+    209,  // TEXT_LDB
+    229,  // TEXT_LDB
+     40,  // TEXT_LDCTL
+     41,  // TEXT_LDCTL
+     43,  // TEXT_LDCTLB
+     44,  // TEXT_LDCTLB
+    166,  // TEXT_LDD
+    154,  // TEXT_LDDB
+    165,  // TEXT_LDDR
+    153,  // TEXT_LDDRB
+    160,  // TEXT_LDI
+    148,  // TEXT_LDIB
+    159,  // TEXT_LDIR
+    147,  // TEXT_LDIRB
+     96,  // TEXT_LDK
+     17,  // TEXT_LDL
+     19,  // TEXT_LDL
+     29,  // TEXT_LDL
+     31,  // TEXT_LDL
+    194,  // TEXT_LDL
+    205,  // TEXT_LDL
+    202,  // TEXT_LDM
+    204,  // TEXT_LDM
+    231,  // TEXT_LDPS
+      8,  // TEXT_LDR
+     12,  // TEXT_LDR
+      6,  // TEXT_LDRB
+     10,  // TEXT_LDRB
+     16,  // TEXT_LDRL
+     18,  // TEXT_LDRL
+     36,  // TEXT_MBIT
+     37,  // TEXT_MREQ
+     35,  // TEXT_MRES
+     34,  // TEXT_MSET
+    199,  // TEXT_MULT
+    198,  // TEXT_MULTL
+    184,  // TEXT_NEG
+     47,  // TEXT_NEGB
+     55,  // TEXT_NOP
+    175,  // TEXT_OR
+    174,  // TEXT_ORB
+    134,  // TEXT_OTDR
+    118,  // TEXT_OTDRB
+    126,  // TEXT_OTIR
+    110,  // TEXT_OTIRB
+     23,  // TEXT_OUT
+    104,  // TEXT_OUT
+     22,  // TEXT_OUTB
+    100,  // TEXT_OUTB
+    135,  // TEXT_OUTD
+    119,  // TEXT_OUTDB
+    127,  // TEXT_OUTI
+    111,  // TEXT_OUTIB
+    197,  // TEXT_POP
+    195,  // TEXT_POPL
+    189,  // TEXT_PUSH
+    193,  // TEXT_PUSH
+    191,  // TEXT_PUSHL
+    213,  // TEXT_RES
+    214,  // TEXT_RES
+    211,  // TEXT_RESB
+    212,  // TEXT_RESB
+     53,  // TEXT_RESFLG
+     56,  // TEXT_RET
+     75,  // TEXT_RL
+     65,  // TEXT_RLB
+     83,  // TEXT_RLC
+     70,  // TEXT_RLCB
+     97,  // TEXT_RLDB
+     79,  // TEXT_RR
+     69,  // TEXT_RRB
+     87,  // TEXT_RRC
+     74,  // TEXT_RRCB
+     95,  // TEXT_RRDB
+     94,  // TEXT_SBC
+     93,  // TEXT_SBCB
+     42,  // TEXT_SC
+     86,  // TEXT_SDA
+     73,  // TEXT_SDAB
+     90,  // TEXT_SDAL
+     78,  // TEXT_SDL
+     68,  // TEXT_SDLB
+     82,  // TEXT_SDLL
+    217,  // TEXT_SET
+    218,  // TEXT_SET
+    215,  // TEXT_SETB
+    216,  // TEXT_SETB
+     52,  // TEXT_SETFLG
+    103,  // TEXT_SIN
+     99,  // TEXT_SINB
+    133,  // TEXT_SIND
+    117,  // TEXT_SINDB
+    132,  // TEXT_SINDR
+    116,  // TEXT_SINDRB
+    125,  // TEXT_SINI
+    109,  // TEXT_SINIB
+    124,  // TEXT_SINIR
+    108,  // TEXT_SINIRB
+     84,  // TEXT_SLA
+     71,  // TEXT_SLAB
+     88,  // TEXT_SLAL
+     76,  // TEXT_SLL
+     66,  // TEXT_SLLB
+     80,  // TEXT_SLLL
+    136,  // TEXT_SOTDR
+    120,  // TEXT_SOTDRB
+    128,  // TEXT_SOTIR
+    112,  // TEXT_SOTIRB
+    105,  // TEXT_SOUT
+    101,  // TEXT_SOUTB
+    137,  // TEXT_SOUTD
+    121,  // TEXT_SOUTDB
+    129,  // TEXT_SOUTI
+    113,  // TEXT_SOUTIB
+     85,  // TEXT_SRA
+     72,  // TEXT_SRAB
+     89,  // TEXT_SRAL
+     77,  // TEXT_SRL
+     67,  // TEXT_SRLB
+     81,  // TEXT_SRLL
+    173,  // TEXT_SUB
+    172,  // TEXT_SUBB
+    192,  // TEXT_SUBL
+     59,  // TEXT_TCC
+     60,  // TEXT_TCC
+     57,  // TEXT_TCCB
+     58,  // TEXT_TCCB
+    185,  // TEXT_TEST
+     48,  // TEXT_TESTB
+    203,  // TEXT_TESTL
+    142,  // TEXT_TRDB
+    144,  // TEXT_TRDRB
+    138,  // TEXT_TRIB
+    140,  // TEXT_TRIRB
+    143,  // TEXT_TRTDB
+    145,  // TEXT_TRTDRB
+    139,  // TEXT_TRTIB
+    141,  // TEXT_TRTIRB
+    187,  // TEXT_TSET
+     50,  // TEXT_TSETB
+    179,  // TEXT_XOR
+    178,  // TEXT_XORB
+};
 // clang-format on
+
+struct TableZ8000::EntryPage : EntryPageBase<Entry> {
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
+};
+
+static constexpr TableZ8000::EntryPage Z8000_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_Z8000), ARRAY_RANGE(INDEX_Z8000)},
+};
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -367,8 +611,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableZ8000::searchName(InsnZ8000 &insn) const {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<Entry, Entry::Flags>(
-            insn.name(), insn.flags(), ARRAY_RANGE(Z8000_TABLE), acceptModes, count);
+    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+            insn.name(), insn.flags(), Z8000_PAGES, acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -408,12 +652,12 @@ const Entry *TableZ8000::searchOpCode(
 }
 
 Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) const {
-    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
+    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(TABLE_Z8000));
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
-    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(Z8000_TABLE));
+    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(TABLE_Z8000));
     if (entry) {
         entry++;
         insn.setFlags(entry->flags());

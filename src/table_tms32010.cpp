@@ -95,7 +95,80 @@ static constexpr Entry TABLE_TMS32010[] PROGMEM = {
     E1(0xFE00, TEXT_BNZ,  M_PMA),
     E1(0xFF00, TEXT_BZ,   M_PMA),
 };
+
+static constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
+     37,  // TEXT_ABS
+      0,  // TEXT_ADD
+      9,  // TEXT_ADDH
+     10,  // TEXT_ADDS
+     28,  // TEXT_AND
+     44,  // TEXT_APAC
+     53,  // TEXT_B
+     49,  // TEXT_BANZ
+     57,  // TEXT_BGEZ
+     56,  // TEXT_BGZ
+     51,  // TEXT_BIOZ
+     55,  // TEXT_BLEZ
+     54,  // TEXT_BLZ
+     58,  // TEXT_BNZ
+     50,  // TEXT_BV
+     59,  // TEXT_BZ
+     41,  // TEXT_CALA
+     52,  // TEXT_CALL
+     35,  // TEXT_DINT
+     19,  // TEXT_DMOV
+     36,  // TEXT_EINT
+      5,  // TEXT_IN
+      2,  // TEXT_LAC
+     33,  // TEXT_LACK
+      4,  // TEXT_LAR
+     26,  // TEXT_LARK
+     17,  // TEXT_LARP
+     25,  // TEXT_LDP
+     24,  // TEXT_LDPK
+     30,  // TEXT_LST
+     20,  // TEXT_LT
+     22,  // TEXT_LTA
+     21,  // TEXT_LTD
+     18,  // TEXT_MAR
+     23,  // TEXT_MPY
+     48,  // TEXT_MPYK
+     34,  // TEXT_NOP
+     29,  // TEXT_OR
+      6,  // TEXT_OUT
+     43,  // TEXT_PAC
+     47,  // TEXT_POP
+     46,  // TEXT_PUSH
+     42,  // TEXT_RET
+     39,  // TEXT_ROVM
+      8,  // TEXT_SACH
+      7,  // TEXT_SACL
+      3,  // TEXT_SAR
+     40,  // TEXT_SOVM
+     45,  // TEXT_SPAC
+     31,  // TEXT_SST
+      1,  // TEXT_SUB
+     13,  // TEXT_SUBC
+     11,  // TEXT_SUBH
+     12,  // TEXT_SUBS
+     16,  // TEXT_TBLR
+     32,  // TEXT_TBLW
+     27,  // TEXT_XOR
+     38,  // TEXT_ZAC
+     14,  // TEXT_ZALH
+     15,  // TEXT_ZALS
+};
 // clang-format on
+
+struct TableTms32010::EntryPage : EntryPageBase<Entry> {
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
+};
+
+static constexpr TableTms32010::EntryPage TMS32010_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_TMS32010), ARRAY_RANGE(INDEX_TMS32010)},
+};
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -125,8 +198,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableTms32010::searchName(InsnTms32010 &insn) const {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<Entry, Entry::Flags>(
-            insn.name(), insn.flags(), ARRAY_RANGE(TABLE_TMS32010), acceptModes, count);
+    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+            insn.name(), insn.flags(), TMS32010_PAGES, acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());

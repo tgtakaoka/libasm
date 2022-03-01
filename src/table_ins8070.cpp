@@ -100,7 +100,88 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E(0xF0, TEXT_ADD,  OPR_A,  OPR_GN, BYTE, M_GEN),
     E(0xF8, TEXT_SUB,  OPR_A,  OPR_GN, BYTE, M_GEN),
 };
+
+static constexpr uint8_t INDEX_INS8070[] PROGMEM = {
+     44,  // TEXT_ADD
+     58,  // TEXT_ADD
+     66,  // TEXT_ADD
+     22,  // TEXT_AND
+     33,  // TEXT_AND
+     63,  // TEXT_AND
+     18,  // TEXT_BND
+     48,  // TEXT_BNZ
+     49,  // TEXT_BNZ
+     40,  // TEXT_BP
+     41,  // TEXT_BP
+     45,  // TEXT_BRA
+     46,  // TEXT_BRA
+     42,  // TEXT_BZ
+     43,  // TEXT_BZ
+     12,  // TEXT_CALL
+      9,  // TEXT_DIV
+     55,  // TEXT_DLD
+     56,  // TEXT_DLD
+     53,  // TEXT_ILD
+     54,  // TEXT_ILD
+     15,  // TEXT_JMP
+     13,  // TEXT_JSR
+      2,  // TEXT_LD
+      3,  // TEXT_LD
+      5,  // TEXT_LD
+      7,  // TEXT_LD
+     16,  // TEXT_LD
+     20,  // TEXT_LD
+     29,  // TEXT_LD
+     30,  // TEXT_LD
+     31,  // TEXT_LD
+     50,  // TEXT_LD
+     57,  // TEXT_LD
+     60,  // TEXT_LD
+     17,  // TEXT_MPY
+      0,  // TEXT_NOP
+     24,  // TEXT_OR
+     36,  // TEXT_OR
+     64,  // TEXT_OR
+     14,  // TEXT_PLI
+     21,  // TEXT_POP
+     23,  // TEXT_POP
+     38,  // TEXT_POP
+      4,  // TEXT_PUSH
+      6,  // TEXT_PUSH
+     34,  // TEXT_PUSH
+     35,  // TEXT_PUSH
+     37,  // TEXT_RET
+     27,  // TEXT_RR
+     28,  // TEXT_RRL
+     10,  // TEXT_SL
+     11,  // TEXT_SL
+      8,  // TEXT_SR
+     25,  // TEXT_SR
+     26,  // TEXT_SRL
+     19,  // TEXT_SSM
+     51,  // TEXT_ST
+     52,  // TEXT_ST
+     61,  // TEXT_ST
+     62,  // TEXT_ST
+     47,  // TEXT_SUB
+     59,  // TEXT_SUB
+     67,  // TEXT_SUB
+      1,  // TEXT_XCH
+     32,  // TEXT_XCH
+     39,  // TEXT_XOR
+     65,  // TEXT_XOR
+};
 // clang-format on
+
+struct TableIns8070::EntryPage : EntryPageBase<Entry> {
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
+};
+
+static constexpr TableIns8070::EntryPage INS8070_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_INS8070), ARRAY_RANGE(INDEX_INS8070)},
+};
 
 static bool acceptOprFormat(OprFormat opr, OprFormat table) {
     if (opr == table)
@@ -128,8 +209,8 @@ static bool acceptOprFormats(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8070::searchName(InsnIns8070 &insn) const {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<Entry, Entry::Flags>(
-            insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8070), acceptOprFormats, count);
+    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+            insn.name(), insn.flags(), INS8070_PAGES, acceptOprFormats, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());

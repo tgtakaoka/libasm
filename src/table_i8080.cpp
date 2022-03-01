@@ -111,23 +111,112 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0xC7, TEXT_RST,  M_VEC,  M_NO),
 };
 
+static constexpr uint8_t INDEX_I8080[] PROGMEM = {
+     70,  // TEXT_ACI
+     25,  // TEXT_ADC
+     24,  // TEXT_ADD
+     69,  // TEXT_ADI
+     28,  // TEXT_ANA
+     73,  // TEXT_ANI
+     68,  // TEXT_CALL
+     62,  // TEXT_CC
+     66,  // TEXT_CM
+     19,  // TEXT_CMA
+     21,  // TEXT_CMC
+     31,  // TEXT_CMP
+     61,  // TEXT_CNC
+     59,  // TEXT_CNZ
+     65,  // TEXT_CP
+     64,  // TEXT_CPE
+     76,  // TEXT_CPI
+     63,  // TEXT_CPO
+     60,  // TEXT_CZ
+     18,  // TEXT_DAA
+      2,  // TEXT_DAD
+     12,  // TEXT_DCR
+     10,  // TEXT_DCX
+     57,  // TEXT_DI
+     58,  // TEXT_EI
+     22,  // TEXT_HLT
+     54,  // TEXT_IN
+     11,  // TEXT_INR
+      9,  // TEXT_INX
+     47,  // TEXT_JC
+     51,  // TEXT_JM
+     52,  // TEXT_JMP
+     46,  // TEXT_JNC
+     44,  // TEXT_JNZ
+     50,  // TEXT_JP
+     49,  // TEXT_JPE
+     48,  // TEXT_JPO
+     45,  // TEXT_JZ
+      8,  // TEXT_LDA
+      6,  // TEXT_LDAX
+      7,  // TEXT_LHLD
+      1,  // TEXT_LXI
+     23,  // TEXT_MOV
+     13,  // TEXT_MVI
+      0,  // TEXT_NOP
+     30,  // TEXT_ORA
+     75,  // TEXT_ORI
+     53,  // TEXT_OUT
+     42,  // TEXT_PCHL
+     40,  // TEXT_POP
+     67,  // TEXT_PUSH
+     16,  // TEXT_RAL
+     17,  // TEXT_RAR
+     35,  // TEXT_RC
+     41,  // TEXT_RET
+     14,  // TEXT_RLC
+     39,  // TEXT_RM
+     34,  // TEXT_RNC
+     32,  // TEXT_RNZ
+     38,  // TEXT_RP
+     37,  // TEXT_RPE
+     36,  // TEXT_RPO
+     15,  // TEXT_RRC
+     77,  // TEXT_RST
+     33,  // TEXT_RZ
+     27,  // TEXT_SBB
+     72,  // TEXT_SBI
+      4,  // TEXT_SHLD
+     43,  // TEXT_SPHL
+      5,  // TEXT_STA
+      3,  // TEXT_STAX
+     20,  // TEXT_STC
+     26,  // TEXT_SUB
+     71,  // TEXT_SUI
+     56,  // TEXT_XCHG
+     29,  // TEXT_XRA
+     74,  // TEXT_XRI
+     55,  // TEXT_XTHL
+};
+
 static constexpr Entry TABLE_I8085[] PROGMEM = {
     E(0x20, TEXT_RIM,  M_NO,   M_NO),
     E(0x30, TEXT_SIM,  M_NO,   M_NO),
+};
+
+static constexpr uint8_t INDEX_I8085[] PROGMEM = {
+      0,  // TEXT_RIM
+      1,  // TEXT_SIM
 };
 // clang-format on
 
 class TableI8080::EntryPage : public EntryPageBase<Entry> {
 public:
-    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8080)},
+        {ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
+
 static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8080)},
-        {ARRAY_RANGE(TABLE_I8085)},
+        {ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -151,8 +240,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableI8080::searchName(InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

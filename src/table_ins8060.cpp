@@ -79,7 +79,67 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E(0xFC, TEXT_CAI,  M_IMM8),
     E(0xF8, TEXT_CAD,  M_INDX),
 };
+
+static constexpr uint8_t INDEX_INS8060[] PROGMEM = {
+     33,  // TEXT_0
+     44,  // TEXT_ADD
+     22,  // TEXT_ADE
+     43,  // TEXT_ADI
+     36,  // TEXT_AND
+     18,  // TEXT_ANE
+     35,  // TEXT_ANI
+     46,  // TEXT_CAD
+     23,  // TEXT_CAE
+     45,  // TEXT_CAI
+      7,  // TEXT_CAS
+      2,  // TEXT_CCL
+      6,  // TEXT_CSA
+     42,  // TEXT_DAD
+     21,  // TEXT_DAE
+     41,  // TEXT_DAI
+      4,  // TEXT_DINT
+     30,  // TEXT_DLD
+     24,  // TEXT_DLY
+      0,  // TEXT_HALT
+      5,  // TEXT_IEN
+     29,  // TEXT_ILD
+     25,  // TEXT_JMP
+     28,  // TEXT_JNZ
+     26,  // TEXT_JP
+     27,  // TEXT_JZ
+     32,  // TEXT_LD
+     17,  // TEXT_LDE
+     31,  // TEXT_LDI
+      8,  // TEXT_NOP
+     38,  // TEXT_OR
+     19,  // TEXT_ORE
+     37,  // TEXT_ORI
+     12,  // TEXT_RR
+     13,  // TEXT_RRL
+      3,  // TEXT_SCL
+      9,  // TEXT_SIO
+     10,  // TEXT_SR
+     11,  // TEXT_SRL
+     34,  // TEXT_ST
+      1,  // TEXT_XAE
+     40,  // TEXT_XOR
+     15,  // TEXT_XPAH
+     14,  // TEXT_XPAL
+     16,  // TEXT_XPPC
+     20,  // TEXT_XRE
+     39,  // TEXT_XRI
+};
 // clang-format on
+
+struct TableIns8060::EntryPage : EntryPageBase<Entry> {
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
+};
+
+static constexpr TableIns8060::EntryPage INS8060_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(TABLE_INS8060), ARRAY_RANGE(INDEX_INS8060)},
+};
 
 static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
     auto opr = flags.mode();
@@ -95,9 +155,8 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8060::searchName(InsnIns8060 &insn) const {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<Entry, Entry::Flags>(
-
-            insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8060), acceptAddrMode, count);
+    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+            insn.name(), insn.flags(), INS8060_PAGES, acceptAddrMode, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());

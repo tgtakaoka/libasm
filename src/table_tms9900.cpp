@@ -102,11 +102,90 @@ static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E(0xF000, TEXT_SOCB, M_SRC,  M_DST),
 };
 
+static constexpr uint8_t INDEX_TMS9900[] PROGMEM = {
+     63,  // TEXT_A
+     64,  // TEXT_AB
+     28,  // TEXT_ABS
+      1,  // TEXT_AI
+      2,  // TEXT_ANDI
+     16,  // TEXT_B
+     25,  // TEXT_BL
+     15,  // TEXT_BLWP
+     61,  // TEXT_C
+     62,  // TEXT_CB
+      4,  // TEXT_CI
+     13,  // TEXT_CKOF
+     12,  // TEXT_CKON
+     18,  // TEXT_CLR
+     49,  // TEXT_COC
+     50,  // TEXT_CZC
+     23,  // TEXT_DEC
+     24,  // TEXT_DECT
+     56,  // TEXT_DIV
+      9,  // TEXT_IDLE
+     21,  // TEXT_INC
+     22,  // TEXT_INCT
+     20,  // TEXT_INV
+     36,  // TEXT_JEQ
+     38,  // TEXT_JGT
+     44,  // TEXT_JH
+     37,  // TEXT_JHE
+     43,  // TEXT_JL
+     35,  // TEXT_JLE
+     34,  // TEXT_JLT
+     33,  // TEXT_JMP
+     40,  // TEXT_JNC
+     39,  // TEXT_JNE
+     42,  // TEXT_JNO
+     41,  // TEXT_JOC
+     45,  // TEXT_JOP
+     53,  // TEXT_LDCR
+      0,  // TEXT_LI
+      8,  // TEXT_LIMI
+     14,  // TEXT_LREX
+      7,  // TEXT_LWPI
+     65,  // TEXT_MOV
+     66,  // TEXT_MOVB
+     55,  // TEXT_MPY
+     19,  // TEXT_NEG
+      3,  // TEXT_ORI
+     10,  // TEXT_RSET
+     11,  // TEXT_RTWP
+     59,  // TEXT_S
+     60,  // TEXT_SB
+     46,  // TEXT_SBO
+     47,  // TEXT_SBZ
+     27,  // TEXT_SETO
+     31,  // TEXT_SLA
+     67,  // TEXT_SOC
+     68,  // TEXT_SOCB
+     29,  // TEXT_SRA
+     32,  // TEXT_SRC
+     30,  // TEXT_SRL
+     54,  // TEXT_STCR
+      6,  // TEXT_STST
+      5,  // TEXT_STWP
+     26,  // TEXT_SWPB
+     57,  // TEXT_SZC
+     58,  // TEXT_SZCB
+     48,  // TEXT_TB
+     17,  // TEXT_X
+     52,  // TEXT_XOP
+     51,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_TMS9995[] PROGMEM = {
     E(0x0080, TEXT_LST,  M_REG,  M_NO),
     E(0x0090, TEXT_LWP,  M_REG,  M_NO),
     E(0x0180, TEXT_DIVS, M_SRC,  M_NO),
     E(0x01C0, TEXT_MPYS, M_SRC,  M_NO),
+};
+
+static constexpr uint8_t INDEX_TMS9995[] PROGMEM = {
+      2,  // TEXT_DIVS
+      0,  // TEXT_LST
+      1,  // TEXT_LWP
+      3,  // TEXT_MPYS
 };
 
 static constexpr Entry TABLE_TMS99105[] PROGMEM = {
@@ -122,25 +201,41 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E(0x0100, TEXT_EVAD, M_SRC,  M_NO),
     E(0x0380, TEXT_RTWP, M_RTWP, M_NO),
 };
+
+static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
+      3,  // TEXT_AM
+      5,  // TEXT_BIND
+      4,  // TEXT_BLSK
+      9,  // TEXT_EVAD
+     10,  // TEXT_RTWP
+      1,  // TEXT_SLAM
+      2,  // TEXT_SM
+      0,  // TEXT_SRAM
+      7,  // TEXT_TCMB
+      6,  // TEXT_TMB
+      8,  // TEXT_TSMB
+};
 // clang-format on
 
 struct TableTms9900::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableTms9900::EntryPage TMS9900_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_TMS9900)},
+        {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
 };
 
 static constexpr TableTms9900::EntryPage TMS9995_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_TMS9900)},
-        {ARRAY_RANGE(TABLE_TMS9995)},
+        {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
+        {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
 static constexpr TableTms9900::EntryPage TMS99105_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_TMS99105)},
-        {ARRAY_RANGE(TABLE_TMS9900)},
-        {ARRAY_RANGE(TABLE_TMS9995)},
+        {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
+        {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
+        {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -167,8 +262,8 @@ Error TableTms9900::searchName(
         InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

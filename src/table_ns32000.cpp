@@ -74,6 +74,23 @@ static const Entry FORMAT_0[] PROGMEM = {
     E(0xDA, TEXT_BGE, NONE, M_REL, M_NONE, P_DISP, P_NONE),
     E(0xEA, TEXT_BR,  NONE, M_REL, M_NONE, P_DISP, P_NONE),
 };
+static const uint8_t INDEX_0[] PROGMEM = {
+      3,  // TEXT_BCC
+      2,  // TEXT_BCS
+      0,  // TEXT_BEQ
+      9,  // TEXT_BFC
+      8,  // TEXT_BFS
+     13,  // TEXT_BGE
+      6,  // TEXT_BGT
+      4,  // TEXT_BHI
+     11,  // TEXT_BHS
+      7,  // TEXT_BLE
+     10,  // TEXT_BLO
+      5,  // TEXT_BLS
+     12,  // TEXT_BLT
+      1,  // TEXT_BNE
+     14,  // TEXT_BR
+};
 
 // Format 1: |_op_|0010|
 static const Entry FORMAT_1[] PROGMEM = {
@@ -93,6 +110,24 @@ static const Entry FORMAT_1[] PROGMEM = {
     E(0xD2, TEXT_FLAG,    NONE,   M_NONE, M_NONE, P_NONE, P_NONE),
     E(0xE2, TEXT_SVC,     NONE,   M_NONE, M_NONE, P_NONE, P_NONE),
     E(0xF2, TEXT_BPT,     NONE,   M_NONE, M_NONE, P_NONE, P_NONE),
+};
+static const uint8_t INDEX_1[] PROGMEM = {
+     15,  // TEXT_BPT
+      0,  // TEXT_BSR
+      2,  // TEXT_CXP
+     12,  // TEXT_DIA
+      8,  // TEXT_ENTER
+      9,  // TEXT_EXIT
+     13,  // TEXT_FLAG
+     10,  // TEXT_NOP
+      7,  // TEXT_RESTORE
+      1,  // TEXT_RET
+      5,  // TEXT_RETI
+      4,  // TEXT_RETT
+      3,  // TEXT_RXP
+      6,  // TEXT_SAVE
+     14,  // TEXT_SVC
+     11,  // TEXT_WAIT
 };
 
 // Format 4: |gen1_|gen| |2_|_op_|ii|
@@ -131,6 +166,42 @@ static const Entry FORMAT_4[] PROGMEM = {
     E(0x38, TEXT_XORB,   BYTE,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E(0x39, TEXT_XORW,   WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E(0x3B, TEXT_XORD,   DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
+};
+static const uint8_t INDEX_4[] PROGMEM = {
+      0,  // TEXT_ADDB
+      9,  // TEXT_ADDCB
+     11,  // TEXT_ADDCD
+     10,  // TEXT_ADDCW
+      2,  // TEXT_ADDD
+     21,  // TEXT_ADDR
+      1,  // TEXT_ADDW
+     22,  // TEXT_ANDB
+     24,  // TEXT_ANDD
+     23,  // TEXT_ANDW
+      6,  // TEXT_BICB
+      8,  // TEXT_BICD
+      7,  // TEXT_BICW
+      3,  // TEXT_CMPB
+      5,  // TEXT_CMPD
+      4,  // TEXT_CMPW
+     12,  // TEXT_MOVB
+     14,  // TEXT_MOVD
+     13,  // TEXT_MOVW
+     15,  // TEXT_ORB
+     17,  // TEXT_ORD
+     16,  // TEXT_ORW
+     18,  // TEXT_SUBB
+     25,  // TEXT_SUBCB
+     27,  // TEXT_SUBCD
+     26,  // TEXT_SUBCW
+     20,  // TEXT_SUBD
+     19,  // TEXT_SUBW
+     28,  // TEXT_TBITB
+     30,  // TEXT_TBITD
+     29,  // TEXT_TBITW
+     31,  // TEXT_XORB
+     33,  // TEXT_XORD
+     32,  // TEXT_XORW
 };
 
 // Format 2: |_gen_|sho| |t|_op|11|ii|
@@ -209,6 +280,80 @@ static const Entry FORMAT_2_6[] PROGMEM = {
     E(0x05, TEXT_SHSD, DOUBLE, M_GENW, M_NONE, P_GEN1, P_NONE),
     E(0x06, TEXT_SGED, DOUBLE, M_GENW, M_NONE, P_GEN1, P_NONE),
 };
+static const uint8_t INDEX_2_0[] PROGMEM = {
+      9,  // TEXT_ACBB
+     11,  // TEXT_ACBD
+     10,  // TEXT_ACBW
+      0,  // TEXT_ADDQB
+      2,  // TEXT_ADDQD
+      1,  // TEXT_ADDQW
+      3,  // TEXT_CMPQB
+      5,  // TEXT_CMPQD
+      4,  // TEXT_CMPQW
+     15,  // TEXT_LPRB
+     17,  // TEXT_LPRD
+     16,  // TEXT_LPRW
+     12,  // TEXT_MOVQB
+     14,  // TEXT_MOVQD
+     13,  // TEXT_MOVQW
+      6,  // TEXT_SPRB
+      8,  // TEXT_SPRD
+      7,  // TEXT_SPRW
+};
+static const uint8_t INDEX_2_1[] PROGMEM = {
+      1,  // TEXT_SCSB
+      0,  // TEXT_SEQB
+      4,  // TEXT_SFSB
+      3,  // TEXT_SGTB
+      2,  // TEXT_SHIB
+      5,  // TEXT_SLOB
+      6,  // TEXT_SLTB
+};
+static const uint8_t INDEX_2_2[] PROGMEM = {
+      1,  // TEXT_SCCB
+      4,  // TEXT_SFCB
+      6,  // TEXT_SGEB
+      5,  // TEXT_SHSB
+      3,  // TEXT_SLEB
+      2,  // TEXT_SLSB
+      0,  // TEXT_SNEB
+};
+static const uint8_t INDEX_2_3[] PROGMEM = {
+      1,  // TEXT_SCSW
+      0,  // TEXT_SEQW
+      4,  // TEXT_SFSW
+      3,  // TEXT_SGTW
+      2,  // TEXT_SHIW
+      5,  // TEXT_SLOW
+      6,  // TEXT_SLTW
+};
+static const uint8_t INDEX_2_4[] PROGMEM = {
+      1,  // TEXT_SCCW
+      4,  // TEXT_SFCW
+      6,  // TEXT_SGEW
+      5,  // TEXT_SHSW
+      3,  // TEXT_SLEW
+      2,  // TEXT_SLSW
+      0,  // TEXT_SNEW
+};
+static const uint8_t INDEX_2_5[] PROGMEM = {
+      1,  // TEXT_SCSD
+      0,  // TEXT_SEQD
+      4,  // TEXT_SFSD
+      3,  // TEXT_SGTD
+      2,  // TEXT_SHID
+      5,  // TEXT_SLOD
+      6,  // TEXT_SLTD
+};
+static const uint8_t INDEX_2_6[] PROGMEM = {
+      1,  // TEXT_SCCD
+      4,  // TEXT_SFCD
+      6,  // TEXT_SGED
+      5,  // TEXT_SHSD
+      3,  // TEXT_SLED
+      2,  // TEXT_SLSD
+      0,  // TEXT_SNED
+};
 
 // Format 3: |_gen_|_op| |011111|ii|
 static const Entry FORMAT_3_1[] PROGMEM = {
@@ -230,6 +375,25 @@ static const Entry FORMAT_3_3[] PROGMEM = {
     E(0x06, TEXT_JSR,    DOUBLE, M_GENA, M_NONE, P_GEN1, P_NONE),
     E(0x07, TEXT_CASED,  DOUBLE, M_GENR, M_NONE, P_GEN1, P_NONE),
 };
+static const uint8_t INDEX_3_1[] PROGMEM = {
+      2,  // TEXT_ADJSPB
+      0,  // TEXT_BICPSRB
+      1,  // TEXT_BISPSRB
+      3,  // TEXT_CASEB
+};
+static const uint8_t INDEX_3_2[] PROGMEM = {
+      2,  // TEXT_ADJSPW
+      0,  // TEXT_BICPSRW
+      1,  // TEXT_BISPSRW
+      3,  // TEXT_CASEW
+};
+static const uint8_t INDEX_3_3[] PROGMEM = {
+      2,  // TEXT_ADJSPD
+      4,  // TEXT_CASED
+      0,  // TEXT_CXPD
+      3,  // TEXT_JSR
+      1,  // TEXT_JUMP
+};
 
 // Format 5: |00000|sho| |t|0|_op_|ii| |0000|1110|
 static const Entry FORMAT_5_0[] PROGMEM = {
@@ -249,6 +413,23 @@ static const Entry FORMAT_5_1[] PROGMEM = {
     E(0x0D, TEXT_SKPSW, WORD,   M_SOPT, M_NONE, P_SHORT, P_NONE),
     E(0x0F, TEXT_SKPSD, DOUBLE, M_SOPT, M_NONE, P_SHORT, P_NONE),
     E(0x8C, TEXT_SKPST, BYTE,   M_SOPT, M_NONE, P_SHORT, P_NONE),
+};
+static const uint8_t INDEX_5_0[] PROGMEM = {
+      0,  // TEXT_SETCFG
+};
+static const uint8_t INDEX_5_1[] PROGMEM = {
+      4,  // TEXT_CMPSB
+      6,  // TEXT_CMPSD
+      7,  // TEXT_CMPST
+      5,  // TEXT_CMPSW
+      0,  // TEXT_MOVSB
+      2,  // TEXT_MOVSD
+      3,  // TEXT_MOVST
+      1,  // TEXT_MOVSW
+      8,  // TEXT_SKPSB
+     10,  // TEXT_SKPSD
+     11,  // TEXT_SKPST
+      9,  // TEXT_SKPSW
 };
 
 // Format 6: |gen1_|gen| |2_|_op_|ii| |0100|1110|
@@ -296,6 +477,50 @@ static const Entry FORMAT_6[] PROGMEM = {
     E(0x3D, TEXT_ADDPW,  WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E(0x3F, TEXT_ADDPD,  DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
+static const uint8_t INDEX_6[] PROGMEM = {
+     30,  // TEXT_ABSB
+     32,  // TEXT_ABSD
+     31,  // TEXT_ABSW
+     39,  // TEXT_ADDPB
+     41,  // TEXT_ADDPD
+     40,  // TEXT_ADDPW
+      3,  // TEXT_ASHB
+      5,  // TEXT_ASHD
+      4,  // TEXT_ASHW
+      6,  // TEXT_CBITB
+      8,  // TEXT_CBITD
+      9,  // TEXT_CBITIB
+     11,  // TEXT_CBITID
+     10,  // TEXT_CBITIW
+      7,  // TEXT_CBITW
+     33,  // TEXT_COMB
+     35,  // TEXT_COMD
+     34,  // TEXT_COMW
+     36,  // TEXT_IBITB
+     38,  // TEXT_IBITD
+     37,  // TEXT_IBITW
+     12,  // TEXT_LSHB
+     14,  // TEXT_LSHD
+     13,  // TEXT_LSHW
+     21,  // TEXT_NEGB
+     23,  // TEXT_NEGD
+     22,  // TEXT_NEGW
+     24,  // TEXT_NOTB
+     26,  // TEXT_NOTD
+     25,  // TEXT_NOTW
+      0,  // TEXT_ROTB
+      2,  // TEXT_ROTD
+      1,  // TEXT_ROTW
+     15,  // TEXT_SBITB
+     17,  // TEXT_SBITD
+     18,  // TEXT_SBITIB
+     20,  // TEXT_SBITID
+     19,  // TEXT_SBITIW
+     16,  // TEXT_SBITW
+     27,  // TEXT_SUBPB
+     29,  // TEXT_SUBPD
+     28,  // TEXT_SUBPW
+};
 
 // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|
 static const Entry FORMAT_7[] PROGMEM = {
@@ -340,6 +565,47 @@ static const Entry FORMAT_7[] PROGMEM = {
     E(0x3D, TEXT_DIVW,   WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E(0x3F, TEXT_DIVD,   DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
+static const uint8_t INDEX_7[] PROGMEM = {
+      3,  // TEXT_CMPMB
+      5,  // TEXT_CMPMD
+      4,  // TEXT_CMPMW
+     24,  // TEXT_DEIB
+     26,  // TEXT_DEID
+     25,  // TEXT_DEIW
+     36,  // TEXT_DIVB
+     38,  // TEXT_DIVD
+     37,  // TEXT_DIVW
+      9,  // TEXT_EXTSB
+     11,  // TEXT_EXTSD
+     10,  // TEXT_EXTSW
+      6,  // TEXT_INSSB
+      8,  // TEXT_INSSD
+      7,  // TEXT_INSSW
+     21,  // TEXT_MEIB
+     23,  // TEXT_MEID
+     22,  // TEXT_MEIW
+     33,  // TEXT_MODB
+     35,  // TEXT_MODD
+     34,  // TEXT_MODW
+      0,  // TEXT_MOVMB
+      2,  // TEXT_MOVMD
+      1,  // TEXT_MOVMW
+     13,  // TEXT_MOVXBD
+     12,  // TEXT_MOVXBW
+     14,  // TEXT_MOVXWD
+     16,  // TEXT_MOVZBD
+     15,  // TEXT_MOVZBW
+     17,  // TEXT_MOVZWD
+     18,  // TEXT_MULB
+     20,  // TEXT_MULD
+     19,  // TEXT_MULW
+     27,  // TEXT_QUOB
+     29,  // TEXT_QUOD
+     28,  // TEXT_QUOW
+     30,  // TEXT_REMB
+     32,  // TEXT_REMD
+     31,  // TEXT_REMW
+};
 
 // Format 8: |gen1_|gen| |2_|reg|o|ii| |op|10|1110|
 static const Entry FORMAT_8_1[] PROGMEM = {
@@ -373,6 +639,38 @@ static const Entry FORMAT_8_4[] PROGMEM = {
     X(0x00, TEXT_CHECKB, BYTE,   M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, EM2_NONE, P_GEN2, EP2_NONE),
     X(0x01, TEXT_CHECKW, WORD,   M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, EM2_NONE, P_GEN2, EP2_NONE),
     X(0x03, TEXT_CHECKD, DOUBLE, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, EM2_NONE, P_GEN2, EP2_NONE),
+};
+static const uint8_t INDEX_8_1[] PROGMEM = {
+      0,  // TEXT_EXTB
+      2,  // TEXT_EXTD
+      1,  // TEXT_EXTW
+      3,  // TEXT_INDEXB
+      5,  // TEXT_INDEXD
+      4,  // TEXT_INDEXW
+};
+static const uint8_t INDEX_8_2[] PROGMEM = {
+      0,  // TEXT_CVTP
+      1,  // TEXT_FFSB
+      3,  // TEXT_FFSD
+      2,  // TEXT_FFSW
+};
+static const uint8_t INDEX_8_3[] PROGMEM = {
+      0,  // TEXT_INSB
+      2,  // TEXT_INSD
+      1,  // TEXT_INSW
+};
+static const uint8_t INDEX_8_3_1[] PROGMEM = {
+      0,  // TEXT_MOVSUB
+      2,  // TEXT_MOVSUD
+      1,  // TEXT_MOVSUW
+      3,  // TEXT_MOVUSB
+      5,  // TEXT_MOVUSD
+      4,  // TEXT_MOVUSW
+};
+static const uint8_t INDEX_8_4[] PROGMEM = {
+      0,  // TEXT_CHECKB
+      2,  // TEXT_CHECKD
+      1,  // TEXT_CHECKW
 };
 
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
@@ -409,6 +707,36 @@ static const Entry FORMAT_9[] PROGMEM = {
     E(0x3D, TEXT_FLOORFW, FLOAT,  M_FENR, M_GENW, P_GEN1, P_GEN2),
     E(0x3F, TEXT_FLOORFD, FLOAT,  M_FENR, M_GENW, P_GEN1, P_GEN2),
 };
+static const uint8_t INDEX_9[] PROGMEM = {
+     25,  // TEXT_FLOORFB
+     27,  // TEXT_FLOORFD
+     26,  // TEXT_FLOORFW
+     22,  // TEXT_FLOORLB
+     24,  // TEXT_FLOORLD
+     23,  // TEXT_FLOORLW
+      6,  // TEXT_LFSR
+      3,  // TEXT_MOVBF
+      0,  // TEXT_MOVBL
+      5,  // TEXT_MOVDF
+      2,  // TEXT_MOVDL
+      9,  // TEXT_MOVFL
+      8,  // TEXT_MOVLF
+      4,  // TEXT_MOVWF
+      1,  // TEXT_MOVWL
+     13,  // TEXT_ROUNDFB
+     15,  // TEXT_ROUNDFD
+     14,  // TEXT_ROUNDFW
+     10,  // TEXT_ROUNDLB
+     12,  // TEXT_ROUNDLD
+     11,  // TEXT_ROUNDLW
+      7,  // TEXT_SFSR
+     19,  // TEXT_TRUNCFB
+     21,  // TEXT_TRUNCFD
+     20,  // TEXT_TRUNCFW
+     16,  // TEXT_TRUNCLB
+     18,  // TEXT_TRUNCLD
+     17,  // TEXT_TRUNCLW
+};
 
 // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
 static const Entry FORMAT_11[] PROGMEM = {
@@ -429,6 +757,24 @@ static const Entry FORMAT_11[] PROGMEM = {
     E(0x34, TEXT_ABSL, LONG,  M_FENR, M_FENW, P_GEN1, P_GEN2),
     E(0x35, TEXT_ABSF, FLOAT, M_FENR, M_FENW, P_GEN1, P_GEN2),
 };
+static const uint8_t INDEX_11[] PROGMEM = {
+     15,  // TEXT_ABSF
+     14,  // TEXT_ABSL
+      1,  // TEXT_ADDF
+      0,  // TEXT_ADDL
+      5,  // TEXT_CMPF
+      4,  // TEXT_CMPL
+     11,  // TEXT_DIVF
+     10,  // TEXT_DIVL
+      3,  // TEXT_MOVF
+      2,  // TEXT_MOVL
+     13,  // TEXT_MULF
+     12,  // TEXT_MULL
+      9,  // TEXT_NEGF
+      8,  // TEXT_NEGL
+      7,  // TEXT_SUBF
+      6,  // TEXT_SUBL
+};
 
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
 static const Entry FORMAT_14_1[] PROGMEM = {
@@ -439,12 +785,20 @@ static const Entry FORMAT_14_2[] PROGMEM = {
     E(0x0B, TEXT_LMR, DOUBLE, M_MREG, M_GENR, P_SHORT, P_GEN1),
     E(0x0F, TEXT_SMR, DOUBLE, M_MREG, M_GENW, P_SHORT, P_GEN1),
 };
+static const uint8_t INDEX_14_1[] PROGMEM = {
+      0,  // TEXT_RDVAL
+      1,  // TEXT_WRVAL
+};
+static const uint8_t INDEX_14_2[] PROGMEM = {
+      0,  // TEXT_LMR
+      1,  // TEXT_SMR
+};
 // clang-format on
 
 struct TableNs32000::EntryPage : EntryPageBase<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
-            const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix), _mask(mask), _post(post) {}
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix), _mask(mask), _post(post) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
     Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
@@ -458,40 +812,40 @@ private:
 
 // Standard Instructions
 static const TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
-        {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_0)},
-        {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_1)},
-        {0x00, 0xC0, 1, ARRAY_RANGE(FORMAT_4)},
-        {0x00, 0x80, 1, ARRAY_RANGE(FORMAT_2_0)},
-        {0x3C, 0xF8, 0, ARRAY_RANGE(FORMAT_2_1)},
-        {0xBC, 0xF8, 0, ARRAY_RANGE(FORMAT_2_2)},
-        {0x3D, 0xF8, 0, ARRAY_RANGE(FORMAT_2_3)},
-        {0xBD, 0xF8, 0, ARRAY_RANGE(FORMAT_2_4)},
-        {0x3F, 0xF8, 0, ARRAY_RANGE(FORMAT_2_5)},
-        {0xBF, 0xF8, 0, ARRAY_RANGE(FORMAT_2_6)},
-        {0x7C, 0xF8, 0, ARRAY_RANGE(FORMAT_3_1)},
-        {0x7D, 0xF8, 0, ARRAY_RANGE(FORMAT_3_2)},
-        {0x7F, 0xF8, 0, ARRAY_RANGE(FORMAT_3_3)},
-        {0x0E, 0x80, 1, ARRAY_RANGE(FORMAT_5_0)},
-        {0x0E, 0x00, 1, ARRAY_RANGE(FORMAT_5_1)},
-        {0x4E, 0xC0, 1, ARRAY_RANGE(FORMAT_6)},
-        {0xCE, 0xC0, 1, ARRAY_RANGE(FORMAT_7)},
-        {0x2E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_1)},
-        {0x6E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_2)},
-        {0xAE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_3)},
-        {0xEE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_4)},
+        {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_0), ARRAY_RANGE(INDEX_0)},
+        {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_1), ARRAY_RANGE(INDEX_1)},
+        {0x00, 0xC0, 1, ARRAY_RANGE(FORMAT_4), ARRAY_RANGE(INDEX_4)},
+        {0x00, 0x80, 1, ARRAY_RANGE(FORMAT_2_0), ARRAY_RANGE(INDEX_2_0)},
+        {0x3C, 0xF8, 0, ARRAY_RANGE(FORMAT_2_1), ARRAY_RANGE(INDEX_2_1)},
+        {0xBC, 0xF8, 0, ARRAY_RANGE(FORMAT_2_2), ARRAY_RANGE(INDEX_2_2)},
+        {0x3D, 0xF8, 0, ARRAY_RANGE(FORMAT_2_3), ARRAY_RANGE(INDEX_2_3)},
+        {0xBD, 0xF8, 0, ARRAY_RANGE(FORMAT_2_4), ARRAY_RANGE(INDEX_2_4)},
+        {0x3F, 0xF8, 0, ARRAY_RANGE(FORMAT_2_5), ARRAY_RANGE(INDEX_2_5)},
+        {0xBF, 0xF8, 0, ARRAY_RANGE(FORMAT_2_6), ARRAY_RANGE(INDEX_2_6)},
+        {0x7C, 0xF8, 0, ARRAY_RANGE(FORMAT_3_1), ARRAY_RANGE(INDEX_3_1)},
+        {0x7D, 0xF8, 0, ARRAY_RANGE(FORMAT_3_2), ARRAY_RANGE(INDEX_3_2)},
+        {0x7F, 0xF8, 0, ARRAY_RANGE(FORMAT_3_3), ARRAY_RANGE(INDEX_3_3)},
+        {0x0E, 0x80, 1, ARRAY_RANGE(FORMAT_5_0), ARRAY_RANGE(INDEX_5_0)},
+        {0x0E, 0x00, 1, ARRAY_RANGE(FORMAT_5_1), ARRAY_RANGE(INDEX_5_1)},
+        {0x4E, 0xC0, 1, ARRAY_RANGE(FORMAT_6), ARRAY_RANGE(INDEX_6)},
+        {0xCE, 0xC0, 1, ARRAY_RANGE(FORMAT_7), ARRAY_RANGE(INDEX_7)},
+        {0x2E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_1), ARRAY_RANGE(INDEX_8_1)},
+        {0x6E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_2), ARRAY_RANGE(INDEX_8_2)},
+        {0xAE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_3), ARRAY_RANGE(INDEX_8_3)},
+        {0xEE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_4), ARRAY_RANGE(INDEX_8_4)},
 };
 
 // Floating point instructions
 static const TableNs32000::EntryPage NS32081_PAGES[] PROGMEM = {
-        {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9)},
-        {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11)},
+        {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9), ARRAY_RANGE(INDEX_9)},
+        {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11), ARRAY_RANGE(INDEX_11)},
 };
 
 // Memory management instructions
 static const TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
-        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1)},
-        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1)},
-        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2)},
+        {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1), ARRAY_RANGE(INDEX_8_3_1)},
+        {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1), ARRAY_RANGE(INDEX_14_1)},
+        {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2), ARRAY_RANGE(INDEX_14_2)},
 };
 
 static bool isPrefix(Config::opcode_t opCode, const TableNs32000::EntryPage *page,
@@ -545,8 +899,8 @@ Error TableNs32000::searchName(
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
         auto post = page->post();
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setPost(0, post != 0);

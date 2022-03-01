@@ -183,6 +183,160 @@ static constexpr Entry MOS6502_TABLE[] PROGMEM = {
     E(0xF0, TEXT_BEQ, REL),
 };
 
+static constexpr uint8_t MOS6502_INDEX[] PROGMEM = {
+     36,  // TEXT_ADC
+     44,  // TEXT_ADC
+     64,  // TEXT_ADC
+     83,  // TEXT_ADC
+    105,  // TEXT_ADC
+    113,  // TEXT_ADC
+    130,  // TEXT_ADC
+    138,  // TEXT_ADC
+     34,  // TEXT_AND
+     42,  // TEXT_AND
+     62,  // TEXT_AND
+     81,  // TEXT_AND
+    103,  // TEXT_AND
+    111,  // TEXT_AND
+    128,  // TEXT_AND
+    136,  // TEXT_AND
+     25,  // TEXT_ASL
+     57,  // TEXT_ASL
+     75,  // TEXT_ASL
+     96,  // TEXT_ASL
+    122,  // TEXT_ASL
+    147,  // TEXT_BCC
+    148,  // TEXT_BCS
+    150,  // TEXT_BEQ
+     40,  // TEXT_BIT
+     79,  // TEXT_BIT
+    144,  // TEXT_BMI
+    149,  // TEXT_BNE
+    143,  // TEXT_BPL
+      0,  // TEXT_BRK
+    145,  // TEXT_BVC
+    146,  // TEXT_BVS
+     18,  // TEXT_CLC
+     23,  // TEXT_CLD
+     20,  // TEXT_CLI
+     22,  // TEXT_CLV
+     38,  // TEXT_CMP
+     47,  // TEXT_CMP
+     67,  // TEXT_CMP
+     86,  // TEXT_CMP
+    108,  // TEXT_CMP
+    116,  // TEXT_CMP
+    133,  // TEXT_CMP
+    141,  // TEXT_CMP
+     32,  // TEXT_CPX
+     54,  // TEXT_CPX
+     93,  // TEXT_CPX
+     31,  // TEXT_CPY
+     51,  // TEXT_CPY
+     90,  // TEXT_CPY
+     55,  // TEXT_DEC
+     73,  // TEXT_DEC
+     94,  // TEXT_DEC
+    120,  // TEXT_DEC
+     10,  // TEXT_DEX
+      8,  // TEXT_DEY
+     35,  // TEXT_EOR
+     43,  // TEXT_EOR
+     63,  // TEXT_EOR
+     82,  // TEXT_EOR
+    104,  // TEXT_EOR
+    112,  // TEXT_EOR
+    129,  // TEXT_EOR
+    137,  // TEXT_EOR
+     56,  // TEXT_INC
+     74,  // TEXT_INC
+     95,  // TEXT_INC
+    121,  // TEXT_INC
+     11,  // TEXT_INX
+      9,  // TEXT_INY
+    100,  // TEXT_JMP
+    126,  // TEXT_JMP
+    101,  // TEXT_JSR
+     37,  // TEXT_LDA
+     46,  // TEXT_LDA
+     66,  // TEXT_LDA
+     85,  // TEXT_LDA
+    107,  // TEXT_LDA
+    115,  // TEXT_LDA
+    132,  // TEXT_LDA
+    140,  // TEXT_LDA
+     30,  // TEXT_LDX
+     53,  // TEXT_LDX
+     72,  // TEXT_LDX
+     92,  // TEXT_LDX
+    119,  // TEXT_LDX
+     29,  // TEXT_LDY
+     50,  // TEXT_LDY
+     70,  // TEXT_LDY
+     89,  // TEXT_LDY
+    118,  // TEXT_LDY
+     27,  // TEXT_LSR
+     59,  // TEXT_LSR
+     77,  // TEXT_LSR
+     98,  // TEXT_LSR
+    124,  // TEXT_LSR
+      3,  // TEXT_NOP
+     33,  // TEXT_ORA
+     41,  // TEXT_ORA
+     61,  // TEXT_ORA
+     80,  // TEXT_ORA
+    102,  // TEXT_ORA
+    110,  // TEXT_ORA
+    127,  // TEXT_ORA
+    135,  // TEXT_ORA
+      6,  // TEXT_PHA
+      4,  // TEXT_PHP
+      7,  // TEXT_PLA
+      5,  // TEXT_PLP
+     26,  // TEXT_ROL
+     58,  // TEXT_ROL
+     76,  // TEXT_ROL
+     97,  // TEXT_ROL
+    123,  // TEXT_ROL
+     28,  // TEXT_ROR
+     60,  // TEXT_ROR
+     78,  // TEXT_ROR
+     99,  // TEXT_ROR
+    125,  // TEXT_ROR
+      1,  // TEXT_RTI
+      2,  // TEXT_RTS
+     39,  // TEXT_SBC
+     48,  // TEXT_SBC
+     68,  // TEXT_SBC
+     87,  // TEXT_SBC
+    109,  // TEXT_SBC
+    117,  // TEXT_SBC
+    134,  // TEXT_SBC
+    142,  // TEXT_SBC
+     19,  // TEXT_SEC
+     24,  // TEXT_SED
+     21,  // TEXT_SEI
+     45,  // TEXT_STA
+     65,  // TEXT_STA
+     84,  // TEXT_STA
+    106,  // TEXT_STA
+    114,  // TEXT_STA
+    131,  // TEXT_STA
+    139,  // TEXT_STA
+     52,  // TEXT_STX
+     71,  // TEXT_STX
+     91,  // TEXT_STX
+     49,  // TEXT_STY
+     69,  // TEXT_STY
+     88,  // TEXT_STY
+     15,  // TEXT_TAX
+     13,  // TEXT_TAY
+     17,  // TEXT_TSX
+     14,  // TEXT_TXA
+     16,  // TEXT_TXS
+     12,  // TEXT_TYA
+};
+
 static constexpr Entry G65SC02_TABLE[] PROGMEM = {
     E(0x5A, TEXT_PHY, IMPL),
     E(0x7A, TEXT_PLY, IMPL),
@@ -211,6 +365,36 @@ static constexpr Entry G65SC02_TABLE[] PROGMEM = {
     E(0xD2, TEXT_CMP, ZPG_IDIR),
     E(0xF2, TEXT_SBC, ZPG_IDIR),
     E(0x80, TEXT_BRA, REL),
+};
+
+static constexpr uint8_t G65SC02_INDEX[] PROGMEM = {
+     21,  // TEXT_ADC
+     19,  // TEXT_AND
+      6,  // TEXT_BIT
+     10,  // TEXT_BIT
+     15,  // TEXT_BIT
+     26,  // TEXT_BRA
+     24,  // TEXT_CMP
+      5,  // TEXT_DEC
+     20,  // TEXT_EOR
+      4,  // TEXT_INC
+     17,  // TEXT_JMP
+     23,  // TEXT_LDA
+     18,  // TEXT_ORA
+      2,  // TEXT_PHX
+      0,  // TEXT_PHY
+      3,  // TEXT_PLX
+      1,  // TEXT_PLY
+     25,  // TEXT_SBC
+     22,  // TEXT_STA
+      9,  // TEXT_STZ
+     11,  // TEXT_STZ
+     14,  // TEXT_STZ
+     16,  // TEXT_STZ
+      8,  // TEXT_TRB
+     13,  // TEXT_TRB
+      7,  // TEXT_TSB
+     12,  // TEXT_TSB
 };
 
 static constexpr Entry R65C02_TABLE[] PROGMEM = {
@@ -248,9 +432,49 @@ static constexpr Entry R65C02_TABLE[] PROGMEM = {
     E(0xF7, TEXT_SMB7, ZPG),
 };
 
+static constexpr uint8_t R65C02_INDEX[] PROGMEM = {
+      0,  // TEXT_BBR0
+      1,  // TEXT_BBR1
+      2,  // TEXT_BBR2
+      3,  // TEXT_BBR3
+      4,  // TEXT_BBR4
+      5,  // TEXT_BBR5
+      6,  // TEXT_BBR6
+      7,  // TEXT_BBR7
+      8,  // TEXT_BBS0
+      9,  // TEXT_BBS1
+     10,  // TEXT_BBS2
+     11,  // TEXT_BBS3
+     12,  // TEXT_BBS4
+     13,  // TEXT_BBS5
+     14,  // TEXT_BBS6
+     15,  // TEXT_BBS7
+     16,  // TEXT_RMB0
+     17,  // TEXT_RMB1
+     18,  // TEXT_RMB2
+     19,  // TEXT_RMB3
+     20,  // TEXT_RMB4
+     21,  // TEXT_RMB5
+     22,  // TEXT_RMB6
+     23,  // TEXT_RMB7
+     24,  // TEXT_SMB0
+     25,  // TEXT_SMB1
+     26,  // TEXT_SMB2
+     27,  // TEXT_SMB3
+     28,  // TEXT_SMB4
+     29,  // TEXT_SMB5
+     30,  // TEXT_SMB6
+     31,  // TEXT_SMB7
+};
+
 static constexpr Entry W65C02S_TABLE[] PROGMEM = {
     E(0xCB, TEXT_WAI, IMPL),
     E(0xDB, TEXT_STP, IMPL),
+};
+
+static constexpr uint8_t W65C02S_INDEX[] PROGMEM = {
+      1,  // TEXT_STP
+      0,  // TEXT_WAI
 };
 
 static constexpr Entry W65C816_TABLE[] PROGMEM = {
@@ -330,7 +554,6 @@ static constexpr Entry W65C816_TABLE[] PROGMEM = {
     E(0xF7, TEXT_SBC, ZPG_IDIR_LONG_IDY),
     E(0xEF, TEXT_SBC, ABS_LONG),
     E(0xFF, TEXT_SBC, ABS_LONG_IDX),
-
     E(0xDC, TEXT_JMPL, ABS_IDIR),
     E(0x07, TEXT_ORAL, ZPG_IDIR),
     E(0x17, TEXT_ORAL, ZPG_IDIR_IDY),
@@ -349,36 +572,133 @@ static constexpr Entry W65C816_TABLE[] PROGMEM = {
     E(0xE7, TEXT_SBCL, ZPG_IDIR),
     E(0xF7, TEXT_SBCL, ZPG_IDIR_IDY),
 };
-// clang-format off
+
+static constexpr uint8_t W65C816_INDEX[] PROGMEM = {
+     46,  // TEXT_ADC
+     47,  // TEXT_ADC
+     48,  // TEXT_ADC
+     49,  // TEXT_ADC
+     50,  // TEXT_ADC
+     51,  // TEXT_ADC
+     83,  // TEXT_ADCL
+     84,  // TEXT_ADCL
+     34,  // TEXT_AND
+     35,  // TEXT_AND
+     36,  // TEXT_AND
+     37,  // TEXT_AND
+     38,  // TEXT_AND
+     39,  // TEXT_AND
+     79,  // TEXT_ANDL
+     80,  // TEXT_ANDL
+     23,  // TEXT_BRL
+     64,  // TEXT_CMP
+     65,  // TEXT_CMP
+     66,  // TEXT_CMP
+     67,  // TEXT_CMP
+     68,  // TEXT_CMP
+     69,  // TEXT_CMP
+     89,  // TEXT_CMPL
+     90,  // TEXT_CMPL
+     14,  // TEXT_COP
+     40,  // TEXT_EOR
+     41,  // TEXT_EOR
+     42,  // TEXT_EOR
+     43,  // TEXT_EOR
+     44,  // TEXT_EOR
+     45,  // TEXT_EOR
+     81,  // TEXT_EORL
+     82,  // TEXT_EORL
+     18,  // TEXT_JMP
+     19,  // TEXT_JMP
+     76,  // TEXT_JMPL
+     21,  // TEXT_JSL
+     20,  // TEXT_JSR
+     58,  // TEXT_LDA
+     59,  // TEXT_LDA
+     60,  // TEXT_LDA
+     61,  // TEXT_LDA
+     62,  // TEXT_LDA
+     63,  // TEXT_LDA
+     87,  // TEXT_LDAL
+     88,  // TEXT_LDAL
+     27,  // TEXT_MVN
+     26,  // TEXT_MVP
+     28,  // TEXT_ORA
+     29,  // TEXT_ORA
+     30,  // TEXT_ORA
+     31,  // TEXT_ORA
+     32,  // TEXT_ORA
+     33,  // TEXT_ORA
+     77,  // TEXT_ORAL
+     78,  // TEXT_ORAL
+     25,  // TEXT_PEA
+     24,  // TEXT_PEI
+     22,  // TEXT_PER
+      8,  // TEXT_PHB
+      0,  // TEXT_PHD
+      4,  // TEXT_PHK
+     10,  // TEXT_PLB
+      2,  // TEXT_PLD
+     16,  // TEXT_REP
+      6,  // TEXT_RTL
+     70,  // TEXT_SBC
+     71,  // TEXT_SBC
+     72,  // TEXT_SBC
+     73,  // TEXT_SBC
+     74,  // TEXT_SBC
+     75,  // TEXT_SBC
+     91,  // TEXT_SBCL
+     92,  // TEXT_SBCL
+     17,  // TEXT_SEP
+     52,  // TEXT_STA
+     53,  // TEXT_STA
+     54,  // TEXT_STA
+     55,  // TEXT_STA
+     56,  // TEXT_STA
+     57,  // TEXT_STA
+     85,  // TEXT_STAL
+     86,  // TEXT_STAL
+      5,  // TEXT_TCD
+      1,  // TEXT_TCS
+      7,  // TEXT_TDC
+      3,  // TEXT_TSC
+      9,  // TEXT_TXY
+     11,  // TEXT_TYX
+     15,  // TEXT_WDM
+     12,  // TEXT_XBA
+     13,  // TEXT_XCE
+};
+// clang-format on
 
 struct TableMos6502::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(const Entry *table, const Entry *end)
-        : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableMos6502::EntryPage MOS6502_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MOS6502_TABLE)},
+        {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
 };
 static constexpr TableMos6502::EntryPage G65SC02_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(G65SC02_TABLE)},
+        {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
+        {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
 };
 static constexpr TableMos6502::EntryPage R65C02_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(G65SC02_TABLE)},
-        {ARRAY_RANGE(R65C02_TABLE)},
+        {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
+        {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
+        {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
 };
 static constexpr TableMos6502::EntryPage W65C02S_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(G65SC02_TABLE)},
-        {ARRAY_RANGE(R65C02_TABLE)},
-        {ARRAY_RANGE(W65C02S_TABLE)},
+        {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
+        {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
+        {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
+        {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
 };
 static constexpr TableMos6502::EntryPage W65C816_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MOS6502_TABLE)},
-        {ARRAY_RANGE(G65SC02_TABLE)},
-        {ARRAY_RANGE(W65C02S_TABLE)},
-        {ARRAY_RANGE(W65C816_TABLE)},
+        {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
+        {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
+        {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
+        {ARRAY_RANGE(W65C816_TABLE), ARRAY_RANGE(W65C816_INDEX)},
 };
 
 static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
@@ -388,8 +708,7 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
     if (opr == IMMA)
         return table == IMMX || table == IMM8;
     if (opr == ZPG)
-        return table == ABS || table == REL || table == ABS_LONG ||
-               table == REL_LONG;
+        return table == ABS || table == REL || table == ABS_LONG || table == REL_LONG;
     if (opr == ZPG_IDX_IDIR)
         return table == ABS_IDX_IDIR;
     if (opr == ZPG_IDIR)
@@ -413,9 +732,8 @@ Error TableMos6502::searchName(
         InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, AddrMode>(insn.name(),
-                insn.addrMode(), page->table(), page->end(), acceptAddrMode,
-                count);
+        auto entry = TableBase::searchName<EntryPage, Entry, AddrMode>(
+                insn.name(), insn.addrMode(), page, acceptAddrMode, count);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setOpCode(entry->opCode());
@@ -426,20 +744,18 @@ Error TableMos6502::searchName(
 }
 
 static bool acceptAddrMode(AddrMode addrMode, bool useIndirectLong) {
-    if (addrMode == ABS_IDIR_LONG || addrMode == ZPG_IDIR_LONG ||
-            addrMode == ZPG_IDIR_LONG_IDY)
+    if (addrMode == ABS_IDIR_LONG || addrMode == ZPG_IDIR_LONG || addrMode == ZPG_IDIR_LONG_IDY)
         return useIndirectLong;
     return true;
 }
 
-Error TableMos6502::searchOpCode(InsnMos6502 &insn, bool useIndirectLong,
-        const EntryPage *pages, const EntryPage *end) const {
+Error TableMos6502::searchOpCode(InsnMos6502 &insn, bool useIndirectLong, const EntryPage *pages,
+        const EntryPage *end) const {
     auto opCode = insn.opCode();
     for (auto page = pages; page < end; page++) {
         for (auto entry = page->table();
-                entry < page->end() &&
-                (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                         opCode, entry, page->end()));
+                entry < page->end() && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
+                                                opCode, entry, page->end()));
                 entry++) {
             insn.setFlags(entry->flags());
             if (!acceptAddrMode(insn.addrMode(), useIndirectLong))
@@ -462,7 +778,7 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
 class CpuTable : public CpuTableBase<CpuType, TableMos6502::EntryPage> {
 public:
     constexpr CpuTable(CpuType cpuType, const char *name, const TableMos6502::EntryPage *table,
-                       const TableMos6502::EntryPage *end)
+            const TableMos6502::EntryPage *end)
         : CpuTableBase(cpuType, name, table, end) {}
 };
 
@@ -513,9 +829,8 @@ bool TableMos6502::setCpu(const char *cpu) {
         return setCpu(R65C02);
     if (strcasecmp_P(cpu, TEXT_CPU_G65SC02) == 0)
         return setCpu(G65SC02);
-    if (strcasecmp_P(cpu, TEXT_CPU_W65816) == 0 ||
-        strcasecmp_P(cpu, TEXT_CPU_W65C816) == 0 ||
-        strcasecmp_P(cpu, TEXT_CPU_W65C816S) == 0)
+    if (strcasecmp_P(cpu, TEXT_CPU_W65816) == 0 || strcasecmp_P(cpu, TEXT_CPU_W65C816) == 0 ||
+            strcasecmp_P(cpu, TEXT_CPU_W65C816S) == 0)
         return setCpu(W65C816);
     return false;
 }

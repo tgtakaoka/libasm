@@ -37,6 +37,8 @@ public:
 
     void setAlias(bool enable) { _aliasEnabled = enable; }
 
+    struct EntryPage;
+
 private:
     bool _aliasEnabled;
 };

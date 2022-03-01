@@ -151,6 +151,126 @@ static constexpr Entry MC6809_P00[] PROGMEM = {
     E(0xCF, TEXT_STU,   M_GEN16),
 };
 
+static constexpr uint8_t MC6809_I00[] PROGMEM = {
+     50,  // TEXT_ABX
+     89,  // TEXT_ADCA
+    108,  // TEXT_ADCB
+     91,  // TEXT_ADDA
+    110,  // TEXT_ADDB
+    101,  // TEXT_ADDD
+     83,  // TEXT_ANDA
+    102,  // TEXT_ANDB
+     19,  // TEXT_ANDCC
+      5,  // TEXT_ASL
+     60,  // TEXT_ASLA
+     72,  // TEXT_ASLB
+      4,  // TEXT_ASR
+     59,  // TEXT_ASRA
+     71,  // TEXT_ASRB
+     28,  // TEXT_BCC
+     30,  // TEXT_BCS
+     32,  // TEXT_BEQ
+     37,  // TEXT_BGE
+     39,  // TEXT_BGT
+     25,  // TEXT_BHI
+     27,  // TEXT_BHS
+     84,  // TEXT_BITA
+    103,  // TEXT_BITB
+     40,  // TEXT_BLE
+     29,  // TEXT_BLO
+     26,  // TEXT_BLS
+     38,  // TEXT_BLT
+     36,  // TEXT_BMI
+     31,  // TEXT_BNE
+     35,  // TEXT_BPL
+     23,  // TEXT_BRA
+     24,  // TEXT_BRN
+     93,  // TEXT_BSR
+     33,  // TEXT_BVC
+     34,  // TEXT_BVS
+     12,  // TEXT_CLR
+     66,  // TEXT_CLRA
+     78,  // TEXT_CLRB
+     80,  // TEXT_CMPA
+     99,  // TEXT_CMPB
+     92,  // TEXT_CMPX
+      1,  // TEXT_COM
+     56,  // TEXT_COMA
+     68,  // TEXT_COMB
+     52,  // TEXT_CWAI
+     17,  // TEXT_DAA
+      8,  // TEXT_DEC
+     63,  // TEXT_DECA
+     75,  // TEXT_DECB
+     88,  // TEXT_EORA
+    107,  // TEXT_EORB
+     21,  // TEXT_EXG
+      9,  // TEXT_INC
+     64,  // TEXT_INCA
+     76,  // TEXT_INCB
+     11,  // TEXT_JMP
+     94,  // TEXT_JSR
+     15,  // TEXT_LBRA
+     16,  // TEXT_LBSR
+     85,  // TEXT_LDA
+    104,  // TEXT_LDB
+    111,  // TEXT_LDD
+    114,  // TEXT_LDU
+     95,  // TEXT_LDX
+     43,  // TEXT_LEAS
+     44,  // TEXT_LEAU
+     41,  // TEXT_LEAX
+     42,  // TEXT_LEAY
+      6,  // TEXT_LSL
+     61,  // TEXT_LSLA
+     73,  // TEXT_LSLB
+      2,  // TEXT_LSR
+     57,  // TEXT_LSRA
+     69,  // TEXT_LSRB
+     53,  // TEXT_MUL
+      0,  // TEXT_NEG
+     55,  // TEXT_NEGA
+     67,  // TEXT_NEGB
+     13,  // TEXT_NOP
+     90,  // TEXT_ORA
+    109,  // TEXT_ORB
+     18,  // TEXT_ORCC
+     45,  // TEXT_PSHS
+     47,  // TEXT_PSHU
+     46,  // TEXT_PULS
+     48,  // TEXT_PULU
+      7,  // TEXT_ROL
+     62,  // TEXT_ROLA
+     74,  // TEXT_ROLB
+      3,  // TEXT_ROR
+     58,  // TEXT_RORA
+     70,  // TEXT_RORB
+     51,  // TEXT_RTI
+     49,  // TEXT_RTS
+     81,  // TEXT_SBCA
+    100,  // TEXT_SBCB
+     20,  // TEXT_SEX
+     86,  // TEXT_STA
+     87,  // TEXT_STA
+    105,  // TEXT_STB
+    106,  // TEXT_STB
+    112,  // TEXT_STD
+    113,  // TEXT_STD
+    115,  // TEXT_STU
+    116,  // TEXT_STU
+     96,  // TEXT_STX
+     97,  // TEXT_STX
+     79,  // TEXT_SUBA
+     98,  // TEXT_SUBB
+     82,  // TEXT_SUBD
+     54,  // TEXT_SWI
+     14,  // TEXT_SYNC
+     22,  // TEXT_TFR
+     10,  // TEXT_TST
+     65,  // TEXT_TSTA
+     77,  // TEXT_TSTB
+};
+
 static constexpr Entry MC6809_P10[] PROGMEM = {
     E(0x21, TEXT_LBRN,  M_LREL),
     E(0x22, TEXT_LBHI,  M_LREL),
@@ -180,10 +300,45 @@ static constexpr Entry MC6809_P10[] PROGMEM = {
     E(0xCF, TEXT_STS,   M_GEN16),
 };
 
+static constexpr uint8_t MC6809_I10[] PROGMEM = {
+     18,  // TEXT_CMPD
+     19,  // TEXT_CMPY
+      4,  // TEXT_LBCC
+      6,  // TEXT_LBCS
+      8,  // TEXT_LBEQ
+     13,  // TEXT_LBGE
+     15,  // TEXT_LBGT
+      1,  // TEXT_LBHI
+      3,  // TEXT_LBHS
+     16,  // TEXT_LBLE
+      5,  // TEXT_LBLO
+      2,  // TEXT_LBLS
+     14,  // TEXT_LBLT
+     12,  // TEXT_LBMI
+      7,  // TEXT_LBNE
+     11,  // TEXT_LBPL
+      0,  // TEXT_LBRN
+      9,  // TEXT_LBVC
+     10,  // TEXT_LBVS
+     23,  // TEXT_LDS
+     20,  // TEXT_LDY
+     24,  // TEXT_STS
+     25,  // TEXT_STS
+     21,  // TEXT_STY
+     22,  // TEXT_STY
+     17,  // TEXT_SWI2
+};
+
 static constexpr Entry MC6809_P11[] PROGMEM = {
     E(0x3F, TEXT_SWI3,  M_NONE),
     E(0x83, TEXT_CMPU,  M_GEN16),
     E(0x8C, TEXT_CMPS,  M_GEN16),
+};
+
+static constexpr uint8_t MC6809_I11[] PROGMEM = {
+      2,  // TEXT_CMPS
+      1,  // TEXT_CMPU
+      0,  // TEXT_SWI3
 };
 
 static constexpr Entry HD6309_P00[] PROGMEM = {
@@ -193,6 +348,15 @@ static constexpr Entry HD6309_P00[] PROGMEM = {
     X(0x0B, TEXT_TIM,   M_IM8,  M_GMEM),
     E(0x14, TEXT_SEXW,  M_NONE),
     E(0xCD, TEXT_LDQ,   M_IM32),
+};
+
+static constexpr uint8_t HD6309_I00[] PROGMEM = {
+      1,  // TEXT_AIM
+      2,  // TEXT_EIM
+      5,  // TEXT_LDQ
+      0,  // TEXT_OIM
+      4,  // TEXT_SEXW
+      3,  // TEXT_TIM
 };
 
 static constexpr Entry HD6309_P10[] PROGMEM = {
@@ -246,6 +410,57 @@ static constexpr Entry HD6309_P10[] PROGMEM = {
     E(0xCD, TEXT_STQ,   M_GEN16),
 };
 
+static constexpr uint8_t HD6309_I10[] PROGMEM = {
+     41,  // TEXT_ADCD
+      1,  // TEXT_ADCR
+      0,  // TEXT_ADDR
+     43,  // TEXT_ADDW
+     35,  // TEXT_ANDD
+      4,  // TEXT_ANDR
+     17,  // TEXT_ASLD
+     16,  // TEXT_ASRD
+     36,  // TEXT_BITD
+     23,  // TEXT_CLRD
+     31,  // TEXT_CLRW
+      7,  // TEXT_CMPR
+     33,  // TEXT_CMPW
+     13,  // TEXT_COMD
+     24,  // TEXT_COMW
+     20,  // TEXT_DECD
+     28,  // TEXT_DECW
+     40,  // TEXT_EORD
+      6,  // TEXT_EORR
+     21,  // TEXT_INCD
+     29,  // TEXT_INCW
+     44,  // TEXT_LDQ
+     45,  // TEXT_LDQ
+     37,  // TEXT_LDW
+     18,  // TEXT_LSLD
+     14,  // TEXT_LSRD
+     25,  // TEXT_LSRW
+     12,  // TEXT_NEGD
+     42,  // TEXT_ORD
+      5,  // TEXT_ORR
+      8,  // TEXT_PSHSW
+     10,  // TEXT_PSHUW
+      9,  // TEXT_PULSW
+     11,  // TEXT_PULUW
+     19,  // TEXT_ROLD
+     27,  // TEXT_ROLW
+     15,  // TEXT_RORD
+     26,  // TEXT_RORW
+     34,  // TEXT_SBCD
+      3,  // TEXT_SBCR
+     46,  // TEXT_STQ
+     47,  // TEXT_STQ
+     38,  // TEXT_STW
+     39,  // TEXT_STW
+      2,  // TEXT_SUBR
+     32,  // TEXT_SUBW
+     22,  // TEXT_TSTD
+     30,  // TEXT_TSTW
+};
+
 static constexpr Entry HD6309_P11[] PROGMEM = {
     X(0x30, TEXT_BAND,  M_RBIT, M_DBIT),
     X(0x31, TEXT_BIAND, M_RBIT, M_DBIT),
@@ -287,6 +502,48 @@ static constexpr Entry HD6309_P11[] PROGMEM = {
     E(0xC7, TEXT_STF,   M_GEN8),
     E(0xCB, TEXT_ADDF,  M_GEN8),
 };
+
+static constexpr uint8_t HD6309_I11[] PROGMEM = {
+     29,  // TEXT_ADDE
+     38,  // TEXT_ADDF
+      0,  // TEXT_BAND
+      4,  // TEXT_BEOR
+      1,  // TEXT_BIAND
+      5,  // TEXT_BIEOR
+      3,  // TEXT_BIOR
+     12,  // TEXT_BITMD
+      2,  // TEXT_BOR
+     18,  // TEXT_CLRE
+     23,  // TEXT_CLRF
+     25,  // TEXT_CMPE
+     34,  // TEXT_CMPF
+     14,  // TEXT_COME
+     19,  // TEXT_COMF
+     15,  // TEXT_DECE
+     20,  // TEXT_DECF
+     30,  // TEXT_DIVD
+     31,  // TEXT_DIVQ
+     16,  // TEXT_INCE
+     21,  // TEXT_INCF
+      6,  // TEXT_LDBT
+     26,  // TEXT_LDE
+     35,  // TEXT_LDF
+     13,  // TEXT_LDMD
+     32,  // TEXT_MULD
+      7,  // TEXT_STBT
+     27,  // TEXT_STE
+     28,  // TEXT_STE
+     36,  // TEXT_STF
+     37,  // TEXT_STF
+     24,  // TEXT_SUBE
+     33,  // TEXT_SUBF
+      8,  // TEXT_TFM
+      9,  // TEXT_TFM
+     10,  // TEXT_TFM
+     11,  // TEXT_TFM
+     17,  // TEXT_TSTE
+     22,  // TEXT_TSTF
+};
 // clang-format on
 
 static constexpr Config::opcode_t PREFIX_P00 = 0x00;
@@ -298,8 +555,9 @@ bool TableMc6809::isPrefix(Config::opcode_t opCode) {
 }
 
 struct TableMc6809::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix) {}
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
+            const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
 
@@ -308,18 +566,18 @@ private:
 };
 
 static constexpr TableMc6809::EntryPage MC6809_PAGES[] PROGMEM = {
-        {PREFIX_P00, ARRAY_RANGE(MC6809_P00)},
-        {PREFIX_P10, ARRAY_RANGE(MC6809_P10)},
-        {PREFIX_P11, ARRAY_RANGE(MC6809_P11)},
+        {PREFIX_P00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
+        {PREFIX_P10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
+        {PREFIX_P11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
 };
 
 static constexpr TableMc6809::EntryPage HD6309_PAGES[] PROGMEM = {
-        {PREFIX_P00, ARRAY_RANGE(HD6309_P00)},
-        {PREFIX_P00, ARRAY_RANGE(MC6809_P00)},
-        {PREFIX_P10, ARRAY_RANGE(MC6809_P10)},
-        {PREFIX_P11, ARRAY_RANGE(MC6809_P11)},
-        {PREFIX_P10, ARRAY_RANGE(HD6309_P10)},
-        {PREFIX_P11, ARRAY_RANGE(HD6309_P11)},
+        {PREFIX_P00, ARRAY_RANGE(HD6309_P00), ARRAY_RANGE(HD6309_I00)},
+        {PREFIX_P00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
+        {PREFIX_P10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
+        {PREFIX_P11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
+        {PREFIX_P10, ARRAY_RANGE(HD6309_P10), ARRAY_RANGE(HD6309_I10)},
+        {PREFIX_P11, ARRAY_RANGE(HD6309_P11), ARRAY_RANGE(HD6309_I11)},
 };
 
 static bool matchAddrMode(AddrMode opr, AddrMode table) {
@@ -358,8 +616,8 @@ Error TableMc6809::searchName(
         InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), matchAddrMode, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, matchAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());

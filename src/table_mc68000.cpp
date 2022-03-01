@@ -74,8 +74,6 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0020100, TEXT_MOVEA, LONG, M_RADDR, M_AREG,  10, _3, LONG),
     E(0030100, TEXT_MOVEA, WORD, M_RADDR, M_AREG,  10, _3, WORD),
     E(0030100, TEXT_MOVEA, NONE, M_RADDR, M_AREG,  10, _3, WORD),
-    A(0020100, TEXT_MOVE,  LONG, M_RADDR, M_AREG,  10, _3, LONG),
-    A(0030100, TEXT_MOVE,  WORD, M_RADDR, M_AREG,  10, _3, WORD),
     W(0042300, TEXT_MOVE,  NONE, M_RDATA, M_CCR,   10, __, WORD),
     W(0040300, TEXT_MOVE,  NONE, M_SR,    M_WDATA, __, 10, WORD),
     W(0043300, TEXT_MOVE,  NONE, M_RDATA, M_SR,    10, __, WORD),
@@ -196,14 +194,11 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0100410, TEXT_SBCD,  NONE, M_PDEC,  M_PDEC,  _0, _3, BYTE),
     E(0100400, TEXT_OR,    DATA, M_DREG,  M_WMEM,  _3, 10, DATA),
     E(0110300, TEXT_SUBA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A(0110300, TEXT_SUB,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A(0110374, TEXT_SUBI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
     E(0110400, TEXT_SUBX,  DATA, M_DREG,  M_DREG,  _0, _3, DATA),
     E(0110410, TEXT_SUBX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA),
     E(0110000, TEXT_SUB,   DATA, M_RADDR, M_DREG,  10, _3, DATA),
     E(0110400, TEXT_SUB,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA),
     E(0130300, TEXT_CMPA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A(0130374, TEXT_CMPI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
     E(0130000, TEXT_CMP,   DATA, M_RADDR, M_DREG,  10, _3, DATA),
     E(0130410, TEXT_CMPM,  DATA, M_PINC,  M_PINC,  _0, _3, DATA),
     E(0130400, TEXT_EOR,   DATA, M_DREG,  M_WDATA, _3, 10, DATA),
@@ -218,8 +213,6 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0140610, TEXT_EXG,   NONE, M_AREG,  M_DREG,  _0, _3, LONG),
     E(0140400, TEXT_AND,   DATA, M_DREG,  M_WMEM,  _3, 10, DATA),
     E(0150300, TEXT_ADDA,  DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A(0150300, TEXT_ADD,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A(0150374, TEXT_ADDI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
     E(0150400, TEXT_ADDX,  DATA, M_DREG,  M_DREG,  _0, _3, DATA),
     E(0150410, TEXT_ADDX,  DATA, M_PDEC,  M_PDEC,  _0, _3, DATA),
     E(0150000, TEXT_ADD,   DATA, M_RADDR, M_DREG,  10, _3, DATA),
@@ -249,7 +242,244 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E(0160430, TEXT_ROL,   DATA, M_IM3,   M_DREG,  __, _0, DATA),
     E(0160470, TEXT_ROL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA),
 };
+
+static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
+    164,  // TEXT_ABCD
+    165,  // TEXT_ABCD
+    174,  // TEXT_ADD
+    175,  // TEXT_ADD
+    171,  // TEXT_ADDA
+      7,  // TEXT_ADDI
+    105,  // TEXT_ADDQ
+    172,  // TEXT_ADDX
+    173,  // TEXT_ADDX
+    163,  // TEXT_AND
+    170,  // TEXT_AND
+      3,  // TEXT_ANDI
+      4,  // TEXT_ANDI
+      5,  // TEXT_ANDI
+    177,  // TEXT_ASL
+    186,  // TEXT_ASL
+    187,  // TEXT_ASL
+    176,  // TEXT_ASR
+    184,  // TEXT_ASR
+    185,  // TEXT_ASR
+    117,  // TEXT_BCC
+    118,  // TEXT_BCC
+     14,  // TEXT_BCHG
+     15,  // TEXT_BCHG
+     24,  // TEXT_BCHG
+     25,  // TEXT_BCHG
+     16,  // TEXT_BCLR
+     17,  // TEXT_BCLR
+     26,  // TEXT_BCLR
+     27,  // TEXT_BCLR
+    121,  // TEXT_BCS
+    122,  // TEXT_BCS
+    127,  // TEXT_BEQ
+    128,  // TEXT_BEQ
+    137,  // TEXT_BGE
+    138,  // TEXT_BGE
+    141,  // TEXT_BGT
+    142,  // TEXT_BGT
+    113,  // TEXT_BHI
+    114,  // TEXT_BHI
+    119,  // TEXT_BHS
+    120,  // TEXT_BHS
+    143,  // TEXT_BLE
+    144,  // TEXT_BLE
+    123,  // TEXT_BLO
+    124,  // TEXT_BLO
+    115,  // TEXT_BLS
+    116,  // TEXT_BLS
+    139,  // TEXT_BLT
+    140,  // TEXT_BLT
+    135,  // TEXT_BMI
+    136,  // TEXT_BMI
+    125,  // TEXT_BNE
+    126,  // TEXT_BNE
+    133,  // TEXT_BPL
+    134,  // TEXT_BPL
+    107,  // TEXT_BRA
+    108,  // TEXT_BRA
+     18,  // TEXT_BSET
+     19,  // TEXT_BSET
+     28,  // TEXT_BSET
+     29,  // TEXT_BSET
+    111,  // TEXT_BSR
+    112,  // TEXT_BSR
+    109,  // TEXT_BT
+    110,  // TEXT_BT
+     12,  // TEXT_BTST
+     13,  // TEXT_BTST
+     22,  // TEXT_BTST
+     23,  // TEXT_BTST
+    129,  // TEXT_BVC
+    130,  // TEXT_BVC
+    131,  // TEXT_BVS
+    132,  // TEXT_BVS
+     67,  // TEXT_CHK
+     40,  // TEXT_CLR
+    158,  // TEXT_CMP
+    157,  // TEXT_CMPA
+     11,  // TEXT_CMPI
+    159,  // TEXT_CMPM
+     73,  // TEXT_DBCC
+     75,  // TEXT_DBCS
+     78,  // TEXT_DBEQ
+     70,  // TEXT_DBF
+     83,  // TEXT_DBGE
+     85,  // TEXT_DBGT
+     71,  // TEXT_DBHI
+     74,  // TEXT_DBHS
+     86,  // TEXT_DBLE
+     76,  // TEXT_DBLO
+     72,  // TEXT_DBLS
+     84,  // TEXT_DBLT
+     82,  // TEXT_DBMI
+     77,  // TEXT_DBNE
+     81,  // TEXT_DBPL
+     69,  // TEXT_DBRA
+     68,  // TEXT_DBT
+     79,  // TEXT_DBVC
+     80,  // TEXT_DBVS
+    147,  // TEXT_DIVS
+    146,  // TEXT_DIVU
+    160,  // TEXT_EOR
+      8,  // TEXT_EORI
+      9,  // TEXT_EORI
+     10,  // TEXT_EORI
+    166,  // TEXT_EXG
+    167,  // TEXT_EXG
+    168,  // TEXT_EXG
+    169,  // TEXT_EXG
+     43,  // TEXT_EXT
+     47,  // TEXT_ILLEG
+     63,  // TEXT_JMP
+     62,  // TEXT_JSR
+     66,  // TEXT_LEA
+     51,  // TEXT_LINK
+    179,  // TEXT_LSL
+    190,  // TEXT_LSL
+    191,  // TEXT_LSL
+    178,  // TEXT_LSR
+    188,  // TEXT_LSR
+    189,  // TEXT_LSR
+     33,  // TEXT_MOVE
+     34,  // TEXT_MOVE
+     35,  // TEXT_MOVE
+     36,  // TEXT_MOVE
+     37,  // TEXT_MOVE
+     38,  // TEXT_MOVE
+     53,  // TEXT_MOVE
+     54,  // TEXT_MOVE
+     30,  // TEXT_MOVEA
+     31,  // TEXT_MOVEA
+     32,  // TEXT_MOVEA
+     64,  // TEXT_MOVEM
+     65,  // TEXT_MOVEM
+     20,  // TEXT_MOVEP
+     21,  // TEXT_MOVEP
+    145,  // TEXT_MOVEQ
+    162,  // TEXT_MULS
+    161,  // TEXT_MULU
+     44,  // TEXT_NBCD
+     41,  // TEXT_NEG
+     39,  // TEXT_NEGX
+     56,  // TEXT_NOP
+     42,  // TEXT_NOT
+    148,  // TEXT_OR
+    151,  // TEXT_OR
+      0,  // TEXT_ORI
+      1,  // TEXT_ORI
+      2,  // TEXT_ORI
+     46,  // TEXT_PEA
+     55,  // TEXT_RESET
+    183,  // TEXT_ROL
+    198,  // TEXT_ROL
+    199,  // TEXT_ROL
+    182,  // TEXT_ROR
+    196,  // TEXT_ROR
+    197,  // TEXT_ROR
+    181,  // TEXT_ROXL
+    194,  // TEXT_ROXL
+    195,  // TEXT_ROXL
+    180,  // TEXT_ROXR
+    192,  // TEXT_ROXR
+    193,  // TEXT_ROXR
+     58,  // TEXT_RTE
+     61,  // TEXT_RTR
+     59,  // TEXT_RTS
+    149,  // TEXT_SBCD
+    150,  // TEXT_SBCD
+     91,  // TEXT_SCC
+     93,  // TEXT_SCS
+     96,  // TEXT_SEQ
+     88,  // TEXT_SF
+    101,  // TEXT_SGE
+    103,  // TEXT_SGT
+     89,  // TEXT_SHI
+     92,  // TEXT_SHS
+    104,  // TEXT_SLE
+     94,  // TEXT_SLO
+     90,  // TEXT_SLS
+    102,  // TEXT_SLT
+    100,  // TEXT_SMI
+     95,  // TEXT_SNE
+     99,  // TEXT_SPL
+     87,  // TEXT_ST
+     57,  // TEXT_STOP
+    155,  // TEXT_SUB
+    156,  // TEXT_SUB
+    152,  // TEXT_SUBA
+      6,  // TEXT_SUBI
+    106,  // TEXT_SUBQ
+    153,  // TEXT_SUBX
+    154,  // TEXT_SUBX
+     97,  // TEXT_SVC
+     98,  // TEXT_SVS
+     45,  // TEXT_SWAP
+     48,  // TEXT_TAS
+     50,  // TEXT_TRAP
+     60,  // TEXT_TRAPV
+     49,  // TEXT_TST
+     52,  // TEXT_UNLK
+};
+
+static constexpr Entry ALIAS_TABLE[] PROGMEM = {
+    A(0020100, TEXT_MOVE,  LONG, M_RADDR, M_AREG,  10, _3, LONG),
+    A(0030100, TEXT_MOVE,  WORD, M_RADDR, M_AREG,  10, _3, WORD),
+    A(0110300, TEXT_SUB,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
+    A(0110374, TEXT_SUBI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
+    A(0130374, TEXT_CMPI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
+    A(0150300, TEXT_ADD,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
+    A(0150374, TEXT_ADDI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
+};
+
+static constexpr uint8_t ALIAS_INDEX[] PROGMEM = {
+      5,  // TEXT_ADD
+      6,  // TEXT_ADDI
+      4,  // TEXT_CMPI
+      0,  // TEXT_MOVE
+      1,  // TEXT_MOVE
+      2,  // TEXT_SUB
+      3,  // TEXT_SUBI
+};
 // clang-format on
+
+struct TableMc68000::EntryPage : EntryPageBase<Entry> {
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
+};
+
+static constexpr TableMc68000::EntryPage MC68000_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
+};
+
+static constexpr TableMc68000::EntryPage ALIAS_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(ALIAS_TABLE), ARRAY_RANGE(ALIAS_INDEX)},
+};
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -305,14 +535,13 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableMc68000::searchName(InsnMc68000 &insn) const {
     uint8_t count = 0;
-    auto end = ARRAY_END(MC68000_TABLE);
-    for (auto entry = ARRAY_BEGIN(MC68000_TABLE);
-            entry < end && (entry = TableBase::searchName<Entry, Entry::Flags>(
-                                    insn.name(), insn.flags(), entry, end, matchAddrMode, count));
-            entry++) {
+    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+            insn.name(), insn.flags(), MC68000_PAGES, matchAddrMode, count);
+    if (entry == nullptr && _aliasEnabled)
+        entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), ALIAS_PAGES, matchAddrMode, count);
+    if (entry) {
         insn.setFlags(entry->flags());
-        if (insn.alias() && !_aliasEnabled)
-            continue;
         insn.setOpCode(entry->opCode());
         return setOK();
     }
@@ -379,7 +608,9 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-TableMc68000::TableMc68000() : _aliasEnabled(false) {}
+TableMc68000::TableMc68000() {
+    setAlias(false);
+}
 
 const /* PROGMEM */ char *TableMc68000::listCpu_P() const {
     return TEXT_CPU_LIST;

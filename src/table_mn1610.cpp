@@ -42,6 +42,14 @@ static constexpr Entry TABLE_COMMON[] PROGMEM = {
         E1(0x2004, TEXT_LPSW, M_ILVL),
 };
 
+static constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+      0,  // TEXT_H
+      4,  // TEXT_LPSW
+      3,  // TEXT_POP
+      2,  // TEXT_PUSH
+      1,  // TEXT_RET
+};
+
 static constexpr Entry TABLE_MN1610[] PROGMEM = {
         E2(0x0800, TEXT_MVI,  M_RD,   M_IM8),
         E2(0x1000, TEXT_WT,   M_RD,   M_IOA),
@@ -73,6 +81,39 @@ static constexpr Entry TABLE_MN1610[] PROGMEM = {
         E1(0xC600, TEXT_IMS,  M_GEN),
         E1(0xC700, TEXT_B,    M_GEN),
         E2(0xC000, TEXT_L,    M_RDG,  M_GEN),
+};
+
+static constexpr uint8_t INDEX_MN1610[] PROGMEM = {
+     15,  // TEXT_A
+     11,  // TEXT_AI
+     19,  // TEXT_AND
+     28,  // TEXT_B
+     25,  // TEXT_BAL
+     21,  // TEXT_BSWP
+     13,  // TEXT_C
+     12,  // TEXT_CB
+     24,  // TEXT_DMS
+     20,  // TEXT_DSWP
+     16,  // TEXT_EOR
+     27,  // TEXT_IMS
+     29,  // TEXT_L
+     18,  // TEXT_LAD
+     23,  // TEXT_MV
+     22,  // TEXT_MVB
+      0,  // TEXT_MVI
+     17,  // TEXT_OR
+      8,  // TEXT_RBIT
+      2,  // TEXT_RD
+     14,  // TEXT_S
+      9,  // TEXT_SBIT
+     10,  // TEXT_SI
+      5,  // TEXT_SL
+      6,  // TEXT_SL
+      3,  // TEXT_SR
+      4,  // TEXT_SR
+     26,  // TEXT_ST
+      7,  // TEXT_TBIT
+      1,  // TEXT_WT
 };
 
 static constexpr Entry TABLE_MN1613[] PROGMEM = {
@@ -150,21 +191,99 @@ static constexpr Entry TABLE_MN1613[] PROGMEM = {
         E3(0x7F0C, TEXT_M,    M_DR0,  M_RI,   M_SKIP),
         E3(0x780F, TEXT_MVWI, M_RD,   M_IM16, M_SKIP),
 };
+
+static constexpr uint8_t INDEX_MN1613[] PROGMEM = {
+     40,  // TEXT_AD
+     41,  // TEXT_AD
+     65,  // TEXT_ANDI
+     60,  // TEXT_ANDR
+     53,  // TEXT_AWI
+     51,  // TEXT_AWR
+     17,  // TEXT_BALD
+     20,  // TEXT_BALL
+     21,  // TEXT_BALR
+     16,  // TEXT_BD
+     18,  // TEXT_BL
+     33,  // TEXT_BLK
+     19,  // TEXT_BR
+     67,  // TEXT_BSWR
+     46,  // TEXT_CBI
+     44,  // TEXT_CBR
+      5,  // TEXT_CPYB
+     37,  // TEXT_CPYH
+      7,  // TEXT_CPYS
+     47,  // TEXT_CWI
+     45,  // TEXT_CWR
+     68,  // TEXT_D
+     48,  // TEXT_DAA
+     49,  // TEXT_DAA
+     42,  // TEXT_DAS
+     43,  // TEXT_DAS
+     36,  // TEXT_DEBP
+     66,  // TEXT_DSWR
+     58,  // TEXT_EORI
+     56,  // TEXT_EORR
+     63,  // TEXT_FA
+     54,  // TEXT_FD
+     13,  // TEXT_FIX
+     12,  // TEXT_FLT
+     55,  // TEXT_FM
+     62,  // TEXT_FS
+     64,  // TEXT_LADI
+     61,  // TEXT_LADR
+      0,  // TEXT_LB
+     22,  // TEXT_LD
+     23,  // TEXT_LD
+     28,  // TEXT_LR
+     29,  // TEXT_LR
+      2,  // TEXT_LS
+     71,  // TEXT_M
+     69,  // TEXT_MVBR
+     72,  // TEXT_MVWI
+     70,  // TEXT_MVWR
+     14,  // TEXT_NEG
+     15,  // TEXT_NEG
+     59,  // TEXT_ORI
+     57,  // TEXT_ORR
+      8,  // TEXT_POPM
+     10,  // TEXT_PSHM
+     27,  // TEXT_RDR
+     32,  // TEXT_RETL
+     38,  // TEXT_SD
+     39,  // TEXT_SD
+      1,  // TEXT_SETB
+     35,  // TEXT_SETH
+      3,  // TEXT_SETS
+     34,  // TEXT_SRBT
+      4,  // TEXT_STB
+     24,  // TEXT_STD
+     25,  // TEXT_STD
+     30,  // TEXT_STR
+     31,  // TEXT_STR
+      6,  // TEXT_STS
+     52,  // TEXT_SWI
+     50,  // TEXT_SWR
+      9,  // TEXT_TRST
+     11,  // TEXT_TSET
+     26,  // TEXT_WTR
+};
 // clang-format on
 
 struct TableMn1610::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableMn1610::EntryPage MN1610_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_COMMON)},
-        {ARRAY_RANGE(TABLE_MN1610)},
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
+        {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
 static constexpr TableMn1610::EntryPage MN1613_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_COMMON)},
-        {ARRAY_RANGE(TABLE_MN1613)},
-        {ARRAY_RANGE(TABLE_MN1610)},
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
+        {ARRAY_RANGE(TABLE_MN1613), ARRAY_RANGE(INDEX_MN1613)},
+        {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -218,8 +337,8 @@ Error TableMn1610::searchName(
         InsnMn1610 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

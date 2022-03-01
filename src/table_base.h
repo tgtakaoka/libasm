@@ -33,13 +33,21 @@ struct EntryPageBase {
         return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_table));
     }
     const ENTRY_T *end() const { return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_end)); }
+    const uint8_t *index() const {
+        return reinterpret_cast<const uint8_t *>(pgm_read_ptr(&_index));
+    }
+    const uint8_t *iend() const { return reinterpret_cast<const uint8_t *>(pgm_read_ptr(&_iend)); }
 
 protected:
-    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end) : _table(table), _end(end) {}
+    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end,
+            const uint8_t *index = nullptr, const uint8_t *iend = nullptr)
+        : _table(table), _end(end), _index(index), _iend(iend) {}
 
 private:
     const ENTRY_T *_table;
     const ENTRY_T *_end;
+    const uint8_t *_index;
+    const uint8_t *_iend;
 };
 
 /**
@@ -99,31 +107,37 @@ protected:
     Error setError(ErrorReporter reporter) const { return _error.setError(reporter); }
 
     /**
-     * Lookup instruction entries from |begin| until |end| to find an
-     * entry which has |name|.
+     * Binary search instruction entries sorted and indexed from
+     * |page->index()| until |page->iend()| to find an entry which
+     * has |name| and accepts |attr|. Returns the number of entries
+     * matching |name| regardless of |attr|.
      */
-    template <typename E>
-    static const E *searchName(const char *name, const E *begin, const E *end) {
-        for (const auto *entry = begin; entry < end; entry++) {
-            if (strcasecmp_P(name, entry->name_P()) == 0)
-                return entry;
+    template <typename P, typename E, typename A>
+    static const E *searchName(
+            const char *name, A attr, const P *page, bool (*accept)(A, const E *), uint8_t &count) {
+        const uint8_t *first = page->index();
+        const uint8_t *last = page->iend();
+        for (;;) {
+            const auto diff = last - first;
+            if (diff == 0)
+                break;
+            const auto *middle = first;
+            middle += diff / 2;
+            const auto &m = page->table()[pgm_read_byte(middle)];
+            if (strcasecmp_P(name, m.name_P()) > 0) {
+                first = ++middle;
+            } else {
+                last = middle;
+            }
         }
-        return nullptr;
-    }
-
-    /**
-     * Lookup instruction entries from |begin| until |end| to find an
-     * entry which has |name| and accepts |attr|. Returns the number
-     * of entries matching |name| regardless of |attr|.
-     */
-    template <typename E, typename A>
-    static const E *searchName(const char *name, A attr, const E *begin, const E *end,
-            bool (*accept)(A, const E *), uint8_t &count) {
-        for (const auto *entry = begin; entry < end && (entry = searchName(name, entry, end));
-                entry++) {
+        while (first < page->iend()) {
+            const E *entry = &page->table()[pgm_read_byte(first)];
+            if (strcasecmp_P(name, entry->name_P()))
+                break;
             count++;
             if (accept(attr, entry))
                 return entry;
+            ++first;
         }
         return nullptr;
     }

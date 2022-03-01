@@ -132,6 +132,106 @@ static const Entry TABLE_00[] PROGMEM = {
     E2(0x94, TEXT_XORB,  M_BREG,  M_BAOP),
 };
 
+static const uint8_t INDEX_00[] PROGMEM = {
+      0,  // TEXT_ADD
+      1,  // TEXT_ADD
+      2,  // TEXT_ADDB
+      3,  // TEXT_ADDB
+      4,  // TEXT_ADDC
+      5,  // TEXT_ADDCB
+      6,  // TEXT_AND
+      7,  // TEXT_AND
+      8,  // TEXT_ANDB
+      9,  // TEXT_ANDB
+     10,  // TEXT_BR
+     11,  // TEXT_CLR
+     12,  // TEXT_CLRB
+     13,  // TEXT_CLRC
+     14,  // TEXT_CLRVT
+     15,  // TEXT_CMP
+     16,  // TEXT_CMPB
+     17,  // TEXT_DEC
+     18,  // TEXT_DECB
+     19,  // TEXT_DI
+     20,  // TEXT_DIVU
+     21,  // TEXT_DIVUB
+     22,  // TEXT_DJNZ
+     23,  // TEXT_EI
+     24,  // TEXT_EXT
+     25,  // TEXT_EXTB
+     26,  // TEXT_INC
+     27,  // TEXT_INCB
+     28,  // TEXT_JBC
+     29,  // TEXT_JBS
+     30,  // TEXT_JC
+     31,  // TEXT_JE
+     32,  // TEXT_JGE
+     33,  // TEXT_JGT
+     34,  // TEXT_JH
+     35,  // TEXT_JLE
+     36,  // TEXT_JLT
+     37,  // TEXT_JNC
+     38,  // TEXT_JNE
+     39,  // TEXT_JNH
+     40,  // TEXT_JNST
+     41,  // TEXT_JNV
+     42,  // TEXT_JNVT
+     43,  // TEXT_JST
+     44,  // TEXT_JV
+     45,  // TEXT_JVT
+     46,  // TEXT_LCALL
+     47,  // TEXT_LD
+     48,  // TEXT_LDB
+     49,  // TEXT_LDBSE
+     50,  // TEXT_LDBZE
+     51,  // TEXT_LJMP
+     52,  // TEXT_MULU
+     53,  // TEXT_MULU
+     54,  // TEXT_MULUB
+     55,  // TEXT_MULUB
+     56,  // TEXT_NEG
+     57,  // TEXT_NEGB
+     58,  // TEXT_NOP
+     59,  // TEXT_NORML
+     60,  // TEXT_NOT
+     61,  // TEXT_NOTB
+     62,  // TEXT_OR
+     63,  // TEXT_ORB
+     64,  // TEXT_POP
+     65,  // TEXT_POP
+     66,  // TEXT_POPF
+     67,  // TEXT_PUSH
+     68,  // TEXT_PUSHF
+     69,  // TEXT_RET
+     70,  // TEXT_RST
+     71,  // TEXT_SCALL
+     72,  // TEXT_SETC
+     73,  // TEXT_SHL
+     74,  // TEXT_SHLB
+     75,  // TEXT_SHLL
+     76,  // TEXT_SHR
+     77,  // TEXT_SHRA
+     78,  // TEXT_SHRAB
+     79,  // TEXT_SHRAL
+     80,  // TEXT_SHRB
+     81,  // TEXT_SHRL
+     82,  // TEXT_SJMP
+     83,  // TEXT_SKIP
+     84,  // TEXT_ST
+     85,  // TEXT_ST
+     86,  // TEXT_STB
+     87,  // TEXT_STB
+     88,  // TEXT_SUB
+     89,  // TEXT_SUB
+     90,  // TEXT_SUBB
+     91,  // TEXT_SUBB
+     92,  // TEXT_SUBC
+     93,  // TEXT_SUBCB
+     94,  // TEXT_TRAP
+     95,  // TEXT_XOR
+     96,  // TEXT_XORB
+};
+
 static const Entry TABLE_FE[] PROGMEM = {
     E2(0x8C, TEXT_DIV,   M_LREG,  M_WAOP),
     E2(0x9C, TEXT_DIVB,  M_WREG,  M_BAOP),
@@ -140,11 +240,21 @@ static const Entry TABLE_FE[] PROGMEM = {
     E2(0x7C, TEXT_MULB,  M_WREG,  M_BAOP),
     E3(0x5C, TEXT_MULB,  M_WREG,  M_BREG,  M_BAOP),
 };
+
+static const uint8_t INDEX_FE[] PROGMEM = {
+      0,  // TEXT_DIV
+      1,  // TEXT_DIVB
+      2,  // TEXT_MUL
+      3,  // TEXT_MUL
+      4,  // TEXT_MULB
+      5,  // TEXT_MULB
+};
 // clang-format on
 
 struct TableI8096::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix) {}
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
+            const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
 
@@ -153,8 +263,8 @@ private:
 };
 
 static const TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_00)},
-        {0xFE, ARRAY_RANGE(TABLE_FE)},
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -182,11 +292,9 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableI8096::searchName(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        for (auto entry = page->table();
-                entry < page->end() &&
-                (entry = TableBase::searchName<Entry, Entry::Flags>(
-                         insn.name(), insn.flags(), entry, page->end(), acceptModes, count));
-                entry++) {
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
+        if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
             if (insn.src2() == M_UNDEF)

@@ -123,6 +123,97 @@ static constexpr Entry TABLE_I8039[] PROGMEM = {
     E0(0x00, TEXT_NOP),
 };
 
+static constexpr uint8_t INDEX_I8039[] PROGMEM = {
+      0,  // TEXT_ADD
+      1,  // TEXT_ADD
+      2,  // TEXT_ADD
+      3,  // TEXT_ADDC
+      4,  // TEXT_ADDC
+      5,  // TEXT_ADDC
+      6,  // TEXT_ANL
+      7,  // TEXT_ANL
+      8,  // TEXT_ANL
+     27,  // TEXT_ANL
+     31,  // TEXT_ANLD
+     52,  // TEXT_CALL
+     17,  // TEXT_CLR
+     55,  // TEXT_CLR
+     57,  // TEXT_CLR
+     18,  // TEXT_CPL
+     56,  // TEXT_CPL
+     58,  // TEXT_CPL
+     19,  // TEXT_DA
+     16,  // TEXT_DEC
+     35,  // TEXT_DEC
+     81,  // TEXT_DIS
+     83,  // TEXT_DIS
+     38,  // TEXT_DJNZ
+     80,  // TEXT_EN
+     82,  // TEXT_EN
+     86,  // TEXT_ENT0
+     25,  // TEXT_IN
+     15,  // TEXT_INC
+     33,  // TEXT_INC
+     34,  // TEXT_INC
+     51,  // TEXT_JB
+     39,  // TEXT_JC
+     47,  // TEXT_JF0
+     48,  // TEXT_JF1
+     36,  // TEXT_JMP
+     37,  // TEXT_JMPP
+     40,  // TEXT_JNC
+     50,  // TEXT_JNI
+     44,  // TEXT_JNT0
+     46,  // TEXT_JNT1
+     42,  // TEXT_JNZ
+     43,  // TEXT_JT0
+     45,  // TEXT_JT1
+     49,  // TEXT_JTF
+     41,  // TEXT_JZ
+     59,  // TEXT_MOV
+     60,  // TEXT_MOV
+     61,  // TEXT_MOV
+     62,  // TEXT_MOV
+     63,  // TEXT_MOV
+     64,  // TEXT_MOV
+     65,  // TEXT_MOV
+     66,  // TEXT_MOV
+     67,  // TEXT_MOV
+     75,  // TEXT_MOV
+     76,  // TEXT_MOV
+     29,  // TEXT_MOVD
+     30,  // TEXT_MOVD
+     73,  // TEXT_MOVP
+     74,  // TEXT_MOVP3
+     71,  // TEXT_MOVX
+     72,  // TEXT_MOVX
+     87,  // TEXT_NOP
+      9,  // TEXT_ORL
+     10,  // TEXT_ORL
+     11,  // TEXT_ORL
+     28,  // TEXT_ORL
+     32,  // TEXT_ORLD
+     26,  // TEXT_OUTL
+     53,  // TEXT_RET
+     54,  // TEXT_RETR
+     21,  // TEXT_RL
+     22,  // TEXT_RLC
+     23,  // TEXT_RR
+     24,  // TEXT_RRC
+     84,  // TEXT_SEL
+     85,  // TEXT_SEL
+     79,  // TEXT_STOP
+     77,  // TEXT_STRT
+     78,  // TEXT_STRT
+     20,  // TEXT_SWAP
+     68,  // TEXT_XCH
+     69,  // TEXT_XCH
+     70,  // TEXT_XCHD
+     12,  // TEXT_XRL
+     13,  // TEXT_XRL
+     14,  // TEXT_XRL
+};
+
 static constexpr Entry TABLE_I8048[] PROGMEM = {
     E2(0x08, TEXT_INS,  M_A,    M_BUS),
     E2(0x02, TEXT_OUTL, M_BUS,  M_A),
@@ -130,8 +221,19 @@ static constexpr Entry TABLE_I8048[] PROGMEM = {
     E2(0x88, TEXT_ORL,  M_BUS,  M_BIT8),
 };
 
+static constexpr uint8_t INDEX_I8048[] PROGMEM = {
+      2,  // TEXT_ANL
+      0,  // TEXT_INS
+      3,  // TEXT_ORL
+      1,  // TEXT_OUTL
+};
+
 static constexpr Entry TABLE_I80C48[] PROGMEM = {
     E0(0x01, TEXT_HALT),
+};
+
+static constexpr uint8_t INDEX_I80C48[] PROGMEM = {
+      0,  // TEXT_HALT
 };
 
 static constexpr Entry TABLE_MSM80C48[] PROGMEM = {
@@ -146,43 +248,58 @@ static constexpr Entry TABLE_MSM80C48[] PROGMEM = {
     E0(0xC2, TEXT_FLTT),
     E0(0xE2, TEXT_FRES),
 };
+
+static constexpr uint8_t INDEX_MSM80C48[] PROGMEM = {
+      2,  // TEXT_DEC
+      3,  // TEXT_DJNZ
+      7,  // TEXT_FLT
+      8,  // TEXT_FLTT
+      9,  // TEXT_FRES
+      6,  // TEXT_HLTS
+      0,  // TEXT_MOV
+      1,  // TEXT_MOV
+      5,  // TEXT_MOV
+      4,  // TEXT_MOVP1
+};
 // clang-format on
 
 struct TableI8048::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableI8048::EntryPage I8039_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8039)},
+        {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
 };
 
 static constexpr TableI8048::EntryPage I8048_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8048)},
-        {ARRAY_RANGE(TABLE_I8039)},
+        {ARRAY_RANGE(TABLE_I8048), ARRAY_RANGE(INDEX_I8048)},
+        {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
 };
 
 static constexpr TableI8048::EntryPage I80C39_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8039)},
-        {ARRAY_RANGE(TABLE_I80C48)},
+        {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
+        {ARRAY_RANGE(TABLE_I80C48), ARRAY_RANGE(INDEX_I80C48)},
 };
 
 static constexpr TableI8048::EntryPage I80C48_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8048)},
-        {ARRAY_RANGE(TABLE_I8039)},
-        {ARRAY_RANGE(TABLE_I80C48)},
+        {ARRAY_RANGE(TABLE_I8048), ARRAY_RANGE(INDEX_I8048)},
+        {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
+        {ARRAY_RANGE(TABLE_I80C48), ARRAY_RANGE(INDEX_I80C48)},
 };
 
 static constexpr TableI8048::EntryPage MSM80C39_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8039)},
-        {ARRAY_RANGE(TABLE_I80C48)},
-        {ARRAY_RANGE(TABLE_MSM80C48)},
+        {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
+        {ARRAY_RANGE(TABLE_I80C48), ARRAY_RANGE(INDEX_I80C48)},
+        {ARRAY_RANGE(TABLE_MSM80C48), ARRAY_RANGE(INDEX_MSM80C48)},
 };
 
 static constexpr TableI8048::EntryPage MSM80C48_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8048)},
-        {ARRAY_RANGE(TABLE_I8039)},
-        {ARRAY_RANGE(TABLE_I80C48)},
-        {ARRAY_RANGE(TABLE_MSM80C48)},
+        {ARRAY_RANGE(TABLE_I8048), ARRAY_RANGE(INDEX_I8048)},
+        {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
+        {ARRAY_RANGE(TABLE_I80C48), ARRAY_RANGE(INDEX_I80C48)},
+        {ARRAY_RANGE(TABLE_MSM80C48), ARRAY_RANGE(INDEX_MSM80C48)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -208,8 +325,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableI8048::searchName(InsnI8048 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (const auto *page = pages; page < end; page++) {
-        const Entry *entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        const Entry *entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

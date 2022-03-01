@@ -136,6 +136,111 @@ static constexpr Entry TABLE_COMMON[] PROGMEM = {
     E(0xFF, TEXT_NOP,  M_NO,  M_NO, DS_NO),
 };
 
+static constexpr uint8_t INDEX_COMMON[] PROGMEM = {
+     18,  // TEXT_ADC
+     19,  // TEXT_ADC
+     20,  // TEXT_ADC
+     21,  // TEXT_ADC
+     22,  // TEXT_ADC
+     13,  // TEXT_ADD
+     14,  // TEXT_ADD
+     15,  // TEXT_ADD
+     16,  // TEXT_ADD
+     17,  // TEXT_ADD
+     38,  // TEXT_AND
+     39,  // TEXT_AND
+     40,  // TEXT_AND
+     41,  // TEXT_AND
+     42,  // TEXT_AND
+    100,  // TEXT_CCF
+     84,  // TEXT_CLR
+     85,  // TEXT_CLR
+     74,  // TEXT_COM
+     75,  // TEXT_COM
+     53,  // TEXT_CP
+     54,  // TEXT_CP
+     55,  // TEXT_CP
+     56,  // TEXT_CP
+     57,  // TEXT_CP
+     70,  // TEXT_DA
+     71,  // TEXT_DA
+     63,  // TEXT_DEC
+     64,  // TEXT_DEC
+     78,  // TEXT_DECW
+     79,  // TEXT_DECW
+     94,  // TEXT_DI
+      7,  // TEXT_DJNZ
+     95,  // TEXT_EI
+     67,  // TEXT_INC
+     68,  // TEXT_INC
+     69,  // TEXT_INC
+     82,  // TEXT_INCW
+     83,  // TEXT_INCW
+     97,  // TEXT_IRET
+     10,  // TEXT_JP
+     11,  // TEXT_JP
+     12,  // TEXT_JP
+      8,  // TEXT_JR
+      9,  // TEXT_JR
+      0,  // TEXT_LD
+      1,  // TEXT_LD
+      2,  // TEXT_LD
+      3,  // TEXT_LD
+      4,  // TEXT_LD
+      5,  // TEXT_LD
+      6,  // TEXT_LD
+    101,  // TEXT_NOP
+     33,  // TEXT_OR
+     34,  // TEXT_OR
+     35,  // TEXT_OR
+     36,  // TEXT_OR
+     37,  // TEXT_OR
+     72,  // TEXT_POP
+     73,  // TEXT_POP
+     76,  // TEXT_PUSH
+     77,  // TEXT_PUSH
+     98,  // TEXT_RCF
+     96,  // TEXT_RET
+     80,  // TEXT_RL
+     81,  // TEXT_RL
+     65,  // TEXT_RLC
+     66,  // TEXT_RLC
+     90,  // TEXT_RR
+     91,  // TEXT_RR
+     86,  // TEXT_RRC
+     87,  // TEXT_RRC
+     28,  // TEXT_SBC
+     29,  // TEXT_SBC
+     30,  // TEXT_SBC
+     31,  // TEXT_SBC
+     32,  // TEXT_SBC
+     99,  // TEXT_SCF
+     88,  // TEXT_SRA
+     89,  // TEXT_SRA
+     23,  // TEXT_SUB
+     24,  // TEXT_SUB
+     25,  // TEXT_SUB
+     26,  // TEXT_SUB
+     27,  // TEXT_SUB
+     92,  // TEXT_SWAP
+     93,  // TEXT_SWAP
+     43,  // TEXT_TCM
+     44,  // TEXT_TCM
+     45,  // TEXT_TCM
+     46,  // TEXT_TCM
+     47,  // TEXT_TCM
+     48,  // TEXT_TM
+     49,  // TEXT_TM
+     50,  // TEXT_TM
+     51,  // TEXT_TM
+     52,  // TEXT_TM
+     58,  // TEXT_XOR
+     59,  // TEXT_XOR
+     60,  // TEXT_XOR
+     61,  // TEXT_XOR
+     62,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_Z8[] PROGMEM = {
     E(0x31, TEXT_SRP,  M_IM,  M_NO,  DS_NO),
     E(0x07, TEXT_ADD,  M_IR,  M_IM,  DST_SRC),
@@ -165,9 +270,43 @@ static constexpr Entry TABLE_Z8[] PROGMEM = {
     E(0xD4, TEXT_CALL, M_IRR, M_NO,  DS_NO),
 };
 
+static constexpr uint8_t INDEX_Z8[] PROGMEM = {
+      2,  // TEXT_ADC
+      1,  // TEXT_ADD
+      6,  // TEXT_AND
+     24,  // TEXT_CALL
+     25,  // TEXT_CALL
+      9,  // TEXT_CP
+     11,  // TEXT_LD
+     12,  // TEXT_LD
+     13,  // TEXT_LD
+     14,  // TEXT_LD
+     15,  // TEXT_LD
+     20,  // TEXT_LDC
+     21,  // TEXT_LDC
+     22,  // TEXT_LDCI
+     23,  // TEXT_LDCI
+     16,  // TEXT_LDE
+     17,  // TEXT_LDE
+     18,  // TEXT_LDEI
+     19,  // TEXT_LDEI
+      5,  // TEXT_OR
+      4,  // TEXT_SBC
+      0,  // TEXT_SRP
+      3,  // TEXT_SUB
+      7,  // TEXT_TCM
+      8,  // TEXT_TM
+     10,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_Z86C[] PROGMEM = {
     E(0x6F, TEXT_STOP, M_NO,  M_NO, DS_NO),
     E(0x7F, TEXT_HALT, M_NO,  M_NO, DS_NO),
+};
+
+static constexpr uint8_t INDEX_Z86C[] PROGMEM = {
+      1,  // TEXT_HALT
+      0,  // TEXT_STOP
 };
 
 static constexpr Entry TABLE_SUPER8[] PROGMEM = {
@@ -200,6 +339,38 @@ static constexpr Entry TABLE_SUPER8[] PROGMEM = {
     E(0x93, TEXT_POPUI,  M_R,  M_IR, SRC_DST),
     P(0xC2, TEXT_CPIJE,  P0, M_r, M_Ir, SRC_DST, M_RA),
     P(0xD2, TEXT_CPIJNE, P0, M_r, M_Ir, SRC_DST, M_RA),
+};
+
+static constexpr uint8_t INDEX_SUPER8[] PROGMEM = {
+      6,  // TEXT_CALL
+      7,  // TEXT_CALL
+      8,  // TEXT_CALL
+     27,  // TEXT_CPIJE
+     28,  // TEXT_CPIJNE
+     17,  // TEXT_DIV
+     18,  // TEXT_DIV
+     19,  // TEXT_DIV
+      1,  // TEXT_ENTER
+      2,  // TEXT_EXIT
+      9,  // TEXT_LD
+     10,  // TEXT_LD
+     11,  // TEXT_LD
+     12,  // TEXT_LD
+     13,  // TEXT_LD
+     14,  // TEXT_LDW
+     15,  // TEXT_LDW
+     16,  // TEXT_LDW
+     20,  // TEXT_MULT
+     21,  // TEXT_MULT
+     22,  // TEXT_MULT
+      0,  // TEXT_NEXT
+     25,  // TEXT_POPUD
+     26,  // TEXT_POPUI
+     23,  // TEXT_PUSHUD
+     24,  // TEXT_PUSHUI
+      4,  // TEXT_SB0
+      5,  // TEXT_SB1
+      3,  // TEXT_WFI
 };
 
 static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
@@ -245,27 +416,73 @@ static constexpr Entry TABLE_SUPER8_POST[] PROGMEM {
     P(0x37, TEXT_BTJRF, P1_0, M_RA,  M_r,   SRC_DST, M_IMb),
     P(0x37, TEXT_BTJRT, P1_1, M_RA,  M_r,   SRC_DST, M_IMb),
 };
+
+static constexpr uint8_t INDEX_SUPER8_POST[] PROGMEM {
+     37,  // TEXT_BAND
+     38,  // TEXT_BAND
+     27,  // TEXT_BCP
+     28,  // TEXT_BITC
+     29,  // TEXT_BITR
+     30,  // TEXT_BITS
+     31,  // TEXT_BOR
+     32,  // TEXT_BOR
+     39,  // TEXT_BTJRF
+     40,  // TEXT_BTJRT
+     33,  // TEXT_BXOR
+     34,  // TEXT_BXOR
+     35,  // TEXT_LDB
+     36,  // TEXT_LDB
+      0,  // TEXT_LDC
+      2,  // TEXT_LDC
+      4,  // TEXT_LDC
+      6,  // TEXT_LDC
+      8,  // TEXT_LDC
+     10,  // TEXT_LDC
+     15,  // TEXT_LDC
+     17,  // TEXT_LDC
+     19,  // TEXT_LDCD
+     21,  // TEXT_LDCI
+     23,  // TEXT_LDCPD
+     25,  // TEXT_LDCPI
+      1,  // TEXT_LDE
+      3,  // TEXT_LDE
+      5,  // TEXT_LDE
+      7,  // TEXT_LDE
+      9,  // TEXT_LDE
+     11,  // TEXT_LDE
+     16,  // TEXT_LDE
+     18,  // TEXT_LDE
+     20,  // TEXT_LDED
+     22,  // TEXT_LDEI
+     24,  // TEXT_LDEPD
+     26,  // TEXT_LDEPI
+     12,  // TEXT_SRP
+     13,  // TEXT_SRP0
+     14,  // TEXT_SRP1
+};
 // clang-format on
 
 struct TableZ8::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableZ8::EntryPage Z8_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_Z8)},
-        {ARRAY_RANGE(TABLE_COMMON)},
+        {ARRAY_RANGE(TABLE_Z8), ARRAY_RANGE(INDEX_Z8)},
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
 static constexpr TableZ8::EntryPage Z86C_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_Z8)},
-        {ARRAY_RANGE(TABLE_COMMON)},
-        {ARRAY_RANGE(TABLE_Z86C)},
+        {ARRAY_RANGE(TABLE_Z8), ARRAY_RANGE(INDEX_Z8)},
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
+        {ARRAY_RANGE(TABLE_Z86C), ARRAY_RANGE(INDEX_Z86C)},
 };
 
 static constexpr TableZ8::EntryPage SUPER8_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_SUPER8)},
-        {ARRAY_RANGE(TABLE_SUPER8_POST)},
-        {ARRAY_RANGE(TABLE_COMMON)},
+        {ARRAY_RANGE(TABLE_SUPER8), ARRAY_RANGE(INDEX_SUPER8)},
+        {ARRAY_RANGE(TABLE_SUPER8_POST), ARRAY_RANGE(INDEX_SUPER8_POST)},
+        {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -315,8 +532,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableZ8::searchName(InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

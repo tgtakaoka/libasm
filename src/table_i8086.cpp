@@ -242,6 +242,215 @@ static const Entry TABLE_00[] PROGMEM = {
     E(0xFD, TEXT_STD,    NONE, M_NONE, M_NONE, P_NONE, P_NONE),
 };
 
+static const uint8_t INDEX_00[] PROGMEM = {
+     57,  // TEXT_AAA
+     65,  // TEXT_AAS
+     22,  // TEXT_ADC
+     23,  // TEXT_ADC
+     24,  // TEXT_ADC
+     25,  // TEXT_ADC
+     26,  // TEXT_ADC
+     27,  // TEXT_ADC
+      7,  // TEXT_ADD
+      8,  // TEXT_ADD
+     11,  // TEXT_ADD
+     12,  // TEXT_ADD
+     13,  // TEXT_ADD
+     14,  // TEXT_ADD
+     34,  // TEXT_AND
+     35,  // TEXT_AND
+     36,  // TEXT_AND
+     37,  // TEXT_AND
+     38,  // TEXT_AND
+     39,  // TEXT_AND
+    179,  // TEXT_CALL
+    118,  // TEXT_CALLF
+    116,  // TEXT_CBW
+    200,  // TEXT_CLC
+    204,  // TEXT_CLD
+    202,  // TEXT_CLI
+    199,  // TEXT_CMC
+     58,  // TEXT_CMP
+     59,  // TEXT_CMP
+     60,  // TEXT_CMP
+     61,  // TEXT_CMP
+     62,  // TEXT_CMP
+     63,  // TEXT_CMP
+    134,  // TEXT_CMPS
+    135,  // TEXT_CMPS
+    130,  // TEXT_CMPSB
+    132,  // TEXT_CMPSB
+    131,  // TEXT_CMPSW
+    133,  // TEXT_CMPSW
+    117,  // TEXT_CWD
+     41,  // TEXT_DAA
+     49,  // TEXT_DAS
+     67,  // TEXT_DEC
+    198,  // TEXT_HLT
+    175,  // TEXT_IN
+    176,  // TEXT_IN
+    183,  // TEXT_IN
+    184,  // TEXT_IN
+     66,  // TEXT_INC
+    164,  // TEXT_INT
+    165,  // TEXT_INT
+    166,  // TEXT_INTO
+    167,  // TEXT_IRET
+     84,  // TEXT_JA
+     75,  // TEXT_JAE
+     72,  // TEXT_JB
+     82,  // TEXT_JBE
+     73,  // TEXT_JC
+    174,  // TEXT_JCXZ
+     78,  // TEXT_JE
+     98,  // TEXT_JG
+     94,  // TEXT_JGE
+     92,  // TEXT_JL
+     96,  // TEXT_JLE
+    180,  // TEXT_JMP
+    181,  // TEXT_JMP
+    182,  // TEXT_JMPF
+     83,  // TEXT_JNA
+     74,  // TEXT_JNAE
+     76,  // TEXT_JNB
+     85,  // TEXT_JNBE
+     77,  // TEXT_JNC
+     80,  // TEXT_JNE
+     97,  // TEXT_JNG
+     93,  // TEXT_JNGE
+     95,  // TEXT_JNL
+     99,  // TEXT_JNLE
+     71,  // TEXT_JNO
+     91,  // TEXT_JNP
+     87,  // TEXT_JNS
+     81,  // TEXT_JNZ
+     70,  // TEXT_JO
+     89,  // TEXT_JP
+     88,  // TEXT_JPE
+     90,  // TEXT_JPO
+     86,  // TEXT_JS
+     79,  // TEXT_JZ
+    123,  // TEXT_LAHF
+    161,  // TEXT_LDS
+    113,  // TEXT_LEA
+    114,  // TEXT_LEA
+    160,  // TEXT_LES
+    187,  // TEXT_LOCK
+    148,  // TEXT_LODS
+    149,  // TEXT_LODS
+    144,  // TEXT_LODSB
+    146,  // TEXT_LODSB
+    145,  // TEXT_LODSW
+    147,  // TEXT_LODSW
+    173,  // TEXT_LOOP
+    171,  // TEXT_LOOPE
+    169,  // TEXT_LOOPNE
+    170,  // TEXT_LOOPNZ
+    172,  // TEXT_LOOPZ
+      0,  // TEXT_MOV
+      1,  // TEXT_MOV
+      2,  // TEXT_MOV
+      3,  // TEXT_MOV
+    108,  // TEXT_MOV
+    109,  // TEXT_MOV
+    110,  // TEXT_MOV
+    111,  // TEXT_MOV
+    112,  // TEXT_MOV
+    115,  // TEXT_MOV
+    156,  // TEXT_MOV
+    157,  // TEXT_MOV
+    128,  // TEXT_MOVS
+    129,  // TEXT_MOVS
+    124,  // TEXT_MOVSB
+    126,  // TEXT_MOVSB
+    125,  // TEXT_MOVSW
+    127,  // TEXT_MOVSW
+      4,  // TEXT_NOP
+      9,  // TEXT_OR
+     10,  // TEXT_OR
+     18,  // TEXT_OR
+     19,  // TEXT_OR
+     20,  // TEXT_OR
+     21,  // TEXT_OR
+    177,  // TEXT_OUT
+    178,  // TEXT_OUT
+    185,  // TEXT_OUT
+    186,  // TEXT_OUT
+     16,  // TEXT_POP
+     17,  // TEXT_POP
+     69,  // TEXT_POP
+    121,  // TEXT_POPF
+     15,  // TEXT_PUSH
+     68,  // TEXT_PUSH
+    120,  // TEXT_PUSHF
+    190,  // TEXT_REP
+    195,  // TEXT_REP
+    191,  // TEXT_REPE
+    196,  // TEXT_REPE
+    188,  // TEXT_REPNE
+    193,  // TEXT_REPNE
+    189,  // TEXT_REPNZ
+    194,  // TEXT_REPNZ
+    192,  // TEXT_REPZ
+    197,  // TEXT_REPZ
+    158,  // TEXT_RET
+    159,  // TEXT_RET
+    162,  // TEXT_RETF
+    163,  // TEXT_RETF
+    122,  // TEXT_SAHF
+     28,  // TEXT_SBB
+     29,  // TEXT_SBB
+     30,  // TEXT_SBB
+     31,  // TEXT_SBB
+     32,  // TEXT_SBB
+     33,  // TEXT_SBB
+    154,  // TEXT_SCAS
+    155,  // TEXT_SCAS
+    150,  // TEXT_SCASB
+    152,  // TEXT_SCASB
+    151,  // TEXT_SCASW
+    153,  // TEXT_SCASW
+     48,  // TEXT_SEGCS
+     64,  // TEXT_SEGDS
+     40,  // TEXT_SEGES
+     56,  // TEXT_SEGSS
+    201,  // TEXT_STC
+    205,  // TEXT_STD
+    203,  // TEXT_STI
+    142,  // TEXT_STOS
+    143,  // TEXT_STOS
+    138,  // TEXT_STOSB
+    140,  // TEXT_STOSB
+    139,  // TEXT_STOSW
+    141,  // TEXT_STOSW
+     42,  // TEXT_SUB
+     43,  // TEXT_SUB
+     44,  // TEXT_SUB
+     45,  // TEXT_SUB
+     46,  // TEXT_SUB
+     47,  // TEXT_SUB
+    100,  // TEXT_TEST
+    101,  // TEXT_TEST
+    102,  // TEXT_TEST
+    103,  // TEXT_TEST
+    136,  // TEXT_TEST
+    137,  // TEXT_TEST
+    119,  // TEXT_WAIT
+      5,  // TEXT_XCHG
+      6,  // TEXT_XCHG
+    104,  // TEXT_XCHG
+    105,  // TEXT_XCHG
+    106,  // TEXT_XCHG
+    107,  // TEXT_XCHG
+    168,  // TEXT_XLAT
+     50,  // TEXT_XOR
+     51,  // TEXT_XOR
+     52,  // TEXT_XOR
+     53,  // TEXT_XOR
+     54,  // TEXT_XOR
+     55,  // TEXT_XOR
+};
+
 static const Entry TABLE_80[] PROGMEM = {
     E(000, TEXT_ADD, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E(010, TEXT_OR,  BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
@@ -251,6 +460,17 @@ static const Entry TABLE_80[] PROGMEM = {
     E(050, TEXT_SUB, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E(060, TEXT_XOR, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E(070, TEXT_CMP, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
+};
+
+static const uint8_t INDEX_80[] PROGMEM = {
+      2,  // TEXT_ADC
+      0,  // TEXT_ADD
+      4,  // TEXT_AND
+      7,  // TEXT_CMP
+      1,  // TEXT_OR
+      3,  // TEXT_SBB
+      5,  // TEXT_SUB
+      6,  // TEXT_XOR
 };
 
 static const Entry TABLE_81[] PROGMEM = {
@@ -264,6 +484,17 @@ static const Entry TABLE_81[] PROGMEM = {
     E(070, TEXT_CMP, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
 };
 
+static const uint8_t INDEX_81[] PROGMEM = {
+      2,  // TEXT_ADC
+      0,  // TEXT_ADD
+      4,  // TEXT_AND
+      7,  // TEXT_CMP
+      1,  // TEXT_OR
+      3,  // TEXT_SBB
+      5,  // TEXT_SUB
+      6,  // TEXT_XOR
+};
+
 static const Entry TABLE_83[] PROGMEM = {
     E(000, TEXT_ADD, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
     E(010, TEXT_OR,  WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
@@ -275,16 +506,39 @@ static const Entry TABLE_83[] PROGMEM = {
     E(070, TEXT_CMP, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
 };
 
+static const uint8_t INDEX_83[] PROGMEM = {
+      2,  // TEXT_ADC
+      0,  // TEXT_ADD
+      4,  // TEXT_AND
+      7,  // TEXT_CMP
+      1,  // TEXT_OR
+      3,  // TEXT_SBB
+      5,  // TEXT_SUB
+      6,  // TEXT_XOR
+};
+
 static const Entry TABLE_8F[] PROGMEM = {
     E(000, TEXT_POP, NONE, M_WMOD, M_NONE, P_OMOD, P_NONE),
+};
+
+static const uint8_t INDEX_8F[] PROGMEM = {
+      0,  // TEXT_POP
 };
 
 static const Entry TABLE_C6[] PROGMEM = {
     E(000, TEXT_MOV, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
 };
 
+static const uint8_t INDEX_C6[] PROGMEM = {
+      0,  // TEXT_MOV
+};
+
 static const Entry TABLE_C7[] PROGMEM = {
     E(000, TEXT_MOV, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
+};
+
+static const uint8_t INDEX_C7[] PROGMEM = {
+      0,  // TEXT_MOV
 };
 
 static const Entry TABLE_D0[] PROGMEM = {
@@ -298,6 +552,17 @@ static const Entry TABLE_D0[] PROGMEM = {
     E(070, TEXT_SAR, BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
+static const uint8_t INDEX_D0[] PROGMEM = {
+      2,  // TEXT_RCL
+      3,  // TEXT_RCR
+      0,  // TEXT_ROL
+      1,  // TEXT_ROR
+      5,  // TEXT_SAL
+      7,  // TEXT_SAR
+      4,  // TEXT_SHL
+      6,  // TEXT_SHR
+};
+
 static const Entry TABLE_D1[] PROGMEM = {
     E(000, TEXT_ROL, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     E(010, TEXT_ROR, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
@@ -307,6 +572,17 @@ static const Entry TABLE_D1[] PROGMEM = {
     E(040, TEXT_SAL, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     E(050, TEXT_SHR, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     E(070, TEXT_SAR, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
+};
+
+static const uint8_t INDEX_D1[] PROGMEM = {
+      2,  // TEXT_RCL
+      3,  // TEXT_RCR
+      0,  // TEXT_ROL
+      1,  // TEXT_ROR
+      5,  // TEXT_SAL
+      7,  // TEXT_SAR
+      4,  // TEXT_SHL
+      6,  // TEXT_SHR
 };
 
 static const Entry TABLE_D2[] PROGMEM = {
@@ -320,6 +596,17 @@ static const Entry TABLE_D2[] PROGMEM = {
     E(070, TEXT_SAR, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
 };
 
+static const uint8_t INDEX_D2[] PROGMEM = {
+      2,  // TEXT_RCL
+      3,  // TEXT_RCR
+      0,  // TEXT_ROL
+      1,  // TEXT_ROR
+      5,  // TEXT_SAL
+      7,  // TEXT_SAR
+      4,  // TEXT_SHL
+      6,  // TEXT_SHR
+};
+
 static const Entry TABLE_D3[] PROGMEM = {
     E(000, TEXT_ROL, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
     E(010, TEXT_ROR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
@@ -331,12 +618,31 @@ static const Entry TABLE_D3[] PROGMEM = {
     E(070, TEXT_SAR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
 };
 
+static const uint8_t INDEX_D3[] PROGMEM = {
+      2,  // TEXT_RCL
+      3,  // TEXT_RCR
+      0,  // TEXT_ROL
+      1,  // TEXT_ROR
+      5,  // TEXT_SAL
+      7,  // TEXT_SAR
+      4,  // TEXT_SHL
+      6,  // TEXT_SHR
+};
+
 static const Entry TABLE_D4[] PROGMEM = {
     E(0x0A, TEXT_AAM, BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
 };
 
+static const uint8_t INDEX_D4[] PROGMEM = {
+      0,  // TEXT_AAM
+};
+
 static const Entry TABLE_D5[] PROGMEM = {
     E(0x0A, TEXT_AAD, BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
+};
+
+static const uint8_t INDEX_D5[] PROGMEM = {
+      0,  // TEXT_AAD
 };
 
 static const Entry TABLE_F6[] PROGMEM = {
@@ -349,6 +655,16 @@ static const Entry TABLE_F6[] PROGMEM = {
     E(070, TEXT_IDIV, BYTE, M_BMOD, M_NONE, P_OMOD, P_NONE),
 };
 
+static const uint8_t INDEX_F6[] PROGMEM = {
+      5,  // TEXT_DIV
+      6,  // TEXT_IDIV
+      4,  // TEXT_IMUL
+      3,  // TEXT_MUL
+      2,  // TEXT_NEG
+      1,  // TEXT_NOT
+      0,  // TEXT_TEST
+};
+
 static const Entry TABLE_F7[] PROGMEM = {
     E(000, TEXT_TEST, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
     E(020, TEXT_NOT,  WORD, M_WMOD, M_NONE, P_OMOD, P_NONE),
@@ -359,9 +675,24 @@ static const Entry TABLE_F7[] PROGMEM = {
     E(070, TEXT_IDIV, WORD, M_WMOD, M_NONE, P_OMOD, P_NONE),
 };
 
+static const uint8_t INDEX_F7[] PROGMEM = {
+      5,  // TEXT_DIV
+      6,  // TEXT_IDIV
+      4,  // TEXT_IMUL
+      3,  // TEXT_MUL
+      2,  // TEXT_NEG
+      1,  // TEXT_NOT
+      0,  // TEXT_TEST
+};
+
 static const Entry TABLE_FE[] PROGMEM = {
     E(000, TEXT_INC, BYTE, M_BMOD, M_NONE, P_OMOD, P_NONE),
     E(010, TEXT_DEC, BYTE, M_BMOD, M_NONE, P_OMOD, P_NONE),
+};
+
+static const uint8_t INDEX_FE[] PROGMEM = {
+      1,  // TEXT_DEC
+      0,  // TEXT_INC
 };
 
 static const Entry TABLE_FF[] PROGMEM = {
@@ -373,11 +704,22 @@ static const Entry TABLE_FF[] PROGMEM = {
     E(050, TEXT_JMPF,  NONE, M_WMEM, M_NONE, P_OMOD, P_NONE),
     E(060, TEXT_PUSH,  NONE, M_WMOD, M_NONE, P_OMOD, P_NONE),
 };
+
+static const uint8_t INDEX_FF[] PROGMEM = {
+      2,  // TEXT_CALL
+      3,  // TEXT_CALLF
+      1,  // TEXT_DEC
+      0,  // TEXT_INC
+      4,  // TEXT_JMP
+      5,  // TEXT_JMPF
+      6,  // TEXT_PUSH
+};
 // clang-format on
 
 struct TableI8086::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix) {}
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
+            const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
 
@@ -386,23 +728,23 @@ private:
 };
 
 static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
-        {0x00, ARRAY_RANGE(TABLE_00)},
-        {0x80, ARRAY_RANGE(TABLE_80)},
-        {0x83, ARRAY_RANGE(TABLE_83)},  // M_IMM8
-        {0x81, ARRAY_RANGE(TABLE_81)},  // M_IMM
-        {0x8F, ARRAY_RANGE(TABLE_8F)},
-        {0xC6, ARRAY_RANGE(TABLE_C6)},
-        {0xC7, ARRAY_RANGE(TABLE_C7)},
-        {0xD0, ARRAY_RANGE(TABLE_D0)},
-        {0xD1, ARRAY_RANGE(TABLE_D1)},
-        {0xD2, ARRAY_RANGE(TABLE_D2)},
-        {0xD3, ARRAY_RANGE(TABLE_D3)},
-        {0xD4, ARRAY_RANGE(TABLE_D4)},
-        {0xD5, ARRAY_RANGE(TABLE_D5)},
-        {0xF6, ARRAY_RANGE(TABLE_F6)},
-        {0xF7, ARRAY_RANGE(TABLE_F7)},
-        {0xFE, ARRAY_RANGE(TABLE_FE)},
-        {0xFF, ARRAY_RANGE(TABLE_FF)},
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
+        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
+        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_81)},  // M_IMM
+        {0x8F, ARRAY_RANGE(TABLE_8F), ARRAY_RANGE(INDEX_8F)},
+        {0xC6, ARRAY_RANGE(TABLE_C6), ARRAY_RANGE(INDEX_C6)},
+        {0xC7, ARRAY_RANGE(TABLE_C7), ARRAY_RANGE(INDEX_C7)},
+        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
+        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_D1)},
+        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_D2)},
+        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_D3)},
+        {0xD4, ARRAY_RANGE(TABLE_D4), ARRAY_RANGE(INDEX_D4)},
+        {0xD5, ARRAY_RANGE(TABLE_D5), ARRAY_RANGE(INDEX_D5)},
+        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_F6)},
+        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_F7)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+        {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -437,12 +779,6 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    auto table = entry->flags();
-    return acceptMode(flags.dstMode(), table.dstMode()) &&
-           acceptMode(flags.srcMode(), table.srcMode());
-}
-
 static bool hasSize(AddrMode mode) {
     return mode == M_AX || mode == M_DX || mode == M_WREG || mode == M_AL || mode == M_CL ||
            mode == M_BREG || mode == M_CS || mode == M_SREG;
@@ -462,16 +798,19 @@ static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
     return true;
 }
 
+static bool acceptModes(const InsnI8086 &insn, const Entry *entry) {
+    auto table = entry->flags();
+    return acceptMode(insn.dstMode(), table.dstMode()) &&
+        acceptMode(insn.srcMode(), table.srcMode()) &&
+        acceptSize(insn, entry);
+}
+
 Error TableI8086::searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        for (auto entry = page->table();
-                entry < page->end() &&
-                (entry = TableBase::searchName<Entry, Entry::Flags>(
-                         insn.name(), insn.flags(), entry, page->end(), acceptModes, count));
-                entry++) {
-            if (!acceptSize(insn, entry))
-                continue;
+        auto entry = TableBase::searchName<EntryPage, Entry, const InsnI8086&>(
+                         insn.name(), insn, page, acceptModes, count);
+        if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
             return OK;

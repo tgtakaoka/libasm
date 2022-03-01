@@ -130,33 +130,137 @@ static constexpr Entry MC6805_TABLE[] PROGMEM = {
     E3(0x01, TEXT_BRCLR, M_BNO, M_DIR, M_REL),
 };
 
+static constexpr uint8_t MC6805_INDEX[] PROGMEM = {
+     64,  // TEXT_ADC
+     66,  // TEXT_ADD
+     58,  // TEXT_AND
+     23,  // TEXT_ASL
+     35,  // TEXT_ASLA
+     47,  // TEXT_ASLX
+     22,  // TEXT_ASR
+     34,  // TEXT_ASRA
+     46,  // TEXT_ASRX
+      5,  // TEXT_BCC
+     87,  // TEXT_BCLR
+      7,  // TEXT_BCS
+      9,  // TEXT_BEQ
+     10,  // TEXT_BHCC
+     11,  // TEXT_BHCS
+      2,  // TEXT_BHI
+      4,  // TEXT_BHS
+     17,  // TEXT_BIH
+     16,  // TEXT_BIL
+     59,  // TEXT_BIT
+      6,  // TEXT_BLO
+      3,  // TEXT_BLS
+     14,  // TEXT_BMC
+     13,  // TEXT_BMI
+     15,  // TEXT_BMS
+      8,  // TEXT_BNE
+     12,  // TEXT_BPL
+      0,  // TEXT_BRA
+     89,  // TEXT_BRCLR
+      1,  // TEXT_BRN
+     88,  // TEXT_BRSET
+     86,  // TEXT_BSET
+     72,  // TEXT_BSR
+     79,  // TEXT_CLC
+     81,  // TEXT_CLI
+     29,  // TEXT_CLR
+     41,  // TEXT_CLRA
+     53,  // TEXT_CLRX
+     55,  // TEXT_CMP
+     19,  // TEXT_COM
+     31,  // TEXT_COMA
+     43,  // TEXT_COMX
+     57,  // TEXT_CPX
+     26,  // TEXT_DEC
+     38,  // TEXT_DECA
+     50,  // TEXT_DECX
+     63,  // TEXT_EOR
+     27,  // TEXT_INC
+     39,  // TEXT_INCA
+     51,  // TEXT_INCX
+     67,  // TEXT_JMP
+     68,  // TEXT_JMP
+     73,  // TEXT_JSR
+     74,  // TEXT_JSR
+     60,  // TEXT_LDA
+     69,  // TEXT_LDX
+     24,  // TEXT_LSL
+     36,  // TEXT_LSLA
+     48,  // TEXT_LSLX
+     20,  // TEXT_LSR
+     32,  // TEXT_LSRA
+     44,  // TEXT_LSRX
+     18,  // TEXT_NEG
+     30,  // TEXT_NEGA
+     42,  // TEXT_NEGX
+     84,  // TEXT_NOP
+     65,  // TEXT_ORA
+     25,  // TEXT_ROL
+     37,  // TEXT_ROLA
+     49,  // TEXT_ROLX
+     21,  // TEXT_ROR
+     33,  // TEXT_RORA
+     45,  // TEXT_RORX
+     83,  // TEXT_RSP
+     75,  // TEXT_RTI
+     76,  // TEXT_RTS
+     56,  // TEXT_SBC
+     80,  // TEXT_SEC
+     82,  // TEXT_SEI
+     61,  // TEXT_STA
+     62,  // TEXT_STA
+     70,  // TEXT_STX
+     71,  // TEXT_STX
+     54,  // TEXT_SUB
+     77,  // TEXT_SWI
+     78,  // TEXT_TAX
+     28,  // TEXT_TST
+     40,  // TEXT_TSTA
+     52,  // TEXT_TSTX
+     85,  // TEXT_TXA
+};
+
 static constexpr Entry MC146805_TABLE[] PROGMEM = {
     E0(0x8E, TEXT_STOP),
     E0(0x8F, TEXT_WAIT),
 };
 
+static constexpr uint8_t MC146805_INDEX[] PROGMEM = {
+      0,  // TEXT_STOP
+      1,  // TEXT_WAIT
+};
+
 static constexpr Entry MC68HC05_TABLE[] PROGMEM = {
     E0(0x42, TEXT_MUL),
+};
+
+static constexpr uint8_t MC68HC05_INDEX[] PROGMEM = {
+      0,  // TEXT_MUL
 };
 // clang-format on
 
 struct TableMc6805::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(const Entry *table, const Entry *end) : EntryPageBase(table, end) {}
+    constexpr EntryPage(
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend) {}
 };
 
 static constexpr TableMc6805::EntryPage MC6805_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MC6805_TABLE)},
+        {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
 };
 
 static constexpr TableMc6805::EntryPage MC146805_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MC6805_TABLE)},
-        {ARRAY_RANGE(MC146805_TABLE)},
+        {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
 };
 
 static constexpr TableMc6805::EntryPage MC68HC05_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(MC6805_TABLE)},
-        {ARRAY_RANGE(MC146805_TABLE)},
-        {ARRAY_RANGE(MC68HC05_TABLE)},
+        {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
+        {ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
+        {ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
 };
 
 static bool acceptAddrMode(AddrMode opr, AddrMode table) {
@@ -187,8 +291,8 @@ Error TableMc6805::searchName(
         InsnMc6805 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptAddrMode, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());

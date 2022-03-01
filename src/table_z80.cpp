@@ -102,10 +102,89 @@ static constexpr Entry TABLE_I8080[] PROGMEM = {
     E(0xFE, TEXT_CP,   M_IM8,  M_NO),
     E(0xC7, TEXT_RST,  M_VEC,  M_NO),
 };
+
+static constexpr uint8_t INDEX_I8080[] PROGMEM = {
+     25,  // TEXT_ADC
+     56,  // TEXT_ADC
+      2,  // TEXT_ADD
+     24,  // TEXT_ADD
+     55,  // TEXT_ADD
+     29,  // TEXT_AND
+     30,  // TEXT_AND
+     60,  // TEXT_AND
+     61,  // TEXT_AND
+     52,  // TEXT_CALL
+     54,  // TEXT_CALL
+     21,  // TEXT_CCF
+     35,  // TEXT_CP
+     36,  // TEXT_CP
+     66,  // TEXT_CP
+     67,  // TEXT_CP
+     19,  // TEXT_CPL
+     18,  // TEXT_DAA
+     10,  // TEXT_DEC
+     12,  // TEXT_DEC
+     50,  // TEXT_DI
+     51,  // TEXT_EI
+     46,  // TEXT_EX
+     47,  // TEXT_EX
+     48,  // TEXT_EX
+     49,  // TEXT_EX
+     22,  // TEXT_HALT
+     45,  // TEXT_IN
+      9,  // TEXT_INC
+     11,  // TEXT_INC
+     41,  // TEXT_JP
+     42,  // TEXT_JP
+     43,  // TEXT_JP
+      1,  // TEXT_LD
+      3,  // TEXT_LD
+      4,  // TEXT_LD
+      5,  // TEXT_LD
+      6,  // TEXT_LD
+      7,  // TEXT_LD
+      8,  // TEXT_LD
+     13,  // TEXT_LD
+     23,  // TEXT_LD
+     40,  // TEXT_LD
+      0,  // TEXT_NOP
+     33,  // TEXT_OR
+     34,  // TEXT_OR
+     64,  // TEXT_OR
+     65,  // TEXT_OR
+     44,  // TEXT_OUT
+     38,  // TEXT_POP
+     53,  // TEXT_PUSH
+     37,  // TEXT_RET
+     39,  // TEXT_RET
+     16,  // TEXT_RLA
+     14,  // TEXT_RLCA
+     17,  // TEXT_RRA
+     15,  // TEXT_RRCA
+     68,  // TEXT_RST
+     28,  // TEXT_SBC
+     59,  // TEXT_SBC
+     20,  // TEXT_SCF
+     26,  // TEXT_SUB
+     27,  // TEXT_SUB
+     57,  // TEXT_SUB
+     58,  // TEXT_SUB
+     31,  // TEXT_XOR
+     32,  // TEXT_XOR
+     62,  // TEXT_XOR
+     63,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_I8085[] PROGMEM = {
     E(0x20, TEXT_LD,   R_A,    R_IM),
     E(0x30, TEXT_LD,   R_IM,   R_A),
 };
+static constexpr uint8_t INDEX_I8085[] PROGMEM = {
+      0,  // TEXT_LD
+      1,  // TEXT_LD
+};
+
+static constexpr Config::opcode_t PREFIX_00 = 0x00;
 static constexpr Entry TABLE_Z80[] PROGMEM = {
     E(0x08, TEXT_EX,   R_AF,   R_AFP),
     E(0x10, TEXT_DJNZ, M_REL,  M_NO),
@@ -113,8 +192,15 @@ static constexpr Entry TABLE_Z80[] PROGMEM = {
     E(0x18, TEXT_JR,   M_REL,  M_NO),
     E(0xD9, TEXT_EXX,  M_NO,   M_NO),
 };
-static constexpr Config::opcode_t PREFIX_00 = 0x00;
+static constexpr uint8_t INDEX_Z80[] PROGMEM = {
+      1,  // TEXT_DJNZ
+      0,  // TEXT_EX
+      4,  // TEXT_EXX
+      2,  // TEXT_JR
+      3,  // TEXT_JR
+};
 
+static constexpr Config::opcode_t PREFIX_CB = 0xCB;
 static constexpr Entry TABLE_CB[] PROGMEM = {
     E(0x00, TEXT_RLC,  M_REG,  M_NO),
     E(0x08, TEXT_RRC,  M_REG,  M_NO),
@@ -137,8 +223,30 @@ static constexpr Entry TABLE_CB[] PROGMEM = {
     IXB(0x86, TEXT_RES,  M_BIT,  M_INDX),
     IXB(0xC6, TEXT_SET,  M_BIT,  M_INDX),
 };
-static constexpr Config::opcode_t PREFIX_CB = 0xCB;
+static constexpr uint8_t INDEX_CB[] PROGMEM = {
+      7,  // TEXT_BIT
+     17,  // TEXT_BIT
+      8,  // TEXT_RES
+     18,  // TEXT_RES
+      2,  // TEXT_RL
+     12,  // TEXT_RL
+      0,  // TEXT_RLC
+     10,  // TEXT_RLC
+      3,  // TEXT_RR
+     13,  // TEXT_RR
+      1,  // TEXT_RRC
+     11,  // TEXT_RRC
+      9,  // TEXT_SET
+     19,  // TEXT_SET
+      4,  // TEXT_SLA
+     14,  // TEXT_SLA
+      5,  // TEXT_SRA
+     15,  // TEXT_SRA
+      6,  // TEXT_SRL
+     16,  // TEXT_SRL
+};
 
+static constexpr Config::opcode_t PREFIX_ED = 0xED;
 static constexpr Entry TABLE_ED[] PROGMEM = {
     E(0x70, TEXT_IN,   M_UNKI, M_UNKI), // IN (HL),,(C),
     E(0x40, TEXT_IN,   M_DST,  I_C),
@@ -175,7 +283,42 @@ static constexpr Entry TABLE_ED[] PROGMEM = {
     E(0xB3, TEXT_OTIR, M_NO,   M_NO),
     E(0xBB, TEXT_OTDR, M_NO,   M_NO),
 };
-static constexpr Config::opcode_t PREFIX_ED = 0xED;
+static constexpr uint8_t INDEX_ED[] PROGMEM = {
+      5,  // TEXT_ADC
+     23,  // TEXT_CPD
+     25,  // TEXT_CPDR
+     22,  // TEXT_CPI
+     24,  // TEXT_CPIR
+     13,  // TEXT_IM
+      0,  // TEXT_IN
+      1,  // TEXT_IN
+     27,  // TEXT_IND
+     29,  // TEXT_INDR
+     26,  // TEXT_INI
+     28,  // TEXT_INIR
+      6,  // TEXT_LD
+      7,  // TEXT_LD
+      8,  // TEXT_LD
+      9,  // TEXT_LD
+     14,  // TEXT_LD
+     15,  // TEXT_LD
+     19,  // TEXT_LDD
+     21,  // TEXT_LDDR
+     18,  // TEXT_LDI
+     20,  // TEXT_LDIR
+     10,  // TEXT_NEG
+     33,  // TEXT_OTDR
+     32,  // TEXT_OTIR
+      2,  // TEXT_OUT
+      3,  // TEXT_OUT
+     31,  // TEXT_OUTD
+     30,  // TEXT_OUTI
+     12,  // TEXT_RETI
+     11,  // TEXT_RETN
+     17,  // TEXT_RLD
+     16,  // TEXT_RRD
+      4,  // TEXT_SBC
+};
 
 static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0x09, TEXT_ADD,  R_IXIY, M_PIX),
@@ -210,11 +353,45 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E(0xE3, TEXT_EX,   I_SP,   R_IXIY),
     E(0xE5, TEXT_PUSH, R_IXIY, M_NO),
 };
+static constexpr uint8_t INDEX_IX[] PROGMEM = {
+     13,  // TEXT_ADC
+      0,  // TEXT_ADD
+     12,  // TEXT_ADD
+     17,  // TEXT_AND
+     18,  // TEXT_AND
+     25,  // TEXT_BIT
+     23,  // TEXT_CP
+     24,  // TEXT_CP
+      5,  // TEXT_DEC
+      7,  // TEXT_DEC
+     29,  // TEXT_EX
+      4,  // TEXT_INC
+      6,  // TEXT_INC
+     27,  // TEXT_JP
+      1,  // TEXT_LD
+      2,  // TEXT_LD
+      3,  // TEXT_LD
+      8,  // TEXT_LD
+      9,  // TEXT_LD
+     10,  // TEXT_LD
+     11,  // TEXT_LD
+     28,  // TEXT_LD
+     21,  // TEXT_OR
+     22,  // TEXT_OR
+     26,  // TEXT_POP
+     30,  // TEXT_PUSH
+     16,  // TEXT_SBC
+     14,  // TEXT_SUB
+     15,  // TEXT_SUB
+     19,  // TEXT_XOR
+     20,  // TEXT_XOR
+};
 // clang-format on
 
 struct TableZ80::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix) {}
+    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
+            const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
 
@@ -223,19 +400,19 @@ private:
 };
 
 static constexpr TableZ80::EntryPage I8080_PAGES[] PROGMEM = {
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080)},
+        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 static constexpr TableZ80::EntryPage I8085_PAGES[] PROGMEM = {
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080)},
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8085)},
+        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {PREFIX_00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
-        {PREFIX_00, ARRAY_RANGE(TABLE_Z80)},
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080)},
-        {PREFIX_CB, ARRAY_RANGE(TABLE_CB)},
-        {PREFIX_ED, ARRAY_RANGE(TABLE_ED)},
-        {TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX)},
-        {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX)},
+        {PREFIX_00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
+        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {PREFIX_CB, ARRAY_RANGE(TABLE_CB), ARRAY_RANGE(INDEX_CB)},
+        {PREFIX_ED, ARRAY_RANGE(TABLE_ED), ARRAY_RANGE(INDEX_ED)},
+        {TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
+        {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -276,8 +453,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableZ80::searchName(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
+                insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());

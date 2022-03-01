@@ -142,6 +142,105 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E(0xFF, TEXT_SWI,  M_NO,    M_NO),
 };
 
+static constexpr uint8_t INDEX_TLCS90[] PROGMEM = {
+     43,  // TEXT_ADC
+     51,  // TEXT_ADC
+     59,  // TEXT_ADC
+     67,  // TEXT_ADC
+     19,  // TEXT_ADD
+     42,  // TEXT_ADD
+     50,  // TEXT_ADD
+     58,  // TEXT_ADD
+     66,  // TEXT_ADD
+     46,  // TEXT_AND
+     54,  // TEXT_AND
+     62,  // TEXT_AND
+     70,  // TEXT_AND
+     90,  // TEXT_BIT
+     24,  // TEXT_CALL
+     25,  // TEXT_CALR
+     12,  // TEXT_CCF
+     49,  // TEXT_CP
+     57,  // TEXT_CP
+     65,  // TEXT_CP
+     73,  // TEXT_CP
+     14,  // TEXT_CPL
+      9,  // TEXT_DAA
+     76,  // TEXT_DEC
+     77,  // TEXT_DEC
+     81,  // TEXT_DEC
+     80,  // TEXT_DECW
+     13,  // TEXT_DECX
+      2,  // TEXT_DI
+     17,  // TEXT_DIV
+     20,  // TEXT_DJNZ
+     21,  // TEXT_DJNZ
+      3,  // TEXT_EI
+      5,  // TEXT_EX
+      6,  // TEXT_EX
+      7,  // TEXT_EX
+      8,  // TEXT_EXX
+      1,  // TEXT_HALT
+     74,  // TEXT_INC
+     75,  // TEXT_INC
+     79,  // TEXT_INC
+     78,  // TEXT_INCW
+      4,  // TEXT_INCX
+     22,  // TEXT_JP
+     93,  // TEXT_JR
+     94,  // TEXT_JR
+     23,  // TEXT_JRL
+     28,  // TEXT_LD
+     29,  // TEXT_LD
+     30,  // TEXT_LD
+     31,  // TEXT_LD
+     32,  // TEXT_LD
+     33,  // TEXT_LD
+     35,  // TEXT_LD
+     36,  // TEXT_LD
+     37,  // TEXT_LD
+     38,  // TEXT_LD
+     39,  // TEXT_LD
+     18,  // TEXT_LDAR
+     34,  // TEXT_LDW
+     16,  // TEXT_MUL
+     15,  // TEXT_NEG
+      0,  // TEXT_NOP
+     48,  // TEXT_OR
+     56,  // TEXT_OR
+     64,  // TEXT_OR
+     72,  // TEXT_OR
+     41,  // TEXT_POP
+     40,  // TEXT_PUSH
+     10,  // TEXT_RCF
+     91,  // TEXT_RES
+     26,  // TEXT_RET
+     27,  // TEXT_RETI
+     84,  // TEXT_RLA
+     82,  // TEXT_RLCA
+     85,  // TEXT_RRA
+     83,  // TEXT_RRCA
+     45,  // TEXT_SBC
+     53,  // TEXT_SBC
+     61,  // TEXT_SBC
+     69,  // TEXT_SBC
+     11,  // TEXT_SCF
+     92,  // TEXT_SET
+     86,  // TEXT_SLAA
+     88,  // TEXT_SLLA
+     87,  // TEXT_SRAA
+     89,  // TEXT_SRLA
+     44,  // TEXT_SUB
+     52,  // TEXT_SUB
+     60,  // TEXT_SUB
+     68,  // TEXT_SUB
+     95,  // TEXT_SWI
+     47,  // TEXT_XOR
+     55,  // TEXT_XOR
+     63,  // TEXT_XOR
+     71,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_SRC[] PROGMEM = {
     E(0x10, TEXT_RLD,  M_DST,   M_NO),
     E(0x11, TEXT_RRD,  M_DST,   M_NO),
@@ -186,6 +285,50 @@ static constexpr Entry TABLE_SRC[] PROGMEM = {
     E(0xB8, TEXT_SET,  M_BIT,   M_SRC),
 };
 
+static constexpr uint8_t INDEX_SRC[] PROGMEM = {
+     11,  // TEXT_ADC
+     19,  // TEXT_ADC
+      4,  // TEXT_ADD
+     10,  // TEXT_ADD
+     18,  // TEXT_ADD
+     14,  // TEXT_AND
+     22,  // TEXT_AND
+     38,  // TEXT_BIT
+     17,  // TEXT_CP
+     25,  // TEXT_CP
+     27,  // TEXT_DEC
+     29,  // TEXT_DECW
+      3,  // TEXT_DIV
+      8,  // TEXT_EX
+      9,  // TEXT_EX
+     26,  // TEXT_INC
+     28,  // TEXT_INCW
+      6,  // TEXT_LD
+      7,  // TEXT_LD
+      2,  // TEXT_MUL
+     16,  // TEXT_OR
+     24,  // TEXT_OR
+     39,  // TEXT_RES
+     32,  // TEXT_RL
+     30,  // TEXT_RLC
+      0,  // TEXT_RLD
+     33,  // TEXT_RR
+     31,  // TEXT_RRC
+      1,  // TEXT_RRD
+     13,  // TEXT_SBC
+     21,  // TEXT_SBC
+     40,  // TEXT_SET
+     34,  // TEXT_SLA
+     36,  // TEXT_SLL
+     35,  // TEXT_SRA
+     37,  // TEXT_SRL
+     12,  // TEXT_SUB
+     20,  // TEXT_SUB
+      5,  // TEXT_TSET
+     15,  // TEXT_XOR
+     23,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_DST[] PROGMEM = {
     E(0x20, TEXT_LD,   M_DST,   M_REG8),
     E(0x37, TEXT_LD,   M_DST,   M_IMM8),
@@ -199,6 +342,21 @@ static constexpr Entry TABLE_DST[] PROGMEM = {
     E(0x6D, TEXT_XOR,  M_DST,   M_IMM8),
     E(0x6E, TEXT_OR,   M_DST,   M_IMM8),
     E(0x6F, TEXT_CP,   M_DST,   M_IMM8),
+};
+
+static constexpr uint8_t INDEX_DST[] PROGMEM = {
+      5,  // TEXT_ADC
+      4,  // TEXT_ADD
+      8,  // TEXT_AND
+     11,  // TEXT_CP
+      0,  // TEXT_LD
+      1,  // TEXT_LD
+      3,  // TEXT_LD
+      2,  // TEXT_LDW
+     10,  // TEXT_OR
+      7,  // TEXT_SBC
+      6,  // TEXT_SUB
+      9,  // TEXT_XOR
 };
 
 static constexpr Entry TABLE_REG[] PROGMEM = {
@@ -245,8 +403,57 @@ static constexpr Entry TABLE_REG[] PROGMEM = {
     E(0x77, TEXT_CP,   R_HL,    M_SRC16),
 };
 
+static constexpr uint8_t INDEX_REG[] PROGMEM = {
+      5,  // TEXT_ADC
+     13,  // TEXT_ADC
+     34,  // TEXT_ADC
+      4,  // TEXT_ADD
+     12,  // TEXT_ADD
+     31,  // TEXT_ADD
+     33,  // TEXT_ADD
+      8,  // TEXT_AND
+     16,  // TEXT_AND
+     37,  // TEXT_AND
+     28,  // TEXT_BIT
+     11,  // TEXT_CP
+     19,  // TEXT_CP
+     40,  // TEXT_CP
+      1,  // TEXT_DIV
+      3,  // TEXT_LD
+     32,  // TEXT_LD
+      0,  // TEXT_MUL
+     10,  // TEXT_OR
+     18,  // TEXT_OR
+     39,  // TEXT_OR
+     29,  // TEXT_RES
+     22,  // TEXT_RL
+     20,  // TEXT_RLC
+     23,  // TEXT_RR
+     21,  // TEXT_RRC
+      7,  // TEXT_SBC
+     15,  // TEXT_SBC
+     36,  // TEXT_SBC
+     30,  // TEXT_SET
+     24,  // TEXT_SLA
+     26,  // TEXT_SLL
+     25,  // TEXT_SRA
+     27,  // TEXT_SRL
+      6,  // TEXT_SUB
+     14,  // TEXT_SUB
+     35,  // TEXT_SUB
+      2,  // TEXT_TSET
+      9,  // TEXT_XOR
+     17,  // TEXT_XOR
+     38,  // TEXT_XOR
+};
+
 static constexpr Entry TABLE_LDA[] PROGMEM = {
     E(0x38, TEXT_LDA,  M_REG16, M_SRC),
+};
+
+
+static constexpr uint8_t INDEX_LDA[] PROGMEM = {
+      0,  // TEXT_LDA
 };
 
 static constexpr Entry TABLE_JP_CALL[] PROGMEM = {
@@ -256,9 +463,21 @@ static constexpr Entry TABLE_JP_CALL[] PROGMEM = {
     E(0xD8, TEXT_CALL, M_DST,   M_NO),
 };
 
+static constexpr uint8_t INDEX_JP_CALL[] PROGMEM = {
+      2,  // TEXT_CALL
+      3,  // TEXT_CALL
+      0,  // TEXT_JP
+      1,  // TEXT_JP
+};
+
 static constexpr Entry TABLE_COND[] PROGMEM = {
     E(0xD8, TEXT_RET,  M_NO,    M_NO),
     E(0xD0, TEXT_RET,  M_CC,    M_NO),
+};
+
+static constexpr uint8_t INDEX_COND[] PROGMEM = {
+      0,  // TEXT_RET
+      1,  // TEXT_RET
 };
 
 static constexpr Entry TABLE_BLOCK[] PROGMEM = {
@@ -272,12 +491,22 @@ static constexpr Entry TABLE_BLOCK[] PROGMEM = {
     E(0x5F, TEXT_CPDR, M_NO,    M_NO),
 };
 
+static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
+      6,  // TEXT_CPD
+      7,  // TEXT_CPDR
+      4,  // TEXT_CPI
+      5,  // TEXT_CPIR
+      2,  // TEXT_LDD
+      3,  // TEXT_LDDR
+      0,  // TEXT_LDI
+      1,  // TEXT_LDIR
+};
 // clang-format on
 
 struct TableTlcs90::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            Config::opcode_t prefix, AddrMode mode, const Entry *table, const Entry *end)
-        : EntryPageBase(table, end), _prefix(prefix), _mode(uint8_t(mode)) {}
+    constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
+            const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryPageBase(table, end, index, iend), _prefix(prefix), _mode(uint8_t(mode)) {}
 
     Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
     AddrMode mode() const { return AddrMode(pgm_read_byte(&_mode)); }
@@ -304,26 +533,26 @@ private:
 };
 
 static constexpr TableTlcs90::EntryPage PAGES_TLCS90[] PROGMEM = {
-        {0x00, M_NO, ARRAY_RANGE(TABLE_TLCS90)},
-        {0xE7, M_DIR, ARRAY_RANGE(TABLE_SRC)},       // src (FFnn)
-        {0xE3, M_EXT, ARRAY_RANGE(TABLE_SRC)},       // src (nnnn)
-        {0xE0, M_IND, ARRAY_RANGE(TABLE_SRC)},       // src (rr)
-        {0xF3, M_BASE, ARRAY_RANGE(TABLE_SRC)},      // src (HL+A)
-        {0xF0, M_IDX, ARRAY_RANGE(TABLE_SRC)},       // src (ix+d)
-        {0xEF, M_DIR, ARRAY_RANGE(TABLE_DST)},       // dst (FFnn)
-        {0xEB, M_EXT, ARRAY_RANGE(TABLE_DST)},       // dst (nnnn)
-        {0xE8, M_IND, ARRAY_RANGE(TABLE_DST)},       // dst (rr)
-        {0xF7, M_BASE, ARRAY_RANGE(TABLE_DST)},      // dst (HL+A)
-        {0xF4, M_IDX, ARRAY_RANGE(TABLE_DST)},       // dst (ix+d)
-        {0xEB, M_EXT, ARRAY_RANGE(TABLE_JP_CALL)},   // JP/CALL
-        {0xE8, M_IND, ARRAY_RANGE(TABLE_JP_CALL)},   // JP/CALL
-        {0xF7, M_BASE, ARRAY_RANGE(TABLE_JP_CALL)},  // JP/CALL
-        {0xF4, M_IDX, ARRAY_RANGE(TABLE_JP_CALL)},   // JP/CALL
-        {0xF8, M_REG8, ARRAY_RANGE(TABLE_REG)},      // r, rr
-        {0xF7, M_BASE, ARRAY_RANGE(TABLE_LDA)},      // LDA
-        {0xF4, M_IDX, ARRAY_RANGE(TABLE_LDA)},       // LDA
-        {0xFE, M_NO, ARRAY_RANGE(TABLE_COND)},
-        {0xFE, M_NO, ARRAY_RANGE(TABLE_BLOCK)},
+        {0x00, M_NO, ARRAY_RANGE(TABLE_TLCS90), ARRAY_RANGE(INDEX_TLCS90)},
+        {0xE7, M_DIR, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (FFnn)
+        {0xE3, M_EXT, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (nnnn)
+        {0xE0, M_IND, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (rr)
+        {0xF3, M_BASE, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},          // src (HL+A)
+        {0xF0, M_IDX, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (ix+d)
+        {0xEF, M_DIR, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (FFnn)
+        {0xEB, M_EXT, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (nnnn)
+        {0xE8, M_IND, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (rr)
+        {0xF7, M_BASE, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},          // dst (HL+A)
+        {0xF4, M_IDX, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (ix+d)
+        {0xEB, M_EXT, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},   // JP/CALL
+        {0xE8, M_IND, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},   // JP/CALL
+        {0xF7, M_BASE, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},  // JP/CALL
+        {0xF4, M_IDX, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},   // JP/CALL
+        {0xF8, M_REG8, ARRAY_RANGE(TABLE_REG), ARRAY_RANGE(INDEX_REG)},          // r, rr
+        {0xF7, M_BASE, ARRAY_RANGE(TABLE_LDA), ARRAY_RANGE(INDEX_LDA)},          // LDA
+        {0xF4, M_IDX, ARRAY_RANGE(TABLE_LDA), ARRAY_RANGE(INDEX_LDA)},           // LDA
+        {0xFE, M_NO, ARRAY_RANGE(TABLE_COND), ARRAY_RANGE(INDEX_COND)},
+        {0xFE, M_NO, ARRAY_RANGE(TABLE_BLOCK), ARRAY_RANGE(INDEX_BLOCK)},
 };
 
 Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
@@ -410,8 +639,8 @@ Error TableTlcs90::searchName(
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
         insn.setPreMode(page->mode());
-        auto entry = TableBase::searchName<Entry, InsnTlcs90 &>(
-                insn.name(), insn, page->table(), page->end(), acceptModes, count);
+        auto entry = TableBase::searchName<EntryPage, Entry, InsnTlcs90 &>(
+                insn.name(), insn, page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             return OK;
