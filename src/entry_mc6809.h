@@ -31,20 +31,20 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    NONE = 0,
-    DIR = 1,       // Direct Page
-    EXT = 2,       // Extended
-    IDX = 3,       // Indexed
-    REL = 4,       // Relative
-    LREL = 5,      // Long Relative
-    IM8 = 6,       // Immediate 8-bit
-    IM16 = 7,      // Immediate 16-bit
-    IM32 = 8,      // Immediate 32-bit
-    REG_REG = 9,   // Register pair
-    REGLIST = 10,  // Register list
-    REG_BIT = 11,  // Register bit
-    DIR_BIT = 12,  // Direct Page bit
-    REG_TFM = 13,  // Transfer Memory Register
+    M_NONE = 0,
+    M_DIR = 1,    // Direct Page
+    M_EXT = 2,    // Extended
+    M_IDX = 3,    // Indexed
+    M_REL = 4,    // Relative
+    M_LREL = 5,   // Long Relative
+    M_IM8 = 6,    // Immediate 8-bit
+    M_IM16 = 7,   // Immediate 16-bit
+    M_IM32 = 8,   // Immediate 32-bit
+    M_PAIR = 9,   // Register pair
+    M_LIST = 10,  // Register list
+    M_RBIT = 11,  // Register bit
+    M_DBIT = 12,  // Direct Page bit
+    M_RTFM = 13,  // Transfer Memory Register
 };
 
 class Entry : public EntryBase<Config> {

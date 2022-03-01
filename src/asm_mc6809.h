@@ -46,7 +46,7 @@ private:
         uint32_t val32;
         Operand()
             : ErrorReporter(),
-              mode(NONE),
+              mode(M_NONE),
               index(REG_UNDEF),
               base(REG_UNDEF),
               indir(false),

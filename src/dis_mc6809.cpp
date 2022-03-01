@@ -124,7 +124,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
 Error DisMc6809::decodeRelative(
         DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
     Config::ptrdiff_t delta;
-    if (mode == REL) {
+    if (mode == M_REL) {
         delta = static_cast<int8_t>(insn.readByte(memory));
     } else {
         delta = static_cast<Config::ptrdiff_t>(insn.readUint16(memory));
@@ -133,7 +133,7 @@ Error DisMc6809::decodeRelative(
     const Config::uintptr_t target = base + delta;
     if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
         return setError(OPERAND_TOO_FAR);
-    const uint8_t deltaWidth = mode == REL ? 8 : 16;
+    const uint8_t deltaWidth = mode == M_REL ? 8 : 16;
     outRelAddr(out, target, insn.address(), deltaWidth);
     return setError(insn);
 }
@@ -141,9 +141,9 @@ Error DisMc6809::decodeRelative(
 Error DisMc6809::decodeImmediate(
         DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
     out.letter('#');
-    if (mode == IM8) {
+    if (mode == M_IM8) {
         outHex(out, insn.readByte(memory), 8);
-    } else if (mode == IM16) {
+    } else if (mode == M_IM16) {
         outHex(out, insn.readUint16(memory), 16);
     } else {
         outHex(out, insn.readUint32(memory), 32);
@@ -229,28 +229,28 @@ Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBu
 
 Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
-    case DIR:
+    case M_DIR:
         return decodeDirectPage(memory, insn, out);
-    case EXT:
+    case M_EXT:
         return decodeExtended(memory, insn, out);
-    case IDX:
+    case M_IDX:
         return decodeIndexed(memory, insn, out);
-    case REL:
-    case LREL:
+    case M_REL:
+    case M_LREL:
         return decodeRelative(memory, insn, out, mode);
-    case IM8:
-    case IM16:
-    case IM32:
+    case M_IM8:
+    case M_IM16:
+    case M_IM32:
         return decodeImmediate(memory, insn, out, mode);
-    case REGLIST:
+    case M_LIST:
         return decodePushPull(memory, insn, out);
-    case REG_REG:
+    case M_PAIR:
         return decodeRegisters(memory, insn, out);
-    case REG_BIT:
+    case M_RBIT:
         return decodeRegBit(memory, insn, out);
-    case DIR_BIT:
+    case M_DBIT:
         return decodeDirBit(memory, insn, out);
-    case REG_TFM:
+    case M_RTFM:
         return decodeTransferMemory(memory, insn, out);
     default:
         return OK;
@@ -275,9 +275,9 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (decodeOperand(memory, insn, out, insn.mode1()))
         return getError();
     const AddrMode mode2 = insn.mode2();
-    if (mode2 == NONE)
+    if (mode2 == M_NONE)
         return OK;
-    if (mode2 == REG_TFM)
+    if (mode2 == M_RTFM)
         return OK;
     out.comma();
     return decodeOperand(memory, insn, out, mode2);
