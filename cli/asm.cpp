@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <vector>
-
 #include "asm_cdp1802.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
@@ -87,7 +85,7 @@ IntelDirective dirz8000(asmz8000);
 NationalDirective dir32000(asm32000);
 NationalDirective dir1610(asm1610);
 
-std::vector<AsmDirective *> directives = {
+AsmDirective *directives[] = {
         &dir6800,
         &dir6805,
         &dir6809,
@@ -112,7 +110,7 @@ std::vector<AsmDirective *> directives = {
 };
 
 int main(int argc, const char **argv) {
-    AsmDriver driver(directives);
+    AsmDriver driver(ARRAY_RANGE(directives));
     if (driver.parseOption(argc, argv))
         return driver.usage();
     return driver.assemble();

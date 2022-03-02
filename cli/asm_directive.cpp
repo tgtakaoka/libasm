@@ -21,24 +21,90 @@
 
 #include <string.h>
 #include <algorithm>
-#include <list>
 
 namespace libasm {
 namespace cli {
 
-AsmCommonDirective::AsmCommonDirective(std::vector<AsmDirective *> &directives) {
-    _directives.reserve(directives.size());
-    _directives.insert(_directives.begin(), directives.begin(), directives.end());
-    _asmZ80 = _asmI8080 = nullptr;
-    for (auto directive : _directives) {
-        if (directive->assembler().setCpu("Z80")) {
-            _asmZ80 = directive;
-        } else if (directive->assembler().setCpu("8080")) {
-            _asmI8080 = directive;
+AsmCommonDirective::Directives::Directives(AsmDirective **begin, AsmDirective **end)
+    : _current(nullptr) {
+    _directives.insert(_directives.begin(), begin, end);
+    switchDirective(_directives.front());
+}
+
+Assembler &AsmCommonDirective::Directives::assembler() const {
+    return current()->assembler();
+}
+
+static void appendTo(const std::string &cpu, std::list<std::string> &list) {
+    if (std::find(list.begin(), list.end(), cpu) == list.end())
+        list.push_back(cpu);
+}
+
+static void filter(const char *text, std::list<std::string> &list) {
+    while (*text) {
+        const char *del = strchr(text, ',');
+        if (del == nullptr) {
+            appendTo(std::string(text), list);
+            return;
         }
+        const std::string cpu(text, del);
+        appendTo(cpu, list);
+        for (text = del + 1; *text == ' '; text++)
+            ;
     }
-    _directive = _directives.front();
-    _assembler = &_directive->assembler();
+}
+
+std::list<std::string> AsmCommonDirective::Directives::listCpu() const {
+    std::list<std::string> list;
+    for (auto dir : _directives) {
+        const char *list_P = dir->assembler().listCpu();
+        char buffer[strlen_P(list_P) + 1];
+        strcpy_P(buffer, list_P);
+        filter(buffer, list);
+    }
+    return list;
+}
+
+std::string AsmCommonDirective::Directives::currentCpu() const {
+    const char *cpu_P = assembler().getCpu();
+    char buffer[strlen_P(cpu_P) + 1];
+    strcpy_P(buffer, cpu_P);
+    return std::string(buffer);
+}
+
+bool AsmCommonDirective::Directives::is8080() const {
+    const std::string cpu(currentCpu());
+    return cpu == "8080" || cpu == "8085";
+}
+
+AsmDirective *AsmCommonDirective::Directives::setCpu(const char *cpu) {
+    for (auto dir : _directives) {
+        if (dir->assembler().setCpu(cpu))
+            return switchDirective(dir);
+    }
+    return nullptr;
+}
+
+AsmDirective *AsmCommonDirective::Directives::restrictCpu(const char *cpu) {
+    AsmDirective *z80 = is8080() ? setCpu("Z80") : nullptr;
+    AsmDirective *dir = setCpu(cpu);
+    if (dir) {
+        _directives.clear();
+        _directives.push_back(dir);
+        if (z80)
+            _directives.push_back(z80);
+    }
+    return dir;
+}
+
+AsmDirective *AsmCommonDirective::Directives::switchDirective(AsmDirective *dir) {
+    _current = dir;
+    assembler().reset();
+    return dir;
+}
+
+AsmCommonDirective::AsmCommonDirective(AsmDirective **begin, AsmDirective **end)
+    : _directives(begin, end) {
     _line_len = 128;
     _line = static_cast<char *>(malloc(_line_len));
     _origin = 0;
@@ -74,58 +140,8 @@ AsmCommonDirective::~AsmCommonDirective() {
     free(_line);
 }
 
-AsmDirective *AsmCommonDirective::restrictCpu(const char *cpu) {
-    AsmDirective *dir = setCpu(cpu);
-    if (dir) {
-        _directives.clear();
-        _directives.push_back(dir);
-        if (dir == _asmI8080)
-            _directives.push_back(_asmZ80);
-        if (dir == _asmZ80)
-            _directives.push_back(_asmI8080);
-    }
-    return dir;
-}
-
-AsmDirective *AsmCommonDirective::switchDirective(AsmDirective *dir) {
-    _directive = dir;
-    _assembler = &dir->assembler();
-    _assembler->reset();
-    return dir;
-}
-
-AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
-    for (auto dir : _directives) {
-        if (dir->assembler().setCpu(cpu))
-            return switchDirective(dir);
-    }
-    return nullptr;
-}
-
-static void appendTo(const std::string &cpu, std::list<std::string> &list) {
-    if (std::find(list.begin(), list.end(), cpu) == list.end())
-        list.push_back(cpu);
-}
-
-static void filter(const char *text, std::list<std::string> &list) {
-    while (*text) {
-        const char *del = strchr(text, ',');
-        if (del == nullptr) {
-            appendTo(std::string(text), list);
-            return;
-        }
-        const std::string cpu(text, del);
-        appendTo(cpu, list);
-        for (text = del + 1; *text == ' '; text++)
-            ;
-    }
-}
-
 std::string AsmCommonDirective::listCpu(const char *separator) const {
-    std::list<std::string> list;
-    for (auto dir : _directives) {
-        filter(dir->assembler().listCpu(), list);
-    }
+    std::list<std::string> list(_directives.listCpu());
     std::string cpuList;
     std::string buf;
     for (auto &cpu : list) {
@@ -141,10 +157,6 @@ std::string AsmCommonDirective::listCpu(const char *separator) const {
     }
     cpuList += separator + buf;
     return cpuList;
-}
-
-AsmDirective *AsmCommonDirective::currentDirective() {
-    return _directive;
 }
 
 Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
@@ -163,7 +175,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     _list.operand = StrScanner::EMPTY;
     _list.comment = StrScanner::EMPTY;
 
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     parser.setCurrentOrigin(_origin);
 
     StrScanner label;
@@ -176,7 +188,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     }
     scan.skipSpaces();
 
-    if (!_assembler->endOfLine(*scan)) {
+    if (!_directives.assembler().endOfLine(*scan)) {
         StrScanner p(scan);
         p.trimStart([](char s) { return !isspace(s); });
         _list.instruction = scan;
@@ -204,16 +216,16 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
             return getError();
     }
 
-    if (_assembler->endOfLine(*scan)) {
+    if (_directives.assembler().endOfLine(*scan)) {
         _list.comment = scan;
         return setError(OK);  // skip comment
     }
 
     Insn insn(_origin);
-    const Error error = _assembler->encode(scan, insn, this);
+    const Error error = _directives.assembler().encode(scan, insn, this);
     const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
     if (error == OK || allowUndef) {
-        StrScanner p(_assembler->errorAt());
+        StrScanner p(_directives.assembler().errorAt());
         _list.operand.trimEndAt(p).trimEnd(isspace);
         _list.comment = p.skipSpaces();
         if (insn.length() > 0) {
@@ -229,7 +241,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 }
 
 void AsmCommonDirective::reset() {
-    currentDirective()->assembler().reset();
+    current()->assembler().reset();
     _origin = 0;
 }
 
@@ -305,7 +317,7 @@ void AsmCommonDirective::registerPseudo(const char *name, PseudoHandler handler)
 
 Error AsmCommonDirective::processPseudo(
         const StrScanner &name, StrScanner &scan, StrScanner &label, CliMemory &memory) {
-    if (_directive->processPseudo(name, *this, scan, label, memory) != UNKNOWN_DIRECTIVE)
+    if (_directives.current()->processPseudo(name, *this, scan, label, memory) != UNKNOWN_DIRECTIVE)
         return getError();
     auto it = _pseudos.find(std::string(name, name.size()));
     if (it != _pseudos.end())
@@ -316,7 +328,7 @@ Error AsmCommonDirective::processPseudo(
 // PseudoHandler
 
 Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory) {
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     Value value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
@@ -328,7 +340,7 @@ Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, CliM
 }
 
 Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory) {
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     Value value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
@@ -349,7 +361,9 @@ Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMe
 Error AsmCommonDirective::defineLabel(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     if (label.size() == 0)
         return setError(MISSING_LABEL);
-    ValueParser &parser = _assembler->parser();
+    if (_reportDuplicate && hasSymbol(label))
+        return setError(DUPLICATE_LABEL);
+    ValueParser &parser = _directives.parser();
     _list.value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
@@ -388,7 +402,7 @@ Error AsmCommonDirective::defineString(StrScanner &scan, StrScanner &label, CliM
 
 Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool terminator) {
     _list.address = _origin;
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
@@ -432,7 +446,7 @@ Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool
 
 Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     _list.address = _origin;
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
@@ -461,7 +475,7 @@ Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, Cli
 
 Error AsmCommonDirective::defineUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     _list.address = _origin;
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
@@ -498,7 +512,7 @@ Error AsmCommonDirective::allocateUint32s(StrScanner &scan, StrScanner &label, C
 }
 
 Error AsmCommonDirective::allocateSpaces(StrScanner &scan, size_t unit) {
-    ValueParser &parser = _assembler->parser();
+    ValueParser &parser = _directives.parser();
     Value value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
@@ -518,28 +532,27 @@ Error AsmCommonDirective::switchCpu(StrScanner &scan, StrScanner &label, CliMemo
     p.trimStart([](char s) { return !isspace(s); });
     scan.trimEndAt(p);
     std::string cpu(scan, scan.size());
-    if (setCpu(cpu.c_str()) == nullptr)
+    if (_directives.setCpu(cpu.c_str()) == nullptr)
         return setError(UNSUPPORTED_CPU);
     scan = p;
     return setError(OK);
 }
 
 Error AsmCommonDirective::switchIntelZilog(StrScanner &scan, StrScanner &label, CliMemory &memory) {
-    const char *cpu = _assembler->getCpu();
-    if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
+    if (!_directives.is8080())
         return setError(UNKNOWN_DIRECTIVE);
-    StrScanner option = _assembler->parser().readSymbol(scan);
-    bool value = false;
+    const std::string currentCpu(_directives.currentCpu());
+    StrScanner option = _directives.parser().readSymbol(scan);
     if (option.iequals_P(PSTR("on"))) {
-        value = true;
+        if (_directives.setCpu("z80") == nullptr)
+            return setError(UNSUPPORTED_CPU);
+        _directives.assembler().setCpu(currentCpu.c_str());
     } else if (option.iequals_P(PSTR("off"))) {
-        value = false;
+        if (_directives.setCpu("8080") == nullptr)
+            return setError(UNSUPPORTED_CPU);
+        _directives.assembler().setCpu(currentCpu.c_str());
     } else
         return setError(option, UNKNOWN_OPERAND);
-    if (_directive == _asmI8080 && value)
-        switchDirective(_asmZ80)->assembler().setCpu(cpu);
-    if (_directive == _asmZ80 && !value)
-        switchDirective(_asmI8080)->assembler().setCpu(cpu);
     return setError(OK);
 }
 
@@ -649,7 +662,7 @@ std::string AsmCommonDirective::getComment() const {
 }
 
 const ConfigBase &AsmCommonDirective::config() const {
-    return _assembler->config();
+    return _directives.assembler().config();
 }
 
 int AsmCommonDirective::codeBytes() const {

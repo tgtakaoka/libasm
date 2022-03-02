@@ -18,8 +18,8 @@
 #define __ASM_DIRECTIVE_H__
 
 #include <functional>
+#include <list>
 #include <map>
-#include <vector>
 
 #include "asm_base.h"
 #include "bin_formatter.h"
@@ -40,13 +40,13 @@ class AsmDirective;
 
 class AsmCommonDirective : public ErrorReporter, public ListingLine, protected SymbolTable {
 public:
-    AsmCommonDirective(std::vector<AsmDirective *> &directives);
+    AsmCommonDirective(AsmDirective **begin, AsmDirective **end);
     virtual ~AsmCommonDirective();
 
-    AsmDirective *restrictCpu(const char *cpu);
-    AsmDirective *setCpu(const char *cpu);
+    AsmDirective *restrictCpu(const char *cpu) { return _directives.restrictCpu(cpu); }
+    AsmDirective *setCpu(const char *cpu) { return _directives.setCpu(cpu); }
     std::string listCpu(const char *separator) const;
-    AsmDirective *currentDirective();
+    AsmDirective *current() { return _directives.current(); }
 
     Error assembleLine(const char *line, CliMemory &memory);
 
@@ -80,11 +80,23 @@ public:
     Error allocateSpaces(StrScanner &scan, size_t unit);
 
 private:
-    std::vector<AsmDirective *> _directives;
-    AsmDirective *_asmZ80;
-    AsmDirective *_asmI8080;
-    AsmDirective *_directive;
-    Assembler *_assembler;
+    struct Directives {
+        Directives(AsmDirective **begin, AsmDirective **end);
+        AsmDirective *current() const { return _current; }
+        Assembler &assembler() const;
+        ValueParser &parser() const { return assembler().parser(); }
+        std::list<std::string> listCpu() const;
+        std::string currentCpu() const;
+        bool is8080() const;
+        AsmDirective *setCpu(const char *cpu);
+        AsmDirective *restrictCpu(const char *cpu);
+
+    private:
+        std::list<AsmDirective *> _directives;
+        AsmDirective *_current;
+        AsmDirective *switchDirective(AsmDirective *dir);
+    };
+    Directives _directives;
     size_t _line_len;
     char *_line;
     StrScanner _line_scan;
@@ -96,8 +108,7 @@ private:
 
     static constexpr int max_includes = 4;
     struct Source;
-    std::vector<Source *> _sources;
-
+    std::list<Source *> _sources;
 
     struct Listing {
         uint16_t line_number;
@@ -153,14 +164,11 @@ public:
     int operandWidth() const override;
 
     uint8_t addrUnit() const;
-
-private:
-    AsmDirective *switchDirective(AsmDirective *);
 };
 
 class AsmDirective {
 public:
-    Assembler &assembler() { return _assembler; }
+    Assembler &assembler() const { return _assembler; }
     Error processPseudo(const StrScanner &name, AsmCommonDirective &common, StrScanner &scan,
             StrScanner &label, CliMemory &memory) const;
     virtual BinFormatter &binFormatter() = 0;

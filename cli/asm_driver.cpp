@@ -22,14 +22,14 @@
 namespace libasm {
 namespace cli {
 
-AsmDriver::AsmDriver(std::vector<AsmDirective *> &directives) : _commonDir(directives) {}
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end) : _commonDir(begin, end) {}
 
 int AsmDriver::usage() {
     std::string cpuList;
     AsmDirective *directive = defaultDirective();
     if (directive) {
         cpuList = ": ";
-        cpuList += directive->assembler().listCpu();
+        cpuList += _commonDir.listCpu("");
     } else {
         const char *cpuSep = "\n                ";
         cpuList = _commonDir.listCpu(cpuSep);
@@ -79,7 +79,7 @@ int AsmDriver::assemble() {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
-        AsmDirective *directive = _commonDir.currentDirective();
+        AsmDirective *directive = _commonDir.current();
         const AddressWidth addrWidth = _commonDir.config().addressWidth();
         BinFormatter *formatter = &directive->binFormatter();
         MotoSrec srecord{addrWidth};
@@ -91,18 +91,17 @@ int AsmDriver::assemble() {
         }
 
         formatter->begin(output);
-        memory.dump(
-                [this, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
-                    if (_verbose) {
-                        const uint8_t addrUnit = _commonDir.addrUnit();
-                        fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
-                                addr / addrUnit, (uint32_t)(addr + data_size - 1) / addrUnit);
-                    }
-                    for (size_t i = 0; i < data_size; i += _record_bytes) {
-                        auto size = std::min(_record_bytes, data_size - i);
-                        formatter->encode(addr + i, data + i, size);
-                    }
-                });
+        memory.dump([this, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
+            if (_verbose) {
+                const uint8_t addrUnit = _commonDir.addrUnit();
+                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
+                        addr / addrUnit, (uint32_t)(addr + data_size - 1) / addrUnit);
+            }
+            for (size_t i = 0; i < data_size; i += _record_bytes) {
+                auto size = std::min(_record_bytes, data_size - i);
+                formatter->encode(addr + i, data + i, size);
+            }
+        });
         formatter->end();
         fclose(output);
     }

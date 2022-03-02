@@ -17,8 +17,6 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
-#include <vector>
-
 #include "asm_directive.h"
 #include "cli_listing.h"
 #include "cli_memory.h"
@@ -28,7 +26,7 @@ namespace cli {
 
 class AsmDriver {
 public:
-    AsmDriver(std::vector<AsmDirective *> &directives);
+    AsmDriver(AsmDirective **begin, AsmDirective **end);
 
     int usage();
     int parseOption(int argc, const char **argv);
