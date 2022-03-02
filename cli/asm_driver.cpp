@@ -81,7 +81,7 @@ int AsmDriver::assemble() {
         }
         AsmDirective *directive = _commonDir.currentDirective();
         const AddressWidth addrWidth = _commonDir.config().addressWidth();
-        BinFormatter *formatter = &directive->defaultFormatter();
+        BinFormatter *formatter = &directive->binFormatter();
         MotoSrec srecord{addrWidth};
         IntelHex intelHex{addrWidth};
         if (_formatter == 'S') {
@@ -133,10 +133,11 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
 
     int errors = 0;
     _commonDir.reset();
-    const char *line;
-    while ((line = _commonDir.readSourceLine()) != nullptr) {
-        if (_commonDir.assembleLine(line, memory) && reportError) {
+    StrScanner *scan;
+    while ((scan = _commonDir.readSourceLine()) != nullptr) {
+        if (_commonDir.assembleLine(*scan, memory) && reportError) {
             const char *filename = _commonDir.currentSource();
+            const char *line = *scan;
             const int lineno = _commonDir.currentLineno();
             const int column = _commonDir.errorAt() - line + 1;
             fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,

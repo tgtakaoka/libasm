@@ -41,7 +41,6 @@ AsmCommonDirective::AsmCommonDirective(std::vector<AsmDirective *> &directives) 
     _assembler = &_directive->assembler();
     _line_len = 128;
     _line = static_cast<char *>(malloc(_line_len));
-    _scan = nullptr;
     _origin = 0;
     _reportUndef = true;
     _reportDuplicate = true;
@@ -51,23 +50,23 @@ AsmCommonDirective::AsmCommonDirective(std::vector<AsmDirective *> &directives) 
     registerPseudo(".cpu", &AsmCommonDirective::switchCpu);
     registerPseudo(".include", &AsmCommonDirective::includeFile);
     // TODO: implement listing after "end".
-    registerPseudo(".end", &AsmCommonDirective::closeSource);
-    registerPseudo(".equ", &AsmCommonDirective::defineSymbol);
-    registerPseudo(":=", &AsmCommonDirective::defineSymbol);
-    registerPseudo("=", &AsmCommonDirective::defineSymbol);
+    registerPseudo(".end", &AsmCommonDirective::endAssemble);
+    registerPseudo(".equ", &AsmCommonDirective::defineLabel);
+    registerPseudo(":=", &AsmCommonDirective::defineLabel);
+    registerPseudo("=", &AsmCommonDirective::defineLabel);
     registerPseudo(".org", &AsmCommonDirective::defineOrigin);
     registerPseudo(".align", &AsmCommonDirective::alignOrigin);
-    registerPseudo(".string", &AsmCommonDirective::defineUint8WithTerminator);
-    registerPseudo(".ascii", &AsmCommonDirective::defineUint8WithTerminator);
-    registerPseudo(".byte", &AsmCommonDirective::defineUint8);
-    registerPseudo(".word", &AsmCommonDirective::defineUint16);
-    registerPseudo(".long", &AsmCommonDirective::defineUint32);
-    registerPseudo("dc.b", &AsmCommonDirective::defineUint8);
-    registerPseudo("dc.w", &AsmCommonDirective::defineUint16);
-    registerPseudo("dc.l", &AsmCommonDirective::defineUint32);
-    registerPseudo("ds.b", &AsmCommonDirective::allocateUint8);
-    registerPseudo("ds.w", &AsmCommonDirective::allocateUint16);
-    registerPseudo("ds.l", &AsmCommonDirective::allocateUint32);
+    registerPseudo(".string", &AsmCommonDirective::defineString);
+    registerPseudo(".ascii", &AsmCommonDirective::defineString);
+    registerPseudo(".byte", &AsmCommonDirective::defineUint8s);
+    registerPseudo(".word", &AsmCommonDirective::defineUint16s);
+    registerPseudo(".long", &AsmCommonDirective::defineUint32s);
+    registerPseudo("dc.b", &AsmCommonDirective::defineUint8s);
+    registerPseudo("dc.w", &AsmCommonDirective::defineUint16s);
+    registerPseudo("dc.l", &AsmCommonDirective::defineUint32s);
+    registerPseudo("ds.b", &AsmCommonDirective::allocateUint8s);
+    registerPseudo("ds.w", &AsmCommonDirective::allocateUint16s);
+    registerPseudo("ds.l", &AsmCommonDirective::allocateUint32s);
     registerPseudo(".z80syntax", &AsmCommonDirective::switchIntelZilog);
 }
 
@@ -149,96 +148,74 @@ AsmDirective *AsmCommonDirective::currentDirective() {
 }
 
 Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
-    _scan = line;
-    if (_scan == nullptr) {
+    if (line == nullptr)
         return OK;
-    }
+    StrScanner scan(line);
 
     _list.line_number = currentLineno();
     _list.include_nest = _sources.size() - 1;
     _list.address = _origin;
     _list.length = 0;
-    _list.value_defined = false;
+    _list.value.clear();
     _list.memory = &memory;
-    _list.label_len = 0;
-    _list.instruction_len = 0;
-    _list.operand_len = 0;
-    _list.comment = nullptr;
-    const char *label = nullptr;
-    std::string label_buf;
-    _list.label_len = 0;
+    _list.label = StrScanner::EMPTY;
+    _list.instruction = StrScanner::EMPTY;
+    _list.operand = StrScanner::EMPTY;
+    _list.comment = StrScanner::EMPTY;
+
     ValueParser &parser = _assembler->parser();
     parser.setCurrentOrigin(_origin);
-    if (parser.isSymbolLetter(*_scan, true)) {
-        _list.label = _scan;
-        StrScanner scan(_scan);
-        const StrScanner sym = parser.readSymbol(scan);
-        const char *end = scan;
-        label_buf = std::string(sym, sym.size());
-        if (*end == ':')
-            end++;  // optional trailing ':' for label.
-        _list.label_len = end - _list.label;
-        label = label_buf.c_str();
-        _scan = end;
-    }
-    skipSpaces();
 
-    if (!_assembler->endOfLine(*_scan)) {
-        _list.instruction = _scan;
-        const char *end = _list.instruction;
-        while (*end && !isspace(*end))
-            end++;
-        std::string directive(_list.instruction, end);
-        _list.instruction_len = end - _list.instruction;
-        _scan = end;
-        skipSpaces();
-        _list.operand = _scan;
+    StrScanner label;
+    if (parser.isSymbolLetter(*scan, true)) {
+        setAt(scan);
+        _list.label = scan;
+        label = parser.readSymbol(scan);
+        scan.expect(':');  // skip optional trailing ':' for label.
+        _list.label.trimEndAt(scan);
+    }
+    scan.skipSpaces();
+
+    if (!_assembler->endOfLine(*scan)) {
+        StrScanner p(scan);
+        p.trimStart([](char s) { return !isspace(s); });
+        _list.instruction = scan;
+        _list.instruction.trimEndAt(p);
+        _list.operand = p.skipSpaces();
         const uint32_t origin = _origin;
-        // setup context
-        _label = label;
-        _memory = &memory;
-        const Error error = processPseudo(directive.c_str());
-        label = _label;
-        if (error == UNKNOWN_DIRECTIVE) {
-            _scan = _list.instruction;
-        } else if (error) {
-            return error;
-        } else {
-            _list.operand_len = _scan - _list.operand;
-            skipSpaces();
-            _list.comment = _scan;
-            if (label)
-                internSymbol(origin / addrUnit(), label);
-            if (getError()) {
-                _scan = _list.label;
-            } else {
-                _scan = _list.operand + _list.operand_len;
+        const Error error = processPseudo(_list.instruction, p, label, memory);
+        if (error == OK) {
+            _list.operand.trimEndAt(p).trimEnd(isspace);
+            _list.comment = p.skipSpaces();
+            if (label.size()) {
+                // If |label| isn't consumed, assign the origin.
+                internSymbol(origin, label);
             }
             return getError();
         }
+        if (error != UNKNOWN_DIRECTIVE)
+            return error;
     }
 
-    if (label) {
+    if (label.size()) {
+        // If |label| isn't consumed, assign the origin.
         internSymbol(_origin, label);
-        if (getError()) {
-            _scan = _list.label;
+        if (getError())
             return getError();
-        }
     }
 
-    if (_assembler->endOfLine(*_scan)) {
-        _list.comment = _scan;
+    if (_assembler->endOfLine(*scan)) {
+        _list.comment = scan;
         return setError(OK);  // skip comment
     }
 
     Insn insn(_origin);
-    const Error error = _assembler->encode(_scan, insn, this);
+    const Error error = _assembler->encode(scan, insn, this);
     const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
     if (error == OK || allowUndef) {
-        _scan = _assembler->errorAt();
-        _list.operand_len = _scan - _list.operand;
-        skipSpaces();
-        _list.comment = _scan;
+        StrScanner p(_assembler->errorAt());
+        _list.operand.trimEndAt(p).trimEnd(isspace);
+        _list.comment = p.skipSpaces();
         if (insn.length() > 0) {
             const uint32_t addr = insn.address() * addrUnit();
             memory.writeBytes(addr, insn.bytes(), insn.length());
@@ -256,18 +233,12 @@ void AsmCommonDirective::reset() {
     _origin = 0;
 }
 
-const char *AsmCommonDirective::errorAt() const {
-    return _scan;
-}
-
 void AsmCommonDirective::setSymbolMode(bool reportUndef, bool reportDuplicate) {
     _reportUndef = reportUndef;
     _reportDuplicate = reportDuplicate;
 }
 
 struct AsmCommonDirective::Source {
-    Source(const char *file_name, const char *end, const Source *parent)
-        : fp(nullptr), lineno(0), name(file_name, end), include_from(parent) {}
     Source(const std::string &file_name, const Source *parent)
         : fp(nullptr), lineno(0), name(file_name), include_from(parent) {}
     FILE *fp;
@@ -284,19 +255,17 @@ int AsmCommonDirective::currentLineno() const {
     return _sources.empty() ? 0 : _sources.back()->lineno;
 }
 
-Error AsmCommonDirective::openSource(const char *input_name, const char *end) {
+Error AsmCommonDirective::openSource(const StrScanner &input_name) {
     if (_sources.size() >= max_includes)
         return setError(TOO_MANY_INCLUDE);
-    if (end == nullptr)
-        end = input_name + strlen(input_name);
     const Source *parent = _sources.empty() ? nullptr : _sources.back();
     const size_t pos = parent ? parent->name.find_last_of('/') : std::string::npos;
     Source *source;
     if (pos == std::string::npos || *input_name == '/') {
-        source = new Source(input_name, end, parent);
+        source = new Source(std::string(input_name, input_name.size()), parent);
     } else {
         std::string name(parent->name.c_str(), pos + 1);
-        name.append(input_name, end);
+        name.append(input_name, input_name.size());
         source = new Source(name, parent);
     }
     _sources.push_back(source);
@@ -307,12 +276,14 @@ Error AsmCommonDirective::openSource(const char *input_name, const char *end) {
     return setError(OK);
 }
 
-const char *AsmCommonDirective::readSourceLine() {
+StrScanner *AsmCommonDirective::readSourceLine() {
     while (!_sources.empty()) {
         Source *source = _sources.back();
         source->lineno++;
-        if (getLine(_line, _line_len, source->fp) >= 0)
-            return _line;
+        if (getLine(_line, _line_len, source->fp) >= 0) {
+            _line_scan = _line;
+            return &_line_scan;
+        }
         closeSource();
     }
     return nullptr;
@@ -326,28 +297,27 @@ Error AsmCommonDirective::closeSource() {
     return setError(OK);
 }
 
-void AsmCommonDirective::registerPseudo(const char *name, Error (AsmCommonDirective::*handler)()) {
+void AsmCommonDirective::registerPseudo(const char *name, PseudoHandler handler) {
     _pseudos.emplace(std::make_pair(std::string(name), handler));
     if (*name++ == '.')
         _pseudos.emplace(std::make_pair(std::string(name), handler));
 }
 
-Error AsmCommonDirective::processPseudo(const char *name) {
-    if (_directive->processPseudo(name, *this) != UNKNOWN_DIRECTIVE)
+Error AsmCommonDirective::processPseudo(
+        const StrScanner &name, StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    if (_directive->processPseudo(name, *this, scan, label, memory) != UNKNOWN_DIRECTIVE)
         return getError();
-    auto it = _pseudos.find(name);
+    auto it = _pseudos.find(std::string(name, name.size()));
     if (it != _pseudos.end())
-        return (this->*it->second)();
+        return (this->*it->second)(scan, label, memory);
     return setError(UNKNOWN_DIRECTIVE);
 }
 
 // PseudoHandler
 
-Error AsmCommonDirective::defineOrigin() {
+Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     ValueParser &parser = _assembler->parser();
-    StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
-    _scan = scan;
     if (setError(parser))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -357,11 +327,9 @@ Error AsmCommonDirective::defineOrigin() {
     return setError(OK);
 }
 
-Error AsmCommonDirective::alignOrigin() {
+Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     ValueParser &parser = _assembler->parser();
-    StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
-    _scan = scan;
     if (setError(parser))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -378,136 +346,73 @@ Error AsmCommonDirective::alignOrigin() {
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineSymbol() {
-    return defineLabel(_label, *_memory);
-}
-
-Error AsmCommonDirective::includeFile() {
-    const char *filename = _scan;
-    char c = 0;
-    if (*filename == '"' || *filename == '\'')
-        c = *filename++;
-    const char *end = filename;
-    while (*end && (!c || *end != c) && !isspace(*end))
-        end++;
-    if (c && *end != c)
-        return setError(c == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-    return openSource(filename, end);
-}
-
-Error AsmCommonDirective::defineUint8() {
-    return defineUint8s(*_memory, false);
-}
-
-Error AsmCommonDirective::defineUint8WithTerminator() {
-    return defineUint8s(*_memory, true);
-}
-
-Error AsmCommonDirective::defineUint16() {
-    return defineUint16s(*_memory);
-}
-
-Error AsmCommonDirective::defineUint32() {
-    return defineUint32s(*_memory);
-}
-
-Error AsmCommonDirective::allocateUint8() {
-    return allocateSpaces(sizeof(uint8_t));
-}
-
-Error AsmCommonDirective::allocateUint16() {
-    return allocateSpaces(sizeof(uint16_t));
-}
-
-Error AsmCommonDirective::allocateUint32() {
-    return allocateSpaces(sizeof(uint32_t));
-}
-
-Error AsmCommonDirective::switchCpu() {
-    const char *p = _scan;
-    while (*p && !isspace(*p))
-        p++;
-    std::string cpu(_scan, p);
-    if (setCpu(cpu.c_str()) == nullptr)
-        return setError(UNSUPPORTED_CPU);
-    _scan = p;
-    return setError(OK);
-}
-
-Error AsmCommonDirective::switchIntelZilog() {
-    const char *cpu = _assembler->getCpu();
-    if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
-        return setError(UNKNOWN_DIRECTIVE);
-    StrScanner scan(_scan);
-    StrScanner option = _assembler->parser().readSymbol(scan);
-    std::string val(option);
-    _scan = scan;
-    bool value = false;
-    if (strcasecmp(val.c_str(), "on") == 0) {
-        value = true;
-    } else if (strcasecmp(val.c_str(), "off") == 0) {
-        value = false;
-    } else
-        return setError(UNKNOWN_OPERAND);
-    if (_directive == _asmI8080 && value)
-        switchDirective(_asmZ80)->assembler().setCpu(cpu);
-    if (_directive == _asmZ80 && !value)
-        switchDirective(_asmI8080)->assembler().setCpu(cpu);
-    return setError(OK);
-}
-
-Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
-    if (label == nullptr)
+Error AsmCommonDirective::defineLabel(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    if (label.size() == 0)
         return setError(MISSING_LABEL);
-    if (_reportDuplicate && hasSymbol(label))
-        return setError(DUPLICATE_LABEL);
     ValueParser &parser = _assembler->parser();
-    StrScanner scan(_scan);
-    Value value = parser.eval(scan, this);
-    _scan = scan;
+    _list.value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
-    if (_reportUndef && value.isUndefined())
+    if (_reportUndef && _list.value.isUndefined())
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    internSymbol(value.getUnsigned(), label);
-    _list.value = value.getUnsigned();
-    _list.value_defined = true;
-    label = nullptr;
+    internSymbol(_list.value.getUnsigned(), label);
+    label = StrScanner::EMPTY;
     return getError();
 }
 
-Error AsmCommonDirective::defineUint8s(CliMemory &memory, bool terminator) {
+Error AsmCommonDirective::includeFile(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    char quote = scan.expect('"');
+    if (quote == 0)
+        quote = scan.expect('\'');
+    StrScanner filename(scan);
+    StrScanner p(scan);
+    if (quote) {
+        p.trimStart([quote](char s) { return s != quote; });
+        if (*p != quote)
+            return setError(p, quote == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+    } else {
+        p.trimStart([](char s) { return !isspace(s); });
+    }
+    scan = p;
+    return openSource(filename.trimEndAt(p));
+}
+
+Error AsmCommonDirective::defineUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    return defineUint8s(scan, memory, false);
+}
+
+Error AsmCommonDirective::defineString(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    return defineUint8s(scan, memory, true);
+}
+
+Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool terminator) {
     _list.address = _origin;
     ValueParser &parser = _assembler->parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
-    do {
-        skipSpaces();
-        if (terminator || *_scan == '"') {
-            const char delim = *_scan;
-            const char *p = _scan + 1;
+    for (;;) {
+        scan.skipSpaces();
+        if (terminator || *scan == '"') {
+            const char delim = *scan++;
+            StrScanner p(scan);
             for (;;) {
-                if (*p == 0)
-                    return setError(MISSING_CLOSING_DQUOTE);
-                if (*p == delim)
+                if (p.expect(delim))
                     break;
-                StrScanner scan(p);
-                const char c = parser.readChar(scan);
-                p = scan;
+                if (*p == 0)
+                    return setError(p, MISSING_CLOSING_DQUOTE);
+                const char c = parser.readChar(p);
                 if (setError(parser)) {
-                    _scan = p;
+                    scan = p;
                     return getError();
                 }
                 memory.writeByte(base + len, c);
                 len++;
             }
-            _scan = p + 1;
+            scan = p;
         } else {
-            StrScanner scan(_scan);
             Value value = parser.eval(scan, this);
-            _scan = scan;
             if (setError(parser))
                 return getError();
             if (_reportUndef && value.isUndefined())
@@ -518,18 +423,14 @@ Error AsmCommonDirective::defineUint8s(CliMemory &memory, bool terminator) {
             memory.writeByte(base + len, val8);
             len++;
         }
-        const char *save = _scan;
-        skipSpaces();
-        if (*_scan++ == ',')
-            continue;
-        _scan = save;
-        break;
-    } while (true);
+        if (!scan.skipSpaces().expect(','))
+            break;
+    }
     _origin += ((len + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineUint16s(CliMemory &memory) {
+Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     _list.address = _origin;
     ValueParser &parser = _assembler->parser();
     const uint32_t base = _origin * addrUnit();
@@ -537,11 +438,8 @@ Error AsmCommonDirective::defineUint16s(CliMemory &memory) {
     len = 0;
     const uint8_t hi = uint8_t(config().endian());
     const uint8_t lo = 1 - hi;
-    do {
-        skipSpaces();
-        StrScanner scan(_scan);
+    for (;;) {
         Value value = parser.eval(scan, this);
-        _scan = scan;
         if (setError(parser))
             return getError();
         if (_reportUndef && value.isUndefined())
@@ -554,28 +452,21 @@ Error AsmCommonDirective::defineUint16s(CliMemory &memory) {
         memory.writeByte(base + len + hi, val8hi);
         memory.writeByte(base + len + lo, val8lo);
         len += 2;
-        const char *save = _scan;
-        skipSpaces();
-        if (*_scan++ == ',')
-            continue;
-        _scan = save;
-        break;
-    } while (true);
+        if (!scan.skipSpaces().expect(','))
+            break;
+    }
     _origin += ((len + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineUint32s(CliMemory &memory) {
+Error AsmCommonDirective::defineUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     _list.address = _origin;
     ValueParser &parser = _assembler->parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
-    do {
-        skipSpaces();
-        StrScanner scan(_scan);
+    for (;;) {
         Value value = parser.eval(scan, this);
-        _scan = scan;
         if (setError(parser))
             return getError();
         if (_reportUndef && value.isUndefined())
@@ -587,22 +478,28 @@ Error AsmCommonDirective::defineUint32s(CliMemory &memory) {
             val32 >>= 8;
         }
         len += 4;
-        const char *save = _scan;
-        skipSpaces();
-        if (*_scan++ == ',')
-            continue;
-        _scan = save;
-        break;
-    } while (true);
+        if (!scan.skipSpaces().expect(','))
+            break;
+    }
     _origin += ((len + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
 }
 
-Error AsmCommonDirective::allocateSpaces(const uint8_t unit) {
+Error AsmCommonDirective::allocateUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    return allocateSpaces(scan, sizeof(uint8_t));
+}
+
+Error AsmCommonDirective::allocateUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    return allocateSpaces(scan, sizeof(uint16_t));
+}
+
+Error AsmCommonDirective::allocateUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    return allocateSpaces(scan, sizeof(uint32_t));
+}
+
+Error AsmCommonDirective::allocateSpaces(StrScanner &scan, size_t unit) {
     ValueParser &parser = _assembler->parser();
-    StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
-    _scan = scan;
     if (setError(parser))
         return getError();
     if (_reportUndef && value.isUndefined())
@@ -614,6 +511,40 @@ Error AsmCommonDirective::allocateSpaces(const uint8_t unit) {
         return setError(OVERFLOW_RANGE);
     _origin += ((size + addrUnit() - 1) & -addrUnit()) / addrUnit();
     return setError(OK);
+}
+
+Error AsmCommonDirective::switchCpu(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    StrScanner p(scan);
+    p.trimStart([](char s) { return !isspace(s); });
+    scan.trimEndAt(p);
+    std::string cpu(scan, scan.size());
+    if (setCpu(cpu.c_str()) == nullptr)
+        return setError(UNSUPPORTED_CPU);
+    scan = p;
+    return setError(OK);
+}
+
+Error AsmCommonDirective::switchIntelZilog(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    const char *cpu = _assembler->getCpu();
+    if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
+        return setError(UNKNOWN_DIRECTIVE);
+    StrScanner option = _assembler->parser().readSymbol(scan);
+    bool value = false;
+    if (option.iequals_P(PSTR("on"))) {
+        value = true;
+    } else if (option.iequals_P(PSTR("off"))) {
+        value = false;
+    } else
+        return setError(option, UNKNOWN_OPERAND);
+    if (_directive == _asmI8080 && value)
+        switchDirective(_asmZ80)->assembler().setCpu(cpu);
+    if (_directive == _asmZ80 && !value)
+        switchDirective(_asmI8080)->assembler().setCpu(cpu);
+    return setError(OK);
+}
+
+Error AsmCommonDirective::endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    return closeSource();
 }
 
 const char *AsmCommonDirective::lookupValue(uint32_t address) const {
@@ -630,15 +561,8 @@ uint32_t AsmCommonDirective::lookupSymbol(const char *symbol, const char *end) c
                : symbolLookup(std::string(symbol));
 }
 
-Error AsmCommonDirective::internSymbol(uint32_t value, const char *symbol, const char *end) {
-    if (end)
-        return symbolIntern(value, std::string(symbol, end - symbol));
-    return symbolIntern(value, std::string(symbol));
-}
-
-void AsmCommonDirective::skipSpaces() {
-    while (isspace(*_scan))
-        _scan++;
+Error AsmCommonDirective::internSymbol(uint32_t value, const StrScanner &symbol) {
+    return symbolIntern(value, std::string(symbol, symbol.size()));
 }
 
 bool AsmCommonDirective::symbolExists(const std::string &key) const {
@@ -659,12 +583,6 @@ Error AsmCommonDirective::symbolIntern(uint32_t value, const std::string &key) {
     return setError(OK);
 }
 
-int AsmCommonDirective::trimRight(const char *str, int len) {
-    while (len > 0 && isspace(str[len - 1]))
-        len--;
-    return len;
-}
-
 // ListingLine oevrrides
 
 uint32_t AsmCommonDirective::startAddress() const {
@@ -683,19 +601,19 @@ uint8_t AsmCommonDirective::getByte(int offset) const {
 }
 
 bool AsmCommonDirective::hasInstruction() const {
-    return _list.instruction_len;
+    return _list.instruction.size() != 0;
 }
 
 std::string AsmCommonDirective::getInstruction() const {
-    return std::string(_list.instruction, _list.instruction_len);
+    return std::string(_list.instruction, _list.instruction.size());
 }
 
 bool AsmCommonDirective::hasOperand() const {
-    return _list.operand_len;
+    return _list.operand.size() != 0;
 }
 
 std::string AsmCommonDirective::getOperand() const {
-    return std::string(_list.operand, trimRight(_list.operand, _list.operand_len));
+    return std::string(_list.operand, _list.operand.size());
 }
 
 uint16_t AsmCommonDirective::lineNumber() const {
@@ -707,27 +625,27 @@ uint16_t AsmCommonDirective::includeNest() const {
 }
 
 bool AsmCommonDirective::hasValue() const {
-    return _list.value_defined;
+    return !_list.value.isUndefined();
 }
 
 uint32_t AsmCommonDirective::value() const {
-    return _list.value;
+    return _list.value.getUnsigned();
 }
 
 bool AsmCommonDirective::hasLabel() const {
-    return _list.label_len;
+    return _list.label.size() != 0;
 }
 
 std::string AsmCommonDirective::getLabel() const {
-    return std::string(_list.label, _list.label_len);
+    return std::string(_list.label, _list.label.size());
 }
 
 bool AsmCommonDirective::hasComment() const {
-    return _list.comment && *_list.comment;
+    return _list.comment.size() != 0;
 }
 
 std::string AsmCommonDirective::getComment() const {
-    return std::string(_list.comment);
+    return std::string(_list.comment, _list.comment.size());
 }
 
 const ConfigBase &AsmCommonDirective::config() const {
@@ -755,26 +673,38 @@ uint8_t AsmCommonDirective::addrUnit() const {
     return static_cast<uint8_t>(config().addressUnit());
 }
 
+void AsmDirective::registerPseudo(const char *name, AsmCommonDirective::PseudoHandler handler) {
+    _pseudos.emplace(std::make_pair(std::string(name), handler));
+    if (*name++ == '.')
+        _pseudos.emplace(std::make_pair(std::string(name), handler));
+}
+
+Error AsmDirective::processPseudo(const StrScanner &name, AsmCommonDirective &common,
+        StrScanner &scan, StrScanner &label, CliMemory &memory) const {
+    auto it = _pseudos.find(std::string(name, name.size()));
+    return it == _pseudos.end() ? UNKNOWN_DIRECTIVE : (common.*it->second)(scan, label, memory);
+}
+
 MotorolaDirective::MotorolaDirective(Assembler &assembler)
     : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
-    registerPseudo("fcb", &AsmCommonDirective::defineUint8);
-    registerPseudo("fcc", &AsmCommonDirective::defineUint8WithTerminator);
-    registerPseudo("fdb", &AsmCommonDirective::defineUint16);
-    registerPseudo("fdb", &AsmCommonDirective::defineUint16);
-    registerPseudo("rmb", &AsmCommonDirective::allocateUint8);
-    registerPseudo("dfs", &AsmCommonDirective::allocateUint8);
+    registerPseudo(".fcb", &AsmCommonDirective::defineUint8s);
+    registerPseudo(".fcc", &AsmCommonDirective::defineString);
+    registerPseudo(".fdb", &AsmCommonDirective::defineUint16s);
+    registerPseudo(".fdb", &AsmCommonDirective::defineUint16s);
+    registerPseudo(".rmb", &AsmCommonDirective::allocateUint8s);
+    registerPseudo(".dfs", &AsmCommonDirective::allocateUint8s);
 }
 
 IntelDirective::IntelDirective(Assembler &assembler)
     : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
-    registerPseudo("db", &AsmCommonDirective::defineUint8);
-    registerPseudo("dw", &AsmCommonDirective::defineUint16);
-    registerPseudo("dd", &AsmCommonDirective::defineUint32);
-    registerPseudo("ds", &AsmCommonDirective::allocateUint8);
+    registerPseudo(".db", &AsmCommonDirective::defineUint8s);
+    registerPseudo(".dw", &AsmCommonDirective::defineUint16s);
+    registerPseudo(".dd", &AsmCommonDirective::defineUint32s);
+    registerPseudo(".ds", &AsmCommonDirective::allocateUint8s);
 }
 
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
-    registerPseudo(".dbyte", &AsmCommonDirective::defineUint16);
+    registerPseudo(".dbyte", &AsmCommonDirective::defineUint16s);
 }
 
 }  // namespace cli

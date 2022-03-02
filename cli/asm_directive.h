@@ -51,34 +51,33 @@ public:
     Error assembleLine(const char *line, CliMemory &memory);
 
     void reset();
-    const char *errorAt() const;
     void setSymbolMode(bool reportUndef, bool reportDuplicate);
     const char *currentSource() const;
     int currentLineno() const;
-    Error openSource(const char *input_name, const char *end = nullptr);
-    const char *readSourceLine();
+    Error openSource(const StrScanner &input_name);
+    StrScanner *readSourceLine();
+    Error closeSource();
 
     // pseudoHandlers
-    Error defineOrigin();
-    Error alignOrigin();
-    Error defineSymbol();
-    Error includeFile();
-    Error defineUint8();
-    Error defineUint8WithTerminator();
-    Error defineUint16();
-    Error defineUint32();
-    Error allocateUint8();
-    Error allocateUint16();
-    Error allocateUint32();
-    Error closeSource();
-    Error switchCpu();
-    Error switchIntelZilog();
+    typedef Error (AsmCommonDirective::*PseudoHandler)(
+            StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error alignOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineLabel(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error includeFile(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineString(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error defineUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error allocateUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error allocateUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error allocateUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error switchCpu(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error switchIntelZilog(StrScanner &scan, StrScanner &label, CliMemory &memory);
+    Error endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory);
 
-    Error defineLabel(const char *&label, CliMemory &memory);
-    Error defineUint8s(CliMemory &memory, bool terminator = false);
-    Error defineUint16s(CliMemory &memory);
-    Error defineUint32s(CliMemory &memory);
-    Error allocateSpaces(const uint8_t unit = 1);
+    Error defineUint8s(StrScanner &scan, CliMemory &memory, bool terminator);
+    Error allocateSpaces(StrScanner &scan, size_t unit);
 
 private:
     std::vector<AsmDirective *> _directives;
@@ -88,49 +87,41 @@ private:
     Assembler *_assembler;
     size_t _line_len;
     char *_line;
-    const char *_scan;
+    StrScanner _line_scan;
     uint32_t _origin;
     bool _reportUndef;
     bool _reportDuplicate;
     int _labelWidth;
     int _operandWidth;
 
-    // pseudoHandler's context
-    const char *_label;
-    CliMemory *_memory;
-
     static constexpr int max_includes = 4;
     struct Source;
     std::vector<Source *> _sources;
 
+
     struct Listing {
         uint16_t line_number;
         uint16_t include_nest;
-        const char *label;  // if label defined
-        int label_len;
         uint32_t address;
         CliMemory *memory;
         int length;
-        bool value_defined;
-        uint32_t value;
-        const char *instruction;
-        int instruction_len;
-        const char *operand;
-        int operand_len;
-        const char *comment;
+        Value value;
+        StrScanner label;
+        StrScanner instruction;
+        StrScanner operand;
+        StrScanner comment;
     } _list;
 
-    std::map<std::string, Error (AsmCommonDirective::*)(), icasecmp> _pseudos;
-    void registerPseudo(const char *name, Error (AsmCommonDirective::*handler)());
-    Error processPseudo(const char *name);
+    std::map<std::string, PseudoHandler, icasecmp> _pseudos;
+    void registerPseudo(const char *name, PseudoHandler handler);
+    Error processPseudo(
+            const StrScanner &name, StrScanner &scan, StrScanner &label, CliMemory &memory);
 
     // SymbolTable
     const char *lookupValue(uint32_t address) const override;
     bool hasSymbol(const char *symbol, const char *end = nullptr) const override;
     uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) const override;
-    Error internSymbol(uint32_t value, const char *symbol, const char *end = nullptr);
-
-    void skipSpaces();
+    Error internSymbol(uint32_t value, const StrScanner &symbol);
 
 private:
     std::map<std::string, uint32_t, std::less<>> _symbols;
@@ -165,33 +156,28 @@ public:
 
 private:
     AsmDirective *switchDirective(AsmDirective *);
-
-    static int trimRight(const char *str, int len);
 };
 
 class AsmDirective {
 public:
     Assembler &assembler() { return _assembler; }
-    Error processPseudo(const char *name, AsmCommonDirective &common) const {
-        auto it = _pseudos.find(name);
-        return it == _pseudos.end() ? UNKNOWN_DIRECTIVE : (common.*it->second)();
-    }
-    virtual BinFormatter &defaultFormatter() = 0;
+    Error processPseudo(const StrScanner &name, AsmCommonDirective &common, StrScanner &scan,
+            StrScanner &label, CliMemory &memory) const;
+    virtual BinFormatter &binFormatter() = 0;
 
 protected:
     Assembler &_assembler;
-    std::map<std::string, Error (AsmCommonDirective::*)(), icasecmp> _pseudos;
+    std::map<std::string, AsmCommonDirective::PseudoHandler, icasecmp> _pseudos;
 
     AsmDirective(Assembler &assembler) : _assembler(assembler) {}
-    void registerPseudo(const char *name, Error (AsmCommonDirective::*handler)()) {
-        _pseudos.emplace(std::make_pair(std::string(name), handler));
-    }
+    void registerPseudo(const char *name, AsmCommonDirective::PseudoHandler handler);
 };
 
 class MotorolaDirective : public AsmDirective {
 public:
     MotorolaDirective(Assembler &assembler);
-    BinFormatter &defaultFormatter() override { return _formatter; }
+    BinFormatter &binFormatter() override { return _formatter; }
+
 private:
     MotoSrec _formatter;
 };
@@ -199,7 +185,8 @@ private:
 class IntelDirective : public AsmDirective {
 public:
     IntelDirective(Assembler &assembler);
-    BinFormatter &defaultFormatter() override { return _formatter; }
+    BinFormatter &binFormatter() override { return _formatter; }
+
 private:
     IntelHex _formatter;
 };
