@@ -70,7 +70,7 @@ endef
 $(eval $(foreach a,$(ARCHS),$(call test-rule,$(a))))
 
 # make rule for testing expression.
-EXPRS = base motorola intel
+EXPRS = base motorola intel national
 define test-expr # expr
 test_expr_$(1): test_expr_$(1).o $$(OBJS_expr) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
@@ -84,6 +84,8 @@ test_expr:: test_expr_$(1)
 
 endef
 $(eval $(foreach e,$(EXPRS),$(call exec-test,$(e))))
+
+test: $(foreach a,$(ARCHS),test_$(a)) test_expr
 
 define gen-rule
 gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen)

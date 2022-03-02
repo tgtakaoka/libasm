@@ -24,6 +24,7 @@ int main(int argc, const char **argv) {
     DisNs32000 dis32000;
     GenDriver<Config> driver(dis32000);
     dis32000.setRelativeTarget(true);
+    dis32000.formatter().setCStyle(true);
     if (driver.main(argc, argv))
         return 1;
 

@@ -35,15 +35,16 @@ public:
     virtual void reset() {}
 
     void setCommentChar(char commentChar) { _commentChar = commentChar; }
-    ValueParser &getParser() const { return _parser; }
+    ValueParser &parser() const { return _parser; }
     bool endOfLine(char letter) const;
 
     const char *listCpu() const { return _table.listCpu(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
     const char *getCpu() const { return _table.getCpu(); }
 
-protected:
+private:
     ValueParser &_parser;
+protected:
     TableBase &_table;
     char _commentChar;
     SymbolTable *_symtab;

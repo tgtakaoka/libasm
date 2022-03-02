@@ -86,7 +86,7 @@ public:
     char readChar(StrScanner &scan);
 
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
-    static bool isSymbolLetter(char c, bool head = false);
+    virtual bool isSymbolLetter(char c, bool head = false) const;
     StrScanner readSymbol(StrScanner &scan) const;
 
     struct FuncParser : public ErrorReporter {
@@ -96,6 +96,7 @@ public:
     void setFuncParser(FuncParser *parser = nullptr) { _funcParser = parser; }
 
 protected:
+    virtual bool numberPrefix(const StrScanner &scan) const;
     virtual Error readNumber(StrScanner &scan, Value &val);
     Error parseNumber(StrScanner &scan, Value &val, const uint8_t base, const char suffix = 0);
     Error scanNumberEnd(const StrScanner &scan, const uint8_t base, char suffix = 0);
@@ -163,14 +164,25 @@ public:
     MotorolaValueParser() : ValueParser('*') {}
 
 protected:
+    bool numberPrefix(const StrScanner &scan) const override;
     Error readNumber(StrScanner &scan, Value &val) override;
 };
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser() : ValueParser('$') {}
+    IntelValueParser(char curSym = '$') : ValueParser(curSym) {}
 
 protected:
+    Error readNumber(StrScanner &scan, Value &val) override;
+};
+
+class NationalValueParser : public IntelValueParser {
+public:
+    NationalValueParser(char curSym = '.') : IntelValueParser(curSym) {}
+
+protected:
+    bool isSymbolLetter(char c, bool head) const override;
+    bool numberPrefix(const StrScanner &scan) const override;
     Error readNumber(StrScanner &scan, Value &val) override;
 };
 

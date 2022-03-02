@@ -27,6 +27,7 @@ Disassembler &disassembler(dis8070);
 static void set_up() {
     disassembler.reset();
     disassembler.setRelativeTarget(false);
+    disassembler.formatter().setCStyle(true);
 }
 
 static void tear_down() {
@@ -336,6 +337,18 @@ static void test_auto_indexed() {
     TEST(SUB, "A, @neg1,P3",   0xFF, 0xFF);
 }
 
+static void test_formatter() {
+    disassembler.formatter().setCStyle(false);
+    TEST(XOR, "A, =X'55",  0xE4, 0x55);
+    TEST(ADD, "A, =X'AA",  0xF4, 0xAA);
+    TEST(SUB, "A, =X'FF",  0xFC, 0xFF);
+
+    TEST(PLI, "P2, =X'1234", 0x22, 0x34, 0x12);
+    TEST(LD,  "P2, =X'1234", 0x26, 0x34, 0x12);
+    TEST(JSR, "X'1234", 0x20, 0x33, 0x12);
+    TEST(JMP, "X'1234", 0x24, 0x33, 0x12);
+}
+
 static void test_illegal() {
     const uint8_t illegals[] = {
         0x02, 0x03, 0x04, 0x05,
@@ -370,6 +383,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_relative);
     RUN_TEST(test_indexed);
     RUN_TEST(test_auto_indexed);
+    RUN_TEST(test_formatter);
     RUN_TEST(test_illegal);
 }
 

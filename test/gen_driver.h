@@ -43,7 +43,7 @@ public:
         const char *commentStr = ";;;";
         if (_generateGas) {
             commentStr = ";###";
-            _disassembler.getFormatter().setCStyleHex(true);
+            _disassembler.formatter().setCStyle(true);
         }
         _disassembler.setUppercase(_uppercase);
         _listing.setUppercase(_uppercase);
@@ -120,7 +120,7 @@ private:
             return;
         char operands[40];
         StrBuffer buffer(operands, sizeof(operands));
-        _disassembler.getFormatter().formatHex(
+        _disassembler.formatter().formatHex(
                 buffer, addr / addrUnit(), config().addressWidth(), false);
         _address = addr;
         _generated_size = 0;

@@ -50,7 +50,7 @@ const char *DisDirective::getCpu(bool withBytes) {
 
 const char *DisDirective::origin(uint32_t origin, bool withBytes) {
     StrBuffer buf(_operands, sizeof(_operands));
-    _disassembler.getFormatter().formatHex(buf, origin, config().addressWidth(), false);
+    _disassembler.formatter().formatHex(buf, origin, config().addressWidth(), false);
     _listing.reset(*this);
     _address = origin;
     _generated_size = 0;

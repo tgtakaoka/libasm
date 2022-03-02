@@ -64,7 +64,7 @@ Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::ui
         if (_relativeTarget) {
             outRelAddr(out, target, base, 8);
         } else {
-            outAbsAddr(out, target).letter('-').letter('*');
+            outAbsAddr(out, target).letter('-').letter(_curSym);
             _regs.outRegName(out.letter('('), REG_IC).letter(')');
         }
         if (mode == 3)

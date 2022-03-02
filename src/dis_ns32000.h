@@ -43,7 +43,7 @@ public:
     void floatPrefix(const char *prefix = nullptr) { _floatPrefix = prefix; }
 
 private:
-    ValueFormatter _formatter;
+    NationalValueFormatter _formatter;
     RegNs32000 _regs;
     bool _stringOptionBraket;
     bool _pcRelativeParen;

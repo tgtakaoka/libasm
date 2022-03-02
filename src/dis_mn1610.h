@@ -28,12 +28,15 @@ namespace mn1610 {
 
 class DisMn1610 : public Disassembler, public Config {
 public:
-    DisMn1610() : Disassembler(_formatter, _regs, TableMn1610, '*') { reset(); }
+    DisMn1610() : Disassembler(_formatter, _regs, TableMn1610, '*') {
+        _formatter.setSuffix(true);
+        reset();
+    }
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMn1610.addressWidth(); }
 
 private:
-    ValueFormatter _formatter;
+    NationalValueFormatter _formatter;
     RegMn1610 _regs;
 
     Error outCcName(StrBuffer &out, CcName cc);

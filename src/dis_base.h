@@ -41,7 +41,7 @@ public:
     virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
 
-    ValueFormatter &getFormatter() { return _formatter; }
+    ValueFormatter &formatter() { return _formatter; }
     void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
     void setUppercase(bool uppercase);
     void setCurrentOriginSymbol(char curSym) { _curSym = curSym; }
@@ -50,8 +50,9 @@ public:
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
     const char *getCpu() const { return _table.getCpu(); }
 
-protected:
+private:
     ValueFormatter &_formatter;
+protected:
     RegBase &_regBase;
     TableBase &_table;
     SymbolTable *_symtab;

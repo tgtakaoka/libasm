@@ -35,7 +35,7 @@ public:
     static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }
 
 private:
-    ValueParser _parser{'$'};
+    NationalValueParser _parser{'$'};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

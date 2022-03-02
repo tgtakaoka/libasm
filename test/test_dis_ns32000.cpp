@@ -27,6 +27,7 @@ Disassembler &disassembler(dis32k);
 static void set_up() {
     disassembler.reset();
     disassembler.setRelativeTarget(true);
+    disassembler.formatter().setCStyle(true);
 }
 
 static void tear_down() {
@@ -658,6 +659,18 @@ static void test_generic_addressing() {
     TEST(ADDW, "10(R2), 8(6(EXT))",      0x81, 0x55, 0x0A, 0x06, 0x08);
     TEST(ADDW, "10(R2), -8(-6(EXT))",    0x81, 0x55, 0x0A, 0x7A, 0x78);
 }
+
+static void test_formatter() {
+    disassembler.formatter().setCStyle(false);
+    ATEST(0x800000, BGT, "*-X'00800000", 0x6A, 0xFF, 0x80, 0x00, 0x00);
+    ATEST(0x000000, BLS, "*+X'00FFFFFF", 0x5A, 0xC0, 0xFF, 0xFF, 0xFF);
+    TEST(RET,  "-X'1F000000",            0x12, 0xE1, 0x00, 0x00, 0x00);
+    TEST(SLSW, "@X'00000E",              0xBD, 0xAA, 0x0E);
+    TEST(CMPW, "X'1234, X'5678",         0x05, 0xA5, 0x12, 0x34, 0x56, 0x78);
+
+    dis32k.pcRelativeParen(true);
+    ATEST(0x1000, SHSW, "X'00100F(PC)", 0xBD, 0xDD, 0x0F);
+}
 // clang-format on
 
 static void assert_illegal(
@@ -860,6 +873,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_format_8_mmu);
     RUN_TEST(test_format_14);
     RUN_TEST(test_generic_addressing);
+    RUN_TEST(test_formatter);
     RUN_TEST(test_illegal);
 }
 

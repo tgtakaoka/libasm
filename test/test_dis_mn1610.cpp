@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+#include "array_memory.h"
 #include "dis_mn1610.h"
 #include "test_dis_helper.h"
-#include "array_memory.h"
 
 using namespace libasm;
 using namespace libasm::mn1610;
@@ -30,13 +30,14 @@ static bool is1610() {
 }
 
 static bool is1613() {
-    return strcasecmp(disassembler.getCpu(), "mn1613") == 0
-        || strcasecmp(disassembler.getCpu(), "mn1613a") == 0;
+    return strcasecmp(disassembler.getCpu(), "mn1613") == 0 ||
+           strcasecmp(disassembler.getCpu(), "mn1613a") == 0;
 }
 
 static void set_up() {
     disassembler.reset();
     disassembler.setRelativeTarget(true);
+    disassembler.formatter().setCStyle(true);
 }
 
 static void tear_down() {
@@ -659,6 +660,22 @@ static void test_misc() {
     }
 }
 
+static void test_formatter() {
+    disassembler.formatter().setCStyle(false);
+    TEST(L,  "R1, X'10'",       0xC000|(0<<11)|(1<<8)|0x10);
+    TEST(ST, "R3, (X'FF')",     0x8000|(2<<11)|(3<<8)|0xFF);
+
+    if (is1613()) {
+        TEST(LD,  "R1, X'1234'",       0x2708|(0<<4)|1, 0x1234);
+        TEST(CWI, "R0, X'1234', LPZ",  0x500F|(0<<8)|(14<<4), 0x1234);
+        TEST(BD,  "X'1234'",           0x2607, 0x1234);
+        TEST(BL,  "(X'1234')",         0x270F, 0x1234);
+        TEST(TSET, "R1, X'1234', NZ",  0x1708|(5<<4)|1, 0x1234);
+        TEST(TRST, "R2, X'1234', Z",   0x1700|(4<<4)|2, 0x1234);
+    }
+}
+// clang-format on
+
 static auto errors = 0;
 static void assert_error(const char *file, int line, Error err, Config::opcode_t opc) {
     __VASSERT(file, line, err, 0x0000, _, "", opc);
@@ -670,13 +687,10 @@ static void assert_error(const char *file, int line, Error err, Config::opcode_t
 #define ILLEGAL(...) ERROR_T(ILLEGAL_REGISTER, __VA_ARGS__)
 
 static void print_illegal(Config::opcode_t, Config::opcode_t, bool, int, int)
-    __attribute__((unused));
-static void print_illegal(Config::opcode_t start = 0,
-                          Config::opcode_t end = 0xffff,
-                          bool print = false,
-                          int offset = 0,
-                          int step = 1) {
-    Config::opcode_t words[2] = { 0, 0 };
+        __attribute__((unused));
+static void print_illegal(Config::opcode_t start = 0, Config::opcode_t end = 0xffff,
+        bool print = false, int offset = 0, int step = 1) {
+    Config::opcode_t words[2] = {0, 0};
     Insn insn(0x1000);
     char operands[40];
     bool prev = true;
@@ -696,16 +710,19 @@ static void print_illegal(Config::opcode_t start = 0,
             if (disassembler.getError() == OK) {
                 if (!prev) {
                     if (fail_start == opc - step) {
-                        if (print) printf("\n");
+                        if (print)
+                            printf("\n");
                     } else {
-                        if (print) printf("-%04X\n", opc - step);
+                        if (print)
+                            printf("-%04X\n", opc - step);
                     }
                 }
                 prev = true;
             } else {
                 fails++;
                 if (prev) {
-                    if (print) printf("%04X", opc);
+                    if (print)
+                        printf("%04X", opc);
                     fail_start = opc;
                 }
                 prev = false;
@@ -714,9 +731,11 @@ static void print_illegal(Config::opcode_t start = 0,
     }
     if (!prev) {
         if (fail_start == end - step) {
-            if (print) printf("\n");
+            if (print)
+                printf("\n");
         } else {
-            if (print) printf("-%04X\n", end - step);
+            if (print)
+                printf("-%04X\n", end - step);
         }
     }
     printf("%04X-%04X offset=%d step=%d fails  %d\n", start, end, offset, step, fails);
@@ -724,15 +743,13 @@ static void print_illegal(Config::opcode_t start = 0,
     errors = 0;
 }
 
-// clang-format on
-
 static void test_illegal_mn1610() {
     for (auto opc = 0x0000; opc < 0x0800; opc++)
         UNKNOWN(opc);
     for (auto opc = 0x0800; opc < 0x2000; opc++) {
         const auto rd = (opc >> 8) & 7;
         if (rd == 7)
-            ILLEGAL(opc); // MVI/WT/RD rd=111
+            ILLEGAL(opc);  // MVI/WT/RD rd=111
     }
     for (auto opc = 0x2000; opc < 0x2800; opc++) {
         const auto rd = (opc >> 8) & 7;
@@ -760,7 +777,7 @@ static void test_illegal_mn1610() {
             if (rd || sk)
                 UNKNOWN(opc);
             break;
-        default: // SR, SL
+        default:  // SR, SL
             if (rd == 7)
                 ILLEGAL(opc);
             break;
@@ -769,13 +786,13 @@ static void test_illegal_mn1610() {
     for (auto opc = 0x2800; opc < 0x5000; opc++) {
         const auto rd = (opc >> 8) & 7;
         if (rd == 7)
-            ILLEGAL(opc); // TBIT/RBIT/SBIT/SI/AI rd=111
+            ILLEGAL(opc);  // TBIT/RBIT/SBIT/SI/AI rd=111
     }
     for (auto opc = 0x5000; opc < 0x8000; opc++) {
         const auto rd = (opc >> 8) & 7;
         const auto rs = opc & 7;
         if (rd == 7 || rs == 7)
-            ILLEGAL(opc); // CB/C/S/A/EOR/OR/LAD/AND/DSWP/BSWP/MVB/MV rd=111/rs=111
+            ILLEGAL(opc);  // CB/C/S/A/EOR/OR/LAD/AND/DSWP/BSWP/MVB/MV rd=111/rs=111
     }
 }
 
@@ -835,7 +852,7 @@ static void test_illegal_mn1613() {
             }
             break;
         case 3:  // RET, WTR, LR
-            if ((sk == 0 && rd) || sk == 2 || sk == 3)  {
+            if ((sk == 0 && rd) || sk == 2 || sk == 3) {
                 if (rd >= 6) {
                     ERROR_T(ILLEGAL_REGISTER, opc);
                 } else {
@@ -845,14 +862,14 @@ static void test_illegal_mn1613() {
                 ERROR_T(ILLEGAL_REGISTER, opc);
             }
             break;
-        case 7:  // LPSW, BD, BALD, BR, BALR, RDR. STR
-            if (rd == 6 && sk < 2) // BD, BALD
+        case 7:                     // LPSW, BD, BALD, BR, BALR, RDR. STR
+            if (rd == 6 && sk < 2)  // BD, BALD
                 break;
             // Fall-through
         case 4:  // LPSW, BR, BALR, RDR, STR
         case 5:
         case 6:
-            if (rd == 0 && sk == 0) { // LPSW
+            if (rd == 0 && sk == 0) {  // LPSW
                 break;
             } else if (rd == 7 && sk >= 2) {
                 ERROR_T(ILLEGAL_REGISTER, opc);
@@ -880,11 +897,11 @@ static void test_illegal_mn1613() {
     for (auto opc = 0x2800; opc < 0x3800; opc++) {
         const auto rd = (opc >> 8) & 7;
         if (rd == 7)
-            ILLEGAL(opc); // TBIT/RBIT rd=111
+            ILLEGAL(opc);  // TBIT/RBIT rd=111
     }
 
     for (auto opc = 0x3800; opc < 0x4000; opc++) {
-        if (opc == 0x3F07 || opc == 0x3F17) // RETL/BLK
+        if (opc == 0x3F07 || opc == 0x3F17)  // RETL/BLK
             continue;
         const auto rd = (opc >> 8) & 7;
         const auto rs = opc & 7;
@@ -933,10 +950,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_bitops);
     RUN_TEST(test_misc);
+    RUN_TEST(test_formatter);
     if (is1610())
-      RUN_TEST(test_illegal_mn1610);
+        RUN_TEST(test_illegal_mn1610);
     if (is1613())
-      RUN_TEST(test_illegal_mn1613);
+        RUN_TEST(test_illegal_mn1613);
 }
 
 // Local Variables:

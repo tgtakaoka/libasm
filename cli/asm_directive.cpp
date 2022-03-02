@@ -167,7 +167,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
     const char *label = nullptr;
     std::string label_buf;
     _list.label_len = 0;
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     parser.setCurrentOrigin(_origin);
     if (parser.isSymbolLetter(*_scan, true)) {
         _list.label = _scan;
@@ -344,7 +344,7 @@ Error AsmCommonDirective::processPseudo(const char *name) {
 // PseudoHandler
 
 Error AsmCommonDirective::defineOrigin() {
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
     _scan = scan;
@@ -358,7 +358,7 @@ Error AsmCommonDirective::defineOrigin() {
 }
 
 Error AsmCommonDirective::alignOrigin() {
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
     _scan = scan;
@@ -439,7 +439,7 @@ Error AsmCommonDirective::switchIntelZilog() {
     if (strcmp(cpu, "8080") && strcmp(cpu, "8085"))
         return setError(UNKNOWN_DIRECTIVE);
     StrScanner scan(_scan);
-    StrScanner option = _assembler->getParser().readSymbol(scan);
+    StrScanner option = _assembler->parser().readSymbol(scan);
     std::string val(option);
     _scan = scan;
     bool value = false;
@@ -461,7 +461,7 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
         return setError(MISSING_LABEL);
     if (_reportDuplicate && hasSymbol(label))
         return setError(DUPLICATE_LABEL);
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
     _scan = scan;
@@ -479,7 +479,7 @@ Error AsmCommonDirective::defineLabel(const char *&label, CliMemory &memory) {
 
 Error AsmCommonDirective::defineUint8s(CliMemory &memory, bool terminator) {
     _list.address = _origin;
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
@@ -531,7 +531,7 @@ Error AsmCommonDirective::defineUint8s(CliMemory &memory, bool terminator) {
 
 Error AsmCommonDirective::defineUint16s(CliMemory &memory) {
     _list.address = _origin;
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
@@ -567,7 +567,7 @@ Error AsmCommonDirective::defineUint16s(CliMemory &memory) {
 
 Error AsmCommonDirective::defineUint32s(CliMemory &memory) {
     _list.address = _origin;
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     const uint32_t base = _origin * addrUnit();
     auto &len = _list.length;
     len = 0;
@@ -599,7 +599,7 @@ Error AsmCommonDirective::defineUint32s(CliMemory &memory) {
 }
 
 Error AsmCommonDirective::allocateSpaces(const uint8_t unit) {
-    ValueParser &parser = _assembler->getParser();
+    ValueParser &parser = _assembler->parser();
     StrScanner scan(_scan);
     Value value = parser.eval(scan, this);
     _scan = scan;

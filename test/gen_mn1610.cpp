@@ -23,6 +23,7 @@ using namespace libasm::test;
 int main(int argc, const char **argv) {
     DisMn1610 dis1610;
     dis1610.setRelativeTarget(true);
+    dis1610.formatter().setCStyle(true);
     GenDriver<Config> driver(dis1610);
     if (driver.main(argc, argv))
         return 1;

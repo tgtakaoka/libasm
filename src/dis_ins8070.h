@@ -35,7 +35,7 @@ public:
     void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
 
 private:
-    ValueFormatter _formatter;
+    NationalValueFormatter _formatter;
     RegIns8070 _regs;
     bool _immSym;
 

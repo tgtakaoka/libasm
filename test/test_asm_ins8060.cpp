@@ -90,6 +90,8 @@ static void test_immediate() {
 static void test_jump() {
     ATEST(0x1000, "JMP 0x1000", 0x90, 0xFE);
     ATEST(0x1000, "JP  0x1081", 0x94, 0x7F);
+    ATEST(0x1000, "JMP x'1000", 0x90, 0xFE);
+    ATEST(0x1000, "JP  h'1081", 0x94, 0x7F);
     ATEST(0x1000, "JMP $+2",    0x90, 0x00);
     ATEST(0x1000, "JNZ E(PC)", 0x9C, 0x80);
 
@@ -182,8 +184,15 @@ static void test_alu() {
 }
 
 static void test_alu_immediate() {
-    TEST("LDI 0",    0xC4, 0x00);
-    TEST("LDI -128", 0xC4, 0x80);
+    TEST("LDI 0",      0xC4, 0x00);
+    TEST("LDI -128",   0xC4, 0x80);
+    TEST("LDI 255",    0xC4, 0xFF);
+    TEST("LDI d'255",  0xC4, 0xFF);
+    TEST("LDI o'377",  0xC4, 0xFF);
+    TEST("LDI q'377",  0xC4, 0xFF);
+    TEST("LDI h'FF",   0xC4, 0xFF);
+    TEST("LDI x'FF",   0xC4, 0xFF);
+    TEST("LDI b'11111111",  0xC4, 0xFF);
     TEST("LDI 255",  0xC4, 0xFF);
     ERRT("LDI -129", OVERFLOW_RANGE);
     ERRT("LDI 256",  OVERFLOW_RANGE);

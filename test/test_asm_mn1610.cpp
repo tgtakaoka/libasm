@@ -68,6 +68,7 @@ static void test_cpu() {
 
 static void test_transfer() {
     TEST(         "L R1, 0x10",            0xC000|(0<<11)|(1<<8)|0x10);
+    TEST(         "L R1, X'10",            0xC000|(0<<11)|(1<<8)|0x10);
     ERRT(         "L STR, 0x10",           OPERAND_NOT_ALLOWED);
     ERRT(         "L R5, 0x10",            OPERAND_NOT_ALLOWED);
     ERRT(         "L X2, 0x10",            OPERAND_NOT_ALLOWED);
@@ -203,6 +204,12 @@ static void test_transfer() {
 
         TEST("MVI R0, 0",    0x0800|(0<<8)|0);
         TEST("MVI R1, 255",  0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, D'255",  0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, O'377",  0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, Q'377",  0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, H'FF",   0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, X'FF",   0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, B'11111111",  0x0800|(1<<8)|0xFF);
         ERRT("MVI R1, 256",  OVERFLOW_RANGE);
         TEST("MVI R2, 128",  0x0800|(2<<8)|0x80);
         TEST("MVI R2, -128", 0x0800|(2<<8)|0x80);

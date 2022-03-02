@@ -27,7 +27,7 @@ class ValueFormatter {
 public:
     ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _uppercase('a') {}
 
-    void setCStyleHex(bool enable) { _cstyle = enable; }
+    void setCStyle(bool enable) { _cstyle = enable; }
     void setUppercase(bool uppercase) { _uppercase = uppercase ? 'A' : 'a'; }
 
     /*
@@ -59,7 +59,6 @@ protected:
 class MotorolaValueFormatter : public ValueFormatter {
 public:
     MotorolaValueFormatter() : ValueFormatter(false) {}
-
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
 };
@@ -67,9 +66,18 @@ protected:
 class IntelValueFormatter : public ValueFormatter {
 public:
     IntelValueFormatter() : ValueFormatter(false) {}
-
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
+};
+
+class NationalValueFormatter : public ValueFormatter {
+public:
+    NationalValueFormatter() : ValueFormatter(false), _suffix(false) {}
+    void setSuffix(bool enable) { _suffix = enable; }
+protected:
+    StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
+private:
+    bool _suffix;
 };
 
 }  // namespace libasm

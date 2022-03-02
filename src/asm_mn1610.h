@@ -33,7 +33,7 @@ public:
     AddressWidth addressWidth() const override { return TableMn1610.addressWidth(); }
 
 private:
-    ValueParser _parser{'*'};
+    NationalValueParser _parser{'*'};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

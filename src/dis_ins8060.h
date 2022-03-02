@@ -32,7 +32,7 @@ public:
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueFormatter _formatter;
+    NationalValueFormatter _formatter;
     RegIns8060 _regs;
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);

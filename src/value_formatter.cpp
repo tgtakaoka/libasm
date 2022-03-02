@@ -95,7 +95,16 @@ StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, 
     char *top = outHex(out, val, bits).mark();
     if (top[-1] > '9')
         out.letter('0');
-    return out.reverse(start).letter(_uppercase + 'H' - 'A');
+    return out.reverse(start).letter(_uppercase - 'A' + 'H');
+}
+
+StrBuffer &NationalValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+    out.letter(_uppercase - 'A' + 'X').letter('\'');
+    char *start = out.mark();
+    outHex(out, val, bits).reverse(start);
+    if (_suffix)
+        out.letter('\'');
+    return out;
 }
 
 }  // namespace libasm

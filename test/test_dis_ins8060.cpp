@@ -27,6 +27,7 @@ Disassembler &disassembler(dis8060);
 static void set_up() {
     disassembler.reset();
     disassembler.setRelativeTarget(false);
+    disassembler.formatter().setCStyle(true);
 }
 
 static void tear_down() {
@@ -219,6 +220,22 @@ static void test_page_boundary() {
     AERRT(0x1FFF, LDI, "0", OVERWRAP_PAGE, 0xC4, 0x00);
 }
 
+static void test_formatter() {
+    disassembler.formatter().setCStyle(false);
+    TEST(LDI, "0",    0xC4, 0x00);
+    TEST(ANI, "X'FF", 0xD4, 0xFF);
+    TEST(ORI, "1",    0xDC, 0x01);
+    TEST(XRI, "X'80", 0xE4, 0x80);
+    TEST(DAI, "X'99", 0xEC, 0x99);
+    TEST(ADI, "18",   0xF4, 0x12);
+    TEST(CAI, "X'34", 0xFC, 0x34);
+
+    ATEST(0x1000, LD, "X'1000", 0xC0, 0xFF);
+    ATEST(0x1000, LD, "X'1FFF", 0xC0, 0xFE);
+    ATEST(0x1FFC, LD, "X'1FFF", 0xC0, 0x02);
+    ATEST(0x1FFC, LD, "X'1000", 0xC0, 0x03);
+}
+
 static void test_illegal() {
     const uint8_t illegals[] = {
         0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
@@ -263,6 +280,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_alu);
     RUN_TEST(test_alu_immediate);
     RUN_TEST(test_page_boundary);
+    RUN_TEST(test_formatter);
     RUN_TEST(test_illegal);
 }
 
