@@ -263,8 +263,8 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
         }
         if (symtab) {
             scan = p;
-            if (symtab->hasSymbol(symbol, symbol + symbol.size())) {
-                const uint32_t v = symtab->lookupSymbol(symbol, symbol + symbol.size());
+            if (symtab->hasSymbol(symbol)) {
+                const uint32_t v = symtab->lookupSymbol(symbol);
                 return Value().setValue(v);
             }
             return Value();

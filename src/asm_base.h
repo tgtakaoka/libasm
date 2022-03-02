@@ -54,8 +54,8 @@ protected:
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
 
-    bool hasSymbol(const char *symbol) const;
-    uint32_t lookupSymbol(const char *symbol) const;
+    bool hasSymbol(const StrScanner &symbol) const;
+    uint32_t lookupSymbol(const StrScanner &symbol) const;
 
     /** Scan |expr| text to find |delim| letter, return an empty if not found. */
     StrScanner scanExpr(const StrScanner &expr, char delim) const;

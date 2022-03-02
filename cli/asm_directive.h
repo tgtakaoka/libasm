@@ -130,8 +130,8 @@ private:
 
     // SymbolTable
     const char *lookupValue(uint32_t address) const override;
-    bool hasSymbol(const char *symbol, const char *end = nullptr) const override;
-    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) const override;
+    bool hasSymbol(const StrScanner &symbol) const override;
+    uint32_t lookupSymbol(const StrScanner &symbol) const override;
     Error internSymbol(uint32_t value, const StrScanner &symbol);
 
 private:

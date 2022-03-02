@@ -19,13 +19,15 @@
 
 #include <stdint.h>
 
+#include "str_scanner.h"
+
 namespace libasm {
 
 class SymbolTable {
 public:
     virtual const char *lookupValue(uint32_t value) const = 0;
-    virtual bool hasSymbol(const char *symbol, const char *end = nullptr) const = 0;
-    virtual uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) const = 0;
+    virtual bool hasSymbol(const StrScanner &symbol) const = 0;
+    virtual uint32_t lookupSymbol(const StrScanner &symbol) const = 0;
 };
 
 }  // namespace libasm

@@ -34,15 +34,15 @@ public:
         auto it = _value_to_symbol.find(addr);
         return it == _value_to_symbol.end() ? nullptr : it->second.c_str();
     }
-    bool hasSymbol(const char *symbol, const char *end = nullptr) const override {
-        return end ? hasSymbol(std::string(symbol, end)) : hasSymbol(std::string(symbol));
+    bool hasSymbol(const StrScanner &symbol) const override {
+        return hasSymbol(std::string(symbol, symbol.size()));
     }
-    uint32_t lookupSymbol(const char *symbol, const char *end = nullptr) const override {
-        return end ? lookup(std::string(symbol, end)) : lookup(std::string(symbol));
+    uint32_t lookupSymbol(const StrScanner &symbol) const override {
+        return lookup(std::string(symbol, symbol.size()));
     }
 
-    void intern(uint32_t value, const char *symbol, const char *end = nullptr) {
-        intern(value, end ? std::string(symbol, end) : std::string(symbol));
+    void intern(uint32_t value, const char *symbol) {
+        intern(value, std::string(symbol));
     }
 
     void reset() {

@@ -32,11 +32,11 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     return error;
 }
 
-bool Assembler::hasSymbol(const char *symbol) const {
+bool Assembler::hasSymbol(const StrScanner &symbol) const {
     return _symtab && _symtab->hasSymbol(symbol);
 }
 
-uint32_t Assembler::lookupSymbol(const char *symbol) const {
+uint32_t Assembler::lookupSymbol(const StrScanner &symbol) const {
     return _symtab ? _symtab->lookupSymbol(symbol) : 0;
 }
 

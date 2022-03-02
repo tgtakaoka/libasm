@@ -564,14 +564,12 @@ const char *AsmCommonDirective::lookupValue(uint32_t address) const {
     return nullptr;
 }
 
-bool AsmCommonDirective::hasSymbol(const char *symbol, const char *end) const {
-    return end ? symbolExists(std::string(symbol, end - symbol))
-               : symbolExists(std::string(symbol));
+bool AsmCommonDirective::hasSymbol(const StrScanner &symbol) const {
+    return symbolExists(std::string(symbol, symbol.size()));
 }
 
-uint32_t AsmCommonDirective::lookupSymbol(const char *symbol, const char *end) const {
-    return end ? symbolLookup(std::string(symbol, end - symbol))
-               : symbolLookup(std::string(symbol));
+uint32_t AsmCommonDirective::lookupSymbol(const StrScanner &symbol) const {
+    return symbolLookup(std::string(symbol, symbol.size()));
 }
 
 Error AsmCommonDirective::internSymbol(uint32_t value, const StrScanner &symbol) {
