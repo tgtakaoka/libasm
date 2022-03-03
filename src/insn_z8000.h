@@ -40,7 +40,7 @@ public:
     ModeField dstField() const { return flags().dstField(); }
     ModeField srcField() const { return flags().srcField(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-        setFlags(Entry::Flags::create(dst, MF_NO, src, MF_NO, ex1, ex2, P_NO, CM_0x0000, SZ_NONE));
+        setFlags(Entry::Flags::create(dst, src, ex1, ex2));
     }
 
     void readPost(DisMemory &memory) { setPost(readUint16(memory)); }
