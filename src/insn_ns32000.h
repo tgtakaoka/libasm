@@ -38,7 +38,7 @@ public:
     OprPos ex2Pos() const { return flags().ex2Pos(); }
     OprSize oprSize() const { return flags().oprSize(); }
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
-        setFlags(Entry::Flags::create(src, P_NONE, dst, P_NONE, ex1, P_NONE, ex2, P_NONE, SZ_NONE));
+        setFlags(Entry::Flags::create(src, dst, ex1, ex2));
     }
 
     void readPost(DisMemory &memory) { setPost(readByte(memory)); }

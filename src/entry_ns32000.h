@@ -67,6 +67,21 @@ enum AddrMode : uint8_t {
     M_LEN4 = 30,   // Length: 1~4
 };
 
+enum Ex2Mode : uint8_t {
+    EM2_NONE = 0,
+    EM2_IMM = 1,
+    EM2_BFLEN = 2,
+    EM2_LEN32 = 3,
+    EM2_ERROR = 4,
+};
+
+enum Ex2Pos : uint8_t {
+    EP2_NONE = 0,
+    EP2_IMPL = 1,
+    EP2_DISP = 2,
+    EP2_ERROR = 3,
+};
+
 enum OprPos : uint8_t {
     P_NONE = 0,
     P_GEN1 = 1,   // Generic operand 1
@@ -96,22 +111,26 @@ public:
         uint8_t _ex2;
 
         static constexpr Flags create(AddrMode src, OprPos srcp, AddrMode dst, OprPos dstp,
-                AddrMode ex1, OprPos ex1p, AddrMode ex2, OprPos ex2p, OprSize size) {
-            return Entry::Flags{Entry::_opr(src, srcp), Entry::_opr(dst, dstp),
-                    Entry::_opr(ex1, ex1p), Entry::_ex2(ex2, ex2p, size)};
+                AddrMode ex1, OprPos ex1p, Ex2Mode ex2, Ex2Pos ex2p, OprSize size) {
+            return Entry::Flags{Entry::opr(src, srcp), Entry::opr(dst, dstp), Entry::opr(ex1, ex1p),
+                    Entry::ex2(ex2, ex2p, size)};
+        }
+        static const Flags create(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
+            return Entry::Flags{Entry::opr(src, P_NONE), Entry::opr(dst, P_NONE),
+                    Entry::opr(ex1, P_NONE), Entry::ex2(toEx2Mode(ex2), EP2_NONE, SZ_NONE)};
         }
         Flags read() const {
             return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_ex1),
                     pgm_read_byte(&_ex2)};
         }
 
-        AddrMode srcMode() const { return _mode(_src); }
-        AddrMode dstMode() const { return _mode(_dst); }
-        AddrMode ex1Mode() const { return _mode(_ex1); }
+        AddrMode srcMode() const { return mode(_src); }
+        AddrMode dstMode() const { return mode(_dst); }
+        AddrMode ex1Mode() const { return mode(_ex1); }
         AddrMode ex2Mode() const { return toAddrMode(Ex2Mode((_ex2 >> ex2Mode_gp) & ex2Mode_gm)); }
-        OprPos srcPos() const { return _pos(_src); }
-        OprPos dstPos() const { return _pos(_dst); }
-        OprPos ex1Pos() const { return _pos(_ex1); }
+        OprPos srcPos() const { return pos(_src); }
+        OprPos dstPos() const { return pos(_dst); }
+        OprPos ex1Pos() const { return pos(_ex1); }
         OprPos ex2Pos() const { return toOprPos(Ex2Pos((_ex2 >> ex2Pos_gp) & ex2Pos_gm)); }
         OprSize oprSize() const { return OprSize((_ex2 >> oprSize_gp) & oprSize_gm); }
     };
@@ -124,79 +143,35 @@ public:
 private:
     Flags _flags;
 
-    static inline AddrMode _mode(uint8_t opr) { return AddrMode((opr >> oprMode_gp) & oprMode_gm); }
-    static inline OprPos _pos(uint8_t opr) { return OprPos((opr >> oprPos_gp) & oprPos_gm); }
-    static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
+    static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> oprMode_gp) & oprMode_gm); }
+    static inline OprPos pos(uint8_t opr) { return OprPos((opr >> oprPos_gp) & oprPos_gm); }
+    static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
         return (static_cast<uint8_t>(mode) << oprMode_gp) |
                (static_cast<uint8_t>(pos) << oprPos_gp);
     }
-    static constexpr uint8_t _ex2(AddrMode mode, OprPos pos, OprSize size) {
-        return (static_cast<uint8_t>(toEx2Mode(mode) << ex2Mode_gp)) |
-               (static_cast<uint8_t>(toEx2Pos(pos) << ex2Pos_gp)) |
+    static constexpr uint8_t ex2(Ex2Mode mode, Ex2Pos pos, OprSize size) {
+        return (static_cast<uint8_t>(mode << ex2Mode_gp)) |
+               (static_cast<uint8_t>(pos << ex2Pos_gp)) |
                (static_cast<uint8_t>(size) << oprSize_gp);
     }
 
-    enum Ex2Mode : uint8_t {
-        EM2_NONE = 0,
-        EM2_IMM = 1,
-        EM2_BFLEN = 2,
-        EM2_LEN32 = 3,
-        EM2_ERROR = 4,
-    };
-    enum Ex2Pos : uint8_t {
-        EP2_NONE = 0,
-        EP2_IMPL = 1,
-        EP2_DISP = 2,
-        EP2_ERROR = 3,
-    };
-    // clang-format off
-    static constexpr Ex2Mode toEx2Mode(AddrMode mode) {
-        return mode == M_NONE ? EM2_NONE : (mode == M_IMM ? EM2_IMM
-               : (mode == M_BFLEN ? EM2_BFLEN : (mode == M_LEN32 ? EM2_LEN32 : EM2_ERROR)));
-        /*
+    static inline Ex2Mode toEx2Mode(AddrMode mode) {
         switch (mode) {
-        case M_NONE:  return EM2_NONE;
-        case M_IMM:   return EM2_IMM;
-        case M_BFLEN: return EM2_BFLEN;
-        case M_LEN32: return EM2_LEN32;
-        default:      return EM2_ERROR;
-        }
-        */
-    }
-    static constexpr Ex2Pos toEx2Pos(OprPos pos) {
-        return pos == P_NONE ? EP2_NONE
-            : (pos == P_IMPL ? EP2_IMPL : (pos == P_DISP ? EP2_DISP : EP2_ERROR));
-        /*
-        switch (pos) {
-        case P_NONE: return EP2_NONE;
-        case P_IMPL: return EP2_IMPL;
-        case P_DISP: return EP2_DISP;
-        default:     return EP2_ERROR;
-        }
-        */
-    }
-    // clang-format on
-    static inline AddrMode toAddrMode(Ex2Mode mode) {
-        switch (mode) {
-        case EM2_NONE:
-            return M_NONE;
-        case EM2_IMM:
-            return M_IMM;
-        case EM2_BFLEN:
-            return M_BFLEN;
-        case EM2_LEN32:
-            return M_LEN32;
+        case M_NONE:
+            return EM2_NONE;
+        case M_IMM:
+            return EM2_IMM;
+        case M_BFLEN:
+            return EM2_BFLEN;
+        case M_LEN32:
+            return EM2_LEN32;
         default:
-            return M_NONE;
+            return EM2_ERROR;
         }
     }
-    static inline OprPos toOprPos(Ex2Pos pos) {
-        if (pos == EP2_NONE)
-            return P_NONE;
-        if (pos == EP2_IMPL)
-            return P_IMPL;
-        return (pos == EP2_DISP) ? P_DISP : P_NONE;
-    }
+
+    static AddrMode toAddrMode(Ex2Mode mode);
+    static OprPos toOprPos(Ex2Pos pos);
 
     // |src|,|dst|,|ex1|
     static constexpr uint8_t oprMode_gm = 0x1f;
