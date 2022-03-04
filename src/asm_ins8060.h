@@ -42,7 +42,7 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(UNDEF), reg(REG_UNDEF), val16(0) {}
+        Operand() : ErrorReporter(), mode(M_UNDEF), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &opr);

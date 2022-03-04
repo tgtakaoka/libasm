@@ -45,7 +45,7 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
         const auto base = insn.address() + 1;
         const auto disp = static_cast<int8_t>(opr);
         // PC will be incremented before fetching next instruction.
-        const int8_t fetch = insn.addrMode() == REL8 ? 1 : 0;
+        const int8_t fetch = insn.addrMode() == M_REL8 ? 1 : 0;
         // Program space is paged by 4kB.
         const auto toff = offset(offset(base) + disp + fetch);
         const Config::uintptr_t target = page(base) | toff;
@@ -78,17 +78,17 @@ Error DisIns8060::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableIns8060.getError());
 
     switch (insn.addrMode()) {
-    case PNTR:
+    case M_PNTR:
         decodePntr(insn, out);
         break;
-    case IMM8:
+    case M_IMM8:
         decodeImm8(memory, insn, out);
         break;
-    case REL8:
-    case DISP:
+    case M_REL8:
+    case M_DISP:
         decodeIndx(memory, insn, out, false);
         break;
-    case INDX:
+    case M_INDX:
         decodeIndx(memory, insn, out, true);
         break;
     default:

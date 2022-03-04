@@ -31,53 +31,53 @@ namespace ins8060 {
 
 // clang-format off
 static constexpr Entry TABLE_INS8060[] PROGMEM = {
-    E(0x00, TEXT_HALT, INHR),
-    E(0x01, TEXT_XAE,  INHR),
-    E(0x02, TEXT_CCL,  INHR),
-    E(0x03, TEXT_SCL,  INHR),
-    E(0x04, TEXT_DINT, INHR),
-    E(0x05, TEXT_IEN,  INHR),
-    E(0x06, TEXT_CSA,  INHR),
-    E(0x07, TEXT_CAS,  INHR),
-    E(0x08, TEXT_NOP,  INHR),
-    E(0x19, TEXT_SIO,  INHR),
-    E(0x1C, TEXT_SR,   INHR),
-    E(0x1D, TEXT_SRL,  INHR),
-    E(0x1E, TEXT_RR,   INHR),
-    E(0x1F, TEXT_RRL,  INHR),
-    E(0x30, TEXT_XPAL, PNTR),
-    E(0x34, TEXT_XPAH, PNTR),
-    E(0x3C, TEXT_XPPC, PNTR),
-    E(0x40, TEXT_LDE,  INHR),
-    E(0x50, TEXT_ANE,  INHR),
-    E(0x58, TEXT_ORE,  INHR),
-    E(0x60, TEXT_XRE,  INHR),
-    E(0x68, TEXT_DAE,  INHR),
-    E(0x70, TEXT_ADE,  INHR),
-    E(0x78, TEXT_CAE,  INHR),
-    E(0x8F, TEXT_DLY,  IMM8),
-    E(0x90, TEXT_JMP,  REL8),
-    E(0x94, TEXT_JP,   REL8),
-    E(0x98, TEXT_JZ,   REL8),
-    E(0x9C, TEXT_JNZ,  REL8),
-    E(0xA8, TEXT_ILD,  DISP),
-    E(0xB8, TEXT_DLD,  DISP),
-    E(0xC4, TEXT_LDI,  IMM8),
-    E(0xC0, TEXT_LD,   INDX),
-    E(0xCC, TEXT_null, UNDEF),  // undefined ST immediate instruction
-    E(0xC8, TEXT_ST,   INDX),
-    E(0xD4, TEXT_ANI,  IMM8),
-    E(0xD0, TEXT_AND,  INDX),
-    E(0xDC, TEXT_ORI,  IMM8),
-    E(0xD8, TEXT_OR,   INDX),
-    E(0xE4, TEXT_XRI,  IMM8),
-    E(0xE0, TEXT_XOR,  INDX),
-    E(0xEC, TEXT_DAI,  IMM8),
-    E(0xE8, TEXT_DAD,  INDX),
-    E(0xF4, TEXT_ADI,  IMM8),
-    E(0xF0, TEXT_ADD,  INDX),
-    E(0xFC, TEXT_CAI,  IMM8),
-    E(0xF8, TEXT_CAD,  INDX),
+    E(0x00, TEXT_HALT, M_INHR),
+    E(0x01, TEXT_XAE,  M_INHR),
+    E(0x02, TEXT_CCL,  M_INHR),
+    E(0x03, TEXT_SCL,  M_INHR),
+    E(0x04, TEXT_DINT, M_INHR),
+    E(0x05, TEXT_IEN,  M_INHR),
+    E(0x06, TEXT_CSA,  M_INHR),
+    E(0x07, TEXT_CAS,  M_INHR),
+    E(0x08, TEXT_NOP,  M_INHR),
+    E(0x19, TEXT_SIO,  M_INHR),
+    E(0x1C, TEXT_SR,   M_INHR),
+    E(0x1D, TEXT_SRL,  M_INHR),
+    E(0x1E, TEXT_RR,   M_INHR),
+    E(0x1F, TEXT_RRL,  M_INHR),
+    E(0x30, TEXT_XPAL, M_PNTR),
+    E(0x34, TEXT_XPAH, M_PNTR),
+    E(0x3C, TEXT_XPPC, M_PNTR),
+    E(0x40, TEXT_LDE,  M_INHR),
+    E(0x50, TEXT_ANE,  M_INHR),
+    E(0x58, TEXT_ORE,  M_INHR),
+    E(0x60, TEXT_XRE,  M_INHR),
+    E(0x68, TEXT_DAE,  M_INHR),
+    E(0x70, TEXT_ADE,  M_INHR),
+    E(0x78, TEXT_CAE,  M_INHR),
+    E(0x8F, TEXT_DLY,  M_IMM8),
+    E(0x90, TEXT_JMP,  M_REL8),
+    E(0x94, TEXT_JP,   M_REL8),
+    E(0x98, TEXT_JZ,   M_REL8),
+    E(0x9C, TEXT_JNZ,  M_REL8),
+    E(0xA8, TEXT_ILD,  M_DISP),
+    E(0xB8, TEXT_DLD,  M_DISP),
+    E(0xC4, TEXT_LDI,  M_IMM8),
+    E(0xC0, TEXT_LD,   M_INDX),
+    E(0xCC, TEXT_null, M_UNDEF),  // undefined ST immediate instruction
+    E(0xC8, TEXT_ST,   M_INDX),
+    E(0xD4, TEXT_ANI,  M_IMM8),
+    E(0xD0, TEXT_AND,  M_INDX),
+    E(0xDC, TEXT_ORI,  M_IMM8),
+    E(0xD8, TEXT_OR,   M_INDX),
+    E(0xE4, TEXT_XRI,  M_IMM8),
+    E(0xE0, TEXT_XOR,  M_INDX),
+    E(0xEC, TEXT_DAI,  M_IMM8),
+    E(0xE8, TEXT_DAD,  M_INDX),
+    E(0xF4, TEXT_ADI,  M_IMM8),
+    E(0xF0, TEXT_ADD,  M_INDX),
+    E(0xFC, TEXT_CAI,  M_IMM8),
+    E(0xF8, TEXT_CAD,  M_INDX),
 };
 // clang-format on
 
@@ -86,16 +86,17 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags().mode();
     if (opr == table)
         return true;
-    if (opr == REL8)
-        return table == IMM8 || table == DISP || table == INDX;
-    if (opr == DISP)
-        return table == REL8 || table == INDX;
+    if (opr == M_REL8)
+        return table == M_IMM8 || table == M_DISP || table == M_INDX;
+    if (opr == M_DISP)
+        return table == M_REL8 || table == M_INDX;
     return false;
 }
 
 Error TableIns8060::searchName(InsnIns8060 &insn) const {
     uint8_t count = 0;
     auto entry = TableBase::searchName<Entry, Entry::Flags>(
+
             insn.name(), insn.flags(), ARRAY_RANGE(TABLE_INS8060), acceptAddrMode, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
@@ -107,11 +108,11 @@ Error TableIns8060::searchName(InsnIns8060 &insn) const {
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     switch (entry->flags().mode()) {
-    case PNTR:
-    case REL8:
-    case DISP:
+    case M_PNTR:
+    case M_REL8:
+    case M_DISP:
         return opCode & ~0x03;
-    case INDX:
+    case M_INDX:
         return opCode & ~0x07;
     default:
         return opCode;
@@ -124,7 +125,7 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
-    if (insn.addrMode() == UNDEF)
+    if (insn.addrMode() == M_UNDEF)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setName_P(entry->name_P());
     return setOK();

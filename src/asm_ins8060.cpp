@@ -42,7 +42,7 @@ AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060), _parser('$') {
 
 Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
     Config::ptrdiff_t delta;
-    if (op.mode == DISP) {
+    if (op.mode == M_DISP) {
         delta = static_cast<Config::ptrdiff_t>(op.val16);
         if (overflowRel8(delta))
             return setError(op, OVERFLOW_RANGE);
@@ -51,7 +51,7 @@ Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
         // PC points the last byte of instruction.
         const auto base = insn.address() + 1;
         // PC will be incremented before fetching next instruction.
-        const uint8_t fetch = (insn.addrMode() == REL8) ? 1 : 0;
+        const uint8_t fetch = (insn.addrMode() == M_REL8) ? 1 : 0;
         const auto target = op.getError() ? base : op.val16;
         // Program space is paged by 4kB.
         if (page(target) != page(base))
@@ -72,11 +72,11 @@ Error AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
 }
 
 Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
-    if (op.mode == REL8)
+    if (op.mode == M_REL8)
         return encodeRel8(insn, op);
     insn.embed(RegIns8060::encodePointerReg(op.reg));
-    if (op.mode == INDX) {  // auto displacement mode
-        if (insn.addrMode() != INDX)
+    if (op.mode == M_INDX) {  // auto displacement mode
+        if (insn.addrMode() != M_INDX)
             return setError(op, OPERAND_NOT_ALLOWED);
         insn.embed(4);
     }
@@ -91,7 +91,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
-        op.mode = INHR;
+        op.mode = M_INHR;
         return OK;
     }
 
@@ -100,7 +100,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
     if (reg == REG_E) {
         op.val16 = -128;
     } else if (reg != REG_UNDEF) {
-        op.mode = PNTR;
+        op.mode = M_PNTR;
         op.reg = reg;
         scan = p;
         return OK;
@@ -117,14 +117,14 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
             return setError(p, MISSING_CLOSING_PAREN);
         scan = p;
         op.reg = base;
-        op.mode = autoDisp ? INDX : DISP;
+        op.mode = autoDisp ? M_INDX : M_DISP;
         return OK;
     }
 
     if (autoDisp || reg == REG_E)
         return setError(scan, UNKNOWN_OPERAND);
     scan = p;
-    op.mode = REL8;  // May be IMM8 too
+    op.mode = M_REL8;  // May be M_IMM8 too
     return OK;
 }
 
@@ -144,21 +144,21 @@ Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
         return setError(TableIns8060.getError());
 
     switch (insn.addrMode()) {
-    case INHR:
+    case M_INHR:
         insn.emitInsn();
         break;
-    case REL8:
+    case M_REL8:
         encodeRel8(insn, op);
         break;
-    case PNTR:
+    case M_PNTR:
         insn.embed(RegIns8060::encodePointerReg(op.reg));
         insn.emitInsn();
         break;
-    case DISP:
-    case INDX:
+    case M_DISP:
+    case M_INDX:
         encodeIndx(insn, op);
         break;
-    case IMM8:
+    case M_IMM8:
         if (overflowUint8(op.val16))
             return setError(op, OVERFLOW_RANGE);
         insn.emitInsn();

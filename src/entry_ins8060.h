@@ -27,13 +27,13 @@ namespace libasm {
 namespace ins8060 {
 
 enum AddrMode : uint8_t {
-    INHR = 1,   // Inherent
-    PNTR = 2,   // Pointer, Pn
-    IMM8 = 3,   // Immediate, nn
-    REL8 = 4,   // PC Relative, label
-    DISP = 5,   // Displacement, REL8 + dd(Pn), E(Pn)
-    INDX = 6,   // Indexed, DISP + @dd(Pn), @E(Pn)
-    UNDEF = 0,  // Undefined instruction
+    M_INHR = 1,   // Inherent
+    M_PNTR = 2,   // Pointer, Pn
+    M_IMM8 = 3,   // Immediate, nn
+    M_REL8 = 4,   // PC Relative, label
+    M_DISP = 5,   // Displacement, M_REL8 + dd(Pn), E(Pn)
+    M_INDX = 6,   // Indexed, M_DISP + @dd(Pn), @E(Pn)
+    M_UNDEF = 0,  // Undefined instruction
 };
 
 class Entry : public EntryBase<Config> {
