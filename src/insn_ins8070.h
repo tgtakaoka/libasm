@@ -33,7 +33,7 @@ public:
     OprFormat srcOpr() const { return flags().srcOpr(); }
     OprSize oprSize() const { return flags().size(); }
     void setOprFormats(OprFormat dst, OprFormat src) {
-        setFlags(Entry::Flags::create(UNDEF, dst, src, SZ_NONE));
+        setFlags(Entry::Flags::create(M_UNDEF, dst, src, SZ_NONE));
     }
 
     void emitInsn() { emitByte(opCode(), 0); }

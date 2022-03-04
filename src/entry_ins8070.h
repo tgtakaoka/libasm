@@ -32,13 +32,13 @@ enum OprSize : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    IMPLIED = 1,   // Implied
-    GENERIC = 2,   // Generic; nnnn,PC/nn,SP/nn,Pn/@nn,Pn/0xFFnn/
-    ABSOLUTE = 3,  // Absolute; nnnn
-    RELATIVE = 4,  // Relative; nnnn
+    M_IMP = 1,  // Implied
+    M_GEN = 2,   // Generic; nnnn,PC/nn,SP/nn,Pn/@nn,Pn/0xFFnn/
+    M_ABS = 3,   // Absolute; nnnn
+    M_REL = 4,   // Relative; nnnn
 
-    IMMEDIATE = 5,  // Immediate; #nn
-    UNDEF = 0,      // Undefined instruction
+    M_IMM = 5,    // Immediate; #nn
+    M_UNDEF = 0,  // Undefined instruction
 };
 
 enum OprFormat : uint8_t {

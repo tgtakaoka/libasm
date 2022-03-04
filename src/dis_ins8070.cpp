@@ -68,7 +68,7 @@ Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffe
 }
 
 Error DisIns8070::decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
-    const uint8_t fetch = (insn.addrMode() == ABSOLUTE) ? 1 : 0;
+    const uint8_t fetch = (insn.addrMode() == M_ABS) ? 1 : 0;
     const Config::uintptr_t target = insn.readUint16(memory) + fetch;
     outAbsAddr(out, target);
     return setError(insn);
@@ -85,7 +85,7 @@ Error DisIns8070::decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer
     const OprFormat src = insn.srcOpr();
     const RegName base = _regs.decodePointerReg(insn.opCode());
     if (insn.dstOpr() == OPR_RL || (src == OPR_GN && base == REG_PC)) {
-        const uint8_t fetch = (insn.addrMode() == RELATIVE) ? 1 : 0;
+        const uint8_t fetch = (insn.addrMode() == M_REL) ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
         outRelAddr(out, target, insn.address(), 8);
         if (src == OPR_GN) {
@@ -131,15 +131,15 @@ Error DisIns8070::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableIns8070.getError());
 
     switch (insn.addrMode()) {
-    case IMPLIED:
+    case M_IMP:
         return decodeImplied(insn, out);
-    case IMMEDIATE:
+    case M_IMM:
         return decodeImmediate(memory, insn, out);
-    case ABSOLUTE:
+    case M_ABS:
         return decodeAbsolute(memory, insn, out);
-    case RELATIVE:
+    case M_REL:
         return decodeRelative(memory, insn, out);
-    case GENERIC:
+    case M_GEN:
         return decodeGeneric(memory, insn, out);
     default:
         return setError(INTERNAL_ERROR);
