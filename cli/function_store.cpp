@@ -42,9 +42,13 @@ Error FunctionStore::internFunction(
 Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
         Value &val, const SymbolTable *symtab) {
     const auto it = _functions.find(std::string(name, name.size()));
-    if (it == _functions.end())
-        return setError(
-                _parent ? _parent->parseFunc(parser, name, scan, val, symtab) : UNKNOWN_FUNCTION);
+    if (it == _functions.end()) {
+        if (_parent) {
+            _parent->parseFunc(parser, name, scan, val, symtab);
+            return setError(*_parent);
+        }
+        return setError(UNKNOWN_FUNCTION);
+    }
     const auto &func = it->second;
 
     struct Binding : public SymbolTable {

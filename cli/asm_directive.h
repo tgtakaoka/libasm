@@ -33,6 +33,11 @@ namespace cli {
 
 class AsmDirective;
 
+enum SymbolMode {
+    REPORT_UNDEFINED = 0,
+    REPORT_DUPLICATE = 1,
+};
+
 class AsmCommonDirective : public ErrorReporter, public ListingLine, protected SymbolTable {
 public:
     AsmCommonDirective(AsmDirective **begin, AsmDirective **end);
@@ -46,7 +51,7 @@ public:
     Error assembleLine(const char *line, CliMemory &memory);
 
     void reset();
-    void setSymbolMode(bool reportUndef, bool reportDuplicate);
+    void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
     const char *currentSource() const;
     int currentLineno() const;
     Error openSource(const StrScanner &input_name);
@@ -100,8 +105,7 @@ private:
     char *_line;
     StrScanner _line_scan;
     uint32_t _origin;
-    bool _reportUndef;
-    bool _reportDuplicate;
+    SymbolMode _symbolMode;
     int _labelWidth;
     int _operandWidth;
 

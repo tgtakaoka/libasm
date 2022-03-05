@@ -53,7 +53,7 @@ int AsmDriver::usage() {
 }
 
 int AsmDriver::assemble() {
-    _commonDir.setSymbolMode(false, true);
+    _commonDir.setSymbolMode(REPORT_DUPLICATE);
     int pass = 0;
     CliMemory memory;
     if (_verbose) {
@@ -63,7 +63,7 @@ int AsmDriver::assemble() {
     (void)assemble(memory);
 
     do {
-        _commonDir.setSymbolMode(true, false);
+        _commonDir.setSymbolMode(REPORT_UNDEFINED);
         CliMemory next;
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);

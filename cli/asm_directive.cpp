@@ -123,8 +123,7 @@ AsmCommonDirective::AsmCommonDirective(AsmDirective **begin, AsmDirective **end)
     _line_len = 128;
     _line = static_cast<char *>(malloc(_line_len));
     _origin = 0;
-    _reportUndef = true;
-    _reportDuplicate = true;
+    _symbolMode = REPORT_UNDEFINED;
     _labelWidth = 16;
     _operandWidth = 16;
 
@@ -217,7 +216,8 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
             _list.comment = p.skipSpaces();
             if (label.size()) {
                 // If |label| isn't consumed, assign the origin.
-                internSymbol(origin, label);
+                if (internSymbol(origin, label))
+                    return getError();
             }
             return getError();
         }
@@ -227,8 +227,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 
     if (label.size()) {
         // If |label| isn't consumed, assign the origin.
-        internSymbol(_origin, label);
-        if (getError())
+        if (internSymbol(_origin, label))
             return getError();
     }
 
@@ -239,7 +238,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
 
     Insn insn(_origin);
     const Error error = _directives.assembler().encode(scan, insn, this);
-    const bool allowUndef = !_reportUndef && error == UNDEFINED_SYMBOL;
+    const bool allowUndef = error == UNDEFINED_SYMBOL && _symbolMode != REPORT_UNDEFINED;
     if (error == OK || allowUndef) {
         StrScanner p(_directives.assembler().errorAt());
         _list.operand.trimEndAt(p).trimEnd(isspace);
@@ -260,11 +259,6 @@ void AsmCommonDirective::reset() {
     current()->assembler().reset();
     _functions.reset();
     _origin = 0;
-}
-
-void AsmCommonDirective::setSymbolMode(bool reportUndef, bool reportDuplicate) {
-    _reportUndef = reportUndef;
-    _reportDuplicate = reportDuplicate;
 }
 
 struct AsmCommonDirective::Source {
@@ -349,7 +343,7 @@ Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, CliM
     Value value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
-    if (_reportUndef && value.isUndefined())
+    if (value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
     _list.address = _origin = value.getUnsigned();
@@ -361,7 +355,7 @@ Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMe
     Value value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
-    if (_reportUndef && value.isUndefined())
+    if (value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
@@ -378,17 +372,15 @@ Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMe
 Error AsmCommonDirective::defineLabel(StrScanner &scan, StrScanner &label, CliMemory &memory) {
     if (label.size() == 0)
         return setError(MISSING_LABEL);
-    if (_reportDuplicate && hasSymbol(label))
-        return setError(DUPLICATE_LABEL);
     ValueParser &parser = _directives.parser();
     _list.value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
-    if (_reportUndef && _list.value.isUndefined())
+    if (_list.value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    internSymbol(_list.value.getUnsigned(), label);
-    label = StrScanner::EMPTY;
+    if (internSymbol(_list.value.getUnsigned(), label) == OK)
+        label = StrScanner::EMPTY;
     return getError();
 }
 
@@ -446,7 +438,7 @@ Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool
             Value value = parser.eval(scan, this);
             if (setError(parser))
                 return getError();
-            if (_reportUndef && value.isUndefined())
+            if (value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
                 return setError(UNDEFINED_SYMBOL);
             if (value.overflowUint8())
                 return setError(OVERFLOW_RANGE);
@@ -473,7 +465,7 @@ Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, Cli
         Value value = parser.eval(scan, this);
         if (setError(parser))
             return getError();
-        if (_reportUndef && value.isUndefined())
+        if (value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
         if (value.overflowUint16())
             return setError(OVERFLOW_RANGE);
@@ -500,7 +492,7 @@ Error AsmCommonDirective::defineUint32s(StrScanner &scan, StrScanner &label, Cli
         Value value = parser.eval(scan, this);
         if (setError(parser))
             return getError();
-        if (_reportUndef && value.isUndefined())
+        if (value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
         uint32_t val32 = value.getUnsigned();
         for (auto i = 0; i < 4; i++) {
@@ -533,7 +525,7 @@ Error AsmCommonDirective::allocateSpaces(StrScanner &scan, size_t unit) {
     Value value = parser.eval(scan, this);
     if (setError(parser))
         return getError();
-    if (_reportUndef && value.isUndefined())
+    if (value.isUndefined() && _symbolMode == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
@@ -545,6 +537,10 @@ Error AsmCommonDirective::allocateSpaces(StrScanner &scan, size_t unit) {
 }
 
 Error AsmCommonDirective::defineFunction(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+    if (label.size() == 0)
+        return setError(MISSING_LABEL);
+    if (_symbolMode == REPORT_DUPLICATE && hasSymbol(label))
+        return setError(DUPLICATE_LABEL);
     ValueParser &parser = _directives.parser();
     std::list<StrScanner> params;
     for (;;) {
@@ -628,11 +624,11 @@ uint32_t AsmCommonDirective::symbolLookup(const std::string &key) const {
 }
 
 Error AsmCommonDirective::symbolIntern(uint32_t value, const std::string &key) {
-    if (_reportDuplicate && symbolExists(key))
+    if (symbolExists(key) && _symbolMode == REPORT_DUPLICATE)
         return setError(DUPLICATE_LABEL);
     _symbols.erase(key);
     _symbols.emplace(key, value);
-    return setError(OK);
+    return OK;
 }
 
 // ListingLine oevrrides
