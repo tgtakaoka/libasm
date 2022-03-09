@@ -79,6 +79,7 @@ enum Error : uint8_t {
     UNSUPPORTED_CPU = 155,
     TOO_MANY_INCLUDE = 156,
     NO_INCLUDE_FOUND = 157,
+    MISSING_CLOSING_DELIMITOR = 158,
 };
 
 class ErrorReporter {

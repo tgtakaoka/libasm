@@ -126,6 +126,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
         return PSTR("Too many include");
     case NO_INCLUDE_FOUND:
         return PSTR("Include file not found");
+    case MISSING_CLOSING_DELIMITOR:
+        return PSTR("Missing closing delimitor");
     }
 
     return PSTR("Unknown error");

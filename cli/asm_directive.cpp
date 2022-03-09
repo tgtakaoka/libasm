@@ -409,7 +409,7 @@ Error AsmCommonDirective::defineString(StrScanner &scan, StrScanner &label, CliM
     return defineUint8s(scan, memory, true);
 }
 
-Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool terminator) {
+Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool delimitor) {
     _list.address = _origin;
     ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
@@ -417,14 +417,22 @@ Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool
     len = 0;
     for (;;) {
         scan.skipSpaces();
-        if (terminator || *scan == '"') {
+        if (delimitor || *scan == '\'' || *scan == '"') {
             const char delim = *scan++;
             StrScanner p(scan);
             for (;;) {
                 if (p.expect(delim))
                     break;
-                if (*p == 0)
-                    return setError(p, MISSING_CLOSING_DQUOTE);
+                if (*p == 0) {
+                    switch (delim) {
+                    case '"':
+                        return setError(p, MISSING_CLOSING_DQUOTE);
+                    case '\'':
+                        return setError(p, MISSING_CLOSING_QUOTE);
+                    default:
+                        return setError(p, MISSING_CLOSING_DELIMITOR);
+                    }
+                }
                 const char c = parser.readChar(p);
                 if (setError(parser)) {
                     scan = p;

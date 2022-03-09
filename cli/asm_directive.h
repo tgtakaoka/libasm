@@ -77,7 +77,7 @@ public:
     Error endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory);
     Error defineFunction(StrScanner &scan, StrScanner &label, CliMemory &memory);
 
-    Error defineUint8s(StrScanner &scan, CliMemory &memory, bool terminator);
+    Error defineUint8s(StrScanner &scan, CliMemory &memory, bool delimitor);
     Error allocateSpaces(StrScanner &scan, size_t unit);
 
 private:
