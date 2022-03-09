@@ -54,9 +54,6 @@ protected:
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
 
-    bool hasSymbol(const StrScanner &symbol) const;
-    uint32_t lookupSymbol(const StrScanner &symbol) const;
-
     /** Parse |expr| text and get value as unsigned 16 bit. */
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error);
     /** Parse |expr| text and get value as unsigned 32 bit. */

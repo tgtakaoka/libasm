@@ -32,20 +32,12 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     return error;
 }
 
-bool Assembler::hasSymbol(const StrScanner &symbol) const {
-    return _symtab && _symtab->hasSymbol(symbol);
-}
-
-uint32_t Assembler::lookupSymbol(const StrScanner &symbol) const {
-    return _symtab ? _symtab->lookupSymbol(symbol) : 0;
-}
-
 bool Assembler::endOfLine(char letter) const {
     return letter == 0 || letter == ';' || letter == _commentChar;
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) {
-    Value value = _parser.eval(expr, _symtab);
+    const Value value = _parser.eval(expr, _symtab);
     setError(_parser);
     if (value.overflowUint16())
         error.setErrorIf(expr, OVERFLOW_RANGE);
@@ -55,7 +47,7 @@ uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) {
 }
 
 uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) {
-    Value value = _parser.eval(expr, _symtab);
+    const Value value = _parser.eval(expr, _symtab);
     setError(_parser);
     if (value.isUndefined())
         error.setErrorIf(expr, UNDEFINED_SYMBOL);
