@@ -36,12 +36,12 @@ public:
 private:
     NationalValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;
         CcName cc;
         uint32_t val32;
-        Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+        Operand() : ErrorAt(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op);

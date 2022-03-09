@@ -767,11 +767,11 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn, bool useIndirectLong, const 
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMos6502::searchName(InsnMos6502 &insn) const {
+Error TableMos6502::searchName(InsnMos6502 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
+Error TableMos6502::searchOpCode(InsnMos6502 &insn) {
     return setError(searchOpCode(insn, _useIndirectLong, _table, _end));
 }
 

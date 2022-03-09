@@ -28,8 +28,8 @@ class TableZ80 : public TableBase {
 public:
     TableZ80();
 
-    Error searchName(InsnZ80 &insn) const;
-    Error searchOpCode(InsnZ80 &insn) const;
+    Error searchName(InsnZ80 &insn);
+    Error searchOpCode(InsnZ80 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

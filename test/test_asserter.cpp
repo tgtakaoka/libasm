@@ -85,7 +85,7 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     }
     _fail_count++;
     printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message,
-            ErrorReporter::errorText(expected), actual.errorText());
+            ErrorReporter::errorText_P(expected), actual.errorText_P());
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,

@@ -28,8 +28,8 @@ class TableTms9900 : public TableBase {
 public:
     TableTms9900();
 
-    Error searchName(InsnTms9900 &insn) const;
-    Error searchOpCode(InsnTms9900 &insn) const;
+    Error searchName(InsnTms9900 &insn);
+    Error searchOpCode(InsnTms9900 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

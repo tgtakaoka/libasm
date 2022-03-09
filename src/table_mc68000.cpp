@@ -533,7 +533,7 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
-Error TableMc68000::searchName(InsnMc68000 &insn) const {
+Error TableMc68000::searchName(InsnMc68000 &insn) {
     uint8_t count = 0;
     auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
             insn.name(), insn.flags(), MC68000_PAGES, matchAddrMode, count);
@@ -596,7 +596,7 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
+Error TableMc68000::searchOpCode(InsnMc68000 &insn) {
     auto opCode = insn.opCode();
     auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);

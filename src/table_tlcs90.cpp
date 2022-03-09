@@ -555,7 +555,7 @@ static constexpr TableTlcs90::EntryPage PAGES_TLCS90[] PROGMEM = {
         {0xFE, M_NO, ARRAY_RANGE(TABLE_BLOCK), ARRAY_RANGE(INDEX_BLOCK)},
 };
 
-Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
+Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) {
     auto code = insn.readByte(memory);
     for (auto page = ARRAY_BEGIN(PAGES_TLCS90) + 1; page < ARRAY_END(PAGES_TLCS90); page++) {
         if (!page->prefixMatch(code))
@@ -695,11 +695,11 @@ Error TableTlcs90::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableTlcs90::searchName(InsnTlcs90 &insn) const {
+Error TableTlcs90::searchName(InsnTlcs90 &insn) {
     return setError(searchName(insn, ARRAY_RANGE(PAGES_TLCS90)));
 }
 
-Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) const {
+Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) {
     return setError(searchOpCode(insn, ARRAY_RANGE(PAGES_TLCS90)));
 }
 

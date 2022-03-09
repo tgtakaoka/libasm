@@ -26,8 +26,8 @@ namespace ins8070 {
 
 class TableIns8070 : public TableBase {
 public:
-    Error searchName(InsnIns8070 &insn) const;
-    Error searchOpCode(InsnIns8070 &insn) const;
+    Error searchName(InsnIns8070 &insn);
+    Error searchOpCode(InsnIns8070 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

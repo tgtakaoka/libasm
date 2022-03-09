@@ -399,11 +399,11 @@ Error TableMn1610::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMn1610::searchName(InsnMn1610 &insn) const {
+Error TableMn1610::searchName(InsnMn1610 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableMn1610::searchOpCode(InsnMn1610 &insn) const {
+Error TableMn1610::searchOpCode(InsnMn1610 &insn) {
     return setError(searchOpCode(insn, _table, _end));
 }
 

@@ -28,8 +28,8 @@ class TableMn1610 : public TableBase {
 public:
     TableMn1610();
 
-    Error searchName(InsnMn1610 &insn) const;
-    Error searchOpCode(InsnMn1610 &insn) const;
+    Error searchName(InsnMn1610 &insn);
+    Error searchOpCode(InsnMn1610 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

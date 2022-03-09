@@ -187,11 +187,11 @@ int DisDriver::disassemble() {
             pc += insn.length();
             if (error)
                 fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
-                        _disassembler->errorText());
+                        _disassembler->errorText_P());
             if (list) {
                 if (error)
                     fprintf(list, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
-                            _disassembler->errorText());
+                            _disassembler->errorText_P());
                 do {
                     fprintf(list, "%s\n", listing.getLine());
                 } while (listing.hasNext());
@@ -200,7 +200,7 @@ int DisDriver::disassemble() {
             if (output) {
                 if (error)
                     fprintf(output, "; %s:0x%04x: error: %s\n", _input_name, insn.address(),
-                            _disassembler->errorText());
+                            _disassembler->errorText_P());
                 do {
                     fprintf(output, "%s\n", listing.getContent());
                 } while (listing.hasNext());

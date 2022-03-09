@@ -42,7 +42,7 @@ public:
 private:
     NationalValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;
         union {
@@ -55,7 +55,7 @@ private:
         RegName index;
         OprSize size;
         Operand()
-            : ErrorReporter(),
+            : ErrorAt(),
               mode(M_NONE),
               reg(REG_UNDEF),
               val32(0),

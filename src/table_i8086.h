@@ -28,8 +28,8 @@ namespace i8086 {
 
 class TableI8086 : public TableBase {
 public:
-    Error searchName(InsnI8086 &insn) const;
-    Error searchOpCode(InsnI8086 &insn) const;
+    Error searchName(InsnI8086 &insn);
+    Error searchOpCode(InsnI8086 &insn);
     bool isRepeatPrefix(Config::opcode_t opcode) const;
     bool isSegmentPrefix(Config::opcode_t opcode) const;
     RegName overrideSeg(Config::opcode_t opcode) const;

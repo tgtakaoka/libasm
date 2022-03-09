@@ -38,7 +38,7 @@ enum SymbolMode {
     REPORT_DUPLICATE = 1,
 };
 
-class AsmCommonDirective : public ErrorReporter, public ListingLine, protected SymbolTable {
+class AsmCommonDirective : public ErrorAt, public ListingLine, protected SymbolTable {
 public:
     AsmCommonDirective(AsmDirective **begin, AsmDirective **end);
     virtual ~AsmCommonDirective();

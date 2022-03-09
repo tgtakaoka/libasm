@@ -37,7 +37,7 @@ private:
     MotorolaValueParser _parser;
     uint8_t _direct_page;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName index;
         RegName base;
@@ -45,7 +45,7 @@ private:
         int8_t extra;
         uint32_t val32;
         Operand()
-            : ErrorReporter(),
+            : ErrorAt(),
               mode(M_NONE),
               index(REG_UNDEF),
               base(REG_UNDEF),

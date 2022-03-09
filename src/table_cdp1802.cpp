@@ -386,11 +386,11 @@ Error TableCdp1802::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
+Error TableCdp1802::searchName(InsnCdp1802 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
+Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
     return setError(searchOpCode(insn, _table, _end));
 }
 

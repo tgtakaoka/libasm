@@ -609,7 +609,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.ex2Mode(), table.ex2Mode());
 }
 
-Error TableZ8000::searchName(InsnZ8000 &insn) const {
+Error TableZ8000::searchName(InsnZ8000 &insn) {
     uint8_t count = 0;
     auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
             insn.name(), insn.flags(), Z8000_PAGES, acceptModes, count);
@@ -639,7 +639,7 @@ const Entry *TableZ8000::searchOpCode(
         if (insn.hasPost()) {
             if (insn.length() < 4) {
                 insn.readPost(memory);
-                if (setError(insn))
+                if (insn.getError())
                     return nullptr;
             }
             if (!matchPostWord(insn))
@@ -651,12 +651,12 @@ const Entry *TableZ8000::searchOpCode(
     return nullptr;
 }
 
-Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) const {
+Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) {
     auto entry = searchOpCode(insn, memory, ARRAY_RANGE(TABLE_Z8000));
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
-Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
+Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) {
     auto entry = searchOpCode(insn, memory, ARRAY_RANGE(TABLE_Z8000));
     if (entry) {
         entry++;

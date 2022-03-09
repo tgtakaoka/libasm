@@ -40,10 +40,10 @@ private:
     bool _long_acc;
     bool _long_idx;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         uint32_t val32;
-        Operand() : ErrorReporter(), mode(IMPL), val32(0) {}
+        Operand() : ErrorAt(), mode(IMPL), val32(0) {}
     };
 
     Error parseOnOff(StrScanner &scan, bool &val);

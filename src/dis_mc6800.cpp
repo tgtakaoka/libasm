@@ -130,7 +130,9 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
     default:
         return OK;
     }
-    return setErrorIf(insn);
+    if (isOK())
+        setError(insn);
+    return getError();
 }
 
 Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {

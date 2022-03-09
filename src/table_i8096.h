@@ -26,8 +26,8 @@ namespace i8096 {
 
 class TableI8096 : public TableBase {
 public:
-    Error searchName(InsnI8096 &insn) const;
-    Error searchOpCode(InsnI8096 &insn) const;
+    Error searchName(InsnI8096 &insn);
+    Error searchOpCode(InsnI8096 &insn);
     bool isPrefix(Config::opcode_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

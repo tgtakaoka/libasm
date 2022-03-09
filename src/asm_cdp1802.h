@@ -44,10 +44,10 @@ private:
     bool _useReg;
     bool _smartBranch;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(NONE), val16(0) {}
+        Operand() : ErrorAt(), mode(NONE), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op);

@@ -25,24 +25,24 @@
 namespace libasm {
 namespace tlcs90 {
 
-struct Operand : public ErrorReporter {
+struct Operand : public ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
     uint16_t val16;
-    Operand() : ErrorReporter(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+    Operand() : ErrorAt(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
 class TableTlcs90 : public TableBase {
 public:
-    Error searchName(InsnTlcs90 &insn) const;
-    Error searchOpCode(InsnTlcs90 &insn) const;
+    Error searchName(InsnTlcs90 &insn);
+    Error searchOpCode(InsnTlcs90 &insn);
+    Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const;
     struct EntryPage;
 
 private:

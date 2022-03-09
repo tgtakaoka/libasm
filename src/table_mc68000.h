@@ -28,8 +28,8 @@ class TableMc68000 : public TableBase {
 public:
     TableMc68000();
 
-    Error searchName(InsnMc68000 &insn) const;
-    Error searchOpCode(InsnMc68000 &insn) const;
+    Error searchName(InsnMc68000 &insn);
+    Error searchOpCode(InsnMc68000 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

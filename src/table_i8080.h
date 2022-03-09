@@ -28,8 +28,8 @@ class TableI8080 : public TableBase {
 public:
     TableI8080();
 
-    Error searchName(InsnI8080 &insn) const;
-    Error searchOpCode(InsnI8080 &insn) const;
+    Error searchName(InsnI8080 &insn);
+    Error searchOpCode(InsnI8080 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

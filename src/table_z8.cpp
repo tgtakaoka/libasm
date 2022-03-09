@@ -595,11 +595,11 @@ Error TableZ8::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableZ8::searchName(InsnZ8 &insn) const {
+Error TableZ8::searchName(InsnZ8 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) const {
+Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) {
     return setError(searchOpCode(insn, memory, _table, _end));
 }
 

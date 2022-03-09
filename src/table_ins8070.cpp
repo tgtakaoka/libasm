@@ -207,7 +207,7 @@ static bool acceptOprFormats(Entry::Flags flags, const Entry *entry) {
            acceptOprFormat(flags.srcOpr(), table.srcOpr());
 }
 
-Error TableIns8070::searchName(InsnIns8070 &insn) const {
+Error TableIns8070::searchName(InsnIns8070 &insn) {
     uint8_t count = 0;
     auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
             insn.name(), insn.flags(), INS8070_PAGES, acceptOprFormats, count);
@@ -244,7 +244,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode;
 }
 
-Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
+Error TableIns8070::searchOpCode(InsnIns8070 &insn) {
     auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
     if (!entry)

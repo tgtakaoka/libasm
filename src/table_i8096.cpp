@@ -348,11 +348,11 @@ Error TableI8096::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableI8096::searchName(InsnI8096 &insn) const {
+Error TableI8096::searchName(InsnI8096 &insn) {
     return setError(searchName(insn, ARRAY_RANGE(I8096_PAGES)));
 }
 
-Error TableI8096::searchOpCode(InsnI8096 &insn) const {
+Error TableI8096::searchOpCode(InsnI8096 &insn) {
     return setError(searchOpCode(insn, ARRAY_RANGE(I8096_PAGES)));
 }
 

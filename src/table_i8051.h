@@ -26,8 +26,8 @@ namespace i8051 {
 
 class TableI8051 : public TableBase {
 public:
-    Error searchName(InsnI8051 &insn) const;
-    Error searchOpCode(InsnI8051 &insn) const;
+    Error searchName(InsnI8051 &insn);
+    Error searchOpCode(InsnI8051 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

@@ -264,9 +264,10 @@ protected:
     uint32_t address() const { return _insn.address(); }
 
     void clear() {
-        _insn.clear();
         resetError();
+        _insn.clear();
     }
+
     void reset() {
         clear();
         _insn.reset();
@@ -462,7 +463,8 @@ public:
     }
 
 protected:
-    InsnImpl(Insn &insn) : InsnBase(insn), _opCode(0), _prefix(0), _post(0), _hasPost(false), _flags() {}
+    InsnImpl(Insn &insn)
+        : InsnBase(insn), _opCode(0), _prefix(0), _post(0), _hasPost(false), _flags() {}
 
 private:
     typename Conf::opcode_t _opCode;

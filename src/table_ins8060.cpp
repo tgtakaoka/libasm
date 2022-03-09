@@ -153,7 +153,7 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
     return false;
 }
 
-Error TableIns8060::searchName(InsnIns8060 &insn) const {
+Error TableIns8060::searchName(InsnIns8060 &insn) {
     uint8_t count = 0;
     auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
             insn.name(), insn.flags(), INS8060_PAGES, acceptAddrMode, count);
@@ -178,7 +178,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     }
 }
 
-Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
+Error TableIns8060::searchOpCode(InsnIns8060 &insn) {
     auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
     if (!entry)

@@ -923,7 +923,7 @@ Error TableNs32000::searchOpCode(
             insn.setFlags(entry->flags());
             if (post) {
                 insn.readPost(memory);
-                if (setError(insn))
+                if (insn.getError())
                     return getError();
             }
             insn.setName_P(entry->name_P());
@@ -933,7 +933,7 @@ Error TableNs32000::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableNs32000::searchName(InsnNs32000 &insn) const {
+Error TableNs32000::searchName(InsnNs32000 &insn) {
     auto error = searchName(insn, ARRAY_RANGE(NS32032_PAGES));
     if (error == UNKNOWN_INSTRUCTION && _fpuType == FPU_NS32081)
         error = searchName(insn, ARRAY_RANGE(NS32081_PAGES));
@@ -942,7 +942,7 @@ Error TableNs32000::searchName(InsnNs32000 &insn) const {
     return setError(error);
 }
 
-Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
+Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) {
     Error error = searchOpCode(insn, memory, ARRAY_RANGE(NS32032_PAGES));
     if (error != OK)
         error = searchOpCode(insn, memory, ARRAY_RANGE(NS32081_PAGES));

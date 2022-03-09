@@ -28,8 +28,8 @@ class TableMos6502 : public TableBase {
 public:
     TableMos6502();
 
-    Error searchName(InsnMos6502 &insn) const;
-    Error searchOpCode(InsnMos6502 &insn) const;
+    Error searchName(InsnMos6502 &insn);
+    Error searchOpCode(InsnMos6502 &insn);
     void useIndirectLong(bool enable);
     void longAccumlator(bool on);
     void longIndex(bool on);

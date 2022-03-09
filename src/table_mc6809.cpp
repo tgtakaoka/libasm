@@ -660,11 +660,11 @@ Error TableMc6809::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableMc6809::searchName(InsnMc6809 &insn) const {
+Error TableMc6809::searchName(InsnMc6809 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
+Error TableMc6809::searchOpCode(InsnMc6809 &insn) {
     return setError(searchOpCode(insn, _table, _end));
 }
 

@@ -84,7 +84,7 @@ enum Error : uint8_t {
 
 class ErrorReporter {
 public:
-    ErrorReporter() : _error(OK), _at(nullptr) {}
+    ErrorReporter() : _error(OK) {}
 
     bool isOK() const { return _error == OK; }
     Error getError() const { return _error; }
@@ -92,27 +92,37 @@ public:
     Error resetError() { return setOK(); }
     Error setOK() { return setError(OK); }
     Error setError(Error error) { return _error = error; }
+    Error setError(const ErrorReporter &reporter) { return setError(reporter.getError()); }
+
+    const /*PROGMEM*/ char *errorText_P() const { return errorText_P(_error); }
+    static const /*PROGMEM*/ char *errorText_P(Error error);
+
+private:
+    Error _error;
+};
+
+class ErrorAt : public ErrorReporter {
+public:
+    ErrorAt() : ErrorReporter(), _at(nullptr) {}
+
+    Error setError(Error error) { return ErrorReporter::setError(error); }
     Error setError(const char *at, Error error) {
         setAt(at);
         return setError(error);
     }
-    Error setError(const ErrorReporter &o) { return setError(o._at, o._error); }
-    Error setError(const ErrorReporter &o, Error error) { return setError(o._at, error); }
+    Error setError(const ErrorAt &o) { return setError(o._at, o.getError()); }
+    Error setError(const ErrorAt &o, Error error) { return setError(o._at, error); }
     Error setErrorIf(const char *at, Error error) {
-        if (_error)
-            return _error;
+        if (getError())
+            return getError();
         return setError(at, error);
     }
-    Error setErrorIf(const ErrorReporter &o) { return setErrorIf(o._at, o._error); }
+    Error setErrorIf(const ErrorAt &o) { return setErrorIf(o._at, o.getError()); }
 
     void setAt(const char *at) { _at = at; }
     const char *errorAt() const { return _at ? _at : ""; }
 
-    const /*PROGMEM*/ char *errorText() const;
-    static const /*PROGMEM*/ char *errorText(Error error);
-
 private:
-    Error _error;
     const char *_at;
 };
 

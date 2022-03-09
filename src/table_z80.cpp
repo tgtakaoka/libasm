@@ -506,11 +506,11 @@ bool TableZ80::isPrefix(Config::opcode_t opCode) const {
            opCode == TableZ80::PREFIX_IY;
 }
 
-Error TableZ80::searchName(InsnZ80 &insn) const {
+Error TableZ80::searchName(InsnZ80 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableZ80::searchOpCode(InsnZ80 &insn) const {
+Error TableZ80::searchOpCode(InsnZ80 &insn) {
     return setError(searchOpCode(insn, _table, _end));
 }
 

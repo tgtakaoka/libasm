@@ -29,9 +29,9 @@ class TableZ8000 : public TableBase {
 public:
     TableZ8000();
 
-    Error searchName(InsnZ8000 &insn) const;
-    Error searchOpCode(InsnZ8000 &insn, DisMemory &memory) const;
-    Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const;
+    Error searchName(InsnZ8000 &insn);
+    Error searchOpCode(InsnZ8000 &insn, DisMemory &memory);
+    Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

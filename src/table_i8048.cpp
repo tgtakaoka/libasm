@@ -370,11 +370,11 @@ const Entry *TableI8048::searchOpCode(
     return nullptr;
 }
 
-Error TableI8048::searchName(InsnI8048 &insn) const {
+Error TableI8048::searchName(InsnI8048 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableI8048::searchOpCode(InsnI8048 &insn) const {
+Error TableI8048::searchOpCode(InsnI8048 &insn) {
     const Entry *entry = searchOpCode(insn, _table, _end);
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }

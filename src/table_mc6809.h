@@ -40,8 +40,8 @@ class TableMc6809 : public TableBase {
 public:
     TableMc6809();
 
-    Error searchName(InsnMc6809 &insn) const;
-    Error searchOpCode(InsnMc6809 &insn) const;
+    Error searchName(InsnMc6809 &insn);
+    Error searchOpCode(InsnMc6809 &insn);
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     int16_t searchPostSpec(PostSpec &spec) const;
 

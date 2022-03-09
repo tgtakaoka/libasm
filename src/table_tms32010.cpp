@@ -196,7 +196,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.op3(), table.op3());
 }
 
-Error TableTms32010::searchName(InsnTms32010 &insn) const {
+Error TableTms32010::searchName(InsnTms32010 &insn) {
     uint8_t count = 0;
     auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
             insn.name(), insn.flags(), TMS32010_PAGES, acceptModes, count);
@@ -234,7 +234,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableTms32010::searchOpCode(InsnTms32010 &insn) const {
+Error TableTms32010::searchOpCode(InsnTms32010 &insn) {
     auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
     if (entry) {

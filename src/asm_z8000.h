@@ -40,14 +40,14 @@ private:
     IntelValueParser _parser;
     bool _autoShortDirect;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
         RegName base;    // M_BA/M_BX
         CcName cc;       // M_CC/M_DA/M_X
         uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
         Operand()
-            : ErrorReporter(),
+            : ErrorAt(),
               mode(M_NO),
               reg(REG_UNDEF),
               base(REG_UNDEF),

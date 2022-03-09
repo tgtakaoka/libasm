@@ -70,10 +70,10 @@ private:
     Value(uint32_t value, ValueType type) : _value(value), _type(type) {}
 };
 
-class ValueParser : public ErrorReporter {
+class ValueParser : public ErrorAt {
 public:
     ValueParser(char curSym = '.')
-        : ErrorReporter(), _origin(0), _curSym(curSym), _funcParser(nullptr), _commentChar(0) {}
+        : ErrorAt(), _origin(0), _curSym(curSym), _funcParser(nullptr), _commentChar(0) {}
 
     /*
      * Parse |scan| text and return expression |value|.  Undefined
@@ -101,7 +101,7 @@ public:
     void setCommentChar(char c) { _commentChar = c; }
     bool endOfLine(char c) const { return c == 0 || c == ';' || c == _commentChar; }
 
-    struct FuncParser : public ErrorReporter {
+    struct FuncParser : public ErrorAt {
         virtual Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
                 Value &val, const SymbolTable *symtab) = 0;
     };

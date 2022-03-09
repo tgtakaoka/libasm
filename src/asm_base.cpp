@@ -44,7 +44,7 @@ bool Assembler::endOfLine(char letter) const {
     return letter == 0 || letter == ';' || letter == _commentChar;
 }
 
-uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorReporter &error) {
+uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) {
     Value value = _parser.eval(expr, _symtab);
     setError(_parser);
     if (value.overflowUint16())
@@ -54,7 +54,7 @@ uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorReporter &error) {
     return value.getUnsigned();
 }
 
-uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorReporter &error) {
+uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) {
     Value value = _parser.eval(expr, _symtab);
     setError(_parser);
     if (value.isUndefined())

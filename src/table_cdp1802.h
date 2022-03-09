@@ -28,8 +28,8 @@ class TableCdp1802 : public TableBase {
 public:
     TableCdp1802();
 
-    Error searchName(InsnCdp1802 &insn) const;
-    Error searchOpCode(InsnCdp1802 &insn) const;
+    Error searchName(InsnCdp1802 &insn);
+    Error searchOpCode(InsnCdp1802 &insn);
     bool isPrefix(Config::opcode_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

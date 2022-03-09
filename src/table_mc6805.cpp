@@ -335,11 +335,11 @@ const Entry *TableMc6805::searchOpCode(
     return nullptr;
 }
 
-Error TableMc6805::searchName(InsnMc6805 &insn) const {
+Error TableMc6805::searchName(InsnMc6805 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableMc6805::searchOpCode(InsnMc6805 &insn) const {
+Error TableMc6805::searchOpCode(InsnMc6805 &insn) {
     auto entry = searchOpCode(insn, _table, _end);
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }

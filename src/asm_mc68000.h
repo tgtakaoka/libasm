@@ -38,14 +38,14 @@ public:
 private:
     MotorolaValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;
         RegName indexReg;
         OprSize indexSize;
         uint32_t val32;
         Operand()
-            : ErrorReporter(),
+            : ErrorAt(),
               mode(M_NONE),
               reg(REG_UNDEF),
               indexReg(REG_UNDEF),

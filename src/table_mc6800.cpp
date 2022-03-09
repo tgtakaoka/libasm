@@ -665,16 +665,16 @@ const Entry *TableMc6800::searchOpCode(
     return nullptr;
 }
 
-Error TableMc6800::searchName(InsnMc6800 &insn) const {
+Error TableMc6800::searchName(InsnMc6800 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
+Error TableMc6800::searchOpCode(InsnMc6800 &insn) {
     auto entry = searchOpCode(insn, _table, _end);
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
-Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
+Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) {
     auto entry = searchOpCode(insn, _table, _end);
     if (!entry)
         return setError(INTERNAL_ERROR);

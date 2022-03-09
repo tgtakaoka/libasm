@@ -18,11 +18,7 @@
 
 namespace libasm {
 
-const /*PROGMEM*/ char *ErrorReporter::errorText() const {
-    return errorText(_error);
-}
-
-const /*PROGMEM*/ char *ErrorReporter::errorText(Error error) {
+const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
     switch (error) {
     case OK:
         return PSTR("OK");

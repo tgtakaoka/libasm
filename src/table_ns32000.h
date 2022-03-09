@@ -27,8 +27,8 @@ namespace ns32000 {
 
 class TableNs32000 : public TableBase {
 public:
-    Error searchName(InsnNs32000 &insn) const;
-    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory) const;
+    Error searchName(InsnNs32000 &insn);
+    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory);
     bool isPrefixCode(Config::opcode_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

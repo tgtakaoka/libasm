@@ -29,9 +29,9 @@ class TableMc6800 : public TableBase {
 public:
     TableMc6800();
 
-    Error searchName(InsnMc6800 &insn) const;
-    Error searchOpCode(InsnMc6800 &insn) const;
-    Error searchOpCodeAlias(InsnMc6800 &insn) const;
+    Error searchName(InsnMc6800 &insn);
+    Error searchOpCode(InsnMc6800 &insn);
+    Error searchOpCodeAlias(InsnMc6800 &insn);
     bool isPrefix(Config::opcode_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

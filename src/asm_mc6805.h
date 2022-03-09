@@ -39,11 +39,11 @@ private:
     MotorolaValueParser _parser;
     uint8_t _pc_bits;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         int8_t size;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(M_NO), size(0), val16(0) {}
+        Operand() : ErrorAt(), mode(M_NO), size(0), val16(0) {}
     };
 
     Error checkAddressRange(Config::uintptr_t addr);

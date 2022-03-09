@@ -35,11 +35,11 @@ public:
 private:
     MotorolaValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         uint8_t size;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(M_NO), size(0), val16(0) {}
+        Operand() : ErrorAt(), mode(M_NO), size(0), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op);

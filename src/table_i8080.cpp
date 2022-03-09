@@ -281,11 +281,11 @@ Error TableI8080::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableI8080::searchName(InsnI8080 &insn) const {
+Error TableI8080::searchName(InsnI8080 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableI8080::searchOpCode(InsnI8080 &insn) const {
+Error TableI8080::searchOpCode(InsnI8080 &insn) {
     return setError(searchOpCode(insn, _table, _end));
 }
 

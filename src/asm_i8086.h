@@ -39,7 +39,7 @@ private:
     IntelValueParser _parser;
     bool _optimizeSegment;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName ptr;
         RegName seg;
@@ -49,7 +49,7 @@ private:
         uint32_t val32;
         uint16_t seg16;
         Operand()
-            : ErrorReporter(),
+            : ErrorAt(),
               mode(M_NONE),
               ptr(REG_UNDEF),
               seg(REG_UNDEF),

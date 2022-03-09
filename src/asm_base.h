@@ -28,7 +28,7 @@
 
 namespace libasm {
 
-class Assembler : public ErrorReporter {
+class Assembler : public ErrorAt {
 public:
     Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
@@ -50,7 +50,7 @@ protected:
     SymbolTable *_symtab;
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
-        : _parser(parser), _table(table), _commentChar(commentChar) {}
+        : ErrorAt(), _parser(parser), _table(table), _commentChar(commentChar) {}
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
 
@@ -58,9 +58,9 @@ protected:
     uint32_t lookupSymbol(const StrScanner &symbol) const;
 
     /** Parse |expr| text and get value as unsigned 16 bit. */
-    uint16_t parseExpr16(StrScanner &expr, ErrorReporter &error);
+    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error);
     /** Parse |expr| text and get value as unsigned 32 bit. */
-    uint32_t parseExpr32(StrScanner &expr, ErrorReporter &error);
+    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error);
     /** Return error caused by |parseExpr16| and |parseExpr32|. */
     Error parserError() { return _parser.getError(); }
 

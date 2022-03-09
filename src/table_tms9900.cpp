@@ -308,11 +308,11 @@ Error TableTms9900::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableTms9900::searchName(InsnTms9900 &insn) const {
+Error TableTms9900::searchName(InsnTms9900 &insn) {
     return setError(searchName(insn, _table, _end));
 }
 
-Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
+Error TableTms9900::searchOpCode(InsnTms9900 &insn) {
     return setError(searchOpCode(insn, _table, _end));
 }
 

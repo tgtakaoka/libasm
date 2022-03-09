@@ -38,11 +38,11 @@ public:
 private:
     NationalValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(M_UNDEF), reg(REG_UNDEF), val16(0) {}
+        Operand() : ErrorAt(), mode(M_UNDEF), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &opr);

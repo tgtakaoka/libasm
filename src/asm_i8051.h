@@ -35,11 +35,11 @@ public:
 private:
     IntelValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand() : ErrorReporter(), mode(NONE), reg(REG_UNDEF), val16(0) {}
+        Operand() : ErrorAt(), mode(NONE), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op);

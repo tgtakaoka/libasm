@@ -35,12 +35,12 @@ public:
 private:
     NationalValueParser _parser;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : public ErrorAt {
         OprFormat format;
         RegName reg;
         bool autoIndex;
         uint16_t val16;
-        Operand() : ErrorReporter(), format(OPR_NO), reg(REG_UNDEF), autoIndex(false), val16(0) {}
+        Operand() : ErrorAt(), format(OPR_NO), reg(REG_UNDEF), autoIndex(false), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op);

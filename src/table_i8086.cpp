@@ -897,11 +897,11 @@ Error TableI8086::searchOpCode(
     return UNKNOWN_INSTRUCTION;
 }
 
-Error TableI8086::searchName(InsnI8086 &insn) const {
+Error TableI8086::searchName(InsnI8086 &insn) {
     return setError(searchName(insn, ARRAY_RANGE(I8086_PAGES)));
 }
 
-Error TableI8086::searchOpCode(InsnI8086 &insn) const {
+Error TableI8086::searchOpCode(InsnI8086 &insn) {
     return setError(searchOpCode(insn, ARRAY_RANGE(I8086_PAGES)));
 }
 

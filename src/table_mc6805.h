@@ -29,8 +29,8 @@ class TableMc6805 : public TableBase {
 public:
     TableMc6805();
 
-    Error searchName(InsnMc6805 &insn) const;
-    Error searchOpCode(InsnMc6805 &insn) const;
+    Error searchName(InsnMc6805 &insn);
+    Error searchOpCode(InsnMc6805 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;

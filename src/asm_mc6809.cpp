@@ -41,7 +41,8 @@ Config::ptrdiff_t AsmMc6809::calculateDisplacement(
     const Config::ptrdiff_t disp = static_cast<Config::ptrdiff_t>(op.val32);
     if (op.base == REG_PCR && op.isOK()) {
         // assuming 8-bit displacement (post byte + 8-bit displacement)
-        const Config::uintptr_t base = insn.address() + (insn.length() == 0 ? 3 : insn.length() + 2) +
+        const Config::uintptr_t base = insn.address() +
+                                       (insn.length() == 0 ? 3 : insn.length() + 2) +
                                        (insn.hasPrefix() ? 1 : 0);
         const Config::uintptr_t target = op.val32;
         return target - base;

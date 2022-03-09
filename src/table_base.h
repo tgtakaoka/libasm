@@ -92,19 +92,14 @@ private:
 /**
  * Base class for instruction table.
  */
-class TableBase {
+class TableBase : public ErrorReporter {
 public:
     virtual /* PROGMEM */ const char *listCpu_P() const = 0;
     virtual /* PROGMEM */ const char *cpu_P() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
-    Error getError() const { return _error.getError(); }
 
 protected:
     TableBase() {}
-
-    Error setOK() const { return _error.setOK(); }
-    Error setError(Error error) const { return _error.setError(error); }
-    Error setError(ErrorReporter reporter) const { return _error.setError(reporter); }
 
     /**
      * Binary search instruction entries sorted and indexed from
@@ -160,9 +155,6 @@ protected:
         }
         return nullptr;
     }
-
-private:
-    mutable ErrorReporter _error;
 };
 
 }  // namespace libasm

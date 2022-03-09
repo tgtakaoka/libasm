@@ -287,7 +287,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.extMode(), table.extMode());
 }
 
-Error TableI8051::searchName(InsnI8051 &insn) const {
+Error TableI8051::searchName(InsnI8051 &insn) {
     uint8_t count = 0;
     auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
             insn.name(), insn.flags(), I8051_PAGES, acceptModes, count);
@@ -312,7 +312,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode;
 }
 
-Error TableI8051::searchOpCode(InsnI8051 &insn) const {
+Error TableI8051::searchOpCode(InsnI8051 &insn) {
     auto opCode = insn.opCode();
     auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
             opCode, ARRAY_RANGE(TABLE_I8051), tableCode);

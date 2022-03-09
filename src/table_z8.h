@@ -29,8 +29,8 @@ class TableZ8 : public TableBase {
 public:
     TableZ8();
 
-    Error searchName(InsnZ8 &insn) const;
-    Error searchOpCode(InsnZ8 &insn, DisMemory &memory) const;
+    Error searchName(InsnZ8 &insn);
+    Error searchOpCode(InsnZ8 &insn, DisMemory &memory);
     bool isSuper8() const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
