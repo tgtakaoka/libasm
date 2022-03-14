@@ -38,8 +38,9 @@ private:
     struct Operand : public ErrorAt {
         AddrMode mode;
         uint8_t regno;
+        Error regerr;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(M_NONE), regno(0), val16(0) {}
+        Operand() : ErrorAt(), mode(M_NONE), regno(0), regerr(OK), val16(0) {}
     };
 
     Error parseIndirect(StrScanner &scan, Operand &opr);

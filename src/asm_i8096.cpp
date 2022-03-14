@@ -20,9 +20,11 @@ namespace libasm {
 namespace i8096 {
 
 Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) {
-    op.regno = parseExpr16(scan, op);
+    Operand regop;
+    op.regno = parseExpr16(scan, regop);
     if (parserError())
         return getError();
+    setErrorIf(scan, op.regerr = regop.getError());
     if (scan.skipSpaces().expect(']'))
         return OK;
     return setError(scan, MISSING_CLOSING_BRACKET);
@@ -80,10 +82,10 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
         insn.emitOperand8(op.regno);
         return OK;
     case M_IDX16:
-        if (op.val16 == 0)
+        if (op.isOK() && op.val16 == 0)
             goto indir;
         insn.embedAa(AA_IDX);
-        if (!overflowRel8(static_cast<int16_t>(op.val16))) {
+        if (op.isOK() && !overflowRel8(static_cast<int16_t>(op.val16))) {
             insn.emitOperand8(op.regno);
             insn.emitOperand8(op.val16);
         } else {
@@ -92,7 +94,7 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
         }
         return OK;
     default:  // M_ADDR
-        if (!overflowUint8(op.val16)) {
+        if (op.isOK() && !overflowUint8(op.val16)) {
             insn.embedAa(AA_REG);
             insn.emitOperand8(op.val16);
         } else {
@@ -105,13 +107,14 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
 }
 
 Error AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
-    const Config::uintptr_t target = op.val16;
+    Config::uintptr_t target;
     Config::uintptr_t base;
     Config::ptrdiff_t delta;
     switch (mode) {
     case M_REL8:
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
+        target = op.getError() ? base : op.val16;
         delta = target - base;
         if (overflowRel8(delta))
             return setError(OPERAND_TOO_FAR);
@@ -119,6 +122,7 @@ Error AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) 
         return OK;
     case M_REL11:
         base = insn.address() + 2;
+        target = op.getError() ? base : op.val16;
         delta = target - base;
         if (delta < -0x400 || delta >= 0x400)
             return setError(OPERAND_TOO_FAR);
@@ -127,6 +131,7 @@ Error AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) 
         return OK;
     default:  // M_REL16
         base = insn.address() + 3;
+        target = op.getError() ? base : op.val16;
         delta = target - base;
         insn.emitOperand16(delta);
         return OK;
