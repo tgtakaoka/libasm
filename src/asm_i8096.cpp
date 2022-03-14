@@ -75,10 +75,13 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
         }
         return OK;
     case M_INDIR:
+    indir:
         insn.embedAa(AA_INDIR);
         insn.emitOperand8(op.regno);
         return OK;
     case M_IDX16:
+        if (op.val16 == 0)
+            goto indir;
         insn.embedAa(AA_IDX);
         if (!overflowRel8(static_cast<int16_t>(op.val16))) {
             insn.emitOperand8(op.regno);
