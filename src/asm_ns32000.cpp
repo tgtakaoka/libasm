@@ -126,7 +126,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             const auto size = base.size();
             if (size) {
                 op.val32 = parseExpr32(base, op);
-                p += size;
+                p += size - base.size();
             } else {
                 op.val32 = parseExpr32(p, op);
             }
