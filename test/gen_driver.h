@@ -17,10 +17,10 @@
 #ifndef __GEN_DRIVER_H__
 #define __GEN_DRIVER_H__
 
-#include <stdio.h>
-#include <string.h>
-
 #include <string>
+
+#include <cstdio>
+#include <cstring>
 
 #include "cli_listing.h"
 #include "dis_base.h"

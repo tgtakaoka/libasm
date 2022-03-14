@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_BUFFER_H__
-#define __TEXT_BUFFER_H__
-
-#include <stdint.h>
+#ifndef __TOKENIZED_TEXT_H__
+#define __TOKENIZED_TEXT_H__
 
 #include <string>
 #include <vector>
+
+#include <cstdint>
 
 namespace libasm {
 namespace test {
@@ -44,20 +44,6 @@ private:
     mutable int _count;
 
     static std::vector<uint8_t> tokenize(const char *text);
-};
-
-class TextBuffer {
-public:
-    TextBuffer(int max) : _max(max), _buffer(new char[max + 1]) {}
-    virtual ~TextBuffer() { delete[] _buffer; }
-
-    char *buffer() { return _buffer; }
-    const char *buffer() const { return _buffer; }
-    const int size() const { return _max; }
-
-private:
-    const int _max;
-    char *_buffer;
 };
 
 }  // namespace test

@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-#include "text_buffer.h"
+#include "tokenized_text.h"
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 namespace libasm {
 namespace test {
 
-static bool isBdigits(const char *&r, const char *p) {
-    if (*p != '0' && *p != '1')
-        return false;
-    while (*p == '0' || *p == '1')
-        p++;
-    r = p;
-    return true;
-}
-
-static bool isXdigits(const char *&r, const char *p) {
+static inline bool isXdigits(const char *&r, const char *p) {
     if (!isxdigit(*p))
         return false;
     while (isxdigit(*p))
@@ -40,7 +31,7 @@ static bool isXdigits(const char *&r, const char *p) {
     return true;
 }
 
-static bool isDigits(const char *&r, const char *p) {
+static inline bool isDigits(const char *&r, const char *p) {
     if (!isdigit(*p))
         return false;
     while (isdigit(*p))
@@ -51,11 +42,7 @@ static bool isDigits(const char *&r, const char *p) {
 
 static bool isNumber(const char *p, const char *&r) {
     const char *s;
-    if (*p == '$' && isXdigits(s, p + 1) && s - p >= 3) {
-        r = s;
-        return true;
-    }
-    if (*p == '%' && isBdigits(s, p + 1) && s - p >= 9) {
+    if (p[0] == '0' && toupper(p[1]) == 'X' && isXdigits(s, p + 2)) {
         r = s;
         return true;
     }
@@ -63,11 +50,11 @@ static bool isNumber(const char *p, const char *&r) {
         r = s + 1;
         return true;
     }
-    if (p[0] == '0' && toupper(p[1]) == 'X' && isXdigits(s, p + 2)) {
+    if (isDigits(s, p)) {
         r = s;
         return true;
     }
-    if (isDigits(s, p)) {
+    if (*p == '$' && isXdigits(s, p + 1) && s - p >= 3) {
         r = s;
         return true;
     }

@@ -17,15 +17,15 @@
 #ifndef __TEST_GENERATOR_H__
 #define __TEST_GENERATOR_H__
 
-#include <ctype.h>
-#include <stdio.h>
-
 #include <unordered_map>
 #include <unordered_set>
 
+#include <cctype>
+#include <cstdio>
+
 #include "array_memory.h"
 #include "dis_base.h"
-#include "text_buffer.h"
+#include "tokenized_text.h"
 
 namespace libasm {
 namespace test {
@@ -156,27 +156,29 @@ private:
 template <typename Conf>
 class TestData {
 public:
-    TestData() : _textBuffer(256) {}
+    TestData() : _operand_size(256), _operands(new char[_operand_size + 1]) {}
+    ~TestData() { delete[] _operands; }
 
     const typename Conf::uintptr_t address() const { return _address; }
     const char *name() const { return _name.c_str(); }
     const uint8_t length() const { return _length; }
     const uint8_t *bytes() const { return _bytes; }
-    const char *operands() const { return _textBuffer.buffer(); }
+    const char *operands() const { return _operands; }
 
     Error tryGenerate(Disassembler &dis, typename Conf::uintptr_t addr, uint8_t *memory, int size) {
         _address = addr;
         _bytes = memory;
         ArrayMemory mem(addr, memory, size);
         Insn insn(addr);
-        const Error error = dis.decode(mem, insn, _textBuffer.buffer(), _textBuffer.size());
+        const Error error = dis.decode(mem, insn, _operands, _operand_size);
         _name = std::string(insn.name());
         _length = insn.length();
         return error;
     }
 
 private:
-    TextBuffer _textBuffer;
+    const std::size_t _operand_size;
+    char *_operands;
     typename Conf::uintptr_t _address;
     const uint8_t *_bytes;
     std::string _name;
