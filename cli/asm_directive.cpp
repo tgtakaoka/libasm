@@ -392,13 +392,15 @@ Error AsmCommonDirective::includeFile(StrScanner &scan, StrScanner &label, CliMe
     StrScanner p(scan);
     if (quote) {
         p.trimStart([quote](char s) { return s != quote; });
-        if (*p != quote)
+        filename.trimEndAt(p);
+        if (!p.expect(quote))
             return setError(p, quote == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
     } else {
         p.trimStart([](char s) { return !isspace(s); });
+        filename.trimEndAt(p);
     }
     scan = p;
-    return openSource(filename.trimEndAt(p));
+    return openSource(filename);
 }
 
 Error AsmCommonDirective::defineUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
