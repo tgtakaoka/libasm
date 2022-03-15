@@ -23,7 +23,7 @@ help:
 -include ../Makefile.asl
 -include ../Makefile.gas
 
-.PHONY:: generate asm-test asl-test gas-test
+.PHONY:: gen generate asm-test asl-test gas-test
 .PHONY:: clean clean-gen clean-asm clean-asl clean-gas
 
 # target which has ".inc" suffix for output.
@@ -39,11 +39,7 @@ endef
 define gen-out # target
 $(if $(call out-inc,$(1)),gen_$(1).inc,gen_$(1).asm)
 endef
-define generator-rule # arch
-../gen_$(1):
-	+$(MAKE) --no-print-directory -C .. gen_$(1)
 
-endef
 # generator options
 define gas-out
 $(filter $(1),$(GAS_targets))
@@ -53,7 +49,7 @@ $(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-c -u,-u))
 endef
 # make rule for auto generation file
 define gen-rule # arch target out opt
-$(3): ../gen_$(1)
+$(3):
 	../gen_$(1) $(4) -C $(CPU_$(2)) -o $$@ -l gen_$(2).lst
 
 endef
@@ -61,12 +57,13 @@ endef
 GEN_OUTS = $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),$(call gen-out,$(t))))
 
 # rules for auto generations
-$(eval $(foreach a,$(ARCHS),$(call generator-rule,$(a))))
+gen:
+	$(MAKE) -C .. gen
 
 $(eval $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),\
 	$(call gen-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
 
-generate: $(GEN_OUTS)
+generate: gen $(GEN_OUTS)
 
 ASM=../../cli/asm
 $(ASM):

@@ -55,7 +55,7 @@ OBJS = 	$(TEST_OBJS) $(GEN_OBJS) $(OBJS_test) $(OBJS_gen) \
 BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
 
 cli_listing.o: ../cli/cli_listing.cpp
-	$(CXX) $(CXX_FLAGS) $(INCLUDES) $(CPPFLAGS) -c -o $@ $^
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(CPPFLAGS) -c -o $@ $^
 
 -include $(OBJS:.o=.d)
 
