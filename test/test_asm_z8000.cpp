@@ -315,6 +315,12 @@ static void test_load_and_exchange() {
         TEST("POPL 0x561234,@RR4",     0x5540, 0xD600, 0x1234);
         TEST("POPL 0x120034(R2),@RR4", 0x5542, 0x1234);
         TEST("POPL 0x561234(R2),@RR4", 0x5542, 0xD600, 0x1234);
+        ERRT("POP  R5,@RR4",           REGISTERS_OVERLAPPED);
+        ERRT("POP  @RR4,@RR4",         REGISTERS_OVERLAPPED);
+        ERRT("POP  0x120034(R4),@RR4", REGISTERS_OVERLAPPED);
+        ERRT("POPL RR4,@RR4",          REGISTERS_OVERLAPPED);
+        ERRT("POPL @RR4,@RR4",         REGISTERS_OVERLAPPED);
+        ERRT("POPL 0x120034(R5),@RR4", REGISTERS_OVERLAPPED);
     } else {
         TEST("POP  R2,@R4",         0x9742);
         TEST("POP  @R2,@R4",        0x1742);
@@ -324,6 +330,12 @@ static void test_load_and_exchange() {
         TEST("POPL @R2,@R4",        0x1542);
         TEST("POPL 0x1234,@R4",     0x5540, 0x1234);
         TEST("POPL 0x1234(R2),@R4", 0x5542, 0x1234);
+        ERRT("POP  R4,@R4",         REGISTERS_OVERLAPPED);
+        ERRT("POP  @R4,@R4",        REGISTERS_OVERLAPPED);
+        ERRT("POP  0x1234(R4),@R4", REGISTERS_OVERLAPPED);
+        ERRT("POPL RR2,@R3",        REGISTERS_OVERLAPPED);
+        ERRT("POPL @R4,@R4",        REGISTERS_OVERLAPPED);
+        ERRT("POPL 0x1234(R4),@R4", REGISTERS_OVERLAPPED);
     }
 
     // Push
@@ -341,6 +353,12 @@ static void test_load_and_exchange() {
         TEST("PUSHL @RR4,0x120034(R2)", 0x5142, 0x1234);
         TEST("PUSHL @RR4,0x561234(R2)", 0x5142, 0xD600, 0x1234);
         TEST("PUSH  @RR4,#0x1234",      0x0D49, 0x1234);
+        ERRT("PUSH  @RR4,R5",           REGISTERS_OVERLAPPED);
+        ERRT("PUSH  @RR4,@RR4",         REGISTERS_OVERLAPPED);
+        ERRT("PUSH  @RR4,0x120034(R4)", REGISTERS_OVERLAPPED);
+        ERRT("PUSHL @RR4,RR4",          REGISTERS_OVERLAPPED);
+        ERRT("PUSHL @RR4,@RR4",         REGISTERS_OVERLAPPED);
+        ERRT("PUSHL @RR4,0x120034(R5)", REGISTERS_OVERLAPPED);
     } else {
         TEST("PUSH  @R4,R2",         0x9342);
         TEST("PUSH  @R4,@R2",        0x1342);
@@ -351,6 +369,12 @@ static void test_load_and_exchange() {
         TEST("PUSHL @R4,0x1234",     0x5140, 0x1234);
         TEST("PUSHL @R4,0x1234(R2)", 0x5142, 0x1234);
         TEST("PUSH  @R4,#0x1234",    0x0D49, 0x1234);
+        ERRT("PUSH  @R4,R4" ,        REGISTERS_OVERLAPPED);
+        ERRT("PUSH  @R4,@R4",        REGISTERS_OVERLAPPED);
+        ERRT("PUSH  @R4,0x1234(R4)", REGISTERS_OVERLAPPED);
+        ERRT("PUSHL @R5,RR4",        REGISTERS_OVERLAPPED);
+        ERRT("PUSHL @R4,@R4",        REGISTERS_OVERLAPPED);
+        ERRT("PUSHL @R4,0x1234(R4)", REGISTERS_OVERLAPPED);
     }
 }
 
@@ -1468,7 +1492,7 @@ static void test_string_manipulation() {
         ERRT("TRDB @R1,@R2,R3", REGISTER_NOT_ALLOWED);
         ERRT("TRDB @R2,@R0,R3", REGISTER_NOT_ALLOWED);
         ERRT("TRDB @R2,@R1,R3", REGISTER_NOT_ALLOWED);
-        ERRT("TRDB @R2,@R2,R3", REGISTERS_OVERWRAPPED);
+        ERRT("TRDB @R2,@R2,R3", REGISTERS_OVERLAPPED);
         TEST("TRDB @R3,@R2,R4", 0xB838, 0x0420);
         TEST("TRDB @R3,@R2,R0", 0xB838, 0x0020);
         ERRT("TRDB @R3,@R2,R1", REGISTER_NOT_ALLOWED);

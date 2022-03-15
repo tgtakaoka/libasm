@@ -72,8 +72,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Operand not aligned");
     case OPCODE_HAS_NO_EFFECT:
         return PSTR("Opcode has no effect");
-    case REGISTERS_OVERWRAPPED:
-        return PSTR("Registers overwrapped");
+    case REGISTERS_OVERLAPPED:
+        return PSTR("Registers overlapped");
     case MISSING_CLOSING_BRACKET:
         return PSTR("Missing closing bracket");
 

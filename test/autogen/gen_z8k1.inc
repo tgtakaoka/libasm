@@ -53,16 +53,16 @@
       push   @rr2, #0x2a2b
       cpl    rr0, #0x01020304
       cpl    rr0, @rr2
-      pushl  @rr2, @rr2
+      pushl  @rr2, @rr4
       subl   rr0, #0x01020304
       subl   rr0, @rr2
-      push   @rr2, @rr2
+      push   @rr2, @rr4
       ldl    rr0, #0x01020304
       ldl    rr0, @rr2
-      popl   @rr2, @rr2
+      popl   @rr4, @rr2
       addl   rr0, #0x01020304
       addl   rr0, @rr2
-      pop    @rr2, @rr2
+      pop    @rr4, @rr2
       multl  rq0, #0x01020304
       multl  rq0, @rr2
       mult   rr0, #0x0102
@@ -561,11 +561,11 @@
       resflg c,z,s,p
       comflg c,z,s,p
       cpl    rr0, rr2
-      pushl  @rr2, rr2
+      pushl  @rr2, rr4
       subl   rr0, rr2
       push   @rr2, r1
       ldl    rr0, rr2
-      popl   rr2, @rr2
+      popl   rr4, @rr2
       addl   rr0, rr2
       pop    r1, @rr2
       multl  rq0, rr2

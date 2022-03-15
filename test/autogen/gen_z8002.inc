@@ -53,16 +53,16 @@
       PUSH   @R1, #1A1BH
       CPL    RR0, #01020304H
       CPL    RR0, @R1
-      PUSHL  @R1, @R1
+      PUSHL  @R1, @R2
       SUBL   RR0, #01020304H
       SUBL   RR0, @R1
-      PUSH   @R1, @R1
+      PUSH   @R1, @R2
       LDL    RR0, #01020304H
       LDL    RR0, @R1
-      POPL   @R1, @R1
+      POPL   @R2, @R1
       ADDL   RR0, #01020304H
       ADDL   RR0, @R1
-      POP    @R1, @R1
+      POP    @R2, @R1
       MULTL  RQ0, #01020304H
       MULTL  RQ0, @R1
       MULT   RR0, #0102H
@@ -259,19 +259,19 @@
       CPL    RR0, 0102H
       CPL    RR0, 1112H(R1)
       PUSHL  @R1, 1112H
-      PUSHL  @R1, 1213H(R1)
+      PUSHL  @R1, 1314H(R2)
       SUBL   RR0, 0102H
       SUBL   RR0, 1112H(R1)
       PUSH   @R1, 1112H
-      PUSH   @R1, 1213H(R1)
+      PUSH   @R1, 1314H(R2)
       LDL    RR0, 0102H
       LDL    RR0, 1112H(R1)
       POPL   1112H, @R1
-      POPL   1213H(R1), @R1
+      POPL   1314H(R2), @R1
       ADDL   RR0, 0102H
       ADDL   RR0, 1112H(R1)
       POP    1112H, @R1
-      POP    1213H(R1), @R1
+      POP    1314H(R2), @R1
       MULTL  RQ0, 0102H
       MULTL  RQ0, 1112H(R1)
       MULT   RR0, 0102H
@@ -483,11 +483,11 @@
       CPL    RR0, RR2
       PUSHL  @R1, RR2
       SUBL   RR0, RR2
-      PUSH   @R1, R1
+      PUSH   @R1, R2
       LDL    RR0, RR2
       POPL   RR2, @R1
       ADDL   RR0, RR2
-      POP    R1, @R1
+      POP    R2, @R1
       MULTL  RQ0, RR2
       MULT   RR0, R1
       DIVL   RQ0, RR2

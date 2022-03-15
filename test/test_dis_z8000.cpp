@@ -295,6 +295,12 @@ static void test_load_and_exchange() {
         TEST(POPL, "561234H, @RR4",       0x5540, 0xD600, 0x1234);
         TEST(POPL, "|120034H|(R2), @RR4", 0x5542, 0x1234);
         TEST(POPL, "561234H(R2), @RR4",   0x5542, 0xD600, 0x1234);
+        ERRV(POP,  "R5, @RR4",            0x9745);
+        ERRV(POP,  "@RR4, @RR4",          0x1744);
+        ERRV(POP,  "|120034H|(R4), @RR4", 0x5744, 0x1234);
+        ERRV(POPL, "RR4, @RR4",           0x9544);
+        ERRV(POPL, "@RR4, @RR4",          0x1544);
+        ERRV(POPL, "|120034H|(R5), @RR4", 0x5545, 0x1234);
     } else {
         TEST(POP,  "R2, @R4",        0x9742);
         TEST(POP,  "@R2, @R4",       0x1742);
@@ -304,6 +310,12 @@ static void test_load_and_exchange() {
         TEST(POPL, "@R2, @R4",       0x1542);
         TEST(POPL, "1234H, @R4",     0x5540, 0x1234);
         TEST(POPL, "1234H(R2), @R4", 0x5542, 0x1234);
+        ERRV(POP,  "R4,@R4",         0x9744);
+        ERRV(POP,  "@R4,@R4",        0x1744);
+        ERRV(POP,  "1234H(R4), @R4", 0x5744, 0x1234);
+        ERRV(POPL, "RR2, @R3",       0x9532);
+        ERRV(POPL, "@R4, @R4",       0x1544);
+        ERRV(POPL, "1234H(R4), @R4", 0x5544, 0x1234);
     }
 
     // Push
@@ -321,6 +333,12 @@ static void test_load_and_exchange() {
         TEST(PUSHL, "@RR4, |120034H|(R2)", 0x5142, 0x1234);
         TEST(PUSHL, "@RR4, 561234H(R2)",   0x5142, 0xD600, 0x1234);
         TEST(PUSH,  "@RR4, #1234H",        0x0D49, 0x1234);
+        ERRV(PUSH,  "@RR4, R5",            0x9345);
+        ERRV(PUSH,  "@RR4, @RR4",          0x1344);
+        ERRV(PUSH,  "@RR4, |120034H|(R4)", 0x5344, 0x1234);
+        ERRV(PUSHL, "@RR4, RR4",           0x9144);
+        ERRV(PUSHL, "@RR4, @RR4",          0x1144);
+        ERRV(PUSHL, "@RR4, |120034H|(R5)", 0x5145, 0x1234);
     } else {
         TEST(PUSH,  "@R4, R2",        0x9342);
         TEST(PUSH,  "@R4, @R2",       0x1342);
@@ -331,6 +349,12 @@ static void test_load_and_exchange() {
         TEST(PUSHL, "@R4, 1234H",     0x5140, 0x1234);
         TEST(PUSHL, "@R4, 1234H(R2)", 0x5142, 0x1234);
         TEST(PUSH,  "@R4, #1234H",    0x0D49, 0x1234);
+        ERRV(PUSH,  "@R4, R4" ,       0x9344);
+        ERRV(PUSH,  "@R4, @R4",       0x1344);
+        ERRV(PUSH,  "@R4, 1234H(R4)", 0x5344, 0x1234);
+        ERRV(PUSHL, "@R5, RR4",       0x9154);
+        ERRV(PUSHL, "@R4, @R4",       0x1144);
+        ERRV(PUSHL, "@R4, 1234H(R4)", 0x5144, 0x1234);
     }
 }
 

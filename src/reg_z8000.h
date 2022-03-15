@@ -161,7 +161,7 @@ public:
     StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs) const;
     static uint8_t encodeIntrName(IntrName name);
 
-    static bool checkOverwrap(RegName dst, RegName src, RegName cnt);
+    static bool checkOverlap(RegName dst, RegName src, RegName cnt = REG_UNDEF);
 
 private:
     StrBuffer &outCtlName(StrBuffer &out, RegName name) const;

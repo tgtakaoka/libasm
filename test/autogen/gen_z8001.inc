@@ -53,16 +53,16 @@
       PUSH   @RR2, #2A2BH
       CPL    RR0, #01020304H
       CPL    RR0, @RR2
-      PUSHL  @RR2, @RR2
+      PUSHL  @RR2, @RR4
       SUBL   RR0, #01020304H
       SUBL   RR0, @RR2
-      PUSH   @RR2, @RR2
+      PUSH   @RR2, @RR4
       LDL    RR0, #01020304H
       LDL    RR0, @RR2
-      POPL   @RR2, @RR2
+      POPL   @RR4, @RR2
       ADDL   RR0, #01020304H
       ADDL   RR0, @RR2
-      POP    @RR2, @RR2
+      POP    @RR4, @RR2
       MULTL  RQ0, #01020304H
       MULTL  RQ0, @RR2
       MULT   RR0, #0102H
@@ -561,11 +561,11 @@
       RESFLG C,Z,S,P
       COMFLG C,Z,S,P
       CPL    RR0, RR2
-      PUSHL  @RR2, RR2
+      PUSHL  @RR2, RR4
       SUBL   RR0, RR2
       PUSH   @RR2, R1
       LDL    RR0, RR2
-      POPL   RR2, @RR2
+      POPL   RR4, @RR2
       ADDL   RR0, RR2
       POP    R1, @RR2
       MULTL  RQ0, RR2

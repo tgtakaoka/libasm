@@ -70,6 +70,10 @@ public:
         const uint8_t opc = opCode() >> 8;
         return opc == 0x1C || opc == 0x5C;
     }
+    bool isPushPopInsn() const {
+        const uint8_t opc = (opCode() >> 8) & ~0xC0;
+        return opc == 0x11 || opc == 0x13 || opc == 0x15 || opc == 0x17;
+    }
 
 private:
     uint8_t operandPos() {

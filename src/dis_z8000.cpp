@@ -329,15 +329,34 @@ Error DisZ8000::checkPostWord(const InsnZ8000 &insn) {
     return OK;
 }
 
-Error DisZ8000::checkRegisterOverwrap(const InsnZ8000 &insn) {
+static OprSize registerSize(const InsnZ8000 &insn, AddrMode mode) {
+    if (mode == M_IR)
+        return SZ_ADDR;
+    if (mode == M_GEND && (insn.opCode() >> 14) == 2) // M_R
+        return insn.oprSize();
+    return SZ_WORD;
+}
+
+Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
     const AddrMode dmode = insn.dstMode();
+    const AddrMode smode = insn.srcMode();
     const uint8_t dnum = modeField(insn, insn.dstField());
     const uint8_t snum = modeField(insn, insn.srcField());
-    const uint8_t cnum = modeField(insn, MF_P8);
+    const OprSize dsize = registerSize(insn, dmode);
+    const OprSize ssize = registerSize(insn, smode);
+    const RegName dst = RegZ8000::decodeRegNum(dnum, dsize);
+    const RegName src = RegZ8000::decodeRegNum(snum, ssize);
+    if (insn.isPushPopInsn()) {
+        if (RegZ8000::checkOverlap(dst, src))
+            return setError(REGISTERS_OVERLAPPED);
+        return OK;
+    }
     if (dmode == M_IR && dnum == 0)
         return setError(REGISTER_NOT_ALLOWED);
     if (snum == 0)
         return setError(REGISTER_NOT_ALLOWED);
+    const uint8_t cnum = modeField(insn, MF_P8);
+    const RegName cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!TableZ8000.segmentedModel() && (dnum == 1 || snum == 1))
@@ -347,15 +366,10 @@ Error DisZ8000::checkRegisterOverwrap(const InsnZ8000 &insn) {
             return setError(REGISTER_NOT_ALLOWED);
     }
 
-    const RegName dst = RegZ8000::decodeRegNum(dnum, dmode == M_IR ? SZ_ADDR : SZ_WORD);
-    if (dst == REG_ILLEGAL)
+    if (dst == REG_ILLEGAL || src == REG_ILLEGAL)
         return OK;
-    const RegName src = RegZ8000::decodeRegNum(snum, SZ_ADDR);
-    if (src == REG_ILLEGAL)
-        return OK;
-    const RegName cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
-    if (RegZ8000::checkOverwrap(dst, src, cnt))
-        return setError(REGISTERS_OVERWRAPPED);
+    if (RegZ8000::checkOverlap(dst, src, cnt))
+        return setError(REGISTERS_OVERLAPPED);
     return OK;
 }
 
@@ -377,7 +391,7 @@ Error DisZ8000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableZ8000.getError());
     if (checkPostWord(insn))
         return getError();
-    if (insn.isThreeRegsInsn() && checkRegisterOverwrap(insn))
+    if ((insn.isPushPopInsn() || insn.isThreeRegsInsn()) && checkRegisterOverlap(insn))
         return getError();
     if (insn.isLoadMultiInsn()) {
         const uint8_t reg = modeField(insn, MF_P8);

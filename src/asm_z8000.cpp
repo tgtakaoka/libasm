@@ -308,14 +308,14 @@ Error AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, M
     }
 }
 
-Error AsmZ8000::checkRegisterOverwrap(
+Error AsmZ8000::checkRegisterOverlap(
         const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp) {
     if (dstOp.mode == M_IR && (dstOp.reg == REG_R0 || dstOp.reg == REG_RR0))
         return setError(dstOp, REGISTER_NOT_ALLOWED);
     if (srcOp.mode == M_IR && (srcOp.reg == REG_R0 || srcOp.reg == REG_RR0))
         return setError(srcOp, REGISTER_NOT_ALLOWED);
-    if (RegZ8000::checkOverwrap(dstOp.reg, srcOp.reg, cntOp.reg))
-        return setError(dstOp, REGISTERS_OVERWRAPPED);
+    if (RegZ8000::checkOverlap(dstOp.reg, srcOp.reg, cntOp.reg))
+        return setError(dstOp, REGISTERS_OVERLAPPED);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!TableZ8000.segmentedModel()) {
@@ -524,8 +524,10 @@ Error AsmZ8000::encode(StrScanner &scan, Insn &_insn) {
     insn.setAddrMode(dstOp.mode, srcOp.mode, ex1Op.mode, ex2Op.mode);
     if (TableZ8000.searchName(insn))
         return setError(TableZ8000.getError());
-    if (insn.isThreeRegsInsn() && checkRegisterOverwrap(insn, dstOp, srcOp, ex1Op))
+    if (insn.isThreeRegsInsn() && checkRegisterOverlap(insn, dstOp, srcOp, ex1Op))
         return getError();
+    if (insn.isPushPopInsn() && RegZ8000::checkOverlap(dstOp.reg, srcOp.reg))
+        return setError(dstOp, REGISTERS_OVERLAPPED);
     if (insn.isLoadMultiInsn()) {
         const RegName reg = insn.dstMode() == M_R ? dstOp.reg : srcOp.reg;
         if (RegZ8000::encodeGeneralRegName(reg) + ex1Op.val32 > 16)

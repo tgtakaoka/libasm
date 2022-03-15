@@ -66,7 +66,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define ERIO(name, opr, ...) ERRT(name, opr, ILLEGAL_OPERAND, __VA_ARGS__)
 #define ERIR(name, opr, ...) ERRT(name, opr, ILLEGAL_REGISTER, __VA_ARGS__)
 #define EROA(name, opr, ...) ERRT(name, opr, OPERAND_NOT_ALLOWED, __VA_ARGS__)
-#define ERRV(name, opr, ...) ERRT(name, opr, REGISTERS_OVERWRAPPED, __VA_ARGS__)
+#define ERRV(name, opr, ...) ERRT(name, opr, REGISTERS_OVERLAPPED, __VA_ARGS__)
 #define ERRR(name, opr, ...) ERRT(name, opr, REGISTER_NOT_ALLOWED, __VA_ARGS__)
 #define ERUI(name, opr, ...) ERRT(name, opr, UNKNOWN_INSTRUCTION, __VA_ARGS__)
 #define ERUR(name, opr, ...) ERRT(name, opr, UNKNOWN_REGISTER, __VA_ARGS__)

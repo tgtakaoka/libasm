@@ -53,16 +53,16 @@
       push   @r1, #0x1a1b
       cpl    rr0, #0x01020304
       cpl    rr0, @r1
-      pushl  @r1, @r1
+      pushl  @r1, @r2
       subl   rr0, #0x01020304
       subl   rr0, @r1
-      push   @r1, @r1
+      push   @r1, @r2
       ldl    rr0, #0x01020304
       ldl    rr0, @r1
-      popl   @r1, @r1
+      popl   @r2, @r1
       addl   rr0, #0x01020304
       addl   rr0, @r1
-      pop    @r1, @r1
+      pop    @r2, @r1
       multl  rq0, #0x01020304
       multl  rq0, @r1
       mult   rr0, #0x0102
@@ -259,19 +259,19 @@
       cpl    rr0, 0x0102
       cpl    rr0, 0x1112(r1)
       pushl  @r1, 0x1112
-      pushl  @r1, 0x1213(r1)
+      pushl  @r1, 0x1314(r2)
       subl   rr0, 0x0102
       subl   rr0, 0x1112(r1)
       push   @r1, 0x1112
-      push   @r1, 0x1213(r1)
+      push   @r1, 0x1314(r2)
       ldl    rr0, 0x0102
       ldl    rr0, 0x1112(r1)
       popl   0x1112, @r1
-      popl   0x1213(r1), @r1
+      popl   0x1314(r2), @r1
       addl   rr0, 0x0102
       addl   rr0, 0x1112(r1)
       pop    0x1112, @r1
-      pop    0x1213(r1), @r1
+      pop    0x1314(r2), @r1
       multl  rq0, 0x0102
       multl  rq0, 0x1112(r1)
       mult   rr0, 0x0102
@@ -483,11 +483,11 @@
       cpl    rr0, rr2
       pushl  @r1, rr2
       subl   rr0, rr2
-      push   @r1, r1
+      push   @r1, r2
       ldl    rr0, rr2
       popl   rr2, @r1
       addl   rr0, rr2
-      pop    r1, @r1
+      pop    r2, @r1
       multl  rq0, rr2
       mult   rr0, r1
       divl   rq0, rr2

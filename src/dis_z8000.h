@@ -71,7 +71,7 @@ private:
     Error decodeOperand(
             DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, ModeField field);
     Error checkPostWord(const InsnZ8000 &insn);
-    Error checkRegisterOverwrap(const InsnZ8000 &insn);
+    Error checkRegisterOverlap(const InsnZ8000 &insn);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
