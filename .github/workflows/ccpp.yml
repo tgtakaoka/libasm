@@ -21,9 +21,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: test
+    - name: build test and run
       run: cd test; make test
-    - name: test generator
-      run: cd test; make generate
-    - name: command line interface
+    - name: build generator
+      run: cd test; make gen
+    - name: build command line interface
       run: cd cli; make cli
