@@ -117,13 +117,15 @@ Error ValueParser::parseNumber(StrScanner &scan, Value &val, const uint8_t base)
     StrScanner p(scan);
     if (!isValidDigit(*p, base))
         return setError(scan, ILLEGAL_CONSTANT);
+    const uint32_t limit = UINT32_MAX / base;
+    const uint8_t limit_digit = UINT32_MAX % base;
     uint32_t v = 0;
     while (isValidDigit(*p, base)) {
-        const uint32_t prev = v;
-        v *= base;
-        v += toNumber(*p, base);
-        if (v < prev)
+        const uint8_t n = toNumber(*p, base);
+        if (v > limit || (v == limit && n > limit_digit))
             return setError(scan, OVERFLOW_RANGE);
+        v *= base;
+        v += n;
         ++p;
     }
     scan = p;

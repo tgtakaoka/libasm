@@ -76,6 +76,7 @@ static void test_dec_constant() {
     E32("2147483648", 0x80000000, OK);
     E32("4294967295", 0xffffffff, OK);
     E32("4294967296", 0,          OVERFLOW_RANGE);
+    E32("9999999999", 0,          OVERFLOW_RANGE);
 }
 
 static void test_hex_constant() {
@@ -96,6 +97,7 @@ static void test_hex_constant() {
     E32("0x80000000",  0x80000000, OK);
     E32("0xFFFFffff",  0xffffffff, OK);
     E32("0x100000000", 0,          OVERFLOW_RANGE);
+    E32("0x7FFFFFFFF", 0,          OVERFLOW_RANGE);
 }
 
 static void test_oct_constant() {
@@ -115,6 +117,7 @@ static void test_oct_constant() {
     E32("020000000000", 0x80000000, OK);
     E32("037777777777", 0xffffffff, OK);
     E32("040000000000", 0,          OVERFLOW_RANGE);
+    E32("047777777777", 0,          OVERFLOW_RANGE);
 }
 
 static void test_bin_constant() {
@@ -135,6 +138,7 @@ static void test_bin_constant() {
     E32("0b10000000000000000000000000000000",  0x80000000, OK);
     E32("0b11111111111111111111111111111111",  0xffffffff, OK);
     E32("0b100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
+    E32("0b111111111111111111111111111111111", 0,          OVERFLOW_RANGE);
 }
 
 static void test_unary_operator() {
