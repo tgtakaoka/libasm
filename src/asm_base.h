@@ -58,6 +58,8 @@ protected:
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error);
     /** Parse |expr| text and get value as unsigned 32 bit. */
     uint32_t parseExpr32(StrScanner &expr, ErrorAt &error);
+    /** Parse |expr| text and get value. */
+    Value parseExpr(StrScanner &expr, ErrorAt &error);
     /** Return error caused by |parseExpr16| and |parseExpr32|. */
     Error parserError() { return _parser.getError(); }
 

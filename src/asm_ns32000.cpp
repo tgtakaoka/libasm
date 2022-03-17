@@ -201,7 +201,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return setError(a, UNKNOWN_REGISTER);
     }
 
-    op.val32 = parseExpr32(p, op);
+    const Value val = parseExpr(p, op);
     StrScanner t(p);
     if (*t == '.' || *t == 'e' || *t == 'E' || parserError() == OVERFLOW_RANGE ||
             op.getError() == UNDEFINED_SYMBOL) {
@@ -212,12 +212,18 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             op.mode = M_IMM;
             op.size = SZ_LONG;
             scan = end;
-            return op.setOK();
+            return setError(op.setOK());
         }
     }
     if (parserError())
         return getError();
+    op.val32 = val.getUnsigned();
     op.size = SZ_DOUBLE;
+    if (val.isSigned()) {
+        op.float64 = val.getSigned();
+    } else {
+        op.float64 = val.getUnsigned();
+    }
     if (*p.skipSpaces() == ',' || endOfLine(*p)) {
         op.mode = M_IMM;  // M_REL
         scan = p;
@@ -408,20 +414,19 @@ Error AsmNs32000::emitBitField(
 Error AsmNs32000::emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size) {
     switch (size) {
     case SZ_BYTE:
-        insn.emitOperand8(static_cast<uint8_t>(op.val32));
+        insn.emitOperand8(op.val32);
         break;
     case SZ_WORD:
-        insn.emitOperand16(static_cast<uint16_t>(op.val32));
+        insn.emitOperand16(op.val32);
         break;
     case SZ_DOUBLE:
         insn.emitOperand32(op.val32);
         break;
     case SZ_FLOAT:
-        insn.emitOpFloat32(
-                op.size == SZ_LONG ? static_cast<float>(op.float64) : static_cast<float>(op.val32));
+        insn.emitOpFloat32(op.float64);
         break;
     case SZ_LONG:
-        insn.emitOpFloat64(op.size == SZ_LONG ? op.float64 : static_cast<double>(op.val32));
+        insn.emitOpFloat64(op.float64);
         break;
     default:
         break;

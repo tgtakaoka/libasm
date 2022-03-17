@@ -45,13 +45,9 @@ private:
     struct Operand : public ErrorAt {
         AddrMode mode;
         RegName reg;
-        union {
-            struct {
-                uint32_t val32;
-                uint32_t disp2;
-            };
-            double float64;
-        };
+        uint32_t val32;
+        uint32_t disp2;
+        double float64;
         RegName index;
         OprSize size;
         Operand()
@@ -60,6 +56,7 @@ private:
               reg(REG_UNDEF),
               val32(0),
               disp2(0),
+              float64(0),
               index(REG_UNDEF),
               size(SZ_NONE) {}
     };

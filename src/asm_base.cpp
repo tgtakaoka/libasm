@@ -54,6 +54,14 @@ uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) {
     return value.getUnsigned();
 }
 
+Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) {
+    const Value value = _parser.eval(expr, _symtab);
+    setError(_parser);
+    if (value.isUndefined())
+        error.setErrorIf(expr, UNDEFINED_SYMBOL);
+    return value;
+}
+
 }  // namespace libasm
 
 // Local Variables:
