@@ -217,12 +217,6 @@ static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
 };
 // clang-format on
 
-struct TableTms9900::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableTms9900::EntryPage TMS9900_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
 };
@@ -236,6 +230,12 @@ static constexpr TableTms9900::EntryPage TMS99105_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS99105), ARRAY_RANGE(INDEX_TMS99105)},
         {ARRAY_RANGE(TABLE_TMS9900), ARRAY_RANGE(INDEX_TMS9900)},
         {ARRAY_RANGE(TABLE_TMS9995), ARRAY_RANGE(INDEX_TMS9995)},
+};
+
+static constexpr TableTms9900::Cpu CPU_TABLES[] PROGMEM = {
+        {TMS9900, TEXT_CPU_9900, ARRAY_RANGE(TMS9900_PAGES)},
+        {TMS9995, TEXT_CPU_9995, ARRAY_RANGE(TMS9995_PAGES)},
+        {TMS99105, TEXT_CPU_99105, ARRAY_RANGE(TMS99105_PAGES)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -258,19 +258,18 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.dstMode(), table.dstMode());
 }
 
-Error TableTms9900::searchName(
-        InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableTms9900::searchName(InsnTms9900 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
@@ -294,52 +293,28 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableTms9900::searchOpCode(
-        InsnTms9900 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableTms9900::searchOpCode(InsnTms9900 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
-            return OK;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
-
-Error TableTms9900::searchName(InsnTms9900 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableTms9900::searchOpCode(InsnTms9900 &insn) {
-    return setError(searchOpCode(insn, _table, _end));
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableTms9900::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableTms9900::EntryPage *table,
-            const TableTms9900::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {TMS9900, TEXT_CPU_9900, ARRAY_RANGE(TMS9900_PAGES)},
-        {TMS9995, TEXT_CPU_9995, ARRAY_RANGE(TMS9995_PAGES)},
-        {TMS99105, TEXT_CPU_99105, ARRAY_RANGE(TMS99105_PAGES)},
-};
 
 TableTms9900::TableTms9900() {
     setCpu(TMS9900);
 }
 
 bool TableTms9900::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -348,13 +323,13 @@ const /* PROGMEM */ char *TableTms9900::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableTms9900::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableTms9900::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_TMS, 3) == 0)
         cpu += 3;
-    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     return false;

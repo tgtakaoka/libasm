@@ -43,21 +43,16 @@ public:
     static constexpr Config::opcode_t WDM = 0x42;
     static constexpr Config::opcode_t JSL = 0x22;
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
-    const EntryPage *_table;
-    const EntryPage *_end;
+    const Cpu *_cpu;
     bool _useIndirectLong;
     bool _longAccumulator;
     bool _longIndex;
 
     bool setCpu(CpuType cpuType);
-
-    Error searchName(InsnMos6502 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(InsnMos6502 &insn, bool useIndirectLong, const EntryPage *pages,
-            const EntryPage *end) const;
 };
 
 extern TableMos6502 TableMos6502;

@@ -269,12 +269,6 @@ static constexpr uint8_t INDEX_MN1613[] PROGMEM = {
 };
 // clang-format on
 
-struct TableMn1610::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableMn1610::EntryPage MN1610_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
@@ -284,6 +278,12 @@ static constexpr TableMn1610::EntryPage MN1613_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1613), ARRAY_RANGE(INDEX_MN1613)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
+};
+
+static constexpr TableMn1610::Cpu CPU_TABLES[] PROGMEM = {
+        {MN1610, TEXT_CPU_MN1610, ARRAY_RANGE(MN1610_PAGES)},
+        {MN1613, TEXT_CPU_MN1613, ARRAY_RANGE(MN1613_PAGES)},
+        {MN1613A, TEXT_CPU_MN1613A, ARRAY_RANGE(MN1613_PAGES)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -333,19 +333,18 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.op3(), table.op3()) && acceptMode(flags.op4(), table.op4());
 }
 
-Error TableMn1610::searchName(
-        InsnMn1610 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableMn1610::searchName(InsnMn1610 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
@@ -385,66 +384,43 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableMn1610::searchOpCode(
-        InsnMn1610 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableMn1610::searchOpCode(InsnMn1610 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
-            return OK;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
-
-Error TableMn1610::searchName(InsnMn1610 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableMn1610::searchOpCode(InsnMn1610 &insn) {
-    return setError(searchOpCode(insn, _table, _end));
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableMn1610::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableMn1610::EntryPage *table,
-            const TableMn1610::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {MN1610, TEXT_CPU_MN1610, ARRAY_RANGE(MN1610_PAGES)},
-        {MN1613, TEXT_CPU_MN1613, ARRAY_RANGE(MN1613_PAGES)},
-        {MN1613A, TEXT_CPU_MN1613A, ARRAY_RANGE(MN1613_PAGES)},
-};
 
 TableMn1610::TableMn1610() {
     setCpu(MN1610);
 }
 
 AddressWidth TableMn1610::addressWidth() const {
-    return (_cpuType == MN1610) ? ADDRESS_16BIT : ADDRESS_20BIT;
+    return (_cpu->cpuType() == MN1610) ? ADDRESS_16BIT : ADDRESS_20BIT;
 }
 
 Error TableMn1610::checkAddressRange(Config::uintptr_t addr) const {
-    if (_cpuType == MN1610 && addr >= 0x10000)
+    const auto cpuType = _cpu->cpuType();
+    if (cpuType == MN1610 && addr >= 0x10000)
         return OVERFLOW_RANGE;
-    if (_cpuType == MN1613 && addr >= 0x40000)
+    if (cpuType == MN1613 && addr >= 0x40000)
         return OVERFLOW_RANGE;
-    if (_cpuType == MN1613A && addr >= 0x100000)
+    if (cpuType == MN1613A && addr >= 0x100000)
         return OVERFLOW_RANGE;
     return OK;
 }
 
 bool TableMn1610::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -453,11 +429,11 @@ const /* PROGMEM */ char *TableMn1610::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableMn1610::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableMn1610::setCpu(const char *cpu) {
-    const auto *t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     if (strcmp_P(cpu, TEXT_CPU_1610) == 0)

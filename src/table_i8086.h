@@ -40,7 +40,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    struct EntryPage;
+    typedef PrefixedEntryPage<Entry> EntryPage;
 
 private:
     Error searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;

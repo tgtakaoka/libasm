@@ -467,12 +467,6 @@ static constexpr uint8_t ALIAS_INDEX[] PROGMEM = {
 };
 // clang-format on
 
-struct TableMc68000::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableMc68000::EntryPage MC68000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };

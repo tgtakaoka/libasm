@@ -551,21 +551,10 @@ static constexpr Config::opcode_t PREFIX_P1A = 0x1A;
 static constexpr Config::opcode_t PREFIX_PCD = 0xCD;
 
 bool TableMc6800::isPrefix(Config::opcode_t opCode) const {
-    if (_cpuType != MC68HC11)
+    if (_cpu->cpuType() != MC68HC11)
         return false;
     return opCode == PREFIX_P18 || opCode == PREFIX_P1A || opCode == PREFIX_PCD;
 }
-
-struct TableMc6800::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
-            const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
-
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
-
-private:
-    Config::opcode_t _prefix;
-};
 
 static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
@@ -589,6 +578,13 @@ static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
         {PREFIX_P18, ARRAY_RANGE(MC68HC11_P18), ARRAY_RANGE(MC68HC11_I18)},
         {PREFIX_P1A, ARRAY_RANGE(MC68HC11_P1A), ARRAY_RANGE(MC68HC11_I1A)},
         {PREFIX_PCD, ARRAY_RANGE(MC68HC11_PCD), ARRAY_RANGE(MC68HC11_ICD)},
+};
+
+static constexpr TableMc6800::Cpu CPU_TABLES[] PROGMEM = {
+        {MC6800, TEXT_CPU_6800, ARRAY_RANGE(MC6800_PAGES)},
+        {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
+        {HD6301, TEXT_CPU_6301, ARRAY_RANGE(HD6301_PAGES)},
+        {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},
 };
 
 static bool acceptAddrMode(AddrMode opr, AddrMode table) {
@@ -616,21 +612,20 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
            acceptAddrMode(flags.mode3(), table.mode3());
 }
 
-Error TableMc6800::searchName(
-        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableMc6800::searchName(InsnMc6800 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
             if (insn.undefined())
-                return OPERAND_NOT_ALLOWED;
-            return OK;
+                return setError(OPERAND_NOT_ALLOWED);
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -646,9 +641,8 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode;
 }
 
-const Entry *TableMc6800::searchOpCode(
-        InsnMc6800 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto prefix = page->prefix();
         if (insn.prefix() != prefix)
             continue;
@@ -665,17 +659,13 @@ const Entry *TableMc6800::searchOpCode(
     return nullptr;
 }
 
-Error TableMc6800::searchName(InsnMc6800 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) {
-    auto entry = searchOpCode(insn, _table, _end);
+    auto entry = searchOpCodeImpl(insn);
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) {
-    auto entry = searchOpCode(insn, _table, _end);
+    auto entry = searchOpCodeImpl(insn);
     if (!entry)
         return setError(INTERNAL_ERROR);
     entry += 1;
@@ -686,31 +676,15 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) {
     return setOK();
 }
 
-class CpuTable : public CpuTableBase<CpuType, TableMc6800::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableMc6800::EntryPage *table,
-            const TableMc6800::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {MC6800, TEXT_CPU_6800, ARRAY_RANGE(MC6800_PAGES)},
-        {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
-        {HD6301, TEXT_CPU_6301, ARRAY_RANGE(HD6301_PAGES)},
-        {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},
-};
-
 TableMc6800::TableMc6800() {
     setCpu(MC6800);
 }
 
 bool TableMc6800::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -719,14 +693,14 @@ const /* PROGMEM */ char *TableMc6800::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableMc6800::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableMc6800::setCpu(const char *cpu) {
     auto p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_MC, 2) == 0)
         p += 2;
-    auto t = CpuTable::search(p, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(p, TEXT_CPU_68HC11) == 0)

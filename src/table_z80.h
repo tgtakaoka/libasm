@@ -34,24 +34,19 @@ public:
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    CpuType cpuType() const { return _cpuType; }
 
     bool isPrefix(Config::opcode_t opCode) const;
 
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
-    struct EntryPage;
+    typedef PrefixedEntryPage<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
-    const EntryPage *_table;
-    const EntryPage *_end;
+    const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-
-    Error searchName(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableZ80 TableZ80;

@@ -388,24 +388,15 @@ static constexpr uint8_t INDEX_IX[] PROGMEM = {
 };
 // clang-format on
 
-struct TableZ80::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
-            const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
-
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
-
-private:
-    Config::opcode_t _prefix;
-};
-
 static constexpr TableZ80::EntryPage I8080_PAGES[] PROGMEM = {
         {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
+
 static constexpr TableZ80::EntryPage I8085_PAGES[] PROGMEM = {
         {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {PREFIX_00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
+
 static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
         {PREFIX_00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
@@ -413,6 +404,12 @@ static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
         {PREFIX_ED, ARRAY_RANGE(TABLE_ED), ARRAY_RANGE(INDEX_ED)},
         {TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
         {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
+};
+
+static constexpr TableZ80::Cpu CPU_TABLES[] PROGMEM = {
+        {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
+        {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
+        {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -450,18 +447,18 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.srcMode(), table.srcMode());
 }
 
-Error TableZ80::searchName(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableZ80::searchName(InsnZ80 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
@@ -484,8 +481,8 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableZ80::searchOpCode(InsnZ80 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableZ80::searchOpCode(InsnZ80 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         if (insn.prefix() != page->prefix())
             continue;
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
@@ -493,51 +490,28 @@ Error TableZ80::searchOpCode(InsnZ80 &insn, const EntryPage *pages, const EntryP
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
-            return OK;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
 
 bool TableZ80::isPrefix(Config::opcode_t opCode) const {
-    if (_cpuType != Z80)
+    if (_cpu->cpuType() != Z80)
         return false;
     return opCode == PREFIX_CB || opCode == PREFIX_ED || opCode == TableZ80::PREFIX_IX ||
            opCode == TableZ80::PREFIX_IY;
 }
-
-Error TableZ80::searchName(InsnZ80 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableZ80::searchOpCode(InsnZ80 &insn) {
-    return setError(searchOpCode(insn, _table, _end));
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableZ80::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableZ80::EntryPage *table,
-            const TableZ80::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
-        {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
-        {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
-};
 
 TableZ80::TableZ80() {
     setCpu(Z80);
 }
 
 bool TableZ80::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -546,11 +520,11 @@ const /* PROGMEM */ char *TableZ80::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableZ80::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_I8080) == 0)

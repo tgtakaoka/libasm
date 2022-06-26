@@ -160,12 +160,6 @@ static constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
 };
 // clang-format on
 
-struct TableTms32010::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableTms32010::EntryPage TMS32010_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS32010), ARRAY_RANGE(INDEX_TMS32010)},
 };

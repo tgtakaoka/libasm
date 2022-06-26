@@ -34,7 +34,7 @@ public:
     bool setCpu(const char *cpu) override;
     uint16_t dataMemoryLimit() const;
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
 
 private:
     CpuType _cpuType;

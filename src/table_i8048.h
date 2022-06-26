@@ -35,18 +35,14 @@ public:
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    CpuType cpuType() const { return _cpuType; }
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
-    const EntryPage *_table;
-    const EntryPage *_end;
+    const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-    Error searchName(InsnI8048 &insn, const EntryPage *pages, const EntryPage *end) const;
-    const Entry *searchOpCode(InsnI8048 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableI8048 TableI8048;

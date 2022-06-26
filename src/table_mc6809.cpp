@@ -554,17 +554,6 @@ bool TableMc6809::isPrefix(Config::opcode_t opCode) {
     return opCode == PREFIX_P10 || opCode == PREFIX_P11;
 }
 
-struct TableMc6809::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
-            const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
-
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
-
-private:
-    Config::opcode_t _prefix;
-};
-
 static constexpr TableMc6809::EntryPage MC6809_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
         {PREFIX_P10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
@@ -578,6 +567,94 @@ static constexpr TableMc6809::EntryPage HD6309_PAGES[] PROGMEM = {
         {PREFIX_P11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
         {PREFIX_P10, ARRAY_RANGE(HD6309_P10), ARRAY_RANGE(HD6309_I10)},
         {PREFIX_P11, ARRAY_RANGE(HD6309_P11), ARRAY_RANGE(HD6309_I11)},
+};
+
+struct TableMc6809::PostEntry : PostSpec {
+    uint8_t mask;
+    uint8_t byte;
+
+    constexpr PostEntry(
+            RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t _mask, uint8_t _byte)
+        : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
+};
+
+static constexpr TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
+        {REG_UNDEF, REG_X, 0, true, 0x8F, 0x84},       // ,X [,X]
+        {REG_UNDEF, REG_X, 5, false, 0x80, 0x00},      // n5,X
+        {REG_UNDEF, REG_X, 8, true, 0x8F, 0x88},       // n8,X [n8,X]
+        {REG_UNDEF, REG_X, 16, true, 0x8F, 0x89},      // n16,X [n16,X]
+        {REG_A, REG_X, 0, true, 0x8F, 0x86},           // A,X [A,X]
+        {REG_B, REG_X, 0, true, 0x8F, 0x85},           // B,X [B,X]
+        {REG_D, REG_X, 0, true, 0x8F, 0x8B},           // D,X [D,X]
+        {REG_UNDEF, REG_X, 1, false, 0x9F, 0x80},      // ,X+
+        {REG_UNDEF, REG_X, 2, true, 0x8F, 0x81},       // ,X++ [,X++]
+        {REG_UNDEF, REG_X, -1, false, 0x9F, 0x82},     // ,-X
+        {REG_UNDEF, REG_X, -2, true, 0x8F, 0x83},      // ,--X [,--X]
+        {REG_UNDEF, REG_PCR, 8, true, 0x8F, 0x8C},     // n8,PCR [n8,PCR]
+        {REG_UNDEF, REG_PCR, 16, true, 0x8F, 0x8D},    // n16,PCR [n16,PCR]
+        {REG_UNDEF, REG_UNDEF, 16, true, 0xFF, 0x9F},  // [n16]
+};
+
+static constexpr TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
+        {REG_E, REG_X, 0, true, 0x8F, 0x87},        // E,X [E,X]
+        {REG_F, REG_X, 0, true, 0x8F, 0x8A},        // F,X [F,X]
+        {REG_W, REG_X, 0, true, 0x8F, 0x8E},        // W,X [W,X]
+        {REG_UNDEF, REG_W, 0, false, 0xFF, 0x8F},   // ,W
+        {REG_UNDEF, REG_W, 0, true, 0xFF, 0x90},    // [,W]
+        {REG_UNDEF, REG_W, 16, false, 0xFF, 0xAF},  // n16,W
+        {REG_UNDEF, REG_W, 16, true, 0xFF, 0xB0},   // [n16,W]
+        {REG_UNDEF, REG_W, 2, false, 0xFF, 0xCF},   // ,W++
+        {REG_UNDEF, REG_W, 2, true, 0xFF, 0xD0},    // [,W++]
+        {REG_UNDEF, REG_W, -2, false, 0xFF, 0xEF},  // ,--W
+        {REG_UNDEF, REG_W, -2, true, 0xFF, 0xF0},   // [,--W]
+};
+
+typedef PageBase<TableMc6809::PostEntry> PostPage;
+
+static constexpr PostPage MC6809_POSTS[] PROGMEM = {
+        {ARRAY_RANGE(MC6809_POSTBYTE)},
+};
+
+static constexpr PostPage HD6309_POSTS[] PROGMEM = {
+        {ARRAY_RANGE(MC6809_POSTBYTE)},
+        {ARRAY_RANGE(HD6309_POSTBYTE)},
+};
+
+struct TableMc6809::Cpu : CpuBase<CpuType, TableMc6809::EntryPage> {
+    const PostPage *postTable() const {
+        return reinterpret_cast<const PostPage *>(pgm_read_ptr(&_post_table));
+    }
+    const PostPage *postEnd() const {
+        return reinterpret_cast<const PostPage *>(pgm_read_ptr(&_post_end));
+    }
+    constexpr Cpu(CpuType cpuType, const char *name, const TableMc6809::EntryPage *table,
+            const TableMc6809::EntryPage *end, const PostPage *postTable, const PostPage *postEnd)
+        : CpuBase(cpuType, name, table, end), _post_table(postTable), _post_end(postEnd) {}
+
+    static const Cpu *search(CpuType cpuType, const Cpu *table, const Cpu *end) {
+        for (const auto *t = table; t < end; t++) {
+            if (cpuType == t->cpuType())
+                return t;
+        }
+        return nullptr;
+    }
+
+    static const Cpu *search(const char *name, const Cpu *table, const Cpu *end) {
+        for (const auto *t = table; t < end; t++) {
+            if (strcasecmp_P(name, t->name_P()) == 0)
+                return t;
+        }
+        return nullptr;
+    }
+
+private:
+    const PostPage *_post_table;
+    const PostPage *_post_end;
+};
+
+static constexpr TableMc6809::Cpu CPU_TABLES[] PROGMEM = {
+        {MC6809, TEXT_CPU_6809, ARRAY_RANGE(MC6809_PAGES), ARRAY_RANGE(MC6809_POSTS)},
+        {HD6309, TEXT_CPU_6309, ARRAY_RANGE(HD6309_PAGES), ARRAY_RANGE(HD6309_POSTS)},
 };
 
 static bool matchAddrMode(AddrMode opr, AddrMode table) {
@@ -612,21 +689,20 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
            matchAddrMode(flags.mode2(), table.mode2());
 }
 
-Error TableMc6809::searchName(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableMc6809::searchName(InsnMc6809 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, matchAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
             if (insn.undefined())
-                return OPERAND_NOT_ALLOWED;
-            return OK;
+                return setError(OPERAND_NOT_ALLOWED);
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {
@@ -642,9 +718,8 @@ static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {
     return code;
 }
 
-Error TableMc6809::searchOpCode(
-        InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableMc6809::searchOpCode(InsnMc6809 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         if (insn.prefix() != page->prefix())
             continue;
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
@@ -653,72 +728,25 @@ Error TableMc6809::searchOpCode(
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
             if (insn.undefined())
-                return UNKNOWN_INSTRUCTION;
-            return OK;
+                break;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error TableMc6809::searchName(InsnMc6809 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableMc6809::searchOpCode(InsnMc6809 &insn) {
-    return setError(searchOpCode(insn, _table, _end));
-}
-
-struct TableMc6809::PostEntry : PostSpec {
-    uint8_t mask;
-    uint8_t byte;
-
-    constexpr PostEntry(
-            RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t _mask, uint8_t _byte)
-        : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
-};
-
-static const TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
-        {REG_UNDEF, REG_X, 0, true, 0x8F, 0x84},       // ,X [,X]
-        {REG_UNDEF, REG_X, 5, false, 0x80, 0x00},      // n5,X
-        {REG_UNDEF, REG_X, 8, true, 0x8F, 0x88},       // n8,X [n8,X]
-        {REG_UNDEF, REG_X, 16, true, 0x8F, 0x89},      // n16,X [n16,X]
-        {REG_A, REG_X, 0, true, 0x8F, 0x86},           // A,X [A,X]
-        {REG_B, REG_X, 0, true, 0x8F, 0x85},           // B,X [B,X]
-        {REG_D, REG_X, 0, true, 0x8F, 0x8B},           // D,X [D,X]
-        {REG_UNDEF, REG_X, 1, false, 0x9F, 0x80},      // ,X+
-        {REG_UNDEF, REG_X, 2, true, 0x8F, 0x81},       // ,X++ [,X++]
-        {REG_UNDEF, REG_X, -1, false, 0x9F, 0x82},     // ,-X
-        {REG_UNDEF, REG_X, -2, true, 0x8F, 0x83},      // ,--X [,--X]
-        {REG_UNDEF, REG_PCR, 8, true, 0x8F, 0x8C},     // n8,PCR [n8,PCR]
-        {REG_UNDEF, REG_PCR, 16, true, 0x8F, 0x8D},    // n16,PCR [n16,PCR]
-        {REG_UNDEF, REG_UNDEF, 16, true, 0xFF, 0x9F},  // [n16]
-};
-
-static const TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
-        {REG_E, REG_X, 0, true, 0x8F, 0x87},        // E,X [E,X]
-        {REG_F, REG_X, 0, true, 0x8F, 0x8A},        // F,X [F,X]
-        {REG_W, REG_X, 0, true, 0x8F, 0x8E},        // W,X [W,X]
-        {REG_UNDEF, REG_W, 0, false, 0xFF, 0x8F},   // ,W
-        {REG_UNDEF, REG_W, 0, true, 0xFF, 0x90},    // [,W]
-        {REG_UNDEF, REG_W, 16, false, 0xFF, 0xAF},  // n16,W
-        {REG_UNDEF, REG_W, 16, true, 0xFF, 0xB0},   // [n16,W]
-        {REG_UNDEF, REG_W, 2, false, 0xFF, 0xCF},   // ,W++
-        {REG_UNDEF, REG_W, 2, true, 0xFF, 0xD0},    // [,W++]
-        {REG_UNDEF, REG_W, -2, false, 0xFF, 0xEF},  // ,--W
-        {REG_UNDEF, REG_W, -2, true, 0xFF, 0xF0},   // [,--W]
-};
-
-Error TableMc6809::searchPostByte(
-        const uint8_t post, PostSpec &spec, const PostEntry *table, const PostEntry *end) const {
-    for (auto entry = table; entry < end; entry++) {
-        auto mask = pgm_read_byte(&entry->mask);
-        auto byte = post & mask;
-        if (byte == pgm_read_byte(&entry->byte)) {
-            spec.index = RegName(pgm_read_byte(&entry->index));
-            spec.base = RegName(pgm_read_byte(&entry->base));
-            spec.size = pgm_read_byte(&entry->size);
-            spec.indir = (mask != 0x80) && (post & 0x10);
-            return OK;
+Error TableMc6809::searchPostByte(const uint8_t post, PostSpec &spec) const {
+    for (auto page = _cpu->postTable(); page < _cpu->postEnd(); page++) {
+        for (auto entry = page->table(); entry < page->end(); entry++) {
+            auto mask = pgm_read_byte(&entry->mask);
+            auto byte = post & mask;
+            if (byte == pgm_read_byte(&entry->byte)) {
+                spec.index = RegName(pgm_read_byte(&entry->index));
+                spec.base = RegName(pgm_read_byte(&entry->base));
+                spec.size = pgm_read_byte(&entry->size);
+                spec.indir = (mask != 0x80) && (post & 0x10);
+                return OK;
+            }
         }
     }
     return UNKNOWN_POSTBYTE;
@@ -734,64 +762,42 @@ static RegName baseRegName(const RegName base) {
     return REG_UNDEF;
 }
 
-int16_t TableMc6809::searchPostSpec(
-        PostSpec &spec, const PostEntry *table, const PostEntry *end) const {
+int16_t TableMc6809::searchPostSpec(PostSpec &spec) const {
     auto specBase = baseRegName(spec.base);
-    for (auto entry = table; entry < end; entry++) {
-        auto base = RegName(pgm_read_byte(&entry->base));
-        auto size = static_cast<int8_t>(pgm_read_byte(&entry->size));
-        if (specBase == base && spec.size == size &&
-                spec.index == RegName(pgm_read_byte(&entry->index))) {
-            auto byte = pgm_read_byte(&entry->byte);
-            if (spec.indir) {
-                if (pgm_read_byte(&entry->indir) == 0)
-                    continue;
-                byte |= 0x10;
+    for (auto page = _cpu->postTable(); page < _cpu->postEnd(); page++) {
+        for (auto entry = page->table(); entry < page->end(); entry++) {
+            auto base = RegName(pgm_read_byte(&entry->base));
+            auto size = static_cast<int8_t>(pgm_read_byte(&entry->size));
+            if (specBase == base && spec.size == size &&
+                    spec.index == RegName(pgm_read_byte(&entry->index))) {
+                auto byte = pgm_read_byte(&entry->byte);
+                if (spec.indir) {
+                    if (pgm_read_byte(&entry->indir) == 0)
+                        continue;
+                    byte |= 0x10;
+                }
+                spec.base = base;
+                return byte;
             }
-            spec.base = base;
-            return byte;
         }
     }
     return -1;
 }
-
-Error TableMc6809::searchPostByte(const uint8_t post, PostSpec &spec) const {
-    if (_cpuType == HD6309 && searchPostByte(post, spec, ARRAY_RANGE(HD6309_POSTBYTE)) == OK)
-        return OK;
-    return searchPostByte(post, spec, ARRAY_RANGE(MC6809_POSTBYTE));
-}
-
-int16_t TableMc6809::searchPostSpec(PostSpec &spec) const {
-    auto post = searchPostSpec(spec, ARRAY_RANGE(MC6809_POSTBYTE));
-    if (post < 0 && _cpuType == HD6309)
-        post = searchPostSpec(spec, ARRAY_RANGE(HD6309_POSTBYTE));
-    return post;
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableMc6809::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableMc6809::EntryPage *table,
-            const TableMc6809::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {MC6809, TEXT_CPU_6809, ARRAY_RANGE(MC6809_PAGES)},
-        {HD6309, TEXT_CPU_6309, ARRAY_RANGE(HD6309_PAGES)},
-};
 
 TableMc6809::TableMc6809() {
     setCpu(MC6809);
 }
 
 bool TableMc6809::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
+}
+
+CpuType TableMc6809::cpuType() const {
+    return _cpu->cpuType();
 }
 
 const /* PROGMEM */ char *TableMc6809::listCpu_P() const {
@@ -799,11 +805,11 @@ const /* PROGMEM */ char *TableMc6809::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableMc6809::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableMc6809::setCpu(const char *cpu) {
-    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_MC6809) == 0)

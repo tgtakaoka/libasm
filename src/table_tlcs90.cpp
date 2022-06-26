@@ -503,12 +503,11 @@ static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 };
 // clang-format on
 
-struct TableTlcs90::EntryPage : EntryPageBase<Entry> {
+struct TableTlcs90::EntryPage : PrefixedEntryPage<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
             const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix), _mode(uint8_t(mode)) {}
+        : PrefixedEntryPage(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
 
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
     AddrMode mode() const { return AddrMode(pgm_read_byte(&_mode)); }
     bool prefixMatch(Config::opcode_t code) const {
         const Config::opcode_t pre = prefix();
@@ -528,7 +527,6 @@ struct TableTlcs90::EntryPage : EntryPageBase<Entry> {
     }
 
 private:
-    Config::opcode_t _prefix;
     uint8_t _mode;
 };
 

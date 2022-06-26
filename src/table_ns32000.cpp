@@ -795,17 +795,15 @@ static const uint8_t INDEX_14_2[] PROGMEM = {
 };
 // clang-format on
 
-struct TableNs32000::EntryPage : EntryPageBase<Entry> {
+struct TableNs32000::EntryPage : PrefixedEntryPage<Entry> {
     constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
             const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix), _mask(mask), _post(post) {}
+        : PrefixedEntryPage(prefix, table, end, index, iend), _mask(mask), _post(post) {}
 
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
     Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
     Config::opcode_t post() const { return pgm_read_byte(&_post); }
 
 private:
-    Config::opcode_t _prefix;
     Config::opcode_t _mask;
     uint8_t _post;
 };

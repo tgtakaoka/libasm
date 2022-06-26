@@ -260,13 +260,11 @@ static constexpr uint8_t INDEX_I8051[] PROGMEM = {
 };
 // clang-format on
 
-struct TableI8051::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
 
-static constexpr TableI8051::EntryPage I8051_PAGES[] PROGMEM = {
+
+typedef EntryPageBase<Entry> EntryPage;
+
+static constexpr EntryPage I8051_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8051), ARRAY_RANGE(INDEX_I8051)},
 };
 

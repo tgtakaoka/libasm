@@ -27,42 +27,59 @@ namespace libasm {
 /**
  * Base class for instruction page table entry.
  */
+template <typename ITEM_T>
+struct PageBase {
+    const ITEM_T *table() const { return reinterpret_cast<const ITEM_T *>(pgm_read_ptr(&_table)); }
+    const ITEM_T *end() const { return reinterpret_cast<const ITEM_T *>(pgm_read_ptr(&_end)); }
+
+    constexpr PageBase(const ITEM_T *table, const ITEM_T *end) : _table(table), _end(end) {}
+
+private:
+    const ITEM_T *_table;
+    const ITEM_T *_end;
+};
+
 template <typename ENTRY_T>
-struct EntryPageBase {
-    const ENTRY_T *table() const {
-        return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_table));
-    }
-    const ENTRY_T *end() const { return reinterpret_cast<const ENTRY_T *>(pgm_read_ptr(&_end)); }
+struct EntryPageBase : PageBase<ENTRY_T> {
     const uint8_t *index() const {
         return reinterpret_cast<const uint8_t *>(pgm_read_ptr(&_index));
     }
     const uint8_t *iend() const { return reinterpret_cast<const uint8_t *>(pgm_read_ptr(&_iend)); }
 
-protected:
     constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end,
             const uint8_t *index = nullptr, const uint8_t *iend = nullptr)
-        : _table(table), _end(end), _index(index), _iend(iend) {}
+        : PageBase<ENTRY_T>(table, end), _index(index), _iend(iend) {}
 
 private:
-    const ENTRY_T *_table;
-    const ENTRY_T *_end;
     const uint8_t *_index;
     const uint8_t *_iend;
+};
+
+template <typename ENTRY_T>
+struct PrefixedEntryPage : EntryPageBase<ENTRY_T> {
+    uint8_t prefix() const { return pgm_read_byte(&_prefix); }
+
+    constexpr PrefixedEntryPage(const uint8_t prefix, const ENTRY_T *table, const ENTRY_T *end,
+            const uint8_t *index = nullptr, const uint8_t *iend = nullptr)
+        : EntryPageBase<ENTRY_T>(table, end, index, iend), _prefix(prefix) {}
+
+private:
+    const uint8_t _prefix;
 };
 
 /**
  * Base class for CPU entry.
  */
-template <typename CPU_T, typename ENTRY_T>
-class CpuTableBase : public EntryPageBase<ENTRY_T> {
+template <typename CPUTYPE_T, typename ENTRY_T>
+struct CpuBase : EntryPageBase<ENTRY_T> {
 public:
-    CPU_T cpuType() const { return static_cast<CPU_T>(pgm_read_byte(&_cpuType)); }
+    CPUTYPE_T cpuType() const { return static_cast<CPUTYPE_T>(pgm_read_byte(&_cpuType)); }
     const /* PROGMEM */ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
-    static const CpuTableBase<CPU_T, ENTRY_T> *search(CPU_T cpuType,
-            const CpuTableBase<CPU_T, ENTRY_T> *table, const CpuTableBase<CPU_T, ENTRY_T> *end) {
+    static const CpuBase<CPUTYPE_T, ENTRY_T> *search(CPUTYPE_T cpuType,
+            const CpuBase<CPUTYPE_T, ENTRY_T> *table, const CpuBase<CPUTYPE_T, ENTRY_T> *end) {
         for (const auto *t = table; t < end; t++) {
             if (cpuType == t->cpuType())
                 return t;
@@ -70,8 +87,8 @@ public:
         return nullptr;
     }
 
-    static const CpuTableBase<CPU_T, ENTRY_T> *search(const char *name,
-            const CpuTableBase<CPU_T, ENTRY_T> *table, const CpuTableBase<CPU_T, ENTRY_T> *end) {
+    static const CpuBase<CPUTYPE_T, ENTRY_T> *search(const char *name,
+            const CpuBase<CPUTYPE_T, ENTRY_T> *table, const CpuBase<CPUTYPE_T, ENTRY_T> *end) {
         for (const auto *t = table; t < end; t++) {
             if (strcasecmp_P(name, t->name_P()) == 0)
                 return t;
@@ -79,13 +96,12 @@ public:
         return nullptr;
     }
 
-protected:
-    constexpr CpuTableBase(CPU_T cpuType, const /* PROGMEM */ char *name_P, const ENTRY_T *table,
+    constexpr CpuBase(CPUTYPE_T cpuType, const /* PROGMEM */ char *name_P, const ENTRY_T *table,
             const ENTRY_T *end)
         : EntryPageBase<ENTRY_T>(table, end), _cpuType(cpuType), _name_P(name_P) {}
 
 private:
-    CPU_T _cpuType;
+    CPUTYPE_T _cpuType;
     const /* PROGMEM */ char *_name_P;
 };
 

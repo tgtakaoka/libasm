@@ -298,17 +298,6 @@ static constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
 };
 // clang-format on
 
-struct TableCdp1802::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
-            const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
-
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
-
-private:
-    Config::opcode_t _prefix;
-};
-
 static constexpr TableCdp1802::EntryPage CDP1802_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
 };
@@ -324,8 +313,14 @@ static constexpr TableCdp1802::EntryPage CDP1804A_PAGES[] PROGMEM = {
         {0x68, ARRAY_RANGE(TABLE_CDP1804A), ARRAY_RANGE(INDEX_CDP1804A)},
 };
 
+static constexpr TableCdp1802::Cpu CPU_TABLES[] PROGMEM = {
+        {CDP1802, TEXT_CPU_1802, ARRAY_RANGE(CDP1802_PAGES)},
+        {CDP1804, TEXT_CPU_1804, ARRAY_RANGE(CDP1804_PAGES)},
+        {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
+};
+
 bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
-    return _cpuType != CDP1802 && opCode == 0x68;
+    return _cpu->cpuType() != CDP1802 && opCode == 0x68;
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -343,19 +338,18 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
-Error TableCdp1802::searchName(
-        InsnCdp1802 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableCdp1802::searchName(InsnCdp1802 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -367,9 +361,8 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode;
 }
 
-Error TableCdp1802::searchOpCode(
-        InsnCdp1802 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto prefix = page->prefix();
         if (insn.prefix() != prefix)
             continue;
@@ -380,44 +373,21 @@ Error TableCdp1802::searchOpCode(
             if (insn.mode1() == UNDF)
                 break;
             insn.setName_P(entry->name_P());
-            return OK;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
-
-Error TableCdp1802::searchName(InsnCdp1802 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
-    return setError(searchOpCode(insn, _table, _end));
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableCdp1802::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableCdp1802::EntryPage *table,
-            const TableCdp1802::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {CDP1802, TEXT_CPU_1802, ARRAY_RANGE(CDP1802_PAGES)},
-        {CDP1804, TEXT_CPU_1804, ARRAY_RANGE(CDP1804_PAGES)},
-        {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
-};
 
 TableCdp1802::TableCdp1802() {
     setCpu(CDP1802);
 }
 
 bool TableCdp1802::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -426,13 +396,13 @@ const /* PROGMEM */ char *TableCdp1802::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableCdp1802::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableCdp1802::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_CDP, 3) == 0)
         cpu += 3;
-    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     return false;

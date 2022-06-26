@@ -38,16 +38,13 @@ public:
     AddressWidth addressWidth() const;
     Error checkAddressRange(Config::uintptr_t addr) const;
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
-    const EntryPage *_table;
-    const EntryPage *_end;
+    const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-    Error searchName(InsnMn1610 &insn, const EntryPage *table, const EntryPage *end) const;
-    Error searchOpCode(InsnMn1610 &insn, const EntryPage *table, const EntryPage *end) const;
 };
 
 extern TableMn1610 TableMn1610;

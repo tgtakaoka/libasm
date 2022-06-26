@@ -39,18 +39,13 @@ public:
 
     static constexpr Config::opcode_t SRP = 0x31;
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
-    const EntryPage *_table;
-    const EntryPage *_end;
+    const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-
-    Error searchName(InsnZ8 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(
-            InsnZ8 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const;
 };
 
 extern TableZ8 TableZ8;

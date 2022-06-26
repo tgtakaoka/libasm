@@ -48,25 +48,18 @@ public:
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    CpuType cpuType() const { return _cpuType; }
+    CpuType cpuType() const;
 
     static bool isPrefix(Config::opcode_t opCode);
 
-    struct EntryPage;
+    typedef PrefixedEntryPage<Entry> EntryPage;
     struct PostEntry;
+    struct Cpu;
 
 private:
-    CpuType _cpuType;
-    const EntryPage *_table;
-    const EntryPage *_end;
+    const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-
-    Error searchName(InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(InsnMc6809 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchPostByte(
-            const uint8_t post, PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
-    int16_t searchPostSpec(PostSpec &spec, const PostEntry *table, const PostEntry *end) const;
 };
 
 extern TableMc6809 TableMc6809;

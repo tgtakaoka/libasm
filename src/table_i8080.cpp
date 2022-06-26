@@ -203,13 +203,6 @@ static constexpr uint8_t INDEX_I8085[] PROGMEM = {
 };
 // clang-format on
 
-class TableI8080::EntryPage : public EntryPageBase<Entry> {
-public:
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
@@ -217,6 +210,11 @@ static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
 static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
+};
+
+static constexpr TableI8080::Cpu CPU_TABLES[] PROGMEM = {
+        {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
+        {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -237,18 +235,18 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.srcMode(), table.srcMode());
 }
 
-Error TableI8080::searchName(InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableI8080::searchName(InsnI8080 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -267,51 +265,28 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-Error TableI8080::searchOpCode(
-        InsnI8080 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableI8080::searchOpCode(InsnI8080 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
-            return OK;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
-
-Error TableI8080::searchName(InsnI8080 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableI8080::searchOpCode(InsnI8080 &insn) {
-    return setError(searchOpCode(insn, _table, _end));
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableI8080::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableI8080::EntryPage *table,
-            const TableI8080::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
-        {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
-};
 
 TableI8080::TableI8080() {
     setCpu(I8080);
 }
 
 bool TableI8080::setCpu(CpuType cpuType) {
-    auto t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -320,13 +295,13 @@ const /* PROGMEM */ char *TableI8080::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableI8080::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableI8080::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I')
         cpu++;
-    auto t = CpuTable::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
     return false;

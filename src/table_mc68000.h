@@ -37,7 +37,7 @@ public:
 
     void setAlias(bool enable) { _aliasEnabled = enable; }
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
 
 private:
     bool _aliasEnabled;

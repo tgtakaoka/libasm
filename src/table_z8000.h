@@ -39,7 +39,7 @@ public:
     bool segmentedModel() const;
     AddressWidth addressWidth() const;
 
-    struct EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
 
 private:
     CpuType _cpuType;

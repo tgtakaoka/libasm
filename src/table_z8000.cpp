@@ -568,12 +568,6 @@ static const uint8_t INDEX_Z8000[] PROGMEM = {
 };
 // clang-format on
 
-struct TableZ8000::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableZ8000::EntryPage Z8000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8000), ARRAY_RANGE(INDEX_Z8000)},
 };

@@ -716,17 +716,6 @@ static const uint8_t INDEX_FF[] PROGMEM = {
 };
 // clang-format on
 
-struct TableI8086::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, const Entry *table, const Entry *end,
-            const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend), _prefix(prefix) {}
-
-    Config::opcode_t prefix() const { return pgm_read_byte(&_prefix); }
-
-private:
-    Config::opcode_t _prefix;
-};
-
 static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},

@@ -263,12 +263,6 @@ static constexpr uint8_t INDEX_MSM80C48[] PROGMEM = {
 };
 // clang-format on
 
-struct TableI8048::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(table, end, index, iend) {}
-};
-
 static constexpr TableI8048::EntryPage I8039_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8039), ARRAY_RANGE(INDEX_I8039)},
 };
@@ -302,6 +296,15 @@ static constexpr TableI8048::EntryPage MSM80C48_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_MSM80C48), ARRAY_RANGE(INDEX_MSM80C48)},
 };
 
+static constexpr TableI8048::Cpu CPU_TABLES[] PROGMEM = {
+        {I8039, TEXT_CPU_8039, ARRAY_RANGE(I8039_PAGES)},
+        {I8048, TEXT_CPU_8048, ARRAY_RANGE(I8048_PAGES)},
+        {I80C39, TEXT_CPU_80C39, ARRAY_RANGE(I80C39_PAGES)},
+        {I80C48, TEXT_CPU_80C48, ARRAY_RANGE(I80C48_PAGES)},
+        {MSM80C39, TEXT_CPU_MSM80C39, ARRAY_RANGE(MSM80C39_PAGES)},
+        {MSM80C48, TEXT_CPU_MSM80C48, ARRAY_RANGE(MSM80C48_PAGES)},
+};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -322,18 +325,18 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
            acceptMode(flags.srcMode(), table.srcMode());
 }
 
-Error TableI8048::searchName(InsnI8048 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableI8048::searchName(InsnI8048 &insn) {
     uint8_t count = 0;
-    for (const auto *page = pages; page < end; page++) {
+    for (const auto *page = _cpu->table(); page < _cpu->end(); page++) {
         const Entry *entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -356,56 +359,29 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     return opCode & ~mask;
 }
 
-const Entry *TableI8048::searchOpCode(
-        InsnI8048 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (const auto *page = pages; page < end; page++) {
+Error TableI8048::searchOpCode(InsnI8048 &insn) {
+    for (const auto *page = _cpu->table(); page < _cpu->end(); page++) {
         const Entry *entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
-            return entry;
+            return setOK();
+            ;
         }
     }
-    return nullptr;
+    return setError(UNKNOWN_INSTRUCTION);
 }
-
-Error TableI8048::searchName(InsnI8048 &insn) {
-    return setError(searchName(insn, _table, _end));
-}
-
-Error TableI8048::searchOpCode(InsnI8048 &insn) {
-    const Entry *entry = searchOpCode(insn, _table, _end);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
-}
-
-class CpuTable : public CpuTableBase<CpuType, TableI8048::EntryPage> {
-public:
-    constexpr CpuTable(CpuType cpuType, const char *name, const TableI8048::EntryPage *table,
-            const TableI8048::EntryPage *end)
-        : CpuTableBase(cpuType, name, table, end) {}
-};
-
-static constexpr CpuTable CPU_TABLES[] PROGMEM = {
-        {I8039, TEXT_CPU_8039, ARRAY_RANGE(I8039_PAGES)},
-        {I8048, TEXT_CPU_8048, ARRAY_RANGE(I8048_PAGES)},
-        {I80C39, TEXT_CPU_80C39, ARRAY_RANGE(I80C39_PAGES)},
-        {I80C48, TEXT_CPU_80C48, ARRAY_RANGE(I80C48_PAGES)},
-        {MSM80C39, TEXT_CPU_MSM80C39, ARRAY_RANGE(MSM80C39_PAGES)},
-        {MSM80C48, TEXT_CPU_MSM80C48, ARRAY_RANGE(MSM80C48_PAGES)},
-};
 
 TableI8048::TableI8048() {
     setCpu(I8048);
 }
 
 bool TableI8048::setCpu(CpuType cpuType) {
-    const auto *t = CpuTable::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
-    _cpuType = cpuType;
-    _table = t->table();
-    _end = t->end();
+    _cpu = t;
     return true;
 }
 
@@ -414,14 +390,14 @@ const /* PROGMEM */ char *TableI8048::listCpu_P() const {
 }
 
 const /* PROGMEM */ char *TableI8048::cpu_P() const {
-    return CpuTable::search(_cpuType, ARRAY_RANGE(CPU_TABLES))->name_P();
+    return _cpu->name_P();
 }
 
 bool TableI8048::setCpu(const char *cpu) {
     const char *p = cpu;
     if (toupper(*p) == 'I')
         p++;
-    const auto *t = CpuTable::search(p, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(p, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
     if (strncasecmp_P(cpu + 1, TEXT_CPU_MSM, 3) == 0)
