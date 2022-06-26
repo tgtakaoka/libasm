@@ -30,12 +30,14 @@ public:
 
     AddrMode dstMode() const { return flags().dstMode(); }
     AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode extMode() const { return flags().extMode(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprPos srcPos() const { return flags().srcPos(); }
+    OprPos extPos() const { return flags().extPos(); }
     OprSize oprSize() const { return flags().size(); }
     bool stringInst() const { return flags().strInst(); }
-    void setAddrMode(AddrMode dst, AddrMode src) {
-        setFlags(Entry::Flags::create(dst, src, P_NONE, P_NONE, SZ_NONE, false));
+    void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
+        setFlags(Entry::Flags::create(dst, src, ext, P_NONE, P_NONE, P_NONE, SZ_NONE, false));
     }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
@@ -62,7 +64,7 @@ public:
             return;
         const OprPos dst = dstPos();
         const OprPos src = srcPos();
-        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
+        if (dst == P_MOD || dst == P_REG || dst == P_MREG || src == P_MOD || src == P_REG)
             embedModReg(0);
     }
 

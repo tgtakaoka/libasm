@@ -24,7 +24,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     InsnI8086 insn(_insn);
     StrScanner p(scan);
     insn.setName(_parser.readSymbol(p));
-    insn.setAddrMode(M_NONE, M_NONE);
+    insn.setAddrMode(M_NONE, M_NONE, M_NONE);
     if (TableI8086.searchName(insn))
         return UNKNOWN_INSTRUCTION;
     if (!insn.stringInst())
@@ -199,7 +199,7 @@ AddrMode AsmI8086::Operand::immediateMode() const {
         return M_VAL1;
     if (val32 == 3)
         return M_VAL3;
-    if (!overflowUint8(val32))
+    if (!overflowRel8(static_cast<int32_t>(val32)))
         return M_IMM8;
     if (!overflowUint16(val32))
         return M_IMM;
@@ -259,6 +259,9 @@ Error AsmI8086::emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos) {
         break;
     case P_MOD:
         insn.embedModReg(0300 | num);
+        break;
+    case P_MREG:
+        insn.embedModReg(0300 | (num << 3) | num);
         break;
     default:
         break;
@@ -378,6 +381,18 @@ Error AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, O
             return setError(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val32);
         return OK;
+    case M_UI8:
+        if (static_cast<int32_t>(op.val32) >= 0x100 || static_cast<int32_t>(op.val32) < 0)
+            return setError(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val32);
+        return OK;
+    case M_BIT:
+        if (static_cast<int32_t>(op.val32) >= 16 || static_cast<int32_t>(op.val32) < 0)
+            return setError(op, OVERFLOW_RANGE);
+        if (insn.oprSize() == SZ_BYTE && static_cast<int32_t>(op.val32) >= 8)
+            return setError(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val32);
+        return OK;
     case M_IMM:
         return emitImmediate(insn, op, insn.oprSize(), op.val32);
     case M_IOA:
@@ -417,13 +432,12 @@ Error AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName se
 Error AsmI8086::encodeStringInst(InsnI8086 &insn, const Operand &dst, const Operand &src) {
     switch (insn.opCode() & ~1) {
     case 0xA4:  // MOVS ES:[DI],DS:[SI]
-        if (emitStringOperand(insn, dst, REG_ES, REG_DI))
-            return getError();
         if (emitStringOperand(insn, src, REG_DS, REG_SI))
             return getError();
         /* Fall-through */
     case 0xAA:  // STOS ES:[DI]
     case 0xAE:  // SCAS ES:[DI]
+    case 0x6C:  // INS ES:[DI]
         if (emitStringOperand(insn, dst, REG_ES, REG_DI))
             return getError();
         break;
@@ -435,6 +449,10 @@ Error AsmI8086::encodeStringInst(InsnI8086 &insn, const Operand &dst, const Oper
         if (emitStringOperand(insn, dst, REG_DS, REG_SI))
             return getError();
         break;
+    case 0x6E:  // OUTS DS:[SI]
+        if (emitStringOperand(insn, src, REG_DS, REG_SI))
+            return getError();
+        break;
     }
     insn.emitInsn();
     return setOK();
@@ -444,7 +462,7 @@ Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
     InsnI8086 insn(_insn);
     insn.setName(_parser.readSymbol(scan));
 
-    Operand dstOp, srcOp;
+    Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp))
         return getError();
     if (scan.skipSpaces().expect(',')) {
@@ -452,12 +470,18 @@ Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
             return getError();
         scan.skipSpaces();
     }
+    if (scan.skipSpaces().expect(',')) {
+        if (parseOperand(scan, extOp))
+            return getError();
+        scan.skipSpaces();
+    }
     if (!endOfLine(*scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);
+    setErrorIf(extOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode);
+    insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
     if (TableI8086.searchName(insn))
         return setError(TableI8086.getError());
     insn.prepairModReg();
@@ -472,6 +496,11 @@ Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
     const AddrMode src = insn.srcMode();
     if (src != M_NONE) {
         if (emitOperand(insn, src, srcOp, insn.srcPos()))
+            return getError();
+    }
+    const AddrMode ext = insn.extMode();
+    if (ext != M_NONE) {
+        if (emitOperand(insn, ext, extOp, insn.extPos()))
             return getError();
     }
     insn.emitInsn();

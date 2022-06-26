@@ -25,12 +25,14 @@
 namespace libasm {
 namespace i8086 {
 
-#define _ENTRY(_opc, _name, _sz, _dst, _src, _dpos, _spos, _stri) \
-    { _opc, Entry::Flags::create(_dst, _src, _dpos, _spos, SZ_##_sz, _stri), _name }
+#define _ENTRY(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, _stri) \
+    { _opc, Entry::Flags::create(_dst, _src, _ext, _dpos, _spos, _epos, SZ_##_sz, _stri), _name }
 #define E(_opc, _name, _sz, _dst, _src, _dpos, _spos) \
-    _ENTRY(_opc, _name, _sz, _dst, _src, _dpos, _spos, false)
+    _ENTRY(_opc, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE, false)
+#define X(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos) \
+    _ENTRY(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, false)
 #define S(_opc, _name, _sz, _dst, _src, _dpos, _spos) \
-    _ENTRY(_opc, _name, _sz, _dst, _src, _dpos, _spos, true)
+    _ENTRY(_opc, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE, true)
 
 // clang-format off
 static const Entry TABLE_00[] PROGMEM = {
@@ -714,6 +716,105 @@ static const uint8_t INDEX_FF[] PROGMEM = {
       5,  // TEXT_JMPF
       6,  // TEXT_PUSH
 };
+
+// i80186
+
+static const Entry TABLE_I80186[] PROGMEM = {
+    E(0x60, TEXT_PUSHA, NONE, M_NONE, M_NONE, P_NONE, P_NONE),
+    E(0x61, TEXT_POPA,  NONE, M_NONE, M_NONE, P_NONE, P_NONE),
+    E(0x62, TEXT_BOUND, WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
+    E(0x6A, TEXT_PUSH,  BYTE, M_IMM8, M_NONE, P_OPR,  P_NONE), // M_IMM8
+    X(0x6B, TEXT_IMUL,  WORD, M_WREG, M_WMOD, M_IMM8, P_REG, P_MOD, P_OPR),
+    E(0x6B, TEXT_IMUL,  WORD, M_WREG, M_IMM8, P_MREG, P_OPR),  // M_IMM8
+    E(0x68, TEXT_PUSH,  WORD, M_IMM,  M_NONE, P_OPR,  P_NONE), // M_IMM
+    X(0x69, TEXT_IMUL,  WORD, M_WREG, M_WMOD, M_IMM,  P_REG, P_MOD, P_OPR),
+    E(0x69, TEXT_IMUL,  WORD, M_WREG, M_IMM,  P_MREG, P_OPR),  // M_IMM
+    S(0x6C, TEXT_INSB,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x6C, TEXT_INSB,  BYTE, M_MEM,  M_DX,   P_NONE, P_NONE),
+    S(0x6D, TEXT_INSW,  WORD, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x6D, TEXT_INSW,  WORD, M_MEM,  M_DX,   P_NONE, P_NONE),
+    S(0x6C, TEXT_INS,   BYTE, M_BMEM, M_DX,   P_NONE, P_NONE),
+    S(0x6D, TEXT_INS,   WORD, M_WMEM, M_DX,   P_NONE, P_NONE),
+    S(0x6E, TEXT_OUTSB, BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x6E, TEXT_OUTSB, BYTE, M_DX,   M_BMEM, P_NONE, P_NONE),
+    S(0x6F, TEXT_OUTSW, WORD, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x6F, TEXT_OUTSW, WORD, M_DX,   M_WMEM, P_NONE, P_NONE),
+    S(0x6E, TEXT_OUTS,  BYTE, M_DX,   M_BMEM, P_NONE, P_NONE),
+    S(0x6F, TEXT_OUTS,  WORD, M_DX,   M_WMEM, P_NONE, P_NONE),
+    E(0xC8, TEXT_ENTER, NONE, M_UI16, M_UI8,  P_OPR,  P_OPR),
+    E(0xC9, TEXT_LEAVE, NONE, M_NONE, M_NONE, P_NONE, P_NONE),
+};
+
+static const uint8_t INDEX_I80186[] PROGMEM = {
+      2,  // TEXT_BOUND
+     21,  // TEXT_ENTER
+      4,  // TEXT_IMUL
+      5,  // TEXT_IMUL
+      7,  // TEXT_IMUL
+      8,  // TEXT_IMUL
+     13,  // TEXT_INS
+     14,  // TEXT_INS
+      9,  // TEXT_INSB
+     10,  // TEXT_INSB
+     11,  // TEXT_INSW
+     12,  // TEXT_INSW
+     22,  // TEXT_LEAVE
+     19,  // TEXT_OUTS
+     20,  // TEXT_OUTS
+     15,  // TEXT_OUTSB
+     16,  // TEXT_OUTSB
+     17,  // TEXT_OUTSW
+     18,  // TEXT_OUTSW
+      1,  // TEXT_POPA
+      3,  // TEXT_PUSH
+      6,  // TEXT_PUSH
+      0,  // TEXT_PUSHA
+};
+
+static const Entry TABLE_C0[] PROGMEM = {
+    E(000, TEXT_ROL, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(010, TEXT_ROR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(020, TEXT_RCL, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(030, TEXT_RCR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(040, TEXT_SHL, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(040, TEXT_SAL, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(050, TEXT_SHR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+    E(070, TEXT_SAR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
+};
+
+static const uint8_t INDEX_C0[] PROGMEM = {
+      2,  // TEXT_RCL
+      3,  // TEXT_RCR
+      0,  // TEXT_ROL
+      1,  // TEXT_ROR
+      5,  // TEXT_SAL
+      7,  // TEXT_SAR
+      4,  // TEXT_SHL
+      6,  // TEXT_SHR
+};
+
+static const Entry TABLE_C1[] PROGMEM = {
+    E(000, TEXT_ROL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(010, TEXT_ROR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(020, TEXT_RCL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(030, TEXT_RCR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(040, TEXT_SHL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(040, TEXT_SAL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(050, TEXT_SHR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+    E(070, TEXT_SAR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
+};
+
+static const uint8_t INDEX_C1[] PROGMEM = {
+      2,  // TEXT_RCL
+      3,  // TEXT_RCR
+      0,  // TEXT_ROL
+      1,  // TEXT_ROR
+      5,  // TEXT_SAL
+      7,  // TEXT_SAR
+      4,  // TEXT_SHL
+      6,  // TEXT_SHR
+};
+
 // clang-format on
 
 static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
@@ -736,6 +837,36 @@ static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
+static const TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
+        // I80186
+        {0x00, ARRAY_RANGE(TABLE_I80186), ARRAY_RANGE(INDEX_I80186)},
+        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
+        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_D1)},
+        {0xC0, ARRAY_RANGE(TABLE_C0), ARRAY_RANGE(INDEX_C0)},
+        {0xC1, ARRAY_RANGE(TABLE_C1), ARRAY_RANGE(INDEX_C1)},
+        // i8086
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
+        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
+        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_81)},  // M_IMM
+        {0x8F, ARRAY_RANGE(TABLE_8F), ARRAY_RANGE(INDEX_8F)},
+        {0xC6, ARRAY_RANGE(TABLE_C6), ARRAY_RANGE(INDEX_C6)},
+        {0xC7, ARRAY_RANGE(TABLE_C7), ARRAY_RANGE(INDEX_C7)},
+        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_D2)},
+        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_D3)},
+        {0xD4, ARRAY_RANGE(TABLE_D4), ARRAY_RANGE(INDEX_D4)},
+        {0xD5, ARRAY_RANGE(TABLE_D5), ARRAY_RANGE(INDEX_D5)},
+        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_F6)},
+        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_F7)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+        {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
+};
+
+static const TableI8086::Cpu CPU_TABLES[] PROGMEM = {
+        {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
+        {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
+};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -752,9 +883,12 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_DIR)  // checked by |acceptSize| later.
         return table == M_BMOD || table == M_BMEM || table == M_BDIR || table == M_WMOD ||
                table == M_WMEM || table == M_WDIR;
-    if (opr == M_IMM || opr == M_IMM8 || opr == M_VAL1 || opr == M_VAL3)
-        return table == M_IMM || table == M_IOA || table == M_UI16 || table == M_REL8 ||
-               table == M_REL;
+    if (opr == M_VAL1 || opr == M_VAL3)
+        return table == M_IMM || table == M_IMM8 || table == M_IOA || table == M_UI16 ||
+               table == M_UI8 || table == M_BIT || table == M_REL8 || table == M_REL;
+    if (opr == M_IMM || opr == M_IMM8)
+        return table == M_IMM || table == M_IOA || table == M_UI16 || table == M_UI8 ||
+               table == M_BIT || table == M_REL8 || table == M_REL;
     if (opr == M_BMEM)
         return table == M_BMOD;
     if (opr == M_WMEM)
@@ -790,22 +924,22 @@ static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
 static bool acceptModes(const InsnI8086 &insn, const Entry *entry) {
     auto table = entry->flags();
     return acceptMode(insn.dstMode(), table.dstMode()) &&
-        acceptMode(insn.srcMode(), table.srcMode()) &&
-        acceptSize(insn, entry);
+           acceptMode(insn.srcMode(), table.srcMode()) &&
+           acceptMode(insn.extMode(), table.extMode()) && acceptSize(insn, entry);
 }
 
-Error TableI8086::searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableI8086::searchName(InsnI8086 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, const InsnI8086&>(
-                         insn.name(), insn, page, acceptModes, count);
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
+        auto entry = TableBase::searchName<EntryPage, Entry, const InsnI8086 &>(
+                insn.name(), insn, page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
-            return OK;
+            return setOK();
         }
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
 bool TableI8086::isRepeatPrefix(Config::opcode_t opCode) const {
@@ -847,7 +981,7 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 }
 
 bool TableI8086::isPrefix(Config::opcode_t opCode) const {
-    for (auto page = ARRAY_BEGIN(I8086_PAGES); page < ARRAY_END(I8086_PAGES); page++) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto prefix = page->prefix();
         if (prefix == 0)
             continue;
@@ -870,9 +1004,8 @@ static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
     return opcode & ~mask;
 }
 
-Error TableI8086::searchOpCode(
-        InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
+Error TableI8086::searchOpCode(InsnI8086 &insn) {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         if (insn.prefix() != page->prefix())
             continue;
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
@@ -880,32 +1013,39 @@ Error TableI8086::searchOpCode(
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
-            return OK;
+            return setOK();
         }
     }
-    return UNKNOWN_INSTRUCTION;
+    return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error TableI8086::searchName(InsnI8086 &insn) {
-    return setError(searchName(insn, ARRAY_RANGE(I8086_PAGES)));
+TableI8086::TableI8086() {
+    setCpu(I8086);
 }
 
-Error TableI8086::searchOpCode(InsnI8086 &insn) {
-    return setError(searchOpCode(insn, ARRAY_RANGE(I8086_PAGES)));
+bool TableI8086::setCpu(CpuType cpuType) {
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    if (t == nullptr)
+        return false;
+    _cpu = t;
+    return true;
 }
 
 const /* PROGMEM */ char *TableI8086::listCpu_P() const {
-    return TEXT_CPU_I8086;
+    return TEXT_CPU_LIST;
 }
 
 const /* PROGMEM */ char *TableI8086::cpu_P() const {
-    return TEXT_CPU_8086;
+    return _cpu->name_P();
 }
 
 bool TableI8086::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I')
         cpu++;
-    return strcmp_P(cpu, TEXT_CPU_8086) == 0;
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    if (t)
+        return setCpu(t->cpuType());
+    return false;
 }
 
 class TableI8086 TableI8086;

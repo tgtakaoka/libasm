@@ -23,8 +23,11 @@ namespace libasm {
 namespace i8086 {
 
 // clang-format off
+static const char TEXT_CPU_LIST[] PROGMEM = "i8086, i80186";
 static const char TEXT_CPU_I8086[] PROGMEM = "i8086";
-static constexpr const char *TEXT_CPU_8086 = (TEXT_CPU_I8086 + 1);
+static constexpr const char *TEXT_CPU_I80186 = TEXT_CPU_LIST + 7;
+static constexpr const char *TEXT_CPU_8086 = TEXT_CPU_I8086 + 1;
+static constexpr const char *TEXT_CPU_80186 = TEXT_CPU_I80186 + 1;
 
 static const char TEXT_AAA[]    PROGMEM = "AAA";
 static const char TEXT_AAD[]    PROGMEM = "AAD";
@@ -153,6 +156,20 @@ static const char TEXT_WAIT[]   PROGMEM = "WAIT";
 static const char TEXT_XCHG[]   PROGMEM = "XCHG";
 static const char TEXT_XLAT[]   PROGMEM = "XLAT";
 static const char TEXT_XOR[]    PROGMEM = "XOR";
+
+// i80186
+static const char TEXT_ENTER[]  PROGMEM = "ENTER";
+static const char TEXT_LEAVE[]  PROGMEM = "LEAVE";
+static const char TEXT_PUSHA[]  PROGMEM = "PUSHA";
+static const char TEXT_POPA[]   PROGMEM = "POPA";
+static const char TEXT_BOUND[]  PROGMEM = "BOUND";
+static const char TEXT_INS[]    PROGMEM = "INS";
+static const char TEXT_INSB[]   PROGMEM = "INSB";
+static const char TEXT_INSW[]   PROGMEM = "INSW";
+static const char TEXT_OUTS[]   PROGMEM = "OUTS";
+static const char TEXT_OUTSB[]  PROGMEM = "OUTSB";
+static const char TEXT_OUTSW[]  PROGMEM = "OUTSW";
+
 // clang-format on
 
 }  // namespace i8086

@@ -74,12 +74,21 @@ Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &ou
 }
 
 Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
-    if ((mode == M_IMM || mode == M_UI16) && insn.oprSize() == SZ_WORD) {
+    if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
         outHex(out, insn.readUint16(memory), 16);
     } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
         outHex(out, insn.readByte(memory), 8);
     } else if (mode == M_IMM8) {
         outHex(out, insn.readByte(memory), -8);
+    } else if (mode == M_UI16) {
+        outDec(out, insn.readUint16(memory), 16);
+    } else if (mode == M_UI8) {
+        outDec(out, insn.readByte(memory), 8);
+    } else if (mode == M_BIT) {
+        const auto bit = insn.readByte(memory);
+        if (bit >= 16 || (insn.oprSize() == SZ_BYTE && bit >= 8))
+            return setError(OVERFLOW_RANGE);
+        outDec(out, bit, 4);
     } else {
         // M_FAR
         const uint16_t offset = insn.readUint16(memory);
@@ -263,9 +272,11 @@ Error DisI8086::decodeOperand(
         break;
     case M_IMM:
     case M_UI16:
+    case M_UI8:
     case M_IMM8:
     case M_FAR:
     case M_IOA:
+    case M_BIT:
         return decodeImmediate(memory, insn, out, mode);
     case M_BDIR:
     case M_WDIR:
@@ -314,6 +325,7 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
             out.comma();
             /* Fall-through */
         case 0xAC:  // LODS DS:[SI]
+        case 0x6E:  // OUTS DS:[SI]
             outMemReg(memory, insn, out, seg, 0, 4);
             break;
         case 0xA6:  // CMPS DS:[SI],ES:[DI]
@@ -323,6 +335,7 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
             break;
         case 0xAA:  // STOS ES:[DI]
         case 0xAE:  // SCAS ES:[DI]
+        case 0x6C:  // INS ES:[DI]
             return setError(ILLEGAL_SEGMENT);
         }
     }
@@ -346,6 +359,14 @@ Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
     return setError(insn);
 }
 
+static bool imulHasSameDstSrc(const InsnI8086 &insn) {
+    const auto modreg = insn.modReg();
+    const auto reg = (modreg >> 3) & 7;
+    return (insn.opCode() & ~2) == 0x69 &&  // IMUL
+           (modreg >> 6) == 3 &&            // regsiter
+           (modreg & 7) == reg;             // dst==src
+}
+
 Error DisI8086::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn))
@@ -363,11 +384,19 @@ Error DisI8086::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return decodeStringInst(memory, insn, out);
     if (decodeOperand(memory, insn, out, insn.dstMode(), insn.dstPos()))
         return getError();
+
     if (insn.srcMode() == M_NONE)
         return setOK();
+    if (!imulHasSameDstSrc(insn)) {
+        out.comma();
+        if (decodeOperand(memory, insn, out, insn.srcMode(), insn.srcPos()))
+            return getError();
+    }
 
+    if (insn.extMode() == M_NONE)
+        return setOK();
     out.comma();
-    if (decodeOperand(memory, insn, out, insn.srcMode(), insn.srcPos()))
+    if (decodeOperand(memory, insn, out, insn.extMode(), insn.extPos()))
         return getError();
     return setOK();
 }

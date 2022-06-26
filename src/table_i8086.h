@@ -28,6 +28,8 @@ namespace i8086 {
 
 class TableI8086 : public TableBase {
 public:
+    TableI8086();
+
     Error searchName(InsnI8086 &insn);
     Error searchOpCode(InsnI8086 &insn);
     bool isRepeatPrefix(Config::opcode_t opcode) const;
@@ -41,10 +43,12 @@ public:
     bool setCpu(const char *cpu) override;
 
     typedef PrefixedEntryPage<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    Error searchName(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
-    Error searchOpCode(InsnI8086 &insn, const EntryPage *pages, const EntryPage *end) const;
+    const Cpu *_cpu;
+
+    bool setCpu(CpuType cpuType);
 };
 
 extern TableI8086 TableI8086;

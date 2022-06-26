@@ -25,6 +25,11 @@
 namespace libasm {
 namespace i8086 {
 
+enum CpuType : uint8_t {
+    I8086,
+    I80186,
+};
+
 // |mod|reg|r/m|
 // mod=11: r/m=reg
 // mod=00: disp=void
@@ -67,16 +72,19 @@ enum AddrMode : uint8_t {
     M_DIR = 24,   // Direct mode: [nnnn]
     M_CS = 25,    // Code Segment Register: CS
     M_UI16 = 26,  // 16-bit unsigned immediate
+    M_UI8 = 27,   // 8-bit unsigned immediate
+    M_BIT = 28,   // 3/4-bit shift count/bit number constant
 };
 
 enum OprPos : uint8_t {
     P_NONE = 0,
-    P_OREG = 1,  // In opcode: ____|_rrr
-    P_OSEG = 2,  // In opcode: ___s|s___
-    P_MOD = 3,   // In mod-reg-r/m: mo__|_r/m
-    P_REG = 4,   // In mod-reg-r/m: __re|g___
-    P_OMOD = 5,  // In opcode:      mo__|_r/m
-    P_OPR = 6,   // In operand
+    P_OPR = 1,   // In operand
+    P_OREG = 2,  // In opcode:      __|___|reg
+    P_OSEG = 3,  // In opcode:      ___|ss|___
+    P_OMOD = 4,  // In opcode:      mo|___|r/m
+    P_MOD = 5,   // In mod-reg-r/m: mo|___|r/m
+    P_REG = 6,   // In mod-reg-r/m: __|reg|___
+    P_MREG = 7,  // In mod-reg-r/m: mo|reg|reg
 };
 
 enum OprSize : uint8_t {
@@ -91,23 +99,25 @@ public:
     struct Flags {
         uint8_t _dst;
         uint8_t _src;
-        uint8_t _pos;
+        uint8_t _ext;
         uint8_t _size;
 
-        static constexpr Flags create(AddrMode dstMode, AddrMode srcMode, OprPos dstPos,
-                OprPos srcPos, OprSize size, bool strInst) {
-            return Entry::Flags{Entry::_opr(dstMode), Entry::_opr(srcMode),
-                    Entry::_pos(dstPos, srcPos), Entry::_size(size, strInst)};
+        static constexpr Flags create(AddrMode dstMode, AddrMode srcMode, AddrMode extMode,
+                OprPos dstPos, OprPos srcPos, OprPos extPos, OprSize size, bool strInst) {
+            return Entry::Flags{Entry::_opr(dstMode, dstPos), Entry::_opr(srcMode, srcPos),
+                    Entry::_opr(extMode, extPos), Entry::_size(size, strInst)};
         }
         Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_pos),
+            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
                     pgm_read_byte(&_size)};
         }
 
         AddrMode dstMode() const { return AddrMode((_dst >> mode_gp) & mode_gm); }
         AddrMode srcMode() const { return AddrMode((_src >> mode_gp) & mode_gm); }
-        OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
-        OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & pos_gm); }
+        AddrMode extMode() const { return AddrMode((_ext >> mode_gp) & mode_gm); }
+        OprPos dstPos() const { return OprPos((_dst >> pos_gp) & pos_gm); }
+        OprPos srcPos() const { return OprPos((_src >> pos_gp) & pos_gm); }
+        OprPos extPos() const { return OprPos((_ext >> pos_gp) & pos_gm); }
         OprSize size() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
         bool strInst() const { return _size & (1 << strInst_bp); }
     };
@@ -120,25 +130,18 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t _opr(AddrMode mode) { return (static_cast<uint8_t>(mode) << mode_gp); }
-    static constexpr uint8_t _pos(OprPos dstPos, OprPos srcPos) {
-        return (static_cast<uint8_t>(dstPos) << dstPos_gp) |
-               (static_cast<uint8_t>(srcPos) << srcPos_gp);
+    static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
+        return (static_cast<uint8_t>(mode) << mode_gp) |
+            (static_cast<uint8_t>(pos) << pos_gp);
     }
     static constexpr uint8_t _size(OprSize size, bool strInst) {
         return (static_cast<uint8_t>(size) << oprSize_gp) | (strInst ? (1 << strInst_bp) : 0);
     }
 
-    static constexpr int dst_gp = 0;
-    static constexpr int src_gp = 8;
-    static constexpr int pos_gp = 16;
-    static constexpr int size_gp = 24;
-    // |dst|, |src|
+    // |dst|, |src|, |ext|
     static constexpr int mode_gp = 0;
+    static constexpr int pos_gp = 5;
     static constexpr uint8_t mode_gm = 0x1F;
-    // |pos|
-    static constexpr int dstPos_gp = 0;
-    static constexpr int srcPos_gp = 4;
     static constexpr uint8_t pos_gm = 0x07;
     // |size|
     static constexpr int oprSize_gp = 0;

@@ -24,6 +24,14 @@ using namespace libasm::test;
 AsmI8086 asm8086;
 Assembler &assembler(asm8086);
 
+static bool is8086() {
+    return strcmp_P("8086", assembler.cpu_P()) == 0;
+}
+
+static bool is80186() {
+    return strcmp_P("80186", assembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -39,6 +47,12 @@ void test_cpu() {
 
     EQUALS("cpu i8086", true,   assembler.setCpu("i8086"));
     EQUALS_P("cpu i8086", "8086", assembler.cpu_P());
+
+    EQUALS("cpu 80186", true,   assembler.setCpu("80186"));
+    EQUALS_P("cpu 80186", "80186", assembler.cpu_P());
+
+    EQUALS("cpu i80186", true,   assembler.setCpu("i80186"));
+    EQUALS_P("cpu i80186", "80186", assembler.cpu_P());
 }
 
 static void test_data_transfer() {
@@ -178,6 +192,19 @@ static void test_data_transfer() {
     ERRT("POP  CS",            REGISTER_NOT_ALLOWED);
     TEST("POP  SS",            0027);
     TEST("POP  DS",            0037);
+
+    if (is80186()) {
+        TEST("PUSH     -1", 0x6A, 0xFF);
+        TEST("PUSH    127", 0x6A, 0x7F);
+        TEST("PUSH   -128", 0x6A, 0x80);
+        TEST("PUSH    128", 0x68, 0x80, 0x00);
+        TEST("PUSH  32767", 0x68, 0xFF, 0x7F);
+        TEST("PUSH -32768", 0x68, 0x00, 0x80);
+        TEST("PUSH  32768", 0x68, 0x00, 0x80);
+
+        TEST("PUSHA", 0x60);
+        TEST("POPA",  0x61);
+    }
 
     TEST("XCHG AL,CH",            0x86, 0305);
     TEST("XCHG [SI],CL",          0x86, 0014);
@@ -674,6 +701,41 @@ static void test_arithmetic() {
     TEST("IMUL WORD PTR [BX+SI]",       0xF7, 0050);
     TEST("IMUL WORD PTR [BX+DI+52]",    0xF7, 0151, 0x34);
     TEST("IMUL WORD PTR [BP+SI+1234H]", 0xF7, 0252, 0x34, 0x12);
+    if (is80186()) {
+        TEST("IMUL AX, -1",   0x6B, 0300, 0xFF);
+        TEST("IMUL CX, 127",  0x6B, 0311, 0x7F);
+        TEST("IMUL DX, -128", 0x6B, 0322, 0x80);
+        TEST("IMUL BX, 4",    0x6B, 0333, 4);
+        TEST("IMUL SP, 5",    0x6B, 0344, 5);
+        TEST("IMUL BP, 6",    0x6B, 0355, 6);
+        TEST("IMUL SI, 7",    0x6B, 0366, 7);
+        TEST("IMUL DI, 8",    0x6B, 0377, 8);
+        TEST("IMUL AX, 128",  0x69, 0300, 0x80, 0x00);
+        TEST("IMUL CX, 255",  0x69, 0311, 0xFF, 0x00);
+        TEST("IMUL DX, 300H", 0x69, 0322, 0, 3);
+        TEST("IMUL BX, 400H", 0x69, 0333, 0, 4);
+        TEST("IMUL SP, 500H", 0x69, 0344, 0, 5);
+        TEST("IMUL BP, 600H", 0x69, 0355, 0, 6);
+        TEST("IMUL SI, 700H", 0x69, 0366, 0, 7);
+        TEST("IMUL DI, 800H", 0x69, 0377, 0, 8);
+
+        TEST("IMUL AX, BP, -1",           0x6B, 0305, 0xFF);
+        TEST("IMUL CX, [SI], 127",        0x6B, 0014, 0x7F);
+        TEST("IMUL DX, [1234H], -128",    0x6B, 0026, 0x34, 0x12, 0x80);
+        TEST("IMUL BX, [DI-52], 4",       0x6B, 0135, 0xCC, 4);
+        TEST("IMUL SP, [BP+1234H], 5",    0x6B, 0246, 0x34, 0x12, 5);
+        TEST("IMUL BP, [BX+SI], 6",       0x6B, 0050, 6);
+        TEST("IMUL SI, [BX+DI+52], 7",    0x6B, 0161, 0x34, 7);
+        TEST("IMUL DI, [BP+SI+1234H], 8", 0x6B, 0272, 0x34, 0x12, 8);
+        TEST("IMUL AX, BP, 128",             0x69, 0305, 0x80, 0x00);
+        TEST("IMUL CX, [SI], 255",           0x69, 0014, 0xFF, 0x00);
+        TEST("IMUL DX, [1234H], 300H",       0x69, 0026, 0x34, 0x12, 0, 3);
+        TEST("IMUL BX, [DI-52], 400H",       0x69, 0135, 0xCC, 0, 4);
+        TEST("IMUL SP, [BP+1234H], 500H",    0x69, 0246, 0x34, 0x12, 0, 5);
+        TEST("IMUL BP, [BX+SI], 600H",       0x69, 0050, 0, 6);
+        TEST("IMUL SI, [BX+DI+52], 700H",    0x69, 0161, 0x34, 0, 7);
+        TEST("IMUL DI, [BP+SI+1234H], 800H", 0x69, 0272, 0x34, 0x12, 0, 8);
+    }
 
     TEST("AAM", 0xD4, 0x0A);
 
@@ -735,24 +797,97 @@ static void test_logic() {
     TEST("NOT WORD PTR [BX+DI+52]",    0xF7, 0121, 0x34);
     TEST("NOT WORD PTR [BP+SI+1234H]", 0xF7, 0222, 0x34, 0x12);
 
-    TEST("SHL CH,1",                      0xD0, 0345);
-    ERRT("SHL CH,0",                      OPERAND_NOT_ALLOWED);
-    ERRT("SHL CH,2",                      OPERAND_NOT_ALLOWED);
-    TEST("SHL BYTE PTR [SI],1",           0xD0, 0044);
-    TEST("SHL BYTE PTR [1234H],1",        0xD0, 0046, 0x34, 0x12);
-    TEST("SHL BYTE PTR [DI-52],1",        0xD0, 0145, 0xCC);
-    TEST("SHL BYTE PTR [BP+1234H],1",     0xD0, 0246, 0x34, 0x12);
-    TEST("SHL BYTE PTR [BX+SI],1",        0xD0, 0040);
-    TEST("SHL BYTE PTR [BX+DI+52],1",     0xD0, 0141, 0x34);
-    TEST("SHL BYTE PTR [BP+SI+1234H],1",  0xD0, 0242, 0x34, 0x12);
-    TEST("SHL BP,1",                      0xD1, 0345);
-    TEST("SHL WORD PTR [SI],1",           0xD1, 0044);
-    TEST("SHL WORD PTR [1234H],1",        0xD1, 0046, 0x34, 0x12);
-    TEST("SHL WORD PTR [DI-52],1",        0xD1, 0145, 0xCC);
-    TEST("SHL WORD PTR [BP+1234H],1",     0xD1, 0246, 0x34, 0x12);
-    TEST("SHL WORD PTR [BX+SI],1",        0xD1, 0040);
-    TEST("SHL WORD PTR [BX+DI+52],1",     0xD1, 0141, 0x34);
-    TEST("SHL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+    if (is8086()) {
+        TEST("SAL CH,1",                      0xD0, 0345);
+        TEST("SAL BYTE PTR [SI],1",           0xD0, 0044);
+        TEST("SAL BYTE PTR [1234H],1",        0xD0, 0046, 0x34, 0x12);
+        TEST("SAL BYTE PTR [DI-52],1",        0xD0, 0145, 0xCC);
+        TEST("SAL BYTE PTR [BP+1234H],1",     0xD0, 0246, 0x34, 0x12);
+        TEST("SAL BYTE PTR [BX+SI],1",        0xD0, 0040);
+        TEST("SAL BYTE PTR [BX+DI+52],1",     0xD0, 0141, 0x34);
+        TEST("SAL BYTE PTR [BP+SI+1234H],1",  0xD0, 0242, 0x34, 0x12);
+        TEST("SAL BP,1",                      0xD1, 0345);
+        TEST("SAL WORD PTR [SI],1",           0xD1, 0044);
+        TEST("SAL WORD PTR [1234H],1",        0xD1, 0046, 0x34, 0x12);
+        TEST("SAL WORD PTR [DI-52],1",        0xD1, 0145, 0xCC);
+        TEST("SAL WORD PTR [BP+1234H],1",     0xD1, 0246, 0x34, 0x12);
+        TEST("SAL WORD PTR [BX+SI],1",        0xD1, 0040);
+        TEST("SAL WORD PTR [BX+DI+52],1",     0xD1, 0141, 0x34);
+        TEST("SAL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+    } else {
+        TEST("SAL CH,0",                      0xC0, 0345, 0);
+        TEST("SAL BYTE PTR [SI],1",           0xD0, 0044);
+        TEST("SAL BYTE PTR [1234H],2",        0xC0, 0046, 0x34, 0x12, 2);
+        TEST("SAL BYTE PTR [DI-52],3",        0xC0, 0145, 0xCC, 3);
+        TEST("SAL BYTE PTR [BP+1234H],4",     0xC0, 0246, 0x34, 0x12, 4);
+        TEST("SAL BYTE PTR [BX+SI],5",        0xC0, 0040, 5);
+        TEST("SAL BYTE PTR [BX+DI+52],6",     0xC0, 0141, 0x34, 6);
+        TEST("SAL BYTE PTR [BP+SI+1234H],7",  0xC0, 0242, 0x34, 0x12, 7);
+        TEST("SAL BP,8",                      0xC1, 0345, 8);
+        TEST("SAL WORD PTR [SI],9",           0xC1, 0044, 9);
+        TEST("SAL WORD PTR [1234H],10",       0xC1, 0046, 0x34, 0x12, 10);
+        TEST("SAL WORD PTR [DI-52],11",       0xC1, 0145, 0xCC, 11);
+        TEST("SAL WORD PTR [BP+1234H],12",    0xC1, 0246, 0x34, 0x12, 12);
+        TEST("SAL WORD PTR [BX+SI],13",       0xC1, 0040, 13);
+        TEST("SAL WORD PTR [BX+DI+52],14",    0xC1, 0141, 0x34, 14);
+        TEST("SAL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+    }
+    TEST("SAL CH,CL",                     0xD2, 0345);
+    TEST("SAL BYTE PTR [SI],CL",          0xD2, 0044);
+    TEST("SAL BYTE PTR [1234H],CL",       0xD2, 0046, 0x34, 0x12);
+    TEST("SAL BYTE PTR [DI-52],CL",       0xD2, 0145, 0xCC);
+    TEST("SAL BYTE PTR [BP+1234H],CL",    0xD2, 0246, 0x34, 0x12);
+    TEST("SAL BYTE PTR [BX+SI],CL",       0xD2, 0040);
+    TEST("SAL BYTE PTR [BX+DI+52],CL",    0xD2, 0141, 0x34);
+    TEST("SAL BYTE PTR [BP+SI+1234H],CL", 0xD2, 0242, 0x34, 0x12);
+    TEST("SAL BP,CL",                     0xD3, 0345);
+    TEST("SAL WORD PTR [SI],CL",          0xD3, 0044);
+    TEST("SAL WORD PTR [1234H],CL",       0xD3, 0046, 0x34, 0x12);
+    TEST("SAL WORD PTR [DI-52],CL",       0xD3, 0145, 0xCC);
+    TEST("SAL WORD PTR [BP+1234H],CL",    0xD3, 0246, 0x34, 0x12);
+    TEST("SAL WORD PTR [BX+SI],CL",       0xD3, 0040);
+    TEST("SAL WORD PTR [BX+DI+52],CL",    0xD3, 0141, 0x34);
+    TEST("SAL WORD PTR [BP+SI+1234H],CL", 0xD3, 0242, 0x34, 0x12);
+
+    if (is8086()) {
+        TEST("SHL CH,1",                      0xD0, 0345);
+        ERRT("SHL CH,0",                      OPERAND_NOT_ALLOWED);
+        ERRT("SHL CH,2",                      OPERAND_NOT_ALLOWED);
+        TEST("SHL BYTE PTR [SI],1",           0xD0, 0044);
+        TEST("SHL BYTE PTR [1234H],1",        0xD0, 0046, 0x34, 0x12);
+        TEST("SHL BYTE PTR [DI-52],1",        0xD0, 0145, 0xCC);
+        TEST("SHL BYTE PTR [BP+1234H],1",     0xD0, 0246, 0x34, 0x12);
+        TEST("SHL BYTE PTR [BX+SI],1",        0xD0, 0040);
+        TEST("SHL BYTE PTR [BX+DI+52],1",     0xD0, 0141, 0x34);
+        TEST("SHL BYTE PTR [BP+SI+1234H],1",  0xD0, 0242, 0x34, 0x12);
+        TEST("SHL BP,1",                      0xD1, 0345);
+        ERRT("SHL BP,0",                      OPERAND_NOT_ALLOWED);
+        ERRT("SHL BP,8",                      OPERAND_NOT_ALLOWED);
+        TEST("SHL WORD PTR [SI],1",           0xD1, 0044);
+        TEST("SHL WORD PTR [1234H],1",        0xD1, 0046, 0x34, 0x12);
+        TEST("SHL WORD PTR [DI-52],1",        0xD1, 0145, 0xCC);
+        TEST("SHL WORD PTR [BP+1234H],1",     0xD1, 0246, 0x34, 0x12);
+        TEST("SHL WORD PTR [BX+SI],1",        0xD1, 0040);
+        TEST("SHL WORD PTR [BX+DI+52],1",     0xD1, 0141, 0x34);
+        TEST("SHL WORD PTR [BP+SI+1234H],1",  0xD1, 0242, 0x34, 0x12);
+    } else {
+        TEST("SHL CH,2",                      0xC0, 0345, 2);
+        TEST("SHL BYTE PTR [SI],3",           0xC0, 0044, 3);
+        TEST("SHL BYTE PTR [1234H],4",        0xC0, 0046, 0x34, 0x12, 4);
+        TEST("SHL BYTE PTR [DI-52],5",        0xC0, 0145, 0xCC, 5);
+        TEST("SHL BYTE PTR [BP+1234H],6",     0xC0, 0246, 0x34, 0x12, 6);
+        TEST("SHL BYTE PTR [BX+SI],7",        0xC0, 0040, 7);
+        TEST("SHL BYTE PTR [BX+DI+52],0",     0xC0, 0141, 0x34, 0);
+        TEST("SHL BYTE PTR [BP+SI+1234H],1",  0xD0, 0242, 0x34, 0x12);
+        TEST("SHL BP,8",                      0xC1, 0345, 8);
+        TEST("SHL WORD PTR [SI],1",           0xD1, 0044);
+        TEST("SHL WORD PTR [1234H],10",       0xC1, 0046, 0x34, 0x12, 10);
+        TEST("SHL WORD PTR [DI-52],11",       0xC1, 0145, 0xCC, 11);
+        TEST("SHL WORD PTR [BP+1234H],12",    0xC1, 0246, 0x34, 0x12, 12);
+        TEST("SHL WORD PTR [BX+SI],13",       0xC1, 0040, 13);
+        TEST("SHL WORD PTR [BX+DI+52],14",    0xC1, 0141, 0x34, 14);
+        TEST("SHL WORD PTR [BP+SI+1234H],15", 0xC1, 0242, 0x34, 0x12, 15);
+    }
     TEST("SHL CH,CL",                     0xD2, 0345);
     TEST("SHL BYTE PTR [SI],CL",          0xD2, 0044);
     TEST("SHL BYTE PTR [1234H],CL",       0xD2, 0046, 0x34, 0x12);
@@ -770,22 +905,41 @@ static void test_logic() {
     TEST("SHL WORD PTR [BX+DI+52],CL",    0xD3, 0141, 0x34);
     TEST("SHL WORD PTR [BP+SI+1234H],CL", 0xD3, 0242, 0x34, 0x12);
 
-    TEST("SHR CH,1",                      0xD0, 0355);
-    TEST("SHR BYTE PTR [SI],1",           0xD0, 0054);
-    TEST("SHR BYTE PTR [1234H],1",        0xD0, 0056, 0x34, 0x12);
-    TEST("SHR BYTE PTR [DI-52],1",        0xD0, 0155, 0xCC);
-    TEST("SHR BYTE PTR [BP+1234H],1",     0xD0, 0256, 0x34, 0x12);
-    TEST("SHR BYTE PTR [BX+SI],1",        0xD0, 0050);
-    TEST("SHR BYTE PTR [BX+DI+52],1",     0xD0, 0151, 0x34);
-    TEST("SHR BYTE PTR [BP+SI+1234H],1",  0xD0, 0252, 0x34, 0x12);
-    TEST("SHR BP,1",                      0xD1, 0355);
-    TEST("SHR WORD PTR [SI],1",           0xD1, 0054);
-    TEST("SHR WORD PTR [1234H],1",        0xD1, 0056, 0x34, 0x12);
-    TEST("SHR WORD PTR [DI-52],1",        0xD1, 0155, 0xCC);
-    TEST("SHR WORD PTR [BP+1234H],1",     0xD1, 0256, 0x34, 0x12);
-    TEST("SHR WORD PTR [BX+SI],1",        0xD1, 0050);
-    TEST("SHR WORD PTR [BX+DI+52],1",     0xD1, 0151, 0x34);
-    TEST("SHR WORD PTR [BP+SI+1234H],1",  0xD1, 0252, 0x34, 0x12);
+    if (is8086()) {
+        TEST("SHR CH,1",                      0xD0, 0355);
+        TEST("SHR BYTE PTR [SI],1",           0xD0, 0054);
+        TEST("SHR BYTE PTR [1234H],1",        0xD0, 0056, 0x34, 0x12);
+        TEST("SHR BYTE PTR [DI-52],1",        0xD0, 0155, 0xCC);
+        TEST("SHR BYTE PTR [BP+1234H],1",     0xD0, 0256, 0x34, 0x12);
+        TEST("SHR BYTE PTR [BX+SI],1",        0xD0, 0050);
+        TEST("SHR BYTE PTR [BX+DI+52],1",     0xD0, 0151, 0x34);
+        TEST("SHR BYTE PTR [BP+SI+1234H],1",  0xD0, 0252, 0x34, 0x12);
+        TEST("SHR BP,1",                      0xD1, 0355);
+        TEST("SHR WORD PTR [SI],1",           0xD1, 0054);
+        TEST("SHR WORD PTR [1234H],1",        0xD1, 0056, 0x34, 0x12);
+        TEST("SHR WORD PTR [DI-52],1",        0xD1, 0155, 0xCC);
+        TEST("SHR WORD PTR [BP+1234H],1",     0xD1, 0256, 0x34, 0x12);
+        TEST("SHR WORD PTR [BX+SI],1",        0xD1, 0050);
+        TEST("SHR WORD PTR [BX+DI+52],1",     0xD1, 0151, 0x34);
+        TEST("SHR WORD PTR [BP+SI+1234H],1",  0xD1, 0252, 0x34, 0x12);
+    } else {
+        TEST("SHR CH,3",                      0xC0, 0355, 3);
+        TEST("SHR BYTE PTR [SI],4",           0xC0, 0054, 4);
+        TEST("SHR BYTE PTR [1234H],5",        0xC0, 0056, 0x34, 0x12, 5);
+        TEST("SHR BYTE PTR [DI-52],6",        0xC0, 0155, 0xCC, 6);
+        TEST("SHR BYTE PTR [BP+1234H],7",     0xC0, 0256, 0x34, 0x12, 7);
+        TEST("SHR BYTE PTR [BX+SI],0",        0xC0, 0050, 0);
+        TEST("SHR BYTE PTR [BX+DI+52],1",     0xD0, 0151, 0x34);
+        TEST("SHR BYTE PTR [BP+SI+1234H],2",  0xC0, 0252, 0x34, 0x12, 2);
+        TEST("SHR BP,8",                      0xC1, 0355, 8);
+        TEST("SHR WORD PTR [SI],9",           0xC1, 0054, 9);
+        TEST("SHR WORD PTR [1234H],1",        0xD1, 0056, 0x34, 0x12);
+        TEST("SHR WORD PTR [DI-52],11",       0xC1, 0155, 0xCC, 11);
+        TEST("SHR WORD PTR [BP+1234H],12",    0xC1, 0256, 0x34, 0x12, 12);
+        TEST("SHR WORD PTR [BX+SI],13",       0xC1, 0050, 13);
+        TEST("SHR WORD PTR [BX+DI+52],14",    0xC1, 0151, 0x34, 14);
+        TEST("SHR WORD PTR [BP+SI+1234H],15", 0xC1, 0252, 0x34, 0x12, 15);
+    }
     TEST("SHR CH,CL",                     0xD2, 0355);
     TEST("SHR BYTE PTR [SI],CL",          0xD2, 0054);
     TEST("SHR BYTE PTR [1234H],CL",       0xD2, 0056, 0x34, 0x12);
@@ -803,22 +957,41 @@ static void test_logic() {
     TEST("SHR WORD PTR [BX+DI+52],CL",    0xD3, 0151, 0x34);
     TEST("SHR WORD PTR [BP+SI+1234H],CL", 0xD3, 0252, 0x34, 0x12);
 
-    TEST("SAR CH,1",                      0xD0, 0375);
-    TEST("SAR BYTE PTR [SI],1",           0xD0, 0074);
-    TEST("SAR BYTE PTR [1234H],1",        0xD0, 0076, 0x34, 0x12);
-    TEST("SAR BYTE PTR [DI-52],1",        0xD0, 0175, 0xCC);
-    TEST("SAR BYTE PTR [BP+1234H],1",     0xD0, 0276, 0x34, 0x12);
-    TEST("SAR BYTE PTR [BX+SI],1",        0xD0, 0070);
-    TEST("SAR BYTE PTR [BX+DI+52],1",     0xD0, 0171, 0x34);
-    TEST("SAR BYTE PTR [BP+SI+1234H],1",  0xD0, 0272, 0x34, 0x12);
-    TEST("SAR BP,1",                      0xD1, 0375);
-    TEST("SAR WORD PTR [SI],1",           0xD1, 0074);
-    TEST("SAR WORD PTR [1234H],1",        0xD1, 0076, 0x34, 0x12);
-    TEST("SAR WORD PTR [DI-52],1",        0xD1, 0175, 0xCC);
-    TEST("SAR WORD PTR [BP+1234H],1",     0xD1, 0276, 0x34, 0x12);
-    TEST("SAR WORD PTR [BX+SI],1",        0xD1, 0070);
-    TEST("SAR WORD PTR [BX+DI+52],1",     0xD1, 0171, 0x34);
-    TEST("SAR WORD PTR [BP+SI+1234H],1",  0xD1, 0272, 0x34, 0x12);
+    if (is8086()) {
+        TEST("SAR CH,1",                      0xD0, 0375);
+        TEST("SAR BYTE PTR [SI],1",           0xD0, 0074);
+        TEST("SAR BYTE PTR [1234H],1",        0xD0, 0076, 0x34, 0x12);
+        TEST("SAR BYTE PTR [DI-52],1",        0xD0, 0175, 0xCC);
+        TEST("SAR BYTE PTR [BP+1234H],1",     0xD0, 0276, 0x34, 0x12);
+        TEST("SAR BYTE PTR [BX+SI],1",        0xD0, 0070);
+        TEST("SAR BYTE PTR [BX+DI+52],1",     0xD0, 0171, 0x34);
+        TEST("SAR BYTE PTR [BP+SI+1234H],1",  0xD0, 0272, 0x34, 0x12);
+        TEST("SAR BP,1",                      0xD1, 0375);
+        TEST("SAR WORD PTR [SI],1",           0xD1, 0074);
+        TEST("SAR WORD PTR [1234H],1",        0xD1, 0076, 0x34, 0x12);
+        TEST("SAR WORD PTR [DI-52],1",        0xD1, 0175, 0xCC);
+        TEST("SAR WORD PTR [BP+1234H],1",     0xD1, 0276, 0x34, 0x12);
+        TEST("SAR WORD PTR [BX+SI],1",        0xD1, 0070);
+        TEST("SAR WORD PTR [BX+DI+52],1",     0xD1, 0171, 0x34);
+        TEST("SAR WORD PTR [BP+SI+1234H],1",  0xD1, 0272, 0x34, 0x12);
+    } else {
+        TEST("SAR CH,1",                      0xD0, 0375);
+        TEST("SAR BYTE PTR [SI],2",           0xC0, 0074, 2);
+        TEST("SAR BYTE PTR [1234H],3",        0xC0, 0076, 0x34, 0x12, 3);
+        TEST("SAR BYTE PTR [DI-52],4",        0xC0, 0175, 0xCC, 4);
+        TEST("SAR BYTE PTR [BP+1234H],5",     0xC0, 0276, 0x34, 0x12, 5);
+        TEST("SAR BYTE PTR [BX+SI],6",        0xC0, 0070, 6);
+        TEST("SAR BYTE PTR [BX+DI+52],7",     0xC0, 0171, 0x34, 7);
+        TEST("SAR BYTE PTR [BP+SI+1234H],0",  0xC0, 0272, 0x34, 0x12, 0);
+        TEST("SAR BP,8",                      0xC1, 0375, 8);
+        TEST("SAR WORD PTR [SI],9",           0xC1, 0074, 9);
+        TEST("SAR WORD PTR [1234H],1",        0xD1, 0076, 0x34, 0x12);
+        TEST("SAR WORD PTR [DI-52],11",       0xC1, 0175, 0xCC, 11);
+        TEST("SAR WORD PTR [BP+1234H],12",    0xC1, 0276, 0x34, 0x12, 12);
+        TEST("SAR WORD PTR [BX+SI],13",       0xC1, 0070, 13);
+        TEST("SAR WORD PTR [BX+DI+52],14",    0xC1, 0171, 0x34, 14);
+        TEST("SAR WORD PTR [BP+SI+1234H],15", 0xC1, 0272, 0x34, 0x12, 15);
+    }
     TEST("SAR CH,CL",                     0xD2, 0375);
     TEST("SAR BYTE PTR [SI],CL",          0xD2, 0074);
     TEST("SAR BYTE PTR [1234H],CL",       0xD2, 0076, 0x34, 0x12);
@@ -836,22 +1009,41 @@ static void test_logic() {
     TEST("SAR WORD PTR [BX+DI+52],CL",    0xD3, 0171, 0x34);
     TEST("SAR WORD PTR [BP+SI+1234H],CL", 0xD3, 0272, 0x34, 0x12);
 
-    TEST("ROL CH,1",                      0xD0, 0305);
-    TEST("ROL BYTE PTR [SI],1",           0xD0, 0004);
-    TEST("ROL BYTE PTR [1234H],1",        0xD0, 0006, 0x34, 0x12);
-    TEST("ROL BYTE PTR [DI-52],1",        0xD0, 0105, 0xCC);
-    TEST("ROL BYTE PTR [BP+1234H],1",     0xD0, 0206, 0x34, 0x12);
-    TEST("ROL BYTE PTR [BX+SI],1",        0xD0, 0000);
-    TEST("ROL BYTE PTR [BX+DI+52],1",     0xD0, 0101, 0x34);
-    TEST("ROL BYTE PTR [BP+SI+1234H],1",  0xD0, 0202, 0x34, 0x12);
-    TEST("ROL BP,1",                      0xD1, 0305);
-    TEST("ROL WORD PTR [SI],1",           0xD1, 0004);
-    TEST("ROL WORD PTR [1234H],1",        0xD1, 0006, 0x34, 0x12);
-    TEST("ROL WORD PTR [DI-52],1",        0xD1, 0105, 0xCC);
-    TEST("ROL WORD PTR [BP+1234H],1",     0xD1, 0206, 0x34, 0x12);
-    TEST("ROL WORD PTR [BX+SI],1",        0xD1, 0000);
-    TEST("ROL WORD PTR [BX+DI+52],1",     0xD1, 0101, 0x34);
-    TEST("ROL WORD PTR [BP+SI+1234H],1",  0xD1, 0202, 0x34, 0x12);
+    if (is8086()) {
+        TEST("ROL CH,1",                      0xD0, 0305);
+        TEST("ROL BYTE PTR [SI],1",           0xD0, 0004);
+        TEST("ROL BYTE PTR [1234H],1",        0xD0, 0006, 0x34, 0x12);
+        TEST("ROL BYTE PTR [DI-52],1",        0xD0, 0105, 0xCC);
+        TEST("ROL BYTE PTR [BP+1234H],1",     0xD0, 0206, 0x34, 0x12);
+        TEST("ROL BYTE PTR [BX+SI],1",        0xD0, 0000);
+        TEST("ROL BYTE PTR [BX+DI+52],1",     0xD0, 0101, 0x34);
+        TEST("ROL BYTE PTR [BP+SI+1234H],1",  0xD0, 0202, 0x34, 0x12);
+        TEST("ROL BP,1",                      0xD1, 0305);
+        TEST("ROL WORD PTR [SI],1",           0xD1, 0004);
+        TEST("ROL WORD PTR [1234H],1",        0xD1, 0006, 0x34, 0x12);
+        TEST("ROL WORD PTR [DI-52],1",        0xD1, 0105, 0xCC);
+        TEST("ROL WORD PTR [BP+1234H],1",     0xD1, 0206, 0x34, 0x12);
+        TEST("ROL WORD PTR [BX+SI],1",        0xD1, 0000);
+        TEST("ROL WORD PTR [BX+DI+52],1",     0xD1, 0101, 0x34);
+        TEST("ROL WORD PTR [BP+SI+1234H],1",  0xD1, 0202, 0x34, 0x12);
+    } else {
+        TEST("ROL CH,4",                      0xC0, 0305, 4);
+        TEST("ROL BYTE PTR [SI],5",           0xC0, 0004, 5);
+        TEST("ROL BYTE PTR [1234H],6",        0xC0, 0006, 0x34, 0x12, 6);
+        TEST("ROL BYTE PTR [DI-52],7",        0xC0, 0105, 0xCC, 7);
+        TEST("ROL BYTE PTR [BP+1234H],0",     0xC0, 0206, 0x34, 0x12, 0);
+        TEST("ROL BYTE PTR [BX+SI],1",        0xD0, 0000);
+        TEST("ROL BYTE PTR [BX+DI+52],2",     0xC0, 0101, 0x34, 2);
+        TEST("ROL BYTE PTR [BP+SI+1234H],3",  0xC0, 0202, 0x34, 0x12, 3);
+        TEST("ROL BP,8",                      0xC1, 0305, 8);
+        TEST("ROL WORD PTR [SI],9",           0xC1, 0004, 9);
+        TEST("ROL WORD PTR [1234H],10",       0xC1, 0006, 0x34, 0x12, 10);
+        TEST("ROL WORD PTR [DI-52],1",        0xD1, 0105, 0xCC);
+        TEST("ROL WORD PTR [BP+1234H],12",    0xC1, 0206, 0x34, 0x12, 12);
+        TEST("ROL WORD PTR [BX+SI],13",       0xC1, 0000, 13);
+        TEST("ROL WORD PTR [BX+DI+52],14",    0xC1, 0101, 0x34, 14);
+        TEST("ROL WORD PTR [BP+SI+1234H],15", 0xC1, 0202, 0x34, 0x12, 15);
+    }
     TEST("ROL CH,CL",                     0xD2, 0305);
     TEST("ROL BYTE PTR [SI],CL",          0xD2, 0004);
     TEST("ROL BYTE PTR [1234H],CL",       0xD2, 0006, 0x34, 0x12);
@@ -869,22 +1061,41 @@ static void test_logic() {
     TEST("ROL WORD PTR [BX+DI+52],CL",    0xD3, 0101, 0x34);
     TEST("ROL WORD PTR [BP+SI+1234H],CL", 0xD3, 0202, 0x34, 0x12);
 
-    TEST("ROR CH,1",                      0xD0, 0315);
-    TEST("ROR BYTE PTR [SI],1",           0xD0, 0014);
-    TEST("ROR BYTE PTR [1234H],1",        0xD0, 0016, 0x34, 0x12);
-    TEST("ROR BYTE PTR [DI-52],1",        0xD0, 0115, 0xCC);
-    TEST("ROR BYTE PTR [BP+1234H],1",     0xD0, 0216, 0x34, 0x12);
-    TEST("ROR BYTE PTR [BX+SI],1",        0xD0, 0010);
-    TEST("ROR BYTE PTR [BX+DI+52],1",     0xD0, 0111, 0x34);
-    TEST("ROR BYTE PTR [BP+SI+1234H],1",  0xD0, 0212, 0x34, 0x12);
-    TEST("ROR BP,1",                      0xD1, 0315);
-    TEST("ROR WORD PTR [SI],1",           0xD1, 0014);
-    TEST("ROR WORD PTR [1234H],1",        0xD1, 0016, 0x34, 0x12);
-    TEST("ROR WORD PTR [DI-52],1",        0xD1, 0115, 0xCC);
-    TEST("ROR WORD PTR [BP+1234H],1",     0xD1, 0216, 0x34, 0x12);
-    TEST("ROR WORD PTR [BX+SI],1",        0xD1, 0010);
-    TEST("ROR WORD PTR [BX+DI+52],1",     0xD1, 0111, 0x34);
-    TEST("ROR WORD PTR [BP+SI+1234H],1",  0xD1, 0212, 0x34, 0x12);
+    if (is8086()) {
+        TEST("ROR CH,1",                      0xD0, 0315);
+        TEST("ROR BYTE PTR [SI],1",           0xD0, 0014);
+        TEST("ROR BYTE PTR [1234H],1",        0xD0, 0016, 0x34, 0x12);
+        TEST("ROR BYTE PTR [DI-52],1",        0xD0, 0115, 0xCC);
+        TEST("ROR BYTE PTR [BP+1234H],1",     0xD0, 0216, 0x34, 0x12);
+        TEST("ROR BYTE PTR [BX+SI],1",        0xD0, 0010);
+        TEST("ROR BYTE PTR [BX+DI+52],1",     0xD0, 0111, 0x34);
+        TEST("ROR BYTE PTR [BP+SI+1234H],1",  0xD0, 0212, 0x34, 0x12);
+        TEST("ROR BP,1",                      0xD1, 0315);
+        TEST("ROR WORD PTR [SI],1",           0xD1, 0014);
+        TEST("ROR WORD PTR [1234H],1",        0xD1, 0016, 0x34, 0x12);
+        TEST("ROR WORD PTR [DI-52],1",        0xD1, 0115, 0xCC);
+        TEST("ROR WORD PTR [BP+1234H],1",     0xD1, 0216, 0x34, 0x12);
+        TEST("ROR WORD PTR [BX+SI],1",        0xD1, 0010);
+        TEST("ROR WORD PTR [BX+DI+52],1",     0xD1, 0111, 0x34);
+        TEST("ROR WORD PTR [BP+SI+1234H],1",  0xD1, 0212, 0x34, 0x12);
+    } else {
+        TEST("ROR CH,5",                      0xC0, 0315, 5);
+        TEST("ROR BYTE PTR [SI],6",           0xC0, 0014, 6);
+        TEST("ROR BYTE PTR [1234H],7",        0xC0, 0016, 0x34, 0x12, 7);
+        TEST("ROR BYTE PTR [DI-52],0",        0xC0, 0115, 0xCC, 0);
+        TEST("ROR BYTE PTR [BP+1234H],1",     0xD0, 0216, 0x34, 0x12);
+        TEST("ROR BYTE PTR [BX+SI],2",        0xC0, 0010, 2);
+        TEST("ROR BYTE PTR [BX+DI+52],3",     0xC0, 0111, 0x34, 3);
+        TEST("ROR BYTE PTR [BP+SI+1234H],4",  0xC0, 0212, 0x34, 0x12, 4);
+        TEST("ROR BP,8",                      0xC1, 0315, 8);
+        TEST("ROR WORD PTR [SI],9",           0xC1, 0014, 9);
+        TEST("ROR WORD PTR [1234H],10",       0xC1, 0016, 0x34, 0x12, 10);
+        TEST("ROR WORD PTR [DI-52],11",       0xC1, 0115, 0xCC, 11);
+        TEST("ROR WORD PTR [BP+1234H],1",     0xD1, 0216, 0x34, 0x12);
+        TEST("ROR WORD PTR [BX+SI],13",       0xC1, 0010, 13);
+        TEST("ROR WORD PTR [BX+DI+52],14",    0xC1, 0111, 0x34, 14);
+        TEST("ROR WORD PTR [BP+SI+1234H],15", 0xC1, 0212, 0x34, 0x12, 15);
+    }
     TEST("ROR CH,CL",                     0xD2, 0315);
     TEST("ROR BYTE PTR [SI],CL",          0xD2, 0014);
     TEST("ROR BYTE PTR [1234H],CL",       0xD2, 0016, 0x34, 0x12);
@@ -902,22 +1113,41 @@ static void test_logic() {
     TEST("ROR WORD PTR [BX+DI+52],CL",    0xD3, 0111, 0x34);
     TEST("ROR WORD PTR [BP+SI+1234H],CL", 0xD3, 0212, 0x34, 0x12);
 
-    TEST("RCL CH,1",                      0xD0, 0325);
-    TEST("RCL BYTE PTR [SI],1",           0xD0, 0024);
-    TEST("RCL BYTE PTR [1234H],1",        0xD0, 0026, 0x34, 0x12);
-    TEST("RCL BYTE PTR [DI-52],1",        0xD0, 0125, 0xCC);
-    TEST("RCL BYTE PTR [BP+1234H],1",     0xD0, 0226, 0x34, 0x12);
-    TEST("RCL BYTE PTR [BX+SI],1",        0xD0, 0020);
-    TEST("RCL BYTE PTR [BX+DI+52],1",     0xD0, 0121, 0x34);
-    TEST("RCL BYTE PTR [BP+SI+1234H],1",  0xD0, 0222, 0x34, 0x12);
-    TEST("RCL BP,1",                      0xD1, 0325);
-    TEST("RCL WORD PTR [SI],1",           0xD1, 0024);
-    TEST("RCL WORD PTR [1234H],1",        0xD1, 0026, 0x34, 0x12);
-    TEST("RCL WORD PTR [DI-52],1",        0xD1, 0125, 0xCC);
-    TEST("RCL WORD PTR [BP+1234H],1",     0xD1, 0226, 0x34, 0x12);
-    TEST("RCL WORD PTR [BX+SI],1",        0xD1, 0020);
-    TEST("RCL WORD PTR [BX+DI+52],1",     0xD1, 0121, 0x34);
-    TEST("RCL WORD PTR [BP+SI+1234H],1",  0xD1, 0222, 0x34, 0x12);
+    if (is8086()) {
+        TEST("RCL CH,1",                      0xD0, 0325);
+        TEST("RCL BYTE PTR [SI],1",           0xD0, 0024);
+        TEST("RCL BYTE PTR [1234H],1",        0xD0, 0026, 0x34, 0x12);
+        TEST("RCL BYTE PTR [DI-52],1",        0xD0, 0125, 0xCC);
+        TEST("RCL BYTE PTR [BP+1234H],1",     0xD0, 0226, 0x34, 0x12);
+        TEST("RCL BYTE PTR [BX+SI],1",        0xD0, 0020);
+        TEST("RCL BYTE PTR [BX+DI+52],1",     0xD0, 0121, 0x34);
+        TEST("RCL BYTE PTR [BP+SI+1234H],1",  0xD0, 0222, 0x34, 0x12);
+        TEST("RCL BP,1",                      0xD1, 0325);
+        TEST("RCL WORD PTR [SI],1",           0xD1, 0024);
+        TEST("RCL WORD PTR [1234H],1",        0xD1, 0026, 0x34, 0x12);
+        TEST("RCL WORD PTR [DI-52],1",        0xD1, 0125, 0xCC);
+        TEST("RCL WORD PTR [BP+1234H],1",     0xD1, 0226, 0x34, 0x12);
+        TEST("RCL WORD PTR [BX+SI],1",        0xD1, 0020);
+        TEST("RCL WORD PTR [BX+DI+52],1",     0xD1, 0121, 0x34);
+        TEST("RCL WORD PTR [BP+SI+1234H],1",  0xD1, 0222, 0x34, 0x12);
+    } else {
+        TEST("RCL CH,6",                      0xC0, 0325, 6);
+        TEST("RCL BYTE PTR [SI],7",           0xC0, 0024, 7);
+        TEST("RCL BYTE PTR [1234H],0",        0xC0, 0026, 0x34, 0x12, 0);
+        TEST("RCL BYTE PTR [DI-52],1",        0xD0, 0125, 0xCC);
+        TEST("RCL BYTE PTR [BP+1234H],2",     0xC0, 0226, 0x34, 0x12, 2);
+        TEST("RCL BYTE PTR [BX+SI],3",        0xC0, 0020, 3);
+        TEST("RCL BYTE PTR [BX+DI+52],4",     0xC0, 0121, 0x34, 4);
+        TEST("RCL BYTE PTR [BP+SI+1234H],5",  0xC0, 0222, 0x34, 0x12, 5);
+        TEST("RCL BP,8",                      0xC1, 0325, 8);
+        TEST("RCL WORD PTR [SI],9",           0xC1, 0024, 9);
+        TEST("RCL WORD PTR [1234H],10",       0xC1, 0026, 0x34, 0x12, 10);
+        TEST("RCL WORD PTR [DI-52],11",       0xC1, 0125, 0xCC, 11);
+        TEST("RCL WORD PTR [BP+1234H],12",    0xC1, 0226, 0x34, 0x12, 12);
+        TEST("RCL WORD PTR [BX+SI],1",        0xD1, 0020);
+        TEST("RCL WORD PTR [BX+DI+52],14",    0xC1, 0121, 0x34, 14);
+        TEST("RCL WORD PTR [BP+SI+1234H],15", 0xC1, 0222, 0x34, 0x12, 15);
+    }
     TEST("RCL CH,CL",                     0xD2, 0325);
     TEST("RCL BYTE PTR [SI],CL",          0xD2, 0024);
     TEST("RCL BYTE PTR [1234H],CL",       0xD2, 0026, 0x34, 0x12);
@@ -935,22 +1165,41 @@ static void test_logic() {
     TEST("RCL WORD PTR [BX+DI+52],CL",    0xD3, 0121, 0x34);
     TEST("RCL WORD PTR [BP+SI+1234H],CL", 0xD3, 0222, 0x34, 0x12);
 
-    TEST("RCR CH,1",                      0xD0, 0335);
-    TEST("RCR BYTE PTR [SI],1",           0xD0, 0034);
-    TEST("RCR BYTE PTR [1234H],1",        0xD0, 0036, 0x34, 0x12);
-    TEST("RCR BYTE PTR [DI-52],1",        0xD0, 0135, 0xCC);
-    TEST("RCR BYTE PTR [BP+1234H],1",     0xD0, 0236, 0x34, 0x12);
-    TEST("RCR BYTE PTR [BX+SI],1",        0xD0, 0030);
-    TEST("RCR BYTE PTR [BX+DI+52],1",     0xD0, 0131, 0x34);
-    TEST("RCR BYTE PTR [BP+SI+1234H],1",  0xD0, 0232, 0x34, 0x12);
-    TEST("RCR BP,1",                      0xD1, 0335);
-    TEST("RCR WORD PTR [SI],1",           0xD1, 0034);
-    TEST("RCR WORD PTR [1234H],1",        0xD1, 0036, 0x34, 0x12);
-    TEST("RCR WORD PTR [DI-52],1",        0xD1, 0135, 0xCC);
-    TEST("RCR WORD PTR [BP+1234H],1",     0xD1, 0236, 0x34, 0x12);
-    TEST("RCR WORD PTR [BX+SI],1",        0xD1, 0030);
-    TEST("RCR WORD PTR [BX+DI+52],1",     0xD1, 0131, 0x34);
-    TEST("RCR WORD PTR [BP+SI+1234H],1",  0xD1, 0232, 0x34, 0x12);
+    if (is8086()) {
+        TEST("RCR CH,1",                      0xD0, 0335);
+        TEST("RCR BYTE PTR [SI],1",           0xD0, 0034);
+        TEST("RCR BYTE PTR [1234H],1",        0xD0, 0036, 0x34, 0x12);
+        TEST("RCR BYTE PTR [DI-52],1",        0xD0, 0135, 0xCC);
+        TEST("RCR BYTE PTR [BP+1234H],1",     0xD0, 0236, 0x34, 0x12);
+        TEST("RCR BYTE PTR [BX+SI],1",        0xD0, 0030);
+        TEST("RCR BYTE PTR [BX+DI+52],1",     0xD0, 0131, 0x34);
+        TEST("RCR BYTE PTR [BP+SI+1234H],1",  0xD0, 0232, 0x34, 0x12);
+        TEST("RCR BP,1",                      0xD1, 0335);
+        TEST("RCR WORD PTR [SI],1",           0xD1, 0034);
+        TEST("RCR WORD PTR [1234H],1",        0xD1, 0036, 0x34, 0x12);
+        TEST("RCR WORD PTR [DI-52],1",        0xD1, 0135, 0xCC);
+        TEST("RCR WORD PTR [BP+1234H],1",     0xD1, 0236, 0x34, 0x12);
+        TEST("RCR WORD PTR [BX+SI],1",        0xD1, 0030);
+        TEST("RCR WORD PTR [BX+DI+52],1",     0xD1, 0131, 0x34);
+        TEST("RCR WORD PTR [BP+SI+1234H],1",  0xD1, 0232, 0x34, 0x12);
+    } else {
+        TEST("RCR CH,7",                      0xC0, 0335, 7);
+        TEST("RCR BYTE PTR [SI],0",           0xC0, 0034, 0);
+        TEST("RCR BYTE PTR [1234H],1",        0xD0, 0036, 0x34, 0x12);
+        TEST("RCR BYTE PTR [DI-52],2",        0xC0, 0135, 0xCC, 2);
+        TEST("RCR BYTE PTR [BP+1234H],3",     0xC0, 0236, 0x34, 0x12, 3);
+        TEST("RCR BYTE PTR [BX+SI],4",        0xC0, 0030, 4);
+        TEST("RCR BYTE PTR [BX+DI+52],5",     0xC0, 0131, 0x34, 5);
+        TEST("RCR BYTE PTR [BP+SI+1234H],6",  0xC0, 0232, 0x34, 0x12, 6);
+        TEST("RCR BP,8",                      0xC1, 0335, 8);
+        TEST("RCR WORD PTR [SI],9",           0xC1, 0034, 9);
+        TEST("RCR WORD PTR [1234H],10",       0xC1, 0036, 0x34, 0x12, 10);
+        TEST("RCR WORD PTR [DI-52],11",       0xC1, 0135, 0xCC, 11);
+        TEST("RCR WORD PTR [BP+1234H],12",    0xC1, 0236, 0x34, 0x12, 12);
+        TEST("RCR WORD PTR [BX+SI],13",       0xC1, 0030, 13);
+        TEST("RCR WORD PTR [BX+DI+52],1",     0xD1, 0131, 0x34);
+        TEST("RCR WORD PTR [BP+SI+1234H],15", 0xC1, 0232, 0x34, 0x12, 15);
+    }
     TEST("RCR CH,CL",                     0xD2, 0335);
     TEST("RCR BYTE PTR [SI],CL",          0xD2, 0034);
     TEST("RCR BYTE PTR [1234H],CL",       0xD2, 0036, 0x34, 0x12);
@@ -1211,7 +1460,7 @@ static void test_string_manipulation() {
     TEST("REPE",  0xF3);
     TEST("REPZ",  0xF3);
     TEST("REP",   0xF3);
-    
+
     TEST("REPNE MOVSB", 0xF2, 0xA4);
     TEST("REPNE MOVSW", 0xF2, 0xA5);
     TEST("REPNE CMPSB", 0xF2, 0xA6);
@@ -1223,6 +1472,13 @@ static void test_string_manipulation() {
     TEST("REPNE SCASB", 0xF2, 0xAE);
     TEST("REPNE SCASW", 0xF2, 0xAF);
 
+    if (is80186()) {
+        TEST("REPNE INSB",  0xF2, 0x6C);
+        TEST("REPNE INSW",  0xF2, 0x6D);
+        TEST("REPNE OUTSB", 0xF2, 0x6E);
+        TEST("REPNE OUTSW", 0xF2, 0x6F);
+    }
+
     TEST("REP MOVSB", 0xF3, 0xA4);
     TEST("REP MOVSW", 0xF3, 0xA5);
     TEST("REP CMPSB", 0xF3, 0xA6);
@@ -1233,6 +1489,13 @@ static void test_string_manipulation() {
     TEST("REP LODSW", 0xF3, 0xAD);
     TEST("REP SCASB", 0xF3, 0xAE);
     TEST("REP SCASW", 0xF3, 0xAF);
+
+    if (is80186()) {
+        TEST("REP INSB",  0xF3, 0x6C);
+        TEST("REP INSW",  0xF3, 0x6D);
+        TEST("REP OUTSB", 0xF3, 0x6E);
+        TEST("REP OUTSW", 0xF3, 0x6F);
+    }
 
     TEST("MOVSB", 0xA4);
     TEST("MOVSW", 0xA5);
@@ -1248,6 +1511,16 @@ static void test_string_manipulation() {
     TEST("CMPS  DS:[SI],BYTE PTR ES:[DI]", 0xA6);
     TEST("CMPS  WORD PTR DS:[SI],ES:[DI]", 0xA7);
 
+    TEST("STOSB", 0xAA);
+    TEST("STOSW", 0xAB);
+    TEST("STOS BYTE PTR ES:[DI]", 0xAA);
+    TEST("STOS WORD PTR ES:[DI]", 0xAB);
+
+    TEST("LODSB", 0xAC);
+    TEST("LODSW", 0xAD);
+    TEST("LODS BYTE PTR DS:[SI]", 0xAC);
+    TEST("LODS WORD PTR DS:[SI]", 0xAD);
+
     TEST("SCASB", 0xAE);
     TEST("SCASW", 0xAF);
     TEST("SCASB ES:[DI]", 0xAE);
@@ -1255,15 +1528,23 @@ static void test_string_manipulation() {
     TEST("SCAS  BYTE PTR ES:[DI]", 0xAE);
     TEST("SCAS  WORD PTR ES:[DI]", 0xAF);
 
-    TEST("LODSB", 0xAC);
-    TEST("LODSW", 0xAD);
-    TEST("LODS BYTE PTR DS:[SI]", 0xAC);
-    TEST("LODS WORD PTR DS:[SI]", 0xAD);
+    if (is80186()) {
+        TEST("INSB ES:[DI], DX", 0x6C);
+        TEST("INSW ES:[DI], DX", 0x6D);
+        TEST("INS BYTE PTR ES:[DI], DX", 0x6C);
+        TEST("INS WORD PTR ES:[DI], DX", 0x6D);
+        ERRT("INSB ES:[DI], AX", OPERAND_NOT_ALLOWED);
+        ERRT("INSW ES:[DI], CX", OPERAND_NOT_ALLOWED);
+        // ERRT("INSW ES:[SI], DX", ILLEGAL_OPERAND);
 
-    TEST("STOSB", 0xAA);
-    TEST("STOSW", 0xAB);
-    TEST("STOS BYTE PTR ES:[DI]", 0xAA);
-    TEST("STOS WORD PTR ES:[DI]", 0xAB);
+        // TEST("OUTSB", 0x6E);
+        // TEST("OUTSW", 0x6F);
+        // TEST("OUTS DX, BYTE PTR [SI]", 0x6E);
+        // TEST("OUTS DX, WORD PTR [SI]", 0x6F);
+        // ERRT("OUTSB AX, DS:[SI]", OPERAND_NOT_ALLOWED);
+        // ERRT("OUTSW CX, DS:[SI]", OPERAND_NOT_ALLOWED);
+        ERRT("OUTSW DX, DS:[DI]", ILLEGAL_OPERAND);
+    }
 }
 
 static void test_control_transfer() {
@@ -1351,6 +1632,22 @@ static void test_control_transfer() {
     ERRT("INT 256", OVERFLOW_RANGE);
     TEST("INTO", 0xCE);
     TEST("IRET", 0xCF);
+
+    if (is80186()) {
+        TEST("ENTER 30, 1",    0xC8, 0x1E, 0x00, 0x01);
+        TEST("ENTER 65535, 0", 0xC8, 0xFF, 0xFF, 0x00);
+        TEST("ENTER 0, 255",   0xC8, 0x00, 0x00, 0xFF);
+
+        TEST("LEAVE", 0xC9);
+
+        TEST("BOUND SI, [SI]",          0x62, 0064);
+        TEST("BOUND DI, [1234H]",       0x62, 0076, 0x34, 0x12);
+        TEST("BOUND AX, [DI+52]",       0x62, 0105, 0x34);
+        TEST("BOUND CX, [BP+1234H]",    0x62, 0216, 0x34, 0x12);
+        TEST("BOUND DX, [BX+SI]",       0x62, 0020);
+        TEST("BOUND BX, [BX+DI+52]",    0x62, 0131, 0x34);
+        TEST("BOUND SP, [BP+SI+1234H]", 0x62, 0242, 0x34, 0x12);
+    }
 }
 
 static void test_processor_control() {
@@ -1390,6 +1687,13 @@ static void test_segment_override() {
     TEST("MOV DS:[1234H],AH", 0x3E, 0x88, 0046, 0x34, 0x12);
     TEST("INC BYTE PTR SS:[SI]",    0x36, 0xFE, 0004);
 
+    if (is80186()) {
+        TEST("BOUND SI, ES:[SI]",       0x26, 0x62, 0064);
+        TEST("BOUND DI, CS:[1234H]",    0x2E, 0x62, 0076, 0x34, 0x12);
+        TEST("BOUND AX, SS:[DI+52]",    0x36, 0x62, 0105, 0x34);
+        TEST("BOUND CX, DS:[BP+1234H]", 0x3E, 0x62, 0216, 0x34, 0x12);
+    }
+
     TEST("JMP ES:[SI]", 0x26, 0xFF, 0044);
     TEST("JMP CS:[SI]", 0x2E, 0xFF, 0044);
     TEST("JMP SS:[SI]", 0x36, 0xFF, 0044);
@@ -1422,6 +1726,17 @@ static void test_segment_override() {
     ERRT("SCASW SS:[DI]", ILLEGAL_SEGMENT);
     ERRT("SCASW DS:[DI]", ILLEGAL_SEGMENT);
 
+    if (is80186()) {
+        TEST("INSB  ES:[DI], DX", 0x6C);
+        ERRT("INSB  CS:[DI], DX", ILLEGAL_SEGMENT);
+        ERRT("INSW  SS:[DI], DX", ILLEGAL_SEGMENT);
+        ERRT("INSW  DS:[DI], DX", ILLEGAL_SEGMENT);
+        TEST("OUTSB DX, ES:[SI]", 0x26, 0x6E);
+        TEST("OUTSB DX, CS:[SI]", 0x2E, 0x6E);
+        TEST("OUTSW DX, SS:[SI]", 0x36, 0x6F);
+        TEST("OUTSW DX, DS:[SI]", 0x6F);
+    }
+
     asm8086.setOptimizeSegment(true);
     TEST("MOV SS:[BP],AH",    0x88, 0146, 0x00);
     TEST("MOV DS:[BX],AH",    0x88, 0047);
@@ -1429,6 +1744,11 @@ static void test_segment_override() {
     TEST("MOV DS:[DI],AH",    0x88, 0045);
     TEST("MOV DS:[1234H],AH", 0x88, 0046, 0x34, 0x12);
     TEST("JMP DS:[SI]",       0xFF, 0044);
+
+    if (is80186()) {
+        TEST("BOUND AX, DS:[DI+52]",    0x62, 0105, 0x34);
+        TEST("BOUND CX, DS:[BP+1234H]", 0x3E, 0x62, 0216, 0x34, 0x12);
+    }
 }
 
 static void test_undefined_symbol() {
@@ -1533,7 +1853,17 @@ static void test_error() {
     ERRT("OUT 34H,BL", OPERAND_NOT_ALLOWED);
     ERRT("OUT CX,AX",  OPERAND_NOT_ALLOWED);
 
-    ERRT("ROR AL,2",  OPERAND_NOT_ALLOWED);
+    if (is8086()) {
+        ERRT("ROR AL,2",  OPERAND_NOT_ALLOWED);
+        ERRT("ROR AH,2",  OPERAND_NOT_ALLOWED);
+    } else {
+        TEST("ROR AL,2",  0xC0, 0310, 2);
+        TEST("ROR AL,7",  0xC0, 0310, 7);
+        ERRT("ROR AL,8",  OVERFLOW_RANGE);
+        TEST("ROR AX,8",  0xC1, 0310, 8);
+        TEST("ROR AX,15", 0xC1, 0310, 15);
+        ERRT("ROR AX,16", OVERFLOW_RANGE);
+    }
     ERRT("ROR AL,CH", OPERAND_NOT_ALLOWED);
 
     ERRT("MOV AX,BL", OPERAND_NOT_ALLOWED);
@@ -1578,6 +1908,18 @@ static void test_error() {
     ERRT("STOSW ES:[DI+0]", ILLEGAL_OPERAND);
     ERRT("STOSB ES:[BP]",   ILLEGAL_OPERAND);
     ERRT("STOSB ES:[BX]",   ILLEGAL_OPERAND);
+
+    if (is80186()) {
+        ERRT("INSB ES:[SI], DX",   ILLEGAL_OPERAND);
+        ERRT("INSW ES:[DI+0], DX", ILLEGAL_OPERAND);
+        ERRT("INSB ES:[BP], DX",   ILLEGAL_OPERAND);
+        ERRT("INSB ES:[BX], DX",   ILLEGAL_OPERAND);
+
+        ERRT("OUTSB DX, [SI+0]", ILLEGAL_OPERAND);
+        ERRT("OUTSW DX, [DI]",   ILLEGAL_OPERAND);
+        ERRT("OUTSB DX, [BP]",   ILLEGAL_OPERAND);
+        ERRT("OUTSB DX, [BX]",   ILLEGAL_OPERAND);
+    }
 }
 // clang-format on
 
