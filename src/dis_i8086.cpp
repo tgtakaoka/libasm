@@ -321,6 +321,9 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
         const RegName seg = TableI8086.overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {
         case 0xA4:  // MOVS ES:[DI],DS:[SI]
+        case 0x20:  // ADD4S ES:[DI],DS:[SI]
+        case 0x22:  // SUB4S ES:[DI],DS:[SI]
+        case 0x26:  // CMP4S ES:[DI],DS:[SI]
             outMemReg(memory, insn, out, REG_ES, 0, 5);
             out.comma();
             /* Fall-through */

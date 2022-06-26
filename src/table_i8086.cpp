@@ -815,6 +815,78 @@ static const uint8_t INDEX_C1[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
+// V30
+
+static const Entry V30TABLE_00[] PROGMEM = {
+    E(0x64, TEXT_REPNC,  NONE, M_ISTR, M_NONE, P_OPR,  P_NONE),
+    E(0x64, TEXT_REPNC,  NONE, M_NONE, M_NONE, P_NONE, P_NONE),
+    E(0x65, TEXT_REPC,   NONE, M_ISTR, M_NONE, P_OPR,  P_NONE),
+    E(0x65, TEXT_REPC,   NONE, M_NONE, M_NONE, P_NONE, P_NONE),
+};
+
+static const uint8_t V30INDEX_00[] PROGMEM = {
+      2,  // TEXT_REPC
+      3,  // TEXT_REPC
+      0,  // TEXT_REPNC
+      1,  // TEXT_REPNC
+};
+
+static const Entry V30TABLE_0F[] PROGMEM = {
+    E(0xFF, TEXT_BRKEM,  BYTE, M_IMM,  M_NONE, P_OPR,  P_NONE),
+    S(0x20, TEXT_ADD4S,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x20, TEXT_ADD4S,  BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE),
+    S(0x26, TEXT_CMP4S,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x26, TEXT_CMP4S,  BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE),
+    S(0x22, TEXT_SUB4S,  BYTE, M_NONE, M_NONE, P_NONE, P_NONE),
+    S(0x22, TEXT_SUB4S,  BYTE, M_BMEM, M_BMEM, P_NONE, P_NONE),
+    E(0x28, TEXT_ROL4,   BYTE, M_BMOD, M_NONE, P_MOD,  P_NONE),
+    E(0x2A, TEXT_ROR4,   BYTE, M_BMOD, M_NONE, P_MOD,  P_NONE),
+    E(0x31, TEXT_INS,    WORD, M_BREG, M_BREG, P_MOD,  P_REG),
+    E(0x39, TEXT_INS,    WORD, M_BREG, M_BIT,  P_MOD,  P_OPR),
+    E(0x33, TEXT_EXT,    WORD, M_BREG, M_BREG, P_MOD,  P_REG),
+    E(0x3B, TEXT_EXT,    WORD, M_BREG, M_BIT,  P_MOD,  P_OPR),
+    E(0x12, TEXT_CLR1,   BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    E(0x13, TEXT_CLR1,   WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    E(0x1A, TEXT_CLR1,   BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
+    E(0x1B, TEXT_CLR1,   WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
+    E(0x14, TEXT_SET1,   BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    E(0x15, TEXT_SET1,   WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    E(0x1C, TEXT_SET1,   BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
+    E(0x1D, TEXT_SET1,   WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
+    E(0x16, TEXT_NOT1,   BYTE, M_BMOD, M_CL,   P_MOD,  P_NONE),
+    E(0x17, TEXT_NOT1,   WORD, M_WMOD, M_CL,   P_MOD,  P_NONE),
+    E(0x1E, TEXT_NOT1,   BYTE, M_BMOD, M_BIT,  P_MOD,  P_OPR),
+    E(0x1F, TEXT_NOT1,   WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
+};
+
+static const uint8_t V30INDEX_0F[] PROGMEM = {
+      1,  // TEXT_ADD4S
+      2,  // TEXT_ADD4S
+      0,  // TEXT_BRKEM
+     13,  // TEXT_CLR1
+     14,  // TEXT_CLR1
+     15,  // TEXT_CLR1
+     16,  // TEXT_CLR1
+      3,  // TEXT_CMP4S
+      4,  // TEXT_CMP4S
+     11,  // TEXT_EXT
+     12,  // TEXT_EXT
+      9,  // TEXT_INS
+     10,  // TEXT_INS
+     21,  // TEXT_NOT1
+     22,  // TEXT_NOT1
+     23,  // TEXT_NOT1
+     24,  // TEXT_NOT1
+      7,  // TEXT_ROL4
+      8,  // TEXT_ROR4
+     17,  // TEXT_SET1
+     18,  // TEXT_SET1
+     19,  // TEXT_SET1
+     20,  // TEXT_SET1
+      5,  // TEXT_SUB4S
+      6,  // TEXT_SUB4S
+};
+
 // clang-format on
 
 static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
@@ -862,9 +934,38 @@ static const TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
+static const TableI8086::EntryPage V30_PAGES[] PROGMEM = {
+        // V30
+        {0x00, ARRAY_RANGE(V30TABLE_00), ARRAY_RANGE(V30INDEX_00)},
+        {0x0F, ARRAY_RANGE(V30TABLE_0F), ARRAY_RANGE(V30INDEX_0F)},
+        // I80186
+        {0x00, ARRAY_RANGE(TABLE_I80186), ARRAY_RANGE(INDEX_I80186)},
+        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
+        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_D1)},
+        {0xC0, ARRAY_RANGE(TABLE_C0), ARRAY_RANGE(INDEX_C0)},
+        {0xC1, ARRAY_RANGE(TABLE_C1), ARRAY_RANGE(INDEX_C1)},
+        // i8086
+        {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
+        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
+        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
+        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_81)},  // M_IMM
+        {0x8F, ARRAY_RANGE(TABLE_8F), ARRAY_RANGE(INDEX_8F)},
+        {0xC6, ARRAY_RANGE(TABLE_C6), ARRAY_RANGE(INDEX_C6)},
+        {0xC7, ARRAY_RANGE(TABLE_C7), ARRAY_RANGE(INDEX_C7)},
+        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_D2)},
+        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_D3)},
+        {0xD4, ARRAY_RANGE(TABLE_D4), ARRAY_RANGE(INDEX_D4)},
+        {0xD5, ARRAY_RANGE(TABLE_D5), ARRAY_RANGE(INDEX_D5)},
+        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_F6)},
+        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_F7)},
+        {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
+        {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
+};
+
 static const TableI8086::Cpu CPU_TABLES[] PROGMEM = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
+        {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -943,7 +1044,11 @@ Error TableI8086::searchName(InsnI8086 &insn) {
 }
 
 bool TableI8086::isRepeatPrefix(Config::opcode_t opCode) const {
-    return opCode == 0xF2 || opCode == 0xF3;
+    if (opCode == 0xF2 || opCode == 0xF3)
+        return true;
+    if (_cpu->cpuType() == V30)
+        return opCode == 0x0F;
+    return false;
 }
 
 bool TableI8086::isSegmentPrefix(Config::opcode_t opCode) const {
@@ -1040,11 +1145,13 @@ const /* PROGMEM */ char *TableI8086::cpu_P() const {
 }
 
 bool TableI8086::setCpu(const char *cpu) {
-    if (toupper(*cpu) == 'I')
-        cpu++;
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
+    if (strcasecmp_P(cpu, TEXT_CPU_I8086) == 0)
+        return setCpu(I8086);
+    if (strcasecmp_P(cpu, TEXT_CPU_I80186) == 0)
+        return setCpu(I80186);
     return false;
 }
 

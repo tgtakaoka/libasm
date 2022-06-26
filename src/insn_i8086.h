@@ -44,14 +44,12 @@ public:
     Config::opcode_t segment() const { return _segment; }
 
     void readModReg(DisMemory &memory) {
-        if (hasPrefix()) {
+        const OprPos dst = dstPos();
+        const OprPos src = srcPos();
+        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
+            _modReg = readByte(memory);
+        else if (dst == P_OMOD || src == P_OMOD)
             _modReg = opCode();
-        } else {
-            const OprPos dst = dstPos();
-            const OprPos src = srcPos();
-            if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
-                _modReg = readByte(memory);
-        }
     }
     void embedModReg(Config::opcode_t data) {
         _modReg |= data;

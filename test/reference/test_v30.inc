@@ -1,0 +1,56 @@
+;;; Copyright 2022 Tadashi G. Takaoka
+;;;
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing, software
+;;; distributed under the License is distributed on an "AS IS" BASIS,
+;;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+;;; See the License for the specific language governing permissions and
+;;; limitations under the License.
+
+;# String manipulation
+;# Repeat
+        repc    cmpsb
+        repc    cmpsw
+        repnc   scasb
+        repnc   scasw
+
+;# BCD operation
+        add4s
+        cmp4s
+        sub4s
+        rol4    ch
+        rol4    byte ptr [si]
+        rol4    byte ptr [0x1234]
+        rol4    byte ptr [di-0x34]
+        rol4    byte ptr [bp+0x1234]
+        rol4    byte ptr [bx+si]
+        rol4    byte ptr [bx+di+0x34]
+        rol4    byte ptr [bp+si+0x1234]
+        ror4    ch
+        ror4    byte ptr [si]
+        ror4    byte ptr [0x1234]
+        ror4    byte ptr [di-0x34]
+        ror4    byte ptr [bp+0x1234]
+        ror4    byte ptr [bx+si]
+        ror4    byte ptr [bx+di+0x34]
+        ror4    byte ptr [bp+si+0x1234]
+
+;# Bit field manipulation
+        ext     al, cl
+        ext     ah, bh
+        ext     dl, 0
+        ext     dh, 15
+        ins     dl, cl
+        ins     ah, bh
+        ins     dl, 12
+        ins     dh, 15
+
+;### Local Variables:
+;### mode: asm
+;### End:
+;### vim: set ft=asm:

@@ -432,6 +432,9 @@ Error AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName se
 Error AsmI8086::encodeStringInst(InsnI8086 &insn, const Operand &dst, const Operand &src) {
     switch (insn.opCode() & ~1) {
     case 0xA4:  // MOVS ES:[DI],DS:[SI]
+    case 0x20:  // ADD4S ES:[DI],DS:[SI]
+    case 0x22:  // SUB4S ES:[DI],DS:[SI]
+    case 0x26:  // CMP4S ES:[DI],DS:[SI]
         if (emitStringOperand(insn, src, REG_DS, REG_SI))
             return getError();
         /* Fall-through */
