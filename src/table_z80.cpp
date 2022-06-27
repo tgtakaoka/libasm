@@ -386,6 +386,16 @@ static constexpr uint8_t INDEX_IX[] PROGMEM = {
      19,  // TEXT_XOR
      20,  // TEXT_XOR
 };
+
+static constexpr Entry TABLE_V30EMU[] PROGMEM = {
+    E(0xED, TEXT_CALLN, M_IM8, M_NO),
+    E(0xFD, TEXT_RETEM, M_NO,  M_NO),
+};
+
+static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
+      0,  // TEXT_CALLN
+      1,  // TEXT_RETEM
+};
 // clang-format on
 
 static constexpr TableZ80::EntryPage I8080_PAGES[] PROGMEM = {
@@ -406,10 +416,16 @@ static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
         {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
 };
 
+static constexpr TableZ80::EntryPage V30EMU_PAGES[] PROGMEM = {
+        {PREFIX_ED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
+        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+};
+
 static constexpr TableZ80::Cpu CPU_TABLES[] PROGMEM = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
+        {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
 
 static bool acceptMode(AddrMode opr, AddrMode table) {

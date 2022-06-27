@@ -36,6 +36,10 @@ static bool is8080() {
     return strcmp_P("8080", disassembler.cpu_P()) == 0;
 }
 
+static bool v30emu() {
+    return strcmp_P("V30EMU", disassembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     disassembler.reset();
 }
@@ -57,6 +61,9 @@ void test_cpu() {
 
     EQUALS("cpu I8085", true, disassembler.setCpu("I8085"));
     EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+
+    EQUALS("cpu v30emu", true, disassembler.setCpu("v30emu"));
+    EQUALS_P("get cpu", "V30EMU", disassembler.cpu_P());
 
     EQUALS("cpu Z80", true, disassembler.setCpu("z80"));
     EQUALS_P("get cpu", "Z80", disassembler.cpu_P());
@@ -159,8 +166,6 @@ static void test_move_inherent() {
         TEST(OUTD, "",  0xED, 0xAB);
         TEST(OTIR, "",  0xED, 0xB3);
         TEST(OTDR, "",  0xED, 0xBB);
-    } else {
-        ERRI(0xED);
     }
 }
 
@@ -195,8 +200,6 @@ static void test_move_direct() {
         TEST(LD, "BC, (5678H)",  0xED, 0x4B, 0x78, 0x56);
         TEST(LD, "DE, (5678H)",  0xED, 0x5B, 0x78, 0x56);
         TEST(LD, "SP, (5678H)",  0xED, 0x7B, 0x78, 0x56);
-    } else {
-        ERRI(0xED);
     }
 }
 
@@ -264,8 +267,8 @@ static void test_jump_call() {
         TEST(IM,   "0", 0xED, 0x46);
         TEST(IM,   "1", 0xED, 0x56);
         TEST(IM,   "2", 0xED, 0x5E);
-    } else {
-        ERRI(0xED);
+    } else if (v30emu()) {
+        TEST(CALLN, "40H", 0xED, 0xED, 0x40);
     }
 }
 
@@ -386,8 +389,6 @@ static void test_alu_register() {
         TEST(SBC, "HL, DE", 0xED, 0x52);
         TEST(SBC, "HL, HL", 0xED, 0x62);
         TEST(SBC, "HL, SP", 0xED, 0x72);
-    } else {
-        ERRI(0xED);
     }
 }
 
@@ -423,8 +424,6 @@ static void test_io() {
         TEST(OUT, "(C), H", 0xED, 0x61);
         TEST(OUT, "(C), L", 0xED, 0x69);
         TEST(OUT, "(C), A", 0xED, 0x79);
-    } else {
-        ERRI(0xED);
     }
 }
 
@@ -457,8 +456,6 @@ static void test_inherent() {
     if (isZ80()) {
         // Z80
         TEST(NEG, "", 0xED, 0x44);
-    } else {
-        ERRI(0xED);
     }
 }
 
@@ -471,6 +468,10 @@ static void test_restart() {
     TEST(RST, "28H", 0xEF);
     TEST(RST, "30H", 0xF7);
     TEST(RST, "38H", 0xFF);
+
+    if (v30emu()) {
+        TEST(RETEM, "", 0xED, 0xFD);
+    }
 }
 
 static void test_relative() {
@@ -566,9 +567,6 @@ static void test_shift() {
 
         TEST(RRD, "", 0xED, 0x67);
         TEST(RLD, "", 0xED, 0x6F);
-    } else {
-        ERRI(0xCB);
-        ERRI(0xED);
     }
 }
 
@@ -765,7 +763,15 @@ static void test_illegal_i8080() {
     ERRI(0x38);
     ERRI(0xD9);
     ERRI(0xDD);
-    ERRI(0xED);
+    if (v30emu()) {
+        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+            if (opc == 0xED || opc == 0xFD)
+                continue;
+            ERRI(0xED, (uint8_t)opc);
+        }
+    } else {
+        ERRI(0xED);
+    }
     ERRI(0xFD);
 }
 
@@ -853,7 +859,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_indexed);
     RUN_TEST(test_shift_indexed);
     RUN_TEST(test_bitop_indexed);
-    if (is8080() || is8085())
+    if (is8080() || is8085() || v30emu())
         RUN_TEST(test_illegal_i8080);
     if (isZ80())
         RUN_TEST(test_illegal_z80);

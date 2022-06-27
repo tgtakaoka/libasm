@@ -23,12 +23,13 @@ namespace libasm {
 namespace z80 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "Z80, i8080, i8085";
+static const char TEXT_CPU_LIST[] PROGMEM = "Z80, i8080, i8085, V30EMU";
 static const char TEXT_CPU_Z80[]  PROGMEM = "Z80";
 static const char TEXT_CPU_I8080[] PROGMEM = "i8080";
+static const char TEXT_CPU_I8085[] PROGMEM = "i8085";
 static constexpr const char *TEXT_CPU_8080 = TEXT_CPU_I8080 + 1;
-static constexpr const char *TEXT_CPU_I8085 = TEXT_CPU_LIST + 12;
 static constexpr const char *TEXT_CPU_8085 = TEXT_CPU_I8085 + 1;
+static constexpr const char *TEXT_CPU_V30EMU = TEXT_CPU_LIST + 19;
 
 static const char TEXT_ADC[]  PROGMEM = "ADC";
 static const char TEXT_ADD[]  PROGMEM = "ADD";
@@ -99,6 +100,11 @@ static const char TEXT_SRA[]  PROGMEM = "SRA";
 static const char TEXT_SRL[]  PROGMEM = "SRL";
 static const char TEXT_SUB[]  PROGMEM = "SUB";
 static const char TEXT_XOR[]  PROGMEM = "XOR";
+
+// V30EMU
+static const char TEXT_CALLN[] PROGMEM = "CALLN";
+static const char TEXT_RETEM[] PROGMEM = "RETEM";
+
 // clang-format on
 
 }  // namespace z80

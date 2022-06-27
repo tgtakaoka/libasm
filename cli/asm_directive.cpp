@@ -74,7 +74,7 @@ std::string AsmCommonDirective::Directives::currentCpu() const {
 
 bool AsmCommonDirective::Directives::is8080() const {
     const std::string cpu(currentCpu());
-    return cpu == "8080" || cpu == "8085";
+    return cpu == "8080" || cpu == "8085" || cpu == "V30EMU";
 }
 
 AsmDirective *AsmCommonDirective::Directives::setCpu(const char *cpu) {

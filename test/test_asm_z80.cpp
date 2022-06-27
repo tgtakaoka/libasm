@@ -32,6 +32,10 @@ static bool is8085() {
     return strcmp_P("8085", assembler.cpu_P()) == 0;
 }
 
+static bool v30emu() {
+    return strcmp_P("V30EMU", assembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -53,6 +57,9 @@ void test_cpu() {
 
     EQUALS("cpu i8085", true, assembler.setCpu("i8085"));
     EQUALS_P("get cpu", "8085", assembler.cpu_P());
+
+    EQUALS("cpu v30emu", true, assembler.setCpu("v30emu"));
+    EQUALS_P("get cpu", "V30EMU", assembler.cpu_P());
 
     EQUALS("cpu z80", true, assembler.setCpu("z80"));
     EQUALS_P("get cpu", "Z80", assembler.cpu_P());
@@ -540,9 +547,18 @@ static void test_inherent() {
         // i8085
         TEST("LD A,IM", 0x20);
         TEST("LD IM,A", 0x30);
+        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
+        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
+    } else if (v30emu()) {
+        ERRT("LD A,IM", OPERAND_NOT_ALLOWED);
+        ERRT("LD IM,A", OPERAND_NOT_ALLOWED);
+        TEST("RETEM",     0xED, 0xFD);
+        TEST("CALLN 40H", 0xED, 0xED, 0x40);
     } else {
         ERRT("LD A,IM", OPERAND_NOT_ALLOWED);
         ERRT("LD IM,A", OPERAND_NOT_ALLOWED);
+        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
+        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
     }
 
     if (isZ80()) {
