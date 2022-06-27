@@ -497,10 +497,14 @@ Error TableZ80::searchOpCode(InsnZ80 &insn) {
 }
 
 bool TableZ80::isPrefix(Config::opcode_t opCode) const {
-    if (_cpu->cpuType() != Z80)
-        return false;
-    return opCode == PREFIX_CB || opCode == PREFIX_ED || opCode == TableZ80::PREFIX_IX ||
-           opCode == TableZ80::PREFIX_IY;
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
+        const auto prefix = page->prefix();
+        if (prefix == 0)
+            continue;
+        if (prefix == opCode)
+            return true;
+    }
+    return false;
 }
 
 TableZ80::TableZ80() {

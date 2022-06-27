@@ -551,9 +551,14 @@ static constexpr Config::opcode_t PREFIX_P1A = 0x1A;
 static constexpr Config::opcode_t PREFIX_PCD = 0xCD;
 
 bool TableMc6800::isPrefix(Config::opcode_t opCode) const {
-    if (_cpu->cpuType() != MC68HC11)
-        return false;
-    return opCode == PREFIX_P18 || opCode == PREFIX_P1A || opCode == PREFIX_PCD;
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
+        const auto prefix = page->prefix();
+        if (prefix == PREFIX_P00)
+            continue;
+        if (prefix == opCode)
+            return true;
+    }
+    return false;
 }
 
 static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
