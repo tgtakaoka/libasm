@@ -32,6 +32,10 @@ static bool is8085() {
     return strcmp_P("8085", disassembler.cpu_P()) == 0;
 }
 
+static bool v30emu() {
+    return strcmp_P("V30EMU", disassembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     disassembler.reset();
 }
@@ -53,6 +57,9 @@ void test_cpu() {
 
     EQUALS("cpu I8085", true,   disassembler.setCpu("I8085"));
     EQUALS_P("cpu I8085", "8085", disassembler.cpu_P());
+
+    EQUALS("cpu v30emu", true,   disassembler.setCpu("v30emu"));
+    EQUALS_P("cpu v30emu", "V30EMU", disassembler.cpu_P());
 }
 
 static void test_move_inherent() {
@@ -133,9 +140,16 @@ static void test_move_inherent() {
         // i8085
         TEST(RIM, "", 0x20);
         TEST(SIM, "", 0x30);
+        ERRI(0xED);
+    } else if (v30emu()) {
+        ERUI(RIM, "", 0x20);
+        ERUI(SIM, "", 0x30);
+        TEST(RETEM, "",    0xED, 0xFD);
+        TEST(CALLN, "40H", 0xED, 0xED, 0x40);
     } else {
         ERUI(RIM, "", 0x20);
         ERUI(SIM, "", 0x30);
+        ERRI(0xED);
     }
 }
 
@@ -403,7 +417,15 @@ static void test_illegal() {
     ERRI(0x38);
     ERRI(0xD9);
     ERRI(0xDD);
-    ERRI(0xED);
+    if (v30emu()) {
+        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
+            if (opc == 0xED || opc == 0xFD)
+                continue;
+            ERRI(0xED, (uint8_t)opc);
+        }
+    } else {
+        ERRI(0xED);
+    }
     ERRI(0xFD);
 }
 // clang-format on

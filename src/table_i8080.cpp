@@ -201,21 +201,48 @@ static constexpr uint8_t INDEX_I8085[] PROGMEM = {
       0,  // TEXT_RIM
       1,  // TEXT_SIM
 };
+
+static constexpr Entry TABLE_V30EMU[] PROGMEM = {
+    E(0xED, TEXT_CALLN, M_IM8, M_NO),
+    E(0xFD, TEXT_RETEM, M_NO,  M_NO),
+};
+
+static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
+      0,  // TEXT_CALLN
+      1,  // TEXT_RETEM
+};
+
 // clang-format on
 
 static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
 static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-        {ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
+};
+
+static constexpr TableI8080::EntryPage V30EMU_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
 static constexpr TableI8080::Cpu CPU_TABLES[] PROGMEM = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
+        {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
+
+bool TableI8080::isPrefix(Config::opcode_t opCode) const {
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
+        if (page->prefix() == 0)
+            continue;
+        if (page->prefix() == opCode)
+            return true;
+    }
+    return false;
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -241,7 +268,7 @@ Error TableI8080::searchName(InsnI8080 &insn) {
         auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
                 insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
-            insn.setOpCode(entry->opCode());
+            insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
             return setOK();
         }
@@ -267,6 +294,8 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableI8080::searchOpCode(InsnI8080 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
+        if (insn.prefix() != page->prefix())
+            continue;
         auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
                 insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
@@ -299,11 +328,13 @@ const /* PROGMEM */ char *TableI8080::cpu_P() const {
 }
 
 bool TableI8080::setCpu(const char *cpu) {
-    if (toupper(*cpu) == 'I')
-        cpu++;
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
     if (t)
         return setCpu(t->cpuType());
+    if (strcasecmp_P(cpu, TEXT_CPU_I8080) == 0)
+        return setCpu(I8080);
+    if (strcasecmp_P(cpu, TEXT_CPU_I8085) == 0)
+        return setCpu(I8085);
     return false;
 }
 

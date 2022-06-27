@@ -28,6 +28,7 @@ namespace i8080 {
 enum CpuType : uint8_t {
     I8080,
     I8085,
+    V30EMU,
 };
 
 enum AddrMode : uint8_t {

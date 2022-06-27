@@ -61,11 +61,16 @@ Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out
 
 Error DisI8080::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8080 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    Config::opcode_t opCode = insn.readByte(memory);
+    insn.setOpCode(opCode);
+    if (TableI8080.isPrefix(opCode)) {
+        const auto prefix = opCode;
+        opCode = insn.readByte(memory);
+        insn.setOpCode(opCode, prefix);
+    }
     if (setError(insn))
         return getError();
 
-    insn.setOpCode(opCode);
     if (TableI8080.searchOpCode(insn))
         return setError(TableI8080.getError());
 

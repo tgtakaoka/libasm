@@ -28,6 +28,10 @@ static bool is8085() {
     return strcmp_P("8085", assembler.cpu_P()) == 0;
 }
 
+static bool v30emu() {
+    return strcmp_P("V30EMU", assembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -49,6 +53,9 @@ void test_cpu() {
 
     EQUALS("cpu i8085", true,   assembler.setCpu("i8085"));
     EQUALS_P("cpu i8085", "8085", assembler.cpu_P());
+
+    EQUALS("cpu v30emu", true,   assembler.setCpu("v30emu"));
+    EQUALS_P("cpu v30emu", "V30EMU", assembler.cpu_P());
 }
 
 static void test_move_inherent() {
@@ -129,9 +136,18 @@ static void test_move_inherent() {
         // i8085
         TEST("RIM", 0x20);
         TEST("SIM", 0x30);
+        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
+        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
+    } else if (v30emu()) {
+        ERRT("RIM", UNKNOWN_INSTRUCTION);
+        ERRT("SIM", UNKNOWN_INSTRUCTION);
+        TEST("RETEM",     0xED, 0xFD);
+        TEST("CALLN 40H", 0xED, 0xED, 0x40);
     } else {
         ERRT("RIM", UNKNOWN_INSTRUCTION);
         ERRT("SIM", UNKNOWN_INSTRUCTION);
+        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
+        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
     }
 }
 
