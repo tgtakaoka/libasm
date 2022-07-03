@@ -66,9 +66,9 @@ static std::string listCpu(
     std::string cpuList;
     std::string buf;
     for (auto &cpu : list) {
-        if (buf.size() + cpu.size() <= 58) {
-            if (buf.size())
-                buf += ", ";
+        if (buf.size())
+            buf += " ";
+        if (buf.size() + cpu.size() < 60) {
             buf += cpu;
         } else {
             cpuList += separator;
