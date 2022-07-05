@@ -20,9 +20,23 @@
 #include "asm_directive.h"
 #include "cli_listing.h"
 #include "cli_memory.h"
+#include "file_reader.h"
 
 namespace libasm {
 namespace cli {
+
+class FileFactory : public AsmSourceFactory {
+public:
+    Error open(const StrScanner &name) override;
+    const TextReader *current() const override;
+    void closeCurrent() override;
+    size_t size() const override { return _sources.size(); }
+    StrScanner *readLine() override;
+
+private:
+    static constexpr int max_includes = 4;
+    std::list<FileReader> _sources;
+};
 
 class AsmDriver {
 public:
@@ -34,6 +48,7 @@ public:
 
 private:
     AsmCommonDirective _commonDir;
+    FileFactory _sources;
     CliListing _listing;
     const char *_progname;
     const char *_input_name;

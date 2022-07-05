@@ -16,9 +16,11 @@
 
 #include "dis_driver.h"
 
+#include "file_reader.h"
+
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+
 #include <algorithm>
 #include <list>
 #include <string>
@@ -54,8 +56,7 @@ static void filter(const char *text, std::list<std::string> &list) {
     }
 }
 
-static std::string listCpu(
-        const char *separator, const std::list<Disassembler *> &disassemblers) {
+static std::string listCpu(const char *separator, const std::list<Disassembler *> &disassemblers) {
     std::list<std::string> list;
     for (auto dis : disassemblers) {
         const /* PROGMEM */ char *list_P = dis->listCpu_P();
@@ -115,15 +116,15 @@ int DisDriver::usage() {
 int DisDriver::disassemble() {
     if (_verbose)
         fprintf(stderr, "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
-    FILE *input = fopen(_input_name, "r");
-    if (input == nullptr) {
+    FileReader input(_input_name);
+    if (!input.open()) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
     CliMemory memory;
-    if (readInput(input, _input_name, memory) != 0)
+    if (readInput(input, memory) != 0)
         return 1;
-    fclose(input);
+    input.close();
     const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
     const uint32_t mem_start = memory.startAddress() / addrUnit;
     const uint32_t mem_end = memory.endAddress() / addrUnit;
@@ -216,21 +217,22 @@ int DisDriver::disassemble() {
     return 0;
 }
 
-int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
+int DisDriver::readInput(FileReader &input, CliMemory &memory) {
+    const char *filename = input.name().c_str();
     int lineno = 0;
     int errors = 0;
-    size_t line_len = 128;
-    char *line = static_cast<char *>(malloc(line_len));
     const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
     uint32_t start = 0, end = 0;
-    while (getLine(line, line_len, input) > 0) {
+    StrScanner *line;
+    while ((line = input.readLine()) != nullptr) {
         lineno++;
         uint32_t addr;
         uint8_t size;
-        uint8_t *data = _formatter->decode(line, addr, size);
+        uint8_t *data = _formatter->decode(*line, addr, size);
         if (data == nullptr) {
             if (errors < 3) {
-                fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno, line);
+                fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno,
+                        (const char *)(*line));
             } else if (errors == 3) {
                 fprintf(stderr, "%s: too many errors, wrong format?\n", filename);
             }
@@ -242,7 +244,7 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
                 start = end = addr;
             if (addr != end) {
                 if (_verbose)
-                    fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start,
+                    fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", filename, end - start,
                             start / addrUnit, (end - 1) / addrUnit);
                 start = addr;
             }
@@ -251,25 +253,20 @@ int DisDriver::readInput(FILE *input, const char *filename, CliMemory &memory) {
         }
     }
     if (start != end && _verbose)
-        fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", _input_name, end - start,
+        fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", filename, end - start,
                 start / addrUnit, (end - 1) / addrUnit);
-    free(line);
     return errors;
 }
 
-BinFormatter *DisDriver::determineInputFormat(const char *input_name) {
-    FILE *input = fopen(input_name, "r");
-    if (input == nullptr) {
+BinFormatter *DisDriver::determineInputFormat(const char *input_name) const {
+    FileReader input(input_name);
+    if (!input.open()) {
         fprintf(stderr, "Can't open input file %s\n", input_name);
         return nullptr;
     }
-
-    size_t line_len = 128;
-    char *line = static_cast<char *>(malloc(line_len));
-    const int len = getLine(line, line_len, input);
-    fclose(input);
-    const char c = (len > 0) ? *line : 0;
-    free(line);
+    StrScanner *line = input.readLine();
+    const auto c = **line;
+    input.close();
 
     const AddressWidth addrWidth = _disassembler->config().addressWidth();
     if (c == 'S')

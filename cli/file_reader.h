@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2022 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,34 @@
  * limitations under the License.
  */
 
-#ifndef __FILE_UTIL__
-#define __FILE_UTIL__
+#ifndef __FILE_READER_H__
+#define __FILE_READER_H__
 
-#include <stdint.h>
+#include "text_reader.h"
+
 #include <stdio.h>
 
 namespace libasm {
 namespace cli {
 
-/*
- * Simplified version of getline() of glibc.
- * Line terminate '\n' will be eliminated.
- */
-int getLine(char *&lineptr, size_t &t, FILE *input);
+class FileReader : public TextReader {
+public:
+    FileReader(const std::string &name);
+    ~FileReader();
+    const std::string &name() const override { return _name; }
+    int lineno() const override { return _lineno; }
+    StrScanner *readLine() override;
+    bool open();
+    void close();
+
+private:
+    const std::string _name;
+    FILE *_file;
+    int _lineno;
+    size_t _line_len;
+    char *_line;
+    StrScanner _line_scan;
+};
 
 }  // namespace cli
 }  // namespace libasm

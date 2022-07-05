@@ -17,16 +17,18 @@
 #ifndef __ASM_DIRECTIVE_H__
 #define __ASM_DIRECTIVE_H__
 
-#include <functional>
-#include <list>
-#include <map>
-
 #include "asm_base.h"
 #include "bin_formatter.h"
 #include "cli_listing.h"
 #include "cli_memory.h"
 #include "error_reporter.h"
 #include "function_store.h"
+#include "str_scanner.h"
+#include "text_reader.h"
+
+#include <functional>
+#include <list>
+#include <map>
 
 namespace libasm {
 namespace cli {
@@ -38,10 +40,18 @@ enum SymbolMode {
     REPORT_DUPLICATE = 1,
 };
 
+class AsmSourceFactory {
+public:
+    virtual Error open(const StrScanner &name) = 0;
+    virtual const TextReader *current() const = 0;
+    virtual void closeCurrent() = 0;
+    virtual size_t size() const = 0;
+    virtual StrScanner *readLine() = 0;
+};
+
 class AsmCommonDirective : public ErrorAt, public ListingLine, protected SymbolTable {
 public:
-    AsmCommonDirective(AsmDirective **begin, AsmDirective **end);
-    virtual ~AsmCommonDirective();
+    AsmCommonDirective(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources);
 
     AsmDirective *restrictCpu(const char *cpu) { return _directives.restrictCpu(cpu); }
     AsmDirective *setCpu(const char *cpu) { return _directives.setCpu(cpu); }
@@ -52,11 +62,6 @@ public:
 
     void reset();
     void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
-    const char *currentSource() const;
-    int currentLineno() const;
-    Error openSource(const StrScanner &input_name);
-    StrScanner *readSourceLine();
-    Error closeSource();
 
     // pseudoHandlers
     typedef Error (AsmCommonDirective::*PseudoHandler)(
@@ -101,19 +106,13 @@ private:
         AsmDirective *switchDirective(AsmDirective *dir);
     };
     Directives _directives;
-    size_t _line_len;
-    char *_line;
-    StrScanner _line_scan;
+    AsmSourceFactory &_sources;
     uint32_t _origin;
     SymbolMode _symbolMode;
     int _labelWidth;
     int _operandWidth;
 
     FunctionStore _functions;
-
-    static constexpr int max_includes = 4;
-    struct Source;
-    std::list<Source *> _sources;
 
     struct Listing {
         uint16_t line_number;

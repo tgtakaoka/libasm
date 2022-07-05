@@ -16,13 +16,53 @@
 
 #include "asm_driver.h"
 
+#include "file_reader.h"
+
 #include <stdio.h>
 #include <string.h>
 
 namespace libasm {
 namespace cli {
 
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end) : _commonDir(begin, end) {}
+Error FileFactory::open(const StrScanner &name) {
+    if (_sources.size() >= max_includes)
+        return TOO_MANY_INCLUDE;
+    const auto *parent = _sources.empty() ? nullptr : &_sources.back();
+    const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;
+    if (pos == std::string::npos || *name == '/') {
+        _sources.emplace_back(std::string(name, name.size()));
+    } else {
+        std::string path(parent->name().substr(0, pos + 1));
+        path.append(name, name.size());
+        _sources.push_back(path);
+    }
+    if (!_sources.back().open()) {
+        _sources.pop_back();
+        return NO_INCLUDE_FOUND;
+    }
+    return OK;
+}
+
+const TextReader *FileFactory::current() const {
+    return _sources.empty() ? nullptr : &_sources.back();
+}
+
+void FileFactory::closeCurrent() {
+    _sources.pop_back();
+}
+
+StrScanner *FileFactory::readLine() {
+    while (!_sources.empty()) {
+        auto &source = _sources.back();
+        auto *line = source.readLine();
+        if (line)
+            return line;
+        closeCurrent();
+    }
+    return nullptr;
+}
+
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end) : _commonDir(begin, end, _sources) {}
 
 int AsmDriver::usage() {
     std::string cpuList;
@@ -125,7 +165,7 @@ int AsmDriver::assemble() {
 }
 
 int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
-    if (_commonDir.openSource(_input_name)) {
+    if (_sources.open(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
@@ -133,11 +173,17 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
     int errors = 0;
     _commonDir.reset();
     StrScanner *scan;
-    while ((scan = _commonDir.readSourceLine()) != nullptr) {
-        if (_commonDir.assembleLine(*scan, memory) && reportError) {
-            const char *filename = _commonDir.currentSource();
+    while ((scan = _sources.readLine()) != nullptr) {
+        const auto error = _commonDir.assembleLine(*scan, memory);
+        if (error == OK || error == END_ASSEMBLE) {
+            if (list)
+                printListing(memory, list);
+            if (error != OK)
+                break;
+        } else if (reportError) {
+            const char *filename = _sources.current()->name().c_str();
             const char *line = *scan;
-            const int lineno = _commonDir.currentLineno();
+            const int lineno = _sources.current()->lineno();
             const char *at = _commonDir.errorAt();
             const int column = (at >= line && at < line + scan->size()) ? at - line + 1 : -1;
             if (column >= 0) {
@@ -159,11 +205,10 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
                 fprintf(list, "%s:%d %s\n", filename, lineno, line);
             }
             errors++;
-            continue;
         }
-        if (list)
-            printListing(memory, list);
     }
+    while (_sources.size())
+        _sources.closeCurrent();
     return errors;
 }
 

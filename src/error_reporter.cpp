@@ -124,6 +124,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Include file not found");
     case MISSING_CLOSING_DELIMITOR:
         return PSTR("Missing closing delimitor");
+    case END_ASSEMBLE:
+        return PSTR("End assemble");
     }
 
     return PSTR("Unknown error");

@@ -17,16 +17,12 @@
 #ifndef __DIS_DRIVER_H__
 #define __DIS_DRIVER_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <list>
-
 #include "cli_memory.h"
 #include "dis_base.h"
 #include "dis_directive.h"
-#include "file_util.h"
+#include "file_reader.h"
+
+#include <list>
 
 namespace libasm {
 namespace cli {
@@ -56,8 +52,8 @@ private:
 
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
-    int readInput(FILE *input, const char *filename, CliMemory &memory);
-    BinFormatter *determineInputFormat(const char *input_name);
+    int readInput(FileReader &input, CliMemory &memory);
+    BinFormatter *determineInputFormat(const char *input_name) const;
     static const char *basename(const char *str, char sep_char = '/');
 };
 

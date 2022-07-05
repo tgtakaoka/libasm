@@ -16,7 +16,6 @@
 
 #include "asm_directive.h"
 
-#include "file_util.h"
 #include "str_scanner.h"
 
 #include <string.h>
@@ -117,11 +116,10 @@ AsmDirective *AsmCommonDirective::Directives::switchDirective(AsmDirective *dir)
     return dir;
 }
 
-AsmCommonDirective::AsmCommonDirective(AsmDirective **begin, AsmDirective **end)
-    : _directives(begin, end) {
+AsmCommonDirective::AsmCommonDirective(
+        AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources)
+    : _directives(begin, end), _sources(sources) {
     _directives.setFunctionStore(&_functions);
-    _line_len = 128;
-    _line = static_cast<char *>(malloc(_line_len));
     _origin = 0;
     _symbolMode = REPORT_UNDEFINED;
     _labelWidth = 16;
@@ -151,10 +149,6 @@ AsmCommonDirective::AsmCommonDirective(AsmDirective **begin, AsmDirective **end)
     registerPseudo(".function", &AsmCommonDirective::defineFunction);
 }
 
-AsmCommonDirective::~AsmCommonDirective() {
-    free(_line);
-}
-
 std::string AsmCommonDirective::listCpu(const char *separator) const {
     std::list<std::string> list(_directives.listCpu());
     std::string cpuList;
@@ -179,7 +173,7 @@ Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
         return OK;
     StrScanner scan(line);
 
-    _list.line_number = currentLineno();
+    _list.line_number = _sources.current()->lineno();
     _list.include_nest = _sources.size() - 1;
     _list.address = _origin;
     _list.length = 0;
@@ -259,65 +253,6 @@ void AsmCommonDirective::reset() {
     current()->assembler().reset();
     _functions.reset();
     _origin = 0;
-}
-
-struct AsmCommonDirective::Source {
-    Source(const std::string &file_name, const Source *parent)
-        : fp(nullptr), lineno(0), name(file_name), include_from(parent) {}
-    FILE *fp;
-    int lineno;
-    const std::string name;
-    const Source *include_from;
-};
-
-const char *AsmCommonDirective::currentSource() const {
-    return _sources.empty() ? nullptr : _sources.back()->name.c_str();
-}
-
-int AsmCommonDirective::currentLineno() const {
-    return _sources.empty() ? 0 : _sources.back()->lineno;
-}
-
-Error AsmCommonDirective::openSource(const StrScanner &input_name) {
-    if (_sources.size() >= max_includes)
-        return setError(TOO_MANY_INCLUDE);
-    const Source *parent = _sources.empty() ? nullptr : _sources.back();
-    const size_t pos = parent ? parent->name.find_last_of('/') : std::string::npos;
-    Source *source;
-    if (pos == std::string::npos || *input_name == '/') {
-        source = new Source(std::string(input_name, input_name.size()), parent);
-    } else {
-        std::string name(parent->name.c_str(), pos + 1);
-        name.append(input_name, input_name.size());
-        source = new Source(name, parent);
-    }
-    _sources.push_back(source);
-    if ((source->fp = fopen(source->name.c_str(), "r")) == nullptr) {
-        _sources.pop_back();
-        return setError(NO_INCLUDE_FOUND);
-    }
-    return setError(OK);
-}
-
-StrScanner *AsmCommonDirective::readSourceLine() {
-    while (!_sources.empty()) {
-        Source *source = _sources.back();
-        source->lineno++;
-        if (getLine(_line, _line_len, source->fp) >= 0) {
-            _line_scan = _line;
-            return &_line_scan;
-        }
-        closeSource();
-    }
-    return nullptr;
-}
-
-Error AsmCommonDirective::closeSource() {
-    Source *source = _sources.back();
-    fclose(source->fp);
-    delete source;
-    _sources.pop_back();
-    return setError(OK);
 }
 
 void AsmCommonDirective::registerPseudo(const char *name, PseudoHandler handler) {
@@ -400,7 +335,7 @@ Error AsmCommonDirective::includeFile(StrScanner &scan, StrScanner &label, CliMe
         filename.trimEndAt(p);
     }
     scan = p;
-    return openSource(filename);
+    return setError(_sources.open(filename));
 }
 
 Error AsmCommonDirective::defineUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
@@ -604,7 +539,7 @@ Error AsmCommonDirective::switchIntelZilog(StrScanner &scan, StrScanner &label, 
 }
 
 Error AsmCommonDirective::endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory) {
-    return closeSource();
+    return END_ASSEMBLE;
 }
 
 const char *AsmCommonDirective::lookupValue(uint32_t address) const {

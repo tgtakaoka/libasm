@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "file_util.h"
+#include "file_reader.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -22,21 +22,52 @@
 namespace libasm {
 namespace cli {
 
-int getLine(char *&lineptr, size_t &n, FILE *input) {
+static int getLine(char *&lineptr, size_t &n, FILE *input) {
     char *p = lineptr;
-    int max = n - 1;
+    auto max = n - 1;
     while (fgets(p, max, input)) {
-        int len = strlen(lineptr);
+        const auto len = strlen(lineptr);
         if (len > 0 && lineptr[len - 1] == '\n') {
             lineptr[len - 1] = 0;
             return len;
         }
-        n += 128;
-        lineptr = static_cast<char *>(realloc(lineptr, n));
-        p = &lineptr[len - 1];
         max = 128;
+        n += max;
+        lineptr = static_cast<char *>(realloc(lineptr, n));
+        p = &lineptr[len];
     }
     return -1;
+}
+
+FileReader::FileReader(const std::string &name)
+    : _name(name), _file(nullptr), _lineno(0), _line_len(80) {
+    _line = static_cast<char *>(malloc(_line_len));
+}
+
+FileReader::~FileReader() {
+    close();
+    free(_line);
+}
+
+StrScanner *FileReader::readLine() {
+    if (_file == nullptr || getLine(_line, _line_len, _file) < 0) {
+        close();
+        return nullptr;
+    }
+    ++_lineno;
+    _line_scan = _line;
+    return &_line_scan;
+}
+
+bool FileReader::open() {
+    _file = fopen(_name.c_str(), "r");
+    return _file != nullptr;
+}
+
+void FileReader::close() {
+    if (_file)
+        fclose(_file);
+    _file = nullptr;
 }
 
 }  // namespace cli
