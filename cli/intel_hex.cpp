@@ -28,7 +28,7 @@ uint8_t IntelHex::getSum() const {
     return static_cast<uint8_t>(-this->_check_sum);
 }
 
-void IntelHex::begin(FILE *out) {
+void IntelHex::begin(TextPrinter *out) {
     _out = out;
     _last_addr = -1;
     _next_addr = 0;

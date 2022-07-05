@@ -16,9 +16,9 @@
 
 #include "asm_driver.h"
 
+#include "file_printer.h"
 #include "file_reader.h"
 
-#include <stdio.h>
 #include <string.h>
 
 namespace libasm {
@@ -100,22 +100,23 @@ int AsmDriver::assemble() {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
-    (void)assemble(memory);
+    FilePrinter listout;
+    (void)assemble(memory, listout);
 
     do {
         _commonDir.setSymbolMode(REPORT_UNDEFINED);
         CliMemory next;
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
-        (void)assemble(next);
+        (void)assemble(next, listout);
         if (memory.equals(next))
             break;
         memory.swap(next);
     } while (true);
 
     if (_output_name) {
-        FILE *output = fopen(_output_name, "w");
-        if (output == nullptr) {
+        FilePrinter output;
+        if (!output.open(_output_name)) {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
@@ -130,7 +131,7 @@ int AsmDriver::assemble() {
             formatter = &intelHex;
         }
 
-        formatter->begin(output);
+        formatter->begin(&output);
         memory.dump([this, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
             if (_verbose) {
                 const uint8_t addrUnit = _commonDir.addrUnit();
@@ -143,28 +144,22 @@ int AsmDriver::assemble() {
             }
         });
         formatter->end();
-        fclose(output);
     }
-    FILE *list = nullptr;
-    if (_list_name) {
-        list = fopen(_list_name, "w");
-        if (list == nullptr) {
-            fprintf(stderr, "Can't open list file %s\n", _list_name);
-            return 1;
-        }
-        if (_verbose)
-            fprintf(stderr, "%s: Opened for listing\n", _list_name);
+
+    if (_list_name && !listout.open(_list_name)) {
+        fprintf(stderr, "Can't open list file %s\n", _list_name);
+        return 1;
     }
-    if (_verbose)
+    if (_list_name && _verbose) {
+        fprintf(stderr, "%s: Opened for listing\n", _list_name);
         fprintf(stderr, "%s: Pass listing\n", _input_name);
-    assemble(memory, list, true);
-    if (list)
-        fclose(list);
+    }
+    assemble(memory, listout, true);
 
     return 0;
 }
 
-int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
+int AsmDriver::assemble(CliMemory &memory, TextPrinter &out, bool reportError) {
     if (_sources.open(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
@@ -176,8 +171,7 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
     while ((scan = _sources.readLine()) != nullptr) {
         const auto error = _commonDir.assembleLine(*scan, memory);
         if (error == OK || error == END_ASSEMBLE) {
-            if (list)
-                printListing(memory, list);
+            printListing(memory, out);
             if (error != OK)
                 break;
         } else if (reportError) {
@@ -194,16 +188,14 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
                         _commonDir.errorText_P(), at);
             }
             fprintf(stderr, "%s:%d %s\n", filename, lineno, line);
-            if (list) {
-                if (column >= 0) {
-                    fprintf(list, "%s:%d:%d: error: %s\n", filename, lineno, column,
-                            _commonDir.errorText_P());
-                } else {
-                    fprintf(list, "%s:%d: error: %s at '%s'\n", filename, lineno,
-                            _commonDir.errorText_P(), at);
-                }
-                fprintf(list, "%s:%d %s\n", filename, lineno, line);
+            if (column >= 0) {
+                out.format("%s:%d:%d: error: %s\n", filename, lineno, column,
+                        _commonDir.errorText_P());
+            } else {
+                out.format("%s:%d: error: %s at '%s'\n", filename, lineno,
+                        _commonDir.errorText_P(), at);
             }
+            out.format("%s:%d %s\n", filename, lineno, line);
             errors++;
         }
     }
@@ -212,14 +204,13 @@ int AsmDriver::assemble(CliMemory &memory, FILE *list, bool reportError) {
     return errors;
 }
 
-void AsmDriver::printListing(CliMemory &memory, FILE *out) {
+void AsmDriver::printListing(CliMemory &memory, TextPrinter &out) {
     _listing.setUppercase(_uppercase);
     _listing.enableLineNumber(_line_number);
     _listing.reset(_commonDir);
     do {
-        fprintf(out, "%s\n", _listing.getLine());
+        out.println(_listing.getLine());
     } while (_listing.hasNext());
-    fflush(out);
 }
 
 AsmDirective *AsmDriver::defaultDirective() {

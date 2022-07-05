@@ -46,10 +46,8 @@ BinFormatter::~BinFormatter() {
 }
 
 void BinFormatter::format(const char *text) const {
-    if (_out) {
-        fprintf(_out, "%s\n", text);
-        fflush(_out);
-    }
+    if (_out)
+        _out->println(text);
 }
 
 void BinFormatter::ensureLine(uint8_t len) {

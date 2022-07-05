@@ -18,8 +18,8 @@
 #define __BIN_FORMATTER_H__
 
 #include <stdint.h>
-#include <stdio.h>
 
+#include "text_printer.h"
 #include "config_base.h"
 #include "config_host.h"
 
@@ -32,7 +32,7 @@ public:
     virtual ~BinFormatter();
 
     // Encode binary into text format;
-    virtual void begin(FILE *out) = 0;
+    virtual void begin(TextPrinter *out) = 0;
     virtual void encode(uint32_t addr, const uint8_t *data, uint8_t size) = 0;
     virtual void end() = 0;
     // Decode text format into binary.
@@ -40,7 +40,7 @@ public:
 
 protected:
     const uint8_t _addrSize;
-    FILE *_out = nullptr;
+    TextPrinter *_out = nullptr;
     char *_line;
     uint8_t _line_len;
     uint8_t *_data;
@@ -63,7 +63,7 @@ class IntelHex : public BinFormatter {
 public:
     IntelHex(AddressWidth addrWidth);
 
-    void begin(FILE *file) override;
+    void begin(TextPrinter *out) override;
     void encode(uint32_t addr, const uint8_t *data, uint8_t size) override;
     void end() override;
     uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) override;
@@ -81,7 +81,7 @@ class MotoSrec : public BinFormatter {
 public:
     MotoSrec(AddressWidth addrWidth);
 
-    void begin(FILE *out) override;
+    void begin(TextPrinter *out) override;
     void encode(uint32_t addr, const uint8_t *data, uint8_t size) override;
     void end() override;
     uint8_t *decode(const char *line, uint32_t &addr, uint8_t &size) override;

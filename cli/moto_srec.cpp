@@ -27,7 +27,7 @@ uint8_t MotoSrec::getSum() const {
     return static_cast<uint8_t>(~_check_sum);
 }
 
-void MotoSrec::begin(FILE *out) {
+void MotoSrec::begin(TextPrinter *out) {
     _out = out;
     format("S0030000FC");
 }

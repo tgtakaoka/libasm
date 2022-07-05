@@ -39,7 +39,7 @@ VPATH = ../src
 CXXFLAGS = -Wall -O -std=c++14 -I../src $(DEBUG_FLAGS)
 CPPFLAGS = -MMD
 
-OBJS_com = cli_listing.o cli_memory.o error_reporter.o file_reader.o \
+OBJS_com = cli_listing.o cli_memory.o error_reporter.o file_reader.o file_printer.o \
 	   bin_formatter.o intel_hex.o moto_srec.o str_buffer.o str_scanner.o \
 	   $(foreach a,$(ARCHS),$(OBJS_$(a)))
 OBJS_asm = asm.o asm_base.o asm_driver.o asm_directive.o value_parser.o function_store.o \

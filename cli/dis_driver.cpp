@@ -16,9 +16,9 @@
 
 #include "dis_driver.h"
 
+#include "file_printer.h"
 #include "file_reader.h"
 
-#include <stdio.h>
 #include <string.h>
 
 #include <algorithm>
@@ -137,29 +137,28 @@ int DisDriver::disassemble() {
 
     _disassembler->setRelativeTarget(_relativeTarget);
     DisDirective listing(*_disassembler, memory, _uppercase);
-    FILE *output = nullptr;
+    FilePrinter output;
     if (_output_name) {
-        output = fopen(_output_name, "w");
-        if (output == nullptr) {
+        if (!output.open(_output_name)) {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
         if (_verbose)
             fprintf(stderr, "%s: Opened for output\n", _output_name);
-        fprintf(output, "%s\n", listing.getCpu());
+        output.println(listing.getCpu());
     }
-    FILE *list = nullptr;
+    FilePrinter listout;
     if (_list_name) {
-        list = fopen(_list_name, "w");
-        if (list == nullptr) {
+        if (!listout.open(_list_name)) {
             fprintf(stderr, "Can't open list file %s\n", _list_name);
             return 1;
         }
         if (_verbose)
             fprintf(stderr, "%s: Opened for listing\n", _list_name);
-        fprintf(list, "%s\n", listing.getCpu(true));
+        listout.println(listing.getCpu(true));
     }
-    memory.dump([this, output, list, &listing](uint32_t base, const uint8_t *data, size_t size) {
+    memory.dump([this, &output, &listout, &listing](
+                        uint32_t base, const uint8_t *data, size_t size) {
         const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
         uint32_t start = base / addrUnit;
         const uint32_t end = start + (size - 1) / addrUnit;
@@ -172,14 +171,8 @@ int DisDriver::disassemble() {
         }
         if (end > _addr_end)
             size -= (end - _addr_end) * addrUnit;
-        if (list) {
-            fprintf(list, "%s\n", listing.origin(start, true));
-            fflush(list);
-        }
-        if (output) {
-            fprintf(output, "%s\n", listing.origin(start));
-            fflush(output);
-        }
+        listout.println(listing.origin(start, true));
+        output.println(listing.origin(start));
         for (size_t pc = 0; pc < size;) {
             const uint32_t address = start + pc / addrUnit;
             Insn insn(address);
@@ -189,30 +182,20 @@ int DisDriver::disassemble() {
             if (error)
                 fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
                         _disassembler->errorText_P());
-            if (list) {
-                if (error)
-                    fprintf(list, "%s:0x%04x: error: %s\n", _input_name, insn.address(),
-                            _disassembler->errorText_P());
-                do {
-                    fprintf(list, "%s\n", listing.getLine());
-                } while (listing.hasNext());
-                fflush(list);
-            }
-            if (output) {
-                if (error)
-                    fprintf(output, "; %s:0x%04x: error: %s\n", _input_name, insn.address(),
-                            _disassembler->errorText_P());
-                do {
-                    fprintf(output, "%s\n", listing.getContent());
-                } while (listing.hasNext());
-                fflush(output);
-            }
+            if (error)
+                listout.format("%s:0x%04x: error: %s\n", _input_name, insn.address(),
+                        _disassembler->errorText_P());
+            do {
+                listout.println(listing.getLine());
+            } while (listing.hasNext());
+            if (error)
+                output.format("; %s:0x%04x: error: %s\n", _input_name, insn.address(),
+                        _disassembler->errorText_P());
+            do {
+                output.println(listing.getContent());
+            } while (listing.hasNext());
         }
     });
-    if (output)
-        fclose(output);
-    if (list)
-        fclose(list);
 
     return 0;
 }
