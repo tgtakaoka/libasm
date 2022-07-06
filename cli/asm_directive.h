@@ -56,7 +56,7 @@ public:
 
     AsmDirective *restrictCpu(const char *cpu) { return _directives.restrictCpu(cpu); }
     AsmDirective *setCpu(const char *cpu) { return _directives.setCpu(cpu); }
-    std::string listCpu(const char *separator) const;
+    std::list<std::string> listCpu() const { return _directives.listCpu(); }
     AsmDirective *current() { return _directives.current(); }
 
     Error assembleLine(const char *line, BinMemory &memory);

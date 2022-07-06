@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2022 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_DRIVER_H__
-#define __DIS_DRIVER_H__
+#ifndef __ASM_ARGS_H__
+#define __ASM_ARGS_H__
 
-#include "bin_decoder.h"
-#include "bin_memory.h"
-#include "dis_args.h"
-#include "dis_base.h"
-#include "dis_directive.h"
-#include "file_reader.h"
+#include <stddef.h>
 
 #include <list>
 #include <string>
@@ -30,23 +25,28 @@
 namespace libasm {
 namespace cli {
 
-class DisDriver {
-public:
-    DisDriver(Disassembler **begin, Disassembler **end, DisArgs &args);
-
-    int parseArgs(int argc, const char **argv);
-    int usage(const std::list<std::string> &cpuList);
-    std::list<std::string> listCpu();
-    int disassemble();
-
-private:
-    std::list<Disassembler *> _disassemblers;
-    DisArgs &_args;
-    Disassembler *_disassembler;
-
-    static constexpr const char *PROG_PREFIX = "dis";
-    Disassembler *defaultDisassembler();
-    int readBinary(FileReader &input, BinMemory &memory);
+struct AsmArgs {
+    std::string prog_name;
+    std::string input_name;
+    std::string output_name;
+    std::string list_name;
+    std::string cpu;
+    char encoder;
+    size_t record_bytes;
+    bool uppercase;
+    bool line_number;
+    bool verbose;
+    AsmArgs()
+        : prog_name(),
+          input_name(),
+          output_name(),
+          list_name(),
+          cpu(),
+          encoder(0),
+          record_bytes(32),
+          uppercase(false),
+          line_number(false),
+          verbose(false) {}
 };
 
 }  // namespace cli

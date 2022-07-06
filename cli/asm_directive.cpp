@@ -149,25 +149,6 @@ AsmCommonDirective::AsmCommonDirective(
     registerPseudo(".function", &AsmCommonDirective::defineFunction);
 }
 
-std::string AsmCommonDirective::listCpu(const char *separator) const {
-    std::list<std::string> list(_directives.listCpu());
-    std::string cpuList;
-    std::string buf;
-    for (auto &cpu : list) {
-        if (buf.size())
-            buf += " ";
-        if (buf.size() + cpu.size() < 60) {
-            buf += cpu;
-        } else {
-            cpuList += separator;
-            cpuList += buf;
-            buf = cpu;
-        }
-    }
-    cpuList += separator + buf;
-    return cpuList;
-}
-
 Error AsmCommonDirective::assembleLine(const char *line, BinMemory &memory) {
     if (line == nullptr)
         return OK;

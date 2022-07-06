@@ -114,9 +114,10 @@ AsmDirective *directives[] = {
 };
 
 int main(int argc, const char **argv) {
-    AsmDriver driver(directives, std::end(directives));
-    if (driver.parseOption(argc, argv))
-        return driver.usage();
+    AsmArgs args;
+    AsmDriver driver(directives, std::end(directives), args);
+    if (driver.parseArgs(argc, argv))
+        return driver.usage(driver.listCpu());
     return driver.assemble();
 }
 

@@ -90,9 +90,10 @@ Disassembler * disassemblers[] = {
 };
 
 int main(int argc, const char **argv) {
-    DisDriver driver(disassemblers, std::end(disassemblers));
-    if (driver.parseOption(argc, argv))
-        return driver.usage();
+    DisArgs args;
+    DisDriver driver(disassemblers, std::end(disassemblers), args);
+    if (driver.parseArgs(argc, argv))
+        return driver.usage(driver.listCpu());
     return driver.disassemble();
 }
 

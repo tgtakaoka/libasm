@@ -62,43 +62,25 @@ StrScanner *FileFactory::readLine() {
     return nullptr;
 }
 
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end) : _commonDir(begin, end, _sources) {}
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmArgs &args)
+    : _commonDir(begin, end, _sources), _args(args) {}
 
-int AsmDriver::usage() {
-    std::string cpuList;
-    AsmDirective *directive = defaultDirective();
-    if (directive) {
-        cpuList = ": ";
-        cpuList += _commonDir.listCpu("");
-    } else {
-        const char *cpuSep = "\n                ";
-        cpuList = _commonDir.listCpu(cpuSep);
-    }
-    fprintf(stderr,
-            "libasm assembler (version " LIBASM_VERSION_STRING
-            ")\n"
-            "usage: %s [-o <output>] [-l <list>] <input>\n"
-            "  -C <CPU>    : target CPU%s\n"
-            "  -o <output> : output file\n"
-            "  -l <list>   : list file\n"
-            "  -S[<bytes>] : output Motorola S-Record format\n"
-            "  -H[<bytes>] : output Intel HEX format\n"
-            "              : optional <bytes> specifies data record length "
-            "(max 32)\n"
-            "  -u          : use uppercase letter for listing\n"
-            "  -n          : output line number to list file\n"
-            "  -v          : print progress verbosely\n",
-            _progname, cpuList.c_str());
-    return 2;
+std::list<std::string> AsmDriver::listCpu() {
+    defaultDirective();
+    return _commonDir.listCpu();
 }
 
 int AsmDriver::assemble() {
+    if (!_args.cpu.empty() && !_commonDir.setCpu(_args.cpu.c_str())) {
+        fprintf(stderr, "unknown CPU '%s'\n", _args.cpu.c_str());
+        return 4;
+    }
     _commonDir.setSymbolMode(REPORT_DUPLICATE);
     int pass = 0;
     BinMemory memory;
-    if (_verbose) {
+    if (_args.verbose) {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
-        fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
+        fprintf(stderr, "%s: Pass %d\n", _args.input_name.c_str(), ++pass);
     }
     FilePrinter listout;
     (void)assemble(memory, listout);
@@ -106,49 +88,48 @@ int AsmDriver::assemble() {
     do {
         _commonDir.setSymbolMode(REPORT_UNDEFINED);
         BinMemory next;
-        if (_verbose)
-            fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
+        if (_args.verbose)
+            fprintf(stderr, "%s: Pass %d\n", _args.input_name.c_str(), ++pass);
         (void)assemble(next, listout);
         if (memory.equals(next))
             break;
         memory.swap(next);
     } while (true);
 
-    if (_output_name) {
+    if (!_args.output_name.empty()) {
         FilePrinter output;
-        if (!output.open(_output_name)) {
-            fprintf(stderr, "Can't open output file %s\n", _output_name);
+        if (!output.open(_args.output_name)) {
+            fprintf(stderr, "Can't open output file %s\n", _args.output_name.c_str());
             return 1;
         }
-        AsmDirective *directive = _commonDir.current();
-        BinEncoder *encoder = &directive->defaultEncoder();
-        if (_encoder == 'S') {
-            encoder = &MotoSrec::encoder();
-        } else if (_encoder == 'H') {
-            encoder = &IntelHex::encoder();
-        }
 
+        auto &encoder =
+                _args.encoder == 'S'
+                        ? MotoSrec::encoder()
+                        : (_args.encoder == 'H' ? IntelHex::encoder()
+                                                 : _commonDir.current()->defaultEncoder());
         const AddressWidth addrWidth = _commonDir.config().addressWidth();
-        encoder->reset(addrWidth, _record_bytes);
-        encoder->encode(memory, output);
-        if (_verbose) {
+        encoder.reset(addrWidth, _args.record_bytes);
+        encoder.encode(memory, output);
+        if (_args.verbose) {
             const uint8_t addrUnit = _commonDir.addrUnit();
             for (const auto &it : memory) {
                 const uint32_t start = it.first / addrUnit;
                 const size_t size = it.second.size();
-                const uint32_t end =  (it.first + size - 1) / addrUnit;
-                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, size, start, end);
+                const uint32_t end = (it.first + size - 1) / addrUnit;
+                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _args.output_name.c_str(), size,
+                        start, end);
             }
         }
     }
 
-    if (_list_name && !listout.open(_list_name)) {
-        fprintf(stderr, "Can't open list file %s\n", _list_name);
+    if (!_args.list_name.empty() && !listout.open(_args.list_name)) {
+        fprintf(stderr, "Can't open list file %s\n", _args.list_name.c_str());
         return 1;
     }
-    if (_list_name && _verbose) {
-        fprintf(stderr, "%s: Opened for listing\n", _list_name);
-        fprintf(stderr, "%s: Pass listing\n", _input_name);
+    if (!_args.list_name.empty() && _args.verbose) {
+        fprintf(stderr, "%s: Opened for listing\n", _args.list_name.c_str());
+        fprintf(stderr, "%s: Pass listing\n", _args.input_name.c_str());
     }
     assemble(memory, listout, true);
 
@@ -156,8 +137,8 @@ int AsmDriver::assemble() {
 }
 
 int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
-    if (_sources.open(_input_name)) {
-        fprintf(stderr, "Can't open input file %s\n", _input_name);
+    if (_sources.open(_args.input_name.c_str())) {
+        fprintf(stderr, "Can't open input file %s\n", _args.input_name.c_str());
         return 1;
     }
 
@@ -188,8 +169,8 @@ int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
                 out.format("%s:%d:%d: error: %s\n", filename, lineno, column,
                         _commonDir.errorText_P());
             } else {
-                out.format("%s:%d: error: %s at '%s'\n", filename, lineno,
-                        _commonDir.errorText_P(), at);
+                out.format("%s:%d: error: %s at '%s'\n", filename, lineno, _commonDir.errorText_P(),
+                        at);
             }
             out.format("%s:%d %s\n", filename, lineno, line);
             errors++;
@@ -201,8 +182,8 @@ int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
 }
 
 void AsmDriver::printListing(BinMemory &memory, TextPrinter &out) {
-    _listing.setUppercase(_uppercase);
-    _listing.enableLineNumber(_line_number);
+    _listing.setUppercase(_args.uppercase);
+    _listing.enableLineNumber(_args.line_number);
     _listing.reset(_commonDir);
     do {
         out.println(_listing.getLine());
@@ -210,25 +191,60 @@ void AsmDriver::printListing(BinMemory &memory, TextPrinter &out) {
 }
 
 AsmDirective *AsmDriver::defaultDirective() {
-    const size_t prefix_len = strlen(PROG_PREFIX);
     AsmDirective *directive = nullptr;
-    if (_progname && strncmp(_progname, PROG_PREFIX, prefix_len) == 0) {
-        const char *cpu = _progname + prefix_len;
+    if (_args.prog_name.find(PROG_PREFIX) == 0) {
+        const size_t prefix_len = strlen(PROG_PREFIX);
+        const char *cpu = _args.prog_name.c_str() + prefix_len;
         directive = _commonDir.restrictCpu(cpu);
     }
     return directive;
 }
 
-int AsmDriver::parseOption(int argc, const char **argv) {
-    _progname = basename(argv[0]);
-    _input_name = nullptr;
-    _output_name = nullptr;
-    _list_name = nullptr;
-    _record_bytes = 32;
-    _encoder = 0;
-    _uppercase = false;
-    _line_number = false;
-    _verbose = false;
+int AsmDriver::usage(const std::list<std::string> &cpuList) {
+    std::string list;
+    const char *cpuSep = "\n                ";
+    std::string buf;
+    for (auto &cpu : cpuList) {
+        if (buf.size())
+            buf += " ";
+        if (buf.size() + cpu.size() < 60) {
+            buf += cpu;
+        } else {
+            list += cpuSep;
+            list += buf;
+            buf = cpu;
+        }
+    }
+    if (list.size() + buf.size() < 60) {
+        list += ": " + buf;
+    } else {
+        list += cpuSep + buf;
+    }
+    fprintf(stderr,
+            "libasm assembler (version " LIBASM_VERSION_STRING
+            ")\n"
+            "usage: %s [-o <output>] [-l <list>] <input>\n"
+            "  -C <CPU>    : target CPU%s\n"
+            "  -o <output> : output file\n"
+            "  -l <list>   : list file\n"
+            "  -S[<bytes>] : output Motorola S-Record format\n"
+            "  -H[<bytes>] : output Intel HEX format\n"
+            "              : optional <bytes> specifies data record length "
+            "(max 32)\n"
+            "  -u          : use uppercase letter for listing\n"
+            "  -n          : output line number to list file\n"
+            "  -v          : print progress verbosely\n",
+            _args.prog_name.c_str(), list.c_str());
+    return 2;
+}
+
+static const char *basename(const char *str, char sep_char = '/') {
+    const char *sep = strrchr(str, sep_char);
+    return sep ? sep + 1 : str;
+}
+
+int AsmDriver::parseArgs(int argc, const char **argv) {
+    _args.prog_name = basename(argv[0]);
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -238,18 +254,18 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                     fprintf(stderr, "-o requires output file name\n");
                     return 1;
                 }
-                _output_name = argv[i];
+                _args.output_name = argv[i];
                 break;
             case 'l':
                 if (++i >= argc) {
                     fprintf(stderr, "-l requires listing file name\n");
                     return 1;
                 }
-                _list_name = argv[i];
+                _args.list_name = argv[i];
                 break;
             case 'S':
             case 'H':
-                _encoder = *opt++;
+                _args.encoder = *opt++;
                 if (*opt) {
                     char *end;
                     unsigned long v = strtoul(opt, &end, 10);
@@ -257,7 +273,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                         fprintf(stderr, "invalid record length: %s\n", argv[i]);
                         return 3;
                     }
-                    _record_bytes = v;
+                    _args.record_bytes = v;
                 }
                 break;
             case 'C':
@@ -265,50 +281,43 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                if (_commonDir.setCpu(argv[i]) == nullptr) {
-                    fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
-                    return 4;
-                }
+                _args.cpu = argv[i];
                 break;
             case 'u':
-                _uppercase = true;
+                _args.uppercase = true;
                 break;
             case 'n':
-                _line_number = true;
+                _args.line_number = true;
                 break;
             case 'v':
-                _verbose = true;
+                _args.verbose = true;
                 break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;
             }
         } else {
-            if (_input_name) {
-                fprintf(stderr, "multiple input files specified: %s and %s\n", _input_name, opt);
+            if (!_args.input_name.empty()) {
+                fprintf(stderr, "multiple input files specified: %s and %s\n",
+                        _args.input_name.c_str(), opt);
                 return 1;
             }
-            _input_name = opt;
+            _args.input_name = opt;
         }
     }
-    if (!_input_name) {
+    if (_args.input_name.empty()) {
         fprintf(stderr, "no input file\n");
         return 1;
     }
-    if (_output_name && strcmp(_output_name, _input_name) == 0) {
+    if (_args.output_name == _args.input_name) {
         fprintf(stderr, "output file overwrite input file\n");
         return 2;
     }
-    if (_list_name && strcmp(_list_name, _input_name) == 0) {
+    if (_args.list_name == _args.input_name) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
     }
     return 0;
-}
-
-const char *AsmDriver::basename(const char *str, char sep_char) {
-    const char *sep = strrchr(str, sep_char);
-    return sep ? sep + 1 : str;
 }
 
 }  // namespace cli

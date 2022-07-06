@@ -17,10 +17,14 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
+#include "asm_args.h"
 #include "asm_directive.h"
 #include "bin_memory.h"
 #include "file_reader.h"
 #include "list_formatter.h"
+
+#include <list>
+#include <string>
 
 namespace libasm {
 namespace cli {
@@ -40,32 +44,23 @@ private:
 
 class AsmDriver {
 public:
-    AsmDriver(AsmDirective **begin, AsmDirective **end);
+    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmArgs &args);
 
-    int usage();
-    int parseOption(int argc, const char **argv);
+    int parseArgs(int argc, const char **argv);
+    int usage(const std::list<std::string> &cpuList);
+    std::list<std::string> listCpu();
     int assemble();
 
 private:
     AsmCommonDirective _commonDir;
     FileFactory _sources;
+    AsmArgs &_args;
     ListFormatter _listing;
-    const char *_progname;
-    const char *_input_name;
-    const char *_output_name;
-    const char *_list_name;
-    char _encoder;
-    size_t _record_bytes;
-    bool _uppercase;
-    bool _line_number;
-    bool _verbose;
 
     static constexpr const char *PROG_PREFIX = "asm";
     AsmDirective *defaultDirective();
     int assemble(BinMemory &memory, TextPrinter &out, bool reportError = false);
     void printListing(BinMemory &memory, TextPrinter &out);
-
-    static const char *basename(const char *str, char sep_char = '/');
 };
 
 }  // namespace cli

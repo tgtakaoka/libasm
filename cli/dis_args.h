@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2022 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_DRIVER_H__
-#define __DIS_DRIVER_H__
+#ifndef __DIS_ARGS_H__
+#define __DIS_ARGS_H__
 
-#include "bin_decoder.h"
-#include "bin_memory.h"
-#include "dis_args.h"
-#include "dis_base.h"
-#include "dis_directive.h"
-#include "file_reader.h"
+#include <stdint.h>
 
 #include <list>
 #include <string>
@@ -30,23 +25,28 @@
 namespace libasm {
 namespace cli {
 
-class DisDriver {
-public:
-    DisDriver(Disassembler **begin, Disassembler **end, DisArgs &args);
-
-    int parseArgs(int argc, const char **argv);
-    int usage(const std::list<std::string> &cpuList);
-    std::list<std::string> listCpu();
-    int disassemble();
-
-private:
-    std::list<Disassembler *> _disassemblers;
-    DisArgs &_args;
-    Disassembler *_disassembler;
-
-    static constexpr const char *PROG_PREFIX = "dis";
-    Disassembler *defaultDisassembler();
-    int readBinary(FileReader &input, BinMemory &memory);
+struct DisArgs {
+    std::string prog_name;
+    std::string input_name;
+    std::string output_name;
+    std::string list_name;
+    std::string cpu;
+    bool relative_target;
+    bool uppercase;
+    bool verbose;
+    uint32_t addr_start;
+    uint32_t addr_end;
+    DisArgs()
+        : prog_name(),
+          input_name(),
+          output_name(),
+          list_name(),
+          cpu(),
+          relative_target(false),
+          uppercase(false),
+          verbose(false),
+          addr_start(0),
+          addr_end(UINT32_MAX) {}
 };
 
 }  // namespace cli
