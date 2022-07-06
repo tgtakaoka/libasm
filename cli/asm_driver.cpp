@@ -47,8 +47,9 @@ const TextReader *FileFactory::current() const {
     return _sources.empty() ? nullptr : &_sources.back();
 }
 
-void FileFactory::closeCurrent() {
+Error FileFactory::closeCurrent() {
     _sources.pop_back();
+    return OK;
 }
 
 StrScanner *FileFactory::readLine() {
@@ -112,7 +113,7 @@ int AsmDriver::assemble() {
         encoder.reset(addrWidth, _args.record_bytes);
         encoder.encode(memory, output);
         if (_args.verbose) {
-            const uint8_t addrUnit = _commonDir.addrUnit();
+            const uint8_t addrUnit = _commonDir.current()->assembler().config().addressUnit();
             for (const auto &it : memory) {
                 const uint32_t start = it.first / addrUnit;
                 const size_t size = it.second.size();
@@ -142,13 +143,19 @@ int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
         return 1;
     }
 
+    ListFormatter listing;
+    listing.setUppercase(_args.uppercase);
+    listing.enableLineNumber(_args.line_number);
     int errors = 0;
     _commonDir.reset();
     StrScanner *scan;
     while ((scan = _sources.readLine()) != nullptr) {
         const auto error = _commonDir.assembleLine(*scan, memory);
         if (error == OK || error == END_ASSEMBLE) {
-            printListing(memory, out);
+            listing.reset(_commonDir);
+            do {
+                out.println(listing.getLine());
+            } while (listing.hasNext());
             if (error != OK)
                 break;
         } else if (reportError) {
@@ -179,15 +186,6 @@ int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
     while (_sources.size())
         _sources.closeCurrent();
     return errors;
-}
-
-void AsmDriver::printListing(BinMemory &memory, TextPrinter &out) {
-    _listing.setUppercase(_args.uppercase);
-    _listing.enableLineNumber(_args.line_number);
-    _listing.reset(_commonDir);
-    do {
-        out.println(_listing.getLine());
-    } while (_listing.hasNext());
 }
 
 AsmDirective *AsmDriver::defaultDirective() {

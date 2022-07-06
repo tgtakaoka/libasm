@@ -33,7 +33,7 @@ class FileFactory : public AsmSourceFactory {
 public:
     Error open(const StrScanner &name) override;
     const TextReader *current() const override;
-    void closeCurrent() override;
+    Error closeCurrent() override;
     size_t size() const override { return _sources.size(); }
     StrScanner *readLine() override;
 
@@ -60,7 +60,6 @@ private:
     static constexpr const char *PROG_PREFIX = "asm";
     AsmDirective *defaultDirective();
     int assemble(BinMemory &memory, TextPrinter &out, bool reportError = false);
-    void printListing(BinMemory &memory, TextPrinter &out);
 };
 
 }  // namespace cli
