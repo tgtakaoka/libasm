@@ -14,29 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_DRIVER_H__
-#define __DIS_DRIVER_H__
+#ifndef __DIS_COMMANDER_H__
+#define __DIS_COMMANDER_H__
 
+#include "bin_memory.h"
+#include "dis_args.h"
 #include "dis_base.h"
-
-#include <list>
-#include <string>
+#include "dis_driver.h"
+#include "file_reader.h"
 
 namespace libasm {
 namespace cli {
 
-class DisDriver {
+class DisCommander {
 public:
-    DisDriver(Disassembler **begin, Disassembler **end);
+    DisCommander(Disassembler **begin, Disassembler **end);
 
-    Disassembler *restrictCpu(const char *cpu);
-    Disassembler *setCpu(const char *cpu);
-    std::list<std::string> listCpu() const;
-    Disassembler *current() const { return _current; }
+    int parseArgs(int argc, const char **argv);
+    int usage();
+    int disassemble();
 
 private:
-    std::list<Disassembler *> _disassemblers;
-    Disassembler *_current;
+    DisDriver _driver;
+    DisArgs _args;
+
+    static constexpr const char *PROG_PREFIX = "dis";
+    Disassembler *defaultDisassembler();
+    int readBinary(FileReader &input, BinMemory &memory);
 };
 
 }  // namespace cli

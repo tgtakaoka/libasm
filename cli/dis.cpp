@@ -16,7 +16,7 @@
 
 #include "dis_scn2650.h"
 #include "dis_cdp1802.h"
-#include "dis_driver.h"
+#include "dis_commander.h"
 #include "dis_i8048.h"
 #include "dis_i8051.h"
 #include "dis_i8080.h"
@@ -64,7 +64,7 @@ z8000::DisZ8000 disz8000;
 ns32000::DisNs32000 dis32000;
 mn1610::DisMn1610 dis1610;
 
-Disassembler * disassemblers[] = {
+Disassembler *disassemblers[] = {
         &dis6800,
         &dis6805,
         &dis6809,
@@ -90,11 +90,10 @@ Disassembler * disassemblers[] = {
 };
 
 int main(int argc, const char **argv) {
-    DisArgs args;
-    DisDriver driver(disassemblers, std::end(disassemblers), args);
-    if (driver.parseArgs(argc, argv))
-        return driver.usage(driver.listCpu());
-    return driver.disassemble();
+    DisCommander commander(disassemblers, std::end(disassemblers));
+    if (commander.parseArgs(argc, argv))
+        return commander.usage();
+    return commander.disassemble();
 }
 
 // Local Variables:
