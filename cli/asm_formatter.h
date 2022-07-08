@@ -19,6 +19,10 @@
 
 #include "bin_memory.h"
 #include "list_formatter.h"
+#include "str_scanner.h"
+#include "value_parser.h"
+
+#include <stdint.h>
 
 namespace libasm {
 namespace cli {

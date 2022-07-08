@@ -19,7 +19,6 @@
 
 #include <stddef.h>
 
-#include <list>
 #include <string>
 
 namespace libasm {

@@ -24,110 +24,13 @@
 namespace libasm {
 namespace cli {
 
-static void appendTo(const std::string &cpu, std::list<std::string> &list) {
-    if (std::find(list.begin(), list.end(), cpu) == list.end())
-        list.push_back(cpu);
-}
-
-static void filter(const char *text, std::list<std::string> &list) {
-    while (*text) {
-        const char *del = strchr(text, ',');
-        if (del == nullptr) {
-            appendTo(std::string(text), list);
-            return;
-        }
-        const std::string cpu(text, del);
-        appendTo(cpu, list);
-        for (text = del + 1; *text == ' '; text++)
-            ;
-    }
-}
-
-std::list<std::string> AsmCommonDirective::listCpu() const {
-    std::list<std::string> list;
-    for (auto dir : _directives) {
-        const /* PROGMEM */ char *list_P = dir->assembler().listCpu_P();
-        char cpuList[strlen_P(list_P) + 1];
-        strcpy_P(cpuList, list_P);
-        filter(cpuList, list);
-    }
-    return list;
-}
-
 bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
     return strcmp_P("8080", cpu_P) == 0 || strcmp_P("8085", cpu_P) == 0 ||
            strcasecmp_P("V30EMU", cpu_P) == 0;
 }
 
-AsmDirective *AsmCommonDirective::setCpu(const char *cpu) {
-    for (auto dir : _directives) {
-        if (dir->assembler().setCpu(cpu))
-            return switchDirective(dir);
-    }
-    return nullptr;
-}
-
-AsmDirective *AsmCommonDirective::restrictCpu(const char *cpu) {
-    const /* PROGMEM */ char *cpu_P = current()->assembler().cpu_P();
-    AsmDirective *z80 = AsmDirective::is8080(cpu_P) ? setCpu("Z80") : nullptr;
-    AsmDirective *dir = setCpu(cpu);
-    if (dir) {
-        _directives.clear();
-        _directives.push_back(dir);
-        if (z80)
-            _directives.push_back(z80);
-    }
-    return dir;
-}
-
-void AsmCommonDirective::setFunctionStore(FunctionStore *functionStore) {
-    _functionStore = functionStore;
-    _savedFuncParser = current()->assembler().parser().setFuncParser(
-            reinterpret_cast<ValueParser::FuncParser *>(functionStore));
-    _functionStore->setParent(_savedFuncParser);
-}
-
-AsmDirective *AsmCommonDirective::switchDirective(AsmDirective *dir) {
-    if (current())
-        current()->assembler().parser().setFuncParser(_savedFuncParser);
-    _current = dir;
-    if (_functionStore == nullptr) {
-        ;  // defer setting FunctionStore until |_functionStore| is set.
-    } else {
-        setFunctionStore(_functionStore);
-    }
-    current()->assembler().reset();
-    return dir;
-}
-
-AsmCommonDirective::AsmCommonDirective(
-        AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources)
-    : _directives(begin, end),
-      _current(nullptr),
-      _sources(sources),
-      _functionStore(nullptr),
-      _savedFuncParser(nullptr) {
-    switchDirective(_directives.front());
-    setFunctionStore(&_functions);
-    _origin = 0;
-    _symbolMode = REPORT_UNDEFINED;
-}
-
-Error AsmCommonDirective::assembleLine(const StrScanner &line, AsmFormatter &list) {
-    list.line_number = _sources.current()->lineno();
-    list.include_nest = _sources.size() - 1;
-    list.conf = &current()->assembler().config();
-    return setError(current()->assembleLine(line, list, *this));
-}
-
-void AsmCommonDirective::reset() {
-    current()->assembler().reset();
-    _functions.reset();
-    setOrigin(0);
-}
-
-Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICommon &common) {
-    list.address = common.origin();
+Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriver &driver) {
+    list.address = driver.origin();
     list.length = 0;
     list.val.clear();
     list.label = StrScanner::EMPTY;
@@ -155,14 +58,14 @@ Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICo
         list.instruction = scan;
         list.instruction.trimEndAt(p);
         list.operand = p.skipSpaces();
-        const uint32_t origin = common.origin();
-        const Error error = processPseudo(list.instruction, p, list, common);
+        const uint32_t origin = driver.origin();
+        const Error error = processPseudo(list.instruction, p, list, driver);
         if (error == OK) {
             list.operand.trimEndAt(p).trimEnd(isspace);
             list.comment = p.skipSpaces();
             if (list.line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
-                if (common.internSymbol(origin, list.line_symbol))
+                if (driver.internSymbol(origin, list.line_symbol))
                     return getError();
             }
             return getError();
@@ -173,7 +76,7 @@ Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICo
 
     if (list.line_symbol.size()) {
         // If |label| isn't consumed, assign the origin.
-        if (common.internSymbol(common.origin(), list.line_symbol))
+        if (driver.internSymbol(driver.origin(), list.line_symbol))
             return getError();
     }
 
@@ -182,9 +85,9 @@ Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICo
         return setError(OK);  // skip comment
     }
 
-    Insn insn(common.origin());
-    const Error error = _assembler.encode(scan, insn, &common);
-    const bool allowUndef = error == UNDEFINED_SYMBOL && common.symbolMode() != REPORT_UNDEFINED;
+    Insn insn(driver.origin());
+    const Error error = _assembler.encode(scan, insn, &driver);
+    const bool allowUndef = error == UNDEFINED_SYMBOL && driver.symbolMode() != REPORT_UNDEFINED;
     if (error == OK || allowUndef) {
         StrScanner p(_assembler.errorAt());
         list.operand.trimEndAt(p).trimEnd(isspace);
@@ -195,7 +98,7 @@ Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICo
             list.address = insn.address();
             for (auto i = 0; i < insn.length(); i++)
                 list.generateByte(addr, insn.bytes()[i]);
-            common.setOrigin(common.origin() + insn.length() / unit);
+            driver.setOrigin(driver.origin() + insn.length() / unit);
         }
         return setError(OK);
     }
@@ -204,24 +107,24 @@ Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICo
 
 // PseudoHandler
 
-Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     ValueParser &parser = assembler().parser();
-    Value value = parser.eval(scan, &common);
+    Value value = parser.eval(scan, &driver);
     if (setError(parser))
         return getError();
-    if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    list.address = common.setOrigin(value.getUnsigned());
+    list.address = driver.setOrigin(value.getUnsigned());
     return setError(OK);
 }
 
-Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     ValueParser &parser = assembler().parser();
-    Value value = parser.eval(scan, &common);
+    Value value = parser.eval(scan, &driver);
     if (setError(parser))
         return getError();
-    if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
@@ -229,28 +132,28 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, ICommon &c
     if (val16 > 0x1000)
         setError(ILLEGAL_OPERAND);
     // TODO line end check
-    const auto origin = common.origin();
+    const auto origin = driver.origin();
     list.address = origin;
-    common.setOrigin((origin + (val16 - 1)) & ~(val16 - 1));
+    driver.setOrigin((origin + (val16 - 1)) & ~(val16 - 1));
     return setError(OK);
 }
 
-Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     if (list.line_symbol.size() == 0)
         return setError(MISSING_LABEL);
     ValueParser &parser = assembler().parser();
-    const auto &value = list.val = parser.eval(scan, &common);
+    const auto &value = list.val = parser.eval(scan, &driver);
     if (setError(parser))
         return getError();
-    if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    if (common.internSymbol(value.getUnsigned(), list.line_symbol) == OK)
+    if (driver.internSymbol(value.getUnsigned(), list.line_symbol) == OK)
         list.line_symbol = StrScanner::EMPTY;
     return getError();
 }
 
-Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     char quote = scan.expect('"');
     if (quote == 0)
         quote = scan.expect('\'');
@@ -266,22 +169,23 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, ICommon &c
         filename.trimEndAt(p);
     }
     scan = p;
-    return setError(common.openSource(filename));
+    return setError(driver.openSource(filename));
 }
 
-Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    return defineBytes(scan, list, common, false);
+Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return defineBytes(scan, list, driver, false);
 }
 
-Error AsmDirective::defineString(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    return defineBytes(scan, list, common, true);
+Error AsmDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return defineBytes(scan, list, driver, true);
 }
 
-Error AsmDirective::defineBytes(StrScanner &scan, AsmFormatter &list, ICommon &common, bool delimitor) {
-    list.address = common.origin();
+Error AsmDirective::defineBytes(
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor) {
+    list.address = driver.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = common.origin() * unit;
+    const uint32_t base = driver.origin() * unit;
     for (;;) {
         scan.skipSpaces();
         if (delimitor || *scan == '\'' || *scan == '"') {
@@ -309,10 +213,10 @@ Error AsmDirective::defineBytes(StrScanner &scan, AsmFormatter &list, ICommon &c
             }
             scan = p;
         } else {
-            Value value = parser.eval(scan, &common);
+            Value value = parser.eval(scan, &driver);
             if (setError(parser))
                 return getError();
-            if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+            if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
                 return setError(UNDEFINED_SYMBOL);
             if (value.overflowUint8())
                 return setError(OVERFLOW_RANGE);
@@ -322,21 +226,21 @@ Error AsmDirective::defineBytes(StrScanner &scan, AsmFormatter &list, ICommon &c
         if (!scan.skipSpaces().expect(','))
             break;
     }
-    common.setOrigin(common.origin() + ((list.length + unit - 1) & -unit) / unit);
+    driver.setOrigin(driver.origin() + ((list.length + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
-Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    list.address = common.origin();
+Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    list.address = driver.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = common.origin() * unit;
+    const uint32_t base = driver.origin() * unit;
     const auto endian = assembler().config().endian();
     for (;;) {
-        Value value = parser.eval(scan, &common);
+        Value value = parser.eval(scan, &driver);
         if (setError(parser))
             return getError();
-        if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+        if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
         if (value.overflowUint16())
             return setError(OVERFLOW_RANGE);
@@ -348,21 +252,21 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, ICommon 
         if (!scan.skipSpaces().expect(','))
             break;
     }
-    common.setOrigin(common.origin() + ((list.length + unit - 1) & -unit) / unit);
+    driver.setOrigin(driver.origin() + ((list.length + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
-Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    list.address = common.origin();
+Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    list.address = driver.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = common.origin() * unit;
+    const uint32_t base = driver.origin() * unit;
     const auto endian = assembler().config().endian();
     for (;;) {
-        Value value = parser.eval(scan, &common);
+        Value value = parser.eval(scan, &driver);
         if (setError(parser))
             return getError();
-        if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+        if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
         uint32_t val32 = value.getUnsigned();
         for (auto i = 0; i < 4; i++) {
@@ -377,43 +281,44 @@ Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, ICommon 
         if (!scan.skipSpaces().expect(','))
             break;
     }
-    common.setOrigin(common.origin() + ((list.length + unit - 1) & -unit) / unit);
+    driver.setOrigin(driver.origin() + ((list.length + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
-Error AsmDirective::allocateUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    return allocateSpaces(scan, list, common, sizeof(uint8_t));
+Error AsmDirective::allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return allocateSpaces(scan, list, driver, sizeof(uint8_t));
 }
 
-Error AsmDirective::allocateUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    return allocateSpaces(scan, list, common, sizeof(uint16_t));
+Error AsmDirective::allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return allocateSpaces(scan, list, driver, sizeof(uint16_t));
 }
 
-Error AsmDirective::allocateUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
-    return allocateSpaces(scan, list, common, sizeof(uint32_t));
+Error AsmDirective::allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return allocateSpaces(scan, list, driver, sizeof(uint32_t));
 }
 
-Error AsmDirective::allocateSpaces(StrScanner &scan, AsmFormatter &list, ICommon &common, size_t unit) {
+Error AsmDirective::allocateSpaces(
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, size_t unit) {
     ValueParser &parser = assembler().parser();
-    Value value = parser.eval(scan, &common);
+    Value value = parser.eval(scan, &driver);
     if (setError(parser))
         return getError();
-    if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
+    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
     const auto size = value.getUnsigned() * unit;
-    const auto origin = common.origin();
+    const auto origin = driver.origin();
     if (origin + size < origin)
         return setError(OVERFLOW_RANGE);
-    common.setOrigin(origin + ((size + unit - 1) & -unit) / unit);
+    driver.setOrigin(origin + ((size + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
-Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     if (list.line_symbol.size() == 0)
         return setError(MISSING_LABEL);
-    if (common.symbolMode() == REPORT_DUPLICATE && common.hasSymbol(list.line_symbol))
+    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasSymbol(list.line_symbol))
         return setError(DUPLICATE_LABEL);
     ValueParser &parser = assembler().parser();
     std::list<StrScanner> params;
@@ -421,7 +326,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, ICommon
         const StrScanner expr = parser.scanExpr(scan.skipSpaces(), ',');
         if (expr.size() == 0) {
             const auto error =
-                    common.internFunction(list.line_symbol, params, StrScanner(scan, expr));
+                    driver.internFunction(list.line_symbol, params, StrScanner(scan, expr));
             scan = expr;
             list.line_symbol = StrScanner::EMPTY;
             return error;
@@ -439,18 +344,18 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, ICommon
     }
 }
 
-Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     StrScanner p(scan);
     p.trimStart([](char s) { return !isspace(s); });
     scan.trimEndAt(p);
     std::string cpu(scan, scan.size());
-    if (common.setCpu(cpu.c_str()) == nullptr)
+    if (driver.setCpu(cpu.c_str()) == nullptr)
         return setError(UNSUPPORTED_CPU);
     scan = p;
     return setError(OK);
 }
 
-Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
@@ -458,12 +363,12 @@ Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, IComm
     strcpy_P(cpu, cpu_P);
     StrScanner option = assembler().parser().readSymbol(scan);
     if (option.iequals_P(PSTR("on"))) {
-        auto zilog = common.setCpu("Z80");
+        auto zilog = driver.setCpu("Z80");
         if (zilog == nullptr)
             return setError(UNSUPPORTED_CPU);
         zilog->assembler().setCpu(cpu);
     } else if (option.iequals_P(PSTR("off"))) {
-        auto intel = common.setCpu("8080");
+        auto intel = driver.setCpu("8080");
         if (intel == nullptr)
             return setError(UNSUPPORTED_CPU);
         intel->assembler().setCpu(cpu);
@@ -472,42 +377,8 @@ Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, IComm
     return setError(OK);
 }
 
-Error AsmDirective::endAssemble(StrScanner &scan, AsmFormatter &list, ICommon &common) {
+Error AsmDirective::endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     return END_ASSEMBLE;
-}
-
-const char *AsmCommonDirective::lookupValue(uint32_t address) const {
-    return nullptr;
-}
-
-bool AsmCommonDirective::hasSymbol(const StrScanner &symbol) const {
-    return symbolExists(std::string(symbol, symbol.size()));
-}
-
-uint32_t AsmCommonDirective::lookupSymbol(const StrScanner &symbol) const {
-    return symbolLookup(std::string(symbol, symbol.size()));
-}
-
-Error AsmCommonDirective::internSymbol(uint32_t value, const StrScanner &symbol) {
-    return symbolIntern(value, std::string(symbol, symbol.size()));
-}
-
-bool AsmCommonDirective::symbolExists(const std::string &key) const {
-    auto it = _symbols.find(key);
-    return it != _symbols.end();
-}
-
-uint32_t AsmCommonDirective::symbolLookup(const std::string &key) const {
-    auto it = _symbols.find(key);
-    return it == _symbols.end() ? 0 : it->second;
-}
-
-Error AsmCommonDirective::symbolIntern(uint32_t value, const std::string &key) {
-    if (symbolExists(key) && _symbolMode == REPORT_DUPLICATE)
-        return setError(DUPLICATE_LABEL);
-    _symbols.erase(key);
-    _symbols.emplace(key, value);
-    return OK;
 }
 
 AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
@@ -541,12 +412,12 @@ void AsmDirective::registerPseudo(const char *name, PseudoHandler handler) {
 }
 
 Error AsmDirective::processPseudo(
-        const StrScanner &name, StrScanner &scan, AsmFormatter &list, ICommon &common) {
+        const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     auto it = _pseudos.find(std::string(name, name.size()));
     if (it == _pseudos.end())
         return UNKNOWN_DIRECTIVE;
     const auto fp = it->second;
-    return (this->*fp)(scan, list, common);
+    return (this->*fp)(scan, list, driver);
 }
 
 MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {

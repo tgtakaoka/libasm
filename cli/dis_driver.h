@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_DRIVER_H__
-#define __DIS_DRIVER_H__
+#ifndef __DIS_COMMANDER_H__
+#define __DIS_COMMANDER_H__
 
 #include "bin_decoder.h"
 #include "bin_memory.h"

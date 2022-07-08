@@ -21,6 +21,8 @@
 namespace libasm {
 namespace cli {
 
+FilePrinter FilePrinter::STDERR{"/dev/stderr", stderr};
+
 FilePrinter::FilePrinter() : _name(), _file(nullptr) {}
 
 FilePrinter::~FilePrinter() {

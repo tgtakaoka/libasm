@@ -36,9 +36,13 @@ public:
     void println(const char *text) override;
     void format(const char *fmt, ...) override;
 
+    static FilePrinter STDERR;
+
 private:
     std::string _name;
     FILE *_file;
+
+    FilePrinter(const char *name, FILE *file) : _name(name), _file(file) {}
 };
 
 }  // namespace cli

@@ -17,48 +17,84 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
-#include "asm_args.h"
-#include "asm_directive.h"
-#include "bin_memory.h"
-#include "file_reader.h"
+#include "asm_formatter.h"
+#include "error_reporter.h"
+#include "function_store.h"
+#include "str_scanner.h"
+#include "symbol_table.h"
+#include "text_reader.h"
+#include "text_printer.h"
+#include "value_parser.h"
 
 #include <list>
-#include <string>
+#include <map>
 
 namespace libasm {
 namespace cli {
 
-class FileFactory : public AsmSourceFactory {
-public:
-    Error open(const StrScanner &name) override;
-    const TextReader *current() const override;
-    Error closeCurrent() override;
-    size_t size() const override { return _sources.size(); }
-    StrScanner *readLine() override;
+class AsmDirective;
 
-private:
-    static constexpr int max_includes = 4;
-    std::list<FileReader> _sources;
+class AsmSourceFactory {
+public:
+    virtual Error open(const StrScanner &name) = 0;
+    virtual const TextReader *current() const = 0;
+    virtual Error closeCurrent() = 0;
+    virtual size_t size() const = 0;
+    virtual StrScanner *readLine() = 0;
+    virtual TextPrinter &errors() = 0;
 };
 
-class AsmDriver {
-public:
-    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmArgs &args);
+enum SymbolMode {
+    REPORT_UNDEFINED = 0,
+    REPORT_DUPLICATE = 1,
+};
 
-    int parseArgs(int argc, const char **argv);
-    int usage(const std::list<std::string> &cpuList);
-    std::list<std::string> listCpu();
-    int assemble();
+class AsmDriver : public ErrorAt, public SymbolTable {
+public:
+    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources);
+
+    AsmDirective *restrictCpu(const char *cpu);
+    AsmDirective *setCpu(const char *cpu);
+    std::list<std::string> listCpu() const;
+    AsmDirective *current() const { return _current; }
+
+    Error assemble(const StrScanner &line, AsmFormatter &list);
+    void reset();
+    uint32_t origin() const { return _origin; }
+    uint32_t setOrigin(uint32_t origin) { return _origin = origin; }
+    void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
+    SymbolMode symbolMode() const { return _symbolMode; }
+
+    // SymbolTable
+    const char *lookupValue(uint32_t address) const override;
+    bool hasSymbol(const StrScanner &symbol) const override;
+    uint32_t lookupSymbol(const StrScanner &symbol) const override;
+    Error internSymbol(uint32_t value, const StrScanner &symbol);
+
+    Error internFunction(
+            const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body) {
+        return _functions.internFunction(name, params, body);
+    }
+    Error openSource(const StrScanner &filename) { return _sources.open(filename); }
 
 private:
-    AsmCommonDirective _commonDir;
-    FileFactory _sources;
-    AsmArgs &_args;
-    ListFormatter _listing;
+    std::list<AsmDirective *> _directives;
+    AsmDirective *_current;
+    AsmSourceFactory &_sources;
+    FunctionStore *_functionStore;
+    ValueParser::FuncParser *_savedFuncParser;
 
-    static constexpr const char *PROG_PREFIX = "asm";
-    AsmDirective *defaultDirective();
-    int assemble(BinMemory &memory, TextPrinter &out, bool reportError = false);
+    uint32_t _origin;
+    SymbolMode _symbolMode;
+
+    FunctionStore _functions;
+    void setFunctionStore(FunctionStore *functionStore);
+    AsmDirective *switchDirective(AsmDirective *dir);
+
+    std::map<std::string, uint32_t, std::less<>> _symbols;
+    bool symbolExists(const std::string &key) const;
+    uint32_t symbolLookup(const std::string &key) const;
+    Error symbolIntern(uint32_t value, const std::string &key);
 };
 
 }  // namespace cli

@@ -18,129 +18,47 @@
 #define __ASM_DIRECTIVE_H__
 
 #include "asm_base.h"
+#include "asm_driver.h"
 #include "asm_formatter.h"
 #include "bin_memory.h"
 #include "error_reporter.h"
-#include "function_store.h"
 #include "intel_hex.h"
-#include "list_formatter.h"
 #include "moto_srec.h"
 #include "str_scanner.h"
-#include "text_reader.h"
 
-#include <functional>
-#include <list>
 #include <map>
+#include <string>
 
 namespace libasm {
 namespace cli {
 
-class AsmDirective;
-
-enum SymbolMode {
-    REPORT_UNDEFINED = 0,
-    REPORT_DUPLICATE = 1,
-};
-
-class AsmSourceFactory {
-public:
-    virtual Error open(const StrScanner &name) = 0;
-    virtual const TextReader *current() const = 0;
-    virtual Error closeCurrent() = 0;
-    virtual size_t size() const = 0;
-    virtual StrScanner *readLine() = 0;
-};
-
-class ICommon : public SymbolTable {
-public:
-    virtual uint32_t origin() const = 0;
-    virtual uint32_t setOrigin(uint32_t origin) = 0;
-    virtual AsmDirective *setCpu(const char *cpu) = 0;
-    virtual SymbolMode symbolMode() const = 0;
-    virtual Error internSymbol(uint32_t value, const StrScanner &symbol) = 0;
-    virtual Error internFunction(
-            const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body) = 0;
-    virtual Error openSource(const StrScanner &filename) = 0;
-};
-
-class AsmCommonDirective : public ErrorAt, public ICommon {
-public:
-    AsmCommonDirective(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources);
-
-    AsmDirective *restrictCpu(const char *cpu);
-    AsmDirective *setCpu(const char *cpu) override;
-    std::list<std::string> listCpu() const;
-    AsmDirective *current() const { return _current; }
-
-    Error assembleLine(const StrScanner &line, AsmFormatter &list);
-
-    void reset();
-    void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
-
-    // ICommon
-    uint32_t origin() const override { return _origin; }
-    uint32_t setOrigin(uint32_t origin) override { return _origin = origin; }
-    SymbolMode symbolMode() const override { return _symbolMode; }
-    Error internFunction(const StrScanner &name, std::list<StrScanner> &params,
-            const StrScanner &body) override {
-        return _functions.internFunction(name, params, body);
-    }
-    Error openSource(const StrScanner &filename) override { return _sources.open(filename); }
-
-private:
-    std::list<AsmDirective *> _directives;
-    AsmDirective *_current;
-    AsmSourceFactory &_sources;
-    FunctionStore *_functionStore;
-    ValueParser::FuncParser *_savedFuncParser;
-
-    uint32_t _origin;
-    SymbolMode _symbolMode;
-
-    FunctionStore _functions;
-    void setFunctionStore(FunctionStore *functionStore);
-    AsmDirective *switchDirective(AsmDirective *dir);
-
-    // SymbolTable
-    const char *lookupValue(uint32_t address) const override;
-    bool hasSymbol(const StrScanner &symbol) const override;
-    uint32_t lookupSymbol(const StrScanner &symbol) const override;
-    Error internSymbol(uint32_t value, const StrScanner &symbol) override;
-
-private:
-    std::map<std::string, uint32_t, std::less<>> _symbols;
-    bool symbolExists(const std::string &key) const;
-    uint32_t symbolLookup(const std::string &key) const;
-    Error symbolIntern(uint32_t value, const std::string &key);
-};
-
 class AsmDirective : public ErrorAt {
 public:
     typedef Error (AsmDirective::*PseudoHandler)(
-            StrScanner &scan, AsmFormatter &list, ICommon &common);
+            StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
-    Error assembleLine(const StrScanner &line, AsmFormatter &list, ICommon &common);
+    Error assemble(const StrScanner &line, AsmFormatter &list, AsmDriver &driver);
     Assembler &assembler() const { return _assembler; }
     virtual BinEncoder &defaultEncoder() = 0;
     Error processPseudo(
-            const StrScanner &name, StrScanner &scan, AsmFormatter &list, ICommon &common);
+            const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
     // PseudoHandler
-    Error defineOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error alignOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error defineLabel(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error includeFile(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error defineUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error defineString(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error defineUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error defineUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error allocateUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error allocateUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error allocateUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error switchCpu(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error endAssemble(StrScanner &scan, AsmFormatter &list, ICommon &common);
-    Error defineFunction(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
@@ -153,8 +71,8 @@ protected:
     void registerPseudo(const char *name, PseudoHandler handler);
 
     // PseudoHanlder helper
-    Error defineBytes(StrScanner &scan, AsmFormatter &list, ICommon &common, bool delimitor);
-    Error allocateSpaces(StrScanner &scan, AsmFormatter &list, ICommon &common, size_t unit);
+    Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor);
+    Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, size_t unit);
 };
 
 class MotorolaDirective : public AsmDirective {

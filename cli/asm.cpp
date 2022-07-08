@@ -15,8 +15,8 @@
  */
 
 #include "asm_cdp1802.h"
+#include "asm_commander.h"
 #include "asm_directive.h"
-#include "asm_driver.h"
 #include "asm_i8048.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
@@ -114,11 +114,10 @@ AsmDirective *directives[] = {
 };
 
 int main(int argc, const char **argv) {
-    AsmArgs args;
-    AsmDriver driver(directives, std::end(directives), args);
-    if (driver.parseArgs(argc, argv))
-        return driver.usage(driver.listCpu());
-    return driver.assemble();
+    AsmCommander commander(directives, std::end(directives));
+    if (commander.parseArgs(argc, argv))
+        return commander.usage();
+    return commander.assemble();
 }
 
 // Local Variables:
