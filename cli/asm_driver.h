@@ -21,7 +21,6 @@
 #include "asm_directive.h"
 #include "bin_memory.h"
 #include "file_reader.h"
-#include "list_formatter.h"
 
 #include <list>
 #include <string>

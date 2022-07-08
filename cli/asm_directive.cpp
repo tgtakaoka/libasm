@@ -111,15 +111,13 @@ AsmCommonDirective::AsmCommonDirective(
     setFunctionStore(&_functions);
     _origin = 0;
     _symbolMode = REPORT_UNDEFINED;
-    _labelWidth = 16;
-    _operandWidth = 16;
 }
 
-Error AsmCommonDirective::assembleLine(const StrScanner &line, BinMemory &memory) {
-    _list.line_number = _sources.current()->lineno();
-    _list.include_nest = _sources.size() - 1;
-    _list.setMemory(memory);
-    return setError(current()->assembleLine(line, _list, *this));
+Error AsmCommonDirective::assembleLine(const StrScanner &line, AsmFormatter &list) {
+    list.line_number = _sources.current()->lineno();
+    list.include_nest = _sources.size() - 1;
+    list.conf = &current()->assembler().config();
+    return setError(current()->assembleLine(line, list, *this));
 }
 
 void AsmCommonDirective::reset() {
@@ -128,10 +126,10 @@ void AsmCommonDirective::reset() {
     setOrigin(0);
 }
 
-Error AsmDirective::assembleLine(const StrScanner &line, Listing &list, ICommon &common) {
+Error AsmDirective::assembleLine(const StrScanner &line, AsmFormatter &list, ICommon &common) {
     list.address = common.origin();
     list.length = 0;
-    list.value.clear();
+    list.val.clear();
     list.label = StrScanner::EMPTY;
     list.instruction = StrScanner::EMPTY;
     list.operand = StrScanner::EMPTY;
@@ -206,7 +204,7 @@ Error AsmDirective::assembleLine(const StrScanner &line, Listing &list, ICommon 
 
 // PseudoHandler
 
-Error AsmDirective::defineOrigin(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &common);
     if (setError(parser))
@@ -218,7 +216,7 @@ Error AsmDirective::defineOrigin(StrScanner &scan, Listing &list, ICommon &commo
     return setError(OK);
 }
 
-Error AsmDirective::alignOrigin(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &common);
     if (setError(parser))
@@ -237,11 +235,11 @@ Error AsmDirective::alignOrigin(StrScanner &scan, Listing &list, ICommon &common
     return setError(OK);
 }
 
-Error AsmDirective::defineLabel(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     if (list.line_symbol.size() == 0)
         return setError(MISSING_LABEL);
     ValueParser &parser = assembler().parser();
-    const auto &value = list.value = parser.eval(scan, &common);
+    const auto &value = list.val = parser.eval(scan, &common);
     if (setError(parser))
         return getError();
     if (value.isUndefined() && common.symbolMode() == REPORT_UNDEFINED)
@@ -252,7 +250,7 @@ Error AsmDirective::defineLabel(StrScanner &scan, Listing &list, ICommon &common
     return getError();
 }
 
-Error AsmDirective::includeFile(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     char quote = scan.expect('"');
     if (quote == 0)
         quote = scan.expect('\'');
@@ -271,15 +269,15 @@ Error AsmDirective::includeFile(StrScanner &scan, Listing &list, ICommon &common
     return setError(common.openSource(filename));
 }
 
-Error AsmDirective::defineUint8s(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     return defineBytes(scan, list, common, false);
 }
 
-Error AsmDirective::defineString(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineString(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     return defineBytes(scan, list, common, true);
 }
 
-Error AsmDirective::defineBytes(StrScanner &scan, Listing &list, ICommon &common, bool delimitor) {
+Error AsmDirective::defineBytes(StrScanner &scan, AsmFormatter &list, ICommon &common, bool delimitor) {
     list.address = common.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
@@ -328,7 +326,7 @@ Error AsmDirective::defineBytes(StrScanner &scan, Listing &list, ICommon &common
     return setError(OK);
 }
 
-Error AsmDirective::defineUint16s(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     list.address = common.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
@@ -354,7 +352,7 @@ Error AsmDirective::defineUint16s(StrScanner &scan, Listing &list, ICommon &comm
     return setError(OK);
 }
 
-Error AsmDirective::defineUint32s(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     list.address = common.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
@@ -383,19 +381,19 @@ Error AsmDirective::defineUint32s(StrScanner &scan, Listing &list, ICommon &comm
     return setError(OK);
 }
 
-Error AsmDirective::allocateUint8s(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::allocateUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     return allocateSpaces(scan, list, common, sizeof(uint8_t));
 }
 
-Error AsmDirective::allocateUint16s(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::allocateUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     return allocateSpaces(scan, list, common, sizeof(uint16_t));
 }
 
-Error AsmDirective::allocateUint32s(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::allocateUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     return allocateSpaces(scan, list, common, sizeof(uint32_t));
 }
 
-Error AsmDirective::allocateSpaces(StrScanner &scan, Listing &list, ICommon &common, size_t unit) {
+Error AsmDirective::allocateSpaces(StrScanner &scan, AsmFormatter &list, ICommon &common, size_t unit) {
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &common);
     if (setError(parser))
@@ -412,7 +410,7 @@ Error AsmDirective::allocateSpaces(StrScanner &scan, Listing &list, ICommon &com
     return setError(OK);
 }
 
-Error AsmDirective::defineFunction(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     if (list.line_symbol.size() == 0)
         return setError(MISSING_LABEL);
     if (common.symbolMode() == REPORT_DUPLICATE && common.hasSymbol(list.line_symbol))
@@ -441,7 +439,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, Listing &list, ICommon &com
     }
 }
 
-Error AsmDirective::switchCpu(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     StrScanner p(scan);
     p.trimStart([](char s) { return !isspace(s); });
     scan.trimEndAt(p);
@@ -452,7 +450,7 @@ Error AsmDirective::switchCpu(StrScanner &scan, Listing &list, ICommon &common) 
     return setError(OK);
 }
 
-Error AsmDirective::switchIntelZilog(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
@@ -474,7 +472,7 @@ Error AsmDirective::switchIntelZilog(StrScanner &scan, Listing &list, ICommon &c
     return setError(OK);
 }
 
-Error AsmDirective::endAssemble(StrScanner &scan, Listing &list, ICommon &common) {
+Error AsmDirective::endAssemble(StrScanner &scan, AsmFormatter &list, ICommon &common) {
     return END_ASSEMBLE;
 }
 
@@ -512,91 +510,6 @@ Error AsmCommonDirective::symbolIntern(uint32_t value, const std::string &key) {
     return OK;
 }
 
-// ListLine oevrrides
-
-uint32_t AsmCommonDirective::startAddress() const {
-    return _list.address;
-}
-
-int AsmCommonDirective::generatedSize() const {
-    return _list.length;
-}
-
-uint8_t AsmCommonDirective::getByte(int offset) const {
-    const uint8_t unit = config().addressUnit();
-    const auto addr = _list.address * unit + offset;
-    return _list.readByte(addr);
-}
-
-bool AsmCommonDirective::hasInstruction() const {
-    return _list.instruction.size() != 0;
-}
-
-std::string AsmCommonDirective::getInstruction() const {
-    return std::string(_list.instruction, _list.instruction.size());
-}
-
-bool AsmCommonDirective::hasOperand() const {
-    return _list.operand.size() != 0;
-}
-
-std::string AsmCommonDirective::getOperand() const {
-    return std::string(_list.operand, _list.operand.size());
-}
-
-uint32_t AsmCommonDirective::lineNumber() const {
-    return _list.line_number;
-}
-
-uint16_t AsmCommonDirective::includeNest() const {
-    return _list.include_nest;
-}
-
-bool AsmCommonDirective::hasValue() const {
-    return !_list.value.isUndefined();
-}
-
-uint32_t AsmCommonDirective::value() const {
-    return _list.value.getUnsigned();
-}
-
-bool AsmCommonDirective::hasLabel() const {
-    return _list.label.size() != 0;
-}
-
-std::string AsmCommonDirective::getLabel() const {
-    return std::string(_list.label, _list.label.size());
-}
-
-bool AsmCommonDirective::hasComment() const {
-    return _list.comment.size() != 0;
-}
-
-std::string AsmCommonDirective::getComment() const {
-    return std::string(_list.comment, _list.comment.size());
-}
-
-const ConfigBase &AsmCommonDirective::config() const {
-    return current()->assembler().config();
-}
-
-int AsmCommonDirective::codeBytes() const {
-    const uint8_t codeMax = config().codeMax();
-    return codeMax < 6 ? codeMax : 6;
-}
-
-int AsmCommonDirective::labelWidth() const {
-    return _labelWidth;
-}
-
-int AsmCommonDirective::nameWidth() const {
-    return config().nameMax() + 1;
-}
-
-int AsmCommonDirective::operandWidth() const {
-    return _operandWidth;
-}
-
 AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(".cpu", &AsmDirective::switchCpu);
     registerPseudo(".include", &AsmDirective::includeFile);
@@ -628,7 +541,7 @@ void AsmDirective::registerPseudo(const char *name, PseudoHandler handler) {
 }
 
 Error AsmDirective::processPseudo(
-        const StrScanner &name, StrScanner &scan, Listing &list, ICommon &common) {
+        const StrScanner &name, StrScanner &scan, AsmFormatter &list, ICommon &common) {
     auto it = _pseudos.find(std::string(name, name.size()));
     if (it == _pseudos.end())
         return UNKNOWN_DIRECTIVE;

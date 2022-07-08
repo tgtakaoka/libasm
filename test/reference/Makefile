@@ -26,7 +26,7 @@ help:
 .PHONY:: clean clean-asm clean-asl clean-gas
 
 ASM=../../cli/asm
-$(ASM):
+$(ASM)-refresh:
 	+$(MAKE) -C ../../cli cli
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
@@ -40,7 +40,7 @@ asm-$(1).$(2):: $(1).asm
 endef
 $(eval $(foreach t,$(ASM_TESTS),$(call asm-rule,$(t),$(call out-ext,$(t)),$(call asm-opt,$(t)))))
 
-asm-test: $(ASM) clean-asm $(ASM_OUTS:%=asm-%)
+asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 

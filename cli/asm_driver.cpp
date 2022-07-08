@@ -16,6 +16,7 @@
 
 #include "asm_driver.h"
 
+#include "asm_formatter.h"
 #include "file_printer.h"
 #include "file_reader.h"
 
@@ -109,7 +110,7 @@ int AsmDriver::assemble() {
                         ? MotoSrec::encoder()
                         : (_args.encoder == 'H' ? IntelHex::encoder()
                                                  : _commonDir.current()->defaultEncoder());
-        const AddressWidth addrWidth = _commonDir.config().addressWidth();
+        const AddressWidth addrWidth = _commonDir.current()->assembler().config().addressWidth();
         encoder.reset(addrWidth, _args.record_bytes);
         encoder.encode(memory, output);
         if (_args.verbose) {
@@ -143,16 +144,16 @@ int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
         return 1;
     }
 
-    ListFormatter listing;
+    AsmFormatter listing(memory);
     listing.setUppercase(_args.uppercase);
     listing.enableLineNumber(_args.line_number);
     int errors = 0;
     _commonDir.reset();
     StrScanner *scan;
     while ((scan = _sources.readLine()) != nullptr) {
-        const auto error = _commonDir.assembleLine(*scan, memory);
+        listing.clear();
+        const auto error = _commonDir.assembleLine(*scan, listing);
         if (error == OK || error == END_ASSEMBLE) {
-            listing.reset(_commonDir);
             do {
                 out.println(listing.getLine());
             } while (listing.hasNext());

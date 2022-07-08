@@ -18,6 +18,7 @@
 #define __ASM_DIRECTIVE_H__
 
 #include "asm_base.h"
+#include "asm_formatter.h"
 #include "bin_memory.h"
 #include "error_reporter.h"
 #include "function_store.h"
@@ -50,33 +51,6 @@ public:
     virtual StrScanner *readLine() = 0;
 };
 
-class Listing {
-public:
-    uint16_t line_number;
-    uint16_t include_nest;
-    uint32_t address;
-    int length;
-    Value value;
-    StrScanner label;
-    StrScanner instruction;
-    StrScanner operand;
-    StrScanner comment;
-
-    StrScanner line_symbol;
-
-    Listing() : _memory(nullptr) {}
-    void setMemory(BinMemory &memory) { _memory = &memory; }
-    void generateByte(uint32_t base, uint8_t val) { _memory->writeByte(base + length++, val); }
-    uint8_t readByte(uint32_t addr) const {
-        uint8_t val;
-        _memory->readByte(addr, val);
-        return val;
-    }
-
-private:
-    BinMemory *_memory;
-};
-
 class ICommon : public SymbolTable {
 public:
     virtual uint32_t origin() const = 0;
@@ -89,7 +63,7 @@ public:
     virtual Error openSource(const StrScanner &filename) = 0;
 };
 
-class AsmCommonDirective : public ErrorAt, public ListLine, public ICommon {
+class AsmCommonDirective : public ErrorAt, public ICommon {
 public:
     AsmCommonDirective(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources);
 
@@ -98,7 +72,7 @@ public:
     std::list<std::string> listCpu() const;
     AsmDirective *current() const { return _current; }
 
-    Error assembleLine(const StrScanner &line, BinMemory &memory);
+    Error assembleLine(const StrScanner &line, AsmFormatter &list);
 
     void reset();
     void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
@@ -122,14 +96,10 @@ private:
 
     uint32_t _origin;
     SymbolMode _symbolMode;
-    int _labelWidth;
-    int _operandWidth;
 
     FunctionStore _functions;
     void setFunctionStore(FunctionStore *functionStore);
     AsmDirective *switchDirective(AsmDirective *dir);
-
-    struct Listing _list;
 
     // SymbolTable
     const char *lookupValue(uint32_t address) const override;
@@ -142,56 +112,35 @@ private:
     bool symbolExists(const std::string &key) const;
     uint32_t symbolLookup(const std::string &key) const;
     Error symbolIntern(uint32_t value, const std::string &key);
-
-public:
-    // ListLine
-    uint32_t startAddress() const override;
-    int generatedSize() const override;
-    uint8_t getByte(int offset) const override;
-    bool hasInstruction() const override;
-    std::string getInstruction() const override;
-    bool hasOperand() const override;
-    std::string getOperand() const override;
-    uint32_t lineNumber() const override;
-    uint16_t includeNest() const override;
-    bool hasValue() const override;
-    uint32_t value() const override;
-    bool hasLabel() const override;
-    std::string getLabel() const override;
-    bool hasComment() const override;
-    std::string getComment() const override;
-    const ConfigBase &config() const override;
-    int nameWidth() const override;
-    int codeBytes() const override;
-    int labelWidth() const override;
-    int operandWidth() const override;
 };
 
 class AsmDirective : public ErrorAt {
 public:
-    // PseudoHandler
-    typedef Error (AsmDirective::*PseudoHandler)(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineOrigin(StrScanner &scan, Listing &list, ICommon &common);
-    Error alignOrigin(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineLabel(StrScanner &scan, Listing &list, ICommon &common);
-    Error includeFile(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineUint8s(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineString(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineUint16s(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineUint32s(StrScanner &scan, Listing &list, ICommon &common);
-    Error allocateUint8s(StrScanner &scan, Listing &list, ICommon &common);
-    Error allocateUint16s(StrScanner &scan, Listing &list, ICommon &common);
-    Error allocateUint32s(StrScanner &scan, Listing &list, ICommon &common);
-    Error switchCpu(StrScanner &scan, Listing &list, ICommon &common);
-    Error switchIntelZilog(StrScanner &scan, Listing &list, ICommon &common);
-    Error endAssemble(StrScanner &scan, Listing &list, ICommon &common);
-    Error defineFunction(StrScanner &scan, Listing &list, ICommon &common);
+    typedef Error (AsmDirective::*PseudoHandler)(
+            StrScanner &scan, AsmFormatter &list, ICommon &common);
 
-    Error assembleLine(const StrScanner &line, Listing &list, ICommon &common);
-
+    Error assembleLine(const StrScanner &line, AsmFormatter &list, ICommon &common);
     Assembler &assembler() const { return _assembler; }
-    Error processPseudo(const StrScanner &name, StrScanner &scan, Listing &list, ICommon &common);
     virtual BinEncoder &defaultEncoder() = 0;
+    Error processPseudo(
+            const StrScanner &name, StrScanner &scan, AsmFormatter &list, ICommon &common);
+
+    // PseudoHandler
+    Error defineOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error alignOrigin(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineLabel(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error includeFile(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineString(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error allocateUint8s(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error allocateUint16s(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error allocateUint32s(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error switchCpu(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error endAssemble(StrScanner &scan, AsmFormatter &list, ICommon &common);
+    Error defineFunction(StrScanner &scan, AsmFormatter &list, ICommon &common);
 
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
@@ -204,8 +153,8 @@ protected:
     void registerPseudo(const char *name, PseudoHandler handler);
 
     // PseudoHanlder helper
-    Error defineBytes(StrScanner &scan, Listing &list, ICommon &common, bool delimitor);
-    Error allocateSpaces(StrScanner &scan, Listing &list, ICommon &common, size_t unit);
+    Error defineBytes(StrScanner &scan, AsmFormatter &list, ICommon &common, bool delimitor);
+    Error allocateSpaces(StrScanner &scan, AsmFormatter &list, ICommon &common, size_t unit);
 };
 
 class MotorolaDirective : public AsmDirective {
