@@ -49,14 +49,11 @@ public:
     uint32_t startAddress() const;
     uint32_t endAddress() const;
 
-    // Dumper should accept (Addr, const uint8_t *, size_t)
-    template <typename Dumper>
-    void dump(Dumper dumper) const {
-        for (auto segment = _segments.cbegin(); segment != _segments.cend(); segment++) {
-            const auto &mem = segment->second;
-            dumper(segment->first, mem.data(), mem.size());
-        }
-    }
+    // Iterator
+    // it->first: uint32_t start_address;
+    // it->second: vector<uint8_t> memory_block;
+    auto begin() const { return _segments.begin(); }
+    auto end() const { return _segments.end(); }
 
 private:
     // Memory segment list in ascending order of start address.

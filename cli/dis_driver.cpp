@@ -157,13 +157,14 @@ int DisDriver::disassemble() {
             fprintf(stderr, "%s: Opened for listing\n", _list_name);
         listout.println(listing.getCpu(true));
     }
-    memory.dump([this, &output, &listout, &listing](
-                        uint32_t base, const uint8_t *data, size_t size) {
+    for (const auto &it : memory) {
+        auto base = it.first;
+        auto size = it.second.size();
         const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
         uint32_t start = base / addrUnit;
         const uint32_t end = start + (size - 1) / addrUnit;
         if (base > _addr_end || end < _addr_start)
-            return;
+            continue;
         if (base < _addr_start) {
             size -= (_addr_start - base) * addrUnit;
             base = _addr_start;
@@ -195,7 +196,7 @@ int DisDriver::disassemble() {
                 output.println(listing.getContent());
             } while (listing.hasNext());
         }
-    });
+    };
 
     return 0;
 }

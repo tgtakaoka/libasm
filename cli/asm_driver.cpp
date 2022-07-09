@@ -132,7 +132,10 @@ int AsmDriver::assemble() {
         }
 
         formatter->begin(&output);
-        memory.dump([this, formatter](uint32_t addr, const uint8_t *data, size_t data_size) {
+        for (const auto &it : memory) {
+            const auto addr = it.first;
+            const auto *data = it.second.data();
+            const auto data_size = it.second.size();
             if (_verbose) {
                 const uint8_t addrUnit = _commonDir.addrUnit();
                 fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
@@ -142,7 +145,7 @@ int AsmDriver::assemble() {
                 auto size = std::min(_record_bytes, data_size - i);
                 formatter->encode(addr + i, data + i, size);
             }
-        });
+        };
         formatter->end();
     }
 
