@@ -22,14 +22,14 @@
 #include <string>
 
 #include "bin_memory.h"
-#include "cli_listing.h"
 #include "config_base.h"
 #include "dis_base.h"
+#include "list_formatter.h"
 
 namespace libasm {
 namespace cli {
 
-class DisDirective : public ListingLine {
+class DisDirective : public ListLine {
 public:
     DisDirective(Disassembler &disassembler, BinMemory &memory, bool uppercase = false);
 
@@ -43,7 +43,7 @@ public:
 private:
     Disassembler &_disassembler;
     BinMemory &_memory;
-    CliListing _listing;
+    ListFormatter _listing;
     int _labelWidth;
     int _operandWidth;
     uint32_t _address;
@@ -51,7 +51,7 @@ private:
     const char *_instruction;
     char _operands[128];
 
-    // ListingLine
+    // ListLine
     uint32_t startAddress() const override;
     int generatedSize() const override;
     uint8_t getByte(int offset) const override;
@@ -59,7 +59,7 @@ private:
     std::string getInstruction() const override;
     bool hasOperand() const override;
     std::string getOperand() const override;
-    uint16_t lineNumber() const override;
+    uint32_t lineNumber() const override;
     uint16_t includeNest() const override;
     bool hasValue() const override;
     uint32_t value() const override;

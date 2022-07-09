@@ -70,7 +70,7 @@ const char *DisDirective::getContent() {
     return _listing.getContent();
 }
 
-// ListingLine overrides
+// ListLine overrides
 
 uint32_t DisDirective::startAddress() const {
     return _address;
@@ -103,7 +103,7 @@ std::string DisDirective::getOperand() const {
     return std::string(_operands);
 }
 
-uint16_t DisDirective::lineNumber() const {
+uint32_t DisDirective::lineNumber() const {
     return 0;
 }
 

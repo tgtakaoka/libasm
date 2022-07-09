@@ -27,7 +27,7 @@
 namespace libasm {
 namespace cli {
 
-class ListingLine {
+class ListLine {
 public:
     virtual uint32_t startAddress() const = 0;
     virtual int generatedSize() const = 0;
@@ -38,7 +38,7 @@ public:
     virtual std::string getOperand() const = 0;
 
     // assemble listing only
-    virtual uint16_t lineNumber() const = 0;
+    virtual uint32_t lineNumber() const = 0;
     virtual uint16_t includeNest() const = 0;
     virtual bool hasValue() const = 0;
     virtual uint32_t value() const = 0;
@@ -55,17 +55,17 @@ public:
     virtual int operandWidth() const = 0;
 };
 
-class CliListing {
+class ListFormatter {
 public:
-    void reset(ListingLine &line);
+    void reset(ListLine &line);
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
     void enableLineNumber(bool enable) { _lineNumber = enable; }
     bool hasNext() const;
     const char *getContent();
     const char *getLine();
 
-private:
-    const ListingLine *_line;
+protected:
+    const ListLine *_line;
     bool _uppercase = false;
     bool _lineNumber = false;
     int _next;

@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-#include "cli_listing.h"
+#include "list_formatter.h"
 
 #include <string>
 
 namespace libasm {
 namespace cli {
 
-void CliListing::reset(ListingLine &line) {
+void ListFormatter::reset(ListLine &line) {
     _line = &line;
     _next = 0;
 }
 
-bool CliListing::hasNext() const {
+bool ListFormatter::hasNext() const {
     return _next < _line->generatedSize();
 }
 
-const char *CliListing::getContent() {
+const char *ListFormatter::getContent() {
     _out.clear();
     formatContent(0);
     _next = _line->generatedSize();
     return _out.c_str();
 }
 
-const char *CliListing::getLine() {
+const char *ListFormatter::getLine() {
     _out.clear();
     formatLine();
     return _out.c_str();
 }
 
-void CliListing::formatHex(uint8_t val) {
+void ListFormatter::formatHex(uint8_t val) {
     val &= 0xf;
     if (val < 10) {
         _out += '0' + val;
@@ -54,7 +54,7 @@ void CliListing::formatHex(uint8_t val) {
     }
 }
 
-void CliListing::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msd = (val >> 4);
     if (msd || !zeroSuppress) {
         formatHex(msd);
@@ -64,7 +64,7 @@ void CliListing::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
     formatHex(val);
 }
 
-void CliListing::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 8) & 0xF;
     if (msb || !zeroSuppress) {
         formatHex(msb);
@@ -75,7 +75,7 @@ void CliListing::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) 
     formatUint8(static_cast<uint8_t>(val), fixedWidth, zeroSuppress);
 }
 
-void CliListing::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 8);
     if (msb || !zeroSuppress) {
         formatUint8(msb, fixedWidth, zeroSuppress);
@@ -86,7 +86,7 @@ void CliListing::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) 
     formatUint8(static_cast<uint8_t>(val), fixedWidth, zeroSuppress);
 }
 
-void CliListing::formatUint20(uint32_t val, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatUint20(uint32_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 16) & 0xF;
     if (msb || !zeroSuppress) {
         formatHex(msb);
@@ -97,7 +97,7 @@ void CliListing::formatUint20(uint32_t val, bool fixedWidth, bool zeroSuppress) 
     formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
 }
 
-void CliListing::formatUint24(uint32_t val, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatUint24(uint32_t val, bool fixedWidth, bool zeroSuppress) {
     const uint8_t msb = static_cast<uint8_t>(val >> 16);
     if (msb || !zeroSuppress) {
         formatUint8(msb, fixedWidth, zeroSuppress);
@@ -108,7 +108,7 @@ void CliListing::formatUint24(uint32_t val, bool fixedWidth, bool zeroSuppress) 
     formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
 }
 
-void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) {
     const uint16_t msw = static_cast<uint16_t>(val >> 16);
     if (msw || !zeroSuppress) {
         formatUint16(msw, fixedWidth, zeroSuppress);
@@ -119,7 +119,7 @@ void CliListing::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) 
     formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
 }
 
-void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
+void ListFormatter::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
     switch (_line->config().addressWidth()) {
     case ADDRESS_12BIT:
         formatUint12(addr, fixedWidth, zeroSuppress);
@@ -140,7 +140,7 @@ void CliListing::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress
     _out += ':';
 }
 
-int CliListing::formatBytes(int base) {
+int ListFormatter::formatBytes(int base) {
     const auto generated = _line->generatedSize();
     const auto codeBytes = _line->codeBytes();
     int i = 0;
@@ -166,7 +166,7 @@ int CliListing::formatBytes(int base) {
     return i;
 }
 
-void CliListing::formatTab(size_t pos, int delta) {
+void ListFormatter::formatTab(size_t pos, int delta) {
     while (pos < _out.size() + 1)
         pos += delta;
     while (_out.size() < pos)
@@ -183,7 +183,7 @@ static void convertCase(const std::string &src, std::string &out, bool uppercase
     }
 }
 
-void CliListing::formatContent(int pos) {
+void ListFormatter::formatContent(int pos) {
     if (!_line->hasLabel() && !_line->hasInstruction() && _line->hasComment()) {
         formatTab(pos);
         _out += _line->getComment();
@@ -210,7 +210,7 @@ void CliListing::formatContent(int pos) {
     }
 }
 
-void CliListing::formatLine() {
+void ListFormatter::formatLine() {
     if (_lineNumber) {
         char buf[12];
         uint16_t nest = _line->includeNest();

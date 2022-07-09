@@ -22,18 +22,18 @@
 #include <cstdio>
 #include <cstring>
 
-#include "cli_listing.h"
 #include "dis_base.h"
+#include "list_formatter.h"
 #include "test_generator.h"
 
 namespace libasm {
 namespace test {
 
-using libasm::cli::CliListing;
-using libasm::cli::ListingLine;
+using libasm::cli::ListFormatter;
+using libasm::cli::ListLine;
 
 template <typename Conf>
-class GenDriver : public TestGenerator<Conf>::Printer, private ListingLine {
+class GenDriver : public TestGenerator<Conf>::Printer, private ListLine {
 public:
     GenDriver(Disassembler &disassembler) : _disassembler(disassembler), _listing() {}
 
@@ -90,7 +90,7 @@ public:
 
 private:
     Disassembler &_disassembler;
-    CliListing _listing;
+    ListFormatter _listing;
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
@@ -149,8 +149,8 @@ private:
 
     FILE *dumpOut() override { return _dump ? _list : nullptr; }
 
-    // ListingLine
-    uint16_t lineNumber() const override { return 0; }
+    // ListLine
+    uint32_t lineNumber() const override { return 0; }
     uint16_t includeNest() const override { return 0; }
     uint32_t startAddress() const override { return _address; }
     int generatedSize() const override { return _generated_size; }

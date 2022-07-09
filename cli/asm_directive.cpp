@@ -576,7 +576,7 @@ Error AsmCommonDirective::symbolIntern(uint32_t value, const std::string &key) {
     return OK;
 }
 
-// ListingLine oevrrides
+// ListLine oevrrides
 
 uint32_t AsmCommonDirective::startAddress() const {
     return _list.address;
@@ -609,7 +609,7 @@ std::string AsmCommonDirective::getOperand() const {
     return std::string(_list.operand, _list.operand.size());
 }
 
-uint16_t AsmCommonDirective::lineNumber() const {
+uint32_t AsmCommonDirective::lineNumber() const {
     return _list.line_number;
 }
 

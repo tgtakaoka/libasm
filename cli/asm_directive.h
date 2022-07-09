@@ -19,10 +19,10 @@
 
 #include "asm_base.h"
 #include "bin_memory.h"
-#include "cli_listing.h"
 #include "error_reporter.h"
 #include "function_store.h"
 #include "intel_hex.h"
+#include "list_formatter.h"
 #include "moto_srec.h"
 #include "str_scanner.h"
 #include "text_reader.h"
@@ -50,7 +50,7 @@ public:
     virtual StrScanner *readLine() = 0;
 };
 
-class AsmCommonDirective : public ErrorAt, public ListingLine, protected SymbolTable {
+class AsmCommonDirective : public ErrorAt, public ListLine, protected SymbolTable {
 public:
     AsmCommonDirective(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources);
 
@@ -116,7 +116,7 @@ private:
     FunctionStore _functions;
 
     struct Listing {
-        uint16_t line_number;
+        uint32_t line_number;
         uint16_t include_nest;
         uint32_t address;
         BinMemory *memory;
@@ -145,7 +145,7 @@ private:
     uint32_t symbolLookup(const std::string &key) const;
     Error symbolIntern(uint32_t value, const std::string &key);
 
-    // ListingLine
+    // ListLine
 public:
     uint32_t startAddress() const override;
     int generatedSize() const override;
@@ -154,7 +154,7 @@ public:
     std::string getInstruction() const override;
     bool hasOperand() const override;
     std::string getOperand() const override;
-    uint16_t lineNumber() const override;
+    uint32_t lineNumber() const override;
     uint16_t includeNest() const override;
     bool hasValue() const override;
     uint32_t value() const override;

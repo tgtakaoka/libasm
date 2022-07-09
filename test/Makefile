@@ -37,7 +37,7 @@ CPPFLAGS = -MMD
 
 OBJS_test = array_memory.o test_asserter.o error_reporter.o
 OBJS_gen  = dis_base.o value_formatter.o array_memory.o tokenized_text.o \
-	    cli_listing.o error_reporter.o str_buffer.o str_scanner.o
+	    list_formatter.o error_reporter.o str_buffer.o str_scanner.o
 OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o str_buffer.o str_scanner.o
 OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o str_buffer.o str_scanner.o \
             array_memory.o
@@ -54,7 +54,7 @@ OBJS = 	$(TEST_OBJS) $(GEN_OBJS) $(OBJS_test) $(OBJS_gen) \
 	$(foreach a,$(ARCHS),$(OBJS_$(a)))
 BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
 
-cli_listing.o: ../cli/cli_listing.cpp
+list_formatter.o: ../cli/list_formatter.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(CPPFLAGS) -c -o $@ $^
 
 -include $(OBJS:.o=.d)

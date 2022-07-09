@@ -18,9 +18,9 @@
 #define __ASM_DRIVER_H__
 
 #include "asm_directive.h"
-#include "cli_listing.h"
 #include "bin_memory.h"
 #include "file_reader.h"
+#include "list_formatter.h"
 
 namespace libasm {
 namespace cli {
@@ -49,7 +49,7 @@ public:
 private:
     AsmCommonDirective _commonDir;
     FileFactory _sources;
-    CliListing _listing;
+    ListFormatter _listing;
     const char *_progname;
     const char *_input_name;
     const char *_output_name;
