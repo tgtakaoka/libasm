@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "cli_memory.h"
+#include "bin_memory.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -22,16 +22,16 @@
 namespace libasm {
 namespace cli {
 
-CliMemory::CliMemory() : DisMemory(0) {
+BinMemory::BinMemory() : DisMemory(0) {
     invalidateWriteCache();
     invalidateReadCache();
 }
 
-void CliMemory::setAddress(uint32_t addr) {
+void BinMemory::setAddress(uint32_t addr) {
     resetAddress(addr);
 }
 
-bool CliMemory::hasNext() const {
+bool BinMemory::hasNext() const {
     const uint32_t addr = address();
     if (insideOf(_read_cache, addr))
         return true;
@@ -45,18 +45,18 @@ bool CliMemory::hasNext() const {
     return false;
 }
 
-uint8_t CliMemory::nextByte() {
+uint8_t BinMemory::nextByte() {
     uint8_t val = 0;
     readByte(address(), val);
     return val;
 }
 
-void CliMemory::writeBytes(uint32_t addr, const uint8_t *p, size_t size) {
+void BinMemory::writeBytes(uint32_t addr, const uint8_t *p, size_t size) {
     for (const uint8_t *end = p + size; p < end; p++)
         writeByte(addr++, *p);
 }
 
-bool CliMemory::readBytes(uint32_t addr, uint8_t *p, size_t size) const {
+bool BinMemory::readBytes(uint32_t addr, uint8_t *p, size_t size) const {
     for (uint8_t *end = p + size; p < end; p++) {
         if (!readByte(addr, *p))
             return false;
@@ -64,7 +64,7 @@ bool CliMemory::readBytes(uint32_t addr, uint8_t *p, size_t size) const {
     return true;
 }
 
-void CliMemory::writeByte(uint32_t addr, uint8_t val) {
+void BinMemory::writeByte(uint32_t addr, uint8_t val) {
     // Shortcut for most possible case, appending byte to cached segment.
     if (atEndOf(_write_cache, addr)) {
         appendTo(_write_cache, addr, val);
@@ -91,7 +91,7 @@ void CliMemory::writeByte(uint32_t addr, uint8_t val) {
     createSegment(addr, val);
 }
 
-bool CliMemory::readByte(uint32_t addr, uint8_t &val) const {
+bool BinMemory::readByte(uint32_t addr, uint8_t &val) const {
     if (insideOf(_read_cache, addr)) {
         val = readFrom(_read_cache, addr);
         return true;
@@ -107,7 +107,7 @@ bool CliMemory::readByte(uint32_t addr, uint8_t &val) const {
     return false;
 }
 
-bool CliMemory::equals(const CliMemory &other) const {
+bool BinMemory::equals(const BinMemory &other) const {
     auto a = _segments.cbegin();
     auto b = other._segments.cbegin();
     while (a != _segments.cend() && b != other._segments.cend()) {
@@ -125,71 +125,71 @@ bool CliMemory::equals(const CliMemory &other) const {
     return a == _segments.cend() && b == other._segments.cend();
 }
 
-void CliMemory::swap(CliMemory &other) {
+void BinMemory::swap(BinMemory &other) {
     _segments.swap(other._segments);
     invalidateWriteCache();
     other.invalidateWriteCache();
 }
 
-uint32_t CliMemory::startAddress() const {
+uint32_t BinMemory::startAddress() const {
     if (_segments.empty())
         return 0;
     const auto it = _segments.cbegin();
     return it->first;
 }
 
-uint32_t CliMemory::endAddress() const {
+uint32_t BinMemory::endAddress() const {
     if (_segments.empty())
         return 0;
     const auto it = _segments.crbegin();
     return it->first + it->second.size() - 1;
 }
 
-void CliMemory::invalidateWriteCache() {
+void BinMemory::invalidateWriteCache() {
     _write_cache = _segments.end();
 }
 
-void CliMemory::invalidateReadCache() const {
+void BinMemory::invalidateReadCache() const {
     _read_cache = _segments.cend();
 }
 
-bool CliMemory::insideOf(ConstSegment &segment, uint32_t addr) const {
+bool BinMemory::insideOf(ConstSegment &segment, uint32_t addr) const {
     return segment != _segments.cend() && addr >= segment->first &&
            addr < segment->first + segment->second.size();
 }
 
-bool CliMemory::insideOf(Segment segment, uint32_t addr) const {
+bool BinMemory::insideOf(Segment segment, uint32_t addr) const {
     return segment != _segments.end() && addr >= segment->first &&
            addr < segment->first + segment->second.size();
 }
 
-bool CliMemory::atEndOf(Segment segment, uint32_t addr) const {
+bool BinMemory::atEndOf(Segment segment, uint32_t addr) const {
     return segment != _segments.end() && addr == segment->first + segment->second.size();
 }
 
-uint8_t CliMemory::readFrom(ConstSegment &segment, uint32_t addr) const {
+uint8_t BinMemory::readFrom(ConstSegment &segment, uint32_t addr) const {
     return segment->second.at(addr - segment->first);
 }
 
-void CliMemory::appendTo(Segment &segment, uint32_t addr, uint8_t val) {
+void BinMemory::appendTo(Segment &segment, uint32_t addr, uint8_t val) {
     segment->second.push_back(val);
     _write_cache = segment;
     aggregate(segment);
 }
 
-void CliMemory::replaceAt(Segment &segment, uint32_t addr, uint8_t val) {
+void BinMemory::replaceAt(Segment &segment, uint32_t addr, uint8_t val) {
     segment->second.at(addr - segment->first) = val;
     _write_cache = segment;
     aggregate(segment);
 }
 
-void CliMemory::createSegment(uint32_t addr, uint8_t val) {
+void BinMemory::createSegment(uint32_t addr, uint8_t val) {
     _write_cache = _segments.insert(std::make_pair(addr, std::vector<uint8_t>())).first;
     _write_cache->second.push_back(val);
     aggregate(_write_cache);
 }
 
-void CliMemory::aggregate(Segment hint) {
+void BinMemory::aggregate(Segment hint) {
     Segment prev = hint;
     // Check following segment whether it is adjacent to.
     for (Segment next = ++hint; next != _segments.end() && atEndOf(prev, next->first);

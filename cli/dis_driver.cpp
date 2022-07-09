@@ -121,7 +121,7 @@ int DisDriver::disassemble() {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
-    CliMemory memory;
+    BinMemory memory;
     if (readInput(input, memory) != 0)
         return 1;
     input.close();
@@ -201,7 +201,7 @@ int DisDriver::disassemble() {
     return 0;
 }
 
-int DisDriver::readInput(FileReader &input, CliMemory &memory) {
+int DisDriver::readInput(FileReader &input, BinMemory &memory) {
     const char *filename = input.name().c_str();
     int lineno = 0;
     int errors = 0;

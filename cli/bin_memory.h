@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef __CLI_MEMORY_H__
-#define __CLI_MEMORY_H__
+#ifndef __BIN_MEMORY_H__
+#define __BIN_MEMORY_H__
 
 #include <stdint.h>
 
 #include <map>
 #include <vector>
 
-#include "bin_formatter.h"
 #include "dis_memory.h"
 
 namespace libasm {
 namespace cli {
 
-class CliMemory : public DisMemory {
+class BinMemory : public DisMemory {
 public:
-    CliMemory();
+    BinMemory();
 
     void setAddress(uint32_t addr);
     bool hasNext() const override;
@@ -43,8 +42,8 @@ public:
     bool readBytes(uint32_t addr, uint8_t *p, size_t size) const;
     void writeByte(uint32_t addr, uint8_t val);
     bool readByte(uint32_t addr, uint8_t &val) const;
-    bool equals(const CliMemory &other) const;
-    void swap(CliMemory &other);
+    bool equals(const BinMemory &other) const;
+    void swap(BinMemory &other);
 
     uint32_t startAddress() const;
     uint32_t endAddress() const;

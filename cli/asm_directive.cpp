@@ -168,7 +168,7 @@ std::string AsmCommonDirective::listCpu(const char *separator) const {
     return cpuList;
 }
 
-Error AsmCommonDirective::assembleLine(const char *line, CliMemory &memory) {
+Error AsmCommonDirective::assembleLine(const char *line, BinMemory &memory) {
     if (line == nullptr)
         return OK;
     StrScanner scan(line);
@@ -262,7 +262,7 @@ void AsmCommonDirective::registerPseudo(const char *name, PseudoHandler handler)
 }
 
 Error AsmCommonDirective::processPseudo(
-        const StrScanner &name, StrScanner &scan, StrScanner &label, CliMemory &memory) {
+        const StrScanner &name, StrScanner &scan, StrScanner &label, BinMemory &memory) {
     if (_directives.current()->processPseudo(name, *this, scan, label, memory) != UNKNOWN_DIRECTIVE)
         return getError();
     auto it = _pseudos.find(std::string(name, name.size()));
@@ -273,7 +273,7 @@ Error AsmCommonDirective::processPseudo(
 
 // PseudoHandler
 
-Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     ValueParser &parser = _directives.parser();
     Value value = parser.eval(scan, this);
     if (setError(parser))
@@ -285,7 +285,7 @@ Error AsmCommonDirective::defineOrigin(StrScanner &scan, StrScanner &label, CliM
     return setError(OK);
 }
 
-Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     ValueParser &parser = _directives.parser();
     Value value = parser.eval(scan, this);
     if (setError(parser))
@@ -304,7 +304,7 @@ Error AsmCommonDirective::alignOrigin(StrScanner &scan, StrScanner &label, CliMe
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineLabel(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineLabel(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     if (label.size() == 0)
         return setError(MISSING_LABEL);
     ValueParser &parser = _directives.parser();
@@ -319,7 +319,7 @@ Error AsmCommonDirective::defineLabel(StrScanner &scan, StrScanner &label, CliMe
     return getError();
 }
 
-Error AsmCommonDirective::includeFile(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::includeFile(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     char quote = scan.expect('"');
     if (quote == 0)
         quote = scan.expect('\'');
@@ -338,15 +338,15 @@ Error AsmCommonDirective::includeFile(StrScanner &scan, StrScanner &label, CliMe
     return setError(_sources.open(filename));
 }
 
-Error AsmCommonDirective::defineUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineUint8s(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     return defineUint8s(scan, memory, false);
 }
 
-Error AsmCommonDirective::defineString(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineString(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     return defineUint8s(scan, memory, true);
 }
 
-Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool delimitor) {
+Error AsmCommonDirective::defineUint8s(StrScanner &scan, BinMemory &memory, bool delimitor) {
     _list.address = _origin;
     ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
@@ -398,7 +398,7 @@ Error AsmCommonDirective::defineUint8s(StrScanner &scan, CliMemory &memory, bool
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     _list.address = _origin;
     ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
@@ -427,7 +427,7 @@ Error AsmCommonDirective::defineUint16s(StrScanner &scan, StrScanner &label, Cli
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineUint32s(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     _list.address = _origin;
     ValueParser &parser = _directives.parser();
     const uint32_t base = _origin * addrUnit();
@@ -453,15 +453,15 @@ Error AsmCommonDirective::defineUint32s(StrScanner &scan, StrScanner &label, Cli
     return setError(OK);
 }
 
-Error AsmCommonDirective::allocateUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::allocateUint8s(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     return allocateSpaces(scan, sizeof(uint8_t));
 }
 
-Error AsmCommonDirective::allocateUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::allocateUint16s(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     return allocateSpaces(scan, sizeof(uint16_t));
 }
 
-Error AsmCommonDirective::allocateUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::allocateUint32s(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     return allocateSpaces(scan, sizeof(uint32_t));
 }
 
@@ -481,7 +481,7 @@ Error AsmCommonDirective::allocateSpaces(StrScanner &scan, size_t unit) {
     return setError(OK);
 }
 
-Error AsmCommonDirective::defineFunction(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::defineFunction(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     if (label.size() == 0)
         return setError(MISSING_LABEL);
     if (_symbolMode == REPORT_DUPLICATE && hasSymbol(label))
@@ -509,7 +509,7 @@ Error AsmCommonDirective::defineFunction(StrScanner &scan, StrScanner &label, Cl
     }
 }
 
-Error AsmCommonDirective::switchCpu(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::switchCpu(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     StrScanner p(scan);
     p.trimStart([](char s) { return !isspace(s); });
     scan.trimEndAt(p);
@@ -520,7 +520,7 @@ Error AsmCommonDirective::switchCpu(StrScanner &scan, StrScanner &label, CliMemo
     return setError(OK);
 }
 
-Error AsmCommonDirective::switchIntelZilog(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::switchIntelZilog(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     if (!_directives.is8080())
         return setError(UNKNOWN_DIRECTIVE);
     const std::string currentCpu(_directives.currentCpu());
@@ -538,7 +538,7 @@ Error AsmCommonDirective::switchIntelZilog(StrScanner &scan, StrScanner &label, 
     return setError(OK);
 }
 
-Error AsmCommonDirective::endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory) {
+Error AsmCommonDirective::endAssemble(StrScanner &scan, StrScanner &label, BinMemory &memory) {
     return END_ASSEMBLE;
 }
 
@@ -673,7 +673,7 @@ void AsmDirective::registerPseudo(const char *name, AsmCommonDirective::PseudoHa
 }
 
 Error AsmDirective::processPseudo(const StrScanner &name, AsmCommonDirective &common,
-        StrScanner &scan, StrScanner &label, CliMemory &memory) const {
+        StrScanner &scan, StrScanner &label, BinMemory &memory) const {
     auto it = _pseudos.find(std::string(name, name.size()));
     return it == _pseudos.end() ? UNKNOWN_DIRECTIVE : (common.*it->second)(scan, label, memory);
 }

@@ -21,8 +21,8 @@
 
 #include <string>
 
+#include "bin_memory.h"
 #include "cli_listing.h"
-#include "cli_memory.h"
 #include "config_base.h"
 #include "dis_base.h"
 
@@ -31,7 +31,7 @@ namespace cli {
 
 class DisDirective : public ListingLine {
 public:
-    DisDirective(Disassembler &disassembler, CliMemory &memory, bool uppercase = false);
+    DisDirective(Disassembler &disassembler, BinMemory &memory, bool uppercase = false);
 
     Error disassemble(uint32_t addr, Insn &insn);
     const char *getCpu(bool withBytes = false);
@@ -42,7 +42,7 @@ public:
 
 private:
     Disassembler &_disassembler;
-    CliMemory &_memory;
+    BinMemory &_memory;
     CliListing _listing;
     int _labelWidth;
     int _operandWidth;

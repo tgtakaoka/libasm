@@ -95,7 +95,7 @@ int AsmDriver::usage() {
 int AsmDriver::assemble() {
     _commonDir.setSymbolMode(REPORT_DUPLICATE);
     int pass = 0;
-    CliMemory memory;
+    BinMemory memory;
     if (_verbose) {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
@@ -105,7 +105,7 @@ int AsmDriver::assemble() {
 
     do {
         _commonDir.setSymbolMode(REPORT_UNDEFINED);
-        CliMemory next;
+        BinMemory next;
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
         (void)assemble(next, listout);
@@ -162,7 +162,7 @@ int AsmDriver::assemble() {
     return 0;
 }
 
-int AsmDriver::assemble(CliMemory &memory, TextPrinter &out, bool reportError) {
+int AsmDriver::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
     if (_sources.open(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
@@ -207,7 +207,7 @@ int AsmDriver::assemble(CliMemory &memory, TextPrinter &out, bool reportError) {
     return errors;
 }
 
-void AsmDriver::printListing(CliMemory &memory, TextPrinter &out) {
+void AsmDriver::printListing(BinMemory &memory, TextPrinter &out) {
     _listing.setUppercase(_uppercase);
     _listing.enableLineNumber(_line_number);
     _listing.reset(_commonDir);

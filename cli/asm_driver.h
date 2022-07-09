@@ -19,7 +19,7 @@
 
 #include "asm_directive.h"
 #include "cli_listing.h"
-#include "cli_memory.h"
+#include "bin_memory.h"
 #include "file_reader.h"
 
 namespace libasm {
@@ -62,8 +62,8 @@ private:
 
     static constexpr const char *PROG_PREFIX = "asm";
     AsmDirective *defaultDirective();
-    int assemble(CliMemory &memory, TextPrinter &out, bool reportError = false);
-    void printListing(CliMemory &memory, TextPrinter &out);
+    int assemble(BinMemory &memory, TextPrinter &out, bool reportError = false);
+    void printListing(BinMemory &memory, TextPrinter &out);
 
     static const char *basename(const char *str, char sep_char = '/');
 };

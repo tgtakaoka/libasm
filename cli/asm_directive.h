@@ -19,8 +19,8 @@
 
 #include "asm_base.h"
 #include "bin_formatter.h"
+#include "bin_memory.h"
 #include "cli_listing.h"
-#include "cli_memory.h"
 #include "error_reporter.h"
 #include "function_store.h"
 #include "str_scanner.h"
@@ -58,31 +58,31 @@ public:
     std::string listCpu(const char *separator) const;
     AsmDirective *current() { return _directives.current(); }
 
-    Error assembleLine(const char *line, CliMemory &memory);
+    Error assembleLine(const char *line, BinMemory &memory);
 
     void reset();
     void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
 
     // pseudoHandlers
     typedef Error (AsmCommonDirective::*PseudoHandler)(
-            StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error alignOrigin(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineLabel(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error includeFile(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineString(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error allocateUint8s(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error allocateUint16s(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error allocateUint32s(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error switchCpu(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error switchIntelZilog(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error endAssemble(StrScanner &scan, StrScanner &label, CliMemory &memory);
-    Error defineFunction(StrScanner &scan, StrScanner &label, CliMemory &memory);
+            StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineOrigin(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error alignOrigin(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineLabel(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error includeFile(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineUint8s(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineString(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineUint16s(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineUint32s(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error allocateUint8s(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error allocateUint16s(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error allocateUint32s(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error switchCpu(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error switchIntelZilog(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error endAssemble(StrScanner &scan, StrScanner &label, BinMemory &memory);
+    Error defineFunction(StrScanner &scan, StrScanner &label, BinMemory &memory);
 
-    Error defineUint8s(StrScanner &scan, CliMemory &memory, bool delimitor);
+    Error defineUint8s(StrScanner &scan, BinMemory &memory, bool delimitor);
     Error allocateSpaces(StrScanner &scan, size_t unit);
 
 private:
@@ -118,7 +118,7 @@ private:
         uint16_t line_number;
         uint16_t include_nest;
         uint32_t address;
-        CliMemory *memory;
+        BinMemory *memory;
         int length;
         Value value;
         StrScanner label;
@@ -130,7 +130,7 @@ private:
     std::map<std::string, PseudoHandler, icasecmp> _pseudos;
     void registerPseudo(const char *name, PseudoHandler handler);
     Error processPseudo(
-            const StrScanner &name, StrScanner &scan, StrScanner &label, CliMemory &memory);
+            const StrScanner &name, StrScanner &scan, StrScanner &label, BinMemory &memory);
 
     // SymbolTable
     const char *lookupValue(uint32_t address) const override;
@@ -174,7 +174,7 @@ class AsmDirective {
 public:
     Assembler &assembler() const { return _assembler; }
     Error processPseudo(const StrScanner &name, AsmCommonDirective &common, StrScanner &scan,
-            StrScanner &label, CliMemory &memory) const;
+            StrScanner &label, BinMemory &memory) const;
     virtual BinFormatter &binFormatter() = 0;
 
 protected:

@@ -17,7 +17,7 @@
 #ifndef __DIS_DRIVER_H__
 #define __DIS_DRIVER_H__
 
-#include "cli_memory.h"
+#include "bin_memory.h"
 #include "dis_base.h"
 #include "dis_directive.h"
 #include "file_reader.h"
@@ -52,7 +52,7 @@ private:
 
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
-    int readInput(FileReader &input, CliMemory &memory);
+    int readInput(FileReader &input, BinMemory &memory);
     BinFormatter *determineInputFormat(const char *input_name) const;
     static const char *basename(const char *str, char sep_char = '/');
 };

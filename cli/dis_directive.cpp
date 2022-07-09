@@ -19,7 +19,7 @@
 namespace libasm {
 namespace cli {
 
-DisDirective::DisDirective(Disassembler &disassembler, CliMemory &memory, bool uppercase)
+DisDirective::DisDirective(Disassembler &disassembler, BinMemory &memory, bool uppercase)
     : _disassembler(disassembler),
       _memory(memory),
       _listing(),
