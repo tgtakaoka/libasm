@@ -18,11 +18,12 @@
 #define __ASM_DIRECTIVE_H__
 
 #include "asm_base.h"
-#include "bin_formatter.h"
 #include "bin_memory.h"
 #include "cli_listing.h"
 #include "error_reporter.h"
 #include "function_store.h"
+#include "intel_hex.h"
+#include "moto_srec.h"
 #include "str_scanner.h"
 #include "text_reader.h"
 
@@ -175,7 +176,7 @@ public:
     Assembler &assembler() const { return _assembler; }
     Error processPseudo(const StrScanner &name, AsmCommonDirective &common, StrScanner &scan,
             StrScanner &label, BinMemory &memory) const;
-    virtual BinFormatter &binFormatter() = 0;
+    virtual BinEncoder &defaultEncoder() = 0;
 
 protected:
     Assembler &_assembler;
@@ -188,19 +189,13 @@ protected:
 class MotorolaDirective : public AsmDirective {
 public:
     MotorolaDirective(Assembler &assembler);
-    BinFormatter &binFormatter() override { return _formatter; }
-
-private:
-    MotoSrec _formatter;
+    BinEncoder &defaultEncoder() override { return MotoSrec::encoder(); }
 };
 
 class IntelDirective : public AsmDirective {
 public:
     IntelDirective(Assembler &assembler);
-    BinFormatter &binFormatter() override { return _formatter; }
-
-private:
-    IntelHex _formatter;
+    BinEncoder &defaultEncoder() override { return IntelHex::encoder(); }
 };
 
 class NationalDirective : public IntelDirective {

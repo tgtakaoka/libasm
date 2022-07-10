@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2022 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-
-#include "bin_formatter.h"
+#include "intel_hex.h"
 
 namespace libasm {
 namespace cli {
 
-IntelHex::IntelHex(AddressWidth addrWidth)
-    : BinFormatter(addrWidth), _last_addr(-1), _next_addr(0) {}
+static IntelHex INSTANCE;
 
-uint8_t IntelHex::getSum() const {
-    return static_cast<uint8_t>(-this->_check_sum);
+BinDecoder &IntelHex::decoder() {
+    return INSTANCE;
 }
 
-void IntelHex::begin(TextPrinter *out) {
-    _out = out;
+BinEncoder &IntelHex::encoder() {
+    return INSTANCE;
+}
+
+uint8_t IntelHex::getSum() const {
+    return static_cast<uint8_t>(-_check_sum);
+}
+
+void IntelHex::reset(AddressWidth addrWidth, uint8_t recordSize) {
+    BinEncoder::reset(addrWidth, recordSize);
     _last_addr = -1;
     _next_addr = 0;
 }
 
-void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
-    const uint32_t end = addr + size;
+void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) {
+    const auto end = addr + size;
     // If this block overwarp ELA boundary.
     if ((addr ^ end) & ~0xFFFF) {
         const uint8_t chunk = (end & ~0xFFFF) - addr;
-        encodeLine(addr, data, chunk);
+        encodeLine(out, addr, data, chunk);
         _last_addr = addr;
         addr += chunk;
         _next_addr = addr;
@@ -50,96 +55,97 @@ void IntelHex::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
     }
     // If |addr| is discontinued or |addr| has different ELA than last
     if (addr != _next_addr || ((addr ^ _last_addr) >> 16) != 0)
-        formatEla(addr);
-    encodeLine(addr, data, size);
+        formatEla(out, addr);
+    encodeLine(out, addr, data, size);
     _last_addr = addr;
     _next_addr = addr + size;
 }
 
 // Output Type "04" Extended Linear Address.
-void IntelHex::formatEla(uint32_t addr) {
-    if (_addrSize <= 2)
+void IntelHex::formatEla(TextPrinter &out, uint32_t addr) {
+    if (addressSize(_addr_width) <= 2)
         return;
     const uint16_t ela = static_cast<uint16_t>(addr >> 16);
     const uint8_t len = sizeof(ela);
     const uint16_t dummy = 0;
     const uint8_t type = 4;
     // :LLdddd04EEEESS
-    ensureLine(1 + (1 + sizeof(dummy) + 1 + len + 1) * 2);
     resetSum();
-    addSum(len);
-    addSum(dummy);
-    addSum(type);
-    addSum(ela);
-    sprintf(_line, ":%02X%04X%02X%04X%2X", len, dummy, type, ela, getSum());
-    format(_line);
+    addSum8(len);
+    addSum16(dummy);
+    addSum8(type);
+    addSum16(ela);
+    out.format(":%02X%04X%02X%04X%2X\n", len, dummy, type, ela, getSum());
 }
 
-void IntelHex::encodeLine(uint16_t addr, const uint8_t *data, uint8_t size) {
+void IntelHex::encodeLine(TextPrinter &out, uint16_t addr, const uint8_t *data, uint8_t size) {
     const uint8_t type = 0;
-    // :LLaaaa00dd....ddSS
-    ensureLine(1 + (1 + sizeof(addr) + 1 + size + 1) * 2);
-    char *p = _line;
-    p += sprintf(p, ":%02X%04X%02X", size, addr, type);
     resetSum();
-    addSum(size);
-    addSum(addr);
+    addSum8(size);
+    addSum16(addr);
+    addSum8(type);
+    // :LLaaaa00dd....ddSS
+    out.format(":%02X%04X%02X", size, addr, type);
     for (uint8_t i = 0; i < size; i++) {
-        p += sprintf(p, "%02X", data[i]);
-        addSum(data[i]);
+        addSum8(data[i]);
+        out.format("%02X", data[i]);
     }
-    sprintf(p, "%02X", getSum());
-    format(_line);
+    out.format("%02X\n", getSum());
 }
 
-void IntelHex::end() {
-    format(":00000001FF");
+void IntelHex::end(TextPrinter &out) {
+    out.println(":00000001FF");
 }
 
-uint8_t *IntelHex::decode(const char *line, uint32_t &ela_addr, uint8_t &size) {
-    if (*line++ != ':')
-        return nullptr;
-    ensureData(16);
-    size = 0;
+int IntelHex::decode(StrScanner &line, BinMemory &memory) {
+    if (!line.expect(':'))
+        return -1;
     resetSum();
     uint8_t len = 0;
-    if (parseByte(line, len))
-        return nullptr;
+    if (!parseByte(line, len))
+        return -1;
+    addSum8(len);
     uint16_t addr = 0;
-    if (parseUint16(line, addr))
-        return nullptr;
+    if (!parseUint16(line, addr))
+        return -1;
+    addSum16(addr);
     uint8_t type;
-    if (parseByte(line, type))
-        return nullptr;
+    if (!parseByte(line, type))
+        return -1;
+    addSum8(type);
     if (type == 0x04) {  // Extended Linear Address
         uint16_t ela = 0;
-        if (parseUint16(line, ela))
-            return nullptr;
+        if (!parseUint16(line, ela))
+            return -1;
+        addSum16(ela);
         _next_addr = static_cast<uint32_t>(ela) << 16;
         uint8_t sum = 0;
-        if (parseByte(line, sum))
-            return nullptr;
+        if (!parseByte(line, sum))
+            return -1;
+        addSum8(sum);
         if (_check_sum)
-            return nullptr;  // checksum error
-        return _data;
+            return -1;  // checksum error
+        return 0;
     }
     if (type != 0x00)
-        return _data;  // ignore 01, 03, 05 record
+        return 0;  // ignore 01, 03, 05 record
 
-    ela_addr = _next_addr | addr;
-    size = len;
-    ensureData(size);
-    for (uint8_t i = 0; i < size; i++) {
-        if (parseByte(line, _data[i]))
-            return nullptr;
+    const uint32_t ela_addr = _next_addr | addr;
+    for (uint8_t i = 0; i < len; i++) {
+        uint8_t data = 0;
+        if (!parseByte(line, data))
+            return -1;
+        addSum8(data);
+        memory.writeByte(ela_addr + i, data);
     }
     uint8_t sum = 0;
-    if (parseByte(line, sum))
-        return nullptr;
+    if (!parseByte(line, sum))
+        return -1;
+    addSum8(sum);
     if (_check_sum)
-        return nullptr;  // checksum error
+        return -1;  // checksum error
 
-    return _data;
+    return len;
 }
 
 }  // namespace cli

@@ -32,11 +32,6 @@ DisDriver::DisDriver(Disassembler **begin, Disassembler **end) {
     _disassemblers.insert(_disassemblers.end(), begin, end);
 }
 
-DisDriver::~DisDriver() {
-    if (_formatter)
-        delete _formatter;
-}
-
 static void appendTo(const std::string &cpu, std::list<std::string> &list) {
     if (std::find(list.begin(), list.end(), cpu) == list.end())
         list.push_back(cpu);
@@ -122,7 +117,7 @@ int DisDriver::disassemble() {
         return 1;
     }
     BinMemory memory;
-    if (readInput(input, memory) != 0)
+    if (readBinary(input, memory) != 0)
         return 1;
     input.close();
     const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
@@ -201,63 +196,21 @@ int DisDriver::disassemble() {
     return 0;
 }
 
-int DisDriver::readInput(FileReader &input, BinMemory &memory) {
+int DisDriver::readBinary(FileReader &input, BinMemory &memory) {
     const char *filename = input.name().c_str();
-    int lineno = 0;
-    int errors = 0;
     const uint8_t addrUnit = static_cast<uint8_t>(_disassembler->config().addressUnit());
-    uint32_t start = 0, end = 0;
-    StrScanner *line;
-    while ((line = input.readLine()) != nullptr) {
-        lineno++;
-        uint32_t addr;
-        uint8_t size;
-        uint8_t *data = _formatter->decode(*line, addr, size);
-        if (data == nullptr) {
-            if (errors < 3) {
-                fprintf(stderr, "%s:%d: format error: %s\n", filename, lineno,
-                        (const char *)(*line));
-            } else if (errors == 3) {
-                fprintf(stderr, "%s: too many errors, wrong format?\n", filename);
-            }
-            errors++;
-            continue;
-        }
-        if (size) {
-            if (start == end)
-                start = end = addr;
-            if (addr != end) {
-                if (_verbose)
-                    fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", filename, end - start,
-                            start / addrUnit, (end - 1) / addrUnit);
-                start = addr;
-            }
-            end = addr + size;
-            memory.writeBytes(addr, data, size);
+    const auto size = BinDecoder::decode(input, memory);
+    if (size < 0) {
+        fprintf(stderr, "%s:%d: Unrecognizable binary format\n", filename, input.lineno());
+    } else if (_verbose) {
+        for (const auto &it : memory) {
+            const uint32_t start = it.first / addrUnit;
+            const size_t size = it.second.size();
+            const uint32_t end = (it.first + size - 1) / addrUnit;
+            fprintf(stderr, "%s: Read %4zu bytes 0x%04X-0x%04X\n", filename, size, start, end);
         }
     }
-    if (start != end && _verbose)
-        fprintf(stderr, "%s: Read %4d bytes 0x%04X,0x%04X\n", filename, end - start,
-                start / addrUnit, (end - 1) / addrUnit);
-    return errors;
-}
-
-BinFormatter *DisDriver::determineInputFormat(const char *input_name) const {
-    FileReader input(input_name);
-    if (!input.open()) {
-        fprintf(stderr, "Can't open input file %s\n", input_name);
-        return nullptr;
-    }
-    StrScanner *line = input.readLine();
-    const auto c = **line;
-    input.close();
-
-    const AddressWidth addrWidth = _disassembler->config().addressWidth();
-    if (c == 'S')
-        return new MotoSrec(addrWidth);
-    if (c == ':')
-        return new IntelHex(addrWidth);
-    return nullptr;
+    return size;
 }
 
 Disassembler *DisDriver::defaultDisassembler() {
@@ -286,7 +239,6 @@ int DisDriver::parseOption(int argc, const char **argv) {
     _output_name = nullptr;
     _list_name = nullptr;
     _disassembler = defaultDisassembler();
-    _formatter = nullptr;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -383,11 +335,6 @@ int DisDriver::parseOption(int argc, const char **argv) {
     if (_disassembler == nullptr) {
         fprintf(stderr, "no target CPU specified\n");
         return 1;
-    }
-    _formatter = determineInputFormat(_input_name);
-    if (_formatter == nullptr) {
-        fprintf(stderr, "Can't determine format of input file %s\n", _input_name);
-        return 2;
     }
     if (_output_name && strcmp(_output_name, _input_name) == 0) {
         fprintf(stderr, "output file overwrite input file\n");

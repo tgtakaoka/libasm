@@ -54,7 +54,7 @@ private:
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
-    char _formatter;
+    char _encoder;
     size_t _record_bytes;
     bool _uppercase;
     bool _line_number;

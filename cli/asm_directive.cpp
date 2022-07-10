@@ -679,7 +679,7 @@ Error AsmDirective::processPseudo(const StrScanner &name, AsmCommonDirective &co
 }
 
 MotorolaDirective::MotorolaDirective(Assembler &assembler)
-    : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
+    : AsmDirective(assembler) {
     registerPseudo(".fcb", &AsmCommonDirective::defineUint8s);
     registerPseudo(".fcc", &AsmCommonDirective::defineString);
     registerPseudo(".fdb", &AsmCommonDirective::defineUint16s);
@@ -689,7 +689,7 @@ MotorolaDirective::MotorolaDirective(Assembler &assembler)
 }
 
 IntelDirective::IntelDirective(Assembler &assembler)
-    : AsmDirective(assembler), _formatter(assembler.config().addressWidth()) {
+    : AsmDirective(assembler) {
     registerPseudo(".db", &AsmCommonDirective::defineUint8s);
     registerPseudo(".dw", &AsmCommonDirective::defineUint16s);
     registerPseudo(".dd", &AsmCommonDirective::defineUint32s);

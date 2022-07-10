@@ -14,138 +14,130 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-
-#include "bin_formatter.h"
+#include "moto_srec.h"
 
 namespace libasm {
 namespace cli {
 
-MotoSrec::MotoSrec(AddressWidth addrWidth) : BinFormatter(addrWidth) {}
+static MotoSrec INSTANCE;
+
+BinDecoder &MotoSrec::decoder() {
+    return INSTANCE;
+}
+
+BinEncoder &MotoSrec::encoder() {
+    return INSTANCE;
+}
 
 uint8_t MotoSrec::getSum() const {
     return static_cast<uint8_t>(~_check_sum);
 }
 
-void MotoSrec::begin(TextPrinter *out) {
-    _out = out;
-    format("S0030000FC");
+void MotoSrec::begin(TextPrinter &out) {
+    out.println("S0030000FC");
 }
 
-void MotoSrec::encode(uint32_t addr, const uint8_t *data, uint8_t size) {
-    ensureLine((_addrSize + size + 3) * 2);
-    const uint8_t len = _addrSize + size + 1;
+void MotoSrec::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) {
     resetSum();
-    addSum(len);
-    char *p = _line;
-    switch (_addrSize) {
+    const auto addr_size = addressSize(_addr_width);
+    const uint8_t len = addr_size + size + 1;
+    addSum8(len);
+    switch (addr_size) {
     case 2:
-        addr &= ((uint32_t)1 << 16) - 1;
-        p += sprintf(p, "S1%02X%04X", len, static_cast<uint16_t>(addr));
+        out.format("S1%02X%04X", len, static_cast<uint16_t>(addr));
+        addSum16(addr);
         break;
     case 3:
-        addr &= ((uint32_t)1 << 24) - 1;
-        p += sprintf(p, "S2%02X%02X%04X", len, static_cast<uint8_t>(addr >> 16),
+        out.format("S2%02X%02X%04X", len, static_cast<uint8_t>(addr >> 16),
                 static_cast<uint16_t>(addr));
+        addSum24(addr);
         break;
     default:
-        p += sprintf(p, "S3%02X%08X", len, static_cast<uint32_t>(addr));
+        out.format("S3%02X%08X", len, static_cast<uint32_t>(addr));
+        addSum32(addr);
         break;
     }
-    addSum(addr);
     for (uint8_t i = 0; i < size; i++) {
-        p += sprintf(p, "%02X", data[i]);
-        addSum(data[i]);
+        out.format("%02X", data[i]);
+        addSum8(data[i]);
     }
-    sprintf(p, "%02X", getSum());
-    format(_line);
+    out.format("%02X\n", getSum());
 }
 
-void MotoSrec::end() {
-    switch (_addrSize) {
+void MotoSrec::end(TextPrinter &out) {
+    switch (addressSize(_addr_width)) {
     case 2:
-        format("S9030000FC");
+        out.println("S9030000FC");
         break;
     case 3:
-        format("S804000000FB");
+        out.println("S804000000FB");
         break;
     default:
-        format("S70500000000FA");
+        out.println("S70500000000FA");
     }
-    _out = nullptr;
 }
 
-uint8_t *MotoSrec::decode(const char *line, uint32_t &addr, uint8_t &size) {
-    if (*line++ != 'S')
-        return nullptr;
+int MotoSrec::decode(StrScanner &line, BinMemory &memory) {
+    if (!line.expect('S'))
+        return -1;
     const char type = *line++;
-    ensureData(16);
-    size = 0;
     if (type == '0')
-        return _data;  // start record
+        return 0;  // start record
     if (type == '9' || type == '8' || type == '7')
-        return _data;  // end record
+        return 0;  // end record
     if (type == '5' || type == '6')
-        return _data;  // record count
+        return 0;  // record count
     if (type != '1' && type != '2' && type != '3')
-        return nullptr;  // format error
-    if (_addrSize == 2 && (type == '2' || type == '3'))
-        return nullptr;  // address size overflow
-    if (_addrSize == 3 && type == '3')
-        return nullptr;  // address size overflow
+        return -1;  // format error
+    const auto addr_size = addressSize(_addr_width);
+    if (addr_size == 2 && (type == '2' || type == '3'))
+        return -2;  // address size overflow
+    if (addr_size == 3 && type == '3')
+        return -2;  // address size overflow
     resetSum();
     uint8_t len = 0;
-    if (parseByte(line, len))
-        return nullptr;
+    if (!parseByte(line, len))
+        return -1;
+    addSum8(len);
+    uint32_t addr = 0;
     uint16_t val16 = 0;
     if (type == '1') {
-        if (len < 2)
-            return nullptr;
-        if (parseUint16(line, val16))
-            return nullptr;
+        if (len < 2 || !parseUint16(line, val16))
+            return -1;
+        addSum16(val16);
         addr = val16;
         len -= 2;
     }
     if (type == '2') {
-        if (len < 3)
-            return nullptr;
-        uint8_t val8;
-        if (parseByte(line, val8))
-            return nullptr;
-        addr = static_cast<uint32_t>(val8) << 16;
-        if (parseUint16(line, val16))
-            return nullptr;
-        addr |= val16;
+        if (len < 3 || !parseUint24(line, addr))
+            return -1;
+        addSum24(addr);
         len -= 3;
     }
     if (type == '3') {
-        if (len < 4)
-            return nullptr;
-        if (parseUint16(line, val16))
-            return nullptr;
-
-        addr = static_cast<uint32_t>(val16) << 16;
-        if (parseUint16(line, val16))
-            return nullptr;
-        addr |= val16;
+        if (len < 4 || !parseUint32(line, addr))
+            return -1;
+        addSum32(addr);
         len -= 4;
     }
     if (len < 1)
-        return nullptr;
-    size = len - 1;
-
-    ensureData(size);
-    for (uint8_t i = 0; i < size; i++)
-        if (parseByte(line, _data[i]))
-            return nullptr;
+        return -2;
+    const auto size = len - 1;
+    for (uint8_t i = 0; i < size; i++) {
+        uint8_t data = 0;
+        if (!parseByte(line, data))
+            return -1;
+        addSum8(data);
+        memory.writeByte(addr + i, data);
+    }
     const uint8_t sum = getSum();
-    uint8_t val = 0;
-    if (parseByte(line, val))
-        return nullptr;
-    if (val != sum)  // checksum error
-        return nullptr;
+    uint8_t val8 = 0;
+    if (!parseByte(line, val8))
+        return -1;
+    if (val8 != sum)  // checksum error
+        return -1;
 
-    return _data;
+    return size;
 }
 
 }  // namespace cli

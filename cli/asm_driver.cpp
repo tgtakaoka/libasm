@@ -121,32 +121,25 @@ int AsmDriver::assemble() {
             return 1;
         }
         AsmDirective *directive = _commonDir.current();
-        const AddressWidth addrWidth = _commonDir.config().addressWidth();
-        BinFormatter *formatter = &directive->binFormatter();
-        MotoSrec srecord{addrWidth};
-        IntelHex intelHex{addrWidth};
-        if (_formatter == 'S') {
-            formatter = &srecord;
-        } else if (_formatter == 'H') {
-            formatter = &intelHex;
+        BinEncoder *encoder = &directive->defaultEncoder();
+        if (_encoder == 'S') {
+            encoder = &MotoSrec::encoder();
+        } else if (_encoder == 'H') {
+            encoder = &IntelHex::encoder();
         }
 
-        formatter->begin(&output);
-        for (const auto &it : memory) {
-            const auto addr = it.first;
-            const auto *data = it.second.data();
-            const auto data_size = it.second.size();
-            if (_verbose) {
-                const uint8_t addrUnit = _commonDir.addrUnit();
-                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, data_size,
-                        addr / addrUnit, (uint32_t)(addr + data_size - 1) / addrUnit);
+        const AddressWidth addrWidth = _commonDir.config().addressWidth();
+        encoder->reset(addrWidth, _record_bytes);
+        encoder->encode(memory, output);
+        if (_verbose) {
+            const uint8_t addrUnit = _commonDir.addrUnit();
+            for (const auto &it : memory) {
+                const uint32_t start = it.first / addrUnit;
+                const size_t size = it.second.size();
+                const uint32_t end =  (it.first + size - 1) / addrUnit;
+                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, size, start, end);
             }
-            for (size_t i = 0; i < data_size; i += _record_bytes) {
-                auto size = std::min(_record_bytes, data_size - i);
-                formatter->encode(addr + i, data + i, size);
-            }
-        };
-        formatter->end();
+        }
     }
 
     if (_list_name && !listout.open(_list_name)) {
@@ -232,7 +225,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
     _output_name = nullptr;
     _list_name = nullptr;
     _record_bytes = 32;
-    _formatter = 0;
+    _encoder = 0;
     _uppercase = false;
     _line_number = false;
     _verbose = false;
@@ -256,7 +249,7 @@ int AsmDriver::parseOption(int argc, const char **argv) {
                 break;
             case 'S':
             case 'H':
-                _formatter = *opt++;
+                _encoder = *opt++;
                 if (*opt) {
                     char *end;
                     unsigned long v = strtoul(opt, &end, 10);

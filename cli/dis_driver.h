@@ -18,6 +18,7 @@
 #define __DIS_DRIVER_H__
 
 #include "bin_memory.h"
+#include "bin_decoder.h"
 #include "dis_base.h"
 #include "dis_directive.h"
 #include "file_reader.h"
@@ -30,7 +31,6 @@ namespace cli {
 class DisDriver {
 public:
     DisDriver(Disassembler **begin, Disassembler **end);
-    virtual ~DisDriver();
 
     int usage();
     int parseOption(int argc, const char **argv);
@@ -48,12 +48,10 @@ private:
     const char *_input_name;
     const char *_output_name;
     const char *_list_name;
-    BinFormatter *_formatter;
 
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
-    int readInput(FileReader &input, BinMemory &memory);
-    BinFormatter *determineInputFormat(const char *input_name) const;
+    int readBinary(FileReader &input, BinMemory &memory);
     static const char *basename(const char *str, char sep_char = '/');
 };
 
