@@ -240,7 +240,7 @@ Error AsmCommonDirective::assembleLine(const char *line, BinMemory &memory) {
         if (insn.length() > 0) {
             const uint32_t addr = insn.address() * addrUnit();
             memory.writeBytes(addr, insn.bytes(), insn.length());
-            _list.address = addr;
+            _list.address = insn.address();
             _list.length = insn.length();
             _origin += insn.length() / addrUnit();
         }
