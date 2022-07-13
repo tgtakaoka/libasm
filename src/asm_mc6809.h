@@ -28,14 +28,22 @@ namespace mc6809 {
 
 class AsmMc6809 : public Assembler, public Config {
 public:
-    AsmMc6809() : Assembler(_parser, TableMc6809), _parser(), _direct_page(0) {}
+    AsmMc6809() : Assembler(_parser, TableMc6809), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _direct_page = 0; }
 
+    static const char OPT_INT_SETDP[] PROGMEM;
+
 private:
     MotorolaValueParser _parser;
     uint8_t _direct_page;
+    const struct OptSetdp : public IntOptionBase {
+        OptSetdp(uint8_t &value, Options &options)
+            : IntOptionBase(OPT_INT_SETDP, options), _dp(value) {}
+        void set(int32_t value) const override { _dp = value; }
+        uint8_t &_dp;
+    } _opt_setdp{_direct_page, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;
@@ -59,7 +67,7 @@ private:
     bool parseBitPosition(StrScanner &scan, Operand &op);
     bool parseRegisterList(StrScanner &scan, Operand &op, bool indir);
     Error parseOperand(StrScanner &scan, Operand &op);
-    Error processPseudo(StrScanner &scan, InsnMc6809 &insn);
+    Error processPseudo(StrScanner &scan, const char *name);
 
     Error encodePushPull(InsnMc6809 &insn, const Operand &op);
     Error encodeRegisters(InsnMc6809 &insn, const Operand &op);

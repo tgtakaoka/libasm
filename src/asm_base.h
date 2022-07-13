@@ -22,6 +22,7 @@
 #include "config_base.h"
 #include "error_reporter.h"
 #include "insn_base.h"
+#include "option_base.h"
 #include "symbol_table.h"
 #include "table_base.h"
 #include "value_parser.h"
@@ -34,7 +35,6 @@ public:
     virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
 
-    void setCommentChar(char commentChar) { _parser.setCommentChar(_commentChar = commentChar); }
     ValueParser &parser() const { return _parser; }
     bool endOfLine(char letter) const;
 
@@ -42,11 +42,17 @@ public:
     const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
 
+    static const char OPT_CHAR_COMMENT[] PROGMEM;
+    Error setOption(const char *name, const char *text) { return _options.setOption(name, text); }
+
 private:
     ValueParser &_parser;
+
 protected:
     TableBase &_table;
+    Options _options;
     char _commentChar;
+    const CharOption _opt_commentChar{OPT_CHAR_COMMENT, _commentChar, _options};
     SymbolTable *_symtab;
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)

@@ -25,7 +25,7 @@ Assembler &assembler(as68000);
 
 static void set_up() {
     assembler.reset();
-    as68000.setAlias(false);
+    as68000.setOption("alias", "disable");
 }
 
 static void tear_down() {
@@ -2759,7 +2759,7 @@ static void test_multiproc() {
 }
 
 static void test_alias() {
-    as68000.setAlias(true);
+    as68000.setOption("alias", "enable");
     TEST("ADDI.W #0,A0", 0150374, 0x0000);          // ADDA.W #0,A0
     TEST("ADDI.L #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
     TEST("SUBI.W #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0

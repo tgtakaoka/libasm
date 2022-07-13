@@ -81,6 +81,9 @@ enum Error : uint8_t {
     NO_INCLUDE_FOUND = 157,
     MISSING_CLOSING_DELIMITOR = 158,
     END_ASSEMBLE = 159,
+
+    // Command line
+    UNKNOWN_OPTION = 200,
 };
 
 class ErrorReporter {

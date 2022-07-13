@@ -498,7 +498,7 @@ static void test_branch() {
 
     TEST("LBNF sym1131", 0xCB, 0x11, 0x31);
 
-    asm1802.smartBranch(true);
+    asm1802.setOption("smart-branch", "enable");
     ATEST(0x1200, "LBR  1234H",  0x30, 0x34);
     ATEST(0x9AF0, "LBZ  9ABCH",  0x32, 0xBC);
     ATEST(0x5680, "LBNZ 5678H",  0x3A, 0x78);
@@ -693,14 +693,14 @@ static void test_undefined_symbol() {
 
     AERRU(0x1234, "LBR UNDEF", 0xC0, 0x00, 0x00);
 
-    asm1802.smartBranch(true);
+    asm1802.setOption("smart-branch", "on");
     AERRU(0x1234, "LBR UNDEF", 0x30, 0x36);
 }
 
 static void test_usereg() {
     symtab.intern(10, "R10");
 
-    asm1802.useRegister(false);
+    asm1802.setOption("use-register", "no");
 
     // default working register is R7, see reg_cdp1802.h SCRT.
     ERUS("LDN R0",  0x07);
@@ -731,7 +731,7 @@ static void test_usereg() {
         TEST("DBNZ R10,1234H", 0x68, 0x2A, 0x12, 0x34);
     }
 
-    asm1802.useRegister(true);
+    asm1802.setOption("use-register", "enable");
 
     ERRT("LDN R0",  REGISTER_NOT_ALLOWED);
     TEST("LDN R1",  0x01);

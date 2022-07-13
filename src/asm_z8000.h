@@ -28,17 +28,21 @@ namespace z8000 {
 
 class AsmZ8000 : public Assembler, public Config {
 public:
-    AsmZ8000() : Assembler(_parser, TableZ8000), _parser(), _autoShortDirect(false) {}
+    AsmZ8000() : Assembler(_parser, TableZ8000), _parser() {
+        reset();
+        //_options.registerOption(_opt_shortDitrect);
+    }
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
-    void reset() override { setAutoShortDirect(false); }
+    void reset() override { _autoShortDirect = false; }
 
-    void setAutoShortDirect(bool enable) { _autoShortDirect = enable; }
+    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
 
 private:
     IntelValueParser _parser;
     bool _autoShortDirect;
+    const BoolOption _opt_shortDitrect{OPT_BOOL_SHORT_DIRECT, _autoShortDirect, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;
@@ -47,12 +51,7 @@ private:
         CcName cc;       // M_CC/M_DA/M_X
         uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
         Operand()
-            : ErrorAt(),
-              mode(M_NO),
-              reg(REG_UNDEF),
-              base(REG_UNDEF),
-              cc(CC_UNDEF),
-              val32(0) {}
+            : ErrorAt(), mode(M_NO), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
     };
 
     int8_t parseIntrNames(StrScanner &scan);

@@ -18,6 +18,8 @@
 
 namespace libasm {
 
+const char Assembler::OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
+
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
     _parser.setCurrentOrigin(insn.address());

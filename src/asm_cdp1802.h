@@ -27,22 +27,20 @@ namespace cdp1802 {
 
 class AsmCdp1802 : public Assembler, public Config {
 public:
-    AsmCdp1802()
-        : Assembler(_parser, TableCdp1802), _parser(), _useReg(false), _smartBranch(false) {}
+    AsmCdp1802() : Assembler(_parser, TableCdp1802), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override {
-        useRegister(false);
-        smartBranch(false);
-    }
+    void reset() override { _useReg = _smartBranch = false; }
 
-    void useRegister(bool enable) { _useReg = enable; }
-    void smartBranch(bool enable) { _smartBranch = enable; }
+    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
+    static const char OPT_BOOL_SMART_BRANCH[] PROGMEM;
 
 private:
     IntelValueParser _parser;
     bool _useReg;
     bool _smartBranch;
+    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, _useReg, _options};
+    const BoolOption _opt_smartBranch{OPT_BOOL_SMART_BRANCH, _smartBranch, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

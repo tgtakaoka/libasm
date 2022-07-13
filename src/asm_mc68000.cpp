@@ -19,6 +19,8 @@
 namespace libasm {
 namespace mc68000 {
 
+const char AsmMc68000::OPT_BOOL_ALIAS[] PROGMEM = "alias";
+
 static int8_t modePos(OprPos pos) {
     switch (pos) {
     case OP_10:

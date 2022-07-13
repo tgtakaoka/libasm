@@ -32,9 +32,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
 
-    static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }
-    static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }
-
 private:
     NationalValueParser _parser;
 

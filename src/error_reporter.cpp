@@ -126,6 +126,10 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Missing closing delimitor");
     case END_ASSEMBLE:
         return PSTR("End assemble");
+
+    // Command line
+    case UNKNOWN_OPTION:
+        return PSTR("Unknown option");
     }
 
     return PSTR("Unknown error");

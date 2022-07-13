@@ -28,17 +28,21 @@ namespace mos6502 {
 
 class AsmMos6502 : public Assembler, public Config {
 public:
-    AsmMos6502()
-        : Assembler(_parser, TableMos6502), _parser(), _long_acc(false), _long_idx(false) {}
+    AsmMos6502() : Assembler(_parser, TableMos6502), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override { _long_acc = _long_idx = false; }
 
+    static const char OPT_BOOL_LONGA[] PROGMEM;
+    static const char OPT_BOOL_LONGI[] PROGMEM;
+
 private:
     MotorolaValueParser _parser;
     bool _long_acc;
     bool _long_idx;
+    const BoolOption _opt_long_acc{OPT_BOOL_LONGA, _long_acc, _options};
+    const BoolOption _opt_long_idx{OPT_BOOL_LONGI, _long_idx, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;
@@ -47,7 +51,7 @@ private:
     };
 
     Error parseOnOff(StrScanner &scan, bool &val);
-    Error processPseudo(StrScanner &scan, InsnMos6502 &insn);
+    Error processPseudo(StrScanner &scan, const char *name);
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
     Error parseOperand(StrScanner &scan, Operand &op, Operand &extra);
 

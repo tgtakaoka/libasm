@@ -1913,7 +1913,7 @@ static void test_segment_override() {
         ERRT("CMP4S CS:[DI],DS:[SI]", ILLEGAL_SEGMENT);
     }
 
-    asm8086.setOptimizeSegment(true);
+    asm8086.setOption("optimize-segment", "yes");
     TEST("MOV SS:[BP],AH",    0x88, 0146, 0x00);
     TEST("MOV DS:[BX],AH",    0x88, 0047);
     TEST("MOV DS:[SI],AH",    0x88, 0044);

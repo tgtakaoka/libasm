@@ -28,16 +28,17 @@ namespace i8086 {
 
 class AsmI8086 : public Assembler, public Config {
 public:
-    AsmI8086() : Assembler(_parser, TableI8086), _parser(), _optimizeSegment(false) {}
+    AsmI8086() : Assembler(_parser, TableI8086), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { setOptimizeSegment(false); }
+    void reset() override { _optimizeSegment = false; }
 
-    void setOptimizeSegment(bool enable) { _optimizeSegment = enable; }
+    static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;
 
 private:
     IntelValueParser _parser;
     bool _optimizeSegment;
+    const BoolOption _opt_optimizeSegment{OPT_BOOL_OPTIMIZE_SEGMENT, _optimizeSegment, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

@@ -19,6 +19,8 @@
 namespace libasm {
 namespace i8086 {
 
+const char AsmI8086::OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
+
 Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     InsnI8086 insn(_insn);

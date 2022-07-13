@@ -19,6 +19,8 @@
 namespace libasm {
 namespace mc6805 {
 
+const char AsmMc6805::OPT_INT_PCBITS[] = "pc-bits";
+
 Error AsmMc6805::checkAddressRange(Config::uintptr_t addr) {
     const uint8_t pc_bits = (_pc_bits > 0 && _pc_bits <= 16) ? _pc_bits : 13;
     const Config::uintptr_t max = (1 << pc_bits);
@@ -132,7 +134,7 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
         case M_IDX:
             insn.embed(0xE0);
             goto idx;
-        default: // M_IX0
+        default:  // M_IX0
             insn.embed(0xF0);
             break;
         }
@@ -147,7 +149,7 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
         case M_IDX:
             insn.embed(0x60);
             goto idx;
-        default: // M_IX0
+        default:  // M_IX0
             insn.embed(0x70);
             break;
         }

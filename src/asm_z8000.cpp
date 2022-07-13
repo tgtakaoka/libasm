@@ -19,6 +19,8 @@
 namespace libasm {
 namespace z8000 {
 
+const char AsmZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+
 Error AsmZ8000::emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;
     if (field == MF_C4 || field == MF_P4)

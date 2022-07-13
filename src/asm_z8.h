@@ -28,15 +28,32 @@ namespace z8 {
 
 class AsmZ8 : public Assembler, public Config {
 public:
-    AsmZ8() : Assembler(_parser, TableZ8), _parser(), _regPointer0(-1), _regPointer1(-1) {}
+    AsmZ8() : Assembler(_parser, TableZ8), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setRegPointer(-1); }
+
+    static const char OPT_INT_SETRP[] PROGMEM;
+    static const char OPT_INT_SETRP0[] PROGMEM;
+    static const char OPT_INT_SETRP1[] PROGMEM;
 
 private:
     IntelValueParser _parser;
     int16_t _regPointer0;
     int16_t _regPointer1;
+    struct OptSetrp : public IntOptionBase {
+        OptSetrp(const /* PROGMEM */ char *name_P, AsmZ8 *assembler, bool (AsmZ8::*set)(int16_t))
+            : IntOptionBase(name_P, assembler->_options), _assembler(assembler), _set(set) {}
+        Error check(int32_t value) const override {
+            return (_assembler->*_set)(value) ? OK : OPERAND_NOT_ALLOWED;
+        }
+        void set(int32_t value) const override {}
+        AsmZ8 *_assembler;
+        bool (AsmZ8::*_set)(int16_t);
+    };
+    const OptSetrp _opt_setrp{OPT_INT_SETRP, this, &AsmZ8::setRegPointer};
+    const OptSetrp _opt_setrp0{OPT_INT_SETRP0, this, &AsmZ8::setRegPointer0};
+    const OptSetrp _opt_setrp1{OPT_INT_SETRP1, this, &AsmZ8::setRegPointer1};
 
     bool setRegPointer(int16_t rp);
     bool setRegPointer0(int16_t rp);
@@ -53,7 +70,7 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op);
     Error setRp(StrScanner &scan, bool (AsmZ8::*)(int16_t));
-    Error processPseudo(StrScanner &scan, InsnZ8 &insn);
+    Error processPseudo(StrScanner &scan, const char *name);
 
     Error encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
     Error encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);

@@ -28,16 +28,25 @@ namespace mc6805 {
 
 class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6805() : Assembler(_parser, TableMc6805), _parser(), _pc_bits(0) {}
+    AsmMc6805() : Assembler(_parser, TableMc6805), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { setProgramCounterBits(0); }
+    void reset() override { _pc_bits = 0; }
 
-    void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }
+    static const char OPT_INT_PCBITS[] PROGMEM;
 
 private:
     MotorolaValueParser _parser;
     uint8_t _pc_bits;
+    const struct OptPcBits : public IntOptionBase {
+        OptPcBits(uint8_t &value, Options &options)
+            : IntOptionBase(OPT_INT_PCBITS, options), _pc_bits(value) {}
+        Error check(int32_t value) const override {
+            return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
+        }
+        void set(int32_t value) const override { _pc_bits = value; }
+        uint8_t &_pc_bits;
+    } _opt_pc_bits{_pc_bits, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

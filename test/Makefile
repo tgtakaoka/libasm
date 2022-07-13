@@ -38,7 +38,8 @@ CPPFLAGS = -MMD
 OBJS_test = array_memory.o test_asserter.o error_reporter.o
 OBJS_gen  = dis_base.o value_formatter.o array_memory.o tokenized_text.o \
 	    list_formatter.o error_reporter.o str_buffer.o str_scanner.o
-OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o str_buffer.o str_scanner.o
+OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o str_buffer.o str_scanner.o \
+            option_base.o
 OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o str_buffer.o str_scanner.o \
             array_memory.o
 OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \

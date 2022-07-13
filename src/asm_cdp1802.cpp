@@ -21,6 +21,9 @@
 namespace libasm {
 namespace cdp1802 {
 
+const char AsmCdp1802::OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+const char AsmCdp1802::OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
+
 Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
@@ -34,7 +37,7 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op
     }
     if ((target & ~0xFF) == page && _smartBranch) {
         const auto opc = insn.opCode();
-        insn.setOpCode(0x30 | (opc & 0xF)); // convert to in-page branch
+        insn.setOpCode(0x30 | (opc & 0xF));  // convert to in-page branch
         insn.emitInsn();
         insn.emitByte(target);
         return OK;
@@ -129,7 +132,6 @@ Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
     insn.setAddrMode(op1.mode, op2.mode);
     if (TableCdp1802.searchName(insn))
         return setError(TableCdp1802.getError());
-
 
     emitOperand(insn, insn.mode1(), op1);
     if (insn.mode2() == ADDR)

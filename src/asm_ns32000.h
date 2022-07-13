@@ -28,10 +28,7 @@ namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000), _parser('*') {
-        TableNs32000.setFpu(FPU_NONE);
-        TableNs32000.setMmu(MMU_NONE);
-    }
+    AsmNs32000() : Assembler(_parser, TableNs32000), _parser('*') { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override {
@@ -39,8 +36,20 @@ public:
         TableNs32000.setMmu(MMU_NONE);
     }
 
+    static const char OPT_TEXT_FPU[] PROGMEM;
+    static const char OPT_TEXT_PMMU[] PROGMEM;
+
 private:
     NationalValueParser _parser;
+    struct OptCoprosessor : public OptionBase {
+        OptCoprosessor(const /* PROGMEM */ char *name_P, Error (*set)(const StrScanner &),
+                Options &options)
+            : OptionBase(name_P, options, OPT_TEXT), _set(set) {}
+        Error set(StrScanner &scan) const override { return (*_set)(scan); }
+        Error (*_set)(const StrScanner &);
+    };
+    const OptCoprosessor _opt_fpu{OPT_TEXT_FPU, &AsmNs32000::setFpu, _options};
+    const OptCoprosessor _opt_pmmu{OPT_TEXT_PMMU, &AsmNs32000::setPmmu, _options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;
@@ -61,12 +70,15 @@ private:
               size(SZ_NONE) {}
     };
 
+    static Error setFpu(const StrScanner &scan);
+    static Error setPmmu(const StrScanner &scan);
+
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false);
     Error parseConfigNames(StrScanner &scan, Operand &op);
     Error parseRegisterList(StrScanner &scan, Operand &op);
     Error parseBaseOperand(StrScanner &scan, Operand &op);
     Error parseOperand(StrScanner &scan, Operand &op);
-    Error processPseudo(StrScanner &scan, const InsnNs32000 &insn);
+    Error processPseudo(StrScanner &scan, const char *name);
     Error emitDisplacement(InsnNs32000 &insn, const Operand &op, uint32_t val32);
     Error emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
     Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len);

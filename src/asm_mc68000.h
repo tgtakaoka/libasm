@@ -28,15 +28,24 @@ namespace mc68000 {
 
 class AsmMc68000 : public Assembler, public Config {
 public:
-    AsmMc68000() : Assembler(_parser, TableMc68000), _parser() { setAlias(true); }
+    AsmMc68000() : Assembler(_parser, TableMc68000), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
 
-    void setAlias(bool enable) { TableMc68000.setAlias(enable); }
+    static const char OPT_BOOL_ALIAS[] PROGMEM;
 
 private:
     MotorolaValueParser _parser;
+    const struct OptAlias : public BoolOptionBase {
+        OptAlias(AsmMc68000 *assembler)
+            : BoolOptionBase(OPT_BOOL_ALIAS, assembler->_options), _assembler(assembler) {}
+        Error set(bool value) const override {
+            _assembler->setAlias(value);
+            return OK;
+        }
+        AsmMc68000 *_assembler;
+    } _opt_alias{this};
 
     struct Operand : public ErrorAt {
         AddrMode mode;
@@ -67,6 +76,8 @@ private:
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    void setAlias(bool enable) { TableMc68000.setAlias(enable); }
 };
 
 }  // namespace mc68000

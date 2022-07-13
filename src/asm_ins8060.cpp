@@ -19,6 +19,14 @@
 namespace libasm {
 namespace ins8060 {
 
+static Config::uintptr_t page(Config::uintptr_t addr) {
+    return addr & ~0xFFF;
+}
+
+    static Config::uintptr_t offset(Config::uintptr_t addr) {
+    return addr & 0xFFF;
+}
+
 static struct : public ValueParser::FuncParser {
     Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
             const SymbolTable *symtab) override {
@@ -28,7 +36,7 @@ static struct : public ValueParser::FuncParser {
         } else if (name.iequals_P(PSTR("l"))) {
             val.setValue(v & 0xFF);
         } else if (name.iequals_P(PSTR("addr"))) {
-            val.setValue(AsmIns8060::page(v) | AsmIns8060::offset(v - 1));
+            val.setValue(page(v) | offset(v - 1));
         } else {
             return setError(UNKNOWN_FUNCTION);
         }

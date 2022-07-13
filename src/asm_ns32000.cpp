@@ -21,6 +21,9 @@
 namespace libasm {
 namespace ns32000 {
 
+const char AsmNs32000::OPT_TEXT_FPU[] PROGMEM = "fpu";
+const char AsmNs32000::OPT_TEXT_PMMU[] PROGMEM = "pmmu";
+
 Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) {
     StrScanner p(scan);
     uint8_t strOpt = 0;
@@ -597,28 +600,50 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
     return OK;
 }
 
-Error AsmNs32000::processPseudo(StrScanner &scan, const InsnNs32000 &insn) {
-    StrScanner p(scan.skipSpaces());
-    if (strcasecmp_P(insn.name(), PSTR("fpu")) == 0) {
-        const StrScanner option = _parser.readSymbol(p);
-        const bool none = option.iequals_P(PSTR("none"));
-        if (option.iequals_P(PSTR("ns32081")) || none) {
-            TableNs32000.setFpu(none ? FPU_NONE : FPU_NS32081);
-            scan = p;
-            return OK;
-        }
-        setError(scan, UNKNOWN_OPERAND);
+Error AsmNs32000::setFpu(const StrScanner &scan) {
+    if (scan.iequals_P(PSTR("ns32081"))) {
+        TableNs32000.setFpu(FPU_NS32081);
         return OK;
     }
-    if (strcasecmp_P(insn.name(), PSTR("pmmu")) == 0) {
+    if (scan.iequals_P(PSTR("none"))) {
+        TableNs32000.setFpu(FPU_NONE);
+        return OK;
+    }
+    return UNKNOWN_OPERAND;
+}
+
+Error AsmNs32000::setPmmu(const StrScanner &scan) {
+    if (scan.iequals_P(PSTR("ns32082"))) {
+        TableNs32000.setMmu(MMU_NS32082);
+        return OK;
+    }
+    if (scan.iequals_P(PSTR("none"))) {
+        TableNs32000.setMmu(MMU_NONE);
+        return OK;
+    }
+    return UNKNOWN_OPERAND;
+}
+
+Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
+    StrScanner p(scan.skipSpaces());
+    if (strcasecmp_P(name, OPT_TEXT_FPU) == 0) {
         const StrScanner option = _parser.readSymbol(p);
-        const bool none = option.iequals_P(PSTR("none"));
-        if (option.iequals_P(PSTR("ns32082")) || none) {
-            TableNs32000.setMmu(none ? MMU_NONE : MMU_NS32082);
+        const auto error = setFpu(option);
+        if (error) {
+            setError(scan, error);
+        } else {
             scan = p;
-            return OK;
         }
-        setError(scan, UNKNOWN_OPERAND);
+        return OK;
+    }
+    if (strcasecmp_P(name, OPT_TEXT_PMMU) == 0) {
+        const StrScanner option = _parser.readSymbol(p);
+        const auto error = setPmmu(option);
+        if (error) {
+            setError(scan, error);
+        } else {
+            scan = p;
+        }
         return OK;
     }
     return UNKNOWN_INSTRUCTION;
@@ -628,7 +653,7 @@ Error AsmNs32000::encode(StrScanner &scan, Insn &_insn) {
     InsnNs32000 insn(_insn);
     insn.setName(_parser.readSymbol(scan));
 
-    if (processPseudo(scan, insn) == OK)
+    if (processPseudo(scan, insn.name()) == OK)
         return getError();
 
     Operand srcOp, dstOp, ex1Op, ex2Op;
