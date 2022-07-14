@@ -31,6 +31,7 @@
 #include "asm_mn1610.h"
 #include "asm_mos6502.h"
 #include "asm_ns32000.h"
+#include "asm_scn2650.h"
 #include "asm_tlcs90.h"
 #include "asm_tms32010.h"
 #include "asm_tms9900.h"
@@ -53,6 +54,7 @@ z8::AsmZ8 asmz8;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
 cdp1802::AsmCdp1802 asm1802;
+scn2650::AsmScn2650 asm2650;
 i8086::AsmI8086 asm8086;
 i8096::AsmI8096 asm8096;
 tlcs90::AsmTlcs90 asm90;
@@ -75,6 +77,7 @@ IntelDirective dirz8(asmz8);
 NationalDirective dir8060(asm8060);
 NationalDirective dir8070(asm8070);
 IntelDirective dir1802(asm1802);
+IntelDirective dir2650(asm2650);
 IntelDirective dir8086(asm8086);
 IntelDirective dir8096(asm8096);
 IntelDirective dir90(asm90);
@@ -99,6 +102,7 @@ AsmDirective *directives[] = {
         &dir8060,
         &dir8070,
         &dir1802,
+        &dir2650,
         &dir32010,
         &dir8086,
         &dir8096,

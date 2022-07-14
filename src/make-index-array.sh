@@ -8,6 +8,8 @@
 # - Mark start and end of table.
 # - C-u M-x shell-command-on-region ./make-index-array.sh
 
-grep -Po '(TEXT_[A-Za-z0-9]+)' | \
+grep -Po '(TEXT_[A-Za-z0-9]+)' |
+    sed 's/TEXT_null/@@@@_null/' |
     awk '{ printf("    %3d,  // %s\n", i++, $1); }' |
-    sort -k3 -s
+    sort -k3 -s |
+    sed 's/@@@@_null/TEXT_null/'
