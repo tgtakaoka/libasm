@@ -109,7 +109,7 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
             goto idx;
         if (gn == 0x30)
             goto ext;
-        // Fall-though
+        // Fall-through
     case M_IM8:
         outHex(out.letter('#'), insn.readByte(memory), 8);
         break;
@@ -120,7 +120,7 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
             goto idx;
         if (gn == 0x30)
             goto ext;
-        // Fall-though
+        // Fall-through
     case M_IM16:
         outHex(out.letter('#'), insn.readUint16(memory), 16);
         break;

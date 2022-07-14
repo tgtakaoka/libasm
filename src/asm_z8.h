@@ -47,7 +47,7 @@ private:
         Error check(int32_t value) const override {
             return (_assembler->*_set)(value) ? OK : OPERAND_NOT_ALLOWED;
         }
-        void set(int32_t value) const override {}
+        void set(int32_t value) const override { (void)value; }
         AsmZ8 *_assembler;
         bool (AsmZ8::*_set)(int16_t);
     };
