@@ -26,7 +26,7 @@ Disassembler &disassembler(dis68000);
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "true");
 }
 
 static void tear_down() {
@@ -1833,7 +1833,7 @@ static void test_bcd() {
 }
 
 static void test_program() {
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "true");
 
     // Bcc label: 006|cc|disp
     TEST(BRA, "*", 0060000 | 0x000 | 0xFE);

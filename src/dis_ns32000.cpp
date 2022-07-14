@@ -21,6 +21,11 @@
 namespace libasm {
 namespace ns32000 {
 
+const char DisNs32000::OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
+const char DisNs32000::OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
+const char DisNs32000::OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
+const char DisNs32000::OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
+
 static bool isGenMode(AddrMode mode) {
     return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA || mode == M_FENR ||
            mode == M_FENW;
@@ -154,12 +159,12 @@ Error DisNs32000::decodeImmediate(
         break;
     case SZ_FLOAT:
         if (_floatPrefix)
-            out.text(_floatPrefix);
+            out.letter('0').letter('f');
         out.format_P(PSTR("%.8g"), insn.readFloat32(memory));
         break;
     case SZ_LONG:
         if (_floatPrefix)
-            out.text(_floatPrefix);
+            out.letter('0').letter('f');
         out.format_P(PSTR("%.16lg"), insn.readFloat64(memory));
         break;
     default:
@@ -205,10 +210,10 @@ Error DisNs32000::decodeConfig(const InsnNs32000 &insn, StrBuffer &out, OprPos p
 
 Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, StrBuffer &out, OprPos pos) {
     const uint8_t strOpts = getOprField(insn, pos);
-    if (_stringOptionBraket)
+    if (_stringOptionBracket)
         out.letter('[');
     _regs.outStrOptNames(out, strOpts);
-    if (_stringOptionBraket)
+    if (_stringOptionBracket)
         out.letter(']');
     return OK;
 }

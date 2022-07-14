@@ -31,7 +31,7 @@ static bool is32010() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "no");
 }
 
 static void tear_down() {
@@ -535,7 +535,7 @@ static void assert_ok(Config::opcode_t opc) {
     char operands[40], message[40];
     ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
 
-    disassembler.setUppercase(true);
+    disassembler.setOption("uppercase", "yes");
     disassembler.decode(memory, insn, operands, sizeof(operands));
     sprintf(message, "%04X must be LEGAL", opc);
     EQUALS(message, OK, disassembler.getError());
@@ -547,7 +547,7 @@ static void assert_illegal(Config::opcode_t opc, Error err, const char *message)
     char operands[40];
     ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
 
-    disassembler.setUppercase(true);
+    disassembler.setOption("uppercase", "enable");
     disassembler.decode(memory, insn, operands, sizeof(operands));
     EQUALS(message, err, disassembler.getError());
     if (disassembler.getError() == OK)

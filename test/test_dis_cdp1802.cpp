@@ -573,7 +573,7 @@ static void test_call() {
 }
 
 static void test_reg() {
-    dis1802.useRegister(true);
+    dis1802.setOption("use-register", "on");
 
     TEST(LDN, "R1",  0x01);
     TEST(LDA, "R0",  0x40);

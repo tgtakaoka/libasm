@@ -28,18 +28,28 @@ namespace mc6805 {
 
 class DisMc6805 : public Disassembler, public Config {
 public:
-    DisMc6805()
-        : Disassembler(_formatter, _regs, TableMc6805, '*'), _formatter(), _regs(), _pc_bits(0) {}
+    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { setProgramCounterBits(0); }
+    void reset() override { _pc_bits = 0; }
 
-    void setProgramCounterBits(uint8_t bits) { _pc_bits = bits; }
+    static const char OPT_INT_PCBITS[] PROGMEM;
 
 private:
     MotorolaValueFormatter _formatter;
     RegMc6805 _regs;
     uint8_t _pc_bits;
+    const struct OptPcBits : public IntOptionBase {
+        OptPcBits(uint8_t &value, Options &options)
+            : IntOptionBase(OPT_INT_PCBITS, options), _pc_bits(value) {}
+        Error check(int32_t value) const override {
+            return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
+        }
+        void set(int32_t value) const override { _pc_bits = value; }
+        uint8_t &_pc_bits;
+    } _opt_pc_bits{_pc_bits, _options};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
 

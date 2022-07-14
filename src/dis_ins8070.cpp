@@ -21,6 +21,8 @@
 namespace libasm {
 namespace ins8070 {
 
+const char DisIns8070::OPT_BOOL_IMM_PREFIX[] PROGMEM = "imm-prefix";
+
 StrBuffer &DisIns8070::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
@@ -59,7 +61,7 @@ Error DisIns8070::decodeImplied(InsnIns8070 &insn, StrBuffer &out) {
 
 Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     outOperand(out, insn.dstOpr(), insn.opCode()).comma();
-    out.letter(_immSym ? '#' : '=');
+    out.letter(_immediatePrefix ? '#' : '=');
     if (insn.oprSize() == SZ_WORD)
         return decodeAbsolute(memory, insn, out);
 

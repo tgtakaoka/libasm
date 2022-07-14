@@ -186,6 +186,7 @@ private:
     }
 
     void processLine(char *line, State state) {
+        (void)state;
         _cli.println();
         auto *scan = skipSpaces(line);
         if (*scan && !processPseudo(line)) {

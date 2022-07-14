@@ -130,7 +130,7 @@ int DisDriver::disassemble() {
         return 1;
     }
 
-    _disassembler->setRelativeTarget(_relativeTarget);
+    _disassembler->setOption("relative", _relativeTarget ? "on" : "off");
     DisDirective listing(*_disassembler, memory, _uppercase);
     FilePrinter output;
     if (_output_name) {

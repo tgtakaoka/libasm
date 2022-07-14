@@ -28,28 +28,27 @@ namespace z8000 {
 
 class DisZ8000 : public Disassembler, public Config {
 public:
-    DisZ8000()
-        : Disassembler(_formatter, _regs, TableZ8000, '$'),
-          _formatter(),
-          _regs(),
-          _ioAddressPrefix(0),
-          _shortDirect(true) {}
+    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000, '$'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
     void reset() override {
-        setIoAddressPrefix(0);
-        setShortDirect(true);
+        _ioAddressPrefix = 0;
+        _shortDirect = true;
     }
 
-    void setIoAddressPrefix(char prefix) { _ioAddressPrefix = prefix; }
-    void setShortDirect(bool enable) { _shortDirect = enable; }
+    static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM;
+    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
 
 private:
     IntelValueFormatter _formatter;
     RegZ8000 _regs;
-    char _ioAddressPrefix;
+    bool _ioAddressPrefix;
     bool _shortDirect;
+    const BoolOption _opt_ioaddrPrefix{OPT_BOOL_IOADDR_PREFIX, _ioAddressPrefix, _options};
+    const BoolOption _opt_shortDirect{OPT_BOOL_SHORT_DIRECT, _shortDirect, _options};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
     StrBuffer &outConditionCode(StrBuffer &out, uint8_t ccNum);

@@ -22,7 +22,7 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisTms9900 dis9900;
-    dis9900.setRelativeTarget(true);
+    dis9900.setOption("relative", "enable");
     GenDriver<Config> driver(dis9900);
     if (driver.main(argc, argv))
         return 1;

@@ -39,7 +39,7 @@ static bool is99105() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "false");
 }
 
 static void tear_down() {
@@ -324,7 +324,7 @@ static void test_rel() {
     ATEST(0x1000, JLE, "sym1100", 0x127F);
     ATEST(0x1000, JEQ, "sym0F02", 0x1380);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "true");
     TEST(JMP, "$-254", 0x1080);
     TEST(JMP, "$",     0x10FF);
     TEST(JMP, "$+2",   0x1000);
@@ -395,7 +395,7 @@ static void assert_mid(
             words[pos + 1] = post;
             ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
 
-            disassembler.setUppercase(true);
+            disassembler.setOption("uppercase","yes");
             disassembler.decode(memory, insn, operands, sizeof(operands));
             if (m && code > m->end) {
                 if (++m >= end)

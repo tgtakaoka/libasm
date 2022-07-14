@@ -28,21 +28,20 @@ namespace cdp1802 {
 
 class DisCdp1802 : public Disassembler, public Config {
 public:
-    DisCdp1802()
-        : Disassembler(_formatter, _regs, TableCdp1802, '$'),
-          _formatter(),
-          _regs(),
-          _useReg(false) {}
+    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802, '$'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { useRegister(false); }
+    void reset() override { _useReg = false; }
 
-    void useRegister(bool enable) { _useReg = enable; }
+    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
 
 private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
     bool _useReg;
+    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, _useReg, _options};
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;

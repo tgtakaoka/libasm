@@ -770,7 +770,7 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn) {
 TableMos6502::TableMos6502() {
     setCpu(MOS6502);
     useIndirectLong(true);
-    longAccumlator(false);
+    longAccumulator(false);
     longIndex(false);
 }
 
@@ -814,7 +814,7 @@ void TableMos6502::useIndirectLong(bool enable) {
     _useIndirectLong = enable;
 }
 
-void TableMos6502::longAccumlator(bool on) {
+void TableMos6502::longAccumulator(bool on) {
     _longAccumulator = on;
 }
 

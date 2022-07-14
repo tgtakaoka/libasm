@@ -1484,7 +1484,7 @@ static void test_logic() {
 }
 
 static void test_string_manipulation() {
-    dis8086.setRepeatHasStringInstruction(true);
+    dis8086.setOption("string-insn", "enable");
     TEST(REPNE, "MOVSB", 0xF2, 0xA4);
     TEST(REPNE, "MOVSW", 0xF2, 0xA5);
     TEST(REPNE, "CMPSB", 0xF2, 0xA6);
@@ -1552,7 +1552,7 @@ static void test_string_manipulation() {
 }
 
 static void test_control_transfer() {
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
 
     TEST(CALL, "$", 0xE8, 0xFD, 0xFF);
 
@@ -1669,7 +1669,7 @@ static void test_segment_override() {
     TEST(SEGSS, "", 0x36);
     TEST(SEGDS, "", 0x3E);
 
-    dis8086.setSeparateSegOverride(false);
+    dis8086.setOption("segment-insn", "disable");
 
     TEST(MOV, "ES:[BX], AH",    0x26, 0x88, 0047);
     TEST(MOV, "ES:[BP+0], AH",  0x26, 0x88, 0146, 0x00);

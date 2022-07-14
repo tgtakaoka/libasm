@@ -24,6 +24,7 @@
 #include "dis_memory.h"
 #include "error_reporter.h"
 #include "insn_base.h"
+#include "option_base.h"
 #include "reg_base.h"
 #include "str_buffer.h"
 #include "symbol_table.h"
@@ -41,13 +42,16 @@ public:
     virtual void reset() {}
 
     ValueFormatter &formatter() { return _formatter; }
-    void setRelativeTarget(bool prefer) { _relativeTarget = prefer; }
-    void setUppercase(bool uppercase);
-    void setCurrentOriginSymbol(char curSym) { _curSym = curSym; }
 
     const /* PROGMEM */ char *listCpu_P() const { return _table.listCpu_P(); }
     const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
+
+    static const char OPT_BOOL_RELATIVE[] PROGMEM;
+    static const char OPT_BOOL_UPPERCASE[] PROGMEM;
+    static const char OPT_BOOL_CSTYLE[] PROGMEM;
+    static const char OPT_CHAR_ORIGIN[] PROGMEM;
+    Error setOption(const char *name, const char *text) { return _options.setOption(name, text); }
 
 private:
     ValueFormatter &_formatter;
@@ -56,8 +60,31 @@ protected:
     RegBase &_regBase;
     TableBase &_table;
     char _curSym;
-    SymbolTable *_symtab = nullptr;
+    Options _options;
     bool _relativeTarget = false;
+    SymbolTable *_symtab = nullptr;
+    const BoolOption _opt_relative{OPT_BOOL_RELATIVE, _relativeTarget, _options};
+    const CharOption _opt_curSym{OPT_CHAR_ORIGIN, _curSym, _options};
+    struct OptDisassembler : public BoolOptionBase {
+        OptDisassembler(const /* PROGMEM */ char *name_P, Disassembler *dis)
+            : BoolOptionBase(name_P, dis->_options), _dis(dis) {}
+        Disassembler *_dis;
+    };
+    const struct OptUppercase : public OptDisassembler {
+        OptUppercase(Disassembler *dis) : OptDisassembler(OPT_BOOL_UPPERCASE, dis) {}
+        Error set(bool value) const override {
+            _dis->_formatter.setUppercase(value);
+            _dis->_regBase.setUppercase(value);
+            return OK;
+        }
+    } _opt_uppercase{this};
+    const struct OptCStyle : public OptDisassembler {
+        OptCStyle(Disassembler *dis) : OptDisassembler(OPT_BOOL_CSTYLE, dis) {}
+        Error set(bool value) const override {
+            _dis->_formatter.setCStyle(value);
+            return OK;
+        }
+    } _opt_cstyle{this};
 
     Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym)
         : _formatter(formatter), _regBase(regs), _table(table), _curSym(curSym) {}

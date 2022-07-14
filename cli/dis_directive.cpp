@@ -27,7 +27,7 @@ DisDirective::DisDirective(Disassembler &disassembler, BinMemory &memory, bool u
       _operandWidth(8),
       _address(0) {
     _listing.setUppercase(uppercase);
-    _disassembler.setUppercase(uppercase);
+    _disassembler.setOption("uppercase", uppercase ? "on" : "off");
 }
 
 Error DisDirective::disassemble(uint32_t addr, Insn &insn) {

@@ -26,8 +26,8 @@ Disassembler &disassembler(dis8070);
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
-    disassembler.formatter().setCStyle(true);
+    disassembler.setOption("relative", "off");
+    disassembler.setOption("c-style", "on");
 }
 
 static void tear_down() {
@@ -141,6 +141,9 @@ static void test_immediate() {
     TEST(LD,  "EA, =sym1234", 0x84, 0x34, 0x12);
     TEST(LD,  "T, =sym1234",  0xA4, 0x34, 0x12);
     TEST(ADD, "EA, =sym1234", 0xB4, 0x34, 0x12);
+
+    disassembler.setOption("imm-prefix", "true");
+    TEST(PLI, "P2, #sym1234", 0x22, 0x34, 0x12);
 }
 
 static void test_absolute() {
@@ -196,7 +199,7 @@ static void test_relative() {
     ATEST(0x1000, BRA, "sym1081", 0x74, 0x7F);
     ATEST(0x1000, BNZ, "sym1005", 0x7C, 0x03);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "enable");
     ATEST(0x2000, BRA, "$-126", 0x74, 0x80);
     ATEST(0x2000, BRA, "$",     0x74, 0xFE);
     ATEST(0x2000, BRA, "$+2",   0x74, 0x00);
@@ -288,7 +291,7 @@ static void test_indexed() {
     TEST(         SUB, "A, pos127,P2",   0xFA, 0x7F);
 
     symtab.reset();
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
     ATEST(0x2000, LD,  "EA, $-127,PC", 0x80, 0x80);
     ATEST(0x2000, LD,  "EA, $,PC",     0x80, 0xFF);
     ATEST(0x2000, LD,  "EA, $+1,PC",   0x80, 0x00);

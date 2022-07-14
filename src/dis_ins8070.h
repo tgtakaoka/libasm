@@ -28,21 +28,20 @@ namespace ins8070 {
 
 class DisIns8070 : public Disassembler, public Config {
 public:
-    DisIns8070()
-        : Disassembler(_formatter, _regs, TableIns8070, '$'),
-          _formatter(),
-          _regs(),
-          _immSym(false) {}
+    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070, '$'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { setImmediateSymbol(false); }
+    void reset() override { _immediatePrefix = false; }
 
-    void setImmediateSymbol(bool usualSharp) { _immSym = usualSharp; }
+    static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;
 
 private:
     NationalValueFormatter _formatter;
     RegIns8070 _regs;
-    bool _immSym;
+    bool _immediatePrefix;
+    const BoolOption _opt_immPrefix{OPT_BOOL_IMM_PREFIX, _immediatePrefix, _options};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
     StrBuffer &outOperand(StrBuffer &out, OprFormat opr, uint8_t value = 0);

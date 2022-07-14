@@ -21,6 +21,9 @@
 namespace libasm {
 namespace z8000 {
 
+const char DisZ8000::OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
+const char DisZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+
 StrBuffer &DisZ8000::outRegister(StrBuffer &out, RegName name) {
     return _regs.outRegName(out, name);
 }
@@ -248,7 +251,7 @@ Error DisZ8000::decodeOperand(
         return OK;
     case M_IO:
         if (_ioAddressPrefix)
-            out.letter(_ioAddressPrefix);
+            out.letter('#');
         outAbsAddr(out, insn.readUint16(memory), 16);
         return OK;
     case M_IRIO:
@@ -332,7 +335,7 @@ Error DisZ8000::checkPostWord(const InsnZ8000 &insn) {
 static OprSize registerSize(const InsnZ8000 &insn, AddrMode mode) {
     if (mode == M_IR)
         return SZ_ADDR;
-    if (mode == M_GEND && (insn.opCode() >> 14) == 2) // M_R
+    if (mode == M_GEND && (insn.opCode() >> 14) == 2)  // M_R
         return insn.oprSize();
     return SZ_WORD;
 }

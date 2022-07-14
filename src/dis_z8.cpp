@@ -21,6 +21,8 @@
 namespace libasm {
 namespace z8 {
 
+const char DisZ8::OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
+
 StrBuffer &DisZ8::outCcName(StrBuffer &out, Config::opcode_t opCode) {
     const CcName cc = _regs.decodeCcNum(opCode >> 4);
     if (cc != CC_T)
@@ -43,7 +45,7 @@ StrBuffer &DisZ8::outPairReg(StrBuffer &out, uint8_t num, bool indir) {
 }
 
 StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
-    if (_preferWorkRegister && _regs.isWorkRegAlias(addr))
+    if (_useWorkRegister && _regs.isWorkRegAlias(addr))
         return outWorkReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
@@ -56,7 +58,7 @@ StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
 }
 
 StrBuffer &DisZ8::outPairAddr(StrBuffer &out, uint8_t addr, bool indir) {
-    if (_preferWorkRegister && _regs.isWorkRegAlias(addr))
+    if (_useWorkRegister && _regs.isWorkRegAlias(addr))
         return outPairReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');

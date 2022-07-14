@@ -30,7 +30,7 @@ static bool z8001() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "false");
 }
 
 static void tear_down() {
@@ -782,7 +782,7 @@ static void test_program_control() {
     }
 
     // Call Procedure Relative
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
     TEST(CALR, "$+2",    0xD000);
     TEST(CALR, "$+10",   0xDFFC);
     TEST(CALR, "$+4098", 0xD800);
@@ -1993,7 +1993,7 @@ static void test_cpu_conrtol() {
 }
 
 static void test_short_direct() {
-    dis8000.setShortDirect(false);
+    dis8000.setOption("short-direct", "disable");
 
     TEST(CLR, "120034H", 0x4D08, 0x1234);
     TEST(CLR, "561234H", 0x4D08, 0xD600, 0x1234);

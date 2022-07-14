@@ -484,7 +484,7 @@ static void test_relative() {
         ATEST(0x1000, JR,   "NC, 0F82H", 0x30, 0x80);
         ATEST(0x1000, JR,   "C, 0F82H",  0x38, 0x80);
 
-        disassembler.setRelativeTarget(true);
+        disassembler.setOption("relative", "on");
         ATEST(0x2000, JR, "$-126", 0x18, 0x80);
         ATEST(0x2000, JR, "$",     0x18, 0xFE);
         ATEST(0x2000, JR, "$+2",   0x18, 0x00);

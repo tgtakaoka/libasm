@@ -36,8 +36,8 @@ static bool is1613() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(true);
-    disassembler.formatter().setCStyle(true);
+    disassembler.setOption("relative", "on");
+    disassembler.setOption("c-style", "on");
 }
 
 static void tear_down() {
@@ -83,7 +83,7 @@ static void test_transfer() {
     TEST(ST, "R1, (0x10)(X0)", 0x8000|(6<<11)|(1<<8)|0x10);
     TEST(ST, "R2, (0x80)(X1)", 0x8000|(7<<11)|(2<<8)|0x80);
 
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "off");
     if (is1610()) {
         ATEST(0x1000, L, "R2, 0x0F80-*(IC)",    0xC000|(1<<11)|(2<<8)|0x80);
         ATEST(0x1000, L, "R4, (0x107F-*(IC))",  0xC000|(3<<11)|(4<<8)|0x7F);
@@ -91,7 +91,7 @@ static void test_transfer() {
         ATEST(0x1000, L, "R2, 0x00F80-*(IC)",   0xC000|(1<<11)|(2<<8)|0x80);
         ATEST(0x1000, L, "R4, (0x0107F-*(IC))", 0xC000|(3<<11)|(4<<8)|0x7F);
     }
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "enable");
 
     TEST(MV,  "R4, SP",       0x7808|(4<<8)|(0<<4)|5);
     TEST(MV,  "SP, STR, SKP", 0x7808|(5<<8)|(1<<4)|6);

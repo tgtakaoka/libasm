@@ -28,21 +28,20 @@ namespace i8096 {
 
 class DisI8096 : public Disassembler, public Config {
 public:
-    DisI8096()
-        : Disassembler(_formatter, _regs, TableI8096, '$'),
-          _formatter(),
-          _regs(),
-          _useAbsolute(false) {}
+    DisI8096() : Disassembler(_formatter, _regs, TableI8096, '$'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { useAbsolute(false); }
+    void reset() override { _useAbsolute = false; }
 
-    void useAbsolute(bool enable) { _useAbsolute = enable; }
+    static const char OPT_BOOL_ABSOLUTE[] PROGMEM;
 
 private:
     IntelValueFormatter _formatter;
     RegI8096 _regs;
     bool _useAbsolute;
+    const BoolOption _opt_absolute{OPT_BOOL_ABSOLUTE, _useAbsolute, _options};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

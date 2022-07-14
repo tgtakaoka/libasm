@@ -35,7 +35,7 @@ static bool m68hc05() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "no");
 }
 
 static void tear_down() {
@@ -189,19 +189,19 @@ static void test_extended() {
     TEST(JMP, ">ext1ABC",  0xCC, 0x1A, 0xBC);
     TEST(JSR, ">ext0090",  0xCD, 0x00, 0x90);
 
-    dis6805.setProgramCounterBits(11); // MC68HC05J for instance
+    dis6805.setOption("pc-bits", "11"); // MC68HC05J for instance
     TEST(         LDA, "$07FF", 0xC6, 0x07, 0xFF);
     ERVR(         LDA, "$0800", 0xC6, 0x08, 0x00);
     ATEST(0x07F0, BSR, "$07FF", 0xAD, 0x0D);
     AERVR(0x07F0, BSR, "$0800", 0xAD, 0x0E);
 
-    dis6805.setProgramCounterBits(0);  // Most of MC68HC05 has 13bits PC.
+    dis6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
     TEST(         LDA, "$1FFF", 0xC6, 0x1F, 0xFF);
     ERVR(         LDA, "$2000", 0xC6, 0x20, 0x00);
     ATEST(0x1FF0, BSR, "$1FFF", 0xAD, 0x0D);
     AERVR(0x1FF0, BSR, "$2000", 0xAD, 0x0E);
 
-    dis6805.setProgramCounterBits(14); // MC68HC05X for instance
+    dis6805.setOption("pc-bits", "14"); // MC68HC05X for instance
     TEST(         LDA, "$3FFF", 0xC6, 0x3F, 0xFF);
     ERVR(         LDA, "$4000", 0xC6, 0x40, 0x00);
     ATEST(0x3FF0, BSR, "$3FFF", 0xAD, 0x0D);
@@ -317,7 +317,7 @@ static void test_relative() {
     ATEST(0x1000, BSR, "sub1081", 0xAD, 0x7F);
     ATEST(0x1000, BSR, "sub0F82", 0xAD, 0x80);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "enable");
 
     ATEST(0x1000, BSR, "*-126", 0xAD, 0x80);
     ATEST(0x1000, BSR, "*",     0xAD, 0xFE);
@@ -332,13 +332,13 @@ static void test_bit_ops() {
     TEST(BCLR, "0, $90", 0x11, 0x90);
     TEST(BCLR, "7, $90", 0x1F, 0x90);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "yes");
     ATEST(0x1000, BRSET, "0, $90, *+130", 0x00, 0x90, 0x7F);
     ATEST(0x1000, BRSET, "7, $90, *-125", 0x0E, 0x90, 0x80);
     ATEST(0x1000, BRCLR, "0, $90, *+130", 0x01, 0x90, 0x7F);
     ATEST(0x1000, BRCLR, "7, $90, *-125", 0x0F, 0x90, 0x80);
     AERVR(0x1FF0, BRCLR, "7, $90, *+16",  0x0F, 0x90, 0x0E);
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "disable");
 
     symtab.intern(0x90, "dir90");
     symtab.intern(0x0F83, "sym0F83");

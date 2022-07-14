@@ -22,8 +22,8 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisI8086 dis8086;
-    dis8086.setRelativeTarget(true);
-    dis8086.setRepeatHasStringInstruction(true);
+    dis8086.setOption("relative", "enable");
+    dis8086.setOption("string-insn", "enable");
     GenDriver<Config> driver(dis8086);
     if (driver.main(argc, argv))
         return 1;

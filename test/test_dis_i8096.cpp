@@ -439,7 +439,7 @@ static void test_jump() {
 }
 
 static void test_jump_relative() {
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
 
     ATEST(0x2000, SJMP, "$+2",     0x20, 0x00);
     ATEST(0x2000, SJMP, "$+512",   0x21, 0xFE);
@@ -566,6 +566,19 @@ static void test_control() {
     TEST(TRAP,  "",  0xF7);
 }
 
+static void test_absolute() {
+    TEST(ADD,   "120, 5634H[0]",  0x67, 0x01, 0x34, 0x56, 0x78);
+    TEST(ADD,   "154, 120, 5634H[0]", 0x47, 0x01, 0x34, 0x56, 0x78, 0x9A);
+    TEST(LDB,   "235, 0ECEDH[0]", 0xB3, 0x01, 0xED, 0xEC, 0xEB);
+    TEST(PUSH,  "5634H[0]",    0xCB, 0x01, 0x34, 0x56);
+
+    disassembler.setOption("absolute", "enable");
+    TEST(ADD,   "120, 5634H",  0x67, 0x01, 0x34, 0x56, 0x78);
+    TEST(ADD,   "154, 120, 5634H", 0x47, 0x01, 0x34, 0x56, 0x78, 0x9A);
+    TEST(LDB,   "235, 0ECEDH", 0xB3, 0x01, 0xED, 0xEC, 0xEB);
+    TEST(PUSH,  "5634H",    0xCB, 0x01, 0x34, 0x56);
+}
+
 static void test_illegal() {
     ERRI(0x04);
     ERRI(0x0B);
@@ -608,6 +621,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump_relative);
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
+    RUN_TEST(test_absolute);
     RUN_TEST(test_illegal);
 }
 

@@ -23,16 +23,16 @@ using namespace libasm::test;
 int main(int argc, const char **argv) {
     DisNs32000 dis32000;
     GenDriver<Config> driver(dis32000);
-    dis32000.setRelativeTarget(true);
-    dis32000.formatter().setCStyle(true);
+    dis32000.setOption("relative", "enable");
+    dis32000.setOption("c-style", "enable");
     if (driver.main(argc, argv))
         return 1;
 
     if (driver.generateGas()) {
-        dis32000.stringOptionBraket(true);
-        dis32000.setCurrentOriginSymbol('.');
-        dis32000.pcRelativeParen(true);
-        dis32000.floatPrefix("0f");
+        dis32000.setOption("stropt-bracket", "enable");
+        dis32000.setOption("origin-char", ".");
+        dis32000.setOption("pcrel-paren", "enable");
+        dis32000.setOption("float-prefix", "enable");
     }
     TestGenerator<Config> generator(dis32000, 0x10000);
     generator.generate(driver);

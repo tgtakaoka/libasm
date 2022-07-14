@@ -22,9 +22,9 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisIns8070 dis8070;
-    dis8070.setRelativeTarget(true);
-    dis8070.setImmediateSymbol(true);
-    dis8070.formatter().setCStyle(true);
+    dis8070.setOption("relative", "enable");
+    dis8070.setOption("imm-prefix", "enable");
+    dis8070.setOption("c-style", "enable");
     GenDriver<Config> driver(dis8070);
     if (driver.main(argc, argv))
         return 1;

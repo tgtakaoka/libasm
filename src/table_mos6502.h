@@ -31,7 +31,7 @@ public:
     Error searchName(InsnMos6502 &insn);
     Error searchOpCode(InsnMos6502 &insn);
     void useIndirectLong(bool enable);
-    void longAccumlator(bool on);
+    void longAccumulator(bool on);
     void longIndex(bool on);
     bool longImmediate(AddrMode addrMode) const;
 

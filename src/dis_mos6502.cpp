@@ -21,10 +21,14 @@
 namespace libasm {
 namespace mos6502 {
 
+const char DisMos6502::OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
+const char DisMos6502::OPT_BOOL_LONGA[] PROGMEM = "longa";
+const char DisMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
+
 void DisMos6502::reset() {
-    useIndirectLong(true);
-    longAccumlator(false);
-    longIndex(false);
+    TableMos6502.useIndirectLong(true);
+    TableMos6502.longAccumulator(false);
+    TableMos6502.longIndex(false);
 }
 
 Error DisMos6502::decodeImmediate(

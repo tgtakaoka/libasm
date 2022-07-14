@@ -59,7 +59,7 @@ static uint8_t R(uint8_t n) {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "disable");
 }
 
 static void tear_down() {
@@ -128,7 +128,7 @@ static void test_relative() {
     symtab.intern(0x106E, "sym106E");
     symtab.intern(0x0F8E, "sym0F8E");
 
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "no");
     ATEST(0x1000, JR, "F, 100EH",   0x0B, 0x0C);
     ATEST(0x1000, JR, "LT, 101EH",  0x1B, 0x1C);
     ATEST(0x1000, JR, "LE, 102EH",  0x2B, 0x2C);
@@ -163,7 +163,7 @@ static void test_relative() {
     ATEST(0x1000, DJNZ, "R14, 0FEDH", 0xEA, 0xEB);
     ATEST(0x1000, DJNZ, "R15, 0FFDH", 0xFA, 0xFB);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "yes");
     ATEST(0x2000, JR, "$-126", 0x8B, 0x80);
     ATEST(0x2000, JR, "$",     0x8B, 0xFE);
     ATEST(0x2000, JR, "$+2",   0x8B, 0x00);
@@ -625,7 +625,7 @@ static void test_bit_operation() {
     TEST(BAND, "0ABH, #4, R8",  0x67, 0x89, 0xAB);
     TEST(BAND, "R9, #4, R8",    0x67, 0x89, R(9));
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "true");
     TEST(BTJRF, "$, R3, #4", 0x37, 0x38, 0xFD);
     TEST(BTJRT, "$, R3, #4", 0x37, 0x39, 0xFD);
 }

@@ -26,8 +26,8 @@ Disassembler &disassembler(dis8060);
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
-    disassembler.formatter().setCStyle(true);
+    disassembler.setOption("relative", "disable");
+    disassembler.setOption("c-style", "enable");
 }
 
 static void tear_down() {
@@ -112,7 +112,7 @@ static void test_jump() {
     TEST(JMP, "disp0x81(P2)", 0x92, 0x81);
     TEST(JMP, "E(P3)",        0x93, 0x80);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
     ATEST(0x2800, JMP, "$-125",  0x90, 0x81);
     ATEST(0x2800, JMP, "$",      0x90, 0xFE);
     ATEST(0x2800, JMP, "$+2",    0x90, 0x00);
@@ -182,7 +182,7 @@ static void test_alu() {
     TEST(AND, "@disp0x7F(P2)", 0xD6, 0x7F);
     TEST(OR,  "@disp0x81(P3)", 0xDF, 0x81);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
     ATEST(0x2800, LD, "$-126",  0xC0, 0x81);
     ATEST(0x2800, LD, "$",      0xC0, 0xFF);
     ATEST(0x2800, LD, "$+1",    0xC0, 0x00);

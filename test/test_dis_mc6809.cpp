@@ -34,7 +34,7 @@ static bool is6309() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "no");
 }
 
 static void tear_down() {
@@ -735,7 +735,7 @@ static void test_indexed_mode() {
     ATEST(0x1000, LDA, "[$9003,PCR]", 0xA6, 0x9D, 0x7F, 0xFF);
     ATEST(0x1000, LDA, "[$9004,PCR]", 0xA6, 0x9D, 0x80, 0x00);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "TRUE");
     ATEST(0x1000, LDA, "*-125,PCR",   0xA6, 0x8C, 0x80);
     ATEST(0x1000, LDA, "*,PCR",       0xA6, 0x8C, 0xFD);
     ATEST(0x1000, LDA, "*+3,PCR",     0xA6, 0x8C, 0x00);
@@ -752,7 +752,7 @@ static void test_indexed_mode() {
     ATEST(0x1000, LDA, "[*,PCR]",       0xA6, 0x9D, 0xFF, 0xFC);
     ATEST(0x1000, LDA, "[*+4,PCR]",     0xA6, 0x9D, 0x00, 0x00);
     ATEST(0x1000, LDA, "[*-$7FFD,PCR]", 0xA6, 0x9D, 0x7F, 0xFF);
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "FALSE");
 
     TEST(LDA, "[$0009]", 0xA6, 0x9F, 0x00, 0x09);
     TEST(LDA, "[$1234]", 0xA6, 0x9F, 0x12, 0x34);
@@ -903,7 +903,7 @@ static void test_relative() {
     ATEST(0x1000, LBSR, "sub9002", 0x17, 0x7F, 0xFF);
     ATEST(0x9000, LBSR, "sub1003", 0x17, 0x80, 0x00);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "enable");
     ATEST(0x2000, BSR, "*-126", 0x8D, 0x80);
     ATEST(0x2000, BSR, "*",     0x8D, 0xFE);
     ATEST(0x2000, BSR, "*+2",   0x8D, 0x00);

@@ -255,7 +255,7 @@ static void test_relative() {
     ATEST(0x1000, DJNZ, "R6, 0FE1H",   0xDE, 0xDF);
     ATEST(0x1000, DJNZ, "R7, 0FE2H",   0xDF, 0xE0);
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "on");
     ATEST(0x2000, JB, "22H.1, $-125", 0x20, 0x11, 0x80);
     ATEST(0x2000, JB, "22H.1, $",     0x20, 0x11, 0xFD);
     ATEST(0x2000, JB, "22H.1, $+3",   0x20, 0x11, 0x00);
@@ -279,7 +279,7 @@ static void test_relative() {
 }
 
 static void test_bit_address() {
-    dis8051.setRelativeTarget(true);
+    dis8051.setOption("relative", "true");
     TEST(JBC, "22H.1, $+21", 0x10, 0x11, 0x12);
     TEST(JB,  "24H.1, $+37", 0x20, 0x21, 0x22);
     TEST(JNB, "26H.1, $+53", 0x30, 0x31, 0x32);

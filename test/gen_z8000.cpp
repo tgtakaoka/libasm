@@ -22,7 +22,7 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisZ8000 dis8000;
-    dis8000.setRelativeTarget(true);
+    dis8000.setOption("relative", "enable");
     GenDriver<Config> driver(dis8000);
     if (driver.main(argc, argv))
         return 1;
@@ -30,9 +30,9 @@ int main(int argc, const char **argv) {
     const Config::uintptr_t org =
             dis8000.addressWidth() == libasm::ADDRESS_24BIT ? 0x10000 : 0x1000;
     if (driver.generateGas()) {
-        dis8000.setIoAddressPrefix('#');
-        dis8000.setCurrentOriginSymbol('.');
-        dis8000.setShortDirect(false);
+        dis8000.setOption("ioaddr-prefix", "enable");
+        dis8000.setOption("origin-char", ".");
+        dis8000.setOption("short-direct", "disable");
     }
     TestGenerator<Config> generator(dis8000, org);
     generator.generate(driver);

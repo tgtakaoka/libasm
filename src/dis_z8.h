@@ -28,21 +28,18 @@ namespace z8 {
 
 class DisZ8 : public Disassembler, public Config {
 public:
-    DisZ8()
-        : Disassembler(_formatter, _regs, TableZ8, '$'),
-          _formatter(),
-          _regs(),
-          _preferWorkRegister(true) {}
+    DisZ8() : Disassembler(_formatter, _regs, TableZ8, '$'), _formatter(), _regs() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { preferWorkRegister(true); }
+    void reset() override { _useWorkRegister = true; }
 
-    void preferWorkRegister(bool enabled) { _preferWorkRegister = enabled; }
+    static const char OPT_BOOL_WORK_REGISTER[] PROGMEM;
 
 private:
     IntelValueFormatter _formatter;
     RegZ8 _regs;
-    bool _preferWorkRegister;
+    bool _useWorkRegister;
+    const BoolOption _opt_workRegister{OPT_BOOL_WORK_REGISTER, _useWorkRegister, _options};
 
     StrBuffer &outCcName(StrBuffer &out, Config::opcode_t opCode);
     StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);

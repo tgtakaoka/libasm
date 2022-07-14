@@ -28,35 +28,31 @@ namespace ns32000 {
 
 class DisNs32000 : public Disassembler, public Config {
 public:
-    DisNs32000()
-        : Disassembler(_formatter, _regs, TableNs32000, '*'),
-          _formatter(),
-          _regs(),
-          _stringOptionBraket(false),
-          _pcRelativeParen(false),
-          _externalParen(false),
-          _floatPrefix(nullptr) {}
+    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '*'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override {
-        stringOptionBraket(false);
-        pcRelativeParen(false);
-        externalParen(false);
-        floatPrefix();
+        _stringOptionBracket = _pcRelativeParen = _externalParen = _floatPrefix = false;
     }
 
-    void stringOptionBraket(bool braket) { _stringOptionBraket = braket; }
-    void pcRelativeParen(bool paren) { _pcRelativeParen = paren; }
-    void externalParen(bool paren) { _externalParen = paren; }
-    void floatPrefix(const char *prefix = nullptr) { _floatPrefix = prefix; }
+    static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM;
+    static const char OPT_BOOL_PCREL_PAREN[] PROGMEM;
+    static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM;
+    static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM;
 
 private:
     NationalValueFormatter _formatter;
     RegNs32000 _regs;
-    bool _stringOptionBraket;
+    bool _stringOptionBracket;
     bool _pcRelativeParen;
     bool _externalParen;
-    const char *_floatPrefix;
+    bool _floatPrefix;
+    const BoolOption _opt_stroptBracket{OPT_BOOL_STROPT_BRACKET, _stringOptionBracket, _options};
+    const BoolOption _opt_pcrelParel{OPT_BOOL_PCREL_PAREN, _pcRelativeParen, _options};
+    const BoolOption _opt_externalParen{OPT_BOOL_EXTERNAL_PAREN, _externalParen, _options};
+    const BoolOption _opt_floatPrefix{OPT_BOOL_FLOAT_PREFIX, _floatPrefix, _options};
 
     struct Displacement {
         int32_t val32;

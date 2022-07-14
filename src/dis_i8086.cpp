@@ -21,6 +21,9 @@
 namespace libasm {
 namespace i8086 {
 
+const char DisI8086::OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
+const char DisI8086::OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
+
 StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix) {
     if (name == REG_UNDEF)
         return out;
@@ -347,7 +350,7 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
 
 Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
     Config::opcode_t opCode = insn.readByte(memory);
-    while (!_separateSegOverride && TableI8086.isSegmentPrefix(opCode)) {
+    while (!_segOverrideInsn && TableI8086.isSegmentPrefix(opCode)) {
         if (insn.segment())
             return setError(ILLEGAL_SEGMENT);
         insn.setSegment(opCode);

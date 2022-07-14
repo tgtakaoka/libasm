@@ -22,7 +22,7 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisMc6809 dis6809;
-    dis6809.setRelativeTarget(true);
+    dis6809.setOption("relative", "enable");
     GenDriver<Config> driver(dis6809);
     if (driver.main(argc, argv))
         return 1;

@@ -22,8 +22,8 @@ using namespace libasm::test;
 
 int main(int argc, const char **argv) {
     DisIns8060 dis8060;
-    dis8060.setRelativeTarget(true);
-    dis8060.formatter().setCStyle(true);
+    dis8060.setOption("relative", "enable");
+    dis8060.setOption("c-style", "enable");
     GenDriver<Config> driver(dis8060);
     if (driver.main(argc, argv))
         return 1;

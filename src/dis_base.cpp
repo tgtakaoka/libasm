@@ -18,10 +18,10 @@
 
 namespace libasm {
 
-void Disassembler::setUppercase(bool uppercase) {
-    _formatter.setUppercase(uppercase);
-    _regBase.setUppercase(uppercase);
-}
+const char Disassembler::OPT_BOOL_RELATIVE[] PROGMEM = "relative";
+const char Disassembler::OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
+const char Disassembler::OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
+const char Disassembler::OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 
 Error Disassembler::decode(
         DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {

@@ -35,7 +35,7 @@ static char actual_opr[128];
 void dis_assert(const char *file, int line, Error error, ArrayMemory &memory,
         const char *expected_name, const char *expected_opr) {
     Insn insn(memory.origin());
-    disassembler.setUppercase(true);
+    disassembler.setOption("uppercase", "yes");
     disassembler.decode(memory, insn, actual_opr, sizeof(actual_opr), &symtab);
 
     asserter.equals(file, line, expected_name, error, disassembler);

@@ -47,7 +47,7 @@ public:
             commentStr = ";###";
             _disassembler.formatter().setCStyle(true);
         }
-        _disassembler.setUppercase(_uppercase);
+        _disassembler.setOption("uppercase", _uppercase ? "yes" : "no");
         _listing.setUppercase(_uppercase);
         _output = nullptr;
         if (_output_name) {

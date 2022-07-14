@@ -28,19 +28,42 @@ namespace mos6502 {
 
 class DisMos6502 : public Disassembler, public Config {
 public:
-    DisMos6502() : Disassembler(_formatter, _regs, TableMos6502, '*'), _formatter(), _regs() {}
+    DisMos6502() : Disassembler(_formatter, _regs, TableMos6502, '*'), _formatter(), _regs() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
     void reset() override;
 
-    void useIndirectLong(bool enable) { TableMos6502.useIndirectLong(enable); }
-    void longAccumlator(bool on) { TableMos6502.longAccumlator(on); }
-    void longIndex(bool on) { TableMos6502.longIndex(on); }
+    static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
+    static const char OPT_BOOL_LONGA[] PROGMEM;
+    static const char OPT_BOOL_LONGI[] PROGMEM;
 
 private:
     MotorolaValueFormatter _formatter;
     RegMos6502 _regs;
+    const struct OptIndirectLong : public BoolOptionBase{
+        OptIndirectLong(Options &options) : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, options) {}
+        Error set(bool value) const override {
+            TableMos6502.useIndirectLong(value);
+            return OK;
+        }
+    } _opt_indirectLong{_options};
+    const struct OptLongA : public BoolOptionBase{
+        OptLongA(Options &options) : BoolOptionBase(OPT_BOOL_LONGA, options) {}
+        Error set(bool value) const override {
+            TableMos6502.longAccumulator(value);
+            return OK;
+        }
+    } _opt_longa{_options};
+    const struct OptLongI : public BoolOptionBase{
+        OptLongI(Options &options) : BoolOptionBase(OPT_BOOL_LONGI, options) {}
+        Error set(bool value) const override {
+            TableMos6502.longIndex(value);
+            return OK;
+        }
+    } _opt_longi{_options};
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);

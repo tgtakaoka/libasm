@@ -43,7 +43,7 @@ static bool m6801() {
 
 static void set_up() {
     disassembler.reset();
-    disassembler.setRelativeTarget(false);
+    disassembler.setOption("relative", "no");
 }
 
 static void tear_down() {
@@ -610,7 +610,7 @@ static void test_relative() {
         ATEST(0x1000, BRN, "sub0F82", 0x21, 0x80);
     }
 
-    disassembler.setRelativeTarget(true);
+    disassembler.setOption("relative", "enable");
     ATEST(0x2000, BSR, "*-126", 0x8D, 0x80);
     ATEST(0x2000, BSR, "*",     0x8D, 0xFE);
     ATEST(0x2000, BSR, "*+2",   0x8D, 0x00);
