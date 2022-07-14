@@ -191,8 +191,8 @@ Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (TableI8051.searchName(insn))
-        return setError(TableI8051.getError());
+    if (TableI8051::TABLE.searchName(insn))
+        return setError(TableI8051::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();

@@ -28,7 +28,8 @@ namespace cdp1802 {
 
 class DisCdp1802 : public Disassembler, public Config {
 public:
-    DisCdp1802() : Disassembler(_formatter, _regs, TableCdp1802, '$'), _formatter(), _regs() {
+    DisCdp1802()
+        : Disassembler(_formatter, _regs, TableCdp1802::TABLE, '$'), _formatter(), _regs() {
         reset();
     }
 

@@ -28,6 +28,8 @@ class TableMos6502 : public TableBase {
 public:
     TableMos6502();
 
+    static TableMos6502 TABLE;
+
     Error searchName(InsnMos6502 &insn);
     Error searchOpCode(InsnMos6502 &insn);
     void useIndirectLong(bool enable);
@@ -54,8 +56,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableMos6502 TableMos6502;
 
 }  // namespace mos6502
 }  // namespace libasm

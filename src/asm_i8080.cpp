@@ -113,8 +113,8 @@ Error AsmI8080::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableI8080.searchName(insn))
-        return setError(TableI8080.getError());
+    if (TableI8080::TABLE.searchName(insn))
+        return setError(TableI8080::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO && encodeOperand(insn, dstOp, dst))

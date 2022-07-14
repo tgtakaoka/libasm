@@ -27,7 +27,7 @@ namespace cdp1802 {
 
 class AsmCdp1802 : public Assembler, public Config {
 public:
-    AsmCdp1802() : Assembler(_parser, TableCdp1802), _parser() { reset(); }
+    AsmCdp1802() : Assembler(_parser, TableCdp1802::TABLE), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useReg = _smartBranch = false; }

@@ -733,8 +733,7 @@ static bool acceptAddrMode(AddrMode opr, const Entry *entry) {
 Error TableMos6502::searchName(InsnMos6502 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, AddrMode>(
-                insn.name(), insn.addrMode(), page, acceptAddrMode, count);
+        auto entry = searchEntry(insn.name(), insn.addrMode(), page, acceptAddrMode, count);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setOpCode(entry->opCode());
@@ -753,10 +752,10 @@ static bool acceptAddrMode(AddrMode addrMode, bool useIndirectLong) {
 Error TableMos6502::searchOpCode(InsnMos6502 &insn) {
     auto opCode = insn.opCode();
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        for (auto entry = page->table();
-                entry < page->end() && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                                                opCode, entry, page->end()));
-                entry++) {
+        for (auto entry = page->table(); entry < page->end(); entry++) {
+            entry = searchEntry(opCode, entry, page->end());
+            if (entry == nullptr)
+                break;
             insn.setFlags(entry->flags());
             if (!acceptAddrMode(insn.addrMode(), _useIndirectLong))
                 continue;
@@ -832,7 +831,7 @@ bool TableMos6502::longImmediate(AddrMode addrMode) const {
     return false;
 }
 
-class TableMos6502 TableMos6502;
+TableMos6502 TableMos6502::TABLE;
 
 }  // namespace mos6502
 }  // namespace libasm

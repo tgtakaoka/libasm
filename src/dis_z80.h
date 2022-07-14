@@ -28,7 +28,7 @@ namespace z80 {
 
 class DisZ80 : public Disassembler, public Config {
 public:
-    DisZ80() : Disassembler(_formatter, _regs, TableZ80, '$'), _formatter(), _regs() {}
+    DisZ80() : Disassembler(_formatter, _regs, TableZ80::TABLE, '$'), _formatter(), _regs() {}
 
     const ConfigBase &config() const override { return *this; }
 

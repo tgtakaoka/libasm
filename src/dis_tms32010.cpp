@@ -27,7 +27,7 @@ Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
     uint8_t dma = static_cast<uint8_t>(opc) & 0x7F;
     if ((opc >> 8) == SST) {
         dma |= (1 << 7);
-        if (dma > TableTms32010.dataMemoryLimit())
+        if (dma > TableTms32010::TABLE.dataMemoryLimit())
             return setError(OVERFLOW_RANGE);
     }
     outAbsAddr(out, dma, 8);
@@ -128,8 +128,8 @@ Error DisTms32010::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    if (TableTms32010.searchOpCode(insn))
-        return setError(TableTms32010.getError());
+    if (TableTms32010::TABLE.searchOpCode(insn))
+        return setError(TableTms32010::TABLE.getError());
 
     const AddrMode op1 = insn.op1();
     if (op1 == M_NO)

@@ -249,8 +249,8 @@ Error AsmZ80::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableZ80.searchName(insn))
-        return setError(TableZ80.getError());
+    if (TableZ80::TABLE.searchName(insn))
+        return setError(TableZ80::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO) {

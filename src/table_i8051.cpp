@@ -260,8 +260,6 @@ static constexpr uint8_t INDEX_I8051[] PROGMEM = {
 };
 // clang-format on
 
-
-
 typedef EntryPageBase<Entry> EntryPage;
 
 static constexpr EntryPage I8051_PAGES[] PROGMEM = {
@@ -287,8 +285,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableI8051::searchName(InsnI8051 &insn) {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-            insn.name(), insn.flags(), I8051_PAGES, acceptModes, count);
+    auto entry = searchEntry(insn.name(), insn.flags(), I8051_PAGES, acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -312,8 +309,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableI8051::searchOpCode(InsnI8051 &insn) {
     auto opCode = insn.opCode();
-    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
+    auto entry = searchEntry(opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
@@ -333,7 +329,7 @@ bool TableI8051::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_8051) == 0 || strcasecmp_P(cpu, TEXT_CPU_I8051) == 0;
 }
 
-class TableI8051 TableI8051;
+TableI8051 TableI8051::TABLE;
 
 }  // namespace i8051
 }  // namespace libasm

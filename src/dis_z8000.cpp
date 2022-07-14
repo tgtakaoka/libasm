@@ -52,8 +52,8 @@ Error DisZ8000::decodeImmediate(
         const int16_t count =
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
-            if (TableZ8000.searchOpCodeAlias(insn, memory))
-                return setError(TableZ8000.getError());
+            if (TableZ8000::TABLE.searchOpCodeAlias(insn, memory))
+                return setError(TableZ8000::TABLE.getError());
             data = -count;
         }
         if (size == SZ_BYTE && data > 8)
@@ -160,7 +160,7 @@ Error DisZ8000::decodeGenericAddressing(
 
 Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, StrBuffer &out) {
     const uint16_t addr = insn.readUint16(memory);
-    if (TableZ8000.segmentedModel()) {
+    if (TableZ8000::TABLE.segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
         uint16_t off = static_cast<uint8_t>(addr);
         bool shortDirect = _shortDirect;
@@ -362,7 +362,7 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
     const RegName cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
-        if (!TableZ8000.segmentedModel() && (dnum == 1 || snum == 1))
+        if (!TableZ8000::TABLE.segmentedModel() && (dnum == 1 || snum == 1))
             return setError(REGISTER_NOT_ALLOWED);
         // R1 isn't allowed as cnt.
         if (cnum == 1)
@@ -390,8 +390,8 @@ Error DisZ8000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableZ8000.searchOpCode(insn, memory))
-        return setError(TableZ8000.getError());
+    if (TableZ8000::TABLE.searchOpCode(insn, memory))
+        return setError(TableZ8000::TABLE.getError());
     if (checkPostWord(insn))
         return getError();
     if ((insn.isPushPopInsn() || insn.isThreeRegsInsn()) && checkRegisterOverlap(insn))

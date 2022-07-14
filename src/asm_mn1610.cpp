@@ -20,7 +20,7 @@ namespace libasm {
 namespace mn1610 {
 
 Error AsmMn1610::checkAddressRange(Config::uintptr_t addr) {
-    return TableMn1610.checkAddressRange(addr);
+    return TableMn1610::TABLE.checkAddressRange(addr);
 }
 
 Error AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
@@ -336,8 +336,8 @@ Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(opr4);
 
     insn.setAddrMode(opr1.mode, opr2.mode, opr3.mode, opr4.mode);
-    if (TableMn1610.searchName(insn))
-        return setError(TableMn1610.getError());
+    if (TableMn1610::TABLE.searchName(insn))
+        return setError(TableMn1610::TABLE.getError());
 
     const AddrMode op1 = insn.op1();
     if (op1 != M_NO && encodeOperand(insn, opr1, op1)) {

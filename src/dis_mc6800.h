@@ -28,7 +28,7 @@ namespace mc6800 {
 
 class DisMc6800 : public Disassembler, public Config {
 public:
-    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800, '*'), _formatter(), _regs() {}
+    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800::TABLE, '*'), _formatter(), _regs() {}
 
     const ConfigBase &config() const override { return *this; }
 

@@ -28,6 +28,8 @@ class TableI8080 : public TableBase {
 public:
     TableI8080();
 
+    static TableI8080 TABLE;
+
     Error searchName(InsnI8080 &insn);
     Error searchOpCode(InsnI8080 &insn);
     bool isPrefix(Config::opcode_t opCode) const;
@@ -44,8 +46,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableI8080 TableI8080;
 
 }  // namespace i8080
 }  // namespace libasm

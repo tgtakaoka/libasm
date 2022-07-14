@@ -28,7 +28,7 @@ namespace tlcs90 {
 
 class AsmTlcs90 : public Assembler, public Config {
 public:
-    AsmTlcs90() : Assembler(_parser, TableTlcs90), _parser() {}
+    AsmTlcs90() : Assembler(_parser, TableTlcs90::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
 

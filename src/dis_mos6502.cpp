@@ -26,15 +26,16 @@ const char DisMos6502::OPT_BOOL_LONGA[] PROGMEM = "longa";
 const char DisMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
 
 void DisMos6502::reset() {
-    TableMos6502.useIndirectLong(true);
-    TableMos6502.longAccumulator(false);
-    TableMos6502.longIndex(false);
+    auto &table = TableMos6502::TABLE;
+    table.useIndirectLong(true);
+    table.longAccumulator(false);
+    table.longIndex(false);
 }
 
 Error DisMos6502::decodeImmediate(
         DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
     out.letter('#');
-    if (TableMos6502.longImmediate(mode)) {
+    if (TableMos6502::TABLE.longImmediate(mode)) {
         outHex(out, insn.readUint16(memory), 16);
     } else {
         outHex(out, insn.readByte(memory), 8);
@@ -186,8 +187,8 @@ Error DisMos6502::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableMos6502.searchOpCode(insn))
-        return setError(TableMos6502.getError());
+    if (TableMos6502::TABLE.searchOpCode(insn))
+        return setError(TableMos6502::TABLE.getError());
 
     const AddrMode mode = insn.addrMode();
     switch (mode) {

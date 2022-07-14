@@ -130,8 +130,8 @@ Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    if (TableCdp1802.searchName(insn))
-        return setError(TableCdp1802.getError());
+    if (TableCdp1802::TABLE.searchName(insn))
+        return setError(TableCdp1802::TABLE.getError());
 
     emitOperand(insn, insn.mode1(), op1);
     if (insn.mode2() == ADDR)

@@ -153,7 +153,7 @@ Error DisTms9900::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    if (TableTms9900.searchOpCode(insn))
+    if (TableTms9900::TABLE.searchOpCode(insn))
         return decodeMacroInstructionDetect(insn);
     insn.readPost(memory);
     if (setError(insn))

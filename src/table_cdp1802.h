@@ -28,6 +28,8 @@ class TableCdp1802 : public TableBase {
 public:
     TableCdp1802();
 
+    static TableCdp1802 TABLE;
+
     Error searchName(InsnCdp1802 &insn);
     Error searchOpCode(InsnCdp1802 &insn);
     bool isPrefix(Config::opcode_t opCode) const;
@@ -44,8 +46,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableCdp1802 TableCdp1802;
 
 }  // namespace cdp1802
 }  // namespace libasm

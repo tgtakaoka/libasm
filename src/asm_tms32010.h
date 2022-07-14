@@ -28,7 +28,7 @@ namespace tms32010 {
 
 class AsmTms32010 : public Assembler, public Config {
 public:
-    AsmTms32010() : Assembler(_parser, TableTms32010), _parser() {}
+    AsmTms32010() : Assembler(_parser, TableTms32010::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
 

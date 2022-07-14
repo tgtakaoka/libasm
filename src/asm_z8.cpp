@@ -275,7 +275,7 @@ Error AsmZ8::setRp(StrScanner &scan, bool (AsmZ8::*set)(int16_t)) {
 Error AsmZ8::processPseudo(StrScanner &scan, const char *name) {
     if (strcasecmp_P(name, OPT_INT_SETRP) == 0)
         return setRp(scan, &AsmZ8::setRegPointer);
-    if (TableZ8.isSuper8()) {
+    if (TableZ8::TABLE.isSuper8()) {
         if (strcasecmp_P(name, OPT_INT_SETRP0) == 0)
             return setRp(scan, &AsmZ8::setRegPointer0);
         if (strcasecmp_P(name, OPT_INT_SETRP1) == 0)
@@ -415,8 +415,8 @@ Error AsmZ8::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (TableZ8.searchName(insn))
-        return setError(TableZ8.getError());
+    if (TableZ8::TABLE.searchName(insn))
+        return setError(TableZ8::TABLE.getError());
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
 

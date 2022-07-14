@@ -28,12 +28,12 @@ namespace mn1610 {
 
 class DisMn1610 : public Disassembler, public Config {
 public:
-    DisMn1610() : Disassembler(_formatter, _regs, TableMn1610, '*'), _formatter(), _regs() {
+    DisMn1610() : Disassembler(_formatter, _regs, TableMn1610::TABLE, '*'), _formatter(), _regs() {
         _formatter.setSuffix(true);
     }
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMn1610.addressWidth(); }
+    AddressWidth addressWidth() const override { return TableMn1610::TABLE.addressWidth(); }
 
 private:
     NationalValueFormatter _formatter;

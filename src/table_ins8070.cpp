@@ -205,8 +205,7 @@ static bool acceptOprFormats(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8070::searchName(InsnIns8070 &insn) {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-            insn.name(), insn.flags(), INS8070_PAGES, acceptOprFormats, count);
+    auto entry = searchEntry(insn.name(), insn.flags(), INS8070_PAGES, acceptOprFormats, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -241,8 +240,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 Error TableIns8070::searchOpCode(InsnIns8070 &insn) {
-    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
+    auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
@@ -264,7 +262,7 @@ bool TableIns8070::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_INS8070) == 0 || strcasecmp_P(cpu, TEXT_CPU_8070) == 0;
 }
 
-class TableIns8070 TableIns8070;
+TableIns8070 TableIns8070::TABLE;
 
 }  // namespace ins8070
 }  // namespace libasm

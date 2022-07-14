@@ -130,8 +130,8 @@ Error DisI8051::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8051.searchOpCode(insn))
-        return setError(TableI8051.getError());
+    if (TableI8051::TABLE.searchOpCode(insn))
+        return setError(TableI8051::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();

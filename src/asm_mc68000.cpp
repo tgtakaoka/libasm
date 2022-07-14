@@ -417,8 +417,8 @@ Error AsmMc68000::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-    if (TableMc68000.searchName(insn))
-        return setError(TableMc68000.getError());
+    if (TableMc68000::TABLE.searchName(insn))
+        return setError(TableMc68000::TABLE.getError());
 
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();

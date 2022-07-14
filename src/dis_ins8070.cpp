@@ -129,8 +129,8 @@ Error DisIns8070::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableIns8070.searchOpCode(insn))
-        return setError(TableIns8070.getError());
+    if (TableIns8070::TABLE.searchOpCode(insn))
+        return setError(TableIns8070::TABLE.getError());
 
     switch (insn.addrMode()) {
     case M_IMP:

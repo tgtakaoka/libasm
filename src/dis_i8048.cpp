@@ -120,8 +120,8 @@ Error DisI8048::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8048.searchOpCode(insn))
-        return setError(TableI8048.getError());
+    if (TableI8048::TABLE.searchOpCode(insn))
+        return setError(TableI8048::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NONE) {

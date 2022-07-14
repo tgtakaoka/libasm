@@ -28,7 +28,7 @@ namespace i8096 {
 
 class AsmI8096 : public Assembler, public Config {
 public:
-    AsmI8096() : Assembler(_parser, TableI8096), _parser() {}
+    AsmI8096() : Assembler(_parser, TableI8096::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
 

@@ -897,8 +897,7 @@ Error TableNs32000::searchName(
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
         auto post = page->post();
-        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setPost(0, post != 0);
@@ -915,8 +914,7 @@ Error TableNs32000::searchOpCode(
         if (insn.prefix() != page->prefix())
             continue;
         auto post = page->post();
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode() & ~page->mask(), page->table(), page->end());
+        auto entry = searchEntry(insn.opCode() & ~page->mask(), page->table(), page->end());
         if (entry) {
             insn.setFlags(entry->flags());
             if (post) {
@@ -963,7 +961,7 @@ bool TableNs32000::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
 }
 
-class TableNs32000 TableNs32000;
+    TableNs32000 TableNs32000::TABLE;
 
 }  // namespace ns32000
 }  // namespace libasm

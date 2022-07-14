@@ -139,8 +139,8 @@ Error DisMc6805::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6805.searchOpCode(insn))
-        return setError(TableMc6805.getError());
+    if (TableMc6805::TABLE.searchOpCode(insn))
+        return setError(TableMc6805::TABLE.getError());
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_NO)

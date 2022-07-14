@@ -28,12 +28,13 @@ namespace mos6502 {
 
 class DisMos6502 : public Disassembler, public Config {
 public:
-    DisMos6502() : Disassembler(_formatter, _regs, TableMos6502, '*'), _formatter(), _regs() {
+    DisMos6502()
+        : Disassembler(_formatter, _regs, TableMos6502::TABLE, '*'), _formatter(), _regs() {
         reset();
     }
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
+    AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
     void reset() override;
 
     static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
@@ -43,24 +44,24 @@ public:
 private:
     MotorolaValueFormatter _formatter;
     RegMos6502 _regs;
-    const struct OptIndirectLong : public BoolOptionBase{
+    const struct OptIndirectLong : public BoolOptionBase {
         OptIndirectLong(Options &options) : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, options) {}
         Error set(bool value) const override {
-            TableMos6502.useIndirectLong(value);
+            TableMos6502::TABLE.useIndirectLong(value);
             return OK;
         }
     } _opt_indirectLong{_options};
-    const struct OptLongA : public BoolOptionBase{
+    const struct OptLongA : public BoolOptionBase {
         OptLongA(Options &options) : BoolOptionBase(OPT_BOOL_LONGA, options) {}
         Error set(bool value) const override {
-            TableMos6502.longAccumulator(value);
+            TableMos6502::TABLE.longAccumulator(value);
             return OK;
         }
     } _opt_longa{_options};
-    const struct OptLongI : public BoolOptionBase{
+    const struct OptLongI : public BoolOptionBase {
         OptLongI(Options &options) : BoolOptionBase(OPT_BOOL_LONGI, options) {}
         Error set(bool value) const override {
-            TableMos6502.longIndex(value);
+            TableMos6502::TABLE.longIndex(value);
             return OK;
         }
     } _opt_longi{_options};

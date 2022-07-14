@@ -336,8 +336,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableMn1610::searchName(InsnMn1610 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
@@ -386,8 +385,7 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableMn1610::searchOpCode(InsnMn1610 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end(), maskCode);
+        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
@@ -445,7 +443,7 @@ bool TableMn1610::setCpu(const char *cpu) {
     return false;
 }
 
-class TableMn1610 TableMn1610;
+TableMn1610 TableMn1610::TABLE;
 
 }  // namespace mn1610
 }  // namespace libasm

@@ -532,8 +532,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableZ8::searchName(InsnZ8 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
@@ -573,10 +572,10 @@ static bool matchPostByte(const InsnZ8 &insn) {
 Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto end = page->end();
-        for (auto entry = page->table();
-                entry < end && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                                        insn.opCode(), entry, end, maskCode)) != nullptr;
-                entry++) {
+        for (auto entry = page->table(); entry < end; entry++) {
+            entry = searchEntry(insn.opCode(), entry, end, maskCode);
+            if (entry == nullptr)
+                break;
             insn.setFlags(entry->flags());
             if (insn.postFormat()) {
                 if (insn.length() < 2) {
@@ -631,7 +630,7 @@ bool TableZ8::setCpu(const char *cpu) {
     return false;
 }
 
-class TableZ8 TableZ8;
+TableZ8 TableZ8::TABLE;
 
 }  // namespace z8
 }  // namespace libasm

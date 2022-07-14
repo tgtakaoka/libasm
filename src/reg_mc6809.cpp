@@ -89,7 +89,7 @@ StrBuffer &RegMc6809::outRegName(StrBuffer &out, const RegName name) const {
 RegName RegMc6809::decodeDataReg(uint8_t num) {
     num &= 0xF;
     const RegName name = RegName(num);
-    if (TableMc6809.cpuType() == MC6809) {
+    if (TableMc6809::TABLE.cpuType() == MC6809) {
         if (name == REG_W || name == REG_V || num >= 12)
             return REG_UNDEF;
     }
@@ -106,7 +106,7 @@ bool RegMc6809::isDataReg(RegName name) {
     case REG_F:
     case REG_Z:
     case REG_0:
-        return TableMc6809.cpuType() == HD6309;
+        return TableMc6809::TABLE.cpuType() == HD6309;
     case REG_PCR:
         return false;
     default:

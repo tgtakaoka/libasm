@@ -35,6 +35,8 @@ struct Operand : public ErrorAt {
 
 class TableTlcs90 : public TableBase {
 public:
+    static TableTlcs90 TABLE;
+
     Error searchName(InsnTlcs90 &insn);
     Error searchOpCode(InsnTlcs90 &insn);
     Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op);
@@ -49,8 +51,6 @@ private:
     Error searchName(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
-
-extern TableTlcs90 TableTlcs90;
 
 }  // namespace tlcs90
 }  // namespace libasm

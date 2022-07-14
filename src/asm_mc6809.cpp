@@ -76,7 +76,7 @@ Error AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
         }
         spec.size = size;
     }
-    const int16_t _post = TableMc6809.searchPostSpec(spec);
+    const int16_t _post = TableMc6809::TABLE.searchPostSpec(spec);
     if (_post < 0)
         return setError(op, UNKNOWN_OPERAND);
     uint8_t post = _post;
@@ -531,8 +531,8 @@ Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    if (TableMc6809.searchName(insn))
-        return setError(TableMc6809.getError());
+    if (TableMc6809::TABLE.searchName(insn))
+        return setError(TableMc6809::TABLE.getError());
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_RTFM)

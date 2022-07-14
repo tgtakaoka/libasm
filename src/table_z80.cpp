@@ -466,8 +466,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableZ80::searchName(InsnZ80 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -501,8 +500,7 @@ Error TableZ80::searchOpCode(InsnZ80 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         if (insn.prefix() != page->prefix())
             continue;
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end(), maskCode);
+        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
@@ -554,7 +552,7 @@ bool TableZ80::setCpu(const char *cpu) {
     return false;
 }
 
-class TableZ80 TableZ80;
+TableZ80 TableZ80::TABLE;
 
 }  // namespace z80
 }  // namespace libasm

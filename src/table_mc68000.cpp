@@ -529,11 +529,9 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableMc68000::searchName(InsnMc68000 &insn) {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-            insn.name(), insn.flags(), MC68000_PAGES, matchAddrMode, count);
+    auto entry = searchEntry(insn.name(), insn.flags(), MC68000_PAGES, matchAddrMode, count);
     if (entry == nullptr && _aliasEnabled)
-        entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), ALIAS_PAGES, matchAddrMode, count);
+        entry = searchEntry(insn.name(), insn.flags(), ALIAS_PAGES, matchAddrMode, count);
     if (entry) {
         insn.setFlags(entry->flags());
         insn.setOpCode(entry->opCode());
@@ -592,8 +590,7 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableMc68000::searchOpCode(InsnMc68000 &insn) {
     auto opCode = insn.opCode();
-    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
+    auto entry = searchEntry(opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
     if (entry) {
         insn.setFlags(entry->flags());
         insn.setName_P(entry->name_P());
@@ -621,7 +618,7 @@ bool TableMc68000::setCpu(const char *cpu) {
     return strcmp_P(p, TEXT_CPU_68000) == 0;
 }
 
-class TableMc68000 TableMc68000;
+TableMc68000 TableMc68000::TABLE;
 
 }  // namespace mc68000
 }  // namespace libasm

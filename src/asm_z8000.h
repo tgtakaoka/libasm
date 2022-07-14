@@ -28,13 +28,13 @@ namespace z8000 {
 
 class AsmZ8000 : public Assembler, public Config {
 public:
-    AsmZ8000() : Assembler(_parser, TableZ8000), _parser() {
+    AsmZ8000() : Assembler(_parser, TableZ8000::TABLE), _parser() {
         reset();
         //_options.registerOption(_opt_shortDitrect);
     }
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
+    AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
     void reset() override { _autoShortDirect = false; }
 
     static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;

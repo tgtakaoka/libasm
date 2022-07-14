@@ -28,7 +28,7 @@ namespace mc6800 {
 
 class AsmMc6800 : public Assembler, public Config {
 public:
-    AsmMc6800() : Assembler(_parser, TableMc6800), _parser() {}
+    AsmMc6800() : Assembler(_parser, TableMc6800::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
 

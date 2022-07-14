@@ -171,8 +171,8 @@ Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableMc6800.searchName(insn))
-        return setError(TableMc6800.getError());
+    if (TableMc6800::TABLE.searchName(insn))
+        return setError(TableMc6800::TABLE.getError());
 
     if (emitOperand(insn, insn.mode1(), op1))
         goto error;

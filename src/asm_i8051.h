@@ -28,7 +28,7 @@ namespace i8051 {
 
 class AsmI8051 : public Assembler, public Config {
 public:
-    AsmI8051() : Assembler(_parser, TableI8051), _parser() {}
+    AsmI8051() : Assembler(_parser, TableI8051::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
 

@@ -1008,9 +1008,9 @@ static bool hasSize(AddrMode mode) {
            mode == M_BREG || mode == M_CS || mode == M_SREG;
 }
 
-static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
-    auto dst = insn.dstMode();
-    auto src = insn.srcMode();
+static bool acceptSize(InsnI8086 *insn, const Entry *entry) {
+    auto dst = insn->dstMode();
+    auto src = insn->srcMode();
     auto flags = entry->flags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
@@ -1022,18 +1022,17 @@ static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
     return true;
 }
 
-static bool acceptModes(const InsnI8086 &insn, const Entry *entry) {
+static bool acceptModes(InsnI8086 *insn, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(insn.dstMode(), table.dstMode()) &&
-           acceptMode(insn.srcMode(), table.srcMode()) &&
-           acceptMode(insn.extMode(), table.extMode()) && acceptSize(insn, entry);
+    return acceptMode(insn->dstMode(), table.dstMode()) &&
+           acceptMode(insn->srcMode(), table.srcMode()) &&
+           acceptMode(insn->extMode(), table.extMode()) && acceptSize(insn, entry);
 }
 
 Error TableI8086::searchName(InsnI8086 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, const InsnI8086 &>(
-                insn.name(), insn, page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), &insn, page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -1113,8 +1112,7 @@ Error TableI8086::searchOpCode(InsnI8086 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         if (insn.prefix() != page->prefix())
             continue;
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end(), maskCode);
+        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
@@ -1155,7 +1153,7 @@ bool TableI8086::setCpu(const char *cpu) {
     return false;
 }
 
-class TableI8086 TableI8086;
+TableI8086 TableI8086::TABLE;
 
 }  // namespace i8086
 }  // namespace libasm

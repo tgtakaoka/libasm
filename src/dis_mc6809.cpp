@@ -52,7 +52,7 @@ Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
 Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
     PostSpec spec;
-    if (TableMc6809.searchPostByte(post, spec))
+    if (TableMc6809::TABLE.searchPostByte(post, spec))
         return setError(UNKNOWN_POSTBYTE);
     if (spec.indir)
         out.letter('[');
@@ -290,8 +290,8 @@ Error DisMc6809::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6809.searchOpCode(insn))
-        return setError(TableMc6809.getError());
+    if (TableMc6809::TABLE.searchOpCode(insn))
+        return setError(TableMc6809::TABLE.getError());
 
     if (decodeOperand(memory, insn, out, insn.mode1()))
         return getError();

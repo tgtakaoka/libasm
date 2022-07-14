@@ -28,7 +28,7 @@ namespace i8080 {
 
 class AsmI8080 : public Assembler, public Config {
 public:
-    AsmI8080() : Assembler(_parser, TableI8080), _parser() {}
+    AsmI8080() : Assembler(_parser, TableI8080::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
 

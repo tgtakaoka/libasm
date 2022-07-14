@@ -29,6 +29,8 @@ class TableMc6800 : public TableBase {
 public:
     TableMc6800();
 
+    static TableMc6800 TABLE;
+
     Error searchName(InsnMc6800 &insn);
     Error searchOpCode(InsnMc6800 &insn);
     Error searchOpCodeAlias(InsnMc6800 &insn);
@@ -47,8 +49,6 @@ private:
     bool setCpu(CpuType cpuType);
     const Entry *searchOpCodeImpl(InsnMc6800 &insn) const;
 };
-
-extern TableMc6800 TableMc6800;
 
 }  // namespace mc6800
 }  // namespace libasm

@@ -26,6 +26,8 @@ namespace ins8070 {
 
 class TableIns8070 : public TableBase {
 public:
+    static TableIns8070 TABLE;
+
     Error searchName(InsnIns8070 &insn);
     Error searchOpCode(InsnIns8070 &insn);
 
@@ -33,8 +35,6 @@ public:
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 };
-
-extern TableIns8070 TableIns8070;
 
 }  // namespace ins8070
 }  // namespace libasm

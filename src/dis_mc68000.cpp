@@ -355,8 +355,8 @@ Error DisMc68000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableMc68000.searchOpCode(insn))
-        return setError(TableMc68000.getError());
+    if (TableMc68000::TABLE.searchOpCode(insn))
+        return setError(TableMc68000::TABLE.getError());
 
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();

@@ -28,6 +28,8 @@ class TableMc68000 : public TableBase {
 public:
     TableMc68000();
 
+    static TableMc68000 TABLE;
+
     Error searchName(InsnMc68000 &insn);
     Error searchOpCode(InsnMc68000 &insn);
 
@@ -42,8 +44,6 @@ public:
 private:
     bool _aliasEnabled;
 };
-
-extern TableMc68000 TableMc68000;
 
 }  // namespace mc68000
 }  // namespace libasm

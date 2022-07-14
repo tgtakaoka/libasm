@@ -28,7 +28,7 @@ namespace i8096 {
 
 class DisI8096 : public Disassembler, public Config {
 public:
-    DisI8096() : Disassembler(_formatter, _regs, TableI8096, '$'), _formatter(), _regs() {
+    DisI8096() : Disassembler(_formatter, _regs, TableI8096::TABLE, '$'), _formatter(), _regs() {
         reset();
     }
 

@@ -28,7 +28,7 @@ namespace i8086 {
 
 class AsmI8086 : public Assembler, public Config {
 public:
-    AsmI8086() : Assembler(_parser, TableI8086), _parser() { reset(); }
+    AsmI8086() : Assembler(_parser, TableI8086::TABLE), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _optimizeSegment = false; }

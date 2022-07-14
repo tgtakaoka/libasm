@@ -124,10 +124,10 @@ protected:
      * matching |name| regardless of |attr|.
      */
     template <typename P, typename E, typename A>
-    static const E *searchName(
+    static const E *searchEntry(
             const char *name, A attr, const P *page, bool (*accept)(A, const E *), uint8_t &count) {
-        const uint8_t *first = page->index();
-        const uint8_t *last = page->iend();
+        const auto *first = page->index();
+        const auto *last = page->iend();
         for (;;) {
             const auto diff = last - first;
             if (diff == 0)
@@ -142,7 +142,7 @@ protected:
             }
         }
         while (first < page->iend()) {
-            const E *entry = &page->table()[pgm_read_byte(first)];
+            const auto *entry = &page->table()[pgm_read_byte(first)];
             if (strcasecmp_P(name, entry->name_P()))
                 break;
             count++;
@@ -158,16 +158,19 @@ protected:
      * entry which matches |opCode| converted by |convert|.
      */
     template <typename E, typename C>
-    static const E *searchCode(
-            const C opCode, const E *begin, const E *end, C (*convert)(C, const E *) = nullptr) {
+    static const E *searchEntry(
+            const C opCode, const E *begin, const E *end, C (*convert)(C, const E *)) {
         for (const auto *entry = begin; entry < end; entry++) {
-            if (convert) {
-                if (convert(opCode, entry) == entry->opCode())
-                    return entry;
-            } else {
-                if (opCode == entry->opCode())
-                    return entry;
-            }
+            if (convert(opCode, entry) == entry->opCode())
+                return entry;
+        }
+        return nullptr;
+    }
+    template <typename E, typename C>
+    static const E *searchEntry(const C opCode, const E *begin, const E *end) {
+        for (const auto *entry = begin; entry < end; entry++) {
+            if (opCode == entry->opCode())
+                return entry;
         }
         return nullptr;
     }

@@ -28,12 +28,12 @@ namespace z8000 {
 
 class DisZ8000 : public Disassembler, public Config {
 public:
-    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000, '$'), _formatter(), _regs() {
+    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000::TABLE, '$'), _formatter(), _regs() {
         reset();
     }
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableZ8000.addressWidth(); }
+    AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
     void reset() override {
         _ioAddressPrefix = 0;
         _shortDirect = true;

@@ -220,8 +220,8 @@ Error AsmTms9900::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-    if (TableTms9900.searchName(insn))
-        return setError(TableTms9900.getError());
+    if (TableTms9900::TABLE.searchName(insn))
+        return setError(TableTms9900::TABLE.getError());
 
     const AddrMode src = insn.srcMode();
     if (src != M_NO && encodeOperand(insn, srcOp, src))

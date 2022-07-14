@@ -28,7 +28,8 @@ namespace ins8070 {
 
 class DisIns8070 : public Disassembler, public Config {
 public:
-    DisIns8070() : Disassembler(_formatter, _regs, TableIns8070, '$'), _formatter(), _regs() {
+    DisIns8070()
+        : Disassembler(_formatter, _regs, TableIns8070::TABLE, '$'), _formatter(), _regs() {
         reset();
     }
 

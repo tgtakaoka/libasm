@@ -28,6 +28,8 @@ class TableTms9900 : public TableBase {
 public:
     TableTms9900();
 
+    static TableTms9900 TABLE;
+
     Error searchName(InsnTms9900 &insn);
     Error searchOpCode(InsnTms9900 &insn);
 
@@ -43,8 +45,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableTms9900 TableTms9900;
 
 }  // namespace tms9900
 }  // namespace libasm

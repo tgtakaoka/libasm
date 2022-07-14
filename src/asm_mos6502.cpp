@@ -238,8 +238,8 @@ Error AsmMos6502::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extra);
 
     insn.setAddrMode(op.mode);
-    if (TableMos6502.searchName(insn))
-        return setError(TableMos6502.getError());
+    if (TableMos6502::TABLE.searchName(insn))
+        return setError(TableMos6502::TABLE.getError());
 
     const AddrMode mode = insn.addrMode();
     switch (mode) {

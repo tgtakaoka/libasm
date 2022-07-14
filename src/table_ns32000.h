@@ -27,6 +27,8 @@ namespace ns32000 {
 
 class TableNs32000 : public TableBase {
 public:
+    static TableNs32000 TABLE;
+
     Error searchName(InsnNs32000 &insn);
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory);
     bool isPrefixCode(Config::opcode_t opCode) const;
@@ -49,8 +51,6 @@ private:
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages,
             const EntryPage *end) const;
 };
-
-extern TableNs32000 TableNs32000;
 
 }  // namespace ns32000
 }  // namespace libasm

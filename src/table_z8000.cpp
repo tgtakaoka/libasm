@@ -605,8 +605,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableZ8000::searchName(InsnZ8000 &insn) {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-            insn.name(), insn.flags(), Z8000_PAGES, acceptModes, count);
+    auto entry = searchEntry(insn.name(), insn.flags(), Z8000_PAGES, acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -625,10 +624,10 @@ static bool matchPostWord(const InsnZ8000 &insn) {
 
 const Entry *TableZ8000::searchOpCode(
         InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const {
-    for (auto entry = table;
-            entry < end && (entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                                    insn.opCode(), entry, end, tableCode)) != nullptr;
-            entry++) {
+    for (auto entry = table; entry < end; entry++) {
+        entry = searchEntry(insn.opCode(), entry, end, tableCode);
+        if (entry == nullptr)
+            break;
         insn.setFlags(entry->flags());
         if (insn.hasPost()) {
             if (insn.length() < 4) {
@@ -690,7 +689,7 @@ bool TableZ8000::segmentedModel() const {
     return _cpuType == Z8001;
 }
 
-class TableZ8000 TableZ8000;
+TableZ8000 TableZ8000::TABLE;
 
 }  // namespace z8000
 }  // namespace libasm

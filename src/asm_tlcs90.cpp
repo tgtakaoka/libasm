@@ -205,8 +205,8 @@ Error AsmTlcs90::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableTlcs90.searchName(insn))
-        return setError(TableTlcs90.getError());
+    if (TableTlcs90::TABLE.searchName(insn))
+        return setError(TableTlcs90::TABLE.getError());
 
     const AddrMode pre = insn.preMode();
     const AddrMode dst = insn.dstMode();

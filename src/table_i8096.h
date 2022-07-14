@@ -26,6 +26,8 @@ namespace i8096 {
 
 class TableI8096 : public TableBase {
 public:
+    static TableI8096 TABLE;
+
     Error searchName(InsnI8096 &insn);
     Error searchOpCode(InsnI8096 &insn);
     bool isPrefix(Config::opcode_t opCode) const;
@@ -40,8 +42,6 @@ private:
     Error searchName(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
-
-extern TableI8096 TableI8096;
 
 }  // namespace i8096
 }  // namespace libasm

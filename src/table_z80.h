@@ -28,6 +28,8 @@ class TableZ80 : public TableBase {
 public:
     TableZ80();
 
+    static TableZ80 TABLE;
+
     Error searchName(InsnZ80 &insn);
     Error searchOpCode(InsnZ80 &insn);
 
@@ -48,8 +50,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableZ80 TableZ80;
 
 }  // namespace z80
 }  // namespace libasm

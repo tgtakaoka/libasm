@@ -36,7 +36,7 @@ static struct : public ValueParser::FuncParser {
     }
 } functionParser;
 
-AsmIns8070::AsmIns8070() : Assembler(_parser, TableIns8070), _parser('$') {
+AsmIns8070::AsmIns8070() : Assembler(_parser, TableIns8070::TABLE), _parser('$') {
     _parser.setFuncParser(&functionParser);
 }
 
@@ -216,8 +216,8 @@ Error AsmIns8070::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(src);
 
     insn.setOprFormats(dst.format, src.format);
-    if (TableIns8070.searchName(insn))
-        return setError(TableIns8070.getError());
+    if (TableIns8070::TABLE.searchName(insn))
+        return setError(TableIns8070::TABLE.getError());
 
     if (emitOperand(insn, insn.dstOpr(), dst))
         return getError();

@@ -40,6 +40,8 @@ class TableMc6809 : public TableBase {
 public:
     TableMc6809();
 
+    static TableMc6809 TABLE;
+
     Error searchName(InsnMc6809 &insn);
     Error searchOpCode(InsnMc6809 &insn);
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
@@ -61,8 +63,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableMc6809 TableMc6809;
 
 }  // namespace mc6809
 }  // namespace libasm

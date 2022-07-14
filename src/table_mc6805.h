@@ -29,6 +29,8 @@ class TableMc6805 : public TableBase {
 public:
     TableMc6805();
 
+    static TableMc6805 TABLE;
+
     Error searchName(InsnMc6805 &insn);
     Error searchOpCode(InsnMc6805 &insn);
 
@@ -44,8 +46,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableMc6805 TableMc6805;
 
 }  // namespace mc6805
 }  // namespace libasm

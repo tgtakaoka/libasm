@@ -29,6 +29,8 @@ class TableZ8 : public TableBase {
 public:
     TableZ8();
 
+    static TableZ8 TABLE;
+
     Error searchName(InsnZ8 &insn);
     Error searchOpCode(InsnZ8 &insn, DisMemory &memory);
     bool isSuper8() const;
@@ -47,8 +49,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableZ8 TableZ8;
 
 }  // namespace z8
 }  // namespace libasm

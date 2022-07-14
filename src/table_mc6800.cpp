@@ -620,8 +620,7 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 Error TableMc6800::searchName(InsnMc6800 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page, acceptAddrMode, count);
+        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptAddrMode, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -651,8 +650,7 @@ const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
         auto prefix = page->prefix();
         if (insn.prefix() != prefix)
             continue;
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end(), tableCode);
+        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
@@ -719,7 +717,7 @@ bool TableMc6800::setCpu(const char *cpu) {
     return false;
 }
 
-class TableMc6800 TableMc6800;
+TableMc6800 TableMc6800::TABLE;
 
 }  // namespace mc6800
 }  // namespace libasm

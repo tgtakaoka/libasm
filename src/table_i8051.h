@@ -26,6 +26,8 @@ namespace i8051 {
 
 class TableI8051 : public TableBase {
 public:
+    static TableI8051 TABLE;
+
     Error searchName(InsnI8051 &insn);
     Error searchOpCode(InsnI8051 &insn);
 
@@ -33,8 +35,6 @@ public:
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 };
-
-extern TableI8051 TableI8051;
 
 }  // namespace i8051
 }  // namespace libasm

@@ -106,7 +106,7 @@ RegName RegZ8000::decodeRegNum(uint8_t num, OprSize size) {
     case SZ_QUAD:
         return decodeQuadReg(num);
     case SZ_ADDR:
-        return TableZ8000.segmentedModel() ? decodeLongReg(num) : decodeWordReg(num);
+        return TableZ8000::TABLE.segmentedModel() ? decodeLongReg(num) : decodeWordReg(num);
     default:
         return REG_UNDEF;
     }
@@ -203,7 +203,7 @@ RegName RegZ8000::decodeCtlReg(uint8_t num) {
     num &= 7;
     const NameEntry *entry = searchName(num + 64, ARRAY_RANGE(CTL_TABLE));
     RegName name = entry ? RegName(entry->name()) : REG_ILLEGAL;
-    if (!TableZ8000.segmentedModel() && isSegCtlReg(name)) {
+    if (!TableZ8000::TABLE.segmentedModel() && isSegCtlReg(name)) {
         name = RegName(entry->name() + 8);
         return isNonSegCtlReg(name) ? name : REG_ILLEGAL;
     }
@@ -212,7 +212,7 @@ RegName RegZ8000::decodeCtlReg(uint8_t num) {
 
 int8_t RegZ8000::encodeCtlReg(RegName name) {
     const int8_t num = (static_cast<int8_t>(name) - 64) & 7;
-    if (TableZ8000.segmentedModel())
+    if (TableZ8000::TABLE.segmentedModel())
         return isNonSegCtlReg(name) ? -1 : num;
     return isSegCtlReg(name) ? -1 : num;
 }

@@ -28,7 +28,8 @@ namespace ns32000 {
 
 class DisNs32000 : public Disassembler, public Config {
 public:
-    DisNs32000() : Disassembler(_formatter, _regs, TableNs32000, '*'), _formatter(), _regs() {
+    DisNs32000()
+        : Disassembler(_formatter, _regs, TableNs32000::TABLE, '*'), _formatter(), _regs() {
         reset();
     }
 

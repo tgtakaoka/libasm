@@ -30,6 +30,8 @@ class TableI8086 : public TableBase {
 public:
     TableI8086();
 
+    static TableI8086 TABLE;
+
     Error searchName(InsnI8086 &insn);
     Error searchOpCode(InsnI8086 &insn);
     bool isRepeatPrefix(Config::opcode_t opcode) const;
@@ -50,8 +52,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableI8086 TableI8086;
 
 }  // namespace i8086
 }  // namespace libasm

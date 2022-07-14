@@ -63,7 +63,7 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8080 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableI8080.isPrefix(opCode)) {
+    if (TableI8080::TABLE.isPrefix(opCode)) {
         const auto prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -71,8 +71,8 @@ Error DisI8080::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8080.searchOpCode(insn))
-        return setError(TableI8080.getError());
+    if (TableI8080::TABLE.searchOpCode(insn))
+        return setError(TableI8080::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO)

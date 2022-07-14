@@ -70,8 +70,8 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
-        if (TableMc6800.searchOpCodeAlias(insn))
-            return setError(TableMc6800.getError());
+        if (TableMc6800::TABLE.searchOpCodeAlias(insn))
+            return setError(TableMc6800::TABLE.getError());
         outHex(out, bitNum, 3);
     } else {
         outHex(out.letter('#'), val8, 8);
@@ -139,7 +139,7 @@ Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6800 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableMc6800.isPrefix(opCode)) {
+    if (TableMc6800::TABLE.isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -147,8 +147,8 @@ Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6800.searchOpCode(insn))
-        return setError(TableMc6800.getError());
+    if (TableMc6800::TABLE.searchOpCode(insn))
+        return setError(TableMc6800::TABLE.getError());
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_NO)

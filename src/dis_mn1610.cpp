@@ -186,8 +186,8 @@ Error DisMn1610::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto opc = insn.readUint16(memory);
 
     insn.setOpCode(opc);
-    if (TableMn1610.searchOpCode(insn))
-        return setError(TableMn1610.getError());
+    if (TableMn1610::TABLE.searchOpCode(insn))
+        return setError(TableMn1610::TABLE.getError());
     if (setError(insn))
         return getError();
 

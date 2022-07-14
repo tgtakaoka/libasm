@@ -182,14 +182,14 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
 Error DisI8096::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8096 insn(_insn);
     const auto opc = insn.readByte(memory);
-    if (TableI8096.isPrefix(opc)) {
+    if (TableI8096::TABLE.isPrefix(opc)) {
         insn.setOpCode(insn.readByte(memory), opc);
     } else {
         insn.setOpCode(opc);
     }
 
-    if (TableI8096.searchOpCode(insn))
-        return setError(TableI8096.getError());
+    if (TableI8096::TABLE.searchOpCode(insn))
+        return setError(TableI8096::TABLE.getError());
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (jbx_djnz) {

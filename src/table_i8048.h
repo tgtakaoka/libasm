@@ -29,6 +29,8 @@ class TableI8048 : public TableBase {
 public:
     TableI8048();
 
+    static TableI8048 TABLE;
+
     Error searchName(InsnI8048 &insn);
     Error searchOpCode(InsnI8048 &insn);
 
@@ -44,8 +46,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableI8048 TableI8048;
 
 }  // namespace i8048
 }  // namespace libasm

@@ -196,8 +196,8 @@ Error AsmI8096::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(src2);
 
     insn.setAddrMode(dst.mode, src1.mode, src2.mode);
-    if (TableI8096.searchName(insn))
-        return setError(TableI8096.getError());
+    if (TableI8096::TABLE.searchName(insn))
+        return setError(TableI8096::TABLE.getError());
 
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (!jbx_djnz && emitOperand(insn, insn.src2(), src2))

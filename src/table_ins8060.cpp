@@ -151,8 +151,7 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8060::searchName(InsnIns8060 &insn) {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-            insn.name(), insn.flags(), INS8060_PAGES, acceptAddrMode, count);
+    auto entry = searchEntry(insn.name(), insn.flags(), INS8060_PAGES, acceptAddrMode, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -175,8 +174,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 Error TableIns8060::searchOpCode(InsnIns8060 &insn) {
-    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
+    auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
@@ -199,7 +197,7 @@ bool TableIns8060::setCpu(const char *cpu) {
            strcasecmp_P(cpu, TEXT_CPU_8060) == 0;
 }
 
-class TableIns8060 TableIns8060;
+TableIns8060 TableIns8060::TABLE;
 
 }  // namespace ins8060
 }  // namespace libasm

@@ -210,8 +210,8 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableMc6805.searchName(insn))
-        return setError(TableMc6805.getError());
+    if (TableMc6805::TABLE.searchName(insn))
+        return setError(TableMc6805::TABLE.getError());
 
     if (insn.mode1() == M_BNO)
         insn.embed((op1.val16 & 7) << 1);

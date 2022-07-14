@@ -61,7 +61,7 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnCdp1802 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableCdp1802.isPrefix(opCode)) {
+    if (TableCdp1802::TABLE.isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -69,8 +69,8 @@ Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableCdp1802.searchOpCode(insn))
-        return setError(TableCdp1802.getError());
+    if (TableCdp1802::TABLE.searchOpCode(insn))
+        return setError(TableCdp1802::TABLE.getError());
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == NONE)

@@ -211,8 +211,8 @@ Error AsmI8048::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableI8048.searchName(insn))
-        return setError(TableI8048.getError());
+    if (TableI8048::TABLE.searchName(insn))
+        return setError(TableI8048::TABLE.getError());
 
     if (encodeOperand(insn, insn.dstMode(), dstOp))
         return getError();

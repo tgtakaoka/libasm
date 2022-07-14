@@ -341,8 +341,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 Error TableCdp1802::searchName(InsnCdp1802 &insn) {
     uint8_t count = 0;
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-                insn.name(), insn.flags(), page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
@@ -366,8 +365,7 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
         auto prefix = page->prefix();
         if (insn.prefix() != prefix)
             continue;
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end(), tableCode);
+        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
             if (insn.mode1() == UNDF)
@@ -408,7 +406,7 @@ bool TableCdp1802::setCpu(const char *cpu) {
     return false;
 }
 
-class TableCdp1802 TableCdp1802;
+TableCdp1802 TableCdp1802::TABLE;
 
 }  // namespace cdp1802
 }  // namespace libasm

@@ -29,6 +29,8 @@ class TableZ8000 : public TableBase {
 public:
     TableZ8000();
 
+    static TableZ8000 TABLE;
+
     Error searchName(InsnZ8000 &insn);
     Error searchOpCode(InsnZ8000 &insn, DisMemory &memory);
     Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory);
@@ -47,8 +49,6 @@ private:
     const Entry *searchOpCode(
             InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const;
 };
-
-extern TableZ8000 TableZ8000;
 
 }  // namespace z8000
 }  // namespace libasm

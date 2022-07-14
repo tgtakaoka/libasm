@@ -28,7 +28,7 @@ namespace mc68000 {
 
 class AsmMc68000 : public Assembler, public Config {
 public:
-    AsmMc68000() : Assembler(_parser, TableMc68000), _parser() { reset(); }
+    AsmMc68000() : Assembler(_parser, TableMc68000::TABLE), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
@@ -77,7 +77,7 @@ private:
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encode(StrScanner &scan, Insn &insn) override;
 
-    void setAlias(bool enable) { TableMc68000.setAlias(enable); }
+    void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }
 };
 
 }  // namespace mc68000

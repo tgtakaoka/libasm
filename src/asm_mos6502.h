@@ -28,10 +28,10 @@ namespace mos6502 {
 
 class AsmMos6502 : public Assembler, public Config {
 public:
-    AsmMos6502() : Assembler(_parser, TableMos6502), _parser() { reset(); }
+    AsmMos6502() : Assembler(_parser, TableMos6502::TABLE), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMos6502.addressWidth(); }
+    AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
     void reset() override { _long_acc = _long_idx = false; }
 
     static const char OPT_BOOL_LONGA[] PROGMEM;

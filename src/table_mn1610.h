@@ -28,6 +28,8 @@ class TableMn1610 : public TableBase {
 public:
     TableMn1610();
 
+    static TableMn1610 TABLE;
+
     Error searchName(InsnMn1610 &insn);
     Error searchOpCode(InsnMn1610 &insn);
 
@@ -46,8 +48,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableMn1610 TableMn1610;
 
 }  // namespace mn1610
 }  // namespace libasm

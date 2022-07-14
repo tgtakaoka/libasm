@@ -27,7 +27,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     insn.setName(_parser.readSymbol(p));
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
-    if (TableI8086.searchName(insn))
+    if (TableI8086::TABLE.searchName(insn))
         return UNKNOWN_INSTRUCTION;
     if (!insn.stringInst())
         return UNKNOWN_INSTRUCTION;
@@ -299,7 +299,7 @@ uint8_t AsmI8086::Operand::encodeR_m() const {
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) {
     if (seg == REG_UNDEF)
         return 0;
-    const Config::opcode_t segPrefix = TableI8086.segOverridePrefix(seg);
+    const Config::opcode_t segPrefix = TableI8086::TABLE.segOverridePrefix(seg);
     if (_optimizeSegment) {
         if (base == REG_BP || base == REG_SP)
             return seg == REG_SS ? 0 : segPrefix;
@@ -427,7 +427,7 @@ Error AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName se
     if (seg == REG_ES && op.seg != REG_ES)
         return setError(op, ILLEGAL_SEGMENT);
     if (seg == REG_DS && op.seg != REG_UNDEF && op.seg != REG_DS)
-        insn.setSegment(TableI8086.segOverridePrefix(op.seg));
+        insn.setSegment(TableI8086::TABLE.segOverridePrefix(op.seg));
     return OK;
 }
 
@@ -487,8 +487,8 @@ Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (TableI8086.searchName(insn))
-        return setError(TableI8086.getError());
+    if (TableI8086::TABLE.searchName(insn))
+        return setError(TableI8086::TABLE.getError());
     insn.prepairModReg();
 
     if (insn.stringInst())

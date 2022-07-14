@@ -28,7 +28,7 @@ namespace mc6809 {
 
 class DisMc6809 : public Disassembler, public Config {
 public:
-    DisMc6809() : Disassembler(_formatter, _regs, TableMc6809, '*'), _formatter(), _regs() {}
+    DisMc6809() : Disassembler(_formatter, _regs, TableMc6809::TABLE, '*'), _formatter(), _regs() {}
 
     const ConfigBase &config() const override { return *this; }
 

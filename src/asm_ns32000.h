@@ -28,12 +28,12 @@ namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000), _parser('*') { reset(); }
+    AsmNs32000() : Assembler(_parser, TableNs32000::TABLE), _parser('*') { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override {
-        TableNs32000.setFpu(FPU_NONE);
-        TableNs32000.setMmu(MMU_NONE);
+        TableNs32000::TABLE.setFpu(FPU_NONE);
+        TableNs32000::TABLE.setMmu(MMU_NONE);
     }
 
     static const char OPT_TEXT_FPU[] PROGMEM;

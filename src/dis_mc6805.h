@@ -28,7 +28,7 @@ namespace mc6805 {
 
 class DisMc6805 : public Disassembler, public Config {
 public:
-    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805, '*'), _formatter(), _regs() {
+    DisMc6805() : Disassembler(_formatter, _regs, TableMc6805::TABLE, '*'), _formatter(), _regs() {
         reset();
     }
 

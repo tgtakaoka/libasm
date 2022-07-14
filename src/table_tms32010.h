@@ -26,6 +26,8 @@ namespace tms32010 {
 
 class TableTms32010 : public TableBase {
 public:
+    static TableTms32010 TABLE;
+
     Error searchName(InsnTms32010 &insn);
     Error searchOpCode(InsnTms32010 &insn);
 
@@ -41,8 +43,6 @@ private:
 
     bool setCpu(CpuType cpuType);
 };
-
-extern TableTms32010 TableTms32010;
 
 }  // namespace tms32010
 }  // namespace libasm

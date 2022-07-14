@@ -23,7 +23,7 @@ static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFFF;
 }
 
-    static Config::uintptr_t offset(Config::uintptr_t addr) {
+static Config::uintptr_t offset(Config::uintptr_t addr) {
     return addr & 0xFFF;
 }
 
@@ -44,7 +44,7 @@ static struct : public ValueParser::FuncParser {
     }
 } functionParser;
 
-AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060), _parser('$') {
+AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060::TABLE), _parser('$') {
     _parser.setFuncParser(&functionParser);
 }
 
@@ -148,8 +148,8 @@ Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op);
 
     insn.setAddrMode(op.mode);
-    if (TableIns8060.searchName(insn))
-        return setError(TableIns8060.getError());
+    if (TableIns8060::TABLE.searchName(insn))
+        return setError(TableIns8060::TABLE.getError());
 
     switch (insn.addrMode()) {
     case M_INHR:

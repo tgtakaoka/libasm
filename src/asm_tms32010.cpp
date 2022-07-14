@@ -57,7 +57,7 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
             insn.embed(0x98);
             break;
         default:
-            if (op.val16 > TableTms32010.dataMemoryLimit())
+            if (op.val16 > TableTms32010::TABLE.dataMemoryLimit())
                 return setError(op, OVERFLOW_RANGE);
             if (insn.opCode() == SST && op.val16 < 0x80)
                 return setError(op, OVERFLOW_RANGE);
@@ -162,8 +162,8 @@ Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableTms32010.searchName(insn))
-        return setError(TableTms32010.getError());
+    if (TableTms32010::TABLE.searchName(insn))
+        return setError(TableTms32010::TABLE.getError());
 
     const AddrMode mode1 = insn.op1();
     if (mode1 != M_NO && encodeOperand(insn, op1, mode1))

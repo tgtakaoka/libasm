@@ -192,8 +192,7 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableTms32010::searchName(InsnTms32010 &insn) {
     uint8_t count = 0;
-    auto entry = TableBase::searchName<EntryPage, Entry, Entry::Flags>(
-            insn.name(), insn.flags(), TMS32010_PAGES, acceptModes, count);
+    auto entry = searchEntry(insn.name(), insn.flags(), TMS32010_PAGES, acceptModes, count);
     if (entry) {
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
@@ -229,8 +228,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 }
 
 Error TableTms32010::searchOpCode(InsnTms32010 &insn) {
-    auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-            insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
+    auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
     if (entry) {
         insn.setFlags(entry->flags());
         insn.setName_P(entry->name_P());
@@ -266,7 +264,7 @@ bool TableTms32010::setCpu(const char *cpu) {
     return false;
 }
 
-class TableTms32010 TableTms32010;
+TableTms32010 TableTms32010::TABLE;
 
 }  // namespace tms32010
 }  // namespace libasm

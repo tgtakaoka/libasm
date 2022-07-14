@@ -28,7 +28,7 @@ namespace i8048 {
 
 class DisI8048 : public Disassembler, public Config {
 public:
-    DisI8048() : Disassembler(_formatter, _regs, TableI8048, '$'), _formatter(), _regs() {}
+    DisI8048() : Disassembler(_formatter, _regs, TableI8048::TABLE, '$'), _formatter(), _regs() {}
 
     const ConfigBase &config() const override { return *this; }
 

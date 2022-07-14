@@ -611,21 +611,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
+static bool acceptModes(InsnTlcs90 *insn, const Entry *entry) {
     auto table = entry->flags();
     auto tableDst = table.dstMode();
     auto tableSrc = table.srcMode();
-    auto dst = (tableDst == M_DST) ? insn.preMode() : tableDst;
-    auto src = (tableSrc == M_SRC) ? insn.preMode() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
-    if (acceptMode(insn.dstMode(), dst) && acceptMode(insn.srcMode(), src)) {
-        insn.setAddrMode(dst, src, table.emit());
+    auto dst = (tableDst == M_DST) ? insn->preMode() : tableDst;
+    auto src = (tableSrc == M_SRC) ? insn->preMode() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    if (acceptMode(insn->dstMode(), dst) && acceptMode(insn->srcMode(), src)) {
+        insn->setAddrMode(dst, src, table.emit());
         // Update prefix mode.
         if (tableDst == M_DST) {
-            insn.setPreMode(M_DST);
+            insn->setPreMode(M_DST);
         } else if (tableSrc == M_SRC || tableSrc == M_SRC16) {
-            insn.setPreMode(M_SRC);
+            insn->setPreMode(M_SRC);
         } else {
-            insn.setPreMode(M_NO);
+            insn->setPreMode(M_NO);
         }
         return true;
     }
@@ -637,8 +637,7 @@ Error TableTlcs90::searchName(
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
         insn.setPreMode(page->mode());
-        auto entry = TableBase::searchName<EntryPage, Entry, InsnTlcs90 &>(
-                insn.name(), insn, page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), &insn, page, acceptModes, count);
         if (entry) {
             insn.setOpCode(entry->opCode(), page->prefix());
             return OK;
@@ -680,8 +679,7 @@ Error TableTlcs90::searchOpCode(
     for (auto page = pages; page < end; page++) {
         if (!page->prefixMatch(insn.prefix()))
             continue;
-        auto entry = TableBase::searchCode<Entry, Config::opcode_t>(
-                insn.opCode(), page->table(), page->end(), maskCode);
+        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
             insn.setName_P(entry->name_P());
@@ -713,7 +711,7 @@ bool TableTlcs90::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_TLCS90) == 0;
 }
 
-class TableTlcs90 TableTlcs90;
+TableTlcs90 TableTlcs90::TABLE;
 
 }  // namespace tlcs90
 }  // namespace libasm

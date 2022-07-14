@@ -602,11 +602,11 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
 
 Error AsmNs32000::setFpu(const StrScanner &scan) {
     if (scan.iequals_P(PSTR("ns32081"))) {
-        TableNs32000.setFpu(FPU_NS32081);
+        TableNs32000::TABLE.setFpu(FPU_NS32081);
         return OK;
     }
     if (scan.iequals_P(PSTR("none"))) {
-        TableNs32000.setFpu(FPU_NONE);
+        TableNs32000::TABLE.setFpu(FPU_NONE);
         return OK;
     }
     return UNKNOWN_OPERAND;
@@ -614,11 +614,11 @@ Error AsmNs32000::setFpu(const StrScanner &scan) {
 
 Error AsmNs32000::setPmmu(const StrScanner &scan) {
     if (scan.iequals_P(PSTR("ns32082"))) {
-        TableNs32000.setMmu(MMU_NS32082);
+        TableNs32000::TABLE.setMmu(MMU_NS32082);
         return OK;
     }
     if (scan.iequals_P(PSTR("none"))) {
-        TableNs32000.setMmu(MMU_NONE);
+        TableNs32000::TABLE.setMmu(MMU_NONE);
         return OK;
     }
     return UNKNOWN_OPERAND;
@@ -682,8 +682,8 @@ Error AsmNs32000::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(ex2Op);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode, ex1Op.mode, ex2Op.mode);
-    if (TableNs32000.searchName(insn))
-        return setError(TableNs32000.getError());
+    if (TableNs32000::TABLE.searchName(insn))
+        return setError(TableNs32000::TABLE.getError());
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     const AddrMode ex1 = insn.ex1Mode();

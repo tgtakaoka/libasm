@@ -461,7 +461,7 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnNs32000 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableNs32000.isPrefixCode(opCode)) {
+    if (TableNs32000::TABLE.isPrefixCode(opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -469,8 +469,8 @@ Error DisNs32000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableNs32000.searchOpCode(insn, memory))
-        return setError(TableNs32000.getError());
+    if (TableNs32000::TABLE.searchOpCode(insn, memory))
+        return setError(TableNs32000::TABLE.getError());
     if (readIndexByte(memory, insn, insn.srcMode(), insn.srcPos()))
         return getError();
     if (readIndexByte(memory, insn, insn.dstMode(), insn.dstPos()))

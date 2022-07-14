@@ -24,11 +24,11 @@ namespace libasm {
 namespace z8 {
 
 bool RegZ8::isWorkRegAlias(uint8_t addr) {
-    return (addr & 0xF0) == (TableZ8.isSuper8() ? 0xC0 : 0xE0);
+    return (addr & 0xF0) == (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
 }
 
 uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
-    return encodeRegName(name) | (TableZ8.isSuper8() ? 0xC0 : 0xE0);
+    return encodeRegName(name) | (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
 }
 
 int8_t RegZ8::parseRegNum(StrScanner &scan) {

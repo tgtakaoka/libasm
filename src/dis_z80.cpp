@@ -52,8 +52,8 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
 
     InsnZ80 ixBit(insn);
     ixBit.setOpCode(opc, insn.opCode());
-    if (TableZ80.searchOpCode(ixBit))
-        return setError(TableZ80.getError());
+    if (TableZ80::TABLE.searchOpCode(ixBit))
+        return setError(TableZ80::TABLE.getError());
     insn.setName(ixBit.name());
 
     const RegName reg = RegZ80::decodeDataReg(opc);
@@ -178,7 +178,7 @@ Error DisZ80::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnZ80 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableZ80.isPrefix(opCode)) {
+    if (TableZ80::TABLE.isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -186,8 +186,8 @@ Error DisZ80::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableZ80.searchOpCode(insn))
-        return setError(TableZ80.getError());
+    if (TableZ80::TABLE.searchOpCode(insn))
+        return setError(TableZ80::TABLE.getError());
 
     const AddrMode dst = insn.dstMode();
     if (dst == M_UNKI)

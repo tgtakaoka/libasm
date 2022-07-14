@@ -68,7 +68,8 @@ Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode,
     return setError(insn);
 }
 
-Error DisTlcs90::decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeRelative(
+        InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
     Config::ptrdiff_t delta;
     if (mode == M_REL8) {
         delta = static_cast<int8_t>(op.val16);
@@ -141,10 +142,10 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, 
 Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTlcs90 insn(_insn);
     Operand preOp;
-    if (TableTlcs90.readInsn(memory, insn, preOp))
-        return setError(TableTlcs90.getError());
-    if (TableTlcs90.searchOpCode(insn))
-        return setError(TableTlcs90.getError());
+    if (TableTlcs90::TABLE.readInsn(memory, insn, preOp))
+        return setError(TableTlcs90::TABLE.getError());
+    if (TableTlcs90::TABLE.searchOpCode(insn))
+        return setError(TableTlcs90::TABLE.getError());
     const AddrMode dst = insn.dstMode();
     if (dst == M_NO)
         return OK;
