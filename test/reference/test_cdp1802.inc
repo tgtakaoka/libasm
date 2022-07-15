@@ -85,7 +85,7 @@
         bn2     13EH
         bn3     13FH
         bn4     140H
-;;; 4XX
+;;; 4X
         lda     0
         lda     1
         lda     2
@@ -257,23 +257,6 @@
         sep     13
         sep     14
         sep     15
-;;; EX
-        ghi     0
-        ghi     1
-        ghi     2
-        ghi     3
-        ghi     4
-        ghi     5
-        ghi     6
-        ghi     7
-        ghi     8
-        ghi     9
-        ghi     10
-        ghi     11
-        ghi     12
-        ghi     13
-        ghi     14
-        ghi     15
 ;;; EX
         sex     0
         sex     1
