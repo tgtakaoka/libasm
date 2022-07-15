@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "dis_scn2650.h"
 #include "dis_cdp1802.h"
 #include "dis_driver.h"
 #include "dis_i8048.h"
@@ -52,6 +53,7 @@ z8::DisZ8 disz8;
 ins8060::DisIns8060 dis8060;
 ins8070::DisIns8070 dis8070;
 cdp1802::DisCdp1802 dis1802;
+scn2650::DisScn2650 dis2650;
 i8086::DisI8086 dis8086;
 i8096::DisI8096 dis8096;
 tlcs90::DisTlcs90 dis90;
@@ -76,6 +78,7 @@ Disassembler * disassemblers[] = {
         &dis8060,
         &dis8070,
         &dis1802,
+        &dis2650,
         &dis32010,
         &dis8086,
         &dis8096,

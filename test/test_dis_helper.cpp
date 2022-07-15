@@ -40,7 +40,7 @@ void dis_assert(const char *file, int line, Error error, ArrayMemory &memory,
 
     asserter.equals(file, line, expected_name, error, disassembler);
     if (error == OK) {
-        asserter.equals(file, line, expected_name, expected_name, insn.name());
+        asserter.equals(file, line, expected_name, expected_name, insn);
         asserter.equals(file, line, expected_name, expected_opr, actual_opr);
         asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length());
     }

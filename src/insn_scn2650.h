@@ -33,6 +33,7 @@ public:
     void setAddrMode(AddrMode mode1, AddrMode mode2) {
         setFlags(Entry::Flags::create(mode1, mode2));
     }
+    bool undefined() const { return mode1() == UNDF; }
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val) { emitByte(val, 1); }

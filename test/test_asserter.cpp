@@ -44,14 +44,32 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
-        const char *expected, const char *actual) {
+        const char *expected, const Insn &insn) {
+    const char *actual = insn.name();
+    if (strcmp(expected, actual) == 0) {
+        _pass_count++;
+        return;
+    }
     const char *e = expected;
-    const char *a = actual;
-    while (*e && (*e == *a || (*e == '_' && *a == '.'))) {
-        e++;
-        a++;
+    const char *a = insn.name();
+    for (; *e; e++, a++) {
+        char c = *a;
+        if (c == '.' || c == ',')
+            c = '_';  // '.' or ',' in instruction name will be treated as '_';
+        if (c != *e)
+            break;
     }
     if (*e == 0 && *a == 0) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message, expected, actual);
+}
+
+void TestAsserter::equals(const char *file, const int line, const char *message,
+        const char *expected, const char *actual) {
+    if (strcmp(expected, actual) == 0) {
         _pass_count++;
         return;
     }

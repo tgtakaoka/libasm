@@ -249,22 +249,25 @@ Error TableScn2650::searchName(InsnScn2650 &insn) {
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    //const Entry::Flags flags = entry->flags();
-    //const AddrMode mode1 = flags.mode1();
-    //const AddrMode mode2 = flags.mode2();
+    const Entry::Flags flags = entry->flags();
+    const AddrMode mode1 = flags.mode1();
+    const AddrMode mode2 = flags.mode2();
     Config::opcode_t mask = 0;
-    // TODO
+    if (mode1 == REGN || mode1 == R123 || mode1 == CCVN || mode1 == C012)
+        mask |= 0x03;
+    if (mode2 == IX13)
+        mask |= 0x03;
     return opCode & ~mask;
 }
 
 Error TableScn2650::searchOpCode(InsnScn2650 &insn) {
-    auto opCode = insn.opCode();
+    const auto opCode = insn.opCode();
     auto entry = searchEntry(opCode, ARRAY_RANGE(TABLE_2650), tableCode);
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
     insn.nameBuffer().text_P(entry->name_P());
-    return setOK();
+    return OK;
 }
 
 const /* PROGMEM */ char *TableScn2650::listCpu_P() const {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "config_scn2650.h"
 #include "reg_base.h"
 
 #ifndef __REG_SCN2650_H__
@@ -42,10 +43,12 @@ class RegScn2650 : public RegBase {
 public:
     static RegName parseRegName(StrScanner &scan);
     static uint8_t encodeRegName(RegName name);
+    static RegName decodeRegName(Config::opcode_t opc);
     StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
 
     static CcName parseCcName(StrScanner &scan);
     static uint8_t encodeCcName(CcName name);
+    static CcName decodeCcName(Config::opcode_t opc);
     StrBuffer &outCcName(StrBuffer &out, const CcName name) const;
 };
 

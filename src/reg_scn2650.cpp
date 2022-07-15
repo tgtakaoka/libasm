@@ -39,6 +39,10 @@ uint8_t RegScn2650::encodeRegName(RegName name) {
     return uint8_t(name);
 }
 
+RegName RegScn2650::decodeRegName(uint8_t opc) {
+    return RegName(opc & 0x3);
+}
+
 StrBuffer &RegScn2650::outRegName(StrBuffer &out, RegName name) const {
     return out.letter('R', isUppercase()).letter('0' + uint8_t(name));
 }
@@ -63,6 +67,10 @@ CcName RegScn2650::parseCcName(StrScanner &scan) {
 
 uint8_t RegScn2650::encodeCcName(CcName name) {
     return uint8_t(name);
+}
+
+CcName RegScn2650::decodeCcName(uint8_t opc) {
+    return CcName(opc & 0x3);
 }
 
 StrBuffer &RegScn2650::outCcName(StrBuffer &out, CcName name) const {
