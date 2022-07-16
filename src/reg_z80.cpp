@@ -70,7 +70,7 @@ RegName RegZ80::parseRegName(StrScanner &scan) {
 StrBuffer &RegZ80::outRegName(StrBuffer &out, RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        outText(out, entry->text());
+        out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
@@ -177,7 +177,7 @@ CcName RegZ80::parseCcName(StrScanner &scan) {
 StrBuffer &RegZ80::outCcName(StrBuffer &out, const CcName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        outText(out, entry->text());
+        out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 

@@ -113,7 +113,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
     InsnCdp1802 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2;
     if (parseOperand(scan, op1))

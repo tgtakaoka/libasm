@@ -231,7 +231,7 @@ Error TableTms32010::searchOpCode(InsnTms32010 &insn) {
     auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
     if (entry) {
         insn.setFlags(entry->flags());
-        insn.setName_P(entry->name_P());
+        insn.nameBuffer().text_P(entry->name_P());
         return setOK();
     }
     return setError(UNKNOWN_INSTRUCTION);

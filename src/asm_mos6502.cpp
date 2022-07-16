@@ -29,7 +29,7 @@ Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand
     const int16_t delta = target - base;
     if (addressWidth() == ADDRESS_24BIT && op.isOK() && (op.val32 & ~0xFFFF) != bank) {
     too_far:
-        insn.reset();
+        insn.clear();
         return setError(OPERAND_TOO_FAR);
     }
     if (mode == REL) {
@@ -224,7 +224,7 @@ Error AsmMos6502::processPseudo(StrScanner &scan, const char *name) {
 
 Error AsmMos6502::encode(StrScanner &scan, Insn &_insn) {
     InsnMos6502 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     if (processPseudo(scan, insn.name()) == OK)
         return getError();

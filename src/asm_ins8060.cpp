@@ -138,7 +138,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
     InsnIns8060 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op;
     if (parseOperand(scan, op))
@@ -177,7 +177,7 @@ Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
     }
     if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1)) {
         setError(OVERWRAP_PAGE);
-        insn.reset();
+        insn.clear();
     }
     return getError();
 }

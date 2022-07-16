@@ -25,6 +25,7 @@
 #include "config_base.h"
 #include "dis_memory.h"
 #include "error_reporter.h"
+#include "str_buffer.h"
 #include "str_scanner.h"
 
 namespace libasm {
@@ -40,10 +41,6 @@ public:
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
     void clear() { _length = 0; }
-    void reset() {
-        clear();
-        _name[0] = 0;
-    }
 
     /** No copy constructor. */
     Insn(Insn const &) = delete;
@@ -55,11 +52,10 @@ private:
     uint8_t _length;
     static constexpr size_t MAX_CODE = 24;
     uint8_t _bytes[MAX_CODE];
-    static constexpr size_t MAX_NAME = 7;
-    char _name[MAX_NAME + 1];
 
     friend class InsnBase;
-    friend class Disassembler;
+    static constexpr size_t MAX_NAME = 7;
+    char _name[MAX_NAME + 1];
 
     void emitByte(uint8_t val) { emitByte(val, _length); }
 
@@ -71,35 +67,7 @@ private:
         }
     }
 
-    void setName_P(const /*PROGMEM*/ char *name_P) {
-        strncpy_P(_name, name_P, MAX_NAME);
-        _name[MAX_NAME] = 0;
-    }
-
-    void setName(const StrScanner &name) {
-        uint8_t len = name.size();
-        if (len >= MAX_NAME)
-            len = MAX_NAME;
-        strncpy(_name, name, len);
-        _name[len] = 0;
-    }
-
-    void setName(const char *name) {
-        uint8_t len = strlen(name);
-        if (len >= MAX_NAME)
-            len = MAX_NAME;
-        strncpy(_name, name, len);
-        _name[len] = 0;
-    }
-
-    void appendName(const char c) {
-        uint8_t len = strlen(_name);
-        if (len < MAX_NAME) {
-            _name[len++] = c;
-            _name[len] = 0;
-        }
-    }
-
+    friend class Disassembler;
     void toLowerName() {
         for (char *p = _name; *p; p++)
             *p = tolower(*p);
@@ -114,18 +82,8 @@ public:
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
-
-    /** Set instruction name from readonly text (Disassembler). */
-    void setName_P(const /*PROGMEM*/ char *name_P) { _insn.setName_P(name_P); }
-
-    /** Set instruction name from text (Assembler). */
-    void setName(const char *name) { _insn.setName(name); }
-
-    /** Set instruction name from text (Assembler). */
-    void setName(const StrScanner &name) { _insn.setName(name); }
-
-    /** Append a letter to instruction name. */
-    void appendName(const char c) { _insn.appendName(c); }
+    StrBuffer &nameBuffer() { return _buffer; }
+    StrBuffer &clearNameBuffer() { return _buffer.reset(_insn._name, sizeof(_insn._name)); }
 
     /** Generate 8 bit |data| (Assembler). */
     void emitByte(uint8_t data) { _insn.emitByte(data); }
@@ -259,22 +217,19 @@ public:
     }
 
 protected:
-    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
+    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn), _buffer(insn._name, sizeof(insn._name)) {}
 
     uint32_t address() const { return _insn.address(); }
 
     void clear() {
         resetError();
         _insn.clear();
-    }
-
-    void reset() {
-        clear();
-        _insn.reset();
+        clearNameBuffer();
     }
 
 private:
     Insn &_insn;
+    StrBuffer _buffer;
 };
 
 template <typename Conf, typename Entry>
@@ -283,8 +238,6 @@ public:
     typename Conf::uintptr_t address() const { return InsnBase::address(); }
 
     void clear() { InsnBase::clear(); }
-    void reset() { InsnBase::reset(); }
-
     void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;

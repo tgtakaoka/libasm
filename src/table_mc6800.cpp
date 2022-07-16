@@ -653,7 +653,7 @@ const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             if (insn.undefined())
                 return nullptr;
             return entry;
@@ -675,7 +675,7 @@ Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) {
     if (entry->opCode() != insn.opCode())
         return setError(INTERNAL_ERROR);
     insn.setFlags(entry->flags());
-    insn.setName_P(entry->name_P());
+    insn.clearNameBuffer().text_P(entry->name_P());
     return setOK();
 }
 

@@ -50,11 +50,11 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     const int8_t offset = insn.readByte(memory);
     const Config::opcode_t opc = insn.readByte(memory);
 
-    InsnZ80 ixBit(insn);
+    InsnZ80 ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
+    ixBit.clearNameBuffer();
     if (TableZ80::TABLE.searchOpCode(ixBit))
         return setError(TableZ80::TABLE.getError());
-    insn.setName(ixBit.name());
 
     const RegName reg = RegZ80::decodeDataReg(opc);
     if (reg != REG_HL)

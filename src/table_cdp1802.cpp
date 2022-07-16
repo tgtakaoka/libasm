@@ -370,7 +370,7 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
             insn.setFlags(entry->flags());
             if (insn.mode1() == UNDF)
                 break;
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return setOK();
         }
     }

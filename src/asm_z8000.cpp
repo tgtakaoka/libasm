@@ -496,7 +496,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmZ8000::encode(StrScanner &scan, Insn &_insn) {
     InsnZ8000 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp, ex1Op, ex2Op;
     if (parseOperand(scan, dstOp))

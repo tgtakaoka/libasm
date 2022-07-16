@@ -922,7 +922,7 @@ Error TableNs32000::searchOpCode(
                 if (insn.getError())
                     return getError();
             }
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return OK;
         }
     }

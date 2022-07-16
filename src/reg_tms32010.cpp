@@ -48,16 +48,11 @@ RegName RegTms32010::parseRegName(StrScanner &scan) {
 
 StrBuffer &RegTms32010::outRegName(StrBuffer &out, RegName name) const {
     if (name == REG_AR0 || name == REG_AR1) {
-        outChar(out, 'A');
-        outChar(out, 'R');
-        out.letter(int8_t(name) + '0');
+        out.text_P(PSTR("AR"), isUppercase()).letter('0' + int8_t(name));
     } else {
         const int8_t num = int8_t(name) - int8_t(REG_PA0);
-        if (num >= 0 && num < 8) {
-            outChar(out, 'P');
-            outChar(out, 'A');
-            out.letter(num + '0');
-        }
+        if (num >= 0 && num < 8)
+            out.text_P(PSTR("PA"), isUppercase()).letter('0' + num);
     }
     return out;
 }

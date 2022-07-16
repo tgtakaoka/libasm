@@ -586,7 +586,7 @@ Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) {
                 if (!matchPostByte(insn))
                     continue;
             }
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return setOK();
         }
     }

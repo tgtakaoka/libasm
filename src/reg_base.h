@@ -38,37 +38,21 @@ public:
      */
     struct NameEntry {
         const uint8_t _name;
-        const /*PROGMEM*/ char *const _text;
+        const /*PROGMEM*/ char *const _text_P;
 #define NAME_ENTRY(name) \
     { name, TEXT_##name }
 
         inline uint8_t name() const { return pgm_read_byte(&this->_name); }
-        inline const /*PROGMEM*/ char *text() const {
-            return reinterpret_cast<const char *>(pgm_read_ptr(&this->_text));
+        inline const /*PROGMEM*/ char *text_P() const {
+            return reinterpret_cast<const char *>(pgm_read_ptr(&this->_text_P));
         }
-        inline uint8_t len() const { return strlen_P(text()); }
+        inline uint8_t len() const { return strlen_P(text_P()); }
     };
 
 protected:
     bool _uppercase;
 
     RegBase() : _uppercase(false) {}
-
-    StrBuffer &outChar(StrBuffer &out, char c) const {
-        return out.letter(_uppercase ? toupper(c) : tolower(c));
-        return out;
-    }
-
-    StrBuffer &outText(StrBuffer &out, const /*PROGMEM*/ char *text) const {
-        while (true) {
-            const char c = pgm_read_byte(text);
-            if (c == 0)
-                break;
-            outChar(out, c);
-            text++;
-        }
-        return out;
-    }
 
     static bool isidchar(char c) { return isalnum(c) || c == '_'; }
 
@@ -88,9 +72,9 @@ protected:
     static const NameEntry *searchText(
             StrScanner &scan, const NameEntry *begin, const NameEntry *end) {
         for (const NameEntry *entry = begin; entry < end; entry++) {
-            const /*PROGMEM*/ char *text = entry->text();
+            const /*PROGMEM*/ char *text_P = entry->text_P();
             const uint8_t len = entry->len();
-            if (scan.istarts_P(text, len) && !isidchar(scan[len])) {
+            if (scan.istarts_P(text_P, len) && !isidchar(scan[len])) {
                 scan += len;
                 return entry;
             }

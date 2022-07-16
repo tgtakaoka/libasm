@@ -140,7 +140,7 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
     InsnTms32010 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
     if (parseOperand(scan, op1))
@@ -170,12 +170,12 @@ Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
         return getError();
     const AddrMode mode2 = insn.op2();
     if (mode2 != M_NO && encodeOperand(insn, op2, mode2)) {
-        insn.reset();
+        insn.clear();
         return getError();
     }
     const AddrMode mode3 = insn.op3();
     if (mode3 != M_NO && encodeOperand(insn, op3, mode3)) {
-        insn.reset();
+        insn.clear();
         return getError();
     }
     insn.emitInsn();

@@ -638,7 +638,7 @@ const Entry *TableZ8000::searchOpCode(
             if (!matchPostWord(insn))
                 continue;
         }
-        insn.setName_P(entry->name_P());
+        insn.nameBuffer().text_P(entry->name_P());
         return entry;
     }
     return nullptr;
@@ -654,7 +654,7 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) {
     if (entry) {
         entry++;
         insn.setFlags(entry->flags());
-        insn.setName_P(entry->name_P());
+        insn.clearNameBuffer().text_P(entry->name_P());
     }
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }

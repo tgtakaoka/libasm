@@ -759,7 +759,7 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn) {
             insn.setFlags(entry->flags());
             if (!acceptAddrMode(insn.addrMode(), _useIndirectLong))
                 continue;
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return setOK();
         }
     }

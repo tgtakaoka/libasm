@@ -593,7 +593,7 @@ Error TableMc68000::searchOpCode(InsnMc68000 &insn) {
     auto entry = searchEntry(opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
     if (entry) {
         insn.setFlags(entry->flags());
-        insn.setName_P(entry->name_P());
+        insn.nameBuffer().text_P(entry->name_P());
         return setOK();
     }
     return setError(UNKNOWN_INSTRUCTION);

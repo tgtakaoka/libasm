@@ -188,7 +188,7 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
 
 Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
     InsnMc6805 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
     if (parseOperand(scan, op1))
@@ -221,7 +221,7 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
         goto error;
     if (emitOperand(insn, insn.mode3(), op3)) {
     error:
-        insn.reset();
+        insn.clear();
         return getError();
     }
     insn.emitInsn();

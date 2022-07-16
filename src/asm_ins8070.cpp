@@ -200,7 +200,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmIns8070::encode(StrScanner &scan, Insn &_insn) {
     InsnIns8070 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dst, src;
     if (parseOperand(scan, dst))

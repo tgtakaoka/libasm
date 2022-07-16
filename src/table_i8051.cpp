@@ -313,7 +313,7 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) {
     if (!entry)
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
-    insn.setName_P(entry->name_P());
+    insn.nameBuffer().text_P(entry->name_P());
     return setOK();
 }
 

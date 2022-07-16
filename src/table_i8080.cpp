@@ -298,7 +298,7 @@ Error TableI8080::searchOpCode(InsnI8080 &insn) {
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return setOK();
         }
     }

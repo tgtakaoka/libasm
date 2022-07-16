@@ -195,7 +195,7 @@ Error AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operan
 
 Error AsmI8048::encode(StrScanner &scan, Insn &_insn) {
     InsnI8048 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp))
@@ -217,7 +217,7 @@ Error AsmI8048::encode(StrScanner &scan, Insn &_insn) {
     if (encodeOperand(insn, insn.dstMode(), dstOp))
         return getError();
     if (encodeOperand(insn, insn.srcMode(), srcOp)) {
-        insn.reset();
+        insn.clear();
         return getError();
     }
     insn.emitInsn();

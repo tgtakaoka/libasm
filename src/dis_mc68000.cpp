@@ -381,10 +381,8 @@ Error DisMc68000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const InsnSize iSize = insn.insnSize();
     const OprSize oSize = (iSize == ISZ_DATA || insn.withSize()) ? size : OprSize(iSize);
     const char suffix = _regs.sizeSuffix(oSize);
-    if (suffix) {
-        insn.appendName('.');
-        insn.appendName(suffix);
-    }
+    if (suffix)
+        insn.nameBuffer().letter('.').letter(suffix);
 
     if (src == M_NONE)
         return setOK();

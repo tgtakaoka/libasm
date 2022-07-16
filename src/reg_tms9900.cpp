@@ -40,7 +40,7 @@ RegName RegTms9900::parseRegName(StrScanner &scan) {
 
 StrBuffer &RegTms9900::outRegName(StrBuffer &out, uint8_t num) const {
     num &= 0x0f;
-    outChar(out, 'R');
+    out.letter('R', isUppercase());
     if (num < 10) {
         out.letter('0' + num);
     } else {

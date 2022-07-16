@@ -682,7 +682,7 @@ Error TableTlcs90::searchOpCode(
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             if (insn.srcMode() == M_UNKI)
                 return UNKNOWN_INSTRUCTION;
             return OK;

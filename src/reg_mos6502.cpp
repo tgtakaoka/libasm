@@ -46,7 +46,7 @@ RegName RegMos6502::parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &RegMos6502::outRegName(StrBuffer &out, const RegName name) const {
-    return outChar(out, char(name));
+    return out.letter(char(name), isUppercase());
 }
 
 }  // namespace mos6502

@@ -169,7 +169,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
 
 Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
     InsnI8051 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp))
@@ -206,11 +206,11 @@ Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
         if (dst && encodeOperand(insn, dst, dstOp))
             return getError();
         if (src && encodeOperand(insn, src, srcOp)) {
-            insn.reset();
+            insn.clear();
             return getError();
         }
         if (ext && encodeOperand(insn, ext, extOp)) {
-            insn.reset();
+            insn.clear();
             return getError();
         }
     }

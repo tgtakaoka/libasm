@@ -149,7 +149,7 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
 
 Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
     InsnMc6800 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
     if (parseOperand(scan, op1))
@@ -180,7 +180,7 @@ Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
         goto error;
     if (emitOperand(insn, insn.mode3(), op3)) {
     error:
-        insn.reset();
+        insn.clear();
         return getError();
     }
     insn.emitInsn();

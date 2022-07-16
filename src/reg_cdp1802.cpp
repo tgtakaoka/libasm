@@ -38,12 +38,12 @@ RegName RegCdp1802::parseRegName(StrScanner &scan) {
 StrBuffer &RegCdp1802::outRegName(StrBuffer &out, RegName name) const {
     int8_t num = int8_t(name);
     if (num >= 0) {
-        outChar(out, 'R');
+        out.letter('R', isUppercase());
         if (num >= 10) {
-            outChar(out, '1');
+            out.letter('1');
             num -= 10;
         }
-        outChar(out, num + '0');
+        out.letter(num + '0');
     }
     return out;
 }

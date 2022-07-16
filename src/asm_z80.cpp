@@ -233,7 +233,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmZ80::encode(StrScanner &scan, Insn &_insn) {
     InsnZ80 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp))

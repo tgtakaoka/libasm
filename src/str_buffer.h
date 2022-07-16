@@ -18,24 +18,34 @@
 #define __STR_BUFFER_H__
 
 #include "error_reporter.h"
+#include "str_scanner.h"
+
+#include <ctype.h>
 
 namespace libasm {
 
 class StrBuffer : public ErrorReporter {
 public:
-    StrBuffer(char *buffer, size_t size);
+    StrBuffer(char *buffer, size_t size) : ErrorReporter() { reset(buffer, size); }
 
-    StrBuffer &letter(char letter);
+    StrBuffer &letter(char c);
+    StrBuffer &letter(char c, bool uppercase) {
+        return uppercase ? letter(toupper(c)) : letter(tolower(c));
+    }
     StrBuffer &text(const char *text);
-    StrBuffer &format_P(const /*PROGMEM*/ char *fmt, double val);
+    StrBuffer &text(const StrScanner &scan);
+    StrBuffer &text_P(const /*PROGMEM*/ char *text_P);
+    StrBuffer &text_P(const /*PROGMEM*/ char *text, bool uppercase);
+    StrBuffer &format_P(const /*PROGMEM*/ char *fmt, ...);
     StrBuffer &comma();
 
+    StrBuffer &reset(char *buffer, size_t size);
     char *mark() const { return _out; }
     StrBuffer &reverse(char *start);
 
 private:
     char *_out;
-    const char *const _end;
+    const char *_end;
 };
 
 }  // namespace libasm

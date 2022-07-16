@@ -328,7 +328,7 @@ Error TableI8096::searchOpCode(
             insn.setFlags(entry->flags());
             if (insn.src2() == M_UNDEF)
                 return UNKNOWN_INSTRUCTION;
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return OK;
         }
     }

@@ -512,7 +512,7 @@ Error AsmMc6809::processPseudo(StrScanner &scan, const char *name) {
 
 Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
     InsnMc6809 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     if (processPseudo(scan, insn.name()) == OK)
         return getError();
@@ -538,12 +538,12 @@ Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
     if (mode1 == M_RTFM)
         return encodeTransferMemory(insn, op1, op2);
     if (encodeOperand(insn, op1, mode1)) {
-        insn.reset();
+        insn.clear();
         return getError();
     }
     const AddrMode mode2 = insn.mode2();
     if (encodeOperand(insn, op2, mode2)) {
-        insn.reset();
+        insn.clear();
         return getError();
     }
     insn.emitInsn();

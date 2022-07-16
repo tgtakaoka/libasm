@@ -97,7 +97,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmI8080::encode(StrScanner &scan, Insn &_insn) {
     InsnI8080 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp))

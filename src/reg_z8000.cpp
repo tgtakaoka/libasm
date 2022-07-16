@@ -68,22 +68,25 @@ StrBuffer &RegZ8000::outRegName(StrBuffer &out, RegName name) const {
     if (isCtlReg(name))
         return outCtlName(out, name);
 
-    outChar(out, 'R');
+    const /*PROGMEM*/ char *prefix_P;
     if (isByteReg(name)) {
         num -= 16;
         if (num < 8) {
-            outChar(out, 'H');
+            prefix_P = PSTR("RH");
         } else {
             num -= 8;
-            outChar(out, 'L');
+            prefix_P = PSTR("RL");
         }
     } else if (isLongReg(name)) {
         num -= 32;
-        outChar(out, 'R');
+        prefix_P = PSTR("RR");
     } else if (isQuadReg(name)) {
         num -= 48;
-        outChar(out, 'Q');
+        prefix_P = PSTR("RQ");
+    } else {
+        prefix_P = PSTR("R");
     }
+    out.text_P(prefix_P, isUppercase());
     if (num >= 10) {
         out.letter('1');
         num -= 10;
@@ -195,7 +198,7 @@ RegName RegZ8000::parseCtlReg(StrScanner &scan) {
 StrBuffer &RegZ8000::outCtlName(StrBuffer &out, RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
     if (entry)
-        outText(out, entry->text());
+        out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
@@ -232,13 +235,13 @@ IntrName RegZ8000::parseIntrName(StrScanner &scan) {
 StrBuffer &RegZ8000::outIntrNames(StrBuffer &out, uint8_t intrs) const {
     char c = 0;
     if ((intrs & int8_t(INTR_VI)) == 0) {
-        outText(out, TEXT_INTR_VI);
+        out.text_P(TEXT_INTR_VI, isUppercase());
         c = ',';
     }
     if ((intrs & int8_t(INTR_NVI)) == 0) {
         if (c)
             out.letter(c);
-        outText(out, TEXT_INTR_NVI);
+        out.text_P(TEXT_INTR_NVI, isUppercase());
     }
     return out;
 }
@@ -311,7 +314,7 @@ CcName RegZ8000::decodeCcNum(uint8_t num) {
 StrBuffer &RegZ8000::outCcName(StrBuffer &out, CcName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        outText(out, entry->text());
+        out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
@@ -341,7 +344,7 @@ StrBuffer &RegZ8000::outFlagNames(StrBuffer &out, uint8_t flags) const {
                 out.letter(sep);
             sep = ',';
             const NameEntry *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
-            outText(out, entry->text());
+            out.text_P(entry->text_P(), isUppercase());
         }
     }
     return out;

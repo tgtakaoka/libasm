@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+#include "array_memory.h"
 #include "dis_tms9900.h"
 #include "test_dis_helper.h"
-#include "array_memory.h"
 
 using namespace libasm;
 using namespace libasm::tms9900;
@@ -387,6 +387,7 @@ static void assert_mid(
     if (prefix) words[0] = prefix;
     const uint8_t pos = prefix ? 1 : 0;
 
+    disassembler.setOption("uppercase", "yes");
     for (uint16_t hi = 0; hi < 0x100; hi++) {
         for (uint16_t lo = 0; lo < 0x100; lo++) {
             const uint16_t code = (hi << 8) | lo;
@@ -395,7 +396,7 @@ static void assert_mid(
             words[pos + 1] = post;
             ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
 
-            disassembler.setOption("uppercase","yes");
+            insn.clear();
             disassembler.decode(memory, insn, operands, sizeof(operands));
             if (m && code > m->end) {
                 if (++m >= end)

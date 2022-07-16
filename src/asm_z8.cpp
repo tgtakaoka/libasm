@@ -390,7 +390,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmZ8::encode(StrScanner &scan, Insn &_insn) {
     InsnZ8 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     if (processPseudo(scan, insn.name()) == OK)
         return getError();

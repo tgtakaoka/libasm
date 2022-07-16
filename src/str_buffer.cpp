@@ -18,22 +18,26 @@
 
 #include "config_host.h"
 
+#include <stdarg.h>
+#include <ctype.h>
 #include <stdio.h>
 
 namespace libasm {
 
-StrBuffer::StrBuffer(char *buffer, size_t size)
-    : ErrorReporter(), _out(buffer), _end(buffer + (size - 1)) {
-    *_out = 0;
+StrBuffer &StrBuffer::reset(char *buffer, size_t size) {
+    _out = buffer;
+    _end = buffer + size - 1;
+    _out[0] = 0;
+    return *this;
 }
 
 StrBuffer &StrBuffer::letter(char letter) {
     if (_out < _end) {
         *_out++ = letter;
+        *_out = 0;
     } else {
         setError(BUFFER_OVERFLOW);
     }
-    *_out = 0;
     return *this;
 }
 
@@ -44,8 +48,39 @@ StrBuffer &StrBuffer::text(const char *text) {
     return *this;
 }
 
-StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, double val) {
-    char *end = _out + snprintf_P(_out, _end - _out, fmt, val);
+StrBuffer &StrBuffer::text(const StrScanner &scan) {
+    StrScanner text(scan);
+    char c;
+    while ((c = *text++) != 0)
+        letter(c);
+    return *this;
+}
+
+StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P) {
+    while (true) {
+        const char c = pgm_read_byte(text_P++);
+        if (c == 0)
+            break;
+        letter(c);
+    }
+    return *this;
+}
+
+StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P, bool uppercase) {
+    const auto &conv = uppercase ? toupper : tolower;
+    while (true) {
+        const char c = pgm_read_byte(text_P++);
+        if (c == 0)
+            break;
+        letter(conv(c));
+    }
+    return *this;
+}
+
+StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    char *end = _out + vsnprintf_P(_out, _end - _out, fmt, args);
     if (end < _end) {
         _out = end;
     } else {

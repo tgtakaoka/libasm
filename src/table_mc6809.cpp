@@ -724,7 +724,7 @@ Error TableMc6809::searchOpCode(InsnMc6809 &insn) {
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             if (insn.undefined())
                 break;
             return setOK();

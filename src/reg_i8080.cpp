@@ -52,7 +52,7 @@ RegName RegI8080::parseRegName(StrScanner &scan) {
 StrBuffer &RegI8080::outRegName(StrBuffer &out, const RegName name) const {
     const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        outText(out, entry->text());
+        out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 

@@ -246,7 +246,7 @@ Error TableIns8070::searchOpCode(InsnIns8070 &insn) {
     insn.setFlags(entry->flags());
     if (insn.addrMode() == M_UNDEF)
         return setError(UNKNOWN_INSTRUCTION);
-    insn.setName_P(entry->name_P());
+    insn.nameBuffer().text_P(entry->name_P());
     return setOK();
 }
 

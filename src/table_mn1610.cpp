@@ -388,7 +388,7 @@ Error TableMn1610::searchOpCode(InsnMn1610 &insn) {
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            insn.setName_P(entry->name_P());
+            insn.nameBuffer().text_P(entry->name_P());
             return setOK();
         }
     }

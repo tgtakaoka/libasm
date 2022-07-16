@@ -34,7 +34,7 @@ RegName RegMc6805::parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &RegMc6805::outRegName(StrBuffer &out, const RegName name) const {
-    return outChar(out, char(name));
+    return out.letter(char(name),isUppercase());
 }
 
 }  // namespace mc6805

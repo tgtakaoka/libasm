@@ -308,7 +308,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     InsnMn1610 insn(_insn);
-    insn.setName(_parser.readSymbol(scan));
+    insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand opr1, opr2, opr3, opr4;
     if (parseOperand(scan, opr1))
@@ -342,7 +342,7 @@ Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     const AddrMode op1 = insn.op1();
     if (op1 != M_NO && encodeOperand(insn, opr1, op1)) {
     error:
-        insn.reset();
+        insn.clear();
         return getError();
     }
     const AddrMode op2 = insn.op2();
