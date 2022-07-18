@@ -22,7 +22,7 @@
 #include <algorithm>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 static void appendTo(const std::string &cpu, std::list<std::string> &list) {
     if (std::find(list.begin(), list.end(), cpu) == list.end())
@@ -154,7 +154,7 @@ Error AsmDriver::symbolIntern(uint32_t value, const std::string &key) {
     return OK;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

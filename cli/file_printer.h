@@ -26,7 +26,7 @@
 namespace libasm {
 namespace cli {
 
-class FilePrinter : public TextPrinter {
+class FilePrinter : public libasm::driver::TextPrinter {
 public:
     FilePrinter();
     ~FilePrinter();

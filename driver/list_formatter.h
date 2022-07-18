@@ -25,7 +25,7 @@
 #include "config_host.h"
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class ListLine {
 public:
@@ -85,7 +85,7 @@ protected:
     void formatLine();
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

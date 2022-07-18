@@ -25,7 +25,7 @@
 #include <stdint.h>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class AsmFormatter : public ListFormatter, public ListLine {
 private:
@@ -88,7 +88,7 @@ private:
     int operandWidth() const override { return 16; }
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

@@ -25,6 +25,8 @@
 namespace libasm {
 namespace cli {
 
+using namespace libasm::driver;
+
 Error AsmCommander::FileFactory::open(const StrScanner &name) {
     if (_sources.size() >= max_includes)
         return TOO_MANY_INCLUDE;
@@ -105,9 +107,9 @@ int AsmCommander::assemble() {
         }
 
         auto &encoder = _args.encoder == 'S'
-            ? MotoSrec::encoder()
-            : (_args.encoder == 'H' ? IntelHex::encoder()
-                                                            : _driver.current()->defaultEncoder());
+                                ? MotoSrec::encoder()
+                                : (_args.encoder == 'H' ? IntelHex::encoder()
+                                                        : _driver.current()->defaultEncoder());
         const AddressWidth addrWidth = _driver.current()->assembler().config().addressWidth();
         encoder.reset(addrWidth, _args.record_bytes);
         encoder.encode(memory, output);

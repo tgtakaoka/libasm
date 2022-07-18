@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef __INTEL_HEX_H__
-#define __INTEL_HEX_H__
+#ifndef __MOTO_SREC_H__
+#define __MOTO_SREC_H__
 
 #include "bin_decoder.h"
 #include "bin_encoder.h"
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
-class IntelHex : public BinDecoder, public BinEncoder {
+class MotoSrec : public BinDecoder, public BinEncoder {
 public:
     static BinDecoder &decoder();
     static BinEncoder &encoder();
 
 private:
-    uint32_t _last_addr;  // start address of the last block
-    uint32_t _next_addr;  // expected address of the next block
     uint8_t _check_sum;
 
     // BinEncoder
-    void reset(AddressWidth addrWidth, uint8_t recordSize) override;
-    void begin(TextPrinter &out) override {}
+    void begin(TextPrinter &out) override;
     void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) override;
     void end(TextPrinter &out) override;
     // BinDecoder
@@ -47,17 +44,18 @@ private:
         addSum8(data >> 8);
         addSum8(data);
     }
+    void addSum24(uint32_t data) {
+        addSum8(data >> 16);
+        addSum16(data);
+    }
     void addSum32(uint32_t data) {
         addSum16(data >> 16);
         addSum16(data);
     }
     uint8_t getSum() const;
-
-    void formatEla(TextPrinter &out, uint32_t addr);
-    void encodeLine(TextPrinter &out, uint16_t addr, const uint8_t *data, uint8_t size);
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

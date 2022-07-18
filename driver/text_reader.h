@@ -22,7 +22,7 @@
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class TextReader {
 public:
@@ -32,7 +32,7 @@ public:
     virtual StrScanner *readLine() = 0;
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

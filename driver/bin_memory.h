@@ -25,7 +25,7 @@
 #include "dis_memory.h"
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class BinMemory : public DisMemory {
 public:
@@ -75,7 +75,7 @@ private:
     void aggregate(Segment hint);
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

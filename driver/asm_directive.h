@@ -30,7 +30,7 @@
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class AsmDirective : public ErrorAt {
 public:
@@ -92,7 +92,7 @@ public:
     NationalDirective(Assembler &assembler);
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

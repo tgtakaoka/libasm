@@ -20,7 +20,7 @@
 #include <ctype.h>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 int BinDecoder::decode(TextReader &in, BinMemory &memory) {
     StrScanner *line;
@@ -97,7 +97,7 @@ bool BinDecoder::parseUint32(StrScanner &line, uint32_t &val) {
     return true;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

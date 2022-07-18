@@ -19,7 +19,7 @@
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 void ListFormatter::reset(ListLine &line) {
     _line = &line;
@@ -241,7 +241,7 @@ void ListFormatter::formatLine() {
     _next += formattedBytes;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

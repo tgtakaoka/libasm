@@ -1,4 +1,5 @@
 -I../src
+-I../driver
 -Wall
 -O
 -std=c++14

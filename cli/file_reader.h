@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cli {
 
-class FileReader : public TextReader {
+class FileReader : public driver::TextReader {
 public:
     FileReader(const std::string &name);
     ~FileReader();

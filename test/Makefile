@@ -30,33 +30,30 @@ clean: clean-objs
 clean-objs:
 	-rm -f $(OBJS) *.d *~
 
-VPATH = ../src
-INCLUDES = -I ../src -I ../cli
-CXXFLAGS = -Wall -std=c++14 -O $(INCLUDES) $(DEBUG_FLAGS)
-CPPFLAGS = -MMD
+vpath %.cpp ../src
+vpath %.cpp ../driver
 
-OBJS_test = array_memory.o test_asserter.o error_reporter.o
-OBJS_gen  = dis_base.o value_formatter.o array_memory.o tokenized_text.o list_formatter.o \
-            option_base.o error_reporter.o str_buffer.o str_scanner.o
-OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o str_buffer.o str_scanner.o \
-            option_base.o
-OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o str_buffer.o str_scanner.o \
-            option_base.o array_memory.o
-OBJS_expr = test_expr_helper.o test_asserter.o error_reporter.o \
-            value_parser.o value_formatter.o str_buffer.o str_scanner.o
+CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
+CPPFLAGS = -MMD -I../src -I../driver
+
+OBJS_test = array_memory.o test_asserter.o error_reporter.o option_base.o \
+            str_buffer.o str_scanner.o
+OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o
+OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o
+OBJS_expr = test_expr_helper.o value_parser.o value_formatter.o
+OBJS_gen  = dis_base.o value_formatter.o list_formatter.o tokenized_text.o
+
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
 GEN_OBJS  = $(ARCHS:%=gen_%.o)
-OBJS = 	$(TEST_OBJS) $(GEN_OBJS) $(OBJS_test) $(OBJS_gen) \
-	$(OBJS_asm) $(OBJS_dis) $(OBJS_expr) \
-	$(ARCHS:%=asm_%.o) $(ARCHS:%=dis_%.o) $(EXPR_OBJS) \
-	$(foreach a,$(ARCHS),$(OBJS_$(a)))
+OBJS = $(TEST_OBJS) $(OBJS_asm) $(OBJS_dis) $(OBJS_test) \
+       $(EXPR_OBJS) $(OBJS_expr) \
+       $(GEN_OBJS) $(OBJS_gen) \
+       $(ARCHS:%=asm_%.o) $(ARCHS:%=dis_%.o) \
+       $(foreach a,$(ARCHS),$(OBJS_$(a)))
 BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
-
-list_formatter.o: ../cli/list_formatter.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(CPPFLAGS) -c -o $@ $^
 
 -include $(OBJS:.o=.d)
 
@@ -66,7 +63,8 @@ test_asm_$(1): test_asm_$(1).o asm_$(1).o $$(OBJS_$(1)) $$(OBJS_asm) $$(OBJS_tes
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
 test_dis_$(1): test_dis_$(1).o dis_$(1).o $$(OBJS_$(1)) $$(OBJS_dis) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
-test_$(1): $(if $(wildcard test_asm_$(1).cpp),test_asm_$(1)) $(if $(wildcard test_dis_$(1).cpp),test_dis_$(1))
+test_$(1): $(if $(wildcard test_asm_$(1).cpp),test_asm_$(1)) \
+           $(if $(wildcard test_dis_$(1).cpp),test_dis_$(1))
 	$(if $(wildcard test_asm_$(1).cpp),./test_asm_$(1))
 	$(if $(wildcard test_dis_$(1).cpp),./test_dis_$(1))
 
@@ -92,7 +90,8 @@ $(eval $(foreach e,$(EXPRS),$(call exec-test,$(e))))
 test: $(foreach a,$(ARCHS),test_$(a)) test_expr
 
 define gen-rule
-gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen)
+gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) \
+          dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen) $$(OBJS_test)
 	$(if $(wildcard gen_$(1).cpp),$$(CXX) -o $$@ $$(CXXFLAGS) $$^)
 
 endef

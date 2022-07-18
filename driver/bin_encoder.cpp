@@ -17,7 +17,7 @@
 #include "bin_encoder.h"
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 uint8_t BinEncoder::addressSize(AddressWidth addrWidth) {
     const uint8_t bits = uint8_t(addrWidth);
@@ -50,7 +50,7 @@ int BinEncoder::encode(const BinMemory &memory, TextPrinter &out) {
     return 0;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

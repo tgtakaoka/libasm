@@ -30,7 +30,7 @@
 #include <map>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class AsmDirective;
 
@@ -97,7 +97,7 @@ private:
     Error symbolIntern(uint32_t value, const std::string &key);
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

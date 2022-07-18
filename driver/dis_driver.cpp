@@ -23,7 +23,7 @@
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 DisDriver::DisDriver(Disassembler **begin, Disassembler **end)
     : _disassemblers(begin, end), _current(nullptr) {}
@@ -75,7 +75,7 @@ std::list<std::string> DisDriver::listCpu() const {
     return list;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

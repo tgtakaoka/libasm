@@ -35,12 +35,12 @@ public:
     int disassemble();
 
 private:
-    DisDriver _driver;
-    DisArgs _args;
+    driver::DisDriver _driver;
+    driver::DisArgs _args;
 
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
-    int readBinary(FileReader &input, BinMemory &memory);
+    int readBinary(FileReader &input, driver::BinMemory &memory);
 };
 
 }  // namespace cli

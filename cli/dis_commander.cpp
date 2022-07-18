@@ -29,6 +29,8 @@
 namespace libasm {
 namespace cli {
 
+using namespace libasm::driver;
+
 DisCommander::DisCommander(Disassembler **begin, Disassembler **end)
     : _driver(begin, end), _args() {}
 

@@ -35,24 +35,25 @@ clean-objs:
 clean: clean-objs
 	-rm -f $(BINS) *.d *~ compile_commands.json
 
-VPATH = ../src
-CXXFLAGS = -Wall -O -std=c++14 -I../src $(DEBUG_FLAGS)
-CPPFLAGS = -MMD
+vpath %.cpp ../driver
+vpath %.cpp ../src
 
-OBJS_com = list_formatter.o bin_memory.o error_reporter.o file_reader.o file_printer.o \
-	   bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o str_buffer.o str_scanner.o \
-           option_base.o \
-	   $(foreach a,$(ARCHS),$(OBJS_$(a)))
-OBJS_asm = asm.o asm_base.o asm_commander.o asm_driver.o asm_directive.o value_parser.o \
-           function_store.o \
-	   $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
-OBJS_dis = dis.o dis_base.o dis_commander.o dis_driver.o value_formatter.o \
-	   $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))
+CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
+CPPFLAGS = -MMD -I../src -I../driver
+
+OBJS_com = str_buffer.o str_scanner.o option_base.o error_reporter.o \
+           $(foreach a,$(ARCHS),$(OBJS_$(a))) \
+           bin_memory.o bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o \
+           file_reader.o file_printer.o list_formatter.o
+OBJS_asm = asm.o asm_commander.o asm_driver.o asm_directive.o asm_base.o \
+           value_parser.o function_store.o \
+           $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
+OBJS_dis = dis.o dis_commander.o dis_driver.o dis_base.o value_formatter.o \
+           $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))
 OBJS_bin = $(BINS:=.o)
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
-OBJS = $(OBJS_com) $(OBJS_asm) $(OBJS_dis) $(OBJS_bin) \
-       $(foreach a,$(ARCHS),$(OBJS_$(a)))
+OBJS = $(OBJS_com) $(OBJS_asm) $(OBJS_dis) $(OBJS_bin)
 
 define bin-rule # bin
 $(1): $(OBJS_com) $(OBJS_$(1))

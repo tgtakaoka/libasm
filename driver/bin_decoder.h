@@ -14,20 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_PRINTER_H__
-#define __TEXT_PRINTER_H__
+#ifndef __BIN_DECODER_H__
+#define __BIN_DECODER_H__
+
+#include "bin_memory.h"
+#include "str_scanner.h"
+#include "text_reader.h"
+
+#include <stdint.h>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
-class TextPrinter {
+class BinDecoder {
 public:
-    virtual ~TextPrinter() {}
-    virtual void println(const char *text) = 0;
-    virtual void format(const char *fmt, ...) = 0;
+    /**
+     * Decode text format binary into |memory|.
+     * @return: number of read bytes or negative if error.
+     */
+    static int decode(TextReader &in, BinMemory &memory);
+
+protected:
+    virtual int decode(StrScanner &line, BinMemory &memory) = 0;
+
+    static bool parseByte(StrScanner &line, uint8_t &val);
+    static bool parseUint16(StrScanner &line, uint16_t &val);
+    static bool parseUint24(StrScanner &line, uint32_t &val);
+    static bool parseUint32(StrScanner &line, uint32_t &val);
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

@@ -28,7 +28,7 @@
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 class DisFormatter : public ListFormatter, public ListLine {
 public:
@@ -97,7 +97,7 @@ private:
     int operandWidth() const override { return 8; }
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

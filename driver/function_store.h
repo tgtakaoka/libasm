@@ -25,7 +25,7 @@
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 struct icasecmp {
     bool operator()(const std::string &lhs, const std::string &rhs) const {
@@ -56,7 +56,7 @@ private:
     std::map<std::string, Function, icasecmp> _functions;
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

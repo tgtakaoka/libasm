@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Tadashi G. Takaoka
+ * Copyright 2020 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef __BIN_DECODER_H__
-#define __BIN_DECODER_H__
+#ifndef __DIS_DRIVER_H__
+#define __DIS_DRIVER_H__
 
-#include "bin_memory.h"
-#include "str_scanner.h"
-#include "text_reader.h"
+#include "dis_base.h"
 
-#include <stdint.h>
+#include <list>
+#include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
-class BinDecoder {
+class DisDriver {
 public:
-    /**
-     * Decode text format binary into |memory|.
-     * @return: number of read bytes or negative if error.
-     */
-    static int decode(TextReader &in, BinMemory &memory);
+    DisDriver(Disassembler **begin, Disassembler **end);
 
-protected:
-    virtual int decode(StrScanner &line, BinMemory &memory) = 0;
+    Disassembler *restrictCpu(const char *cpu);
+    Disassembler *setCpu(const char *cpu);
+    std::list<std::string> listCpu() const;
+    Disassembler *current() const { return _current; }
 
-    static bool parseByte(StrScanner &line, uint8_t &val);
-    static bool parseUint16(StrScanner &line, uint16_t &val);
-    static bool parseUint24(StrScanner &line, uint32_t &val);
-    static bool parseUint32(StrScanner &line, uint32_t &val);
+private:
+    std::list<Disassembler *> _disassemblers;
+    Disassembler *_current;
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

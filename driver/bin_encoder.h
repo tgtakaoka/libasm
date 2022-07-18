@@ -14,41 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_ARGS_H__
-#define __DIS_ARGS_H__
+#ifndef __BIN_ENCODER_H__
+#define __BIN_ENCODER_H__
+
+#include "bin_memory.h"
+#include "config_base.h"
+#include "text_printer.h"
 
 #include <stdint.h>
 
-#include <string>
-
 namespace libasm {
-namespace cli {
+namespace driver {
 
-struct DisArgs {
-    std::string prog_name;
-    std::string input_name;
-    std::string output_name;
-    std::string list_name;
-    std::string cpu;
-    bool relative_target;
-    bool uppercase;
-    bool verbose;
-    uint32_t addr_start;
-    uint32_t addr_end;
-    DisArgs()
-        : prog_name(),
-          input_name(),
-          output_name(),
-          list_name(),
-          cpu(),
-          relative_target(false),
-          uppercase(false),
-          verbose(false),
-          addr_start(0),
-          addr_end(UINT32_MAX) {}
+class BinEncoder {
+public:
+    virtual void reset(AddressWidth addrWidth, uint8_t recordSize);
+    int encode(const BinMemory &memory, TextPrinter &out);
+
+protected:
+    AddressWidth _addr_width;
+    uint8_t _record_size;
+
+    virtual void begin(TextPrinter &out) = 0;
+    virtual void encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) = 0;
+    virtual void end(TextPrinter &out) = 0;
+
+    static uint8_t addressSize(AddressWidth addrWidth);
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

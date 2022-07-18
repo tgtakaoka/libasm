@@ -17,7 +17,7 @@
 #include "moto_srec.h"
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 static MotoSrec INSTANCE;
 
@@ -140,7 +140,7 @@ int MotoSrec::decode(StrScanner &line, BinMemory &memory) {
     return size;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

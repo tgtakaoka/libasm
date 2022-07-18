@@ -40,6 +40,7 @@
 
 using namespace libasm;
 using namespace libasm::cli;
+using namespace libasm::driver;
 
 mos6502::DisMos6502 dis6502;
 mc6800::DisMc6800 dis6800;

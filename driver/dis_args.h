@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+ * Copyright 2022 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,41 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_DRIVER_H__
-#define __DIS_DRIVER_H__
+#ifndef __DIS_ARGS_H__
+#define __DIS_ARGS_H__
 
-#include "dis_base.h"
+#include <stdint.h>
 
-#include <list>
 #include <string>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
-class DisDriver {
-public:
-    DisDriver(Disassembler **begin, Disassembler **end);
-
-    Disassembler *restrictCpu(const char *cpu);
-    Disassembler *setCpu(const char *cpu);
-    std::list<std::string> listCpu() const;
-    Disassembler *current() const { return _current; }
-
-private:
-    std::list<Disassembler *> _disassemblers;
-    Disassembler *_current;
+struct DisArgs {
+    std::string prog_name;
+    std::string input_name;
+    std::string output_name;
+    std::string list_name;
+    std::string cpu;
+    bool relative_target;
+    bool uppercase;
+    bool verbose;
+    uint32_t addr_start;
+    uint32_t addr_end;
+    DisArgs()
+        : prog_name(),
+          input_name(),
+          output_name(),
+          list_name(),
+          cpu(),
+          relative_target(false),
+          uppercase(false),
+          verbose(false),
+          addr_start(0),
+          addr_end(UINT32_MAX) {}
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

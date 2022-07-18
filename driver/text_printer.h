@@ -14,41 +14,20 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_ARGS_H__
-#define __ASM_ARGS_H__
-
-#include <stddef.h>
-
-#include <string>
+#ifndef __TEXT_PRINTER_H__
+#define __TEXT_PRINTER_H__
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
-struct AsmArgs {
-    std::string prog_name;
-    std::string input_name;
-    std::string output_name;
-    std::string list_name;
-    std::string cpu;
-    char encoder;
-    size_t record_bytes;
-    bool uppercase;
-    bool line_number;
-    bool verbose;
-    AsmArgs()
-        : prog_name(),
-          input_name(),
-          output_name(),
-          list_name(),
-          cpu(),
-          encoder(0),
-          record_bytes(32),
-          uppercase(false),
-          line_number(false),
-          verbose(false) {}
+class TextPrinter {
+public:
+    virtual ~TextPrinter() {}
+    virtual void println(const char *text) = 0;
+    virtual void format(const char *fmt, ...) = 0;
 };
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 #endif

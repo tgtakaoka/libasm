@@ -20,7 +20,7 @@
 #include <string.h>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 BinMemory::BinMemory() : DisMemory(0) {
     invalidateWriteCache();
@@ -202,7 +202,7 @@ void BinMemory::aggregate(Segment hint) {
     }
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

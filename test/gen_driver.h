@@ -29,8 +29,8 @@
 namespace libasm {
 namespace test {
 
-using libasm::cli::ListFormatter;
-using libasm::cli::ListLine;
+using libasm::driver::ListFormatter;
+using libasm::driver::ListLine;
 
 template <typename Conf>
 class GenDriver : public TestGenerator<Conf>::Printer, private ListLine {

@@ -31,21 +31,21 @@ namespace cli {
 
 class AsmCommander {
 public:
-    AsmCommander(AsmDirective **begin, AsmDirective **end);
+    AsmCommander(driver::AsmDirective **begin, driver::AsmDirective **end);
 
     int parseArgs(int argc, const char **argv);
     int usage();
     int assemble();
 
 private:
-    class FileFactory : public AsmSourceFactory {
+    class FileFactory : public driver::AsmSourceFactory {
     public:
         Error open(const StrScanner &name) override;
-        const TextReader *current() const override;
+        const driver::TextReader *current() const override;
         Error closeCurrent() override;
         size_t size() const override { return _sources.size(); }
         StrScanner *readLine() override;
-        TextPrinter &errors() override;
+        driver::TextPrinter &errors() override;
 
     private:
         static constexpr int max_includes = 4;
@@ -53,12 +53,12 @@ private:
     };
 
     FileFactory _sources;
-    AsmDriver _driver;
-    AsmArgs _args;
+    driver::AsmDriver _driver;
+    driver::AsmArgs _args;
 
     static constexpr const char *PROG_PREFIX = "asm";
-    AsmDirective *defaultDirective();
-    int assemble(BinMemory &memory, TextPrinter &out, bool reportError = false);
+    driver::AsmDirective *defaultDirective();
+    int assemble(driver::BinMemory &memory, driver::TextPrinter &out, bool reportError = false);
 };
 
 }  // namespace cli

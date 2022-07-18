@@ -17,7 +17,7 @@
 #include "intel_hex.h"
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 static IntelHex INSTANCE;
 
@@ -148,7 +148,7 @@ int IntelHex::decode(StrScanner &line, BinMemory &memory) {
     return len;
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

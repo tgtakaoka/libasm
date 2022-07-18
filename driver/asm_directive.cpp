@@ -22,7 +22,7 @@
 #include <algorithm>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
     return strcmp_P("8080", cpu_P) == 0 || strcmp_P("8085", cpu_P) == 0 ||
@@ -441,7 +441,7 @@ NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(asse
     registerPseudo(".dbyte", &AsmDirective::defineUint16s);
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:

@@ -20,7 +20,7 @@
 #include <string.h>
 
 namespace libasm {
-namespace cli {
+namespace driver {
 
 void FunctionStore::reset() {
     _functions.clear();
@@ -79,7 +79,7 @@ Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrS
     return setError(parser);
 }
 
-}  // namespace cli
+}  // namespace driver
 }  // namespace libasm
 
 // Local Variables:
