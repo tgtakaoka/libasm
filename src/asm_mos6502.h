@@ -32,17 +32,25 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
-    void reset() override { _long_acc = _long_idx = false; }
+    void reset() override { TableMos6502::TABLE.reset(); }
 
     static const char OPT_BOOL_LONGA[] PROGMEM;
     static const char OPT_BOOL_LONGI[] PROGMEM;
 
 private:
     MotorolaValueParser _parser;
-    bool _long_acc;
-    bool _long_idx;
-    const BoolOption _opt_long_acc{OPT_BOOL_LONGA, _long_acc, _options};
-    const BoolOption _opt_long_idx{OPT_BOOL_LONGI, _long_idx, _options};
+    const struct OptLongA : public BoolOptionBase {
+        OptLongA(Options &options) : BoolOptionBase(OPT_BOOL_LONGA, options) {}
+        Error set(bool value) const override {
+            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+        }
+    } _opt_longa{_options};
+    const struct OptLongI : public BoolOptionBase {
+        OptLongI(Options &options) : BoolOptionBase(OPT_BOOL_LONGI, options) {}
+        Error set(bool value) const override {
+            return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
+        }
+    } _opt_longi{_options};
 
     struct Operand : public ErrorAt {
         AddrMode mode;
@@ -50,7 +58,7 @@ private:
         Operand() : ErrorAt(), mode(IMPL), val32(0) {}
     };
 
-    Error parseOnOff(StrScanner &scan, bool &val);
+    Error parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val));
     Error processPseudo(StrScanner &scan, const char *name);
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
     Error parseOperand(StrScanner &scan, Operand &op, Operand &extra);

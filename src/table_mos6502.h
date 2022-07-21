@@ -26,15 +26,18 @@ namespace mos6502 {
 
 class TableMos6502 : public TableBase {
 public:
-    TableMos6502();
+    TableMos6502() { reset(); }
+    void reset();
 
     static TableMos6502 TABLE;
 
     Error searchName(InsnMos6502 &insn);
     Error searchOpCode(InsnMos6502 &insn);
-    void useIndirectLong(bool enable);
-    void longAccumulator(bool on);
-    void longIndex(bool on);
+    bool useIndirectLong(bool enable);
+    bool longAccumulator() const { return _longAccumulator; }
+    bool setLongAccumulator(bool on);
+    bool longIndex() const { return _longIndex; }
+    bool setLongIndex(bool on);
     bool longImmediate(AddrMode addrMode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

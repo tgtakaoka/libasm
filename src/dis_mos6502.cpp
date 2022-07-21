@@ -25,13 +25,6 @@ const char DisMos6502::OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
 const char DisMos6502::OPT_BOOL_LONGA[] PROGMEM = "longa";
 const char DisMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
 
-void DisMos6502::reset() {
-    auto &table = TableMos6502::TABLE;
-    table.useIndirectLong(true);
-    table.longAccumulator(false);
-    table.longIndex(false);
-}
-
 Error DisMos6502::decodeImmediate(
         DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
     out.letter('#');

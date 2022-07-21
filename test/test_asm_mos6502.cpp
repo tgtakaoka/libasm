@@ -241,6 +241,11 @@ static void test_imm() {
         TEST("LONGI OFF");
         TEST("LDA #$1234", 0xA9, 0x34);
         TEST("LDX #$1234", 0xA2, 0x34);
+    } else {
+        TEST("LONGA OFF");
+        TEST("LONGI OFF");
+        ERRT("LONGA ON", OPERAND_NOT_ALLOWED);
+        ERRT("LONGI ON", OPERAND_NOT_ALLOWED);
     }
 
     symtab.intern(0x0010, "zero10");

@@ -35,7 +35,7 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
-    void reset() override;
+    void reset() override { TableMos6502::TABLE.reset(); }
 
     static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
     static const char OPT_BOOL_LONGA[] PROGMEM;
@@ -47,22 +47,19 @@ private:
     const struct OptIndirectLong : public BoolOptionBase {
         OptIndirectLong(Options &options) : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, options) {}
         Error set(bool value) const override {
-            TableMos6502::TABLE.useIndirectLong(value);
-            return OK;
+            return TableMos6502::TABLE.useIndirectLong(value) ? OK : OPERAND_NOT_ALLOWED;
         }
     } _opt_indirectLong{_options};
     const struct OptLongA : public BoolOptionBase {
         OptLongA(Options &options) : BoolOptionBase(OPT_BOOL_LONGA, options) {}
         Error set(bool value) const override {
-            TableMos6502::TABLE.longAccumulator(value);
-            return OK;
+            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
         }
     } _opt_longa{_options};
     const struct OptLongI : public BoolOptionBase {
         OptLongI(Options &options) : BoolOptionBase(OPT_BOOL_LONGI, options) {}
         Error set(bool value) const override {
-            TableMos6502::TABLE.longIndex(value);
-            return OK;
+            return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
         }
     } _opt_longi{_options};
 

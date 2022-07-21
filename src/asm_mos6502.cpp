@@ -199,13 +199,15 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, Operand &extra) {
     }
 }
 
-Error AsmMos6502::parseOnOff(StrScanner &scan, bool &val) {
+Error AsmMos6502::parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val)) {
     StrScanner p(scan.skipSpaces());
     const StrScanner name = _parser.readSymbol(p);
     if (name.iequals_P(PSTR("on"))) {
-        val = true;
+        if (!(TableMos6502::TABLE.*set)(true))
+            setError(scan, OPERAND_NOT_ALLOWED);
     } else if (name.iequals_P(PSTR("off"))) {
-        val = false;
+        if (!(TableMos6502::TABLE.*set)(false))
+            setError(scan, OPERAND_NOT_ALLOWED);
     } else {
         setError(scan, UNKNOWN_OPERAND);
         return OK;
@@ -216,9 +218,9 @@ Error AsmMos6502::parseOnOff(StrScanner &scan, bool &val) {
 
 Error AsmMos6502::processPseudo(StrScanner &scan, const char *name) {
     if (strcasecmp_P(name, PSTR("longa")) == 0)
-        return parseOnOff(scan, _long_acc);
+        return parseTableOnOff(scan, &TableMos6502::setLongAccumulator);
     if (strcasecmp_P(name, PSTR("longi")) == 0)
-        return parseOnOff(scan, _long_idx);
+        return parseTableOnOff(scan, &TableMos6502::setLongIndex);
     return UNKNOWN_INSTRUCTION;
 }
 
@@ -264,7 +266,7 @@ Error AsmMos6502::encode(StrScanner &scan, Insn &_insn) {
         break;
     case IMMA:
         insn.emitInsn();
-        if (_long_acc) {
+        if (TableMos6502::TABLE.longAccumulator()) {
             insn.emitUint16(op.val32);
         } else {
             insn.emitByte(op.val32);
@@ -272,7 +274,7 @@ Error AsmMos6502::encode(StrScanner &scan, Insn &_insn) {
         break;
     case IMMX:
         insn.emitInsn();
-        if (_long_idx) {
+        if (TableMos6502::TABLE.longIndex()) {
             insn.emitUint16(op.val32);
         } else {
             insn.emitByte(op.val32);
