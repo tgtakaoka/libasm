@@ -34,15 +34,14 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useWorkRegister = true; }
-
-    static const char OPT_BOOL_WORK_REGISTER[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
     RegZ8 _regs;
     bool _useWorkRegister;
-    const BoolOption _opt_workRegister{OPT_BOOL_WORK_REGISTER, _useWorkRegister};
+    const BoolOption _opt_workRegister{
+            OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER, _useWorkRegister};
     const Options _options{_opt_workRegister};
 
     StrBuffer &outCcName(StrBuffer &out, Config::opcode_t opCode);
@@ -63,6 +62,9 @@ private:
     Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
     Error decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    static const char OPT_BOOL_WORK_REGISTER[] PROGMEM;
+    static const char OPT_DESC_WORK_REGISTER[] PROGMEM;
 };
 
 }  // namespace z8

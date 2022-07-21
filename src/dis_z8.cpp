@@ -22,6 +22,7 @@ namespace libasm {
 namespace z8 {
 
 const char DisZ8::OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
+const char DisZ8::OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
 
 StrBuffer &DisZ8::outCcName(StrBuffer &out, Config::opcode_t opCode) {
     const CcName cc = _regs.decodeCcNum(opCode >> 4);

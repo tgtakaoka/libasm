@@ -32,15 +32,13 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _direct_page = 0; }
-
-    static const char OPT_INT_SETDP[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
     uint8_t _direct_page;
     const struct OptSetdp : public IntOptionBase {
-        OptSetdp(uint8_t &value) : IntOptionBase(OPT_INT_SETDP), _dp(value) {}
+        OptSetdp(uint8_t &value) : IntOptionBase(OPT_INT_SETDP, OPT_DESC_SETDP), _dp(value) {}
         void set(int32_t value) const override { _dp = value; }
         uint8_t &_dp;
     } _opt_setdp{_direct_page};
@@ -79,6 +77,9 @@ private:
     Error encodeTransferMemory(InsnMc6809 &insn, const Operand &op1, const Operand &op2);
     Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_INT_SETDP[] PROGMEM;
+    static const char OPT_DESC_SETDP[] PROGMEM;
 };
 
 }  // namespace mc6809

@@ -22,6 +22,7 @@ namespace libasm {
 namespace i8096 {
 
 const char DisI8096::OPT_BOOL_ABSOLUTE[] PROGMEM = "absolute";
+const char DisI8096::OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
 
 StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) const {
     if (regno == 0 && indir && _useAbsolute)  // omit [0]

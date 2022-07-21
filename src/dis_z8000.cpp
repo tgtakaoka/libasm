@@ -22,7 +22,9 @@ namespace libasm {
 namespace z8000 {
 
 const char DisZ8000::OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
+const char DisZ8000::OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
 const char DisZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+const char DisZ8000::OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
 
 StrBuffer &DisZ8000::outRegister(StrBuffer &out, RegName name) {
     return _regs.outRegName(out, name);

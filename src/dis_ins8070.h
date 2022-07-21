@@ -35,15 +35,13 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _immediatePrefix = false; }
-
-    static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     NationalValueFormatter _formatter;
     RegIns8070 _regs;
     bool _immediatePrefix;
-    const BoolOption _opt_immPrefix{OPT_BOOL_IMM_PREFIX, _immediatePrefix};
+    const BoolOption _opt_immPrefix{OPT_BOOL_IMM_PREFIX, OPT_DESC_IMM_PREFIX, _immediatePrefix};
     const Options _options{_opt_immPrefix};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
@@ -56,6 +54,9 @@ private:
     Error decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;
+    static const char OPT_DESC_IMM_PREFIX[] PROGMEM;
 };
 
 }  // namespace ins8070

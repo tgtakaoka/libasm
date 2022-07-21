@@ -31,17 +31,15 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useReg = _smartBranch = false; }
-
-    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
-    static const char OPT_BOOL_SMART_BRANCH[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
     bool _useReg;
     bool _smartBranch;
-    const BoolOption _opt_smartBranch{OPT_BOOL_SMART_BRANCH, _smartBranch};
-    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, _useReg, _opt_smartBranch};
+    const BoolOption _opt_smartBranch{OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH, _smartBranch};
+    const BoolOption _opt_useReg{
+            OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, _useReg, _opt_smartBranch};
     const Options _options{_opt_useReg};
 
     struct Operand : public ErrorAt {
@@ -55,6 +53,11 @@ private:
     Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
+    static const char OPT_DESC_USE_REGISTER[] PROGMEM;
+    static const char OPT_BOOL_SMART_BRANCH[] PROGMEM;
+    static const char OPT_DESC_SMART_BRANCH[] PROGMEM;
 };
 
 }  // namespace cdp1802

@@ -33,21 +33,18 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
     void reset() override { TableMos6502::TABLE.reset(); }
-
-    static const char OPT_BOOL_LONGA[] PROGMEM;
-    static const char OPT_BOOL_LONGI[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
     const struct OptLongI : public BoolOptionBase {
-        OptLongI() : BoolOptionBase(OPT_BOOL_LONGI) {}
+        OptLongI() : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
         }
     } _opt_longi{};
     const struct OptLongA : public BoolOptionBase {
-        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, next) {}
+        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
         }
@@ -67,6 +64,11 @@ private:
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_BOOL_LONGA[] PROGMEM;
+    static const char OPT_DESC_LONGA[] PROGMEM;
+    static const char OPT_BOOL_LONGI[] PROGMEM;
+    static const char OPT_DESC_LONGI[] PROGMEM;
 };
 
 }  // namespace mos6502

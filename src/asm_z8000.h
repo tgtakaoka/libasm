@@ -36,14 +36,13 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
     void reset() override { _autoShortDirect = false; }
-
-    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
     bool _autoShortDirect;
-    const BoolOption _opt_shortDitrect{OPT_BOOL_SHORT_DIRECT, _autoShortDirect};
+    const BoolOption _opt_shortDitrect{
+            OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, _autoShortDirect};
     const Options _options{_opt_shortDitrect};
 
     struct Operand : public ErrorAt {
@@ -75,6 +74,9 @@ private:
     Error checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
             const Operand &cntOp);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
+    static const char OPT_DESC_SHORT_DIRECT[] PROGMEM;
 };
 
 }  // namespace z8000

@@ -22,8 +22,11 @@ namespace libasm {
 namespace z8 {
 
 const char AsmZ8::OPT_INT_SETRP[] PROGMEM = "setrp";
+const char AsmZ8::OPT_DESC_SETRP[] PROGMEM = "set register pointer";
 const char AsmZ8::OPT_INT_SETRP0[] PROGMEM = "setrp0";
+const char AsmZ8::OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
 const char AsmZ8::OPT_INT_SETRP1[] PROGMEM = "setrp1";
+const char AsmZ8::OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
 
 bool AsmZ8::setRegPointer(int16_t rp) {
     if (rp < 0) {
@@ -35,15 +38,19 @@ bool AsmZ8::setRegPointer(int16_t rp) {
 }
 
 bool AsmZ8::setRegPointer0(int16_t rp0) {
-    if (rp0 >= 0 && (rp0 & ~0xF8))
+    if (rp0 >= 0 && (rp0 & ~0xF8)) {
+        setError(ILLEGAL_OPERAND);
         return false;
+    }
     _regPointer0 = rp0;
     return true;
 }
 
 bool AsmZ8::setRegPointer1(int16_t rp1) {
-    if (rp1 >= 0 && (rp1 & ~0xF8))
+    if (rp1 >= 0 && (rp1 & ~0xF8)) {
+        setError(ILLEGAL_OPERAND);
         return false;
+    }
     _regPointer1 = rp1;
     return true;
 }

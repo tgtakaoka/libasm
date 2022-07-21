@@ -22,8 +22,11 @@ namespace libasm {
 namespace mos6502 {
 
 const char DisMos6502::OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
+const char DisMos6502::OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
 const char DisMos6502::OPT_BOOL_LONGA[] PROGMEM = "longa";
+const char DisMos6502::OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
 const char DisMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
+const char DisMos6502::OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
 
 Error DisMos6502::decodeImmediate(
         DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {

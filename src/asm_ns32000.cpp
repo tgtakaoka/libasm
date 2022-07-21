@@ -22,7 +22,9 @@ namespace libasm {
 namespace ns32000 {
 
 const char AsmNs32000::OPT_TEXT_FPU[] PROGMEM = "fpu";
+const char AsmNs32000::OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 const char AsmNs32000::OPT_TEXT_PMMU[] PROGMEM = "pmmu";
+const char AsmNs32000::OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
 Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) {
     StrScanner p(scan);

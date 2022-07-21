@@ -33,14 +33,14 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override { _pc_bits = 0; }
 
-    static const char OPT_INT_PCBITS[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
     uint8_t _pc_bits;
     const struct OptPcBits : public IntOptionBase {
-        OptPcBits(uint8_t &value) : IntOptionBase(OPT_INT_PCBITS), _pc_bits(value) {}
+        OptPcBits(uint8_t &value)
+            : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _pc_bits(value) {}
         Error check(int32_t value) const override {
             return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
         }
@@ -62,6 +62,9 @@ private:
     Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
     Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_INT_PCBITS[] PROGMEM;
+    static const char OPT_DESC_PCBITS[] PROGMEM;
 };
 
 }  // namespace mc6805

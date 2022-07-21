@@ -19,6 +19,7 @@
 namespace libasm {
 
 const char Assembler::OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
+const char Assembler::OPT_DESC_COMMENT[] PROGMEM = "line comment starting letter";
 
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;

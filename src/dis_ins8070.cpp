@@ -22,6 +22,7 @@ namespace libasm {
 namespace ins8070 {
 
 const char DisIns8070::OPT_BOOL_IMM_PREFIX[] PROGMEM = "imm-prefix";
+const char DisIns8070::OPT_DESC_IMM_PREFIX[] PROGMEM = "immediate prefix # (default =)";
 
 StrBuffer &DisIns8070::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);

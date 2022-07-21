@@ -20,6 +20,7 @@ namespace libasm {
 namespace mc68000 {
 
 const char AsmMc68000::OPT_BOOL_ALIAS[] PROGMEM = "alias";
+const char AsmMc68000::OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
 
 static int8_t modePos(OprPos pos) {
     switch (pos) {

@@ -32,14 +32,13 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _optimizeSegment = false; }
-
-    static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
     bool _optimizeSegment;
-    const BoolOption _opt_optimizeSegment{OPT_BOOL_OPTIMIZE_SEGMENT, _optimizeSegment};
+    const BoolOption _opt_optimizeSegment{
+            OPT_BOOL_OPTIMIZE_SEGMENT, OPT_DESC_OPTIMIZE_SEGMENT, _optimizeSegment};
     const Options _options{_opt_optimizeSegment};
 
     struct Operand : public ErrorAt {
@@ -85,6 +84,9 @@ private:
     Error emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
     Error encodeStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;
+    static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM;
 };
 
 }  // namespace i8086

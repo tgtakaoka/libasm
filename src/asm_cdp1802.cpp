@@ -22,7 +22,9 @@ namespace libasm {
 namespace cdp1802 {
 
 const char AsmCdp1802::OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+const char AsmCdp1802::OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
 const char AsmCdp1802::OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
+const char AsmCdp1802::OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;

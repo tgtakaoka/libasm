@@ -42,7 +42,6 @@ public:
     const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
 
-    static const char OPT_CHAR_COMMENT[] PROGMEM;
     Error setOption(const char *name, const char *text) {
         if (_commonOptions.setOption(name, text) == OK)
             return getError();
@@ -53,13 +52,13 @@ public:
 
 private:
     ValueParser &_parser;
-    const CharOption _opt_commentChar{OPT_CHAR_COMMENT, _commentChar};
-    const Options _commonOptions{_opt_commentChar};
 
 protected:
     TableBase &_table;
     char _commentChar;
     SymbolTable *_symtab;
+    const CharOption _opt_commentChar{OPT_CHAR_COMMENT, OPT_DESC_COMMENT, _commentChar};
+    const Options _commonOptions{_opt_commentChar};
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
         : ErrorAt(), _parser(parser), _table(table), _commentChar(commentChar) {}
@@ -81,6 +80,9 @@ protected:
     static bool overflowUint8(uint16_t u16) { return Value::overflowUint8(u16); }
     static bool overflowUint8(uint32_t u32) { return Value::overflowUint8(u32); }
     static bool overflowUint16(uint32_t u32) { return Value::overflowUint16(u32); }
+
+    static const char OPT_CHAR_COMMENT[] PROGMEM;
+    static const char OPT_DESC_COMMENT[] PROGMEM;
 
 private:
     virtual Error encode(StrScanner &scan, Insn &insn) = 0;

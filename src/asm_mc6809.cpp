@@ -22,6 +22,7 @@ namespace libasm {
 namespace mc6809 {
 
 const char AsmMc6809::OPT_INT_SETDP[] PROGMEM = "setdp";
+const char AsmMc6809::OPT_DESC_SETDP[] PROGMEM = "set direct page register";
 
 Error AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
     const Config::uintptr_t base =

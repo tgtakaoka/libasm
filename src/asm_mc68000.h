@@ -32,14 +32,13 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
-
-    static const char OPT_BOOL_ALIAS[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
     const struct OptAlias : public BoolOptionBase {
-        OptAlias(AsmMc68000 *assembler) : BoolOptionBase(OPT_BOOL_ALIAS), _assembler(assembler) {}
+        OptAlias(AsmMc68000 *assembler)
+            : BoolOptionBase(OPT_BOOL_ALIAS, OPT_DESC_ALIAS), _assembler(assembler) {}
         Error set(bool value) const override {
             _assembler->setAlias(value);
             return OK;
@@ -79,6 +78,9 @@ private:
     Error encode(StrScanner &scan, Insn &insn) override;
 
     void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }
+
+    static const char OPT_BOOL_ALIAS[] PROGMEM;
+    static const char OPT_DESC_ALIAS[] PROGMEM;
 };
 
 }  // namespace mc68000

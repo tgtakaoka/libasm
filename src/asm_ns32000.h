@@ -35,24 +35,22 @@ public:
         TableNs32000::TABLE.setFpu(FPU_NONE);
         TableNs32000::TABLE.setMmu(MMU_NONE);
     }
-
-    static const char OPT_TEXT_FPU[] PROGMEM;
-    static const char OPT_TEXT_PMMU[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     NationalValueParser _parser;
     struct OptCoprocessor : public OptionBase {
-        OptCoprocessor(const /*PROGMEM*/ char *name_P, Error (*set)(const StrScanner &))
-            : OptionBase(name_P, OPT_TEXT), _set(set) {}
-        OptCoprocessor(const /*PROGMEM*/ char *name_P, Error (*set)(const StrScanner &),
-                const OptionBase &next)
-            : OptionBase(name_P, OPT_TEXT, next), _set(set) {}
+        OptCoprocessor(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
+                Error (*set)(const StrScanner &))
+            : OptionBase(name_P, desc_P, OPT_TEXT), _set(set) {}
+        OptCoprocessor(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
+                Error (*set)(const StrScanner &), const OptionBase &next)
+            : OptionBase(name_P, desc_P, OPT_TEXT, next), _set(set) {}
         Error set(StrScanner &scan) const override { return (*_set)(scan); }
         Error (*_set)(const StrScanner &);
     };
-    const OptCoprocessor _opt_pmmu{OPT_TEXT_PMMU, &AsmNs32000::setPmmu};
-    const OptCoprocessor _opt_fpu{OPT_TEXT_FPU, &AsmNs32000::setFpu, _opt_pmmu};
+    const OptCoprocessor _opt_pmmu{OPT_TEXT_PMMU, OPT_DESC_PMMU, &AsmNs32000::setPmmu};
+    const OptCoprocessor _opt_fpu{OPT_TEXT_FPU, OPT_DESC_FPU, &AsmNs32000::setFpu, _opt_pmmu};
     const Options _options{_opt_fpu};
 
     struct Operand : public ErrorAt {
@@ -94,6 +92,11 @@ private:
     Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
     Error encode(StrScanner &scan, Insn &insn) override;
+
+    static const char OPT_TEXT_FPU[] PROGMEM;
+    static const char OPT_DESC_FPU[] PROGMEM;
+    static const char OPT_TEXT_PMMU[] PROGMEM;
+    static const char OPT_DESC_PMMU[] PROGMEM;
 };
 
 }  // namespace ns32000

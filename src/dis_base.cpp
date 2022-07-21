@@ -19,9 +19,13 @@
 namespace libasm {
 
 const char Disassembler::OPT_BOOL_RELATIVE[] PROGMEM = "relative";
+const char Disassembler::OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
 const char Disassembler::OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
+const char Disassembler::OPT_DESC_UPPERCASE[] PROGMEM = "uppercase instruction and register name";
 const char Disassembler::OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
+const char Disassembler::OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
 const char Disassembler::OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
+const char Disassembler::OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
 Error Disassembler::decode(
         DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {

@@ -22,6 +22,7 @@ namespace libasm {
 namespace mc6805 {
 
 const char DisMc6805::OPT_INT_PCBITS[] PROGMEM = "pc-bits";
+const char DisMc6805::OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
 StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);

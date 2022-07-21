@@ -36,34 +36,30 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
     void reset() override { TableMos6502::TABLE.reset(); }
-
-    static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
-    static const char OPT_BOOL_LONGA[] PROGMEM;
-    static const char OPT_BOOL_LONGI[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
     RegMos6502 _regs;
     const struct OptIndirectLong : public BoolOptionBase {
-        OptIndirectLong() : BoolOptionBase(OPT_BOOL_INDIRECT_LONG) {}
+        OptIndirectLong() : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, OPT_DESC_INDIRECT_LONG) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.useIndirectLong(value) ? OK : OPERAND_NOT_ALLOWED;
         }
     } _opt_indirectLong{};
-    const struct OptLongA : public BoolOptionBase {
-        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, next) {}
-        Error set(bool value) const override {
-            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
-        }
-    } _opt_longa{_opt_indirectLong};
     const struct OptLongI : public BoolOptionBase {
-        OptLongI(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGI, next) {}
+        OptLongI(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI, next) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
         }
-    } _opt_longi{_opt_longa};
-    const Options _options{_opt_longi};
+    } _opt_longi{_opt_indirectLong};
+    const struct OptLongA : public BoolOptionBase {
+        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
+        Error set(bool value) const override {
+            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+        }
+    } _opt_longa{_opt_longi};
+    const Options _options{_opt_longa};
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
@@ -71,6 +67,13 @@ private:
     Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
+    static const char OPT_DESC_INDIRECT_LONG[] PROGMEM;
+    static const char OPT_BOOL_LONGA[] PROGMEM;
+    static const char OPT_DESC_LONGA[] PROGMEM;
+    static const char OPT_BOOL_LONGI[] PROGMEM;
+    static const char OPT_DESC_LONGI[] PROGMEM;
 };
 
 }  // namespace mos6502

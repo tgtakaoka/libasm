@@ -35,19 +35,20 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useReg = false; }
-
-    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
     bool _useReg;
-    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, _useReg};
+    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, _useReg};
     const Options _options{_opt_useReg};
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
+    static const char OPT_DESC_USE_REGISTER[] PROGMEM;
 };
 
 }  // namespace cdp1802

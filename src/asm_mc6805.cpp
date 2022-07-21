@@ -20,6 +20,7 @@ namespace libasm {
 namespace mc6805 {
 
 const char AsmMc6805::OPT_INT_PCBITS[] = "pc-bits";
+const char AsmMc6805::OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
 Error AsmMc6805::checkAddressRange(Config::uintptr_t addr) {
     const uint8_t pc_bits = (_pc_bits > 0 && _pc_bits <= 16) ? _pc_bits : 13;

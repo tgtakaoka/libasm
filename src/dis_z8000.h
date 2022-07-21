@@ -38,9 +38,6 @@ public:
         _ioAddressPrefix = 0;
         _shortDirect = true;
     }
-
-    static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM;
-    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
     const Options &options() const override { return _options; }
 
 private:
@@ -48,8 +45,10 @@ private:
     RegZ8000 _regs;
     bool _ioAddressPrefix;
     bool _shortDirect;
-    const BoolOption _opt_ioaddrPrefix{OPT_BOOL_IOADDR_PREFIX, _ioAddressPrefix};
-    const BoolOption _opt_shortDirect{OPT_BOOL_SHORT_DIRECT, _shortDirect, _opt_ioaddrPrefix};
+    const BoolOption _opt_ioaddrPrefix{
+            OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX, _ioAddressPrefix};
+    const BoolOption _opt_shortDirect{
+            OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, _shortDirect, _opt_ioaddrPrefix};
     const Options _options{_opt_shortDirect};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
@@ -74,6 +73,11 @@ private:
     Error checkPostWord(const InsnZ8000 &insn);
     Error checkRegisterOverlap(const InsnZ8000 &insn);
     Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM;
+    static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM;
+    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
+    static const char OPT_DESC_SHORT_DIRECT[] PROGMEM;
 };
 
 }  // namespace z8000

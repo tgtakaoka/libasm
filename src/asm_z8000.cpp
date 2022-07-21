@@ -20,6 +20,7 @@ namespace libasm {
 namespace z8000 {
 
 const char AsmZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+const char AsmZ8000::OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
 
 Error AsmZ8000::emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;
