@@ -36,12 +36,14 @@ public:
     void reset() override { _useAbsolute = false; }
 
     static const char OPT_BOOL_ABSOLUTE[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
     RegI8096 _regs;
     bool _useAbsolute;
-    const BoolOption _opt_absolute{OPT_BOOL_ABSOLUTE, _useAbsolute, _options};
+    const BoolOption _opt_absolute{OPT_BOOL_ABSOLUTE, _useAbsolute};
+    const Options _options{_opt_absolute};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

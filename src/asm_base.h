@@ -43,16 +43,22 @@ public:
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
 
     static const char OPT_CHAR_COMMENT[] PROGMEM;
-    Error setOption(const char *name, const char *text) { return _options.setOption(name, text); }
+    Error setOption(const char *name, const char *text) {
+        if (_commonOptions.setOption(name, text) == OK)
+            return getError();
+        return options().setOption(name, text);
+    }
+    const Options &commonOptions() const { return _commonOptions; }
+    virtual const Options &options() const { return Options::EMPTY; }
 
 private:
     ValueParser &_parser;
+    const CharOption _opt_commentChar{OPT_CHAR_COMMENT, _commentChar};
+    const Options _commonOptions{_opt_commentChar};
 
 protected:
     TableBase &_table;
-    Options _options;
     char _commentChar;
-    const CharOption _opt_commentChar{OPT_CHAR_COMMENT, _commentChar, _options};
     SymbolTable *_symtab;
 
     Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)

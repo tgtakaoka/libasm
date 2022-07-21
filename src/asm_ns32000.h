@@ -38,18 +38,22 @@ public:
 
     static const char OPT_TEXT_FPU[] PROGMEM;
     static const char OPT_TEXT_PMMU[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     NationalValueParser _parser;
-    struct OptCoprosessor : public OptionBase {
-        OptCoprosessor(const /* PROGMEM */ char *name_P, Error (*set)(const StrScanner &),
-                Options &options)
-            : OptionBase(name_P, options, OPT_TEXT), _set(set) {}
+    struct OptCoprocessor : public OptionBase {
+        OptCoprocessor(const /*PROGMEM*/ char *name_P, Error (*set)(const StrScanner &))
+            : OptionBase(name_P, OPT_TEXT), _set(set) {}
+        OptCoprocessor(const /*PROGMEM*/ char *name_P, Error (*set)(const StrScanner &),
+                const OptionBase &next)
+            : OptionBase(name_P, OPT_TEXT, next), _set(set) {}
         Error set(StrScanner &scan) const override { return (*_set)(scan); }
         Error (*_set)(const StrScanner &);
     };
-    const OptCoprosessor _opt_fpu{OPT_TEXT_FPU, &AsmNs32000::setFpu, _options};
-    const OptCoprosessor _opt_pmmu{OPT_TEXT_PMMU, &AsmNs32000::setPmmu, _options};
+    const OptCoprocessor _opt_pmmu{OPT_TEXT_PMMU, &AsmNs32000::setPmmu};
+    const OptCoprocessor _opt_fpu{OPT_TEXT_FPU, &AsmNs32000::setFpu, _opt_pmmu};
+    const Options _options{_opt_fpu};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

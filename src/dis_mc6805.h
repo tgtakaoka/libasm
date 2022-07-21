@@ -36,20 +36,21 @@ public:
     void reset() override { _pc_bits = 0; }
 
     static const char OPT_INT_PCBITS[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
     RegMc6805 _regs;
     uint8_t _pc_bits;
     const struct OptPcBits : public IntOptionBase {
-        OptPcBits(uint8_t &value, Options &options)
-            : IntOptionBase(OPT_INT_PCBITS, options), _pc_bits(value) {}
+        OptPcBits(uint8_t &value) : IntOptionBase(OPT_INT_PCBITS), _pc_bits(value) {}
         Error check(int32_t value) const override {
             return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
         }
         void set(int32_t value) const override { _pc_bits = value; }
         uint8_t &_pc_bits;
-    } _opt_pc_bits{_pc_bits, _options};
+    } _opt_pc_bits{_pc_bits};
+    const Options _options{_opt_pc_bits};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
 

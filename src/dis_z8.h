@@ -36,12 +36,14 @@ public:
     void reset() override { _useWorkRegister = true; }
 
     static const char OPT_BOOL_WORK_REGISTER[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
     RegZ8 _regs;
     bool _useWorkRegister;
-    const BoolOption _opt_workRegister{OPT_BOOL_WORK_REGISTER, _useWorkRegister, _options};
+    const BoolOption _opt_workRegister{OPT_BOOL_WORK_REGISTER, _useWorkRegister};
+    const Options _options{_opt_workRegister};
 
     StrBuffer &outCcName(StrBuffer &out, Config::opcode_t opCode);
     StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);

@@ -36,39 +36,31 @@ struct OptionBase {
         OPT_TEXT = 3,
     };
 
-    const /* PROGMEM */ char *name_P() const { return _name_P; }
+    const /*PROGMEM*/ char *name_P() const { return _name_P; }
     OptionSpec spec() const { return _spec; }
     virtual Error set(StrScanner &scan) const = 0;
+    const OptionBase *next() const { return _next; }
 
 protected:
-    OptionBase(const /* PROGMEM */ char *name_P, Options &options, OptionSpec spec);
+    OptionBase(const /*PROGMEM*/ char *name_P, OptionSpec spec, const OptionBase &next)
+        : _name_P(name_P), _spec(spec), _next(&next) {}
+
+    OptionBase(const /*PROGMEM*/ char *name_P, OptionSpec spec)
+        : _name_P(name_P), _spec(spec), _next(nullptr) {}
 
     Error parseBoolOption(StrScanner &scan, bool &value) const;
     Error parseIntOption(StrScanner &scan, int32_t &value) const;
 
 private:
-    const /* PROGMEM */ char *_name_P;
+    const /*PROGMEM*/ char *_name_P;
     OptionSpec _spec;
-};
-
-class Options {
-public:
-    Options() : _num_options(0) {}
-
-    Error setOption(const char *name, const char *text) const;
-
-private:
-    friend class OptionBase;
-    void registerOption(const OptionBase *option);
-
-    static constexpr auto MAX_OPTIONS = 10;
-    uint8_t _num_options;
-    const OptionBase *_options[MAX_OPTIONS];
+    const OptionBase *_next;
 };
 
 struct BoolOptionBase : public OptionBase {
-    BoolOptionBase(const /* PROGMEM */ char *name_P, Options &options)
-        : OptionBase(name_P, options, OPT_BOOL) {}
+    BoolOptionBase(const /*PROGMEM*/ char *name_P, const OptionBase &next)
+        : OptionBase(name_P, OPT_BOOL, next) {}
+    BoolOptionBase(const /*PROGMEM*/ char *name_P) : OptionBase(name_P, OPT_BOOL) {}
     Error set(StrScanner &scan) const override {
         bool value = false;
         const auto error = parseBoolOption(scan, value);
@@ -78,8 +70,9 @@ struct BoolOptionBase : public OptionBase {
 };
 
 struct IntOptionBase : public OptionBase {
-    IntOptionBase(const /* PROGMEM */ char *name_P, Options &options)
-        : OptionBase(name_P, options, OPT_INT) {}
+    IntOptionBase(const /*PROGMEM*/ char *name_P, const OptionBase &next)
+        : OptionBase(name_P, OPT_INT, next) {}
+    IntOptionBase(const /*PROGMEM*/ char *name_P) : OptionBase(name_P, OPT_INT) {}
     Error set(StrScanner &scan) const override {
         int32_t value = 0;
         auto error = parseIntOption(scan, value);
@@ -95,9 +88,10 @@ struct IntOptionBase : public OptionBase {
 };
 
 struct BoolOption : public OptionBase {
-    BoolOption(const /* PROGMEM */ char *name_P, bool &value, Options &options)
-        : OptionBase(name_P, options, OPT_BOOL), _value(value) {}
-
+    BoolOption(const /*PROGMEM*/ char *name_P, bool &value, const OptionBase &next)
+        : OptionBase(name_P, OPT_BOOL, next), _value(value) {}
+    BoolOption(const /*PROGMEM*/ char *name_P, bool &value)
+        : OptionBase(name_P, OPT_BOOL), _value(value) {}
     Error set(StrScanner &scan) const override { return parseBoolOption(scan, _value); }
 
 private:
@@ -105,9 +99,10 @@ private:
 };
 
 struct CharOption : public OptionBase {
-    CharOption(const /* PROGMEM */ char *name_P, char &value, Options &options)
-        : OptionBase(name_P, options, OPT_CHAR), _value(value) {}
-
+    CharOption(const /*PROGMEM*/ char *name_P, char &value, const OptionBase &next)
+        : OptionBase(name_P, OPT_CHAR, next), _value(value) {}
+    CharOption(const /*PROGMEM*/ char *name_P, char &value)
+        : OptionBase(name_P, OPT_CHAR), _value(value) {}
     Error set(StrScanner &scan) const override {
         if (scan.size() == 1) {
             _value = *scan;
@@ -118,6 +113,21 @@ struct CharOption : public OptionBase {
 
 private:
     char &_value;
+};
+
+class Options {
+public:
+    Options(const OptionBase &head) : _head(&head) {}
+
+    const OptionBase *head() const { return _head; }
+    Error setOption(const char *name, const char *text) const;
+
+    static const Options EMPTY;
+
+private:
+    const OptionBase *_head;
+
+    Options() : _head(nullptr) {}
 };
 
 }  // namespace libasm

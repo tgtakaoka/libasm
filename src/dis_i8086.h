@@ -40,14 +40,16 @@ public:
 
     static const char OPT_BOOL_SEGMENT_INSN[] PROGMEM;
     static const char OPT_BOOL_STRING_INSN[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
     RegI8086 _regs;
     bool _segOverrideInsn;
     bool _repeatHasStringInst;
-    const BoolOption _opt_segmentInsn{OPT_BOOL_SEGMENT_INSN, _segOverrideInsn, _options};
-    const BoolOption _opt_stringInsn{OPT_BOOL_STRING_INSN, _repeatHasStringInst, _options};
+    const BoolOption _opt_stringInsn{OPT_BOOL_STRING_INSN, _repeatHasStringInst};
+    const BoolOption _opt_segmentInsn{OPT_BOOL_SEGMENT_INSN, _segOverrideInsn, _opt_stringInsn};
+    const Options _options{_opt_segmentInsn};
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
     Error outMemReg(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mode,

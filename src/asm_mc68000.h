@@ -34,18 +34,19 @@ public:
     void reset() override { setAlias(true); }
 
     static const char OPT_BOOL_ALIAS[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
     const struct OptAlias : public BoolOptionBase {
-        OptAlias(AsmMc68000 *assembler)
-            : BoolOptionBase(OPT_BOOL_ALIAS, assembler->_options), _assembler(assembler) {}
+        OptAlias(AsmMc68000 *assembler) : BoolOptionBase(OPT_BOOL_ALIAS), _assembler(assembler) {}
         Error set(bool value) const override {
             _assembler->setAlias(value);
             return OK;
         }
         AsmMc68000 *_assembler;
     } _opt_alias{this};
+    const Options _options{_opt_alias};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

@@ -37,12 +37,14 @@ public:
     void reset() override { _immediatePrefix = false; }
 
     static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     NationalValueFormatter _formatter;
     RegIns8070 _regs;
     bool _immediatePrefix;
-    const BoolOption _opt_immPrefix{OPT_BOOL_IMM_PREFIX, _immediatePrefix, _options};
+    const BoolOption _opt_immPrefix{OPT_BOOL_IMM_PREFIX, _immediatePrefix};
+    const Options _options{_opt_immPrefix};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
     StrBuffer &outOperand(StrBuffer &out, OprFormat opr, uint8_t value = 0);

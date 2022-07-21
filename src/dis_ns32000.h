@@ -42,6 +42,7 @@ public:
     static const char OPT_BOOL_PCREL_PAREN[] PROGMEM;
     static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM;
     static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     NationalValueFormatter _formatter;
@@ -50,10 +51,11 @@ private:
     bool _pcRelativeParen;
     bool _externalParen;
     bool _floatPrefix;
-    const BoolOption _opt_stroptBracket{OPT_BOOL_STROPT_BRACKET, _stringOptionBracket, _options};
-    const BoolOption _opt_pcrelParel{OPT_BOOL_PCREL_PAREN, _pcRelativeParen, _options};
-    const BoolOption _opt_externalParen{OPT_BOOL_EXTERNAL_PAREN, _externalParen, _options};
-    const BoolOption _opt_floatPrefix{OPT_BOOL_FLOAT_PREFIX, _floatPrefix, _options};
+    const BoolOption _opt_floatPrefix{OPT_BOOL_FLOAT_PREFIX, _floatPrefix};
+    const BoolOption _opt_stroptBracket{OPT_BOOL_STROPT_BRACKET, _stringOptionBracket, _opt_floatPrefix};
+    const BoolOption _opt_externalParen{OPT_BOOL_EXTERNAL_PAREN, _externalParen, _opt_stroptBracket};
+    const BoolOption _opt_pcrelParel{OPT_BOOL_PCREL_PAREN, _pcRelativeParen, _opt_externalParen};
+    const Options _options{_opt_pcrelParel};
 
     struct Displacement {
         int32_t val32;

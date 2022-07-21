@@ -34,13 +34,15 @@ public:
 
     static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
     static const char OPT_BOOL_SMART_BRANCH[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
     bool _useReg;
     bool _smartBranch;
-    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, _useReg, _options};
-    const BoolOption _opt_smartBranch{OPT_BOOL_SMART_BRANCH, _smartBranch, _options};
+    const BoolOption _opt_smartBranch{OPT_BOOL_SMART_BRANCH, _smartBranch};
+    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, _useReg, _opt_smartBranch};
+    const Options _options{_opt_useReg};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

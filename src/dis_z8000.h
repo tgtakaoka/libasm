@@ -41,14 +41,16 @@ public:
 
     static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM;
     static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
     RegZ8000 _regs;
     bool _ioAddressPrefix;
     bool _shortDirect;
-    const BoolOption _opt_ioaddrPrefix{OPT_BOOL_IOADDR_PREFIX, _ioAddressPrefix, _options};
-    const BoolOption _opt_shortDirect{OPT_BOOL_SHORT_DIRECT, _shortDirect, _options};
+    const BoolOption _opt_ioaddrPrefix{OPT_BOOL_IOADDR_PREFIX, _ioAddressPrefix};
+    const BoolOption _opt_shortDirect{OPT_BOOL_SHORT_DIRECT, _shortDirect, _opt_ioaddrPrefix};
+    const Options _options{_opt_shortDirect};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
     StrBuffer &outConditionCode(StrBuffer &out, uint8_t ccNum);

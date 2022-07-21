@@ -34,11 +34,13 @@ public:
     void reset() override { _optimizeSegment = false; }
 
     static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
     bool _optimizeSegment;
-    const BoolOption _opt_optimizeSegment{OPT_BOOL_OPTIMIZE_SEGMENT, _optimizeSegment, _options};
+    const BoolOption _opt_optimizeSegment{OPT_BOOL_OPTIMIZE_SEGMENT, _optimizeSegment};
+    const Options _options{_opt_optimizeSegment};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

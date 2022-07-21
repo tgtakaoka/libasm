@@ -18,10 +18,7 @@
 
 namespace libasm {
 
-OptionBase::OptionBase(const /* PROGMEM */ char *name_P, Options &options, OptionSpec spec)
-    : _name_P(name_P), _spec(spec) {
-    options.registerOption(this);
-}
+const Options Options::EMPTY{};
 
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) const {
     if (scan.iequals_P(PSTR("on")) || scan.iequals_P(PSTR("true")) || scan.iequals_P(PSTR("yes")) ||
@@ -46,19 +43,13 @@ Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) const {
 }
 
 Error Options::setOption(const char *name, const char *text) const {
-    for (auto i = 0; i < _num_options; i++) {
-        const auto *option = _options[i];
+    for (auto option = _head; option != nullptr; option = option->next()) {
         if (strcmp_P(name, option->name_P()) == 0) {
             StrScanner scan(text);
             return option->set(scan);
         }
     }
     return UNKNOWN_OPTION;
-}
-
-void Options::registerOption(const OptionBase *option) {
-    if (_num_options < MAX_OPTIONS)
-        _options[_num_options++] = option;
 }
 
 }  // namespace libasm

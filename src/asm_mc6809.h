@@ -34,16 +34,17 @@ public:
     void reset() override { _direct_page = 0; }
 
     static const char OPT_INT_SETDP[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
     uint8_t _direct_page;
     const struct OptSetdp : public IntOptionBase {
-        OptSetdp(uint8_t &value, Options &options)
-            : IntOptionBase(OPT_INT_SETDP, options), _dp(value) {}
+        OptSetdp(uint8_t &value) : IntOptionBase(OPT_INT_SETDP), _dp(value) {}
         void set(int32_t value) const override { _dp = value; }
         uint8_t &_dp;
-    } _opt_setdp{_direct_page, _options};
+    } _opt_setdp{_direct_page};
+    const Options _options{_opt_setdp};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

@@ -36,21 +36,23 @@ public:
 
     static const char OPT_BOOL_LONGA[] PROGMEM;
     static const char OPT_BOOL_LONGI[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
-    const struct OptLongA : public BoolOptionBase {
-        OptLongA(Options &options) : BoolOptionBase(OPT_BOOL_LONGA, options) {}
-        Error set(bool value) const override {
-            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
-        }
-    } _opt_longa{_options};
     const struct OptLongI : public BoolOptionBase {
-        OptLongI(Options &options) : BoolOptionBase(OPT_BOOL_LONGI, options) {}
+        OptLongI() : BoolOptionBase(OPT_BOOL_LONGI) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
         }
-    } _opt_longi{_options};
+    } _opt_longi{};
+    const struct OptLongA : public BoolOptionBase {
+        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, next) {}
+        Error set(bool value) const override {
+            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+        }
+    } _opt_longa{_opt_longi};
+    const Options _options{_opt_longa};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

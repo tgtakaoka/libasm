@@ -38,11 +38,13 @@ public:
     void reset() override { _autoShortDirect = false; }
 
     static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
     bool _autoShortDirect;
-    const BoolOption _opt_shortDitrect{OPT_BOOL_SHORT_DIRECT, _autoShortDirect, _options};
+    const BoolOption _opt_shortDitrect{OPT_BOOL_SHORT_DIRECT, _autoShortDirect};
+    const Options _options{_opt_shortDitrect};
 
     struct Operand : public ErrorAt {
         AddrMode mode;

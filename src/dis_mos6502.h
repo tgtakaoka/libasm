@@ -40,28 +40,30 @@ public:
     static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
     static const char OPT_BOOL_LONGA[] PROGMEM;
     static const char OPT_BOOL_LONGI[] PROGMEM;
+    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
     RegMos6502 _regs;
     const struct OptIndirectLong : public BoolOptionBase {
-        OptIndirectLong(Options &options) : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, options) {}
+        OptIndirectLong() : BoolOptionBase(OPT_BOOL_INDIRECT_LONG) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.useIndirectLong(value) ? OK : OPERAND_NOT_ALLOWED;
         }
-    } _opt_indirectLong{_options};
+    } _opt_indirectLong{};
     const struct OptLongA : public BoolOptionBase {
-        OptLongA(Options &options) : BoolOptionBase(OPT_BOOL_LONGA, options) {}
+        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, next) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
         }
-    } _opt_longa{_options};
+    } _opt_longa{_opt_indirectLong};
     const struct OptLongI : public BoolOptionBase {
-        OptLongI(Options &options) : BoolOptionBase(OPT_BOOL_LONGI, options) {}
+        OptLongI(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGI, next) {}
         Error set(bool value) const override {
             return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
         }
-    } _opt_longi{_options};
+    } _opt_longi{_opt_longa};
+    const Options _options{_opt_longi};
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
