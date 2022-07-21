@@ -94,7 +94,8 @@ int DisCommander::disassemble() {
     }
 
     listing.setCpu(_cpu);
-    _driver.disassemble(memory, _dis_start, _dis_end, listing, output, listout, FilePrinter::STDERR);
+    _driver.disassemble(
+            memory, _dis_start, _dis_end, listing, output, listout, FilePrinter::STDERR);
 
     return 0;
 }
@@ -153,7 +154,7 @@ int DisCommander::usage() {
     fprintf(stderr,
             "libasm disassembler (version " LIBASM_VERSION_STRING
             ")\n"
-            "usage: %s%s [-o <output>] [-l <list>] <input>\n"
+            "usage: %s [-o <output>] [-l <list>] <input>\n"
             "  -C <CPU>    : target CPU%s\n"
             "  -o <output> : output file\n"
             "  -l <list>   : list file\n"
@@ -163,7 +164,7 @@ int DisCommander::usage() {
             "  -r          : use program counter relative notation\n"
             "  -h          : use lower case letter for hexadecimal\n"
             "  -u          : use upper case letter for output\n"
-            "  -v          : print progress verbosely\n",
+            "  -v          : print progress verbosely\n"
             "  -X<name>=<vale>\n"
             "              : extra options (<type> [, <CPU>])\n",
             _prog_name, cpuOption);

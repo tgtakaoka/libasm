@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#include <arduino_example.h>
+#include <asm_scn2650.h>
+#include <dis_scn2650.h>
 
-#define LIBASM_VERSION_MAJOR 1
-#define LIBASM_VERSION_MINOR 6
-#define LIBASM_VERSION_PATCH 25
-#define LIBASM_VERSION_STRING "1.6.25"
+libasm::scn2650::AsmScn2650 asm2650;
+libasm::scn2650::DisScn2650 dis2650;
 
-#endif  // __VERSION_H__
+libasm::arduino::Example example(asm2650, dis2650);
+
+void setup() {
+    Serial.begin(9600);
+    example.begin(Serial);
+}
+
+void loop() {
+    example.loop();
+}
 
 // Local Variables:
 // mode: c++
-// c-basic-offset: 4
-// tab-width: 4
+// c-basic-offset: 2
+// tab-width: 2
 // End:
-// vim: set ft=cpp et ts=4 sw=4:
+// vim: set ft=cpp et ts=2 sw=2:
