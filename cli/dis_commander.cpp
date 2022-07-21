@@ -94,7 +94,8 @@ int DisCommander::disassemble() {
     }
 
     listing.setCpu(_cpu);
-    _driver.disassemble(memory, _dis_start, _dis_end, listing, output, listout, FilePrinter::STDERR);
+    _driver.disassemble(
+            memory, _dis_start, _dis_end, listing, output, listout, FilePrinter::STDERR);
 
     return 0;
 }
@@ -163,10 +164,10 @@ int DisCommander::usage() {
             "  -r          : use program counter relative notation\n"
             "  -h          : use lower case letter for hexadecimal\n"
             "  -u          : use upper case letter for output\n"
-            "  -v          : print progress verbosely\n",
+            "  -v          : print progress verbosely\n"
             "  -X<name>=<vale>\n"
             "              : extra options (<type> [, <CPU>])\n",
-            _prog_name, cpuOption);
+            _prog_name, cpuOption, list.c_str());
     bool common = true;
     for (const auto *dis : _driver) {
         if (common) {

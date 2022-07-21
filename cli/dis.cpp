@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include "dis_scn2650.h"
 #include "dis_cdp1802.h"
 #include "dis_commander.h"
 #include "dis_i8048.h"
@@ -31,6 +30,7 @@
 #include "dis_mn1610.h"
 #include "dis_mos6502.h"
 #include "dis_ns32000.h"
+#include "dis_scn2650.h"
 #include "dis_tlcs90.h"
 #include "dis_tms32010.h"
 #include "dis_tms9900.h"
