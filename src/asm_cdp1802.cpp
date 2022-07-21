@@ -24,18 +24,21 @@ namespace cdp1802 {
 const char AsmCdp1802::OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 const char AsmCdp1802::OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 
+static Config::uintptr_t page(Config::uintptr_t addr) {
+    return addr & ~0xFF;
+}
+
 Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
-    const Config::uintptr_t page = base & ~0xFF;
     if (mode == PAGE) {
-        if ((target & ~0xFF) != page)
-            return setError(op, OPERAND_TOO_FAR);
+        if (page(target) != page(base))
+            return setError(op, OVERWRAP_PAGE);
         insn.emitInsn();
         insn.emitByte(target);
         return OK;
     }
-    if ((target & ~0xFF) == page && _smartBranch) {
+    if (_smartBranch && page(target) == page(base)) {
         const auto opc = insn.opCode();
         insn.setOpCode(0x30 | (opc & 0xF));  // convert to in-page branch
         insn.emitInsn();

@@ -464,6 +464,7 @@ static void test_branch() {
     }
 
     ATEST(0x10FD, "BR 1031H", 0x30, 0x31);
+    AERRT(0x10FD, "BR 1131H", OVERWRAP_PAGE);
     ATEST(0x10FE, "BR 1131H", 0x30, 0x31);
     ATEST(0x10FF, "BR 1131H", 0x30, 0x31);
 

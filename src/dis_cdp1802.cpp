@@ -23,8 +23,12 @@ namespace cdp1802 {
 
 const char DisCdp1802::OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 
-static Config::uintptr_t pageAddr(Config::uintptr_t base, uint8_t val) {
-    return (base & ~0xFF) | val;
+static Config::uintptr_t page(Config::uintptr_t addr) {
+    return addr & ~0xFF;
+}
+
+static Config::uintptr_t inpage(Config::uintptr_t base, uint8_t offset) {
+    return page(base) | offset;
 }
 
 Error DisCdp1802::decodeOperand(
@@ -49,7 +53,7 @@ Error DisCdp1802::decodeOperand(
         outAbsAddr(out, insn.readUint16(memory));
         break;
     case PAGE:
-        outAbsAddr(out, pageAddr(insn.address() + 2, insn.readByte(memory)));
+        outAbsAddr(out, inpage(insn.address() + 2, insn.readByte(memory)));
         break;
     default:
         return OK;
