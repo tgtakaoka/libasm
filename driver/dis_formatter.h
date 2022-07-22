@@ -35,8 +35,7 @@ public:
     DisFormatter(Disassembler &disassembler)
         : ListFormatter(), _disassembler(disassembler), _address(0) {}
 
-    Error disassemble(BinMemory &memory, uint32_t addr, Insn &insn) {
-        memory.setAddress(addr);
+    Error disassemble(BinMemory &memory, Insn &insn) {
         _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
         const Error error = _disassembler.decode(memory, insn, _operands, sizeof(_operands));
         reset(*this);

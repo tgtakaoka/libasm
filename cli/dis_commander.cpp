@@ -55,11 +55,10 @@ int DisCommander::disassemble() {
         return 1;
     input.close();
 
-    const uint8_t addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
-    const uint32_t mem_start = memory.startAddress() / addrUnit;
-    const uint32_t mem_end = memory.endAddress() / addrUnit;
-    if ((_addr_start != 0 || _addr_end != UINT32_MAX) &&
-            (mem_end < _addr_start || mem_start > _addr_end)) {
+    const auto addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
+    const auto mem_start = memory.startAddress() / addrUnit;
+    const auto mem_end = memory.endAddress() / addrUnit;
+    if (_addr_start > mem_end || _addr_end < mem_start) {
         fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
         fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _addr_start, _addr_end);
         return 1;
@@ -90,29 +89,29 @@ int DisCommander::disassemble() {
         listout.println(list.getLine());
     }
     for (const auto &it : memory) {
-        auto base = it.first;
-        auto size = it.second.size();
-        uint32_t start = base / addrUnit;
-        const uint32_t end = start + (size - 1) / addrUnit;
-        if (base > _addr_end || end < _addr_start)
+        auto mem_base = it.first;
+        auto mem_size = it.second.size();
+        auto start = mem_base / addrUnit;
+        const auto end = start + (mem_size - 1) / addrUnit;
+        if (start > _addr_end || end < _addr_start)
             continue;
-        if (base < _addr_start) {
-            size -= (_addr_start - base) * addrUnit;
-            base = _addr_start;
-            start = base / addrUnit;
+        if (start < _addr_start) {
+            mem_base = _addr_start * addrUnit;
+            mem_size -= (_addr_start - start) * addrUnit;
+            start = _addr_start;
         }
         if (end > _addr_end)
-            size -= (end - _addr_end) * addrUnit;
+            mem_size -= (end - _addr_end) * addrUnit;
         list.setOrigin(start);
         output.println(list.getContent());
         listout.println(list.getLine());
-        for (size_t pc = 0; pc < size;) {
-            const uint32_t address = start + pc / addrUnit;
-            Insn insn(address);
-            list.disassemble(memory, base + pc, insn);
+        for (size_t mem_offset = 0; mem_offset < mem_size;) {
+            memory.setAddress(mem_base + mem_offset);
+            Insn insn(start + mem_offset / addrUnit);
+            list.disassemble(memory, insn);
             const Error error = _driver.current()->getError();
             const /* PROGMEM */ char *error_P = _driver.current()->errorText_P();
-            pc += insn.length();
+            mem_offset += insn.length();
             if (error)
                 fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
             if (error)
