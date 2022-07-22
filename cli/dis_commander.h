@@ -18,7 +18,6 @@
 #define __DIS_COMMANDER_H__
 
 #include "bin_memory.h"
-#include "dis_args.h"
 #include "dis_base.h"
 #include "dis_driver.h"
 #include "file_reader.h"
@@ -36,7 +35,18 @@ public:
 
 private:
     driver::DisDriver _driver;
-    driver::DisArgs _args;
+    // command line arguments
+    const char *_prog_name;
+    const char *_input_name;
+    const char *_output_name;
+    const char *_list_name;
+    const char *_cpu;
+    bool _relative_target;
+    bool _uppercase;
+    bool _verbose;
+    uint32_t _addr_start;
+    uint32_t _addr_end;
+    std::map<std::string, std::string> _options;
 
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();

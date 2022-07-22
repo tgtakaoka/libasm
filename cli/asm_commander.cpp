@@ -71,19 +71,19 @@ TextPrinter &AsmCommander::FileFactory::errors() {
 }
 
 AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end)
-    : _sources(), _driver(begin, end, _sources), _args() {}
+    : _sources(), _driver(begin, end, _sources) {}
 
 int AsmCommander::assemble() {
-    if (!_args.cpu.empty() && !_driver.setCpu(_args.cpu.c_str())) {
-        fprintf(stderr, "unknown CPU '%s'\n", _args.cpu.c_str());
+    if (_cpu && !_driver.setCpu(_cpu)) {
+        fprintf(stderr, "unknown CPU '%s'\n", _cpu);
         return 4;
     }
     _driver.setSymbolMode(REPORT_DUPLICATE);
     int pass = 0;
     BinMemory memory;
-    if (_args.verbose) {
+    if (_verbose) {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
-        fprintf(stderr, "%s: Pass %d\n", _args.input_name.c_str(), ++pass);
+        fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
     FilePrinter listout;
     (void)assemble(memory, listout);
@@ -91,47 +91,45 @@ int AsmCommander::assemble() {
     do {
         _driver.setSymbolMode(REPORT_UNDEFINED);
         BinMemory next;
-        if (_args.verbose)
-            fprintf(stderr, "%s: Pass %d\n", _args.input_name.c_str(), ++pass);
+        if (_verbose)
+            fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
         (void)assemble(next, listout);
         if (memory.equals(next))
             break;
         memory.swap(next);
     } while (true);
 
-    if (!_args.output_name.empty()) {
+    if (_output_name) {
         FilePrinter output;
-        if (!output.open(_args.output_name)) {
-            fprintf(stderr, "Can't open output file %s\n", _args.output_name.c_str());
+        if (!output.open(_output_name)) {
+            fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
 
-        auto &encoder = _args.encoder == 'S'
-                                ? MotoSrec::encoder()
-                                : (_args.encoder == 'H' ? IntelHex::encoder()
-                                                        : _driver.current()->defaultEncoder());
+        auto &encoder = _encoder == 'S' ? MotoSrec::encoder()
+                                        : (_encoder == 'H' ? IntelHex::encoder()
+                                                           : _driver.current()->defaultEncoder());
         const AddressWidth addrWidth = _driver.current()->assembler().config().addressWidth();
-        encoder.reset(addrWidth, _args.record_bytes);
+        encoder.reset(addrWidth, _record_bytes);
         encoder.encode(memory, output);
-        if (_args.verbose) {
+        if (_verbose) {
             const uint8_t addrUnit = _driver.current()->assembler().config().addressUnit();
             for (const auto &it : memory) {
                 const uint32_t start = it.first / addrUnit;
                 const size_t size = it.second.size();
                 const uint32_t end = (it.first + size - 1) / addrUnit;
-                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _args.output_name.c_str(), size,
-                        start, end);
+                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, size, start, end);
             }
         }
     }
 
-    if (!_args.list_name.empty() && !listout.open(_args.list_name)) {
-        fprintf(stderr, "Can't open list file %s\n", _args.list_name.c_str());
+    if (_list_name && !listout.open(_list_name)) {
+        fprintf(stderr, "Can't open list file %s\n", _list_name);
         return 1;
     }
-    if (!_args.list_name.empty() && _args.verbose) {
-        fprintf(stderr, "%s: Opened for listing\n", _args.list_name.c_str());
-        fprintf(stderr, "%s: Pass listing\n", _args.input_name.c_str());
+    if (_list_name && _verbose) {
+        fprintf(stderr, "%s: Opened for listing\n", _list_name);
+        fprintf(stderr, "%s: Pass listing\n", _input_name);
     }
     assemble(memory, listout, true);
 
@@ -139,14 +137,14 @@ int AsmCommander::assemble() {
 }
 
 int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
-    if (_sources.open(_args.input_name.c_str())) {
-        fprintf(stderr, "Can't open input file %s\n", _args.input_name.c_str());
+    if (_sources.open(_input_name)) {
+        fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
 
     AsmFormatter listing(memory);
-    listing.setUppercase(_args.uppercase);
-    listing.enableLineNumber(_args.line_number);
+    listing.setUppercase(_uppercase);
+    listing.enableLineNumber(_line_number);
     int errors = 0;
     _driver.reset();
     StrScanner *scan;
@@ -191,9 +189,9 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
 
 AsmDirective *AsmCommander::defaultDirective() {
     AsmDirective *directive = nullptr;
-    if (_args.prog_name.find(PROG_PREFIX) == 0) {
-        const size_t prefix_len = strlen(PROG_PREFIX);
-        const char *cpu = _args.prog_name.c_str() + prefix_len;
+    const auto *prefix = strstr(_prog_name, PROG_PREFIX);
+    if (prefix) {
+        const char *cpu = prefix + strlen(PROG_PREFIX);
         directive = _driver.restrictCpu(cpu);
     }
     return directive;
@@ -234,7 +232,7 @@ int AsmCommander::usage() {
             "  -u          : use uppercase letter for listing\n"
             "  -n          : output line number to list file\n"
             "  -v          : print progress verbosely\n",
-            _args.prog_name.c_str(), list.c_str());
+            _prog_name, list.c_str());
     return 2;
 }
 
@@ -244,7 +242,16 @@ static const char *basename(const char *str, char sep_char = '/') {
 }
 
 int AsmCommander::parseArgs(int argc, const char **argv) {
-    _args.prog_name = basename(argv[0]);
+    _prog_name = basename(argv[0]);
+    _input_name = nullptr;
+    _output_name = nullptr;
+    _list_name = nullptr;
+    _cpu = nullptr;
+    _encoder = 0;
+    _record_bytes = 32;
+    _uppercase = false;
+    _line_number = false;
+    _verbose = false;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -254,18 +261,18 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
                     fprintf(stderr, "-o requires output file name\n");
                     return 1;
                 }
-                _args.output_name = argv[i];
+                _output_name = argv[i];
                 break;
             case 'l':
                 if (++i >= argc) {
                     fprintf(stderr, "-l requires listing file name\n");
                     return 1;
                 }
-                _args.list_name = argv[i];
+                _list_name = argv[i];
                 break;
             case 'S':
             case 'H':
-                _args.encoder = *opt++;
+                _encoder = *opt++;
                 if (*opt) {
                     char *end;
                     unsigned long v = strtoul(opt, &end, 10);
@@ -273,7 +280,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
                         fprintf(stderr, "invalid record length: %s\n", argv[i]);
                         return 3;
                     }
-                    _args.record_bytes = v;
+                    _record_bytes = v;
                 }
                 break;
             case 'C':
@@ -281,39 +288,38 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                _args.cpu = argv[i];
+                _cpu = argv[i];
                 break;
             case 'u':
-                _args.uppercase = true;
+                _uppercase = true;
                 break;
             case 'n':
-                _args.line_number = true;
+                _line_number = true;
                 break;
             case 'v':
-                _args.verbose = true;
+                _verbose = true;
                 break;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;
             }
         } else {
-            if (!_args.input_name.empty()) {
-                fprintf(stderr, "multiple input files specified: %s and %s\n",
-                        _args.input_name.c_str(), opt);
+            if (_input_name) {
+                fprintf(stderr, "multiple input files specified: %s and %s\n", _input_name, opt);
                 return 1;
             }
-            _args.input_name = opt;
+            _input_name = opt;
         }
     }
-    if (_args.input_name.empty()) {
+    if (_input_name == nullptr) {
         fprintf(stderr, "no input file\n");
         return 1;
     }
-    if (_args.output_name == _args.input_name) {
+    if (_output_name && strcmp(_output_name, _input_name) == 0) {
         fprintf(stderr, "output file overwrite input file\n");
         return 2;
     }
-    if (_args.list_name == _args.input_name) {
+    if (_list_name && strcmp(_list_name, _input_name) == 0) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
     }

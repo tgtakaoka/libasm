@@ -17,7 +17,6 @@
 #ifndef __ASM_COMMANDER_H__
 #define __ASM_COMMANDER_H__
 
-#include "asm_args.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
 #include "bin_memory.h"
@@ -54,7 +53,18 @@ private:
 
     FileFactory _sources;
     driver::AsmDriver _driver;
-    driver::AsmArgs _args;
+    // command line arguments
+    const char *_prog_name;
+    const char *_input_name;
+    const char *_output_name;
+    const char *_list_name;
+    const char *_cpu;
+    char _encoder;
+    size_t _record_bytes;
+    bool _uppercase;
+    bool _line_number;
+    bool _verbose;
+    std::map<std::string, std::string> _options;
 
     static constexpr const char *PROG_PREFIX = "asm";
     driver::AsmDirective *defaultDirective();

@@ -31,25 +31,24 @@ namespace cli {
 
 using namespace libasm::driver;
 
-DisCommander::DisCommander(Disassembler **begin, Disassembler **end)
-    : _driver(begin, end), _args() {}
+DisCommander::DisCommander(Disassembler **begin, Disassembler **end) : _driver(begin, end) {}
 
 int DisCommander::disassemble() {
-    if (_args.verbose)
+    if (_verbose)
         fprintf(stderr, "libasm disassembler (version " LIBASM_VERSION_STRING ")\n");
-    if (defaultDisassembler() == nullptr && _args.cpu.empty()) {
+    if (defaultDisassembler() == nullptr && _cpu == nullptr) {
         fprintf(stderr, "No target CPU specified\n");
         return 1;
     }
-    if (_driver.setCpu(_args.cpu.c_str()) == nullptr) {
-        fprintf(stderr, "Unknown target CPU %s\n", _args.cpu.c_str());
+    if (_driver.setCpu(_cpu) == nullptr) {
+        fprintf(stderr, "Unknown target CPU %s\n", _cpu);
         return 1;
     }
 
     BinMemory memory;
-    FileReader input(_args.input_name);
+    FileReader input(_input_name);
     if (!input.open()) {
-        fprintf(stderr, "Can't open input file %s\n", _args.input_name.c_str());
+        fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
     if (readBinary(input, memory) != 0)
@@ -59,35 +58,34 @@ int DisCommander::disassemble() {
     const uint8_t addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
     const uint32_t mem_start = memory.startAddress() / addrUnit;
     const uint32_t mem_end = memory.endAddress() / addrUnit;
-    if ((_args.addr_start != 0 || _args.addr_end != UINT32_MAX) &&
-            (mem_end < _args.addr_start || mem_start > _args.addr_end)) {
+    if ((_addr_start != 0 || _addr_end != UINT32_MAX) &&
+            (mem_end < _addr_start || mem_start > _addr_end)) {
         fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
-        fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _args.addr_start,
-                _args.addr_end);
+        fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _addr_start, _addr_end);
         return 1;
     }
 
-    _driver.current()->setOption("relative", _args.relative_target ? "on" : "off");
+    _driver.current()->setOption("relative", _relative_target ? "on" : "off");
     DisFormatter list(*_driver.current());
-    list.setUppercase(_args.uppercase);
+    list.setUppercase(_uppercase);
     list.setCpu();
     FilePrinter output;
-    if (!_args.output_name.empty()) {
-        if (!output.open(_args.output_name)) {
-            fprintf(stderr, "Can't open output file %s\n", _args.output_name.c_str());
+    if (_output_name) {
+        if (!output.open(_output_name)) {
+            fprintf(stderr, "Can't open output file %s\n", _output_name);
             return 1;
         }
-        if (_args.verbose)
+        if (_verbose)
             fprintf(stderr, "%s: Opened for output\n", output.name().c_str());
         output.println(list.getContent());
     }
     FilePrinter listout;
-    if (!_args.list_name.empty()) {
-        if (!listout.open(_args.list_name)) {
-            fprintf(stderr, "Can't open list file %s\n", _args.list_name.c_str());
+    if (_list_name) {
+        if (!listout.open(_list_name)) {
+            fprintf(stderr, "Can't open list file %s\n", _list_name);
             return 1;
         }
-        if (_args.verbose)
+        if (_verbose)
             fprintf(stderr, "%s: Opened for listing\n", listout.name().c_str());
         listout.println(list.getLine());
     }
@@ -96,15 +94,15 @@ int DisCommander::disassemble() {
         auto size = it.second.size();
         uint32_t start = base / addrUnit;
         const uint32_t end = start + (size - 1) / addrUnit;
-        if (base > _args.addr_end || end < _args.addr_start)
+        if (base > _addr_end || end < _addr_start)
             continue;
-        if (base < _args.addr_start) {
-            size -= (_args.addr_start - base) * addrUnit;
-            base = _args.addr_start;
+        if (base < _addr_start) {
+            size -= (_addr_start - base) * addrUnit;
+            base = _addr_start;
             start = base / addrUnit;
         }
-        if (end > _args.addr_end)
-            size -= (end - _args.addr_end) * addrUnit;
+        if (end > _addr_end)
+            size -= (end - _addr_end) * addrUnit;
         list.setOrigin(start);
         output.println(list.getContent());
         listout.println(list.getLine());
@@ -116,17 +114,14 @@ int DisCommander::disassemble() {
             const /* PROGMEM */ char *error_P = _driver.current()->errorText_P();
             pc += insn.length();
             if (error)
-                fprintf(stderr, "%s:0x%04x: error: %s\n", _args.input_name.c_str(), insn.address(),
-                        error_P);
+                fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
             if (error)
-                listout.format("%s:0x%04x: error: %s\n", _args.input_name.c_str(), insn.address(),
-                        error_P);
+                listout.format("%s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
             do {
                 listout.println(list.getLine());
             } while (list.hasNext());
             if (error)
-                output.format("; %s:0x%04x: error: %s\n", _args.input_name.c_str(), insn.address(),
-                        error_P);
+                output.format("; %s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
             do {
                 output.println(list.getContent());
             } while (list.hasNext());
@@ -142,7 +137,7 @@ int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
     const auto size = BinDecoder::decode(input, memory);
     if (size < 0) {
         fprintf(stderr, "%s:%d: Unrecognizable binary format\n", filename, input.lineno());
-    } else if (_args.verbose) {
+    } else if (_verbose) {
         for (const auto &it : memory) {
             const uint32_t start = it.first / addrUnit;
             const size_t size = it.second.size();
@@ -154,14 +149,13 @@ int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
 }
 
 Disassembler *DisCommander::defaultDisassembler() {
-    if (_args.prog_name.find(PROG_PREFIX) == 0) {
-        const size_t prefix_len = strlen(PROG_PREFIX);
-        const char *cpu = _args.prog_name.c_str() + prefix_len;
-        Disassembler *dis = _driver.restrictCpu(cpu);
-        if (dis)
-            return dis;
+    Disassembler *dis = nullptr;
+    const auto *prefix = strstr(_prog_name, PROG_PREFIX);
+    if (prefix) {
+        const char *cpu = prefix + strlen(PROG_PREFIX);
+        dis = _driver.restrictCpu(cpu);
     }
-    return nullptr;
+    return dis;
 }
 
 int DisCommander::usage() {
@@ -199,7 +193,7 @@ int DisCommander::usage() {
             "  -r          : use program counter relative notation\n"
             "  -u          : use uppercase letter for output\n"
             "  -v          : print progress verbosely\n",
-            _args.prog_name.c_str(), cpuOption, list.c_str());
+            _prog_name, cpuOption, list.c_str());
     return 2;
 }
 
@@ -209,7 +203,16 @@ static const char *basename(const char *str, char sep_char = '/') {
 }
 
 int DisCommander::parseArgs(int argc, const char **argv) {
-    _args.prog_name = basename(argv[0]);
+    _prog_name = basename(argv[0]);
+    _input_name = nullptr;
+    _output_name = nullptr;
+    _list_name = nullptr;
+    _cpu = nullptr;
+    _relative_target = false;
+    _uppercase = false;
+    _verbose = false;
+    _addr_start = 0;
+    _addr_end = UINT32_MAX;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -219,31 +222,31 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                     fprintf(stderr, "-o requires output file name\n");
                     return 1;
                 }
-                _args.output_name = argv[i];
+                _output_name = argv[i];
                 break;
             case 'l':
                 if (++i >= argc) {
                     fprintf(stderr, "-l requires listing file name\n");
                     return 1;
                 }
-                _args.list_name = argv[i];
+                _list_name = argv[i];
                 break;
             case 'C': {
                 if (++i >= argc) {
                     fprintf(stderr, "-C requires CPU name\n");
                     return 1;
                 }
-                _args.cpu = argv[i];
+                _cpu = argv[i];
                 break;
             }
             case 'r':
-                _args.relative_target = true;
+                _relative_target = true;
                 break;
             case 'u':
-                _args.uppercase = true;
+                _uppercase = true;
                 break;
             case 'v':
-                _args.verbose = true;
+                _verbose = true;
                 break;
             case 'A':
                 if (++i >= argc) {
@@ -251,7 +254,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                     return 1;
                 } else {
                     char *end_start;
-                    _args.addr_start = strtoul(argv[i], &end_start, 0);
+                    _addr_start = strtoul(argv[i], &end_start, 0);
                     if (end_start == argv[i]) {
                     format_error:
                         fprintf(stderr, "invalid address format for -A: %s\n", argv[i]);
@@ -265,12 +268,12 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                         return 1;
                     }
                     char *end_end;
-                    _args.addr_end = strtoul(end_start, &end_end, 0);
+                    _addr_end = strtoul(end_start, &end_end, 0);
                     if (end_end == end_start)
                         goto format_error;
                     if (*end_end)
                         goto form_error;
-                    if (_args.addr_end < _args.addr_start) {
+                    if (_addr_end < _addr_start) {
                         fprintf(stderr, "end address must be less than start: %s\n", argv[i]);
                         return 1;
                     }
@@ -281,23 +284,22 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                 return 1;
             }
         } else {
-            if (!_args.input_name.empty()) {
-                fprintf(stderr, "multiple input files specified: %s and %s\n",
-                        _args.input_name.c_str(), opt);
+            if (_input_name) {
+                fprintf(stderr, "multiple input files specified: %s and %s\n", _input_name, opt);
                 return 1;
             }
-            _args.input_name = opt;
+            _input_name = opt;
         }
     }
-    if (_args.input_name.empty()) {
+    if (_input_name == nullptr) {
         fprintf(stderr, "no input file\n");
         return 1;
     }
-    if (_args.output_name == _args.input_name) {
+    if (_output_name && strcmp(_output_name, _input_name) == 0) {
         fprintf(stderr, "output file overwrite input file\n");
         return 2;
     }
-    if (_args.list_name == _args.input_name) {
+    if (_list_name && strcmp(_list_name, _input_name) == 0) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
     }
