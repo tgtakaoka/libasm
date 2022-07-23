@@ -37,15 +37,20 @@ public:
     virtual bool hasOperand() const = 0;
     virtual std::string getOperand() const = 0;
 
+    virtual std::string inputName() const { return ""; }
+    virtual bool isError() const { return false; }
+    virtual std::string errorText() const { return ""; }
+
     // assemble listing only
-    virtual uint32_t lineNumber() const = 0;
-    virtual uint16_t includeNest() const = 0;
-    virtual bool hasValue() const = 0;
-    virtual uint32_t value() const = 0;
-    virtual bool hasLabel() const = 0;
-    virtual std::string getLabel() const = 0;
-    virtual bool hasComment() const = 0;
-    virtual std::string getComment() const = 0;
+    virtual uint32_t lineNumber() const { return 0; }
+    virtual int16_t columnNumber() const { return -1; }
+    virtual uint16_t includeNest() const { return 0; }
+    virtual bool hasValue() const { return false; }
+    virtual uint32_t value() const { return 0; }
+    virtual bool hasLabel() const { return false; }
+    virtual std::string getLabel() const { return ""; }
+    virtual bool hasComment() const { return false; }
+    virtual std::string getComment() const { return ""; }
 
     // configuration
     virtual const ConfigBase &config() const = 0;
@@ -60,7 +65,8 @@ public:
     void reset(ListLine &line);
     void setUppercase(bool uppercase) { _uppercase = uppercase; }
     void enableLineNumber(bool enable) { _lineNumber = enable; }
-    bool hasNext() const;
+    bool hasNextContent() const;
+    bool hasNextLine() const;
     const char *getContent();
     const char *getLine();
 
@@ -68,8 +74,11 @@ protected:
     const ListLine *_line;
     bool _uppercase = false;
     bool _lineNumber = false;
-    int _next;
+    int _nextContent;
+    int _nextLine;
     std::string _out;
+    bool _errorContent;
+    bool _errorLine;
 
     void formatHex(uint8_t val);
     void formatUint8(uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);

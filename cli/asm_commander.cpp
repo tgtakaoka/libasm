@@ -154,7 +154,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
         if (error == OK || error == END_ASSEMBLE) {
             do {
                 out.println(listing.getLine());
-            } while (listing.hasNext());
+            } while (listing.hasNextLine());
             if (error != OK)
                 break;
         } else if (reportError) {
@@ -170,7 +170,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
                 fprintf(stderr, "%s:%d: error: %s at '%s'\n", filename, lineno,
                         _driver.errorText_P(), at);
             }
-            fprintf(stderr, "%s:%d %s\n", filename, lineno, line);
+            fprintf(stderr, "%s:%d: %s\n", filename, lineno, line);
             if (column >= 0) {
                 out.format(
                         "%s:%d:%d: error: %s\n", filename, lineno, column, _driver.errorText_P());
@@ -178,7 +178,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
                 out.format(
                         "%s:%d: error: %s at '%s'\n", filename, lineno, _driver.errorText_P(), at);
             }
-            out.format("%s:%d %s\n", filename, lineno, line);
+            out.format("%s:%d: %s\n", filename, lineno, line);
             errors++;
         }
     }

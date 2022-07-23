@@ -136,13 +136,13 @@ private:
         if (_list) {
             do {
                 fprintf(_list, "%s\n", _listing.getLine());
-            } while (_listing.hasNext());
+            } while (_listing.hasNextLine());
             fflush(_list);
         }
         if (_output) {
             do {
                 fprintf(_output, "%s\n", _listing.getContent());
-            } while (_listing.hasNext());
+            } while (_listing.hasNextContent());
             fflush(_output);
         }
     }

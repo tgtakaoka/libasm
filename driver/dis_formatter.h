@@ -17,10 +17,10 @@
 #ifndef __DIS_FORMATTER_H__
 #define __DIS_FORMATTER_H__
 
-#include "bin_memory.h"
 #include "list_formatter.h"
 #include "config_base.h"
 #include "dis_base.h"
+#include "list_formatter.h"
 #include "str_buffer.h"
 
 #include <stdint.h>
@@ -32,60 +32,55 @@ namespace driver {
 
 class DisFormatter : public ListFormatter, public ListLine {
 public:
-    DisFormatter(Disassembler &disassembler)
-        : ListFormatter(), _disassembler(disassembler), _address(0) {}
 
-    Error disassemble(BinMemory &memory, Insn &insn) {
-        _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
-        const Error error = _disassembler.decode(memory, insn, _operands, sizeof(_operands));
+    DisFormatter(Disassembler &disassembler, const char *input_name)
+        : ListFormatter(), _disassembler(disassembler), _input_name(input_name), _insn(0), _insnBase(_insn) {}
+
+    Error disassemble(DisMemory &memory, uint32_t addr) {
         reset(*this);
-        _address = insn.address();
-        _generated_bytes = insn.bytes();
-        _generated_size = insn.length();
-        _instruction = insn.name();
+        _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
+        _insnBase.reset(addr);
+        const Error error = _disassembler.decode(memory, _insn, _operands, sizeof(_operands));
         return error;
     }
 
     void setCpu() {
         reset(*this);
-        _generated_size = 0;
-        _instruction = _uppercase ? "CPU" : "cpu";
+        _insnBase.reset(_insn.address());
+        _insnBase.nameBuffer().text_P(PSTR("CPU"), _uppercase);
         strcpy_P(_operands, _disassembler.cpu_P());
     }
 
     void setOrigin(uint32_t origin) {
+        reset(*this);
         StrBuffer buf(_operands, sizeof(_operands));
         _disassembler.formatter().formatHex(buf, origin, config().addressWidth(), false);
-        reset(*this);
-        _address = origin;
-        _generated_size = 0;
-        _instruction = _uppercase ? "ORG" : "org";
+        _insnBase.reset(origin);
+        _insnBase.nameBuffer().text_P(PSTR("ORG"), _uppercase);
     }
+
+    // ListLine
+    int generatedSize() const override { return _insn.length(); }
+    bool isError() const override { return _disassembler.getError() != OK; }
 
 private:
     Disassembler &_disassembler;
-    uint32_t _address;
+    const char *_input_name;
+    Insn _insn;
+    InsnBase _insnBase;
     char _operands[128];
-    const uint8_t *_generated_bytes;
-    int _generated_size;
-    const char *_instruction;
 
     // ListLine
-    uint32_t startAddress() const override { return _address; }
-    int generatedSize() const override { return _generated_size; }
-    uint8_t getByte(int offset) const override { return _generated_bytes[offset]; }
-    bool hasInstruction() const override { return _instruction; }
-    std::string getInstruction() const override { return std::string(_instruction); }
+    uint32_t startAddress() const override { return _insn.address(); }
+    uint8_t getByte(int offset) const override { return _insn.bytes()[offset]; }
+    bool hasInstruction() const override { return *_insn.name() != 0; }
+    std::string getInstruction() const override { return std::string(_insn.name()); }
     bool hasOperand() const override { return *_operands; }
     std::string getOperand() const override { return std::string(_operands); }
-    uint32_t lineNumber() const override { return 0; }
-    uint16_t includeNest() const override { return 0; }
-    bool hasValue() const override { return false; }
-    uint32_t value() const override { return 0; }
-    bool hasLabel() const override { return false; }
-    std::string getLabel() const override { return ""; }
-    bool hasComment() const override { return false; }
-    std::string getComment() const override { return ""; }
+
+    std::string inputName() const { return std::string(_input_name); }
+    std::string errorText() const override { return std::string(_disassembler.errorText_P()); }
+
     const ConfigBase &config() const override { return _disassembler.config(); }
     int labelWidth() const override { return 8; }
     int codeBytes() const override {

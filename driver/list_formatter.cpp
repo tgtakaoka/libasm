@@ -23,23 +23,66 @@ namespace driver {
 
 void ListFormatter::reset(ListLine &line) {
     _line = &line;
-    _next = 0;
+    _nextContent = _nextLine = 0;
+    _errorContent = _errorLine = false;
 }
 
-bool ListFormatter::hasNext() const {
-    return _next < _line->generatedSize();
+bool ListFormatter::hasNextContent() const {
+    return _nextContent < _line->generatedSize();
+}
+
+bool ListFormatter::hasNextLine() const {
+    return _nextLine < _line->generatedSize();
 }
 
 const char *ListFormatter::getContent() {
     _out.clear();
-    formatContent(0);
-    _next = _line->generatedSize();
+    if (_line->isError()) {
+        if (!_errorContent) {
+            if (_line->lineNumber()) {
+                // TODO: assembler error
+            } else {
+                // disassembler error
+                _out += "; " + _line->inputName() + ": 0x";
+                formatAddress(_line->startAddress(), true);
+                _out += ' ';
+                _out += _line->errorText();
+                _nextContent = 0;
+            }
+            _errorContent = true;
+        } else {
+            if (_line->lineNumber()) {
+                // TODO: assembler error
+            } else {
+                _out += "; ";
+                formatAddress(_line->startAddress(), true);
+                _nextContent += formatBytes(_nextContent);
+            }
+        }
+    } else {
+        formatContent(0);
+        _nextContent = _line->generatedSize();
+    }
     return _out.c_str();
 }
 
 const char *ListFormatter::getLine() {
     _out.clear();
-    formatLine();
+    if (_line->isError() && !_errorLine) {
+        if (_line->lineNumber()) {
+            // TODO: assembler error
+        } else {
+            // disassembler error
+            _out += _line->inputName() + ": 0x";
+            formatAddress(_line->startAddress(), true);
+            _out += ' ';
+            _out += _line->errorText();
+            _nextLine = 0;
+        }
+        _errorLine = true;
+    } else {
+        formatLine();
+    }
     return _out.c_str();
 }
 
@@ -223,7 +266,7 @@ void ListFormatter::formatLine() {
         sprintf(buf, "%5d/ ", _line->lineNumber());
         _out += buf;
     }
-    formatAddress(_line->startAddress() + _next, true, true);
+    formatAddress(_line->startAddress() + _nextLine, true, true);
     const int pos = _out.size();
     int formattedBytes = 0;
     if (_line->hasValue()) {
@@ -231,14 +274,14 @@ void ListFormatter::formatLine() {
         formatUint32(_line->value(), false, true);
         formattedBytes = 0;
     } else {
-        formattedBytes = formatBytes(_next);
+        formattedBytes = formatBytes(_nextLine);
     }
     const int codeBytes = _line->codeBytes();
     const int dataTextLen =
             _line->config().opCodeWidth() == OPCODE_8BIT ? (codeBytes * 3) : (codeBytes / 2) * 5;
-    if (_next == 0)
+    if (_nextLine == 0)
         formatContent(pos + dataTextLen + 1);
-    _next += formattedBytes;
+    _nextLine += formattedBytes;
 }
 
 }  // namespace driver

@@ -65,9 +65,9 @@ int DisCommander::disassemble() {
     }
 
     _driver.current()->setOption("relative", _relative_target ? "on" : "off");
-    DisFormatter list(*_driver.current());
-    list.setUppercase(_uppercase);
-    list.setCpu();
+    DisFormatter listing(*_driver.current(), _input_name);
+    listing.setUppercase(_uppercase);
+    listing.setCpu();
     FilePrinter output;
     if (_output_name) {
         if (!output.open(_output_name)) {
@@ -76,7 +76,7 @@ int DisCommander::disassemble() {
         }
         if (_verbose)
             fprintf(stderr, "%s: Opened for output\n", output.name().c_str());
-        output.println(list.getContent());
+        output.println(listing.getContent());
     }
     FilePrinter listout;
     if (_list_name) {
@@ -86,7 +86,7 @@ int DisCommander::disassemble() {
         }
         if (_verbose)
             fprintf(stderr, "%s: Opened for listing\n", listout.name().c_str());
-        listout.println(list.getLine());
+        listout.println(listing.getLine());
     }
     for (const auto &it : memory) {
         auto mem_base = it.first;
@@ -102,28 +102,22 @@ int DisCommander::disassemble() {
         }
         if (end > _addr_end)
             mem_size -= (end - _addr_end) * addrUnit;
-        list.setOrigin(start);
-        output.println(list.getContent());
-        listout.println(list.getLine());
+        listing.setOrigin(start);
+        output.println(listing.getContent());
+        listout.println(listing.getLine());
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
             memory.setAddress(mem_base + mem_offset);
-            Insn insn(start + mem_offset / addrUnit);
-            list.disassemble(memory, insn);
-            const Error error = _driver.current()->getError();
-            const /* PROGMEM */ char *error_P = _driver.current()->errorText_P();
-            mem_offset += insn.length();
-            if (error)
-                fprintf(stderr, "%s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
-            if (error)
-                listout.format("%s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
+            listing.disassemble(memory, start + mem_offset / addrUnit);
+            mem_offset += listing.generatedSize();
             do {
-                listout.println(list.getLine());
-            } while (list.hasNext());
-            if (error)
-                output.format("; %s:0x%04x: error: %s\n", _input_name, insn.address(), error_P);
+                const char *line = listing.getLine();
+                listout.println(line);
+                if (listing.isError())
+                    fprintf(stderr, "%s\n", line);
+            } while (listing.hasNextLine());
             do {
-                output.println(list.getContent());
-            } while (list.hasNext());
+                output.println(listing.getContent());
+            } while (listing.hasNextContent());
         }
     };
 
