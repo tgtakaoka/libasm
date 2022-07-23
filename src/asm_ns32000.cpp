@@ -553,14 +553,14 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
     case M_FENW:
         if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) &&
                 !RegNs32000::isRegPair(op.reg)) {
-            insn.clear();
+            insn.reset();
             return setError(op, REGISTER_NOT_ALLOWED);
         }
         goto emit_generic;
     case M_GENR:
     case M_GENW:
         if (op.mode == M_GREG && size == SZ_QUAD && !RegNs32000::isRegPair(op.reg)) {
-            insn.clear();
+            insn.reset();
             return setError(op, REGISTER_NOT_ALLOWED);
         }
         goto emit_generic;

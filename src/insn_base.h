@@ -40,7 +40,10 @@ public:
     const uint8_t *bytes() const { return _bytes; }
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
-    void clear() { _length = 0; }
+    void reset(uint32_t addr) {
+        _address = addr;
+        _length = 0;
+    }
 
     /** No copy constructor. */
     Insn(Insn const &) = delete;
@@ -48,7 +51,7 @@ public:
     void operator=(Insn const &) = delete;
 
 private:
-    const uint32_t _address;
+    uint32_t _address;
     uint8_t _length;
     static constexpr size_t MAX_CODE = 24;
     uint8_t _bytes[MAX_CODE];
@@ -79,11 +82,20 @@ private:
  */
 class InsnBase : public ErrorReporter {
 public:
+    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn), _buffer(insn._name, sizeof(insn._name)) {}
+
+    uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _buffer; }
     StrBuffer &clearNameBuffer() { return _buffer.reset(_insn._name, sizeof(_insn._name)); }
+
+    void reset(uint32_t addr) {
+        resetError();
+        _insn.reset(addr);
+        clearNameBuffer();
+    }
 
     /** Generate 8 bit |data| (Assembler). */
     void emitByte(uint8_t data) { _insn.emitByte(data); }
@@ -216,17 +228,6 @@ public:
         return static_cast<uint64_t>(msw) << 32 | lsw;
     }
 
-protected:
-    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn), _buffer(insn._name, sizeof(insn._name)) {}
-
-    uint32_t address() const { return _insn.address(); }
-
-    void clear() {
-        resetError();
-        _insn.clear();
-        clearNameBuffer();
-    }
-
 private:
     Insn &_insn;
     StrBuffer _buffer;
@@ -237,7 +238,7 @@ class InsnImpl : public InsnBase {
 public:
     typename Conf::uintptr_t address() const { return InsnBase::address(); }
 
-    void clear() { InsnBase::clear(); }
+    void reset() { InsnBase::reset(address()); }
     void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;

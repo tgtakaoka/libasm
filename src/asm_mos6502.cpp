@@ -31,7 +31,7 @@ Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand
     const int16_t delta = target - base;
     if (addressWidth() == ADDRESS_24BIT && op.isOK() && (op.val32 & ~0xFFFF) != bank) {
     too_far:
-        insn.clear();
+        insn.reset();
         return setError(OPERAND_TOO_FAR);
     }
     if (mode == REL) {

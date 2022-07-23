@@ -177,7 +177,7 @@ Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
     }
     if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1)) {
         setError(OVERWRAP_PAGE);
-        insn.clear();
+        insn.reset();
     }
     return getError();
 }

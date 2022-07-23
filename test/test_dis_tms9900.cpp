@@ -396,7 +396,7 @@ static void assert_mid(
             words[pos + 1] = post;
             ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
 
-            insn.clear();
+            insn.reset(insn.address());
             disassembler.decode(memory, insn, operands, sizeof(operands));
             if (m && code > m->end) {
                 if (++m >= end)

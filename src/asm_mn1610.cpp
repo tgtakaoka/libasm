@@ -342,7 +342,7 @@ Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     const AddrMode op1 = insn.op1();
     if (op1 != M_NO && encodeOperand(insn, opr1, op1)) {
     error:
-        insn.clear();
+        insn.reset();
         return getError();
     }
     const AddrMode op2 = insn.op2();

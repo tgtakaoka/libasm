@@ -539,12 +539,12 @@ Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
     if (mode1 == M_RTFM)
         return encodeTransferMemory(insn, op1, op2);
     if (encodeOperand(insn, op1, mode1)) {
-        insn.clear();
+        insn.reset();
         return getError();
     }
     const AddrMode mode2 = insn.mode2();
     if (encodeOperand(insn, op2, mode2)) {
-        insn.clear();
+        insn.reset();
         return getError();
     }
     insn.emitInsn();

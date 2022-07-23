@@ -228,7 +228,7 @@ Error AsmTms9900::encode(StrScanner &scan, Insn &_insn) {
         return getError();
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO && encodeOperand(insn, dstOp, dst)) {
-        insn.clear();
+        insn.reset();
         return getError();
     }
     insn.emitInsn();

@@ -234,7 +234,7 @@ Error AsmScn2650::encode(StrScanner &scan, Insn &_insn) {
     if (encodeOperand(insn, opr1, insn.mode1()))
         return getError();
     if (encodeOperand(insn, opr2, insn.mode2())) {
-        insn.clear();
+        insn.reset();
         return getError();
     }
 

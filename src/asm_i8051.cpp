@@ -206,11 +206,11 @@ Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
         if (dst && encodeOperand(insn, dst, dstOp))
             return getError();
         if (src && encodeOperand(insn, src, srcOp)) {
-            insn.clear();
+            insn.reset();
             return getError();
         }
         if (ext && encodeOperand(insn, ext, extOp)) {
-            insn.clear();
+            insn.reset();
             return getError();
         }
     }

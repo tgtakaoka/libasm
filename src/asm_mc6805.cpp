@@ -222,7 +222,7 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
         goto error;
     if (emitOperand(insn, insn.mode3(), op3)) {
     error:
-        insn.clear();
+        insn.reset();
         return getError();
     }
     insn.emitInsn();
