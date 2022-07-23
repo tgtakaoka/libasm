@@ -18,17 +18,18 @@
 #include "gen_driver.h"
 
 using namespace libasm::tms9900;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisTms9900 dis9900;
-    dis9900.setOption("relative", "enable");
-    GenDriver<Config> driver(dis9900);
+    GenDriver driver(dis9900);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis9900, 0x0100);
-    generator.generate(driver);
+    dis9900.setOption("relative", "enable");
+
+    TestGenerator generator(driver, dis9900, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

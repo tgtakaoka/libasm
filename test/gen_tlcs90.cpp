@@ -18,17 +18,18 @@
 #include "gen_driver.h"
 
 using namespace libasm::tlcs90;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisTlcs90 dis90;
-    dis90.setOption("relative", "enable");
-    GenDriver<Config> driver(dis90);
+    GenDriver driver(dis90);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis90, 0x0100);
-    generator.generate(driver);
+    dis90.setOption("relative", "enable");
+
+    TestGenerator generator(driver, dis90, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

@@ -18,20 +18,21 @@
 #include "gen_driver.h"
 
 using namespace libasm::mos6502;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisMos6502 dis6502;
-    dis6502.setOption("relative", "enable");
-    dis6502.setOption("indirect-long", "disable");
-    GenDriver<Config> driver(dis6502);
+    GenDriver driver(dis6502);
     if (driver.main(argc, argv))
         return 1;
 
+    dis6502.setOption("relative", "enable");
+    dis6502.setOption("indirect-long", "disable");
+
     const Config::uintptr_t origin =
             dis6502.addressWidth() == libasm::ADDRESS_24BIT ? 0x100200 : 0x0200;
-    TestGenerator<Config> generator(dis6502, origin);
-    generator.generate(driver);
+    TestGenerator generator(driver, dis6502, origin);
+    generator.generate();
 
     return driver.close();
 }

@@ -18,16 +18,16 @@
 #include "gen_driver.h"
 
 using namespace libasm::tms32010;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisTms32010 dis32010;
-    GenDriver<Config> driver(dis32010);
+    GenDriver driver(dis32010);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis32010, 0x0100);
-    generator.generate(driver);
+    TestGenerator generator(driver, dis32010, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

@@ -18,17 +18,18 @@
 #include "gen_driver.h"
 
 using namespace libasm::mc6809;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisMc6809 dis6809;
-    dis6809.setOption("relative", "enable");
-    GenDriver<Config> driver(dis6809);
+    GenDriver driver(dis6809);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis6809, 0x0100);
-    generator.generate(driver);
+    dis6809.setOption("relative", "enable");
+
+    TestGenerator generator(driver, dis6809, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

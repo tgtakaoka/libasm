@@ -17,13 +17,12 @@
 #ifndef __TOKENIZED_TEXT_H__
 #define __TOKENIZED_TEXT_H__
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
-#include <cstdint>
-
 namespace libasm {
-namespace test {
+namespace gen {
 
 class TokenizedText {
 public:
@@ -46,7 +45,7 @@ private:
     static std::vector<uint8_t> tokenize(const char *text);
 };
 
-}  // namespace test
+}  // namespace gen
 }  // namespace libasm
 
 #endif

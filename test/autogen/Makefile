@@ -45,13 +45,13 @@ define gas-out
 $(filter $(1),$(GAS_targets))
 endef
 define gen-opt
-$(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-c -u,-u))
+$(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-i -u,-u))
 endef
 # make rule for auto generation file
 define gen-rule # arch target out opt
-gen_$(1)-refresh::
-	+$(MAKE) -C .. gen_$(1)
-$(3): gen_$(1)-refresh
+#../gen_$(1)::
+#	+$(MAKE) -C .. gen_$(1)
+$(3): #../gen_$(1)
 	../gen_$(1) $(4) -C $(CPU_$(2)) -o $$@ -l gen_$(2).lst
 
 endef
@@ -62,10 +62,10 @@ GEN_OUTS = $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),$(call gen-out,$(t))))
 $(eval $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),\
 	$(call gen-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
 
-generate: gen $(GEN_OUTS)
+generate: clean-gen $(GEN_OUTS)
 
 ASM=../../cli/asm
-$(ASM)-refresh:
+$(ASM):
 	+$(MAKE) -C ../../cli cli
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
@@ -78,7 +78,7 @@ asm-$(2).$(3): $(1)
 endef
 $(eval $(foreach f,$(ASM_TESTS),$(call asm-rule,$(f).asm,$(f),$(call out-ext,$(f)),$(call asm-opt,$(f)))))
 
-asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
+asm-test: $(ASM) clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 

@@ -18,24 +18,24 @@
 #include "gen_driver.h"
 
 using namespace libasm::ns32000;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisNs32000 dis32000;
-    GenDriver<Config> driver(dis32000);
-    dis32000.setOption("relative", "enable");
-    dis32000.setOption("c-style", "enable");
+    GenDriver driver(dis32000);
     if (driver.main(argc, argv))
         return 1;
 
+    dis32000.setOption("relative", "enable");
+    dis32000.setOption("c-style", "enable");
     if (driver.generateGas()) {
         dis32000.setOption("stropt-bracket", "enable");
         dis32000.setOption("origin-char", ".");
         dis32000.setOption("pcrel-paren", "enable");
         dis32000.setOption("float-prefix", "enable");
     }
-    TestGenerator<Config> generator(dis32000, 0x10000);
-    generator.generate(driver);
+    TestGenerator generator(driver, dis32000, 0x10000);
+    generator.generate();
 
     return driver.close();
 }

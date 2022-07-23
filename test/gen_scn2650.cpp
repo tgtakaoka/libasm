@@ -18,17 +18,18 @@
 #include "gen_driver.h"
 
 using namespace libasm::scn2650;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisScn2650 dis2650;
-    dis2650.setOption("relative", "disable");
-    GenDriver<Config> driver(dis2650);
+    GenDriver driver(dis2650);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis2650, 0x0100);
-    generator.generate(driver);
+    dis2650.setOption("relative", "disable");
+
+    TestGenerator generator(driver, dis2650, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

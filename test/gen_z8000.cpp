@@ -18,24 +18,25 @@
 #include "gen_driver.h"
 
 using namespace libasm::z8000;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisZ8000 dis8000;
-    dis8000.setOption("relative", "enable");
-    GenDriver<Config> driver(dis8000);
+    GenDriver driver(dis8000);
     if (driver.main(argc, argv))
         return 1;
 
-    const Config::uintptr_t org =
-            dis8000.addressWidth() == libasm::ADDRESS_24BIT ? 0x10000 : 0x1000;
+    dis8000.setOption("relative", "enable");
     if (driver.generateGas()) {
         dis8000.setOption("ioaddr-prefix", "enable");
         dis8000.setOption("origin-char", ".");
         dis8000.setOption("short-direct", "disable");
     }
-    TestGenerator<Config> generator(dis8000, org);
-    generator.generate(driver);
+
+    const Config::uintptr_t org =
+            dis8000.addressWidth() == libasm::ADDRESS_24BIT ? 0x10000 : 0x1000;
+    TestGenerator generator(driver, dis8000, org);
+    generator.generate();
 
     return driver.close();
 }

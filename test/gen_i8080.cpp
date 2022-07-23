@@ -18,16 +18,16 @@
 #include "gen_driver.h"
 
 using namespace libasm::i8080;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisI8080 dis8080;
-    GenDriver<Config> driver(dis8080);
+    GenDriver driver(dis8080);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis8080, 0x0100);
-    generator.generate(driver);
+    TestGenerator generator(driver, dis8080, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

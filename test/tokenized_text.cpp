@@ -20,7 +20,7 @@
 #include <cstring>
 
 namespace libasm {
-namespace test {
+namespace gen {
 
 static inline bool isXdigits(const char *&r, const char *p) {
     if (!isxdigit(*p))

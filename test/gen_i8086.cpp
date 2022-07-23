@@ -18,18 +18,19 @@
 #include "gen_driver.h"
 
 using namespace libasm::i8086;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisI8086 dis8086;
-    dis8086.setOption("relative", "enable");
-    dis8086.setOption("string-insn", "enable");
-    GenDriver<Config> driver(dis8086);
+    GenDriver driver(dis8086);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis8086, 0x1000);
-    generator.generate(driver);
+    dis8086.setOption("relative", "enable");
+    dis8086.setOption("string-insn", "enable");
+
+    TestGenerator generator(driver, dis8086, 0x1000);
+    generator.generate();
 
     return driver.close();
 }

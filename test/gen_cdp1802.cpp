@@ -18,16 +18,16 @@
 #include "gen_driver.h"
 
 using namespace libasm::cdp1802;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisCdp1802 dis1802;
-    GenDriver<Config> driver(dis1802);
+    GenDriver driver(dis1802);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis1802, 0x0100);
-    generator.generate(driver).generate(driver, 0x68);
+    TestGenerator generator(driver, dis1802, 0x0100);
+    generator.generate().generate(0x68);
 
     return driver.close();
 }

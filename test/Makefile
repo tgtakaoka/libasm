@@ -41,7 +41,8 @@ OBJS_test = array_memory.o test_asserter.o error_reporter.o option_base.o \
 OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o
 OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o
 OBJS_expr = test_expr_helper.o value_parser.o value_formatter.o
-OBJS_gen  = dis_base.o value_formatter.o list_formatter.o tokenized_text.o
+OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o \
+            dis_base.o value_formatter.o list_formatter.o
 
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 

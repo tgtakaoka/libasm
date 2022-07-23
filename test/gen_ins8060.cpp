@@ -18,18 +18,19 @@
 #include "gen_driver.h"
 
 using namespace libasm::ins8060;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisIns8060 dis8060;
-    dis8060.setOption("relative", "enable");
-    dis8060.setOption("c-style", "enable");
-    GenDriver<Config> driver(dis8060);
+    GenDriver driver(dis8060);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(dis8060, 0x0100);
-    generator.generate(driver);
+    dis8060.setOption("relative", "enable");
+    dis8060.setOption("c-style", "enable");
+
+    TestGenerator generator(driver, dis8060, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

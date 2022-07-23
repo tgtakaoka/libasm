@@ -44,12 +44,13 @@ public:
         return error;
     }
 
-    void setCpu(const char *cpu) {
+    bool setCpu(const char *cpu) {
         reset(*this);
         _insnBase.reset(_insn.address());
         _insnBase.nameBuffer().text_P(PSTR("CPU"), _uppercase);
         StrBuffer buf(_operands, sizeof(_operands));
         buf.text(cpu, _uppercase);
+        return _disassembler.setCpu(cpu);
     }
 
     void setOrigin(uint32_t origin) {
@@ -64,7 +65,7 @@ public:
     int generatedSize() const override { return _insn.length(); }
     bool isError() const override { return _disassembler.getError() != OK; }
 
-private:
+protected:
     Disassembler &_disassembler;
     const char *_input_name;
     Insn _insn;

@@ -18,18 +18,19 @@
 #include "gen_driver.h"
 
 using namespace libasm::z8;
-using namespace libasm::test;
+using namespace libasm::gen;
 
 int main(int argc, const char **argv) {
     DisZ8 disz8;
-    disz8.setOption("relative", "enable");
-    disz8.setOption("work-register", "disable");
-    GenDriver<Config> driver(disz8);
+    GenDriver driver(disz8);
     if (driver.main(argc, argv))
         return 1;
 
-    TestGenerator<Config> generator(disz8, 0x0100);
-    generator.generate(driver);
+    disz8.setOption("relative", "enable");
+    disz8.setOption("work-register", "disable");
+
+    TestGenerator generator(driver, disz8, 0x0100);
+    generator.generate();
 
     return driver.close();
 }

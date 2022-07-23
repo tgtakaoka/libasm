@@ -17,258 +17,54 @@
 #ifndef __GEN_DRIVER_H__
 #define __GEN_DRIVER_H__
 
-#include <string>
-
-#include <cstdio>
-#include <cstring>
-
 #include "dis_base.h"
-#include "list_formatter.h"
+#include "gen_formatter.h"
 #include "test_generator.h"
 
+#include <cstdio>
+#include <string>
+
 namespace libasm {
-namespace test {
+namespace gen {
 
-using libasm::driver::ListFormatter;
-using libasm::driver::ListLine;
-
-template <typename Conf>
-class GenDriver : public TestGenerator<Conf>::Printer, private ListLine {
+class GenDriver : public TestGenerator::Formatter {
 public:
-    GenDriver(Disassembler &disassembler) : _disassembler(disassembler), _listing() {}
+    GenDriver(Disassembler &disassembler);
 
-    int main(int argc, const char **argv) {
-        _progname = basename(argv[0]);
-        if (parseOption(argc, argv))
-            return usage();
-
-        const char *commentStr = ";;;";
-        if (_generateGas) {
-            commentStr = ";###";
-            _disassembler.formatter().setCStyle(true);
-        }
-        _disassembler.setOption("uppercase", _uppercase ? "yes" : "no");
-        _listing.setUppercase(_uppercase);
-        _output = nullptr;
-        if (_output_name) {
-            _output = fopen(_output_name, "w");
-            if (_output == nullptr) {
-                fprintf(stderr, "Can't open output file %s\n", _output_name);
-                return 1;
-            }
-            printCommandLine(_output, commentStr, _progname, argc, argv);
-        }
-        _list = nullptr;
-        if (_list_name) {
-            _list = fopen(_list_name, "w");
-            if (_list == nullptr) {
-                fprintf(stderr, "Can't open list file %s\n", _list_name);
-                return 1;
-            }
-            printCommandLine(_list, commentStr, _progname, argc, argv);
-        }
-        if (_generateCpu && !_generateGas)
-            pseudo("CPU", _cpu.c_str());
-        return 0;
-    }
-
-    void pseudo(const char *name, const char *operands) {
-        _address = 0;
-        _generated_size = 0;
-        print(name, operands);
-    }
-
-    int close() {
-        if (_output)
-            fclose(_output);
-        if (_list)
-            fclose(_list);
-        return 0;
-    }
-
+    int main(int argc, const char **argv);
+    void pseudo(const char *name, const char *operands);
+    int close();
     bool generateGas() const { return _generateGas; }
 
 private:
     Disassembler &_disassembler;
-    ListFormatter _listing;
+    GenFormatter _listing;
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
     bool _uppercase;
     std::string _cpu;
-    bool _generateCpu;
+    bool _includeTarget;
     bool _generateGas;
     bool _dump;
     FILE *_output;
     FILE *_list;
-    const char *_name;
-    const char *_operands;
-    typename Conf::uintptr_t _address;
-    const uint8_t *_bytes;
-    size_t _generated_size;
-    const char *_instruction;
 
-    // TestGenerator<Addr>::Printer
-    void print(const TestData<Conf> &data) override {
-        _name = data.name();
-        _address = data.address();
-        _bytes = data.bytes();
-        _generated_size = data.length();
-        print(data.name(), data.operands());
-    }
+    // TestGenerator::Formatter
+    GenFormatter &listing() override final { return _listing; }
+    void printList() override final;
+    void setOrigin(uint32_t addr) override final;
 
-    void origin(typename Conf::uintptr_t addr) override {
-        if (!_generateCpu || _generateGas)
-            return;
-        char operands[40];
-        StrBuffer buffer(operands, sizeof(operands));
-        _disassembler.formatter().formatHex(
-                buffer, addr / addrUnit(), config().addressWidth(), false);
-        _address = addr;
-        _generated_size = 0;
-        print("ORG", operands);
-    }
+    void info(const char *fmt, ...) override final;
 
-    void print(const char *inst, const char *operands) {
-        _listing.reset(*this);
-        _instruction = inst;
-        _operands = operands;
-        if (_list) {
-            do {
-                fprintf(_list, "%s\n", _listing.getLine());
-            } while (_listing.hasNextLine());
-            fflush(_list);
-        }
-        if (_output) {
-            do {
-                fprintf(_output, "%s\n", _listing.getContent());
-            } while (_listing.hasNextContent());
-            fflush(_output);
-        }
-    }
+    int parseOption(int argc, const char **argv);
+    int usage() const;
 
-    FILE *dumpOut() override { return _dump ? _list : nullptr; }
-
-    // ListLine
-    uint32_t lineNumber() const override { return 0; }
-    uint16_t includeNest() const override { return 0; }
-    uint32_t startAddress() const override { return _address; }
-    int generatedSize() const override { return _generated_size; }
-    uint8_t getByte(int offset) const override { return _bytes[offset]; }
-    bool hasValue() const override { return false; }
-    uint32_t value() const override { return 0; }
-    bool hasLabel() const override { return false; }
-    bool hasInstruction() const override { return true; }
-    bool hasOperand() const override { return *_operands; }
-    bool hasComment() const override { return false; }
-    std::string getLabel() const override { return ""; }
-    std::string getInstruction() const override { return std::string(_instruction); }
-    std::string getOperand() const override { return std::string(_operands); }
-    std::string getComment() const override { return ""; }
-    const ConfigBase &config() const override { return _disassembler.config(); }
-    int labelWidth() const override { return 6; }
-    int codeBytes() const override { return 6; }
-    int nameWidth() const override { return config().nameMax() + 1; }
-    int operandWidth() const override { return 40; }
-    uint8_t addrUnit() const { return static_cast<uint8_t>(config().addressUnit()); }
-
-    int parseOption(int argc, const char **argv) {
-        _output_name = nullptr;
-        _list_name = nullptr;
-        _uppercase = false;
-        _generateCpu = true;
-        _generateGas = false;
-        _dump = false;
-        for (int i = 1; i < argc; i++) {
-            const char *opt = argv[i];
-            if (*opt == '-') {
-                switch (*++opt) {
-                case 'o':
-                    if (++i >= argc) {
-                        fprintf(stderr, "-o requires output file name\n");
-                        return 1;
-                    }
-                    _output_name = argv[i];
-                    break;
-                case 'l':
-                    if (++i >= argc) {
-                        fprintf(stderr, "-l requires listing file name\n");
-                        return 1;
-                    }
-                    _list_name = argv[i];
-                    break;
-                case 'C':
-                    if (++i >= argc) {
-                        fprintf(stderr, "-C requires CPU name\n");
-                        return 1;
-                    }
-                    if (!_disassembler.setCpu(argv[i])) {
-                        fprintf(stderr, "unknown CPU '%s'\n", argv[i]);
-                        return 4;
-                    }
-                    _cpu = argv[i];
-                    break;
-                case 'c':
-                    _generateCpu = false;
-                    break;
-                case 'g':
-                    _generateGas = true;
-                    break;
-                case 'u':
-                    _uppercase = true;
-                    break;
-                case 'd':
-                    _dump = true;
-                    break;
-                default:
-                    fprintf(stderr, "unknown option: %s\n", opt);
-                    return 1;
-                }
-            }
-        }
-        if (_cpu.empty()) {
-            const /* PROGMEM */ auto cpu_P = _disassembler.cpu_P();
-            char cpu[strlen_P(cpu_P) + 1];
-            strcpy_P(cpu, cpu_P);
-            _cpu = cpu;
-        }
-        return 0;
-    }
-
-    int usage() {
-        const /* PROGMEM */ auto list_P = _disassembler.listCpu_P();
-        char listCpu[strlen_P(list_P) + 1];
-        strcpy_P(listCpu, list_P);
-        fprintf(stderr,
-                "usage: %s [-o <output>] [-l <list>]\n"
-                " options:\n"
-                "  -o <output> : output file\n"
-                "  -l <list>   : list file\n"
-                "  -C          : CPU variant: %s\n"
-                "  -c          : do not output cpu directive\n"
-                "  -g          : output GNU as compatible\n"
-                "  -u          : use uppercase letter for output\n"
-                "  -d          : dump debug info\n",
-                _progname, listCpu);
-        return 2;
-    }
-
-    static const char *basename(const char *str, char sep_char = '/') {
-        const char *sep = strrchr(str, sep_char);
-        return sep ? sep + 1 : str;
-    }
-
-    void printCommandLine(
-            FILE *out, const char *commentStr, const char *progname, int argc, const char **argv) {
-        fprintf(out, "%s AUTO GENERATED FILE\n", commentStr);
-        fprintf(out, "%s generated by: %s", commentStr, progname);
-        for (int i = 1; i < argc; i++)
-            fprintf(out, " %s", argv[i]);
-        fprintf(out, "\n");
-    }
+    void printCommandLine(FILE *out, const char *commentStr, const char *progname, int argc,
+            const char **argv) const;
 };
 
-}  // namespace test
+}  // namespace gen
 }  // namespace libasm
 
 #endif
