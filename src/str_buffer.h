@@ -33,6 +33,7 @@ public:
         return uppercase ? letter(toupper(c)) : letter(tolower(c));
     }
     StrBuffer &text(const char *text);
+    StrBuffer &text(const char *text, bool uppercase);
     StrBuffer &text(const StrScanner &scan);
     StrBuffer &text_P(const /*PROGMEM*/ char *text_P);
     StrBuffer &text_P(const /*PROGMEM*/ char *text, bool uppercase);

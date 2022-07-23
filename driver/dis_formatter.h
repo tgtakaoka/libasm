@@ -44,11 +44,12 @@ public:
         return error;
     }
 
-    void setCpu() {
+    void setCpu(const char *cpu) {
         reset(*this);
         _insnBase.reset(_insn.address());
         _insnBase.nameBuffer().text_P(PSTR("CPU"), _uppercase);
-        strcpy_P(_operands, _disassembler.cpu_P());
+        StrBuffer buf(_operands, sizeof(_operands));
+        buf.text(cpu, _uppercase);
     }
 
     void setOrigin(uint32_t origin) {

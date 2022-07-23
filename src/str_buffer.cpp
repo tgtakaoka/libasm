@@ -18,8 +18,8 @@
 
 #include "config_host.h"
 
-#include <stdarg.h>
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdio.h>
 
 namespace libasm {
@@ -45,6 +45,14 @@ StrBuffer &StrBuffer::text(const char *text) {
     char c;
     while ((c = *text++) != 0)
         letter(c);
+    return *this;
+}
+
+StrBuffer &StrBuffer::text(const char *text, bool uppercase) {
+    const auto &conv = uppercase ? toupper : tolower;
+    char c;
+    while ((c = *text++) != 0)
+        letter(conv(c));
     return *this;
 }
 

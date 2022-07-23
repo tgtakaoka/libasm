@@ -67,7 +67,7 @@ int DisCommander::disassemble() {
     _driver.current()->setOption("relative", _relative_target ? "on" : "off");
     DisFormatter listing(*_driver.current(), _input_name);
     listing.setUppercase(_uppercase);
-    listing.setCpu();
+    listing.setCpu(_cpu);
     FilePrinter output;
     if (_output_name) {
         if (!output.open(_output_name)) {
