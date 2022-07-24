@@ -68,8 +68,9 @@ int DisCommander::disassemble() {
     DisFormatter listing(disassembler, _input_name);
     listing.setUpperHex(_upper_hex);
     listing.setUppercase(_uppercase);
-    disassembler.setOption("relative", _relative_target ? "on" : "off");
-    // TODO: call disassembler.setOption()
+    for (auto &opt : _options) {
+        disassembler.setOption(opt.first.c_str(), opt.second.c_str());
+    }
 
     FilePrinter output;
     if (_output_name) {
@@ -163,7 +164,23 @@ int DisCommander::usage() {
             "  -h          : use lower case letter for hexadecimal\n"
             "  -u          : use upper case letter for output\n"
             "  -v          : print progress verbosely\n",
-            _prog_name, cpuOption, list.c_str());
+            "  -X<name>=<vale>\n"
+            "              : extra options (<type> [, <CPU>])\n",
+            _prog_name, cpuOption);
+    bool common = true;
+    for (const auto *dis : _driver) {
+        if (common) {
+            common = false;
+            for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
+                fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
+                        Options::nameof(opt->spec()));
+            }
+        }
+        for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
+            fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
+                    Options::nameof(opt->spec()), dis->cpu_P());
+        }
+    }
     return 2;
 }
 
@@ -172,13 +189,20 @@ static const char *basename(const char *str, char sep_char = '/') {
     return sep ? sep + 1 : str;
 }
 
+int DisCommander::parseOptionValue(const char *option) {
+    const char *equ = strchr(option, '=');
+    if (equ == nullptr)
+        return 1;
+    _options.emplace(std::string(option, equ), std::string(equ + 1));
+    return 0;
+}
+
 int DisCommander::parseArgs(int argc, const char **argv) {
     _prog_name = basename(argv[0]);
     _input_name = nullptr;
     _output_name = nullptr;
     _list_name = nullptr;
     _cpu = nullptr;
-    _relative_target = false;
     _upper_hex = true;
     _uppercase = false;
     _verbose = false;
@@ -211,7 +235,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                 break;
             }
             case 'r':
-                _relative_target = true;
+                _options.emplace("relative", "on");
                 break;
             case 'h':
                 _upper_hex = false;
@@ -253,6 +277,16 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                     }
                 }
                 break;
+            case 'X':
+                if (*++opt) {
+                    if (parseOptionValue(opt) == 0)
+                        break;
+                } else if (++i < argc) {
+                    if (parseOptionValue(argv[i]) == 0)
+                        break;
+                }
+                fprintf(stderr, "-X requires option=value\n");
+                return 1;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;
@@ -276,6 +310,30 @@ int DisCommander::parseArgs(int argc, const char **argv) {
     if (_list_name && strcmp(_list_name, _input_name) == 0) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
+    }
+    for (auto &option : _options) {
+        bool valid = false;
+        for (const auto *dis : _driver) {
+            for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
+                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                    valid = true;
+                    break;
+                }
+            }
+            if (valid)
+                continue;
+            for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
+                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                    valid = true;
+                    break;
+                }
+            }
+        }
+        if (!valid) {
+            fprintf(stderr, "unknown option -X%s=%s\n", option.first.c_str(),
+                    option.second.c_str());
+            return 1;
+        }
     }
     return 0;
 }

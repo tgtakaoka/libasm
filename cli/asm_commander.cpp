@@ -154,7 +154,11 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &listout, bool reportE
     formatter.enableLineNumber(_line_number);
     if (_cpu)
         _driver.setCpu(_cpu);
-    // TODO: call Assembler::setOptions()
+    for (auto dir : _driver) {
+        for (auto &opt : _options) {
+            dir->assembler().setOption(opt.first.c_str(), opt.second.c_str());
+        }
+    }
 
     return _driver.assemble(_sources, memory, formatter, listout, FilePrinter::STDERR, reportError);
 }
@@ -203,14 +207,39 @@ int AsmCommander::usage() {
             "(max 32)\n"
             "  -h          : use lowe case letter for hexadecimal\n"
             "  -n          : output line number to list file\n"
-            "  -v          : print progress verbosely\n",
+            "  -v          : print progress verbosely\n"
+            "  -X<name>=<vale>\n"
+            "              : extra options (<type> [, <CPU>])\n",
             _prog_name, list.c_str());
+    bool common = true;
+    for (const auto *dir : _driver) {
+        if (common) {
+            common = false;
+            for (const auto *opt = dir->assembler().commonOptions().head(); opt;
+                    opt = opt->next()) {
+                fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
+                        Options::nameof(opt->spec()));
+            }
+        }
+        for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
+            fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
+                    Options::nameof(opt->spec()), dir->assembler().cpu_P());
+        }
+    }
     return 2;
 }
 
 static const char *basename(const char *str, char sep_char = '/') {
     const char *sep = strrchr(str, sep_char);
     return sep ? sep + 1 : str;
+}
+
+int AsmCommander::parseOptionValue(const char *option) {
+    const char *equ = strchr(option, '=');
+    if (equ == nullptr)
+        return 1;
+    _options.emplace(std::string(option, equ), std::string(equ + 1));
+    return 0;
 }
 
 int AsmCommander::parseArgs(int argc, const char **argv) {
@@ -271,6 +300,16 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
             case 'v':
                 _verbose = true;
                 break;
+            case 'X':
+                if (*++opt) {
+                    if (parseOptionValue(opt) == 0)
+                        break;
+                } else if (++i < argc) {
+                    if (parseOptionValue(argv[i]) == 0)
+                        break;
+                }
+                fprintf(stderr, "-X requires option=value\n");
+                return 1;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);
                 return 1;
@@ -294,6 +333,32 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
     if (_list_name && strcmp(_list_name, _input_name) == 0) {
         fprintf(stderr, "listing file overwrite input file\n");
         return 2;
+    }
+
+    for (auto &option : _options) {
+        bool valid = false;
+        for (const auto *dir : _driver) {
+            for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
+                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                    valid = true;
+                    break;
+                }
+            }
+            if (valid)
+                continue;
+            for (const auto *opt = dir->assembler().commonOptions().head(); opt;
+                    opt = opt->next()) {
+                if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
+                    valid = true;
+                    break;
+                }
+            }
+        }
+        if (!valid) {
+            fprintf(stderr, "unknown option -X%s=%s\n", option.first.c_str(),
+                    option.second.c_str());
+            return 1;
+        }
     }
     return 0;
 }

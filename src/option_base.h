@@ -134,6 +134,7 @@ public:
     Error setOption(const char *name, const char *text) const;
 
     static const Options EMPTY;
+    static const char *nameof(OptionBase::OptionSpec spec);
 
 private:
     const OptionBase *_head;

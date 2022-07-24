@@ -110,10 +110,14 @@ AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sourc
 
 int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
         TextPrinter &listout, TextPrinter &errorout, bool reportError) {
-    reset();
-    setSymbolMode(reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE);
-    int errors = 0;
+    for (auto dir : _directives) {
+        dir->assembler().reset();
+    }
+    _functions.reset();
+    setOrigin(0);
+    _symbolMode = reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE;
 
+    int errors = 0;
     StrScanner *scan;
     while ((scan = sources.readLine()) != nullptr) {
         // const auto error = _driver.assemble(*scan, listing);
@@ -135,14 +139,6 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &fo
 
 Error AsmDriver::openSource(const StrScanner &filename) {
     return _sources.open(filename);
-}
-
-void AsmDriver::reset() {
-    for (auto *dir : _directives) {
-        dir->assembler().reset();
-    }
-    _functions.reset();
-    setOrigin(0);
 }
 
 const char *AsmDriver::lookupValue(uint32_t address) const {

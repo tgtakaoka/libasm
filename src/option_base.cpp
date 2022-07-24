@@ -52,6 +52,21 @@ Error Options::setOption(const char *name, const char *text) const {
     return UNKNOWN_OPTION;
 }
 
+const char *Options::nameof(OptionBase::OptionSpec spec) {
+    switch (spec) {
+    case OptionBase::OptionSpec::OPT_BOOL:
+        return "bool";
+    case OptionBase::OptionSpec::OPT_CHAR:
+        return "char";
+    case OptionBase::OptionSpec::OPT_INT:
+        return "int";
+    case OptionBase::OptionSpec::OPT_TEXT:
+        return "text";
+    default:
+        return "UNKNOWN";
+    }
+}
+
 }  // namespace libasm
 
 // Local Variables:

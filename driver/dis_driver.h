@@ -42,6 +42,9 @@ public:
             DisFormatter &formatter, TextPrinter &output, TextPrinter &listout,
             TextPrinter &errorout);
 
+    auto begin() const { return _disassemblers.cbegin(); }
+    auto end() const { return _disassemblers.cend(); }
+
 private:
     std::list<Disassembler *> _disassemblers;
     Disassembler *_current;

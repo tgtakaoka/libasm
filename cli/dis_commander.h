@@ -43,7 +43,6 @@ private:
     const char *_output_name;
     const char *_list_name;
     const char *_cpu;
-    bool _relative_target;
     bool _upper_hex;
     bool _uppercase;
     bool _verbose;
@@ -54,6 +53,7 @@ private:
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
     int readBinary(FileReader &input, driver::BinMemory &memory);
+    int parseOptionValue(const char *option);
 };
 
 }  // namespace cli

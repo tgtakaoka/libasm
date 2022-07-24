@@ -54,10 +54,8 @@ public:
     int assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
             TextPrinter &listout, TextPrinter &errorout, bool reportError);
 
-    void reset();
     uint32_t origin() const { return _origin; }
     uint32_t setOrigin(uint32_t origin) { return _origin = origin; }
-    void setSymbolMode(SymbolMode mode) { _symbolMode = mode; }
     SymbolMode symbolMode() const { return _symbolMode; }
 
     // SymbolTable
@@ -71,6 +69,9 @@ public:
         return _functions.internFunction(name, params, body);
     }
     Error openSource(const StrScanner &filename);
+
+    auto begin() const { return _directives.cbegin(); }
+    auto end() const { return _directives.cend(); }
 
 private:
     std::list<AsmDirective *> _directives;

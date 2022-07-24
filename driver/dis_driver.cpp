@@ -30,7 +30,7 @@ namespace libasm {
 namespace driver {
 
 DisDriver::DisDriver(Disassembler **begin, Disassembler **end)
-    : _disassemblers(begin, end), _current(nullptr) {}
+    : _disassemblers(begin, end), _current(*begin) {}
 
 static void appendTo(const std::string &cpu, std::list<std::string> &list) {
     if (std::find(list.begin(), list.end(), cpu) == list.end())

@@ -71,6 +71,7 @@ private:
     static constexpr const char *PROG_PREFIX = "asm";
     driver::AsmDirective *defaultDirective();
     int assemble(driver::BinMemory &memory, driver::TextPrinter &out, bool reportError = false);
+    int parseOptionValue(const char *option);
 };
 
 }  // namespace cli
