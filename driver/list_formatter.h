@@ -17,12 +17,13 @@
 #ifndef __CLI_LISTING_H__
 #define __CLI_LISTING_H__
 
-#include <stdint.h>
-
-#include <string>
-
 #include "config_base.h"
 #include "config_host.h"
+#include "str_buffer.h"
+#include "value_formatter.h"
+
+#include <cstdint>
+#include <string>
 
 namespace libasm {
 namespace driver {
@@ -63,7 +64,7 @@ public:
 class ListFormatter {
 public:
     void reset(ListLine &line);
-    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    virtual void setUppercase(bool uppercase);
     void enableLineNumber(bool enable) { _lineNumber = enable; }
     bool hasNextContent() const;
     bool hasNextLine() const;
@@ -71,22 +72,18 @@ public:
     const char *getLine();
 
 protected:
+    ValueFormatter _formatter{false};
     const ListLine *_line;
     bool _uppercase = false;
     bool _lineNumber = false;
     int _nextContent;
     int _nextLine;
-    std::string _out;
     bool _errorContent;
     bool _errorLine;
+    char _outBuffer[256];
+    StrBuffer _out{_outBuffer, sizeof(_outBuffer)};
 
-    void formatHex(uint8_t val);
-    void formatUint8(uint8_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint12(uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint16(uint16_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint20(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint24(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
-    void formatUint32(uint32_t val, bool fixedWidth = true, bool zeroSuppress = false);
+    void formatHex(uint32_t val, uint8_t bits = 0, bool zeroSuppress = false);
     void formatAddress(uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
     int formatBytes(int base);
     void formatTab(size_t pos, int delta = 4);

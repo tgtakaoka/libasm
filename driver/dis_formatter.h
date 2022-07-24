@@ -36,9 +36,13 @@ public:
     DisFormatter(Disassembler &disassembler, const char *input_name)
         : ListFormatter(), _disassembler(disassembler), _input_name(input_name), _insn(0), _insnBase(_insn) {}
 
+    void setUppercase(bool uppercase) override {
+        ListFormatter::setUppercase(uppercase);
+        _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
+    }
+
     Error disassemble(DisMemory &memory, uint32_t addr) {
         reset(*this);
-        _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
         _insnBase.reset(addr);
         const Error error = _disassembler.decode(memory, _insn, _operands, sizeof(_operands));
         return error;

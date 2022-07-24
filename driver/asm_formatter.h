@@ -34,11 +34,17 @@ private:
 public:
     AsmFormatter(BinMemory &memory) : ListFormatter(), _memory(memory) {}
 
+    void setUppercase(bool enable) override {
+        ListFormatter::setUppercase(enable);
+        uppercase = enable;
+    }
+
     AsmFormatter &clear() {
         reset(*this);
         return *this;
     }
 
+    bool uppercase;
     uint32_t line_number;
     uint16_t include_nest;
     uint32_t address;

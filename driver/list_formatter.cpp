@@ -27,6 +27,10 @@ void ListFormatter::reset(ListLine &line) {
     _errorContent = _errorLine = false;
 }
 
+void ListFormatter::setUppercase(bool uppercase) {
+    _formatter.setUppercase(_uppercase = uppercase);
+}
+
 bool ListFormatter::hasNextContent() const {
     return _nextContent < _line->generatedSize();
 }
@@ -36,17 +40,16 @@ bool ListFormatter::hasNextLine() const {
 }
 
 const char *ListFormatter::getContent() {
-    _out.clear();
+    _out.reset(_outBuffer, sizeof(_outBuffer));
     if (_line->isError()) {
         if (!_errorContent) {
             if (_line->lineNumber()) {
                 // TODO: assembler error
             } else {
                 // disassembler error
-                _out += "; " + _line->inputName() + ": 0x";
+                _out.text("; ").text(_line->inputName().c_str()).text(": 0x");
                 formatAddress(_line->startAddress(), true);
-                _out += ' ';
-                _out += _line->errorText();
+                _out.letter(' ').text(_line->errorText().c_str());
                 _nextContent = 0;
             }
             _errorContent = true;
@@ -54,7 +57,7 @@ const char *ListFormatter::getContent() {
             if (_line->lineNumber()) {
                 // TODO: assembler error
             } else {
-                _out += "; ";
+                _out.text("; ");
                 formatAddress(_line->startAddress(), true);
                 _nextContent += formatBytes(_nextContent);
             }
@@ -63,124 +66,48 @@ const char *ListFormatter::getContent() {
         formatContent(0);
         _nextContent = _line->generatedSize();
     }
-    return _out.c_str();
+    return _outBuffer;
 }
 
 const char *ListFormatter::getLine() {
-    _out.clear();
+    _out.reset(_outBuffer, sizeof(_outBuffer));
     if (_line->isError() && !_errorLine) {
         if (_line->lineNumber()) {
             // TODO: assembler error
         } else {
             // disassembler error
-            _out += _line->inputName() + ": 0x";
+            _out.text(_line->inputName().c_str()).text(": 0x");
             formatAddress(_line->startAddress(), true);
-            _out += ' ';
-            _out += _line->errorText();
+            _out.letter(' ').text(_line->errorText().c_str());
             _nextLine = 0;
         }
         _errorLine = true;
     } else {
         formatLine();
     }
-    return _out.c_str();
+    return _outBuffer;
 }
 
-void ListFormatter::formatHex(uint8_t val) {
-    val &= 0xf;
-    if (val < 10) {
-        _out += '0' + val;
-    } else if (_uppercase) {
-        _out += 'A' + val - 10;
-    } else {
-        _out += 'a' + val - 10;
+void ListFormatter::formatHex(uint32_t val, uint8_t bits, bool zeroSuppress) {
+    if (zeroSuppress && bits == 0) {
+        bits = 32;
+        uint32_t mask = 0x80000000;
+        while (mask >= 2 && (val & mask) == 0) {
+            mask >>= 1;
+            bits--;
+        }
     }
-}
-
-void ListFormatter::formatUint8(uint8_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msd = (val >> 4);
-    if (msd || !zeroSuppress) {
-        formatHex(msd);
-    } else if (fixedWidth) {
-        _out += ' ';
+    auto start = _out.mark();
+    _formatter.formatHex(_out, val, bits, false);
+    if (zeroSuppress) {
+        while (*start == '0' && start[1])
+            *start++ = ' ';
     }
-    formatHex(val);
-}
-
-void ListFormatter::formatUint12(uint16_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 8) & 0xF;
-    if (msb || !zeroSuppress) {
-        formatHex(msb);
-        zeroSuppress = false;
-    } else if (fixedWidth) {
-        _out += " ";
-    }
-    formatUint8(static_cast<uint8_t>(val), fixedWidth, zeroSuppress);
-}
-
-void ListFormatter::formatUint16(uint16_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 8);
-    if (msb || !zeroSuppress) {
-        formatUint8(msb, fixedWidth, zeroSuppress);
-        zeroSuppress = false;
-    } else if (fixedWidth) {
-        _out += "  ";
-    }
-    formatUint8(static_cast<uint8_t>(val), fixedWidth, zeroSuppress);
-}
-
-void ListFormatter::formatUint20(uint32_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 16) & 0xF;
-    if (msb || !zeroSuppress) {
-        formatHex(msb);
-        zeroSuppress = false;
-    } else if (fixedWidth) {
-        _out += " ";
-    }
-    formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
-}
-
-void ListFormatter::formatUint24(uint32_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint8_t msb = static_cast<uint8_t>(val >> 16);
-    if (msb || !zeroSuppress) {
-        formatUint8(msb, fixedWidth, zeroSuppress);
-        zeroSuppress = false;
-    } else if (fixedWidth) {
-        _out += "  ";
-    }
-    formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
-}
-
-void ListFormatter::formatUint32(uint32_t val, bool fixedWidth, bool zeroSuppress) {
-    const uint16_t msw = static_cast<uint16_t>(val >> 16);
-    if (msw || !zeroSuppress) {
-        formatUint16(msw, fixedWidth, zeroSuppress);
-        zeroSuppress = false;
-    } else if (fixedWidth) {
-        _out += "    ";
-    }
-    formatUint16(static_cast<uint16_t>(val), fixedWidth, zeroSuppress);
 }
 
 void ListFormatter::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
-    switch (_line->config().addressWidth()) {
-    case ADDRESS_12BIT:
-        formatUint12(addr, fixedWidth, zeroSuppress);
-        break;
-    case ADDRESS_16BIT:
-        formatUint16(addr, fixedWidth, zeroSuppress);
-        break;
-    case ADDRESS_20BIT:
-        formatUint20(addr, fixedWidth, zeroSuppress);
-        break;
-    case ADDRESS_24BIT:
-        formatUint24(addr, fixedWidth, zeroSuppress);
-        break;
-    case ADDRESS_32BIT:
-        formatUint32(addr, fixedWidth, zeroSuppress);
-        break;
-    }
-    _out += ':';
+    formatHex(addr, fixedWidth ? uint8_t(_line->config().addressWidth()) : 0, zeroSuppress);
+    _out.letter(':');
 }
 
 int ListFormatter::formatBytes(int base) {
@@ -190,8 +117,8 @@ int ListFormatter::formatBytes(int base) {
     if (_line->config().opCodeWidth() == OPCODE_8BIT) {
         while (base + i < generated && i < codeBytes) {
             const uint8_t val8 = _line->getByte(base + i);
-            _out += ' ';
-            formatUint8(val8);
+            _out.letter(' ');
+            formatHex(val8, 8);
             i++;
         }
     } else {  // OPCODE_16BIT
@@ -201,8 +128,8 @@ int ListFormatter::formatBytes(int base) {
             const uint8_t val8hi = _line->getByte(base + i + hi);
             const uint8_t val8lo = _line->getByte(base + i + lo);
             const uint16_t val16 = (static_cast<uint16_t>(val8hi) << 8) | val8lo;
-            _out += ' ';
-            formatUint16(val16);
+            _out.letter(' ');
+            formatHex(val16, 16);
             i += 2;
         }
     }
@@ -210,68 +137,60 @@ int ListFormatter::formatBytes(int base) {
 }
 
 void ListFormatter::formatTab(size_t pos, int delta) {
-    while (pos < _out.size() + 1)
+    size_t size = _out.mark() - _outBuffer;
+    while (pos < size + 1)
         pos += delta;
-    while (_out.size() < pos)
-        _out += ' ';
-}
-
-static void convertCase(const std::string &src, std::string &out, bool uppercase) {
-    for (char c : src) {
-        if (uppercase)
-            c = toupper(c);
-        else
-            c = tolower(c);
-        out += c;
+    while (size < pos) {
+        _out.letter(' ');
+        size++;
     }
 }
 
 void ListFormatter::formatContent(int pos) {
     if (!_line->hasLabel() && !_line->hasInstruction() && _line->hasComment()) {
         formatTab(pos);
-        _out += _line->getComment();
+        _out.text(_line->getComment().c_str());
         return;
     }
     if (_line->hasLabel()) {
         formatTab(pos);
-        _out += _line->getLabel();
+        _out.text(_line->getLabel().c_str());
     }
     pos += _line->labelWidth();
     if (_line->hasInstruction()) {
         formatTab(pos, 8);
-        convertCase(_line->getInstruction(), _out, _uppercase);
+        _out.text(_line->getInstruction().c_str(), _uppercase);
     }
     pos += _line->nameWidth();
     if (_line->hasOperand()) {
         formatTab(pos);
-        _out += _line->getOperand();
+        _out.text(_line->getOperand().c_str());
     }
     pos += _line->operandWidth();
     if (_line->hasComment()) {
         formatTab(pos);
-        _out += _line->getComment();
+        _out.text(_line->getComment().c_str());
     }
 }
 
 void ListFormatter::formatLine() {
     if (_lineNumber) {
-        char buf[12];
         uint16_t nest = _line->includeNest();
         if (nest) {
-            sprintf(buf, "(%d)", nest);
-            _out += buf;
+            _formatter.formatDec(_out, nest, 0);
         } else {
-            _out += "   ";
+            _out.text("   ");
         }
-        sprintf(buf, "%5d/ ", _line->lineNumber());
-        _out += buf;
+        // TODO: fixed 5 letter width
+        _formatter.formatDec(_out, _line->lineNumber(), 0);
+        _out.text("/ ");
     }
     formatAddress(_line->startAddress() + _nextLine, true, true);
-    const int pos = _out.size();
+    const int pos = _out.mark() - _outBuffer;
     int formattedBytes = 0;
     if (_line->hasValue()) {
-        _out += " =0x";
-        formatUint32(_line->value(), false, true);
+        _out.text(" =0x");
+        formatHex(_line->value(), 0, true);
         formattedBytes = 0;
     } else {
         formattedBytes = formatBytes(_nextLine);

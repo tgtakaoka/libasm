@@ -41,14 +41,14 @@ vpath %.cpp ../src
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -MMD -I../src -I../driver
 
-OBJS_com = str_buffer.o str_scanner.o option_base.o error_reporter.o \
+OBJS_com = str_buffer.o str_scanner.o option_base.o error_reporter.o value_formatter.o \
            $(foreach a,$(ARCHS),$(OBJS_$(a))) \
            bin_memory.o bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o \
            file_reader.o file_printer.o list_formatter.o
 OBJS_asm = asm.o asm_commander.o asm_driver.o asm_directive.o asm_base.o \
            value_parser.o function_store.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
-OBJS_dis = dis.o dis_commander.o dis_driver.o dis_base.o value_formatter.o \
+OBJS_dis = dis.o dis_commander.o dis_driver.o dis_base.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))
 OBJS_bin = $(BINS:=.o)
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))

@@ -38,6 +38,7 @@ Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriv
     list.operand = StrScanner::EMPTY;
     list.comment = StrScanner::EMPTY;
     list.line_symbol = StrScanner::EMPTY;
+    _assembler.setOption("uppercase", list.uppercase ? "on" : "off");
 
     StrScanner scan(line);
     auto &parser = _assembler.parser();
