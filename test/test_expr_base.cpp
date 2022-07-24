@@ -23,7 +23,9 @@ ValueParser base_parser;
 ValueParser &parser = base_parser;
 ValueFormatter formatter;
 
-static void set_up() {}
+static void set_up() {
+    formatter.setCStyle(true);
+}
 
 static void tear_down() {
     symtab.reset();
@@ -766,6 +768,57 @@ static void test_formatter_13bit() {
     HEX(    0 *2, -13, false, "0x0000");
     HEX(+2047 *2, -13, false, "0x0ffe");
 }
+
+static void test_formatter_bare_hex() {
+    formatter.setCStyle(false);
+
+    HEX(0,    8, false, "00");
+    HEX(32,   8, false, "20");
+    HEX(128,  8, false, "80");
+    HEX(255,  8, false, "ff");
+    HEX(256,  8, false, "00");
+    HEX(-32,  8, false, "e0");
+    HEX(-128, 8, false, "80");
+    HEX(-255, 8, false, "01");
+    HEX(-256, 8, false, "00");
+
+    HEX(0,         16, false, "0000");
+    HEX(32,        16, false, "0020");
+    HEX(0x8000,    16, false, "8000");
+    HEX(0xffff,    16, false, "ffff");
+    HEX(0x10000,   16, false, "0000");
+    HEX(-32,       16, false, "ffe0");
+    HEX(-0x8000,   16, false, "8000");
+    HEX(-0xffff,   16, false, "0001");
+    HEX(-0x10000,  16, false, "0000");
+
+    HEX(0,           24, false, "000000");
+    HEX(32,          24, false, "000020");
+    HEX(0x800000,    24, false, "800000");
+    HEX(0xffffff,    24, false, "ffffff");
+    HEX(0x1000000,   24, false, "000000");
+    HEX(-32,         24, false, "ffffe0");
+    HEX(-0x800000,   24, false, "800000");
+    HEX(-0xffffff,   24, false, "000001");
+    HEX(-0x1000000,  24, false, "000000");
+
+    HEX(0,           32, false, "00000000");
+    HEX(32,          32, false, "00000020");
+    HEX(0x80000000,  32, false, "80000000");
+    HEX(0xffffffff,  32, false, "ffffffff");
+    HEX(-32,         32, false, "ffffffe0");
+    HEX(-0x80000000, 32, false, "80000000");
+    HEX(-0xffffffff, 32, false, "00000001");
+
+    HEX(-128 *2, 9, false, "100");
+    HEX(   0 *2, 9, false, "000");
+    HEX(+127 *2, 9, false, "0fe");
+
+    HEX(-2048 *2, 13, false, "1000");
+    HEX(    0 *2, 13, false, "0000");
+    HEX(+2047 *2, 13, false, "0ffe");
+}
+
 // clang-format on
 
 void run_tests() {
@@ -789,6 +842,7 @@ void run_tests() {
     RUN_TEST(test_formatter_32bit);
     RUN_TEST(test_formatter_9bit);
     RUN_TEST(test_formatter_13bit);
+    RUN_TEST(test_formatter_bare_hex);
 }
 
 // Local Variables:

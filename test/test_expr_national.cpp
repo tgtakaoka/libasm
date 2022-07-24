@@ -23,7 +23,9 @@ NationalValueParser national_parser;
 ValueParser &parser = national_parser;
 NationalValueFormatter formatter;
 
-static void set_up() {}
+static void set_up() {
+    formatter.setCStyle(false);
+}
 
 static void tear_down() {
     symtab.reset();
@@ -515,6 +517,56 @@ static void test_formatter_suffix() {
     HEX(0xffffff,    24, true, "x'ffffff'");
 }
 
+static void test_formatter_cstyle() {
+    formatter.setCStyle(true);
+
+    HEX(0,    8, false, "0x00");
+    HEX(32,   8, false, "0x20");
+    HEX(128,  8, false, "0x80");
+    HEX(255,  8, false, "0xff");
+    HEX(256,  8, false, "0x00");
+    HEX(-32,  8, false, "0xe0");
+    HEX(-128, 8, false, "0x80");
+    HEX(-255, 8, false, "0x01");
+    HEX(-256, 8, false, "0x00");
+
+    HEX(0,         16, false, "0x0000");
+    HEX(32,        16, false, "0x0020");
+    HEX(0x8000,    16, false, "0x8000");
+    HEX(0xffff,    16, false, "0xffff");
+    HEX(0x10000,   16, false, "0x0000");
+    HEX(-32,       16, false, "0xffe0");
+    HEX(-0x8000,   16, false, "0x8000");
+    HEX(-0xffff,   16, false, "0x0001");
+    HEX(-0x10000,  16, false, "0x0000");
+
+    HEX(0,           24, false, "0x000000");
+    HEX(32,          24, false, "0x000020");
+    HEX(0x800000,    24, false, "0x800000");
+    HEX(0xffffff,    24, false, "0xffffff");
+    HEX(0x1000000,   24, false, "0x000000");
+    HEX(-32,         24, false, "0xffffe0");
+    HEX(-0x800000,   24, false, "0x800000");
+    HEX(-0xffffff,   24, false, "0x000001");
+    HEX(-0x1000000,  24, false, "0x000000");
+
+    HEX(0,           32, false, "0x00000000");
+    HEX(32,          32, false, "0x00000020");
+    HEX(0x80000000,  32, false, "0x80000000");
+    HEX(0xffffffff,  32, false, "0xffffffff");
+    HEX(-32,         32, false, "0xffffffe0");
+    HEX(-0x80000000, 32, false, "0x80000000");
+    HEX(-0xffffffff, 32, false, "0x00000001");
+
+    HEX(-128 *2, 9, false, "0x100");
+    HEX(   0 *2, 9, false, "0x000");
+    HEX(+127 *2, 9, false, "0x0fe");
+
+    HEX(-2048 *2, 13, false, "0x1000");
+    HEX(    0 *2, 13, false, "0x0000");
+    HEX(+2047 *2, 13, false, "0x0ffe");
+}
+
 // clang-format on
 
 void run_tests() {
@@ -530,6 +582,7 @@ void run_tests() {
     RUN_TEST(test_formatter_24bit);
     RUN_TEST(test_formatter_32bit);
     RUN_TEST(test_formatter_suffix);
+    RUN_TEST(test_formatter_cstyle);
 }
 
 // Local Variables:

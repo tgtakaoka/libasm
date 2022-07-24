@@ -25,21 +25,21 @@ namespace libasm {
 
 class ValueFormatter {
 public:
-    ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _uppercase('a') {}
+    ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _uppercase(false) {}
 
     void setCStyle(bool enable) { _cstyle = enable; }
-    void setUppercase(bool uppercase) { _uppercase = uppercase ? 'A' : 'a'; }
+    void setUppercase(bool uppercase) { _uppercase = uppercase; }
 
     /*
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed
      * integer when |bits| is negative.  Leading zero will be
      * suppressed.
      */
-
     StrBuffer &formatDec(StrBuffer &out, uint32_t val, int8_t bits) const;
+
     /*
      * Convert |val| as |bits| hexadecimal integer.  Treat |val| as
-     * signed integer when |bits| is negative. Yse base 10 and zero
+     * signed integer when |bits| is negative. Use base 10 and zero
      * suppress when |relax| is true and |val| is less than 32 in
      * absolute value.
      */
@@ -47,7 +47,7 @@ public:
 
 protected:
     bool _cstyle;
-    char _uppercase;
+    bool _uppercase;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const
             __attribute__((noinline));
