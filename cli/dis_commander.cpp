@@ -130,7 +130,9 @@ int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
     const auto size = BinDecoder::decode(input, memory);
     if (size < 0) {
         fprintf(stderr, "%s:%d: Unrecognizable binary format\n", filename, input.lineno());
-    } else if (_verbose) {
+        return size;
+    }
+    if (_verbose) {
         for (const auto &it : memory) {
             const uint32_t start = it.first / addrUnit;
             const size_t size = it.second.size();

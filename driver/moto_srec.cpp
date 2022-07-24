@@ -89,11 +89,6 @@ int MotoSrec::decode(StrScanner &line, BinMemory &memory) {
         return 0;  // record count
     if (type != '1' && type != '2' && type != '3')
         return -1;  // format error
-    const auto addr_size = addressSize(_addr_width);
-    if (addr_size == 2 && (type == '2' || type == '3'))
-        return -2;  // address size overflow
-    if (addr_size == 3 && type == '3')
-        return -2;  // address size overflow
     resetSum();
     uint8_t len = 0;
     if (!parseByte(line, len))
