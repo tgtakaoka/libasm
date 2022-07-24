@@ -47,9 +47,9 @@ const char *ListFormatter::getContent() {
                 // TODO: assembler error
             } else {
                 // disassembler error
-                _out.text("; ").text(_line->inputName().c_str()).text(": 0x");
+                _out.text("; ").text(_line->inputName()).text(": 0x");
                 formatAddress(_line->startAddress(), true);
-                _out.letter(' ').text(_line->errorText().c_str());
+                _out.letter(' ').text_P(_line->errorText_P());
                 _nextContent = 0;
             }
             _errorContent = true;
@@ -76,9 +76,9 @@ const char *ListFormatter::getLine() {
             // TODO: assembler error
         } else {
             // disassembler error
-            _out.text(_line->inputName().c_str()).text(": 0x");
+            _out.text(_line->inputName()).text(": 0x");
             formatAddress(_line->startAddress(), true);
-            _out.letter(' ').text(_line->errorText().c_str());
+            _out.letter(' ').text_P(_line->errorText_P());
             _nextLine = 0;
         }
         _errorLine = true;
@@ -149,27 +149,27 @@ void ListFormatter::formatTab(size_t pos, int delta) {
 void ListFormatter::formatContent(int pos) {
     if (!_line->hasLabel() && !_line->hasInstruction() && _line->hasComment()) {
         formatTab(pos);
-        _out.text(_line->getComment().c_str());
+        _out.text(_line->getComment());
         return;
     }
     if (_line->hasLabel()) {
         formatTab(pos);
-        _out.text(_line->getLabel().c_str());
+        _out.text(_line->getLabel());
     }
     pos += _line->labelWidth();
     if (_line->hasInstruction()) {
         formatTab(pos, 8);
-        _out.text(_line->getInstruction().c_str(), _uppercase);
+        _out.text(_line->getInstruction(), _uppercase);
     }
     pos += _line->nameWidth();
     if (_line->hasOperand()) {
         formatTab(pos);
-        _out.text(_line->getOperand().c_str());
+        _out.text(_line->getOperand());
     }
     pos += _line->operandWidth();
     if (_line->hasComment()) {
         formatTab(pos);
-        _out.text(_line->getComment().c_str());
+        _out.text(_line->getComment());
     }
 }
 

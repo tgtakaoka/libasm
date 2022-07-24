@@ -71,20 +71,18 @@ private:
         return val;
     }
     bool hasInstruction() const override { return instruction.size() != 0; }
-    std::string getInstruction() const override {
-        return std::string(instruction, instruction.size());
-    }
+    const StrScanner getInstruction() const override { return instruction; }
     bool hasOperand() const override { return operand.size() != 0; }
-    std::string getOperand() const override { return std::string(operand, operand.size()); }
+    const StrScanner getOperand() const override { return operand; }
 
     uint32_t lineNumber() const override { return line_number; }
     uint16_t includeNest() const override { return include_nest; }
     bool hasValue() const override { return !val.isUndefined(); }
     uint32_t value() const override { return val.getUnsigned(); }
     bool hasLabel() const override { return label.size() != 0; }
-    std::string getLabel() const override { return std::string(label, label.size()); }
+    const StrScanner getLabel() const override { return label; }
     bool hasComment() const override { return comment.size() != 0; }
-    std::string getComment() const override { return std::string(comment, comment.size()); }
+    const StrScanner getComment() const override { return comment; }
 
     // configuration
     const ConfigBase &config() const override { return *conf; }

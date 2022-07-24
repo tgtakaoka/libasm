@@ -34,13 +34,13 @@ public:
     virtual int generatedSize() const = 0;
     virtual uint8_t getByte(int offset) const = 0;
     virtual bool hasInstruction() const = 0;
-    virtual std::string getInstruction() const = 0;
+    virtual const StrScanner getInstruction() const = 0;
     virtual bool hasOperand() const = 0;
-    virtual std::string getOperand() const = 0;
+    virtual const StrScanner  getOperand() const = 0;
 
-    virtual std::string inputName() const { return ""; }
+    virtual const char *inputName() const { return ""; }
     virtual bool isError() const { return false; }
-    virtual std::string errorText() const { return ""; }
+    virtual const /*PROGMEM*/ char *errorText_P() const { return PSTR(""); }
 
     // assemble listing only
     virtual uint32_t lineNumber() const { return 0; }
@@ -49,9 +49,9 @@ public:
     virtual bool hasValue() const { return false; }
     virtual uint32_t value() const { return 0; }
     virtual bool hasLabel() const { return false; }
-    virtual std::string getLabel() const { return ""; }
+    virtual const StrScanner getLabel() const { return StrScanner::EMPTY; }
     virtual bool hasComment() const { return false; }
-    virtual std::string getComment() const { return ""; }
+    virtual const StrScanner getComment() const { return StrScanner::EMPTY; }
 
     // configuration
     virtual const ConfigBase &config() const = 0;

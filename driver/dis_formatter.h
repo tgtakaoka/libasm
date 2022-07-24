@@ -17,7 +17,6 @@
 #ifndef __DIS_FORMATTER_H__
 #define __DIS_FORMATTER_H__
 
-#include "list_formatter.h"
 #include "config_base.h"
 #include "dis_base.h"
 #include "list_formatter.h"
@@ -32,9 +31,12 @@ namespace driver {
 
 class DisFormatter : public ListFormatter, public ListLine {
 public:
-
     DisFormatter(Disassembler &disassembler, const char *input_name)
-        : ListFormatter(), _disassembler(disassembler), _input_name(input_name), _insn(0), _insnBase(_insn) {}
+        : ListFormatter(),
+          _disassembler(disassembler),
+          _input_name(input_name),
+          _insn(0),
+          _insnBase(_insn) {}
 
     void setUppercase(bool uppercase) override {
         ListFormatter::setUppercase(uppercase);
@@ -80,12 +82,12 @@ protected:
     uint32_t startAddress() const override { return _insn.address(); }
     uint8_t getByte(int offset) const override { return _insn.bytes()[offset]; }
     bool hasInstruction() const override { return *_insn.name() != 0; }
-    std::string getInstruction() const override { return std::string(_insn.name()); }
+    const StrScanner getInstruction() const override { return StrScanner(_insn.name()); }
     bool hasOperand() const override { return *_operands; }
-    std::string getOperand() const override { return std::string(_operands); }
+    const StrScanner getOperand() const override { return StrScanner(_operands); }
 
-    std::string inputName() const { return std::string(_input_name); }
-    std::string errorText() const override { return std::string(_disassembler.errorText_P()); }
+    const char *inputName() const override { return _input_name; }
+    const /*PROGMEM*/ char *errorText_P() const override { return _disassembler.errorText_P(); }
 
     const ConfigBase &config() const override { return _disassembler.config(); }
     int labelWidth() const override { return 8; }
