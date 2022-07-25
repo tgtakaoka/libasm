@@ -35,6 +35,7 @@ public:
     StrBuffer &text(const char *text);
     StrBuffer &text(const char *text, bool uppercase);
     StrBuffer &text(const StrScanner &scan);
+    StrBuffer &text(const StrScanner &scan, bool uppercase);
     StrBuffer &text_P(const /*PROGMEM*/ char *text_P);
     StrBuffer &text_P(const /*PROGMEM*/ char *text, bool uppercase);
     StrBuffer &format_P(const /*PROGMEM*/ char *fmt, ...);

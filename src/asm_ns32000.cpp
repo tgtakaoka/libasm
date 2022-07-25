@@ -211,9 +211,9 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     if (*t == '.' || *t == 'e' || *t == 'E' || parserError() == OVERFLOW_RANGE ||
             op.getError() == UNDEFINED_SYMBOL) {
         char *e;
-        op.float64 = strtod(a, &e);
+        op.float64 = strtod(a.str(), &e);
         StrScanner end(e);
-        if (a != e && (*end == ',' || endOfLine(*end))) {
+        if (a.str() != e && (*end == ',' || endOfLine(*end))) {
             op.mode = M_IMM;
             op.size = SZ_LONG;
             scan = end;

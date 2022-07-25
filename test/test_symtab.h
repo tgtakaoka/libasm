@@ -35,10 +35,10 @@ public:
         return it == _value_to_symbol.end() ? nullptr : it->second.c_str();
     }
     bool hasSymbol(const StrScanner &symbol) const override {
-        return hasSymbol(std::string(symbol, symbol.size()));
+        return hasSymbol(std::string(symbol.str(), symbol.size()));
     }
     uint32_t lookupSymbol(const StrScanner &symbol) const override {
-        return lookup(std::string(symbol, symbol.size()));
+        return lookup(std::string(symbol.str(), symbol.size()));
     }
 
     void intern(uint32_t value, const char *symbol) {

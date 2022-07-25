@@ -87,7 +87,7 @@ Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriv
     }
 
     Insn insn(driver.origin());
-    const Error error = _assembler.encode(scan, insn, &driver);
+    const Error error = _assembler.encode(scan.str(), insn, &driver);
     const bool allowUndef = error == UNDEFINED_SYMBOL && driver.symbolMode() != REPORT_UNDEFINED;
     if (error == OK || allowUndef) {
         StrScanner p(_assembler.errorAt());
@@ -349,7 +349,7 @@ Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &d
     StrScanner p(scan);
     p.trimStart([](char s) { return !isspace(s); });
     scan.trimEndAt(p);
-    std::string cpu(scan, scan.size());
+    std::string cpu(scan.str(), scan.size());
     if (driver.setCpu(cpu.c_str()) == nullptr)
         return setError(UNSUPPORTED_CPU);
     scan = p;
@@ -414,7 +414,7 @@ void AsmDirective::registerPseudo(const char *name, PseudoHandler handler) {
 
 Error AsmDirective::processPseudo(
         const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    auto it = _pseudos.find(std::string(name, name.size()));
+    auto it = _pseudos.find(std::string(name.str(), name.size()));
     if (it == _pseudos.end())
         return UNKNOWN_DIRECTIVE;
     const auto fp = it->second;

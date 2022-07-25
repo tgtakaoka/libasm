@@ -125,15 +125,15 @@ const char *AsmDriver::lookupValue(uint32_t address) const {
 }
 
 bool AsmDriver::hasSymbol(const StrScanner &symbol) const {
-    return symbolExists(std::string(symbol, symbol.size()));
+    return symbolExists(std::string(symbol.str(), symbol.size()));
 }
 
 uint32_t AsmDriver::lookupSymbol(const StrScanner &symbol) const {
-    return symbolLookup(std::string(symbol, symbol.size()));
+    return symbolLookup(std::string(symbol.str(), symbol.size()));
 }
 
 Error AsmDriver::internSymbol(uint32_t value, const StrScanner &symbol) {
-    return symbolIntern(value, std::string(symbol, symbol.size()));
+    return symbolIntern(value, std::string(symbol.str(), symbol.size()));
 }
 
 bool AsmDriver::symbolExists(const std::string &key) const {

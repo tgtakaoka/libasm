@@ -17,9 +17,10 @@
 #ifndef __ERROR_REPORTER_H__
 #define __ERROR_REPORTER_H__
 
-#include <stdint.h>
-
 #include "config_host.h"
+#include "str_scanner.h"
+
+#include <stdint.h>
 
 namespace libasm {
 
@@ -107,27 +108,27 @@ private:
 
 class ErrorAt : public ErrorReporter {
 public:
-    ErrorAt() : ErrorReporter(), _at(nullptr) {}
+    ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY) {}
 
     Error setError(Error error) { return ErrorReporter::setError(error); }
-    Error setError(const char *at, Error error) {
+    Error setError(const StrScanner &at, Error error) {
         setAt(at);
         return setError(error);
     }
     Error setError(const ErrorAt &o) { return setError(o._at, o.getError()); }
     Error setError(const ErrorAt &o, Error error) { return setError(o._at, error); }
-    Error setErrorIf(const char *at, Error error) {
+    Error setErrorIf(const StrScanner &at, Error error) {
         if (getError())
             return getError();
         return setError(at, error);
     }
     Error setErrorIf(const ErrorAt &o) { return setErrorIf(o._at, o.getError()); }
 
-    void setAt(const char *at) { _at = at; }
-    const char *errorAt() const { return _at ? _at : ""; }
+    void setAt(const StrScanner &at) { _at = at; }
+    const StrScanner &errorAt() const { return _at; }
 
 private:
-    const char *_at;
+    StrScanner _at;
 };
 
 }  // namespace libasm

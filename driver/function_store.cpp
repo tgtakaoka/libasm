@@ -29,19 +29,19 @@ void FunctionStore::reset() {
 Error FunctionStore::internFunction(
         const StrScanner &_name, std::list<StrScanner> &_params, const StrScanner &body) {
     Function func;
-    const std::string name(_name, _name.size());
+    const std::string name(_name.str(), _name.size());
     if (_functions.find(name) != _functions.end())
         return setError(DUPLICATE_FUNCTION);
     std::list<std::string> params;
     for (auto &param : _params)
-        params.emplace_back(param, param.size());
-    _functions.emplace(name, Function{name, std::string(body, body.size()), std::move(params)});
+        params.emplace_back(param.str(), param.size());
+    _functions.emplace(name, Function{name, std::string(body.str(), body.size()), std::move(params)});
     return OK;
 }
 
 Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
         Value &val, const SymbolTable *symtab) {
-    const auto it = _functions.find(std::string(name, name.size()));
+    const auto it = _functions.find(std::string(name.str(), name.size()));
     if (it == _functions.end()) {
         if (_parent) {
             _parent->parseFunc(parser, name, scan, val, symtab);
@@ -56,10 +56,10 @@ Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrS
             _params.emplace(std::make_pair(symbol, value));
         }
         bool hasSymbol(const StrScanner &symbol) const override {
-            return _params.find(std::string(symbol, symbol.size())) != _params.end();
+            return _params.find(std::string(symbol.str(), symbol.size())) != _params.end();
         }
         uint32_t lookupSymbol(const StrScanner &symbol) const override {
-            return _params.find(std::string(symbol, symbol.size()))->second;
+            return _params.find(std::string(symbol.str(), symbol.size()))->second;
         }
         const char *lookupValue(uint32_t address) const override { return nullptr; }
         std::map<std::string, uint32_t> _params;

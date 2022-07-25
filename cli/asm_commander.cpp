@@ -33,10 +33,10 @@ Error AsmCommander::FileFactory::open(const StrScanner &name) {
     const auto *parent = _sources.empty() ? nullptr : &_sources.back();
     const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;
     if (pos == std::string::npos || *name == '/') {
-        _sources.emplace_back(std::string(name, name.size()));
+        _sources.emplace_back(std::string(name.str(), name.size()));
     } else {
         std::string path(parent->name().substr(0, pos + 1));
-        path.append(name, name.size());
+        path.append(name.str(), name.size());
         _sources.push_back(path);
     }
     if (!_sources.back().open()) {
@@ -159,9 +159,9 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
                 break;
         } else if (reportError) {
             const char *filename = _sources.current()->name().c_str();
-            const char *line = *scan;
+            const char *line = scan->str();
             const int lineno = _sources.current()->lineno();
-            const char *at = _driver.errorAt();
+            const char *at = _driver.errorAt().str();
             const int column = (at >= line && at < line + scan->size()) ? at - line + 1 : -1;
             if (column >= 0) {
                 fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,

@@ -18,6 +18,7 @@
 #define __FUNCTION_STORE_H__
 
 #include "error_reporter.h"
+#include "str_scanner.h"
 #include "value_parser.h"
 
 #include <list>

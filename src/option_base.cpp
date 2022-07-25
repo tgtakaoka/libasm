@@ -36,8 +36,8 @@ Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) const {
 
 Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) const {
     char *end = nullptr;
-    value = strtol((const char *)scan, &end, 10);
-    if (end != scan && *end == 0)
+    value = strtol(scan.str(), &end, 10);
+    if (end != scan.str() && *end == 0)
         return OK;
     return ILLEGAL_CONSTANT;
 }

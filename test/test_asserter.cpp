@@ -79,13 +79,13 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
         const char *expected, const StrScanner &actual) {
-    if (strlen(expected) == actual.size() && strncmp(expected, actual, actual.size()) == 0) {
+    if (strlen(expected) == actual.size() && strncmp(expected, actual.str(), actual.size()) == 0) {
         _pass_count++;
         return;
     }
     _fail_count++;
     printf("%s:%d: %s: expected '%s': actual '%.*s'\n", file, line, message, expected,
-            (int)actual.size(), (const char *)actual);
+            (int)actual.size(), actual.str());
 }
 
 void TestAsserter::equals_P(const char *file, const int line, const char *message,

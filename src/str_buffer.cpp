@@ -64,6 +64,15 @@ StrBuffer &StrBuffer::text(const StrScanner &scan) {
     return *this;
 }
 
+StrBuffer &StrBuffer::text(const StrScanner &scan, bool uppercase) {
+    const auto &conv = uppercase ? toupper : tolower;
+    StrScanner text(scan);
+    char c;
+    while ((c = *text++) != 0)
+        letter(conv(c));
+    return *this;
+}
+
 StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P) {
     while (true) {
         const char c = pgm_read_byte(text_P++);

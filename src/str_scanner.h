@@ -25,12 +25,14 @@ namespace libasm {
 
 class StrScanner {
 public:
-    /** construct from C-string |str| to end of it, or |end| if specified */
-    StrScanner(const char *str, const char *end = nullptr)
-        : _str(str), _end(end ? end : str + strlen(str)) {}
+    /** construct from C-string |str| to end of it */
+    StrScanner(const char *str) : _str(str), _end(str + strlen(str)) {}
 
     /** copy construct from |scan|, or |EMPTY| */
     StrScanner(const StrScanner &scan = EMPTY) : _str(scan._str), _end(scan._end) {}
+
+    /** construct from range of StrScanner */
+    StrScanner(const StrScanner &scan, const StrScanner &end) : _str(scan._str), _end(end._str) {}
 
     /** assignment */
     StrScanner &operator=(const StrScanner &scan) {
@@ -39,7 +41,7 @@ public:
         return *this;
     }
 
-    operator const char *() const { return _str; }
+    const char *str() const { return _str; }
     size_t size() const { return _end - _str; }
 
     /** dereference; return character at the head or 0 if none */
@@ -89,7 +91,7 @@ public:
     /** trim from end while |predicate(char)| return true */
     template <typename P>
     StrScanner &trimEnd(const P &predicate) {
-        while (_str < _end && predicate(_end[-1])) // NOLINT(clang-analyzer-core.CallAndMessage)
+        while (_str < _end && predicate(_end[-1]))  // NOLINT(clang-analyzer-core.CallAndMessage)
             --_end;
         return *this;
     }
@@ -97,15 +99,15 @@ public:
     /** skip spaces */
     StrScanner &skipSpaces() { return trimStart(isspace); }
 
-    /** trim start to |scan|, or make it empty. */
-    StrScanner &trimStartAt(const char *str) {
-        _str = (str < _end) ? str : _end;
+    /** trim start to |at|, or make it empty. */
+    StrScanner &trimStartAt(const StrScanner &at) {
+        _str = (at._str < _end) ? at._str : _end;
         return *this;
     }
 
-    /** trim end to |scan|, or make it empty. */
-    StrScanner &trimEndAt(const char *str) {
-        _end = (_str < str) ? str : _str;
+    /** trim end to |at|, or make it empty. */
+    StrScanner &trimEndAt(const StrScanner &at) {
+        _end = (_str < at._str) ? at._str : _str;
         return *this;
     }
 
