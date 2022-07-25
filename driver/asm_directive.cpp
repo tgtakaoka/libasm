@@ -189,7 +189,7 @@ Error AsmDirective::defineBytes(
     const uint32_t base = driver.origin() * unit;
     for (;;) {
         scan.skipSpaces();
-        if (delimitor || *scan == '\'' || *scan == '"') {
+        if (delimitor || *scan == '"') {
             const char delim = *scan++;
             StrScanner p(scan);
             for (;;) {
@@ -199,8 +199,6 @@ Error AsmDirective::defineBytes(
                     switch (delim) {
                     case '"':
                         return setError(p, MISSING_CLOSING_DQUOTE);
-                    case '\'':
-                        return setError(p, MISSING_CLOSING_QUOTE);
                     default:
                         return setError(p, MISSING_CLOSING_DELIMITOR);
                     }
