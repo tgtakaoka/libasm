@@ -36,7 +36,7 @@ CPPFLAGS = -MMD -I../../driver -I../../src -I../../test
 OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o
 OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
 OBJS_formatter = list_formatter.o
-OBJS_dis = dis_base.o value_formatter.o option_base.o str_buffer.o bin_memory.o \
+OBJS_dis = dis_base.o value_formatter.o option_base.o str_buffer.o bin_memory.o dis_formatter.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../../src/dis_$(a).cpp),dis_$(a).o $(OBJS_$(a))))
 BINS = $(TESTS)
 
@@ -53,7 +53,6 @@ test_helpers: test_helpers.o bin_memory.o $(OBJS_common)
 	$(CXX) -o $@ $^
 test_bin_memory: test_bin_memory.o bin_memory.o $(OBJS_common)
 	$(CXX) -o $@ $^
-
 test_intel_hex: test_intel_hex.o $(OBJS_encdec) $(OBJS_common)
 	$(CXX) -o $@ $^
 test_moto_srec: test_moto_srec.o $(OBJS_encdec) $(OBJS_common)

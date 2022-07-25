@@ -28,8 +28,23 @@
 namespace libasm {
 namespace driver {
 
-class ListLine {
+class ListFormatter {
 public:
+    virtual void reset();
+    virtual void setUppercase(bool uppercase);
+
+    bool hasNextLine() const;
+    virtual const char *getLine();
+
+protected:
+    ValueFormatter _formatter{false};
+    bool _uppercase = false;
+    int _nextContent;
+    int _nextLine;
+    bool _errorLine;
+    char _outBuffer[256];
+    StrBuffer _out{_outBuffer, sizeof(_outBuffer)};
+
     virtual uint32_t startAddress() const = 0;
     virtual int generatedSize() const = 0;
     virtual uint8_t getByte(int offset) const = 0;
@@ -37,10 +52,6 @@ public:
     virtual const StrScanner getInstruction() const = 0;
     virtual bool hasOperand() const = 0;
     virtual const StrScanner  getOperand() const = 0;
-
-    virtual const char *inputName() const { return ""; }
-    virtual bool isError() const { return false; }
-    virtual const /*PROGMEM*/ char *errorText_P() const { return PSTR(""); }
 
     // assemble listing only
     virtual uint32_t lineNumber() const { return 0; }
@@ -59,36 +70,14 @@ public:
     virtual int nameWidth() const = 0;
     virtual int codeBytes() const = 0;
     virtual int operandWidth() const = 0;
-};
 
-class ListFormatter {
-public:
-    void reset(ListLine &line);
-    virtual void setUppercase(bool uppercase);
-    void enableLineNumber(bool enable) { _lineNumber = enable; }
-    bool hasNextContent() const;
-    bool hasNextLine() const;
-    const char *getContent();
-    const char *getLine();
-
-protected:
-    ValueFormatter _formatter{false};
-    const ListLine *_line;
-    bool _uppercase = false;
-    bool _lineNumber = false;
-    int _nextContent;
-    int _nextLine;
-    bool _errorContent;
-    bool _errorLine;
-    char _outBuffer[256];
-    StrBuffer _out{_outBuffer, sizeof(_outBuffer)};
-
+    void formatDec(uint32_t val, int8_t width = 0);
     void formatHex(uint32_t val, uint8_t bits = 0, bool zeroSuppress = false);
     void formatAddress(uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
-    int formatBytes(int base);
+    virtual int formatBytes(int base);
     void formatTab(size_t pos, int delta = 4);
     void formatContent(int pos);
-    void formatLine();
+    virtual void formatLine();
 };
 
 }  // namespace driver

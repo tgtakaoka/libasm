@@ -21,71 +21,39 @@
 namespace libasm {
 namespace driver {
 
-void ListFormatter::reset(ListLine &line) {
-    _line = &line;
+void ListFormatter::reset() {
     _nextContent = _nextLine = 0;
-    _errorContent = _errorLine = false;
 }
 
 void ListFormatter::setUppercase(bool uppercase) {
     _formatter.setUppercase(_uppercase = uppercase);
 }
 
-bool ListFormatter::hasNextContent() const {
-    return _nextContent < _line->generatedSize();
-}
-
 bool ListFormatter::hasNextLine() const {
-    return _nextLine < _line->generatedSize();
-}
-
-const char *ListFormatter::getContent() {
-    _out.reset(_outBuffer, sizeof(_outBuffer));
-    if (_line->isError()) {
-        if (!_errorContent) {
-            if (_line->lineNumber()) {
-                // TODO: assembler error
-            } else {
-                // disassembler error
-                _out.text("; ").text(_line->inputName()).text(": 0x");
-                formatAddress(_line->startAddress(), true);
-                _out.letter(' ').text_P(_line->errorText_P());
-                _nextContent = 0;
-            }
-            _errorContent = true;
-        } else {
-            if (_line->lineNumber()) {
-                // TODO: assembler error
-            } else {
-                _out.text("; ");
-                formatAddress(_line->startAddress(), true);
-                _nextContent += formatBytes(_nextContent);
-            }
-        }
-    } else {
-        formatContent(0);
-        _nextContent = _line->generatedSize();
-    }
-    return _outBuffer;
+    return _nextLine < generatedSize();
 }
 
 const char *ListFormatter::getLine() {
     _out.reset(_outBuffer, sizeof(_outBuffer));
-    if (_line->isError() && !_errorLine) {
-        if (_line->lineNumber()) {
-            // TODO: assembler error
-        } else {
-            // disassembler error
-            _out.text(_line->inputName()).text(": 0x");
-            formatAddress(_line->startAddress(), true);
-            _out.letter(' ').text_P(_line->errorText_P());
-            _nextLine = 0;
-        }
-        _errorLine = true;
-    } else {
-        formatLine();
-    }
+    formatLine();
     return _outBuffer;
+}
+
+void ListFormatter::formatDec(uint32_t val, int8_t width) {
+    if (width > 0) {
+        auto len = 1;
+        for (auto v = val; v >= 10; v /= 10)
+            len++;
+        for (; len < width; len++)
+            _out.letter(' ');
+    }
+    auto start = _out.mark();
+    _formatter.formatDec(_out, val, 32);
+    if (width < 0) {
+        width = -width;
+        for (auto len = _out.mark() - start; len < width; len++)
+            _out.letter(' ');
+    }
 }
 
 void ListFormatter::formatHex(uint32_t val, uint8_t bits, bool zeroSuppress) {
@@ -106,27 +74,27 @@ void ListFormatter::formatHex(uint32_t val, uint8_t bits, bool zeroSuppress) {
 }
 
 void ListFormatter::formatAddress(uint32_t addr, bool fixedWidth, bool zeroSuppress) {
-    formatHex(addr, fixedWidth ? uint8_t(_line->config().addressWidth()) : 0, zeroSuppress);
+    formatHex(addr, fixedWidth ? uint8_t(config().addressWidth()) : 0, zeroSuppress);
     _out.letter(':');
 }
 
 int ListFormatter::formatBytes(int base) {
-    const auto generated = _line->generatedSize();
-    const auto codeBytes = _line->codeBytes();
+    const auto generated = generatedSize();
+    const auto bytes = codeBytes();
     int i = 0;
-    if (_line->config().opCodeWidth() == OPCODE_8BIT) {
-        while (base + i < generated && i < codeBytes) {
-            const uint8_t val8 = _line->getByte(base + i);
+    if (config().opCodeWidth() == OPCODE_8BIT) {
+        while (base + i < generated && i < bytes) {
+            const uint8_t val8 = getByte(base + i);
             _out.letter(' ');
             formatHex(val8, 8);
             i++;
         }
     } else {  // OPCODE_16BIT
-        const int hi = int(_line->config().endian());
+        const int hi = int(config().endian());
         const int lo = 1 - hi;
-        while (base + i < generated && i < codeBytes) {
-            const uint8_t val8hi = _line->getByte(base + i + hi);
-            const uint8_t val8lo = _line->getByte(base + i + lo);
+        while (base + i < generated && i < bytes) {
+            const uint8_t val8hi = getByte(base + i + hi);
+            const uint8_t val8lo = getByte(base + i + lo);
             const uint16_t val16 = (static_cast<uint16_t>(val8hi) << 8) | val8lo;
             _out.letter(' ');
             formatHex(val16, 16);
@@ -147,57 +115,38 @@ void ListFormatter::formatTab(size_t pos, int delta) {
 }
 
 void ListFormatter::formatContent(int pos) {
-    if (!_line->hasLabel() && !_line->hasInstruction() && _line->hasComment()) {
+    if (!hasLabel() && !hasInstruction() && hasComment()) {
         formatTab(pos);
-        _out.text(_line->getComment());
+        _out.text(getComment());
         return;
     }
-    if (_line->hasLabel()) {
+    if (hasLabel()) {
         formatTab(pos);
-        _out.text(_line->getLabel());
+        _out.text(getLabel());
     }
-    pos += _line->labelWidth();
-    if (_line->hasInstruction()) {
+    pos += labelWidth();
+    if (hasInstruction()) {
         formatTab(pos, 8);
-        _out.text(_line->getInstruction(), _uppercase);
+        _out.text(getInstruction(), _uppercase);
     }
-    pos += _line->nameWidth();
-    if (_line->hasOperand()) {
+    pos += nameWidth();
+    if (hasOperand()) {
         formatTab(pos);
-        _out.text(_line->getOperand());
+        _out.text(getOperand());
     }
-    pos += _line->operandWidth();
-    if (_line->hasComment()) {
+    pos += operandWidth();
+    if (hasComment()) {
         formatTab(pos);
-        _out.text(_line->getComment());
+        _out.text(getComment());
     }
 }
 
 void ListFormatter::formatLine() {
-    if (_lineNumber) {
-        uint16_t nest = _line->includeNest();
-        if (nest) {
-            _formatter.formatDec(_out, nest, 0);
-        } else {
-            _out.text("   ");
-        }
-        // TODO: fixed 5 letter width
-        _formatter.formatDec(_out, _line->lineNumber(), 0);
-        _out.text("/ ");
-    }
-    formatAddress(_line->startAddress() + _nextLine, true, true);
+    formatAddress(startAddress() + _nextLine, true, true);
     const int pos = _out.mark() - _outBuffer;
-    int formattedBytes = 0;
-    if (_line->hasValue()) {
-        _out.text(" =0x");
-        formatHex(_line->value(), 0, true);
-        formattedBytes = 0;
-    } else {
-        formattedBytes = formatBytes(_nextLine);
-    }
-    const int codeBytes = _line->codeBytes();
-    const int dataTextLen =
-            _line->config().opCodeWidth() == OPCODE_8BIT ? (codeBytes * 3) : (codeBytes / 2) * 5;
+    const int formattedBytes = formatBytes(_nextLine);
+    const int bytes = codeBytes();
+    const int dataTextLen = config().opCodeWidth() == OPCODE_8BIT ? (bytes * 3) : (bytes / 2) * 5;
     if (_nextLine == 0)
         formatContent(pos + dataTextLen + 1);
     _nextLine += formattedBytes;

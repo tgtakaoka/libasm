@@ -108,7 +108,7 @@ int DisCommander::disassemble() {
         auto reader = memory.reader(mem_base);
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
             listing.disassemble(reader, start + mem_offset / addrUnit);
-            mem_offset += listing.generatedSize();
+            mem_offset += listing.byteLength();
             do {
                 const char *line = listing.getLine();
                 listout.println(line);

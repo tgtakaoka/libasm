@@ -55,18 +55,18 @@ void test_mc6809() {
     listing.setUppercase(true);
 
     TRUE("setcpu", listing.setCpu("mc6809"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        CPU   MC6809", listing.getContent());
-    EQ("line", "   0:                        CPU   MC6809", listing.getLine());
+    EQ("line", "   0:                     CPU   MC6809", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        ORG   $ABCD", listing.getContent());
-    EQ("line", "ABCD:                        ORG   $ABCD", listing.getLine());
+    EQ("line", "ABCD:                     ORG   $ABCD", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
@@ -74,7 +74,9 @@ void test_mc6809() {
     auto reader = memory.reader(org);
     EQ("cmp", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        CMPD  [$1234,Y]", listing.getContent());
-    EQ("line", "ABCD: 10 A3 B9 12 34         CMPD  [$1234,Y]", listing.getLine());
+    EQ("line", "ABCD: 10 A3 B9 12         CMPD  [$1234,Y]", listing.getLine());
+    TRUE("cmp", listing.hasNextLine());
+    EQ("line", "ABD1: 34", listing.getLine());
 }
 
 void test_mc6800() {
@@ -82,18 +84,18 @@ void test_mc6800() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("mc6800"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu   mc6800", listing.getContent());
-    EQ("line", "   0:                        cpu   mc6800", listing.getLine());
+    EQ("line", "   0:                     cpu   mc6800", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        org   $abcd", listing.getContent());
-    EQ("line", "abcd:                        org   $abcd", listing.getLine());
+    EQ("line", "abcd:                     org   $abcd", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
@@ -101,7 +103,7 @@ void test_mc6800() {
     auto reader = memory.reader(org);
     EQ("sub", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        subb  $f1f2", listing.getContent());
-    EQ("line", "abcd: f0 f1 f2               subb  $f1f2", listing.getLine());
+    EQ("line", "abcd: f0 f1 f2            subb  $f1f2", listing.getLine());
 }
 
 void test_mc6805() {
@@ -109,7 +111,7 @@ void test_mc6805() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("mc146805"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu   mc146805", listing.getContent());
@@ -137,7 +139,7 @@ void test_mos6502() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("mos6502"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  mos6502", listing.getContent());
@@ -165,7 +167,7 @@ void test_w65816() {
     listing.setUppercase(true);
 
     TRUE("setcpu", listing.setCpu("w65c816"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        CPU  W65C816", listing.getContent());
@@ -199,7 +201,7 @@ void test_i8048() {
     listing.setUppercase(true);
 
     TRUE("setcpu", listing.setCpu("i8039"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        CPU   I8039", listing.getContent());
@@ -228,7 +230,7 @@ void test_i8051() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("i8051"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu   i8051", listing.getContent());
@@ -255,7 +257,7 @@ void test_i8080() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("i8080"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu   i8080", listing.getContent());
@@ -282,18 +284,18 @@ void test_i8096() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("i8096"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu   i8096", listing.getContent());
-    EQ("line", "   0:                           cpu   i8096", listing.getLine());
+    EQ("line", "   0:                     cpu   i8096", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        org   0abcdh", listing.getContent());
-    EQ("line", "abcd:                           org   0abcdh", listing.getLine());
+    EQ("line", "abcd:                     org   0abcdh", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
@@ -301,7 +303,9 @@ void test_i8096() {
     auto reader = memory.reader(org);
     EQ("mul", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        mulb  130, 817bh[124]", listing.getContent());
-    EQ("line", "abcd: fe 7f 7d 7b 81 82         mulb  130, 817bh[124]", listing.getLine());
+    EQ("line", "abcd: fe 7f 7d 7b         mulb  130, 817bh[124]", listing.getLine());
+    TRUE("mul", listing.hasNextLine());
+    EQ("line", "abd1: 81 82", listing.getLine());
 }
 
 void test_z80() {
@@ -309,7 +313,7 @@ void test_z80() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("z80"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu   z80", listing.getContent());
@@ -336,7 +340,7 @@ void test_z8() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("z8"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu     z8", listing.getContent());
@@ -363,18 +367,18 @@ void test_tlcs90() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("tlcs90"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  tlcs90", listing.getContent());
-    EQ("line", "   0:                           cpu  tlcs90", listing.getLine());
+    EQ("line", "   0:                     cpu  tlcs90", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        org  0abcdh", listing.getContent());
-    EQ("line", "abcd:                           org  0abcdh", listing.getLine());
+    EQ("line", "abcd:                     org  0abcdh", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
@@ -382,7 +386,7 @@ void test_tlcs90() {
     auto reader = memory.reader(org);
     EQ("xor", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        xor  (hl+a), 0efh", listing.getContent());
-    EQ("line", "abcd: f7 6d ef                  xor  (hl+a), 0efh", listing.getLine());
+    EQ("line", "abcd: f7 6d ef            xor  (hl+a), 0efh", listing.getLine());
 }
 
 void test_ins8060() {
@@ -390,7 +394,7 @@ void test_ins8060() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("ins8060"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  ins8060", listing.getContent());
@@ -417,7 +421,7 @@ void test_ins8070() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("ins8070"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  ins8070", listing.getContent());
@@ -444,7 +448,7 @@ void test_cdp1802() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("cdp1804"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  cdp1804", listing.getContent());
@@ -471,7 +475,7 @@ void test_scn2650() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("scn2650"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu     scn2650", listing.getContent());
@@ -498,18 +502,18 @@ void test_i8086() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("i8086"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu    i8086", listing.getContent());
-    EQ("line", "    0:                           cpu    i8086", listing.getLine());
+    EQ("line", "    0:                     cpu    i8086", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xbcdef;
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        org    0bcdefh", listing.getContent());
-    EQ("line", "bcdef:                           org    0bcdefh", listing.getLine());
+    EQ("line", "bcdef:                     org    0bcdefh", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
@@ -517,8 +521,10 @@ void test_i8086() {
     auto reader = memory.reader(org);
     EQ("test", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        test   word ptr [bp+di+0feffh], 0bbaah", listing.getContent());
-    EQ("line", "bcdef: f7 83 ff fe aa bb         test   word ptr [bp+di+0feffh], 0bbaah",
+    EQ("line", "bcdef: f7 83 ff fe         test   word ptr [bp+di+0feffh], 0bbaah",
             listing.getLine());
+    TRUE("test", listing.hasNextLine());
+    EQ("line", "bcdf3: aa bb", listing.getLine());
 }
 
 void test_tms9900() {
@@ -526,11 +532,11 @@ void test_tms9900() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("tms99105"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  tms99105", listing.getContent());
-    EQ("line", "   0:                        cpu  tms99105", listing.getLine());
+    EQ("line", "   0:                   cpu  tms99105", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
@@ -538,7 +544,7 @@ void test_tms9900() {
     EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCD));
     EQ("org", OK, listing.setOrigin(0x9abc));
     EQ("content", "        org  9abch", listing.getContent());
-    EQ("line", "9abc:                        org  9abch", listing.getLine());
+    EQ("line", "9abc:                   org  9abch", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org, dis.config().endian());
@@ -546,9 +552,9 @@ void test_tms9900() {
     auto reader = memory.reader(org);
     EQ("am", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        am   @4a4bh(r1), @4c4dh(r1)", listing.getContent());
-    EQ("line", "9abc: 002a 4861 4a4b         am   @4a4bh(r1), @4c4dh(r1)", listing.getLine());
+    EQ("line", "9abc: 002a 4861         am   @4a4bh(r1), @4c4dh(r1)", listing.getLine());
     TRUE("am", listing.hasNextLine());
-    EQ("line", "9ac2: 4c4d", listing.getLine());
+    EQ("line", "9ac0: 4a4b 4c4d", listing.getLine());
 }
 
 void test_tms32010() {
@@ -556,7 +562,7 @@ void test_tms32010() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("tms32010"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  tms32010", listing.getContent());
@@ -590,11 +596,11 @@ void test_mc68000() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("mc68000"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu     mc68000", listing.getContent());
-    EQ("line", "     0:                        cpu     mc68000", listing.getLine());
+    EQ("line", "     0:                   cpu     mc68000", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
@@ -602,7 +608,7 @@ void test_mc68000() {
     EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCDEF));
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        org     $9abcde", listing.getContent());
-    EQ("line", "9abcde:                        org     $9abcde", listing.getLine());
+    EQ("line", "9abcde:                   org     $9abcde", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org, dis.config().endian());
@@ -610,9 +616,11 @@ void test_mc68000() {
     auto reader = memory.reader(org);
     EQ("ori", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        ori.l   #$bdbebfc0, ($c2c3c4).l", listing.getContent());
-    EQ("line", "9abcde: 00b9 bdbe bfc0         ori.l   #$bdbebfc0, ($c2c3c4).l", listing.getLine());
+    EQ("line", "9abcde: 00b9 bdbe         ori.l   #$bdbebfc0, ($c2c3c4).l", listing.getLine());
     TRUE("ori", listing.hasNextLine());
-    EQ("line", "9abce4: 00c2 c3c4", listing.getLine());
+    EQ("line", "9abce2: bfc0 00c2", listing.getLine());
+    TRUE("ori", listing.hasNextLine());
+    EQ("line", "9abce6: c3c4", listing.getLine());
 }
 
 void test_ns32000() {
@@ -620,18 +628,18 @@ void test_ns32000() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("ns32032"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu     ns32032", listing.getContent());
-    EQ("line", "     0:                           cpu     ns32032", listing.getLine());
+    EQ("line", "     0:                     cpu     ns32032", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcdef;
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        org     x'abcdef", listing.getContent());
-    EQ("line", "abcdef:                           org     x'abcdef", listing.getLine());
+    EQ("line", "abcdef:                     org     x'abcdef", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
@@ -646,14 +654,18 @@ void test_ns32000() {
     EQ("content", "        extd    r1, x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32",
             listing.getContent());
-    EQ("line", "abcdef: 2e 4b ef 83 94 c0         extd    r1, x'00112233(x'00334455(fp))[r3:w], "
+    EQ("line", "abcdef: 2e 4b ef 83         extd    r1, x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32", listing.getLine());
     TRUE("extd", listing.hasNextLine());
-    EQ("line", "abcdf5: 33 44 55 c0 11 22", listing.getLine());
+    EQ("line", "abcdf3: 94 c0 33 44", listing.getLine());
     TRUE("extd", listing.hasNextLine());
-    EQ("line", "abcdfb: 33 c0 77 88 99 c0", listing.getLine());
+    EQ("line", "abcdf7: 55 c0 11 22", listing.getLine());
     TRUE("extd", listing.hasNextLine());
-    EQ("line", "abce01: 55 66 77 20", listing.getLine());
+    EQ("line", "abcdfb: 33 c0 77 88", listing.getLine());
+    TRUE("extd", listing.hasNextLine());
+    EQ("line", "abcdff: 99 c0 55 66", listing.getLine());
+    TRUE("extd", listing.hasNextLine());
+    EQ("line", "abce03: 77 20", listing.getLine());
     // clang-format on
 }
 
@@ -664,11 +676,11 @@ void test_z8001() {
     dis.setOption("short-address", "on");
 
     TRUE("setcpu", listing.setCpu("z8001"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        CPU    Z8001", listing.getContent());
-    EQ("line", "     0:                        CPU    Z8001", listing.getLine());
+    EQ("line", "     0:                   CPU    Z8001", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
@@ -677,7 +689,7 @@ void test_z8001() {
     EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0x789abd));
     EQ("org", OK, listing.setOrigin(org));
     EQ("content", "        ORG    789ABCH", listing.getContent());
-    EQ("line", "789ABC:                        ORG    789ABCH", listing.getLine());
+    EQ("line", "789ABC:                   ORG    789ABCH", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org, dis.config().endian());
@@ -685,7 +697,9 @@ void test_z8001() {
     auto reader = memory.reader(org);
     EQ("ldb", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        LDB    |160017H|(R1), #25", listing.getContent());
-    EQ("line", "789ABC: 4C15 1617 1919         LDB    |160017H|(R1), #25", listing.getLine());
+    EQ("line", "789ABC: 4C15 1617         LDB    |160017H|(R1), #25", listing.getLine());
+    TRUE("ldb", listing.hasNextLine());
+    EQ("line", "789AC0: 1919", listing.getLine());
 }
 
 void test_z8002() {
@@ -693,11 +707,11 @@ void test_z8002() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("z8002"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu    z8002", listing.getContent());
-    EQ("line", "   0:                        cpu    z8002", listing.getLine());
+    EQ("line", "   0:                   cpu    z8002", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
@@ -705,7 +719,7 @@ void test_z8002() {
     EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCD));
     EQ("prg", OK, listing.setOrigin(org));
     EQ("content", "        org    9abch", listing.getContent());
-    EQ("line", "9abc:                        org    9abch", listing.getLine());
+    EQ("line", "9abc:                   org    9abch", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org, dis.config().endian());
@@ -713,7 +727,9 @@ void test_z8002() {
     auto reader = memory.reader(org);
     EQ("cpl", OK, listing.disassemble(reader, reader.address()));
     EQ("content", "        cpl    rr0, #01020304h", listing.getContent());
-    EQ("line", "9abc: 1000 0102 0304         cpl    rr0, #01020304h", listing.getLine());
+    EQ("line", "9abc: 1000 0102         cpl    rr0, #01020304h", listing.getLine());
+    TRUE("cpl", listing.hasNextLine());
+    EQ("line", "9ac0: 0304", listing.getLine());
 }
 
 void test_mn1610() {
@@ -721,7 +737,7 @@ void test_mn1610() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("mn1610"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  mn1610", listing.getContent());
@@ -750,7 +766,7 @@ void test_mn1613() {
     DisFormatter listing(dis, "test");
 
     TRUE("setcpu", listing.setCpu("mn1613"));
-    EQ("bytes", 0, listing.generatedSize());
+    EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
     EQ("content", "        cpu  mn1613", listing.getContent());

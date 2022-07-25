@@ -138,7 +138,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
     _driver.reset();
     StrScanner *scan;
     while ((scan = _sources.readLine()) != nullptr) {
-        listing.clear();
+        listing.reset();
         const auto error = _driver.assemble(*scan, listing);
         if (error == OK || error == END_ASSEMBLE) {
             do {

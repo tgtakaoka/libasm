@@ -27,7 +27,7 @@
 namespace libasm {
 namespace driver {
 
-class AsmFormatter : public ListFormatter, public ListLine {
+class AsmFormatter : public ListFormatter {
 private:
     BinMemory &_memory;
 
@@ -38,11 +38,7 @@ public:
         ListFormatter::setUppercase(enable);
         uppercase = enable;
     }
-
-    AsmFormatter &clear() {
-        reset(*this);
-        return *this;
-    }
+    void enableLineNumber(bool enable) { _lineNumber = enable; }
 
     bool uppercase;
     uint32_t line_number;
@@ -61,6 +57,8 @@ public:
     void generateByte(uint32_t base, uint8_t val) { _memory.writeByte(base + length++, val); }
 
 private:
+    bool _lineNumber;
+
     // ListLine
     uint32_t startAddress() const override { return address; }
     int generatedSize() const override { return length; }
