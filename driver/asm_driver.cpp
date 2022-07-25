@@ -115,7 +115,6 @@ Error AsmDriver::openSource(const StrScanner &filename) {
 Error AsmDriver::assemble(const StrScanner &line, AsmFormatter &list) {
     list.line_number = _sources.current()->lineno();
     list.include_nest = _sources.size() - 1;
-    list.conf = &current()->assembler().config();
     return setError(current()->assemble(line, list, *this));
 }
 

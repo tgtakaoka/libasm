@@ -30,6 +30,7 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 }
 
 Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriver &driver) {
+    list.line = line;
     list.address = driver.origin();
     list.length = 0;
     list.val.clear();
@@ -38,6 +39,7 @@ Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriv
     list.operand = StrScanner::EMPTY;
     list.comment = StrScanner::EMPTY;
     list.line_symbol = StrScanner::EMPTY;
+    list.conf = &_assembler.config();
     _assembler.setOption("uppercase", list.uppercase ? "on" : "off");
 
     StrScanner scan(line);
@@ -86,20 +88,21 @@ Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriv
         return setError(OK);  // skip comment
     }
 
-    Insn insn(driver.origin());
-    const Error error = _assembler.encode(scan.str(), insn, &driver);
+    list.insn.reset(driver.origin());
+    const Error error = _assembler.encode(scan.str(), list.insn, &driver);
     const bool allowUndef = error == UNDEFINED_SYMBOL && driver.symbolMode() != REPORT_UNDEFINED;
     if (error == OK || allowUndef) {
         StrScanner p(_assembler.errorAt());
+        list.instruction = StrScanner(list.insn.name());
         list.operand.trimEndAt(p).trimEnd(isspace);
         list.comment = p.skipSpaces();
-        if (insn.length() > 0) {
+        if (list.insn.length() > 0) {
             const uint8_t unit = _assembler.config().addressUnit();
-            const uint32_t addr = insn.address() * unit;
-            list.address = insn.address();
-            for (auto i = 0; i < insn.length(); i++)
-                list.generateByte(addr, insn.bytes()[i]);
-            driver.setOrigin(driver.origin() + insn.length() / unit);
+            const uint32_t addr = list.insn.address() * unit;
+            list.address = list.insn.address();
+            for (auto i = 0; i < list.insn.length(); i++)
+                list.emitByte(addr, list.insn.bytes()[i]);
+            driver.setOrigin(driver.origin() + list.insn.length() / unit);
         }
         return setError(OK);
     }
@@ -213,7 +216,7 @@ Error AsmDirective::defineBytes(
                     scan = p;
                     return getError();
                 }
-                list.generateByte(base, c);
+                list.emitByte(base, c);
             }
             scan = p;
         } else {
@@ -225,7 +228,7 @@ Error AsmDirective::defineBytes(
             if (value.overflowUint8())
                 return setError(OVERFLOW_RANGE);
             const uint8_t val8 = value.getUnsigned();
-            list.generateByte(base, val8);
+            list.emitByte(base, val8);
         }
         if (!scan.skipSpaces().expect(','))
             break;
@@ -251,8 +254,8 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDrive
         const uint16_t val16 = value.getUnsigned();
         const uint8_t val8lo = val16;
         const uint8_t val8hi = val16 >> 8;
-        list.generateByte(base, endian == ENDIAN_BIG ? val8hi : val8lo);
-        list.generateByte(base, endian == ENDIAN_BIG ? val8lo : val8hi);
+        list.emitByte(base, endian == ENDIAN_BIG ? val8hi : val8lo);
+        list.emitByte(base, endian == ENDIAN_BIG ? val8lo : val8hi);
         if (!scan.skipSpaces().expect(','))
             break;
     }
@@ -275,10 +278,10 @@ Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDrive
         uint32_t val32 = value.getUnsigned();
         for (auto i = 0; i < 4; i++) {
             if (endian == ENDIAN_BIG) {
-                list.generateByte(base, val32 >> 24);
+                list.emitByte(base, val32 >> 24);
                 val32 <<= 8;
             } else {
-                list.generateByte(base, val32);
+                list.emitByte(base, val32);
                 val32 >>= 8;
             }
         }

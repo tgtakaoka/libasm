@@ -140,36 +140,15 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
     while ((scan = _sources.readLine()) != nullptr) {
         listing.reset();
         const auto error = _driver.assemble(*scan, listing);
-        if (error == OK || error == END_ASSEMBLE) {
-            do {
-                out.println(listing.getLine());
-            } while (listing.hasNextLine());
-            if (error != OK)
-                break;
-        } else if (reportError) {
-            const char *filename = _sources.current()->name().c_str();
-            const char *line = scan->str();
-            const int lineno = _sources.current()->lineno();
-            const char *at = _driver.errorAt().str();
-            const int column = (at >= line && at < line + scan->size()) ? at - line + 1 : -1;
-            if (column >= 0) {
-                fprintf(stderr, "%s:%d:%d: error: %s\n", filename, lineno, column,
-                        _driver.errorText_P());
-            } else {
-                fprintf(stderr, "%s:%d: error: %s at '%s'\n", filename, lineno,
-                        _driver.errorText_P(), at);
-            }
-            fprintf(stderr, "%s:%d: %s\n", filename, lineno, line);
-            if (column >= 0) {
-                out.format(
-                        "%s:%d:%d: error: %s\n", filename, lineno, column, _driver.errorText_P());
-            } else {
-                out.format(
-                        "%s:%d: error: %s at '%s'\n", filename, lineno, _driver.errorText_P(), at);
-            }
-            out.format("%s:%d: %s\n", filename, lineno, line);
-            errors++;
-        }
+        do {
+            const char *line = listing.getLine();
+            if (listing.isError())
+                fprintf(stderr, "%s\n", line);
+            out.println(line);
+        } while (listing.hasNextLine());
+        if (error == END_ASSEMBLE)
+            break;
+        errors++;
     }
     while (_sources.size())
         _sources.closeCurrent();

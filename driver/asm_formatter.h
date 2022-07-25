@@ -17,15 +17,17 @@
 #ifndef __ASM_FORMATTER_H__
 #define __ASM_FORMATTER_H__
 
-#include "bin_memory.h"
+#include "insn_base.h"
 #include "list_formatter.h"
 #include "str_scanner.h"
-#include "value_parser.h"
+#include "value.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace libasm {
 namespace driver {
+
+class BinMemory;
 
 class AsmFormatter : public ListFormatter {
 private:
@@ -33,51 +35,53 @@ private:
     bool _lineNumber;
 
 public:
-    AsmFormatter(BinMemory &memory) : ListFormatter(), _memory(memory), _lineNumber(false) {}
+    AsmFormatter(BinMemory &memory);
 
-    void setUppercase(bool enable) override {
-        ListFormatter::setUppercase(enable);
-        uppercase = enable;
-    }
+    void setUppercase(bool enable) override;
     void enableLineNumber(bool enable) { _lineNumber = enable; }
 
+    void reset() override;
+    void emitByte(uint32_t base, uint8_t val);
+    bool isError() const;
+    const char *getLine() override;
+
     bool uppercase;
+    const char *input_name;
     uint32_t line_number;
     uint16_t include_nest;
+    Insn insn{0};
     uint32_t address;
     int length;
     Value val;
+    StrScanner line;
     StrScanner label;
     StrScanner instruction;
     StrScanner operand;
     StrScanner comment;
+    ErrorAt error;
 
     StrScanner line_symbol;
     const ConfigBase *conf;
 
-    void generateByte(uint32_t base, uint8_t val) { _memory.writeByte(base + length++, val); }
-
 private:
+    bool _errorLine;
+
+    int formatBytes(int base) override;
+    void formatLine() override;
+
     // ListLine
-    uint32_t startAddress() const override { return address; }
-    int generatedSize() const override { return length; }
+    uint32_t startAddress() const override;
+    int generatedSize() const override;
+    uint8_t getByte(int offset) const override;
+    bool hasInstruction() const override;
+    const StrScanner getInstruction() const override;
+    bool hasOperand() const override;
+    const StrScanner getOperand() const override;
 
-    uint8_t getByte(int offset) const override {
-        return _memory.readByte(address * conf->addressUnit() + offset);
-    }
-    bool hasInstruction() const override { return instruction.size() != 0; }
-    const StrScanner getInstruction() const override { return instruction; }
-    bool hasOperand() const override { return operand.size() != 0; }
-    const StrScanner getOperand() const override { return operand; }
-
-    uint32_t lineNumber() const override { return line_number; }
-    uint16_t includeNest() const override { return include_nest; }
-    bool hasValue() const override { return !val.isUndefined(); }
-    uint32_t value() const override { return val.getUnsigned(); }
-    bool hasLabel() const override { return label.size() != 0; }
-    const StrScanner getLabel() const override { return label; }
-    bool hasComment() const override { return comment.size() != 0; }
-    const StrScanner getComment() const override { return comment; }
+    bool hasLabel() const override;
+    const StrScanner getLabel() const override;
+    bool hasComment() const override;
+    const StrScanner getComment() const override;
 
     // configuration
     const ConfigBase &config() const override { return *conf; }
@@ -85,20 +89,6 @@ private:
     int nameWidth() const override { return conf->nameMax() < 5 ? 6 : conf->nameMax() + 1; }
     int codeBytes() const override { return conf->codeMax() < 6 ? conf->codeMax() : 6; }
     int operandWidth() const override { return 16; }
-
-    void formatLine() override {
-        if (_lineNumber) {
-            auto nest = includeNest();
-            if (nest) {
-                formatDec(nest);
-            } else {
-                _out.text("   ");
-            }
-            formatDec(lineNumber(), 5);
-            _out.text("/ ");
-        }
-        ListFormatter::formatLine();
-    }
 };
 
 }  // namespace driver

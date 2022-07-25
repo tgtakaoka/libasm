@@ -398,7 +398,7 @@ void test_mc68000() {
             "        ori.l   #$bdbebfc0, ($c2c3c4).l",
             "     0:                                cpu     mc68000\n"
             "9abcde:                                org     $9abcde\n"
-            "9abcde: 00b9 bdbe bfc0                 ori.l   #$bdbebfc0, ($c2c3c4).l\n"
+            "9abcde: 00b9 bdbe bfc0                 ori     #$bdbebfc0, ($c2c3c4).l\n"
             "9abce4: 00c2 c3c4");
 }
 
