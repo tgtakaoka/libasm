@@ -1,4 +1,0 @@
--I../src
--Wall
--O
--std=c++14
