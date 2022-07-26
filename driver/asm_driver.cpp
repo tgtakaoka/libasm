@@ -112,14 +112,10 @@ Error AsmDriver::openSource(const StrScanner &filename) {
     return _sources.open(filename);
 }
 
-Error AsmDriver::assemble(const StrScanner &line, AsmFormatter &list) {
-    list.line_number = _sources.current()->lineno();
-    list.include_nest = _sources.size() - 1;
-    return setError(current()->assemble(line, list, *this));
-}
-
 void AsmDriver::reset() {
-    current()->assembler().reset();
+    for (auto *dir : _directives) {
+        dir->assembler().reset();
+    }
     _functions.reset();
     setOrigin(0);
 }
@@ -152,7 +148,7 @@ uint32_t AsmDriver::symbolLookup(const std::string &key) const {
 
 Error AsmDriver::symbolIntern(uint32_t value, const std::string &key) {
     if (symbolExists(key) && _symbolMode == REPORT_DUPLICATE)
-        return setError(DUPLICATE_LABEL);
+        return DUPLICATE_LABEL;
     _symbols.erase(key);
     _symbols.emplace(key, value);
     return OK;

@@ -131,7 +131,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
         return 1;
     }
 
-    AsmFormatter listing(memory);
+    AsmFormatter listing(_driver, _sources, memory);
     listing.setUppercase(_uppercase);
     listing.enableLineNumber(_line_number);
     int errors = 0;
@@ -139,7 +139,8 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
     StrScanner *scan;
     while ((scan = _sources.readLine()) != nullptr) {
         listing.reset();
-        const auto error = _driver.assemble(*scan, listing);
+        // const auto error = _driver.assemble(*scan, listing);
+        const auto error = listing.assemble(*scan, reportError);
         do {
             const char *line = listing.getLine();
             if (listing.isError())

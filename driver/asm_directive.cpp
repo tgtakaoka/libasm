@@ -16,6 +16,9 @@
 
 #include "asm_directive.h"
 
+#include "asm_driver.h"
+#include "intel_hex.h"
+#include "moto_srec.h"
 #include "str_scanner.h"
 
 #include <string.h>
@@ -27,86 +30,6 @@ namespace driver {
 bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
     return strcmp_P("8080", cpu_P) == 0 || strcmp_P("8085", cpu_P) == 0 ||
            strcasecmp_P("V30EMU", cpu_P) == 0;
-}
-
-Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriver &driver) {
-    list.line = line;
-    list.address = driver.origin();
-    list.length = 0;
-    list.val.clear();
-    list.label = StrScanner::EMPTY;
-    list.instruction = StrScanner::EMPTY;
-    list.operand = StrScanner::EMPTY;
-    list.comment = StrScanner::EMPTY;
-    list.line_symbol = StrScanner::EMPTY;
-    list.conf = &_assembler.config();
-    _assembler.setOption("uppercase", list.uppercase ? "on" : "off");
-
-    StrScanner scan(line);
-    auto &parser = _assembler.parser();
-    parser.setCurrentOrigin(list.address);
-
-    if (parser.isSymbolLetter(*scan, true)) {
-        setAt(scan);
-        list.label = scan;
-        list.line_symbol = parser.readSymbol(scan);
-        scan.expect(':');  // skip optional trailing ':' for label.
-        list.label.trimEndAt(scan);
-    }
-    scan.skipSpaces();
-
-    if (!_assembler.endOfLine(*scan)) {
-        StrScanner p(scan);
-        p.trimStart([](char s) { return !isspace(s); });
-        list.instruction = scan;
-        list.instruction.trimEndAt(p);
-        list.operand = p.skipSpaces();
-        const uint32_t origin = driver.origin();
-        const Error error = processPseudo(list.instruction, p, list, driver);
-        if (error == OK) {
-            list.operand.trimEndAt(p).trimEnd(isspace);
-            list.comment = p.skipSpaces();
-            if (list.line_symbol.size()) {
-                // If |label| isn't consumed, assign the origin.
-                if (driver.internSymbol(origin, list.line_symbol))
-                    return getError();
-            }
-            return getError();
-        }
-        if (error != UNKNOWN_DIRECTIVE)
-            return error;
-    }
-
-    if (list.line_symbol.size()) {
-        // If |label| isn't consumed, assign the origin.
-        if (driver.internSymbol(driver.origin(), list.line_symbol))
-            return getError();
-    }
-
-    if (_assembler.endOfLine(*scan)) {
-        list.comment = scan;
-        return setError(OK);  // skip comment
-    }
-
-    list.insn.reset(driver.origin());
-    const Error error = _assembler.encode(scan.str(), list.insn, &driver);
-    const bool allowUndef = error == UNDEFINED_SYMBOL && driver.symbolMode() != REPORT_UNDEFINED;
-    if (error == OK || allowUndef) {
-        StrScanner p(_assembler.errorAt());
-        list.instruction = StrScanner(list.insn.name());
-        list.operand.trimEndAt(p).trimEnd(isspace);
-        list.comment = p.skipSpaces();
-        if (list.insn.length() > 0) {
-            const uint8_t unit = _assembler.config().addressUnit();
-            const uint32_t addr = list.insn.address() * unit;
-            list.address = list.insn.address();
-            for (auto i = 0; i < list.insn.length(); i++)
-                list.emitByte(addr, list.insn.bytes()[i]);
-            driver.setOrigin(driver.origin() + list.insn.length() / unit);
-        }
-        return setError(OK);
-    }
-    return setError(error);
 }
 
 // PseudoHandler
@@ -157,8 +80,12 @@ Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver 
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    if (driver.internSymbol(value.getUnsigned(), list.line_symbol) == OK)
+    const auto error = driver.internSymbol(value.getUnsigned(), list.line_symbol);
+    if (error) {
+        setError(list.line_symbol, error);
+    } else {
         list.line_symbol = StrScanner::EMPTY;
+    }
     return getError();
 }
 
@@ -191,7 +118,6 @@ Error AsmDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver
 
 Error AsmDirective::defineBytes(
         StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor) {
-    list.address = driver.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
@@ -238,7 +164,6 @@ Error AsmDirective::defineBytes(
 }
 
 Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    list.address = driver.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
@@ -264,7 +189,6 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDrive
 }
 
 Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    list.address = driver.origin();
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
@@ -436,12 +360,20 @@ MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assemb
     registerPseudo(".dfs", &AsmDirective::allocateUint8s);
 }
 
+BinEncoder &MotorolaDirective::defaultEncoder() {
+    return MotoSrec::encoder();
+}
+
 IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
     registerPseudo(".db", &AsmDirective::defineUint8s);
     registerPseudo(".dw", &AsmDirective::defineUint16s);
     registerPseudo(".dd", &AsmDirective::defineUint32s);
     registerPseudo(".ds", &AsmDirective::allocateUint8s);
     registerPseudo(".z80syntax", &AsmDirective::switchIntelZilog);
+}
+
+BinEncoder &IntelDirective::defaultEncoder() {
+    return IntelHex::encoder();
 }
 
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {

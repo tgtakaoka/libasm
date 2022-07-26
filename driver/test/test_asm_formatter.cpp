@@ -59,14 +59,14 @@ void tear_down() {}
     TestSources sources;                       \
     AsmDriver driver(&dir, &dir + 1, sources); \
     BinMemory memory;                          \
-    AsmFormatter listing(memory)
+    AsmFormatter listing(driver, sources, memory)
 
 #define ASM_LINE(_line, _expected)                                   \
     do {                                                             \
         listing.reset();                                             \
         const char *msg = "";                                        \
-        driver.assemble(_line, listing);                             \
-        EQ(msg, OK, driver);                                         \
+        listing.assemble(_line, true);                               \
+        EQ(msg, OK, directive);                                      \
         EQ(msg, _expected.readLine()->str(), listing.getLine());     \
         if (listing.hasNextLine())                                   \
             EQ(msg, _expected.readLine()->str(), listing.getLine()); \

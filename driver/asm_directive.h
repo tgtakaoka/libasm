@@ -18,12 +18,8 @@
 #define __ASM_DIRECTIVE_H__
 
 #include "asm_base.h"
-#include "asm_driver.h"
 #include "asm_formatter.h"
-#include "bin_memory.h"
 #include "error_reporter.h"
-#include "intel_hex.h"
-#include "moto_srec.h"
 #include "str_scanner.h"
 
 #include <map>
@@ -32,12 +28,14 @@
 namespace libasm {
 namespace driver {
 
+class AsmDriver;
+class BinEncoder;
+
 class AsmDirective : public ErrorAt {
 public:
     typedef Error (AsmDirective::*PseudoHandler)(
             StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
-    Error assemble(const StrScanner &line, AsmFormatter &list, AsmDriver &driver);
     Assembler &assembler() const { return _assembler; }
     virtual BinEncoder &defaultEncoder() = 0;
     Error processPseudo(
@@ -63,6 +61,12 @@ public:
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
 protected:
+    struct icasecmp {
+        bool operator()(const std::string &lhs, const std::string &rhs) const {
+            return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
+        }
+    };
+
     Assembler &_assembler;
     std::map<std::string, PseudoHandler, icasecmp> _pseudos;
 
@@ -78,13 +82,13 @@ protected:
 class MotorolaDirective : public AsmDirective {
 public:
     MotorolaDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override { return MotoSrec::encoder(); }
+    BinEncoder &defaultEncoder() override;
 };
 
 class IntelDirective : public AsmDirective {
 public:
     IntelDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override { return IntelHex::encoder(); }
+    BinEncoder &defaultEncoder() override;
 };
 
 class NationalDirective : public IntelDirective {

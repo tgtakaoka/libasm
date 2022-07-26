@@ -27,44 +27,47 @@
 namespace libasm {
 namespace driver {
 
+class AsmDriver;
+class AsmSources;
 class BinMemory;
 
 class AsmFormatter : public ListFormatter {
-private:
-    BinMemory &_memory;
-    bool _lineNumber;
-
 public:
-    AsmFormatter(BinMemory &memory);
+    AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
 
     void setUppercase(bool enable) override;
     void enableLineNumber(bool enable) { _lineNumber = enable; }
 
     void reset() override;
+    Error assemble(const StrScanner &line, bool reportError = false);
     void emitByte(uint32_t base, uint8_t val);
+
     bool isError() const;
     const char *getLine() override;
 
-    bool uppercase;
-    const char *input_name;
+private:
+    AsmDriver &_driver;
+    AsmSources &_sources;
+    BinMemory &_memory;
+    bool _lineNumber;
+    bool _reportError;
+    bool _errorLine;
+
+    friend class AsmDirective;
+    StrScanner line;
+    uint32_t address;
+    int length;
     uint32_t line_number;
     uint16_t include_nest;
     Insn insn{0};
-    uint32_t address;
-    int length;
     Value val;
-    StrScanner line;
     StrScanner label;
+    StrScanner line_symbol;
     StrScanner instruction;
     StrScanner operand;
     StrScanner comment;
-    ErrorAt error;
-
-    StrScanner line_symbol;
+    ErrorAt errorAt;
     const ConfigBase *conf;
-
-private:
-    bool _errorLine;
 
     int formatBytes(int base) override;
     void formatLine() override;

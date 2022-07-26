@@ -17,7 +17,6 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
-#include "asm_formatter.h"
 #include "error_reporter.h"
 #include "function_store.h"
 #include "str_scanner.h"
@@ -40,7 +39,10 @@ enum SymbolMode {
     REPORT_DUPLICATE = 1,
 };
 
-class AsmDriver : public ErrorAt, public SymbolTable {
+class AsmDirective;
+class AsmFormatter;
+
+class AsmDriver : public SymbolTable {
 public:
     AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources);
 
@@ -49,7 +51,6 @@ public:
     std::list<std::string> listCpu() const;
     AsmDirective *current() const { return _current; }
 
-    Error assemble(const StrScanner &line, AsmFormatter &list);
     void reset();
     uint32_t origin() const { return _origin; }
     uint32_t setOrigin(uint32_t origin) { return _origin = origin; }

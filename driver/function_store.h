@@ -28,12 +28,6 @@
 namespace libasm {
 namespace driver {
 
-struct icasecmp {
-    bool operator()(const std::string &lhs, const std::string &rhs) const {
-        return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
-    }
-};
-
 struct FunctionStore : public ValueParser::FuncParser {
     FunctionStore() : _parent(nullptr) {}
 
@@ -48,6 +42,12 @@ struct FunctionStore : public ValueParser::FuncParser {
             const SymbolTable *symtab) override;
 
 private:
+    struct icasecmp {
+        bool operator()(const std::string &lhs, const std::string &rhs) const {
+            return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
+        }
+    };
+
     ValueParser::FuncParser *_parent;
     struct Function {
         std::string name;
