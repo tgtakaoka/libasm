@@ -15,7 +15,7 @@
 help:
 	@echo '"make test"     run tests of libasm::driver'
 
-TESTS = test_bin_memory
+TESTS = test_helpers test_bin_memory test_intel_hex test_moto_srec
 
 .PHONY:: help test clean clean-objs
 
@@ -32,6 +32,7 @@ CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -MMD -I../../driver -I../../src -I../../test
 
 OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o
+OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
 OBJS = $(OBJS_common) $(TESTS:=.o)
 BINS = $(TESTS)
 
@@ -44,7 +45,13 @@ test:: $(1)
 endef
 $(eval $(foreach t,$(TESTS),$(call test-rule,$(t))))
 
+test_helpers: test_helpers.o $(OBJS_common)
+	$(CXX) -o $@ $^
 test_bin_memory: test_bin_memory.o bin_memory.o $(OBJS_common)
+	$(CXX) -o $@ $^
+test_intel_hex: test_intel_hex.o $(OBJS_encdec) $(OBJS_common)
+	$(CXX) -o $@ $^
+test_moto_srec: test_moto_srec.o $(OBJS_encdec) $(OBJS_common)
 	$(CXX) -o $@ $^
 
 # Local Variables:
