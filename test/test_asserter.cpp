@@ -33,8 +33,26 @@ bool TestAsserter::check() const {
     return _fail_count == 0;
 }
 
-void TestAsserter::equals(const char *file, const int line, const char *message,
-        const uint32_t expected, const uint32_t actual) {
+void TestAsserter::isTrue(const char *file, const int line, const char *message, bool actual) {
+    if (actual) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s:%d: %s: expected 'true': actual 'false'\n", file, line, message);
+}
+
+void TestAsserter::isFalse(const char *file, const int line, const char *message, bool actual) {
+    if (!actual) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s:%d: %s: expected 'false': actual 'true'\n", file, line, message);
+}
+
+void TestAsserter::equals(
+        const char *file, const int line, const char *message, uint32_t expected, uint32_t actual) {
     if (expected == actual) {
         _pass_count++;
         return;

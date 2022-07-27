@@ -38,21 +38,23 @@ public:
         _fail_count = 0;
     }
     bool check() const;
-    void equals(const char *file, const int line, const char *message, const uint32_t expected,
-            const uint32_t actual);
-    void equals(const char *file, const int line, const char *message, const char *expected,
+    void isTrue(const char *file, int line, const char *message, bool actual);
+    void isFalse(const char *file, int line, const char *message, bool actual);
+    void equals(
+            const char *file, int line, const char *message, uint32_t expected, uint32_t actual);
+    void equals(const char *file, int line, const char *message, const char *expected,
             const char *actual);
-    void equals(const char *file, const int line, const char *message, const char *expected,
+    void equals(const char *file, int line, const char *message, const char *expected,
             const StrScanner &actual);
-    void equals(const char *file, const int line, const char *message, const char *expected,
+    void equals(const char *file, int line, const char *message, const char *expected,
             const Insn &actual);
-    void equals_P(const char *file, const int line, const char *message, const char *expected,
+    void equals_P(const char *file, int line, const char *message, const char *expected,
             const /* PROGMEM */ char *actual_P);
-    void equals(const char *file, const int line, const char *message, Error expected,
+    void equals(const char *file, int line, const char *message, Error expected,
             const ErrorReporter &actual);
     void equals(const char *file, const int line, const char *message, const ArrayMemory &expected,
             const uint8_t actual[], size_t actual_len);
-    void not_equals(const char *file, const int line, const char *message, const char *expected,
+    void not_equals(const char *file, int line, const char *message, const char *expected,
             const char *actual);
 
 private:
