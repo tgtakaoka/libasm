@@ -28,8 +28,8 @@ void tear_down() {}
 
 int mem_size(BinMemory &memory) {
     size_t size = 0;
-    for (auto it : memory)
-        size += it.second.size();
+    for (const auto &it : memory)
+        size += it.data.size();
     return size;
 }
 
@@ -48,17 +48,15 @@ int mem_block(BinMemory &memory) {
         EQ(_msg "block", _block, mem_block(_mem));      \
     } while (0)
 
-#define MEM_NONE(_mem, addr)                                 \
-    do {                                                     \
-        uint8_t val;                                         \
-        FALSE(#addr " not exist", _mem.readByte(addr, val)); \
+#define MEM_NONE(_mem, addr)                           \
+    do {                                               \
+        FALSE(#addr " not exist", _mem.hasByte(addr)); \
     } while (0);
 
-#define MEM_READ(_mem, addr, expected)                          \
-    do {                                                        \
-        uint8_t val;                                            \
-        TRUE("read " #addr " exist", _mem.readByte(addr, val)); \
-        EQ("read " #addr " value", expected, val);              \
+#define MEM_READ(_mem, addr, expected)                             \
+    do {                                                           \
+        TRUE("read " #addr " exist", _mem.hasByte(addr));          \
+        EQ("read " #addr " value", expected, _mem.readByte(addr)); \
     } while (0);
 
 #define MEM_WRITE(_mem, addr, val) \
@@ -153,20 +151,19 @@ void test_dis_memory() {
     MEM_WRITE(memory, 0x0200, 0xF2);
     MEM_WRITE(memory, 0x0400, 0xF3);
 
-    memory.setAddress(0x0080);
-    EQ("0x0080", 0x0080, memory.address());
-    FALSE("0x0080", memory.hasNext());
+    auto reader = memory.reader(0x0080);
+    EQ("0x0080", 0x0080, reader.address());
+    FALSE("0x0080", reader.hasNext());
 
-    memory.setAddress(0x0100);
-    DisMemory &dis = memory;
-    EQ("0x0100", 0x0100, dis.address());
-    TRUE("0x0100", dis.hasNext());
-    EQ("at 0x0100", 0xF0, dis.readByte());
-    EQ("0x0101", 0x0101, dis.address());
-    TRUE("0x0101", dis.hasNext());
-    EQ("at 0x0101", 0xF1, dis.readByte());
-    EQ("0x0102", 0x0102, dis.address());
-    FALSE("0x0102", dis.hasNext());
+    reader.setAddress(0x0100);
+    EQ("0x0100", 0x0100, reader.address());
+    TRUE("0x0100", reader.hasNext());
+    EQ("at 0x0100", 0xF0, reader.readByte());
+    EQ("0x0101", 0x0101, reader.address());
+    TRUE("0x0101", reader.hasNext());
+    EQ("at 0x0101", 0xF1, reader.readByte());
+    EQ("0x0102", 0x0102, reader.address());
+    FALSE("0x0102", reader.hasNext());
 }
 
 void run_tests() {

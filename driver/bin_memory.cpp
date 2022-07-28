@@ -22,182 +22,151 @@
 namespace libasm {
 namespace driver {
 
-BinMemory::BinMemory() : DisMemory(0) {
+BinMemory::BinMemory() {
     invalidateWriteCache();
     invalidateReadCache();
 }
 
-void BinMemory::setAddress(uint32_t addr) {
-    resetAddress(addr);
+void BinMemory::invalidateWriteCache() {
+    _writeCache = _blocks.end();
 }
 
-bool BinMemory::hasNext() const {
-    const uint32_t addr = address();
-    if (insideOf(_read_cache, addr))
+void BinMemory::invalidateReadCache() const {
+    _readCache = _blocks.end();
+}
+
+bool BinMemory::hasByte(uint32_t addr) const {
+    if (insideOf(_readCache, addr))
         return true;
-    for (auto segment = _segments.cbegin(); segment != _segments.cend(); segment++) {
-        if (insideOf(segment, addr)) {
-            _read_cache = segment;
+    invalidateReadCache();
+
+    for (auto cache = _blocks.begin(); cache != _blocks.end(); cache++) {
+        if (insideOf(cache, addr)) {
+            _readCache = cache;
             return true;
         }
     }
-    invalidateReadCache();
     return false;
-}
-
-uint8_t BinMemory::nextByte() {
-    uint8_t val = 0;
-    readByte(address(), val);
-    return val;
-}
-
-void BinMemory::writeBytes(uint32_t addr, const uint8_t *p, size_t size) {
-    for (const uint8_t *end = p + size; p < end; p++)
-        writeByte(addr++, *p);
-}
-
-bool BinMemory::readBytes(uint32_t addr, uint8_t *p, size_t size) const {
-    for (uint8_t *end = p + size; p < end; p++) {
-        if (!readByte(addr, *p))
-            return false;
-    }
-    return true;
 }
 
 void BinMemory::writeByte(uint32_t addr, uint8_t val) {
-    // Shortcut for most possible case, appending byte to cached segment.
-    if (atEndOf(_write_cache, addr)) {
-        appendTo(_write_cache, addr, val);
+    // Shortcut for most possible case, appending byte to cached cache.
+    if (atEndOf(_writeCache, addr)) {
+        appendTo(_writeCache, addr, val);
         return;
     }
-    if (insideOf(_write_cache, addr)) {
-        replaceAt(_write_cache, addr, val);
+    if (insideOf(_writeCache, addr)) {
+        replaceAt(_writeCache, addr, val);
         return;
     }
-
     invalidateWriteCache();
-    for (auto segment = _segments.begin(); segment != _segments.end(); segment++) {
-        if (atEndOf(segment, addr)) {
-            appendTo(segment, addr, val);
+
+    for (auto cache = _blocks.begin(); cache != _blocks.end(); cache++) {
+        if (atEndOf(cache, addr)) {
+            appendTo(cache, addr, val);
             return;
         }
-        if (insideOf(segment, addr)) {
-            replaceAt(segment, addr, val);
+        if (insideOf(cache, addr)) {
+            replaceAt(cache, addr, val);
             return;
         }
     }
 
-    // No appropriate segment found, create a segment.
-    createSegment(addr, val);
+    // No appropriate cache found, create a block.
+    createBlock(addr, val);
 }
 
-bool BinMemory::readByte(uint32_t addr, uint8_t &val) const {
-    if (insideOf(_read_cache, addr)) {
-        val = readFrom(_read_cache, addr);
-        return true;
-    }
-    for (auto segment = _segments.cbegin(); segment != _segments.cend(); segment++) {
-        if (insideOf(segment, addr)) {
-            val = readFrom(segment, addr);
-            _read_cache = segment;
-            return true;
+uint8_t BinMemory::readByte(uint32_t addr) const {
+    if (insideOf(_readCache, addr))
+        return readFrom(_readCache, addr);
+    invalidateReadCache();
+
+    for (auto cache = _blocks.begin(); cache != _blocks.end(); cache++) {
+        if (insideOf(cache, addr)) {
+            _readCache = cache;
+            return readFrom(cache, addr);
         }
     }
-    invalidateReadCache();
-    return false;
+    return 0;
 }
 
 bool BinMemory::equals(const BinMemory &other) const {
-    auto a = _segments.cbegin();
-    auto b = other._segments.cbegin();
-    while (a != _segments.cend() && b != other._segments.cend()) {
-        if (a->first != b->first)
+    auto a = _blocks.begin();
+    auto b = other._blocks.begin();
+    while (a != _blocks.end() && b != other._blocks.end()) {
+        if (a->base != b->base)
             return false;
-        if (a->second.size() != b->second.size())
+        if (a->data.size() != b->data.size())
             return false;
-        for (size_t i = 0; i < a->second.size(); i++) {
-            if (a->second[i] != b->second[i])
+        for (size_t i = 0; i < a->data.size(); i++) {
+            if (a->data[i] != b->data[i])
                 return false;
         }
         a++;
         b++;
     }
-    return a == _segments.cend() && b == other._segments.cend();
+    return a == _blocks.end() && b == other._blocks.end();
 }
 
 void BinMemory::swap(BinMemory &other) {
-    _segments.swap(other._segments);
+    _blocks.swap(other._blocks);
+    invalidateReadCache();
     invalidateWriteCache();
+    other.invalidateReadCache();
     other.invalidateWriteCache();
 }
 
 uint32_t BinMemory::startAddress() const {
-    if (_segments.empty())
-        return 0;
-    const auto it = _segments.cbegin();
-    return it->first;
+    return _blocks.empty() ? 0 : _blocks.begin()->base;
 }
 
 uint32_t BinMemory::endAddress() const {
-    if (_segments.empty())
+    if (_blocks.empty())
         return 0;
-    const auto it = _segments.crbegin();
-    return it->first + it->second.size() - 1;
+    const auto cache = _blocks.rbegin();
+    return cache->base + cache->data.size() - 1;
 }
 
-void BinMemory::invalidateWriteCache() {
-    _write_cache = _segments.end();
+bool BinMemory::insideOf(Cache &cache, uint32_t addr) const {
+    return cache != _blocks.end() && addr >= cache->base && addr < cache->base + cache->data.size();
 }
 
-void BinMemory::invalidateReadCache() const {
-    _read_cache = _segments.cend();
+bool BinMemory::atEndOf(Cache &cache, uint32_t addr) const {
+    return cache != _blocks.end() && addr == cache->base + cache->data.size();
 }
 
-bool BinMemory::insideOf(ConstSegment &segment, uint32_t addr) const {
-    return segment != _segments.cend() && addr >= segment->first &&
-           addr < segment->first + segment->second.size();
+uint8_t BinMemory::readFrom(Cache &cache, uint32_t addr) const {
+    return cache->data.at(addr - cache->base);
 }
 
-bool BinMemory::insideOf(Segment segment, uint32_t addr) const {
-    return segment != _segments.end() && addr >= segment->first &&
-           addr < segment->first + segment->second.size();
+void BinMemory::appendTo(Cache &cache, uint32_t addr, uint8_t val) {
+    cache->data.push_back(val);
+    _writeCache = cache;
+    aggregate(cache);
 }
 
-bool BinMemory::atEndOf(Segment segment, uint32_t addr) const {
-    return segment != _segments.end() && addr == segment->first + segment->second.size();
+void BinMemory::replaceAt(Cache &cache, uint32_t addr, uint8_t val) {
+    cache->data.at(addr - cache->base) = val;
+    _writeCache = cache;
+    aggregate(cache);
 }
 
-uint8_t BinMemory::readFrom(ConstSegment &segment, uint32_t addr) const {
-    return segment->second.at(addr - segment->first);
+void BinMemory::createBlock(uint32_t addr, uint8_t val) {
+    _writeCache = _blocks.emplace(addr).first;
+    _writeCache->data.push_back(val);
+    aggregate(_writeCache);
 }
 
-void BinMemory::appendTo(Segment &segment, uint32_t addr, uint8_t val) {
-    segment->second.push_back(val);
-    _write_cache = segment;
-    aggregate(segment);
-}
-
-void BinMemory::replaceAt(Segment &segment, uint32_t addr, uint8_t val) {
-    segment->second.at(addr - segment->first) = val;
-    _write_cache = segment;
-    aggregate(segment);
-}
-
-void BinMemory::createSegment(uint32_t addr, uint8_t val) {
-    _write_cache = _segments.insert(std::make_pair(addr, std::vector<uint8_t>())).first;
-    _write_cache->second.push_back(val);
-    aggregate(_write_cache);
-}
-
-void BinMemory::aggregate(Segment hint) {
-    Segment prev = hint;
-    // Check following segment whether it is adjacent to.
-    for (Segment next = ++hint; next != _segments.end() && atEndOf(prev, next->first);
-            next = _segments.erase(next)) {
-        // Append next segment.
-        prev->second.reserve(prev->second.size() + next->second.size());
-        prev->second.insert(prev->second.end(), std::make_move_iterator(next->second.begin()),
-                std::make_move_iterator(next->second.end()));
+void BinMemory::aggregate(Cache &hint) {
+    Cache prev = hint;
+    // Check following cache whether it is adjacent to.
+    for (Cache next = ++hint; next != _blocks.end() && atEndOf(prev, next->base);
+            next = _blocks.erase(next)) {
+        // Append next block.
+        prev->data.reserve(prev->data.size() + next->data.size());
+        prev->data.insert(prev->data.end(), std::make_move_iterator(next->data.begin()),
+                std::make_move_iterator(next->data.end()));
+        invalidateReadCache();
         invalidateWriteCache();
     }
 }

@@ -17,62 +17,74 @@
 #ifndef __BIN_MEMORY_H__
 #define __BIN_MEMORY_H__
 
-#include <stdint.h>
-
-#include <map>
-#include <vector>
-
 #include "dis_memory.h"
+
+#include <set>
+#include <vector>
 
 namespace libasm {
 namespace driver {
 
-class BinMemory : public DisMemory {
+class BinMemory {
 public:
     BinMemory();
 
-    void setAddress(uint32_t addr);
-    bool hasNext() const override;
-
-protected:
-    uint8_t nextByte() override;
-
-public:
-    void writeBytes(uint32_t addr, const uint8_t *p, size_t size);
-    bool readBytes(uint32_t addr, uint8_t *p, size_t size) const;
+    bool hasByte(uint32_t addr) const;
     void writeByte(uint32_t addr, uint8_t val);
-    bool readByte(uint32_t addr, uint8_t &val) const;
+    uint8_t readByte(uint32_t addr) const;
+
     bool equals(const BinMemory &other) const;
     void swap(BinMemory &other);
 
     uint32_t startAddress() const;
     uint32_t endAddress() const;
 
-    // Iterator
-    // it->first: uint32_t start_address;
-    // it->second: vector<uint8_t> memory_block;
-    auto begin() const { return _segments.begin(); }
-    auto end() const { return _segments.end(); }
+    // byte iterator
+    class ByteIterator : public DisMemory {
+    public:
+        bool hasNext() const override { return _memory.hasByte(address()); }
+        void setAddress(uint32_t addr) { DisMemory::resetAddress(addr); }
+
+    private:
+        friend class BinMemory;
+        ByteIterator(const BinMemory &memory, uint32_t addr) : DisMemory(addr), _memory(memory) {}
+        uint8_t nextByte() override { return _memory.readByte(address()); }
+
+        const BinMemory &_memory;
+    };
+
+    auto reader(uint32_t addr) const { return ByteIterator(*this, addr); }
+
+    // block iterator
+    // it->base: uint32_t start_address;
+    // it->data: vector<uint8_t> memory_block;
+    auto begin() const { return _blocks.begin(); }
+    auto end() const { return _blocks.end(); }
 
 private:
-    // Memory segment list in ascending order of start address.
-    typedef std::map<uint32_t, std::vector<uint8_t>> Segments;
-    typedef typename Segments::iterator Segment;
-    typedef typename Segments::const_iterator ConstSegment;
-    Segments _segments;
-    Segment _write_cache;
-    mutable ConstSegment _read_cache;
+    struct Block {
+        const uint32_t base;
+        mutable std::vector<uint8_t> data;
+
+        Block(uint32_t addr) : base(addr), data() {}
+        bool operator<(const Block &o) const { return base < o.base; }
+    };
+
+    // Memory block set in ascending order of start address.
+    std::set<Block> _blocks;
+    typedef std::set<Block>::iterator Cache;
+    Cache _writeCache;
+    mutable Cache _readCache;
 
     void invalidateWriteCache();
     void invalidateReadCache() const;
-    bool insideOf(ConstSegment &segment, uint32_t addr) const;
-    bool insideOf(Segment segment, uint32_t addr) const;
-    bool atEndOf(Segment segment, uint32_t addr) const;
-    uint8_t readFrom(ConstSegment &segment, uint32_t addr) const;
-    void appendTo(Segment &segment, uint32_t addr, uint8_t val);
-    void replaceAt(Segment &segment, uint32_t addr, uint8_t val);
-    void createSegment(uint32_t addr, uint8_t val);
-    void aggregate(Segment hint);
+    bool insideOf(Cache &cache, uint32_t addr) const;
+    bool atEndOf(Cache &cache, uint32_t addr) const;
+    uint8_t readFrom(Cache &cache, uint32_t addr) const;
+    void appendTo(Cache &cache, uint32_t addr, uint8_t val);
+    void replaceAt(Cache &cache, uint32_t addr, uint8_t val);
+    void createBlock(uint32_t addr, uint8_t val);
+    void aggregate(Cache &hint);
 };
 
 }  // namespace driver

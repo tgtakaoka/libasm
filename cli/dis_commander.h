@@ -22,6 +22,8 @@
 #include "dis_driver.h"
 #include "file_reader.h"
 
+#include <map>
+
 namespace libasm {
 namespace cli {
 

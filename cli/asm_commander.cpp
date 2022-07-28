@@ -115,9 +115,9 @@ int AsmCommander::assemble() {
         if (_verbose) {
             const uint8_t addrUnit = _driver.current()->assembler().config().addressUnit();
             for (const auto &it : memory) {
-                const uint32_t start = it.first / addrUnit;
-                const size_t size = it.second.size();
-                const uint32_t end = (it.first + size - 1) / addrUnit;
+                const uint32_t start = it.base / addrUnit;
+                const size_t size = it.data.size();
+                const uint32_t end = (it.base + size - 1) / addrUnit;
                 fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, size, start, end);
             }
         }

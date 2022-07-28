@@ -89,8 +89,8 @@ int DisCommander::disassemble() {
         listout.println(listing.getLine());
     }
     for (const auto &it : memory) {
-        auto mem_base = it.first;
-        auto mem_size = it.second.size();
+        auto mem_base = it.base;
+        auto mem_size = it.data.size();
         auto start = mem_base / addrUnit;
         const auto end = start + (mem_size - 1) / addrUnit;
         if (start > _addr_end || end < _addr_start)
@@ -105,9 +105,9 @@ int DisCommander::disassemble() {
         listing.setOrigin(start);
         output.println(listing.getContent());
         listout.println(listing.getLine());
+        auto reader = memory.reader(mem_base);
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
-            memory.setAddress(mem_base + mem_offset);
-            listing.disassemble(memory, start + mem_offset / addrUnit);
+            listing.disassemble(reader, start + mem_offset / addrUnit);
             mem_offset += listing.generatedSize();
             do {
                 const char *line = listing.getLine();
@@ -134,9 +134,9 @@ int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
     }
     if (_verbose) {
         for (const auto &it : memory) {
-            const uint32_t start = it.first / addrUnit;
-            const size_t size = it.second.size();
-            const uint32_t end = (it.first + size - 1) / addrUnit;
+            const uint32_t start = it.base / addrUnit;
+            const size_t size = it.data.size();
+            const uint32_t end = (it.base + size - 1) / addrUnit;
             fprintf(stderr, "%s: Read %4zu bytes 0x%04X-0x%04X\n", filename, size, start, end);
         }
     }

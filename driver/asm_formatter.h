@@ -64,11 +64,9 @@ private:
     // ListLine
     uint32_t startAddress() const override { return address; }
     int generatedSize() const override { return length; }
+
     uint8_t getByte(int offset) const override {
-        const auto addr = address * conf->addressUnit() + offset;
-        uint8_t val;
-        _memory.readByte(addr, val);
-        return val;
+        return _memory.readByte(address * conf->addressUnit() + offset);
     }
     bool hasInstruction() const override { return instruction.size() != 0; }
     const StrScanner getInstruction() const override { return instruction; }
