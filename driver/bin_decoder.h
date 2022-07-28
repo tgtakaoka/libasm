@@ -35,6 +35,7 @@ public:
     static int decode(TextReader &in, BinMemory &memory);
 
 protected:
+    virtual void reset() {}
     virtual int decode(StrScanner &line, BinMemory &memory) = 0;
 
     static bool parseByte(StrScanner &line, uint8_t &val);

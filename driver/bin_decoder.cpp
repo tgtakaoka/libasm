@@ -38,6 +38,7 @@ int BinDecoder::decode(TextReader &in, BinMemory &memory) {
             default:
                 return 1;
             }
+            decoder->reset();
         }
         const auto len = decoder->decode(*line, memory);
         if (len < 0)

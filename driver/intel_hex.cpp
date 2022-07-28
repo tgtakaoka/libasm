@@ -35,8 +35,7 @@ uint8_t IntelHex::getSum() const {
 
 void IntelHex::reset(AddressWidth addrWidth, uint8_t recordSize) {
     BinEncoder::reset(addrWidth, recordSize);
-    _last_addr = -1;
-    _next_addr = 0;
+    reset();
 }
 
 void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) {
@@ -95,6 +94,11 @@ void IntelHex::encodeLine(TextPrinter &out, uint16_t addr, const uint8_t *data, 
 
 void IntelHex::end(TextPrinter &out) {
     out.println(":00000001FF");
+}
+
+void IntelHex::reset() {
+    _last_addr = -1;
+    _next_addr = 0;
 }
 
 int IntelHex::decode(StrScanner &line, BinMemory &memory) {
