@@ -533,10 +533,11 @@ static void assert_ok(Config::opcode_t opc) {
     uint16_t words[2] = { opc, 0 };
     Insn insn(0x100);
     char operands[40], message[40];
-    ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
+    const ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
+    auto it = memory.iterator();
 
     disassembler.setOption("uppercase", "yes");
-    disassembler.decode(memory, insn, operands, sizeof(operands));
+    disassembler.decode(it, insn, operands, sizeof(operands));
     sprintf(message, "%04X must be LEGAL", opc);
     EQUALS(message, OK, disassembler.getError());
 }
@@ -545,10 +546,11 @@ static void assert_illegal(Config::opcode_t opc, Error err, const char *message)
     uint16_t words[2] = { opc, 0 };
     Insn insn(0x100);
     char operands[40];
-    ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
+    const ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
+    auto it = memory.iterator();
 
     disassembler.setOption("uppercase", "enable");
-    disassembler.decode(memory, insn, operands, sizeof(operands));
+    disassembler.decode(it, insn, operands, sizeof(operands));
     EQUALS(message, err, disassembler.getError());
     if (disassembler.getError() == OK)
         printf("actual: %s %s\n", insn.name(), operands);

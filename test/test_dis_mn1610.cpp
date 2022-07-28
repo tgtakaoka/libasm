@@ -705,8 +705,9 @@ static void print_illegal(Config::opcode_t start = 0, Config::opcode_t end = 0xf
             if (opc >= end)
                 quit = true;
             words[0] = opc;
-            ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
-            disassembler.decode(memory, insn, operands, sizeof(operands));
+            const ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
+            auto it = memory.iterator();
+            disassembler.decode(it, insn, operands, sizeof(operands));
             if (disassembler.getError() == OK) {
                 if (!prev) {
                     if (fail_start == opc - step) {

@@ -45,11 +45,12 @@ interface.
     dis68k.setRelativeTarget(true);
 
     const uint16_t words[] = {0047372, 0x1232};
-    libasm::ArrayMemory memory(0x100, words, sizeof(words));
+    const libasm::ArrayMemory memory(0x100, words, sizeof(words));
+    auto dismem = memory.iterator();
     libasm::Insn insn(0x100);
     char opr[80];
 
-    dis68k.decode(memory, insn, opr, sizeof(opr));
+    dis68k.decode(dismem, insn, opr, sizeof(opr));
     assert(insn.address() == 0x100);
     assert(std::string(insn.name()) == "jmp");
     assert(std::string(opr) == "(*+$1234,pc)");

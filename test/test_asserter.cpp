@@ -107,22 +107,23 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
-        ArrayMemory &memory, const uint8_t actual[], size_t actual_len) {
+        const ArrayMemory &expected, const uint8_t actual[], size_t actual_len) {
     size_t i;
-    for (i = 0, memory.rewind(); i < actual_len && memory.hasNext(); i++) {
-        if (memory.readByte() != actual[i])
+    auto it = expected.iterator();
+    for (i = 0, it.rewind(); i < actual_len && it.hasNext(); i++) {
+        if (it.readByte() != actual[i])
             break;
     }
-    if (i == memory.size()) {
+    if (i == expected.size()) {
         _pass_count++;
         return;
     }
     _fail_count++;
     printf("%s:%d: %s: expected [", file, line, message);
-    for (i = 0, memory.rewind(); memory.hasNext(); i++) {
+    for (i = 0, it.rewind(); it.hasNext(); i++) {
         if (i)
             printf(" ");
-        printf("%02" PRIX8, memory.readByte());
+        printf("%02" PRIX8, it.readByte());
     }
     printf("]: actual [");
     for (i = 0; i < actual_len; i++) {

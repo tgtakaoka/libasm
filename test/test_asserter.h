@@ -50,7 +50,7 @@ public:
             const /* PROGMEM */ char *actual_P);
     void equals(const char *file, const int line, const char *message, Error expected,
             const ErrorReporter &actual);
-    void equals(const char *file, const int line, const char *message, ArrayMemory &memory,
+    void equals(const char *file, const int line, const char *message, const ArrayMemory &expected,
             const uint8_t actual[], size_t actual_len);
     void not_equals(const char *file, const int line, const char *message, const char *expected,
             const char *actual);

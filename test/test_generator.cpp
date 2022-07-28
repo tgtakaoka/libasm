@@ -222,8 +222,9 @@ void TestGenerator::generateTests(DataGenerator &gen) {
     do {
         gen.next();
         gen.debug("@@  loop");
-        ArrayMemory memory(_addr, _memory, _memorySize);
-        _listing.disassemble(memory, _addr);
+        const ArrayMemory memory(_addr, _memory, _memorySize);
+        auto it = memory.iterator();
+        _listing.disassemble(it, _addr);
         if (_disassembler.isOK()) {
             const int len = gen.length();
             const int newLen = _listing.length();

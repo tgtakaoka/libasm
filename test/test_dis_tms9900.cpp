@@ -394,10 +394,11 @@ static void assert_mid(
             const uint16_t post = validPostWord(prefix ? prefix : code);
             words[pos] = code;
             words[pos + 1] = post;
-            ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
+            const ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
+            auto it = memory.iterator();
 
             insn.reset(insn.address());
-            disassembler.decode(memory, insn, operands, sizeof(operands));
+            disassembler.decode(it, insn, operands, sizeof(operands));
             if (m && code > m->end) {
                 if (++m >= end)
                     m = nullptr;
