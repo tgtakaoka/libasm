@@ -29,10 +29,6 @@ static constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
     return addr & 0x1FFF;
 }
 
-static constexpr Config::ptrdiff_t signedOffset(const Config::uintptr_t addr) {
-    return (addr & (0x1000 - 1)) - (addr & 0x1000);
-}
-
 static constexpr Config::uintptr_t inpage(
         const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
     return page(addr) | offset(addr + delta);
