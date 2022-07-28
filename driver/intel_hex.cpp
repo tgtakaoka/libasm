@@ -40,6 +40,9 @@ void IntelHex::reset(AddressWidth addrWidth, uint8_t recordSize) {
 }
 
 void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint8_t size) {
+    // If |addr| is discontinued or |addr| has different ELA than last
+    if (addr != _next_addr || ((addr ^ _last_addr) >> 16) != 0)
+        formatEla(out, addr);
     const auto end = addr + size;
     // If this block overwarp ELA boundary.
     if ((addr ^ end) & ~0xFFFF) {
@@ -53,9 +56,6 @@ void IntelHex::encode(TextPrinter &out, uint32_t addr, const uint8_t *data, uint
         if (size == 0)
             return;
     }
-    // If |addr| is discontinued or |addr| has different ELA than last
-    if (addr != _next_addr || ((addr ^ _last_addr) >> 16) != 0)
-        formatEla(out, addr);
     encodeLine(out, addr, data, size);
     _last_addr = addr;
     _next_addr = addr + size;
