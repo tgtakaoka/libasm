@@ -66,8 +66,8 @@ protected:
 
     const ConfigBase &config() const override { return _disassembler.config(); }
     int labelWidth() const override { return 8; }
+    int nameWidth() const override { return config().nameMax() < 5 ? 6 : config().nameMax() + 1; }
     int codeBytes() const override { return config().codeMax() < 4 ? config().codeMax() : 4; }
-    int nameWidth() const override { return config().nameMax() + 1; }
     int operandWidth() const override { return 8; }
 };
 

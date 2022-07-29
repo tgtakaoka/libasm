@@ -142,23 +142,23 @@ void test_mos6502() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  mos6502", listing.getContent());
-    EQ("line", "   0:                     cpu  mos6502", listing.getLine());
+    EQ("content", "        cpu   mos6502", listing.getContent());
+    EQ("line", "   0:                     cpu   mos6502", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  $abcd", listing.getContent());
-    EQ("line", "abcd:                     org  $abcd", listing.getLine());
+    EQ("content", "        org   $abcd", listing.getContent());
+    EQ("line", "abcd:                     org   $abcd", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
     writer.add(0xed).add(0xf2).add(0xf1);
     auto reader = memory.reader(org);
     EQ("sbc", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        sbc  $f1f2", listing.getContent());
-    EQ("line", "abcd: ed f2 f1            sbc  $f1f2", listing.getLine());
+    EQ("content", "        sbc   $f1f2", listing.getContent());
+    EQ("line", "abcd: ed f2 f1            sbc   $f1f2", listing.getLine());
 }
 
 void test_w65816() {
@@ -170,29 +170,29 @@ void test_w65816() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        CPU  W65C816", listing.getContent());
-    EQ("line", "     0:                     CPU  W65C816", listing.getLine());
+    EQ("content", "        CPU   W65C816", listing.getContent());
+    EQ("line", "     0:                     CPU   W65C816", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcdef;
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        ORG  $ABCDEF", listing.getContent());
-    EQ("line", "ABCDEF:                     ORG  $ABCDEF", listing.getLine());
+    EQ("content", "        ORG   $ABCDEF", listing.getContent());
+    EQ("line", "ABCDEF:                     ORG   $ABCDEF", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
     writer.add(0xef).add(0xf0).add(0xf1).add(0xf2);
     auto reader = memory.reader(org);
     EQ("sbc", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        SBC  $F2F1F0", listing.getContent());
-    EQ("line", "ABCDEF: EF F0 F1 F2         SBC  $F2F1F0", listing.getLine());
+    EQ("content", "        SBC   $F2F1F0", listing.getContent());
+    EQ("line", "ABCDEF: EF F0 F1 F2         SBC   $F2F1F0", listing.getLine());
 
     dis.setOption("longa", "on");
     writer.add(0x69).add(0x34).add(0x12);
     EQ("adc", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        ADC  #$1234", listing.getContent());
-    EQ("line", "ABCDF3: 69 34 12            ADC  #$1234", listing.getLine());
+    EQ("content", "        ADC   #$1234", listing.getContent());
+    EQ("line", "ABCDF3: 69 34 12            ADC   #$1234", listing.getLine());
 }
 
 void test_i8048() {
@@ -370,23 +370,23 @@ void test_tlcs90() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  tlcs90", listing.getContent());
-    EQ("line", "   0:                     cpu  tlcs90", listing.getLine());
+    EQ("content", "        cpu   tlcs90", listing.getContent());
+    EQ("line", "   0:                     cpu   tlcs90", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  0abcdh", listing.getContent());
-    EQ("line", "abcd:                     org  0abcdh", listing.getLine());
+    EQ("content", "        org   0abcdh", listing.getContent());
+    EQ("line", "abcd:                     org   0abcdh", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
     writer.add(0xf7).add(0x6d).add(0xef);
     auto reader = memory.reader(org);
     EQ("xor", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        xor  (hl+a), 0efh", listing.getContent());
-    EQ("line", "abcd: f7 6d ef            xor  (hl+a), 0efh", listing.getLine());
+    EQ("content", "        xor   (hl+a), 0efh", listing.getContent());
+    EQ("line", "abcd: f7 6d ef            xor   (hl+a), 0efh", listing.getLine());
 }
 
 void test_ins8060() {
@@ -397,23 +397,23 @@ void test_ins8060() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  ins8060", listing.getContent());
-    EQ("line", "   0:               cpu  ins8060", listing.getLine());
+    EQ("content", "        cpu   ins8060", listing.getContent());
+    EQ("line", "   0:               cpu   ins8060", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  x'abcd", listing.getContent());
-    EQ("line", "abcd:               org  x'abcd", listing.getLine());
+    EQ("content", "        org   x'abcd", listing.getContent());
+    EQ("line", "abcd:               org   x'abcd", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
     writer.add(0xd5).add(0x80);
     auto reader = memory.reader(org);
     EQ("and", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        and  @e(p1)", listing.getContent());
-    EQ("line", "abcd: d5 80         and  @e(p1)", listing.getLine());
+    EQ("content", "        and   @e(p1)", listing.getContent());
+    EQ("line", "abcd: d5 80         and   @e(p1)", listing.getLine());
 }
 
 void test_ins8070() {
@@ -424,50 +424,51 @@ void test_ins8070() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  ins8070", listing.getContent());
-    EQ("line", "   0:                  cpu  ins8070", listing.getLine());
+    EQ("content", "        cpu   ins8070", listing.getContent());
+    EQ("line", "   0:                  cpu   ins8070", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  x'abcd", listing.getContent());
-    EQ("line", "abcd:                  org  x'abcd", listing.getLine());
+    EQ("content", "        org   x'abcd", listing.getContent());
+    EQ("line", "abcd:                  org   x'abcd", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
     writer.add(0x22).add(0x23).add(0x24);
     auto reader = memory.reader(org);
     EQ("pli", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        pli  p2, =x'2423", listing.getContent());
-    EQ("line", "abcd: 22 23 24         pli  p2, =x'2423", listing.getLine());
+    EQ("content", "        pli   p2, =x'2423", listing.getContent());
+    EQ("line", "abcd: 22 23 24         pli   p2, =x'2423", listing.getLine());
 }
 
 void test_cdp1802() {
     cdp1802::DisCdp1802 dis;
     DisFormatter listing(dis, "test");
+    dis.setOption("use-register", "on");
 
     TRUE("setcpu", listing.setCpu("cdp1804"));
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  cdp1804", listing.getContent());
-    EQ("line", "   0:                     cpu  cdp1804", listing.getLine());
+    EQ("content", "        cpu   cdp1804", listing.getContent());
+    EQ("line", "   0:                     cpu   cdp1804", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  0abcdh", listing.getContent());
-    EQ("line", "abcd:                     org  0abcdh", listing.getLine());
+    EQ("content", "        org   0abcdh", listing.getContent());
+    EQ("line", "abcd:                     org   0abcdh", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org);
     writer.add(0x68).add(0x83).add(0x84).add(0x85);
     auto reader = memory.reader(org);
     EQ("scal", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        scal 3, 8485h", listing.getContent());
-    EQ("line", "abcd: 68 83 84 85         scal 3, 8485h", listing.getLine());
+    EQ("content", "        scal  r3, 8485h", listing.getContent());
+    EQ("line", "abcd: 68 83 84 85         scal  r3, 8485h", listing.getLine());
 }
 
 void test_scn2650() {
@@ -535,24 +536,24 @@ void test_tms9900() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  tms99105", listing.getContent());
-    EQ("line", "   0:                   cpu  tms99105", listing.getLine());
+    EQ("content", "        cpu   tms99105", listing.getContent());
+    EQ("line", "   0:                   cpu   tms99105", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0x9abc;
     EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCD));
     EQ("org", OK, listing.setOrigin(0x9abc));
-    EQ("content", "        org  9abch", listing.getContent());
-    EQ("line", "9abc:                   org  9abch", listing.getLine());
+    EQ("content", "        org   9abch", listing.getContent());
+    EQ("line", "9abc:                   org   9abch", listing.getLine());
 
     TestMemory memory;
     auto writer = memory.writer(org, dis.config().endian());
     writer.add(0x002a).add(0x4861).add(0x4a4b).add(0x4c4d);
     auto reader = memory.reader(org);
     EQ("am", OK, listing.disassemble(reader, reader.address()));
-    EQ("content", "        am   @4a4bh(r1), @4c4dh(r1)", listing.getContent());
-    EQ("line", "9abc: 002a 4861         am   @4a4bh(r1), @4c4dh(r1)", listing.getLine());
+    EQ("content", "        am    @4a4bh(r1), @4c4dh(r1)", listing.getContent());
+    EQ("line", "9abc: 002a 4861         am    @4a4bh(r1), @4c4dh(r1)", listing.getLine());
     TRUE("am", listing.hasNextLine());
     EQ("line", "9ac0: 4a4b 4c4d", listing.getLine());
 }
@@ -565,16 +566,16 @@ void test_tms32010() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  tms32010", listing.getContent());
-    EQ("line", "  0:                   cpu  tms32010", listing.getLine());
+    EQ("content", "        cpu   tms32010", listing.getContent());
+    EQ("line", "  0:                   cpu   tms32010", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0x789;
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0xabcd));
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  789h", listing.getContent());
-    EQ("line", "789:                   org  789h", listing.getLine());
+    EQ("content", "        org   789h", listing.getContent());
+    EQ("line", "789:                   org   789h", listing.getLine());
 
     TestMemory memory;
     const auto start = org * dis.config().addressUnit();
@@ -582,13 +583,13 @@ void test_tms32010() {
     writer.add(0xf800).add(0x0fed);
     auto reader = memory.reader(start);
     EQ("call", OK, listing.disassemble(reader, reader.address() / dis.config().addressUnit()));
-    EQ("content", "        call 0fedh", listing.getContent());
-    EQ("line", "789: f800 0fed         call 0fedh", listing.getLine());
+    EQ("content", "        call  0fedh", listing.getContent());
+    EQ("line", "789: f800 0fed         call  0fedh", listing.getLine());
 
     writer.add(0x50a0);
     EQ("sacl", OK, listing.disassemble(reader, reader.address() / dis.config().addressUnit()));
-    EQ("content", "        sacl *+, 0, ar0", listing.getContent());
-    EQ("line", "78b: 50a0              sacl *+, 0, ar0", listing.getLine());
+    EQ("content", "        sacl  *+, 0, ar0", listing.getContent());
+    EQ("line", "78b: 50a0              sacl  *+, 0, ar0", listing.getLine());
 }
 
 void test_mc68000() {
@@ -740,16 +741,16 @@ void test_mn1610() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  mn1610", listing.getContent());
-    EQ("line", "   0:                   cpu  mn1610", listing.getLine());
+    EQ("content", "        cpu   mn1610", listing.getContent());
+    EQ("line", "   0:                   cpu   mn1610", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0xabcd;
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x12345));
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  x'abcd'", listing.getContent());
-    EQ("line", "abcd:                   org  x'abcd'", listing.getLine());
+    EQ("content", "        org   x'abcd'", listing.getContent());
+    EQ("line", "abcd:                   org   x'abcd'", listing.getLine());
 
     TestMemory memory;
     const auto start = org * dis.config().addressUnit();
@@ -757,8 +758,8 @@ void test_mn1610() {
     writer.add(0x2b55);
     auto reader = memory.reader(start);
     EQ("tbit", OK, listing.disassemble(reader, reader.address() / dis.config().addressUnit()));
-    EQ("content", "        tbit r3, 5, nz", listing.getContent());
-    EQ("line", "abcd: 2b55              tbit r3, 5, nz", listing.getLine());
+    EQ("content", "        tbit  r3, 5, nz", listing.getContent());
+    EQ("line", "abcd: 2b55              tbit  r3, 5, nz", listing.getLine());
 }
 
 void test_mn1613() {
@@ -769,16 +770,16 @@ void test_mn1613() {
     EQ("bytes", 0, listing.byteLength());
     FALSE("error", listing.isError());
 
-    EQ("content", "        cpu  mn1613", listing.getContent());
-    EQ("line", "    0:                   cpu  mn1613", listing.getLine());
+    EQ("content", "        cpu   mn1613", listing.getContent());
+    EQ("line", "    0:                   cpu   mn1613", listing.getLine());
     FALSE("content", listing.hasNextContent());
     FALSE("line", listing.hasNextLine());
 
     const uint32_t org = 0x34567;
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x45678));
     EQ("org", OK, listing.setOrigin(org));
-    EQ("content", "        org  x'34567'", listing.getContent());
-    EQ("line", "34567:                   org  x'34567'", listing.getLine());
+    EQ("content", "        org   x'34567'", listing.getContent());
+    EQ("line", "34567:                   org   x'34567'", listing.getLine());
 
     TestMemory memory;
     const auto start = org * dis.config().addressUnit();
@@ -786,8 +787,8 @@ void test_mn1613() {
     writer.add(0x7e1f).add(0x5678);
     auto reader = memory.reader(start);
     EQ("mvwi", OK, listing.disassemble(reader, reader.address() / dis.config().addressUnit()));
-    EQ("content", "        mvwi str, x'5678', skp", listing.getContent());
-    EQ("line", "34567: 7e1f 5678         mvwi str, x'5678', skp", listing.getLine());
+    EQ("content", "        mvwi  str, x'5678', skp", listing.getContent());
+    EQ("line", "34567: 7e1f 5678         mvwi  str, x'5678', skp", listing.getLine());
 }
 
 void run_tests() {
