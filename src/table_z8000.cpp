@@ -682,7 +682,7 @@ bool TableZ8000::setCpu(const char *cpu) {
 }
 
 AddressWidth TableZ8000::addressWidth() const {
-    return segmentedModel() ? ADDRESS_24BIT : ADDRESS_16BIT;
+    return segmentedModel() ? ADDRESS_23BIT : ADDRESS_16BIT;
 }
 
 bool TableZ8000::segmentedModel() const {

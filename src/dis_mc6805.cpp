@@ -29,8 +29,7 @@ StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
 }
 
 Error DisMc6805::checkAddressRange(Config::uintptr_t addr) {
-    const uint8_t pc_bits = (_pc_bits > 0 && _pc_bits <= 16) ? _pc_bits : 13;
-    const Config::uintptr_t max = (1 << pc_bits);
+    const uint32_t max = 1UL << uint8_t(_addrWidth);
     if (max && addr >= max)
         return setError(OVERFLOW_RANGE);
     return OK;

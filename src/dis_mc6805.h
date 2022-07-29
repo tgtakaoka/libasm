@@ -33,22 +33,23 @@ public:
     }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _pc_bits = 0; }
+    AddressWidth addressWidth() const override { return _addrWidth; }
+    void reset() override { _addrWidth = ADDRESS_13BIT; }
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
     RegMc6805 _regs;
-    uint8_t _pc_bits;
+    AddressWidth _addrWidth;
     const struct OptPcBits : public IntOptionBase {
-        OptPcBits(uint8_t &value)
-            : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _pc_bits(value) {}
+        OptPcBits(AddressWidth &value)
+            : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _width(value) {}
         Error check(int32_t value) const override {
             return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
         }
-        void set(int32_t value) const override { _pc_bits = value; }
-        uint8_t &_pc_bits;
-    } _opt_pc_bits{_pc_bits};
+        void set(int32_t value) const override { _width = AddressWidth(value ?: 13); }
+        AddressWidth &_width;
+    } _opt_pc_bits{_addrWidth};
     const Options _options{_opt_pc_bits};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);

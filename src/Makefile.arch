@@ -42,6 +42,7 @@ define objs-arch # arch
 OBJS_$(1) = table_$(1).o reg_$(1).o
 
 endef
+$(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
 
 # target list for each architecture.
 TGT_mc6809  = mc6809 hd6309

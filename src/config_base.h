@@ -26,8 +26,11 @@ namespace libasm {
 
 enum AddressWidth : uint8_t {
     ADDRESS_12BIT = 12,
+    ADDRESS_13BIT = 13,
     ADDRESS_16BIT = 16,
+    ADDRESS_18BIT = 18,
     ADDRESS_20BIT = 20,
+    ADDRESS_23BIT = 23,
     ADDRESS_24BIT = 24,
     ADDRESS_32BIT = 32,
 };
@@ -67,9 +70,15 @@ struct __address_type;
 template <>
 struct __address_type<ADDRESS_12BIT> : public __address_helper<uint16_t> {};
 template <>
+struct __address_type<ADDRESS_13BIT> : public __address_helper<uint16_t> {};
+template <>
 struct __address_type<ADDRESS_16BIT> : public __address_helper<uint16_t> {};
 template <>
+struct __address_type<ADDRESS_18BIT> : public __address_helper<uint32_t> {};
+template <>
 struct __address_type<ADDRESS_20BIT> : public __address_helper<uint32_t> {};
+template <>
+struct __address_type<ADDRESS_23BIT> : public __address_helper<uint32_t> {};
 template <>
 struct __address_type<ADDRESS_24BIT> : public __address_helper<uint32_t> {};
 template <>

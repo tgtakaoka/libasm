@@ -26,6 +26,7 @@ namespace libasm {
 
 enum Error : uint8_t {
     OK = 0,
+    INSTRUCTION_NOT_ALIGNED = 1,
 
     // Disassembler
     NO_MEMORY = 2,

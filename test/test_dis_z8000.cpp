@@ -220,10 +220,10 @@ static void test_load_and_exchange() {
 
     // Load Address Relative
     if (z8001()) {
-        ATEST(0x2000, LDAR, "RR8, 002000H",  0x3408, 0xFFFC);
-        ATEST(0x2000, LDAR, "RR8, 002004H",  0x3408, 0x0000);
-        ATEST(0x2000, LDAR, "RR8, 0FFA004H", 0x3408, 0x8000);
-        ATEST(0x2000, LDAR, "RR8, 00A003H",  0x3408, 0x7FFF);
+        ATEST(0x2000, LDAR, "RR8, 002000H", 0x3408, 0xFFFC);
+        ATEST(0x2000, LDAR, "RR8, 002004H", 0x3408, 0x0000);
+        ATEST(0x2000, LDAR, "RR8, 7FA004H", 0x3408, 0x8000);
+        ATEST(0x2000, LDAR, "RR8, 00A003H", 0x3408, 0x7FFF);
     } else {
         ATEST(0x2000, LDAR, "R8, 2000H",  0x3408, 0xFFFC);
         ATEST(0x2000, LDAR, "R8, 2004H",  0x3408, 0x0000);

@@ -32,6 +32,14 @@ Error Disassembler::decode(
     _symtab = symtab;
     resetError();
     StrBuffer out(operands, size);
+    const auto addr = insn.address();
+    const uint32_t max = 1UL << config().addressWidth();
+    if (max && (addr & ~(max - 1)))
+        return setError(OVERFLOW_RANGE);
+    if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
+        if (addr % 2)
+            return setError(INSTRUCTION_NOT_ALIGNED);
+    }
     decode(memory, insn, out);
     if (!_regBase.isUppercase())
         insn.toLowerName();

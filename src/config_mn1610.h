@@ -22,7 +22,7 @@
 namespace libasm {
 namespace mn1610 {
 
-struct Config : ConfigImpl<ADDRESS_20BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {};
 
 }  // namespace mn1610
 }  // namespace libasm

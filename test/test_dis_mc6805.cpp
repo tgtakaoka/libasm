@@ -190,10 +190,10 @@ static void test_extended() {
     TEST(JSR, ">ext0090",  0xCD, 0x00, 0x90);
 
     dis6805.setOption("pc-bits", "11"); // MC68HC05J for instance
-    TEST(         LDA, "$07FF", 0xC6, 0x07, 0xFF);
-    ERVR(         LDA, "$0800", 0xC6, 0x08, 0x00);
-    ATEST(0x07F0, BSR, "$07FF", 0xAD, 0x0D);
-    AERVR(0x07F0, BSR, "$0800", 0xAD, 0x0E);
+    TEST(         LDA, "$7FF", 0xC6, 0x07, 0xFF);
+    ERVR(         LDA, "$800", 0xC6, 0x08, 0x00);
+    ATEST(0x07F0, BSR, "$7FF", 0xAD, 0x0D);
+    AERVR(0x07F0, BSR, "$800", 0xAD, 0x0E);
 
     dis6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
     TEST(         LDA, "$1FFF", 0xC6, 0x1F, 0xFF);

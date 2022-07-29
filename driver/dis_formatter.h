@@ -50,21 +50,29 @@ public:
         return error;
     }
 
-    bool setCpu(const char *cpu) {
+    Error setCpu(const char *cpu) {
         reset(*this);
         _insnBase.reset(_insn.address());
         _insnBase.nameBuffer().text_P(PSTR("CPU"), _uppercase);
         StrBuffer buf(_operands, sizeof(_operands));
         buf.text(cpu, _uppercase);
-        return _disassembler.setCpu(cpu);
+        return _disassembler.setCpu(cpu) ? UNSUPPORTED_CPU : OK;
     }
 
-    void setOrigin(uint32_t origin) {
+    Error setOrigin(uint32_t origin) {
+        const uint32_t max = 1UL << config().addressWidth();
+        if (max && (origin & ~(max - 1)))
+            return OVERFLOW_RANGE;
+        if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
+            if (origin % 2)
+                return INSTRUCTION_NOT_ALIGNED;
+        }
         reset(*this);
         StrBuffer buf(_operands, sizeof(_operands));
         _disassembler.formatter().formatHex(buf, origin, config().addressWidth(), false);
         _insnBase.reset(origin);
         _insnBase.nameBuffer().text_P(PSTR("ORG"), _uppercase);
+        return OK;
     }
 
     // ListLine

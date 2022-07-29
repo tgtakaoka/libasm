@@ -22,7 +22,7 @@
 namespace libasm {
 namespace z8000 {
 
-struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {};
+struct Config : ConfigImpl<ADDRESS_23BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {};
 
 }  // namespace z8000
 }  // namespace libasm

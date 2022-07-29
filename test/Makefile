@@ -44,8 +44,6 @@ OBJS_expr = test_expr_helper.o value_parser.o value_formatter.o
 OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o \
             dis_base.o value_formatter.o list_formatter.o
 
-$(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))
-
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
 GEN_OBJS  = $(ARCHS:%=gen_%.o)

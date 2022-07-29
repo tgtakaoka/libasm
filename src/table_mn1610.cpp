@@ -400,7 +400,7 @@ TableMn1610::TableMn1610() {
 }
 
 AddressWidth TableMn1610::addressWidth() const {
-    return (_cpu->cpuType() == MN1610) ? ADDRESS_16BIT : ADDRESS_20BIT;
+    return (_cpu->cpuType() == MN1610) ? ADDRESS_16BIT : ADDRESS_18BIT;
 }
 
 Error TableMn1610::checkAddressRange(Config::uintptr_t addr) const {
