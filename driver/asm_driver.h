@@ -22,8 +22,8 @@
 #include "function_store.h"
 #include "str_scanner.h"
 #include "symbol_table.h"
-#include "text_reader.h"
 #include "text_printer.h"
+#include "text_reader.h"
 #include "value_parser.h"
 
 #include <list>
@@ -33,16 +33,7 @@ namespace libasm {
 namespace driver {
 
 class AsmDirective;
-
-class AsmSourceFactory {
-public:
-    virtual Error open(const StrScanner &name) = 0;
-    virtual const TextReader *current() const = 0;
-    virtual Error closeCurrent() = 0;
-    virtual size_t size() const = 0;
-    virtual StrScanner *readLine() = 0;
-    virtual TextPrinter &errors() = 0;
-};
+class AsmSources;
 
 enum SymbolMode {
     REPORT_UNDEFINED = 0,
@@ -51,7 +42,7 @@ enum SymbolMode {
 
 class AsmDriver : public ErrorAt, public SymbolTable {
 public:
-    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources);
+    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources);
 
     AsmDirective *restrictCpu(const char *cpu);
     AsmDirective *setCpu(const char *cpu);
@@ -75,12 +66,12 @@ public:
             const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body) {
         return _functions.internFunction(name, params, body);
     }
-    Error openSource(const StrScanner &filename) { return _sources.open(filename); }
+    Error openSource(const StrScanner &filename);
 
 private:
     std::list<AsmDirective *> _directives;
     AsmDirective *_current;
-    AsmSourceFactory &_sources;
+    AsmSources &_sources;
     FunctionStore *_functionStore;
     ValueParser::FuncParser *_savedFuncParser;
 

@@ -17,6 +17,7 @@
 #include "asm_driver.h"
 
 #include "asm_directive.h"
+#include "asm_sources.h"
 
 #include <string.h>
 #include <algorithm>
@@ -95,7 +96,7 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     return dir;
 }
 
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSourceFactory &sources)
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources)
     : _directives(begin, end),
       _current(nullptr),
       _sources(sources),
@@ -105,6 +106,10 @@ AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSourceFactory 
     setFunctionStore(&_functions);
     _origin = 0;
     _symbolMode = REPORT_UNDEFINED;
+}
+
+Error AsmDriver::openSource(const StrScanner &filename) {
+    return _sources.open(filename);
 }
 
 Error AsmDriver::assemble(const StrScanner &line, AsmFormatter &list) {

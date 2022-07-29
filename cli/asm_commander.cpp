@@ -16,9 +16,13 @@
 
 #include "asm_commander.h"
 
+#include "asm_directive.h"
 #include "asm_formatter.h"
+#include "asm_sources.h"
 #include "file_printer.h"
 #include "file_reader.h"
+#include "intel_hex.h"
+#include "moto_srec.h"
 
 #include <string.h>
 
@@ -27,7 +31,7 @@ namespace cli {
 
 using namespace libasm::driver;
 
-Error AsmCommander::FileFactory::open(const StrScanner &name) {
+Error AsmCommander::FileSources::open(const StrScanner &name) {
     if (_sources.size() >= max_includes)
         return TOO_MANY_INCLUDE;
     const auto *parent = _sources.empty() ? nullptr : &_sources.back();
@@ -46,28 +50,13 @@ Error AsmCommander::FileFactory::open(const StrScanner &name) {
     return OK;
 }
 
-const TextReader *AsmCommander::FileFactory::current() const {
+TextReader *AsmCommander::FileSources::current() {
     return _sources.empty() ? nullptr : &_sources.back();
 }
 
-Error AsmCommander::FileFactory::closeCurrent() {
+Error AsmCommander::FileSources::closeCurrent() {
     _sources.pop_back();
     return OK;
-}
-
-StrScanner *AsmCommander::FileFactory::readLine() {
-    while (!_sources.empty()) {
-        auto &source = _sources.back();
-        auto *line = source.readLine();
-        if (line)
-            return line;
-        closeCurrent();
-    }
-    return nullptr;
-}
-
-TextPrinter &AsmCommander::FileFactory::errors() {
-    return FilePrinter::STDERR;
 }
 
 AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end)

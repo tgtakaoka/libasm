@@ -17,8 +17,8 @@
 #ifndef __ASM_COMMANDER_H__
 #define __ASM_COMMANDER_H__
 
-#include "asm_directive.h"
 #include "asm_driver.h"
+#include "asm_sources.h"
 #include "bin_memory.h"
 #include "file_reader.h"
 #include "text_reader.h"
@@ -37,21 +37,19 @@ public:
     int assemble();
 
 private:
-    class FileFactory : public driver::AsmSourceFactory {
+    class FileSources : public driver::AsmSources {
     public:
         Error open(const StrScanner &name) override;
-        const driver::TextReader *current() const override;
+        driver::TextReader *current() override;
         Error closeCurrent() override;
         size_t size() const override { return _sources.size(); }
-        StrScanner *readLine() override;
-        driver::TextPrinter &errors() override;
 
     private:
         static constexpr int max_includes = 4;
         std::list<FileReader> _sources;
     };
 
-    FileFactory _sources;
+    FileSources _sources;
     driver::AsmDriver _driver;
     // command line arguments
     const char *_prog_name;
