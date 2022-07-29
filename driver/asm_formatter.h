@@ -30,9 +30,10 @@ namespace driver {
 class AsmFormatter : public ListFormatter {
 private:
     BinMemory &_memory;
+    bool _lineNumber;
 
 public:
-    AsmFormatter(BinMemory &memory) : ListFormatter(), _memory(memory) {}
+    AsmFormatter(BinMemory &memory) : ListFormatter(), _memory(memory), _lineNumber(false) {}
 
     void setUppercase(bool enable) override {
         ListFormatter::setUppercase(enable);
@@ -57,8 +58,6 @@ public:
     void generateByte(uint32_t base, uint8_t val) { _memory.writeByte(base + length++, val); }
 
 private:
-    bool _lineNumber;
-
     // ListLine
     uint32_t startAddress() const override { return address; }
     int generatedSize() const override { return length; }
@@ -83,9 +82,23 @@ private:
     // configuration
     const ConfigBase &config() const override { return *conf; }
     int labelWidth() const override { return 16; }
-    int nameWidth() const override { return conf->nameMax() + 1; }
+    int nameWidth() const override { return conf->nameMax() < 5 ? 6 : conf->nameMax() + 1; }
     int codeBytes() const override { return conf->codeMax() < 6 ? conf->codeMax() : 6; }
     int operandWidth() const override { return 16; }
+
+    void formatLine() override {
+        if (_lineNumber) {
+            auto nest = includeNest();
+            if (nest) {
+                formatDec(nest);
+            } else {
+                _out.text("   ");
+            }
+            formatDec(lineNumber(), 5);
+            _out.text("/ ");
+        }
+        ListFormatter::formatLine();
+    }
 };
 
 }  // namespace driver

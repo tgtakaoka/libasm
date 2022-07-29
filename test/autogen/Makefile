@@ -66,7 +66,7 @@ generate: clean-gen $(GEN_OUTS)
 
 ASM=../../cli/asm
 $(ASM):
-	+$(MAKE) -C ../../cli cli
+	+$(MAKE) -C ../../cli asm
 
 ASM_TESTS = $(patsubst %.asm,%,$(wildcard gen_*.asm))
 ASM_OUTS  = $(foreach f,$(ASM_TESTS),$(f).$(call out-ext,$(f)))
