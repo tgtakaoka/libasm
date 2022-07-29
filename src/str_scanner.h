@@ -28,11 +28,11 @@ public:
     /** construct from C-string |str| to end of it */
     StrScanner(const char *str) : _str(str), _end(str + strlen(str)) {}
 
+    /** construct from string from |str| to |end| */
+    StrScanner(const char *str, const char *end) : _str(str), _end(end) {}
+
     /** copy construct from |scan|, or |EMPTY| */
     StrScanner(const StrScanner &scan = EMPTY) : _str(scan._str), _end(scan._end) {}
-
-    /** construct from range of StrScanner */
-    StrScanner(const StrScanner &scan, const StrScanner &end) : _str(scan._str), _end(end._str) {}
 
     /** assignment */
     StrScanner &operator=(const StrScanner &scan) {
@@ -41,11 +41,16 @@ public:
         return *this;
     }
 
+    /** return head of underlying string */
     const char *str() const { return _str; }
+
+    /** return remaining size */
     size_t size() const { return _end - _str; }
 
-    /** dereference; return character at the head or 0 if none */
+    /** dereference; returns character at the head, or 0 otherwise */
     char operator*() const { return (*this)[0]; }
+
+    /** indexing; character at offset delta, 0 if delte beyonds end */
     char operator[](int delta) const {
         const char *p = _str + delta;
         return p < _end ? *p : 0;
@@ -132,11 +137,11 @@ public:
         return expect([c](char s) { return toupper(s) == toupper(c); });
     }
 
-    /** return true if this equals to |str| with ignore case. */
-    bool iequals_P(const char *str) const;
+    /** return true if this equals to |text_P| with ignore case. */
+    bool iequals_P(const /*PROGMEM*/ char *text_P) const;
 
-    /** return true if this starts with |str| with ignore case. */
-    bool istarts_P(const char *str, size_t len = 0) const;
+    /** return true if this starts with |text_P| with ignore case. */
+    bool istarts_P(const /*PROGMEM*/ char *text_P, size_t len = 0) const;
 
     static StrScanner EMPTY;
 

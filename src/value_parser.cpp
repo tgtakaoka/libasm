@@ -153,7 +153,7 @@ StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
                 continue;
         }
         if (*p == delim)
-            return StrScanner(scan, p);
+            return StrScanner(scan.str(), p.str());
         if (*p == '(' || *p == '[') {
             const char close = (*p++ == '(') ? ')' : ']';
             const StrScanner atom = scanExpr(p, close);
@@ -164,7 +164,7 @@ StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
             ++p;
         }
     }
-    return StrScanner(p, p);
+    return StrScanner(p.str(), p.str());
 }
 Value ValueParser::parseExpr(
         StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab) {
@@ -363,7 +363,7 @@ bool ValueParser::isSymbolLetter(char c, bool head) const {
 StrScanner ValueParser::readSymbol(StrScanner &scan) const {
     StrScanner p(scan);
     p.trimStart([this](char c) { return this->isSymbolLetter(c); });
-    StrScanner symbol = StrScanner(scan, p);
+    StrScanner symbol = StrScanner(scan.str(), p.str());
     scan = p;
     return symbol;
 }

@@ -22,15 +22,15 @@ namespace libasm {
 
 StrScanner StrScanner::EMPTY("");
 
-bool StrScanner::iequals_P(const char *str) const {
-    const auto len = strlen_P(str);
-    return size() == len && strncasecmp_P(_str, str, len) == 0;
+bool StrScanner::iequals_P(const /*PROGMEM*/ char *text_P) const {
+    const auto len = strlen_P(text_P);
+    return size() == len && strncasecmp_P(_str, text_P, len) == 0;
 }
 
-bool StrScanner::istarts_P(const char *str, size_t len) const {
+bool StrScanner::istarts_P(const /*PROGMEM*/ char *text_P, size_t len) const {
     if (len == 0)
-        len = strlen_P(str);
-    return strncasecmp_P(_str, str, len) == 0;
+        len = strlen_P(text_P);
+    return strncasecmp_P(_str, text_P, len) == 0;
 }
 
 }  // namespace libasm

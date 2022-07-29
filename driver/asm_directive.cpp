@@ -324,8 +324,8 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
     for (;;) {
         const StrScanner expr = parser.scanExpr(scan.skipSpaces(), ',');
         if (expr.size() == 0) {
-            const auto error =
-                    driver.internFunction(list.line_symbol, params, StrScanner(scan, expr));
+            const auto error = driver.internFunction(
+                    list.line_symbol, params, StrScanner(scan.str(), expr.str()));
             scan = expr;
             list.line_symbol = StrScanner::EMPTY;
             return error;
