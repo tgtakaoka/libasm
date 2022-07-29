@@ -17,11 +17,11 @@
 #ifndef __ARRAY_MEMORY_H__
 #define __ARRAY_MEMORY_H__
 
-#include <stddef.h>
-#include <stdint.h>
-
 #include "config_base.h"
 #include "dis_memory.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 namespace libasm {
 
@@ -45,7 +45,7 @@ public:
         friend class ArrayMemory;
         Iterator(const ArrayMemory &memory)
             : DisMemory(memory.origin()), _memory(memory), _index(0) {}
-        uint8_t nextByte() override { return _memory.byteAt(_index++); }
+        uint8_t nextByte() override { return _memory.byteAt(_memory.origin() + _index++); }
 
         const ArrayMemory &_memory;
         size_t _index;
@@ -72,14 +72,17 @@ public:
     /** returns DisMemory interface */
     Iterator iterator() const { return Iterator(*this); }
 
-    /** returns byte at address |at| */
-    uint8_t byteAt(size_t at) const {
+    /** returns byte at address |addr|, otherwise zero */
+    uint8_t byteAt(uint32_t addr) const {
+        const auto offset = addr - _origin;
+        if (offset >= _size)
+            return 0;
         if (_bytes)
-            return _bytes[at];
-        const uint16_t word = _words[at / 2];
+            return _bytes[offset];
+        const uint16_t word = _words[offset / 2];
         const uint8_t hi = word >> 8;
         const uint8_t lo = word;
-        if (at % 2 == 0) {
+        if (offset % 2 == 0) {
             return _endian == ENDIAN_BIG ? hi : lo;
         } else {
             return _endian == ENDIAN_BIG ? lo : hi;
