@@ -28,8 +28,10 @@ pio: examples
 clean: 
 	$(MAKE) -C cli clean
 	$(MAKE) -C test clean
+	$(MAKE) -C test/unittest clean
 	$(MAKE) -C test/autogen clean
 	$(MAKE) -C test/reference clean
+	$(MAKE) -C driver/test clean
 	$(MAKE) -C examples clean
 	rm -f $$(find . -type f -a -name '*~')
 
