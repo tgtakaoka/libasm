@@ -28,6 +28,7 @@ StrBuffer &StrBuffer::reset(char *buffer, size_t size) {
     _out = buffer;
     _end = buffer + size - 1;
     _out[0] = 0;
+    resetError();
     return *this;
 }
 
@@ -111,10 +112,14 @@ StrBuffer &StrBuffer::comma() {
 }
 
 StrBuffer &StrBuffer::reverse(char *start) {
-    for (char *end = _out - 1; start < end;) {
-        const char c = *start;
-        *start++ = *end;
-        *end-- = c;
+    if (start >= _out) {
+        setError(OVERWRAP_PAGE);
+    } else {
+        for (char *end = _out - 1; start < end;) {
+            const char c = *start;
+            *start++ = *end;
+            *end-- = c;
+        }
     }
     return *this;
 }
