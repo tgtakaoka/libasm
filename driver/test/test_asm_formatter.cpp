@@ -111,13 +111,15 @@ void test_mc6809() {
             "        cmpd  [$1234,y] ; indirect\n"
             "label1: fcc   /abcdefghijklmn/\n"
             "        setdp $ff00",
-            "       1/    0:                                CPU   mc6809\n"
-            "       2/ ABCD:                                ORG   $abcd\n"
-            "       3/ ABCD: 10 A3 B9 12 34                 CMPD  [$1234,y]       ; indirect\n"
-            "       4/ ABD2: 61 62 63 64 65 label1:         FCC   /abcdefghijklmn/\n"
-            "       4/ ABD7: 66 67 68 69 6A\n"
-            "       4/ ABDC: 6B 6C 6D 6E\n"
-            "       5/ ABE0:                                SETDP $ff00");
+            "       1/    0:                             CPU   mc6809\n"
+            "       2/ ABCD:                             ORG   $abcd\n"
+            "       3/ ABCD: 10 A3 B9 12                 CMPD  [$1234,y]       ; indirect\n"
+            "       3/ ABD1: 34\n"
+            "       4/ ABD2: 61 62 63 64 label1:         FCC   /abcdefghijklmn/\n"
+            "       4/ ABD6: 65 66 67 68\n"
+            "       4/ ABDA: 69 6A 6B 6C\n"
+            "       4/ ABDE: 6D 6E\n"
+            "       5/ ABE0:                             SETDP $ff00");
 }
 
 void test_mc6800() {
@@ -131,9 +133,9 @@ void test_mc6800() {
             "        cpu   mc6800\n"
             "        org   $abcd\n"
             "        subb  label1",
-            "   0:                                cpu   mc6800\n"
-            "abcd:                                org   $abcd\n"
-            "abcd: f0 f1 f2                       subb  label1");
+            "   0:                             cpu   mc6800\n"
+            "abcd:                             org   $abcd\n"
+            "abcd: f0 f1 f2                    subb  label1");
 }
 
 void test_mc6805() {
@@ -247,9 +249,10 @@ void test_i8096() {
             "        cpu   i8096\n"
             "        org   0abcdh\n"
             "        mulb  130, label1[124]",
-            "   0:                                   cpu   i8096\n"
-            "abcd:                                   org   0abcdh\n"
-            "abcd: fe 7f 7d 7b 81 82                 mulb  130, label1[124]");
+            "   0:                             cpu   i8096\n"
+            "abcd:                             org   0abcdh\n"
+            "abcd: fe 7f 7d 7b                 mulb  130, label1[124]\n"
+            "abd1: 81 82");
 }
 
 void test_z80() {
@@ -287,9 +290,9 @@ void test_tlcs90() {
             "        cpu   tlcs90\n"
             "        org   0abcdh\n"
             "        xor   (hl+a), 0efh",
-            "   0:                                   cpu   tlcs90\n"
-            "abcd:                                   org   0abcdh\n"
-            "abcd: f7 6d ef                          xor   (hl+a), 0efh");
+            "   0:                             cpu   tlcs90\n"
+            "abcd:                             org   0abcdh\n"
+            "abcd: f7 6d ef                    xor   (hl+a), 0efh");
 }
 
 void test_ins8060() {
@@ -357,9 +360,10 @@ void test_i8086() {
             "        cpu    i8086\n"
             "        org    0bcdefh\n"
             "        test   word ptr [bp+di+0feffh], 0bbaah",
-            "    0:                                   cpu    i8086\n"
-            "bcdef:                                   org    0bcdefh\n"
-            "bcdef: f7 83 ff fe aa bb                 test   word ptr [bp+di+0feffh], 0bbaah");
+            "    0:                             cpu    i8086\n"
+            "bcdef:                             org    0bcdefh\n"
+            "bcdef: f7 83 ff fe                 test   word ptr [bp+di+0feffh], 0bbaah\n"
+            "bcdf3: aa bb");
 }
 
 void test_tms9900() {
@@ -369,10 +373,10 @@ void test_tms9900() {
             "        cpu   tms99105\n"
             "        org   9abch\n"
             "        am    @4a4bh(r1), @4c4dh(r1)\n",
-            "   0:                                cpu   tms99105\n"
-            "9abc:                                org   9abch\n"
-            "9abc: 002a 4861 4a4b                 am    @4a4bh(r1), @4c4dh(r1)\n"
-            "9ac2: 4c4d");
+            "   0:                           cpu   tms99105\n"
+            "9abc:                           org   9abch\n"
+            "9abc: 002a 4861                 am    @4a4bh(r1), @4c4dh(r1)\n"
+            "9ac0: 4a4b 4c4d");
 }
 
 void test_tms32010() {
@@ -396,10 +400,11 @@ void test_mc68000() {
             "        cpu     mc68000\n"
             "        org     $9abcde\n"
             "        ori.l   #$bdbebfc0, ($c2c3c4).l",
-            "     0:                                cpu     mc68000\n"
-            "9abcde:                                org     $9abcde\n"
-            "9abcde: 00b9 bdbe bfc0                 ori     #$bdbebfc0, ($c2c3c4).l\n"
-            "9abce4: 00c2 c3c4");
+            "     0:                           cpu     mc68000\n"
+            "9abcde:                           org     $9abcde\n"
+            "9abcde: 00b9 bdbe                 ori     #$bdbebfc0, ($c2c3c4).l\n"
+            "9abce2: bfc0 00c2\n"
+            "9abce6: c3c4");
 }
 
 void test_ns32000() {
@@ -410,14 +415,16 @@ void test_ns32000() {
             "        org     x'abcdef\n"
             "        extd    r1, x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32",
-            "     0:                                   cpu     ns32032\n"
-            "abcdef:                                   org     x'abcdef\n"
-            "abcdef: 2e 4b ef 83 94 c0                 extd    r1, "
+            "     0:                             cpu     ns32032\n"
+            "abcdef:                             org     x'abcdef\n"
+            "abcdef: 2e 4b ef 83                 extd    r1, "
             "x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32\n"
-            "abcdf5: 33 44 55 c0 11 22\n"
-            "abcdfb: 33 c0 77 88 99 c0\n"
-            "abce01: 55 66 77 20");
+            "abcdf3: 94 c0 33 44\n"
+            "abcdf7: 55 c0 11 22\n"
+            "abcdfb: 33 c0 77 88\n"
+            "abcdff: 99 c0 55 66\n"
+            "abce03: 77 20");
 }
 
 void test_z8001() {
@@ -427,9 +434,10 @@ void test_z8001() {
             "        cpu    z8001\n"
             "        org    789abch\n"
             "        ldb    |160017h|(r1), #25",
-            "     0:                                cpu    z8001\n"
-            "789abc:                                org    789abch\n"
-            "789abc: 4c15 1617 1919                 ldb    |160017h|(r1), #25");
+            "     0:                           cpu    z8001\n"
+            "789abc:                           org    789abch\n"
+            "789abc: 4c15 1617                 ldb    |160017h|(r1), #25\n"
+            "789ac0: 1919");
 }
 
 void test_z8002() {
@@ -439,9 +447,10 @@ void test_z8002() {
             "        cpu    z8002\n"
             "        org    9abch\n"
             "        cpl    rr0, #01020304h",
-            "   0:                                cpu    z8002\n"
-            "9abc:                                org    9abch\n"
-            "9abc: 1000 0102 0304                 cpl    rr0, #01020304h");
+            "   0:                           cpu    z8002\n"
+            "9abc:                           org    9abch\n"
+            "9abc: 1000 0102                 cpl    rr0, #01020304h\n"
+            "9ac0: 0304");
 }
 
 void test_mn1610() {

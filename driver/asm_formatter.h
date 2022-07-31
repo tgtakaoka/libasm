@@ -90,7 +90,7 @@ private:
     const ConfigBase &config() const override { return *conf; }
     int labelWidth() const override { return 16; }
     int nameWidth() const override { return conf->nameMax() < 5 ? 6 : conf->nameMax() + 1; }
-    int codeBytes() const override { return conf->codeMax() < 6 ? conf->codeMax() : 6; }
+    int codeBytes() const override { return conf->codeMax() < 4 ? conf->codeMax() : 4; }
     int operandWidth() const override { return 16; }
 };
 
