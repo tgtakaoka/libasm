@@ -316,14 +316,15 @@ void test_cdp1802() {
 void test_scn2650() {
     PREP(scn2650::DisScn2650);
 
-    DIS8("scn2650", 0xabcd,
+    DIS8("scn2650", 0x7bcd,
             "        cpu     scn2650\n"
-            "        org     0abcdh\n"
-            "        loda,r0 *0adefh, r0, +",
+            "        org     7bcdh\n"
+            "        loda,r0 *7defh, r0, +",
             "   0:                  cpu     scn2650\n"
-            "abcd:                  org     0abcdh\n"
-            "abcd: 0c ad ef         loda,r0 *0adefh, r0, +",
-            0x0c, 0xad, 0xEF);
+            "7bcd:                  org     7bcdh\n"
+            "7bcd: 0c bd ef         loda,r0 *7defh, r0, +",
+            0x0C, 0xBD, 0xEF);
+    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x89ab));
 }
 
 void test_i8086() {

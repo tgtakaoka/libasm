@@ -22,7 +22,7 @@
 namespace libasm {
 namespace scn2650 {
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 7> {};
+struct Config : ConfigImpl<ADDRESS_15BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 7> {};
 
 }  // namespace scn2650
 }  // namespace libasm
