@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <stdio.h>
+
 #ifndef __TEST_READER_H__
 #define __TEST_READER_H__
 
@@ -49,7 +51,15 @@ public:
     }
 
     TestReader &add(std::string line) {
-        _lines.push_back(line);
+        auto start = line.begin();
+        for (auto pos = line.begin(); pos != line.end(); pos++) {
+            if (*pos == '\n') {
+                _lines.emplace_back(start, pos);
+                start = pos + 1;
+            }
+        }
+        if (start < line.end())
+            _lines.emplace_back(start, line.end());
         return *this;
     }
 

@@ -90,6 +90,16 @@ void test_reader() {
     EQ("clear", "clear", in.name().c_str());
     EQ("clear", 0, in.lineno());
     TRUE("clear", in.readLine() == nullptr);
+
+    TestReader lines("lines");
+    lines.add(
+              "line1\n"
+              "line2");
+    lines.add("line3");
+    EQ("lines 1", "line1", lines.readLine()->str());
+    EQ("lines 2", "line2", lines.readLine()->str());
+    EQ("lines 3", "line3", lines.readLine()->str());
+    TRUE("eof", lines.readLine() == nullptr);
 }
 
 int mem_size(const BinMemory &memory) {
