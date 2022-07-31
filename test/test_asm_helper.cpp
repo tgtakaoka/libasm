@@ -30,8 +30,9 @@ namespace test {
 TestAsserter asserter;
 TestSymtab symtab;
 
-void asm_assert(const char *file, int line, Error error, const char *src, const ArrayMemory &expected) {
-    Insn insn(expected.origin());
+void asm_assert(
+        const char *file, int line, Error error, const char *src, const ArrayMemory &expected) {
+    Insn insn(expected.origin() / assembler.config().addressUnit());
     assembler.encode(src, insn, &symtab);
     asserter.equals(file, line, src, error, assembler);
     asserter.equals(file, line, src, expected, insn.bytes(), insn.length());

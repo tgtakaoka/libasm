@@ -55,6 +55,8 @@ public:
     const Options &commonOptions() const { return _commonOptions; }
     virtual const Options &options() const { return Options::EMPTY; }
 
+    Error checkAddress(uint32_t addr);
+
 private:
     ValueFormatter &_formatter;
 

@@ -21,10 +21,22 @@ namespace libasm {
 const char Assembler::OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
 const char Assembler::OPT_DESC_COMMENT[] PROGMEM = "line comment starting letter";
 
+Error Assembler::checkAddress(uint32_t addr) {
+    const uint32_t max = 1UL << config().addressWidth();
+    if (max && (addr & ~(max - 1)))
+        return setError(OVERFLOW_RANGE);
+    if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
+        if (addr % 2)
+            return setError(INSTRUCTION_NOT_ALIGNED);
+    }
+    return setOK();
+}
+
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
     _parser.setCurrentOrigin(insn.address());
-    resetError();
+    if (checkAddress(insn.address()))
+        return getError();
     StrScanner scan(line);
     setAt(scan.skipSpaces());
     if (endOfLine(*scan))

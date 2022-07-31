@@ -79,8 +79,8 @@ private:
     const OpCodeWidth _opCodeWidth;
     const int _memorySize;
     const Endian _endian;
-    const uint8_t _addrUnit;
-    uint32_t _addr;
+    const uint8_t _addr_unit;
+    uint32_t _mem_addr;
     uint8_t *_memory;
     std::unordered_map<std::string,
             std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq> >

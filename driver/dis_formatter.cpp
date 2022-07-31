@@ -50,14 +50,9 @@ Error DisFormatter::setCpu(const char *cpu) {
 }
 
 Error DisFormatter::setOrigin(uint32_t origin) {
-    const uint32_t max = 1UL << config().addressWidth();
-    if (max && (origin & ~(max - 1)))
-        return OVERFLOW_RANGE;
-    if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
-        if (origin % 2)
-            return INSTRUCTION_NOT_ALIGNED;
-    }
     reset();
+    if (_disassembler.checkAddress(origin))
+        return _disassembler.getError();
     StrBuffer buf(_operands, sizeof(_operands));
     _disassembler.formatter().formatHex(buf, origin, config().addressWidth(), false);
     _insnBase.reset(origin);

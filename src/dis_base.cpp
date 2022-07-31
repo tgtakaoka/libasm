@@ -27,12 +27,7 @@ const char Disassembler::OPT_DESC_CSTYLE[] PROGMEM = "C language style number co
 const char Disassembler::OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 const char Disassembler::OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
-Error Disassembler::decode(
-        DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {
-    _symtab = symtab;
-    resetError();
-    StrBuffer out(operands, size);
-    const auto addr = insn.address();
+Error Disassembler::checkAddress(uint32_t addr) {
     const uint32_t max = 1UL << config().addressWidth();
     if (max && (addr & ~(max - 1)))
         return setError(OVERFLOW_RANGE);
@@ -40,6 +35,15 @@ Error Disassembler::decode(
         if (addr % 2)
             return setError(INSTRUCTION_NOT_ALIGNED);
     }
+    return setOK();
+}
+
+Error Disassembler::decode(
+        DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {
+    _symtab = symtab;
+    if (checkAddress(insn.address()))
+        return getError();
+    StrBuffer out(operands, size);
     decode(memory, insn, out);
     if (!_regBase.isUppercase())
         insn.toLowerName();

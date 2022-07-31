@@ -32,9 +32,9 @@ TestSymtab symtab;
 
 static char actual_opr[128];
 
-void dis_assert(const char *file, int line, Error error, ArrayMemory &memory,
+void dis_assert(const char *file, int line, Error error, const ArrayMemory &memory,
         const char *expected_name, const char *expected_opr) {
-    Insn insn(memory.origin());
+    Insn insn(memory.origin() / disassembler.config().addressUnit());
     disassembler.setOption("uppercase", "yes");
     auto mem = memory.iterator();
     disassembler.decode(mem, insn, actual_opr, sizeof(actual_opr), &symtab);

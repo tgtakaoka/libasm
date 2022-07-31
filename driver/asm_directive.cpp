@@ -111,11 +111,13 @@ Error AsmDirective::assemble(const StrScanner &line, AsmFormatter &list, AsmDriv
 Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &driver);
+    // TODO line end check
     if (setError(parser))
         return getError();
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
-    // TODO line end check
+    if (assembler().checkAddress(value.getUnsigned()))
+        return setError(assembler());
     list.address = driver.setOrigin(value.getUnsigned());
     return setError(OK);
 }
@@ -123,19 +125,22 @@ Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver
 Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &driver);
+    // TODO line end check
     if (setError(parser))
         return getError();
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
-    const uint16_t val16 = value.getUnsigned();
-    if (val16 > 0x1000)
+    const auto alignment = value.getUnsigned();
+    if (alignment > 0x1000)
         setError(ILLEGAL_OPERAND);
-    // TODO line end check
     const auto origin = driver.origin();
     list.address = origin;
-    driver.setOrigin((origin + (val16 - 1)) & ~(val16 - 1));
+    const auto addr = (origin + (alignment - 1)) & ~(alignment - 1);
+    if (assembler().checkAddress(addr))
+        return setError(assembler());
+    driver.setOrigin(addr);
     return setError(OK);
 }
 

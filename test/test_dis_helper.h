@@ -31,7 +31,7 @@ namespace test {
 extern TestAsserter asserter;
 extern TestSymtab symtab;
 
-void dis_assert(const char *file, int line, Error error, ArrayMemory &src,
+void dis_assert(const char *file, int line, Error error, const ArrayMemory &src,
         const char *expected_name, const char *expected_opr);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
@@ -44,11 +44,13 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
-#define __VASSERT(file, line, error, addr, name, opr, ...)                            \
-    do {                                                                              \
-        const Config::opcode_t name[] = {__VA_ARGS__};                                \
-        ArrayMemory memory(addr, name, sizeof(name), disassembler.config().endian()); \
-        dis_assert(file, line, error, memory, #name, opr);                            \
+#define __VASSERT(file, line, error, addr, name, opr, ...)                \
+    do {                                                                  \
+        const auto unit = disassembler.config().addressUnit();            \
+        const auto endian = disassembler.config().endian();               \
+        const Config::opcode_t name[] = {__VA_ARGS__};                    \
+        const ArrayMemory memory(addr *unit, name, sizeof(name), endian); \
+        dis_assert(file, line, error, memory, #name, opr);                \
     } while (0)
 #define VASSERT(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)

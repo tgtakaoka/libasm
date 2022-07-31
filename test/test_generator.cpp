@@ -146,8 +146,8 @@ TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, u
       _opCodeWidth(disassembler.config().opCodeWidth()),
       _memorySize(disassembler.config().codeMax()),
       _endian(disassembler.config().endian()),
-      _addrUnit(disassembler.config().addressUnit()),
-      _addr(addr),
+      _addr_unit(disassembler.config().addressUnit()),
+      _mem_addr(addr * _addr_unit),
       _memory(new uint8_t[_memorySize]) {}
 
 TestGenerator::~TestGenerator() {
@@ -156,8 +156,10 @@ TestGenerator::~TestGenerator() {
 
 TestGenerator &TestGenerator::generate() {
     _formatter.info("@@ generate:\n");
-    if (_addr)
-        _formatter.setOrigin(_addr);
+    if (_mem_addr) {
+        const auto addr = _mem_addr / _addr_unit;
+        _formatter.setOrigin(addr);
+    }
     if (_opCodeWidth == OPCODE_16BIT) {
         WordGenerator gen(_memory, _memorySize, _endian, 0, _formatter);
         return generate(gen);
@@ -222,9 +224,9 @@ void TestGenerator::generateTests(DataGenerator &gen) {
     do {
         gen.next();
         gen.debug("@@  loop");
-        const ArrayMemory memory(_addr, _memory, _memorySize);
+        const ArrayMemory memory(_mem_addr, _memory, _memorySize);
         auto it = memory.iterator();
-        _listing.disassemble(it, _addr);
+        _listing.disassemble(it, _mem_addr / _addr_unit);
         if (_disassembler.isOK()) {
             const int len = gen.length();
             const int newLen = _listing.length();
@@ -239,7 +241,7 @@ void TestGenerator::generateTests(DataGenerator &gen) {
                 return;
             if (level > 0) {
                 _formatter.printList();
-                _addr += newLen * _disassembler.config().addressUnit();
+                _mem_addr += newLen;
             }
             if (delta > 0) {
                 ByteGenerator child(gen, delta);
