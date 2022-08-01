@@ -109,15 +109,14 @@ int DisCommander::disassemble() {
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
             listing.disassemble(reader, start + mem_offset / addrUnit);
             mem_offset += listing.byteLength();
-            do {
+            while (listing.hasNextLine()) {
                 const char *line = listing.getLine();
                 listout.println(line);
                 if (listing.isError())
                     fprintf(stderr, "%s\n", line);
-            } while (listing.hasNextLine());
-            do {
+            }
+            while (listing.hasNextContent())
                 output.println(listing.getContent());
-            } while (listing.hasNextContent());
         }
     };
 

@@ -22,7 +22,6 @@
 #include "list_formatter.h"
 
 #include <cstdint>
-#include <string>
 
 namespace libasm {
 namespace driver {

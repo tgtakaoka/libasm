@@ -87,6 +87,20 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
         const char *expected, const char *actual) {
+    if (expected == nullptr && actual == nullptr) {
+        _pass_count++;
+        return;
+    }
+    if (expected == nullptr) {
+        _fail_count++;
+        printf("%s:%d: %s: expected nullptr: actual '%s'\n", file, line, message, actual);
+        return;
+    }
+    if (actual == nullptr) {
+        _fail_count++;
+        printf("%s:%d: %s: expected '%s': actual nullptr\n", file, line, message, expected);
+        return;
+    }
     if (strcmp(expected, actual) == 0) {
         _pass_count++;
         return;
@@ -96,8 +110,21 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
+        const StrScanner *expected, const char *actual) {
+    return expected ? equals(file, line, message, expected->str(), actual)
+                    : equals(file, line, message, static_cast<const char *>(nullptr), actual);
+}
+
+void TestAsserter::equals(const char *file, const int line, const char *message,
+        const char *expected, const StrScanner *actual) {
+    return actual ? equals(file, line, message, expected, *actual)
+                  : equals(file, line, message, expected, static_cast<const char *>(nullptr));
+}
+
+void TestAsserter::equals(const char *file, const int line, const char *message,
         const char *expected, const StrScanner &actual) {
-    if (strlen(expected) == actual.size() && strncmp(expected, actual.str(), actual.size()) == 0) {
+    if (expected && strlen(expected) == actual.size() &&
+            strncmp(expected, actual.str(), actual.size()) == 0) {
         _pass_count++;
         return;
     }
@@ -153,13 +180,19 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
 }
 
 void TestAsserter::not_equals(const char *file, const int line, const char *message,
-        const char *expected, const char *actual) {
-    if (strcmp(expected, actual)) {
+        const char *not_expected, const char *actual) {
+    if (actual && (not_expected == nullptr || strcmp(not_expected, actual))) {
         _pass_count++;
         return;
     }
+    if (actual == nullptr && not_expected == nullptr) {
+        _fail_count++;
+        printf("%s:%d: %s: not expected nullptr: actual nullptr\n", file, line, message);
+        return;
+    }
     _fail_count++;
-    printf("%s:%d: %s: not expected '%s': actual '%s'\n", file, line, message, expected, actual);
+    printf("%s:%d: %s: not expected '%s': actual '%s'\n", file, line, message, not_expected,
+            actual);
 }
 
 }  // namespace test

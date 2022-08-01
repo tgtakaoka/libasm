@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-
 #ifndef __TEST_READER_H__
 #define __TEST_READER_H__
 

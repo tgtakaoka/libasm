@@ -54,37 +54,33 @@ void tear_down() {}
     typeof_disassembler disassembler; \
     DisFormatter listing(disassembler, "test");
 
-#define DIS_LINE(_msg, _expected)                                     \
-    do {                                                              \
-        if (listing.hasNextLine())                                    \
-            EQ(_msg, _expected.readLine()->str(), listing.getLine()); \
-    } while (0)
-
-#define DIS(_cpu, _org, _contents, _expected, _memory)                  \
-    do {                                                                \
-        TestReader contents(_cpu);                                      \
-        contents.add(_contents);                                        \
-        TestReader expected(_cpu);                                      \
-        expected.add(_expected);                                        \
-        TRUE("setcpu" _cpu, listing.setCpu(_cpu));                      \
-        EQ("setcpu", 0, listing.byteLength());                          \
-        FALSE("setcpu", listing.isError());                             \
-        EQ("setcpu", contents.readLine()->str(), listing.getContent()); \
-        EQ("setcpu", expected.readLine()->str(), listing.getLine());    \
-        EQ("origin", OK, listing.setOrigin(_org));                      \
-        EQ("origin", contents.readLine()->str(), listing.getContent()); \
-        EQ("origin", expected.readLine()->str(), listing.getLine());    \
-        auto reader = _memory.iterator();                               \
-        EQ("dis", OK, listing.disassemble(reader, _org));               \
-        EQ("dis", contents.readLine()->str(), listing.getContent());    \
-        FALSE("dis", listing.hasNextContent());                         \
-        DIS_LINE("dis1", expected);                                     \
-        DIS_LINE("dis2", expected);                                     \
-        DIS_LINE("dis3", expected);                                     \
-        DIS_LINE("dis4", expected);                                     \
-        DIS_LINE("dis5", expected);                                     \
-        DIS_LINE("dis6", expected);                                     \
-        FALSE("dis", listing.hasNextLine());                            \
+#define DIS(_cpu, _org, _contents, _lines, _memory)                       \
+    do {                                                                  \
+        TestReader contents(_cpu);                                        \
+        contents.add(_contents);                                          \
+        TestReader lines(_cpu);                                           \
+        lines.add(_lines);                                                \
+        TRUE("setcpu" _cpu, listing.setCpu(_cpu));                        \
+        EQ("setcpu", 0, listing.byteLength());                            \
+        FALSE("setcpu", listing.isError());                               \
+        EQ("setcpu", contents.readLine()->str(), listing.getContent());   \
+        EQ("setcpu", lines.readLine()->str(), listing.getLine());         \
+        EQ("origin", OK, listing.setOrigin(_org));                        \
+        EQ("origin", contents.readLine()->str(), listing.getContent());   \
+        EQ("origin", lines.readLine()->str(), listing.getLine());         \
+        const auto unit = disassembler.config().addressUnit();            \
+        auto reader = _memory.iterator();                                 \
+        while (reader.hasNext()) {                                        \
+            const auto addr = reader.address() / unit;                    \
+            EQ("disassemble", OK, listing.disassemble(reader, addr));     \
+            while (listing.hasNextContent())                              \
+                EQ("content", contents.readLine(), listing.getContent()); \
+            while (listing.hasNextLine())                                 \
+                EQ("line", lines.readLine(), listing.getLine());          \
+            FALSE("line eor", listing.hasNextLine());                     \
+        }                                                                 \
+        EQ("expected content eor", nullptr, contents.readLine());         \
+        EQ("expected line eor", nullptr, lines.readLine());               \
     } while (0)
 
 #define DIS16(_cpu, _org, _contents, _expected, ...)                            \
@@ -163,7 +159,8 @@ void test_w65816() {
     PREP(mos6502::DisMos6502);
 
     listing.setUppercase(true);
-    disassembler.setOption("longa", "on");
+    TRUE("setcpu", disassembler.setCpu("w65c816"));
+    EQ("longa", OK, disassembler.setOption("longa", "on"));
 
     DIS8("w65c816", 0xabcdef,
             "        CPU   W65C816\n"
@@ -301,7 +298,7 @@ void test_ins8070() {
 void test_cdp1802() {
     PREP(cdp1802::DisCdp1802);
 
-    disassembler.setOption("use-register", "on");
+    EQ("use-register", OK, disassembler.setOption("use-register", "on"));
 
     DIS8("cdp1804", 0xabcd,
             "        cpu   cdp1804\n"
@@ -413,7 +410,7 @@ void test_z8001() {
     PREP(z8000::DisZ8000);
 
     listing.setUppercase(true);
-    disassembler.setOption("short-address", "on");
+    EQ("short-direct", OK, disassembler.setOption("short-direct", "on"));
 
     DIS16("z8001", 0x789abc,
             "        CPU    Z8001\n"

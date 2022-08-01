@@ -61,41 +61,22 @@ void tear_down() {}
     BinMemory memory;                          \
     AsmFormatter listing(driver, sources, memory)
 
-#define ASM_LINE(_line, _expected)                                   \
-    do {                                                             \
-        listing.reset();                                             \
-        const char *msg = "";                                        \
-        listing.assemble(_line, true);                               \
-        EQ(msg, OK, directive);                                      \
-        EQ(msg, _expected.readLine()->str(), listing.getLine());     \
-        if (listing.hasNextLine())                                   \
-            EQ(msg, _expected.readLine()->str(), listing.getLine()); \
-        if (listing.hasNextLine())                                   \
-            EQ(msg, _expected.readLine()->str(), listing.getLine()); \
-        if (listing.hasNextLine())                                   \
-            EQ(msg, _expected.readLine()->str(), listing.getLine()); \
-        if (listing.hasNextLine())                                   \
-            EQ(msg, _expected.readLine()->str(), listing.getLine()); \
-        if (listing.hasNextLine())                                   \
-            EQ(msg, _expected.readLine()->str(), listing.getLine()); \
-        if (listing.hasNextLine())                                   \
-            EQ(msg, _expected.readLine()->str(), listing.getLine()); \
-        FALSE(msg, listing.hasNextLine());                           \
-    } while (0)
-
-#define ASM(_cpu, _source, _expected)                    \
-    do {                                                 \
-        TestReader expected("expected");                 \
-        expected.add(_expected);                         \
-        TestReader source(_cpu);                         \
-        source.add(_source);                             \
-        sources.add(source);                             \
-        sources.open(source.name().c_str());             \
-        StrScanner *line;                                \
-        while ((line = sources.readLine()) != nullptr) { \
-            ASM_LINE(*line, expected);                   \
-        }                                                \
-        TRUE(_cpu, expected.readLine() == nullptr);      \
+#define ASM(_cpu, _source, _expected)                               \
+    do {                                                            \
+        TestReader expected("expected");                            \
+        expected.add(_expected);                                    \
+        TestReader source(_cpu);                                    \
+        source.add(_source);                                        \
+        sources.add(source);                                        \
+        sources.open(source.name().c_str());                        \
+        StrScanner *line;                                           \
+        while ((line = sources.readLine()) != nullptr) {            \
+            listing.assemble(*line, /* reportError */ true);        \
+            EQ("directive", OK, directive);                         \
+            while (listing.hasNextLine())                           \
+                EQ("line", expected.readLine(), listing.getLine()); \
+        }                                                           \
+        EQ(_cpu, nullptr, expected.readLine());                     \
     } while (0)
 
 void test_mc6809() {

@@ -55,7 +55,7 @@ void test_reader() {
 
     EQ("empty", "empty", empty.name().c_str());
     EQ("empty", 0, empty.lineno());
-    TRUE("empty", empty.readLine() == nullptr);
+    EQ("empty", nullptr, empty.readLine());
 
     TestReader in("test");
     EQ("in", "test", in.name().c_str());
@@ -67,9 +67,9 @@ void test_reader() {
     EQ("line 2", 2, in.lineno());
     EQ("line 3", "line 3", in.readLine()->str());
     EQ("line 3", 3, in.lineno());
-    TRUE("eof 1", in.readLine() == nullptr);
+    EQ("eof 1", nullptr, in.readLine());
     EQ("eof 1", 3, in.lineno());
-    TRUE("eof 2", in.readLine() == nullptr);
+    EQ("eof 2", nullptr, in.readLine());
     EQ("eof 2", 3, in.lineno());
 
     in.rewind();
@@ -81,15 +81,15 @@ void test_reader() {
     EQ("rewind 2", 2, in.lineno());
     EQ("rewind 3", "line 3", in.readLine()->str());
     EQ("rewind 3", 3, in.lineno());
-    TRUE("eof 1", in.readLine() == nullptr);
+    EQ("eof 1", nullptr, in.readLine());
     EQ("eof 1", 3, in.lineno());
-    TRUE("eof 2", in.readLine() == nullptr);
+    EQ("eof 2", nullptr, in.readLine());
     EQ("eof 2", 3, in.lineno());
 
     in.clear("clear");
     EQ("clear", "clear", in.name().c_str());
     EQ("clear", 0, in.lineno());
-    TRUE("clear", in.readLine() == nullptr);
+    EQ("clear", nullptr, in.readLine());
 
     TestReader lines("lines");
     lines.add(
@@ -99,7 +99,7 @@ void test_reader() {
     EQ("lines 1", "line1", lines.readLine()->str());
     EQ("lines 2", "line2", lines.readLine()->str());
     EQ("lines 3", "line3", lines.readLine()->str());
-    TRUE("eof", lines.readLine() == nullptr);
+    EQ("eof", nullptr, lines.readLine());
 }
 
 int mem_size(const BinMemory &memory) {
@@ -239,7 +239,7 @@ void test_sources() {
     EQ("read 1-3", "reader1", sources.current()->name().c_str());
     EQ("read 1-3", 3, sources.current()->lineno());
 
-    TRUE("eof", sources.readLine() == nullptr);
+    EQ("eof", nullptr, sources.readLine());
     EQ("eof", 0, sources.size());
 }
 

@@ -38,22 +38,48 @@ public:
         _fail_count = 0;
     }
     bool check() const;
+
+    /** assert bool */
     void isTrue(const char *file, int line, const char *message, bool actual);
     void isFalse(const char *file, int line, const char *message, bool actual);
+
+    /** assert uint32_t */
     void equals(
             const char *file, int line, const char *message, uint32_t expected, uint32_t actual);
+
+    /** assert const char* */
     void equals(const char *file, int line, const char *message, const char *expected,
             const char *actual);
+
+    /** assert const char* with StrScanner* */
+    void equals(const char *file, int line, const char *message, const StrScanner *expected,
+                const char *actual);
+
+    /** assert StrScanner* */
+    void equals(const char *file, int line, const char *message, const char *expected,
+            const StrScanner *actual);
+
+    /** assert StrScanner& */
     void equals(const char *file, int line, const char *message, const char *expected,
             const StrScanner &actual);
+
+    /** assert Insn& */
     void equals(const char *file, int line, const char *message, const char *expected,
             const Insn &actual);
+
+    /** assert const char with const PROGMEM char* */
     void equals_P(const char *file, int line, const char *message, const char *expected,
             const /* PROGMEM */ char *actual_P);
+
+    /** assert ErrorReporter& */
     void equals(const char *file, int line, const char *message, Error expected,
             const ErrorReporter &actual);
+
+    /** assert uint8_t[] with ArrayMemory */
     void equals(const char *file, const int line, const char *message, const ArrayMemory &expected,
             const uint8_t actual[], size_t actual_len);
+
+    /** assert const char* is not equal */
     void not_equals(const char *file, int line, const char *message, const char *expected,
             const char *actual);
 

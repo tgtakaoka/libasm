@@ -37,6 +37,7 @@ void AsmFormatter::setUppercase(bool uppercase) {
 }
 
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
+    reset();
     _reportError = reportError;
     line_number = _sources.current()->lineno();
     include_nest = _sources.size() - 1;

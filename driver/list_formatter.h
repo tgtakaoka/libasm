@@ -23,7 +23,6 @@
 #include "value_formatter.h"
 
 #include <cstdint>
-#include <string>
 
 namespace libasm {
 namespace driver {
@@ -37,9 +36,8 @@ public:
     virtual const char *getLine();
 
 protected:
-    ValueFormatter _formatter{false};
+    ValueFormatter _formatter{/*cstyle*/ false};
     bool _uppercase = false;
-    int _nextContent;
     int _nextLine;
     bool _errorLine;
     char _outBuffer[256];
