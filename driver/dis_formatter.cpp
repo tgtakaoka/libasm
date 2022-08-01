@@ -42,7 +42,7 @@ Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {
 
 Error DisFormatter::setCpu(const char *cpu) {
     reset();
-    _insnBase.reset(_insn.address());
+    _insnBase.reset(_insn.address() + _insn.length());
     _insnBase.nameBuffer().text_P(PSTR("CPU"), _uppercase);
     StrBuffer buf(_operands, sizeof(_operands));
     buf.text(cpu, _uppercase);
@@ -77,13 +77,14 @@ const char *DisFormatter::getContent() {
     if (isError()) {
         if (!_errorContent) {
             _errorContent = true;
-            _out.text("; ").text(_input_name).text(": 0x");
-            formatAddress(startAddress(), true);
-            _out.letter(' ').text_P(_disassembler.errorText_P());
+            _out.text("; ").text(_input_name).text(": ");
+            _disassembler.formatter().formatHex(
+                    _out, startAddress(), config().addressWidth(), false);
+            _out.text(": error: ").text_P(_disassembler.errorText_P());
             _nextContent = 0;
         } else {
             _out.text("; ");
-            formatAddress(startAddress(), true);
+            formatAddress(startAddress() + _nextContent, true);
             _nextContent += formatBytes(_nextContent);
         }
         return _outBuffer;
@@ -98,9 +99,9 @@ const char *DisFormatter::getLine() {
     if (isError() && !_errorLine) {
         _errorLine = true;
         _out.reset(_outBuffer, sizeof(_outBuffer));
-        _out.text(_input_name).text(": 0x");
-        formatAddress(startAddress(), true);
-        _out.letter(' ').text_P(_disassembler.errorText_P());
+        _out.text(_input_name).text(": ");
+        _disassembler.formatter().formatHex(_out, startAddress(), config().addressWidth(), false);
+        _out.text(": error: ").text_P(_disassembler.errorText_P());
         _nextLine = 0;
         return _outBuffer;
     }
