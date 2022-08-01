@@ -32,7 +32,6 @@ public:
 
     void setUppercase(bool uppercase) override;
 
-    void reset() override;
     Error disassemble(DisMemory &memory, uint32_t addr);
     Error setCpu(const char *cpu);
     Error setOrigin(uint32_t origin);
@@ -54,7 +53,9 @@ protected:
     bool _errorContent;
     char _operands[256];
 
-    // ListLine
+    void reset() override;
+
+    // ListFormatter
     uint32_t startAddress() const override { return _insn.address(); }
     int generatedSize() const override { return _insn.length(); }
     uint8_t getByte(int offset) const override { return _insn.bytes()[offset]; }

@@ -44,7 +44,7 @@ Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver
         return setError(UNDEFINED_SYMBOL);
     if (assembler().checkAddress(value.getUnsigned()))
         return setError(assembler());
-    list.address = driver.setOrigin(value.getUnsigned());
+    list.setStartAddress(driver.setOrigin(value.getUnsigned()));
     return setError(OK);
 }
 
@@ -62,7 +62,7 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
     if (alignment > 0x1000)
         setError(ILLEGAL_OPERAND);
     const auto origin = driver.origin();
-    list.address = origin;
+    list.setStartAddress(origin);
     const auto addr = (origin + (alignment - 1)) & ~(alignment - 1);
     if (assembler().checkAddress(addr))
         return setError(assembler());
@@ -71,20 +71,20 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
 }
 
 Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    if (list.line_symbol.size() == 0)
+    if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
     ValueParser &parser = assembler().parser();
-    const auto &value = list.val = parser.eval(scan, &driver);
+    const auto &value = list.lineValue() = parser.eval(scan, &driver);
     if (setError(parser))
         return getError();
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    const auto error = driver.internSymbol(value.getUnsigned(), list.line_symbol);
+    const auto error = driver.internSymbol(value.getUnsigned(), list.lineSymbol());
     if (error) {
-        setError(list.line_symbol, error);
+        setError(list.lineSymbol(), error);
     } else {
-        list.line_symbol = StrScanner::EMPTY;
+        list.lineSymbol() = StrScanner::EMPTY;
     }
     return getError();
 }
@@ -159,7 +159,7 @@ Error AsmDirective::defineBytes(
         if (!scan.skipSpaces().expect(','))
             break;
     }
-    driver.setOrigin(driver.origin() + ((list.length + unit - 1) & -unit) / unit);
+    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
@@ -184,7 +184,7 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDrive
         if (!scan.skipSpaces().expect(','))
             break;
     }
-    driver.setOrigin(driver.origin() + ((list.length + unit - 1) & -unit) / unit);
+    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
@@ -212,7 +212,7 @@ Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDrive
         if (!scan.skipSpaces().expect(','))
             break;
     }
-    driver.setOrigin(driver.origin() + ((list.length + unit - 1) & -unit) / unit);
+    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setError(OK);
 }
 
@@ -247,9 +247,9 @@ Error AsmDirective::allocateSpaces(
 }
 
 Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    if (list.line_symbol.size() == 0)
+    if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
-    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasSymbol(list.line_symbol))
+    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasSymbol(list.lineSymbol()))
         return setError(DUPLICATE_LABEL);
     ValueParser &parser = assembler().parser();
     std::list<StrScanner> params;
@@ -257,9 +257,9 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
         const StrScanner expr = parser.scanExpr(scan.skipSpaces(), ',');
         if (expr.size() == 0) {
             const auto error = driver.internFunction(
-                    list.line_symbol, params, StrScanner(scan.str(), expr.str()));
+                    list.lineSymbol(), params, StrScanner(scan.str(), expr.str()));
             scan = expr;
-            list.line_symbol = StrScanner::EMPTY;
+            list.lineSymbol() = StrScanner::EMPTY;
             return error;
         }
         StrScanner p(expr);

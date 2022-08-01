@@ -38,12 +38,16 @@ public:
     void setUppercase(bool enable) override;
     void enableLineNumber(bool enable) { _lineNumber = enable; }
 
-    void reset() override;
     Error assemble(const StrScanner &line, bool reportError = false);
-    void emitByte(uint32_t base, uint8_t val);
-
     bool isError() const;
     const char *getLine() override;
+
+    // Interface to AsmDirective
+    void emitByte(uint32_t base, uint8_t val);
+    void setStartAddress(uint32_t addr) { _address = addr; }
+    int byteLength() const { return generatedSize(); }
+    StrScanner &lineSymbol() { return _line_symbol; }
+    Value &lineValue() { return _line_value; }
 
 private:
     AsmDriver &_driver;
@@ -53,44 +57,42 @@ private:
     bool _reportError;
     bool _errorLine;
 
-    friend class AsmDirective;
-    StrScanner line;
-    uint32_t address;
-    int length;
-    uint32_t line_number;
-    uint16_t include_nest;
-    Insn insn{0};
-    Value val;
-    StrScanner label;
-    StrScanner line_symbol;
-    StrScanner instruction;
-    StrScanner operand;
-    StrScanner comment;
-    ErrorAt errorAt;
-    const ConfigBase *conf;
+    StrScanner _line;
+    Value _line_value;
+    StrScanner _line_symbol;
+    Insn _insn{0};
+    uint32_t _address;
+    int _length;
+    StrScanner _label;
+    StrScanner _instruction;
+    StrScanner _operand;
+    StrScanner _comment;
+    ErrorAt _errorAt;
+    const ConfigBase *_conf;
 
+    void reset() override;
     int formatBytes(int base) override;
     void formatLine() override;
 
-    // ListLine
-    uint32_t startAddress() const override;
-    int generatedSize() const override;
+    // ListFormatter
+    uint32_t startAddress() const override { return _address; }
+    int generatedSize() const override { return _length; }
     uint8_t getByte(int offset) const override;
-    bool hasInstruction() const override;
-    const StrScanner getInstruction() const override;
-    bool hasOperand() const override;
-    const StrScanner getOperand() const override;
+    bool hasInstruction() const override { return _instruction.size() != 0; }
+    const StrScanner getInstruction() const override { return _instruction; }
+    bool hasOperand() const override { return _operand.size() != 0; }
+    const StrScanner getOperand() const override { return _operand; }
 
-    bool hasLabel() const override;
-    const StrScanner getLabel() const override;
-    bool hasComment() const override;
-    const StrScanner getComment() const override;
+    bool hasLabel() const override { return _label.size() != 0; }
+    const StrScanner getLabel() const override { return _label; }
+    bool hasComment() const override { return _comment.size() != 0; }
+    const StrScanner getComment() const override { return _comment; }
 
     // configuration
-    const ConfigBase &config() const override { return *conf; }
+    const ConfigBase &config() const override { return *_conf; }
     int labelWidth() const override { return 16; }
-    int nameWidth() const override { return conf->nameMax() < 5 ? 6 : conf->nameMax() + 1; }
-    int codeBytes() const override { return conf->codeMax() < 4 ? conf->codeMax() : 4; }
+    int nameWidth() const override { return config().nameMax() < 5 ? 6 : config().nameMax() + 1; }
+    int codeBytes() const override { return config().codeMax() < 4 ? config().codeMax() : 4; }
     int operandWidth() const override { return 16; }
 };
 

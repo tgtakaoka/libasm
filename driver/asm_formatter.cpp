@@ -39,96 +39,94 @@ void AsmFormatter::setUppercase(bool uppercase) {
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     reset();
     _reportError = reportError;
-    line_number = _sources.current()->lineno();
-    include_nest = _sources.size() - 1;
-    line = li;
-    address = _driver.origin();
-    length = 0;
-    val.clear();
-    label = StrScanner::EMPTY;
-    instruction = StrScanner::EMPTY;
-    operand = StrScanner::EMPTY;
-    comment = StrScanner::EMPTY;
-    line_symbol = StrScanner::EMPTY;
+    _line = li;
+    setStartAddress(_driver.origin());
+    _length = 0;
+    _line_value.clear();
+    _label = StrScanner::EMPTY;
+    _instruction = StrScanner::EMPTY;
+    _operand = StrScanner::EMPTY;
+    _comment = StrScanner::EMPTY;
+    _line_symbol = StrScanner::EMPTY;
     auto &assembler = _driver.current()->assembler();
     assembler.setOption("uppercase", _uppercase ? "on" : "off");
-    conf = &assembler.config();
+    _conf = &assembler.config();
 
-    StrScanner scan(line);
+    StrScanner scan(_line);
     auto &parser = assembler.parser();
-    parser.setCurrentOrigin(address);
+    parser.setCurrentOrigin(startAddress());
 
     if (parser.isSymbolLetter(*scan, true)) {
         // setAt(scan);
-        label = scan;
-        line_symbol = parser.readSymbol(scan);
+        _label = scan;
+        _line_symbol = parser.readSymbol(scan);
         scan.expect(':');  // skip optional trailing ':' for label.
-        label.trimEndAt(scan);
+        _label.trimEndAt(scan);
     }
     scan.skipSpaces();
 
     if (!assembler.endOfLine(*scan)) {
         StrScanner p(scan);
         p.trimStart([](char s) { return !isspace(s); });
-        instruction = scan;
-        instruction.trimEndAt(p);
-        operand = p.skipSpaces();
-        errorAt.setError(_driver.current()->processPseudo(instruction, p, *this, _driver));
-        if (errorAt.isOK()) {
-            operand.trimEndAt(p).trimEnd(isspace);
-            comment = p.skipSpaces();
-            if (line_symbol.size()) {
+        _instruction = scan;
+        _instruction.trimEndAt(p);
+        _operand = p.skipSpaces();
+        _errorAt.setError(_driver.current()->processPseudo(_instruction, p, *this, _driver));
+        if (_errorAt.isOK()) {
+            _operand.trimEndAt(p).trimEnd(isspace);
+            _comment = p.skipSpaces();
+            if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
-                const auto error = _driver.internSymbol(address, line_symbol);
+                const auto error = _driver.internSymbol(startAddress(), _line_symbol);
                 if (error)
-                    return errorAt.setError(line_symbol, error);
+                    return _errorAt.setError(_line_symbol, error);
             }
             return OK;
         }
-        if (errorAt.getError() != UNKNOWN_DIRECTIVE)
-            return errorAt.getError();
+        if (_errorAt.getError() != UNKNOWN_DIRECTIVE)
+            return _errorAt.getError();
     }
 
-    if (line_symbol.size()) {
+    if (_line_symbol.size()) {
         // If |label| isn't consumed, assign the origin.
-        const auto error = _driver.internSymbol(address, line_symbol);
+        const auto error = _driver.internSymbol(startAddress(), _line_symbol);
         if (error)
-            return errorAt.setError(line_symbol, error);
+            return _errorAt.setError(_line_symbol, error);
     }
 
     if (assembler.endOfLine(*scan)) {
-        comment = scan;
+        _comment = scan;
         return OK;  // skip comment
     }
 
-    insn.reset(address);
-    errorAt.setError(assembler.encode(scan.str(), insn, /*SymbolTable*/ &_driver));
+    _insn.reset(startAddress());
+    _errorAt.setError(assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver));
     const bool allowUndef =
-            errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
-    if (errorAt.isOK() || allowUndef) {
+            _errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
+    if (_errorAt.isOK() || allowUndef) {
         StrScanner p(assembler.errorAt());
-        instruction = StrScanner(insn.name());
-        operand.trimEndAt(p).trimEnd(isspace);
-        comment = p.skipSpaces();
-        if (insn.length() > 0) {
+        _instruction = StrScanner(_insn.name());
+        _operand.trimEndAt(p).trimEnd(isspace);
+        _comment = p.skipSpaces();
+        if (_insn.length() > 0) {
             const uint8_t unit = assembler.config().addressUnit();
-            const uint32_t base = insn.address() * unit;
-            for (auto offset = 0; offset < insn.length(); offset++) {
-                emitByte(base, insn.bytes()[offset]);
+            const uint32_t base = _insn.address() * unit;
+            for (auto offset = 0; offset < _insn.length(); offset++) {
+                emitByte(base, _insn.bytes()[offset]);
             }
-            _driver.setOrigin(address + insn.length() / unit);
+            _driver.setOrigin(startAddress() + _insn.length() / unit);
         }
         return OK;
     }
-    return errorAt.getError();
+    return _errorAt.getError();
 }
 
 void AsmFormatter::emitByte(uint32_t base, uint8_t val) {
-    _memory.writeByte(base + length++, val);
+    _memory.writeByte(base + _length++, val);
 }
 
 bool AsmFormatter::isError() const {
-    return _reportError && errorAt.getError() != OK && errorAt.getError() != END_ASSEMBLE;
+    return _reportError && _errorAt.getError() != OK && _errorAt.getError() != END_ASSEMBLE;
 }
 
 const char *AsmFormatter::getLine() {
@@ -136,15 +134,16 @@ const char *AsmFormatter::getLine() {
         _out.reset(_outBuffer, sizeof(_outBuffer));
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
-        _formatter.formatDec(_out, line_number, 0);
-        const char *at = errorAt.errorAt().str();
-        const int column =
-                (at >= line.str() && at < line.str() + line.size()) ? at - line.str() + 1 : -1;
+        _formatter.formatDec(_out, _sources.current()->lineno(), 0);
+        const char *at = _errorAt.errorAt().str();
+        const char *line = _line.str();
+        const char *line_end = _line.str() + _line.size();
+        const int column = (at >= line && at < line_end) ? at - line + 1 : -1;
         if (column >= 0) {
             _out.letter(':');
             formatDec(column);
         }
-        _out.letter(':').letter(' ').text_P(errorAt.errorText_P());
+        _out.letter(':').letter(' ').text_P(_errorAt.errorText_P());
         _nextLine = 0;
         _errorLine = true;
         return _outBuffer;
@@ -154,9 +153,9 @@ const char *AsmFormatter::getLine() {
 }
 
 int AsmFormatter::formatBytes(int base) {
-    if (!val.isUndefined()) {
+    if (!_line_value.isUndefined()) {
         _out.text(" =0x");
-        formatHex(val.getUnsigned(), 0, true);
+        formatHex(_line_value.getUnsigned(), 0, true);
         return 0;
     }
     return ListFormatter::formatBytes(base);
@@ -164,6 +163,7 @@ int AsmFormatter::formatBytes(int base) {
 
 void AsmFormatter::formatLine() {
     if (_lineNumber) {
+        const auto include_nest = _sources.size() - 1;
         if (include_nest) {
             _out.letter('(');
             formatDec(include_nest);
@@ -171,54 +171,14 @@ void AsmFormatter::formatLine() {
         } else {
             _out.text("   ");
         }
-        formatDec(line_number, 5);
+        formatDec(_sources.current()->lineno(), 5);
         _out.text("/ ");
     }
     return ListFormatter::formatLine();
 }
 
-uint32_t AsmFormatter::startAddress() const {
-    return address;
-}
-
-int AsmFormatter::generatedSize() const {
-    return length;
-}
-
 uint8_t AsmFormatter::getByte(int offset) const {
-    return _memory.readByte(address * conf->addressUnit() + offset);
-}
-
-bool AsmFormatter::hasInstruction() const {
-    return instruction.size() != 0;
-}
-
-const StrScanner AsmFormatter::getInstruction() const {
-    return instruction;
-}
-
-bool AsmFormatter::hasOperand() const {
-    return operand.size() != 0;
-}
-
-const StrScanner AsmFormatter::getOperand() const {
-    return operand;
-}
-
-bool AsmFormatter::hasLabel() const {
-    return label.size() != 0;
-}
-
-const StrScanner AsmFormatter::getLabel() const {
-    return label;
-}
-
-bool AsmFormatter::hasComment() const {
-    return comment.size() != 0;
-}
-
-const StrScanner AsmFormatter::getComment() const {
-    return comment;
+    return _memory.readByte(_address * config().addressUnit() + offset);
 }
 
 }  // namespace driver

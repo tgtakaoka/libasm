@@ -29,7 +29,6 @@ namespace driver {
 
 class ListFormatter {
 public:
-    virtual void reset();
     virtual void setUppercase(bool uppercase);
 
     bool hasNextLine() const;
@@ -42,6 +41,8 @@ protected:
     bool _errorLine;
     char _outBuffer[256];
     StrBuffer _out{_outBuffer, sizeof(_outBuffer)};
+
+    virtual void reset();
 
     virtual uint32_t startAddress() const = 0;
     virtual int generatedSize() const = 0;
