@@ -35,7 +35,7 @@ define asm-rule # test suffix option
 .PHONY:: asm-$(1).$(2)
 asm-$(1).$(2):: $(ASM)
 asm-$(1).$(2):: $(1).asm
-	$(ASM) $(3) -o $(1).$(2) -l $(1).lst $$^
+	$$(ASM) $$(ASM_FLAGS) $(3) -o $(1).$(2) -l $(1).lst $$^
 
 endef
 $(eval $(foreach t,$(ASM_TESTS),$(call asm-rule,$(t),$(call out-ext,$(t)),$(call asm-opt,$(t)))))
@@ -51,7 +51,7 @@ ASL_OUTS  = $(foreach t,$(ASL_TESTS),$(t).$(call out-ext,$(t)))
 define asl-rule # test suffix option source
 .PHONY:: asl-$(1).$(2)
 asl-$(1).$(2): $(4)
-	asl $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(3) $(1).p $(1).$(2)
+	$$(ASL) $$(ASL_FLAGS) -L $$^ && p2hex $$(P2HEX_FLAGS) $(3) $(1).p $(1).$(2)
 
 endef
 define asl-source # test

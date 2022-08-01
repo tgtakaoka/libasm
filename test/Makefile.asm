@@ -14,6 +14,8 @@
 
 # Macro Assembler asm target
 
+ASM_FLAGS = -n
+
 define __asm-opt # target
 $(if $(filter $(1),$(S19_OUTS) $(S28_OUTS)),-S16,-H16)
 endef
