@@ -42,6 +42,7 @@ private:
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
+    bool _upper_hex;
     bool _uppercase;
     std::string _cpu;
     bool _includeTarget;

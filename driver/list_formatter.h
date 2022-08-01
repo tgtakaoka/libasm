@@ -29,14 +29,16 @@ namespace driver {
 
 class ListFormatter {
 public:
-    virtual void setUppercase(bool uppercase);
+    virtual void setUpperHex(bool enable);
 
     bool hasNextLine() const;
     virtual const char *getLine();
 
 protected:
-    ValueFormatter _formatter{/*cstyle*/ false};
-    bool _uppercase = false;
+    ListFormatter();
+
+    ValueFormatter _formatter;
+    bool _upperHex;
     int _nextLine;
     bool _errorLine;
     char _outBuffer[256];
@@ -49,8 +51,8 @@ protected:
     virtual uint8_t getByte(int offset) const = 0;
     virtual bool hasInstruction() const = 0;
     virtual const StrScanner getInstruction() const = 0;
-    virtual bool hasOperand() const = 0;
-    virtual const StrScanner  getOperand() const = 0;
+    virtual bool hasOperand() const { return false; }
+    virtual const StrScanner getOperand() const { return StrScanner::EMPTY; }
 
     // assemble listing only
     virtual uint32_t lineNumber() const { return 0; }
@@ -60,15 +62,12 @@ protected:
     virtual uint32_t value() const { return 0; }
     virtual bool hasLabel() const { return false; }
     virtual const StrScanner getLabel() const { return StrScanner::EMPTY; }
-    virtual bool hasComment() const { return false; }
-    virtual const StrScanner getComment() const { return StrScanner::EMPTY; }
 
     // configuration
     virtual const ConfigBase &config() const = 0;
     virtual int labelWidth() const = 0;
     virtual int nameWidth() const = 0;
     virtual int codeBytes() const = 0;
-    virtual int operandWidth() const = 0;
 
     void formatDec(uint32_t val, int8_t width = 0);
     void formatHex(uint32_t val, uint8_t bits = 0, bool zeroSuppress = false);

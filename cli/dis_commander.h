@@ -44,6 +44,7 @@ private:
     const char *_list_name;
     const char *_cpu;
     bool _relative_target;
+    bool _upper_hex;
     bool _uppercase;
     bool _verbose;
     uint32_t _addr_start;

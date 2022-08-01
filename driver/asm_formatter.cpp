@@ -32,10 +32,6 @@ void AsmFormatter::reset() {
     _errorLine = false;
 }
 
-void AsmFormatter::setUppercase(bool uppercase) {
-    ListFormatter::setUppercase(uppercase);
-}
-
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     reset();
     _reportError = reportError;
@@ -45,11 +41,8 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     _line_value.clear();
     _label = StrScanner::EMPTY;
     _instruction = StrScanner::EMPTY;
-    _operand = StrScanner::EMPTY;
-    _comment = StrScanner::EMPTY;
     _line_symbol = StrScanner::EMPTY;
     auto &assembler = _driver.current()->assembler();
-    assembler.setOption("uppercase", _uppercase ? "on" : "off");
     _conf = &assembler.config();
 
     StrScanner scan(_line);
@@ -66,15 +59,13 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     scan.skipSpaces();
 
     if (!assembler.endOfLine(*scan)) {
+        _instruction = scan;
+        StrScanner directive = scan;
         StrScanner p(scan);
         p.trimStart([](char s) { return !isspace(s); });
-        _instruction = scan;
-        _instruction.trimEndAt(p);
-        _operand = p.skipSpaces();
-        _errorAt.setError(_driver.current()->processPseudo(_instruction, p, *this, _driver));
+        directive.trimEndAt(p);
+        _errorAt.setError(_driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver));
         if (_errorAt.isOK()) {
-            _operand.trimEndAt(p).trimEnd(isspace);
-            _comment = p.skipSpaces();
             if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
                 const auto error = _driver.internSymbol(startAddress(), _line_symbol);
@@ -94,10 +85,8 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             return _errorAt.setError(_line_symbol, error);
     }
 
-    if (assembler.endOfLine(*scan)) {
-        _comment = scan;
+    if (assembler.endOfLine(*scan))
         return OK;  // skip comment
-    }
 
     _insn.reset(startAddress());
     _errorAt.setError(assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver));
@@ -105,9 +94,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             _errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
     if (_errorAt.isOK() || allowUndef) {
         StrScanner p(assembler.errorAt());
-        _instruction = StrScanner(_insn.name());
-        _operand.trimEndAt(p).trimEnd(isspace);
-        _comment = p.skipSpaces();
+        _instruction = scan;
         if (_insn.length() > 0) {
             const uint8_t unit = assembler.config().addressUnit();
             const uint32_t base = _insn.address() * unit;

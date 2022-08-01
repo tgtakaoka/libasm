@@ -64,8 +64,10 @@ int DisCommander::disassemble() {
         return 1;
     }
 
-    _driver.current()->setOption("relative", _relative_target ? "on" : "off");
-    DisFormatter listing(*_driver.current(), _input_name);
+    auto &disassembler = *_driver.current();
+    DisFormatter listing(disassembler, _input_name);
+    disassembler.setOption("relative", _relative_target ? "on" : "off");
+    listing.setUpperHex(_upper_hex);
     listing.setUppercase(_uppercase);
     listing.setCpu(_cpu);
     FilePrinter output;
@@ -185,7 +187,8 @@ int DisCommander::usage() {
             "  -A start[,end]\n"
             "              : disassemble start address and optional end address\n"
             "  -r          : use program counter relative notation\n"
-            "  -u          : use uppercase letter for output\n"
+            "  -h          : use lower case letter for hexadecimal\n"
+            "  -u          : use upper case letter for output\n"
             "  -v          : print progress verbosely\n",
             _prog_name, cpuOption, list.c_str());
     return 2;
@@ -203,6 +206,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
     _list_name = nullptr;
     _cpu = nullptr;
     _relative_target = false;
+    _upper_hex = true;
     _uppercase = false;
     _verbose = false;
     _addr_start = 0;
@@ -235,6 +239,9 @@ int DisCommander::parseArgs(int argc, const char **argv) {
             }
             case 'r':
                 _relative_target = true;
+                break;
+            case 'h':
+                _upper_hex = false;
                 break;
             case 'u':
                 _uppercase = true;

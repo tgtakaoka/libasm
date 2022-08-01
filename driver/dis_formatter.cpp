@@ -25,12 +25,23 @@ DisFormatter::DisFormatter(Disassembler &disassembler, const char *input_name)
     : ListFormatter(),
       _disassembler(disassembler),
       _input_name(input_name),
+      _upper_hex(true),
+      _uppercase(false),
       _insn(0),
-      _insnBase(_insn) {}
+      _insnBase(_insn) {
+    _disassembler.formatter().setUppercase(true);
+}
 
-void DisFormatter::setUppercase(bool uppercase) {
-    ListFormatter::setUppercase(uppercase);
+void DisFormatter::setUpperHex(bool enable) {
+    _upper_hex = enable;
+    ListFormatter::setUpperHex(enable);
+    _disassembler.formatter().setUppercase(enable);
+}
+
+void DisFormatter::setUppercase(bool enable) {
+    _uppercase = enable;
     _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
+    _disassembler.formatter().setUppercase(_upper_hex);
 }
 
 Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {

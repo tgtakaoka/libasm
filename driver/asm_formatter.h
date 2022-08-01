@@ -35,7 +35,6 @@ class AsmFormatter : public ListFormatter {
 public:
     AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
 
-    void setUppercase(bool enable) override;
     void enableLineNumber(bool enable) { _lineNumber = enable; }
 
     Error assemble(const StrScanner &line, bool reportError = false);
@@ -65,8 +64,6 @@ private:
     int _length;
     StrScanner _label;
     StrScanner _instruction;
-    StrScanner _operand;
-    StrScanner _comment;
     ErrorAt _errorAt;
     const ConfigBase *_conf;
 
@@ -80,20 +77,15 @@ private:
     uint8_t getByte(int offset) const override;
     bool hasInstruction() const override { return _instruction.size() != 0; }
     const StrScanner getInstruction() const override { return _instruction; }
-    bool hasOperand() const override { return _operand.size() != 0; }
-    const StrScanner getOperand() const override { return _operand; }
 
     bool hasLabel() const override { return _label.size() != 0; }
     const StrScanner getLabel() const override { return _label; }
-    bool hasComment() const override { return _comment.size() != 0; }
-    const StrScanner getComment() const override { return _comment; }
 
     // configuration
     const ConfigBase &config() const override { return *_conf; }
     int labelWidth() const override { return 16; }
     int nameWidth() const override { return config().nameMax() < 5 ? 6 : config().nameMax() + 1; }
     int codeBytes() const override { return config().codeMax() < 4 ? config().codeMax() : 4; }
-    int operandWidth() const override { return 16; }
 };
 
 }  // namespace driver

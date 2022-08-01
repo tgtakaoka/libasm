@@ -21,8 +21,12 @@
 namespace libasm {
 namespace driver {
 
-void ListFormatter::setUppercase(bool uppercase) {
-    _formatter.setUppercase(_uppercase = uppercase);
+ListFormatter::ListFormatter() : _formatter(/*cstyle*/ false) {
+    _formatter.setUppercase(true);
+}
+
+void ListFormatter::setUpperHex(bool enable) {
+    _formatter.setUppercase(enable);
 }
 
 void ListFormatter::reset() {
@@ -130,11 +134,6 @@ void ListFormatter::formatTab(size_t pos, int delta) {
 }
 
 void ListFormatter::formatContent(int pos) {
-    if (!hasLabel() && !hasInstruction() && hasComment()) {
-        formatTab(pos);
-        _out.text(getComment());
-        return;
-    }
     if (hasLabel()) {
         formatTab(pos);
         _out.text(getLabel());
@@ -142,17 +141,12 @@ void ListFormatter::formatContent(int pos) {
     pos += labelWidth();
     if (hasInstruction()) {
         formatTab(pos, 8);
-        _out.text(getInstruction(), _uppercase);
+        _out.text(getInstruction());
     }
     pos += nameWidth();
     if (hasOperand()) {
         formatTab(pos);
         _out.text(getOperand());
-    }
-    pos += operandWidth();
-    if (hasComment()) {
-        formatTab(pos);
-        _out.text(getComment());
     }
 }
 }  // namespace driver

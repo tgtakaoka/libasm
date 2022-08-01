@@ -30,7 +30,8 @@ class DisFormatter : public ListFormatter {
 public:
     DisFormatter(Disassembler &disassembler, const char *input_name);
 
-    void setUppercase(bool uppercase) override;
+    void setUpperHex(bool enable) override;
+    void setUppercase(bool enable);
 
     Error disassemble(DisMemory &memory, uint32_t addr);
     Error setCpu(const char *cpu);
@@ -46,6 +47,8 @@ public:
 protected:
     Disassembler &_disassembler;
     const char *_input_name;
+    bool _upper_hex;
+    bool _uppercase;
     Insn _insn;
     InsnBase _insnBase;
     int _nextContent;
@@ -68,7 +71,6 @@ protected:
     int labelWidth() const override { return 8; }
     int nameWidth() const override { return config().nameMax() < 5 ? 6 : config().nameMax() + 1; }
     int codeBytes() const override { return config().codeMax() < 4 ? config().codeMax() : 4; }
-    int operandWidth() const override { return 8; }
 };
 
 }  // namespace driver

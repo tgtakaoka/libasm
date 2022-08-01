@@ -75,7 +75,7 @@ It can generate Intel HEX or Motorola S-Record output.
       -S[<bytes>] : output Motorola S-Record format
       -H[<bytes>] : output Intel HEX format
                   : optional <bytes> specifies data record length (max 32)
-      -u          : use uppercase letter for listing
+      -h          : use lowe case letter for hexadecimal
       -n          : output line number to list file
       -v          : print progress verbosely
 
@@ -100,7 +100,8 @@ It can read Intel HEX or Motorola S-Record input.
       -A start[,end]
                   : disassemble start address and optional end address
       -r          : use program counter relative notation
-      -u          : use uppercase letter for output
+      -h          : use lower case letter for hexadecimal
+      -u          : use upper case letter for output
       -v          : print progress verbosely
 
 == Supported host environment ==

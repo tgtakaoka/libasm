@@ -82,7 +82,7 @@ void tear_down() {}
 void test_mc6809() {
     PREP(mc6809::AsmMc6809, MotorolaDirective);
 
-    listing.setUppercase(true);
+    listing.setUpperHex(true);
     listing.enableLineNumber(true);
     driver.internSymbol(0xabd2, "label1");
 
@@ -92,22 +92,21 @@ void test_mc6809() {
             "        cmpd  [$1234,y] ; indirect\n"
             "label1: fcc   /abcdefghijklmn/\n"
             "        setdp $ff00",
-            "       1/    0:                             CPU   mc6809\n"
-            "       2/ ABCD:                             ORG   $abcd\n"
-            "       3/ ABCD: 10 A3 B9 12                 CMPD  [$1234,y]       ; indirect\n"
+            "       1/    0:                             cpu   mc6809\n"
+            "       2/ ABCD:                             org   $abcd\n"
+            "       3/ ABCD: 10 A3 B9 12                 cmpd  [$1234,y] ; indirect\n"
             "       3/ ABD1: 34\n"
-            "       4/ ABD2: 61 62 63 64 label1:         FCC   /abcdefghijklmn/\n"
+            "       4/ ABD2: 61 62 63 64 label1:         fcc   /abcdefghijklmn/\n"
             "       4/ ABD6: 65 66 67 68\n"
             "       4/ ABDA: 69 6A 6B 6C\n"
             "       4/ ABDE: 6D 6E\n"
-            "       5/ ABE0:                             SETDP $ff00");
+            "       5/ ABE0:                             setdp $ff00");
 }
 
 void test_mc6800() {
     PREP(mc6800::AsmMc6800, MotorolaDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0xf1f2, "label1");
 
     ASM("mc6800",
@@ -122,8 +121,7 @@ void test_mc6800() {
 void test_mc6805() {
     PREP(mc6805::AsmMc6805, MotorolaDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0x0800, "label1");
 
     ASM("mc146805",
@@ -138,8 +136,7 @@ void test_mc6805() {
 void test_mos6502() {
     PREP(mos6502::AsmMos6502, MotorolaDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0xf1f2, "label1");
 
     ASM("mos6502",
@@ -154,8 +151,7 @@ void test_mos6502() {
 void test_w65816() {
     PREP(mos6502::AsmMos6502, MotorolaDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0xf2f1f0, "label1");
 
     ASM("w65c816",
@@ -174,8 +170,7 @@ void test_w65816() {
 void test_i8048() {
     PREP(i8048::AsmI8048, IntelDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
 
     ASM("i8039",
@@ -190,8 +185,7 @@ void test_i8048() {
 void test_i8051() {
     PREP(i8051::AsmI8051, IntelDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0xb0, "data1");
 
     ASM("i8051",
@@ -206,8 +200,7 @@ void test_i8051() {
 void test_i8080() {
     PREP(i8080::AsmI8080, IntelDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0xebec, "label1");
 
     ASM("i8080",
@@ -222,8 +215,7 @@ void test_i8080() {
 void test_i8096() {
     PREP(i8096::AsmI8096, IntelDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0x817b, "label1");
 
     ASM("i8096",
@@ -239,8 +231,7 @@ void test_i8096() {
 void test_z80() {
     PREP(z80::AsmZ80, IntelDirective);
 
-    listing.setUppercase(false);
-    listing.enableLineNumber(false);
+    listing.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
 
     ASM("z80",
@@ -255,6 +246,8 @@ void test_z80() {
 void test_z8() {
     PREP(z8::AsmZ8, IntelDirective);
 
+    listing.setUpperHex(false);
+
     ASM("z8",
             "        cpu     z8\n"
             "        org     0abcdh\n"
@@ -266,6 +259,8 @@ void test_z8() {
 
 void test_tlcs90() {
     PREP(tlcs90::AsmTlcs90, IntelDirective);
+
+    listing.setUpperHex(false);
 
     ASM("tlcs90",
             "        cpu   tlcs90\n"
@@ -284,12 +279,14 @@ void test_ins8060() {
             "        org   x'abcd\n"
             "        and   @e(p1)",
             "   0:                       cpu   ins8060\n"
-            "abcd:                       org   x'abcd\n"
-            "abcd: d5 80                 and   @e(p1)");
+            "ABCD:                       org   x'abcd\n"
+            "ABCD: D5 80                 and   @e(p1)");
 }
 
 void test_ins8070() {
     PREP(ins8070::AsmIns8070, NationalDirective);
+
+    listing.setUpperHex(false);
 
     ASM("ins8070",
             "        cpu   ins8070\n"
@@ -302,6 +299,8 @@ void test_ins8070() {
 
 void test_cdp1802() {
     PREP(cdp1802::AsmCdp1802, IntelDirective);
+
+    listing.setUpperHex(false);
 
     ASM("cdp1804",
             "        cpu   cdp1804\n"
@@ -330,12 +329,14 @@ void test_scn2650() {
             "        org     07bcdh\n"
             "        loda,r0 *label1, r0, +",
             "   0:                          cpu     scn2650\n"
-            "7bcd:                          org     07bcdh\n"
-            "7bcd: 0c bd ef                 loda,r0 *label1, r0, +");
+            "7BCD:                          org     07bcdh\n"
+            "7BCD: 0C BD EF                 loda,r0 *label1, r0, +");
 }
 
 void test_i8086() {
     PREP(i8086::AsmI8086, IntelDirective);
+
+    listing.setUpperHex(false);
 
     ASM("i8086",
             "        cpu    i8086\n"
@@ -350,6 +351,8 @@ void test_i8086() {
 void test_tms9900() {
     PREP(tms9900::AsmTms9900, IntelDirective);
 
+    listing.setUpperHex(false);
+
     ASM("tms99105",
             "        cpu   tms99105\n"
             "        org   9abch\n"
@@ -362,6 +365,8 @@ void test_tms9900() {
 
 void test_tms32010() {
     PREP(tms32010::AsmTms32010, IntelDirective);
+
+    listing.setUpperHex(false);
 
     ASM("tms32010",
             "        cpu   tms32010\n"
@@ -377,19 +382,23 @@ void test_tms32010() {
 void test_mc68000() {
     PREP(mc68000::AsmMc68000, MotorolaDirective);
 
+    listing.setUpperHex(false);
+
     ASM("mc68000",
             "        cpu     mc68000\n"
             "        org     $9abcde\n"
             "        ori.l   #$bdbebfc0, ($c2c3c4).l",
             "     0:                           cpu     mc68000\n"
             "9abcde:                           org     $9abcde\n"
-            "9abcde: 00b9 bdbe                 ori     #$bdbebfc0, ($c2c3c4).l\n"
+            "9abcde: 00b9 bdbe                 ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "9abce2: bfc0 00c2\n"
             "9abce6: c3c4");
 }
 
 void test_ns32000() {
     PREP(ns32000::AsmNs32000, NationalDirective);
+
+    listing.setUpperHex(false);
 
     ASM("ns32032",
             "        cpu     ns32032\n"
@@ -411,6 +420,8 @@ void test_ns32000() {
 void test_z8001() {
     PREP(z8000::AsmZ8000, IntelDirective);
 
+    listing.setUpperHex(false);
+
     ASM("z8001",
             "        cpu    z8001\n"
             "        org    789abch\n"
@@ -423,6 +434,8 @@ void test_z8001() {
 
 void test_z8002() {
     PREP(z8000::AsmZ8000, IntelDirective);
+
+    listing.setUpperHex(false);
 
     ASM("z8002",
             "        cpu    z8002\n"
@@ -442,12 +455,14 @@ void test_mn1610() {
             "        org   x'abcd'\n"
             "        tbit  r3, 5, nz",
             "   0:                           cpu   mn1610\n"
-            "abcd:                           org   x'abcd'\n"
-            "abcd: 2b55                      tbit  r3, 5, nz");
+            "ABCD:                           org   x'abcd'\n"
+            "ABCD: 2B55                      tbit  r3, 5, nz");
 }
 
 void test_mn1613() {
     PREP(mn1610::AsmMn1610, NationalDirective);
+
+    listing.setUpperHex(false);
 
     ASM("mn1613",
             "        cpu   mn1613\n"

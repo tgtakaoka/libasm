@@ -36,12 +36,13 @@ int GenDriver::main(int argc, const char **argv) {
         return usage();
 
     const char *commentStr = ";;;";
+    _listing.setUpperHex(_upper_hex);
+    _listing.setUppercase(_uppercase);
     if (_generateGas) {
         commentStr = ";###";
         _disassembler.setOption("c-style", "on");
+        _listing.setUpperHex(false);
     }
-    _disassembler.setOption("uppercase", _uppercase ? "yes" : "no");
-    _listing.setUppercase(_uppercase);
     _output = nullptr;
     if (_output_name) {
         _output = fopen(_output_name, "w");
@@ -109,6 +110,7 @@ void GenDriver::info(const char *fmt, ...) {
 int GenDriver::parseOption(int argc, const char **argv) {
     _output_name = nullptr;
     _list_name = nullptr;
+    _upper_hex = true;
     _uppercase = false;
     _includeTarget = false;
     _generateGas = false;
@@ -148,6 +150,9 @@ int GenDriver::parseOption(int argc, const char **argv) {
             case 'g':
                 _generateGas = true;
                 break;
+            case 'h':
+                _upper_hex = false;
+                break;
             case 'u':
                 _uppercase = true;
                 break;
@@ -181,7 +186,8 @@ int GenDriver::usage() const {
             "  -C          : CPU variant: %s\n"
             "  -i          : include target; no cpu and org directive\n"
             "  -g          : output GNU as compatible\n"
-            "  -u          : use uppercase letter for output\n"
+            "  -h          : use lower case letter for hexadecimal\n"
+            "  -u          : use upper case letter for output\n"
             "  -d          : dump debug info\n",
             _progname, listCpu);
     return 2;

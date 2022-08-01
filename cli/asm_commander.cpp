@@ -132,7 +132,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
     }
 
     AsmFormatter listing(_driver, _sources, memory);
-    listing.setUppercase(_uppercase);
+    listing.setUpperHex(_upper_hex);
     listing.enableLineNumber(_line_number);
     int errors = 0;
     _driver.reset();
@@ -197,7 +197,7 @@ int AsmCommander::usage() {
             "  -H[<bytes>] : output Intel HEX format\n"
             "              : optional <bytes> specifies data record length "
             "(max 32)\n"
-            "  -u          : use uppercase letter for listing\n"
+            "  -h          : use lowe case letter for hexadecimal\n"
             "  -n          : output line number to list file\n"
             "  -v          : print progress verbosely\n",
             _prog_name, list.c_str());
@@ -217,7 +217,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
     _cpu = nullptr;
     _encoder = 0;
     _record_bytes = 32;
-    _uppercase = false;
+    _upper_hex = true;
     _line_number = false;
     _verbose = false;
     for (int i = 1; i < argc; i++) {
@@ -258,8 +258,8 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
                 }
                 _cpu = argv[i];
                 break;
-            case 'u':
-                _uppercase = true;
+            case 'h':
+                _upper_hex = false;
                 break;
             case 'n':
                 _line_number = true;
