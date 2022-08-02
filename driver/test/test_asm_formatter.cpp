@@ -92,15 +92,15 @@ void test_mc6809() {
             "        cmpd  [$1234,y] ; indirect\n"
             "label1: fcc   /abcdefghijklmn/\n"
             "        setdp $ff00",
-            "       1/    0:                             cpu   mc6809\n"
-            "       2/ ABCD:                             org   $abcd\n"
-            "       3/ ABCD: 10 A3 B9 12                 cmpd  [$1234,y] ; indirect\n"
+            "       1/    0:                     cpu   mc6809\n"
+            "       2/ ABCD:                     org   $abcd\n"
+            "       3/ ABCD: 10 A3 B9 12         cmpd  [$1234,y] ; indirect\n"
             "       3/ ABD1: 34\n"
-            "       4/ ABD2: 61 62 63 64 label1:         fcc   /abcdefghijklmn/\n"
+            "       4/ ABD2: 61 62 63 64 label1: fcc   /abcdefghijklmn/\n"
             "       4/ ABD6: 65 66 67 68\n"
             "       4/ ABDA: 69 6A 6B 6C\n"
             "       4/ ABDE: 6D 6E\n"
-            "       5/ ABE0:                             setdp $ff00");
+            "       5/ ABE0:                     setdp $ff00");
 }
 
 void test_mc6800() {
@@ -113,9 +113,9 @@ void test_mc6800() {
             "        cpu   mc6800\n"
             "        org   $abcd\n"
             "        subb  label1",
-            "   0:                             cpu   mc6800\n"
-            "abcd:                             org   $abcd\n"
-            "abcd: f0 f1 f2                    subb  label1");
+            "   0:                     cpu   mc6800\n"
+            "abcd:                     org   $abcd\n"
+            "abcd: f0 f1 f2            subb  label1");
 }
 
 void test_mc6805() {
@@ -128,9 +128,9 @@ void test_mc6805() {
             "        cpu   mc146805\n"
             "        org   $1234\n"
             "        stx   label1, x",
-            "   0:                          cpu   mc146805\n"
-            "1234:                          org   $1234\n"
-            "1234: df 08 00                 stx   label1, x");
+            "   0:                  cpu   mc146805\n"
+            "1234:                  org   $1234\n"
+            "1234: df 08 00         stx   label1, x");
 }
 
 void test_mos6502() {
@@ -143,9 +143,9 @@ void test_mos6502() {
             "        cpu   mos6502\n"
             "        org   $abcd\n"
             "        sbc   label1",
-            "   0:                             cpu   mos6502\n"
-            "abcd:                             org   $abcd\n"
-            "abcd: ed f2 f1                    sbc   label1");
+            "   0:                     cpu   mos6502\n"
+            "abcd:                     org   $abcd\n"
+            "abcd: ed f2 f1            sbc   label1");
 }
 
 void test_w65816() {
@@ -160,11 +160,11 @@ void test_w65816() {
             "        sbc   label1\n"
             "        longa on\n"
             "        adc   #$1234",
-            "     0:                             cpu   w65c816\n"
-            "abcdef:                             org   $abcdef\n"
-            "abcdef: ef f0 f1 f2                 sbc   label1\n"
-            "abcdf3:                             longa on\n"
-            "abcdf3: 69 34 12                    adc   #$1234");
+            "     0:                     cpu   w65c816\n"
+            "abcdef:                     org   $abcdef\n"
+            "abcdef: ef f0 f1 f2         sbc   label1\n"
+            "abcdf3:                     longa on\n"
+            "abcdf3: 69 34 12            adc   #$1234");
 }
 
 void test_i8048() {
@@ -177,9 +177,9 @@ void test_i8048() {
             "        cpu   i8039\n"
             "        org   0bcdh\n"
             "        orl   p1, #data1",
-            "  0:                       cpu   i8039\n"
-            "bcd:                       org   0bcdh\n"
-            "bcd: 89 8a                 orl   p1, #data1");
+            "  0:               cpu   i8039\n"
+            "bcd:               org   0bcdh\n"
+            "bcd: 89 8a         orl   p1, #data1");
 }
 
 void test_i8051() {
@@ -192,9 +192,9 @@ void test_i8051() {
             "        cpu   i8051\n"
             "        org   0abcdh\n"
             "        anl   c, /data1.1\n",
-            "   0:                          cpu   i8051\n"
-            "abcd:                          org   0abcdh\n"
-            "abcd: b0 b1                    anl   c, /data1.1");
+            "   0:                  cpu   i8051\n"
+            "abcd:                  org   0abcdh\n"
+            "abcd: b0 b1            anl   c, /data1.1");
 }
 
 void test_i8080() {
@@ -207,9 +207,9 @@ void test_i8080() {
             "        cpu   i8080\n"
             "        org   0abcdh\n"
             "        jpe   label1",
-            "   0:                          cpu   i8080\n"
-            "abcd:                          org   0abcdh\n"
-            "abcd: ea ec eb                 jpe   label1");
+            "   0:                  cpu   i8080\n"
+            "abcd:                  org   0abcdh\n"
+            "abcd: ea ec eb         jpe   label1");
 }
 
 void test_i8096() {
@@ -222,9 +222,9 @@ void test_i8096() {
             "        cpu   i8096\n"
             "        org   0abcdh\n"
             "        mulb  130, label1[124]",
-            "   0:                             cpu   i8096\n"
-            "abcd:                             org   0abcdh\n"
-            "abcd: fe 7f 7d 7b                 mulb  130, label1[124]\n"
+            "   0:                     cpu   i8096\n"
+            "abcd:                     org   0abcdh\n"
+            "abcd: fe 7f 7d 7b         mulb  130, label1[124]\n"
             "abd1: 81 82");
 }
 
@@ -238,9 +238,9 @@ void test_z80() {
             "        cpu   z80\n"
             "        org   0abcdh\n"
             "        res   0, (iy-128)",
-            "   0:                             cpu   z80\n"
-            "abcd:                             org   0abcdh\n"
-            "abcd: fd cb 80 86                 res   0, (iy-128)");
+            "   0:                     cpu   z80\n"
+            "abcd:                     org   0abcdh\n"
+            "abcd: fd cb 80 86         res   0, (iy-128)");
 }
 
 void test_z8() {
@@ -252,9 +252,9 @@ void test_z8() {
             "        cpu     z8\n"
             "        org     0abcdh\n"
             "        ld      r12, 0c9h(r8)",
-            "   0:                             cpu     z8\n"
-            "abcd:                             org     0abcdh\n"
-            "abcd: c7 c8 c9                    ld      r12, 0c9h(r8)");
+            "   0:                     cpu     z8\n"
+            "abcd:                     org     0abcdh\n"
+            "abcd: c7 c8 c9            ld      r12, 0c9h(r8)");
 }
 
 void test_tlcs90() {
@@ -266,9 +266,9 @@ void test_tlcs90() {
             "        cpu   tlcs90\n"
             "        org   0abcdh\n"
             "        xor   (hl+a), 0efh",
-            "   0:                             cpu   tlcs90\n"
-            "abcd:                             org   0abcdh\n"
-            "abcd: f7 6d ef                    xor   (hl+a), 0efh");
+            "   0:                     cpu   tlcs90\n"
+            "abcd:                     org   0abcdh\n"
+            "abcd: f7 6d ef            xor   (hl+a), 0efh");
 }
 
 void test_ins8060() {
@@ -278,9 +278,9 @@ void test_ins8060() {
             "        cpu   ins8060\n"
             "        org   x'abcd\n"
             "        and   @e(p1)",
-            "   0:                       cpu   ins8060\n"
-            "ABCD:                       org   x'abcd\n"
-            "ABCD: D5 80                 and   @e(p1)");
+            "   0:               cpu   ins8060\n"
+            "ABCD:               org   x'abcd\n"
+            "ABCD: D5 80         and   @e(p1)");
 }
 
 void test_ins8070() {
@@ -292,9 +292,9 @@ void test_ins8070() {
             "        cpu   ins8070\n"
             "        org   x'abcd\n"
             "        pli   p2, =x'2423",
-            "   0:                          cpu   ins8070\n"
-            "abcd:                          org   x'abcd\n"
-            "abcd: 22 23 24                 pli   p2, =x'2423");
+            "   0:                  cpu   ins8070\n"
+            "abcd:                  org   x'abcd\n"
+            "abcd: 22 23 24         pli   p2, =x'2423");
 }
 
 void test_cdp1802() {
@@ -306,17 +306,17 @@ void test_cdp1802() {
             "        cpu   cdp1804\n"
             "        org   0abcdh\n"
             "        scal  3, 8485h",
-            "   0:                             cpu   cdp1804\n"
-            "abcd:                             org   0abcdh\n"
-            "abcd: 68 83 84 85                 scal  3, 8485h");
+            "   0:                     cpu   cdp1804\n"
+            "abcd:                     org   0abcdh\n"
+            "abcd: 68 83 84 85         scal  3, 8485h");
 
     assembler.setOption("use-register", "on");
 
     ASM("cdp1804",
             "        org   0abcdh\n"
             "        scal  r3, 8485h",
-            "abcd:                             org   0abcdh\n"
-            "abcd: 68 83 84 85                 scal  r3, 8485h");
+            "abcd:                     org   0abcdh\n"
+            "abcd: 68 83 84 85         scal  r3, 8485h");
 }
 
 void test_scn2650() {
@@ -328,9 +328,9 @@ void test_scn2650() {
             "        cpu     scn2650\n"
             "        org     07bcdh\n"
             "        loda,r0 *label1, r0, +",
-            "   0:                          cpu     scn2650\n"
-            "7BCD:                          org     07bcdh\n"
-            "7BCD: 0C BD EF                 loda,r0 *label1, r0, +");
+            "   0:                  cpu     scn2650\n"
+            "7BCD:                  org     07bcdh\n"
+            "7BCD: 0C BD EF         loda,r0 *label1, r0, +");
 }
 
 void test_i8086() {
@@ -342,9 +342,9 @@ void test_i8086() {
             "        cpu    i8086\n"
             "        org    0bcdefh\n"
             "        test   word ptr [bp+di+0feffh], 0bbaah",
-            "    0:                             cpu    i8086\n"
-            "bcdef:                             org    0bcdefh\n"
-            "bcdef: f7 83 ff fe                 test   word ptr [bp+di+0feffh], 0bbaah\n"
+            "    0:                     cpu    i8086\n"
+            "bcdef:                     org    0bcdefh\n"
+            "bcdef: f7 83 ff fe         test   word ptr [bp+di+0feffh], 0bbaah\n"
             "bcdf3: aa bb");
 }
 
@@ -357,9 +357,9 @@ void test_tms9900() {
             "        cpu   tms99105\n"
             "        org   9abch\n"
             "        am    @4a4bh(r1), @4c4dh(r1)\n",
-            "   0:                           cpu   tms99105\n"
-            "9abc:                           org   9abch\n"
-            "9abc: 002a 4861                 am    @4a4bh(r1), @4c4dh(r1)\n"
+            "   0:                   cpu   tms99105\n"
+            "9abc:                   org   9abch\n"
+            "9abc: 002a 4861         am    @4a4bh(r1), @4c4dh(r1)\n"
             "9ac0: 4a4b 4c4d");
 }
 
@@ -373,10 +373,10 @@ void test_tms32010() {
             "        org   789h\n"
             "        call  0fedh\n"
             "        sacl  *+, 0, ar0",
-            "  0:                           cpu   tms32010\n"
-            "789:                           org   789h\n"
-            "789: f800 0fed                 call  0fedh\n"
-            "78b: 50a0                      sacl  *+, 0, ar0");
+            "  0:                   cpu   tms32010\n"
+            "789:                   org   789h\n"
+            "789: f800 0fed         call  0fedh\n"
+            "78b: 50a0              sacl  *+, 0, ar0");
 }
 
 void test_mc68000() {
@@ -388,9 +388,9 @@ void test_mc68000() {
             "        cpu     mc68000\n"
             "        org     $9abcde\n"
             "        ori.l   #$bdbebfc0, ($c2c3c4).l",
-            "     0:                           cpu     mc68000\n"
-            "9abcde:                           org     $9abcde\n"
-            "9abcde: 00b9 bdbe                 ori.l   #$bdbebfc0, ($c2c3c4).l\n"
+            "     0:                   cpu     mc68000\n"
+            "9abcde:                   org     $9abcde\n"
+            "9abcde: 00b9 bdbe         ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "9abce2: bfc0 00c2\n"
             "9abce6: c3c4");
 }
@@ -405,9 +405,9 @@ void test_ns32000() {
             "        org     x'abcdef\n"
             "        extd    r1, x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32",
-            "     0:                             cpu     ns32032\n"
-            "abcdef:                             org     x'abcdef\n"
-            "abcdef: 2e 4b ef 83                 extd    r1, "
+            "     0:                     cpu     ns32032\n"
+            "abcdef:                     org     x'abcdef\n"
+            "abcdef: 2e 4b ef 83         extd    r1, "
             "x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32\n"
             "abcdf3: 94 c0 33 44\n"
@@ -426,9 +426,9 @@ void test_z8001() {
             "        cpu    z8001\n"
             "        org    789abch\n"
             "        ldb    |160017h|(r1), #25",
-            "     0:                           cpu    z8001\n"
-            "789abc:                           org    789abch\n"
-            "789abc: 4c15 1617                 ldb    |160017h|(r1), #25\n"
+            "     0:                   cpu    z8001\n"
+            "789abc:                   org    789abch\n"
+            "789abc: 4c15 1617         ldb    |160017h|(r1), #25\n"
             "789ac0: 1919");
 }
 
@@ -441,9 +441,9 @@ void test_z8002() {
             "        cpu    z8002\n"
             "        org    9abch\n"
             "        cpl    rr0, #01020304h",
-            "   0:                           cpu    z8002\n"
-            "9abc:                           org    9abch\n"
-            "9abc: 1000 0102                 cpl    rr0, #01020304h\n"
+            "   0:                   cpu    z8002\n"
+            "9abc:                   org    9abch\n"
+            "9abc: 1000 0102         cpl    rr0, #01020304h\n"
             "9ac0: 0304");
 }
 
@@ -454,9 +454,9 @@ void test_mn1610() {
             "        cpu   mn1610\n"
             "        org   x'abcd'\n"
             "        tbit  r3, 5, nz",
-            "   0:                           cpu   mn1610\n"
-            "ABCD:                           org   x'abcd'\n"
-            "ABCD: 2B55                      tbit  r3, 5, nz");
+            "   0:                   cpu   mn1610\n"
+            "ABCD:                   org   x'abcd'\n"
+            "ABCD: 2B55              tbit  r3, 5, nz");
 }
 
 void test_mn1613() {
@@ -468,9 +468,9 @@ void test_mn1613() {
             "        cpu   mn1613\n"
             "        org   x'34567'\n"
             "        mvwi  str, x'5678', skp",
-            "    0:                           cpu   mn1613\n"
-            "34567:                           org   x'34567'\n"
-            "34567: 7e1f 5678                 mvwi  str, x'5678', skp");
+            "    0:                   cpu   mn1613\n"
+            "34567:                   org   x'34567'\n"
+            "34567: 7e1f 5678         mvwi  str, x'5678', skp");
 }
 
 void run_tests() {

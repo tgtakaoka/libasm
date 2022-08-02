@@ -40,37 +40,35 @@ public:
     bool isError() const { return _disassembler.getError() != OK; }
     int byteLength() const { return generatedSize(); }
 
-    const char *getLine() override;
     bool hasNextContent() const;
     const char *getContent();
+    bool hasNextLine() const;
+    const char *getLine() override;
 
 protected:
     Disassembler &_disassembler;
     const char *_input_name;
     bool _upper_hex;
     bool _uppercase;
+
+    int _nextContent;
+    bool _errorContent;
+    int _nextLine;
+    bool _errorLine;
+
     Insn _insn;
     InsnBase _insnBase;
-    int _nextContent;
-    bool _errorLine;
-    bool _errorContent;
     char _operands[256];
 
-    void reset() override;
+    void reset();
 
     // ListFormatter
     uint32_t startAddress() const override { return _insn.address(); }
     int generatedSize() const override { return _insn.length(); }
     uint8_t getByte(int offset) const override { return _insn.bytes()[offset]; }
-    bool hasInstruction() const override { return *_insn.name() != 0; }
-    const StrScanner getInstruction() const override { return StrScanner(_insn.name()); }
-    bool hasOperand() const override { return *_operands; }
-    const StrScanner getOperand() const override { return StrScanner(_operands); }
-
     const ConfigBase &config() const override { return _disassembler.config(); }
-    int labelWidth() const override { return 8; }
-    int nameWidth() const override { return config().nameMax() < 5 ? 6 : config().nameMax() + 1; }
-    int codeBytes() const override { return config().codeMax() < 4 ? config().codeMax() : 4; }
+
+    static constexpr int min_nameWidth = 5;
 };
 
 }  // namespace driver

@@ -61,11 +61,11 @@ void tear_down() {}
         TestReader lines(_cpu);                                           \
         lines.add(_lines);                                                \
         TRUE("setcpu" _cpu, listing.setCpu(_cpu));                        \
-        EQ("setcpu", contents.readLine(), listing.getContent());          \
-        EQ("setcpu", lines.readLine(), listing.getLine());                \
+        EQ("content", contents.readLine(), listing.getContent());         \
+        EQ("line", lines.readLine(), listing.getLine());                  \
         EQ("origin", OK, listing.setOrigin(_org));                        \
-        EQ("origin", contents.readLine(), listing.getContent());          \
-        EQ("origin", lines.readLine(), listing.getLine());                \
+        EQ("content", contents.readLine(), listing.getContent());         \
+        EQ("line", lines.readLine(), listing.getLine());                  \
         const auto unit = disassembler.config().addressUnit();            \
         auto reader = _memory.iterator();                                 \
         while (reader.hasNext()) {                                        \
@@ -103,9 +103,9 @@ void test_mc6809() {
     listing.setUpperHex(true);
 
     DIS8("mc6809", 0xabcd,
-            "        cpu   mc6809\n"
-            "        org   $ABCD\n"
-            "        cmpd  [$1234,y]\n"
+            "      cpu   mc6809\n"
+            "      org   $ABCD\n"
+            "      cmpd  [$1234,y]\n"
             "; test.bin: $ABD2: error: Unknown instruction\n"
             "; ABD2: 01\n"
             "; test.bin: $ABD3: error: Unknown post-byte\n"
@@ -127,9 +127,9 @@ void test_mc6800() {
     listing.setUpperHex(false);
 
     DIS8("mc6800", 0xabcd,
-            "        cpu   mc6800\n"
-            "        org   $abcd\n"
-            "        subb  $f1f2\n"
+            "      cpu   mc6800\n"
+            "      org   $abcd\n"
+            "      subb  $f1f2\n"
             "; test.bin: $abd0: error: Unknown instruction\n"
             "; abd0: 83\n",
             "   0:                     cpu   mc6800\n"
@@ -146,9 +146,9 @@ void test_mc6805() {
     listing.setUpperHex(false);
 
     DIS8("mc146805", 0x1234,
-            "        cpu   mc146805\n"
-            "        org   $1234\n"
-            "        stx   16384,x\n"
+            "      cpu   mc146805\n"
+            "      org   $1234\n"
+            "      stx   16384,x\n"
             "; test.bin: $1237: error: Unknown instruction\n"
             "; 1237: 82\n"
             "; test.bin: $1238: error: Overflow range\n"
@@ -171,9 +171,9 @@ void test_mos6502() {
     listing.setUpperHex(false);
 
     DIS8("mos6502", 0xabcd,
-            "        cpu   mos6502\n"
-            "        org   $abcd\n"
-            "        sbc   $f1f2\n"
+            "      cpu   mos6502\n"
+            "      org   $abcd\n"
+            "      sbc   $f1f2\n"
             "; test.bin: $abd0: error: Unknown instruction\n"
             "; abd0: 80\n",
             "   0:                     cpu   mos6502\n"
@@ -193,10 +193,10 @@ void test_w65816() {
     EQ("longa", OK, disassembler.setOption("longa", "on"));
 
     DIS8("w65c816", 0xabcdef,
-            "        CPU   W65C816\n"
-            "        ORG   $ABCDEF\n"
-            "        SBC   $F2F1F0\n"
-            "        ADC   #$1234\n"
+            "      CPU   W65C816\n"
+            "      ORG   $ABCDEF\n"
+            "      SBC   $F2F1F0\n"
+            "      ADC   #$1234\n"
             "; test.bin: $ABCDF6: error: Operand too far\n"
             "; ABCDF6: 82 FF 7F\n",
             "     0:                     CPU   W65C816\n"
@@ -215,9 +215,9 @@ void test_i8048() {
     listing.setUppercase(true);
 
     DIS8("i8039", 0xbcd,
-            "        CPU   I8039\n"
-            "        ORG   0BCDH\n"
-            "        ORL   P1, #8AH\n"
+            "      CPU   I8039\n"
+            "      ORG   0BCDH\n"
+            "      ORL   P1, #8AH\n"
             "; test.bin: 0BCFH: error: Unknown instruction\n"
             "; BCF: 08\n",
             "  0:               CPU   I8039\n"
@@ -236,9 +236,9 @@ void test_i8051() {
     listing.setUpperHex(false);
 
     DIS8("i8051", 0xabcd,
-            "        cpu   i8051\n"
-            "        org   0abcdh\n"
-            "        anl   c, /0b0h.1\n"
+            "      cpu   i8051\n"
+            "      org   0abcdh\n"
+            "      anl   c, /0b0h.1\n"
             "; test.bin: 0abcfh: error: Unknown instruction\n"
             "; abcf: a5\n",
             "   0:                  cpu   i8051\n"
@@ -253,9 +253,9 @@ void test_i8080() {
     PREP(i8080::DisI8080);
 
     DIS8("i8080", 0xabcd,
-            "        cpu   i8080\n"
-            "        org   0ABCDH\n"
-            "        jpe   0ECEBH\n"
+            "      cpu   i8080\n"
+            "      org   0ABCDH\n"
+            "      jpe   0ECEBH\n"
             "; test.bin: 0ABD0H: error: Unknown instruction\n"
             "; ABD0: DD\n",
             "   0:                  cpu   i8080\n"
@@ -272,9 +272,9 @@ void test_i8096() {
     listing.setUpperHex(false);
 
     DIS8("i8096", 0xabcd,
-            "        cpu   i8096\n"
-            "        org   0abcdh\n"
-            "        mulb  130, 817bh[124]\n"
+            "      cpu   i8096\n"
+            "      org   0abcdh\n"
+            "      mulb  130, 817bh[124]\n"
             "; test.bin: 0abd3h: error: Register not allowed\n"
             "; abd3: 67 13 34 56\n"
             "; abd7: 79\n",
@@ -292,9 +292,9 @@ void test_z80() {
     PREP(z80::DisZ80);
 
     DIS8("z80", 0xabcd,
-            "        cpu   z80\n"
-            "        org   0ABCDH\n"
-            "        res   0, (iy-128)\n"
+            "      cpu   z80\n"
+            "      org   0ABCDH\n"
+            "      res   0, (iy-128)\n"
             "; test.bin: 0ABD1H: error: Unknown instruction\n"
             "; ABD1: DD CB 00 EF\n",
             "   0:                     cpu   z80\n"
@@ -311,9 +311,9 @@ void test_z8() {
     listing.setUpperHex(false);
 
     DIS8("z8", 0xabcd,
-            "        cpu     z8\n"
-            "        org     0abcdh\n"
-            "        ld      r12, 0c9h(r8)\n"
+            "      cpu     z8\n"
+            "      org     0abcdh\n"
+            "      ld      r12, 0c9h(r8)\n"
             "; test.bin: 0abd0h: error: Unknown instruction\n"
             "; abd0: 0f\n",
             "   0:                     cpu     z8\n"
@@ -330,9 +330,9 @@ void test_tlcs90() {
     listing.setUpperHex(false);
 
     DIS8("tlcs90", 0xabcd,
-            "        cpu   tlcs90\n"
-            "        org   0abcdh\n"
-            "        xor   (hl+a), 0efh\n"
+            "      cpu   tlcs90\n"
+            "      org   0abcdh\n"
+            "      xor   (hl+a), 0efh\n"
             "; test.bin: 0abd0h: error: Unknown instruction\n"
             "; abd0: e3 12 34 17\n",
             "   0:                     cpu   tlcs90\n"
@@ -347,9 +347,9 @@ void test_ins8060() {
     PREP(ins8060::DisIns8060);
 
     DIS8("ins8060", 0xabcd,
-            "        cpu   ins8060\n"
-            "        org   X'ABCD\n"
-            "        and   @e(p1)\n"
+            "      cpu   ins8060\n"
+            "      org   X'ABCD\n"
+            "      and   @e(p1)\n"
             "; test.bin: X'ABCF: error: Unknown instruction\n"
             "; ABCF: 09\n",
             "   0:               cpu   ins8060\n"
@@ -366,9 +366,9 @@ void test_ins8070() {
     listing.setUpperHex(false);
 
     DIS8("ins8070", 0xabcd,
-            "        cpu   ins8070\n"
-            "        org   x'abcd\n"
-            "        pli   p2, =x'2423\n"
+            "      cpu   ins8070\n"
+            "      org   x'abcd\n"
+            "      pli   p2, =x'2423\n"
             "; test.bin: x'abd0: error: Unknown instruction\n"
             "; abd0: ef\n",
             "   0:                  cpu   ins8070\n"
@@ -386,9 +386,9 @@ void test_cdp1802() {
     EQ("use-register", OK, disassembler.setOption("use-register", "on"));
 
     DIS8("cdp1804", 0xabcd,
-            "        cpu   cdp1804\n"
-            "        org   0abcdh\n"
-            "        scal  r3, 8485h\n"
+            "      cpu   cdp1804\n"
+            "      org   0abcdh\n"
+            "      scal  r3, 8485h\n"
             "; test.bin: 0abd1h: error: Unknown instruction\n"
             "; abd1: 68 0f\n",
             "   0:                     cpu   cdp1804\n"
@@ -405,9 +405,9 @@ void test_scn2650() {
     listing.setUpperHex(false);
 
     DIS8("scn2650", 0x7bcd,
-            "        cpu     scn2650\n"
-            "        org     7bcdh\n"
-            "        loda,r0 *7defh, r0, +\n"
+            "      cpu     scn2650\n"
+            "      org     7bcdh\n"
+            "      loda,r0 *7defh, r0, +\n"
             "; test.bin: 7bd0h: error: Unknown instruction\n"
             "; 7bd0: 90\n",
             "   0:                  cpu     scn2650\n"
@@ -426,9 +426,9 @@ void test_i8086() {
     listing.setUpperHex(false);
 
     DIS8("i8086", 0xbcdef,
-            "        cpu    i8086\n"
-            "        org    0bcdefh\n"
-            "        test   word ptr [bp+di+0feffh], 0bbaah\n"
+            "      cpu    i8086\n"
+            "      org    0bcdefh\n"
+            "      test   word ptr [bp+di+0feffh], 0bbaah\n"
             "; test.bin: 0bcdf5h: error: Unknown instruction\n"
             "; bcdf5: d1 f7\n",
             "    0:                     cpu    i8086\n"
@@ -446,9 +446,9 @@ void test_tms9900() {
     listing.setUpperHex(false);
 
     DIS16("tms99105", 0x9abc,
-            "        cpu   tms99105\n"
-            "        org   9abch\n"
-            "        am    @4a4bh(r1), @4c4dh(r1)\n"
+            "      cpu   tms99105\n"
+            "      org   9abch\n"
+            "      am    @4a4bh(r1), @4c4dh(r1)\n"
             "; test.bin: 9ac4h: error: Unknown instruction\n"
             "; 9ac4: 0383\n",
             "   0:                   cpu   tms99105\n"
@@ -468,10 +468,10 @@ void test_tms32010() {
     listing.setUpperHex(false);
 
     DIS16("tms32010", 0x789,
-            "        cpu   tms32010\n"
-            "        org   789h\n"
-            "        call  0fedh\n"
-            "        sacl  *+, 0, ar0\n"
+            "      cpu   tms32010\n"
+            "      org   789h\n"
+            "      call  0fedh\n"
+            "      sacl  *+, 0, ar0\n"
             "; test.bin: 78ch: error: Unknown instruction\n"
             "; 78c: 0086\n",
             "  0:                   cpu   tms32010\n"
@@ -491,9 +491,9 @@ void test_mc68000() {
     listing.setUpperHex(false);
 
     DIS16("mc68000", 0x9abcde,
-            "        cpu     mc68000\n"
-            "        org     $9abcde\n"
-            "        ori.l   #$bdbebfc0, ($c2c3c4).l\n"
+            "      cpu     mc68000\n"
+            "      org     $9abcde\n"
+            "      ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "; test.bin: $9abce8: error: Operand not allowed\n"
             "; 9abce8: 43fc\n"
             "; test.bin: $9abcea: error: Operand not aligned\n"
@@ -518,9 +518,9 @@ void test_ns32000() {
     listing.setUpperHex(false);
 
     DIS8("ns32032", 0xabcdef,
-            "        cpu     ns32032\n"
-            "        org     x'abcdef\n"
-            "        extd    r1, x'00112233(x'00334455(fp))[r3:w], "
+            "      cpu     ns32032\n"
+            "      org     x'abcdef\n"
+            "      extd    r1, x'00112233(x'00334455(fp))[r3:w], "
             "x'00556677(x'00778899(sb))[r4:w], 32\n"
             "; test.bin: x'abce05: error: Register not allowed\n"
             "; abce05: ce ec 08\n",
@@ -546,9 +546,9 @@ void test_z8001() {
     EQ("short-direct", OK, disassembler.setOption("short-direct", "on"));
 
     DIS16("z8001", 0x789abc,
-            "        CPU    Z8001\n"
-            "        ORG    789ABCH\n"
-            "        LDB    |160017H|(R1), #25\n"
+            "      CPU    Z8001\n"
+            "      ORG    789ABCH\n"
+            "      LDB    |160017H|(R1), #25\n"
             "; test.bin: 789AC2H: error: Registers overlapped\n"
             "; 789AC2: 9745\n",
             "     0:                   CPU    Z8001\n"
@@ -569,9 +569,9 @@ void test_z8002() {
     listing.setUpperHex(false);
 
     DIS16("z8002", 0x9abc,
-            "        cpu    z8002\n"
-            "        org    9abch\n"
-            "        cpl    rr0, #01020304h\n"
+            "      cpu    z8002\n"
+            "      org    9abch\n"
+            "      cpl    rr0, #01020304h\n"
             "; test.bin: 9ac2h: error: Registers overlapped\n"
             "; 9ac2: 5144\n",
             "   0:                   cpu    z8002\n"
@@ -592,9 +592,9 @@ void test_mn1610() {
     listing.setUpperHex(false);
 
     DIS16("mn1610", 0xabcd,
-            "        cpu   mn1610\n"
-            "        org   x'abcd'\n"
-            "        tbit  r3, 5, nz\n"
+            "      cpu   mn1610\n"
+            "      org   x'abcd'\n"
+            "      tbit  r3, 5, nz\n"
             "; test.bin: x'abce': error: Illegal register\n"
             "; abce: 0f06\n",
             "   0:                   cpu   mn1610\n"
@@ -613,9 +613,9 @@ void test_mn1613() {
     listing.setUpperHex(false);
 
     DIS16("mn1613", 0x34567,
-            "        cpu   mn1613\n"
-            "        org   x'34567'\n"
-            "        mvwi  str, x'5678', skp\n"
+            "      cpu   mn1613\n"
+            "      org   x'34567'\n"
+            "      mvwi  str, x'5678', skp\n"
             "; test.bin: x'34569': error: Register not allowed\n"
             "; 34569: 0f06\n",
             "    0:                   cpu   mn1613\n"

@@ -18,7 +18,6 @@
 #define __CLI_LISTING_H__
 
 #include "config_base.h"
-#include "config_host.h"
 #include "str_buffer.h"
 #include "value_formatter.h"
 
@@ -31,51 +30,33 @@ class ListFormatter {
 public:
     virtual void setUpperHex(bool enable);
 
-    bool hasNextLine() const;
-    virtual const char *getLine();
+    bool hasNextContent() const;
+    const char *getContent();
+    virtual bool hasNextLine() const = 0;
+    virtual const char *getLine() = 0;
 
 protected:
     ListFormatter();
 
     ValueFormatter _formatter;
-    bool _upperHex;
-    int _nextLine;
-    bool _errorLine;
-    char _outBuffer[256];
-    StrBuffer _out{_outBuffer, sizeof(_outBuffer)};
+    StrBuffer _out;
+    char _out_buffer[256];
 
-    virtual void reset();
+    void resetOut() { _out.reset(_out_buffer, sizeof(_out_buffer)); }
+    int outLength() const { return _out.mark() - _out_buffer; }
 
     virtual uint32_t startAddress() const = 0;
     virtual int generatedSize() const = 0;
     virtual uint8_t getByte(int offset) const = 0;
-    virtual bool hasInstruction() const = 0;
-    virtual const StrScanner getInstruction() const = 0;
-    virtual bool hasOperand() const { return false; }
-    virtual const StrScanner getOperand() const { return StrScanner::EMPTY; }
-
-    // assemble listing only
-    virtual uint32_t lineNumber() const { return 0; }
-    virtual int16_t columnNumber() const { return -1; }
-    virtual uint16_t includeNest() const { return 0; }
-    virtual bool hasValue() const { return false; }
-    virtual uint32_t value() const { return 0; }
-    virtual bool hasLabel() const { return false; }
-    virtual const StrScanner getLabel() const { return StrScanner::EMPTY; }
-
-    // configuration
     virtual const ConfigBase &config() const = 0;
-    virtual int labelWidth() const = 0;
-    virtual int nameWidth() const = 0;
-    virtual int codeBytes() const = 0;
 
     void formatDec(uint32_t val, int8_t width = 0);
     void formatHex(uint32_t val, uint8_t bits = 0, bool zeroSuppress = false);
-    void formatAddress(uint32_t addr, bool fixedWidth = true, bool zeroSuppress = false);
-    virtual int formatBytes(int base);
-    void formatTab(size_t pos, int delta = 4);
-    void formatContent(int pos);
-    virtual void formatLine();
+    void formatAddress(uint32_t addr, bool fixedWidth = true);
+    int bytesInLine() const { return config().codeMax() < 4 ? config().codeMax() : 4; }
+    int bytesColumnWidth() const;
+    int formatBytes(int base);
+    void formatTab(int tabPosition, int delta = 4);
 };
 
 }  // namespace driver

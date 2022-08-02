@@ -33,8 +33,6 @@ public:
     const char *name() const { return _insn.name(); }
     const char *operand() const { return _operands; }
     int length() const { return _insn.length(); }
-
-    int labelWidth() const override { return 6; }
 };
 
 }  // namespace gen

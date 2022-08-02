@@ -39,6 +39,7 @@ public:
 
     Error assemble(const StrScanner &line, bool reportError = false);
     bool isError() const;
+    bool hasNextLine() const override;
     const char *getLine() override;
 
     // Interface to AsmDirective
@@ -54,6 +55,7 @@ private:
     BinMemory &_memory;
     bool _lineNumber;
     bool _reportError;
+    int _nextLine;
     bool _errorLine;
 
     StrScanner _line;
@@ -62,30 +64,17 @@ private:
     Insn _insn{0};
     uint32_t _address;
     int _length;
-    StrScanner _label;
-    StrScanner _instruction;
     ErrorAt _errorAt;
     const ConfigBase *_conf;
 
-    void reset() override;
-    int formatBytes(int base) override;
-    void formatLine() override;
+    void reset();
+    void formatLineNumber();
 
     // ListFormatter
     uint32_t startAddress() const override { return _address; }
     int generatedSize() const override { return _length; }
     uint8_t getByte(int offset) const override;
-    bool hasInstruction() const override { return _instruction.size() != 0; }
-    const StrScanner getInstruction() const override { return _instruction; }
-
-    bool hasLabel() const override { return _label.size() != 0; }
-    const StrScanner getLabel() const override { return _label; }
-
-    // configuration
     const ConfigBase &config() const override { return *_conf; }
-    int labelWidth() const override { return 16; }
-    int nameWidth() const override { return config().nameMax() < 5 ? 6 : config().nameMax() + 1; }
-    int codeBytes() const override { return config().codeMax() < 4 ? config().codeMax() : 4; }
 };
 
 }  // namespace driver

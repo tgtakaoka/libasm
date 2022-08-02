@@ -28,7 +28,7 @@ AsmFormatter::AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &me
     : ListFormatter(), _driver(driver), _sources(sources), _memory(memory), _lineNumber(false) {}
 
 void AsmFormatter::reset() {
-    ListFormatter::reset();
+    _nextLine = -1;
     _errorLine = false;
 }
 
@@ -39,8 +39,6 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     setStartAddress(_driver.origin());
     _length = 0;
     _line_value.clear();
-    _label = StrScanner::EMPTY;
-    _instruction = StrScanner::EMPTY;
     _line_symbol = StrScanner::EMPTY;
     auto &assembler = _driver.current()->assembler();
     _conf = &assembler.config();
@@ -51,20 +49,18 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
 
     if (parser.isSymbolLetter(*scan, true)) {
         // setAt(scan);
-        _label = scan;
         _line_symbol = parser.readSymbol(scan);
         scan.expect(':');  // skip optional trailing ':' for label.
-        _label.trimEndAt(scan);
     }
     scan.skipSpaces();
 
     if (!assembler.endOfLine(*scan)) {
-        _instruction = scan;
         StrScanner directive = scan;
         StrScanner p(scan);
         p.trimStart([](char s) { return !isspace(s); });
         directive.trimEndAt(p);
-        _errorAt.setError(_driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver));
+        _errorAt.setError(
+                _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver));
         if (_errorAt.isOK()) {
             if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
@@ -94,7 +90,6 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             _errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
     if (_errorAt.isOK() || allowUndef) {
         StrScanner p(assembler.errorAt());
-        _instruction = scan;
         if (_insn.length() > 0) {
             const uint8_t unit = assembler.config().addressUnit();
             const uint32_t base = _insn.address() * unit;
@@ -108,17 +103,21 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     return _errorAt.getError();
 }
 
-void AsmFormatter::emitByte(uint32_t base, uint8_t val) {
-    _memory.writeByte(base + _length++, val);
-}
-
 bool AsmFormatter::isError() const {
     return _reportError && _errorAt.getError() != OK && _errorAt.getError() != END_ASSEMBLE;
 }
 
+void AsmFormatter::emitByte(uint32_t base, uint8_t val) {
+    _memory.writeByte(base + _length++, val);
+}
+
+bool AsmFormatter::hasNextLine() const {
+    return _nextLine < generatedSize();
+}
+
 const char *AsmFormatter::getLine() {
+    resetOut();
     if (isError() && !_errorLine) {
-        _out.reset(_outBuffer, sizeof(_outBuffer));
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
         _formatter.formatDec(_out, _sources.current()->lineno(), 0);
@@ -133,22 +132,29 @@ const char *AsmFormatter::getLine() {
         _out.letter(':').letter(' ').text_P(_errorAt.errorText_P());
         _nextLine = 0;
         _errorLine = true;
-        return _outBuffer;
+    } else {
+        if (_nextLine < 0)
+            _nextLine = 0;
+        formatLineNumber();
+        formatAddress(startAddress() + _nextLine);
+        const auto pos = outLength();
+        auto formatted = 0;
+        if (!_line_value.isUndefined()) {
+            _out.text(" =");
+            formatHex(_line_value.getUnsigned(), 0, true);
+        } else {
+            formatted = formatBytes(_nextLine);
+        }
+        if (_nextLine == 0 && _line.size()) {
+            formatTab(pos + bytesColumnWidth() + 1);
+            _out.text(_line);
+        }
+        _nextLine += formatted;
     }
-
-    return ListFormatter::getLine();
+    return _out_buffer;
 }
 
-int AsmFormatter::formatBytes(int base) {
-    if (!_line_value.isUndefined()) {
-        _out.text(" =0x");
-        formatHex(_line_value.getUnsigned(), 0, true);
-        return 0;
-    }
-    return ListFormatter::formatBytes(base);
-}
-
-void AsmFormatter::formatLine() {
+void AsmFormatter::formatLineNumber() {
     if (_lineNumber) {
         const auto include_nest = _sources.size() - 1;
         if (include_nest) {
@@ -161,8 +167,18 @@ void AsmFormatter::formatLine() {
         formatDec(_sources.current()->lineno(), 5);
         _out.text("/ ");
     }
-    return ListFormatter::formatLine();
 }
+
+#if 0
+int AsmFormatter::formatBytes(int base) {
+    if (!_line_value.isUndefined()) {
+        _out.text(" =0x");
+        formatHex(_line_value.getUnsigned(), 0, true);
+        return 0;
+    }
+    return ListFormatter::formatBytes(base);
+}
+#endif
 
 uint8_t AsmFormatter::getByte(int offset) const {
     return _memory.readByte(_address * config().addressUnit() + offset);
