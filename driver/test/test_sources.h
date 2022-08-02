@@ -47,18 +47,26 @@ public:
         return OK;
     }
 
-    driver::TextReader *current() override { return _sources.empty() ? nullptr : _sources.back(); }
-
     Error closeCurrent() override {
         _sources.pop_back();
         return OK;
     }
 
-    size_t size() const override { return _sources.size(); }
-
     TestSources &add(TestReader &reader) {
         _files.emplace(reader.name(), &reader);
         return *this;
+    }
+
+protected:
+    int size() const override { return _sources.size(); }
+
+    TextReader *last() override { return size() ? _sources.back() : nullptr; }
+
+    TextReader *secondToLast() override {
+        if (size() < 2)
+            return nullptr;
+        auto it = _sources.rbegin();
+        return *++it;
     }
 
 private:

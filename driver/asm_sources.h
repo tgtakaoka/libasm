@@ -26,14 +26,13 @@ namespace driver {
 
 class AsmSources {
 public:
+    /** open input source */
     virtual Error open(const StrScanner &name) = 0;
-    virtual TextReader *current() = 0;
-    virtual Error closeCurrent() = 0;
-    virtual size_t size() const = 0;
 
+    /** read one line from current source, null if no remaining */
     StrScanner *readLine() {
         TextReader *reader;
-        while ((reader = current()) != nullptr) {
+        while ((reader = last()) != nullptr) {
             auto *line = reader->readLine();
             if (line)
                 return line;
@@ -41,6 +40,36 @@ public:
         }
         return nullptr;
     }
+
+    /** returns a nest level of just returned line */
+    int nest() {
+        auto reader = last();
+        if (reader == nullptr)
+            return 0;
+        // if a line number is zero, it means just after opened.
+        return reader->lineno() ? size() : size() - 1;
+    }
+
+    /** returns input source of just returned line */
+    TextReader *current() {
+        auto reader = last();
+        if (reader == nullptr)
+            return nullptr;
+        // if a line number is zero, it means just after opened.
+        return (reader->lineno() || size() == 1) ? reader : secondToLast();
+    }
+
+    virtual Error closeCurrent() = 0;
+
+protected:
+    /** returns number of input sources currently opened */
+    virtual int size() const = 0;
+
+    /** return input source of the last opened, null if there is no input source */
+    virtual TextReader *last() = 0;
+
+    /** return input source of the second to last, null if it not exists */
+    virtual TextReader *secondToLast() = 0;
 };
 
 }  // namespace driver

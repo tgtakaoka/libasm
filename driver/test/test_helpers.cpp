@@ -93,8 +93,8 @@ void test_reader() {
 
     TestReader lines("lines");
     lines.add(
-              "line1\n"
-              "line2");
+            "line1\n"
+            "line2");
     lines.add("line3");
     lines.add("line4\nline5\n");
     EQ("lines 1", "line1", lines.readLine());
@@ -172,78 +172,61 @@ void test_memory() {
     EQ("2-3", 0x56, reader4.readByte());
 }
 
+#define SOURCE_OPEN(_msg, _open, _nest, _name, _lineno)             \
+    do {                                                            \
+        EQ(_msg " open", OK, sources.open(_open));                  \
+        EQ(_msg " nest", _nest, sources.nest());                    \
+        EQ(_msg " name", _name, sources.current()->name().c_str()); \
+        EQ(_msg " lineno", _lineno, sources.current()->lineno());   \
+    } while (0)
+
+#define SOURCE_READ(_msg, _line, _nest, _name, _lineno)             \
+    do {                                                            \
+        EQ(_msg " line", _line, sources.readLine());                \
+        EQ(_msg " nest", _nest, sources.nest());                    \
+        EQ(_msg " name", _name, sources.current()->name().c_str()); \
+        EQ(_msg " lineno", _lineno, sources.current()->lineno());   \
+    } while (0)
+
 void test_sources() {
     TestReader reader1("reader1");
     reader1.add("line1").add("line2").add("line3");
     TestReader reader2("dir/reader2");
     reader2.add("LINE1").add("LINE2");
-    TestReader reader3("dir/reader3");
+    TestReader reader3("/tmp/reader3");
     reader3.add("* 1 *").add("* 2 *");
-    TestReader reader4("/tmp/reader4");
+    TestReader reader4("/tmp/dir/reader4");
     reader4.add("@ 1 @").add("@ 2 @");
     TestSources sources;
     sources.add(reader1).add(reader2).add(reader3).add(reader4);
 
-    EQ("open0", NO_INCLUDE_FOUND, sources.open("reader0"));
+    EQ("open 0", NO_INCLUDE_FOUND, sources.open("reader0"));
 
-    EQ("open1", OK, sources.open("reader1"));
-    EQ("reader1", 1, sources.size());
-    EQ("read 1-1", "line1", sources.readLine());
-    EQ("read 1-1", "reader1", sources.current()->name().c_str());
-    EQ("read 1-1", 1, sources.current()->lineno());
+    SOURCE_OPEN("open 1", "reader1", 0, "reader1", 0);
+    SOURCE_READ("read 1-1", "line1", 1, "reader1", 1);
 
-    EQ("open4", OK, sources.open("/tmp/reader4"));
-    EQ("reader4", 2, sources.size());
-    EQ("read 4-1", "@ 1 @", sources.readLine());
-    EQ("read 4-1", "/tmp/reader4", sources.current()->name().c_str());
-    EQ("read 4-1", 1, sources.current()->lineno());
-    EQ("read 4-2", "@ 2 @", sources.readLine());
-    EQ("read 4-2", 2, sources.current()->lineno());
+    EQ("open 2", NO_INCLUDE_FOUND, sources.open("reader2"));
 
-    EQ("read 1-2", "line2", sources.readLine());
-    EQ("read 1-2", 1, sources.size());
-    EQ("read 1-2", "reader1", sources.current()->name().c_str());
-    EQ("read 1-2", 2, sources.current()->lineno());
+    SOURCE_OPEN("open 2", "dir/reader2", 1, "reader1", 1);
+    SOURCE_READ("read 2-1", "LINE1", 2, "dir/reader2", 1);
+    SOURCE_READ("read 2-2", "LINE2", 2, "dir/reader2", 2);
+    SOURCE_READ("read 1-2", "line2", 1, "reader1", 2);
 
-    EQ("open2", OK, sources.open("dir/reader2"));
-    EQ("reader2", 2, sources.size());
-    EQ("read 2-1", "LINE1", sources.readLine());
-    EQ("read 2-1", "dir/reader2", sources.current()->name().c_str());
-    EQ("read 2-1", 1, sources.current()->lineno());
+    SOURCE_OPEN("open 3", "/tmp/reader3", 1, "reader1", 2);
+    SOURCE_READ("read 3-1", "* 1 *", 2, "/tmp/reader3", 1);
 
-    EQ("open3", NO_INCLUDE_FOUND, sources.open("dir/reader3"));
+    EQ("open 4", NO_INCLUDE_FOUND, sources.open("reader4"));
 
-    EQ("open3", OK, sources.open("reader3"));
-    EQ("reader3", 3, sources.size());
-    EQ("read 3-1", "* 1 *", sources.readLine());
-    EQ("read 3-1", "dir/reader3", sources.current()->name().c_str());
-    EQ("read 3-1", 1, sources.current()->lineno());
+    SOURCE_OPEN("open 4", "dir/reader4", 2, "/tmp/reader3", 1);
+    SOURCE_READ("read 4-1", "@ 1 @", 3, "/tmp/dir/reader4", 1);
+    SOURCE_READ("read 4-2", "@ 2 @", 3, "/tmp/dir/reader4", 2);
 
-    EQ("open4", OK, sources.open("/tmp/reader4"));
-    EQ("reader4", 4, sources.size());
-    EQ("read 4-1", "@ 1 @", sources.readLine());
-    EQ("read 4-1", "/tmp/reader4", sources.current()->name().c_str());
-    EQ("read 4-1", 1, sources.current()->lineno());
-    EQ("read 4-2", "@ 2 @", sources.readLine());
-    EQ("read 4-2", 2, sources.current()->lineno());
+    SOURCE_READ("read 3-2", "* 2 *", 2, "/tmp/reader3", 2);
 
-    EQ("read 3-2", "* 2 *", sources.readLine());
-    EQ("read 3-2", 3, sources.size());
-    EQ("read 3-2", "dir/reader3", sources.current()->name().c_str());
-    EQ("read 3-2", 2, sources.current()->lineno());
-
-    EQ("read 2-2", "LINE2", sources.readLine());
-    EQ("read 2-2", 2, sources.size());
-    EQ("read 2-2", "dir/reader2", sources.current()->name().c_str());
-    EQ("read 2-2", 2, sources.current()->lineno());
-
-    EQ("read 1-3", "line3", sources.readLine());
-    EQ("read 1-3", 1, sources.size());
-    EQ("read 1-3", "reader1", sources.current()->name().c_str());
-    EQ("read 1-3", 3, sources.current()->lineno());
+    SOURCE_READ("read 1-3", "line3", 1, "reader1", 3);
 
     EQ("eof", nullptr, sources.readLine());
-    EQ("eof", 0, sources.size());
+    EQ("eof", 0, sources.nest());
 }
 
 void run_tests() {

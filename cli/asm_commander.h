@@ -40,9 +40,12 @@ private:
     class FileSources : public driver::AsmSources {
     public:
         Error open(const StrScanner &name) override;
-        driver::TextReader *current() override;
         Error closeCurrent() override;
-        size_t size() const override { return _sources.size(); }
+
+    protected:
+        int size() const override { return _sources.size(); }
+        driver::TextReader *last() override;
+        driver::TextReader *secondToLast() override;
 
     private:
         static constexpr int max_includes = 4;
@@ -59,7 +62,8 @@ private:
     const char *_cpu;
     char _encoder;
     size_t _record_bytes;
-    bool _upper_hex;;
+    bool _upper_hex;
+    ;
     bool _line_number;
     bool _verbose;
     std::map<std::string, std::string> _options;

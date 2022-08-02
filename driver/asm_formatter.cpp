@@ -156,10 +156,10 @@ const char *AsmFormatter::getLine() {
 
 void AsmFormatter::formatLineNumber() {
     if (_lineNumber) {
-        const auto include_nest = _sources.size() - 1;
-        if (include_nest) {
+        const auto include_nest = _sources.nest();
+        if (include_nest > 1) {
             _out.letter('(');
-            formatDec(include_nest);
+            formatDec(include_nest - 1);
             _out.letter(')');
         } else {
             _out.text("   ");

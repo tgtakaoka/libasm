@@ -32,7 +32,7 @@ namespace cli {
 using namespace libasm::driver;
 
 Error AsmCommander::FileSources::open(const StrScanner &name) {
-    if (_sources.size() >= max_includes)
+    if (size() >= max_includes)
         return TOO_MANY_INCLUDE;
     const auto *parent = _sources.empty() ? nullptr : &_sources.back();
     const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;
@@ -50,11 +50,20 @@ Error AsmCommander::FileSources::open(const StrScanner &name) {
     return OK;
 }
 
-TextReader *AsmCommander::FileSources::current() {
+driver::TextReader *AsmCommander::FileSources::last() {
     return _sources.empty() ? nullptr : &_sources.back();
 }
 
+driver::TextReader *AsmCommander::FileSources::secondToLast() {
+    if (size() < 2)
+        return nullptr;
+    auto it = _sources.rbegin();
+    return &(*++it);
+}
+
 Error AsmCommander::FileSources::closeCurrent() {
+    auto &reader = _sources.back();
+    reader.close();
     _sources.pop_back();
     return OK;
 }
@@ -150,7 +159,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError
             break;
         errors++;
     }
-    while (_sources.size())
+    while (_sources.nest())
         _sources.closeCurrent();
     return errors;
 }
