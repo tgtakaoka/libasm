@@ -53,8 +53,8 @@ protected:
     void formatDec(uint32_t val, int8_t width = 0);
     void formatHex(uint32_t val, uint8_t bits = 0, bool zeroSuppress = false);
     void formatAddress(uint32_t addr, bool fixedWidth = true);
-    int bytesInLine() const { return config().codeMax() < 4 ? config().codeMax() : 4; }
-    int bytesColumnWidth() const;
+    int bytesInLine() const { return 6; }
+    int bytesColumnWidth() const { return 19; }
     int formatBytes(int base);
     void formatTab(int tabPosition, int delta = 4);
 };

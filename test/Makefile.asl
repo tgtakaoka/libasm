@@ -15,7 +15,7 @@
 # Macro Assembler asl target
 
 ASL = asl -q -gnuerrors -relaxed -supmode
-ASL_FLAGS = +t 0x1e
+ASL_FLAGS = +t 0x0e
 P2HEX_FLAGS = -q -k -r \$$-\$$ -l 16
 
 define __asl-opt # target

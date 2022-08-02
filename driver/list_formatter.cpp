@@ -65,17 +65,8 @@ void ListFormatter::formatHex(uint32_t val, uint8_t bits, bool zeroSuppress) {
 }
 
 void ListFormatter::formatAddress(uint32_t addr, bool fixedWidth) {
-    formatHex(addr, fixedWidth ? uint8_t(config().addressWidth()) : 0, true);
-    _out.letter(':');
-}
-
-int ListFormatter::bytesColumnWidth() const {
-    const auto numBytes = bytesInLine();
-    if (config().opCodeWidth() == OPCODE_8BIT) {
-        return numBytes * 3;  // "HH "
-    } else {
-        return (numBytes / 2) * 5;  // "HHHH "
-    }
+    formatHex(addr, fixedWidth ? ADDRESS_32BIT : 0, true);
+    _out.letter(' ').letter(':');
 }
 
 int ListFormatter::formatBytes(int base) {

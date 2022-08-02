@@ -155,7 +155,8 @@ const char *AsmFormatter::getLine() {
 }
 
 void AsmFormatter::formatLineNumber() {
-    if (_lineNumber) {
+    // Only the first has "(nest) lineno/"
+    if (_nextLine <= 0) {
         const auto include_nest = _sources.nest();
         if (include_nest > 1) {
             _out.letter('(');
@@ -164,21 +165,16 @@ void AsmFormatter::formatLineNumber() {
         } else {
             _out.text("   ");
         }
-        formatDec(_sources.current()->lineno(), 5);
-        _out.text("/ ");
+        if (_lineNumber) {
+            formatDec(_sources.current()->lineno(), 5);
+            _out.letter('/');
+        }
+    } else {
+        _out.text("   ");
+        if (_lineNumber)
+            _out.text("      ");
     }
 }
-
-#if 0
-int AsmFormatter::formatBytes(int base) {
-    if (!_line_value.isUndefined()) {
-        _out.text(" =0x");
-        formatHex(_line_value.getUnsigned(), 0, true);
-        return 0;
-    }
-    return ListFormatter::formatBytes(base);
-}
-#endif
 
 uint8_t AsmFormatter::getByte(int offset) const {
     return _memory.readByte(_address * config().addressUnit() + offset);

@@ -355,7 +355,6 @@ MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assemb
     registerPseudo(".fcb", &AsmDirective::defineUint8s);
     registerPseudo(".fcc", &AsmDirective::defineString);
     registerPseudo(".fdb", &AsmDirective::defineUint16s);
-    registerPseudo(".fdb", &AsmDirective::defineUint16s);
     registerPseudo(".rmb", &AsmDirective::allocateUint8s);
     registerPseudo(".dfs", &AsmDirective::allocateUint8s);
 }
