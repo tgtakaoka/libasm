@@ -47,8 +47,8 @@ enum OpCodeWidth : uint8_t {
 };
 
 enum Endian : uint8_t {
-    ENDIAN_BIG = 0,     // Must be 0
-    ENDIAN_LITTLE = 1,  // Must be 1
+    ENDIAN_BIG,
+    ENDIAN_LITTLE,
 };
 
 struct ConfigBase {

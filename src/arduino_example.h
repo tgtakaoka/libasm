@@ -235,10 +235,14 @@ private:
             return 1;
         }
         // OPCODE_16BIT
-        const auto hi = uint8_t(config().endian());
-        const auto lo = 1 - hi;
         if (pos < max) {
-            const auto val = (static_cast<uint16_t>(bytes[pos + hi]) << 8) | bytes[pos + lo];
+            uint16_t val = bytes[pos];
+            const uint32_t next = bytes[pos + 1];
+            if (config().endian() == ENDIAN_BIG) {
+                val = (val << 8) | next;
+            } else {
+                val |= (next << 8);
+            }
             _cli.printHex(val, 4);
         } else {
             _cli.print(F("    "));

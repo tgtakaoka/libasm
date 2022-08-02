@@ -103,21 +103,21 @@ int ListFormatter::formatBytes(int base) {
     int i = 0;
     if (config().opCodeWidth() == OPCODE_8BIT) {
         while (base + i < generated && i < bytes) {
-            const uint8_t val8 = getByte(base + i);
+            const uint8_t val8 = getByte(base + i++);
             _out.letter(' ');
             formatHex(val8, 8);
-            i++;
         }
     } else {  // OPCODE_16BIT
-        const int hi = int(config().endian());
-        const int lo = 1 - hi;
         while (base + i < generated && i < bytes) {
-            const uint8_t val8hi = getByte(base + i + hi);
-            const uint8_t val8lo = getByte(base + i + lo);
-            const uint16_t val16 = (static_cast<uint16_t>(val8hi) << 8) | val8lo;
+            uint16_t val16 = getByte(base + i++);
+            const uint16_t next8 = getByte(base + i++);
+            if (config().endian() == ENDIAN_BIG) {
+                val16 = (val16 << 8) | next8;
+            } else {
+                val16 |= (next8 << 8);
+            }
             _out.letter(' ');
             formatHex(val16, 16);
-            i += 2;
         }
     }
     return i;
