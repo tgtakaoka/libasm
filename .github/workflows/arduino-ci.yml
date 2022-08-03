@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - devel
     tags-ignore:
       - '*.*.*'
     paths-ignore:
@@ -12,6 +13,11 @@ on:
       - "**/*.md"
       - "**/*.txt"
       - "library.*"
+      - "**/*.asm"
+      - "**/*.inc"
+      - "**/*.hex"
+      - "**/*.s19"
+      - "**/*.s28"
   pull_request:
 
 jobs:
@@ -22,10 +28,6 @@ jobs:
       matrix:
         fqbn:
           - arduino:megaavr:nona4809
-
-#         - arduino:avr:nano
-#         - arduino:samd:nano_33_iot
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

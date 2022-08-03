@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - devel
     tags-ignore:
       - '*.*.*'
     paths-ignore:
@@ -12,6 +13,11 @@ on:
       - "**/*.md"
       - "**/*.txt"
       - "library.*"
+      - "**/*.asm"
+      - "**/*.inc"
+      - "**/*.hex"
+      - "**/*.s19"
+      - "**/*.s28"
   pull_request:
 
 jobs:
@@ -63,7 +69,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
       - name: Install library dependency
-        run: pio lib -g install libcli@1.2.3
+        run: pio lib install libcli@1.2.3
       - name: Run PlatformIO
         run: pio ci --lib="." --board=nano_every --board=nano_33_iot --board=pico
         env:
