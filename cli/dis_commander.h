@@ -47,8 +47,8 @@ private:
     bool _upper_hex;
     bool _uppercase;
     bool _verbose;
-    uint32_t _addr_start;
-    uint32_t _addr_end;
+    uint32_t _dis_start;
+    uint32_t _dis_end;
     std::map<std::string, std::string> _options;
 
     static constexpr const char *PROG_PREFIX = "dis";

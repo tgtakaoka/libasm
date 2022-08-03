@@ -58,18 +58,19 @@ int DisCommander::disassemble() {
     const auto addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
     const auto mem_start = memory.startAddress() / addrUnit;
     const auto mem_end = memory.endAddress() / addrUnit;
-    if (_addr_start > mem_end || _addr_end < mem_start) {
+    if (_dis_start > mem_end || _dis_end < mem_start) {
         fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
-        fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _addr_start, _addr_end);
+        fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _dis_start, _dis_end);
         return 1;
     }
 
     auto &disassembler = *_driver.current();
     DisFormatter listing(disassembler, _input_name);
-    disassembler.setOption("relative", _relative_target ? "on" : "off");
     listing.setUpperHex(_upper_hex);
     listing.setUppercase(_uppercase);
-    listing.setCpu(_cpu);
+    disassembler.setOption("relative", _relative_target ? "on" : "off");
+    // TODO: call disassembler.setOption()
+
     FilePrinter output;
     if (_output_name) {
         if (!output.open(_output_name)) {
@@ -90,37 +91,9 @@ int DisCommander::disassemble() {
             fprintf(stderr, "%s: Opened for listing\n", listout.name().c_str());
         listout.println(listing.getLine());
     }
-    for (const auto &it : memory) {
-        auto mem_base = it.base;
-        auto mem_size = it.data.size();
-        auto start = mem_base / addrUnit;
-        const auto end = start + (mem_size - 1) / addrUnit;
-        if (start > _addr_end || end < _addr_start)
-            continue;
-        if (start < _addr_start) {
-            mem_base = _addr_start * addrUnit;
-            mem_size -= (_addr_start - start) * addrUnit;
-            start = _addr_start;
-        }
-        if (end > _addr_end)
-            mem_size -= (end - _addr_end) * addrUnit;
-        listing.setOrigin(start);
-        output.println(listing.getContent());
-        listout.println(listing.getLine());
-        auto reader = memory.reader(mem_base);
-        for (size_t mem_offset = 0; mem_offset < mem_size;) {
-            listing.disassemble(reader, start + mem_offset / addrUnit);
-            mem_offset += listing.byteLength();
-            while (listing.hasNextLine()) {
-                const char *line = listing.getLine();
-                listout.println(line);
-                if (listing.isError())
-                    fprintf(stderr, "%s\n", line);
-            }
-            while (listing.hasNextContent())
-                output.println(listing.getContent());
-        }
-    };
+
+    listing.setCpu(_cpu);
+    _driver.disassemble(memory, _dis_start, _dis_end, listing, output, listout, FilePrinter::STDERR);
 
     return 0;
 }
@@ -209,8 +182,8 @@ int DisCommander::parseArgs(int argc, const char **argv) {
     _upper_hex = true;
     _uppercase = false;
     _verbose = false;
-    _addr_start = 0;
-    _addr_end = UINT32_MAX;
+    _dis_start = 0;
+    _dis_end = UINT32_MAX;
     for (int i = 1; i < argc; i++) {
         const char *opt = argv[i];
         if (*opt == '-') {
@@ -255,7 +228,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                     return 1;
                 } else {
                     char *end_start;
-                    _addr_start = strtoul(argv[i], &end_start, 0);
+                    _dis_start = strtoul(argv[i], &end_start, 0);
                     if (end_start == argv[i]) {
                     format_error:
                         fprintf(stderr, "invalid address format for -A: %s\n", argv[i]);
@@ -269,12 +242,12 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                         return 1;
                     }
                     char *end_end;
-                    _addr_end = strtoul(end_start, &end_end, 0);
+                    _dis_end = strtoul(end_start, &end_end, 0);
                     if (end_end == end_start)
                         goto format_error;
                     if (*end_end)
                         goto form_error;
-                    if (_addr_end < _addr_start) {
+                    if (_dis_end < _dis_start) {
                         fprintf(stderr, "end address must be less than start: %s\n", argv[i]);
                         return 1;
                     }

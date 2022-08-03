@@ -16,6 +16,10 @@
 
 #include "dis_driver.h"
 
+#include "bin_memory.h"
+#include "dis_formatter.h"
+#include "text_printer.h"
+
 #include <string.h>
 
 #include <algorithm>
@@ -73,6 +77,42 @@ std::list<std::string> DisDriver::listCpu() const {
         filter(listCpu, list);
     }
     return list;
+}
+
+void DisDriver::disassemble(const BinMemory &memory, uint32_t dis_start, uint32_t dis_end,
+        DisFormatter &formatter, TextPrinter &output, TextPrinter &listout, TextPrinter &errorout) {
+    const auto addrUnit = current()->config().addressUnit();
+    for (const auto &it : memory) {
+        auto mem_base = it.base;
+        auto mem_size = it.data.size();
+        auto start = mem_base / addrUnit;
+        const auto end = start + (mem_size - 1) / addrUnit;
+        if (start > dis_end || end < dis_start)
+            continue;
+        if (start < dis_start) {
+            mem_base = dis_start * addrUnit;
+            mem_size -= (dis_start - start) * addrUnit;
+            start = dis_start;
+        }
+        if (end > dis_end)
+            mem_size -= (end - dis_end) * addrUnit;
+        formatter.setOrigin(start);
+        output.println(formatter.getContent());
+        listout.println(formatter.getLine());
+        auto reader = memory.reader(mem_base);
+        for (size_t mem_offset = 0; mem_offset < mem_size;) {
+            formatter.disassemble(reader, start + mem_offset / addrUnit);
+            mem_offset += formatter.byteLength();
+            while (formatter.hasNextLine()) {
+                const char *line = formatter.getLine();
+                listout.println(line);
+                if (formatter.isError())
+                    errorout.println(line);
+            }
+            while (formatter.hasNextContent())
+                output.println(formatter.getContent());
+        }
+    }
 }
 
 }  // namespace driver

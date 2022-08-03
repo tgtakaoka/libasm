@@ -25,6 +25,10 @@
 namespace libasm {
 namespace driver {
 
+class TextPrinter;
+class BinMemory;
+class DisFormatter;
+
 class DisDriver {
 public:
     DisDriver(Disassembler **begin, Disassembler **end);
@@ -33,6 +37,10 @@ public:
     Disassembler *setCpu(const char *cpu);
     std::list<std::string> listCpu() const;
     Disassembler *current() const { return _current; }
+
+    void disassemble(const BinMemory &memory, uint32_t dis_start, uint32_t dis_end,
+            DisFormatter &formatter, TextPrinter &output, TextPrinter &listout,
+            TextPrinter &errorout);
 
 private:
     std::list<Disassembler *> _disassemblers;
