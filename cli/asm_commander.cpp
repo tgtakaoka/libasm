@@ -31,6 +31,14 @@ namespace cli {
 
 using namespace libasm::driver;
 
+class NullPrinter : public TextPrinter {
+public:
+    void println(const char *text) override {}
+    void format(const char *fmt, ...) override {}
+};
+
+static NullPrinter STDNULL;
+
 Error AsmCommander::FileSources::open(const StrScanner &name) {
     if (size() >= max_includes)
         return TOO_MANY_INCLUDE;
@@ -76,22 +84,20 @@ int AsmCommander::assemble() {
         fprintf(stderr, "unknown CPU '%s'\n", _cpu);
         return 4;
     }
-    _driver.setSymbolMode(REPORT_DUPLICATE);
+
     int pass = 0;
     BinMemory memory;
     if (_verbose) {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
-    FilePrinter listout;
-    (void)assemble(memory, listout);
+    (void)assemble(memory, STDNULL, false);
 
     do {
-        _driver.setSymbolMode(REPORT_UNDEFINED);
         BinMemory next;
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
-        (void)assemble(next, listout);
+        (void)assemble(next, STDNULL, true);
         if (memory.equals(next))
             break;
         memory.swap(next);
@@ -121,47 +127,36 @@ int AsmCommander::assemble() {
         }
     }
 
-    if (_list_name && !listout.open(_list_name)) {
-        fprintf(stderr, "Can't open list file %s\n", _list_name);
-        return 1;
+    if (_list_name) {
+        FilePrinter listout;
+        if (!listout.open(_list_name)) {
+            fprintf(stderr, "Can't open list file %s\n", _list_name);
+            return 1;
+        }
+        if (_verbose) {
+            fprintf(stderr, "%s: Opened for listing\n", _list_name);
+            fprintf(stderr, "%s: Pass listing\n", _input_name);
+        }
+        assemble(memory, listout, true);
     }
-    if (_list_name && _verbose) {
-        fprintf(stderr, "%s: Opened for listing\n", _list_name);
-        fprintf(stderr, "%s: Pass listing\n", _input_name);
-    }
-    assemble(memory, listout, true);
 
     return 0;
 }
 
-int AsmCommander::assemble(BinMemory &memory, TextPrinter &out, bool reportError) {
+int AsmCommander::assemble(BinMemory &memory, TextPrinter &listout, bool reportError) {
     if (_sources.open(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
 
-    AsmFormatter listing(_driver, _sources, memory);
-    listing.setUpperHex(_upper_hex);
-    listing.enableLineNumber(_line_number);
-    int errors = 0;
-    _driver.reset();
-    StrScanner *scan;
-    while ((scan = _sources.readLine()) != nullptr) {
-        // const auto error = _driver.assemble(*scan, listing);
-        const auto error = listing.assemble(*scan, reportError);
-        while (listing.hasNextLine()) {
-            const char *line = listing.getLine();
-            if (listing.isError())
-                fprintf(stderr, "%s\n", line);
-            out.println(line);
-        }
-        if (error == END_ASSEMBLE)
-            break;
-        errors++;
-    }
-    while (_sources.nest())
-        _sources.closeCurrent();
-    return errors;
+    AsmFormatter formatter(_driver, _sources, memory);
+    formatter.setUpperHex(_upper_hex);
+    formatter.enableLineNumber(_line_number);
+    if (_cpu)
+        _driver.setCpu(_cpu);
+    // TODO: call Assembler::setOptions()
+
+    return _driver.assemble(_sources, memory, formatter, listout, FilePrinter::STDERR, reportError);
 }
 
 AsmDirective *AsmCommander::defaultDirective() {

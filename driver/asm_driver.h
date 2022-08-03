@@ -22,7 +22,6 @@
 #include "str_scanner.h"
 #include "symbol_table.h"
 #include "text_printer.h"
-#include "text_reader.h"
 #include "value_parser.h"
 
 #include <list>
@@ -33,6 +32,7 @@ namespace driver {
 
 class AsmDirective;
 class AsmSources;
+class BinMemory;
 
 enum SymbolMode {
     REPORT_UNDEFINED = 0,
@@ -50,6 +50,9 @@ public:
     AsmDirective *setCpu(const char *cpu);
     std::list<std::string> listCpu() const;
     AsmDirective *current() const { return _current; }
+
+    int assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
+            TextPrinter &listout, TextPrinter &errorout, bool reportError);
 
     void reset();
     uint32_t origin() const { return _origin; }

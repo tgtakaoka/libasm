@@ -108,6 +108,31 @@ AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sourc
     _symbolMode = REPORT_UNDEFINED;
 }
 
+int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
+        TextPrinter &listout, TextPrinter &errorout, bool reportError) {
+    reset();
+    setSymbolMode(reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE);
+    int errors = 0;
+
+    StrScanner *scan;
+    while ((scan = sources.readLine()) != nullptr) {
+        // const auto error = _driver.assemble(*scan, listing);
+        const auto error = formatter.assemble(*scan, reportError);
+        while (formatter.hasNextLine()) {
+            const char *line = formatter.getLine();
+            if (formatter.isError())
+                errorout.println(line);
+            listout.println(line);
+        }
+        if (error == END_ASSEMBLE)
+            break;
+        errors++;
+    }
+    while (sources.nest())
+        sources.closeCurrent();
+    return errors;
+}
+
 Error AsmDriver::openSource(const StrScanner &filename) {
     return _sources.open(filename);
 }
