@@ -42,13 +42,13 @@ private:
             OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, _useReg, _opt_smartBranch};
     const Options _options{_opt_useReg};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(NONE), val16(0) {}
+        Operand() : mode(NONE), val16(0) {}
     };
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
 
     Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);

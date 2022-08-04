@@ -35,16 +35,16 @@ public:
 private:
     IntelValueParser _parser;
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         uint8_t regno;
         Error regerr;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(M_NONE), regno(0), regerr(OK), val16(0) {}
+        Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
     };
 
-    Error parseIndirect(StrScanner &scan, Operand &opr);
-    Error parseOperand(StrScanner &scan, Operand &opr);
+    Error parseIndirect(StrScanner &scan, Operand &opr) const;
+    Error parseOperand(StrScanner &scan, Operand &opr) const;
     Error emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op);

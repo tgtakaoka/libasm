@@ -75,9 +75,9 @@ static void test_inh() {
         TEST("RTWP 1", 0x0381);
         TEST("RTWP 2", 0x0382);
         TEST("RTWP 4", 0x0384);
-        ERRT("RTWP 3", OPERAND_NOT_ALLOWED);
+        ERRT("RTWP 3", OPERAND_NOT_ALLOWED, "3");
     } else {
-        ERRT("RTWP 0", OPERAND_NOT_ALLOWED);
+        ERRT("RTWP 0", OPERAND_NOT_ALLOWED, "0");
     }
 }
 
@@ -101,8 +101,8 @@ static void test_reg() {
         TEST("LST R0", 0x0080);
         TEST("LWP R1", 0x0091);
     } else {
-        ERRT("LST R0", UNKNOWN_INSTRUCTION);
-        ERRT("LWP R1", UNKNOWN_INSTRUCTION);
+        ERUI("LST R0");
+        ERUI("LWP R1");
     }
 }
 
@@ -122,7 +122,7 @@ static void test_reg_imm() {
         TEST("BLSK R3,4567H",   0x00B3, 0x4567);
         TEST("BLSK R3,sym1234", 0x00B3, 0x1234);
     } else {
-        ERRT("BLSK R3,4567H",   UNKNOWN_INSTRUCTION);
+        ERUI("BLSK R3,4567H");
     }
 }
 
@@ -131,7 +131,7 @@ static void test_cnt_reg() {
     TEST("SRL R4,12", 0x09C4);
     TEST("SLA R8,4",  0x0A48);
     TEST("SRC R9,15", 0x0BF9);
-    ERRT("SRC R9,16", OVERFLOW_RANGE);
+    ERRT("SRC R9,16", OVERFLOW_RANGE, "16");
 }
 
 static void test_src() {
@@ -149,7 +149,7 @@ static void test_src() {
     TEST("SWPB *R1",    0x06D1);
     TEST("SETO R12",    0x070C);
     TEST("ABS  @8(R3)", 0x0763, 0x0008);
-    ERRT("ABS  @8(R0)", REGISTER_NOT_ALLOWED);
+    ERRT("ABS  @8(R0)", REGISTER_NOT_ALLOWED, "R0)");
 
     if (is9995()) {
         // TMS9995
@@ -162,8 +162,8 @@ static void test_src() {
         TEST("MPYS @2(R8)",     0x01E8, 0x0002);
         TEST("MPYS *R15+",      0x01FF);
     } else {
-        ERRT("DIVS R2", UNKNOWN_INSTRUCTION);
-        ERRT("MPYS R0", UNKNOWN_INSTRUCTION);
+        ERUI("DIVS R2");
+        ERUI("MPYS R0");
     }
 
     if (is99105()) {
@@ -173,15 +173,15 @@ static void test_src() {
         TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
         TEST("BIND @2223H(R1)", 0x0161, 0x2223);
         TEST("EVAD R5",         0x0105);
-        ERRT("TMB  *R1+,7",  OPERAND_NOT_ALLOWED);
-        ERRT("TCMB *R1+,0",  OPERAND_NOT_ALLOWED);
-        ERRT("TSMB *R1+,15", OPERAND_NOT_ALLOWED);
+        ERRT("TMB  *R1+,7",  OPERAND_NOT_ALLOWED, "*R1+,7");
+        ERRT("TCMB *R1+,0",  OPERAND_NOT_ALLOWED, "*R1+,0");
+        ERRT("TSMB *R1+,15", OPERAND_NOT_ALLOWED, "*R1+,15");
     } else {
-        ERRT("TMB  @0123H(R15),7", UNKNOWN_INSTRUCTION);
-        ERRT("TCMB R0,0",          UNKNOWN_INSTRUCTION);
-        ERRT("TSMB *R2,15",        UNKNOWN_INSTRUCTION);
-        ERRT("BIND @2223H(R1)",    UNKNOWN_INSTRUCTION);
-        ERRT("EVAD R5",            UNKNOWN_INSTRUCTION);
+        ERUI("TMB  @0123H(R15),7");
+        ERUI("TCMB R0,0");
+        ERUI("TSMB *R2,15");
+        ERUI("BIND @2223H(R1)");
+        ERUI("EVAD R5");
     }
 
     symtab.intern(-2, "neg2");
@@ -221,8 +221,8 @@ static void test_reg_src() {
 static void test_cnt_src() {
     TEST("LDCR *R13+,16",  0x303D);
     TEST("STCR @2(R4),15", 0x37E4, 0x0002);
-    ERRT("STCR @2(R4),R0", OPERAND_NOT_ALLOWED);
-    ERRT("STCR @2(R4),17", OVERFLOW_RANGE);
+    ERRT("STCR @2(R4),R0", OPERAND_NOT_ALLOWED, "@2(R4),R0");
+    ERRT("STCR @2(R4),17", OVERFLOW_RANGE, "17");
 
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
@@ -236,20 +236,20 @@ static void test_cnt_src() {
         TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
         TEST("SLAM R11,R0",          0x001D, 0x400B);
         TEST("SLAM *R13+,1",         0x001D, 0x407D);
-        ERRT("SRAM R11,R2", REGISTER_NOT_ALLOWED);
-        ERRT("SLAM R11,0",  OPERAND_NOT_ALLOWED);
-        ERRT("SLAM R11,16", OVERFLOW_RANGE);
+        ERRT("SRAM R11,R2", REGISTER_NOT_ALLOWED, "R2");
+        ERRT("SLAM R11,0",  OPERAND_NOT_ALLOWED,  "0");
+        ERRT("SLAM R11,16", OVERFLOW_RANGE,       "16");
     } else {
-        ERRT("SRAM R11,R0",  UNKNOWN_INSTRUCTION);
-        ERRT("SLAM *R13+,1", UNKNOWN_INSTRUCTION);
+        ERUI("SRAM R11,R0");
+        ERUI("SLAM *R13+,1");
     }
 }
 
 static void test_xop_src() {
     TEST("XOP @9876H,0",  0x2C20, 0x9876);
     TEST("XOP @9876H,15", 0x2FE0, 0x9876);
-    ERRT("XOP @9876H,R0", OPERAND_NOT_ALLOWED);
-    ERRT("XOP @9876H,16", OVERFLOW_RANGE);
+    ERRT("XOP @9876H,R0", OPERAND_NOT_ALLOWED, "@9876H,R0");
+    ERRT("XOP @9876H,16", OVERFLOW_RANGE,      "16");
 
     symtab.intern(10, "xop10");
     symtab.intern(0x9876, "sym9876");
@@ -294,8 +294,8 @@ static void test_dst_src() {
         TEST("AM @sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
         TEST("AM @sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
     } else {
-        ERRT("SM R10,@sym4000(R11)",  UNKNOWN_INSTRUCTION);
-        ERRT("AM @zero(R10),@1(R11)", UNKNOWN_INSTRUCTION);
+        ERUI("SM R10,@sym4000(R11)");
+        ERUI("AM @zero(R10),@1(R11)");
     }
 }
 
@@ -314,11 +314,11 @@ static void test_rel() {
     ATEST(0x1000, "JH  0FF8H", 0x1BFB);
     ATEST(0x1000, "JOP 0FF6H", 0x1CFA);
 
-    ERRT("JMP 1001H", OPERAND_NOT_ALIGNED);
+    ERRT("JMP 1001H", OPERAND_NOT_ALIGNED, "1001H");
     ATEST(0x1000, "JMP $+256", 0x107F);
     ATEST(0x1000, "JMP $-254", 0x1080);
-    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR);
-    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR);
+    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR, "$+258");
+    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR, "$-256");
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");
@@ -350,41 +350,41 @@ static void test_comment() {
     TEST("LWPI 1234H   ; comment", 0x02E0, 0x1234);
     TEST("STWP R14     ; comment", 0x02AE);
     TEST("LI   R0 , 0  ; comment", 0x0200, 0x0000);
-    TEST("X *R10   ; comment", 0x049A);
-    ERRT("X * R10  ; comment", UNKNOWN_OPERAND);
-    TEST("CLR *R12+  ; comment", 0x04FC);
-    ERRT("CLR * R12+ ; comment", UNKNOWN_OPERAND);
+    TEST("X *R10   ; comment",     0x049A);
+    ERRT("X * R10  ; comment",     UNKNOWN_OPERAND, "* R10  ; comment");
+    TEST("CLR *R12+  ; comment",   0x04FC);
+    ERRT("CLR * R12+ ; comment",   UNKNOWN_OPERAND, "* R12+ ; comment");
     TEST("BLWP @ 9876H ; comment", 0x0420, 0x9876);
     TEST("SBO  0       ; comment", 0x1D00);
     TEST("INC  @ 2 ( R7 )  ; comment", 0x05A7, 0x0002);
     TEST("LDCR *R13+  , 16 ; comment", 0x303D);
-    ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND);
+    ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND, "* R13+ , 16 ; comment");
     TEST("SZC  @ 1234H ( R10 ) , @ 5678H ( R11 ) ; comment", 0x4AEA, 0x1234, 0x5678);
     ATEST(0x1000, "JMP 1002H ; comment", 0x1000);
-    ERRT("CLR  *R12 + ; comment", GARBAGE_AT_END);
-    ERRT("LDCR *R13 +, 16 ; comment", GARBAGE_AT_END);
+    ERRT("CLR  *R12 + ; comment",     GARBAGE_AT_END, "+ ; comment");
+    ERRT("LDCR *R13 +, 16 ; comment", GARBAGE_AT_END, "+, 16 ; comment");
 }
 
 static void test_undefined_symbol() {
-    ERUS("LWPI UNDEF",    0x02E0, 0x0000);
-    ERUS("LI   R0,UNDEF", 0x0200, 0x0000);
-    ERUS("SRL  R4,UNDEF", 0x0904);
-    ERUS("BLWP @UNDEF",   0x0420, 0x0000);
-    ERUS("INC  @UNDEF(R7)", 0x05A7, 0x0000);
-    ERUS("CZC  @UNDEF(R3),R7",    0x25E3, 0x0000);
-    ERUS("STCR @UNDEF(R4),15",    0x37E4, 0x0000);
-    ERUS("STCR @2(R4),UNDEF",     0x3424, 0x0002);
-    ERUS("STCR @UNDEF(R4),UNDEF", 0x3424, 0x0000);
-    ERUS("XOP  @UNDEF,15",    0x2FE0, 0x0000);
-    ERUS("XOP  @9876H,UNDEF", 0x2C20, 0x9876);
-    ERUS("XOP  @UNDEF,UNDEF", 0x2C20, 0x0000);
-    ERUS("SZC  @UNDEF(R10),@5678H(R11)", 0x4AEA, 0x0000, 0x5678);
-    ERUS("SZC  @1234H(R10),@UNDEF(R11)", 0x4AEA, 0x1234, 0x0000);
-    ERUS("SZC  @UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
-    ERUS("SBZ  UNDEF", 0x1E00);
+    ERUS("LWPI UNDEF",    "UNDEF", 0x02E0, 0x0000);
+    ERUS("LI   R0,UNDEF", "UNDEF", 0x0200, 0x0000);
+    ERUS("SRL  R4,UNDEF", "UNDEF", 0x0904);
+    ERUS("SBZ  UNDEF",    "UNDEF", 0x1E00);
+    ERUS("BLWP @UNDEF",   "UNDEF", 0x0420, 0x0000);
+    ERUS("INC  @UNDEF(R7)",       "UNDEF(R7)",       0x05A7, 0x0000);
+    ERUS("CZC  @UNDEF(R3),R7",    "UNDEF(R3),R7",    0x25E3, 0x0000);
+    ERUS("STCR @UNDEF(R4),15",    "UNDEF(R4),15",    0x37E4, 0x0000);
+    ERUS("STCR @2(R4),UNDEF",     "UNDEF",            0x3424, 0x0002);
+    ERUS("STCR @UNDEF(R4),UNDEF", "UNDEF(R4),UNDEF", 0x3424, 0x0000);
+    ERUS("XOP  @UNDEF,15",    "UNDEF,15",    0x2FE0, 0x0000);
+    ERUS("XOP  @9876H,UNDEF", "UNDEF",       0x2C20, 0x9876);
+    ERUS("XOP  @UNDEF,UNDEF", "UNDEF,UNDEF", 0x2C20, 0x0000);
+    ERUS("SZC  @UNDEF(R10),@5678H(R11)", "UNDEF(R10),@5678H(R11)", 0x4AEA, 0x0000, 0x5678);
+    ERUS("SZC  @1234H(R10),@UNDEF(R11)", "UNDEF(R11)",             0x4AEA, 0x1234, 0x0000);
+    ERUS("SZC  @UNDEF(R10),@UNDEF(R11)", "UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
 
-    AERRU(0x1000, "JMP UNDEF", 0x1000);
-    AERRU(0x1000, "JNE UNDEF", 0x1600);
+    AERUS(0x1000, "JMP UNDEF", "UNDEF", 0x1000);
+    AERUS(0x1000, "JNE UNDEF", "UNDEF", 0x1600);
 }
 // clang-format on
 

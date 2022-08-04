@@ -21,15 +21,16 @@
 namespace libasm {
 namespace i8051 {
 
-Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = IMM16;
         scan = p;
         return OK;
@@ -37,8 +38,9 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
 
     const bool indir = p.expect('@');
     if (indir && isspace(*p))
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
+    const StrScanner regp = p;
     op.reg = RegI8051::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (indir && op.reg == REG_A && p.expect('+')) {
@@ -48,7 +50,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
                 scan = p;
                 return OK;
             }
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         }
         scan = p;
         if (indir) {
@@ -60,7 +62,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
                 op.mode = IDIRD;
                 return OK;
             }
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         }
         if (RegI8051::isRReg(op.reg)) {
             op.mode = RREG;
@@ -80,12 +82,13 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
             op.mode = ABREG;
             return OK;
         default:
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(regp, UNKNOWN_OPERAND);
         }
     }
     if (indir)
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
+    const StrScanner addrp = p;
     const bool bitNot = p.expect('/');
     op.val16 = parseExpr16(p.skipSpaces(), op);
     if (parserError())
@@ -93,11 +96,12 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
     if (p.expect('.')) {
         if (op.getError())
             op.val16 = 0x20;
+        const StrScanner bitp = p;
         uint16_t bitNo = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         if (bitNo >= 8)
-            return setError(p, ILLEGAL_BIT_NUMBER);
+            return op.setError(bitp, ILLEGAL_BIT_NUMBER);
         uint16_t val16 = op.val16;
         if ((val16 & ~0x0F) == 0x20 || (val16 & ~0x78) == 0x80) {
             op.mode = bitNot ? NOTAD : BITAD;
@@ -107,7 +111,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) {
             scan = p;
             return OK;
         }
-        return setError(p, NOT_BIT_ADDRESSABLE);
+        return op.setError(addrp, NOT_BIT_ADDRESSABLE);
     }
     op.mode = bitNot ? NOTAD : ADR16;
     scan = p;
@@ -124,7 +128,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         const Config::ptrdiff_t delta = target - base;
         if (overflowRel8(delta))
-            return setError(OPERAND_TOO_FAR);
+            return setError(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return OK;
     }
@@ -134,12 +138,12 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         return OK;
     case ADR8:
         if (op.val16 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
     case IMM8: {
         if (overflowUint8(op.val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
     }
@@ -147,7 +151,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         const Config::uintptr_t base = insn.address() + 2;
         const Config::uintptr_t target = op.getError() ? (base & ~0x7FF) : op.val16;
         if ((base & ~0x7FF) != (target & ~0x7FF))
-            return setError(OPERAND_TOO_FAR);
+            return setError(op, OPERAND_TOO_FAR);
         insn.embed((target & 0x700) >> 3);
         insn.emitOperand8(target);
         return OK;
@@ -159,7 +163,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
     case BITAD:
     case NOTAD:
         if (op.val16 >= 0x100)
-            return setError(NOT_BIT_ADDRESSABLE);
+            return setError(op, NOT_BIT_ADDRESSABLE);
         insn.emitOperand8(op.val16);
         return OK;
     default:
@@ -172,16 +176,16 @@ Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp, extOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, extOp))
-            return getError();
+        if (parseOperand(scan, extOp) && extOp.hasError())
+            return setError(extOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -191,8 +195,9 @@ Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (TableI8051::TABLE.searchName(insn))
-        return setError(TableI8051::TABLE.getError());
+    const auto error = TableI8051::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();

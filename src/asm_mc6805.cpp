@@ -22,15 +22,11 @@ namespace mc6805 {
 const char AsmMc6805::OPT_INT_PCBITS[] = "pc-bits";
 const char AsmMc6805::OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
-Error AsmMc6805::checkAddressRange(Config::uintptr_t addr) {
-    const uint8_t pc_bits = (_pc_bits > 0 && _pc_bits <= 16) ? _pc_bits : 13;
-    const Config::uintptr_t max = (1 << pc_bits);
-    if (max && addr >= max)
-        return setError(OVERFLOW_RANGE);
-    return OK;
+AddressWidth AsmMc6805::addressWidth() const {
+    return AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
 }
 
-Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
@@ -57,7 +53,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     if (immediate) {
         op.mode = M_IMM;
         scan = p;
@@ -98,7 +94,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) {
 Error AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base : op.val16;
-    if (checkAddressRange(target))
+    if (checkAddress(target, op))
         return getError();
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
@@ -169,7 +165,7 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
         return OK;
     case M_EXT:
     ext:
-        if (checkAddressRange(op.val16))
+        if (checkAddress(op.val16, op))
             return getError();
         insn.emitOperand16(op.val16);
         return OK;
@@ -192,16 +188,16 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
-    if (parseOperand(scan, op1))
-        return getError();
+    if (parseOperand(scan, op1) && op1.hasError())
+        return setError(op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2))
-            return getError();
+        if (parseOperand(scan, op2) && op2.hasError())
+            return setError(op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op3))
-            return getError();
+        if (parseOperand(scan, op3) && op3.hasError())
+            return setError(op3);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -211,8 +207,9 @@ Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableMc6805::TABLE.searchName(insn))
-        return setError(TableMc6805::TABLE.getError());
+    const auto error = TableMc6805::TABLE.searchName(insn);
+    if (error)
+        return setError(op1, error);
 
     if (insn.mode1() == M_BNO)
         insn.embed((op1.val16 & 7) << 1);

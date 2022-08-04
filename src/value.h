@@ -50,6 +50,7 @@ public:
     static bool overflowUint8(uint16_t u16);
     static bool overflowUint8(uint32_t u32);
     static bool overflowUint16(uint32_t u32);
+    static bool overflowUint(uint32_t, uint8_t bitw);
     static Value makeSigned(int32_t value) { return Value(value, SIGNED); }
     static Value makeUnsigned(uint32_t value) { return Value(value, UNSIGNED); }
 

@@ -51,16 +51,16 @@ private:
     } _opt_longa{_opt_longi};
     const Options _options{_opt_longa};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         uint32_t val32;
-        Operand() : ErrorAt(), mode(IMPL), val32(0) {}
+        Operand() : mode(IMPL), val32(0) {}
     };
 
     Error parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val));
     Error processPseudo(StrScanner &scan, const char *name);
-    Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL);
-    Error parseOperand(StrScanner &scan, Operand &op, Operand &extra);
+    Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = IMPL) const;
+    Error parseOperand(StrScanner &scan, Operand &op, Operand &extra) const;
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     Error encode(StrScanner &scan, Insn &insn) override;

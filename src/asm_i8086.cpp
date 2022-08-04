@@ -26,7 +26,8 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     InsnI8086 insn(_insn);
     StrScanner p(scan);
-    insn.nameBuffer().text(_parser.readSymbol(p));
+    StrScanner strInsn = _parser.readSymbol(p);
+    insn.nameBuffer().text(strInsn);
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
     if (TableI8086::TABLE.searchName(insn))
         return UNKNOWN_INSTRUCTION;
@@ -38,7 +39,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) {
+Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     const RegName reg = RegI8086::parseRegName(p);
     if (reg == REG_BYTE || reg == REG_WORD) {
@@ -48,7 +49,7 @@ Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) {
             scan = p.skipSpaces();
             return OK;
         }
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
     }
     return OK;
 }
@@ -88,25 +89,23 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
     }
 }
 
-Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) {
+Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     if (endOfLine(*p) || *p == ']')
         return OK;
     if (op.reg != REG_UNDEF || op.index != REG_UNDEF) {
         if (*p != '+' && *p != '-')
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
     }
     op.val32 = parseExpr32(p, op);
     if (parserError())
-        return getError();
-    if (overflowUint16(static_cast<int32_t>(op.val32)))
-        return setError(op, OVERFLOW_RANGE);
+        return op.getError();
     op.hasVal = true;
     scan = p.skipSpaces();
     return OK;
 }
 
-Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -117,7 +116,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (parsePointerSize(p, op))
-        return getError();
+        return op.getError();
     parseSegmentOverride(p, op);
     if (p.skipSpaces().expect('[')) {
         parseBaseRegister(p.skipSpaces(), op);
@@ -125,11 +124,11 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) {
         if (parseDisplacement(p, op))
             return getError();
         if (!p.skipSpaces().expect(']'))
-            return setError(p, MISSING_CLOSING_BRACKET);
+            return op.setError(p, MISSING_CLOSING_BRACKET);
         scan = p;
         if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
             if (!op.hasVal)
-                return setError(op, UNKNOWN_OPERAND);
+                return op.setError(UNKNOWN_OPERAND);
             op.mode = (op.ptr == REG_UNDEF) ? M_DIR : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
             return OK;
         }
@@ -137,7 +136,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
-        return setError(op, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
     StrScanner a(p);
     const RegName reg = RegI8086::parseRegName(a);
@@ -170,27 +169,27 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (reg != REG_UNDEF)
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
+    const StrScanner valp = p.skipSpaces();;
     op.val32 = parseExpr32(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     if (p.skipSpaces().expect(':')) {
         if (op.val32 >= 0x10000UL)
-            return setError(op, OVERFLOW_RANGE);
+            return op.setError(valp, OVERFLOW_RANGE);
         op.seg16 = op.val32;
-        op.val32 = parseExpr32(p, op);
-        if (op.val32 >= 0x10000UL)
-            return setError(op, OVERFLOW_RANGE);
+        ErrorAt offset;
+        offset.setAt(p);
+        op.val32 = parseExpr32(p, offset);
         if (parserError())
-            return getError();
+            return offset.getError();
+        op.setErrorIf(offset);
         op.mode = M_FAR;
         scan = p;
         return OK;
     }
     op.mode = op.immediateMode();
-    if (op.mode == M_NONE)
-        return setError(op, OVERFLOW_RANGE);
     scan = p;
     return OK;
 }
@@ -204,9 +203,7 @@ AddrMode AsmI8086::Operand::immediateMode() const {
         return M_VAL3;
     if (!overflowRel8(static_cast<int32_t>(val32)))
         return M_IMM8;
-    if (!overflowUint16(val32))
-        return M_IMM;
-    return M_NONE;
+    return M_IMM;
 }
 
 Error AsmI8086::emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val) {
@@ -469,16 +466,16 @@ Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp, extOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, extOp))
-            return getError();
+        if (parseOperand(scan, extOp) && extOp.hasError())
+            return setError(extOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -488,8 +485,9 @@ Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (TableI8086::TABLE.searchName(insn))
-        return setError(TableI8086::TABLE.getError());
+    const auto error = TableI8086::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
     insn.prepairModReg();
 
     if (insn.stringInst())

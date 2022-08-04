@@ -229,22 +229,24 @@ Error AsmMc6809::encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mod
     return OK;
 }
 
-char AsmMc6809::transferMemoryMode(const Operand &op) {
+char AsmMc6809::transferMemoryMode(Operand &op) const {
     if (op.mode == M_LIST) {
         if (op.extra != 1)
-            setError(op, UNKNOWN_OPERAND);
+            op.setError(UNKNOWN_OPERAND);
         if (!RegMc6809::isTfmBaseReg(op.index))
-            setError(op, OPERAND_NOT_ALLOWED);
+            op.setError(REGISTER_NOT_ALLOWED);
         return 0;
     }
     return op.extra;
 }
 
-Error AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, const Operand &op1, const Operand &op2) {
+Error AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2) {
     const char srcMode = transferMemoryMode(op1);
+    if (op1.getError())
+        return setError(op1);
     const char dstMode = transferMemoryMode(op2);
-    if (getError())
-        return getError();
+    if (op2.getError())
+        return setError(op2);
 
     const int8_t mode = RegMc6809::encodeTfmMode(srcMode, dstMode);
     if (mode < 0)
@@ -258,7 +260,7 @@ Error AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, const Operand &op1, cons
     return OK;
 }
 
-bool AsmMc6809::parsePointerMode(StrScanner &scan, Operand &op, bool indir) {
+bool AsmMc6809::parsePointerMode(StrScanner &scan, Operand &op, bool indir) const {
     StrScanner p(scan);
     if (!p.expect(','))
         return false;
@@ -280,7 +282,7 @@ bool AsmMc6809::parsePointerMode(StrScanner &scan, Operand &op, bool indir) {
     }
     p.skipSpaces();
     if (indir && !p.expect(']'))
-        setError(p, MISSING_CLOSING_BRACKET);
+        op.setErrorIf(p, MISSING_CLOSING_BRACKET);
     op.base = reg;
     op.mode = M_IDX;
     op.extra = size;
@@ -289,14 +291,14 @@ bool AsmMc6809::parsePointerMode(StrScanner &scan, Operand &op, bool indir) {
     return true;
 }
 
-bool AsmMc6809::parseIndexedMode(StrScanner &scan, Operand &op, bool indir) {
+bool AsmMc6809::parseIndexedMode(StrScanner &scan, Operand &op, bool indir) const {
     StrScanner p(scan);
     const RegName base = RegMc6809::parseRegName(p);
     if (!RegMc6809::isIndexedBase(base))
         return false;
     p.skipSpaces();
     if (indir && !p.expect(']'))
-        setError(p, MISSING_CLOSING_BRACKET);
+        op.setErrorIf(p, MISSING_CLOSING_BRACKET);
     op.base = base;
     op.mode = M_IDX;
     op.indir = indir;
@@ -304,37 +306,28 @@ bool AsmMc6809::parseIndexedMode(StrScanner &scan, Operand &op, bool indir) {
     return true;
 }
 
-bool AsmMc6809::parseBitPosition(StrScanner &p, Operand &op) {
-    StrScanner a(p);
-    if (p.expect('.')) {
-        // bit position separator '.' can't have space around it.
-        if (isspace(*p))
+bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
+    StrScanner p(scan);
+    if (p.skipSpaces().expect('.') || p.expect(',')) {
+        const RegName reg = RegMc6809::parseRegName(p.skipSpaces());
+        if (reg == REG_0) {
+            op.extra = 0;
+            scan = p;
+            return true;
+        }
+        if (reg != REG_UNDEF)
             return false;
-        a = p;
-    } else if (a.skipSpaces().expect(',')) {
-        // bit position separator ',' can have spaces around it.
-        a.skipSpaces();
-    } else {
-        return false;
-    }
-    const RegName reg = RegMc6809::parseRegName(a);
-    if (reg == REG_0) {
-        op.extra = 0;
-        p = a;
+        const uint32_t bitp = parseExpr32(p, op);
+        if (parserError() || bitp >= 8)
+            return false;
+        op.extra = bitp;
+        scan = p;
         return true;
     }
-    if (reg != REG_UNDEF)
-        return false;
-    const uint32_t bitp = parseExpr32(p = a, op);
-    if (parserError() || bitp >= 8) {
-        setError(op.setOK());
-        return false;
-    }
-    op.extra = bitp;
-    return true;
+    return false;
 }
 
-bool AsmMc6809::parseRegisterList(StrScanner &scan, Operand &op, bool indir) {
+bool AsmMc6809::parseRegisterList(StrScanner &scan, Operand &op, bool indir) const {
     RegName stack = REG_UNDEF;
     bool push_pull = true;
     uint8_t n = 0;
@@ -342,12 +335,13 @@ bool AsmMc6809::parseRegisterList(StrScanner &scan, Operand &op, bool indir) {
     StrScanner p(scan);
     StrScanner lastComma(p);
     while (true) {
+        const StrScanner r(p);
         RegName reg = RegMc6809::parseRegName(p);
         if (reg == REG_UNDEF)
             return false;
         if (*p == '+' || *p == '-') {
             if (!RegMc6809::isTfmBaseReg(reg)) {
-                op.setError(p, REGISTER_NOT_ALLOWED);
+                op.setErrorIf(r, REGISTER_NOT_ALLOWED);
                 scan = ++p;
                 return true;
             }
@@ -377,7 +371,7 @@ bool AsmMc6809::parseRegisterList(StrScanner &scan, Operand &op, bool indir) {
         if (bit == 0)
             push_pull = false;
         if (post & bit)
-            op.setError(p, DUPLICATE_REGISTER);
+            op.setErrorIf(r, DUPLICATE_REGISTER);
         post |= bit;
         lastComma = p.skipSpaces();
         if (endOfLine(*p) || !p.expect(','))
@@ -386,9 +380,9 @@ bool AsmMc6809::parseRegisterList(StrScanner &scan, Operand &op, bool indir) {
     }
     if (indir) {
         if (!p.expect(']'))
-            setError(p, MISSING_CLOSING_BRACKET);
+            op.setErrorIf(p, MISSING_CLOSING_BRACKET);
         if (n != 2)
-            setErrorIf(p, UNKNOWN_OPERAND);
+            op.setErrorIf(UNKNOWN_OPERAND);
         scan = p;
         op.mode = M_IDX;  // [A,X] [0,X]
         if (op.index == REG_0)
@@ -409,7 +403,7 @@ bool AsmMc6809::parseRegisterList(StrScanner &scan, Operand &op, bool indir) {
     return true;
 }
 
-Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -418,7 +412,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) {
     const bool indir = p.expect('[');
     if (parsePointerMode(p.skipSpaces(), op, indir)) {
         scan = p;
-        return getError();
+        return op.getError();
     }
     StrScanner a(p);
     const RegName reg = RegMc6809::parseRegName(a);
@@ -432,15 +426,17 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) {
     }
     if (parseRegisterList(p, op, indir)) {
         scan = p;
-        return getError();
+        return op.getError();
     }
+    if (RegMc6809::parseRegName(a = p) != REG_UNDEF)
+        return op.setError(p, REGISTER_NOT_ALLOWED);
 
     if (p.expect('#')) {
         if (indir)
-            return setError(op, UNKNOWN_OPERAND);
+            return op.setErrorIf(UNKNOWN_OPERAND);
         op.val32 = parseExpr32(p, op);
         if (parserError())
-            return getError();
+            return parserError();
         op.mode = M_IM32;
         scan = p;
         return OK;
@@ -456,18 +452,17 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) {
     }
     op.extra = size;
     if (*p.skipSpaces() == ',')
-        return setError(scan, UNKNOWN_OPERAND);
+        return op.setErrorIf(UNKNOWN_OPERAND);
     op.val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
-    setOK();  // Clear error
 
     if (*p.skipSpaces() == ',') {
         StrScanner a(p);
         ++a;
         if (parseIndexedMode(a.skipSpaces(), op, indir)) {
             scan = a;
-            return getError();
+            return op.getError();
         }
     }
 
@@ -485,9 +480,9 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) {
 
     if (indir) {
         if (*p == ',')
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setErrorIf(UNKNOWN_OPERAND);
         if (!p.expect(']'))
-            return setError(p, MISSING_CLOSING_BRACKET);
+            return op.setErrorIf(p, MISSING_CLOSING_BRACKET);
         op.mode = M_IDX;  // [nnnn]
         op.extra = 16;
         scan = p;
@@ -519,11 +514,11 @@ Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
         return getError();
 
     Operand op1, op2;
-    if (parseOperand(scan, op1))
-        return getError();
+    if (parseOperand(scan, op1) && op1.hasError())
+        return setError(op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2))
-            return getError();
+        if (parseOperand(scan, op2) && op2.hasError())
+            return setError(op2);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -532,8 +527,9 @@ Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    if (TableMc6809::TABLE.searchName(insn))
-        return setError(TableMc6809::TABLE.getError());
+    const auto error = TableMc6809::TABLE.searchName(insn);
+    if (error)
+        return setError(op1, error);
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_RTFM)

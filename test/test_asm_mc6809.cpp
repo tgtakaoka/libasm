@@ -120,32 +120,32 @@ static void test_inherent() {
         TEST("TSTF",  0x11, 0x5D);
         TEST("CLRF",  0x11, 0x5F);
     } else {
-        ERRT("SEXW",  UNKNOWN_INSTRUCTION);
-        ERRT("PSHSW", UNKNOWN_INSTRUCTION);
-        ERRT("PULSW", UNKNOWN_INSTRUCTION);
-        ERRT("PSHUW", UNKNOWN_INSTRUCTION);
-        ERRT("PULUW", UNKNOWN_INSTRUCTION);
-        ERRT("NEGD",  UNKNOWN_INSTRUCTION);
-        ERRT("COMD",  UNKNOWN_INSTRUCTION);
-        ERRT("LSRD",  UNKNOWN_INSTRUCTION);
-        ERRT("RORD",  UNKNOWN_INSTRUCTION);
-        ERRT("ASRD",  UNKNOWN_INSTRUCTION);
-        ERRT("ASLD",  UNKNOWN_INSTRUCTION);
-        ERRT("ROLD",  UNKNOWN_INSTRUCTION);
-        ERRT("DECD",  UNKNOWN_INSTRUCTION);
-        ERRT("INCD",  UNKNOWN_INSTRUCTION);
-        ERRT("TSTD",  UNKNOWN_INSTRUCTION);
-        ERRT("CLRD",  UNKNOWN_INSTRUCTION);
-        ERRT("COME",  UNKNOWN_INSTRUCTION);
-        ERRT("DECE",  UNKNOWN_INSTRUCTION);
-        ERRT("INCE",  UNKNOWN_INSTRUCTION);
-        ERRT("TSTE",  UNKNOWN_INSTRUCTION);
-        ERRT("CLRE",  UNKNOWN_INSTRUCTION);
-        ERRT("COMF",  UNKNOWN_INSTRUCTION);
-        ERRT("DECF",  UNKNOWN_INSTRUCTION);
-        ERRT("INCF",  UNKNOWN_INSTRUCTION);
-        ERRT("TSTF",  UNKNOWN_INSTRUCTION);
-        ERRT("CLRF",  UNKNOWN_INSTRUCTION);
+        ERUI("SEXW");
+        ERUI("PSHSW");
+        ERUI("PULSW");
+        ERUI("PSHUW");
+        ERUI("PULUW");
+        ERUI("NEGD");
+        ERUI("COMD");
+        ERUI("LSRD");
+        ERUI("RORD");
+        ERUI("ASRD");
+        ERUI("ASLD");
+        ERUI("ROLD");
+        ERUI("DECD");
+        ERUI("INCD");
+        ERUI("TSTD");
+        ERUI("CLRD");
+        ERUI("COME");
+        ERUI("DECE");
+        ERUI("INCE");
+        ERUI("TSTE");
+        ERUI("CLRE");
+        ERUI("COMF");
+        ERUI("DECF");
+        ERUI("INCF");
+        ERUI("TSTF");
+        ERUI("CLRF");
     }
 }
 
@@ -205,24 +205,24 @@ static void test_stack() {
     TEST("PSHU #$AA", 0x36, 0xAA);
     TEST("PULU #$FF", 0x37, 0xFF);
 
-    ERRT("PSHS S",         REGISTER_NOT_ALLOWED);
-    ERRT("PULS A,S,B",     REGISTER_NOT_ALLOWED);
-    ERRT("PSHU CC,X,U,PC", REGISTER_NOT_ALLOWED);
-    ERRT("PULU U",         REGISTER_NOT_ALLOWED);
+    ERRT("PSHS S",         REGISTER_NOT_ALLOWED, "S");
+    ERRT("PULS A,S,B",     REGISTER_NOT_ALLOWED, "A,S,B");
+    ERRT("PSHU CC,X,U,PC", REGISTER_NOT_ALLOWED, "CC,X,U,PC");
+    ERRT("PULU U",         REGISTER_NOT_ALLOWED, "U");
 
-    ERRT("PSHS A,D",   DUPLICATE_REGISTER);
-    ERRT("PULS D,B",   DUPLICATE_REGISTER);
-    ERRT("PSHU X,D,X", DUPLICATE_REGISTER);
-    ERRT("PSHS U,D,U", DUPLICATE_REGISTER);
-    ERRT("PSHU S,D,S", DUPLICATE_REGISTER);
+    ERRT("PSHS A,D",   DUPLICATE_REGISTER, "D");
+    ERRT("PULS D,B",   DUPLICATE_REGISTER, "B");
+    ERRT("PSHU X,D,X", DUPLICATE_REGISTER, "X");
+    ERRT("PSHS U,D,U", DUPLICATE_REGISTER, "U");
+    ERRT("PSHU S,D,S", DUPLICATE_REGISTER, "S");
 
-    ERRT("PULS E",   REGISTER_NOT_ALLOWED);
-    ERRT("PSHU F",   REGISTER_NOT_ALLOWED);
-    ERRT("PSHS V",   REGISTER_NOT_ALLOWED);
-    ERRT("PULU W",   REGISTER_NOT_ALLOWED);
-    ERRT("PULS E,X", REGISTER_NOT_ALLOWED);
-    ERRT("PSHU F,Y", REGISTER_NOT_ALLOWED);
-    ERRT("PSHS V,U", REGISTER_NOT_ALLOWED);
+    ERRT("PULS E",   REGISTER_NOT_ALLOWED, "E");
+    ERRT("PSHU F",   REGISTER_NOT_ALLOWED, "F");
+    ERRT("PSHS V",   REGISTER_NOT_ALLOWED, "V");
+    ERRT("PULU W",   REGISTER_NOT_ALLOWED, "W");
+    ERRT("PULS E,X", REGISTER_NOT_ALLOWED, "E,X");
+    ERRT("PSHU F,Y", REGISTER_NOT_ALLOWED, "F,Y");
+    ERRT("PSHS V,U", REGISTER_NOT_ALLOWED, "V,U");
 }
 
 static void test_register() {
@@ -249,10 +249,10 @@ static void test_register() {
     TEST("TFR S,D",  0x1F, 0x40);
     TEST("TFR PC,D", 0x1F, 0x50);
 
-    ERRT("EXG A",     OPERAND_NOT_ALLOWED);
-    ERRT("EXG A,",    OPERAND_NOT_ALLOWED);
-    ERRT("EXG A,X",   ILLEGAL_SIZE);
-    ERRT("EXG A,X,Y", OPERAND_NOT_ALLOWED);
+    ERRT("EXG A",     OPERAND_NOT_ALLOWED,  "A");
+    ERRT("EXG A,",    REGISTER_NOT_ALLOWED, "A,");
+    ERRT("EXG A,X",   ILLEGAL_SIZE,         "A,X");
+    ERRT("EXG A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
     if (is6309()) {
         // HD6309
@@ -286,44 +286,44 @@ static void test_register() {
         TEST("TFR 0,V",  0x1F, 0xD7);
         TEST("TFR X,0",  0x1F, 0x1D);
 
-        ERRT("ADDR A",     OPERAND_NOT_ALLOWED);
-        ERRT("ADDR A,",    OPERAND_NOT_ALLOWED);
-        ERRT("ADDR A,X",   ILLEGAL_SIZE);
-        ERRT("ADDR A,X,Y", OPERAND_NOT_ALLOWED);
+        ERRT("ADDR A",     OPERAND_NOT_ALLOWED,  "A");
+        ERRT("ADDR A,",    REGISTER_NOT_ALLOWED, "A,");
+        ERRT("ADDR A,X",   ILLEGAL_SIZE,         "A,X");
+        ERRT("ADDR A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
-        ERRT("TFR E",     OPERAND_NOT_ALLOWED);
-        ERRT("TFR E,",    OPERAND_NOT_ALLOWED);
-        ERRT("TFR E,W",   ILLEGAL_SIZE);
-        ERRT("TFR E,X,F", OPERAND_NOT_ALLOWED);
+        ERRT("TFR E",     OPERAND_NOT_ALLOWED,  "E");
+        ERRT("TFR E,",    REGISTER_NOT_ALLOWED, "E,");
+        ERRT("TFR E,W",   ILLEGAL_SIZE,         "E,W");
+        ERRT("TFR E,X,F", OPERAND_NOT_ALLOWED,  "E,X,F");
     } else {
-        ERRT("ADDR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("ADCR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("SUBR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("SBCR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("ANDR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("ORR  A,B", UNKNOWN_INSTRUCTION);
-        ERRT("EORR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("CMPR A,B", UNKNOWN_INSTRUCTION);
-        ERRT("TFR A,E",  UNKNOWN_REGISTER);
-        ERRT("TFR A,F",  UNKNOWN_REGISTER);
-        ERRT("TFR E,A",  UNKNOWN_REGISTER);
-        ERRT("TFR F,A",  UNKNOWN_REGISTER);
-        ERRT("TFR A,Z",  UNKNOWN_REGISTER);
-        ERRT("TFR Z,A",  UNKNOWN_REGISTER);
-        ERRT("TFR A,0",  UNKNOWN_REGISTER);
-        ERRT("TFR 0,A",  UNKNOWN_REGISTER);
-        ERRT("TFR CC,0", UNKNOWN_REGISTER);
-        ERRT("TFR 0,CC", UNKNOWN_REGISTER);
-        ERRT("TFR D,W",  UNKNOWN_REGISTER);
-        ERRT("TFR D,V",  UNKNOWN_REGISTER);
-        ERRT("TFR W,D",  UNKNOWN_REGISTER);
-        ERRT("TFR V,D",  UNKNOWN_REGISTER);
-        ERRT("TFR W,PC", UNKNOWN_REGISTER);
-        ERRT("TFR S,W",  UNKNOWN_REGISTER);
-        ERRT("TFR Z,V",  UNKNOWN_REGISTER);
-        ERRT("TFR X,Z",  UNKNOWN_REGISTER);
-        ERRT("TFR 0,V",  UNKNOWN_REGISTER);
-        ERRT("TFR X,0",  UNKNOWN_REGISTER);
+        ERUI("ADDR A,B");
+        ERUI("ADCR A,B");
+        ERUI("SUBR A,B");
+        ERUI("SBCR A,B");
+        ERUI("ANDR A,B");
+        ERUI("ORR  A,B");
+        ERUI("EORR A,B");
+        ERUI("CMPR A,B");
+        ERRT("TFR A,E",  UNKNOWN_REGISTER, "A,E");
+        ERRT("TFR A,F",  UNKNOWN_REGISTER, "A,F");
+        ERRT("TFR E,A",  UNKNOWN_REGISTER, "E,A");
+        ERRT("TFR F,A",  UNKNOWN_REGISTER, "F,A");
+        ERRT("TFR A,Z",  UNKNOWN_REGISTER, "A,Z");
+        ERRT("TFR Z,A",  UNKNOWN_REGISTER, "Z,A");
+        ERRT("TFR A,0",  UNKNOWN_REGISTER, "A,0");
+        ERRT("TFR 0,A",  UNKNOWN_REGISTER, "0,A");
+        ERRT("TFR CC,0", UNKNOWN_REGISTER, "CC,0");
+        ERRT("TFR 0,CC", UNKNOWN_REGISTER, "0,CC");
+        ERRT("TFR D,W",  UNKNOWN_REGISTER, "D,W");
+        ERRT("TFR D,V",  UNKNOWN_REGISTER, "D,V");
+        ERRT("TFR W,D",  UNKNOWN_REGISTER, "W,D");
+        ERRT("TFR V,D",  UNKNOWN_REGISTER, "V,D");
+        ERRT("TFR W,PC", UNKNOWN_REGISTER, "W,PC");
+        ERRT("TFR S,W",  UNKNOWN_REGISTER, "S,W");
+        ERRT("TFR Z,V",  UNKNOWN_REGISTER, "Z,V");
+        ERRT("TFR X,Z",  UNKNOWN_REGISTER, "X,Z");
+        ERRT("TFR 0,V",  UNKNOWN_REGISTER, "0,V");
+        ERRT("TFR X,0",  UNKNOWN_REGISTER, "X,0");
     }
 }
 
@@ -387,7 +387,7 @@ static void test_immediate() {
     TEST("ANDA #@177", 0x84, 0x7F);
     TEST("BITA #$90",  0x85, 0x90);
     TEST("LDA  #$90",  0x86, 0x90);
-    ERRT("STA  #$90",  OPERAND_NOT_ALLOWED);
+    ERRT("STA  #$90",  OPERAND_NOT_ALLOWED, "#$90");
     TEST("EORA #$90",  0x88, 0x90);
     TEST("ADCA #$90",  0x89, 0x90);
     TEST("ORA  #$90",  0x8A, 0x90);
@@ -399,7 +399,7 @@ static void test_immediate() {
     TEST("ANDB #$90", 0xC4, 0x90);
     TEST("BITB #$90", 0xC5, 0x90);
     TEST("LDB  #$90", 0xC6, 0x90);
-    ERRT("STB  #$90", OPERAND_NOT_ALLOWED);
+    ERRT("STB  #$90", OPERAND_NOT_ALLOWED, "#$90");
     TEST("EORB #$90", 0xC8, 0x90);
     TEST("ADCB #$90", 0xC9, 0x90);
     TEST("ORB  #$90", 0xCA, 0x90);
@@ -408,24 +408,24 @@ static void test_immediate() {
     TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
     TEST("ADDD #$90A0", 0xC3, 0x90, 0xA0);
     TEST("LDD  #$90A0", 0xCC, 0x90, 0xA0);
-    ERRT("STD  #$90A0", OPERAND_NOT_ALLOWED);
+    ERRT("STD  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
     TEST("CMPD #$90A0", 0x10, 0x83, 0x90, 0xA0);
 
     TEST("CMPX #$90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX  #$90A0", 0x8E, 0x90, 0xA0);
-    ERRT("STX  #$90A0", OPERAND_NOT_ALLOWED);
+    ERRT("STX  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
 
     TEST("CMPY #$90A0", 0x10, 0x8C, 0x90, 0xA0);
     TEST("LDY  #$90A0", 0x10, 0x8E, 0x90, 0xA0);
-    ERRT("STY  #$90A0", OPERAND_NOT_ALLOWED);
+    ERRT("STY  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
 
     TEST("CMPU #$90A0", 0x11, 0x83, 0x90, 0xA0);
     TEST("LDU  #$90A0", 0xCE, 0x90, 0xA0);
-    ERRT("STU  #$90A0", OPERAND_NOT_ALLOWED);
+    ERRT("STU  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
 
     TEST("CMPS #$90A0", 0x11, 0x8C, 0x90, 0xA0);
     TEST("LDS  #$90A0", 0x10, 0xCE, 0x90, 0xA0);
-    ERRT("StS  #$90A0", OPERAND_NOT_ALLOWED);
+    ERRT("StS  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
 
     if (is6309()) {
         // HD6309
@@ -442,51 +442,51 @@ static void test_immediate() {
         TEST("SUBE #$90", 0x11, 0x80, 0x90);
         TEST("ADDE #$90", 0x11, 0x8B, 0x90);
         TEST("LDE  #$90", 0x11, 0x86, 0x90);
-        ERRT("STE  #$90", OPERAND_NOT_ALLOWED);
+        ERRT("STE  #$90", OPERAND_NOT_ALLOWED, "#$90");
         TEST("CMPE #$90", 0x11, 0x81, 0x90);
 
         TEST("SUBF #$90", 0x11, 0xC0, 0x90);
         TEST("ADDF #$90", 0x11, 0xCB, 0x90);
         TEST("LDF  #$90", 0x11, 0xC6, 0x90);
-        ERRT("STF  #$90", OPERAND_NOT_ALLOWED);
+        ERRT("STF  #$90", OPERAND_NOT_ALLOWED, "#$90");
         TEST("CMPF #$90", 0x11, 0xC1, 0x90);
 
         TEST("SUBW #$90A0", 0x10, 0x80, 0x90, 0xA0);
         TEST("ADDW #$90A0", 0x10, 0x8B, 0x90, 0xA0);
         TEST("LDW  #$90A0", 0x10, 0x86, 0x90, 0xA0);
-        ERRT("STW  #$90A0", OPERAND_NOT_ALLOWED);
+        ERRT("STW  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
         TEST("CMPW #$90A0", 0x10, 0x81, 0x90, 0xA0);
 
         TEST("LDQ  #$12345678", 0xCD, 0x12, 0x34, 0x56, 0x78);
-        ERRT("STQ  #$12345678", OPERAND_NOT_ALLOWED);
+        ERRT("STQ  #$12345678", OPERAND_NOT_ALLOWED, "#$12345678");
 
         TEST("MULD #$90A0", 0x11, 0x8F, 0x90, 0xA0);
         TEST("DIVD #$90A0", 0x11, 0x8D, 0x90, 0xA0);
         TEST("DIVQ #$90A0", 0x11, 0x8E, 0x90, 0xA0);
     } else {
-        ERRT("LDMD  #$01",  UNKNOWN_INSTRUCTION);
-        ERRT("BITMD #$80",  UNKNOWN_INSTRUCTION);
-        ERRT("SBCD #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("ANDD #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("BITD #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("EORD #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("ADCD #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("ORD  #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("SUBE #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("ADDE #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("LDE  #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("CMPE #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("SUBF #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("ADDF #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("LDF  #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("CMPF #$90",   UNKNOWN_INSTRUCTION);
-        ERRT("SUBW #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("ADDW #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("LDW  #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("CMPW #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("LDQ  #$12345678", UNKNOWN_INSTRUCTION);
-        ERRT("MULD #$90A0", UNKNOWN_INSTRUCTION);
-        ERRT("DIVD #$90A0", UNKNOWN_INSTRUCTION);
+        ERUI("LDMD  #$01");
+        ERUI("BITMD #$80");
+        ERUI("SBCD #$90A0");
+        ERUI("ANDD #$90A0");
+        ERUI("BITD #$90A0");
+        ERUI("EORD #$90A0");
+        ERUI("ADCD #$90A0");
+        ERUI("ORD  #$90A0");
+        ERUI("SUBE #$90");
+        ERUI("ADDE #$90");
+        ERUI("LDE  #$90");
+        ERUI("CMPE #$90");
+        ERUI("SUBF #$90");
+        ERUI("ADDF #$90");
+        ERUI("LDF  #$90");
+        ERUI("CMPF #$90");
+        ERUI("SUBW #$90A0");
+        ERUI("ADDW #$90A0");
+        ERUI("LDW  #$90A0");
+        ERUI("CMPW #$90A0");
+        ERUI("LDQ  #$12345678");
+        ERUI("MULD #$90A0");
+        ERUI("DIVD #$90A0");
     }
 
     symtab.intern(0x90, "dir90");
@@ -620,35 +620,35 @@ static void test_direct() {
         TEST("TIM #$30,[*+$20,PCR]",  0x6B, 0x30, 0x9C, 0x1C);
         TEST("TIM #$30,[*+$120,PCR]", 0x6B, 0x30, 0x9D, 0x01, 0x1B);
     } else {
-        ERRT("SBCD    $90", UNKNOWN_INSTRUCTION);
-        ERRT("ANDD    $90", UNKNOWN_INSTRUCTION);
-        ERRT("BITD    $90", UNKNOWN_INSTRUCTION);
-        ERRT("EORD <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("ADCD <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("ORD  <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("SUBE    $90", UNKNOWN_INSTRUCTION);
-        ERRT("ADDE    $90", UNKNOWN_INSTRUCTION);
-        ERRT("LDE     $90", UNKNOWN_INSTRUCTION);
-        ERRT("STE     $90", UNKNOWN_INSTRUCTION);
-        ERRT("CMPE    $90", UNKNOWN_INSTRUCTION);
-        ERRT("SUBF <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("ADDF <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("LDF  <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("STF  <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("CMPF <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("SUBW    $90", UNKNOWN_INSTRUCTION);
-        ERRT("ADDW    $90", UNKNOWN_INSTRUCTION);
-        ERRT("LDW  <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("STW  <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("CMPW <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("LDQ     $90", UNKNOWN_INSTRUCTION);
-        ERRT("STQ  <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("MULD <$1290", UNKNOWN_INSTRUCTION);
-        ERRT("DIVD    $90", UNKNOWN_INSTRUCTION);
-        ERRT("OIM #$30,$10", UNKNOWN_INSTRUCTION);
-        ERRT("AIM #$30,$10", UNKNOWN_INSTRUCTION);
-        ERRT("EIM #$30,<$1290", UNKNOWN_INSTRUCTION);
-        ERRT("TIM #$30,<$1290", UNKNOWN_INSTRUCTION);
+        ERUI("SBCD    $90");
+        ERUI("ANDD    $90");
+        ERUI("BITD    $90");
+        ERUI("EORD <$1290");
+        ERUI("ADCD <$1290");
+        ERUI("ORD  <$1290");
+        ERUI("SUBE    $90");
+        ERUI("ADDE    $90");
+        ERUI("LDE     $90");
+        ERUI("STE     $90");
+        ERUI("CMPE    $90");
+        ERUI("SUBF <$1290");
+        ERUI("ADDF <$1290");
+        ERUI("LDF  <$1290");
+        ERUI("STF  <$1290");
+        ERUI("CMPF <$1290");
+        ERUI("SUBW    $90");
+        ERUI("ADDW    $90");
+        ERUI("LDW  <$1290");
+        ERUI("STW  <$1290");
+        ERUI("CMPW <$1290");
+        ERUI("LDQ     $90");
+        ERUI("STQ  <$1290");
+        ERUI("MULD <$1290");
+        ERUI("DIVD    $90");
+        ERUI("OIM #$30,$10");
+        ERUI("AIM #$30,$10");
+        ERUI("EIM #$30,<$1290");
+        ERUI("TIM #$30,<$1290");
     }
 
     symtab.intern(0x10, "dir10");
@@ -805,35 +805,35 @@ static void test_extended() {
         TEST("EIM #$30,$1290", 0x75, 0x30, 0x12, 0x90);
         TEST("TIM #$30,$1290", 0x7B, 0x30, 0x12, 0x90);
     } else {
-        ERRT("SBCD $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("ANDD $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("BITD $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("EORD $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("ORD   >$90", UNKNOWN_INSTRUCTION);
-        ERRT("ADCD $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("SUBE $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("ADDE $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("LDE   >$90", UNKNOWN_INSTRUCTION);
-        ERRT("STE  $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("CMPE $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("SUBF $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("ADDF $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("LDF   >$90", UNKNOWN_INSTRUCTION);
-        ERRT("STF  $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("CMPF $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("SUBW $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("ADDW $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("LDW   >$90", UNKNOWN_INSTRUCTION);
-        ERRT("STW  $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("CMPW $9ABC", UNKNOWN_INSTRUCTION);
-        ERRT("LDQ   >$90", UNKNOWN_INSTRUCTION);
-        ERRT("STQ  $1290", UNKNOWN_INSTRUCTION);
-        ERRT("MULD $1290", UNKNOWN_INSTRUCTION);
-        ERRT("DIVD  >$90", UNKNOWN_INSTRUCTION);
-        ERRT("OIM  #$30,>$10", UNKNOWN_INSTRUCTION);
-        ERRT("AIM  #$30,>$10", UNKNOWN_INSTRUCTION);
-        ERRT("EIM #$30,$1290", UNKNOWN_INSTRUCTION);
-        ERRT("TIM #$30,$1290", UNKNOWN_INSTRUCTION);
+        ERUI("SBCD $9ABC");
+        ERUI("ANDD $9ABC");
+        ERUI("BITD $9ABC");
+        ERUI("EORD $9ABC");
+        ERUI("ORD   >$90");
+        ERUI("ADCD $9ABC");
+        ERUI("SUBE $9ABC");
+        ERUI("ADDE $9ABC");
+        ERUI("LDE   >$90");
+        ERUI("STE  $9ABC");
+        ERUI("CMPE $9ABC");
+        ERUI("SUBF $9ABC");
+        ERUI("ADDF $9ABC");
+        ERUI("LDF   >$90");
+        ERUI("STF  $9ABC");
+        ERUI("CMPF $9ABC");
+        ERUI("SUBW $9ABC");
+        ERUI("ADDW $9ABC");
+        ERUI("LDW   >$90");
+        ERUI("STW  $9ABC");
+        ERUI("CMPW $9ABC");
+        ERUI("LDQ   >$90");
+        ERUI("STQ  $1290");
+        ERUI("MULD $1290");
+        ERUI("DIVD  >$90");
+        ERUI("OIM  #$30,>$10");
+        ERUI("AIM  #$30,>$10");
+        ERUI("EIM #$30,$1290");
+        ERUI("TIM #$30,$1290");
     }
 
     symtab.intern(0x0090, "dir90");
@@ -968,35 +968,35 @@ static void test_indexed() {
         TEST("EIM #$30,[,--X]", 0x65, 0x30, 0x93);
         TEST("TIM #$30,-2,X",   0x6B, 0x30, 0x1E);
     } else {
-        ERRT("SBCD ,X",     UNKNOWN_INSTRUCTION);
-        ERRT("ANDD ,X++",   UNKNOWN_INSTRUCTION);
-        ERRT("BITD ,--X",   UNKNOWN_INSTRUCTION);
-        ERRT("EORD [,X]",   UNKNOWN_INSTRUCTION);
-        ERRT("ADCD [,X++]", UNKNOWN_INSTRUCTION);
-        ERRT("ORD  [,--X]", UNKNOWN_INSTRUCTION);
-        ERRT("SUBE ,X", UNKNOWN_INSTRUCTION);
-        ERRT("ADDE ,X", UNKNOWN_INSTRUCTION);
-        ERRT("LDE  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("STE  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("CMPE ,X", UNKNOWN_INSTRUCTION);
-        ERRT("SUBF ,X", UNKNOWN_INSTRUCTION);
-        ERRT("ADDF ,X", UNKNOWN_INSTRUCTION);
-        ERRT("LDF  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("STF  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("CMPF ,X", UNKNOWN_INSTRUCTION);
-        ERRT("SUBW ,X", UNKNOWN_INSTRUCTION);
-        ERRT("CMPW ,X", UNKNOWN_INSTRUCTION);
-        ERRT("LDW  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("STW  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("ADDW ,X", UNKNOWN_INSTRUCTION);
-        ERRT("LDQ  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("STQ  ,X", UNKNOWN_INSTRUCTION);
-        ERRT("MULD ,X", UNKNOWN_INSTRUCTION);
-        ERRT("DIVD -1,X",       UNKNOWN_INSTRUCTION);
-        ERRT("OIM #$30,,X",     UNKNOWN_INSTRUCTION);
-        ERRT("AIM #$30,,X+",    UNKNOWN_INSTRUCTION);
-        ERRT("EIM #$30,[,--X]", UNKNOWN_INSTRUCTION);
-        ERRT("TIM #$30,-2,X",   UNKNOWN_INSTRUCTION);
+        ERUI("SBCD ,X");
+        ERUI("ANDD ,X++");
+        ERUI("BITD ,--X");
+        ERUI("EORD [,X]");
+        ERUI("ADCD [,X++]");
+        ERUI("ORD  [,--X]");
+        ERUI("SUBE ,X");
+        ERUI("ADDE ,X");
+        ERUI("LDE  ,X");
+        ERUI("STE  ,X");
+        ERUI("CMPE ,X");
+        ERUI("SUBF ,X");
+        ERUI("ADDF ,X");
+        ERUI("LDF  ,X");
+        ERUI("STF  ,X");
+        ERUI("CMPF ,X");
+        ERUI("SUBW ,X");
+        ERUI("CMPW ,X");
+        ERUI("LDW  ,X");
+        ERUI("STW  ,X");
+        ERUI("ADDW ,X");
+        ERUI("LDQ  ,X");
+        ERUI("STQ  ,X");
+        ERUI("MULD ,X");
+        ERUI("DIVD -1,X");
+        ERUI("OIM #$30,,X");
+        ERUI("AIM #$30,,X+");
+        ERUI("EIM #$30,[,--X]");
+        ERUI("TIM #$30,-2,X");
     }
 }
 
@@ -1238,44 +1238,44 @@ static void test_indexed_mode() {
         TEST("LDA [,W++]",     0xA6, 0xD0);
         TEST("LDA [,--W]",     0xA6, 0xF0);
     } else {
-        ERRT("LDA E,X",   UNKNOWN_OPERAND);
-        ERRT("LDA F,X",   UNKNOWN_OPERAND);
-        ERRT("LDA W,X",   UNKNOWN_OPERAND);
-        ERRT("LDA [E,X]", UNKNOWN_OPERAND);
-        ERRT("LDA [F,X]", UNKNOWN_OPERAND);
-        ERRT("LDA [W,X]", UNKNOWN_OPERAND);
-        ERRT("LDA E,Y",   UNKNOWN_OPERAND);
-        ERRT("LDA F,Y",   UNKNOWN_OPERAND);
-        ERRT("LDA W,Y",   UNKNOWN_OPERAND);
-        ERRT("LDA [E,Y]", UNKNOWN_OPERAND);
-        ERRT("LDA [F,Y]", UNKNOWN_OPERAND);
-        ERRT("LDA [W,Y]", UNKNOWN_OPERAND);
-        ERRT("LDA E,U",   UNKNOWN_OPERAND);
-        ERRT("LDA F,U",   UNKNOWN_OPERAND);
-        ERRT("LDA W,U",   UNKNOWN_OPERAND);
-        ERRT("LDA [E,U]", UNKNOWN_OPERAND);
-        ERRT("LDA [F,U]", UNKNOWN_OPERAND);
-        ERRT("LDA [W,U]", UNKNOWN_OPERAND);
-        ERRT("LDA E,S",   UNKNOWN_OPERAND);
-        ERRT("LDA F,S",   UNKNOWN_OPERAND);
-        ERRT("LDA W,S",   UNKNOWN_OPERAND);
-        ERRT("LDA [E,S]", UNKNOWN_OPERAND);
-        ERRT("LDA [F,S]", UNKNOWN_OPERAND);
-        ERRT("LDA [W,S]", UNKNOWN_OPERAND);
-        ERRT("LDA       ,W",   UNKNOWN_OPERAND);
-        ERRT("LDA      0,W",   UNKNOWN_OPERAND);
-        ERRT("LDA     >0,W",   UNKNOWN_OPERAND);
-        ERRT("LDA  32767,W",   UNKNOWN_OPERAND);
-        ERRT("LDA -32768,W",   UNKNOWN_OPERAND);
-        ERRT("LDA       [,W]", UNKNOWN_OPERAND);
-        ERRT("LDA      [0,W]", UNKNOWN_OPERAND);
-        ERRT("LDA     [>0,W]", UNKNOWN_OPERAND);
-        ERRT("LDA  [32767,W]", UNKNOWN_OPERAND);
-        ERRT("LDA [-32768,W]", UNKNOWN_OPERAND);
-        ERRT("LDA ,W++",       UNKNOWN_OPERAND);
-        ERRT("LDA ,--W",       UNKNOWN_OPERAND);
-        ERRT("LDA [,W++]",     UNKNOWN_OPERAND);
-        ERRT("LDA [,--W]",     UNKNOWN_OPERAND);
+        ERRT("LDA E,X",   UNKNOWN_OPERAND, "E,X");
+        ERRT("LDA F,X",   UNKNOWN_OPERAND, "F,X");
+        ERRT("LDA W,X",   UNKNOWN_OPERAND, "W,X");
+        ERRT("LDA [E,X]", UNKNOWN_OPERAND, "[E,X]");
+        ERRT("LDA [F,X]", UNKNOWN_OPERAND, "[F,X]");
+        ERRT("LDA [W,X]", UNKNOWN_OPERAND, "[W,X]");
+        ERRT("LDA E,Y",   UNKNOWN_OPERAND, "E,Y");
+        ERRT("LDA F,Y",   UNKNOWN_OPERAND, "F,Y");
+        ERRT("LDA W,Y",   UNKNOWN_OPERAND, "W,Y");
+        ERRT("LDA [E,Y]", UNKNOWN_OPERAND, "[E,Y]");
+        ERRT("LDA [F,Y]", UNKNOWN_OPERAND, "[F,Y]");
+        ERRT("LDA [W,Y]", UNKNOWN_OPERAND, "[W,Y]");
+        ERRT("LDA E,U",   UNKNOWN_OPERAND, "E,U");
+        ERRT("LDA F,U",   UNKNOWN_OPERAND, "F,U");
+        ERRT("LDA W,U",   UNKNOWN_OPERAND, "W,U");
+        ERRT("LDA [E,U]", UNKNOWN_OPERAND, "[E,U]");
+        ERRT("LDA [F,U]", UNKNOWN_OPERAND, "[F,U]");
+        ERRT("LDA [W,U]", UNKNOWN_OPERAND, "[W,U]");
+        ERRT("LDA E,S",   UNKNOWN_OPERAND, "E,S");
+        ERRT("LDA F,S",   UNKNOWN_OPERAND, "F,S");
+        ERRT("LDA W,S",   UNKNOWN_OPERAND, "W,S");
+        ERRT("LDA [E,S]", UNKNOWN_OPERAND, "[E,S]");
+        ERRT("LDA [F,S]", UNKNOWN_OPERAND, "[F,S]");
+        ERRT("LDA [W,S]", UNKNOWN_OPERAND, "[W,S]");
+        ERRT("LDA       ,W",   UNKNOWN_OPERAND, ",W");
+        ERRT("LDA      0,W",   UNKNOWN_OPERAND, "0,W");
+        ERRT("LDA     >0,W",   UNKNOWN_OPERAND, ">0,W");
+        ERRT("LDA  32767,W",   UNKNOWN_OPERAND, "32767,W");
+        ERRT("LDA -32768,W",   UNKNOWN_OPERAND, "-32768,W");
+        ERRT("LDA       [,W]", UNKNOWN_OPERAND, "[,W]");
+        ERRT("LDA      [0,W]", UNKNOWN_OPERAND, "[0,W]");
+        ERRT("LDA     [>0,W]", UNKNOWN_OPERAND, "[>0,W]");
+        ERRT("LDA  [32767,W]", UNKNOWN_OPERAND, "[32767,W]");
+        ERRT("LDA [-32768,W]", UNKNOWN_OPERAND, "[-32768,W]");
+        ERRT("LDA ,W++",       UNKNOWN_OPERAND, ",W++");
+        ERRT("LDA ,--W",       UNKNOWN_OPERAND, ",--W");
+        ERRT("LDA [,W++]",     UNKNOWN_OPERAND, "[,W++]");
+        ERRT("LDA [,--W]",     UNKNOWN_OPERAND, "[,--W]");
     }
 
     symtab.intern(0x0F83, "label0F83");
@@ -1321,12 +1321,12 @@ static void test_transfer() {
         TEST("TFM U+,S+", 0x11, 0x38, 0x34);
         TEST("TFM S+,D+", 0x11, 0x38, 0x40);
 
-        ERRT("TFM X+,W",  OPERAND_NOT_ALLOWED);
-        ERRT("TFM W+,X",  OPERAND_NOT_ALLOWED);
-        ERRT("TFM W-,X-", OPERAND_NOT_ALLOWED);
+        ERRT("TFM X+,W",  REGISTER_NOT_ALLOWED, "W");
+        ERRT("TFM W+,X",  REGISTER_NOT_ALLOWED, "W+,X");
+        ERRT("TFM W-,X-", REGISTER_NOT_ALLOWED, "W-,X-");
     } else {
-        ERRT("TFM D,Y",   UNKNOWN_INSTRUCTION);
-        ERRT("TFM X+,Y+", UNKNOWN_INSTRUCTION);
+        ERUI("TFM D,Y");
+        ERUI("TFM X+,Y+");
     }
 }
 
@@ -1368,13 +1368,13 @@ static void test_bit_position() {
         TEST("SETDP $90");
         TEST("LDBT  B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
     } else {
-        ERRT("BAND  A.1,$34.2", UNKNOWN_INSTRUCTION);
-        ERRT("BIAND A.1,$34.2", UNKNOWN_INSTRUCTION);
-        ERRT("BOR   A.1,$34.2", UNKNOWN_INSTRUCTION);
-        ERRT("BIOR  A,1,$34,2", UNKNOWN_INSTRUCTION);
-        ERRT("BEOR  A,1,$34,2", UNKNOWN_INSTRUCTION);
-        ERRT("LDBT  A,1,$34,2", UNKNOWN_INSTRUCTION);
-        ERRT("STBT  A.1,$34.2", UNKNOWN_INSTRUCTION);
+        ERUI("BAND  A.1,$34.2");
+        ERUI("BIAND A.1,$34.2");
+        ERUI("BOR   A.1,$34.2");
+        ERUI("BIOR  A,1,$34,2");
+        ERUI("BEOR  A,1,$34,2");
+        ERUI("LDBT  A,1,$34,2");
+        ERUI("STBT  A.1,$34.2");
     }
 }
 
@@ -1416,91 +1416,87 @@ static void test_comment() {
 }
 
 static void test_error() {
-    ERRT("LDA , S",       UNKNOWN_OPERAND);
-    ERRT("LDA , X+",      UNKNOWN_OPERAND);
-    ERRT("LDA , X++",     UNKNOWN_OPERAND);
-    ERRT("LDA , -X",      UNKNOWN_OPERAND);
-    ERRT("LDA , --X",     UNKNOWN_OPERAND);
-    ERRT("LDA [ , X++ ]", UNKNOWN_OPERAND);
-    ERRT("LDA [ , --X ]", UNKNOWN_OPERAND);
-    ERRT("LDA ,X +",  GARBAGE_AT_END);
-    ERRT("LDA ,X ++", GARBAGE_AT_END);
-    ERRT("LDA ,X+ +", GARBAGE_AT_END);
-    ERRT("LDA ,- X",  UNKNOWN_OPERAND);
-    ERRT("LDA ,-- X", UNKNOWN_OPERAND);
-    ERRT("LDA ,- -X", UNKNOWN_OPERAND);
-    ERRT("LDA ,X]",   GARBAGE_AT_END);
-    ERRT("LDA [,X",   MISSING_CLOSING_BRACKET);
+    ERRT("LDA , S",       UNKNOWN_OPERAND, ", S");
+    ERRT("LDA , X+",      UNKNOWN_OPERAND, ", X+");
+    ERRT("LDA , X++",     UNKNOWN_OPERAND, ", X++");
+    ERRT("LDA , -X",      UNKNOWN_OPERAND, ", -X");
+    ERRT("LDA , --X",     UNKNOWN_OPERAND, ", --X");
+    ERRT("LDA [ , X++ ]", UNKNOWN_OPERAND, "[ , X++ ]");
+    ERRT("LDA [ , --X ]", UNKNOWN_OPERAND, "[ , --X ]");
+    ERRT("LDA ,X +",  GARBAGE_AT_END, "+");
+    ERRT("LDA ,X ++", GARBAGE_AT_END, "++");
+    ERRT("LDA ,X+ +", GARBAGE_AT_END, "+");
+    ERRT("LDA ,- X",  UNKNOWN_OPERAND, ",- X");
+    ERRT("LDA ,-- X", UNKNOWN_OPERAND, ",-- X");
+    ERRT("LDA ,- -X", UNKNOWN_OPERAND, ",- -X");
+    ERRT("LDA ,X]",   GARBAGE_AT_END, "]");
+    ERRT("LDA [,X ; comment",   MISSING_CLOSING_BRACKET, "; comment");
 
     if (is6309()) {
         // HD6309
-        ERRT("LDA ,W+",   UNKNOWN_OPERAND);
-        ERRT("LDA ,-W",   UNKNOWN_OPERAND);
-        ERRT("LDA , W++", UNKNOWN_OPERAND);
-        ERRT("LDA , --W", UNKNOWN_OPERAND);
-        ERRT("LDA [ , W++ ]", UNKNOWN_OPERAND);
-        ERRT("LDA [ , --W ]", UNKNOWN_OPERAND);
+        ERRT("LDA ,W+",   UNKNOWN_OPERAND, ",W+");
+        ERRT("LDA ,-W",   UNKNOWN_OPERAND, ",-W");
+        ERRT("LDA , W++", UNKNOWN_OPERAND, ", W++");
+        ERRT("LDA , --W", UNKNOWN_OPERAND, ", --W");
+        ERRT("LDA [ , W++ ]", UNKNOWN_OPERAND, "[ , W++ ]");
+        ERRT("LDA [ , --W ]", UNKNOWN_OPERAND, "[ , --W ]");
 
-        ERRT("TFM D+,W+",    OPERAND_NOT_ALLOWED);
-        ERRT("TFM D + , X+", GARBAGE_AT_END);
-        ERRT("TFM D+ , X +", GARBAGE_AT_END);
-        ERRT("TFM X - , Y-", GARBAGE_AT_END);
-        ERRT("TFM X- , Y -", GARBAGE_AT_END);
-        ERRT("BOR A .1  , $34.2",   GARBAGE_AT_END);
-        ERRT("BOR A. 1  , $34.2",   GARBAGE_AT_END);
-        TEST("BOR A.1   , $34 .2",  0x11, 0x32, 0x51, 0x34);
-        ERRT("BOR A.1   , $34. 2",  GARBAGE_AT_END);
+        ERRT("TFM D+,W+",    REGISTER_NOT_ALLOWED, "W+");
+        ERRT("TFM D + , X+", GARBAGE_AT_END, "+ , X+");
+        ERRT("TFM D+ , X +", GARBAGE_AT_END, "+");
+        ERRT("TFM X - , Y-", GARBAGE_AT_END, "- , Y-");
+        ERRT("TFM X- , Y -", GARBAGE_AT_END, "-");
         TEST("BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
     }
 }
 
 static void test_undefined_symbol() {
-    ERUS("LDA  #UNDEF", 0x86, 0x00);
-    ERUS("SUBD #UNDEF", 0x83, 0x00, 0x00);
-    ERUS("NEG   UNDEF", 0x00, 0x00);
-    ERUS("SUBA <UNDEF", 0x90, 0x00);
-    ERUS("SUBB >UNDEF", 0xF0, 0x00, 0x00);
+    ERUS("LDA  #UNDEF", "UNDEF", 0x86, 0x00);
+    ERUS("SUBD #UNDEF", "UNDEF", 0x83, 0x00, 0x00);
+    ERUS("NEG   UNDEF", "UNDEF", 0x00, 0x00);
+    ERUS("SUBA <UNDEF", "UNDEF", 0x90, 0x00);
+    ERUS("SUBB >UNDEF", "UNDEF", 0xF0, 0x00, 0x00);
 
-    ERUS("LDA    UNDEF,Y",  0xA6, 0xA9, 0x00, 0x00);
-    ERUS("LDA  <<UNDEF,Y",  0xA6, 0x20);
-    ERUS("LDA   <UNDEF,Y",  0xA6, 0xA8, 0x00);
-    ERUS("LDA   >UNDEF,Y",  0xA6, 0xA9, 0x00, 0x00);
-    ERUS("LDA   [UNDEF,Y]", 0xA6, 0xB9, 0x00, 0x00);
-    ERUS("LDA  [<UNDEF,Y]", 0xA6, 0xB8, 0x00);
-    ERUS("LDA  [>UNDEF,Y]", 0xA6, 0xB9, 0x00, 0x00);
-    ERUS("LDA     [UNDEF]", 0xA6, 0x9F, 0x00, 0x00);
-    ERUS("LDA    [>UNDEF]", 0xA6, 0x9F, 0x00, 0x00);
+    ERUS("LDA    UNDEF,Y",  "UNDEF,Y",  0xA6, 0xA9, 0x00, 0x00);
+    ERUS("LDA  <<UNDEF,Y",  "UNDEF,Y",  0xA6, 0x20);
+    ERUS("LDA   <UNDEF,Y",  "UNDEF,Y",  0xA6, 0xA8, 0x00);
+    ERUS("LDA   >UNDEF,Y",  "UNDEF,Y",  0xA6, 0xA9, 0x00, 0x00);
+    ERUS("LDA   [UNDEF,Y]", "UNDEF,Y]", 0xA6, 0xB9, 0x00, 0x00);
+    ERUS("LDA  [<UNDEF,Y]", "UNDEF,Y]", 0xA6, 0xB8, 0x00);
+    ERUS("LDA  [>UNDEF,Y]", "UNDEF,Y]", 0xA6, 0xB9, 0x00, 0x00);
+    ERUS("LDA     [UNDEF]", "UNDEF]",   0xA6, 0x9F, 0x00, 0x00);
+    ERUS("LDA    [>UNDEF]", "UNDEF]",   0xA6, 0x9F, 0x00, 0x00);
 
-    ERUS("BRA   UNDEF", 0x20, 0x00);
-    ERUS("LBRA  UNDEF", 0x16, 0x00, 0x00);
-    ERUS("LBCC  UNDEF", 0x10, 0x24, 0x00, 0x00);
-    ERUS("LDA   UNDEF,PCR",  0xA6, 0x8D, 0x00, 0x00);
-    ERUS("LDA  <UNDEF,PCR",  0xA6, 0x8C, 0x00);
-    ERUS("LDA  >UNDEF,PCR",  0xA6, 0x8D, 0x00, 0x00);
-    ERUS("LDA  [UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
-    ERUS("LDA [<UNDEF,PCR]", 0xA6, 0x9C, 0x00);
-    ERUS("LDA [>UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
+    ERUS("BRA   UNDEF", "UNDEF", 0x20, 0x00);
+    ERUS("LBRA  UNDEF", "UNDEF", 0x16, 0x00, 0x00);
+    ERUS("LBCC  UNDEF", "UNDEF", 0x10, 0x24, 0x00, 0x00);
+    ERUS("LDA   UNDEF,PCR",  "UNDEF,PCR",  0xA6, 0x8D, 0x00, 0x00);
+    ERUS("LDA  <UNDEF,PCR",  "UNDEF,PCR",  0xA6, 0x8C, 0x00);
+    ERUS("LDA  >UNDEF,PCR",  "UNDEF,PCR",  0xA6, 0x8D, 0x00, 0x00);
+    ERUS("LDA  [UNDEF,PCR]", "UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
+    ERUS("LDA [<UNDEF,PCR]", "UNDEF,PCR]", 0xA6, 0x9C, 0x00);
+    ERUS("LDA [>UNDEF,PCR]", "UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
 
     if (is6309()) {
         // HD6309
-        ERUS("BITMD #UNDEF", 0x11, 0x3C, 0x00);
-        ERUS("LDQ   #UNDEF", 0xCD, 0x00, 0x00, 0x00, 0x00);
-        ERUS("MULD  #UNDEF", 0x11, 0x8F, 0x00, 0x00);
-        ERUS("LDA   UNDEF,W",  0xA6, 0xAF, 0x00, 0x00);
-        ERUS("LDA  >UNDEF,W",  0xA6, 0xAF, 0x00, 0x00);
-        ERUS("LDA [UNDEF,W]",  0xA6, 0xB0, 0x00, 0x00);
-        ERUS("LDA [>UNDEF,W]", 0xA6, 0xB0, 0x00, 0x00);
-        ERUS("OIM #UNDEF,$10",       0x01, 0x00, 0x10);
-        ERUS("OIM #UNDEF,$1000",     0x71, 0x00, 0x10, 0x00);
-        ERUS("OIM #UNDEF,UNDEF,X",   0x61, 0x00, 0x89, 0x00, 0x00);
-        ERUS("OIM #UNDEF,[$1000,X]", 0x61, 0x00, 0x99, 0x10, 0x00);
-        ERUS("OIM #$30,UNDEF",       0x01, 0x30, 0x00);
-        ERUS("OIM #$30,>UNDEF",      0x71, 0x30, 0x00, 0x00);
-        ERUS("OIM #$30,UNDEF,X",     0x61, 0x30, 0x89, 0x00, 0x00);
-        ERUS("OIM #$30,[UNDEF,X]",   0x61, 0x30, 0x99, 0x00, 0x00);
-        ERUS("BOR A.UNDEF,$34.2", 0x11, 0x32, 0x50, 0x34);
-        ERUS("BOR A.1,UNDEF.2",   0x11, 0x32, 0x51, 0x00);
-        ERUS("BOR A.1,$34.UNDEF", 0x11, 0x32, 0x41, 0x34);
+        ERUS("BITMD #UNDEF",   "UNDEF",    0x11, 0x3C, 0x00);
+        ERUS("LDQ   #UNDEF",   "UNDEF",    0xCD, 0x00, 0x00, 0x00, 0x00);
+        ERUS("MULD  #UNDEF",   "UNDEF",    0x11, 0x8F, 0x00, 0x00);
+        ERUS("LDA   UNDEF,W",  "UNDEF,W",  0xA6, 0xAF, 0x00, 0x00);
+        ERUS("LDA  >UNDEF,W",  "UNDEF,W",  0xA6, 0xAF, 0x00, 0x00);
+        ERUS("LDA [UNDEF,W]",  "UNDEF,W]", 0xA6, 0xB0, 0x00, 0x00);
+        ERUS("LDA [>UNDEF,W]", "UNDEF,W]", 0xA6, 0xB0, 0x00, 0x00);
+        ERUS("OIM #UNDEF,$10",       "UNDEF,$10",       0x01, 0x00, 0x10);
+        ERUS("OIM #UNDEF,$1000",     "UNDEF,$1000",     0x71, 0x00, 0x10, 0x00);
+        ERUS("OIM #UNDEF,UNDEF,X",   "UNDEF,UNDEF,X",   0x61, 0x00, 0x89, 0x00, 0x00);
+        ERUS("OIM #UNDEF,[$1000,X]", "UNDEF,[$1000,X]", 0x61, 0x00, 0x99, 0x10, 0x00);
+        ERUS("OIM #$30,UNDEF",       "UNDEF",    0x01, 0x30, 0x00);
+        ERUS("OIM #$30,>UNDEF",      "UNDEF",    0x71, 0x30, 0x00, 0x00);
+        ERUS("OIM #$30,UNDEF,X",     "UNDEF,X",  0x61, 0x30, 0x89, 0x00, 0x00);
+        ERUS("OIM #$30,[UNDEF,X]",   "UNDEF,X]", 0x61, 0x30, 0x99, 0x00, 0x00);
+        ERUS("BOR A.UNDEF,$34.2", "UNDEF,$34.2", 0x11, 0x32, 0x50, 0x34);
+        ERUS("BOR A.1,UNDEF.2",   "UNDEF.2",     0x11, 0x32, 0x51, 0x00);
+        ERUS("BOR A.1,$34.UNDEF", "UNDEF",       0x11, 0x32, 0x41, 0x34);
     }
 }
 // clang-format on

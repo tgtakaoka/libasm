@@ -35,20 +35,23 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 // PseudoHandler
 
 Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    const StrScanner line = scan;
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &driver);
     // TODO line end check
     if (setError(parser))
         return getError();
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-        return setError(UNDEFINED_SYMBOL);
-    if (assembler().checkAddress(value.getUnsigned()))
+        return setError(parser, UNDEFINED_SYMBOL);
+    setAt(line);
+    if (assembler().checkAddress(value.getUnsigned(), *this))
         return setError(assembler());
     list.setStartAddress(driver.setOrigin(value.getUnsigned()));
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    const StrScanner line = scan;
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &driver);
     // TODO line end check
@@ -64,10 +67,11 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
     const auto origin = driver.origin();
     list.setStartAddress(origin);
     const auto addr = (origin + (alignment - 1)) & ~(alignment - 1);
-    if (assembler().checkAddress(addr))
+    setAt(line);
+    if (assembler().checkAddress(addr, *this))
         return setError(assembler());
     driver.setOrigin(addr);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -160,7 +164,7 @@ Error AsmDirective::defineBytes(
             break;
     }
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -185,7 +189,7 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDrive
             break;
     }
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -213,7 +217,7 @@ Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDrive
             break;
     }
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -243,7 +247,7 @@ Error AsmDirective::allocateSpaces(
     if (origin + size < origin)
         return setError(OVERFLOW_RANGE);
     driver.setOrigin(origin + ((size + unit - 1) & -unit) / unit);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -283,7 +287,7 @@ Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &d
     if (driver.setCpu(cpu.c_str()) == nullptr)
         return setError(UNSUPPORTED_CPU);
     scan = p;
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -305,7 +309,7 @@ Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDr
         intel->assembler().setCpu(cpu);
     } else
         return setError(option, UNKNOWN_OPERAND);
-    return setError(OK);
+    return setOK();
 }
 
 Error AsmDirective::endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {

@@ -109,7 +109,7 @@ private:
 
 class ErrorAt : public ErrorReporter {
 public:
-    ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY) {}
+    ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
 
     Error setError(Error error) { return ErrorReporter::setError(error); }
     Error setError(const StrScanner &at, Error error) {
@@ -118,18 +118,32 @@ public:
     }
     Error setError(const ErrorAt &o) { return setError(o._at, o.getError()); }
     Error setError(const ErrorAt &o, Error error) { return setError(o._at, error); }
+    Error setErrorIf(Error error) {
+        if (getError())
+            return getError();
+        return setError(_at, error);
+    }
+    Error setErrorIf(const ErrorAt &o) {
+        if (getError())
+            return getError();
+        return setError(o._at, o.getError());
+    }
     Error setErrorIf(const StrScanner &at, Error error) {
         if (getError())
             return getError();
         return setError(at, error);
     }
-    Error setErrorIf(const ErrorAt &o) { return setErrorIf(o._at, o.getError()); }
+    Error setErrorIf(const ErrorAt &o, Error error) {
+        if (getError())
+            return getError();
+        return setError(o._at, error);
+    }
 
-    void setAt(const StrScanner &at) { _at = at; }
-    const StrScanner &errorAt() const { return _at; }
+    void setAt(const StrScanner &at) { _at = at.str(); }
+    const char *errorAt() const { return _at; }
 
 private:
-    StrScanner _at;
+    const char *_at;
 };
 
 }  // namespace libasm

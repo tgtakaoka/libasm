@@ -19,16 +19,12 @@
 namespace libasm {
 namespace mn1610 {
 
-Error AsmMn1610::checkAddressRange(Config::uintptr_t addr) {
-    return TableMn1610::TABLE.checkAddressRange(addr);
-}
-
 Error AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
-    if (checkAddressRange(op.val32))
+    if (checkAddress(op.val32, op))
         return getError();
     const int32_t delta = op.val32 - insn.address();
     if (overflowRel8(delta))
-        return setError(OPERAND_TOO_FAR);
+        return setError(op, OPERAND_TOO_FAR);
     const Config::opcode_t mode = (op.mode == M_IABS) ? 3 : 1;
     insn.embed(mode << 11);
     insn.embed(static_cast<uint8_t>(delta));
@@ -53,9 +49,9 @@ Error AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
     case M_IDIX:
         if (RegMn1610::isIndex(op.reg)) {
             if (op.mode == M_IXID)
-                return setError(REGISTER_NOT_ALLOWED);
+                return setError(op, REGISTER_NOT_ALLOWED);
             if (op.val32 >= 0x100)
-                return setError(OVERFLOW_RANGE);
+                return setError(op, OVERFLOW_RANGE);
             // Direct index: D(Xj), Indirect index: (D)(Xj)
             insn.embed(static_cast<uint8_t>(op.val32));
             const Config::opcode_t mode =
@@ -65,15 +61,15 @@ Error AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
         }
         if (op.reg == REG_IC) {
             if (op.mode == M_IDIX)
-                return setError(REGISTER_NOT_ALLOWED);
+                return setError(op, REGISTER_NOT_ALLOWED);
             if (overflowRel8(static_cast<int32_t>(op.val32)))
-                return setError(OPERAND_TOO_FAR);
+                return setError(op, OPERAND_TOO_FAR);
             // Relative: d(IC), Relative indirect: (d(IC))
             insn.embed(static_cast<uint8_t>(op.val32));
             insn.embed((op.mode == M_INDX ? 1 : 3) << 11);
             return OK;
         }
-        return setError(REGISTER_NOT_ALLOWED);
+        return setError(op, REGISTER_NOT_ALLOWED);
     case M_IM8:
     case M_IM4:
     case M_ILVL:
@@ -81,7 +77,7 @@ Error AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
         insn.embed((0 << 11) | op.val32);
         return OK;
     default:
-        return setError(UNKNOWN_OPERAND);
+        return setError(op, UNKNOWN_OPERAND);
     }
 }
 
@@ -89,21 +85,21 @@ Error AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mod
     switch (mode) {
     case M_RDG:
         if (op.reg == REG_STR)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RD:
         insn.embed(RegMn1610::encodeGeneric(op.reg) << 8);
         break;
     case M_RSG:
         if (op.reg == REG_STR)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RS:
         insn.embed(RegMn1610::encodeGeneric(op.reg));
         break;
     case M_RBW:
         if (op.reg == REG_CSBR)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_SB:
     case M_RB:
@@ -112,7 +108,7 @@ Error AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mod
     case M_RHR:
     case M_RHW:
         if ((mode == M_RHR && op.reg == REG_SOR) || (mode == M_RHW && op.reg == REG_SIR))
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         insn.embed(RegMn1610::encodeHardware(op.reg) << 4);
         return OK;
     case M_RP:
@@ -137,39 +133,39 @@ Error AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mod
             return OK;
         }
         if (op.val32 >= 2)
-            return setError(ILLEGAL_CONSTANT);
+            return setError(op, ILLEGAL_CONSTANT);
         insn.embed((op.val32 & 1) << 3);
         return OK;
     case M_IM8W:
     case M_IM16:
         if (overflowUint16(op.val32))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         // Fall-through
     case M_IABS:
         insn.emitOperand16(op.val32);
         return OK;
     case M_BIT:
         if (op.val32 >= 16)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(op, ILLEGAL_BIT_NUMBER);
         insn.embed(static_cast<uint8_t>(op.val32));
         return OK;
     case M_ILVL:
         if (op.val32 >= 4)
-            return setError(ILLEGAL_CONSTANT);
+            return setError(op, ILLEGAL_CONSTANT);
         // Fall-through
     case M_IM4:
         if (op.val32 >= 16)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         // Fall-through
     case M_IM8:
     case M_IOA:
         if (overflowUint8(op.val32))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.embed(static_cast<uint8_t>(op.val32));
         return OK;
     case M_ABS:
         // TODO: calculate/check segment/offset
-        if (checkAddressRange(op.val32))
+        if (checkAddress(op.val32, op))
             return getError();
         insn.emitOperand16(op.val32);
         return OK;
@@ -181,13 +177,14 @@ Error AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mod
     case M_RI2:
         return OK;
     default:
-        return setError(UNKNOWN_OPERAND);
+        return setError(op, UNKNOWN_OPERAND);
     }
     return OK;
 }
 
-Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
 
@@ -222,10 +219,10 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) {
             } else if (RegMn1610::isIndirect(op.reg)) {
                 op.mode = M_RI;
             } else {
-                return setError(r, REGISTER_NOT_ALLOWED);
+                return op.setError(r, REGISTER_NOT_ALLOWED);
             }
             if (!t.expect(')'))
-                return setError(t, MISSING_CLOSING_PAREN);
+                return op.setError(t, MISSING_CLOSING_PAREN);
             if (preDec) {
                 op.mode = M_RIAU;
                 op.val32 = -1;
@@ -274,18 +271,18 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) {
         // v(r), (v(r))
         op.reg = RegMn1610::parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF)
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(p, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         p.skipSpaces();
         if (indir && !p.expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         op.mode = indir ? M_IXID : M_INDX;
         scan = p;
         return OK;
     }
     if (indir && !p.expect(')'))
-        return setError(MISSING_CLOSING_PAREN);
+        return op.setError(p, MISSING_CLOSING_PAREN);
     // (v), (v)(r)
     if (endOfLine(*p.skipSpaces()) || *p == ',') {
         op.mode = M_IABS;
@@ -297,13 +294,13 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) {
         op.reg = RegMn1610::parseRegName(p.skipSpaces());
         if (op.reg != REG_UNDEF) {
             if (!p.skipSpaces().expect(')'))
-                return setError(MISSING_CLOSING_PAREN);
+                return op.setError(p, MISSING_CLOSING_PAREN);
             op.mode = M_IDIX;
             scan = p;
             return OK;
         }
     }
-    return setError(p, UNKNOWN_OPERAND);
+    return op.setError(UNKNOWN_OPERAND);
 }
 
 Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
@@ -311,21 +308,21 @@ Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand opr1, opr2, opr3, opr4;
-    if (parseOperand(scan, opr1))
-        return getError();
+    if (parseOperand(scan, opr1) && opr1.hasError())
+        return setError(opr1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, opr2))
-            return getError();
+        if (parseOperand(scan, opr2) && opr2.hasError())
+            return setError(opr2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, opr3))
-            return getError();
+        if (parseOperand(scan, opr3) && opr3.hasError())
+            return setError(opr3);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, opr4))
-            return getError();
+        if (parseOperand(scan, opr4) && opr4.hasError())
+            return setError(opr4);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -336,8 +333,9 @@ Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(opr4);
 
     insn.setAddrMode(opr1.mode, opr2.mode, opr3.mode, opr4.mode);
-    if (TableMn1610::TABLE.searchName(insn))
-        return setError(TableMn1610::TABLE.getError());
+    const auto error = TableMn1610::TABLE.searchName(insn);
+    if (error)
+        return setError(opr1, error);
 
     const AddrMode op1 = insn.op1();
     if (op1 != M_NO && encodeOperand(insn, opr1, op1)) {

@@ -64,15 +64,15 @@ private:
     bool setRegPointer1(int16_t rp);
     bool isWorkReg(uint8_t regAddr) const;
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
         CcName cc;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+        Operand() : mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
     };
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     Error setRp(StrScanner &scan, bool (AsmZ8::*)(int16_t));
     Error processPseudo(StrScanner &scan, const char *name);
 

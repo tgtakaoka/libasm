@@ -46,8 +46,9 @@ static bool overflowInt13(Config::ptrdiff_t delta) {
     return delta < -0x40 || delta >= 0x40;
 }
 
-Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     // Do not skip preceding spaces.
+    op.setAt(scan);
     if (endOfLine(*scan))
         return OK;
 
@@ -68,11 +69,11 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) {
     op.indir = p.expect('*');
     op.val16 = parseExpr16(p.skipSpaces(), op);
     if (parserError())
-        return getError();
+        return op.getError();
     if (p.expect(',')) {
         op.reg = RegScn2650::parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         if (p.skipSpaces().expect(',')) {
             op.sign = p.skipSpaces().expect([](char c) { return c == '+' || c == '-'; });
             if (op.sign) {
@@ -80,7 +81,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) {
                 scan = p;
                 return OK;
             }
-            return setError(UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         }
         op.mode = op.reg == REG_R3 ? IX15 : IX13;
         scan = p;
@@ -203,20 +204,20 @@ Error AsmScn2650::encode(StrScanner &scan, Insn &_insn) {
     Operand opr1, opr2;
     bool insnWithReg = false;
     if (scan.expect(',')) {
-        if (parseOperand(scan, opr1))
-            return getError();
+        if (parseOperand(scan, opr1) && opr1.hasError())
+            return setError(opr1);
         if (opr1.mode == REGN || opr1.mode == REG0 || opr1.mode == R123)
             insnWithReg = true;
         if (!endOfLine(*scan.skipSpaces())) {
-            if (parseOperand(scan.skipSpaces(), opr2))
-                return getError();
+            if (parseOperand(scan.skipSpaces(), opr2) && opr2.hasError())
+                return setError(opr2);
         }
     } else {
-        if (parseOperand(scan.skipSpaces(), opr1))
-            return getError();
+        if (parseOperand(scan.skipSpaces(), opr1) && opr1.hasError())
+            return setError(opr1);
         if (scan.skipSpaces().expect(',')) {
-            if (parseOperand(scan.skipSpaces(), opr2))
-                return getError();
+            if (parseOperand(scan.skipSpaces(), opr2) && opr2.hasError())
+                return setError(opr2);
         }
     }
 
@@ -226,8 +227,9 @@ Error AsmScn2650::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(opr2);
 
     insn.setAddrMode(opr1.mode, opr2.mode);
-    if (TableScn2650::TABLE.searchName(insn))
-        return setError(TableScn2650::TABLE.getError());
+    const auto error = TableScn2650::TABLE.searchName(insn);
+    if (error)
+        return setError(opr1, error);
 
     if (insnWithReg)
         _regs.outRegName(insn.nameBuffer().letter(','), opr1.reg);

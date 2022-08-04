@@ -51,20 +51,20 @@ static void test_accumrator() {
     TEST("ADD 70H",         0x0070);
     TEST("ADD 8FH",         0x000F);
     if (is32010()) {
-        ERRT("ADD 090H",    OVERFLOW_RANGE);
+        ERRT("ADD 090H",    OVERFLOW_RANGE, "090H");
     } else {
         TEST("ADD 090H",    0x0010);
     }
-    ERRT("ADD 0100H",       OPERAND_NOT_ALLOWED);
-    ERUS("ADD UNDEF",       0x0000);
+    ERRT("ADD 0100H",       OPERAND_NOT_ALLOWED, "0100H");
+    ERUS("ADD UNDEF",       "UNDEF",       0x0000);
     TEST("ADD 70H, 15",     0x0F70);
-    ERRT("ADD 70H, 16",     OPERAND_NOT_ALLOWED);
-    ERUS("ADD 70H, UNDEF",  0x0070);
-    ERUS("ADD UNDEF, 15",   0x0F00);
+    ERRT("ADD 70H, 16",     OPERAND_NOT_ALLOWED, "70H, 16");
+    ERUS("ADD 70H, UNDEF",  "UNDEF",  0x0070);
+    ERUS("ADD UNDEF, 15",   "UNDEF, 15",   0x0F00);
     TEST("ADD *, 0, AR0",   0x0080);
     TEST("ADD *, 0, AR1",   0x0081);
     TEST("ADD *, 0, 0",     0x0080);
-    ERRT("ADD *, 0, 2",     OPERAND_NOT_ALLOWED);
+    ERRT("ADD *, 0, 2",     OPERAND_NOT_ALLOWED, "*, 0, 2");
     TEST("ADD *",           0x0088);
     TEST("ADD *-",          0x0098);
     TEST("ADD *+",          0x00A8);
@@ -72,8 +72,8 @@ static void test_accumrator() {
     TEST("ADD *-, 2",       0x0298);
     TEST("ADD *+, 3",       0x03A8);
     TEST("ADD *, 0, AR0",   0x0080);
-    ERRT("ADD *, -1, AR0",  OPERAND_NOT_ALLOWED);
-    ERUS("ADD *, UNDEF, AR1", 0x0081);
+    ERRT("ADD *, -1, AR0",  OPERAND_NOT_ALLOWED, "*, -1, AR0");
+    ERUS("ADD *, UNDEF, AR1", "UNDEF, AR1", 0x0081);
     TEST("ADD *, 4, AR1",   0x0481);
     TEST("ADD *-, 4, AR0",  0x0490);
     TEST("ADD *-, 0, AR1",  0x0091);
@@ -137,12 +137,12 @@ static void test_accumrator() {
     TEST("SACH 70H",        0x5870);
     TEST("SACH 70H, 0",     0x5870);
     TEST("SACH 70H, 1",     0x5970);
-    ERRT("SACH 70H, 2",     OPERAND_NOT_ALLOWED);
-    ERRT("SACH 70H, 3",     OPERAND_NOT_ALLOWED);
+    ERRT("SACH 70H, 2",     OPERAND_NOT_ALLOWED, "70H, 2");
+    ERRT("SACH 70H, 3",     OPERAND_NOT_ALLOWED, "70H, 3");
     TEST("SACH 70H, 4",     0x5C70);
-    ERRT("SACH 70H, 5",     OPERAND_NOT_ALLOWED);
-    ERRT("SACH 70H, 6",     OPERAND_NOT_ALLOWED);
-    ERRT("SACH 70H, 7",     OPERAND_NOT_ALLOWED);
+    ERRT("SACH 70H, 5",     OPERAND_NOT_ALLOWED, "70H, 5");
+    ERRT("SACH 70H, 6",     OPERAND_NOT_ALLOWED, "70H, 6");
+    ERRT("SACH 70H, 7",     OPERAND_NOT_ALLOWED, "70H, 7");
     TEST("SACH *, 0, AR0",  0x5880);
     TEST("SACH *, 0, AR1",  0x5881);
     TEST("SACH *",          0x5888);
@@ -160,7 +160,7 @@ static void test_accumrator() {
 
     TEST("SACL 70H",        0x5070);
     TEST("SACL 70H, 0",     0x5070);
-    ERRT("SACL 70H, 1",     OPERAND_NOT_ALLOWED);
+    ERRT("SACL 70H, 1",     OPERAND_NOT_ALLOWED, "70H, 1");
     TEST("SACL *",          0x5088);
     TEST("SACL *-",         0x5098);
     TEST("SACL *+",         0x50A8);
@@ -239,7 +239,7 @@ static void test_accumrator() {
 static void test_auxiliary() {
     TEST("LAR AR0, 70H",     0x3870);
     TEST("LAR 0,   70H",     0x3870);
-    ERRT("LAR 2,   70H",     OPERAND_NOT_ALLOWED);
+    ERRT("LAR 2,   70H",     OPERAND_NOT_ALLOWED, "2,   70H");
     TEST("LAR AR0, *",       0x3888);
     TEST("LAR AR0, *-",      0x3898);
     TEST("LAR AR0, *+",      0x38A8);
@@ -258,14 +258,14 @@ static void test_auxiliary() {
     TEST("LARK AR0, 255", 0x70FF);
     TEST("LARK AR1, 128", 0x7180);
     TEST("LARK 0,   255", 0x70FF);
-    ERRT("LARK 1,   256", OPERAND_NOT_ALLOWED);
-    ERRT("LARK 2,   128", OPERAND_NOT_ALLOWED);
+    ERRT("LARK 1,   256", OPERAND_NOT_ALLOWED, "1,   256");
+    ERRT("LARK 2,   128", OPERAND_NOT_ALLOWED, "2,   128");
 
     TEST("LARP AR0", 0x6880);
     TEST("LARP AR1", 0x6881);
     TEST("LARP 0",   0x6880);
     TEST("LARP 1",   0x6881);
-    ERRT("LARP 2",   OPERAND_NOT_ALLOWED);
+    ERRT("LARP 2",   OPERAND_NOT_ALLOWED, "2");
 
     TEST("LDP 70H",     0x6F70);
     TEST("LDP *",       0x6F88);
@@ -277,7 +277,7 @@ static void test_auxiliary() {
 
     TEST("LDPK 0", 0x6E00);
     TEST("LDPK 1", 0x6E01);
-    ERRT("LDPK 2", OPERAND_NOT_ALLOWED);
+    ERRT("LDPK 2", OPERAND_NOT_ALLOWED, "2");
 
     TEST("MAR  70H",     0x6870);
     TEST("MAR  *",       0x6888);
@@ -341,11 +341,11 @@ static void test_multiply() {
     TEST("MPYK 0",     0x8000);
     TEST("MPYK 2",     0x8002);
     TEST("MPYK 4095",  0x8FFF);
-    ERRT("MPYK 4096",  OVERFLOW_RANGE);
+    ERRT("MPYK 4096",  OVERFLOW_RANGE, "4096");
     TEST("MPYK -1",    0x9FFF);
     TEST("MPYK -2",    0x9FFE);
     TEST("MPYK -4096", 0x9000);
-    ERRT("MPYK -4097", OVERFLOW_RANGE);
+    ERRT("MPYK -4097", OVERFLOW_RANGE, "-4097");
 
     TEST("PAC",  0x7F8E);
     TEST("SPAC", 0x7F90);
@@ -366,11 +366,11 @@ static void test_branch() {
     TEST("B 400H",  0xF900, 0x0400);
     TEST("B 800H",  0xF900, 0x0800);
     TEST("B 0FFFH", 0xF900, 0x0FFF);
-    ERUS("B UNDEF", 0xF900, 0x0000);
-    ERRT("B 1000H", OVERFLOW_RANGE);
-    ERRT("B 2000H", OVERFLOW_RANGE);
-    ERRT("B 4000H", OVERFLOW_RANGE);
-    ERRT("B 8000H", OVERFLOW_RANGE);
+    ERUS("B UNDEF", "UNDEF", 0xF900, 0x0000);
+    ERRT("B 1000H", OVERFLOW_RANGE, "1000H");
+    ERRT("B 2000H", OVERFLOW_RANGE, "2000H");
+    ERRT("B 4000H", OVERFLOW_RANGE, "4000H");
+    ERRT("B 8000H", OVERFLOW_RANGE, "8000H");
 
     TEST("BANZ 900H",  0xF400, 0x0900);
     TEST("BGEZ 900H",  0xFD00, 0x0900);
@@ -382,7 +382,7 @@ static void test_branch() {
     TEST("BV   900H",  0xF500, 0x0900);
     TEST("BZ   900H",  0xFF00, 0x0900);
     TEST("CALL 900H",  0xF800, 0x0900);
-    ERUS("CALL UNDEF", 0xF800, 0x0000);
+    ERUS("CALL UNDEF", "UNDEF", 0xF800, 0x0000);
 
     TEST("CALA", 0x7F8C);
     TEST("RET",  0x7F8D);
@@ -406,12 +406,12 @@ static void test_control() {
     TEST("LST *-, AR1", 0x7B91);
     TEST("LST *+, AR0", 0x7BA0);
 
-    ERRT("SST 00H",     OVERFLOW_RANGE);
-    ERRT("SST 7FH",     OVERFLOW_RANGE);
+    ERRT("SST 00H",     OVERFLOW_RANGE, "00H");
+    ERRT("SST 7FH",     OVERFLOW_RANGE, "7FH");
     TEST("SST 80H",     0x7C00);
     TEST("SST 8FH",     0x7C0F);
     if (is32010()) {
-        ERRT("SST 090H", OVERFLOW_RANGE);
+        ERRT("SST 090H", OVERFLOW_RANGE, "090H");
     } else {
         TEST("SST 090H", 0x7C10);
     }
@@ -455,7 +455,7 @@ static void test_dataio() {
     TEST("IN 70H, PA7",     0x4770);
     TEST("IN 70H, 0",       0x4070);
     TEST("IN 70H, 7",       0x4770);
-    ERRT("IN 70H, 8",       OPERAND_NOT_ALLOWED);
+    ERRT("IN 70H, 8",       OPERAND_NOT_ALLOWED, "70H, 8");
     TEST("IN *, PA0, AR0",  0x4080);
     TEST("IN *, PA7, AR1",  0x4781);
     TEST("IN *, 0,   0",    0x4080);
@@ -490,10 +490,10 @@ static void test_dataio() {
     TEST("OUT *+, PA7, AR0", 0x4FA0);
     TEST("OUT *+, PA7, AR1", 0x4FA1);
 
-    ERUS("OUT *+, UNDEF, AR0", 0x48A0);
-    ERUS("OUT *+, PA7, UNDEF", 0x4FA0);
-    ERUS("OUT *+, UNDEF, AR1", 0x48A1);
-    ERUS("OUT *+, PA7, UNDEF", 0x4FA0);
+    ERUS("OUT *+, UNDEF, AR0", "UNDEF, AR0", 0x48A0);
+    ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
+    ERUS("OUT *+, UNDEF, AR1", "UNDEF, AR1", 0x48A1);
+    ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
 }
 // clang-format on
 

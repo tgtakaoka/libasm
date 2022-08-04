@@ -36,17 +36,16 @@ public:
 private:
     NationalValueParser _parser;
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
         CcName cc;
         uint32_t val32;
-        Operand() : ErrorAt(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+        Operand() : mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
     };
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error checkAddressRange(Config::uintptr_t addr);
     Error encodeIcRelative(InsnMn1610 &insn, const Operand &op);
     Error encodeGenericAddress(InsnMn1610 &insn, const Operand &op);
     Error encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode);

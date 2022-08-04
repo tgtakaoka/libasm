@@ -16,8 +16,6 @@
 
 #include "asm_tms32010.h"
 
-#include "table_tms32010.h"
-
 namespace libasm {
 namespace tms32010 {
 
@@ -34,12 +32,12 @@ static AddrMode constantType(uint16_t val) {
         return M_LS4;
     if (val < 0x100)
         return M_IM8;
-    if (val < 0x1000)
-        return M_PMA;
-    const int16_t k13 = static_cast<int16_t>(val);
-    if (k13 >= -0x1000 && k13 < 0x1000)
-        return M_IM13;
-    return M_NO;
+    return M_IM13;
+}
+
+static bool overflowInt13(uint16_t uval) {
+    const auto sval = static_cast<int16_t>(uval);
+    return sval >= 0x1000 || sval < -0x1000;
 }
 
 Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode) {
@@ -87,9 +85,13 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
         insn.embed(op.val16);
         break;
     case M_IM13:
+        if (overflowInt13(op.val16))
+            return setError(op, OVERFLOW_RANGE);
         insn.embed(op.val16 & 0x1FFF);
         break;
     case M_PMA:
+        if (op.val16 >= 0x1000)
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val16);
         break;
     default:
@@ -98,7 +100,7 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
     return OK;
 }
 
-Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -130,10 +132,8 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) {
 
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     op.mode = constantType(op.val16);
-    if (op.mode == M_NO)
-        return setError(op, OVERFLOW_RANGE);
     scan = p;
     return OK;
 }
@@ -143,16 +143,16 @@ Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
-    if (parseOperand(scan, op1))
-        return getError();
+    if (parseOperand(scan, op1) && op1.hasError())
+        return setError(op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2))
-            return getError();
+        if (parseOperand(scan, op2) && op2.hasError())
+            return setError(op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op3))
-            return getError();
+        if (parseOperand(scan, op3) && op3.hasError())
+            return setError(op3);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -162,8 +162,9 @@ Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableTms32010::TABLE.searchName(insn))
-        return setError(TableTms32010::TABLE.getError());
+    const auto error = TableTms32010::TABLE.searchName(insn);
+    if (error)
+        return setError(op1, error);
 
     const AddrMode mode1 = insn.op1();
     if (mode1 != M_NO && encodeOperand(insn, op1, mode1))

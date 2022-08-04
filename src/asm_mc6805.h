@@ -31,6 +31,7 @@ public:
     AsmMc6805() : Assembler(_parser, TableMc6805::TABLE), _parser() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
+    AddressWidth addressWidth() const override;
     void reset() override { _pc_bits = 0; }
 
     const Options &options() const override { return _options; }
@@ -49,15 +50,14 @@ private:
     } _opt_pc_bits{_pc_bits};
     const Options _options{_opt_pc_bits};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         int8_t size;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(M_NO), size(0), val16(0) {}
+        Operand() : mode(M_NO), size(0), val16(0) {}
     };
 
-    Error checkAddressRange(Config::uintptr_t addr);
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     Error emitRelative(InsnMc6805 &insn, const Operand &op);
     Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
     Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);

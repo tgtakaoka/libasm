@@ -38,7 +38,6 @@ public:
     bool setCpu(const char *cpu) override;
 
     AddressWidth addressWidth() const;
-    Error checkAddressRange(Config::uintptr_t addr) const;
 
     typedef EntryPageBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;

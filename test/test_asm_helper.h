@@ -51,11 +51,20 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
         asm_assert(file, line, error, src, memory);                               \
     } while (0)
 #define VASSERT(error, addr, src, ...) __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)
-#define AERRT(addr, src, error) VASSERT(error, addr, src)
-#define AERRU(addr, src, ...) VASSERT(UNDEFINED_SYMBOL, addr, src, __VA_ARGS__)
+#define AERRT(addr, src, error, at)                                               \
+    do {                                                                          \
+        VASSERT(error, addr, src);                                                \
+        asserter.equals(__FILE__, __LINE__, "error at", at, assembler.errorAt()); \
+    } while (0)
+#define AERUS(addr, src, at, ...)                                                 \
+    do {                                                                          \
+        VASSERT(UNDEFINED_SYMBOL, addr, src, __VA_ARGS__);                        \
+        asserter.equals(__FILE__, __LINE__, "error at", at, assembler.errorAt()); \
+    } while (0)
 #define ATEST(addr, src, ...) VASSERT(OK, addr, src, __VA_ARGS__)
-#define ERRT(src, error) VASSERT(error, 0x0000, src)
-#define ERUS(src, ...) VASSERT(UNDEFINED_SYMBOL, 0x0000, src, __VA_ARGS__)
+#define ERRT(src, error, at) AERRT(0x0000, src, error, at)
+#define ERUS(src, at, ...) AERUS(0x0000, src, at, __VA_ARGS__)
+#define ERUI(src) ERRT(src, UNKNOWN_INSTRUCTION, src);
 #define TEST(src, ...) VASSERT(OK, 0x0000, src, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)

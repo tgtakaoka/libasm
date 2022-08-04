@@ -35,14 +35,14 @@ public:
 private:
     MotorolaValueParser _parser;
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         uint8_t size;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(M_NO), size(0), val16(0) {}
+        Operand() : mode(M_NO), size(0), val16(0) {}
     };
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     Error emitRelative(InsnMc6800 &insn, const Operand &op);
     Error emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op);
     Error emitBitNumber(InsnMc6800 &insn, const Operand &op);

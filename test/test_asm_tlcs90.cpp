@@ -41,10 +41,10 @@ void test_cpu() {
 static void test_8bit_transfer() {
     TEST("LD B,34H",      0x30, 0x34);
     TEST("LD B,-128",     0x30, 0x80);
-    ERRT("LD B,-129",     OVERFLOW_RANGE);
+    ERRT("LD B,-129",     OVERFLOW_RANGE, "-129");
     TEST("LD B,-1",       0x30, 0xFF);
     TEST("LD B,255",      0x30, 0xFF);
-    ERRT("LD B,256",      OVERFLOW_RANGE);
+    ERRT("LD B,256",      OVERFLOW_RANGE, "256");
     TEST("LD B,B",        0xF8, 0x30);
     TEST("LD B,C",        0xF9, 0x30);
     TEST("LD B,D",        0xFA, 0x30);
@@ -1478,8 +1478,8 @@ static void test_bitops() {
     TEST("BIT 0,(IY-34H)", 0xF1, 0xCC, 0xA8);
     TEST("BIT 1,(SP+34H)", 0xF2, 0x34, 0xA9);
     TEST("BIT 2,(HL+A)",   0xF3, 0xAA);
-    ERRT("BIT -1,B",       OVERFLOW_RANGE);
-    ERRT("BIT 8,B",        OVERFLOW_RANGE);
+    ERRT("BIT -1,B",       OVERFLOW_RANGE, "-1,B");
+    ERRT("BIT 8,B",        OVERFLOW_RANGE, "8,B");
 
     TEST("SET 0,B",        0xF8, 0xB8);
     TEST("SET 1,C",        0xF9, 0xB9);
@@ -1682,35 +1682,35 @@ static void test_comment() {
 }
 
 static void test_error() {
-    ERRT("LD B,BC",       OPERAND_NOT_ALLOWED);
-    ERRT("LD B,(B)",      REGISTER_NOT_ALLOWED);
-    ERRT("LD B,(BC+34H)", REGISTER_NOT_ALLOWED);
-    ERRT("LD B,(HL+34H)", REGISTER_NOT_ALLOWED);
-    ERRT("LD B,(HL+B)",   REGISTER_NOT_ALLOWED);
-    ERRT("LD B,(HL-A)",   REGISTER_NOT_ALLOWED);
-    ERRT("LD B,(1234H",   MISSING_CLOSING_PAREN);
-    ERRT("LD B,(BC+34H",  MISSING_CLOSING_PAREN);
-    ERRT("LD B,(HL+A",    MISSING_CLOSING_PAREN);
+    ERRT("LD B,BC",       OPERAND_NOT_ALLOWED,   "B,BC");
+    ERRT("LD B,(B)",      REGISTER_NOT_ALLOWED,  "B)");
+    ERRT("LD B,(BC+34H)", REGISTER_NOT_ALLOWED,  "BC+34H)");
+    ERRT("LD B,(HL+34H)", REGISTER_NOT_ALLOWED,  "HL+34H)");
+    ERRT("LD B,(HL+B)",   REGISTER_NOT_ALLOWED,  "B)");
+    ERRT("LD B,(HL-A)",   REGISTER_NOT_ALLOWED,  "HL-A)");
+    ERRT("LD B,(1234H",   MISSING_CLOSING_PAREN, "");
+    ERRT("LD B,(BC+34H",  MISSING_CLOSING_PAREN, "");
+    ERRT("LD B,(HL+A",    MISSING_CLOSING_PAREN, "");
 }
 
 static void test_undefined_symbol() {
-    ERUS("LD B,UNDEF",       0x30, 0x00);
-    ERUS("LD B,(UNDEF)",     0xE7, 0x00, 0x28);
-    ERUS("LD B,(SP+UNDEF)",  0xF2, 0x00, 0x28);
-    ERUS("LD (UNDEF),B",     0xEF, 0x00, 0x20);
-    ERUS("LD (IX-UNDEF),B",  0xF4, 0x00, 0x20);
-    ERUS("LD (UNDEF),UNDEF", 0x37, 0x00, 0x00);
-    ERUS("LD BC,UNDEF",      0x38, 0x00, 0x00);
-    ERUS("LD BC,(UNDEF)",    0xE7, 0x00, 0x48);
-    ERUS("LD BC,(SP+UNDEF)", 0xF2, 0x00, 0x48);
-    ERUS("LD (UNDEF),BC",    0xEF, 0x00, 0x40);
-    ERUS("INC (UNDEF)",      0x87, 0x00);
-    ERUS("INCX (UNDEF)",     0x07, 0x00);
-    ERUS("INCW (UNDEF)",     0x97, 0x00);
+    ERUS("LD B,UNDEF",       "UNDEF",     0x30, 0x00);
+    ERUS("LD B,(UNDEF)",     "UNDEF)",    0xE7, 0x00, 0x28);
+    ERUS("LD B,(SP+UNDEF)",  "UNDEF)",    0xF2, 0x00, 0x28);
+    ERUS("LD (UNDEF),B",     "UNDEF),B",  0xEF, 0x00, 0x20);
+    ERUS("LD (IX-UNDEF),B",  "UNDEF),B",  0xF4, 0x00, 0x20);
+    ERUS("LD (UNDEF),UNDEF", "UNDEF),UNDEF", 0x37, 0x00, 0x00);
+    ERUS("LD BC,UNDEF",      "UNDEF",     0x38, 0x00, 0x00);
+    ERUS("LD BC,(UNDEF)",    "UNDEF)",    0xE7, 0x00, 0x48);
+    ERUS("LD BC,(SP+UNDEF)", "UNDEF)",    0xF2, 0x00, 0x48);
+    ERUS("LD (UNDEF),BC",    "UNDEF),BC", 0xEF, 0x00, 0x40);
+    ERUS("INC (UNDEF)",      "UNDEF)",    0x87, 0x00);
+    ERUS("INCX (UNDEF)",     "UNDEF)",    0x07, 0x00);
+    ERUS("INCW (UNDEF)",     "UNDEF)",    0x97, 0x00);
 
-    ERUS("BIT UNDEF,B",       0xF8, 0xA8);
-    ERUS("SET UNDEF,(UNDEF)", 0xB8, 0x00);
-    ERUS("RES 6,(UNDEF)",     0xB6, 0x00);
+    ERUS("BIT UNDEF,B",       "UNDEF,B",       0xF8, 0xA8);
+    ERUS("SET UNDEF,(UNDEF)", "UNDEF,(UNDEF)", 0xB8, 0x00);
+    ERUS("RES 6,(UNDEF)",     "UNDEF)",        0xB6, 0x00);
 }
 
 // clang-format on

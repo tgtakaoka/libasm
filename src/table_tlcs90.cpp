@@ -15,10 +15,10 @@
  */
 
 #include "table_tlcs90.h"
+
 #include "config_tlcs90.h"
 #include "entry_tlcs90.h"
 #include "insn_tlcs90.h"
-#include "reg_tlcs90.h"
 #include "text_tlcs90.h"
 
 #include <ctype.h>

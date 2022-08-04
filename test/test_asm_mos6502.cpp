@@ -117,10 +117,10 @@ static void test_impl() {
     TEST("SED", 0xF8);
 
     if (m6502()) {
-        ERRT("PHY", UNKNOWN_INSTRUCTION);
-        ERRT("PLY", UNKNOWN_INSTRUCTION);
-        ERRT("PHX", UNKNOWN_INSTRUCTION);
-        ERRT("PLX", UNKNOWN_INSTRUCTION);
+        ERUI("PHY");
+        ERUI("PLY");
+        ERUI("PHX");
+        ERUI("PLX");
     } else {
         // G65SC02
         TEST("PHY", 0x5A);
@@ -132,8 +132,8 @@ static void test_impl() {
             TEST("WAI", 0xCB);
             TEST("STP", 0xDB);
         } else {
-            ERRT("WAI", UNKNOWN_INSTRUCTION);
-            ERRT("STP", UNKNOWN_INSTRUCTION);
+            ERUI("WAI");
+            ERUI("STP");
         }
     }
     if (w65c816()) {
@@ -153,20 +153,20 @@ static void test_impl() {
         TEST("XBA", 0xEB);
         TEST("XCE", 0xFB);
     } else {
-        ERRT("RTL", UNKNOWN_INSTRUCTION);
-        ERRT("PHB", UNKNOWN_INSTRUCTION);
-        ERRT("PHD", UNKNOWN_INSTRUCTION);
-        ERRT("PHK", UNKNOWN_INSTRUCTION);
-        ERRT("PLB", UNKNOWN_INSTRUCTION);
-        ERRT("PLD", UNKNOWN_INSTRUCTION);
-        ERRT("TCS", UNKNOWN_INSTRUCTION);
-        ERRT("TSC", UNKNOWN_INSTRUCTION);
-        ERRT("TCD", UNKNOWN_INSTRUCTION);
-        ERRT("TDC", UNKNOWN_INSTRUCTION);
-        ERRT("TXY", UNKNOWN_INSTRUCTION);
-        ERRT("TYX", UNKNOWN_INSTRUCTION);
-        ERRT("XBA", UNKNOWN_INSTRUCTION);
-        ERRT("XCE", UNKNOWN_INSTRUCTION);
+        ERUI("RTL");
+        ERUI("PHB");
+        ERUI("PHD");
+        ERUI("PHK");
+        ERUI("PLB");
+        ERUI("PLD");
+        ERUI("TCS");
+        ERUI("TSC");
+        ERUI("TCD");
+        ERUI("TDC");
+        ERUI("TXY");
+        ERUI("TYX");
+        ERUI("XBA");
+        ERUI("XCE");
     }
 }
 
@@ -178,8 +178,8 @@ static void test_accm() {
     TEST("ROR A", 0x6A);
 
     if (m6502()) {
-        ERRT("INC A", OPERAND_NOT_ALLOWED);
-        ERRT("DEC A", OPERAND_NOT_ALLOWED);
+        ERRT("INC A", OPERAND_NOT_ALLOWED, "A");
+        ERRT("DEC A", OPERAND_NOT_ALLOWED, "A");
     } else {
         // G65SC02
         TEST("INC A", 0x1A);
@@ -203,7 +203,7 @@ static void test_imm() {
     TEST("SBC #$90",   0xE9, 0x90);
 
     if (m6502()) {
-        ERRT("BIT #$90", OPERAND_NOT_ALLOWED);
+        ERRT("BIT #$90", OPERAND_NOT_ALLOWED, "#$90");
     } else {
         // G65SC02
         TEST("BIT #$90", 0x89, 0x90);
@@ -215,10 +215,10 @@ static void test_imm() {
         TEST("REP #$20", 0xC2, 0x20);
         TEST("SEP #$10", 0xE2, 0x10);
     } else {
-        ERRT("COP #$10", UNKNOWN_INSTRUCTION);
-        ERRT("WDM #$10", UNKNOWN_INSTRUCTION);
-        ERRT("REP #$20", UNKNOWN_INSTRUCTION);
-        ERRT("SEP #$10", UNKNOWN_INSTRUCTION);
+        ERUI("COP #$10");
+        ERUI("WDM #$10");
+        ERUI("REP #$20");
+        ERUI("SEP #$10");
     }
 
     if (w65c816()) {
@@ -244,8 +244,8 @@ static void test_imm() {
     } else {
         TEST("LONGA OFF");
         TEST("LONGI OFF");
-        ERRT("LONGA ON", OPERAND_NOT_ALLOWED);
-        ERRT("LONGI ON", OPERAND_NOT_ALLOWED);
+        ERRT("LONGA ON", OPERAND_NOT_ALLOWED, "ON");
+        ERRT("LONGI ON", OPERAND_NOT_ALLOWED, "ON");
     }
 
     symtab.intern(0x0010, "zero10");
@@ -258,7 +258,7 @@ static void test_imm() {
     TEST("SBC #zero90", 0xE9, 0x90);
 
     if (m6502()) {
-        ERRT("BIT #zero90", OPERAND_NOT_ALLOWED);
+        ERRT("BIT #zero90", OPERAND_NOT_ALLOWED, "#zero90");
     } else {
         // G65SC02
         TEST("BIT #zero90", 0x89, 0x90);
@@ -298,9 +298,9 @@ static void test_zpg() {
     TEST("ROR $10", 0x66, 0x10);
 
     if (m6502()) {
-        ERRT("TSB $10", UNKNOWN_INSTRUCTION);
-        ERRT("TRB $10", UNKNOWN_INSTRUCTION);
-        ERRT("STZ $10", UNKNOWN_INSTRUCTION);
+        ERUI("TSB $10");
+        ERUI("TRB $10");
+        ERUI("STZ $10");
     } else {
         // G65SC02
         TEST("TSB $10", 0x04, 0x10);
@@ -318,7 +318,7 @@ static void test_zpg() {
     TEST("ROR zero90", 0x66, 0x90);
 
     if (m6502()) {
-        ERRT("STZ zero10", UNKNOWN_INSTRUCTION);
+        ERUI("STZ zero10");
     } else {
         // G65SC02
         TEST("STZ zero10", 0x64, 0x10);
@@ -350,8 +350,8 @@ static void test_zpg_indexed() {
     TEST("ROR $10,X", 0x76, 0x10);
 
     if (m6502()) {
-        ERRT("BIT $10,X", OPERAND_NOT_ALLOWED);
-        ERRT("STZ $10,X", UNKNOWN_INSTRUCTION);
+        ERRT("BIT $10,X", OPERAND_NOT_ALLOWED, "$10,X");
+        ERUI("STZ $10,X");
     } else {
         // G65SC02
         TEST("BIT $10,X", 0x34, 0x10);
@@ -371,7 +371,7 @@ static void test_zpg_indexed() {
     TEST("ROR zero90,X", 0x76, 0x90);
 
     if (m6502()) {
-        ERRT("BIT zero10,X", OPERAND_NOT_ALLOWED);
+        ERRT("BIT zero10,X", OPERAND_NOT_ALLOWED, "zero10,X");
     } else {
         // G65SC02
         TEST("BIT zero10,X", 0x34, 0x10);
@@ -424,9 +424,9 @@ static void test_zpg_long() {
         TEST("ORAL (dir10)",   0x07, 0x10);
         TEST("ORAL (dir10),Y", 0x17, 0x10);
     } else {
-        ERRT("ORA [$10]",   OPERAND_NOT_ALLOWED);
-        ERRT("ORA [$10],Y", OPERAND_NOT_ALLOWED);
-        ERRT("ORAL ($10)",  UNKNOWN_INSTRUCTION);
+        ERRT("ORA [$10]",   OPERAND_NOT_ALLOWED, "[$10]");
+        ERRT("ORA [$10],Y", OPERAND_NOT_ALLOWED, "[$10],Y");
+        ERUI("ORAL ($10)");
     }
 }
 
@@ -451,8 +451,8 @@ static void test_sp_rel() {
         TEST("CMP ($10,S),Y", 0xD3, 0x10);
         TEST("SBC ($10,S),Y", 0xF3, 0x10);
     } else {
-        ERRT("ORA $10,S",     OPERAND_NOT_ALLOWED);
-        ERRT("ORA ($10,S),Y", OPERAND_NOT_ALLOWED);
+        ERRT("ORA $10,S",     OPERAND_NOT_ALLOWED, "$10,S");
+        ERRT("ORA ($10,S),Y", OPERAND_NOT_ALLOWED, "($10,S),Y");
     }
 }
 
@@ -487,9 +487,9 @@ static void test_abs() {
     TEST("JSR $1234", 0x20, 0x34, 0x12);
 
     if (m6502()) {
-        ERRT("TSB $1234", UNKNOWN_INSTRUCTION);
-        ERRT("TRB $1234", UNKNOWN_INSTRUCTION);
-        ERRT("STZ $1234", UNKNOWN_INSTRUCTION);
+        ERUI("TSB $1234");
+        ERUI("TRB $1234");
+        ERUI("STZ $1234");
     } else {
         // G65SC02
         TEST("TSB $1234", 0x0C, 0x34, 0x12);
@@ -500,7 +500,7 @@ static void test_abs() {
         // W65C816
         TEST("PEA $1234", 0xF4, 0x34, 0x12);
     } else {
-        ERRT("PEA $1234", UNKNOWN_INSTRUCTION);
+        ERUI("PEA $1234");
     }
 
     symtab.intern(0x0010, "abs0010");
@@ -513,7 +513,7 @@ static void test_abs() {
     TEST("JSR abs0100",  0x20, 0x00, 0x01);
 
     if (m6502()) {
-        ERRT("TSB abs1234", UNKNOWN_INSTRUCTION);
+        ERUI("TSB abs1234");
     } else {
         // G65SC02
         TEST("TSB abs1234", 0x0C, 0x34, 0x12);
@@ -573,14 +573,14 @@ static void test_abs_long() {
         TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
         TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
     } else {
-        ERRT("ORA $123456",   OPERAND_NOT_ALLOWED);
-        ERRT("ORA $123456,X", OPERAND_NOT_ALLOWED);
-        ERRT("JMP $123456",   OPERAND_NOT_ALLOWED);
-        ERRT("JSL $123456",   UNKNOWN_INSTRUCTION);
-        ERRT("JMP  [$1234]",  OPERAND_NOT_ALLOWED);
-        ERRT("JMPL ($1234)",  UNKNOWN_INSTRUCTION);
-        ERRT("MVP $123456,$345678", UNKNOWN_INSTRUCTION);
-        ERRT("MVN $003456,$345678", UNKNOWN_INSTRUCTION);
+        ERRT("ORA $123456",   OPERAND_NOT_ALLOWED, "$123456");
+        ERRT("ORA $123456,X", OPERAND_NOT_ALLOWED, "$123456,X");
+        ERRT("JMP $123456",   OPERAND_NOT_ALLOWED, "$123456");
+        ERUI("JSL $123456");
+        ERRT("JMP  [$1234]",  OPERAND_NOT_ALLOWED, "[$1234]");
+        ERUI("JMPL ($1234)");
+        ERUI("MVP $123456,$345678");
+        ERUI("MVN $003456,$345678");
     }
 }
 
@@ -616,8 +616,8 @@ static void test_abs_indexed() {
     TEST("ROR $1234,X", 0x7E, 0x34, 0x12);
 
     if (m6502()) {
-        ERRT("BIT $1234,X", OPERAND_NOT_ALLOWED);
-        ERRT("STZ $1234,X", UNKNOWN_INSTRUCTION);
+        ERRT("BIT $1234,X", OPERAND_NOT_ALLOWED, "$1234,X");
+        ERUI("STZ $1234,X");
     } else {
         // G65SC02
         TEST("BIT $1234,X", 0x3C, 0x34, 0x12);
@@ -636,8 +636,8 @@ static void test_abs_indexed() {
     TEST("LSR abs0100,X",  0x5E, 0x00, 0x01);
 
     if (m6502()) {
-        ERRT("BIT abs1234,X", OPERAND_NOT_ALLOWED);
-        ERRT("STZ abs1234,X", UNKNOWN_INSTRUCTION);
+        ERRT("BIT abs1234,X", OPERAND_NOT_ALLOWED, "abs1234,X");
+        ERUI("STZ abs1234,X");
     } else {
         // G65SC02
         TEST("BIT abs1234,X",  0x3C, 0x34, 0x12);
@@ -659,7 +659,7 @@ static void test_abs_idir() {
 
 static void test_abs_indexed_idir() {
     if (m6502()) {
-        ERRT("JMP ($1234,X)", OPERAND_NOT_ALLOWED);
+        ERRT("JMP ($1234,X)", OPERAND_NOT_ALLOWED, "($1234,X)");
     } else {
         // G65SC02
         TEST("JMP ($1234,X)", 0x7C, 0x34, 0x12);
@@ -676,21 +676,21 @@ static void test_abs_indexed_idir() {
         TEST("JSR ($1235,X)",    0xFC, 0x35, 0x12);
         TEST("JSR (>abs0010,X)", 0xFC, 0x10, 0x00);
     } else {
-        ERRT("JSR ($1235,X)",    OPERAND_NOT_ALLOWED);
-        ERRT("JSR (>abs0010),X", REGISTER_NOT_ALLOWED);
+        ERRT("JSR ($1235,X)",    OPERAND_NOT_ALLOWED, "($1235,X)");
+        ERRT("JSR (>abs0010),X", REGISTER_NOT_ALLOWED, "X");
     }
 }
 
 static void test_zpg_idir() {
     if (m6502()) {
-        ERRT("ORA ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("AND ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("EOR ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("ADC ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("STA ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("LDA ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("CMP ($10)", OPERAND_NOT_ALLOWED);
-        ERRT("SBC ($10)", OPERAND_NOT_ALLOWED);
+        ERRT("ORA ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("AND ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("EOR ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("ADC ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("STA ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("LDA ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("CMP ($10)", OPERAND_NOT_ALLOWED, "($10)");
+        ERRT("SBC ($10)", OPERAND_NOT_ALLOWED, "($10)");
     } else {
         // G65SC02
         TEST("ORA ($10)", 0x12, 0x10);
@@ -706,7 +706,7 @@ static void test_zpg_idir() {
         // W65C816
         TEST("PEI ($10)", 0xD4, 0x10);
     } else {
-        ERRT("PEI ($10)", UNKNOWN_INSTRUCTION);
+        ERUI("PEI ($10)");
     }
 }
 
@@ -753,7 +753,7 @@ static void test_rel() {
     ATEST(0x1000, "BCC $0F82", 0x90, 0x80);
 
     if (m6502()) {
-        ERRT("BRA $1000", UNKNOWN_INSTRUCTION);
+        ERUI("BRA $1000");
     } else {
         // G65SC02
         ATEST(0x1000, "BRA $1002", 0x80, 0x00);
@@ -763,32 +763,32 @@ static void test_rel() {
         ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
         ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
         ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
-        AERRT(0x0000, "BCS *-126", OPERAND_TOO_FAR);
-        AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR);
-        AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR);
+        AERRT(0x0000, "BCS *-126", OPERAND_TOO_FAR, "*-126");
+        AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR, "*+2");
+        AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR, "*+129");
 
         ATEST(0x120000, "BCS $12FF82", 0xB0, 0x80);
         ATEST(0x12FFFE, "BNE $120000", 0xD0, 0x00);
         ATEST(0x12FFF0, "BEQ $120071", 0xF0, 0x7F);
-        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR);
-        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR);
-        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR);
+        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR, "*-126");
+        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2");
+        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129");
 
         ATEST(0x129000, "BRL $121003", 0x82, 0x00, 0x80);
         ATEST(0x121000, "PER $129002", 0x62, 0xFF, 0x7F);
         ATEST(0x129000, "BRL *-$7FFD", 0x82, 0x00, 0x80);
         ATEST(0x121000, "PER *+$8002", 0x62, 0xFF, 0x7F);
-        AERRT(0x129000, "BRL $131003", OPERAND_TOO_FAR);
-        AERRT(0x121000, "PER $118002", OPERAND_TOO_FAR);
+        AERRT(0x129000, "BRL $131003", OPERAND_TOO_FAR, "$131003");
+        AERRT(0x121000, "PER $118002", OPERAND_TOO_FAR, "$118002");
 
         ATEST(0x121000, "BRL $129003", 0x82, 0x00, 0x80);
         ATEST(0x129000, "PER $121002", 0x62, 0xFF, 0x7F);
-        AERRT(0x121000, "BRL *-$7FFD", OPERAND_TOO_FAR);
-        AERRT(0x129000, "PER *+$8002", OPERAND_TOO_FAR);
+        AERRT(0x121000, "BRL *-$7FFD", OPERAND_TOO_FAR, "*-$7FFD");
+        AERRT(0x129000, "PER *+$8002", OPERAND_TOO_FAR, "*+$8002");
 
-        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR);
-        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR);
-        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR);
+        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82");
+        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000");
+        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR, "$130061");
     } else {
         ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
         ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
@@ -797,8 +797,8 @@ static void test_rel() {
         ATEST(0xFFFE, "BNE *+2",   0xD0, 0x00);
         ATEST(0xFFF0, "BEQ *+129", 0xF0, 0x7F);
 
-        ERRT("BRL $121234", UNKNOWN_INSTRUCTION);
-        ERRT("PER $121234", UNKNOWN_INSTRUCTION);
+        ERUI("BRL $121234");
+        ERUI("PER $121234");
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -811,7 +811,7 @@ static void test_rel() {
     ATEST(0x1000, "BCC label0F82", 0x90, 0x80);
 
     if (m6502()) {
-        ERRT("BRA label1000", UNKNOWN_INSTRUCTION);
+        ERUI("BRA label1000");
     } else {
         // G65SC02
         ATEST(0x1000, "BRA label1000", 0x80, 0xFE);
@@ -844,22 +844,22 @@ static void test_bitop() {
         TEST("RMB7 zero10", 0x77, 0x10);
         TEST("SMB0 zero10", 0x87, 0x10);
     } else {
-        ERRT("RMB0 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB1 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB2 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB3 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB4 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB5 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB6 $10", UNKNOWN_INSTRUCTION);
-        ERRT("RMB7 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB0 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB1 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB2 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB3 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB4 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB5 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB6 $10", UNKNOWN_INSTRUCTION);
-        ERRT("SMB7 $10", UNKNOWN_INSTRUCTION);
+        ERUI("RMB0 $10");
+        ERUI("RMB1 $10");
+        ERUI("RMB2 $10");
+        ERUI("RMB3 $10");
+        ERUI("RMB4 $10");
+        ERUI("RMB5 $10");
+        ERUI("RMB6 $10");
+        ERUI("RMB7 $10");
+        ERUI("SMB0 $10");
+        ERUI("SMB1 $10");
+        ERUI("SMB2 $10");
+        ERUI("SMB3 $10");
+        ERUI("SMB4 $10");
+        ERUI("SMB5 $10");
+        ERUI("SMB6 $10");
+        ERUI("SMB7 $10");
     }
 }
 
@@ -895,22 +895,22 @@ static void test_zpg_rel() {
         ATEST(0x1000, "BBS4 zero10,label1003", 0xCF, 0x10, 0x00);
         ATEST(0x1000, "BBS5 zero10,label1000", 0xDF, 0x10, 0xFD);
     } else {
-        ERRT("BBR0 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBR1 $10,$1000", UNKNOWN_INSTRUCTION);
-        ERRT("BBR2 $10,$1006", UNKNOWN_INSTRUCTION);
-        ERRT("BBR3 $10,$1082", UNKNOWN_INSTRUCTION);
-        ERRT("BBR4 $10,$0F83", UNKNOWN_INSTRUCTION);
-        ERRT("BBR5 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBR6 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBR7 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBS0 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBS1 $10,$1000", UNKNOWN_INSTRUCTION);
-        ERRT("BBS2 $10,$1006", UNKNOWN_INSTRUCTION);
-        ERRT("BBS3 $10,$1082", UNKNOWN_INSTRUCTION);
-        ERRT("BBS4 $10,$0F83", UNKNOWN_INSTRUCTION);
-        ERRT("BBS5 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBS6 $10,$1003", UNKNOWN_INSTRUCTION);
-        ERRT("BBS7 $10,$1003", UNKNOWN_INSTRUCTION);
+        ERUI("BBR0 $10,$1003");
+        ERUI("BBR1 $10,$1000");
+        ERUI("BBR2 $10,$1006");
+        ERUI("BBR3 $10,$1082");
+        ERUI("BBR4 $10,$0F83");
+        ERUI("BBR5 $10,$1003");
+        ERUI("BBR6 $10,$1003");
+        ERUI("BBR7 $10,$1003");
+        ERUI("BBS0 $10,$1003");
+        ERUI("BBS1 $10,$1000");
+        ERUI("BBS2 $10,$1006");
+        ERUI("BBS3 $10,$1082");
+        ERUI("BBS4 $10,$0F83");
+        ERUI("BBS5 $10,$1003");
+        ERUI("BBS6 $10,$1003");
+        ERUI("BBS7 $10,$1003");
     }
 }
 
@@ -937,112 +937,112 @@ static void test_comment() {
     TEST("ORA ( $10 ) , Y ; comment", 0x11, 0x10);
     if (w65c816()) {
         // W65C816
-        ERUS("SEP #UNDEF", 0xE2, 0x00);
-        ERUS("MVP $123456,UNDEF", 0x44, 0x00, 0x12);
-        ERUS("MVP UNDEF,$123456", 0x44, 0x12, 0x00);
-        ERUS("MVN UNDEF,UNDEF", 0x54, 0x00, 0x00);
-        ERUS("ORA [UNDEF]",   0x07, 0x00);
-        ERUS("AND [UNDEF],Y", 0x37, 0x00);
-        ERUS("EOR UNDEF,S",   0x43, 0x00);
-        ERUS("ADC (UNDEF,S),Y", 0x73, 0x00);
-        ERUS("PEA UNDEF",   0xF4, 0x00, 0x00);
-        ERUS("PEI (UNDEF)", 0xD4, 0x00);
-        ERUS("STA   UNDEF", 0x85, 0x00);
-        ERUS("STA  <UNDEF", 0x85, 0x00);
-        ERUS("STA  >UNDEF", 0x8D, 0x00, 0x00);
-        ERUS("STA >>UNDEF", 0x8F, 0x00, 0x00, 0x00);
-        ERUS("LDA   UNDEF,X", 0xB5, 0x00);
-        ERUS("LDA  <UNDEF,X", 0xB5, 0x00);
-        ERUS("LDA  >UNDEF,X", 0xBD, 0x00, 0x00);
-        ERUS("LDA >>UNDEF,X", 0xBF, 0x00, 0x00, 0x00);
-        ERUS("JMP [UNDEF]",   0xDC, 0x00, 0x00);
-        ERUS("JSR (UNDEF,X)", 0xFC, 0x00, 0x00);
+        ERUS("SEP #UNDEF",        "UNDEF",    0xE2, 0x00);
+        ERUS("MVP $123456,UNDEF", "UNDEF",    0x44, 0x00, 0x12);
+        ERUS("MVP UNDEF,$123456", "UNDEF,$123456", 0x44, 0x12, 0x00);
+        ERUS("MVN UNDEF,UNDEF",   "UNDEF,UNDEF",   0x54, 0x00, 0x00);
+        ERUS("ORA [UNDEF]",       "UNDEF]",   0x07, 0x00);
+        ERUS("AND [UNDEF],Y",     "UNDEF],Y", 0x37, 0x00);
+        ERUS("EOR UNDEF,S",       "UNDEF,S",  0x43, 0x00);
+        ERUS("ADC (UNDEF,S),Y",   "UNDEF,S),Y", 0x73, 0x00);
+        ERUS("PEA UNDEF",         "UNDEF",    0xF4, 0x00, 0x00);
+        ERUS("PEI (UNDEF)",       "UNDEF)",   0xD4, 0x00);
+        ERUS("STA   UNDEF",       "UNDEF",    0x85, 0x00);
+        ERUS("STA  <UNDEF",       "UNDEF",    0x85, 0x00);
+        ERUS("STA  >UNDEF",       "UNDEF",    0x8D, 0x00, 0x00);
+        ERUS("STA >>UNDEF",       "UNDEF",    0x8F, 0x00, 0x00, 0x00);
+        ERUS("LDA   UNDEF,X",     "UNDEF,X",  0xB5, 0x00);
+        ERUS("LDA  <UNDEF,X",     "UNDEF,X",  0xB5, 0x00);
+        ERUS("LDA  >UNDEF,X",     "UNDEF,X",  0xBD, 0x00, 0x00);
+        ERUS("LDA >>UNDEF,X",     "UNDEF,X",  0xBF, 0x00, 0x00, 0x00);
+        ERUS("JMP [UNDEF]",       "UNDEF]",   0xDC, 0x00, 0x00);
+        ERUS("JSR (UNDEF,X)",     "UNDEF,X)", 0xFC, 0x00, 0x00);
 
-        ERUS("SBCL (UNDEF)",   0xE7, 0x00);
-        ERUS("CMPL (UNDEF),Y", 0xD7, 0x00);
-        ERUS("JMPL (UNDEF)",   0xDC, 0x00, 0x00);
+        ERUS("SBCL (UNDEF)",   "UNDEF)",   0xE7, 0x00);
+        ERUS("CMPL (UNDEF),Y", "UNDEF),Y", 0xD7, 0x00);
+        ERUS("JMPL (UNDEF)",   "UNDEF)",   0xDC, 0x00, 0x00);
 
-        AERRU(0x121000, "BRL UNDEF", 0x82, 0x00, 0x00);
-        AERRU(0x121000, "PER UNDEF", 0x62, 0x00, 0x00);
+        AERUS(0x121000, "BRL UNDEF", "UNDEF", 0x82, 0x00, 0x00);
+        AERUS(0x121000, "PER UNDEF", "UNDEF", 0x62, 0x00, 0x00);
     }
 }
 
 static void test_undefined_symbol() {
     // MOS6502
-    ERUS("LDA #UNDEF", 0xA9, 0x00);
-    ERUS("JSR  UNDEF", 0x20, 0x00, 0x00);
-    ERUS("JSR >UNDEF", 0x20, 0x00, 0x00);
-    ERUS("BIT  UNDEF", 0x24, 0x00);
-    ERUS("BIT <UNDEF", 0x24, 0x00);
-    ERUS("BIT >UNDEF", 0x2C, 0x00, 0x00);
-    ERUS("LDY  UNDEF,X", 0xB4, 0x00);
-    ERUS("LDY <UNDEF,X", 0xB4, 0x00);
-    ERUS("LDY >UNDEF,X", 0xBC, 0x00, 0x00);
-    ERUS("LDX  UNDEF,Y", 0xB6, 0x00);
-    ERUS("LDX <UNDEF,Y", 0xB6, 0x00);
-    ERUS("LDX >UNDEF,Y", 0xBE, 0x00, 0x00);
-    ERUS("LDA  (UNDEF,X)", 0xA1, 0x00);
-    ERUS("LDA (<UNDEF,X)", 0xA1, 0x00);
-    ERUS("LDA  (UNDEF),Y", 0xB1, 0x00);
-    ERUS("LDA (<UNDEF),Y", 0xB1, 0x00);
-    ERUS("JMP  (UNDEF)",   0x6C, 0x00, 0x00);
+    ERUS("LDA #UNDEF", "UNDEF", 0xA9, 0x00);
+    ERUS("JSR  UNDEF", "UNDEF", 0x20, 0x00, 0x00);
+    ERUS("JSR >UNDEF", "UNDEF", 0x20, 0x00, 0x00);
+    ERUS("BIT  UNDEF", "UNDEF", 0x24, 0x00);
+    ERUS("BIT <UNDEF", "UNDEF", 0x24, 0x00);
+    ERUS("BIT >UNDEF", "UNDEF", 0x2C, 0x00, 0x00);
+    ERUS("LDY  UNDEF,X", "UNDEF,X", 0xB4, 0x00);
+    ERUS("LDY <UNDEF,X", "UNDEF,X", 0xB4, 0x00);
+    ERUS("LDY >UNDEF,X", "UNDEF,X", 0xBC, 0x00, 0x00);
+    ERUS("LDX  UNDEF,Y", "UNDEF,Y", 0xB6, 0x00);
+    ERUS("LDX <UNDEF,Y", "UNDEF,Y", 0xB6, 0x00);
+    ERUS("LDX >UNDEF,Y", "UNDEF,Y", 0xBE, 0x00, 0x00);
+    ERUS("LDA  (UNDEF,X)", "UNDEF,X)", 0xA1, 0x00);
+    ERUS("LDA (<UNDEF,X)", "UNDEF,X)", 0xA1, 0x00);
+    ERUS("LDA  (UNDEF),Y", "UNDEF),Y", 0xB1, 0x00);
+    ERUS("LDA (<UNDEF),Y", "UNDEF),Y", 0xB1, 0x00);
+    ERUS("JMP  (UNDEF)",   "UNDEF)",   0x6C, 0x00, 0x00);
 
-    AERRU(0x1000, "BCC UNDEF", 0x90, 0x00);
+    AERUS(0x1000, "BCC UNDEF", "UNDEF", 0x90, 0x00);
 
     if (!m6502()) {
         // G65SC02
-        ERUS("BIT #UNDEF",   0x89, 0x00);
-        ERUS("BIT  UNDEF,X", 0x34, 0x00);
-        ERUS("BIT <UNDEF,X", 0x34, 0x00);
-        ERUS("BIT >UNDEF,X", 0x3C, 0x00, 0x00);
-        ERUS("LDA  (UNDEF)", 0xB2, 0x00);
-        ERUS("LDA (<UNDEF)", 0xB2, 0x00);
-        ERUS("JMP  (UNDEF,X)", 0x7C, 0x00, 0x00);
-        ERUS("JMP (>UNDEF,X)", 0x7C, 0x00, 0x00);
+        ERUS("BIT #UNDEF",   "UNDEF",   0x89, 0x00);
+        ERUS("BIT  UNDEF,X", "UNDEF,X", 0x34, 0x00);
+        ERUS("BIT <UNDEF,X", "UNDEF,X", 0x34, 0x00);
+        ERUS("BIT >UNDEF,X", "UNDEF,X", 0x3C, 0x00, 0x00);
+        ERUS("LDA  (UNDEF)", "UNDEF)", 0xB2, 0x00);
+        ERUS("LDA (<UNDEF)", "UNDEF)", 0xB2, 0x00);
+        ERUS("JMP  (UNDEF,X)", "UNDEF,X)", 0x7C, 0x00, 0x00);
+        ERUS("JMP (>UNDEF,X)", "UNDEF,X)", 0x7C, 0x00, 0x00);
 
-        AERRU(0x1000, "BRA UNDEF", 0x80, 0x00);
+        AERUS(0x1000, "BRA UNDEF", "UNDEF", 0x80, 0x00);
     }
 
     if (r65c02() || w65c02s()) {
         // R65C02
-        ERUS("RMB5  UNDEF", 0x57, 0x00);
-        ERUS("SMB4 <UNDEF", 0xC7, 0x00);
+        ERUS("RMB5  UNDEF", "UNDEF", 0x57, 0x00);
+        ERUS("SMB4 <UNDEF", "UNDEF", 0xC7, 0x00);
 
-        AERRU(0x1000, "BBR3 UNDEF,$1082", 0x3F, 0x00, 0x7F);
-        AERRU(0x1000, "BBS6 $10,UNDEF",   0xEF, 0x10, 0x00);
-        AERRU(0x1000, "BBS7 UNDEF,UNDEF", 0xFF, 0x00, 0x00);
+        AERUS(0x1000, "BBR3 UNDEF,$1082", "UNDEF,$1082", 0x3F, 0x00, 0x7F);
+        AERUS(0x1000, "BBS6 $10,UNDEF",   "UNDEF",       0xEF, 0x10, 0x00);
+        AERUS(0x1000, "BBS7 UNDEF,UNDEF", "UNDEF,UNDEF", 0xFF, 0x00, 0x00);
     }
 }
 
 static void test_error() {
     if (w65c816()) {
-        ERRT("SBC  [$10],X",   REGISTER_NOT_ALLOWED);
-        ERRT("ORAL ($10),X",   REGISTER_NOT_ALLOWED);
-        ERRT("ORA  ($10,S),X", REGISTER_NOT_ALLOWED);
-        ERRT("ORA  ($10,X),X", REGISTER_NOT_ALLOWED);
-        ERRT("ORA  ($10,X),Y", REGISTER_NOT_ALLOWED);
-        ERRT("ORA  ($10,Y),X", REGISTER_NOT_ALLOWED);
-        ERRT("ORA  ($10,Y),Y", REGISTER_NOT_ALLOWED);
-        ERRT("ORA  $123456,Y", OPERAND_NOT_ALLOWED);
-        ERRT("ORA  [$10,$20]", UNKNOWN_OPERAND);
+        ERRT("SBC  [$10],X",   REGISTER_NOT_ALLOWED, "X");
+        ERRT("ORAL ($10),X",   REGISTER_NOT_ALLOWED, "X");
+        ERRT("ORA  ($10,S),X", REGISTER_NOT_ALLOWED, "X");
+        ERRT("ORA  ($10,X),X", REGISTER_NOT_ALLOWED, "X");
+        ERRT("ORA  ($10,X),Y", REGISTER_NOT_ALLOWED, "Y");
+        ERRT("ORA  ($10,Y),X", REGISTER_NOT_ALLOWED, "Y),X");
+        ERRT("ORA  ($10,Y),Y", REGISTER_NOT_ALLOWED, "Y),Y");
+        ERRT("ORA  $123456,Y", OPERAND_NOT_ALLOWED,  "$123456,Y");
+        ERRT("ORA  [$10,$20]", UNKNOWN_OPERAND,      "[$10,$20]");
     }
-    ERRT("ORA ($10,$20)", UNKNOWN_OPERAND);
-    ERRT("ORA ($10,Y)", REGISTER_NOT_ALLOWED);
-    ERRT("ORA ($10),X", REGISTER_NOT_ALLOWED);
+    ERRT("ORA ($10,$20)", UNKNOWN_OPERAND,     "($10,$20)");
+    ERRT("ORA ($10,Y)", REGISTER_NOT_ALLOWED,  "Y)");
+    ERRT("ORA ($10),X", REGISTER_NOT_ALLOWED,  "X");
     if (m6502()) {
         // MOS6502
-        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED);
-        ERRT("JSR ($1234,X)", OPERAND_NOT_ALLOWED);
-        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED);
+        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
+        ERRT("JSR ($1234,X)", OPERAND_NOT_ALLOWED,  "($1234,X)");
+        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     } else if (w65c816()) {
         // W65C816
-        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED);
-        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED);
+        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
+        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     } else {
         // G65SC02
-        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED);
-        ERRT("JSR ($1234,X)", OPERAND_NOT_ALLOWED);
-        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED);
+        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
+        ERRT("JSR ($1234,X)", OPERAND_NOT_ALLOWED,  "($1234,X)");
+        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     }
 }
 // clang-format on

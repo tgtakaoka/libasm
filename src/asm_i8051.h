@@ -35,14 +35,14 @@ public:
 private:
     IntelValueParser _parser;
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand() : ErrorAt(), mode(NONE), reg(REG_UNDEF), val16(0) {}
+        Operand() : mode(NONE), reg(REG_UNDEF), val16(0) {}
     };
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
 
     Error encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op);
     Error encode(StrScanner &scan, Insn &insn) override;

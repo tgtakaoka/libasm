@@ -311,14 +311,34 @@ Error AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, M
     }
 }
 
+Error AsmZ8000::checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt) {
+    const RegName dst = dstOp.reg;
+    const RegName src = srcOp.reg;
+    const uint8_t dnum = RegZ8000::encodeGeneralRegName(dst);
+    const uint8_t ds = RegZ8000::isByteReg(dst) && dnum >= 8 ? dnum - 8 : dnum;
+    const uint8_t de = RegZ8000::isLongReg(dst) ? ds + 1 : ds;
+    const uint8_t ss = RegZ8000::encodeGeneralRegName(src);
+    const uint8_t se = RegZ8000::isLongReg(src) ? ss + 1 : ss;
+    if (ds == ss || ds == se || de == ss || de == se)
+        return setError(dstOp, REGISTERS_OVERLAPPED);
+    if (cnt == REG_UNDEF)
+        return OK;
+    const uint8_t c = RegZ8000::encodeGeneralRegName(cnt);
+    if (ds == c || de == c)
+        return setError(dstOp, REGISTERS_OVERLAPPED);
+    if (ss == c || se == c)
+        return setError(srcOp, REGISTERS_OVERLAPPED);
+    return OK;
+}
+
 Error AsmZ8000::checkRegisterOverlap(
         const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp) {
     if (dstOp.mode == M_IR && (dstOp.reg == REG_R0 || dstOp.reg == REG_RR0))
         return setError(dstOp, REGISTER_NOT_ALLOWED);
     if (srcOp.mode == M_IR && (srcOp.reg == REG_R0 || srcOp.reg == REG_RR0))
         return setError(srcOp, REGISTER_NOT_ALLOWED);
-    if (RegZ8000::checkOverlap(dstOp.reg, srcOp.reg, cntOp.reg))
-        return setError(dstOp, REGISTERS_OVERLAPPED);
+    if (checkRegisterOverlap(dstOp, srcOp, cntOp.reg))
+        return getError();
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!TableZ8000::TABLE.segmentedModel()) {
@@ -334,7 +354,7 @@ Error AsmZ8000::checkRegisterOverlap(
     return OK;
 }
 
-int8_t AsmZ8000::parseIntrNames(StrScanner &scan) {
+int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
     StrScanner p(scan);
     if (endOfLine(*p))
         return 0;
@@ -354,7 +374,7 @@ int8_t AsmZ8000::parseIntrNames(StrScanner &scan) {
     }
 }
 
-int8_t AsmZ8000::parseFlagNames(StrScanner &scan) {
+int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
     StrScanner p(scan);
     if (endOfLine(*p))
         return 0;
@@ -380,7 +400,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = M_IM;
         scan = p;
         return OK;
@@ -392,9 +412,9 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     if (p.expect('@')) {
         op.reg = RegZ8000::parseRegName(p);
         if (op.reg == REG_UNDEF)
-            return setError(p, UNKNOWN_REGISTER);
+            return op.setError(a, UNKNOWN_REGISTER);
         if (op.reg == REG_ILLEGAL)
-            return setError(a, ILLEGAL_REGISTER);
+            return op.setError(a, ILLEGAL_REGISTER);
         op.mode = M_IR;
         scan = p;
         return OK;
@@ -403,15 +423,15 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     op.reg = RegZ8000::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (op.reg == REG_ILLEGAL)
-            return setError(a, ILLEGAL_REGISTER);
+            return op.setError(a, ILLEGAL_REGISTER);
         if (p.skipSpaces().expect('(')) {
             op.base = op.reg;
             if (p.skipSpaces().expect('#')) {
                 op.val32 = parseExpr32(p, op);
                 if (parserError())
-                    return getError();
+                    return op.getError();
                 if (!p.skipSpaces().expect(')'))
-                    return setError(p, UNKNOWN_OPERAND);
+                    return op.setError(p, MISSING_CLOSING_PAREN);
                 op.mode = M_BA;
                 scan = p;
                 return OK;
@@ -419,12 +439,12 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
             op.reg = RegZ8000::parseRegName(p);
             if (op.reg != REG_UNDEF) {
                 if (!p.skipSpaces().expect(')'))
-                    return setError(p, UNKNOWN_OPERAND);
+                    return op.setError(p, MISSING_CLOSING_PAREN);
                 op.mode = M_BX;
                 scan = p;
                 return OK;
             }
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         }
         op.mode = M_R;
         scan = p;
@@ -479,13 +499,13 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
         op.val32 = parseExpr32(p, op);
     }
     if (parserError())
-        return getError();
+        return op.getError();
     if (p.skipSpaces().expect('(')) {
         op.reg = RegZ8000::parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF)
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(')'))
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         op.mode = M_X;
         scan = p;
         return OK;
@@ -500,21 +520,21 @@ Error AsmZ8000::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp, ex1Op, ex2Op;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, ex1Op))
-            return getError();
+        if (parseOperand(scan, ex1Op) && ex1Op.hasError())
+            return setError(ex1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, ex2Op))
-            return getError();
+        if (parseOperand(scan, ex2Op) && ex2Op.hasError())
+            return setError(ex2Op);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -525,15 +545,16 @@ Error AsmZ8000::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(ex2Op);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, ex1Op.mode, ex2Op.mode);
-    if (TableZ8000::TABLE.searchName(insn))
-        return setError(TableZ8000::TABLE.getError());
+    const auto error = TableZ8000::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
     if (insn.isThreeRegsInsn() && checkRegisterOverlap(insn, dstOp, srcOp, ex1Op))
         return getError();
-    if (insn.isPushPopInsn() && RegZ8000::checkOverlap(dstOp.reg, srcOp.reg))
-        return setError(dstOp, REGISTERS_OVERLAPPED);
+    if (insn.isPushPopInsn() && checkRegisterOverlap(dstOp, srcOp))
+        return getError();
     if (insn.isLoadMultiInsn()) {
-        const RegName reg = insn.dstMode() == M_R ? dstOp.reg : srcOp.reg;
-        if (RegZ8000::encodeGeneralRegName(reg) + ex1Op.val32 > 16)
+        const Operand &regOp = insn.dstMode() == M_R ? dstOp : srcOp;
+        if (RegZ8000::encodeGeneralRegName(regOp.reg) + ex1Op.val32 > 16)
             return setError(ex1Op, OVERFLOW_RANGE);
     }
 

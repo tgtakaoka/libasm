@@ -93,7 +93,7 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
     return getError();
 }
 
-Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -110,7 +110,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) {
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     op.mode = ADDR;
     scan = p;
     return OK;
@@ -121,12 +121,12 @@ Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2;
-    if (parseOperand(scan, op1))
-        return getError();
+    if (parseOperand(scan, op1) && op1.hasError())
+        return setError(op1);
     const StrScanner op1p(scan);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2))
-            return getError();
+        if (parseOperand(scan, op2) && op2.hasError())
+            return setError(op2);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -135,8 +135,9 @@ Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    if (TableCdp1802::TABLE.searchName(insn))
-        return setError(TableCdp1802::TABLE.getError());
+    const auto error = TableCdp1802::TABLE.searchName(insn);
+    if (error)
+        return setError(op1, error);
 
     emitOperand(insn, insn.mode1(), op1);
     if (insn.mode2() == ADDR)

@@ -45,19 +45,18 @@ private:
             OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, _autoShortDirect};
     const Options _options{_opt_shortDitrect};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
         RegName base;    // M_BA/M_BX
         CcName cc;       // M_CC/M_DA/M_X
         uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
-        Operand()
-            : ErrorAt(), mode(M_NO), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+        Operand() : mode(M_NO), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
     };
 
-    int8_t parseIntrNames(StrScanner &scan);
-    int8_t parseFlagNames(StrScanner &scan);
-    Error parseOperand(StrScanner &scan, Operand &opr);
+    int8_t parseIntrNames(StrScanner &scan) const;
+    int8_t parseFlagNames(StrScanner &scan) const;
+    Error parseOperand(StrScanner &scan, Operand &op);
 
     Error emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
     Error emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);
@@ -71,6 +70,7 @@ private:
     Error emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op);
     Error emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op);
     Error emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
+    Error checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt = REG_UNDEF);
     Error checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
             const Operand &cntOp);
     Error encode(StrScanner &scan, Insn &insn) override;

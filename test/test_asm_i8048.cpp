@@ -91,15 +91,15 @@ static void test_accumlator() {
     TEST("ADD A, R5",  0x6D);
     TEST("ADD A, R6",  0x6E);
     TEST("ADD A, R7",  0x6F);
-    ERRT("ADD A, R8",  OPERAND_NOT_ALLOWED);
+    ERRT("ADD A, R8",  OPERAND_NOT_ALLOWED, "A, R8");
     TEST("ADD A, @R0", 0x60);
     TEST("ADD A, @R1", 0x61);
-    ERRT("ADD A, @R2", REGISTER_NOT_ALLOWED);
+    ERRT("ADD A, @R2", REGISTER_NOT_ALLOWED, "R2");
     TEST("ADD A, #37", 0x03, 0x25);
     TEST("ADD A, #-128", 0x03, 0x80);
     TEST("ADD A, #255",  0x03, 0xFF);
-    ERRT("ADD A, #-129", OVERFLOW_RANGE);
-    ERRT("ADD A, #256",  OVERFLOW_RANGE);
+    ERRT("ADD A, #-129", OVERFLOW_RANGE, "#-129");
+    ERRT("ADD A, #256",  OVERFLOW_RANGE, "#256");
 
     TEST("ADDC A, R0",  0x78);
     TEST("ADDC A, R1",  0x79);
@@ -162,45 +162,45 @@ static void test_accumlator() {
 }
 
 static void test_io() {
-    ERRT("IN   A, P0", OPERAND_NOT_ALLOWED);
+    ERRT("IN   A, P0", OPERAND_NOT_ALLOWED, "A, P0");
     TEST("IN   A, P1", 0x09);
     TEST("IN   A, P2", 0x0A);
-    ERRT("IN   A, P3", OPERAND_NOT_ALLOWED);
-    ERRT("IN   A, P4", OPERAND_NOT_ALLOWED);
-    ERRT("IN   A, P5", OPERAND_NOT_ALLOWED);
-    ERRT("IN   A, P6", OPERAND_NOT_ALLOWED);
-    ERRT("IN   A, P7", OPERAND_NOT_ALLOWED);
-    ERRT("IN   A, P8", OPERAND_NOT_ALLOWED);
+    ERRT("IN   A, P3", OPERAND_NOT_ALLOWED, "A, P3");
+    ERRT("IN   A, P4", OPERAND_NOT_ALLOWED, "A, P4");
+    ERRT("IN   A, P5", OPERAND_NOT_ALLOWED, "A, P5");
+    ERRT("IN   A, P6", OPERAND_NOT_ALLOWED, "A, P6");
+    ERRT("IN   A, P7", OPERAND_NOT_ALLOWED, "A, P7");
+    ERRT("IN   A, P8", OPERAND_NOT_ALLOWED, "A, P8");
     if (isOki()) {
-        ERRT("MOV A, P0",   OPERAND_NOT_ALLOWED);
+        ERRT("MOV A, P0",   OPERAND_NOT_ALLOWED, "A, P0");
         TEST("MOV A, P1",   0x63);
         TEST("MOV A, P2",   0x73);
-        ERRT("MOV A, P3",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV A, P4",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV A, P5",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV A, P6",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV A, P7",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV A, P8",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV P0, @R3", OPERAND_NOT_ALLOWED);
-        ERRT("MOV P1, @R0", OPERAND_NOT_ALLOWED);
-        ERRT("MOV P1, @R1", OPERAND_NOT_ALLOWED);
-        ERRT("MOV P1, @R2", REGISTER_NOT_ALLOWED);
+        ERRT("MOV A, P3",   OPERAND_NOT_ALLOWED, "A, P3");
+        ERRT("MOV A, P4",   OPERAND_NOT_ALLOWED, "A, P4");
+        ERRT("MOV A, P5",   OPERAND_NOT_ALLOWED, "A, P5");
+        ERRT("MOV A, P6",   OPERAND_NOT_ALLOWED, "A, P6");
+        ERRT("MOV A, P7",   OPERAND_NOT_ALLOWED, "A, P7");
+        ERRT("MOV A, P8",   OPERAND_NOT_ALLOWED, "A, P8");
+        ERRT("MOV P0, @R3", OPERAND_NOT_ALLOWED, "P0, @R3");
+        ERRT("MOV P1, @R0", OPERAND_NOT_ALLOWED, "P1, @R0");
+        ERRT("MOV P1, @R1", OPERAND_NOT_ALLOWED, "P1, @R1");
+        ERRT("MOV P1, @R2", REGISTER_NOT_ALLOWED, "R2");
         TEST("MOV P1, @R3", 0xF3);
-        ERRT("MOV P2, @R3", OPERAND_NOT_ALLOWED);
+        ERRT("MOV P2, @R3", OPERAND_NOT_ALLOWED, "P2, @R3");
     } else {
-        ERRT("MOV A, P1",   OPERAND_NOT_ALLOWED);
- 	    ERRT("MOV A, P2",   OPERAND_NOT_ALLOWED);
-        ERRT("MOV P1, @R3", OPERAND_NOT_ALLOWED);
+        ERRT("MOV A, P1",   OPERAND_NOT_ALLOWED, "A, P1");
+        ERRT("MOV A, P2",   OPERAND_NOT_ALLOWED, "A, P2");
+        ERRT("MOV P1, @R3", OPERAND_NOT_ALLOWED, "P1, @R3");
     }
-    ERRT("OUTL P0, A", OPERAND_NOT_ALLOWED);
+    ERRT("OUTL P0, A", OPERAND_NOT_ALLOWED, "P0, A");
     TEST("OUTL P1, A", 0x39);
     TEST("OUTL P2, A", 0x3A);
-    ERRT("OUTL P3, A", OPERAND_NOT_ALLOWED);
-    ERRT("OUTL P4, A", OPERAND_NOT_ALLOWED);
-    ERRT("OUTL P5, A", OPERAND_NOT_ALLOWED);
-    ERRT("OUTL P6, A", OPERAND_NOT_ALLOWED);
-    ERRT("OUTL P7, A", OPERAND_NOT_ALLOWED);
-    ERRT("OUTL P8, A", OPERAND_NOT_ALLOWED);
+    ERRT("OUTL P3, A", OPERAND_NOT_ALLOWED, "P3, A");
+    ERRT("OUTL P4, A", OPERAND_NOT_ALLOWED, "P4, A");
+    ERRT("OUTL P5, A", OPERAND_NOT_ALLOWED, "P5, A");
+    ERRT("OUTL P6, A", OPERAND_NOT_ALLOWED, "P6, A");
+    ERRT("OUTL P7, A", OPERAND_NOT_ALLOWED, "P7, A");
+    ERRT("OUTL P8, A", OPERAND_NOT_ALLOWED, "P8, A");
     TEST("ANL  P1, #80H", 0x99, 0x80);
     TEST("ANL  P2, #40H", 0x9A, 0x40);
     TEST("ORL  P1, #20H", 0x89, 0x20);
@@ -212,16 +212,16 @@ static void test_io() {
         TEST("ANL  BUS, #08H", 0x98, 0x08);
         TEST("ORL  BUS, #0CH", 0x88, 0x0C);
     } else {
-        ERRT("INS  A, BUS",    UNKNOWN_INSTRUCTION);
-        ERRT("OUTL BUS, A",    OPERAND_NOT_ALLOWED);
-        ERRT("ANL  BUS, #08H", OPERAND_NOT_ALLOWED);
-        ERRT("ORL  BUS, #0CH", OPERAND_NOT_ALLOWED);
+        ERUI("INS  A, BUS");
+        ERRT("OUTL BUS, A",    OPERAND_NOT_ALLOWED, "BUS, A");
+        ERRT("ANL  BUS, #08H", OPERAND_NOT_ALLOWED, "BUS, #08H");
+        ERRT("ORL  BUS, #0CH", OPERAND_NOT_ALLOWED, "BUS, #0CH");
     }
 
-    ERRT("MOVD A, P0", OPERAND_NOT_ALLOWED);
-    ERRT("MOVD A, P1", OPERAND_NOT_ALLOWED);
-    ERRT("MOVD A, P2", OPERAND_NOT_ALLOWED);
-    ERRT("MOVD A, P3", OPERAND_NOT_ALLOWED);
+    ERRT("MOVD A, P0", OPERAND_NOT_ALLOWED, "A, P0");
+    ERRT("MOVD A, P1", OPERAND_NOT_ALLOWED, "A, P1");
+    ERRT("MOVD A, P2", OPERAND_NOT_ALLOWED, "A, P2");
+    ERRT("MOVD A, P3", OPERAND_NOT_ALLOWED, "A, P3");
     TEST("MOVD A, P4", 0x0C);
     TEST("MOVD A, P5", 0x0D);
     TEST("MOVD A, P6", 0x0E);
@@ -265,8 +265,8 @@ static void test_register() {
         TEST("DEC @R0", 0xC0);
         TEST("DEC @R1", 0xC1);
     } else {
-        ERRT("DEC @R0", OPERAND_NOT_ALLOWED);
-        ERRT("DEC @R1", OPERAND_NOT_ALLOWED);
+        ERRT("DEC @R0", OPERAND_NOT_ALLOWED, "@R0");
+        ERRT("DEC @R1", OPERAND_NOT_ALLOWED, "@R1");
     }
 }
 
@@ -283,13 +283,13 @@ static void test_branch() {
     ATEST(0x200, "DJNZ R5, 234H",  0xED, 0x34);
     ATEST(0x100, "DJNZ R6, 134H",  0xEE, 0x34);
     ATEST(0x000, "DJNZ R7, 034H",  0xEF, 0x34);
-    AERRT(0x100, "DJNZ R7, 034H",  OPERAND_TOO_FAR);
+    AERRT(0x100, "DJNZ R7, 034H",  OPERAND_TOO_FAR, "034H");
     if (isOki()) {
         ATEST(0xF00, "DJNZ @R0, 0F34H", 0xE0, 0x34);
         ATEST(0xE00, "DJNZ @R1, 0E34H", 0xE1, 0x34);
     } else {
-        AERRT(0xF00, "DJNZ @R0, 0F34H", OPERAND_NOT_ALLOWED);
-        AERRT(0xE00, "DJNZ @R1, 0E34H", OPERAND_NOT_ALLOWED);
+        AERRT(0xF00, "DJNZ @R0, 0F34H", OPERAND_NOT_ALLOWED, "@R0, 0F34H");
+        AERRT(0xE00, "DJNZ @R1, 0E34H", OPERAND_NOT_ALLOWED, "@R1, 0E34H");
     }
 
     ATEST(0xF00, "JC   0F34H", 0xF6, 0x34);
@@ -304,9 +304,9 @@ static void test_branch() {
     ATEST(0x600, "JF1  634H",  0x76, 0x34);
     ATEST(0x500, "JTF  534H",  0x16, 0x34);
     ATEST(0x400, "JNI  434H",  0x86, 0x34);
-    AERRT(0x3FF, "JNI  334H",  OPERAND_TOO_FAR);
+    AERRT(0x3FF, "JNI  334H",  OPERAND_TOO_FAR, "334H");
     ATEST(0x3FF, "JNI  434H",  0x86, 0x34);
-    AERRT(0x500, "JNI  434H",  OPERAND_TOO_FAR);
+    AERRT(0x500, "JNI  434H",  OPERAND_TOO_FAR, "434H");
 
     ATEST(0x300, "JB 0, 334H",  0x12, 0x34);
     ATEST(0x200, "JB 1, 234H",  0x32, 0x34);
@@ -316,11 +316,11 @@ static void test_branch() {
     ATEST(0xE00, "JB 5, 0E34H", 0xB2, 0x34);
     ATEST(0xD00, "JB 6, 0D34H", 0xD2, 0x34);
     ATEST(0xC00, "JB 7, 0C34H", 0xF2, 0x34);
-    AERRT(0xCFF, "JB 7, 0C34H", OPERAND_TOO_FAR);
+    AERRT(0xCFF, "JB 7, 0C34H", OPERAND_TOO_FAR, "0C34H");
     ATEST(0xCFF, "JB 7, 0D34H", 0xF2, 0x34);
-    AERRT(0xD00, "JB 7, 0C34H", OPERAND_TOO_FAR);
-    AERRT(0xC00, "JB -1, 0C34H", ILLEGAL_BIT_NUMBER);
-    AERRT(0xC00, "JB 8, 0C34H",  ILLEGAL_BIT_NUMBER);
+    AERRT(0xD00, "JB 7, 0C34H", OPERAND_TOO_FAR, "0C34H");
+    AERRT(0xC00, "JB -1, 0C34H", ILLEGAL_BIT_NUMBER, "-1, 0C34H");
+    AERRT(0xC00, "JB 8, 0C34H",  ILLEGAL_BIT_NUMBER, "8, 0C34H");
 }
 
 static void test_subroutine() {
@@ -402,7 +402,7 @@ static void test_move() {
     if (isOki()) {
         TEST("MOVP1 P, @R3", 0xC3);
     } else {
-        ERRT("MOVP1 P, @R3", UNKNOWN_INSTRUCTION);
+        ERUI("MOVP1 P, @R3");
     }
 }
 
@@ -438,13 +438,13 @@ static void test_control() {
             TEST("FLTT ", 0xC2);
             TEST("FRES ", 0xE2);
         } else {
-            ERRT("HLTS ", UNKNOWN_INSTRUCTION);
-            ERRT("FLT  ", UNKNOWN_INSTRUCTION);
-            ERRT("FLTT ", UNKNOWN_INSTRUCTION);
-            ERRT("FRES ", UNKNOWN_INSTRUCTION);
+            ERUI("HLTS ");
+            ERUI("FLT  ");
+            ERUI("FLTT ");
+            ERUI("FRES ");
         }
     } else {
-        ERRT("HALT", UNKNOWN_INSTRUCTION);
+        ERUI("HALT");
     }
 }
 

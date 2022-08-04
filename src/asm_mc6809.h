@@ -44,7 +44,7 @@ private:
     } _opt_setdp{_direct_page};
     const Options _options{_opt_setdp};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName index;
         RegName base;
@@ -52,20 +52,14 @@ private:
         int8_t extra;
         uint32_t val32;
         Operand()
-            : ErrorAt(),
-              mode(M_NONE),
-              index(REG_UNDEF),
-              base(REG_UNDEF),
-              indir(false),
-              extra(0),
-              val32(0) {}
+            : mode(M_NONE), index(REG_UNDEF), base(REG_UNDEF), indir(false), extra(0), val32(0) {}
     };
 
-    bool parsePointerMode(StrScanner &scan, Operand &op, bool indir) __attribute__((noinline));
-    bool parseIndexedMode(StrScanner &scan, Operand &op, bool indir);
-    bool parseBitPosition(StrScanner &scan, Operand &op);
-    bool parseRegisterList(StrScanner &scan, Operand &op, bool indir);
-    Error parseOperand(StrScanner &scan, Operand &op);
+    bool parsePointerMode(StrScanner &scan, Operand &op, bool indir) const;
+    bool parseIndexedMode(StrScanner &scan, Operand &op, bool indir) const;
+    bool parseBitPosition(StrScanner &scan, Operand &op) const;
+    bool parseRegisterList(StrScanner &scan, Operand &op, bool indir) const;
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     Error processPseudo(StrScanner &scan, const char *name);
 
     Error encodePushPull(InsnMc6809 &insn, const Operand &op);
@@ -73,8 +67,8 @@ private:
     Error encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Config::ptrdiff_t calculateDisplacement(const InsnMc6809 &insn, const Operand &op) const;
     Error encodeIndexed(InsnMc6809 &insn, const Operand &op);
-    char transferMemoryMode(const Operand &op);
-    Error encodeTransferMemory(InsnMc6809 &insn, const Operand &op1, const Operand &op2);
+    char transferMemoryMode(Operand &op) const;
+    Error encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
     Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Error encode(StrScanner &scan, Insn &insn) override;
 

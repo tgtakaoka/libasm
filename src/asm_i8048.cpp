@@ -21,15 +21,16 @@
 namespace libasm {
 namespace i8048 {
 
-Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = M_IMM8;
         scan = p;
         return OK;
@@ -37,8 +38,9 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) {
 
     const bool indir = p.expect('@');
     if (indir && isspace(*p))
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
+    const StrScanner regp = p;
     op.reg = RegI8048::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (indir) {
@@ -54,7 +56,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) {
                 op.mode = M_IR3;
                 break;
             default:
-                return setError(scan, REGISTER_NOT_ALLOWED);
+                return op.setError(regp, REGISTER_NOT_ALLOWED);
             }
             scan = p;
             return OK;
@@ -121,18 +123,18 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) {
             if (RegI8048::isRReg(op.reg)) {
                 op.mode = M_R;
             } else {
-                return setError(UNKNOWN_OPERAND);
+                return op.setError(UNKNOWN_OPERAND);
             }
         }
         scan = p;
         return OK;
     }
     if (indir)
-        return setError(UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     scan = p;
     op.mode = M_AD11;
     return OK;
@@ -142,13 +144,13 @@ Error AsmI8048::encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operan
     if (mode == M_AD08) {
         const Config::uintptr_t page = (insn.address() + 1) & ~0xFF;
         if ((op.val16 & ~0xFF) != page)
-            return setError(OPERAND_TOO_FAR);
+            return setError(op, OPERAND_TOO_FAR);
         insn.emitOperand8(op.val16);
         return setOK();
     }
     const Config::uintptr_t max = 1UL << uint8_t(config().addressWidth());
     if (op.val16 >= max)
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
     insn.embed((op.val16 >> 3) & 0xE0);
     insn.emitOperand8(op.val16);
     return setOK();
@@ -171,12 +173,12 @@ Error AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operan
     case M_IMM8:
     case M_BIT8:
         if (overflowUint8(op.val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
     case M_BITN:
         if (op.val16 >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(op, ILLEGAL_BIT_NUMBER);
         insn.embed(op.val16 << 5);
         return OK;
     case M_F:
@@ -198,11 +200,11 @@ Error AsmI8048::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -211,8 +213,9 @@ Error AsmI8048::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableI8048::TABLE.searchName(insn))
-        return setError(TableI8048::TABLE.getError());
+    const auto error = TableI8048::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
 
     if (encodeOperand(insn, insn.dstMode(), dstOp))
         return getError();

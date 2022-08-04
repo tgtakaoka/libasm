@@ -95,7 +95,7 @@ Error AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
     return getError();
 }
 
-Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
@@ -115,14 +115,14 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
     } else {
         op.val16 = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
     }
     if (p.skipSpaces().expect('(')) {
         const RegName base = RegIns8060::parseRegName(p);
         if (!RegIns8060::isPointerReg(base))
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         if (!p.expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         scan = p;
         op.reg = base;
         op.mode = autoDisp ? M_INDX : M_DISP;
@@ -130,7 +130,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) {
     }
 
     if (autoDisp || reg == REG_E)
-        return setError(scan, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
     scan = p;
     op.mode = M_REL8;  // May be M_IMM8 too
     return OK;
@@ -141,15 +141,16 @@ Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op;
-    if (parseOperand(scan, op))
-        return getError();
+    if (parseOperand(scan, op) && op.hasError())
+        return setError(op);
     if (!endOfLine(*scan.skipSpaces()))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op);
 
     insn.setAddrMode(op.mode);
-    if (TableIns8060::TABLE.searchName(insn))
-        return setError(TableIns8060::TABLE.getError());
+    const auto error = TableIns8060::TABLE.searchName(insn);
+    if (error)
+        return setError(op, error);
 
     switch (insn.addrMode()) {
     case M_INHR:

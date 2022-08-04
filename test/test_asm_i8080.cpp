@@ -136,18 +136,18 @@ static void test_move_inherent() {
         // i8085
         TEST("RIM", 0x20);
         TEST("SIM", 0x30);
-        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
-        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
+        ERUI("RETEM");
+        ERUI("CALLN 40H");
     } else if (v30emu()) {
-        ERRT("RIM", UNKNOWN_INSTRUCTION);
-        ERRT("SIM", UNKNOWN_INSTRUCTION);
+        ERUI("RIM");
+        ERUI("SIM");
         TEST("RETEM",     0xED, 0xFD);
         TEST("CALLN 40H", 0xED, 0xED, 0x40);
     } else {
-        ERRT("RIM", UNKNOWN_INSTRUCTION);
-        ERRT("SIM", UNKNOWN_INSTRUCTION);
-        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
-        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
+        ERUI("RIM");
+        ERUI("SIM");
+        ERUI("RETEM");
+        ERUI("CALLN 40H");
     }
 }
 
@@ -156,9 +156,9 @@ static void test_move_immediate() {
     TEST("MVI C,9FH",  0x0E, 0x9F);
     TEST("MVI D,58",   0x16, 0x3A);
     TEST("MVI E,-128", 0x1E, 0x80);
-    ERRT("MVI E,-129", OVERFLOW_RANGE);
+    ERRT("MVI E,-129", OVERFLOW_RANGE, "-129");
     TEST("MVI H,255",  0x26, 0xFF);
-    ERRT("MVI H,256",  OVERFLOW_RANGE);
+    ERRT("MVI H,256",  OVERFLOW_RANGE, "256");
     TEST("MVI L,-10",  0x2E, 0xF6);
     TEST("MVI M,0F6H", 0x36, 0xF6);
     TEST("MVI A,0FEH", 0x3E, 0xFE);
@@ -286,8 +286,8 @@ static void test_incr_decr() {
     TEST("RST 5", 0xEF);
     TEST("RST 6", 0xF7);
     TEST("RST 7", 0xFF);
-    ERRT("RST -1", OVERFLOW_RANGE);
-    ERRT("RST 8",  OVERFLOW_RANGE);
+    ERRT("RST -1", OVERFLOW_RANGE, "-1");
+    ERRT("RST 8",  OVERFLOW_RANGE, "8");
 }
 
 static void test_alu_register() {
@@ -388,10 +388,10 @@ static void test_alu_register() {
 static void test_alu_immediate() {
     TEST("ADI 10B", 0xC6, 0x02);
     TEST("ACI 255", 0xCE, 0xFF);
-    ERRT("ACI 256", OVERFLOW_RANGE);
+    ERRT("ACI 256", OVERFLOW_RANGE, "256");
 
     TEST("SUI -2",   0xD6, 0xFE);
-    ERRT("SUI -129", OVERFLOW_RANGE);
+    ERRT("SUI -129", OVERFLOW_RANGE, "-129");
     TEST("SBI 177O", 0xDE, 0x7F);
 
     TEST("ANI ~0FH", 0xE6, 0xF0);
@@ -403,8 +403,8 @@ static void test_alu_immediate() {
 static void test_io() {
     TEST("OUT 0F1H", 0xD3, 0xF1);
     TEST("IN  0F0H", 0xDB, 0xF0);
-    ERRT("OUT 100H", OVERFLOW_RANGE);
-    ERRT("IN  -1",   OVERFLOW_RANGE);
+    ERRT("OUT 100H", OVERFLOW_RANGE, "100H");
+    ERRT("IN  -1",   OVERFLOW_RANGE, "-1");
 }
 
 static void test_comment() {
@@ -421,15 +421,15 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ERUS("MVI  B,UNDEF", 0x06, 0x00);
-    ERUS("LXI  B,UNDEF", 0x01, 0x00, 0x00);
-    ERUS("STA  UNDEF", 0x32, 0x00, 0x00);
-    ERUS("SHLD UNDEF", 0x22, 0x00, 0x00);
-    ERUS("JMP  UNDEF", 0xC3, 0x00, 0x00);
-    ERUS("CALL UNDEF", 0xCD, 0x00, 0x00);
-    ERUS("ADI  UNDEF", 0xC6, 0x00);
-    ERUS("OUT  UNDEF", 0xD3, 0x00);
-    ERUS("IN   UNDEF", 0xDB, 0x00);
+    ERUS("MVI  B,UNDEF", "UNDEF", 0x06, 0x00);
+    ERUS("LXI  B,UNDEF", "UNDEF", 0x01, 0x00, 0x00);
+    ERUS("STA  UNDEF", "UNDEF", 0x32, 0x00, 0x00);
+    ERUS("SHLD UNDEF", "UNDEF", 0x22, 0x00, 0x00);
+    ERUS("JMP  UNDEF", "UNDEF", 0xC3, 0x00, 0x00);
+    ERUS("CALL UNDEF", "UNDEF", 0xCD, 0x00, 0x00);
+    ERUS("ADI  UNDEF", "UNDEF", 0xC6, 0x00);
+    ERUS("OUT  UNDEF", "UNDEF", 0xD3, 0x00);
+    ERUS("IN   UNDEF", "UNDEF", 0xDB, 0x00);
 }
 // clang-format on
 

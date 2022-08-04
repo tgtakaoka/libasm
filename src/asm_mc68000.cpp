@@ -78,23 +78,22 @@ Error AsmMc68000::checkAlignment(OprSize size, const Operand &op) {
     return OK;
 }
 
-Error AsmMc68000::emitBriefExtension(
-        InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp) {
+Error AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
     if (overflowRel8(disp))
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
-    ext |= RegMc68000::encodeGeneralRegNo(index) << 12;
-    if (RegMc68000::isAddrReg(index))
+    ext |= RegMc68000::encodeGeneralRegNo(op.indexReg) << 12;
+    if (RegMc68000::isAddrReg(op.indexReg))
         ext |= (1 << 15);
-    if (size == SZ_LONG)
+    if (op.indexSize == SZ_LONG)
         ext |= (1 << 11);
     insn.emitOperand16(ext);
     return OK;
 }
 
-Error AsmMc68000::emitDisplacement(InsnMc68000 &insn, Config::ptrdiff_t disp) {
+Error AsmMc68000::emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
     if (overflowRel16(disp))
-        return setError(OVERFLOW_RANGE);
+        return setError(op, OVERFLOW_RANGE);
     insn.emitOperand16(static_cast<uint16_t>(disp));
     return OK;
 }
@@ -117,7 +116,8 @@ Error AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Opera
     return OK;
 }
 
-Error AsmMc68000::emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t data) {
+Error AsmMc68000::emitImmediateData(
+        InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data) {
     if (size == SZ_LONG) {
         insn.emitOperand32(data);
         return OK;
@@ -134,7 +134,7 @@ Error AsmMc68000::emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t da
             return OK;
         }
     }
-    return setError(OVERFLOW_RANGE);
+    return setError(op, OVERFLOW_RANGE);
 }
 
 Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
@@ -148,8 +148,11 @@ Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
 
 Error AsmMc68000::emitEffectiveAddr(
         InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) {
-    if (mode == M_NONE)
-        return op.mode == M_NONE ? OK : UNKNOWN_OPERAND;
+    if (mode == M_NONE) {
+        if (op.mode != M_NONE)
+            return setError(op, UNKNOWN_OPERAND);
+        return OK;
+    }
 
     const int8_t mode_gp = modePos(pos);
     if (mode_gp >= 0) {
@@ -166,19 +169,18 @@ Error AsmMc68000::emitEffectiveAddr(
     switch (op.mode) {
     case M_AREG:
         if (size == SZ_BYTE)
-            return setError(OPERAND_NOT_ALLOWED);
+            return setError(op, OPERAND_NOT_ALLOWED);
         break;
     case M_INDX:
-        return emitBriefExtension(
-                insn, op.indexReg, op.indexSize, static_cast<Config::ptrdiff_t>(op.val32));
+        return emitBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
     case M_PCIDX:
-        return emitBriefExtension(insn, op.indexReg, op.indexSize, op.offset(insn));
+        return emitBriefExtension(insn, op, op.offset(insn));
     case M_DISP:
-        return emitDisplacement(insn, static_cast<Config::ptrdiff_t>(op.val32));
+        return emitDisplacement(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
     case M_PCDSP:
         if (checkAlignment(size, op))
             return getError();
-        return emitDisplacement(insn, op.offset(insn));
+        return emitDisplacement(insn, op, op.offset(insn));
     case M_AWORD:
     case M_ALONG:
         if (checkAlignment(size, op))
@@ -222,7 +224,7 @@ Error AsmMc68000::emitEffectiveAddr(
             insn.emitOperand16(static_cast<uint16_t>(op.val32));
             return OK;
         }
-        return emitImmediateData(insn, size, op.val32);
+        return emitImmediateData(insn, op, size, op.val32);
     case M_LABEL:
         if (size == SZ_LONG || (size == SZ_BYTE && mode == M_REL16))
             return setError(op, ILLEGAL_SIZE);
@@ -249,14 +251,14 @@ void AsmMc68000::Operand::fixupMultiRegister() {
     }
 }
 
-Error AsmMc68000::parseMoveMultiRegList(StrScanner &scan, Operand &op) {
+Error AsmMc68000::parseMoveMultiRegList(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     Error error = OK;
     for (;;) {
         StrScanner a(p);
         const RegName start = RegMc68000::parseRegName(a);
         if (!RegMc68000::isGeneralReg(start))
-            return setError(p, REGISTER_NOT_ALLOWED);
+            return op.setError(p, REGISTER_NOT_ALLOWED);
         const uint8_t s = RegMc68000::encodeGeneralRegPos(start);
         uint8_t e = s;
         if (*a == '-') {
@@ -267,7 +269,7 @@ Error AsmMc68000::parseMoveMultiRegList(StrScanner &scan, Operand &op) {
                 return op.setError(p, REGISTER_NOT_ALLOWED);
             e = RegMc68000::encodeGeneralRegPos(last);
             if (e < s)
-                return setError(a, UNKNOWN_OPERAND);
+                return op.setError(UNKNOWN_OPERAND);
         }
         for (uint8_t i = s; i <= e; i++) {
             const uint32_t bm = (1 << i);
@@ -278,13 +280,13 @@ Error AsmMc68000::parseMoveMultiRegList(StrScanner &scan, Operand &op) {
         if (!a.skipSpaces().expect('/')) {
             op.mode = M_MULT;
             scan = a;
-            return setError(error);
+            return op.setError(error);
         }
         p = a.skipSpaces();
     }
 }
 
-Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -292,7 +294,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = M_IMDAT;
         scan = p;
         return OK;
@@ -305,7 +307,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
         op.reg = RegMc68000::parseRegName(p.skipSpaces());
         if (RegMc68000::isAddrReg(op.reg)) {
             if (!p.skipSpaces().expect(')'))
-                return setError(p, MISSING_CLOSING_PAREN);
+                return op.setError(MISSING_CLOSING_PAREN);
             if (pdec) {
                 op.mode = M_PDEC;
             } else if (p.expect('+')) {
@@ -318,18 +320,18 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
         }
         op.val32 = parseExpr32(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         if (p.skipSpaces().expect(')')) {
             const OprSize size = RegMc68000::parseSize(p.skipSpaces());
-            const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
-            if (static_cast<int32_t>(op.val32) >= 0 && op.val32 >= max)
-                return setError(op, OVERFLOW_RANGE);
-            // Sign extends 24-bit number.
-            const Config::uintptr_t sign = max >> 1;
-            const Config::uintptr_t addr = (op.val32 & (sign - 1)) - (op.val32 & sign);
-            const bool over16 = overflowRel16(addr);
-            if (size == SZ_WORD && over16)
-                return setError(op, OVERFLOW_RANGE);
+            bool over16 = overflowRel16(op.val32);
+            if (over16) {
+                // check if it is near the end of address space.
+                const auto max = 1UL << uint8_t(addressWidth());
+                if (op.val32 <= max - 1 && op.val32 >= (max - 0x8000))
+                    over16 = false;
+            }
+            if (over16 && size == SZ_WORD)
+                return op.setError(OVERFLOW_RANGE);
             op.mode = (size == SZ_WORD || (size == SZ_NONE && !over16)) ? M_AWORD : M_ALONG;
             scan = p;
             return OK;
@@ -338,30 +340,30 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
             a = p.skipSpaces();
             op.reg = RegMc68000::parseRegName(a);
             if (!RegMc68000::isAddrReg(op.reg) && op.reg != REG_PC)
-                return setError(p, REGISTER_NOT_ALLOWED);
+                return op.setError(a, REGISTER_NOT_ALLOWED);
             if (a.skipSpaces().expect(')')) {
                 op.mode = (op.reg == REG_PC) ? M_PCDSP : M_DISP;
                 scan = a;
                 return OK;
             }
             if (!a.expect(','))
-                return setError(a, MISSING_COMMA);
+                return op.setError(a, MISSING_COMMA);
             p = a.skipSpaces();
             op.indexReg = RegMc68000::parseRegName(p);
             if (!RegMc68000::isGeneralReg(op.indexReg))
-                return setError(a, UNKNOWN_OPERAND);
+                return op.setError(UNKNOWN_OPERAND);
             op.indexSize = RegMc68000::parseSize(p);
             if (op.indexSize == SZ_ERROR)
-                return setError(p, UNKNOWN_OPERAND);
+                return op.setError(UNKNOWN_OPERAND);
             if (op.indexSize == SZ_NONE)
                 op.indexSize = SZ_WORD;
             if (!p.skipSpaces().expect(')'))
-                return setError(p, MISSING_CLOSING_PAREN);
+                return op.setError(p, MISSING_CLOSING_PAREN);
             op.mode = (op.reg == REG_PC) ? M_PCIDX : M_INDX;
             scan = p;
             return OK;
         }
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
     }
 
     op.reg = RegMc68000::parseRegName(a = p);
@@ -370,8 +372,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
         if ((*a == '/' || *a == '-') && RegMc68000::isGeneralReg(op.reg)) {
             parseMoveMultiRegList(p, op);
             scan = p;
-            return getError();
-        }            
+            return op.getError();
+        }
         if (RegMc68000::isAddrReg(op.reg)) {
             op.mode = M_AREG;
         } else if (RegMc68000::isDataReg(op.reg)) {
@@ -383,13 +385,13 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) {
         } else if (op.reg == REG_SR) {
             op.mode = M_SR;
         } else
-            return setError(p, REGISTER_NOT_ALLOWED);
+            return op.setError(p, REGISTER_NOT_ALLOWED);
         scan = a;
         return OK;
     }
     op.val32 = parseExpr32(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     op.mode = M_LABEL;
     scan = p;
     return OK;
@@ -405,11 +407,11 @@ Error AsmMc68000::encode(StrScanner &scan, Insn &_insn) {
     insn.setInsnSize(isize);
 
     Operand srcOp, dstOp;
-    if (parseOperand(scan, srcOp))
-        return getError();
+    if (parseOperand(scan, srcOp) && srcOp.hasError())
+        return setError(srcOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, dstOp))
-            return getError();
+        if (parseOperand(scan, dstOp) && dstOp.hasError())
+            return setError(dstOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -418,8 +420,9 @@ Error AsmMc68000::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-    if (TableMc68000::TABLE.searchName(insn))
-        return setError(TableMc68000::TABLE.getError());
+    const auto error = TableMc68000::TABLE.searchName(insn);
+    if (error)
+        return setError(srcOp, error);
 
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();

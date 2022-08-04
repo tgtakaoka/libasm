@@ -35,7 +35,7 @@ public:
 private:
     IntelValueParser _parser;
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     Error encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
     Error encodeOperand(
             InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);

@@ -70,8 +70,8 @@ static void test_implied() {
     TEST("CALL 13",    0x1D);
     TEST("CALL 14",    0x1E);
     TEST("CALL 15",    0x1F);
-    ERRT("CALL -1",    OPERAND_NOT_ALLOWED);
-    ERRT("CALL 16",    OPERAND_NOT_ALLOWED);
+    ERRT("CALL -1",    OPERAND_NOT_ALLOWED, "-1");
+    ERRT("CALL 16",    OPERAND_NOT_ALLOWED, "16");
     TEST("MPY  EA,T",  0x2C);
     TEST("SSM  P2",    0x2E);
     TEST("SSM  P3",    0x2F);
@@ -96,7 +96,7 @@ static void test_implied() {
     TEST("XCH  EA,P2", 0x4E);
     TEST("XCH  EA,P3", 0x4F);
     TEST("PUSH PC",    0x54);
-    ERRT("PUSH SP",    OPERAND_NOT_ALLOWED);
+    ERRT("PUSH SP",    OPERAND_NOT_ALLOWED, "SP");
     TEST("PUSH P2",    0x56);
     TEST("PUSH P3",    0x57);
     TEST("OR   A,E",   0x58);
@@ -112,11 +112,11 @@ static void test_immediate() {
     TEST("AND S,=0x12", 0x39, 0x12);
     TEST("AND S,=-128", 0x39, 0x80);
     TEST("AND S,=255",  0x39, 0xFF);
-    ERRT("AND S,=-129", OVERFLOW_RANGE);
-    ERRT("AND S,=256",  OVERFLOW_RANGE);
+    ERRT("AND S,=-129", OVERFLOW_RANGE, "=-129");
+    ERRT("AND S,=256",  OVERFLOW_RANGE, "=256");
     TEST("OR  S,=0x34", 0x3B, 0x34);
     TEST("LD  A,=0x12", 0xC4, 0x12);
-    ERRT("ST  A,=0x12", OPERAND_NOT_ALLOWED);
+    ERRT("ST  A,=0x12", OPERAND_NOT_ALLOWED, "A,=0x12");
     TEST("AND A,=0x12", 0xD4, 0x12);
     TEST("OR  A,=0x12", 0xDC, 0x12);
     TEST("XOR A,=0x12", 0xE4, 0x12);
@@ -129,13 +129,13 @@ static void test_immediate() {
     TEST("LD  P2,=0x1234", 0x26, 0x34, 0x12);
     TEST("LD  P3,=0x1234", 0x27, 0x34, 0x12);
     TEST("LD  EA,=0x1234", 0x84, 0x34, 0x12);
-    ERRT("ST  EA,=0x1234", OPERAND_NOT_ALLOWED);
+    ERRT("ST  EA,=0x1234", OPERAND_NOT_ALLOWED, "EA,=0x1234");
     TEST("LD  T,=0x1234",  0xA4, 0x34, 0x12);
     TEST("ADD EA,=0x1234", 0xB4, 0x34, 0x12);
     TEST("SUB EA,=0x1234", 0xBC, 0x34, 0x12);
 
-    ERRT("ILD =0x1234", OPERAND_NOT_ALLOWED);
-    ERRT("DLD =0x1234", OPERAND_NOT_ALLOWED);
+    ERRT("ILD =0x1234", OPERAND_NOT_ALLOWED, "=0x1234");
+    ERRT("DLD =0x1234", OPERAND_NOT_ALLOWED, "=0x1234");
 
     symtab.intern(0x12,   "sym12");
     symtab.intern(0x1234, "sym1234");
@@ -218,19 +218,19 @@ static void test_indexed() {
     TEST("BRA 3,P3",    0x77, 0x03);
     TEST("BNZ -2,P2",   0x7E, 0xFE);
     TEST("BNZ -3,P3",   0x7F, 0xFD);
-    ERRT("BRA -129,P2", OVERFLOW_RANGE);
-    ERRT("BRA 128,P3",  OVERFLOW_RANGE);
+    ERRT("BRA -129,P2", OVERFLOW_RANGE, "-129,P2");
+    ERRT("BRA 128,P3",  OVERFLOW_RANGE, "128,P3");
 
     ATEST(0x1000, "LD  EA,0x1000,PC", 0x80, 0xFF);
     ATEST(0x1000, "LD  EA,0x0F81,PC", 0x80, 0x80);
     ATEST(0x1000, "LD  EA,0x1080,PC", 0x80, 0x7F);
-    AERRT(0x1000, "LD  EA,0x0F80,PC", OPERAND_TOO_FAR);
-    AERRT(0x1000, "LD  EA,0x1081,PC", OPERAND_TOO_FAR);
+    AERRT(0x1000, "LD  EA,0x0F80,PC", OPERAND_TOO_FAR, "0x0F80,PC");
+    AERRT(0x1000, "LD  EA,0x1081,PC", OPERAND_TOO_FAR, "0x1081,PC");
     TEST(         "LD  EA,0,SP",      0x81, 0x00);
     TEST(         "LD  EA,-128,P2",   0x82, 0x80);
     TEST(         "LD  EA,127,P3",    0x83, 0x7F);
-    ERRT(         "LD  EA,-129,P2",   OVERFLOW_RANGE);
-    ERRT(         "LD  EA,128,P3",    OVERFLOW_RANGE);
+    ERRT(         "LD  EA,-129,P2",   OVERFLOW_RANGE, "-129,P2");
+    ERRT(         "LD  EA,128,P3",    OVERFLOW_RANGE, "128,P3");
     ATEST(0x1100, "ST  EA,0x1081,PC", 0x88, 0x80);
     TEST(         "ST  EA,0,SP",      0x89, 0x00);
     TEST(         "ST  EA,-128,P2",   0x8A, 0x80);
@@ -305,8 +305,8 @@ static void test_indexed() {
 static void test_auto_indexed() {
     TEST("LD  EA,@-128,P2", 0x86, 0x80);
     TEST("LD  EA,@127,P3",  0x87, 0x7F);
-    ERRT("LD  EA,@-129,P2", OVERFLOW_RANGE);
-    ERRT("LD  EA,@128,P3",  OVERFLOW_RANGE);
+    ERRT("LD  EA,@-129,P2", OVERFLOW_RANGE, "@-129,P2");
+    ERRT("LD  EA,@128,P3",  OVERFLOW_RANGE, "@128,P3");
     TEST("ST  EA,@-128,P2", 0x8E, 0x80);
     TEST("ST  EA,@127,P3",  0x8F, 0x7F);
     TEST("LD  T,@-128,P2",  0xA6, 0x80);
@@ -377,29 +377,29 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ERUS("AND S,=UNDEF",  0x39, 0x00);
-    ERUS("ADD A,=UNDEF",  0xF4, 0x00);
-    ERUS("PLI P2,=UNDEF", 0x22, 0x00, 0x00);
-    ERUS("LD  SP,=UNDEF", 0x25, 0x00, 0x00);
-    ERUS("LD  EA,=UNDEF", 0x84, 0x00, 0x00);
-    ERUS("ST  EA,UNDEF",  0x8D, 0x00);
-    ERUS("ILD A,UNDEF",   0x95, 0x00);
-    ERUS("LD  T,@UNDEF,P3",  0xA7, 0x00);
-    ERUS("ADD EA,@UNDEF,P2", 0xB6, 0x00);
-    ERUS("BP  UNDEF,P2", 0x66, 0x00);
-    AERRU(0x1100, "BZ  UNDEF", 0x6C, 0x00);
-    AERRU(0x1000, "LD  EA,UNDEF,PC", 0x80, 0x00);
-    AERRU(0x1000, "JSR UNDEF", 0x20, 0x00, 0x00);
-    AERRU(0x1000, "JMP UNDEF", 0x24, 0x00, 0x00);
+    ERUS("AND S,=UNDEF",  "UNDEF",  0x39, 0x00);
+    ERUS("ADD A,=UNDEF",  "UNDEF",  0xF4, 0x00);
+    ERUS("PLI P2,=UNDEF", "UNDEF", 0x22, 0x00, 0x00);
+    ERUS("LD  SP,=UNDEF", "UNDEF", 0x25, 0x00, 0x00);
+    ERUS("LD  EA,=UNDEF", "UNDEF", 0x84, 0x00, 0x00);
+    ERUS("ST  EA,UNDEF",  "UNDEF",  0x8D, 0x00);
+    ERUS("ILD A,UNDEF",   "UNDEF",   0x95, 0x00);
+    ERUS("LD  T,@UNDEF,P3",  "UNDEF,P3",  0xA7, 0x00);
+    ERUS("ADD EA,@UNDEF,P2", "UNDEF,P2", 0xB6, 0x00);
+    ERUS("BP  UNDEF,P2", "UNDEF,P2", 0x66, 0x00);
+    AERUS(0x1100, "BZ  UNDEF",       "UNDEF",    0x6C, 0x00);
+    AERUS(0x1000, "LD  EA,UNDEF,PC", "UNDEF,PC", 0x80, 0x00);
+    AERUS(0x1000, "JSR UNDEF",       "UNDEF",    0x20, 0x00, 0x00);
+    AERUS(0x1000, "JMP UNDEF",       "UNDEF",    0x24, 0x00, 0x00);
 }
 
 static void test_error() {
-    ERRT("LD A,@@1,P3", ILLEGAL_CONSTANT);
-    ERRT("LD A,@#1",    ILLEGAL_CONSTANT);
-    ERRT("LD A,@=1",    ILLEGAL_CONSTANT);
-    ERRT("LD A,1(P3)",  MISSING_COMMA); // SC/MP style
-    ERRT("LD A,@1(P3)", MISSING_COMMA); // SC/MP style
-    ERRT("LD A,1,(EA)", GARBAGE_AT_END);
+    ERRT("LD A,@@1,P3", ILLEGAL_CONSTANT, "@1,P3");
+    ERRT("LD A,@#1",    ILLEGAL_CONSTANT, "#1");
+    ERRT("LD A,@=1",    ILLEGAL_CONSTANT, "=1");
+    ERRT("LD A,1(P3)",  MISSING_COMMA,    "1(P3)"); // SC/MP style
+    ERRT("LD A,@1(P3)", MISSING_COMMA,    "@1(P3)"); // SC/MP style
+    ERRT("LD A,1,(EA)", GARBAGE_AT_END,   "(EA)");
 }
 // clang-format on
 

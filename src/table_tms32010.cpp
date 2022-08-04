@@ -175,6 +175,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return false;
     if (opr == M_ARP || opr == M_INC || opr == M_DEC)
         return table == M_MAM;
+    if (opr == M_IM13 && table == M_PMA)
+        return true;
     // Compare constant range.
     auto tv = uint8_t(table);
     if (tv >= uint8_t(M_LS0) && tv <= uint8_t(M_IM13)) {

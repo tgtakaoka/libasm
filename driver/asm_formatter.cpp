@@ -121,7 +121,7 @@ const char *AsmFormatter::getLine() {
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
         _formatter.formatDec(_out, _sources.current()->lineno(), 0);
-        const char *at = _errorAt.errorAt().str();
+        const char *at = _errorAt.errorAt();
         const char *line = _line.str();
         const char *line_end = _line.str() + _line.size();
         const int column = (at >= line && at < line_end) ? at - line + 1 : -1;

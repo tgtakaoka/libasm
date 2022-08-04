@@ -184,10 +184,10 @@ Error AsmZ8::encodePostByte(
         uint8_t srp = dstOp.val16;
         if (post == P2_0) {  // SRP
             if (srp & 0xf)
-                return setError(srcOp, OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
+                return setError(dstOp, OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
         } else {                                              // SRP0, SRP1
             if (srp & 0x7)
-                return setError(srcOp, OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
+                return setError(dstOp, OPERAND_NOT_ALLOWED);  // TODO: Should be warning.
             if (post == P2_1)
                 srp |= 1;
             if (post == P2_2)
@@ -291,7 +291,7 @@ Error AsmZ8::processPseudo(StrScanner &scan, const char *name) {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
@@ -309,7 +309,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = M_IM;
         scan = p;
         return OK;
@@ -317,7 +317,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
 
     const bool indir = p.expect('@');
     if (indir && isspace(*p))
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
 
     op.reg = RegZ8::parseRegName(p);
     if (op.reg != REG_UNDEF) {
@@ -334,24 +334,24 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
 
     const bool forceRegAddr = p.expect('>');
     if (forceRegAddr && isspace(*p))
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
     const int32_t val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
     if (p.skipSpaces().expect('(')) {
         if (indir || forceRegAddr)
-            setError(p, UNKNOWN_OPERAND);
+            op.setError(UNKNOWN_OPERAND);
         op.reg = RegZ8::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             const uint16_t val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
             if (!isWorkReg(val16))
-                return setError(op, UNKNOWN_OPERAND);
+                return op.setError(UNKNOWN_OPERAND);
             op.reg = RegZ8::decodeRegNum(val16 & 0xF);
         }
         if (!p.skipSpaces().expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         scan = p;
         if (val32 >= -128 && val32 < 128) {
             op.mode = M_XS;
@@ -362,12 +362,12 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (val32 < 0)
-        return setError(op, OVERFLOW_RANGE);
+        return op.setError(OVERFLOW_RANGE);
     scan = p;
     op.val16 = val32;
     if (indir) {
         if (op.val16 >= 0x100)
-            return setError(op, OVERFLOW_RANGE);
+            return op.setError(OVERFLOW_RANGE);
         if (!forceRegAddr && isWorkReg(op.val16)) {
             op.mode = (op.val16 & 1) == 0 ? M_IWW : M_IW;
             op.reg = RegZ8::decodeRegNum(op.val16 & 0xF);
@@ -378,7 +378,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) {
     }
     if (forceRegAddr) {
         if (op.val16 >= 0x100)
-            return setError(op, OVERFLOW_RANGE);
+            return op.setError(OVERFLOW_RANGE);
         op.mode = (op.val16 & 1) == 0 ? M_RR : M_R;
         return OK;
     }
@@ -403,16 +403,16 @@ Error AsmZ8::encode(StrScanner &scan, Insn &_insn) {
         return getError();
 
     Operand dstOp, srcOp, extOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, extOp))
-            return getError();
+        if (parseOperand(scan, extOp) && extOp.hasError())
+            return setError(extOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -422,8 +422,9 @@ Error AsmZ8::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    if (TableZ8::TABLE.searchName(insn))
-        return setError(TableZ8::TABLE.getError());
+    const auto error = TableZ8::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
 

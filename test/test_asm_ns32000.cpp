@@ -42,11 +42,11 @@ static void tear_down() {
 
     TEST("fpu ns32081");
     TEST("fpu none");
-    ERRT("fpu ns32082", UNKNOWN_OPERAND);
+    ERRT("fpu ns32082", UNKNOWN_OPERAND, "ns32082");
 
     TEST("pmmu ns32082");
     TEST("pmmu none");
-    ERRT("pmmu ns32081", UNKNOWN_OPERAND);
+    ERRT("pmmu ns32081", UNKNOWN_OPERAND, "ns32081");
 }
 
 static void test_format_0() {
@@ -87,11 +87,11 @@ static void test_format_1() {
     TEST("SAVE    [R0,R2,R7]",     0x62, 0x85);
     TEST("RESTORE [R0,R2,R7]",     0x72, 0xA1);
     TEST("ENTER   [R0,R2,R7], 16", 0x82, 0x85, 0x10);
+    TEST("ENTER   [], 0",          0x82, 0x00, 0x00);
     TEST("EXIT    [R0,R2,R7]",     0x92, 0xA1);
-    ERRT("SAVE    []",     OPCODE_HAS_NO_EFFECT);
-    ERRT("RESTORE [ ]",    OPCODE_HAS_NO_EFFECT);
-    ERRT("ENTER   [], 16", OPCODE_HAS_NO_EFFECT);
-    ERRT("EXIT    []",     OPCODE_HAS_NO_EFFECT);
+    TEST("EXIT    []",             0x92, 0x00);
+    ERRT("SAVE    []",     OPCODE_HAS_NO_EFFECT, "[]");
+    ERRT("RESTORE [ ]",    OPCODE_HAS_NO_EFFECT, "[ ]");
 
     // Various displacement.
     TEST("RET 0",          0x12, 0x00);
@@ -101,8 +101,8 @@ static void test_format_1() {
     TEST("RET -8192",      0x12, 0xA0, 0x00);
     TEST("RET 536870911",  0x12, 0xDF, 0xFF, 0xFF, 0xFF);
     TEST("RET -520093696", 0x12, 0xE1, 0x00, 0x00, 0x00);
-    ERRT("RET 536870912",  OVERFLOW_RANGE);
-    ERRT("RET -520093697", OVERFLOW_RANGE);
+    ERRT("RET 536870912",  OVERFLOW_RANGE, "536870912");
+    ERRT("RET -520093697", OVERFLOW_RANGE, "-520093697");
 }
 
 static void test_format_2() {
@@ -313,22 +313,22 @@ static void test_format_7() {
     TEST("QUOW 4(SB),8(SB)", 0xCE, 0xB1, 0xD6, 0x04, 0x08);
     TEST("REMB 4(SB),8(SB)", 0xCE, 0xB4, 0xD6, 0x04, 0x08);
 
-    ERRT("DEIB R1,R3", REGISTER_NOT_ALLOWED);
-    ERRT("DEIW R3,R1", REGISTER_NOT_ALLOWED);
-    ERRT("DEID R5,R7", REGISTER_NOT_ALLOWED);
-    ERRT("MEIB R1,R3", REGISTER_NOT_ALLOWED);
-    ERRT("MEIW R3,R1", REGISTER_NOT_ALLOWED);
-    ERRT("MEID R5,R7", REGISTER_NOT_ALLOWED);
+    ERRT("DEIB R1,R3", REGISTER_NOT_ALLOWED, "R3");
+    ERRT("DEIW R3,R1", REGISTER_NOT_ALLOWED, "R1");
+    ERRT("DEID R5,R7", REGISTER_NOT_ALLOWED, "R7");
+    ERRT("MEIB R1,R3", REGISTER_NOT_ALLOWED, "R3");
+    ERRT("MEIW R3,R1", REGISTER_NOT_ALLOWED, "R1");
+    ERRT("MEID R5,R7", REGISTER_NOT_ALLOWED, "R7");
 }
 
 static void test_format_8() {
-    TEST("CHECKB R0,4(SB),R2", 0xEE, 0x80, 0xD0, 0x04);
-    TEST("CVTP R0,0x20(SB),R2", 0x6E, 0x83, 0xD0, 0x20);
-    TEST("EXTW R0,0(R1),R2,7", 0x2E, 0x81, 0x48, 0x00, 0x07);
-    TEST("FFSB -4(FP),TOS", 0x6E, 0xC4, 0xC5, 0x7C);
-    TEST("FFSW 8(SB),R0",   0x6E, 0x05, 0xD0, 0x08);
+    TEST("CHECKB R0,4(SB),R2",        0xEE, 0x80, 0xD0, 0x04);
+    TEST("CVTP   R0,0x20(SB),R2",     0x6E, 0x83, 0xD0, 0x20);
+    TEST("EXTW   R0,0(R1),R2,7",      0x2E, 0x81, 0x48, 0x00, 0x07);
+    TEST("FFSB   -4(FP),TOS",         0x6E, 0xC4, 0xC5, 0x7C);
+    TEST("FFSW   8(SB),R0",           0x6E, 0x05, 0xD0, 0x08);
     TEST("INDEXB R0,0x14(SB),-4(FP)", 0x2E, 0x04, 0xD6, 0x14, 0x7C);
-    TEST("INSW R0,R2,0(R1),7", 0xAE, 0x41, 0x12, 0x00, 0x07);
+    TEST("INSW   R0,R2,0(R1),7",      0xAE, 0x41, 0x12, 0x00, 0x07);
 }
 
 static void test_format_9() {
@@ -384,37 +384,37 @@ static void test_format_9() {
     TEST("LFSR R0",  0x3E, 0x0F, 0x00);
     TEST("SFSR TOS", 0x3E, 0xF7, 0x05);
 
-    ERRT("MOVL F3,8(SB)",   REGISTER_NOT_ALLOWED);
-    ERRT("MOVBL R1,F5",     REGISTER_NOT_ALLOWED);
-    ERRT("MOVWL R3,F7",     REGISTER_NOT_ALLOWED);
-    ERRT("MOVDL R5,F1",     REGISTER_NOT_ALLOWED);
-    ERRT("MOVDL 16(SB),F3", REGISTER_NOT_ALLOWED);
-    ERRT("MOVFL 8(SB),F5",  REGISTER_NOT_ALLOWED);
-    ERRT("MOVFL F1,F7",     REGISTER_NOT_ALLOWED);
-    ERRT("MOVLF F1,12(SB)", REGISTER_NOT_ALLOWED);
-    ERRT("MOVLF F3,F3",     REGISTER_NOT_ALLOWED);
-    ERRT("FLOORLD F5,R5",   REGISTER_NOT_ALLOWED);
-    ERRT("ROUNDLD F7,R5",   REGISTER_NOT_ALLOWED);
-    ERRT("TRUNCLD F1,R5",   REGISTER_NOT_ALLOWED);
+    ERRT("MOVL F3,8(SB)",   REGISTER_NOT_ALLOWED, "F3,8(SB)");
+    ERRT("MOVBL R1,F5",     REGISTER_NOT_ALLOWED, "F5");
+    ERRT("MOVWL R3,F7",     REGISTER_NOT_ALLOWED, "F7");
+    ERRT("MOVDL R5,F1",     REGISTER_NOT_ALLOWED, "F1");
+    ERRT("MOVDL 16(SB),F3", REGISTER_NOT_ALLOWED, "F3");
+    ERRT("MOVFL 8(SB),F5",  REGISTER_NOT_ALLOWED, "F5");
+    ERRT("MOVFL F1,F7",     REGISTER_NOT_ALLOWED, "F7");
+    ERRT("MOVLF F1,12(SB)", REGISTER_NOT_ALLOWED, "F1,12(SB)");
+    ERRT("MOVLF F3,F3",     REGISTER_NOT_ALLOWED, "F3,F3");
+    ERRT("FLOORLD F5,R5",   REGISTER_NOT_ALLOWED, "F5,R5");
+    ERRT("ROUNDLD F7,R5",   REGISTER_NOT_ALLOWED, "F7,R5");
+    ERRT("TRUNCLD F1,R5",   REGISTER_NOT_ALLOWED, "F1,R5");
 
     TEST("FPU NONE");
 
-    ERRT("MOVF F1,8(SB)",   UNKNOWN_INSTRUCTION);
-    ERRT("MOVL F2,8(SB)",   UNKNOWN_INSTRUCTION);
-    ERRT("MOVBF 2,F0",      UNKNOWN_INSTRUCTION);
-    ERRT("MOVBL R1,F2",     UNKNOWN_INSTRUCTION);
-    ERRT("MOVWL R1,F2",     UNKNOWN_INSTRUCTION);
-    ERRT("MOVDL R1,F2",     UNKNOWN_INSTRUCTION);
-    ERRT("MOVFL 8(SB),F0",  UNKNOWN_INSTRUCTION);
-    ERRT("MOVLF F0,12(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("FLOORFB F0,R0",     UNKNOWN_INSTRUCTION);
-    ERRT("FLOORLD F2,16(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("ROUNDFB F0,R0",     UNKNOWN_INSTRUCTION);
-    ERRT("ROUNDLD F2,12(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("TRUNCFB F0,R0",     UNKNOWN_INSTRUCTION);
-    ERRT("TRUNCLD F2,8(SB)",  UNKNOWN_INSTRUCTION);
-    ERRT("LFSR R0",  UNKNOWN_INSTRUCTION);
-    ERRT("SFSR TOS", UNKNOWN_INSTRUCTION);
+    ERUI("MOVF F1,8(SB)");
+    ERUI("MOVL F2,8(SB)");
+    ERUI("MOVBF 2,F0");
+    ERUI("MOVBL R1,F2");
+    ERUI("MOVWL R1,F2");
+    ERUI("MOVDL R1,F2");
+    ERUI("MOVFL 8(SB),F0");
+    ERUI("MOVLF F0,12(SB)");
+    ERUI("FLOORFB F0,R0");
+    ERUI("FLOORLD F2,16(SB)");
+    ERUI("ROUNDFB F0,R0");
+    ERUI("ROUNDLD F2,12(SB)");
+    ERUI("TRUNCFB F0,R0");
+    ERUI("TRUNCLD F2,8(SB)");
+    ERUI("LFSR R0");
+    ERUI("SFSR TOS");
 }
 
 static void test_format_11() {
@@ -449,17 +449,17 @@ static void test_format_11() {
 
     TEST("FPU NONE");
 
-    ERRT("ABSF F0,F2",     UNKNOWN_INSTRUCTION);
-    ERRT("ADDF F0,F7",     UNKNOWN_INSTRUCTION);
-    ERRT("ADDL F2,16(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("CMPF F0,F2",     UNKNOWN_INSTRUCTION);
-    ERRT("DIVF F0,F7",         UNKNOWN_INSTRUCTION);
-    ERRT("DIVL -8(FP),16(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("MULF F0,F7",        UNKNOWN_INSTRUCTION);
-    ERRT("MULL -8(FP),8(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("NEGF F0,F2", UNKNOWN_INSTRUCTION);
-    ERRT("SUBF F0,F7",     UNKNOWN_INSTRUCTION);
-    ERRT("SUBL F2,16(SB)", UNKNOWN_INSTRUCTION);
+    ERUI("ABSF F0,F2");
+    ERUI("ADDF F0,F7");
+    ERUI("ADDL F2,16(SB)");
+    ERUI("CMPF F0,F2");
+    ERUI("DIVF F0,F7");
+    ERUI("DIVL -8(FP),16(SB)");
+    ERUI("MULF F0,F7");
+    ERUI("MULL -8(FP),8(SB)");
+    ERUI("NEGF F0,F2");
+    ERUI("SUBF F0,F7");
+    ERUI("SUBL F2,16(SB)");
 }
 
 static void test_format_8_mmu() {
@@ -470,8 +470,8 @@ static void test_format_8_mmu() {
 
     TEST("PMMU NONE");
 
-    ERRT("MOVSUB 5(SP),9(SB)", UNKNOWN_INSTRUCTION);
-    ERRT("MOVUSB 9(SB),5(SP)", UNKNOWN_INSTRUCTION);
+    ERUI("MOVSUB 5(SP),9(SB)");
+    ERUI("MOVUSB 9(SB),5(SP)");
 }
 
 static void test_format_14() {
@@ -484,10 +484,10 @@ static void test_format_14() {
 
     TEST("PMMU NONE");
 
-    ERRT("LMR PTB1,R0", UNKNOWN_INSTRUCTION);
-    ERRT("SMR PTB0,R0", UNKNOWN_INSTRUCTION);
-    ERRT("RDVAL 0x200(R0)", UNKNOWN_INSTRUCTION);
-    ERRT("WRVAL 0x200(R0)", UNKNOWN_INSTRUCTION);
+    ERUI("LMR PTB1,R0");
+    ERUI("SMR PTB0,R0");
+    ERUI("RDVAL 0x200(R0)");
+    ERUI("WRVAL 0x200(R0)");
 }
 
 static void test_generic_addressing() {
@@ -526,7 +526,7 @@ static void test_generic_addressing() {
     TEST("MOVW @0x800000, R0", 0x15, 0xA8, 0xFF, 0x80, 0x00, 0x00);
     TEST("MOVW @0xFFE000, R0", 0x15, 0xA8, 0xA0, 0x00);
     TEST("MOVW @0xFFFFC0, R0", 0x15, 0xA8, 0x40);
-    ERRT("MOVW @0x1000000, R0", OVERFLOW_RANGE);
+    ERRT("MOVW @0x1000000, R0", OVERFLOW_RANGE, "@0x1000000, R0");
     // External
     TEST("ADDW EXT(2)+4,     10(R2)",       0x81, 0xB2, 0x02, 0x04, 0x0A);
     TEST("ADDW EXT(-2)+(-4), 10(R2)",       0x81, 0xB2, 0x7E, 0x7C, 0x0A);
@@ -659,64 +659,64 @@ static void test_comment() {
     TEST("MOVSB [ B ]     ; comment", 0x0E, 0x00, 0x01);
     TEST("MOVSB [ B , W ] ; comment", 0x0E, 0x00, 0x03);
     TEST("MOVSB [ U , B ] ; comment", 0x0E, 0x00, 0x07);
-    ERRT("MOVSB [ U , W ] ; comment", ILLEGAL_OPERAND);
+    ERRT("MOVSB [ U , W ] ; comment", ILLEGAL_OPERAND,  "[ U , W ] ; comment");
 }
 
 static void test_undefined_symbol() {
-    ERUS("ADDB UNDEF(R2),           R0", 0x00, 0x50, 0x00);
-    ERUS("ADDB UNDEF(4(FP)),        R0", 0x00, 0x80, 0x04, 0x00);
-    ERUS("ADDB 2(UNDEF(FP)),        R0", 0x00, 0x80, 0x00, 0x02);
-    ERUS("ADDB UNDEF(UNDEF(FP)),    R0", 0x00, 0x80, 0x00, 0x00);
-    ERUS("ADDB UNDEF,               R0", 0x00, 0xA0, 0x00);
-    ERUS("ADDB @UNDEF,              R0", 0x00, 0xA8, 0x00);
-    ERUS("ADDB EXT(UNDEF)+(-4),     R0", 0x00, 0xB0, 0x00, 0x7C);
-    ERUS("ADDB EXT(2)+(UNDEF),      R0", 0x00, 0xB0, 0x02, 0x00);
-    ERUS("ADDB EXT(UNDEF)+(UNDEF),  R0", 0x00, 0xB0, 0x00, 0x00);
-    ERUS("ADDB -4(UNDEF(EXT)),      R0", 0x00, 0xB0, 0x00, 0x7C);
-    ERUS("ADDB UNDEF(2(EXT)),       R0", 0x00, 0xB0, 0x02, 0x00);
-    ERUS("ADDB UNDEF(UNDEF(EXT)),   R0", 0x00, 0xB0, 0x00, 0x00);
-    ERUS("ADDB UNDEF(SP),           R0", 0x00, 0xC8, 0x00);
-    ERUS("ADDB R0, UNDEF(R2)",          0x80, 0x02, 0x00);
-    ERUS("ADDB R0, UNDEF(4(FP))",       0x00, 0x04, 0x04, 0x00);
-    ERUS("ADDB R0, 2(UNDEF(FP))",       0x00, 0x04, 0x00, 0x02);
-    ERUS("ADDB R0, UNDEF(UNDEF(FP))",   0x00, 0x04, 0x00, 0x00);
-    ERUS("ADDB R0, @UNDEF",             0x40, 0x05, 0x00);
-    ERUS("ADDB R0, EXT(UNDEF)+(-4)",    0x80, 0x05, 0x00, 0x7C);
-    ERUS("ADDB R0, EXT(2)+(UNDEF)",     0x80, 0x05, 0x02, 0x00);
-    ERUS("ADDB R0, EXT(UNDEF)+(UNDEF)", 0x80, 0x05, 0x00, 0x00);
-    ERUS("ADDB R0, UNDEF(SP)",          0x40, 0x06, 0x00);
-    AERRU(0x100, "ADDW 8(SP) , *+UNDEF",       0xC1, 0xCE, 0x08, 0x00);
-    AERRU(0x100, "ADDW 8(SP) , UNDEF(PC)",     0xC1, 0xCE, 0x08, 0x00);
-    AERRU(0x100, "ADDW *-UNDEF, 6(R2)",        0x81, 0xDA, 0x00, 0x06);
-    AERRU(0x100, "ADDW UNDEF(PC), 6(R2)",      0x81, 0xDA, 0x00, 0x06);
-    AERRU(0x100, "ADDW UNDEF(PC), UNDEF(R2)",  0x81, 0xDA, 0x00, 0x00);
+    ERUS("ADDB UNDEF(R2), R0",          "UNDEF(R2), R0",           0x00, 0x50, 0x00);
+    ERUS("ADDB UNDEF(4(FP)), R0",       "UNDEF(4(FP)), R0",        0x00, 0x80, 0x04, 0x00);
+    ERUS("ADDB 2(UNDEF(FP)), R0",       "UNDEF(FP)), R0",          0x00, 0x80, 0x00, 0x02);
+    ERUS("ADDB UNDEF(UNDEF(FP)), R0",   "UNDEF(UNDEF(FP)), R0",    0x00, 0x80, 0x00, 0x00);
+    ERUS("ADDB UNDEF, R0",              "UNDEF, R0",               0x00, 0xA0, 0x00);
+    ERUS("ADDB @UNDEF, R0",             "UNDEF, R0",               0x00, 0xA8, 0x00);
+    ERUS("ADDB EXT(UNDEF)+(-4), R0",    "UNDEF)+(-4), R0",         0x00, 0xB0, 0x00, 0x7C);
+    ERUS("ADDB EXT(2)+(UNDEF), R0",     "UNDEF), R0",              0x00, 0xB0, 0x02, 0x00);
+    ERUS("ADDB EXT(UNDEF)+(UNDEF), R0", "UNDEF)+(UNDEF), R0",      0x00, 0xB0, 0x00, 0x00);
+    ERUS("ADDB -4(UNDEF(EXT)), R0",     "UNDEF(EXT)), R0",         0x00, 0xB0, 0x00, 0x7C);
+    ERUS("ADDB UNDEF(2(EXT)), R0",      "UNDEF(2(EXT)), R0",       0x00, 0xB0, 0x02, 0x00);
+    ERUS("ADDB UNDEF(UNDEF(EXT)), R0",  "UNDEF(UNDEF(EXT)), R0",   0x00, 0xB0, 0x00, 0x00);
+    ERUS("ADDB UNDEF(SP), R0",          "UNDEF(SP), R0",           0x00, 0xC8, 0x00);
+    ERUS("ADDB R0, UNDEF(R2)",          "UNDEF(R2)",               0x80, 0x02, 0x00);
+    ERUS("ADDB R0, UNDEF(4(FP))",       "UNDEF(4(FP))",            0x00, 0x04, 0x04, 0x00);
+    ERUS("ADDB R0, 2(UNDEF(FP))",       "UNDEF(FP))",              0x00, 0x04, 0x00, 0x02);
+    ERUS("ADDB R0, UNDEF(UNDEF(FP))",   "UNDEF(UNDEF(FP))",        0x00, 0x04, 0x00, 0x00);
+    ERUS("ADDB R0, @UNDEF",             "UNDEF",                   0x40, 0x05, 0x00);
+    ERUS("ADDB R0, EXT(UNDEF)+(-4)",    "UNDEF)+(-4)",             0x80, 0x05, 0x00, 0x7C);
+    ERUS("ADDB R0, EXT(2)+(UNDEF)",     "UNDEF)",                  0x80, 0x05, 0x02, 0x00);
+    ERUS("ADDB R0, EXT(UNDEF)+(UNDEF)", "UNDEF)+(UNDEF)",          0x80, 0x05, 0x00, 0x00);
+    ERUS("ADDB R0, UNDEF(SP)",          "UNDEF(SP)",               0x40, 0x06, 0x00);
+    AERUS(0x100, "ADDW 8(SP) , *+UNDEF",      "UNDEF",                0xC1, 0xCE, 0x08, 0x00);
+    AERUS(0x100, "ADDW 8(SP) , UNDEF(PC)",    "UNDEF(PC)",            0xC1, 0xCE, 0x08, 0x00);
+    AERUS(0x100, "ADDW *-UNDEF, 6(R2)",       "UNDEF, 6(R2)",         0x81, 0xDA, 0x00, 0x06);
+    AERUS(0x100, "ADDW UNDEF(PC), 6(R2)",     "UNDEF(PC), 6(R2)",     0x81, 0xDA, 0x00, 0x06);
+    AERUS(0x100, "ADDW UNDEF(PC), UNDEF(R2)", "UNDEF(PC), UNDEF(R2)", 0x81, 0xDA, 0x00, 0x00);
 
-    ERUS("MOVQB UNDEF,R0", 0x5C, 0x00);
+    ERUS("MOVQB UNDEF,R0", "UNDEF,R0", 0x5C, 0x00);
 
-    ERUS("BR   UNDEF", 0xEA, 0x00);
-    ERUS("ACBB UNDEF,R0,.",     0x4C, 0x00, 0x00);
-    ERUS("ACBB -1,   R0,UNDEF", 0xCC, 0x07, 0x00);
-    ERUS("ACBB UNDEF,R0,UNDEF", 0x4C, 0x00, 0x00);
+    ERUS("BR   UNDEF",          "UNDEF",          0xEA, 0x00);
+    ERUS("ACBB UNDEF,R0,.",     "UNDEF,R0,.",     0x4C, 0x00, 0x00);
+    ERUS("ACBB -1,   R0,UNDEF", "UNDEF",          0xCC, 0x07, 0x00);
+    ERUS("ACBB UNDEF,R0,UNDEF", "UNDEF,R0,UNDEF", 0x4C, 0x00, 0x00);
 
-    ERUS("MOVMB 2(R0),4(R1),UNDEF", 0xCE, 0x40, 0x42, 0x02, 0x04, 0x00);
+    ERUS("MOVMB 2(R0),4(R1),UNDEF", "UNDEF", 0xCE, 0x40, 0x42, 0x02, 0x04, 0x00);
 
-    ERUS("INSSB 16, 2(R0),2, UNDEF",      0xCE, 0x08, 0xA2, 0x10, 0x02, 0x40);
-    ERUS("INSSB 16, 2(R0),UNDEF,6",       0xCE, 0x08, 0xA2, 0x10, 0x02, 0x05);
-    ERUS("INSSB 16, 2(R0),UNDEF,UNDEF",   0xCE, 0x08, 0xA2, 0x10, 0x02, 0x00);
-    ERUS("INSSB UNDEF,2(R0),2, 6",        0xCE, 0x08, 0xA2, 0x00, 0x02, 0x45);
-    ERUS("INSSB UNDEF,2(R0),2, UNDEF",    0xCE, 0x08, 0xA2, 0x00, 0x02, 0x40);
-    ERUS("INSSB UNDEF,2(R0),UNDEF,6",     0xCE, 0x08, 0xA2, 0x00, 0x02, 0x05);
-    ERUS("INSSB UNDEF,2(R0),UNDEF,UNDEF", 0xCE, 0x08, 0xA2, 0x00, 0x02, 0x00);
+    ERUS("INSSB 16, 2(R0),2, UNDEF",      "UNDEF",                   0xCE, 0x08, 0xA2, 0x10, 0x02, 0x40);
+    ERUS("INSSB 16, 2(R0),UNDEF,6",       "UNDEF,6",                 0xCE, 0x08, 0xA2, 0x10, 0x02, 0x05);
+    ERUS("INSSB 16, 2(R0),UNDEF,UNDEF",   "UNDEF,UNDEF",             0xCE, 0x08, 0xA2, 0x10, 0x02, 0x00);
+    ERUS("INSSB UNDEF,2(R0),2,6",         "UNDEF,2(R0),2,6",         0xCE, 0x08, 0xA2, 0x00, 0x02, 0x45);
+    ERUS("INSSB UNDEF,2(R0),2,UNDEF",     "UNDEF,2(R0),2,UNDEF",     0xCE, 0x08, 0xA2, 0x00, 0x02, 0x40);
+    ERUS("INSSB UNDEF,2(R0),UNDEF,6",     "UNDEF,2(R0),UNDEF,6",     0xCE, 0x08, 0xA2, 0x00, 0x02, 0x05);
+    ERUS("INSSB UNDEF,2(R0),UNDEF,UNDEF", "UNDEF,2(R0),UNDEF,UNDEF", 0xCE, 0x08, 0xA2, 0x00, 0x02, 0x00);
 
-    ERUS("INSB R1,UNDEF,2(R0),6",     0xAE, 0x08, 0xA2, 0x00, 0x02, 0x06);
-    ERUS("INSB R1,16,   2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x10, 0x02, 0x00);
-    ERUS("INSB R1,UNDEF,2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x00, 0x02, 0x00);
+    ERUS("INSB R1,UNDEF,2(R0),6",     "UNDEF,2(R0),6",     0xAE, 0x08, 0xA2, 0x00, 0x02, 0x06);
+    ERUS("INSB R1,16,   2(R0),UNDEF", "UNDEF",             0xAE, 0x08, 0xA2, 0x10, 0x02, 0x00);
+    ERUS("INSB R1,UNDEF,2(R0),UNDEF", "UNDEF,2(R0),UNDEF", 0xAE, 0x08, 0xA2, 0x00, 0x02, 0x00);
 
     TEST("FPU NS32081");
-    ERUS("ADDF UNDEF, F0", 0xBE, 0x01, 0xA0, 0x00, 0x00, 0x00, 0x00);
-    ERUS("ADDL UNDEF, F0", 0xBE, 0x00, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-    ERUS("CMPF F0, UNDEF", 0xBE, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00);
-    ERUS("CMPL F0, UNDEF", 0xBE, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    ERUS("ADDF UNDEF, F0", "UNDEF, F0", 0xBE, 0x01, 0xA0, 0x00, 0x00, 0x00, 0x00);
+    ERUS("ADDL UNDEF, F0", "UNDEF, F0", 0xBE, 0x00, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    ERUS("CMPF F0, UNDEF", "UNDEF",     0xBE, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00);
+    ERUS("CMPL F0, UNDEF", "UNDEF",     0xBE, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 }
 // clang-format on
 

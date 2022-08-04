@@ -89,7 +89,7 @@ Error AsmTlcs90::encodeOperand(
     }
 }
 
-Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -131,13 +131,14 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (p.expect('(')) {
-        reg = RegTlcs90::parseRegName(p.skipSpaces());
+        const StrScanner regp = p.skipSpaces();
+        reg = RegTlcs90::parseRegName(p);
         if (reg == REG_UNDEF) {  // (nnnn)
             op.val16 = parseExpr16(p, op);
             if (parserError())
-                return getError();
+                return op.getError();
             if (!p.skipSpaces().expect(')'))
-                return setError(p, MISSING_CLOSING_PAREN);
+                return op.setError(p, MISSING_CLOSING_PAREN);
             op.mode = op.getError() ? M_UNDEF : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
             scan = p;
             return OK;
@@ -149,16 +150,17 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) {
                 scan = p;
                 return OK;
             }
-            return setError(p, REGISTER_NOT_ALLOWED);
+            return op.setError(regp, REGISTER_NOT_ALLOWED);
         }
         StrScanner a(p);
         if (reg == REG_HL && a.expect('+')) {
-            const RegName idx = RegTlcs90::parseRegName(a.skipSpaces());
+            const StrScanner idxp = a.skipSpaces();
+            const RegName idx = RegTlcs90::parseRegName(a);
             if (idx != REG_UNDEF) {
                 if (idx != REG_A)
-                    return setError(p, REGISTER_NOT_ALLOWED);
+                    return op.setError(idxp, REGISTER_NOT_ALLOWED);
                 if (!a.skipSpaces().expect(')'))
-                    return setError(a, MISSING_CLOSING_PAREN);
+                    return op.setError(a, MISSING_CLOSING_PAREN);
                 scan = a;
                 op.mode = M_BASE;  // (HL+A)
                 return OK;
@@ -167,21 +169,21 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) {
         if (*p == '+' || *p == '-') {  // (rr+n)
             op.val16 = parseExpr16(p, op);
             if (parserError())
-                return getError();
+                return op.getError();
             if (!p.skipSpaces().expect(')'))
-                return setError(p, MISSING_CLOSING_PAREN);
+                return op.setError(p, MISSING_CLOSING_PAREN);
             if (RegTlcs90::isRegIndex(reg)) {
                 scan = p;
                 op.mode = M_IDX;
                 return OK;
             }
-            return setError(p, REGISTER_NOT_ALLOWED);
+            return op.setError(regp, REGISTER_NOT_ALLOWED);
         }
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     op.mode = M_IMM16;
     scan = p;
     return OK;
@@ -192,11 +194,11 @@ Error AsmTlcs90::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.getError() != UNDEFINED_SYMBOL)
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.getError() != UNDEFINED_SYMBOL)
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -205,8 +207,9 @@ Error AsmTlcs90::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableTlcs90::TABLE.searchName(insn))
-        return setError(TableTlcs90::TABLE.getError());
+    const auto error = TableTlcs90::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
 
     const AddrMode pre = insn.preMode();
     const AddrMode dst = insn.dstMode();

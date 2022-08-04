@@ -66,8 +66,8 @@ static void test_mem_ref() {
     TEST("LDI 18",   0xF8, 0x12);
     TEST("LDI -128", 0xF8, 0x80);
     TEST("LDI 255",  0xF8, 0xFF);
-    ERRT("LDI -129", OVERFLOW_RANGE);
-    ERRT("LDI 256",  OVERFLOW_RANGE);
+    ERRT("LDI -129", OVERFLOW_RANGE, "-129");
+    ERRT("LDI 256",  OVERFLOW_RANGE, "256");
 
     if (cdp1804() || cdp1804a()) {
         // Register Load Immediate
@@ -89,12 +89,12 @@ static void test_mem_ref() {
         TEST("RLDI 13,1234H",  0x68, 0xCD, 0x12, 0x34);
         TEST("RLDI 14,1234H",  0x68, 0xCE, 0x12, 0x34);
         TEST("RLDI 15,1234H",  0x68, 0xCF, 0x12, 0x34);
-        ERRT("RLDI 16,1234H",  ILLEGAL_REGISTER);
-        ERRT("RLDI -1,1234H",  ILLEGAL_REGISTER);
+        ERRT("RLDI 16,1234H",  ILLEGAL_REGISTER, "16,1234H");
+        ERRT("RLDI -1,1234H",  ILLEGAL_REGISTER, "-1,1234H");
     }
 
     // Load via N
-    ERRT("LDN  0", REGISTER_NOT_ALLOWED);
+    ERRT("LDN  0", REGISTER_NOT_ALLOWED, "0");
     TEST("LDN  1", 0x01);
     TEST("LDN  2", 0x02);
     TEST("LDN  3", 0x03);
@@ -110,8 +110,8 @@ static void test_mem_ref() {
     TEST("LDN 13", 0x0D);
     TEST("LDN 14", 0x0E);
     TEST("LDN 15", 0x0F);
-    ERRT("LDN 16", ILLEGAL_REGISTER);
-    ERRT("LDN -1", ILLEGAL_REGISTER);
+    ERRT("LDN 16", ILLEGAL_REGISTER, "16");
+    ERRT("LDN -1", ILLEGAL_REGISTER, "-1");
 
     // Load Advance
     TEST("LDA  0", 0x40);
@@ -130,8 +130,8 @@ static void test_mem_ref() {
     TEST("LDA 13", 0x4D);
     TEST("LDA 14", 0x4E);
     TEST("LDA 15", 0x4F);
-    ERRT("LDA 16", ILLEGAL_REGISTER);
-    ERRT("LDA -1", ILLEGAL_REGISTER);
+    ERRT("LDA 16", ILLEGAL_REGISTER, "16");
+    ERRT("LDA -1", ILLEGAL_REGISTER, "-1");
 
     // Load via X
     TEST("LDX", 0xF0);
@@ -157,8 +157,8 @@ static void test_mem_ref() {
         TEST("RLXA 13", 0x68, 0x6D);
         TEST("RLXA 14", 0x68, 0x6E);
         TEST("RLXA 15", 0x68, 0x6F);
-        ERRT("RLXA 16", ILLEGAL_REGISTER);
-        ERRT("RLXA -1", ILLEGAL_REGISTER);
+        ERRT("RLXA 16", ILLEGAL_REGISTER, "16");
+        ERRT("RLXA -1", ILLEGAL_REGISTER, "-1");
     }
 
     // Store via N
@@ -178,8 +178,8 @@ static void test_mem_ref() {
     TEST("STR 13", 0x5D);
     TEST("STR 14", 0x5E);
     TEST("STR 15", 0x5F);
-    ERRT("STR 16", ILLEGAL_REGISTER);
-    ERRT("STR -1", ILLEGAL_REGISTER);
+    ERRT("STR 16", ILLEGAL_REGISTER, "16");
+    ERRT("STR -1", ILLEGAL_REGISTER, "-1");
 
     // Store via X and Decrement
     TEST("STXD", 0x73);
@@ -202,8 +202,8 @@ static void test_mem_ref() {
         TEST("RSXD 13", 0x68, 0xAD);
         TEST("RSXD 14", 0x68, 0xAE);
         TEST("RSXD 15", 0x68, 0xAF);
-        ERRT("RSXD 16", ILLEGAL_REGISTER);
-        ERRT("RSXD -1", ILLEGAL_REGISTER);
+        ERRT("RSXD 16", ILLEGAL_REGISTER, "16");
+        ERRT("RSXD -1", ILLEGAL_REGISTER, "-1");
     }
 
     symtab.intern(3, "PC");
@@ -230,8 +230,8 @@ static void test_reg_op() {
     TEST("INC 13", 0x1D);
     TEST("INC 14", 0x1E);
     TEST("INC 15", 0x1F);
-    ERRT("INC 16", ILLEGAL_REGISTER);
-    ERRT("INC -1", ILLEGAL_REGISTER);
+    ERRT("INC 16", ILLEGAL_REGISTER, "16");
+    ERRT("INC -1", ILLEGAL_REGISTER, "-1");
 
     // Decrement reg N
     TEST("DEC  0", 0x20);
@@ -250,8 +250,8 @@ static void test_reg_op() {
     TEST("DEC 13", 0x2D);
     TEST("DEC 14", 0x2E);
     TEST("DEC 15", 0x2F);
-    ERRT("DEC 16", ILLEGAL_REGISTER);
-    ERRT("DEC -1", ILLEGAL_REGISTER);
+    ERRT("DEC 16", ILLEGAL_REGISTER, "16");
+    ERRT("DEC -1", ILLEGAL_REGISTER, "-1");
 
     if (cdp1804a()) {
         // Decrement reg N and long Branch if Not equal Zero
@@ -271,10 +271,10 @@ static void test_reg_op() {
         TEST("DBNZ 13,1234H", 0x68, 0x2D, 0x12, 0x34);
         TEST("DBNZ 14,1234H", 0x68, 0x2E, 0x12, 0x34);
         TEST("DBNZ 15,1234H", 0x68, 0x2F, 0x12, 0x34);
-        ERRT("DBNZ 16,1234H", ILLEGAL_REGISTER);
-        ERRT("DBNZ -1,1234H", ILLEGAL_REGISTER);
+        ERRT("DBNZ 16,1234H", ILLEGAL_REGISTER, "16,1234H");
+        ERRT("DBNZ -1,1234H", ILLEGAL_REGISTER, "-1,1234H");
     } else {
-        ERRT("DBNZ 15,1234H", UNKNOWN_INSTRUCTION);
+        ERUI("DBNZ 15,1234H");
     }
 
     // Increment reg X
@@ -297,8 +297,8 @@ static void test_reg_op() {
     TEST("GLO 13", 0x8D);
     TEST("GLO 14", 0x8E);
     TEST("GLO 15", 0x8F);
-    ERRT("GLO 16", ILLEGAL_REGISTER);
-    ERRT("GLO -1", ILLEGAL_REGISTER);
+    ERRT("GLO 16", ILLEGAL_REGISTER, "16");
+    ERRT("GLO -1", ILLEGAL_REGISTER, "-1");
 
     // Put Low reg N
     TEST("PLO  0", 0xA0);
@@ -317,8 +317,8 @@ static void test_reg_op() {
     TEST("PLO 13", 0xAD);
     TEST("PLO 14", 0xAE);
     TEST("PLO 15", 0xAF);
-    ERRT("PLO 16", ILLEGAL_REGISTER);
-    ERRT("PLO -1", ILLEGAL_REGISTER);
+    ERRT("PLO 16", ILLEGAL_REGISTER, "16");
+    ERRT("PLO -1", ILLEGAL_REGISTER, "-1");
 
     // Get High reg N
     TEST("GHI  0", 0x90);
@@ -337,8 +337,8 @@ static void test_reg_op() {
     TEST("GHI 13", 0x9D);
     TEST("GHI 14", 0x9E);
     TEST("GHI 15", 0x9F);
-    ERRT("GHI 16", ILLEGAL_REGISTER);
-    ERRT("GHI -1", ILLEGAL_REGISTER);
+    ERRT("GHI 16", ILLEGAL_REGISTER, "16");
+    ERRT("GHI -1", ILLEGAL_REGISTER, "-1");
 
     // Put High reg N
     TEST("PHI  0", 0xB0);
@@ -357,8 +357,8 @@ static void test_reg_op() {
     TEST("PHI 13", 0xBD);
     TEST("PHI 14", 0xBE);
     TEST("PHI 15", 0xBF);
-    ERRT("PHI 16", ILLEGAL_REGISTER);
-    ERRT("PHI -1", ILLEGAL_REGISTER);
+    ERRT("PHI 16", ILLEGAL_REGISTER, "16");
+    ERRT("PHI -1", ILLEGAL_REGISTER, "-1");
 
     if (cdp1804() || cdp1804a()) {
         // Register N to register X copy
@@ -378,8 +378,8 @@ static void test_reg_op() {
         TEST("RNX 13", 0x68, 0xBD);
         TEST("RNX 14", 0x68, 0xBE);
         TEST("RNX 15", 0x68, 0xBF);
-        ERRT("RNX 16", ILLEGAL_REGISTER);
-        ERRT("RNX -1", ILLEGAL_REGISTER);
+        ERRT("RNX 16", ILLEGAL_REGISTER, "16");
+        ERRT("RNX -1", ILLEGAL_REGISTER, "-1");
     }
 }
 
@@ -387,8 +387,8 @@ static void test_logic_op() {
     TEST("OR",       0xF1);
     TEST("ORI 34H",  0xF9, 0x34);
     TEST("ORI -128", 0xF9, 0x80);
-    ERRT("ORI -129", OVERFLOW_RANGE);
-    ERRT("ORI 256",  OVERFLOW_RANGE);
+    ERRT("ORI -129", OVERFLOW_RANGE, "-129");
+    ERRT("ORI 256",  OVERFLOW_RANGE, "256");
     TEST("XOR",      0xF3);
     TEST("XRI 67H",  0xFB, 0x67);
     TEST("AND",      0xF2);
@@ -403,8 +403,8 @@ static void test_arith_op() {
     TEST("ADD",       0xF4);
     TEST("ADI 89H",   0xFC, 0x89);
     TEST("ADI -128",  0xFC, 0x80);
-    ERRT("ADI -129",  OVERFLOW_RANGE);
-    ERRT("ADI 256",   OVERFLOW_RANGE);
+    ERRT("ADI -129",  OVERFLOW_RANGE, "-129");
+    ERRT("ADI 256",   OVERFLOW_RANGE, "256");
     TEST("ADC",       0x74);
     TEST("ADCI 0ABH", 0x7C, 0xAB);
     TEST("SD",        0xF5);
@@ -426,14 +426,14 @@ static void test_arith_op() {
         TEST("DSMB",     0x68, 0x77);
         TEST("DSBI 89H", 0x68, 0x7F, 0x89);
     } else {
-        ERRT("DADD",     UNKNOWN_INSTRUCTION);
-        ERRT("DADI 89H", UNKNOWN_INSTRUCTION);
-        ERRT("DADC",     UNKNOWN_INSTRUCTION);
-        ERRT("DACI 89H", UNKNOWN_INSTRUCTION);
-        ERRT("DSM",      UNKNOWN_INSTRUCTION);
-        ERRT("DSMI 89H", UNKNOWN_INSTRUCTION);
-        ERRT("DSMB",     UNKNOWN_INSTRUCTION);
-        ERRT("DSBI 89H", UNKNOWN_INSTRUCTION);
+        ERUI("DADD");
+        ERUI("DADI 89H");
+        ERUI("DADC");
+        ERUI("DACI 89H");
+        ERUI("DSM");
+        ERUI("DSMI 89H");
+        ERUI("DSMB");
+        ERUI("DSBI 89H");
     }
 
     symtab.intern(-1,  "neg1");
@@ -464,7 +464,7 @@ static void test_branch() {
     }
 
     ATEST(0x10FD, "BR 1031H", 0x30, 0x31);
-    AERRT(0x10FD, "BR 1131H", OVERWRAP_PAGE);
+    AERRT(0x10FD, "BR 1131H", OVERWRAP_PAGE, "1131H");
     ATEST(0x10FE, "BR 1131H", 0x30, 0x31);
     ATEST(0x10FF, "BR 1131H", 0x30, 0x31);
 
@@ -538,8 +538,8 @@ static void test_control() {
     TEST("SEP 13", 0xDD);
     TEST("SEP 14", 0xDE);
     TEST("SEP 15", 0xDF);
-    ERRT("SEP 16", ILLEGAL_REGISTER);
-    ERRT("SEP -1", ILLEGAL_REGISTER);
+    ERRT("SEP 16", ILLEGAL_REGISTER, "16");
+    ERRT("SEP -1", ILLEGAL_REGISTER, "-1");
 
     TEST("SEX  0", 0xE0);
     TEST("SEX  1", 0xE1);
@@ -557,8 +557,8 @@ static void test_control() {
     TEST("SEX 13", 0xED);
     TEST("SEX 14", 0xEE);
     TEST("SEX 15", 0xEF);
-    ERRT("SEX R16", UNDEFINED_SYMBOL);
-    ERRT("SEX R-1", UNDEFINED_SYMBOL);
+    ERRT("SEX R16", UNDEFINED_SYMBOL, "R16");
+    ERRT("SEX R-1", UNDEFINED_SYMBOL, "R-1");
 
     TEST("SEQ",  0x7B);
     TEST("REQ",  0x7A);
@@ -589,15 +589,15 @@ static void test_intr() {
         TEST("CIE", 0x68, 0x0C);
         TEST("CID", 0x68, 0x0D);
     } else {
-        ERRT("XIE", UNKNOWN_INSTRUCTION);
-        ERRT("XID", UNKNOWN_INSTRUCTION);
-        ERRT("CIE", UNKNOWN_INSTRUCTION);
-        ERRT("CID", UNKNOWN_INSTRUCTION);
+        ERUI("XIE");
+        ERUI("XID");
+        ERUI("CIE");
+        ERUI("CID");
     }
     if (cdp1804a()) {
         TEST("DSAV", 0x68, 0x76);
     } else {
-        ERRT("DSAV", UNKNOWN_INSTRUCTION);
+        ERUI("DSAV");
     }
 }
 
@@ -609,9 +609,9 @@ static void test_io() {
     TEST("OUT 5", 0x65);
     TEST("OUT 6", 0x66);
     TEST("OUT 7", 0x67);
-    ERRT("OUT 0", OPERAND_NOT_ALLOWED);
-    ERRT("OUT 8", OPERAND_NOT_ALLOWED);
-    ERRT("OUT -1", OPERAND_NOT_ALLOWED);
+    ERRT("OUT 0", OPERAND_NOT_ALLOWED, "0");
+    ERRT("OUT 8", OPERAND_NOT_ALLOWED, "8");
+    ERRT("OUT -1", OPERAND_NOT_ALLOWED, "-1");
 
     TEST("INP 1", 0x69);
     TEST("INP 2", 0x6A);
@@ -620,9 +620,9 @@ static void test_io() {
     TEST("INP 5", 0x6D);
     TEST("INP 6", 0x6E);
     TEST("INP 7", 0x6F);
-    ERRT("INP 0", OPERAND_NOT_ALLOWED);
-    ERRT("INP 8", OPERAND_NOT_ALLOWED);
-    ERRT("INP -1", OPERAND_NOT_ALLOWED);
+    ERRT("INP 0", OPERAND_NOT_ALLOWED, "0");
+    ERRT("INP 8", OPERAND_NOT_ALLOWED, "8");
+    ERRT("INP -1", OPERAND_NOT_ALLOWED, "-1");
 
     symtab.intern(1, "STDIN");
     TEST("INP STDIN", 0x69);
@@ -645,8 +645,8 @@ static void test_call() {
     TEST("SCAL 13,1234H", 0x68, 0x8D, 0x12, 0x34);
     TEST("SCAL 14,1234H", 0x68, 0x8E, 0x12, 0x34);
     TEST("SCAL 15,1234H", 0x68, 0x8F, 0x12, 0x34);
-    ERRT("SCAL 16,1234H", ILLEGAL_REGISTER);
-    ERRT("SCAL -1,1234H", ILLEGAL_REGISTER);
+    ERRT("SCAL 16,1234H", ILLEGAL_REGISTER, "16,1234H");
+    ERRT("SCAL -1,1234H", ILLEGAL_REGISTER, "-1,1234H");
 
     TEST("SRET  0", 0x68, 0x90);
     TEST("SRET  1", 0x68, 0x91);
@@ -664,8 +664,8 @@ static void test_call() {
     TEST("SRET 13", 0x68, 0x9D);
     TEST("SRET 14", 0x68, 0x9E);
     TEST("SRET 15", 0x68, 0x9F);
-    ERRT("SRET 16,", ILLEGAL_REGISTER);
-    ERRT("SRET -1,", ILLEGAL_REGISTER);
+    ERRT("SRET 16", ILLEGAL_REGISTER, "16");
+    ERRT("SRET -1", ILLEGAL_REGISTER, "-1");
 }
 
 static void test_comment() {
@@ -681,60 +681,59 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ERUS("LDN UNDEF", 0x07); // Default work register
-    ERUS("OUT UNDEF", 0x61); // Default IO
-    ERUS("INP UNDEF", 0x69); // Default IO
+    ERUS("LDN UNDEF", "UNDEF", 0x07); // Default work register
+    ERUS("OUT UNDEF", "UNDEF", 0x61); // Default IO
+    ERUS("INP UNDEF", "UNDEF", 0x69); // Default IO
 
-    ERUS("ADCI UNDEF", 0x7C, 0x00);
+    ERUS("ADCI UNDEF", "UNDEF", 0x7C, 0x00);
 
-    AERRU(0x10FD, "BR  UNDEF", 0x30, 0xFF);
-    AERRU(0x10FE, "BR  UNDEF", 0x30, 0x00);
-    AERRU(0x10FF, "BR  UNDEF", 0x30, 0x01);
-    AERRU(0x1100, "BR  UNDEF", 0x30, 0x02);
+    AERUS(0x10FD, "BR  UNDEF", "UNDEF", 0x30, 0xFF);
+    AERUS(0x10FE, "BR  UNDEF", "UNDEF", 0x30, 0x00);
+    AERUS(0x10FF, "BR  UNDEF", "UNDEF", 0x30, 0x01);
+    AERUS(0x1100, "BR  UNDEF", "UNDEF", 0x30, 0x02);
 
-    AERRU(0x1234, "LBR UNDEF", 0xC0, 0x00, 0x00);
+    AERUS(0x1234, "LBR UNDEF", "UNDEF", 0xC0, 0x00, 0x00);
 
     asm1802.setOption("smart-branch", "on");
-    AERRU(0x1234, "LBR UNDEF", 0x30, 0x36);
+    AERUS(0x1234, "LBR UNDEF", "UNDEF", 0x30, 0x36);
 }
 
 static void test_usereg() {
     symtab.intern(10, "R10");
-
     asm1802.setOption("use-register", "no");
 
     // default working register is R7, see reg_cdp1802.h SCRT.
-    ERUS("LDN R0",  0x07);
-    ERUS("LDN R1",  0x07);
-    ERUS("LDA R0",  0x47);
-    ERUS("STR R15", 0x57);
-    ERUS("INC R14", 0x17);
-    ERUS("DEC R13", 0x27);
-    ERUS("GLO R12", 0x87);
-    ERUS("PLO R11", 0xA7);
-    TEST("GHI R10", 0x9A);
-    ERUS("PHI R9",  0xB7);
-    ERUS("SEP R8",  0xD7);
-    ERUS("SEX R7",  0xE7);
+    ERUS("LDN R0",  "R0",  0x07);
+    ERUS("LDN R1",  "R1",  0x07);
+    ERUS("LDA R0",  "R0",  0x47);
+    ERUS("STR R15", "R15", 0x57);
+    ERUS("INC R14", "R14", 0x17);
+    ERUS("DEC R13", "R13", 0x27);
+    ERUS("GLO R12", "R12", 0x87);
+    ERUS("PLO R11", "R11", 0xA7);
+    TEST("GHI R10",        0x9A);
+    ERUS("PHI R9",  "R9",  0xB7);
+    ERUS("SEP R8",  "R8",  0xD7);
+    ERUS("SEX R7",  "R7",  0xE7);
 
     if (cdp1804() || cdp1804a()) {
-        ERUS("RLDI R0,1234H", 0x68, 0xC7, 0x12, 0x34);
-        ERUS("SCAL R2,1234H", 0x68, 0x87, 0x12, 0x34);
-        ERUS("RLXA R15", 0x68, 0x67);
-        TEST("RLXA R10", 0x68, 0x6A);
-        ERUS("RSXD R0",  0x68, 0xA7);
-        ERUS("RNX  R1",  0x68, 0xB7);
-        ERUS("SRET R3",  0x68, 0x97);
+        ERUS("RLDI R0,1234H", "R0,1234H", 0x68, 0xC7, 0x12, 0x34);
+        ERUS("SCAL R2,1234H", "R2,1234H", 0x68, 0x87, 0x12, 0x34);
+        ERUS("RLXA R15", "R15", 0x68, 0x67);
+        TEST("RLXA R10",        0x68, 0x6A);
+        ERUS("RSXD R0",  "R0",  0x68, 0xA7);
+        ERUS("RNX  R1",  "R1",  0x68, 0xB7);
+        ERUS("SRET R3",  "R3",  0x68, 0x97);
     }
 
     if (cdp1804a()) {
-        ERUS("DBNZ R8, 1234H", 0x68, 0x27, 0x12, 0x34);
-        TEST("DBNZ R10,1234H", 0x68, 0x2A, 0x12, 0x34);
+        ERUS("DBNZ R8, 1234H", "R8, 1234H", 0x68, 0x27, 0x12, 0x34);
+        TEST("DBNZ R10,1234H",              0x68, 0x2A, 0x12, 0x34);
     }
 
     asm1802.setOption("use-register", "enable");
 
-    ERRT("LDN R0",  REGISTER_NOT_ALLOWED);
+    ERRT("LDN R0",  REGISTER_NOT_ALLOWED, "R0");
     TEST("LDN R1",  0x01);
     TEST("LDA R0",  0x40);
     TEST("STR R15", 0x5F);

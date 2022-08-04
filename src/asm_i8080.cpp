@@ -23,11 +23,11 @@ Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode)
     switch (mode) {
     case M_IOA:
         if (op.val16 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
         if (overflowUint8(op.val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
     case M_IM16:
@@ -51,7 +51,7 @@ Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode)
         return OK;
     case M_VEC:
         if (op.val16 >= 8)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.embed((op.val16 & 7) << 3);
         return OK;
     default:
@@ -59,8 +59,9 @@ Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode)
     }
 }
 
-Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
 
@@ -89,7 +90,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) {
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     op.mode = M_IM16;
     scan = p;
     return OK;
@@ -100,11 +101,11 @@ Error AsmI8080::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -113,8 +114,9 @@ Error AsmI8080::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableI8080::TABLE.searchName(insn))
-        return setError(TableI8080::TABLE.getError());
+    const auto error = TableI8080::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO && encodeOperand(insn, dstOp, dst))

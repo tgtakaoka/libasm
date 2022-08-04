@@ -17,20 +17,23 @@
 #ifndef __TABLE_TLCS90_H__
 #define __TABLE_TLCS90_H__
 
+#include "asm_base.h"
 #include "config_tlcs90.h"
-#include "insn_tlcs90.h"
+#include "entry_tlcs90.h"
 #include "reg_tlcs90.h"
 #include "table_base.h"
 
 namespace libasm {
 namespace tlcs90 {
 
-struct Operand : public ErrorAt {
+class InsnTlcs90;
+
+struct Operand : public OperandBase {
     AddrMode mode;
     RegName reg;
     CcName cc;
     uint16_t val16;
-    Operand() : ErrorAt(), mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+    Operand() : mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
 class TableTlcs90 : public TableBase {

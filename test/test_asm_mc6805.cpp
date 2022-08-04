@@ -77,7 +77,7 @@ static void test_inherent() {
         // MC146805/MC68HC05
         TEST("WAIT", 0x8F);
     } else {
-        ERRT("WAIT", UNKNOWN_INSTRUCTION);
+        ERUI("WAIT");
     }
 
     TEST("NEGA", 0x40);
@@ -108,13 +108,13 @@ static void test_inherent() {
         // MC68HC05
         TEST("MUL",  0x42);
     } else {
-        ERRT("MUL",  UNKNOWN_INSTRUCTION);
+        ERUI("MUL");
     }
     if (m146805() || m68hc05()) {
         // MC146805/MC68HC05
         TEST("STOP", 0x8E);
     } else {
-        ERRT("STOP", UNKNOWN_INSTRUCTION);
+        ERUI("STOP");
     }
 }
 
@@ -128,8 +128,8 @@ static void test_relative() {
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
     ATEST(0x1000, "BPL $1002", 0x2A, 0x00);
     ATEST(0x1000, "BMI $1002", 0x2B, 0x00);
-    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR);
-    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR);
+    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR, "$0F81");
+    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR, "$1082");
 
     ATEST(0x1000, "BHCC $1002", 0x28, 0x00);
     ATEST(0x1000, "BHCS $1002", 0x29, 0x00);
@@ -139,7 +139,7 @@ static void test_relative() {
     ATEST(0x1000, "BIH $1002", 0x2F, 0x00);
     ATEST(0x1000, "BSR $1042", 0xAD, 0x40);
 
-    AERRT(0x1FF0, "BRA $2000", OVERFLOW_RANGE);
+    AERRT(0x1FF0, "BRA $2000", OVERFLOW_RANGE, "$2000");
     ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
 
     symtab.intern(0x0F82, "sub0F82");
@@ -157,21 +157,21 @@ static void test_immediate() {
     TEST("AND #$90",  0xA4, 0x90);
     TEST("BIT #$90",  0xA5, 0x90);
     TEST("LDA #$90",  0xA6, 0x90);
-    ERRT("STA #$90",  OPERAND_NOT_ALLOWED);
+    ERRT("STA #$90",  OPERAND_NOT_ALLOWED, "#$90");
     TEST("EOR #$90",  0xA8, 0x90);
     TEST("ADC #-1",   0xA9, 0xFF);
     TEST("ORA #255",  0xAA, 0xFF);
     TEST("ADD #-128", 0xAB, 0x80);
-    ERRT("ADD #256",  OVERFLOW_RANGE);
-    ERRT("ADD #-129", OVERFLOW_RANGE);
+    ERRT("ADD #256",  OVERFLOW_RANGE, "#256");
+    ERRT("ADD #-129", OVERFLOW_RANGE, "#-129");
 
     TEST("CPX #$90", 0xA3, 0x90);
     TEST("LDX #$90", 0xAE, 0x90);
-    ERRT("STX #$90", OPERAND_NOT_ALLOWED);
+    ERRT("STX #$90", OPERAND_NOT_ALLOWED, "#$90");
 
-    ERRT("BSR #$90", OPERAND_NOT_ALLOWED);
-    ERRT("JSR #$90", OPERAND_NOT_ALLOWED);
-    ERRT("JMP #$90", OPERAND_NOT_ALLOWED);
+    ERRT("BSR #$90", OPERAND_NOT_ALLOWED, "#$90");
+    ERRT("JSR #$90", OPERAND_NOT_ALLOWED, "#$90");
+    ERRT("JMP #$90", OPERAND_NOT_ALLOWED, "#$90");
 
     symtab.intern(0x90, "dir90");
     symtab.intern(0x90A0, "dir90A0");
@@ -211,17 +211,17 @@ static void test_direct() {
 }
 
 static void test_extended() {
-    ERRT("NEG >$0000", OPERAND_NOT_ALLOWED);
-    ERRT("COM >$0009", OPERAND_NOT_ALLOWED);
-    ERRT("LSR >$0034", OPERAND_NOT_ALLOWED);
-    ERRT("ROR  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("ASR  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("ASL  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("ROL  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("DEC  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("INC  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("TST  $1234", OPERAND_NOT_ALLOWED);
-    ERRT("CLR  $1234", OPERAND_NOT_ALLOWED);
+    ERRT("NEG >$0000", OPERAND_NOT_ALLOWED, ">$0000");
+    ERRT("COM >$0009", OPERAND_NOT_ALLOWED, ">$0009");
+    ERRT("LSR >$0034", OPERAND_NOT_ALLOWED, ">$0034");
+    ERRT("ROR  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("ASR  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("ASL  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("ROL  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("DEC  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("INC  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("TST  $1234", OPERAND_NOT_ALLOWED, "$1234");
+    ERRT("CLR  $1234", OPERAND_NOT_ALLOWED, "$1234");
 
     TEST("SUB >$0090", 0xC0, 0x00, 0x90);
     TEST("CMP >$0090", 0xC1, 0x00, 0x90);
@@ -234,7 +234,7 @@ static void test_extended() {
     TEST("ADC >$0090", 0xC9, 0x00, 0x90);
     TEST("ORA >$0090", 0xCA, 0x00, 0x90);
     TEST("ADD  $1FFF", 0xCB, 0x1F, 0xFF);
-    ERRT("SUB  $2000", OVERFLOW_RANGE);
+    ERRT("SUB  $2000", OVERFLOW_RANGE, "$2000");
 
     TEST("CPX $1ABC", 0xC3, 0x1A, 0xBC);
     TEST("LDX $1ABC", 0xCE, 0x1A, 0xBC);
@@ -243,15 +243,15 @@ static void test_extended() {
     TEST("JMP >$0034", 0xCC, 0x00, 0x34);
     TEST("JSR  $1234", 0xCD, 0x12, 0x34);
 
-    ERRT("CPX $2000", OVERFLOW_RANGE);
-    ERRT("JMP $4000", OVERFLOW_RANGE);
-    ERRT("JSR $8000", OVERFLOW_RANGE);
+    ERRT("CPX $2000", OVERFLOW_RANGE, "$2000");
+    ERRT("JMP $4000", OVERFLOW_RANGE, "$4000");
+    ERRT("JSR $8000", OVERFLOW_RANGE, "$8000");
 
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x1ABC, "ext1ABC");
     symtab.intern(0x9ABC, "ext9ABC");
 
-    ERRT("NEG >ext0090", OPERAND_NOT_ALLOWED);
+    ERRT("NEG >ext0090", OPERAND_NOT_ALLOWED, ">ext0090");
     TEST("LDA  ext1ABC", 0xC6, 0x1A, 0xBC);
     TEST("STA >ext0090", 0xC7, 0x00, 0x90);
 
@@ -263,21 +263,21 @@ static void test_extended() {
 
     as6805.setOption("pc-bits", "11"); // MC68HC05J for instance
     TEST(         "LDA $07FF", 0xC6, 0x07, 0xFF);
-    ERRT(         "LDA $0800", OVERFLOW_RANGE);
+    ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800");
     ATEST(0x07F0, "BSR $07FF", 0xAD, 0x0D);
-    AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE);
+    AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800");
 
     as6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
     TEST(         "LDA $1FFF", 0xC6, 0x1F, 0xFF);
-    ERRT(         "LDA $2000", OVERFLOW_RANGE);
+    ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000");
     ATEST(0x1FF0, "BSR $1FFF", 0xAD, 0x0D);
-    AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE);
+    AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE, "$2000");
 
     as6805.setOption("pc-bits", "14"); // MC68HC05X for instance
     TEST(         "LDA $3FFF", 0xC6, 0x3F, 0xFF);
-    ERRT(         "LDA $4000", OVERFLOW_RANGE);
+    ERRT(         "LDA $4000", OVERFLOW_RANGE, "$4000");
     ATEST(0x3FF0, "BSR $3FFF", 0xAD, 0x0D);
-    AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE);
+    AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE, "$4000");
 }
 
 static void test_indexed() {
@@ -294,18 +294,18 @@ static void test_indexed() {
     TEST("TST 128,X", 0x6D, 0x80);
     TEST("CLR 255,X", 0x6F, 0xFF);
 
-    ERRT("NEG >0,X",    OPERAND_NOT_ALLOWED);
-    ERRT("COM >1,X",    OPERAND_NOT_ALLOWED);
-    ERRT("LSR >255,X",  OPERAND_NOT_ALLOWED);
-    ERRT("ROR 256,X",   OPERAND_NOT_ALLOWED);
-    ERRT("ASR 512,X",   OPERAND_NOT_ALLOWED);
-    ERRT("ASL 1024,X",  OPERAND_NOT_ALLOWED);
-    ERRT("LSL 2048,X",  OPERAND_NOT_ALLOWED);
-    ERRT("ROL 4096,X",  OPERAND_NOT_ALLOWED);
-    ERRT("DEC 8192,X",  OPERAND_NOT_ALLOWED);
-    ERRT("INC 16384,X", OPERAND_NOT_ALLOWED);
-    ERRT("TST 32768,X", OPERAND_NOT_ALLOWED);
-    ERRT("CLR 65535,X", OPERAND_NOT_ALLOWED);
+    ERRT("NEG >0,X",    OPERAND_NOT_ALLOWED, ">0,X");
+    ERRT("COM >1,X",    OPERAND_NOT_ALLOWED, ">1,X");
+    ERRT("LSR >255,X",  OPERAND_NOT_ALLOWED, ">255,X");
+    ERRT("ROR 256,X",   OPERAND_NOT_ALLOWED, "256,X");
+    ERRT("ASR 512,X",   OPERAND_NOT_ALLOWED, "512,X");
+    ERRT("ASL 1024,X",  OPERAND_NOT_ALLOWED, "1024,X");
+    ERRT("LSL 2048,X",  OPERAND_NOT_ALLOWED, "2048,X");
+    ERRT("ROL 4096,X",  OPERAND_NOT_ALLOWED, "4096,X");
+    ERRT("DEC 8192,X",  OPERAND_NOT_ALLOWED, "8192,X");
+    ERRT("INC 16384,X", OPERAND_NOT_ALLOWED, "16384,X");
+    ERRT("TST 32768,X", OPERAND_NOT_ALLOWED, "32768,X");
+    ERRT("CLR 65535,X", OPERAND_NOT_ALLOWED, "65535,X");
 
     TEST("NEG ,X", 0x70);
     TEST("COM ,X", 0x73);
@@ -386,20 +386,20 @@ static void test_bit_ops() {
     TEST("BSET 7, $89", 0x1E, 0x89);
     TEST("BCLR 0, $23", 0x11, 0x23);
     TEST("BCLR 7, $89", 0x1F, 0x89);
-    ERRT("BSET -1, $23", OPERAND_NOT_ALLOWED);
-    ERRT("BCLR 8, $89",  OPERAND_NOT_ALLOWED);
+    ERRT("BSET -1, $23", OPERAND_NOT_ALLOWED, "-1, $23");
+    ERRT("BCLR 8, $89",  OPERAND_NOT_ALLOWED, "8, $89");
 
     ATEST(0x1000, "BRSET 0,$23,$1082", 0x00, 0x23, 0x7F);
     ATEST(0x1000, "BRSET 7,$89,$0F83", 0x0E, 0x89, 0x80);
     ATEST(0x1000, "BRCLR 0,$23,$1082", 0x01, 0x23, 0x7F);
     ATEST(0x1000, "BRCLR 7,$89,$0F83", 0x0F, 0x89, 0x80);
-    AERRT(0x1000, "BRSET 7,$89,$0F82", OPERAND_TOO_FAR);
-    AERRT(0x1000, "BRCLR 0,$23,$1083", OPERAND_TOO_FAR);
+    AERRT(0x1000, "BRSET 7,$89,$0F82", OPERAND_TOO_FAR, "$0F82");
+    AERRT(0x1000, "BRCLR 0,$23,$1083", OPERAND_TOO_FAR, "$1083");
 
-    ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED);
-    ERRT("BCLR $90,#$88", OPERAND_NOT_ALLOWED);
-    ERRT("BRSET $90,#$88,$1083", OPERAND_NOT_ALLOWED);
-    ERRT("BRCLR $90,#$88,$1F84", OPERAND_NOT_ALLOWED);
+    ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED, "$90,#$88");
+    ERRT("BCLR $90,#$88", OPERAND_NOT_ALLOWED, "$90,#$88");
+    ERRT("BRSET $90,#$88,$1083", OPERAND_NOT_ALLOWED, "$90,#$88,$1083");
+    ERRT("BRCLR $90,#$88,$1F84", OPERAND_NOT_ALLOWED, "$90,#$88,$1F84");
 
     TEST("BCLR   7,$90", 0x1F, 0x90);
     TEST("BSET   6,$90", 0x1C, 0x90);
@@ -424,19 +424,19 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ERUS("LDA  #UNDEF", 0xA6, 0x00);
-    ERUS("LDX  #UNDEF", 0xAE, 0x00);
-    ERUS("NEG  UNDEF",  0x30, 0x00);
-    ERUS("SUB  UNDEF",  0xB0, 0x00);
-    ERUS("SUB <UNDEF",  0xB0, 0x00);
-    ERUS("SUB >UNDEF",  0xC0, 0x00, 0x00);
-    ERUS("JMP  UNDEF",  0xBC, 0x00);
-    ERUS("LDA  UNDEF,X", 0xF6);
-    ERUS("LDA <UNDEF,X", 0xE6, 0x00);
-    ERUS("LDA >UNDEF,X", 0xD6, 0x00, 0x00);
-    ERUS("JSR UNDEF", 0xBD, 0x00);
-    ERUS("BRA UNDEF", 0x20, 0x00);
-    ERUS("BSR UNDEF", 0xAD, 0x00);
+    ERUS("LDA  #UNDEF",  "UNDEF", 0xA6, 0x00);
+    ERUS("LDX  #UNDEF",  "UNDEF", 0xAE, 0x00);
+    ERUS("NEG  UNDEF",   "UNDEF", 0x30, 0x00);
+    ERUS("SUB  UNDEF",   "UNDEF", 0xB0, 0x00);
+    ERUS("SUB <UNDEF",   "UNDEF", 0xB0, 0x00);
+    ERUS("SUB >UNDEF",   "UNDEF", 0xC0, 0x00, 0x00);
+    ERUS("JMP  UNDEF",   "UNDEF", 0xBC, 0x00);
+    ERUS("LDA  UNDEF,X", "UNDEF,X", 0xF6);
+    ERUS("LDA <UNDEF,X", "UNDEF,X", 0xE6, 0x00);
+    ERUS("LDA >UNDEF,X", "UNDEF,X", 0xD6, 0x00, 0x00);
+    ERUS("JSR UNDEF",   "UNDEF",   0xBD, 0x00);
+    ERUS("BRA UNDEF+2", "UNDEF+2", 0x20, 0x00);
+    ERUS("BSR UNDEF",   "UNDEF",   0xAD, 0x00);
 }
 // clang-format on
 

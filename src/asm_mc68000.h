@@ -47,32 +47,26 @@ private:
     } _opt_alias{this};
     const Options _options{_opt_alias};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
         RegName indexReg;
         OprSize indexSize;
         uint32_t val32;
         Operand()
-            : ErrorAt(),
-              mode(M_NONE),
-              reg(REG_UNDEF),
-              indexReg(REG_UNDEF),
-              indexSize(SZ_NONE),
-              val32(0) {}
+            : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0) {}
         void fixupMultiRegister();
         Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
 
-    Error parseMoveMultiRegList(StrScanner &scan, Operand &op);
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseMoveMultiRegList(StrScanner &scan, Operand &op) const;
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);
 
-    Error emitBriefExtension(
-            InsnMc68000 &insn, RegName index, OprSize size, Config::ptrdiff_t disp);
-    Error emitDisplacement(InsnMc68000 &insn, Config::ptrdiff_t disp);
+    Error emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
+    Error emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
     Error emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
-    Error emitImmediateData(InsnMc68000 &insn, OprSize size, uint32_t data);
+    Error emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encode(StrScanner &scan, Insn &insn) override;

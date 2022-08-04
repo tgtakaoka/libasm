@@ -26,7 +26,7 @@ const char AsmNs32000::OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 const char AsmNs32000::OPT_TEXT_PMMU[] PROGMEM = "pmmu";
 const char AsmNs32000::OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
-Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) {
+Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) const {
     StrScanner p(scan);
     uint8_t strOpt = 0;
     while (true) {
@@ -34,7 +34,7 @@ Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) {
         if (name == STROPT_UNDEF)
             return UNKNOWN_OPERAND;
         if (strOpt & uint8_t(name))
-            return setError(op, ILLEGAL_OPERAND);
+            return op.setError(ILLEGAL_OPERAND);
         strOpt |= uint8_t(name);
         if (p.skipSpaces().expect(']') || (!braket && endOfLine(*p)))
             break;
@@ -47,10 +47,10 @@ Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) {
     op.val32 = strOpt;
     op.mode = M_SOPT;
     scan = p;
-    return setOK();
+    return OK;
 }
 
-Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) {
+Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     uint8_t configs = 0;
     while (true) {
@@ -69,10 +69,10 @@ Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) {
     op.val32 = configs;
     op.mode = configs ? M_CONF : M_NONE;
     scan = p;
-    return setOK();
+    return OK;
 }
 
-Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) {
+Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     uint8_t list = 0;
     uint8_t n = 0;
@@ -91,17 +91,18 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) {
     op.val32 = list;
     op.mode = M_RLST;
     scan = p;
-    return setOK();
+    return OK;
 }
 
 Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
     if (p.expect('@')) {
         op.val32 = parseExpr32(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = M_ABS;
         scan = p;
         return OK;
@@ -114,9 +115,9 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
                 parseRegisterList(p, op) != UNKNOWN_OPERAND ||
                 parseStrOptNames(p, op, true) != UNKNOWN_OPERAND) {
             scan = p;
-            return getError();
+            return op.getError();
         }
-        return setError(p, MISSING_CLOSING_BRACKET);
+        return op.setError(p, MISSING_CLOSING_BRACKET);
     }
     if (parseStrOptNames(p, op) == OK) {
         scan = p;
@@ -136,7 +137,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
                 op.val32 = parseExpr32(p, op);
             }
             if (parserError())
-                return getError();
+                return op.getError();
             op.mode = M_REL;
             op.reg = REG_PC;
             scan = p;
@@ -184,16 +185,16 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         }
         if (reg == REG_EXT) {
             if (!p.expect('('))
-                return setError(p, UNKNOWN_OPERAND);
+                return op.setError(p, UNKNOWN_OPERAND);
             op.val32 = parseExpr32(p, op);
             if (parserError())
                 return getError();
             if (!p.skipSpaces().expect(')'))
-                return setError(p, MISSING_CLOSING_PAREN);
+                return op.setError(p, MISSING_CLOSING_PAREN);
             if (*p.skipSpaces() == '+' || *p == '-') {
                 op.disp2 = parseExpr32(p, op);
                 if (parserError())
-                    return getError();
+                    return op.getError();
                 p.skipSpaces();
             }
             if (*p == '[' || endOfLine(*p) || *p == ',') {
@@ -201,9 +202,9 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
                 scan = p;
                 return OK;
             }
-            return setError(p, UNKNOWN_OPERAND);
+            return op.setError(UNKNOWN_OPERAND);
         }
-        return setError(a, UNKNOWN_REGISTER);
+        return op.setError(a, UNKNOWN_REGISTER);
     }
 
     const Value val = parseExpr(p, op);
@@ -217,11 +218,11 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             op.mode = M_IMM;
             op.size = SZ_LONG;
             scan = end;
-            return setError(op.setOK());
+            return op.setOK();
         }
     }
     if (parserError())
-        return getError();
+        return op.getError();
     op.val32 = val.getUnsigned();
     op.size = SZ_DOUBLE;
     if (val.isSigned()) {
@@ -235,12 +236,12 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (!p.expect('('))
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(p, UNKNOWN_OPERAND);
     const StrScanner r(p);
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         if (RegNs32000::isGeneric(reg)) {
             op.reg = reg;
             op.mode = M_RREL;
@@ -253,22 +254,22 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             scan = p;
             return OK;
         }
-        return setError(r, UNKNOWN_OPERAND);
+        return op.setError(r, UNKNOWN_OPERAND);
     }
 
     op.disp2 = op.val32;
     op.val32 = parseExpr32(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     if (!p.skipSpaces().expect('('))
-        return setError(p, UNKNOWN_OPERAND);
+        return op.setError(p, UNKNOWN_OPERAND);
     const StrScanner x(p);
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         if (!p.skipSpaces().expect(')'))
-            return setError(p, MISSING_CLOSING_PAREN);
+            return op.setError(p, MISSING_CLOSING_PAREN);
         if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_EXT) {
             op.reg = reg;
             op.mode = (reg == REG_EXT) ? M_EXT : M_MREL;
@@ -277,27 +278,29 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         }
     }
 
-    return setError(x, UNKNOWN_OPERAND);
+    return op.setError(x, UNKNOWN_OPERAND);
 }
 
 Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {
     if (parseBaseOperand(scan, op))
-        return getError();
+        return op.getError();
     if (op.mode == M_GREG || op.mode == M_RREL || op.mode == M_MREL || op.mode == M_ABS ||
             op.mode == M_EXT || op.mode == M_TOS || op.mode == M_MEM || op.mode == M_REL) {
         StrScanner p(scan);
         if (!p.skipSpaces().expect('['))
             return OK;
+        const StrScanner indexp = p;
         const RegName index = RegNs32000::parseRegName(p);
         if (!RegNs32000::isGeneric(index))
-            return setError(scan, UNKNOWN_OPERAND);
+            return op.setError(indexp, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(':'))
-            return setError(scan, UNKNOWN_OPERAND);
+            return op.setError(p, UNKNOWN_OPERAND);
+        const StrScanner sizep = p;
         const OprSize indexSize = RegNs32000::parseIndexSize(p);
         if (indexSize == SZ_NONE)
-            return setError(scan, UNKNOWN_OPERAND);
+            return op.setError(sizep, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(']'))
-            return setError(p, MISSING_CLOSING_BRACKET);
+            return op.setError(p, MISSING_CLOSING_BRACKET);
         scan = p;
         op.index = index;
         op.size = indexSize;
@@ -530,6 +533,8 @@ Error AsmNs32000::emitRelative(InsnNs32000 &insn, const Operand &op) {
 
 Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op,
         OprPos pos, const Operand &prevOp) {
+    constexpr uint8_t SAVE = 0x62;
+    constexpr uint8_t RESTORE = 0x72;
     switch (mode) {
     case M_GREG:
         embedOprField(insn, pos, RegNs32000::encodeRegName(op.reg));
@@ -541,7 +546,7 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
         embedOprField(insn, pos, op.val32);
         break;
     case M_RLST:
-        if (op.val32 == 0)
+        if (op.val32 == 0 && (insn.opCode() == SAVE || insn.opCode() == RESTORE))
             return setError(op, OPCODE_HAS_NO_EFFECT);
         if (size == SZ_NONE) {  // PUSH
             insn.emitOperand8(op.val32);
@@ -659,21 +664,21 @@ Error AsmNs32000::encode(StrScanner &scan, Insn &_insn) {
         return getError();
 
     Operand srcOp, dstOp, ex1Op, ex2Op;
-    if (parseOperand(scan, srcOp))
-        return getError();
+    if (parseOperand(scan, srcOp) && srcOp.hasError())
+        return setError(srcOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, dstOp))
-            return getError();
+        if (parseOperand(scan, dstOp) && dstOp.hasError())
+            return setError(dstOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, ex1Op))
-            return getError();
+        if (parseOperand(scan, ex1Op) && ex1Op.hasError())
+            return setError(ex1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, ex2Op))
-            return getError();
+        if (parseOperand(scan, ex2Op) && ex2Op.hasError())
+            return setError(ex2Op);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -684,8 +689,10 @@ Error AsmNs32000::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(ex2Op);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode, ex1Op.mode, ex2Op.mode);
-    if (TableNs32000::TABLE.searchName(insn))
-        return setError(TableNs32000::TABLE.getError());
+    const auto error = TableNs32000::TABLE.searchName(insn);
+    if (error)
+        return setError(srcOp, error);
+
     const AddrMode src = insn.srcMode();
     const AddrMode dst = insn.dstMode();
     const AddrMode ex1 = insn.ex1Mode();

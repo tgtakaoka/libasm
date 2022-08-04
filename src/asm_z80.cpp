@@ -44,17 +44,17 @@ Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, con
     switch (mode) {
     case M_IM8:
         if (overflowUint8(val16))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return OK;
     case M_IOA:
         if (val16 >= 0x100)
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return OK;
     case M_INDX:
         if (overflowRel8(static_cast<int16_t>(val16)))
-            return setError(OVERFLOW_RANGE);
+            return setError(op, OVERFLOW_RANGE);
         if (insn.indexBit())
             return encodeIndexedBitOp(insn, op);
         insn.emitOperand8(val16);
@@ -96,12 +96,12 @@ Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, con
         return OK;
     case M_VEC:
         if ((val16 & ~0x38) != 0)
-            return setError(ILLEGAL_OPERAND);
+            return setError(op, ILLEGAL_OPERAND);
         insn.embed(val16);
         return OK;
     case M_BIT:
         if (val16 >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(op, ILLEGAL_BIT_NUMBER);
         insn.embed(static_cast<uint8_t>(val16) << 3);
         return OK;
     case M_IMMD:
@@ -117,14 +117,15 @@ Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, con
         default:
             break;
         }
-        return setError(ILLEGAL_OPERAND);
+        return setError(op, ILLEGAL_OPERAND);
     default:
         return OK;
     }
 }
 
-Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
 
@@ -173,13 +174,14 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (p.expect('(')) {
-        op.reg = RegZ80::parseRegName(p.skipSpaces());
+        const StrScanner regp = p.skipSpaces();
+        op.reg = RegZ80::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
             if (!p.skipSpaces().expect(')'))
-                return setError(p, MISSING_CLOSING_PAREN);
+                return op.setError(p, MISSING_CLOSING_PAREN);
             op.mode = M_ABS;
             scan = p;
             return OK;
@@ -204,7 +206,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) {
                 op.mode = I_C;
                 break;
             default:
-                return setError(REGISTER_NOT_ALLOWED);
+                return op.setError(regp, REGISTER_NOT_ALLOWED);
             }
             scan = p;
             return OK;
@@ -215,17 +217,17 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) {
                 if (parserError())
                     return getError();
                 if (!p.skipSpaces().expect(')'))
-                    return setError(MISSING_CLOSING_PAREN);
+                    return op.setError(p, MISSING_CLOSING_PAREN);
                 scan = p;
                 op.mode = M_INDX;
                 return OK;
             }
         }
-        return setError(UNKNOWN_OPERAND);
+        return op.setError(UNKNOWN_OPERAND);
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     op.mode = M_IM16;
     scan = p;
     return OK;
@@ -236,11 +238,11 @@ Error AsmZ80::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp))
-        return getError();
+    if (parseOperand(scan, dstOp) && dstOp.hasError())
+        return setError(dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp))
-            return getError();
+        if (parseOperand(scan, srcOp) && srcOp.hasError())
+            return setError(srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -249,8 +251,9 @@ Error AsmZ80::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    if (TableZ80::TABLE.searchName(insn))
-        return setError(TableZ80::TABLE.getError());
+    const auto error = TableZ80::TABLE.searchName(insn);
+    if (error)
+        return setError(dstOp, error);
 
     const AddrMode dst = insn.dstMode();
     if (dst != M_NO) {

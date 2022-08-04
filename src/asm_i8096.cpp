@@ -19,33 +19,35 @@
 namespace libasm {
 namespace i8096 {
 
-Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) {
+Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {
     Operand regop;
     op.regno = parseExpr16(scan, regop);
     if (parserError())
-        return getError();
-    setErrorIf(scan, op.regerr = regop.getError());
+        return op.setError(regop);
+    if (regop.getError())
+        op.setErrorIf(regop);
     if (scan.skipSpaces().expect(']'))
         return OK;
-    return setError(scan, MISSING_CLOSING_BRACKET);
+    return op.setError(scan, MISSING_CLOSING_BRACKET);
 }
 
-Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
+    op.setAt(p);
     if (endOfLine(*p))
         return OK;
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.mode = M_IMM16;
         scan = p;
         return OK;
     }
     if (p.expect('[')) {
         if (parseIndirect(p, op))
-            return getError();
+            return op.getError();
         op.val16 = op.regno;
         op.mode = M_INDIR;
         scan = p;
@@ -53,10 +55,10 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) {
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     if (p.skipSpaces().expect('[')) {
         if (parseIndirect(p, op))
-            return getError();
+            return op.getError();
         op.mode = M_IDX16;
     } else {
         op.mode = M_ADDR;
@@ -142,17 +144,17 @@ Error AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_LREG:
         if (op.val16 & 3)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         // Fall-through
     case M_INDIR:
     case M_WREG:
         if (op.val16 & 1)
-            return setError(REGISTER_NOT_ALLOWED);
+            return setError(op, REGISTER_NOT_ALLOWED);
         // Fall-through
     case M_COUNT:
     case M_BREG:
         if (op.val16 >= 0x100)
-            return setError(ILLEGAL_REGISTER);
+            return setError(op, ILLEGAL_REGISTER);
         insn.emitOperand8(op.val16);
         return OK;
     case M_BAOP:
@@ -164,7 +166,7 @@ Error AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
         return emitRelative(insn, mode, op);
     case M_BITNO:
         if (op.val16 >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            return setError(op, ILLEGAL_BIT_NUMBER);
         insn.embed(op.val16 & 7);
         return OK;
     default:
@@ -177,16 +179,16 @@ Error AsmI8096::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dst, src1, src2;
-    if (parseOperand(scan, dst))
-        return getError();
+    if (parseOperand(scan, dst) && dst.hasError())
+        return setError(dst);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, src1))
-            return getError();
+        if (parseOperand(scan, src1) && src1.hasError())
+            return setError(src1);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, src2))
-            return getError();
+        if (parseOperand(scan, src2) && src2.hasError())
+            return setError(src2);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -196,8 +198,9 @@ Error AsmI8096::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(src2);
 
     insn.setAddrMode(dst.mode, src1.mode, src2.mode);
-    if (TableI8096::TABLE.searchName(insn))
-        return setError(TableI8096::TABLE.getError());
+    const auto error = TableI8096::TABLE.searchName(insn);
+    if (error)
+        return setError(dst, error);
 
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (!jbx_djnz && emitOperand(insn, insn.src2(), src2))

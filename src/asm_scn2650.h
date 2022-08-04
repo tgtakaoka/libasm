@@ -36,24 +36,17 @@ private:
     IntelValueParser _parser;
     RegScn2650 _regs;
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
         CcName cc;
         bool indir;
         char sign;
         uint16_t val16;
-        Operand()
-            : ErrorAt(),
-              mode(NONE),
-              reg(REG_UNDEF),
-              cc(CC_UNDEF),
-              indir(false),
-              sign(0),
-              val16(0) {}
+        Operand() : mode(NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
     };
 
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
 
     Error emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode);
     Error emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode);

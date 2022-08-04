@@ -167,27 +167,27 @@ static void test_move_inherent() {
         TEST("OTIR", 0xED, 0xB3);
         TEST("OTDR", 0xED, 0xBB);
     } else {
-        ERRT("LD I,A", OPERAND_NOT_ALLOWED);
-        ERRT("LD R,A", OPERAND_NOT_ALLOWED);
-        ERRT("LD A,I", OPERAND_NOT_ALLOWED);
-        ERRT("LD A,R", OPERAND_NOT_ALLOWED);
+        ERRT("LD I,A", OPERAND_NOT_ALLOWED, "I,A");
+        ERRT("LD R,A", OPERAND_NOT_ALLOWED, "R,A");
+        ERRT("LD A,I", OPERAND_NOT_ALLOWED, "A,I");
+        ERRT("LD A,R", OPERAND_NOT_ALLOWED, "A,R");
 
-        ERRT("LDI",  UNKNOWN_INSTRUCTION);
-        ERRT("LDD",  UNKNOWN_INSTRUCTION);
-        ERRT("LDIR", UNKNOWN_INSTRUCTION);
-        ERRT("LDDR", UNKNOWN_INSTRUCTION);
-        ERRT("CPI",  UNKNOWN_INSTRUCTION);
-        ERRT("CPD",  UNKNOWN_INSTRUCTION);
-        ERRT("CPIR", UNKNOWN_INSTRUCTION);
-        ERRT("CPDR", UNKNOWN_INSTRUCTION);
-        ERRT("INI",  UNKNOWN_INSTRUCTION);
-        ERRT("IND",  UNKNOWN_INSTRUCTION);
-        ERRT("INIR", UNKNOWN_INSTRUCTION);
-        ERRT("INDR", UNKNOWN_INSTRUCTION);
-        ERRT("OUTI", UNKNOWN_INSTRUCTION);
-        ERRT("OUTD", UNKNOWN_INSTRUCTION);
-        ERRT("OTIR", UNKNOWN_INSTRUCTION);
-        ERRT("OTDR", UNKNOWN_INSTRUCTION);
+        ERUI("LDI");
+        ERUI("LDD");
+        ERUI("LDIR");
+        ERUI("LDDR");
+        ERUI("CPI");
+        ERUI("CPD");
+        ERUI("CPIR");
+        ERUI("CPDR");
+        ERUI("INI");
+        ERUI("IND");
+        ERUI("INIR");
+        ERUI("INDR");
+        ERUI("OUTI");
+        ERUI("OUTD");
+        ERUI("OTIR");
+        ERUI("OTDR");
     }
 }
 
@@ -202,9 +202,9 @@ static void test_move_immediate() {
     TEST("LD A,0FEH", 0x3E, 0xFE);
     TEST("LD A,-1",   0x3E, 0xFF);
     TEST("LD A,255",  0x3E, 0xFF);
-    ERRT("LD A,256",  OVERFLOW_RANGE);
+    ERRT("LD A,256",  OVERFLOW_RANGE, "256");
     TEST("LD A,-128", 0x3E, 0x80);
-    ERRT("LD A,-129", OVERFLOW_RANGE);
+    ERRT("LD A,-129", OVERFLOW_RANGE, "-129");
 
     TEST("LD BC,0BEEFH", 0x01, 0xEF, 0xBE);
     TEST("LD DE,1234H",  0x11, 0x34, 0x12);
@@ -228,12 +228,12 @@ static void test_move_direct() {
         TEST("LD DE,(05678H)", 0xED, 0x5B, 0x78, 0x56);
         TEST("LD SP,(05678H)", 0xED, 0x7B, 0x78, 0x56);
     } else {
-        ERRT("LD (0ABCDH),BC", OPERAND_NOT_ALLOWED);
-        ERRT("LD (0ABCDH),DE", OPERAND_NOT_ALLOWED);
-        ERRT("LD (0ABCDH),SP", OPERAND_NOT_ALLOWED);
-        ERRT("LD BC,(05678H)", OPERAND_NOT_ALLOWED);
-        ERRT("LD DE,(05678H)", OPERAND_NOT_ALLOWED);
-        ERRT("LD SP,(05678H)", OPERAND_NOT_ALLOWED);
+        ERRT("LD (0ABCDH),BC", OPERAND_NOT_ALLOWED, "(0ABCDH),BC");
+        ERRT("LD (0ABCDH),DE", OPERAND_NOT_ALLOWED, "(0ABCDH),DE");
+        ERRT("LD (0ABCDH),SP", OPERAND_NOT_ALLOWED, "(0ABCDH),SP");
+        ERRT("LD BC,(05678H)", OPERAND_NOT_ALLOWED, "BC,(05678H)");
+        ERRT("LD DE,(05678H)", OPERAND_NOT_ALLOWED, "DE,(05678H)");
+        ERRT("LD SP,(05678H)", OPERAND_NOT_ALLOWED, "SP,(05678H)");
     }
 }
 
@@ -259,8 +259,8 @@ static void test_stack_op() {
         TEST("EX AF,AF'", 0x08);
         TEST("EXX",       0xD9);
     } else {
-        ERRT("EX AF,AF'", OPERAND_NOT_ALLOWED);
-        ERRT("EXX",       UNKNOWN_INSTRUCTION);
+        ERRT("EX AF,AF'", OPERAND_NOT_ALLOWED, "AF,AF'");
+        ERUI("EXX");
     }
 }
 
@@ -303,12 +303,12 @@ static void test_jump_call() {
         TEST("IM 0", 0xED, 0x46);
         TEST("IM 1", 0xED, 0x56);
         TEST("IM 2", 0xED, 0x5E);
-        ERRT("IM 3",  ILLEGAL_OPERAND);
-        ERRT("IM -1", ILLEGAL_OPERAND);
+        ERRT("IM 3",  ILLEGAL_OPERAND, "3");
+        ERRT("IM -1", ILLEGAL_OPERAND, "-1");
     } else {
-        ERRT("RETN", UNKNOWN_INSTRUCTION);
-        ERRT("RETI", UNKNOWN_INSTRUCTION);
-        ERRT("IM 0", UNKNOWN_INSTRUCTION);
+        ERUI("RETN");
+        ERUI("RETI");
+        ERUI("IM 0");
     }
 }
 
@@ -470,14 +470,14 @@ static void test_alu_register() {
         TEST("SBC HL,HL", 0xED, 0x62);
         TEST("SBC HL,SP", 0xED, 0x72);
     } else {
-        ERRT("ADC HL,BC", OPERAND_NOT_ALLOWED);
-        ERRT("ADC HL,DE", OPERAND_NOT_ALLOWED);
-        ERRT("ADC HL,HL", OPERAND_NOT_ALLOWED);
-        ERRT("ADC HL,SP", OPERAND_NOT_ALLOWED);
-        ERRT("SBC HL,BC", OPERAND_NOT_ALLOWED);
-        ERRT("SBC HL,DE", OPERAND_NOT_ALLOWED);
-        ERRT("SBC HL,HL", OPERAND_NOT_ALLOWED);
-        ERRT("SBC HL,SP", OPERAND_NOT_ALLOWED);
+        ERRT("ADC HL,BC", OPERAND_NOT_ALLOWED, "HL,BC");
+        ERRT("ADC HL,DE", OPERAND_NOT_ALLOWED, "HL,DE");
+        ERRT("ADC HL,HL", OPERAND_NOT_ALLOWED, "HL,HL");
+        ERRT("ADC HL,SP", OPERAND_NOT_ALLOWED, "HL,SP");
+        ERRT("SBC HL,BC", OPERAND_NOT_ALLOWED, "HL,BC");
+        ERRT("SBC HL,DE", OPERAND_NOT_ALLOWED, "HL,DE");
+        ERRT("SBC HL,HL", OPERAND_NOT_ALLOWED, "HL,HL");
+        ERRT("SBC HL,SP", OPERAND_NOT_ALLOWED, "HL,SP");
     }
 }
 
@@ -500,8 +500,8 @@ static void test_alu_immediate() {
 static void test_io() {
     TEST("OUT (0F1H),A", 0xD3, 0xF1);
     TEST("IN A,(0F0H)",  0xDB, 0xF0);
-    ERRT("IN A,(-1)",    OVERFLOW_RANGE);
-    ERRT("IN A,(256)",   OVERFLOW_RANGE);
+    ERRT("IN A,(-1)",    OVERFLOW_RANGE, "(-1)");
+    ERRT("IN A,(256)",   OVERFLOW_RANGE, "(256)");
 
     if (isZ80()) {
         // Z80
@@ -521,8 +521,8 @@ static void test_io() {
         TEST("OUT (C),L", 0xED, 0x69);
         TEST("OUT (C),A", 0xED, 0x79);
     } else {
-        ERRT("IN  B,(C)", OPERAND_NOT_ALLOWED);
-        ERRT("OUT (C),A", OPERAND_NOT_ALLOWED);
+        ERRT("IN  B,(C)", OPERAND_NOT_ALLOWED, "B,(C)");
+        ERRT("OUT (C),A", OPERAND_NOT_ALLOWED, "(C),A");
     }
 }
 
@@ -547,25 +547,25 @@ static void test_inherent() {
         // i8085
         TEST("LD A,IM", 0x20);
         TEST("LD IM,A", 0x30);
-        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
-        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
+        ERUI("RETEM");
+        ERUI("CALLN 40H");
     } else if (v30emu()) {
-        ERRT("LD A,IM", OPERAND_NOT_ALLOWED);
-        ERRT("LD IM,A", OPERAND_NOT_ALLOWED);
+        ERRT("LD A,IM", OPERAND_NOT_ALLOWED, "A,IM");
+        ERRT("LD IM,A", OPERAND_NOT_ALLOWED, "IM,A");
         TEST("RETEM",     0xED, 0xFD);
         TEST("CALLN 40H", 0xED, 0xED, 0x40);
     } else {
-        ERRT("LD A,IM", OPERAND_NOT_ALLOWED);
-        ERRT("LD IM,A", OPERAND_NOT_ALLOWED);
-        ERRT("RETEM",     UNKNOWN_INSTRUCTION);
-        ERRT("CALLN 40H", UNKNOWN_INSTRUCTION);
+        ERRT("LD A,IM", OPERAND_NOT_ALLOWED, "A,IM");
+        ERRT("LD IM,A", OPERAND_NOT_ALLOWED, "IM,A");
+        ERUI("RETEM");
+        ERUI("CALLN 40H");
     }
 
     if (isZ80()) {
         // Z80
         TEST("NEG", 0xED, 0x44);
     } else {
-        ERRT("NEG", UNKNOWN_INSTRUCTION);
+        ERUI("NEG");
     }
 }
 
@@ -578,9 +578,9 @@ static void test_restart() {
     TEST("RST 28H", 0xEF);
     TEST("RST 30H", 0xF7);
     TEST("RST 38H", 0xFF);
-    ERRT("RST 39H", ILLEGAL_OPERAND);
-    ERRT("RST 40H", ILLEGAL_OPERAND);
-    ERRT("RST -1",  ILLEGAL_OPERAND);
+    ERRT("RST 39H", ILLEGAL_OPERAND, "39H");
+    ERRT("RST 40H", ILLEGAL_OPERAND, "40H");
+    ERRT("RST -1",  ILLEGAL_OPERAND, "-1");
 }
 
 static void test_relative() {
@@ -593,9 +593,9 @@ static void test_relative() {
         ATEST(0x1000, "JR NC,0F82H", 0x30, 0x80);
         ATEST(0x1000, "JR C,0F82H",  0x38, 0x80);
     } else {
-        ERRT("DJNZ 1000H",  UNKNOWN_INSTRUCTION);
-        ERRT("JR 1000H",    UNKNOWN_INSTRUCTION);
-        ERRT("JR NZ,1004H", UNKNOWN_INSTRUCTION);
+        ERUI("DJNZ 1000H");
+        ERUI("JR 1000H");
+        ERUI("JR NZ,1004H");
     }
 }
 
@@ -668,14 +668,14 @@ static void test_shift() {
         TEST("RRD", 0xED, 0x67);
         TEST("RLD", 0xED, 0x6F);
     } else {
-        ERRT("RLC A", UNKNOWN_INSTRUCTION);
-        ERRT("RRC B", UNKNOWN_INSTRUCTION);
-        ERRT("RL  C", UNKNOWN_INSTRUCTION);
-        ERRT("RR  D", UNKNOWN_INSTRUCTION);
-        ERRT("SLA E", UNKNOWN_INSTRUCTION);
-        ERRT("SRA H", UNKNOWN_INSTRUCTION);
-        ERRT("SRL L", UNKNOWN_INSTRUCTION);
-        ERRT("RLD",   UNKNOWN_INSTRUCTION);
+        ERUI("RLC A");
+        ERUI("RRC B");
+        ERUI("RL  C");
+        ERUI("RR  D");
+        ERUI("SLA E");
+        ERUI("SRA H");
+        ERUI("SRL L");
+        ERUI("RLD");
     }
 }
 
@@ -709,9 +709,9 @@ static void test_bitop() {
         TEST("SET 6,(HL)", 0xCB, 0xF6);
         TEST("SET 7,A", 0xCB, 0xFF);
     } else {
-        ERRT("BIT 0,B", UNKNOWN_INSTRUCTION);
-        ERRT("RES 1,C", UNKNOWN_INSTRUCTION);
-        ERRT("SET 2,D", UNKNOWN_INSTRUCTION);
+        ERUI("BIT 0,B");
+        ERUI("RES 1,C");
+        ERUI("SET 2,D");
     }
 }
 
@@ -748,32 +748,32 @@ static void test_index_registers() {
         TEST("JP (IY)",    0xFD, 0xE9);
         TEST("LD SP,IY",   0xFD, 0xF9);
     } else {
-        ERRT("ADD IX,BC", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IX,DE", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IX,IX", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IX,SP", OPERAND_NOT_ALLOWED);
-        ERRT("LD (0ABCDH),IX", OPERAND_NOT_ALLOWED);
-        ERRT("LD IX,(5678H)",  OPERAND_NOT_ALLOWED);
-        ERRT("INC IX",  OPERAND_NOT_ALLOWED);
-        ERRT("DEC IX",  OPERAND_NOT_ALLOWED);
-        ERRT("POP IX",  OPERAND_NOT_ALLOWED);
-        ERRT("PUSH IX", OPERAND_NOT_ALLOWED);
-        ERRT("EX (SP),IX", OPERAND_NOT_ALLOWED);
-        ERRT("JP (IX)",  OPERAND_NOT_ALLOWED);
-        ERRT("LD SP,IX", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IY,BC", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IY,DE", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IY,IY", OPERAND_NOT_ALLOWED);
-        ERRT("ADD IY,SP", OPERAND_NOT_ALLOWED);
-        ERRT("LD (0ABCDH),IY", OPERAND_NOT_ALLOWED);
-        ERRT("LD IY,(5678H)",  OPERAND_NOT_ALLOWED);
-        ERRT("INC IY",  OPERAND_NOT_ALLOWED);
-        ERRT("DEC IY",  OPERAND_NOT_ALLOWED);
-        ERRT("POP IY",  OPERAND_NOT_ALLOWED);
-        ERRT("PUSH IY", OPERAND_NOT_ALLOWED);
-        ERRT("EX (SP),IY", OPERAND_NOT_ALLOWED);
-        ERRT("JP (IY)",  OPERAND_NOT_ALLOWED);
-        ERRT("LD SP,IY", OPERAND_NOT_ALLOWED);
+        ERRT("ADD IX,BC", OPERAND_NOT_ALLOWED, "IX,BC");
+        ERRT("ADD IX,DE", OPERAND_NOT_ALLOWED, "IX,DE");
+        ERRT("ADD IX,IX", OPERAND_NOT_ALLOWED, "IX,IX");
+        ERRT("ADD IX,SP", OPERAND_NOT_ALLOWED, "IX,SP");
+        ERRT("LD (0ABCDH),IX", OPERAND_NOT_ALLOWED, "(0ABCDH),IX");
+        ERRT("LD IX,(5678H)",  OPERAND_NOT_ALLOWED, "IX,(5678H)");
+        ERRT("INC IX",  OPERAND_NOT_ALLOWED, "IX");
+        ERRT("DEC IX",  OPERAND_NOT_ALLOWED, "IX");
+        ERRT("POP IX",  OPERAND_NOT_ALLOWED, "IX");
+        ERRT("PUSH IX", OPERAND_NOT_ALLOWED, "IX");
+        ERRT("EX (SP),IX", OPERAND_NOT_ALLOWED, "(SP),IX");
+        ERRT("JP (IX)",  OPERAND_NOT_ALLOWED, "(IX)");
+        ERRT("LD SP,IX", OPERAND_NOT_ALLOWED, "SP,IX");
+        ERRT("ADD IY,BC", OPERAND_NOT_ALLOWED, "IY,BC");
+        ERRT("ADD IY,DE", OPERAND_NOT_ALLOWED, "IY,DE");
+        ERRT("ADD IY,IY", OPERAND_NOT_ALLOWED, "IY,IY");
+        ERRT("ADD IY,SP", OPERAND_NOT_ALLOWED, "IY,SP");
+        ERRT("LD (0ABCDH),IY", OPERAND_NOT_ALLOWED, "(0ABCDH),IY");
+        ERRT("LD IY,(5678H)",  OPERAND_NOT_ALLOWED, "IY,(5678H)");
+        ERRT("INC IY",  OPERAND_NOT_ALLOWED, "IY");
+        ERRT("DEC IY",  OPERAND_NOT_ALLOWED, "IY");
+        ERRT("POP IY",  OPERAND_NOT_ALLOWED, "IY");
+        ERRT("PUSH IY", OPERAND_NOT_ALLOWED, "IY");
+        ERRT("EX (SP),IY", OPERAND_NOT_ALLOWED, "(SP),IY");
+        ERRT("JP (IY)",  OPERAND_NOT_ALLOWED, "(IY)");
+        ERRT("LD SP,IY", OPERAND_NOT_ALLOWED, "SP,IY");
     }
 }
 
@@ -850,18 +850,18 @@ static void test_indexed() {
         TEST("OR  (IY-2)", 0xFD, 0xB6, 0xFE);
         TEST("CP  (IY-2)", 0xFD, 0xBE, 0xFE);
     } else {
-        ERRT("INC (IX+2)", OPERAND_NOT_ALLOWED);
-        ERRT("INC (IY-2)", OPERAND_NOT_ALLOWED);
-        ERRT("DEC (IX+2)", OPERAND_NOT_ALLOWED);
-        ERRT("DEC (IY-2)", OPERAND_NOT_ALLOWED);
-        ERRT("LD B,(IX+2)", OPERAND_NOT_ALLOWED);
-        ERRT("LD C,(IY-2)", OPERAND_NOT_ALLOWED);
-        ERRT("LD (IX+2),D", OPERAND_NOT_ALLOWED);
-        ERRT("LD (IY-2),E", OPERAND_NOT_ALLOWED);
-        ERRT("ADD A,(IX+2)", OPERAND_NOT_ALLOWED);
-        ERRT("ADC A,(IY-2)", OPERAND_NOT_ALLOWED);
-        ERRT("AND (IX+2)", OPERAND_NOT_ALLOWED);
-        ERRT("SUB (IY-2)", OPERAND_NOT_ALLOWED);
+        ERRT("INC (IX+2)", OPERAND_NOT_ALLOWED, "(IX+2)");
+        ERRT("INC (IY-2)", OPERAND_NOT_ALLOWED, "(IY-2)");
+        ERRT("DEC (IX+2)", OPERAND_NOT_ALLOWED, "(IX+2)");
+        ERRT("DEC (IY-2)", OPERAND_NOT_ALLOWED, "(IY-2)");
+        ERRT("LD B,(IX+2)", OPERAND_NOT_ALLOWED, "B,(IX+2)");
+        ERRT("LD C,(IY-2)", OPERAND_NOT_ALLOWED, "C,(IY-2)");
+        ERRT("LD (IX+2),D", OPERAND_NOT_ALLOWED, "(IX+2),D");
+        ERRT("LD (IY-2),E", OPERAND_NOT_ALLOWED, "(IY-2),E");
+        ERRT("ADD A,(IX+2)", OPERAND_NOT_ALLOWED, "A,(IX+2)");
+        ERRT("ADC A,(IY-2)", OPERAND_NOT_ALLOWED, "A,(IY-2)");
+        ERRT("AND (IX+2)", OPERAND_NOT_ALLOWED, "(IX+2)");
+        ERRT("SUB (IY-2)", OPERAND_NOT_ALLOWED, "(IY-2)");
     }
 }
 
@@ -876,8 +876,8 @@ static void test_shift_indexed() {
         TEST("SRA (IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
         TEST("SRL (IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
         TEST("SRL (IX-128)", 0xDD, 0xCB, 0x80, 0x3E);
-        ERRT("SRL (IX+128)", OVERFLOW_RANGE);
-        ERRT("SRL (IX-129)", OVERFLOW_RANGE);
+        ERRT("SRL (IX+128)", OVERFLOW_RANGE, "(IX+128)");
+        ERRT("SRL (IX-129)", OVERFLOW_RANGE, "(IX-129)");
 
         TEST("RLC (IY-128)", 0xFD, 0xCB, 0x80, 0x06);
         TEST("RRC (IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
@@ -887,13 +887,13 @@ static void test_shift_indexed() {
         TEST("SRA (IY-128)", 0xFD, 0xCB, 0x80, 0x2E);
         TEST("SRL (IY-128)", 0xFD, 0xCB, 0x80, 0x3E);
     } else {
-        ERRT("RLC (IY-128)", UNKNOWN_INSTRUCTION);
-        ERRT("RRC (IY-128)", UNKNOWN_INSTRUCTION);
-        ERRT("RL  (IY-128)", UNKNOWN_INSTRUCTION);
-        ERRT("RR  (IY-128)", UNKNOWN_INSTRUCTION);
-        ERRT("SLA (IY-128)", UNKNOWN_INSTRUCTION);
-        ERRT("SRA (IY-128)", UNKNOWN_INSTRUCTION);
-        ERRT("SRL (IY-128)", UNKNOWN_INSTRUCTION);
+        ERUI("RLC (IY-128)");
+        ERUI("RRC (IY-128)");
+        ERUI("RL  (IY-128)");
+        ERUI("RR  (IY-128)");
+        ERUI("SLA (IY-128)");
+        ERUI("SRA (IY-128)");
+        ERUI("SRL (IY-128)");
     }
 }
 
@@ -903,18 +903,18 @@ static void test_bitop_indexed() {
         TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
         TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
         TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
-        ERRT("SET 8,(IX-128)", ILLEGAL_BIT_NUMBER);
-        ERRT("SET -1,(IX+1)",  ILLEGAL_BIT_NUMBER);
-        ERRT("SET 2,(IX-129)", OVERFLOW_RANGE);
-        ERRT("SET 2,(IX+128)", OVERFLOW_RANGE);
+        ERRT("SET 8,(IX-128)", ILLEGAL_BIT_NUMBER, "8,(IX-128)");
+        ERRT("SET -1,(IX+1)",  ILLEGAL_BIT_NUMBER, "-1,(IX+1)");
+        ERRT("SET 2,(IX-129)", OVERFLOW_RANGE, "(IX-129)");
+        ERRT("SET 2,(IX+128)", OVERFLOW_RANGE, "(IX+128)");
 
         TEST("BIT 5,(IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
         TEST("RES 6,(IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);
         TEST("SET 7,(IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
     } else {
-        ERRT("BIT 0,(IX-128)", UNKNOWN_INSTRUCTION);
-        ERRT("RES 1,(IX-128)", UNKNOWN_INSTRUCTION);
-        ERRT("SET 2,(IX-128)", UNKNOWN_INSTRUCTION);
+        ERUI("BIT 0,(IX-128)");
+        ERUI("RES 1,(IX-128)");
+        ERUI("SET 2,(IX-128)");
     }
 }
 
@@ -948,40 +948,40 @@ static void test_comment() {
 }
 
 static void test_undefined_symbol() {
-    ERUS("LD  B,UNDEF", 0x06, 0x00);
-    ERUS("LD BC,UNDEF", 0x01, 0x00, 0x00);
-    ERUS("LD (UNDEF),A", 0x32, 0x00, 0x00);
-    ERUS("LD A,(UNDEF)", 0x3A, 0x00, 0x00);
-    ERUS("LD (UNDEF),HL", 0x22, 0x00, 0x00);
-    ERUS("LD HL,(UNDEF)", 0x2A, 0x00, 0x00);
-    ERUS("JP    UNDEF", 0xC3, 0x00, 0x00);
-    ERUS("JP NZ,UNDEF", 0xC2, 0x00, 0x00);
-    ERUS("CALL    UNDEF", 0xCD, 0x00, 0x00);
-    ERUS("CALL NZ,UNDEF", 0xC4, 0x00, 0x00);
-    ERUS("ADD  A,UNDEF",  0xC6, 0x00);
-    ERUS("OUT (UNDEF),A", 0xD3, 0x00);
-    ERUS("IN  A,(UNDEF)", 0xDB, 0x00);
-    ERUS("RST UNDEF", 0xC7);
+    ERUS("LD  B,UNDEF",   "UNDEF",     0x06, 0x00);
+    ERUS("LD BC,UNDEF",   "UNDEF",     0x01, 0x00, 0x00);
+    ERUS("LD (UNDEF),A",  "UNDEF),A",  0x32, 0x00, 0x00);
+    ERUS("LD A,(UNDEF)",  "UNDEF)",    0x3A, 0x00, 0x00);
+    ERUS("LD (UNDEF),HL", "UNDEF),HL", 0x22, 0x00, 0x00);
+    ERUS("LD HL,(UNDEF)", "UNDEF)",    0x2A, 0x00, 0x00);
+    ERUS("JP    UNDEF",   "UNDEF",     0xC3, 0x00, 0x00);
+    ERUS("JP NZ,UNDEF",   "UNDEF",     0xC2, 0x00, 0x00);
+    ERUS("CALL    UNDEF", "UNDEF",     0xCD, 0x00, 0x00);
+    ERUS("CALL NZ,UNDEF", "UNDEF",     0xC4, 0x00, 0x00);
+    ERUS("ADD  A,UNDEF",  "UNDEF",     0xC6, 0x00);
+    ERUS("OUT (UNDEF),A", "UNDEF),A",  0xD3, 0x00);
+    ERUS("IN  A,(UNDEF)", "UNDEF)",    0xDB, 0x00);
+    ERUS("RST UNDEF",     "UNDEF",     0xC7);
 
     if (isZ80()) {
         // Z80
-        ERUS("LD (UNDEF),BC", 0xED, 0x43, 0x00, 0x00);
-        ERUS("LD BC,(UNDEF)", 0xED, 0x4B, 0x00, 0x00);
-        ERUS("IM UNDEF",  0xED, 0x46);
-        ERUS("BIT UNDEF,B", 0xCB, 0x40);
-        ERUS("LD (UNDEF),IY", 0xFD, 0x22, 0x00, 0x00);
-        ERUS("LD IY,(UNDEF)", 0xFD, 0x2A, 0x00, 0x00);
-        ERUS("INC (IX+UNDEF)", 0xDD, 0x34, 0x00);
-        ERUS("LD (IY-UNDEF),B", 0xFD, 0x70, 0x00);
-        ERUS("LD (IY-2),UNDEF", 0xFD, 0x36, 0xFE, 0x00);
-        ERUS("RLC (IX+UNDEF)", 0xDD, 0xCB, 0x00, 0x06);
-        ERUS("BIT UNDEF,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
-        ERUS("RES 7,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xBE);
-        ERUS("SET UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
+        ERUS("LD (UNDEF),BC",        "UNDEF),BC",      0xED, 0x43, 0x00, 0x00);
+        ERUS("LD BC,(UNDEF)",        "UNDEF)",         0xED, 0x4B, 0x00, 0x00);
+        ERUS("IM UNDEF",             "UNDEF",          0xED, 0x46);
+        ERUS("BIT UNDEF,B",          "UNDEF,B",        0xCB, 0x40);
+        ERUS("LD (UNDEF),IY",        "UNDEF),IY",      0xFD, 0x22, 0x00, 0x00);
+        ERUS("LD IY,(UNDEF)",        "UNDEF)",         0xFD, 0x2A, 0x00, 0x00);
+        ERUS("INC (IX+UNDEF)",       "UNDEF)",         0xDD, 0x34, 0x00);
+        ERUS("LD (IY-UNDEF),B",      "UNDEF),B",       0xFD, 0x70, 0x00);
+        ERUS("LD (IY-2),UNDEF",      "UNDEF",          0xFD, 0x36, 0xFE, 0x00);
+        ERUS("RLC (IX+UNDEF)",       "UNDEF)",         0xDD, 0xCB, 0x00, 0x06);
+        ERUS("BIT UNDEF,(IX-128)",   "UNDEF,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
+        ERUS("RES 7,(IX-UNDEF)",     "UNDEF)",         0xDD, 0xCB, 0x00, 0xBE);
+        ERUS("SET UNDEF,(IX-UNDEF)", "UNDEF,(IX-UNDEF)", 0xDD, 0xCB, 0x00, 0xC6);
 
-        AERRU(0x1000, "JR UNDEF",    0x18, 0x00);
-        AERRU(0x1000, "JR NZ,UNDEF", 0x20, 0x00);
-        AERRU(0x1000, "DJNZ UNDEF",  0x10, 0x00);
+        AERUS(0x1000, "JR UNDEF",    "UNDEF", 0x18, 0x00);
+        AERUS(0x1000, "JR NZ,UNDEF", "UNDEF", 0x20, 0x00);
+        AERUS(0x1000, "DJNZ UNDEF",  "UNDEF", 0x10, 0x00);
     }
 }
 // clang-format on

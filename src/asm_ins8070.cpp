@@ -120,7 +120,7 @@ Error AsmIns8070::emitOperand(InsnIns8070 &insn, OprFormat format, const Operand
     return OK;
 }
 
-Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p))
@@ -129,7 +129,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) {
     if (p.expect('#') || p.expect('=')) {
         op.val16 = parseExpr16(p, op);
         if (parserError())
-            return getError();
+            return op.getError();
         op.format = OPR_IM;
         scan = p;
         return OK;
@@ -173,19 +173,20 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) {
     bool autoIndex = p.expect('@');
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
 
     if (*p.skipSpaces() == '(')  // SC/MP style
-        return setError(p, MISSING_COMMA);
+        return op.setError(MISSING_COMMA);
     if (p.expect(',')) {
         p.skipSpaces();
         if (!autoIndex && p.expect('@'))
             autoIndex = true;
+        const StrScanner ptrp = p;
         const RegName ptr = RegIns8070::parseRegName(p);
         if (!RegIns8070::isPointerReg(ptr))
-            setError(p, UNKNOWN_OPERAND);
+            op.setError(UNKNOWN_OPERAND);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
-            return setError(p, REGISTER_NOT_ALLOWED);
+            return op.setError(ptrp, REGISTER_NOT_ALLOWED);
         op.reg = ptr;
         op.autoIndex = autoIndex;
         op.format = (autoIndex || ptr == REG_SP || ptr == REG_PC) ? OPR_GN : OPR_PR;
@@ -203,11 +204,11 @@ Error AsmIns8070::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand dst, src;
-    if (parseOperand(scan, dst))
-        return getError();
+    if (parseOperand(scan, dst) && dst.hasError())
+        return setError(dst);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, src))
-            return getError();
+        if (parseOperand(scan, src) && src.hasError())
+            return setError(src);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -216,8 +217,9 @@ Error AsmIns8070::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(src);
 
     insn.setOprFormats(dst.format, src.format);
-    if (TableIns8070::TABLE.searchName(insn))
-        return setError(TableIns8070::TABLE.getError());
+    const auto error = TableIns8070::TABLE.searchName(insn);
+    if (error)
+        return setError(dst, error);
 
     if (emitOperand(insn, insn.dstOpr(), dst))
         return getError();

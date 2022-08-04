@@ -403,17 +403,6 @@ AddressWidth TableMn1610::addressWidth() const {
     return (_cpu->cpuType() == MN1610) ? ADDRESS_16BIT : ADDRESS_18BIT;
 }
 
-Error TableMn1610::checkAddressRange(Config::uintptr_t addr) const {
-    const auto cpuType = _cpu->cpuType();
-    if (cpuType == MN1610 && addr >= 0x10000)
-        return OVERFLOW_RANGE;
-    if (cpuType == MN1613 && addr >= 0x40000)
-        return OVERFLOW_RANGE;
-    if (cpuType == MN1613A && addr >= 0x100000)
-        return OVERFLOW_RANGE;
-    return OK;
-}
-
 bool TableMn1610::setCpu(CpuType cpuType) {
     auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)

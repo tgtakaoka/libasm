@@ -29,6 +29,10 @@
 
 namespace libasm {
 
+struct OperandBase : public ErrorAt {
+    bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
+};
+
 class Assembler : public ErrorAt {
 public:
     Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
@@ -50,7 +54,7 @@ public:
     const Options &commonOptions() const { return _commonOptions; }
     virtual const Options &options() const { return Options::EMPTY; }
 
-    Error checkAddress(uint32_t addr);
+    Error checkAddress(uint32_t addr, const ErrorAt &at);
 
 private:
     ValueParser &_parser;
@@ -68,13 +72,13 @@ protected:
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
 
     /** Parse |expr| text and get value as unsigned 16 bit. */
-    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error);
+    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error) const;
     /** Parse |expr| text and get value as unsigned 32 bit. */
-    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error);
+    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error) const;
     /** Parse |expr| text and get value. */
-    Value parseExpr(StrScanner &expr, ErrorAt &error);
+    Value parseExpr(StrScanner &expr, ErrorAt &error) const;
     /** Return error caused by |parseExpr16| and |parseExpr32|. */
-    Error parserError() { return _parser.getError(); }
+    Error parserError() const { return _parser.getError(); }
 
     static bool overflowRel8(int16_t s16) { return Value::overflowRel8(s16); }
     static bool overflowRel8(int32_t s32) { return Value::overflowRel8(s32); }
@@ -82,6 +86,7 @@ protected:
     static bool overflowUint8(uint16_t u16) { return Value::overflowUint8(u16); }
     static bool overflowUint8(uint32_t u32) { return Value::overflowUint8(u32); }
     static bool overflowUint16(uint32_t u32) { return Value::overflowUint16(u32); }
+    static bool overflowUint(uint32_t u32, uint8_t bitw) { return Value::overflowUint(u32, bitw); }
 
     static const char OPT_CHAR_COMMENT[] PROGMEM;
     static const char OPT_DESC_COMMENT[] PROGMEM;

@@ -53,7 +53,7 @@ private:
     const OptCoprocessor _opt_fpu{OPT_TEXT_FPU, OPT_DESC_FPU, &AsmNs32000::setFpu, _opt_pmmu};
     const Options _options{_opt_fpu};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
         uint32_t val32;
@@ -62,8 +62,7 @@ private:
         RegName index;
         OprSize size;
         Operand()
-            : ErrorAt(),
-              mode(M_NONE),
+            : mode(M_NONE),
               reg(REG_UNDEF),
               val32(0),
               disp2(0),
@@ -75,9 +74,9 @@ private:
     static Error setFpu(const StrScanner &scan);
     static Error setPmmu(const StrScanner &scan);
 
-    Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false);
-    Error parseConfigNames(StrScanner &scan, Operand &op);
-    Error parseRegisterList(StrScanner &scan, Operand &op);
+    Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;
+    Error parseConfigNames(StrScanner &scan, Operand &op) const;
+    Error parseRegisterList(StrScanner &scan, Operand &op) const;
     Error parseBaseOperand(StrScanner &scan, Operand &op);
     Error parseOperand(StrScanner &scan, Operand &op);
     Error processPseudo(StrScanner &scan, const char *name);

@@ -19,7 +19,7 @@
 namespace libasm {
 namespace mc6800 {
 
-Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p) || *p == ',') {
@@ -37,7 +37,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) {
     }
     op.val16 = parseExpr16(p, op);
     if (parserError())
-        return getError();
+        return op.getError();
     if (immediate) {
         op.mode = M_IM16;
         scan = p;
@@ -152,16 +152,16 @@ Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
     Operand op1, op2, op3;
-    if (parseOperand(scan, op1))
-        return getError();
+    if (parseOperand(scan, op1) && op1.hasError())
+        return setError(op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2))
-            return getError();
+        if (parseOperand(scan, op2) && op2.hasError())
+            return setError(op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op3))
-            return getError();
+        if (parseOperand(scan, op3) && op3.hasError())
+            return setError(op3);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
@@ -171,8 +171,9 @@ Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    if (TableMc6800::TABLE.searchName(insn))
-        return setError(TableMc6800::TABLE.getError());
+    const auto error = TableMc6800::TABLE.searchName(insn);
+    if (error)
+        return setError(op1, error);
 
     if (emitOperand(insn, insn.mode1(), op1))
         goto error;

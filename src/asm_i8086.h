@@ -41,7 +41,7 @@ private:
             OPT_BOOL_OPTIMIZE_SEGMENT, OPT_DESC_OPTIMIZE_SEGMENT, _optimizeSegment};
     const Options _options{_opt_optimizeSegment};
 
-    struct Operand : public ErrorAt {
+    struct Operand : public OperandBase {
         AddrMode mode;
         RegName ptr;
         RegName seg;
@@ -51,8 +51,7 @@ private:
         uint32_t val32;
         uint16_t seg16;
         Operand()
-            : ErrorAt(),
-              mode(M_NONE),
+            : mode(M_NONE),
               ptr(REG_UNDEF),
               seg(REG_UNDEF),
               reg(REG_UNDEF),
@@ -67,12 +66,12 @@ private:
     };
 
     Error parseStringInst(StrScanner &scan, Operand &op) const;
-    Error parsePointerSize(StrScanner &scan, Operand &op);
+    Error parsePointerSize(StrScanner &scan, Operand &op) const;
     void parseSegmentOverride(StrScanner &scan, Operand &op) const;
     void parseBaseRegister(StrScanner &scan, Operand &op) const;
     void parseIndexRegister(StrScanner &scan, Operand &op) const;
-    Error parseDisplacement(StrScanner &scan, Operand &op);
-    Error parseOperand(StrScanner &scan, Operand &opr);
+    Error parseDisplacement(StrScanner &scan, Operand &op) const;
+    Error parseOperand(StrScanner &scan, Operand &opr) const;
 
     Error emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val);
     Error emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);

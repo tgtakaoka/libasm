@@ -46,6 +46,15 @@ bool Value::overflowUint16(uint32_t u32) {
     return s32 < -32768L || (s32 >= 0 && u32 >= 0x10000L);
 }
 
+bool Value::overflowUint(uint32_t u32, uint8_t bitw) {
+    const int32_t s32 = static_cast<int32_t>(u32);
+    if (bitw >= 32)
+        return false;
+    const uint32_t max = 1UL << bitw;
+    const int32_t sign = max >> 1;
+    return s32 < -sign || (s32 >= 0 && u32 >= max);
+}
+
 static bool isoctal(char c) {
     return c >= '0' && c < '8';
 }

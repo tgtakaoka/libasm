@@ -21,29 +21,30 @@ namespace libasm {
 const char Assembler::OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
 const char Assembler::OPT_DESC_COMMENT[] PROGMEM = "line comment starting letter";
 
-Error Assembler::checkAddress(uint32_t addr) {
+Error Assembler::checkAddress(uint32_t addr, const ErrorAt &at) {
     const uint32_t max = 1UL << config().addressWidth();
     if (max && (addr & ~(max - 1)))
-        return setError(OVERFLOW_RANGE);
+        return setError(at, OVERFLOW_RANGE);
     if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
         if (addr % 2)
-            return setError(INSTRUCTION_NOT_ALIGNED);
+            return setError(at, INSTRUCTION_NOT_ALIGNED);
     }
-    return setOK();
+    return OK;
 }
 
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
     _parser.setCurrentOrigin(insn.address());
-    if (checkAddress(insn.address()))
+    setAt(line);
+    if (checkAddress(insn.address(), *this))
         return getError();
     StrScanner scan(line);
-    setAt(scan.skipSpaces());
+    setError(scan.skipSpaces(), OK);
     if (endOfLine(*scan))
-        return OK;
+        return setError(scan, OK);
     const auto error = encode(scan, insn);
-    if (error == OK)
-        setAt(scan);
+    if (error == UNKNOWN_INSTRUCTION)
+        setAt(line);
     return error;
 }
 
@@ -51,29 +52,32 @@ bool Assembler::endOfLine(char letter) const {
     return letter == 0 || letter == ';' || letter == _commentChar;
 }
 
-uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) {
+uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
     const Value value = _parser.eval(expr, _symtab);
-    setError(_parser);
+    if (_parser.getError())
+        error.setError(_parser);
     if (value.overflowUint16())
-        error.setErrorIf(expr, OVERFLOW_RANGE);
+        error.setError(OVERFLOW_RANGE);
     if (value.isUndefined())
-        error.setErrorIf(expr, UNDEFINED_SYMBOL);
+        error.setErrorIf(_parser, UNDEFINED_SYMBOL);
     return value.getUnsigned();
 }
 
-uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) {
+uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
     const Value value = _parser.eval(expr, _symtab);
-    setError(_parser);
+    if (_parser.getError())
+        error.setError(_parser);
     if (value.isUndefined())
-        error.setErrorIf(expr, UNDEFINED_SYMBOL);
+        error.setErrorIf(_parser, UNDEFINED_SYMBOL);
     return value.getUnsigned();
 }
 
-Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) {
+Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) const {
     const Value value = _parser.eval(expr, _symtab);
-    setError(_parser);
+    if (_parser.getError())
+        error.setError(_parser);
     if (value.isUndefined())
-        error.setErrorIf(expr, UNDEFINED_SYMBOL);
+        error.setErrorIf(_parser, UNDEFINED_SYMBOL);
     return value;
 }
 
