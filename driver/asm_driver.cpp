@@ -92,7 +92,6 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     } else {
         setFunctionStore(_functionStore);
     }
-    current()->assembler().reset();
     return dir;
 }
 

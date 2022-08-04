@@ -72,7 +72,6 @@ void tear_down() {}
         StrScanner *line;                                           \
         while ((line = sources.readLine()) != nullptr) {            \
             listing.assemble(*line, /* reportError */ true);        \
-            EQ("directive", OK, directive);                         \
             while (listing.hasNextLine())                           \
                 EQ("line", expected.readLine(), listing.getLine()); \
         }                                                           \
@@ -487,6 +486,50 @@ void test_mn1613() {
             "      34567 : 7e1f 5678                  mvwi  str, x'5678', skp");
 }
 
+void test_switch_cpu() {
+    mc6809::AsmMc6809 asm6809;
+    MotorolaDirective dir6809(asm6809);
+    mos6502::AsmMos6502 asm6502;
+    MotorolaDirective dir6502(asm6502);
+    i8080::AsmI8080 asm8080;
+    IntelDirective dir8080(asm8080);
+    z80::AsmZ80 asmz80;
+    IntelDirective dirz80(asmz80);
+    AsmDirective *dirs[] = {&dir6809, &dir6502, &dir8080, &dirz80};
+    TestSources sources;
+    AsmDriver driver(&dirs[0], &dirs[4], sources);
+    BinMemory memory;
+    AsmFormatter listing(driver, sources, memory);
+
+    ASM("switch cpu",
+            "        cpu   mc6809\n"
+            "        org   $1000\n"
+            "        ldx   #$1234\n"
+            "        cpu   z80\n"
+            "        ld    hl, 1234H\n"
+            "        cpu   i8080\n"
+            "        lxi   d, 5678H\n"
+            "        z80syntax on\n"
+            "        ld    bc, 9abcH\n"
+            "        cpu   65816\n"
+            "        longi on\n"
+            "        org   $123456\n"
+            "        ldx   #$1234\n",
+            "          0 :                            cpu   mc6809\n"
+            "       1000 :                            org   $1000\n"
+            "       1000 : 8E 12 34                   ldx   #$1234\n"
+            "       1003 :                            cpu   z80\n"
+            "       1003 : 21 34 12                   ld    hl, 1234H\n"
+            "       1006 :                            cpu   i8080\n"
+            "       1006 : 11 78 56                   lxi   d, 5678H\n"
+            "       1009 :                            z80syntax on\n"
+            "       1009 : 01 BC 9A                   ld    bc, 9abcH\n"
+            "       100C :                            cpu   65816\n"
+            "       100C :                            longi on\n"
+            "     123456 :                            org   $123456\n"
+            "     123456 : A2 34 12                   ldx   #$1234\n");
+}
+
 void run_tests() {
     RUN_TEST(test_mc6809);
     RUN_TEST(test_mc6800);
@@ -513,6 +556,7 @@ void run_tests() {
     RUN_TEST(test_z8002);
     RUN_TEST(test_mn1610);
     RUN_TEST(test_mn1613);
+    RUN_TEST(test_switch_cpu);
 }
 
 }  // namespace test
