@@ -85,7 +85,8 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
         return OK;  // skip comment
 
     _insn.reset(startAddress());
-    _errorAt.setError(assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver));
+    assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver);
+    _errorAt.setError(assembler);
     const bool allowUndef =
             _errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
     if (_errorAt.isOK() || allowUndef) {
@@ -120,17 +121,17 @@ const char *AsmFormatter::getLine() {
     if (isError() && !_errorLine) {
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
-        _formatter.formatDec(_out, _sources.current()->lineno(), 0);
-        const char *at = _errorAt.errorAt();
+        _formatter.formatDec(_out, _sources.current()->lineno(), 32);
         const char *line = _line.str();
-        const char *line_end = _line.str() + _line.size();
+        const char *line_end = line + _line.size();
+        const char *at = _errorAt.errorAt();
         const int column = (at >= line && at < line_end) ? at - line + 1 : -1;
         if (column >= 0) {
             _out.letter(':');
             formatDec(column);
         }
-        _out.letter(':').letter(' ').text_P(_errorAt.errorText_P());
-        _nextLine = 0;
+        _out.text(": error: ").text_P(_errorAt.errorText_P());
+        _nextLine = -1;
         _errorLine = true;
     } else {
         if (_nextLine < 0)
