@@ -38,7 +38,7 @@ int mem_size(BinMemory &memory) {
 
 int mem_block(BinMemory &memory) {
     size_t block = 0;
-    for (const auto it : memory)
+    for (auto it = memory.begin(); it != memory.end(); it++)
         block++;
     return block;
 }

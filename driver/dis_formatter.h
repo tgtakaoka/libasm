@@ -42,7 +42,7 @@ public:
 
     bool hasNextContent() const;
     const char *getContent();
-    bool hasNextLine() const;
+    bool hasNextLine() const override;
     const char *getLine() override;
 
 protected:
