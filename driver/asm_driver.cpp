@@ -19,8 +19,8 @@
 #include "asm_directive.h"
 #include "asm_sources.h"
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 
 namespace libasm {
 namespace driver {

@@ -21,7 +21,7 @@
 #include "config_base.h"
 #include "text_printer.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace libasm {
 namespace driver {

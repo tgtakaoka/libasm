@@ -17,7 +17,7 @@
 #include "intel_hex.h"
 #include "moto_srec.h"
 
-#include <ctype.h>
+#include <cctype>
 
 namespace libasm {
 namespace driver {

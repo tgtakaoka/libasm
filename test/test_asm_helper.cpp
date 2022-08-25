@@ -16,7 +16,7 @@
 
 #include "test_asm_helper.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <vector>
 

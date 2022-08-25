@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
+#include <cinttypes>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
 
 #include "test_asserter.h"
 

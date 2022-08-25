@@ -16,7 +16,7 @@
 
 #include "file_printer.h"
 
-#include <stdarg.h>
+#include <cstdarg>
 
 namespace libasm {
 namespace cli {

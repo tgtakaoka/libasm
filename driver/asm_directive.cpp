@@ -21,8 +21,8 @@
 #include "moto_srec.h"
 #include "str_scanner.h"
 
-#include <string.h>
 #include <algorithm>
+#include <cstring>
 
 namespace libasm {
 namespace driver {

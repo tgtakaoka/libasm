@@ -19,7 +19,7 @@
 
 #include "text_reader.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace libasm {
 namespace cli {

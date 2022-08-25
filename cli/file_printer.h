@@ -19,8 +19,7 @@
 
 #include "text_printer.h"
 
-#include <stdio.h>
-
+#include <cstdio>
 #include <string>
 
 namespace libasm {

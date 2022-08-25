@@ -17,14 +17,14 @@
 #ifndef __TEST_ASSERTER_H__
 #define __TEST_ASSERTER_H__
 
-#include <stddef.h>
-#include <stdint.h>
-
 #include "array_memory.h"
 #include "config_base.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "str_scanner.h"
+
+#include <cstddef>
+#include <cstdint>
 
 namespace libasm {
 namespace test {

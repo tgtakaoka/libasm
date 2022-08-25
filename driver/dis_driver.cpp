@@ -20,9 +20,8 @@
 #include "dis_formatter.h"
 #include "text_printer.h"
 
-#include <string.h>
-
 #include <algorithm>
+#include <cstring>
 #include <list>
 #include <string>
 

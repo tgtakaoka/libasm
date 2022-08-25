@@ -21,9 +21,8 @@
 #include "file_printer.h"
 #include "file_reader.h"
 
-#include <string.h>
-
 #include <algorithm>
+#include <cstring>
 #include <string>
 
 namespace libasm {

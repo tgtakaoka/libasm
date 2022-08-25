@@ -17,9 +17,8 @@
 #ifndef __TEST_SYMTAB_H__
 #define __TEST_SYMTAB_H__
 
-#include <stdint.h>
-#include <string.h>
-
+#include <cstdint>
+#include <cstring>
 #include <map>
 #include <string>
 
@@ -41,9 +40,7 @@ public:
         return lookup(std::string(symbol.str(), symbol.size()));
     }
 
-    void intern(uint32_t value, const char *symbol) {
-        intern(value, std::string(symbol));
-    }
+    void intern(uint32_t value, const char *symbol) { intern(value, std::string(symbol)); }
 
     void reset() {
         _symbol_to_value.clear();

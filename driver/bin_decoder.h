@@ -21,7 +21,7 @@
 #include "str_scanner.h"
 #include "text_reader.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace libasm {
 namespace driver {

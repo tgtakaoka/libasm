@@ -16,9 +16,9 @@
 
 #include "test_dis_helper.h"
 
-#include <inttypes.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <cinttypes>
+#include <cstdint>
+#include <cstdio>
 #include <string>
 #include <vector>
 

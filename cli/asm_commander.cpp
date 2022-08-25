@@ -24,7 +24,7 @@
 #include "intel_hex.h"
 #include "moto_srec.h"
 
-#include <string.h>
+#include <cstring>
 
 namespace libasm {
 namespace cli {

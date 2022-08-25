@@ -18,7 +18,7 @@
 
 #include "test_src_helper.h"
 
-#include <ctype.h>
+#include <cctype>
 
 namespace libasm {
 namespace test {

@@ -16,8 +16,8 @@
 
 #include "function_store.h"
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 namespace libasm {
 namespace driver {

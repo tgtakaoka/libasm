@@ -16,8 +16,8 @@
 
 #include "bin_memory.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 namespace libasm {
 namespace driver {
