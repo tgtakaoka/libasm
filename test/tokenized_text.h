@@ -35,7 +35,9 @@ public:
         std::size_t operator()(const TokenizedText &it) const;
     };
     struct eq {
-        bool operator()(const TokenizedText &a, const TokenizedText &b) const;
+        bool operator()(const TokenizedText &a, const TokenizedText &b) const {
+            return a._tokens == b._tokens;
+        }
     };
 
 private:

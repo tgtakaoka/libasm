@@ -89,16 +89,6 @@ std::size_t TokenizedText::hash::operator()(const TokenizedText &it) const {
     return seed;
 }
 
-bool TokenizedText::eq::operator()(const TokenizedText &a, const TokenizedText &b) const {
-    if (a.length() != b.length())
-        return false;
-    for (std::size_t i = 0; i < a.length(); i++) {
-        if (a._tokens.at(i) != b._tokens.at(i))
-            return false;
-    }
-    return true;
-}
-
 }  // namespace test
 }  // namespace libasm
 
