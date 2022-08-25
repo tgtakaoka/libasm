@@ -47,8 +47,7 @@ Error DisScn2650::decodeAbsolute(
     return OK;
 }
 
-Error DisScn2650::decodeIndexed(
-        DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode) {
+Error DisScn2650::decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out) {
     const auto opr = insn.readUint16(memory);
     if (opr & 0x8000)
         out.letter('*');
@@ -112,7 +111,7 @@ Error DisScn2650::decodeOperand(
         return decodeRelative(memory, insn, out, mode);
     case IX13:
     case AB13:
-        return decodeIndexed(memory, insn, out, mode);
+        return decodeIndexed(memory, insn, out);
     case IX15:
     case AB15:
         return decodeAbsolute(memory, insn, out, mode);
