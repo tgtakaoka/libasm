@@ -42,12 +42,12 @@ interface.
 
     #include <dis_mc68000.h>
     libasm::mc68000::DisMc68000 dis68k;
-    dis68k.setRelativeTarget(true);
+    dis68k.setOption("relative", "true");
 
     const uint16_t words[] = {0047372, 0x1232};
     const libasm::ArrayMemory memory(0x100, words, sizeof(words));
     auto dismem = memory.iterator();
-    libasm::Insn insn(0x100);
+    libasm::Insn insn(dismem.address());
     char opr[80];
 
     dis68k.decode(dismem, insn, opr, sizeof(opr));
