@@ -1,0 +1,143 @@
+# Ninja build script for libasm/src
+# Variable root should be set before subninja.
+
+build asm_base.o:        cxx ${root}/src/asm_base.cpp
+build dis_base.o:        cxx ${root}/src/dis_base.cpp
+build error_reporter.o:  cxx ${root}/src/error_reporter.cpp
+build option_base.o:     cxx ${root}/src/option_base.cpp
+build str_buffer.o:      cxx ${root}/src/str_buffer.cpp
+build str_scanner.o:     cxx ${root}/src/str_scanner.cpp
+build value_formatter.o: cxx ${root}/src/value_formatter.cpp
+build value_parser.o:    cxx ${root}/src/value_parser.cpp
+
+# mc6809
+build asm_mc6809.o:   cxx ${root}/src/asm_mc6809.cpp
+build dis_mc6809.o:   cxx ${root}/src/dis_mc6809.cpp
+build reg_mc6809.o:   cxx ${root}/src/reg_mc6809.cpp
+build table_mc6809.o: cxx ${root}/src/table_mc6809.cpp
+
+# mc6800
+build asm_mc6800.o:   cxx ${root}/src/asm_mc6800.cpp
+build dis_mc6800.o:   cxx ${root}/src/dis_mc6800.cpp
+build reg_mc6800.o:   cxx ${root}/src/reg_mc6800.cpp
+build table_mc6800.o: cxx ${root}/src/table_mc6800.cpp
+
+# mc6805
+build asm_mc6805.o:   cxx ${root}/src/asm_mc6805.cpp
+build dis_mc6805.o:   cxx ${root}/src/dis_mc6805.cpp
+build reg_mc6805.o:   cxx ${root}/src/reg_mc6805.cpp
+build table_mc6805.o: cxx ${root}/src/table_mc6805.cpp
+
+# mos6502
+build asm_mos6502.o:   cxx ${root}/src/asm_mos6502.cpp
+build dis_mos6502.o:   cxx ${root}/src/dis_mos6502.cpp
+build reg_mos6502.o:   cxx ${root}/src/reg_mos6502.cpp
+build table_mos6502.o: cxx ${root}/src/table_mos6502.cpp
+
+# i8048
+build asm_i8048.o:   cxx ${root}/src/asm_i8048.cpp
+build dis_i8048.o:   cxx ${root}/src/dis_i8048.cpp
+build reg_i8048.o:   cxx ${root}/src/reg_i8048.cpp
+build table_i8048.o: cxx ${root}/src/table_i8048.cpp
+
+# i8051
+build asm_i8051.o:   cxx ${root}/src/asm_i8051.cpp
+build dis_i8051.o:   cxx ${root}/src/dis_i8051.cpp
+build reg_i8051.o:   cxx ${root}/src/reg_i8051.cpp
+build table_i8051.o: cxx ${root}/src/table_i8051.cpp
+
+# i8080
+build asm_i8080.o:   cxx ${root}/src/asm_i8080.cpp
+build dis_i8080.o:   cxx ${root}/src/dis_i8080.cpp
+build reg_i8080.o:   cxx ${root}/src/reg_i8080.cpp
+build table_i8080.o: cxx ${root}/src/table_i8080.cpp
+
+# i8096
+build asm_i8096.o:   cxx ${root}/src/asm_i8096.cpp
+build dis_i8096.o:   cxx ${root}/src/dis_i8096.cpp
+build reg_i8096.o:   cxx ${root}/src/reg_i8096.cpp
+build table_i8096.o: cxx ${root}/src/table_i8096.cpp
+
+# z80
+build asm_z80.o:   cxx ${root}/src/asm_z80.cpp
+build dis_z80.o:   cxx ${root}/src/dis_z80.cpp
+build reg_z80.o:   cxx ${root}/src/reg_z80.cpp
+build table_z80.o: cxx ${root}/src/table_z80.cpp
+
+# z8
+build asm_z8.o:   cxx ${root}/src/asm_z8.cpp
+build dis_z8.o:   cxx ${root}/src/dis_z8.cpp
+build reg_z8.o:   cxx ${root}/src/reg_z8.cpp
+build table_z8.o: cxx ${root}/src/table_z8.cpp
+
+# tlcs90
+build asm_tlcs90.o:   cxx ${root}/src/asm_tlcs90.cpp
+build dis_tlcs90.o:   cxx ${root}/src/dis_tlcs90.cpp
+build reg_tlcs90.o:   cxx ${root}/src/reg_tlcs90.cpp
+build table_tlcs90.o: cxx ${root}/src/table_tlcs90.cpp
+
+# ins8060
+build asm_ins8060.o:   cxx ${root}/src/asm_ins8060.cpp
+build dis_ins8060.o:   cxx ${root}/src/dis_ins8060.cpp
+build reg_ins8060.o:   cxx ${root}/src/reg_ins8060.cpp
+build table_ins8060.o: cxx ${root}/src/table_ins8060.cpp
+
+# ins8070
+build asm_ins8070.o:   cxx ${root}/src/asm_ins8070.cpp
+build dis_ins8070.o:   cxx ${root}/src/dis_ins8070.cpp
+build reg_ins8070.o:   cxx ${root}/src/reg_ins8070.cpp
+build table_ins8070.o: cxx ${root}/src/table_ins8070.cpp
+
+# cdp1802
+build asm_cdp1802.o:   cxx ${root}/src/asm_cdp1802.cpp
+build dis_cdp1802.o:   cxx ${root}/src/dis_cdp1802.cpp
+build reg_cdp1802.o:   cxx ${root}/src/reg_cdp1802.cpp
+build table_cdp1802.o: cxx ${root}/src/table_cdp1802.cpp
+
+# scn2650
+build asm_scn2650.o:   cxx ${root}/src/asm_scn2650.cpp
+build dis_scn2650.o:   cxx ${root}/src/dis_scn2650.cpp
+build reg_scn2650.o:   cxx ${root}/src/reg_scn2650.cpp
+build table_scn2650.o: cxx ${root}/src/table_scn2650.cpp
+
+# i8086
+build asm_i8086.o:   cxx ${root}/src/asm_i8086.cpp
+build dis_i8086.o:   cxx ${root}/src/dis_i8086.cpp
+build reg_i8086.o:   cxx ${root}/src/reg_i8086.cpp
+build table_i8086.o: cxx ${root}/src/table_i8086.cpp
+
+# tms9900
+build asm_tms9900.o:   cxx ${root}/src/asm_tms9900.cpp
+build dis_tms9900.o:   cxx ${root}/src/dis_tms9900.cpp
+build reg_tms9900.o:   cxx ${root}/src/reg_tms9900.cpp
+build table_tms9900.o: cxx ${root}/src/table_tms9900.cpp
+
+# tms32010
+build asm_tms32010.o:   cxx ${root}/src/asm_tms32010.cpp
+build dis_tms32010.o:   cxx ${root}/src/dis_tms32010.cpp
+build reg_tms32010.o:   cxx ${root}/src/reg_tms32010.cpp
+build table_tms32010.o: cxx ${root}/src/table_tms32010.cpp
+
+# mc68000
+build asm_mc68000.o:   cxx ${root}/src/asm_mc68000.cpp
+build dis_mc68000.o:   cxx ${root}/src/dis_mc68000.cpp
+build reg_mc68000.o:   cxx ${root}/src/reg_mc68000.cpp
+build table_mc68000.o: cxx ${root}/src/table_mc68000.cpp
+
+# z8000
+build asm_z8000.o:   cxx ${root}/src/asm_z8000.cpp
+build dis_z8000.o:   cxx ${root}/src/dis_z8000.cpp
+build reg_z8000.o:   cxx ${root}/src/reg_z8000.cpp
+build table_z8000.o: cxx ${root}/src/table_z8000.cpp
+
+# ns32000
+build asm_ns32000.o:   cxx ${root}/src/asm_ns32000.cpp
+build dis_ns32000.o:   cxx ${root}/src/dis_ns32000.cpp
+build reg_ns32000.o:   cxx ${root}/src/reg_ns32000.cpp
+build table_ns32000.o: cxx ${root}/src/table_ns32000.cpp
+
+# mn1610
+build asm_mn1610.o:   cxx ${root}/src/asm_mn1610.cpp
+build dis_mn1610.o:   cxx ${root}/src/dis_mn1610.cpp
+build reg_mn1610.o:   cxx ${root}/src/reg_mn1610.cpp
+build table_mn1610.o: cxx ${root}/src/table_mn1610.cpp

@@ -5,3 +5,4 @@ build
 .pio
 .cache
 compile_commands.json
+.ninja_log

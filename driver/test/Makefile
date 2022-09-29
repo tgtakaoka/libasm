@@ -32,7 +32,7 @@ vpath %.cpp ../../src
 vpath %.cpp ../../test
 
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
-CPPFLAGS = -MMD -I../../driver -I../../src -I../../test
+CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o
 OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o

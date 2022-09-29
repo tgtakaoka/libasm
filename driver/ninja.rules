@@ -1,0 +1,15 @@
+# Ninja build script for libasm/driver
+# Variable root should be set before subninja
+
+build asm_directive.o:  cxx ${root}/driver/asm_directive.cpp
+build asm_driver.o:     cxx ${root}/driver/asm_driver.cpp
+build asm_formatter.o:  cxx ${root}/driver/asm_formatter.cpp
+build bin_decoder.o:    cxx ${root}/driver/bin_decoder.cpp
+build bin_encoder.o:    cxx ${root}/driver/bin_encoder.cpp
+build bin_memory.o:     cxx ${root}/driver/bin_memory.cpp
+build dis_driver.o:     cxx ${root}/driver/dis_driver.cpp
+build dis_formatter.o:  cxx ${root}/driver/dis_formatter.cpp
+build function_store.o: cxx ${root}/driver/function_store.cpp
+build intel_hex.o:      cxx ${root}/driver/intel_hex.cpp
+build list_formatter.o: cxx ${root}/driver/list_formatter.cpp
+build moto_srec.o:      cxx ${root}/driver/moto_srec.cpp

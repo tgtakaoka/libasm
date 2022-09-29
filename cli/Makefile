@@ -39,7 +39,7 @@ vpath %.cpp ../driver
 vpath %.cpp ../src
 
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
-CPPFLAGS = -MMD -I../src -I../driver
+CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_com = str_buffer.o str_scanner.o option_base.o error_reporter.o value_formatter.o \
            $(foreach a,$(ARCHS),$(OBJS_$(a))) \

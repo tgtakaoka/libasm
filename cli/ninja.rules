@@ -1,0 +1,9 @@
+# Ninja build script for libasm/cli
+# Variable root should be set before subninja
+
+build asm.o:           cxx ${root}/cli/asm.cpp
+build asm_commander.o: cxx ${root}/cli/asm_commander.cpp
+build dis.o:           cxx ${root}/cli/dis.cpp
+build dis_commander.o: cxx ${root}/cli/dis_commander.cpp
+build file_printer.o:  cxx ${root}/cli/file_printer.cpp
+build file_reader.o:   cxx ${root}/cli/file_reader.cpp

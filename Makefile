@@ -34,6 +34,7 @@ clean:
 	$(MAKE) -C driver/test clean
 	$(MAKE) -C examples clean
 	rm -f $$(find . -type f -a -name '*~')
+	rm -f $$(find . -type f -a -name '.ninja_log')
 
 .PHONY: help clean pio
 

@@ -1,0 +1,10 @@
+# Ninja build script for libasm/driver/test
+# Variable root should be set before subninja
+
+build test_asm_formatter.o: cxx test_asm_formatter.cpp
+build test_bin_memory.o:    cxx test_bin_memory.cpp
+build test_dis_formatter.o: cxx test_dis_formatter.cpp
+build test_driver_helper.o: cxx test_driver_helper.cpp
+build test_helpers.o:       cxx test_helpers.cpp
+build test_intel_hex.o:     cxx test_intel_hex.cpp
+build test_moto_srec.o:     cxx test_moto_srec.cpp

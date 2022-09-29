@@ -35,7 +35,7 @@ vpath %.cpp ../src
 vpath %.cpp ../driver
 
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
-CPPFLAGS = -MMD -I../src -I../driver
+CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_test = test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o

@@ -1,0 +1,27 @@
+# Ninja build script for libasm/src/test
+
+root = ../..
+cxxflags = -std=c++14 -Wall -O ${debug_flags}
+cppflags = -I${root}/src -I${root}/test
+
+rule cxx
+  depfile = ${out}.d
+  command = g++ ${cxxflags} ${cppflags} -MD -MF ${out}.d -c ${in} -o ${out}
+
+rule test
+  command = g++ ${cxxflags} ${in} -o ${out} && ./${out}
+
+subninja ${root}/src/ninja.rules
+subninja ${root}/test/ninja.rules
+subninja ${root}/test/unittest/ninja.rules
+
+build test_array_memory: test test_array_memory.o $
+  test_src_helper.o test_asserter.o error_reporter.o
+build test_str_buffer:   test test_str_buffer.o str_buffer.o $
+  test_src_helper.o test_asserter.o error_reporter.o
+build test_str_scanner:  test test_str_scanner.o str_scanner.o $
+  test_src_helper.o test_asserter.o error_reporter.o
+
+build test: phony test_array_memory test_str_buffer test_str_scanner
+
+default test

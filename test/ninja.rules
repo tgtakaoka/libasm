@@ -1,0 +1,129 @@
+# Ninja build script for libasm/test
+# Variable root should be set before subninja
+
+# test
+build test_asserter.o:    cxx ${root}/test/test_asserter.cpp
+build test_asm_helper.o:  cxx ${root}/test/test_asm_helper.cpp
+build test_dis_helper.o:  cxx ${root}/test/test_dis_helper.cpp
+build test_expr_helper.o: cxx ${root}/test/test_expr_helper.cpp
+
+# gen
+build gen_driver.o:      cxx ${root}/test/gen_driver.cpp
+build test_generator.o:  cxx ${root}/test/test_generator.cpp
+build tokenized_text.o:  cxx ${root}/test/tokenized_text.cpp
+
+# mc6809
+build test_asm_mc6809.o: cxx ${root}/test/test_asm_mc6809.cpp
+build test_dis_mc6809.o: cxx ${root}/test/test_dis_mc6809.cpp
+build gen_mc6809.o:      cxx ${root}/test/gen_mc6809.cpp
+
+# mc6800
+build test_asm_mc6800.o: cxx ${root}/test/test_asm_mc6800.cpp
+build test_dis_mc6800.o: cxx ${root}/test/test_dis_mc6800.cpp
+build gen_mc6800.o:      cxx ${root}/test/gen_mc6800.cpp
+
+# mc6805
+build test_asm_mc6805.o: cxx ${root}/test/test_asm_mc6805.cpp
+build test_dis_mc6805.o: cxx ${root}/test/test_dis_mc6805.cpp
+build gen_mc6805.o:      cxx ${root}/test/gen_mc6805.cpp
+
+# mos6502
+build test_asm_mos6502.o: cxx ${root}/test/test_asm_mos6502.cpp
+build test_dis_mos6502.o: cxx ${root}/test/test_dis_mos6502.cpp
+build gen_mos6502.o:      cxx ${root}/test/gen_mos6502.cpp
+
+# i8048
+build test_asm_i8048.o: cxx ${root}/test/test_asm_i8048.cpp
+build test_dis_i8048.o: cxx ${root}/test/test_dis_i8048.cpp
+build gen_i8048.o:      cxx ${root}/test/gen_i8048.cpp
+
+# i8051
+build test_asm_i8051.o: cxx ${root}/test/test_asm_i8051.cpp
+build test_dis_i8051.o: cxx ${root}/test/test_dis_i8051.cpp
+build gen_i8051.o:      cxx ${root}/test/gen_i8051.cpp
+
+# i8080
+build test_asm_i8080.o: cxx ${root}/test/test_asm_i8080.cpp
+build test_dis_i8080.o: cxx ${root}/test/test_dis_i8080.cpp
+build gen_i8080.o:      cxx ${root}/test/gen_i8080.cpp
+
+# i8096
+build test_asm_i8096.o: cxx ${root}/test/test_asm_i8096.cpp
+build test_dis_i8096.o: cxx ${root}/test/test_dis_i8096.cpp
+build gen_i8096.o:      cxx ${root}/test/gen_i8096.cpp
+
+# z80
+build test_asm_z80.o: cxx ${root}/test/test_asm_z80.cpp
+build test_dis_z80.o: cxx ${root}/test/test_dis_z80.cpp
+build gen_z80.o:      cxx ${root}/test/gen_z80.cpp
+
+# z8
+build test_asm_z8.o: cxx ${root}/test/test_asm_z8.cpp
+build test_dis_z8.o: cxx ${root}/test/test_dis_z8.cpp
+build gen_z8.o:      cxx ${root}/test/gen_z8.cpp
+
+# tlcs90
+build test_asm_tlcs90.o: cxx ${root}/test/test_asm_tlcs90.cpp
+build test_dis_tlcs90.o: cxx ${root}/test/test_dis_tlcs90.cpp
+build gen_tlcs90.o:      cxx ${root}/test/gen_tlcs90.cpp
+
+# ins8060
+build test_asm_ins8060.o: cxx ${root}/test/test_asm_ins8060.cpp
+build test_dis_ins8060.o: cxx ${root}/test/test_dis_ins8060.cpp
+build gen_ins8060.o:      cxx ${root}/test/gen_ins8060.cpp
+
+# ins8070
+build test_asm_ins8070.o: cxx ${root}/test/test_asm_ins8070.cpp
+build test_dis_ins8070.o: cxx ${root}/test/test_dis_ins8070.cpp
+build gen_ins8070.o:      cxx ${root}/test/gen_ins8070.cpp
+
+# cdp1802
+build test_asm_cdp1802.o: cxx ${root}/test/test_asm_cdp1802.cpp
+build test_dis_cdp1802.o: cxx ${root}/test/test_dis_cdp1802.cpp
+build gen_cdp1802.o:      cxx ${root}/test/gen_cdp1802.cpp
+
+# scn2650
+build test_asm_scn2650.o: cxx ${root}/test/test_asm_scn2650.cpp
+build test_dis_scn2650.o: cxx ${root}/test/test_dis_scn2650.cpp
+build gen_scn2650.o:      cxx ${root}/test/gen_scn2650.cpp
+
+# i8086
+build test_asm_i8086.o: cxx ${root}/test/test_asm_i8086.cpp
+build test_dis_i8086.o: cxx ${root}/test/test_dis_i8086.cpp
+build gen_i8086.o:      cxx ${root}/test/gen_i8086.cpp
+
+# tms9900
+build test_asm_tms9900.o: cxx ${root}/test/test_asm_tms9900.cpp
+build test_dis_tms9900.o: cxx ${root}/test/test_dis_tms9900.cpp
+build gen_tms9900.o:      cxx ${root}/test/gen_tms9900.cpp
+
+# tms32010
+build test_asm_tms32010.o: cxx ${root}/test/test_asm_tms32010.cpp
+build test_dis_tms32010.o: cxx ${root}/test/test_dis_tms32010.cpp
+build gen_tms32010.o:      cxx ${root}/test/gen_tms32010.cpp
+
+# mc68000
+build test_asm_mc68000.o: cxx ${root}/test/test_asm_mc68000.cpp
+build test_dis_mc68000.o: cxx ${root}/test/test_dis_mc68000.cpp
+build gen_mc68000.o:      cxx ${root}/test/gen_mc68000.cpp
+
+# z8000
+build test_asm_z8000.o: cxx ${root}/test/test_asm_z8000.cpp
+build test_dis_z8000.o: cxx ${root}/test/test_dis_z8000.cpp
+build gen_z8000.o:      cxx ${root}/test/gen_z8000.cpp
+
+# ns32000
+build test_asm_ns32000.o: cxx ${root}/test/test_asm_ns32000.cpp
+build test_dis_ns32000.o: cxx ${root}/test/test_dis_ns32000.cpp
+build gen_ns32000.o:      cxx ${root}/test/gen_ns32000.cpp
+
+# mn1610
+build test_asm_mn1610.o: cxx ${root}/test/test_asm_mn1610.cpp
+build test_dis_mn1610.o: cxx ${root}/test/test_dis_mn1610.cpp
+build gen_mn1610.o:      cxx ${root}/test/gen_mn1610.cpp
+
+# expr
+build test_expr_base.o:     cxx ${root}/test/test_expr_base.cpp
+build test_expr_intel.o:    cxx ${root}/test/test_expr_intel.cpp
+build test_expr_motorola.o: cxx ${root}/test/test_expr_motorola.cpp
+build test_expr_national.o: cxx ${root}/test/test_expr_national.cpp
