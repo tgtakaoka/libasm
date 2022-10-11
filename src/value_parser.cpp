@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "value_parser.h"
 
 #include <ctype.h>
@@ -270,13 +271,14 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
             _funcParser->setAt(p);
         const StrScanner symbol = readSymbol(p);
         if (*p.skipSpaces() == '(' && _funcParser) {
-            StrScanner f(p);
-            if (_funcParser->parseFunc(*this, symbol, ++f, val, symtab) == OK) {
-                if (!f.expect(')')) {
+            StrScanner params(p);
+            params.expect('(');
+            if (_funcParser->parseFunc(*this, symbol, params, val, symtab) == OK) {
+                if (!params.expect(')')) {
                     setError(p, MISSING_CLOSING_PAREN);
                     return Value();
                 }
-                scan = f;
+                scan = params;
                 return val;
             } else if (_funcParser->getError() != UNKNOWN_FUNCTION) {
                 setError(*_funcParser);

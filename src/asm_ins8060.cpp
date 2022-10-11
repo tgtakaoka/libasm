@@ -40,7 +40,7 @@ static struct : public ValueParser::FuncParser {
         } else {
             return setError(UNKNOWN_FUNCTION);
         }
-        return OK;
+        return setOK();
     }
 } functionParser;
 
