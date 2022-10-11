@@ -49,7 +49,7 @@ private:
     Error encodeIcRelative(InsnMn1610 &insn, const Operand &op);
     Error encodeGenericAddress(InsnMn1610 &insn, const Operand &op);
     Error encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mn1610

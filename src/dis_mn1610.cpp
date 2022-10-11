@@ -181,7 +181,7 @@ StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mo
     return out.comma();
 }
 
-Error DisMn1610::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMn1610 insn(_insn);
     const auto opc = insn.readUint16(memory);
 

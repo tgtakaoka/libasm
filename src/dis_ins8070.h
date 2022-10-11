@@ -53,7 +53,7 @@ private:
     Error decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;
     static const char OPT_DESC_IMM_PREFIX[] PROGMEM;

@@ -197,7 +197,7 @@ Error AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode m
     return OK;
 }
 
-Error AsmScn2650::encode(StrScanner &scan, Insn &_insn) {
+Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnScn2650 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

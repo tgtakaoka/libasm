@@ -64,7 +64,7 @@ private:
             DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos);
     Error readCodes(DisMemory &memory, InsnI8086 &insn);
     Error decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_SEGMENT_INSN[] PROGMEM;
     static const char OPT_DESC_SEGMENT_INSN[] PROGMEM;

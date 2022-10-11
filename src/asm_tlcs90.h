@@ -39,7 +39,7 @@ private:
     Error encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
     Error encodeOperand(
             InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace tlcs90

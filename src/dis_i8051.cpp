@@ -123,7 +123,7 @@ Error DisI8051::decodeOperand(DisMemory &memory, InsnI8051 &insn, StrBuffer &out
     return setOK();
 }
 
-Error DisI8051::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8051 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

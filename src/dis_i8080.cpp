@@ -59,7 +59,7 @@ Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out
     return setError(insn);
 }
 
-Error DisI8080::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8080 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

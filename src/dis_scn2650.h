@@ -40,7 +40,7 @@ private:
     Error decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out);
     Error decodeRelative(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode);
     Error decodeOperand(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, const AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace scn2650

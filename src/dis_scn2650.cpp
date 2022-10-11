@@ -121,7 +121,7 @@ Error DisScn2650::decodeOperand(
     return setOK();
 }
 
-Error DisScn2650::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnScn2650 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

@@ -232,7 +232,7 @@ Error AsmMos6502::processPseudo(StrScanner &scan, const char *name) {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error AsmMos6502::encode(StrScanner &scan, Insn &_insn) {
+Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMos6502 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

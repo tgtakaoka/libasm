@@ -202,7 +202,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmTms9900::encode(StrScanner &scan, Insn &_insn) {
+Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnTms9900 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

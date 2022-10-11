@@ -139,7 +139,7 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, 
     return OK;
 }
 
-Error DisTlcs90::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTlcs90 insn(_insn);
     Operand preOp;
     if (TableTlcs90::TABLE.readInsn(memory, insn, preOp))

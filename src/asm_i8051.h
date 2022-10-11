@@ -45,7 +45,7 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     Error encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace i8051

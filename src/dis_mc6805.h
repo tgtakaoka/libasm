@@ -60,7 +60,7 @@ private:
     Error decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_INT_PCBITS[] PROGMEM;
     static const char OPT_DESC_PCBITS[] PROGMEM;

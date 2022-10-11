@@ -180,7 +180,7 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
     return setError(insn.getError());
 }
 
-Error DisI8096::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8096 insn(_insn);
     const auto opc = insn.readByte(memory);
     if (TableI8096::TABLE.isPrefix(opc)) {

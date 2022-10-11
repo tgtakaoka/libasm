@@ -50,7 +50,7 @@ private:
     Error emitRelative(InsnIns8070 &insn, const Operand &op);
     Error emitGeneric(InsnIns8070 &insn, const Operand &op);
     Error emitOperand(InsnIns8070 &insn, OprFormat format, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace ins8070

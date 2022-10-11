@@ -70,7 +70,7 @@ private:
     char transferMemoryMode(Operand &op) const;
     Error encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
     Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_SETDP[] PROGMEM;
     static const char OPT_DESC_SETDP[] PROGMEM;

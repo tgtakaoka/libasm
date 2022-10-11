@@ -42,7 +42,7 @@ private:
     Error decodeAddress(DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode);
     Error decodeImmediate(DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode);
     Error decodeOperand(DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace i8048

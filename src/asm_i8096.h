@@ -48,7 +48,7 @@ private:
     Error emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace i8096

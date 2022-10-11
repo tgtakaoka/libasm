@@ -86,7 +86,7 @@ private:
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
     Error encodePostByte(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_SETRP[] PROGMEM;
     static const char OPT_DESC_SETRP[] PROGMEM;

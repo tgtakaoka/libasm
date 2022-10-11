@@ -395,7 +395,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ8::encode(StrScanner &scan, Insn &_insn) {
+Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnZ8 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

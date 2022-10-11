@@ -183,7 +183,7 @@ protected:
     }
 
 private:
-    virtual Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) = 0;
+    virtual Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) = 0;
 };
 
 }  // namespace libasm

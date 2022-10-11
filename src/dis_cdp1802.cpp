@@ -62,7 +62,7 @@ Error DisCdp1802::decodeOperand(
     return setError(insn);
 }
 
-Error DisCdp1802::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnCdp1802 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

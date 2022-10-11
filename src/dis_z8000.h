@@ -72,7 +72,7 @@ private:
             DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, ModeField field);
     Error checkPostWord(const InsnZ8000 &insn);
     Error checkRegisterOverlap(const InsnZ8000 &insn);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM;
     static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM;

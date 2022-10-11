@@ -344,7 +344,7 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
     return setError(insn);
 }
 
-Error DisZ8::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnZ8 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))

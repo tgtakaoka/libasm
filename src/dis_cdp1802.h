@@ -45,7 +45,7 @@ private:
     const Options _options{_opt_useReg};
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
     static const char OPT_DESC_USE_REGISTER[] PROGMEM;

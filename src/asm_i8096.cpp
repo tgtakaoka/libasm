@@ -174,7 +174,7 @@ Error AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
     }
 }
 
-Error AsmI8096::encode(StrScanner &scan, Insn &_insn) {
+Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8096 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

@@ -461,7 +461,7 @@ Error AsmI8086::encodeStringInst(InsnI8086 &insn, const Operand &dst, const Oper
     return setOK();
 }
 
-Error AsmI8086::encode(StrScanner &scan, Insn &_insn) {
+Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8086 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

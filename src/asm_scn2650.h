@@ -53,7 +53,7 @@ private:
     Error emitZeroPage(InsnScn2650 &insn, const Operand &op);
     Error emitRelative(InsnScn2650 &insn, const Operand &op);
     Error encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace scn2650

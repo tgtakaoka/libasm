@@ -189,7 +189,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmTlcs90::encode(StrScanner &scan, Insn &_insn) {
+Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnTlcs90 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

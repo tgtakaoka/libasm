@@ -123,7 +123,7 @@ Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer 
     }
 }
 
-Error DisIns8070::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnIns8070 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))

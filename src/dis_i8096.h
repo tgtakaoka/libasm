@@ -53,7 +53,7 @@ private:
 
     StrBuffer &outRegister(StrBuffer &out, uint8_t regno, bool indir = false) const;
     StrBuffer &outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op) const;
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_ABSOLUTE[] PROGMEM;
     static const char OPT_DESC_ABSOLUTE[] PROGMEM;

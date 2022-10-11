@@ -90,7 +90,7 @@ private:
     Error emitRelative(InsnNs32000 &insn, const Operand &op);
     Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_TEXT_FPU[] PROGMEM;
     static const char OPT_DESC_FPU[] PROGMEM;

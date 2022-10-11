@@ -66,7 +66,7 @@ private:
     Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;
     static const char OPT_DESC_INDIRECT_LONG[] PROGMEM;

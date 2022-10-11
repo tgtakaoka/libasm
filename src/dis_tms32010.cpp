@@ -123,7 +123,7 @@ Error DisTms32010::decodeOperand(
     return OK;
 }
 
-Error DisTms32010::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTms32010 insn(_insn);
     Config::opcode_t opCode = insn.readUint16(memory);
 

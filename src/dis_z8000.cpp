@@ -385,7 +385,7 @@ StrBuffer &DisZ8000::outComma(
     return out.comma();
 }
 
-Error DisZ8000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnZ8000 insn(_insn);
     const Config::opcode_t opCode = insn.readUint16(memory);
     if (setError(insn))

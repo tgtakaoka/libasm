@@ -61,7 +61,7 @@ private:
     Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
     Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
     Error decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_WORK_REGISTER[] PROGMEM;
     static const char OPT_DESC_WORK_REGISTER[] PROGMEM;

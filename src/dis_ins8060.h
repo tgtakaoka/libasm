@@ -42,7 +42,7 @@ private:
     Error decodePntr(InsnIns8060 &insn, StrBuffer &out);
     Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out);
     Error decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }
     static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }

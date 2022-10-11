@@ -147,7 +147,7 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
     }
 }
 
-Error AsmMc6800::encode(StrScanner &scan, Insn &_insn) {
+Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6800 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

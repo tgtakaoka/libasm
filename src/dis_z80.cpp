@@ -174,7 +174,7 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, Ad
     return setError(insn);
 }
 
-Error DisZ80::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnZ80 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

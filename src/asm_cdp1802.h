@@ -52,7 +52,7 @@ private:
 
     Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
     static const char OPT_DESC_USE_REGISTER[] PROGMEM;

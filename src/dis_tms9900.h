@@ -43,7 +43,7 @@ private:
     Error decodeModeReg(
             DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, uint8_t mode, uint8_t reg);
     Error decodeOperand(DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace tms9900

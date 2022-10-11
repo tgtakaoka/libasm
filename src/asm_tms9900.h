@@ -48,7 +48,7 @@ private:
     Error encodeCruOffset(InsnTms9900 &insn, const Operand &op);
     Error encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
     Error encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace tms9900

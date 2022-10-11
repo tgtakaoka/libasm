@@ -78,7 +78,7 @@ private:
     Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode,
             OprPos pos, OprSize size);
 
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM;
     static const char OPT_DESC_STROPT_BRACKET[] PROGMEM;

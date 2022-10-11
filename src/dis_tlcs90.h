@@ -39,7 +39,7 @@ private:
     Error readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op);
     Error decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);
     Error decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace tlcs90

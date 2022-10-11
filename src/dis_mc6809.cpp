@@ -278,7 +278,7 @@ Error DisMc6809::decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
     }
 }
 
-Error DisMc6809::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6809 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

@@ -506,7 +506,7 @@ Error AsmMc6809::processPseudo(StrScanner &scan, const char *name) {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error AsmMc6809::encode(StrScanner &scan, Insn &_insn) {
+Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6809 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

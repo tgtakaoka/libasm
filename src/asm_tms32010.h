@@ -45,7 +45,7 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     Error encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace tms32010

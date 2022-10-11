@@ -199,7 +199,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmIns8070::encode(StrScanner &scan, Insn &_insn) {
+Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnIns8070 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

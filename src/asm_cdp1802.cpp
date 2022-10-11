@@ -116,7 +116,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmCdp1802::encode(StrScanner &scan, Insn &_insn) {
+Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnCdp1802 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

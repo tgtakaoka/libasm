@@ -42,7 +42,7 @@ private:
     Error decodeNextArp(StrBuffer &out, uint8_t mam);
     Error decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mnode);
     Error decodeOperand(DisMemory &memory, InsnTms32010 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace tms32010

@@ -148,7 +148,7 @@ Error DisTms9900::decodeOperand(
     }
 }
 
-Error DisTms9900::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTms9900 insn(_insn);
     Config::opcode_t opCode = insn.readUint16(memory);
 

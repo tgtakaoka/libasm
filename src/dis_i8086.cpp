@@ -375,7 +375,7 @@ static bool imulHasSameDstSrc(const InsnI8086 &insn) {
            (modreg & 7) == reg;             // dst==src
 }
 
-Error DisI8086::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn))
         return getError();

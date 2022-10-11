@@ -47,7 +47,7 @@ private:
     Error emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op);
     Error emitBitNumber(InsnMc6800 &insn, const Operand &op);
     Error emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace mc6800

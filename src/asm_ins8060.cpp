@@ -136,7 +136,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmIns8060::encode(StrScanner &scan, Insn &_insn) {
+Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnIns8060 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

@@ -73,7 +73,7 @@ private:
     Error checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt = REG_UNDEF);
     Error checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
             const Operand &cntOp);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
     static const char OPT_DESC_SHORT_DIRECT[] PROGMEM;

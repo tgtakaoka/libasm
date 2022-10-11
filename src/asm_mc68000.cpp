@@ -397,7 +397,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmMc68000::encode(StrScanner &scan, Insn &_insn) {
+Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc68000 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

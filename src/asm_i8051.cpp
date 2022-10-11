@@ -171,7 +171,7 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
     }
 }
 
-Error AsmI8051::encode(StrScanner &scan, Insn &_insn) {
+Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8051 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

@@ -113,7 +113,7 @@ Error DisI8048::decodeOperand(
     return setOK();
 }
 
-Error DisI8048::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8048 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

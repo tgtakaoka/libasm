@@ -43,7 +43,7 @@ private:
     Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
     Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mc6800

@@ -39,7 +39,7 @@ private:
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace i8080

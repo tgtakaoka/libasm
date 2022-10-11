@@ -135,7 +135,7 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
     return getError();
 }
 
-Error DisMc6800::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6800 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

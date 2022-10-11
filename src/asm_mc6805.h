@@ -61,7 +61,7 @@ private:
     Error emitRelative(InsnMc6805 &insn, const Operand &op);
     Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
     Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_PCBITS[] PROGMEM;
     static const char OPT_DESC_PCBITS[] PROGMEM;

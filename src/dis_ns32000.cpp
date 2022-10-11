@@ -461,7 +461,7 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
     return OK;
 }
 
-Error DisNs32000::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnNs32000 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

@@ -69,7 +69,7 @@ private:
     Error emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }
 

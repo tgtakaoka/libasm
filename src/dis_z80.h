@@ -45,7 +45,7 @@ private:
     Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
     Error decodeRelative(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace z80

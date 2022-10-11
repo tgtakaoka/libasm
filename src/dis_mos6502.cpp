@@ -176,7 +176,7 @@ Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffe
     return setOK();
 }
 
-Error DisMos6502::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMos6502 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))

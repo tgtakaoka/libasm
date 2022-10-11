@@ -46,7 +46,7 @@ private:
 
     Error encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op);
     Error encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace i8048

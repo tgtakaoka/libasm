@@ -82,7 +82,7 @@ private:
     Error emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
     Error emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
     Error encodeStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;
     static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM;

@@ -92,7 +92,7 @@ protected:
     static const char OPT_DESC_COMMENT[] PROGMEM;
 
 private:
-    virtual Error encode(StrScanner &scan, Insn &insn) = 0;
+    virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
 };
 
 }  // namespace libasm

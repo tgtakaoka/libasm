@@ -132,7 +132,7 @@ Error DisMc6805::decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &o
     }
 }
 
-Error DisMc6805::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6805 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

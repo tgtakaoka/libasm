@@ -303,7 +303,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     return op.setError(UNKNOWN_OPERAND);
 }
 
-Error AsmMn1610::encode(StrScanner &scan, Insn &_insn) {
+Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMn1610 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

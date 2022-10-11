@@ -47,7 +47,7 @@ private:
     Error encodeRel8(InsnIns8060 &insn, const Operand &op);
     Error encodeIndx(InsnIns8060 &insn, const Operand &op);
 
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
 }  // namespace ins8060

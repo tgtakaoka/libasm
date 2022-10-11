@@ -45,7 +45,7 @@ private:
     Error outIndirect(StrBuffer &out, Config::opcode_t opc);
     StrBuffer &outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode);
     Error decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mn1610

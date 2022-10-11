@@ -63,7 +63,7 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op, Operand &extra) const;
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
-    Error encode(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_LONGA[] PROGMEM;
     static const char OPT_DESC_LONGA[] PROGMEM;

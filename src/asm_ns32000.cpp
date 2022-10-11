@@ -656,7 +656,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
     return UNKNOWN_INSTRUCTION;
 }
 
-Error AsmNs32000::encode(StrScanner &scan, Insn &_insn) {
+Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnNs32000 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

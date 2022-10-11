@@ -67,7 +67,7 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
     return setError(insn);
 }
 
-Error DisIns8060::decode(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnIns8060 insn(_insn);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))

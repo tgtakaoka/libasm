@@ -138,7 +138,7 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmTms32010::encode(StrScanner &scan, Insn &_insn) {
+Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnTms32010 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

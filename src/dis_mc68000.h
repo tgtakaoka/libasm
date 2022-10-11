@@ -51,7 +51,7 @@ private:
             uint8_t modePos, uint8_t regPos, OprSize size, uint16_t opr16);
     Error checkOperand(AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mc68000

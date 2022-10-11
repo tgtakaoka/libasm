@@ -52,7 +52,7 @@ private:
     Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
 
     Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
-    Error decode(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 
 }  // namespace mc6809

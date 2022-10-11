@@ -515,7 +515,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     return OK;
 }
 
-Error AsmZ8000::encode(StrScanner &scan, Insn &_insn) {
+Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnZ8000 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 

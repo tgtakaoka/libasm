@@ -177,13 +177,13 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
             return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
-    case M_BNO:  // handled in encode(Insn)
+    case M_BNO:  // handled in encodeImpl(Insn)
     default:
         return OK;
     }
 }
 
-Error AsmMc6805::encode(StrScanner &scan, Insn &_insn) {
+Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6805 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
