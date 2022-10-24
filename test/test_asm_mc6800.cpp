@@ -24,8 +24,12 @@ using namespace libasm::test;
 AsmMc6800 as6800;
 Assembler &assembler(as6800);
 
+static bool mb8861() {
+    return strcasecmp_P("MB8861", assembler.cpu_P()) == 0;
+}
+
 static bool m6800() {
-    return strcmp_P("6800", assembler.cpu_P()) == 0;
+    return strcmp_P("6800", assembler.cpu_P()) == 0 || mb8861();
 }
 
 static bool hd6301() {
@@ -64,6 +68,9 @@ void test_cpu() {
 
     EQUALS("cpu MC6800", true,   assembler.setCpu("mc6800"));
     EQUALS_P("cpu MC6800", "6800", assembler.cpu_P());
+
+    EQUALS("cpu mb8861", true, assembler.setCpu("mb8861"));
+    EQUALS_P("cpu MB8861", "MB8861", assembler.cpu_P());
 
     EQUALS("cpu MC6801", true,   assembler.setCpu("mc6801"));
     EQUALS_P("cpu MC6801", "6801", assembler.cpu_P());
@@ -425,6 +432,13 @@ static void test_immediate() {
     TEST("LDS #$90A0", 0x8E, 0x90, 0xA0);
     ERRT("STS #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
 
+    if (mb8861()) {
+        // MB8861
+        TEST("ADX #$90", 0xEC, 0x90);
+    } else {
+        ERUI("ADX #$90");
+    }
+
     if (m6801()) {
         // MC6801
         TEST("SUBD #$90A0", 0x83, 0x90, 0xA0);
@@ -610,6 +624,13 @@ static void test_extended() {
 
     TEST("JMP $0034", 0x7E, 0x00, 0x34);
     TEST("JSR $1234", 0xBD, 0x12, 0x34);
+
+    if (mb8861()) {
+        // MB8861
+        TEST("ADX $1234", 0xFC, 0x12, 0x34);
+    } else {
+        ERUI("ADX $1234");
+    }
 
     if (m6801()) {
         // MC6801
@@ -875,11 +896,27 @@ static void test_bit_ops() {
             ERUI("BSET 6,$90");
         }
         ERUI("AIM #$88,$90");
-        ERUI("OIM #$44,$90");
+        if (mb8861()) {
+            ERRT("OIM #$44,$90", OPERAND_NOT_ALLOWED, "#$44,$90");
+        } else {
+            ERUI("OIM #$44,$90");
+        }
         ERUI("EIM #$22,$90");
         ERUI("TIM #$11,$90");
         ERUI("BTGL   1,$90");
         ERUI("BTST   0,$90");
+    }
+
+    if (mb8861()) {
+        // MB8861
+        TEST("NIM #$88, 0,X",   0x71, 0x88, 0x00);
+        TEST("OIM #$44, 1,X",   0x72, 0x44, 0x01);
+        TEST("XIM #$22, 128,X", 0x75, 0x22, 0x80);
+        TEST("TMM #$33, 255,X", 0x7B, 0x33, 0xFF);
+    } else {
+        ERUI("NIM #$88, 0,X");
+        ERUI("XIM #$22, 128,X");
+        ERUI("TMM #$33, 255,X");
     }
 
     symtab.intern(0x90, "dir90");

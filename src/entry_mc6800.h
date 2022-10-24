@@ -27,6 +27,7 @@ namespace mc6800 {
 
 enum CpuType : uint8_t {
     MC6800,
+    MB8861,
     MC6801,
     HD6301,
     MC68HC11,
@@ -44,10 +45,10 @@ enum AddrMode : uint8_t {
     M_GN16 = 8,  // Generic, M_IM16/M_DIR/M_IDX/M_EXT
     M_GMEM = 9,  // Generic memory, M_IDX/M_EXT
     // HD6301
-    M_BMM = 10,   // Bit number or Immediate (for disassembler)
+    M_BMM = 10,  // Bit number or Immediate (for disassembler)
     M_BIT = 11,  // Bit number (for assembler)
     // MC68HC11
-    M_IDY = 12,    // Indexed Y
+    M_IDY = 12,  // Indexed Y
 };
 
 class Entry : public EntryBase<Config> {
@@ -55,7 +56,8 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3, bool undef = false) {
+        static constexpr Flags create(
+                AddrMode op1, AddrMode op2, AddrMode op3, bool undef = false) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(op1) << op1_gp) |
                                                (static_cast<uint16_t>(op2) << op2_gp) |
                                                (static_cast<uint16_t>(op3) << op3_gp) |

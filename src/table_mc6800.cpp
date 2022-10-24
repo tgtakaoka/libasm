@@ -274,6 +274,24 @@ static constexpr uint8_t MC6800_INDEX[] PROGMEM = {
      44,  // TEXT_WAI
 };
 
+static constexpr Entry MB8861_TABLE[] PROGMEM = {
+    E2(0x71, TEXT_NIM, M_IM8, M_IDX),
+    E2(0x72, TEXT_OIM, M_IM8, M_IDX),
+    E2(0x75, TEXT_XIM, M_IM8, M_IDX),
+    E2(0x7B, TEXT_TMM, M_IM8, M_IDX),
+    E1(0xEC, TEXT_ADX, M_IM8),
+    E1(0xFC, TEXT_ADX, M_EXT),
+};
+
+static constexpr uint8_t MB8861_INDEX[] PROGMEM = {
+      4,  // TEXT_ADX
+      5,  // TEXT_ADX
+      0,  // TEXT_NIM
+      1,  // TEXT_OIM
+      3,  // TEXT_TMM
+      2,  // TEXT_XIM
+};
+
 static constexpr Entry MC6801_TABLE[] PROGMEM = {
     E0(0x04, TEXT_LSRD),
     E0(0x05, TEXT_ASLD),
@@ -565,6 +583,11 @@ static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
 };
 
+static constexpr TableMc6800::EntryPage MB8861_PAGES[] PROGMEM = {
+        {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
+        {PREFIX_P00, ARRAY_RANGE(MB8861_TABLE), ARRAY_RANGE(MB8861_INDEX)},
+};
+
 static constexpr TableMc6800::EntryPage MC6801_PAGES[] PROGMEM = {
         {PREFIX_P00, ARRAY_RANGE(MC6801_TABLE), ARRAY_RANGE(MC6801_INDEX)},
         {PREFIX_P00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
@@ -587,6 +610,7 @@ static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
 
 static constexpr TableMc6800::Cpu CPU_TABLES[] PROGMEM = {
         {MC6800, TEXT_CPU_6800, ARRAY_RANGE(MC6800_PAGES)},
+        {MB8861, TEXT_CPU_MB8861, ARRAY_RANGE(MB8861_PAGES)},
         {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
         {HD6301, TEXT_CPU_6301, ARRAY_RANGE(HD6301_PAGES)},
         {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},

@@ -23,14 +23,15 @@ namespace libasm {
 namespace mc6800 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MC6801, HD6301, MC68HC11";
+static const char TEXT_CPU_LIST[] PROGMEM = "MC6800, MB8861, MC6801, HD6301, MC68HC11";
 static const char TEXT_CPU_6800[] PROGMEM = "6800";
 static const char TEXT_CPU_6801[] PROGMEM = "6801";
 static const char TEXT_CPU_6301[] PROGMEM = "6301";
 static const char TEXT_CPU_6811[] PROGMEM = "6811";
+static const char TEXT_CPU_MB8861[] PROGMEM = "MB8861";
 static constexpr const char *TEXT_CPU_MC   = TEXT_CPU_LIST;
-static constexpr const char *TEXT_CPU_HD   = (TEXT_CPU_LIST + 16);
-static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 26);
+static constexpr const char *TEXT_CPU_HD   = (TEXT_CPU_LIST + 24);
+static constexpr const char *TEXT_CPU_68HC11 = (TEXT_CPU_LIST + 34);
 
 // MC6800
 static const char TEXT_ABA[]  PROGMEM = "ABA";
@@ -158,6 +159,12 @@ static const char TEXT_TSTB[] PROGMEM = "TSTB";
 static const char TEXT_TSX[]  PROGMEM = "TSX";
 static const char TEXT_TXS[]  PROGMEM = "TXS";
 static const char TEXT_WAI[]  PROGMEM = "WAI";
+
+// MB8861
+static const char TEXT_ADX[] PROGMEM = "ADX";
+static const char TEXT_NIM[] PROGMEM = "NIM";
+static const char TEXT_TMM[] PROGMEM = "TMM";
+static const char TEXT_XIM[] PROGMEM = "XIM";
 
 // MC6801
 static const char TEXT_ABX[]  PROGMEM = "ABX";

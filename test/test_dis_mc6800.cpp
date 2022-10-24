@@ -25,8 +25,12 @@ using namespace libasm::test;
 DisMc6800 dis6800;
 Disassembler &disassembler(dis6800);
 
+static bool mb8861() {
+    return strcasecmp_P("MB8861", disassembler.cpu_P()) == 0;
+}
+
 static bool m6800() {
-    return strcmp_P("6800", disassembler.cpu_P()) == 0;
+    return strcmp_P("6800", disassembler.cpu_P()) == 0 || mb8861();
 }
 
 static bool hd6301() {
@@ -49,7 +53,7 @@ static void set_up() {
 static void tear_down() {
     symtab.reset();
 }
-        
+
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 6800", true, disassembler.setCpu("6800"));
@@ -66,6 +70,9 @@ void test_cpu() {
 
     EQUALS("cpu MC6800", true, disassembler.setCpu("MC6800"));
     EQUALS_P("cpu MC6800", "6800", disassembler.cpu_P());
+
+    EQUALS("cpu mb8861", true, disassembler.setCpu("mb8861"));
+    EQUALS_P("cpu MB8861", "MB8861", disassembler.cpu_P());
 
     EQUALS("cpu MC6801", true, disassembler.setCpu("MC6801"));
     EQUALS_P("cpu MC6801", "6801", disassembler.cpu_P());
@@ -196,6 +203,11 @@ static void test_immediate() {
     TEST(CPX, "#$90A0", 0x8C, 0x90, 0xA0);
     TEST(LDX, "#$90A0", 0xCE, 0x90, 0xA0);
     TEST(LDS, "#$90A0", 0x8E, 0x90, 0xA0);
+
+    if (mb8861()) {
+        // MB8861
+        TEST(ADX, "#$90", 0xEC, 0x90);
+    }
 
     if (m6801()) {
         // MC6801
@@ -352,6 +364,11 @@ static void test_extended() {
 
     TEST(JMP, "$1234", 0x7E, 0x12, 0x34);
     TEST(JSR, "$1234", 0xBD, 0x12, 0x34);
+
+    if (mb8861()) {
+        // MB8861
+        TEST(ADX, "$1234", 0xFC, 0x12, 0x34);
+    }
 
     if (m6801()) {
         // MC6801
@@ -656,6 +673,14 @@ static void test_bit_ops() {
         TEST(BTST, "0, $90",   0x7B, 0x01, 0x90);
     }
 
+    if (mb8861()) {
+        // MB8861
+        TEST(NIM, "#$88, 0,X",   0x71, 0x88, 0x00);
+        TEST(OIM, "#$44, 1,X",   0x72, 0x44, 0x01);
+        TEST(XIM, "#$22, 128,X", 0x75, 0x22, 0x80);
+        TEST(TMM, "#$33, 255,X", 0x7B, 0x33, 0xFF);
+    }
+
     symtab.intern(0x90, "dir90");
     symtab.intern(255,  "offset255");
     symtab.intern(128,  "offset128");
@@ -713,6 +738,21 @@ static void test_illegal_mc6800() {
         0x83, 0x87, 0x8F, 0x93, 0x9D, 0xA3, 0xB3,
         0xC3, 0xC7, 0xCC, 0xCD, 0xCF, 0xD3, 0xDC, 0xDD,
         0xE3, 0xEC, 0xED, 0xF3, 0xFC, 0xFD,
+    };
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        ERRI(illegals[idx]);
+}
+
+static void test_illegal_mb8861() {
+    const uint8_t illegals[] = {
+        0x00, 0x02, 0x03, 0x04, 0x05,
+        0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
+        0x21, 0x38, 0x3A, 0x3C, 0x3D,
+        0x41, 0x42, 0x45, 0x4B, 0x4E, 0x51, 0x52, 0x55, 0x5B, 0x5E,
+        0x61, 0x62, 0x65, 0x6B,
+        0x83, 0x87, 0x8F, 0x93, 0x9D, 0xA3, 0xB3,
+        0xC3, 0xC7, 0xCC, 0xCD, 0xCF, 0xD3, 0xDC, 0xDD,
+        0xE3, 0xED, 0xF3, 0xFD,
     };
     for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
         ERRI(illegals[idx]);
@@ -807,12 +847,14 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_indexed_y);
     RUN_TEST(test_relative);
     RUN_TEST(test_bit_ops);
-    if (m6800()) {
+    if (mb8861()) {
+        RUN_TEST(test_illegal_mb8861);
+    } else if (m6800()) {
         RUN_TEST(test_illegal_mc6800);
-    } else if (m68hc11()) {
-        RUN_TEST(test_illegal_mc68hc11);
     } else if (hd6301()) {
         RUN_TEST(test_illegal_hd6301);
+    } else if (m68hc11()) {
+        RUN_TEST(test_illegal_mc68hc11);
     } else {
         RUN_TEST(test_illegal_mc6801);
     }
