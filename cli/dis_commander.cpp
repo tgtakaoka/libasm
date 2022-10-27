@@ -129,6 +129,7 @@ Disassembler *DisCommander::defaultDisassembler() {
 }
 
 int DisCommander::usage() {
+    defaultDisassembler();
     const auto cpuList = _driver.listCpu();
     const char *cpuOption = cpuList.size() == 1 ? "" : " -C <CPU>";
     std::string list;
