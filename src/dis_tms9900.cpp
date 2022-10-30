@@ -160,12 +160,12 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     const AddrMode src = insn.srcMode();
-    if (src == M_NO)
+    if (src == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, src))
         return getError();
     const AddrMode dst = insn.dstMode();
-    if (dst == M_NO)
+    if (dst == M_NONE)
         return OK;
     out.comma();
     return decodeOperand(memory, insn, out, dst);

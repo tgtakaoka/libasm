@@ -30,11 +30,11 @@ namespace mc6805 {
 
 #define E3(_opc, _name, _op1, _op2, _op3) \
     { _opc, Entry::Flags::create(_op1, _op2, _op3), _name }
-#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NO)
-#define E1(_opc, _name, _op1) E3(_opc, _name, _op1, M_NO, M_NO)
-#define E0(_opc, _name) E3(_opc, _name, M_NO, M_NO, M_NO)
+#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NONE)
+#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E0(_opc, _name) E1(_opc, _name, M_NONE)
 #define U1(_opc, _name, _op1) \
-    { _opc, Entry::Flags::create(_op1, M_NO, M_NO, true), _name }
+    { _opc, Entry::Flags::create(_op1, M_NONE, M_NONE, true), _name }
 
 // clang-format off
 static constexpr Entry MC6805_TABLE[] PROGMEM = {

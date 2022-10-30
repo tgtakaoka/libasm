@@ -45,7 +45,7 @@ private:
     struct Operand : public OperandBase {
         AddrMode mode;
         uint16_t val16;
-        Operand() : mode(NONE), val16(0) {}
+        Operand() : mode(M_NONE), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;

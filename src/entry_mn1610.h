@@ -28,7 +28,7 @@ namespace mn1610 {
 enum CpuType : uint8_t { MN1610, MN1613, MN1613A };
 
 enum AddrMode : uint8_t {
-    M_NO = 0,     // No operand
+    M_NONE = 0,     // No operand
     M_SKIP = 1,   // Skip specifier
     M_ILVL = 2,   // 2-bit interrupt level
     M_BIT = 3,    // Bit number of 16-bit

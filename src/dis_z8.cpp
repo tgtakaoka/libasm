@@ -195,7 +195,7 @@ Error DisZ8::decodeInOpCode(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
         if (decodeOperand(memory, insn, out, dst))
             return getError();
     }
-    if (src == M_NO)
+    if (src == M_NONE)
         return setOK();
     out.comma();
     if (src == M_r) {
@@ -317,7 +317,7 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
         return setOK();
     }
     const AddrMode ext = insn.extMode();
-    if (ext == M_NO) {  // P1: BITC, BITR, BITS
+    if (ext == M_NONE) {  // P1: BITC, BITR, BITS
         outWorkReg(out, post >> 4);
         outBitPos(out, post >> 1);
         return setOK();
@@ -356,7 +356,7 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
-    if (dst == M_NO)
+    if (dst == M_NONE)
         return setOK();  // No operand
     if (insn.postFormat() != P0)
         return decodePostByte(memory, insn, out);
@@ -381,7 +381,7 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return decodeIndirectRegPair(memory, insn, out);
     if (InsnZ8::operandInOpCode(opCode))
         return decodeInOpCode(memory, insn, out);
-    if (src == M_NO)
+    if (src == M_NONE)
         return decodeOperand(memory, insn, out, dst);
     return decodeTwoOperands(memory, insn, out);
 }

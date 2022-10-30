@@ -31,7 +31,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         op.val16 = parseExpr16(p, op);
         if (parserError())
             return op.getError();
-        op.mode = IMM16;
+        op.mode = M_IMM16;
         scan = p;
         return OK;
     }
@@ -46,7 +46,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         if (indir && op.reg == REG_A && p.expect('+')) {
             const RegName base = RegI8051::parseRegName(p);
             if (base == REG_DPTR || base == REG_PC) {
-                op.mode = (base == REG_DPTR) ? INDXD : INDXP;
+                op.mode = (base == REG_DPTR) ? M_INDXD : M_INDXP;
                 scan = p;
                 return OK;
             }
@@ -55,31 +55,31 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         if (indir) {
             if (op.reg == REG_R0 || op.reg == REG_R1) {
-                op.mode = IDIRR;
+                op.mode = M_IDIRR;
                 return OK;
             }
             if (op.reg == REG_DPTR) {
-                op.mode = IDIRD;
+                op.mode = M_IDIRD;
                 return OK;
             }
             return op.setError(UNKNOWN_OPERAND);
         }
         if (RegI8051::isRReg(op.reg)) {
-            op.mode = RREG;
+            op.mode = M_RREG;
             return OK;
         }
         switch (op.reg) {
         case REG_A:
-            op.mode = AREG;
+            op.mode = M_AREG;
             return OK;
         case REG_C:
-            op.mode = CREG;
+            op.mode = M_CREG;
             return OK;
         case REG_DPTR:
-            op.mode = DREG;
+            op.mode = M_DREG;
             return OK;
         case REG_AB:
-            op.mode = ABREG;
+            op.mode = M_ABREG;
             return OK;
         default:
             return op.setError(regp, UNKNOWN_OPERAND);
@@ -104,7 +104,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
             return op.setError(bitp, ILLEGAL_BIT_NUMBER);
         uint16_t val16 = op.val16;
         if ((val16 & ~0x0F) == 0x20 || (val16 & ~0x78) == 0x80) {
-            op.mode = bitNot ? NOTAD : BITAD;
+            op.mode = bitNot ? M_NOTAD : M_BITAD;
             if ((val16 & 0x80) == 0)
                 op.val16 = (val16 & 0xF) << 3;
             op.val16 |= bitNo;
@@ -113,14 +113,14 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         }
         return op.setError(addrp, NOT_BIT_ADDRESSABLE);
     }
-    op.mode = bitNot ? NOTAD : ADR16;
+    op.mode = bitNot ? M_NOTAD : M_ADR16;
     scan = p;
     return OK;
 }
 
 Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op) {
     switch (mode) {
-    case REL: {
+    case M_REL: {
         uint8_t len = insn.length();
         if (len == 0)
             len = 1;
@@ -132,22 +132,22 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         insn.emitOperand8(delta);
         return OK;
     }
-    case RREG:
-    case IDIRR:
+    case M_RREG:
+    case M_IDIRR:
         insn.embed(RegI8051::encodeRReg(op.reg));
         return OK;
-    case ADR8:
+    case M_ADR8:
         if (op.val16 >= 0x100)
             return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
-    case IMM8: {
+    case M_IMM8: {
         if (overflowUint8(op.val16))
             return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return OK;
     }
-    case ADR11: {
+    case M_ADR11: {
         const Config::uintptr_t base = insn.address() + 2;
         const Config::uintptr_t target = op.getError() ? (base & ~0x7FF) : op.val16;
         if ((base & ~0x7FF) != (target & ~0x7FF))
@@ -156,12 +156,12 @@ Error AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operan
         insn.emitOperand8(target);
         return OK;
     }
-    case ADR16:
-    case IMM16:
+    case M_ADR16:
+    case M_IMM16:
         insn.emitOperand16(op.val16);
         return OK;
-    case BITAD:
-    case NOTAD:
+    case M_BITAD:
+    case M_NOTAD:
         if (op.val16 >= 0x100)
             return setError(op, NOT_BIT_ADDRESSABLE);
         insn.emitOperand8(op.val16);
@@ -202,7 +202,7 @@ Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
     const AddrMode ext = insn.extMode();
-    if (dst == ADR8 && src == ADR8) {
+    if (dst == M_ADR8 && src == M_ADR8) {
         if (encodeOperand(insn, src, srcOp))
             return getError();
         if (encodeOperand(insn, dst, dstOp))

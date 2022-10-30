@@ -192,14 +192,14 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const AddrMode dst = insn.dstMode();
     if (dst == M_UNKI)
         return setError(UNKNOWN_INSTRUCTION);
-    if (dst == M_NO)
+    if (dst == M_NONE)
         return OK;
     if (dst == T_IXB)
         return decodeIndexedBitOp(memory, insn, out);
     if (decodeOperand(memory, insn, out, dst))
         return getError();
     const AddrMode src = insn.srcMode();
-    if (src == M_NO)
+    if (src == M_NONE)
         return OK;
     out.comma();
     return decodeOperand(memory, insn, out, src);

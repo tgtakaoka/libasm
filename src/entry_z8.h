@@ -33,7 +33,7 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     // Those (0~7) happen all operands including extra.
-    M_NO = 0,   // No operand
+    M_NONE = 0,   // No operand
     M_IM = 1,   // Immediate: #nn
     M_r = 2,    // Working register: rn
     M_RA = 3,   // Relative Address: nnnn

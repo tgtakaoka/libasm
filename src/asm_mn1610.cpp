@@ -338,19 +338,19 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
         return setError(opr1, error);
 
     const AddrMode op1 = insn.op1();
-    if (op1 != M_NO && encodeOperand(insn, opr1, op1)) {
+    if (op1 != M_NONE && encodeOperand(insn, opr1, op1)) {
     error:
         insn.reset();
         return getError();
     }
     const AddrMode op2 = insn.op2();
-    if (op2 != M_NO && encodeOperand(insn, opr2, op2))
+    if (op2 != M_NONE && encodeOperand(insn, opr2, op2))
         goto error;
     const AddrMode op3 = insn.op3();
-    if (op3 != M_NO && encodeOperand(insn, opr3, op3))
+    if (op3 != M_NONE && encodeOperand(insn, opr3, op3))
         goto error;
     const AddrMode op4 = insn.op4();
-    if (op4 != M_NO && encodeOperand(insn, opr4, op4))
+    if (op4 != M_NONE && encodeOperand(insn, opr4, op4))
         goto error;
 
     insn.emitInsn();

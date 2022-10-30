@@ -32,7 +32,7 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO = 0,
+    M_NONE = 0,
     M_IMM = 1,    // 16-bit Immediate data
     M_REG = 2,    // ---- ---- ---- wwww: Work Register Addressing
     M_SCNT = 3,   // ---- ---- cccc ----

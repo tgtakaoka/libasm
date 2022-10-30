@@ -28,9 +28,9 @@ namespace tms32010 {
 
 #define E3(_opc, _name, _op1, _op2, _op3) \
     { _opc, Entry::Flags::create(_op1, _op2, _op3), _name }
-#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NO)
-#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NO)
-#define E0(_opc, _name) E1(_opc, _name, M_NO)
+#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NONE)
+#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
 static constexpr Entry TABLE_TMS32010[] PROGMEM = {
@@ -167,7 +167,7 @@ static constexpr TableTms32010::EntryPage TMS32010_PAGES[] PROGMEM = {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
-    if (opr == M_NO)  // These can be ommitted.
+    if (opr == M_NONE)  // These can be ommitted.
         return table == M_LS0 || table == M_LS3 || table == M_LS4 || table == M_NARP;
     if (opr == M_AR)  // ARn can be used as 0,1
         return table == M_ARK || table == M_NARP;

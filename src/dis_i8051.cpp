@@ -42,17 +42,18 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out
 }
 
 Error DisI8051::decodeRReg(InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
-    const RegName reg = _regs.decodeRReg(insn.opCode() & (mode == IDIRR ? 1 : 7));
-    if (mode == IDIRR)
+    const RegName reg = _regs.decodeRReg(insn.opCode() & (mode == M_IDIRR ? 1 : 7));
+    if (mode == M_IDIRR)
         out.letter('@');
     outRegister(out, reg);
     return setOK();
 }
 
-Error DisI8051::decodeAddress(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
-    if (mode == ADR8) {
+Error DisI8051::decodeAddress(
+        DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
+    if (mode == M_ADR8) {
         outAbsAddr(out, insn.readByte(memory), 8);
-    } else if (mode == ADR11) {
+    } else if (mode == M_ADR11) {
         const uint8_t val8 = insn.readByte(memory);
         Config::uintptr_t addr = (insn.address() + insn.length()) & 0xF800;
         addr |= (insn.opCode() & 0xE0) << 3;
@@ -67,7 +68,7 @@ Error DisI8051::decodeAddress(DisMemory &memory, InsnI8051 &insn, StrBuffer &out
 Error DisI8051::decodeImmediate(
         DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
     out.letter('#');
-    if (mode == IMM8) {
+    if (mode == M_IMM8) {
         outHex(out, insn.readByte(memory), 8);
     } else {
         outHex(out, insn.readUint16(memory), 16);
@@ -75,47 +76,48 @@ Error DisI8051::decodeImmediate(
     return setError(insn);
 }
 
-Error DisI8051::decodeOperand(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
+Error DisI8051::decodeOperand(
+        DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
     switch (mode) {
-    case NONE:
+    case M_NONE:
         break;
-    case REL:
+    case M_REL:
         return decodeRelative(memory, insn, out);
-    case AREG:
+    case M_AREG:
         outRegister(out, REG_A);
         break;
-    case RREG:
-    case IDIRR:
+    case M_RREG:
+    case M_IDIRR:
         return decodeRReg(insn, out, mode);
-    case CREG:
+    case M_CREG:
         outRegister(out, REG_C);
         break;
-    case IDIRD:
+    case M_IDIRD:
         out.letter('@');
         /* Fall-through */
-    case DREG:
+    case M_DREG:
         outRegister(out, REG_DPTR);
         break;
-    case ABREG:
+    case M_ABREG:
         outRegister(out, REG_AB);
         break;
-    case ADR8:
-    case ADR11:
-    case ADR16:
+    case M_ADR8:
+    case M_ADR11:
+    case M_ADR16:
         return decodeAddress(memory, insn, out, mode);
-    case NOTAD:
+    case M_NOTAD:
         out.letter('/');
         /* Fall-through */
-    case BITAD:
+    case M_BITAD:
         return decodeBitAddr(memory, insn, out);
-    case IMM8:
-    case IMM16:
+    case M_IMM8:
+    case M_IMM16:
         return decodeImmediate(memory, insn, out, mode);
-    case INDXD:
+    case M_INDXD:
         outRegister(out.letter('@'), REG_A).letter('+');
         outRegister(out, REG_DPTR);
         break;
-    case INDXP:
+    case M_INDXP:
         outRegister(out.letter('@'), REG_A).letter('+');
         outRegister(out, REG_PC);
         break;
@@ -135,24 +137,24 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
-    if (dst == ADR8 && src == ADR8) {  // MOV dst,src
+    if (dst == M_ADR8 && src == M_ADR8) {  // MOV dst,src
         const uint8_t src8 = insn.readByte(memory);
         const uint8_t dst8 = insn.readByte(memory);
         outAbsAddr(out, dst8, 8).comma();
         outAbsAddr(out, src8, 8);
     } else {
-        if (dst != NONE) {
+        if (dst != M_NONE) {
             if (decodeOperand(memory, insn, out, dst))
                 return getError();
         }
-        if (src != NONE) {
+        if (src != M_NONE) {
             out.comma();
             if (decodeOperand(memory, insn, out, src))
                 return getError();
         }
     }
     const AddrMode ext = insn.extMode();
-    if (ext != NONE) {
+    if (ext != M_NONE) {
         out.comma();
         if (decodeOperand(memory, insn, out, ext))
             return getError();

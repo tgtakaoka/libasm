@@ -236,7 +236,7 @@ Error DisZ8000::decodeOperand(
         DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, ModeField field) {
     uint8_t num = modeField(insn, field);
     switch (mode) {
-    case M_NO:
+    case M_NONE:
         return OK;
     case M_BA:
     case M_BX:
@@ -406,25 +406,25 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     }
 
     const AddrMode dst = insn.dstMode();
-    if (dst == M_NO)
+    if (dst == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, dst, insn.dstField()))
         return getError();
     const AddrMode src = insn.srcMode();
-    if (src == M_NO)
+    if (src == M_NONE)
         return setOK();
     outComma(out, insn, dst, insn.dstField());
     if (decodeOperand(memory, insn, out, src, insn.srcField()))
         return getError();
     const AddrMode ex1 = insn.ex1Mode();
-    if (ex1 == M_NO)
+    if (ex1 == M_NONE)
         return setOK();
     const ModeField ex1Field = (ex1 == M_CNT ? MF_P0 : MF_P8);
     outComma(out, insn, ex1, ex1Field);
     if (decodeOperand(memory, insn, out, ex1, ex1Field))
         return getError();
     const AddrMode ex2 = insn.ex2Mode();
-    if (ex2 == M_NO)
+    if (ex2 == M_NONE)
         return setOK();
     outComma(out, insn, ex2, MF_P0);
     return decodeOperand(memory, insn, out, ex2, MF_P0);

@@ -69,7 +69,7 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
         insn.embed(op.val16 << 8);
         break;
     case M_NARP:
-        if (op.mode == M_NO)
+        if (op.mode == M_NONE)
             break;
         insn.setOpCode(insn.opCode() & ~8);
         insn.embed(op.val16);
@@ -167,15 +167,15 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
         return setError(op1, error);
 
     const AddrMode mode1 = insn.op1();
-    if (mode1 != M_NO && encodeOperand(insn, op1, mode1))
+    if (mode1 != M_NONE && encodeOperand(insn, op1, mode1))
         return getError();
     const AddrMode mode2 = insn.op2();
-    if (mode2 != M_NO && encodeOperand(insn, op2, mode2)) {
+    if (mode2 != M_NONE && encodeOperand(insn, op2, mode2)) {
         insn.reset();
         return getError();
     }
     const AddrMode mode3 = insn.op3();
-    if (mode3 != M_NO && encodeOperand(insn, op3, mode3)) {
+    if (mode3 != M_NONE && encodeOperand(insn, op3, mode3)) {
         insn.reset();
         return getError();
     }

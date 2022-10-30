@@ -26,7 +26,7 @@ namespace libasm {
 namespace tlcs90 {
 
 enum AddrMode : uint8_t {
-    M_NO = 0,
+    M_NONE = 0,
     M_IMM8 = 1,          // Immediate 8-bit: nn
     M_IMM16 = 2,         // immediate 16-bit: nnnn
     M_BIT = 3,           // Bit number: 0-7

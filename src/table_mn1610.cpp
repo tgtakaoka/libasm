@@ -28,10 +28,10 @@ namespace mn1610 {
 
 #define E4(_opc, _name, _op1, _op2, _op3, _op4) \
     { _opc, Entry::Flags::create(_op1, _op2, _op3, _op4), _name }
-#define E3(_opc, _name, _op1, _op2, _op3) E4(_opc, _name, _op1, _op2, _op3, M_NO)
-#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NO)
-#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NO)
-#define E0(_opc, _name) E1(_opc, _name, M_NO)
+#define E3(_opc, _name, _op1, _op2, _op3) E4(_opc, _name, _op1, _op2, _op3, M_NONE)
+#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NONE)
+#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
 static constexpr Entry TABLE_COMMON[] PROGMEM = {
@@ -291,7 +291,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return true;
     switch (table) {
     case M_SKIP:
-        return opr == M_NO;
+        return opr == M_NONE;
     case M_RD:
         return opr == M_R0 || opr == M_RDG;
     case M_RDG:

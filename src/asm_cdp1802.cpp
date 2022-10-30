@@ -33,7 +33,7 @@ static Config::uintptr_t page(Config::uintptr_t addr) {
 Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
-    if (mode == PAGE) {
+    if (mode == M_PAGE) {
         if (page(target) != page(base))
             return setError(op, OVERWRAP_PAGE);
         insn.emitInsn();
@@ -55,13 +55,13 @@ Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op
 Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     uint16_t val16 = op.val16;
     switch (mode) {
-    case REG1:
+    case M_REG1:
         if (op.getError())
             val16 = 7;  // default work register.
         if (val16 == 0)
             return setError(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
-    case REGN:
+    case M_REGN:
         if (op.getError())
             val16 = 7;  // default work register.
         if (val16 >= 16)
@@ -69,16 +69,16 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
         insn.embed(val16);
         insn.emitInsn();
         break;
-    case IMM8:
+    case M_IMM8:
         if (overflowUint8(val16))
             return setError(op, OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
         break;
-    case PAGE:
-    case ADDR:
+    case M_PAGE:
+    case M_ADDR:
         return encodePage(insn, mode, op);
-    case IOAD:
+    case M_IOAD:
         if (op.getError())
             val16 = 1;  // default IO address
         if (val16 == 0 || val16 >= 8)
@@ -103,7 +103,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
         const RegName reg = RegCdp1802::parseRegName(p);
         if (reg != REG_UNDEF) {
             op.val16 = int8_t(reg);
-            op.mode = REGN;
+            op.mode = M_REGN;
             scan = p;
             return OK;
         }
@@ -111,7 +111,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return op.getError();
-    op.mode = ADDR;
+    op.mode = M_ADDR;
     scan = p;
     return OK;
 }
@@ -140,7 +140,7 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
         return setError(op1, error);
 
     emitOperand(insn, insn.mode1(), op1);
-    if (insn.mode2() == ADDR)
+    if (insn.mode2() == M_ADDR)
         insn.emitUint16(op2.val16);
     return getError();
 }

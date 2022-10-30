@@ -33,7 +33,7 @@ struct Operand : public OperandBase {
     RegName reg;
     CcName cc;
     uint16_t val16;
-    Operand() : mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
 class TableTlcs90 : public TableBase {

@@ -23,7 +23,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p) || *p == ',') {
-        op.mode = M_NO;
+        op.mode = M_NONE;
         scan = p;
         return OK;
     }

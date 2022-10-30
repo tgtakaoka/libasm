@@ -27,7 +27,7 @@ namespace libasm {
 namespace ins8060 {
 
 enum AddrMode : uint8_t {
-    M_INHR = 1,   // Inherent
+    M_NONE = 1,   // Inherent
     M_PNTR = 2,   // Pointer, Pn
     M_IMM8 = 3,   // Immediate, nn
     M_REL8 = 4,   // PC Relative, label

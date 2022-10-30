@@ -40,7 +40,7 @@ Error DisScn2650::decodeAbsolute(
     if (opr & 0x8000)
         out.letter('*');
     outAbsAddr(out, opr & ~0x8000);
-    if (mode == IX15) {
+    if (mode == M_IX15) {
         out.comma();
         _regs.outRegName(out, REG_R3);
     }
@@ -77,11 +77,11 @@ Error DisScn2650::decodeRelative(
         out.letter('*');
     // Sign extends 7-bit number
     const auto delta = (opr & 0x3F) - (opr & 0x40);
-    if (mode == REL7) {
+    if (mode == M_REL7) {
         const auto base = inpage(insn.address(), insn.length());
         const auto target = inpage(base, delta);
         outRelAddr(out, target, insn.address(), 7);
-    } else if (mode == ABS7) {
+    } else if (mode == M_ABS7) {
         const auto target = offset(delta);
         outAbsAddr(out, target);
     }
@@ -91,29 +91,29 @@ Error DisScn2650::decodeRelative(
 Error DisScn2650::decodeOperand(
         DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, const AddrMode mode) {
     switch (mode) {
-    case REG0:
-    case R123:
-    case REGN:
+    case M_REG0:
+    case M_R123:
+    case M_REGN:
         // destination register R0 will be handled at |decodeIndexed|.
-        if (insn.mode2() == IX13)
+        if (insn.mode2() == M_IX13)
             break;
         _regs.outRegName(insn.nameBuffer().letter(','), RegScn2650::decodeRegName(insn.opCode()));
         break;
-    case C012:
-    case CCVN:
+    case M_C012:
+    case M_CCVN:
         _regs.outCcName(insn.nameBuffer().letter(','), RegScn2650::decodeCcName(insn.opCode()));
         break;
-    case IMM8:
+    case M_IMM8:
         outHex(out, insn.readByte(memory), 8);
         break;
-    case REL7:
-    case ABS7:
+    case M_REL7:
+    case M_ABS7:
         return decodeRelative(memory, insn, out, mode);
-    case IX13:
-    case AB13:
+    case M_IX13:
+    case M_AB13:
         return decodeIndexed(memory, insn, out);
-    case IX15:
-    case AB15:
+    case M_IX15:
+    case M_AB15:
         return decodeAbsolute(memory, insn, out, mode);
     default:
         break;

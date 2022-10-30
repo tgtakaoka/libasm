@@ -290,7 +290,7 @@ Error AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, M
     case M_NCNT:
         return emitImmediate(insn, field, mode, op);
     case M_CC:
-        if (op.mode == M_NO)
+        if (op.mode == M_NONE)
             return emitData(insn, field, CC_T);
         return emitData(insn, field, RegZ8000::encodeCcName(op.cc));
     case M_INTR:
@@ -559,23 +559,23 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     }
 
     const AddrMode dst = insn.dstMode();
-    if (dst != M_NO) {
+    if (dst != M_NONE) {
         if (emitOperand(insn, dst, dstOp, insn.dstField()))
             return getError();
     }
     const AddrMode src = insn.srcMode();
-    if (src != M_NO) {
+    if (src != M_NONE) {
         if (emitOperand(insn, src, srcOp, insn.srcField()))
             return getError();
     }
     const AddrMode ex1 = insn.ex1Mode();
-    if (ex1 != M_NO) {
+    if (ex1 != M_NONE) {
         const ModeField field = (ex1 == M_WR ? MF_P8 : MF_P0);
         if (emitOperand(insn, ex1, ex1Op, field))
             return getError();
     }
     const AddrMode ex2 = insn.ex2Mode();
-    if (ex2 != M_NO) {
+    if (ex2 != M_NONE) {
         if (emitOperand(insn, ex2, ex2Op, MF_P0))
             return getError();
     }

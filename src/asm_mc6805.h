@@ -54,7 +54,7 @@ private:
         AddrMode mode;
         int8_t size;
         uint16_t val16;
-        Operand() : mode(M_NO), size(0), val16(0) {}
+        Operand() : mode(M_NONE), size(0), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;

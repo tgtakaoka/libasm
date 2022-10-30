@@ -34,7 +34,7 @@ public:
     AddrMode ex1Mode() const { return flags().ex1Mode(); }
     AddrMode ex2Mode() const { return flags().ex2Mode(); }
     PostMode postMode() const { return flags().postMode(); }
-    bool hasPost() const { return postMode() != P_NO; }
+    bool hasPost() const { return postMode() != P_NONE; }
     uint8_t postMask() const { return flags().postMask(); }
     uint8_t postVal() const { return flags().postVal(); }
     ModeField dstField() const { return flags().dstField(); }
@@ -52,7 +52,7 @@ public:
             embedPost(0x8);
         if (mode == P_0XXE)
             embedPost(0xE);
-        if (mode != P_NO)
+        if (mode != P_NONE)
             emitUint16(post(), 2);
     }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }

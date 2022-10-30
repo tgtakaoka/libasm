@@ -221,7 +221,7 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
             return getError();
         if (pre == M_SRC && encodeOperand(insn, src, srcOp, prefix))
             return getError();
-        if (pre == M_NO)
+        if (pre == M_NONE)
             insn.emitByte(prefix);
     }
     const Config::opcode_t opc = insn.opCode();

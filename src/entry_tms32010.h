@@ -32,7 +32,7 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     // T=table, P=parser. Sorted by constant range from M_LS0 to M_IM13.
-    M_NO = 0,     // TP: No operand
+    M_NONE = 0,     // TP: No operand
     M_LS0 = 1,    // TP: [0] 0 left shift (SACL)     ---- -000 ---- ----
     M_DPK = 2,    // TP: [0-1] Data memory page      ---- ---- ---- ---d
     M_ARK = 3,    // T_: [0-1] Auxiliary register    ---- ---- ---- ---a

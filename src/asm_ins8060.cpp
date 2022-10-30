@@ -99,7 +99,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
-        op.mode = M_INHR;
+        op.mode = M_NONE;
         return OK;
     }
 
@@ -153,7 +153,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
         return setError(op, error);
 
     switch (insn.addrMode()) {
-    case M_INHR:
+    case M_NONE:
         insn.emitInsn();
         break;
     case M_REL8:

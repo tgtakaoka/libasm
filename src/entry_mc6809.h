@@ -54,9 +54,10 @@ public:
     struct Flags {
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2) {
-            return Flags{static_cast<uint8_t>(
-                    (static_cast<uint8_t>(op1) << op1_gp) | (static_cast<uint8_t>(op2) << op2_gp))};
+        static constexpr Flags create(AddrMode op1, AddrMode op2, bool undef = false) {
+            return Flags{
+                    static_cast<uint8_t>((static_cast<uint8_t>(op1) << op1_gp) |
+                                         (static_cast<uint8_t>(undef ? M_LIST : op2) << op2_gp))};
         }
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 

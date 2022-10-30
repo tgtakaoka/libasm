@@ -32,14 +32,14 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    NONE = 0,
-    REGN = 1,  // Register number, 0~15
-    REG1 = 2,  // Register number, 1~15
-    IMM8 = 3,  // Immediate, 8 bit
-    PAGE = 4,  // Page offset, 8 bit
-    ADDR = 5,  // Absolute address, 16 bit
-    IOAD = 6,  // IO address, 1~7
-    UNDF = 7,  // Undefined instruction
+    M_NONE = 0,
+    M_REGN = 1,  // Register number, 0~15
+    M_REG1 = 2,  // Register number, 1~15
+    M_IMM8 = 3,  // Immediate, 8 bit
+    M_PAGE = 4,  // Page offset, 8 bit
+    M_ADDR = 5,  // Absolute address, 16 bit
+    M_IOAD = 6,  // IO address, 1~7
+    M_UNDF = 7,  // Undefined instruction
 };
 
 class Entry : public EntryBase<Config> {

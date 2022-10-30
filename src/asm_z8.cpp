@@ -65,7 +65,7 @@ bool AsmZ8::isWorkReg(uint8_t regAddr) const {
 }
 
 Error AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op) {
-    if (mode == M_NO)
+    if (mode == M_NONE)
         return getError();
     if (op.reg != REG_UNDEF && (mode == M_R || mode == M_IR || mode == M_IRR)) {
         insn.emitByte(RegZ8::encodeWorkRegAddr(op.reg));
@@ -243,7 +243,7 @@ Error AsmZ8::encodePostByte(
         return encodeRelative(insn, dstOp);
     }
     const AddrMode ext = insn.extMode();
-    if (ext == M_NO) {  // P1: BITC, BITR, BITS
+    if (ext == M_NONE) {  // P1: BITC, BITR, BITS
         if (srcOp.val16 >= 8)
             return setError(srcOp, ILLEGAL_BIT_NUMBER);
         uint8_t opr1 = (RegZ8::encodeRegName(dstOp.reg) << 4) | (srcOp.val16 << 1);
@@ -295,7 +295,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
-        op.mode = M_NO;
+        op.mode = M_NONE;
         return OK;
     }
 
@@ -428,7 +428,7 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
     const AddrMode dst = insn.dstMode();
     const AddrMode src = insn.srcMode();
 
-    if (dst == M_NO) {
+    if (dst == M_NONE) {
         insn.emitInsn();
         return setOK();
     }
@@ -453,7 +453,7 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
         return encodeIndirectRegPair(insn, dstOp, srcOp);
     if (InsnZ8::operandInOpCode(insn.opCode()))
         return encodeInOpCode(insn, dstOp, srcOp);
-    if (src == M_NO) {
+    if (src == M_NONE) {
         insn.emitInsn();
         return encodeOperand(insn, dst, dstOp);
     }

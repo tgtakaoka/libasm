@@ -51,7 +51,7 @@ private:
         RegName base;    // M_BA/M_BX
         CcName cc;       // M_CC/M_DA/M_X
         uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
-        Operand() : mode(M_NO), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+        Operand() : mode(M_NONE), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
     };
 
     int8_t parseIntrNames(StrScanner &scan) const;

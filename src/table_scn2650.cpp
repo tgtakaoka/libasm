@@ -28,96 +28,96 @@ namespace scn2650 {
 
 #define E2(_opc, _name, _mode1, _mode2) \
     { _opc, Entry::Flags::create(_mode1, _mode2), _name }
-#define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, NONE)
-#define E0(_opc, _name) E1(_opc, _name, NONE)
+#define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
+#define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
 static constexpr Entry TABLE_2650[] PROGMEM = {
-    E1(0x00, TEXT_null, UNDF),
-    E1(0x00, TEXT_LODZ, R123),
-    E2(0x04, TEXT_LODI, REGN, IMM8),
-    E2(0x08, TEXT_LODR, REGN, REL7),
-    E2(0x0C, TEXT_LODA, REG0, IX13),
-    E2(0x0C, TEXT_LODA, REGN, AB13),
+    E1(0x00, TEXT_null, M_UNDF),
+    E1(0x00, TEXT_LODZ, M_R123),
+    E2(0x04, TEXT_LODI, M_REGN, M_IMM8),
+    E2(0x08, TEXT_LODR, M_REGN, M_REL7),
+    E2(0x0C, TEXT_LODA, M_REG0, M_IX13),
+    E2(0x0C, TEXT_LODA, M_REGN, M_AB13),
     E0(0x12, TEXT_SPSU),
     E0(0x13, TEXT_SPSL),
-    E1(0x14, TEXT_RETC, CCVN),
-    E2(0x18, TEXT_BCTR, CCVN, REL7),
-    E2(0x1C, TEXT_BCTA, CCVN, AB15),
-    E1(0x20, TEXT_EORZ, REGN),
-    E2(0x24, TEXT_EORI, REGN, IMM8),
-    E2(0x28, TEXT_EORR, REGN, REL7),
-    E2(0x2C, TEXT_EORA, REG0, IX13),
-    E2(0x2C, TEXT_EORA, REGN, AB13),
-    E1(0x30, TEXT_REDC, REGN),
-    E1(0x34, TEXT_RETE, CCVN),
-    E2(0x38, TEXT_BSTR, CCVN, REL7),
-    E2(0x3C, TEXT_BSTA, CCVN, AB15),
+    E1(0x14, TEXT_RETC, M_CCVN),
+    E2(0x18, TEXT_BCTR, M_CCVN, M_REL7),
+    E2(0x1C, TEXT_BCTA, M_CCVN, M_AB15),
+    E1(0x20, TEXT_EORZ, M_REGN),
+    E2(0x24, TEXT_EORI, M_REGN, M_IMM8),
+    E2(0x28, TEXT_EORR, M_REGN, M_REL7),
+    E2(0x2C, TEXT_EORA, M_REG0, M_IX13),
+    E2(0x2C, TEXT_EORA, M_REGN, M_AB13),
+    E1(0x30, TEXT_REDC, M_REGN),
+    E1(0x34, TEXT_RETE, M_CCVN),
+    E2(0x38, TEXT_BSTR, M_CCVN, M_REL7),
+    E2(0x3C, TEXT_BSTA, M_CCVN, M_AB15),
     E0(0x40, TEXT_HALT),
-    E1(0x40, TEXT_ANDZ, R123),
-    E2(0x44, TEXT_ANDI, REGN, IMM8),
-    E2(0x48, TEXT_ANDR, REGN, REL7),
-    E2(0x4C, TEXT_ANDA, REG0, IX13),
-    E2(0x4C, TEXT_ANDA, REGN, AB13),
-    E1(0x50, TEXT_RRR,  REGN),
-    E2(0x54, TEXT_REDE, REGN, IMM8),
-    E2(0x58, TEXT_BRNR, REGN, REL7),
-    E2(0x5C, TEXT_BRNA, REGN, AB15),
-    E1(0x60, TEXT_LODZ, REG0),
-    E1(0x60, TEXT_IORZ, REGN),
-    E2(0x64, TEXT_IORI, REGN, IMM8),
-    E2(0x68, TEXT_IORR, REGN, REL7),
-    E2(0x6C, TEXT_IORA, REG0, IX13),
-    E2(0x6C, TEXT_IORA, REGN, AB13),
-    E1(0x70, TEXT_REDD, REGN),
-    E1(0x74, TEXT_CPSU, IMM8),
-    E1(0x75, TEXT_CPSL, IMM8),
-    E1(0x76, TEXT_PPSU, IMM8),
-    E1(0x77, TEXT_PPSL, IMM8),
-    E2(0x78, TEXT_BSNR, REGN, REL7),
-    E2(0x7C, TEXT_BSNA, REGN, AB15),
-    E1(0x80, TEXT_ADDZ, REGN),
-    E2(0x84, TEXT_ADDI, REGN, IMM8),
-    E2(0x88, TEXT_ADDR, REGN, REL7),
-    E2(0x8C, TEXT_ADDA, REG0, IX13),
-    E2(0x8C, TEXT_ADDA, REGN, AB13),
+    E1(0x40, TEXT_ANDZ, M_R123),
+    E2(0x44, TEXT_ANDI, M_REGN, M_IMM8),
+    E2(0x48, TEXT_ANDR, M_REGN, M_REL7),
+    E2(0x4C, TEXT_ANDA, M_REG0, M_IX13),
+    E2(0x4C, TEXT_ANDA, M_REGN, M_AB13),
+    E1(0x50, TEXT_RRR,  M_REGN),
+    E2(0x54, TEXT_REDE, M_REGN, M_IMM8),
+    E2(0x58, TEXT_BRNR, M_REGN, M_REL7),
+    E2(0x5C, TEXT_BRNA, M_REGN, M_AB15),
+    E1(0x60, TEXT_LODZ, M_REG0),
+    E1(0x60, TEXT_IORZ, M_REGN),
+    E2(0x64, TEXT_IORI, M_REGN, M_IMM8),
+    E2(0x68, TEXT_IORR, M_REGN, M_REL7),
+    E2(0x6C, TEXT_IORA, M_REG0, M_IX13),
+    E2(0x6C, TEXT_IORA, M_REGN, M_AB13),
+    E1(0x70, TEXT_REDD, M_REGN),
+    E1(0x74, TEXT_CPSU, M_IMM8),
+    E1(0x75, TEXT_CPSL, M_IMM8),
+    E1(0x76, TEXT_PPSU, M_IMM8),
+    E1(0x77, TEXT_PPSL, M_IMM8),
+    E2(0x78, TEXT_BSNR, M_REGN, M_REL7),
+    E2(0x7C, TEXT_BSNA, M_REGN, M_AB15),
+    E1(0x80, TEXT_ADDZ, M_REGN),
+    E2(0x84, TEXT_ADDI, M_REGN, M_IMM8),
+    E2(0x88, TEXT_ADDR, M_REGN, M_REL7),
+    E2(0x8C, TEXT_ADDA, M_REG0, M_IX13),
+    E2(0x8C, TEXT_ADDA, M_REGN, M_AB13),
     E0(0x92, TEXT_LPSU),
     E0(0x93, TEXT_LPSL),
-    E1(0x94, TEXT_DAR,  REGN),
-    E1(0x9B, TEXT_ZBRR, ABS7),
-    E2(0x98, TEXT_BCFR, C012, REL7),
-    E1(0x9F, TEXT_BXA,  IX15),
-    E2(0x9C, TEXT_BCFA, C012, AB15),
-    E1(0xA0, TEXT_SUBZ, REGN),
-    E2(0xA4, TEXT_SUBI, REGN, IMM8),
-    E2(0xA8, TEXT_SUBR, REGN, REL7),
-    E2(0xAC, TEXT_SUBA, REG0, IX13),
-    E2(0xAC, TEXT_SUBA, REGN, AB13),
-    E1(0xB0, TEXT_WRTC, REGN),
-    E1(0xB4, TEXT_TPSU, IMM8),
-    E1(0xB5, TEXT_TPSL, IMM8),
-    E1(0xBB, TEXT_ZBSR, ABS7),
-    E2(0xB8, TEXT_BSFR, C012, REL7),
-    E1(0xBF, TEXT_BSXA, IX15),
-    E2(0xBC, TEXT_BSFA, C012, AB15),
+    E1(0x94, TEXT_DAR,  M_REGN),
+    E1(0x9B, TEXT_ZBRR, M_ABS7),
+    E2(0x98, TEXT_BCFR, M_C012, M_REL7),
+    E1(0x9F, TEXT_BXA,  M_IX15),
+    E2(0x9C, TEXT_BCFA, M_C012, M_AB15),
+    E1(0xA0, TEXT_SUBZ, M_REGN),
+    E2(0xA4, TEXT_SUBI, M_REGN, M_IMM8),
+    E2(0xA8, TEXT_SUBR, M_REGN, M_REL7),
+    E2(0xAC, TEXT_SUBA, M_REG0, M_IX13),
+    E2(0xAC, TEXT_SUBA, M_REGN, M_AB13),
+    E1(0xB0, TEXT_WRTC, M_REGN),
+    E1(0xB4, TEXT_TPSU, M_IMM8),
+    E1(0xB5, TEXT_TPSL, M_IMM8),
+    E1(0xBB, TEXT_ZBSR, M_ABS7),
+    E2(0xB8, TEXT_BSFR, M_C012, M_REL7),
+    E1(0xBF, TEXT_BSXA, M_IX15),
+    E2(0xBC, TEXT_BSFA, M_C012, M_AB15),
     E0(0xC0, TEXT_NOP),
-    E1(0xC0, TEXT_STRZ, R123),
-    E2(0xC8, TEXT_STRR, REGN, REL7),
-    E2(0xCC, TEXT_STRA, REG0, IX13),
-    E2(0xCC, TEXT_STRA, REGN, AB13),
-    E1(0xD0, TEXT_RRL,  REGN),
-    E2(0xD4, TEXT_WRTE, REGN, IMM8),
-    E2(0xD8, TEXT_BIRR, REGN, REL7),
-    E2(0xDC, TEXT_BIRA, REGN, AB15),
-    E1(0xE0, TEXT_COMZ, REGN),
-    E2(0xE4, TEXT_COMI, REGN, IMM8),
-    E2(0xE8, TEXT_COMR, REGN, REL7),
-    E2(0xEC, TEXT_COMA, REG0, IX13),
-    E2(0xEC, TEXT_COMA, REGN, AB13),
-    E1(0xF0, TEXT_WRTD, REGN),
-    E2(0xF4, TEXT_TMI,  REGN, IMM8),
-    E2(0xF8, TEXT_BDRR, REGN, REL7),
-    E2(0xFC, TEXT_BDRA, REGN, AB15),
+    E1(0xC0, TEXT_STRZ, M_R123),
+    E2(0xC8, TEXT_STRR, M_REGN, M_REL7),
+    E2(0xCC, TEXT_STRA, M_REG0, M_IX13),
+    E2(0xCC, TEXT_STRA, M_REGN, M_AB13),
+    E1(0xD0, TEXT_RRL,  M_REGN),
+    E2(0xD4, TEXT_WRTE, M_REGN, M_IMM8),
+    E2(0xD8, TEXT_BIRR, M_REGN, M_REL7),
+    E2(0xDC, TEXT_BIRA, M_REGN, M_AB15),
+    E1(0xE0, TEXT_COMZ, M_REGN),
+    E2(0xE4, TEXT_COMI, M_REGN, M_IMM8),
+    E2(0xE8, TEXT_COMR, M_REGN, M_REL7),
+    E2(0xEC, TEXT_COMA, M_REG0, M_IX13),
+    E2(0xEC, TEXT_COMA, M_REGN, M_AB13),
+    E1(0xF0, TEXT_WRTD, M_REGN),
+    E2(0xF4, TEXT_TMI,  M_REGN, M_IMM8),
+    E2(0xF8, TEXT_BDRR, M_REGN, M_REL7),
+    E2(0xFC, TEXT_BDRA, M_REGN, M_AB15),
 };
 
 static constexpr uint8_t INDEX_2650[] PROGMEM = {
@@ -219,16 +219,17 @@ static constexpr EntryPage SCN2650_PAGES[] PROGMEM = {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
-    if (opr == REG0 || opr == R123)
-        return table == REGN;
-    if (opr == C012)
-        return table == CCVN;
-    if (opr == IMM8)
-        return table == ABS7 || table == AB13 || table == AB15 || table == REL7 || table == IX15;
-    if (opr == AB15)
-        return table == ABS7 || table == AB13 || table == REL7 || table == IX15;
-    if (opr == IX15)
-        return table == AB15 || table == IX13 || table == AB13;
+    if (opr == M_REG0 || opr == M_R123)
+        return table == M_REGN;
+    if (opr == M_C012)
+        return table == M_CCVN;
+    if (opr == M_IMM8)
+        return table == M_ABS7 || table == M_AB13 || table == M_AB15 || table == M_REL7 ||
+               table == M_IX15;
+    if (opr == M_AB15)
+        return table == M_ABS7 || table == M_AB13 || table == M_REL7 || table == M_IX15;
+    if (opr == M_IX15)
+        return table == M_AB15 || table == M_IX13 || table == M_AB13;
     return false;
 }
 
@@ -253,9 +254,9 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     const AddrMode mode1 = flags.mode1();
     const AddrMode mode2 = flags.mode2();
     Config::opcode_t mask = 0;
-    if (mode1 == REGN || mode1 == R123 || mode1 == CCVN || mode1 == C012)
+    if (mode1 == M_REGN || mode1 == M_R123 || mode1 == M_CCVN || mode1 == M_C012)
         mask |= 0x03;
-    if (mode2 == IX13)
+    if (mode2 == M_IX13)
         mask |= 0x03;
     return opCode & ~mask;
 }

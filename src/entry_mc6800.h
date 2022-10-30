@@ -34,7 +34,7 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO = 0,
+    M_NONE = 0,
     M_DIR = 1,   // Direct page
     M_EXT = 2,   // Extended
     M_IDX = 3,   // Indexed

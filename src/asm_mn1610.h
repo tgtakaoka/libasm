@@ -41,7 +41,7 @@ private:
         RegName reg;
         CcName cc;
         uint32_t val32;
-        Operand() : mode(M_NO), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+        Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;

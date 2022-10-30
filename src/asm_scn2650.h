@@ -43,7 +43,7 @@ private:
         bool indir;
         char sign;
         uint16_t val16;
-        Operand() : mode(NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
+        Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;

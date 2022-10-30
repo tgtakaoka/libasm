@@ -26,20 +26,20 @@ namespace libasm {
 namespace scn2650 {
 
 enum AddrMode : uint8_t {
-    NONE = 0,
-    REGN = 1,  // r0~r3
-    REG0 = 2,  // r0
-    R123 = 3,  // r1~R3
-    IMM8 = 4,  // v: Immediate, 8 bit
-    CCVN = 5,  // eq/gt/lt/un: Condition code
-    C012 = 6,  // eq/gt/lt: Condition code
-    REL7 = 7,  // (*)a: Relative, 7 bit, optionally indirect
-    ABS7 = 8,  // (*)a: First page relative. 7 bit. optionally indirect.
-    AB13 = 9,   // (*)a: Absolute, 13 bit, optionnally indirect
-    IX13 = 10,  // (*)a,rx(,[+-]): Indexed, 13bit, optionally indirect and auto increment/decrement
-    IX15 = 11,  // (*)a,r3: Indexed with r3, 15bit, optionally indirect
-    AB15 = 12,  // (*)a: Absolute jump, 15 bit, optionally indirect
-    UNDF = 15,  // Undefined instruction
+    M_NONE = 0,
+    M_REGN = 1,   // r0~r3
+    M_REG0 = 2,   // r0
+    M_R123 = 3,   // r1~R3
+    M_IMM8 = 4,   // v: Immediate, 8 bit
+    M_CCVN = 5,   // eq/gt/lt/un: Condition code
+    M_C012 = 6,   // eq/gt/lt: Condition code
+    M_REL7 = 7,   // (*)a: Relative, 7 bit, optionally indirect
+    M_ABS7 = 8,   // (*)a: First page relative. 7 bit. optionally indirect.
+    M_AB13 = 9,   // (*)a: Absolute, 13 bit, optionnally indirect
+    M_IX13 = 10,  // (*)a,rx(,[+-]): Indexed, 13bit (indirect and auto increment/decrement)
+    M_IX15 = 11,  // (*)a,r3: Indexed with r3, 15bit, optionally indirect
+    M_AB15 = 12,  // (*)a: Absolute jump, 15 bit, optionally indirect
+    M_UNDF = 15,  // Undefined instruction
 };
 
 class Entry : public EntryBase<Config> {

@@ -26,7 +26,7 @@ const char AsmMos6502::OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers
 
 Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t bank = insn.address() & ~0xFFFF;
-    const uint16_t base = insn.address() + insn.length() + (mode == REL ? 1 : 2);
+    const uint16_t base = insn.address() + insn.length() + (mode == M_REL ? 1 : 2);
     const uint16_t target = op.getError() ? base : op.val32;
     const int16_t delta = target - base;
     if (addressWidth() == ADDRESS_24BIT && op.isOK() && (op.val32 & ~0xFFFF) != bank) {
@@ -34,7 +34,7 @@ Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand
         insn.reset();
         return setError(op, OPERAND_TOO_FAR);
     }
-    if (mode == REL) {
+    if (mode == M_REL) {
         if (overflowRel8(delta))
             goto too_far;
         insn.emitByte(delta);
@@ -46,7 +46,7 @@ Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand
 
 Error AsmMos6502::selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const {
     if (size == '}') {
-        if (labs == IMPL)
+        if (labs == M_NONE)
             return op.setError(UNKNOWN_OPERAND);
         op.mode = labs;
     } else if (size == '>') {
@@ -90,7 +90,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, Operand &extra) co
         op.val32 = parseExpr32(p, op);
         if (parserError())
             return getError();
-        op.mode = IMMA;
+        op.mode = M_IMMA;
         scan = p;
         return OK;
     }
@@ -98,7 +98,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, Operand &extra) co
     const RegName reg = RegMos6502::parseRegName(a);
     if (reg != REG_UNDEF) {
         if (reg == REG_A) {
-            op.mode = ACCM;
+            op.mode = M_ACCM;
             scan = a;
             return OK;
         }
@@ -150,22 +150,22 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, Operand &extra) co
             if (hasExtra) {
                 if (indir)
                     return op.setError(UNKNOWN_OPERAND);
-                op.mode = ZPG_REL;  // zp,rel
+                op.mode = M_ZPG_REL;  // zp,rel
                 return OK;
             }
             switch (indir) {
             case ')':  // (abs) (zp)
-                return selectMode(size, op, ZPG_IDIR, ABS_IDIR);
+                return selectMode(size, op, M_ZPG_IDIR, M_ABS_IDIR);
             case ']':  // [abs] [zp]
-                return selectMode(size, op, ZPG_IDIR_LONG, ABS_IDIR_LONG);
+                return selectMode(size, op, M_ZPG_IDIR_LONG, M_ABS_IDIR_LONG);
             default:  // labs abs zp
-                return selectMode(size, op, ZPG, ABS, ABS_LONG);
+                return selectMode(size, op, M_ZPG, M_ABS, M_ABS_LONG);
             }
         }
         if (indir == 0)
             return op.setError(UNKNOWN_OPERAND);
         if (index == REG_Y) {  // (zp),Y [zp],Y
-            op.mode = (indir == ']') ? ZPG_IDIR_LONG_IDY : ZPG_IDIR_IDY;
+            op.mode = (indir == ']') ? M_ZPG_IDIR_LONG_IDY : M_ZPG_IDIR_IDY;
             return OK;
         }
         return op.setError(indexp, REGISTER_NOT_ALLOWED);
@@ -176,11 +176,11 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, Operand &extra) co
             return op.setError(REGISTER_NOT_ALLOWED);
         switch (base) {
         case REG_X:  // labs,X abs,X zp,X
-            return selectMode(size, op, ZPG_IDX, ABS_IDX, ABS_LONG_IDX);
+            return selectMode(size, op, M_ZPG_IDX, M_ABS_IDX, M_ABS_LONG_IDX);
         case REG_Y:  // abs,Y zp,Y
-            return selectMode(size, op, ZPG_IDY, ABS_IDY);
+            return selectMode(size, op, M_ZPG_IDY, M_ABS_IDY);
         case REG_S:  // off,S
-            op.mode = SP_REL;
+            op.mode = M_SP_REL;
             return OK;
         default:
             return op.setError(basep, REGISTER_NOT_ALLOWED);
@@ -189,13 +189,13 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, Operand &extra) co
         switch (base) {
         case REG_X:  // (abs,X) (zp,X)
             if (index == REG_UNDEF)
-                return selectMode(size, op, ZPG_IDX_IDIR, ABS_IDX_IDIR);
+                return selectMode(size, op, M_ZPG_IDX_IDIR, M_ABS_IDX_IDIR);
             return op.setError(indexp, REGISTER_NOT_ALLOWED);
         case REG_S:  // (off,S),Y
             if (index == REG_UNDEF)
                 return op.setError(UNKNOWN_OPERAND);
             if (index == REG_Y) {
-                op.mode = SP_REL_IDIR_IDY;
+                op.mode = M_SP_REL_IDIR_IDY;
                 return OK;
             }
             return op.setError(indexp, REGISTER_NOT_ALLOWED);
@@ -255,26 +255,26 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
 
     const AddrMode mode = insn.addrMode();
     switch (mode) {
-    case IMPL:
-    case ACCM:
+    case M_NONE:
+    case M_ACCM:
         insn.emitInsn();
         break;
-    case REL:
-    case REL_LONG:
+    case M_REL:
+    case M_REL_LONG:
         insn.emitInsn();
         encodeRelative(insn, mode, op);
         break;
-    case ZPG_REL:
+    case M_ZPG_REL:
         insn.emitInsn();
         insn.emitByte(op.val32);
-        encodeRelative(insn, REL, extra);
+        encodeRelative(insn, M_REL, extra);
         break;
-    case BLOCK_MOVE:
+    case M_BLOCK_MOVE:
         insn.emitInsn();
         insn.emitByte(extra.val32 >> 16);
         insn.emitByte(op.val32 >> 16);
         break;
-    case IMMA:
+    case M_IMMA:
         insn.emitInsn();
         if (TableMos6502::TABLE.longAccumulator()) {
             insn.emitUint16(op.val32);
@@ -282,7 +282,7 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
             insn.emitByte(op.val32);
         }
         break;
-    case IMMX:
+    case M_IMMX:
         insn.emitInsn();
         if (TableMos6502::TABLE.longIndex()) {
             insn.emitUint16(op.val32);
@@ -290,31 +290,31 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
             insn.emitByte(op.val32);
         }
         break;
-    case IMM8:
-    case ZPG:
-    case ZPG_IDX:
-    case ZPG_IDY:
-    case ZPG_IDX_IDIR:
-    case ZPG_IDIR_IDY:
-    case ZPG_IDIR:
-    case SP_REL:
-    case SP_REL_IDIR_IDY:
-    case ZPG_IDIR_LONG:
-    case ZPG_IDIR_LONG_IDY:
+    case M_IMM8:
+    case M_ZPG:
+    case M_ZPG_IDX:
+    case M_ZPG_IDY:
+    case M_ZPG_IDX_IDIR:
+    case M_ZPG_IDIR_IDY:
+    case M_ZPG_IDIR:
+    case M_SP_REL:
+    case M_SP_REL_IDIR_IDY:
+    case M_ZPG_IDIR_LONG:
+    case M_ZPG_IDIR_LONG_IDY:
         insn.emitInsn();
         insn.emitByte(op.val32);
         break;
-    case ABS:
-    case ABS_IDX:
-    case ABS_IDY:
-    case ABS_IDIR:
-    case ABS_IDX_IDIR:
-    case ABS_IDIR_LONG:
+    case M_ABS:
+    case M_ABS_IDX:
+    case M_ABS_IDY:
+    case M_ABS_IDIR:
+    case M_ABS_IDX_IDIR:
+    case M_ABS_IDIR_LONG:
         insn.emitInsn();
         insn.emitUint16(op.val32);
         break;
-    case ABS_LONG:
-    case ABS_LONG_IDX:
+    case M_ABS_LONG:
+    case M_ABS_LONG_IDX:
         insn.emitInsn();
         insn.emitUint16(op.val32);
         insn.emitByte(op.val32 >> 16);

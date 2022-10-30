@@ -256,12 +256,12 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
         return setError(dstOp, error);
 
     const AddrMode dst = insn.dstMode();
-    if (dst != M_NO) {
+    if (dst != M_NONE) {
         if (encodeOperand(insn, dstOp, dst, srcOp))
             return getError();
     }
     const AddrMode src = insn.srcMode();
-    if (src != M_NO) {
+    if (src != M_NONE) {
         if (encodeOperand(insn, srcOp, src, dstOp))
             return getError();
     }

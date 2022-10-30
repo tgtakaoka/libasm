@@ -30,7 +30,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
     if (endOfLine(*p)) {
-        op.mode = M_NO;
+        op.mode = M_NONE;
         return OK;
     }
 

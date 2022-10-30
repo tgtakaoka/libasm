@@ -55,13 +55,13 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
     op.reg = RegScn2650::parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        op.mode = op.reg == REG_R0 ? REG0 : R123;
+        op.mode = op.reg == REG_R0 ? M_REG0 : M_R123;
         scan = p;
         return OK;
     }
     op.cc = RegScn2650::parseCcName(p);
     if (op.cc != CC_UNDEF) {
-        op.mode = op.cc == CC_UN ? CCVN : C012;
+        op.mode = op.cc == CC_UN ? M_CCVN : M_C012;
         scan = p;
         return OK;
     }
@@ -77,17 +77,17 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         if (p.skipSpaces().expect(',')) {
             op.sign = p.skipSpaces().expect([](char c) { return c == '+' || c == '-'; });
             if (op.sign) {
-                op.mode = IX13;
+                op.mode = M_IX13;
                 scan = p;
                 return OK;
             }
             return op.setError(UNKNOWN_OPERAND);
         }
-        op.mode = op.reg == REG_R3 ? IX15 : IX13;
+        op.mode = op.reg == REG_R3 ? M_IX15 : M_IX13;
         scan = p;
         return OK;
     }
-    op.mode = op.indir ? AB15 : IMM8;
+    op.mode = op.indir ? M_AB15 : M_IMM8;
     scan = p;
     return OK;
 }
@@ -99,7 +99,7 @@ Error AsmScn2650::emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mo
     uint16_t opr = target;
     if (op.indir)
         opr |= 0x8000;
-    if (mode == IX15) {
+    if (mode == M_IX15) {
         if (op.reg != REG_R3 && op.reg != REG_UNDEF)
             return setError(op, REGISTER_NOT_ALLOWED);
         insn.embed(RegScn2650::encodeRegName(REG_R3));
@@ -118,7 +118,7 @@ Error AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mod
     uint16_t opr = offset(target);
     if (op.indir)
         opr |= 0x8000;
-    if (mode == IX13) {
+    if (mode == M_IX13) {
         insn.embed(RegScn2650::encodeRegName(op.reg));
         switch (op.sign) {
         case '+':
@@ -169,27 +169,27 @@ Error AsmScn2650::emitRelative(InsnScn2650 &insn, const Operand &op) {
 
 Error AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
-    case REGN:
-    case REG0:
-    case R123:
+    case M_REGN:
+    case M_REG0:
+    case M_R123:
         insn.embed(RegScn2650::encodeRegName(op.reg));
         break;
-    case CCVN:
-    case C012:
+    case M_CCVN:
+    case M_C012:
         insn.embed(RegScn2650::encodeCcName(op.cc));
         break;
-    case IMM8:
+    case M_IMM8:
         insn.emitOperand8(op.val16);
         break;
-    case REL7:
+    case M_REL7:
         return emitRelative(insn, op);
-    case ABS7:
+    case M_ABS7:
         return emitZeroPage(insn, op);
-    case AB13:
-    case IX13:
+    case M_AB13:
+    case M_IX13:
         return emitIndexed(insn, op, mode);
-    case AB15:
-    case IX15:
+    case M_AB15:
+    case M_IX15:
         return emitAbsolute(insn, op, mode);
     default:
         break;
@@ -206,7 +206,7 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (scan.expect(',')) {
         if (parseOperand(scan, opr1) && opr1.hasError())
             return setError(opr1);
-        if (opr1.mode == REGN || opr1.mode == REG0 || opr1.mode == R123)
+        if (opr1.mode == M_REGN || opr1.mode == M_REG0 || opr1.mode == M_R123)
             insnWithReg = true;
         if (!endOfLine(*scan.skipSpaces())) {
             if (parseOperand(scan.skipSpaces(), opr2) && opr2.hasError())

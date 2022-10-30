@@ -143,20 +143,20 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableMc6805::TABLE.getError());
 
     const AddrMode mode1 = insn.mode1();
-    if (mode1 == M_NO)
+    if (mode1 == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
     const AddrMode mode2 = insn.mode2();
 
-    if (mode2 == M_NO)
+    if (mode2 == M_NONE)
         return setOK();
     out.comma();
     if (decodeOperand(memory, insn, out, mode2))
         return getError();
 
     const AddrMode mode3 = insn.mode3();
-    if (mode3 == M_NO)
+    if (mode3 == M_NONE)
         return setOK();
     out.comma();
     return decodeOperand(memory, insn, out, mode3);

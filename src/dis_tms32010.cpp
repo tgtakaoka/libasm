@@ -132,19 +132,19 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableTms32010::TABLE.getError());
 
     const AddrMode op1 = insn.op1();
-    if (op1 == M_NO)
+    if (op1 == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, op1))
         return getError();
     const AddrMode op2 = insn.op2();
-    if (op2 == M_NO)
+    if (op2 == M_NONE)
         return OK;
     if (!(op2 == M_LS4 || op2 == M_LS3 || op2 == M_LS0 || op2 == M_NARP))
         out.comma();
     if (decodeOperand(memory, insn, out, op2))
         return getError();
     const AddrMode op3 = insn.op3();
-    if (op3 == M_NO)
+    if (op3 == M_NONE)
         return OK;
     return decodeOperand(memory, insn, out, op3);
 }

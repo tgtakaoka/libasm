@@ -36,24 +36,24 @@ Error DisCdp1802::decodeOperand(
         DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode) {
     const Config::opcode_t opCode = insn.opCode();
     switch (mode) {
-    case REG1:
-    case REGN:
+    case M_REG1:
+    case M_REGN:
         if (_useReg) {
             _regs.outRegName(out, RegName(opCode & 0x0F));
         } else {
             outDec(out, opCode & 0xF, 4);
         }
         return OK;
-    case IMM8:
+    case M_IMM8:
         outHex(out, insn.readByte(memory), 8);
         break;
-    case IOAD:
+    case M_IOAD:
         outHex(out, opCode & 7, 3);
         return OK;
-    case ADDR:
+    case M_ADDR:
         outAbsAddr(out, insn.readUint16(memory));
         break;
-    case PAGE:
+    case M_PAGE:
         outAbsAddr(out, inpage(insn.address() + 2, insn.readByte(memory)));
         break;
     default:
@@ -78,12 +78,12 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableCdp1802::TABLE.getError());
 
     const AddrMode mode1 = insn.mode1();
-    if (mode1 == NONE)
+    if (mode1 == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
     const AddrMode mode2 = insn.mode2();
-    if (mode2 == NONE)
+    if (mode2 == M_NONE)
         return OK;
     out.comma();
     return decodeOperand(memory, insn, out, mode2);

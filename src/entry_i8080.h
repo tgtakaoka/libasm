@@ -32,7 +32,7 @@ enum CpuType : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO = 0,
+    M_NONE = 0,
     M_IM8 = 1,    // Immediate 8-bit
     M_IM16 = 2,   // Immediate 16-bit
     M_ABS = 3,    // Direct address 16-bit

@@ -26,104 +26,105 @@
 namespace libasm {
 namespace cdp1802 {
 
-#define X(_opc, _name, _op1, _op2) \
+#define E2(_opc, _name, _op1, _op2) \
     { _opc, Entry::Flags::create(_op1, _op2), _name }
-#define E(_opc, _name, _op1) X(_opc, _name, _op1, NONE)
+#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
 static constexpr Entry TABLE_CDP1802[] PROGMEM = {
-    E(0x00, TEXT_IDL,  NONE),
-    E(0x00, TEXT_LDN,  REG1),
-    E(0x10, TEXT_INC,  REGN),
-    E(0x20, TEXT_DEC,  REGN),
-    E(0x30, TEXT_BR,   PAGE),
-    E(0x31, TEXT_BQ,   PAGE),
-    E(0x32, TEXT_BZ,   PAGE),
-    E(0x33, TEXT_BDF,  PAGE),
-    E(0x33, TEXT_BPZ,  PAGE),
-    E(0x33, TEXT_BGE,  PAGE),
-    E(0x34, TEXT_B1,   PAGE),
-    E(0x35, TEXT_B2,   PAGE),
-    E(0x36, TEXT_B3,   PAGE),
-    E(0x37, TEXT_B4,   PAGE),
-    E(0x38, TEXT_SKP,  NONE),
-    E(0x38, TEXT_NBR,  PAGE),
-    E(0x39, TEXT_BNQ,  PAGE),
-    E(0x3A, TEXT_BNZ,  PAGE),
-    E(0x3B, TEXT_BNF,  PAGE),
-    E(0x3B, TEXT_BM,   PAGE),
-    E(0x3B, TEXT_BL,   PAGE),
-    E(0x3C, TEXT_BN1,  PAGE),
-    E(0x3D, TEXT_BN2,  PAGE),
-    E(0x3E, TEXT_BN3,  PAGE),
-    E(0x3F, TEXT_BN4,  PAGE),
-    E(0x40, TEXT_LDA,  REGN),
-    E(0x50, TEXT_STR,  REGN),
-    E(0x60, TEXT_IRX,  NONE),
-    E(0x60, TEXT_OUT,  IOAD),
-    E(0x68, TEXT_null, UNDF),   // undefined
-    E(0x68, TEXT_INP,  IOAD),
-    E(0x70, TEXT_RET,  NONE),
-    E(0x71, TEXT_DIS,  NONE),
-    E(0x72, TEXT_LDXA, NONE),
-    E(0x73, TEXT_STXD, NONE),
-    E(0x74, TEXT_ADC,  NONE),
-    E(0x75, TEXT_SDB,  NONE),
-    E(0x76, TEXT_SHRC, NONE),
-    E(0x76, TEXT_RSHR, NONE),
-    E(0x77, TEXT_SMB,  NONE),
-    E(0x78, TEXT_SAV,  NONE),
-    E(0x79, TEXT_MARK, NONE),
-    E(0x7A, TEXT_REQ,  NONE),
-    E(0x7B, TEXT_SEQ,  NONE),
-    E(0x7C, TEXT_ADCI, IMM8),
-    E(0x7D, TEXT_SDBI, IMM8),
-    E(0x7E, TEXT_SHLC, NONE),
-    E(0x7E, TEXT_RSHL, NONE),
-    E(0x7F, TEXT_SMBI, IMM8),
-    E(0x80, TEXT_GLO,  REGN),
-    E(0x90, TEXT_GHI,  REGN),
-    E(0xA0, TEXT_PLO,  REGN),
-    E(0xB0, TEXT_PHI,  REGN),
-    E(0xC0, TEXT_LBR,  ADDR),
-    E(0xC1, TEXT_LBQ,  ADDR),
-    E(0xC2, TEXT_LBZ,  ADDR),
-    E(0xC3, TEXT_LBDF, ADDR),
-    E(0xC3, TEXT_LBPZ, ADDR),
-    E(0xC3, TEXT_LBGE, ADDR),
-    E(0xC4, TEXT_NOP,  NONE),
-    E(0xC5, TEXT_LSNQ, NONE),
-    E(0xC6, TEXT_LSNZ, NONE),
-    E(0xC7, TEXT_LSNF, NONE),
-    E(0xC8, TEXT_LSKP, NONE),
-    E(0xC8, TEXT_NLBR, ADDR),
-    E(0xC9, TEXT_LBNQ, ADDR),
-    E(0xCA, TEXT_LBNZ, ADDR),
-    E(0xCB, TEXT_LBNF, ADDR),
-    E(0xCB, TEXT_LBM,  ADDR),
-    E(0xCB, TEXT_LBL,  ADDR),
-    E(0xCC, TEXT_LSIE, NONE),
-    E(0xCD, TEXT_LSQ,  NONE),
-    E(0xCE, TEXT_LSZ,  NONE),
-    E(0xCF, TEXT_LSDF, NONE),
-    E(0xD0, TEXT_SEP,  REGN),
-    E(0xE0, TEXT_SEX,  REGN),
-    E(0xF0, TEXT_LDX,  NONE),
-    E(0xF1, TEXT_OR,   NONE),
-    E(0xF2, TEXT_AND,  NONE),
-    E(0xF3, TEXT_XOR,  NONE),
-    E(0xF4, TEXT_ADD,  NONE),
-    E(0xF5, TEXT_SD,   NONE),
-    E(0xF6, TEXT_SHR,  NONE),
-    E(0xF7, TEXT_SM,   NONE),
-    E(0xF8, TEXT_LDI,  IMM8),
-    E(0xF9, TEXT_ORI,  IMM8),
-    E(0xFA, TEXT_ANI,  IMM8),
-    E(0xFB, TEXT_XRI,  IMM8),
-    E(0xFC, TEXT_ADI,  IMM8),
-    E(0xFD, TEXT_SDI,  IMM8),
-    E(0xFE, TEXT_SHL,  NONE),
-    E(0xFF, TEXT_SMI,  IMM8),
+    E0(0x00, TEXT_IDL),
+    E1(0x00, TEXT_LDN,  M_REG1),
+    E1(0x10, TEXT_INC,  M_REGN),
+    E1(0x20, TEXT_DEC,  M_REGN),
+    E1(0x30, TEXT_BR,   M_PAGE),
+    E1(0x31, TEXT_BQ,   M_PAGE),
+    E1(0x32, TEXT_BZ,   M_PAGE),
+    E1(0x33, TEXT_BDF,  M_PAGE),
+    E1(0x33, TEXT_BPZ,  M_PAGE),
+    E1(0x33, TEXT_BGE,  M_PAGE),
+    E1(0x34, TEXT_B1,   M_PAGE),
+    E1(0x35, TEXT_B2,   M_PAGE),
+    E1(0x36, TEXT_B3,   M_PAGE),
+    E1(0x37, TEXT_B4,   M_PAGE),
+    E0(0x38, TEXT_SKP),
+    E1(0x38, TEXT_NBR,  M_PAGE),
+    E1(0x39, TEXT_BNQ,  M_PAGE),
+    E1(0x3A, TEXT_BNZ,  M_PAGE),
+    E1(0x3B, TEXT_BNF,  M_PAGE),
+    E1(0x3B, TEXT_BM,   M_PAGE),
+    E1(0x3B, TEXT_BL,   M_PAGE),
+    E1(0x3C, TEXT_BN1,  M_PAGE),
+    E1(0x3D, TEXT_BN2,  M_PAGE),
+    E1(0x3E, TEXT_BN3,  M_PAGE),
+    E1(0x3F, TEXT_BN4,  M_PAGE),
+    E1(0x40, TEXT_LDA,  M_REGN),
+    E1(0x50, TEXT_STR,  M_REGN),
+    E0(0x60, TEXT_IRX),
+    E1(0x60, TEXT_OUT,  M_IOAD),
+    E1(0x68, TEXT_null, M_UNDF),   // undefined
+    E1(0x68, TEXT_INP,  M_IOAD),
+    E0(0x70, TEXT_RET),
+    E0(0x71, TEXT_DIS),
+    E0(0x72, TEXT_LDXA),
+    E0(0x73, TEXT_STXD),
+    E0(0x74, TEXT_ADC),
+    E0(0x75, TEXT_SDB),
+    E0(0x76, TEXT_SHRC),
+    E0(0x76, TEXT_RSHR),
+    E0(0x77, TEXT_SMB),
+    E0(0x78, TEXT_SAV),
+    E0(0x79, TEXT_MARK),
+    E0(0x7A, TEXT_REQ),
+    E0(0x7B, TEXT_SEQ),
+    E1(0x7C, TEXT_ADCI, M_IMM8),
+    E1(0x7D, TEXT_SDBI, M_IMM8),
+    E0(0x7E, TEXT_SHLC),
+    E0(0x7E, TEXT_RSHL),
+    E1(0x7F, TEXT_SMBI, M_IMM8),
+    E1(0x80, TEXT_GLO,  M_REGN),
+    E1(0x90, TEXT_GHI,  M_REGN),
+    E1(0xA0, TEXT_PLO,  M_REGN),
+    E1(0xB0, TEXT_PHI,  M_REGN),
+    E1(0xC0, TEXT_LBR,  M_ADDR),
+    E1(0xC1, TEXT_LBQ,  M_ADDR),
+    E1(0xC2, TEXT_LBZ,  M_ADDR),
+    E1(0xC3, TEXT_LBDF, M_ADDR),
+    E1(0xC3, TEXT_LBPZ, M_ADDR),
+    E1(0xC3, TEXT_LBGE, M_ADDR),
+    E0(0xC4, TEXT_NOP),
+    E0(0xC5, TEXT_LSNQ),
+    E0(0xC6, TEXT_LSNZ),
+    E0(0xC7, TEXT_LSNF),
+    E0(0xC8, TEXT_LSKP),
+    E1(0xC8, TEXT_NLBR, M_ADDR),
+    E1(0xC9, TEXT_LBNQ, M_ADDR),
+    E1(0xCA, TEXT_LBNZ, M_ADDR),
+    E1(0xCB, TEXT_LBNF, M_ADDR),
+    E1(0xCB, TEXT_LBM,  M_ADDR),
+    E1(0xCB, TEXT_LBL,  M_ADDR),
+    E0(0xCC, TEXT_LSIE),
+    E0(0xCD, TEXT_LSQ),
+    E0(0xCE, TEXT_LSZ),
+    E0(0xCF, TEXT_LSDF),
+    E1(0xD0, TEXT_SEP,  M_REGN),
+    E1(0xE0, TEXT_SEX,  M_REGN),
+    E0(0xF0, TEXT_LDX),
+    E0(0xF1, TEXT_OR),
+    E0(0xF2, TEXT_AND),
+    E0(0xF3, TEXT_XOR),
+    E0(0xF4, TEXT_ADD),
+    E0(0xF5, TEXT_SD),
+    E0(0xF6, TEXT_SHR),
+    E0(0xF7, TEXT_SM),
+    E1(0xF8, TEXT_LDI,  M_IMM8),
+    E1(0xF9, TEXT_ORI,  M_IMM8),
+    E1(0xFA, TEXT_ANI,  M_IMM8),
+    E1(0xFB, TEXT_XRI,  M_IMM8),
+    E1(0xFC, TEXT_ADI,  M_IMM8),
+    E1(0xFD, TEXT_SDI,  M_IMM8),
+    E0(0xFE, TEXT_SHL),
+    E1(0xFF, TEXT_SMI,  M_IMM8),
 };
 
 static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
@@ -222,28 +223,28 @@ static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
 };
 
 static constexpr Entry TABLE_CDP1804[] PROGMEM = {
-    E(0x00, TEXT_STPC, NONE),
-    E(0x01, TEXT_DTC,  NONE),
-    E(0x02, TEXT_SPM2, NONE),
-    E(0x03, TEXT_SCM2, NONE),
-    E(0x04, TEXT_SPM1, NONE),
-    E(0x05, TEXT_SCM1, NONE),
-    E(0x06, TEXT_LDC,  NONE),
-    E(0x07, TEXT_STM,  NONE),
-    E(0x08, TEXT_GEC,  NONE),
-    E(0x09, TEXT_ETQ,  NONE),
-    E(0x0A, TEXT_XIE,  NONE),
-    E(0x0B, TEXT_XID,  NONE),
-    E(0x0C, TEXT_CIE,  NONE),
-    E(0x0D, TEXT_CID,  NONE),
-    E(0x3E, TEXT_BCI,  PAGE),
-    E(0x3F, TEXT_BXI,  PAGE),
-    E(0x60, TEXT_RLXA, REGN),
-    X(0x80, TEXT_SCAL, REGN, ADDR),
-    E(0x90, TEXT_SRET, REGN),
-    E(0xA0, TEXT_RSXD, REGN),
-    E(0xB0, TEXT_RNX,  REGN),
-    X(0xC0, TEXT_RLDI, REGN, ADDR),
+    E0(0x00, TEXT_STPC),
+    E0(0x01, TEXT_DTC),
+    E0(0x02, TEXT_SPM2),
+    E0(0x03, TEXT_SCM2),
+    E0(0x04, TEXT_SPM1),
+    E0(0x05, TEXT_SCM1),
+    E0(0x06, TEXT_LDC),
+    E0(0x07, TEXT_STM),
+    E0(0x08, TEXT_GEC),
+    E0(0x09, TEXT_ETQ),
+    E0(0x0A, TEXT_XIE),
+    E0(0x0B, TEXT_XID),
+    E0(0x0C, TEXT_CIE),
+    E0(0x0D, TEXT_CID),
+    E1(0x3E, TEXT_BCI,  M_PAGE),
+    E1(0x3F, TEXT_BXI,  M_PAGE),
+    E1(0x60, TEXT_RLXA, M_REGN),
+    E2(0x80, TEXT_SCAL, M_REGN, M_ADDR),
+    E1(0x90, TEXT_SRET, M_REGN),
+    E1(0xA0, TEXT_RSXD, M_REGN),
+    E1(0xB0, TEXT_RNX,  M_REGN),
+    E2(0xC0, TEXT_RLDI, M_REGN, M_ADDR),
 };
 
 static constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
@@ -272,16 +273,16 @@ static constexpr uint8_t INDEX_CDP1804[] PROGMEM = {
 };
 
 static constexpr Entry TABLE_CDP1804A[] PROGMEM = {
-    X(0x20, TEXT_DBNZ, REGN, ADDR),
-    E(0x74, TEXT_DADC, NONE),
-    E(0x76, TEXT_DSAV, NONE),
-    E(0x77, TEXT_DSMB, NONE),
-    E(0x7C, TEXT_DACI, IMM8),
-    E(0x7F, TEXT_DSBI, IMM8),
-    E(0xF4, TEXT_DADD, NONE),
-    E(0xF7, TEXT_DSM,  NONE),
-    E(0xFC, TEXT_DADI, IMM8),
-    E(0xFF, TEXT_DSMI, IMM8),
+    E2(0x20, TEXT_DBNZ, M_REGN, M_ADDR),
+    E0(0x74, TEXT_DADC),
+    E0(0x76, TEXT_DSAV),
+    E0(0x77, TEXT_DSMB),
+    E1(0x7C, TEXT_DACI, M_IMM8),
+    E1(0x7F, TEXT_DSBI, M_IMM8),
+    E0(0xF4, TEXT_DADD),
+    E0(0xF7, TEXT_DSM),
+    E1(0xFC, TEXT_DADI, M_IMM8),
+    E1(0xFF, TEXT_DSMI, M_IMM8),
 };
 
 static constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
@@ -326,10 +327,11 @@ bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
-    if (opr == REGN)
-        return table == REG1;
-    if (opr == ADDR)
-        return table == REGN || table == REG1 || table == IMM8 || table == PAGE || table == IOAD;
+    if (opr == M_REGN)
+        return table == M_REG1;
+    if (opr == M_ADDR)
+        return table == M_REGN || table == M_REG1 || table == M_IMM8 || table == M_PAGE ||
+               table == M_IOAD;
     return false;
 }
 
@@ -353,9 +355,9 @@ Error TableCdp1802::searchName(InsnCdp1802 &insn) {
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     auto mode = entry->flags().mode1();
-    if (mode == REGN || mode == REG1)
+    if (mode == M_REGN || mode == M_REG1)
         return opCode & ~0x0F;
-    if (mode == IOAD)
+    if (mode == M_IOAD)
         return opCode & ~7;
     return opCode;
 }
@@ -368,7 +370,7 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
             insn.setFlags(entry->flags());
-            if (insn.mode1() == UNDF)
+            if (insn.mode1() == M_UNDF)
                 break;
             insn.nameBuffer().text_P(entry->name_P());
             return setOK();

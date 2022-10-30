@@ -26,24 +26,24 @@ namespace libasm {
 namespace i8051 {
 
 enum AddrMode : uint8_t {
-    NONE = 0,
-    REL = 1,     // Relative
-    AREG = 2,    // A register
-    RREG = 3,    // Rn register
-    CREG = 4,    // C register
-    DREG = 5,    // DPTR register
-    ABREG = 6,   // AB register
-    ADR8 = 7,    // Internal 8-bit RAM address
-    ADR11 = 8,   // 11-bit program code address
-    ADR16 = 9,   // 16-bot program code address
-    BITAD = 10,  // 8-bit bit address
-    NOTAD = 11,  // not(/) 8-bit address
-    IMM8 = 12,   // 8-bit Immediate data
-    IMM16 = 13,  // 16-bit Immediate data
-    IDIRR = 14,  // @Rn indirect
-    IDIRD = 15,  // @DPTR indirect
-    INDXD = 16,  // @A+DPTR
-    INDXP = 17,  // @A+PC
+    M_NONE = 0,
+    M_REL = 1,     // Relative
+    M_AREG = 2,    // A register
+    M_RREG = 3,    // Rn register
+    M_CREG = 4,    // C register
+    M_DREG = 5,    // DPTR register
+    M_ABREG = 6,   // AB register
+    M_ADR8 = 7,    // Internal 8-bit RAM address
+    M_ADR11 = 8,   // 11-bit program code address
+    M_ADR16 = 9,   // 16-bot program code address
+    M_BITAD = 10,  // 8-bit bit address
+    M_NOTAD = 11,  // not(/) 8-bit address
+    M_IMM8 = 12,   // 8-bit Immediate data
+    M_IMM16 = 13,  // 16-bit Immediate data
+    M_IDIRR = 14,  // @Rn indirect
+    M_IDIRD = 15,  // @DPTR indirect
+    M_INDXD = 16,  // @A+DPTR
+    M_INDXP = 17,  // @A+PC
 };
 
 class Entry : public EntryBase<Config> {

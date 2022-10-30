@@ -192,22 +192,22 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     const auto op1 = insn.op1();
-    if (op1 == M_NO)
+    if (op1 == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, op1))
         return getError();
     const auto op2 = insn.op2();
-    if (op2 == M_NO)
+    if (op2 == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, outComma(out, opc, op2), op2))
         return getError();
     const auto op3 = insn.op3();
-    if (op3 == M_NO)
+    if (op3 == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, outComma(out, opc, op3), op3))
         return getError();
     const auto op4 = insn.op4();
-    if (op4 == M_NO)
+    if (op4 == M_NONE)
         return setOK();
     return decodeOperand(memory, insn, outComma(out, opc, op4), op4);
 }

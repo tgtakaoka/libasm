@@ -40,7 +40,7 @@ enum OprSize : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_NO = 0,
+    M_NONE = 0,
     M_R = 1,      // Register: Rn/RHn/RLn/RRn/RQn
     M_IM = 2,     // Immediate: #nn
     M_IR = 3,     // Indirect Register: @Rn/@RRn
@@ -76,19 +76,19 @@ enum AddrMode : uint8_t {
 };
 
 enum Ex1Mode : uint8_t {
-    E1_NO = 0,
+    E1_NONE = 0,
     E1_CNT = 1,
     E1_WR = 2,
     E1_ERROR = 3,
 };
 enum Ex2Mode : uint8_t {
-    E2_NO = 0,
+    E2_NONE = 0,
     E2_CC = 1,
     E2_ERROR = 2,
 };
 
 enum PostMode : uint8_t {
-    P_NO = 0,    // No Post Word
+    P_NONE = 0,    // No Post Word
     P_0XX0 = 1,  // 0 is part of instruction
     P_0XX8 = 2,  // 8 is part of instruction
     P_0XXE = 3,  // E is part of instruction
@@ -137,7 +137,7 @@ public:
         }
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
             return Flags{Entry::opr(dst, MF_NO), Entry::opr(src, MF_NO),
-                    Entry::exopr(toEx1Mode(ex1), toEx2Mode(ex2), P_NO),
+                    Entry::exopr(toEx1Mode(ex1), toEx2Mode(ex2), P_NONE),
                     Entry::size(CM_0x0000, SZ_NONE)};
         }
         Flags read() const {
@@ -190,8 +190,8 @@ private:
     static AddrMode toAddrMode(Ex1Mode mode);
     static inline Ex1Mode toEx1Mode(AddrMode mode) {
         switch (mode) {
-        case M_NO:
-            return E1_NO;
+        case M_NONE:
+            return E1_NONE;
         case M_CNT:
         case M_IM:
             return E1_CNT;
@@ -206,8 +206,8 @@ private:
     static AddrMode toAddrMode(Ex2Mode mode);
     static inline Ex2Mode toEx2Mode(AddrMode mode) {
         switch (mode) {
-        case M_NO:
-            return E2_NO;
+        case M_NONE:
+            return E2_NONE;
         case M_CC:
             return E2_CC;
         default:
