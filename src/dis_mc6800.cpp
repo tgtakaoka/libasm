@@ -155,8 +155,8 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setOK();
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
-    const AddrMode mode2 = insn.mode2();
 
+    const AddrMode mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return setOK();
     out.comma();

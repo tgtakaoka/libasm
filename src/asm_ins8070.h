@@ -36,11 +36,11 @@ private:
     NationalValueParser _parser;
 
     struct Operand : public OperandBase {
-        OprFormat format;
+        AddrMode mode;
         RegName reg;
         bool autoIndex;
         uint16_t val16;
-        Operand() : format(OPR_NO), reg(REG_UNDEF), autoIndex(false), val16(0) {}
+        Operand() : mode(M_NONE), reg(REG_UNDEF), autoIndex(false), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
@@ -49,7 +49,7 @@ private:
     Error emitImmediate(InsnIns8070 &insn, const Operand &op);
     Error emitRelative(InsnIns8070 &insn, const Operand &op);
     Error emitGeneric(InsnIns8070 &insn, const Operand &op);
-    Error emitOperand(InsnIns8070 &insn, OprFormat format, const Operand &op);
+    Error emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

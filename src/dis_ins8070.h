@@ -45,14 +45,13 @@ private:
     const Options _options{_opt_immPrefix};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
-    StrBuffer &outOperand(StrBuffer &out, OprFormat opr, uint8_t value = 0);
 
-    Error decodeImplied(InsnIns8070 &insn, StrBuffer &out);
     Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
-    Error decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
+    Error decodeRelative(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode);
     Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
+    Error decodeOperand(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;

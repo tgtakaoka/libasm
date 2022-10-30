@@ -32,31 +32,21 @@ enum OprSize : uint8_t {
 };
 
 enum AddrMode : uint8_t {
-    M_IMP = 1,  // Implied
-    M_GEN = 2,   // Generic; nnnn,PC/nn,SP/nn,Pn/@nn,Pn/0xFFnn/
-    M_ABS = 3,   // Absolute; nnnn
-    M_REL = 4,   // Relative; nnnn
-
-    M_IMM = 5,    // Immediate; #nn
-    M_UNDEF = 0,  // Undefined instruction
-};
-
-enum OprFormat : uint8_t {
-    OPR_NO = 0,
-    OPR_A = 1,    // Accumulator: A
-    OPR_E = 2,    // Extension register: E
-    OPR_EA = 3,   // Double precision Accumulator: EA
-    OPR_T = 4,    // Temporary register: T
-    OPR_S = 5,    // Status register: S
-    OPR_PN = 6,   // Pointer Register: P2/P3
-    OPR_SP = 7,   // SP register
-    OPR_BR = 8,   // Base Register: PC/SP/P2/P3
-    OPR_IM = 9,   // Immediate constant
-    OPR_16 = 10,  // 16 bit constant
-    OPR_4 = 11,   // 4 bit constant
-    OPR_PR = 12,  // Pointer relative: nn,Pn
-    OPR_RL = 13,  // PC Relative
-    OPR_GN = 14,  // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
+    M_NONE = 0,
+    M_AR = 1,    // Accumulator: A
+    M_ER = 2,    // Extension register: E
+    M_EA = 3,    // Double precision Accumulator: EA
+    M_TR = 4,    // Temporary register: T
+    M_SR = 5,    // Status register: S
+    M_P23 = 6,   // Pointer Register: P2/P3
+    M_SP = 7,    // SP register
+    M_PTR = 8,   // Base Register: PC/SP/P2/P3
+    M_IMM = 9,   // Immediate constant
+    M_ADR = 10,  // 16 bit constant
+    M_VEC = 11,  // 4 bit constant
+    M_IDX = 12,  // Pointer relative: nn,Pn
+    M_PCR = 13,  // PC Relative
+    M_GEN = 14,  // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
 };
 
 class Entry : public EntryBase<Config> {
@@ -65,18 +55,20 @@ public:
         uint16_t _attr;
 
         static constexpr Flags create(
-                AddrMode addrMode, OprFormat dst, OprFormat src, OprSize size) {
-            return Flags{static_cast<uint16_t>(static_cast<uint16_t>(addrMode) |
-                                               (static_cast<uint16_t>(dst) << dstOpr_gp) |
-                                               (static_cast<uint16_t>(src) << srcOpr_gp) |
-                                               (static_cast<uint16_t>(size) << oprSize_gp))};
+                AddrMode dst, AddrMode src, OprSize size, bool exec = false, bool undef = false) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(src) << src_gp) |
+                                               (static_cast<uint16_t>(size) << oprSize_gp) |
+                                               (static_cast<uint16_t>(exec ? 1 : 0) << exec_bp) |
+                                               (static_cast<uint16_t>(undef ? 1 : 0) << undef_bp))};
         }
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode mode() const { return AddrMode(_attr & addrMode_gm); }
-        OprFormat dstOpr() const { return OprFormat((_attr >> dstOpr_gp) & oprFormat_gm); }
-        OprFormat srcOpr() const { return OprFormat((_attr >> srcOpr_gp) & oprFormat_gm); }
+        AddrMode dst() const { return AddrMode((_attr >> dst_gp) & addrMode_gm); }
+        AddrMode src() const { return AddrMode((_attr >> src_gp) & addrMode_gm); }
         OprSize size() const { return OprSize((_attr >> oprSize_gp) & oprSize_gm); }
+        bool execute() const { return (_attr & (1 << exec_bp)) != 0; }
+        bool undefined() const { return (_attr & (1 << undef_bp)) != 0; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -87,12 +79,13 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t addrMode_gm = 0x7;
-    static constexpr uint8_t oprFormat_gm = 0xF;
+    static constexpr uint8_t addrMode_gm = 0xF;
     static constexpr uint8_t oprSize_gm = 0x3;
-    static constexpr int oprSize_gp = 4;
-    static constexpr int dstOpr_gp = 8;
-    static constexpr int srcOpr_gp = 12;
+    static constexpr int dst_gp = 0;
+    static constexpr int src_gp = 4;
+    static constexpr int oprSize_gp = 8;
+    static constexpr int exec_bp = 14;
+    static constexpr int undef_bp = 15;
 };
 
 }  // namespace ins8070

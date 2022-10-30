@@ -28,12 +28,13 @@ class InsnIns8070 : public InsnImpl<Config, Entry> {
 public:
     InsnIns8070(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode addrMode() const { return flags().mode(); }
-    OprFormat dstOpr() const { return flags().dstOpr(); }
-    OprFormat srcOpr() const { return flags().srcOpr(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
     OprSize oprSize() const { return flags().size(); }
-    void setOprFormats(OprFormat dst, OprFormat src) {
-        setFlags(Entry::Flags::create(M_UNDEF, dst, src, SZ_NONE));
+    bool execute() const { return flags().execute(); }
+    bool undefined() const { return flags().undefined(); }
+    void setAddrMode(AddrMode dst, AddrMode src) {
+        setFlags(Entry::Flags::create(dst, src, SZ_NONE));
     }
 
     void emitInsn() { emitByte(opCode(), 0); }
