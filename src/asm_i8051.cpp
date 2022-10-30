@@ -199,9 +199,9 @@ Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
-    const AddrMode ext = insn.extMode();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
+    const AddrMode ext = insn.ext();
     if (dst == M_ADR8 && src == M_ADR8) {
         if (encodeOperand(insn, src, srcOp))
             return getError();

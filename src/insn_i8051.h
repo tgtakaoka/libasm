@@ -28,9 +28,9 @@ class InsnI8051 : public InsnImpl<Config, Entry> {
 public:
     InsnI8051(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode extMode() const { return flags().extMode(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode ext() const { return flags().ext(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
         setFlags(Entry::Flags::create(dst, src, ext));
     }

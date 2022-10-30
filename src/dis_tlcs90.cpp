@@ -146,7 +146,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(TableTlcs90::TABLE.getError());
     if (TableTlcs90::TABLE.searchOpCode(insn))
         return setError(TableTlcs90::TABLE.getError());
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst == M_NONE)
         return OK;
     const char *start = out.mark();
@@ -159,7 +159,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     }
     if (getError())
         return getError();
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src == M_NONE)
         return OK;
     if (src == M_SRC16) {

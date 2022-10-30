@@ -28,18 +28,15 @@ class InsnMc68000 : public InsnImpl<Config, Entry> {
 public:
     InsnMc68000(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode dst() const { return flags().dst(); }
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
     bool alias() const { return flags().alias(); }
     OprSize oprSize() const { return flags().oprSize(); }
     InsnSize insnSize() const { return flags().insnSize(); }
-    bool withSize() const { return flags().withSize(); }
-    void setAddrMode(AddrMode src, AddrMode dst) {
-        flags().setSrcMode(src);
-        flags().setDstMode(dst);
-    }
+    bool hasSize() const { return flags().hasSize(); }
+    void setAddrMode(AddrMode src, AddrMode dst) { flags().setAddrMode(src, dst); }
 
     void setInsnSize(OprSize osize) { flags().setInsnSize(InsnSize(osize)); }
 

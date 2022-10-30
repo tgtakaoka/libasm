@@ -28,16 +28,16 @@ class InsnI8086 : public InsnImpl<Config, Entry> {
 public:
     InsnI8086(Insn &insn) : InsnImpl(insn), _segment(0), _modReg(0), _hasModReg(false) {}
 
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode extMode() const { return flags().extMode(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode ext() const { return flags().ext(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos extPos() const { return flags().extPos(); }
-    OprSize oprSize() const { return flags().size(); }
-    bool stringInst() const { return flags().strInst(); }
+    OprSize size() const { return flags().size(); }
+    bool stringInst() const { return flags().stringInst(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        setFlags(Entry::Flags::create(dst, src, ext, P_NONE, P_NONE, P_NONE, SZ_NONE, false));
+        setFlags(Entry::Flags::create(dst, src, ext, P_NONE, P_NONE, P_NONE, SZ_NONE));
     }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }

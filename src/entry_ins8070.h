@@ -54,21 +54,32 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(
-                AddrMode dst, AddrMode src, OprSize size, bool exec = false, bool undef = false) {
+        static constexpr Flags create(AddrMode dst, AddrMode src, OprSize size) {
             return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
                                                (static_cast<uint16_t>(src) << src_gp) |
-                                               (static_cast<uint16_t>(size) << oprSize_gp) |
-                                               (static_cast<uint16_t>(exec ? 1 : 0) << exec_bp) |
-                                               (static_cast<uint16_t>(undef ? 1 : 0) << undef_bp))};
+                                               (static_cast<uint16_t>(size) << size_gp))};
         }
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode dst() const { return AddrMode((_attr >> dst_gp) & addrMode_gm); }
-        AddrMode src() const { return AddrMode((_attr >> src_gp) & addrMode_gm); }
-        OprSize size() const { return OprSize((_attr >> oprSize_gp) & oprSize_gm); }
-        bool execute() const { return (_attr & (1 << exec_bp)) != 0; }
-        bool undefined() const { return (_attr & (1 << undef_bp)) != 0; }
+        static constexpr Flags exec(AddrMode dst) {
+            return Flags{
+                    static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                          (static_cast<uint16_t>(M_NONE) << src_gp) |
+                                          (static_cast<uint16_t>(SZ_NONE) << size_gp) | exec_bm)};
+        }
+
+        static constexpr Flags undef(AddrMode dst, AddrMode src) {
+            return Flags{
+                    static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                          (static_cast<uint16_t>(src) << src_gp) |
+                                          (static_cast<uint16_t>(SZ_NONE) << size_gp) | undef_bm)};
+        }
+
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+        AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
+        AddrMode src() const { return AddrMode((_attr >> src_gp) & mode_gm); }
+        OprSize size() const { return OprSize((_attr >> size_gp) & size_gm); }
+        bool execute() const { return _attr & exec_bm; }
+        bool undefined() const { return _attr & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -79,13 +90,15 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t addrMode_gm = 0xF;
-    static constexpr uint8_t oprSize_gm = 0x3;
     static constexpr int dst_gp = 0;
     static constexpr int src_gp = 4;
-    static constexpr int oprSize_gp = 8;
+    static constexpr int size_gp = 8;
     static constexpr int exec_bp = 14;
     static constexpr int undef_bp = 15;
+    static constexpr uint8_t mode_gm = 0x0F;
+    static constexpr uint8_t size_gm = 0x03;
+    static constexpr uint16_t exec_bm = (1 << exec_bp);
+    static constexpr uint16_t undef_bm = (1 << undef_bp);
 };
 
 }  // namespace ins8070

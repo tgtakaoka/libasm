@@ -28,7 +28,7 @@ namespace mn1610 {
 enum CpuType : uint8_t { MN1610, MN1613, MN1613A };
 
 enum AddrMode : uint8_t {
-    M_NONE = 0,     // No operand
+    M_NONE = 0,   // No operand
     M_SKIP = 1,   // Skip specifier
     M_ILVL = 2,   // 2-bit interrupt level
     M_BIT = 3,    // Bit number of 16-bit
@@ -66,24 +66,24 @@ enum AddrMode : uint8_t {
 class Entry : public EntryBase<Config> {
 public:
     struct Flags {
-        uint8_t _op1;
-        uint8_t _op2;
-        uint8_t _op3;
-        uint8_t _op4;
+        uint8_t _opr1;
+        uint8_t _opr2;
+        uint8_t _opr3;
+        uint8_t _opr4;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3, AddrMode op4) {
-            return Flags{static_cast<uint8_t>(op1), static_cast<uint8_t>(op2),
-                    static_cast<uint8_t>(op3), static_cast<uint8_t>(op4)};
+        static constexpr Flags create(AddrMode opr1, AddrMode opr2, AddrMode opr3, AddrMode opr4) {
+            return Flags{static_cast<uint8_t>(opr1), static_cast<uint8_t>(opr2),
+                    static_cast<uint8_t>(opr3), static_cast<uint8_t>(opr4)};
         }
+
         Flags read() const {
-            return Flags{pgm_read_byte(&_op1), pgm_read_byte(&_op2), pgm_read_byte(&_op3),
-                    pgm_read_byte(&_op4)};
+            return Flags{pgm_read_byte(&_opr1), pgm_read_byte(&_opr2), pgm_read_byte(&_opr3),
+                    pgm_read_byte(&_opr4)};
         }
-
-        AddrMode op1() const { return AddrMode(_op1); }
-        AddrMode op2() const { return AddrMode(_op2); }
-        AddrMode op3() const { return AddrMode(_op3); }
-        AddrMode op4() const { return AddrMode(_op4); }
+        AddrMode mode1() const { return AddrMode(_opr1); }
+        AddrMode mode2() const { return AddrMode(_opr2); }
+        AddrMode mode3() const { return AddrMode(_opr3); }
+        AddrMode mode4() const { return AddrMode(_opr4); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

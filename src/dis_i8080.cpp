@@ -74,12 +74,12 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableI8080::TABLE.searchOpCode(insn))
         return setError(TableI8080::TABLE.getError());
 
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, dst))
         return getError();
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src == M_NONE)
         return OK;
     out.comma();

@@ -102,27 +102,29 @@ public:
         uint8_t _size;
 
         static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
-                OprSize oSize, InsnSize iSize, bool withSize, bool alias) {
+                OprSize oSize, InsnSize iSize, bool hasSize, bool alias) {
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos, alias), Entry::_size(oSize, iSize, withSize)};
+                    Entry::_pos(srcPos, dstPos, alias), Entry::_size(oSize, iSize, hasSize)};
         }
+
         Flags read() const {
             return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_pos),
                     pgm_read_byte(&_size)};
         }
+        AddrMode src() const { return AddrMode(_src); }
+        AddrMode dst() const { return AddrMode(_dst); }
+        OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & pos_gm); }
+        OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
+        bool alias() const { return _pos & alias_bm; }
+        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & size_gm); }
+        InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & size_gm); }
+        bool hasSize() const { return _size & hasSize_bm; }
 
-        AddrMode srcMode() const { return AddrMode(_src); }
-        AddrMode dstMode() const { return AddrMode(_dst); }
-        OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & oprPos_gm); }
-        OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & oprPos_gm); }
-        bool alias() const { return ((_pos >> alias_bp) & 1) ? true : false; }
-        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
-        InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & insnSize_gm); }
-        bool withSize() const { return (_size & (1 << withSize_gp)) != 0; }
-
-        void setSrcMode(AddrMode mode) { _src = static_cast<uint8_t>(mode); }
-        void setDstMode(AddrMode mode) { _dst = static_cast<uint8_t>(mode); }
-        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size, withSize()); }
+        void setAddrMode(AddrMode src, AddrMode dst) {
+            _src = static_cast<uint8_t>(src);
+            _dst = static_cast<uint8_t>(dst);
+        }
+        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size, hasSize()); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -135,25 +137,26 @@ private:
 
     static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
         return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp) |
-               (alias ? (1 << alias_bp) : 0);
+               (alias ? alias_bm : 0);
     }
-    static constexpr uint8_t _size(OprSize opr, InsnSize insn, bool withSize) {
+
+    static constexpr uint8_t _size(OprSize opr, InsnSize insn, bool hasSize) {
         return (static_cast<uint8_t>(opr) << oprSize_gp) |
-               (static_cast<uint8_t>(insn) << insnSize_gp) |
-               (static_cast<uint8_t>(withSize ? 1 : 0) << withSize_gp);
+               (static_cast<uint8_t>(insn) << insnSize_gp) | (hasSize ? hasSize_bm : 0);
     }
 
     // |pos|
-    static constexpr uint8_t oprPos_gm = 0x7;
     static constexpr int srcPos_gp = 0;
     static constexpr int dstPos_gp = 3;
     static constexpr int alias_bp = 7;
+    static constexpr uint8_t pos_gm = 0x07;
+    static constexpr uint8_t alias_bm = (1 << alias_bp);
     // |size|
-    static constexpr uint8_t oprSize_gm = 0x7;
-    static constexpr uint8_t insnSize_gm = 0x7;
     static constexpr int oprSize_gp = 0;
     static constexpr int insnSize_gp = 3;
-    static constexpr int withSize_gp = 6;
+    static constexpr int hasSize_bp = 6;
+    static constexpr uint8_t size_gm = 0x07;
+    static constexpr uint8_t hasSize_bm = (1 << hasSize_bp);
 };
 
 }  // namespace mc68000

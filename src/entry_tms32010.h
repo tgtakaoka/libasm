@@ -32,7 +32,7 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     // T=table, P=parser. Sorted by constant range from M_LS0 to M_IM13.
-    M_NONE = 0,     // TP: No operand
+    M_NONE = 0,   // TP: No operand
     M_LS0 = 1,    // TP: [0] 0 left shift (SACL)     ---- -000 ---- ----
     M_DPK = 2,    // TP: [0-1] Data memory page      ---- ---- ---- ---d
     M_ARK = 3,    // T_: [0-1] Auxiliary register    ---- ---- ---- ---a
@@ -56,16 +56,16 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2, AddrMode op3) {
-            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(op1) << op1_gp) |
-                                               (static_cast<uint16_t>(op2) << op2_gp) |
-                                               (static_cast<uint16_t>(op3) << op3_gp))};
+        static constexpr Flags create(AddrMode opr1, AddrMode opr2, AddrMode opr3) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(opr1) << opr1_gp) |
+                                               (static_cast<uint16_t>(opr2) << opr2_gp) |
+                                               (static_cast<uint16_t>(opr3) << opr3_gp))};
         }
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode op1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
-        AddrMode op2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
-        AddrMode op3() const { return AddrMode((_attr >> op3_gp) & mode_gm); }
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+        AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
+        AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
+        AddrMode mode3() const { return AddrMode((_attr >> opr3_gp) & mode_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -76,10 +76,10 @@ public:
 private:
     Flags _flags;
 
+    static constexpr int opr1_gp = 0;
+    static constexpr int opr2_gp = 5;
+    static constexpr int opr3_gp = 10;
     static constexpr uint8_t mode_gm = 0x1f;
-    static constexpr int op1_gp = 0;
-    static constexpr int op2_gp = 5;
-    static constexpr int op3_gp = 10;
 };
 
 }  // namespace tms32010

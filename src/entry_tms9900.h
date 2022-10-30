@@ -66,8 +66,8 @@ public:
         }
         Flags read() const { return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst)}; }
 
-        AddrMode srcMode() const { return AddrMode(_src); }
-        AddrMode dstMode() const { return AddrMode(_dst); }
+        AddrMode src() const { return AddrMode(_src); }
+        AddrMode dst() const { return AddrMode(_dst); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

@@ -28,13 +28,13 @@ class InsnZ8 : public InsnImpl<Config, Entry> {
 public:
     InsnZ8(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode extMode() const { return flags().extMode(); }
-    PostFormat postFormat() const { return flags().postFmt(); }
-    bool dstSrc() const { return flags().dstSrc(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode ext() const { return flags().ext(); }
+    PostFormat postFormat() const { return flags().postFormat(); }
+    bool dstFirst() const { return flags().dstFirst(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        setFlags(Entry::Flags::create(dst, src, ext, DS_NO, P0));
+        setFlags(Entry::Flags::create(dst, src, ext, ORDER_NONE, PF_NONE));
     }
 
     void readPost(DisMemory &memory) { setPost(readByte(memory)); }

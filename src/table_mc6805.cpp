@@ -28,13 +28,13 @@ using namespace libasm::mc6800;
 namespace libasm {
 namespace mc6805 {
 
-#define E3(_opc, _name, _op1, _op2, _op3) \
-    { _opc, Entry::Flags::create(_op1, _op2, _op3), _name }
-#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NONE)
-#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E3(_opc, _name, _opr1, _opr2, _opr3) \
+    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name }
+#define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
+#define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U1(_opc, _name, _op1) \
-    { _opc, Entry::Flags::create(_op1, M_NONE, M_NONE, true), _name }
+#define U1(_opc, _name, _opr1) \
+    { _opc, Entry::Flags::undef(_opr1), _name }
 
 // clang-format off
 static constexpr Entry MC6805_TABLE[] PROGMEM = {
@@ -292,10 +292,10 @@ Error TableMc6805::searchName(InsnMc6805 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = searchEntry(insn.name(), insn.flags(), page, acceptAddrMode, count);
         if (entry) {
+            if (entry->flags().undefined())
+                return setError(OPERAND_NOT_ALLOWED);
             insn.setOpCode(entry->opCode());
             insn.setFlags(entry->flags());
-            if (insn.undefined())
-                return setError(OPERAND_NOT_ALLOWED);
             return setOK();
         }
     }
@@ -321,10 +321,10 @@ Error TableMc6805::searchOpCode(InsnMc6805 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
+            if (entry->flags().undefined())
+                break;
             insn.setFlags(entry->flags());
             insn.nameBuffer().text_P(entry->name_P());
-            if (insn.undefined())
-                break;
             return setOK();
         }
     }

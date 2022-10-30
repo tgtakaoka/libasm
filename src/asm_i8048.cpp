@@ -217,9 +217,9 @@ Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    if (encodeOperand(insn, insn.dstMode(), dstOp))
+    if (encodeOperand(insn, insn.dst(), dstOp))
         return getError();
-    if (encodeOperand(insn, insn.srcMode(), srcOp)) {
+    if (encodeOperand(insn, insn.src(), srcOp)) {
         insn.reset();
         return getError();
     }

@@ -424,8 +424,8 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(srcOp, error);
 
-    const AddrMode src = insn.srcMode();
-    const AddrMode dst = insn.dstMode();
+    const AddrMode src = insn.src();
+    const AddrMode dst = insn.dst();
     if (src == M_MULT)
         srcOp.fixupMultiRegister();
     if (dst == M_MULT)

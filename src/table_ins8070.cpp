@@ -31,9 +31,9 @@ namespace ins8070 {
 #define E1(_opc, _name, _dst, _size) E2(_opc, _name, _dst, M_NONE, _size)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE, NONE)
 #define X1(_opc, _name, _dst) \
-    { _opc, Entry::Flags::create(_dst, M_NONE, SZ_NONE, true), _name }
+    { _opc, Entry::Flags::exec(_dst), _name }
 #define U2(_opc, _name, _dst, _src) \
-    { _opc, Entry::Flags::create(_dst, _src, SZ_NONE, false, true), _name }
+    { _opc, Entry::Flags::undef(_dst, _src), _name }
 #define U1(_opc, _name, _dst) U2(_opc, _name, _dst, M_NONE)
 
 // clang-format off
@@ -213,10 +213,10 @@ Error TableIns8070::searchName(InsnIns8070 &insn) {
     uint8_t count = 0;
     auto entry = searchEntry(insn.name(), insn.flags(), INS8070_PAGES, acceptAddrModes, count);
     if (entry) {
+        if (entry->flags().undefined())
+            return setError(OPERAND_NOT_ALLOWED);
         insn.setOpCode(entry->opCode());
         insn.setFlags(entry->flags());
-        if (insn.undefined())
-            return setError(OPERAND_NOT_ALLOWED);
         return setOK();
     }
     return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
@@ -247,11 +247,9 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableIns8070::searchOpCode(InsnIns8070 &insn) {
     auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
-    if (!entry)
+    if (!entry || entry->flags().undefined())
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
-    if (insn.undefined())
-        return setError(UNKNOWN_INSTRUCTION);
     insn.nameBuffer().text_P(entry->name_P());
     return setOK();
 }

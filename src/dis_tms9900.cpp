@@ -23,8 +23,8 @@ namespace tms9900 {
 
 Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     const Config::opcode_t post = insn.post();
-    const uint8_t srcMode = (post >> 4 & 3);
-    switch (insn.dstMode()) {
+    const uint8_t src = (post >> 4 & 3);
+    switch (insn.dst()) {
     case M_DST2:
         if ((post & 0xF000) == 0x4000)
             return OK;
@@ -35,7 +35,7 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
         break;
     case M_BIT2:
         // no auto increment mode.
-        if ((post & 0xFC00) == 0x0000 && srcMode != 3)
+        if ((post & 0xFC00) == 0x0000 && src != 3)
             return OK;
         break;
     default:
@@ -159,12 +159,12 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, src))
         return getError();
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst == M_NONE)
         return OK;
     out.comma();

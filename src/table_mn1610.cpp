@@ -26,11 +26,11 @@
 namespace libasm {
 namespace mn1610 {
 
-#define E4(_opc, _name, _op1, _op2, _op3, _op4) \
-    { _opc, Entry::Flags::create(_op1, _op2, _op3, _op4), _name }
-#define E3(_opc, _name, _op1, _op2, _op3) E4(_opc, _name, _op1, _op2, _op3, M_NONE)
-#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NONE)
-#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E4(_opc, _name, _opr1, _opr2, _opr3, _opr4) \
+    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3, _opr4), _name }
+#define E3(_opc, _name, _opr1, _opr2, _opr3) E4(_opc, _name, _opr1, _opr2, _opr3, M_NONE)
+#define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
+#define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
@@ -329,8 +329,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.op1(), table.op1()) && acceptMode(flags.op2(), table.op2()) &&
-           acceptMode(flags.op3(), table.op3()) && acceptMode(flags.op4(), table.op4());
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
+           acceptMode(flags.mode3(), table.mode3()) && acceptMode(flags.mode4(), table.mode4());
 }
 
 Error TableMn1610::searchName(InsnMn1610 &insn) {
@@ -347,38 +347,38 @@ Error TableMn1610::searchName(InsnMn1610 &insn) {
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    const auto op1 = entry->flags().op1();
-    const auto op2 = entry->flags().op2();
-    const auto op3 = entry->flags().op3();
-    const auto op4 = entry->flags().op4();
+    const auto mode1 = entry->flags().mode1();
+    const auto mode2 = entry->flags().mode2();
+    const auto mode3 = entry->flags().mode3();
+    const auto mode4 = entry->flags().mode4();
     Config::opcode_t mask = 0;
-    if (op1 == M_GEN || op2 == M_GEN)
+    if (mode1 == M_GEN || mode2 == M_GEN)
         mask |= (7 << 11) | 0xFF;
-    if (op1 == M_RD || op1 == M_RDG)
+    if (mode1 == M_RD || mode1 == M_RDG)
         mask |= 7 << 8;
-    if (op1 == M_RS || op2 == M_RS || op1 == M_RSG)
+    if (mode1 == M_RS || mode2 == M_RS || mode1 == M_RSG)
         mask |= 7;
-    if (op1 == M_RI || op2 == M_RI)
+    if (mode1 == M_RI || mode2 == M_RI)
         mask |= 3;
-    if (op3 == M_RIAU)
+    if (mode3 == M_RIAU)
         mask |= (3 << 6) | 3;
-    if (op2 == M_SB)
+    if (mode2 == M_SB)
         mask |= 3 << 4;
-    if (op1 == M_RB || op2 == M_RB || op1 == M_RBW || op2 == M_RBW)
+    if (mode1 == M_RB || mode2 == M_RB || mode1 == M_RBW || mode2 == M_RBW)
         mask |= 7 << 4;
-    if (op1 == M_RP || op2 == M_RP)
+    if (mode1 == M_RP || mode2 == M_RP)
         mask |= 7 << 4;
-    if (op2 == M_RHR || op2 == M_RHW)
+    if (mode2 == M_RHR || mode2 == M_RHW)
         mask |= 7 << 4;
-    if (op3 == M_SKIP || op4 == M_SKIP)
+    if (mode3 == M_SKIP || mode4 == M_SKIP)
         mask |= 0xF << 4;
-    if (op2 == M_IM8 || op2 == M_IOA)
+    if (mode2 == M_IM8 || mode2 == M_IOA)
         mask |= 0xFF;
-    if (op2 == M_IM4 || op2 == M_BIT)
+    if (mode2 == M_IM4 || mode2 == M_BIT)
         mask |= 0xF;
-    if (op1 == M_ILVL || op2 == M_EOP)
+    if (mode1 == M_ILVL || mode2 == M_EOP)
         mask |= 3;
-    if (op2 == M_COP || op3 == M_COP)
+    if (mode2 == M_COP || mode3 == M_COP)
         mask |= 1 << 3;
     return opCode & ~mask;
 }

@@ -79,9 +79,9 @@ Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &ou
 }
 
 Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
-    if (mode == M_IMM && insn.oprSize() == SZ_WORD) {
+    if (mode == M_IMM && insn.size() == SZ_WORD) {
         outHex(out, insn.readUint16(memory), 16);
-    } else if ((mode == M_IMM && insn.oprSize() == SZ_BYTE) || mode == M_IOA) {
+    } else if ((mode == M_IMM && insn.size() == SZ_BYTE) || mode == M_IOA) {
         outHex(out, insn.readByte(memory), 8);
     } else if (mode == M_IMM8) {
         outHex(out, insn.readByte(memory), -8);
@@ -91,7 +91,7 @@ Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &o
         outDec(out, insn.readByte(memory), 8);
     } else if (mode == M_BIT) {
         const auto bit = insn.readByte(memory);
-        if (bit >= 16 || (insn.oprSize() == SZ_BYTE && bit >= 8))
+        if (bit >= 16 || (insn.size() == SZ_BYTE && bit >= 8))
             return setError(OVERFLOW_RANGE);
         outDec(out, bit, 4);
     } else {
@@ -131,7 +131,7 @@ static OprSize operandSize(const InsnI8086 &insn, AddrMode mode) {
         return SZ_WORD;
     case M_BMOD:
     case M_WMOD:
-        return (insn.modReg() >> 6) == 3 ? insn.oprSize() : SZ_NONE;
+        return (insn.modReg() >> 6) == 3 ? insn.size() : SZ_NONE;
     default:
         return SZ_NONE;
     }
@@ -139,17 +139,17 @@ static OprSize operandSize(const InsnI8086 &insn, AddrMode mode) {
 
 static OprSize operandSize(const InsnI8086 &insn) {
     if (insn.stringInst())
-        return insn.oprSize();
+        return insn.size();
     OprSize size;
-    if ((size = operandSize(insn, insn.dstMode())) != SZ_NONE)
+    if ((size = operandSize(insn, insn.dst())) != SZ_NONE)
         return size;
-    if ((size = operandSize(insn, insn.srcMode())) != SZ_NONE)
+    if ((size = operandSize(insn, insn.src())) != SZ_NONE)
         return size;
     return SZ_NONE;
 }
 
 static OprSize pointerSize(const InsnI8086 &insn, AddrMode mode) {
-    const OprSize size = insn.oprSize();
+    const OprSize size = insn.size();
     if (size == SZ_NONE)
         return size;
     switch (mode) {
@@ -166,8 +166,8 @@ static OprSize pointerSize(const InsnI8086 &insn, AddrMode mode) {
 
 static RegName pointerReg(const InsnI8086 &insn) {
     OprSize size;
-    if ((size = pointerSize(insn, insn.dstMode())) == SZ_NONE &&
-            (size = pointerSize(insn, insn.srcMode())) == SZ_NONE)
+    if ((size = pointerSize(insn, insn.dst())) == SZ_NONE &&
+            (size = pointerSize(insn, insn.src())) == SZ_NONE)
         return REG_UNDEF;
     return size == SZ_BYTE ? REG_BYTE : REG_WORD;
 }
@@ -318,7 +318,7 @@ static bool validSegOverride(const InsnI8086 &insn) {
     if (insn.stringInst())
         return true;
     const uint8_t mod = insn.modReg() >> 6;
-    return validSegOverride(insn.dstMode(), mod) || validSegOverride(insn.srcMode(), mod);
+    return validSegOverride(insn.dst(), mod) || validSegOverride(insn.src(), mod);
 }
 
 Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out) {
@@ -390,21 +390,21 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (insn.stringInst())
         return decodeStringInst(memory, insn, out);
-    if (decodeOperand(memory, insn, out, insn.dstMode(), insn.dstPos()))
+    if (decodeOperand(memory, insn, out, insn.dst(), insn.dstPos()))
         return getError();
 
-    if (insn.srcMode() == M_NONE)
+    if (insn.src() == M_NONE)
         return setOK();
     if (!imulHasSameDstSrc(insn)) {
         out.comma();
-        if (decodeOperand(memory, insn, out, insn.srcMode(), insn.srcPos()))
+        if (decodeOperand(memory, insn, out, insn.src(), insn.srcPos()))
             return getError();
     }
 
-    if (insn.extMode() == M_NONE)
+    if (insn.ext() == M_NONE)
         return setOK();
     out.comma();
-    if (decodeOperand(memory, insn, out, insn.extMode(), insn.extPos()))
+    if (decodeOperand(memory, insn, out, insn.ext(), insn.extPos()))
         return getError();
     return setOK();
 }

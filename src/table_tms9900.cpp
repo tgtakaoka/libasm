@@ -256,8 +256,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.srcMode(), table.srcMode()) &&
-           acceptMode(flags.dstMode(), table.dstMode());
+    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst());
 }
 
 Error TableTms9900::searchName(InsnTms9900 &insn) {
@@ -274,8 +273,8 @@ Error TableTms9900::searchName(InsnTms9900 &insn) {
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    auto src = entry->flags().srcMode();
-    auto dst = entry->flags().dstMode();
+    auto src = entry->flags().src();
+    auto dst = entry->flags().dst();
     Config::opcode_t mask = 0;
     if (src == M_REG || dst == M_REG)
         mask |= 0xF;

@@ -40,7 +40,7 @@ enum AddrMode : uint8_t {
     M_IM8 = 6,     // Immediate 8-bit
     M_IM32 = 7,    // Immediate 32-bit
     M_PAIR = 8,    // Register pair
-    M_LIST = 9,    // Register list; means Undefined when in op2
+    M_LIST = 9,    // Register list; means Undefined when in mode2
     M_RBIT = 10,   // Register bit
     M_DBIT = 11,   // Direct Page bit
     M_RTFM = 12,   // Transfer Memory Register
@@ -54,15 +54,19 @@ public:
     struct Flags {
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2, bool undef = false) {
-            return Flags{
-                    static_cast<uint8_t>((static_cast<uint8_t>(op1) << op1_gp) |
-                                         (static_cast<uint8_t>(undef ? M_LIST : op2) << op2_gp))};
+        static constexpr Flags create(AddrMode opr1, AddrMode opr2) {
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
+                                              (static_cast<uint8_t>(opr2) << opr2_gp))};
         }
-        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 
-        AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
-        AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
+        static constexpr Flags undef(AddrMode opr1) {
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
+                                              (static_cast<uint8_t>(M_LIST) << opr2_gp))};
+        }
+
+        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
+        AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
+        AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
         bool undefined() const { return mode2() == M_LIST; }
     };
 
@@ -74,9 +78,9 @@ public:
 private:
     Flags _flags;
 
+    static constexpr int opr1_gp = 0;
+    static constexpr int opr2_gp = 4;
     static constexpr uint8_t mode_gm = 0xf;
-    static constexpr int op1_gp = 0;
-    static constexpr int op2_gp = 4;
 };
 
 }  // namespace mc6809

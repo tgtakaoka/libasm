@@ -28,15 +28,15 @@ class InsnNs32000 : public InsnImpl<Config, Entry> {
 public:
     InsnNs32000(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode ex1Mode() const { return flags().ex1Mode(); }
-    AddrMode ex2Mode() const { return flags().ex2Mode(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode ex1() const { return flags().ex1(); }
+    AddrMode ex2() const { return flags().ex2(); }
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprPos ex1Pos() const { return flags().ex1Pos(); }
     OprPos ex2Pos() const { return flags().ex2Pos(); }
-    OprSize oprSize() const { return flags().oprSize(); }
+    OprSize size() const { return flags().size(); }
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
         setFlags(Entry::Flags::create(src, dst, ex1, ex2));
     }

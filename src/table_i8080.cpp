@@ -260,8 +260,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.dstMode(), table.dstMode()) &&
-           acceptMode(flags.srcMode(), table.srcMode());
+    return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src());
 }
 
 Error TableI8080::searchName(InsnI8080 &insn) {
@@ -279,8 +278,8 @@ Error TableI8080::searchName(InsnI8080 &insn) {
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     const auto &flags = entry->flags();
-    const auto dst = flags.dstMode();
-    const auto src = flags.srcMode();
+    const auto dst = flags.dst();
+    const auto src = flags.src();
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
         mask |= 07;

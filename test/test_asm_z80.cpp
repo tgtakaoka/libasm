@@ -511,6 +511,7 @@ static void test_io() {
         TEST("IN E,(C)", 0xED, 0x58);
         TEST("IN H,(C)", 0xED, 0x60);
         TEST("IN L,(C)", 0xED, 0x68);
+        ERRT("IN (HL),(C)", OPERAND_NOT_ALLOWED, "(HL),(C)");
         TEST("IN A,(C)", 0xED, 0x78);
 
         TEST("OUT (C),B", 0xED, 0x41);
@@ -519,6 +520,7 @@ static void test_io() {
         TEST("OUT (C),E", 0xED, 0x59);
         TEST("OUT (C),H", 0xED, 0x61);
         TEST("OUT (C),L", 0xED, 0x69);
+        ERRT("OUT (C),(HL)", OPERAND_NOT_ALLOWED, "(C),(HL)");
         TEST("OUT (C),A", 0xED, 0x79);
     } else {
         ERRT("IN  B,(C)", OPERAND_NOT_ALLOWED, "B,(C)");
@@ -790,6 +792,7 @@ static void test_indexed() {
         TEST("LD H,(IX+2)", 0xDD, 0x66, 0x02);
         TEST("LD L,(IX+2)", 0xDD, 0x6E, 0x02);
         TEST("LD A,(IX+2)", 0xDD, 0x7E, 0x02);
+        ERRT("LD (HL),(IX+2)", OPERAND_NOT_ALLOWED, "(HL),(IX+2)");
 
         TEST("LD (IX+2),B", 0xDD, 0x70, 0x02);
         TEST("LD (IX+2),C", 0xDD, 0x71, 0x02);
@@ -798,6 +801,7 @@ static void test_indexed() {
         TEST("LD (IX+2),H", 0xDD, 0x74, 0x02);
         TEST("LD (IX+2),L", 0xDD, 0x75, 0x02);
         TEST("LD (IX+2),A", 0xDD, 0x77, 0x02);
+        ERRT("LD (IX+2),(HL)", OPERAND_NOT_ALLOWED, "(IX+2),(HL)");
 
         TEST("LD (IX+2),0F6H", 0xDD, 0x36, 0x02, 0xF6);
 

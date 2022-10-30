@@ -103,24 +103,29 @@ public:
         uint8_t _ext;
         uint8_t _size;
 
-        static constexpr Flags create(AddrMode dstMode, AddrMode srcMode, AddrMode extMode,
-                OprPos dstPos, OprPos srcPos, OprPos extPos, OprSize size, bool strInst) {
-            return Entry::Flags{Entry::_opr(dstMode, dstPos), Entry::_opr(srcMode, srcPos),
-                    Entry::_opr(extMode, extPos), Entry::_size(size, strInst)};
+        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext, OprPos dstPos,
+                OprPos srcPos, OprPos extPos, OprSize size) {
+            return Entry::Flags{Entry::_opr(dst, dstPos), Entry::_opr(src, srcPos),
+                    Entry::_opr(ext, extPos), Entry::_size(size, false)};
         }
+
+        static constexpr Flags strInst(AddrMode dst, AddrMode src, OprSize size) {
+            return Entry::Flags{Entry::_opr(dst, P_NONE), Entry::_opr(src, P_NONE),
+                    Entry::_opr(M_NONE, P_NONE), Entry::_size(size, true)};
+        }
+
         Flags read() const {
             return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
                     pgm_read_byte(&_size)};
         }
-
-        AddrMode dstMode() const { return AddrMode((_dst >> mode_gp) & mode_gm); }
-        AddrMode srcMode() const { return AddrMode((_src >> mode_gp) & mode_gm); }
-        AddrMode extMode() const { return AddrMode((_ext >> mode_gp) & mode_gm); }
+        AddrMode dst() const { return AddrMode((_dst >> mode_gp) & mode_gm); }
+        AddrMode src() const { return AddrMode((_src >> mode_gp) & mode_gm); }
+        AddrMode ext() const { return AddrMode((_ext >> mode_gp) & mode_gm); }
         OprPos dstPos() const { return OprPos((_dst >> pos_gp) & pos_gm); }
         OprPos srcPos() const { return OprPos((_src >> pos_gp) & pos_gm); }
         OprPos extPos() const { return OprPos((_ext >> pos_gp) & pos_gm); }
-        OprSize size() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
-        bool strInst() const { return _size & (1 << strInst_bp); }
+        OprSize size() const { return OprSize((_size >> size_gp) & size_gm); }
+        bool stringInst() const { return _size & strInst_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -132,11 +137,10 @@ private:
     Flags _flags;
 
     static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
-        return (static_cast<uint8_t>(mode) << mode_gp) |
-            (static_cast<uint8_t>(pos) << pos_gp);
+        return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
     }
     static constexpr uint8_t _size(OprSize size, bool strInst) {
-        return (static_cast<uint8_t>(size) << oprSize_gp) | (strInst ? (1 << strInst_bp) : 0);
+        return (static_cast<uint8_t>(size) << size_gp) | (strInst ? strInst_bm : 0);
     }
 
     // |dst|, |src|, |ext|
@@ -145,9 +149,10 @@ private:
     static constexpr uint8_t mode_gm = 0x1F;
     static constexpr uint8_t pos_gm = 0x07;
     // |size|
-    static constexpr int oprSize_gp = 0;
+    static constexpr int size_gp = 0;
     static constexpr int strInst_bp = 4;
-    static constexpr uint8_t oprSize_gm = 0x03;
+    static constexpr uint8_t size_gm = 0x03;
+    static constexpr uint8_t strInst_bm = (1 << strInst_bp);
 };
 
 }  // namespace i8086

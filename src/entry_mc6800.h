@@ -56,19 +56,24 @@ public:
     struct Flags {
         uint16_t _attr;
 
-        static constexpr Flags create(
-                AddrMode op1, AddrMode op2, AddrMode op3, bool undef = false) {
-            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(op1) << op1_gp) |
-                                               (static_cast<uint16_t>(op2) << op2_gp) |
-                                               (static_cast<uint16_t>(op3) << op3_gp) |
-                                               (static_cast<uint16_t>(undef ? 1 : 0) << undef_bp))};
+        static constexpr Flags create(AddrMode opr1, AddrMode opr2, AddrMode opr3) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(opr1) << opr1_gp) |
+                                               (static_cast<uint16_t>(opr2) << opr2_gp) |
+                                               (static_cast<uint16_t>(opr3) << opr3_gp))};
         }
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
-        AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
-        AddrMode mode3() const { return AddrMode((_attr >> op3_gp) & mode_gm); }
-        bool undefined() const { return (_attr & (1 << undef_bp)) != 0; }
+        static constexpr Flags undef(AddrMode opr1) {
+            return Flags{
+                    static_cast<uint16_t>((static_cast<uint16_t>(opr1) << opr1_gp) |
+                                          (static_cast<uint16_t>(M_NONE) << opr2_gp) |
+                                          (static_cast<uint16_t>(M_NONE) << opr3_gp) | undef_bm)};
+        }
+
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+        AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
+        AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
+        AddrMode mode3() const { return AddrMode((_attr >> opr3_gp) & mode_gm); }
+        bool undefined() const { return _attr & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -79,12 +84,13 @@ public:
 private:
     const Flags _flags;
 
-    static constexpr int op1_gp = 0;
-    static constexpr int op2_gp = 4;
-    static constexpr int op3_gp = 8;
-    static constexpr uint8_t mode_gm = 0xF;
+    static constexpr int opr1_gp = 0;
+    static constexpr int opr2_gp = 4;
+    static constexpr int opr3_gp = 8;
     static constexpr int undef_bp = 15;
-};  // namespace mc6800
+    static constexpr uint8_t mode_gm = 0x0F;
+    static constexpr uint16_t undef_bm = (1 << undef_bp);
+};
 
 }  // namespace mc6800
 }  // namespace libasm

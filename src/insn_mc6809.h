@@ -30,8 +30,7 @@ public:
 
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
-    bool undefined() const { return flags().undefined(); }
-    void setAddrMode(AddrMode op1, AddrMode op2) { setFlags(Entry::Flags::create(op1, op2)); }
+    void setAddrMode(AddrMode opr1, AddrMode opr2) { setFlags(Entry::Flags::create(opr1, opr2)); }
 
     Config::opcode_t readPost(DisMemory &memory) {
         if (!hasPost())

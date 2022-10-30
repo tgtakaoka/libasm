@@ -63,7 +63,7 @@ Error AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, c
         return OK;
     }
     if (mode == M_BIT) {
-        if (op.val32 >= (insn.oprSize() == SZ_BYTE ? 8 : 16))
+        if (op.val32 >= (insn.size() == SZ_BYTE ? 8 : 16))
             return setError(op, ILLEGAL_BIT_NUMBER);
         return emitData(insn, field, op.val32);
     }
@@ -86,18 +86,18 @@ Error AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, c
         if (op.val32 > 32)
             return setError(op, OVERFLOW_RANGE);
         int16_t count = static_cast<int16_t>(op.val32);
-        const OprSize sz = insn.oprSize();
-        if (count < 0 || (sz == SZ_BYTE && count > 8) || (sz == SZ_WORD && op.val32 > 16))
+        const OprSize size = insn.size();
+        if (count < 0 || (size == SZ_BYTE && count > 8) || (size == SZ_WORD && op.val32 > 16))
             return setError(op, OVERFLOW_RANGE);
         if (mode == M_NCNT)
             count = -count;
-        if (sz == SZ_BYTE)
+        if (size == SZ_BYTE)
             count = static_cast<uint8_t>(count);
         insn.emitOperand16(static_cast<uint16_t>(count));
         return OK;
     }
     // M_IM
-    switch (insn.oprSize()) {
+    switch (insn.size()) {
     case SZ_BYTE:
         if (!overflowUint8(op.val32)) {
             uint16_t val16 = static_cast<uint8_t>(op.val32);
@@ -221,9 +221,9 @@ Error AsmZ8000::emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op) {
 }
 
 Error AsmZ8000::emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op) {
-    if (insn.oprSize() == SZ_BYTE && op.reg != REG_FLAGS)
+    if (insn.size() == SZ_BYTE && op.reg != REG_FLAGS)
         return setError(op, ILLEGAL_SIZE);
-    if (insn.oprSize() == SZ_WORD && op.reg == REG_FLAGS)
+    if (insn.size() == SZ_WORD && op.reg == REG_FLAGS)
         return setError(op, ILLEGAL_SIZE);
     const int8_t data = RegZ8000::encodeCtlReg(op.reg);
     if (data < 0)
@@ -234,9 +234,9 @@ Error AsmZ8000::emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand 
 Error AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field) {
     switch (mode) {
     case M_DR:
-        if (insn.oprSize() == SZ_WORD && !RegZ8000::isLongReg(op.reg))
+        if (insn.size() == SZ_WORD && !RegZ8000::isLongReg(op.reg))
             return setError(op, REGISTER_NOT_ALLOWED);
-        if (insn.oprSize() == SZ_LONG && !RegZ8000::isQuadReg(op.reg))
+        if (insn.size() == SZ_LONG && !RegZ8000::isQuadReg(op.reg))
             return setError(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_R:
@@ -553,28 +553,28 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (insn.isPushPopInsn() && checkRegisterOverlap(dstOp, srcOp))
         return getError();
     if (insn.isLoadMultiInsn()) {
-        const Operand &regOp = insn.dstMode() == M_R ? dstOp : srcOp;
+        const Operand &regOp = insn.dst() == M_R ? dstOp : srcOp;
         if (RegZ8000::encodeGeneralRegName(regOp.reg) + ex1Op.val32 > 16)
             return setError(ex1Op, OVERFLOW_RANGE);
     }
 
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst != M_NONE) {
         if (emitOperand(insn, dst, dstOp, insn.dstField()))
             return getError();
     }
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src != M_NONE) {
         if (emitOperand(insn, src, srcOp, insn.srcField()))
             return getError();
     }
-    const AddrMode ex1 = insn.ex1Mode();
+    const AddrMode ex1 = insn.ex1();
     if (ex1 != M_NONE) {
         const ModeField field = (ex1 == M_WR ? MF_P8 : MF_P0);
         if (emitOperand(insn, ex1, ex1Op, field))
             return getError();
     }
-    const AddrMode ex2 = insn.ex2Mode();
+    const AddrMode ex2 = insn.ex2();
     if (ex2 != M_NONE) {
         if (emitOperand(insn, ex2, ex2Op, MF_P0))
             return getError();

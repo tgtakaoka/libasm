@@ -138,10 +138,10 @@ Error DisZ8000::decodeGenericAddressing(
     num &= 0xF;
     const uint8_t addressing = insn.opCode() >> 14;
     if (addressing == 0 && num == 0 && mode == M_GENI) {  // M_IM
-        return decodeImmediate(memory, insn, out, M_IM, insn.oprSize());
+        return decodeImmediate(memory, insn, out, M_IM, insn.size());
     }
     if (addressing == 2 && num && (mode == M_GENI || mode == M_GEND)) {  // M_R
-        return decodeGeneralRegister(out, num, insn.oprSize());
+        return decodeGeneralRegister(out, num, insn.size());
     }
     if (addressing == 0 && num) {  // M_IR
         return decodeGeneralRegister(out, num, SZ_ADDR, true);
@@ -245,7 +245,7 @@ Error DisZ8000::decodeOperand(
         outConditionCode(out, num);
         return OK;
     case M_CTL:
-        return decodeControlRegister(out, num, insn.oprSize());
+        return decodeControlRegister(out, num, insn.size());
     case M_FLAG:
         return decodeFlags(out, num);
     case M_IM8:
@@ -276,9 +276,9 @@ Error DisZ8000::decodeOperand(
     case M_RA7:
         return decodeRelativeAddressing(memory, insn, out, mode);
     case M_DR:
-        return decodeDoubleSizedRegister(out, num, insn.oprSize());
+        return decodeDoubleSizedRegister(out, num, insn.size());
     case M_R:
-        return decodeGeneralRegister(out, num, insn.oprSize());
+        return decodeGeneralRegister(out, num, insn.size());
     case M_WR07:
         if (num >= 8)
             return setError(REGISTER_NOT_ALLOWED);
@@ -292,7 +292,7 @@ Error DisZ8000::decodeOperand(
     case M_GENI:
         return decodeGenericAddressing(memory, insn, out, mode, num);
     case M_BIT:
-        if (insn.oprSize() == SZ_BYTE && num >= 8)
+        if (insn.size() == SZ_BYTE && num >= 8)
             return setError(ILLEGAL_BIT_NUMBER);
         /* Fall-through */
     case M_CNT:
@@ -302,7 +302,7 @@ Error DisZ8000::decodeOperand(
     case M_IM:
     case M_SCNT:
     case M_NCNT:
-        return decodeImmediate(memory, insn, out, mode, insn.oprSize());
+        return decodeImmediate(memory, insn, out, mode, insn.size());
     case M_X:
         return decodeGenericAddressing(memory, insn, out, mode, num);
     default:
@@ -313,14 +313,14 @@ Error DisZ8000::decodeOperand(
 Error DisZ8000::checkPostWord(const InsnZ8000 &insn) {
     if (insn.hasPost()) {
         uint16_t mask;
-        switch (insn.postMode()) {
-        case P_0X0X:
+        switch (insn.postFormat()) {
+        case PF_0X0X:
             mask = 0x0F0F;
             break;
-        case P_0X00:
+        case PF_0X00:
             mask = 0x0F00;
             break;
-        case P_0XXX:
+        case PF_0XXX:
             mask = 0x0FFF;
             break;
         default:
@@ -338,13 +338,13 @@ static OprSize registerSize(const InsnZ8000 &insn, AddrMode mode) {
     if (mode == M_IR)
         return SZ_ADDR;
     if (mode == M_GEND && (insn.opCode() >> 14) == 2)  // M_R
-        return insn.oprSize();
+        return insn.size();
     return SZ_WORD;
 }
 
 Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
-    const AddrMode dmode = insn.dstMode();
-    const AddrMode smode = insn.srcMode();
+    const AddrMode dmode = insn.dst();
+    const AddrMode smode = insn.src();
     const uint8_t dnum = modeField(insn, insn.dstField());
     const uint8_t snum = modeField(insn, insn.srcField());
     const OprSize dsize = registerSize(insn, dmode);
@@ -405,25 +405,25 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             return setError(OVERFLOW_RANGE);
     }
 
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, dst, insn.dstField()))
         return getError();
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src == M_NONE)
         return setOK();
     outComma(out, insn, dst, insn.dstField());
     if (decodeOperand(memory, insn, out, src, insn.srcField()))
         return getError();
-    const AddrMode ex1 = insn.ex1Mode();
+    const AddrMode ex1 = insn.ex1();
     if (ex1 == M_NONE)
         return setOK();
     const ModeField ex1Field = (ex1 == M_CNT ? MF_P0 : MF_P8);
     outComma(out, insn, ex1, ex1Field);
     if (decodeOperand(memory, insn, out, ex1, ex1Field))
         return getError();
-    const AddrMode ex2 = insn.ex2Mode();
+    const AddrMode ex2 = insn.ex2();
     if (ex2 == M_NONE)
         return setOK();
     outComma(out, insn, ex2, MF_P0);

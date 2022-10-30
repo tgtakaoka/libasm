@@ -27,12 +27,10 @@
 namespace libasm {
 namespace tlcs90 {
 
-#define E(_opc, _name, _dst, _src, _emit) \
-    { _opc, Entry::Flags::create(_dst, _src, _emit), _name }
-#define E2(_opc, _name, _dst, _src) E(_opc, _name, _dst, _src, false)
+#define E2(_opc, _name, _dst, _src) \
+    { _opc, Entry::Flags::create(_dst, _src), _name }
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define I2(_opc, _name, _dst, _src) E(_opc, _name, _dst, _src, true)
 
 // clang-format off
 static constexpr Entry TABLE_TLCS90[] PROGMEM = {
@@ -64,36 +62,36 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E1(0x1D, TEXT_CALR, M_REL16),
     E0(0x1E, TEXT_RET),
     E0(0x1F, TEXT_RETI),
-    I2(0x27, TEXT_LD,   R_A,     M_DIR),
+    E2(0x27, TEXT_LD,   R_A,     M_DIR),
     E2(0x20, TEXT_LD,   R_A,     M_REG8),
-    I2(0x2F, TEXT_LD,   M_DIR,   R_A),
+    E2(0x2F, TEXT_LD,   M_DIR,   R_A),
     E2(0x28, TEXT_LD,   M_REG8,  R_A),
-    I2(0x37, TEXT_LD,   M_DIR,   M_IMM8),
+    E2(0x37, TEXT_LD,   M_DIR,   M_IMM8),
     E2(0x30, TEXT_LD,   M_REG8,  M_IMM8),
     E2(0x3F, TEXT_LDW,  M_DIR,   M_IMM16),
     E2(0x38, TEXT_LD,   M_REG16, M_IMM16),
-    I2(0x47, TEXT_LD,   R_HL,    M_DIR),
+    E2(0x47, TEXT_LD,   R_HL,    M_DIR),
     E2(0x40, TEXT_LD,   R_HL,    M_REG16),
-    I2(0x4F, TEXT_LD,   M_DIR,   R_HL),
+    E2(0x4F, TEXT_LD,   M_DIR,   R_HL),
     E2(0x48, TEXT_LD,   M_REG16, R_HL),
     E1(0x50, TEXT_PUSH, M_STACK),
     E1(0x58, TEXT_POP,  M_STACK),
-    I2(0x60, TEXT_ADD,  R_A,     M_DIR),
-    I2(0x61, TEXT_ADC,  R_A,     M_DIR),
-    I2(0x62, TEXT_SUB,  R_A,     M_DIR),
-    I2(0x63, TEXT_SBC,  R_A,     M_DIR),
-    I2(0x64, TEXT_AND,  R_A,     M_DIR),
-    I2(0x65, TEXT_XOR,  R_A,     M_DIR),
-    I2(0x66, TEXT_OR,   R_A,     M_DIR),
-    I2(0x67, TEXT_CP,   R_A,     M_DIR),
-    I2(0x68, TEXT_ADD,  R_A,     M_IMM8),
-    I2(0x69, TEXT_ADC,  R_A,     M_IMM8),
-    I2(0x6A, TEXT_SUB,  R_A,     M_IMM8),
-    I2(0x6B, TEXT_SBC,  R_A,     M_IMM8),
-    I2(0x6C, TEXT_AND,  R_A,     M_IMM8),
-    I2(0x6D, TEXT_XOR,  R_A,     M_IMM8),
-    I2(0x6E, TEXT_OR,   R_A,     M_IMM8),
-    I2(0x6F, TEXT_CP,   R_A,     M_IMM8),
+    E2(0x60, TEXT_ADD,  R_A,     M_DIR),
+    E2(0x61, TEXT_ADC,  R_A,     M_DIR),
+    E2(0x62, TEXT_SUB,  R_A,     M_DIR),
+    E2(0x63, TEXT_SBC,  R_A,     M_DIR),
+    E2(0x64, TEXT_AND,  R_A,     M_DIR),
+    E2(0x65, TEXT_XOR,  R_A,     M_DIR),
+    E2(0x66, TEXT_OR,   R_A,     M_DIR),
+    E2(0x67, TEXT_CP,   R_A,     M_DIR),
+    E2(0x68, TEXT_ADD,  R_A,     M_IMM8),
+    E2(0x69, TEXT_ADC,  R_A,     M_IMM8),
+    E2(0x6A, TEXT_SUB,  R_A,     M_IMM8),
+    E2(0x6B, TEXT_SBC,  R_A,     M_IMM8),
+    E2(0x6C, TEXT_AND,  R_A,     M_IMM8),
+    E2(0x6D, TEXT_XOR,  R_A,     M_IMM8),
+    E2(0x6E, TEXT_OR,   R_A,     M_IMM8),
+    E2(0x6F, TEXT_CP,   R_A,     M_IMM8),
     E2(0x70, TEXT_ADD,  R_HL,    M_DIR),
     E2(0x71, TEXT_ADC,  R_HL,    M_DIR),
     E2(0x72, TEXT_SUB,  R_HL,    M_DIR),
@@ -240,7 +238,7 @@ static constexpr Entry TABLE_SRC[] PROGMEM = {
     E2(0x13, TEXT_DIV,  R_HL,    M_SRC),
     E2(0x14, TEXT_ADD,  M_REGIX, M_SRC),
     E2(0x18, TEXT_TSET, M_BIT,   M_SRC),
-    I2(0x28, TEXT_LD,   M_REG8,  M_SRC),
+    E2(0x28, TEXT_LD,   M_REG8,  M_SRC),
     E2(0x48, TEXT_LD,   M_REG16, M_SRC),
     E2(0x50, TEXT_EX,   M_DST,   M_REG16),
     E2(0x50, TEXT_EX,   M_REG16, M_SRC),
@@ -355,7 +353,7 @@ static constexpr Entry TABLE_REG[] PROGMEM = {
     E2(0x12, TEXT_MUL,  R_HL,    M_SRC),
     E2(0x13, TEXT_DIV,  R_HL,    M_SRC),
     E2(0x18, TEXT_TSET, M_BIT,   M_SRC),
-    I2(0x30, TEXT_LD,   M_REG8,  M_SRC),
+    E2(0x30, TEXT_LD,   M_REG8,  M_SRC),
     E2(0x60, TEXT_ADD,  R_A,     M_SRC),
     E2(0x61, TEXT_ADC,  R_A,     M_SRC),
     E2(0x62, TEXT_SUB,  R_A,     M_SRC),
@@ -596,7 +594,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_IMM8 || table == M_BIT || table == M_REL8 || table == M_REL16;
     if (opr == M_DIR)
         return table == M_EXT;
-    if (opr == M_UNDEF)
+    if (opr == M_SYM)
         return table == M_EXT || table == M_DIR;
     if (opr == R_AF)
         return table == M_STACK;
@@ -605,12 +603,12 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(InsnTlcs90 *insn, const Entry *entry) {
     auto table = entry->flags();
-    auto tableDst = table.dstMode();
-    auto tableSrc = table.srcMode();
-    auto dst = (tableDst == M_DST) ? insn->preMode() : tableDst;
-    auto src = (tableSrc == M_SRC) ? insn->preMode() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
-    if (acceptMode(insn->dstMode(), dst) && acceptMode(insn->srcMode(), src)) {
-        insn->setAddrMode(dst, src, table.emit());
+    auto tableDst = table.dst();
+    auto tableSrc = table.src();
+    auto dst = (tableDst == M_DST) ? insn->pre() : tableDst;
+    auto src = (tableSrc == M_SRC) ? insn->pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    if (acceptMode(insn->dst(), dst) && acceptMode(insn->src(), src)) {
+        insn->setAddrMode(dst, src);
         // Update prefix mode.
         if (tableDst == M_DST) {
             insn->setPreMode(M_DST);
@@ -640,7 +638,7 @@ Error TableTlcs90::searchName(
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     Config::opcode_t mask = 0;
-    switch (entry->flags().dstMode()) {
+    switch (entry->flags().dst()) {
     case M_REGIX:
         mask |= 3;
         break;
@@ -656,7 +654,7 @@ static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
     default:
         break;
     }
-    switch (entry->flags().srcMode()) {
+    switch (entry->flags().src()) {
     case M_REG8:
     case M_REG16:
         mask |= 7;
@@ -675,8 +673,6 @@ Error TableTlcs90::searchOpCode(
         if (entry) {
             insn.setFlags(entry->flags());
             insn.nameBuffer().text_P(entry->name_P());
-            if (insn.srcMode() == M_UNKI)
-                return UNKNOWN_INSTRUCTION;
             return OK;
         }
     }

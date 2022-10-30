@@ -131,22 +131,22 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableTms32010::TABLE.searchOpCode(insn))
         return setError(TableTms32010::TABLE.getError());
 
-    const AddrMode op1 = insn.op1();
-    if (op1 == M_NONE)
+    const AddrMode mode1 = insn.mode1();
+    if (mode1 == M_NONE)
         return OK;
-    if (decodeOperand(memory, insn, out, op1))
+    if (decodeOperand(memory, insn, out, mode1))
         return getError();
-    const AddrMode op2 = insn.op2();
-    if (op2 == M_NONE)
+    const AddrMode mode2 = insn.mode2();
+    if (mode2 == M_NONE)
         return OK;
-    if (!(op2 == M_LS4 || op2 == M_LS3 || op2 == M_LS0 || op2 == M_NARP))
+    if (!(mode2 == M_LS4 || mode2 == M_LS3 || mode2 == M_LS0 || mode2 == M_NARP))
         out.comma();
-    if (decodeOperand(memory, insn, out, op2))
+    if (decodeOperand(memory, insn, out, mode2))
         return getError();
-    const AddrMode op3 = insn.op3();
-    if (op3 == M_NONE)
+    const AddrMode mode3 = insn.mode3();
+    if (mode3 == M_NONE)
         return OK;
-    return decodeOperand(memory, insn, out, op3);
+    return decodeOperand(memory, insn, out, mode3);
 }
 
 }  // namespace tms32010

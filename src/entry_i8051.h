@@ -52,15 +52,15 @@ public:
         uint16_t _attr;
 
         static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext) {
-            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dstMode_gp) |
-                                               (static_cast<uint16_t>(src) << srcMode_gp) |
-                                               (static_cast<uint16_t>(ext) << extMode_gp))};
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(src) << src_gp) |
+                                               (static_cast<uint16_t>(ext) << ext_gp))};
         }
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
-        AddrMode dstMode() const { return AddrMode((_attr >> dstMode_gp) & addrMode_gm); }
-        AddrMode srcMode() const { return AddrMode((_attr >> srcMode_gp) & addrMode_gm); }
-        AddrMode extMode() const { return AddrMode((_attr >> extMode_gp) & addrMode_gm); }
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
+        AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
+        AddrMode src() const { return AddrMode((_attr >> src_gp) & mode_gm); }
+        AddrMode ext() const { return AddrMode((_attr >> ext_gp) & mode_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -71,10 +71,10 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t addrMode_gm = 0x1f;
-    static constexpr uint8_t dstMode_gp = 0;
-    static constexpr uint8_t srcMode_gp = 5;
-    static constexpr uint8_t extMode_gp = 10;
+    static constexpr uint8_t dst_gp = 0;
+    static constexpr uint8_t src_gp = 5;
+    static constexpr uint8_t ext_gp = 10;
+    static constexpr uint8_t mode_gm = 0x1f;
 };
 
 }  // namespace i8051

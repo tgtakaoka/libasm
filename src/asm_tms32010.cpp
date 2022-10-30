@@ -166,15 +166,15 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(op1, error);
 
-    const AddrMode mode1 = insn.op1();
+    const AddrMode mode1 = insn.mode1();
     if (mode1 != M_NONE && encodeOperand(insn, op1, mode1))
         return getError();
-    const AddrMode mode2 = insn.op2();
+    const AddrMode mode2 = insn.mode2();
     if (mode2 != M_NONE && encodeOperand(insn, op2, mode2)) {
         insn.reset();
         return getError();
     }
-    const AddrMode mode3 = insn.op3();
+    const AddrMode mode3 = insn.mode3();
     if (mode3 != M_NONE && encodeOperand(insn, op3, mode3)) {
         insn.reset();
         return getError();

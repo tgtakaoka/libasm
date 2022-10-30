@@ -25,13 +25,15 @@
 namespace libasm {
 namespace z80 {
 
-#define E(_opc, _name, _dst, _src, _ixb) \
-    { _opc, Entry::Flags::create(_dst, _src, _ixb), _name }
-#define E2(_opc, _name, _dst, _src) E(_opc, _name, _dst, _src, false)
+#define E2(_opc, _name, _dst, _src) \
+    { _opc, Entry::Flags::create(_dst, _src), _name }
 #define E1(_opc, _name, _dst) E2(_opc, _name, _dst, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define I2(_opc, _name, _dst, _src) E(_opc, _name, _dst, _src, true)
+#define I2(_opc, _name, _dst, _src) \
+    { _opc, Entry::Flags::ixbit(_dst, _src), _name }
 #define I1(_opc, _name, _dst) I2(_opc, _name, _dst, M_NONE)
+#define U2(_opc, _name, _dst, _src) \
+    { _opc, Entry::Flags::undef(_dst, _src), _name }
 
 // clang-format off
 static constexpr Entry TABLE_I8080[] PROGMEM = {
@@ -251,15 +253,15 @@ static constexpr uint8_t INDEX_CB[] PROGMEM = {
 
 static constexpr Config::opcode_t PREFIX_ED = 0xED;
 static constexpr Entry TABLE_ED[] PROGMEM = {
-    E2(0x70, TEXT_IN,   M_UNKI, M_UNKI), // IN (HL),,(C),
+    U2(0x70, TEXT_IN,   I_HL,   I_C), // IN (HL),(C)
     E2(0x40, TEXT_IN,   M_DST,  I_C),
-    E2(0x71, TEXT_OUT,  M_UNKI, M_UNKI), // OUT (C),,(H),
+    U2(0x71, TEXT_OUT,  I_C,    I_HL), // OUT (C),(HL)
     E2(0x41, TEXT_OUT,  I_C,    M_DST),
     E2(0x42, TEXT_SBC,  R_HL,   M_PTR),
     E2(0x4A, TEXT_ADC,  R_HL,   M_PTR),
-    E2(0x63, TEXT_LD,   M_UNKI, M_UNKI), // LD (ABS),,HL
+    U2(0x63, TEXT_LD,   M_ABS,  R_HL), // LD (ABS),HL
     E2(0x43, TEXT_LD,   M_ABS,  M_PTR),
-    E2(0x6B, TEXT_LD,   M_UNKI, M_UNKI), // LD HL,(ABS),
+    U2(0x6B, TEXT_LD,   R_HL,   M_ABS), // LD HL,(ABS)
     E2(0x4B, TEXT_LD,   M_PTR,  M_ABS),
     E0(0x44, TEXT_NEG),
     E0(0x45, TEXT_RETN),
@@ -333,7 +335,8 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E1(0x34, TEXT_INC,  M_INDX),
     E1(0x35, TEXT_DEC,  M_INDX),
     E2(0x36, TEXT_LD,   M_INDX, M_IM8),
-    E2(0x76, TEXT_LD,   M_UNKI, M_UNKI), // LD (Ix+nn),,(HL),
+    U2(0x76, TEXT_LD,   M_INDX, I_HL),   // LD (Ix+nn),(HL)
+    U2(0x76, TEXT_LD,   I_HL,   M_INDX), // LD (HL),(Ix+nn)
     E2(0x46, TEXT_LD,   M_DST,  M_INDX),
     E2(0x70, TEXT_LD,   M_INDX, M_REG),
     E2(0x86, TEXT_ADD,  R_A,    M_INDX),
@@ -357,20 +360,20 @@ static constexpr Entry TABLE_IX[] PROGMEM = {
     E1(0xE5, TEXT_PUSH, R_IXIY),
 };
 static constexpr uint8_t INDEX_IX[] PROGMEM = {
-     13,  // TEXT_ADC
+     14,  // TEXT_ADC
       0,  // TEXT_ADD
-     12,  // TEXT_ADD
-     17,  // TEXT_AND
+     13,  // TEXT_ADD
      18,  // TEXT_AND
-     25,  // TEXT_BIT
-     23,  // TEXT_CP
+     19,  // TEXT_AND
+     26,  // TEXT_BIT
      24,  // TEXT_CP
+     25,  // TEXT_CP
       5,  // TEXT_DEC
       7,  // TEXT_DEC
-     29,  // TEXT_EX
+     30,  // TEXT_EX
       4,  // TEXT_INC
       6,  // TEXT_INC
-     27,  // TEXT_JP
+     28,  // TEXT_JP
       1,  // TEXT_LD
       2,  // TEXT_LD
       3,  // TEXT_LD
@@ -378,16 +381,17 @@ static constexpr uint8_t INDEX_IX[] PROGMEM = {
       9,  // TEXT_LD
      10,  // TEXT_LD
      11,  // TEXT_LD
-     28,  // TEXT_LD
-     21,  // TEXT_OR
+     12,  // TEXT_LD
+     29,  // TEXT_LD
      22,  // TEXT_OR
-     26,  // TEXT_POP
-     30,  // TEXT_PUSH
-     16,  // TEXT_SBC
-     14,  // TEXT_SUB
+     23,  // TEXT_OR
+     27,  // TEXT_POP
+     31,  // TEXT_PUSH
+     17,  // TEXT_SBC
      15,  // TEXT_SUB
-     19,  // TEXT_XOR
+     16,  // TEXT_SUB
      20,  // TEXT_XOR
+     21,  // TEXT_XOR
 };
 
 static constexpr Entry TABLE_V30EMU[] PROGMEM = {
@@ -462,8 +466,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.dstMode(), table.dstMode()) &&
-           acceptMode(flags.srcMode(), table.srcMode());
+    return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src());
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) {
@@ -471,6 +474,8 @@ Error TableZ80::searchName(InsnZ80 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
         auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
         if (entry) {
+            if (entry->flags().undefined())
+                return setError(OPERAND_NOT_ALLOWED);
             insn.setOpCode(entry->opCode(), page->prefix());
             insn.setFlags(entry->flags());
             return setOK();
@@ -480,8 +485,8 @@ Error TableZ80::searchName(InsnZ80 &insn) {
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    auto dst = entry->flags().dstMode();
-    auto src = entry->flags().srcMode();
+    auto dst = entry->flags().dst();
+    auto src = entry->flags().src();
     Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
         mask |= 7;
@@ -505,6 +510,8 @@ Error TableZ80::searchOpCode(InsnZ80 &insn) {
             continue;
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
         if (entry) {
+            if (entry->flags().undefined())
+                break;
             insn.setFlags(entry->flags());
             insn.nameBuffer().text_P(entry->name_P());
             return setOK();

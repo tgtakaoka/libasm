@@ -321,8 +321,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     const Entry::Flags table = entry->flags();
-    return acceptMode(flags.dstMode(), table.dstMode()) &&
-           acceptMode(flags.srcMode(), table.srcMode());
+    return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src());
 }
 
 Error TableI8048::searchName(InsnI8048 &insn) {
@@ -340,8 +339,8 @@ Error TableI8048::searchName(InsnI8048 &insn) {
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
     const Entry::Flags flags = entry->flags();
-    const AddrMode dst = flags.dstMode();
-    const AddrMode src = flags.srcMode();
+    const AddrMode dst = flags.dst();
+    const AddrMode src = flags.src();
     Config::opcode_t mask = 0;
     if (dst == M_R || src == M_R)
         mask |= 7;

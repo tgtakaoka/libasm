@@ -28,18 +28,18 @@ class InsnTms9900 : public InsnImpl<Config, Entry> {
 public:
     InsnTms9900(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode dstMode() const { return flags().dstMode(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode dst() const { return flags().dst(); }
     void setAddrMode(AddrMode src, AddrMode dst) { setFlags(Entry::Flags::create(src, dst)); }
 
     void readPost(DisMemory &memory) {
-        if (srcMode() == M_SRC2)
+        if (src() == M_SRC2)
             setPost(readUint16(memory));
     }
 
     void emitInsn() {
         emitUint16(opCode(), 0);
-        if (srcMode() == M_SRC2)
+        if (src() == M_SRC2)
             emitUint16(post(), 2);
     }
 
@@ -50,7 +50,7 @@ private:
         uint8_t pos = length();
         if (pos == 0)
             pos = 2;
-        if (srcMode() == M_SRC2 && pos < 4)
+        if (src() == M_SRC2 && pos < 4)
             pos = 4;
         return pos;
     }

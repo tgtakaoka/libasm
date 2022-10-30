@@ -29,6 +29,8 @@ namespace ins8060 {
 #define E1(_opc, _name, _mode) \
     { _opc, Entry::Flags::create(_mode), _name }
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define U0(_opc, _name) \
+    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_INS8060[] PROGMEM = {
@@ -65,7 +67,7 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E1(0xB8, TEXT_DLD,  M_DISP),
     E1(0xC4, TEXT_LDI,  M_IMM8),
     E1(0xC0, TEXT_LD,   M_INDX),
-    E1(0xCC, TEXT_null, M_UNDEF),  // undefined ST immediate instruction
+    U0(0xCC, TEXT_null),  // undefined ST immediate instruction
     E1(0xC8, TEXT_ST,   M_INDX),
     E1(0xD4, TEXT_ANI,  M_IMM8),
     E1(0xD0, TEXT_AND,  M_INDX),
@@ -176,11 +178,9 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableIns8060::searchOpCode(InsnIns8060 &insn) {
     auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
-    if (!entry)
+    if (!entry || entry->flags().undefined())
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
-    if (insn.addrMode() == M_UNDEF)
-        return setError(UNKNOWN_INSTRUCTION);
     insn.nameBuffer().text_P(entry->name_P());
     return setOK();
 }

@@ -25,16 +25,14 @@
 namespace libasm {
 namespace i8086 {
 
-#define _ENTRY(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, _stri) \
-    { _opc, Entry::Flags::create(_dst, _src, _ext, _dpos, _spos, _epos, SZ_##_sz, _stri), _name }
 #define E3(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos) \
-    _ENTRY(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos, false)
+    { _opc, Entry::Flags::create(_dst, _src, _ext, _dpos, _spos, _epos, SZ_##_sz), _name }
 #define E2(_opc, _name, _sz, _dst, _src, _dpos, _spos) \
     E3(_opc, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE)
 #define E1(_opc, _name, _sz, _dst, _dpos) E2(_opc, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define E0(_opc, _name, _sz) E1(_opc, _name, _sz, M_NONE, P_NONE)
 #define S2(_opc, _name, _sz, _dst, _src) \
-    _ENTRY(_opc, _name, _sz, _dst, _src, M_NONE, P_NONE, P_NONE, P_NONE, true)
+    { _opc, Entry::Flags::strInst(_dst, _src, SZ_##_sz), _name }
 #define S1(_opc, _name, _sz, _dst) S2(_opc, _name, _sz, _dst, M_NONE)
 #define S0(_opc, _name, _sz) S1(_opc, _name, _sz, M_NONE)
 
@@ -1013,24 +1011,23 @@ static bool hasSize(AddrMode mode) {
 }
 
 static bool acceptSize(InsnI8086 *insn, const Entry *entry) {
-    auto dst = insn->dstMode();
-    auto src = insn->srcMode();
+    auto dst = insn->dst();
+    auto src = insn->src();
     auto flags = entry->flags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
             return flags.size() == SZ_NONE;
-        return hasSize(src) || flags.strInst();
+        return hasSize(src) || flags.stringInst();
     }
     if (src == M_MEM || src == M_DIR)
-        return hasSize(dst) || flags.strInst();
+        return hasSize(dst) || flags.stringInst();
     return true;
 }
 
 static bool acceptModes(InsnI8086 *insn, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(insn->dstMode(), table.dstMode()) &&
-           acceptMode(insn->srcMode(), table.srcMode()) &&
-           acceptMode(insn->extMode(), table.extMode()) && acceptSize(insn, entry);
+    return acceptMode(insn->dst(), table.dst()) && acceptMode(insn->src(), table.src()) &&
+           acceptMode(insn->ext(), table.ext()) && acceptSize(insn, entry);
 }
 
 Error TableI8086::searchName(InsnI8086 &insn) {

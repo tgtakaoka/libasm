@@ -51,7 +51,6 @@ enum AddrMode : uint8_t {
     M_IDX8 = 14,   // 8-bit indexed (M_BAOP:3, M_WAOP:3)
     M_IDX16 = 15,  // 16-bit indexed (M_BAOP:3, M_WAOP:3)
     M_ADDR = 16,   // 16-bit address or register number
-    M_UNDEF = 31,  // undefiuned instruction
 };
 
 class Entry : public EntryBase<Config> {
@@ -64,11 +63,19 @@ public:
                                                (static_cast<uint16_t>(src1) << src1_gp) |
                                                (static_cast<uint16_t>(src2) << src2_gp))};
         }
-        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
 
+        static constexpr Flags undef(AddrMode dst, AddrMode src1) {
+            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                               (static_cast<uint16_t>(src1) << src1_gp) |
+                                               (static_cast<uint16_t>(M_NONE) << src2_gp) |
+                                               undef_bm)};
+        }
+
+        Flags read() const { return Flags{pgm_read_word(&_attr)}; }
         AddrMode dst() const { return AddrMode((_attr >> dst_gp) & mode_gm); }
         AddrMode src1() const { return AddrMode((_attr >> src1_gp) & mode_gm); }
         AddrMode src2() const { return AddrMode((_attr >> src2_gp) & mode_gm); }
+        bool undefined() const { return _attr & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -79,10 +86,12 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t mode_gm = 0x1f;
     static constexpr int dst_gp = 0;
     static constexpr int src1_gp = 5;
     static constexpr int src2_gp = 10;
+    static constexpr int undef_bp = 15;
+    static constexpr uint8_t mode_gm = 0x1f;
+    static constexpr uint16_t undef_bm = (1 << undef_bp);
 };
 
 }  // namespace i8096

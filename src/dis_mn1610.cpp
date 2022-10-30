@@ -191,25 +191,25 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    const auto op1 = insn.op1();
-    if (op1 == M_NONE)
+    const auto mode1 = insn.mode1();
+    if (mode1 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, out, op1))
+    if (decodeOperand(memory, insn, out, mode1))
         return getError();
-    const auto op2 = insn.op2();
-    if (op2 == M_NONE)
+    const auto mode2 = insn.mode2();
+    if (mode2 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, outComma(out, opc, op2), op2))
+    if (decodeOperand(memory, insn, outComma(out, opc, mode2), mode2))
         return getError();
-    const auto op3 = insn.op3();
-    if (op3 == M_NONE)
+    const auto mode3 = insn.mode3();
+    if (mode3 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, outComma(out, opc, op3), op3))
+    if (decodeOperand(memory, insn, outComma(out, opc, mode3), mode3))
         return getError();
-    const auto op4 = insn.op4();
-    if (op4 == M_NONE)
+    const auto mode4 = insn.mode4();
+    if (mode4 == M_NONE)
         return setOK();
-    return decodeOperand(memory, insn, outComma(out, opc, op4), op4);
+    return decodeOperand(memory, insn, outComma(out, opc, mode4), mode4);
 }
 
 }  // namespace mn1610

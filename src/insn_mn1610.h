@@ -28,12 +28,12 @@ class InsnMn1610 : public InsnImpl<Config, Entry> {
 public:
     InsnMn1610(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode op1() const { return flags().op1(); }
-    AddrMode op2() const { return flags().op2(); }
-    AddrMode op3() const { return flags().op3(); }
-    AddrMode op4() const { return flags().op4(); }
-    void setAddrMode(AddrMode op1, AddrMode op2, AddrMode op3, AddrMode op4) {
-        setFlags(Entry::Flags::create(op1, op2, op3, op4));
+    AddrMode mode1() const { return flags().mode1(); }
+    AddrMode mode2() const { return flags().mode2(); }
+    AddrMode mode3() const { return flags().mode3(); }
+    AddrMode mode4() const { return flags().mode4(); }
+    void setAddrMode(AddrMode opr1, AddrMode opr2, AddrMode opr3, AddrMode opr4) {
+        setFlags(Entry::Flags::create(opr1, opr2, opr3, opr4));
     }
 
     void emitInsn() { emitUint16(opCode(), 0); }

@@ -31,9 +31,8 @@ public:
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
-    bool undefined() const { return flags().undefined(); }
-    void setAddrMode(const AddrMode op1, const AddrMode op2, const AddrMode op3) {
-        setFlags(Entry::Flags::create(op1, op2, op3));
+    void setAddrMode(const AddrMode opr1, const AddrMode opr2, const AddrMode opr3) {
+        setFlags(Entry::Flags::create(opr1, opr2, opr3));
     }
 
     void emitInsn() {

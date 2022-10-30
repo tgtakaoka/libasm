@@ -146,7 +146,7 @@ Error DisNs32000::decodeBitField(
 
 Error DisNs32000::decodeImmediate(
         DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
-    const OprSize size = (mode == M_GENC) ? SZ_BYTE : insn.oprSize();
+    const OprSize size = (mode == M_GENC) ? SZ_BYTE : insn.size();
     switch (size) {
     case SZ_BYTE:
         if (mode == M_GENC) {
@@ -228,7 +228,7 @@ Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBu
         return getError();
     if (list == 0)
         return setError(OPCODE_HAS_NO_EFFECT);
-    const bool push = insn.oprSize() == SZ_NONE;
+    const bool push = insn.size() == SZ_NONE;
     const uint8_t mask = push ? 0x01 : 0x80;
     out.letter('[');
     char sep = 0;
@@ -475,18 +475,18 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (TableNs32000::TABLE.searchOpCode(insn, memory))
         return setError(TableNs32000::TABLE.getError());
-    if (readIndexByte(memory, insn, insn.srcMode(), insn.srcPos()))
+    if (readIndexByte(memory, insn, insn.src(), insn.srcPos()))
         return getError();
-    if (readIndexByte(memory, insn, insn.dstMode(), insn.dstPos()))
+    if (readIndexByte(memory, insn, insn.dst(), insn.dstPos()))
         return getError();
-    if (readIndexByte(memory, insn, insn.ex1Mode(), insn.ex1Pos()))
+    if (readIndexByte(memory, insn, insn.ex1(), insn.ex1Pos()))
         return getError();
 
-    const AddrMode src = insn.srcMode();
-    const AddrMode dst = insn.dstMode();
-    const AddrMode ex1 = insn.ex1Mode();
-    const AddrMode ex2 = insn.ex2Mode();
-    const OprSize size = insn.oprSize();
+    const AddrMode src = insn.src();
+    const AddrMode dst = insn.dst();
+    const AddrMode ex1 = insn.ex1();
+    const AddrMode ex2 = insn.ex2();
+    const OprSize size = insn.size();
     if (src == M_NONE)
         return setOK();
     const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;

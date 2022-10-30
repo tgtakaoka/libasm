@@ -389,12 +389,12 @@ Error AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, O
     case M_BIT:
         if (static_cast<int32_t>(op.val32) >= 16 || static_cast<int32_t>(op.val32) < 0)
             return setError(op, OVERFLOW_RANGE);
-        if (insn.oprSize() == SZ_BYTE && static_cast<int32_t>(op.val32) >= 8)
+        if (insn.size() == SZ_BYTE && static_cast<int32_t>(op.val32) >= 8)
             return setError(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val32);
         return OK;
     case M_IMM:
-        return emitImmediate(insn, op, insn.oprSize(), op.val32);
+        return emitImmediate(insn, op, insn.size(), op.val32);
     case M_IOA:
         if (op.val32 >= 0x100)
             return setError(op, OVERFLOW_RANGE);
@@ -492,17 +492,17 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
 
     if (insn.stringInst())
         return encodeStringInst(insn, dstOp, srcOp);
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst != M_NONE) {
         if (emitOperand(insn, dst, dstOp, insn.dstPos()))
             return getError();
     }
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src != M_NONE) {
         if (emitOperand(insn, src, srcOp, insn.srcPos()))
             return getError();
     }
-    const AddrMode ext = insn.extMode();
+    const AddrMode ext = insn.ext();
     if (ext != M_NONE) {
         if (emitOperand(insn, ext, extOp, insn.extPos()))
             return getError();

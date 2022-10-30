@@ -67,7 +67,6 @@ enum AddrMode : uint8_t {
     R_C = 26 + 8,    // REG_C  or Carry-condition
     R_A = 26 + 15,   // REG_A
     R_IM = 26 + 18,  // REG_IM (8085)
-    M_UNKI = 50,     // Undefined instruction
 };
 
 class Entry : public EntryBase<Config> {
@@ -76,16 +75,23 @@ public:
         uint8_t _dst;
         uint8_t _src;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src, bool indexBit = false) {
-            return Flags{static_cast<uint8_t>(
-                                 static_cast<uint8_t>(dst) | (indexBit ? 1 << indexBit_bp : 0)),
-                    static_cast<uint8_t>(src)};
+        static constexpr Flags create(AddrMode dst, AddrMode src) {
+            return Flags{Entry::dst(dst, false), Entry::src(src, false)};
         }
-        Flags read() const { return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)}; }
 
-        AddrMode dstMode() const { return AddrMode(_dst & ~(1 << indexBit_bp)); }
-        AddrMode srcMode() const { return AddrMode(_src); }
-        bool indexBit() const { return _dst & (1 << indexBit_bp); }
+        static constexpr Flags ixbit(AddrMode dst, AddrMode src) {
+            return Flags{Entry::dst(dst, true), Entry::src(src, false)};
+        }
+
+        static constexpr Flags undef(AddrMode dst, AddrMode src) {
+            return Flags{Entry::dst(dst, false), Entry::src(src, true)};
+        }
+
+        Flags read() const { return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)}; }
+        AddrMode dst() const { return AddrMode(_dst & mode_gm); }
+        AddrMode src() const { return AddrMode(_src & mode_gm); }
+        bool indexBit() const { return _dst & ixbit_bm; }
+        bool undefined() const { return _src & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -96,7 +102,20 @@ public:
 private:
     Flags _flags;
 
-    static constexpr int indexBit_bp = 7;
+    static constexpr uint8_t dst(AddrMode mode, bool ixbit) {
+        return static_cast<uint8_t>(static_cast<uint8_t>(mode) | (ixbit ? ixbit_bm : 0));
+    }
+    static constexpr uint8_t src(AddrMode mode, bool undef) {
+        return static_cast<uint8_t>(static_cast<uint8_t>(mode) | (undef ? undef_bm : 0));
+    }
+
+    static constexpr uint8_t mode_gm = 0x7F;
+    // |_dst|
+    static constexpr int ixbit_bp = 7;
+    static constexpr uint8_t ixbit_bm = (1 << ixbit_bp);
+    // |_src|
+    static constexpr int undef_bp = 7;
+    static constexpr uint8_t undef_bm = (1 << undef_bp);
 };
 
 }  // namespace z80

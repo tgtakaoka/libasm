@@ -26,10 +26,10 @@
 namespace libasm {
 namespace tms32010 {
 
-#define E3(_opc, _name, _op1, _op2, _op3) \
-    { _opc, Entry::Flags::create(_op1, _op2, _op3), _name }
-#define E2(_opc, _name, _op1, _op2) E3(_opc, _name, _op1, _op2, M_NONE)
-#define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
+#define E3(_opc, _name, _opr1, _opr2, _opr3) \
+    { _opc, Entry::Flags::create(_opr1, _opr2, _opr3), _name }
+#define E2(_opc, _name, _opr1, _opr2) E3(_opc, _name, _opr1, _opr2, M_NONE)
+#define E1(_opc, _name, _opr1) E2(_opc, _name, _opr1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
 // clang-format off
@@ -188,8 +188,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.op1(), table.op1()) && acceptMode(flags.op2(), table.op2()) &&
-           acceptMode(flags.op3(), table.op3());
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
+           acceptMode(flags.mode3(), table.mode3());
 }
 
 Error TableTms32010::searchName(InsnTms32010 &insn) {
@@ -204,27 +204,27 @@ Error TableTms32010::searchName(InsnTms32010 &insn) {
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    auto op1 = entry->flags().op1();
-    auto op2 = entry->flags().op2();
+    auto mode1 = entry->flags().mode1();
+    auto mode2 = entry->flags().mode2();
     Config::opcode_t mask = 0;
-    if (op1 == M_IM8 || op2 == M_IM8)
+    if (mode1 == M_IM8 || mode2 == M_IM8)
         mask |= 0xFF;
-    if (op1 == M_MAM || op2 == M_MAM) {
+    if (mode1 == M_MAM || mode2 == M_MAM) {
         if ((opCode & (1 << 7)) == 0) {
             mask |= 0x7F;  // Direct addressing
         } else {
             mask |= 0xB9;  // Indirect addressing
         }
     }
-    if (op1 == M_IM13)
+    if (mode1 == M_IM13)
         mask |= 0x1FFF;
-    if (op1 == M_AR)
+    if (mode1 == M_AR)
         mask |= 1 << 8;
-    if (op1 == M_ARK || op1 == M_DPK)
+    if (mode1 == M_ARK || mode1 == M_DPK)
         mask |= (1 << 0);
-    if (op2 == M_LS4)
+    if (mode2 == M_LS4)
         mask |= 0xF << 8;
-    if (op2 == M_PA || op2 == M_LS3 || op2 == M_LS0)
+    if (mode2 == M_PA || mode2 == M_LS3 || mode2 == M_LS0)
         mask |= 7 << 8;
     return opCode & ~mask;
 }

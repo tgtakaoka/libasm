@@ -307,50 +307,50 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMn1610 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
-    Operand opr1, opr2, opr3, opr4;
-    if (parseOperand(scan, opr1) && opr1.hasError())
-        return setError(opr1);
+    Operand op1, op2, op3, op4;
+    if (parseOperand(scan, op1) && op1.hasError())
+        return setError(op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, opr2) && opr2.hasError())
-            return setError(opr2);
+        if (parseOperand(scan, op2) && op2.hasError())
+            return setError(op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, opr3) && opr3.hasError())
-            return setError(opr3);
+        if (parseOperand(scan, op3) && op3.hasError())
+            return setError(op3);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, opr4) && opr4.hasError())
-            return setError(opr4);
+        if (parseOperand(scan, op4) && op4.hasError())
+            return setError(op4);
         scan.skipSpaces();
     }
     if (!endOfLine(*scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(opr1);
-    setErrorIf(opr2);
-    setErrorIf(opr3);
-    setErrorIf(opr4);
+    setErrorIf(op1);
+    setErrorIf(op2);
+    setErrorIf(op3);
+    setErrorIf(op4);
 
-    insn.setAddrMode(opr1.mode, opr2.mode, opr3.mode, opr4.mode);
+    insn.setAddrMode(op1.mode, op2.mode, op3.mode, op4.mode);
     const auto error = TableMn1610::TABLE.searchName(insn);
     if (error)
-        return setError(opr1, error);
+        return setError(op1, error);
 
-    const AddrMode op1 = insn.op1();
-    if (op1 != M_NONE && encodeOperand(insn, opr1, op1)) {
+    const AddrMode mode1 = insn.mode1();
+    if (mode1 != M_NONE && encodeOperand(insn, op1, mode1)) {
     error:
         insn.reset();
         return getError();
     }
-    const AddrMode op2 = insn.op2();
-    if (op2 != M_NONE && encodeOperand(insn, opr2, op2))
+    const AddrMode mode2 = insn.mode2();
+    if (mode2 != M_NONE && encodeOperand(insn, op2, mode2))
         goto error;
-    const AddrMode op3 = insn.op3();
-    if (op3 != M_NONE && encodeOperand(insn, opr3, op3))
+    const AddrMode mode3 = insn.mode3();
+    if (mode3 != M_NONE && encodeOperand(insn, op3, mode3))
         goto error;
-    const AddrMode op4 = insn.op4();
-    if (op4 != M_NONE && encodeOperand(insn, opr4, op4))
+    const AddrMode mode4 = insn.mode4();
+    if (mode4 != M_NONE && encodeOperand(insn, op4, mode4))
         goto error;
 
     insn.emitInsn();

@@ -527,8 +527,8 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
 
 static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.srcMode(), table.srcMode()) &&
-           acceptMode(flags.dstMode(), table.dstMode()) &&
+    return acceptMode(flags.src(), table.src()) &&
+           acceptMode(flags.dst(), table.dst()) &&
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
@@ -545,12 +545,12 @@ Error TableMc68000::searchName(InsnMc68000 &insn) {
     return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
 }
 
-static Config::opcode_t getInsnMask(AddrMode srcMode) {
-    if (srcMode == M_IM8 || srcMode == M_REL8)
+static Config::opcode_t getInsnMask(AddrMode src) {
+    if (src == M_IM8 || src == M_REL8)
         return 0xFF;
-    if (srcMode == M_IMVEC)
+    if (src == M_IMVEC)
         return 0xF;
-    if (srcMode == M_IM3)
+    if (src == M_IM3)
         return 07000;
     return 0;
 }
@@ -584,7 +584,7 @@ static Config::opcode_t getInsnMask(OprSize size) {
 }
 
 static Config::opcode_t getInsnMask(Entry::Flags flags) {
-    return getInsnMask(flags.srcMode()) | getInsnMask(flags.srcPos()) |
+    return getInsnMask(flags.src()) | getInsnMask(flags.srcPos()) |
            getInsnMask(flags.dstPos()) | getInsnMask(flags.oprSize());
 }
 

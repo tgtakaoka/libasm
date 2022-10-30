@@ -39,7 +39,6 @@ enum AddrMode : uint8_t {
     M_PAGE = 4,  // Page offset, 8 bit
     M_ADDR = 5,  // Absolute address, 16 bit
     M_IOAD = 6,  // IO address, 1~7
-    M_UNDF = 7,  // Undefined instruction
 };
 
 class Entry : public EntryBase<Config> {
@@ -47,14 +46,21 @@ public:
     struct Flags {
         uint8_t _attr;
 
-        static constexpr Flags create(AddrMode op1, AddrMode op2) {
-            return Flags{static_cast<uint8_t>(
-                    (static_cast<uint8_t>(op1) << op1_gp) | (static_cast<uint8_t>(op2) << op2_gp))};
+        static constexpr Flags create(AddrMode opr1, AddrMode opr2) {
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
+                                              (static_cast<uint8_t>(opr2) << opr2_gp))};
         }
-        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
 
-        AddrMode mode1() const { return AddrMode((_attr >> op1_gp) & mode_gm); }
-        AddrMode mode2() const { return AddrMode((_attr >> op2_gp) & mode_gm); }
+        static constexpr Flags undef() {
+            return Flags{
+                    static_cast<uint8_t>((static_cast<uint8_t>(M_NONE) << opr1_gp) |
+                                         (static_cast<uint8_t>(M_NONE) << opr2_gp) | undef_bm)};
+        }
+
+        Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
+        AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
+        AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
+        bool undefined() const { return _attr & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -65,9 +71,11 @@ public:
 private:
     Flags _flags;
 
-    static constexpr int op1_gp = 0;
-    static constexpr int op2_gp = 4;
-    static constexpr uint8_t mode_gm = 0x0F;
+    static constexpr int opr1_gp = 0;
+    static constexpr int opr2_gp = 3;
+    static constexpr int undef_bp = 7;
+    static constexpr uint8_t mode_gm = 0x07;
+    static constexpr uint8_t undef_bm = (1 << undef_bp);
 };
 
 }  // namespace cdp1802

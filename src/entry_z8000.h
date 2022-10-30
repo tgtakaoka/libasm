@@ -87,14 +87,14 @@ enum Ex2Mode : uint8_t {
     E2_ERROR = 2,
 };
 
-enum PostMode : uint8_t {
-    P_NONE = 0,    // No Post Word
-    P_0XX0 = 1,  // 0 is part of instruction
-    P_0XX8 = 2,  // 8 is part of instruction
-    P_0XXE = 3,  // E is part of instruction
-    P_0X0X = 4,  // Any post word
-    P_0X00 = 5,  // Any post word
-    P_0XXX = 6,  // Any post word
+enum PostFormat : uint8_t {
+    PF_NONE = 0,  // No Post Word
+    PF_0XX0 = 1,  // 0 is part of instruction
+    PF_0XX8 = 2,  // 8 is part of instruction
+    PF_0XXE = 3,  // E is part of instruction
+    PF_0X0X = 4,  // Any post word
+    PF_0X00 = 5,  // Any post word
+    PF_0XXX = 6,  // Any post word
 };
 
 enum CodeMask : uint8_t {
@@ -130,31 +130,32 @@ public:
         uint8_t _size;
 
         static constexpr Flags create(AddrMode dst, ModeField dstField, AddrMode src,
-                ModeField srcField, Ex1Mode ex1, Ex2Mode ex2, PostMode post, CodeMask mask,
+                ModeField srcField, Ex1Mode ex1, Ex2Mode ex2, PostFormat post, CodeMask mask,
                 OprSize size) {
             return Flags{Entry::opr(dst, dstField), Entry::opr(src, srcField),
-                    Entry::exopr(ex1, ex2, post), Entry::size(mask, size)};
+                    Entry::ext(ex1, ex2, post), Entry::size(mask, size)};
         }
+
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
             return Flags{Entry::opr(dst, MF_NO), Entry::opr(src, MF_NO),
-                    Entry::exopr(toEx1Mode(ex1), toEx2Mode(ex2), P_NONE),
+                    Entry::ext(toEx1Mode(ex1), toEx2Mode(ex2), PF_NONE),
                     Entry::size(CM_0x0000, SZ_NONE)};
         }
+
         Flags read() const {
             return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
                     pgm_read_byte(&_size)};
         }
-
-        AddrMode dstMode() const { return Entry::mode(_dst); }
-        AddrMode srcMode() const { return Entry::mode(_src); }
-        AddrMode ex1Mode() const { return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm)); }
-        AddrMode ex2Mode() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
+        AddrMode dst() const { return Entry::mode(_dst); }
+        AddrMode src() const { return Entry::mode(_src); }
+        AddrMode ex1() const { return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm)); }
+        AddrMode ex2() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
         ModeField dstField() const { return Entry::field(_dst); }
         ModeField srcField() const { return Entry::field(_src); }
-        PostMode postMode() const { return PostMode((_ext >> postVal_gp) & postVal_gm); }
-        OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & oprSize_gm); }
-        uint8_t postMask() const { return Entry::postMask(postMode()); }
-        uint8_t postVal() const { return Entry::postVal(postMode()); }
+        PostFormat postFormat() const { return PostFormat((_ext >> postVal_gp) & postVal_gm); }
+        OprSize size() const { return OprSize((_size >> size_gp) & size_gm); }
+        uint8_t postMask() const { return Entry::postMask(postFormat()); }
+        uint8_t postVal() const { return Entry::postVal(postFormat()); }
         uint16_t codeMask() const { return Entry::codeMask(_size); }
     };
 
@@ -167,22 +168,22 @@ private:
     Flags _flags;
 
     static constexpr uint8_t opr(AddrMode mode, ModeField field) {
-        return (static_cast<uint8_t>(mode) << addrMode_gp) |
+        return (static_cast<uint8_t>(mode) << mode_gp) |
                (static_cast<uint8_t>(field) << modeField_gp);
     }
-    static constexpr uint8_t exopr(Ex1Mode ex1, Ex2Mode ex2, PostMode post) {
+
+    static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat post) {
         return (static_cast<uint8_t>(ex1) << ex1Mode_gp) |
                (static_cast<uint8_t>(ex2) << ex2Mode_gp) |
                (static_cast<uint8_t>(post) << postVal_gp);
     }
+
     static constexpr uint8_t size(CodeMask mask, OprSize size) {
         return (static_cast<uint8_t>(mask) << codeMask_gp) |
-               (static_cast<uint8_t>(size) << oprSize_gp);
+               (static_cast<uint8_t>(size) << size_gp);
     }
 
-    static inline AddrMode mode(uint8_t opr) {
-        return AddrMode((opr >> addrMode_gp) & addrMode_gm);
-    }
+    static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
     static inline ModeField field(uint8_t opr) {
         return ModeField((opr >> modeField_gp) & modeField_gm);
     }
@@ -215,27 +216,27 @@ private:
         }
     }
 
-    static uint8_t postVal(PostMode post);
-    static uint8_t postMask(PostMode post);
+    static uint8_t postVal(PostFormat post);
+    static uint8_t postMask(PostFormat post);
     static uint16_t codeMask(uint8_t size);
 
     // |dst|, |src|
-    static constexpr uint8_t addrMode_gm = 0x1f;
+    static constexpr int mode_gp = 0;
+    static constexpr int modeField_gp = 5;
+    static constexpr uint8_t mode_gm = 0x1f;
     static constexpr uint8_t modeField_gm = 0x7;
-    static constexpr uint8_t addrMode_gp = 0;
-    static constexpr uint8_t modeField_gp = 5;
     // |ext|
+    static constexpr int ex1Mode_gp = 0;
+    static constexpr int ex2Mode_gp = 2;
+    static constexpr int postVal_gp = 4;
     static constexpr uint8_t ex1Mode_gm = 0x3;
     static constexpr uint8_t ex2Mode_gm = 0x3;
     static constexpr uint8_t postVal_gm = 0x7;
-    static constexpr uint8_t ex1Mode_gp = 0;
-    static constexpr uint8_t ex2Mode_gp = 2;
-    static constexpr uint8_t postVal_gp = 4;
     // |size|
+    static constexpr int codeMask_gp = 0;
+    static constexpr int size_gp = 4;
     static constexpr uint8_t codeMask_gm = 0xf;
-    static constexpr uint8_t oprSize_gm = 0x7;
-    static constexpr uint8_t codeMask_gp = 0;
-    static constexpr uint8_t oprSize_gp = 4;
+    static constexpr uint8_t size_gm = 0x7;
 };
 
 }  // namespace z8000

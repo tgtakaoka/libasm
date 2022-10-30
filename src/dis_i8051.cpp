@@ -135,8 +135,8 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableI8051::TABLE.searchOpCode(insn))
         return setError(TableI8051::TABLE.getError());
 
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
     if (dst == M_ADR8 && src == M_ADR8) {  // MOV dst,src
         const uint8_t src8 = insn.readByte(memory);
         const uint8_t dst8 = insn.readByte(memory);
@@ -153,7 +153,7 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
                 return getError();
         }
     }
-    const AddrMode ext = insn.extMode();
+    const AddrMode ext = insn.ext();
     if (ext != M_NONE) {
         out.comma();
         if (decodeOperand(memory, insn, out, ext))

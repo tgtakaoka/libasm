@@ -139,7 +139,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
-            op.mode = op.getError() ? M_UNDEF : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
+            op.mode = op.getError() ? M_SYM : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
             scan = p;
             return OK;
         }
@@ -211,9 +211,9 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    const AddrMode pre = insn.preMode();
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
+    const AddrMode pre = insn.pre();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
     const Config::opcode_t prefix = insn.prefix();
     if (prefix) {
         insn.setEmitInsn();

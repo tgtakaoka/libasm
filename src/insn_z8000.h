@@ -28,13 +28,13 @@ class InsnZ8000 : public InsnImpl<Config, Entry> {
 public:
     InsnZ8000(Insn &insn) : InsnImpl(insn) {}
 
-    OprSize oprSize() const { return flags().oprSize(); }
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode srcMode() const { return flags().srcMode(); }
-    AddrMode ex1Mode() const { return flags().ex1Mode(); }
-    AddrMode ex2Mode() const { return flags().ex2Mode(); }
-    PostMode postMode() const { return flags().postMode(); }
-    bool hasPost() const { return postMode() != P_NONE; }
+    OprSize size() const { return flags().size(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
+    AddrMode ex1() const { return flags().ex1(); }
+    AddrMode ex2() const { return flags().ex2(); }
+    PostFormat postFormat() const { return flags().postFormat(); }
+    bool hasPost() const { return postFormat() != PF_NONE; }
     uint8_t postMask() const { return flags().postMask(); }
     uint8_t postVal() const { return flags().postVal(); }
     ModeField dstField() const { return flags().dstField(); }
@@ -47,12 +47,12 @@ public:
 
     void emitInsn() {
         emitUint16(opCode(), 0);
-        const PostMode mode = postMode();
-        if (mode == P_0XX8)
+        const PostFormat format = postFormat();
+        if (format == PF_0XX8)
             embedPost(0x8);
-        if (mode == P_0XXE)
+        if (format == PF_0XXE)
             embedPost(0xE);
-        if (mode != P_NONE)
+        if (format != PF_NONE)
             emitUint16(post(), 2);
     }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }

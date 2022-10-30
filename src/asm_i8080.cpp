@@ -118,10 +118,10 @@ Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst != M_NONE && encodeOperand(insn, dstOp, dst))
         return getError();
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src != M_NONE && encodeOperand(insn, srcOp, src))
         return getError();
     insn.emitInsn();

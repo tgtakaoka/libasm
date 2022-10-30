@@ -58,9 +58,9 @@ OprPos Entry::toOprPos(Ex2Pos pos) {
     E3(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, M_NONE, P_NONE)
 #define E1(_opc, _name, _sz, _srcm, _srcp) E2(_opc, _name, _sz, _srcm, M_NONE, _srcp, P_NONE)
 #define E0(_opc, _name) E1(_opc, _name, NONE, M_NONE, P_NONE)
-#define W2(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _srcw, _dstw) \
-    E4(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, M_NONE, EM2_NONE, \
-       _srcw ? P_IMPL : P_NONE, _dstw ? EP2_IMPL : EP2_NONE)
+#define W2(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, _srcw, _dstw)                          \
+    E4(_opc, _name, _sz, _srcm, _dstm, _srcp, _dstp, M_NONE, EM2_NONE, _srcw ? P_IMPL : P_NONE, \
+            _dstw ? EP2_IMPL : EP2_NONE)
 
 // clang-format off
 // Format 0: |cond|1010|
@@ -893,10 +893,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 
 static bool acceptModes(const Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.srcMode(), table.srcMode()) &&
-           acceptMode(flags.dstMode(), table.dstMode()) &&
-           acceptMode(flags.ex1Mode(), table.ex1Mode()) &&
-           acceptMode(flags.ex2Mode(), table.ex2Mode());
+    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
+           acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
 Error TableNs32000::searchName(

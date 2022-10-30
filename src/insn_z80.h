@@ -28,8 +28,8 @@ class InsnZ80 : public InsnImpl<Config, Entry> {
 public:
     InsnZ80(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
     bool indexBit() const { return flags().indexBit(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
 

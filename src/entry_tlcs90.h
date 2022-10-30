@@ -50,11 +50,10 @@ enum AddrMode : uint8_t {
     R_AFP = 16 + 8 + 7,  // REG_AFP
     R_C = 16 + 16 + 1,   // REG_C or CC_C
     R_A = 16 + 16 + 6,   // REG_A
-    M_UNDEF = 59,        // Undefined address: M_EXT/M_DIR
+    M_SYM = 59,          // Undefined symbol: M_EXT/M_DIR
     M_SRC16 = 60,        // M_REG16
     M_SRC = 61,
     M_DST = 62,
-    M_UNKI = 63,  // Undefined instruction
 };
 
 class Entry : public EntryBase<Config> {
@@ -63,15 +62,13 @@ public:
         uint8_t _dst;
         uint8_t _src;
 
-        static constexpr Flags create(AddrMode dst, AddrMode src, bool emit) {
-            return Flags{static_cast<uint8_t>(uint8_t(dst) | (emit ? (1 << emit_bp) : 0)),
-                    static_cast<uint8_t>(src)};
+        static constexpr Flags create(AddrMode dst, AddrMode src) {
+            return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src)};
         }
-        Flags read() const { return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)}; }
 
-        AddrMode dstMode() const { return AddrMode(_dst & mode_gm); }
-        AddrMode srcMode() const { return AddrMode(_src); }
-        bool emit() const { return _dst & (1 << emit_bp); }
+        Flags read() const { return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src)}; }
+        AddrMode dst() const { return AddrMode(_dst); }
+        AddrMode src() const { return AddrMode(_src); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -81,9 +78,6 @@ public:
 
 private:
     Flags _flags;
-
-    static constexpr uint8_t mode_gm = 0x3f;
-    static constexpr int8_t emit_bp = 7;
 };
 
 }  // namespace tlcs90

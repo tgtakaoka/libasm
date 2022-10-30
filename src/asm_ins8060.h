@@ -39,7 +39,7 @@ private:
         AddrMode mode;
         RegName reg;
         uint16_t val16;
-        Operand() : mode(M_UNDEF), reg(REG_UNDEF), val16(0) {}
+        Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;

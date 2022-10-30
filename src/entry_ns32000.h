@@ -115,24 +115,25 @@ public:
             return Entry::Flags{Entry::opr(src, srcp), Entry::opr(dst, dstp), Entry::opr(ex1, ex1p),
                     Entry::ex2(ex2, ex2p, size)};
         }
+
         static const Flags create(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
             return Entry::Flags{Entry::opr(src, P_NONE), Entry::opr(dst, P_NONE),
                     Entry::opr(ex1, P_NONE), Entry::ex2(toEx2Mode(ex2), EP2_NONE, SZ_NONE)};
         }
+
         Flags read() const {
             return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_ex1),
                     pgm_read_byte(&_ex2)};
         }
-
-        AddrMode srcMode() const { return mode(_src); }
-        AddrMode dstMode() const { return mode(_dst); }
-        AddrMode ex1Mode() const { return mode(_ex1); }
-        AddrMode ex2Mode() const { return toAddrMode(Ex2Mode((_ex2 >> ex2Mode_gp) & ex2Mode_gm)); }
+        AddrMode src() const { return mode(_src); }
+        AddrMode dst() const { return mode(_dst); }
+        AddrMode ex1() const { return mode(_ex1); }
+        AddrMode ex2() const { return toAddrMode(Ex2Mode((_ex2 >> ex2Mode_gp) & ex2Mode_gm)); }
         OprPos srcPos() const { return pos(_src); }
         OprPos dstPos() const { return pos(_dst); }
         OprPos ex1Pos() const { return pos(_ex1); }
         OprPos ex2Pos() const { return toOprPos(Ex2Pos((_ex2 >> ex2Pos_gp) & ex2Pos_gm)); }
-        OprSize oprSize() const { return OprSize((_ex2 >> oprSize_gp) & oprSize_gm); }
+        OprSize size() const { return OprSize((_ex2 >> size_gp) & size_gm); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -143,16 +144,17 @@ public:
 private:
     Flags _flags;
 
-    static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> oprMode_gp) & oprMode_gm); }
-    static inline OprPos pos(uint8_t opr) { return OprPos((opr >> oprPos_gp) & oprPos_gm); }
+    static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
+
+    static inline OprPos pos(uint8_t opr) { return OprPos((opr >> pos_gp) & pos_gm); }
+
     static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
-        return (static_cast<uint8_t>(mode) << oprMode_gp) |
-               (static_cast<uint8_t>(pos) << oprPos_gp);
+        return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
     }
+
     static constexpr uint8_t ex2(Ex2Mode mode, Ex2Pos pos, OprSize size) {
         return (static_cast<uint8_t>(mode << ex2Mode_gp)) |
-               (static_cast<uint8_t>(pos << ex2Pos_gp)) |
-               (static_cast<uint8_t>(size) << oprSize_gp);
+               (static_cast<uint8_t>(pos << ex2Pos_gp)) | (static_cast<uint8_t>(size) << size_gp);
     }
 
     static inline Ex2Mode toEx2Mode(AddrMode mode) {
@@ -174,17 +176,17 @@ private:
     static OprPos toOprPos(Ex2Pos pos);
 
     // |src|,|dst|,|ex1|
-    static constexpr uint8_t oprMode_gm = 0x1f;
-    static constexpr uint8_t oprPos_gm = 0x7;
-    static constexpr uint8_t oprMode_gp = 0;
-    static constexpr uint8_t oprPos_gp = 5;
+    static constexpr uint8_t mode_gp = 0;
+    static constexpr uint8_t pos_gp = 5;
+    static constexpr uint8_t mode_gm = 0x1F;
+    static constexpr uint8_t pos_gm = 0x07;
     // |ex2|
-    static constexpr uint8_t ex2Mode_gm = 0x7;
-    static constexpr uint8_t ex2Pos_gm = 0x3;
-    static constexpr uint8_t oprSize_gm = 0x7;
     static constexpr uint8_t ex2Mode_gp = 0;
     static constexpr uint8_t ex2Pos_gp = 3;
-    static constexpr uint8_t oprSize_gp = 5;
+    static constexpr uint8_t size_gp = 5;
+    static constexpr uint8_t ex2Mode_gm = 0x07;
+    static constexpr uint8_t ex2Pos_gm = 0x03;
+    static constexpr uint8_t size_gm = 0x07;
 };
 
 }  // namespace ns32000

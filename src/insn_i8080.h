@@ -28,8 +28,8 @@ class InsnI8080 : public InsnImpl<Config, Entry> {
 public:
     InsnI8080(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode dstMode() const { return flags().dstMode(); }
-    AddrMode srcMode() const { return flags().srcMode(); }
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
 
     void emitInsn() {

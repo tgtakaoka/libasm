@@ -517,7 +517,7 @@ Error AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &o
             return getError();
         return emitDisplacement(insn, op, op.disp2);
     case M_IMM:
-        return emitImmediate(insn, op, mode == M_GENC ? SZ_BYTE : insn.oprSize());
+        return emitImmediate(insn, op, mode == M_GENC ? SZ_BYTE : insn.size());
     default:
         return OK;
     }
@@ -693,17 +693,17 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(srcOp, error);
 
-    const AddrMode src = insn.srcMode();
-    const AddrMode dst = insn.dstMode();
-    const AddrMode ex1 = insn.ex1Mode();
-    const AddrMode ex2 = insn.ex2Mode();
+    const AddrMode src = insn.src();
+    const AddrMode dst = insn.dst();
+    const AddrMode ex1 = insn.ex1();
+    const AddrMode ex2 = insn.ex2();
     if (emitIndexByte(insn, srcOp))
         return getError();
     if (emitIndexByte(insn, dstOp))
         return getError();
     if (emitIndexByte(insn, ex1Op))
         return getError();
-    const OprSize size = insn.oprSize();
+    const OprSize size = insn.size();
     if (src != M_NONE) {
         const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
         if (emitOperand(insn, src, srcSize, srcOp, insn.srcPos(), srcOp))

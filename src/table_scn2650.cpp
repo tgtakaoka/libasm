@@ -30,10 +30,12 @@ namespace scn2650 {
     { _opc, Entry::Flags::create(_mode1, _mode2), _name }
 #define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define U0(_opc, _name) \
+    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_2650[] PROGMEM = {
-    E1(0x00, TEXT_null, M_UNDF),
+    U0(0x00, TEXT_null),
     E1(0x00, TEXT_LODZ, M_R123),
     E2(0x04, TEXT_LODI, M_REGN, M_IMM8),
     E2(0x08, TEXT_LODR, M_REGN, M_REL7),
@@ -264,7 +266,7 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 Error TableScn2650::searchOpCode(InsnScn2650 &insn) {
     const auto opCode = insn.opCode();
     auto entry = searchEntry(opCode, ARRAY_RANGE(TABLE_2650), tableCode);
-    if (!entry)
+    if (!entry || entry->flags().undefined())
         return setError(UNKNOWN_INSTRUCTION);
     insn.setFlags(entry->flags());
     insn.nameBuffer().text_P(entry->name_P());

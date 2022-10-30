@@ -94,9 +94,9 @@ Error DisZ8::decodeOperand(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, Addr
         }
     }
     if (mode == M_IM) {
-        if (post == P2_0 || post == P2_1 || post == P2_2)
+        if (post == PF2_0 || post == PF2_1 || post == PF2_2)
             val &= ~3;
-        if (post == P0 && insn.opCode() == TableZ8::SRP && (val & ~0xF0) != 0)
+        if (post == PF_NONE && insn.opCode() == TableZ8::SRP && (val & ~0xF0) != 0)
             return setError(OPERAND_NOT_ALLOWED);
         outHex(out.letter('#'), val, 8);
     }
@@ -138,8 +138,8 @@ StrBuffer &DisZ8::outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMod
 }
 
 Error DisZ8::decodeIndexed(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, uint8_t opr1) {
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
     const bool pair = !(dst == M_X || src == M_X);
     uint16_t base16;
     if (dst == M_XL || src == M_XL) {
@@ -170,14 +170,14 @@ Error DisZ8::decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, StrBuffer &o
     const uint8_t reg2 = opr >> 4;
     if (reg1 % 2)
         return setError(ILLEGAL_REGISTER);
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst == M_Irr) {
         outPairReg(out, reg1, true);
     } else if (dst == M_r || dst == M_Ir) {
         outWorkReg(out, reg2, dst == M_Ir);
     }
     out.comma();
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src == M_Irr) {
         outPairReg(out, reg1, true);
     } else if (src == M_r || src == M_Ir) {
@@ -187,8 +187,8 @@ Error DisZ8::decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, StrBuffer &o
 }
 
 Error DisZ8::decodeInOpCode(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
     if (dst == M_r) {
         outWorkReg(out, insn.opCode() >> 4);
     } else {
@@ -213,9 +213,9 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) 
     const uint8_t opr1 = insn.readByte(memory);
     if (setError(insn))
         return getError();
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
-    if (src == M_Ir && insn.extMode() == M_RA) {
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
+    if (src == M_Ir && insn.ext() == M_RA) {
         outWorkReg(out, opr1 & 0xF).comma();
         outWorkReg(out, opr1 >> 4, true).comma();
         return decodeRelative(memory, insn, out);
@@ -236,9 +236,9 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) 
     const uint8_t opr2 = insn.readByte(memory);
     if (setError(insn))
         return getError();
-    const bool dstSrc = insn.dstSrc();
-    const uint8_t dstReg = dstSrc ? opr1 : opr2;
-    const uint8_t srcReg = dstSrc ? opr2 : opr1;
+    const bool dstFirst = insn.dstFirst();
+    const uint8_t dstReg = dstFirst ? opr1 : opr2;
+    const uint8_t srcReg = dstFirst ? opr2 : opr1;
     if (dst == M_RR) {
         if (dstReg % 2)
             return setError(ILLEGAL_REGISTER);
@@ -262,16 +262,16 @@ Error DisZ8::decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) 
 }
 
 Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
     const uint8_t post = insn.post();
     if (insn.opCode() == TableZ8::SRP) {
-        const PostFormat pfmt = insn.postFormat();
-        if (pfmt == P2_0 && (post & ~0xF0) != 0x00)
+        const PostFormat format = insn.postFormat();
+        if (format == PF2_0 && (post & ~0xF0) != 0x00)
             return setError(OPERAND_NOT_ALLOWED);
-        if (pfmt == P2_1 && (post & ~0xF8) != 0x01)
+        if (format == PF2_1 && (post & ~0xF8) != 0x01)
             return setError(OPERAND_NOT_ALLOWED);
-        if (pfmt == P2_2 && (post & ~0xF8) != 0x02)
+        if (format == PF2_2 && (post & ~0xF8) != 0x02)
             return setError(OPERAND_NOT_ALLOWED);
         return decodeOperand(memory, insn, out, dst);
     }
@@ -316,7 +316,7 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
         outBitPos(out, post >> 1);
         return setOK();
     }
-    const AddrMode ext = insn.extMode();
+    const AddrMode ext = insn.ext();
     if (ext == M_NONE) {  // P1: BITC, BITR, BITS
         outWorkReg(out, post >> 4);
         outBitPos(out, post >> 1);
@@ -354,11 +354,11 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableZ8::TABLE.searchOpCode(insn, memory))
         return setError(TableZ8::TABLE.getError());
 
-    const AddrMode dst = insn.dstMode();
-    const AddrMode src = insn.srcMode();
+    const AddrMode dst = insn.dst();
+    const AddrMode src = insn.src();
     if (dst == M_NONE)
         return setOK();  // No operand
-    if (insn.postFormat() != P0)
+    if (insn.postFormat() != PF_NONE)
         return decodePostByte(memory, insn, out);
     if (dst == M_DA || src == M_DA) {
         if (dst == M_cc)

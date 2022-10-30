@@ -30,6 +30,8 @@ namespace cdp1802 {
     { _opc, Entry::Flags::create(_op1, _op2), _name }
 #define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
+#define U0(_opc, _name) \
+    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_CDP1802[] PROGMEM = {
@@ -62,7 +64,7 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E1(0x50, TEXT_STR,  M_REGN),
     E0(0x60, TEXT_IRX),
     E1(0x60, TEXT_OUT,  M_IOAD),
-    E1(0x68, TEXT_null, M_UNDF),   // undefined
+    U0(0x68, TEXT_null),   // undefined
     E1(0x68, TEXT_INP,  M_IOAD),
     E0(0x70, TEXT_RET),
     E0(0x71, TEXT_DIS),
@@ -369,9 +371,9 @@ Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
             continue;
         auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
         if (entry) {
-            insn.setFlags(entry->flags());
-            if (insn.mode1() == M_UNDF)
+            if (entry->flags().undefined())
                 break;
+            insn.setFlags(entry->flags());
             insn.nameBuffer().text_P(entry->name_P());
             return setOK();
         }

@@ -33,14 +33,14 @@ enum CpuType : uint8_t {
 
 enum AddrMode : uint8_t {
     // Those (0~7) happen all operands including extra.
-    M_NONE = 0,   // No operand
-    M_IM = 1,   // Immediate: #nn
-    M_r = 2,    // Working register: rn
-    M_RA = 3,   // Relative Address: nnnn
-    M_IMb = 4,  // Bit position: #n
-    M_DA = 5,   // Direct Address: nnnn
-    M_R = 6,    // Register: Rn
-    M_RR = 7,   // Register Pair: RRn
+    M_NONE = 0,  // No operand
+    M_IM = 1,    // Immediate: #nn
+    M_r = 2,     // Working register: rn
+    M_RA = 3,    // Relative Address: nnnn
+    M_IMb = 4,   // Bit position: #n
+    M_DA = 5,    // Direct Address: nnnn
+    M_R = 6,     // Register: Rn
+    M_RR = 7,    // Register Pair: RRn
     // Those (6~16)  happen on destination and source operands.
     M_IR = 8,    // Indirect Register: @Rn
     M_Ir = 9,    // Indirect Working register: @rn
@@ -62,21 +62,21 @@ enum AddrMode : uint8_t {
 
 // Post byte format
 enum PostFormat : uint8_t {
-    P0 = 0,    // No Post Byte check necessary
-    P1_0 = 1,  // Least 1 bit is 0
-    P1_1 = 2,  // Least 1 bit is 1
-    P2_0 = 3,  // Least 2 bits are 00
-    P2_1 = 4,  // Least 2 bits are 01
-    P2_2 = 5,  // Least 2 bits are 10
-    P4_0 = 6,  // Least 4 bits are 0000
-    P4_1 = 7,  // Least 4 bits are 0001
+    PF_NONE = 0,  // No Post Byte check necessary
+    PF1_0 = 1,    // Least 1 bit is 0
+    PF1_1 = 2,    // Least 1 bit is 1
+    PF2_0 = 3,    // Least 2 bits are 00
+    PF2_1 = 4,    // Least 2 bits are 01
+    PF2_2 = 5,    // Least 2 bits are 10
+    PF4_0 = 6,    // Least 4 bits are 0000
+    PF4_1 = 7,    // Least 4 bits are 0001
 };
 
 // Destination and Source order
-enum DstSrc : uint8_t {
-    DS_NO = 0,    // one or no operand.
-    DST_SRC = 0,  // destination first, source second.
-    SRC_DST = 1,  // source first, destination second.
+enum OprOrder : uint8_t {
+    ORDER_NONE = 0,  // one or no operand.
+    DST_FIRST = 0,   // destination first, source second.
+    SRC_FIRST = 1,   // source first, destination second.
 };
 
 class Entry : public EntryBase<Config> {
@@ -88,20 +88,20 @@ public:
         uint8_t _fmt;
 
         static constexpr Flags create(
-                AddrMode dst, AddrMode src, AddrMode ext, DstSrc dstSrc, PostFormat postFmt) {
+                AddrMode dst, AddrMode src, AddrMode ext, OprOrder order, PostFormat post) {
             return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src),
-                    static_cast<uint8_t>(ext), Entry::_fmt(dstSrc, postFmt)};
+                    static_cast<uint8_t>(ext), Entry::fmt(order, post)};
         }
         Flags read() const {
             return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
                     pgm_read_byte(&_fmt)};
         }
 
-        AddrMode dstMode() const { return AddrMode(_dst); }
-        AddrMode srcMode() const { return AddrMode(_src); }
-        AddrMode extMode() const { return AddrMode(_ext); }
-        PostFormat postFmt() const { return PostFormat(_fmt & postFmt_gm); }
-        bool dstSrc() const { return DstSrc((_fmt >> dstSrc_gp) & dstSrc_gm) == DST_SRC; }
+        AddrMode dst() const { return AddrMode(_dst); }
+        AddrMode src() const { return AddrMode(_src); }
+        AddrMode ext() const { return AddrMode(_ext); }
+        PostFormat postFormat() const { return PostFormat(_fmt & post_gm); }
+        bool dstFirst() const { return OprOrder((_fmt >> order_gp) & order_gm) == DST_FIRST; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -112,16 +112,15 @@ public:
 private:
     Flags _flags;
 
-    static constexpr uint8_t _fmt(DstSrc dstSrc, PostFormat postFmt) {
-        return static_cast<uint8_t>(postFmt & postFmt_gm) |
-               (static_cast<uint8_t>(dstSrc & dstSrc_gm) << dstSrc_gp);
+    static constexpr uint8_t fmt(OprOrder order, PostFormat post) {
+        return static_cast<uint8_t>(post & post_gm) |
+               (static_cast<uint8_t>(order & order_gm) << order_gp);
     }
 
     // |fmt|
-    static constexpr int8_t fmt_gp = 24;
-    static constexpr uint8_t postFmt_gm = 0x7;
-    static constexpr uint8_t dstSrc_gm = 0x1;
-    static constexpr int8_t dstSrc_gp = 7;
+    static constexpr uint8_t post_gm = 0x7;
+    static constexpr uint8_t order_gm = 0x1;
+    static constexpr int8_t order_gp = 7;
 };
 
 }  // namespace z8

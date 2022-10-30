@@ -40,7 +40,7 @@ Error AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
 }
 
 Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
-    if (mode == M_SRC2 && insn.dstMode() == M_BIT2 && op.mode == M_INCR)
+    if (mode == M_SRC2 && insn.dst() == M_BIT2 && op.mode == M_INCR)
         return setError(op, OPERAND_NOT_ALLOWED);
     Config::opcode_t opc = RegTms9900::encodeRegNumber(op.reg);
     switch (op.mode) {
@@ -224,10 +224,10 @@ Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(srcOp, error);
 
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src != M_NONE && encodeOperand(insn, srcOp, src))
         return getError();
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst != M_NONE && encodeOperand(insn, dstOp, dst)) {
         insn.reset();
         return getError();

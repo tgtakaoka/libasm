@@ -37,7 +37,7 @@ Error DisMc68000::decodeImmediateData(
     if (size == SZ_BYTE) {
         outHex(out, insn.readUint16(memory) & 0xFF, 8);
     } else if (size == SZ_WORD) {
-        if (insn.srcMode() == M_CCR || insn.dstMode() == M_CCR) {
+        if (insn.src() == M_CCR || insn.dst() == M_CCR) {
             outHex(out, insn.readUint16(memory) & 0xFF, 8);
         } else {
             outHex(out, insn.readUint16(memory), 16);
@@ -358,20 +358,20 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableMc68000::TABLE.searchOpCode(insn))
         return setError(TableMc68000::TABLE.getError());
 
-    const AddrMode src = insn.srcMode();
-    const AddrMode dst = insn.dstMode();
+    const AddrMode src = insn.src();
+    const AddrMode dst = insn.dst();
     const OprSize size = sizeVal(insn);
     if (size == SZ_ERROR)
         return setError(ILLEGAL_SIZE);
     const OprPos srcPos = insn.srcPos();
-    const uint8_t srcMode = modeVal(opCode, srcPos);
+    const uint8_t srcModeVal = modeVal(opCode, srcPos);
     const uint8_t srcReg = regVal(opCode, srcPos);
-    if (checkOperand(src, srcMode, srcReg, size))
+    if (checkOperand(src, srcModeVal, srcReg, size))
         return getError();
     const OprPos dstPos = insn.dstPos();
-    const uint8_t dstMode = modeVal(opCode, dstPos);
+    const uint8_t dstModeVal = modeVal(opCode, dstPos);
     const uint8_t dstReg = regVal(opCode, dstPos);
-    if (checkOperand(dst, dstMode, dstReg, size))
+    if (checkOperand(dst, dstModeVal, dstReg, size))
         return getError();
 
     uint16_t opr16 = 0;
@@ -379,20 +379,20 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         opr16 = insn.readUint16(memory);
 
     const InsnSize iSize = insn.insnSize();
-    const OprSize oSize = (iSize == ISZ_DATA || insn.withSize()) ? size : OprSize(iSize);
+    const OprSize oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
     const char suffix = _regs.sizeSuffix(oSize);
     if (suffix)
         insn.nameBuffer().letter('.').letter(suffix);
 
     if (src == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, out, src, srcMode, srcReg, size, opr16))
+    if (decodeOperand(memory, insn, out, src, srcModeVal, srcReg, size, opr16))
         return getError();
 
     if (dst == M_NONE)
         return setOK();
     out.comma();
-    return decodeOperand(memory, insn, out, dst, dstMode, dstReg, size, opr16);
+    return decodeOperand(memory, insn, out, dst, dstModeVal, dstReg, size, opr16);
 }
 
 }  // namespace mc68000

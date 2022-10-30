@@ -123,12 +123,12 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableI8048::TABLE.searchOpCode(insn))
         return setError(TableI8048::TABLE.getError());
 
-    const AddrMode dst = insn.dstMode();
+    const AddrMode dst = insn.dst();
     if (dst != M_NONE) {
         if (decodeOperand(memory, insn, out, dst))
             return getError();
     }
-    const AddrMode src = insn.srcMode();
+    const AddrMode src = insn.src();
     if (src != M_NONE) {
         out.comma();
         if (decodeOperand(memory, insn, out, src))
