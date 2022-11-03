@@ -63,7 +63,7 @@ void test_cpu() {
 }
 
 static void test_data_transfer() {
-    TEST("MOV AL,CL",            0x8A, 0301);
+    TEST("mov al,cl",            0x8A, 0301);
     TEST("MOV DL,BL",            0x8A, 0323);
     TEST("MOV AH,CH",            0x8A, 0345);
     TEST("MOV [SI],DH",          0x88, 0064);

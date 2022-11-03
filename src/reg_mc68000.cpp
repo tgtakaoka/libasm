@@ -112,27 +112,21 @@ RegName RegMc68000::decodeAddrReg(uint8_t regno) {
 
 OprSize RegMc68000::parseSize(StrScanner &scan) {
     StrScanner p(scan);
-    if (!p.expect('.'))
-        return SZ_NONE;
-    const char c = *p++;
-    if (isidchar(*p))
-        return SZ_ERROR;
-    OprSize size;
-    switch (c & ~0x20) {
-    case 'B':
-        size = SZ_BYTE;
-        break;
-    case 'W':
-        size = SZ_WORD;
-        break;
-    case 'L':
-        size = SZ_LONG;
-        break;
-    default:
-        return SZ_ERROR;
+    if (p.expect('.')) {
+        OprSize size = SZ_ERROR;
+        if (p.iexpect('B')) {
+            size = SZ_BYTE;
+        } else if (p.iexpect('W')) {
+            size = SZ_WORD;
+        } else if (p.iexpect('L')) {
+            size = SZ_LONG;
+        }
+        if (size == SZ_ERROR || isidchar(*p))
+            return SZ_ERROR;
+        scan = p;
+        return size;
     }
-    scan = p;
-    return size;
+    return SZ_NONE;
 }
 
 uint8_t RegMc68000::sizeNameLen(OprSize size) {
@@ -140,23 +134,18 @@ uint8_t RegMc68000::sizeNameLen(OprSize size) {
 }
 
 char RegMc68000::sizeSuffix(OprSize size) const {
-    char suffix;
+    char base = isUppercase() ? 0 : 'a' - 'A';
     switch (size) {
     case SZ_BYTE:
-        suffix = 'B';
-        break;
+        return base + 'B';
     case SZ_WORD:
-        suffix = 'W';
+        return base + 'W';
         break;
     case SZ_LONG:
-        suffix = 'L';
-        break;
+        return base + 'L';
     default:
         return 0;
     }
-    if (_uppercase)
-        return suffix;
-    return suffix | 0x20;
 }
 
 Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {

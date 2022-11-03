@@ -84,7 +84,7 @@ static void test_format_1() {
     TEST("CXP 1",  0x22, 0x01);
     TEST("RXP 16", 0x32, 0x10);
 
-    TEST("SAVE    [R0,R2,R7]",     0x62, 0x85);
+    TEST("save    [r0,r2,r7]",     0x62, 0x85);
     TEST("RESTORE [R0,R2,R7]",     0x72, 0xA1);
     TEST("ENTER   [R0,R2,R7], 16", 0x82, 0x85, 0x10);
     TEST("ENTER   [], 0",          0x82, 0x00, 0x00);
@@ -123,7 +123,7 @@ static void test_format_2() {
     TEST("ACBW  -2,R1,.-2", 0x4D, 0x0F, 0x7E);
     TEST("ACBD  4,R2,.+2",  0x4F, 0x12, 0x02);
 
-    TEST("LPRB UPSR,R0",    0x6C, 0x00);
+    TEST("lprb upsr,r0",    0x6C, 0x00);
     TEST("LPRD FP,R0",      0x6F, 0x04);
     TEST("LPRD SP,R6",      0xEF, 0x34);
     TEST("LPRD SB,R7",      0x6F, 0x3D);
@@ -454,7 +454,7 @@ static void test_format_11() {
     ERUI("ADDL F2,16(SB)");
     ERUI("CMPF F0,F2");
     ERUI("DIVF F0,F7");
-    ERUI("DIVL -8(FP),16(SB)");
+    ERUI("divl -8(fp),16(sb)");
     ERUI("MULF F0,F7");
     ERUI("MULL -8(FP),8(SB)");
     ERUI("NEGF F0,F2");
@@ -571,7 +571,7 @@ static void test_generic_addressing() {
     TEST("ADDW 4(R1)[R3:B],8(R2)",          0x81, 0xE2, 0x4B, 0x04, 0x08);
     TEST("ADDW 6(4(FP))[R3:B],8(R2)",       0x81, 0xE2, 0x83, 0x04, 0x06, 0x08);
     TEST("ADDW @0x1234[R3:B],8(R2)",        0x81, 0xE2, 0xAB, 0x92, 0x34, 0x08);
-    TEST("ADDW EXT(4)+6[R3:B],8(R2)",       0x81, 0xE2, 0xB3, 0x04, 0x06, 0x08);
+    TEST("addw ext(4)+6[r3:b],8(r2)",       0x81, 0xE2, 0xB3, 0x04, 0x06, 0x08);
     TEST("ADDW EXT(4)-6[R3:B],8(R2)",       0x81, 0xE2, 0xB3, 0x04, 0x7A, 0x08);
     TEST("ADDW EXT(4)[R3:B],8(R2)",         0x81, 0xE2, 0xB3, 0x04, 0x00, 0x08);
     TEST("ADDW 6(4(EXT))[R3:B],8(R2)",      0x81, 0xE2, 0xB3, 0x04, 0x06, 0x08);

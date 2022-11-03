@@ -43,7 +43,7 @@ void test_cpu() {
 
 static void test_implied() {
     TEST("NOP  ",      0x00);
-    TEST("XCH  A,E",   0x01);
+    TEST("xch  a,e",   0x01);
     TEST("LD   A,S",   0x06);
     TEST("LD   S,A",   0x07);
     TEST("PUSH EA",    0x08);

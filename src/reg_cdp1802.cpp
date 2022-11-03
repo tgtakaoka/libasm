@@ -23,11 +23,9 @@ namespace cdp1802 {
 
 RegName RegCdp1802::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    if (toupper(*p++) == 'R' && isdigit(*p)) {
-        int8_t num = *p++ - '0';
-        if (num == 1 && isdigit(*p))
-            num = *p++ - '0' + 10;
-        if (num < 16 && !isidchar(*p)) {
+    if (p.iexpect('R')) {
+        const auto num = parseRegNumber(p, 16);
+        if (num >= 0) {
             scan = p;
             return RegName(num);
         }
@@ -36,16 +34,7 @@ RegName RegCdp1802::parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &RegCdp1802::outRegName(StrBuffer &out, RegName name) const {
-    int8_t num = int8_t(name);
-    if (num >= 0) {
-        out.letter('R', isUppercase());
-        if (num >= 10) {
-            out.letter('1');
-            num -= 10;
-        }
-        out.letter(num + '0');
-    }
-    return out;
+    return outRegNumber(out.letter('R', isUppercase()), int8_t(name));
 }
 
 }  // namespace cdp1802

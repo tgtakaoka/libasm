@@ -165,7 +165,6 @@ public:
 
 private:
     StrBuffer &outCtlName(StrBuffer &out, RegName name) const;
-    static int8_t parseRegNum(StrScanner &scan);
     static uint8_t ctlRegLen(RegName name);
 };
 

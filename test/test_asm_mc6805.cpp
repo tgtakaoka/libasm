@@ -281,7 +281,7 @@ static void test_extended() {
 }
 
 static void test_indexed() {
-    TEST("NEG   0,X", 0x70);
+    TEST("neg   0,x", 0x70);
     TEST("COM  <0,X", 0x63, 0x00);
     TEST("LSR   1,X", 0x64, 0x01);
     TEST("ROR   2,X", 0x66, 0x02);

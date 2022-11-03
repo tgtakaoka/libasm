@@ -24,19 +24,18 @@ namespace mc6800 {
 
 RegName RegMc6800::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    const char r = *p++;
-    if (isidchar(*p))
-        return REG_UNDEF;
-    switch (toupper(r)) {
-    case 'X':
-        scan = p;
-        return REG_X;
-    case 'Y':
-        scan = p;
-        return REG_Y;
-    default:
+    RegName reg = REG_UNDEF;
+    if (p.iexpect('X')) {
+        reg = REG_X;
+    } else if (p.iexpect('Y')) {
+        reg = REG_Y;
+    } else {
         return REG_UNDEF;
     }
+    if (isidchar(*p))
+        return REG_UNDEF;
+    scan = p;
+    return reg;
 }
 
 StrBuffer &RegMc6800::outRegName(StrBuffer &out, const RegName name) const {

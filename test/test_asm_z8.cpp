@@ -121,7 +121,7 @@ static void test_absolute() {
     TEST("JP    F,0E0FH", 0x0D, 0x0E, 0x0F);
     TEST("JP   LT,1E1FH", 0x1D, 0x1E, 0x1F);
     TEST("JP   LE,2E2FH", 0x2D, 0x2E, 0x2F);
-    TEST("JP  ULE,3E3FH", 0x3D, 0x3E, 0x3F);
+    TEST("jp  ule,3e3fh", 0x3D, 0x3E, 0x3F);
     TEST("JP   OV,4E4FH", 0x4D, 0x4E, 0x4F);
     TEST("JP   MI,5E5FH", 0x5D, 0x5E, 0x5F);
     TEST("JP    Z,6E6FH", 0x6D, 0x6E, 0x6F);
@@ -163,7 +163,7 @@ static void test_relative() {
     ATEST(0x1000, "JR  NC,0FFEH", 0xFB, 0xFC);
     ATEST(0x1000, "JR UGE,0FFEH", 0xFB, 0xFC);
 
-    ATEST(0x1000, "DJNZ  R0,100DH", 0x0A, 0x0B);
+    ATEST(0x1000, "djnz  r0,100dh", 0x0A, 0x0B);
     ATEST(0x1000, "DJNZ  R1,101DH", 0x1A, 0x1B);
     ATEST(0x1000, "DJNZ  R2,102DH", 0x2A, 0x2B);
     ATEST(0x1000, "DJNZ  R3,103DH", 0x3A, 0x3B);
@@ -301,9 +301,9 @@ static void test_one_operand() {
     TEST("PUSH @R2",  0x71, R(2));
 
     TEST("DECW 82H",  0x80, 0x82);
-    TEST("DECW RR2",  0x80, R(2));
+    TEST("decw rr2",  0x80, R(2));
     ERRT("DECW 81H",  OPERAND_NOT_ALLOWED, "81H");
-    ERUS("DECW RR1",  "RR1", 0x80, 0x00);
+    ERRT("DECW RR1",  ILLEGAL_REGISTER, "RR1");
     TEST("DECW @81H", 0x81, 0x81);
     TEST("DECW @R1",  0x81, R(1));
 
@@ -315,7 +315,7 @@ static void test_one_operand() {
     TEST("INCW 0A2H",  0xA0, 0xA2);
     TEST("INCW RR2",   0xA0, R(2));
     ERRT("INCW 0A1H",  OPERAND_NOT_ALLOWED, "0A1H");
-    ERUS("INCW RR1",   "RR1", 0xA0, 0x00);
+    ERRT("INCW RR1",   ILLEGAL_REGISTER, "RR1");
     TEST("INCW @0A1H", 0xA1, 0xA1);
     TEST("INCW @R1",   0xA1, R(1));
 

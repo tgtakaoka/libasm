@@ -48,8 +48,8 @@ void test_cpu() {
 
 static void test_load_and_exchange() {
     // Clear
-    TEST("CLR  R2",  0x8D28);
-    TEST("CLRB RH2", 0x8C28);
+    TEST("clr  r2",  0x8D28);
+    TEST("clrb rh2", 0x8C28);
     if (z8001()) {
         TEST("CLR  @RR2",         0x0D28);
         TEST("CLR  0x120034",     0x4D08, 0x1234);
@@ -80,7 +80,7 @@ static void test_load_and_exchange() {
 
     // Exchange
     TEST("EX  R1,R2",   0xAD21);
-    TEST("EXB RL1,RH2", 0xAC29);
+    TEST("exb rl1,rh2", 0xAC29);
     if (z8001()) {
         TEST("EX  R9,@RR2",          0x2D29);
         TEST("EX  R9,0x120034",      0x6D09, 0x1234);
@@ -104,7 +104,7 @@ static void test_load_and_exchange() {
     // Load
     TEST("LD  R2,R8",   0xA182);
     TEST("LDB RH2,RL0", 0xA082);
-    TEST("LDL RR2,RR8", 0x9482);
+    TEST("ldl rr2,rr8", 0x9482);
     TEST("LD  R2,#0x5678",      0x2102, 0x5678);
     TEST("LDB RH2,#0x56",       0xC256);
     TEST("LDL RR2,#0x12345678", 0x1402, 0x1234, 0x5678);
@@ -506,7 +506,7 @@ static void test_arithmetic() {
     // Divide
     TEST("DIV  RR4,R2",          0x9B24);
     TEST("DIV  RR4,#0x1234",     0x1B04, 0x1234);
-    TEST("DIVL RQ4,RR2",         0x9A24);
+    TEST("divl rq4,rr2",         0x9A24);
     TEST("DIVL RQ4,#0x12345678", 0x1A04, 0x1234, 0x5678);
     if (z8001()) {
         TEST("DIV  RR4,@RR2",         0x1B24);
@@ -850,13 +850,13 @@ static void test_program_control() {
         TEST("JP LT,0x1234(R2)", 0x5E21, 0x1234);
     }
     if (z8001()) {
-        TEST("JP LE,@RR2",         0x1E22);
+        TEST("jp le,@rr2",         0x1E22);
         TEST("JP LE,0x120034",     0x5E02, 0x1234);
         TEST("JP LE,0x561234",     0x5E02, 0xD600, 0x1234);
         TEST("JP LE,0x120034(R2)", 0x5E22, 0x1234);
         TEST("JP LE,0x561234(R2)", 0x5E22, 0xD600, 0x1234);
     } else {
-        TEST("JP LE,@R2",        0x1E22);
+        TEST("jp le,@r2",        0x1E22);
         TEST("JP LE,0x1234",     0x5E02, 0x1234);
         TEST("JP LE,0x1234(R2)", 0x5E22, 0x1234);
     }

@@ -69,7 +69,7 @@ static void test_inherent() {
 }
 
 static void test_pointer() {
-    TEST("XPAL PC", 0x30);
+    TEST("xpal pc", 0x30);
     TEST("XPAL P1", 0x31);
     TEST("XPAL P2", 0x32);
     TEST("XPAL P3", 0x33);

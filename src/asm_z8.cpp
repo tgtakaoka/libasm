@@ -321,6 +321,8 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
 
     op.reg = RegZ8::parseRegName(p);
     if (op.reg != REG_UNDEF) {
+        if (op.reg == REG_ILLEGAL)
+            return op.setError(ILLEGAL_REGISTER);
         const bool pair = RegZ8::isPairReg(op.reg);
         if (indir) {
             op.mode = pair ? M_Irr : M_Ir;

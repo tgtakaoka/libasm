@@ -43,14 +43,14 @@ void test_cpu() {
 
 static void test_data_move() {
     // EXG Rx,Ry
-    TEST("EXG   D1,D2", 0141502); // 014|Dx|50|Dy
+    TEST("exg   d1,d2", 0141502); // 014|Dx|50|Dy
     ERRT("EXG.B D1,D2", OPERAND_NOT_ALLOWED, "D1,D2");
     ERRT("EXG.W D1,D2", OPERAND_NOT_ALLOWED, "D1,D2");
     TEST("EXG.L D1,D2", 0141502); // 014|Dx|50|Dy
     TEST("EXG   A1,A2", 0141512); // 014|Ax|51|Ay
     ERRT("EXG.B A1,A2", OPERAND_NOT_ALLOWED, "A1,A2");
     ERRT("EXG.W A1,A2", OPERAND_NOT_ALLOWED, "A1,A2");
-    TEST("EXG.L A1,A2", 0141512); // 014|Ax|51|Ay
+    TEST("exg.l a1,a2", 0141512); // 014|Ax|51|Ay
     TEST("EXG   D1,A2", 0141612); // 014|Dx|61|Ay
     ERRT("EXG.B D1,A2", OPERAND_NOT_ALLOWED, "D1,A2");
     ERRT("EXG.W D1,A2", OPERAND_NOT_ALLOWED, "D1,A2");
@@ -72,7 +72,7 @@ static void test_data_move() {
     TEST("LEA ($FFFF00).W,A1",     0041770, 0xFF00);
     TEST("LEA ($001234).L,A1",     0041771, 0x0000, 0x1234);
     TEST("LEA (*+$1234,PC),A1",    0041772, 0x1232);
-    TEST("LEA (*+$12,PC,A3.L),A1", 0041773, 0xB810);
+    TEST("lea (*+$12,pc,a3.l),a1", 0041773, 0xB810);
     ERRT("LEA #$1234",             OPERAND_NOT_ALLOWED, "#$1234");
 
     // LINK An,#nn: 004712|An
@@ -2636,7 +2636,7 @@ static void test_program() {
 
 static void test_system() {
     // ANDI #nn,SR
-    TEST("ANDI #$1234,SR", 0001174, 0x1234);
+    TEST("andi #$1234,sr", 0001174, 0x1234);
 
     // EORI #nn,SR
     TEST("EORI #$1234,SR", 0005174, 0x1234);
@@ -2675,7 +2675,7 @@ static void test_system() {
     ERRT("MOVE SR,($234567).L",   OPERAND_NOT_ALIGNED, "($234567).L");
 
     // MOVE USP,An: 004715|An
-    TEST("MOVE   USP,A2", 0047152);
+    TEST("move   usp,a2", 0047152);
     TEST("MOVE.L USP,A2", 0047152);
 
     // MOVE An,USP: 004714|An
@@ -2720,7 +2720,7 @@ static void test_system() {
     TEST("TRAPV ", 047166);
 
     // ANDI #nn,CCR
-    TEST("ANDI   #$34,CCR", 0001074, 0x0034);
+    TEST("andi   #$34,ccr", 0001074, 0x0034);
     TEST("ANDI.B #$34,CCR", 0001074, 0x0034);
 
     // EORI #nn,CCR

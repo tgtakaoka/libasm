@@ -59,7 +59,7 @@ void test_cpu() {
 }
 
 static void test_move_inherent() {
-    TEST("MOV B,B", 0x40);
+    TEST("mov b,b", 0x40);
     TEST("MOV B,C", 0x41);
     TEST("MOV B,D", 0x42);
     TEST("MOV B,E", 0x43);

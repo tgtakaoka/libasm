@@ -42,7 +42,7 @@ void test_cpu() {
 }
 
 static void test_load_store() {
-    TEST("LODZ,R0",             0x60);
+    TEST("lodz,r0",             0x60);
     TEST("LODZ,R1",             0x01);
     TEST("LODZ,R2",             0x02);
     TEST("LODZ,R3",             0x03);
@@ -420,7 +420,7 @@ static void test_rotate_compare() {
 }
 
 static void test_branch() {
-    ATEST(0x1000, "BCTR,EQ $+1BH",  0x18, 0x19);
+    ATEST(0x1000, "bctr,eq $+1bh",  0x18, 0x19);
     ATEST(0x1000, "BCTR,EQ *$+1CH", 0x18, 0x9A);
     ATEST(0x1000, "BCTR,GT $+1CH",  0x19, 0x1A);
     ATEST(0x1000, "BCTR,GT *$+2DH", 0x19, 0xAB);

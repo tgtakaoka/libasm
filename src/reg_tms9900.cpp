@@ -23,30 +23,19 @@ namespace tms9900 {
 
 RegName RegTms9900::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    if (toupper(*p++) != 'R')
-        return REG_UNDEF;
-    const char c1 = *p++;
-    const char c2 = *p;
-    if (isdigit(c1) && !isidchar(c2)) {
-        scan = p;
-        return RegName(c1 - '0');
-    }
-    if (c1 == '1' && (c2 >= '0' && c2 < '6') && !isidchar(*++p)) {
-        scan = p;
-        return RegName((c2 - '0') + 10);
+    if (p.iexpect('R')) {
+        const auto num = parseRegNumber(p, 16);
+        if (num >= 0) {
+            scan = p;
+            return RegName(num);
+        }
     }
     return REG_UNDEF;
 }
 
 StrBuffer &RegTms9900::outRegName(StrBuffer &out, uint8_t num) const {
     num &= 0x0f;
-    out.letter('R', isUppercase());
-    if (num < 10) {
-        out.letter('0' + num);
-    } else {
-        out.letter('1').letter('0' + num - 10);
-    }
-    return out;
+    return outRegNumber(out.letter('R', isUppercase()), num);
 }
 
 uint8_t RegTms9900::encodeRegNumber(RegName name) {

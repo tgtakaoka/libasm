@@ -26,10 +26,10 @@ namespace scn2650 {
 RegName RegScn2650::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
     if (p.iexpect('R')) {
-        const auto num = p.expect([](char c) { return c >= '0' && c <= '3'; });
-        if (num) {
+        const auto num = parseRegNumber(p, 4);
+        if (num >= 0) {
             scan = p;
-            return RegName(num - '0');
+            return RegName(num);
         }
     }
     return REG_UNDEF;
@@ -44,7 +44,7 @@ RegName RegScn2650::decodeRegName(uint8_t opc) {
 }
 
 StrBuffer &RegScn2650::outRegName(StrBuffer &out, RegName name) const {
-    return out.letter('R', isUppercase()).letter('0' + uint8_t(name));
+    return outRegNumber(out.letter('R', isUppercase()), int8_t(name));
 }
 
 // clang-format off

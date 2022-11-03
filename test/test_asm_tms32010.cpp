@@ -61,7 +61,7 @@ static void test_accumrator() {
     ERRT("ADD 70H, 16",     OPERAND_NOT_ALLOWED, "70H, 16");
     ERUS("ADD 70H, UNDEF",  "UNDEF",  0x0070);
     ERUS("ADD UNDEF, 15",   "UNDEF, 15",   0x0F00);
-    TEST("ADD *, 0, AR0",   0x0080);
+    TEST("add *, 0, ar0",   0x0080);
     TEST("ADD *, 0, AR1",   0x0081);
     TEST("ADD *, 0, 0",     0x0080);
     ERRT("ADD *, 0, 2",     OPERAND_NOT_ALLOWED, "*, 0, 2");
@@ -451,7 +451,7 @@ static void test_dataio() {
     TEST("TBLW *-, AR1", 0x7D91);
     TEST("TBLW *+, AR0", 0x7DA0);
 
-    TEST("IN 70H, PA0",     0x4070);
+    TEST("in 70h, pa0",     0x4070);
     TEST("IN 70H, PA7",     0x4770);
     TEST("IN 70H, 0",       0x4070);
     TEST("IN 70H, 7",       0x4770);

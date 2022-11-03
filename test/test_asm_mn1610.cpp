@@ -62,13 +62,13 @@ void test_cpu() {
 }
 
 static void test_transfer() {
-    TEST(         "L R1, 0x10",            0xC000|(0<<11)|(1<<8)|0x10);
+    TEST(         "l r1, 0x10",            0xC000|(0<<11)|(1<<8)|0x10);
     TEST(         "L R1, X'10",            0xC000|(0<<11)|(1<<8)|0x10);
     ERRT(         "L STR, 0x10",           OPERAND_NOT_ALLOWED, "STR, 0x10");
     ERRT(         "L R5, 0x10",            OPERAND_NOT_ALLOWED, "R5, 0x10");
     ERRT(         "L X2, 0x10",            OPERAND_NOT_ALLOWED, "X2, 0x10");
     ATEST(0x1000, "L R2, *-128",           0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "L R2, 0x0F80-*(IC)",    0xC000|(1<<11)|(2<<8)|0x80);
+    ATEST(0x1000, "l r2, 0x0f80-*(ic)",    0xC000|(1<<11)|(2<<8)|0x80);
     AERRT(0x1000, "L R1, *-129",           OPERAND_TOO_FAR, "*-129");
     AERRT(0x1000, "L R1, 0x0F7F-*(IC)",    OPERAND_TOO_FAR, "0x0F7F-*(IC)");
     AERRT(0x1000, "L R1, *+128",           OPERAND_TOO_FAR, "*+128");
@@ -85,7 +85,7 @@ static void test_transfer() {
     TEST(         "L R1, (0x10)(X0)",      0xC000|(6<<11)|(1<<8)|0x10);
     TEST(         "L R2, (0x80)(X1)",      0xC000|(7<<11)|(2<<8)|0x80);
     TEST(         "ST R1, 0x10",           0x8000|(0<<11)|(1<<8)|0x10);
-    ERRT(         "ST STR, 0x10",          OPERAND_NOT_ALLOWED, "STR, 0x10");
+    ERRT(         "st str, 0x10",          OPERAND_NOT_ALLOWED, "str, 0x10");
     ERRT(         "ST R5, 0x10",           OPERAND_NOT_ALLOWED, "R5, 0x10");
     ERRT(         "ST X2, 0x10",           OPERAND_NOT_ALLOWED, "X2, 0x10");
     ATEST(0x1000, "ST R2, *-128",          0x8000|(1<<11)|(2<<8)|0x80);
@@ -99,7 +99,7 @@ static void test_transfer() {
     TEST(         "ST R2, (0x80)(X1)",     0x8000|(7<<11)|(2<<8)|0x80);
 
     TEST("MV  R4, SP",       0x7808|(4<<8)|(0<<4)|5);
-    TEST("MV  SP, STR, SKP", 0x7808|(5<<8)|(1<<4)|6);
+    TEST("mv  sp, str, skp", 0x7808|(5<<8)|(1<<4)|6);
     TEST("MV  STR, R0, M",   0x7808|(6<<8)|(2<<4)|0);
     TEST("MV  R0, R1, PZ",   0x7808|(0<<8)|(3<<4)|1);
     TEST("MVB R0, R1, Z",    0x7800|(0<<8)|(4<<4)|1);

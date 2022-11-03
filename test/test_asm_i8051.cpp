@@ -48,7 +48,7 @@ static void test_implied() {
 }
 
 static void test_regs() {
-    TEST("RR   A", 0x03);
+    TEST("rr   a", 0x03);
     TEST("INC  A", 0x04);
     TEST("RRC  A", 0x13);
     TEST("DEC  A", 0x14);

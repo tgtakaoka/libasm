@@ -734,7 +734,7 @@ static void test_usereg() {
     asm1802.setOption("use-register", "enable");
 
     ERRT("LDN R0",  REGISTER_NOT_ALLOWED, "R0");
-    TEST("LDN R1",  0x01);
+    TEST("ldn r1",  0x01);
     TEST("LDA R0",  0x40);
     TEST("STR R15", 0x5F);
     TEST("INC R14", 0x1E);

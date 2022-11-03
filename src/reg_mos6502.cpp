@@ -21,26 +21,20 @@ namespace mos6502 {
 
 RegName RegMos6502::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    const char r = *p++;
-    if (isidchar(*p))
-        return REG_UNDEF;
     RegName reg = REG_UNDEF;
-    switch (toupper(r)) {
-    case 'A':
+    if (p.iexpect('A')) {
         reg = REG_A;
-        break;
-    case 'X':
+    } else if (p.iexpect('X')) {
         reg = REG_X;
-        break;
-    case 'Y':
+    } else if (p.iexpect('Y')) {
         reg = REG_Y;
-        break;
-    case 'S':
+    } else if (p.iexpect('S')) {
         reg = REG_S;
-        break;
-    default:
+    } else {
         return REG_UNDEF;
     }
+    if (isidchar(*p))
+        return REG_UNDEF;
     scan = p;
     return reg;
 }

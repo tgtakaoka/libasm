@@ -93,7 +93,7 @@ static void test_imm() {
 }
 
 static void test_reg() {
-    TEST("STWP R14", 0x02AE);
+    TEST("stwp r14", 0x02AE);
     TEST("STST R15", 0x02CF);
 
     if (is9995()) {

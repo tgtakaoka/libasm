@@ -260,49 +260,37 @@ StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
 }
 
 OprSize RegNs32000::parseIndexSize(StrScanner &scan) {
-    OprSize size = SZ_NONE;
     StrScanner p(scan);
-    switch (toupper(*p++)) {
-    case 'B':
+    OprSize size = SZ_NONE;
+    if (p.iexpect('B')) {
         size = SZ_BYTE;
-        break;
-    case 'W':
+    } else if (p.iexpect('W')) {
         size = SZ_WORD;
-        break;
-    case 'D':
+    } else if (p.iexpect('D')) {
         size = SZ_DOUBLE;
-        break;
-    case 'Q':
+    } else if (p.iexpect('Q')) {
         size = SZ_QUAD;
-        break;
-    default:
-        return SZ_NONE;
     }
-    if (isidchar(*p))
+    if (size == SZ_NONE || isidchar(*p))
         return SZ_NONE;
     scan = p;
     return size;
 }
 
 char RegNs32000::indexSizeChar(OprSize size) const {
-    char c;
+    char base = isUppercase() ? 0 : 'a' - 'A';
     switch (size) {
     case SZ_BYTE:
-        c = 'B';
-        break;
+        return base + 'B';
     case SZ_WORD:
-        c = 'W';
-        break;
+        return base + 'W';
     case SZ_DOUBLE:
-        c = 'D';
-        break;
+        return base + 'D';
     case SZ_QUAD:
-        c = 'Q';
-        break;
+        return base + 'Q';
     default:
         return 0;
     }
-    return _uppercase ? c : tolower(c);
 }
 
 }  // namespace ns32000

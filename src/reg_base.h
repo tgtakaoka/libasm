@@ -56,6 +56,32 @@ protected:
 
     static bool isidchar(char c) { return isalnum(c) || c == '_'; }
 
+    /**
+     * Parse register number from 0 to less than 20.
+     * returns -1 if number is invalid or greater than |max|.
+     */
+    static int8_t parseRegNumber(StrScanner &scan, int8_t max) {
+        const auto c1 = scan.expect(isdigit);
+        if (c1) {
+            int8_t num = c1 - '0';
+            const auto c2 = scan.expect(isdigit);
+            if (c2)
+                num = c2 - '0' + 10;
+            if (num < max && !isidchar(*scan))
+                return num;
+        }
+        return -1;
+    }
+
+    /** Output register number from 0 to less than 20. */
+    static StrBuffer &outRegNumber(StrBuffer &out, int8_t num) {
+        if (num >= 10) {
+            out.letter('1');
+            num -= 10;
+        }
+        return out.letter(num + '0');
+    }
+
     static const NameEntry *searchName(uint8_t name, const NameEntry *begin, const NameEntry *end) {
         for (const NameEntry *entry = begin; entry < end; entry++) {
             if (name == entry->name())

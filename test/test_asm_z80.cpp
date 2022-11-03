@@ -72,7 +72,7 @@ static void test_move_inherent() {
     TEST("LD B,E", 0x43);
     TEST("LD B,H", 0x44);
     TEST("LD B,L", 0x45);
-    TEST("LD B,(HL)", 0x46);
+    TEST("ld b,(hl)", 0x46);
     TEST("LD B,A", 0x47);
 
     TEST("LD C,B", 0x48);
@@ -251,7 +251,7 @@ static void test_stack_op() {
     TEST("EX HL,(SP)", 0xE3);
     TEST("JP (HL)",    0xE9);
     TEST("LD SP,HL",   0xF9);
-    TEST("EX DE,HL",   0xEB);
+    TEST("ex de,hl",   0xEB);
     TEST("EX HL,DE",   0xEB);
 
     if (isZ80()) {
@@ -266,7 +266,7 @@ static void test_stack_op() {
 
 static void test_jump_call() {
     TEST("JP 1234H",    0xC3, 0x34, 0x12);
-    TEST("JP NZ,1234H", 0xC2, 0x34, 0x12);
+    TEST("jp nz,1234h", 0xC2, 0x34, 0x12);
     TEST("JP Z,1234H",  0xCA, 0x34, 0x12);
     TEST("JP NC,1234H", 0xD2, 0x34, 0x12);
     TEST("JP C,1234H",  0xDA, 0x34, 0x12);

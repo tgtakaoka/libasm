@@ -193,7 +193,7 @@ static void test_stack() {
     TEST("PSHU A,X",     0x36, 0x12);
     TEST("PSHU A,X,B,Y", 0x36, 0x36);
 
-    TEST("PSHS CC,A,B,DP,X,Y,U,PC", 0x34, 0xFF);
+    TEST("pshs cc,a,b,dp,x,y,u,pc", 0x34, 0xFF);
     TEST("PULS PC,A,DP,B,X,U,Y,CC", 0x35, 0xFF);
     TEST("PSHU PC,S,Y,X,DP,B,A,CC", 0x36, 0xFF);
     TEST("PULU DP,CC,PC,A,B,S,Y,X", 0x37, 0xFF);

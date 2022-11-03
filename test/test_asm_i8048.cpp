@@ -83,7 +83,7 @@ void test_cpu() {
 }
 
 static void test_accumlator() {
-    TEST("ADD A, R0",  0x68);
+    TEST("add a, r0",  0x68);
     TEST("ADD A, R1",  0x69);
     TEST("ADD A, R2",  0x6A);
     TEST("ADD A, R3",  0x6B);

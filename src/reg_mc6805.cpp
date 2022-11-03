@@ -21,16 +21,13 @@ namespace mc6805 {
 
 RegName RegMc6805::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    const char r = *p++;
-    if (isidchar(*p))
-        return REG_UNDEF;
-    switch (toupper(r)) {
-    case 'X':
+    if (p.iexpect('X')) {
+        if (isidchar(*p))
+            return REG_UNDEF;
         scan = p;
         return REG_X;
-    default:
-        return REG_UNDEF;
     }
+    return REG_UNDEF;
 }
 
 StrBuffer &RegMc6805::outRegName(StrBuffer &out, const RegName name) const {

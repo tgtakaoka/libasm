@@ -327,7 +327,7 @@ static void test_zpg() {
 
 static void test_zpg_indexed() {
     // MOS6502
-    TEST("ORA $10,X", 0x15, 0x10);
+    TEST("ora $10,x", 0x15, 0x10);
     TEST("AND $10,X", 0x35, 0x10);
     TEST("EOR $10,X", 0x55, 0x10);
     TEST("ADC $10,X", 0x75, 0x10);
@@ -338,7 +338,7 @@ static void test_zpg_indexed() {
 
     TEST("STY $10,X", 0x94, 0x10);
     TEST("LDY $10,X", 0xB4, 0x10);
-    TEST("STX $10,Y", 0x96, 0x10);
+    TEST("stx $10,y", 0x96, 0x10);
     TEST("LDX $10,Y", 0xB6, 0x10);
 
     TEST("DEC $10,X", 0xD6, 0x10);
@@ -433,7 +433,7 @@ static void test_zpg_long() {
 static void test_sp_rel() {
     if (w65c816()) {
         // W65C816
-        TEST("ORA $10,S", 0x03, 0x10);
+        TEST("ora $10,s", 0x03, 0x10);
         TEST("AND $10,S", 0x23, 0x10);
         TEST("EOR $10,S", 0x43, 0x10);
         TEST("ADC $10,S", 0x63, 0x10);

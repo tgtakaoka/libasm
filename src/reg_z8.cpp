@@ -31,36 +31,22 @@ uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
     return encodeRegName(name) | (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
 }
 
-int8_t RegZ8::parseRegNum(StrScanner &scan) {
-    const char c1 = *scan;
-    if (!isdigit(c1))
-        return -1;
-    StrScanner p(scan);
-    const char c2 = *++p;
-    if (!isidchar(c2)) {
-        scan = p;
-        return c1 - '0';
-    }
-    if (c1 != '1' || c2 < '0' || c2 >= '7' || isidchar(*++p))
-        return -1;
-    scan = p;
-    return c2 - '0' + 10;
-}
-
 RegName RegZ8::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    if (toupper(*p++) == 'R') {
-        if (toupper(*p) == 'R') {
-            const int8_t regNum = parseRegNum(++p);
-            if (regNum >= 0 && regNum % 2 == 0) {
+    if (p.iexpect('R')) {
+        if (p.iexpect('R')) {
+            const auto num = parseRegNumber(p, 16);
+            if (num >= 0) {
+                if (num % 2)
+                    return REG_ILLEGAL;
                 scan = p;
-                return RegName(regNum + 16);
+                return RegName(num + int8_t(REG_RR0));
             }
-        } else if (isdigit(*p)) {
-            const int8_t regNum = parseRegNum(p);
-            if (regNum >= 0) {
+        } else {
+            const auto num = parseRegNumber(p, 16);
+            if (num >= 0) {
                 scan = p;
-                return RegName(regNum);
+                return RegName(num);
             }
         }
     }
@@ -86,18 +72,10 @@ bool RegZ8::isPairReg(RegName name) {
 }
 
 StrBuffer &RegZ8::outRegName(StrBuffer &out, RegName name) const {
-    uint8_t num = uint8_t(name);
-    const char r = _uppercase ? 'R' : 'r';
-    out.letter(r);
-    if (num >= 16) {
-        out.letter(r);
-        num -= 16;
-    }
-    if (num >= 10) {
-        out.letter('1');
-        num -= 10;
-    }
-    return out.letter(num + '0');
+    const auto num = uint8_t(name);
+    if (num < 16)
+        return outRegNumber(out.letter('R', isUppercase()), num);
+    return outRegNumber(out.text_P(PSTR("RR"), isUppercase()), num - 16);
 }
 
 // clang-format off

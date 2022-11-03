@@ -23,38 +23,28 @@ namespace tms32010 {
 
 RegName RegTms32010::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    const char c1 = toupper(*p++);
-    if (c1 == 'A') {
-        const char c2 = toupper(*p++);
-        if (c2 == 'R') {
-            const char c3 = *p++;
-            if ((c3 == '0' || c3 == '1') && !isidchar(*p)) {
-                scan = p;
-                return RegName(c3 - '0');
-            }
+    if (p.iexpect('A') && p.iexpect('R')) {
+        const auto num = parseRegNumber(p, 2);
+        if (num >= 0) {
+            scan = p;
+            return RegName(num);
         }
-    } else if (c1 == 'P') {
-        const char c2 = toupper(*p++);
-        if (c2 == 'A') {
-            const char c3 = *p++;
-            if ((c3 >= '0' && c3 < '8') && !isidchar(*p)) {
-                scan = p;
-                return RegName(c3 - '0' + int8_t(REG_PA0));
-            }
+    } else if (p.iexpect('P') && p.iexpect('A')) {
+        const auto num = parseRegNumber(p, 8);
+        if (num >= 0) {
+            scan = p;
+            return RegName(num + int8_t(REG_PA0));
         }
     }
     return REG_UNDEF;
 }
 
 StrBuffer &RegTms32010::outRegName(StrBuffer &out, RegName name) const {
-    if (name == REG_AR0 || name == REG_AR1) {
-        out.text_P(PSTR("AR"), isUppercase()).letter('0' + int8_t(name));
-    } else {
-        const int8_t num = int8_t(name) - int8_t(REG_PA0);
-        if (num >= 0 && num < 8)
-            out.text_P(PSTR("PA"), isUppercase()).letter('0' + num);
-    }
-    return out;
+    if (isAuxiliary(name))
+        return outRegNumber(out.text_P(PSTR("AR"), isUppercase()), int8_t(name));
+
+    const int8_t num = int8_t(name) - int8_t(REG_PA0);
+    return outRegNumber(out.text_P(PSTR("PA"), isUppercase()), num);
 }
 
 bool RegTms32010::isAuxiliary(RegName name) {

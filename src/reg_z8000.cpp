@@ -23,75 +23,66 @@
 namespace libasm {
 namespace z8000 {
 
-int8_t RegZ8000::parseRegNum(StrScanner &scan) {
-    StrScanner p(scan);
-    const char c1 = *p++;
-    const char c2 = *p;
-    if (isdigit(c1) && !isidchar(c2)) {
-        scan = p;
-        return c1 - '0';
-    }
-    if (c1 == '1' && c2 >= '0' && c2 < '6' && !isidchar(*++p)) {
-        scan = p;
-        return c2 - '0' + 10;
-    }
-    return -1;
-}
-
 RegName RegZ8000::parseRegName(StrScanner &scan) {
     StrScanner p(scan);
-    if (toupper(*p++) == 'R') {
-        const char type = toupper(*p);
-        if (type == 'H' || type == 'L' || type == 'R' || type == 'Q')
-            ++p;
-        int8_t num = parseRegNum(p);
-        if (num < 0)
-            return REG_UNDEF;
-        scan = p;
-        if (type == 'H')
-            return num < 8 ? RegName(num + 16) : REG_ILLEGAL;
-        if (type == 'L')
-            return num < 8 ? RegName(num + 24) : REG_ILLEGAL;
-        if (type == 'R')
-            return (num % 2) == 0 ? RegName(num + 32) : REG_ILLEGAL;
-        if (type == 'Q')
-            return (num % 4) == 0 ? RegName(num + 48) : REG_ILLEGAL;
-        return RegName(num);
+    if (p.iexpect('R')) {
+        RegName base = REG_UNDEF;
+        int8_t num = -1;
+        if (p.iexpect('H')) {
+            base = REG_RH0;
+            num = parseRegNumber(p, 8);
+        } else if (p.iexpect('L')) {
+            base = REG_RL0;
+            num = parseRegNumber(p, 8);
+        } else if (p.iexpect('R')) {
+            base = REG_RR0;
+            num = parseRegNumber(p, 16);
+            if (num % 2)
+                num = -1;
+        } else if (p.iexpect('Q')) {
+            base = REG_RQ0;
+            num = parseRegNumber(p, 16);
+            if (num % 4)
+                num = -1;
+        } else if (isdigit(*p)) {
+            base = REG_R0;
+            num = parseRegNumber(p, 16);
+        }
+        if (base != REG_UNDEF) {
+            if (num < 0)
+                return REG_ILLEGAL;
+            scan = p;
+            return RegName(num + int8_t(base));
+        }
     }
     return REG_UNDEF;
 }
 
 StrBuffer &RegZ8000::outRegName(StrBuffer &out, RegName name) const {
-    int8_t num = int8_t(name);
-    if (num < 0)
-        return out;
     if (isCtlReg(name))
         return outCtlName(out, name);
 
+    int8_t num = int8_t(name);
+    if (num < 0)
+        return out;
     const /*PROGMEM*/ char *prefix_P;
-    if (isByteReg(name)) {
-        num -= 16;
-        if (num < 8) {
-            prefix_P = PSTR("RH");
-        } else {
-            num -= 8;
-            prefix_P = PSTR("RL");
-        }
+    if (isWordReg(name)) {
+        num -= int8_t(REG_R0);
+        prefix_P = PSTR("R");
     } else if (isLongReg(name)) {
-        num -= 32;
+        num -= int8_t(REG_RR0);
         prefix_P = PSTR("RR");
     } else if (isQuadReg(name)) {
-        num -= 48;
+        num -= int8_t(REG_RQ0);
         prefix_P = PSTR("RQ");
+    } else if (num < int8_t(REG_RH0) + 8) {
+        num -= int8_t(REG_RH0);
+        prefix_P = PSTR("RH");
     } else {
-        prefix_P = PSTR("R");
+        num -= int8_t(REG_RL0);
+        prefix_P = PSTR("RL");
     }
-    out.text_P(prefix_P, isUppercase());
-    if (num >= 10) {
-        out.letter('1');
-        num -= 10;
-    }
-    return out.letter(num + '0');
+    return outRegNumber(out.text_P(prefix_P, isUppercase()), num);
 }
 
 uint8_t RegZ8000::encodeGeneralRegName(RegName name) {
