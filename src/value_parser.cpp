@@ -68,11 +68,11 @@ char ValueParser::readChar(StrScanner &scan) {
         scan = p;
         return c;
     }
-    uint8_t base = 0;
+    Radix radix = RADIX_10;
     if (p.iexpect('x')) {
-        base = 16;
+        radix = RADIX_16;
     } else if (isoctal(*p)) {
-        base = 8;
+        radix = RADIX_8;
     } else {
         switch (c = *p++) {
         case '\'':
@@ -100,7 +100,7 @@ char ValueParser::readChar(StrScanner &scan) {
         return c;
     }
     Value value;
-    parseNumber(p, value, base);
+    parseNumber(p, value, radix);
     if (getError())
         return 0;
     if (value.overflowUint8()) {
@@ -111,30 +111,30 @@ char ValueParser::readChar(StrScanner &scan) {
     return value.getUnsigned();
 }
 
-static bool isValidDigit(const char c, const uint8_t base) {
-    if (base == 16)
+static bool isValidDigit(const char c, const Radix radix) {
+    if (radix == RADIX_16)
         return isxdigit(c);
-    return c >= '0' && c < '0' + base;
+    return c >= '0' && c < '0' + uint8_t(radix);
 }
 
-static uint8_t toNumber(const char c, const uint8_t base) {
-    if (base == 16 && c >= 'A')
+static uint8_t toNumber(const char c, const Radix radix) {
+    if (radix == RADIX_16 && c >= 'A')
         return (c & ~0x20) - 'A' + 10;
     return c - '0';
 }
 
-Error ValueParser::parseNumber(StrScanner &scan, Value &val, const uint8_t base) {
+Error ValueParser::parseNumber(StrScanner &scan, Value &val, const Radix radix) {
     StrScanner p(scan);
-    if (!isValidDigit(*p, base))
+    if (!isValidDigit(*p, radix))
         return setError(scan, ILLEGAL_CONSTANT);
-    const uint32_t limit = UINT32_MAX / base;
-    const uint8_t limit_digit = UINT32_MAX % base;
+    const uint32_t limit = UINT32_MAX / uint8_t(radix);
+    const uint8_t limit_digit = UINT32_MAX % uint8_t(radix);
     uint32_t v = 0;
-    while (isValidDigit(*p, base)) {
-        const uint8_t n = toNumber(*p, base);
+    while (isValidDigit(*p, radix)) {
+        const uint8_t n = toNumber(*p, radix);
         if (v > limit || (v == limit && n > limit_digit))
             return setError(scan, OVERFLOW_RANGE);
-        v *= base;
+        v *= uint8_t(radix);
         v += n;
         ++p;
     }
@@ -444,7 +444,7 @@ Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
     }
 }
 
-Error ValueParser::scanNumberEnd(const StrScanner &scan, const uint8_t base, char suffix) {
+Error ValueParser::scanNumberEnd(const StrScanner &scan, const Radix radix, char suffix) {
     StrScanner p(scan);
     if (suffix == 'B') {
         // Check whether intel binary or C-style binary
@@ -452,8 +452,8 @@ Error ValueParser::scanNumberEnd(const StrScanner &scan, const uint8_t base, cha
             return ILLEGAL_CONSTANT;  // expect intel but found C-style
         p = scan;
     }
-    if (isValidDigit(*p, base)) {
-        p.trimStart([base](char c) { return isValidDigit(c, base); });
+    if (isValidDigit(*p, radix)) {
+        p.trimStart([radix](char c) { return isValidDigit(c, radix); });
         if (suffix == 0)
             return OK;
         if (toupper(*p) == suffix)
@@ -485,26 +485,24 @@ Error ValueParser::expectNumberSuffix(StrScanner &scan, char suffix) {
 
 Error ValueParser::readNumber(StrScanner &scan, Value &val) {
     StrScanner p(scan);
-    uint8_t base = 0;
+    Radix radix = RADIX_10;
     if (p.expect('0')) {
         if (isoctal(*p)) {
-            if (scanNumberEnd(p, 8) == OK)
-                base = 8;
+            if (scanNumberEnd(p, RADIX_8) == OK)
+                radix = RADIX_8;
         } else if (p.iexpect('X')) {
-            if (scanNumberEnd(p, 16) == OK)
-                base = 16;
+            if (scanNumberEnd(p, RADIX_16) == OK)
+                radix = RADIX_16;
         } else if (p.iexpect('B')) {
-            if (scanNumberEnd(p, 2) == OK)
-                base = 2;
+            if (scanNumberEnd(p, RADIX_2) == OK)
+                radix = RADIX_2;
         } else {
             p = scan;
         }
     }
-    if (base == 0 && isdigit(*p) && scanNumberEnd(p, 10) == OK)
-        base = 10;
-    if (base == 0)
+    if (radix == RADIX_10 && (!isdigit(*p) || scanNumberEnd(p, RADIX_10) != OK))
         setError(scan, ILLEGAL_CONSTANT);
-    parseNumber(p, val, base);
+    parseNumber(p, val, radix);
     return expectNumberSuffix(scan = p);
 }
 
@@ -515,19 +513,19 @@ bool MotorolaValueParser::numberPrefix(const StrScanner &scan) const {
 
 Error MotorolaValueParser::readNumber(StrScanner &scan, Value &val) {
     StrScanner p(scan);
-    uint8_t base = 0;
+    Radix radix = RADIX_10;
     if (p.expect('$')) {
-        if (scanNumberEnd(p, 16) == OK)
-            base = 16;
+        if (scanNumberEnd(p, RADIX_16) == OK)
+            radix = RADIX_16;
     } else if (p.expect('@')) {
-        if (scanNumberEnd(p, 8) == OK)
-            base = 8;
+        if (scanNumberEnd(p, RADIX_8) == OK)
+            radix = RADIX_8;
     } else if (p.expect('%')) {
-        if (scanNumberEnd(p, 2) == OK)
-            base = 2;
+        if (scanNumberEnd(p, RADIX_2) == OK)
+            radix = RADIX_2;
     }
-    if (base) {
-        parseNumber(p, val, base);
+    if (radix != RADIX_10) {
+        parseNumber(p, val, radix);
         return expectNumberSuffix(scan = p);
     }
     return ValueParser::readNumber(scan, val);
@@ -538,17 +536,17 @@ bool IntelValueParser::numberPrefix(const StrScanner &scan) const {
 }
 
 Error IntelValueParser::readNumber(StrScanner &scan, Value &val) {
-    uint8_t base = 0;
+    Radix radix = RADIX_10;
     char suffix = 0;
-    if (scanNumberEnd(scan, 16, suffix = 'H') == OK) {
-        base = 16;
-    } else if (scanNumberEnd(scan, 8, suffix = 'O') == OK) {
-        base = 8;
-    } else if (scanNumberEnd(scan, 2, suffix = 'B') == OK) {
-        base = 2;
+    if (scanNumberEnd(scan, RADIX_16, suffix = 'H') == OK) {
+        radix = RADIX_16;
+    } else if (scanNumberEnd(scan, RADIX_8, suffix = 'O') == OK) {
+        radix = RADIX_8;
+    } else if (scanNumberEnd(scan, RADIX_2, suffix = 'B') == OK) {
+        radix = RADIX_2;
     }
-    if (base) {
-        parseNumber(scan, val, base);
+    if (radix != RADIX_10) {
+        parseNumber(scan, val, radix);
         return expectNumberSuffix(scan, suffix);
     }
     return ValueParser::readNumber(scan, val);
@@ -570,24 +568,24 @@ bool NationalValueParser::numberPrefix(const StrScanner &scan) const {
 
 Error NationalValueParser::readNumber(StrScanner &scan, Value &val) {
     StrScanner p(scan);
-    uint8_t base = 0;
+    Radix radix = Radix(0);
     constexpr char quote = '\'';
     if ((p.iexpect('X') || p.iexpect('H')) && p.expect(quote)) {
-        if (scanNumberEnd(p, 16) == OK)
-            base = 16;
+        if (scanNumberEnd(p, RADIX_16) == OK)
+            radix = RADIX_16;
     } else if (p.iexpect('D') && p.expect(quote)) {
-        if (scanNumberEnd(p, 10) == OK)
-            base = 10;
+        if (scanNumberEnd(p, RADIX_10) == OK)
+            radix = RADIX_10;
     } else if ((p.iexpect('O') || p.iexpect('Q')) && p.expect(quote)) {
-        if (scanNumberEnd(p, 8) == OK)
-            base = 8;
+        if (scanNumberEnd(p, RADIX_8) == OK)
+            radix = RADIX_8;
     } else if (p.iexpect('B') && p.expect(quote)) {
-        if (scanNumberEnd(p, 2) == OK)
-            base = 2;
+        if (scanNumberEnd(p, RADIX_2) == OK)
+            radix = RADIX_2;
     }
 
-    if (base) {
-        parseNumber(p, val, base);
+    if (uint8_t(radix) != 0) {
+        parseNumber(p, val, radix);
         return expectNumberSuffix(scan = p, quote);
     }
     // TODO: Support Decimal(0[fFlL]) and Hexadecimal([fFlL]'/0[yYzZ]) floating ponit constant

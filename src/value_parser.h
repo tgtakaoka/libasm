@@ -26,6 +26,13 @@
 
 namespace libasm {
 
+enum Radix : uint8_t {
+    RADIX_2 = 2,
+    RADIX_8 = 8,
+    RADIX_10 = 10,
+    RADIX_16 = 16,
+};
+
 class ValueParser : public ErrorAt {
 public:
     ValueParser(char curSym = '.')
@@ -66,8 +73,8 @@ public:
 protected:
     virtual bool numberPrefix(const StrScanner &scan) const;
     virtual Error readNumber(StrScanner &scan, Value &val);
-    Error parseNumber(StrScanner &scan, Value &val, const uint8_t base);
-    Error scanNumberEnd(const StrScanner &scan, const uint8_t base, char suffix = 0);
+    Error parseNumber(StrScanner &scan, Value &val, const Radix radix);
+    Error scanNumberEnd(const StrScanner &scan, const Radix radix, char suffix = 0);
     Error expectNumberSuffix(StrScanner &scan, char suffux = 0);
 
 private:
