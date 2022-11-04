@@ -127,14 +127,14 @@ static void test_impl() {
         TEST("PLY", 0x7A);
         TEST("PHX", 0xDA);
         TEST("PLX", 0xFA);
-        if (w65c02s() || w65c816()) {
-            // W65C02S, 65816
-            TEST("WAI", 0xCB);
-            TEST("STP", 0xDB);
-        } else {
-            ERUI("WAI");
-            ERUI("STP");
-        }
+    }
+    if (w65c02s() || w65c816()) {
+        // W65C02S, 65816
+        TEST("WAI", 0xCB);
+        TEST("STP", 0xDB);
+    } else {
+        ERUI("WAI");
+        ERUI("STP");
     }
     if (w65c816()) {
         // W65C816
@@ -178,8 +178,8 @@ static void test_accm() {
     TEST("ROR A", 0x6A);
 
     if (m6502()) {
-        ERRT("INC A", OPERAND_NOT_ALLOWED, "A");
-        ERRT("DEC A", OPERAND_NOT_ALLOWED, "A");
+        ERRT("INC A", REGISTER_NOT_ALLOWED, "A");
+        ERRT("DEC A", REGISTER_NOT_ALLOWED, "A");
     } else {
         // G65SC02
         TEST("INC A", 0x1A);
@@ -222,6 +222,7 @@ static void test_imm() {
     }
 
     if (w65c816()) {
+        // W65C816
         TEST("LONGA ON");
         TEST("LONGI ON");
         TEST("LDA #$1234", 0xA9, 0x34, 0x12);
@@ -350,7 +351,7 @@ static void test_zpg_indexed() {
     TEST("ROR $10,X", 0x76, 0x10);
 
     if (m6502()) {
-        ERRT("BIT $10,X", OPERAND_NOT_ALLOWED, "$10,X");
+        ERRT("BIT $10,X", REGISTER_NOT_ALLOWED, "X");
         ERUI("STZ $10,X");
     } else {
         // G65SC02
@@ -371,7 +372,7 @@ static void test_zpg_indexed() {
     TEST("ROR zero90,X", 0x76, 0x90);
 
     if (m6502()) {
-        ERRT("BIT zero10,X", OPERAND_NOT_ALLOWED, "zero10,X");
+        ERRT("BIT zero10,X", REGISTER_NOT_ALLOWED, "X");
     } else {
         // G65SC02
         TEST("BIT zero10,X", 0x34, 0x10);
@@ -425,12 +426,20 @@ static void test_zpg_long() {
         TEST("ORAL (dir10),Y", 0x17, 0x10);
     } else {
         ERRT("ORA [$10]",   OPERAND_NOT_ALLOWED, "[$10]");
-        ERRT("ORA [$10],Y", OPERAND_NOT_ALLOWED, "[$10],Y");
+        ERRT("ORA [$10],Y", REGISTER_NOT_ALLOWED, "Y");
         ERUI("ORAL ($10)");
     }
 }
 
 static void test_sp_rel() {
+    if (w65c816()) {
+        // W65C816
+        TEST("LDA ($10,S),Y", 0xB3, 0x10);
+        TEST("STA ($10,S),Y", 0x93, 0x10);
+    } else {
+        ERRT("LDA ($10,S),Y", REGISTER_NOT_ALLOWED, "S),Y");
+        ERRT("STA ($10,S),Y", REGISTER_NOT_ALLOWED, "S),Y");
+    }
     if (w65c816()) {
         // W65C816
         TEST("ora $10,s", 0x03, 0x10);
@@ -446,13 +455,11 @@ static void test_sp_rel() {
         TEST("AND ($10,S),Y", 0x33, 0x10);
         TEST("EOR ($10,S),Y", 0x53, 0x10);
         TEST("ADC ($10,S),Y", 0x73, 0x10);
-        TEST("STA ($10,S),Y", 0x93, 0x10);
-        TEST("LDA ($10,S),Y", 0xB3, 0x10);
         TEST("CMP ($10,S),Y", 0xD3, 0x10);
         TEST("SBC ($10,S),Y", 0xF3, 0x10);
     } else {
-        ERRT("ORA $10,S",     OPERAND_NOT_ALLOWED, "$10,S");
-        ERRT("ORA ($10,S),Y", OPERAND_NOT_ALLOWED, "($10,S),Y");
+        ERRT("ORA $10,S",     REGISTER_NOT_ALLOWED, "S");
+        ERRT("ORA ($10,S),Y", REGISTER_NOT_ALLOWED, "S),Y");
     }
 }
 
@@ -573,11 +580,11 @@ static void test_abs_long() {
         TEST("MVP bank12,bank34", 0x44, 0x34, 0x12);
         TEST("MVN zero10,bank34", 0x54, 0x34, 0x00);
     } else {
-        ERRT("ORA $123456",   OPERAND_NOT_ALLOWED, "$123456");
-        ERRT("ORA $123456,X", OPERAND_NOT_ALLOWED, "$123456,X");
-        ERRT("JMP $123456",   OPERAND_NOT_ALLOWED, "$123456");
+        ERRT("ORA $123456",   OPERAND_NOT_ALLOWED,  "$123456");
+        ERRT("ORA $123456,X", REGISTER_NOT_ALLOWED, "X");
+        ERRT("JMP $123456",   OPERAND_NOT_ALLOWED,  "$123456");
         ERUI("JSL $123456");
-        ERRT("JMP  [$1234]",  OPERAND_NOT_ALLOWED, "[$1234]");
+        ERRT("JMP  [$1234]",  OPERAND_NOT_ALLOWED,  "[$1234]");
         ERUI("JMPL ($1234)");
         ERUI("MVP $123456,$345678");
         ERUI("MVN $003456,$345678");
@@ -616,7 +623,7 @@ static void test_abs_indexed() {
     TEST("ROR $1234,X", 0x7E, 0x34, 0x12);
 
     if (m6502()) {
-        ERRT("BIT $1234,X", OPERAND_NOT_ALLOWED, "$1234,X");
+        ERRT("BIT $1234,X", REGISTER_NOT_ALLOWED, "X");
         ERUI("STZ $1234,X");
     } else {
         // G65SC02
@@ -636,7 +643,7 @@ static void test_abs_indexed() {
     TEST("LSR abs0100,X",  0x5E, 0x00, 0x01);
 
     if (m6502()) {
-        ERRT("BIT abs1234,X", OPERAND_NOT_ALLOWED, "abs1234,X");
+        ERRT("BIT abs1234,X", REGISTER_NOT_ALLOWED, "X");
         ERUI("STZ abs1234,X");
     } else {
         // G65SC02
@@ -646,38 +653,46 @@ static void test_abs_indexed() {
 }
 
 static void test_abs_idir() {
-    // MOS6502
-    TEST("JMP ($1234)", 0x6C, 0x34, 0x12);
-
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
     // MOS6502
+    TEST("JMP (>$0009)",   0x6C, 0x09, 0x00);
+    TEST("JMP ($1234)",    0x6C, 0x34, 0x12);
     TEST("JMP (>abs0010)", 0x6C, 0x10, 0x00);
     TEST("JMP (abs1234)",  0x6C, 0x34, 0x12);
+
 }
 
 static void test_abs_indexed_idir() {
+    symtab.intern(0x0010, "abs0010");
+    symtab.intern(0x1234, "abs1234");
+
     if (m6502()) {
-        ERRT("JMP ($1234,X)", OPERAND_NOT_ALLOWED, "($1234,X)");
+        // MOS6502
+        ERRT("JMP (>$0009,X)",   REGISTER_NOT_ALLOWED, "X)");
+        ERRT("JMP ($1235,X)",    REGISTER_NOT_ALLOWED, "X)");
+        ERRT("JMP (>abs0010,X)", REGISTER_NOT_ALLOWED, "X)");
+        ERRT("JMP (>abs1234,X)", REGISTER_NOT_ALLOWED, "X)");
     } else {
         // G65SC02
-        TEST("JMP ($1234,X)", 0x7C, 0x34, 0x12);
-
-        symtab.intern(0x0010, "abs0010");
-        symtab.intern(0x1234, "abs1234");
-
-        // G65SC02
+        TEST("JMP (>$0009,X)",   0x7C, 0x09, 0x00);
+        TEST("JMP ($1235,X)",    0x7C, 0x35, 0x12);
         TEST("JMP (>abs0010,X)", 0x7C, 0x10, 0x00);
-        TEST("JMP (abs1234,X)",  0x7C, 0x34, 0x12);
+        TEST("JMP (>abs1234,X)", 0x7C, 0x34, 0x12);
     }
+
     if (w65c816()) {
         // W65C816
+        TEST("JSR (>$0009,X)",   0xFC, 0x09, 0x00);
         TEST("JSR ($1235,X)",    0xFC, 0x35, 0x12);
         TEST("JSR (>abs0010,X)", 0xFC, 0x10, 0x00);
+        TEST("JSR (>abs1234,X)", 0xFC, 0x34, 0x12);
     } else {
-        ERRT("JSR ($1235,X)",    OPERAND_NOT_ALLOWED, "($1235,X)");
-        ERRT("JSR (>abs0010),X", REGISTER_NOT_ALLOWED, "X");
+        ERRT("JSR (>$0009,X)",   REGISTER_NOT_ALLOWED, "X)");
+        ERRT("JSR ($1235,X)",    REGISTER_NOT_ALLOWED, "X)");
+        ERRT("JSR (>abs0010,X)", REGISTER_NOT_ALLOWED, "X)");
+        ERRT("JSR (>abs1234,X)", REGISTER_NOT_ALLOWED, "X)");
     }
 }
 
@@ -758,6 +773,7 @@ static void test_rel() {
         // G65SC02
         ATEST(0x1000, "BRA $1002", 0x80, 0x00);
     }
+
     if (w65c816()) {
         // W65C816
         ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
@@ -766,7 +782,16 @@ static void test_rel() {
         AERRT(0x0000, "BCS *-126", OPERAND_TOO_FAR, "*-126");
         AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR, "*+2");
         AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR, "*+129");
+    } else {
+        ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
+        ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
+        ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
+        ATEST(0x0000, "BCS *-126", 0xB0, 0x80);
+        ATEST(0xFFFE, "BNE *+2",   0xD0, 0x00);
+        ATEST(0xFFF0, "BEQ *+129", 0xF0, 0x7F);
+    }
 
+    if (w65c816()) {
         ATEST(0x120000, "BCS $12FF82", 0xB0, 0x80);
         ATEST(0x12FFFE, "BNE $120000", 0xD0, 0x00);
         ATEST(0x12FFF0, "BEQ $120071", 0xF0, 0x7F);
@@ -774,6 +799,12 @@ static void test_rel() {
         AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2");
         AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129");
 
+        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82");
+        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000");
+        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR, "$130061");
+    }
+
+    if (w65c816()) {
         ATEST(0x129000, "BRL $121003", 0x82, 0x00, 0x80);
         ATEST(0x121000, "PER $129002", 0x62, 0xFF, 0x7F);
         ATEST(0x129000, "BRL *-$7FFD", 0x82, 0x00, 0x80);
@@ -785,20 +816,9 @@ static void test_rel() {
         ATEST(0x129000, "PER $121002", 0x62, 0xFF, 0x7F);
         AERRT(0x121000, "BRL *-$7FFD", OPERAND_TOO_FAR, "*-$7FFD");
         AERRT(0x129000, "PER *+$8002", OPERAND_TOO_FAR, "*+$8002");
-
-        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82");
-        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000");
-        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR, "$130061");
     } else {
-        ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
-        ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
-        ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
-        ATEST(0x0000, "BCS *-126", 0xB0, 0x80);
-        ATEST(0xFFFE, "BNE *+2",   0xD0, 0x00);
-        ATEST(0xFFF0, "BEQ *+129", 0xF0, 0x7F);
-
-        ERUI("BRL $121234");
-        ERUI("PER $121234");
+        ERUI("BRL $1234");
+        ERUI("PER $1234");
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -1021,27 +1041,21 @@ static void test_error() {
         ERRT("ORA  ($10,S),X", REGISTER_NOT_ALLOWED, "X");
         ERRT("ORA  ($10,X),X", REGISTER_NOT_ALLOWED, "X");
         ERRT("ORA  ($10,X),Y", REGISTER_NOT_ALLOWED, "Y");
-        ERRT("ORA  ($10,Y),X", REGISTER_NOT_ALLOWED, "Y),X");
-        ERRT("ORA  ($10,Y),Y", REGISTER_NOT_ALLOWED, "Y),Y");
-        ERRT("ORA  $123456,Y", OPERAND_NOT_ALLOWED,  "$123456,Y");
-        ERRT("ORA  [$10,$20]", UNKNOWN_OPERAND,      "[$10,$20]");
+        ERRT("ORA  ($10,Y),X", REGISTER_NOT_ALLOWED, "X");
+        ERRT("ORA  ($10,Y),Y", REGISTER_NOT_ALLOWED, "Y");
+        ERRT("ORA  $123456,Y", REGISTER_NOT_ALLOWED, "Y");
+        ERRT("ORA  [$10,$20]", OPERAND_NOT_ALLOWED,  "[$10,$20]");
     }
-    ERRT("ORA ($10,$20)", UNKNOWN_OPERAND,     "($10,$20)");
-    ERRT("ORA ($10,Y)", REGISTER_NOT_ALLOWED,  "Y)");
-    ERRT("ORA ($10),X", REGISTER_NOT_ALLOWED,  "X");
-    if (m6502()) {
-        // MOS6502
-        ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
-        ERRT("JSR ($1234,X)", OPERAND_NOT_ALLOWED,  "($1234,X)");
-        ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
-    } else if (w65c816()) {
-        // W65C816
+    ERRT("ORA ($10,$20)", OPERAND_NOT_ALLOWED,  "($10,$20)");
+    ERRT("ORA ($10,Y)",   REGISTER_NOT_ALLOWED, "Y)");
+    ERRT("ORA ($10),X",   REGISTER_NOT_ALLOWED, "X");
+    if (w65c816()) {
+        // W65C816, CSG65CE02
         ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
         ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     } else {
-        // G65SC02
         ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
-        ERRT("JSR ($1234,X)", OPERAND_NOT_ALLOWED,  "($1234,X)");
+        ERRT("JSR ($1234,X)", REGISTER_NOT_ALLOWED, "X)");
         ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     }
 }

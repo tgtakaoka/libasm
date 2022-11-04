@@ -137,9 +137,6 @@ static void test_impl() {
         // W65C02S, W65C816
         TEST(WAI, "", 0xCB);
         TEST(STP, "", 0xDB);
-    } else {
-        ERRI(0xCB);
-        ERRI(0xDB);
     }
     if (w65c816()) {
         // W65C816
@@ -393,74 +390,78 @@ static void test_zpg_indexed() {
 }
 
 static void test_zpg_long() {
-    // W65C816
-    TEST(ORA, "[$10]", 0x07, 0x10);
-    TEST(AND, "[$10]", 0x27, 0x10);
-    TEST(EOR, "[$10]", 0x47, 0x10);
-    TEST(ADC, "[$10]", 0x67, 0x10);
-    TEST(STA, "[$10]", 0x87, 0x10);
-    TEST(LDA, "[$10]", 0xA7, 0x10);
-    TEST(CMP, "[$10]", 0xC7, 0x10);
-    TEST(SBC, "[$10]", 0xE7, 0x10);
+    if (w65c816()) {
+        // W65C816
+        TEST(ORA, "[$10]", 0x07, 0x10);
+        TEST(AND, "[$10]", 0x27, 0x10);
+        TEST(EOR, "[$10]", 0x47, 0x10);
+        TEST(ADC, "[$10]", 0x67, 0x10);
+        TEST(STA, "[$10]", 0x87, 0x10);
+        TEST(LDA, "[$10]", 0xA7, 0x10);
+        TEST(CMP, "[$10]", 0xC7, 0x10);
+        TEST(SBC, "[$10]", 0xE7, 0x10);
 
-    TEST(ORA, "[$10],Y", 0x17, 0x10);
-    TEST(AND, "[$10],Y", 0x37, 0x10);
-    TEST(EOR, "[$10],Y", 0x57, 0x10);
-    TEST(ADC, "[$10],Y", 0x77, 0x10);
-    TEST(STA, "[$10],Y", 0x97, 0x10);
-    TEST(LDA, "[$10],Y", 0xB7, 0x10);
-    TEST(CMP, "[$10],Y", 0xD7, 0x10);
-    TEST(SBC, "[$10],Y", 0xF7, 0x10);
+        TEST(ORA, "[$10],Y", 0x17, 0x10);
+        TEST(AND, "[$10],Y", 0x37, 0x10);
+        TEST(EOR, "[$10],Y", 0x57, 0x10);
+        TEST(ADC, "[$10],Y", 0x77, 0x10);
+        TEST(STA, "[$10],Y", 0x97, 0x10);
+        TEST(LDA, "[$10],Y", 0xB7, 0x10);
+        TEST(CMP, "[$10],Y", 0xD7, 0x10);
+        TEST(SBC, "[$10],Y", 0xF7, 0x10);
 
-    dis6502.setOption("indirect-long", "disable");
-    TEST(ORAL, "($10)", 0x07, 0x10);
-    TEST(ANDL, "($10)", 0x27, 0x10);
-    TEST(EORL, "($10)", 0x47, 0x10);
-    TEST(ADCL, "($10)", 0x67, 0x10);
-    TEST(STAL, "($10)", 0x87, 0x10);
-    TEST(LDAL, "($10)", 0xA7, 0x10);
-    TEST(CMPL, "($10)", 0xC7, 0x10);
-    TEST(SBCL, "($10)", 0xE7, 0x10);
+        dis6502.setOption("indirect-long", "disable");
+        TEST(ORAL, "($10)", 0x07, 0x10);
+        TEST(ANDL, "($10)", 0x27, 0x10);
+        TEST(EORL, "($10)", 0x47, 0x10);
+        TEST(ADCL, "($10)", 0x67, 0x10);
+        TEST(STAL, "($10)", 0x87, 0x10);
+        TEST(LDAL, "($10)", 0xA7, 0x10);
+        TEST(CMPL, "($10)", 0xC7, 0x10);
+        TEST(SBCL, "($10)", 0xE7, 0x10);
 
-    TEST(ORAL, "($10),Y", 0x17, 0x10);
-    TEST(ANDL, "($10),Y", 0x37, 0x10);
-    TEST(EORL, "($10),Y", 0x57, 0x10);
-    TEST(ADCL, "($10),Y", 0x77, 0x10);
-    TEST(STAL, "($10),Y", 0x97, 0x10);
-    TEST(LDAL, "($10),Y", 0xB7, 0x10);
-    TEST(CMPL, "($10),Y", 0xD7, 0x10);
-    TEST(SBCL, "($10),Y", 0xF7, 0x10);
+        TEST(ORAL, "($10),Y", 0x17, 0x10);
+        TEST(ANDL, "($10),Y", 0x37, 0x10);
+        TEST(EORL, "($10),Y", 0x57, 0x10);
+        TEST(ADCL, "($10),Y", 0x77, 0x10);
+        TEST(STAL, "($10),Y", 0x97, 0x10);
+        TEST(LDAL, "($10),Y", 0xB7, 0x10);
+        TEST(CMPL, "($10),Y", 0xD7, 0x10);
+        TEST(SBCL, "($10),Y", 0xF7, 0x10);
 
-    symtab.intern(0x10, "dir10");
+        symtab.intern(0x10, "dir10");
 
-    dis6502.setOption("indirect-long", "enable");
-    TEST(ORA, "[<dir10]",   0x07, 0x10);
-    TEST(ORA, "[<dir10],Y", 0x17, 0x10);
+        dis6502.setOption("indirect-long", "enable");
+        TEST(ORA, "[<dir10]",   0x07, 0x10);
+        TEST(ORA, "[<dir10],Y", 0x17, 0x10);
 
-    dis6502.setOption("indirect-long", "disable");
-    TEST(ORAL, "(<dir10)",  0x07, 0x10);
-    TEST(ORAL, "(<dir10),Y", 0x17, 0x10);
+        dis6502.setOption("indirect-long", "disable");
+        TEST(ORAL, "(<dir10)",  0x07, 0x10);
+        TEST(ORAL, "(<dir10),Y", 0x17, 0x10);
+    }
 }
 
 static void test_sp_rel() {
-    // W65C816
-    TEST(ORA, "$10,S", 0x03, 0x10);
-    TEST(AND, "$10,S", 0x23, 0x10);
-    TEST(EOR, "$10,S", 0x43, 0x10);
-    TEST(ADC, "$10,S", 0x63, 0x10);
-    TEST(STA, "$10,S", 0x83, 0x10);
-    TEST(LDA, "$10,S", 0xA3, 0x10);
-    TEST(CMP, "$10,S", 0xC3, 0x10);
-    TEST(SBC, "$10,S", 0xE3, 0x10);
+    if (w65c816()) {
+        // W65C816
+        TEST(ORA, "$10,S", 0x03, 0x10);
+        TEST(AND, "$10,S", 0x23, 0x10);
+        TEST(EOR, "$10,S", 0x43, 0x10);
+        TEST(ADC, "$10,S", 0x63, 0x10);
+        TEST(STA, "$10,S", 0x83, 0x10);
+        TEST(LDA, "$10,S", 0xA3, 0x10);
+        TEST(CMP, "$10,S", 0xC3, 0x10);
+        TEST(SBC, "$10,S", 0xE3, 0x10);
 
-    TEST(ORA, "($10,S),Y", 0x13, 0x10);
-    TEST(AND, "($10,S),Y", 0x33, 0x10);
-    TEST(EOR, "($10,S),Y", 0x53, 0x10);
-    TEST(ADC, "($10,S),Y", 0x73, 0x10);
-    TEST(STA, "($10,S),Y", 0x93, 0x10);
-    TEST(LDA, "($10,S),Y", 0xB3, 0x10);
-    TEST(CMP, "($10,S),Y", 0xD3, 0x10);
-    TEST(SBC, "($10,S),Y", 0xF3, 0x10);
+        TEST(ORA, "($10,S),Y", 0x13, 0x10);
+        TEST(AND, "($10,S),Y", 0x33, 0x10);
+        TEST(EOR, "($10,S),Y", 0x53, 0x10);
+        TEST(ADC, "($10,S),Y", 0x73, 0x10);
+        TEST(STA, "($10,S),Y", 0x93, 0x10);
+        TEST(LDA, "($10,S),Y", 0xB3, 0x10);
+        TEST(CMP, "($10,S),Y", 0xD3, 0x10);
+        TEST(SBC, "($10,S),Y", 0xF3, 0x10);
+    }
 }
 
 static void test_abs() {
@@ -534,51 +535,53 @@ static void test_abs() {
 }
 
 static void test_abs_long() {
-    // W65C816
-    TEST(ORA, "$123456", 0x0F, 0x56, 0x34, 0x12);
-    TEST(AND, "$123456", 0x2F, 0x56, 0x34, 0x12);
-    TEST(EOR, "$123456", 0x4F, 0x56, 0x34, 0x12);
-    TEST(ADC, "$123456", 0x6F, 0x56, 0x34, 0x12);
-    TEST(LDA, "$123456", 0xAF, 0x56, 0x34, 0x12);
-    TEST(CMP, "$123456", 0xCF, 0x56, 0x34, 0x12);
-    TEST(SBC, "$123456", 0xEF, 0x56, 0x34, 0x12);
+    if (w65c816()) {
+        // W65C816
+        TEST(ORA, "$123456", 0x0F, 0x56, 0x34, 0x12);
+        TEST(AND, "$123456", 0x2F, 0x56, 0x34, 0x12);
+        TEST(EOR, "$123456", 0x4F, 0x56, 0x34, 0x12);
+        TEST(ADC, "$123456", 0x6F, 0x56, 0x34, 0x12);
+        TEST(LDA, "$123456", 0xAF, 0x56, 0x34, 0x12);
+        TEST(CMP, "$123456", 0xCF, 0x56, 0x34, 0x12);
+        TEST(SBC, "$123456", 0xEF, 0x56, 0x34, 0x12);
 
-    TEST(ORA, "$123456,X", 0x1F, 0x56, 0x34, 0x12);
-    TEST(AND, "$123456,X", 0x3F, 0x56, 0x34, 0x12);
-    TEST(EOR, "$123456,X", 0x5F, 0x56, 0x34, 0x12);
-    TEST(ADC, "$123456,X", 0x7F, 0x56, 0x34, 0x12);
-    TEST(LDA, "$123456,X", 0xBF, 0x56, 0x34, 0x12);
-    TEST(CMP, "$123456,X", 0xDF, 0x56, 0x34, 0x12);
-    TEST(SBC, "$123456,X", 0xFF, 0x56, 0x34, 0x12);
+        TEST(ORA, "$123456,X", 0x1F, 0x56, 0x34, 0x12);
+        TEST(AND, "$123456,X", 0x3F, 0x56, 0x34, 0x12);
+        TEST(EOR, "$123456,X", 0x5F, 0x56, 0x34, 0x12);
+        TEST(ADC, "$123456,X", 0x7F, 0x56, 0x34, 0x12);
+        TEST(LDA, "$123456,X", 0xBF, 0x56, 0x34, 0x12);
+        TEST(CMP, "$123456,X", 0xDF, 0x56, 0x34, 0x12);
+        TEST(SBC, "$123456,X", 0xFF, 0x56, 0x34, 0x12);
 
-    TEST(JMP, "$123456", 0x5C, 0x56, 0x34, 0x12);
-    TEST(JSL, "$123456", 0x22, 0x56, 0x34, 0x12);
+        TEST(JMP, "$123456", 0x5C, 0x56, 0x34, 0x12);
+        TEST(JSL, "$123456", 0x22, 0x56, 0x34, 0x12);
 
-    TEST(JMP,  "[$1234]", 0xDC, 0x34, 0x12);
-    dis6502.setOption("indirect-long", "disable");
-    TEST(JMPL, "($1234)", 0xDC, 0x34, 0x12);
+        TEST(JMP,  "[$1234]", 0xDC, 0x34, 0x12);
+        dis6502.setOption("indirect-long", "disable");
+        TEST(JMPL, "($1234)", 0xDC, 0x34, 0x12);
 
-    TEST(MVP, "$120000, $340000", 0x44, 0x34, 0x12);
-    TEST(MVN, "$000000, $340000", 0x54, 0x34, 0x00);
+        TEST(MVP, "$120000, $340000", 0x44, 0x34, 0x12);
+        TEST(MVN, "$000000, $340000", 0x54, 0x34, 0x00);
 
-    symtab.intern(0x1234, "sym1234");
-    symtab.intern(0x123456, "long3456");
-    symtab.intern(0x120000, "bank12");
-    symtab.intern(0x340000, "bank34");
+        symtab.intern(0x1234, "sym1234");
+        symtab.intern(0x123456, "long3456");
+        symtab.intern(0x120000, "bank12");
+        symtab.intern(0x340000, "bank34");
 
-    // W65C816
-    TEST(ORA, ">>long3456",   0x0F, 0x56, 0x34, 0x12);
-    TEST(ORA, ">>long3456,X", 0x1F, 0x56, 0x34, 0x12);
-    TEST(JMP, ">>long3456",   0x5C, 0x56, 0x34, 0x12);
-    TEST(JSL, "long3456",     0x22, 0x56, 0x34, 0x12); // absolute long only
+        // W65C816
+        TEST(ORA, ">>long3456",   0x0F, 0x56, 0x34, 0x12);
+        TEST(ORA, ">>long3456,X", 0x1F, 0x56, 0x34, 0x12);
+        TEST(JMP, ">>long3456",   0x5C, 0x56, 0x34, 0x12);
+        TEST(JSL, "long3456",     0x22, 0x56, 0x34, 0x12); // absolute long only
 
-    TEST(MVP, "bank12, bank34", 0x44, 0x34, 0x12);
+        TEST(MVP, "bank12, bank34", 0x44, 0x34, 0x12);
 
-    dis6502.setOption("indirect-long", "enable");
-    TEST(JMP,  "[>sym1234]", 0xDC, 0x34, 0x12);
+        dis6502.setOption("indirect-long", "enable");
+        TEST(JMP,  "[>sym1234]", 0xDC, 0x34, 0x12);
 
-    dis6502.setOption("indirect-long", "disable");
-    TEST(JMPL, "(>sym1234)", 0xDC, 0x34, 0x12);
+        dis6502.setOption("indirect-long", "disable");
+        TEST(JMPL, "(>sym1234)", 0xDC, 0x34, 0x12);
+    }
 }
 
 static void test_abs_indexed() {
@@ -642,51 +645,38 @@ static void test_abs_indexed() {
 }
 
 static void test_abs_idir() {
-    // MOS6502
-    TEST(JMP, "(>$0009)", 0x6C, 0x09, 0x00);
-    TEST(JMP,  "($1234)", 0x6C, 0x34, 0x12);
-
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
     // MOS6502
+    TEST(JMP, "(>$0009)",   0x6C, 0x09, 0x00);
+    TEST(JMP, "($1235)",    0x6C, 0x35, 0x12);
     TEST(JMP, "(>abs0010)", 0x6C, 0x10, 0x00);
     TEST(JMP, "(>abs1234)", 0x6C, 0x34, 0x12);
 }
 
 static void test_abs_indexed_idir() {
-    if (m6502()) {
-        ERRI(0x7C);
-    } else {
-        // G65SC02
-        TEST(JMP, "(>$0009,X)", 0x7C, 0x09, 0x00);
-        TEST(JMP, "($1234,X)",  0x7C, 0x34, 0x12);
+    symtab.intern(0x0010, "abs0010");
+    symtab.intern(0x1234, "abs1234");
 
-        symtab.intern(0x0010, "abs0010");
-        symtab.intern(0x1234, "abs1234");
-
+    if (!m6502()) {
         // G65SC02
+        TEST(JMP, "(>$0009,X)",   0x7C, 0x09, 0x00);
+        TEST(JMP, "($1235,X)",    0x7C, 0x35, 0x12);
         TEST(JMP, "(>abs0010,X)", 0x7C, 0x10, 0x00);
         TEST(JMP, "(>abs1234,X)", 0x7C, 0x34, 0x12);
     }
     if (w65c816()) {
         // W65C816
+        TEST(JSR, "(>$0009,X)",   0xFC, 0x09, 0x00);
         TEST(JSR, "($1235,X)",    0xFC, 0x35, 0x12);
+        TEST(JSR, "(>abs0010,X)", 0xFC, 0x10, 0x00);
         TEST(JSR, "(>abs1234,X)", 0xFC, 0x34, 0x12);
     }
 }
 
 static void test_zpg_idir() {
-    if (m6502()) {
-        ERRI(0x12);
-        ERRI(0x32);
-        ERRI(0x52);
-        ERRI(0x72);
-        ERRI(0x92);
-        ERRI(0xB2);
-        ERRI(0xD2);
-        ERRI(0xF2);
-    } else {
+    if (!m6502()) {
         // G65SC02
         TEST(ORA, "($00)", 0x12, 0x00);
         TEST(AND, "($09)", 0x32, 0x09);
@@ -696,10 +686,12 @@ static void test_zpg_idir() {
         TEST(LDA, "($10)", 0xB2, 0x10);
         TEST(CMP, "($10)", 0xD2, 0x10);
         TEST(SBC, "($10)", 0xF2, 0x10);
+    }
 
-        symtab.intern(0x0010, "zero10");
-        symtab.intern(0x00FF, "zeroFF");
+    symtab.intern(0x0010, "zero10");
+    symtab.intern(0x00FF, "zeroFF");
 
+    if (!m6502()) {
         // G65SC02
         TEST(ORA, "(<zero10)", 0x12, 0x10);
         TEST(AND, "(<zeroFF)", 0x32, 0xFF);
@@ -765,19 +757,18 @@ static void test_rel() {
         ATEST(0xFFFE, BNE, "$0000", 0xD0, 0x00);
         AERRF(0xFFF0, BEQ, "$0071", 0xF0, 0x7F);
     }
-
-    if (m6502()) {
-        ERRI(0x80);
-    } else if (w65c816()) {
-        // W65C816
+    if (w65c816()) {
         ATEST(0x121000, BRA, "$121002", 0x80, 0x00);
+    } else if (!m6502()) {
+        // G65SC02
+        ATEST(0x1000, BRA, "$1002", 0x80, 0x00);
+    }
+    if (w65c816()) {
+        // W65C816
         ATEST(0x121000, BRL, "$121234", 0x82, 0x31, 0x02);
         ATEST(0x121000, PER, "$121234", 0x62, 0x31, 0x02);
         AERRF(0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
         AERRF(0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
-    } else {
-        // G65SC02
-        ATEST(0x1000, BRA, "$1002", 0x80, 0x00);
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -986,13 +977,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_long_imm);
     RUN_TEST(test_zpg);
     RUN_TEST(test_zpg_indexed);
-    if (w65c816())
-        RUN_TEST(test_zpg_long);
-    if (w65c816())
-        RUN_TEST(test_sp_rel);
     RUN_TEST(test_abs);
-    if (w65c816())
-        RUN_TEST(test_abs_long);
+    RUN_TEST(test_sp_rel);
+    RUN_TEST(test_zpg_long);
+    RUN_TEST(test_abs_long);
     RUN_TEST(test_abs_indexed);
     RUN_TEST(test_abs_idir);
     RUN_TEST(test_zpg_idir);

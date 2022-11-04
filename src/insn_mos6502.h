@@ -28,10 +28,27 @@ class InsnMos6502 : public InsnImpl<Config, Entry> {
 public:
     InsnMos6502(Insn &insn) : InsnImpl(insn) {}
 
-    AddrMode addrMode() const { return flags().mode(); }
-    void setAddrMode(AddrMode mode) { setFlags(Entry::Flags::create(mode)); }
+    AddrMode mode1() const { return flags().mode1(); }
+    AddrMode mode2() const { return flags().mode2(); }
+    AddrMode mode3() const { return flags().mode3(); }
+    void setAddrMode(AddrMode opr1, AddrMode opr2, AddrMode opr3) {
+        setFlags(Entry::Flags::create(opr1, opr2, opr3));
+    }
 
-    void emitInsn() { emitByte(opCode()); }
+    void emitInsn() { emitByte(opCode(), 0); }
+    void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+
+    static AddrMode baseMode(AddrMode mode) { return Entry::baseMode(mode); }
+    static AddrMode indirectFlags(AddrMode mode) { return Entry::indirectFlags(mode); }
+    static bool indirect(AddrMode mode) { return Entry::indirect(mode); }
+    static bool longIndirect(AddrMode mode) { return Entry::longIndirect(mode); }
+
+private:
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        return pos == 0 ? 1 : pos;
+    }
 };
 
 }  // namespace mos6502

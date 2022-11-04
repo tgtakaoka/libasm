@@ -62,10 +62,12 @@ private:
     const Options _options{_opt_longa};
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeZeroPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
+    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
+    Error decodeDirectPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
     Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
+    Error decodeOperand(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM;

@@ -38,10 +38,11 @@ public:
     bool setLongAccumulator(bool on);
     bool longIndex() const { return _longIndex; }
     bool setLongIndex(bool on);
-    bool longImmediate(AddrMode addrMode) const;
+    bool longImmediate(AddrMode mode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
+    CpuType cpuType() const;
     bool setCpu(const char *cpu) override;
     AddressWidth addressWidth() const;
 

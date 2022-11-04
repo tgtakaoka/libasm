@@ -55,15 +55,21 @@ private:
         AddrMode mode;
         uint32_t val32;
         Operand() : mode(M_NONE), val32(0) {}
+        void embed(AddrMode indirectFlags) {
+            mode = AddrMode(uint8_t(InsnMos6502::indirectFlags(indirectFlags)) |
+                            uint8_t(InsnMos6502::baseMode(mode)));
+        }
     };
 
     Error parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val));
     Error processPseudo(StrScanner &scan, const char *name);
-    Error selectMode(
-            char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs = M_NONE) const;
-    Error parseOperand(StrScanner &scan, Operand &op, Operand &extra) const;
+    Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
+    Error parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const;
+    Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;
+    Error parseOperand(StrScanner &scan, Operand &op, char &indirect) const;
 
     Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
+    Error encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_LONGA[] PROGMEM;
