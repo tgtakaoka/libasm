@@ -601,25 +601,13 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnTlcs90 *insn, const Entry *entry) {
+static bool acceptModes(const InsnTlcs90 *insn, const Entry *entry) {
     auto table = entry->flags();
     auto tableDst = table.dst();
     auto tableSrc = table.src();
     auto dst = (tableDst == M_DST) ? insn->pre() : tableDst;
     auto src = (tableSrc == M_SRC) ? insn->pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
-    if (acceptMode(insn->dst(), dst) && acceptMode(insn->src(), src)) {
-        insn->setAddrMode(dst, src);
-        // Update prefix mode.
-        if (tableDst == M_DST) {
-            insn->setPreMode(M_DST);
-        } else if (tableSrc == M_SRC || tableSrc == M_SRC16) {
-            insn->setPreMode(M_SRC);
-        } else {
-            insn->setPreMode(M_NONE);
-        }
-        return true;
-    }
-    return false;
+    return acceptMode(insn->dst(), dst) && acceptMode(insn->src(), src);
 }
 
 Error TableTlcs90::searchName(
@@ -627,8 +615,21 @@ Error TableTlcs90::searchName(
     uint8_t count = 0;
     for (auto page = pages; page < end; page++) {
         insn.setPreMode(page->mode());
-        auto entry = searchEntry(insn.name(), &insn, page, acceptModes, count);
+        auto entry = searchEntry(insn.name(), (const InsnTlcs90 *)&insn, page, acceptModes, count);
         if (entry) {
+            // Update prefix mode.
+            auto tableDst = entry->flags().dst();
+            auto tableSrc = entry->flags().src();
+            auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
+            auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+            insn.setAddrMode(dst, src);
+            if (tableDst == M_DST) {
+                insn.setPreMode(M_DST);
+            } else if (tableSrc == M_SRC || tableSrc == M_SRC16) {
+                insn.setPreMode(M_SRC);
+            } else {
+                insn.setPreMode(M_NONE);
+            }
             insn.setOpCode(entry->opCode(), page->prefix());
             return OK;
         }
