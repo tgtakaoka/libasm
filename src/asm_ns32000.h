@@ -31,10 +31,7 @@ public:
     AsmNs32000() : Assembler(_parser, TableNs32000::TABLE), _parser('*') { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override {
-        TableNs32000::TABLE.setFpu(FPU_NONE);
-        TableNs32000::TABLE.setMmu(MMU_NONE);
-    }
+    void reset() override { TableNs32000::TABLE.reset(); }
     const Options &options() const override { return _options; }
 
 private:

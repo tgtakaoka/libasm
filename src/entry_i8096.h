@@ -25,6 +25,10 @@
 namespace libasm {
 namespace i8096 {
 
+enum CpuType : uint8_t {
+    I8096 = 0,
+};
+
 enum AaMode : uint8_t {
     AA_REG = 0,    // Register direct
     AA_IMM = 1,    // Immediate
@@ -65,10 +69,10 @@ public:
         }
 
         static constexpr Flags undef(AddrMode dst, AddrMode src1) {
-            return Flags{static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
-                                               (static_cast<uint16_t>(src1) << src1_gp) |
-                                               (static_cast<uint16_t>(M_NONE) << src2_gp) |
-                                               undef_bm)};
+            return Flags{
+                    static_cast<uint16_t>((static_cast<uint16_t>(dst) << dst_gp) |
+                                          (static_cast<uint16_t>(src1) << src1_gp) |
+                                          (static_cast<uint16_t>(M_NONE) << src2_gp) | undef_bm)};
         }
 
         Flags read() const { return Flags{pgm_read_word(&_attr)}; }

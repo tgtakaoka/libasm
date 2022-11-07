@@ -548,36 +548,19 @@ static constexpr uint8_t HD6309_I11[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr Config::opcode_t PREFIX_P00 = 0x00;
-static constexpr Config::opcode_t PREFIX_P10 = 0x10;
-static constexpr Config::opcode_t PREFIX_P11 = 0x11;
-
-bool TableMc6809::isPrefix(Config::opcode_t opCode) {
-    return opCode == PREFIX_P10 || opCode == PREFIX_P11;
-}
-
 static constexpr TableMc6809::EntryPage MC6809_PAGES[] PROGMEM = {
-        {PREFIX_P00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
-        {PREFIX_P10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
-        {PREFIX_P11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
+        {0x00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
+        {0x10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
+        {0x11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
 };
 
 static constexpr TableMc6809::EntryPage HD6309_PAGES[] PROGMEM = {
-        {PREFIX_P00, ARRAY_RANGE(HD6309_P00), ARRAY_RANGE(HD6309_I00)},
-        {PREFIX_P00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
-        {PREFIX_P10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
-        {PREFIX_P11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
-        {PREFIX_P10, ARRAY_RANGE(HD6309_P10), ARRAY_RANGE(HD6309_I10)},
-        {PREFIX_P11, ARRAY_RANGE(HD6309_P11), ARRAY_RANGE(HD6309_I11)},
-};
-
-struct TableMc6809::PostEntry : PostSpec {
-    uint8_t mask;
-    uint8_t byte;
-
-    constexpr PostEntry(
-            RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t _mask, uint8_t _byte)
-        : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
+        {0x00, ARRAY_RANGE(HD6309_P00), ARRAY_RANGE(HD6309_I00)},
+        {0x00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},
+        {0x10, ARRAY_RANGE(MC6809_P10), ARRAY_RANGE(MC6809_I10)},
+        {0x11, ARRAY_RANGE(MC6809_P11), ARRAY_RANGE(MC6809_I11)},
+        {0x10, ARRAY_RANGE(HD6309_P10), ARRAY_RANGE(HD6309_I10)},
+        {0x11, ARRAY_RANGE(HD6309_P11), ARRAY_RANGE(HD6309_I11)},
 };
 
 static constexpr TableMc6809::PostEntry MC6809_POSTBYTE[] PROGMEM = {
@@ -611,48 +594,22 @@ static constexpr TableMc6809::PostEntry HD6309_POSTBYTE[] PROGMEM = {
         {REG_UNDEF, REG_W, -2, true, 0xFF, 0xF0},   // [,--W]
 };
 
-typedef PageBase<TableMc6809::PostEntry> PostPage;
-
-static constexpr PostPage MC6809_POSTS[] PROGMEM = {
+static constexpr TableMc6809::PostPage MC6809_POSTS[] PROGMEM = {
         {ARRAY_RANGE(MC6809_POSTBYTE)},
 };
 
-static constexpr PostPage HD6309_POSTS[] PROGMEM = {
+static constexpr TableMc6809::PostPage HD6309_POSTS[] PROGMEM = {
         {ARRAY_RANGE(MC6809_POSTBYTE)},
         {ARRAY_RANGE(HD6309_POSTBYTE)},
 };
 
-struct TableMc6809::Cpu : CpuBase<CpuType, TableMc6809::EntryPage> {
-    const PostPage *postTable() const {
-        return reinterpret_cast<const PostPage *>(pgm_read_ptr(&_post_table));
-    }
-    const PostPage *postEnd() const {
-        return reinterpret_cast<const PostPage *>(pgm_read_ptr(&_post_end));
-    }
-    constexpr Cpu(CpuType cpuType, const char *name, const TableMc6809::EntryPage *table,
-            const TableMc6809::EntryPage *end, const PostPage *postTable, const PostPage *postEnd)
-        : CpuBase(cpuType, name, table, end), _post_table(postTable), _post_end(postEnd) {}
+const TableMc6809::PostPage *TableMc6809::Cpu::postTable() const {
+    return reinterpret_cast<const TableMc6809::PostPage *>(pgm_read_ptr(&_post_table));
+}
 
-    static const Cpu *search(CpuType cpuType, const Cpu *table, const Cpu *end) {
-        for (const auto *t = table; t < end; t++) {
-            if (cpuType == t->cpuType())
-                return t;
-        }
-        return nullptr;
-    }
-
-    static const Cpu *search(const char *name, const Cpu *table, const Cpu *end) {
-        for (const auto *t = table; t < end; t++) {
-            if (strcasecmp_P(name, t->name_P()) == 0)
-                return t;
-        }
-        return nullptr;
-    }
-
-private:
-    const PostPage *_post_table;
-    const PostPage *_post_end;
-};
+const TableMc6809::PostPage *TableMc6809::Cpu::postEnd() const {
+    return reinterpret_cast<const TableMc6809::PostPage *>(pgm_read_ptr(&_post_end));
+}
 
 static constexpr TableMc6809::Cpu CPU_TABLES[] PROGMEM = {
         {MC6809, TEXT_CPU_6809, ARRAY_RANGE(MC6809_PAGES), ARRAY_RANGE(MC6809_POSTS)},
@@ -789,7 +746,7 @@ TableMc6809::TableMc6809() {
 }
 
 bool TableMc6809::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
     if (t == nullptr)
         return false;
     _cpu = t;

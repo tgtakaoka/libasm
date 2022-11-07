@@ -406,26 +406,26 @@ static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
 // clang-format on
 
 static constexpr TableZ80::EntryPage I8080_PAGES[] PROGMEM = {
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
 static constexpr TableZ80::EntryPage I8085_PAGES[] PROGMEM = {
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 
 static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
-        {PREFIX_00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
-        {PREFIX_CB, ARRAY_RANGE(TABLE_CB), ARRAY_RANGE(INDEX_CB)},
-        {PREFIX_ED, ARRAY_RANGE(TABLE_ED), ARRAY_RANGE(INDEX_ED)},
+        {0x00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0xCB, ARRAY_RANGE(TABLE_CB), ARRAY_RANGE(INDEX_CB)},
+        {0xED, ARRAY_RANGE(TABLE_ED), ARRAY_RANGE(INDEX_ED)},
         {TableZ80::PREFIX_IX, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
         {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
 };
 
 static constexpr TableZ80::EntryPage V30EMU_PAGES[] PROGMEM = {
-        {PREFIX_ED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
-        {PREFIX_00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
+        {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
+        {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
 static constexpr TableZ80::Cpu CPU_TABLES[] PROGMEM = {
@@ -518,17 +518,6 @@ Error TableZ80::searchOpCode(InsnZ80 &insn) {
         }
     }
     return setError(UNKNOWN_INSTRUCTION);
-}
-
-bool TableZ80::isPrefix(Config::opcode_t opCode) const {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        const auto prefix = page->prefix();
-        if (prefix == 0)
-            continue;
-        if (prefix == opCode)
-            return true;
-    }
-    return false;
 }
 
 TableZ80::TableZ80() {

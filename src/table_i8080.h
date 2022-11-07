@@ -32,13 +32,13 @@ public:
 
     Error searchName(InsnI8080 &insn);
     Error searchOpCode(InsnI8080 &insn);
-    bool isPrefix(Config::opcode_t opCode) const;
+    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    typedef PrefixedEntryPage<Entry> EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

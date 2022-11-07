@@ -802,18 +802,13 @@ static const uint8_t INDEX_14_2[] PROGMEM = {
 };
 // clang-format on
 
-struct TableNs32000::EntryPage : PrefixedEntryPage<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
-            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : PrefixedEntryPage(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+Config::opcode_t TableNs32000::EntryPage::mask() const {
+    return pgm_read_byte(&_mask);
+}
 
-    Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
-    Config::opcode_t post() const { return pgm_read_byte(&_post); }
-
-private:
-    Config::opcode_t _mask;
-    uint8_t _post;
-};
+Config::opcode_t TableNs32000::EntryPage::post() const {
+    return pgm_read_byte(&_post);
+}
 
 // Standard Instructions
 static const TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
@@ -853,22 +848,25 @@ static const TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
         {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2), ARRAY_RANGE(INDEX_14_2)},
 };
 
-static bool isPrefix(Config::opcode_t opCode, const TableNs32000::EntryPage *page,
-        const TableNs32000::EntryPage *end) {
-    for (auto entry = page; entry < end; entry++) {
-        auto prefix = entry->prefix();
-        if (prefix == 0)
-            continue;
-        if (prefix == opCode)
-            return true;
-    }
-    return false;
-}
+static const TableNs32000::Cpu NS32032_CPU PROGMEM = {
+        NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)};
 
-bool TableNs32000::isPrefixCode(Config::opcode_t opCode) const {
-    return isPrefix(opCode, ARRAY_RANGE(NS32032_PAGES)) ||
-           isPrefix(opCode, ARRAY_RANGE(NS32081_PAGES)) ||
-           isPrefix(opCode, ARRAY_RANGE(NS32082_PAGES));
+#define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
+
+static const TableNs32000::Fpu FPU_TABLE[] PROGMEM = {
+        {FPU_NONE, TEXT_none, EMPTY_RANGE(NS32081_PAGES)},
+        {FPU_NS32081, TEXT_FPU_NS32081, ARRAY_RANGE(NS32081_PAGES)},
+};
+static const TableNs32000::Fpu &NS32081_FPU = FPU_TABLE[1];
+
+static const TableNs32000::Mmu MMU_TABLE[] PROGMEM = {
+        {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
+        {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
+};
+static const TableNs32000::Mmu &NS32082_MMU = MMU_TABLE[1];
+
+bool TableNs32000::isPrefixCode(uint8_t code) const {
+    return NS32032_CPU.isPrefix(code) || NS32081_FPU.isPrefix(code) || NS32082_MMU.isPrefix(code);
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -935,11 +933,11 @@ Error TableNs32000::searchOpCode(
 }
 
 Error TableNs32000::searchName(InsnNs32000 &insn) {
-    auto error = searchName(insn, ARRAY_RANGE(NS32032_PAGES));
-    if (error == UNKNOWN_INSTRUCTION && _fpuType == FPU_NS32081)
-        error = searchName(insn, ARRAY_RANGE(NS32081_PAGES));
-    if (error == UNKNOWN_INSTRUCTION && _mmuType == MMU_NS32082)
-        error = searchName(insn, ARRAY_RANGE(NS32082_PAGES));
+    auto error = searchName(insn, _cpu->table(), _cpu->end());
+    if (error == UNKNOWN_INSTRUCTION)
+        error = searchName(insn, _fpu->table(), _fpu->end());
+    if (error == UNKNOWN_INSTRUCTION)
+        error = searchName(insn, _mmu->table(), _mmu->end());
     return setError(error);
 }
 
@@ -952,18 +950,60 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) {
     return setError(error);
 }
 
+TableNs32000::TableNs32000() : _cpu(&NS32032_CPU) {
+    reset();
+}
+
+void TableNs32000::reset() {
+    setFpu(FPU_NONE);
+    setMmu(MMU_NONE);
+}
+
+bool TableNs32000::setFpu(FpuType fpuType) {
+    auto t = Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
+    if (t == nullptr)
+        return false;
+    _fpu = t;
+    return true;
+}
+
+bool TableNs32000::setMmu(MmuType mmuType) {
+    auto t = Mmu::search(mmuType, ARRAY_RANGE(MMU_TABLE));
+    if (t == nullptr)
+        return false;
+    _mmu = t;
+    return true;
+}
+
 const /* PROGMEM */ char *TableNs32000::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
 const /* PROGMEM */ char *TableNs32000::cpu_P() const {
-    return TEXT_CPU_32032;
+    return _cpu->name_P();
+    ;
 }
 
 bool TableNs32000::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_NS, 2) == 0)
         cpu += 2;
     return strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
+}
+
+bool TableNs32000::setFpu(StrScanner fpu) {
+    if (fpu.iequals_P(TEXT_FPU_NS32081))
+        return setFpu(FPU_NS32081);
+    if (fpu.iequals_P(TEXT_none))
+        return setFpu(FPU_NONE);
+    return false;
+}
+
+bool TableNs32000::setMmu(StrScanner mmu) {
+    if (mmu.iequals_P(TEXT_MMU_NS32082))
+        return setMmu(MMU_NS32082);
+    if (mmu.iequals_P(TEXT_none))
+        return setMmu(MMU_NONE);
+    return false;
 }
 
 TableNs32000 TableNs32000::TABLE;

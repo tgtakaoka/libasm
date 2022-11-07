@@ -322,10 +322,6 @@ static constexpr TableCdp1802::Cpu CPU_TABLES[] PROGMEM = {
         {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
 };
 
-bool TableCdp1802::isPrefix(Config::opcode_t opCode) const {
-    return _cpu->cpuType() != CDP1802 && opCode == 0x68;
-}
-
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -366,16 +362,15 @@ static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
 
 Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
     for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto prefix = page->prefix();
-        if (insn.prefix() != prefix)
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
-        if (entry) {
-            if (entry->flags().undefined())
-                break;
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
+        if (page->prefixMatch(insn.prefix())) {
+            auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
+            if (entry) {
+                if (entry->flags().undefined())
+                    break;
+                insn.setFlags(entry->flags());
+                insn.nameBuffer().text_P(entry->name_P());
+                return setOK();
+            }
         }
     }
     return setError(UNKNOWN_INSTRUCTION);

@@ -25,6 +25,10 @@
 namespace libasm {
 namespace ns32000 {
 
+enum CpuType : uint8_t {
+    NS32032 = 0,
+};
+
 enum FpuType : uint8_t {
     FPU_NONE = 0,
     FPU_NS32081 = 1,

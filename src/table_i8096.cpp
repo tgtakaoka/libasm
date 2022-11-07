@@ -259,6 +259,8 @@ static const TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
+static const TableI8096::Cpu CPU_I8096 PROGMEM = {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -294,17 +296,6 @@ Error TableI8096::searchName(InsnI8096 &insn, const EntryPage *pages, const Entr
         }
     }
     return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
-}
-
-bool TableI8096::isPrefix(Config::opcode_t opCode) const {
-    for (auto page = ARRAY_BEGIN(I8096_PAGES); page < ARRAY_END(I8096_PAGES); page++) {
-        auto prefix = page->prefix();
-        if (prefix == 0)
-            continue;
-        if (prefix == opCode)
-            return true;
-    }
-    return false;
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
@@ -346,12 +337,14 @@ Error TableI8096::searchOpCode(InsnI8096 &insn) {
     return setError(searchOpCode(insn, ARRAY_RANGE(I8096_PAGES)));
 }
 
+TableI8096::TableI8096() : _cpu(&CPU_I8096) {}
+
 const /* PROGMEM */ char *TableI8096::listCpu_P() const {
-    return TEXT_CPU_I8096;
+    return TEXT_CPU_LIST;
 }
 
 const /* PROGMEM */ char *TableI8096::cpu_P() const {
-    return TEXT_CPU_8096;
+    return _cpu->name_P();
 }
 
 bool TableI8096::setCpu(const char *cpu) {

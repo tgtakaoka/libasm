@@ -23,7 +23,8 @@ namespace libasm {
 namespace i8096 {
 
 // clang-format off
-static const char TEXT_CPU_I8096[] PROGMEM = "i8096";
+static const char TEXT_CPU_LIST[] PROGMEM = "i8096";
+static constexpr const char *TEXT_CPU_I8096 = TEXT_CPU_LIST;
 static constexpr const char *TEXT_CPU_8096 = (TEXT_CPU_I8096 + 1);
 
 static const char TEXT_ADD[]   PROGMEM = "ADD";

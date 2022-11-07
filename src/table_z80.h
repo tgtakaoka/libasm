@@ -36,13 +36,12 @@ public:
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-
-    bool isPrefix(Config::opcode_t opCode) const;
+    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
-    typedef PrefixedEntryPage<Entry> EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

@@ -282,7 +282,7 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6809 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableMc6809::isPrefix(opCode)) {
+    if (TableMc6809::TABLE.isPrefix(opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);

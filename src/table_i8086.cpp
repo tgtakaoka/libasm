@@ -1085,17 +1085,6 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
     }
 }
 
-bool TableI8086::isPrefix(Config::opcode_t opCode) const {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto prefix = page->prefix();
-        if (prefix == 0)
-            continue;
-        if (prefix == opCode)
-            return true;
-    }
-    return false;
-}
-
 static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
     auto dstPos = entry->flags().dstPos();
     auto srcPos = entry->flags().srcPos();

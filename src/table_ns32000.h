@@ -20,6 +20,7 @@
 #include "config_ns32000.h"
 #include "dis_memory.h"
 #include "insn_ns32000.h"
+#include "str_scanner.h"
 #include "table_base.h"
 
 namespace libasm {
@@ -27,26 +28,46 @@ namespace ns32000 {
 
 class TableNs32000 : public TableBase {
 public:
+    TableNs32000();
+
     static TableNs32000 TABLE;
 
+    void reset();
     Error searchName(InsnNs32000 &insn);
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory);
-    bool isPrefixCode(Config::opcode_t opCode) const;
+    bool isPrefixCode(uint8_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    void setFpu(FpuType fpuType) { _fpuType = fpuType; }
-    FpuType getFpu() const { return _fpuType; }
-    void setMmu(MmuType mmuType) { _mmuType = mmuType; }
-    MmuType getMmu() const { return _mmuType; }
+    bool setFpu(StrScanner fpu);
+    bool setMmu(StrScanner mmu);
+    FpuType getFpu() const { return _fpu->cpuType(); }
+    MmuType getMmu() const { return _mmu->cpuType(); }
 
-    struct EntryPage;
+    struct EntryPage : EntryPageBase<Entry> {
+        constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
+                const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+            : EntryPageBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+
+        Config::opcode_t mask() const;
+        Config::opcode_t post() const;
+
+    private:
+        Config::opcode_t _mask;
+        uint8_t _post;
+    };
+    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef CpuBase<FpuType, EntryPage> Fpu;
+    typedef CpuBase<MmuType, EntryPage> Mmu;
 
 private:
-    FpuType _fpuType;
-    MmuType _mmuType;
+    const Cpu *const _cpu;
+    const Fpu *_fpu;
+    const Mmu *_mmu;
 
+    bool setFpu(FpuType fpuType);
+    bool setMmu(MmuType mmuType);
     Error searchName(InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages,
             const EntryPage *end) const;

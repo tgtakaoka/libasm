@@ -24,9 +24,12 @@ namespace ns32000 {
 
 // clang-format off
 static const char TEXT_CPU_NS32032[] PROGMEM = "NS32032";
-static constexpr const char *TEXT_CPU_LIST  = TEXT_CPU_NS32032;
-static constexpr const char *TEXT_CPU_NS    = TEXT_CPU_NS32032;
-static constexpr const char *TEXT_CPU_32032 = (TEXT_CPU_NS32032 + 2);
+static const char TEXT_FPU_NS32081[] PROGMEM = "NS32081";
+static const char TEXT_MMU_NS32082[] PROGMEM = "NS32082";
+static constexpr const char *TEXT_CPU_32032 = TEXT_CPU_NS32032 + 2;
+static const char TEXT_CPU_NS[] PROGMEM = "NS";
+static const char TEXT_none[] PROGMEM = "none";
+static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_NS32032;
 
 // Standard instructions
 static const char TEXT_ABSB[]    PROGMEM = "ABSB";

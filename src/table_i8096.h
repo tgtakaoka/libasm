@@ -26,19 +26,24 @@ namespace i8096 {
 
 class TableI8096 : public TableBase {
 public:
+    TableI8096();
+
     static TableI8096 TABLE;
 
     Error searchName(InsnI8096 &insn);
     Error searchOpCode(InsnI8096 &insn);
-    bool isPrefix(Config::opcode_t opCode) const;
+    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    typedef PrefixedEntryPage<Entry> EntryPage;
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
+    const Cpu *const _cpu;
+
     Error searchName(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
 };

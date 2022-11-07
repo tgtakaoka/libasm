@@ -25,7 +25,7 @@
 namespace libasm {
 
 /**
- * Base class for instruction page table entry.
+ * Base class for any table.
  */
 template <typename ITEM_T>
 struct PageBase {
@@ -39,31 +39,29 @@ private:
     const ITEM_T *_end;
 };
 
+/**
+ * Base class for instruction entry table.
+ */
 template <typename ENTRY_T>
 struct EntryPageBase : PageBase<ENTRY_T> {
     const uint8_t *index() const {
         return reinterpret_cast<const uint8_t *>(pgm_read_ptr(&_index));
     }
     const uint8_t *iend() const { return reinterpret_cast<const uint8_t *>(pgm_read_ptr(&_iend)); }
+    uint8_t prefix() const { return pgm_read_byte(&_prefix); }
+    bool prefixMatch(uint8_t code) const { return code == prefix(); }
 
-    constexpr EntryPageBase(const ENTRY_T *table, const ENTRY_T *end,
-            const uint8_t *index = nullptr, const uint8_t *iend = nullptr)
-        : PageBase<ENTRY_T>(table, end), _index(index), _iend(iend) {}
+    constexpr EntryPageBase(uint8_t prefix, const ENTRY_T *table, const ENTRY_T *end,
+            const uint8_t *index, const uint8_t *iend)
+        : PageBase<ENTRY_T>(table, end), _index(index), _iend(iend), _prefix(prefix) {}
+
+    constexpr EntryPageBase(
+            const ENTRY_T *table, const ENTRY_T *end, const uint8_t *index, const uint8_t *iend)
+        : PageBase<ENTRY_T>(table, end), _index(index), _iend(iend), _prefix(0) {}
 
 private:
     const uint8_t *_index;
     const uint8_t *_iend;
-};
-
-template <typename ENTRY_T>
-struct PrefixedEntryPage : EntryPageBase<ENTRY_T> {
-    uint8_t prefix() const { return pgm_read_byte(&_prefix); }
-
-    constexpr PrefixedEntryPage(const uint8_t prefix, const ENTRY_T *table, const ENTRY_T *end,
-            const uint8_t *index = nullptr, const uint8_t *iend = nullptr)
-        : EntryPageBase<ENTRY_T>(table, end, index, iend), _prefix(prefix) {}
-
-private:
     const uint8_t _prefix;
 };
 
@@ -71,15 +69,15 @@ private:
  * Base class for CPU entry.
  */
 template <typename CPUTYPE_T, typename ENTRY_T>
-struct CpuBase : EntryPageBase<ENTRY_T> {
+struct CpuBase : PageBase<ENTRY_T> {
 public:
     CPUTYPE_T cpuType() const { return static_cast<CPUTYPE_T>(pgm_read_byte(&_cpuType)); }
     const /* PROGMEM */ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
-    static const CpuBase<CPUTYPE_T, ENTRY_T> *search(CPUTYPE_T cpuType,
-            const CpuBase<CPUTYPE_T, ENTRY_T> *table, const CpuBase<CPUTYPE_T, ENTRY_T> *end) {
+    template <typename CPU_T>
+    static const CPU_T *search(CPUTYPE_T cpuType, const CPU_T *table, const CPU_T *end) {
         for (const auto *t = table; t < end; t++) {
             if (cpuType == t->cpuType())
                 return t;
@@ -87,8 +85,8 @@ public:
         return nullptr;
     }
 
-    static const CpuBase<CPUTYPE_T, ENTRY_T> *search(const char *name,
-            const CpuBase<CPUTYPE_T, ENTRY_T> *table, const CpuBase<CPUTYPE_T, ENTRY_T> *end) {
+    template <typename CPU_T>
+    static const CPU_T *search(const char *name, const CPU_T *table, const CPU_T *end) {
         for (const auto *t = table; t < end; t++) {
             if (strcasecmp_P(name, t->name_P()) == 0)
                 return t;
@@ -98,7 +96,18 @@ public:
 
     constexpr CpuBase(CPUTYPE_T cpuType, const /* PROGMEM */ char *name_P, const ENTRY_T *table,
             const ENTRY_T *end)
-        : EntryPageBase<ENTRY_T>(table, end), _cpuType(cpuType), _name_P(name_P) {}
+        : PageBase<ENTRY_T>(table, end), _cpuType(cpuType), _name_P(name_P) {}
+
+    bool isPrefix(uint8_t code) const {
+        for (const auto *page = this->table(); page < this->end(); page++) {
+            const auto prefix = page->prefix();
+            if (prefix == 0)
+                continue;
+            if (prefix == code)
+                return true;
+        }
+        return false;
+    }
 
 private:
     CPUTYPE_T _cpuType;
@@ -141,6 +150,7 @@ protected:
                 last = middle;
             }
         }
+        // Search for the same key entries.
         while (first < page->iend()) {
             const auto *entry = &page->table()[pgm_read_byte(first)];
             if (strcasecmp_P(name, entry->name_P()))
@@ -166,6 +176,7 @@ protected:
         }
         return nullptr;
     }
+
     template <typename E, typename C>
     static const E *searchEntry(const C opCode, const E *begin, const E *end) {
         for (const auto *entry = begin; entry < end; entry++) {

@@ -236,16 +236,6 @@ static constexpr TableI8080::Cpu CPU_TABLES[] PROGMEM = {
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
 
-bool TableI8080::isPrefix(Config::opcode_t opCode) const {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        if (page->prefix() == 0)
-            continue;
-        if (page->prefix() == opCode)
-            return true;
-    }
-    return false;
-}
-
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;

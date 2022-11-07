@@ -44,6 +44,8 @@ public:
 
     Error searchName(InsnMc6809 &insn);
     Error searchOpCode(InsnMc6809 &insn);
+    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
+
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     int16_t searchPostSpec(PostSpec &spec) const;
 
@@ -52,11 +54,28 @@ public:
     bool setCpu(const char *cpu) override;
     CpuType cpuType() const;
 
-    static bool isPrefix(Config::opcode_t opCode);
+    struct PostEntry : PostSpec {
+        uint8_t mask;
+        uint8_t byte;
+        constexpr PostEntry(RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t _mask,
+                uint8_t _byte)
+            : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
+    };
+    typedef PageBase<TableMc6809::PostEntry> PostPage;
 
-    typedef PrefixedEntryPage<Entry> EntryPage;
-    struct PostEntry;
-    struct Cpu;
+    typedef EntryPageBase<Entry> EntryPage;
+    struct Cpu : CpuBase<CpuType, EntryPage> {
+        constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name,
+                const /*PROGMEM*/ EntryPage *table, const /*PROGMEM*/ EntryPage *end,
+                const /*PROGMEM*/ PostPage *postTable, const /*PROGMEM*/ PostPage *postEnd)
+            : CpuBase(cpuType, name, table, end), _post_table(postTable), _post_end(postEnd) {}
+        const PostPage *postTable() const;
+        const PostPage *postEnd() const;
+
+    private:
+        const PostPage *_post_table;
+        const PostPage *_post_end;
+    };
 
 private:
     const Cpu *_cpu;

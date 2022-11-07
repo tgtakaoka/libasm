@@ -608,34 +608,17 @@ Error AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, co
 }
 
 Error AsmNs32000::setFpu(const StrScanner &scan) {
-    if (scan.iequals_P(PSTR("ns32081"))) {
-        TableNs32000::TABLE.setFpu(FPU_NS32081);
-        return OK;
-    }
-    if (scan.iequals_P(PSTR("none"))) {
-        TableNs32000::TABLE.setFpu(FPU_NONE);
-        return OK;
-    }
-    return UNKNOWN_OPERAND;
+    return TableNs32000::TABLE.setFpu(scan) ? OK : UNKNOWN_OPERAND;
 }
 
 Error AsmNs32000::setPmmu(const StrScanner &scan) {
-    if (scan.iequals_P(PSTR("ns32082"))) {
-        TableNs32000::TABLE.setMmu(MMU_NS32082);
-        return OK;
-    }
-    if (scan.iequals_P(PSTR("none"))) {
-        TableNs32000::TABLE.setMmu(MMU_NONE);
-        return OK;
-    }
-    return UNKNOWN_OPERAND;
+    return TableNs32000::TABLE.setMmu(scan) ? OK : UNKNOWN_OPERAND;
 }
 
 Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
     StrScanner p(scan.skipSpaces());
     if (strcasecmp_P(name, OPT_TEXT_FPU) == 0) {
-        const StrScanner option = _parser.readSymbol(p);
-        const auto error = setFpu(option);
+        const auto error = setFpu(_parser.readSymbol(p));
         if (error) {
             setError(scan, error);
         } else {
@@ -644,8 +627,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
         return OK;
     }
     if (strcasecmp_P(name, OPT_TEXT_PMMU) == 0) {
-        const StrScanner option = _parser.readSymbol(p);
-        const auto error = setPmmu(option);
+        const auto error = setPmmu(_parser.readSymbol(p));
         if (error) {
             setError(scan, error);
         } else {
