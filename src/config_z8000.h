@@ -22,6 +22,11 @@
 namespace libasm {
 namespace z8000 {
 
+enum CpuType : uint8_t {
+    Z8001,
+    Z8002,
+};
+
 struct Config : ConfigImpl<ADDRESS_23BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {};
 
 }  // namespace z8000

@@ -22,6 +22,12 @@
 namespace libasm {
 namespace tms9900 {
 
+enum CpuType : uint8_t {
+    TMS9900,
+    TMS9995,
+    TMS99105,
+};
+
 struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 8, 4> {};
 
 }  // namespace tms9900

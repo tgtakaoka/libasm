@@ -262,11 +262,14 @@ static constexpr uint8_t INDEX_I8051[] PROGMEM = {
 };
 // clang-format on
 
-typedef EntryPageBase<Entry> EntryPage;
-
-static constexpr EntryPage I8051_PAGES[] PROGMEM = {
+static constexpr TableI8051::EntryPage I8051_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_I8051), ARRAY_RANGE(INDEX_I8051)},
 };
+
+static constexpr TableI8051::Cpu CPU_TABLE[] PROGMEM = {
+        {I8051, TEXT_CPU_8051, ARRAY_RANGE(I8051_PAGES)},
+};
+static constexpr const TableI8051::Cpu &I8051_CPU = CPU_TABLE[0];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -318,12 +321,10 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) {
     return setOK();
 }
 
-const /* PROGMEM */ char *TableI8051::listCpu_P() const {
-    return TEXT_CPU_I8051;
-}
+TableI8051::TableI8051() : _cpu(&I8051_CPU) {}
 
-const /* PROGMEM */ char *TableI8051::cpu_P() const {
-    return TEXT_CPU_8051;
+const /* PROGMEM */ char *TableI8051::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
 bool TableI8051::setCpu(const char *cpu) {

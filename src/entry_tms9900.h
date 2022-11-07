@@ -25,12 +25,6 @@
 namespace libasm {
 namespace tms9900 {
 
-enum CpuType : uint8_t {
-    TMS9900,
-    TMS9995,
-    TMS99105,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_IMM = 1,    // 16-bit Immediate data

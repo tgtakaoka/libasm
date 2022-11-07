@@ -296,7 +296,7 @@ static constexpr TableI8048::EntryPage MSM80C48_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_MSM80C48), ARRAY_RANGE(INDEX_MSM80C48)},
 };
 
-static constexpr TableI8048::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableI8048::Cpu CPU_TABLE[] PROGMEM = {
         {I8039, TEXT_CPU_8039, ARRAY_RANGE(I8039_PAGES)},
         {I8048, TEXT_CPU_8048, ARRAY_RANGE(I8048_PAGES)},
         {I80C39, TEXT_CPU_80C39, ARRAY_RANGE(I80C39_PAGES)},
@@ -375,7 +375,7 @@ TableI8048::TableI8048() {
 }
 
 bool TableI8048::setCpu(CpuType cpuType) {
-    const auto *t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -386,15 +386,11 @@ const /* PROGMEM */ char *TableI8048::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableI8048::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableI8048::setCpu(const char *cpu) {
     const char *p = cpu;
     if (toupper(*p) == 'I')
         p++;
-    const auto *t = Cpu::search(p, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     if (strncasecmp_P(cpu + 1, TEXT_CPU_MSM, 3) == 0)

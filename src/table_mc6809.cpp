@@ -611,7 +611,7 @@ const TableMc6809::PostPage *TableMc6809::Cpu::postEnd() const {
     return reinterpret_cast<const TableMc6809::PostPage *>(pgm_read_ptr(&_post_end));
 }
 
-static constexpr TableMc6809::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableMc6809::Cpu CPU_TABLE[] PROGMEM = {
         {MC6809, TEXT_CPU_6809, ARRAY_RANGE(MC6809_PAGES), ARRAY_RANGE(MC6809_POSTS)},
         {HD6309, TEXT_CPU_6309, ARRAY_RANGE(HD6309_PAGES), ARRAY_RANGE(HD6309_POSTS)},
 };
@@ -746,7 +746,7 @@ TableMc6809::TableMc6809() {
 }
 
 bool TableMc6809::setCpu(CpuType cpuType) {
-    const auto *t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -761,12 +761,8 @@ const /* PROGMEM */ char *TableMc6809::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableMc6809::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableMc6809::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_MC6809) == 0)

@@ -25,12 +25,6 @@
 namespace libasm {
 namespace cdp1802 {
 
-enum CpuType : uint8_t {
-    CDP1802,
-    CDP1804,
-    CDP1804A,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_REGN = 1,  // Register number, 0~15

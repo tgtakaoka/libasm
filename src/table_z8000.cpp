@@ -578,6 +578,11 @@ static constexpr TableZ8000::EntryPage Z8000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8000), ARRAY_RANGE(INDEX_Z8000)},
 };
 
+static constexpr TableZ8000 ::Cpu CPU_TABLE[] PROGMEM = {
+        {Z8001, TEXT_CPU_Z8001, ARRAY_RANGE(Z8000_PAGES)},
+        {Z8002, TEXT_CPU_Z8002, ARRAY_RANGE(Z8000_PAGES)},
+};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -663,25 +668,27 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) {
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
-TableZ8000::TableZ8000() : _cpuType(Z8001) {}
+TableZ8000::TableZ8000() {
+    setCpu(Z8001);
+}
+
+bool TableZ8000::setCpu(CpuType cpuType) {
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+    if (t == nullptr)
+        return false;
+    _cpu = t;
+    return true;
+}
 
 const /* PROGMEM */ char *TableZ8000::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableZ8000::cpu_P() const {
-    return _cpuType == Z8001 ? TEXT_CPU_Z8001 : TEXT_CPU_Z8002;
-}
-
 bool TableZ8000::setCpu(const char *cpu) {
-    if (strcasecmp_P(cpu, TEXT_CPU_Z8001) == 0) {
-        _cpuType = Z8001;
-        return true;
-    }
-    if (strcasecmp_P(cpu, TEXT_CPU_Z8002) == 0) {
-        _cpuType = Z8002;
-        return true;
-    }
+    if (strcasecmp_P(cpu, TEXT_CPU_Z8001) == 0)
+        return setCpu(Z8001);
+    if (strcasecmp_P(cpu, TEXT_CPU_Z8002) == 0)
+        return setCpu(Z8002);
     return false;
 }
 
@@ -690,7 +697,7 @@ AddressWidth TableZ8000::addressWidth() const {
 }
 
 bool TableZ8000::segmentedModel() const {
-    return _cpuType == Z8001;
+    return _cpu->cpuType() == Z8001;
 }
 
 TableZ8000 TableZ8000::TABLE;

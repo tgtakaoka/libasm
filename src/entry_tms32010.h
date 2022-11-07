@@ -25,11 +25,6 @@
 namespace libasm {
 namespace tms32010 {
 
-enum CpuType : uint8_t {
-    TMS32010,
-    TMS32015,
-};
-
 enum AddrMode : uint8_t {
     // T=table, P=parser. Sorted by constant range from M_LS0 to M_IM13.
     M_NONE = 0,   // TP: No operand

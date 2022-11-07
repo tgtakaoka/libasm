@@ -22,6 +22,14 @@
 namespace libasm {
 namespace mos6502 {
 
+enum CpuType : uint8_t {
+    MOS6502,
+    G65SC02,
+    R65C02,
+    W65C02S,
+    W65C816,
+};
+
 struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4> {};
 
 }  // namespace mos6502

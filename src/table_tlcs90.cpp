@@ -493,34 +493,28 @@ static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 };
 // clang-format on
 
-struct TableTlcs90::EntryPage : EntryPageBase<Entry> {
-    constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
-            const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryPageBase(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
+AddrMode TableTlcs90::EntryPage::mode() const {
+    return AddrMode(pgm_read_byte(&_mode));
+}
 
-    AddrMode mode() const { return AddrMode(pgm_read_byte(&_mode)); }
-    bool prefixMatch(Config::opcode_t code) const {
-        const Config::opcode_t pre = prefix();
-        const Config::opcode_t reg = code & 7;
-        switch (mode()) {
-        case M_IND:
-            return (code & ~7) == pre && reg != 3 && reg != 7;
-        case M_IDX:
-            return (code & ~3) == pre && reg != 7;
-        case M_REG8:
-            return (code & ~7) == pre && reg != 7;
-        case M_CC:
-            return (code & ~0xF) == pre;
-        default:
-            return code == pre;
-        }
+bool TableTlcs90::EntryPage::prefixMatch(Config::opcode_t code) const {
+    const Config::opcode_t pre = prefix();
+    const Config::opcode_t reg = code & 7;
+    switch (mode()) {
+    case M_IND:
+        return (code & ~7) == pre && reg != 3 && reg != 7;
+    case M_IDX:
+        return (code & ~3) == pre && reg != 7;
+    case M_REG8:
+        return (code & ~7) == pre && reg != 7;
+    case M_CC:
+        return (code & ~0xF) == pre;
+    default:
+        return code == pre;
     }
+}
 
-private:
-    uint8_t _mode;
-};
-
-static constexpr TableTlcs90::EntryPage PAGES_TLCS90[] PROGMEM = {
+static constexpr TableTlcs90::EntryPage TLCS90_PAGES[] PROGMEM = {
         {0x00, M_NONE, ARRAY_RANGE(TABLE_TLCS90), ARRAY_RANGE(INDEX_TLCS90)},
         {0xE7, M_DIR, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (FFnn)
         {0xE3, M_EXT, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (nnnn)
@@ -543,9 +537,14 @@ static constexpr TableTlcs90::EntryPage PAGES_TLCS90[] PROGMEM = {
         {0xFE, M_NONE, ARRAY_RANGE(TABLE_BLOCK), ARRAY_RANGE(INDEX_BLOCK)},
 };
 
+static constexpr TableTlcs90::Cpu CPU_TABLE[] PROGMEM = {
+        {TLCS90, TEXT_CPU_TLCS90, ARRAY_RANGE(TLCS90_PAGES)},
+};
+static constexpr const TableTlcs90::Cpu &TLCS90_CPU = CPU_TABLE[0];
+
 Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) {
     auto code = insn.readByte(memory);
-    for (auto page = ARRAY_BEGIN(PAGES_TLCS90) + 1; page < ARRAY_END(PAGES_TLCS90); page++) {
+    for (auto page = ARRAY_BEGIN(TLCS90_PAGES) + 1; page < ARRAY_END(TLCS90_PAGES); page++) {
         if (!page->prefixMatch(code))
             continue;
         op.mode = page->mode();
@@ -681,19 +680,17 @@ Error TableTlcs90::searchOpCode(
 }
 
 Error TableTlcs90::searchName(InsnTlcs90 &insn) {
-    return setError(searchName(insn, ARRAY_RANGE(PAGES_TLCS90)));
+    return setError(searchName(insn, ARRAY_RANGE(TLCS90_PAGES)));
 }
 
 Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) {
-    return setError(searchOpCode(insn, ARRAY_RANGE(PAGES_TLCS90)));
+    return setError(searchOpCode(insn, ARRAY_RANGE(TLCS90_PAGES)));
 }
+
+TableTlcs90::TableTlcs90() : _cpu(&TLCS90_CPU) {}
 
 const /* PROGMEM */ char *TableTlcs90::listCpu_P() const {
-    return TEXT_CPU_TLCS90;
-}
-
-const /* PROGMEM */ char *TableTlcs90::cpu_P() const {
-    return TEXT_CPU_TLCS90;
+    return TEXT_CPU_LIST;
 }
 
 bool TableTlcs90::setCpu(const char *cpu) {

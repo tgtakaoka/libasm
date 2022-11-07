@@ -35,7 +35,7 @@ public:
     Error searchOpCode(InsnMc6805 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
     typedef EntryPageBase<Entry> EntryPage;

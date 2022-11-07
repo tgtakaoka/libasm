@@ -22,6 +22,14 @@
 namespace libasm {
 namespace mc6800 {
 
+enum CpuType : uint8_t {
+    MC6800,
+    MB8861,
+    MC6801,
+    HD6301,
+    MC68HC11,
+};
+
 struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 5, 5> {};
 
 }  // namespace mc6800

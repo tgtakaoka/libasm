@@ -22,6 +22,12 @@
 namespace libasm {
 namespace mn1610 {
 
+enum CpuType : uint8_t {
+    MN1610,
+    MN1613,
+    MN1613A,
+};
+
 struct Config : ConfigImpl<ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {};
 
 }  // namespace mn1610

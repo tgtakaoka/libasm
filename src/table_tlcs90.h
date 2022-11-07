@@ -38,6 +38,8 @@ struct Operand : public OperandBase {
 
 class TableTlcs90 : public TableBase {
 public:
+    TableTlcs90();
+
     static TableTlcs90 TABLE;
 
     Error searchName(InsnTlcs90 &insn);
@@ -45,12 +47,26 @@ public:
     Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    struct EntryPage;
+    struct EntryPage : EntryPageBase<Entry> {
+        constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
+                const Entry *end, const uint8_t *index, const uint8_t *iend)
+            : EntryPageBase(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
+
+        AddrMode mode() const;
+        bool prefixMatch(Config::opcode_t code) const;
+
+    private:
+        uint8_t _mode;
+    };
+
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
+    const Cpu *const _cpu;
+
     Error searchName(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
 };

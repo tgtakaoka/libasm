@@ -25,14 +25,6 @@
 namespace libasm {
 namespace mc6800 {
 
-enum CpuType : uint8_t {
-    MC6800,
-    MB8861,
-    MC6801,
-    HD6301,
-    MC68HC11,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_DIR = 1,   // Direct page

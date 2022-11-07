@@ -38,7 +38,7 @@ public:
     bool isPrefixCode(uint8_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override  { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
     bool setFpu(StrScanner fpu);
     bool setMmu(StrScanner mmu);

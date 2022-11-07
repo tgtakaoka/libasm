@@ -26,14 +26,22 @@ namespace i8051 {
 
 class TableI8051 : public TableBase {
 public:
+    TableI8051();
+
     static TableI8051 TABLE;
 
     Error searchName(InsnI8051 &insn);
     Error searchOpCode(InsnI8051 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
+
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
+
+private:
+    const Cpu *const _cpu;
 };
 
 }  // namespace i8051

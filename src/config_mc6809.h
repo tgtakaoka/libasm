@@ -22,6 +22,11 @@
 namespace libasm {
 namespace mc6809 {
 
+enum CpuType : uint8_t {
+    MC6809,
+    HD6309,
+};
+
 struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 5, 5> {};
 
 }  // namespace mc6809

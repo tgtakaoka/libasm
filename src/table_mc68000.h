@@ -34,15 +34,16 @@ public:
     Error searchOpCode(InsnMc68000 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    void setAlias(bool enable) { _aliasEnabled = enable; }
+    void setAlias(bool enable);
 
     typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    bool _aliasEnabled;
+    const Cpu *_cpu;
 };
 
 }  // namespace mc68000

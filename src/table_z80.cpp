@@ -428,7 +428,7 @@ static constexpr TableZ80::EntryPage V30EMU_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
-static constexpr TableZ80::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableZ80::Cpu CPU_TABLE[] PROGMEM = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
@@ -525,7 +525,7 @@ TableZ80::TableZ80() {
 }
 
 bool TableZ80::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -536,12 +536,8 @@ const /* PROGMEM */ char *TableZ80::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableZ80::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableZ80::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_I8080) == 0)

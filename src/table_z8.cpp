@@ -484,7 +484,7 @@ static constexpr TableZ8::EntryPage SUPER8_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
-static constexpr TableZ8::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableZ8::Cpu CPU_TABLE[] PROGMEM = {
         {Z8, TEXT_CPU_Z8, ARRAY_RANGE(Z8_PAGES)},
         {Z86C, TEXT_CPU_Z86C, ARRAY_RANGE(Z86C_PAGES)},
         {SUPER8, TEXT_CPU_Z88, ARRAY_RANGE(SUPER8_PAGES)},
@@ -606,7 +606,7 @@ bool TableZ8::isSuper8() const {
 }
 
 bool TableZ8::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -617,12 +617,8 @@ const /* PROGMEM */ char *TableZ8::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableZ8::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableZ8::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strncasecmp_P(cpu, TEXT_CPU_Z86C, 4) == 0)

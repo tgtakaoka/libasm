@@ -22,6 +22,19 @@
 namespace libasm {
 namespace ns32000 {
 
+enum CpuType : uint8_t {
+    NS32032,
+};
+
+enum FpuType : uint8_t {
+    FPU_NONE,
+    FPU_NS32081,
+};
+enum MmuType : uint8_t {
+    MMU_NONE,
+    MMU_NS32082,
+};
+
 struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 22, 7> {};
 
 }  // namespace ns32000

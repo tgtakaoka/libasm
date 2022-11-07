@@ -26,14 +26,22 @@ namespace ins8060 {
 
 class TableIns8060 : public TableBase {
 public:
+    TableIns8060();
+
     static TableIns8060 TABLE;
 
     Error searchName(InsnIns8060 &insn);
     Error searchOpCode(InsnIns8060 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
+
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
+
+private:
+    const Cpu *const _cpu;
 };
 
 }  // namespace ins8060

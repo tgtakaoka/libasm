@@ -25,13 +25,6 @@
 namespace libasm {
 namespace z80 {
 
-enum CpuType : uint8_t {
-    Z80,
-    I8080,
-    I8085,
-    V30EMU,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_IM8 = 1,       // Immediate 8-bit: nn

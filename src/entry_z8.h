@@ -25,12 +25,6 @@
 namespace libasm {
 namespace z8 {
 
-enum CpuType : uint8_t {
-    Z8,
-    Z86C,
-    SUPER8,
-};
-
 enum AddrMode : uint8_t {
     // Those (0~7) happen all operands including extra.
     M_NONE = 0,  // No operand

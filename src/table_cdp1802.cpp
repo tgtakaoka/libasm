@@ -316,7 +316,7 @@ static constexpr TableCdp1802::EntryPage CDP1804A_PAGES[] PROGMEM = {
         {0x68, ARRAY_RANGE(TABLE_CDP1804A), ARRAY_RANGE(INDEX_CDP1804A)},
 };
 
-static constexpr TableCdp1802::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableCdp1802::Cpu CPU_TABLE[] PROGMEM = {
         {CDP1802, TEXT_CPU_1802, ARRAY_RANGE(CDP1802_PAGES)},
         {CDP1804, TEXT_CPU_1804, ARRAY_RANGE(CDP1804_PAGES)},
         {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
@@ -381,7 +381,7 @@ TableCdp1802::TableCdp1802() {
 }
 
 bool TableCdp1802::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -392,14 +392,10 @@ const /* PROGMEM */ char *TableCdp1802::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableCdp1802::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableCdp1802::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_CDP, 3) == 0)
         cpu += 3;
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     return false;

@@ -592,7 +592,7 @@ static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
         {0xCD, ARRAY_RANGE(MC68HC11_PCD), ARRAY_RANGE(MC68HC11_ICD)},
 };
 
-static constexpr TableMc6800::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableMc6800::Cpu CPU_TABLE[] PROGMEM = {
         {MC6800, TEXT_CPU_6800, ARRAY_RANGE(MC6800_PAGES)},
         {MB8861, TEXT_CPU_MB8861, ARRAY_RANGE(MB8861_PAGES)},
         {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
@@ -692,7 +692,7 @@ TableMc6800::TableMc6800() {
 }
 
 bool TableMc6800::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -703,15 +703,11 @@ const /* PROGMEM */ char *TableMc6800::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableMc6800::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableMc6800::setCpu(const char *cpu) {
     auto p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_MC, 2) == 0)
         p += 2;
-    auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(p, TEXT_CPU_68HC11) == 0)

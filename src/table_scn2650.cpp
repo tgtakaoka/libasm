@@ -212,11 +212,14 @@ static constexpr uint8_t INDEX_2650[] PROGMEM = {
 
 // clang-format on
 
-typedef EntryPageBase<Entry> EntryPage;
-
-static constexpr EntryPage SCN2650_PAGES[] PROGMEM = {
+static constexpr TableScn2650::EntryPage SCN2650_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_2650), ARRAY_RANGE(INDEX_2650)},
 };
+
+static constexpr TableScn2650::Cpu CPU_TABLE[] PROGMEM = {
+        {SCN2650, TEXT_CPU_2650, ARRAY_RANGE(SCN2650_PAGES)},
+};
+static constexpr const TableScn2650::Cpu &SCN2650_CPU = CPU_TABLE[0];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -273,12 +276,10 @@ Error TableScn2650::searchOpCode(InsnScn2650 &insn) {
     return OK;
 }
 
+TableScn2650::TableScn2650() : _cpu(&SCN2650_CPU) {}
+
 const /* PROGMEM */ char *TableScn2650::listCpu_P() const {
     return TEXT_CPU_LIST;
-}
-
-const /* PROGMEM */ char *TableScn2650::cpu_P() const {
-    return TEXT_CPU_2650;
 }
 
 bool TableScn2650::setCpu(const char *cpu) {

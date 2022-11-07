@@ -25,11 +25,6 @@
 namespace libasm {
 namespace z8000 {
 
-enum CpuType : uint8_t {
-    Z8001,
-    Z8002,
-};
-
 enum OprSize : uint8_t {
     SZ_NONE = 0,
     SZ_BYTE = 1,

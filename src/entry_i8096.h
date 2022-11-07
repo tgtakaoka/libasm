@@ -25,10 +25,6 @@
 namespace libasm {
 namespace i8096 {
 
-enum CpuType : uint8_t {
-    I8096 = 0,
-};
-
 enum AaMode : uint8_t {
     AA_REG = 0,    // Register direct
     AA_IMM = 1,    // Immediate

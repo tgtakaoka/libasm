@@ -22,6 +22,12 @@
 namespace libasm {
 namespace cdp1802 {
 
+enum CpuType : uint8_t {
+    CDP1802,
+    CDP1804,
+    CDP1804A,
+};
+
 struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 4> {};
 
 }  // namespace cdp1802

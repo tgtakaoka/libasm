@@ -25,14 +25,6 @@
 namespace libasm {
 namespace mos6502 {
 
-enum CpuType : uint8_t {
-    MOS6502,
-    G65SC02,
-    R65C02,
-    W65C02S,
-    W65C816,
-};
-
 namespace {
 static constexpr int opr1_gp = 0;
 static constexpr int indir_bp = 4;  // ()

@@ -164,6 +164,11 @@ static constexpr TableTms32010::EntryPage TMS32010_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS32010), ARRAY_RANGE(INDEX_TMS32010)},
 };
 
+static constexpr TableTms32010::Cpu CPU_TABLE[] PROGMEM = {
+        {TMS32010, TEXT_CPU_32010, ARRAY_RANGE(TMS32010_PAGES)},
+        {TMS32015, TEXT_CPU_32015, ARRAY_RANGE(TMS32010_PAGES)},
+};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -240,20 +245,23 @@ Error TableTms32010::searchOpCode(InsnTms32010 &insn) {
 }
 
 uint16_t TableTms32010::dataMemoryLimit() const {
-    return _cpuType == TMS32010 ? 0x8F : 0xFF;
+    return _cpu->cpuType() == TMS32010 ? 0x8F : 0xFF;
+}
+
+TableTms32010::TableTms32010() {
+    setCpu(TMS32010);
 }
 
 bool TableTms32010::setCpu(CpuType cpuType) {
-    _cpuType = cpuType;
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+    if (t == nullptr)
+        return false;
+    _cpu = t;
     return true;
 }
 
 const /* PROGMEM */ char *TableTms32010::listCpu_P() const {
     return TEXT_CPU_LIST;
-}
-
-const /* PROGMEM */ char *TableTms32010::cpu_P() const {
-    return (_cpuType == TMS32010) ? TEXT_CPU_32010 : TEXT_CPU_32015;
 }
 
 bool TableTms32010::setCpu(const char *cpu) {

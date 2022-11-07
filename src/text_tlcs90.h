@@ -23,6 +23,7 @@ namespace libasm {
 namespace tlcs90 {
 
 static const char TEXT_CPU_TLCS90[] PROGMEM = "TLCS90";
+static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_TLCS90;
 
 // clang-format off
 static const char TEXT_ADC[]  PROGMEM = "ADC";

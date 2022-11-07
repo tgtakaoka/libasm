@@ -24,6 +24,7 @@ namespace ins8070 {
 
 // clang-format off
 static const char TEXT_CPU_INS8070[] PROGMEM = "INS8070";
+static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_INS8070;
 static constexpr const char *TEXT_CPU_8070 = (TEXT_CPU_INS8070 + 3);
 
 static const char TEXT_ADD[]  PROGMEM = "ADD";

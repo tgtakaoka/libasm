@@ -25,19 +25,6 @@
 namespace libasm {
 namespace ns32000 {
 
-enum CpuType : uint8_t {
-    NS32032 = 0,
-};
-
-enum FpuType : uint8_t {
-    FPU_NONE = 0,
-    FPU_NS32081 = 1,
-};
-enum MmuType : uint8_t {
-    MMU_NONE = 0,
-    MMU_NS32082 = 1,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_GREG = 1,    // Generic Register: Rn

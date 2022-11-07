@@ -22,6 +22,10 @@
 namespace libasm {
 namespace ins8070 {
 
+enum CpuType : uint8_t {
+    INS8070,
+};
+
 struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 3, 4> {};
 
 }  // namespace ins8070

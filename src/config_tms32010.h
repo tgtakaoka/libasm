@@ -22,6 +22,11 @@
 namespace libasm {
 namespace tms32010 {
 
+enum CpuType : uint8_t {
+    TMS32010,
+    TMS32015,
+};
+
 struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_LITTLE, 4, 4> {};
 
 }  // namespace tms32010

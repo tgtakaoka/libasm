@@ -36,16 +36,18 @@ public:
     Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
     bool segmentedModel() const;
     AddressWidth addressWidth() const;
 
     typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
+    const Cpu *_cpu;
 
+    bool setCpu(CpuType cpuType);
     const Entry *searchOpCode(
             InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const;
 };

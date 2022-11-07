@@ -964,7 +964,7 @@ static const TableI8086::EntryPage V30_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static const TableI8086::Cpu CPU_TABLES[] PROGMEM = {
+static const TableI8086::Cpu CPU_TABLE[] PROGMEM = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
@@ -1117,7 +1117,7 @@ TableI8086::TableI8086() {
 }
 
 bool TableI8086::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -1133,7 +1133,7 @@ const /* PROGMEM */ char *TableI8086::cpu_P() const {
 }
 
 bool TableI8086::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_I8086) == 0)

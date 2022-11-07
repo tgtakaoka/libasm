@@ -25,15 +25,6 @@
 namespace libasm {
 namespace i8048 {
 
-enum CpuType : uint8_t {
-    I8048 = 0,
-    I8039 = 1,
-    I80C48 = 2,
-    I80C39 = 3,
-    MSM80C48 = 4,
-    MSM80C39 = 5,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_A = 1,       // A register

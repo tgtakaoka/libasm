@@ -230,7 +230,7 @@ static constexpr TableI8080::EntryPage V30EMU_PAGES[] PROGMEM = {
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
-static constexpr TableI8080::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableI8080::Cpu CPU_TABLE[] PROGMEM = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
@@ -301,7 +301,7 @@ TableI8080::TableI8080() {
 }
 
 bool TableI8080::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -317,7 +317,7 @@ const /* PROGMEM */ char *TableI8080::cpu_P() const {
 }
 
 bool TableI8080::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_I8080) == 0)

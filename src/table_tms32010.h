@@ -26,20 +26,23 @@ namespace tms32010 {
 
 class TableTms32010 : public TableBase {
 public:
+    TableTms32010();
+
     static TableTms32010 TABLE;
 
     Error searchName(InsnTms32010 &insn);
     Error searchOpCode(InsnTms32010 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
     uint16_t dataMemoryLimit() const;
 
     typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
-    CpuType _cpuType;
+    const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
 };

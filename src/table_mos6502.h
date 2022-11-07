@@ -41,7 +41,7 @@ public:
     bool longImmediate(AddrMode mode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     CpuType cpuType() const;
     bool setCpu(const char *cpu) override;
     AddressWidth addressWidth() const;

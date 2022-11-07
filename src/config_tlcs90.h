@@ -22,6 +22,10 @@
 namespace libasm {
 namespace tlcs90 {
 
+enum CpuType : uint8_t {
+    TLCS90,
+};
+
 struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 4> {};
 
 }  // namespace tlcs90

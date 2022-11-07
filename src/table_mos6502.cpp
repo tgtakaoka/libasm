@@ -698,7 +698,7 @@ static constexpr TableMos6502::EntryPage W65C816_PAGES[] PROGMEM = {
         {ARRAY_RANGE(W65C816_TABLE), ARRAY_RANGE(W65C816_INDEX)},
 };
 
-static constexpr TableMos6502::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableMos6502::Cpu CPU_TABLE[] PROGMEM = {
         {MOS6502, TEXT_CPU_6502, ARRAY_RANGE(MOS6502_PAGES)},
         {G65SC02, TEXT_CPU_65SC02, ARRAY_RANGE(G65SC02_PAGES)},
         {R65C02, TEXT_CPU_65C02, ARRAY_RANGE(R65C02_PAGES)},
@@ -777,7 +777,7 @@ void TableMos6502::reset() {
 }
 
 bool TableMos6502::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -793,16 +793,12 @@ const /* PROGMEM */ char *TableMos6502::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableMos6502::cpu_P() const {
-    return _cpu->name_P();
-}
-
 CpuType TableMos6502::cpuType() const {
     return _cpu->cpuType();
 }
 
 bool TableMos6502::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcasecmp_P(cpu, TEXT_CPU_MOS6502) == 0)

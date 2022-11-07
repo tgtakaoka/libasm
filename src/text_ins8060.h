@@ -23,8 +23,9 @@ namespace libasm {
 namespace ins8060 {
 
 // clang-format off
-static const char TEXT_CPU_SCMP[]    PROGMEM = "SC/MP";
+static const char TEXT_CPU_SCMP[] PROGMEM = "SC/MP";
 static const char TEXT_CPU_INS8060[] PROGMEM = "INS8060";
+static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_INS8060;
 static constexpr const char *TEXT_CPU_8060 = (TEXT_CPU_INS8060 + 3);
 static constexpr const char *TEXT_null = &TEXT_CPU_INS8060[7];
 

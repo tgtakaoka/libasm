@@ -22,6 +22,12 @@
 namespace libasm {
 namespace i8080 {
 
+enum CpuType : uint8_t {
+    I8080,
+    I8085,
+    V30EMU,
+};
+
 struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 3, 5> {};
 
 }  // namespace i8080

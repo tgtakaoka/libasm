@@ -64,7 +64,7 @@ OprPos Entry::toOprPos(Ex2Pos pos) {
 
 // clang-format off
 // Format 0: |cond|1010|
-static const Entry FORMAT_0[] PROGMEM = {
+static constexpr Entry FORMAT_0[] PROGMEM = {
     E1(0x0A, TEXT_BEQ, NONE, M_REL, P_DISP),
     E1(0x1A, TEXT_BNE, NONE, M_REL, P_DISP),
     E1(0x2A, TEXT_BCS, NONE, M_REL, P_DISP),
@@ -81,7 +81,7 @@ static const Entry FORMAT_0[] PROGMEM = {
     E1(0xDA, TEXT_BGE, NONE, M_REL, P_DISP),
     E1(0xEA, TEXT_BR,  NONE, M_REL, P_DISP),
 };
-static const uint8_t INDEX_0[] PROGMEM = {
+static constexpr uint8_t INDEX_0[] PROGMEM = {
       3,  // TEXT_BCC
       2,  // TEXT_BCS
       0,  // TEXT_BEQ
@@ -100,7 +100,7 @@ static const uint8_t INDEX_0[] PROGMEM = {
 };
 
 // Format 1: |_op_|0010|
-static const Entry FORMAT_1[] PROGMEM = {
+static constexpr Entry FORMAT_1[] PROGMEM = {
     E1(0x02, TEXT_BSR,     NONE,   M_REL, P_DISP),
     E1(0x12, TEXT_RET,     NONE,   M_DISP, P_DISP),
     E1(0x22, TEXT_CXP,     NONE,   M_DISP, P_DISP),
@@ -118,7 +118,7 @@ static const Entry FORMAT_1[] PROGMEM = {
     E0(0xE2, TEXT_SVC),
     E0(0xF2, TEXT_BPT),
 };
-static const uint8_t INDEX_1[] PROGMEM = {
+static constexpr uint8_t INDEX_1[] PROGMEM = {
      15,  // TEXT_BPT
       0,  // TEXT_BSR
       2,  // TEXT_CXP
@@ -138,7 +138,7 @@ static const uint8_t INDEX_1[] PROGMEM = {
 };
 
 // Format 4: |gen1_|gen| |2_|_op_|ii|
-static const Entry FORMAT_4[] PROGMEM = {
+static constexpr Entry FORMAT_4[] PROGMEM = {
     E2(0x00, TEXT_ADDB,   BYTE,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ADDW,   WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x03, TEXT_ADDD,   DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
@@ -174,7 +174,7 @@ static const Entry FORMAT_4[] PROGMEM = {
     E2(0x39, TEXT_XORW,   WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3B, TEXT_XORD,   DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static const uint8_t INDEX_4[] PROGMEM = {
+static constexpr uint8_t INDEX_4[] PROGMEM = {
       0,  // TEXT_ADDB
       9,  // TEXT_ADDCB
      11,  // TEXT_ADDCD
@@ -212,7 +212,7 @@ static const uint8_t INDEX_4[] PROGMEM = {
 };
 
 // Format 2: |_gen_|sho| |t|_op|11|ii|
-static const Entry FORMAT_2_0[] PROGMEM = {
+static constexpr Entry FORMAT_2_0[] PROGMEM = {
     E2(0x0C, TEXT_ADDQB, BYTE,   M_INT4, M_GENW, P_SHORT, P_GEN1),
     E2(0x0D, TEXT_ADDQW, WORD,   M_INT4, M_GENW, P_SHORT, P_GEN1),
     E2(0x0F, TEXT_ADDQD, DOUBLE, M_INT4, M_GENW, P_SHORT, P_GEN1),
@@ -233,7 +233,7 @@ static const Entry FORMAT_2_0[] PROGMEM = {
     E2(0x6F, TEXT_LPRD,  DOUBLE, M_PREG, M_GENR, P_SHORT, P_GEN1),
 };
 // Format 2: |_gen_|con| |d|011|11|ii|
-static const Entry FORMAT_2_1[] PROGMEM = {
+static constexpr Entry FORMAT_2_1[] PROGMEM = {
     E1(0x00, TEXT_SEQB, BYTE, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCSB, BYTE, M_GENW, P_GEN1),
     E1(0x02, TEXT_SHIB, BYTE, M_GENW, P_GEN1),
@@ -242,7 +242,7 @@ static const Entry FORMAT_2_1[] PROGMEM = {
     E1(0x05, TEXT_SLOB, BYTE, M_GENW, P_GEN1),
     E1(0x06, TEXT_SLTB, BYTE, M_GENW, P_GEN1),
 };
-static const Entry FORMAT_2_2[] PROGMEM = {
+static constexpr Entry FORMAT_2_2[] PROGMEM = {
     E1(0x00, TEXT_SNEB, BYTE, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCCB, BYTE, M_GENW, P_GEN1),
     E1(0x02, TEXT_SLSB, BYTE, M_GENW, P_GEN1),
@@ -251,7 +251,7 @@ static const Entry FORMAT_2_2[] PROGMEM = {
     E1(0x05, TEXT_SHSB, BYTE, M_GENW, P_GEN1),
     E1(0x06, TEXT_SGEB, BYTE, M_GENW, P_GEN1),
 };
-static const Entry FORMAT_2_3[] PROGMEM = {
+static constexpr Entry FORMAT_2_3[] PROGMEM = {
     E1(0x00, TEXT_SEQW, WORD, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCSW, WORD, M_GENW, P_GEN1),
     E1(0x02, TEXT_SHIW, WORD, M_GENW, P_GEN1),
@@ -260,7 +260,7 @@ static const Entry FORMAT_2_3[] PROGMEM = {
     E1(0x05, TEXT_SLOW, WORD, M_GENW, P_GEN1),
     E1(0x06, TEXT_SLTW, WORD, M_GENW, P_GEN1),
 };
-static const Entry FORMAT_2_4[] PROGMEM = {
+static constexpr Entry FORMAT_2_4[] PROGMEM = {
     E1(0x00, TEXT_SNEW, WORD, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCCW, WORD, M_GENW, P_GEN1),
     E1(0x02, TEXT_SLSW, WORD, M_GENW, P_GEN1),
@@ -269,7 +269,7 @@ static const Entry FORMAT_2_4[] PROGMEM = {
     E1(0x05, TEXT_SHSW, WORD, M_GENW, P_GEN1),
     E1(0x06, TEXT_SGEW, WORD, M_GENW, P_GEN1),
 };
-static const Entry FORMAT_2_5[] PROGMEM = {
+static constexpr Entry FORMAT_2_5[] PROGMEM = {
     E1(0x00, TEXT_SEQD, DOUBLE, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCSD, DOUBLE, M_GENW, P_GEN1),
     E1(0x02, TEXT_SHID, DOUBLE, M_GENW, P_GEN1),
@@ -278,7 +278,7 @@ static const Entry FORMAT_2_5[] PROGMEM = {
     E1(0x05, TEXT_SLOD, DOUBLE, M_GENW, P_GEN1),
     E1(0x06, TEXT_SLTD, DOUBLE, M_GENW, P_GEN1),
 };
-static const Entry FORMAT_2_6[] PROGMEM = {
+static constexpr Entry FORMAT_2_6[] PROGMEM = {
     E1(0x00, TEXT_SNED, DOUBLE, M_GENW, P_GEN1),
     E1(0x01, TEXT_SCCD, DOUBLE, M_GENW, P_GEN1),
     E1(0x02, TEXT_SLSD, DOUBLE, M_GENW, P_GEN1),
@@ -287,7 +287,7 @@ static const Entry FORMAT_2_6[] PROGMEM = {
     E1(0x05, TEXT_SHSD, DOUBLE, M_GENW, P_GEN1),
     E1(0x06, TEXT_SGED, DOUBLE, M_GENW, P_GEN1),
 };
-static const uint8_t INDEX_2_0[] PROGMEM = {
+static constexpr uint8_t INDEX_2_0[] PROGMEM = {
       9,  // TEXT_ACBB
      11,  // TEXT_ACBD
      10,  // TEXT_ACBW
@@ -307,7 +307,7 @@ static const uint8_t INDEX_2_0[] PROGMEM = {
       8,  // TEXT_SPRD
       7,  // TEXT_SPRW
 };
-static const uint8_t INDEX_2_1[] PROGMEM = {
+static constexpr uint8_t INDEX_2_1[] PROGMEM = {
       1,  // TEXT_SCSB
       0,  // TEXT_SEQB
       4,  // TEXT_SFSB
@@ -316,7 +316,7 @@ static const uint8_t INDEX_2_1[] PROGMEM = {
       5,  // TEXT_SLOB
       6,  // TEXT_SLTB
 };
-static const uint8_t INDEX_2_2[] PROGMEM = {
+static constexpr uint8_t INDEX_2_2[] PROGMEM = {
       1,  // TEXT_SCCB
       4,  // TEXT_SFCB
       6,  // TEXT_SGEB
@@ -325,7 +325,7 @@ static const uint8_t INDEX_2_2[] PROGMEM = {
       2,  // TEXT_SLSB
       0,  // TEXT_SNEB
 };
-static const uint8_t INDEX_2_3[] PROGMEM = {
+static constexpr uint8_t INDEX_2_3[] PROGMEM = {
       1,  // TEXT_SCSW
       0,  // TEXT_SEQW
       4,  // TEXT_SFSW
@@ -334,7 +334,7 @@ static const uint8_t INDEX_2_3[] PROGMEM = {
       5,  // TEXT_SLOW
       6,  // TEXT_SLTW
 };
-static const uint8_t INDEX_2_4[] PROGMEM = {
+static constexpr uint8_t INDEX_2_4[] PROGMEM = {
       1,  // TEXT_SCCW
       4,  // TEXT_SFCW
       6,  // TEXT_SGEW
@@ -343,7 +343,7 @@ static const uint8_t INDEX_2_4[] PROGMEM = {
       2,  // TEXT_SLSW
       0,  // TEXT_SNEW
 };
-static const uint8_t INDEX_2_5[] PROGMEM = {
+static constexpr uint8_t INDEX_2_5[] PROGMEM = {
       1,  // TEXT_SCSD
       0,  // TEXT_SEQD
       4,  // TEXT_SFSD
@@ -352,7 +352,7 @@ static const uint8_t INDEX_2_5[] PROGMEM = {
       5,  // TEXT_SLOD
       6,  // TEXT_SLTD
 };
-static const uint8_t INDEX_2_6[] PROGMEM = {
+static constexpr uint8_t INDEX_2_6[] PROGMEM = {
       1,  // TEXT_SCCD
       4,  // TEXT_SFCD
       6,  // TEXT_SGED
@@ -363,38 +363,38 @@ static const uint8_t INDEX_2_6[] PROGMEM = {
 };
 
 // Format 3: |_gen_|_op| |011111|ii|
-static const Entry FORMAT_3_1[] PROGMEM = {
+static constexpr Entry FORMAT_3_1[] PROGMEM = {
     E1(0x01, TEXT_BICPSRB, BYTE, M_GENR, P_GEN1),
     E1(0x03, TEXT_BISPSRB, BYTE, M_GENR, P_GEN1),
     E1(0x05, TEXT_ADJSPB,  BYTE, M_GENR, P_GEN1),
     E1(0x07, TEXT_CASEB,   BYTE, M_GENR, P_GEN1),
 };
-static const Entry FORMAT_3_2[] PROGMEM = {
+static constexpr Entry FORMAT_3_2[] PROGMEM = {
     E1(0x01, TEXT_BICPSRW, WORD, M_GENR, P_GEN1),
     E1(0x03, TEXT_BISPSRW, WORD, M_GENR, P_GEN1),
     E1(0x05, TEXT_ADJSPW,  WORD, M_GENR, P_GEN1),
     E1(0x07, TEXT_CASEW,   WORD, M_GENR, P_GEN1),
 };
-static const Entry FORMAT_3_3[] PROGMEM = {
+static constexpr Entry FORMAT_3_3[] PROGMEM = {
     E1(0x00, TEXT_CXPD,   DOUBLE, M_GENA, P_GEN1),
     E1(0x02, TEXT_JUMP,   DOUBLE, M_GENA, P_GEN1),
     E1(0x05, TEXT_ADJSPD, DOUBLE, M_GENR, P_GEN1),
     E1(0x06, TEXT_JSR,    DOUBLE, M_GENA, P_GEN1),
     E1(0x07, TEXT_CASED,  DOUBLE, M_GENR, P_GEN1),
 };
-static const uint8_t INDEX_3_1[] PROGMEM = {
+static constexpr uint8_t INDEX_3_1[] PROGMEM = {
       2,  // TEXT_ADJSPB
       0,  // TEXT_BICPSRB
       1,  // TEXT_BISPSRB
       3,  // TEXT_CASEB
 };
-static const uint8_t INDEX_3_2[] PROGMEM = {
+static constexpr uint8_t INDEX_3_2[] PROGMEM = {
       2,  // TEXT_ADJSPW
       0,  // TEXT_BICPSRW
       1,  // TEXT_BISPSRW
       3,  // TEXT_CASEW
 };
-static const uint8_t INDEX_3_3[] PROGMEM = {
+static constexpr uint8_t INDEX_3_3[] PROGMEM = {
       2,  // TEXT_ADJSPD
       4,  // TEXT_CASED
       0,  // TEXT_CXPD
@@ -403,11 +403,11 @@ static const uint8_t INDEX_3_3[] PROGMEM = {
 };
 
 // Format 5: |00000|sho| |t|0|_op_|ii| |0000|1110|
-static const Entry FORMAT_5_0[] PROGMEM = {
+static constexpr Entry FORMAT_5_0[] PROGMEM = {
     E1(0x0B, TEXT_SETCFG, NONE, M_CONF, P_SHORT),
 };
 // Format 5: |00000|flg| |t|0|_op_|ii| |0000|1110|
-static const Entry FORMAT_5_1[] PROGMEM = {
+static constexpr Entry FORMAT_5_1[] PROGMEM = {
     E1(0x00, TEXT_MOVSB, BYTE,   M_SOPT, P_SHORT),
     E1(0x01, TEXT_MOVSW, WORD,   M_SOPT, P_SHORT),
     E1(0x03, TEXT_MOVSD, DOUBLE, M_SOPT, P_SHORT),
@@ -421,10 +421,10 @@ static const Entry FORMAT_5_1[] PROGMEM = {
     E1(0x0F, TEXT_SKPSD, DOUBLE, M_SOPT, P_SHORT),
     E1(0x8C, TEXT_SKPST, BYTE,   M_SOPT, P_SHORT),
 };
-static const uint8_t INDEX_5_0[] PROGMEM = {
+static constexpr uint8_t INDEX_5_0[] PROGMEM = {
       0,  // TEXT_SETCFG
 };
-static const uint8_t INDEX_5_1[] PROGMEM = {
+static constexpr uint8_t INDEX_5_1[] PROGMEM = {
       4,  // TEXT_CMPSB
       6,  // TEXT_CMPSD
       7,  // TEXT_CMPST
@@ -440,7 +440,7 @@ static const uint8_t INDEX_5_1[] PROGMEM = {
 };
 
 // Format 6: |gen1_|gen| |2_|_op_|ii| |0100|1110|
-static const Entry FORMAT_6[] PROGMEM = {
+static constexpr Entry FORMAT_6[] PROGMEM = {
     E2(0x00, TEXT_ROTB,   BYTE,   M_GENC, M_GENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ROTW,   WORD,   M_GENC, M_GENW, P_GEN1, P_GEN2),
     E2(0x03, TEXT_ROTD,   DOUBLE, M_GENC, M_GENW, P_GEN1, P_GEN2),
@@ -484,7 +484,7 @@ static const Entry FORMAT_6[] PROGMEM = {
     E2(0x3D, TEXT_ADDPW,  WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_ADDPD,  DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static const uint8_t INDEX_6[] PROGMEM = {
+static constexpr uint8_t INDEX_6[] PROGMEM = {
      30,  // TEXT_ABSB
      32,  // TEXT_ABSD
      31,  // TEXT_ABSW
@@ -530,7 +530,7 @@ static const uint8_t INDEX_6[] PROGMEM = {
 };
 
 // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|
-static const Entry FORMAT_7[] PROGMEM = {
+static constexpr Entry FORMAT_7[] PROGMEM = {
     E3(0x00, TEXT_MOVMB,  BYTE,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
     E3(0x01, TEXT_MOVMW,  WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN8,  P_DISP),
     E3(0x03, TEXT_MOVMD,  DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN4,  P_DISP),
@@ -572,7 +572,7 @@ static const Entry FORMAT_7[] PROGMEM = {
     E2(0x3D, TEXT_DIVW,   WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_DIVD,   DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static const uint8_t INDEX_7[] PROGMEM = {
+static constexpr uint8_t INDEX_7[] PROGMEM = {
       3,  // TEXT_CMPMB
       5,  // TEXT_CMPMD
       4,  // TEXT_CMPMW
@@ -615,7 +615,7 @@ static const uint8_t INDEX_7[] PROGMEM = {
 };
 
 // Format 8: |gen1_|gen| |2_|reg|o|ii| |op|10|1110|
-static const Entry FORMAT_8_1[] PROGMEM = {
+static constexpr Entry FORMAT_8_1[] PROGMEM = {
     E4(0x00, TEXT_EXTB,   BYTE,   M_GREG, M_GENW, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x01, TEXT_EXTW,   WORD,   M_GREG, M_GENW, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x03, TEXT_EXTD,   DOUBLE, M_GREG, M_GENW, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
@@ -623,18 +623,18 @@ static const Entry FORMAT_8_1[] PROGMEM = {
     E3(0x05, TEXT_INDEXW, WORD,   M_GREG, M_GENR, P_REG, P_GEN1, M_GENR,  P_GEN2),
     E3(0x07, TEXT_INDEXD, DOUBLE, M_GREG, M_GENR, P_REG, P_GEN1, M_GENR,  P_GEN2),
 };
-static const Entry FORMAT_8_2[] PROGMEM = {
+static constexpr Entry FORMAT_8_2[] PROGMEM = {
     E3(0x03, TEXT_CVTP, DOUBLE, M_GREG, M_GENA, P_REG,  P_GEN1,  M_GENW, P_GEN2),
     E2(0x04, TEXT_FFSB, BYTE,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x05, TEXT_FFSW, WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x07, TEXT_FFSD, DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
 };
-static const Entry FORMAT_8_3[] PROGMEM = {
+static constexpr Entry FORMAT_8_3[] PROGMEM = {
     E4(0x00, TEXT_INSB, BYTE,   M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x01, TEXT_INSW, WORD,   M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
     E4(0x03, TEXT_INSD, DOUBLE, M_GREG, M_GENR, P_REG, P_GEN1, M_GENW, EM2_LEN32, P_GEN2, EP2_DISP),
 };
-static const Entry FORMAT_8_3_1[] PROGMEM = {
+static constexpr Entry FORMAT_8_3_1[] PROGMEM = {
     E2(0x0C, TEXT_MOVSUB, BYTE,   M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0D, TEXT_MOVSUW, WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x0F, TEXT_MOVSUD, DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2),
@@ -642,12 +642,12 @@ static const Entry FORMAT_8_3_1[] PROGMEM = {
     E2(0x1D, TEXT_MOVUSW, WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2),
     E2(0x1F, TEXT_MOVUSD, DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2),
 };
-static const Entry FORMAT_8_4[] PROGMEM = {
+static constexpr Entry FORMAT_8_4[] PROGMEM = {
     E3(0x00, TEXT_CHECKB, BYTE,   M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
     E3(0x01, TEXT_CHECKW, WORD,   M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
     E3(0x03, TEXT_CHECKD, DOUBLE, M_GREG, M_GENA, P_REG, P_GEN1, M_GENR, P_GEN2),
 };
-static const uint8_t INDEX_8_1[] PROGMEM = {
+static constexpr uint8_t INDEX_8_1[] PROGMEM = {
       0,  // TEXT_EXTB
       2,  // TEXT_EXTD
       1,  // TEXT_EXTW
@@ -655,18 +655,18 @@ static const uint8_t INDEX_8_1[] PROGMEM = {
       5,  // TEXT_INDEXD
       4,  // TEXT_INDEXW
 };
-static const uint8_t INDEX_8_2[] PROGMEM = {
+static constexpr uint8_t INDEX_8_2[] PROGMEM = {
       0,  // TEXT_CVTP
       1,  // TEXT_FFSB
       3,  // TEXT_FFSD
       2,  // TEXT_FFSW
 };
-static const uint8_t INDEX_8_3[] PROGMEM = {
+static constexpr uint8_t INDEX_8_3[] PROGMEM = {
       0,  // TEXT_INSB
       2,  // TEXT_INSD
       1,  // TEXT_INSW
 };
-static const uint8_t INDEX_8_3_1[] PROGMEM = {
+static constexpr uint8_t INDEX_8_3_1[] PROGMEM = {
       0,  // TEXT_MOVSUB
       2,  // TEXT_MOVSUD
       1,  // TEXT_MOVSUW
@@ -674,14 +674,14 @@ static const uint8_t INDEX_8_3_1[] PROGMEM = {
       5,  // TEXT_MOVUSD
       4,  // TEXT_MOVUSW
 };
-static const uint8_t INDEX_8_4[] PROGMEM = {
+static constexpr uint8_t INDEX_8_4[] PROGMEM = {
       0,  // TEXT_CHECKB
       2,  // TEXT_CHECKD
       1,  // TEXT_CHECKW
 };
 
 // Format 9: |gen1_|gen| |2_|_op|f|ii| |0011|1110|
-static const Entry FORMAT_9[] PROGMEM = {
+static constexpr Entry FORMAT_9[] PROGMEM = {
     // gen2 must be register pair
     W2(0x00, TEXT_MOVBL,   BYTE,   M_GENR, M_FENW, P_GEN1, P_GEN2, false, true),
     W2(0x01, TEXT_MOVWL,   WORD,   M_GENR, M_FENW, P_GEN1, P_GEN2, false, true),
@@ -714,7 +714,7 @@ static const Entry FORMAT_9[] PROGMEM = {
     E2(0x3D, TEXT_FLOORFW, FLOAT,  M_FENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x3F, TEXT_FLOORFD, FLOAT,  M_FENR, M_GENW, P_GEN1, P_GEN2),
 };
-static const uint8_t INDEX_9[] PROGMEM = {
+static constexpr uint8_t INDEX_9[] PROGMEM = {
      25,  // TEXT_FLOORFB
      27,  // TEXT_FLOORFD
      26,  // TEXT_FLOORFW
@@ -746,7 +746,7 @@ static const uint8_t INDEX_9[] PROGMEM = {
 };
 
 // Format 11: |gen1_|gen| |2_|_op_|0f| |1011|1110|
-static const Entry FORMAT_11[] PROGMEM = {
+static constexpr Entry FORMAT_11[] PROGMEM = {
     E2(0x00, TEXT_ADDL, LONG,  M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x01, TEXT_ADDF, FLOAT, M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x04, TEXT_MOVL, LONG,  M_FENR, M_FENW, P_GEN1, P_GEN2),
@@ -764,7 +764,7 @@ static const Entry FORMAT_11[] PROGMEM = {
     E2(0x34, TEXT_ABSL, LONG,  M_FENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x35, TEXT_ABSF, FLOAT, M_FENR, M_FENW, P_GEN1, P_GEN2),
 };
-static const uint8_t INDEX_11[] PROGMEM = {
+static constexpr uint8_t INDEX_11[] PROGMEM = {
      15,  // TEXT_ABSF
      14,  // TEXT_ABSL
       1,  // TEXT_ADDF
@@ -784,19 +784,19 @@ static const uint8_t INDEX_11[] PROGMEM = {
 };
 
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
-static const Entry FORMAT_14_1[] PROGMEM = {
+static constexpr Entry FORMAT_14_1[] PROGMEM = {
     E1(0x03, TEXT_RDVAL, DOUBLE, M_GENA, P_GEN1),
     E1(0x07, TEXT_WRVAL, DOUBLE, M_GENA, P_GEN1),
 };
-static const Entry FORMAT_14_2[] PROGMEM = {
+static constexpr Entry FORMAT_14_2[] PROGMEM = {
     E2(0x0B, TEXT_LMR, DOUBLE, M_MREG, M_GENR, P_SHORT, P_GEN1),
     E2(0x0F, TEXT_SMR, DOUBLE, M_MREG, M_GENW, P_SHORT, P_GEN1),
 };
-static const uint8_t INDEX_14_1[] PROGMEM = {
+static constexpr uint8_t INDEX_14_1[] PROGMEM = {
       0,  // TEXT_RDVAL
       1,  // TEXT_WRVAL
 };
-static const uint8_t INDEX_14_2[] PROGMEM = {
+static constexpr uint8_t INDEX_14_2[] PROGMEM = {
       0,  // TEXT_LMR
       1,  // TEXT_SMR
 };
@@ -811,7 +811,7 @@ Config::opcode_t TableNs32000::EntryPage::post() const {
 }
 
 // Standard Instructions
-static const TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
+static constexpr TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_0), ARRAY_RANGE(INDEX_0)},
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_1), ARRAY_RANGE(INDEX_1)},
         {0x00, 0xC0, 1, ARRAY_RANGE(FORMAT_4), ARRAY_RANGE(INDEX_4)},
@@ -836,34 +836,36 @@ static const TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
 };
 
 // Floating point instructions
-static const TableNs32000::EntryPage NS32081_PAGES[] PROGMEM = {
+static constexpr TableNs32000::EntryPage NS32081_PAGES[] PROGMEM = {
         {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9), ARRAY_RANGE(INDEX_9)},
         {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11), ARRAY_RANGE(INDEX_11)},
 };
 
 // Memory management instructions
-static const TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
+static constexpr TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
         {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1), ARRAY_RANGE(INDEX_8_3_1)},
         {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1), ARRAY_RANGE(INDEX_14_1)},
         {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2), ARRAY_RANGE(INDEX_14_2)},
 };
 
-static const TableNs32000::Cpu NS32032_CPU PROGMEM = {
-        NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)};
+static constexpr TableNs32000::Cpu CPU_TABLE[] PROGMEM = {
+        {NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)},
+};
+static constexpr const TableNs32000::Cpu &NS32032_CPU = CPU_TABLE[0];
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
-static const TableNs32000::Fpu FPU_TABLE[] PROGMEM = {
-        {FPU_NONE, TEXT_none, EMPTY_RANGE(NS32081_PAGES)},
+static constexpr TableNs32000::Fpu FPU_TABLE[] PROGMEM = {
         {FPU_NS32081, TEXT_FPU_NS32081, ARRAY_RANGE(NS32081_PAGES)},
+        {FPU_NONE, TEXT_none, EMPTY_RANGE(NS32081_PAGES)},
 };
-static const TableNs32000::Fpu &NS32081_FPU = FPU_TABLE[1];
+static constexpr const TableNs32000::Fpu &NS32081_FPU = FPU_TABLE[0];
 
-static const TableNs32000::Mmu MMU_TABLE[] PROGMEM = {
-        {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
+static constexpr TableNs32000::Mmu MMU_TABLE[] PROGMEM = {
         {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
+        {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
 };
-static const TableNs32000::Mmu &NS32082_MMU = MMU_TABLE[1];
+static constexpr const TableNs32000::Mmu &NS32082_MMU = MMU_TABLE[0];
 
 bool TableNs32000::isPrefixCode(uint8_t code) const {
     return NS32032_CPU.isPrefix(code) || NS32081_FPU.isPrefix(code) || NS32082_MMU.isPrefix(code);
@@ -889,7 +891,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
@@ -977,11 +979,6 @@ bool TableNs32000::setMmu(MmuType mmuType) {
 
 const /* PROGMEM */ char *TableNs32000::listCpu_P() const {
     return TEXT_CPU_LIST;
-}
-
-const /* PROGMEM */ char *TableNs32000::cpu_P() const {
-    return _cpu->name_P();
-    ;
 }
 
 bool TableNs32000::setCpu(const char *cpu) {

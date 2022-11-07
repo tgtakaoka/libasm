@@ -480,6 +480,15 @@ static constexpr TableMc68000::EntryPage ALIAS_PAGES[] PROGMEM = {
         {ARRAY_RANGE(ALIAS_TABLE), ARRAY_RANGE(ALIAS_INDEX)},
 };
 
+static constexpr TableMc68000::Cpu MC68000_CPU[] PROGMEM = {
+        {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
+};
+
+static constexpr TableMc68000::Cpu MC68000_WITH_ALIAS[] PROGMEM = {
+        {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
+        {MC68000, TEXT_CPU_68000, ARRAY_RANGE(ALIAS_PAGES)},
+};
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
@@ -527,15 +536,14 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
 
 static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(flags.src(), table.src()) &&
-           acceptMode(flags.dst(), table.dst()) &&
+    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
 Error TableMc68000::searchName(InsnMc68000 &insn) {
     uint8_t count = 0;
     auto entry = searchEntry(insn.name(), insn.flags(), MC68000_PAGES, matchAddrMode, count);
-    if (entry == nullptr && _aliasEnabled)
+    if (entry == nullptr && _cpu == MC68000_WITH_ALIAS)
         entry = searchEntry(insn.name(), insn.flags(), ALIAS_PAGES, matchAddrMode, count);
     if (entry) {
         insn.setFlags(entry->flags());
@@ -584,8 +592,8 @@ static Config::opcode_t getInsnMask(OprSize size) {
 }
 
 static Config::opcode_t getInsnMask(Entry::Flags flags) {
-    return getInsnMask(flags.src()) | getInsnMask(flags.srcPos()) |
-           getInsnMask(flags.dstPos()) | getInsnMask(flags.oprSize());
+    return getInsnMask(flags.src()) | getInsnMask(flags.srcPos()) | getInsnMask(flags.dstPos()) |
+           getInsnMask(flags.oprSize());
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
@@ -608,12 +616,12 @@ TableMc68000::TableMc68000() {
     setAlias(false);
 }
 
-const /* PROGMEM */ char *TableMc68000::listCpu_P() const {
-    return TEXT_CPU_LIST;
+void TableMc68000::setAlias(bool enable) {
+    _cpu = enable ? MC68000_WITH_ALIAS : MC68000_CPU;
 }
 
-const /* PROGMEM */ char *TableMc68000::cpu_P() const {
-    return TEXT_CPU_68000;
+const /* PROGMEM */ char *TableMc68000::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
 bool TableMc68000::setCpu(const char *cpu) {

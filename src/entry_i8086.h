@@ -25,12 +25,6 @@
 namespace libasm {
 namespace i8086 {
 
-enum CpuType : uint8_t {
-    I8086,
-    I80186,
-    V30,
-};
-
 // |mod|reg|r/m|
 // mod=11: r/m=reg
 // mod=00: disp=void

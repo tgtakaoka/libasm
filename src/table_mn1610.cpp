@@ -280,7 +280,7 @@ static constexpr TableMn1610::EntryPage MN1613_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
-static constexpr TableMn1610::Cpu CPU_TABLES[] PROGMEM = {
+static constexpr TableMn1610::Cpu CPU_TABLE[] PROGMEM = {
         {MN1610, TEXT_CPU_MN1610, ARRAY_RANGE(MN1610_PAGES)},
         {MN1613, TEXT_CPU_MN1613, ARRAY_RANGE(MN1613_PAGES)},
         {MN1613A, TEXT_CPU_MN1613A, ARRAY_RANGE(MN1613_PAGES)},
@@ -404,7 +404,7 @@ AddressWidth TableMn1610::addressWidth() const {
 }
 
 bool TableMn1610::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLES));
+    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
     _cpu = t;
@@ -415,12 +415,8 @@ const /* PROGMEM */ char *TableMn1610::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableMn1610::cpu_P() const {
-    return _cpu->name_P();
-}
-
 bool TableMn1610::setCpu(const char *cpu) {
-    const auto *t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLES));
+    const auto *t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
     if (strcmp_P(cpu, TEXT_CPU_1610) == 0)

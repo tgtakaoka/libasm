@@ -26,14 +26,22 @@ namespace scn2650 {
 
 class TableScn2650 : public TableBase {
 public:
+    TableScn2650();
+
     static TableScn2650 TABLE;
 
     Error searchName(InsnScn2650 &insn);
     Error searchOpCode(InsnScn2650 &insn);
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override;
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
+
+    typedef EntryPageBase<Entry> EntryPage;
+    typedef CpuBase<CpuType, EntryPage> Cpu;
+
+private:
+    const Cpu *const _cpu;
 };
 
 }  // namespace scn2650

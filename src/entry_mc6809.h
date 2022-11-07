@@ -25,11 +25,6 @@
 namespace libasm {
 namespace mc6809 {
 
-enum CpuType : uint8_t {
-    MC6809,
-    HD6309,
-};
-
 enum AddrMode : uint8_t {
     M_NONE = 0,
     M_DIR = 1,     // Direct Page
