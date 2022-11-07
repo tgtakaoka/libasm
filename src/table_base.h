@@ -109,6 +109,57 @@ public:
         return false;
     }
 
+    /**
+     * Binary search an entry from all instruction page tables which
+     * are sorted and indexed from |page->index()| until
+     * |page->iend()| where an entry has |insn.name()| and
+     * |accept(insn, entry)| return true.  Also updates |count| as the
+     * number of entries matching |insn.name()|.
+     */
+    template <typename E, typename P, typename I>
+    static void defaultReadCode(I &insn, const E *entry, const P *page) {
+        insn.setFlags(entry->flags());
+        insn.setOpCode(entry->opCode(), page->prefix());
+    }
+
+    template <typename E, typename I>
+    const E *searchName(I &insn, bool (*accept)(const I &, const E *), uint8_t &count,
+            void (*pageSetup)(I &, const ENTRY_T *) = nullptr,
+            void (*read)(I &, const E *, const ENTRY_T *) = defaultReadCode) const {
+        for (auto page = this->table(); page < this->end(); page++) {
+            if (pageSetup)
+                pageSetup(insn, page);
+            const auto *first = page->index();
+            const auto *last = page->iend();
+            for (;;) {
+                const auto diff = last - first;
+                if (diff == 0)
+                    break;
+                const auto *middle = first;
+                middle += diff / 2;
+                const auto &m = page->table()[pgm_read_byte(middle)];
+                if (strcasecmp_P(insn.name(), m.name_P()) > 0) {
+                    first = ++middle;
+                } else {
+                    last = middle;
+                }
+            }
+            // Search for the same key entries.
+            while (first < page->iend()) {
+                const auto *entry = &page->table()[pgm_read_byte(first)];
+                if (strcasecmp_P(insn.name(), entry->name_P()))
+                    break;
+                count++;
+                if (accept(insn, entry)) {
+                    read(insn, entry, page);
+                    return entry;
+                }
+                ++first;
+            }
+        }
+        return nullptr;
+    }
+
 private:
     CPUTYPE_T _cpuType;
     const /* PROGMEM */ char *_name_P;
@@ -125,43 +176,6 @@ public:
 
 protected:
     TableBase() {}
-
-    /**
-     * Binary search instruction entries sorted and indexed from
-     * |page->index()| until |page->iend()| to find an entry which
-     * has |name| and accepts |attr|. Returns the number of entries
-     * matching |name| regardless of |attr|.
-     */
-    template <typename P, typename E, typename A>
-    static const E *searchEntry(
-            const char *name, A attr, const P *page, bool (*accept)(A, const E *), uint8_t &count) {
-        const auto *first = page->index();
-        const auto *last = page->iend();
-        for (;;) {
-            const auto diff = last - first;
-            if (diff == 0)
-                break;
-            const auto *middle = first;
-            middle += diff / 2;
-            const auto &m = page->table()[pgm_read_byte(middle)];
-            if (strcasecmp_P(name, m.name_P()) > 0) {
-                first = ++middle;
-            } else {
-                last = middle;
-            }
-        }
-        // Search for the same key entries.
-        while (first < page->iend()) {
-            const auto *entry = &page->table()[pgm_read_byte(first)];
-            if (strcasecmp_P(name, entry->name_P()))
-                break;
-            count++;
-            if (accept(attr, entry))
-                return entry;
-            ++first;
-        }
-        return nullptr;
-    }
 
     /**
      * Lookup instruction entries from |begin| until |end| to find an

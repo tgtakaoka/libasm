@@ -281,7 +281,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnI8051 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
            acceptMode(flags.ext(), table.ext());
@@ -289,13 +290,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableI8051::searchName(InsnI8051 &insn) {
     uint8_t count = 0;
-    auto entry = searchEntry(insn.name(), insn.flags(), I8051_PAGES, acceptModes, count);
-    if (entry) {
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return setOK();
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
@@ -324,7 +320,7 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) {
 TableI8051::TableI8051() : _cpu(&I8051_CPU) {}
 
 const /* PROGMEM */ char *TableI8051::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_I8051;
 }
 
 bool TableI8051::setCpu(const char *cpu) {

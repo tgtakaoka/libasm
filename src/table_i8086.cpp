@@ -1010,9 +1010,9 @@ static bool hasSize(AddrMode mode) {
            mode == M_BREG || mode == M_CS || mode == M_SREG;
 }
 
-static bool acceptSize(InsnI8086 *insn, const Entry *entry) {
-    auto dst = insn->dst();
-    auto src = insn->src();
+static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
+    auto dst = insn.dst();
+    auto src = insn.src();
     auto flags = entry->flags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
@@ -1024,23 +1024,16 @@ static bool acceptSize(InsnI8086 *insn, const Entry *entry) {
     return true;
 }
 
-static bool acceptModes(InsnI8086 *insn, const Entry *entry) {
+static bool acceptModes(const InsnI8086 &insn, const Entry *entry) {
     auto table = entry->flags();
-    return acceptMode(insn->dst(), table.dst()) && acceptMode(insn->src(), table.src()) &&
-           acceptMode(insn->ext(), table.ext()) && acceptSize(insn, entry);
+    return acceptMode(insn.dst(), table.dst()) && acceptMode(insn.src(), table.src()) &&
+           acceptMode(insn.ext(), table.ext()) && acceptSize(insn, entry);
 }
 
 Error TableI8086::searchName(InsnI8086 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), &insn, page, acceptModes, count);
-        if (entry) {
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setFlags(entry->flags());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 bool TableI8086::isRepeatPrefix(Config::opcode_t opCode) const {

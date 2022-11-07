@@ -259,7 +259,8 @@ static constexpr TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
-static constexpr TableI8096::Cpu CPU_I8096 PROGMEM = {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)};
+static constexpr TableI8096::Cpu CPU_I8096 PROGMEM = {
+        I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)};
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -277,25 +278,19 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnI8096 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
            acceptMode(flags.src2(), table.src2());
 }
 
-Error TableI8096::searchName(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const {
+Error TableI8096::searchName(InsnI8096 &insn) {
     uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
-        if (entry) {
-            if (entry->flags().undefined())
-                return OPERAND_NOT_ALLOWED;
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setFlags(entry->flags());
-            return OK;
-        }
-    }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return entry && !entry->flags().undefined()
+                   ? OK
+                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
@@ -327,10 +322,6 @@ Error TableI8096::searchOpCode(
         }
     }
     return UNKNOWN_INSTRUCTION;
-}
-
-Error TableI8096::searchName(InsnI8096 &insn) {
-    return setError(searchName(insn, ARRAY_RANGE(I8096_PAGES)));
 }
 
 Error TableI8096::searchOpCode(InsnI8096 &insn) {

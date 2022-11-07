@@ -44,7 +44,6 @@ public:
 private:
     const Cpu *const _cpu;
 
-    Error searchName(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 

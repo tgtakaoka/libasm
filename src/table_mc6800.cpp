@@ -600,7 +600,7 @@ static constexpr TableMc6800::Cpu CPU_TABLE[] PROGMEM = {
         {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},
 };
 
-static bool acceptAddrMode(AddrMode opr, AddrMode table) {
+static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (table == M_GN8 || table == M_GN16)
@@ -618,26 +618,19 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnMc6800 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
-    return acceptAddrMode(flags.mode1(), table.mode1()) &&
-           acceptAddrMode(flags.mode2(), table.mode2()) &&
-           acceptAddrMode(flags.mode3(), table.mode3());
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
+           acceptMode(flags.mode3(), table.mode3());
 }
 
 Error TableMc6800::searchName(InsnMc6800 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptAddrMode, count);
-        if (entry) {
-            if (entry->flags().undefined())
-                return setError(OPERAND_NOT_ALLOWED);
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setFlags(entry->flags());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return entry && !entry->flags().undefined()
+                   ? OK
+                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {

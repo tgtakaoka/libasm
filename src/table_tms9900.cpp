@@ -254,22 +254,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnTms9900 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst());
 }
 
 Error TableTms9900::searchName(InsnTms9900 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
-        if (entry) {
-            insn.setOpCode(entry->opCode());
-            insn.setFlags(entry->flags());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {

@@ -616,7 +616,7 @@ static constexpr TableMc6809::Cpu CPU_TABLE[] PROGMEM = {
         {HD6309, TEXT_CPU_6309, ARRAY_RANGE(HD6309_PAGES), ARRAY_RANGE(HD6309_POSTS)},
 };
 
-static bool matchAddrMode(AddrMode opr, AddrMode table) {
+static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (table == M_GEN8 || table == M_GEN16)
@@ -642,25 +642,18 @@ static bool matchAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnMc6809 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
-    return matchAddrMode(flags.mode1(), table.mode1()) &&
-           matchAddrMode(flags.mode2(), table.mode2());
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
 Error TableMc6809::searchName(InsnMc6809 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, matchAddrMode, count);
-        if (entry) {
-            if (entry->flags().undefined())
-                return setError(OPERAND_NOT_ALLOWED);
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setFlags(entry->flags());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return entry && !entry->flags().undefined()
+                   ? OK
+                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {

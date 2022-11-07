@@ -191,7 +191,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnTms32010 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
            acceptMode(flags.mode3(), table.mode3());
@@ -199,13 +200,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableTms32010::searchName(InsnTms32010 &insn) {
     uint8_t count = 0;
-    auto entry = searchEntry(insn.name(), insn.flags(), TMS32010_PAGES, acceptModes, count);
-    if (entry) {
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return setOK();
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {

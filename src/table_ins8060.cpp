@@ -143,7 +143,8 @@ static constexpr TableIns8060::Cpu CPU_TABLE[] PROGMEM = {
 };
 static constexpr const TableIns8060::Cpu &INS8060_CPU = CPU_TABLE[0];
 
-static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
+static bool acceptMode(const InsnIns8060 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto opr = flags.mode();
     auto table = entry->flags().mode();
     if (opr == table)
@@ -157,13 +158,8 @@ static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableIns8060::searchName(InsnIns8060 &insn) {
     uint8_t count = 0;
-    auto entry = searchEntry(insn.name(), insn.flags(), INS8060_PAGES, acceptAddrMode, count);
-    if (entry) {
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return setOK();
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptMode, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {

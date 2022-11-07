@@ -891,26 +891,24 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static void searchPageSetup(InsnNs32000 &insn, const TableNs32000::EntryPage *page) {
+    insn.setPost(0, page->post() != 0);
+}
+
+static bool acceptModes(const InsnNs32000 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableNs32000::searchName(
-        InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const {
-    uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
-        auto post = page->post();
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
-        if (entry) {
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setPost(0, post != 0);
-            insn.setFlags(entry->flags());
-            return OK;
-        }
-    }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+Error TableNs32000::searchName(InsnNs32000 &insn) {
+    auto error = _cpu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    if (error == UNKNOWN_INSTRUCTION)
+        error = _fpu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    if (error == UNKNOWN_INSTRUCTION)
+        error = _mmu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    return setError(error);
 }
 
 Error TableNs32000::searchOpCode(
@@ -932,15 +930,6 @@ Error TableNs32000::searchOpCode(
         }
     }
     return UNKNOWN_INSTRUCTION;
-}
-
-Error TableNs32000::searchName(InsnNs32000 &insn) {
-    auto error = searchName(insn, _cpu->table(), _cpu->end());
-    if (error == UNKNOWN_INSTRUCTION)
-        error = searchName(insn, _fpu->table(), _fpu->end());
-    if (error == UNKNOWN_INSTRUCTION)
-        error = searchName(insn, _mmu->table(), _mmu->end());
-    return setError(error);
 }
 
 Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) {

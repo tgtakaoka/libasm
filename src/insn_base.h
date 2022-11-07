@@ -242,7 +242,6 @@ public:
     void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;
-        setPost(0, false);
     }
     typename Conf::opcode_t opCode() const { return _opCode; }
     void embed(typename Conf::opcode_t data) { _opCode |= data; }

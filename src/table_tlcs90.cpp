@@ -600,40 +600,41 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnTlcs90 *insn, const Entry *entry) {
+static void searchPageSetup(InsnTlcs90 &insn, const TableTlcs90::EntryPage *page) {
+    insn.setPreMode(page->mode());
+}
+
+static bool acceptModes(const InsnTlcs90 &insn, const Entry *entry) {
     auto table = entry->flags();
     auto tableDst = table.dst();
     auto tableSrc = table.src();
-    auto dst = (tableDst == M_DST) ? insn->pre() : tableDst;
-    auto src = (tableSrc == M_SRC) ? insn->pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
-    return acceptMode(insn->dst(), dst) && acceptMode(insn->src(), src);
+    auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
+    auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    return acceptMode(insn.dst(), dst) && acceptMode(insn.src(), src);
 }
 
-Error TableTlcs90::searchName(
-        InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const {
-    uint8_t count = 0;
-    for (auto page = pages; page < end; page++) {
-        insn.setPreMode(page->mode());
-        auto entry = searchEntry(insn.name(), (const InsnTlcs90 *)&insn, page, acceptModes, count);
-        if (entry) {
-            // Update prefix mode.
-            auto tableDst = entry->flags().dst();
-            auto tableSrc = entry->flags().src();
-            auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
-            auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
-            insn.setAddrMode(dst, src);
-            if (tableDst == M_DST) {
-                insn.setPreMode(M_DST);
-            } else if (tableSrc == M_SRC || tableSrc == M_SRC16) {
-                insn.setPreMode(M_SRC);
-            } else {
-                insn.setPreMode(M_NONE);
-            }
-            insn.setOpCode(entry->opCode(), page->prefix());
-            return OK;
-        }
+static void readCode(InsnTlcs90 &insn, const Entry *entry, const TableTlcs90::EntryPage *page) {
+    TableTlcs90::Cpu::defaultReadCode(insn, entry, page);
+    
+    // Update prefix mode.
+    auto tableDst = entry->flags().dst();
+    auto tableSrc = entry->flags().src();
+    auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
+    auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    insn.setAddrMode(dst, src);
+    if (tableDst == M_DST) {
+        insn.setPreMode(M_DST);
+    } else if (tableSrc == M_SRC || tableSrc == M_SRC16) {
+        insn.setPreMode(M_SRC);
+    } else {
+        insn.setPreMode(M_NONE);
     }
-    return count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED;
+}
+
+Error TableTlcs90::searchName(InsnTlcs90 &insn) {
+    uint8_t count = 0;
+    auto entry = _cpu->searchName(insn, acceptModes, count, searchPageSetup, readCode);
+    return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
@@ -677,10 +678,6 @@ Error TableTlcs90::searchOpCode(
         }
     }
     return UNKNOWN_INSTRUCTION;
-}
-
-Error TableTlcs90::searchName(InsnTlcs90 &insn) {
-    return setError(searchName(insn, ARRAY_RANGE(TLCS90_PAGES)));
 }
 
 Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) {

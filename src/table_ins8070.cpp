@@ -189,7 +189,7 @@ static constexpr TableIns8070::Cpu CPU_TABLE[] PROGMEM = {
 };
 static constexpr const TableIns8070::Cpu &INS8070_CPU = CPU_TABLE[0];
 
-static bool acceptAddrMode(AddrMode opr, AddrMode table) {
+static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_ADR)
@@ -207,22 +207,18 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptAddrModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnIns8070 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
-    return acceptAddrMode(flags.dst(), table.dst()) && acceptAddrMode(flags.src(), table.src());
+    return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src());
 }
 
 Error TableIns8070::searchName(InsnIns8070 &insn) {
     uint8_t count = 0;
-    auto entry = searchEntry(insn.name(), insn.flags(), INS8070_PAGES, acceptAddrModes, count);
-    if (entry) {
-        if (entry->flags().undefined())
-            return setError(OPERAND_NOT_ALLOWED);
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return setOK();
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return entry && !entry->flags().undefined()
+                   ? OK
+                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(AddrMode mode) {

@@ -38,7 +38,7 @@ public:
     bool isPrefixCode(uint8_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override  { return _cpu->name_P(); }
+    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
     bool setFpu(StrScanner fpu);
     bool setMmu(StrScanner mmu);
@@ -57,9 +57,24 @@ public:
         Config::opcode_t _mask;
         uint8_t _post;
     };
-    typedef CpuBase<CpuType, EntryPage> Cpu;
-    typedef CpuBase<FpuType, EntryPage> Fpu;
-    typedef CpuBase<MmuType, EntryPage> Mmu;
+
+    template <typename CPUTYPE_T>
+    struct CpuCommon : CpuBase<CPUTYPE_T, EntryPage> {
+        constexpr CpuCommon(CPUTYPE_T cpuType, const /* PROGMEM */ char *name_P,
+                const EntryPage *table, const EntryPage *end)
+            : CpuBase<CPUTYPE_T, EntryPage>(cpuType, name_P, table, end) {}
+
+        Error searchNameCommon(InsnNs32000 &insn,
+                bool (*accept)(const InsnNs32000 &, const Entry *),
+                void (*pageSetup)(InsnNs32000 &, const EntryPage *)) const {
+            uint8_t count = 0;
+            auto entry = this->searchName(insn, accept, count, pageSetup);
+            return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+        }
+    };
+    typedef CpuCommon<CpuType> Cpu;
+    typedef CpuCommon<FpuType> Fpu;
+    typedef CpuCommon<MmuType> Mmu;
 
 private:
     const Cpu *const _cpu;
@@ -68,7 +83,6 @@ private:
 
     bool setFpu(FpuType fpuType);
     bool setMmu(MmuType mmuType);
-    Error searchName(InsnNs32000 &insn, const EntryPage *pages, const EntryPage *end) const;
     Error searchOpCode(InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages,
             const EntryPage *end) const;
 };

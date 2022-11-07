@@ -464,24 +464,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnZ80 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src());
 }
 
 Error TableZ80::searchName(InsnZ80 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
-        if (entry) {
-            if (entry->flags().undefined())
-                return setError(OPERAND_NOT_ALLOWED);
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setFlags(entry->flags());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return entry && !entry->flags().undefined()
+                   ? OK
+                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {

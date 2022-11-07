@@ -606,7 +606,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnZ8000 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
@@ -614,13 +615,8 @@ static bool acceptModes(Entry::Flags flags, const Entry *entry) {
 
 Error TableZ8000::searchName(InsnZ8000 &insn) {
     uint8_t count = 0;
-    auto entry = searchEntry(insn.name(), insn.flags(), Z8000_PAGES, acceptModes, count);
-    if (entry) {
-        insn.setOpCode(entry->opCode());
-        insn.setFlags(entry->flags());
-        return setOK();
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {

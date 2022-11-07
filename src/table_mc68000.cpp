@@ -478,16 +478,15 @@ static constexpr TableMc68000::EntryPage MC68000_PAGES[] PROGMEM = {
 
 static constexpr TableMc68000::EntryPage ALIAS_PAGES[] PROGMEM = {
         {ARRAY_RANGE(ALIAS_TABLE), ARRAY_RANGE(ALIAS_INDEX)},
+        {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-static constexpr TableMc68000::Cpu MC68000_CPU[] PROGMEM = {
-        {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
-};
-
-static constexpr TableMc68000::Cpu MC68000_WITH_ALIAS[] PROGMEM = {
+static constexpr TableMc68000::Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(ALIAS_PAGES)},
 };
+static constexpr const TableMc68000::Cpu &MC68000_CPU = CPU_TABLE[0];
+static constexpr const TableMc68000::Cpu &MC68000_CPU_WITH_ALIAS = CPU_TABLE[1];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -534,7 +533,8 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
     return false;
 }
 
-static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnMc68000 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
@@ -542,15 +542,8 @@ static bool matchAddrMode(Entry::Flags flags, const Entry *entry) {
 
 Error TableMc68000::searchName(InsnMc68000 &insn) {
     uint8_t count = 0;
-    auto entry = searchEntry(insn.name(), insn.flags(), MC68000_PAGES, matchAddrMode, count);
-    if (entry == nullptr && _cpu == MC68000_WITH_ALIAS)
-        entry = searchEntry(insn.name(), insn.flags(), ALIAS_PAGES, matchAddrMode, count);
-    if (entry) {
-        insn.setFlags(entry->flags());
-        insn.setOpCode(entry->opCode());
-        return setOK();
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
 static Config::opcode_t getInsnMask(AddrMode src) {
@@ -617,7 +610,7 @@ TableMc68000::TableMc68000() {
 }
 
 void TableMc68000::setAlias(bool enable) {
-    _cpu = enable ? MC68000_WITH_ALIAS : MC68000_CPU;
+    _cpu = enable ? &MC68000_CPU_WITH_ALIAS : &MC68000_CPU;
 }
 
 const /* PROGMEM */ char *TableMc68000::listCpu_P() const {

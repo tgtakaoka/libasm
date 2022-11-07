@@ -706,7 +706,7 @@ static constexpr TableMos6502::Cpu CPU_TABLE[] PROGMEM = {
         {W65C816, TEXT_CPU_65816, ARRAY_RANGE(W65C816_PAGES)},
 };
 
-static bool acceptAddrMode(AddrMode opr, AddrMode table) {
+static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IMA)
@@ -725,27 +725,20 @@ static bool acceptAddrMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptAddrMode(Entry::Flags flags, const Entry *entry) {
+static bool acceptModes(const InsnMos6502 &insn, const Entry *entry) {
+    auto flags = insn.flags();
     auto table = entry->flags();
-    return acceptAddrMode(flags.mode1(), table.mode1()) &&
-           acceptAddrMode(flags.mode2(), table.mode2()) &&
-           acceptAddrMode(flags.mode3(), table.mode3());
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
+           acceptMode(flags.mode3(), table.mode3());
 }
 
 Error TableMos6502::searchName(InsnMos6502 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptAddrMode, count);
-        if (entry) {
-            insn.setFlags(entry->flags());
-            insn.setOpCode(entry->opCode());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static bool acceptAddrMode(AddrMode mode, bool useIndirectLong) {
+static bool acceptMode(AddrMode mode, bool useIndirectLong) {
     if (mode == L_ABS || mode == L_DPG)
         return useIndirectLong;
     return true;
@@ -759,7 +752,7 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn) {
             if (entry == nullptr)
                 break;
             insn.setFlags(entry->flags());
-            if (!acceptAddrMode(insn.mode1(), _useIndirectLong))
+            if (!acceptMode(insn.mode1(), _useIndirectLong))
                 continue;
             insn.nameBuffer().text_P(entry->name_P());
             return setOK();

@@ -333,22 +333,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(Entry::Flags flags, const Entry *entry) {
-    const Entry::Flags table = entry->flags();
+static bool acceptModes(const InsnCdp1802 &insn, const Entry *entry) {
+    auto flags = insn.flags();
+    auto table = entry->flags();
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
 Error TableCdp1802::searchName(InsnCdp1802 &insn) {
     uint8_t count = 0;
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.name(), insn.flags(), page, acceptModes, count);
-        if (entry) {
-            insn.setOpCode(entry->opCode(), page->prefix());
-            insn.setFlags(entry->flags());
-            return setOK();
-        }
-    }
-    return setError(count == 0 ? UNKNOWN_INSTRUCTION : OPERAND_NOT_ALLOWED);
+    auto entry = _cpu->searchName(insn, acceptModes, count);
+    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
 static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
