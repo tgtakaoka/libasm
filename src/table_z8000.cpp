@@ -104,7 +104,7 @@ uint16_t Entry::codeMask(uint8_t size) {
 #define E0(_opc, _name, _cm) E1(_opc, _name, _cm, NONE, M_NONE, NO)
 
 // clang-format off
-static const Entry TABLE_Z8000[] PROGMEM = {
+static constexpr Entry TABLE_Z8000[] PROGMEM = {
     E2(0xC000, TEXT_LDB,    0x0FFF, BYTE, M_R,    M_IM8,  C8, C0),
     E1(0xD000, TEXT_CALR,   0x0FFF, NONE, M_RA12, C0),
     E2(0xE000, TEXT_JR,     0x0FFF, NONE, M_CC,   M_RA8,  C8, C0),
@@ -338,7 +338,7 @@ static const Entry TABLE_Z8000[] PROGMEM = {
     E2(0x2F00, TEXT_LD,     0xC0FF, WORD, M_GENA, M_R,    C4, C0),
     E1(0x3900, TEXT_LDPS,   0xC0F0, WORD, M_GENA, C4),
 };
-static const uint8_t INDEX_Z8000[] PROGMEM = {
+static constexpr uint8_t INDEX_Z8000[] PROGMEM = {
      92,  // TEXT_ADC
      91,  // TEXT_ADCB
     171,  // TEXT_ADD

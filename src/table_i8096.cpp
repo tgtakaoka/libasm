@@ -35,7 +35,7 @@ namespace i8096 {
 #define U1(_opc, _name, _dst) U2(_opc, _name, _dst, M_NONE)
 
 // clang-format off
-static const Entry TABLE_00[] PROGMEM = {
+static constexpr Entry TABLE_00[] PROGMEM = {
     E2(0x64, TEXT_ADD,   M_WREG,  M_WAOP),
     E3(0x44, TEXT_ADD,   M_WREG,  M_WREG,  M_WAOP),
     E2(0x74, TEXT_ADDB,  M_BREG,  M_BAOP),
@@ -135,7 +135,7 @@ static const Entry TABLE_00[] PROGMEM = {
     E2(0x94, TEXT_XORB,  M_BREG,  M_BAOP),
 };
 
-static const uint8_t INDEX_00[] PROGMEM = {
+static constexpr uint8_t INDEX_00[] PROGMEM = {
       0,  // TEXT_ADD
       1,  // TEXT_ADD
       2,  // TEXT_ADDB
@@ -235,7 +235,7 @@ static const uint8_t INDEX_00[] PROGMEM = {
      96,  // TEXT_XORB
 };
 
-static const Entry TABLE_FE[] PROGMEM = {
+static constexpr Entry TABLE_FE[] PROGMEM = {
     E2(0x8C, TEXT_DIV,   M_LREG,  M_WAOP),
     E2(0x9C, TEXT_DIVB,  M_WREG,  M_BAOP),
     E2(0x6C, TEXT_MUL,   M_LREG,  M_WAOP),
@@ -244,7 +244,7 @@ static const Entry TABLE_FE[] PROGMEM = {
     E3(0x5C, TEXT_MULB,  M_WREG,  M_BREG,  M_BAOP),
 };
 
-static const uint8_t INDEX_FE[] PROGMEM = {
+static constexpr uint8_t INDEX_FE[] PROGMEM = {
       0,  // TEXT_DIV
       1,  // TEXT_DIVB
       2,  // TEXT_MUL
@@ -254,12 +254,12 @@ static const uint8_t INDEX_FE[] PROGMEM = {
 };
 // clang-format on
 
-static const TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
+static constexpr TableI8096::EntryPage I8096_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
 };
 
-static const TableI8096::Cpu CPU_I8096 PROGMEM = {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)};
+static constexpr TableI8096::Cpu CPU_I8096 PROGMEM = {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)};
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)

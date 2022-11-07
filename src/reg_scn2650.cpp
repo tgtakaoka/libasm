@@ -48,12 +48,12 @@ StrBuffer &RegScn2650::outRegName(StrBuffer &out, RegName name) const {
 }
 
 // clang-format off
-static const char TEXT_CC_EQ[] PROGMEM = "EQ";
-static const char TEXT_CC_GT[] PROGMEM = "GT";
-static const char TEXT_CC_LT[] PROGMEM = "LT";
-static const char TEXT_CC_UN[] PROGMEM = "UN";
+static constexpr char TEXT_CC_EQ[] PROGMEM = "EQ";
+static constexpr char TEXT_CC_GT[] PROGMEM = "GT";
+static constexpr char TEXT_CC_LT[] PROGMEM = "LT";
+static constexpr char TEXT_CC_UN[] PROGMEM = "UN";
 // clang-format on
-static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_EQ),
         NAME_ENTRY(CC_GT),
         NAME_ENTRY(CC_LT),

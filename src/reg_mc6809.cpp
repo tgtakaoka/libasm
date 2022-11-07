@@ -23,23 +23,23 @@ namespace libasm {
 namespace mc6809 {
 
 // clang-format off
-static const char TEXT_REG_A[] PROGMEM   = "A";
-static const char TEXT_REG_B[] PROGMEM   = "B";
-static const char TEXT_REG_D[] PROGMEM   = "D";
-static const char TEXT_REG_X[] PROGMEM   = "X";
-static const char TEXT_REG_Y[] PROGMEM   = "Y";
-static const char TEXT_REG_U[] PROGMEM   = "U";
-static const char TEXT_REG_S[] PROGMEM   = "S";
-static const char TEXT_REG_PC[] PROGMEM  = "PC";
-static const char TEXT_REG_CC[] PROGMEM  = "CC";
-static const char TEXT_REG_DP[] PROGMEM  = "DP";
-static const char TEXT_REG_PCR[] PROGMEM = "PCR";
-static const char TEXT_REG_W[] PROGMEM   = "W";
-static const char TEXT_REG_E[] PROGMEM   = "E";
-static const char TEXT_REG_F[] PROGMEM   = "F";
-static const char TEXT_REG_V[] PROGMEM   = "V";
-static const char TEXT_REG_Z[] PROGMEM   = "Z";
-static const char TEXT_REG_0[] PROGMEM   = "0";
+static constexpr char TEXT_REG_A[] PROGMEM   = "A";
+static constexpr char TEXT_REG_B[] PROGMEM   = "B";
+static constexpr char TEXT_REG_D[] PROGMEM   = "D";
+static constexpr char TEXT_REG_X[] PROGMEM   = "X";
+static constexpr char TEXT_REG_Y[] PROGMEM   = "Y";
+static constexpr char TEXT_REG_U[] PROGMEM   = "U";
+static constexpr char TEXT_REG_S[] PROGMEM   = "S";
+static constexpr char TEXT_REG_PC[] PROGMEM  = "PC";
+static constexpr char TEXT_REG_CC[] PROGMEM  = "CC";
+static constexpr char TEXT_REG_DP[] PROGMEM  = "DP";
+static constexpr char TEXT_REG_PCR[] PROGMEM = "PCR";
+static constexpr char TEXT_REG_W[] PROGMEM   = "W";
+static constexpr char TEXT_REG_E[] PROGMEM   = "E";
+static constexpr char TEXT_REG_F[] PROGMEM   = "F";
+static constexpr char TEXT_REG_V[] PROGMEM   = "V";
+static constexpr char TEXT_REG_Z[] PROGMEM   = "Z";
+static constexpr char TEXT_REG_0[] PROGMEM   = "0";
 // clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),

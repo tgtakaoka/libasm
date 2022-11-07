@@ -22,26 +22,26 @@ namespace libasm {
 namespace z80 {
 
 // clang-format off
-static const char TEXT_REG_BC[]  PROGMEM = "BC";
-static const char TEXT_REG_DE[]  PROGMEM = "DE";
-static const char TEXT_REG_HL[]  PROGMEM = "HL";
-static const char TEXT_REG_IX[]  PROGMEM = "IX";
-static const char TEXT_REG_IY[]  PROGMEM = "IY";
-static const char TEXT_REG_SP[]  PROGMEM = "SP";
-static const char TEXT_REG_AFP[] PROGMEM = "AF'";
-static const char TEXT_REG_AF[]  PROGMEM = "AF";
-static const char TEXT_REG_A[]   PROGMEM = "A";
-static const char TEXT_REG_B[]   PROGMEM = "B";
-static const char TEXT_REG_C[]   PROGMEM = "C";
-static const char TEXT_REG_D[]   PROGMEM = "D";
-static const char TEXT_REG_E[]   PROGMEM = "E";
-static const char TEXT_REG_H[]   PROGMEM = "H";
-static const char TEXT_REG_L[]   PROGMEM = "L";
-static const char TEXT_REG_IM[]  PROGMEM = "IM";
-static const char TEXT_REG_R[]   PROGMEM = "R";
-static const char TEXT_REG_I[]   PROGMEM = "I";
+static constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
+static constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
+static constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
+static constexpr char TEXT_REG_IX[]  PROGMEM = "IX";
+static constexpr char TEXT_REG_IY[]  PROGMEM = "IY";
+static constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
+static constexpr char TEXT_REG_AFP[] PROGMEM = "AF'";
+static constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
+static constexpr char TEXT_REG_A[]   PROGMEM = "A";
+static constexpr char TEXT_REG_B[]   PROGMEM = "B";
+static constexpr char TEXT_REG_C[]   PROGMEM = "C";
+static constexpr char TEXT_REG_D[]   PROGMEM = "D";
+static constexpr char TEXT_REG_E[]   PROGMEM = "E";
+static constexpr char TEXT_REG_H[]   PROGMEM = "H";
+static constexpr char TEXT_REG_L[]   PROGMEM = "L";
+static constexpr char TEXT_REG_IM[]  PROGMEM = "IM";
+static constexpr char TEXT_REG_R[]   PROGMEM = "R";
+static constexpr char TEXT_REG_I[]   PROGMEM = "I";
 // clang-format on
-static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_BC),
         NAME_ENTRY(REG_DE),
         NAME_ENTRY(REG_HL),
@@ -149,16 +149,16 @@ RegName RegZ80::decodeIrReg(uint8_t num) {
 }
 
 // clang-format off
-static const char TEXT_CC_NZ[] PROGMEM = "NZ";
-static const char TEXT_CC_Z[]  PROGMEM = "Z";
-static const char TEXT_CC_NC[] PROGMEM = "NC";
-static const char TEXT_CC_C[]  PROGMEM = "C";
-static const char TEXT_CC_PO[] PROGMEM = "PO";
-static const char TEXT_CC_PE[] PROGMEM = "PE";
-static const char TEXT_CC_P[]  PROGMEM = "P";
-static const char TEXT_CC_M[]  PROGMEM = "M";
+static constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
+static constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
+static constexpr char TEXT_CC_NC[] PROGMEM = "NC";
+static constexpr char TEXT_CC_C[]  PROGMEM = "C";
+static constexpr char TEXT_CC_PO[] PROGMEM = "PO";
+static constexpr char TEXT_CC_PE[] PROGMEM = "PE";
+static constexpr char TEXT_CC_P[]  PROGMEM = "P";
+static constexpr char TEXT_CC_M[]  PROGMEM = "M";
 // clang-format off
-static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_NZ),
         NAME_ENTRY(CC_Z),
         NAME_ENTRY(CC_NC),

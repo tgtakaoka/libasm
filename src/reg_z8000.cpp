@@ -151,17 +151,17 @@ bool RegZ8000::isCtlReg(RegName name) {
 }
 
 // clang-format off
-static const char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
-static const char TEXT_REG_FCW[]     PROGMEM = "FCW";
-static const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
-static const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
-static const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
-static const char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
-static const char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
-static const char TEXT_REG_NSPOFF[]  PROGMEM = "NSPOFF";
-static const char TEXT_REG_NSP[]     PROGMEM = "NSP";
+static constexpr char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
+static constexpr char TEXT_REG_FCW[]     PROGMEM = "FCW";
+static constexpr char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
+static constexpr char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
+static constexpr char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
+static constexpr char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
+static constexpr char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
+static constexpr char TEXT_REG_NSPOFF[]  PROGMEM = "NSPOFF";
+static constexpr char TEXT_REG_NSP[]     PROGMEM = "NSP";
 // clang-format on
-static const RegBase::NameEntry CTL_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry CTL_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_FLAGS),
         NAME_ENTRY(REG_FCW),
         NAME_ENTRY(REG_REFRESH),
@@ -211,9 +211,9 @@ int8_t RegZ8000::encodeCtlReg(RegName name) {
     return isSegCtlReg(name) ? -1 : num;
 }
 
-static const char TEXT_INTR_VI[] PROGMEM = "VI";
-static const char TEXT_INTR_NVI[] PROGMEM = "NVI";
-static const RegBase::NameEntry INTR_TABLE[] PROGMEM = {
+static constexpr char TEXT_INTR_VI[] PROGMEM = "VI";
+static constexpr char TEXT_INTR_NVI[] PROGMEM = "NVI";
+static constexpr RegBase::NameEntry INTR_TABLE[] PROGMEM = {
         NAME_ENTRY(INTR_NVI),
         NAME_ENTRY(INTR_VI),
 };
@@ -242,28 +242,28 @@ uint8_t RegZ8000::encodeIntrName(IntrName name) {
 }
 
 // clang-format off
-static const char TEXT_CC_F[]   PROGMEM = "F";
-static const char TEXT_CC_LT[]  PROGMEM = "LT";
-static const char TEXT_CC_LE[]  PROGMEM = "LE";
-static const char TEXT_CC_ULE[] PROGMEM = "ULE";
-static const char TEXT_CC_OV[]  PROGMEM = "OV";
-static const char TEXT_CC_MI[]  PROGMEM = "MI";
-static const char TEXT_CC_Z[]   PROGMEM = "Z";
-static const char TEXT_CC_C[]   PROGMEM = "C";
-static const char TEXT_CC_T[]   PROGMEM = "";
-static const char TEXT_CC_GE[]  PROGMEM = "GE";
-static const char TEXT_CC_GT[]  PROGMEM = "GT";
-static const char TEXT_CC_UGT[] PROGMEM = "UGT";
-static const char TEXT_CC_NOV[] PROGMEM = "NOV";
-static const char TEXT_CC_PL[]  PROGMEM = "PL";
-static const char TEXT_CC_NZ[]  PROGMEM = "NZ";
-static const char TEXT_CC_NC[]  PROGMEM = "NC";
-static const char TEXT_CC_EQ[]  PROGMEM = "EQ";
-static const char TEXT_CC_ULT[] PROGMEM = "ULT";
-static const char TEXT_CC_NE[]  PROGMEM = "NE";
-static const char TEXT_CC_UGE[] PROGMEM = "UGE";
+static constexpr char TEXT_CC_F[]   PROGMEM = "F";
+static constexpr char TEXT_CC_LT[]  PROGMEM = "LT";
+static constexpr char TEXT_CC_LE[]  PROGMEM = "LE";
+static constexpr char TEXT_CC_ULE[] PROGMEM = "ULE";
+static constexpr char TEXT_CC_OV[]  PROGMEM = "OV";
+static constexpr char TEXT_CC_MI[]  PROGMEM = "MI";
+static constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
+static constexpr char TEXT_CC_C[]   PROGMEM = "C";
+static constexpr char TEXT_CC_T[]   PROGMEM = "";
+static constexpr char TEXT_CC_GE[]  PROGMEM = "GE";
+static constexpr char TEXT_CC_GT[]  PROGMEM = "GT";
+static constexpr char TEXT_CC_UGT[] PROGMEM = "UGT";
+static constexpr char TEXT_CC_NOV[] PROGMEM = "NOV";
+static constexpr char TEXT_CC_PL[]  PROGMEM = "PL";
+static constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
+static constexpr char TEXT_CC_NC[]  PROGMEM = "NC";
+static constexpr char TEXT_CC_EQ[]  PROGMEM = "EQ";
+static constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
+static constexpr char TEXT_CC_NE[]  PROGMEM = "NE";
+static constexpr char TEXT_CC_UGE[] PROGMEM = "UGE";
 // clang-format on
-static const RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_F),
         NAME_ENTRY(CC_LT),
         NAME_ENTRY(CC_LE),
@@ -309,12 +309,12 @@ StrBuffer &RegZ8000::outCcName(StrBuffer &out, CcName name) const {
     return out;
 }
 
-static const char TEXT_FLAG_C[] PROGMEM = "C";
-static const char TEXT_FLAG_Z[] PROGMEM = "Z";
-static const char TEXT_FLAG_S[] PROGMEM = "S";
-static const char TEXT_FLAG_P[] PROGMEM = "P";
-static const char TEXT_FLAG_V[] PROGMEM = "V";
-static const RegBase::NameEntry FLAG_TABLE[] PROGMEM = {
+static constexpr char TEXT_FLAG_C[] PROGMEM = "C";
+static constexpr char TEXT_FLAG_Z[] PROGMEM = "Z";
+static constexpr char TEXT_FLAG_S[] PROGMEM = "S";
+static constexpr char TEXT_FLAG_P[] PROGMEM = "P";
+static constexpr char TEXT_FLAG_V[] PROGMEM = "V";
+static constexpr RegBase::NameEntry FLAG_TABLE[] PROGMEM = {
         NAME_ENTRY(FLAG_C),
         NAME_ENTRY(FLAG_Z),
         NAME_ENTRY(FLAG_S),

@@ -44,7 +44,7 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     return decodeMacroInstructionDetect(insn);
 }
 
-static const char TEXT_MID[] PROGMEM = "MID";
+static constexpr char TEXT_MID[] PROGMEM = "MID";
 
 Error DisTms9900::decodeMacroInstructionDetect(InsnTms9900 &insn) {
     insn.clearNameBuffer().text_P(TEXT_MID);

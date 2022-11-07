@@ -20,12 +20,12 @@ namespace libasm {
 namespace ins8060 {
 
 // clang-format off
-static const char TEXT_REG_E[]  PROGMEM  = "E";
-static const char TEXT_REG_P0[] PROGMEM = "P0";
-static const char TEXT_REG_P1[] PROGMEM = "P1";
-static const char TEXT_REG_P2[] PROGMEM = "P2";
-static const char TEXT_REG_P3[] PROGMEM = "P3";
-static const char TEXT_REG_PC[] PROGMEM = "PC";
+static constexpr char TEXT_REG_E[]  PROGMEM  = "E";
+static constexpr char TEXT_REG_P0[] PROGMEM = "P0";
+static constexpr char TEXT_REG_P1[] PROGMEM = "P1";
+static constexpr char TEXT_REG_P2[] PROGMEM = "P2";
+static constexpr char TEXT_REG_P3[] PROGMEM = "P3";
+static constexpr char TEXT_REG_PC[] PROGMEM = "PC";
 // clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_E),

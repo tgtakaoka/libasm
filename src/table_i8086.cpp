@@ -37,7 +37,7 @@ namespace i8086 {
 #define S0(_opc, _name, _sz) S1(_opc, _name, _sz, M_NONE)
 
 // clang-format off
-static const Entry TABLE_00[] PROGMEM = {
+static constexpr Entry TABLE_00[] PROGMEM = {
     E2(0xA0, TEXT_MOV,    BYTE, M_AL,   M_BDIR, P_NONE, P_OPR),
     E2(0xA1, TEXT_MOV,    WORD, M_AX,   M_WDIR, P_NONE, P_OPR),
     E2(0xA2, TEXT_MOV,    BYTE, M_BDIR, M_AL,   P_OPR,  P_NONE),
@@ -246,7 +246,7 @@ static const Entry TABLE_00[] PROGMEM = {
     E0(0xFD, TEXT_STD,    NONE),
 };
 
-static const uint8_t INDEX_00[] PROGMEM = {
+static constexpr uint8_t INDEX_00[] PROGMEM = {
      57,  // TEXT_AAA
      65,  // TEXT_AAS
      22,  // TEXT_ADC
@@ -455,7 +455,7 @@ static const uint8_t INDEX_00[] PROGMEM = {
      55,  // TEXT_XOR
 };
 
-static const Entry TABLE_80[] PROGMEM = {
+static constexpr Entry TABLE_80[] PROGMEM = {
     E2(000, TEXT_ADD, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E2(010, TEXT_OR,  BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E2(020, TEXT_ADC, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
@@ -466,7 +466,7 @@ static const Entry TABLE_80[] PROGMEM = {
     E2(070, TEXT_CMP, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_80[] PROGMEM = {
+static constexpr uint8_t INDEX_80[] PROGMEM = {
       2,  // TEXT_ADC
       0,  // TEXT_ADD
       4,  // TEXT_AND
@@ -477,7 +477,7 @@ static const uint8_t INDEX_80[] PROGMEM = {
       6,  // TEXT_XOR
 };
 
-static const Entry TABLE_81[] PROGMEM = {
+static constexpr Entry TABLE_81[] PROGMEM = {
     E2(000, TEXT_ADD, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
     E2(010, TEXT_OR,  WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
     E2(020, TEXT_ADC, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
@@ -488,7 +488,7 @@ static const Entry TABLE_81[] PROGMEM = {
     E2(070, TEXT_CMP, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_81[] PROGMEM = {
+static constexpr uint8_t INDEX_81[] PROGMEM = {
       2,  // TEXT_ADC
       0,  // TEXT_ADD
       4,  // TEXT_AND
@@ -499,7 +499,7 @@ static const uint8_t INDEX_81[] PROGMEM = {
       6,  // TEXT_XOR
 };
 
-static const Entry TABLE_83[] PROGMEM = {
+static constexpr Entry TABLE_83[] PROGMEM = {
     E2(000, TEXT_ADD, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
     E2(010, TEXT_OR,  WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
     E2(020, TEXT_ADC, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
@@ -510,7 +510,7 @@ static const Entry TABLE_83[] PROGMEM = {
     E2(070, TEXT_CMP, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_83[] PROGMEM = {
+static constexpr uint8_t INDEX_83[] PROGMEM = {
       2,  // TEXT_ADC
       0,  // TEXT_ADD
       4,  // TEXT_AND
@@ -521,31 +521,31 @@ static const uint8_t INDEX_83[] PROGMEM = {
       6,  // TEXT_XOR
 };
 
-static const Entry TABLE_8F[] PROGMEM = {
+static constexpr Entry TABLE_8F[] PROGMEM = {
     E1(000, TEXT_POP, NONE, M_WMOD, P_OMOD),
 };
 
-static const uint8_t INDEX_8F[] PROGMEM = {
+static constexpr uint8_t INDEX_8F[] PROGMEM = {
       0,  // TEXT_POP
 };
 
-static const Entry TABLE_C6[] PROGMEM = {
+static constexpr Entry TABLE_C6[] PROGMEM = {
     E2(000, TEXT_MOV, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_C6[] PROGMEM = {
+static constexpr uint8_t INDEX_C6[] PROGMEM = {
       0,  // TEXT_MOV
 };
 
-static const Entry TABLE_C7[] PROGMEM = {
+static constexpr Entry TABLE_C7[] PROGMEM = {
     E2(000, TEXT_MOV, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_C7[] PROGMEM = {
+static constexpr uint8_t INDEX_C7[] PROGMEM = {
       0,  // TEXT_MOV
 };
 
-static const Entry TABLE_D0[] PROGMEM = {
+static constexpr Entry TABLE_D0[] PROGMEM = {
     E2(000, TEXT_ROL, BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
     E2(010, TEXT_ROR, BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
     E2(020, TEXT_RCL, BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
@@ -556,7 +556,7 @@ static const Entry TABLE_D0[] PROGMEM = {
     E2(070, TEXT_SAR, BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
-static const uint8_t INDEX_D0[] PROGMEM = {
+static constexpr uint8_t INDEX_D0[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -567,7 +567,7 @@ static const uint8_t INDEX_D0[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-static const Entry TABLE_D1[] PROGMEM = {
+static constexpr Entry TABLE_D1[] PROGMEM = {
     E2(000, TEXT_ROL, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     E2(010, TEXT_ROR, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
     E2(020, TEXT_RCL, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
@@ -578,7 +578,7 @@ static const Entry TABLE_D1[] PROGMEM = {
     E2(070, TEXT_SAR, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
-static const uint8_t INDEX_D1[] PROGMEM = {
+static constexpr uint8_t INDEX_D1[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -589,7 +589,7 @@ static const uint8_t INDEX_D1[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-static const Entry TABLE_D2[] PROGMEM = {
+static constexpr Entry TABLE_D2[] PROGMEM = {
     E2(000, TEXT_ROL, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
     E2(010, TEXT_ROR, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
     E2(020, TEXT_RCL, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
@@ -600,7 +600,7 @@ static const Entry TABLE_D2[] PROGMEM = {
     E2(070, TEXT_SAR, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
 };
 
-static const uint8_t INDEX_D2[] PROGMEM = {
+static constexpr uint8_t INDEX_D2[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -611,7 +611,7 @@ static const uint8_t INDEX_D2[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-static const Entry TABLE_D3[] PROGMEM = {
+static constexpr Entry TABLE_D3[] PROGMEM = {
     E2(000, TEXT_ROL, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
     E2(010, TEXT_ROR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
     E2(020, TEXT_RCL, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
@@ -622,7 +622,7 @@ static const Entry TABLE_D3[] PROGMEM = {
     E2(070, TEXT_SAR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
 };
 
-static const uint8_t INDEX_D3[] PROGMEM = {
+static constexpr uint8_t INDEX_D3[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -633,23 +633,23 @@ static const uint8_t INDEX_D3[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-static const Entry TABLE_D4[] PROGMEM = {
+static constexpr Entry TABLE_D4[] PROGMEM = {
     E0(0x0A, TEXT_AAM, BYTE),
 };
 
-static const uint8_t INDEX_D4[] PROGMEM = {
+static constexpr uint8_t INDEX_D4[] PROGMEM = {
       0,  // TEXT_AAM
 };
 
-static const Entry TABLE_D5[] PROGMEM = {
+static constexpr Entry TABLE_D5[] PROGMEM = {
     E0(0x0A, TEXT_AAD, BYTE),
 };
 
-static const uint8_t INDEX_D5[] PROGMEM = {
+static constexpr uint8_t INDEX_D5[] PROGMEM = {
       0,  // TEXT_AAD
 };
 
-static const Entry TABLE_F6[] PROGMEM = {
+static constexpr Entry TABLE_F6[] PROGMEM = {
     E2(000, TEXT_TEST, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
     E1(020, TEXT_NOT,  BYTE, M_BMOD, P_OMOD),
     E1(030, TEXT_NEG,  BYTE, M_BMOD, P_OMOD),
@@ -659,7 +659,7 @@ static const Entry TABLE_F6[] PROGMEM = {
     E1(070, TEXT_IDIV, BYTE, M_BMOD, P_OMOD),
 };
 
-static const uint8_t INDEX_F6[] PROGMEM = {
+static constexpr uint8_t INDEX_F6[] PROGMEM = {
       5,  // TEXT_DIV
       6,  // TEXT_IDIV
       4,  // TEXT_IMUL
@@ -669,7 +669,7 @@ static const uint8_t INDEX_F6[] PROGMEM = {
       0,  // TEXT_TEST
 };
 
-static const Entry TABLE_F7[] PROGMEM = {
+static constexpr Entry TABLE_F7[] PROGMEM = {
     E2(000, TEXT_TEST, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
     E1(020, TEXT_NOT,  WORD, M_WMOD, P_OMOD),
     E1(030, TEXT_NEG,  WORD, M_WMOD, P_OMOD),
@@ -679,7 +679,7 @@ static const Entry TABLE_F7[] PROGMEM = {
     E1(070, TEXT_IDIV, WORD, M_WMOD, P_OMOD),
 };
 
-static const uint8_t INDEX_F7[] PROGMEM = {
+static constexpr uint8_t INDEX_F7[] PROGMEM = {
       5,  // TEXT_DIV
       6,  // TEXT_IDIV
       4,  // TEXT_IMUL
@@ -689,17 +689,17 @@ static const uint8_t INDEX_F7[] PROGMEM = {
       0,  // TEXT_TEST
 };
 
-static const Entry TABLE_FE[] PROGMEM = {
+static constexpr Entry TABLE_FE[] PROGMEM = {
     E1(000, TEXT_INC, BYTE, M_BMOD, P_OMOD),
     E1(010, TEXT_DEC, BYTE, M_BMOD, P_OMOD),
 };
 
-static const uint8_t INDEX_FE[] PROGMEM = {
+static constexpr uint8_t INDEX_FE[] PROGMEM = {
       1,  // TEXT_DEC
       0,  // TEXT_INC
 };
 
-static const Entry TABLE_FF[] PROGMEM = {
+static constexpr Entry TABLE_FF[] PROGMEM = {
     E1(000, TEXT_INC,   WORD, M_WMOD, P_OMOD),
     E1(010, TEXT_DEC,   WORD, M_WMOD, P_OMOD),
     E1(020, TEXT_CALL,  NONE, M_WMOD, P_OMOD),
@@ -709,7 +709,7 @@ static const Entry TABLE_FF[] PROGMEM = {
     E1(060, TEXT_PUSH,  NONE, M_WMOD, P_OMOD),
 };
 
-static const uint8_t INDEX_FF[] PROGMEM = {
+static constexpr uint8_t INDEX_FF[] PROGMEM = {
       2,  // TEXT_CALL
       3,  // TEXT_CALLF
       1,  // TEXT_DEC
@@ -721,7 +721,7 @@ static const uint8_t INDEX_FF[] PROGMEM = {
 
 // i80186
 
-static const Entry TABLE_I80186[] PROGMEM = {
+static constexpr Entry TABLE_I80186[] PROGMEM = {
     E0(0x60, TEXT_PUSHA, NONE),
     E0(0x61, TEXT_POPA,  NONE),
     E2(0x62, TEXT_BOUND, WORD, M_WREG, M_WMEM, P_REG,  P_MOD),
@@ -747,7 +747,7 @@ static const Entry TABLE_I80186[] PROGMEM = {
     E0(0xC9, TEXT_LEAVE, NONE),
 };
 
-static const uint8_t INDEX_I80186[] PROGMEM = {
+static constexpr uint8_t INDEX_I80186[] PROGMEM = {
       2,  // TEXT_BOUND
      21,  // TEXT_ENTER
       4,  // TEXT_IMUL
@@ -773,7 +773,7 @@ static const uint8_t INDEX_I80186[] PROGMEM = {
       0,  // TEXT_PUSHA
 };
 
-static const Entry TABLE_C0[] PROGMEM = {
+static constexpr Entry TABLE_C0[] PROGMEM = {
     E2(000, TEXT_ROL, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
     E2(010, TEXT_ROR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
     E2(020, TEXT_RCL, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
@@ -784,7 +784,7 @@ static const Entry TABLE_C0[] PROGMEM = {
     E2(070, TEXT_SAR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_C0[] PROGMEM = {
+static constexpr uint8_t INDEX_C0[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -795,7 +795,7 @@ static const uint8_t INDEX_C0[] PROGMEM = {
       6,  // TEXT_SHR
 };
 
-static const Entry TABLE_C1[] PROGMEM = {
+static constexpr Entry TABLE_C1[] PROGMEM = {
     E2(000, TEXT_ROL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
     E2(010, TEXT_ROR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
     E2(020, TEXT_RCL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
@@ -806,7 +806,7 @@ static const Entry TABLE_C1[] PROGMEM = {
     E2(070, TEXT_SAR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
 };
 
-static const uint8_t INDEX_C1[] PROGMEM = {
+static constexpr uint8_t INDEX_C1[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -819,21 +819,21 @@ static const uint8_t INDEX_C1[] PROGMEM = {
 
 // V30
 
-static const Entry V30TABLE_00[] PROGMEM = {
+static constexpr Entry V30TABLE_00[] PROGMEM = {
     E1(0x64, TEXT_REPNC,  NONE, M_ISTR, P_OPR),
     E0(0x64, TEXT_REPNC,  NONE),
     E1(0x65, TEXT_REPC,   NONE, M_ISTR, P_OPR),
     E0(0x65, TEXT_REPC,   NONE),
 };
 
-static const uint8_t V30INDEX_00[] PROGMEM = {
+static constexpr uint8_t V30INDEX_00[] PROGMEM = {
       2,  // TEXT_REPC
       3,  // TEXT_REPC
       0,  // TEXT_REPNC
       1,  // TEXT_REPNC
 };
 
-static const Entry V30TABLE_0F[] PROGMEM = {
+static constexpr Entry V30TABLE_0F[] PROGMEM = {
     E1(0xFF, TEXT_BRKEM,  BYTE, M_IMM,  P_OPR),
     S0(0x20, TEXT_ADD4S,  BYTE),
     S2(0x20, TEXT_ADD4S,  BYTE, M_BMEM, M_BMEM),
@@ -861,7 +861,7 @@ static const Entry V30TABLE_0F[] PROGMEM = {
     E2(0x1F, TEXT_NOT1,   WORD, M_WMOD, M_BIT,  P_MOD,  P_OPR),
 };
 
-static const uint8_t V30INDEX_0F[] PROGMEM = {
+static constexpr uint8_t V30INDEX_0F[] PROGMEM = {
       1,  // TEXT_ADD4S
       2,  // TEXT_ADD4S
       0,  // TEXT_BRKEM
@@ -891,7 +891,7 @@ static const uint8_t V30INDEX_0F[] PROGMEM = {
 
 // clang-format on
 
-static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
+static constexpr TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
         {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
@@ -911,7 +911,7 @@ static const TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static const TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
+static constexpr TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
         // I80186
         {0x00, ARRAY_RANGE(TABLE_I80186), ARRAY_RANGE(INDEX_I80186)},
         {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
@@ -936,7 +936,7 @@ static const TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static const TableI8086::EntryPage V30_PAGES[] PROGMEM = {
+static constexpr TableI8086::EntryPage V30_PAGES[] PROGMEM = {
         // V30
         {0x00, ARRAY_RANGE(V30TABLE_00), ARRAY_RANGE(V30INDEX_00)},
         {0x0F, ARRAY_RANGE(V30TABLE_0F), ARRAY_RANGE(V30INDEX_0F)},
@@ -964,7 +964,7 @@ static const TableI8086::EntryPage V30_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static const TableI8086::Cpu CPU_TABLE[] PROGMEM = {
+static constexpr TableI8086::Cpu CPU_TABLE[] PROGMEM = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},

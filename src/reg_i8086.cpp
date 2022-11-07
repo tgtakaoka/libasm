@@ -20,31 +20,31 @@ namespace libasm {
 namespace i8086 {
 
 // clang-format off
-static const char TEXT_REG_AL[]   PROGMEM = "AL";
-static const char TEXT_REG_BL[]   PROGMEM = "BL";
-static const char TEXT_REG_CL[]   PROGMEM = "CL";
-static const char TEXT_REG_DL[]   PROGMEM = "DL";
-static const char TEXT_REG_AH[]   PROGMEM = "AH";
-static const char TEXT_REG_BH[]   PROGMEM = "BH";
-static const char TEXT_REG_CH[]   PROGMEM = "CH";
-static const char TEXT_REG_DH[]   PROGMEM = "DH";
-static const char TEXT_REG_AX[]   PROGMEM = "AX";
-static const char TEXT_REG_BX[]   PROGMEM = "BX";
-static const char TEXT_REG_CX[]   PROGMEM = "CX";
-static const char TEXT_REG_DX[]   PROGMEM = "DX";
-static const char TEXT_REG_SP[]   PROGMEM = "SP";
-static const char TEXT_REG_BP[]   PROGMEM = "BP";
-static const char TEXT_REG_SI[]   PROGMEM = "SI";
-static const char TEXT_REG_DI[]   PROGMEM = "DI";
-static const char TEXT_REG_CS[]   PROGMEM = "CS";
-static const char TEXT_REG_DS[]   PROGMEM = "DS";
-static const char TEXT_REG_ES[]   PROGMEM = "ES";
-static const char TEXT_REG_SS[]   PROGMEM = "SS";
-static const char TEXT_REG_PTR[]  PROGMEM  = "PTR";
-static const char TEXT_REG_BYTE[] PROGMEM = "BYTE";
-static const char TEXT_REG_WORD[] PROGMEM = "WORD";
+static constexpr char TEXT_REG_AL[]   PROGMEM = "AL";
+static constexpr char TEXT_REG_BL[]   PROGMEM = "BL";
+static constexpr char TEXT_REG_CL[]   PROGMEM = "CL";
+static constexpr char TEXT_REG_DL[]   PROGMEM = "DL";
+static constexpr char TEXT_REG_AH[]   PROGMEM = "AH";
+static constexpr char TEXT_REG_BH[]   PROGMEM = "BH";
+static constexpr char TEXT_REG_CH[]   PROGMEM = "CH";
+static constexpr char TEXT_REG_DH[]   PROGMEM = "DH";
+static constexpr char TEXT_REG_AX[]   PROGMEM = "AX";
+static constexpr char TEXT_REG_BX[]   PROGMEM = "BX";
+static constexpr char TEXT_REG_CX[]   PROGMEM = "CX";
+static constexpr char TEXT_REG_DX[]   PROGMEM = "DX";
+static constexpr char TEXT_REG_SP[]   PROGMEM = "SP";
+static constexpr char TEXT_REG_BP[]   PROGMEM = "BP";
+static constexpr char TEXT_REG_SI[]   PROGMEM = "SI";
+static constexpr char TEXT_REG_DI[]   PROGMEM = "DI";
+static constexpr char TEXT_REG_CS[]   PROGMEM = "CS";
+static constexpr char TEXT_REG_DS[]   PROGMEM = "DS";
+static constexpr char TEXT_REG_ES[]   PROGMEM = "ES";
+static constexpr char TEXT_REG_SS[]   PROGMEM = "SS";
+static constexpr char TEXT_REG_PTR[]  PROGMEM  = "PTR";
+static constexpr char TEXT_REG_BYTE[] PROGMEM = "BYTE";
+static constexpr char TEXT_REG_WORD[] PROGMEM = "WORD";
 // clang-format on
-static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_AL),
         NAME_ENTRY(REG_AH),
         NAME_ENTRY(REG_AX),

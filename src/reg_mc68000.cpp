@@ -19,28 +19,28 @@
 namespace libasm {
 namespace mc68000 {
 
-static const char TEXT_REG_D0[] PROGMEM = "D0";
-static const char TEXT_REG_D1[] PROGMEM = "D1";
-static const char TEXT_REG_D2[] PROGMEM = "D2";
-static const char TEXT_REG_D3[] PROGMEM = "D3";
-static const char TEXT_REG_D4[] PROGMEM = "D4";
-static const char TEXT_REG_D5[] PROGMEM = "D5";
-static const char TEXT_REG_D6[] PROGMEM = "D6";
-static const char TEXT_REG_D7[] PROGMEM = "D7";
-static const char TEXT_REG_A0[] PROGMEM = "A0";
-static const char TEXT_REG_A1[] PROGMEM = "A1";
-static const char TEXT_REG_A2[] PROGMEM = "A2";
-static const char TEXT_REG_A3[] PROGMEM = "A3";
-static const char TEXT_REG_A4[] PROGMEM = "A4";
-static const char TEXT_REG_A5[] PROGMEM = "A5";
-static const char TEXT_REG_A6[] PROGMEM = "A6";
-static const char TEXT_REG_A7[] PROGMEM = "A7";
-static const char TEXT_REG_PC[] PROGMEM = "PC";
-static const char TEXT_REG_SR[] PROGMEM = "SR";
-static const char TEXT_REG_CCR[] PROGMEM = "CCR";
-static const char TEXT_REG_USP[] PROGMEM = "USP";
+static constexpr char TEXT_REG_D0[] PROGMEM = "D0";
+static constexpr char TEXT_REG_D1[] PROGMEM = "D1";
+static constexpr char TEXT_REG_D2[] PROGMEM = "D2";
+static constexpr char TEXT_REG_D3[] PROGMEM = "D3";
+static constexpr char TEXT_REG_D4[] PROGMEM = "D4";
+static constexpr char TEXT_REG_D5[] PROGMEM = "D5";
+static constexpr char TEXT_REG_D6[] PROGMEM = "D6";
+static constexpr char TEXT_REG_D7[] PROGMEM = "D7";
+static constexpr char TEXT_REG_A0[] PROGMEM = "A0";
+static constexpr char TEXT_REG_A1[] PROGMEM = "A1";
+static constexpr char TEXT_REG_A2[] PROGMEM = "A2";
+static constexpr char TEXT_REG_A3[] PROGMEM = "A3";
+static constexpr char TEXT_REG_A4[] PROGMEM = "A4";
+static constexpr char TEXT_REG_A5[] PROGMEM = "A5";
+static constexpr char TEXT_REG_A6[] PROGMEM = "A6";
+static constexpr char TEXT_REG_A7[] PROGMEM = "A7";
+static constexpr char TEXT_REG_PC[] PROGMEM = "PC";
+static constexpr char TEXT_REG_SR[] PROGMEM = "SR";
+static constexpr char TEXT_REG_CCR[] PROGMEM = "CCR";
+static constexpr char TEXT_REG_USP[] PROGMEM = "USP";
 
-static const RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_D0),
         NAME_ENTRY(REG_D1),
         NAME_ENTRY(REG_D2),
