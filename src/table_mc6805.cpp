@@ -283,8 +283,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 static bool acceptModes(const InsnMc6805 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
-    return acceptMode(flags.mode1(), table.mode1()) &&
-           acceptMode(flags.mode2(), table.mode2()) &&
+    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
            acceptMode(flags.mode3(), table.mode3());
 }
 
@@ -296,33 +295,25 @@ Error TableMc6805::searchName(InsnMc6805 &insn) {
                    : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
-static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {
-    const auto &flags = entry->flags();
+static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const TableMc6805::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
-    if (mode1 == M_GEN && (code & 0xF0) >= 0xA0)
-        return (code & ~0xF0) | 0xA0;
     if (mode1 == M_MEM) {
-        const auto opc = code & 0xF0;
+        const auto opc = opCode & 0xF0;
         if (opc == 0x30 || opc == 0x60 || opc == 0x70)
-            return (code & ~0xF0) | 0x30;
+            opCode = (opCode & ~0xF0) | 0x30;
+    } else if (mode1 == M_GEN && (opCode & 0xF0) >= 0xA0) {
+        opCode = (opCode & ~0xF0) | 0xA0;
+    } else if (mode1 == M_BNO) {
+        opCode &= ~0x0E;
     }
-    if (mode1 == M_BNO)
-        return code & ~0x0E;
-    return code;
+    return opCode == entry->opCode();
 }
 
 Error TableMc6805::searchOpCode(InsnMc6805 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            if (entry->flags().undefined())
-                break;
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableMc6805::TableMc6805() {

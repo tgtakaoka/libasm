@@ -43,8 +43,6 @@ public:
 
 private:
     const Cpu *const _cpu;
-
-    Error searchOpCode(InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 }  // namespace i8096

@@ -738,27 +738,19 @@ Error TableMos6502::searchName(InsnMos6502 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static bool acceptMode(AddrMode mode, bool useIndirectLong) {
+static bool matchOpCode(InsnMos6502 &insn, const Entry *entry, const TableMos6502::EntryPage *page) {
+    if (insn.opCode() != entry->opCode())
+        return false;
+    const auto mode = entry->flags().mode1();
     if (mode == L_ABS || mode == L_DPG)
-        return useIndirectLong;
+        return insn.allowIndirectLong();
     return true;
 }
 
 Error TableMos6502::searchOpCode(InsnMos6502 &insn) {
-    auto opCode = insn.opCode();
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        for (auto entry = page->table(); entry < page->end(); entry++) {
-            entry = searchEntry(opCode, entry, page->end());
-            if (entry == nullptr)
-                break;
-            insn.setFlags(entry->flags());
-            if (!acceptMode(insn.mode1(), _useIndirectLong))
-                continue;
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    insn.setAllowIndirectLong(_useIndirectLong);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 void TableMos6502::reset() {

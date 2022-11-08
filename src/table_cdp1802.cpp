@@ -345,29 +345,22 @@ Error TableCdp1802::searchName(InsnCdp1802 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    auto mode = entry->flags().mode1();
-    if (mode == M_REGN || mode == M_REG1)
-        return opCode & ~0x0F;
-    if (mode == M_IOAD)
-        return opCode & ~7;
-    return opCode;
+static bool matchOpCode(
+        InsnCdp1802 &insn, const Entry *entry, const TableCdp1802::EntryPage *page) {
+    auto opCode = insn.opCode();
+    auto flags = entry->flags();
+    auto mode = flags.mode1();
+    if (mode == M_REGN || mode == M_REG1) {
+        opCode &= ~0x0F;
+    } else if (mode == M_IOAD) {
+        opCode &= ~7;
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        if (page->prefixMatch(insn.prefix())) {
-            auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
-            if (entry) {
-                if (entry->flags().undefined())
-                    break;
-                insn.setFlags(entry->flags());
-                insn.nameBuffer().text_P(entry->name_P());
-                return setOK();
-            }
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableCdp1802::TableCdp1802() {

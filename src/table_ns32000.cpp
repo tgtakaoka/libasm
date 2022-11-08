@@ -911,33 +911,25 @@ Error TableNs32000::searchName(InsnNs32000 &insn) {
     return setError(error);
 }
 
-Error TableNs32000::searchOpCode(
-        InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
-        if (insn.prefix() != page->prefix())
-            continue;
-        auto post = page->post();
-        auto entry = searchEntry(insn.opCode() & ~page->mask(), page->table(), page->end());
-        if (entry) {
-            insn.setFlags(entry->flags());
-            if (post) {
-                insn.readPost(memory);
-                if (insn.getError())
-                    return getError();
-            }
-            insn.nameBuffer().text_P(entry->name_P());
-            return OK;
-        }
-    }
-    return UNKNOWN_INSTRUCTION;
+static bool matchOpCode(
+        InsnNs32000 &insn, const Entry *entry, const TableNs32000::EntryPage *page) {
+    auto opCode = insn.opCode();
+    opCode &= ~page->mask();
+    return opCode == entry->opCode();
+}
+
+static void readEntryName(
+        InsnNs32000 &insn, const Entry *entry, const TableNs32000::EntryPage *page) {
+    TableNs32000::Cpu::defaultReadEntryName(insn, entry, page);
+    insn.setPost(0, page->post() != 0);
 }
 
 Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) {
-    Error error = searchOpCode(insn, memory, ARRAY_RANGE(NS32032_PAGES));
-    if (error != OK)
-        error = searchOpCode(insn, memory, ARRAY_RANGE(NS32081_PAGES));
-    if (error != OK)
-        error = searchOpCode(insn, memory, ARRAY_RANGE(NS32082_PAGES));
+    Error error = NS32032_CPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+    if (error == UNKNOWN_INSTRUCTION)
+        error = NS32081_FPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+    if (error == UNKNOWN_INSTRUCTION)
+        error = NS32082_MMU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
     return setError(error);
 }
 

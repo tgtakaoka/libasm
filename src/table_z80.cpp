@@ -478,40 +478,32 @@ Error TableZ80::searchName(InsnZ80 &insn) {
                    : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    auto dst = entry->flags().dst();
-    auto src = entry->flags().src();
-    Config::opcode_t mask = 0;
+static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const TableZ80::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    const auto dst = flags.dst();
+    const auto src = flags.src();
+
     if (dst == M_REG || src == M_REG)
-        mask |= 7;
-    if (dst == M_CC8 || src == M_DST || dst == M_DST || dst == M_VEC || dst == M_BIT)
-        mask |= (7 << 3);
-    if (dst == M_PTR || src == M_PTR || dst == M_PIX || src == M_PIX || dst == M_STK ||
-            src == M_STK)
-        mask |= (3 << 4);
-    if (dst == I_BCDE || src == I_BCDE)
-        mask |= (1 << 4);
-    if (dst == M_CC4 || dst == M_IMMD)
-        mask |= (3 << 3);
-    if (dst == R_IR || src == R_IR)
-        mask |= (1 << 3);
-    return opCode & ~mask;
+        opCode &= ~7;
+    if (dst == M_CC8 || src == M_DST || dst == M_DST || dst == M_VEC || dst == M_BIT) {
+        opCode &= ~(7 << 3);
+    } else if (dst == M_PTR || src == M_PTR || dst == M_PIX || src == M_PIX || dst == M_STK ||
+               src == M_STK) {
+        opCode &= ~(3 << 4);
+    } else if (dst == I_BCDE || src == I_BCDE) {
+        opCode &= ~(1 << 4);
+    } else if (dst == M_CC4 || dst == M_IMMD) {
+        opCode &= ~(3 << 3);
+    } else if (dst == R_IR || src == R_IR) {
+        opCode &= ~(1 << 3);
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableZ80::searchOpCode(InsnZ80 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        if (insn.prefix() != page->prefix())
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            if (entry->flags().undefined())
-                break;
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableZ80::TableZ80() {

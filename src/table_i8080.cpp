@@ -260,34 +260,28 @@ Error TableI8080::searchName(InsnI8080 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
+static bool matchOpCode(InsnI8080 &insn, const Entry *entry, const TableI8080::EntryPage *page) {
+    auto opCode = insn.opCode();
     const auto &flags = entry->flags();
     const auto dst = flags.dst();
     const auto src = flags.src();
-    Config::opcode_t mask = 0;
     if (dst == M_REG || src == M_REG)
-        mask |= 07;
-    if (dst == M_DST || dst == M_VEC)
-        mask |= 070;
-    if (dst == M_PTR || dst == M_STK)
-        mask |= 0x30;
-    if (dst == M_IDX)
-        mask |= 0x10;
-    return opCode & ~mask;
+        opCode &= ~07;
+    if (dst == M_DST)
+        opCode &= ~070;
+    if (dst == M_PTR || dst == M_STK) {
+        opCode &= ~0x30;
+    } else if (dst == M_IDX) {
+        opCode &= ~0x10;
+    } else if (dst == M_VEC) {
+        opCode &= ~070;
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableI8080::searchOpCode(InsnI8080 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        if (insn.prefix() != page->prefix())
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
-        if (entry) {
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableI8080::TableI8080() {

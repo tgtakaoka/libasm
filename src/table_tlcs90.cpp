@@ -615,7 +615,7 @@ static bool acceptModes(const InsnTlcs90 &insn, const Entry *entry) {
 
 static void readCode(InsnTlcs90 &insn, const Entry *entry, const TableTlcs90::EntryPage *page) {
     TableTlcs90::Cpu::defaultReadCode(insn, entry, page);
-    
+
     // Update prefix mode.
     auto tableDst = entry->flags().dst();
     auto tableSrc = entry->flags().src();
@@ -637,51 +637,25 @@ Error TableTlcs90::searchName(InsnTlcs90 &insn) {
     return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    Config::opcode_t mask = 0;
-    switch (entry->flags().dst()) {
-    case M_REGIX:
-        mask |= 3;
-        break;
-    case M_BIT:
-    case M_STACK:
-    case M_REG8:
-    case M_REG16:
-        mask |= 7;
-        break;
-    case M_CC:
-        mask |= 0xF;
-        break;
-    default:
-        break;
+static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const TableTlcs90::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    const auto dst = flags.dst();
+    const auto src = flags.src();
+    if (dst == M_REG8 || src == M_REG8 || dst == M_REG16 || src == M_REG16 || dst == M_BIT ||
+            dst == M_STACK) {
+        opCode &= ~7;
+    } else if (dst == M_CC) {
+        opCode &= ~0xF;
+    } else if (dst == M_REGIX) {
+        opCode &= ~3;
     }
-    switch (entry->flags().src()) {
-    case M_REG8:
-    case M_REG16:
-        mask |= 7;
-    default:
-        break;
-    }
-    return opCode & ~mask;
-}
-
-Error TableTlcs90::searchOpCode(
-        InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
-        if (!page->prefixMatch(insn.prefix()))
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return OK;
-        }
-    }
-    return UNKNOWN_INSTRUCTION;
+    return opCode == entry->opCode();
 }
 
 Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) {
-    return setError(searchOpCode(insn, ARRAY_RANGE(TLCS90_PAGES)));
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableTlcs90::TableTlcs90() : _cpu(&TLCS90_CPU) {}

@@ -204,40 +204,37 @@ Error TableTms32010::searchName(InsnTms32010 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    auto mode1 = entry->flags().mode1();
-    auto mode2 = entry->flags().mode2();
-    Config::opcode_t mask = 0;
-    if (mode1 == M_IM8 || mode2 == M_IM8)
-        mask |= 0xFF;
-    if (mode1 == M_MAM || mode2 == M_MAM) {
+static bool matchOpCode(
+        InsnTms32010 &insn, const Entry *entry, const TableTms32010::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    const auto mode1 = flags.mode1();
+    const auto mode2 = flags.mode2();
+    if (mode1 == M_IM8 || mode2 == M_IM8) {
+        opCode &= ~0xFF;
+    } else if (mode1 == M_MAM || mode2 == M_MAM) {
         if ((opCode & (1 << 7)) == 0) {
-            mask |= 0x7F;  // Direct addressing
+            opCode &= ~0x7F;  // Direct addressing
         } else {
-            mask |= 0xB9;  // Indirect addressing
+            opCode &= ~0xB9;  // Indirect addressing
         }
+    } else if (mode1 == M_IM13) {
+        opCode &= ~0x1FFF;
     }
-    if (mode1 == M_IM13)
-        mask |= 0x1FFF;
     if (mode1 == M_AR)
-        mask |= 1 << 8;
+        opCode &= ~(1 << 8);
     if (mode1 == M_ARK || mode1 == M_DPK)
-        mask |= (1 << 0);
+        opCode &= ~(1 << 0);
     if (mode2 == M_LS4)
-        mask |= 0xF << 8;
+        opCode &= ~(0xF << 8);
     if (mode2 == M_PA || mode2 == M_LS3 || mode2 == M_LS0)
-        mask |= 7 << 8;
-    return opCode & ~mask;
+        opCode &= ~(7 << 8);
+    return opCode == entry->opCode();
 }
 
 Error TableTms32010::searchOpCode(InsnTms32010 &insn) {
-    auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_TMS32010), tableCode);
-    if (entry) {
-        insn.setFlags(entry->flags());
-        insn.nameBuffer().text_P(entry->name_P());
-        return setOK();
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 uint16_t TableTms32010::dataMemoryLimit() const {

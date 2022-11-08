@@ -224,33 +224,31 @@ Error TableIns8070::searchName(InsnIns8070 &insn) {
 static Config::opcode_t maskCode(AddrMode mode) {
     switch (mode) {
     case M_VEC:
-        return 0x0F;
+        return ~0x0F;
     case M_IDX:
     case M_P23:
-        return 0x01;
+        return ~0x01;
     case M_PTR:
-        return 0x03;
+        return ~0x03;
     case M_GEN:
-        return 0x07;
+        return ~0x07;
     default:
-        return 0;
+        return ~0;
     }
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    auto flags = entry->flags();
-    opCode &= ~maskCode(flags.dst());
-    opCode &= ~maskCode(flags.src());
-    return opCode;
+static bool matchOpCode(
+        InsnIns8070 &insn, const Entry *entry, const TableIns8070::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    opCode &= maskCode(flags.dst());
+    opCode &= maskCode(flags.src());
+    return opCode == entry->opCode();
 }
 
 Error TableIns8070::searchOpCode(InsnIns8070 &insn) {
-    auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_INS8070), tableCode);
-    if (!entry || entry->flags().undefined())
-        return setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(entry->flags());
-    insn.nameBuffer().text_P(entry->name_P());
-    return setOK();
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableIns8070::TableIns8070() : _cpu(&INS8070_CPU) {}

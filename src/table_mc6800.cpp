@@ -633,34 +633,23 @@ Error TableMc6800::searchName(InsnMc6800 &insn) {
                    : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const auto &flags = entry->flags();
+static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const TableMc6800::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
-    if (mode1 == M_GN8 || mode1 == M_GN16)
-        return opCode & ~0x30;
     if (mode1 == M_GMEM || flags.mode2() == M_GMEM) {
         const auto opc = opCode & 0xF0;
         if (opc == 0x60 || opc == 0x70)
-            return opCode & ~0x10;
+            opCode &= ~0x10;
+    } else if (mode1 == M_GN8 || mode1 == M_GN16) {
+        opCode &= ~0x30;
     }
-    return opCode;
+    return opCode == entry->opCode();
 }
 
 const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto prefix = page->prefix();
-        if (insn.prefix() != prefix)
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
-        if (entry) {
-            if (entry->flags().undefined())
-                return nullptr;
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return entry;
-        }
-    }
-    return nullptr;
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return entry && !entry->flags().undefined() ? entry : nullptr;
 }
 
 Error TableMc6800::searchOpCode(InsnMc6800 &insn) {

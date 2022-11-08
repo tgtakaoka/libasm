@@ -35,6 +35,9 @@ public:
         setFlags(Entry::Flags::create(opr1, opr2, opr3));
     }
 
+    void setAllowIndirectLong(bool allow) { _allowIndirectLong = allow; }
+    bool allowIndirectLong() const { return _allowIndirectLong; }
+
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
@@ -45,6 +48,8 @@ public:
     static bool longIndirect(AddrMode mode) { return Entry::longIndirect(mode); }
 
 private:
+    bool _allowIndirectLong;    // allow [] to represent indirect long
+
     uint8_t operandPos() const {
         uint8_t pos = length();
         return pos == 0 ? 1 : pos;

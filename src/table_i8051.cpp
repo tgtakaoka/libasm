@@ -294,27 +294,24 @@ Error TableI8051::searchName(InsnI8051 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
+static bool matchOpCode(InsnI8051 &insn, const Entry *entry, const TableI8051::EntryPage *page) {
+    auto opCode = insn.opCode();
     auto flags = entry->flags();
     auto dst = flags.dst();
     auto src = flags.src();
-    if (dst == M_RREG || src == M_RREG)
-        return opCode & ~7;
-    if (dst == M_IDIRR || src == M_IDIRR)
-        return opCode & ~1;
-    if (dst == M_ADR11)
-        return opCode & ~0xE0;
-    return opCode;
+    if (dst == M_RREG || src == M_RREG) {
+        opCode &= ~7;
+    } else if (dst == M_IDIRR || src == M_IDIRR) {
+        opCode &= ~1;
+    } else if (dst == M_ADR11) {
+        opCode &= ~0xE0;
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableI8051::searchOpCode(InsnI8051 &insn) {
-    auto opCode = insn.opCode();
-    auto entry = searchEntry(opCode, ARRAY_RANGE(TABLE_I8051), tableCode);
-    if (!entry)
-        return setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(entry->flags());
-    insn.nameBuffer().text_P(entry->name_P());
-    return setOK();
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableI8051::TableI8051() : _cpu(&I8051_CPU) {}

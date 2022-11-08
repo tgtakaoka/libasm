@@ -250,26 +250,23 @@ Error TableScn2650::searchName(InsnScn2650 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const Entry::Flags flags = entry->flags();
-    const AddrMode mode1 = flags.mode1();
-    const AddrMode mode2 = flags.mode2();
-    Config::opcode_t mask = 0;
-    if (mode1 == M_REGN || mode1 == M_R123 || mode1 == M_CCVN || mode1 == M_C012)
-        mask |= 0x03;
-    if (mode2 == M_IX13)
-        mask |= 0x03;
-    return opCode & ~mask;
+static bool matchOpCode(
+        InsnScn2650 &insn, const Entry *entry, const TableScn2650::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    const auto mode1 = flags.mode1();
+    const auto mode2 = flags.mode2();
+    if (mode1 == M_REGN || mode1 == M_R123 || mode1 == M_CCVN || mode1 == M_C012) {
+        opCode &= ~0x03;
+    } else if (mode2 == M_IX13) {
+        opCode &= ~0x03;
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableScn2650::searchOpCode(InsnScn2650 &insn) {
-    const auto opCode = insn.opCode();
-    auto entry = searchEntry(opCode, ARRAY_RANGE(TABLE_2650), tableCode);
-    if (!entry || entry->flags().undefined())
-        return setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(entry->flags());
-    insn.nameBuffer().text_P(entry->name_P());
-    return OK;
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableScn2650::TableScn2650() : _cpu(&SCN2650_CPU) {}

@@ -589,20 +589,16 @@ static Config::opcode_t getInsnMask(Entry::Flags flags) {
            getInsnMask(flags.oprSize());
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    auto mask = getInsnMask(entry->flags());
-    return opCode & ~mask;
+static bool matchOpCode(
+        InsnMc68000 &insn, const Entry *entry, const TableMc68000::EntryPage *page) {
+    auto opCode = insn.opCode();
+    opCode &= ~getInsnMask(entry->flags());
+    return opCode == entry->opCode();
 }
 
 Error TableMc68000::searchOpCode(InsnMc68000 &insn) {
-    auto opCode = insn.opCode();
-    auto entry = searchEntry(opCode, ARRAY_RANGE(MC68000_TABLE), maskCode);
-    if (entry) {
-        insn.setFlags(entry->flags());
-        insn.nameBuffer().text_P(entry->name_P());
-        return setOK();
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableMc68000::TableMc68000() {

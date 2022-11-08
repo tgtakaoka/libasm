@@ -656,33 +656,23 @@ Error TableMc6809::searchName(InsnMc6809 &insn) {
                    : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
-static Config::opcode_t maskCode(Config::opcode_t code, const Entry *entry) {
-    const auto &flags = entry->flags();
+static bool matchOpCode(InsnMc6809 &insn, const Entry *entry, const TableMc6809::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
-    if (mode1 == M_GEN8 || mode1 == M_GEN16)
-        return code & ~0x30;
     if (mode1 == M_GMEM || flags.mode2() == M_GMEM) {
-        const auto opc = code & 0xF0;
+        const auto opc = opCode & 0xF0;
         if (opc == 0x00 || opc == 0x60 || opc == 0x70)
-            return code & ~0xF0;
+            opCode &= ~0xF0;
+    } else if (mode1 == M_GEN8 || mode1 == M_GEN16) {
+        opCode &= ~0x30;
     }
-    return code;
+    return opCode == entry->opCode();
 }
 
 Error TableMc6809::searchOpCode(InsnMc6809 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        if (insn.prefix() != page->prefix())
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            if (entry->flags().undefined())
-                break;
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableMc6809::searchPostByte(const uint8_t post, PostSpec &spec) const {

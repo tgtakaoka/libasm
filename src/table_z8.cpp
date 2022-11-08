@@ -540,14 +540,8 @@ Error TableZ8::searchName(InsnZ8 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    auto table = entry->opCode();
-    return InsnZ8::operandInOpCode(table) ? opCode & 0x0f : opCode;
-}
-
-static bool matchPostByte(const InsnZ8 &insn) {
-    auto post = insn.post();
-    switch (insn.postFormat()) {
+static bool matchPostByte(Config::opcode_t post, PostFormat format) {
+    switch (format) {
     case PF1_0:
         return (post & 1) == 0;
     case PF1_1:
@@ -567,28 +561,26 @@ static bool matchPostByte(const InsnZ8 &insn) {
     }
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto end = page->end();
-        for (auto entry = page->table(); entry < end; entry++) {
-            entry = searchEntry(insn.opCode(), entry, end, maskCode);
-            if (entry == nullptr)
-                break;
-            insn.setFlags(entry->flags());
-            if (insn.postFormat()) {
-                if (insn.length() < 2) {
-                    insn.readPost(memory);
-                    if (insn.getError())
-                        return setError(NO_MEMORY);
-                }
-                if (!matchPostByte(insn))
-                    continue;
-            }
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
+static bool matchOpCode(InsnZ8 &insn, const Entry *entry, const TableZ8::EntryPage *page) {
+    auto opCode = insn.opCode();
+    if (InsnZ8::operandInOpCode(entry->opCode()))
+        opCode &= 0x0f;
+    if (opCode != entry->opCode())
+        return false;
+    const auto postFormat = entry->flags().postFormat();
+    if (postFormat != PF_NONE) {
+        if (insn.length() < 2)
+            insn.readPost();
+        if (!matchPostByte(insn.post(), postFormat))
+            return false;
     }
-    return setError(UNKNOWN_INSTRUCTION);
+    return true;
+}
+
+Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) {
+    insn.setMemory(memory);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableZ8::TableZ8() {

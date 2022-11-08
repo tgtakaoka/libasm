@@ -48,8 +48,6 @@ private:
     const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-    const Entry *searchOpCode(
-            InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const;
 };
 
 }  // namespace z8000

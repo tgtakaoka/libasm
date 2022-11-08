@@ -293,39 +293,24 @@ Error TableI8096::searchName(InsnI8096 &insn) {
                    : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
-    const auto &flags = entry->flags();
+static bool matchOpCode(InsnI8096 &insn, const Entry *entry, const TableI8096::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
     const auto dst = flags.dst();
     const auto src1 = flags.src1();
     const auto src2 = flags.src2();
-    Config::opcode_t mask = 0;
     if (dst == M_BAOP || src1 == M_BAOP || src2 == M_BAOP || dst == M_WAOP || src1 == M_WAOP ||
-            src2 == M_WAOP)
-        mask |= 3;
-    if (dst == M_REL11 || src1 == M_BITNO)
-        mask |= 7;
-    return opcode & ~mask;
-}
-
-Error TableI8096::searchOpCode(
-        InsnI8096 &insn, const EntryPage *pages, const EntryPage *end) const {
-    for (auto page = pages; page < end; page++) {
-        if (insn.prefix() != page->prefix())
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            if (entry->flags().undefined())
-                break;
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return OK;
-        }
+            src2 == M_WAOP) {
+        opCode &= ~3;
+    } else if (dst == M_REL11 || src1 == M_BITNO) {
+        opCode &= ~7;
     }
-    return UNKNOWN_INSTRUCTION;
+    return opCode == entry->opCode();
 }
 
 Error TableI8096::searchOpCode(InsnI8096 &insn) {
-    return setError(searchOpCode(insn, ARRAY_RANGE(I8096_PAGES)));
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableI8096::TableI8096() : _cpu(&CPU_I8096) {}

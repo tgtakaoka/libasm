@@ -266,37 +266,33 @@ Error TableTms9900::searchName(InsnTms9900 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opCode, const Entry *entry) {
-    auto src = entry->flags().src();
-    auto dst = entry->flags().dst();
-    Config::opcode_t mask = 0;
-    if (src == M_REG || dst == M_REG)
-        mask |= 0xF;
+static bool matchOpCode(
+        InsnTms9900 &insn, const Entry *entry, const TableTms9900::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    const auto src = flags.src();
+    const auto dst = flags.dst();
+    if (src == M_REG || dst == M_REG) {
+        opCode &= ~0xF;
+    } else if (src == M_REL || src == M_CRU) {
+        opCode &= ~0xFF;
+    }
     if (src == M_SRC)
-        mask |= 0x3F;
+        opCode &= ~0x3F;
     if (dst == M_DST)
-        mask |= 0xFC0;
-    if (dst == M_SCNT)
-        mask |= 0xF0;
+        opCode &= ~0xFC0;
     if (dst == M_CNT || dst == M_XOP || dst == M_DREG)
-        mask |= 0x3C0;
-    if (src == M_REL || src == M_CRU)
-        mask |= 0xFF;
+        opCode &= ~0x3C0;
+    if (dst == M_SCNT)
+        opCode &= ~0xF0;
     if (src == M_RTWP)
-        mask |= 7;
-    return opCode & ~mask;
+        opCode &= ~7;
+    return opCode == entry->opCode();
 }
 
 Error TableTms9900::searchOpCode(InsnTms9900 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableTms9900::TableTms9900() {

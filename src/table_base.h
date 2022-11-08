@@ -160,6 +160,39 @@ public:
         return nullptr;
     }
 
+    /**
+     * Lookup instruction page tables from |tabel()| until |end()| to
+     * find an entry which satisfis |match|, then call |read| to read
+     * the table entry into |insn|.
+     */
+    template <typename E, typename P, typename I>
+    static bool defaultMatchOpCode(I &insn, const E *entry, const P *page) {
+        return insn.opCode() == entry->opCode();
+    }
+
+    template <typename E, typename P, typename I>
+    static void defaultReadEntryName(I &insn, const E *entry, const P *page) {
+        insn.setFlags(entry->flags());
+        insn.nameBuffer().text_P(entry->name_P());
+    }
+
+    template <typename E, typename I>
+    const E *searchOpCode(I &insn,
+            bool (*match)(I &, const E *, const ENTRY_T *) = defaultMatchOpCode,
+            void (*read)(I &, const E *, const ENTRY_T *) = defaultReadEntryName) const {
+        for (auto page = this->table(); page < this->end(); page++) {
+            if (page->prefixMatch(insn.prefix())) {
+                for (const auto *entry = page->table(); entry < page->end(); entry++) {
+                    if (match(insn, entry, page)) {
+                        read(insn, entry, page);
+                        return entry;
+                    }
+                }
+            }
+        }
+        return nullptr;
+    }
+
 private:
     CPUTYPE_T _cpuType;
     const /* PROGMEM */ char *_name_P;
@@ -173,32 +206,6 @@ public:
     virtual /* PROGMEM */ const char *listCpu_P() const = 0;
     virtual /* PROGMEM */ const char *cpu_P() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
-
-protected:
-    TableBase() {}
-
-    /**
-     * Lookup instruction entries from |begin| until |end| to find an
-     * entry which matches |opCode| converted by |convert|.
-     */
-    template <typename E, typename C>
-    static const E *searchEntry(
-            const C opCode, const E *begin, const E *end, C (*convert)(C, const E *)) {
-        for (const auto *entry = begin; entry < end; entry++) {
-            if (convert(opCode, entry) == entry->opCode())
-                return entry;
-        }
-        return nullptr;
-    }
-
-    template <typename E, typename C>
-    static const E *searchEntry(const C opCode, const E *begin, const E *end) {
-        for (const auto *entry = begin; entry < end; entry++) {
-            if (opCode == entry->opCode())
-                return entry;
-        }
-        return nullptr;
-    }
 };
 
 }  // namespace libasm

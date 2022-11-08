@@ -37,7 +37,8 @@ public:
         setFlags(Entry::Flags::create(dst, src, ext, ORDER_NONE, PF_NONE));
     }
 
-    void readPost(DisMemory &memory) { setPost(readByte(memory)); }
+    void setMemory(DisMemory &memory) { _memory = &memory; }
+    void readPost() { setPost(readByte(*_memory)); }
 
     static bool operandInOpCode(Config::opcode_t opCode) {
         const Config::opcode_t low4 = opCode & 0xF;
@@ -54,6 +55,9 @@ public:
         emitByte(val >> 0);
         emitByte(val >> 8);
     }
+
+private:
+    DisMemory *_memory;
 };
 
 }  // namespace z8

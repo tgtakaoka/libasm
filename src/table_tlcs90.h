@@ -66,8 +66,6 @@ public:
 
 private:
     const Cpu *const _cpu;
-
-    Error searchOpCode(InsnTlcs90 &insn, const EntryPage *pages, const EntryPage *end) const;
 };
 
 }  // namespace tlcs90

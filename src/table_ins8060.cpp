@@ -162,26 +162,21 @@ Error TableIns8060::searchName(InsnIns8060 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    switch (entry->flags().mode()) {
-    case M_PNTR:
-    case M_REL8:
-    case M_DISP:
-        return opCode & ~0x03;
-    case M_INDX:
-        return opCode & ~0x07;
-    default:
-        return opCode;
+static bool matchOpCode(
+        InsnIns8060 &insn, const Entry *entry, const TableIns8060::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto mode = entry->flags().mode();
+    if (mode == M_INDX) {
+        opCode &= ~0x07;
+    } else if (mode == M_PNTR || mode == M_REL8 || mode == M_DISP) {
+        opCode &= ~0x03;
     }
+    return opCode == entry->opCode();
 }
 
 Error TableIns8060::searchOpCode(InsnIns8060 &insn) {
-    auto entry = searchEntry(insn.opCode(), ARRAY_RANGE(TABLE_INS8060), tableCode);
-    if (!entry || entry->flags().undefined())
-        return setError(UNKNOWN_INSTRUCTION);
-    insn.setFlags(entry->flags());
-    insn.nameBuffer().text_P(entry->name_P());
-    return setOK();
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableIns8060::TableIns8060() : _cpu(&INS8060_CPU) {}

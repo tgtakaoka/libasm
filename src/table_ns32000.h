@@ -71,6 +71,18 @@ public:
             auto entry = this->searchName(insn, accept, count, pageSetup);
             return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
         }
+
+        Error searchOpCodeCommon(InsnNs32000 &insn, DisMemory &memory,
+                bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
+                void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
+            auto entry = this->searchOpCode(insn, matchOpCode, readEntryName);
+            if (entry) {
+                if (insn.hasPost())
+                    insn.readPost(memory);
+                return insn.getError();
+            }
+            return UNKNOWN_INSTRUCTION;
+        }
     };
     typedef CpuCommon<CpuType> Cpu;
     typedef CpuCommon<FpuType> Fpu;
@@ -83,8 +95,6 @@ private:
 
     bool setFpu(FpuType fpuType);
     bool setMmu(MmuType mmuType);
-    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory, const EntryPage *pages,
-            const EntryPage *end) const;
 };
 
 }  // namespace ns32000

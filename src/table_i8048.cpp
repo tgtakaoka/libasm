@@ -331,37 +331,30 @@ Error TableI8048::searchName(InsnI8048 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    const Entry::Flags flags = entry->flags();
-    const AddrMode dst = flags.dst();
-    const AddrMode src = flags.src();
-    Config::opcode_t mask = 0;
-    if (dst == M_R || src == M_R)
-        mask |= 7;
-    if (dst == M_IR || src == M_IR)
-        mask |= 1;
-    if (dst == M_P12 || src == M_P12 || dst == M_PEXT || src == M_PEXT)
-        mask |= 3;
-    if (dst == M_AD11 || dst == M_BITN)
-        mask |= 0xE0;
-    if (dst == M_F)
-        mask |= 0x20;
-    if (dst == M_RB || dst == M_MB)
-        mask |= 0x10;
-    return opCode & ~mask;
+static bool matchOpCode(InsnI8048 &insn, const Entry *entry, const TableI8048::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto flags = entry->flags();
+    const auto dst = flags.dst();
+    const auto src = flags.src();
+    if (dst == M_R || src == M_R) {
+        opCode &= ~7;
+    } else if (dst == M_IR || src == M_IR) {
+        opCode &= ~1;
+    } else if (dst == M_P12 || src == M_P12 || dst == M_PEXT || src == M_PEXT) {
+        opCode &= ~3;
+    } else if (dst == M_AD11 || dst == M_BITN) {
+        opCode &= ~0xE0;
+    } else if (dst == M_F) {
+        opCode &= ~0x20;
+    } else if (dst == M_RB || dst == M_MB) {
+        opCode &= ~0x10;
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableI8048::searchOpCode(InsnI8048 &insn) {
-    for (const auto *page = _cpu->table(); page < _cpu->end(); page++) {
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), tableCode);
-        if (entry) {
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-            ;
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableI8048::TableI8048() {

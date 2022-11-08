@@ -619,43 +619,28 @@ Error TableZ8000::searchName(InsnZ8000 &insn) {
     return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
 }
 
-static Config::opcode_t tableCode(Config::opcode_t opCode, const Entry *entry) {
-    return opCode & entry->flags().codeMask();
-}
-
-static bool matchPostWord(const InsnZ8000 &insn) {
-    return (insn.post() & insn.postMask()) == insn.postVal();
-}
-
-const Entry *TableZ8000::searchOpCode(
-        InsnZ8000 &insn, DisMemory &memory, const Entry *table, const Entry *end) const {
-    for (auto entry = table; entry < end; entry++) {
-        entry = searchEntry(insn.opCode(), entry, end, tableCode);
-        if (entry == nullptr)
-            break;
-        insn.setFlags(entry->flags());
-        if (insn.hasPost()) {
-            if (insn.length() < 4) {
-                insn.readPost(memory);
-                if (insn.getError())
-                    return nullptr;
-            }
-            if (!matchPostWord(insn))
-                continue;
-        }
-        insn.nameBuffer().text_P(entry->name_P());
-        return entry;
+static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const TableZ8000::EntryPage *page) {
+    const auto flags = entry->flags();
+    if ((insn.opCode() & flags.codeMask()) != entry->opCode())
+        return false;
+    if (flags.postFormat() != PF_NONE) {
+        if (insn.length() < 4)
+            insn.readPost();
+        if ((insn.post() & flags.postMask()) != flags.postVal())
+            return false;
     }
-    return nullptr;
+    return true;
 }
 
 Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) {
-    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(TABLE_Z8000));
+    insn.setMemory(memory);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
     return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) {
-    auto entry = searchOpCode(insn, memory, ARRAY_RANGE(TABLE_Z8000));
+    insn.setMemory(memory);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
     if (entry) {
         entry++;
         insn.setFlags(entry->flags());

@@ -34,7 +34,6 @@ public:
     AddrMode ex1() const { return flags().ex1(); }
     AddrMode ex2() const { return flags().ex2(); }
     PostFormat postFormat() const { return flags().postFormat(); }
-    bool hasPost() const { return postFormat() != PF_NONE; }
     uint8_t postMask() const { return flags().postMask(); }
     uint8_t postVal() const { return flags().postVal(); }
     ModeField dstField() const { return flags().dstField(); }
@@ -43,6 +42,8 @@ public:
         setFlags(Entry::Flags::create(dst, src, ex1, ex2));
     }
 
+    void setMemory(DisMemory &memory) { _memory = &memory; }
+    void readPost() { setPost(readUint16(*_memory)); }
     void readPost(DisMemory &memory) { setPost(readUint16(memory)); }
 
     void emitInsn() {
@@ -76,10 +77,12 @@ public:
     }
 
 private:
+    DisMemory *_memory;
+
     uint8_t operandPos() {
         uint8_t pos = length();
         if (pos == 0)
-            pos = hasPost() ? 4 : 2;
+            pos = postFormat() != PF_NONE ? 4 : 2;
         return pos;
     }
 };

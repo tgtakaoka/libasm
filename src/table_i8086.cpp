@@ -1078,31 +1078,23 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
     }
 }
 
-static Config::opcode_t maskCode(Config::opcode_t opcode, const Entry *entry) {
-    auto dstPos = entry->flags().dstPos();
-    auto srcPos = entry->flags().srcPos();
-    Config::opcode_t mask = 0;
-    if (dstPos == P_OREG || srcPos == P_OREG)
-        mask |= 0007;
-    if (dstPos == P_OSEG || srcPos == P_OSEG)
-        mask |= 0030;
-    if (dstPos == P_OMOD || srcPos == P_OMOD)
-        mask |= 0307;
-    return opcode & ~mask;
+static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const TableI8086::EntryPage *page) {
+    auto opCode = insn.opCode();
+    const auto dstPos = entry->flags().dstPos();
+    const auto srcPos = entry->flags().srcPos();
+    if (dstPos == P_OREG || srcPos == P_OREG) {
+        opCode &= ~0007;
+    } else if (dstPos == P_OSEG || srcPos == P_OSEG) {
+        opCode &= ~0030;
+    } else if (dstPos == P_OMOD || srcPos == P_OMOD) {
+        opCode &= ~0307;
+    }
+    return opCode == entry->opCode();
 }
 
 Error TableI8086::searchOpCode(InsnI8086 &insn) {
-    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
-        if (insn.prefix() != page->prefix())
-            continue;
-        auto entry = searchEntry(insn.opCode(), page->table(), page->end(), maskCode);
-        if (entry) {
-            insn.setFlags(entry->flags());
-            insn.nameBuffer().text_P(entry->name_P());
-            return setOK();
-        }
-    }
-    return setError(UNKNOWN_INSTRUCTION);
+    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
 }
 
 TableI8086::TableI8086() {
