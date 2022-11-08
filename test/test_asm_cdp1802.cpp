@@ -89,8 +89,8 @@ static void test_mem_ref() {
         TEST("RLDI 13,1234H",  0x68, 0xCD, 0x12, 0x34);
         TEST("RLDI 14,1234H",  0x68, 0xCE, 0x12, 0x34);
         TEST("RLDI 15,1234H",  0x68, 0xCF, 0x12, 0x34);
-        ERRT("RLDI 16,1234H",  ILLEGAL_REGISTER, "16,1234H");
-        ERRT("RLDI -1,1234H",  ILLEGAL_REGISTER, "-1,1234H");
+        ERRT("RLDI 16,1234H",  ILLEGAL_REGISTER, "16,1234H", 0x12, 0x34);
+        ERRT("RLDI -1,1234H",  ILLEGAL_REGISTER, "-1,1234H", 0x12, 0x34);
     }
 
     // Load via N
@@ -271,8 +271,8 @@ static void test_reg_op() {
         TEST("DBNZ 13,1234H", 0x68, 0x2D, 0x12, 0x34);
         TEST("DBNZ 14,1234H", 0x68, 0x2E, 0x12, 0x34);
         TEST("DBNZ 15,1234H", 0x68, 0x2F, 0x12, 0x34);
-        ERRT("DBNZ 16,1234H", ILLEGAL_REGISTER, "16,1234H");
-        ERRT("DBNZ -1,1234H", ILLEGAL_REGISTER, "-1,1234H");
+        ERRT("DBNZ 16,1234H", ILLEGAL_REGISTER, "16,1234H", 0x12, 0x34);
+        ERRT("DBNZ -1,1234H", ILLEGAL_REGISTER, "-1,1234H", 0x12, 0x34);
     } else {
         ERUI("DBNZ 15,1234H");
     }
@@ -557,8 +557,8 @@ static void test_control() {
     TEST("SEX 13", 0xED);
     TEST("SEX 14", 0xEE);
     TEST("SEX 15", 0xEF);
-    ERRT("SEX R16", UNDEFINED_SYMBOL, "R16");
-    ERRT("SEX R-1", UNDEFINED_SYMBOL, "R-1");
+    ERRT("SEX R16", UNDEFINED_SYMBOL, "R16", 0xE7);
+    ERRT("SEX R-1", UNDEFINED_SYMBOL, "R-1", 0xE7);
 
     TEST("SEQ",  0x7B);
     TEST("REQ",  0x7A);
@@ -645,8 +645,8 @@ static void test_call() {
     TEST("SCAL 13,1234H", 0x68, 0x8D, 0x12, 0x34);
     TEST("SCAL 14,1234H", 0x68, 0x8E, 0x12, 0x34);
     TEST("SCAL 15,1234H", 0x68, 0x8F, 0x12, 0x34);
-    ERRT("SCAL 16,1234H", ILLEGAL_REGISTER, "16,1234H");
-    ERRT("SCAL -1,1234H", ILLEGAL_REGISTER, "-1,1234H");
+    ERRT("SCAL 16,1234H", ILLEGAL_REGISTER, "16,1234H", 0x12, 0x34);
+    ERRT("SCAL -1,1234H", ILLEGAL_REGISTER, "-1,1234H", 0x12, 0x34);
 
     TEST("SRET  0", 0x68, 0x90);
     TEST("SRET  1", 0x68, 0x91);

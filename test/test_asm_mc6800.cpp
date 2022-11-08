@@ -411,8 +411,8 @@ static void test_immediate() {
     TEST("ADCA #-1",   0x89, 0xFF);
     TEST("ORAA #255",  0x8A, 0xFF);
     TEST("ADDA #-128", 0x8B, 0x80);
-    ERRT("ADDA #256",  OVERFLOW_RANGE, "#256");
-    ERRT("ADDA #-129", OVERFLOW_RANGE, "#-129");
+    ERRT("ADDA #256",  OVERFLOW_RANGE, "#256", 0x8B);
+    ERRT("ADDA #-129", OVERFLOW_RANGE, "#-129", 0x8B);
 
     TEST("SUBB #$90", 0xC0, 0x90);
     TEST("CMPB #$90", 0xC1, 0x90);

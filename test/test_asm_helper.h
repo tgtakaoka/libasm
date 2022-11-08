@@ -46,25 +46,26 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     do {                                                                          \
         const auto unit = assembler.config().addressUnit();                       \
         const auto endian = assembler.config().endian();                          \
-        const Config::opcode_t expected[] = {__VA_ARGS__};                        \
+        const Config::opcode_t expected[] = {__VA_ARGS__};                      \
         const ArrayMemory memory(addr *unit, expected, sizeof(expected), endian); \
         asm_assert(file, line, error, src, memory);                               \
     } while (0)
-#define VASSERT(error, addr, src, ...) __VASSERT(__FILE__, __LINE__, error, addr, src, __VA_ARGS__)
-#define AERRT(addr, src, error, at)                                               \
+#define VASSERT(error, addr, src, ...) \
+    __VASSERT(__FILE__, __LINE__, error, addr, src, ##__VA_ARGS__)
+#define AERRT(addr, src, error, at, ...)                                          \
     do {                                                                          \
-        VASSERT(error, addr, src);                                                \
+        VASSERT(error, addr, src, ##__VA_ARGS__);                                 \
         asserter.equals(__FILE__, __LINE__, "error at", at, assembler.errorAt()); \
     } while (0)
 #define AERUS(addr, src, at, ...)                                                 \
     do {                                                                          \
-        VASSERT(UNDEFINED_SYMBOL, addr, src, __VA_ARGS__);                        \
+        VASSERT(UNDEFINED_SYMBOL, addr, src, ##__VA_ARGS__);                      \
         asserter.equals(__FILE__, __LINE__, "error at", at, assembler.errorAt()); \
     } while (0)
 #define ATEST(addr, src, ...) VASSERT(OK, addr, src, __VA_ARGS__)
-#define ERRT(src, error, at) AERRT(0x0000, src, error, at)
+#define ERRT(src, error, at, ...) AERRT(0x0000, src, error, at, ##__VA_ARGS__)
 #define ERUS(src, at, ...) AERUS(0x0000, src, at, __VA_ARGS__)
-#define ERUI(src) ERRT(src, UNKNOWN_INSTRUCTION, src);
+#define ERUI(src, ...) ERRT(src, UNKNOWN_INSTRUCTION, src, ##__VA_ARGS__);
 #define TEST(src, ...) VASSERT(OK, 0x0000, src, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)

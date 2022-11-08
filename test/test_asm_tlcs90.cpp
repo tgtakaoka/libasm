@@ -41,10 +41,10 @@ void test_cpu() {
 static void test_8bit_transfer() {
     TEST("LD B,34H",      0x30, 0x34);
     TEST("LD B,-128",     0x30, 0x80);
-    ERRT("LD B,-129",     OVERFLOW_RANGE, "-129");
+    ERRT("LD B,-129",     OVERFLOW_RANGE, "-129", 0x30);
     TEST("LD B,-1",       0x30, 0xFF);
     TEST("LD B,255",      0x30, 0xFF);
-    ERRT("LD B,256",      OVERFLOW_RANGE, "256");
+    ERRT("LD B,256",      OVERFLOW_RANGE, "256",  0x30);
     TEST("LD B,B",        0xF8, 0x30);
     TEST("LD B,C",        0xF9, 0x30);
     TEST("LD B,D",        0xFA, 0x30);
@@ -1478,8 +1478,8 @@ static void test_bitops() {
     TEST("BIT 0,(IY-34H)", 0xF1, 0xCC, 0xA8);
     TEST("BIT 1,(SP+34H)", 0xF2, 0x34, 0xA9);
     TEST("BIT 2,(HL+A)",   0xF3, 0xAA);
-    ERRT("BIT -1,B",       OVERFLOW_RANGE, "-1,B");
-    ERRT("BIT 8,B",        OVERFLOW_RANGE, "8,B");
+    ERRT("BIT -1,B",       OVERFLOW_RANGE, "-1,B", 0xF8);
+    ERRT("BIT 8,B",        OVERFLOW_RANGE, "8,B",  0xF8);
 
     TEST("SET 0,B",        0xF8, 0xB8);
     TEST("SET 1,C",        0xF9, 0xB9);

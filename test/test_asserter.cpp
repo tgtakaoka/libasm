@@ -159,7 +159,7 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         if (it.readByte() != actual[i])
             break;
     }
-    if (i == expected.size()) {
+    if (i == actual_len && i == expected.size()) {
         _pass_count++;
         return;
     }

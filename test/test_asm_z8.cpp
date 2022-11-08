@@ -241,8 +241,8 @@ static void test_operand_in_opcode() {
     TEST("LD R15,#-128", 0xFC, 0x80);
     TEST("LD R15,#-1",   0xFC, 0xFF);
     TEST("LD R15,#255",  0xFC, 0xFF);
-    ERRT("LD R15,#-129", OVERFLOW_RANGE, "#-129");
-    ERRT("LD R15,#256",  OVERFLOW_RANGE, "#256");
+    ERRT("LD R15,#-129", OVERFLOW_RANGE, "#-129", 0xFC);
+    ERRT("LD R15,#256",  OVERFLOW_RANGE, "#256",  0xFC);
 
     TEST("INC  R0", 0x0E);
     TEST("INC  R1", 0x1E);
@@ -358,7 +358,11 @@ static void test_one_operand() {
     TZ88("SRP0 #30H",  0x31, 0x32);
     EZ86("SRP1 #38H",  UNKNOWN_INSTRUCTION, "SRP1 #38H");
     TZ88("SRP1 #38H",  0x31, 0x39);
-    ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H");
+    if (z86()) {
+        ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H", 0x31);
+    } else {
+        ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H");
+    }
 }
 
 static void test_two_operands() {
@@ -379,8 +383,8 @@ static void test_two_operands() {
     TEST("ADD R7,#-128",  0x06, R(7), 0x80);
     TEST("ADD R7,#-1",    0x06, R(7), 0xFF);
     TEST("ADD R7,#255",   0x06, R(7), 0xFF);
-    ERRT("ADD R7,#256",   OVERFLOW_RANGE, "#256");
-    ERRT("ADD R7,#-129",  OVERFLOW_RANGE, "#-129");
+    ERRT("ADD R7,#256",   OVERFLOW_RANGE, "#256",  0x06);
+    ERRT("ADD R7,#-129",  OVERFLOW_RANGE, "#-129", 0x06);
 
     TEST("ADC R3,R4",     0x12, 0x34);
     TEST("ADC R1,@R4",    0x13, 0x14);
