@@ -45,7 +45,7 @@ OBJS_dis = dis_base.o dis_formatter.o option_base.o bin_memory.o str_buffer.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../../src/dis_$(a).cpp),dis_$(a).o $(OBJS_$(a))))
 BINS = $(TESTS)
 
--include $(wildcard *.d)
+-include $(OBJS:%=%.d)
 
 define test-rule # test
 test:: $(1)

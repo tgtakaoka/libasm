@@ -34,7 +34,7 @@ OBJS_common = test_src_helper.o test_asserter.o error_reporter.o
 OBJS = $(OBJS_common) $(TESTS:=.o)
 BINS = $(TESTS)
 
--include $(OBJS:.o=.d)
+-include $(OBJS:%=%.d)
 
 define test-rule # test
 test:: $(1)

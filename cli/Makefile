@@ -74,7 +74,7 @@ endef
 $(eval $(foreach t,$(SRCS:%.cpp=%),$(call tidy-rule,$(t))))
 tidy: $(SRCS:%.cpp=%.tidy)
 
--include $(OBJS:.o=.d)
+-include $(OBJS:%=.%d)
 
 # Local Variables:
 # mode: makefile-gmake
