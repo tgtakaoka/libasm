@@ -542,10 +542,10 @@ static constexpr TableTlcs90::Cpu CPU_TABLE[] PROGMEM = {
 };
 static constexpr const TableTlcs90::Cpu &TLCS90_CPU = CPU_TABLE[0];
 
-Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) {
+Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
     auto code = insn.readByte(memory);
-    for (auto page = ARRAY_BEGIN(TLCS90_PAGES) + 1; page < ARRAY_END(TLCS90_PAGES); page++) {
-        if (!page->prefixMatch(code))
+    for (auto page = _cpu->table(); page < _cpu->end(); page++) {
+        if (page->prefix() == 0 || !page->prefixMatch(code))
             continue;
         op.mode = page->mode();
         switch (op.mode) {
@@ -572,10 +572,10 @@ Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) {
             break;
         }
         insn.setOpCode(insn.readByte(memory), code);
-        return setError(insn);
+        return insn.getError();
     }
     insn.setOpCode(code);
-    return setError(insn);
+    return insn.getError();
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -604,7 +604,7 @@ static void searchPageSetup(InsnTlcs90 &insn, const TableTlcs90::EntryPage *page
     insn.setPreMode(page->mode());
 }
 
-static bool acceptModes(const InsnTlcs90 &insn, const Entry *entry) {
+static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
     auto table = entry->flags();
     auto tableDst = table.dst();
     auto tableSrc = table.src();
@@ -631,10 +631,9 @@ static void readCode(InsnTlcs90 &insn, const Entry *entry, const TableTlcs90::En
     }
 }
 
-Error TableTlcs90::searchName(InsnTlcs90 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count, searchPageSetup, readCode);
-    return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+Error TableTlcs90::searchName(InsnTlcs90 &insn) const {
+    _cpu->searchName(insn, acceptModes, searchPageSetup, readCode);
+    return insn.getError();
 }
 
 static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const TableTlcs90::EntryPage *page) {
@@ -653,9 +652,9 @@ static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const TableTlcs90:
     return opCode == entry->opCode();
 }
 
-Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableTlcs90::TableTlcs90() : _cpu(&TLCS90_CPU) {}

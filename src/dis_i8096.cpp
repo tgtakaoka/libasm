@@ -190,7 +190,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     }
 
     if (TableI8096::TABLE.searchOpCode(insn))
-        return setError(TableI8096::TABLE.getError());
+        return setError(insn);
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (jbx_djnz) {

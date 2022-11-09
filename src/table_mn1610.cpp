@@ -327,17 +327,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     }
 }
 
-static bool acceptModes(const InsnMn1610 &insn, const Entry *entry) {
+static bool acceptModes(InsnMn1610 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
            acceptMode(flags.mode3(), table.mode3()) && acceptMode(flags.mode4(), table.mode4());
 }
 
-Error TableMn1610::searchName(InsnMn1610 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableMn1610::searchName(InsnMn1610 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const TableMn1610::EntryPage *page) {
@@ -377,9 +376,9 @@ static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const TableMn1610:
     return opCode == entry->opCode();
 }
 
-Error TableMn1610::searchOpCode(InsnMn1610 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableMn1610::searchOpCode(InsnMn1610 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableMn1610::TableMn1610() {

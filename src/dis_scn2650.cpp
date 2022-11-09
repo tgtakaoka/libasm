@@ -129,7 +129,7 @@ Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableScn2650::TABLE.searchOpCode(insn))
-        return setError(TableScn2650::TABLE.getError());
+        return setError(insn);
 
     if (decodeOperand(memory, insn, out, insn.mode1()))
         return getError();

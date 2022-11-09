@@ -143,7 +143,7 @@ static constexpr TableIns8060::Cpu CPU_TABLE[] PROGMEM = {
 };
 static constexpr const TableIns8060::Cpu &INS8060_CPU = CPU_TABLE[0];
 
-static bool acceptMode(const InsnIns8060 &insn, const Entry *entry) {
+static bool acceptMode(InsnIns8060 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto opr = flags.mode();
     auto table = entry->flags().mode();
@@ -156,10 +156,9 @@ static bool acceptMode(const InsnIns8060 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableIns8060::searchName(InsnIns8060 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptMode, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableIns8060::searchName(InsnIns8060 &insn) const {
+    _cpu->searchName(insn, acceptMode);
+    return insn.getError();
 }
 
 static bool matchOpCode(
@@ -174,9 +173,11 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableIns8060::searchOpCode(InsnIns8060 &insn) {
+Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
     auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
+    if (entry && entry->flags().undefined())
+        insn.setError(UNKNOWN_INSTRUCTION);
+    return insn.getError();
 }
 
 TableIns8060::TableIns8060() : _cpu(&INS8060_CPU) {}

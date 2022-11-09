@@ -113,8 +113,8 @@ public:
      * Binary search an entry from all instruction page tables which
      * are sorted and indexed from |page->index()| until
      * |page->iend()| where an entry has |insn.name()| and
-     * |accept(insn, entry)| return true.  Also updates |count| as the
-     * number of entries matching |insn.name()|.
+     * |acceptOperands(insn, entry)| returns true.  Also updates |insn| error
+     * code if any.
      */
     template <typename E, typename P, typename I>
     static void defaultReadCode(I &insn, const E *entry, const P *page) {
@@ -123,12 +123,13 @@ public:
     }
 
     template <typename E, typename I>
-    const E *searchName(I &insn, bool (*accept)(const I &, const E *), uint8_t &count,
-            void (*pageSetup)(I &, const ENTRY_T *) = nullptr,
-            void (*read)(I &, const E *, const ENTRY_T *) = defaultReadCode) const {
+    const E *searchName(
+            I &insn, bool (*acceptOperands)(I &, const E *),
+            void (*pageSetup)(I &, const ENTRY_T *) = [](I &, const ENTRY_T *) {},
+            void (*readCode)(I &, const E *, const ENTRY_T *) = defaultReadCode) const {
+        bool found = false;
         for (auto page = this->table(); page < this->end(); page++) {
-            if (pageSetup)
-                pageSetup(insn, page);
+            pageSetup(insn, page);
             const auto *first = page->index();
             const auto *last = page->iend();
             for (;;) {
@@ -149,21 +150,23 @@ public:
                 const auto *entry = &page->table()[pgm_read_byte(first)];
                 if (strcasecmp_P(insn.name(), entry->name_P()))
                     break;
-                count++;
-                if (accept(insn, entry)) {
-                    read(insn, entry, page);
+                found = true;
+                if (acceptOperands(insn, entry)) {
+                    readCode(insn, entry, page);
                     return entry;
                 }
                 ++first;
             }
         }
+        insn.setError(found ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
         return nullptr;
     }
 
     /**
      * Lookup instruction page tables from |tabel()| until |end()| to
-     * find an entry which satisfis |match|, then call |read| to read
-     * the table entry into |insn|.
+     * find an entry which satisfis |matchCode|, then call |readName|
+     * to read the table entry into |insn|. Also updates |insn| error
+     * code if any.
      */
     template <typename E, typename P, typename I>
     static bool defaultMatchOpCode(I &insn, const E *entry, const P *page) {
@@ -178,18 +181,19 @@ public:
 
     template <typename E, typename I>
     const E *searchOpCode(I &insn,
-            bool (*match)(I &, const E *, const ENTRY_T *) = defaultMatchOpCode,
-            void (*read)(I &, const E *, const ENTRY_T *) = defaultReadEntryName) const {
+            bool (*matchCode)(I &, const E *, const ENTRY_T *) = defaultMatchOpCode,
+            void (*readName)(I &, const E *, const ENTRY_T *) = defaultReadEntryName) const {
         for (auto page = this->table(); page < this->end(); page++) {
             if (page->prefixMatch(insn.prefix())) {
                 for (const auto *entry = page->table(); entry < page->end(); entry++) {
-                    if (match(insn, entry, page)) {
-                        read(insn, entry, page);
+                    if (matchCode(insn, entry, page)) {
+                        readName(insn, entry, page);
                         return entry;
                     }
                 }
             }
         }
+        insn.setError(UNKNOWN_INSTRUCTION);
         return nullptr;
     }
 
@@ -201,7 +205,7 @@ private:
 /**
  * Base class for instruction table.
  */
-class TableBase : public ErrorReporter {
+class TableBase {
 public:
     virtual /* PROGMEM */ const char *listCpu_P() const = 0;
     virtual /* PROGMEM */ const char *cpu_P() const = 0;

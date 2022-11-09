@@ -533,17 +533,16 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
     return false;
 }
 
-static bool acceptModes(const InsnMc68000 &insn, const Entry *entry) {
+static bool acceptModes(InsnMc68000 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
-Error TableMc68000::searchName(InsnMc68000 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+Error TableMc68000::searchName(InsnMc68000 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static Config::opcode_t getInsnMask(AddrMode src) {
@@ -596,9 +595,9 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableMc68000::searchOpCode(InsnMc68000 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableMc68000::TableMc68000() {

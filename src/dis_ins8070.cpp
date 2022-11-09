@@ -142,7 +142,7 @@ Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     insn.setOpCode(opCode);
 
     if (TableIns8070::TABLE.searchOpCode(insn))
-        return setError(TableIns8070::TABLE.getError());
+        return setError(insn);
 
     const AddrMode dst = insn.dst();
     if (dst == M_NONE)

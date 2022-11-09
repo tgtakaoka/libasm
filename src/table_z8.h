@@ -31,8 +31,8 @@ public:
 
     static TableZ8 TABLE;
 
-    Error searchName(InsnZ8 &insn);
-    Error searchOpCode(InsnZ8 &insn, DisMemory &memory);
+    Error searchName(InsnZ8 &insn) const;
+    Error searchOpCode(InsnZ8 &insn, DisMemory &memory) const;
     bool isSuper8() const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

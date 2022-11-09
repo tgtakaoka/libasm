@@ -31,8 +31,8 @@ public:
 
     static TableMos6502 TABLE;
 
-    Error searchName(InsnMos6502 &insn);
-    Error searchOpCode(InsnMos6502 &insn);
+    Error searchName(InsnMos6502 &insn) const;
+    Error searchOpCode(InsnMos6502 &insn) const;
     bool useIndirectLong(bool enable);
     bool longAccumulator() const { return _longAccumulator; }
     bool setLongAccumulator(bool on);

@@ -229,7 +229,7 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &ou
         const Config::opcode_t opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
         if (TableI8086::TABLE.searchOpCode(istr))
-            return setError(TableI8086::TABLE.getError());
+            return setError(istr);
         if (!istr.stringInst())
             return setError(UNKNOWN_INSTRUCTION);
         out.text(istr.name());
@@ -380,7 +380,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (readCodes(memory, insn))
         return getError();
     if (TableI8086::TABLE.searchOpCode(insn))
-        return setError(TableI8086::TABLE.getError());
+        return setError(insn);
 
     insn.readModReg(memory);
     if (setError(insn))

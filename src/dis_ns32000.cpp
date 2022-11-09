@@ -474,7 +474,7 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableNs32000::TABLE.searchOpCode(insn, memory))
-        return setError(TableNs32000::TABLE.getError());
+        return setError(insn);
     if (readIndexByte(memory, insn, insn.src(), insn.srcPos()))
         return getError();
     if (readIndexByte(memory, insn, insn.dst(), insn.dstPos()))

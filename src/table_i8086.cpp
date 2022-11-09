@@ -1024,16 +1024,15 @@ static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
     return true;
 }
 
-static bool acceptModes(const InsnI8086 &insn, const Entry *entry) {
+static bool acceptModes(InsnI8086 &insn, const Entry *entry) {
     auto table = entry->flags();
     return acceptMode(insn.dst(), table.dst()) && acceptMode(insn.src(), table.src()) &&
            acceptMode(insn.ext(), table.ext()) && acceptSize(insn, entry);
 }
 
-Error TableI8086::searchName(InsnI8086 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableI8086::searchName(InsnI8086 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 bool TableI8086::isRepeatPrefix(Config::opcode_t opCode) const {
@@ -1092,9 +1091,9 @@ static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const TableI8086::E
     return opCode == entry->opCode();
 }
 
-Error TableI8086::searchOpCode(InsnI8086 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableI8086::searchOpCode(InsnI8086 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableI8086::TableI8086() {

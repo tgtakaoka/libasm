@@ -54,7 +54,7 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     ixBit.setOpCode(opc, insn.opCode());
     ixBit.clearNameBuffer();
     if (TableZ80::TABLE.searchOpCode(ixBit))
-        return setError(TableZ80::TABLE.getError());
+        return setError(ixBit);
 
     const RegName reg = RegZ80::decodeDataReg(opc);
     if (reg != REG_HL)
@@ -187,7 +187,7 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableZ80::TABLE.searchOpCode(insn))
-        return setError(TableZ80::TABLE.getError());
+        return setError(insn);
 
     const AddrMode dst = insn.dst();
     if (dst == M_NONE)

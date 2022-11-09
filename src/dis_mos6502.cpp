@@ -168,7 +168,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     insn.setOpCode(opCode);
 
     if (TableMos6502::TABLE.searchOpCode(insn))
-        return setError(TableMos6502::TABLE.getError());
+        return setError(insn);
 
     const auto mode1 = insn.mode1();
     if (mode1 == M_BANK && insn.mode2() == M_BANK)

@@ -254,16 +254,15 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnTms9900 &insn, const Entry *entry) {
+static bool acceptModes(InsnTms9900 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst());
 }
 
-Error TableTms9900::searchName(InsnTms9900 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableTms9900::searchName(InsnTms9900 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(
@@ -290,9 +289,9 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableTms9900::searchOpCode(InsnTms9900 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableTms9900::searchOpCode(InsnTms9900 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableTms9900::TableTms9900() {

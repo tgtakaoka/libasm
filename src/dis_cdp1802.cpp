@@ -75,7 +75,7 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableCdp1802::TABLE.searchOpCode(insn))
-        return setError(TableCdp1802::TABLE.getError());
+        return setError(insn);
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_NONE)

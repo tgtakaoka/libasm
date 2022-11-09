@@ -33,8 +33,8 @@ public:
     static TableNs32000 TABLE;
 
     void reset();
-    Error searchName(InsnNs32000 &insn);
-    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory);
+    Error searchName(InsnNs32000 &insn) const;
+    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory) const;
     bool isPrefixCode(uint8_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
@@ -64,24 +64,19 @@ public:
                 const EntryPage *table, const EntryPage *end)
             : CpuBase<CPUTYPE_T, EntryPage>(cpuType, name_P, table, end) {}
 
-        Error searchNameCommon(InsnNs32000 &insn,
-                bool (*accept)(const InsnNs32000 &, const Entry *),
+        Error searchNameCommon(InsnNs32000 &insn, bool (*accept)(InsnNs32000 &, const Entry *),
                 void (*pageSetup)(InsnNs32000 &, const EntryPage *)) const {
-            uint8_t count = 0;
-            auto entry = this->searchName(insn, accept, count, pageSetup);
-            return entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+            this->searchName(insn, accept, pageSetup);
+            return insn.getError();
         }
 
         Error searchOpCodeCommon(InsnNs32000 &insn, DisMemory &memory,
                 bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
                 void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
             auto entry = this->searchOpCode(insn, matchOpCode, readEntryName);
-            if (entry) {
-                if (insn.hasPost())
-                    insn.readPost(memory);
-                return insn.getError();
-            }
-            return UNKNOWN_INSTRUCTION;
+            if (entry && insn.hasPost())
+                insn.readPost(memory);
+            return insn.getError();
         }
     };
     typedef CpuCommon<CpuType> Cpu;

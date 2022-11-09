@@ -32,8 +32,8 @@ public:
 
     static TableI8086 TABLE;
 
-    Error searchName(InsnI8086 &insn);
-    Error searchOpCode(InsnI8086 &insn);
+    Error searchName(InsnI8086 &insn) const;
+    Error searchOpCode(InsnI8086 &insn) const;
     bool isRepeatPrefix(Config::opcode_t opcode) const;
     bool isSegmentPrefix(Config::opcode_t opcode) const;
     RegName overrideSeg(Config::opcode_t opcode) const;

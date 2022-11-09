@@ -121,7 +121,7 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableI8048::TABLE.searchOpCode(insn))
-        return setError(TableI8048::TABLE.getError());
+        return setError(insn);
 
     const AddrMode dst = insn.dst();
     if (dst != M_NONE) {

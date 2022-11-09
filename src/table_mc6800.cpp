@@ -618,19 +618,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnMc6800 &insn, const Entry *entry) {
+static bool acceptModes(InsnMc6800 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
-    return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
-           acceptMode(flags.mode3(), table.mode3());
+    if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
+            acceptMode(flags.mode3(), table.mode3())) {
+        if (table.undefined())
+            insn.setError(OPERAND_NOT_ALLOWED);
+        return true;
+    }
+    return false;
 }
 
-Error TableMc6800::searchName(InsnMc6800 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return entry && !entry->flags().undefined()
-                   ? OK
-                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+Error TableMc6800::searchName(InsnMc6800 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const TableMc6800::EntryPage *page) {
@@ -649,24 +651,28 @@ static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const TableMc6800:
 
 const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
     auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return entry && !entry->flags().undefined() ? entry : nullptr;
+    if (entry && entry->flags().undefined()) {
+        insn.setError(UNKNOWN_INSTRUCTION);
+        entry = nullptr;
+    }
+    return entry;
 }
 
-Error TableMc6800::searchOpCode(InsnMc6800 &insn) {
-    auto entry = searchOpCodeImpl(insn);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
+    searchOpCodeImpl(insn);
+    return insn.getError();
 }
 
-Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) {
+Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
     auto entry = searchOpCodeImpl(insn);
-    if (!entry)
-        return setError(INTERNAL_ERROR);
+    if (entry == nullptr)
+        return insn.setError(INTERNAL_ERROR);
     entry += 1;
     if (entry->opCode() != insn.opCode())
-        return setError(INTERNAL_ERROR);
+        return insn.setError(INTERNAL_ERROR);
     insn.setFlags(entry->flags());
     insn.clearNameBuffer().text_P(entry->name_P());
-    return setOK();
+    return OK;
 }
 
 TableMc6800::TableMc6800() {

@@ -15,6 +15,7 @@
  */
 
 #include "table_ns32000.h"
+
 #include "config_ns32000.h"
 #include "entry_ns32000.h"
 #include "text_ns32000.h"
@@ -895,20 +896,24 @@ static void searchPageSetup(InsnNs32000 &insn, const TableNs32000::EntryPage *pa
     insn.setPost(0, page->post() != 0);
 }
 
-static bool acceptModes(const InsnNs32000 &insn, const Entry *entry) {
+static bool acceptModes(InsnNs32000 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableNs32000::searchName(InsnNs32000 &insn) {
-    auto error = _cpu->searchNameCommon(insn, acceptModes, searchPageSetup);
-    if (error == UNKNOWN_INSTRUCTION)
-        error = _fpu->searchNameCommon(insn, acceptModes, searchPageSetup);
-    if (error == UNKNOWN_INSTRUCTION)
-        error = _mmu->searchNameCommon(insn, acceptModes, searchPageSetup);
-    return setError(error);
+Error TableNs32000::searchName(InsnNs32000 &insn) const {
+    _cpu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.setOK();
+        _fpu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    }
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.setOK();
+        _mmu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    }
+    return insn.getError();
 }
 
 static bool matchOpCode(
@@ -924,13 +929,17 @@ static void readEntryName(
     insn.setPost(0, page->post() != 0);
 }
 
-Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) {
-    Error error = NS32032_CPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
-    if (error == UNKNOWN_INSTRUCTION)
-        error = NS32081_FPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
-    if (error == UNKNOWN_INSTRUCTION)
-        error = NS32082_MMU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
-    return setError(error);
+Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
+    NS32032_CPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.setOK();
+        NS32081_FPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+    }
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.setOK();
+        NS32082_MMU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+    }
+    return insn.getError();
 }
 
 TableNs32000::TableNs32000() : _cpu(&NS32032_CPU) {

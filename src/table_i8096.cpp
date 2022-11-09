@@ -278,19 +278,21 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnI8096 &insn, const Entry *entry) {
+static bool acceptModes(InsnI8096 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
-    return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
-           acceptMode(flags.src2(), table.src2());
+    if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
+        acceptMode(flags.src2(), table.src2())) {
+        if (table.undefined())
+            insn.setError(OPERAND_NOT_ALLOWED);
+        return true;
+    }
+    return false;
 }
 
-Error TableI8096::searchName(InsnI8096 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return entry && !entry->flags().undefined()
-                   ? OK
-                   : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+Error TableI8096::searchName(InsnI8096 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(InsnI8096 &insn, const Entry *entry, const TableI8096::EntryPage *page) {
@@ -308,9 +310,11 @@ static bool matchOpCode(InsnI8096 &insn, const Entry *entry, const TableI8096::E
     return opCode == entry->opCode();
 }
 
-Error TableI8096::searchOpCode(InsnI8096 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
+Error TableI8096::searchOpCode(InsnI8096 &insn) const {
+    const auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    if (entry && entry->flags().undefined())
+        insn.setError(UNKNOWN_INSTRUCTION);
+    return insn.getError();
 }
 
 TableI8096::TableI8096() : _cpu(&CPU_I8096) {}

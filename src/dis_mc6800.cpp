@@ -71,7 +71,7 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
         if (TableMc6800::TABLE.searchOpCodeAlias(insn))
-            return setError(TableMc6800::TABLE.getError());
+            return setError(insn);
         outHex(out, bitNum, 3);
     } else {
         outHex(out.letter('#'), val8, 8);
@@ -148,7 +148,7 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableMc6800::TABLE.searchOpCode(insn))
-        return setError(TableMc6800::TABLE.getError());
+        return setError(insn);
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_NONE)

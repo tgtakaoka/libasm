@@ -30,8 +30,8 @@ public:
 
     static TableTms9900 TABLE;
 
-    Error searchName(InsnTms9900 &insn);
-    Error searchOpCode(InsnTms9900 &insn);
+    Error searchName(InsnTms9900 &insn) const;
+    Error searchOpCode(InsnTms9900 &insn) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

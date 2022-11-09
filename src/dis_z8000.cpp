@@ -55,7 +55,7 @@ Error DisZ8000::decodeImmediate(
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
             if (TableZ8000::TABLE.searchOpCodeAlias(insn, memory))
-                return setError(TableZ8000::TABLE.getError());
+                return setError(insn);
             data = -count;
         }
         if (size == SZ_BYTE && data > 8)
@@ -393,7 +393,7 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     insn.setOpCode(opCode);
 
     if (TableZ8000::TABLE.searchOpCode(insn, memory))
-        return setError(TableZ8000::TABLE.getError());
+        return setError(insn);
     if (checkPostWord(insn))
         return getError();
     if ((insn.isPushPopInsn() || insn.isThreeRegsInsn()) && checkRegisterOverlap(insn))

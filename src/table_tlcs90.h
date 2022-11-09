@@ -42,9 +42,9 @@ public:
 
     static TableTlcs90 TABLE;
 
-    Error searchName(InsnTlcs90 &insn);
-    Error searchOpCode(InsnTlcs90 &insn);
-    Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op);
+    Error searchName(InsnTlcs90 &insn) const;
+    Error searchOpCode(InsnTlcs90 &insn) const;
+    Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

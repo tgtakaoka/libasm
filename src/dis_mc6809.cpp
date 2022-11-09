@@ -291,7 +291,7 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableMc6809::TABLE.searchOpCode(insn))
-        return setError(TableMc6809::TABLE.getError());
+        return setError(insn);
 
     if (decodeOperand(memory, insn, out, insn.mode1()))
         return getError();

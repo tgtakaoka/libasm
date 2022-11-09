@@ -30,8 +30,8 @@ public:
 
     static TableI8080 TABLE;
 
-    Error searchName(InsnI8080 &insn);
-    Error searchOpCode(InsnI8080 &insn);
+    Error searchName(InsnI8080 &insn) const;
+    Error searchOpCode(InsnI8080 &insn) const;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
     const /* PROGMEM */ char *listCpu_P() const override;

@@ -72,7 +72,7 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (TableI8080::TABLE.searchOpCode(insn))
-        return setError(TableI8080::TABLE.getError());
+        return setError(insn);
 
     const AddrMode dst = insn.dst();
     if (dst == M_NONE)

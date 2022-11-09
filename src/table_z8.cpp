@@ -527,17 +527,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnZ8 &insn, const Entry *entry) {
+static bool acceptModes(InsnZ8 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
            acceptMode(flags.ext(), table.ext());
 }
 
-Error TableZ8::searchName(InsnZ8 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableZ8::searchName(InsnZ8 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchPostByte(Config::opcode_t post, PostFormat format) {
@@ -577,10 +576,10 @@ static bool matchOpCode(InsnZ8 &insn, const Entry *entry, const TableZ8::EntryPa
     return true;
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) {
+Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) const {
     insn.setMemory(memory);
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableZ8::TableZ8() {

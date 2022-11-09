@@ -187,7 +187,7 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     insn.setOpCode(opc);
     if (TableMn1610::TABLE.searchOpCode(insn))
-        return setError(TableMn1610::TABLE.getError());
+        return setError(insn);
     if (setError(insn))
         return getError();
 

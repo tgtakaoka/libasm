@@ -352,7 +352,7 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     insn.setOpCode(opCode);
 
     if (TableZ8::TABLE.searchOpCode(insn, memory))
-        return setError(TableZ8::TABLE.getError());
+        return setError(insn);
 
     const AddrMode dst = insn.dst();
     const AddrMode src = insn.src();

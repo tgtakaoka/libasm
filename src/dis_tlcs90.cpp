@@ -143,9 +143,9 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTlcs90 insn(_insn);
     Operand preOp;
     if (TableTlcs90::TABLE.readInsn(memory, insn, preOp))
-        return setError(TableTlcs90::TABLE.getError());
+        return setError(insn);
     if (TableTlcs90::TABLE.searchOpCode(insn))
-        return setError(TableTlcs90::TABLE.getError());
+        return setError(insn);
     const AddrMode dst = insn.dst();
     if (dst == M_NONE)
         return OK;

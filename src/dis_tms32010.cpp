@@ -129,7 +129,7 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     insn.setOpCode(opCode);
     if (TableTms32010::TABLE.searchOpCode(insn))
-        return setError(TableTms32010::TABLE.getError());
+        return setError(insn);
 
     const AddrMode mode1 = insn.mode1();
     if (mode1 == M_NONE)

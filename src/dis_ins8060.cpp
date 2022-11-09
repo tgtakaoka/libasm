@@ -75,7 +75,7 @@ Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     insn.setOpCode(opCode);
 
     if (TableIns8060::TABLE.searchOpCode(insn))
-        return setError(TableIns8060::TABLE.getError());
+        return setError(insn);
 
     switch (insn.addrMode()) {
     case M_PNTR:

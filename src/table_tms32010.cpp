@@ -191,17 +191,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnTms32010 &insn, const Entry *entry) {
+static bool acceptModes(InsnTms32010 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
            acceptMode(flags.mode3(), table.mode3());
 }
 
-Error TableTms32010::searchName(InsnTms32010 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableTms32010::searchName(InsnTms32010 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(
@@ -232,9 +231,9 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableTms32010::searchOpCode(InsnTms32010 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableTms32010::searchOpCode(InsnTms32010 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 uint16_t TableTms32010::dataMemoryLimit() const {

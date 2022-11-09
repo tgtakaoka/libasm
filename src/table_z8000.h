@@ -31,9 +31,9 @@ public:
 
     static TableZ8000 TABLE;
 
-    Error searchName(InsnZ8000 &insn);
-    Error searchOpCode(InsnZ8000 &insn, DisMemory &memory);
-    Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory);
+    Error searchName(InsnZ8000 &insn) const;
+    Error searchOpCode(InsnZ8000 &insn, DisMemory &memory) const;
+    Error searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

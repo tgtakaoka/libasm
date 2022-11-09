@@ -30,8 +30,8 @@ public:
 
     static TableMn1610 TABLE;
 
-    Error searchName(InsnMn1610 &insn);
-    Error searchOpCode(InsnMn1610 &insn);
+    Error searchName(InsnMn1610 &insn) const;
+    Error searchOpCode(InsnMn1610 &insn) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

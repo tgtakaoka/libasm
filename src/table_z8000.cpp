@@ -606,17 +606,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnZ8000 &insn, const Entry *entry) {
+static bool acceptModes(InsnZ8000 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableZ8000::searchName(InsnZ8000 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableZ8000::searchName(InsnZ8000 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const TableZ8000::EntryPage *page) {
@@ -632,13 +631,13 @@ static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const TableZ8000::E
     return true;
 }
 
-Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) {
+Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) const {
     insn.setMemory(memory);
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
-Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) {
+Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
     insn.setMemory(memory);
     auto entry = _cpu->searchOpCode(insn, matchOpCode);
     if (entry) {
@@ -646,7 +645,7 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) {
         insn.setFlags(entry->flags());
         insn.clearNameBuffer().text_P(entry->name_P());
     }
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+    return insn.getError();
 }
 
 TableZ8000::TableZ8000() {

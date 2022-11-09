@@ -281,17 +281,16 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnI8051 &insn, const Entry *entry) {
+static bool acceptModes(InsnI8051 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
            acceptMode(flags.ext(), table.ext());
 }
 
-Error TableI8051::searchName(InsnI8051 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableI8051::searchName(InsnI8051 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(InsnI8051 &insn, const Entry *entry, const TableI8051::EntryPage *page) {
@@ -309,9 +308,9 @@ static bool matchOpCode(InsnI8051 &insn, const Entry *entry, const TableI8051::E
     return opCode == entry->opCode();
 }
 
-Error TableI8051::searchOpCode(InsnI8051 &insn) {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry ? OK : UNKNOWN_INSTRUCTION);
+Error TableI8051::searchOpCode(InsnI8051 &insn) const {
+    _cpu->searchOpCode(insn, matchOpCode);
+    return insn.getError();
 }
 
 TableI8051::TableI8051() : _cpu(&I8051_CPU) {}

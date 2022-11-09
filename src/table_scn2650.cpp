@@ -238,16 +238,15 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(const InsnScn2650 &insn, const Entry *entry) {
+static bool acceptModes(InsnScn2650 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
-Error TableScn2650::searchName(InsnScn2650 &insn) {
-    uint8_t count = 0;
-    auto entry = _cpu->searchName(insn, acceptModes, count);
-    return setError(entry ? OK : (count ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION));
+Error TableScn2650::searchName(InsnScn2650 &insn) const {
+    _cpu->searchName(insn, acceptModes);
+    return insn.getError();
 }
 
 static bool matchOpCode(
@@ -264,9 +263,11 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableScn2650::searchOpCode(InsnScn2650 &insn) {
+Error TableScn2650::searchOpCode(InsnScn2650 &insn) const {
     auto entry = _cpu->searchOpCode(insn, matchOpCode);
-    return setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
+    if (entry && entry->flags().undefined())
+        insn.setError(UNKNOWN_INSTRUCTION);
+    return insn.getError();
 }
 
 TableScn2650::TableScn2650() : _cpu(&SCN2650_CPU) {}
