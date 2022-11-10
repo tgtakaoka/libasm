@@ -34,6 +34,15 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
+        if (parserError())
+            return op.getError();
+        op.mode = M_IMM;
+        scan = p;
+        return OK;
+    }
+
     if (p.expect(',')) {
         const RegName reg = RegMc6805::parseRegName(p);
         if (reg == REG_X) {
@@ -44,7 +53,6 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(scan, UNKNOWN_OPERAND);
     }
 
-    const bool immediate = p.expect('#');
     op.size = 0;
     if (p.expect('<')) {
         op.size = 8;
@@ -54,11 +62,6 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return op.getError();
-    if (immediate) {
-        op.mode = M_IMM;
-        scan = p;
-        return OK;
-    }
 
     StrScanner a(p);
     if (a.skipSpaces().expect(',')) {
