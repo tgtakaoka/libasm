@@ -28,7 +28,15 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const bool immediate = p.expect('#');
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
+        if (parserError())
+            return op.getError();
+        op.mode = M_IM16;
+        scan = p;
+        return OK;
+    }
+
     op.size = 0;
     if (p.expect('<')) {
         op.size = 8;
@@ -38,11 +46,6 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return op.getError();
-    if (immediate) {
-        op.mode = M_IM16;
-        scan = p;
-        return OK;
-    }
 
     StrScanner a(p);
     if (a.skipSpaces().expect(',')) {
