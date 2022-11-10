@@ -68,8 +68,8 @@ public:
     static bool isIndexedBase(RegName name);
     static uint8_t encodeBaseReg(RegName name);
 
-    static RegName decodeStackReg(uint8_t bitPos);
-    static uint8_t encodeStackReg(RegName name) __attribute__((noinline));
+    static RegName decodeStackReg(uint8_t bitPos, bool userStack);
+    static uint8_t encodeStackReg(RegName name, bool userStack) __attribute__((noinline));
 
     static RegName decodeBitOpReg(uint8_t num);
     static bool isBitOpReg(RegName name);

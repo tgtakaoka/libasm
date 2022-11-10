@@ -206,8 +206,8 @@ static void test_stack() {
     TEST("PULU #$FF", 0x37, 0xFF);
 
     ERRT("PSHS S",         REGISTER_NOT_ALLOWED, "S");
-    ERRT("PULS A,S,B",     REGISTER_NOT_ALLOWED, "A,S,B");
-    ERRT("PSHU CC,X,U,PC", REGISTER_NOT_ALLOWED, "CC,X,U,PC");
+    ERRT("PULS A,S,B",     REGISTER_NOT_ALLOWED, "S,B");
+    ERRT("PSHU CC,X,U,PC", REGISTER_NOT_ALLOWED, "U,PC");
     ERRT("PULU U",         REGISTER_NOT_ALLOWED, "U");
 
     ERRT("PSHS A,D",   DUPLICATE_REGISTER, "D");
@@ -220,9 +220,9 @@ static void test_stack() {
     ERRT("PSHU F",   REGISTER_NOT_ALLOWED, "F");
     ERRT("PSHS V",   REGISTER_NOT_ALLOWED, "V");
     ERRT("PULU W",   REGISTER_NOT_ALLOWED, "W");
-    ERRT("PULS E,X", REGISTER_NOT_ALLOWED, "E,X");
-    ERRT("PSHU F,Y", REGISTER_NOT_ALLOWED, "F,Y");
-    ERRT("PSHS V,U", REGISTER_NOT_ALLOWED, "V,U");
+    ERRT("PULS X,E", REGISTER_NOT_ALLOWED, "E");
+    ERRT("PSHU Y,F", REGISTER_NOT_ALLOWED, "F");
+    ERRT("PSHS U,V", REGISTER_NOT_ALLOWED, "V");
 }
 
 static void test_register() {
@@ -250,7 +250,7 @@ static void test_register() {
     TEST("TFR PC,D", 0x1F, 0x50);
 
     ERRT("EXG A",     OPERAND_NOT_ALLOWED,  "A");
-    ERRT("EXG A,",    REGISTER_NOT_ALLOWED, "A,");
+    ERRT("EXG A,",    UNKNOWN_OPERAND,      "A,");
     ERRT("EXG A,X",   ILLEGAL_SIZE,         "A,X");
     ERRT("EXG A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
@@ -287,12 +287,12 @@ static void test_register() {
         TEST("TFR X,0",  0x1F, 0x1D);
 
         ERRT("ADDR A",     OPERAND_NOT_ALLOWED,  "A");
-        ERRT("ADDR A,",    REGISTER_NOT_ALLOWED, "A,");
+        ERRT("ADDR A,",    UNKNOWN_OPERAND,      "A,");
         ERRT("ADDR A,X",   ILLEGAL_SIZE,         "A,X");
         ERRT("ADDR A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
         ERRT("TFR E",     OPERAND_NOT_ALLOWED,  "E");
-        ERRT("TFR E,",    REGISTER_NOT_ALLOWED, "E,");
+        ERRT("TFR E,",    UNKNOWN_OPERAND,      "E,");
         ERRT("TFR E,W",   ILLEGAL_SIZE,         "E,W");
         ERRT("TFR E,X,F", OPERAND_NOT_ALLOWED,  "E,X,F");
     } else {
@@ -1430,7 +1430,7 @@ static void test_error() {
     ERRT("LDA ,-- X", UNKNOWN_OPERAND, ",-- X");
     ERRT("LDA ,- -X", UNKNOWN_OPERAND, ",- -X");
     ERRT("LDA ,X]",   GARBAGE_AT_END, "]");
-    ERRT("LDA [,X ; comment",   MISSING_CLOSING_BRACKET, "; comment");
+    ERRT("LDA [,X ; comment", MISSING_CLOSING_BRACKET, "[,X ; comment");
 
     if (is6309()) {
         // HD6309
@@ -1442,10 +1442,12 @@ static void test_error() {
         ERRT("LDA [ , --W ]", UNKNOWN_OPERAND, "[ , --W ]");
 
         ERRT("TFM D+,W+",    REGISTER_NOT_ALLOWED, "W+");
-        ERRT("TFM D + , X+", GARBAGE_AT_END, "+ , X+");
-        ERRT("TFM D+ , X +", GARBAGE_AT_END, "+");
-        ERRT("TFM X - , Y-", GARBAGE_AT_END, "- , Y-");
-        ERRT("TFM X- , Y -", GARBAGE_AT_END, "-");
+        ERRT("TFM D + , X+", UNKNOWN_OPERAND, "D + , X+");
+        ERRT("TFM D+ , X +", UNKNOWN_OPERAND, "X +");
+        ERRT("TFM X - , Y-", UNKNOWN_OPERAND, "X - , Y-");
+        ERRT("TFM X- , Y -", UNKNOWN_OPERAND, "Y -");
+        ERRT("BOR A . 1 , $34 , 2", UNKNOWN_OPERAND, "A . 1 , $34 , 2");
+        ERRT("BOR A , 1 , $34 . 2", GARBAGE_AT_END, ". 2");
         TEST("BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
     }
 }
