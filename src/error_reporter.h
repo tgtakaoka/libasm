@@ -123,6 +123,9 @@ public:
             return getError();
         return setError(_at, error);
     }
+    Error setErrorIf(ErrorReporter &o) {
+        return setErrorIf(_at, o.getError());
+    }
     Error setErrorIf(const ErrorAt &o) {
         if (getError())
             return getError();

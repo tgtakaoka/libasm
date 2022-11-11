@@ -66,14 +66,14 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error processPseudo(StrScanner &scan, const char *name);
 
-    Error encodeRegisterList(InsnMc6809 &insn, const Operand &op);
-    Error encodeRegisterPair(InsnMc6809 &insn, const Operand &op);
-    Error encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
+    void encodeRegisterList(InsnMc6809 &insn, const Operand &op);
+    void encodeRegisterPair(InsnMc6809 &insn, const Operand &op);
+    void encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Config::ptrdiff_t calculateDisplacement(const InsnMc6809 &insn, const Operand &op) const;
-    Error encodeIndexed(InsnMc6809 &insn, const Operand &op);
+    void encodeIndexed(InsnMc6809 &insn, const Operand &op);
     char transferMemoryMode(Operand &op) const;
-    Error encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
-    Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
+    void encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
+    void encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_SETDP[] PROGMEM;

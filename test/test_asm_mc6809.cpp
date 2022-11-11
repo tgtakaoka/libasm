@@ -205,24 +205,24 @@ static void test_stack() {
     TEST("PSHU #$AA", 0x36, 0xAA);
     TEST("PULU #$FF", 0x37, 0xFF);
 
-    ERRT("PSHS S",         REGISTER_NOT_ALLOWED, "S");
-    ERRT("PULS A,S,B",     REGISTER_NOT_ALLOWED, "S,B");
-    ERRT("PSHU CC,X,U,PC", REGISTER_NOT_ALLOWED, "U,PC");
-    ERRT("PULU U",         REGISTER_NOT_ALLOWED, "U");
+    ERRT("PSHS S",         REGISTER_NOT_ALLOWED, "S",    0x34, 0x00);
+    ERRT("PULS A,S,B",     REGISTER_NOT_ALLOWED, "S,B",  0x35, 0x06);
+    ERRT("PSHU CC,X,U,PC", REGISTER_NOT_ALLOWED, "U,PC", 0x36, 0x91);
+    ERRT("PULU U",         REGISTER_NOT_ALLOWED, "U",    0x37, 0x00);
 
-    ERRT("PSHS A,D",   DUPLICATE_REGISTER, "D");
-    ERRT("PULS D,B",   DUPLICATE_REGISTER, "B");
-    ERRT("PSHU X,D,X", DUPLICATE_REGISTER, "X");
-    ERRT("PSHS U,D,U", DUPLICATE_REGISTER, "U");
-    ERRT("PSHU S,D,S", DUPLICATE_REGISTER, "S");
+    ERRT("PSHS A,D",   DUPLICATE_REGISTER, "D", 0x34, 0x06);
+    ERRT("PULS D,B",   DUPLICATE_REGISTER, "B", 0x35, 0x06);
+    ERRT("PSHU X,D,X", DUPLICATE_REGISTER, "X", 0x36, 0x16);
+    ERRT("PSHS U,D,U", DUPLICATE_REGISTER, "U", 0x34, 0x46);
+    ERRT("PSHU S,D,S", DUPLICATE_REGISTER, "S", 0x36, 0x46);
 
-    ERRT("PULS E",   REGISTER_NOT_ALLOWED, "E");
-    ERRT("PSHU F",   REGISTER_NOT_ALLOWED, "F");
-    ERRT("PSHS V",   REGISTER_NOT_ALLOWED, "V");
-    ERRT("PULU W",   REGISTER_NOT_ALLOWED, "W");
-    ERRT("PULS X,E", REGISTER_NOT_ALLOWED, "E");
-    ERRT("PSHU Y,F", REGISTER_NOT_ALLOWED, "F");
-    ERRT("PSHS U,V", REGISTER_NOT_ALLOWED, "V");
+    ERRT("PULS E",   REGISTER_NOT_ALLOWED, "E", 0x35, 0x00);
+    ERRT("PSHU F",   REGISTER_NOT_ALLOWED, "F", 0x36, 0x00);
+    ERRT("PSHS V",   REGISTER_NOT_ALLOWED, "V", 0x34, 0x00);
+    ERRT("PULU W",   REGISTER_NOT_ALLOWED, "W", 0x37, 0x00);
+    ERRT("PULS X,E", REGISTER_NOT_ALLOWED, "E", 0x35, 0x10);
+    ERRT("PSHU Y,F", REGISTER_NOT_ALLOWED, "F", 0x36, 0x20);
+    ERRT("PSHS U,V", REGISTER_NOT_ALLOWED, "V", 0x34, 0x40);
 }
 
 static void test_register() {
@@ -251,7 +251,7 @@ static void test_register() {
 
     ERRT("EXG A",     OPERAND_NOT_ALLOWED,  "A");
     ERRT("EXG A,",    UNKNOWN_OPERAND,      "A,");
-    ERRT("EXG A,X",   ILLEGAL_SIZE,         "A,X");
+    ERRT("EXG A,X",   ILLEGAL_SIZE,         "A,X",   0x1E, 0x81);
     ERRT("EXG A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
     if (is6309()) {
@@ -288,12 +288,12 @@ static void test_register() {
 
         ERRT("ADDR A",     OPERAND_NOT_ALLOWED,  "A");
         ERRT("ADDR A,",    UNKNOWN_OPERAND,      "A,");
-        ERRT("ADDR A,X",   ILLEGAL_SIZE,         "A,X");
+        ERRT("ADDR A,X",   ILLEGAL_SIZE,         "A,X", 0x10, 0x30, 0x81);
         ERRT("ADDR A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
         ERRT("TFR E",     OPERAND_NOT_ALLOWED,  "E");
         ERRT("TFR E,",    UNKNOWN_OPERAND,      "E,");
-        ERRT("TFR E,W",   ILLEGAL_SIZE,         "E,W");
+        ERRT("TFR E,W",   ILLEGAL_SIZE,         "E,W", 0x1F, 0xE6);
         ERRT("TFR E,X,F", OPERAND_NOT_ALLOWED,  "E,X,F");
     } else {
         ERUI("ADDR A,B");
@@ -304,26 +304,26 @@ static void test_register() {
         ERUI("ORR  A,B");
         ERUI("EORR A,B");
         ERUI("CMPR A,B");
-        ERRT("TFR A,E",  UNKNOWN_REGISTER, "A,E");
-        ERRT("TFR A,F",  UNKNOWN_REGISTER, "A,F");
-        ERRT("TFR E,A",  UNKNOWN_REGISTER, "E,A");
-        ERRT("TFR F,A",  UNKNOWN_REGISTER, "F,A");
-        ERRT("TFR A,Z",  UNKNOWN_REGISTER, "A,Z");
-        ERRT("TFR Z,A",  UNKNOWN_REGISTER, "Z,A");
-        ERRT("TFR A,0",  UNKNOWN_REGISTER, "A,0");
-        ERRT("TFR 0,A",  UNKNOWN_REGISTER, "0,A");
-        ERRT("TFR CC,0", UNKNOWN_REGISTER, "CC,0");
-        ERRT("TFR 0,CC", UNKNOWN_REGISTER, "0,CC");
-        ERRT("TFR D,W",  UNKNOWN_REGISTER, "D,W");
-        ERRT("TFR D,V",  UNKNOWN_REGISTER, "D,V");
-        ERRT("TFR W,D",  UNKNOWN_REGISTER, "W,D");
-        ERRT("TFR V,D",  UNKNOWN_REGISTER, "V,D");
-        ERRT("TFR W,PC", UNKNOWN_REGISTER, "W,PC");
-        ERRT("TFR S,W",  UNKNOWN_REGISTER, "S,W");
-        ERRT("TFR Z,V",  UNKNOWN_REGISTER, "Z,V");
-        ERRT("TFR X,Z",  UNKNOWN_REGISTER, "X,Z");
-        ERRT("TFR 0,V",  UNKNOWN_REGISTER, "0,V");
-        ERRT("TFR X,0",  UNKNOWN_REGISTER, "X,0");
+        ERRT("TFR A,E",  UNKNOWN_REGISTER, "A,E",  0x1F, 0x8E);
+        ERRT("TFR A,F",  UNKNOWN_REGISTER, "A,F",  0x1F, 0x8F);
+        ERRT("TFR E,A",  UNKNOWN_REGISTER, "E,A",  0x1F, 0xE8);
+        ERRT("TFR F,A",  UNKNOWN_REGISTER, "F,A",  0x1F, 0xF8);
+        ERRT("TFR A,Z",  UNKNOWN_REGISTER, "A,Z",  0x1F, 0x8D);
+        ERRT("TFR Z,A",  UNKNOWN_REGISTER, "Z,A",  0x1F, 0xD8);
+        ERRT("TFR A,0",  UNKNOWN_REGISTER, "A,0",  0x1F, 0x8D);
+        ERRT("TFR 0,A",  UNKNOWN_REGISTER, "0,A",  0x1F, 0xD8);
+        ERRT("TFR CC,0", UNKNOWN_REGISTER, "CC,0", 0x1F, 0xAD);
+        ERRT("TFR 0,CC", UNKNOWN_REGISTER, "0,CC", 0x1F, 0xDA);
+        ERRT("TFR D,W",  UNKNOWN_REGISTER, "D,W",  0x1F, 0x06);
+        ERRT("TFR D,V",  UNKNOWN_REGISTER, "D,V",  0x1F, 0x07);
+        ERRT("TFR W,D",  UNKNOWN_REGISTER, "W,D",  0x1F, 0x60);
+        ERRT("TFR V,D",  UNKNOWN_REGISTER, "V,D",  0x1F, 0x70);
+        ERRT("TFR W,PC", UNKNOWN_REGISTER, "W,PC", 0x1F, 0x65);
+        ERRT("TFR S,W",  UNKNOWN_REGISTER, "S,W",  0x1F, 0x46);
+        ERRT("TFR Z,V",  UNKNOWN_REGISTER, "Z,V",  0x1F, 0xD7);
+        ERRT("TFR X,Z",  UNKNOWN_REGISTER, "X,Z",  0x1F, 0x1D);
+        ERRT("TFR 0,V",  UNKNOWN_REGISTER, "0,V",  0x1F, 0xD7);
+        ERRT("TFR X,0",  UNKNOWN_REGISTER, "X,0",  0x1F, 0x1D);
     }
 }
 
@@ -331,8 +331,8 @@ static void test_relative() {
     ATEST(0x1000, "BRA $1002", 0x20, 0x00);
     ATEST(0x1000, "BRN $1000", 0x21, 0xFE);
     ATEST(0x1000, "BHI $1004", 0x22, 0x02);
-    ATEST(0x1000, "BLS $1002", 0x23, 0x00);
-    ATEST(0x1000, "BHS $1002", 0x24, 0x00);
+    ATEST(0x1000, "BLS $1081", 0x23, 0x7F);
+    ATEST(0x1000, "BHS $0F82", 0x24, 0x80);
     ATEST(0x1000, "BLO $1002", 0x25, 0x00);
     ATEST(0x1000, "BNE $1002", 0x26, 0x00);
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
@@ -344,12 +344,17 @@ static void test_relative() {
     ATEST(0x1000, "BLT $1002", 0x2D, 0x00);
     ATEST(0x1000, "BGT $1002", 0x2E, 0x00);
     ATEST(0x1000, "BLE $1002", 0x2F, 0x00);
+    AERRT(0x1000, "BRA $1082", OPERAND_TOO_FAR, "$1082", 0x20, 0x80);
+    AERRT(0x1000, "BLE $0F81", OPERAND_TOO_FAR, "$0F81", 0x2F, 0x7F);
 
     ATEST(0x1000, "LBRA $1003", 0x16, 0x00, 0x00);
+    ATEST(0x1000, "LBRA $9002", 0x16, 0x7F, 0xFF);
+    ATEST(0x9000, "LBRA $1003", 0x16, 0x80, 0x00);
+    ATEST(0x9000, "LBRA $1002", 0x16, 0x7F, 0xFF);
     ATEST(0x1000, "LBRN $1000", 0x10, 0x21, 0xFF, 0xFC);
     ATEST(0x1000, "LBHI $1008", 0x10, 0x22, 0x00, 0x04);
-    ATEST(0x1000, "LBLS $1004", 0x10, 0x23, 0x00, 0x00);
-    ATEST(0x1000, "LBHS $1004", 0x10, 0x24, 0x00, 0x00);
+    ATEST(0x1000, "LBLS $9003", 0x10, 0x23, 0x7F, 0xFF);
+    ATEST(0x9000, "LBHS $1004", 0x10, 0x24, 0x80, 0x00);
     ATEST(0x1000, "LBLO $1004", 0x10, 0x25, 0x00, 0x00);
     ATEST(0x1000, "LBNE $1004", 0x10, 0x26, 0x00, 0x00);
     ATEST(0x1000, "LBEQ $1004", 0x10, 0x27, 0x00, 0x00);
@@ -361,6 +366,8 @@ static void test_relative() {
     ATEST(0x1000, "LBLT $1004", 0x10, 0x2D, 0x00, 0x00);
     ATEST(0x1000, "LBGT $1004", 0x10, 0x2E, 0x00, 0x00);
     ATEST(0x1000, "LBLE $1004", 0x10, 0x2F, 0x00, 0x00);
+    ATEST(0x1000, "LBLE $9004", 0x10, 0x2F, 0x80, 0x00);
+    ATEST(0x9000, "LBLE $1003", 0x10, 0x2F, 0x7F, 0xFF);
 
     ATEST(0x1000, "BSR  $1042", 0x8D, 0x40);
     ATEST(0x1000, "LBSR $1043", 0x17, 0x00, 0x40);
@@ -1238,44 +1245,44 @@ static void test_indexed_mode() {
         TEST("LDA [,W++]",     0xA6, 0xD0);
         TEST("LDA [,--W]",     0xA6, 0xF0);
     } else {
-        ERRT("LDA E,X",   UNKNOWN_OPERAND, "E,X");
-        ERRT("LDA F,X",   UNKNOWN_OPERAND, "F,X");
-        ERRT("LDA W,X",   UNKNOWN_OPERAND, "W,X");
-        ERRT("LDA [E,X]", UNKNOWN_OPERAND, "[E,X]");
-        ERRT("LDA [F,X]", UNKNOWN_OPERAND, "[F,X]");
-        ERRT("LDA [W,X]", UNKNOWN_OPERAND, "[W,X]");
-        ERRT("LDA E,Y",   UNKNOWN_OPERAND, "E,Y");
-        ERRT("LDA F,Y",   UNKNOWN_OPERAND, "F,Y");
-        ERRT("LDA W,Y",   UNKNOWN_OPERAND, "W,Y");
-        ERRT("LDA [E,Y]", UNKNOWN_OPERAND, "[E,Y]");
-        ERRT("LDA [F,Y]", UNKNOWN_OPERAND, "[F,Y]");
-        ERRT("LDA [W,Y]", UNKNOWN_OPERAND, "[W,Y]");
-        ERRT("LDA E,U",   UNKNOWN_OPERAND, "E,U");
-        ERRT("LDA F,U",   UNKNOWN_OPERAND, "F,U");
-        ERRT("LDA W,U",   UNKNOWN_OPERAND, "W,U");
-        ERRT("LDA [E,U]", UNKNOWN_OPERAND, "[E,U]");
-        ERRT("LDA [F,U]", UNKNOWN_OPERAND, "[F,U]");
-        ERRT("LDA [W,U]", UNKNOWN_OPERAND, "[W,U]");
-        ERRT("LDA E,S",   UNKNOWN_OPERAND, "E,S");
-        ERRT("LDA F,S",   UNKNOWN_OPERAND, "F,S");
-        ERRT("LDA W,S",   UNKNOWN_OPERAND, "W,S");
-        ERRT("LDA [E,S]", UNKNOWN_OPERAND, "[E,S]");
-        ERRT("LDA [F,S]", UNKNOWN_OPERAND, "[F,S]");
-        ERRT("LDA [W,S]", UNKNOWN_OPERAND, "[W,S]");
-        ERRT("LDA       ,W",   UNKNOWN_OPERAND, ",W");
-        ERRT("LDA      0,W",   UNKNOWN_OPERAND, "0,W");
-        ERRT("LDA     >0,W",   UNKNOWN_OPERAND, ">0,W");
-        ERRT("LDA  32767,W",   UNKNOWN_OPERAND, "32767,W");
-        ERRT("LDA -32768,W",   UNKNOWN_OPERAND, "-32768,W");
-        ERRT("LDA       [,W]", UNKNOWN_OPERAND, "[,W]");
-        ERRT("LDA      [0,W]", UNKNOWN_OPERAND, "[0,W]");
-        ERRT("LDA     [>0,W]", UNKNOWN_OPERAND, "[>0,W]");
-        ERRT("LDA  [32767,W]", UNKNOWN_OPERAND, "[32767,W]");
-        ERRT("LDA [-32768,W]", UNKNOWN_OPERAND, "[-32768,W]");
-        ERRT("LDA ,W++",       UNKNOWN_OPERAND, ",W++");
-        ERRT("LDA ,--W",       UNKNOWN_OPERAND, ",--W");
-        ERRT("LDA [,W++]",     UNKNOWN_OPERAND, "[,W++]");
-        ERRT("LDA [,--W]",     UNKNOWN_OPERAND, "[,--W]");
+        ERRT("LDA E,X",   UNKNOWN_OPERAND, "E,X",   0xA6, 0x84);
+        ERRT("LDA F,X",   UNKNOWN_OPERAND, "F,X",   0xA6, 0x84);
+        ERRT("LDA W,X",   UNKNOWN_OPERAND, "W,X",   0xA6, 0x84);
+        ERRT("LDA [E,X]", UNKNOWN_OPERAND, "[E,X]", 0xA6, 0x94);
+        ERRT("LDA [F,X]", UNKNOWN_OPERAND, "[F,X]", 0xA6, 0x94);
+        ERRT("LDA [W,X]", UNKNOWN_OPERAND, "[W,X]", 0xA6, 0x94);
+        ERRT("LDA E,Y",   UNKNOWN_OPERAND, "E,Y",   0xA6, 0xA4);
+        ERRT("LDA F,Y",   UNKNOWN_OPERAND, "F,Y",   0xA6, 0xA4);
+        ERRT("LDA W,Y",   UNKNOWN_OPERAND, "W,Y",   0xA6, 0xA4);
+        ERRT("LDA [E,Y]", UNKNOWN_OPERAND, "[E,Y]", 0xA6, 0xB4);
+        ERRT("LDA [F,Y]", UNKNOWN_OPERAND, "[F,Y]", 0xA6, 0xB4);
+        ERRT("LDA [W,Y]", UNKNOWN_OPERAND, "[W,Y]", 0xA6, 0xB4);
+        ERRT("LDA E,U",   UNKNOWN_OPERAND, "E,U",   0xA6, 0xC4);
+        ERRT("LDA F,U",   UNKNOWN_OPERAND, "F,U",   0xA6, 0xC4);
+        ERRT("LDA W,U",   UNKNOWN_OPERAND, "W,U",   0xA6, 0xC4);
+        ERRT("LDA [E,U]", UNKNOWN_OPERAND, "[E,U]", 0xA6, 0xD4);
+        ERRT("LDA [F,U]", UNKNOWN_OPERAND, "[F,U]", 0xA6, 0xD4);
+        ERRT("LDA [W,U]", UNKNOWN_OPERAND, "[W,U]", 0xA6, 0xD4);
+        ERRT("LDA E,S",   UNKNOWN_OPERAND, "E,S",   0xA6, 0xE4);
+        ERRT("LDA F,S",   UNKNOWN_OPERAND, "F,S",   0xA6, 0xE4);
+        ERRT("LDA W,S",   UNKNOWN_OPERAND, "W,S",   0xA6, 0xE4);
+        ERRT("LDA [E,S]", UNKNOWN_OPERAND, "[E,S]", 0xA6, 0xF4);
+        ERRT("LDA [F,S]", UNKNOWN_OPERAND, "[F,S]", 0xA6, 0xF4);
+        ERRT("LDA [W,S]", UNKNOWN_OPERAND, "[W,S]", 0xA6, 0xF4);
+        ERRT("LDA       ,W",   UNKNOWN_OPERAND, ",W",         0xA6, 0x00);
+        ERRT("LDA      0,W",   UNKNOWN_OPERAND, "0,W",        0xA6, 0x00);
+        ERRT("LDA     >0,W",   UNKNOWN_OPERAND, ">0,W",       0xA6, 0x00, 0x00, 0x00);
+        ERRT("LDA  32767,W",   UNKNOWN_OPERAND, "32767,W",    0xA6, 0x00, 0x7F, 0xFF);
+        ERRT("LDA -32768,W",   UNKNOWN_OPERAND, "-32768,W",   0xA6, 0x00, 0x80, 0x00);
+        ERRT("LDA       [,W]", UNKNOWN_OPERAND, "[,W]",       0xA6, 0x00);
+        ERRT("LDA      [0,W]", UNKNOWN_OPERAND, "[0,W]",      0xA6, 0x00);
+        ERRT("LDA     [>0,W]", UNKNOWN_OPERAND, "[>0,W]",     0xA6, 0x00, 0x00, 0x00);
+        ERRT("LDA  [32767,W]", UNKNOWN_OPERAND, "[32767,W]",  0xA6, 0x00, 0x7F, 0xFF);
+        ERRT("LDA [-32768,W]", UNKNOWN_OPERAND, "[-32768,W]", 0xA6, 0x00, 0x80, 0x00);
+        ERRT("LDA ,W++",       UNKNOWN_OPERAND, ",W++",       0xA6, 0x00);
+        ERRT("LDA ,--W",       UNKNOWN_OPERAND, ",--W",       0xA6, 0x00);
+        ERRT("LDA [,W++]",     UNKNOWN_OPERAND, "[,W++]",     0xA6, 0x00);
+        ERRT("LDA [,--W]",     UNKNOWN_OPERAND, "[,--W]",     0xA6, 0x00);
     }
 
     symtab.intern(0x0F83, "label0F83");
@@ -1321,9 +1328,9 @@ static void test_transfer() {
         TEST("TFM U+,S+", 0x11, 0x38, 0x34);
         TEST("TFM S+,D+", 0x11, 0x38, 0x40);
 
-        ERRT("TFM X+,W",  REGISTER_NOT_ALLOWED, "W");
-        ERRT("TFM W+,X",  REGISTER_NOT_ALLOWED, "W+,X");
-        ERRT("TFM W-,X-", REGISTER_NOT_ALLOWED, "W-,X-");
+        ERRT("TFM X+,W",  REGISTER_NOT_ALLOWED, "W",     0x11, 0x3A, 0x16);
+        ERRT("TFM W+,X",  REGISTER_NOT_ALLOWED, "W+,X",  0x11, 0x3A, 0x61);
+        ERRT("TFM W-,X-", REGISTER_NOT_ALLOWED, "W-,X-", 0x11, 0x39, 0x61);
     } else {
         ERUI("TFM D,Y");
         ERUI("TFM X+,Y+");
@@ -1333,23 +1340,28 @@ static void test_transfer() {
 static void test_bit_position() {
     if (is6309()) {
         // HD6309
-        TEST("BAND  A.1,$34.2", 0x11, 0x30, 0x51, 0x34);
-        TEST("BIAND A.1,$34.2", 0x11, 0x31, 0x51, 0x34);
-        TEST("BOR   A.1,$34.2", 0x11, 0x32, 0x51, 0x34);
-        // ',' can be accepted as bit number separator.
-        TEST("BIOR  A,1,$34,2", 0x11, 0x33, 0x51, 0x34);
-        TEST("BEOR  A,1,$34,2", 0x11, 0x34, 0x51, 0x34);
-        TEST("SETDP $12");
+        TEST("BAND  A.1,$34.2",                                   0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.9,$34.2",  ILLEGAL_BIT_NUMBER, "A.9,$34.2", 0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.1,$34.10", ILLEGAL_BIT_NUMBER, "$34.10",    0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A,9,$34,2",  ILLEGAL_BIT_NUMBER, "A,9,$34,2", 0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A,1,$34,10", ILLEGAL_BIT_NUMBER, "$34,10",    0x11, 0x30, 0x51, 0x34);
+        TEST("BIAND A.1,$34.2",   0x11, 0x31, 0x51, 0x34);
+        TEST("BOR   A.1,$34.2",   0x11, 0x32, 0x51, 0x34);
+        TEST("BIAND A.1,$34,2",   0x11, 0x31, 0x51, 0x34);
         TEST("BIEOR A.1,$1234.2", 0x11, 0x35, 0x51, 0x34);
-        TEST("LDBT  A,1,$1234,2", 0x11, 0x36, 0x51, 0x34);
+        // ',' can be accepted as bit number separator.
+        TEST("BIOR  A,1,$34,2",   0x11, 0x33, 0x51, 0x34);
+        TEST("BEOR  A,1,$34,2",   0x11, 0x34, 0x51, 0x34);
+        TEST("SETDP $12");
         TEST("STBT  A.1,<$5634.2", 0x11, 0x37, 0x51, 0x34);
+        TEST("LDBT  A,1,$1234,2",  0x11, 0x36, 0x51, 0x34);
         TEST("STBT  B,0,<$5634.2", 0x11, 0x37, 0x90, 0x34);
 
         TEST("SETDP 0");
-        TEST("LDBT CC,0,$34.7", 0x11, 0x36, 0x38, 0x34);
         TEST("LDBT CC.1,$34.7", 0x11, 0x36, 0x39, 0x34);
         TEST("LDBT CC.2,$34.7", 0x11, 0x36, 0x3A, 0x34);
         // ',' can be accepted as bit number separator.
+        TEST("LDBT CC,0,$34.7", 0x11, 0x36, 0x38, 0x34);
         TEST("LDBT CC,3,$34.7", 0x11, 0x36, 0x3B, 0x34);
         TEST("LDBT CC,4,$34,7", 0x11, 0x36, 0x3C, 0x34);
         TEST("SETDP $12");
@@ -1434,14 +1446,14 @@ static void test_error() {
 
     if (is6309()) {
         // HD6309
-        ERRT("LDA ,W+",   UNKNOWN_OPERAND, ",W+");
-        ERRT("LDA ,-W",   UNKNOWN_OPERAND, ",-W");
+        ERRT("LDA ,W+",   UNKNOWN_OPERAND, ",W+", 0xA6, 0x00);
+        ERRT("LDA ,-W",   UNKNOWN_OPERAND, ",-W", 0xA6, 0x00);
         ERRT("LDA , W++", UNKNOWN_OPERAND, ", W++");
         ERRT("LDA , --W", UNKNOWN_OPERAND, ", --W");
         ERRT("LDA [ , W++ ]", UNKNOWN_OPERAND, "[ , W++ ]");
         ERRT("LDA [ , --W ]", UNKNOWN_OPERAND, "[ , --W ]");
 
-        ERRT("TFM D+,W+",    REGISTER_NOT_ALLOWED, "W+");
+        ERRT("TFM D+,W+",    REGISTER_NOT_ALLOWED, "W+", 0x11, 0x38, 0x06);
         ERRT("TFM D + , X+", UNKNOWN_OPERAND, "D + , X+");
         ERRT("TFM D+ , X +", UNKNOWN_OPERAND, "X +");
         ERRT("TFM X - , Y-", UNKNOWN_OPERAND, "X - , Y-");

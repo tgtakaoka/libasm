@@ -711,24 +711,29 @@ static RegName baseRegName(const RegName base) {
 
 int16_t TableMc6809::searchPostSpec(PostSpec &spec) const {
     auto specBase = baseRegName(spec.base);
+    uint8_t maybe = 0;
     for (auto page = _cpu->postTable(); page < _cpu->postEnd(); page++) {
         for (auto entry = page->table(); entry < page->end(); entry++) {
-            auto base = RegName(pgm_read_byte(&entry->base));
-            auto size = static_cast<int8_t>(pgm_read_byte(&entry->size));
-            if (specBase == base && spec.size == size &&
-                    spec.index == RegName(pgm_read_byte(&entry->index))) {
-                auto byte = pgm_read_byte(&entry->byte);
-                if (spec.indir) {
-                    if (pgm_read_byte(&entry->indir) == 0)
-                        continue;
-                    byte |= 0x10;
-                }
+            auto byte = pgm_read_byte(&entry->byte);
+            const auto index = RegName(pgm_read_byte(&entry->index));
+            const auto base = RegName(pgm_read_byte(&entry->base));
+            const auto size = static_cast<int8_t>(pgm_read_byte(&entry->size));
+            const auto indir = pgm_read_byte(&entry->indir);
+            if (spec.indir && indir)
+                byte |= 0x10;
+            if (specBase == base && spec.size == size) {
                 spec.base = base;
-                return byte;
+                if (maybe == 0)
+                    maybe = byte;
+                if (spec.index == index) {
+                    if (spec.indir && !indir)
+                        continue;
+                    return byte;
+                }
             }
         }
     }
-    return -1;
+    return (-1 & ~0xFF) | maybe;
 }
 
 TableMc6809::TableMc6809() {

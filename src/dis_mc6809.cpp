@@ -131,8 +131,6 @@ Error DisMc6809::decodeRelative(
     }
     const Config::uintptr_t base = insn.address() + insn.length();
     const Config::uintptr_t target = base + delta;
-    if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
-        return setError(OPERAND_TOO_FAR);
     const uint8_t deltaWidth = mode == M_REL ? 8 : 16;
     outRelAddr(out, target, insn.address(), deltaWidth);
     return setError(insn);
