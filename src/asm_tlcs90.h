@@ -36,9 +36,8 @@ private:
     IntelValueParser _parser;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    Error encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
-    Error encodeOperand(
-            InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
+    void encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
+    void encodeOperand(InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

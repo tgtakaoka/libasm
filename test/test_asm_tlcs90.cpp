@@ -41,10 +41,10 @@ void test_cpu() {
 static void test_8bit_transfer() {
     TEST("LD B,34H",      0x30, 0x34);
     TEST("LD B,-128",     0x30, 0x80);
-    ERRT("LD B,-129",     OVERFLOW_RANGE, "-129", 0x30);
+    ERRT("LD B,-129",     OVERFLOW_RANGE, "-129", 0x30, 0x7F);
     TEST("LD B,-1",       0x30, 0xFF);
     TEST("LD B,255",      0x30, 0xFF);
-    ERRT("LD B,256",      OVERFLOW_RANGE, "256",  0x30);
+    ERRT("LD B,256",      OVERFLOW_RANGE, "256",  0x30, 0x00);
     TEST("LD B,B",        0xF8, 0x30);
     TEST("LD B,C",        0xF9, 0x30);
     TEST("LD B,D",        0xFA, 0x30);
@@ -64,6 +64,9 @@ static void test_8bit_transfer() {
     TEST("LD B,(IY-34H)", 0xF1, 0xCC, 0x28);
     TEST("LD B,(SP+34H)", 0xF2, 0x34, 0x28);
     TEST("ld b,(hl+a)",   0xF3, 0x28);
+    ERRT("ld b,(ix+128)", OVERFLOW_RANGE, "(ix+128)", 0xF0, 0x80, 0x28);
+    ERRT("LD B,(IY-129)", OVERFLOW_RANGE, "(IY-129)", 0xF1, 0x7F, 0x28);
+    ERRT("LD B,(SP+129)", OVERFLOW_RANGE, "(SP+129)", 0xF2, 0x81, 0x28);
 
     TEST("LD C,34H",      0x31, 0x34);
     TEST("LD C,B",        0xF8, 0x31);
@@ -1478,8 +1481,8 @@ static void test_bitops() {
     TEST("BIT 0,(IY-34H)", 0xF1, 0xCC, 0xA8);
     TEST("BIT 1,(SP+34H)", 0xF2, 0x34, 0xA9);
     TEST("BIT 2,(HL+A)",   0xF3, 0xAA);
-    ERRT("BIT -1,B",       OVERFLOW_RANGE, "-1,B", 0xF8);
-    ERRT("BIT 8,B",        OVERFLOW_RANGE, "8,B",  0xF8);
+    ERRT("BIT 8,B",        OVERFLOW_RANGE, "8,B",  0xF8, 0xA8);
+    ERRT("BIT -1,B",       OVERFLOW_RANGE, "-1,B", 0xF8, 0xAF);
 
     TEST("SET 0,B",        0xF8, 0xB8);
     TEST("SET 1,C",        0xF9, 0xB9);
@@ -1543,35 +1546,39 @@ static void test_bitops() {
 }
 
 static void test_jump_call() {
-    TEST("JR F,$+2",     0xC0, 0x00);
-    TEST("JR LT,$",      0xC1, 0xFE);
-    TEST("JR LE,$-126",  0xC2, 0x80);
-    TEST("JR ULE,$+129", 0xC3, 0x7F);
-    TEST("JR OV,$+2",    0xC4, 0x00);
-    TEST("JR MI,$",      0xC5, 0xFE);
-    TEST("JR Z,$-126",   0xC6, 0x80);
-    TEST("JR C,$+129",   0xC7, 0x7F);
-    TEST("JR $+2",       0xC8, 0x00);
-    TEST("JR GE,$",      0xC9, 0xFE);
-    TEST("JR GT,$-126",  0xCA, 0x80);
-    TEST("JR UGT,$+129", 0xCB, 0x7F);
-    TEST("JR NOV,$+2",   0xCC, 0x00);
-    TEST("JR PL,$",      0xCD, 0xFE);
-    TEST("JR NZ,$-126",  0xCE, 0x80);
-    TEST("JR NC,$+129",  0xCF, 0x7F);
-    TEST("JR PE,$+2",    0xC4, 0x00);
-    TEST("JR M,$",       0xC5, 0xFE);
-    TEST("JR EQ,$-126",  0xC6, 0x80);
-    TEST("JR ULT,$+129", 0xC7, 0x7F);
-    TEST("JR PO,$+2",    0xCC, 0x00);
-    TEST("JR P,$",       0xCD, 0xFE);
-    TEST("JR NE,$-126",  0xCE, 0x80);
-    TEST("JR UGE,$+129", 0xCF, 0x7F);
+    ATEST(0x1000, "JR F,$+2",     0xC0, 0x00);
+    ATEST(0x1000, "JR LT,$",      0xC1, 0xFE);
+    ATEST(0x1000, "JR LE,$-126",  0xC2, 0x80);
+    ATEST(0x1000, "JR ULE,$+129", 0xC3, 0x7F);
+    ATEST(0x1000, "JR OV,$+2",    0xC4, 0x00);
+    ATEST(0x1000, "JR MI,$",      0xC5, 0xFE);
+    ATEST(0x1000, "JR Z,$-126",   0xC6, 0x80);
+    ATEST(0x1000, "JR C,$+129",   0xC7, 0x7F);
+    ATEST(0x1000, "JR $+2",       0xC8, 0x00);
+    ATEST(0x1000, "JR GE,$",      0xC9, 0xFE);
+    ATEST(0x1000, "JR GT,$-126",  0xCA, 0x80);
+    ATEST(0x1000, "JR UGT,$+129", 0xCB, 0x7F);
+    ATEST(0x1000, "JR NOV,$+2",   0xCC, 0x00);
+    ATEST(0x1000, "JR PL,$",      0xCD, 0xFE);
+    ATEST(0x1000, "JR NZ,$-126",  0xCE, 0x80);
+    ATEST(0x1000, "JR NC,$+129",  0xCF, 0x7F);
+    ATEST(0x1000, "JR PE,$+2",    0xC4, 0x00);
+    ATEST(0x1000, "JR M,$",       0xC5, 0xFE);
+    ATEST(0x1000, "JR EQ,$-126",  0xC6, 0x80);
+    ATEST(0x1000, "JR ULT,$+129", 0xC7, 0x7F);
+    ATEST(0x1000, "JR PO,$+2",    0xCC, 0x00);
+    ATEST(0x1000, "JR P,$",       0xCD, 0xFE);
+    ATEST(0x1000, "JR NE,$-126",  0xCE, 0x80);
+    ATEST(0x1000, "JR UGE,$+129", 0xCF, 0x7F);
+    AERRT(0x1000, "JR C,$+130", OPERAND_TOO_FAR, "$+130", 0xC7, 0x80);
+    AERRT(0x1000, "JR C,$-127", OPERAND_TOO_FAR, "$-127", 0xC7, 0x7F);
 
-    TEST("JRL $+3",     0x1B, 0x01, 0x00);
-    TEST("JRL $",       0x1B, 0xFE, 0xFF);
-    TEST("JRL $-7FFEH", 0x1B, 0x00, 0x80);
-    TEST("JRL $+8001H", 0x1B, 0xFF, 0x7F);
+    ATEST(0x1000, "JRL $+3",     0x1B, 0x01, 0x00);
+    ATEST(0x1000, "JRL $",       0x1B, 0xFE, 0xFF);
+    ATEST(0x9000, "JRL $-7FFEH", 0x1B, 0x00, 0x80);
+    ATEST(0x9000, "JRL $-7FFFH", 0x1B, 0xFF, 0x7F);
+    ATEST(0x1000, "JRL $+8001H", 0x1B, 0xFF, 0x7F);
+    ATEST(0x1000, "JRL $+8002H", 0x1B, 0x00, 0x80);
 
     TEST("JP (1234H)",  0x1A, 0x34, 0x12);
 
@@ -1627,20 +1634,26 @@ static void test_jump_call() {
     TEST("CALL NE,(SP+34H)",  0xF6, 0x34, 0xDE);
     TEST("CALL UGE,(HL+A)",   0xF7, 0xDF);
 
-    TEST("CALR $+3",     0x1D, 0x01, 0x00);
-    TEST("CALR $",       0x1D, 0xFE, 0xFF);
-    TEST("CALR $-7FFEH", 0x1D, 0x00, 0x80);
-    TEST("CALR $+8001H", 0x1D, 0xFF, 0x7F);
+    ATEST(0x1000, "CALR $+3",     0x1D, 0x01, 0x00);
+    ATEST(0x1000, "CALR $",       0x1D, 0xFE, 0xFF);
+    ATEST(0x9000, "CALR $-7FFEH", 0x1D, 0x00, 0x80);
+    ATEST(0x9000, "CALR $-7FFFH", 0x1D, 0xFF, 0x7F);
+    ATEST(0x1000, "CALR $+8001H", 0x1D, 0xFF, 0x7F);
+    ATEST(0x1000, "CALR $+8002H", 0x1D, 0x00, 0x80);
 
-    TEST("DJNZ $+2",   0x18, 0x00);
-    TEST("DJNZ $",     0x18, 0xFE);
-    TEST("DJNZ $-126", 0x18, 0x80);
-    TEST("DJNZ $+129", 0x18, 0x7F);
+    ATEST(0x1000, "DJNZ $+2",   0x18, 0x00);
+    ATEST(0x1000, "DJNZ $",     0x18, 0xFE);
+    ATEST(0x1000, "DJNZ $-126", 0x18, 0x80);
+    ATEST(0x1000, "DJNZ $+129", 0x18, 0x7F);
+    AERRT(0x1000, "DJNZ $-127", OPERAND_TOO_FAR, "$-127", 0x18, 0x7F);
+    AERRT(0x1000, "DJNZ $+130", OPERAND_TOO_FAR, "$+130", 0x18, 0x80);
 
-    TEST("DJNZ BC,$+2",   0x19, 0x00);
-    TEST("DJNZ BC,$",     0x19, 0xFE);
-    TEST("DJNZ BC,$-126", 0x19, 0x80);
-    TEST("DJNZ BC,$+129", 0x19, 0x7F);
+    ATEST(0x1000, "DJNZ BC,$+2",   0x19, 0x00);
+    ATEST(0x1000, "DJNZ BC,$",     0x19, 0xFE);
+    ATEST(0x1000, "DJNZ BC,$-126", 0x19, 0x80);
+    ATEST(0x1000, "DJNZ BC,$+129", 0x19, 0x7F);
+    AERRT(0x1000, "DJNZ BC,$-127", OPERAND_TOO_FAR, "$-127", 0x19, 0x7F);
+    AERRT(0x1000, "DJNZ BC,$+130", OPERAND_TOO_FAR, "$+130", 0x19, 0x80);
 
     TEST("RETI", 0x1F);
 
@@ -1688,6 +1701,7 @@ static void test_error() {
     ERRT("LD B,(HL+34H)", REGISTER_NOT_ALLOWED,  "HL+34H)");
     ERRT("LD B,(HL+B)",   REGISTER_NOT_ALLOWED,  "B)");
     ERRT("LD B,(HL-A)",   REGISTER_NOT_ALLOWED,  "HL-A)");
+    ERRT("LD B,(IX+127",  MISSING_CLOSING_PAREN, "");
     ERRT("LD B,(1234H",   MISSING_CLOSING_PAREN, "");
     ERRT("LD B,(BC+34H",  MISSING_CLOSING_PAREN, "");
     ERRT("LD B,(HL+A",    MISSING_CLOSING_PAREN, "");

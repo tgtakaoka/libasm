@@ -19,73 +19,75 @@
 namespace libasm {
 namespace tlcs90 {
 
-Error AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
+void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (mode == M_REL16) {
         insn.emitUint16(delta);
-        return OK;
+    } else {
+        if (overflowRel8(delta))
+            setErrorIf(op, OPERAND_TOO_FAR);
+        insn.emitByte(delta);
     }
-    if (overflowRel8(delta))
-        return setError(op, OPERAND_TOO_FAR);
-    insn.emitByte(delta);
-    return OK;
 }
 
-Error AsmTlcs90::encodeOperand(
+void AsmTlcs90::encodeOperand(
         InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) {
     switch (mode) {
     case M_IMM8:
         if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_DIR:
         insn.emitInsn(opc);
         insn.emitByte(op.val16);
-        return OK;
+        return;
     case M_IMM16:
     case M_EXT:
         insn.emitInsn(opc);
         insn.emitUint16(op.val16);
-        return OK;
+        return;
     case M_BIT:
         if (op.val16 >= 8)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | (op.val16 & 7));
-        return OK;
+        return;
     case M_REL8:
     case M_REL16:
         insn.emitInsn(opc);
-        return encodeRelative(insn, mode, op);
+        encodeRelative(insn, mode, op);
+        return;
     case M_IND:
         insn.emitInsn(opc | RegTlcs90::encodeReg16(op.reg));
-        return OK;
+        return;
     case M_IDX:
+        if (overflowRel8(static_cast<int16_t>(op.val16)))
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | RegTlcs90::encodeIndexReg(op.reg));
         insn.emitByte(op.val16);
-        return OK;
+        return;
     case M_CC:
         insn.emitInsn(opc | RegTlcs90::encodeCcName(op.cc));
-        return OK;
+        return;
     case M_STACK:
         insn.emitInsn(opc | RegTlcs90::encodeStackReg(op.reg));
-        return OK;
+        return;
     case M_REG8:
         insn.emitInsn(opc | RegTlcs90::encodeReg8(op.reg));
-        return OK;
+        return;
     case M_REG16:
         insn.emitInsn(opc | RegTlcs90::encodeReg16(op.reg));
-        return OK;
+        return;
     case M_REGIX:
         insn.emitInsn(opc | RegTlcs90::encodeIndexReg(op.reg));
-        return OK;
+        return;
     case R_A:
     case R_HL:
-        return OK;
+        return;
     default:
         insn.emitInsn(opc);
-        return OK;
+        return;
     }
 }
 
@@ -95,7 +97,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(*p))
         return OK;
 
-    const CcName cc = RegTlcs90::parseCcName(p);
+    const auto cc = RegTlcs90::parseCcName(p);
     if (cc != CC_UNDEF) {
         op.mode = M_CC;
         op.cc = cc;
@@ -108,7 +110,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    RegName reg = RegTlcs90::parseRegName(p);
+    auto reg = RegTlcs90::parseRegName(p);
     if (reg != REG_UNDEF) {
         switch (reg) {
         case REG_IX:
@@ -131,7 +133,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     if (p.expect('(')) {
-        const StrScanner regp = p.skipSpaces();
+        const auto regp = p.skipSpaces();
         reg = RegTlcs90::parseRegName(p);
         if (reg == REG_UNDEF) {  // (nnnn)
             op.val16 = parseExpr16(p, op);
@@ -154,8 +156,8 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         }
         StrScanner a(p);
         if (reg == REG_HL && a.expect('+')) {
-            const StrScanner idxp = a.skipSpaces();
-            const RegName idx = RegTlcs90::parseRegName(a);
+            const auto idxp = a.skipSpaces();
+            const auto idx = RegTlcs90::parseRegName(a);
             if (idx != REG_UNDEF) {
                 if (idx != REG_A)
                     return op.setError(idxp, REGISTER_NOT_ALLOWED);
@@ -211,27 +213,27 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    const AddrMode pre = insn.pre();
-    const AddrMode dst = insn.dst();
-    const AddrMode src = insn.src();
-    const Config::opcode_t prefix = insn.prefix();
+    const auto pre = insn.pre();
+    const auto dst = insn.dst();
+    const auto src = insn.src();
+    const auto prefix = insn.prefix();
     if (prefix) {
         insn.setEmitInsn();
-        if (pre == M_DST && encodeOperand(insn, dst, dstOp, prefix))
-            return getError();
-        if (pre == M_SRC && encodeOperand(insn, src, srcOp, prefix))
-            return getError();
+        if (pre == M_DST)
+            encodeOperand(insn, dst, dstOp, prefix);
+        if (pre == M_SRC)
+            encodeOperand(insn, src, srcOp, prefix);
         if (pre == M_NONE)
             insn.emitByte(prefix);
     }
-    const Config::opcode_t opc = insn.opCode();
+    const auto opc = insn.opCode();
     insn.setEmitInsn();
-    if (pre != M_DST && encodeOperand(insn, dst, dstOp, opc))
-        return getError();
-    if (pre != M_SRC && encodeOperand(insn, src, srcOp, opc))
-        return getError();
+    if (pre != M_DST)
+        encodeOperand(insn, dst, dstOp, opc);
+    if (pre != M_SRC)
+        encodeOperand(insn, src, srcOp, opc);
     insn.emitInsn(opc);
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace tlcs90
