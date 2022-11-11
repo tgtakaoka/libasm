@@ -41,7 +41,7 @@ public:
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
-    private:
+private:
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0)

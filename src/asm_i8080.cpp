@@ -19,43 +19,43 @@
 namespace libasm {
 namespace i8080 {
 
-Error AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
+void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_IOA:
         if (op.val16 >= 0x100)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
         if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
-        return OK;
+        return;
     case M_IM16:
     case M_ABS:
         insn.emitOperand16(op.val16);
-        return OK;
+        return;
     case M_PTR:
         insn.embed(RegI8080::encodePointerReg(op.reg) << 4);
-        return OK;
+        return;
     case M_STK:
         insn.embed(RegI8080::encodeStackReg(op.reg) << 4);
-        return OK;
+        return;
     case M_IDX:
         insn.embed(RegI8080::encodeIndexReg(op.reg) << 4);
-        return OK;
+        return;
     case M_REG:
         insn.embed(RegI8080::encodeDataReg(op.reg));
-        return OK;
+        return;
     case M_DST:
         insn.embed(RegI8080::encodeDataReg(op.reg) << 3);
-        return OK;
+        return;
     case M_VEC:
         if (op.val16 >= 8)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.embed((op.val16 & 7) << 3);
-        return OK;
+        return;
     default:
-        return OK;
+        return;
     }
 }
 
@@ -118,14 +118,10 @@ Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    const AddrMode dst = insn.dst();
-    if (dst != M_NONE && encodeOperand(insn, dstOp, dst))
-        return getError();
-    const AddrMode src = insn.src();
-    if (src != M_NONE && encodeOperand(insn, srcOp, src))
-        return getError();
+    encodeOperand(insn, dstOp, insn.dst());
+    encodeOperand(insn, srcOp, insn.src());
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace i8080
