@@ -19,42 +19,40 @@
 namespace libasm {
 namespace z80 {
 
-Error AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
+void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
-        return setError(OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
-    return OK;
 }
 
-Error AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
-    const Config::opcode_t opc = insn.opCode();  // Bit opcode.
+void AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
+    const auto opc = insn.opCode();  // Bit opcode.
     insn.setOpCode(insn.prefix());               // Make 0xCB prefix as opcode.
     RegZ80::encodeIndexReg(insn, op.reg);        // Add 0xDD/0xFD prefix
     insn.emitOperand8(op.val16);                 // Index offset.
     insn.emitOperand8(opc);                      // Bit opcode.
     insn.emitInsn();
-    return OK;
 }
 
-Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
-    uint16_t val16 = op.val16;
+void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
+    auto val16 = op.val16;
     switch (mode) {
     case M_IM8:
         if (overflowUint8(val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
-        return OK;
+        return;
     case M_IOA:
         if (val16 >= 0x100)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
-        return OK;
+        return;
     case M_INDX:
         if (overflowRel8(static_cast<int16_t>(val16)))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         if (insn.indexBit())
             return encodeIndexedBitOp(insn, op);
         insn.emitOperand8(val16);
@@ -62,64 +60,66 @@ Error AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, con
     case R_IXIY:
     case I_IXIY:
         RegZ80::encodeIndexReg(insn, op.reg);
-        return OK;
+        return;
     case M_IM16:
     case M_ABS:
         insn.emitOperand16(val16);
-        return OK;
+        return;
     case M_REL:
         return encodeRelative(insn, op);
     case M_CC4:
     case M_CC8:
         insn.embed(static_cast<uint8_t>(val16) << 3);
-        return OK;
+        return;
     case M_PTR:
         insn.embed(RegZ80::encodePointerReg(op.reg) << 4);
-        return OK;
+        return;
     case M_PIX:
         insn.embed(RegZ80::encodePointerRegIx(op.reg, other.reg) << 4);
-        return OK;
+        return;
     case M_STK:
         insn.embed(RegZ80::encodeStackReg(op.reg) << 4);
-        return OK;
+        return;
     case I_BCDE:
         insn.embed(RegZ80::encodeIndirectBase(op.reg) << 4);
-        return OK;
+        return;
     case M_REG:
         insn.embed(RegZ80::encodeDataReg(op.reg));
-        return OK;
+        return;
     case M_DST:
         insn.embed(RegZ80::encodeDataReg(op.reg) << 3);
-        return OK;
+        return;
     case R_IR:
         insn.embed(RegZ80::encodeIrReg(op.reg) << 3);
-        return OK;
+        return;
     case M_VEC:
-        if ((val16 & ~0x38) != 0)
-            return setError(op, ILLEGAL_OPERAND);
+        if ((val16 & ~0x38) != 0) {
+            val16 &= ~0x38;
+            setErrorIf(op, ILLEGAL_OPERAND);
+        }
         insn.embed(val16);
-        return OK;
+        return;
     case M_BIT:
         if (val16 >= 8)
-            return setError(op, ILLEGAL_BIT_NUMBER);
-        insn.embed(static_cast<uint8_t>(val16) << 3);
-        return OK;
+            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+        insn.embed(static_cast<uint8_t>(val16 & 7) << 3);
+        return;
     case M_IMMD:
         switch (val16) {
         case 0:
-            return OK;
+            return;
         case 1:
             insn.embed(2 << 3);
-            return OK;
+            return;
         case 2:
             insn.embed(3 << 3);
-            return OK;
+            return;
         default:
-            break;
+            setErrorIf(op, ILLEGAL_OPERAND);
+            return;
         }
-        return setError(op, ILLEGAL_OPERAND);
     default:
-        return OK;
+        return;
     }
 }
 
@@ -131,7 +131,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
 
     // 'C' is either C-reg or C-condition
     StrScanner a(p);
-    const RegName reg = RegZ80::parseRegName(a);
+    const auto reg = RegZ80::parseRegName(a);
     if (reg == REG_C) {
         op.mode = R_C;
         op.reg = REG_C;
@@ -140,7 +140,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const CcName cc = RegZ80::parseCcName(p);
+    const auto cc = RegZ80::parseCcName(p);
     if (cc != CC_UNDEF) {
         op.mode = RegZ80::isCc4Name(cc) ? M_CC4 : M_CC8;
         op.val16 = RegZ80::encodeCcName(cc);
@@ -174,7 +174,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     if (p.expect('(')) {
-        const StrScanner regp = p.skipSpaces();
+        const auto regp = p.skipSpaces();
         op.reg = RegZ80::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p, op);
@@ -255,19 +255,11 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    const AddrMode dst = insn.dst();
-    if (dst != M_NONE) {
-        if (encodeOperand(insn, dstOp, dst, srcOp))
-            return getError();
-    }
-    const AddrMode src = insn.src();
-    if (src != M_NONE) {
-        if (encodeOperand(insn, srcOp, src, dstOp))
-            return getError();
-    }
+    encodeOperand(insn, dstOp, insn.dst(), srcOp);
+    encodeOperand(insn, srcOp, insn.src(), dstOp);
     if (!insn.indexBit())
         insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace z80
