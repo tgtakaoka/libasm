@@ -98,8 +98,8 @@ static void test_accumlator() {
     TEST("ADD A, #37", 0x03, 0x25);
     TEST("ADD A, #-128", 0x03, 0x80);
     TEST("ADD A, #255",  0x03, 0xFF);
-    ERRT("ADD A, #-129", OVERFLOW_RANGE, "#-129");
-    ERRT("ADD A, #256",  OVERFLOW_RANGE, "#256");
+    ERRT("ADD A, #-129", OVERFLOW_RANGE, "#-129", 0x03, 0x7F);
+    ERRT("ADD A, #256",  OVERFLOW_RANGE, "#256",  0x03, 0x00);
 
     TEST("ADDC A, R0",  0x78);
     TEST("ADDC A, R1",  0x79);
@@ -283,7 +283,7 @@ static void test_branch() {
     ATEST(0x200, "DJNZ R5, 234H",  0xED, 0x34);
     ATEST(0x100, "DJNZ R6, 134H",  0xEE, 0x34);
     ATEST(0x000, "DJNZ R7, 034H",  0xEF, 0x34);
-    AERRT(0x100, "DJNZ R7, 034H",  OPERAND_TOO_FAR, "034H");
+    AERRT(0x100, "DJNZ R7, 034H",  OPERAND_TOO_FAR, "034H", 0xEF, 0x34);
     if (isOki()) {
         ATEST(0xF00, "DJNZ @R0, 0F34H", 0xE0, 0x34);
         ATEST(0xE00, "DJNZ @R1, 0E34H", 0xE1, 0x34);
@@ -304,9 +304,9 @@ static void test_branch() {
     ATEST(0x600, "JF1  634H",  0x76, 0x34);
     ATEST(0x500, "JTF  534H",  0x16, 0x34);
     ATEST(0x400, "JNI  434H",  0x86, 0x34);
-    AERRT(0x3FF, "JNI  334H",  OPERAND_TOO_FAR, "334H");
+    AERRT(0x3FF, "JNI  334H",  OPERAND_TOO_FAR, "334H", 0x86, 0x34);
     ATEST(0x3FF, "JNI  434H",  0x86, 0x34);
-    AERRT(0x500, "JNI  434H",  OPERAND_TOO_FAR, "434H");
+    AERRT(0x500, "JNI  434H",  OPERAND_TOO_FAR, "434H", 0x86, 0x34);
 
     ATEST(0x300, "JB 0, 334H",  0x12, 0x34);
     ATEST(0x200, "JB 1, 234H",  0x32, 0x34);
@@ -316,11 +316,11 @@ static void test_branch() {
     ATEST(0xE00, "JB 5, 0E34H", 0xB2, 0x34);
     ATEST(0xD00, "JB 6, 0D34H", 0xD2, 0x34);
     ATEST(0xC00, "JB 7, 0C34H", 0xF2, 0x34);
-    AERRT(0xCFF, "JB 7, 0C34H", OPERAND_TOO_FAR, "0C34H");
+    AERRT(0xCFF, "JB 7, 0C34H", OPERAND_TOO_FAR, "0C34H", 0xF2, 0x34);
     ATEST(0xCFF, "JB 7, 0D34H", 0xF2, 0x34);
-    AERRT(0xD00, "JB 7, 0C34H", OPERAND_TOO_FAR, "0C34H");
-    AERRT(0xC00, "JB -1, 0C34H", ILLEGAL_BIT_NUMBER, "-1, 0C34H");
-    AERRT(0xC00, "JB 8, 0C34H",  ILLEGAL_BIT_NUMBER, "8, 0C34H");
+    AERRT(0xD00, "JB 7, 0C34H", OPERAND_TOO_FAR, "0C34H", 0xF2, 0x34);
+    AERRT(0xC00, "JB -1, 0C34H", ILLEGAL_BIT_NUMBER, "-1, 0C34H", 0xF2, 0x34);
+    AERRT(0xC00, "JB 8, 0C34H",  ILLEGAL_BIT_NUMBER, "8, 0C34H",  0x12, 0x34);
 }
 
 static void test_subroutine() {
