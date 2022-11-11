@@ -68,8 +68,9 @@ private:
     Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseOperand(StrScanner &scan, Operand &op, char &indirect) const;
 
-    Error encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
-    Error encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
+    void emitImmediate(InsnMos6502 &insn, const Operand &op, bool imm16);
+    void encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
+    void encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_LONGA[] PROGMEM;

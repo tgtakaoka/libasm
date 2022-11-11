@@ -201,6 +201,9 @@ static void test_imm() {
     TEST("LDA #$90",   0xA9, 0x90);
     TEST("CMP #$90",   0xC9, 0x90);
     TEST("SBC #$90",   0xE9, 0x90);
+    ERRT("LDA #256",   OVERFLOW_RANGE, "#256", 0xA9, 0x00);
+    TEST("LDA #-1",    0xA9, 0xFF);
+    TEST("LDA #-128",  0xA9, 0x80);
 
     if (m6502()) {
         ERRT("BIT #$90", OPERAND_NOT_ALLOWED, "#$90");
@@ -225,23 +228,27 @@ static void test_imm() {
         // W65C816
         TEST("LONGA ON");
         TEST("LONGI ON");
-        TEST("LDA #$1234", 0xA9, 0x34, 0x12);
-        TEST("LDX #$1234", 0xA2, 0x34, 0x12);
+        TEST("LDA #$1234",  0xA9, 0x34, 0x12);
+        TEST("LDX #$1234",  0xA2, 0x34, 0x12);
+        TEST("LDA #-1",     0xA9, 0xFF, 0xFF);
+        TEST("LDX #-32768", 0xA2, 0x00, 0x80);
+        ERRT("LDA #$12345", OVERFLOW_RANGE, "#$12345", 0xA9, 0x45, 0x23);
+        ERRT("LDX #$12345", OVERFLOW_RANGE, "#$12345", 0xA2, 0x45, 0x23);
 
         TEST("LONGA OFF");
         TEST("LONGI ON");
-        TEST("LDA #$1234", 0xA9, 0x34);
+        ERRT("LDA #$1234", OVERFLOW_RANGE, "#$1234", 0xA9, 0x34);
         TEST("LDX #$1234", 0xA2, 0x34, 0x12);
 
         TEST("LONGA ON");
         TEST("LONGI OFF");
         TEST("LDA #$1234", 0xA9, 0x34, 0x12);
-        TEST("LDX #$1234", 0xA2, 0x34);
+        ERRT("LDX #$1234", OVERFLOW_RANGE, "#$1234", 0xA2, 0x34);
 
         TEST("LONGA OFF");
         TEST("LONGI OFF");
-        TEST("LDA #$1234", 0xA9, 0x34);
-        TEST("LDX #$1234", 0xA2, 0x34);
+        ERRT("LDA #$1234", OVERFLOW_RANGE, "#$1234", 0xA9, 0x34);
+        ERRT("LDX #$1234", OVERFLOW_RANGE, "#$1234", 0xA2, 0x34);
     } else {
         TEST("LONGA OFF");
         TEST("LONGI OFF");
@@ -779,9 +786,9 @@ static void test_rel() {
         ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
         ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
         ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
-        AERRT(0x0000, "BCS *-126", OPERAND_TOO_FAR, "*-126");
-        AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR, "*+2");
-        AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR, "*+129");
+        AERRT(0x0000, "BCS *-126", OPERAND_TOO_FAR, "*-126", 0xB0, 0x80);
+        AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
     } else {
         ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
         ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
@@ -795,13 +802,13 @@ static void test_rel() {
         ATEST(0x120000, "BCS $12FF82", 0xB0, 0x80);
         ATEST(0x12FFFE, "BNE $120000", 0xD0, 0x00);
         ATEST(0x12FFF0, "BEQ $120071", 0xF0, 0x7F);
-        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR, "*-126");
-        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2");
-        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129");
+        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR, "*-126", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
 
-        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82");
-        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000");
-        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR, "$130061");
+        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000", 0xB0, 0x00);
+        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR, "$130061", 0xB0, 0x6F);
     }
 
     if (w65c816()) {
@@ -809,13 +816,13 @@ static void test_rel() {
         ATEST(0x121000, "PER $129002", 0x62, 0xFF, 0x7F);
         ATEST(0x129000, "BRL *-$7FFD", 0x82, 0x00, 0x80);
         ATEST(0x121000, "PER *+$8002", 0x62, 0xFF, 0x7F);
-        AERRT(0x129000, "BRL $131003", OPERAND_TOO_FAR, "$131003");
-        AERRT(0x121000, "PER $118002", OPERAND_TOO_FAR, "$118002");
+        AERRT(0x129000, "BRL $131003", OPERAND_TOO_FAR, "$131003", 0x82, 0x00, 0x80);
+        AERRT(0x121000, "PER $118002", OPERAND_TOO_FAR, "$118002", 0x62, 0xFF, 0x6F);
 
         ATEST(0x121000, "BRL $129003", 0x82, 0x00, 0x80);
         ATEST(0x129000, "PER $121002", 0x62, 0xFF, 0x7F);
-        AERRT(0x121000, "BRL *-$7FFD", OPERAND_TOO_FAR, "*-$7FFD");
-        AERRT(0x129000, "PER *+$8002", OPERAND_TOO_FAR, "*+$8002");
+        AERRT(0x121000, "BRL *-$7FFD", OPERAND_TOO_FAR, "*-$7FFD", 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER *+$8002", OPERAND_TOO_FAR, "*+$8002", 0x62, 0xFF, 0x7F);
     } else {
         ERUI("BRL $1234");
         ERUI("PER $1234");
