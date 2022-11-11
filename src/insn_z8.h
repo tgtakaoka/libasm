@@ -50,14 +50,19 @@ public:
         return low4 == 0x0E || low4 == 0xF;
     }
 
-    void emitInsn() { emitByte(opCode()); }
-    void emitUint16Le(uint16_t val) {
-        emitByte(val >> 0);
-        emitByte(val >> 8);
-    }
+    uint8_t emitLength() const { return operandPos() + 1; }
+    void emitInsn() { emitByte(opCode(), 0); }
+    void emitOperand8(uint8_t val) { emitByte(val, operandPos()); }
+    void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
+    void emitOperand16Le(uint16_t val) { emitUint16Le(val, operandPos()); }
 
 private:
     DisMemory *_memory;
+
+    uint8_t operandPos() const {
+        uint8_t pos = length();
+        return pos == 0 ? 1 : pos;
+    }
 };
 
 }  // namespace z8

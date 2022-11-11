@@ -42,12 +42,12 @@ static bool z88() {
 #define TZ88(src, ...) \
     if (z88())         \
     TEST(src, __VA_ARGS__)
-#define EZ86(src, error, at) \
-    if (z86())               \
-    ERRT(src, error, at)
-#define EZ88(src, error, at) \
-    if (z88())               \
-    ERRT(src, error, at)
+#define EZ86(src, error, at, ...) \
+    if (z86())                    \
+    ERRT(src, error, at, __VA_ARGS__)
+#define EZ88(src, error, at, ...) \
+    if (z88())                    \
+    ERRT(src, error, at, __VA_ARGS__)
 
 static uint8_t R(uint8_t n) {
     if (z88())
@@ -241,8 +241,8 @@ static void test_operand_in_opcode() {
     TEST("LD R15,#-128", 0xFC, 0x80);
     TEST("LD R15,#-1",   0xFC, 0xFF);
     TEST("LD R15,#255",  0xFC, 0xFF);
-    ERRT("LD R15,#-129", OVERFLOW_RANGE, "#-129", 0xFC);
-    ERRT("LD R15,#256",  OVERFLOW_RANGE, "#256",  0xFC);
+    ERRT("LD R15,#-129", OVERFLOW_RANGE, "#-129", 0xFC, 0x7F);
+    ERRT("LD R15,#256",  OVERFLOW_RANGE, "#256",  0xFC, 0x00);
 
     TEST("INC  R0", 0x0E);
     TEST("INC  R1", 0x1E);
@@ -264,7 +264,7 @@ static void test_operand_in_opcode() {
 
 static void test_one_operand() {
     TEST("DEC >01H", 0x00, 0x01);
-    ERRT("DEC -1",   OVERFLOW_RANGE, "-1");
+    ERRT("DEC -1",   OPERAND_NOT_ALLOWED, "-1");
     ERRT("DEC 256",  OPERAND_NOT_ALLOWED, "256");
     TEST("DEC R1",   0x00, R(1));
     TEST("DEC @15H", 0x01, 0x15);
@@ -353,15 +353,15 @@ static void test_one_operand() {
     EZ86("CALL #0D6H", OPERAND_NOT_ALLOWED, "#0D6H");
     TZ88("CALL #0D6H", 0xD4, 0xD6);
     TEST("SRP  #30H",  0x31, 0x30);
-    ERRT("SRP  #38H",  OPERAND_NOT_ALLOWED, "#38H");
+    ERRT("SRP  #38H",  OPERAND_NOT_ALLOWED, "#38H", 0x31, 0x30);
     EZ86("SRP0 #30H",  UNKNOWN_INSTRUCTION, "SRP0 #30H");
     TZ88("SRP0 #30H",  0x31, 0x32);
     EZ86("SRP1 #38H",  UNKNOWN_INSTRUCTION, "SRP1 #38H");
     TZ88("SRP1 #38H",  0x31, 0x39);
     if (z86()) {
-        ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H", 0x31);
+        ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H", 0x31, 0x00);
     } else {
-        ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H");
+        ERRT("SRP #100H",  OVERFLOW_RANGE, "#100H", 0x31, 0x00);
     }
 }
 
@@ -383,8 +383,8 @@ static void test_two_operands() {
     TEST("ADD R7,#-128",  0x06, R(7), 0x80);
     TEST("ADD R7,#-1",    0x06, R(7), 0xFF);
     TEST("ADD R7,#255",   0x06, R(7), 0xFF);
-    ERRT("ADD R7,#256",   OVERFLOW_RANGE, "#256",  0x06);
-    ERRT("ADD R7,#-129",  OVERFLOW_RANGE, "#-129", 0x06);
+    ERRT("ADD R7,#256",   OVERFLOW_RANGE, "#256",  0x06, R(7), 0x00);
+    ERRT("ADD R7,#-129",  OVERFLOW_RANGE, "#-129", 0x06, R(7), 0x7F);
 
     TEST("ADC R3,R4",     0x12, 0x34);
     TEST("ADC R1,@R4",    0x13, 0x14);
@@ -621,7 +621,8 @@ static void test_indexed() {
     TZ88("LD R12,0C9H(R8)",  0x87, 0xC8, 0xC9);
     TZ86("LD 0D9H(R8),R13",  0xD7, 0xD8, 0xD9);
     TZ88("LD 0D9H(R8),R13",  0x97, 0xD8, 0xD9);
-    ERRT("LD R12, -129(R8)", OVERFLOW_RANGE, "-129(R8)");
+    EZ86("LD R12, -129(R8)", OVERFLOW_RANGE, "-129(R8)", 0xC7, 0xC8, 0x7F);
+    EZ88("LD R12, -129(R8)", OVERFLOW_RANGE, "-129(R8)", 0x87, 0xC8, 0x7F);
     TZ86("LD R12, -128(R8)", 0xC7, 0xC8, 0x80);
     TZ88("LD R12, -128(R8)", 0x87, 0xC8, 0x80);
     TZ86("LD R12,   -1(R8)", 0xC7, 0xC8, 0xFF);
@@ -632,8 +633,10 @@ static void test_indexed() {
     TZ88("LD R12, +128(R8)", 0x87, 0xC8, 0x80);
     TZ86("LD R12, +255(R8)", 0xC7, 0xC8, 0xFF);
     TZ88("LD R12, +255(R8)", 0x87, 0xC8, 0xFF);
-    ERRT("LD R12, +256(R8)", OVERFLOW_RANGE, "+256(R8)");
-    ERRT("LD -129(R8), R12", OVERFLOW_RANGE, "-129(R8), R12");
+    EZ86("LD R12, +256(R8)", OVERFLOW_RANGE, "+256(R8)", 0xC7, 0xC8, 0x00);
+    EZ88("LD R12, +256(R8)", OVERFLOW_RANGE, "+256(R8)", 0x87, 0xC8, 0x00);
+    EZ86("LD -129(R8), R12", OVERFLOW_RANGE, "-129(R8), R12", 0xD7, 0xC8, 0x7F);
+    EZ88("LD -129(R8), R12", OVERFLOW_RANGE, "-129(R8), R12", 0x97, 0xC8, 0x7F);
     TZ86("LD -128(R8), R12", 0xD7, 0xC8, 0x80);
     TZ88("LD -128(R8), R12", 0x97, 0xC8, 0x80);
     TZ86("LD   -1(R8), R12", 0xD7, 0xC8, 0xFF);
@@ -644,7 +647,8 @@ static void test_indexed() {
     TZ88("LD +128(R8), R12", 0x97, 0xC8, 0x80);
     TZ86("LD +255(R8), R12", 0xD7, 0xC8, 0xFF);
     TZ88("LD +255(R8), R12", 0x97, 0xC8, 0xFF);
-    ERRT("LD +256(R8), R12", OVERFLOW_RANGE, "+256(R8), R12");
+    EZ86("LD +256(R8), R12", OVERFLOW_RANGE, "+256(R8), R12", 0xD7, 0xC8, 0x00);
+    EZ88("LD +256(R8), R12", OVERFLOW_RANGE, "+256(R8), R12", 0x97, 0xC8, 0x00);
 
     TZ88("LDC R14, -129(RR8)",  0xA7, 0xE8, 0x7F, 0xFF);
     TZ88("LDC R14, -128(RR8)",  0xE7, 0xE8, 0x80);
@@ -789,43 +793,43 @@ static void test_setrp() {
     TZ88("SETRP1 18H");
     EZ88("SETRP1 1FH", OPERAND_NOT_ALLOWED, "1FH");
 
-    TEST("SRP #10H", 0x31, 0x10);
-    ERRT("SRP #11H", OPERAND_NOT_ALLOWED, "#11H");
-    ERRT("SRP #12H", OPERAND_NOT_ALLOWED, "#12H");
-    ERRT("SRP #13H", OPERAND_NOT_ALLOWED, "#13H");
-    ERRT("SRP #14H", OPERAND_NOT_ALLOWED, "#14H");
-    ERRT("SRP #15H", OPERAND_NOT_ALLOWED, "#15H");
-    ERRT("SRP #16H", OPERAND_NOT_ALLOWED, "#16H");
-    ERRT("SRP #17H", OPERAND_NOT_ALLOWED, "#17H");
-    ERRT("SRP #18H", OPERAND_NOT_ALLOWED, "#18H");
-    ERRT("SRP #19H", OPERAND_NOT_ALLOWED, "#19H");
-    ERRT("SRP #1AH", OPERAND_NOT_ALLOWED, "#1AH");
-    ERRT("SRP #1BH", OPERAND_NOT_ALLOWED, "#1BH");
-    ERRT("SRP #1CH", OPERAND_NOT_ALLOWED, "#1CH");
-    ERRT("SRP #1DH", OPERAND_NOT_ALLOWED, "#1DH");
-    ERRT("SRP #1EH", OPERAND_NOT_ALLOWED, "#1EH");
-    ERRT("SRP #1FH", OPERAND_NOT_ALLOWED, "#1FH");
-    TEST("SRP #20H", 0x31, 0x20);
+    TEST("SRP #10H",                              0x31, 0x10);
+    ERRT("SRP #11H", OPERAND_NOT_ALLOWED, "#11H", 0x31, 0x10);
+    ERRT("SRP #12H", OPERAND_NOT_ALLOWED, "#12H", 0x31, 0x10);
+    ERRT("SRP #13H", OPERAND_NOT_ALLOWED, "#13H", 0x31, 0x10);
+    ERRT("SRP #14H", OPERAND_NOT_ALLOWED, "#14H", 0x31, 0x10);
+    ERRT("SRP #15H", OPERAND_NOT_ALLOWED, "#15H", 0x31, 0x10);
+    ERRT("SRP #16H", OPERAND_NOT_ALLOWED, "#16H", 0x31, 0x10);
+    ERRT("SRP #17H", OPERAND_NOT_ALLOWED, "#17H", 0x31, 0x10);
+    ERRT("SRP #18H", OPERAND_NOT_ALLOWED, "#18H", 0x31, 0x10);
+    ERRT("SRP #19H", OPERAND_NOT_ALLOWED, "#19H", 0x31, 0x10);
+    ERRT("SRP #1AH", OPERAND_NOT_ALLOWED, "#1AH", 0x31, 0x10);
+    ERRT("SRP #1BH", OPERAND_NOT_ALLOWED, "#1BH", 0x31, 0x10);
+    ERRT("SRP #1CH", OPERAND_NOT_ALLOWED, "#1CH", 0x31, 0x10);
+    ERRT("SRP #1DH", OPERAND_NOT_ALLOWED, "#1DH", 0x31, 0x10);
+    ERRT("SRP #1EH", OPERAND_NOT_ALLOWED, "#1EH", 0x31, 0x10);
+    ERRT("SRP #1FH", OPERAND_NOT_ALLOWED, "#1FH", 0x31, 0x10);
+    TEST("SRP #20H",                              0x31, 0x20);
 
-    TZ88("SRP0 #10H", 0x31, 0x12);
-    EZ88("SRP0 #11H", OPERAND_NOT_ALLOWED, "#11H");
-    EZ88("SRP0 #12H", OPERAND_NOT_ALLOWED, "#12H");
-    EZ88("SRP0 #13H", OPERAND_NOT_ALLOWED, "#13H");
-    EZ88("SRP0 #14H", OPERAND_NOT_ALLOWED, "#14H");
-    EZ88("SRP0 #15H", OPERAND_NOT_ALLOWED, "#15H");
-    EZ88("SRP0 #16H", OPERAND_NOT_ALLOWED, "#16H");
-    EZ88("SRP0 #17H", OPERAND_NOT_ALLOWED, "#17H");
-    TZ88("SRP0 #18H", 0x31, 0x1A);
+    TZ88("SRP0 #10H",                              0x31, 0x12);
+    EZ88("SRP0 #11H", OPERAND_NOT_ALLOWED, "#11H", 0x31, 0x12);
+    EZ88("SRP0 #12H", OPERAND_NOT_ALLOWED, "#12H", 0x31, 0x12);
+    EZ88("SRP0 #13H", OPERAND_NOT_ALLOWED, "#13H", 0x31, 0x12);
+    EZ88("SRP0 #14H", OPERAND_NOT_ALLOWED, "#14H", 0x31, 0x12);
+    EZ88("SRP0 #15H", OPERAND_NOT_ALLOWED, "#15H", 0x31, 0x12);
+    EZ88("SRP0 #16H", OPERAND_NOT_ALLOWED, "#16H", 0x31, 0x12);
+    EZ88("SRP0 #17H", OPERAND_NOT_ALLOWED, "#17H", 0x31, 0x12);
+    TZ88("SRP0 #18H",                              0x31, 0x1A);
 
-    TZ88("SRP1 #10H", 0x31, 0x11);
-    EZ88("SRP1 #11H", OPERAND_NOT_ALLOWED, "#11H");
-    EZ88("SRP1 #12H", OPERAND_NOT_ALLOWED, "#12H");
-    EZ88("SRP1 #13H", OPERAND_NOT_ALLOWED, "#13H");
-    EZ88("SRP1 #14H", OPERAND_NOT_ALLOWED, "#14H");
-    EZ88("SRP1 #15H", OPERAND_NOT_ALLOWED, "#15H");
-    EZ88("SRP1 #16H", OPERAND_NOT_ALLOWED, "#16H");
-    EZ88("SRP1 #17H", OPERAND_NOT_ALLOWED, "#17H");
-    TZ88("SRP1 #18H", 0x31, 0x19);
+    TZ88("SRP1 #10H",                              0x31, 0x11);
+    EZ88("SRP1 #11H", OPERAND_NOT_ALLOWED, "#11H", 0x31, 0x11);
+    EZ88("SRP1 #12H", OPERAND_NOT_ALLOWED, "#12H", 0x31, 0x11);
+    EZ88("SRP1 #13H", OPERAND_NOT_ALLOWED, "#13H", 0x31, 0x11);
+    EZ88("SRP1 #14H", OPERAND_NOT_ALLOWED, "#14H", 0x31, 0x11);
+    EZ88("SRP1 #15H", OPERAND_NOT_ALLOWED, "#15H", 0x31, 0x11);
+    EZ88("SRP1 #16H", OPERAND_NOT_ALLOWED, "#16H", 0x31, 0x11);
+    EZ88("SRP1 #17H", OPERAND_NOT_ALLOWED, "#17H", 0x31, 0x11);
+    TZ88("SRP1 #18H",                              0x31, 0x19);
 }
 
 static void test_comment() {
@@ -892,8 +896,10 @@ static void test_error() {
     TEST("DEC @>15H",   0x01, 0x15);
     ERRT("DEC @ >15H",  UNKNOWN_OPERAND, "@ >15H");
     ERRT("DEC @> 15H",  UNKNOWN_OPERAND, "@> 15H");
-    EZ88("BITS R8,#8",    ILLEGAL_BIT_NUMBER, "#8");
-    EZ88("BXOR R2,R8,#8", ILLEGAL_BIT_NUMBER, "#8");
+    EZ88("BITS R8,#8",     ILLEGAL_BIT_NUMBER, "#8",  0x77, 0x81);
+    EZ88("BITS R8,#-1",    ILLEGAL_BIT_NUMBER, "#-1", 0x77, 0x8F);
+    EZ88("BXOR R2,R8,#8",  ILLEGAL_BIT_NUMBER, "#8",  0x27, 0x20, 0xC8);
+    EZ88("BXOR R2,R8,#-1", ILLEGAL_BIT_NUMBER, "#-1", 0x27, 0x2E, 0xC8);
 }
 // clang-format on
 

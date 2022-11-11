@@ -76,15 +76,15 @@ private:
     Error setRp(StrScanner &scan, bool (AsmZ8::*)(int16_t));
     Error processPseudo(StrScanner &scan, const char *name);
 
-    Error encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
-    Error encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeRelative(InsnZ8 &insn, const Operand &op);
-    Error encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeIndirectRegPair(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeInOpCode(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    Error encodeMultiOperands(
+    void encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
+    void encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeRelative(InsnZ8 &insn, const Operand &op);
+    void encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeIndirectRegPair(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeInOpCode(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeMultiOperands(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
-    Error encodePostByte(
+    void encodePostByte(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
