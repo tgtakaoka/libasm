@@ -48,11 +48,11 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode);
-    Error emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode);
-    Error emitZeroPage(InsnScn2650 &insn, const Operand &op);
-    Error emitRelative(InsnScn2650 &insn, const Operand &op);
-    Error encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode);
+    void emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode);
+    void emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode);
+    void emitZeroPage(InsnScn2650 &insn, const Operand &op);
+    void emitRelative(InsnScn2650 &insn, const Operand &op);
+    void encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
