@@ -19,30 +19,28 @@
 namespace libasm {
 namespace tms9900 {
 
-Error AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
+void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     if (target % 2)
-        return setError(op, OPERAND_NOT_ALIGNED);
+        setErrorIf(op, OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t delta = (target - base) >> 1;
     if (overflowRel8(delta))
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
-    return OK;
 }
 
-Error AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
+void AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
     const int16_t offset = static_cast<int16_t>(op.val16);
     if (overflowRel16(offset))
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
     insn.embed(static_cast<uint8_t>(offset));
-    return OK;
 }
 
-Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
+void AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
     if (mode == M_SRC2 && insn.dst() == M_BIT2 && op.mode == M_INCR)
-        return setError(op, OPERAND_NOT_ALLOWED);
-    Config::opcode_t opc = RegTms9900::encodeRegNumber(op.reg);
+        setErrorIf(op, OPERAND_NOT_ALLOWED);
+    auto opc = RegTms9900::encodeRegNumber(op.reg);
     switch (op.mode) {
     case M_REG:
         break;
@@ -58,7 +56,7 @@ Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode m
         break;
     default:  // M_INDX
         if (op.reg == REG_R0)
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         opc |= (2 << 4);
         insn.emitOperand16(op.val16);
         break;
@@ -77,79 +75,84 @@ Error AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode m
         insn.embedPost(opc << 6);
         break;
     }
-    return OK;
 }
 
-Error AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
+void AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
     uint16_t val16 = op.val16;
     switch (mode) {
     case M_IMM:
         insn.emitOperand16(op.val16);
-        return OK;
+        return;
     case M_REG:
         insn.embed(RegTms9900::encodeRegNumber(op.reg));
-        return OK;
+        return;
     case M_DREG:
         insn.embed(RegTms9900::encodeRegNumber(op.reg) << 6);
-        return OK;
+        return;
     case M_DST2:
         insn.embedPost(0x4000);
         /* Fall-through */
     case M_SRC:
     case M_SRC2:
     case M_DST:
-        return encodeModeReg(insn, op, mode);
+        encodeModeReg(insn, op, mode);
+        return;
     case M_REL:
-        return encodeRelative(insn, op);
+        encodeRelative(insn, op);
+        return;
     case M_CRU:
-        return encodeCruOffset(insn, op);
+        encodeCruOffset(insn, op);
+        return;
     case M_CNT:
-        if (val16 == 0 && !op.getError())
-            return setError(op, OPERAND_NOT_ALLOWED);
-        if (val16 == 16)
+        if (val16 == 0 && !op.getError()) {
+            setErrorIf(op, OPERAND_NOT_ALLOWED);
+        } else if (val16 == 16) {
             val16 = 0;
+        }
         /* Fall-through */
     case M_XOP:
         if (val16 >= 16)
-            return setError(op, OVERFLOW_RANGE);
-        insn.embed(val16 << 6);
-        return OK;
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.embed((val16 & 0xF) << 6);
+        return;
     case M_SCNT:
         if (op.mode == M_REG) {
             if (op.reg == REG_R0)
-                return OK;
-            return setError(op, REGISTER_NOT_ALLOWED);
+                return;
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            return;
         }
-        if (val16 == 0 && !op.getError())
-            return setError(op, OPERAND_NOT_ALLOWED);
-        if (val16 >= 16)
-            return setError(op, OVERFLOW_RANGE);
-        insn.embed(val16 << 4);
-        return OK;
+        if (val16 == 0 && !op.getError()) {
+            setErrorIf(op, OPERAND_NOT_ALLOWED);
+        } else if (val16 >= 16) {
+            setErrorIf(op, OVERFLOW_RANGE);
+        }
+        insn.embed((val16 & 0xF) << 4);
+        return;
     case M_CNT2:
         insn.embedPost(0x4000);
         if (op.mode == M_REG) {
             if (op.reg == REG_R0)
-                return OK;
-            return setError(op, REGISTER_NOT_ALLOWED);
+                return;
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            return;
         }
         if (val16 == 0 && !op.getError())
-            return setError(op, OPERAND_NOT_ALLOWED);
+            setErrorIf(op, OPERAND_NOT_ALLOWED);
         /* Fall-through */
     case M_BIT2:
         if (val16 >= 16)
-            return setError(op, OVERFLOW_RANGE);
-        insn.embedPost(val16 << 6);
-        return OK;
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.embedPost((val16 & 0xF) << 6);
+        return;
     case M_RTWP:
         // 0,1,2,4 are acceptable.
-        if (val16 != 3 && val16 <= 4 && op.isOK()) {
-            insn.embed(val16 & 7);
-            return OK;
-        }
-        return setError(op, OPERAND_NOT_ALLOWED);
+        if (val16 == 3 || val16 > 4)
+            setError(op, OPERAND_NOT_ALLOWED);
+        insn.embed(val16 & 7);
+        return;
     default:
-        return OK;
+        return;
     }
 }
 
@@ -172,7 +175,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
         if (parserError())
             return op.getError();
         if (p.skipSpaces().expect('(')) {
-            const StrScanner regp = p.skipSpaces();
+            const auto regp = p.skipSpaces();
             op.reg = RegTms9900::parseRegName(p);
             if (op.reg == REG_UNDEF)
                 return op.setError(UNKNOWN_OPERAND);
@@ -224,16 +227,10 @@ Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(srcOp, error);
 
-    const AddrMode src = insn.src();
-    if (src != M_NONE && encodeOperand(insn, srcOp, src))
-        return getError();
-    const AddrMode dst = insn.dst();
-    if (dst != M_NONE && encodeOperand(insn, dstOp, dst)) {
-        insn.reset();
-        return getError();
-    }
+    encodeOperand(insn, srcOp, insn.src());
+    encodeOperand(insn, dstOp, insn.dst());
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace tms9900

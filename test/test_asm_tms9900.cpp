@@ -75,7 +75,7 @@ static void test_inh() {
         TEST("RTWP 1", 0x0381);
         TEST("RTWP 2", 0x0382);
         TEST("RTWP 4", 0x0384);
-        ERRT("RTWP 3", OPERAND_NOT_ALLOWED, "3");
+        ERRT("RTWP 3", OPERAND_NOT_ALLOWED, "3", 0x0383);
     } else {
         ERRT("RTWP 0", OPERAND_NOT_ALLOWED, "0");
     }
@@ -131,7 +131,7 @@ static void test_cnt_reg() {
     TEST("SRL R4,12", 0x09C4);
     TEST("SLA R8,4",  0x0A48);
     TEST("SRC R9,15", 0x0BF9);
-    ERRT("SRC R9,16", OVERFLOW_RANGE, "16");
+    ERRT("SRC R9,16", OVERFLOW_RANGE, "16", 0x0B09);
 }
 
 static void test_src() {
@@ -173,9 +173,9 @@ static void test_src() {
         TEST("TSMB *R2,15",        0x0C0B, 0x03D2);
         TEST("BIND @2223H(R1)", 0x0161, 0x2223);
         TEST("EVAD R5",         0x0105);
-        ERRT("TMB  *R1+,7",  OPERAND_NOT_ALLOWED, "*R1+,7");
-        ERRT("TCMB *R1+,0",  OPERAND_NOT_ALLOWED, "*R1+,0");
-        ERRT("TSMB *R1+,15", OPERAND_NOT_ALLOWED, "*R1+,15");
+        ERRT("TMB  *R1+,7",  OPERAND_NOT_ALLOWED, "*R1+,7",  0x0C09, 0x01F1);
+        ERRT("TCMB *R1+,0",  OPERAND_NOT_ALLOWED, "*R1+,0",  0x0C0A, 0x0031);
+        ERRT("TSMB *R1+,15", OPERAND_NOT_ALLOWED, "*R1+,15", 0x0C0B, 0x03F1);
     } else {
         ERUI("TMB  @0123H(R15),7");
         ERUI("TCMB R0,0");
@@ -220,9 +220,9 @@ static void test_reg_src() {
 
 static void test_cnt_src() {
     TEST("LDCR *R13+,16",  0x303D);
-    TEST("STCR @2(R4),15", 0x37E4, 0x0002);
+    TEST("STCR @2(R4),15",                       0x37E4, 0x0002);
+    ERRT("STCR @2(R4),17", OVERFLOW_RANGE, "17", 0x3464, 0x0002);
     ERRT("STCR @2(R4),R0", OPERAND_NOT_ALLOWED, "@2(R4),R0");
-    ERRT("STCR @2(R4),17", OVERFLOW_RANGE, "17");
 
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
@@ -236,9 +236,9 @@ static void test_cnt_src() {
         TEST("SRAM @offset2(R4),15", 0x001C, 0x43E4, 0x0002);
         TEST("SLAM R11,R0",          0x001D, 0x400B);
         TEST("SLAM *R13+,1",         0x001D, 0x407D);
-        ERRT("SRAM R11,R2", REGISTER_NOT_ALLOWED, "R2");
-        ERRT("SLAM R11,0",  OPERAND_NOT_ALLOWED,  "0");
-        ERRT("SLAM R11,16", OVERFLOW_RANGE,       "16");
+        ERRT("SRAM R11,R2", REGISTER_NOT_ALLOWED, "R2", 0x001C, 0x400B);
+        ERRT("SLAM R11,0",  OPERAND_NOT_ALLOWED,  "0",  0x001D, 0x400B);
+        ERRT("SLAM R11,16", OVERFLOW_RANGE,       "16", 0x001D, 0x400B);
     } else {
         ERUI("SRAM R11,R0");
         ERUI("SLAM *R13+,1");
@@ -246,10 +246,10 @@ static void test_cnt_src() {
 }
 
 static void test_xop_src() {
-    TEST("XOP @9876H,0",  0x2C20, 0x9876);
-    TEST("XOP @9876H,15", 0x2FE0, 0x9876);
+    TEST("XOP @9876H,0",                             0x2C20, 0x9876);
+    TEST("XOP @9876H,15",                            0x2FE0, 0x9876);
+    ERRT("XOP @9876H,16", OVERFLOW_RANGE,      "16", 0x2C20, 0x9876);
     ERRT("XOP @9876H,R0", OPERAND_NOT_ALLOWED, "@9876H,R0");
-    ERRT("XOP @9876H,16", OVERFLOW_RANGE,      "16");
 
     symtab.intern(10, "xop10");
     symtab.intern(0x9876, "sym9876");
@@ -314,11 +314,11 @@ static void test_rel() {
     ATEST(0x1000, "JH  0FF8H", 0x1BFB);
     ATEST(0x1000, "JOP 0FF6H", 0x1CFA);
 
-    ERRT("JMP 1001H", OPERAND_NOT_ALIGNED, "1001H");
-    ATEST(0x1000, "JMP $+256", 0x107F);
-    ATEST(0x1000, "JMP $-254", 0x1080);
-    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR, "$+258");
-    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR, "$-256");
+    AERRT(0x1000, "JMP 1001H", OPERAND_NOT_ALIGNED, "1001H", 0x10FF);
+    ATEST(0x1000, "JMP $+256",                               0x107F);
+    ATEST(0x1000, "JMP $-254",                               0x1080);
+    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR,     "$+258", 0x1080);
+    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR,     "$-256", 0x107F);
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");

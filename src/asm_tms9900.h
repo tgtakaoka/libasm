@@ -44,10 +44,10 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error encodeRelative(InsnTms9900 &insn, const Operand &op);
-    Error encodeCruOffset(InsnTms9900 &insn, const Operand &op);
-    Error encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
-    Error encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
+    void encodeRelative(InsnTms9900 &insn, const Operand &op);
+    void encodeCruOffset(InsnTms9900 &insn, const Operand &op);
+    void encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
+    void encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
