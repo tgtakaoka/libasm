@@ -93,18 +93,18 @@ static void test_jump() {
     ATEST(0x1000, "JMP x'1000", 0x90, 0xFE);
     ATEST(0x1000, "JP  h'1081", 0x94, 0x7F);
     ATEST(0x1000, "JMP $+2",    0x90, 0x00);
-    ATEST(0x1000, "JNZ E(PC)", 0x9C, 0x80);
+    ATEST(0x1000, "JNZ E(PC)",  0x9C, 0x80);
 
-    TEST("JMP E(PC)",    0x90, 0x80);
-    TEST("JMP -128(PC)", 0x90, 0x80);
-    TEST("JMP E(P1)",    0x91, 0x80);
-    TEST("JMP -128(P1)", 0x91, 0x80);
-    TEST("JMP 127(PC)",  0x90, 0x7F);
-    TEST("JMP 127(P3)",  0x93, 0x7F);
-    ERRT("JMP 128(PC)",  OVERFLOW_RANGE, "128(PC)");
-    ERRT("JMP 128(P3)",  OVERFLOW_RANGE, "128(P3)");
-    ERRT("JMP -129(PC)", OVERFLOW_RANGE, "-129(PC)");
-    ERRT("JMP -129(P3)", OVERFLOW_RANGE, "-129(P3)");
+    TEST("JMP 127(PC)",                              0x90, 0x7F);
+    ERRT("JMP 128(PC)",  OVERFLOW_RANGE, "128(PC)",  0x90, 0x80);
+    TEST("JMP -127(PC)",                             0x90, 0x81);
+    ERRT("JMP -128(PC)", OVERFLOW_RANGE, "-128(PC)", 0x90, 0x80);
+    TEST("JMP E(PC)",                                0x90, 0x80);
+    TEST("JMP 127(P3)",                              0x93, 0x7F);
+    ERRT("JMP 128(P3)",  OVERFLOW_RANGE, "128(P3)",  0x93, 0x80);
+    TEST("JMP -127(P1)",                             0x91, 0x81);
+    ERRT("JMP -128(P3)", OVERFLOW_RANGE, "-128(P3)", 0x93, 0x80);
+    TEST("JMP E(P1)",                                0x91, 0x80);
 
     symtab.intern(0x0FF0, "label0FF0");
     symtab.intern(0x1000, "label1000");
@@ -113,7 +113,7 @@ static void test_jump() {
     symtab.intern(-128,   "disp0x80");
 
     ATEST(0x1000, "JMP label1000", 0x90, 0xFE);
-    AERRT(0x1000, "JMP label0FF0", OVERWRAP_PAGE, "label0FF0");
+    AERRT(0x1000, "JMP label0FF0", OVERWRAP_PAGE, "label0FF0", 0x90, 0xEE);
 
     TEST("JMP E(PC)",        0x90, 0x80);
     TEST("JMP disp0x7F(P1)", 0x91, 0x7F);
@@ -143,7 +143,7 @@ static void test_incr_decr() {
     symtab.intern(-128,   "disp0x80");
 
     ATEST(0x1000, "ILD label1000", 0xA8, 0xFF);
-    AERRT(0x1FF0, "ILD label2010", OVERWRAP_PAGE, "label2010");
+    AERRT(0x1FF0, "ILD label2010", OVERWRAP_PAGE, "label2010", 0xA8, 0x1F);
     TEST("ILD E(PC)",    0xA8, 0x80);
     TEST("ILD E(P1)",    0xA9, 0x80);
     TEST("ILD disp0x7F(P2)", 0xAA, 0x7F);
@@ -152,17 +152,17 @@ static void test_incr_decr() {
 
 static void test_alu() {
     ATEST(0x1000, "LD 0x1000", 0xC0, 0xFF);
-    TEST("LD E(PC)",     0xC0, 0x80);
-    TEST("LD E(P1)",     0xC1, 0x80);
-    TEST("LD 127(P2)",   0xC2, 0x7F);
-    TEST("LD -128(P3)",  0xC3, 0x80);
-    ERRT("LD 128(P2)",   OVERFLOW_RANGE, "128(P2)");
-    ERRT("LD -129(P3)",  OVERFLOW_RANGE, "-129(P3)");
-    TEST("LD @E(P1)",    0xC5, 0x80);
-    TEST("LD @127(P2)",  0xC6, 0x7F);
-    TEST("LD @-128(P3)", 0xC7, 0x80);
-    ERRT("LD @128(P2)",  OVERFLOW_RANGE, "@128(P2)");
-    ERRT("LD @-129(P3)", OVERFLOW_RANGE, "@-129(P3)");
+    TEST("LD 127(P2)",                               0xC2, 0x7F);
+    ERRT("LD 128(P2)",   OVERFLOW_RANGE, "128(P2)",  0xC2, 0x80);
+    TEST("LD -127(P3)",                              0xC3, 0x81);
+    ERRT("LD -128(P3)",  OVERFLOW_RANGE, "-128(P3)", 0xC3, 0x80);
+    TEST("LD E(P1)",                                 0xC1, 0x80);
+    TEST("LD E(PC)",                                 0xC0, 0x80);
+    TEST("LD @127(P2)",                               0xC6, 0x7F);
+    ERRT("LD @128(P2)",  OVERFLOW_RANGE, "@128(P2)",  0xC6, 0x80);
+    TEST("LD @-127(P3)",                              0xC7, 0x81);
+    ERRT("LD @-128(P3)", OVERFLOW_RANGE, "@-128(P3)", 0xC7, 0x80);
+    TEST("LD @E(P1)",                                 0xC5, 0x80);
 
     ATEST(0x1000, "ST  0x1000", 0xC8, 0xFF);
     TEST("XOR E(PC)",     0xE0, 0x80);
@@ -184,18 +184,17 @@ static void test_alu() {
 }
 
 static void test_alu_immediate() {
-    TEST("LDI 0",      0xC4, 0x00);
-    TEST("LDI -128",   0xC4, 0x80);
-    TEST("LDI 255",    0xC4, 0xFF);
-    TEST("LDI d'255",  0xC4, 0xFF);
-    TEST("LDI o'377",  0xC4, 0xFF);
-    TEST("LDI q'377",  0xC4, 0xFF);
-    TEST("LDI h'FF",   0xC4, 0xFF);
-    TEST("LDI x'FF",   0xC4, 0xFF);
-    TEST("LDI b'11111111",  0xC4, 0xFF);
-    TEST("LDI 255",  0xC4, 0xFF);
-    ERRT("LDI -129", OVERFLOW_RANGE, "-129");
-    ERRT("LDI 256",  OVERFLOW_RANGE, "256");
+    TEST("LDI 0",                            0xC4, 0x00);
+    TEST("LDI 255",                          0xC4, 0xFF);
+    ERRT("LDI 256",  OVERFLOW_RANGE, "256",  0xC4, 0x00);
+    TEST("LDI -128",                         0xC4, 0x80);
+    ERRT("LDI -129", OVERFLOW_RANGE, "-129", 0xC4, 0x7F);
+    TEST("LDI d'255",                        0xC4, 0xFF);
+    TEST("LDI o'377",                        0xC4, 0xFF);
+    TEST("LDI q'377",                        0xC4, 0xFF);
+    TEST("LDI h'FF",                         0xC4, 0xFF);
+    TEST("LDI x'FF",                         0xC4, 0xFF);
+    TEST("LDI b'11111111",                   0xC4, 0xFF);
     TEST("ANI 0xFF", 0xD4, 0xFF);
     TEST("ORI 1",    0xDC, 0x01);
     TEST("XRI 0x80", 0xE4, 0x80);
@@ -209,32 +208,32 @@ static void test_alu_immediate() {
 }
 
 static void test_page_boundary() {
-    ATEST(0x1FFE, "LDI 0", 0xC4, 0x00);
-    AERRT(0x1FFF, "LDI 0", OVERWRAP_PAGE, "0");
+    ATEST(0x1FFE, "LDI 0",                     0xC4, 0x00);
+    AERRT(0x1FFF, "LDI 0", OVERWRAP_PAGE, "0", 0xC4, 0x00);
 
-    ATEST(0x1010, "LD 0x1000", 0xC0, 0xEF);
-    AERRT(0x1010, "LD 0x0FFF", OVERWRAP_PAGE, "0x0FFF");
-    ATEST(0x1010, "LD 0x1FFF", 0xC0, 0xEE);
-    ATEST(0x1010, "LD 0x1F92", 0xC0, 0x81);
-    AERRT(0x1010, "LD 0x1F91", OPERAND_TOO_FAR, "0x1F91");
+    ATEST(0x1010, "LD 0x1000",                            0xC0, 0xEF);
+    AERRT(0x1010, "LD 0x0FFF", OVERWRAP_PAGE, "0x0FFF",   0xC0, 0xEE);
+    ATEST(0x1010, "LD 0x1FFF",                            0xC0, 0xEE);
+    ATEST(0x1010, "LD 0x1F92",                            0xC0, 0x81);
+    AERRT(0x1010, "LD 0x1F91", OPERAND_TOO_FAR, "0x1F91", 0xC0, 0x80);
 
-    ATEST(0x1FF0, "LD 0x1FFF", 0xC0, 0x0E);
-    AERRT(0x1FF0, "LD 0x2000", OVERWRAP_PAGE, "0x2000");
-    ATEST(0x1FF0, "LD 0x1000", 0xC0, 0x0F);
-    ATEST(0x1FF0, "LD 0x1070", 0xC0, 0x7F);
-    AERRT(0x1FF0, "LD 0x1071", OPERAND_TOO_FAR, "0x1071");
+    ATEST(0x1FF0, "LD 0x1FFF",                            0xC0, 0x0E);
+    AERRT(0x1FF0, "LD 0x2000", OVERWRAP_PAGE, "0x2000",   0xC0, 0x0F);
+    ATEST(0x1FF0, "LD 0x1000",                            0xC0, 0x0F);
+    ATEST(0x1FF0, "LD 0x1070",                            0xC0, 0x7F);
+    AERRT(0x1FF0, "LD 0x1071", OPERAND_TOO_FAR, "0x1071", 0xC0, 0x80);
 
-    ATEST(0x1010, "JZ 0x1000", 0x98, 0xEE);
-    AERRT(0x1010, "JZ 0x0FFF", OVERWRAP_PAGE, "0x0FFF");
-    ATEST(0x1010, "JZ 0x1FFF", 0x98, 0xED);
-    ATEST(0x1010, "JZ 0x1F93", 0x98, 0x81);
-    AERRT(0x1010, "JZ 0x1F92", OPERAND_TOO_FAR, "0x1F92");
+    ATEST(0x1010, "JZ 0x1000",                            0x98, 0xEE);
+    AERRT(0x1010, "JZ 0x0FFF", OVERWRAP_PAGE, "0x0FFF",   0x98, 0xED);
+    ATEST(0x1010, "JZ 0x1FFF",                            0x98, 0xED);
+    ATEST(0x1010, "JZ 0x1F93",                            0x98, 0x81);
+    AERRT(0x1010, "JZ 0x1F92", OPERAND_TOO_FAR, "0x1F92", 0x98, 0x80);
 
-    ATEST(0x1FF0, "JZ 0x1FFF", 0x98, 0x0D);
-    AERRT(0x1FF0, "JZ 0x2000", OVERWRAP_PAGE, "0x2000");
-    ATEST(0x1FF0, "JZ 0x1000", 0x98, 0x0E);
-    ATEST(0x1FF0, "JZ 0x1071", 0x98, 0x7F);
-    AERRT(0x1FF0, "JZ 0x1072", OPERAND_TOO_FAR, "0x1072");
+    ATEST(0x1FF0, "JZ 0x1FFF",                            0x98, 0x0D);
+    AERRT(0x1FF0, "JZ 0x2000", OVERWRAP_PAGE, "0x2000",   0x98, 0x0E);
+    ATEST(0x1FF0, "JZ 0x1000",                            0x98, 0x0E);
+    ATEST(0x1FF0, "JZ 0x1071",                            0x98, 0x7F);
+    AERRT(0x1FF0, "JZ 0x1072", OPERAND_TOO_FAR, "0x1072", 0x98, 0x80);
 }
 
 static void test_func() {
@@ -242,10 +241,10 @@ static void test_func() {
     symtab.intern(0x1000, "main");
     symtab.intern(0x3210, "func");
 
-    TEST("LDI L(stack)", 0xC4, 0xFF);
-    TEST("LDI H(stack)", 0xC4, 0x1F);
-    TEST("LDI L(addr(main))", 0xC4, 0xFF); // addr(main) == 0x1FFF
-    TEST("LDI H(addr(main))", 0xC4, 0x1F);
+    TEST("LDI L(stack)",      0xC4, 0xFF);
+    TEST("LDI H(stack)",      0xC4, 0x1F);
+    TEST("LDI l(ADDR(main))", 0xC4, 0xFF); // addr(main) == 0x1FFF
+    TEST("LDI h(ADDR(main))", 0xC4, 0x1F);
     TEST("LDI L(addr(func))", 0xC4, 0x0F); // addr(func) == 0x320F
     TEST("LDI H(addr(func))", 0xC4, 0x32);
 }
