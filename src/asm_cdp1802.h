@@ -50,8 +50,8 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
-    Error encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
+    void emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
+    void encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
