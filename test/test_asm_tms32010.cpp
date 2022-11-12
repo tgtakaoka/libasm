@@ -51,9 +51,9 @@ static void test_accumrator() {
     TEST("ADD 70H",         0x0070);
     TEST("ADD 8FH",         0x000F);
     if (is32010()) {
-        ERRT("ADD 090H",    OVERFLOW_RANGE, "090H");
+        ERRT("ADD 090H", OVERFLOW_RANGE, "090H", 0x0010);
     } else {
-        TEST("ADD 090H",    0x0010);
+        TEST("ADD 090H",                         0x0010);
     }
     ERRT("ADD 0100H",       OPERAND_NOT_ALLOWED, "0100H");
     ERUS("ADD UNDEF",       "UNDEF",       0x0000);
@@ -341,11 +341,11 @@ static void test_multiply() {
     TEST("MPYK 0",     0x8000);
     TEST("MPYK 2",     0x8002);
     TEST("MPYK 4095",  0x8FFF);
-    ERRT("MPYK 4096",  OVERFLOW_RANGE, "4096");
+    ERRT("MPYK 4096",  OVERFLOW_RANGE, "4096",  0x9000);
     TEST("MPYK -1",    0x9FFF);
     TEST("MPYK -2",    0x9FFE);
     TEST("MPYK -4096", 0x9000);
-    ERRT("MPYK -4097", OVERFLOW_RANGE, "-4097");
+    ERRT("MPYK -4097", OVERFLOW_RANGE, "-4097", 0x8FFF);
 
     TEST("PAC",  0x7F8E);
     TEST("SPAC", 0x7F90);
@@ -367,10 +367,10 @@ static void test_branch() {
     TEST("B 800H",  0xF900, 0x0800);
     TEST("B 0FFFH", 0xF900, 0x0FFF);
     ERUS("B UNDEF", "UNDEF", 0xF900, 0x0000);
-    ERRT("B 1000H", OVERFLOW_RANGE, "1000H");
-    ERRT("B 2000H", OVERFLOW_RANGE, "2000H");
-    ERRT("B 4000H", OVERFLOW_RANGE, "4000H");
-    ERRT("B 8000H", OVERFLOW_RANGE, "8000H");
+    ERRT("B 1000H", OVERFLOW_RANGE, "1000H", 0xF900, 0x0000);
+    ERRT("B 2000H", OVERFLOW_RANGE, "2000H", 0xF900, 0x0000);
+    ERRT("B 4000H", OVERFLOW_RANGE, "4000H", 0xF900, 0x0000);
+    ERRT("B 8000H", OVERFLOW_RANGE, "8000H", 0xF900, 0x0000);
 
     TEST("BANZ 900H",  0xF400, 0x0900);
     TEST("BGEZ 900H",  0xFD00, 0x0900);
@@ -406,14 +406,14 @@ static void test_control() {
     TEST("LST *-, AR1", 0x7B91);
     TEST("LST *+, AR0", 0x7BA0);
 
-    ERRT("SST 00H",     OVERFLOW_RANGE, "00H");
-    ERRT("SST 7FH",     OVERFLOW_RANGE, "7FH");
+    ERRT("SST 00H",     OVERFLOW_RANGE, "00H", 0x7C00);
+    ERRT("SST 7FH",     OVERFLOW_RANGE, "7FH", 0x7C7F);
     TEST("SST 80H",     0x7C00);
     TEST("SST 8FH",     0x7C0F);
     if (is32010()) {
-        ERRT("SST 090H", OVERFLOW_RANGE, "090H");
+        ERRT("SST 090H", OVERFLOW_RANGE, "090H", 0x7C10);
     } else {
-        TEST("SST 090H", 0x7C10);
+        TEST("SST 090H",                         0x7C10);
     }
     TEST("SST *",       0x7C88);
     TEST("SST *-",      0x7C98);

@@ -44,7 +44,7 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode);
+    void encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 
