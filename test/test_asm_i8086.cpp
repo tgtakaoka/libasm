@@ -69,7 +69,7 @@ static void test_data_transfer() {
     TEST("MOV [SI],DH",          0x88, 0064);
     TEST("MOV [SI+0],DH",        0x88, 0064);
     TEST("MOV [1234H],BH",       0x88, 0076, 0x34, 0x12);
-    ERRT("MOV [10000H],BH",      OVERFLOW_RANGE, "[10000H],BH");
+    ERRT("MOV [10000H],BH",      OVERFLOW_RANGE, "[10000H],BH", 0x88, 0x3E, 0x00, 0x00);
     TEST("MOV [DI+52],AL",       0x88, 0105, 0x34);
     TEST("MOV [DI+127],AL",      0x88, 0105, 0x7F);
     TEST("MOV [DI+128],AL",      0x88, 0205, 0x80, 0x00);
@@ -79,7 +79,7 @@ static void test_data_transfer() {
     TEST("MOV [DI-128],AL",      0x88, 0105, 0x80);
     TEST("MOV [DI-129],AL",      0x88, 0205, 0x7F, 0xFF);
     TEST("MOV [DI-8000H],AL",    0x88, 0205, 0x00, 0x80);
-    ERRT("MOV [DI-8001H],AL",    OVERFLOW_RANGE, "[DI-8001H],AL");
+    ERRT("MOV [DI-8001H],AL",    OVERFLOW_RANGE, "[DI-8001H],AL", 0x88, 0205, 0xFF, 0x7F);
     TEST("MOV [BP+1234H],CL",    0x88, 0216, 0x34, 0x12);
     TEST("MOV [BP],CL",          0x88, 0116, 0x00);
     TEST("MOV [BP+0],CL",        0x88, 0116, 0x00);
@@ -132,19 +132,19 @@ static void test_data_transfer() {
     TEST("MOV AL,56H",   0260, 0x56);
     TEST("MOV AL,-1",    0260, 0xFF);
     TEST("MOV AL,255",   0260, 0xFF);
-    ERRT("MOV AL,256",   OVERFLOW_RANGE, "256");
+    ERRT("MOV AL,256",   OVERFLOW_RANGE, "256", 0260, 0x00);
     TEST("MOV CH,56H",   0265, 0x56);
     TEST("MOV AX,5678H",  0270, 0x78, 0x56);
     TEST("MOV AX,-1",     0270, 0xFF, 0xFF);
     TEST("MOV AX,-32768", 0270, 0x00, 0x80);
-    ERRT("MOV AX,-32769", OVERFLOW_RANGE, "-32769");
+    ERRT("MOV AX,-32769", OVERFLOW_RANGE, "-32769", 0270, 0xFF, 0x7F);
     TEST("MOV AX,65535",  0270, 0xFF, 0xFF);
-    ERRT("MOV AX,65536",  OVERFLOW_RANGE, "65536");
+    ERRT("MOV AX,65536",  OVERFLOW_RANGE, "65536",  0270, 0x00, 0x00);
     TEST("MOV BP,5678H",  0275, 0x78, 0x56);
 
     TEST("MOV AL,[1234H]", 0xA0, 0x34, 0x12);
     TEST("MOV AX,[1234H]", 0xA1, 0x34, 0x12);
-    ERRT("MOV AX,[10000H]", OVERFLOW_RANGE, "[10000H]");
+    ERRT("MOV AX,[10000H]", OVERFLOW_RANGE, "[10000H]", 0xA1, 0x00, 0x00);
     TEST("MOV [1234H],AL", 0xA2, 0x34, 0x12);
     TEST("MOV [1234H],AX", 0xA3, 0x34, 0x12);
 
@@ -152,10 +152,10 @@ static void test_data_transfer() {
     TEST("MOV CL,3", 0261, 0x03);
     TEST("IN  AL,1", 0xE4, 0x01);
     TEST("OUT 3,AL", 0xE6, 0x03);
-    ERRT("IN  AL,-1",  OVERFLOW_RANGE, "-1");
-    ERRT("IN  AL,256", OVERFLOW_RANGE, "256");
-    ERRT("OUT -1,AL",  OVERFLOW_RANGE, "-1,AL");
-    ERRT("OUT 256,AL", OVERFLOW_RANGE, "256,AL");
+    ERRT("IN  AL,-1",  OVERFLOW_RANGE, "-1",     0xE4, 0xFF);
+    ERRT("IN  AL,256", OVERFLOW_RANGE, "256",    0xE4, 0x00);
+    ERRT("OUT -1,AL",  OVERFLOW_RANGE, "-1,AL",  0xE6, 0xFF);
+    ERRT("OUT 256,AL", OVERFLOW_RANGE, "256,AL", 0xE6, 0x00);
 
     TEST("MOV AX,ES",            0x8C, 0300);
     TEST("MOV [SI],CS",          0x8C, 0014);
@@ -196,7 +196,7 @@ static void test_data_transfer() {
     TEST("POP  [BX+DI+52]",    0x8F, 0101, 0x34);
     TEST("POP  [BP+SI+1234H]", 0x8F, 0202, 0x34, 0x12);
     TEST("POP  ES",            0007);
-    ERRT("POP  CS",            REGISTER_NOT_ALLOWED, "CS");
+    ERRT("POP  CS",            REGISTER_NOT_ALLOWED, "CS", 0017);
     TEST("POP  SS",            0027);
     TEST("POP  DS",            0037);
 
@@ -1681,7 +1681,7 @@ static void test_string_manipulation() {
         TEST("INS WORD PTR ES:[DI], DX", 0x6D);
         ERRT("INSB ES:[DI], AX", OPERAND_NOT_ALLOWED, "ES:[DI], AX");
         ERRT("INSW ES:[DI], CX", OPERAND_NOT_ALLOWED, "ES:[DI], CX");
-        ERRT("INSW ES:[SI], DX", ILLEGAL_OPERAND, "ES:[SI], DX");
+        ERRT("INSW ES:[SI], DX", ILLEGAL_OPERAND, "ES:[SI], DX", 0x6D);
 
         TEST("OUTSB", 0x6E);
         TEST("OUTSW", 0x6F);
@@ -1689,7 +1689,7 @@ static void test_string_manipulation() {
         TEST("OUTS DX, WORD PTR [SI]", 0x6F);
         ERRT("OUTSB AX, DS:[SI]", OPERAND_NOT_ALLOWED, "AX, DS:[SI]");
         ERRT("OUTSW CX, DS:[SI]", OPERAND_NOT_ALLOWED, "CX, DS:[SI]");
-        ERRT("OUTSW DX, DS:[DI]", ILLEGAL_OPERAND,     "DS:[DI]");
+        ERRT("OUTSW DX, DS:[DI]", ILLEGAL_OPERAND,     "DS:[DI]", 0x6F);
     }
 
     TEST("LODSB", 0xAC);
@@ -1762,10 +1762,10 @@ static void test_control_transfer() {
     TEST("RET",       0xC3);
     TEST("RET 16",    0xC2, 0x10, 0x00);
     TEST("RET 65535", 0xC2, 0xFF, 0xFF);
-    ERRT("RET -1",    OVERFLOW_RANGE, "-1");
+    ERRT("RET -1",    OVERFLOW_RANGE, "-1", 0xC2, 0xFF, 0xFF);
     TEST("RETF",      0xCB);
     TEST("RETF 16",   0xCA, 0x10, 0x00);
-    ERRT("RETF -1",   OVERFLOW_RANGE, "-1");
+    ERRT("RETF -1",   OVERFLOW_RANGE, "-1", 0xCA, 0xFF, 0xFF);
 
     TEST("JE  $", 0x74, 0xFE);
     TEST("JL  $", 0x7C, 0xFE);
@@ -1794,7 +1794,7 @@ static void test_control_transfer() {
     TEST("INT  2",  0xCD, 0x02);
     TEST("INT  3",  0xCC);
     TEST("INT 255", 0xCD, 0xFF);
-    ERRT("INT 256", OVERFLOW_RANGE, "256");
+    ERRT("INT 256", OVERFLOW_RANGE, "256", 0xCD, 0x00);
     TEST("INTO", 0xCE);
     TEST("IRET", 0xCF);
 
@@ -1872,34 +1872,34 @@ static void test_segment_override() {
     TEST("MOVSB ES:[DI],CS:[SI]", 0x2E, 0xA4);
     TEST("MOVSW ES:[DI],SS:[SI]", 0x36, 0xA5);
     TEST("MOVSW ES:[DI],DS:[SI]", 0xA5);
-    ERRT("MOVSB CS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "CS:[DI],DS:[SI]");
-    ERRT("MOVSW SS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "SS:[DI],DS:[SI]");
-    ERRT("MOVSW DS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "DS:[DI],DS:[SI]");
+    ERRT("MOVSB CS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "CS:[DI],DS:[SI]", 0xA4);
+    ERRT("MOVSW SS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "SS:[DI],DS:[SI]", 0xA5);
+    ERRT("MOVSW DS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "DS:[DI],DS:[SI]", 0xA5);
     TEST("CMPSB ES:[SI],ES:[DI]", 0x26, 0xA6);
     TEST("CMPSB CS:[SI],ES:[DI]", 0x2E, 0xA6);
     TEST("CMPSW SS:[SI],ES:[DI]", 0x36, 0xA7);
     TEST("CMPSW DS:[SI],ES:[DI]", 0xA7);
-    ERRT("CMPSB DS:[SI],CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]");
-    ERRT("CMPSW DS:[SI],SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]");
-    ERRT("CMPSW DS:[SI],DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]");
+    ERRT("CMPSB DS:[SI],CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0xA6);
+    ERRT("CMPSW DS:[SI],SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0xA7);
+    ERRT("CMPSW DS:[SI],DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0xA7);
     TEST("LODSB ES:[SI]", 0x26, 0xAC);
     TEST("LODSB CS:[SI]", 0x2E, 0xAC);
     TEST("LODSW SS:[SI]", 0x36, 0xAD);
     TEST("LODSW DS:[SI]", 0xAD);
     TEST("STOSB ES:[DI]", 0xAA);
-    ERRT("STOSB CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]");
-    ERRT("STOSW SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]");
-    ERRT("STOSW DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]");
+    ERRT("STOSB CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0xAA);
+    ERRT("STOSW SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0xAB);
+    ERRT("STOSW DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0xAB);
     TEST("SCASB ES:[DI]", 0xAE);
-    ERRT("SCASB CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]");
-    ERRT("SCASW SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]");
-    ERRT("SCASW DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]");
+    ERRT("SCASB CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0xAE);
+    ERRT("SCASW SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0xAF);
+    ERRT("SCASW DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0xAF);
 
     if (is80186()) {
         TEST("INSB  ES:[DI], DX", 0x6C);
-        ERRT("INSB  CS:[DI], DX", ILLEGAL_SEGMENT, "CS:[DI], DX");
-        ERRT("INSW  SS:[DI], DX", ILLEGAL_SEGMENT, "SS:[DI], DX");
-        ERRT("INSW  DS:[DI], DX", ILLEGAL_SEGMENT, "DS:[DI], DX");
+        ERRT("INSB  CS:[DI], DX", ILLEGAL_SEGMENT, "CS:[DI], DX", 0x6C);
+        ERRT("INSW  SS:[DI], DX", ILLEGAL_SEGMENT, "SS:[DI], DX", 0x6D);
+        ERRT("INSW  DS:[DI], DX", ILLEGAL_SEGMENT, "DS:[DI], DX", 0x6D);
         TEST("OUTSB DX, ES:[SI]", 0x26, 0x6E);
         TEST("OUTSB DX, CS:[SI]", 0x2E, 0x6E);
         TEST("OUTSW DX, SS:[SI]", 0x36, 0x6F);
@@ -1910,7 +1910,7 @@ static void test_segment_override() {
         TEST("ADD4S ES:[DI],ES:[SI]", 0x26, 0x0F, 0x20);
         TEST("CMP4S ES:[DI],CS:[SI]", 0x2E, 0x0F, 0x26);
         TEST("SUB4S ES:[DI],SS:[SI]", 0x36, 0x0F, 0x22);
-        ERRT("CMP4S CS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "CS:[DI],DS:[SI]");
+        ERRT("CMP4S CS:[DI],DS:[SI]", ILLEGAL_SEGMENT, "CS:[DI],DS:[SI]", 0x0F, 0x26);
     }
 
     asm8086.setOption("optimize-segment", "yes");
@@ -2035,10 +2035,10 @@ static void test_error() {
     } else {
         TEST("ROR AL,2",  0xC0, 0310, 2);
         TEST("ROR AL,7",  0xC0, 0310, 7);
-        ERRT("ROR AL,8",  OVERFLOW_RANGE, "8");
+        ERRT("ROR AL,10", OVERFLOW_RANGE, "10", 0xC0, 0310, 2);
         TEST("ROR AX,8",  0xC1, 0310, 8);
         TEST("ROR AX,15", 0xC1, 0310, 15);
-        ERRT("ROR AX,16", OVERFLOW_RANGE, "16");
+        ERRT("ROR AX,16", OVERFLOW_RANGE, "16", 0xC1, 0310, 0);
     }
     ERRT("ROR AL,CH", OPERAND_NOT_ALLOWED, "AL,CH");
 
@@ -2049,52 +2049,52 @@ static void test_error() {
     ERRT("MOV [SI], 34H", OPERAND_NOT_ALLOWED, "[SI], 34H");
     ERRT("INC [SI]",      OPERAND_NOT_ALLOWED, "[SI]");
 
-    ERRT("JE $+130", OPERAND_TOO_FAR, "$+130");
-    ERRT("JE $-127", OPERAND_TOO_FAR, "$-127");
+    ERRT("JE $+130", OPERAND_TOO_FAR, "$+130", 0x74, 0x80);
+    ERRT("JE $-127", OPERAND_TOO_FAR, "$-127", 0x74, 0x7F);
 
-    ERRT("MOVSB ES:[DI],[SI+0]", ILLEGAL_OPERAND, "[SI+0]");
-    ERRT("MOVSB ES:[DI],[DI]",   ILLEGAL_OPERAND, "[DI]");
-    ERRT("MOVSB ES:[DI],[BP]",   ILLEGAL_OPERAND, "[BP]");
-    ERRT("MOVSB ES:[DI],[BX]",   ILLEGAL_OPERAND, "[BX]");
-    ERRT("MOVSB ES:[DI+0],[SI]", ILLEGAL_OPERAND, "ES:[DI+0],[SI]");
-    ERRT("MOVSB ES:[SI],[SI]",   ILLEGAL_OPERAND, "ES:[SI],[SI]");
-    ERRT("MOVSB ES:[BP],[SI]",   ILLEGAL_OPERAND, "ES:[BP],[SI]");
-    ERRT("MOVSB ES:[BX],[SI]",   ILLEGAL_OPERAND, "ES:[BX],[SI]");
+    ERRT("MOVSB ES:[DI],[SI+0]", ILLEGAL_OPERAND, "[SI+0]",         0xA4);
+    ERRT("MOVSB ES:[DI],[DI]",   ILLEGAL_OPERAND, "[DI]",           0xA4);
+    ERRT("MOVSB ES:[DI],[BP]",   ILLEGAL_OPERAND, "[BP]",           0xA4);
+    ERRT("MOVSB ES:[DI],[BX]",   ILLEGAL_OPERAND, "[BX]",           0xA4);
+    ERRT("MOVSB ES:[DI+0],[SI]", ILLEGAL_OPERAND, "ES:[DI+0],[SI]", 0xA4);
+    ERRT("MOVSB ES:[SI],[SI]",   ILLEGAL_OPERAND, "ES:[SI],[SI]",   0xA4);
+    ERRT("MOVSB ES:[BP],[SI]",   ILLEGAL_OPERAND, "ES:[BP],[SI]",   0xA4);
+    ERRT("MOVSB ES:[BX],[SI]",   ILLEGAL_OPERAND, "ES:[BX],[SI]",   0xA4);
 
-    ERRT("CMPSB [SI],ES:[SI]",   ILLEGAL_OPERAND, "ES:[SI]");
-    ERRT("CMPSB [SI],ES:[DI+0]", ILLEGAL_OPERAND, "ES:[DI+0]");
-    ERRT("CMPSB [SI],ES:[BP]",   ILLEGAL_OPERAND, "ES:[BP]");
-    ERRT("CMPSB [SI],ES:[BX]",   ILLEGAL_OPERAND, "ES:[BX]");
-    ERRT("CMPSB [SI+0],ES:[DI]", ILLEGAL_OPERAND, "[SI+0],ES:[DI]");
-    ERRT("CMPSB [DI],ES:[DI]",   ILLEGAL_OPERAND, "[DI],ES:[DI]");
-    ERRT("CMPSB [BP],ES:[DI]",   ILLEGAL_OPERAND, "[BP],ES:[DI]");
-    ERRT("CMPSB [BX],ES:[DI]",   ILLEGAL_OPERAND, "[BX],ES:[DI]");
+    ERRT("CMPSB [SI],ES:[SI]",   ILLEGAL_OPERAND, "ES:[SI]",        0xA6);
+    ERRT("CMPSB [SI],ES:[DI+0]", ILLEGAL_OPERAND, "ES:[DI+0]",      0xA6);
+    ERRT("CMPSB [SI],ES:[BP]",   ILLEGAL_OPERAND, "ES:[BP]",        0xA6);
+    ERRT("CMPSB [SI],ES:[BX]",   ILLEGAL_OPERAND, "ES:[BX]",        0xA6);
+    ERRT("CMPSB [SI+0],ES:[DI]", ILLEGAL_OPERAND, "[SI+0],ES:[DI]", 0xA6);
+    ERRT("CMPSB [DI],ES:[DI]",   ILLEGAL_OPERAND, "[DI],ES:[DI]",   0xA6);
+    ERRT("CMPSB [BP],ES:[DI]",   ILLEGAL_OPERAND, "[BP],ES:[DI]",   0xA6);
+    ERRT("CMPSB [BX],ES:[DI]",   ILLEGAL_OPERAND, "[BX],ES:[DI]",   0xA6);
 
-    ERRT("SCASB ES:[SI]",   ILLEGAL_OPERAND, "ES:[SI]");
-    ERRT("SCASW ES:[DI+0]", ILLEGAL_OPERAND, "ES:[DI+0]");
-    ERRT("SCASB ES:[BP]",   ILLEGAL_OPERAND, "ES:[BP]");
-    ERRT("SCASB ES:[BX]",   ILLEGAL_OPERAND, "ES:[BX]");
+    ERRT("SCASB ES:[SI]",   ILLEGAL_OPERAND, "ES:[SI]",   0xAE);
+    ERRT("SCASW ES:[DI+0]", ILLEGAL_OPERAND, "ES:[DI+0]", 0xAF);
+    ERRT("SCASB ES:[BP]",   ILLEGAL_OPERAND, "ES:[BP]",   0xAE);
+    ERRT("SCASB ES:[BX]",   ILLEGAL_OPERAND, "ES:[BX]",   0xAE);
 
-    ERRT("LODSB [SI+0]", ILLEGAL_OPERAND, "[SI+0]");
-    ERRT("LODSW [DI]",   ILLEGAL_OPERAND, "[DI]");
-    ERRT("LODSB [BP]",   ILLEGAL_OPERAND, "[BP]");
-    ERRT("LODSB [BX]",   ILLEGAL_OPERAND, "[BX]");
+    ERRT("LODSB [SI+0]", ILLEGAL_OPERAND, "[SI+0]", 0xAC);
+    ERRT("LODSW [DI]",   ILLEGAL_OPERAND, "[DI]",   0xAD);
+    ERRT("LODSB [BP]",   ILLEGAL_OPERAND, "[BP]",   0xAC);
+    ERRT("LODSB [BX]",   ILLEGAL_OPERAND, "[BX]",   0xAC);
 
-    ERRT("STOSB ES:[SI]",   ILLEGAL_OPERAND, "ES:[SI]");
-    ERRT("STOSW ES:[DI+0]", ILLEGAL_OPERAND, "ES:[DI+0]");
-    ERRT("STOSB ES:[BP]",   ILLEGAL_OPERAND, "ES:[BP]");
-    ERRT("STOSB ES:[BX]",   ILLEGAL_OPERAND, "ES:[BX]");
+    ERRT("STOSB ES:[SI]",   ILLEGAL_OPERAND, "ES:[SI]",   0xAA);
+    ERRT("STOSW ES:[DI+0]", ILLEGAL_OPERAND, "ES:[DI+0]", 0xAB);
+    ERRT("STOSB ES:[BP]",   ILLEGAL_OPERAND, "ES:[BP]",   0xAA);
+    ERRT("STOSB ES:[BX]",   ILLEGAL_OPERAND, "ES:[BX]",   0xAA);
 
     if (is80186()) {
-        ERRT("INSB ES:[SI], DX",   ILLEGAL_OPERAND, "ES:[SI], DX");
-        ERRT("INSW ES:[DI+0], DX", ILLEGAL_OPERAND, "ES:[DI+0], DX");
-        ERRT("INSB ES:[BP], DX",   ILLEGAL_OPERAND, "ES:[BP], DX");
-        ERRT("INSB ES:[BX], DX",   ILLEGAL_OPERAND, "ES:[BX], DX");
+        ERRT("INSB ES:[SI], DX",   ILLEGAL_OPERAND, "ES:[SI], DX",   0x6C);
+        ERRT("INSW ES:[DI+0], DX", ILLEGAL_OPERAND, "ES:[DI+0], DX", 0x6D);
+        ERRT("INSB ES:[BP], DX",   ILLEGAL_OPERAND, "ES:[BP], DX",   0x6C);
+        ERRT("INSB ES:[BX], DX",   ILLEGAL_OPERAND, "ES:[BX], DX",   0x6C);
 
-        ERRT("OUTSB DX, [SI+0]", ILLEGAL_OPERAND, "[SI+0]");
-        ERRT("OUTSW DX, [DI]",   ILLEGAL_OPERAND, "[DI]");
-        ERRT("OUTSB DX, [BP]",   ILLEGAL_OPERAND, "[BP]");
-        ERRT("OUTSB DX, [BX]",   ILLEGAL_OPERAND, "[BX]");
+        ERRT("OUTSB DX, [SI+0]", ILLEGAL_OPERAND, "[SI+0]", 0x6E);
+        ERRT("OUTSW DX, [DI]",   ILLEGAL_OPERAND, "[DI]",   0x6F);
+        ERRT("OUTSB DX, [BP]",   ILLEGAL_OPERAND, "[BP]",   0x6E);
+        ERRT("OUTSB DX, [BX]",   ILLEGAL_OPERAND, "[BX]",   0x6E);
     }
 }
 // clang-format on
