@@ -53,13 +53,12 @@ private:
         RegName indexReg;
         OprSize indexSize;
         uint32_t val32;
+        StrScanner list;
         Operand()
-            : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0) {}
-        void fixupMultiRegister();
+            : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0), list() {}
         Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
 
-    Error parseMoveMultiRegList(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);
 
@@ -69,6 +68,7 @@ private:
     Error emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
+    Error emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse = false);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }

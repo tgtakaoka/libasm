@@ -232,6 +232,7 @@ Error AsmMc68000::emitEffectiveAddr(
             mode = M_REL16;
         return emitRelativeAddr(insn, mode, op);
     default:
+    case M_MULT:
         break;
     }
     return OK;
@@ -244,51 +245,49 @@ static uint16_t reverseBits(uint16_t bits) {
     return bits << 8 | bits >> 8;
 }
 
-void AsmMc68000::Operand::fixupMultiRegister() {
-    if (mode == M_DREG || mode == M_AREG) {
-        val32 = (1 << RegMc68000::encodeGeneralRegPos(reg));
-        mode = M_MULT;
-    }
-}
-
-Error AsmMc68000::parseMoveMultiRegList(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
-    Error error = OK;
+Error AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse) {
+    StrScanner p(op.list);
+    uint16_t bits = 0;
     for (;;) {
         StrScanner a(p);
-        const RegName start = RegMc68000::parseRegName(a);
+        const auto start = RegMc68000::parseRegName(a);
         if (!RegMc68000::isGeneralReg(start))
-            return op.setError(p, REGISTER_NOT_ALLOWED);
+            return setError(p, REGISTER_NOT_ALLOWED);
         const uint8_t s = RegMc68000::encodeGeneralRegPos(start);
         uint8_t e = s;
         if (*a == '-') {
             ++a;
             p = a.skipSpaces();
-            const RegName last = RegMc68000::parseRegName(a);
+            const auto last = RegMc68000::parseRegName(a);
             if (!RegMc68000::isGeneralReg(last))
-                return op.setError(p, REGISTER_NOT_ALLOWED);
+                return setError(p, REGISTER_NOT_ALLOWED);
             e = RegMc68000::encodeGeneralRegPos(last);
             if (e < s)
-                return op.setError(UNKNOWN_OPERAND);
+                return setError(UNKNOWN_OPERAND);
         }
         for (uint8_t i = s; i <= e; i++) {
             const uint32_t bm = (1 << i);
-            if (op.val32 & bm)
-                error = DUPLICATE_REGISTER;
-            op.val32 |= bm;
+            if (bits & bm)
+                setErrorIf(p, DUPLICATE_REGISTER);
+            bits |= bm;
         }
-        if (!a.skipSpaces().expect('/')) {
-            op.mode = M_MULT;
-            scan = a;
-            return op.setError(error);
+        if (a.skipSpaces().expect('/')) {
+            p = a;
+            continue;
+        } else if (*a == ',' || endOfLine(*a)) {
+            break;
         }
-        p = a.skipSpaces();
+        setErrorIf(a, UNKNOWN_OPERAND);
     }
+    if (reverse)
+        bits = reverseBits(bits);
+    insn.emitOperand16(bits);
+    return OK;
 }
 
 Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
-    op.setAt(p);
+    op.setAt(op.list = p);
     if (endOfLine(*p))
         return OK;
     if (p.expect('#')) {
@@ -370,8 +369,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.reg != REG_UNDEF) {
         a.skipSpaces();
         if ((*a == '/' || *a == '-') && RegMc68000::isGeneralReg(op.reg)) {
-            parseMoveMultiRegList(p, op);
-            scan = p;
+            while (*a != ',' && !endOfLine(*a))
+                ++a;
+            op.mode = M_MULT;
+            scan = a;
             return op.getError();
         }
         if (RegMc68000::isAddrReg(op.reg)) {
@@ -401,7 +402,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc68000 insn(_insn);
     insn.nameBuffer().text(_parser.readSymbol(scan));
 
-    const OprSize isize = RegMc68000::parseSize(scan);
+    const auto isize = RegMc68000::parseSize(scan);
     if (isize == SZ_ERROR)
         return setError(scan, ILLEGAL_SIZE);
     insn.setInsnSize(isize);
@@ -424,18 +425,12 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(srcOp, error);
 
-    const AddrMode src = insn.src();
-    const AddrMode dst = insn.dst();
+    const auto src = insn.src();
+    const auto dst = insn.dst();
     if (src == M_MULT)
-        srcOp.fixupMultiRegister();
+        emitRegisterList(insn, srcOp, dstOp.mode == M_PDEC);
     if (dst == M_MULT)
-        dstOp.fixupMultiRegister();
-    if (src == M_MULT && dstOp.mode == M_PDEC)
-        srcOp.val32 = reverseBits(srcOp.val32);
-    if (src == M_MULT)
-        insn.emitOperand16(static_cast<uint16_t>(srcOp.val32));
-    if (dst == M_MULT)
-        insn.emitOperand16(static_cast<uint16_t>(dstOp.val32));
+        emitRegisterList(insn, dstOp);
     if (src == M_IMBIT) {
         if (srcOp.mode != M_IMDAT)
             return setError(srcOp, OPERAND_NOT_ALLOWED);
@@ -443,11 +438,11 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(srcOp, ILLEGAL_BIT_NUMBER);
         if (insn.oprSize() == SZ_LONG && srcOp.val32 >= 32)
             return setError(srcOp, ILLEGAL_BIT_NUMBER);
-        insn.emitOperand16(static_cast<uint16_t>(srcOp.val32));
+        insn.emitOperand16(srcOp.val32);
     }
     emitOprSize(insn, isize);
     insn.setInsnSize(isize);
-    const OprSize osize = (isize == SZ_NONE) ? insn.oprSize() : isize;
+    const auto osize = (isize == SZ_NONE) ? insn.oprSize() : isize;
     if (emitEffectiveAddr(insn, osize, srcOp, src, insn.srcPos()))
         return getError();
     if (emitEffectiveAddr(insn, osize, dstOp, dst, insn.dstPos()))
