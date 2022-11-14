@@ -58,20 +58,20 @@ private:
     int8_t parseFlagNames(StrScanner &scan) const;
     Error parseOperand(StrScanner &scan, Operand &op);
 
-    Error emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
-    Error emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);
-    Error emitIndirectRegister(InsnZ8000 &insn, const Operand &op, ModeField field, RegName reg);
-    Error emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
-    Error emitDirectAddress(InsnZ8000 &insn, const Operand &op);
-    Error emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op);
-    Error emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
-    Error emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op);
-    Error emitBaseIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
-    Error emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op);
-    Error emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op);
-    Error emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
-    Error checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt = REG_UNDEF);
-    Error checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
+    void emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
+    void emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);
+    void emitIndirectRegister(InsnZ8000 &insn, const Operand &op, ModeField field, RegName reg);
+    void emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
+    void emitDirectAddress(InsnZ8000 &insn, const Operand &op);
+    void emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op);
+    void emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
+    void emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op);
+    void emitBaseIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
+    void emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op);
+    void emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op);
+    void emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
+    void checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt = REG_UNDEF);
+    void checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
             const Operand &cntOp);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
