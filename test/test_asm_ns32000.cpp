@@ -51,14 +51,16 @@ static void tear_down() {
 
 static void test_format_0() {
     TEST("BEQ .",            0x0A, 0x00);
-    TEST("BNE .+10",         0x1A, 0x0A);
-    TEST("BCS .-0x40",       0x2A, 0x40);
-    TEST("BCC .+0x1FFF",     0x3A, 0x9F, 0xFF);
-    TEST("BHI .-0x2000",     0x4A, 0xA0, 0x00);
-    TEST("BLS .+0x7FFFFF",   0x5A, 0xC0, 0x7F, 0xFF, 0xFF);
-    TEST("BGT .-0x800000",   0x6A, 0xFF, 0x80, 0x00, 0x00);
+    TEST("BNE .+63",         0x1A, 0x3F);
+    TEST("BCS .-64",         0x2A, 0x40);
+    TEST("BCC .+8191",       0x3A, 0x9F, 0xFF);
+    TEST("BHI .-8192",       0x4A, 0xA0, 0x00);
+    TEST("BLS .+536870911",  0x5A, 0xDF, 0xFF, 0xFF, 0xFF);
+    TEST("BGT .-520093696",  0x6A, 0xE1, 0x00, 0x00, 0x00);
     TEST("BLE .+0x1FFFFFFF", 0x7A, 0xDF, 0xFF, 0xFF, 0xFF);
     TEST("BFS .-0x1F000000", 0x8A, 0xE1, 0x00, 0x00, 0x00);
+    ERRT("BLE .+0x20000000", OPERAND_TOO_FAR, ".+0x20000000", 0x7A, 0xDF, 0xFF, 0xFF, 0xFF);
+    ERRT("BFS .-0x1F000001", OPERAND_TOO_FAR, ".-0x1F000001", 0x8A, 0xE1, 0x00, 0x00, 0x00);
     TEST("BFC .+2",          0x9A, 0x02);
     TEST("BLO .-0x9A",       0xAA, 0xBF, 0x66);
     TEST("BHS .+0x3F",       0xBA, 0x3F);
@@ -90,8 +92,8 @@ static void test_format_1() {
     TEST("ENTER   [], 0",          0x82, 0x00, 0x00);
     TEST("EXIT    [R0,R2,R7]",     0x92, 0xA1);
     TEST("EXIT    []",             0x92, 0x00);
-    ERRT("SAVE    []",     OPCODE_HAS_NO_EFFECT, "[]");
-    ERRT("RESTORE [ ]",    OPCODE_HAS_NO_EFFECT, "[ ]");
+    ERRT("SAVE    []",     OPCODE_HAS_NO_EFFECT, "[]",  0x62, 0x00);
+    ERRT("RESTORE [ ]",    OPCODE_HAS_NO_EFFECT, "[ ]", 0x72, 0x00);
 
     // Various displacement.
     TEST("RET 0",          0x12, 0x00);
@@ -101,8 +103,8 @@ static void test_format_1() {
     TEST("RET -8192",      0x12, 0xA0, 0x00);
     TEST("RET 536870911",  0x12, 0xDF, 0xFF, 0xFF, 0xFF);
     TEST("RET -520093696", 0x12, 0xE1, 0x00, 0x00, 0x00);
-    ERRT("RET 536870912",  OVERFLOW_RANGE, "536870912");
-    ERRT("RET -520093697", OVERFLOW_RANGE, "-520093697");
+    ERRT("RET 536870912",  OVERFLOW_RANGE, "536870912",  0x12, 0xDF, 0xFF, 0xFF, 0xFF);
+    ERRT("RET -520093697", OVERFLOW_RANGE, "-520093697", 0x12, 0xE1, 0x00, 0x00, 0x00);
 }
 
 static void test_format_2() {
@@ -313,12 +315,12 @@ static void test_format_7() {
     TEST("QUOW 4(SB),8(SB)", 0xCE, 0xB1, 0xD6, 0x04, 0x08);
     TEST("REMB 4(SB),8(SB)", 0xCE, 0xB4, 0xD6, 0x04, 0x08);
 
-    ERRT("DEIB R1,R3", REGISTER_NOT_ALLOWED, "R3");
-    ERRT("DEIW R3,R1", REGISTER_NOT_ALLOWED, "R1");
-    ERRT("DEID R5,R7", REGISTER_NOT_ALLOWED, "R7");
-    ERRT("MEIB R1,R3", REGISTER_NOT_ALLOWED, "R3");
-    ERRT("MEIW R3,R1", REGISTER_NOT_ALLOWED, "R1");
-    ERRT("MEID R5,R7", REGISTER_NOT_ALLOWED, "R7");
+    ERRT("DEIB R1,R3", REGISTER_NOT_ALLOWED, "R3", 0xCE, 0xEC, 0x08);
+    ERRT("DEIW R3,R1", REGISTER_NOT_ALLOWED, "R1", 0xCE, 0x6D, 0x18);
+    ERRT("DEID R5,R7", REGISTER_NOT_ALLOWED, "R7", 0xCE, 0xEF, 0x29);
+    ERRT("MEIB R1,R3", REGISTER_NOT_ALLOWED, "R3", 0xCE, 0xE4, 0x08);
+    ERRT("MEIW R3,R1", REGISTER_NOT_ALLOWED, "R1", 0xCE, 0x65, 0x18);
+    ERRT("MEID R5,R7", REGISTER_NOT_ALLOWED, "R7", 0xCE, 0xE7, 0x29);
 }
 
 static void test_format_8() {
@@ -384,18 +386,18 @@ static void test_format_9() {
     TEST("LFSR R0",  0x3E, 0x0F, 0x00);
     TEST("SFSR TOS", 0x3E, 0xF7, 0x05);
 
-    ERRT("MOVL F3,8(SB)",   REGISTER_NOT_ALLOWED, "F3,8(SB)");
-    ERRT("MOVBL R1,F5",     REGISTER_NOT_ALLOWED, "F5");
-    ERRT("MOVWL R3,F7",     REGISTER_NOT_ALLOWED, "F7");
-    ERRT("MOVDL R5,F1",     REGISTER_NOT_ALLOWED, "F1");
-    ERRT("MOVDL 16(SB),F3", REGISTER_NOT_ALLOWED, "F3");
-    ERRT("MOVFL 8(SB),F5",  REGISTER_NOT_ALLOWED, "F5");
-    ERRT("MOVFL F1,F7",     REGISTER_NOT_ALLOWED, "F7");
-    ERRT("MOVLF F1,12(SB)", REGISTER_NOT_ALLOWED, "F1,12(SB)");
-    ERRT("MOVLF F3,F3",     REGISTER_NOT_ALLOWED, "F3,F3");
-    ERRT("FLOORLD F5,R5",   REGISTER_NOT_ALLOWED, "F5,R5");
-    ERRT("ROUNDLD F7,R5",   REGISTER_NOT_ALLOWED, "F7,R5");
-    ERRT("TRUNCLD F1,R5",   REGISTER_NOT_ALLOWED, "F1,R5");
+    ERRT("MOVL F3,8(SB)",   REGISTER_NOT_ALLOWED, "F3,8(SB)",  0xBE, 0x84, 0x1E, 0x08);
+    ERRT("MOVBL R1,F5",     REGISTER_NOT_ALLOWED, "F5",        0x3E, 0x40, 0x09);
+    ERRT("MOVWL R3,F7",     REGISTER_NOT_ALLOWED, "F7",        0x3E, 0xC1, 0x19);
+    ERRT("MOVDL R5,F1",     REGISTER_NOT_ALLOWED, "F1",        0x3E, 0x43, 0x28);
+    ERRT("MOVDL 16(SB),F3", REGISTER_NOT_ALLOWED, "F3",        0x3E, 0xC3, 0xD0, 0x10);
+    ERRT("MOVFL 8(SB),F5",  REGISTER_NOT_ALLOWED, "F5",        0x3E, 0x5B, 0xD1, 0x08);
+    ERRT("MOVFL F1,F7",     REGISTER_NOT_ALLOWED, "F7",        0x3E, 0xDB, 0x09);
+    ERRT("MOVLF F1,12(SB)", REGISTER_NOT_ALLOWED, "F1,12(SB)", 0x3E, 0x96, 0x0E, 0x0C);
+    ERRT("MOVLF F3,F3",     REGISTER_NOT_ALLOWED, "F3,F3",     0x3E, 0xD6, 0x18);
+    ERRT("FLOORLD F5,R5",   REGISTER_NOT_ALLOWED, "F5,R5",     0x3E, 0x7B, 0x29);
+    ERRT("ROUNDLD F7,R5",   REGISTER_NOT_ALLOWED, "F7,R5",     0x3E, 0x63, 0x39);
+    ERRT("TRUNCLD F1,R5",   REGISTER_NOT_ALLOWED, "F1,R5",     0x3E, 0x6B, 0x09);
 
     TEST("FPU NONE");
 
@@ -526,7 +528,8 @@ static void test_generic_addressing() {
     TEST("MOVW @0x800000, R0", 0x15, 0xA8, 0xFF, 0x80, 0x00, 0x00);
     TEST("MOVW @0xFFE000, R0", 0x15, 0xA8, 0xA0, 0x00);
     TEST("MOVW @0xFFFFC0, R0", 0x15, 0xA8, 0x40);
-    ERRT("MOVW @0x1000000, R0", OVERFLOW_RANGE, "@0x1000000, R0");
+    TEST("MOVB @0xFFFFFF, R0", 0x14, 0xA8, 0x7F);
+    ERRT("MOVW @0x1000000, R0", OVERFLOW_RANGE, "@0x1000000, R0", 0x15, 0xA8, 0x00);
     // External
     TEST("ADDW EXT(2)+4,     10(R2)",       0x81, 0xB2, 0x02, 0x04, 0x0A);
     TEST("ADDW EXT(-2)+(-4), 10(R2)",       0x81, 0xB2, 0x7E, 0x7C, 0x0A);
