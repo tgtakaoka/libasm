@@ -78,9 +78,9 @@ Error AsmMc68000::checkAlignment(OprSize size, const Operand &op) {
     return OK;
 }
 
-Error AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
+void AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
     if (overflowRel8(disp))
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
     ext |= RegMc68000::encodeGeneralRegNo(op.indexReg) << 12;
     if (RegMc68000::isAddrReg(op.indexReg))
@@ -88,53 +88,50 @@ Error AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Confi
     if (op.indexSize == SZ_LONG)
         ext |= (1 << 11);
     insn.emitOperand16(ext);
-    return OK;
 }
 
-Error AsmMc68000::emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
+void AsmMc68000::emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
     if (overflowRel16(disp))
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand16(static_cast<uint16_t>(disp));
-    return OK;
 }
 
-Error AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op) {
+void AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     if (target % 2)
-        return setError(op, OPERAND_NOT_ALIGNED);
+        setErrorIf(op, OPERAND_NOT_ALIGNED);
     const Config::ptrdiff_t disp = target - base;
     if (mode == M_REL8) {
         if (!overflowRel8(disp)) {
             insn.embed(static_cast<uint8_t>(disp));
-            return OK;
+            return;
         }
     }
     if (overflowRel16(disp))
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand16(static_cast<uint16_t>(disp));
-    return OK;
 }
 
-Error AsmMc68000::emitImmediateData(
+void AsmMc68000::emitImmediateData(
         InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data) {
-    if (size == SZ_LONG) {
+    switch (size) {
+    case SZ_LONG:
         insn.emitOperand32(data);
-        return OK;
+        return;
+    case SZ_WORD:
+        if (overflowUint16(data))
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(data);
+        return;
+    case SZ_BYTE:
+        if (overflowUint8(data))
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(static_cast<uint8_t>(data));
+        return;
+    default:
+        return;
     }
-    if (size == SZ_WORD) {
-        if (!overflowUint16(data)) {
-            insn.emitOperand16(static_cast<uint16_t>(data));
-            return OK;
-        }
-    }
-    if (size == SZ_BYTE) {
-        if (!overflowUint8(data)) {
-            insn.emitOperand16(static_cast<uint8_t>(data));
-            return OK;
-        }
-    }
-    return setError(op, OVERFLOW_RANGE);
 }
 
 Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
@@ -150,8 +147,8 @@ Error AsmMc68000::emitEffectiveAddr(
         InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) {
     if (mode == M_NONE) {
         if (op.mode != M_NONE)
-            return setError(op, UNKNOWN_OPERAND);
-        return OK;
+            setErrorIf(op, UNKNOWN_OPERAND);
+        return getError();
     }
 
     const int8_t mode_gp = modePos(pos);
@@ -169,73 +166,78 @@ Error AsmMc68000::emitEffectiveAddr(
     switch (op.mode) {
     case M_AREG:
         if (size == SZ_BYTE)
-            return setError(op, OPERAND_NOT_ALLOWED);
+            return setErrorIf(op, OPERAND_NOT_ALLOWED);
         break;
     case M_INDX:
-        return emitBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
+        emitBriefExtension(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
+        break;
     case M_PCIDX:
-        return emitBriefExtension(insn, op, op.offset(insn));
+        emitBriefExtension(insn, op, op.offset(insn));
+        break;
     case M_DISP:
-        return emitDisplacement(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
+        emitDisplacement(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
+        break;
     case M_PCDSP:
         if (checkAlignment(size, op))
-            return getError();
-        return emitDisplacement(insn, op, op.offset(insn));
+            setErrorIf(op, getError());
+        emitDisplacement(insn, op, op.offset(insn));
+        break;
     case M_AWORD:
     case M_ALONG:
         if (checkAlignment(size, op))
-            return getError();
+            setErrorIf(op, getError());
         if (op.mode == M_AWORD) {
             insn.emitOperand16(op.val32);
         } else {
             insn.emitOperand32(op.val32);
         }
-        return OK;
+        break;
     case M_IMDAT:
         if (mode == M_IMBIT)
-            return OK;
+            break;
         if (mode == M_IM3) {
             // "Zero means 2^3" unsigned 3-bit.
             if (op.val32 > 8)
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             if (op.val32 == 0 && op.getError() == OK)
-                return setError(op, OPERAND_NOT_ALLOWED);
+                return setErrorIf(op, OPERAND_NOT_ALLOWED);
             const Config::opcode_t count = (op.val32 & 7);  // 8 is encoded to 0.
             const Config::opcode_t data = op.getError() ? 0 : (count << 9);
             insn.embed(data);
-            return OK;
+            break;
         }
         if (mode == M_IM8) {
             // Signed 8-bit.
             if (overflowRel8(static_cast<int32_t>(op.val32)))
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(static_cast<uint8_t>(op.val32));
-            return OK;
+            break;
         }
         if (mode == M_IMVEC) {
             if (op.val32 >= 16)
-                return setError(op, OVERFLOW_RANGE);
-            insn.embed(static_cast<uint8_t>(op.val32));
-            return OK;
+                setErrorIf(op, OVERFLOW_RANGE);
+            insn.embed(static_cast<uint8_t>(op.val32 & 0xF));
+            break;
         }
         if (mode == M_IMDSP) {
             if (overflowRel16(static_cast<int32_t>(op.val32)))
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             insn.emitOperand16(static_cast<uint16_t>(op.val32));
-            return OK;
+            break;
         }
-        return emitImmediateData(insn, op, size, op.val32);
+        emitImmediateData(insn, op, size, op.val32);
+        break;
     case M_LABEL:
         if (size == SZ_LONG || (size == SZ_BYTE && mode == M_REL16))
-            return setError(op, ILLEGAL_SIZE);
+            setErrorIf(op, ILLEGAL_SIZE);
         if (size == SZ_WORD && mode == M_REL8)
             mode = M_REL16;
-        return emitRelativeAddr(insn, mode, op);
+        emitRelativeAddr(insn, mode, op);
+        break;
     default:
-    case M_MULT:
         break;
     }
-    return OK;
+    return getError();
 }
 
 static uint16_t reverseBits(uint16_t bits) {
@@ -245,14 +247,14 @@ static uint16_t reverseBits(uint16_t bits) {
     return bits << 8 | bits >> 8;
 }
 
-Error AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse) {
+void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse) {
     StrScanner p(op.list);
     uint16_t bits = 0;
     for (;;) {
         StrScanner a(p);
         const auto start = RegMc68000::parseRegName(a);
         if (!RegMc68000::isGeneralReg(start))
-            return setError(p, REGISTER_NOT_ALLOWED);
+            setErrorIf(p, REGISTER_NOT_ALLOWED);
         const uint8_t s = RegMc68000::encodeGeneralRegPos(start);
         uint8_t e = s;
         if (*a == '-') {
@@ -260,10 +262,10 @@ Error AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool re
             p = a.skipSpaces();
             const auto last = RegMc68000::parseRegName(a);
             if (!RegMc68000::isGeneralReg(last))
-                return setError(p, REGISTER_NOT_ALLOWED);
+                setErrorIf(p, REGISTER_NOT_ALLOWED);
             e = RegMc68000::encodeGeneralRegPos(last);
             if (e < s)
-                return setError(UNKNOWN_OPERAND);
+                setErrorIf(UNKNOWN_OPERAND);
         }
         for (uint8_t i = s; i <= e; i++) {
             const uint32_t bm = (1 << i);
@@ -282,7 +284,6 @@ Error AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool re
     if (reverse)
         bits = reverseBits(bits);
     insn.emitOperand16(bits);
-    return OK;
 }
 
 Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
@@ -330,7 +331,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
                     over16 = false;
             }
             if (over16 && size == SZ_WORD)
-                return op.setError(OVERFLOW_RANGE);
+                op.setErrorIf(OVERFLOW_RANGE);
             op.mode = (size == SZ_WORD || (size == SZ_NONE && !over16)) ? M_AWORD : M_ALONG;
             scan = p;
             return OK;
@@ -432,23 +433,30 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (dst == M_MULT)
         emitRegisterList(insn, dstOp);
     if (src == M_IMBIT) {
-        if (srcOp.mode != M_IMDAT)
-            return setError(srcOp, OPERAND_NOT_ALLOWED);
-        if (insn.oprSize() == SZ_BYTE && srcOp.val32 >= 8)
-            return setError(srcOp, ILLEGAL_BIT_NUMBER);
-        if (insn.oprSize() == SZ_LONG && srcOp.val32 >= 32)
-            return setError(srcOp, ILLEGAL_BIT_NUMBER);
-        insn.emitOperand16(srcOp.val32);
+        auto bitno = srcOp.val32;
+        if (srcOp.mode != M_IMDAT) {
+            setErrorIf(srcOp, OPERAND_NOT_ALLOWED);
+            bitno = 0;
+        }
+        if (insn.oprSize() == SZ_BYTE && bitno >= 8) {
+            setErrorIf(srcOp, ILLEGAL_BIT_NUMBER);
+            bitno &= 7;
+        }
+        if (insn.oprSize() == SZ_LONG && bitno >= 32) {
+            setErrorIf(srcOp, ILLEGAL_BIT_NUMBER);
+            bitno &= 0x1F;
+        }
+        insn.emitOperand16(bitno);
     }
     emitOprSize(insn, isize);
     insn.setInsnSize(isize);
     const auto osize = (isize == SZ_NONE) ? insn.oprSize() : isize;
-    if (emitEffectiveAddr(insn, osize, srcOp, src, insn.srcPos()))
+    if (emitEffectiveAddr(insn, osize, srcOp, src, insn.srcPos()) == OPERAND_NOT_ALLOWED)
         return getError();
-    if (emitEffectiveAddr(insn, osize, dstOp, dst, insn.dstPos()))
+    if (emitEffectiveAddr(insn, osize, dstOp, dst, insn.dstPos()) == OPERAND_NOT_ALLOWED)
         return getError();
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace mc68000

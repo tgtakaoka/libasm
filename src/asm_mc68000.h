@@ -62,13 +62,13 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);
 
-    Error emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
-    Error emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
-    Error emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
-    Error emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
+    void emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
+    void emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
+    void emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
+    void emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
+    void emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse = false);
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
-    Error emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse = false);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }
