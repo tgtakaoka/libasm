@@ -38,14 +38,15 @@ private:
     struct Operand : public OperandBase {
         AddrMode mode;
         RegName reg;
+        RegName index;
         uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+        Operand() : mode(M_NONE), reg(REG_UNDEF), index(REG_UNDEF), val16(0) {}
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error encodeRel8(InsnIns8060 &insn, const Operand &op);
-    Error encodeIndx(InsnIns8060 &insn, const Operand &op);
+    void encodeRel8(InsnIns8060 &insn, const Operand &op);
+    void encodeIndx(InsnIns8060 &insn, const Operand &op);
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };

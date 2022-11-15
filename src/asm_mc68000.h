@@ -53,20 +53,20 @@ private:
         RegName indexReg;
         OprSize indexSize;
         uint32_t val32;
+        StrScanner list;
         Operand()
-            : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0) {}
-        void fixupMultiRegister();
+            : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0), list() {}
         Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
 
-    Error parseMoveMultiRegList(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);
 
-    Error emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
-    Error emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
-    Error emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
-    Error emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
+    void emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
+    void emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
+    void emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
+    void emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
+    void emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse = false);
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;

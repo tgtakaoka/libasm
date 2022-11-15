@@ -44,9 +44,9 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error encodeRelative(InsnZ80 &insn, const Operand &op);
-    Error encodeIndexedBitOp(InsnZ80 &insn, const Operand &op);
-    Error encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other);
+    void encodeRelative(InsnZ80 &insn, const Operand &op);
+    void encodeIndexedBitOp(InsnZ80 &insn, const Operand &op);
+    void encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

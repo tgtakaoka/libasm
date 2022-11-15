@@ -36,11 +36,11 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const bool indir = p.expect('@');
+    const auto indir = p.expect('@');
     if (indir && isspace(*p))
         return op.setError(UNKNOWN_OPERAND);
 
-    const StrScanner regp = p;
+    const auto regp = p;
     op.reg = RegI8048::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (indir) {
@@ -140,58 +140,58 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmI8048::encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op) {
+void AsmI8048::encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op) {
     if (mode == M_AD08) {
         const Config::uintptr_t page = (insn.address() + 1) & ~0xFF;
         if ((op.val16 & ~0xFF) != page)
-            return setError(op, OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(op.val16);
-        return setOK();
+        return;
     }
     const Config::uintptr_t max = 1UL << uint8_t(config().addressWidth());
     if (op.val16 >= max)
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
     insn.embed((op.val16 >> 3) & 0xE0);
     insn.emitOperand8(op.val16);
-    return setOK();
 }
 
-Error AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op) {
+void AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_IR:
     case M_IR3:
     case M_R:
         insn.embed(RegI8048::encodeRReg(op.reg));
-        return OK;
+        return;
     case M_P12:
     case M_PEXT:
         insn.embed(RegI8048::encodePort(op.reg));
-        return OK;
+        return;
     case M_AD08:
     case M_AD11:
-        return encodeAddress(insn, mode, op);
+        encodeAddress(insn, mode, op);
+        return;
     case M_IMM8:
     case M_BIT8:
         if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
-        return OK;
+        return;
     case M_BITN:
         if (op.val16 >= 8)
-            return setError(op, ILLEGAL_BIT_NUMBER);
-        insn.embed(op.val16 << 5);
-        return OK;
+            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+        insn.embed((op.val16 & 7) << 5);
+        return;
     case M_F:
         insn.embed(op.reg == REG_F1 ? 0x20 : 0);
-        return OK;
+        return;
     case M_RB:
         insn.embed(op.reg == REG_RB1 ? 0x10 : 0);
-        return OK;
+        return;
     case M_MB:
         insn.embed(op.reg == REG_MB1 ? 0x10 : 0);
-        return OK;
+        return;
     default:
-        return OK;
+        return;
     }
 }
 
@@ -217,14 +217,10 @@ Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dstOp, error);
 
-    if (encodeOperand(insn, insn.dst(), dstOp))
-        return getError();
-    if (encodeOperand(insn, insn.src(), srcOp)) {
-        insn.reset();
-        return getError();
-    }
+    encodeOperand(insn, insn.dst(), dstOp);
+    encodeOperand(insn, insn.src(), srcOp);
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace i8048

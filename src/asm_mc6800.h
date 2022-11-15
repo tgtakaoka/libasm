@@ -43,10 +43,10 @@ private:
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    Error emitRelative(InsnMc6800 &insn, const Operand &op);
-    Error emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op);
-    Error emitBitNumber(InsnMc6800 &insn, const Operand &op);
-    Error emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
+    void emitRelative(InsnMc6800 &insn, const Operand &op);
+    void emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op);
+    void emitBitNumber(InsnMc6800 &insn, const Operand &op);
+    void emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

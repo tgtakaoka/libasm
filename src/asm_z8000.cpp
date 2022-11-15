@@ -22,7 +22,7 @@ namespace z8000 {
 const char AsmZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 const char AsmZ8000::OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
 
-Error AsmZ8000::emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
+void AsmZ8000::emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;
     if (field == MF_C4 || field == MF_P4)
         data <<= 4;
@@ -32,101 +32,102 @@ Error AsmZ8000::emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data
         insn.embed(data);
     if (field == MF_P0 || field == MF_P4 || field == MF_P8)
         insn.embedPost(data);
-    return OK;
 }
 
-Error AsmZ8000::emitRegister(InsnZ8000 &insn, ModeField field, RegName reg) {
-    return emitData(insn, field, RegZ8000::encodeGeneralRegName(reg));
+void AsmZ8000::emitRegister(InsnZ8000 &insn, ModeField field, RegName reg) {
+    emitData(insn, field, RegZ8000::encodeGeneralRegName(reg));
 }
 
-Error AsmZ8000::emitIndirectRegister(
+void AsmZ8000::emitIndirectRegister(
         InsnZ8000 &insn, const Operand &op, ModeField field, RegName reg) {
     if (TableZ8000::TABLE.segmentedModel()) {
         if (!RegZ8000::isLongReg(reg))
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
     } else {
         if (!RegZ8000::isWordReg(reg))
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
     }
     const uint8_t data = RegZ8000::encodeGeneralRegName(reg);
     if (data == 0)
-        return setError(op, REGISTER_NOT_ALLOWED);
-    return emitData(insn, field, data);
+        setErrorIf(op, REGISTER_NOT_ALLOWED);
+    emitData(insn, field, data);
 }
 
-Error AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op) {
+void AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op) {
     if (mode == M_IM8) {
         if (overflowUint8(op.val32))
-            return setError(op, OVERFLOW_RANGE);
-        const uint8_t val8 = static_cast<uint8_t>(op.val32);
-        insn.embed(val8);
-        return OK;
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.embed(static_cast<uint8_t>(op.val32));
+        return;
     }
     if (mode == M_BIT) {
         if (op.val32 >= (insn.size() == SZ_BYTE ? 8 : 16))
-            return setError(op, ILLEGAL_BIT_NUMBER);
-        return emitData(insn, field, op.val32);
+            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+        emitData(insn, field, op.val32);
+        return;
     }
     if (mode == M_CNT) {
         if (op.val32 > 16)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         const Config::opcode_t count = op.getError() ? 0 : static_cast<uint8_t>(op.val32) - 1;
-        return emitData(insn, field, count);
+        emitData(insn, field, count);
+        return;
     }
     if (mode == M_QCNT) {
         if (op.val32 == 1 || op.getError())
-            return OK;
+            return;
         if (op.val32 == 0)
-            return setError(op, OPERAND_NOT_ALLOWED);
-        if (op.val32 == 2)
-            return emitData(insn, field, 2);
-        return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OPERAND_NOT_ALLOWED);
+        if (op.val32 == 2) {
+            emitData(insn, field, 2);
+            return;
+        }
+        setErrorIf(op, OVERFLOW_RANGE);
+        return;
     }
     if (mode == M_SCNT || mode == M_NCNT) {
         if (op.val32 > 32)
-            return setError(op, OVERFLOW_RANGE);
-        int16_t count = static_cast<int16_t>(op.val32);
-        const OprSize size = insn.size();
+            setErrorIf(op, OVERFLOW_RANGE);
+        auto count = static_cast<int16_t>(op.val32);
+        const auto size = insn.size();
         if (count < 0 || (size == SZ_BYTE && count > 8) || (size == SZ_WORD && op.val32 > 16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         if (mode == M_NCNT)
             count = -count;
         if (size == SZ_BYTE)
             count = static_cast<uint8_t>(count);
         insn.emitOperand16(static_cast<uint16_t>(count));
-        return OK;
+        return;
     }
     // M_IM
     switch (insn.size()) {
     case SZ_BYTE:
-        if (!overflowUint8(op.val32)) {
+        if (overflowUint8(op.val32))
+            setErrorIf(op, OVERFLOW_RANGE);
+        {
             uint16_t val16 = static_cast<uint8_t>(op.val32);
             val16 |= (val16 << 8);
             insn.emitOperand16(val16);
-            return OK;
         }
-        break;
+        return;
     case SZ_WORD:
-        if (!overflowUint16(op.val32)) {
-            const uint16_t val16 = static_cast<uint16_t>(op.val32);
-            insn.emitOperand16(val16);
-            return OK;
-        }
-        break;
+        if (overflowUint16(op.val32))
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(static_cast<uint16_t>(op.val32));
+        return;
     case SZ_LONG:
         insn.emitOperand32(op.val32);
-        return OK;
+        return;
     default:
         break;
     }
-    return setError(op, OVERFLOW_RANGE);
 }
 
-Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
+void AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
     const uint32_t addr = op.val32;
     if (TableZ8000::TABLE.segmentedModel()) {
         if (addr >= 0x800000L)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t off = static_cast<uint16_t>(addr);
         bool autoShortDirect = _autoShortDirect && op.isOK();
@@ -134,153 +135,166 @@ Error AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
             insn.emitOperand16(seg | off);
         } else if (op.cc == CC_F) {  // short direct
             if (off >= 0x100)
-                return setError(op, OVERFLOW_RANGE);
-            insn.emitOperand16(seg | off);
+                setErrorIf(op, OVERFLOW_RANGE);
+            insn.emitOperand16(seg | (off & 0xFF));
         } else {
             insn.emitOperand16(0x8000 | seg);
             insn.emitOperand16(off);
         }
-        return OK;
+        return;
     }
     if (addr >= 0x10000)
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand16(static_cast<uint16_t>(addr));
-    return OK;
 }
 
-Error AsmZ8000::emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op) {
+void AsmZ8000::emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + (mode == M_RA ? 4 : 2);
     const Config::uintptr_t target = op.getError() ? base : op.val32;
     Config::ptrdiff_t delta = target - base;
     if (mode == M_RA) {
         if (overflowRel16(delta))
-            return setError(op, OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(static_cast<uint16_t>(delta));
-        return OK;
+        return;
     }
     if (target % 2)
-        return setError(op, OPERAND_NOT_ALIGNED);
+        setErrorIf(op, OPERAND_NOT_ALIGNED);
     delta /= 2;
     if (mode == M_RA12) {
         delta = -delta;
         if (delta < -0x800 || delta >= 0x800)
-            return setError(op, OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFFF));
-        return OK;
+        return;
     }
     if (mode == M_RA8) {
         if (overflowRel8(delta))
-            return setError(op, OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFF));
-        return OK;
+        return;
     }
     // M_RA7
     if (delta <= -0x80 || delta > 0)
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(-delta & 0x7F));
-    return OK;
 }
 
-Error AsmZ8000::emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op) {
+void AsmZ8000::emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (!RegZ8000::isWordReg(op.reg) || op.reg == REG_R0)
-        return setError(op, REGISTER_NOT_ALLOWED);
-    if (emitRegister(insn, field, op.reg))
-        return getError();
-    return emitDirectAddress(insn, op);
+        setErrorIf(op, REGISTER_NOT_ALLOWED);
+    emitRegister(insn, field, op.reg);
+    emitDirectAddress(insn, op);
 }
 
-Error AsmZ8000::emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op) {
+void AsmZ8000::emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op) {
     const int32_t disp = static_cast<int32_t>(op.val32);
     if (overflowRel16(disp))
-        return setError(op, OVERFLOW_RANGE);
-    if (emitIndirectRegister(insn, op, field, op.base))
-        return getError();
+        setErrorIf(op, OVERFLOW_RANGE);
+    emitIndirectRegister(insn, op, field, op.base);
     insn.emitOperand16(static_cast<uint16_t>(disp));
-    return OK;
 }
 
-Error AsmZ8000::emitBaseIndexed(InsnZ8000 &insn, ModeField field, const Operand &op) {
+void AsmZ8000::emitBaseIndexed(InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (!RegZ8000::isWordReg(op.reg) || RegZ8000::encodeGeneralRegName(op.reg) == 0)
-        return setError(op, REGISTER_NOT_ALLOWED);
-    if (emitIndirectRegister(insn, op, field, op.base))
-        return getError();
-    return emitRegister(insn, MF_P8, op.reg);
+        setErrorIf(op, REGISTER_NOT_ALLOWED);
+    emitIndirectRegister(insn, op, field, op.base);
+    emitRegister(insn, MF_P8, op.reg);
 }
 
-Error AsmZ8000::emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op) {
+void AsmZ8000::emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (op.mode == M_CC) {
-        if (op.cc == CC_Z)
-            return emitData(insn, field, FLAG_Z);
-        if (op.cc == CC_C)
-            return emitData(insn, field, FLAG_C);
-        return setError(op, UNKNOWN_OPERAND);
+        if (op.cc == CC_Z) {
+            emitData(insn, field, FLAG_Z);
+        } else if (op.cc == CC_C) {
+            emitData(insn, field, FLAG_C);
+        } else {
+            setErrorIf(op, UNKNOWN_OPERAND);
+        }
+        return;
     }
     if (op.val32 == 0)
-        return setError(op, OPCODE_HAS_NO_EFFECT);
-    return emitData(insn, field, static_cast<uint16_t>(op.val32));
+        setErrorIf(op, OPCODE_HAS_NO_EFFECT);
+    emitData(insn, field, static_cast<uint16_t>(op.val32));
 }
 
-Error AsmZ8000::emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op) {
+void AsmZ8000::emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op) {
     if (insn.size() == SZ_BYTE && op.reg != REG_FLAGS)
-        return setError(op, ILLEGAL_SIZE);
+        setErrorIf(op, ILLEGAL_SIZE);
     if (insn.size() == SZ_WORD && op.reg == REG_FLAGS)
-        return setError(op, ILLEGAL_SIZE);
-    const int8_t data = RegZ8000::encodeCtlReg(op.reg);
-    if (data < 0)
-        return setError(op, ILLEGAL_REGISTER);
-    return emitData(insn, field, data);
+        setErrorIf(op, ILLEGAL_SIZE);
+    int8_t data = RegZ8000::encodeCtlReg(op.reg);
+    if (data < 0) {
+        setErrorIf(op, ILLEGAL_REGISTER);
+        data = 0;
+    }
+    emitData(insn, field, data);
 }
 
-Error AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field) {
+void AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field) {
     switch (mode) {
     case M_DR:
         if (insn.size() == SZ_WORD && !RegZ8000::isLongReg(op.reg))
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         if (insn.size() == SZ_LONG && !RegZ8000::isQuadReg(op.reg))
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_R:
-        return emitRegister(insn, field, op.reg);
+        emitRegister(insn, field, op.reg);
+        return;
     case M_WR07:
         if (RegZ8000::encodeGeneralRegName(op.reg) >= 8)
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_WR:
         if (!RegZ8000::isWordReg(op.reg))
-            return setError(op, REGISTER_NOT_ALLOWED);
-        return emitRegister(insn, field, op.reg);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+        emitRegister(insn, field, op.reg);
+        return;
     case M_IR:
-        return emitIndirectRegister(insn, op, field, op.reg);
+        emitIndirectRegister(insn, op, field, op.reg);
+        return;
     case M_IRIO:
         if (!RegZ8000::isWordReg(op.reg) || RegZ8000::encodeGeneralRegName(op.reg) == 0)
-            return setError(op, REGISTER_NOT_ALLOWED);
-        return emitRegister(insn, field, op.reg);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+        emitRegister(insn, field, op.reg);
+        return;
     case M_GENI:
-        if (op.mode == M_IM)
-            return emitImmediate(insn, MF_NO, M_IM, op);
+        if (op.mode == M_IM) {
+            emitImmediate(insn, MF_NO, M_IM, op);
+            return;
+        }
         /* Fall-through */
     case M_GEND:
         if (op.mode == M_R) {
             insn.embed(0x8000);
-            return emitRegister(insn, field, op.reg);
+            emitRegister(insn, field, op.reg);
+            return;
         }
         /* Fall-through */
     case M_GENA:
-        if (op.mode == M_IR)
-            return emitIndirectRegister(insn, op, field, op.reg);
+        if (op.mode == M_IR) {
+            emitIndirectRegister(insn, op, field, op.reg);
+            return;
+        }
         insn.embed(0x4000);
-        if (op.mode == M_DA)
-            return emitDirectAddress(insn, op);
-        return emitIndexed(insn, field, op);
+        if (op.mode == M_DA) {
+            emitDirectAddress(insn, op);
+            return;
+        }
+        emitIndexed(insn, field, op);
+        return;
     case M_BA:
-        return emitBaseAddress(insn, field, op);
+        emitBaseAddress(insn, field, op);
+        return;
     case M_BX:
-        return emitBaseIndexed(insn, field, op);
+        emitBaseIndexed(insn, field, op);
+        return;
     case M_IO:
         if (op.val32 >= 0x10000)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
-        return OK;
+        return;
     case M_IM:
     case M_IM8:
     case M_BIT:
@@ -288,70 +302,75 @@ Error AsmZ8000::emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, M
     case M_QCNT:
     case M_SCNT:
     case M_NCNT:
-        return emitImmediate(insn, field, mode, op);
+        emitImmediate(insn, field, mode, op);
+        return;
     case M_CC:
-        if (op.mode == M_NONE)
-            return emitData(insn, field, CC_T);
-        return emitData(insn, field, RegZ8000::encodeCcName(op.cc));
+        if (op.mode == M_NONE) {
+            emitData(insn, field, CC_T);
+            return;
+        }
+        emitData(insn, field, RegZ8000::encodeCcName(op.cc));
+        return;
     case M_INTR:
         if (op.val32 == 0)
-            return setError(op, OPCODE_HAS_NO_EFFECT);
-        return emitData(insn, field, static_cast<uint16_t>(3 ^ op.val32));
+            setErrorIf(op, OPCODE_HAS_NO_EFFECT);
+        emitData(insn, field, static_cast<uint16_t>(3 ^ op.val32));
+        return;
     case M_FLAG:
-        return emitFlags(insn, field, op);
+        emitFlags(insn, field, op);
+        return;
     case M_RA:
     case M_RA12:
     case M_RA8:
     case M_RA7:
-        return emitRelative(insn, mode, op);
+        emitRelative(insn, mode, op);
+        return;
     case M_CTL:
-        return emitCtlRegister(insn, field, op);
+        emitCtlRegister(insn, field, op);
+        return;
     default:
-        return OK;
+        break;
     }
 }
 
-Error AsmZ8000::checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt) {
-    const RegName dst = dstOp.reg;
-    const RegName src = srcOp.reg;
+void AsmZ8000::checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt) {
+    const auto dst = dstOp.reg;
+    const auto src = srcOp.reg;
     const uint8_t dnum = RegZ8000::encodeGeneralRegName(dst);
     const uint8_t ds = RegZ8000::isByteReg(dst) && dnum >= 8 ? dnum - 8 : dnum;
     const uint8_t de = RegZ8000::isLongReg(dst) ? ds + 1 : ds;
     const uint8_t ss = RegZ8000::encodeGeneralRegName(src);
     const uint8_t se = RegZ8000::isLongReg(src) ? ss + 1 : ss;
     if (ds == ss || ds == se || de == ss || de == se)
-        return setError(dstOp, REGISTERS_OVERLAPPED);
+        setErrorIf(dstOp, REGISTERS_OVERLAPPED);
     if (cnt == REG_UNDEF)
-        return OK;
+        return;
     const uint8_t c = RegZ8000::encodeGeneralRegName(cnt);
     if (ds == c || de == c)
-        return setError(dstOp, REGISTERS_OVERLAPPED);
+        setErrorIf(dstOp, REGISTERS_OVERLAPPED);
     if (ss == c || se == c)
-        return setError(srcOp, REGISTERS_OVERLAPPED);
-    return OK;
+        setErrorIf(srcOp, REGISTERS_OVERLAPPED);
 }
 
-Error AsmZ8000::checkRegisterOverlap(
+void AsmZ8000::checkRegisterOverlap(
         const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp) {
     if (dstOp.mode == M_IR && (dstOp.reg == REG_R0 || dstOp.reg == REG_RR0))
-        return setError(dstOp, REGISTER_NOT_ALLOWED);
+        setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
     if (srcOp.mode == M_IR && (srcOp.reg == REG_R0 || srcOp.reg == REG_RR0))
-        return setError(srcOp, REGISTER_NOT_ALLOWED);
-    if (checkRegisterOverlap(dstOp, srcOp, cntOp.reg))
-        return getError();
+        setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
+    checkRegisterOverlap(dstOp, srcOp, cntOp.reg);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!TableZ8000::TABLE.segmentedModel()) {
             if (dstOp.reg == REG_R1)
-                return setError(dstOp, REGISTER_NOT_ALLOWED);
+                setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
             if (srcOp.reg == REG_R1)
-                return setError(srcOp, REGISTER_NOT_ALLOWED);
+                setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
         }
         // R1 isn't allowed as cnt.
         if (cntOp.reg == REG_R1)
-            return setError(cntOp, REGISTER_NOT_ALLOWED);
+            setErrorIf(cntOp, REGISTER_NOT_ALLOWED);
     }
-    return OK;
 }
 
 int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
@@ -360,7 +379,7 @@ int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
         return 0;
     int8_t num = 0;
     while (true) {
-        const IntrName intr = RegZ8000::parseIntrName(p);
+        const auto intr = RegZ8000::parseIntrName(p);
         if (intr == INTR_UNDEF)
             return -1;
         num |= RegZ8000::encodeIntrName(intr);
@@ -380,7 +399,7 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
         return 0;
     int8_t num = 0;
     while (true) {
-        const FlagName flag = RegZ8000::parseFlagName(p);
+        const auto flag = RegZ8000::parseFlagName(p);
         if (flag == FLAG_UNDEF)
             return -1;
         num |= RegZ8000::encodeFlagName(flag);
@@ -460,7 +479,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     if (op.cc != CC_UNDEF) {
         // 'C' and 'Z' are parsed as M_CC, though these can be M_FLAG.
         const int8_t num = parseFlagNames(a);
-        const FlagName flag = FlagName(num);
+        const auto flag = FlagName(num);
         if (num > 0 && flag != FLAG_C && flag != FLAG_Z) {
             op.val32 = num;
             op.mode = M_FLAG;
@@ -548,39 +567,24 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     const auto error = TableZ8000::TABLE.searchName(insn);
     if (error)
         return setError(dstOp, error);
-    if (insn.isThreeRegsInsn() && checkRegisterOverlap(insn, dstOp, srcOp, ex1Op))
-        return getError();
-    if (insn.isPushPopInsn() && checkRegisterOverlap(dstOp, srcOp))
-        return getError();
+
+    if (insn.isThreeRegsInsn())
+        checkRegisterOverlap(insn, dstOp, srcOp, ex1Op);
+    if (insn.isPushPopInsn())
+        checkRegisterOverlap(dstOp, srcOp);
     if (insn.isLoadMultiInsn()) {
-        const Operand &regOp = insn.dst() == M_R ? dstOp : srcOp;
+        const auto &regOp = insn.dst() == M_R ? dstOp : srcOp;
         if (RegZ8000::encodeGeneralRegName(regOp.reg) + ex1Op.val32 > 16)
-            return setError(ex1Op, OVERFLOW_RANGE);
+            setErrorIf(ex1Op, OVERFLOW_RANGE);
     }
 
-    const AddrMode dst = insn.dst();
-    if (dst != M_NONE) {
-        if (emitOperand(insn, dst, dstOp, insn.dstField()))
-            return getError();
-    }
-    const AddrMode src = insn.src();
-    if (src != M_NONE) {
-        if (emitOperand(insn, src, srcOp, insn.srcField()))
-            return getError();
-    }
-    const AddrMode ex1 = insn.ex1();
-    if (ex1 != M_NONE) {
-        const ModeField field = (ex1 == M_WR ? MF_P8 : MF_P0);
-        if (emitOperand(insn, ex1, ex1Op, field))
-            return getError();
-    }
-    const AddrMode ex2 = insn.ex2();
-    if (ex2 != M_NONE) {
-        if (emitOperand(insn, ex2, ex2Op, MF_P0))
-            return getError();
-    }
+    emitOperand(insn, insn.dst(), dstOp, insn.dstField());
+    emitOperand(insn, insn.src(), srcOp, insn.srcField());
+    const auto ex1Field = (insn.ex1() == M_WR ? MF_P8 : MF_P0);
+    emitOperand(insn, insn.ex1(), ex1Op, ex1Field);
+    emitOperand(insn, insn.ex2(), ex2Op, MF_P0);
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace z8000

@@ -58,9 +58,9 @@ private:
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    Error emitRelative(InsnMc6805 &insn, const Operand &op);
-    Error emitBitNumber(InsnMc6805 &insn, const Operand &op);
-    Error emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
+    void emitRelative(InsnMc6805 &insn, const Operand &op);
+    void emitBitNumber(InsnMc6805 &insn, const Operand &op);
+    void emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_PCBITS[] PROGMEM;

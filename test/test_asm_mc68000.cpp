@@ -98,20 +98,20 @@ static void test_data_move() {
     TEST("MOVE.B ($1234,A2),D7",      0017052, 0x1234);
     TEST("MOVE.B (-$8000,A2),D7",     0017052, 0x8000);
     TEST("MOVE.B ($7FFF,A2),D7",      0017052, 0x7FFF);
-    ERRT("MOVE.B (-$8001,A2),D7",     OVERFLOW_RANGE, "(-$8001,A2),D7");
-    ERRT("MOVE.B ($8000,A2),D7",      OVERFLOW_RANGE, "($8000,A2),D7");
+    ERRT("MOVE.B (-$8001,A2),D7",     OVERFLOW_RANGE, "(-$8001,A2),D7", 0017052, 0x7FFF);
+    ERRT("MOVE.B ($8000,A2),D7",      OVERFLOW_RANGE, "($8000,A2),D7",  0017052, 0x8000);
     TEST("MOVE.B ($12,A2,D3.L),D7",   0017062, 0x3812);
     TEST("MOVE.B (-$80,A2,D3.L),D7",  0017062, 0x3880);
     TEST("MOVE.B ($7F,A2,D3.L),D7",   0017062, 0x387F);
-    ERRT("MOVE.B (-$81,A2,D3.L),D7",  OVERFLOW_RANGE, "(-$81,A2,D3.L),D7");
-    ERRT("MOVE.B ($80,A2,D3.L),D7",   OVERFLOW_RANGE, "($80,A2,D3.L),D7");
+    ERRT("MOVE.B (-$81,A2,D3.L),D7",  OVERFLOW_RANGE, "(-$81,A2,D3.L),D7", 0017062, 0x387F);
+    ERRT("MOVE.B ($80,A2,D3.L),D7",   OVERFLOW_RANGE, "($80,A2,D3.L),D7",  0017062, 0x3880);
     TEST("MOVE.B ($1234).W,D7",       0017070, 0x1234);
     TEST("MOVE.B ($123456).L,D7",     0017071, 0x0012, 0x3456);
     TEST("MOVE.B (32767),D7",         0017070, 0x7FFF);
     TEST("MOVE.B (32767).W,D7",       0017070, 0x7FFF);
     TEST("MOVE.B (32767).L,D7",       0017071, 0x0000, 0x7FFF);
     TEST("MOVE.B (32768),D7",         0017071, 0x0000, 0x8000);
-    ERRT("MOVE.B (32768).W,D7",       OVERFLOW_RANGE, "(32768).W,D7");
+    ERRT("MOVE.B (32768).W,D7",       OVERFLOW_RANGE, "(32768).W,D7", 0017070, 0x8000);
     TEST("MOVE.B (32768).L,D7",       0017071, 0x0000, 0x8000);
     TEST("MOVE.B (-1),D7",            0017070, 0xFFFF);
     TEST("MOVE.B (-1).W,D7",          0017070, 0xFFFF);
@@ -120,7 +120,7 @@ static void test_data_move() {
     TEST("MOVE.B (-32768).W,D7",      0017070, 0x8000);
     TEST("MOVE.B (-32768).L,D7",      0017071, 0xFFFF, 0x8000);
     TEST("MOVE.B (-32769),D7",        0017071, 0xFFFF, 0x7FFF);
-    ERRT("MOVE.B (-32769).W,D7",      OVERFLOW_RANGE, "(-32769).W,D7");
+    ERRT("MOVE.B (-32769).W,D7",      OVERFLOW_RANGE, "(-32769).W,D7", 0017070, 0x7FFF);
     TEST("MOVE.B (-32769).L,D7",      0017071, 0xFFFF, 0x7FFF);
     TEST("MOVE.B ($FFFFFF),D7",       0017070, 0xFFFF);
     TEST("MOVE.B ($FFFFFF).W,D7",     0017070, 0xFFFF);
@@ -129,26 +129,26 @@ static void test_data_move() {
     TEST("MOVE.B ($FF8000).W,D7",     0017070, 0x8000);
     TEST("MOVE.B ($FF8000).L,D7",     0017071, 0x00FF, 0x8000);
     TEST("MOVE.B ($FF7FFF),D7",       0017071, 0x00FF, 0x7FFF);
-    ERRT("MOVE.B ($FF7FFF).W,D7",     OVERFLOW_RANGE, "($FF7FFF).W,D7");
+    ERRT("MOVE.B ($FF7FFF).W,D7",     OVERFLOW_RANGE, "($FF7FFF).W,D7", 017070, 0x7FFF);
     TEST("MOVE.B ($FF7FFF).L,D7",     0017071, 0x00FF, 0x7FFF);
     TEST("MOVE.B ($1000000),D7",      0017071, 0x0100, 0x0000);
-    ERRT("MOVE.B ($1000000).W,D7",    OVERFLOW_RANGE, "($1000000).W,D7");
+    ERRT("MOVE.B ($1000000).W,D7",    OVERFLOW_RANGE, "($1000000).W,D7", 017070, 0x0000);
     TEST("MOVE.B ($1000000).L,D7",    0017071, 0x0100, 0x0000);
     TEST("MOVE.B (*+$1234,PC),D7",    0017072, 0x1232);
     TEST("MOVE.B (*+$12,PC,D3.W),D7", 0017073, 0x3010);
     TEST("MOVE.B (*-$7FFE,PC),D7",    0017072, 0x8000);
     TEST("MOVE.B (*+$8001,PC),D7",    0017072, 0x7FFF);
-    ERRT("MOVE.B (*-$7FFF,PC),D7",    OVERFLOW_RANGE, "(*-$7FFF,PC),D7");
-    ERRT("MOVE.B (*+$8002,PC),D7",    OVERFLOW_RANGE, "(*+$8002,PC),D7");
+    ERRT("MOVE.B (*-$7FFF,PC),D7",    OVERFLOW_RANGE, "(*-$7FFF,PC),D7", 0017072, 0x7FFF);
+    ERRT("MOVE.B (*+$8002,PC),D7",    OVERFLOW_RANGE, "(*+$8002,PC),D7", 0017072, 0x8000);
     TEST("MOVE.B (*-$7E,PC,D3),D7",   0017073, 0x3080);
     TEST("MOVE.B (*+$81,PC,D3),D7",   0017073, 0x307F);
-    ERRT("MOVE.B (*-$7F,PC,D3),D7",   OVERFLOW_RANGE, "(*-$7F,PC,D3),D7");
-    ERRT("MOVE.B (*+$82,PC,D3),D7",   OVERFLOW_RANGE, "(*+$82,PC,D3),D7");
+    ERRT("MOVE.B (*-$7F,PC,D3),D7",   OVERFLOW_RANGE, "(*-$7F,PC,D3),D7", 0017073, 0x307F);
+    ERRT("MOVE.B (*+$82,PC,D3),D7",   OVERFLOW_RANGE, "(*+$82,PC,D3),D7", 0017073, 0x3080);
     TEST("MOVE.B #$34,D7",            0017074, 0x0034);
     TEST("MOVE.B #$FF,D7",            0017074, 0x00FF);
     TEST("MOVE.B #-$80,D7",           0017074, 0x0080);
-    ERRT("MOVE.B #$100,D7",           OVERFLOW_RANGE, "#$100,D7");
-    ERRT("MOVE.B #-$81,D7",           OVERFLOW_RANGE, "#-$81,D7");
+    ERRT("MOVE.B #$100,D7",           OVERFLOW_RANGE, "#$100,D7", 0017074, 0x0000);
+    ERRT("MOVE.B #-$81,D7",           OVERFLOW_RANGE, "#-$81,D7", 0017074, 0x007F);
     TEST("MOVE.W D2,D7",              0037002);
     TEST("MOVE.W A2,D7",              0037012);
     TEST("MOVE.W (A2),D7",            0037022);
@@ -163,8 +163,8 @@ static void test_data_move() {
     TEST("MOVE.W #$0034,D7",          0037074, 0x0034);
     TEST("MOVE.W #$FFFF,D7",          0037074, 0xFFFF);
     TEST("MOVE.W #-$8000,D7",         0037074, 0x8000);
-    ERRT("MOVE.W #$10000,D7",         OVERFLOW_RANGE, "#$10000,D7");
-    ERRT("MOVE.W #-$8001,D7",         OVERFLOW_RANGE, "#-$8001,D7");
+    ERRT("MOVE.W #$10000,D7",         OVERFLOW_RANGE, "#$10000,D7", 0037074, 0x0000);
+    ERRT("MOVE.W #-$8001,D7",         OVERFLOW_RANGE, "#-$8001,D7", 0037074, 0x7FFF);
     TEST("MOVE.L D2,D7",              0027002);
     TEST("MOVE.L A2,D7",              0027012);
     TEST("MOVE.L (A2),D7",            0027022);
@@ -592,10 +592,10 @@ static void test_data_move() {
     ERRT("MOVEQ (*+$12,PC,D3),D7", OPERAND_NOT_ALLOWED, "(*+$12,PC,D3),D7");
     TEST("MOVEQ #0,D0",            0070000 | 0x00);
     TEST("MOVEQ #$7F,D0",          0070000 | 0x7F);
-    ERRT("MOVEQ #$80,D0",          OVERFLOW_RANGE, "#$80,D0");
+    ERRT("MOVEQ #$80,D0",          OVERFLOW_RANGE, "#$80,D0", 0070000 | 0x80);
     TEST("MOVEQ #-1,D7",           0077000 | 0xFF);
     TEST("MOVEQ #-$80,D0",         0070000 | 0x80);
-    ERRT("MOVEQ #-$81,D0",         OVERFLOW_RANGE, "#-$81,D0");
+    ERRT("MOVEQ #-$81,D0",         OVERFLOW_RANGE, "#-$81,D0", 0070000 | 0x7F);
 
     // PEA src: 00441|M|Rn
     ERRT("PEA D2",              OPERAND_NOT_ALLOWED, "D2");
@@ -777,8 +777,8 @@ static void test_integer() {
     TEST("ADDQ.B #6,D2",            0056002);
     TEST("ADDQ.B #7,D2",            0057002);
     TEST("ADDQ.B #8,D2",            0050002);
-    ERRT("ADDQ.B #9,D2",            OVERFLOW_RANGE, "#9,D2");
-    ERRT("ADDQ.B #-1,D2",           OVERFLOW_RANGE, "#-1,D2");
+    ERRT("ADDQ.B #9,D2",            OVERFLOW_RANGE, "#9,D2",  0051002);
+    ERRT("ADDQ.B #-1,D2",           OVERFLOW_RANGE, "#-1,D2", 0057002);
     ERRT("ADDQ.B #8,A2",            OPERAND_NOT_ALLOWED, "A2");
     TEST("ADDQ.B #8,(A2)",          0050022);
     TEST("ADDQ.B #8,(A2)+",         0050032);
@@ -1653,8 +1653,8 @@ static void test_shift_rotate() {
     TEST("ASL.B #2,D7",  0162407);
     TEST("ASL.W #4,D7",  0164507);
     TEST("ASL.L #8,D7",  0160607);
-    ERRT("ASL.B #9,D7",  OVERFLOW_RANGE, "#9,D7");
-    ERRT("ASL.B #-1,D7", OVERFLOW_RANGE, "#-1,D7");
+    ERRT("ASL.B #9,D7",  OVERFLOW_RANGE, "#9,D7",  0161407);
+    ERRT("ASL.B #-1,D7", OVERFLOW_RANGE, "#-1,D7", 0167407);
 
     // ASL dst: 01607|M|Rn
     ERRT("ASL D2",            OPERAND_NOT_ALLOWED, "D2");
@@ -1910,14 +1910,14 @@ static void test_bit() {
     ERRT("BCHG.W #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
     TEST("BCHG.L #0,D2",            0004102, 0x0000);
     TEST("BCHG.L #31,D2",           0004102, 0x001F);
-    ERRT("BCHG.L #32,D2",           ILLEGAL_BIT_NUMBER,  "#32,D2");
+    ERRT("BCHG.L #32,D2",           ILLEGAL_BIT_NUMBER,  "#32,D2", 0004102, 0x0000);
     ERRT("BCHG   #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
     ERRT("BCHG.L #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
     ERRT("BCHG.W #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
     ERRT("BCHG.L #0,A2",            OPERAND_NOT_ALLOWED, "#0,A2");
     TEST("BCHG   #7,(A2)",          0004122, 0x0007);
     TEST("BCHG.B #7,(A2)",          0004122, 0x0007);
-    ERRT("BCHG.B #8,(A2)",          ILLEGAL_BIT_NUMBER,  "#8,(A2)");
+    ERRT("BCHG.B #8,(A2)",          ILLEGAL_BIT_NUMBER,  "#8,(A2)", 0004122, 0x0000);
     ERRT("BCHG.W #7,(A2)",          OPERAND_NOT_ALLOWED, "#7,(A2)");
     ERRT("BCHG.L #7,(A2)",          OPERAND_NOT_ALLOWED, "#7,(A2)");
     TEST("BCHG   #6,(A2)+",         0004132, 0x0006);
@@ -2314,8 +2314,8 @@ static void test_program() {
     TEST("DBRA D2,*+2",     0050312 | 0x100, 0x0000);
     TEST("DBRA D2,*+$0080", 0050312 | 0x100, 0x007E);
     TEST("DBRA D2,*+$8000", 0050312 | 0x100, 0x7FFE);
-    ERRT("DBRA D2,*+3",     OPERAND_NOT_ALIGNED, "*+3");
-    ERRT("DBRA D2,*-3",     OPERAND_NOT_ALIGNED, "*-3");
+    ERRT("DBRA D2,*+3",     OPERAND_NOT_ALIGNED, "*+3", 0050312 | 0x100, 0x0001);
+    ERRT("DBRA D2,*-3",     OPERAND_NOT_ALIGNED, "*-3", 0050312 | 0x100, 0xFFFB);
     TEST("DBT  D2,*", 0050312 | 0x000, 0xFFFE);
     TEST("DBHI D2,*", 0050312 | 0x200, 0xFFFE);
     TEST("DBLS D2,*", 0050312 | 0x300, 0xFFFE);
@@ -2536,8 +2536,8 @@ static void test_program() {
     TEST("BRA   *+$80",   0060000 | 0x7E);
     TEST("BRA.W *+$0080", 0060000, 0x007E);
     TEST("BRA   *+$8000", 0060000, 0x7FFE);
-    ERRT("BRA *+3",       OPERAND_NOT_ALIGNED, "*+3");
-    ERRT("BRA *-3",       OPERAND_NOT_ALIGNED, "*-3");
+    ERRT("BRA *+3",       OPERAND_NOT_ALIGNED, "*+3", 0060000 | 0x01);
+    ERRT("BRA *-3",       OPERAND_NOT_ALIGNED, "*-3", 0060000 | 0xFB);
 
     // BSR label: 00604|disp
     TEST("BSR   *-$7FFE", 0060400, 0x8000);
@@ -2549,8 +2549,8 @@ static void test_program() {
     TEST("BSR   *+$80",   0060400 | 0x7E);
     TEST("BSR.W *+$0080", 0060400, 0x007E);
     TEST("BSR.W *+$8000", 0060400, 0x7FFE);
-    ERRT("BSR *+3",       OPERAND_NOT_ALIGNED, "*+3");
-    ERRT("BSR *-3",       OPERAND_NOT_ALIGNED, "*-3");
+    ERRT("BSR *+3",       OPERAND_NOT_ALIGNED, "*+3", 0060400 | 0x01);
+    ERRT("BSR *-3",       OPERAND_NOT_ALIGNED, "*-3", 0060400 | 0xFB);
 
     // JMP dst: 00473|M|Rn
     ERRT("JMP D2",              OPERAND_NOT_ALLOWED, "D2");
@@ -2565,9 +2565,9 @@ static void test_program() {
     TEST("JMP (*+$1234,PC)",    0047372, 0x1232);
     TEST("JMP (*+$12,PC,D3.L)", 0047373, 0x3810);
     ERRT("JMP #$1234",          OPERAND_NOT_ALLOWED, "#$1234");
-    ERRT("JMP ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W");
-    ERRT("JMP ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L");
-    ERRT("JMP (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)");
+    ERRT("JMP ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W",  0047370, 0x3455);
+    ERRT("JMP ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L",  0047371, 0x0012, 0x3455);
+    ERRT("JMP (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)", 0047372, 0x1233);
 
     // JSR dst, 00472|M|Rn
     ERRT("JSR D2",              OPERAND_NOT_ALLOWED, "D2");
@@ -2582,9 +2582,9 @@ static void test_program() {
     TEST("JSR (*+$1234,PC)",    0047272, 0x1232);
     TEST("JSR (*+$12,PC,D3.L)", 0047273, 0x3810);
     ERRT("JSR #$1234",          OPERAND_NOT_ALLOWED, "#$1234");
-    ERRT("JSR ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W");
-    ERRT("JSR ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L");
-    ERRT("JSR (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)");
+    ERRT("JSR ($003455).W",     OPERAND_NOT_ALIGNED, "($003455).W",  0047270, 0x3455);
+    ERRT("JSR ($123455).L",     OPERAND_NOT_ALIGNED, "($123455).L",  0047271, 0x0012, 0x3455);
+    ERRT("JSR (*+$1235,PC)",    OPERAND_NOT_ALIGNED, "(*+$1235,PC)", 0047272, 0x1233);
 
     // NOP
     TEST("NOP ", 047161);
@@ -2654,9 +2654,9 @@ static void test_system() {
     TEST("MOVE (*+$1234,PC),SR",   0043372, 0x1232);
     TEST("MOVE (*-16,PC,D3.L),SR", 0043373, 0x38EE);
     TEST("MOVE #$3456,SR",         0043374, 0x3456);
-    ERRT("MOVE ($001235).W,SR",    OPERAND_NOT_ALIGNED, "($001235).W,SR");
-    ERRT("MOVE ($234567).L,SR",    OPERAND_NOT_ALIGNED, "($234567).L,SR");
-    ERRT("MOVE (*+$1233,PC),SR",   OPERAND_NOT_ALIGNED, "(*+$1233,PC),SR");
+    ERRT("MOVE ($001235).W,SR",    OPERAND_NOT_ALIGNED, "($001235).W,SR",  0043370, 0x1235);
+    ERRT("MOVE ($234567).L,SR",    OPERAND_NOT_ALIGNED, "($234567).L,SR",  0043371, 0x0023, 0x4567);
+    ERRT("MOVE (*+$1233,PC),SR",   OPERAND_NOT_ALIGNED, "(*+$1233,PC),SR", 0043372, 0x1231);
 
     // MOVE SR,dst: 00403|M|Rn
     TEST("MOVE SR,D2",            0040302);
@@ -2671,8 +2671,8 @@ static void test_system() {
     ERRT("MOVE SR,(*+$1234,PC)",  OPERAND_NOT_ALLOWED, "SR,(*+$1234,PC)");
     ERRT("MOVE SR,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "SR,(*+$12,PC,D3)");
     ERRT("MOVE SR,#$1234",        OPERAND_NOT_ALLOWED, "SR,#$1234");
-    ERRT("MOVE SR,($001235).W",   OPERAND_NOT_ALIGNED, "($001235).W");
-    ERRT("MOVE SR,($234567).L",   OPERAND_NOT_ALIGNED, "($234567).L");
+    ERRT("MOVE SR,($001235).W",   OPERAND_NOT_ALIGNED, "($001235).W",  0040370, 0x1235);
+    ERRT("MOVE SR,($234567).L",   OPERAND_NOT_ALIGNED, "($234567).L",  0040371, 0x0023, 0x4567);
 
     // MOVE USP,An: 004715|An
     TEST("move   usp,a2", 0047152);
@@ -2741,9 +2741,9 @@ static void test_system() {
     TEST("MOVE (*+$1234,PC),CCR",   0042372, 0x1232);
     TEST("MOVE (*-16,PC,D3.L),CCR", 0042373, 0x38EE);
     TEST("MOVE #$34,CCR",           0042374, 0x0034);
-    ERRT("MOVE ($001235).W,CCR",    OPERAND_NOT_ALIGNED, "($001235).W,CCR");
-    ERRT("MOVE ($234567).L,CCR",    OPERAND_NOT_ALIGNED, "($234567).L,CCR");
-    ERRT("MOVE (*+$1235,PC),CCR",   OPERAND_NOT_ALIGNED, "(*+$1235,PC),CCR");
+    ERRT("MOVE ($001235).W,CCR",    OPERAND_NOT_ALIGNED, "($001235).W,CCR",  0042370, 0x1235);
+    ERRT("MOVE ($234567).L,CCR",    OPERAND_NOT_ALIGNED, "($234567).L,CCR",  0042371, 0x0023, 0x4567);
+    ERRT("MOVE (*+$1235,PC),CCR",   OPERAND_NOT_ALIGNED, "(*+$1235,PC),CCR", 0042372, 0x1233);
 
     // ORI #nn,CCR
     TEST("ORI   #$34,CCR", 0000074, 0x0034);

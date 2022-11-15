@@ -77,15 +77,16 @@ private:
     Error parseBaseOperand(StrScanner &scan, Operand &op);
     Error parseOperand(StrScanner &scan, Operand &op);
     Error processPseudo(StrScanner &scan, const char *name);
-    Error emitDisplacement(InsnNs32000 &insn, const Operand &op, uint32_t val32);
-    Error emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
-    Error emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len);
-    Error emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);
-    Error emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
+    void emitDisplacement(
+            InsnNs32000 &insn, const Operand &op, uint32_t val32, Error error = OVERFLOW_RANGE);
+    void emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
+    void emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len);
+    void emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);
+    void emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
-    Error emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
-    Error emitRelative(InsnNs32000 &insn, const Operand &op);
-    Error emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
+    void emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
+    void emitRelative(InsnNs32000 &insn, const Operand &op);
+    void emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 

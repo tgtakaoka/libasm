@@ -67,19 +67,19 @@ static void test_transfer() {
     ERRT(         "L STR, 0x10",           OPERAND_NOT_ALLOWED, "STR, 0x10");
     ERRT(         "L R5, 0x10",            OPERAND_NOT_ALLOWED, "R5, 0x10");
     ERRT(         "L X2, 0x10",            OPERAND_NOT_ALLOWED, "X2, 0x10");
-    ATEST(0x1000, "L R2, *-128",           0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "l r2, 0x0f80-*(ic)",    0xC000|(1<<11)|(2<<8)|0x80);
-    AERRT(0x1000, "L R1, *-129",           OPERAND_TOO_FAR, "*-129");
-    AERRT(0x1000, "L R1, 0x0F7F-*(IC)",    OPERAND_TOO_FAR, "0x0F7F-*(IC)");
-    AERRT(0x1000, "L R1, *+128",           OPERAND_TOO_FAR, "*+128");
-    AERRT(0x1000, "L R1, 0x1080-*(IC)",    OPERAND_TOO_FAR, "0x1080-*(IC)");
+    ATEST(0x1000, "L R2, *-128",                                            0xC000|(1<<11)|(2<<8)|0x80);
+    ATEST(0x1000, "l r2, 0x0f80-*(ic)",                                     0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R2, *-129",           OPERAND_TOO_FAR, "*-129",        0xC000|(1<<11)|(2<<8)|0x7F);
+    AERRT(0x1000, "L R2, 0x0F7F-*(IC)",    OPERAND_TOO_FAR, "0x0F7F-*(IC)", 0xC000|(1<<11)|(2<<8)|0x7F);
+    AERRT(0x1000, "L R2, *+128",           OPERAND_TOO_FAR, "*+128",        0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R2, 0x1080-*(IC)",    OPERAND_TOO_FAR, "0x1080-*(IC)", 0xC000|(1<<11)|(2<<8)|0x80);
     TEST(         "L R3, (0xFF)",          0xC000|(2<<11)|(3<<8)|0xFF);
     ATEST(0x1000, "L R4, (*+127)",         0xC000|(3<<11)|(4<<8)|0x7F);
     ATEST(0x1000, "L R4, (0x107F-*(IC))",  0xC000|(3<<11)|(4<<8)|0x7F);
-    AERRT(0x1000, "L R1, (*-129)",         OPERAND_TOO_FAR, "(*-129)");
-    AERRT(0x1000, "L R1, (0x0F7F-*(IC))",  OPERAND_TOO_FAR, "(0x0F7F-*(IC))");
-    AERRT(0x1000, "L R1, (*+128)",         OPERAND_TOO_FAR, "(*+128)");
-    AERRT(0x1000, "L R1, (0x1080-*(IC))",  OPERAND_TOO_FAR, "(0x1080-*(IC))");
+    AERRT(0x1000, "L R4, (*-129)",         OPERAND_TOO_FAR, "(*-129)",        0xC000|(3<<11)|(4<<8)|0x7F);
+    AERRT(0x1000, "L R4, (0x0F7F-*(IC))",  OPERAND_TOO_FAR, "(0x0F7F-*(IC))", 0xC000|(3<<11)|(4<<8)|0x7F);
+    AERRT(0x1000, "L R4, (*+128)",         OPERAND_TOO_FAR, "(*+128)",        0xC000|(3<<11)|(4<<8)|0x80);
+    AERRT(0x1000, "L R4, (0x1080-*(IC))",  OPERAND_TOO_FAR, "(0x1080-*(IC))", 0xC000|(3<<11)|(4<<8)|0x80);
     TEST(         "L R0, 128(X0)",         0xC000|(4<<11)|(0<<8)|0x80);
     TEST(         "L SP, 255(X1)",         0xC000|(5<<11)|(5<<8)|0xFF);
     TEST(         "L R1, (0x10)(X0)",      0xC000|(6<<11)|(1<<8)|0x10);
@@ -205,7 +205,7 @@ static void test_transfer() {
         TEST("MVI R1, H'FF",   0x0800|(1<<8)|0xFF);
         TEST("MVI R1, X'FF",   0x0800|(1<<8)|0xFF);
         TEST("MVI R1, B'11111111",  0x0800|(1<<8)|0xFF);
-        ERRT("MVI R1, 256",  OVERFLOW_RANGE, "256");
+        ERRT("MVI R1, 256",  OVERFLOW_RANGE, "256", 0x0800|(1<<8)|0x00);
         TEST("MVI R2, 128",  0x0800|(2<<8)|0x80);
         TEST("MVI R2, -128", 0x0800|(2<<8)|0x80);
         TEST("MVI R3, 127",  0x0800|(3<<8)|0x7F);
@@ -226,12 +226,12 @@ static void test_integer() {
     TEST("A R0, SP, EZ",   0x5808|(0<<8)|(8<<4)|5);
     TEST("AI R0, 1, PZ",   0x4800|(0<<8)|(3<<4)|1);
     TEST("AI R1, 2",       0x4800|(1<<8)|(0<<4)|2);
-    ERRT("AI R1, -1, Z",   OVERFLOW_RANGE, "-1, Z");
+    ERRT("AI R1, -1, Z",   OVERFLOW_RANGE, "-1, Z", 0x4800|(1<<8)|(4<<4)|15);
     TEST("AI R2, 3, M",    0x4800|(2<<8)|(2<<4)|3);
     TEST("AI R3, 13, P",   0x4800|(3<<8)|(7<<4)|13);
     TEST("AI R4, 14, SKP", 0x4800|(4<<8)|(1<<4)|14);
     TEST("AI SP, 15, NZ",  0x4800|(5<<8)|(5<<4)|15);
-    ERRT("AI SP, 16, NZ",  OVERFLOW_RANGE, "16, NZ");
+    ERRT("AI SP, 16, NZ",  OVERFLOW_RANGE, "16, NZ", 0x4800|(5<<8)|(5<<4)|0);
     TEST("AI STR, 0, Z",   0x4800|(6<<8)|(4<<4)|0);
 
     TEST("S R0, STR, ENZ", 0x5800|(0<<8)|(9<<4)|6);
@@ -243,13 +243,13 @@ static void test_integer() {
     TEST("S STR, R0, LM",  0x5800|(6<<8)|(15<<4)|0);
     TEST("S R0, SP",       0x5800|(0<<8)|(0<<4)|5);
     TEST("SI R0, 1, PZ",   0x4000|(0<<8)|(3<<4)|1);
-    ERRT("SI R0, -1, PZ",  OVERFLOW_RANGE, "-1, PZ");
+    ERRT("SI R0, -1, PZ",  OVERFLOW_RANGE, "-1, PZ", 0x4000|(0<<8)|(3<<4)|15);
     TEST("SI R1, 2",       0x4000|(1<<8)|(0<<4)|2);
     TEST("SI R2, 3, M",    0x4000|(2<<8)|(2<<4)|3);
     TEST("SI R3, 13, P",   0x4000|(3<<8)|(7<<4)|13);
     TEST("SI R4, 14, SKP", 0x4000|(4<<8)|(1<<4)|14);
     TEST("SI SP, 15, NZ",  0x4000|(5<<8)|(5<<4)|15);
-    ERRT("SI SP, 16, NZ",  OVERFLOW_RANGE, "16, NZ");
+    ERRT("SI SP, 16, NZ",  OVERFLOW_RANGE, "16, NZ", 0x4000|(5<<8)|(5<<4)|0);
     TEST("SI STR, 0, Z",   0x4000|(6<<8)|(4<<4)|0);
 
     TEST("C R2, R4, PZ",   0x5008|(2<<8)|(3<<4)|4);
@@ -287,8 +287,8 @@ static void test_integer() {
         TEST("AWI STR, 0xDEF0",     0x580F|(6<<8)|(0<<4),  0xDEF0);
         TEST("AWI X0, -32768",      0x580F|(3<<8)|(0<<4),  0x8000);
         TEST("AWI X1, 65535",       0x580F|(4<<8)|(0<<4),  0xFFFF);
-        ERRT("AWI R1, -32769",      OVERFLOW_RANGE, "-32769");
-        ERRT("AWI R3, 65536",       OVERFLOW_RANGE, "65536");
+        ERRT("AWI R1, -32769",      OVERFLOW_RANGE, "-32769", 0x580F|(1<<8)|(0<<4), 0x7FFF);
+        ERRT("AWI R3, 65536",       OVERFLOW_RANGE, "65536",  0x580F|(3<<8)|(0<<4), 0x0000);
 
         TEST("SWR R0, (R1)",        0x5F00|(0<<4)|0);
         TEST("SWR R0, (R2), ONZ",   0x5F00|(11<<4)|1);
@@ -324,8 +324,8 @@ static void test_integer() {
         TEST("NEG R0, 0",  0x1F00|(0<<3)|0);
         TEST("NEG R1, C",  0x1F00|(1<<3)|1);
         TEST("NEG R1, 1",  0x1F00|(1<<3)|1);
-        ERRT("NEG R1, 2",  ILLEGAL_CONSTANT, "2");
-        ERRT("NEG R1, -1", ILLEGAL_CONSTANT, "-1");
+        ERRT("NEG R1, 2",  ILLEGAL_CONSTANT, "2",  0x1F00|(0<<3)|1);
+        ERRT("NEG R1, -1", ILLEGAL_CONSTANT, "-1", 0x1F00|(1<<3)|1);
         TEST("NEG R2",     0x1F00|(0<<3)|2);
         TEST("NEG R3, C",  0x1F00|(1<<3)|3);
         TEST("NEG R4",     0x1F00|(0<<3)|4);
@@ -501,8 +501,8 @@ static void test_branch() {
     TEST("LPSW 1", 0x2004|1);
     TEST("LPSW 2", 0x2004|2);
     TEST("LPSW 3", 0x2004|3);
-    ERRT("LPSW -1", ILLEGAL_CONSTANT, "-1");
-    ERRT("LPSW 4",  ILLEGAL_CONSTANT, "4");
+    ERRT("LPSW -1", ILLEGAL_CONSTANT, "-1", 0x2004|7);
+    ERRT("LPSW 4",  ILLEGAL_CONSTANT, "4",  0x2004|4);
 
     if (is1613() || is1613a()) {
         TEST("BD    0x1234",  0x2607, 0x1234);
@@ -531,8 +531,8 @@ static void test_bitops() {
     TEST("TBIT R4, 13",      0x2800|(4<<8)|(0<<4)|13);
     TEST("TBIT SP, 14, Z",   0x2800|(5<<8)|(4<<4)|14);
     TEST("TBIT STR, 15, NZ", 0x2800|(6<<8)|(5<<4)|15);
-    ERRT("TBIT STR, -1, NZ", ILLEGAL_BIT_NUMBER, "-1, NZ");
-    ERRT("TBIT STR, 16, NZ", ILLEGAL_BIT_NUMBER, "16, NZ");
+    ERRT("TBIT STR, -1, NZ", ILLEGAL_BIT_NUMBER, "-1, NZ", 0x2800|(6<<8)|(5<<4)|15);
+    ERRT("TBIT STR, 16, NZ", ILLEGAL_BIT_NUMBER, "16, NZ", 0x2800|(6<<8)|(5<<4)|0);
     TEST("SBIT R0, 1",       0x3800|(0<<8)|(0<<4)|1);
     TEST("SBIT R1, 0, SKP",  0x3800|(1<<8)|(1<<4)|0);
     TEST("SBIT R2, 2, Z",    0x3800|(2<<8)|(4<<4)|2);
@@ -611,8 +611,8 @@ static void test_misc() {
     TEST("WT R4, 0x34",  0x1000|(4<<8)|0x34);
     TEST("WT SP, 0x34",  0x1000|(5<<8)|0x34);
     TEST("WT STR, 0x34", 0x1000|(6<<8)|0x34);
-    ERRT("RD R0, 0x100", OVERFLOW_RANGE, "0x100");
-    ERRT("WT R0, 0x100", OVERFLOW_RANGE, "0x100");
+    ERRT("RD R0, 0x100", OVERFLOW_RANGE, "0x100", 0x1800|(0<<8)|0x00);
+    ERRT("WT R0, 0x100", OVERFLOW_RANGE, "0x100", 0x1000|(0<<8)|0x00);
 
     TEST("H ", 0x2000);
 
@@ -637,7 +637,7 @@ static void test_misc() {
         ERRT("BLK (R2), (R4), R0", OPERAND_NOT_ALLOWED, "(R2), (R4), R0");
         ERRT("BLK (R2), (R1), R3", OPERAND_NOT_ALLOWED, "(R2), (R1), R3");
 
-        ERRT("LB CSBR, 0x1234", REGISTER_NOT_ALLOWED, "CSBR, 0x1234");
+        ERRT("LB CSBR, 0x1234", REGISTER_NOT_ALLOWED, "CSBR, 0x1234", 0x0F07|(0<<4), 0x1234);
         TEST("LB SSBR, 0x1234", 0x0F07|(1<<4), 0x1234);
         TEST("LB TSR0, 0x1234", 0x0F07|(2<<4), 0x1234);
         TEST("LB TSR1, 0x1234", 0x0F07|(3<<4), 0x1234);
@@ -661,7 +661,7 @@ static void test_misc() {
         TEST("CPYB R1, OSR1",  0x0F80|(5<<4)|1);
         TEST("CPYB R0, OSR2",  0x0F80|(6<<4)|0);
         TEST("CPYB R1, OSR3",  0x0F80|(7<<4)|1);
-        ERRT("SETB STR, CSBR", REGISTER_NOT_ALLOWED, "CSBR");
+        ERRT("SETB STR, CSBR", REGISTER_NOT_ALLOWED, "CSBR", 0x0F00|(0<<4)|6);
         TEST("SETB SP, SSBR",  0x0F00|(1<<4)|5);
         TEST("SETB R4, TSR0",  0x0F00|(2<<4)|4);
         TEST("SETB R3, TSR1",  0x0F00|(3<<4)|3);
@@ -705,7 +705,7 @@ static void test_misc() {
         TEST("CPYH R3, SCR",  0x3F80|(3<<4)|3);
         TEST("CPYH R2, SSR",  0x3F80|(4<<4)|2);
         TEST("CPYH R1, SIR",  0x3F80|(5<<4)|1);
-        ERRT("CPYH R1, SOR",  REGISTER_NOT_ALLOWED, "SOR");
+        ERRT("CPYH R1, SOR",  REGISTER_NOT_ALLOWED, "SOR", 0x3F80|(5<<4)|1);
         TEST("CPYH R0, IISR", 0x3F80|(6<<4)|0);
         TEST("SETH STR, TCR", 0x3F00|(0<<4)|6);
         TEST("SETH SP, TIR",  0x3F00|(1<<4)|5);
@@ -713,7 +713,7 @@ static void test_misc() {
         TEST("SETH R3, SCR",  0x3F00|(3<<4)|3);
         TEST("SETH R2, SSR",  0x3F00|(4<<4)|2);
         TEST("SETH R1, SOR",  0x3F00|(5<<4)|1);
-        ERRT("SETH R1, SIR",  REGISTER_NOT_ALLOWED, "SIR");
+        ERRT("SETH R1, SIR",  REGISTER_NOT_ALLOWED, "SIR", 0x3F00|(5<<4)|1);
         TEST("SETH R0, IISR", 0x3F00|(6<<4)|0);
     }
 }

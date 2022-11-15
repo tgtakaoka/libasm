@@ -157,23 +157,30 @@ uint8_t RegMc6809::encodeBaseReg(RegName name) {
     return uint8_t(name) - 1;
 }
 
-static constexpr RegName STACK_REGS[8] PROGMEM = {
+static constexpr RegName SYSTEM_STACK_REGS[8] PROGMEM = {
         REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC};
 
-uint8_t RegMc6809::encodeStackReg(RegName name) {
+static constexpr RegName USER_STACK_REGS[8] PROGMEM = {
+        REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_S, REG_PC};
+
+uint8_t RegMc6809::encodeStackReg(RegName name, bool userStack) {
     if (name == REG_D)
         return 0x06;
+    auto *reg = userStack ? ARRAY_BEGIN(USER_STACK_REGS) : ARRAY_BEGIN(SYSTEM_STACK_REGS);
+    auto *end = userStack ? ARRAY_END(USER_STACK_REGS) : ARRAY_END(SYSTEM_STACK_REGS);
     uint8_t bit = 0x01;
-    for (const /*PROGMEM*/ RegName *r = ARRAY_BEGIN(STACK_REGS); r < ARRAY_END(STACK_REGS);
-            r++, bit <<= 1) {
-        if (pgm_read_byte(r) == name)
-            return bit;
+    while (reg < end) {
+        if (pgm_read_byte(reg) == name)
+            break;
+        reg++;
+        bit <<= 1;
     }
     return bit;
 }
 
-RegName RegMc6809::decodeStackReg(uint8_t bitPos) {
-    return RegName(pgm_read_byte(&STACK_REGS[bitPos]));
+RegName RegMc6809::decodeStackReg(uint8_t bitPos, bool userStack) {
+    auto *reg = userStack ? ARRAY_BEGIN(USER_STACK_REGS) : ARRAY_BEGIN(SYSTEM_STACK_REGS);
+    return RegName(pgm_read_byte(reg + bitPos));
 }
 
 RegName RegMc6809::decodeBitOpReg(uint8_t num) {

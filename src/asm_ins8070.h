@@ -45,11 +45,11 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error emitAbsolute(InsnIns8070 &insn, const Operand &op);
-    Error emitImmediate(InsnIns8070 &insn, const Operand &op);
-    Error emitRelative(InsnIns8070 &insn, const Operand &op);
-    Error emitGeneric(InsnIns8070 &insn, const Operand &op);
-    Error emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op);
+    void emitAbsolute(InsnIns8070 &insn, const Operand &op);
+    void emitImmediate(InsnIns8070 &insn, const Operand &op);
+    void emitRelative(InsnIns8070 &insn, const Operand &op);
+    void emitGeneric(InsnIns8070 &insn, const Operand &op);
+    void emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

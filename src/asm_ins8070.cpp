@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 Tadashi G. Takaoka
  *
@@ -40,63 +41,62 @@ AsmIns8070::AsmIns8070() : Assembler(_parser, TableIns8070::TABLE), _parser('$')
     _parser.setFuncParser(&functionParser);
 }
 
-Error AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {
     // PC will be +1 before fetching instruction.
-    const Config::uintptr_t target = op.getError() ? 0 : op.val16 - 1;
+    const auto target = op.getError() ? 0 : op.val16 - 1;
     insn.emitOperand16(target);
-    return OK;
 }
 
-Error AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
-    if (insn.oprSize() == SZ_WORD)
+void AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
+    if (insn.oprSize() == SZ_WORD) {
         insn.emitOperand16(op.val16);
-    if (insn.oprSize() == SZ_BYTE) {
+    } else {
         if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
     }
-    return OK;
 }
 
-Error AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const uint8_t fetch = insn.execute() ? 1 : 0;
     const Config::uintptr_t target = (op.getError() ? base + fetch : op.val16) - fetch;
     const Config::ptrdiff_t offset = target - base;
     if (overflowRel8(offset))
-        return setError(op, OPERAND_TOO_FAR);
-    insn.emitOperand8(static_cast<uint8_t>(offset));
-    return OK;
+        setErrorIf(op, OPERAND_TOO_FAR);
+    insn.emitOperand8(offset);
 }
 
-Error AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     if (op.mode == M_IMM) {
         insn.embed(4);
-        return emitImmediate(insn, op);
+        emitImmediate(insn, op);
+        return;
     }
     if ((op.mode == M_ADR || op.mode == M_VEC) && op.reg == REG_UNDEF) {
-        const Config::uintptr_t target = op.getError() ? 0xFF00 : op.val16;
+        const auto target = op.getError() ? 0xFF00 : op.val16;
         if (target < 0xFF00)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(5);
-        insn.emitOperand8(static_cast<uint8_t>(target));
-        return OK;
+        insn.emitOperand8(target);
+        return;
     }
-    if (op.reg == REG_PC)
-        return emitRelative(insn, op);
+    if (op.reg == REG_PC) {
+        emitRelative(insn, op);
+        return;
+    }
 
-    const Config::ptrdiff_t offset = static_cast<Config::uintptr_t>(op.val16);
-    if (overflowRel8(offset))
-        return setError(op, OVERFLOW_RANGE);
     insn.embed(RegIns8070::encodePointerReg(op.reg));
     if (op.autoIndex)
         insn.embed(4);
-    insn.emitOperand8(static_cast<uint8_t>(offset));
-    return OK;
+    const auto offset = static_cast<Config::ptrdiff_t>(op.val16);
+    if (overflowRel8(offset))
+        setErrorIf(op, OVERFLOW_RANGE);
+    insn.emitOperand8(offset);
 }
 
-Error AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op) {
+void AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_P23:
     case M_PTR:
@@ -106,18 +106,21 @@ Error AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &o
         insn.embed(op.val16 & 0x0F);
         break;
     case M_IMM:
-        return emitImmediate(insn, op);
+        emitImmediate(insn, op);
+        break;
     case M_ADR:
-        return emitAbsolute(insn, op);
+        emitAbsolute(insn, op);
+        break;
     case M_IDX:
     case M_GEN:
-        return emitGeneric(insn, op);
+        emitGeneric(insn, op);
+        break;
     case M_PCR:
-        return emitRelative(insn, op);
+        emitRelative(insn, op);
+        break;
     default:
         break;
     }
-    return OK;
 }
 
 Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
@@ -170,7 +173,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    bool autoIndex = p.expect('@');
+    auto autoIndex = p.expect('@');
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return op.getError();
@@ -179,10 +182,10 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(MISSING_COMMA);
     if (p.expect(',')) {
         p.skipSpaces();
-        if (!autoIndex && p.expect('@'))
-            autoIndex = true;
-        const StrScanner ptrp = p;
-        const RegName ptr = RegIns8070::parseRegName(p);
+        if (!autoIndex)
+            autoIndex = p.expect('@');
+        const auto ptrp = p;
+        const auto ptr = RegIns8070::parseRegName(p);
         if (!RegIns8070::isPointerReg(ptr))
             op.setError(UNKNOWN_OPERAND);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
@@ -221,12 +224,10 @@ Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dst, error);
 
-    if (emitOperand(insn, insn.dst(), dst))
-        return getError();
-    if (emitOperand(insn, insn.src(), src))
-        return getError();
+    emitOperand(insn, insn.dst(), dst);
+    emitOperand(insn, insn.src(), src);
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace ins8070

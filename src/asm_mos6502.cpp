@@ -24,59 +24,67 @@ const char AsmMos6502::OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
 const char AsmMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
 const char AsmMos6502::OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
 
-Error AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
+void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t bank = insn.address() & ~0xFFFF;
     const auto len = insn.length();
     const uint16_t base = insn.address() + (len ? len : 1) + (mode == M_REL ? 1 : 2);
     const uint16_t target = op.getError() ? base : op.val32;
+    checkAddress(target, op);
     const int16_t delta = target - base;
     if (addressWidth() == ADDRESS_24BIT && op.isOK() && (op.val32 & ~0xFFFF) != bank)
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     if (mode == M_REL) {
         if (overflowRel8(delta))
-            return setError(op, OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
     } else {
         insn.emitOperand16(delta);
     }
-    return OK;
 }
 
-Error AsmMos6502::encodeOperand(InsnMos6502 &insn, AddrMode modeAndFlags, const Operand &op) {
+void AsmMos6502::emitImmediate(InsnMos6502 &insn, const Operand &op, bool imm16) {
+    if (imm16) {
+        if (overflowUint16(op.val32))
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(op.val32);
+    } else {
+        if (overflowUint8(op.val32))
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val32);
+    }
+}
+
+void AsmMos6502::encodeOperand(InsnMos6502 &insn, AddrMode modeAndFlags, const Operand &op) {
     const auto mode = InsnMos6502::baseMode(modeAndFlags);
     switch (mode) {
     case M_IMA:
-        if (TableMos6502::TABLE.longAccumulator()) {
-            insn.emitOperand16(op.val32);
-        } else {
-            insn.emitOperand8(op.val32);
-        }
+        emitImmediate(insn, op, TableMos6502::TABLE.longAccumulator());
         break;
     case M_IMX:
-        if (TableMos6502::TABLE.longIndex()) {
-            insn.emitOperand16(op.val32);
-        } else {
-            insn.emitOperand8(op.val32);
-        }
+        emitImmediate(insn, op, TableMos6502::TABLE.longIndex());
         break;
     case M_ABS:
-        insn.emitOperand16(op.val32);
+        checkAddress(op.val32, op);
+        emitImmediate(insn, op, true);
         break;
     case M_ABSL:
+        checkAddress(op.val32, op);
         insn.emitOperand16(op.val32);
         insn.emitOperand8(op.val32 >> 16);
         break;
     case M_DPG:
+        checkAddress(op.val32, op);
+        /* Fall-through */
     case M_IM8:
-        insn.emitOperand8(op.val32);
+        emitImmediate(insn, op, false);
         break;
     case M_REL:
     case M_RELL:
-        return encodeRelative(insn, mode, op);
+        encodeRelative(insn, mode, op);
+        break;
     default:
         break;
     }
-    return OK;
 }
 
 Error AsmMos6502::selectMode(
@@ -168,13 +176,13 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
     if (parseOpenIndirect(p, op, indirect))
         return op.getError();
-    const AddrMode indirectFlags = op.mode;
+    const auto indirectFlags = op.mode;
 
-    const RegName reg = RegMos6502::parseRegName(p.skipSpaces());
+    const auto reg = RegMos6502::parseRegName(p.skipSpaces());
     if (reg != REG_UNDEF) {
         op.mode = regName2AddrMode(reg);
     } else {
-        const char size = parseSizeOverride(p);
+        const auto size = parseSizeOverride(p);
         op.val32 = parseExpr32(p, op);
         if (parserError())
             return op.getError();
@@ -190,7 +198,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
 Error AsmMos6502::parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val)) {
     StrScanner p(scan.skipSpaces());
-    const StrScanner name = _parser.readSymbol(p);
+    const auto name = _parser.readSymbol(p);
     if (name.iequals_P(PSTR("on"))) {
         if (!(TableMos6502::TABLE.*set)(true))
             setError(scan, OPERAND_NOT_ALLOWED);
@@ -268,19 +276,12 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (insn.mode1() == M_BANK && insn.mode2() == M_BANK) {
         insn.emitOperand8(op2.val32 >> 16);  // destination
         insn.emitOperand8(op1.val32 >> 16);  // source
-        insn.emitInsn();
-        return getError();
-    }
-
-    if (encodeOperand(insn, insn.mode1(), op1))
-        goto error;
-    if (encodeOperand(insn, insn.mode2(), op2)) {
-    error:
-        insn.reset();
-        return getError();
+    } else {
+        encodeOperand(insn, insn.mode1(), op1);
+        encodeOperand(insn, insn.mode2(), op2);
     }
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace mos6502

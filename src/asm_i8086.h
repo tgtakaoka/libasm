@@ -73,15 +73,15 @@ private:
     Error parseDisplacement(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
 
-    Error emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val);
-    Error emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);
-    Error emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos);
+    void emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val);
+    void emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);
+    void emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos);
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);
-    Error emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos);
-    Error emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos);
-    Error emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
-    Error emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
-    Error encodeStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
+    void emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos);
+    void emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos);
+    void emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
+    void emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
+    void emitStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;

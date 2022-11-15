@@ -227,8 +227,8 @@ static void test_indexed_y() {
         TEST("TST 128,Y", 0x18, 0x6D, 0x80);
         TEST("JMP 254,Y", 0x18, 0x6E, 0xFE);
         TEST("CLR 255,Y", 0x18, 0x6F, 0xFF);
-        ERRT("CLR 256,Y", OVERFLOW_RANGE, "256,Y");
-        ERRT("CLR -1,Y",  OVERFLOW_RANGE, "-1,Y");
+        ERRT("CLR 256,Y", OVERFLOW_RANGE, "256,Y", 0x18, 0x6F, 0x00);
+        ERRT("CLR -1,Y",  OVERFLOW_RANGE, "-1,Y",  0x18, 0x6F, 0xFF);
 
         TEST("SUBA   0,Y", 0x18, 0xA0, 0x00);
         TEST("CMPA   0,Y", 0x18, 0xA1, 0x00);
@@ -370,8 +370,8 @@ static void test_relative() {
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
     ATEST(0x1000, "BPL $1002", 0x2A, 0x00);
     ATEST(0x1000, "BMI $1002", 0x2B, 0x00);
-    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR, "$0F81");
-    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR, "$1082");
+    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR, "$0F81", 0x2B, 0x7F);
+    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR, "$1082", 0x2B, 0x80);
     ATEST(0x1000, "BVC $1002", 0x28, 0x00);
     ATEST(0x1000, "BVS $1002", 0x29, 0x00);
     ATEST(0x1000, "BGE $1002", 0x2C, 0x00);
@@ -411,8 +411,8 @@ static void test_immediate() {
     TEST("ADCA #-1",   0x89, 0xFF);
     TEST("ORAA #255",  0x8A, 0xFF);
     TEST("ADDA #-128", 0x8B, 0x80);
-    ERRT("ADDA #256",  OVERFLOW_RANGE, "#256", 0x8B);
-    ERRT("ADDA #-129", OVERFLOW_RANGE, "#-129", 0x8B);
+    ERRT("ADDA #256",  OVERFLOW_RANGE, "#256",  0x8B, 0x00);
+    ERRT("ADDA #-129", OVERFLOW_RANGE, "#-129", 0x8B, 0x7F);
 
     TEST("SUBB #$90", 0xC0, 0x90);
     TEST("CMPB #$90", 0xC1, 0x90);
@@ -833,25 +833,24 @@ static void test_bit_ops() {
         TEST("BCLR  $90,#$88",  0x15, 0x90, 0x88);
         TEST("BCLR  $90,#-128", 0x15, 0x90, 0x80);
         ERRT("BCLR  $190,#$88", OPERAND_NOT_ALLOWED, "$190,#$88");
-        ERRT("BCLR  $90,#256",  OVERFLOW_RANGE, "#256");
-        ERRT("BCLR  $90,#256",  OVERFLOW_RANGE, "#256");
+        ERRT("BCLR  $90,#256",  OVERFLOW_RANGE, "#256", 0x15, 0x90, 0x00);
         TEST("BSET  0,X,#$88",  0x1C, 0x00, 0x88);
         TEST("BCLR  0,X,#$88",  0x1D, 0x00, 0x88);
         TEST("BSET 255,Y,#$88", 0x18, 0x1C, 0xFF, 0x88);
         TEST("BCLR  0,Y,#$88",  0x18, 0x1D, 0x00, 0x88);
-        ERRT("BCLR -1,Y,#$88",  OVERFLOW_RANGE, "-1,Y,#$88");
-        ERRT("BCLR  0,Y,#256",  OVERFLOW_RANGE, "#256");
+        ERRT("BCLR -1,Y,#$88",  OVERFLOW_RANGE, "-1,Y,#$88", 0x18, 0x1D, 0xFF, 0x88);
+        ERRT("BCLR  1,Y,#256",  OVERFLOW_RANGE, "#256",      0x18, 0x1D, 0x01, 0x00);
 
         ATEST(0x1000, "BRSET   $90,#$88,$1083", 0x12, 0x90, 0x88, 0x7F);
         ATEST(0x1000, "BRCLR   $90,#$88,$0F84", 0x13, 0x90, 0x88, 0x80);
         ATEST(0x1000, "BRSET 127,X,#$88,$1000", 0x1E, 0x7F, 0x88, 0xFC);
         ATEST(0x1000, "BRCLR 128,X,#$88,$1006", 0x1F, 0x80, 0x88, 0x02);
-        AERRT(0x1000, "BRCLR 128,X,#$88,$1084", OPERAND_TOO_FAR, "$1084");
-        AERRT(0x1000, "BRCLR 128,X,#$88,$0F83", OPERAND_TOO_FAR, "$0F83");
+        AERRT(0x1000, "BRCLR 128,X,#$88,$1084", OPERAND_TOO_FAR, "$1084", 0x1F, 0x80, 0x88, 0x80);
+        AERRT(0x1000, "BRCLR 128,X,#$88,$0F83", OPERAND_TOO_FAR, "$0F83", 0x1F, 0x80, 0x88, 0x7F);
         ATEST(0x1000, "BRSET 255,Y,#$88,$0F85", 0x18, 0x1E, 0xFF, 0x88, 0x80);
         ATEST(0x1000, "BRCLR   0,Y,#$88,$1084", 0x18, 0x1F, 0x00, 0x88, 0x7F);
-        AERRT(0x1000, "BRSET 255,Y,#$88,$0F84", OPERAND_TOO_FAR, "$0F84");
-        AERRT(0x1000, "BRCLR   0,Y,#$88,$1085", OPERAND_TOO_FAR, "$1085");
+        AERRT(0x1000, "BRSET 255,Y,#$88,$0F84", OPERAND_TOO_FAR, "$0F84", 0x18, 0x1E, 0xFF, 0x88, 0x7F);
+        AERRT(0x1000, "BRCLR   1,Y,#$88,$1085", OPERAND_TOO_FAR, "$1085", 0x18, 0x1F, 0x01, 0x88, 0x80);
     } else {
         if (hd6301()) {
             ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED, "$90,#$88");
@@ -871,8 +870,8 @@ static void test_bit_ops() {
         TEST("EIM #$22,128,X", 0x65, 0x22, 0x80);
         TEST("TIM #-128,12,X", 0x6B, 0x80, 0x0C);
         TEST("TIM #255,128,X", 0x6B, 0xFF, 0x80);
-        ERRT("TIM #256,255,X", OVERFLOW_RANGE, "#256,255,X");
-        ERRT("TIM #255,256,X", OVERFLOW_RANGE, "256,X");
+        ERRT("TIM #256,255,X", OVERFLOW_RANGE, "#256,255,X", 0x6B, 0x00, 0xFF);
+        ERRT("TIM #255,256,X", OVERFLOW_RANGE, "256,X",      0x6B, 0xFF, 0x00);
         TEST("BCLR     0,1,X", 0x61, 0xFE, 0x01);
         TEST("BSET   1,128,X", 0x62, 0x02, 0x80);
         TEST("BTGL   6,255,X", 0x65, 0x40, 0xFF);

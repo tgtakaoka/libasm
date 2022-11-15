@@ -34,8 +34,17 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
+        if (parserError())
+            return op.getError();
+        op.mode = M_IMM;
+        scan = p;
+        return OK;
+    }
+
     if (p.expect(',')) {
-        const RegName reg = RegMc6805::parseRegName(p);
+        const auto reg = RegMc6805::parseRegName(p);
         if (reg == REG_X) {
             op.mode = M_IX0;
             scan = p;
@@ -44,7 +53,6 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(scan, UNKNOWN_OPERAND);
     }
 
-    const bool immediate = p.expect('#');
     op.size = 0;
     if (p.expect('<')) {
         op.size = 8;
@@ -54,15 +62,10 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return op.getError();
-    if (immediate) {
-        op.mode = M_IMM;
-        scan = p;
-        return OK;
-    }
 
     StrScanner a(p);
     if (a.skipSpaces().expect(',')) {
-        const RegName reg = RegMc6805::parseRegName(a.skipSpaces());
+        const auto reg = RegMc6805::parseRegName(a.skipSpaces());
         if (reg == REG_X) {
             if (op.size == 8) {
                 op.mode = M_IDX;
@@ -91,26 +94,23 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
+void AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
     const Config::uintptr_t target = op.getError() ? base : op.val16;
-    if (checkAddress(target, op))
-        return getError();
+    checkAddress(target, op);
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
-    return OK;
 }
 
-Error AsmMc6805::emitBitNumber(InsnMc6805 &insn, const Operand &op) {
-    const uint8_t imm = 1 << op.val16;
-    const bool aim = (insn.opCode() & 0xF) == 1;
+void AsmMc6805::emitBitNumber(InsnMc6805 &insn, const Operand &op) {
+    const uint8_t imm = 1 << (op.val16 & 7);
+    const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
-    return OK;
 }
 
-Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) {
+void AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_GEN:
         insn.setOpCode(insn.opCode() & 0x0F);
@@ -135,7 +135,7 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
             insn.embed(0xF0);
             break;
         }
-        return OK;
+        break;
     case M_MEM:
         insn.setOpCode(insn.opCode() & 0x0F);
         switch (op.mode) {
@@ -150,36 +150,35 @@ Error AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op)
             insn.embed(0x70);
             break;
         }
-        return OK;
+        break;
     case M_DIR:
     dir:
     case M_IDX:
     idx:
         if (op.val16 >= 256)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
-        return OK;
+        break;
     case M_IX2:
     ix2:
         insn.emitOperand16(op.val16);
-        return OK;
+        break;
     case M_EXT:
     ext:
-        if (checkAddress(op.val16, op))
-            return getError();
+        checkAddress(op.val16, op);
         insn.emitOperand16(op.val16);
-        return OK;
+        break;
     case M_REL:
         return emitRelative(insn, op);
     case M_IMM:
     imm:
         if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
-        return OK;
+        break;
     case M_BNO:  // handled in encodeImpl(Insn)
     default:
-        return OK;
+        break;
     }
 }
 
@@ -213,17 +212,11 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
 
     if (insn.mode1() == M_BNO)
         insn.embed((op1.val16 & 7) << 1);
-    if (emitOperand(insn, insn.mode1(), op1))
-        goto error;
-    if (emitOperand(insn, insn.mode2(), op2))
-        goto error;
-    if (emitOperand(insn, insn.mode3(), op3)) {
-    error:
-        insn.reset();
-        return getError();
-    }
+    emitOperand(insn, insn.mode1(), op1);
+    emitOperand(insn, insn.mode2(), op2);
+    emitOperand(insn, insn.mode3(), op3);
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace mc6805

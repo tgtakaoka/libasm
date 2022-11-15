@@ -156,9 +156,9 @@ static void test_move_immediate() {
     TEST("MVI C,9FH",  0x0E, 0x9F);
     TEST("MVI D,58",   0x16, 0x3A);
     TEST("MVI E,-128", 0x1E, 0x80);
-    ERRT("MVI E,-129", OVERFLOW_RANGE, "-129");
+    ERRT("MVI E,-129", OVERFLOW_RANGE, "-129", 0x1E, 0x7F);
     TEST("MVI H,255",  0x26, 0xFF);
-    ERRT("MVI H,256",  OVERFLOW_RANGE, "256");
+    ERRT("MVI H,256",  OVERFLOW_RANGE, "256",  0x26, 0x00);
     TEST("MVI L,-10",  0x2E, 0xF6);
     TEST("MVI M,0F6H", 0x36, 0xF6);
     TEST("MVI A,0FEH", 0x3E, 0xFE);
@@ -286,8 +286,8 @@ static void test_incr_decr() {
     TEST("RST 5", 0xEF);
     TEST("RST 6", 0xF7);
     TEST("RST 7", 0xFF);
-    ERRT("RST -1", OVERFLOW_RANGE, "-1");
-    ERRT("RST 8",  OVERFLOW_RANGE, "8");
+    ERRT("RST -1", OVERFLOW_RANGE, "-1", 0xFF);
+    ERRT("RST 8",  OVERFLOW_RANGE, "8",  0xC7);
 }
 
 static void test_alu_register() {
@@ -388,10 +388,10 @@ static void test_alu_register() {
 static void test_alu_immediate() {
     TEST("ADI 10B", 0xC6, 0x02);
     TEST("ACI 255", 0xCE, 0xFF);
-    ERRT("ACI 256", OVERFLOW_RANGE, "256");
+    ERRT("ACI 256", OVERFLOW_RANGE, "256", 0xCE, 0x00);
 
     TEST("SUI -2",   0xD6, 0xFE);
-    ERRT("SUI -129", OVERFLOW_RANGE, "-129");
+    ERRT("SUI -129", OVERFLOW_RANGE, "-129", 0xD6, 0x7F);
     TEST("SBI 177O", 0xDE, 0x7F);
 
     TEST("ANI ~0FH", 0xE6, 0xF0);
@@ -403,8 +403,8 @@ static void test_alu_immediate() {
 static void test_io() {
     TEST("OUT 0F1H", 0xD3, 0xF1);
     TEST("IN  0F0H", 0xDB, 0xF0);
-    ERRT("OUT 100H", OVERFLOW_RANGE, "100H");
-    ERRT("IN  -1",   OVERFLOW_RANGE, "-1");
+    ERRT("OUT 101H", OVERFLOW_RANGE, "101H", 0xD3, 0x01);
+    ERRT("IN  -1",   OVERFLOW_RANGE, "-1",   0xDB, 0xFF);
 }
 
 static void test_comment() {

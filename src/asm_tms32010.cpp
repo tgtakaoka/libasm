@@ -40,7 +40,7 @@ static bool overflowInt13(uint16_t uval) {
     return sval >= 0x1000 || sval < -0x1000;
 }
 
-Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode) {
+void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode) {
     static constexpr Config::opcode_t SST = 0x7C00;
     switch (mode) {
     case M_MAM:
@@ -56,9 +56,9 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
             break;
         default:
             if (op.val16 > TableTms32010::TABLE.dataMemoryLimit())
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             if (insn.opCode() == SST && op.val16 < 0x80)
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(op.val16 & 0x7F);
             break;
         }
@@ -86,18 +86,17 @@ Error AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode
         break;
     case M_IM13:
         if (overflowInt13(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(op.val16 & 0x1FFF);
         break;
     case M_PMA:
         if (op.val16 >= 0x1000)
-            return setError(op, OVERFLOW_RANGE);
-        insn.emitOperand16(op.val16);
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(op.val16 & 0x0FFF);
         break;
     default:
         break;
     }
-    return OK;
 }
 
 Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
@@ -166,21 +165,11 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(op1, error);
 
-    const AddrMode mode1 = insn.mode1();
-    if (mode1 != M_NONE && encodeOperand(insn, op1, mode1))
-        return getError();
-    const AddrMode mode2 = insn.mode2();
-    if (mode2 != M_NONE && encodeOperand(insn, op2, mode2)) {
-        insn.reset();
-        return getError();
-    }
-    const AddrMode mode3 = insn.mode3();
-    if (mode3 != M_NONE && encodeOperand(insn, op3, mode3)) {
-        insn.reset();
-        return getError();
-    }
+    encodeOperand(insn, op1, insn.mode1());
+    encodeOperand(insn, op2, insn.mode2());
+    encodeOperand(insn, op3, insn.mode3());
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace tms32010

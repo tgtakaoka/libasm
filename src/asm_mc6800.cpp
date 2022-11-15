@@ -28,7 +28,15 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const bool immediate = p.expect('#');
+    if (p.expect('#')) {
+        op.val16 = parseExpr16(p, op);
+        if (parserError())
+            return op.getError();
+        op.mode = M_IM16;
+        scan = p;
+        return OK;
+    }
+
     op.size = 0;
     if (p.expect('<')) {
         op.size = 8;
@@ -38,15 +46,10 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     op.val16 = parseExpr16(p, op);
     if (parserError())
         return op.getError();
-    if (immediate) {
-        op.mode = M_IM16;
-        scan = p;
-        return OK;
-    }
 
     StrScanner a(p);
     if (a.skipSpaces().expect(',')) {
-        const RegName reg = RegMc6800::parseRegName(a.skipSpaces());
+        const auto reg = RegMc6800::parseRegName(a.skipSpaces());
         if (reg != REG_UNDEF) {
             op.mode = (reg == REG_X) ? M_IDX : M_IDY;
             scan = a;
@@ -67,35 +70,32 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
+void AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
     const Config::uintptr_t base = insn.address() + (insn.length() == 0 ? 2 : insn.length() + 1);
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     const Config::ptrdiff_t delta = target - base;
     if (overflowRel8(delta))
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
-    return OK;
 }
 
-Error AsmMc6800::emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+void AsmMc6800::emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
     if (mode == M_GN16 || mode == M_IM16) {
         insn.emitOperand16(op.val16);
     } else {
         if (overflowUint8(op.val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
     }
-    return OK;
 }
 
-Error AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
-    const uint8_t imm = 1 << op.val16;
-    const bool aim = (insn.opCode() & 0xF) == 1;
+void AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
+    const uint8_t imm = 1 << (op.val16 & 7);
+    const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
-    return OK;
 }
 
-Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
+void AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_GN8:
     case M_GN16:
@@ -104,7 +104,7 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
             insn.emitOperand8(op.val16);
         } else if (op.mode == M_IDX || op.mode == M_IDY) {
             if (op.val16 >= 256)
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(0x20);
             insn.emitOperand8(op.val16);
         } else if (op.mode == M_EXT) {
@@ -113,37 +113,40 @@ Error AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op)
         } else {
             emitImmediate(insn, mode, op);
         }
-        return OK;
+        break;
     case M_GMEM:
         if (op.mode == M_IDX) {
             if (op.val16 >= 256)
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             insn.emitOperand8(op.val16);
         } else {
             insn.embed(0x70);
             insn.emitOperand16(op.val16);
         }
-        return OK;
+        break;
     case M_DIR:
     case M_IDX:
     case M_IDY:
         if (op.val16 >= 256)
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
-        return OK;
+        break;
     case M_EXT:
         insn.emitOperand16(op.val16);
-        return OK;
+        break;
     case M_REL:
-        return emitRelative(insn, op);
+        emitRelative(insn, op);
+        break;
     case M_IM8:
     case M_IM16:
     case M_BMM:
-        return emitImmediate(insn, mode, op);
+        emitImmediate(insn, mode, op);
+        break;
     case M_BIT:
-        return emitBitNumber(insn, op);
+        emitBitNumber(insn, op);
+        break;
     default:
-        return OK;
+        break;
     }
 }
 
@@ -175,17 +178,11 @@ Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(op1, error);
 
-    if (emitOperand(insn, insn.mode1(), op1))
-        goto error;
-    if (emitOperand(insn, insn.mode2(), op2))
-        goto error;
-    if (emitOperand(insn, insn.mode3(), op3)) {
-    error:
-        insn.reset();
-        return getError();
-    }
+    emitOperand(insn, insn.mode1(), op1);
+    emitOperand(insn, insn.mode2(), op2);
+    emitOperand(insn, insn.mode3(), op3);
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace mc6800

@@ -92,30 +92,29 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmScn2650::emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
-    const auto target = op.getError() ? insn.address() : op.val16;
+void AsmScn2650::emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
+    const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
     if (!inspace(target))
-        return setError(op, OVERFLOW_RANGE);
-    uint16_t opr = target;
+        setErrorIf(op, OVERFLOW_RANGE);
+    auto opr = target;
     if (op.indir)
         opr |= 0x8000;
     if (mode == M_IX15) {
         if (op.reg != REG_R3 && op.reg != REG_UNDEF)
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         insn.embed(RegScn2650::encodeRegName(REG_R3));
     }
     insn.emitOperand16(opr);
-    return OK;
 }
 
-Error AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
-    const auto target = op.getError() ? insn.address() : op.val16;
+void AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
+    const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
     if (!inspace(target))
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
 
     if (page(target) != page(insn.address()))
-        return setError(op, OVERWRAP_PAGE);
-    uint16_t opr = offset(target);
+        setErrorIf(op, OVERWRAP_PAGE);
+    auto opr = offset(target);
     if (op.indir)
         opr |= 0x8000;
     if (mode == M_IX13) {
@@ -133,41 +132,38 @@ Error AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mod
         }
     }
     insn.emitOperand16(opr);
-    return OK;
 }
 
-Error AsmScn2650::emitZeroPage(InsnScn2650 &insn, const Operand &op) {
+void AsmScn2650::emitZeroPage(InsnScn2650 &insn, const Operand &op) {
     const auto target = op.val16;
     if (page(target) != 0)
-        return setError(op, OVERFLOW_RANGE);
+        setErrorIf(op, OVERFLOW_RANGE);
     // Sign extends 13-bit number
     const auto offset = signedOffset(target);
     if (overflowInt13(offset))
-        return setError(op, OPERAND_TOO_FAR);
-    uint8_t opr = op.val16 & 0x7F;
+        setErrorIf(op, OPERAND_TOO_FAR);
+    uint8_t opr = target & 0x7F;
     if (op.indir)
         opr |= 0x80;
     insn.emitOperand8(opr);
-    return OK;
 }
 
-Error AsmScn2650::emitRelative(InsnScn2650 &insn, const Operand &op) {
+void AsmScn2650::emitRelative(InsnScn2650 &insn, const Operand &op) {
     const auto base = inpage(insn.address(), 2);
     const auto target = op.getError() ? base : op.val16;
     if (page(target) != page(base))
-        return setError(op, OVERWRAP_PAGE);
+        setErrorIf(op, OVERWRAP_PAGE);
     // Sign extends 13-bit number.
     const auto delta = signedOffset(offset(target) - offset(base));
     if (overflowInt13(delta))
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = delta & 0x7F;
     if (op.indir)
         opr |= 0x80;
     insn.emitOperand8(opr);
-    return OK;
 }
 
-Error AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_REGN:
     case M_REG0:
@@ -182,19 +178,22 @@ Error AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode m
         insn.emitOperand8(op.val16);
         break;
     case M_REL7:
-        return emitRelative(insn, op);
+        emitRelative(insn, op);
+        break;
     case M_ABS7:
-        return emitZeroPage(insn, op);
+        emitZeroPage(insn, op);
+        break;
     case M_AB13:
     case M_IX13:
-        return emitIndexed(insn, op, mode);
+        emitIndexed(insn, op, mode);
+        break;
     case M_AB15:
     case M_IX15:
-        return emitAbsolute(insn, op, mode);
+        emitAbsolute(insn, op, mode);
+        break;
     default:
         break;
     }
-    return OK;
 }
 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
@@ -233,15 +232,10 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
 
     if (insnWithReg)
         _regs.outRegName(insn.nameBuffer().letter(','), opr1.reg);
-    if (encodeOperand(insn, opr1, insn.mode1()))
-        return getError();
-    if (encodeOperand(insn, opr2, insn.mode2())) {
-        insn.reset();
-        return getError();
-    }
-
+    encodeOperand(insn, opr1, insn.mode1());
+    encodeOperand(insn, opr2, insn.mode2());
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace scn2650

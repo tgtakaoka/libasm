@@ -51,25 +51,29 @@ private:
         bool indir;
         int8_t extra;
         uint32_t val32;
+        StrScanner list;
         Operand()
-            : mode(M_NONE), index(REG_UNDEF), base(REG_UNDEF), indir(false), extra(0), val32(0) {}
+            : mode(M_NONE),
+              index(REG_UNDEF),
+              base(REG_UNDEF),
+              indir(false),
+              extra(0),
+              val32(0),
+              list() {}
     };
 
-    bool parsePointerMode(StrScanner &scan, Operand &op, bool indir) const;
-    bool parseIndexedMode(StrScanner &scan, Operand &op, bool indir) const;
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
-    bool parseRegisterList(StrScanner &scan, Operand &op, bool indir) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error processPseudo(StrScanner &scan, const char *name);
 
-    Error encodePushPull(InsnMc6809 &insn, const Operand &op);
-    Error encodeRegisters(InsnMc6809 &insn, const Operand &op);
-    Error encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
+    void encodeRegisterList(InsnMc6809 &insn, const Operand &op);
+    void encodeRegisterPair(InsnMc6809 &insn, const Operand &op);
+    void encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Config::ptrdiff_t calculateDisplacement(const InsnMc6809 &insn, const Operand &op) const;
-    Error encodeIndexed(InsnMc6809 &insn, const Operand &op);
+    void encodeIndexed(InsnMc6809 &insn, const Operand &op);
     char transferMemoryMode(Operand &op) const;
-    Error encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
-    Error encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
+    void encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
+    void encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_SETDP[] PROGMEM;

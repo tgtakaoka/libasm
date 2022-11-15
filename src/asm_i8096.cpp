@@ -67,8 +67,8 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
-    const bool waop = (mode == M_WAOP);
+void AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+    const auto waop = (mode == M_WAOP);
     switch (op.mode) {
     case M_IMM16:
         insn.embedAa(AA_IMM);
@@ -77,12 +77,12 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
         } else {
             insn.emitOperand8(op.val16);
         }
-        return OK;
+        return;
     case M_INDIR:
     indir:
         insn.embedAa(AA_INDIR);
         insn.emitOperand8(op.regno);
-        return OK;
+        return;
     case M_IDX16:
         if (op.isOK() && op.val16 == 0)
             goto indir;
@@ -94,7 +94,7 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
             insn.emitOperand8(op.regno | 1);
             insn.emitOperand16(op.val16);
         }
-        return OK;
+        return;
     default:  // M_ADDR
         if (op.isOK() && !overflowUint8(op.val16)) {
             insn.embedAa(AA_REG);
@@ -104,11 +104,11 @@ Error AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
             insn.emitOperand8(0 | 1);  // Zero register
             insn.emitOperand16(op.val16);
         }
-        return OK;
+        return;
     }
 }
 
-Error AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
     Config::uintptr_t target;
     Config::uintptr_t base;
     Config::ptrdiff_t delta;
@@ -119,58 +119,65 @@ Error AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) 
         target = op.getError() ? base : op.val16;
         delta = target - base;
         if (overflowRel8(delta))
-            return setError(OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
-        return OK;
+        return;
     case M_REL11:
         base = insn.address() + 2;
         target = op.getError() ? base : op.val16;
         delta = target - base;
         if (delta < -0x400 || delta >= 0x400)
-            return setError(OPERAND_TOO_FAR);
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
         insn.emitOperand8(delta);
-        return OK;
+        return;
     default:  // M_REL16
         base = insn.address() + 3;
         target = op.getError() ? base : op.val16;
         delta = target - base;
         insn.emitOperand16(delta);
-        return OK;
+        return;
     }
 }
 
-Error AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+    auto val16 = op.val16;
     switch (mode) {
     case M_LREG:
-        if (op.val16 & 3)
-            return setError(op, REGISTER_NOT_ALLOWED);
+        if (val16 & 3) {
+            val16 &= ~3;
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+        }
         // Fall-through
     case M_INDIR:
     case M_WREG:
-        if (op.val16 & 1)
-            return setError(op, REGISTER_NOT_ALLOWED);
+        if (val16 & 1) {
+            val16 &= ~1;
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+        }
         // Fall-through
     case M_COUNT:
     case M_BREG:
-        if (op.val16 >= 0x100)
-            return setError(op, ILLEGAL_REGISTER);
-        insn.emitOperand8(op.val16);
-        return OK;
+        if (val16 >= 0x100)
+            setErrorIf(op, ILLEGAL_REGISTER);
+        insn.emitOperand8(val16);
+        return;
     case M_BAOP:
     case M_WAOP:
-        return emitAop(insn, mode, op);
+        emitAop(insn, mode, op);
+        return;
     case M_REL8:
     case M_REL11:
     case M_REL16:
-        return emitRelative(insn, mode, op);
+        emitRelative(insn, mode, op);
+        return;
     case M_BITNO:
         if (op.val16 >= 8)
-            return setError(op, ILLEGAL_BIT_NUMBER);
+            setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed(op.val16 & 7);
-        return OK;
+        return;
     default:
-        return OK;
+        return;
     }
 }
 
@@ -202,19 +209,18 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(dst, error);
 
-    const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
-    if (!jbx_djnz && emitOperand(insn, insn.src2(), src2))
-        return getError();
-    if (!jbx_djnz && emitOperand(insn, insn.src1(), src1))
-        return getError();
-    if (emitOperand(insn, insn.dst(), dst))
-        return getError();
-    if (jbx_djnz && emitOperand(insn, insn.src1(), src1))
-        return getError();
-    if (jbx_djnz && emitOperand(insn, insn.src2(), src2))
-        return getError();
+    const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
+    if (!jbx_djnz) {
+        emitOperand(insn, insn.src2(), src2);
+        emitOperand(insn, insn.src1(), src1);
+    }
+    emitOperand(insn, insn.dst(), dst);
+    if (jbx_djnz) {
+        emitOperand(insn, insn.src1(), src1);
+        emitOperand(insn, insn.src2(), src2);
+    }
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace i8096

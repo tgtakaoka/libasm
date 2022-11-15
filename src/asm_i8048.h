@@ -44,8 +44,8 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op);
-    Error encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op);
+    void encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op);
+    void encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

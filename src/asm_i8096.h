@@ -45,9 +45,9 @@ private:
 
     Error parseIndirect(StrScanner &scan, Operand &opr) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
-    Error emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op);
-    Error emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op);
-    Error emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op);
+    void emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op);
+    void emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op);
+    void emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

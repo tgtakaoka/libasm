@@ -30,59 +30,65 @@ static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;
 }
 
-Error AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
+void AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     if (mode == M_PAGE) {
         if (page(target) != page(base))
-            return setError(op, OVERWRAP_PAGE);
+            setErrorIf(op, OVERWRAP_PAGE);
         insn.emitInsn();
         insn.emitByte(target);
-        return OK;
+        return;
     }
     if (_smartBranch && page(target) == page(base)) {
         const auto opc = insn.opCode();
         insn.setOpCode(0x30 | (opc & 0xF));  // convert to in-page branch
         insn.emitInsn();
         insn.emitByte(target);
-        return OK;
+        return;
     }
     insn.emitInsn();
     insn.emitUint16(op.val16);
-    return OK;
 }
 
-Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
-    uint16_t val16 = op.val16;
+void AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
+    auto val16 = op.val16;
     switch (mode) {
     case M_REG1:
         if (op.getError())
             val16 = 7;  // default work register.
-        if (val16 == 0)
-            return setError(op, REGISTER_NOT_ALLOWED);
+        if (val16 == 0) {
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            val16 = 7;
+        }
         /* Fall-through */
     case M_REGN:
         if (op.getError())
             val16 = 7;  // default work register.
-        if (val16 >= 16)
-            return setError(op, ILLEGAL_REGISTER);
+        if (val16 >= 16) {
+            setErrorIf(op, ILLEGAL_REGISTER);
+            val16 = 7;
+        }
         insn.embed(val16);
         insn.emitInsn();
         break;
     case M_IMM8:
         if (overflowUint8(val16))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
         break;
     case M_PAGE:
     case M_ADDR:
-        return encodePage(insn, mode, op);
+        encodePage(insn, mode, op);
+        break;
     case M_IOAD:
         if (op.getError())
             val16 = 1;  // default IO address
-        if (val16 == 0 || val16 >= 8)
-            return setError(op, OPERAND_NOT_ALLOWED);
+        if (val16 == 0 || val16 >= 8) {
+            setErrorIf(op, OPERAND_NOT_ALLOWED);
+            val16 = 1;
+        }
         insn.embed(val16);
         insn.emitInsn();
         break;
@@ -90,7 +96,6 @@ Error AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &o
         insn.emitInsn();
         break;
     }
-    return getError();
 }
 
 Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
@@ -100,7 +105,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (_useReg) {
-        const RegName reg = RegCdp1802::parseRegName(p);
+        const auto reg = RegCdp1802::parseRegName(p);
         if (reg != REG_UNDEF) {
             op.val16 = int8_t(reg);
             op.mode = M_REGN;
@@ -123,7 +128,7 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
     Operand op1, op2;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);
-    const StrScanner op1p(scan);
+    const auto op1p(scan);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, op2) && op2.hasError())
             return setError(op2);
@@ -142,7 +147,7 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
     emitOperand(insn, insn.mode1(), op1);
     if (insn.mode2() == M_ADDR)
         insn.emitUint16(op2.val16);
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace cdp1802

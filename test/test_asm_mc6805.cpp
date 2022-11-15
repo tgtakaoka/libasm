@@ -128,8 +128,8 @@ static void test_relative() {
     ATEST(0x1000, "BEQ $1002", 0x27, 0x00);
     ATEST(0x1000, "BPL $1002", 0x2A, 0x00);
     ATEST(0x1000, "BMI $1002", 0x2B, 0x00);
-    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR, "$0F81");
-    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR, "$1082");
+    AERRT(0x1000, "BMI $0F81", OPERAND_TOO_FAR, "$0F81", 0x2B, 0x7F);
+    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR, "$1082", 0x2B, 0x80);
 
     ATEST(0x1000, "BHCC $1002", 0x28, 0x00);
     ATEST(0x1000, "BHCS $1002", 0x29, 0x00);
@@ -139,7 +139,7 @@ static void test_relative() {
     ATEST(0x1000, "BIH $1002", 0x2F, 0x00);
     ATEST(0x1000, "BSR $1042", 0xAD, 0x40);
 
-    AERRT(0x1FF0, "BRA $2000", OVERFLOW_RANGE, "$2000");
+    AERRT(0x1FF0, "BRA $2000", OVERFLOW_RANGE, "$2000", 0x20, 0x0E);
     ATEST(0x1000, "BRN $1081", 0x21, 0x7F);
 
     symtab.intern(0x0F82, "sub0F82");
@@ -162,8 +162,8 @@ static void test_immediate() {
     TEST("ADC #-1",   0xA9, 0xFF);
     TEST("ORA #255",  0xAA, 0xFF);
     TEST("ADD #-128", 0xAB, 0x80);
-    ERRT("ADD #256",  OVERFLOW_RANGE, "#256");
-    ERRT("ADD #-129", OVERFLOW_RANGE, "#-129");
+    ERRT("ADD #256",  OVERFLOW_RANGE, "#256",  0xAB, 0x00);
+    ERRT("ADD #-129", OVERFLOW_RANGE, "#-129", 0xAB, 0x7F);
 
     TEST("CPX #$90", 0xA3, 0x90);
     TEST("LDX #$90", 0xAE, 0x90);
@@ -234,7 +234,7 @@ static void test_extended() {
     TEST("ADC >$0090", 0xC9, 0x00, 0x90);
     TEST("ORA >$0090", 0xCA, 0x00, 0x90);
     TEST("ADD  $1FFF", 0xCB, 0x1F, 0xFF);
-    ERRT("SUB  $2000", OVERFLOW_RANGE, "$2000");
+    ERRT("SUB  $2000", OVERFLOW_RANGE, "$2000", 0xC0, 0x20, 0x00);
 
     TEST("CPX $1ABC", 0xC3, 0x1A, 0xBC);
     TEST("LDX $1ABC", 0xCE, 0x1A, 0xBC);
@@ -243,9 +243,9 @@ static void test_extended() {
     TEST("JMP >$0034", 0xCC, 0x00, 0x34);
     TEST("JSR  $1234", 0xCD, 0x12, 0x34);
 
-    ERRT("CPX $2000", OVERFLOW_RANGE, "$2000");
-    ERRT("JMP $4000", OVERFLOW_RANGE, "$4000");
-    ERRT("JSR $8000", OVERFLOW_RANGE, "$8000");
+    ERRT("CPX $2000", OVERFLOW_RANGE, "$2000", 0xC3, 0x20, 0x00);
+    ERRT("JMP $4000", OVERFLOW_RANGE, "$4000", 0xCC, 0x40, 0x00);
+    ERRT("JSR $8000", OVERFLOW_RANGE, "$8000", 0xCD, 0x80, 0x00);
 
     symtab.intern(0x0090, "ext0090");
     symtab.intern(0x1ABC, "ext1ABC");
@@ -262,22 +262,22 @@ static void test_extended() {
     TEST("JSR  ext0090", 0xBD, 0x90);
 
     as6805.setOption("pc-bits", "11"); // MC68HC05J for instance
-    TEST(         "LDA $07FF", 0xC6, 0x07, 0xFF);
-    ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800");
-    ATEST(0x07F0, "BSR $07FF", 0xAD, 0x0D);
-    AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800");
+    TEST(         "LDA $07FF",                          0xC6, 0x07, 0xFF);
+    ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800", 0xC6, 0x08, 0x00);
+    ATEST(0x07F0, "BSR $07FF",                          0xAD, 0x0D);
+    AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800", 0xAD, 0x0E);
 
     as6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
-    TEST(         "LDA $1FFF", 0xC6, 0x1F, 0xFF);
-    ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000");
-    ATEST(0x1FF0, "BSR $1FFF", 0xAD, 0x0D);
-    AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE, "$2000");
+    TEST(         "LDA $1FFF",                          0xC6, 0x1F, 0xFF);
+    ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000", 0xC6, 0x20, 0x00);
+    ATEST(0x1FF0, "BSR $1FFF",                          0xAD, 0x0D);
+    AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE, "$2000", 0xAD, 0x0E);
 
     as6805.setOption("pc-bits", "14"); // MC68HC05X for instance
-    TEST(         "LDA $3FFF", 0xC6, 0x3F, 0xFF);
-    ERRT(         "LDA $4000", OVERFLOW_RANGE, "$4000");
-    ATEST(0x3FF0, "BSR $3FFF", 0xAD, 0x0D);
-    AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE, "$4000");
+    TEST(         "LDA $3FFF",                          0xC6, 0x3F, 0xFF);
+    ERRT(         "LDA $4000", OVERFLOW_RANGE, "$4000", 0xC6, 0x40, 0x00);
+    ATEST(0x3FF0, "BSR $3FFF",                          0xAD, 0x0D);
+    AERRT(0x3FF0, "BSR $4000", OVERFLOW_RANGE, "$4000", 0xAD, 0x0E);
 }
 
 static void test_indexed() {
@@ -393,8 +393,8 @@ static void test_bit_ops() {
     ATEST(0x1000, "BRSET 7,$89,$0F83", 0x0E, 0x89, 0x80);
     ATEST(0x1000, "BRCLR 0,$23,$1082", 0x01, 0x23, 0x7F);
     ATEST(0x1000, "BRCLR 7,$89,$0F83", 0x0F, 0x89, 0x80);
-    AERRT(0x1000, "BRSET 7,$89,$0F82", OPERAND_TOO_FAR, "$0F82");
-    AERRT(0x1000, "BRCLR 0,$23,$1083", OPERAND_TOO_FAR, "$1083");
+    AERRT(0x1000, "BRSET 7,$89,$0F82", OPERAND_TOO_FAR, "$0F82", 0x0E, 0x89, 0x7F);
+    AERRT(0x1000, "BRCLR 0,$23,$1083", OPERAND_TOO_FAR, "$1083", 0x01, 0x23, 0x80);
 
     ERRT("BSET $90,#$88", OPERAND_NOT_ALLOWED, "$90,#$88");
     ERRT("BCLR $90,#$88", OPERAND_NOT_ALLOWED, "$90,#$88");
