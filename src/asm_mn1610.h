@@ -46,9 +46,9 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    Error encodeIcRelative(InsnMn1610 &insn, const Operand &op);
-    Error encodeGenericAddress(InsnMn1610 &insn, const Operand &op);
-    Error encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode);
+    void encodeIcRelative(InsnMn1610 &insn, const Operand &op);
+    void encodeGenericAddress(InsnMn1610 &insn, const Operand &op);
+    void encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

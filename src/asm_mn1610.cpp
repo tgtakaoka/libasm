@@ -19,167 +19,168 @@
 namespace libasm {
 namespace mn1610 {
 
-Error AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
+void AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
     if (checkAddress(op.val32, op))
-        return getError();
+        setErrorIf(op, getError());
     const int32_t delta = op.val32 - insn.address();
     if (overflowRel8(delta))
-        return setError(op, OPERAND_TOO_FAR);
+        setErrorIf(op, OPERAND_TOO_FAR);
     const Config::opcode_t mode = (op.mode == M_IABS) ? 3 : 1;
     insn.embed(mode << 11);
     insn.embed(static_cast<uint8_t>(delta));
-    return OK;
 }
 
-Error AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
+void AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
     switch (op.mode) {
     case M_IABS:
         if (op.val32 < 0x100) {  // Zero-page indirect: (D)
             insn.embed(2 << 11);
             insn.embed(static_cast<uint8_t>(op.val32));
-            return OK;
+            break;
         }
         // Relative indirect: (abs)
         // Fall-through
     case M_ABS:
     case M_IM16:  // Relative: abs
-        return encodeIcRelative(insn, op);
+        encodeIcRelative(insn, op);
+        break;
     case M_IXID:
     case M_INDX:
     case M_IDIX:
         if (RegMn1610::isIndex(op.reg)) {
             if (op.mode == M_IXID)
-                return setError(op, REGISTER_NOT_ALLOWED);
+                setErrorIf(op, REGISTER_NOT_ALLOWED);
             if (op.val32 >= 0x100)
-                return setError(op, OVERFLOW_RANGE);
+                setErrorIf(op, OVERFLOW_RANGE);
             // Direct index: D(Xj), Indirect index: (D)(Xj)
             insn.embed(static_cast<uint8_t>(op.val32));
             const Config::opcode_t mode =
                     (op.mode == M_IDIX ? 2 : 0) | RegMn1610::encodeIndex(op.reg);
             insn.embed(mode << 11);
-            return OK;
+            break;
         }
         if (op.reg == REG_IC) {
             if (op.mode == M_IDIX)
-                return setError(op, REGISTER_NOT_ALLOWED);
+                setErrorIf(op, REGISTER_NOT_ALLOWED);
             if (overflowRel8(static_cast<int32_t>(op.val32)))
-                return setError(op, OPERAND_TOO_FAR);
+                setErrorIf(op, OPERAND_TOO_FAR);
             // Relative: d(IC), Relative indirect: (d(IC))
             insn.embed(static_cast<uint8_t>(op.val32));
             insn.embed((op.mode == M_INDX ? 1 : 3) << 11);
-            return OK;
+            break;
         }
-        return setError(op, REGISTER_NOT_ALLOWED);
+        setErrorIf(op, REGISTER_NOT_ALLOWED);
+        break;
     case M_IM8:
     case M_IM4:
     case M_ILVL:
         // Zero-page direct: D
         insn.embed((0 << 11) | op.val32);
-        return OK;
+        break;
     default:
-        return setError(op, UNKNOWN_OPERAND);
+        break;
     }
 }
 
-Error AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode) {
+void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode) {
+    auto val32 = op.val32;
     switch (mode) {
     case M_RDG:
         if (op.reg == REG_STR)
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RD:
         insn.embed(RegMn1610::encodeGeneric(op.reg) << 8);
         break;
     case M_RSG:
         if (op.reg == REG_STR)
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RS:
         insn.embed(RegMn1610::encodeGeneric(op.reg));
         break;
     case M_RBW:
         if (op.reg == REG_CSBR)
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_SB:
     case M_RB:
         insn.embed(RegMn1610::encodeSegment(op.reg) << 4);
-        return OK;
+        break;
     case M_RHR:
     case M_RHW:
         if ((mode == M_RHR && op.reg == REG_SOR) || (mode == M_RHW && op.reg == REG_SIR))
-            return setError(op, REGISTER_NOT_ALLOWED);
+            setErrorIf(op, REGISTER_NOT_ALLOWED);
         insn.embed(RegMn1610::encodeHardware(op.reg) << 4);
-        return OK;
+        break;
     case M_RP:
         insn.embed(RegMn1610::encodeSpecial(op.reg) << 4);
-        return OK;
+        break;
     case M_RIAU:
         insn.embed((op.mode == M_RIAU ? (op.val32 == 1 ? 3 : 2) : 1) << 6);
         // Fall-through
     case M_RI:
         insn.embed(RegMn1610::encodeIndirect(op.reg));
-        return OK;
+        break;
     case M_SKIP:
         if (op.mode == M_SKIP)  // op.mode may be M_NONE
             insn.embed(RegMn1610::encodeSkip(op.cc) << 4);
-        return OK;
+        break;
     case M_EOP:
         insn.embed(RegMn1610::encodeEop(op.cc));
-        return OK;
+        break;
     case M_COP:
         if (op.mode == M_COP) {
             insn.embed(RegMn1610::encodeCop(op.cc) << 3);
-            return OK;
+            break;
         }
         if (op.val32 >= 2)
-            return setError(op, ILLEGAL_CONSTANT);
+            setErrorIf(op, ILLEGAL_CONSTANT);
         insn.embed((op.val32 & 1) << 3);
-        return OK;
+        break;
     case M_IM8W:
     case M_IM16:
         if (overflowUint16(op.val32))
-            return setError(op, OVERFLOW_RANGE);
+            setErrorIf(op, OVERFLOW_RANGE);
         // Fall-through
     case M_IABS:
         insn.emitOperand16(op.val32);
-        return OK;
+        break;
     case M_BIT:
         if (op.val32 >= 16)
-            return setError(op, ILLEGAL_BIT_NUMBER);
-        insn.embed(static_cast<uint8_t>(op.val32));
-        return OK;
+            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+        insn.embed(static_cast<uint8_t>(op.val32 & 0x0F));
+        break;
     case M_ILVL:
-        if (op.val32 >= 4)
-            return setError(op, ILLEGAL_CONSTANT);
+        if (val32 >= 4) {
+            setErrorIf(op, ILLEGAL_CONSTANT);
+            val32 &= 3;
+        }
         // Fall-through
     case M_IM4:
-        if (op.val32 >= 16)
-            return setError(op, OVERFLOW_RANGE);
+        if (val32 >= 16) {
+            setErrorIf(op, OVERFLOW_RANGE);
+            val32 &= 0xF;
+        }
         // Fall-through
     case M_IM8:
     case M_IOA:
-        if (overflowUint8(op.val32))
-            return setError(op, OVERFLOW_RANGE);
-        insn.embed(static_cast<uint8_t>(op.val32));
-        return OK;
+        if (overflowUint8(val32))
+            setErrorIf(op, OVERFLOW_RANGE);
+        insn.embed(static_cast<uint8_t>(val32));
+        break;
     case M_ABS:
         // TODO: calculate/check segment/offset
         if (checkAddress(op.val32, op))
-            return getError();
+            setErrorIf(op, getError());
         insn.emitOperand16(op.val32);
-        return OK;
+        break;
     case M_GEN:
-        return encodeGenericAddress(insn, op);
-    case M_R0:
-    case M_DR0:
-    case M_RI1:
-    case M_RI2:
-        return OK;
+        encodeGenericAddress(insn, op);
+        break;
     default:
-        return setError(op, UNKNOWN_OPERAND);
+        break;
     }
-    return OK;
 }
 
 Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
@@ -202,11 +203,11 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     StrScanner t(p);
-    const bool indir = p.expect('(');
-    const bool preDec = (*t == '-' && *++t == '(');
+    const auto indir = p.expect('(');
+    const auto preDec = (*t == '-' && *++t == '(');
     if (indir || preDec)
         ++t;
-    const StrScanner r(t);
+    const auto r(t);
     op.reg = RegMn1610::parseRegName(t);
     if (op.reg != REG_UNDEF) {
         // r, (r), -(r), (r)+
@@ -337,24 +338,12 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(op1, error);
 
-    const AddrMode mode1 = insn.mode1();
-    if (mode1 != M_NONE && encodeOperand(insn, op1, mode1)) {
-    error:
-        insn.reset();
-        return getError();
-    }
-    const AddrMode mode2 = insn.mode2();
-    if (mode2 != M_NONE && encodeOperand(insn, op2, mode2))
-        goto error;
-    const AddrMode mode3 = insn.mode3();
-    if (mode3 != M_NONE && encodeOperand(insn, op3, mode3))
-        goto error;
-    const AddrMode mode4 = insn.mode4();
-    if (mode4 != M_NONE && encodeOperand(insn, op4, mode4))
-        goto error;
-
+    encodeOperand(insn, op1, insn.mode1());
+    encodeOperand(insn, op2, insn.mode2());
+    encodeOperand(insn, op3, insn.mode3());
+    encodeOperand(insn, op4, insn.mode4());
     insn.emitInsn();
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace mn1610
