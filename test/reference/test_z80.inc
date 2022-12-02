@@ -127,14 +127,14 @@
         add     a,(ix-121)
         adc     a,(ix-114)
 ;;; DD9X
-        sub     a,(ix-105)
+        sub     (ix-105)
         sbc     a,(ix-97)
 ;;; DDAX
-        and     a,(ix-89)
-        xor     a,(ix-81)
+        and     (ix-89)
+        xor     (ix-81)
 ;;; DDBX
-        or      a,(ix-73)
-        cp      a,(ix-65)
+        or      (ix-73)
+        cp      (ix-65)
 ;;; DDEX
         pop     ix
         ex      (sp),ix
@@ -181,14 +181,14 @@
         add     a,(iy-121)
         adc     a,(iy-113)
 ;;; FD9X
-        sub     a,(iy-105)
+        sub     (iy-105)
         sbc     a,(iy-97)
 ;;; FDAX
-        and     a,(iy-89)
-        xor     a,(iy-81)
+        and     (iy-89)
+        xor     (iy-81)
 ;;; FDBX
-        or      a,(iy-73)
-        cp      a,(iy-65)
+        or      (iy-73)
+        cp      (iy-65)
 ;;; FDEX
         pop     iy
         ex      (sp),iy

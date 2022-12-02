@@ -159,14 +159,14 @@
         adc     a,(hl)
         adc     a,a
 ;;; 9X
-        sub     a,b
-        sub     a,c
-        sub     a,d
-        sub     a,e
-        sub     a,h
-        sub     a,l
-        sub     a,(hl)
-        sub     a,a
+        sub     b
+        sub     c
+        sub     d
+        sub     e
+        sub     h
+        sub     l
+        sub     (hl)
+        sub     a
         sbc     a,b
         sbc     a,c
         sbc     a,d
@@ -176,39 +176,39 @@
         sbc     a,(hl)
         sbc     a,a
 ;;; AX
-        and     a,b
-        and     a,c
-        and     a,d
-        and     a,e
-        and     a,h
-        and     a,l
-        and     a,(hl)
-        and     a,a
-        xor     a,b
-        xor     a,c
-        xor     a,d
-        xor     a,e
-        xor     a,h
-        xor     a,l
-        xor     a,(hl)
-        xor     a,a
+        and     b
+        and     c
+        and     d
+        and     e
+        and     h
+        and     l
+        and     (hl)
+        and     a
+        xor     b
+        xor     c
+        xor     d
+        xor     e
+        xor     h
+        xor     l
+        xor     (hl)
+        xor     a
 ;;; BX
-        or      a,b
-        or      a,c
-        or      a,d
-        or      a,e
-        or      a,h
-        or      a,l
-        or      a,(hl)
-        or      a,a
-        cp      a,b
-        cp      a,c
-        cp      a,d
-        cp      a,e
-        cp      a,h
-        cp      a,l
-        cp      a,(hl)
-        cp      a,a
+        or      b
+        or      c
+        or      d
+        or      e
+        or      h
+        or      l
+        or      (hl)
+        or      a
+        cp      b
+        cp      c
+        cp      d
+        cp      e
+        cp      h
+        cp      l
+        cp      (hl)
+        cp      a
 ;;; CX
         ret     nz
         pop     bc
@@ -232,7 +232,7 @@
         out     (0d4h),a
         call    nc,0d6d5H
         push    de
-        sub     a,0d7H
+        sub     0d7H
         rst     10h
         ret     c
         jp      c,0dcdbH
@@ -247,14 +247,14 @@
         ex      (sp),hl
         call    po,0e6e5H
         push    hl
-        and     a,0e7H
+        and     0e7H
         rst     20H
         ret     pe
         jp      (hl)
         jp      pe,0ecebH
         ex      de,hl
         call    pe,0eeedH
-        xor     a,0efH
+        xor     0efH
         rst     28H
 ;;; FX
         ret     p
@@ -263,14 +263,14 @@
         di
         call    p,0f6f5H
         push    af
-        or      a,0f7H
+        or      0f7H
         rst     30H
         ret     m
         ld      sp,hl
         jp      m,0fcfbH
         ei
         call    m,0fefdH
-        cp      a,0ffH
+        cp      0ffH
         rst     38H
 
         org     $+32-($&31)
