@@ -19,35 +19,35 @@
       JMP   $0F
       CLR   $10
       LBRN  *+$2227
-      LBRN  *-$00D9
+      LBRN  *-$7FD9
       LBHI  *+$2328
-      LBHI  *-$00D8
+      LBHI  *-$7FD8
       LBLS  *+$2429
-      LBLS  *-$00D7
+      LBLS  *-$7FD7
       LBHS  *+$252A
-      LBHS  *-$00D6
+      LBHS  *-$7FD6
       LBLO  *+$262B
-      LBLO  *-$00D5
+      LBLO  *-$7FD5
       LBNE  *+$272C
-      LBNE  *-$00D4
+      LBNE  *-$7FD4
       LBEQ  *+$282D
-      LBEQ  *-$00D3
+      LBEQ  *-$7FD3
       LBVC  *+$292E
-      LBVC  *-$00D2
+      LBVC  *-$7FD2
       LBVS  *+$2A2F
-      LBVS  *-$00D1
+      LBVS  *-$7FD1
       LBPL  *+$2B30
-      LBPL  *-$00D0
+      LBPL  *-$7FD0
       LBMI  *+$2C31
-      LBMI  *-$00CF
+      LBMI  *-$7FCF
       LBGE  *+$2D32
-      LBGE  *-$00CE
+      LBGE  *-$7FCE
       LBLT  *+$2E33
-      LBLT  *-$00CD
+      LBLT  *-$7FCD
       LBGT  *+$2F34
-      LBGT  *-$00CC
+      LBGT  *-$7FCC
       LBLE  *+$3035
-      LBLE  *-$00CB
+      LBLE  *-$7FCB
       ADDR  U, X
       ADDR  U, Y
       ADDR  U, U
