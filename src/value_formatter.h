@@ -85,6 +85,11 @@ private:
     const char _hexPrefix;
 };
 
+class FairchildValueFormatter : public NationalValueFormatter {
+public:
+    FairchildValueFormatter() : NationalValueFormatter(true, 'H') {}
+};
+
 }  // namespace libasm
 
 #endif

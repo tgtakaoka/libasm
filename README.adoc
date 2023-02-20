@@ -124,9 +124,9 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
                 MC68HC05 MC6809 HD6309 MOS6502 R65C02 G65SC02 W65C02S
                 W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051
                 i8080 i8085 V30EMU Z80 Z8 Z86C Z88 TLCS90 INS8060 INS8070
-                CDP1802 CDP1804 CDP1804A SCN2650 TMS32010 TMS32015 i8086
-                i80186 V30 i8096 MC68000 TMS9900 TMS9995 TMS99105 Z8001
-                Z8002 NS32032 MN1610 MN1613 MN1613A
+                CDP1802 CDP1804 CDP1804A SCN2650 F3850 TMS32010 TMS32015
+                i8086 i80186 V30 i8096 MC68000 TMS9900 TMS9995 TMS99105
+                Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
   -o <output> : output file
   -l <list>   : list file
   <input>     : file can be Motorola S-Record or Intel HEX format
@@ -149,6 +149,7 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   work-register   : prefer work register name than alias address  (bool, Z8)
   imm-prefix      : immediate prefix # (default =)  (bool, 8070)
   use-register    : use register name Rn  (bool, 1802)
+  use-scratchpad  : use name for scratchpad  (bool, 3850)
   segment-insn    : segment override as instruction  (bool, 8086)
   string-insn     : string instruction as repeat operand  (bool, 8086)
   absolute        : zero register indexing as absolute addressing  (bool, 8096)

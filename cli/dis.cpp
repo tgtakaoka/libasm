@@ -16,6 +16,7 @@
 
 #include "dis_cdp1802.h"
 #include "dis_commander.h"
+#include "dis_f3850.h"
 #include "dis_i8048.h"
 #include "dis_i8051.h"
 #include "dis_i8080.h"
@@ -55,6 +56,7 @@ ins8060::DisIns8060 dis8060;
 ins8070::DisIns8070 dis8070;
 cdp1802::DisCdp1802 dis1802;
 scn2650::DisScn2650 dis2650;
+f3850::DisF3850 dis3850;
 i8086::DisI8086 dis8086;
 i8096::DisI8096 dis8096;
 tlcs90::DisTlcs90 dis90;
@@ -80,6 +82,7 @@ Disassembler *disassemblers[] = {
         &dis8070,
         &dis1802,
         &dis2650,
+        &dis3850,
         &dis32010,
         &dis8086,
         &dis8096,

@@ -100,6 +100,11 @@ build dis_scn2650.o:   cxx ${root}/src/dis_scn2650.cpp
 build reg_scn2650.o:   cxx ${root}/src/reg_scn2650.cpp
 build table_scn2650.o: cxx ${root}/src/table_scn2650.cpp
 
+# f3850
+build dis_f3850.o:   cxx ${root}/src/dis_f3850.cpp
+build reg_f3850.o:   cxx ${root}/src/reg_f3850.cpp
+build table_f3850.o: cxx ${root}/src/table_f3850.cpp
+
 # i8086
 build asm_i8086.o:   cxx ${root}/src/asm_i8086.cpp
 build dis_i8086.o:   cxx ${root}/src/dis_i8086.cpp

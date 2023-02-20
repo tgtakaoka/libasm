@@ -53,16 +53,16 @@ build test_dis_formatter:     test test_dis_formatter.o test_driver_helper.o tes
   dis_base.o error_reporter.o value_formatter.o value_parser.o option_base.o str_buffer.o str_scanner.o $
   dis_mc6809.o dis_mc6800.o dis_mc6805.o dis_mos6502.o dis_i8048.o dis_i8051.o $
   dis_i8080.o dis_i8096.o dis_z80.o dis_z8.o dis_tlcs90.o dis_ins8060.o dis_ins8070.o dis_cdp1802.o $
-  dis_scn2650.o dis_i8086.o dis_tms9900.o dis_tms32010.o dis_mc68000.o dis_z8000.o dis_ns32000.o $
-  dis_mn1610.o $
+  dis_scn2650.o dis_f3850.o dis_i8086.o dis_tms9900.o dis_tms32010.o dis_mc68000.o dis_z8000.o $
+  dis_ns32000.o dis_mn1610.o $
   reg_mc6809.o reg_mc6800.o reg_mc6805.o reg_mos6502.o reg_i8048.o reg_i8051.o reg_i8080.o $
   reg_i8096.o reg_z80.o reg_z8.o reg_tlcs90.o reg_ins8060.o reg_ins8070.o reg_cdp1802.o $
-  reg_scn2650.o reg_i8086.o reg_tms9900.o reg_tms32010.o reg_mc68000.o reg_z8000.o reg_ns32000.o $
-  reg_mn1610.o $
+  reg_scn2650.o reg_f3850.o reg_i8086.o reg_tms9900.o reg_tms32010.o reg_mc68000.o reg_z8000.o $
+  reg_ns32000.o reg_mn1610.o $
   table_mc6809.o table_mc6800.o table_mc6805.o table_mos6502.o table_i8048.o table_i8051.o $
   table_i8080.o table_i8096.o table_z80.o table_z8.o table_tlcs90.o table_ins8060.o table_ins8070.o $
-  table_cdp1802.o table_scn2650.o table_i8086.o table_tms9900.o table_tms32010.o table_mc68000.o $
-  table_z8000.o table_ns32000.o table_mn1610.o
+  table_cdp1802.o table_scn2650.o table_f3850.o table_i8086.o table_tms9900.o table_tms32010.o $
+  table_mc68000.o table_z8000.o table_ns32000.o table_mn1610.o
 
 build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_asm_formatter test_dis_formatter

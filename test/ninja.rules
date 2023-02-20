@@ -87,6 +87,10 @@ build test_asm_scn2650.o: cxx ${root}/test/test_asm_scn2650.cpp
 build test_dis_scn2650.o: cxx ${root}/test/test_dis_scn2650.cpp
 build gen_scn2650.o:      cxx ${root}/test/gen_scn2650.cpp
 
+# f3850
+build test_dis_f3850.o: cxx ${root}/test/test_dis_f3850.cpp
+build gen_f3850.o:      cxx ${root}/test/gen_f3850.cpp
+
 # i8086
 build test_asm_i8086.o: cxx ${root}/test/test_asm_i8086.cpp
 build test_dis_i8086.o: cxx ${root}/test/test_dis_i8086.cpp
@@ -127,3 +131,4 @@ build test_expr_base.o:     cxx ${root}/test/test_expr_base.cpp
 build test_expr_intel.o:    cxx ${root}/test/test_expr_intel.cpp
 build test_expr_motorola.o: cxx ${root}/test/test_expr_motorola.cpp
 build test_expr_national.o: cxx ${root}/test/test_expr_national.cpp
+build test_expr_fairchild.o: cxx ${root}/test/test_expr_fairchild.cpp

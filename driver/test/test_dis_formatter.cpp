@@ -18,6 +18,7 @@
 
 #include "array_memory.h"
 #include "dis_cdp1802.h"
+#include "dis_f3850.h"
 #include "dis_i8048.h"
 #include "dis_i8051.h"
 #include "dis_i8080.h"
@@ -416,6 +417,30 @@ void test_scn2650() {
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x89ab));
 }
 
+void test_f3850() {
+    PREP(f3850::DisF3850);
+
+    listing.setUpperHex(false);
+    EQ("use-scratchpad", OK, disassembler.setOption("use-scratchpad", "on"));
+
+    DIS8("f3850", 0x7bcd,
+            "      cpu   f3850\n"
+            "      org   h'7bcd'\n"
+            "      clr\n"
+            "      lr    a, j\n"
+            "      bp    h'7bcf'\n"
+            "; test.bin: h'7bd1': error: Unknown instruction\n"
+            ";     7bd1 : 2e\n",
+            "       0 :                            cpu   f3850\n"
+            "    7bcd :                            org   h'7bcd'\n"
+            "    7bcd : 70                         clr\n"
+            "    7bce : 49                         lr    a, j\n"
+            "    7bcf : 81 ff                      bp    h'7bcf'\n"
+            "test.bin: h'7bd1': error: Unknown instruction\n"
+            "    7bd1 : 2e\n",
+            0x70, 0x49, 0x81, 0xFF, 0x2E);
+}
+
 void test_i8086() {
     PREP(i8086::DisI8086);
 
@@ -636,6 +661,7 @@ void run_tests() {
     RUN_TEST(test_ins8070);
     RUN_TEST(test_cdp1802);
     RUN_TEST(test_scn2650);
+    RUN_TEST(test_f3850);
     RUN_TEST(test_i8086);
     RUN_TEST(test_tms9900);
     RUN_TEST(test_tms32010);
