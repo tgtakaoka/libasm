@@ -23,7 +23,7 @@ namespace libasm {
 namespace scn2650 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] = "SCN2650";
+static const char TEXT_CPU_LIST[] PROGMEM = "SCN2650";
 static constexpr const char *TEXT_CPU_SCN2650 = TEXT_CPU_LIST;
 static constexpr const char *TEXT_CPU_2650 = TEXT_CPU_LIST + 3;
 static constexpr const char *TEXT_null = TEXT_CPU_2650 + 4;
