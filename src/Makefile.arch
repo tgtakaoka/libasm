@@ -29,6 +29,7 @@ ARCHS = \
 	ins8070 \
 	cdp1802 \
 	scn2650 \
+	f3850   \
 	i8086   \
 	tms9900 \
 	tms32010 \
@@ -60,6 +61,7 @@ TGT_ins8060 = ins8060
 TGT_ins8070 = ins8070
 TGT_cdp1802 = cdp1802 cdp1804 cdp1804a
 TGT_scn2650 = scn2650
+TGT_f3850   = f3850
 TGT_i8086   = i8086 i80186 v30
 TGT_tms9900 = tms9900 tms9995 tms99105
 TGT_tms32010= tms32010
@@ -107,6 +109,7 @@ CPU_cdp1802  = 1802
 CPU_cdp1804  = 1804
 CPU_cdp1804a = 1804A
 CPU_scn2650  = 2650
+CPU_f3850    = F3850
 CPU_i8086    = 8086
 CPU_i80186   = 80186
 CPU_v30      = V30
