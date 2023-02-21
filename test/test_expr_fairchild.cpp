@@ -19,7 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-NationalValueParser parser('*');
+FairchildValueParser parser;
 FairchildValueFormatter formatter;
 
 static void set_up() {

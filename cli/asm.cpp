@@ -17,6 +17,7 @@
 #include "asm_cdp1802.h"
 #include "asm_commander.h"
 #include "asm_directive.h"
+#include "asm_f3850.h"
 #include "asm_i8048.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
@@ -56,6 +57,7 @@ ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
 cdp1802::AsmCdp1802 asm1802;
 scn2650::AsmScn2650 asm2650;
+f3850::AsmF3850 asm3850;
 i8086::AsmI8086 asm8086;
 i8096::AsmI8096 asm8096;
 tlcs90::AsmTlcs90 asm90;
@@ -79,6 +81,7 @@ NationalDirective dir8060(asm8060);
 NationalDirective dir8070(asm8070);
 IntelDirective dir1802(asm1802);
 IntelDirective dir2650(asm2650);
+FairchildDirective dir3850(asm3850);
 IntelDirective dir8086(asm8086);
 IntelDirective dir8096(asm8096);
 IntelDirective dir90(asm90);
@@ -104,6 +107,7 @@ AsmDirective *directives[] = {
         &dir8070,
         &dir1802,
         &dir2650,
+        &dir3850,
         &dir32010,
         &dir8086,
         &dir8096,

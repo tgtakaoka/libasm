@@ -184,6 +184,9 @@ build gen_scn2650:      link gen_scn2650.o dis_scn2650.o reg_scn2650.o table_scn
   gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # f3850
+build test_asm_f3850: run test_asm_f3850.o asm_f3850.o reg_f3850.o table_f3850.o $
+  test_asm_helper.o asm_base.o value_parser.o $
+  test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_f3850: run test_dis_f3850.o dis_f3850.o reg_f3850.o table_f3850.o $
   test_dis_helper.o dis_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
@@ -307,7 +310,7 @@ build test_ins8060:  phony test_asm_ins8060 test_dis_ins8060
 build test_ins8070:  phony test_asm_ins8070 test_dis_ins8070
 build test_cdp1802:  phony test_asm_cdp1802 test_dis_cdp1802
 build test_scn2650:  phony test_asm_scn2650 test_dis_scn2650
-build test_f3850:    phony                  test_dis_f3850
+build test_f3850:    phony test_asm_f3850 test_dis_f3850
 build test_i8086:    phony test_asm_i8086 test_dis_i8086
 build test_tms9900:  phony test_asm_tms9900 test_dis_tms9900
 build test_tms32010: phony test_asm_tms32010 test_dis_tms32010

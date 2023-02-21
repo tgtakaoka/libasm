@@ -19,6 +19,7 @@
 #include "asm_cdp1802.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
+#include "asm_f3850.h"
 #include "asm_i8048.h"
 #include "asm_i8051.h"
 #include "asm_i8080.h"
@@ -365,6 +366,31 @@ void test_scn2650() {
             "       7BCD : 0C BD EF                   loda,r0 *label1, r0, +\n");
 }
 
+void test_f3850() {
+    PREP(f3850::AsmF3850, FairchildDirective);
+
+    TestReader inc("data/db.inc");
+    sources.add(inc);
+    inc.add("        dc    h'1234', h'5678', h'9abc'\n");
+
+    driver.internSymbol(0x7bcf, "label1");
+
+    ASM("f3850",
+            "        cpu   F3850\n"
+            "        org   H'7BCD'\n"
+            "        clr\n"
+            "        lr    a, j\n"
+            "        bp    label1\n"
+            "        include \"data/db.inc\"\n",
+            "          0 :                            cpu   F3850\n"
+            "       7BCD :                            org   H'7BCD'\n"
+            "       7BCD : 70                         clr\n"
+            "       7BCE : 49                         lr    a, j\n"
+            "       7BCF : 81 FF                      bp    label1\n"
+            "       7BD1 :                            include \"data/db.inc\"\n"
+            "(1)    7BD1 : 12 34 56 78 9A BC          dc    h'1234', h'5678', h'9abc'\n");
+}
+
 void test_i8086() {
     PREP(i8086::AsmI8086, IntelDirective);
 
@@ -563,6 +589,7 @@ void run_tests() {
     RUN_TEST(test_ins8070);
     RUN_TEST(test_cdp1802);
     RUN_TEST(test_scn2650);
+    RUN_TEST(test_f3850);
     RUN_TEST(test_i8086);
     RUN_TEST(test_tms9900);
     RUN_TEST(test_tms32010);

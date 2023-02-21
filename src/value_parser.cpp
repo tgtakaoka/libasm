@@ -596,6 +596,22 @@ Error NationalValueParser::readNumber(StrScanner &scan, Value &val) {
     return IntelValueParser::readNumber(scan, val);
 }
 
+bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
+    return (scan.expect('*') || scan.expect('$')) && !symbolLetter(*scan);
+}
+
+bool FairchildValueParser::symbolLetter(char c, bool head) const {
+    return ValueParser::symbolLetter(c, head);
+}
+
+bool FairchildValueParser::numberPrefix(const StrScanner &scan) const {
+    const char c = toupper(*scan);
+    const char q = scan[1];
+    if (q == '\'')
+        return c == 'H' || c == 'D' || c == 'O' || c == 'B';
+    return IntelValueParser::numberPrefix(scan);
+}
+
 }  // namespace libasm
 
 // Local Variables:

@@ -96,6 +96,12 @@ public:
     NationalDirective(Assembler &assembler);
 };
 
+class FairchildDirective : public AsmDirective {
+public:
+    FairchildDirective(Assembler &assembler);
+    BinEncoder &defaultEncoder() override;
+};
+
 }  // namespace driver
 }  // namespace libasm
 

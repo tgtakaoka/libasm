@@ -160,9 +160,19 @@ public:
     NationalValueParser(char locSym = '.') : IntelValueParser(locSym) {}
 
 protected:
-    bool symbolLetter(char c, bool head) const override;
+    bool symbolLetter(char c, bool head = false) const override;
     bool numberPrefix(const StrScanner &scan) const override;
     Error readNumber(StrScanner &scan, Value &val) override;
+};
+
+class FairchildValueParser : public NationalValueParser {
+public:
+    FairchildValueParser() : NationalValueParser() {}
+
+protected:
+    bool locationSymbol(StrScanner &scan) const override;
+    bool symbolLetter(char c, bool head = false) const override;
+    bool numberPrefix(const StrScanner &scan) const override;
 };
 
 }  // namespace libasm

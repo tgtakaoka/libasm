@@ -383,6 +383,14 @@ NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(asse
     registerPseudo(".dbyte", &AsmDirective::defineUint16s);
 }
 
+FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {
+    registerPseudo(".dc", &AsmDirective::defineUint16s);
+}
+
+BinEncoder &FairchildDirective::defaultEncoder() {
+    return IntelHex::encoder();
+}
+
 }  // namespace driver
 }  // namespace libasm
 

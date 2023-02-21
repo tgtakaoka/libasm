@@ -68,8 +68,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegF3850::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+    StrScanner p(scan);
+    const NameEntry *entry = searchText(p, ARRAY_RANGE(REG_TABLE));
+    if (entry == nullptr || p.expect('\''))
+        return REG_UNDEF;       // maybe H'xx' number
+    scan = p;
+    return RegName(entry->name());
 }
 
 RegName RegF3850::decodeRegName(Config::opcode_t opc) {

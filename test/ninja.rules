@@ -88,6 +88,7 @@ build test_dis_scn2650.o: cxx ${root}/test/test_dis_scn2650.cpp
 build gen_scn2650.o:      cxx ${root}/test/gen_scn2650.cpp
 
 # f3850
+build test_asm_f3850.o: cxx ${root}/test/test_asm_f3850.cpp
 build test_dis_f3850.o: cxx ${root}/test/test_dis_f3850.cpp
 build gen_f3850.o:      cxx ${root}/test/gen_f3850.cpp
 
