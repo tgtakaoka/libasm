@@ -59,6 +59,7 @@ protected:
 class MotorolaValueFormatter : public ValueFormatter {
 public:
     MotorolaValueFormatter() : ValueFormatter(false) {}
+
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
 };
@@ -66,18 +67,22 @@ protected:
 class IntelValueFormatter : public ValueFormatter {
 public:
     IntelValueFormatter() : ValueFormatter(false) {}
+
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
 };
 
 class NationalValueFormatter : public ValueFormatter {
 public:
-    NationalValueFormatter() : ValueFormatter(false), _suffix(false) {}
-    void setSuffix(bool enable) { _suffix = enable; }
+    NationalValueFormatter(bool suffix = false, char hexPrefix = 'X')
+        : ValueFormatter(false), _suffix(suffix), _hexPrefix(hexPrefix) {}
+
 protected:
     StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
+
 private:
-    bool _suffix;
+    const bool _suffix;
+    const char _hexPrefix;
 };
 
 }  // namespace libasm

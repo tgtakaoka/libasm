@@ -269,7 +269,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
         StrScanner p(expr);
         bool head = true;
         while (p.size()) {
-            if (!parser.isSymbolLetter(*p, head))
+            if (!parser.symbolLetter(*p, head))
                 return setError(expr, SYMBOL_REQUIRE);
             head = false;
             ++p;

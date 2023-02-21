@@ -47,7 +47,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     auto &parser = assembler.parser();
     parser.setCurrentOrigin(startAddress());
 
-    if (parser.isSymbolLetter(*scan, true)) {
+    if (parser.symbolLetter(*scan, true)) {
         // setAt(scan);
         _line_symbol = parser.readSymbol(scan);
         scan.expect(':');  // skip optional trailing ':' for label.

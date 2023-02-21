@@ -82,7 +82,8 @@ StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_
     return outHex(out, val, bits).reverse(start);
 }
 
-StrBuffer &MotorolaValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+StrBuffer &MotorolaValueFormatter::formatPositiveHex(
+        StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle) {
         out.letter('0').letter('x');
     } else {
@@ -104,11 +105,12 @@ StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, 
     return out.reverse(start).letter('H', _uppercase);
 }
 
-StrBuffer &NationalValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+StrBuffer &NationalValueFormatter::formatPositiveHex(
+        StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle) {
         out.letter('0').letter('x');
     } else {
-        out.letter('X', _uppercase).letter('\'');
+        out.letter(_hexPrefix, _uppercase).letter('\'');
     }
     char *start = out.mark();
     outHex(out, val, bits).reverse(start);

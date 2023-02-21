@@ -257,7 +257,7 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
         return value;
     }
 
-    if ((p.expect(_curSym) || p.expect('.')) && !isSymbolLetter(*p)) {
+    if (locationSymbol(p)) {
         scan = p;
         return Value::makeUnsigned(_origin);
     }
@@ -266,7 +266,7 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
     if (numberPrefix(p))
         goto read_number;
 
-    if (isSymbolLetter(*p, true)) {
+    if (symbolLetter(*p, true)) {
         if (_funcParser)
             _funcParser->setAt(p);
         const StrScanner symbol = readSymbol(p);
@@ -299,7 +299,7 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
 
 read_number:
     if (readNumber(p, val) == OK) {
-        if (isSymbolLetter(*p)) {
+        if (symbolLetter(*p)) {
             setError(ILLEGAL_CONSTANT);
         } else {
             scan = p;
@@ -363,7 +363,7 @@ ValueParser::Operator ValueParser::readOperator(StrScanner &scan) {
     return Operator(OP_NONE, 0);
 }
 
-bool ValueParser::isSymbolLetter(char c, bool head) const {
+bool ValueParser::symbolLetter(char c, bool head) const {
     if (isalpha(c) || c == '_')
         return true;
     if (head && c == '.')
@@ -373,7 +373,7 @@ bool ValueParser::isSymbolLetter(char c, bool head) const {
 
 StrScanner ValueParser::readSymbol(StrScanner &scan) const {
     StrScanner p(scan);
-    p.trimStart([this](char c) { return this->isSymbolLetter(c); });
+    p.trimStart([this](char c) { return this->symbolLetter(c); });
     StrScanner symbol = StrScanner(scan.str(), p.str());
     scan = p;
     return symbol;
@@ -460,6 +460,10 @@ Error ValueParser::scanNumberEnd(const StrScanner &scan, const Radix radix, char
             return OK;
     }
     return ILLEGAL_CONSTANT;
+}
+
+bool ValueParser::locationSymbol(StrScanner &scan) const {
+    return (scan.expect(_locSym) || scan.expect('.')) && !symbolLetter(*scan);
 }
 
 bool ValueParser::numberPrefix(const StrScanner &scan) const {
@@ -552,10 +556,10 @@ Error IntelValueParser::readNumber(StrScanner &scan, Value &val) {
     return ValueParser::readNumber(scan, val);
 }
 
-bool NationalValueParser::isSymbolLetter(char c, bool head) const {
+bool NationalValueParser::symbolLetter(char c, bool head) const {
     if (head && c == '$')
         return true;
-    return IntelValueParser::isSymbolLetter(c, head);
+    return ValueParser::symbolLetter(c, head);
 }
 
 bool NationalValueParser::numberPrefix(const StrScanner &scan) const {

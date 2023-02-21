@@ -35,8 +35,8 @@ enum Radix : uint8_t {
 
 class ValueParser : public ErrorAt {
 public:
-    ValueParser(char curSym = '.')
-        : ErrorAt(), _origin(0), _curSym(curSym), _funcParser(nullptr), _commentChar(0) {}
+    ValueParser(char locSym = '.')
+        : ErrorAt(), _locSym(locSym), _origin(0), _funcParser(nullptr), _commentChar(0) {}
 
     /*
      * Parse |scan| text and return expression |value|.  Undefined
@@ -59,7 +59,7 @@ public:
     char readChar(StrScanner &scan);
 
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
-    virtual bool isSymbolLetter(char c, bool head = false) const;
+    virtual bool symbolLetter(char c, bool head = false) const;
     StrScanner readSymbol(StrScanner &scan) const;
     void setCommentChar(char c) { _commentChar = c; }
     bool endOfLine(char c) const { return c == 0 || c == ';' || c == _commentChar; }
@@ -71,6 +71,7 @@ public:
     FuncParser *setFuncParser(FuncParser *parser = nullptr);
 
 protected:
+    virtual bool locationSymbol(StrScanner &scan) const;
     virtual bool numberPrefix(const StrScanner &scan) const;
     virtual Error readNumber(StrScanner &scan, Value &val);
     Error parseNumber(StrScanner &scan, Value &val, const Radix radix);
@@ -78,8 +79,8 @@ protected:
     Error expectNumberSuffix(StrScanner &scan, char suffux = 0);
 
 private:
+    const char _locSym;
     uint32_t _origin;
-    const char _curSym;
     FuncParser *_funcParser;
     char _commentChar;
 
@@ -147,7 +148,7 @@ protected:
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser(char curSym = '$') : ValueParser(curSym) {}
+    IntelValueParser(char locSym = '$') : ValueParser(locSym) {}
 
 protected:
     bool numberPrefix(const StrScanner &scan) const override;
@@ -156,10 +157,10 @@ protected:
 
 class NationalValueParser : public IntelValueParser {
 public:
-    NationalValueParser(char curSym = '.') : IntelValueParser(curSym) {}
+    NationalValueParser(char locSym = '.') : IntelValueParser(locSym) {}
 
 protected:
-    bool isSymbolLetter(char c, bool head) const override;
+    bool symbolLetter(char c, bool head) const override;
     bool numberPrefix(const StrScanner &scan) const override;
     Error readNumber(StrScanner &scan, Value &val) override;
 };
