@@ -19,8 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-ValueParser base_parser;
-ValueParser &parser = base_parser;
+ValueParser parser;
 ValueFormatter formatter;
 
 static void set_up() {

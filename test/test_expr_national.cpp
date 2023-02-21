@@ -512,7 +512,7 @@ static void test_formatter_32bit() {
 }
 
 static void test_formatter_suffix() {
-    formatter.setSuffix(true);
+    NationalValueFormatter formatter(true);
     HEX(255,  8, false, "x'ff'");
     HEX(0xffffff,    24, true, "x'ffffff'");
 }

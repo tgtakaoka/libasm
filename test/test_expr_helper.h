@@ -24,8 +24,6 @@
 
 void run_tests();
 
-extern libasm::ValueParser &parser;
-
 namespace libasm {
 namespace test {
 
@@ -33,11 +31,11 @@ extern TestSymtab symtab;
 extern TestAsserter asserter;
 
 void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
-        const Error expected_error, size_t size);
+        const Error expected_error, size_t size, ValueParser &);
 void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const char *expected);
+        const char *expected, ValueFormatter &);
 void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const bool relax, const char *expected);
+        const bool relax, const char *expected, ValueFormatter &);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -47,15 +45,15 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define SCAN(delim, text, expected) \
     asserter.equals(__FILE__, __LINE__, "scan " text, expected, parser.scanExpr(text, delim))
 #define E8(expr, expected, expected_error) \
-    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint8_t))
+    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint8_t), parser)
 #define E16(expr, expected, expected_error) \
-    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint16_t))
+    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint16_t), parser)
 #define E32(expr, expected, expected_error) \
-    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint32_t))
+    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint32_t), parser)
 
-#define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected)
+#define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
 #define HEX(value, bits, relax, expected) \
-    hex_assert(__FILE__, __LINE__, value, bits, relax, expected)
+    hex_assert(__FILE__, __LINE__, value, bits, relax, expected, formatter)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

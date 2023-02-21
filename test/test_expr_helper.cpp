@@ -18,9 +18,6 @@
 
 #include "str_buffer.h"
 
-extern libasm::ValueParser &parser;
-extern libasm::ValueFormatter formatter;
-
 namespace libasm {
 namespace test {
 
@@ -28,7 +25,7 @@ TestAsserter asserter;
 TestSymtab symtab;
 
 void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
-        const Error expected_error, size_t size) {
+        const Error expected_error, size_t size, ValueParser &parser) {
     Value val;
     ErrorReporter error;
     StrScanner scan(expr);
@@ -55,7 +52,7 @@ void val_assert(const char *file, const int line, const char *expr, uint32_t exp
 }
 
 void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const char *expected) {
+        const char *expected, ValueFormatter &formatter) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
@@ -65,7 +62,7 @@ void dec_assert(const char *file, const int line, const uint32_t value, int8_t b
 }
 
 void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const bool relax, const char *expected) {
+        const bool relax, const char *expected, ValueFormatter &formatter) {
     char msg[80];
     sprintf(msg, "%#x", value);
     char actual[80];
