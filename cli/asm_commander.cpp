@@ -23,6 +23,7 @@
 #include "file_reader.h"
 #include "intel_hex.h"
 #include "moto_srec.h"
+#include "stored_printer.h"
 
 #include <cstring>
 
@@ -91,17 +92,22 @@ int AsmCommander::assemble() {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
-    (void)assemble(memory, STDNULL, false);
+    (void)assemble(memory, STDNULL, STDNULL, false);
 
+    StoredPrinter errorout;
     do {
         BinMemory next;
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
-        (void)assemble(next, STDNULL, true);
+        errorout.clear();
+        (void)assemble(next, STDNULL, errorout, true);
         if (memory.equals(next))
             break;
         memory.swap(next);
     } while (true);
+
+    for (size_t lineno = 1; lineno <= errorout.size(); lineno++)
+        fprintf(stderr, "%s\n", errorout.line(lineno));
 
     if (_output_name) {
         FilePrinter output;
@@ -137,13 +143,14 @@ int AsmCommander::assemble() {
             fprintf(stderr, "%s: Opened for listing\n", _list_name);
             fprintf(stderr, "%s: Pass listing\n", _input_name);
         }
-        assemble(memory, listout, true);
+        assemble(memory, listout, STDNULL, true);
     }
 
     return 0;
 }
 
-int AsmCommander::assemble(BinMemory &memory, TextPrinter &listout, bool reportError) {
+int AsmCommander::assemble(
+        BinMemory &memory, TextPrinter &listout, TextPrinter &errorout, bool reportError) {
     if (_sources.open(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
@@ -160,7 +167,7 @@ int AsmCommander::assemble(BinMemory &memory, TextPrinter &listout, bool reportE
         }
     }
 
-    return _driver.assemble(_sources, memory, formatter, listout, FilePrinter::STDERR, reportError);
+    return _driver.assemble(_sources, memory, formatter, listout, errorout, reportError);
 }
 
 AsmDirective *AsmCommander::defaultDirective() {
