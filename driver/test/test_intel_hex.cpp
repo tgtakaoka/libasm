@@ -18,7 +18,7 @@
 
 #include "bin_memory.h"
 #include "test_driver_helper.h"
-#include "test_printer.h"
+#include "stored_printer.h"
 #include "test_reader.h"
 
 namespace libasm {
@@ -69,7 +69,7 @@ void test_encoder() {
     BinMemory memory;
     WRITE_BLOCK(memory, 0x123400, block1);
 
-    TestPrinter out;
+    StoredPrinter out;
     encoder.reset(ADDRESS_16BIT, 32);
     encoder.encode(memory, out);
     EQ("lines", 2, out.size());
@@ -115,7 +115,7 @@ void test_encoder_blocks() {
     WRITE_BLOCK(memory, 0x1234, block1);
     WRITE_BLOCK(memory, 0xFF00, block2);
 
-    TestPrinter out;
+    StoredPrinter out;
     encoder.reset(ADDRESS_16BIT, 16);
     encoder.encode(memory, out);
     EQ("lines", 5, out.size());

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_PRINTER_H__
-#define __TEST_PRINTER_H__
+#ifndef __STORED_PRINTER_H__
+#define __STORED_PRINTER_H__
 
 #include "text_printer.h"
 
@@ -27,11 +27,10 @@
 
 namespace libasm {
 namespace driver {
-namespace test {
 
-class TestPrinter : public TextPrinter {
+class StoredPrinter : public TextPrinter {
 public:
-    TestPrinter() : _buffer() {}
+    StoredPrinter() : _buffer() {}
 
     void println(const char *text) override {
         _buffer += text;
@@ -67,7 +66,6 @@ private:
     }
 };
 
-}  // namespace test
 }  // namespace driver
 }  // namespace libasm
 

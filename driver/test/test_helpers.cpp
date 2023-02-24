@@ -15,7 +15,7 @@
  */
 
 #include "test_memory.h"
-#include "test_printer.h"
+#include "stored_printer.h"
 #include "test_reader.h"
 #include "test_sources.h"
 
@@ -29,8 +29,8 @@ void set_up() {}
 
 void tear_down() {}
 
-void test_printer() {
-    TestPrinter out;
+void stored_printer() {
+    StoredPrinter out;
 
     EQ("empty", 0, out.size());
 
@@ -230,7 +230,7 @@ void test_sources() {
 }
 
 void run_tests() {
-    RUN_TEST(test_printer);
+    RUN_TEST(stored_printer);
     RUN_TEST(test_reader);
     RUN_TEST(test_memory);
     RUN_TEST(test_sources);
