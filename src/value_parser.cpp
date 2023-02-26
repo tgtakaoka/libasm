@@ -546,6 +546,8 @@ Error IntelValueParser::readNumber(StrScanner &scan, Value &val) {
         radix = RADIX_16;
     } else if (scanNumberEnd(scan, RADIX_8, suffix = 'O') == OK) {
         radix = RADIX_8;
+    } else if (scanNumberEnd(scan, RADIX_8, suffix = 'Q') == OK) {
+        radix = RADIX_8;
     } else if (scanNumberEnd(scan, RADIX_2, suffix = 'B') == OK) {
         radix = RADIX_2;
     }

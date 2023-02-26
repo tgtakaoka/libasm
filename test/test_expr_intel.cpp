@@ -61,21 +61,21 @@ static void test_hex_constant() {
 static void test_oct_constant() {
     E8("0O",   0x00, OK);
     E8("177O", 0x7f, OK);
-    E8("200O", 0x80, OK);
+    E8("200Q", 0x80, OK);
     E8("377O", 0xff, OK);
-    E8("400O", 0,    OVERFLOW_RANGE);
+    E8("400Q", 0,    OVERFLOW_RANGE);
 
-    E16("0O",      0x0000, OK);
+    E16("0Q",      0x0000, OK);
     E16("77777O",  0x7fff, OK);
-    E16("100000O", 0x8000, OK);
-    E16("177777o", 0xffff, OK);
+    E16("100000o", 0x8000, OK);
+    E16("177777q", 0xffff, OK);
     E16("200000O", 0,      OVERFLOW_RANGE);
 
     E32("0O",           0x00000000, OK);
     E32("17777777777O", 0x7fffffff, OK);
     E32("20000000000o", 0x80000000, OK);
     E32("37777777777O", 0xffffffff, OK);
-    E32("40000000000O", 0,          OVERFLOW_RANGE);
+    E32("40000000000Q", 0,          OVERFLOW_RANGE);
 
     E32("00",           0x00000000, OK);
     E32("017777777777", 0x7fffffff, OK);
