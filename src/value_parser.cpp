@@ -157,7 +157,7 @@ StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
             if (readNumber(p, val) == OK)
                 continue;
         }
-        if (p.expect('\'')) {
+        if (charPrefix(p)) {
             readChar(p);
             if (isOK() && p.expect('\''))
                 continue;
@@ -226,7 +226,7 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
         }
         return value;
     }
-    if (p.expect('\'')) {
+    if (charPrefix(p)) {
         Value value(readCharacterConstant(p));
         if (isOK() && !p.expect('\''))
             setError(p, MISSING_CLOSING_QUOTE);
@@ -466,6 +466,10 @@ bool ValueParser::locationSymbol(StrScanner &scan) const {
     return (scan.expect(_locSym) || scan.expect('.')) && !symbolLetter(*scan);
 }
 
+bool ValueParser::charPrefix(StrScanner &scan) const {
+    return scan.expect('\'');
+}
+
 bool ValueParser::numberPrefix(const StrScanner &scan) const {
     StrScanner p(scan);
     return p.expect('0') && (p.iexpect('X') || p.iexpect('B'));
@@ -600,6 +604,15 @@ Error NationalValueParser::readNumber(StrScanner &scan, Value &val) {
 
 bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
     return (scan.expect('*') || scan.expect('$')) && !symbolLetter(*scan);
+}
+
+bool FairchildValueParser::charPrefix(StrScanner &scan) const {
+    StrScanner p(scan);
+    if (p.iexpect('c') && p.expect('\'')) {
+        scan = p;
+        return true;
+    }
+    return ValueParser::charPrefix(scan);
 }
 
 bool FairchildValueParser::symbolLetter(char c, bool head) const {

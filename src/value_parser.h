@@ -72,6 +72,7 @@ public:
 
 protected:
     virtual bool locationSymbol(StrScanner &scan) const;
+    virtual bool charPrefix(StrScanner &scan) const;
     virtual bool numberPrefix(const StrScanner &scan) const;
     virtual Error readNumber(StrScanner &scan, Value &val);
     Error parseNumber(StrScanner &scan, Value &val, const Radix radix);
@@ -172,6 +173,7 @@ public:
 protected:
     bool locationSymbol(StrScanner &scan) const override;
     bool symbolLetter(char c, bool head = false) const override;
+    bool charPrefix(StrScanner &scan) const override;
     bool numberPrefix(const StrScanner &scan) const override;
 };
 

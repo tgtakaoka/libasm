@@ -58,15 +58,15 @@ void test_accumlator() {
     TEST("LI  0",     0x20, 0x00);
     TEST("LI  H'FF'", 0x20, 0xFF);
     TEST("NI  1",     0x21, 0x01);
-    TEST("NI  H'FE'", 0x21, 0xFE);
+    TEST("NI  -D'2'", 0x21, 0xFE);
     TEST("OI  2",     0x22, 0x02);
-    TEST("OI  H'FD'", 0x22, 0xFD);
-    TEST("XI  3",     0x23, 0x03);
-    TEST("XI  H'FC'", 0x23, 0xFC);
+    TEST("OI  -3",    0x22, 0xFD);
+    TEST("XI  O'030", 0x23, 0x18);
+    TEST("XI  B'11111100'", 0x23, 0xFC);
     TEST("AI  4",     0x24, 0x04);
-    TEST("AI  H'FB'", 0x24, 0xFB);
+    TEST("AI  C'F'",  0x24, 0x46);
     TEST("CI  5",     0x25, 0x05);
-    TEST("CI  H'FA'", 0x25, 0xFA);
+    TEST("CI  'f'",   0x25, 0x66);
 }
 
 void test_status() {
