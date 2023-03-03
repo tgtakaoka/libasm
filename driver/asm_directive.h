@@ -66,16 +66,21 @@ protected:
     Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint32sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint32sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
     // PseudoHanlder helper
     Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor);
-    Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, size_t unit);
+    Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int width);
+    Error setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver);
 };
 
 class MotorolaDirective : public AsmDirective {

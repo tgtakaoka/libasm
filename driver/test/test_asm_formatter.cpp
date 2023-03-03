@@ -405,15 +405,34 @@ void test_f3850() {
 void test_i8086() {
     PREP(i8086::AsmI8086, IntelDirective);
 
+    TestReader inc("data/db.inc");
+    sources.add(inc);
+    inc.add("        ds     3\n"
+            "        db     1\n"
+            "        dd     12345678H, 9abcdef0H\n"
+            "        dw     1234H, 5678H, 9abcH\n"
+            "        db     'a', 'bcd''fgh', 0\n"
+            "        db     'A', '''', 'C'+80H, 'a''c'\n");
+
     listing.setUpperHex(false);
 
     ASM("i8086",
             "        cpu    i8086\n"
             "        org    0bcdefh\n"
-            "        test   word ptr [bp+di+0feffh], 0bbaah\n",
+            "        test   word ptr [bp+di+0feffh], 0bbaah\n"
+            "        include 'data/db.inc'\n",
             "          0 :                            cpu    i8086\n"
             "      bcdef :                            org    0bcdefh\n"
-            "      bcdef : f7 83 ff fe aa bb          test   word ptr [bp+di+0feffh], 0bbaah\n");
+            "      bcdef : f7 83 ff fe aa bb          test   word ptr [bp+di+0feffh], 0bbaah\n"
+            "      bcdf5 :                            include 'data/db.inc'\n"
+            "(1)   bcdf5 :                            ds     3\n"
+            "(1)   bcdf8 : 01                         db     1\n"
+            "(1)   bcdf9 : 78 56 34 12 f0 de          dd     12345678H, 9abcdef0H\n"
+            "      bcdff : bc 9a\n"
+            "(1)   bce01 : 34 12 78 56 bc 9a          dw     1234H, 5678H, 9abcH\n"
+            "(1)   bce07 : 61 62 63 64 27 66          db     'a', 'bcd''fgh', 0\n"
+            "      bce0d : 67 68 00\n"
+            "(1)   bce10 : 41 27 c3 61 27 63          db     'A', '''', 'C'+80H, 'a''c'\n");
 }
 
 void test_tms9900() {
@@ -452,7 +471,11 @@ void test_mc68000() {
 
     TestReader inc("data/dc.inc");
     sources.add(inc);
-    inc.add("        dc.l    $12345678, $9abcdef0\n"
+    inc.add("        dc.b    1\n"
+            "        dc.l    $12345678, $9abcdef0\n"
+            "        dc.b    2\n"
+            "        ds.l    1\n"
+            "        ds.b    3\n"
             "        dc.w    $1234, $5678, $9abc\n"
             "        dc.b    'a', 'bcd''fgh', 0\n"
             "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");
@@ -469,12 +492,16 @@ void test_mc68000() {
             "     9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "     9abce4 : 00c2 c3c4\n"
             "     9abce8 :                            include \"data/dc.inc\"\n"
-            "(1)  9abce8 : 1234 5678 9abc             dc.l    $12345678, $9abcdef0\n"
-            "     9abcee : def0\n"
-            "(1)  9abcf0 : 1234 5678 9abc             dc.w    $1234, $5678, $9abc\n"
-            "(1)  9abcf6 : 6162 6364 2766             dc.b    'a', 'bcd''fgh', 0\n"
-            "     9abcfc : 6768 00\n"
-            "(1)  9abcff : 4127 c361 2763             dc.b    'A', '''', 'C'+$80, 'a''c'\n");
+            "(1)  9abce8 : 01                         dc.b    1\n"
+            "(1)  9abcea : 1234 5678 9abc             dc.l    $12345678, $9abcdef0\n"
+            "     9abcf0 : def0\n"
+            "(1)  9abcf2 : 02                         dc.b    2\n"
+            "(1)  9abcf4 :                            ds.l    1\n"
+            "(1)  9abcf8 :                            ds.b    3\n"
+            "(1)  9abcfc : 1234 5678 9abc             dc.w    $1234, $5678, $9abc\n"
+            "(1)  9abd02 : 6162 6364 2766             dc.b    'a', 'bcd''fgh', 0\n"
+            "     9abd08 : 6768 00\n"
+            "(1)  9abd0b : 4127 c361 2763             dc.b    'A', '''', 'C'+$80, 'a''c'\n");
 }
 
 void test_ns32000() {

@@ -50,6 +50,15 @@ Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver
     return setOK();
 }
 
+Error AsmDirective::setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver) {
+    const auto addr = (driver.origin() + (alignment - 1)) & ~(alignment - 1);
+    if (assembler().checkAddress(addr, *this))
+        return setError(assembler());
+    driver.setOrigin(addr);
+    list.setStartAddress(driver.origin());
+    return setOK();
+}
+
 Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     const StrScanner line = scan;
     ValueParser &parser = assembler().parser();
@@ -61,17 +70,11 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
+    setAt(line);
     const auto alignment = value.getUnsigned();
     if (alignment > 0x1000)
         setError(ILLEGAL_OPERAND);
-    const auto origin = driver.origin();
-    list.setStartAddress(origin);
-    const auto addr = (origin + (alignment - 1)) & ~(alignment - 1);
-    setAt(line);
-    if (assembler().checkAddress(addr, *this))
-        return setError(assembler());
-    driver.setOrigin(addr);
-    return setOK();
+    return setAlignment(alignment, list, driver);
 }
 
 Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -228,6 +231,16 @@ Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDrive
     return setOK();
 }
 
+Error AsmDirective::defineUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    setAlignment(2, list, driver);
+    return defineUint16s(scan, list, driver);
+}
+
+Error AsmDirective::defineUint32sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    setAlignment(2, list, driver);
+    return defineUint32s(scan, list, driver);
+}
+
 Error AsmDirective::allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     return allocateSpaces(scan, list, driver, sizeof(uint8_t));
 }
@@ -240,8 +253,20 @@ Error AsmDirective::allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDri
     return allocateSpaces(scan, list, driver, sizeof(uint32_t));
 }
 
+Error AsmDirective::allocateUint16sAligned(
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    setAlignment(2, list, driver);
+    return allocateUint16s(scan, list, driver);
+}
+
+Error AsmDirective::allocateUint32sAligned(
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    setAlignment(2, list, driver);
+    return allocateUint32s(scan, list, driver);
+}
+
 Error AsmDirective::allocateSpaces(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, size_t unit) {
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int spaceUnit) {
     ValueParser &parser = assembler().parser();
     Value value = parser.eval(scan, &driver);
     if (setError(parser))
@@ -250,10 +275,11 @@ Error AsmDirective::allocateSpaces(
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
         return setError(OVERFLOW_RANGE);
-    const auto size = value.getUnsigned() * unit;
+    const auto size = value.getUnsigned() * spaceUnit;
     const auto origin = driver.origin();
     if (origin + size < origin)
         return setError(OVERFLOW_RANGE);
+    const uint8_t unit = assembler().config().addressUnit();
     driver.setOrigin(origin + ((size + unit - 1) & -unit) / unit);
     return setOK();
 }
@@ -340,11 +366,11 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(".word", &AsmDirective::defineUint16s);
     registerPseudo(".long", &AsmDirective::defineUint32s);
     registerPseudo("dc.b", &AsmDirective::defineUint8s);
-    registerPseudo("dc.w", &AsmDirective::defineUint16s);
-    registerPseudo("dc.l", &AsmDirective::defineUint32s);
+    registerPseudo("dc.w", &AsmDirective::defineUint16sAligned);
+    registerPseudo("dc.l", &AsmDirective::defineUint32sAligned);
     registerPseudo("ds.b", &AsmDirective::allocateUint8s);
-    registerPseudo("ds.w", &AsmDirective::allocateUint16s);
-    registerPseudo("ds.l", &AsmDirective::allocateUint32s);
+    registerPseudo("ds.w", &AsmDirective::allocateUint16sAligned);
+    registerPseudo("ds.l", &AsmDirective::allocateUint32sAligned);
     registerPseudo(".function", &AsmDirective::defineFunction);
 }
 
