@@ -163,9 +163,10 @@ StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
             if (setError(_numberParser.readNumber(p, val)) == OK)
                 continue;
         }
-        if (charPrefix(p)) {
+        char prefix;
+        if (charPrefix(p, prefix)) {
             readChar(p);
-            if (isOK() && p.expect('\''))
+            if (isOK() && charSuffix(p, prefix))
                 continue;
         }
         if (*p == delim)
@@ -232,9 +233,10 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
         }
         return value;
     }
-    if (charPrefix(p)) {
+    char prefix;
+    if (charPrefix(p, prefix)) {
         Value value(readCharacterConstant(p));
-        if (isOK() && !p.expect('\''))
+        if (isOK() && !charSuffix(p, prefix))
             setError(p, MISSING_CLOSING_QUOTE);
         scan = p;
         return value;
@@ -470,8 +472,12 @@ bool ValueParser::locationSymbol(StrScanner &scan) const {
     return (scan.expect(_locSym) || scan.expect('.')) && !symbolLetter(*scan);
 }
 
-bool ValueParser::charPrefix(StrScanner &scan) const {
-    return scan.expect('\'');
+bool ValueParser::charPrefix(StrScanner &scan, char &prefix) const {
+    return (prefix = scan.expect('\''));
+}
+
+bool ValueParser::charSuffix(StrScanner &scan, char prefix) const {
+    return scan.expect(prefix);
 }
 
 bool NumberParser::numberPrefix(const StrScanner &scan) const {
@@ -516,6 +522,10 @@ Error NumberParser::readNumber(StrScanner &scan, Value &val) {
         setError(scan, ILLEGAL_CONSTANT);
     parseNumber(p, val, radix);
     return setError(expectNumberSuffix(scan = p));
+}
+
+bool MotorolaValueParser::charSuffix(StrScanner &scan, char prefix) const {
+    return scan.expect('\'') || !_closingQuote;
 }
 
 bool MotorolaNumberParser::numberPrefix(const StrScanner &scan) const {
@@ -617,13 +627,21 @@ bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
     return scan.expect('*') || (!NUMBER_PARSER.numberPrefix(scan) && scan.expect('$'));
 }
 
-bool FairchildValueParser::charPrefix(StrScanner &scan) const {
+bool FairchildValueParser::charPrefix(StrScanner &scan, char &prefix) const {
     StrScanner p(scan);
     if (p.iexpect('c') && p.expect('\'')) {
+        prefix = 'C';
         scan = p;
         return true;
     }
-    return ValueParser::charPrefix(scan);
+    return ValueParser::charPrefix(scan, prefix);
+}
+
+bool FairchildValueParser::charSuffix(StrScanner &scan, char prefix) const {
+    if (prefix == 'C')
+        return scan.expect('\'');  // closing quote is necessary for C'x'.
+    scan.expect('\'');             // closing quote is optional for 'x'
+    return true;
 }
 
 bool FairchildValueParser::symbolLetter(char c, bool head) const {

@@ -85,8 +85,10 @@ void test_mc6809() {
     TestReader inc("data/fdb.inc");
     sources.add(inc);
     inc.add("        fdb   $1234, $5678, $9abc\n"
-            "        fcc   /abcdef''ijklmn/\n"
-            "        fcb   'A','''','C'+$80,'a''c'\n");
+            "        fcc   /a,/, /bc''de/\n"                // FCC requires surrounding quotes
+            "        fcc   'a,', 'bc\\'\\'de'\n"            // FCC can accept string
+            "        fcb   'a, ',, '/, ' , 0\n"             // FCB can omit closing quote
+            "        fcb   'A', '''', 'C'+$80, 'a''c'\n");  // FCB can accept closing quote
 
     listing.setUpperHex(true);
     listing.enableLineNumber(true);
@@ -102,11 +104,13 @@ void test_mc6809() {
             "       3/    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y] ; indirect\n"
             "       4/    ABD2 :                            include \"data/fdb.inc\"\n"
             "(1)    1/    ABD2 : 12 34 56 78 9A BC          fdb   $1234, $5678, $9abc\n"
-            "(1)    2/    ABD8 : 61 62 63 64 65 66          fcc   /abcdef''ijklmn/\n"
-            "             ABDE : 27 27 69 6A 6B 6C\n"
-            "             ABE4 : 6D 6E\n"
-            "(1)    3/    ABE6 : 41 27 C3 61 27 63          fcb   'A','''','C'+$80,'a''c'\n"
-            "       5/    ABEC :                            setdp $ff00\n");
+            "(1)    2/    ABD8 : 61 2C 62 63 27 27          fcc   /a,/, /bc''de/\n"
+            "             ABDE : 64 65\n"
+            "(1)    3/    ABE0 : 61 2C 62 63 27 27          fcc   'a,', 'bc\\'\\'de'\n"
+            "             ABE6 : 64 65\n"
+            "(1)    4/    ABE8 : 61 2C 2F 20 00             fcb   'a, ',, '/, ' , 0\n"
+            "(1)    5/    ABED : 41 27 C3 61 27 63          fcb   'A', '''', 'C'+$80, 'a''c'\n"
+            "       5/    ABF3 :                            setdp $ff00\n");
 }
 
 void test_mc6800() {
@@ -239,9 +243,9 @@ void test_z80() {
     TestReader inc("data/db.inc");
     sources.add(inc);
     inc.add("        dw    1234H, 5678H, 9ABCH\n"
-            "        db    'a','bcd''fg',0\n"
-            "        ds    2\n"
-            "        db    'A','''','C'+80H,'a''c'\n");
+            "        db    'a,', 'bc''de', 0\n"  // DB requires surrounding quotes
+            "        ds    2\n"                  // DS allocate spaces
+            "        db    'A', '''', 'C'+80H, 'a''c'\n");
 
     listing.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
@@ -255,10 +259,10 @@ void test_z80() {
             "       abcd :                            org   0abcdh\n"
             "       abcd :                            include \"data/db.inc\"\n"
             "(1)    abcd : 34 12 78 56 bc 9a          dw    1234H, 5678H, 9ABCH\n"
-            "(1)    abd3 : 61 62 63 64 27 66          db    'a','bcd''fg',0\n"
-            "       abd9 : 67 00\n"
+            "(1)    abd3 : 61 2c 62 63 27 64          db    'a,', 'bc''de', 0\n"
+            "       abd9 : 65 00\n"
             "(1)    abdb :                            ds    2\n"
-            "(1)    abdd : 41 27 c3 61 27 63          db    'A','''','C'+80H,'a''c'\n"
+            "(1)    abdd : 41 27 c3 61 27 63          db    'A', '''', 'C'+80H, 'a''c'\n"
             "       abe3 : fd cb 80 86                res   0, (iy-128)\n");
 }
 
@@ -373,10 +377,11 @@ void test_f3850() {
 
     TestReader inc("data/da.inc");
     sources.add(inc);
-    inc.add("        rs    3\n"
-            "        da    H'1234', label1, H'9ABC'\n"
-            "        dc    'a','bcdefg',0\n"
-            "        dc    C'A',c'B',C'C'+h'80'\n");
+    inc.add("        rs    3\n"                         // RS allocates spaces
+            "        da    H'1234', label1, H'9ABC'\n"  // DA generates words
+            "        dc    'a, ',, '/, ' , 0\n"         // DC can omit closing quote
+            "        dc    \"a,\", \"bc''de\", 0\n"     // DC can accept string
+            "        dc    C'A', c'B', C'C'+h'80'\n");  // C'c' requires surrounding quotes
 
     driver.internSymbol(0x7bd0, "label1");
 
@@ -397,9 +402,10 @@ void test_f3850() {
             "       7BD2 :                            include \"data/da.inc\"\n"
             "(1)    7BD2 :                            rs    3\n"
             "(1)    7BD5 : 12 34 7B D0 9A BC          da    H'1234', label1, H'9ABC'\n"
-            "(1)    7BDB : 61 62 63 64 65 66          dc    'a','bcdefg',0\n"
-            "       7BE1 : 67 00\n"
-            "(1)    7BE3 : 41 42 C3                   dc    C'A',c'B',C'C'+h'80'\n");
+            "(1)    7BDB : 61 2C 2F 20 00             dc    'a, ',, '/, ' , 0\n"
+            "(1)    7BE0 : 61 2C 62 63 27 64          dc    \"a,\", \"bc''de\", 0\n"
+            "       7BE6 : 65 00\n"
+            "(1)    7BE8 : 41 42 C3                   dc    C'A', c'B', C'C'+h'80'\n");
 }
 
 void test_i8086() {
@@ -407,11 +413,11 @@ void test_i8086() {
 
     TestReader inc("data/db.inc");
     sources.add(inc);
-    inc.add("        ds     3\n"
-            "        db     1\n"
-            "        dd     12345678H, 9abcdef0H\n"
-            "        dw     1234H, 5678H, 9abcH\n"
-            "        db     'a', 'bcd''fgh', 0\n"
+    inc.add("        ds     3\n"                     // DS allocates spaces
+            "        db     1\n"                     // DB generates bytes
+            "        dd     12345678H, 9abcdef0H\n"  // DD doesn't care alignment
+            "        dw     1234H, 5678H, 9abcH\n"   // DW doesn't care alignment
+            "        db     'a,', 'bc''de', 0\n"
             "        db     'A', '''', 'C'+80H, 'a''c'\n");
 
     listing.setUpperHex(false);
@@ -430,9 +436,9 @@ void test_i8086() {
             "(1)   bcdf9 : 78 56 34 12 f0 de          dd     12345678H, 9abcdef0H\n"
             "      bcdff : bc 9a\n"
             "(1)   bce01 : 34 12 78 56 bc 9a          dw     1234H, 5678H, 9abcH\n"
-            "(1)   bce07 : 61 62 63 64 27 66          db     'a', 'bcd''fgh', 0\n"
-            "      bce0d : 67 68 00\n"
-            "(1)   bce10 : 41 27 c3 61 27 63          db     'A', '''', 'C'+80H, 'a''c'\n");
+            "(1)   bce07 : 61 2c 62 63 27 64          db     'a,', 'bc''de', 0\n"
+            "      bce0d : 65 00\n"
+            "(1)   bce0f : 41 27 c3 61 27 63          db     'A', '''', 'C'+80H, 'a''c'\n");
 }
 
 void test_tms9900() {
@@ -471,14 +477,15 @@ void test_mc68000() {
 
     TestReader inc("data/dc.inc");
     sources.add(inc);
-    inc.add("        dc.b    1\n"
-            "        dc.l    $12345678, $9abcdef0\n"
-            "        dc.b    2\n"
-            "        ds.l    1\n"
-            "        ds.b    3\n"
-            "        dc.w    $1234, $5678, $9abc\n"
-            "        dc.b    'a', 'bcd''fgh', 0\n"
-            "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");
+    inc.add("        dc.b    1\n"                     // DC.B negerates bytes
+            "        dc.l    $12345678, $9abcdef0\n"  // DC.L requires 2 byte alignment
+            "        dc.b    2\n"                     // DC.B generates bytes
+            "        ds.l    1\n"                     // DS.L allocates 2 byte aligned spaces
+            "        ds.b    3\n"                     // DS.B allocates spaces
+            "        dc.w    $1234, $5678, $9abc\n"   // DC.W requires 2 byte alignment
+            "        dc.b    'a,', 'bc''de', 4, 0\n"  // DC.B can generate odd bytes
+            "        ds.w    1\n"                     // DS.W allocates 2 byte aligned spaces
+            "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");  // DC.B doesn' care alignment
 
     listing.setUpperHex(false);
 
@@ -499,9 +506,10 @@ void test_mc68000() {
             "(1)  9abcf4 :                            ds.l    1\n"
             "(1)  9abcf8 :                            ds.b    3\n"
             "(1)  9abcfc : 1234 5678 9abc             dc.w    $1234, $5678, $9abc\n"
-            "(1)  9abd02 : 6162 6364 2766             dc.b    'a', 'bcd''fgh', 0\n"
-            "     9abd08 : 6768 00\n"
-            "(1)  9abd0b : 4127 c361 2763             dc.b    'A', '''', 'C'+$80, 'a''c'\n");
+            "(1)  9abd02 : 612c 6263 2764             dc.b    'a,', 'bc''de', 4, 0\n"
+            "     9abd08 : 6504 00\n"
+            "(1)  9abd0c :                            ds.w    1\n"
+            "(1)  9abd0e : 4127 c361 2763             dc.b    'A', '''', 'C'+$80, 'a''c'\n");
 }
 
 void test_ns32000() {

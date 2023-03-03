@@ -115,20 +115,37 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver 
     return setError(driver.openSource(filename));
 }
 
-Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineBytes(scan, list, driver, false);
-}
-
-Error AsmDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineBytes(scan, list, driver, true);
-}
-
-Error AsmDirective::defineBytes(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor) {
+Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     ValueParser &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
-    for (;;) {
+    do {
+        const char delim = *scan.skipSpaces()++;
+        StrScanner p(scan);
+        while (!p.expect(delim)) {
+            if (*p == 0)
+                return setError(p, MISSING_CLOSING_DELIMITOR);
+            const char c = parser.readChar(p);
+            if (setError(parser)) {
+                scan = p;
+                return getError();
+            }
+            list.emitByte(base, c);
+        }
+        scan = p;
+    } while (scan.skipSpaces().expect(','));
+    scan.skipSpaces();
+    if (!assembler().endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
+    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
+    return setOK();
+}
+
+Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    ValueParser &parser = assembler().parser();
+    const uint8_t unit = assembler().config().addressUnit();
+    const uint32_t base = driver.origin() * unit;
+    do {
         StrScanner p(scan.skipSpaces());
         Value value = parser.eval(p, &driver);
         if (parser.isOK() && !(*scan == '\'' && *p == '\'')) {
@@ -140,26 +157,19 @@ Error AsmDirective::defineBytes(
                 return setError(OVERFLOW_RANGE);
             const uint8_t val8 = value.getUnsigned();
             list.emitByte(base, val8);
-        } else if (*scan == '"' || *scan == '\'' || delimitor) {
-            // a string surrounded by double quotes, single quotes, or explicit delimitors
+        } else if (*scan == '"' || *scan == '\'') {
+            // a string surrounded by double quotes, single quotes
             const char delim = *scan++;
             StrScanner p(scan);
             for (;;) {
-                if (!delimitor && *p == '\'' && p[1] == '\'') {
+                if (*p == '\'' && p[1] == '\'') {
                     ++p;  // inside a string, two successive apostrophe is an apostrophe
                 } else if (p.expect(delim)) {
                     break;
                 }
-                if (*p == 0) {
-                    switch (delim) {
-                    case '\'':
-                        return setError(p, MISSING_CLOSING_QUOTE);
-                    case '"':
-                        return setError(p, MISSING_CLOSING_DQUOTE);
-                    default:
-                        return setError(p, MISSING_CLOSING_DELIMITOR);
-                    }
-                }
+                if (*p == 0)
+                    return setError(
+                            p, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
                 const char c = parser.readChar(p);
                 if (setError(parser)) {
                     scan = p;
@@ -171,9 +181,10 @@ Error AsmDirective::defineBytes(
         } else {
             return setError(parser);
         }
-        if (!scan.skipSpaces().expect(','))
-            break;
-    }
+    } while (scan.skipSpaces().expect(','));
+    scan.skipSpaces();
+    if (!assembler().endOfLine(*scan))
+        return setError(scan, GARBAGE_AT_END);
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setOK();
 }
@@ -391,7 +402,7 @@ Error AsmDirective::processPseudo(
 
 MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {
     registerPseudo(".fcb", &MotorolaDirective::defineUint8s);
-    registerPseudo(".fcc", &MotorolaDirective::defineString);
+    registerPseudo(".fcc", reinterpret_cast<PseudoHandler>(&MotorolaDirective::defineString));
     registerPseudo(".fdb", &MotorolaDirective::defineUint16s);
     registerPseudo(".rmb", &MotorolaDirective::allocateUint8s);
     registerPseudo(".dfs", &MotorolaDirective::allocateUint8s);

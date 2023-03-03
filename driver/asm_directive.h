@@ -63,7 +63,6 @@ protected:
     Error defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
@@ -87,6 +86,9 @@ class MotorolaDirective : public AsmDirective {
 public:
     MotorolaDirective(Assembler &assembler);
     BinEncoder &defaultEncoder() override;
+
+private:
+    Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
 class IntelDirective : public AsmDirective {

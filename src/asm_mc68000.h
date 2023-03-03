@@ -28,7 +28,10 @@ namespace mc68000 {
 
 class AsmMc68000 : public Assembler, public Config {
 public:
-    AsmMc68000() : Assembler(_parser, TableMc68000::TABLE), _parser() { reset(); }
+    AsmMc68000()
+        : Assembler(_parser, TableMc68000::TABLE), _parser(/*closingQuote*/ true) {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
@@ -55,7 +58,12 @@ private:
         uint32_t val32;
         StrScanner list;
         Operand()
-            : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0), list() {}
+            : mode(M_NONE),
+              reg(REG_UNDEF),
+              indexReg(REG_UNDEF),
+              indexSize(SZ_NONE),
+              val32(0),
+              list() {}
         Config::uintptr_t offset(const InsnMc68000 &insn) const;
     };
 

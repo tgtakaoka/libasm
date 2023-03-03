@@ -67,6 +67,7 @@ class FairchildNumberParser : public NumberParser {
 public:
     bool numberPrefix(const StrScanner &scan) const override;
     Error readNumber(StrScanner &scan, Value &val) override;
+
 private:
     MotorolaNumberParser _motorola;
     NationalNumberParser _national;
@@ -116,7 +117,8 @@ public:
 
 protected:
     virtual bool locationSymbol(StrScanner &scan) const;
-    virtual bool charPrefix(StrScanner &scan) const;
+    virtual bool charPrefix(StrScanner &scan, char &prefix) const;
+    virtual bool charSuffix(StrScanner &scan, char prefix) const;
 
 private:
     NumberParser &_numberParser;
@@ -182,9 +184,15 @@ private:
 
 class MotorolaValueParser : public ValueParser {
 public:
-    MotorolaValueParser() : ValueParser('*', NUMBER_PARSER) {}
+    MotorolaValueParser(bool closingQuote = false)
+        : ValueParser('*', NUMBER_PARSER), _closingQuote(closingQuote) {}
+
+protected:
+    bool charSuffix(StrScanner &scan, char prefix) const override;
 
 private:
+    bool _closingQuote;
+
     static MotorolaNumberParser NUMBER_PARSER;
 };
 
@@ -215,7 +223,8 @@ public:
 protected:
     bool locationSymbol(StrScanner &scan) const override;
     bool symbolLetter(char c, bool head = false) const override;
-    bool charPrefix(StrScanner &scan) const override;
+    bool charPrefix(StrScanner &scan, char &prefix) const override;
+    bool charSuffix(StrScanner &scan, char prefix) const override;
 
 private:
     static FairchildNumberParser NUMBER_PARSER;

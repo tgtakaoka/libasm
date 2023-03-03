@@ -32,27 +32,55 @@ static void tear_down() {
 
 // clang-format off
 static void test_char_constant() {
-    E8("c'a'",    0x61, OK);
-    E8("C'a'+5",  0x66, OK);
-    E8("5+c'a'",  0x66, OK);
-    E8("c'\\''",  0x27, OK);
-    E8("C'\\\"'", 0x22, OK);
-    E8("'\\?'",  0x3F, OK);
-    E8("C'\\\\'", 0x5C, OK);
-    E8("'\\b'",  0x08, OK);
-    E8("c'\\t'",  0x09, OK);
-    E8("'\\n'",  0x0A, OK);
-    E8("c'\\r'",  0x0D, OK);
-    E8("c'\\X0'", 0x00, OK);
+    E8("'a'",     0x61, OK);
+    E8("'a'+5",   0x66, OK);
+    E8("5+'a'",   0x66, OK);
+    E8("'a",      0x61, OK);
+    E8("'a+5",    0x66, OK);
+    E8("5+'a",    0x66, OK);
+    E8("' ",      0x20, OK);
+    E8("''",      0x27, OK);
+    E8("'\\''",   0x27, OK);
+    E8("'\\\"'",  0x22, OK);
+    E8("'\\?'",   0x3F, OK);
+    E8("'\\\\'",  0x5C, OK);
+    E8("'\\b'",   0x08, OK);
+    E8("'\\t'",   0x09, OK);
+    E8("'\\n'",   0x0A, OK);
+    E8("'\\r'",   0x0D, OK);
+    E8("'\\X0'",  0x00, OK);
+    E8("'\\xfF'", 0xFF, OK);
+    E8("'\\0'",   0x00, OK);
+    E8("'\\377'", 0xFF, OK);
+
+    E8("'\\x100'", 0, OVERFLOW_RANGE);
+    E8("'\\400'",  0, OVERFLOW_RANGE);
+    E8("'\\z'",    0, UNKNOWN_ESCAPE_SEQUENCE);
+
+    E8("c'a'",     0x61, OK);
+    E8("C'a'+5",   0x66, OK);
+    E8("5+c'a'",   0x66, OK);
+    E8("c'a",      0,    MISSING_CLOSING_QUOTE);
+    E8("C'a+5",    0,    MISSING_CLOSING_QUOTE);
+    E8("5+c'a",    0,    MISSING_CLOSING_QUOTE);
+    E8("c' ",      0,    MISSING_CLOSING_QUOTE);
+    E8("c''",      0,    MISSING_CLOSING_QUOTE);
+    E8("c'\\''",   0x27, OK);
+    E8("C'\\\"'",  0x22, OK);
+    E8("'\\?'",    0x3F, OK);
+    E8("C'\\\\'",  0x5C, OK);
+    E8("'\\b'",    0x08, OK);
+    E8("c'\\t'",   0x09, OK);
+    E8("'\\n'",    0x0A, OK);
+    E8("c'\\r'",   0x0D, OK);
+    E8("c'\\X0'",  0x00, OK);
     E8("C'\\xfF'", 0xFF, OK);
-    E8("c'\\0'",  0x00, OK);
+    E8("c'\\0'",   0x00, OK);
     E8("c'\\377'", 0xFF, OK);
 
-    E8("C'\\x100'", 0,  OVERFLOW_RANGE);
-    E8("'\\400'", 0,   OVERFLOW_RANGE);
-    E8("C''",     0,    MISSING_CLOSING_QUOTE);
-    E8("C'a",     0,    MISSING_CLOSING_QUOTE);
-    E8("c'\\Z'",  0,    UNKNOWN_ESCAPE_SEQUENCE);
+    E8("C'\\x100'", 0, OVERFLOW_RANGE);
+    E8("'\\400'",   0, OVERFLOW_RANGE);
+    E8("c'\\Z'",    0, UNKNOWN_ESCAPE_SEQUENCE);
 
     E16("'a'", 0x61, OK);
     E32("'a'", 0x61, OK);
