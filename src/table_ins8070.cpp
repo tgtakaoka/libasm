@@ -40,6 +40,7 @@ namespace ins8070 {
 static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E0(0x00, TEXT_NOP),
     E2(0x01, TEXT_XCH,  M_AR,   M_ER,   BYTE),
+    E2(0x01, TEXT_XCH,  M_ER,   M_AR,   BYTE),
     E2(0x06, TEXT_LD,   M_AR,   M_SR,   BYTE),
     E2(0x07, TEXT_LD,   M_SR,   M_AR,   BYTE),
     E1(0x08, TEXT_PUSH, M_EA,   WORD),
@@ -71,6 +72,7 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
     E2(0x44, TEXT_LD,   M_PTR,  M_EA,   WORD),
     E2(0x48, TEXT_LD,   M_ER,   M_AR,   BYTE),
     E2(0x4C, TEXT_XCH,  M_EA,   M_PTR,  WORD),
+    E2(0x4C, TEXT_XCH,  M_PTR,  M_EA,   WORD),
     E2(0x50, TEXT_AND,  M_AR,   M_ER,   BYTE),
     U1(0x55, TEXT_PUSH, M_SP), // undefined PUSH SP
     E1(0x54, TEXT_PUSH, M_PTR,  WORD),
@@ -109,74 +111,76 @@ static constexpr Entry TABLE_INS8070[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_INS8070[] PROGMEM = {
-     44,  // TEXT_ADD
-     58,  // TEXT_ADD
-     66,  // TEXT_ADD
-     22,  // TEXT_AND
-     33,  // TEXT_AND
-     63,  // TEXT_AND
-     18,  // TEXT_BND
-     48,  // TEXT_BNZ
-     49,  // TEXT_BNZ
-     40,  // TEXT_BP
-     41,  // TEXT_BP
-     45,  // TEXT_BRA
-     46,  // TEXT_BRA
-     42,  // TEXT_BZ
-     43,  // TEXT_BZ
-     12,  // TEXT_CALL
-      9,  // TEXT_DIV
-     55,  // TEXT_DLD
-     56,  // TEXT_DLD
-     53,  // TEXT_ILD
-     54,  // TEXT_ILD
-     15,  // TEXT_JMP
-     13,  // TEXT_JSR
-      2,  // TEXT_LD
+     46,  // TEXT_ADD
+     60,  // TEXT_ADD
+     68,  // TEXT_ADD
+     23,  // TEXT_AND
+     35,  // TEXT_AND
+     65,  // TEXT_AND
+     19,  // TEXT_BND
+     50,  // TEXT_BNZ
+     51,  // TEXT_BNZ
+     42,  // TEXT_BP
+     43,  // TEXT_BP
+     47,  // TEXT_BRA
+     48,  // TEXT_BRA
+     44,  // TEXT_BZ
+     45,  // TEXT_BZ
+     13,  // TEXT_CALL
+     10,  // TEXT_DIV
+     57,  // TEXT_DLD
+     58,  // TEXT_DLD
+     55,  // TEXT_ILD
+     56,  // TEXT_ILD
+     16,  // TEXT_JMP
+     14,  // TEXT_JSR
       3,  // TEXT_LD
-      5,  // TEXT_LD
-      7,  // TEXT_LD
-     16,  // TEXT_LD
-     20,  // TEXT_LD
-     29,  // TEXT_LD
+      4,  // TEXT_LD
+      6,  // TEXT_LD
+      8,  // TEXT_LD
+     17,  // TEXT_LD
+     21,  // TEXT_LD
      30,  // TEXT_LD
      31,  // TEXT_LD
-     50,  // TEXT_LD
-     57,  // TEXT_LD
-     60,  // TEXT_LD
-     17,  // TEXT_MPY
+     32,  // TEXT_LD
+     52,  // TEXT_LD
+     59,  // TEXT_LD
+     62,  // TEXT_LD
+     18,  // TEXT_MPY
       0,  // TEXT_NOP
-     24,  // TEXT_OR
-     36,  // TEXT_OR
-     64,  // TEXT_OR
-     14,  // TEXT_PLI
-     21,  // TEXT_POP
-     23,  // TEXT_POP
-     38,  // TEXT_POP
-      4,  // TEXT_PUSH
-      6,  // TEXT_PUSH
-     34,  // TEXT_PUSH
-     35,  // TEXT_PUSH
-     37,  // TEXT_RET
-     27,  // TEXT_RR
-     28,  // TEXT_RRL
-     10,  // TEXT_SL
+     25,  // TEXT_OR
+     38,  // TEXT_OR
+     66,  // TEXT_OR
+     15,  // TEXT_PLI
+     22,  // TEXT_POP
+     24,  // TEXT_POP
+     40,  // TEXT_POP
+      5,  // TEXT_PUSH
+      7,  // TEXT_PUSH
+     36,  // TEXT_PUSH
+     37,  // TEXT_PUSH
+     39,  // TEXT_RET
+     28,  // TEXT_RR
+     29,  // TEXT_RRL
      11,  // TEXT_SL
-      8,  // TEXT_SR
-     25,  // TEXT_SR
-     26,  // TEXT_SRL
-     19,  // TEXT_SSM
-     51,  // TEXT_ST
-     52,  // TEXT_ST
-     61,  // TEXT_ST
-     62,  // TEXT_ST
-     47,  // TEXT_SUB
-     59,  // TEXT_SUB
-     67,  // TEXT_SUB
+     12,  // TEXT_SL
+      9,  // TEXT_SR
+     26,  // TEXT_SR
+     27,  // TEXT_SRL
+     20,  // TEXT_SSM
+     53,  // TEXT_ST
+     54,  // TEXT_ST
+     63,  // TEXT_ST
+     64,  // TEXT_ST
+     49,  // TEXT_SUB
+     61,  // TEXT_SUB
+     69,  // TEXT_SUB
       1,  // TEXT_XCH
-     32,  // TEXT_XCH
-     39,  // TEXT_XOR
-     65,  // TEXT_XOR
+      2,  // TEXT_XCH
+     33,  // TEXT_XCH
+     34,  // TEXT_XCH
+     41,  // TEXT_XOR
+     67,  // TEXT_XOR
 };
 // clang-format on
 

@@ -44,6 +44,7 @@ void test_cpu() {
 static void test_implied() {
     TEST("NOP  ",      0x00);
     TEST("xch  a,e",   0x01);
+    TEST("XCH  E,A",   0x01);
     TEST("LD   A,S",   0x06);
     TEST("LD   S,A",   0x07);
     TEST("PUSH EA",    0x08);
@@ -95,6 +96,10 @@ static void test_implied() {
     TEST("XCH  EA,SP", 0x4D);
     TEST("XCH  EA,P2", 0x4E);
     TEST("XCH  EA,P3", 0x4F);
+    TEST("XCH  PC,EA", 0x4C);
+    TEST("XCH  SP,EA", 0x4D);
+    TEST("XCH  P2,EA", 0x4E);
+    TEST("XCH  P3,EA", 0x4F);
     TEST("PUSH PC",    0x54);
     ERRT("PUSH SP",    OPERAND_NOT_ALLOWED, "SP");
     TEST("PUSH P2",    0x56);
