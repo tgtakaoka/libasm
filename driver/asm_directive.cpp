@@ -393,7 +393,9 @@ NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(asse
 }
 
 FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".dc", &FairchildDirective::defineUint16s);
+    registerPseudo(".dc", &FairchildDirective::defineUint8s);
+    registerPseudo(".da", &FairchildDirective::defineUint16s);
+    registerPseudo(".rs", &FairchildDirective::allocateUint8s);
 }
 
 BinEncoder &FairchildDirective::defaultEncoder() {

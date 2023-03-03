@@ -371,9 +371,12 @@ void test_scn2650() {
 void test_f3850() {
     PREP(f3850::AsmF3850, FairchildDirective);
 
-    TestReader inc("data/db.inc");
+    TestReader inc("data/da.inc");
     sources.add(inc);
-    inc.add("        dc    h'1234', h'5678', h'9ABC'\n");
+    inc.add("        rs    3\n"
+            "        da    H'1234', label1, H'9ABC'\n"
+            "        dc    'a','bcdefg',0\n"
+            "        dc    C'A',c'B',C'C'+h'80'\n");
 
     driver.internSymbol(0x7bd0, "label1");
 
@@ -384,15 +387,19 @@ void test_f3850() {
             "        lr    a, j\n"
             "        ds    10\n"  // DS is the instruction of F3850
             "        bp    label1\n"
-            "        include \"data/db.inc\"\n",
+            "        include \"data/da.inc\"\n",
             "          0 :                            cpu   F3850\n"
             "       7BCD :                            org   H'7BCD'\n"
             "       7BCD : 70                         clr\n"
             "       7BCE : 49                         lr    a, j\n"
             "       7BCF : 3A                         ds    10\n"
             "       7BD0 : 81 FF                      bp    label1\n"
-            "       7BD2 :                            include \"data/db.inc\"\n"
-            "(1)    7BD2 : 12 34 56 78 9A BC          dc    h'1234', h'5678', h'9ABC'\n");
+            "       7BD2 :                            include \"data/da.inc\"\n"
+            "(1)    7BD2 :                            rs    3\n"
+            "(1)    7BD5 : 12 34 7B D0 9A BC          da    H'1234', label1, H'9ABC'\n"
+            "(1)    7BDB : 61 62 63 64 65 66          dc    'a','bcdefg',0\n"
+            "       7BE1 : 67 00\n"
+            "(1)    7BE3 : 41 42 C3                   dc    C'A',c'B',C'C'+h'80'\n");
 }
 
 void test_i8086() {
