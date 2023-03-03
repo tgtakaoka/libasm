@@ -167,8 +167,8 @@ static void test_scan() {
     SCAN(',', "','+'\'',abc", "','+'\''");
     SCAN('x', "0x1230xG",     "0x1230");
     SCAN('b', "0b1010b0",     "0b1010");
-    SCAN('H', "1AB0HHX",      "1AB0H");
-    SCAN('O', "1230OOX",      "1230O");
+    SCAN('H', "1AB0HHX",      "1AB0");
+    SCAN('O', "1230OOX",      "1230");
     SCAN('O', "1239OOX",      "1239");
     SCAN('B', "1010BBX",      "1010B");
     SCAN('B', "1012BBX",      "1012");

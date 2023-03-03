@@ -13,7 +13,7 @@
 ;;; limitations under the License.
 
         cpu     f3850
-        org     100h
+        org     $100
 ;;; 0x
         lr      a,ku
         lr      a,kl
@@ -49,18 +49,18 @@
         lr      j,w
         inc
 ;;; 2x
-        li      21h
+        li      $21
         clr
-        ni      22h
-        oi      23h
-        xi      24h
-        ai      25h
-        ci      26h
-        in      27h
-        out     28h
-        pi      292ah
-        jmp     2a2bh
-        dci     2b2ch
+        ni      $22
+        oi      $23
+        xi      $24
+        ai      $25
+        ci      $26
+        in      $27
+        out     $28
+        pi      $292a
+        jmp     $2a2b
+        dci     $2b2c
         nop
         xdc
 ;;; 3x

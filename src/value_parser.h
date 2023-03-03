@@ -33,10 +33,54 @@ enum Radix : uint8_t {
     RADIX_16 = 16,
 };
 
+class NumberParser : public ErrorAt {
+public:
+    virtual bool numberPrefix(const StrScanner &scan) const;
+    virtual Error readNumber(StrScanner &scan, Value &val);
+
+    Error parseNumber(StrScanner &scan, Value &val, const Radix radix);
+
+protected:
+    Error scanNumberEnd(const StrScanner &scan, const Radix radix, char suffix = 0) const;
+    Error expectNumberSuffix(StrScanner &scan, char suffux = 0) const;
+};
+
+class MotorolaNumberParser : public NumberParser {
+public:
+    bool numberPrefix(const StrScanner &scan) const override;
+    Error readNumber(StrScanner &scan, Value &val) override;
+};
+
+class IntelNumberParser : public NumberParser {
+public:
+    bool numberPrefix(const StrScanner &scan) const override;
+    Error readNumber(StrScanner &scan, Value &val) override;
+};
+
+class NationalNumberParser : public NumberParser {
+public:
+    bool numberPrefix(const StrScanner &scan) const override;
+    Error readNumber(StrScanner &scan, Value &val) override;
+};
+
+class FairchildNumberParser : public NumberParser {
+public:
+    bool numberPrefix(const StrScanner &scan) const override;
+    Error readNumber(StrScanner &scan, Value &val) override;
+private:
+    MotorolaNumberParser _motorola;
+    NationalNumberParser _national;
+};
+
 class ValueParser : public ErrorAt {
 public:
-    ValueParser(char locSym = '.')
-        : ErrorAt(), _locSym(locSym), _origin(0), _funcParser(nullptr), _commentChar(0) {}
+    ValueParser(char locSym = '.', NumberParser &numberParser = NUMBER_PARSER)
+        : ErrorAt(),
+          _numberParser(numberParser),
+          _locSym(locSym),
+          _origin(0),
+          _funcParser(nullptr),
+          _commentChar(0) {}
 
     /*
      * Parse |scan| text and return expression |value|.  Undefined
@@ -73,17 +117,15 @@ public:
 protected:
     virtual bool locationSymbol(StrScanner &scan) const;
     virtual bool charPrefix(StrScanner &scan) const;
-    virtual bool numberPrefix(const StrScanner &scan) const;
-    virtual Error readNumber(StrScanner &scan, Value &val);
-    Error parseNumber(StrScanner &scan, Value &val, const Radix radix);
-    Error scanNumberEnd(const StrScanner &scan, const Radix radix, char suffix = 0);
-    Error expectNumberSuffix(StrScanner &scan, char suffux = 0);
 
 private:
+    NumberParser &_numberParser;
     const char _locSym;
     uint32_t _origin;
     FuncParser *_funcParser;
     char _commentChar;
+
+    static NumberParser NUMBER_PARSER;
 
     enum Op : uint8_t {
         OP_NONE,
@@ -140,41 +182,43 @@ private:
 
 class MotorolaValueParser : public ValueParser {
 public:
-    MotorolaValueParser() : ValueParser('*') {}
+    MotorolaValueParser() : ValueParser('*', NUMBER_PARSER) {}
 
-protected:
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
+private:
+    static MotorolaNumberParser NUMBER_PARSER;
 };
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser(char locSym = '$') : ValueParser(locSym) {}
+    IntelValueParser(char locSym = '$') : ValueParser(locSym, NUMBER_PARSER) {}
 
-protected:
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
+private:
+    static IntelNumberParser NUMBER_PARSER;
 };
 
-class NationalValueParser : public IntelValueParser {
+class NationalValueParser : public ValueParser {
 public:
-    NationalValueParser(char locSym = '.') : IntelValueParser(locSym) {}
+    NationalValueParser(char locSym = '.', NumberParser &numberParser = NUMBER_PARSER)
+        : ValueParser(locSym, numberParser) {}
 
 protected:
     bool symbolLetter(char c, bool head = false) const override;
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
+
+private:
+    static NationalNumberParser NUMBER_PARSER;
 };
 
 class FairchildValueParser : public NationalValueParser {
 public:
-    FairchildValueParser() : NationalValueParser() {}
+    FairchildValueParser() : NationalValueParser('*', NUMBER_PARSER) {}
 
 protected:
     bool locationSymbol(StrScanner &scan) const override;
     bool symbolLetter(char c, bool head = false) const override;
     bool charPrefix(StrScanner &scan) const override;
-    bool numberPrefix(const StrScanner &scan) const override;
+
+private:
+    static FairchildNumberParser NUMBER_PARSER;
 };
 
 }  // namespace libasm
