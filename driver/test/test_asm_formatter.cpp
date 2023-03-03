@@ -85,8 +85,8 @@ void test_mc6809() {
     TestReader inc("data/fdb.inc");
     sources.add(inc);
     inc.add("        fdb   $1234, $5678, $9abc\n"
-            "        fcc   /abcdefghijklmn/\n"
-            "        fcb   'A','B','C'+$80\n");
+            "        fcc   /abcdef''ijklmn/\n"
+            "        fcb   'A','''','C'+$80,'a''c'\n");
 
     listing.setUpperHex(true);
     listing.enableLineNumber(true);
@@ -102,11 +102,11 @@ void test_mc6809() {
             "       3/    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y] ; indirect\n"
             "       4/    ABD2 :                            include \"data/fdb.inc\"\n"
             "(1)    1/    ABD2 : 12 34 56 78 9A BC          fdb   $1234, $5678, $9abc\n"
-            "(1)    2/    ABD8 : 61 62 63 64 65 66          fcc   /abcdefghijklmn/\n"
-            "             ABDE : 67 68 69 6A 6B 6C\n"
+            "(1)    2/    ABD8 : 61 62 63 64 65 66          fcc   /abcdef''ijklmn/\n"
+            "             ABDE : 27 27 69 6A 6B 6C\n"
             "             ABE4 : 6D 6E\n"
-            "(1)    3/    ABE6 : 41 42 C3                   fcb   'A','B','C'+$80\n"
-            "       5/    ABE9 :                            setdp $ff00\n");
+            "(1)    3/    ABE6 : 41 27 C3 61 27 63          fcb   'A','''','C'+$80,'a''c'\n"
+            "       5/    ABEC :                            setdp $ff00\n");
 }
 
 void test_mc6800() {
@@ -239,8 +239,9 @@ void test_z80() {
     TestReader inc("data/db.inc");
     sources.add(inc);
     inc.add("        dw    1234H, 5678H, 9ABCH\n"
-            "        db    'a','b','c','d','e','f','g',0\n"
-            "        db    'A','B','C'+80H\n");
+            "        db    'a','bcd''fg',0\n"
+            "        ds    2\n"
+            "        db    'A','''','C'+80H,'a''c'\n");
 
     listing.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
@@ -254,10 +255,11 @@ void test_z80() {
             "       abcd :                            org   0abcdh\n"
             "       abcd :                            include \"data/db.inc\"\n"
             "(1)    abcd : 34 12 78 56 bc 9a          dw    1234H, 5678H, 9ABCH\n"
-            "(1)    abd3 : 61 62 63 64 65 66          db    'a','b','c','d','e','f','g',0\n"
+            "(1)    abd3 : 61 62 63 64 27 66          db    'a','bcd''fg',0\n"
             "       abd9 : 67 00\n"
-            "(1)    abdb : 41 42 c3                   db    'A','B','C'+80H\n"
-            "       abde : fd cb 80 86                res   0, (iy-128)\n");
+            "(1)    abdb :                            ds    2\n"
+            "(1)    abdd : 41 27 c3 61 27 63          db    'A','''','C'+80H,'a''c'\n"
+            "       abe3 : fd cb 80 86                res   0, (iy-128)\n");
 }
 
 void test_z8() {
@@ -371,24 +373,26 @@ void test_f3850() {
 
     TestReader inc("data/db.inc");
     sources.add(inc);
-    inc.add("        dc    h'1234', h'5678', h'9abc'\n");
+    inc.add("        dc    h'1234', h'5678', h'9ABC'\n");
 
-    driver.internSymbol(0x7bcf, "label1");
+    driver.internSymbol(0x7bd0, "label1");
 
     ASM("f3850",
             "        cpu   F3850\n"
             "        org   H'7BCD'\n"
             "        clr\n"
             "        lr    a, j\n"
+            "        ds    10\n"  // DS is the instruction of F3850
             "        bp    label1\n"
             "        include \"data/db.inc\"\n",
             "          0 :                            cpu   F3850\n"
             "       7BCD :                            org   H'7BCD'\n"
             "       7BCD : 70                         clr\n"
             "       7BCE : 49                         lr    a, j\n"
-            "       7BCF : 81 FF                      bp    label1\n"
-            "       7BD1 :                            include \"data/db.inc\"\n"
-            "(1)    7BD1 : 12 34 56 78 9A BC          dc    h'1234', h'5678', h'9abc'\n");
+            "       7BCF : 3A                         ds    10\n"
+            "       7BD0 : 81 FF                      bp    label1\n"
+            "       7BD2 :                            include \"data/db.inc\"\n"
+            "(1)    7BD2 : 12 34 56 78 9A BC          dc    h'1234', h'5678', h'9ABC'\n");
 }
 
 void test_i8086() {
@@ -439,16 +443,31 @@ void test_tms32010() {
 void test_mc68000() {
     PREP(mc68000::AsmMc68000, MotorolaDirective);
 
+    TestReader inc("data/dc.inc");
+    sources.add(inc);
+    inc.add("        dc.l    $12345678, $9abcdef0\n"
+            "        dc.w    $1234, $5678, $9abc\n"
+            "        dc.b    'a', 'bcd''fgh', 0\n"
+            "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");
+
     listing.setUpperHex(false);
 
     ASM("mc68000",
             "        cpu     mc68000\n"
             "        org     $9abcde\n"
-            "        ori.l   #$bdbebfc0, ($c2c3c4).l\n",
+            "        ori.l   #$bdbebfc0, ($c2c3c4).l\n"
+            "        include \"data/dc.inc\"\n",
             "          0 :                            cpu     mc68000\n"
             "     9abcde :                            org     $9abcde\n"
             "     9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"
-            "     9abce4 : 00c2 c3c4\n");
+            "     9abce4 : 00c2 c3c4\n"
+            "     9abce8 :                            include \"data/dc.inc\"\n"
+            "(1)  9abce8 : 1234 5678 9abc             dc.l    $12345678, $9abcdef0\n"
+            "     9abcee : def0\n"
+            "(1)  9abcf0 : 1234 5678 9abc             dc.w    $1234, $5678, $9abc\n"
+            "(1)  9abcf6 : 6162 6364 2766             dc.b    'a', 'bcd''fgh', 0\n"
+            "     9abcfc : 6768 00\n"
+            "(1)  9abcff : 4127 c361 2763             dc.b    'A', '''', 'C'+$80, 'a''c'\n");
 }
 
 void test_ns32000() {

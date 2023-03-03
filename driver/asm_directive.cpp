@@ -126,15 +126,31 @@ Error AsmDirective::defineBytes(
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
     for (;;) {
-        scan.skipSpaces();
-        if (delimitor || *scan == '"') {
+        StrScanner p(scan.skipSpaces());
+        Value value = parser.eval(p, &driver);
+        if (parser.isOK() && !(*scan == '\'' && *p == '\'')) {
+            // a byte expression, though a single 'c' constant is handled as a string
+            scan = p;
+            if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
+                return setError(UNDEFINED_SYMBOL);
+            if (value.overflowUint8())
+                return setError(OVERFLOW_RANGE);
+            const uint8_t val8 = value.getUnsigned();
+            list.emitByte(base, val8);
+        } else if (*scan == '"' || *scan == '\'' || delimitor) {
+            // a string surrounded by double quotes, single quotes, or explicit delimitors
             const char delim = *scan++;
             StrScanner p(scan);
             for (;;) {
-                if (p.expect(delim))
+                if (!delimitor && *p == '\'' && p[1] == '\'') {
+                    ++p;  // inside a string, two successive apostrophe is an apostrophe
+                } else if (p.expect(delim)) {
                     break;
+                }
                 if (*p == 0) {
                     switch (delim) {
+                    case '\'':
+                        return setError(p, MISSING_CLOSING_QUOTE);
                     case '"':
                         return setError(p, MISSING_CLOSING_DQUOTE);
                     default:
@@ -150,15 +166,7 @@ Error AsmDirective::defineBytes(
             }
             scan = p;
         } else {
-            Value value = parser.eval(scan, &driver);
-            if (setError(parser))
-                return getError();
-            if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-                return setError(UNDEFINED_SYMBOL);
-            if (value.overflowUint8())
-                return setError(OVERFLOW_RANGE);
-            const uint8_t val8 = value.getUnsigned();
-            list.emitByte(base, val8);
+            return setError(parser);
         }
         if (!scan.skipSpaces().expect(','))
             break;
@@ -326,8 +334,8 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo("=", &AsmDirective::defineLabel);
     registerPseudo(".org", &AsmDirective::defineOrigin);
     registerPseudo(".align", &AsmDirective::alignOrigin);
-    registerPseudo(".string", &AsmDirective::defineString);
-    registerPseudo(".ascii", &AsmDirective::defineString);
+    registerPseudo(".string", &AsmDirective::defineUint8s);
+    registerPseudo(".ascii", &AsmDirective::defineUint8s);
     registerPseudo(".byte", &AsmDirective::defineUint8s);
     registerPseudo(".word", &AsmDirective::defineUint16s);
     registerPseudo(".long", &AsmDirective::defineUint32s);

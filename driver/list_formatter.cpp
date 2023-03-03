@@ -82,14 +82,19 @@ int ListFormatter::formatBytes(int base) {
     } else {  // OPCODE_16BIT
         while (base + i < generated && i < bytes) {
             uint16_t val16 = getByte(base + i++);
-            const uint16_t next8 = getByte(base + i++);
-            if (config().endian() == ENDIAN_BIG) {
-                val16 = (val16 << 8) | next8;
+            if (base + i < generated) {
+                const uint16_t next8 = getByte(base + i++);
+                if (config().endian() == ENDIAN_BIG) {
+                    val16 = (val16 << 8) | next8;
+                } else {
+                    val16 |= (next8 << 8);
+                }
+                _out.letter(' ');
+                formatHex(val16, 16);
             } else {
-                val16 |= (next8 << 8);
+                _out.letter(' ');
+                formatHex(val16, 8);
             }
-            _out.letter(' ');
-            formatHex(val16, 16);
         }
     }
     return i;
