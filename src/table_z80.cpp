@@ -17,6 +17,7 @@
 #include "table_z80.h"
 #include "config_z80.h"
 #include "entry_z80.h"
+#include "str_scanner.h"
 #include "text_z80.h"
 
 #include <ctype.h>
@@ -525,13 +526,18 @@ const /* PROGMEM */ char *TableZ80::listCpu_P() const {
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
+    StrScanner p(cpu);
+    p.iexpect('i');
+    auto t = Cpu::search(p.str(), ARRAY_RANGE(CPU_TABLE));
+    if (t) {
         return setCpu(t->cpuType());
-    if (strcasecmp_P(cpu, TEXT_CPU_I8080) == 0)
-        return setCpu(I8080);
-    if (strcasecmp_P(cpu, TEXT_CPU_I8085) == 0)
-        return setCpu(I8085);
+    } else if (p.istarts_P(TEXT_CPU_8080)) {
+        if ((p += 4).iexpect('z'))
+            return setCpu(I8080);
+    } else if (p.istarts_P(TEXT_CPU_8085)) {
+        if ((p += 4).iexpect('z'))
+            return setCpu(I8085);
+    }
     return false;
 }
 

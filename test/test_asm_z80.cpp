@@ -63,6 +63,18 @@ void test_cpu() {
 
     EQUALS("cpu z80", true, assembler.setCpu("z80"));
     EQUALS_P("get cpu", "Z80", assembler.cpu_P());
+
+    EQUALS("cpu 8080zilog", true, assembler.setCpu("8080Z"));
+    EQUALS_P("get cpu", "8080", assembler.cpu_P());
+
+    EQUALS("cpu 8085zilog", true, assembler.setCpu("8085z"));
+    EQUALS_P("get cpu", "8085", assembler.cpu_P());
+
+    EQUALS("cpu i8080zilog", true, assembler.setCpu("i8080Zilog"));
+    EQUALS_P("get cpu", "8080", assembler.cpu_P());
+
+    EQUALS("cpu i8085zilog", true, assembler.setCpu("i8085zilog"));
+    EQUALS_P("get cpu", "8085", assembler.cpu_P());
 }
 
 static void test_move_inherent() {
