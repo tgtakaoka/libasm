@@ -30,6 +30,7 @@ AsmFormatter::AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &me
 void AsmFormatter::reset() {
     _nextLine = -1;
     _errorLine = false;
+    _errorAt.setOK();
 }
 
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
