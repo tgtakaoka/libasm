@@ -38,6 +38,11 @@ static void test_char_constant() {
     E8("'a",      0x61, OK);
     E8("'a+5",    0x66, OK);
     E8("5+'a",    0x66, OK);
+    E8("#a",      0x61, OK);
+    E8("#a+5",    0x66, OK);
+    E8("5+#a",    0x66, OK);
+    E8("# ",      0x20, OK);
+    E8("#'",      0x27, OK);
     E8("' ",      0x20, OK);
     E8("''",      0x27, OK);
     E8("'\\''",   0x27, OK);

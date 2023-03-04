@@ -381,7 +381,7 @@ void test_f3850() {
             "        da    H'1234', label1, H'9ABC'\n"  // DA generates words
             "        dc    'a, ',, '/, ' , 0\n"         // DC can omit closing quote
             "        dc    \"a,\", \"bc''de\", 0\n"     // DC can accept string
-            "        dc    C'A', c'B', C'C'+h'80'\n");  // C'c' requires surrounding quotes
+            "        dc    C'A', #', C'C'+h'80'\n");    // C'c' requires surrounding quotes
 
     driver.internSymbol(0x7bd0, "label1");
 
@@ -405,7 +405,7 @@ void test_f3850() {
             "(1)    7BDB : 61 2C 2F 20 00             dc    'a, ',, '/, ' , 0\n"
             "(1)    7BE0 : 61 2C 62 63 27 64          dc    \"a,\", \"bc''de\", 0\n"
             "       7BE6 : 65 00\n"
-            "(1)    7BE8 : 41 42 C3                   dc    C'A', c'B', C'C'+h'80'\n");
+            "(1)    7BE8 : 41 27 C3                   dc    C'A', #', C'C'+h'80'\n");
 }
 
 void test_i8086() {

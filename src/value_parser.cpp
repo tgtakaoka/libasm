@@ -630,17 +630,27 @@ bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
 bool FairchildValueParser::charPrefix(StrScanner &scan, char &prefix) const {
     StrScanner p(scan);
     if (p.iexpect('c') && p.expect('\'')) {
+        // C'x'
         prefix = 'C';
         scan = p;
         return true;
     }
+    if (p.expect('#')) {
+        // #c
+        prefix = '#';
+        scan = p;
+        return true;
+    }
+    // 'c' or 'c
     return ValueParser::charPrefix(scan, prefix);
 }
 
 bool FairchildValueParser::charSuffix(StrScanner &scan, char prefix) const {
     if (prefix == 'C')
         return scan.expect('\'');  // closing quote is necessary for C'x'.
-    scan.expect('\'');             // closing quote is optional for 'x'
+    if (prefix == '#')
+        return true;    //  no closing quite for #c
+    scan.expect('\'');  // closing quote is optional for 'x'
     return true;
 }
 
