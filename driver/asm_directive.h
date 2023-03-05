@@ -41,23 +41,6 @@ public:
     Error processPseudo(
             const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
-    // PseudoHandler
-    Error defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
 protected:
@@ -74,6 +57,22 @@ protected:
 
     void registerPseudo(const char *name, PseudoHandler handler);
 
+    // Common PseudoHandler
+    Error defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+
     // PseudoHanlder helper
     Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor);
     Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, size_t unit);
@@ -89,6 +88,9 @@ class IntelDirective : public AsmDirective {
 public:
     IntelDirective(Assembler &assembler);
     BinEncoder &defaultEncoder() override;
+
+private:
+    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
 class NationalDirective : public IntelDirective {

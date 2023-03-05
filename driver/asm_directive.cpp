@@ -298,7 +298,7 @@ Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &d
     return setOK();
 }
 
-Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error IntelDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
@@ -364,11 +364,11 @@ Error AsmDirective::processPseudo(
 }
 
 MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".fcb", &AsmDirective::defineUint8s);
-    registerPseudo(".fcc", &AsmDirective::defineString);
-    registerPseudo(".fdb", &AsmDirective::defineUint16s);
-    registerPseudo(".rmb", &AsmDirective::allocateUint8s);
-    registerPseudo(".dfs", &AsmDirective::allocateUint8s);
+    registerPseudo(".fcb", &MotorolaDirective::defineUint8s);
+    registerPseudo(".fcc", &MotorolaDirective::defineString);
+    registerPseudo(".fdb", &MotorolaDirective::defineUint16s);
+    registerPseudo(".rmb", &MotorolaDirective::allocateUint8s);
+    registerPseudo(".dfs", &MotorolaDirective::allocateUint8s);
 }
 
 BinEncoder &MotorolaDirective::defaultEncoder() {
@@ -376,11 +376,12 @@ BinEncoder &MotorolaDirective::defaultEncoder() {
 }
 
 IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".db", &AsmDirective::defineUint8s);
-    registerPseudo(".dw", &AsmDirective::defineUint16s);
-    registerPseudo(".dd", &AsmDirective::defineUint32s);
-    registerPseudo(".ds", &AsmDirective::allocateUint8s);
-    registerPseudo(".z80syntax", &AsmDirective::switchIntelZilog);
+    registerPseudo(".db", &IntelDirective::defineUint8s);
+    registerPseudo(".dw", &IntelDirective::defineUint16s);
+    registerPseudo(".dd", &IntelDirective::defineUint32s);
+    registerPseudo(".ds", &IntelDirective::allocateUint8s);
+    registerPseudo(
+            ".z80syntax", reinterpret_cast<PseudoHandler>(&IntelDirective::switchIntelZilog));
 }
 
 BinEncoder &IntelDirective::defaultEncoder() {
@@ -388,11 +389,11 @@ BinEncoder &IntelDirective::defaultEncoder() {
 }
 
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
-    registerPseudo(".dbyte", &AsmDirective::defineUint16s);
+    registerPseudo(".dbyte", &NationalDirective::defineUint16s);
 }
 
 FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".dc", &AsmDirective::defineUint16s);
+    registerPseudo(".dc", &FairchildDirective::defineUint16s);
 }
 
 BinEncoder &FairchildDirective::defaultEncoder() {
