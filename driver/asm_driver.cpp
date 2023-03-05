@@ -95,7 +95,8 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     return dir;
 }
 
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources)
+AsmDriver::AsmDriver(
+        AsmDirective **begin, AsmDirective **end, AsmSources &sources, SymbolMode symbolMode)
     : _directives(begin, end),
       _current(nullptr),
       _sources(sources),
@@ -104,7 +105,7 @@ AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sourc
     switchDirective(_directives.front());
     setFunctionStore(&_functions);
     _origin = 0;
-    _symbolMode = REPORT_UNDEFINED;
+    _symbolMode = symbolMode;
 }
 
 int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
@@ -145,32 +146,48 @@ const char *AsmDriver::lookupValue(uint32_t address) const {
 }
 
 bool AsmDriver::hasSymbol(const StrScanner &symbol) const {
-    return symbolExists(std::string(symbol.str(), symbol.size()));
+    const auto key = std::string(symbol.str(), symbol.size());
+    return _symbols.find(key) != _symbols.end() || _variables.find(key) != _variables.end();
 }
 
 uint32_t AsmDriver::lookupSymbol(const StrScanner &symbol) const {
-    return symbolLookup(std::string(symbol.str(), symbol.size()));
+    const auto key = std::string(symbol.str(), symbol.size());
+    const auto s = _symbols.find(key);
+    if (s != _symbols.end())
+        return s->second;
+    const auto v = _variables.find(key);
+    if (v != _variables.end())
+        return v->second;
+    return 0;
 }
 
-Error AsmDriver::internSymbol(uint32_t value, const StrScanner &symbol) {
-    return symbolIntern(value, std::string(symbol.str(), symbol.size()));
-}
+Error AsmDriver::internSymbol(uint32_t value, const StrScanner &symbol, bool variable) {
+    const auto key = std::string(symbol.str(), symbol.size());
 
-bool AsmDriver::symbolExists(const std::string &key) const {
-    auto it = _symbols.find(key);
-    return it != _symbols.end();
-}
+    if (variable) {
+        const auto s = _symbols.find(key);
+        if (s != _symbols.end())
+            return DUPLICATE_LABEL;
+        auto v = _variables.find(key);
+        if (v != _variables.end()) {
+            v->second = value;
+        } else {
+            _variables.emplace(key, value);
+        }
+        return OK;
+    }
 
-uint32_t AsmDriver::symbolLookup(const std::string &key) const {
-    auto it = _symbols.find(key);
-    return it == _symbols.end() ? 0 : it->second;
-}
-
-Error AsmDriver::symbolIntern(uint32_t value, const std::string &key) {
-    if (symbolExists(key) && _symbolMode == REPORT_DUPLICATE)
+    const auto v = _variables.find(key);
+    if (v != _variables.end())
         return DUPLICATE_LABEL;
-    _symbols.erase(key);
-    _symbols.emplace(key, value);
+    auto s = _symbols.find(key);
+    if (s != _symbols.end() && s->second != value && _symbolMode == REPORT_DUPLICATE)
+        return DUPLICATE_LABEL;
+    if (s != _symbols.end()) {
+        s->second = value;
+    } else {
+        _symbols.emplace(key, value);
+    }
     return OK;
 }
 

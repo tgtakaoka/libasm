@@ -75,6 +75,8 @@ void test_cpu() {
 
     EQUALS("cpu i8085zilog", true, assembler.setCpu("i8085zilog"));
     EQUALS_P("get cpu", "8085", assembler.cpu_P());
+
+    EQUALS("has SET", true, assembler.hasSetInstruction());
 }
 
 static void test_move_inherent() {

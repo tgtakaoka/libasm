@@ -37,6 +37,7 @@ public:
     AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
     void reset() override { _autoShortDirect = false; }
     const Options &options() const override { return _options; }
+    bool hasSetInstruction() const override { return true; }
 
 private:
     IntelValueParser _parser;

@@ -36,6 +36,8 @@ static void tear_down() {
 void test_cpu() {
     EQUALS("cpu tlcs90", true, assembler.setCpu("tlcs90"));
     EQUALS_P("get cpu", "TLCS90", assembler.cpu_P());
+
+    EQUALS("has SET", true, assembler.hasSetInstruction());
 }
 
 static void test_8bit_transfer() {

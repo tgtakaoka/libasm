@@ -44,7 +44,8 @@ class AsmFormatter;
 
 class AsmDriver : public SymbolTable {
 public:
-    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources);
+    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources,
+            SymbolMode symbolMode = REPORT_UNDEFINED);
 
     AsmDirective *restrictCpu(const char *cpu);
     AsmDirective *setCpu(const char *cpu);
@@ -62,7 +63,7 @@ public:
     const char *lookupValue(uint32_t address) const override;
     bool hasSymbol(const StrScanner &symbol) const override;
     uint32_t lookupSymbol(const StrScanner &symbol) const override;
-    Error internSymbol(uint32_t value, const StrScanner &symbol);
+    Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false);
 
     Error internFunction(
             const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body) {
@@ -88,9 +89,7 @@ private:
     AsmDirective *switchDirective(AsmDirective *dir);
 
     std::map<std::string, uint32_t, std::less<>> _symbols;
-    bool symbolExists(const std::string &key) const;
-    uint32_t symbolLookup(const std::string &key) const;
-    Error symbolIntern(uint32_t value, const std::string &key);
+    std::map<std::string, uint32_t, std::less<>> _variables;
 };
 
 }  // namespace driver

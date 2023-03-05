@@ -56,6 +56,9 @@ public:
 
     Error checkAddress(uint32_t addr, const ErrorAt &at);
 
+    /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
+    virtual bool hasSetInstruction() const { return false; }
+
 private:
     ValueParser &_parser;
 

@@ -44,6 +44,8 @@ void test_cpu() {
 
     EQUALS("cpu Z8002", true,    assembler.setCpu("Z8002"));
     EQUALS_P("cpu Z8002", "Z8002", assembler.cpu_P());
+
+    EQUALS("has SET", true, assembler.hasSetInstruction());
 }
 
 static void test_load_and_exchange() {

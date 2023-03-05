@@ -66,8 +66,10 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
                 const auto error = _driver.internSymbol(startAddress(), _line_symbol);
-                if (error)
+                if (error) {
+                    _line_value.clear();
                     return _errorAt.setError(_line_symbol, error);
+                }
             }
             return OK;
         }

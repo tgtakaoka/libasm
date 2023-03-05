@@ -53,14 +53,15 @@ void set_up() {}
 
 void tear_down() {}
 
-#define PREP(typeof_asm, typeof_directive)     \
-    typeof_asm assembler;                      \
-    typeof_directive directive(assembler);     \
-    AsmDirective *dir = &directive;            \
-    TestSources sources;                       \
-    AsmDriver driver(&dir, &dir + 1, sources); \
-    BinMemory memory;                          \
+#define PREP_ASM(typeof_asm, typeof_directive, symbolMode) \
+    typeof_asm assembler;                                  \
+    typeof_directive directive(assembler);                 \
+    AsmDirective *dir = &directive;                        \
+    TestSources sources;                                   \
+    AsmDriver driver(&dir, &dir + 1, sources, symbolMode); \
+    BinMemory memory;                                      \
     AsmFormatter listing(driver, sources, memory)
+#define PREP(typeof_asm, typeof_directive) PREP_ASM(typeof_asm, typeof_directive, REPORT_UNDEFINED)
 
 #define ASM(_cpu, _source, _expected)                               \
     do {                                                            \
@@ -78,6 +79,41 @@ void tear_down() {}
         }                                                           \
         EQ(_cpu, nullptr, expected.readLine());                     \
     } while (0)
+
+void test_symbols() {
+    PREP_ASM(z80::AsmZ80, IntelDirective, REPORT_DUPLICATE);
+
+    listing.setUpperHex(true);
+    listing.enableLineNumber(true);
+
+    ASM("z80",
+            "label1  equ   1234H\n"
+            "label1  :=    1234H\n"
+            "label1  =     1234H\n"
+            "label1  equ   3456H\n"
+            "var1    :=    1234H\n"
+            "var1    equ   1234H\n"
+            "var1    .set  1234H\n"
+            "var1    .set  3456H\n"
+            "        org   1234H\n"
+            "label1  set   0, b\n"  // Z80 has SET instruction
+            "var1\n",
+            "       1/       0 : =1234              label1  equ   1234H\n"
+            "z80:2: error: Duplicate label\n"
+            "       2/       0 :                    label1  :=    1234H\n"  // SET
+            "       3/       0 : =1234              label1  =     1234H\n"  // EQU
+            "z80:4: error: Duplicate label\n"
+            "       4/       0 :                    label1  equ   3456H\n"
+            "       5/       0 : =1234              var1    :=    1234H\n"  // SET
+            "z80:6: error: Duplicate label\n"
+            "       6/       0 :                    var1    equ   1234H\n"
+            "       7/       0 : =1234              var1    .set  1234H\n"
+            "       8/       0 : =3456              var1    .set  3456H\n"
+            "       9/    1234 :                            org   1234H\n"
+            "      10/    1234 : CB C0              label1  set   0, b\n"
+            "z80:11:1: error: Duplicate label\n"
+            "      11/    1236 :                    var1\n");
+}
 
 void test_mc6809() {
     PREP(mc6809::AsmMc6809, MotorolaDirective);
@@ -654,6 +690,7 @@ void test_switch_cpu() {
 }
 
 void run_tests() {
+    RUN_TEST(test_symbols);
     RUN_TEST(test_mc6809);
     RUN_TEST(test_mc6800);
     RUN_TEST(test_mc6805);

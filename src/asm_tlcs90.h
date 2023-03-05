@@ -31,6 +31,7 @@ public:
     AsmTlcs90() : Assembler(_parser, TableTlcs90::TABLE), _parser() {}
 
     const ConfigBase &config() const override { return *this; }
+    bool hasSetInstruction() const override { return true; }
 
 private:
     IntelValueParser _parser;

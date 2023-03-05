@@ -56,11 +56,13 @@ protected:
     AsmDirective(Assembler &assembler);
 
     void registerPseudo(const char *name, PseudoHandler handler);
+    void disablePseudo(const char *name);
 
     // Common PseudoHandler
     Error defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
@@ -77,6 +79,7 @@ protected:
     Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
     // PseudoHanlder helper
+    Error defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable);
     Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor);
     Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int width);
     Error setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver);

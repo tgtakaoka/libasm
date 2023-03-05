@@ -77,22 +77,33 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
     return setAlignment(alignment, list, driver);
 }
 
-Error AsmDirective::defineLabel(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return defineSymbol(scan, list, driver, /*variable*/ false);
+}
+
+Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return defineSymbol(scan, list, driver, /*variable*/ true);
+}
+
+Error AsmDirective::defineSymbol(
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable) {
     if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
     ValueParser &parser = assembler().parser();
-    const auto &value = list.lineValue() = parser.eval(scan, &driver);
-    if (setError(parser))
+    auto &value = list.lineValue() = parser.eval(scan, &driver);
+    if (setError(parser)) {
+        value.clear();
         return getError();
+    }
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    const auto error = driver.internSymbol(value.getUnsigned(), list.lineSymbol());
+    const auto error = driver.internSymbol(value.getUnsigned(), list.lineSymbol(), variable);
     if (error) {
         setError(list.lineSymbol(), error);
-    } else {
-        list.lineSymbol() = StrScanner::EMPTY;
+        value.clear();
     }
+    list.lineSymbol() = StrScanner::EMPTY;
     return getError();
 }
 
@@ -366,9 +377,12 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(".include", &AsmDirective::includeFile);
     // TODO: implement listing after "end".
     registerPseudo(".end", &AsmDirective::endAssemble);
-    registerPseudo(".equ", &AsmDirective::defineLabel);
-    registerPseudo(":=", &AsmDirective::defineLabel);
-    registerPseudo("=", &AsmDirective::defineLabel);
+    registerPseudo(".equ", &AsmDirective::defineConstant);
+    registerPseudo("=", &AsmDirective::defineConstant);
+    registerPseudo(".set", &AsmDirective::defineVariable);
+    if (a.hasSetInstruction())
+        disablePseudo("set");
+    registerPseudo(":=", &AsmDirective::defineVariable);
     registerPseudo(".org", &AsmDirective::defineOrigin);
     registerPseudo(".align", &AsmDirective::alignOrigin);
     registerPseudo(".string", &AsmDirective::defineUint8s);
@@ -389,6 +403,10 @@ void AsmDirective::registerPseudo(const char *name, PseudoHandler handler) {
     _pseudos.emplace(std::make_pair(std::string(name), handler));
     if (*name++ == '.')
         _pseudos.emplace(std::make_pair(std::string(name), handler));
+}
+
+void AsmDirective::disablePseudo(const char *name) {
+    _pseudos.erase(std::string(name));
 }
 
 Error AsmDirective::processPseudo(
