@@ -42,6 +42,7 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     setError(scan.skipSpaces(), OK);
     if (endOfLine(*scan))
         return setError(scan, OK);
+    insn.clearNameBuffer();
     const auto error = encodeImpl(scan, insn);
     if (error == UNKNOWN_INSTRUCTION)
         setAt(line);

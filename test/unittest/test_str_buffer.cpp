@@ -151,6 +151,22 @@ void test_reset() {
     EQ("reset", "ABCD", buffer);
 }
 
+void test_lowercase() {
+    char buffer[10];
+    StrBuffer buf(buffer, sizeof(buffer));
+
+    buf.text("AB");
+    char *mark = buf.mark();
+    buf.text("CD");
+    EQ("lowercase", OK, buf.getError());
+    buf.lowercase(mark);
+    EQ("lowercase", "ABcd", buffer);
+    buf.text("XY");
+    EQ("lowercase", "ABcdXY", buffer);
+    buf.lowercase(mark);
+    EQ("lowercase", "ABcdxy", buffer);
+}
+
 void run_tests() {
     RUN_TEST(test_letter);
     RUN_TEST(test_text);
@@ -159,6 +175,7 @@ void run_tests() {
     RUN_TEST(test_comma);
     RUN_TEST(test_reverse);
     RUN_TEST(test_reset);
+    RUN_TEST(test_lowercase);
 }
 
 }  // namespace test

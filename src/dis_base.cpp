@@ -44,9 +44,10 @@ Error Disassembler::decode(
     if (checkAddress(insn.address()))
         return getError();
     StrBuffer out(operands, size);
+    char *mark = insn.clearNameBuffer().mark();
     decodeImpl(memory, insn, out);
     if (!_regBase.isUppercase())
-        insn.toLowerName();
+        insn.nameBuffer().lowercase(mark);
     if (isOK())
         setError(out);
     return getError();

@@ -44,6 +44,7 @@ public:
     StrBuffer &reset(char *buffer, size_t size);
     char *mark() const { return _out; }
     StrBuffer &reverse(char *start);
+    StrBuffer &lowercase(char *start);
 
 private:
     char *_out;

@@ -17,7 +17,6 @@
 #ifndef __INSN_BASE_H__
 #define __INSN_BASE_H__
 
-#include <ctype.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -35,11 +34,13 @@ namespace libasm {
  */
 class Insn {
 public:
-    Insn(uint32_t addr) : _address(addr), _length(0) { _name[0] = 0; }
+    Insn(uint32_t addr) : _address(addr), _length(0), _buffer(_name, sizeof(_name)) {}
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
+    StrBuffer &nameBuffer() { return _buffer; }
+    StrBuffer &clearNameBuffer() { return _buffer.reset(_name, sizeof(_name)); }
     void reset(uint32_t addr) {
         _address = addr;
         _length = 0;
@@ -49,16 +50,6 @@ public:
     Insn(Insn const &) = delete;
     /** No assignment operator. */
     void operator=(Insn const &) = delete;
-
-private:
-    uint32_t _address;
-    uint8_t _length;
-    static constexpr size_t MAX_CODE = 24;
-    uint8_t _bytes[MAX_CODE];
-
-    friend class InsnBase;
-    static constexpr size_t MAX_NAME = 7;
-    char _name[MAX_NAME + 1];
 
     void emitByte(uint8_t val) { emitByte(val, _length); }
 
@@ -70,11 +61,16 @@ private:
         }
     }
 
-    friend class Disassembler;
-    void toLowerName() {
-        for (char *p = _name; *p; p++)
-            *p = tolower(*p);
-    }
+private:
+    uint32_t _address;
+    uint8_t _length;
+    StrBuffer _buffer;
+
+    static constexpr size_t MAX_CODE = 24;
+    uint8_t _bytes[MAX_CODE];
+
+    static constexpr size_t MAX_NAME = 11;
+    char _name[MAX_NAME + 1];
 };
 
 /**
@@ -82,14 +78,14 @@ private:
  */
 class InsnBase : public ErrorReporter {
 public:
-    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn), _buffer(insn._name, sizeof(insn._name)) {}
+    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
 
     uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
-    StrBuffer &nameBuffer() { return _buffer; }
-    StrBuffer &clearNameBuffer() { return _buffer.reset(_insn._name, sizeof(_insn._name)); }
+    StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
+    StrBuffer &clearNameBuffer() { return _insn.clearNameBuffer(); }
 
     void reset(uint32_t addr) {
         resetError();
@@ -230,7 +226,6 @@ public:
 
 private:
     Insn &_insn;
-    StrBuffer _buffer;
 };
 
 template <typename Conf, typename Entry>

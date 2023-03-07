@@ -124,6 +124,14 @@ StrBuffer &StrBuffer::reverse(char *start) {
     return *this;
 }
 
+StrBuffer &StrBuffer::lowercase(char *start) {
+    while (start < _out) {
+        *start = tolower(*start);
+        start++;
+    }
+    return *this;
+}
+
 }  // namespace libasm
 
 // Local Variables:
