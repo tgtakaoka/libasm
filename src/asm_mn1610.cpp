@@ -186,7 +186,7 @@ void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode
 Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     op.cc = RegMn1610::parseCcName(p);
@@ -256,7 +256,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     op.val32 = parseExpr32(p, op);
     if (parserError())
         return getError();
-    if (endOfLine(*p.skipSpaces()) || *p == ',') {
+    if (endOfLine(p.skipSpaces()) || *p == ',') {
         // v
         if (overflowUint16(op.val32)) {
             op.mode = M_ABS;
@@ -285,7 +285,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir && !p.expect(')'))
         return op.setError(p, MISSING_CLOSING_PAREN);
     // (v), (v)(r)
-    if (endOfLine(*p.skipSpaces()) || *p == ',') {
+    if (endOfLine(p.skipSpaces()) || *p == ',') {
         op.mode = M_IABS;
         scan = p;
         return OK;
@@ -324,7 +324,7 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op4);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

@@ -21,10 +21,16 @@
 namespace libasm {
 namespace cdp1802 {
 
-const char AsmCdp1802::OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-const char AsmCdp1802::OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
-const char AsmCdp1802::OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
-const char AsmCdp1802::OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+static const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
+static const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
+static const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+
+AsmCdp1802::OptSmartBranch::OptSmartBranch(bool &var)
+    : BoolOption(OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH, var) {}
+
+AsmCdp1802::OptUseRegister::OptUseRegister(bool &var, const OptionBase &next)
+    : BoolOption(OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, var, next) {}
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;
@@ -101,7 +107,7 @@ void AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op
 Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (_useReg) {
@@ -132,7 +138,7 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op2);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

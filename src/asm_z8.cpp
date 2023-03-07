@@ -21,42 +21,46 @@
 namespace libasm {
 namespace z8 {
 
-const char AsmZ8::OPT_INT_SETRP[] PROGMEM = "setrp";
-const char AsmZ8::OPT_DESC_SETRP[] PROGMEM = "set register pointer";
-const char AsmZ8::OPT_INT_SETRP0[] PROGMEM = "setrp0";
-const char AsmZ8::OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
-const char AsmZ8::OPT_INT_SETRP1[] PROGMEM = "setrp1";
-const char AsmZ8::OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+static const char OPT_INT_SETRP[] PROGMEM = "setrp";
+static const char OPT_DESC_SETRP[] PROGMEM = "set register pointer";
+static const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
+static const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
+static const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
+static const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
 
-bool AsmZ8::setRegPointer(int16_t rp) {
-    if (rp < 0) {
-        setRegPointer0(rp);
-        setRegPointer1(rp);
-        return true;
-    }
-    return setRegPointer0(rp) && setRegPointer1(rp + 8);
+AsmZ8::OptSetrp1::OptSetrp1(AsmZ8::PseudoZ8 &pseudos)
+    : IntOptionBase(OPT_INT_SETRP1, OPT_DESC_SETRP1), _pseudos(pseudos) {}
+
+AsmZ8::OptSetrp0::OptSetrp0(AsmZ8::PseudoZ8 &pseudos, const OptionBase &next)
+    : IntOptionBase(OPT_INT_SETRP0, OPT_DESC_SETRP0, next), _pseudos(pseudos) {}
+
+AsmZ8::OptSetrp::OptSetrp(AsmZ8::PseudoZ8 &pseudos, const OptionBase &next)
+    : IntOptionBase(OPT_INT_SETRP, OPT_DESC_SETRP, next), _pseudos(pseudos) {}
+
+Error AsmZ8::PseudoZ8::setRegPointer(int32_t rp) {
+    if (rp >= 0 && (rp & ~0xFF))
+        return ILLEGAL_OPERAND;
+    const auto error0 = setRegPointer0(rp);
+    const auto error1 = setRegPointer1(rp);
+    return error0 ? error0 : error1;
 }
 
-bool AsmZ8::setRegPointer0(int16_t rp0) {
-    if (rp0 >= 0 && (rp0 & ~0xF8)) {
-        setError(ILLEGAL_OPERAND);
-        return false;
-    }
+Error AsmZ8::PseudoZ8::setRegPointer0(int32_t rp0) {
+    if (rp0 >= 0 && (rp0 & ~0xF8))
+        return ILLEGAL_OPERAND;
     _regPointer0 = rp0;
-    return true;
+    return OK;
 }
 
-bool AsmZ8::setRegPointer1(int16_t rp1) {
-    if (rp1 >= 0 && (rp1 & ~0xF8)) {
-        setError(ILLEGAL_OPERAND);
-        return false;
-    }
+Error AsmZ8::PseudoZ8::setRegPointer1(int32_t rp1) {
+    if (rp1 >= 0 && (rp1 & ~0xF8))
+        return ILLEGAL_OPERAND;
     _regPointer1 = rp1;
-    return true;
+    return OK;
 }
 
-bool AsmZ8::isWorkReg(uint8_t regAddr) const {
-    const uint8_t regPage = (regAddr & 0xF8);
+bool AsmZ8::PseudoZ8::isWorkReg(uint8_t regAddr) const {
+    const auto regPage = (regAddr & 0xF8);
     if (_regPointer0 >= 0 && regPage == _regPointer0)
         return true;
     if (_regPointer1 >= 0 && regPage == _regPointer1)
@@ -260,21 +264,10 @@ void AsmZ8::encodePostByte(
     insn.emitOperand8(regAddr);
 }
 
-Error AsmZ8::setRp(StrScanner &scan, bool (AsmZ8::*set)(int16_t)) {
-    StrScanner p(scan.skipSpaces());
-    const auto rp = parseExpr16(p, *this);
-    if (isOK() && (this->*set)(rp)) {
-        scan = p;
-        return OK;
-    }
-    setError(scan, OPERAND_NOT_ALLOWED);
-    return OK;
-}
-
 Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p)) {
+    if (endOfLine(p)) {
         op.mode = M_NONE;
         return OK;
     }
@@ -328,7 +321,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
             const auto val16 = parseExpr16(p, op);
             if (parserError())
                 return getError();
-            if (!isWorkReg(val16))
+            if (!_pseudos.isWorkReg(val16))
                 return op.setError(UNKNOWN_OPERAND);
             op.reg = RegZ8::decodeRegNum(val16 & 0xF);
         }
@@ -350,7 +343,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir) {
         if (op.val16 >= 0x100)
             op.setErrorIf(OVERFLOW_RANGE);
-        if (!forceRegAddr && isWorkReg(op.val16)) {
+        if (!forceRegAddr && _pseudos.isWorkReg(op.val16)) {
             op.mode = (op.val16 & 1) == 0 ? M_IWW : M_IW;
             op.reg = RegZ8::decodeRegNum(op.val16 & 0xF);
             return OK;
@@ -368,7 +361,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         op.mode = M_DA;
         return OK;
     }
-    if (isWorkReg(op.val16)) {
+    if (_pseudos.isWorkReg(op.val16)) {
         op.mode = (op.val16 & 1) == 0 ? M_WW : M_W;
         op.reg = RegZ8::decodeRegNum(op.val16 & 0xF);
         return OK;
@@ -377,16 +370,31 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
+Error AsmZ8::PseudoZ8::setRp(
+        StrScanner &scan, Assembler &assembler, Error (AsmZ8::PseudoZ8::*set)(int32_t)) {
+    StrScanner p(scan.skipSpaces());
+    const int32_t rp = assembler.parseExpr32(p, assembler);
+    if (assembler.isOK()) {
+        const auto error = (this->*set)(rp);
+        if (error)
+            return assembler.setError(scan, error);
+        scan = p;
+        return OK;
+    }
+    assembler.setError(scan, OPERAND_NOT_ALLOWED);
+    return OK;
+}
+
+Error AsmZ8::PseudoZ8::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
-        return setRp(scan, &AsmZ8::setRegPointer);
+        return setRp(scan, assembler, &AsmZ8::PseudoZ8::setRegPointer);
     if (TableZ8::TABLE.isSuper8()) {
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0)
-            return setRp(scan, &AsmZ8::setRegPointer0);
+            return setRp(scan, assembler, &AsmZ8::PseudoZ8::setRegPointer0);
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
-            return setRp(scan, &AsmZ8::setRegPointer1);
+            return setRp(scan, assembler, &AsmZ8::PseudoZ8::setRegPointer1);
     }
-    return UNKNOWN_INSTRUCTION;
+    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
@@ -404,7 +412,7 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(extOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

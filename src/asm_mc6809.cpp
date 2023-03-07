@@ -21,8 +21,11 @@
 namespace libasm {
 namespace mc6809 {
 
-const char AsmMc6809::OPT_INT_SETDP[] PROGMEM = "setdp";
-const char AsmMc6809::OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+static const char OPT_INT_SETDP[] PROGMEM = "setdp";
+static const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+
+AsmMc6809::OptSetdp::OptSetdp(AsmMc6809::PseudoMc6809 &pseudos)
+    : IntOptionBase(OPT_INT_SETDP, OPT_DESC_SETDP), _pseudos(pseudos) {}
 
 void AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
     const auto length = (insn.hasPrefix() ? 1 : 0) + (mode == M_LREL ? 3 : 2);
@@ -126,7 +129,7 @@ void AsmMc6809::encodeRegisterList(InsnMc6809 &insn, const Operand &op) {
         if (post & bit)
             setErrorIf(r, DUPLICATE_REGISTER);
         post |= bit;
-        if (endOfLine(*p.skipSpaces()))
+        if (endOfLine(p.skipSpaces()))
             break;
         if (!p.expect(',')) {
             setErrorIf(p, UNKNOWN_OPERAND);
@@ -275,7 +278,7 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
 Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     op.list = p;
@@ -346,14 +349,14 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
             }
             if (indexBits < 0) {
                 const auto addr = static_cast<Config::uintptr_t>(op.val32);
-                indexBits = static_cast<uint8_t>(addr >> 8) == _direct_page ? 8 : 16;
+                indexBits = static_cast<uint8_t>(addr >> 8) == _pseudos.dp() ? 8 : 16;
             }
             op.extra = indexBits;
             op.mode = (indexBits == 8) ? M_DIR : M_EXT;
             scan = p;
             return OK;
         }
-        if (endOfLine(*p)) {
+        if (endOfLine(p)) {
             op.index = index;
             op.mode = M_LIST;
             op.extra = 1;  // single register
@@ -411,7 +414,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
         if (op.indir)
             return op.setError(UNKNOWN_OPERAND);
         // actual parsing happens on |encodeRegisterList|.
-        while (!endOfLine(*p))
+        while (!endOfLine(p))
             p += 1;
         op.mode = M_LIST;
         op.extra = 2;  // multiple registers
@@ -422,16 +425,25 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
+bool AsmMc6809::PseudoMc6809::endOfLine(const StrScanner &scan, bool headOfLine) const {
+    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
+}
+
+Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
         StrScanner p(scan);
-        const auto val = parseExpr32(p, *this);
-        if (isOK())
-            _direct_page = val;
+        const auto val = assembler.parseExpr32(scan, assembler);
+        if (assembler.isOK())
+            setDp(val);
         scan = p;
         return OK;
     }
-    return UNKNOWN_INSTRUCTION;
+    return UNKNOWN_DIRECTIVE;
+}
+
+Error AsmMc6809::PseudoMc6809::setDp(int32_t value) {
+    _direct_page = value;
+    return OK;
 }
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
@@ -444,7 +456,7 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op2);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

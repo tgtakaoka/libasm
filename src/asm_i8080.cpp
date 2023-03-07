@@ -62,7 +62,7 @@ void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) 
 Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     op.reg = RegI8080::parseRegName(p);
@@ -106,7 +106,7 @@ Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(srcOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

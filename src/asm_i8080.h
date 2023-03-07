@@ -28,12 +28,13 @@ namespace i8080 {
 
 class AsmI8080 : public Assembler, public Config {
 public:
-    AsmI8080() : Assembler(_parser, TableI8080::TABLE), _parser() {}
+    AsmI8080() : Assembler(_parser, TableI8080::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

@@ -23,7 +23,7 @@ namespace f3850 {
 
 Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(scan.skipSpaces());
-    if (endOfLine(*scan))
+    if (endOfLine(scan))
         return OK;
 
     StrScanner p(scan);
@@ -122,7 +122,7 @@ Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op2);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

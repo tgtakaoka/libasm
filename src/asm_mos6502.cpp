@@ -19,10 +19,23 @@
 namespace libasm {
 namespace mos6502 {
 
-const char AsmMos6502::OPT_BOOL_LONGA[] PROGMEM = "longa";
-const char AsmMos6502::OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
-const char AsmMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
-const char AsmMos6502::OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
+static const char OPT_BOOL_LONGA[] PROGMEM = "longa";
+static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
+static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
+static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
+
+AsmMos6502::OptLongI::OptLongI() : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI) {}
+
+Error AsmMos6502::OptLongI::set(bool value) const {
+    return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
+}
+
+AsmMos6502::OptLongA::OptLongA(const OptionBase &next)
+    : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
+
+Error AsmMos6502::OptLongA::set(bool value) const {
+    return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+}
 
 void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t bank = insn.address() & ~0xFFFF;
@@ -162,7 +175,7 @@ static char parseSizeOverride(StrScanner &p) {
 Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (p.expect('#')) {  // #nn
@@ -196,29 +209,31 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
     return OK;
 }
 
-Error AsmMos6502::parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val)) {
+Error AsmMos6502::PseudoMos6502::parseTableOnOff(
+        StrScanner &scan, Assembler &assembler, bool (TableMos6502::*set)(bool val)) {
     StrScanner p(scan.skipSpaces());
-    const auto name = _parser.readSymbol(p);
+    const auto name = assembler.parser().readSymbol(p);
+    Error error = UNKNOWN_OPERAND;
     if (name.iequals_P(PSTR("on"))) {
-        if (!(TableMos6502::TABLE.*set)(true))
-            setError(scan, OPERAND_NOT_ALLOWED);
+        error = (TableMos6502::TABLE.*set)(true) ? OK : OPERAND_NOT_ALLOWED;
     } else if (name.iequals_P(PSTR("off"))) {
-        if (!(TableMos6502::TABLE.*set)(false))
-            setError(scan, OPERAND_NOT_ALLOWED);
-    } else {
-        setError(scan, UNKNOWN_OPERAND);
-        return OK;
+        error = (TableMos6502::TABLE.*set)(false) ? OK : OPERAND_NOT_ALLOWED;
     }
-    scan = p;
-    return OK;
+    if (error == OK)
+        scan = p;
+    return assembler.setError(scan, error);
 }
 
-Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
+bool AsmMos6502::PseudoMos6502::endOfLine(const StrScanner &scan, bool headOfLine) const {
+    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
+}
+
+Error AsmMos6502::PseudoMos6502::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     if (strcasecmp_P(insn.name(), PSTR("longa")) == 0)
-        return parseTableOnOff(scan, &TableMos6502::setLongAccumulator);
+        return parseTableOnOff(scan, assembler, &TableMos6502::setLongAccumulator);
     if (strcasecmp_P(insn.name(), PSTR("longi")) == 0)
-        return parseTableOnOff(scan, &TableMos6502::setLongIndex);
-    return UNKNOWN_INSTRUCTION;
+        return parseTableOnOff(scan, assembler, &TableMos6502::setLongIndex);
+    return UNKNOWN_DIRECTIVE;
 }
 
 static bool hasRegister(AddrMode mode) {
@@ -248,7 +263,7 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op3);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

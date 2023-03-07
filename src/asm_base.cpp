@@ -18,8 +18,8 @@
 
 namespace libasm {
 
-const char Assembler::OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
-const char Assembler::OPT_DESC_COMMENT[] PROGMEM = "line comment starting letter";
+static const char OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
+static const char OPT_DESC_COMMENT[] PROGMEM = "line comment starting letter";
 
 Error Assembler::checkAddress(uint32_t addr, const ErrorAt &at) {
     const uint32_t max = 1UL << config().addressWidth();
@@ -40,25 +40,27 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
         return getError();
     StrScanner scan(line);
     setError(scan, OK);
-    if (endOfLine(*scan.skipSpaces()))
+    if (endOfLine(scan.skipSpaces(), /*HeadOfLine*/ true))
         return setError(scan, OK);
 
     insn.clearNameBuffer().text(_parser.readSymbol(scan));
-    if (processPseudo(scan, insn) == OK)
-        return getError();
+    auto error = _pseudos.processPseudo(scan, insn, *this);
+    if (error != UNKNOWN_DIRECTIVE)
+        return setError(error);
 
-    const auto error = encodeImpl(scan, insn);
+    error = encodeImpl(scan, insn);
     if (error == UNKNOWN_INSTRUCTION)
         setAt(line);
     return error;
 }
 
-Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
+Error PseudoBase::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     return UNKNOWN_DIRECTIVE;
 }
 
-bool Assembler::endOfLine(char letter) const {
-    return letter == 0 || letter == ';' || letter == _commentChar;
+bool PseudoBase::endOfLine(const StrScanner &scan, bool headOfLine) const {
+    const auto c = *scan;
+    return c == 0 || c == ';';
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {

@@ -102,7 +102,7 @@ void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode 
 Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (p.expect('*')) {
@@ -152,7 +152,7 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op3);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

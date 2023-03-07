@@ -146,7 +146,7 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
         scan = p;
     } while (scan.skipSpaces().expect(','));
     scan.skipSpaces();
-    if (!assembler().endOfLine(*scan))
+    if (!assembler().endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setOK();
@@ -194,7 +194,7 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
         }
     } while (scan.skipSpaces().expect(','));
     scan.skipSpaces();
-    if (!assembler().endOfLine(*scan))
+    if (!assembler().endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setOK();

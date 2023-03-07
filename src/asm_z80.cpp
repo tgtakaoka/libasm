@@ -126,7 +126,7 @@ void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, cons
 Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     // 'C' is either C-reg or C-condition
@@ -243,7 +243,7 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(srcOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

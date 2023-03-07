@@ -28,7 +28,7 @@ namespace i8086 {
 
 class AsmI8086 : public Assembler, public Config {
 public:
-    AsmI8086() : Assembler(_parser, TableI8086::TABLE), _parser() { reset(); }
+    AsmI8086() : Assembler(_parser, TableI8086::TABLE, _pseudos), _parser(), _pseudos() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _optimizeSegment = false; }
@@ -36,9 +36,12 @@ public:
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
+
     bool _optimizeSegment;
-    const BoolOption _opt_optimizeSegment{
-            OPT_BOOL_OPTIMIZE_SEGMENT, OPT_DESC_OPTIMIZE_SEGMENT, _optimizeSegment};
+    const struct OptOptimizeSeg : public BoolOption {
+        OptOptimizeSeg(bool &var);
+    } _opt_optimizeSegment{_optimizeSegment};
     const Options _options{_opt_optimizeSegment};
 
     struct Operand : public OperandBase {
@@ -83,9 +86,6 @@ private:
     void emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
     void emitStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM;
-    static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM;
 };
 
 }  // namespace i8086

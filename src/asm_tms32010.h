@@ -28,12 +28,13 @@ namespace tms32010 {
 
 class AsmTms32010 : public Assembler, public Config {
 public:
-    AsmTms32010() : Assembler(_parser, TableTms32010::TABLE), _parser() {}
+    AsmTms32010() : Assembler(_parser, TableTms32010::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

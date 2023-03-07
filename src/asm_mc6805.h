@@ -28,7 +28,9 @@ namespace mc6805 {
 
 class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6805() : Assembler(_parser, TableMc6805::TABLE), _parser() { reset(); }
+    AsmMc6805() : Assembler(_parser, TableMc6805::TABLE, _pseudos), _parser(), _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
@@ -38,15 +40,14 @@ public:
 
 private:
     MotorolaValueParser _parser;
+    class PseudoMc6805 : public PseudoBase {
+        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
+    } _pseudos;
+
     uint8_t _pc_bits;
-    const struct OptPcBits : public IntOptionBase {
-        OptPcBits(uint8_t &value)
-            : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _pc_bits(value) {}
-        Error check(int32_t value) const override {
-            return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
-        }
-        void set(int32_t value) const override { _pc_bits = value; }
-        uint8_t &_pc_bits;
+    const struct OptPcBits : public IntOption<uint8_t> {
+        OptPcBits(uint8_t &var);
+        Error check(int32_t value) const override;
     } _opt_pc_bits{_pc_bits};
     const Options _options{_opt_pc_bits};
 
@@ -62,9 +63,6 @@ private:
     void emitBitNumber(InsnMc6805 &insn, const Operand &op);
     void emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_INT_PCBITS[] PROGMEM;
-    static const char OPT_DESC_PCBITS[] PROGMEM;
 };
 
 }  // namespace mc6805

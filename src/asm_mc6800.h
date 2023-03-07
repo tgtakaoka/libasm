@@ -28,12 +28,15 @@ namespace mc6800 {
 
 class AsmMc6800 : public Assembler, public Config {
 public:
-    AsmMc6800() : Assembler(_parser, TableMc6800::TABLE), _parser() {}
+    AsmMc6800() : Assembler(_parser, TableMc6800::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     MotorolaValueParser _parser;
+    class PseudoMc6800 : public PseudoBase {
+        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
+    } _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

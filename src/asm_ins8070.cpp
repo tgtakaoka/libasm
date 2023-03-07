@@ -37,7 +37,8 @@ static struct : public ValueParser::FuncParser {
     }
 } functionParser;
 
-AsmIns8070::AsmIns8070() : Assembler(_parser, TableIns8070::TABLE), _parser('$') {
+AsmIns8070::AsmIns8070()
+    : Assembler(_parser, TableIns8070::TABLE, _pseudos), _parser('$'), _pseudos() {
     _parser.setFuncParser(&functionParser);
 }
 
@@ -126,7 +127,7 @@ void AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op
 Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (p.expect('#') || p.expect('=')) {
@@ -212,7 +213,7 @@ Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(src);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dst);
     setErrorIf(src);

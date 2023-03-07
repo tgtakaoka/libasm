@@ -24,7 +24,7 @@ namespace i8048 {
 Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (p.expect('#')) {
@@ -205,7 +205,7 @@ Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(srcOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

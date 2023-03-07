@@ -28,7 +28,9 @@ namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000::TABLE), _parser('*') { reset(); }
+    AsmNs32000() : Assembler(_parser, TableNs32000::TABLE, _pseudos), _parser('*'), _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { TableNs32000::TABLE.reset(); }
@@ -36,18 +38,24 @@ public:
 
 private:
     NationalValueParser _parser;
-    struct OptCoprocessor : public OptionBase {
-        OptCoprocessor(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
-                Error (*set)(const StrScanner &))
-            : OptionBase(name_P, desc_P, OPT_TEXT), _set(set) {}
-        OptCoprocessor(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
-                Error (*set)(const StrScanner &), const OptionBase &next)
-            : OptionBase(name_P, desc_P, OPT_TEXT, next), _set(set) {}
-        Error set(StrScanner &scan) const override { return (*_set)(scan); }
-        Error (*_set)(const StrScanner &);
-    };
-    const OptCoprocessor _opt_pmmu{OPT_TEXT_PMMU, OPT_DESC_PMMU, &AsmNs32000::setPmmu};
-    const OptCoprocessor _opt_fpu{OPT_TEXT_FPU, OPT_DESC_FPU, &AsmNs32000::setFpu, _opt_pmmu};
+    class PseudoNs32000 : public PseudoBase {
+    public:
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
+
+        Error setFpu(const StrScanner &scan) const;
+        Error setPmmu(const StrScanner &scan) const;
+    } _pseudos;
+
+    const struct OptPmmu : public OptionBase {
+        OptPmmu(PseudoNs32000 &pseudos);
+        Error set(StrScanner &scan) const override;
+        PseudoNs32000 &_pseudos;
+    } _opt_pmmu{_pseudos};
+    const struct OptFpu : public OptionBase {
+        OptFpu(PseudoNs32000 &pseudos, const OptionBase &next);
+        Error set(StrScanner &scan) const override;
+        PseudoNs32000 &_pseudos;
+    } _opt_fpu{_pseudos, _opt_pmmu};
     const Options _options{_opt_fpu};
 
     struct Operand : public OperandBase {
@@ -68,9 +76,6 @@ private:
               size(SZ_NONE) {}
     };
 
-    static Error setFpu(const StrScanner &scan);
-    static Error setPmmu(const StrScanner &scan);
-
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;
     Error parseConfigNames(StrScanner &scan, Operand &op) const;
     Error parseRegisterList(StrScanner &scan, Operand &op) const;
@@ -88,13 +93,7 @@ private:
     void emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_TEXT_FPU[] PROGMEM;
-    static const char OPT_DESC_FPU[] PROGMEM;
-    static const char OPT_TEXT_PMMU[] PROGMEM;
-    static const char OPT_DESC_PMMU[] PROGMEM;
 };
 
 }  // namespace ns32000

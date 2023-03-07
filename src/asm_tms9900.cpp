@@ -159,7 +159,7 @@ void AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mo
 Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (p.expect('*')) {
@@ -215,7 +215,7 @@ Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(dstOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(srcOp);
     setErrorIf(dstOp);

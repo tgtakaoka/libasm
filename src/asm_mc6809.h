@@ -25,23 +25,34 @@
 
 namespace libasm {
 namespace mc6809 {
-
 class AsmMc6809 : public Assembler, public Config {
 public:
-    AsmMc6809() : Assembler(_parser, TableMc6809::TABLE), _parser() { reset(); }
+    AsmMc6809() : Assembler(_parser, TableMc6809::TABLE, _pseudos), _parser(), _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _direct_page = 0; }
+    void reset() override { _pseudos.setDp(0); }
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueParser _parser;
-    uint8_t _direct_page;
+    class PseudoMc6809 : public PseudoBase {
+    public:
+        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
+        uint8_t dp() const { return _direct_page; }
+        Error setDp(int32_t value);
+
+    private:
+        uint8_t _direct_page;
+    } _pseudos;
+
     const struct OptSetdp : public IntOptionBase {
-        OptSetdp(uint8_t &value) : IntOptionBase(OPT_INT_SETDP, OPT_DESC_SETDP), _dp(value) {}
-        void set(int32_t value) const override { _dp = value; }
-        uint8_t &_dp;
-    } _opt_setdp{_direct_page};
+        OptSetdp(PseudoMc6809 &pseudo);
+        void set(int32_t value) const override { _pseudos.setDp(value); }
+        PseudoMc6809 &_pseudos;
+    } _opt_setdp{_pseudos};
     const Options _options{_opt_setdp};
 
     struct Operand : public OperandBase {
@@ -74,11 +85,7 @@ private:
     void encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
     void encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
 
-    Error processPseudo(StrScanner &scan, Insn &Insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_INT_SETDP[] PROGMEM;
-    static const char OPT_DESC_SETDP[] PROGMEM;
 };
 
 }  // namespace mc6809

@@ -19,8 +19,16 @@
 namespace libasm {
 namespace mc68000 {
 
-const char AsmMc68000::OPT_BOOL_ALIAS[] PROGMEM = "alias";
-const char AsmMc68000::OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+static const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
+static const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+
+AsmMc68000::OptAlias::OptAlias(AsmMc68000 &assembler)
+    : BoolOptionBase(OPT_BOOL_ALIAS, OPT_DESC_ALIAS), _assembler(assembler) {}
+
+Error AsmMc68000::OptAlias::set(bool value) const {
+    _assembler.setAlias(value);
+    return OK;
+}
 
 static int8_t modePos(OprPos pos) {
     switch (pos) {
@@ -276,7 +284,7 @@ void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool rev
         if (a.skipSpaces().expect('/')) {
             p = a;
             continue;
-        } else if (*a == ',' || endOfLine(*a)) {
+        } else if (*a == ',' || endOfLine(a)) {
             break;
         }
         setErrorIf(a, UNKNOWN_OPERAND);
@@ -289,7 +297,7 @@ void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool rev
 Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(op.list = p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
@@ -370,7 +378,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.reg != REG_UNDEF) {
         a.skipSpaces();
         if ((*a == '/' || *a == '-') && RegMc68000::isGeneralReg(op.reg)) {
-            while (*a != ',' && !endOfLine(*a))
+            while (*a != ',' && !endOfLine(a))
                 ++a;
             op.mode = M_MULT;
             scan = a;
@@ -414,7 +422,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(dstOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(srcOp);
     setErrorIf(dstOp);

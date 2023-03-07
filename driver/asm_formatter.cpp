@@ -55,7 +55,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     }
     scan.skipSpaces();
 
-    if (!assembler.endOfLine(*scan)) {
+    if (!assembler.endOfLine(scan)) {
         StrScanner directive = scan;
         StrScanner p(scan);
         p.trimStart([](char s) { return !isspace(s); });
@@ -84,7 +84,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             return _errorAt.setError(_line_symbol, error);
     }
 
-    if (assembler.endOfLine(*scan))
+    if (assembler.endOfLine(scan))
         return OK;  // skip comment
 
     _insn.reset(startAddress());

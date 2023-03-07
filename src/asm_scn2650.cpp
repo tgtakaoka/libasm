@@ -49,7 +49,7 @@ static bool overflowInt13(Config::ptrdiff_t delta) {
 Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     // Do not skip preceding spaces.
     op.setAt(scan);
-    if (endOfLine(*scan))
+    if (endOfLine(scan))
         return OK;
 
     StrScanner p(scan);
@@ -205,7 +205,7 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(opr1);
         if (opr1.mode == M_REGN || opr1.mode == M_REG0 || opr1.mode == M_R123)
             insnWithReg = true;
-        if (!endOfLine(*scan.skipSpaces())) {
+        if (!endOfLine(scan.skipSpaces())) {
             if (parseOperand(scan.skipSpaces(), opr2) && opr2.hasError())
                 return setError(opr2);
         }
@@ -218,7 +218,7 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
         }
     }
 
-    if (!endOfLine(*scan.skipSpaces()))
+    if (!endOfLine(scan.skipSpaces()))
         return setError(GARBAGE_AT_END);
     setErrorIf(opr1);
     setErrorIf(opr2);

@@ -34,7 +34,7 @@ Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {
 Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (p.expect('#')) {
@@ -196,7 +196,7 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(src2);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dst);
     setErrorIf(src1);

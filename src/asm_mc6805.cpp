@@ -19,8 +19,15 @@
 namespace libasm {
 namespace mc6805 {
 
-const char AsmMc6805::OPT_INT_PCBITS[] = "pc-bits";
-const char AsmMc6805::OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+static const char OPT_INT_PCBITS[] = "pc-bits";
+static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+
+AsmMc6805::OptPcBits::OptPcBits(uint8_t &var)
+    : IntOption(OPT_INT_PCBITS, OPT_DESC_PCBITS, var) {}
+
+Error AsmMc6805::OptPcBits::check(int32_t value) const {
+    return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
+}
 
 AddressWidth AsmMc6805::addressWidth() const {
     return AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
@@ -29,7 +36,7 @@ AddressWidth AsmMc6805::addressWidth() const {
 Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p)) {
+    if (endOfLine(p)) {
         op.mode = M_NONE;
         return OK;
     }
@@ -182,6 +189,10 @@ void AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) 
     }
 }
 
+bool AsmMc6805::PseudoMc6805::endOfLine(const StrScanner &scan, bool headOfLine) const {
+    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
+}
+
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6805 insn(_insn);
     Operand op1, op2, op3;
@@ -197,7 +208,7 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op3);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

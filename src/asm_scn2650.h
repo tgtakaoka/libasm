@@ -28,12 +28,13 @@ namespace scn2650 {
 
 class AsmScn2650 : public Assembler, public Config {
 public:
-    AsmScn2650() : Assembler(_parser, TableScn2650::TABLE), _parser() {}
+    AsmScn2650() : Assembler(_parser, TableScn2650::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
     RegScn2650 _regs;
 
     struct Operand : public OperandBase {

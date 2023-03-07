@@ -48,8 +48,8 @@ protected:
     OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec)
         : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(nullptr) {}
 
-    Error parseBoolOption(StrScanner &scan, bool &value) const;
-    Error parseIntOption(StrScanner &scan, int32_t &value) const;
+    Error parseBoolOption(StrScanner &scan, bool &var) const;
+    Error parseIntOption(StrScanner &scan, int32_t &var) const;
 
 private:
     const /*PROGMEM*/ char *_name_P;
@@ -73,6 +73,19 @@ struct BoolOptionBase : public OptionBase {
     virtual Error set(bool value) const = 0;
 };
 
+struct BoolOption : public OptionBase {
+    BoolOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, bool &var,
+            const OptionBase &next)
+        : OptionBase(name_P, desc_P, OPT_BOOL, next), _var(var) {}
+    BoolOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, bool &var)
+        : OptionBase(name_P, desc_P, OPT_BOOL), _var(var) {}
+
+    Error set(StrScanner &scan) const override { return parseBoolOption(scan, _var); }
+
+private:
+    bool &_var;
+};
+
 struct IntOptionBase : public OptionBase {
     IntOptionBase(
             const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, const OptionBase &next)
@@ -94,40 +107,42 @@ struct IntOptionBase : public OptionBase {
     virtual void set(int32_t value) const = 0;
 };
 
-struct BoolOption : public OptionBase {
-    BoolOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, bool &value,
+template <typename T>
+struct IntOption : public IntOptionBase {
+    IntOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, T &var,
             const OptionBase &next)
-        : OptionBase(name_P, desc_P, OPT_BOOL, next), _value(value) {}
-    BoolOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, bool &value)
-        : OptionBase(name_P, desc_P, OPT_BOOL), _value(value) {}
+        : IntOptionBase(name_P, desc_P, next), _var(var) {}
+    IntOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, T &var)
+        : IntOptionBase(name_P, desc_P), _var(var) {}
 
-    Error set(StrScanner &scan) const override { return parseBoolOption(scan, _value); }
+    void set(int32_t value) const override { _var = value; }
 
 private:
-    bool &_value;
+    T &_var;
 };
 
 struct CharOption : public OptionBase {
-    CharOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, char &value,
+    CharOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, char &var,
             const OptionBase &next)
-        : OptionBase(name_P, desc_P, OPT_CHAR, next), _value(value) {}
-    CharOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, char &value)
-        : OptionBase(name_P, desc_P, OPT_CHAR), _value(value) {}
+        : OptionBase(name_P, desc_P, OPT_CHAR, next), _var(var) {}
+    CharOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, char &var)
+        : OptionBase(name_P, desc_P, OPT_CHAR), _var(var) {}
 
     Error set(StrScanner &scan) const override {
         if (scan.size() == 1) {
-            _value = *scan;
+            _var = *scan;
             return OK;
         }
         return ILLEGAL_CONSTANT;
     }
 
 private:
-    char &_value;
+    char &_var;
 };
 
 class Options {
 public:
+    Options() : _head(nullptr) {}
     Options(const OptionBase &head) : _head(&head) {}
 
     const OptionBase *head() const { return _head; }
@@ -138,8 +153,6 @@ public:
 
 private:
     const OptionBase *_head;
-
-    Options() : _head(nullptr) {}
 };
 
 }  // namespace libasm

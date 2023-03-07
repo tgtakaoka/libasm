@@ -44,7 +44,8 @@ static struct : public ValueParser::FuncParser {
     }
 } functionParser;
 
-AsmIns8060::AsmIns8060() : Assembler(_parser, TableIns8060::TABLE), _parser('$') {
+AsmIns8060::AsmIns8060()
+    : Assembler(_parser, TableIns8060::TABLE, _pseudos), _parser('$'), _pseudos() {
     _parser.setFuncParser(&functionParser);
 }
 
@@ -106,7 +107,7 @@ void AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
 Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p)) {
+    if (endOfLine(p)) {
         op.mode = M_NONE;
         return OK;
     }
@@ -149,7 +150,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     Operand op;
     if (parseOperand(scan, op) && op.hasError())
         return setError(op);
-    if (!endOfLine(*scan.skipSpaces()))
+    if (!endOfLine(scan.skipSpaces()))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op);
 

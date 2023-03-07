@@ -34,6 +34,7 @@ public:
 
 private:
     NationalValueParser _parser;
+    PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

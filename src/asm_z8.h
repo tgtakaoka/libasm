@@ -28,41 +28,46 @@ namespace z8 {
 
 class AsmZ8 : public Assembler, public Config {
 public:
-    AsmZ8() : Assembler(_parser, TableZ8::TABLE), _parser() { reset(); }
+    AsmZ8() : Assembler(_parser, TableZ8::TABLE, _pseudos), _parser(), _pseudos() { reset(); }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { setRegPointer(-1); }
+    void reset() override { _pseudos.setRegPointer(-1); }
     const Options &options() const override { return _options; }
 
 private:
     IntelValueParser _parser;
-    int16_t _regPointer0;
-    int16_t _regPointer1;
-    struct OptSetrp : public IntOptionBase {
-        OptSetrp(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, AsmZ8 *assembler,
-                bool (AsmZ8::*set)(int16_t), const OptionBase &next)
-            : IntOptionBase(name_P, desc_P, next), _assembler(assembler), _set(set) {}
-        OptSetrp(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, AsmZ8 *assembler,
-                bool (AsmZ8::*set)(int16_t))
-            : IntOptionBase(name_P, desc_P), _assembler(assembler), _set(set) {}
-        Error check(int32_t value) const override {
-            return (_assembler->*_set)(value) ? OK : OPERAND_NOT_ALLOWED;
-        }
-        void set(int32_t value) const override { (void)value; }
-        AsmZ8 *_assembler;
-        bool (AsmZ8::*_set)(int16_t);
-    };
-    const OptSetrp _opt_setrp1{OPT_INT_SETRP1, OPT_DESC_SETRP1, this, &AsmZ8::setRegPointer1};
-    const OptSetrp _opt_setrp0{
-            OPT_INT_SETRP0, OPT_DESC_SETRP0, this, &AsmZ8::setRegPointer0, _opt_setrp1};
-    const OptSetrp _opt_setrp{
-            OPT_INT_SETRP, OPT_DESC_SETRP, this, &AsmZ8::setRegPointer, _opt_setrp0};
-    const Options _options{_opt_setrp};
+    class PseudoZ8 : public PseudoBase {
+    public:
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 
-    bool setRegPointer(int16_t rp);
-    bool setRegPointer0(int16_t rp);
-    bool setRegPointer1(int16_t rp);
-    bool isWorkReg(uint8_t regAddr) const;
+        bool isWorkReg(uint8_t regAddr) const;
+        Error setRegPointer(int32_t rp);
+        Error setRegPointer0(int32_t rp);
+        Error setRegPointer1(int32_t rp);
+
+    private:
+        Error setRp(StrScanner &scan, Assembler &assembler, Error (AsmZ8::PseudoZ8::*)(int32_t));
+
+        int16_t _regPointer0;
+        int16_t _regPointer1;
+    } _pseudos;
+
+    struct OptSetrp1 : public IntOptionBase {
+        OptSetrp1(PseudoZ8 &pseudos);
+        void set(int32_t value) const override { _pseudos.setRegPointer1(value); }
+        PseudoZ8 &_pseudos;
+    } _opt_setrp1{_pseudos};
+    struct OptSetrp0 : public IntOptionBase {
+        OptSetrp0(PseudoZ8 &pseudos, const OptionBase &next);
+        void set(int32_t value) const override { _pseudos.setRegPointer0(value); }
+        PseudoZ8 &_pseudos;
+    } _opt_setrp0{_pseudos, _opt_setrp1};
+    struct OptSetrp : public IntOptionBase {
+        OptSetrp(PseudoZ8 &pseudos, const OptionBase &next);
+        void set(int32_t value) const override { _pseudos.setRegPointer(value); }
+        PseudoZ8 &_pseudos;
+    } _opt_setrp{_pseudos, _opt_setrp0};
+    const Options _options{_opt_setrp};
 
     struct Operand : public OperandBase {
         AddrMode mode;
@@ -73,7 +78,6 @@ private:
     };
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    Error setRp(StrScanner &scan, bool (AsmZ8::*)(int16_t));
 
     void encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
     void encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
@@ -86,15 +90,7 @@ private:
     void encodePostByte(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_INT_SETRP[] PROGMEM;
-    static const char OPT_DESC_SETRP[] PROGMEM;
-    static const char OPT_INT_SETRP0[] PROGMEM;
-    static const char OPT_DESC_SETRP0[] PROGMEM;
-    static const char OPT_INT_SETRP1[] PROGMEM;
-    static const char OPT_DESC_SETRP1[] PROGMEM;
 };
 
 }  // namespace z8

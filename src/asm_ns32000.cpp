@@ -21,10 +21,24 @@
 namespace libasm {
 namespace ns32000 {
 
-const char AsmNs32000::OPT_TEXT_FPU[] PROGMEM = "fpu";
-const char AsmNs32000::OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
-const char AsmNs32000::OPT_TEXT_PMMU[] PROGMEM = "pmmu";
-const char AsmNs32000::OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+static const char OPT_TEXT_FPU[] PROGMEM = "fpu";
+static const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
+static const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
+static const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+
+AsmNs32000::OptPmmu::OptPmmu(PseudoNs32000 &pseudos)
+    : OptionBase(OPT_TEXT_PMMU, OPT_DESC_PMMU, OPT_TEXT), _pseudos(pseudos) {}
+
+Error AsmNs32000::OptPmmu::set(StrScanner &scan) const {
+    return _pseudos.setPmmu(scan);
+}
+
+AsmNs32000::OptFpu::OptFpu(PseudoNs32000 &pseudos, const OptionBase &next)
+    : OptionBase(OPT_TEXT_FPU, OPT_DESC_FPU, OPT_TEXT, next), _pseudos(pseudos) {}
+
+Error AsmNs32000::OptFpu::set(StrScanner &scan) const {
+    return _pseudos.setFpu(scan);
+}
 
 Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) const {
     StrScanner p(scan);
@@ -36,7 +50,7 @@ Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) c
         if (strOpt & uint8_t(name))
             return op.setError(ILLEGAL_OPERAND);
         strOpt |= uint8_t(name);
-        if (p.skipSpaces().expect(']') || (!braket && endOfLine(*p)))
+        if (p.skipSpaces().expect(']') || (!braket && endOfLine(p)))
             break;
         if (p.expect(',') || (!braket && p.expect('/'))) {
             p.skipSpaces();
@@ -97,7 +111,7 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
 Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
     if (p.expect('@')) {
         op.val32 = parseExpr32(p, op);
@@ -127,7 +141,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     if (*p == '*' || *p == '.') {
         StrScanner t(p);
         ++t;
-        if (*t.skipSpaces() == '+' || *t == '-' || endOfLine(*t) || *t == '[' || *t == ',') {
+        if (*t.skipSpaces() == '+' || *t == '-' || endOfLine(t) || *t == '[' || *t == ',') {
             StrScanner base = _parser.scanExpr(p, '[');
             const auto size = base.size();
             if (size) {
@@ -197,7 +211,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
                     return op.getError();
                 p.skipSpaces();
             }
-            if (*p == '[' || endOfLine(*p) || *p == ',') {
+            if (*p == '[' || endOfLine(p) || *p == ',') {
                 op.mode = M_EXT;
                 scan = p;
                 return OK;
@@ -214,7 +228,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         char *e;
         op.float64 = strtod(a.str(), &e);
         StrScanner end(e);
-        if (a.str() != e && (*end == ',' || endOfLine(*end))) {
+        if (a.str() != e && (*end == ',' || endOfLine(end))) {
             op.mode = M_IMM;
             op.size = SZ_LONG;
             scan = end;
@@ -230,7 +244,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     } else {
         op.float64 = val.getUnsigned();
     }
-    if (*p.skipSpaces() == ',' || endOfLine(*p)) {
+    if (*p.skipSpaces() == ',' || endOfLine(p)) {
         op.mode = M_IMM;  // M_REL
         scan = p;
         return OK;
@@ -613,35 +627,31 @@ void AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, con
     }
 }
 
-Error AsmNs32000::setFpu(const StrScanner &scan) {
+Error AsmNs32000::PseudoNs32000::setFpu(const StrScanner &scan) const {
     return TableNs32000::TABLE.setFpu(scan) ? OK : UNKNOWN_OPERAND;
 }
 
-Error AsmNs32000::setPmmu(const StrScanner &scan) {
+Error AsmNs32000::PseudoNs32000::setPmmu(const StrScanner &scan) const {
     return TableNs32000::TABLE.setMmu(scan) ? OK : UNKNOWN_OPERAND;
 }
 
-Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
+Error AsmNs32000::PseudoNs32000::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     StrScanner p(scan.skipSpaces());
+    ValueParser &parser = assembler.parser();
+    Error error = UNKNOWN_DIRECTIVE;
     if (strcasecmp_P(insn.name(), OPT_TEXT_FPU) == 0) {
-        const auto error = setFpu(_parser.readSymbol(p));
-        if (error) {
-            setError(scan, error);
-        } else {
-            scan = p;
-        }
-        return OK;
+        error = setFpu(parser.readSymbol(p));
+        if (error)
+            assembler.setError(scan, error);
     }
     if (strcasecmp_P(insn.name(), OPT_TEXT_PMMU) == 0) {
-        const auto error = setPmmu(_parser.readSymbol(p));
-        if (error) {
-            setError(scan, error);
-        } else {
-            scan = p;
-        }
-        return OK;
+        error = setPmmu(parser.readSymbol(p));
+        if (error)
+            assembler.setError(scan, error);
     }
-    return UNKNOWN_INSTRUCTION;
+    if (error == OK)
+        scan = p;
+    return error;
 }
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
@@ -664,7 +674,7 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(ex2Op);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(srcOp);
     setErrorIf(dstOp);

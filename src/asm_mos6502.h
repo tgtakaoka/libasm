@@ -28,7 +28,9 @@ namespace mos6502 {
 
 class AsmMos6502 : public Assembler, public Config {
 public:
-    AsmMos6502() : Assembler(_parser, TableMos6502::TABLE), _parser() { reset(); }
+    AsmMos6502() : Assembler(_parser, TableMos6502::TABLE, _pseudos), _parser(), _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
@@ -37,17 +39,22 @@ public:
 
 private:
     MotorolaValueParser _parser;
+    class PseudoMos6502 : public PseudoBase {
+        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
+
+    private:
+        Error parseTableOnOff(
+                StrScanner &scan, Assembler &assembler, bool (TableMos6502::*set)(bool val));
+    } _pseudos;
+
     const struct OptLongI : public BoolOptionBase {
-        OptLongI() : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI) {}
-        Error set(bool value) const override {
-            return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
-        }
+        OptLongI();
+        Error set(bool value) const override;
     } _opt_longi{};
     const struct OptLongA : public BoolOptionBase {
-        OptLongA(const OptionBase &next) : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
-        Error set(bool value) const override {
-            return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
-        }
+        OptLongA(const OptionBase &next);
+        Error set(bool value) const override;
     } _opt_longa{_opt_longi};
     const Options _options{_opt_longa};
 
@@ -61,7 +68,6 @@ private:
         }
     };
 
-    Error parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val));
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
     Error parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;
@@ -71,13 +77,7 @@ private:
     void encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     void encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_BOOL_LONGA[] PROGMEM;
-    static const char OPT_DESC_LONGA[] PROGMEM;
-    static const char OPT_BOOL_LONGI[] PROGMEM;
-    static const char OPT_DESC_LONGI[] PROGMEM;
 };
 
 }  // namespace mos6502

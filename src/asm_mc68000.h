@@ -29,7 +29,9 @@ namespace mc68000 {
 class AsmMc68000 : public Assembler, public Config {
 public:
     AsmMc68000()
-        : Assembler(_parser, TableMc68000::TABLE), _parser(/*closingQuote*/ true) {
+        : Assembler(_parser, TableMc68000::TABLE, _pseudos),
+          _parser(/*closingQuote*/ true),
+          _pseudos() {
         reset();
     }
 
@@ -39,15 +41,13 @@ public:
 
 private:
     MotorolaValueParser _parser;
+    PseudoBase _pseudos;
+
     const struct OptAlias : public BoolOptionBase {
-        OptAlias(AsmMc68000 *assembler)
-            : BoolOptionBase(OPT_BOOL_ALIAS, OPT_DESC_ALIAS), _assembler(assembler) {}
-        Error set(bool value) const override {
-            _assembler->setAlias(value);
-            return OK;
-        }
-        AsmMc68000 *_assembler;
-    } _opt_alias{this};
+        OptAlias(AsmMc68000 &assembler);
+        Error set(bool value) const override;
+        AsmMc68000 &_assembler;
+    } _opt_alias{*this};
     const Options _options{_opt_alias};
 
     struct Operand : public OperandBase {
@@ -80,9 +80,6 @@ private:
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }
-
-    static const char OPT_BOOL_ALIAS[] PROGMEM;
-    static const char OPT_DESC_ALIAS[] PROGMEM;
 };
 
 }  // namespace mc68000

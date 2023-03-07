@@ -29,8 +29,16 @@
 
 namespace libasm {
 
+class Assembler;
+
 struct OperandBase : public ErrorAt {
     bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
+};
+
+class PseudoBase {
+public:
+    virtual bool endOfLine(const StrScanner &scan, bool headOfLine) const;
+    virtual Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler);
 };
 
 class Assembler : public ErrorAt {
@@ -40,7 +48,9 @@ public:
     virtual void reset() {}
 
     ValueParser &parser() const { return _parser; }
-    bool endOfLine(char letter) const;
+    bool endOfLine(StrScanner &scan, bool headOfLine = false) const {
+        return _pseudos.endOfLine(scan, headOfLine);
+    }
 
     const /* PROGMEM */ char *listCpu_P() const { return _table.listCpu_P(); }
     const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }
@@ -59,21 +69,6 @@ public:
     /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
     virtual bool hasSetInstruction() const { return false; }
 
-private:
-    ValueParser &_parser;
-
-protected:
-    TableBase &_table;
-    char _commentChar;
-    SymbolTable *_symtab;
-    const CharOption _opt_commentChar{OPT_CHAR_COMMENT, OPT_DESC_COMMENT, _commentChar};
-    const Options _commonOptions{_opt_commentChar};
-
-    Assembler(ValueParser &parser, TableBase &table, char commentChar = 0)
-        : ErrorAt(), _parser(parser), _table(table), _commentChar(commentChar) {}
-
-    uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
-
     /** Parse |expr| text and get value as unsigned 16 bit. */
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error) const;
     /** Parse |expr| text and get value as unsigned 32 bit. */
@@ -83,6 +78,21 @@ protected:
     /** Return error caused by |parseExpr16| and |parseExpr32|. */
     Error parserError() const { return _parser.getError(); }
 
+private:
+    ValueParser &_parser;
+
+protected:
+    TableBase &_table;
+    PseudoBase &_pseudos;
+    char _commentChar;
+    SymbolTable *_symtab;
+    const Options _commonOptions;
+
+    Assembler(ValueParser &parser, TableBase &table, PseudoBase &pseudos)
+        : ErrorAt(), _parser(parser), _table(table), _pseudos(pseudos) {}
+
+    uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
+
     static bool overflowRel8(int16_t s16) { return Value::overflowRel8(s16); }
     static bool overflowRel8(int32_t s32) { return Value::overflowRel8(s32); }
     static bool overflowRel16(int32_t s32) { return Value::overflowRel16(s32); }
@@ -91,11 +101,7 @@ protected:
     static bool overflowUint16(uint32_t u32) { return Value::overflowUint16(u32); }
     static bool overflowUint(uint32_t u32, uint8_t bitw) { return Value::overflowUint(u32, bitw); }
 
-    static const char OPT_CHAR_COMMENT[] PROGMEM;
-    static const char OPT_DESC_COMMENT[] PROGMEM;
-
 private:
-    virtual Error processPseudo(StrScanner &scan, Insn &insn);
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
 };
 

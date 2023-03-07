@@ -28,12 +28,13 @@ namespace f3850 {
 
 class AsmF3850 : public Assembler, public Config {
 public:
-    AsmF3850() : Assembler(_parser, TableF3850::TABLE), _parser() {}
+    AsmF3850() : Assembler(_parser, TableF3850::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     FairchildValueParser _parser;
+    PseudoBase _pseudos;
     RegF3850 _regs;
 
     struct Operand : public OperandBase {

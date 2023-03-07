@@ -19,8 +19,11 @@
 namespace libasm {
 namespace i8086 {
 
-const char AsmI8086::OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
-const char AsmI8086::OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
+static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+
+AsmI8086::OptOptimizeSeg::OptOptimizeSeg(bool &var)
+    : BoolOption(OPT_BOOL_OPTIMIZE_SEGMENT, OPT_DESC_OPTIMIZE_SEGMENT, var) {}
 
 Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
@@ -91,7 +94,7 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
 
 Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
     StrScanner p(scan);
-    if (endOfLine(*p) || *p == ']')
+    if (endOfLine(p) || *p == ']')
         return OK;
     if (op.reg != REG_UNDEF || op.index != REG_UNDEF) {
         if (*p != '+' && *p != '-')
@@ -108,7 +111,7 @@ Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
 Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     if (parseStringInst(p, op) == OK) {
@@ -171,7 +174,8 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     if (reg != REG_UNDEF)
         return op.setError(UNKNOWN_OPERAND);
 
-    const auto valp = p.skipSpaces();;
+    const auto valp = p.skipSpaces();
+    ;
     op.val32 = parseExpr32(p, op);
     if (parserError())
         return op.getError();
@@ -479,7 +483,7 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(extOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

@@ -28,12 +28,13 @@ namespace tms9900 {
 
 class AsmTms9900 : public Assembler, public Config {
 public:
-    AsmTms9900() : Assembler(_parser, TableTms9900::TABLE), _parser() {}
+    AsmTms9900() : Assembler(_parser, TableTms9900::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

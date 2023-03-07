@@ -28,13 +28,14 @@ namespace tlcs90 {
 
 class AsmTlcs90 : public Assembler, public Config {
 public:
-    AsmTlcs90() : Assembler(_parser, TableTlcs90::TABLE), _parser() {}
+    AsmTlcs90() : Assembler(_parser, TableTlcs90::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
     bool hasSetInstruction() const override { return true; }
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);

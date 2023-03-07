@@ -94,7 +94,7 @@ void AsmTlcs90::encodeOperand(
 Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     const auto cc = RegTlcs90::parseCcName(p);
@@ -201,7 +201,7 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(srcOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

@@ -28,13 +28,14 @@ namespace mn1610 {
 
 class AsmMn1610 : public Assembler, public Config {
 public:
-    AsmMn1610() : Assembler(_parser, TableMn1610::TABLE), _parser('*') {}
+    AsmMn1610() : Assembler(_parser, TableMn1610::TABLE, _pseudos), _parser('*'), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMn1610::TABLE.addressWidth(); }
 
 private:
     NationalValueParser _parser;
+    PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

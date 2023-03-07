@@ -19,8 +19,11 @@
 namespace libasm {
 namespace z8000 {
 
-const char AsmZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-const char AsmZ8000::OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+
+AsmZ8000::OptAutoShortDirect::OptAutoShortDirect(bool &var)
+    : BoolOption(OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, var) {}
 
 void AsmZ8000::emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data) {
     data &= 0xF;
@@ -375,7 +378,7 @@ void AsmZ8000::checkRegisterOverlap(
 
 int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
     StrScanner p(scan);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return 0;
     int8_t num = 0;
     while (true) {
@@ -383,7 +386,7 @@ int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
         if (intr == INTR_UNDEF)
             return -1;
         num |= RegZ8000::encodeIntrName(intr);
-        if (endOfLine(*p.skipSpaces())) {
+        if (endOfLine(p.skipSpaces())) {
             scan = p;
             return num;
         }
@@ -395,7 +398,7 @@ int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
 
 int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
     StrScanner p(scan);
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return 0;
     int8_t num = 0;
     while (true) {
@@ -403,7 +406,7 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
         if (flag == FLAG_UNDEF)
             return -1;
         num |= RegZ8000::encodeFlagName(flag);
-        if (endOfLine(*p.skipSpaces())) {
+        if (endOfLine(p.skipSpaces())) {
             scan = p;
             return num;
         }
@@ -424,7 +427,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
         scan = p;
         return OK;
     }
-    if (endOfLine(*p))
+    if (endOfLine(p))
         return OK;
 
     StrScanner a(p);
@@ -554,7 +557,7 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(ex2Op);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);

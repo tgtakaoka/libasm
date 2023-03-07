@@ -28,12 +28,13 @@ namespace i8096 {
 
 class AsmI8096 : public Assembler, public Config {
 public:
-    AsmI8096() : Assembler(_parser, TableI8096::TABLE), _parser() {}
+    AsmI8096() : Assembler(_parser, TableI8096::TABLE, _pseudos), _parser(), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

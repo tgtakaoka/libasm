@@ -28,7 +28,7 @@ namespace z8000 {
 
 class AsmZ8000 : public Assembler, public Config {
 public:
-    AsmZ8000() : Assembler(_parser, TableZ8000::TABLE), _parser() {
+    AsmZ8000() : Assembler(_parser, TableZ8000::TABLE, _pseudos), _parser(), _pseudos() {
         reset();
         //_options.registerOption(_opt_shortDitrect);
     }
@@ -41,9 +41,12 @@ public:
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
+
     bool _autoShortDirect;
-    const BoolOption _opt_shortDitrect{
-            OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, _autoShortDirect};
+    const struct OptAutoShortDirect : public BoolOption {
+        OptAutoShortDirect(bool &var);
+    } _opt_shortDitrect{_autoShortDirect};
     const Options _options{_opt_shortDitrect};
 
     struct Operand : public OperandBase {
@@ -75,9 +78,6 @@ private:
     void checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
             const Operand &cntOp);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM;
-    static const char OPT_DESC_SHORT_DIRECT[] PROGMEM;
 };
 
 }  // namespace z8000

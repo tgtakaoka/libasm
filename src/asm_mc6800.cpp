@@ -22,7 +22,7 @@ namespace mc6800 {
 Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
-    if (endOfLine(*p) || *p == ',') {
+    if (endOfLine(p) || *p == ',') {
         op.mode = M_NONE;
         scan = p;
         return OK;
@@ -150,6 +150,10 @@ void AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) 
     }
 }
 
+bool AsmMc6800::PseudoMc6800::endOfLine(const StrScanner &scan, bool headOfLine) const {
+    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
+}
+
 Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6800 insn(_insn);
     Operand op1, op2, op3;
@@ -165,7 +169,7 @@ Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(op3);
         scan.skipSpaces();
     }
-    if (!endOfLine(*scan))
+    if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
     setErrorIf(op1);
     setErrorIf(op2);

@@ -27,7 +27,9 @@ namespace cdp1802 {
 
 class AsmCdp1802 : public Assembler, public Config {
 public:
-    AsmCdp1802() : Assembler(_parser, TableCdp1802::TABLE), _parser() { reset(); }
+    AsmCdp1802() : Assembler(_parser, TableCdp1802::TABLE, _pseudos), _parser(), _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useReg = _smartBranch = false; }
@@ -35,11 +37,16 @@ public:
 
 private:
     IntelValueParser _parser;
+    PseudoBase _pseudos;
+
     bool _useReg;
     bool _smartBranch;
-    const BoolOption _opt_smartBranch{OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH, _smartBranch};
-    const BoolOption _opt_useReg{
-            OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, _useReg, _opt_smartBranch};
+    const struct OptSmartBranch : public BoolOption {
+        OptSmartBranch(bool &var);
+    } _opt_smartBranch{_smartBranch};
+    const struct OptUseRegister : public BoolOption {
+        OptUseRegister(bool &var, const OptionBase &next);
+    } _opt_useReg{_useReg, _opt_smartBranch};
     const Options _options{_opt_useReg};
 
     struct Operand : public OperandBase {
@@ -53,11 +60,6 @@ private:
     void emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     void encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
-    static const char OPT_DESC_USE_REGISTER[] PROGMEM;
-    static const char OPT_BOOL_SMART_BRANCH[] PROGMEM;
-    static const char OPT_DESC_SMART_BRANCH[] PROGMEM;
 };
 
 }  // namespace cdp1802
