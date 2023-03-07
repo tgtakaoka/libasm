@@ -198,8 +198,6 @@ void AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mo
 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnScn2650 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand opr1, opr2;
     bool insnWithReg = false;
     if (scan.expect(',')) {

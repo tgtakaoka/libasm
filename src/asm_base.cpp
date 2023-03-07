@@ -39,14 +39,22 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (checkAddress(insn.address(), *this))
         return getError();
     StrScanner scan(line);
-    setError(scan.skipSpaces(), OK);
-    if (endOfLine(*scan))
+    setError(scan, OK);
+    if (endOfLine(*scan.skipSpaces()))
         return setError(scan, OK);
-    insn.clearNameBuffer();
+
+    insn.clearNameBuffer().text(_parser.readSymbol(scan));
+    if (processPseudo(scan, insn) == OK)
+        return getError();
+
     const auto error = encodeImpl(scan, insn);
     if (error == UNKNOWN_INSTRUCTION)
         setAt(line);
     return error;
+}
+
+Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
+    return UNKNOWN_DIRECTIVE;
 }
 
 bool Assembler::endOfLine(char letter) const {

@@ -95,6 +95,7 @@ protected:
     static const char OPT_DESC_COMMENT[] PROGMEM;
 
 private:
+    virtual Error processPseudo(StrScanner &scan, Insn &insn);
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
 };
 

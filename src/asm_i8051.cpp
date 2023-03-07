@@ -173,8 +173,6 @@ void AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand
 
 Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8051 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

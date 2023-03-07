@@ -621,9 +621,9 @@ Error AsmNs32000::setPmmu(const StrScanner &scan) {
     return TableNs32000::TABLE.setMmu(scan) ? OK : UNKNOWN_OPERAND;
 }
 
-Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
+Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     StrScanner p(scan.skipSpaces());
-    if (strcasecmp_P(name, OPT_TEXT_FPU) == 0) {
+    if (strcasecmp_P(insn.name(), OPT_TEXT_FPU) == 0) {
         const auto error = setFpu(_parser.readSymbol(p));
         if (error) {
             setError(scan, error);
@@ -632,7 +632,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
         }
         return OK;
     }
-    if (strcasecmp_P(name, OPT_TEXT_PMMU) == 0) {
+    if (strcasecmp_P(insn.name(), OPT_TEXT_PMMU) == 0) {
         const auto error = setPmmu(_parser.readSymbol(p));
         if (error) {
             setError(scan, error);
@@ -646,11 +646,6 @@ Error AsmNs32000::processPseudo(StrScanner &scan, const char *name) {
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnNs32000 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
-    if (processPseudo(scan, insn.name()) == OK)
-        return getError();
-
     Operand srcOp, dstOp, ex1Op, ex2Op;
     if (parseOperand(scan, srcOp) && srcOp.hasError())
         return setError(srcOp);

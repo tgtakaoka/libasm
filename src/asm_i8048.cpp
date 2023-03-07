@@ -197,8 +197,6 @@ void AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand
 
 Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8048 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

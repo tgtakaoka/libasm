@@ -193,8 +193,6 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnTlcs90 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.getError() != UNDEFINED_SYMBOL)
         return setError(dstOp);

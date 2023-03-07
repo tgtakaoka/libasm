@@ -62,7 +62,6 @@ private:
     };
 
     Error parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bool val));
-    Error processPseudo(StrScanner &scan, const char *name);
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
     Error parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;
@@ -71,6 +70,8 @@ private:
     void emitImmediate(InsnMos6502 &insn, const Operand &op, bool imm16);
     void encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     void encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_BOOL_LONGA[] PROGMEM;

@@ -98,8 +98,6 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8080 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

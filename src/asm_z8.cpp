@@ -271,18 +271,6 @@ Error AsmZ8::setRp(StrScanner &scan, bool (AsmZ8::*set)(int16_t)) {
     return OK;
 }
 
-Error AsmZ8::processPseudo(StrScanner &scan, const char *name) {
-    if (strcasecmp_P(name, OPT_INT_SETRP) == 0)
-        return setRp(scan, &AsmZ8::setRegPointer);
-    if (TableZ8::TABLE.isSuper8()) {
-        if (strcasecmp_P(name, OPT_INT_SETRP0) == 0)
-            return setRp(scan, &AsmZ8::setRegPointer0);
-        if (strcasecmp_P(name, OPT_INT_SETRP1) == 0)
-            return setRp(scan, &AsmZ8::setRegPointer1);
-    }
-    return UNKNOWN_INSTRUCTION;
-}
-
 Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     StrScanner p(scan.skipSpaces());
     op.setAt(p);
@@ -389,13 +377,20 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
+        return setRp(scan, &AsmZ8::setRegPointer);
+    if (TableZ8::TABLE.isSuper8()) {
+        if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0)
+            return setRp(scan, &AsmZ8::setRegPointer0);
+        if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
+            return setRp(scan, &AsmZ8::setRegPointer1);
+    }
+    return UNKNOWN_INSTRUCTION;
+}
+
 Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnZ8 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
-    if (processPseudo(scan, insn.name()) == OK)
-        return getError();
-
     Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

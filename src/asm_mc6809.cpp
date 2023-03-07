@@ -422,8 +422,8 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmMc6809::processPseudo(StrScanner &scan, const char *name) {
-    if (strcasecmp_P(name, OPT_INT_SETDP) == 0) {
+Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
         StrScanner p(scan);
         const auto val = parseExpr32(p, *this);
         if (isOK())
@@ -436,11 +436,6 @@ Error AsmMc6809::processPseudo(StrScanner &scan, const char *name) {
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6809 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
-    if (processPseudo(scan, insn.name()) == OK)
-        return getError();
-
     Operand op1, op2;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

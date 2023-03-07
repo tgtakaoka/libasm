@@ -114,8 +114,6 @@ void AsmF3850::encodeOperand(InsnF3850 &insn, const Operand &op, AddrMode mode) 
 
 Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnF3850 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand op1, op2;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

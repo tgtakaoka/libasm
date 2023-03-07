@@ -123,8 +123,6 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnCdp1802 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand op1, op2;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

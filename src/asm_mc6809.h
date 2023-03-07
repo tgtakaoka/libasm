@@ -64,7 +64,6 @@ private:
 
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    Error processPseudo(StrScanner &scan, const char *name);
 
     void encodeRegisterList(InsnMc6809 &insn, const Operand &op);
     void encodeRegisterPair(InsnMc6809 &insn, const Operand &op);
@@ -74,6 +73,8 @@ private:
     char transferMemoryMode(Operand &op) const;
     void encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
     void encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
+
+    Error processPseudo(StrScanner &scan, Insn &Insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_SETDP[] PROGMEM;

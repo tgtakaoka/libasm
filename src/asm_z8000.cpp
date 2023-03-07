@@ -536,8 +536,6 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
 
 Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnZ8000 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dstOp, srcOp, ex1Op, ex2Op;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

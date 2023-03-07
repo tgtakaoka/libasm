@@ -76,7 +76,6 @@ private:
     Error parseRegisterList(StrScanner &scan, Operand &op) const;
     Error parseBaseOperand(StrScanner &scan, Operand &op);
     Error parseOperand(StrScanner &scan, Operand &op);
-    Error processPseudo(StrScanner &scan, const char *name);
     void emitDisplacement(
             InsnNs32000 &insn, const Operand &op, uint32_t val32, Error error = OVERFLOW_RANGE);
     void emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
@@ -88,6 +87,8 @@ private:
     void emitRelative(InsnNs32000 &insn, const Operand &op);
     void emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_TEXT_FPU[] PROGMEM;

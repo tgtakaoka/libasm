@@ -306,8 +306,6 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMn1610 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand op1, op2, op3, op4;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

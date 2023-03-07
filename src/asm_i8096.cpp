@@ -183,8 +183,6 @@ void AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
 
 Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnI8096 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dst, src1, src2;
     if (parseOperand(scan, dst) && dst.hasError())
         return setError(dst);

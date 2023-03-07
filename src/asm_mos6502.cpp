@@ -213,10 +213,10 @@ Error AsmMos6502::parseTableOnOff(StrScanner &scan, bool (TableMos6502::*set)(bo
     return OK;
 }
 
-Error AsmMos6502::processPseudo(StrScanner &scan, const char *name) {
-    if (strcasecmp_P(name, PSTR("longa")) == 0)
+Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("longa")) == 0)
         return parseTableOnOff(scan, &TableMos6502::setLongAccumulator);
-    if (strcasecmp_P(name, PSTR("longi")) == 0)
+    if (strcasecmp_P(insn.name(), PSTR("longi")) == 0)
         return parseTableOnOff(scan, &TableMos6502::setLongIndex);
     return UNKNOWN_INSTRUCTION;
 }
@@ -232,11 +232,6 @@ static bool maybeStackRelativeIndirect(AddrMode mode3) {
 
 Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMos6502 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
-    if (processPseudo(scan, insn.name()) == OK)
-        return getError();
-
     char indirect = 0;
     Operand op1, op2, op3;
     if (parseOperand(scan, op1, indirect) && op1.hasError())

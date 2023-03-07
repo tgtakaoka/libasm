@@ -74,7 +74,6 @@ private:
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error setRp(StrScanner &scan, bool (AsmZ8::*)(int16_t));
-    Error processPseudo(StrScanner &scan, const char *name);
 
     void encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
     void encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
@@ -86,6 +85,8 @@ private:
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
     void encodePostByte(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     static const char OPT_INT_SETRP[] PROGMEM;

@@ -401,8 +401,6 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc68000 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     const auto isize = RegMc68000::parseSize(scan);
     if (isize == SZ_ERROR)
         return setError(scan, ILLEGAL_SIZE);

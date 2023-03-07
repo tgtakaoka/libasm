@@ -204,8 +204,6 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnIns8070 insn(_insn);
-    insn.nameBuffer().text(_parser.readSymbol(scan));
-
     Operand dst, src;
     if (parseOperand(scan, dst) && dst.hasError())
         return setError(dst);
