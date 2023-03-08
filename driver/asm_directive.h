@@ -64,6 +64,7 @@ protected:
     Error defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineData8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
@@ -80,7 +81,7 @@ protected:
 
     // PseudoHanlder helper
     Error defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable);
-    Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool delimitor);
+    Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool acceptString);
     Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int width);
     Error setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver);
 };

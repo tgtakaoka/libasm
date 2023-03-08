@@ -121,10 +121,10 @@ void test_mc6809() {
     TestReader inc("data/fdb.inc");
     sources.add(inc);
     inc.add("        fdb   $1234, $5678, $9abc\n"
-            "        fcc   /a,/, /bc''de/\n"                // FCC requires surrounding quotes
-            "        fcc   'a,', 'bc\\'\\'de'\n"            // FCC can accept string
-            "        fcb   'a, ',, '/, ' , 0\n"             // FCB can omit closing quote
-            "        fcb   'A', '''', 'C'+$80, 'a''c'\n");  // FCB can accept closing quote
+            "        fcc   /a,/, /bc''de/\n"              // FCC requires surrounding quotes
+            "        fcc   'a,', 'bc\\', \"de'\"\n"       // FCC can accept string
+            "        fcb   'a, ',, '/, ' , 0\n"           // FCB can omit closing quote
+            "        fcb   'A', '', 'C'+$80, $80+'a\n");  // FCB can accept closing quote
 
     listing.setUpperHex(true);
     listing.enableLineNumber(true);
@@ -142,11 +142,11 @@ void test_mc6809() {
             "(1)    1/    ABD2 : 12 34 56 78 9A BC          fdb   $1234, $5678, $9abc\n"
             "(1)    2/    ABD8 : 61 2C 62 63 27 27          fcc   /a,/, /bc''de/\n"
             "             ABDE : 64 65\n"
-            "(1)    3/    ABE0 : 61 2C 62 63 27 27          fcc   'a,', 'bc\\'\\'de'\n"
-            "             ABE6 : 64 65\n"
+            "(1)    3/    ABE0 : 61 2C 62 63 5C 64          fcc   'a,', 'bc\\', \"de'\"\n"
+            "             ABE6 : 65 27\n"
             "(1)    4/    ABE8 : 61 2C 2F 20 00             fcb   'a, ',, '/, ' , 0\n"
-            "(1)    5/    ABED : 41 27 C3 61 27 63          fcb   'A', '''', 'C'+$80, 'a''c'\n"
-            "       5/    ABF3 :                            setdp $ff00\n");
+            "(1)    5/    ABED : 41 27 C3 E1                fcb   'A', '', 'C'+$80, $80+'a\n"
+            "       5/    ABF1 :                            setdp $ff00\n");
 }
 
 void test_mc6800() {
@@ -513,7 +513,7 @@ void test_mc68000() {
 
     TestReader inc("data/dc.inc");
     sources.add(inc);
-    inc.add("        dc.b    1\n"                     // DC.B negerates bytes
+    inc.add("        dc.b    1\n"                     // DC.B generates bytes
             "        dc.l    $12345678, $9abcdef0\n"  // DC.L requires 2 byte alignment
             "        dc.b    2\n"                     // DC.B generates bytes
             "        ds.l    1\n"                     // DS.L allocates 2 byte aligned spaces
@@ -521,7 +521,7 @@ void test_mc68000() {
             "        dc.w    $1234, $5678, $9abc\n"   // DC.W requires 2 byte alignment
             "        dc.b    'a,', 'bc''de', 4, 0\n"  // DC.B can generate odd bytes
             "        ds.w    1\n"                     // DS.W allocates 2 byte aligned spaces
-            "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");  // DC.B doesn' care alignment
+            "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");  // DC.B doesn't care alignment
 
     listing.setUpperHex(false);
 

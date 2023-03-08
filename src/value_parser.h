@@ -45,6 +45,72 @@ struct MotorolaCommentParser : DefaultCommentParser {
 };
 
 /**
+ * Parse for letter constant.
+ */
+struct LetterParser {
+    /**
+     * Parse |scan| as a letter constant.
+     * - Returns OK when |scan| is recognized as a valid letter, and
+     *   updates |scan| at the end of a letter.
+     * - Returns ILLEGAL_CONSTANT when |scan| seems a letter but not
+     *   ended as expected. |scan| is updated at the error.
+     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
+     *   letter. |scan| is unchanged.
+     */
+    virtual Error parseLetter(StrScanner &scan, char &letter) const = 0;
+
+    /**
+     * Read a letter constant from |scan| and return it.
+     * When |scan| points text which doesn't make sense as a letter,
+     * |error| is set as ILLEGAL_CONSTANT.
+     */
+    virtual char readLetter(StrScanner &scan, ErrorAt &error) const = 0;
+};
+
+struct CStyleLetterParser : LetterParser {
+    /** C-style letter is enclosed by sigle quotes */
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+    /** C-style letter is: [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
+    char readLetter(StrScanner &scan, ErrorAt &error) const override;
+};
+
+struct DefaultLetterParser : LetterParser {
+    /** Default style letter is enclosed by single quotes */
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+    /** Default style letter is: [:print:], '' */
+    char readLetter(StrScanner &scan, ErrorAt &error) const override;
+};
+
+struct MotorolaLetterParser : DefaultLetterParser {
+    MotorolaLetterParser(bool closingQuote = false) : _closingQuote(closingQuote) {}
+
+    /**
+     * Motorola style letter is follwed after a single quote and
+     * optionally closed with another single quote
+     */
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+    /** Motorola style letter is: [:print] */
+    char readLetter(StrScanner &scan, ErrorAt &error) const override;
+
+private:
+    const bool _closingQuote;
+    Error hasSuffix(StrScanner &scan) const;
+};
+
+struct FairchildLetterParser : DefaultLetterParser {
+    FairchildLetterParser() : DefaultLetterParser(), _motorolaLetter(false) {}
+
+    /** Fairchild style letter is: [cC]'[:print:]', #[:print:], '[:print:]'? */
+    Error parseLetter(StrScanner &scan, char &letter) const override;
+
+private:
+    const MotorolaLetterParser _motorolaLetter;
+
+    static Error hasPrefix(StrScanner &scan, char &prefix);
+    static Error hasSuffix(StrScanner &scan, char prefix);
+};
+
+/**
  * Parse text |scan| as a number.
  *
  * - Returns OK when |scan| is recognized as a valid number, and
@@ -129,6 +195,7 @@ public:
     ValueParser(char locSym = '.')
         : _numberParser(_cStyleNumber),
           _commentParser(_defaultComment),
+          _letterParser(_defaultLetter),
           _locSym(locSym),
           _origin(0),
           _funcParser(nullptr) {}
@@ -148,10 +215,10 @@ public:
     StrScanner scanExpr(const StrScanner &scan, ErrorAt &error, char delim) const;
 
     /**
-     * Parse |scan| text and convert character constant to |val|.
+     * Parse |scan| text and convert letter constant to |val|.
      * Error should be checked by |getError()|.
      */
-    char readChar(StrScanner &scan, ErrorAt &error) const;
+    char readLetter(StrScanner &scan, ErrorAt &error) const;
 
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     virtual bool symbolLetter(char c, bool head = false) const;
@@ -166,22 +233,24 @@ public:
     FuncParser *setFuncParser(FuncParser *parser = nullptr);
 
 protected:
-    ValueParser(const NumberParser &numberParser, const CommentParser &commentParser, char locSym)
+    ValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
+            const LetterParser &letterParser, char locSym)
         : _numberParser(numberParser),
           _commentParser(commentParser),
+          _letterParser(letterParser),
           _locSym(locSym),
           _origin(0),
           _funcParser(nullptr) {}
 
     const DefaultCommentParser _defaultComment;
+    const DefaultLetterParser _defaultLetter;
 
     virtual bool locationSymbol(StrScanner &scan) const;
-    virtual bool charPrefix(StrScanner &scan, char &prefix) const;
-    virtual bool charSuffix(StrScanner &scan, char prefix) const;
 
 private:
     const NumberParser &_numberParser;
     const CommentParser &_commentParser;
+    const LetterParser &_letterParser;
     const char _locSym;
     uint32_t _origin;
     FuncParser *_funcParser;
@@ -237,7 +306,6 @@ private:
             const SymbolTable *symtab) const;
     Value readAtom(StrScanner &scan, ErrorAt &errpr, Stack<OprAndLval> &stack,
             const SymbolTable *symtab) const;
-    Value readCharacterConstant(StrScanner &scan, ErrorAt &error) const;
     Operator readOperator(StrScanner &scan, ErrorAt &error) const;
     Value evalExpr(const Op op, const Value lhs, const Value rhs, ErrorAt &error) const;
 };
@@ -245,20 +313,19 @@ private:
 class MotorolaValueParser : public ValueParser {
 public:
     MotorolaValueParser(bool closingQuote = false)
-        : ValueParser(_motorolaNumber, _motorolaComment, '*'), _closingQuote(closingQuote) {}
-
-protected:
-    bool charSuffix(StrScanner &scan, char prefix) const override;
+        : ValueParser(_motorolaNumber, _motorolaComment, _motorolaLetter, '*'),
+          _motorolaLetter(closingQuote) {}
 
 private:
-    const bool _closingQuote;
     const MotorolaNumberParser _motorolaNumber;
     const MotorolaCommentParser _motorolaComment;
+    const MotorolaLetterParser _motorolaLetter;
 };
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser(char locSym = '$') : ValueParser(_intelNumber, _defaultComment, locSym) {}
+    IntelValueParser(char locSym = '$')
+        : ValueParser(_intelNumber, _defaultComment, _defaultLetter, locSym) {}
 
 private:
     const IntelNumberParser _intelNumber;
@@ -267,12 +334,12 @@ private:
 class NationalValueParser : public ValueParser {
 public:
     NationalValueParser(char locSym = '.')
-        : ValueParser(_nationalNumber, _defaultComment, locSym) {}
+        : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, locSym) {}
 
 protected:
-    NationalValueParser(
-            const NumberParser &numberParser, const CommentParser &commentParser, char locSym = '.')
-        : ValueParser(numberParser, commentParser, locSym) {}
+    NationalValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
+            const LetterParser &letterParser, char locSym = '.')
+        : ValueParser(numberParser, commentParser, letterParser, locSym) {}
 
     bool symbolLetter(char c, bool head = false) const override;
 
@@ -282,17 +349,17 @@ private:
 
 class FairchildValueParser : public NationalValueParser {
 public:
-    FairchildValueParser() : NationalValueParser(_fairchildNumber, _motorolaComment, '*') {}
+    FairchildValueParser()
+        : NationalValueParser(_fairchildNumber, _motorolaComment, _fairchildLetter, '*') {}
 
 protected:
     bool locationSymbol(StrScanner &scan) const override;
     bool symbolLetter(char c, bool head = false) const override;
-    bool charPrefix(StrScanner &scan, char &prefix) const override;
-    bool charSuffix(StrScanner &scan, char prefix) const override;
 
 private:
     const FairchildNumberParser _fairchildNumber;
     const MotorolaCommentParser _motorolaComment;
+    const FairchildLetterParser _fairchildLetter;
 };
 
 }  // namespace libasm

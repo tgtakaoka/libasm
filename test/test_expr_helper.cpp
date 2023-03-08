@@ -43,8 +43,8 @@ void val_assert(const char *file, const int line, const char *expr, uint32_t exp
         actual = static_cast<uint16_t>(actual);
         expected = static_cast<uint16_t>(expected);
     }
-    if (val.isUndefined() && error.isOK())
-        error.setError(UNDEFINED_SYMBOL);
+    if (!parser.endOfLine(scan))
+        error.setErrorIf(scan, GARBAGE_AT_END);
     asserter.equals(file, line, expr, expected_error, error);
     if (error.isOK())
         asserter.equals(file, line, expr, expected, actual);

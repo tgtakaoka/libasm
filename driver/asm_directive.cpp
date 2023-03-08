@@ -130,7 +130,6 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver 
 }
 
 Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    auto &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
     do {
@@ -139,12 +138,7 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
         while (!p.expect(delim)) {
             if (*p == 0)
                 return setError(p, MISSING_CLOSING_DELIMITOR);
-            ErrorAt error;
-            const auto c = parser.readChar(p, error);
-            if (error.getError()) {
-                scan = p;
-                return setError(error);
-            }
+            const auto c = *p++;
             list.emitByte(base, c);
         }
         scan = p;
@@ -156,7 +150,41 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
     return setOK();
 }
 
+static bool isString(StrScanner &scan, ValueParser &parser) {
+    auto p = scan;
+    const auto delim = *p++;
+    if (delim == '"' || delim == '\'') {
+        while (true) {
+            if (*p == 0)
+                return false;
+            ErrorAt error;
+            parser.readLetter(p, error);
+            if (error.getError())
+                return false;
+            if (*p == delim) {
+                if (p[1] == ',')
+                    break;
+                parser.readLetter(p, error);
+                if (error.getError())
+                    break;
+            }
+        }
+        scan = p;
+        return true;
+    }
+    return false;
+}
+
+Error AsmDirective::defineData8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return defineBytes(scan, list, driver, true);
+}
+
 Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    return defineBytes(scan, list, driver, false);
+}
+
+Error AsmDirective::defineBytes(
+        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool acceptString) {
     auto &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
@@ -164,40 +192,32 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
         auto p = scan.skipSpaces();
         ErrorAt error;
         auto value = parser.eval(p, error, &driver);
-        if (error.isOK() && !(*scan == '\'' && *p == '\'')) {
-            // a byte expression, though a single 'c' constant is handled as a string
-            scan = p;
+        if (error.isOK() && (parser.endOfLine(p.skipSpaces()) || *p == ',')) {
+            // a byte expression.
             if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
                 return setError(UNDEFINED_SYMBOL);
             if (value.overflowUint8())
                 return setError(OVERFLOW_RANGE);
             const uint8_t val8 = value.getUnsigned();
             list.emitByte(base, val8);
-        } else if (*scan == '"' || *scan == '\'') {
-            // a string surrounded by double quotes, single quotes
-            const auto delim = *scan++;
-            auto p = scan;
-            for (;;) {
-                if (*p == '\'' && p[1] == '\'') {
-                    ++p;  // inside a string, two successive apostrophe is an apostrophe
-                } else if (p.expect(delim)) {
-                    break;
-                }
-                if (*p == 0)
-                    return setError(
-                            p, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-                ErrorAt error;
-                const auto c = parser.readChar(p, error);
-                if (error.getError()) {
-                    scan = p;
-                    return setError(error);
-                }
-                list.emitByte(base, c);
-            }
             scan = p;
-        } else {
-            return setError(error);
+            continue;
         }
+        if (acceptString) {
+            p = scan;
+            if (isString(p, parser)) {
+                // a string surrounded by double quotes, single quotes
+                ++scan;  // skip delimitor
+                while (scan.str() < p.str()) {
+                    ErrorAt error;
+                    const auto c = parser.readLetter(scan, error);
+                    list.emitByte(base, c);
+                }
+                ++scan;  // skip delimitor
+                continue;
+            }
+        }
+        return setError(error);
     } while (scan.skipSpaces().expect(','));
     scan.skipSpaces();
     if (!assembler().endOfLine(scan))
@@ -393,12 +413,12 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(":=", &AsmDirective::defineVariable);
     registerPseudo(".org", &AsmDirective::defineOrigin);
     registerPseudo(".align", &AsmDirective::alignOrigin);
-    registerPseudo(".string", &AsmDirective::defineUint8s);
-    registerPseudo(".ascii", &AsmDirective::defineUint8s);
-    registerPseudo(".byte", &AsmDirective::defineUint8s);
+    registerPseudo(".string", &AsmDirective::defineData8s);
+    registerPseudo(".ascii", &AsmDirective::defineData8s);
+    registerPseudo(".byte", &AsmDirective::defineData8s);
     registerPseudo(".word", &AsmDirective::defineUint16s);
     registerPseudo(".long", &AsmDirective::defineUint32s);
-    registerPseudo("dc.b", &AsmDirective::defineUint8s);
+    registerPseudo("dc.b", &AsmDirective::defineData8s);
     registerPseudo("dc.w", &AsmDirective::defineUint16sAligned);
     registerPseudo("dc.l", &AsmDirective::defineUint32sAligned);
     registerPseudo("ds.b", &AsmDirective::allocateUint8s);
@@ -439,7 +459,7 @@ BinEncoder &MotorolaDirective::defaultEncoder() {
 }
 
 IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".db", &IntelDirective::defineUint8s);
+    registerPseudo(".db", &IntelDirective::defineData8s);
     registerPseudo(".dw", &IntelDirective::defineUint16s);
     registerPseudo(".dd", &IntelDirective::defineUint32s);
     registerPseudo(".ds", &IntelDirective::allocateUint8s);
@@ -456,7 +476,7 @@ NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(asse
 }
 
 FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".dc", &FairchildDirective::defineUint8s);
+    registerPseudo(".dc", &FairchildDirective::defineData8s);
     registerPseudo(".da", &FairchildDirective::defineUint16s);
     registerPseudo(".rs", &FairchildDirective::allocateUint8s);
 }

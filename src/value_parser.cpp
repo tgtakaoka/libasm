@@ -60,56 +60,66 @@ static bool isoctal(char c) {
     return c >= '0' && c < '8';
 }
 
-char ValueParser::readChar(StrScanner &scan, ErrorAt &error) const {
+char ValueParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+    return _letterParser.readLetter(scan, error);
+}
+
+Error CStyleLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+    if (!scan.expect('\''))
+        return NOT_AN_EXPECTED;
+    ErrorAt error;
+    letter = readLetter(scan, error);
+    return error.getError() ?: (scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE);
+}
+
+char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     auto p = scan;
-    auto c = *p++;
-    if (c != '\\') {
-        scan = p;
-        return c;
-    }
-    auto radix = RADIX_10;
-    if (p.iexpect('x')) {
-        radix = RADIX_16;
-    } else if (isoctal(*p)) {
-        radix = RADIX_8;
-    } else {
-        switch (c = *p++) {
-        case '\'':
-        case '"':
-        case '?':
-        case '\\':
-            break;
-        case 'b':
-            c = 0x08;
-            break;
-        case 't':
-            c = 0x09;
-            break;
-        case 'n':
-            c = 0x0a;
-            break;
-        case 'r':
-            c = 0x0d;
-            break;
-        default:
-            error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
-            return 0;
+    if (p.expect('\\')) {
+        // Backslash escape sequence
+        Radix radix = RADIX_NONE;
+        if (p.iexpect('x')) {
+            radix = RADIX_16;
+        } else if (isoctal(*p)) {
+            radix = RADIX_8;
+        } else {
+            auto c = *p++;
+            switch (c) {
+            case '\'':
+            case '"':
+            case '?':
+            case '\\':
+                break;
+            case 'b':
+                c = 0x08;
+                break;
+            case 't':
+                c = 0x09;
+                break;
+            case 'n':
+                c = 0x0a;
+                break;
+            case 'r':
+                c = 0x0d;
+                break;
+            default:
+                error.setError(UNKNOWN_ESCAPE_SEQUENCE);
+            }
+            scan = p;
+            return c;
         }
+        Value value;
+        const auto err = value.parseNumber(p, radix);
         scan = p;
-        return c;
+        if (err != OK)
+            error.setError(err);
+        if (value.overflowUint8())
+            error.setError(OVERFLOW_RANGE);
+        return value.getUnsigned();
     }
-    Value value;
-    const auto err = value.parseNumber(p, radix);
-    if (err) {
-        error.setError(scan, err);
-        return 0;
-    }
-    if (value.overflowUint8()) {
-        error.setError(scan, OVERFLOW_RANGE);
-        return 0;
-    }
+
+    const auto c = *p++;
     scan = p;
-    return value.getUnsigned();
+    return c;
 }
 
 static bool isValidDigit(const char c, const Radix radix) {
@@ -168,15 +178,13 @@ StrScanner ValueParser::scanExpr(const StrScanner &scan, ErrorAt &error, char de
     auto p = scan;
     while (!endOfLine(p)) {
         Value val;
-        const auto err = _numberParser.parseNumber(p, val);
+        auto err = _numberParser.parseNumber(p, val);
         if (err != NOT_AN_EXPECTED)
             continue;
-        char prefix;
-        if (charPrefix(p, prefix)) {
-            readChar(p, error);
-            if (error.isOK() && charSuffix(p, prefix))
-                continue;
-        }
+        char letter;
+        err = _letterParser.parseLetter(p, letter);
+        if (err == OK)
+            continue;
         if (*p == delim)
             return StrScanner(scan.str(), p.str());
         if (*p == '(' || *p == '[') {
@@ -241,13 +249,14 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
         }
         return value;
     }
-    char prefix;
-    if (charPrefix(p, prefix)) {
-        const auto value = readCharacterConstant(p, error);
-        if (error.isOK() && !charSuffix(p, prefix))
-            error.setError(p, MISSING_CLOSING_QUOTE);
+    char letter;
+    auto err = _letterParser.parseLetter(p, letter);
+    if (err == OK) {
         scan = p;
-        return value;
+        return Value::makeUnsigned(letter);
+    } else if (err != NOT_AN_EXPECTED) {
+        error.setError(p, err);
+        return Value();
     }
     if (p.expect('~')) {
         auto value = readAtom(p, error, stack, symtab);
@@ -281,7 +290,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
     }
 
     Value val;
-    const auto err = _numberParser.parseNumber(p, val);
+    err = _numberParser.parseNumber(p, val);
     if (err != NOT_AN_EXPECTED) {
         if (err)
             error.setErrorIf(scan, err);
@@ -330,13 +339,6 @@ ValueParser::FuncParser *ValueParser::setFuncParser(FuncParser *parser) {
     auto prev = _funcParser;
     _funcParser = parser;
     return prev;
-}
-
-Value ValueParser::readCharacterConstant(StrScanner &scan, ErrorAt &error) const {
-    const auto c = readChar(scan, error);
-    if (error.hasError())
-        return Value();
-    return Value::makeSigned(c);
 }
 
 // Operator precedence (larger value means higher precedence).
@@ -487,14 +489,6 @@ bool ValueParser::locationSymbol(StrScanner &scan) const {
     return (scan.expect(_locSym) || scan.expect('.')) && !symbolLetter(*scan);
 }
 
-bool ValueParser::charPrefix(StrScanner &scan, char &prefix) const {
-    return (prefix = scan.expect('\''));
-}
-
-bool ValueParser::charSuffix(StrScanner &scan, char prefix) const {
-    return scan.expect(prefix);
-}
-
 Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     auto radix = RADIX_NONE;
@@ -522,8 +516,52 @@ Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     return isalnum(*p) ? ILLEGAL_CONSTANT : error;
 }
 
-bool MotorolaValueParser::charSuffix(StrScanner &scan, char prefix) const {
-    return scan.expect('\'') || !_closingQuote;
+Error DefaultLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+    if (!scan.expect('\''))
+        return NOT_AN_EXPECTED;
+    ErrorAt error;
+    letter = readLetter(scan, error);
+    return error.getError() ?: (scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE);
+}
+
+char DefaultLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+    const auto c = *scan;
+    if (c == 0) {
+        error.setError(ILLEGAL_CONSTANT);
+    } else if (c == '\'') {
+        if (scan[1] == '\'') {
+            scan += 2;  // successive single quoite
+        } else {
+            error.setError(MISSING_CLOSING_QUOTE);
+        }
+    } else {
+        scan += 1;
+    }
+    return c;
+}
+
+Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+    if (!scan.expect('\''))
+        return NOT_AN_EXPECTED;
+    ErrorAt error;
+    letter = readLetter(scan, error);
+    return error.getError() ?: hasSuffix(scan);
+}
+
+char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+    if (_closingQuote)
+        return DefaultLetterParser::readLetter(scan, error);
+    const auto c = *scan;
+    if (c == 0) {
+        error.setError(ILLEGAL_CONSTANT);
+    } else {
+        scan += 1;
+    }
+    return c;
+}
+
+Error MotorolaLetterParser::hasSuffix(StrScanner &scan) const {
+    return (scan.expect('\'') || !_closingQuote) ? OK : MISSING_CLOSING_QUOTE;
 }
 
 Error MotorolaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
@@ -612,31 +650,52 @@ bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
     return scan.expect('*') || scan.expect('$');
 }
 
-bool FairchildValueParser::charPrefix(StrScanner &scan, char &prefix) const {
+Error FairchildLetterParser::hasPrefix(StrScanner &scan, char &prefix) {
     auto p = scan;
-    if (p.iexpect('c') && p.expect('\'')) {
-        // C'x'
+    // C'x'
+    if (p.iexpect('c')) {
+        if (*p != '\'')
+            return NOT_AN_EXPECTED;
+        ++p;
         prefix = 'C';
-        scan = p;
-        return true;
-    }
-    if (p.expect('#')) {
+    } else if (p.expect('#')) {
         // #c
         prefix = '#';
-        scan = p;
-        return true;
+    } else if (p.expect('\'')) {
+        // 'c' or 'c
+        prefix = '\'';
+    } else {
+        return NOT_AN_EXPECTED;
     }
-    // 'c' or 'c
-    return ValueParser::charPrefix(scan, prefix);
+    scan = p;
+    return OK;
 }
 
-bool FairchildValueParser::charSuffix(StrScanner &scan, char prefix) const {
-    if (prefix == 'C')
-        return scan.expect('\'');  // closing quote is necessary for C'x'.
-    if (prefix == '#')
-        return true;    //  no closing quite for #c
-    scan.expect('\'');  // closing quote is optional for 'x'
-    return true;
+Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+    char prefix;
+    if (hasPrefix(scan, prefix) != OK)
+        return NOT_AN_EXPECTED;
+    ErrorAt error;
+    if (prefix == 'C') {
+        letter = readLetter(scan, error);
+    } else {
+        letter = _motorolaLetter.readLetter(scan, error);
+    }
+    return error.getError() ?: hasSuffix(scan, prefix);
+}
+
+Error FairchildLetterParser::hasSuffix(StrScanner &scan, char prefix) {
+    if (prefix == 'C') {
+        // closing quote is necessary for C'x'.
+        return scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE;
+    }
+    if (prefix == '#') {
+        // no closing quite for #c
+        return OK;
+    }
+    // closing quote is optional for 'x'
+    scan.expect('\'');
+    return OK;
 }
 
 bool FairchildValueParser::symbolLetter(char c, bool head) const {
