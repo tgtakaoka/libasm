@@ -53,7 +53,7 @@ public:
 
     /** assert const char* with StrScanner* */
     void equals(const char *file, int line, const char *message, const StrScanner *expected,
-                const char *actual);
+            const char *actual);
 
     /** assert StrScanner* */
     void equals(const char *file, int line, const char *message, const char *expected,
@@ -74,6 +74,10 @@ public:
     /** assert ErrorReporter& */
     void equals(const char *file, int line, const char *message, Error expected,
             const ErrorReporter &actual);
+
+    /** assert ErrorAt& */
+    void equals(
+            const char *file, int line, const char *message, Error expected, const ErrorAt &actual);
 
     /** assert uint8_t[] with ArrayMemory */
     void equals(const char *file, const int line, const char *message, const ArrayMemory &expected,

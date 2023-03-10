@@ -151,6 +151,22 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
             ErrorReporter::errorText_P(expected), actual.errorText_P());
 }
 
+void TestAsserter::equals(const char *file, const int line, const char *message, Error expected,
+        const ErrorAt &actual) {
+    if (expected == actual.getError()) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    if (actual.getError() == OK) {
+        printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message,
+                ErrorAt::errorText_P(expected), actual.errorText_P());
+    } else {
+        printf("%s:%d: %s: expected '%s': actual '%s' at '%s'\n", file, line, message,
+                ErrorAt::errorText_P(expected), actual.errorText_P(), actual.errorAt());
+    }
+}
+
 void TestAsserter::equals(const char *file, const int line, const char *message,
         const ArrayMemory &expected, const uint8_t actual[], size_t actual_len) {
     size_t i;
