@@ -42,13 +42,10 @@ private:
     RegMc6805 _regs;
     AddressWidth _addrWidth;
     const struct OptPcBits : public IntOptionBase {
-        OptPcBits(AddressWidth &value)
-            : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _width(value) {}
-        Error check(int32_t value) const override {
-            return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
-        }
-        void set(int32_t value) const override { _width = AddressWidth(value ?: 13); }
-        AddressWidth &_width;
+        OptPcBits(AddressWidth &var);
+        Error check(int32_t value) const override;
+        void set(int32_t value) const override;
+        AddressWidth &_var;
     } _opt_pc_bits{_addrWidth};
     const Options _options{_opt_pc_bits};
 
@@ -61,9 +58,6 @@ private:
     Error decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static const char OPT_INT_PCBITS[] PROGMEM;
-    static const char OPT_DESC_PCBITS[] PROGMEM;
 };
 
 }  // namespace mc6805

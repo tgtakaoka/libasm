@@ -41,14 +41,13 @@ private:
     IntelValueFormatter _formatter;
     RegCdp1802 _regs;
     bool _useReg;
-    const BoolOption _opt_useReg{OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, _useReg};
+    const struct OptUseRegister : public BoolOption {
+        OptUseRegister(bool &var);
+    } _opt_useReg{_useReg};
     const Options _options{_opt_useReg};
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static const char OPT_BOOL_USE_REGISTER[] PROGMEM;
-    static const char OPT_DESC_USE_REGISTER[] PROGMEM;
 };
 
 }  // namespace cdp1802

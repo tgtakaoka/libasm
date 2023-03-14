@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2021 Tadashi G. Takaoka
  *
@@ -21,8 +22,19 @@
 namespace libasm {
 namespace mc6805 {
 
-const char DisMc6805::OPT_INT_PCBITS[] PROGMEM = "pc-bits";
-const char DisMc6805::OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+static const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
+static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+
+DisMc6805::OptPcBits::OptPcBits(AddressWidth &var)
+    : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _var(var) {}
+
+Error DisMc6805::OptPcBits::check(int32_t value) const {
+    return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
+}
+
+void DisMc6805::OptPcBits::set(int32_t value) const {
+    _var = AddressWidth(value ?: 13);
+}
 
 StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);

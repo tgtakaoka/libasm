@@ -21,8 +21,11 @@
 namespace libasm {
 namespace f3850 {
 
-const char DisF3850::OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
-const char DisF3850::OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
+static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
+static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
+
+DisF3850::OptUseScratchpad::OptUseScratchpad(bool &var)
+    : BoolOption(OPT_BOOL_USE_SCRATCHPAD, OPT_DESC_USE_SCRATCHPAD, var) {}
 
 Error DisF3850::decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out) {
     const int8_t delta = insn.readByte(memory);

@@ -44,10 +44,12 @@ private:
     RegI8086 _regs;
     bool _segOverrideInsn;
     bool _repeatHasStringInst;
-    const BoolOption _opt_stringInsn{
-            OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN, _repeatHasStringInst};
-    const BoolOption _opt_segmentInsn{
-            OPT_BOOL_SEGMENT_INSN, OPT_DESC_SEGMENT_INSN, _segOverrideInsn, _opt_stringInsn};
+    const struct OptStringInsn : public BoolOption {
+        OptStringInsn(bool &var);
+    } _opt_stringInsn{_repeatHasStringInst};
+    const struct OptSegmentInsn : public BoolOption {
+        OptSegmentInsn(bool &var, const OptionBase &next);
+    } _opt_segmentInsn{_segOverrideInsn, _opt_stringInsn};
     const Options _options{_opt_segmentInsn};
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
@@ -65,11 +67,6 @@ private:
     Error readCodes(DisMemory &memory, InsnI8086 &insn);
     Error decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static const char OPT_BOOL_SEGMENT_INSN[] PROGMEM;
-    static const char OPT_DESC_SEGMENT_INSN[] PROGMEM;
-    static const char OPT_BOOL_STRING_INSN[] PROGMEM;
-    static const char OPT_DESC_STRING_INSN[] PROGMEM;
 };
 
 }  // namespace i8086

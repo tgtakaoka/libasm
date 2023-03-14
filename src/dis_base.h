@@ -60,47 +60,33 @@ public:
 private:
     ValueFormatter &_formatter;
 
-    static const char OPT_BOOL_RELATIVE[] PROGMEM;
-    static const char OPT_DESC_RELATIVE[] PROGMEM;
-    static const char OPT_BOOL_UPPERCASE[] PROGMEM;
-    static const char OPT_DESC_UPPERCASE[] PROGMEM;
-    static const char OPT_BOOL_CSTYLE[] PROGMEM;
-    static const char OPT_DESC_CSTYLE[] PROGMEM;
-    static const char OPT_CHAR_ORIGIN[] PROGMEM;
-    static const char OPT_DESC_ORIGIN[] PROGMEM;
-
 protected:
     RegBase &_regBase;
     TableBase &_table;
+
+    struct DisassemblerOption {
+    protected:
+        DisassemblerOption(Disassembler *dis) : _dis(dis) {}
+        Disassembler *_dis;
+    };
+
+    const CharOption _opt_curSym;
+    const struct OptCStyle : public BoolOptionBase, DisassemblerOption {
+        OptCStyle(Disassembler *dis, const OptionBase &next);
+        Error set(bool value) const override;
+    } _opt_cstyle;
+    const struct OptUppercase : public BoolOptionBase, DisassemblerOption {
+        OptUppercase(Disassembler *dis, const OptionBase &next);
+        Error set(bool value) const override;
+    } _opt_uppercase;
+    const BoolOption _opt_relative;
+    const Options _commonOptions;
+
     char _curSym;
     bool _relativeTarget = false;
     SymbolTable *_symtab = nullptr;
-    const CharOption _opt_curSym{OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, _curSym};
-    const struct OptCStyle : public BoolOptionBase {
-        OptCStyle(Disassembler *dis, const OptionBase &next)
-            : BoolOptionBase(OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, next), _dis(dis) {}
-        Error set(bool value) const override {
-            _dis->_formatter.setCStyle(value);
-            return OK;
-        }
-        Disassembler *_dis;
-    } _opt_cstyle{this, _opt_curSym};
-    const struct OptUppercase : public BoolOptionBase {
-        OptUppercase(Disassembler *dis, const OptionBase &next)
-            : BoolOptionBase(OPT_BOOL_UPPERCASE, OPT_DESC_UPPERCASE, next), _dis(dis) {}
-        Error set(bool value) const override {
-            _dis->_formatter.setUppercase(value);
-            _dis->_regBase.setUppercase(value);
-            return OK;
-        }
-        Disassembler *_dis;
-    } _opt_uppercase{this, _opt_cstyle};
-    const BoolOption _opt_relative{
-            OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE, _relativeTarget, _opt_uppercase};
-    const Options _commonOptions{_opt_relative};
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym)
-        : _formatter(formatter), _regBase(regs), _table(table), _curSym(curSym) {}
+    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym);
 
     /** Lookup |addr| value and returns symbol. */
     template <typename Addr>

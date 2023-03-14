@@ -41,7 +41,9 @@ private:
     NationalValueFormatter _formatter;
     RegIns8070 _regs;
     bool _immediatePrefix;
-    const BoolOption _opt_immPrefix{OPT_BOOL_IMM_PREFIX, OPT_DESC_IMM_PREFIX, _immediatePrefix};
+    const struct OptImmediatePrefix : public BoolOption {
+        OptImmediatePrefix(bool &var);
+    } _opt_immPrefix{_immediatePrefix};
     const Options _options{_opt_immPrefix};
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
@@ -53,9 +55,6 @@ private:
     Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static const char OPT_BOOL_IMM_PREFIX[] PROGMEM;
-    static const char OPT_DESC_IMM_PREFIX[] PROGMEM;
 };
 
 }  // namespace ins8070

@@ -46,13 +46,18 @@ private:
     bool _pcRelativeParen;
     bool _externalParen;
     bool _floatPrefix;
-    const BoolOption _opt_floatPrefix{OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX, _floatPrefix};
-    const BoolOption _opt_stroptBracket{OPT_BOOL_STROPT_BRACKET, OPT_DESC_STROPT_BRACKET,
-            _stringOptionBracket, _opt_floatPrefix};
-    const BoolOption _opt_externalParen{
-            OPT_BOOL_EXTERNAL_PAREN, OPT_DESC_EXTERNAL_PAREN, _externalParen, _opt_stroptBracket};
-    const BoolOption _opt_pcrelParel{
-            OPT_BOOL_PCREL_PAREN, OPT_DESC_PCREL_PAREN, _pcRelativeParen, _opt_externalParen};
+    const struct OptFloatPrefix : public BoolOption {
+        OptFloatPrefix(bool &var);
+    } _opt_floatPrefix{_floatPrefix};
+    const struct OptStroptBracket : public BoolOption {
+        OptStroptBracket(bool &var, const OptionBase &next);
+    } _opt_stroptBracket{_stringOptionBracket, _opt_floatPrefix};
+    const struct OptExteranlParen : public BoolOption {
+        OptExteranlParen(bool &var, const OptionBase &next);
+    } _opt_externalParen{_externalParen, _opt_stroptBracket};
+    const struct OptPcrelParen : public BoolOption {
+        OptPcrelParen(bool &var, const OptionBase &next);
+    } _opt_pcrelParel{_pcRelativeParen, _opt_externalParen};
     const Options _options{_opt_pcrelParel};
 
     struct Displacement {
@@ -79,15 +84,6 @@ private:
             OprPos pos, OprSize size);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM;
-    static const char OPT_DESC_STROPT_BRACKET[] PROGMEM;
-    static const char OPT_BOOL_PCREL_PAREN[] PROGMEM;
-    static const char OPT_DESC_PCREL_PAREN[] PROGMEM;
-    static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM;
-    static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM;
-    static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM;
-    static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM;
 };
 
 }  // namespace ns32000

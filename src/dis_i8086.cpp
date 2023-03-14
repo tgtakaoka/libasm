@@ -21,10 +21,16 @@
 namespace libasm {
 namespace i8086 {
 
-const char DisI8086::OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
-const char DisI8086::OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
-const char DisI8086::OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
-const char DisI8086::OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+static const char OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
+static const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
+static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
+static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+
+DisI8086::OptStringInsn::OptStringInsn(bool &var)
+    : BoolOption(OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN, var) {}
+
+DisI8086::OptSegmentInsn::OptSegmentInsn(bool &var, const OptionBase &next)
+    : BoolOption(OPT_BOOL_SEGMENT_INSN, OPT_DESC_SEGMENT_INSN, var, next) {}
 
 StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix) {
     if (name == REG_UNDEF)

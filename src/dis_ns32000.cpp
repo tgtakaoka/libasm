@@ -21,14 +21,26 @@
 namespace libasm {
 namespace ns32000 {
 
-const char DisNs32000::OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
-const char DisNs32000::OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
-const char DisNs32000::OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
-const char DisNs32000::OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
-const char DisNs32000::OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
-const char DisNs32000::OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
-const char DisNs32000::OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
-const char DisNs32000::OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
+static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
+static const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
+static const char OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
+static const char OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
+static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
+static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
+static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
+static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
+
+DisNs32000::OptFloatPrefix::OptFloatPrefix(bool &var)
+    : BoolOption(OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX, var) {}
+
+DisNs32000::OptStroptBracket::OptStroptBracket(bool &var, const OptionBase &next)
+    : BoolOption(OPT_BOOL_STROPT_BRACKET, OPT_DESC_STROPT_BRACKET, var, next) {}
+
+DisNs32000::OptExteranlParen::OptExteranlParen(bool &var, const OptionBase &next)
+    : BoolOption(OPT_BOOL_EXTERNAL_PAREN, OPT_DESC_EXTERNAL_PAREN, var, next) {}
+
+DisNs32000::OptPcrelParen::OptPcrelParen(bool &var, const OptionBase &next)
+    : BoolOption(OPT_BOOL_PCREL_PAREN, OPT_DESC_PCREL_PAREN, var, next) {}
 
 static bool isGenMode(AddrMode mode) {
     return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA || mode == M_FENR ||

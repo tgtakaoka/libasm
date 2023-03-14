@@ -21,8 +21,11 @@
 namespace libasm {
 namespace cdp1802 {
 
-const char DisCdp1802::OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-const char DisCdp1802::OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
+static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
+
+DisCdp1802::OptUseRegister::OptUseRegister(bool &var)
+    : BoolOption(OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, var) {}
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;

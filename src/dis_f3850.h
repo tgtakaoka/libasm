@@ -28,8 +28,7 @@ namespace f3850 {
 
 class DisF3850 : public Disassembler, public Config {
 public:
-    DisF3850()
-        : Disassembler(_formatter, _regs, TableF3850::TABLE, '$'), _formatter(), _regs() {
+    DisF3850() : Disassembler(_formatter, _regs, TableF3850::TABLE, '$'), _formatter(), _regs() {
         reset();
     }
 
@@ -41,16 +40,14 @@ private:
     FairchildValueFormatter _formatter;
     RegF3850 _regs;
     bool _useScratchpad;
-    const BoolOption _opt_useScratchpad{
-            OPT_BOOL_USE_SCRATCHPAD, OPT_DESC_USE_SCRATCHPAD, _useScratchpad};
+    const struct OptUseScratchpad : public BoolOption {
+        OptUseScratchpad(bool &var);
+    } _opt_useScratchpad{_useScratchpad};
     const Options _options{_opt_useScratchpad};
 
     Error decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM;
-    static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM;
 };
 
 }  // namespace f3850

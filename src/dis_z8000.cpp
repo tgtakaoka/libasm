@@ -21,10 +21,16 @@
 namespace libasm {
 namespace z8000 {
 
-const char DisZ8000::OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
-const char DisZ8000::OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
-const char DisZ8000::OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-const char DisZ8000::OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
+static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
+static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
+static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
+
+DisZ8000::OptIoaddrPrefix::OptIoaddrPrefix(bool &var)
+    : BoolOption(OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX, var) {}
+
+DisZ8000::OptShortDirect::OptShortDirect(bool &var, const OptionBase &next)
+    : BoolOption(OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, var, next) {}
 
 StrBuffer &DisZ8000::outRegister(StrBuffer &out, RegName name) {
     return _regs.outRegName(out, name);

@@ -21,12 +21,33 @@
 namespace libasm {
 namespace mos6502 {
 
-const char DisMos6502::OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
-const char DisMos6502::OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
-const char DisMos6502::OPT_BOOL_LONGA[] PROGMEM = "longa";
-const char DisMos6502::OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
-const char DisMos6502::OPT_BOOL_LONGI[] PROGMEM = "longi";
-const char DisMos6502::OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
+static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
+static const char OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
+static const char OPT_BOOL_LONGA[] PROGMEM = "longa";
+static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
+static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
+static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
+
+DisMos6502::OptIndirectLong::OptIndirectLong()
+    : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, OPT_DESC_INDIRECT_LONG) {}
+
+Error DisMos6502::OptIndirectLong::set(bool value) const {
+    return TableMos6502::TABLE.useIndirectLong(value) ? OK : OPERAND_NOT_ALLOWED;
+}
+
+DisMos6502::OptLongI::OptLongI(const OptionBase &next)
+    : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI, next) {}
+
+Error DisMos6502::OptLongI::set(bool value) const {
+    return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
+}
+
+DisMos6502::OptLongA::OptLongA(const OptionBase &next)
+    : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
+
+Error DisMos6502::OptLongA::set(bool value) const {
+    return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+}
 
 Error DisMos6502::decodeImmediate(
         DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {

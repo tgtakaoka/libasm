@@ -18,14 +18,42 @@
 
 namespace libasm {
 
-const char Disassembler::OPT_BOOL_RELATIVE[] PROGMEM = "relative";
-const char Disassembler::OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
-const char Disassembler::OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
-const char Disassembler::OPT_DESC_UPPERCASE[] PROGMEM = "uppercase instruction and register name";
-const char Disassembler::OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
-const char Disassembler::OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
-const char Disassembler::OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
-const char Disassembler::OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
+static const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
+static const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
+static const char OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
+static const char OPT_DESC_UPPERCASE[] PROGMEM = "uppercase instruction and register name";
+static const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
+static const char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
+static const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
+static const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
+
+Disassembler::Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym)
+    : _formatter(formatter),
+      _regBase(regs),
+      _table(table),
+      _opt_curSym(OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, _curSym),
+      _opt_cstyle(this, _opt_curSym),
+      _opt_uppercase(this, _opt_cstyle),
+      _opt_relative(OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE, _relativeTarget, _opt_uppercase),
+      _commonOptions(_opt_relative),
+      _curSym(curSym) {}
+
+Disassembler::OptCStyle::OptCStyle(Disassembler *dis, const OptionBase &next)
+    : BoolOptionBase(OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, next), DisassemblerOption(dis) {}
+
+Error Disassembler::OptCStyle::set(bool value) const {
+    _dis->_formatter.setCStyle(value);
+    return OK;
+}
+
+Disassembler::OptUppercase::OptUppercase(Disassembler *dis, const OptionBase &next)
+    : BoolOptionBase(OPT_BOOL_UPPERCASE, OPT_DESC_UPPERCASE, next), DisassemblerOption(dis) {}
+
+Error Disassembler::OptUppercase::set(bool value) const {
+    _dis->_formatter.setUppercase(value);
+    _dis->_regBase.setUppercase(value);
+    return OK;
+}
 
 Error Disassembler::checkAddress(uint32_t addr) {
     const uint32_t max = 1UL << config().addressWidth();
