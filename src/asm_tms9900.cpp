@@ -172,7 +172,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('@')) {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         if (p.skipSpaces().expect('(')) {
             const auto regp = p.skipSpaces();
@@ -198,7 +198,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.mode = M_IMM;
     scan = p;

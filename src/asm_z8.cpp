@@ -281,7 +281,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IM;
         scan = p;
@@ -311,7 +311,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     if (forceRegAddr && isspace(*p))
         return op.setError(UNKNOWN_OPERAND);
     const int32_t val32 = parseExpr32(p, op);
-    if (parserError())
+    if (op.hasError())
         return getError();
     if (p.skipSpaces().expect('(')) {
         if (indir || forceRegAddr)
@@ -319,7 +319,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         op.reg = RegZ8::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             const auto val16 = parseExpr16(p, op);
-            if (parserError())
+            if (op.hasError())
                 return getError();
             if (!_pseudos.isWorkReg(val16))
                 return op.setError(UNKNOWN_OPERAND);

@@ -178,7 +178,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         op.reg = RegZ80::parseRegName(p);
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p, op);
-            if (parserError())
+            if (op.hasError())
                 return getError();
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
@@ -214,7 +214,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         if (*p == '+' || *p == '-') {
             if (op.reg == REG_IX || op.reg == REG_IY) {
                 op.val16 = parseExpr16(p, op);
-                if (parserError())
+                if (op.hasError())
                     return getError();
                 if (!p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
@@ -226,7 +226,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
     }
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.mode = M_IM16;
     scan = p;

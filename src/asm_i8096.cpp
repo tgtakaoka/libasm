@@ -22,8 +22,6 @@ namespace i8096 {
 Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {
     Operand regop;
     op.regno = parseExpr16(scan, regop);
-    if (parserError())
-        return op.setError(regop);
     if (regop.getError())
         op.setErrorIf(regop);
     if (scan.skipSpaces().expect(']'))
@@ -39,7 +37,7 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IMM16;
         scan = p;
@@ -54,7 +52,7 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect('[')) {
         if (parseIndirect(p, op))

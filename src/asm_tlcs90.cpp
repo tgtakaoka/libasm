@@ -137,7 +137,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         reg = RegTlcs90::parseRegName(p);
         if (reg == REG_UNDEF) {  // (nnnn)
             op.val16 = parseExpr16(p, op);
-            if (parserError())
+            if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
@@ -170,7 +170,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (*p == '+' || *p == '-') {  // (rr+n)
             op.val16 = parseExpr16(p, op);
-            if (parserError())
+            if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
@@ -184,7 +184,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
     }
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.mode = M_IMM16;
     scan = p;

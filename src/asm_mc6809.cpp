@@ -252,7 +252,9 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
     // ',n' can have spaces after ','.
     p = scan;
     if (p.expect('.') || p.skipSpaces().expect(',')) {
-        const auto reg = RegMc6809::parseRegName(p.skipSpaces());
+        if (endOfLine(p.skipSpaces()))
+            return false;
+        const auto reg = RegMc6809::parseRegName(p);
         if (reg == REG_0) {
             op.extra = 0;
             scan = p;
@@ -264,7 +266,7 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
         ErrorAt error;
         error.setAt(p);
         const auto bitp = parseExpr32(p, error);
-        if (parserError())
+        if (op.hasError())
             return false;
         if (bitp >= 8)
             error.setErrorIf(ILLEGAL_BIT_NUMBER);
@@ -285,7 +287,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     op.list = p;
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IM32;
         scan = p;
@@ -328,7 +330,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     } else if (indexBits) {
         const auto index = p;
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
 
         if (parseBitPosition(p, op)) {

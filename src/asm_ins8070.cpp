@@ -132,7 +132,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
 
     if (p.expect('#') || p.expect('=')) {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IMM;
         scan = p;
@@ -176,7 +176,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
 
     auto autoIndex = p.expect('@');
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
 
     if (*p.skipSpaces() == '(')  // SC/MP style

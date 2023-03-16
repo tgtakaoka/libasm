@@ -64,31 +64,24 @@ bool PseudoBase::endOfLine(const StrScanner &scan, bool headOfLine) const {
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
-    const auto value = _parser.eval(expr, _symtab);
+    auto p = expr;
+    const auto value = _parser.eval(p, _symtab);
     if (_parser.getError())
         error.setError(_parser);
     if (value.overflowUint16())
-        error.setError(OVERFLOW_RANGE);
-    if (value.isUndefined())
-        error.setErrorIf(_parser, UNDEFINED_SYMBOL);
+        error.setErrorIf(expr, OVERFLOW_RANGE);
+    expr = p;
     return value.getUnsigned();
 }
 
 uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
-    const auto value = _parser.eval(expr, _symtab);
-    if (_parser.getError())
-        error.setError(_parser);
-    if (value.isUndefined())
-        error.setErrorIf(_parser, UNDEFINED_SYMBOL);
-    return value.getUnsigned();
+    return parseExpr(expr, error).getUnsigned();
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) const {
     const auto value = _parser.eval(expr, _symtab);
     if (_parser.getError())
         error.setError(_parser);
-    if (value.isUndefined())
-        error.setErrorIf(_parser, UNDEFINED_SYMBOL);
     return value;
 }
 

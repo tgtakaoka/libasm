@@ -68,7 +68,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
 
     op.indir = p.expect('*');
     op.val16 = parseExpr16(p.skipSpaces(), op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     if (p.expect(',')) {
         op.reg = RegScn2650::parseRegName(p.skipSpaces());

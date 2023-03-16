@@ -27,6 +27,7 @@
 namespace libasm {
 
 enum Radix : uint8_t {
+    RADIX_NONE = 0,
     RADIX_2 = 2,
     RADIX_8 = 8,
     RADIX_10 = 10,
@@ -108,6 +109,7 @@ public:
     StrScanner readSymbol(StrScanner &scan) const;
     void setCommentChar(char c) { _commentChar = c; }
     bool endOfLine(char c) const { return c == 0 || c == ';' || c == _commentChar; }
+    bool hasError() const;
 
     struct FuncParser : public ErrorAt {
         virtual Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
@@ -175,7 +177,6 @@ private:
     };
 
     Value parseExpr(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
-    Error parseFunction(const uint16_t funid, StrScanner &scan, Value &val);
     Value readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
     Value readCharacterConstant(StrScanner &scan);
     Operator readOperator(StrScanner &scan);

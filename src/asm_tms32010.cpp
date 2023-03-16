@@ -130,7 +130,7 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.mode = constantType(op.val16);
     scan = p;

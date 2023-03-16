@@ -301,7 +301,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IMDAT;
         scan = p;
@@ -327,7 +327,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             return OK;
         }
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         if (p.skipSpaces().expect(')')) {
             const auto size = RegMc68000::parseSize(p.skipSpaces());
@@ -400,7 +400,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     op.val32 = parseExpr32(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.mode = M_LABEL;
     scan = p;

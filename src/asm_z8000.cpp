@@ -421,7 +421,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     op.setAt(p);
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IM;
         scan = p;
@@ -450,7 +450,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
             op.base = op.reg;
             if (p.skipSpaces().expect('#')) {
                 op.val32 = parseExpr32(p, op);
-                if (parserError())
+                if (op.hasError())
                     return op.getError();
                 if (!p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
@@ -520,7 +520,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     } else {
         op.val32 = parseExpr32(p, op);
     }
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect('(')) {
         op.reg = RegZ8000::parseRegName(p.skipSpaces());

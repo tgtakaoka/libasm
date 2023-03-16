@@ -89,7 +89,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.mode = M_IM16;
     scan = p;

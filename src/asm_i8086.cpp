@@ -101,7 +101,7 @@ Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
             return op.setError(UNKNOWN_OPERAND);
     }
     op.val32 = parseExpr32(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.hasVal = true;
     scan = p.skipSpaces();
@@ -177,7 +177,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     const auto valp = p.skipSpaces();
     ;
     op.val32 = parseExpr32(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect(':')) {
         if (op.val32 >= 0x10000UL)
@@ -186,7 +186,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         ErrorAt offset;
         offset.setAt(p);
         op.val32 = parseExpr32(p, offset);
-        if (parserError())
+        if (op.hasError())
             return offset.getError();
         op.setErrorIf(offset);
         op.mode = M_FAR;

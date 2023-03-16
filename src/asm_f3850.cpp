@@ -42,7 +42,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     auto val = parseExpr(p.skipSpaces(), op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.val16 = val.getUnsigned();
     const int16_t v = val.isSigned() ? val.getSigned() : val.getUnsigned();

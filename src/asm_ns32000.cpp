@@ -115,7 +115,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return OK;
     if (p.expect('@')) {
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_ABS;
         scan = p;
@@ -150,7 +150,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             } else {
                 op.val32 = parseExpr32(p, op);
             }
-            if (parserError())
+            if (op.hasError())
                 return op.getError();
             op.mode = M_REL;
             op.reg = REG_PC;
@@ -201,14 +201,17 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             if (!p.expect('('))
                 return op.setError(p, UNKNOWN_OPERAND);
             op.val32 = parseExpr32(p, op);
-            if (parserError())
-                return getError();
+            if (op.hasError())
+                return op.getError();
             if (!p.skipSpaces().expect(')'))
-                return op.setError(p, MISSING_CLOSING_PAREN);
+                return op.setErrorIf(p, MISSING_CLOSING_PAREN);
             if (*p.skipSpaces() == '+' || *p == '-') {
+                ErrorAt save(op);
                 op.disp2 = parseExpr32(p, op);
-                if (parserError())
+                if (op.hasError())
                     return op.getError();
+                if (save.getError())
+                    op.setError(save);
                 p.skipSpaces();
             }
             if (*p == '[' || endOfLine(p) || *p == ',') {
@@ -223,7 +226,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
 
     const auto val = parseExpr(p, op);
     auto t = p;
-    if (*t == '.' || *t == 'e' || *t == 'E' || parserError() == OVERFLOW_RANGE ||
+    if (*t == '.' || *t == 'e' || *t == 'E' || op.getError() == OVERFLOW_RANGE ||
             op.getError() == UNDEFINED_SYMBOL) {
         char *e;
         op.float64 = strtod(a.str(), &e);
@@ -235,7 +238,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             return op.setOK();
         }
     }
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     op.val32 = val.getUnsigned();
     op.size = SZ_DOUBLE;
@@ -255,7 +258,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
-            return op.setError(p, MISSING_CLOSING_PAREN);
+            return op.setErrorIf(p, MISSING_CLOSING_PAREN);
         if (RegNs32000::isGeneric(reg)) {
             op.reg = reg;
             op.mode = M_RREL;
@@ -268,20 +271,23 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             scan = p;
             return OK;
         }
-        return op.setError(r, UNKNOWN_OPERAND);
+        return op.setErrorIf(r, UNKNOWN_OPERAND);
     }
 
     op.disp2 = op.val32;
+    ErrorAt save(op);
     op.val32 = parseExpr32(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
+    if (save.getError())
+        op.setError(save);
     if (!p.skipSpaces().expect('('))
-        return op.setError(p, UNKNOWN_OPERAND);
+        return op.setErrorIf(p, UNKNOWN_OPERAND);
     const auto x = p;
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
-            return op.setError(p, MISSING_CLOSING_PAREN);
+            return op.setErrorIf(p, MISSING_CLOSING_PAREN);
         if (!p.skipSpaces().expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
         if (reg == REG_FP || reg == REG_SP || reg == REG_SB || reg == REG_EXT) {
@@ -292,7 +298,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         }
     }
 
-    return op.setError(x, UNKNOWN_OPERAND);
+    return op.setErrorIf(x, UNKNOWN_OPERAND);
 }
 
 Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {

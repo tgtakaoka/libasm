@@ -66,6 +66,10 @@ static bool isoctal(char c) {
     return c >= '0' && c < '8';
 }
 
+bool ValueParser::hasError() const {
+    return getError() && getError() != UNDEFINED_SYMBOL;
+}
+
 char ValueParser::readChar(StrScanner &scan) {
     setOK();
     auto p = scan;
@@ -107,7 +111,7 @@ char ValueParser::readChar(StrScanner &scan) {
     }
     Value value;
     NUMBER_PARSER.parseNumber(p, value, radix);
-    if (getError())
+    if (hasError())
         return 0;
     if (value.overflowUint8()) {
         setError(scan, OVERFLOW_RANGE);
@@ -151,6 +155,7 @@ Error NumberParser::parseNumber(StrScanner &scan, Value &val, const Radix radix)
 
 Value ValueParser::eval(StrScanner &expr, const SymbolTable *symtab) {
     setOK();
+    setAt(expr);
     Stack<OprAndLval> stack;
     return parseExpr(expr, stack, symtab);
 }
@@ -191,10 +196,10 @@ Value ValueParser::parseExpr(
     }
     stack.push(OprAndLval());
     auto value = readAtom(scan, stack, symtab);
-    if (getError())
-        return Value();
-    while (!stack.empty()) {
+    while (!hasError() && !stack.empty()) {
         const auto opr = readOperator(scan);
+        if (hasError())
+            return Value();
         while (opr._precedence <= stack.top().precedence()) {
             if (stack.top().isEnd()) {
                 stack.pop();
@@ -209,8 +214,6 @@ Value ValueParser::parseExpr(
         }
         stack.push(OprAndLval(opr, value));
         value = readAtom(scan, stack, symtab);
-        if (getError())
-            return Value();
     }
     return Value();
 }
@@ -223,7 +226,7 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
     }
     if (p.expect('(')) {
         const auto value = parseExpr(p, stack, symtab);
-        if (isOK()) {
+        if (!hasError()) {
             if (!p.skipSpaces().expect(')')) {
                 setError(p, MISSING_CLOSING_PAREN);
                 return Value();
@@ -248,19 +251,26 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
             return value.setValue(~value.getUnsigned());
         return value;
     }
-    if (*p == '-' || *p == '+') {
-        const auto c = *p;
-        if (*++p == '-' || *p == '+') {
+    if (p.expect('-')) {
+        if (*p == '-' || *p == '+') {
             setError(scan, UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
         auto value = readAtom(p, stack, symtab);
-        if (c == '-' && !value.isUndefined()) {
+        if (!value.isUndefined()) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(scan, OVERFLOW_RANGE);
-            scan = p;
-            return Value::makeSigned(-value.getSigned());
+            value = Value::makeSigned(-value.getSigned());
         }
+        scan = p;
+        return value;
+    }
+    if (p.expect('+')) {
+        if (*p == '+' || *p == '-') {
+            setError(scan, UNKNOWN_EXPR_OPERATOR);
+            return Value();
+        }
+        const auto value = readAtom(p, stack, symtab);
         scan = p;
         return value;
     }
@@ -281,28 +291,31 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
         if (*p.skipSpaces() == '(' && _funcParser) {
             auto params = p;
             params.expect('(');
+            ErrorAt save;
+            save.setError(*this);
             if (_funcParser->parseFunc(*this, symbol, params, val, symtab) == OK) {
+                setError(save);
                 if (!params.expect(')')) {
                     setError(p, MISSING_CLOSING_PAREN);
-                    return Value();
+                } else {
+                    scan = params;
                 }
-                scan = params;
                 return val;
-            } else if (_funcParser->getError() != UNKNOWN_FUNCTION) {
+            } else if (_funcParser->getError() == UNKNOWN_FUNCTION) {
+                ;
+            } else {
                 setError(*_funcParser);
-                return Value();
+                return val;
             }
+            setError(save);
         }
         scan = p;
-        if (symtab) {
-            if (symtab->hasSymbol(symbol)) {
-                const uint32_t v = symtab->lookupSymbol(symbol);
-                return Value().setValue(v);
-            }
-            setAt(symbol);
-            return Value();
+        if (symtab && symtab->hasSymbol(symbol)) {
+            const uint32_t v = symtab->lookupSymbol(symbol);
+            return val.setValue(v);
         }
-        return Value();
+        setErrorIf(symbol, UNDEFINED_SYMBOL);
+        return val;
     }
 
 read_number:
@@ -324,7 +337,7 @@ ValueParser::FuncParser *ValueParser::setFuncParser(FuncParser *parser) {
 
 Value ValueParser::readCharacterConstant(StrScanner &scan) {
     const auto c = readChar(scan);
-    if (getError())
+    if (hasError())
         return Value();
     return Value::makeSigned(c);
 }
@@ -599,7 +612,7 @@ bool NationalNumberParser::numberPrefix(const StrScanner &scan) const {
 
 Error NationalNumberParser::readNumber(StrScanner &scan, Value &val) {
     auto p = scan;
-    auto radix = Radix(0);
+    auto radix = RADIX_NONE;
     constexpr auto quote = '\'';
     if ((p.iexpect('X') || p.iexpect('H')) && p.expect(quote)) {
         if (scanNumberEnd(p, RADIX_16) == OK)
@@ -615,7 +628,7 @@ Error NationalNumberParser::readNumber(StrScanner &scan, Value &val) {
             radix = RADIX_2;
     }
 
-    if (uint8_t(radix) != 0) {
+    if (radix != RADIX_NONE) {
         parseNumber(p, val, radix);
         return setError(expectNumberSuffix(scan = p, quote));
     }

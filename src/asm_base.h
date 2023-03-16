@@ -75,8 +75,6 @@ public:
     uint32_t parseExpr32(StrScanner &expr, ErrorAt &error) const;
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error) const;
-    /** Return error caused by |parseExpr16| and |parseExpr32|. */
-    Error parserError() const { return _parser.getError(); }
 
 private:
     ValueParser &_parser;

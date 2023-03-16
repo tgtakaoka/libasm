@@ -29,7 +29,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IMM8;
         scan = p;
@@ -133,7 +133,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     op.val16 = parseExpr16(p, op);
-    if (parserError())
+    if (op.hasError())
         return op.getError();
     scan = p;
     op.mode = M_AD11;

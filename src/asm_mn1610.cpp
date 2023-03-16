@@ -254,7 +254,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
 
     // v, (v), (v)(r), v(r), (v(r))
     op.val32 = parseExpr32(p, op);
-    if (parserError())
+    if (op.hasError())
         return getError();
     if (endOfLine(p.skipSpaces()) || *p == ',') {
         // v

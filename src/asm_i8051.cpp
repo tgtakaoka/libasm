@@ -29,7 +29,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         op.mode = M_IMM16;
         scan = p;
@@ -91,15 +91,16 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     const auto addrp = p;
     const auto bitNot = p.expect('/');
     op.val16 = parseExpr16(p.skipSpaces(), op);
-    if (parserError())
+    if (op.hasError())
         return getError();
     if (p.expect('.')) {
         if (op.getError())
             op.val16 = 0x20;
         const auto bitp = p;
-        auto bitNo = parseExpr16(p, op);
-        if (parserError())
-            return op.getError();
+        ErrorAt bitOp;
+        auto bitNo = parseExpr16(p, bitOp);
+        if (bitOp.getError())
+            op.setErrorIf(bitOp);
         if (bitNo >= 8)
             return op.setError(bitp, ILLEGAL_BIT_NUMBER);
         auto val16 = op.val16;
@@ -121,7 +122,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
 void AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_REL: {
-        uint8_t len = insn.length();
+        auto len = insn.length();
         if (len == 0)
             len = 1;
         const Config::uintptr_t base = insn.address() + len + 1;

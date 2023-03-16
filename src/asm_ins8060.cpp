@@ -30,7 +30,10 @@ static Config::uintptr_t offset(Config::uintptr_t addr) {
 static struct : public ValueParser::FuncParser {
     Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
             const SymbolTable *symtab) override {
-        const auto v = parser.eval(scan, symtab).getUnsigned();
+        const auto vv = parser.eval(scan, symtab);
+        if (parser.hasError())
+            return setError(parser);
+        const auto v = vv.getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
             val.setValue((v >> 8) & 0xFF);
         } else if (name.iequals_P(PSTR("l"))) {
@@ -123,7 +126,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     } else {
         op.val16 = parseExpr16(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
     }
     if (p.skipSpaces().expect('(')) {

@@ -180,7 +180,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
     if (p.expect('#')) {  // #nn
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return getError();
         op.mode = M_IMA;
         scan = p;
@@ -197,7 +197,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
     } else {
         const auto size = parseSizeOverride(p);
         op.val32 = parseExpr32(p, op);
-        if (parserError())
+        if (op.hasError())
             return op.getError();
         if (selectMode(size, op, M_DPG, M_ABS, M_ABSL))
             return op.getError();
