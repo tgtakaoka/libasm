@@ -41,7 +41,9 @@ private:
     public:
         bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
-        uint8_t dp() const { return _direct_page; }
+        bool inDirectPage(Config::uintptr_t addr) const {
+            return static_cast<uint8_t>(addr >> 8) == _direct_page;
+        }
         Error setDp(int32_t value);
 
     private:

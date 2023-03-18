@@ -1340,15 +1340,15 @@ static void test_transfer() {
 static void test_bit_position() {
     if (is6309()) {
         // HD6309
-        TEST("BAND  A.1,$34.2",                                   0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A.9,$34.2",  ILLEGAL_BIT_NUMBER, "A.9,$34.2", 0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A.1,$34.10", ILLEGAL_BIT_NUMBER, "$34.10",    0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A,9,$34,2",  ILLEGAL_BIT_NUMBER, "A,9,$34,2", 0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A,1,$34,10", ILLEGAL_BIT_NUMBER, "$34,10",    0x11, 0x30, 0x51, 0x34);
+        TEST("BAND  A.1,$34.2",                                 0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.9,$34.2",  ILLEGAL_BIT_NUMBER, "9,$34.2", 0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.1,$34.10", ILLEGAL_BIT_NUMBER, "10",      0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A,9,$34,2",  ILLEGAL_BIT_NUMBER, "9,$34,2", 0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A,1,$34,10", ILLEGAL_BIT_NUMBER, "10",      0x11, 0x30, 0x51, 0x34);
         TEST("BIAND A.1,$34.2",   0x11, 0x31, 0x51, 0x34);
         TEST("BOR   A.1,$34.2",   0x11, 0x32, 0x51, 0x34);
         TEST("BIAND A.1,$34,2",   0x11, 0x31, 0x51, 0x34);
-        TEST("BIEOR A.1,$1234.2", 0x11, 0x35, 0x51, 0x34);
+        ERRT("BIEOR A.1,$1234.2", OPERAND_NOT_ALLOWED, "$1234.2");
         // ',' can be accepted as bit number separator.
         TEST("BIOR  A,1,$34,2",   0x11, 0x33, 0x51, 0x34);
         TEST("BEOR  A,1,$34,2",   0x11, 0x34, 0x51, 0x34);
@@ -1356,6 +1356,7 @@ static void test_bit_position() {
         TEST("STBT  A.1,<$5634.2", 0x11, 0x37, 0x51, 0x34);
         TEST("LDBT  A,1,$1234,2",  0x11, 0x36, 0x51, 0x34);
         TEST("STBT  B,0,<$5634.2", 0x11, 0x37, 0x90, 0x34);
+        ERRT("BEOR  A,1,$34,2",    OPERAND_NOT_ALLOWED, "$34,2");
 
         TEST("SETDP 0");
         TEST("LDBT CC.1,$34.7", 0x11, 0x36, 0x39, 0x34);
@@ -1364,6 +1365,7 @@ static void test_bit_position() {
         TEST("LDBT CC,0,$34.7", 0x11, 0x36, 0x38, 0x34);
         TEST("LDBT CC,3,$34.7", 0x11, 0x36, 0x3B, 0x34);
         TEST("LDBT CC,4,$34,7", 0x11, 0x36, 0x3C, 0x34);
+        ERRT("LDBT CC,4,$1234,7", OPERAND_NOT_ALLOWED, "$1234,7");
         TEST("SETDP $12");
         TEST("LDBT CC.5,$1234.7",  0x11, 0x36, 0x3D, 0x34);
         TEST("LDBT CC,6,$1234,7",  0x11, 0x36, 0x3E, 0x34);
@@ -1373,18 +1375,22 @@ static void test_bit_position() {
 
         symtab.intern(0x0034, "dir34");
         symtab.intern(0x9030, "sym9030");
+        symtab.intern(4, "bit");
 
         TEST("SETDP 0");
         TEST("LDBT  CC.0,dir34.7",   0x11, 0x36, 0x38, 0x34);
         TEST("LDBT  B.2,<sym9030.4", 0x11, 0x36, 0xA2, 0x30);
         TEST("SETDP $90");
         TEST("LDBT  B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
+
+        TEST("LDBT  B.6-bit,sym9030+2.bit",   0x11, 0x36, 0xA2, 0x32);
+        TEST("LDBT  B.bit-1,sym9030-2.bit/2", 0x11, 0x36, 0x93, 0x2E);
     } else {
         ERUI("BAND  A.1,$34.2");
         ERUI("BIAND A.1,$34.2");
         ERUI("BOR   A.1,$34.2");
-        ERUI("BIOR  A,1,$34,2");
-        ERUI("BEOR  A,1,$34,2");
+        ERUI("BIOR  A,bit,$34,bit2");
+        ERUI("BEOR  A,1,undef,2");
         ERUI("LDBT  A,1,$34,2");
         ERUI("STBT  A.1,$34.2");
     }

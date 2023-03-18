@@ -253,15 +253,16 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
     p = scan;
     if (p.expect('.') || p.skipSpaces().expect(',')) {
         const auto reg = RegMc6809::parseRegName(p.skipSpaces());
-        if (reg != REG_UNDEF) {
-            if (reg == REG_0) {
-                op.extra = 0;
-                scan = p;
-                return true;
-            }
-            return false;
+        if (reg == REG_0) {
+            op.extra = 0;
+            scan = p;
+            return true;
         }
-        ErrorAt error(op);
+        if (reg != REG_UNDEF)
+            return false;
+
+        ErrorAt error;
+        error.setAt(p);
         const auto bitp = parseExpr32(p, error);
         if (parserError())
             return false;
@@ -325,11 +326,14 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
             return OK;
         }
     } else if (indexBits) {
+        const StrScanner index(p);
         op.val32 = parseExpr32(p, op);
         if (parserError())
             return op.getError();
 
         if (parseBitPosition(p, op)) {
+            if (op.isOK() && !_pseudos.inDirectPage(op.val32) && indexBits != 8)
+                return op.setError(index, OPERAND_NOT_ALLOWED);
             op.mode = M_DBIT;
             scan = p;
             return OK;
@@ -349,7 +353,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
             }
             if (indexBits < 0) {
                 const auto addr = static_cast<Config::uintptr_t>(op.val32);
-                indexBits = static_cast<uint8_t>(addr >> 8) == _pseudos.dp() ? 8 : 16;
+                indexBits = _pseudos.inDirectPage(addr) ? 8 : 16;
             }
             op.extra = indexBits;
             op.mode = (indexBits == 8) ? M_DIR : M_EXT;
