@@ -436,6 +436,7 @@ static void test_undefined_symbol() {
     ERUS("LDA >UNDEF,X", "UNDEF,X", 0xD6, 0x00, 0x00);
     ERUS("JSR UNDEF",   "UNDEF",   0xBD, 0x00);
     ERUS("BRA UNDEF+2", "UNDEF+2", 0x20, 0x00);
+    ERUS("BRA 2+UNDEF", "UNDEF",   0x20, 0x00);
     ERUS("BSR UNDEF",   "UNDEF",   0xAD, 0x00);
 }
 // clang-format on

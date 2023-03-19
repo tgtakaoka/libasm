@@ -293,7 +293,7 @@ static void test_scan() {
     SCAN('H', "1AB0HHX",      "1AB0");
     SCAN('O', "1230OOX",      "1230");
     SCAN('O', "1239OOX",      "1239");
-    SCAN('B', "1010BBX",      "1010B");
+    SCAN('B', "1010BBX",      "1010");
     SCAN('B', "1012BBX",      "1012");
     SCAN(',', "h'1230,",      "h'1230");
     SCAN(',', "h'1230',",     "h'1230'");

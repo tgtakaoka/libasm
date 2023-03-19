@@ -106,6 +106,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Duplicate function");
     case SYMBOL_REQUIRE:
         return PSTR("Symbol name required");
+    case NOT_AN_EXPECTED:
+        return PSTR("Not an expected entity");
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:

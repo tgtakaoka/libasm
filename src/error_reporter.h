@@ -71,6 +71,7 @@ enum Error : uint8_t {
     UNKNOWN_FUNCTION = 110,
     DUPLICATE_FUNCTION = 111,
     SYMBOL_REQUIRE = 112,
+    NOT_AN_EXPECTED = 113,
 
     // AsmDirective
     UNKNOWN_DIRECTIVE = 150,

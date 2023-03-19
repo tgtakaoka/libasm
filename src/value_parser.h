@@ -26,59 +26,91 @@
 
 namespace libasm {
 
-enum Radix : uint8_t {
-    RADIX_NONE = 0,
-    RADIX_2 = 2,
-    RADIX_8 = 8,
-    RADIX_10 = 10,
-    RADIX_16 = 16,
+/**
+ * Parse text |scan| as a number.
+ *
+ * - Returns OK when |scan| is recognized as a valid number, and
+ *   updates |scan| at the end of a number.
+ * - Returns ILLEGAL_CONSTANT when |scan| seems a number but not
+ *   ended as expected. |scan| is updated at the error.
+ * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
+ *   number. |scan| is unchanged.
+ */
+struct NumberParser {
+    virtual Error parseNumber(StrScanner &scan, Value &val) const = 0;
 };
 
-class NumberParser : public ErrorAt {
-public:
-    virtual bool numberPrefix(const StrScanner &scan) const;
-    virtual Error readNumber(StrScanner &scan, Value &val);
-
-    Error parseNumber(StrScanner &scan, Value &val, const Radix radix);
-
-protected:
-    Error scanNumberEnd(const StrScanner &scan, const Radix radix, char suffix = 0) const;
-    Error expectNumberSuffix(StrScanner &scan, char suffux = 0) const;
+/**
+`* C-style number are,
+ * - Decimal:     "[1-9][0-9]*"
+ * - Hexadecimal: "0[xX][0-9A-Fa-f]+"
+ * - Octal:       "0[0-7]*"
+ * - Binary:      "0[bB][01]+"
+ */
+struct CStyleNumberParser : NumberParser {
+    Error parseNumber(StrScanner &scan, Value &val) const override;
 };
 
-class MotorolaNumberParser : public NumberParser {
-public:
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
+/**
+ * Motorola style number are,
+ * - Decimal:     "{&}[0-9]+"
+ * - Hexadecimal: "$[0-9A-Fa-f]+"
+ * - Octal:       "@[0-7]+"
+ * - Binary:      "%[01]+"
+ */
+struct MotorolaNumberParser : CStyleNumberParser {
+    Error parseNumber(StrScanner &scan, Value &val) const override;
 };
 
-class IntelNumberParser : public NumberParser {
-public:
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
-};
-
-class NationalNumberParser : public NumberParser {
-public:
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
-};
-
-class FairchildNumberParser : public NumberParser {
-public:
-    bool numberPrefix(const StrScanner &scan) const override;
-    Error readNumber(StrScanner &scan, Value &val) override;
+/**
+ * Intel style number are,
+ * - Decimal:     "[0-9]+"
+ * - Hexadecimal: "([0-9]|0[A-Fa-f])[0-9A-Fa-f]*[hH]"
+ * - Octal:       "[0-7]+[oOqQ]"
+ * - Binary:      "[01]+[bB]"
+ */
+struct IntelNumberParser : CStyleNumberParser {
+    Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    MotorolaNumberParser _motorola;
-    NationalNumberParser _national;
+    /**
+     * Search |scan| as a |radix| based number with optional |suffix|.
+     * - Returns OK when |scan| looks a valid number, and |scan| is
+     *   updated to the end of a number including |suffix|.
+     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
+     *   number, or lacks |suffix|.
+     */
+    static Error scanNumberEnd(StrScanner &scan, Radix radix, char suffix = 0);
+};
+
+/**
+ * National style number are,
+ * - Decimal:     "[0-9]+|[dD]'[0-9]+'?"
+ * - Hexadecimal: "[hHxX]'[0-9A-Fa-f]+'?"
+ * - Octal:       "[oOqQ]'[0-7]+'?"
+ * - Binary:      "[bB]'[01]+'?"
+ */
+struct NationalNumberParser : CStyleNumberParser {
+    Error parseNumber(StrScanner &scan, Value &val) const override;
+};
+
+/**
+ * Fairchild style number are National or Motorola style number.
+ */
+struct FairchildNumberParser : CStyleNumberParser {
+    FairchildNumberParser() : CStyleNumberParser(), _national(), _motorola() {}
+    Error parseNumber(StrScanner &scan, Value &val) const override;
+
+private:
+    const NationalNumberParser _national;
+    const MotorolaNumberParser _motorola;
 };
 
 class ValueParser : public ErrorAt {
 public:
-    ValueParser(char locSym = '.', NumberParser &numberParser = NUMBER_PARSER)
+    ValueParser(char locSym = '.')
         : ErrorAt(),
-          _numberParser(numberParser),
+          _numberParser(_cStyleNumber),
           _locSym(locSym),
           _origin(0),
           _funcParser(nullptr),
@@ -118,18 +150,26 @@ public:
     FuncParser *setFuncParser(FuncParser *parser = nullptr);
 
 protected:
+    ValueParser(const NumberParser &numberParser, char locSym = '.')
+        : ErrorAt(),
+          _numberParser(numberParser),
+          _locSym(locSym),
+          _origin(0),
+          _funcParser(nullptr),
+          _commentChar(0) {}
+
     virtual bool locationSymbol(StrScanner &scan) const;
     virtual bool charPrefix(StrScanner &scan, char &prefix) const;
     virtual bool charSuffix(StrScanner &scan, char prefix) const;
 
 private:
-    NumberParser &_numberParser;
+    const NumberParser &_numberParser;
     const char _locSym;
     uint32_t _origin;
     FuncParser *_funcParser;
     char _commentChar;
 
-    static NumberParser NUMBER_PARSER;
+    const CStyleNumberParser _cStyleNumber;
 
     enum Op : uint8_t {
         OP_NONE,
@@ -186,40 +226,41 @@ private:
 class MotorolaValueParser : public ValueParser {
 public:
     MotorolaValueParser(bool closingQuote = false)
-        : ValueParser('*', NUMBER_PARSER), _closingQuote(closingQuote) {}
+        : ValueParser(_motorolaNumber, '*'), _closingQuote(closingQuote) {}
 
 protected:
     bool charSuffix(StrScanner &scan, char prefix) const override;
 
 private:
-    bool _closingQuote;
-
-    static MotorolaNumberParser NUMBER_PARSER;
+    const bool _closingQuote;
+    const MotorolaNumberParser _motorolaNumber;
 };
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser(char locSym = '$') : ValueParser(locSym, NUMBER_PARSER) {}
+    IntelValueParser(char locSym = '$') : ValueParser(_intelNumber, locSym) {}
 
 private:
-    static IntelNumberParser NUMBER_PARSER;
+    const IntelNumberParser _intelNumber;
 };
 
 class NationalValueParser : public ValueParser {
 public:
-    NationalValueParser(char locSym = '.', NumberParser &numberParser = NUMBER_PARSER)
-        : ValueParser(locSym, numberParser) {}
+    NationalValueParser(char locSym = '.') : ValueParser(_nationalNumber, locSym) {}
 
 protected:
+    NationalValueParser(const NumberParser &numberParser, char locSym = '.')
+        : ValueParser(numberParser, locSym) {}
+
     bool symbolLetter(char c, bool head = false) const override;
 
 private:
-    static NationalNumberParser NUMBER_PARSER;
+    const NationalNumberParser _nationalNumber;
 };
 
 class FairchildValueParser : public NationalValueParser {
 public:
-    FairchildValueParser() : NationalValueParser('*', NUMBER_PARSER) {}
+    FairchildValueParser() : NationalValueParser(_fairchildNumber, '*') {}
 
 protected:
     bool locationSymbol(StrScanner &scan) const override;
@@ -228,7 +269,7 @@ protected:
     bool charSuffix(StrScanner &scan, char prefix) const override;
 
 private:
-    static FairchildNumberParser NUMBER_PARSER;
+    const FairchildNumberParser _fairchildNumber;
 };
 
 }  // namespace libasm

@@ -17,14 +17,36 @@
 #ifndef __VALUE_H__
 #define __VALUE_H__
 
+#include "error_reporter.h"
+#include "str_scanner.h"
+
 #include <stdint.h>
 
 namespace libasm {
+
+enum Radix : uint8_t {
+    RADIX_NONE = 0,
+    RADIX_2 = 2,
+    RADIX_8 = 8,
+    RADIX_10 = 10,
+    RADIX_16 = 16,
+};
 
 class Value {
 public:
     Value() : _value(0), _type(UNDEFINED) {}
 
+    /**
+     * Parse text |scan| as a number of |radix| based.
+     *
+     * - Returns OK when |scan| is recognized as valid |radix| based
+     *   number, and updates |scan| at the end of number.
+     * - Returns OVERFLOW_RANGE when a number exceeds UINT_MAX, and
+     *   updates |scan| at the end of a number.
+     * - Returns ILLEGAL_CONSTANT when there is no valid digit found
+     *   at |scan|, and |scan} is unchanged.
+     */
+    Error parseNumber(StrScanner &scan, Radix radix);
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned() const { return _type == SIGNED; }
     bool isUnsigned() const { return _type == UNSIGNED; }
@@ -33,8 +55,8 @@ public:
     int32_t getSigned() const { return static_cast<int32_t>(_value); }
     uint32_t getUnsigned() const { return _value; }
 
-    Value &setSign(bool sign) {
-        _type = sign ? SIGNED : UNSIGNED;
+    Value &setSign(bool hasSign) {
+        _type = hasSign ? SIGNED : UNSIGNED;
         return *this;
     }
     Value &setValue(uint32_t value) { return setSign(static_cast<int32_t>(_value = value) >= 0); }

@@ -61,6 +61,27 @@ static void test_char_constant() {
     E32("'a'", 0x61, OK);
 }
 
+static void test_dec_constant() {
+    E8("0",   0x00, OK);
+    E8("127", 0x7f, OK);
+    E8("128", 0x80, OK);
+    E8("255", 0xff, OK);
+    E8("256", 0,    OVERFLOW_RANGE);
+
+    E16("0D",     0x0000, OK);
+    E16("32767D", 0x7fff, OK);
+    E16("32768d", 0x8000, OK);
+    E16("65535D", 0xffff, OK);
+    E16("65536D", 0,      OVERFLOW_RANGE);
+
+    E32("0d",          0x00000000, OK);
+    E32("2147483647D", 0x7fffffff, OK);
+    E32("2147483648",  0x80000000, OK);
+    E32("4294967295D", 0xffffffff, OK);
+    E32("4294967296",  0,          OVERFLOW_RANGE);
+    E32("9999999999D", 0,          OVERFLOW_RANGE);
+}
+
 static void test_hex_constant() {
     E8("0H",   0x00, OK);
     E8("7fH",  0x7f, OK);
@@ -569,6 +590,7 @@ static void test_formatter_cstyle() {
 
 void run_tests() {
     RUN_TEST(test_char_constant);
+    RUN_TEST(test_dec_constant);
     RUN_TEST(test_hex_constant);
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
