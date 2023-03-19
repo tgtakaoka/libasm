@@ -55,12 +55,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegTlcs90::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegTlcs90::outRegName(StrBuffer &out, RegName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -178,20 +178,20 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
 };
 
 CcName RegTlcs90::parseCcName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
-    const CcName name = entry ? CcName(entry->name()) : CC_UNDEF;
+    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
 }
 
 StrBuffer &RegTlcs90::outCcName(StrBuffer &out, const CcName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
 uint8_t RegTlcs90::encodeCcName(const CcName name) {
-    const uint8_t cc = uint8_t(name);
+    const auto cc = uint8_t(name);
     return cc >= 16 ? cc - 16 : cc;
 }
 

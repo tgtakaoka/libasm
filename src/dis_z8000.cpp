@@ -90,7 +90,7 @@ Error DisZ8000::decodeFlags(StrBuffer &out, uint8_t flags) {
 }
 
 Error DisZ8000::decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect) {
-    const RegName reg = _regs.decodeRegNum(num, size);
+    const auto reg = _regs.decodeRegNum(num, size);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
     if (indirect)
@@ -110,7 +110,7 @@ Error DisZ8000::decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize s
 }
 
 Error DisZ8000::decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size) {
-    const RegName reg = _regs.decodeCtlReg(ctlNum);
+    const auto reg = _regs.decodeCtlReg(ctlNum);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS)
@@ -171,7 +171,7 @@ Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, StrBuffe
     if (TableZ8000::TABLE.segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
         uint16_t off = static_cast<uint8_t>(addr);
-        bool shortDirect = _shortDirect;
+        auto shortDirect = _shortDirect;
         if (addr & 0x8000) {
             if (addr & 0x00FF)
                 setError(ILLEGAL_OPERAND);
@@ -349,14 +349,14 @@ static OprSize registerSize(const InsnZ8000 &insn, AddrMode mode) {
 }
 
 Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
-    const AddrMode dmode = insn.dst();
-    const AddrMode smode = insn.src();
-    const uint8_t dnum = modeField(insn, insn.dstField());
-    const uint8_t snum = modeField(insn, insn.srcField());
-    const OprSize dsize = registerSize(insn, dmode);
-    const OprSize ssize = registerSize(insn, smode);
-    const RegName dst = RegZ8000::decodeRegNum(dnum, dsize);
-    const RegName src = RegZ8000::decodeRegNum(snum, ssize);
+    const auto dmode = insn.dst();
+    const auto smode = insn.src();
+    const auto dnum = modeField(insn, insn.dstField());
+    const auto snum = modeField(insn, insn.srcField());
+    const auto dsize = registerSize(insn, dmode);
+    const auto ssize = registerSize(insn, smode);
+    const auto dst = RegZ8000::decodeRegNum(dnum, dsize);
+    const auto src = RegZ8000::decodeRegNum(snum, ssize);
     if (insn.isPushPopInsn()) {
         if (RegZ8000::checkOverlap(dst, src))
             return setError(REGISTERS_OVERLAPPED);
@@ -366,8 +366,8 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
         return setError(REGISTER_NOT_ALLOWED);
     if (snum == 0)
         return setError(REGISTER_NOT_ALLOWED);
-    const uint8_t cnum = modeField(insn, MF_P8);
-    const RegName cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
+    const auto cnum = modeField(insn, MF_P8);
+    const auto cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!TableZ8000::TABLE.segmentedModel() && (dnum == 1 || snum == 1))
@@ -411,25 +411,25 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             return setError(OVERFLOW_RANGE);
     }
 
-    const AddrMode dst = insn.dst();
+    const auto dst = insn.dst();
     if (dst == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, dst, insn.dstField()))
         return getError();
-    const AddrMode src = insn.src();
+    const auto src = insn.src();
     if (src == M_NONE)
         return setOK();
     outComma(out, insn, dst, insn.dstField());
     if (decodeOperand(memory, insn, out, src, insn.srcField()))
         return getError();
-    const AddrMode ex1 = insn.ex1();
+    const auto ex1 = insn.ex1();
     if (ex1 == M_NONE)
         return setOK();
-    const ModeField ex1Field = (ex1 == M_CNT ? MF_P0 : MF_P8);
+    const auto ex1Field = (ex1 == M_CNT ? MF_P0 : MF_P8);
     outComma(out, insn, ex1, ex1Field);
     if (decodeOperand(memory, insn, out, ex1, ex1Field))
         return getError();
-    const AddrMode ex2 = insn.ex2();
+    const auto ex2 = insn.ex2();
     if (ex2 == M_NONE)
         return setOK();
     outComma(out, insn, ex2, MF_P0);

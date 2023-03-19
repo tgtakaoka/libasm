@@ -23,8 +23,8 @@ namespace libasm {
 namespace mc6800 {
 
 RegName RegMc6800::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
-    RegName reg = REG_UNDEF;
+    auto p = scan;
+    auto reg = REG_UNDEF;
     if (p.iexpect('X')) {
         reg = REG_X;
     } else if (p.iexpect('Y')) {

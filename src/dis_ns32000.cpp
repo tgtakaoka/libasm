@@ -158,7 +158,7 @@ Error DisNs32000::decodeBitField(
 
 Error DisNs32000::decodeImmediate(
         DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
-    const OprSize size = (mode == M_GENC) ? SZ_BYTE : insn.size();
+    const auto size = (mode == M_GENC) ? SZ_BYTE : insn.size();
     switch (size) {
     case SZ_BYTE:
         if (mode == M_GENC) {
@@ -240,7 +240,7 @@ Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBu
         return getError();
     if (list == 0)
         return setError(OPCODE_HAS_NO_EFFECT);
-    const bool push = insn.size() == SZ_NONE;
+    const auto push = insn.size() == SZ_NONE;
     const uint8_t mask = push ? 0x01 : 0x80;
     out.letter('[');
     char sep = 0;
@@ -263,8 +263,8 @@ Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBu
 Error DisNs32000::decodeGeneric(
         DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
     uint8_t gen = getOprField(insn, pos);
-    RegName index = REG_UNDEF;
-    OprSize size = SZ_NONE;
+    auto index = REG_UNDEF;
+    auto size = SZ_NONE;
     const bool scaledIndex = isScaledIndex(gen);
     if (scaledIndex) {
         size = OprSize(gen & 0x3);
@@ -419,14 +419,14 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
         _regs.outRegName(out, RegNs32000::decodeRegName(field));
         break;
     case M_PREG: {
-        const PregName preg = RegNs32000::decodePregName(field);
+        const auto preg = RegNs32000::decodePregName(field);
         if (preg == PREG_UNDEF)
             return setError(UNKNOWN_REGISTER);
         _regs.outPregName(out, preg);
         break;
     }
     case M_MREG: {
-        const MregName mreg = RegNs32000::decodeMregName(field);
+        const auto mreg = RegNs32000::decodeMregName(field);
         if (mreg == MREG_UNDEF)
             return setError(UNKNOWN_REGISTER);
         _regs.outMregName(out, mreg);
@@ -494,20 +494,20 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (readIndexByte(memory, insn, insn.ex1(), insn.ex1Pos()))
         return getError();
 
-    const AddrMode src = insn.src();
-    const AddrMode dst = insn.dst();
-    const AddrMode ex1 = insn.ex1();
-    const AddrMode ex2 = insn.ex2();
-    const OprSize size = insn.size();
+    const auto src = insn.src();
+    const auto dst = insn.dst();
+    const auto ex1 = insn.ex1();
+    const auto ex2 = insn.ex2();
+    const auto size = insn.size();
     if (src == M_NONE)
         return setOK();
-    const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
+    const auto srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
     if (decodeOperand(memory, insn, out, src, insn.srcPos(), srcSize))
         return getError();
     if (dst == M_NONE)
         return setOK();
     out.comma();
-    const OprSize dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
+    const auto dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
     if (decodeOperand(memory, insn, out, dst, insn.dstPos(), dstSize))
         return getError();
     if (ex1 == M_NONE)

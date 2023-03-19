@@ -34,7 +34,7 @@ AddressWidth AsmMc6805::addressWidth() const {
 }
 
 Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p)) {
         op.mode = M_NONE;
@@ -70,7 +70,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     if (parserError())
         return op.getError();
 
-    StrScanner a(p);
+    auto a = p;
     if (a.skipSpaces().expect(',')) {
         const auto reg = RegMc6805::parseRegName(a.skipSpaces());
         if (reg == REG_X) {

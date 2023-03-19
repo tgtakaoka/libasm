@@ -20,7 +20,7 @@ namespace libasm {
 namespace mc6805 {
 
 RegName RegMc6805::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.iexpect('X')) {
         if (isidchar(*p))
             return REG_UNDEF;

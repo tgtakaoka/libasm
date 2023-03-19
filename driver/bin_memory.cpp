@@ -158,9 +158,9 @@ void BinMemory::createBlock(uint32_t addr, uint8_t val) {
 }
 
 void BinMemory::aggregate(Cache &hint) {
-    Cache prev = hint;
+    auto prev = hint;
     // Check following cache whether it is adjacent to.
-    for (Cache next = ++hint; next != _blocks.end() && atEndOf(prev, next->base);
+    for (auto next = ++hint; next != _blocks.end() && atEndOf(prev, next->base);
             next = _blocks.erase(next)) {
         // Append next block.
         prev->data.reserve(prev->data.size() + next->data.size());

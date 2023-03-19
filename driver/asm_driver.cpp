@@ -32,7 +32,7 @@ static void appendTo(const std::string &cpu, std::list<std::string> &list) {
 
 static void filter(const char *text, std::list<std::string> &list) {
     while (*text) {
-        const char *del = strchr(text, ',');
+        const auto del = strchr(text, ',');
         if (del == nullptr) {
             appendTo(std::string(text), list);
             return;
@@ -65,8 +65,8 @@ AsmDirective *AsmDriver::setCpu(const char *cpu) {
 
 AsmDirective *AsmDriver::restrictCpu(const char *cpu) {
     const /* PROGMEM */ char *cpu_P = current()->assembler().cpu_P();
-    AsmDirective *z80 = AsmDirective::is8080(cpu_P) ? setCpu("Z80") : nullptr;
-    AsmDirective *dir = setCpu(cpu);
+    auto *z80 = AsmDirective::is8080(cpu_P) ? setCpu("Z80") : nullptr;
+    auto *dir = setCpu(cpu);
     if (dir) {
         _directives.clear();
         _directives.push_back(dir);

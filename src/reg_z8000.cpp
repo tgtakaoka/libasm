@@ -24,9 +24,9 @@ namespace libasm {
 namespace z8000 {
 
 RegName RegZ8000::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.iexpect('R')) {
-        RegName base = REG_UNDEF;
+        auto base = REG_UNDEF;
         int8_t num = -1;
         if (p.iexpect('H')) {
             base = REG_RH0;
@@ -62,7 +62,7 @@ StrBuffer &RegZ8000::outRegName(StrBuffer &out, RegName name) const {
     if (isCtlReg(name))
         return outCtlName(out, name);
 
-    int8_t num = int8_t(name);
+    auto num = int8_t(name);
     if (num < 0)
         return out;
     const /*PROGMEM*/ char *prefix_P;
@@ -127,22 +127,22 @@ RegName RegZ8000::decodeQuadReg(uint8_t num) {
 }
 
 bool RegZ8000::isWordReg(RegName name) {
-    const int8_t r = static_cast<int8_t>(name);
+    const auto r = static_cast<int8_t>(name);
     return r >= 0 && r < 16;
 }
 
 bool RegZ8000::isByteReg(RegName name) {
-    const int8_t r = static_cast<int8_t>(name);
+    const auto r = static_cast<int8_t>(name);
     return r >= 16 && r < 16 + 16;
 }
 
 bool RegZ8000::isLongReg(RegName name) {
-    const int8_t r = static_cast<int8_t>(name);
+    const auto r = static_cast<int8_t>(name);
     return r >= 32 && r < 32 + 16;
 }
 
 bool RegZ8000::isQuadReg(RegName name) {
-    const int8_t r = static_cast<int8_t>(name);
+    const auto r = static_cast<int8_t>(name);
     return r >= 48 && r < 48 + 16;
 }
 
@@ -182,12 +182,12 @@ static bool isNonSegCtlReg(RegName name) {
 }
 
 RegName RegZ8000::parseCtlReg(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CTL_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(CTL_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegZ8000::outCtlName(StrBuffer &out, RegName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -195,8 +195,8 @@ StrBuffer &RegZ8000::outCtlName(StrBuffer &out, RegName name) const {
 
 RegName RegZ8000::decodeCtlReg(uint8_t num) {
     num &= 7;
-    const NameEntry *entry = searchName(num + 64, ARRAY_RANGE(CTL_TABLE));
-    RegName name = entry ? RegName(entry->name()) : REG_ILLEGAL;
+    const auto *entry = searchName(num + 64, ARRAY_RANGE(CTL_TABLE));
+    auto name = entry ? RegName(entry->name()) : REG_ILLEGAL;
     if (!TableZ8000::TABLE.segmentedModel() && isSegCtlReg(name)) {
         name = RegName(entry->name() + 8);
         return isNonSegCtlReg(name) ? name : REG_ILLEGAL;
@@ -219,7 +219,7 @@ static constexpr RegBase::NameEntry INTR_TABLE[] PROGMEM = {
 };
 
 IntrName RegZ8000::parseIntrName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(INTR_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(INTR_TABLE));
     return entry ? IntrName(entry->name()) : INTR_UNDEF;
 }
 
@@ -289,8 +289,8 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
 };
 
 CcName RegZ8000::parseCcName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
-    const CcName name = entry ? CcName(entry->name()) : CC_UNDEF;
+    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
 }
 
@@ -303,7 +303,7 @@ CcName RegZ8000::decodeCcNum(uint8_t num) {
 }
 
 StrBuffer &RegZ8000::outCcName(StrBuffer &out, CcName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -323,7 +323,7 @@ static constexpr RegBase::NameEntry FLAG_TABLE[] PROGMEM = {
 };
 
 FlagName RegZ8000::parseFlagName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(FLAG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(FLAG_TABLE));
     return entry ? FlagName(entry->name()) : FLAG_UNDEF;
 }
 
@@ -334,7 +334,7 @@ StrBuffer &RegZ8000::outFlagNames(StrBuffer &out, uint8_t flags) const {
             if (sep)
                 out.letter(sep);
             sep = ',';
-            const NameEntry *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
+            const auto *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
             out.text_P(entry->text_P(), isUppercase());
         }
     }
@@ -346,16 +346,16 @@ uint8_t RegZ8000::encodeFlagName(FlagName name) {
 }
 
 bool RegZ8000::checkOverlap(RegName dst, RegName src, RegName cnt) {
-    const uint8_t dnum = encodeGeneralRegName(dst);
-    const uint8_t ds = isByteReg(dst) && dnum >= 8 ? dnum - 8 : dnum;
-    const uint8_t de = isLongReg(dst) ? ds + 1 : ds;
-    const uint8_t ss = encodeGeneralRegName(src);
-    const uint8_t se = isLongReg(src) ? ss + 1 : ss;
+    const auto dnum = encodeGeneralRegName(dst);
+    const auto ds = isByteReg(dst) && dnum >= 8 ? dnum - 8 : dnum;
+    const auto de = isLongReg(dst) ? ds + 1 : ds;
+    const auto ss = encodeGeneralRegName(src);
+    const auto se = isLongReg(src) ? ss + 1 : ss;
     if (ds == ss || ds == se || de == ss || de == se)
         return true;
     if (cnt == REG_UNDEF)
         return false;
-    const uint8_t c = encodeGeneralRegName(cnt);
+    const auto c = encodeGeneralRegName(cnt);
     return ds == c || de == c || ss == c || se == c;
 }
 

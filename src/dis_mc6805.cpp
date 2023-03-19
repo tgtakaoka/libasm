@@ -49,7 +49,7 @@ Error DisMc6805::checkAddressRange(Config::uintptr_t addr) {
 
 Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
-    const char *label = lookup(dir);
+    const auto label = lookup(dir);
     if (label) {
         out.letter('<').text(label);
     } else {
@@ -62,7 +62,7 @@ Error DisMc6805::decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &
     const Config::uintptr_t addr = insn.readUint16(memory);
     if (checkAddressRange(addr))
         return getError();
-    const char *label = lookup(addr);
+    const auto label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
     } else {
@@ -146,7 +146,7 @@ Error DisMc6805::decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &o
 
 Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6805 insn(_insn);
-    Config::opcode_t opCode = insn.readByte(memory);
+    auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
     if (setError(insn))
         return getError();
@@ -154,12 +154,12 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableMc6805::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode mode1 = insn.mode1();
+    const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
-    const AddrMode mode2 = insn.mode2();
+    const auto mode2 = insn.mode2();
 
     if (mode2 == M_NONE)
         return setOK();
@@ -167,7 +167,7 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (decodeOperand(memory, insn, out, mode2))
         return getError();
 
-    const AddrMode mode3 = insn.mode3();
+    const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
         return setOK();
     out.comma();

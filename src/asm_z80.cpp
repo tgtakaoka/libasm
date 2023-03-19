@@ -124,13 +124,13 @@ void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, cons
 }
 
 Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
 
     // 'C' is either C-reg or C-condition
-    StrScanner a(p);
+    auto a = p;
     const auto reg = RegZ80::parseRegName(a);
     if (reg == REG_C) {
         op.mode = R_C;

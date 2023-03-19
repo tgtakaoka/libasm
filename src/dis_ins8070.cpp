@@ -57,7 +57,7 @@ Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &
 Error DisIns8070::decodeRelative(
         DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode) {
     const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
-    const RegName base = _regs.decodePointerReg(insn.opCode());
+    const auto base = _regs.decodePointerReg(insn.opCode());
     if (mode == M_PCR) {
         const uint8_t fetch = insn.execute() ? 1 : 0;
         const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
@@ -139,7 +139,7 @@ Error DisIns8070::decodeOperand(
 
 Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnIns8070 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    const auto opCode = insn.readByte(memory);
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);
@@ -147,13 +147,13 @@ Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableIns8070::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode dst = insn.dst();
+    const auto dst = insn.dst();
     if (dst == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, dst))
         return getError();
 
-    const AddrMode src = insn.src();
+    const auto src = insn.src();
     if (src == M_NONE)
         return setOK();
     out.comma();

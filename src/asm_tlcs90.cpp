@@ -92,7 +92,7 @@ void AsmTlcs90::encodeOperand(
 }
 
 Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
@@ -154,7 +154,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
             }
             return op.setError(regp, REGISTER_NOT_ALLOWED);
         }
-        StrScanner a(p);
+        auto a = p;
         if (reg == REG_HL && a.expect('+')) {
             const auto idxp = a.skipSpaces();
             const auto idx = RegTlcs90::parseRegName(a);

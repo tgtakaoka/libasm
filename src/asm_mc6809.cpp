@@ -116,10 +116,10 @@ void AsmMc6809::encodeRegisterList(InsnMc6809 &insn, const Operand &op) {
     }
     const auto userStack = (insn.opCode() & 2) != 0;
     uint8_t post = 0;
-    StrScanner p(op.list);
+    auto p = op.list;
     while (true) {
         p.skipSpaces();
-        const StrScanner r(p);
+        const auto r = p;
         auto reg = RegMc6809::parseRegName(p);
         if (reg == REG_UNDEF)
             setErrorIf(p, UNKNOWN_OPERAND);
@@ -277,7 +277,7 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
@@ -308,7 +308,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
 
     const auto index = RegMc6809::parseRegName(p);
     if (index != REG_UNDEF) {
-        StrScanner a(p);
+        auto a = p;
         if (!op.indir && parseBitPosition(a, op)) {
             op.mode = M_RBIT;
             op.base = index;
@@ -326,7 +326,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
             return OK;
         }
     } else if (indexBits) {
-        const StrScanner index(p);
+        const auto index = p;
         op.val32 = parseExpr32(p, op);
         if (parserError())
             return op.getError();
@@ -340,7 +340,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
         }
     }
 
-    const StrScanner endOfIndex(p.skipSpaces());
+    const auto endOfIndex = p.skipSpaces();
     if (!p.expect(',')) {
         if (index == REG_UNDEF) {
             if (op.indir) {
@@ -435,7 +435,7 @@ bool AsmMc6809::PseudoMc6809::endOfLine(const StrScanner &scan, bool headOfLine)
 
 Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
-        StrScanner p(scan);
+        auto p = scan;
         const auto val = assembler.parseExpr32(scan, assembler);
         if (assembler.isOK())
             setDp(val);

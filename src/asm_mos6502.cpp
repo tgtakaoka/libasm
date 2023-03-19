@@ -173,7 +173,7 @@ static char parseSizeOverride(StrScanner &p) {
 }
 
 Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
@@ -211,7 +211,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
 Error AsmMos6502::PseudoMos6502::parseTableOnOff(
         StrScanner &scan, Assembler &assembler, bool (TableMos6502::*set)(bool val)) {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     const auto name = assembler.parser().readSymbol(p);
     Error error = UNKNOWN_OPERAND;
     if (name.iequals_P(PSTR("on"))) {

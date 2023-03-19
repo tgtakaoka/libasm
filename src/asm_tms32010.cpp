@@ -100,7 +100,7 @@ void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode 
 }
 
 Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;

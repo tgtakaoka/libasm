@@ -71,12 +71,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegI8086::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegI8086::outRegName(StrBuffer &out, RegName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -95,22 +95,22 @@ RegName RegI8086::decodeSegReg(uint8_t num) {
 }
 
 bool RegI8086::isGeneralReg(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 16;
 }
 
 bool RegI8086::isSegmentReg(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 16 && num < 20;
 }
 
 OprSize RegI8086::generalRegSize(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num < 8 ? SZ_WORD : SZ_BYTE;
 }
 
 uint8_t RegI8086::encodeRegNum(RegName name) {
-    const uint8_t num = uint8_t(name);
+    const auto num = uint8_t(name);
     if (num < 8)
         return num;
     if (num < 16)

@@ -22,7 +22,7 @@ namespace libasm {
 namespace tms32010 {
 
 RegName RegTms32010::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.iexpect('A') && p.iexpect('R')) {
         const auto num = parseRegNumber(p, 2);
         if (num >= 0) {
@@ -52,7 +52,7 @@ bool RegTms32010::isAuxiliary(RegName name) {
 }
 
 bool RegTms32010::isPortAddress(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= int8_t(REG_PA0) && num <= int8_t(REG_PA7);
 }
 

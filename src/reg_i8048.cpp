@@ -88,29 +88,29 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegI8048::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegI8048::outRegName(StrBuffer &out, const RegName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
 bool RegI8048::isRReg(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= int8_t(REG_R0) && num <= int8_t(REG_R7);
 }
 
 bool RegI8048::isPort(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= int8_t(REG_P1) && num <= int8_t(REG_P7);
 }
 
 bool RegI8048::isTimer(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= int8_t(REG_T) && num <= int8_t(REG_TCNTI);
 }
 

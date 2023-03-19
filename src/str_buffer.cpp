@@ -58,7 +58,7 @@ StrBuffer &StrBuffer::text(const char *text, bool uppercase) {
 }
 
 StrBuffer &StrBuffer::text(const StrScanner &scan) {
-    StrScanner text(scan);
+    auto text = scan;
     char c;
     while ((c = *text++) != 0)
         letter(c);
@@ -67,7 +67,7 @@ StrBuffer &StrBuffer::text(const StrScanner &scan) {
 
 StrBuffer &StrBuffer::text(const StrScanner &scan, bool uppercase) {
     const auto &conv = uppercase ? toupper : tolower;
-    StrScanner text(scan);
+    auto text = scan;
     char c;
     while ((c = *text++) != 0)
         letter(conv(c));
@@ -115,8 +115,8 @@ StrBuffer &StrBuffer::reverse(char *start) {
     if (start >= _out) {
         setError(OVERWRAP_PAGE);
     } else {
-        for (char *end = _out - 1; start < end;) {
-            const char c = *start;
+        for (auto *end = _out - 1; start < end;) {
+            const auto c = *start;
             *start++ = *end;
             *end-- = c;
         }

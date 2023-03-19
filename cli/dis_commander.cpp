@@ -100,8 +100,8 @@ int DisCommander::disassemble() {
 }
 
 int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
-    const char *filename = input.name().c_str();
-    const uint8_t addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
+    const auto filename = input.name().c_str();
+    const auto addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
     const auto size = BinDecoder::decode(input, memory);
     if (size < 0) {
         fprintf(stderr, "%s:%d: Unrecognizable binary format\n", filename, input.lineno());
@@ -131,9 +131,9 @@ Disassembler *DisCommander::defaultDisassembler() {
 int DisCommander::usage() {
     defaultDisassembler();
     const auto cpuList = _driver.listCpu();
-    const char *cpuOption = cpuList.size() == 1 ? "" : " -C <CPU>";
+    const auto cpuOption = cpuList.size() == 1 ? "" : " -C <CPU>";
     std::string list;
-    const char *cpuSep = "\n                ";
+    const auto cpuSep = "\n                ";
     std::string buf;
     for (auto &cpu : cpuList) {
         if (buf.size())
@@ -168,7 +168,7 @@ int DisCommander::usage() {
             "  -X<name>=<vale>\n"
             "              : extra options (<type> [, <CPU>])\n",
             _prog_name, cpuOption, list.c_str());
-    bool common = true;
+    auto common = true;
     for (const auto *dis : _driver) {
         if (common) {
             common = false;
@@ -186,12 +186,12 @@ int DisCommander::usage() {
 }
 
 static const char *basename(const char *str, char sep_char = '/') {
-    const char *sep = strrchr(str, sep_char);
+    const auto sep = strrchr(str, sep_char);
     return sep ? sep + 1 : str;
 }
 
 int DisCommander::parseOptionValue(const char *option) {
-    const char *equ = strchr(option, '=');
+    const auto equ = strchr(option, '=');
     if (equ == nullptr)
         return 1;
     _options.emplace(std::string(option, equ), std::string(equ + 1));
@@ -209,8 +209,8 @@ int DisCommander::parseArgs(int argc, const char **argv) {
     _verbose = false;
     _dis_start = 0;
     _dis_end = UINT32_MAX;
-    for (int i = 1; i < argc; i++) {
-        const char *opt = argv[i];
+    for (auto i = 1; i < argc; i++) {
+        const auto *opt = argv[i];
         if (*opt == '-') {
             switch (*++opt) {
             case 'o':
@@ -313,7 +313,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
         return 2;
     }
     for (auto &option : _options) {
-        bool valid = false;
+        auto valid = false;
         for (const auto *dis : _driver) {
             for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
                 if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {

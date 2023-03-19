@@ -77,12 +77,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegNs32000::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegNs32000::outRegName(StrBuffer &out, RegName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -99,17 +99,17 @@ uint8_t RegNs32000::encodeRegName(RegName name) {
 }
 
 bool RegNs32000::isGeneric(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 8;
 }
 
 bool RegNs32000::isFloat(RegName name) {
-    const int8_t num = int8_t(name) - 8;
+    const auto num = int8_t(name) - 8;
     return num >= 0 && num < 8;
 }
 
 bool RegNs32000::isRegPair(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 16 && num % 2 == 0;
 }
 
@@ -132,12 +132,12 @@ static constexpr RegBase::NameEntry PREG_TABLE[] PROGMEM = {
 };
 
 PregName RegNs32000::parsePregName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(PREG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(PREG_TABLE));
     return entry ? PregName(entry->name()) : PREG_UNDEF;
 }
 
 StrBuffer &RegNs32000::outPregName(StrBuffer &out, PregName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -177,12 +177,12 @@ static constexpr RegBase::NameEntry MREG_TABLE[] PROGMEM = {
 };
 
 MregName RegNs32000::parseMregName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(MREG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(MREG_TABLE));
     return entry ? MregName(entry->name()) : MREG_UNDEF;
 }
 
 StrBuffer &RegNs32000::outMregName(StrBuffer &out, MregName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -211,7 +211,7 @@ static constexpr RegBase::NameEntry CONFIG_TABLE[] PROGMEM = {
 };
 
 ConfigName RegNs32000::parseConfigName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CONFIG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(CONFIG_TABLE));
     return entry ? ConfigName(entry->name()) : CONFIG_UNDEF;
 }
 
@@ -222,7 +222,7 @@ StrBuffer &RegNs32000::outConfigNames(StrBuffer &out, uint8_t configs) const {
         if (configs & mask) {
             if (sep)
                 out.letter(sep);
-            const NameEntry *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
+            const auto *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
             out.text_P(entry->text_P(), isUppercase());
             sep = ',';
         }
@@ -240,7 +240,7 @@ static constexpr RegBase::NameEntry STROPT_TABLE[] PROGMEM = {
 };
 
 StrOptName RegNs32000::parseStrOptName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(STROPT_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(STROPT_TABLE));
     return entry ? StrOptName(entry->name()) : STROPT_UNDEF;
 }
 
@@ -250,7 +250,7 @@ StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
         out.text_P(TEXT_STROPT_B, isUppercase());
         sep = ',';
     }
-    const NameEntry *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
+    const auto *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
     if (entry) {
         if (sep)
             out.letter(sep);
@@ -260,8 +260,8 @@ StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
 }
 
 OprSize RegNs32000::parseIndexSize(StrScanner &scan) {
-    StrScanner p(scan);
-    OprSize size = SZ_NONE;
+    auto p = scan;
+    auto size = SZ_NONE;
     if (p.iexpect('B')) {
         size = SZ_BYTE;
     } else if (p.iexpect('W')) {

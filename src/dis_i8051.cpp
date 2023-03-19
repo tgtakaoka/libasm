@@ -42,7 +42,7 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out
 }
 
 Error DisI8051::decodeRReg(InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
-    const RegName reg = _regs.decodeRReg(insn.opCode() & (mode == M_IDIRR ? 1 : 7));
+    const auto reg = _regs.decodeRReg(insn.opCode() & (mode == M_IDIRR ? 1 : 7));
     if (mode == M_IDIRR)
         out.letter('@');
     outRegister(out, reg);
@@ -127,7 +127,7 @@ Error DisI8051::decodeOperand(
 
 Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8051 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    const auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
     if (setError(insn))
         return getError();
@@ -135,11 +135,11 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableI8051::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode dst = insn.dst();
-    const AddrMode src = insn.src();
+    const auto dst = insn.dst();
+    const auto src = insn.src();
     if (dst == M_ADR8 && src == M_ADR8) {  // MOV dst,src
-        const uint8_t src8 = insn.readByte(memory);
-        const uint8_t dst8 = insn.readByte(memory);
+        const auto src8 = insn.readByte(memory);
+        const auto dst8 = insn.readByte(memory);
         outAbsAddr(out, dst8, 8).comma();
         outAbsAddr(out, src8, 8);
     } else {
@@ -153,7 +153,7 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
                 return getError();
         }
     }
-    const AddrMode ext = insn.ext();
+    const auto ext = insn.ext();
     if (ext != M_NONE) {
         out.comma();
         if (decodeOperand(memory, insn, out, ext))

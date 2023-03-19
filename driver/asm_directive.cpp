@@ -35,9 +35,9 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 // PseudoHandler
 
 Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    const StrScanner line = scan;
-    ValueParser &parser = assembler().parser();
-    Value value = parser.eval(scan, &driver);
+    const auto line = scan;
+    auto &parser = assembler().parser();
+    auto value = parser.eval(scan, &driver);
     // TODO line end check
     if (setError(parser))
         return getError();
@@ -60,9 +60,9 @@ Error AsmDirective::setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriv
 }
 
 Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    const StrScanner line = scan;
-    ValueParser &parser = assembler().parser();
-    Value value = parser.eval(scan, &driver);
+    const auto line = scan;
+    auto &parser = assembler().parser();
+    auto value = parser.eval(scan, &driver);
     // TODO line end check
     if (setError(parser))
         return getError();
@@ -89,7 +89,7 @@ Error AsmDirective::defineSymbol(
         StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable) {
     if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
-    ValueParser &parser = assembler().parser();
+    auto &parser = assembler().parser();
     auto &value = list.lineValue() = parser.eval(scan, &driver);
     if (setError(parser)) {
         value.clear();
@@ -108,11 +108,11 @@ Error AsmDirective::defineSymbol(
 }
 
 Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    char quote = scan.expect('"');
+    auto quote = scan.expect('"');
     if (quote == 0)
         quote = scan.expect('\'');
-    StrScanner filename(scan);
-    StrScanner p(scan);
+    auto filename = scan;
+    auto p = scan;
     if (quote) {
         p.trimStart([quote](char s) { return s != quote; });
         filename.trimEndAt(p);
@@ -127,16 +127,16 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver 
 }
 
 Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    ValueParser &parser = assembler().parser();
+    auto &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
     do {
-        const char delim = *scan.skipSpaces()++;
-        StrScanner p(scan);
+        const auto delim = *scan.skipSpaces()++;
+        auto p = scan;
         while (!p.expect(delim)) {
             if (*p == 0)
                 return setError(p, MISSING_CLOSING_DELIMITOR);
-            const char c = parser.readChar(p);
+            const auto c = parser.readChar(p);
             if (setError(parser)) {
                 scan = p;
                 return getError();
@@ -153,12 +153,12 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
 }
 
 Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    ValueParser &parser = assembler().parser();
+    auto &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
     do {
-        StrScanner p(scan.skipSpaces());
-        Value value = parser.eval(p, &driver);
+        auto p = scan.skipSpaces();
+        auto value = parser.eval(p, &driver);
         if (parser.isOK() && !(*scan == '\'' && *p == '\'')) {
             // a byte expression, though a single 'c' constant is handled as a string
             scan = p;
@@ -170,8 +170,8 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
             list.emitByte(base, val8);
         } else if (*scan == '"' || *scan == '\'') {
             // a string surrounded by double quotes, single quotes
-            const char delim = *scan++;
-            StrScanner p(scan);
+            const auto delim = *scan++;
+            auto p = scan;
             for (;;) {
                 if (*p == '\'' && p[1] == '\'') {
                     ++p;  // inside a string, two successive apostrophe is an apostrophe
@@ -181,7 +181,7 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
                 if (*p == 0)
                     return setError(
                             p, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-                const char c = parser.readChar(p);
+                const auto c = parser.readChar(p);
                 if (setError(parser)) {
                     scan = p;
                     return getError();
@@ -201,12 +201,12 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
 }
 
 Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    ValueParser &parser = assembler().parser();
+    auto &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
     const auto endian = assembler().config().endian();
     for (;;) {
-        Value value = parser.eval(scan, &driver);
+        auto value = parser.eval(scan, &driver);
         if (setError(parser))
             return getError();
         if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
@@ -226,17 +226,17 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDrive
 }
 
 Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    ValueParser &parser = assembler().parser();
+    auto &parser = assembler().parser();
     const uint8_t unit = assembler().config().addressUnit();
     const uint32_t base = driver.origin() * unit;
     const auto endian = assembler().config().endian();
     for (;;) {
-        Value value = parser.eval(scan, &driver);
+        auto value = parser.eval(scan, &driver);
         if (setError(parser))
             return getError();
         if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
-        uint32_t val32 = value.getUnsigned();
+        auto val32 = value.getUnsigned();
         for (auto i = 0; i < 4; i++) {
             if (endian == ENDIAN_BIG) {
                 list.emitByte(base, val32 >> 24);
@@ -289,8 +289,8 @@ Error AsmDirective::allocateUint32sAligned(
 
 Error AsmDirective::allocateSpaces(
         StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int spaceUnit) {
-    ValueParser &parser = assembler().parser();
-    Value value = parser.eval(scan, &driver);
+    auto &parser = assembler().parser();
+    auto value = parser.eval(scan, &driver);
     if (setError(parser))
         return getError();
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
@@ -311,10 +311,10 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
         return setError(MISSING_LABEL);
     if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasSymbol(list.lineSymbol()))
         return setError(DUPLICATE_LABEL);
-    ValueParser &parser = assembler().parser();
+    auto &parser = assembler().parser();
     std::list<StrScanner> params;
     for (;;) {
-        const StrScanner expr = parser.scanExpr(scan.skipSpaces(), ',');
+        const auto expr = parser.scanExpr(scan.skipSpaces(), ',');
         if (expr.size() == 0) {
             const auto error = driver.internFunction(
                     list.lineSymbol(), params, StrScanner(scan.str(), expr.str()));
@@ -322,8 +322,8 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
             list.lineSymbol() = StrScanner::EMPTY;
             return error;
         }
-        StrScanner p(expr);
-        bool head = true;
+        auto p = expr;
+        auto head = true;
         while (p.size()) {
             if (!parser.symbolLetter(*p, head))
                 return setError(expr, SYMBOL_REQUIRE);
@@ -336,7 +336,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
 }
 
 Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    StrScanner p(scan);
+    auto p = scan;
     p.trimStart([](char s) { return !isspace(s); });
     scan.trimEndAt(p);
     std::string cpu(scan.str(), scan.size());
@@ -352,7 +352,7 @@ Error IntelDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, Asm
         return setError(UNKNOWN_DIRECTIVE);
     char cpu[strlen_P(cpu_P) + 1];
     strcpy_P(cpu, cpu_P);
-    StrScanner option = assembler().parser().readSymbol(scan);
+    auto option = assembler().parser().readSymbol(scan);
     if (option.iequals_P(PSTR("on"))) {
         auto zilog = driver.setCpu("Z80");
         if (zilog == nullptr)

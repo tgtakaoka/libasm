@@ -44,7 +44,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     auto &assembler = _driver.current()->assembler();
     _conf = &assembler.config();
 
-    StrScanner scan(_line);
+    auto scan = _line;
     auto &parser = assembler.parser();
     parser.setCurrentOrigin(startAddress());
 
@@ -56,8 +56,8 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     scan.skipSpaces();
 
     if (!assembler.endOfLine(scan)) {
-        StrScanner directive = scan;
-        StrScanner p(scan);
+        auto directive = scan;
+        auto p = scan;
         p.trimStart([](char s) { return !isspace(s); });
         directive.trimEndAt(p);
         _errorAt.setError(
@@ -90,10 +90,9 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     _insn.reset(startAddress());
     assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver);
     _errorAt.setError(assembler);
-    const bool allowUndef =
+    const auto allowUndef =
             _errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
     if (_errorAt.isOK() || allowUndef) {
-        StrScanner p(assembler.errorAt());
         if (_insn.length() > 0) {
             const uint8_t unit = assembler.config().addressUnit();
             const uint32_t base = _insn.address() * unit;
@@ -125,9 +124,9 @@ const char *AsmFormatter::getLine() {
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
         _formatter.formatDec(_out, _sources.current()->lineno(), 32);
-        const char *line = _line.str();
-        const char *line_end = line + _line.size();
-        const char *at = _errorAt.errorAt();
+        const auto *line = _line.str();
+        const auto *line_end = line + _line.size();
+        const auto *at = _errorAt.errorAt();
         const int column = (at >= line && at < line_end) ? at - line + 1 : -1;
         if (column >= 0) {
             _out.letter(':');

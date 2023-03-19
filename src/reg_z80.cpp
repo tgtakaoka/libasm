@@ -63,12 +63,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegZ80::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegZ80::outRegName(StrBuffer &out, RegName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -98,9 +98,9 @@ uint8_t RegZ80::encodePointerRegIx(RegName name, RegName ix) {
 }
 
 RegName RegZ80::decodePointerReg(uint8_t num, const InsnZ80 &insn) {
-    const RegName name = RegName(num & 3);
+    const auto name = RegName(num & 3);
     if (name == REG_HL) {
-        const RegName ix = decodeIndexReg(insn);
+        const auto ix = decodeIndexReg(insn);
         return ix == REG_UNDEF ? name : ix;
     }
     return name;
@@ -170,19 +170,19 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
 };
 
 CcName RegZ80::parseCcName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     return entry ? CcName(entry->name()) : CC_UNDEF;
 }
 
 StrBuffer &RegZ80::outCcName(StrBuffer &out, const CcName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
 bool RegZ80::isCc4Name(CcName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 4;
 }
 

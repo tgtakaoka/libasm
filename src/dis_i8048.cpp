@@ -25,7 +25,7 @@ namespace i8048 {
 
 Error DisI8048::decodeOperand(
         DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode) {
-    const Config::opcode_t opc = insn.opCode();
+    const auto opc = insn.opCode();
     switch (mode) {
     case M_IA:
         out.letter('@');
@@ -115,7 +115,7 @@ Error DisI8048::decodeOperand(
 
 Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8048 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    const auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
     if (setError(insn))
         return getError();
@@ -123,12 +123,12 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableI8048::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode dst = insn.dst();
+    const auto dst = insn.dst();
     if (dst != M_NONE) {
         if (decodeOperand(memory, insn, out, dst))
             return getError();
     }
-    const AddrMode src = insn.src();
+    const auto src = insn.src();
     if (src != M_NONE) {
         out.comma();
         if (decodeOperand(memory, insn, out, src))

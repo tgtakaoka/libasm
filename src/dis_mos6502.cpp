@@ -70,7 +70,7 @@ Error DisMos6502::decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBu
     if (insn.opCode() == TableMos6502::JSL) {
         outAbsAddr(out, target);
     } else {
-        const char *label = lookup(target);
+        const auto label = lookup(target);
         if (label) {
             out.letter('>').letter('>').text(label);
         } else {
@@ -84,7 +84,7 @@ Error DisMos6502::decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBu
 
 Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
     const uint16_t addr = insn.readUint16(memory);
-    const char *label = lookup(addr);
+    const auto label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
     } else {
@@ -97,7 +97,7 @@ Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer
 
 Error DisMos6502::decodeDirectPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
     const uint8_t zp = insn.readByte(memory);
-    const char *label = lookup(zp);
+    const auto label = lookup(zp);
     if (label) {
         out.letter('<').text(label);
     } else {
@@ -205,7 +205,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
 
-    const AddrMode mode2 = insn.mode2();
+    const auto mode2 = insn.mode2();
     const auto indir2 = InsnMos6502::indirect(mode2);
     const auto longi2 = InsnMos6502::longIndirect(mode2);
     if (indir1 && !indir2)
@@ -218,7 +218,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (decodeOperand(memory, insn, out, mode2))
         return getError();
 
-    const AddrMode mode3 = insn.mode3();
+    const auto mode3 = insn.mode3();
     if (indir2)
         out.letter(')');
     if (longi2)

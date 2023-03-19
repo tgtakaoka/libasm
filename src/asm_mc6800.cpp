@@ -20,7 +20,7 @@ namespace libasm {
 namespace mc6800 {
 
 Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p) || *p == ',') {
         op.mode = M_NONE;
@@ -47,7 +47,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     if (parserError())
         return op.getError();
 
-    StrScanner a(p);
+    auto a = p;
     if (a.skipSpaces().expect(',')) {
         const auto reg = RegMc6800::parseRegName(a.skipSpaces());
         if (reg != REG_UNDEF) {

@@ -26,8 +26,8 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(scan))
         return OK;
 
-    StrScanner p(scan);
-    RegName reg = RegF3850::parseRegName(p);
+    auto p = scan;
+    auto reg = RegF3850::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (uint8_t(reg) < uint8_t(REG_alias)) {
             op.mode = AddrMode(uint8_t(reg));
@@ -41,7 +41,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    Value val = parseExpr(p.skipSpaces(), op);
+    auto val = parseExpr(p.skipSpaces(), op);
     if (parserError())
         return op.getError();
     op.val16 = val.getUnsigned();

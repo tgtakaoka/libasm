@@ -125,7 +125,7 @@ void AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op
 }
 
 Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;

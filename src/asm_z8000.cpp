@@ -377,7 +377,7 @@ void AsmZ8000::checkRegisterOverlap(
 }
 
 int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
-    StrScanner p(scan);
+    auto p = scan;
     if (endOfLine(p))
         return 0;
     int8_t num = 0;
@@ -397,7 +397,7 @@ int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {
 }
 
 int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
-    StrScanner p(scan);
+    auto p = scan;
     if (endOfLine(p))
         return 0;
     int8_t num = 0;
@@ -417,7 +417,7 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
 }
 
 Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (p.expect('#')) {
         op.val32 = parseExpr32(p, op);
@@ -430,7 +430,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     if (endOfLine(p))
         return OK;
 
-    StrScanner a(p);
+    auto a = p;
     if (p.expect('@')) {
         op.reg = RegZ8000::parseRegName(p);
         if (op.reg == REG_UNDEF)
@@ -508,7 +508,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
     if (*p == '|') {
-        StrScanner expr = _parser.scanExpr(++a, '|');
+        auto expr = _parser.scanExpr(++a, '|');
         const auto size = expr.size();
         if (size == 0) {
             op.val32 = parseExpr32(p, op);

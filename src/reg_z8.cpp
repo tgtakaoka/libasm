@@ -32,7 +32,7 @@ uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
 }
 
 RegName RegZ8::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.iexpect('R')) {
         if (p.iexpect('R')) {
             const auto num = parseRegNumber(p, 16);
@@ -126,20 +126,20 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
 };
 
 CcName RegZ8::parseCcName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
-    const CcName name = entry ? CcName(entry->name()) : CC_UNDEF;
+    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
 }
 
 StrBuffer &RegZ8::outCcName(StrBuffer &out, CcName name) const {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
 uint8_t RegZ8::encodeCcName(CcName name) {
-    const uint8_t cc = uint8_t(name);
+    const auto cc = uint8_t(name);
     if (cc < 16)
         return cc;
     return cc - 16;  // Aliases

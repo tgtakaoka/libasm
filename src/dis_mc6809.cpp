@@ -27,7 +27,7 @@ StrBuffer &DisMc6809::outRegister(StrBuffer &out, RegName regName) {
 
 Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
-    const char *label = lookup(dir);
+    const auto label = lookup(dir);
     if (label) {
         out.letter('<').text(label);
     } else {
@@ -38,7 +38,7 @@ Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer
 
 Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    const char *label = lookup(addr);
+    const auto label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
     } else {
@@ -106,7 +106,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
             out.letter('-');
     }
     if (spec.base == REG_X) {
-        const RegName base = _regs.decodeBaseReg(post >> 5);
+        const auto base = _regs.decodeBaseReg(post >> 5);
         outRegister(out, base);
     } else if (spec.base != REG_UNDEF) {
         outRegister(out, spec.base);
@@ -161,7 +161,7 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
         if (post & (1 << bitPos)) {
             if (n != 0)
                 out.letter(',');
-            RegName reg = _regs.decodeStackReg(bitPos, userStack);
+            auto reg = _regs.decodeStackReg(bitPos, userStack);
             if (reg == REG_B && hasDreg)
                 reg = REG_D;
             outRegister(out, reg);
@@ -173,12 +173,12 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
 
 Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const RegName dst = _regs.decodeDataReg(post);
-    const RegName src = _regs.decodeDataReg(post >> 4);
+    const auto dst = _regs.decodeDataReg(post);
+    const auto src = _regs.decodeDataReg(post >> 4);
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    const RegSize size2 = _regs.regSize(dst);
-    const RegSize size1 = _regs.regSize(src);
+    const auto size2 = _regs.regSize(dst);
+    const auto size1 = _regs.regSize(src);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
     outRegister(out, src).comma();
@@ -188,7 +188,7 @@ Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer 
 
 Error DisMc6809::decodeRegBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const RegName reg = _regs.decodeBitOpReg(post >> 6);
+    const auto reg = _regs.decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
     outRegister(out, reg).letter('.');
@@ -206,8 +206,8 @@ Error DisMc6809::decodeDirBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &ou
 
 Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const RegName src = _regs.decodeTfmBaseReg(post >> 4);
-    const RegName dst = _regs.decodeTfmBaseReg(post);
+    const auto src = _regs.decodeTfmBaseReg(post >> 4);
+    const auto dst = _regs.decodeTfmBaseReg(post);
     const uint8_t mode = insn.opCode() & 0x3;
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
@@ -291,7 +291,7 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (decodeOperand(memory, insn, out, insn.mode1()))
         return getError();
-    const AddrMode mode2 = insn.mode2();
+    const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return OK;
     if (mode2 == M_RTFM)

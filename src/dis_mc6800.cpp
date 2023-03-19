@@ -27,7 +27,7 @@ StrBuffer &DisMc6800::outRegister(StrBuffer &out, RegName regName) {
 
 Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
-    const char *label = lookup(dir);
+    const auto label = lookup(dir);
     if (label) {
         out.letter('<').text(label);
     } else {
@@ -38,7 +38,7 @@ Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer
 
 Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    const char *label = lookup(addr);
+    const auto label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
     } else {
@@ -137,10 +137,10 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
 
 Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6800 insn(_insn);
-    Config::opcode_t opCode = insn.readByte(memory);
+    auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
     if (TableMc6800::TABLE.isPrefix(opCode)) {
-        const Config::opcode_t prefix = opCode;
+        const auto prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
     }
@@ -150,20 +150,20 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableMc6800::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode mode1 = insn.mode1();
+    const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return setOK();
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
 
-    const AddrMode mode2 = insn.mode2();
+    const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return setOK();
     out.comma();
     if (decodeOperand(memory, insn, out, mode2))
         return getError();
 
-    const AddrMode mode3 = insn.mode3();
+    const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
         return setOK();
     out.comma();

@@ -189,8 +189,8 @@ Error DisI8086::outMemReg(
     }
     if (seg != REG_UNDEF)
         outRegister(out, seg).letter(':');
-    const RegName base = getBaseReg(mod, r_m);
-    const RegName index = getIndexReg(r_m);
+    const auto base = getBaseReg(mod, r_m);
+    const auto index = getIndexReg(r_m);
     out.letter('[');
     char sep = 0;
     outRegister(out, base, sep);
@@ -220,7 +220,7 @@ Error DisI8086::decodeMemReg(
     if (mod == 3) {
         if (mode == M_BMEM || mode == M_WMEM)
             return setError(ILLEGAL_OPERAND);
-        const AddrMode regMode = (mode == M_BMOD ? M_BREG : M_WREG);
+        const auto regMode = (mode == M_BMOD ? M_BREG : M_WREG);
         outRegister(out, decodeRegister(insn, regMode, pos));
         return OK;
     }
@@ -232,7 +232,7 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &ou
     if (_repeatHasStringInst) {
         Insn _istr(0);
         InsnI8086 istr(_istr);
-        const Config::opcode_t opc = rep.readByte(memory);
+        const auto opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
         if (TableI8086::TABLE.searchOpCode(istr))
             return setError(istr);
@@ -329,7 +329,7 @@ static bool validSegOverride(const InsnI8086 &insn) {
 
 Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out) {
     if (insn.segment()) {
-        const RegName seg = TableI8086::TABLE.overrideSeg(insn.segment());
+        const auto seg = TableI8086::TABLE.overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {
         case 0xA4:  // MOVS ES:[DI],DS:[SI]
         case 0x20:  // ADD4S ES:[DI],DS:[SI]
@@ -357,14 +357,14 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
 }
 
 Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
-    Config::opcode_t opCode = insn.readByte(memory);
+    auto opCode = insn.readByte(memory);
     while (!_segOverrideInsn && TableI8086::TABLE.isSegmentPrefix(opCode)) {
         if (insn.segment())
             return setError(ILLEGAL_SEGMENT);
         insn.setSegment(opCode);
         opCode = insn.readByte(memory);
     }
-    Config::opcode_t prefix = 0;
+    auto prefix = 0;
     if (TableI8086::TABLE.isPrefix(opCode)) {
         prefix = opCode;
         opCode = insn.readByte(memory);

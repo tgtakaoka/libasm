@@ -41,10 +41,10 @@ Error AsmNs32000::OptFpu::set(StrScanner &scan) const {
 }
 
 Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) const {
-    StrScanner p(scan);
+    auto p = scan;
     uint8_t strOpt = 0;
     while (true) {
-        const StrOptName name = RegNs32000::parseStrOptName(p);
+        const auto name = RegNs32000::parseStrOptName(p);
         if (name == STROPT_UNDEF)
             return UNKNOWN_OPERAND;
         if (strOpt & uint8_t(name))
@@ -65,12 +65,12 @@ Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) c
 }
 
 Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     uint8_t configs = 0;
     while (true) {
         if (p.expect(']'))
             break;
-        const ConfigName name = RegNs32000::parseConfigName(p);
+        const auto name = RegNs32000::parseConfigName(p);
         if (name == CONFIG_UNDEF)
             return UNKNOWN_OPERAND;
         configs |= uint8_t(name);
@@ -87,11 +87,11 @@ Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     uint8_t list = 0;
     uint8_t n = 0;
     while (true) {
-        const RegName name = RegNs32000::parseRegName(p);
+        const auto name = RegNs32000::parseRegName(p);
         if (!RegNs32000::isGeneric(name))
             return UNKNOWN_OPERAND;
         list |= (1 << RegNs32000::encodeRegName(name));
@@ -109,7 +109,7 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
@@ -139,10 +139,10 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     }
 
     if (*p == '*' || *p == '.') {
-        StrScanner t(p);
+        auto t = p;
         ++t;
         if (*t.skipSpaces() == '+' || *t == '-' || endOfLine(t) || *t == '[' || *t == ',') {
-            StrScanner base = _parser.scanExpr(p, '[');
+            auto base = _parser.scanExpr(p, '[');
             const auto size = base.size();
             if (size) {
                 op.val32 = parseExpr32(base, op);
@@ -159,7 +159,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         }
     }
 
-    const PregName preg = RegNs32000::parsePregName(p);
+    const auto preg = RegNs32000::parsePregName(p);
     if (preg != PREG_UNDEF) {
         op.val32 = RegNs32000::encodePregName(preg);
         op.mode = M_PREG;
@@ -167,7 +167,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
 
-    const MregName mreg = RegNs32000::parseMregName(p);
+    const auto mreg = RegNs32000::parseMregName(p);
     if (mreg != MREG_UNDEF) {
         op.val32 = RegNs32000::encodeMregName(mreg);
         op.mode = M_MREG;
@@ -175,8 +175,8 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
 
-    StrScanner a(p);
-    RegName reg = RegNs32000::parseRegName(p);
+    auto a = p;
+    auto reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (RegNs32000::isGeneric(reg)) {
             op.reg = reg;
@@ -221,8 +221,8 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return op.setError(a, UNKNOWN_REGISTER);
     }
 
-    const Value val = parseExpr(p, op);
-    StrScanner t(p);
+    const auto val = parseExpr(p, op);
+    auto t = p;
     if (*t == '.' || *t == 'e' || *t == 'E' || parserError() == OVERFLOW_RANGE ||
             op.getError() == UNDEFINED_SYMBOL) {
         char *e;
@@ -251,7 +251,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     }
     if (!p.expect('('))
         return op.setError(p, UNKNOWN_OPERAND);
-    const StrScanner r(p);
+    const auto r = p;
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
@@ -277,7 +277,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return op.getError();
     if (!p.skipSpaces().expect('('))
         return op.setError(p, UNKNOWN_OPERAND);
-    const StrScanner x(p);
+    const auto x = p;
     reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
@@ -300,17 +300,17 @@ Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {
         return op.getError();
     if (op.mode == M_GREG || op.mode == M_RREL || op.mode == M_MREL || op.mode == M_ABS ||
             op.mode == M_EXT || op.mode == M_TOS || op.mode == M_MEM || op.mode == M_REL) {
-        StrScanner p(scan);
+        auto p = scan;
         if (!p.skipSpaces().expect('['))
             return OK;
-        const StrScanner indexp = p;
-        const RegName index = RegNs32000::parseRegName(p);
+        const auto indexp = p;
+        const auto index = RegNs32000::parseRegName(p);
         if (!RegNs32000::isGeneric(index))
             return op.setError(indexp, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(':'))
             return op.setError(p, UNKNOWN_OPERAND);
-        const StrScanner sizep = p;
-        const OprSize indexSize = RegNs32000::parseIndexSize(p);
+        const auto sizep = p;
+        const auto indexSize = RegNs32000::parseIndexSize(p);
         if (indexSize == SZ_NONE)
             return op.setError(sizep, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(']'))
@@ -372,12 +372,12 @@ void AsmNs32000::emitDisplacement(
         InsnNs32000 &insn, const Operand &op, uint32_t val32, Error error) {
     auto val = static_cast<int32_t>(val32);
     if (val >= -0x40 && val < 0x40) {
-        const uint8_t disp = static_cast<uint8_t>(val) & 0x7F;
+        const auto disp = static_cast<uint8_t>(val) & 0x7F;
         insn.emitOperand8(disp);
         return;
     }
     if (val >= -0x2000 && val < 0x2000) {
-        const uint16_t disp = (static_cast<uint16_t>(val) & 0x3FFF) | 0x8000;
+        const auto disp = (static_cast<uint16_t>(val) & 0x3FFF) | 0x8000;
         insn.emitOperand16(disp);
         return;
     }
@@ -395,7 +395,7 @@ void AsmNs32000::emitDisplacement(
 void AsmNs32000::emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op) {
     uint8_t len = op.getError() ? 0 : op.val32;
     if (op.isOK()) {
-        const int32_t val = static_cast<int32_t>(op.val32);
+        const auto val = static_cast<int32_t>(op.val32);
         if (val <= 0)
             setErrorIf(op, ILLEGAL_CONSTANT);
         if (val > 16)
@@ -431,8 +431,8 @@ void AsmNs32000::emitBitField(
         setErrorIf(len, ILLEGAL_CONSTANT);
     if (len.val32 > 32)
         setErrorIf(len, OVERFLOW_RANGE);
-    const uint8_t length = len.getError() ? 0 : len.val32 - 1;
-    const uint8_t data = (static_cast<uint8_t>(off.val32) << 5) | (length & 0x1F);
+    const auto length = len.getError() ? 0 : len.val32 - 1;
+    const auto data = (static_cast<uint8_t>(off.val32) << 5) | (length & 0x1F);
     insn.emitOperand8(data);
 }
 
@@ -500,14 +500,14 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
 void AsmNs32000::emitIndexByte(InsnNs32000 &insn, const Operand &op) const {
     if (op.index == REG_UNDEF)
         return;
-    const uint8_t indexByte =
+    const auto indexByte =
             (encodeGenericField(op.mode, op.reg) << 3) | RegNs32000::encodeRegName(op.index);
     insn.emitOperand8(indexByte);
 }
 
 void AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos) {
-    const uint8_t field = (op.index == REG_UNDEF) ? encodeGenericField(op.mode, op.reg)
-                                                  : encodeScaledIndex(op.size);
+    const auto field = (op.index == REG_UNDEF) ? encodeGenericField(op.mode, op.reg)
+                                               : encodeScaledIndex(op.size);
     embedOprField(insn, pos, field);
     switch (op.mode) {
     case M_ABS: {
@@ -636,9 +636,9 @@ Error AsmNs32000::PseudoNs32000::setPmmu(const StrScanner &scan) const {
 }
 
 Error AsmNs32000::PseudoNs32000::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
-    StrScanner p(scan.skipSpaces());
-    ValueParser &parser = assembler.parser();
-    Error error = UNKNOWN_DIRECTIVE;
+    auto p = scan.skipSpaces();
+    auto &parser = assembler.parser();
+    auto error = UNKNOWN_DIRECTIVE;
     if (strcasecmp_P(insn.name(), OPT_TEXT_FPU) == 0) {
         error = setFpu(parser.readSymbol(p));
         if (error)

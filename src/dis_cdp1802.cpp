@@ -37,7 +37,7 @@ static Config::uintptr_t inpage(Config::uintptr_t base, uint8_t offset) {
 
 Error DisCdp1802::decodeOperand(
         DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode) {
-    const Config::opcode_t opCode = insn.opCode();
+    const auto opCode = insn.opCode();
     switch (mode) {
     case M_REG1:
     case M_REGN:
@@ -67,10 +67,10 @@ Error DisCdp1802::decodeOperand(
 
 Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnCdp1802 insn(_insn);
-    Config::opcode_t opCode = insn.readByte(memory);
+    auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
     if (TableCdp1802::TABLE.isPrefix(opCode)) {
-        const Config::opcode_t prefix = opCode;
+        const auto prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
     }
@@ -80,12 +80,12 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableCdp1802::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode mode1 = insn.mode1();
+    const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
-    const AddrMode mode2 = insn.mode2();
+    const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return OK;
     out.comma();

@@ -23,7 +23,7 @@ namespace libasm {
 namespace cli {
 
 static int getLine(char *&lineptr, size_t &n, FILE *input) {
-    char *p = lineptr;
+    auto p = lineptr;
     auto max = n - 1;
     while (fgets(p, max, input)) {
         const auto len = strlen(lineptr);

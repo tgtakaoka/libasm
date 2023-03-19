@@ -26,7 +26,7 @@ StrBuffer &DisMc68000::outRegName(StrBuffer &out, RegName regName) {
 }
 
 StrBuffer &DisMc68000::outOprSize(StrBuffer &out, OprSize size) {
-    const char suffix = _regs.sizeSuffix(size);
+    const auto suffix = _regs.sizeSuffix(size);
     if (suffix)
         out.letter('.').letter(suffix);
     return out;
@@ -50,7 +50,7 @@ Error DisMc68000::decodeImmediateData(
 
 Error DisMc68000::decodeEffectiveAddr(
         DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, const EaMc68000 &ea) {
-    const AddrMode mode = ea.mode;
+    const auto mode = ea.mode;
     if (mode == M_ERROR)
         return setError(ILLEGAL_OPERAND);
     if (mode == M_DREG || mode == M_AREG) {
@@ -64,7 +64,7 @@ Error DisMc68000::decodeEffectiveAddr(
         out.letter('-');
     out.letter('(');
     if (mode == M_DISP || mode == M_PCDSP) {
-        const RegName base = (mode == M_DISP) ? ea.reg : REG_PC;
+        const auto base = (mode == M_DISP) ? ea.reg : REG_PC;
         const uint16_t val16 = insn.readUint16(memory);
         if (mode == M_PCDSP) {
             const Config::uintptr_t target =
@@ -96,7 +96,7 @@ Error DisMc68000::decodeEffectiveAddr(
         outAbsAddr(out, target);
     }
     if (mode == M_INDX || mode == M_PCIDX) {
-        const RegName base = (mode == M_INDX) ? ea.reg : REG_PC;
+        const auto base = (mode == M_INDX) ? ea.reg : REG_PC;
         BriefExt ext;
         ext.word = insn.readUint16(memory);
         const uint8_t val8 = ext.disp();
@@ -327,8 +327,8 @@ static uint8_t regVal(Config::opcode_t opc, OprPos pos) {
 }
 
 static OprSize sizeVal(const InsnMc68000 &insn) {
-    const OprSize size = insn.oprSize();
-    const Config::opcode_t opc = insn.opCode();
+    const auto size = insn.oprSize();
+    const auto opc = insn.opCode();
     if (size == SZ_DATA) {
         switch ((opc >> 6) & 3) {
         case 0:
@@ -350,7 +350,7 @@ static OprSize sizeVal(const InsnMc68000 &insn) {
 
 Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc68000 insn(_insn);
-    const Config::opcode_t opCode = insn.readUint16(memory);
+    const auto opCode = insn.readUint16(memory);
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);
@@ -358,19 +358,19 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableMc68000::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode src = insn.src();
-    const AddrMode dst = insn.dst();
-    const OprSize size = sizeVal(insn);
+    const auto src = insn.src();
+    const auto dst = insn.dst();
+    const auto size = sizeVal(insn);
     if (size == SZ_ERROR)
         return setError(ILLEGAL_SIZE);
-    const OprPos srcPos = insn.srcPos();
-    const uint8_t srcModeVal = modeVal(opCode, srcPos);
-    const uint8_t srcReg = regVal(opCode, srcPos);
+    const auto srcPos = insn.srcPos();
+    const auto srcModeVal = modeVal(opCode, srcPos);
+    const auto srcReg = regVal(opCode, srcPos);
     if (checkOperand(src, srcModeVal, srcReg, size))
         return getError();
-    const OprPos dstPos = insn.dstPos();
-    const uint8_t dstModeVal = modeVal(opCode, dstPos);
-    const uint8_t dstReg = regVal(opCode, dstPos);
+    const auto dstPos = insn.dstPos();
+    const auto dstModeVal = modeVal(opCode, dstPos);
+    const auto dstReg = regVal(opCode, dstPos);
     if (checkOperand(dst, dstModeVal, dstReg, size))
         return getError();
 
@@ -378,9 +378,9 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (src == M_IMBIT || src == M_MULT || dst == M_MULT || dst == M_IMDSP)
         opr16 = insn.readUint16(memory);
 
-    const InsnSize iSize = insn.insnSize();
-    const OprSize oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
-    const char suffix = _regs.sizeSuffix(oSize);
+    const auto iSize = insn.insnSize();
+    const auto oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
+    const auto suffix = _regs.sizeSuffix(oSize);
     if (suffix)
         insn.nameBuffer().letter('.').letter(suffix);
 

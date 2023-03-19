@@ -265,7 +265,7 @@ void AsmZ8::encodePostByte(
 }
 
 Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p)) {
         op.mode = M_NONE;
@@ -372,7 +372,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmZ8::PseudoZ8::setRp(
         StrScanner &scan, Assembler &assembler, Error (AsmZ8::PseudoZ8::*set)(int32_t)) {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     const int32_t rp = assembler.parseExpr32(p, assembler);
     if (assembler.isOK()) {
         const auto error = (this->*set)(rp);

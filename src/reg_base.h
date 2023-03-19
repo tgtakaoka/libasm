@@ -83,7 +83,7 @@ protected:
     }
 
     static const NameEntry *searchName(uint8_t name, const NameEntry *begin, const NameEntry *end) {
-        for (const NameEntry *entry = begin; entry < end; entry++) {
+        for (const auto *entry = begin; entry < end; entry++) {
             if (name == entry->name())
                 return entry;
         }
@@ -91,13 +91,13 @@ protected:
     }
 
     static uint8_t nameLen(uint8_t name, const NameEntry *begin, const NameEntry *end) {
-        const NameEntry *entry = searchName(name, begin, end);
+        const auto *entry = searchName(name, begin, end);
         return entry ? entry->len() : 0;
     }
 
     static const NameEntry *searchText(
             StrScanner &scan, const NameEntry *begin, const NameEntry *end) {
-        for (const NameEntry *entry = begin; entry < end; entry++) {
+        for (const auto *entry = begin; entry < end; entry++) {
             const /*PROGMEM*/ char *text_P = entry->text_P();
             const uint8_t len = entry->len();
             if (scan.istarts_P(text_P, len) && !isidchar(scan[len])) {

@@ -72,7 +72,7 @@ Error Disassembler::decode(
     if (checkAddress(insn.address()))
         return getError();
     StrBuffer out(operands, size);
-    char *mark = insn.clearNameBuffer().mark();
+    auto mark = insn.clearNameBuffer().mark();
     decodeImpl(memory, insn, out);
     if (!_regBase.isUppercase())
         insn.nameBuffer().lowercase(mark);

@@ -52,7 +52,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(scan))
         return OK;
 
-    StrScanner p(scan);
+    auto p = scan;
     op.reg = RegScn2650::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         op.mode = op.reg == REG_R0 ? M_REG0 : M_R123;

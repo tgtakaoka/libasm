@@ -22,7 +22,7 @@ namespace libasm {
 namespace i8048 {
 
 Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;

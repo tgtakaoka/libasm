@@ -39,22 +39,22 @@ bool Value::overflowRel16(int32_t s32) {
 }
 
 bool Value::overflowUint8(uint16_t u16) {
-    const int16_t s16 = static_cast<int16_t>(u16);
+    const auto s16 = static_cast<int16_t>(u16);
     return s16 < -128 || (s16 >= 0 && u16 >= 256);
 }
 
 bool Value::overflowUint8(uint32_t u32) {
-    const int32_t s32 = static_cast<int32_t>(u32);
+    const auto s32 = static_cast<int32_t>(u32);
     return s32 < -128 || (s32 >= 0 && u32 >= 0x100);
 }
 
 bool Value::overflowUint16(uint32_t u32) {
-    const int32_t s32 = static_cast<int32_t>(u32);
+    const auto s32 = static_cast<int32_t>(u32);
     return s32 < -32768L || (s32 >= 0 && u32 >= 0x10000L);
 }
 
 bool Value::overflowUint(uint32_t u32, uint8_t bitw) {
-    const int32_t s32 = static_cast<int32_t>(u32);
+    const auto s32 = static_cast<int32_t>(u32);
     if (bitw >= 32)
         return false;
     const uint32_t max = 1UL << bitw;
@@ -68,13 +68,13 @@ static bool isoctal(char c) {
 
 char ValueParser::readChar(StrScanner &scan) {
     setOK();
-    StrScanner p(scan);
-    char c = *p++;
+    auto p = scan;
+    auto c = *p++;
     if (c != '\\') {
         scan = p;
         return c;
     }
-    Radix radix = RADIX_10;
+    auto radix = RADIX_10;
     if (p.iexpect('x')) {
         radix = RADIX_16;
     } else if (isoctal(*p)) {
@@ -130,14 +130,14 @@ static uint8_t toNumber(const char c, const Radix radix) {
 }
 
 Error NumberParser::parseNumber(StrScanner &scan, Value &val, const Radix radix) {
-    StrScanner p(scan);
+    auto p = scan;
     if (!isValidDigit(*p, radix))
         return setError(scan, ILLEGAL_CONSTANT);
     const uint32_t limit = UINT32_MAX / uint8_t(radix);
     const uint8_t limit_digit = UINT32_MAX % uint8_t(radix);
     uint32_t v = 0;
     while (isValidDigit(*p, radix)) {
-        const uint8_t n = toNumber(*p, radix);
+        const auto n = toNumber(*p, radix);
         if (v > limit || (v == limit && n > limit_digit))
             return setError(scan, OVERFLOW_RANGE);
         v *= uint8_t(radix);
@@ -156,7 +156,7 @@ Value ValueParser::eval(StrScanner &expr, const SymbolTable *symtab) {
 }
 
 StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
-    StrScanner p(scan);
+    auto p = scan;
     while (!endOfLine(*p)) {
         if (_numberParser.numberPrefix(p)) {
             Value val;
@@ -172,8 +172,8 @@ StrScanner ValueParser::scanExpr(const StrScanner &scan, char delim) {
         if (*p == delim)
             return StrScanner(scan.str(), p.str());
         if (*p == '(' || *p == '[') {
-            const char close = (*p++ == '(') ? ')' : ']';
-            const StrScanner atom = scanExpr(p, close);
+            const auto close = (*p++ == '(') ? ')' : ']';
+            const auto atom = scanExpr(p, close);
             if (atom.size() == 0)
                 break;
             p += atom.size() + 1;
@@ -190,11 +190,11 @@ Value ValueParser::parseExpr(
         return Value();
     }
     stack.push(OprAndLval());
-    Value value(readAtom(scan, stack, symtab));
+    auto value = readAtom(scan, stack, symtab);
     if (getError())
         return Value();
     while (!stack.empty()) {
-        Operator opr(readOperator(scan));
+        const auto opr = readOperator(scan);
         while (opr._precedence <= stack.top().precedence()) {
             if (stack.top().isEnd()) {
                 stack.pop();
@@ -216,13 +216,13 @@ Value ValueParser::parseExpr(
 }
 
 Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab) {
-    StrScanner p(scan);
+    auto p = scan;
     if (endOfLine(*p.skipSpaces())) {
         setError(scan, ILLEGAL_CONSTANT);
         return Value();
     }
     if (p.expect('(')) {
-        Value value(parseExpr(p, stack, symtab));
+        const auto value = parseExpr(p, stack, symtab);
         if (isOK()) {
             if (!p.skipSpaces().expect(')')) {
                 setError(p, MISSING_CLOSING_PAREN);
@@ -235,26 +235,26 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
     }
     char prefix;
     if (charPrefix(p, prefix)) {
-        Value value(readCharacterConstant(p));
+        const auto value = readCharacterConstant(p);
         if (isOK() && !charSuffix(p, prefix))
             setError(p, MISSING_CLOSING_QUOTE);
         scan = p;
         return value;
     }
     if (p.expect('~')) {
-        Value value(readAtom(p, stack, symtab));
+        auto value = readAtom(p, stack, symtab);
         scan = p;
         if (!value.isUndefined())
             return value.setValue(~value.getUnsigned());
         return value;
     }
     if (*p == '-' || *p == '+') {
-        const char c = *p;
+        const auto c = *p;
         if (*++p == '-' || *p == '+') {
             setError(scan, UNKNOWN_EXPR_OPERATOR);
             return Value();
         }
-        Value value(readAtom(p, stack, symtab));
+        auto value = readAtom(p, stack, symtab);
         if (c == '-' && !value.isUndefined()) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 setError(scan, OVERFLOW_RANGE);
@@ -277,9 +277,9 @@ Value ValueParser::readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const Sy
     if (symbolLetter(*p, true)) {
         if (_funcParser)
             _funcParser->setAt(p);
-        const StrScanner symbol = readSymbol(p);
+        const auto symbol = readSymbol(p);
         if (*p.skipSpaces() == '(' && _funcParser) {
-            StrScanner params(p);
+            auto params = p;
             params.expect('(');
             if (_funcParser->parseFunc(*this, symbol, params, val, symtab) == OK) {
                 if (!params.expect(')')) {
@@ -378,9 +378,9 @@ bool ValueParser::symbolLetter(char c, bool head) const {
 }
 
 StrScanner ValueParser::readSymbol(StrScanner &scan) const {
-    StrScanner p(scan);
+    auto p = scan;
     p.trimStart([this](char c) { return this->symbolLetter(c); });
-    StrScanner symbol = StrScanner(scan.str(), p.str());
+    auto symbol = StrScanner(scan.str(), p.str());
     scan = p;
     return symbol;
 }
@@ -409,7 +409,7 @@ Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
     if (lhs.isUndefined() || rhs.isUndefined())
         return Value();
 
-    const bool bsigned = lhs.isSigned() && rhs.isSigned();
+    const auto bsigned = lhs.isSigned() && rhs.isSigned();
 
     switch (op) {
     case OP_ADD:
@@ -451,7 +451,7 @@ Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs) {
 }
 
 Error NumberParser::scanNumberEnd(const StrScanner &scan, const Radix radix, char suffix) const {
-    StrScanner p(scan);
+    auto p = scan;
     if (suffix == 'B') {
         // Check whether intel binary or C-style binary
         if (*p == '0' && toupper(*++p) == 'B' && (*++p == '0' || *p == '1'))
@@ -481,14 +481,14 @@ bool ValueParser::charSuffix(StrScanner &scan, char prefix) const {
 }
 
 bool NumberParser::numberPrefix(const StrScanner &scan) const {
-    StrScanner p(scan);
+    auto p = scan;
     return p.expect('0') && (p.iexpect('X') || p.iexpect('B'));
 }
 
 Error NumberParser::expectNumberSuffix(StrScanner &scan, char suffix) const {
     if (getError())
         return getError();
-    StrScanner p(scan);
+    auto p = scan;
     if (isalpha(suffix)) {
         // Alphabet suffix is mandatory
         if (toupper(*p++) != suffix)
@@ -502,8 +502,8 @@ Error NumberParser::expectNumberSuffix(StrScanner &scan, char suffix) const {
 }
 
 Error NumberParser::readNumber(StrScanner &scan, Value &val) {
-    StrScanner p(scan);
-    Radix radix = RADIX_10;
+    auto p = scan;
+    auto radix = RADIX_10;
     if (p.expect('0')) {
         if (isoctal(*p)) {
             if (scanNumberEnd(p, RADIX_8) == OK)
@@ -529,8 +529,8 @@ bool MotorolaValueParser::charSuffix(StrScanner &scan, char prefix) const {
 }
 
 bool MotorolaNumberParser::numberPrefix(const StrScanner &scan) const {
-    const char c = *scan;
-    const char n = scan[1];
+    const auto c = *scan;
+    const auto n = scan[1];
     if (c == '$')
         return isxdigit(n);
     if (c == '@')
@@ -541,8 +541,8 @@ bool MotorolaNumberParser::numberPrefix(const StrScanner &scan) const {
 }
 
 Error MotorolaNumberParser::readNumber(StrScanner &scan, Value &val) {
-    StrScanner p(scan);
-    Radix radix = RADIX_10;
+    auto p = scan;
+    auto radix = RADIX_10;
     if (p.expect('$')) {
         if (scanNumberEnd(p, RADIX_16) == OK)
             radix = RADIX_16;
@@ -565,7 +565,7 @@ bool IntelNumberParser::numberPrefix(const StrScanner &scan) const {
 }
 
 Error IntelNumberParser::readNumber(StrScanner &scan, Value &val) {
-    Radix radix = RADIX_10;
+    auto radix = RADIX_10;
     char suffix = 0;
     if (scanNumberEnd(scan, RADIX_16, suffix = 'H') == OK) {
         radix = RADIX_16;
@@ -590,17 +590,17 @@ bool NationalValueParser::symbolLetter(char c, bool head) const {
 }
 
 bool NationalNumberParser::numberPrefix(const StrScanner &scan) const {
-    const char c = toupper(*scan);
-    const char q = scan[1];
+    const auto c = toupper(*scan);
+    const auto q = scan[1];
     if (q == '\'')
         return c == 'H' || c == 'X' || c == 'D' || c == 'O' || c == 'Q' || c == 'B';
     return NumberParser::numberPrefix(scan);
 }
 
 Error NationalNumberParser::readNumber(StrScanner &scan, Value &val) {
-    StrScanner p(scan);
-    Radix radix = Radix(0);
-    constexpr char quote = '\'';
+    auto p = scan;
+    auto radix = Radix(0);
+    constexpr auto quote = '\'';
     if ((p.iexpect('X') || p.iexpect('H')) && p.expect(quote)) {
         if (scanNumberEnd(p, RADIX_16) == OK)
             radix = RADIX_16;
@@ -628,7 +628,7 @@ bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
 }
 
 bool FairchildValueParser::charPrefix(StrScanner &scan, char &prefix) const {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.iexpect('c') && p.expect('\'')) {
         // C'x'
         prefix = 'C';
@@ -661,8 +661,8 @@ bool FairchildValueParser::symbolLetter(char c, bool head) const {
 bool FairchildNumberParser::numberPrefix(const StrScanner &scan) const {
     if (_motorola.numberPrefix(scan))
         return true;
-    const char c = toupper(*scan);
-    const char q = scan[1];
+    const auto c = toupper(*scan);
+    const auto q = scan[1];
     if (q == '\'')
         return c == 'H' || c == 'D' || c == 'O' || c == 'B';
     return NumberParser::numberPrefix(scan);

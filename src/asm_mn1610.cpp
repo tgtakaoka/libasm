@@ -184,7 +184,7 @@ void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode
 }
 
 Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
@@ -202,7 +202,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    StrScanner t(p);
+    auto t = p;
     const auto indir = p.expect('(');
     const auto preDec = (*t == '-' && *++t == '(');
     if (indir || preDec)

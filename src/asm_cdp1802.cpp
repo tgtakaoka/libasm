@@ -105,7 +105,7 @@ void AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op
 }
 
 Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;

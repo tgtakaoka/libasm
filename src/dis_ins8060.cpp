@@ -36,8 +36,8 @@ Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
 }
 
 Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode) {
-    const RegName reg = _regs.decodePointerReg(insn.opCode());
-    const uint8_t opr = insn.readByte(memory);
+    const auto reg = _regs.decodePointerReg(insn.opCode());
+    const auto opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)
         out.letter('@');
     if (reg == REG_PC && opr != 0x80) {  // PC relative
@@ -69,7 +69,7 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
 
 Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnIns8060 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    const auto opCode = insn.readByte(memory);
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);

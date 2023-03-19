@@ -66,10 +66,10 @@ Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrS
     } binding;
 
     for (auto it = func.params.cbegin(); it != func.params.cend(); ++it) {
-        const std::string &param = *it;
+        const auto &param = *it;
         if (it != func.params.cbegin() && !scan.skipSpaces().expect(','))
             return setError(MISSING_FUNC_ARGUMENT);
-        const Value arg = parser.eval(scan, symtab);
+        const auto arg = parser.eval(scan, symtab);
         if (parser.getError())
             return setError(parser);
         binding.intern(param, arg.getUnsigned());

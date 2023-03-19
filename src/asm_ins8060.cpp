@@ -105,7 +105,7 @@ void AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
 }
 
 Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p)) {
         op.mode = M_NONE;

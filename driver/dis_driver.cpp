@@ -51,7 +51,7 @@ static void filter(const char *text, std::list<std::string> &list) {
 }
 
 Disassembler *DisDriver::restrictCpu(const char *cpu) {
-    Disassembler *dis = setCpu(cpu);
+    auto dis = setCpu(cpu);
     if (dis) {
         _disassemblers.clear();
         _disassemblers.push_back(dis);

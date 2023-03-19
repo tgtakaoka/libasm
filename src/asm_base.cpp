@@ -64,7 +64,7 @@ bool PseudoBase::endOfLine(const StrScanner &scan, bool headOfLine) const {
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
-    const Value value = _parser.eval(expr, _symtab);
+    const auto value = _parser.eval(expr, _symtab);
     if (_parser.getError())
         error.setError(_parser);
     if (value.overflowUint16())
@@ -75,7 +75,7 @@ uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
 }
 
 uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
-    const Value value = _parser.eval(expr, _symtab);
+    const auto value = _parser.eval(expr, _symtab);
     if (_parser.getError())
         error.setError(_parser);
     if (value.isUndefined())
@@ -84,7 +84,7 @@ uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) const {
-    const Value value = _parser.eval(expr, _symtab);
+    const auto value = _parser.eval(expr, _symtab);
     if (_parser.getError())
         error.setError(_parser);
     if (value.isUndefined())

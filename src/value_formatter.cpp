@@ -21,7 +21,7 @@
 namespace libasm {
 
 StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) const {
-    char *start = out.mark();
+    const auto start = out.mark();
     while (val) {
         const uint8_t digit = val & 0xF;
         if (digit < 10)
@@ -38,7 +38,7 @@ StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) con
 }
 
 StrBuffer &ValueFormatter::outDec(StrBuffer &out, uint32_t val) const {
-    char *start = out.mark();
+    const auto start = out.mark();
     while (val) {
         const uint8_t digit = val % 10;
         out.letter(digit + '0');
@@ -63,7 +63,7 @@ uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits)
 
 StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
     val = makePositive(out, val, bits);
-    char *start = out.mark();
+    const auto start = out.mark();
     if (relax && val <= 32)
         return outDec(out, val).reverse(start);
     return formatPositiveHex(out, val, bits);
@@ -71,14 +71,14 @@ StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, 
 
 StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
     val = makePositive(out, val, bits);
-    char *start = out.mark();
+    const auto start = out.mark();
     return outDec(out, val).reverse(start);
 }
 
 StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle)
         out.letter('0').letter('x');
-    char *start = out.mark();
+    const auto start = out.mark();
     return outHex(out, val, bits).reverse(start);
 }
 
@@ -89,15 +89,15 @@ StrBuffer &MotorolaValueFormatter::formatPositiveHex(
     } else {
         out.letter('$');
     }
-    char *start = out.mark();
+    const auto start = out.mark();
     return outHex(out, val, bits).reverse(start);
 }
 
 StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle)
         out.letter('0').letter('x');
-    char *start = out.mark();
-    char *top = outHex(out, val, bits).mark();
+    const auto start = out.mark();
+    auto *top = outHex(out, val, bits).mark();
     if (_cstyle)
         return out.reverse(start);
     if (top[-1] > '9')
@@ -112,7 +112,7 @@ StrBuffer &NationalValueFormatter::formatPositiveHex(
     } else {
         out.letter(_hexPrefix, _uppercase).letter('\'');
     }
-    char *start = out.mark();
+    const auto start = out.mark();
     outHex(out, val, bits).reverse(start);
     if (!_cstyle && _suffix)
         out.letter('\'');

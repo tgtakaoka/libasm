@@ -28,8 +28,8 @@ AsmI8086::OptOptimizeSeg::OptOptimizeSeg(bool &var)
 Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     InsnI8086 insn(_insn);
-    StrScanner p(scan);
-    StrScanner strInsn = _parser.readSymbol(p);
+    auto p = scan;
+    auto strInsn = _parser.readSymbol(p);
     insn.nameBuffer().text(strInsn);
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
     if (TableI8086::TABLE.searchName(insn))
@@ -43,7 +43,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     const auto reg = RegI8086::parseRegName(p);
     if (reg == REG_BYTE || reg == REG_WORD) {
         // Pointer size override
@@ -58,7 +58,7 @@ Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
 }
 
 void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     const auto reg = RegI8086::parseRegName(p);
     if (RegI8086::isSegmentReg(reg)) {
         // Segment Override
@@ -70,7 +70,7 @@ void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
 }
 
 void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     const auto reg = RegI8086::parseRegName(p);
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
@@ -79,7 +79,7 @@ void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
 }
 
 void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     if (op.reg != REG_UNDEF) {
         if (!p.expect('+'))
             return;
@@ -93,7 +93,7 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan);
+    auto p = scan;
     if (endOfLine(p) || *p == ']')
         return OK;
     if (op.reg != REG_UNDEF || op.index != REG_UNDEF) {
@@ -109,7 +109,7 @@ Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
         return OK;
@@ -141,7 +141,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
         return op.setError(UNKNOWN_OPERAND);
 
-    StrScanner a(p);
+    auto a = p;
     const auto reg = RegI8086::parseRegName(a);
     if (RegI8086::isGeneralReg(reg)) {
         op.reg = reg;

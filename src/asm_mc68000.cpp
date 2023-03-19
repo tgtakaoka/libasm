@@ -256,10 +256,10 @@ static uint16_t reverseBits(uint16_t bits) {
 }
 
 void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse) {
-    StrScanner p(op.list);
+    auto p = op.list;
     uint16_t bits = 0;
     for (;;) {
-        StrScanner a(p);
+        auto a = p;
         const auto start = RegMc68000::parseRegName(a);
         if (!RegMc68000::isGeneralReg(start))
             setErrorIf(p, REGISTER_NOT_ALLOWED);
@@ -295,7 +295,7 @@ void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool rev
 }
 
 Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
-    StrScanner p(scan.skipSpaces());
+    auto p = scan.skipSpaces();
     op.setAt(op.list = p);
     if (endOfLine(p))
         return OK;
@@ -307,7 +307,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    StrScanner a(p);
+    auto a = p;
     const bool pdec = (*a++ == '-' && *a == '(');
     if (pdec)
         p = a;
@@ -330,7 +330,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         if (parserError())
             return op.getError();
         if (p.skipSpaces().expect(')')) {
-            const OprSize size = RegMc68000::parseSize(p.skipSpaces());
+            const auto size = RegMc68000::parseSize(p.skipSpaces());
             bool over16 = overflowRel16(op.val32);
             if (over16) {
                 // check if it is near the end of address space.

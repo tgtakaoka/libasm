@@ -22,7 +22,7 @@ namespace libasm {
 namespace cdp1802 {
 
 RegName RegCdp1802::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.iexpect('R')) {
         const auto num = parseRegNumber(p, 16);
         if (num >= 0) {

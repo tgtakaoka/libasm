@@ -119,7 +119,7 @@ int AsmCommander::assemble() {
         auto &encoder = _encoder == 'S' ? MotoSrec::encoder()
                                         : (_encoder == 'H' ? IntelHex::encoder()
                                                            : _driver.current()->defaultEncoder());
-        const AddressWidth addrWidth = _driver.current()->assembler().config().addressWidth();
+        const auto addrWidth = _driver.current()->assembler().config().addressWidth();
         encoder.reset(addrWidth, _record_bytes);
         encoder.encode(memory, output);
         if (_verbose) {
@@ -172,9 +172,9 @@ int AsmCommander::assemble(
 
 AsmDirective *AsmCommander::defaultDirective() {
     AsmDirective *directive = nullptr;
-    const auto *prefix = strstr(_prog_name, PROG_PREFIX);
+    const auto prefix = strstr(_prog_name, PROG_PREFIX);
     if (prefix) {
-        const char *cpu = prefix + strlen(PROG_PREFIX);
+        const auto cpu = prefix + strlen(PROG_PREFIX);
         directive = _driver.restrictCpu(cpu);
     }
     return directive;
@@ -183,7 +183,7 @@ AsmDirective *AsmCommander::defaultDirective() {
 int AsmCommander::usage() {
     defaultDirective();
     std::string list;
-    const char *cpuSep = "\n                ";
+    const auto cpuSep = "\n                ";
     std::string buf;
     for (auto &cpu : _driver.listCpu()) {
         if (buf.size())
@@ -218,7 +218,7 @@ int AsmCommander::usage() {
             "  -X<name>=<vale>\n"
             "              : extra options (<type> [, <CPU>])\n",
             _prog_name, list.c_str());
-    bool common = true;
+    auto common = true;
     for (const auto *dir : _driver) {
         if (common) {
             common = false;
@@ -237,12 +237,12 @@ int AsmCommander::usage() {
 }
 
 static const char *basename(const char *str, char sep_char = '/') {
-    const char *sep = strrchr(str, sep_char);
+    const auto sep = strrchr(str, sep_char);
     return sep ? sep + 1 : str;
 }
 
 int AsmCommander::parseOptionValue(const char *option) {
-    const char *equ = strchr(option, '=');
+    const auto equ = strchr(option, '=');
     if (equ == nullptr)
         return 1;
     _options.emplace(std::string(option, equ), std::string(equ + 1));
@@ -260,8 +260,8 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
     _upper_hex = true;
     _line_number = false;
     _verbose = false;
-    for (int i = 1; i < argc; i++) {
-        const char *opt = argv[i];
+    for (auto i = 1; i < argc; i++) {
+        const auto *opt = argv[i];
         if (*opt == '-') {
             switch (*++opt) {
             case 'o':
@@ -283,7 +283,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
                 _encoder = *opt++;
                 if (*opt) {
                     char *end;
-                    unsigned long v = strtoul(opt, &end, 10);
+                    const auto v = strtoul(opt, &end, 10);
                     if (*end || v > 64) {
                         fprintf(stderr, "invalid record length: %s\n", argv[i]);
                         return 3;
@@ -343,7 +343,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
     }
 
     for (auto &option : _options) {
-        bool valid = false;
+        auto valid = false;
         for (const auto *dir : _driver) {
             for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
                 if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {

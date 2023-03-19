@@ -62,12 +62,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegMc6809::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 RegSize RegMc6809::regSize(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     if (num < 0)
         return SZ_NONE;  // REG_UNDEF
     if (num < 8)
@@ -80,7 +80,7 @@ RegSize RegMc6809::regSize(RegName name) {
 }
 
 StrBuffer &RegMc6809::outRegName(StrBuffer &out, const RegName name) const {
-    const NameEntry *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
@@ -88,7 +88,7 @@ StrBuffer &RegMc6809::outRegName(StrBuffer &out, const RegName name) const {
 
 RegName RegMc6809::decodeDataReg(uint8_t num) {
     num &= 0xF;
-    const RegName name = RegName(num);
+    const auto name = RegName(num);
     if (TableMc6809::TABLE.cpuType() == MC6809) {
         if (name == REG_W || name == REG_V || num >= 12)
             return REG_UNDEF;
@@ -197,7 +197,7 @@ RegName RegMc6809::decodeBitOpReg(uint8_t num) {
 }
 
 bool RegMc6809::isBitOpReg(RegName name) {
-    const uint8_t num = uint8_t(name);
+    const auto num = uint8_t(name);
     return num >= 8 && num < 11;
 }
 
@@ -213,7 +213,7 @@ RegName RegMc6809::decodeTfmBaseReg(uint8_t num) {
 }
 
 bool RegMc6809::isTfmBaseReg(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 5;
 }
 

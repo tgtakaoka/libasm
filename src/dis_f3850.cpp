@@ -36,7 +36,7 @@ Error DisF3850::decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &ou
 }
 
 Error DisF3850::decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode) {
-    const Config::opcode_t opCode = insn.opCode();
+    const auto opCode = insn.opCode();
     switch (mode) {
     case M_REG:
         if (_useScratchpad) {
@@ -83,7 +83,7 @@ Error DisF3850::decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out
 
 Error DisF3850::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnF3850 insn(_insn);
-    Config::opcode_t opCode = insn.readByte(memory);
+    auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
     if (setError(insn))
         return getError();
@@ -91,12 +91,12 @@ Error DisF3850::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TableF3850::TABLE.searchOpCode(insn))
         return setError(insn);
 
-    const AddrMode mode1 = insn.mode1();
+    const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return OK;
     if (decodeOperand(memory, insn, out, mode1))
         return getError();
-    const AddrMode mode2 = insn.mode2();
+    const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return OK;
     out.comma();

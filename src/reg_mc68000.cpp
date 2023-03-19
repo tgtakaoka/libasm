@@ -64,29 +64,29 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
 };
 
 RegName RegMc68000::parseRegName(StrScanner &scan) {
-    const NameEntry *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &RegMc68000::outRegName(StrBuffer &out, RegName name) {
-    const NameEntry *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
+    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P(), isUppercase());
     return out;
 }
 
 bool RegMc68000::isDataReg(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 8;
 }
 
 bool RegMc68000::isAddrReg(RegName name) {
-    const int8_t num = int8_t(name) - 8;
+    const auto num = int8_t(name) - 8;
     return num >= 0 && num < 8;
 }
 
 bool RegMc68000::isGeneralReg(RegName name) {
-    const int8_t num = int8_t(name);
+    const auto num = int8_t(name);
     return num >= 0 && num < 16;
 }
 
@@ -111,9 +111,9 @@ RegName RegMc68000::decodeAddrReg(uint8_t regno) {
 }
 
 OprSize RegMc68000::parseSize(StrScanner &scan) {
-    StrScanner p(scan);
+    auto p = scan;
     if (p.expect('.')) {
-        OprSize size = SZ_ERROR;
+        auto size = SZ_ERROR;
         if (p.iexpect('B')) {
             size = SZ_BYTE;
         } else if (p.iexpect('W')) {
@@ -149,12 +149,12 @@ char RegMc68000::sizeSuffix(OprSize size) const {
 }
 
 Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
-    const uint8_t m = static_cast<uint8_t>(mode);
+    const auto m = static_cast<uint8_t>(mode);
     return m >= 8 ? 7 : m;
 }
 
 Config::opcode_t EaMc68000::encodeRegNo(AddrMode mode, RegName reg) {
-    const uint8_t m = static_cast<uint8_t>(mode);
+    const auto m = static_cast<uint8_t>(mode);
     if (m < 8)
         return RegMc68000::encodeGeneralRegNo(reg);
     return m - 8;

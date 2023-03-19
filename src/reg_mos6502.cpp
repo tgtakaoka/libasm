@@ -20,8 +20,8 @@ namespace libasm {
 namespace mos6502 {
 
 RegName RegMos6502::parseRegName(StrScanner &scan) {
-    StrScanner p(scan);
-    RegName reg = REG_UNDEF;
+    auto p = scan;
+    auto reg = REG_UNDEF;
     if (p.iexpect('A')) {
         reg = REG_A;
     } else if (p.iexpect('X')) {
