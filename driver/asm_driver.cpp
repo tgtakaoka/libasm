@@ -120,7 +120,6 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &fo
     int errors = 0;
     StrScanner *scan;
     while ((scan = sources.readLine()) != nullptr) {
-        // const auto error = _driver.assemble(*scan, listing);
         const auto error = formatter.assemble(*scan, reportError);
         while (formatter.hasNextLine()) {
             const char *line = formatter.getLine();

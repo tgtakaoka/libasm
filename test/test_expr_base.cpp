@@ -353,16 +353,16 @@ static void test_current_address() {
 }
 
 static void test_function() {
-    struct : public ValueParser::FuncParser {
-        Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-                        const SymbolTable *symtab) override {
-            const auto v = parser.eval(scan, symtab).getUnsigned();
+    struct : ValueParser::FuncParser {
+        Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
+                        ErrorAt &error, const SymbolTable *symtab) const override {
+            const auto v = parser.eval(scan, error, symtab).getUnsigned();
             if (name.iequals_P(PSTR("hi"))) {
                 val.setValue((v >> 8) & 0xFF);
             } else if (name.iequals_P(PSTR("lo"))) {
                 val.setValue(v & 0xFF);
             } else {
-                return setError(UNKNOWN_FUNCTION);
+                return UNKNOWN_FUNCTION;
             }
             return OK;
         }

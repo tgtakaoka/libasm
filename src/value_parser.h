@@ -106,53 +106,50 @@ private:
     const MotorolaNumberParser _motorola;
 };
 
-class ValueParser : public ErrorAt {
+class ValueParser {
 public:
     ValueParser(char locSym = '.')
-        : ErrorAt(),
-          _numberParser(_cStyleNumber),
+        : _numberParser(_cStyleNumber),
           _locSym(locSym),
           _origin(0),
           _funcParser(nullptr),
           _commentChar(0) {}
 
-    /*
+    /**
      * Parse |scan| text and return expression |value|.  Undefined
      * symbol reference in expression should be checked by
      * |value.isUndefined()|. Other error should be checked by
      * |getError()|.
      */
-    Value eval(StrScanner &scan, const SymbolTable *symtab);
+    Value eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab) const;
 
-    /*
+    /**
      * Scan |scan| text, and find |delim| letter.  Return
      * StrScanner::EMPTY if not found.
      */
-    StrScanner scanExpr(const StrScanner &scan, char delim);
+    StrScanner scanExpr(const StrScanner &scan, ErrorAt &error, char delim) const;
 
-    /*
+    /**
      * Parse |scan| text and convert character constant to |val|.
      * Error should be checked by |getError()|.
      */
-    char readChar(StrScanner &scan);
+    char readChar(StrScanner &scan, ErrorAt &error) const;
 
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     virtual bool symbolLetter(char c, bool head = false) const;
     StrScanner readSymbol(StrScanner &scan) const;
     void setCommentChar(char c) { _commentChar = c; }
     bool endOfLine(char c) const { return c == 0 || c == ';' || c == _commentChar; }
-    bool hasError() const;
 
-    struct FuncParser : public ErrorAt {
-        virtual Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
-                Value &val, const SymbolTable *symtab) = 0;
+    struct FuncParser {
+        virtual Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan,
+                Value &val, ErrorAt &error, const SymbolTable *symtab) const = 0;
     };
     FuncParser *setFuncParser(FuncParser *parser = nullptr);
 
 protected:
     ValueParser(const NumberParser &numberParser, char locSym = '.')
-        : ErrorAt(),
-          _numberParser(numberParser),
+        : _numberParser(numberParser),
           _locSym(locSym),
           _origin(0),
           _funcParser(nullptr),
@@ -216,11 +213,13 @@ private:
         E _values[capacity];
     };
 
-    Value parseExpr(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
-    Value readAtom(StrScanner &scan, Stack<OprAndLval> &stack, const SymbolTable *symtab);
-    Value readCharacterConstant(StrScanner &scan);
-    Operator readOperator(StrScanner &scan);
-    Value evalExpr(const Op op, const Value lhs, const Value rhs);
+    Value parseExpr(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> &stack,
+            const SymbolTable *symtab) const;
+    Value readAtom(StrScanner &scan, ErrorAt &errpr, Stack<OprAndLval> &stack,
+            const SymbolTable *symtab) const;
+    Value readCharacterConstant(StrScanner &scan, ErrorAt &error) const;
+    Operator readOperator(StrScanner &scan, ErrorAt &error) const;
+    Value evalExpr(const Op op, const Value lhs, const Value rhs, ErrorAt &error) const;
 };
 
 class MotorolaValueParser : public ValueParser {

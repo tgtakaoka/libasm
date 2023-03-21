@@ -27,12 +27,10 @@ static Config::uintptr_t offset(Config::uintptr_t addr) {
     return addr & 0xFFF;
 }
 
-static struct : public ValueParser::FuncParser {
-    Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-            const SymbolTable *symtab) override {
-        const auto vv = parser.eval(scan, symtab);
-        if (parser.hasError())
-            return setError(parser);
+static struct : ValueParser::FuncParser {
+    Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
+            ErrorAt &error, const SymbolTable *symtab) const override {
+        const auto vv = parser.eval(scan, error, symtab);
         const auto v = vv.getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
             val.setValue((v >> 8) & 0xFF);
@@ -41,9 +39,9 @@ static struct : public ValueParser::FuncParser {
         } else if (name.iequals_P(PSTR("addr"))) {
             val.setValue(page(v) | offset(v - 1));
         } else {
-            return setError(UNKNOWN_FUNCTION);
+            return UNKNOWN_FUNCTION;
         }
-        return setOK();
+        return OK;
     }
 } functionParser;
 

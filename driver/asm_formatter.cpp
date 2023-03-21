@@ -31,6 +31,7 @@ void AsmFormatter::reset() {
     _nextLine = -1;
     _errorLine = false;
     _errorAt.setOK();
+    _driver.current()->setOK();
 }
 
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
@@ -49,7 +50,6 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     parser.setCurrentOrigin(startAddress());
 
     if (parser.symbolLetter(*scan, true)) {
-        // setAt(scan);
         _line_symbol = parser.readSymbol(scan);
         scan.expect(':');  // skip optional trailing ':' for label.
     }

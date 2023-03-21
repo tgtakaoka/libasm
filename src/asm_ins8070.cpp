@@ -20,10 +20,10 @@
 namespace libasm {
 namespace ins8070 {
 
-static struct : public ValueParser::FuncParser {
-    Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-            const SymbolTable *symtab) override {
-        const auto v = parser.eval(scan, symtab).getUnsigned();
+static struct : ValueParser::FuncParser {
+    Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
+            ErrorAt &error, const SymbolTable *symtab) const override {
+        const auto v = parser.eval(scan, error, symtab).getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
             val.setValue((v >> 8) & 0xFF);
         } else if (name.iequals_P(PSTR("l"))) {
@@ -31,9 +31,9 @@ static struct : public ValueParser::FuncParser {
         } else if (name.iequals_P(PSTR("addr"))) {
             val.setValue((v - 1) & 0xFFFF);
         } else {
-            return setError(UNKNOWN_FUNCTION);
+            return UNKNOWN_FUNCTION;
         }
-        return setOK();
+        return OK;
     }
 } functionParser;
 

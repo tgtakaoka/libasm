@@ -18,9 +18,6 @@
 
 namespace libasm {
 
-static const char OPT_CHAR_COMMENT[] PROGMEM = "comment-char";
-static const char OPT_DESC_COMMENT[] PROGMEM = "line comment starting letter";
-
 Error Assembler::checkAddress(uint32_t addr, const ErrorAt &at) {
     const uint32_t max = 1UL << config().addressWidth();
     if (max && (addr & ~(max - 1)))
@@ -65,9 +62,7 @@ bool PseudoBase::endOfLine(const StrScanner &scan, bool headOfLine) const {
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
     auto p = expr;
-    const auto value = _parser.eval(p, _symtab);
-    if (_parser.getError())
-        error.setError(_parser);
+    const auto value = _parser.eval(p, error, _symtab);
     if (value.overflowUint16())
         error.setErrorIf(expr, OVERFLOW_RANGE);
     expr = p;
@@ -79,10 +74,7 @@ uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) const {
-    const auto value = _parser.eval(expr, _symtab);
-    if (_parser.getError())
-        error.setError(_parser);
-    return value;
+    return _parser.eval(expr, error, _symtab);
 }
 
 }  // namespace libasm

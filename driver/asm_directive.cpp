@@ -37,12 +37,13 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     const auto line = scan;
     auto &parser = assembler().parser();
-    auto value = parser.eval(scan, &driver);
+    ErrorAt error;
+    auto value = parser.eval(scan, error, &driver);
     // TODO line end check
-    if (setError(parser))
-        return getError();
+    if (error.getError())
+        return setError(error);
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-        return setError(parser, UNDEFINED_SYMBOL);
+        return setError(UNDEFINED_SYMBOL);
     setAt(line);
     if (assembler().checkAddress(value.getUnsigned(), *this))
         return setError(assembler());
@@ -62,10 +63,11 @@ Error AsmDirective::setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriv
 Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     const auto line = scan;
     auto &parser = assembler().parser();
-    auto value = parser.eval(scan, &driver);
+    ErrorAt error;
+    auto value = parser.eval(scan, error, &driver);
     // TODO line end check
-    if (setError(parser))
-        return getError();
+    if (error.getError())
+        return setError(error);
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     if (value.overflowUint16())
@@ -90,17 +92,18 @@ Error AsmDirective::defineSymbol(
     if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
     auto &parser = assembler().parser();
-    auto &value = list.lineValue() = parser.eval(scan, &driver);
-    if (setError(parser)) {
+    ErrorAt error;
+    auto &value = list.lineValue() = parser.eval(scan, error, &driver);
+    if (error.getError()) {
         value.clear();
-        return getError();
+        return setError(error);
     }
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     // TODO line end check
-    const auto error = driver.internSymbol(value.getUnsigned(), list.lineSymbol(), variable);
-    if (error) {
-        setError(list.lineSymbol(), error);
+    const auto err = driver.internSymbol(value.getUnsigned(), list.lineSymbol(), variable);
+    if (err) {
+        setError(list.lineSymbol(), err);
         value.clear();
     }
     list.lineSymbol() = StrScanner::EMPTY;
@@ -136,10 +139,11 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
         while (!p.expect(delim)) {
             if (*p == 0)
                 return setError(p, MISSING_CLOSING_DELIMITOR);
-            const auto c = parser.readChar(p);
-            if (setError(parser)) {
+            ErrorAt error;
+            const auto c = parser.readChar(p, error);
+            if (error.getError()) {
                 scan = p;
-                return getError();
+                return setError(error);
             }
             list.emitByte(base, c);
         }
@@ -158,8 +162,9 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
     const uint32_t base = driver.origin() * unit;
     do {
         auto p = scan.skipSpaces();
-        auto value = parser.eval(p, &driver);
-        if (parser.isOK() && !(*scan == '\'' && *p == '\'')) {
+        ErrorAt error;
+        auto value = parser.eval(p, error, &driver);
+        if (error.isOK() && !(*scan == '\'' && *p == '\'')) {
             // a byte expression, though a single 'c' constant is handled as a string
             scan = p;
             if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
@@ -181,16 +186,17 @@ Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver
                 if (*p == 0)
                     return setError(
                             p, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-                const auto c = parser.readChar(p);
-                if (setError(parser)) {
+                ErrorAt error;
+                const auto c = parser.readChar(p, error);
+                if (error.getError()) {
                     scan = p;
-                    return getError();
+                    return setError(error);
                 }
                 list.emitByte(base, c);
             }
             scan = p;
         } else {
-            return setError(parser);
+            return setError(error);
         }
     } while (scan.skipSpaces().expect(','));
     scan.skipSpaces();
@@ -206,9 +212,10 @@ Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDrive
     const uint32_t base = driver.origin() * unit;
     const auto endian = assembler().config().endian();
     for (;;) {
-        auto value = parser.eval(scan, &driver);
-        if (setError(parser))
-            return getError();
+        ErrorAt error;
+        auto value = parser.eval(scan, error, &driver);
+        if (error.getError())
+            return setError(error);
         if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
         if (value.overflowUint16())
@@ -231,9 +238,10 @@ Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDrive
     const uint32_t base = driver.origin() * unit;
     const auto endian = assembler().config().endian();
     for (;;) {
-        auto value = parser.eval(scan, &driver);
-        if (setError(parser))
-            return getError();
+        ErrorAt error;
+        auto value = parser.eval(scan, error, &driver);
+        if (error.getError())
+            return setError(error);
         if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
             return setError(UNDEFINED_SYMBOL);
         auto val32 = value.getUnsigned();
@@ -290,8 +298,8 @@ Error AsmDirective::allocateUint32sAligned(
 Error AsmDirective::allocateSpaces(
         StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int spaceUnit) {
     auto &parser = assembler().parser();
-    auto value = parser.eval(scan, &driver);
-    if (setError(parser))
+    auto value = parser.eval(scan, *this, &driver);
+    if (getError())
         return getError();
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
@@ -314,7 +322,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
     auto &parser = assembler().parser();
     std::list<StrScanner> params;
     for (;;) {
-        const auto expr = parser.scanExpr(scan.skipSpaces(), ',');
+        const auto expr = parser.scanExpr(scan.skipSpaces(), *this, ',');
         if (expr.size() == 0) {
             const auto error = driver.internFunction(
                     list.lineSymbol(), params, StrScanner(scan.str(), expr.str()));

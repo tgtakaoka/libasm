@@ -112,6 +112,8 @@ class ErrorAt : public ErrorReporter {
 public:
     ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
 
+    bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
+
     Error setError(Error error) { return ErrorReporter::setError(error); }
     Error setError(const StrScanner &at, Error error) {
         setAt(at);

@@ -31,9 +31,7 @@ namespace libasm {
 
 class Assembler;
 
-struct OperandBase : public ErrorAt {
-    bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
-};
+struct OperandBase : public ErrorAt {};
 
 class PseudoBase {
 public:

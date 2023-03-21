@@ -28,7 +28,7 @@
 namespace libasm {
 namespace driver {
 
-struct FunctionStore : public ValueParser::FuncParser {
+struct FunctionStore : ValueParser::FuncParser {
     FunctionStore() : _parent(nullptr) {}
 
     void reset();
@@ -38,8 +38,8 @@ struct FunctionStore : public ValueParser::FuncParser {
             const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body);
 
     // FuncParser
-    Error parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-            const SymbolTable *symtab) override;
+    Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
+            ErrorAt &error, const SymbolTable *symtab) const override;
 
 private:
     struct icasecmp {

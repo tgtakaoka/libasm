@@ -399,9 +399,9 @@ static void test_undefined_symbol() {
 }
 
 static void test_error() {
-    ERRT("LD A,@@1,P3", ILLEGAL_CONSTANT, "@1,P3");
-    ERRT("LD A,@#1",    ILLEGAL_CONSTANT, "#1");
-    ERRT("LD A,@=1",    ILLEGAL_CONSTANT, "=1");
+    ERRT("LD A,@@1,P3", ILLEGAL_CONSTANT, "@@1,P3");
+    ERRT("LD A,@#1",    ILLEGAL_CONSTANT, "@#1");
+    ERRT("LD A,@=1",    ILLEGAL_CONSTANT, "@=1");
     ERRT("LD A,1(P3)",  MISSING_COMMA,    "1(P3)"); // SC/MP style
     ERRT("LD A,@1(P3)", MISSING_COMMA,    "@1(P3)"); // SC/MP style
     ERRT("LD A,1,(EA)", GARBAGE_AT_END,   "(EA)");

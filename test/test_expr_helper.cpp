@@ -27,11 +27,10 @@ TestSymtab symtab;
 void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
         const Error expected_error, size_t size, ValueParser &parser) {
     Value val;
-    ErrorReporter error;
+    ErrorAt error;
     StrScanner scan(expr);
-    val = parser.eval(scan, &symtab);
+    val = parser.eval(scan, error, &symtab);
     uint32_t actual = val.getUnsigned();
-    error.setError(parser);
     if (size == 1) {
         if (val.overflowUint8() && error.isOK())
             error.setError(OVERFLOW_RANGE);

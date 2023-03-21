@@ -42,8 +42,12 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 }  // namespace test
 }  // namespace libasm
 
-#define SCAN(delim, text, expected) \
-    asserter.equals(__FILE__, __LINE__, "scan " text, expected, parser.scanExpr(text, delim))
+#define SCAN(delim, text, expected)                                                               \
+    do {                                                                                          \
+        ErrorAt error;                                                                            \
+        asserter.equals(                                                                          \
+                __FILE__, __LINE__, "scan " text, expected, parser.scanExpr(text, error, delim)); \
+    } while (0)
 #define E8(expr, expected, expected_error) \
     val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint8_t), parser)
 #define E16(expr, expected, expected_error) \

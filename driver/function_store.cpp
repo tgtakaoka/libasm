@@ -31,27 +31,28 @@ Error FunctionStore::internFunction(
     Function func;
     const std::string name(_name.str(), _name.size());
     if (_functions.find(name) != _functions.end())
-        return setError(DUPLICATE_FUNCTION);
+        return DUPLICATE_FUNCTION;
     std::list<std::string> params;
     for (auto &param : _params)
         params.emplace_back(param.str(), param.size());
-    _functions.emplace(name, Function{name, std::string(body.str(), body.size()), std::move(params)});
+    _functions.emplace(
+            name, Function{name, std::string(body.str(), body.size()), std::move(params)});
     return OK;
 }
 
-Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrScanner &scan,
-        Value &val, const SymbolTable *symtab) {
+Error FunctionStore::parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan,
+        Value &val, ErrorAt &error, const SymbolTable *symtab) const {
     const auto it = _functions.find(std::string(name.str(), name.size()));
     if (it == _functions.end()) {
         if (_parent) {
-            _parent->parseFunc(parser, name, scan, val, symtab);
-            return setError(*_parent);
+            _parent->parseFunc(parser, name, scan, val, error, symtab);
+            return error.getError();
         }
-        return setError(UNKNOWN_FUNCTION);
+        return error.setError(UNKNOWN_FUNCTION);
     }
     const auto &func = it->second;
 
-    struct Binding : public SymbolTable {
+    struct Binding : SymbolTable {
         void intern(const std::string &symbol, uint32_t value) {
             _params.emplace(std::make_pair(symbol, value));
         }
@@ -68,15 +69,15 @@ Error FunctionStore::parseFunc(ValueParser &parser, const StrScanner &name, StrS
     for (auto it = func.params.cbegin(); it != func.params.cend(); ++it) {
         const auto &param = *it;
         if (it != func.params.cbegin() && !scan.skipSpaces().expect(','))
-            return setError(MISSING_FUNC_ARGUMENT);
-        const auto arg = parser.eval(scan, symtab);
-        if (parser.getError())
-            return setError(parser);
+            return error.setError(MISSING_FUNC_ARGUMENT);
+        const auto arg = parser.eval(scan, error, symtab);
+        if (error.getError())
+            return error.getError();
         binding.intern(param, arg.getUnsigned());
     }
     StrScanner body_scan(func.body.c_str());
-    val = parser.eval(body_scan, &binding);
-    return setError(parser);
+    val = parser.eval(body_scan, error, &binding);
+    return error.getError();
 }
 
 }  // namespace driver

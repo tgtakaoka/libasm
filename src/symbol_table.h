@@ -23,8 +23,7 @@
 
 namespace libasm {
 
-class SymbolTable {
-public:
+struct SymbolTable {
     virtual const char *lookupValue(uint32_t value) const = 0;
     virtual bool hasSymbol(const StrScanner &symbol) const = 0;
     virtual uint32_t lookupSymbol(const StrScanner &symbol) const = 0;
