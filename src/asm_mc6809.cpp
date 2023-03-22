@@ -431,10 +431,6 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-bool AsmMc6809::PseudoMc6809::endOfLine(const StrScanner &scan, bool headOfLine) const {
-    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
-}
-
 Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
         auto p = scan;

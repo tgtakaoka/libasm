@@ -37,7 +37,7 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
         return getError();
     StrScanner scan(line);
     setError(scan, OK);
-    if (endOfLine(scan.skipSpaces(), /*HeadOfLine*/ true))
+    if (_parser.commentLine(scan.skipSpaces()))
         return setError(scan, OK);
 
     insn.clearNameBuffer().text(_parser.readSymbol(scan));
@@ -49,15 +49,6 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (error == UNKNOWN_INSTRUCTION)
         setAt(line);
     return error;
-}
-
-Error PseudoBase::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
-    return UNKNOWN_DIRECTIVE;
-}
-
-bool PseudoBase::endOfLine(const StrScanner &scan, bool headOfLine) const {
-    const auto c = *scan;
-    return c == 0 || c == ';';
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {

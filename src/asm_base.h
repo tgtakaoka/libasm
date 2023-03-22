@@ -33,10 +33,10 @@ class Assembler;
 
 struct OperandBase : public ErrorAt {};
 
-class PseudoBase {
-public:
-    virtual bool endOfLine(const StrScanner &scan, bool headOfLine) const;
-    virtual Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler);
+struct PseudoBase {
+    virtual Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
+        return UNKNOWN_DIRECTIVE;
+    }
 };
 
 class Assembler : public ErrorAt {
@@ -46,9 +46,7 @@ public:
     virtual void reset() {}
 
     ValueParser &parser() const { return _parser; }
-    bool endOfLine(StrScanner &scan, bool headOfLine = false) const {
-        return _pseudos.endOfLine(scan, headOfLine);
-    }
+    bool endOfLine(const StrScanner &scan) const { return _parser.endOfLine(scan); }
 
     const /* PROGMEM */ char *listCpu_P() const { return _table.listCpu_P(); }
     const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }

@@ -36,8 +36,7 @@ public:
 
 private:
     IntelValueParser _parser;
-    class PseudoZ8 : public PseudoBase {
-    public:
+    struct PseudoZ8 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 
         bool isWorkReg(uint8_t regAddr) const;

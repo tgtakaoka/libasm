@@ -34,9 +34,7 @@ public:
 
 private:
     MotorolaValueParser _parser;
-    class PseudoMc6800 : public PseudoBase {
-        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
-    } _pseudos;
+    struct PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
         AddrMode mode;

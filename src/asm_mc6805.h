@@ -40,9 +40,7 @@ public:
 
 private:
     MotorolaValueParser _parser;
-    class PseudoMc6805 : public PseudoBase {
-        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
-    } _pseudos;
+    struct PseudoBase _pseudos;
 
     uint8_t _pc_bits;
     const struct OptPcBits : public IntOption<uint8_t> {

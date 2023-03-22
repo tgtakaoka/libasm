@@ -39,8 +39,7 @@ public:
 
 private:
     MotorolaValueParser _parser;
-    class PseudoMos6502 : public PseudoBase {
-        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
+    struct PseudoMos6502 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 
     private:

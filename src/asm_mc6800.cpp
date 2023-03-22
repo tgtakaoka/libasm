@@ -150,10 +150,6 @@ void AsmMc6800::emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op) 
     }
 }
 
-bool AsmMc6800::PseudoMc6800::endOfLine(const StrScanner &scan, bool headOfLine) const {
-    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
-}
-
 Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6800 insn(_insn);
     Operand op1, op2, op3;

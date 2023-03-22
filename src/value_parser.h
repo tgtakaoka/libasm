@@ -27,6 +27,24 @@
 namespace libasm {
 
 /**
+ * Comment parser
+ */
+struct CommentParser {
+    virtual bool commentLine(const StrScanner &scan) const = 0;
+    virtual bool endOfLine(const StrScanner &scan) const = 0;
+};
+
+struct DefaultCommentParser : CommentParser {
+    bool commentLine(const StrScanner &scan) const override;
+    bool endOfLine(const StrScanner &scan) const override;
+};
+
+struct MotorolaCommentParser : DefaultCommentParser {
+    MotorolaCommentParser() : DefaultCommentParser() {}
+    bool commentLine(const StrScanner &scan) const override;
+};
+
+/**
  * Parse text |scan| as a number.
  *
  * - Returns OK when |scan| is recognized as a valid number, and
@@ -110,10 +128,10 @@ class ValueParser {
 public:
     ValueParser(char locSym = '.')
         : _numberParser(_cStyleNumber),
+          _commentParser(_defaultComment),
           _locSym(locSym),
           _origin(0),
-          _funcParser(nullptr),
-          _commentChar(0) {}
+          _funcParser(nullptr) {}
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined
@@ -138,8 +156,8 @@ public:
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     virtual bool symbolLetter(char c, bool head = false) const;
     StrScanner readSymbol(StrScanner &scan) const;
-    void setCommentChar(char c) { _commentChar = c; }
-    bool endOfLine(char c) const { return c == 0 || c == ';' || c == _commentChar; }
+    bool commentLine(const StrScanner &scan) const { return _commentParser.commentLine(scan); }
+    bool endOfLine(const StrScanner &scan) const { return _commentParser.endOfLine(scan); }
 
     struct FuncParser {
         virtual Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan,
@@ -148,12 +166,14 @@ public:
     FuncParser *setFuncParser(FuncParser *parser = nullptr);
 
 protected:
-    ValueParser(const NumberParser &numberParser, char locSym = '.')
+    ValueParser(const NumberParser &numberParser, const CommentParser &commentParser, char locSym)
         : _numberParser(numberParser),
+          _commentParser(commentParser),
           _locSym(locSym),
           _origin(0),
-          _funcParser(nullptr),
-          _commentChar(0) {}
+          _funcParser(nullptr) {}
+
+    const DefaultCommentParser _defaultComment;
 
     virtual bool locationSymbol(StrScanner &scan) const;
     virtual bool charPrefix(StrScanner &scan, char &prefix) const;
@@ -161,10 +181,10 @@ protected:
 
 private:
     const NumberParser &_numberParser;
+    const CommentParser &_commentParser;
     const char _locSym;
     uint32_t _origin;
     FuncParser *_funcParser;
-    char _commentChar;
 
     const CStyleNumberParser _cStyleNumber;
 
@@ -225,7 +245,7 @@ private:
 class MotorolaValueParser : public ValueParser {
 public:
     MotorolaValueParser(bool closingQuote = false)
-        : ValueParser(_motorolaNumber, '*'), _closingQuote(closingQuote) {}
+        : ValueParser(_motorolaNumber, _motorolaComment, '*'), _closingQuote(closingQuote) {}
 
 protected:
     bool charSuffix(StrScanner &scan, char prefix) const override;
@@ -233,11 +253,12 @@ protected:
 private:
     const bool _closingQuote;
     const MotorolaNumberParser _motorolaNumber;
+    const MotorolaCommentParser _motorolaComment;
 };
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser(char locSym = '$') : ValueParser(_intelNumber, locSym) {}
+    IntelValueParser(char locSym = '$') : ValueParser(_intelNumber, _defaultComment, locSym) {}
 
 private:
     const IntelNumberParser _intelNumber;
@@ -245,11 +266,13 @@ private:
 
 class NationalValueParser : public ValueParser {
 public:
-    NationalValueParser(char locSym = '.') : ValueParser(_nationalNumber, locSym) {}
+    NationalValueParser(char locSym = '.')
+        : ValueParser(_nationalNumber, _defaultComment, locSym) {}
 
 protected:
-    NationalValueParser(const NumberParser &numberParser, char locSym = '.')
-        : ValueParser(numberParser, locSym) {}
+    NationalValueParser(
+            const NumberParser &numberParser, const CommentParser &commentParser, char locSym = '.')
+        : ValueParser(numberParser, commentParser, locSym) {}
 
     bool symbolLetter(char c, bool head = false) const override;
 
@@ -259,7 +282,7 @@ private:
 
 class FairchildValueParser : public NationalValueParser {
 public:
-    FairchildValueParser() : NationalValueParser(_fairchildNumber, '*') {}
+    FairchildValueParser() : NationalValueParser(_fairchildNumber, _motorolaComment, '*') {}
 
 protected:
     bool locationSymbol(StrScanner &scan) const override;
@@ -269,6 +292,7 @@ protected:
 
 private:
     const FairchildNumberParser _fairchildNumber;
+    const MotorolaCommentParser _motorolaComment;
 };
 
 }  // namespace libasm

@@ -145,6 +145,20 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
     return error;
 }
 
+bool DefaultCommentParser::commentLine(const StrScanner &scan) const {
+    return endOfLine(scan);
+}
+
+bool DefaultCommentParser::endOfLine(const StrScanner &scan) const {
+    const auto c = *scan;
+    return c == 0 || c == ';';
+}
+
+bool MotorolaCommentParser::commentLine(const StrScanner &scan) const {
+    const auto c = *scan;
+    return c == 0 || c == '*';
+}
+
 Value ValueParser::eval(StrScanner &expr, ErrorAt &error, const SymbolTable *symtab) const {
     Stack<OprAndLval> stack;
     return parseExpr(expr, error, stack, symtab);
@@ -152,7 +166,7 @@ Value ValueParser::eval(StrScanner &expr, ErrorAt &error, const SymbolTable *sym
 
 StrScanner ValueParser::scanExpr(const StrScanner &scan, ErrorAt &error, char delim) const {
     auto p = scan;
-    while (!endOfLine(*p)) {
+    while (!endOfLine(p)) {
         Value val;
         const auto err = _numberParser.parseNumber(p, val);
         if (err != NOT_AN_EXPECTED)
@@ -211,7 +225,7 @@ Value ValueParser::parseExpr(StrScanner &scan, ErrorAt &error, Stack<OprAndLval>
 Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> &stack,
         const SymbolTable *symtab) const {
     auto p = scan;
-    if (endOfLine(*p.skipSpaces())) {
+    if (endOfLine(p.skipSpaces())) {
         error.setError(scan, ILLEGAL_CONSTANT);
         return Value();
     }
@@ -328,7 +342,7 @@ Value ValueParser::readCharacterConstant(StrScanner &scan, ErrorAt &error) const
 // Operator precedence (larger value means higher precedence).
 // The same order of C/C++ language.
 ValueParser::Operator ValueParser::readOperator(StrScanner &scan, ErrorAt &error) const {
-    if (endOfLine(*scan.skipSpaces()))
+    if (endOfLine(scan.skipSpaces()))
         return Operator(OP_NONE, 0);
     const char c = *scan++;
     switch (c) {

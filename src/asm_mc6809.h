@@ -25,6 +25,7 @@
 
 namespace libasm {
 namespace mc6809 {
+
 class AsmMc6809 : public Assembler, public Config {
 public:
     AsmMc6809() : Assembler(_parser, TableMc6809::TABLE, _pseudos), _parser(), _pseudos() {
@@ -37,9 +38,7 @@ public:
 
 private:
     MotorolaValueParser _parser;
-    class PseudoMc6809 : public PseudoBase {
-    public:
-        bool endOfLine(const StrScanner &scan, bool headOfLine) const override;
+    struct PseudoMc6809 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
         bool inDirectPage(Config::uintptr_t addr) const {
             return static_cast<uint8_t>(addr >> 8) == _direct_page;

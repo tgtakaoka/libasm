@@ -189,10 +189,6 @@ void AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) 
     }
 }
 
-bool AsmMc6805::PseudoMc6805::endOfLine(const StrScanner &scan, bool headOfLine) const {
-    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
-}
-
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6805 insn(_insn);
     Operand op1, op2, op3;

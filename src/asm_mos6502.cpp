@@ -224,10 +224,6 @@ Error AsmMos6502::PseudoMos6502::parseTableOnOff(
     return assembler.setError(scan, error);
 }
 
-bool AsmMos6502::PseudoMos6502::endOfLine(const StrScanner &scan, bool headOfLine) const {
-    return PseudoBase::endOfLine(scan, headOfLine) || (headOfLine && *scan == '*');
-}
-
 Error AsmMos6502::PseudoMos6502::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
     if (strcasecmp_P(insn.name(), PSTR("longa")) == 0)
         return parseTableOnOff(scan, assembler, &TableMos6502::setLongAccumulator);

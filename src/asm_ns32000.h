@@ -38,8 +38,7 @@ public:
 
 private:
     NationalValueParser _parser;
-    class PseudoNs32000 : public PseudoBase {
-    public:
+    struct PseudoNs32000 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 
         Error setFpu(const StrScanner &scan) const;
