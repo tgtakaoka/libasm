@@ -63,7 +63,7 @@ void test_cpu() {
 
 static void test_transfer() {
     TEST(         "l r1, 0x10",            0xC000|(0<<11)|(1<<8)|0x10);
-    TEST(         "L R1, X'10",            0xC000|(0<<11)|(1<<8)|0x10);
+    TEST(         "L R1, X'10'",           0xC000|(0<<11)|(1<<8)|0x10);
     ERRT(         "L STR, 0x10",           OPERAND_NOT_ALLOWED, "STR, 0x10");
     ERRT(         "L R5, 0x10",            OPERAND_NOT_ALLOWED, "R5, 0x10");
     ERRT(         "L X2, 0x10",            OPERAND_NOT_ALLOWED, "X2, 0x10");
@@ -197,21 +197,16 @@ static void test_transfer() {
         TEST("PSHM ", 0x170F);
         TEST("POPM ", 0x1707);
 
-        TEST("MVI R0, 0",    0x0800|(0<<8)|0);
-        TEST("MVI R1, 255",  0x0800|(1<<8)|0xFF);
-        TEST("MVI R1, D'255",  0x0800|(1<<8)|0xFF);
-        TEST("MVI R1, O'377",  0x0800|(1<<8)|0xFF);
-        TEST("MVI R1, Q'377",  0x0800|(1<<8)|0xFF);
-        TEST("MVI R1, H'FF",   0x0800|(1<<8)|0xFF);
-        TEST("MVI R1, X'FF",   0x0800|(1<<8)|0xFF);
-        TEST("MVI R1, B'11111111",  0x0800|(1<<8)|0xFF);
-        ERRT("MVI R1, 256",  OVERFLOW_RANGE, "256", 0x0800|(1<<8)|0x00);
-        TEST("MVI R2, 128",  0x0800|(2<<8)|0x80);
-        TEST("MVI R2, -128", 0x0800|(2<<8)|0x80);
-        TEST("MVI R3, 127",  0x0800|(3<<8)|0x7F);
-        TEST("MVI R4, 1",    0x0800|(4<<8)|1);
-        TEST("MVI SP, 2",    0x0800|(5<<8)|2);
-        TEST("MVI STR, 64",  0x0800|(6<<8)|64);
+        TEST("MVI R0, 0",     0x0800|(0<<8)|0);
+        TEST("MVI R1, 255",   0x0800|(1<<8)|0xFF);
+        TEST("MVI R1, X'FF'", 0x0800|(1<<8)|0xFF);
+        ERRT("MVI R1, 256",   OVERFLOW_RANGE, "256", 0x0800|(1<<8)|0x00);
+        TEST("MVI R2, C'4'",  0x0800|(2<<8)|0x34);
+        TEST("MVI R2, -128",  0x0800|(2<<8)|0x80);
+        TEST("MVI R3, 127",   0x0800|(3<<8)|0x7F);
+        TEST("MVI R4, 1",     0x0800|(4<<8)|1);
+        TEST("MVI SP, 2",     0x0800|(5<<8)|2);
+        TEST("MVI STR, 64",   0x0800|(6<<8)|64);
     }
 }
 

@@ -29,7 +29,9 @@ namespace mos6502 {
 class AsmMos6502 : public Assembler, public Config {
 public:
     AsmMos6502()
-        : Assembler(_parser, TableMos6502::TABLE, _pseudos), _parser(_commentParser), _pseudos() {
+        : Assembler(_parser, TableMos6502::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
         reset();
     }
 
@@ -39,10 +41,12 @@ public:
     const Options &options() const override { return _options; }
 
 private:
-    MotorolaValueParser _parser;
-    const struct : CommentParser {
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _commentParser;
+    ValueParser _parser;
+    const MotorolaNumberParser _number;
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const MotorolaLetterParser _letter;
+    const AsteriskLocationParser _location;
     struct PseudoMos6502 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 

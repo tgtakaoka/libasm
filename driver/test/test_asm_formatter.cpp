@@ -408,20 +408,20 @@ void test_cdp1802() {
     ASM("cdp1804",
             "        cpu   cdp1804\n"
             ".. comment line\n"
-            "        org   0abcdh\n"
-            "        scal  3, 8485h\n",
+            "        org   x'abcd'\n"
+            "        scal  3, #8485\n",
             "          0 :                            cpu   cdp1804\n"
             "          0 :                    .. comment line\n"
-            "       abcd :                            org   0abcdh\n"
-            "       abcd : 68 83 84 85                scal  3, 8485h\n");
+            "       abcd :                            org   x'abcd'\n"
+            "       abcd : 68 83 84 85                scal  3, #8485\n");
 
     assembler.setOption("use-register", "on");
 
     ASM("cdp1804",
-            "        org   0abcdh\n"
-            "        scal  r3, 8485h\n",
-            "       abcd :                            org   0abcdh\n"
-            "       abcd : 68 83 84 85                scal  r3, 8485h\n");
+            "        org   #abcd\n"
+            "        scal  r3, x'8485'\n",
+            "       abcd :                            org   #abcd\n"
+            "       abcd : 68 83 84 85                scal  r3, x'8485'\n");
 }
 
 void test_scn2650() {
@@ -432,11 +432,11 @@ void test_scn2650() {
     ASM("scn2650",
             "        cpu     scn2650\n"
             "* comment line\n"
-            "        org     07bcdh\n"
+            "        org     h'7bcd'\n"
             "        loda,r0 *label1, r0, +\n",
             "          0 :                            cpu     scn2650\n"
             "          0 :                    * comment line\n"
-            "       7BCD :                            org     07bcdh\n"
+            "       7BCD :                            org     h'7bcd'\n"
             "       7BCD : 0C BD EF                   loda,r0 *label1, r0, +\n");
 }
 
@@ -521,12 +521,12 @@ void test_tms9900() {
     ASM("tms99105",
             "        cpu   tms99105\n"
             "* comment line\n"
-            "        org   9abch\n"
-            "        am    @4a4bh(r1), @4c4dh(r1)\n",
+            "        org   >9abc\n"
+            "        am    @>4a4b(r1), @>4c4d(r1)\n",
             "          0 :                            cpu   tms99105\n"
             "          0 :                    * comment line\n"
-            "       9abc :                            org   9abch\n"
-            "       9abc : 002a 4861 4a4b             am    @4a4bh(r1), @4c4dh(r1)\n"
+            "       9abc :                            org   >9abc\n"
+            "       9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)\n"
             "       9ac2 : 4c4d\n");
 }
 
@@ -741,6 +741,33 @@ void test_switch_cpu() {
             "     123458 : A2 34 12                   ldx   #$1234\n");
 }
 
+void test_function() {
+    PREP(ins8060::AsmIns8060, NationalDirective);
+
+    ASM("ins8060",
+            "        cpu   ins8060\n"
+            "high:   function v  , v >> 8 ; high 8-bit\n"
+            "low:    function v, v & x'FF ; low 8-bit\n"
+            "cons:   function hi, lo, (hi << 8) | lo ; construct 16-bit address\n"
+            "label:  org   x'abcd\n"
+            "        and   @e(p1)\n"
+            "        db    high(label)\n"
+            "        db    low(label)\n"
+            "        dw    cons(h(label), l(label))\n"
+            "        dw    cons(high(x'1234), low(x'3456))\n",
+            "          0 :                            cpu   ins8060\n"
+            "          0 :                    high:   function v  , v >> 8 ; high 8-bit\n"
+            "          0 :                    low:    function v, v & x'FF ; low 8-bit\n"
+            "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; construct "
+            "16-bit address\n"
+            "       ABCD :                    label:  org   x'abcd\n"
+            "       ABCD : D5 80                      and   @e(p1)\n"
+            "       ABCF : AB                         db    high(label)\n"
+            "       ABD0 : CD                         db    low(label)\n"
+            "       ABD1 : CD AB                      dw    cons(h(label), l(label))\n"
+            "       ABD3 : 56 12                      dw    cons(high(x'1234), low(x'3456))\n");
+}
+
 void run_tests() {
     RUN_TEST(test_symbols);
     RUN_TEST(test_mc6809);
@@ -770,6 +797,7 @@ void run_tests() {
     RUN_TEST(test_mn1610);
     RUN_TEST(test_mn1613);
     RUN_TEST(test_switch_cpu);
+    RUN_TEST(test_function);
 }
 
 }  // namespace test

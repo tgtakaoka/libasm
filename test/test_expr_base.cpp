@@ -19,7 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-ValueParser parser;
+const CStyleNumberParser number;
+const SemicolonCommentParser comment;
+const DefaultSymbolParser symbol;
+const DefaultLetterParser letter;
+const DollarLocationParser location;
+ValueParser parser{number, comment, symbol, letter, location};
 ValueFormatter formatter;
 
 static void set_up() {
@@ -385,10 +390,10 @@ static void test_errors() {
     E32("1-undef", 0, UNDEFINED_SYMBOL);
     E32("undef+1", 0, UNDEFINED_SYMBOL);
     E32("undef",   0, UNDEFINED_SYMBOL);
-    E32("0xcdefg", 0, ILLEGAL_CONSTANT);
-    E32("0345678", 0, ILLEGAL_CONSTANT);
-    E32("0b10102", 0, ILLEGAL_CONSTANT);
-    E32("456789A", 0, ILLEGAL_CONSTANT);
+    E32("0xcdefg", 0, GARBAGE_AT_END);
+    E32("0345678", 0, GARBAGE_AT_END);
+    E32("0b10102", 0, GARBAGE_AT_END);
+    E32("456789A", 0, GARBAGE_AT_END);
     E32("2*(1+3",  0, MISSING_CLOSING_PAREN);
     E32("2*(1+3]", 0, MISSING_CLOSING_PAREN);
     E32(" (((((((0)))))))",     0, OK);

@@ -1378,12 +1378,12 @@ static void test_bit_position() {
         symtab.intern(4, "bit");
 
         TEST("SETDP 0");
-        TEST("LDBT  CC.0,dir34.7",   0x11, 0x36, 0x38, 0x34);
-        TEST("LDBT  B.2,<sym9030.4", 0x11, 0x36, 0xA2, 0x30);
+        TEST("LDBT  CC.0,dir34.7",    0x11, 0x36, 0x38, 0x34);
+        TEST("LDBT  B.2,<sym9030.4",  0x11, 0x36, 0xA2, 0x30);
         TEST("SETDP $90");
-        TEST("LDBT  B.2,sym9030.4",  0x11, 0x36, 0xA2, 0x30);
+        TEST("LDBT  B.2,sym9030.2*2", 0x11, 0x36, 0xA2, 0x30);
 
-        TEST("LDBT  B.6-bit,sym9030+2.bit",   0x11, 0x36, 0xA2, 0x32);
+        TEST("LDBT  B.6-bit,2+sym9030.bit",   0x11, 0x36, 0xA2, 0x32);
         TEST("LDBT  B.bit-1,sym9030-2.bit/2", 0x11, 0x36, 0x93, 0x2E);
     } else {
         ERUI("BAND  A.1,$34.2");

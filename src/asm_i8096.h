@@ -28,12 +28,20 @@ namespace i8096 {
 
 class AsmI8096 : public Assembler, public Config {
 public:
-    AsmI8096() : Assembler(_parser, TableI8096::TABLE, _pseudos), _parser(), _pseudos() {}
+    AsmI8096()
+        : Assembler(_parser, TableI8096::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueParser _parser;
+    ValueParser _parser;
+    const IntelNumberParser _number;
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const DefaultLetterParser _letter;
+    const DollarLocationParser _location;
     PseudoBase _pseudos;
 
     struct Operand : public OperandBase {

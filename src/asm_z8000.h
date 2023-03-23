@@ -28,9 +28,11 @@ namespace z8000 {
 
 class AsmZ8000 : public Assembler, public Config {
 public:
-    AsmZ8000() : Assembler(_parser, TableZ8000::TABLE, _pseudos), _parser(), _pseudos() {
+    AsmZ8000()
+        : Assembler(_parser, TableZ8000::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
         reset();
-        //_options.registerOption(_opt_shortDitrect);
     }
 
     const ConfigBase &config() const override { return *this; }
@@ -40,7 +42,12 @@ public:
     bool hasSetInstruction() const override { return true; }
 
 private:
-    IntelValueParser _parser;
+    ValueParser _parser;
+    const ZilogNumberParser _number;
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const ZilogLetterParser _letter;
+    const DollarLocationParser _location;
     PseudoBase _pseudos;
 
     bool _autoShortDirect;

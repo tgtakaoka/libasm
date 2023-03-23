@@ -19,7 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-FairchildValueParser parser;
+const FairchildNumberParser number;
+const AsteriskCommentParser comment;
+const DefaultSymbolParser symbol;
+const FairchildLetterParser letter;
+const AsteriskLocationParser location;
+ValueParser parser{number, comment, symbol, letter, location};
 FairchildValueFormatter formatter;
 
 static void set_up() {
@@ -65,31 +70,31 @@ static void test_char_constant() {
 
 static void test_dec_constant() {
     E32("2147483647",    0x7fffffff, OK);
-    E32("d'2147483647",  0x7fffffff, OK);
-    E32("D'2147483647",  0x7fffffff, OK);
+    E32("d'2147483647",  0x7fffffff, MISSING_CLOSING_QUOTE);
+    E32("D'2147483647",  0x7fffffff, MISSING_CLOSING_QUOTE);
     E32("d'2147483647'", 0x7fffffff, OK);
     E32("D'2147483647'", 0x7fffffff, OK);
 }
 
 static void test_hex_constant() {
-    E8("h'0",   0x00, OK);
-    E8("h'7f",  0x7f, OK);
-    E8("h'80",  0x80, OK);
-    E8("h'FF'", 0xff, OK);
-    E8("h'100", 0,    OVERFLOW_RANGE);
+    E8("h'0'",   0x00, OK);
+    E8("h'7f'",  0x7f, OK);
+    E8("h'80'",  0x80, OK);
+    E8("h'FF",   0xff, MISSING_CLOSING_QUOTE);
+    E8("h'100'", 0,    OVERFLOW_RANGE);
 
-    E16("h'0",     0x0000, OK);
-    E16("h'7fff",  0x7fff, OK);
-    E16("h'8000",  0x8000, OK);
-    E16("h'ffff",  0xffff, OK);
-    E16("h'10000", 0,      OVERFLOW_RANGE);
+    E16("h'0'",     0x0000, OK);
+    E16("h'7fff'",  0x7fff, OK);
+    E16("h'8000'",  0x8000, OK);
+    E16("h'ffff'",  0xffff, OK);
+    E16("h'10000'", 0,      OVERFLOW_RANGE);
 
-    E32("h'0",         0x00000000, OK);
-    E32("h'7FFFFFFF",  0x7fffffff, OK);
-    E32("H'7FFFFFFF",  0x7fffffff, OK);
-    E32("h'80000000",  0x80000000, OK);
-    E32("h'FFFFffff",  0xffffffff, OK);
-    E32("h'100000000", 0,          OVERFLOW_RANGE);
+    E32("h'0'",         0x00000000, OK);
+    E32("h'7FFFFFFF'",  0x7fffffff, OK);
+    E32("H'7FFFFFFF'",  0x7fffffff, OK);
+    E32("h'80000000'",  0x80000000, OK);
+    E32("h'FFFFffff'",  0xffffffff, OK);
+    E32("h'100000000'", 0,          OVERFLOW_RANGE);
 
     E8("$0",   0x00, OK);
     E8("$7f",  0x7f, OK);
@@ -117,44 +122,26 @@ static void test_hex_constant() {
 }
 
 static void test_oct_constant() {
-    E8("o'0",   0x00, OK);
-    E8("o'177", 0x7f, OK);
-    E8("o'200", 0x80, OK);
-    E8("o'377", 0xff, OK);
-    E8("o'400", 0,    OVERFLOW_RANGE);
+    E8("o'0'",   0x00, OK);
+    E8("o'177'", 0x7f, OK);
+    E8("o'200",  0x80, MISSING_CLOSING_QUOTE);
+    E8("o'377'", 0xff, OK);
+    E8("o'400'", 0,    OVERFLOW_RANGE);
 
-    E16("o'0",      0x0000, OK);
-    E16("o'077777", 0x7fff, OK);
-    E16("o'100000", 0x8000, OK);
-    E16("o'177777", 0xffff, OK);
-    E16("o'200000", 0,      OVERFLOW_RANGE);
+    E16("o'0'",      0x0000, OK);
+    E16("o'077777'", 0x7fff, OK);
+    E16("o'100000'", 0x8000, OK);
+    E16("o'177777'", 0xffff, OK);
+    E16("o'200000'", 0,      OVERFLOW_RANGE);
 
-    E32("o'0",            0x00000000, OK);
-    E32("o'17777777777",  0x7fffffff, OK);
-    E32("o'20000000000",  0x80000000, OK);
-    E32("o'37777777777",  0xffffffff, OK);
-    E32("O'37777777777",  0xffffffff, OK);
+    E32("o'0'",           0x00000000, OK);
+    E32("o'17777777777'", 0x7fffffff, OK);
+    E32("o'20000000000'", 0x80000000, OK);
     E32("o'37777777777'", 0xffffffff, OK);
     E32("O'37777777777'", 0xffffffff, OK);
-    E32("o'40000000000",  0,          OVERFLOW_RANGE);
-
-    E8("@0",   0x00, OK);
-    E8("@177", 0x7f, OK);
-    E8("@200", 0x80, OK);
-    E8("@377", 0xff, OK);
-    E8("@400", 0,    OVERFLOW_RANGE);
-
-    E16("@0",      0x0000, OK);
-    E16("@077777", 0x7fff, OK);
-    E16("@100000", 0x8000, OK);
-    E16("@177777", 0xffff, OK);
-    E16("@200000", 0,      OVERFLOW_RANGE);
-
-    E32("@0",           0x00000000, OK);
-    E32("@17777777777", 0x7fffffff, OK);
-    E32("@20000000000", 0x80000000, OK);
-    E32("@37777777777", 0xffffffff, OK);
-    E32("@40000000000", 0,          OVERFLOW_RANGE);
+    E32("o'37777777777'", 0xffffffff, OK);
+    E32("O'37777777777'", 0xffffffff, OK);
+    E32("o'40000000000'", 0,          OVERFLOW_RANGE);
 
     E32("00",           0x00000000, OK);
     E32("017777777777", 0x7fffffff, OK);
@@ -164,44 +151,26 @@ static void test_oct_constant() {
 }
 
 static void test_bin_constant() {
-    E8("b'0",        0x00, OK);
-    E8("b'01111111", 0x7f, OK);
-    E8("b'10000000", 0x80, OK);
-    E8("b'11111111", 0xff, OK);
-    E8("100000000", 0,    OVERFLOW_RANGE);
+    E8("b'0'",        0x00, OK);
+    E8("b'01111111'", 0x7f, OK);
+    E8("b'10000000",  0x80, MISSING_CLOSING_QUOTE);
+    E8("b'11111111'", 0xff, OK);
+    E8("b'100000000'", 0,    OVERFLOW_RANGE);
 
-    E16("b'0",                0x0000, OK);
-    E16("b'0111111111111111", 0x7fff, OK);
-    E16("b'1000000000000000", 0x8000, OK);
-    E16("b'1111111111111111", 0xffff, OK);
-    E16("b'10000000000000000", 0,      OVERFLOW_RANGE);
+    E16("b'0'",                0x0000, OK);
+    E16("b'0111111111111111'", 0x7fff, OK);
+    E16("b'1000000000000000'", 0x8000, OK);
+    E16("b'1111111111111111'", 0xffff, OK);
+    E16("b'10000000000000000'", 0,      OVERFLOW_RANGE);
 
-    E32("b'0",                                 0x00000000, OK);
-    E32("b'01111111111111111111111111111111",  0x7fffffff, OK);
-    E32("b'10000000000000000000000000000000",  0x80000000, OK);
-    E32("b'11111111111111111111111111111111",  0xffffffff, OK);
-    E32("B'11111111111111111111111111111111",  0xffffffff, OK);
+    E32("b'0'",                                0x00000000, OK);
+    E32("b'01111111111111111111111111111111'", 0x7fffffff, OK);
+    E32("b'10000000000000000000000000000000'", 0x80000000, OK);
     E32("b'11111111111111111111111111111111'", 0xffffffff, OK);
     E32("B'11111111111111111111111111111111'", 0xffffffff, OK);
-    E32("b'100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
-
-    E8("%0",        0x00, OK);
-    E8("%01111111", 0x7f, OK);
-    E8("%10000000", 0x80, OK);
-    E8("%11111111", 0xff, OK);
-    E8("100000000", 0,    OVERFLOW_RANGE);
-
-    E16("%0",                0x0000, OK);
-    E16("%0111111111111111", 0x7fff, OK);
-    E16("%1000000000000000", 0x8000, OK);
-    E16("%1111111111111111", 0xffff, OK);
-    E16("%10000000000000000", 0,      OVERFLOW_RANGE);
-
-    E32("%0",                                0x00000000, OK);
-    E32("%01111111111111111111111111111111", 0x7fffffff, OK);
-    E32("%10000000000000000000000000000000", 0x80000000, OK);
-    E32("%11111111111111111111111111111111", 0xffffffff, OK);
-    E32("%100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
+    E32("b'11111111111111111111111111111111'", 0xffffffff, OK);
+    E32("B'11111111111111111111111111111111'", 0xffffffff, OK);
+    E32("b'100000000000000000000000000000000'", 0,          OVERFLOW_RANGE);
 
     E32("0b0",                                 0x00000000, OK);
     E32("0b01111111111111111111111111111111",  0x7fffffff, OK);
@@ -229,28 +198,10 @@ static void test_current_address() {
     E32("*+0xF000",  0x00010000, OK);
     E32("*-0x1001",  0xFFFFFFFF, OK);
 
-    E16("$",         0x1000, OK);
-    E16("$+2",       0x1002, OK);
-    E16("$-2",       0x0FFE, OK);
-    E16("$+h'F000'", 0,      OVERFLOW_RANGE);
-    E16("$-h'1001'", 0xFFFF, OK);
-    E16("$+$F000",   0,      OVERFLOW_RANGE);
-    E16("$-$1001",   0xFFFF, OK);
-    E16("$+0xF000",  0,      OVERFLOW_RANGE);
-    E16("$-$1001",   0xFFFF, OK);
-    E32("$+h'F000'", 0x00010000, OK);
-    E32("$-h'1001'", 0xFFFFFFFF, OK);
-    E32("$+$F000",   0x00010000, OK);
-    E32("$-$1001",   0xFFFFFFFF, OK);
-    E32("$+0xF000",  0x00010000, OK);
-    E32("$-0x1001",  0xFFFFFFFF, OK);
-
     symtab.intern(0x1000, "table");
     parser.setCurrentOrigin(0x1100);
     E16("*-table",     0x100, OK);
     E16("(*-table)/2", 0x80,  OK);
-    E16("$-table",     0x100, OK);
-    E16("($-table)/2", 0x80,  OK);
 }
 
 static void test_scan() {
@@ -270,15 +221,13 @@ static void test_scan() {
     SCAN(',', "h'1230,",      "h'1230");
     SCAN(',', "h'1230',",     "h'1230'");
     SCAN('$', "$1230$X230",   "$1230");
-    SCAN('@', "@1230@8230",   "@1230");
-    SCAN('%', "%1010%2010",   "%1010");
 }
 
 static void test_errors() {
-    E32("h'bcdefg", 0, ILLEGAL_CONSTANT);
-    E32("o'345678", 0, ILLEGAL_CONSTANT);
-    E32("b'101012", 0, ILLEGAL_CONSTANT);
-    E32("456789a", 0, ILLEGAL_CONSTANT);
+    E32("h'bcdefg'", 0, MISSING_CLOSING_QUOTE);
+    E32("o'345678'", 0, MISSING_CLOSING_QUOTE);
+    E32("b'101012'", 0, MISSING_CLOSING_QUOTE);
+    E32("456789a",   0, GARBAGE_AT_END);
 }
 
 static void test_formatter_8bit() {

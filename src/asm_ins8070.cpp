@@ -38,7 +38,9 @@ static struct : FunCallParser {
 } funCallParser;
 
 AsmIns8070::AsmIns8070()
-    : Assembler(_parser, TableIns8070::TABLE, _pseudos), _parser(), _pseudos() {
+    : Assembler(_parser, TableIns8070::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {
     _parser.setFunCallParser(&funCallParser);
 }
 

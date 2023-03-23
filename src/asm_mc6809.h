@@ -28,7 +28,10 @@ namespace mc6809 {
 
 class AsmMc6809 : public Assembler, public Config {
 public:
-    AsmMc6809() : Assembler(_parser, TableMc6809::TABLE, _pseudos), _parser(), _pseudos() {
+    AsmMc6809()
+        : Assembler(_parser, TableMc6809::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
         reset();
     }
 
@@ -37,7 +40,12 @@ public:
     const Options &options() const override { return _options; }
 
 private:
-    MotorolaValueParser _parser;
+    ValueParser _parser;
+    const MotorolaNumberParser _number;
+    const AsteriskCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const MotorolaLetterParser _letter;
+    const AsteriskLocationParser _location;
     struct PseudoMc6809 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
         bool inDirectPage(Config::uintptr_t addr) const {

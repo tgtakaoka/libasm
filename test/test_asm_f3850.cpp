@@ -55,16 +55,16 @@ void test_accumlator() {
     TEST("CLR ",   0x70);
     TEST("LIS 1",  0x71);
     TEST("LIS 15", 0x7F);
-    TEST("LI  0",     0x20, 0x00);
-    TEST("LI  H'FF'", 0x20, 0xFF);
-    TEST("NI  1",     0x21, 0x01);
-    TEST("NI  -D'2'", 0x21, 0xFE);
-    TEST("OI  2",     0x22, 0x02);
-    TEST("OI  -3",    0x22, 0xFD);
-    TEST("XI  O'030", 0x23, 0x18);
+    TEST("LI  0",      0x20, 0x00);
+    TEST("LI  H'FF'",  0x20, 0xFF);
+    TEST("NI  1",      0x21, 0x01);
+    TEST("NI  -D'2'",  0x21, 0xFE);
+    TEST("OI  $FE",    0x22, 0xFE);
+    TEST("OI  -3",     0x22, 0xFD);
+    TEST("XI  O'030'", 0x23, 0x18);
     TEST("XI  B'11111100'", 0x23, 0xFC);
-    TEST("AI  4",     0x24, 0x04);
     TEST("AI  C'F'",  0x24, 0x46);
+    TEST("AI  #4",    0x24, 0x34);
     TEST("CI  5",     0x25, 0x05);
     TEST("CI  'f'",   0x25, 0x66);
 }

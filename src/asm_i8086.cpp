@@ -29,8 +29,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     InsnI8086 insn(_insn);
     auto p = scan;
-    auto strInsn = _parser.readSymbol(p);
-    insn.nameBuffer().text(strInsn);
+    insn.nameBuffer().text(_parser.readSymbol(p));
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
     if (TableI8086::TABLE.searchName(insn))
         return UNKNOWN_INSTRUCTION;

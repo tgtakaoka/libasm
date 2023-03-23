@@ -339,27 +339,19 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
         return setError(MISSING_LABEL);
     if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasSymbol(list.lineSymbol()))
         return setError(DUPLICATE_LABEL);
-    auto &parser = assembler().parser();
+    const auto &parser = assembler().parser();
     std::list<StrScanner> params;
     for (;;) {
-        const auto expr = parser.scanExpr(scan.skipSpaces(), *this, ',');
-        if (expr.size() == 0) {
-            const auto error = driver.internFunction(
-                    list.lineSymbol(), params, StrScanner(scan.str(), expr.str()));
-            scan = expr;
+        auto p = scan.skipSpaces();
+        const auto param = parser.readSymbol(p);
+        if (param.size() && p.skipSpaces().expect(',')) {
+            params.emplace_back(param);
+            scan = p;
+        } else {
+            const auto error = driver.internFunction(list.lineSymbol(), params, scan);
             list.lineSymbol() = StrScanner::EMPTY;
             return error;
         }
-        auto p = expr;
-        auto head = true;
-        while (p.size()) {
-            if (!parser.symbolLetter(*p, head))
-                return setError(expr, SYMBOL_REQUIRE);
-            head = false;
-            ++p;
-        }
-        params.emplace_back(expr);
-        scan += expr.size() + 1;
     }
 }
 

@@ -19,7 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-MotorolaValueParser parser;
+const MotorolaNumberParser number;
+const AsteriskCommentParser comment;
+const DefaultSymbolParser symbol;
+const MotorolaLetterParser letter;
+const AsteriskLocationParser location;
+ValueParser parser{number, comment, symbol, letter, location};
 MotorolaValueFormatter formatter;
 
 static void set_up() {
@@ -48,7 +53,8 @@ static void test_char_constant() {
 }
 
 static void test_char_closing() {
-    MotorolaValueParser parser(/*closingQuote*/ true);
+    const MotorolaLetterParser letter{true};
+    ValueParser parser{number, comment, symbol, letter, location};
 
     E8("'a",     0, MISSING_CLOSING_QUOTE);
     E8("'a+5",   0, MISSING_CLOSING_QUOTE);
@@ -187,10 +193,10 @@ static void test_scan() {
 }
 
 static void test_errors() {
-    E32("$bcdefg", 0, ILLEGAL_CONSTANT);
-    E32("@345678", 0, ILLEGAL_CONSTANT);
-    E32("%101012", 0, ILLEGAL_CONSTANT);
-    E32("456789a", 0, ILLEGAL_CONSTANT);
+    E32("$bcdefg", 0, GARBAGE_AT_END);
+    E32("@345678", 0, GARBAGE_AT_END);
+    E32("%101012", 0, GARBAGE_AT_END);
+    E32("456789a", 0, GARBAGE_AT_END);
 }
 
 static void test_formatter_8bit() {

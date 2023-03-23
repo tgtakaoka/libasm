@@ -19,7 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-NationalValueParser parser;
+const NationalNumberParser number{0, 'B', 'Q'};
+const SemicolonCommentParser comment;
+const DefaultSymbolParser symbol;
+const DefaultLetterParser letter;
+const DollarLocationParser location;
+ValueParser parser{number, comment, symbol, letter, location};
 NationalValueFormatter formatter;
 
 static void set_up() {
@@ -184,10 +189,10 @@ static void test_scan() {
 }
 
 static void test_errors() {
-    E32("x'bcdefg", 0, ILLEGAL_CONSTANT);
-    E32("o'345678", 0, ILLEGAL_CONSTANT);
-    E32("b'101012", 0, ILLEGAL_CONSTANT);
-    E32("456789a", 0, ILLEGAL_CONSTANT);
+    E32("x'bcdefg", 0, GARBAGE_AT_END);
+    E32("o'345678", 0, GARBAGE_AT_END);
+    E32("b'101012", 0, GARBAGE_AT_END);
+    E32("456789a",  0, GARBAGE_AT_END);
 }
 
 static void test_formatter_8bit() {

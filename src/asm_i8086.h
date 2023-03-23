@@ -28,14 +28,24 @@ namespace i8086 {
 
 class AsmI8086 : public Assembler, public Config {
 public:
-    AsmI8086() : Assembler(_parser, TableI8086::TABLE, _pseudos), _parser(), _pseudos() { reset(); }
+    AsmI8086()
+        : Assembler(_parser, TableI8086::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _optimizeSegment = false; }
     const Options &options() const override { return _options; }
 
 private:
-    IntelValueParser _parser;
+    ValueParser _parser;
+    const IntelNumberParser _number;
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const DefaultLetterParser _letter;
+    const DollarLocationParser _location;
     PseudoBase _pseudos;
 
     bool _optimizeSegment;

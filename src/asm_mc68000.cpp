@@ -407,9 +407,18 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+OprSize InsnMc68000::parseInsnSize() {
+    StrScanner p(name());
+    p.trimStart([](char c) { return c != '.'; });
+    char *eos = const_cast<char *>(p.str());
+    const auto isize = RegMc68000::parseSize(p);
+    *eos = 0;
+    return isize;
+}
+
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc68000 insn(_insn);
-    const auto isize = RegMc68000::parseSize(scan);
+    const auto isize = insn.parseInsnSize();
     if (isize == SZ_ERROR)
         return setError(scan, ILLEGAL_SIZE);
     insn.setInsnSize(isize);

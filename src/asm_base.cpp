@@ -40,7 +40,10 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (_parser.commentLine(scan.skipSpaces()))
         return setError(scan, OK);
 
-    insn.clearNameBuffer().text(_parser.readSymbol(scan));
+    const auto symbol = _parser.readSymbol(scan);
+    if (symbol.size() == 0)
+        return setError(scan, UNKNOWN_INSTRUCTION);
+    insn.clearNameBuffer().text(symbol);
     auto error = _pseudos.processPseudo(scan, insn, *this);
     if (error != UNKNOWN_DIRECTIVE)
         return setError(error);

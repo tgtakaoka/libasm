@@ -23,6 +23,7 @@
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "option_base.h"
+#include "parsers.h"
 #include "symbol_table.h"
 #include "table_base.h"
 #include "value_parser.h"

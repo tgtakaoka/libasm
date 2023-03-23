@@ -28,13 +28,21 @@ namespace tlcs90 {
 
 class AsmTlcs90 : public Assembler, public Config {
 public:
-    AsmTlcs90() : Assembler(_parser, TableTlcs90::TABLE, _pseudos), _parser(), _pseudos() {}
+    AsmTlcs90()
+        : Assembler(_parser, TableTlcs90::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
     bool hasSetInstruction() const override { return true; }
 
 private:
-    IntelValueParser _parser;
+    ValueParser _parser;
+    const IntelNumberParser _number;
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const DefaultLetterParser _letter;
+    const DollarLocationParser _location;
     PseudoBase _pseudos;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;

@@ -19,7 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-IntelValueParser parser;
+const IntelNumberParser number;
+const SemicolonCommentParser comment;
+const DefaultSymbolParser symbol;
+const DefaultLetterParser letter;
+const DollarLocationParser location;
+ValueParser parser{number, comment, symbol, letter, location};
 IntelValueFormatter formatter;
 
 static void set_up() {
@@ -180,9 +185,9 @@ static void test_scan() {
 
 static void test_errors() {
     E32("0ABCGH", 0, ILLEGAL_CONSTANT);
-    E32("01778O", 0, ILLEGAL_CONSTANT);
-    E32("01012B", 0, ILLEGAL_CONSTANT);
-    E32("56789A", 0, ILLEGAL_CONSTANT);
+    E32("01778O", 0, GARBAGE_AT_END);
+    E32("01012B", 0, GARBAGE_AT_END);
+    E32("56789A", 0, GARBAGE_AT_END);
 }
 
 static void test_formatter_8bit() {

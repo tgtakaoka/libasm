@@ -42,6 +42,13 @@ struct LocationParser {
 };
 
 /**
+ * Symbol Parser
+ */
+struct SymbolParser {
+    virtual bool symbolLetter(char c, bool headOfSymbol = false) const = 0;
+};
+
+/**
  * Parse for letter constant.
  */
 struct LetterParser {
@@ -64,49 +71,6 @@ struct LetterParser {
     virtual char readLetter(StrScanner &scan, ErrorAt &error) const = 0;
 };
 
-struct CStyleLetterParser : LetterParser {
-    /** C-style letter is enclosed by sigle quotes */
-    Error parseLetter(StrScanner &scan, char &letter) const override;
-    /** C-style letter is: [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
-    char readLetter(StrScanner &scan, ErrorAt &error) const override;
-};
-
-struct DefaultLetterParser : LetterParser {
-    /** Default style letter is enclosed by single quotes */
-    Error parseLetter(StrScanner &scan, char &letter) const override;
-    /** Default style letter is: [:print:], '' */
-    char readLetter(StrScanner &scan, ErrorAt &error) const override;
-};
-
-struct MotorolaLetterParser : DefaultLetterParser {
-    MotorolaLetterParser(bool closingQuote = false) : _closingQuote(closingQuote) {}
-
-    /**
-     * Motorola style letter is follwed after a single quote and
-     * optionally closed with another single quote
-     */
-    Error parseLetter(StrScanner &scan, char &letter) const override;
-    /** Motorola style letter is: [:print] */
-    char readLetter(StrScanner &scan, ErrorAt &error) const override;
-
-private:
-    const bool _closingQuote;
-    Error hasSuffix(StrScanner &scan) const;
-};
-
-struct FairchildLetterParser : DefaultLetterParser {
-    FairchildLetterParser() : DefaultLetterParser(), _motorolaLetter(false) {}
-
-    /** Fairchild style letter is: [cC]'[:print:]', #[:print:], '[:print:]'? */
-    Error parseLetter(StrScanner &scan, char &letter) const override;
-
-private:
-    const MotorolaLetterParser _motorolaLetter;
-
-    static Error hasPrefix(StrScanner &scan, char &prefix);
-    static Error hasSuffix(StrScanner &scan, char prefix);
-};
-
 /**
  * Parse text |scan| as a number.
  *
@@ -119,72 +83,6 @@ private:
  */
 struct NumberParser {
     virtual Error parseNumber(StrScanner &scan, Value &val) const = 0;
-};
-
-/**
-`* C-style number are,
- * - Decimal:     "[1-9][0-9]*"
- * - Hexadecimal: "0[xX][0-9A-Fa-f]+"
- * - Octal:       "0[0-7]*"
- * - Binary:      "0[bB][01]+"
- */
-struct CStyleNumberParser : NumberParser {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-};
-
-/**
- * Motorola style number are,
- * - Decimal:     "{&}[0-9]+"
- * - Hexadecimal: "$[0-9A-Fa-f]+"
- * - Octal:       "@[0-7]+"
- * - Binary:      "%[01]+"
- */
-struct MotorolaNumberParser : CStyleNumberParser {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-};
-
-/**
- * Intel style number are,
- * - Decimal:     "[0-9]+"
- * - Hexadecimal: "([0-9]|0[A-Fa-f])[0-9A-Fa-f]*[hH]"
- * - Octal:       "[0-7]+[oOqQ]"
- * - Binary:      "[01]+[bB]"
- */
-struct IntelNumberParser : CStyleNumberParser {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-
-private:
-    /**
-     * Search |scan| as a |radix| based number with optional |suffix|.
-     * - Returns OK when |scan| looks a valid number, and |scan| is
-     *   updated to the end of a number including |suffix|.
-     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
-     *   number, or lacks |suffix|.
-     */
-    static Error scanNumberEnd(StrScanner &scan, Radix radix, char suffix = 0);
-};
-
-/**
- * National style number are,
- * - Decimal:     "[0-9]+|[dD]'[0-9]+'?"
- * - Hexadecimal: "[hHxX]'[0-9A-Fa-f]+'?"
- * - Octal:       "[oOqQ]'[0-7]+'?"
- * - Binary:      "[bB]'[01]+'?"
- */
-struct NationalNumberParser : CStyleNumberParser {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-};
-
-/**
- * Fairchild style number are National or Motorola style number.
- */
-struct FairchildNumberParser : CStyleNumberParser {
-    FairchildNumberParser() : CStyleNumberParser(), _national(), _motorola() {}
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-
-private:
-    const NationalNumberParser _national;
-    const MotorolaNumberParser _motorola;
 };
 
 /**
@@ -202,13 +100,15 @@ struct FunCallParser {
 
 class ValueParser {
 public:
-    ValueParser()
-        : _numberParser(_cStyleNumber),
-          _commentParser(_defaultComment),
-          _letterParser(_defaultLetter),
-          _locationParser(_defaultLocation),
+    ValueParser(const NumberParser &number, const CommentParser &comment,
+            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location)
+        : _number(number),
+          _comment(comment),
+          _symbol(symbol),
+          _letter(letter),
+          _location(location),
           _origin(0),
-          _funCallParser(nullptr) {}
+          _funCall(nullptr) {}
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined
@@ -230,40 +130,25 @@ public:
      */
     char readLetter(StrScanner &scan, ErrorAt &error) const;
 
-    void setCurrentOrigin(uint32_t origin) { _origin = origin; }
-    virtual bool symbolLetter(char c, bool head = false) const;
+    /**
+     * Parse |scan| and read a symbol. Returns StrScanner::EMPTY when error.
+     */
     StrScanner readSymbol(StrScanner &scan) const;
-    bool commentLine(const StrScanner &scan) const { return _commentParser.commentLine(scan); }
-    bool endOfLine(const StrScanner &scan) const { return _commentParser.endOfLine(scan); }
+    bool symbolLetter(char c, bool head = false) const { return _symbol.symbolLetter(c, head); }
+
+    void setCurrentOrigin(uint32_t origin) { _origin = origin; }
+    bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
+    bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
     FunCallParser *setFunCallParser(FunCallParser *parser = nullptr);
 
-protected:
-    ValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
-            const LetterParser &letterParser, const LocationParser &locationParser)
-        : _numberParser(numberParser),
-          _commentParser(commentParser),
-          _letterParser(letterParser),
-          _locationParser(locationParser),
-          _origin(0),
-          _funCallParser(nullptr) {}
-
-    const struct : CommentParser {
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _defaultComment;
-    const DefaultLetterParser _defaultLetter;
-    const struct : LocationParser {
-        bool locationSymbol(StrScanner &scan) const override { return scan.expect('$'); }
-    } _defaultLocation;
-
 private:
-    const NumberParser &_numberParser;
-    const CommentParser &_commentParser;
-    const LetterParser &_letterParser;
-    const LocationParser &_locationParser;
+    const NumberParser &_number;
+    const CommentParser &_comment;
+    const SymbolParser &_symbol;
+    const LetterParser &_letter;
+    const LocationParser &_location;
     uint32_t _origin;
-    FunCallParser *_funCallParser;
-
-    const CStyleNumberParser _cStyleNumber;
+    FunCallParser *_funCall;
 
     enum Op : uint8_t {
         OP_NONE,
@@ -316,83 +201,6 @@ private:
             const SymbolTable *symtab) const;
     Operator readOperator(StrScanner &scan, ErrorAt &error) const;
     Value evalExpr(const Op op, const Value lhs, const Value rhs, ErrorAt &error) const;
-};
-
-class MotorolaValueParser : public ValueParser {
-public:
-    MotorolaValueParser(bool closingQuote = false)
-        : ValueParser(_motorolaNumber, _motorolaComment, _motorolaLetter, _motorolaLocation),
-          _motorolaLetter(closingQuote) {}
-    MotorolaValueParser(const CommentParser &commentParser)
-        : ValueParser(_motorolaNumber, commentParser, _motorolaLetter, _motorolaLocation),
-          _motorolaLetter(false) {}
-
-private:
-    const MotorolaNumberParser _motorolaNumber;
-    const struct : CommentParser {
-        bool commentLine(const StrScanner &scan) const override {
-            return *scan == '*' || endOfLine(scan);
-        }
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _motorolaComment;
-    const MotorolaLetterParser _motorolaLetter;
-    const struct : LocationParser {
-        bool locationSymbol(StrScanner &scan) const override { return scan.expect('*'); }
-    } _motorolaLocation;
-};
-
-class IntelValueParser : public ValueParser {
-public:
-    IntelValueParser()
-        : ValueParser(_intelNumber, _defaultComment, _defaultLetter, _defaultLocation) {}
-    IntelValueParser(const CommentParser &commentParser)
-        : ValueParser(_intelNumber, commentParser, _defaultLetter, _defaultLocation) {}
-
-private:
-    const IntelNumberParser _intelNumber;
-};
-
-class NationalValueParser : public ValueParser {
-public:
-    NationalValueParser()
-        : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, _defaultLocation) {}
-    NationalValueParser(const CommentParser &commentParser, const LocationParser &locationParser)
-        : ValueParser(_nationalNumber, commentParser, _defaultLetter, locationParser) {}
-
-protected:
-    NationalValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
-            const LetterParser &letterParser, const LocationParser &locationParser)
-        : ValueParser(numberParser, commentParser, letterParser, locationParser) {}
-
-    bool symbolLetter(char c, bool head = false) const override;
-
-private:
-    const NationalNumberParser _nationalNumber;
-};
-
-class FairchildValueParser : public NationalValueParser {
-public:
-    FairchildValueParser()
-        : NationalValueParser(
-                  _fairchildNumber, _fairchildComment, _fairchildLetter, _fairchildLocation) {}
-
-protected:
-    bool symbolLetter(char c, bool head = false) const override;
-
-private:
-    const FairchildNumberParser _fairchildNumber;
-    const struct : CommentParser {
-        bool commentLine(const StrScanner &scan) const override {
-            return *scan == '*' || endOfLine(scan);
-        }
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _fairchildComment;
-    const FairchildLetterParser _fairchildLetter;
-    const struct : LocationParser {
-        bool locationSymbol(StrScanner &scan) const override {
-            return scan.expect('*') || scan.expect('$');
-        }
-    } _fairchildLocation;
 };
 
 }  // namespace libasm

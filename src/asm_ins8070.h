@@ -33,7 +33,12 @@ public:
     const ConfigBase &config() const override { return *this; }
 
 private:
-    NationalValueParser _parser;
+    ValueParser _parser;
+    const NationalNumberParser _number{'X'};
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const DefaultLetterParser _letter;
+    const NationalLocationParser _location{'$'};
     PseudoBase _pseudos;
 
     struct Operand : public OperandBase {

@@ -46,7 +46,7 @@ OBJS_com = str_buffer.o str_scanner.o option_base.o error_reporter.o value_forma
            bin_memory.o bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o \
            file_reader.o file_printer.o list_formatter.o
 OBJS_asm = asm.o asm_commander.o asm_driver.o asm_directive.o asm_formatter.o \
-           asm_base.o value_parser.o function_store.o \
+           asm_base.o value_parser.o parsers.o function_store.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../src/asm_$(a).cpp),asm_$(a).o))
 OBJS_dis = dis.o dis_commander.o dis_driver.o dis_formatter.o dis_base.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../src/dis_$(a).cpp),dis_$(a).o))

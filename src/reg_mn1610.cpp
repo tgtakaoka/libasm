@@ -251,8 +251,12 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
 };
 
 CcName RegMn1610::parseCcName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    auto p = scan;
+    const auto *entry = searchText(p, ARRAY_RANGE(CC_TABLE));
     const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
+    if (name == CC_C && *p == '\'')
+        return CC_UNDEF;  // Letter constant C'x'
+    scan = p;
     return name == CC_NONE ? CC_UNDEF : name;
 }
 

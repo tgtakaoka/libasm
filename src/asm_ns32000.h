@@ -30,7 +30,7 @@ class AsmNs32000 : public Assembler, public Config {
 public:
     AsmNs32000()
         : Assembler(_parser, TableNs32000::TABLE, _pseudos),
-          _parser(_commentParser, _locationParser),
+          _parser(_number, _comment, _symbol, _letter, _location),
           _pseudos() {
         reset();
     }
@@ -40,18 +40,12 @@ public:
     const Options &options() const override { return _options; }
 
 private:
-    NationalValueParser _parser;
-    const struct : CommentParser {
-        bool commentLine(const StrScanner &scan) const override {
-            return *scan == '#' || endOfLine(scan);
-        }
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _commentParser;
-    const struct : LocationParser {
-        bool locationSymbol(StrScanner &scan) const override {
-            return scan.expect('*') || scan.expect('.');
-        }
-    } _locationParser;
+    ValueParser _parser;
+    const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
+    const SharpCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const CStyleLetterParser _letter;
+    const NationalLocationParser _location{'*'};
     struct PseudoNs32000 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 

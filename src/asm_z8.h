@@ -28,14 +28,24 @@ namespace z8 {
 
 class AsmZ8 : public Assembler, public Config {
 public:
-    AsmZ8() : Assembler(_parser, TableZ8::TABLE, _pseudos), _parser(), _pseudos() { reset(); }
+    AsmZ8()
+        : Assembler(_parser, TableZ8::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
+        reset();
+    }
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _pseudos.setRegPointer(-1); }
     const Options &options() const override { return _options; }
 
 private:
-    IntelValueParser _parser;
+    ValueParser _parser;
+    const ZilogNumberParser _number;
+    const SemicolonCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const ZilogLetterParser _letter;
+    const DollarLocationParser _location;
     struct PseudoZ8 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 

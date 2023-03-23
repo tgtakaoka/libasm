@@ -49,10 +49,9 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     auto &parser = assembler.parser();
     parser.setCurrentOrigin(startAddress());
 
-    if (parser.symbolLetter(*scan, true)) {
-        _line_symbol = parser.readSymbol(scan);
+    _line_symbol = parser.readSymbol(scan);
+    if (_line_symbol.size())
         scan.expect(':');  // skip optional trailing ':' for label.
-    }
     scan.skipSpaces();
 
     if (!assembler.endOfLine(scan)) {

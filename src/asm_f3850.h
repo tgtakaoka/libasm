@@ -28,12 +28,20 @@ namespace f3850 {
 
 class AsmF3850 : public Assembler, public Config {
 public:
-    AsmF3850() : Assembler(_parser, TableF3850::TABLE, _pseudos), _parser(), _pseudos() {}
+    AsmF3850()
+        : Assembler(_parser, TableF3850::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    FairchildValueParser _parser;
+    ValueParser _parser;
+    const FairchildNumberParser _number;
+    const AsteriskCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const FairchildLetterParser _letter;
+    const FairchildLocationParser _location;
     PseudoBase _pseudos;
     RegF3850 _regs;
 

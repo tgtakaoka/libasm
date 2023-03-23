@@ -30,23 +30,19 @@ class AsmMn1610 : public Assembler, public Config {
 public:
     AsmMn1610()
         : Assembler(_parser, TableMn1610::TABLE, _pseudos),
-          _parser(_commentParser, _locationParser),
+          _parser(_number, _comment, _symbol, _letter, _location),
           _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMn1610::TABLE.addressWidth(); }
 
 private:
-    NationalValueParser _parser;
-    const struct : CommentParser {
-        bool commentLine(const StrScanner &scan) const override {
-            return *scan == '*' || endOfLine(scan);
-        }
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _commentParser;
-    const struct : LocationParser {
-        bool locationSymbol(StrScanner &scan) const override { return scan.expect('*'); }
-    } _locationParser;
+    ValueParser _parser;
+    const IbmNumberParser _number{'X'};
+    const AsteriskCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const IbmLetterParser _letter{'C'};
+    const AsteriskLocationParser _location;
     PseudoBase _pseudos;
 
     struct Operand : public OperandBase {

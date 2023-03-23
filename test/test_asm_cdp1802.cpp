@@ -66,6 +66,11 @@ static void test_mem_ref() {
     TEST("LDI 18",   0xF8, 0x12);
     TEST("LDI -128", 0xF8, 0x80);
     TEST("LDI 255",  0xF8, 0xFF);
+    TEST("LDI D'24'", 0xF8, 0x18);
+    TEST("LDI B'11000'", 0xF8, 0x18);
+    TEST("LDI X'18'", 0xF8, 0x18);
+    TEST("LDI #18",   0xF8, 0x18);
+    TEST("LDI T'8'", 0xF8, 0x38);
     ERRT("LDI -129", OVERFLOW_RANGE, "-129", 0xF8, 0x7F);
     ERRT("LDI 256",  OVERFLOW_RANGE, "256",  0xF8, 0x00);
 

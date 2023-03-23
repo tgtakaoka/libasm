@@ -38,6 +38,7 @@ public:
     bool hasSize() const { return flags().hasSize(); }
     void setAddrMode(AddrMode src, AddrMode dst) { flags().setAddrMode(src, dst); }
 
+    OprSize parseInsnSize();
     void setInsnSize(OprSize osize) { flags().setInsnSize(InsnSize(osize)); }
 
     void emitInsn() { emitUint16(opCode(), 0); }

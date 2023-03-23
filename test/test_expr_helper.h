@@ -17,6 +17,7 @@
 #ifndef __TEST_EXPT_HELPER_H__
 #define __TEST_EXPT_HELPER_H__
 
+#include "parsers.h"
 #include "test_asserter.h"
 #include "test_symtab.h"
 #include "value_formatter.h"

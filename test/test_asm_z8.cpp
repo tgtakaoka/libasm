@@ -382,7 +382,7 @@ static void test_two_operands() {
     EZ88("ADD @R8,#9",    OPERAND_NOT_ALLOWED, "@R8,#9");
     TEST("ADD R7,#-128",  0x06, R(7), 0x80);
     TEST("ADD R7,#-1",    0x06, R(7), 0xFF);
-    TEST("ADD R7,#255",   0x06, R(7), 0xFF);
+    TEST("ADD R7,#%FF",   0x06, R(7), 0xFF);
     ERRT("ADD R7,#256",   OVERFLOW_RANGE, "#256",  0x06, R(7), 0x00);
     ERRT("ADD R7,#-129",  OVERFLOW_RANGE, "#-129", 0x06, R(7), 0x7F);
 

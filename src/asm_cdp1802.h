@@ -28,7 +28,9 @@ namespace cdp1802 {
 class AsmCdp1802 : public Assembler, public Config {
 public:
     AsmCdp1802()
-        : Assembler(_parser, TableCdp1802::TABLE, _pseudos), _parser(_commentParser), _pseudos() {
+        : Assembler(_parser, TableCdp1802::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
         reset();
     }
 
@@ -37,13 +39,17 @@ public:
     const Options &options() const override { return _options; }
 
 private:
-    IntelValueParser _parser;
-    const struct : CommentParser {
-        bool commentLine(const StrScanner &scan) const override {
-            return (*scan == '.' && scan[1] == '.') || endOfLine(scan);
+    ValueParser _parser;
+    const RcaNumberParser _number;
+    const struct : SemicolonCommentParser {
+        bool commentLine(const StrScanner &scan) const {
+            return (scan[0] == '.' && scan[1] == '.') || endOfLine(scan);
         }
-        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
-    } _commentParser;
+    } _comment;
+
+    const DefaultSymbolParser _symbol;
+    const IbmLetterParser _letter{/*prefix*/ 'T'};
+    const AsteriskLocationParser _location;
     PseudoBase _pseudos;
 
     bool _useReg;

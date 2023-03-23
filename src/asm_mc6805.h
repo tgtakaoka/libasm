@@ -28,7 +28,10 @@ namespace mc6805 {
 
 class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6805() : Assembler(_parser, TableMc6805::TABLE, _pseudos), _parser(), _pseudos() {
+    AsmMc6805()
+        : Assembler(_parser, TableMc6805::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {
         reset();
     }
 
@@ -39,7 +42,12 @@ public:
     const Options &options() const override { return _options; }
 
 private:
-    MotorolaValueParser _parser;
+    ValueParser _parser;
+    const MotorolaNumberParser _number;
+    const AsteriskCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const MotorolaLetterParser _letter;
+    const AsteriskLocationParser _location;
     struct PseudoBase _pseudos;
 
     uint8_t _pc_bits;

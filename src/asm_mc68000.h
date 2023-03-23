@@ -30,7 +30,7 @@ class AsmMc68000 : public Assembler, public Config {
 public:
     AsmMc68000()
         : Assembler(_parser, TableMc68000::TABLE, _pseudos),
-          _parser(/*closingQuote*/ true),
+          _parser(_number, _comment, _symbol, _letter, _location),
           _pseudos() {
         reset();
     }
@@ -40,7 +40,16 @@ public:
     const Options &options() const override { return _options; }
 
 private:
-    MotorolaValueParser _parser;
+    ValueParser _parser;
+    const MotorolaNumberParser _number;
+    const AsteriskCommentParser _comment;
+    const struct : DefaultSymbolParser {
+        bool symbolLetter(char c, bool headOfSymbol) const {
+            return DefaultSymbolParser::symbolLetter(c, headOfSymbol) || c == '.';
+        }
+    } _symbol;
+    const MotorolaLetterParser _letter{/*closingQuote*/ true};
+    const AsteriskLocationParser _location;
     PseudoBase _pseudos;
 
     const struct OptAlias : public BoolOptionBase {

@@ -28,12 +28,20 @@ namespace mc6800 {
 
 class AsmMc6800 : public Assembler, public Config {
 public:
-    AsmMc6800() : Assembler(_parser, TableMc6800::TABLE, _pseudos), _parser(), _pseudos() {}
+    AsmMc6800()
+        : Assembler(_parser, TableMc6800::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location),
+          _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    MotorolaValueParser _parser;
+    ValueParser _parser;
+    const MotorolaNumberParser _number;
+    const AsteriskCommentParser _comment;
+    const DefaultSymbolParser _symbol;
+    const MotorolaLetterParser _letter;
+    const AsteriskLocationParser _location;
     struct PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
