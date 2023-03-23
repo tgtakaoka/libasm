@@ -27,7 +27,8 @@ namespace cdp1802 {
 
 class AsmCdp1802 : public Assembler, public Config {
 public:
-    AsmCdp1802() : Assembler(_parser, TableCdp1802::TABLE, _pseudos), _parser(), _pseudos() {
+    AsmCdp1802()
+        : Assembler(_parser, TableCdp1802::TABLE, _pseudos), _parser(_commentParser), _pseudos() {
         reset();
     }
 
@@ -37,6 +38,12 @@ public:
 
 private:
     IntelValueParser _parser;
+    const struct : CommentParser {
+        bool commentLine(const StrScanner &scan) const override {
+            return (*scan == '.' && scan[1] == '.') || endOfLine(scan);
+        }
+        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
+    } _commentParser;
     PseudoBase _pseudos;
 
     bool _useReg;

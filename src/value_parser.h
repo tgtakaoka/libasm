@@ -30,18 +30,8 @@ namespace libasm {
  * Comment parser
  */
 struct CommentParser {
-    virtual bool commentLine(const StrScanner &scan) const = 0;
+    virtual bool commentLine(const StrScanner &scan) const { return endOfLine(scan); }
     virtual bool endOfLine(const StrScanner &scan) const = 0;
-};
-
-struct DefaultCommentParser : CommentParser {
-    bool commentLine(const StrScanner &scan) const override;
-    bool endOfLine(const StrScanner &scan) const override;
-};
-
-struct MotorolaCommentParser : DefaultCommentParser {
-    MotorolaCommentParser() : DefaultCommentParser() {}
-    bool commentLine(const StrScanner &scan) const override;
 };
 
 /**
@@ -249,7 +239,9 @@ protected:
           _origin(0),
           _funcParser(nullptr) {}
 
-    const DefaultCommentParser _defaultComment;
+    const struct : CommentParser {
+        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
+    } _defaultComment;
     const DefaultLetterParser _defaultLetter;
     const struct : LocationParser {
         bool locationSymbol(StrScanner &scan) const override { return scan.expect('$'); }
@@ -323,10 +315,18 @@ public:
     MotorolaValueParser(bool closingQuote = false)
         : ValueParser(_motorolaNumber, _motorolaComment, _motorolaLetter, _motorolaLocation),
           _motorolaLetter(closingQuote) {}
+    MotorolaValueParser(const CommentParser &commentParser)
+        : ValueParser(_motorolaNumber, commentParser, _motorolaLetter, _motorolaLocation),
+          _motorolaLetter(false) {}
 
 private:
     const MotorolaNumberParser _motorolaNumber;
-    const MotorolaCommentParser _motorolaComment;
+    const struct : CommentParser {
+        bool commentLine(const StrScanner &scan) const override {
+            return *scan == '*' || endOfLine(scan);
+        }
+        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
+    } _motorolaComment;
     const MotorolaLetterParser _motorolaLetter;
     const struct : LocationParser {
         bool locationSymbol(StrScanner &scan) const override { return scan.expect('*'); }
@@ -337,6 +337,8 @@ class IntelValueParser : public ValueParser {
 public:
     IntelValueParser()
         : ValueParser(_intelNumber, _defaultComment, _defaultLetter, _defaultLocation) {}
+    IntelValueParser(const CommentParser &commentParser)
+        : ValueParser(_intelNumber, commentParser, _defaultLetter, _defaultLocation) {}
 
 private:
     const IntelNumberParser _intelNumber;
@@ -346,8 +348,8 @@ class NationalValueParser : public ValueParser {
 public:
     NationalValueParser()
         : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, _defaultLocation) {}
-    NationalValueParser(const LocationParser &locationParser)
-        : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, locationParser) {}
+    NationalValueParser(const CommentParser &commentParser, const LocationParser &locationParser)
+        : ValueParser(_nationalNumber, commentParser, _defaultLetter, locationParser) {}
 
 protected:
     NationalValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
@@ -364,14 +366,19 @@ class FairchildValueParser : public NationalValueParser {
 public:
     FairchildValueParser()
         : NationalValueParser(
-                  _fairchildNumber, _motorolaComment, _fairchildLetter, _fairchildLocation) {}
+                  _fairchildNumber, _fairchildComment, _fairchildLetter, _fairchildLocation) {}
 
 protected:
     bool symbolLetter(char c, bool head = false) const override;
 
 private:
     const FairchildNumberParser _fairchildNumber;
-    const MotorolaCommentParser _motorolaComment;
+    const struct : CommentParser {
+        bool commentLine(const StrScanner &scan) const override {
+            return *scan == '*' || endOfLine(scan);
+        }
+        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
+    } _fairchildComment;
     const FairchildLetterParser _fairchildLetter;
     const struct : LocationParser {
         bool locationSymbol(StrScanner &scan) const override {

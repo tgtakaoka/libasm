@@ -155,20 +155,6 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
     return error;
 }
 
-bool DefaultCommentParser::commentLine(const StrScanner &scan) const {
-    return endOfLine(scan);
-}
-
-bool DefaultCommentParser::endOfLine(const StrScanner &scan) const {
-    const auto c = *scan;
-    return c == 0 || c == ';';
-}
-
-bool MotorolaCommentParser::commentLine(const StrScanner &scan) const {
-    const auto c = *scan;
-    return c == 0 || c == '*';
-}
-
 Value ValueParser::eval(StrScanner &expr, ErrorAt &error, const SymbolTable *symtab) const {
     Stack<OprAndLval> stack;
     return parseExpr(expr, error, stack, symtab);

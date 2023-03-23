@@ -29,7 +29,9 @@ namespace ns32000 {
 class AsmNs32000 : public Assembler, public Config {
 public:
     AsmNs32000()
-        : Assembler(_parser, TableNs32000::TABLE, _pseudos), _parser(_locationParser), _pseudos() {
+        : Assembler(_parser, TableNs32000::TABLE, _pseudos),
+          _parser(_commentParser, _locationParser),
+          _pseudos() {
         reset();
     }
 
@@ -39,6 +41,12 @@ public:
 
 private:
     NationalValueParser _parser;
+    const struct : CommentParser {
+        bool commentLine(const StrScanner &scan) const override {
+            return *scan == '#' || endOfLine(scan);
+        }
+        bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
+    } _commentParser;
     const struct : LocationParser {
         bool locationSymbol(StrScanner &scan) const override {
             return scan.expect('*') || scan.expect('.');

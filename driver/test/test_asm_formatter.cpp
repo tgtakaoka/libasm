@@ -131,14 +131,16 @@ void test_mc6809() {
 
     ASM("mc6809",
             "        cpu   mc6809\n"
+            "* comment line\n"
             "        org   $abcd\n"
             "        cmpd  [$1234,y] ; indirect\n"
             "        include \"data/fdb.inc\"\n"
             "        setdp $ff00\n",
             "       1/       0 :                            cpu   mc6809\n"
-            "       2/    ABCD :                            org   $abcd\n"
-            "       3/    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y] ; indirect\n"
-            "       4/    ABD2 :                            include \"data/fdb.inc\"\n"
+            "       2/       0 :                    * comment line\n"
+            "       3/    ABCD :                            org   $abcd\n"
+            "       4/    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y] ; indirect\n"
+            "       5/    ABD2 :                            include \"data/fdb.inc\"\n"
             "(1)    1/    ABD2 : 12 34 56 78 9A BC          fdb   $1234, $5678, $9abc\n"
             "(1)    2/    ABD8 : 61 2C 62 63 27 27          fcc   /a,/, /bc''de/\n"
             "             ABDE : 64 65\n"
@@ -146,7 +148,7 @@ void test_mc6809() {
             "             ABE6 : 65 27\n"
             "(1)    4/    ABE8 : 61 2C 2F 20 00             fcb   'a, ',, '/, ' , 0\n"
             "(1)    5/    ABED : 41 27 C3 E1                fcb   'A', '', 'C'+$80, $80+'a\n"
-            "       5/    ABF1 :                            setdp $ff00\n");
+            "       6/    ABF1 :                            setdp $ff00\n");
 }
 
 void test_mc6800() {
@@ -157,9 +159,11 @@ void test_mc6800() {
 
     ASM("mc6800",
             "        cpu   mc6800\n"
+            "* comment line\n"
             "        org   $abcd\n"
             "        subb  label1\n",
             "          0 :                            cpu   mc6800\n"
+            "          0 :                    * comment line\n"
             "       abcd :                            org   $abcd\n"
             "       abcd : f0 f1 f2                   subb  label1\n");
 }
@@ -172,9 +176,11 @@ void test_mc6805() {
 
     ASM("mc146805",
             "        cpu   mc146805\n"
+            "* comment line\n"
             "        org   $1234\n"
             "        stx   label1, x\n",
             "          0 :                            cpu   mc146805\n"
+            "          0 :                    * comment line\n"
             "       1234 :                            org   $1234\n"
             "       1234 : df 08 00                   stx   label1, x\n");
 }
@@ -187,9 +193,11 @@ void test_mos6502() {
 
     ASM("mos6502",
             "        cpu   mos6502\n"
+            "; comment line\n"
             "        org   $abcd\n"
             "        sbc   label1\n",
             "          0 :                            cpu   mos6502\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org   $abcd\n"
             "       abcd : ed f2 f1                   sbc   label1\n");
 }
@@ -202,11 +210,13 @@ void test_w65816() {
 
     ASM("w65c816",
             "        cpu   w65c816\n"
+            "; comment line\n"
             "        org   $abcdef\n"
             "        sbc   label1\n"
             "        longa on\n"
             "        adc   #$1234\n",
             "          0 :                            cpu   w65c816\n"
+            "          0 :                    ; comment line\n"
             "     abcdef :                            org   $abcdef\n"
             "     abcdef : ef f0 f1 f2                sbc   label1\n"
             "     abcdf3 :                            longa on\n"
@@ -221,9 +231,11 @@ void test_i8048() {
 
     ASM("i8039",
             "        cpu   i8039\n"
+            "; comment line\n"
             "        org   0bcdh\n"
             "        orl   p1, #data1\n",
             "          0 :                            cpu   i8039\n"
+            "          0 :                    ; comment line\n"
             "        bcd :                            org   0bcdh\n"
             "        bcd : 89 8a                      orl   p1, #data1\n");
 }
@@ -236,9 +248,11 @@ void test_i8051() {
 
     ASM("i8051",
             "        cpu   i8051\n"
+            "; comment line\n"
             "        org   0abcdh\n"
             "        anl   c, /data1.1\n",
             "          0 :                            cpu   i8051\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : b0 b1                      anl   c, /data1.1\n");
 }
@@ -251,9 +265,11 @@ void test_i8080() {
 
     ASM("i8080",
             "        cpu   i8080\n"
+            "; comment line\n"
             "        org   0abcdh\n"
             "        jpe   label1\n",
             "          0 :                            cpu   i8080\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : ea ec eb                   jpe   label1\n");
 }
@@ -266,9 +282,11 @@ void test_i8096() {
 
     ASM("i8096",
             "        cpu   i8096\n"
+            "; comment line\n"
             "        org   0abcdh\n"
             "        mulb  130, label1[124]\n",
             "          0 :                            cpu   i8096\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : fe 7f 7d 7b 81 82          mulb  130, label1[124]\n");
 }
@@ -288,10 +306,12 @@ void test_z80() {
 
     ASM("z80",
             "        cpu   z80\n"
+            "; comment line\n"
             "        org   0abcdh\n"
             "        include \"data/db.inc\"\n"
             "        res   0, (iy-128)\n",
             "          0 :                            cpu   z80\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd :                            include \"data/db.inc\"\n"
             "(1)    abcd : 34 12 78 56 bc 9a          dw    1234H, 5678H, 9ABCH\n"
@@ -309,9 +329,11 @@ void test_z8() {
 
     ASM("z8",
             "        cpu     z8\n"
+            "; comment line\n"
             "        org     0abcdh\n"
             "        ld      r12, 0c9h(r8)\n",
             "          0 :                            cpu     z8\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org     0abcdh\n"
             "       abcd : c7 c8 c9                   ld      r12, 0c9h(r8)");
 }
@@ -323,9 +345,11 @@ void test_tlcs90() {
 
     ASM("tlcs90",
             "        cpu   tlcs90\n"
+            "; comment line\n"
             "        org   0abcdh\n"
             "        xor   (hl+a), 0efh\n",
             "          0 :                            cpu   tlcs90\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : f7 6d ef                   xor   (hl+a), 0efh\n");
 }
@@ -335,6 +359,7 @@ void test_ins8060() {
 
     ASM("ins8060",
             "        cpu   ins8060\n"
+            "; comment line\n"
             "label:  org   x'abcd\n"
             "        and   @e(p1)\n"
             "        db    h(label)\n"
@@ -342,6 +367,7 @@ void test_ins8060() {
             "        dw    addr(label)\n"
             "        dw    addr(x'1000)\n",
             "          0 :                            cpu   ins8060\n"
+            "          0 :                    ; comment line\n"
             "       ABCD :                    label:  org   x'abcd\n"
             "       ABCD : D5 80                      and   @e(p1)\n"
             "       ABCF : AB                         db    h(label)\n"
@@ -357,6 +383,7 @@ void test_ins8070() {
 
     ASM("ins8070",
             "        cpu   ins8070\n"
+            "; comment line\n"
             "label:  org   x'abcd\n"
             "        pli   p2, =x'2423\n"
             "        db    h(label)\n"
@@ -364,6 +391,7 @@ void test_ins8070() {
             "        dw    addr(label)\n"
             "        dw    addr(x'1000)\n",
             "          0 :                            cpu   ins8070\n"
+            "          0 :                    ; comment line\n"
             "       abcd :                    label:  org   x'abcd\n"
             "       abcd : 22 23 24                   pli   p2, =x'2423\n"
             "       abd0 : ab                         db    h(label)\n"
@@ -379,9 +407,11 @@ void test_cdp1802() {
 
     ASM("cdp1804",
             "        cpu   cdp1804\n"
+            ".. comment line\n"
             "        org   0abcdh\n"
             "        scal  3, 8485h\n",
             "          0 :                            cpu   cdp1804\n"
+            "          0 :                    .. comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : 68 83 84 85                scal  3, 8485h\n");
 
@@ -401,9 +431,11 @@ void test_scn2650() {
 
     ASM("scn2650",
             "        cpu     scn2650\n"
+            "* comment line\n"
             "        org     07bcdh\n"
             "        loda,r0 *label1, r0, +\n",
             "          0 :                            cpu     scn2650\n"
+            "          0 :                    * comment line\n"
             "       7BCD :                            org     07bcdh\n"
             "       7BCD : 0C BD EF                   loda,r0 *label1, r0, +\n");
 }
@@ -423,6 +455,7 @@ void test_f3850() {
 
     ASM("f3850",
             "        cpu   F3850\n"
+            "* comment line\n"
             "        org   H'7BCD'\n"
             "        clr\n"
             "        lr    a, j\n"
@@ -430,6 +463,7 @@ void test_f3850() {
             "        bp    label1\n"
             "        include \"data/da.inc\"\n",
             "          0 :                            cpu   F3850\n"
+            "          0 :                    * comment line\n"
             "       7BCD :                            org   H'7BCD'\n"
             "       7BCD : 70                         clr\n"
             "       7BCE : 49                         lr    a, j\n"
@@ -460,10 +494,12 @@ void test_i8086() {
 
     ASM("i8086",
             "        cpu    i8086\n"
+            "; comment line\n"
             "        org    0bcdefh\n"
             "        test   word ptr [bp+di+0feffh], 0bbaah\n"
             "        include 'data/db.inc'\n",
             "          0 :                            cpu    i8086\n"
+            "          0 :                    ; comment line\n"
             "      bcdef :                            org    0bcdefh\n"
             "      bcdef : f7 83 ff fe aa bb          test   word ptr [bp+di+0feffh], 0bbaah\n"
             "      bcdf5 :                            include 'data/db.inc'\n"
@@ -484,9 +520,11 @@ void test_tms9900() {
 
     ASM("tms99105",
             "        cpu   tms99105\n"
+            "* comment line\n"
             "        org   9abch\n"
             "        am    @4a4bh(r1), @4c4dh(r1)\n",
             "          0 :                            cpu   tms99105\n"
+            "          0 :                    * comment line\n"
             "       9abc :                            org   9abch\n"
             "       9abc : 002a 4861 4a4b             am    @4a4bh(r1), @4c4dh(r1)\n"
             "       9ac2 : 4c4d\n");
@@ -499,10 +537,12 @@ void test_tms32010() {
 
     ASM("tms32010",
             "        cpu   tms32010\n"
+            "* comment line\n"
             "        org   789h\n"
             "        call  0fedh\n"
             "        sacl  *+, 0, ar0\n",
             "          0 :                            cpu   tms32010\n"
+            "          0 :                    * comment line\n"
             "        789 :                            org   789h\n"
             "        789 : f800 0fed                  call  0fedh\n"
             "        78b : 50a0                       sacl  *+, 0, ar0\n");
@@ -527,10 +567,12 @@ void test_mc68000() {
 
     ASM("mc68000",
             "        cpu     mc68000\n"
+            "* comment line\n"
             "        org     $9abcde\n"
             "        ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "        include \"data/dc.inc\"\n",
             "          0 :                            cpu     mc68000\n"
+            "          0 :                    * comment line\n"
             "     9abcde :                            org     $9abcde\n"
             "     9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "     9abce4 : 00c2 c3c4\n"
@@ -559,9 +601,11 @@ void test_ns32000() {
 
     ASM("ns32032",
             "        cpu     ns32032\n"
+            "# comment line\n"
             "        org     x'abcdef\n"
             "        extd    r1, disp2(disp1(fp))[r3:w], off2(off1(sb))[r4:w], 32\n",
             "          0 :                            cpu     ns32032\n"
+            "          0 :                    # comment line\n"
             "     abcdef :                            org     x'abcdef\n"
             // clang-format off
             "     abcdef : 2e 4b ef 83 94 c0          extd    r1, disp2(disp1(fp))[r3:w], off2(off1(sb))[r4:w], 32\n"
@@ -578,9 +622,11 @@ void test_z8001() {
 
     ASM("z8001",
             "        cpu    z8001\n"
+            "; comment line\n"
             "        org    789abch\n"
             "        ldb    |160017h|(r1), #25\n",
             "          0 :                            cpu    z8001\n"
+            "          0 :                    ; comment line\n"
             "     789abc :                            org    789abch\n"
             "     789abc : 4c15 1617 1919             ldb    |160017h|(r1), #25\n");
 }
@@ -592,9 +638,11 @@ void test_z8002() {
 
     ASM("z8002",
             "        cpu    z8002\n"
+            "; comment line\n"
             "        org    9abch\n"
             "        cpl    rr0, #01020304h\n",
             "          0 :                            cpu    z8002\n"
+            "          0 :                    ; comment line\n"
             "       9abc :                            org    9abch\n"
             "       9abc : 1000 0102 0304             cpl    rr0, #01020304h\n");
 }
@@ -604,9 +652,11 @@ void test_mn1610() {
 
     ASM("mn1610",
             "        cpu   mn1610\n"
+            "* comment line\n"
             "        org   x'abcd'\n"
             "        tbit  r3, 5, nz\n",
             "          0 :                            cpu   mn1610\n"
+            "          0 :                    * comment line\n"
             "       ABCD :                            org   x'abcd'\n"
             "       ABCD : 2B55                       tbit  r3, 5, nz\n");
 }
@@ -618,9 +668,11 @@ void test_mn1613() {
 
     ASM("mn1613",
             "        cpu   mn1613\n"
+            "* comment line\n"
             "        org   x'34567'\n"
             "        mvwi  str, x'5678', skp\n",
             "          0 :                            cpu   mn1613\n"
+            "          0 :                    * comment line\n"
             "      34567 :                            org   x'34567'\n"
             "      34567 : 7e1f 5678                  mvwi  str, x'5678', skp\n");
 }
