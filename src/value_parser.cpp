@@ -298,7 +298,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
         return val;
     }
 
-    if (locationSymbol(p)) {
+    if (_locationParser.locationSymbol(p)) {
         scan = p;
         return Value::makeUnsigned(_origin);
     }
@@ -485,10 +485,6 @@ Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffi
     return NOT_AN_EXPECTED;
 }
 
-bool ValueParser::locationSymbol(StrScanner &scan) const {
-    return (scan.expect(_locSym) || scan.expect('.')) && !symbolLetter(*scan);
-}
-
 Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     auto radix = RADIX_NONE;
@@ -644,10 +640,6 @@ Error NationalNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     // Closing quote is optional
     scan = p;
     return isalnum(*p) ? ILLEGAL_CONSTANT : error;
-}
-
-bool FairchildValueParser::locationSymbol(StrScanner &scan) const {
-    return scan.expect('*') || scan.expect('$');
 }
 
 Error FairchildLetterParser::hasPrefix(StrScanner &scan, char &prefix) {

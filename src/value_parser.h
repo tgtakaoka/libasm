@@ -45,6 +45,13 @@ struct MotorolaCommentParser : DefaultCommentParser {
 };
 
 /**
+ * Location counter parser.
+ */
+struct LocationParser {
+    virtual bool locationSymbol(StrScanner &scan) const = 0;
+};
+
+/**
  * Parse for letter constant.
  */
 struct LetterParser {
@@ -192,11 +199,11 @@ private:
 
 class ValueParser {
 public:
-    ValueParser(char locSym = '.')
+    ValueParser()
         : _numberParser(_cStyleNumber),
           _commentParser(_defaultComment),
           _letterParser(_defaultLetter),
-          _locSym(locSym),
+          _locationParser(_defaultLocation),
           _origin(0),
           _funcParser(nullptr) {}
 
@@ -234,24 +241,25 @@ public:
 
 protected:
     ValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
-            const LetterParser &letterParser, char locSym)
+            const LetterParser &letterParser, const LocationParser &locationParser)
         : _numberParser(numberParser),
           _commentParser(commentParser),
           _letterParser(letterParser),
-          _locSym(locSym),
+          _locationParser(locationParser),
           _origin(0),
           _funcParser(nullptr) {}
 
     const DefaultCommentParser _defaultComment;
     const DefaultLetterParser _defaultLetter;
-
-    virtual bool locationSymbol(StrScanner &scan) const;
+    const struct : LocationParser {
+        bool locationSymbol(StrScanner &scan) const override { return scan.expect('$'); }
+    } _defaultLocation;
 
 private:
     const NumberParser &_numberParser;
     const CommentParser &_commentParser;
     const LetterParser &_letterParser;
-    const char _locSym;
+    const LocationParser &_locationParser;
     uint32_t _origin;
     FuncParser *_funcParser;
 
@@ -313,19 +321,22 @@ private:
 class MotorolaValueParser : public ValueParser {
 public:
     MotorolaValueParser(bool closingQuote = false)
-        : ValueParser(_motorolaNumber, _motorolaComment, _motorolaLetter, '*'),
+        : ValueParser(_motorolaNumber, _motorolaComment, _motorolaLetter, _motorolaLocation),
           _motorolaLetter(closingQuote) {}
 
 private:
     const MotorolaNumberParser _motorolaNumber;
     const MotorolaCommentParser _motorolaComment;
     const MotorolaLetterParser _motorolaLetter;
+    const struct : LocationParser {
+        bool locationSymbol(StrScanner &scan) const override { return scan.expect('*'); }
+    } _motorolaLocation;
 };
 
 class IntelValueParser : public ValueParser {
 public:
-    IntelValueParser(char locSym = '$')
-        : ValueParser(_intelNumber, _defaultComment, _defaultLetter, locSym) {}
+    IntelValueParser()
+        : ValueParser(_intelNumber, _defaultComment, _defaultLetter, _defaultLocation) {}
 
 private:
     const IntelNumberParser _intelNumber;
@@ -333,13 +344,15 @@ private:
 
 class NationalValueParser : public ValueParser {
 public:
-    NationalValueParser(char locSym = '.')
-        : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, locSym) {}
+    NationalValueParser()
+        : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, _defaultLocation) {}
+    NationalValueParser(const LocationParser &locationParser)
+        : ValueParser(_nationalNumber, _defaultComment, _defaultLetter, locationParser) {}
 
 protected:
     NationalValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
-            const LetterParser &letterParser, char locSym = '.')
-        : ValueParser(numberParser, commentParser, letterParser, locSym) {}
+            const LetterParser &letterParser, const LocationParser &locationParser)
+        : ValueParser(numberParser, commentParser, letterParser, locationParser) {}
 
     bool symbolLetter(char c, bool head = false) const override;
 
@@ -350,16 +363,21 @@ private:
 class FairchildValueParser : public NationalValueParser {
 public:
     FairchildValueParser()
-        : NationalValueParser(_fairchildNumber, _motorolaComment, _fairchildLetter, '*') {}
+        : NationalValueParser(
+                  _fairchildNumber, _motorolaComment, _fairchildLetter, _fairchildLocation) {}
 
 protected:
-    bool locationSymbol(StrScanner &scan) const override;
     bool symbolLetter(char c, bool head = false) const override;
 
 private:
     const FairchildNumberParser _fairchildNumber;
     const MotorolaCommentParser _motorolaComment;
     const FairchildLetterParser _fairchildLetter;
+    const struct : LocationParser {
+        bool locationSymbol(StrScanner &scan) const override {
+            return scan.expect('*') || scan.expect('$');
+        }
+    } _fairchildLocation;
 };
 
 }  // namespace libasm

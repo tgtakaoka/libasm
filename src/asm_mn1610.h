@@ -28,13 +28,17 @@ namespace mn1610 {
 
 class AsmMn1610 : public Assembler, public Config {
 public:
-    AsmMn1610() : Assembler(_parser, TableMn1610::TABLE, _pseudos), _parser('*'), _pseudos() {}
+    AsmMn1610()
+        : Assembler(_parser, TableMn1610::TABLE, _pseudos), _parser(_locationParser), _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMn1610::TABLE.addressWidth(); }
 
 private:
     NationalValueParser _parser;
+    const struct : LocationParser {
+        bool locationSymbol(StrScanner &scan) const override { return scan.expect('*'); }
+    } _locationParser;
     PseudoBase _pseudos;
 
     struct Operand : public OperandBase {

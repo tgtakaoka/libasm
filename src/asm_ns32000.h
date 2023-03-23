@@ -28,7 +28,8 @@ namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000() : Assembler(_parser, TableNs32000::TABLE, _pseudos), _parser('*'), _pseudos() {
+    AsmNs32000()
+        : Assembler(_parser, TableNs32000::TABLE, _pseudos), _parser(_locationParser), _pseudos() {
         reset();
     }
 
@@ -38,6 +39,11 @@ public:
 
 private:
     NationalValueParser _parser;
+    const struct : LocationParser {
+        bool locationSymbol(StrScanner &scan) const override {
+            return scan.expect('*') || scan.expect('.');
+        }
+    } _locationParser;
     struct PseudoNs32000 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 
