@@ -291,10 +291,11 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
 
     if (symbolLetter(*p, true)) {
         const auto symbol = readSymbol(p);
-        if (*p.skipSpaces() == '(' && _funcParser) {
+        if (*p.skipSpaces() == '(' && _funCallParser) {
             auto params = p;
             params.expect('(');
-            const auto err = _funcParser->parseFunc(*this, symbol, params, val, error, symtab);
+            const auto err =
+                    _funCallParser->parseFunCall(symbol, params, val, error, *this, symtab);
             if (err == OK) {
                 if (params.expect(')')) {
                     scan = params;
@@ -321,9 +322,9 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
     return Value();
 }
 
-ValueParser::FuncParser *ValueParser::setFuncParser(FuncParser *parser) {
-    auto prev = _funcParser;
-    _funcParser = parser;
+FunCallParser *ValueParser::setFunCallParser(FunCallParser *parser) {
+    auto prev = _funCallParser;
+    _funCallParser = parser;
     return prev;
 }
 

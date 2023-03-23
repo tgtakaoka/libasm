@@ -187,6 +187,19 @@ private:
     const MotorolaNumberParser _motorola;
 };
 
+/**
+ * Function call parser.
+ */
+class ValueParser;
+struct FunCallParser {
+    /**
+     * Parse function call and evaluate the value.
+     * Call function |name| with optional parameters |params| and get |val|.
+     */
+    virtual Error parseFunCall(const StrScanner &name, StrScanner &params, Value &val,
+            ErrorAt &error, const ValueParser &parser, const SymbolTable *symtab) const = 0;
+};
+
 class ValueParser {
 public:
     ValueParser()
@@ -195,7 +208,7 @@ public:
           _letterParser(_defaultLetter),
           _locationParser(_defaultLocation),
           _origin(0),
-          _funcParser(nullptr) {}
+          _funCallParser(nullptr) {}
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined
@@ -222,12 +235,7 @@ public:
     StrScanner readSymbol(StrScanner &scan) const;
     bool commentLine(const StrScanner &scan) const { return _commentParser.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _commentParser.endOfLine(scan); }
-
-    struct FuncParser {
-        virtual Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan,
-                Value &val, ErrorAt &error, const SymbolTable *symtab) const = 0;
-    };
-    FuncParser *setFuncParser(FuncParser *parser = nullptr);
+    FunCallParser *setFunCallParser(FunCallParser *parser = nullptr);
 
 protected:
     ValueParser(const NumberParser &numberParser, const CommentParser &commentParser,
@@ -237,7 +245,7 @@ protected:
           _letterParser(letterParser),
           _locationParser(locationParser),
           _origin(0),
-          _funcParser(nullptr) {}
+          _funCallParser(nullptr) {}
 
     const struct : CommentParser {
         bool endOfLine(const StrScanner &scan) const override { return *scan == 0 || *scan == ';'; }
@@ -253,7 +261,7 @@ private:
     const LetterParser &_letterParser;
     const LocationParser &_locationParser;
     uint32_t _origin;
-    FuncParser *_funcParser;
+    FunCallParser *_funCallParser;
 
     const CStyleNumberParser _cStyleNumber;
 

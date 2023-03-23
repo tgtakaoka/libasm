@@ -20,9 +20,9 @@
 namespace libasm {
 namespace ins8070 {
 
-static struct : ValueParser::FuncParser {
-    Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-            ErrorAt &error, const SymbolTable *symtab) const override {
+static struct : FunCallParser {
+    Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
+            const ValueParser &parser, const SymbolTable *symtab) const override {
         const auto v = parser.eval(scan, error, symtab).getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
             val.setValue((v >> 8) & 0xFF);
@@ -35,11 +35,11 @@ static struct : ValueParser::FuncParser {
         }
         return OK;
     }
-} functionParser;
+} funCallParser;
 
 AsmIns8070::AsmIns8070()
     : Assembler(_parser, TableIns8070::TABLE, _pseudos), _parser(), _pseudos() {
-    _parser.setFuncParser(&functionParser);
+    _parser.setFunCallParser(&funCallParser);
 }
 
 void AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {

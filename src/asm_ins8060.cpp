@@ -27,9 +27,9 @@ static Config::uintptr_t offset(Config::uintptr_t addr) {
     return addr & 0xFFF;
 }
 
-static struct : ValueParser::FuncParser {
-    Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-            ErrorAt &error, const SymbolTable *symtab) const override {
+static struct : FunCallParser {
+    Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
+            const ValueParser &parser, const SymbolTable *symtab) const override {
         const auto vv = parser.eval(scan, error, symtab);
         const auto v = vv.getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
@@ -43,11 +43,11 @@ static struct : ValueParser::FuncParser {
         }
         return OK;
     }
-} functionParser;
+} funCallParser;
 
 AsmIns8060::AsmIns8060()
     : Assembler(_parser, TableIns8060::TABLE, _pseudos), _parser(), _pseudos() {
-    _parser.setFuncParser(&functionParser);
+    _parser.setFunCallParser(&funCallParser);
 }
 
 void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {

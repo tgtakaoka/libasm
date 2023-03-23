@@ -79,7 +79,7 @@ private:
     AsmDirective *_current;
     AsmSources &_sources;
     FunctionStore *_functionStore;
-    ValueParser::FuncParser *_savedFuncParser;
+    FunCallParser *_savedFunCallParser;
 
     uint32_t _origin;
     SymbolMode _symbolMode;

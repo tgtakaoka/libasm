@@ -28,7 +28,7 @@ static void set_up() {
 
 static void tear_down() {
     symtab.reset();
-    parser.setFuncParser();
+    parser.setFunCallParser();
 }
 
 // clang-format off
@@ -339,9 +339,10 @@ static void test_current_address() {
 }
 
 static void test_function() {
-    struct : ValueParser::FuncParser {
-        Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-                        ErrorAt &error, const SymbolTable *symtab) const override {
+    // clang-format on
+    struct : FunCallParser {
+        Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
+                const ValueParser &parser, const SymbolTable *symtab) const override {
             const auto v = parser.eval(scan, error, symtab).getUnsigned();
             if (name.iequals_P(PSTR("hi"))) {
                 val.setValue((v >> 8) & 0xFF);
@@ -352,8 +353,10 @@ static void test_function() {
             }
             return OK;
         }
-    } funcParser;
-    parser.setFuncParser(&funcParser);
+    } funCallParser;
+    parser.setFunCallParser(&funCallParser);
+    // clang-format off
+
     E16("hi(0x1234)",  0x12, OK);
     E16("lo(0x1234)",  0x34, OK);
     E16("hi( 0x1234 ) + 1",  0x13, OK);

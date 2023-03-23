@@ -28,18 +28,18 @@
 namespace libasm {
 namespace driver {
 
-struct FunctionStore : ValueParser::FuncParser {
+struct FunctionStore : FunCallParser {
     FunctionStore() : _parent(nullptr) {}
 
     void reset();
-    void setParent(ValueParser::FuncParser *parent) { _parent = parent; }
+    void setParent(FunCallParser *parent) { _parent = parent; }
 
     Error internFunction(
             const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body);
 
-    // FuncParser
-    Error parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan, Value &val,
-            ErrorAt &error, const SymbolTable *symtab) const override;
+    // FunCallParser
+    Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
+            const ValueParser &parser, const SymbolTable *symtab) const override;
 
 private:
     struct icasecmp {
@@ -48,7 +48,7 @@ private:
         }
     };
 
-    ValueParser::FuncParser *_parent;
+    FunCallParser *_parent;
     struct Function {
         std::string name;
         std::string body;

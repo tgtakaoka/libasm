@@ -40,12 +40,12 @@ Error FunctionStore::internFunction(
     return OK;
 }
 
-Error FunctionStore::parseFunc(const ValueParser &parser, const StrScanner &name, StrScanner &scan,
-        Value &val, ErrorAt &error, const SymbolTable *symtab) const {
+Error FunctionStore::parseFunCall(const StrScanner &name, StrScanner &scan, Value &val,
+        ErrorAt &error, const ValueParser &parser, const SymbolTable *symtab) const {
     const auto it = _functions.find(std::string(name.str(), name.size()));
     if (it == _functions.end()) {
         if (_parent) {
-            _parent->parseFunc(parser, name, scan, val, error, symtab);
+            _parent->parseFunCall(name, scan, val, error, parser, symtab);
             return error.getError();
         }
         return error.setError(UNKNOWN_FUNCTION);
