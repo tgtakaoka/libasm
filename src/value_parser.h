@@ -98,6 +98,22 @@ struct FunCallParser {
             ErrorAt &error, const ValueParser &parser, const SymbolTable *symtab) const = 0;
 };
 
+struct Operator {
+    virtual Error eval(Value &val, const Value &rhs) const { return OK; }
+    virtual Error eval(Value &val, const Value &lhs, const Value &rhs) const { return OK; }
+    bool hasPrecedence(const Operator &o) const { return _precedence <= o._precedence; }
+
+    static const struct Operator OP_NONE;
+
+protected:
+    Operator(uint8_t precedence) : _precedence(precedence) {}
+
+private:
+    // Operator precedence (smaller value means higher precedence).
+    // The same order of C/C++ language.
+    const uint8_t _precedence;
+};
+
 class ValueParser {
 public:
     ValueParser(const NumberParser &number, const CommentParser &comment,
@@ -150,36 +166,6 @@ private:
     uint32_t _origin;
     FunCallParser *_funCall;
 
-    enum Op : uint8_t {
-        OP_NONE,
-        OP_ADD,
-        OP_SUB,
-        OP_MUL,
-        OP_DIV,
-        OP_MOD,
-        OP_BIT_AND,
-        OP_BIT_XOR,
-        OP_BIT_OR,
-        OP_BIT_SHL,
-        OP_BIT_SHR,
-    };
-
-    struct Operator {
-        Operator(Op op, uint8_t precedence) : _op(op), _precedence(precedence) {}
-        enum Op _op;
-        uint8_t _precedence;
-    };
-
-    struct OprAndLval {
-        OprAndLval() : _opr(OP_NONE, 0), _value() {}
-        OprAndLval(const Operator &opr, Value value) : _opr(opr), _value(value) {}
-        OprAndLval(const OprAndLval &o) : _opr(o._opr), _value(o._value) {}
-        bool isEnd() const { return _opr._op == OP_NONE; }
-        int precedence() const { return _opr._precedence; }
-        Operator _opr;
-        Value _value;
-    };
-
     template <typename E>
     struct Stack {
         Stack() : _size(0) {}
@@ -195,12 +181,12 @@ private:
         E _values[capacity];
     };
 
-    Value parseExpr(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> &stack,
-            const SymbolTable *symtab) const;
-    Value readAtom(StrScanner &scan, ErrorAt &errpr, Stack<OprAndLval> &stack,
-            const SymbolTable *symtab) const;
-    Operator readOperator(StrScanner &scan, ErrorAt &error) const;
-    Value evalExpr(const Op op, const Value lhs, const Value rhs, ErrorAt &error) const;
+    Value parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
+            Stack<Value> &vstack, const SymbolTable *symtab) const;
+    Value readAtom(StrScanner &scan, ErrorAt &errpr, Stack<const Operator *> &ostack,
+            Stack<Value> &vstack, const SymbolTable *symtab) const;
+    const Operator *readUnary(StrScanner &scan, ErrorAt &error) const;
+    const Operator *readBinary(StrScanner &scan, ErrorAt &error) const;
 };
 
 }  // namespace libasm
