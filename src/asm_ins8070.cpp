@@ -25,11 +25,11 @@ static struct : FunCallParser {
             const ValueParser &parser, const SymbolTable *symtab) const override {
         const auto v = parser.eval(scan, error, symtab).getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
-            val.setValue((v >> 8) & 0xFF);
+            val.setUnsigned((v >> 8) & 0xFF);
         } else if (name.iequals_P(PSTR("l"))) {
-            val.setValue(v & 0xFF);
+            val.setUnsigned(v & 0xFF);
         } else if (name.iequals_P(PSTR("addr"))) {
-            val.setValue((v - 1) & 0xFFFF);
+            val.setUnsigned((v - 1) & 0xFFFF);
         } else {
             return UNKNOWN_FUNCTION;
         }

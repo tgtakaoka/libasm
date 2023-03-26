@@ -90,7 +90,7 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
         ++p;
     }
     scan = p;
-    setValue(v);
+    setUnsigned(v);
     return error;
 }
 
@@ -178,7 +178,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
         auto value = readAtom(p, error, stack, symtab);
         scan = p;
         if (!value.isUndefined())
-            return value.setValue(~value.getUnsigned());
+            return value.setUnsigned(~value.getUnsigned());
         return value;
     }
     if (p.expect('-')) {
@@ -190,7 +190,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
         if (!value.isUndefined()) {
             if (value.isUnsigned() && value.getUnsigned() > 0x80000000)
                 error.setError(scan, OVERFLOW_RANGE);
-            value.setValue(-value.getSigned()).setSign(true);
+            value.setSigned(-value.getSigned());
         }
         scan = p;
         return value;
@@ -206,16 +206,16 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
     }
 
     char letter;
+    Value val;
     auto err = _letter.parseLetter(p, letter);
     if (err == OK) {
         scan = p;
-        return Value::makeUnsigned(letter);
+        return val.setUnsigned(letter);
     } else if (err != NOT_AN_EXPECTED) {
         error.setError(p, err);
         return Value();
     }
 
-    Value val;
     err = _number.parseNumber(p, val);
     if (err != NOT_AN_EXPECTED) {
         if (err)
@@ -226,7 +226,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
 
     if (_location.locationSymbol(p)) {
         scan = p;
-        return Value::makeUnsigned(_origin);
+        return val.setUnsigned(_origin);
     }
 
     const auto symbol = readSymbol(p);
@@ -251,7 +251,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<OprAndLval> 
         scan = p;
         if (symtab && symtab->hasSymbol(symbol)) {
             const uint32_t v = symtab->lookupSymbol(symbol);
-            return val.setValue(v);
+            return val.setSigned(v);
         }
         error.setErrorIf(symbol, UNDEFINED_SYMBOL);
         return val;
@@ -337,49 +337,78 @@ static int32_t shift_right_negative(int32_t value, uint8_t count) {
     return value;
 }
 
-Value ValueParser::evalExpr(const Op op, const Value lhs, const Value rhs, ErrorAt &error) const {
+Value ValueParser::evalExpr(const Op op, Value lhs, Value rhs, ErrorAt &error) const {
     if (lhs.isUndefined() || rhs.isUndefined())
         return Value();
 
-    const auto bsigned = lhs.isSigned() && rhs.isSigned();
+    const auto esigned = lhs.isSigned() || rhs.isSigned();
 
+    Value v;
     switch (op) {
     case OP_ADD:
-        return Value::makeUnsigned(lhs.getUnsigned() + rhs.getUnsigned()).setSign(bsigned);
+        if (esigned) {
+            v.setSigned(lhs.getSigned() + rhs.getSigned());
+        } else {
+            v.setUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
+        }
+        break;
     case OP_SUB:
-        return Value::makeUnsigned(lhs.getUnsigned() - rhs.getUnsigned()).setSign(bsigned);
+        if (esigned) {
+            v.setSigned(lhs.getSigned() - rhs.getSigned());
+        } else if (lhs.getUnsigned() < rhs.getUnsigned()) {
+            v.setSigned(lhs.getUnsigned() - rhs.getUnsigned());
+        } else {
+            v.setUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
+        }
+        break;
     case OP_MUL:
-        return bsigned ? Value::makeSigned(lhs.getSigned() * rhs.getSigned())
-                       : Value::makeUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
+        if (esigned) {
+            v.setSigned(lhs.getSigned() * rhs.getSigned());
+        } else {
+            v.setUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
+        }
+        break;
     case OP_DIV:
         if (rhs.getUnsigned() == 0) {
             error.setError(DIVIDE_BY_ZERO);
-            return Value();
+        } else if (esigned) {
+            v.setSigned(lhs.getSigned() / rhs.getSigned());
+        } else {
+            v.setUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
         }
-        return bsigned ? Value::makeSigned(lhs.getSigned() / rhs.getSigned())
-                       : Value::makeUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
+        break;
     case OP_MOD:
         if (rhs.getUnsigned() == 0) {
             error.setError(DIVIDE_BY_ZERO);
-            return Value();
+        } else if (esigned) {
+            v.setSigned(lhs.getSigned() % rhs.getSigned());
+        } else {
+            v.setUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
         }
-        return bsigned ? Value::makeSigned(lhs.getSigned() % rhs.getSigned())
-                       : Value::makeUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
+        break;
     case OP_BIT_AND:
-        return Value::makeUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
+        v.setUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
+        break;
     case OP_BIT_XOR:
-        return Value::makeUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
+        v.setUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
+        break;
     case OP_BIT_OR:
-        return Value::makeUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
+        v.setUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
+        break;
     case OP_BIT_SHL:
-        return Value::makeUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+        v.setUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+        break;
     case OP_BIT_SHR:
-        if (lhs.isSigned() && lhs.getSigned() < 0)
-            return Value::makeSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
-        return Value::makeUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
+        if (lhs.isSigned() && lhs.getSigned() < 0) {
+            v.setSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
+        } else {
+            v.setUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
+        }
+        break;
     default:
-        return Value();
+        break;
     }
+    return v;
 }
 
 }  // namespace libasm

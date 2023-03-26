@@ -148,6 +148,7 @@ static void test_unary_operator() {
     E32("-1",          0xffffffff, OK);
     E32("-2147483648", 0x80000000, OK);
     E32("-2147483649", 0,          OVERFLOW_RANGE);
+    E32("-4294967295", 0,          OVERFLOW_RANGE);
 
     E8("+128", 0x80, OK);
     E8("+129", 0x81, OK);
@@ -350,9 +351,9 @@ static void test_function() {
                 const ValueParser &parser, const SymbolTable *symtab) const override {
             const auto v = parser.eval(scan, error, symtab).getUnsigned();
             if (name.iequals_P(PSTR("hi"))) {
-                val.setValue((v >> 8) & 0xFF);
+                val.setUnsigned((v >> 8) & 0xFF);
             } else if (name.iequals_P(PSTR("lo"))) {
-                val.setValue(v & 0xFF);
+                val.setUnsigned(v & 0xFF);
             } else {
                 return UNKNOWN_FUNCTION;
             }

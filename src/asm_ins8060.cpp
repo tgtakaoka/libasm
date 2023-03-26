@@ -33,11 +33,11 @@ static struct : FunCallParser {
         const auto vv = parser.eval(scan, error, symtab);
         const auto v = vv.getUnsigned();
         if (name.iequals_P(PSTR("h"))) {
-            val.setValue((v >> 8) & 0xFF);
+            val.setUnsigned((v >> 8) & 0xFF);
         } else if (name.iequals_P(PSTR("l"))) {
-            val.setValue(v & 0xFF);
+            val.setUnsigned(v & 0xFF);
         } else if (name.iequals_P(PSTR("addr"))) {
-            val.setValue(page(v) | offset(v - 1));
+            val.setUnsigned(page(v) | offset(v - 1));
         } else {
             return UNKNOWN_FUNCTION;
         }

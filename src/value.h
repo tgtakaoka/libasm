@@ -47,19 +47,26 @@ public:
      *   at |scan|, and |scan} is unchanged.
      */
     Error parseNumber(StrScanner &scan, Radix radix);
+
     bool isUndefined() const { return _type == UNDEFINED; }
-    bool isSigned() const { return _type == SIGNED; }
+    bool isSigned() const { return _type == NEGATIVE; }
     bool isUnsigned() const { return _type == UNSIGNED; }
     bool overflowUint8() const { return overflowUint8(_value); }
     bool overflowUint16() const { return overflowUint16(_value); }
+
     int32_t getSigned() const { return static_cast<int32_t>(_value); }
     uint32_t getUnsigned() const { return _value; }
 
-    Value &setSign(bool hasSign) {
-        _type = hasSign ? SIGNED : UNSIGNED;
+    Value &setSigned(int32_t value) {
+        _value = value;
+        _type = value < 0 ? NEGATIVE : UNSIGNED;
         return *this;
     }
-    Value &setValue(uint32_t value) { return setSign(static_cast<int32_t>(_value = value) >= 0); }
+    Value &setUnsigned(uint32_t value) {
+        _value = value;
+        _type = UNSIGNED;
+        return *this;
+    }
     Value &clear() {
         _value = 0;
         _type = UNDEFINED;
@@ -73,13 +80,11 @@ public:
     static bool overflowUint8(uint32_t u32);
     static bool overflowUint16(uint32_t u32);
     static bool overflowUint(uint32_t, uint8_t bitw);
-    static Value makeSigned(int32_t value) { return Value(value, SIGNED); }
-    static Value makeUnsigned(uint32_t value) { return Value(value, UNSIGNED); }
 
 private:
     enum ValueType : uint8_t {
         UNDEFINED = 0,
-        SIGNED = 1,
+        NEGATIVE = 1,
         UNSIGNED = 2,
     };
 
