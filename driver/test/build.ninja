@@ -33,8 +33,8 @@ build test_moto_srec:    test test_moto_srec.o bin_memory.o $
 build test_asm_formatter: test test_asm_formatter.o test_driver_helper.o test_asserter.o $
   list_formatter.o asm_formatter.o asm_driver.o asm_directive.o function_store.o $
   bin_memory.o bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o $
-  asm_base.o error_reporter.o value_formatter.o value_parser.o parsers.o option_base.o $
-  str_buffer.o str_scanner.o $
+  asm_base.o error_reporter.o value_formatter.o value_parser.o parsers.o operators.o $
+  option_base.o str_buffer.o str_scanner.o $
   asm_mc6809.o asm_mc6800.o asm_mc6805.o asm_mos6502.o asm_i8048.o asm_i8051.o $
   asm_i8080.o asm_i8096.o asm_z80.o asm_z8.o asm_tlcs90.o asm_ins8060.o asm_ins8070.o $
   asm_cdp1802.o asm_scn2650.o asm_f3850.o asm_i8086.o asm_tms9900.o asm_tms32010.o asm_mc68000.o $
@@ -51,8 +51,8 @@ build test_asm_formatter: test test_asm_formatter.o test_driver_helper.o test_as
 build test_dis_formatter: test test_dis_formatter.o test_driver_helper.o test_asserter.o $
   list_formatter.o dis_formatter.o dis_driver.o function_store.o bin_memory.o bin_encoder.o $
   bin_decoder.o intel_hex.o moto_srec.o $
-  dis_base.o error_reporter.o value_formatter.o value_parser.o parsers.o option_base.o $
-  str_buffer.o str_scanner.o $
+  dis_base.o error_reporter.o value_formatter.o value_parser.o parsers.o operators.o $
+  option_base.o str_buffer.o str_scanner.o $
   dis_mc6809.o dis_mc6800.o dis_mc6805.o dis_mos6502.o dis_i8048.o dis_i8051.o $
   dis_i8080.o dis_i8096.o dis_z80.o dis_z8.o dis_tlcs90.o dis_ins8060.o dis_ins8070.o $
   dis_cdp1802.o dis_scn2650.o dis_f3850.o dis_i8086.o dis_tms9900.o dis_tms32010.o dis_mc68000.o $

@@ -15,7 +15,6 @@
  */
 
 #include "value_parser.h"
-#include "parsers.h"
 
 #include <ctype.h>
 
@@ -134,10 +133,11 @@ Value ValueParser::parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Opera
         value = readAtom(scan, error, ostack, vstack, symtab);
         if (error.hasError())
             break;
-        const auto *opr = readBinary(scan, error);
+        const auto *opr = endOfLine(scan.skipSpaces()) ? &Operator::OP_NONE
+                                                       : _operator.readBinary(scan, error);
         if (error.hasError())
             break;
-        while (ostack.top()->hasPrecedence(*opr)) {
+        while (ostack.top()->hasHigherPriority(*opr)) {
             if (ostack.top() == &Operator::OP_NONE) {
                 ostack.pop();
                 return value;
@@ -180,7 +180,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<const Operat
         return val;
     }
 
-    const auto *opr = readUnary(p, error);
+    const auto *opr = _operator.readUnary(p, error);
     if (error.hasError())
         return val;
     if (opr != &Operator::OP_NONE) {
@@ -251,230 +251,6 @@ FunCallParser *ValueParser::setFunCallParser(FunCallParser *parser) {
     auto prev = _funCall;
     _funCall = parser;
     return prev;
-}
-
-const Operator Operator::OP_NONE(18);
-
-static const struct OpBitNot : Operator {
-    OpBitNot() : Operator(3) {}
-    Error eval(Value &val, const Value &rhs) const override {
-        val.setUnsigned(~rhs.getUnsigned());
-        return OK;
-    }
-} OP_BIT_NOT;
-
-static const struct OpMinus : Operator {
-    OpMinus() : Operator(3) {}
-    Error eval(Value &val, const Value &rhs) const override {
-        if (rhs.isUnsigned() && rhs.getUnsigned() > 0x80000000)
-            return OVERFLOW_RANGE;
-        val.setSigned(-rhs.getSigned());
-        return OK;
-    }
-} OP_MINUS;
-
-static const struct OpPlus : Operator {
-    OpPlus() : Operator(3) {}
-    Error eval(Value &val, const Value &rhs) const override {
-        val.setUnsigned(rhs.getUnsigned());
-        return OK;
-    }
-} OP_PLUS;
-
-const Operator *ValueParser::readUnary(StrScanner &scan, ErrorAt &error) const {
-    if (endOfLine(scan.skipSpaces()))
-        return &Operator::OP_NONE;
-    switch (*scan++) {
-    case '~':
-        return &OP_BIT_NOT;
-    case '-':
-        if (*scan != '-' && *scan != '+')
-            return &OP_MINUS;
-        error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    case '+':
-        if (*scan != '+' && *scan != '-')
-            return &OP_PLUS;
-        error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    default:
-        break;
-    }
-    --scan;
-    return &Operator::OP_NONE;
-}
-
-static const struct OpMul : Operator {
-    OpMul() : Operator(5) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() * rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_MUL;
-
-static const struct OpDiv : Operator {
-    OpDiv() : Operator(5) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (rhs.getUnsigned() == 0) {
-            val.clear();
-            return DIVIDE_BY_ZERO;
-        }
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() / rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_DIV;
-
-static const struct OpMod : Operator {
-    OpMod() : Operator(5) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (rhs.getUnsigned() == 0) {
-            val.clear();
-            return DIVIDE_BY_ZERO;
-        }
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() % rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_MOD;
-
-static const struct OpAdd : Operator {
-    OpAdd() : Operator(6) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() + rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_ADD;
-
-static const struct OpSub : Operator {
-    OpSub() : Operator(6) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() - rhs.getSigned());
-        } else if (lhs.getUnsigned() < rhs.getUnsigned()) {
-            val.setSigned(lhs.getUnsigned() - rhs.getUnsigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_SUB;
-
-static const struct OpBitShl : Operator {
-    OpBitShl() : Operator(7) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
-        return OK;
-    }
-
-    static uint32_t shift_left(uint32_t value, uint8_t count) {
-        for (unsigned i = 0; i <= 32 && i < count; i++)
-            value <<= 1;
-        return value;
-    }
-
-} OP_BIT_SHL;
-
-static const struct OpBitShr : Operator {
-    OpBitShr() : Operator(7) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() && lhs.getSigned() < 0) {
-            val.setSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
-        } else {
-            val.setUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
-        }
-        return OK;
-    }
-
-    static uint32_t shift_right(uint32_t value, uint8_t count) {
-        for (unsigned i = 0; i <= 32 && i < count; i++)
-            value >>= 1;
-        return value;
-    }
-
-    static int32_t shift_right_negative(int32_t value, uint8_t count) {
-        for (unsigned i = 0; i <= 32 && i < count; i++) {
-            value >>= 1;
-            value |= 0x80000000;
-        }
-        return value;
-    }
-
-} OP_BIT_SHR;
-
-static const struct OpBitAnd : Operator {
-    OpBitAnd() : Operator(11) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
-        return OK;
-    }
-} OP_BIT_AND;
-
-static const struct OpBitXor : Operator {
-    OpBitXor() : Operator(12) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
-        return OK;
-    }
-} OP_BIT_XOR;
-
-static const struct OpBitOr : Operator {
-    OpBitOr() : Operator(13) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
-        return OK;
-    }
-} OP_BIT_OR;
-
-const Operator *ValueParser::readBinary(StrScanner &scan, ErrorAt &error) const {
-    if (endOfLine(scan.skipSpaces()))
-        return &Operator::OP_NONE;
-    switch (*scan++) {
-    case '*':
-        return &OP_MUL;
-    case '/':
-        return &OP_DIV;
-    case '%':
-        return &OP_MOD;
-    case '+':
-        return &OP_ADD;
-    case '-':
-        return &OP_SUB;
-    case '<':
-        if (scan.expect('<'))
-            return &OP_BIT_SHL;
-        error.setError(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    case '>':
-        if (scan.expect('>'))
-            return &OP_BIT_SHR;
-        error.setError(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    case '&':
-        return &OP_BIT_AND;
-    case '^':
-        return &OP_BIT_XOR;
-    case '|':
-        return &OP_BIT_OR;
-    default:
-        break;
-    }
-    --scan;
-    return &Operator::OP_NONE;
 }
 
 StrScanner ValueParser::readSymbol(StrScanner &scan) const {

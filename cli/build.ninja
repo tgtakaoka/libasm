@@ -17,7 +17,8 @@ subninja ${root}/src/ninja.rules
 
 build asm: link asm.o asm_commander.o file_reader.o file_printer.o $
   error_reporter.o option_base.o str_buffer.o str_scanner.o value_formatter.o value_parser.o $
-  parsers.o bin_memory.o bin_decoder.o bin_encoder.o list_formatter.o intel_hex.o moto_srec.o $
+  parsers.o operators.o bin_memory.o bin_decoder.o bin_encoder.o list_formatter.o intel_hex.o $
+  moto_srec.o $
   asm_driver.o asm_directive.o asm_formatter.o function_store.o $
   asm_base.o asm_mc6809.o asm_mc6800.o asm_mc6805.o asm_mos6502.o asm_i8048.o asm_i8051.o $
   asm_i8080.o asm_i8096.o asm_z80.o asm_z8.o asm_tlcs90.o asm_ins8060.o asm_ins8070.o asm_cdp1802.o $

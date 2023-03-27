@@ -17,9 +17,86 @@
 #ifndef __PARSERS_H__
 #define __PARSERS_H__
 
-#include "value_parser.h"
+#include "error_reporter.h"
+#include "operators.h"
+#include "str_scanner.h"
+#include "symbol_table.h"
+#include "value.h"
 
 namespace libasm {
+
+class ValueParser;
+
+/**
+ * Comment parser
+ */
+struct CommentParser {
+    virtual bool commentLine(const StrScanner &scan) const { return endOfLine(scan); }
+    virtual bool endOfLine(const StrScanner &scan) const = 0;
+};
+
+/**
+ * Location counter parser.
+ */
+struct LocationParser {
+    virtual bool locationSymbol(StrScanner &scan) const = 0;
+};
+
+/**
+ * Symbol Parser
+ */
+struct SymbolParser {
+    virtual bool symbolLetter(char c, bool headOfSymbol = false) const = 0;
+};
+
+/**
+ * Parse for letter constant.
+ */
+struct LetterParser {
+    /**
+     * Parse |scan| as a letter constant.
+     * - Returns OK when |scan| is recognized as a valid letter, and
+     *   updates |scan| at the end of a letter.
+     * - Returns ILLEGAL_CONSTANT when |scan| seems a letter but not
+     *   ended as expected. |scan| is updated at the error.
+     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
+     *   letter. |scan| is unchanged.
+     */
+    virtual Error parseLetter(StrScanner &scan, char &letter) const = 0;
+
+    /**
+     * Read a letter constant from |scan| and return it.
+     * When |scan| points text which doesn't make sense as a letter,
+     * |error| is set as ILLEGAL_CONSTANT.
+     */
+    virtual char readLetter(StrScanner &scan, ErrorAt &error) const = 0;
+};
+
+/**
+ * Parse text |scan| as a number.
+ *
+ * - Returns OK when |scan| is recognized as a valid number, and
+ *   updates |scan| at the end of a number.
+ * - Returns ILLEGAL_CONSTANT when |scan| seems a number but not
+ *   ended as expected. |scan| is updated at the error.
+ * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
+ *   number. |scan| is unchanged.
+ */
+struct NumberParser {
+    virtual Error parseNumber(StrScanner &scan, Value &val) const = 0;
+};
+
+/**
+ * Function call parser.
+ */
+struct FunCallParser {
+    /**
+     * Parse function call and evaluate the value.
+     * Call function |name| with optional parameters |params| and get |val|.
+     */
+    virtual Error parseFunCall(const StrScanner &name, StrScanner &params, Value &val,
+            ErrorAt &error, const ValueParser &parser, const SymbolTable *symtab) const = 0;
+};
 
 /**
 `* C-style numbers are

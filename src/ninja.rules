@@ -10,6 +10,7 @@ build str_scanner.o:     cxx ${root}/src/str_scanner.cpp
 build value_formatter.o: cxx ${root}/src/value_formatter.cpp
 build value_parser.o:    cxx ${root}/src/value_parser.cpp
 build parsers.o:         cxx ${root}/src/parsers.cpp
+build operators.o:       cxx ${root}/src/operators.cpp
 
 # mc6809
 build asm_mc6809.o:   cxx ${root}/src/asm_mc6809.cpp
