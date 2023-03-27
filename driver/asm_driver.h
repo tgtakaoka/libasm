@@ -65,9 +65,10 @@ public:
     uint32_t lookupSymbol(const StrScanner &symbol) const override;
     Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false);
 
-    Error internFunction(
-            const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body) {
-        return _functions.internFunction(name, params, body);
+    bool hasFunction(const StrScanner &name) const { return _functions.hasFunction(name); }
+    Error internFunction(const StrScanner &name, const std::list<StrScanner> &params,
+            const StrScanner &body, const ValueParser &parser) {
+        return _functions.internFunction(name, params, body, parser);
     }
     Error openSource(const StrScanner &filename);
 
@@ -79,7 +80,7 @@ private:
     AsmDirective *_current;
     AsmSources &_sources;
     FunctionStore *_functionStore;
-    FunCallParser *_savedFunCallParser;
+    const FunctionParser *_savedFunctionParser;
 
     uint32_t _origin;
     SymbolMode _symbolMode;

@@ -91,6 +91,8 @@ Error AsmDirective::defineSymbol(
         StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable) {
     if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
+    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasFunction(list.lineSymbol()))
+        return setError(DUPLICATE_LABEL);
     auto &parser = assembler().parser();
     ErrorAt error;
     auto &value = list.lineValue() = parser.eval(scan, error, &driver);
@@ -348,7 +350,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
             params.emplace_back(param);
             scan = p;
         } else {
-            const auto error = driver.internFunction(list.lineSymbol(), params, scan);
+            const auto error = driver.internFunction(list.lineSymbol(), params, scan, parser);
             list.lineSymbol() = StrScanner::EMPTY;
             return error;
         }

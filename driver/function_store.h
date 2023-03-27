@@ -28,33 +28,34 @@
 namespace libasm {
 namespace driver {
 
-struct FunctionStore : FunCallParser {
+struct FunctionStore : FunctionParser {
     FunctionStore() : _parent(nullptr) {}
 
     void reset();
-    void setParent(FunCallParser *parent) { _parent = parent; }
+    void setParent(const FunctionParser *parent) { _parent = parent; }
 
-    Error internFunction(
-            const StrScanner &name, std::list<StrScanner> &params, const StrScanner &body);
+    bool hasFunction(const StrScanner &name) const;
+    Error internFunction(const StrScanner &name, const std::list<StrScanner> &params,
+            const StrScanner &body, const ValueParser &parser);
 
-    // FunCallParser
-    Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
-            const ValueParser &parser, const SymbolTable *symtab) const override;
+    const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const override;
 
 private:
-    struct icasecmp {
-        bool operator()(const std::string &lhs, const std::string &rhs) const {
-            return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
-        }
-    };
+    struct Function : Functor {
+        Function(const StrScanner &body, const std::list<StrScanner> &params,
+                const ValueParser &parser);
+        // Functor
+        int8_t nargs() const override { return params.size(); }
+        Error eval(const Arguments &args, Value &val) const override;
 
-    FunCallParser *_parent;
-    struct Function {
-        std::string name;
+    private:
         std::string body;
+        const ValueParser &parser;
         std::list<std::string> params;
     };
-    std::map<std::string, Function, icasecmp> _functions;
+
+    const FunctionParser *_parent;
+    std::map<std::string, Function, std::less<>> _functions;
 };
 
 }  // namespace driver

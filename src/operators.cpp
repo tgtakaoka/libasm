@@ -22,6 +22,8 @@
 
 namespace libasm {
 
+const Functor Functor::FN_NONE;
+
 const Operator Operator::OP_NONE(18);
 
 static const struct OpBitwiseNot : Operator {

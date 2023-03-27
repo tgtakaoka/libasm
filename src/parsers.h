@@ -87,18 +87,6 @@ struct NumberParser {
 };
 
 /**
- * Function call parser.
- */
-struct FunCallParser {
-    /**
-     * Parse function call and evaluate the value.
-     * Call function |name| with optional parameters |params| and get |val|.
-     */
-    virtual Error parseFunCall(const StrScanner &name, StrScanner &params, Value &val,
-            ErrorAt &error, const ValueParser &parser, const SymbolTable *symtab) const = 0;
-};
-
-/**
 `* C-style numbers are
  * - Decimal:     "[1-9][0-9]*"
  * - Hexadecimal: "0[xX][0-9A-Fa-f]+"

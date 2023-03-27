@@ -27,29 +27,47 @@ static Config::uintptr_t offset(Config::uintptr_t addr) {
     return addr & 0xFFF;
 }
 
-static struct : FunCallParser {
-    Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
-            const ValueParser &parser, const SymbolTable *symtab) const override {
-        const auto vv = parser.eval(scan, error, symtab);
-        const auto v = vv.getUnsigned();
-        if (name.iequals_P(PSTR("h"))) {
-            val.setUnsigned((v >> 8) & 0xFF);
-        } else if (name.iequals_P(PSTR("l"))) {
-            val.setUnsigned(v & 0xFF);
-        } else if (name.iequals_P(PSTR("addr"))) {
-            val.setUnsigned(page(v) | offset(v - 1));
-        } else {
-            return UNKNOWN_FUNCTION;
-        }
+static const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(const Arguments &args, Value &val) const override {
+        val.setUnsigned((args.at(1).getUnsigned() >> 8) & 0xFF);
         return OK;
     }
-} funCallParser;
+} FN_HIGH;
 
-AsmIns8060::AsmIns8060()
-    : Assembler(_parser, TableIns8060::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
-      _pseudos() {
-    _parser.setFunCallParser(&funCallParser);
+static const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(const Arguments &args, Value &val) const override {
+        val.setUnsigned(args.at(1).getUnsigned() & 0xFF);
+        return OK;
+    }
+} FN_LOW;
+
+static const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(const Arguments &args, Value &val) const override {
+        const auto v = args.at(1).getUnsigned();
+        val.setUnsigned(page(v) | offset(v - 1));
+        return OK;
+    }
+} FN_ADDR;
+
+const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(
+        StrScanner &scan, ErrorAt &error) const {
+    auto p = scan;
+    p.trimStart([](char c) { return c != '(' && !isspace(c); });
+    const auto name = StrScanner(scan.str(), p.str());
+    auto fn = &Functor::FN_NONE;
+    if (name.iequals_P(PSTR("H"))) {
+        fn = &FN_HIGH;
+    } else if (name.iequals_P(PSTR("L"))) {
+        fn = &FN_LOW;
+    } else if (name.iequals_P(PSTR("ADDR"))) {
+        fn = &FN_ADDR;
+    }
+    if (fn != &Functor::FN_NONE)
+        scan = p;
+    return fn;
 }
 
 void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {

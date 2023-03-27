@@ -185,25 +185,49 @@ Value ValueParser::parseAtom(StrScanner &scan, ErrorAt &error, Stack<const Opera
         return val.setUnsigned(_origin);
     }
 
+    const auto *fun = _function->parseFunction(p, error);
+    if (fun != &Functor::FN_NONE) {
+        if (!p.skipSpaces().expect('(')) {
+            error.setError(p, MISSING_FUNC_ARGUMENT);
+            return val;
+        }
+        p.skipSpaces();
+        Functor::Arguments args;
+        while (true) {
+            if (p.expect(')'))
+                break;
+            val = eval(p, error, symtab);
+            if (error.hasError())
+                break;
+            if (args.full()) {
+                error.setErrorIf(TOO_MANY_FUNC_ARGUMENT);
+                break;
+            }
+            args.push(val);
+
+            if (*p.skipSpaces() == ')' || p.expect(','))
+                continue;
+            error.setError(p, MISSING_CLOSING_PAREN);
+            break;
+        }
+        scan = p;
+        if (error.isOK()) {
+            const auto nargs = fun->nargs();
+            if (nargs < 0 || args.size() == nargs) {
+                err = fun->eval(args, val);
+            } else if (args.size() < nargs) {
+                err = TOO_FEW_FUNC_ARGUMENT;
+            } else {
+                err = TOO_MANY_FUNC_ARGUMENT;
+            }
+            if (err)
+                error.setErrorIf(err);
+        }
+        return val;
+    }
+
     const auto symbol = readSymbol(p);
     if (symbol.size()) {
-        if (*p.skipSpaces() == '(' && _funCall) {
-            auto params = p;
-            params.expect('(');
-            const auto err = _funCall->parseFunCall(symbol, params, val, error, *this, symtab);
-            if (err == OK) {
-                if (params.expect(')')) {
-                    scan = params;
-                } else {
-                    error.setError(p, MISSING_CLOSING_PAREN);
-                }
-                return val;
-            } else if (err == UNKNOWN_FUNCTION) {
-                error.setOK();
-            } else {
-                return val;
-            }
-        }
         scan = p;
         if (symtab && symtab->hasSymbol(symbol)) {
             const uint32_t v = symtab->lookupSymbol(symbol);
@@ -217,9 +241,9 @@ Value ValueParser::parseAtom(StrScanner &scan, ErrorAt &error, Stack<const Opera
     return Value();
 }
 
-FunCallParser *ValueParser::setFunCallParser(FunCallParser *parser) {
-    auto prev = _funCall;
-    _funCall = parser;
+const FunctionParser *ValueParser::setFunctionParser(const FunctionParser *function) {
+    const auto prev = _function;
+    _function = function ? function : &_nullFunction;
     return prev;
 }
 
@@ -227,7 +251,7 @@ StrScanner ValueParser::readSymbol(StrScanner &scan) const {
     auto p = scan;
     if (!_symbol.symbolLetter(*p++, true))
         return StrScanner::EMPTY;
-    p.trimStart([this](char c) { return this->_symbol.symbolLetter(c); });
+    p.trimStart([this](char c) { return _symbol.symbolLetter(c); });
     auto symbol = StrScanner(scan.str(), p.str());
     scan = p;
     return symbol;

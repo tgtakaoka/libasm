@@ -742,30 +742,51 @@ void test_switch_cpu() {
 }
 
 void test_function() {
-    PREP(ins8060::AsmIns8060, NationalDirective);
+    PREP_ASM(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
 
     ASM("ins8060",
             "        cpu   ins8060\n"
             "high:   function v  , v >> 8 ; high 8-bit\n"
             "low:    function v, v & x'FF ; low 8-bit\n"
-            "cons:   function hi, lo, (hi << 8) | lo ; construct 16-bit address\n"
+            "cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
+            "CONS:   function -1\n"
             "label:  org   x'abcd\n"
             "        and   @e(p1)\n"
             "        db    high(label)\n"
             "        db    low(label)\n"
             "        dw    cons(h(label), l(label))\n"
-            "        dw    cons(high(x'1234), low(x'3456))\n",
+            "        dw    cons (high(x'1234),low(x'3456))\n"
+            "        dw    CONS (  ) \n"
+            "high:   function x,x  ; duplicate\n"
+            "label:  function y,y  ; symbol\n"
+            "cons:   equ   0       ; function\n"
+            "        dw    cons(0) ; requires 2\n"
+            "        dw    CONS(0) ; requires 0\n"
+            "        dw    CONS    ; missing\n",
             "          0 :                            cpu   ins8060\n"
             "          0 :                    high:   function v  , v >> 8 ; high 8-bit\n"
             "          0 :                    low:    function v, v & x'FF ; low 8-bit\n"
-            "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; construct "
-            "16-bit address\n"
+            "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
+            "          0 :                    CONS:   function -1\n"
             "       ABCD :                    label:  org   x'abcd\n"
             "       ABCD : D5 80                      and   @e(p1)\n"
             "       ABCF : AB                         db    high(label)\n"
             "       ABD0 : CD                         db    low(label)\n"
             "       ABD1 : CD AB                      dw    cons(h(label), l(label))\n"
-            "       ABD3 : 56 12                      dw    cons(high(x'1234), low(x'3456))\n");
+            "       ABD3 : 56 12                      dw    cons (high(x'1234),low(x'3456))\n"
+            "       ABD5 : FF FF                      dw    CONS (  ) \n"
+            "ins8060:13: error: Duplicate function\n"
+            "       ABD7 :                    high:   function x,x  ; duplicate\n"
+            "ins8060:14: error: Duplicate label\n"
+            "       ABD7 :                    label:  function y,y  ; symbol\n"
+            "ins8060:15: error: Duplicate label\n"
+            "       ABD7 :                    cons:   equ   0       ; function\n"
+            "ins8060:16: error: Too few function arguments\n"
+            "       ABD7 :                            dw    cons(0) ; requires 2\n"
+            "ins8060:17: error: Too many function arguments\n"
+            "       ABD7 :                            dw    CONS(0) ; requires 0\n"
+            "ins8060:18: error: Missing function arguments\n"
+            "       ABD7 :                            dw    CONS    ; missing\n");
 }
 
 void run_tests() {

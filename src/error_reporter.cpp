@@ -99,9 +99,11 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
     case TOO_COMPLEX_EXPRESSION:
         return PSTR("Too complex expression");
     case MISSING_FUNC_ARGUMENT:
-        return PSTR("Missing function argument");
-    case UNKNOWN_FUNCTION:
-        return PSTR("Unknown function");
+        return PSTR("Missing function arguments");
+    case TOO_FEW_FUNC_ARGUMENT:
+        return PSTR("Too few function arguments");
+    case TOO_MANY_FUNC_ARGUMENT:
+        return PSTR("Too many function arguments");
     case DUPLICATE_FUNCTION:
         return PSTR("Duplicate function");
     case SYMBOL_REQUIRE:

@@ -26,56 +26,61 @@ void FunctionStore::reset() {
     _functions.clear();
 }
 
-Error FunctionStore::internFunction(
-        const StrScanner &_name, std::list<StrScanner> &_params, const StrScanner &body) {
-    Function func;
+bool FunctionStore::hasFunction(const StrScanner &_name) const {
+    const std::string name(_name.str(), _name.size());
+    return _functions.find(name) != _functions.end();
+}
+
+FunctionStore::Function::Function(
+        const StrScanner &b, const std::list<StrScanner> &plist, const ValueParser &_parser)
+    : body(b.str(), b.size()), parser(_parser) {
+    for (const auto &p : plist)
+        params.emplace_back(p.str(), p.size());
+}
+
+Error FunctionStore::internFunction(const StrScanner &_name, const std::list<StrScanner> &params,
+        const StrScanner &body, const ValueParser &parser) {
     const std::string name(_name.str(), _name.size());
     if (_functions.find(name) != _functions.end())
         return DUPLICATE_FUNCTION;
-    std::list<std::string> params;
-    for (auto &param : _params)
-        params.emplace_back(param.str(), param.size());
-    _functions.emplace(
-            name, Function{name, std::string(body.str(), body.size()), std::move(params)});
+    _functions.emplace(name, Function{body, params, parser});
     return OK;
 }
 
-Error FunctionStore::parseFunCall(const StrScanner &name, StrScanner &scan, Value &val,
-        ErrorAt &error, const ValueParser &parser, const SymbolTable *symtab) const {
-    const auto it = _functions.find(std::string(name.str(), name.size()));
-    if (it == _functions.end()) {
-        if (_parent) {
-            _parent->parseFunCall(name, scan, val, error, parser, symtab);
-            return error.getError();
-        }
-        return error.setError(UNKNOWN_FUNCTION);
-    }
-    const auto &func = it->second;
+const Functor *FunctionStore::parseFunction(StrScanner &scan, ErrorAt &error) const {
+    auto p = scan;
+    p.trimStart([](char c) { return c != '(' && !isspace(c); });
+    const std::string name(scan.str(), p.str() - scan.str());
+    const auto it = _functions.find(name);
+    if (it == _functions.end())
+        return _parent ? _parent->parseFunction(scan, error) : &Functor::FN_NONE;
+    scan = p;
+    return &it->second;
+}
 
+Error FunctionStore::Function::eval(const Arguments &args, Value &val) const {
     struct Binding : SymbolTable {
-        void intern(const std::string &symbol, uint32_t value) {
-            _params.emplace(std::make_pair(symbol, value));
+        Binding(const std::list<std::string> &params, const Functor::Arguments &args)
+            : _args(args) {
+            int index = 1;
+            for (const std::string &param : params)
+                _params.emplace(param, index++);
         }
         bool hasSymbol(const StrScanner &symbol) const override {
             return _params.find(std::string(symbol.str(), symbol.size())) != _params.end();
         }
         uint32_t lookupSymbol(const StrScanner &symbol) const override {
-            return _params.find(std::string(symbol.str(), symbol.size()))->second;
+            const auto it = _params.find(std::string(symbol.str(), symbol.size()));
+            return _args.at(it->second).getUnsigned();
         }
         const char *lookupValue(uint32_t address) const override { return nullptr; }
-        std::map<std::string, uint32_t> _params;
-    } binding;
 
-    for (auto it = func.params.cbegin(); it != func.params.cend(); ++it) {
-        const auto &param = *it;
-        if (it != func.params.cbegin() && !scan.skipSpaces().expect(','))
-            return error.setError(MISSING_FUNC_ARGUMENT);
-        const auto arg = parser.eval(scan, error, symtab);
-        if (error.getError())
-            return error.getError();
-        binding.intern(param, arg.getUnsigned());
-    }
-    StrScanner body_scan(func.body.c_str());
+    private:
+        const Functor::Arguments &_args;
+        std::map<std::string, int, std::less<>> _params;
+    } binding{params, args};
+    StrScanner body_scan(body.c_str());
+    ErrorAt error;
     val = parser.eval(body_scan, error, &binding);
     return error.getError();
 }

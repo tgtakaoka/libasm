@@ -28,7 +28,10 @@ namespace ins8070 {
 
 class AsmIns8070 : public Assembler, public Config {
 public:
-    AsmIns8070();
+    AsmIns8070()
+        : Assembler(_parser, TableIns8070::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location, _function),
+          _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
@@ -39,6 +42,9 @@ private:
     const DefaultSymbolParser _symbol;
     const DefaultLetterParser _letter;
     const NationalLocationParser _location{'$'};
+    const struct Ins8070FunctionParser : FunctionParser {
+        const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const override;
+    } _function;
     PseudoBase _pseudos;
 
     struct Operand : public OperandBase {

@@ -33,7 +33,7 @@ static void set_up() {
 
 static void tear_down() {
     symtab.reset();
-    parser.setFunCallParser();
+    parser.setFunctionParser();
 }
 
 // clang-format off
@@ -346,29 +346,66 @@ static void test_current_address() {
 
 static void test_function() {
     // clang-format on
-    struct : FunCallParser {
-        Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
-                const ValueParser &parser, const SymbolTable *symtab) const override {
-            const auto v = parser.eval(scan, error, symtab).getUnsigned();
-            if (name.iequals_P(PSTR("hi"))) {
-                val.setUnsigned((v >> 8) & 0xFF);
-            } else if (name.iequals_P(PSTR("lo"))) {
-                val.setUnsigned(v & 0xFF);
-            } else {
-                return UNKNOWN_FUNCTION;
-            }
+    static const struct : Functor {
+        int8_t nargs() const override { return 0; }
+        Error eval(const Arguments &args, Value &val) const override {
+            val.setUnsigned(0x31415926);
             return OK;
         }
-    } funCallParser;
-    parser.setFunCallParser(&funCallParser);
+    } FN_PI;
+    static const struct : Functor {
+        int8_t nargs() const override { return 2; }
+        Error eval(const Arguments &args, Value &val) const override {
+            val.setSigned(args.at(1).getSigned() - args.at(2).getSigned());
+            return OK;
+        }
+    } FN_SUB;
+    static const struct : Functor {
+        Error eval(const Arguments &args, Value &val) const override {
+            int32_t sum = 0;
+            for (auto i = 1; i <= args.size(); ++i)
+                sum += args.at(i).getSigned();
+            val.setSigned(sum);
+            return OK;
+        }
+    } FN_SUM;
+    const struct : FunctionParser {
+        const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const {
+            auto p = scan;
+            p.trimStart([](char c) { return isalnum(c); });
+            const auto name = StrScanner(scan.str(), p.str());
+            auto fn = &Functor::FN_NONE;
+            if (name.iequals_P(PSTR("PI"))) {
+                fn = &FN_PI;
+            } else if (name.iequals_P(PSTR("SUB"))) {
+                fn = &FN_SUB;
+            } else if (name.iequals_P(PSTR("SUM"))) {
+                fn = &FN_SUM;
+            }
+            if (fn != &Functor::FN_NONE)
+                scan = p;
+            return fn;
+        }
+
+    } function;
+    parser.setFunctionParser(&function);
     // clang-format off
 
-    E16("hi(0x1234)",  0x12, OK);
-    E16("lo(0x1234)",  0x34, OK);
-    E16("hi( 0x1234 ) + 1",  0x13, OK);
-    E16("1 + lo( 0x1234 )",  0x35, OK);
-    E16("1 + lo (0x1234 )",  0x35, OK);
-    E16("1 + lo (0x1234  ",  0x35, MISSING_CLOSING_PAREN);
+    E16("hi (0x1234)",  0x12, UNDEFINED_SYMBOL);
+    E32("pi()",         0x31415926, OK);
+    E32("pi ( ) + 1",   0x31415927, OK);
+    E32("pi + 1",       0,          MISSING_FUNC_ARGUMENT);
+    E32("pi(1) + 1",    0,          TOO_MANY_FUNC_ARGUMENT);
+    E16("1 + sub(2, 10)",    -7, OK);
+    E16("1 + sub( 1 )",       0, TOO_FEW_FUNC_ARGUMENT);
+    E16("1 + sub( 1, 2, 3 )", 0, TOO_MANY_FUNC_ARGUMENT);
+    E16("1 + sub( 1, 2, 3",   0, MISSING_CLOSING_PAREN);
+    E16("sum()",                0, OK);
+    E16("sum(1)",               1, OK);
+    E16("sum(1, -2)",          -1, OK);
+    E16("sum(1, -2, 3)",        2, OK);
+    E16("sum(1, -2, 3, -4)",   -2, OK);
+    E16("sum(1, -2, 3, -4, 5)", 0, TOO_MANY_FUNC_ARGUMENT);
 }
 
 static void test_scan() {

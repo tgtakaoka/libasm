@@ -33,8 +33,19 @@ public:
           _letter(letter),
           _location(location),
           _operator(_cstyleOperators),
-          _origin(0),
-          _funCall(nullptr) {}
+          _function(&_nullFunction),
+          _origin(0) {}
+    ValueParser(const NumberParser &number, const CommentParser &comment,
+            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
+            const FunctionParser &function)
+        : _number(number),
+          _comment(comment),
+          _symbol(symbol),
+          _letter(letter),
+          _location(location),
+          _operator(_cstyleOperators),
+          _function(&function),
+          _origin(0) {}
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined
@@ -59,7 +70,8 @@ public:
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
-    FunCallParser *setFunCallParser(FunCallParser *parser = nullptr);
+    // const FunCallParser *setFunCallParser(const FunCallParser *funCall = nullptr);
+    const FunctionParser *setFunctionParser(const FunctionParser *function = nullptr);
 
 private:
     const NumberParser &_number;
@@ -68,9 +80,11 @@ private:
     const LetterParser &_letter;
     const LocationParser &_location;
     const OperatorParser &_operator;
-    const CStyleOperatorParser _cstyleOperators;
+    const FunctionParser *_function;
     uint32_t _origin;
-    FunCallParser *_funCall;
+
+    const FunctionParser _nullFunction;
+    const CStyleOperatorParser _cstyleOperators;
 
     template <typename E>
     struct Stack {

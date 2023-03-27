@@ -20,28 +20,46 @@
 namespace libasm {
 namespace ins8070 {
 
-static struct : FunCallParser {
-    Error parseFunCall(const StrScanner &name, StrScanner &scan, Value &val, ErrorAt &error,
-            const ValueParser &parser, const SymbolTable *symtab) const override {
-        const auto v = parser.eval(scan, error, symtab).getUnsigned();
-        if (name.iequals_P(PSTR("h"))) {
-            val.setUnsigned((v >> 8) & 0xFF);
-        } else if (name.iequals_P(PSTR("l"))) {
-            val.setUnsigned(v & 0xFF);
-        } else if (name.iequals_P(PSTR("addr"))) {
-            val.setUnsigned((v - 1) & 0xFFFF);
-        } else {
-            return UNKNOWN_FUNCTION;
-        }
+static const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(const Arguments &args, Value &val) const override {
+        val.setUnsigned((args.at(1).getUnsigned() >> 8) & 0xFF);
         return OK;
     }
-} funCallParser;
+} FN_HIGH;
 
-AsmIns8070::AsmIns8070()
-    : Assembler(_parser, TableIns8070::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
-      _pseudos() {
-    _parser.setFunCallParser(&funCallParser);
+static const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(const Arguments &args, Value &val) const override {
+        val.setUnsigned(args.at(1).getUnsigned() & 0xFF);
+        return OK;
+    }
+} FN_LOW;
+
+static const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(const Arguments &args, Value &val) const override {
+        val.setUnsigned((args.at(1).getUnsigned() - 1) & 0xFFFF);
+        return OK;
+    }
+} FN_ADDR;
+
+const Functor *AsmIns8070::Ins8070FunctionParser::parseFunction(
+        StrScanner &scan, ErrorAt &error) const {
+    auto p = scan;
+    p.trimStart([](char c) { return c != '(' && !isspace(c); });
+    const auto name = StrScanner(scan.str(), p.str());
+    auto fn = &Functor::FN_NONE;
+    if (name.iequals_P(PSTR("H"))) {
+        fn = &FN_HIGH;
+    } else if (name.iequals_P(PSTR("L"))) {
+        fn = &FN_LOW;
+    } else if (name.iequals_P(PSTR("ADDR"))) {
+        fn = &FN_ADDR;
+    }
+    if (fn != &Functor::FN_NONE)
+        scan = p;
+    return fn;
 }
 
 void AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {

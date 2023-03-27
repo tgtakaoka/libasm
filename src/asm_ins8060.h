@@ -28,7 +28,10 @@ namespace ins8060 {
 
 class AsmIns8060 : public Assembler, public Config {
 public:
-    AsmIns8060();
+    AsmIns8060()
+        : Assembler(_parser, TableIns8060::TABLE, _pseudos),
+          _parser(_number, _comment, _symbol, _letter, _location, _function),
+          _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
 
@@ -39,6 +42,9 @@ private:
     const DefaultSymbolParser _symbol;
     const DefaultLetterParser _letter;
     const NationalLocationParser _location{'$'};
+    const struct Ins8060FunctionParser : FunctionParser {
+        const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const override;
+    } _function;
     PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
