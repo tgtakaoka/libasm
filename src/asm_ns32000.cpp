@@ -113,6 +113,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     op.setAt(p);
     if (endOfLine(p))
         return OK;
+
     if (p.expect('@')) {
         op.val32 = parseExpr32(p, op);
         if (op.hasError())
@@ -133,30 +134,21 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         }
         return op.setError(p, MISSING_CLOSING_BRACKET);
     }
+
     if (parseStrOptNames(p, op) == OK) {
         scan = p;
         return OK;
     }
 
-    if (*p == '*' || *p == '.') {
-        auto t = p;
-        ++t;
-        if (*t.skipSpaces() == '+' || *t == '-' || endOfLine(t) || *t == '[' || *t == ',') {
-            auto base = _parser.scanExpr(p, op, '[');
-            const auto size = base.size();
-            if (size) {
-                op.val32 = parseExpr32(base, op);
-                p += size - base.size();
-            } else {
-                op.val32 = parseExpr32(p, op);
-            }
-            if (op.hasError())
-                return op.getError();
-            op.mode = M_REL;
-            op.reg = REG_PC;
-            scan = p;
-            return OK;
-        }
+    auto l = p;
+    if (_location.locationSymbol(l)) {
+        op.val32 = parseExpr32(p, op);
+        if (op.hasError())
+            return op.getError();
+        op.mode = M_REL;
+        op.reg = REG_PC;
+        scan = p;
+        return OK;
     }
 
     const auto preg = RegNs32000::parsePregName(p);
@@ -175,7 +167,6 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
 
-    auto a = p;
     auto reg = RegNs32000::parseRegName(p);
     if (reg != REG_UNDEF) {
         if (RegNs32000::isGeneric(reg)) {
@@ -221,20 +212,19 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
             }
             return op.setError(UNKNOWN_OPERAND);
         }
-        return op.setError(a, UNKNOWN_REGISTER);
+        return op.setError(scan, UNKNOWN_REGISTER);
     }
 
     const auto val = parseExpr(p, op);
-    auto t = p;
-    if (*t == '.' || *t == 'e' || *t == 'E' || op.getError() == OVERFLOW_RANGE ||
+    if ((op.isOK() && (*p == '.' || *p == 'e' || *p == 'E')) || op.getError() == OVERFLOW_RANGE ||
             op.getError() == UNDEFINED_SYMBOL) {
-        char *e;
-        op.float64 = strtod(a.str(), &e);
-        StrScanner end(e);
-        if (a.str() != e && (*end == ',' || endOfLine(end))) {
+        char *end;
+        op.float64 = strtod(scan.str(), &end);
+        StrScanner e(end);
+        if (end != scan.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
             op.mode = M_IMM;
             op.size = SZ_LONG;
-            scan = end;
+            scan = e;
             return op.setOK();
         }
     }
@@ -247,11 +237,12 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     } else {
         op.float64 = val.getUnsigned();
     }
-    if (*p.skipSpaces() == ',' || endOfLine(p)) {
+    if (endOfLine(p.skipSpaces()) || *p == ',') {
         op.mode = M_IMM;  // M_REL
         scan = p;
         return OK;
     }
+
     if (!p.expect('('))
         return op.setError(p, UNKNOWN_OPERAND);
     const auto r = p;
@@ -280,7 +271,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     if (op.hasError())
         return op.getError();
     if (save.getError())
-        op.setError(save);
+        op.setErrorIf(save);
     if (!p.skipSpaces().expect('('))
         return op.setErrorIf(p, UNKNOWN_OPERAND);
     const auto x = p;

@@ -430,13 +430,12 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     if (endOfLine(p))
         return OK;
 
-    auto a = p;
     if (p.expect('@')) {
         op.reg = RegZ8000::parseRegName(p);
         if (op.reg == REG_UNDEF)
-            return op.setError(a, UNKNOWN_REGISTER);
+            return op.setError(scan, UNKNOWN_REGISTER);
         if (op.reg == REG_ILLEGAL)
-            return op.setError(a, ILLEGAL_REGISTER);
+            return op.setError(scan, ILLEGAL_REGISTER);
         op.mode = M_IR;
         scan = p;
         return OK;
@@ -445,7 +444,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     op.reg = RegZ8000::parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (op.reg == REG_ILLEGAL)
-            return op.setError(a, ILLEGAL_REGISTER);
+            return op.setError(scan, ILLEGAL_REGISTER);
         if (p.skipSpaces().expect('(')) {
             op.base = op.reg;
             if (p.skipSpaces().expect('#')) {
@@ -481,6 +480,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     op.cc = RegZ8000::parseCcName(p);
     if (op.cc != CC_UNDEF) {
         // 'C' and 'Z' are parsed as M_CC, though these can be M_FLAG.
+        auto a = scan;
         const int8_t num = parseFlagNames(a);
         const auto flag = FlagName(num);
         if (num > 0 && flag != FLAG_C && flag != FLAG_Z) {
@@ -507,15 +507,12 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
         scan = p;
         return OK;
     }
-    if (*p == '|') {
-        auto expr = _parser.scanExpr(++a, op, '|');
-        const auto size = expr.size();
-        if (size == 0) {
-            op.val32 = parseExpr32(p, op);
-        } else {
+    if (p.expect('|')) {
+        op.val32 = parseExpr(p, op, '|').getUnsigned();
+        if (p.expect('|')) {
             op.cc = CC_F;  // short direct
-            op.val32 = parseExpr32(expr, op);
-            p += size + 2;
+        } else {
+            op.setError(scan, UNKNOWN_OPERAND);
         }
     } else {
         op.val32 = parseExpr32(p, op);

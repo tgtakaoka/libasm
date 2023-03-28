@@ -71,7 +71,7 @@ public:
     /** Parse |expr| text and get value as unsigned 32 bit. */
     uint32_t parseExpr32(StrScanner &expr, ErrorAt &error) const;
     /** Parse |expr| text and get value. */
-    Value parseExpr(StrScanner &expr, ErrorAt &error) const;
+    Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
 private:
     ValueParser &_parser;

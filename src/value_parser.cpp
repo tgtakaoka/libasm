@@ -93,47 +93,23 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
     return error;
 }
 
-Value ValueParser::eval(StrScanner &expr, ErrorAt &error, const SymbolTable *symtab) const {
+Value ValueParser::eval(
+        StrScanner &expr, ErrorAt &error, const SymbolTable *symtab, char delim) const {
     Stack<const Operator *> ostack;
     Stack<Value> vstack;
     ostack.push(&Operator::OP_NONE);
-    return parseExpr(expr, error, ostack, vstack, symtab);
-}
-
-StrScanner ValueParser::scanExpr(const StrScanner &scan, ErrorAt &error, char delim) const {
-    auto p = scan;
-    while (!endOfLine(p)) {
-        Value val;
-        auto err = _number.parseNumber(p, val);
-        if (err == OK)
-            continue;
-        char letter;
-        err = _letter.parseLetter(p, letter);
-        if (err == OK)
-            continue;
-        if (*p == delim)
-            return StrScanner(scan.str(), p.str());
-        if (*p == '(' || *p == '[') {
-            const auto close = (*p++ == '(') ? ')' : ']';
-            const auto atom = scanExpr(p, error, close);
-            if (atom.size() == 0)
-                break;
-            p += atom.size() + 1;
-        } else {
-            ++p;
-        }
-    }
-    return StrScanner(p.str(), p.str());
+    return parseExpr(expr, error, ostack, vstack, symtab, delim);
 }
 
 Value ValueParser::parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
-        Stack<Value> &vstack, const SymbolTable *symtab) const {
+        Stack<Value> &vstack, const SymbolTable *symtab, char delim) const {
     Value value;
     while (true) {
-        value = readAtom(scan.skipSpaces(), error, ostack, vstack, symtab);
+        value = parseAtom(scan.skipSpaces(), error, ostack, vstack, symtab);
         if (error.hasError())
             break;
-        const auto *opr = _operator.readBinary(scan.skipSpaces(), error);
+        const auto *opr = *scan.skipSpaces() == delim ? &Operator::OP_NONE
+                                                      : _operator.readBinary(scan, error);
         if (error.hasError())
             break;
         while (ostack.top()->hasHigherPriority(*opr)) {
@@ -157,7 +133,7 @@ Value ValueParser::parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Opera
     return value;
 }
 
-Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
+Value ValueParser::parseAtom(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
         Stack<Value> &vstack, const SymbolTable *symtab) const {
     auto p = scan;
     Value val;
@@ -178,7 +154,7 @@ Value ValueParser::readAtom(StrScanner &scan, ErrorAt &error, Stack<const Operat
     if (error.hasError())
         return val;
     if (opr != &Operator::OP_NONE) {
-        const auto atom = readAtom(p.skipSpaces(), error, ostack, vstack, symtab);
+        const auto atom = parseAtom(p.skipSpaces(), error, ostack, vstack, symtab);
         scan = p;
         const auto err = opr->eval(val, atom);
         if (err)

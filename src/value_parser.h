@@ -42,13 +42,7 @@ public:
      * |value.isUndefined()|. Other error should be checked by
      * |getError()|.
      */
-    Value eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab) const;
-
-    /**
-     * Scan |scan| text, and find |delim| letter.  Return
-     * StrScanner::EMPTY if not found.
-     */
-    StrScanner scanExpr(const StrScanner &scan, ErrorAt &error, char delim) const;
+    Value eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim = 0) const;
 
     /**
      * Parse |scan| text and convert letter constant to |val|.
@@ -94,8 +88,8 @@ private:
     };
 
     Value parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
-            Stack<Value> &vstack, const SymbolTable *symtab) const;
-    Value readAtom(StrScanner &scan, ErrorAt &errpr, Stack<const Operator *> &ostack,
+            Stack<Value> &vstack, const SymbolTable *symtab, char delim = 0) const;
+    Value parseAtom(StrScanner &scan, ErrorAt &errpr, Stack<const Operator *> &ostack,
             Stack<Value> &vstack, const SymbolTable *symtab) const;
 };
 

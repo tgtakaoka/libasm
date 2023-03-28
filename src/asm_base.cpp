@@ -67,8 +67,8 @@ uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
     return _parser.eval(expr, error, _symtab).getUnsigned();
 }
 
-Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) const {
-    return _parser.eval(expr, error, _symtab);
+Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
+    return _parser.eval(expr, error, _symtab, delim);
 }
 
 }  // namespace libasm
