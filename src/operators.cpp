@@ -188,6 +188,8 @@ static const struct OpBitwiseOr : Operator {
 
 const Operator *CStyleOperatorParser::readUnary(StrScanner &scan, ErrorAt &error) const {
     switch (*scan++) {
+    case 0:
+        return &Operator::OP_NONE;
     case '~':
         return &OP_BITWISE_NOT;
     case '-':
@@ -209,6 +211,8 @@ const Operator *CStyleOperatorParser::readUnary(StrScanner &scan, ErrorAt &error
 
 const Operator *CStyleOperatorParser::readBinary(StrScanner &scan, ErrorAt &error) const {
     switch (*scan++) {
+    case 0:
+        return &Operator::OP_NONE;
     case '*':
         return &OP_MULTIPLICATION;
     case '/':

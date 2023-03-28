@@ -64,7 +64,7 @@ uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
 }
 
 uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
-    return parseExpr(expr, error).getUnsigned();
+    return _parser.eval(expr, error, _symtab).getUnsigned();
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error) const {
