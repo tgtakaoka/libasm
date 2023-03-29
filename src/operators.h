@@ -59,6 +59,10 @@ struct FunctionParser {
  * Immutable instance to represent prefix or infix operators and functions.
  */
 struct Operator : ErrorAt {
+    enum Type : uint8_t {
+        PREFIX,
+        INFIX,
+    };
     /** Associativity of an operator */
     enum Assoc : uint8_t {
         LEFT,
@@ -117,22 +121,18 @@ private:
  * Parsing prefix and infix operator.
  */
 struct OperatorParser {
-    enum OperatorType : uint8_t {
-        PREFIX,
-        INFIX,
-    };
     virtual const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, OperatorType type) const = 0;
+            StrScanner &scan, ErrorAt &error, Operator::Type type) const = 0;
 };
 
 struct CStyleOperatorParser : OperatorParser {
     const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, OperatorType type) const override;
+            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
 };
 
 struct Mc68xxOperatorParser : CStyleOperatorParser {
     const Operator *readOperator(
-            StrScanner &scan, ErrorAt &error, OperatorType type) const override;
+            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
 };
 
 }  // namespace libasm

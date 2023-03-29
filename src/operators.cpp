@@ -42,32 +42,32 @@ Error Operator::eval(ValueStack &stack, uint8_t argc) const {
     return argc >= _nargs ? (*_op)(stack) : MISSING_OPERAND;
 }
 
-static const Operator OP_BITWISE_NOT(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+static Error bitwise_not(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
     stack.pushUnsigned(~v);
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_NOT(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+static Error logical_not(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
     stack.pushUnsigned(!v);
     return OK;
-});
+}
 
-static Operator OP_UNARY_MINUS(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+static Error unary_minus(ValueStack &stack) {
     const auto v = stack.pop();
     const auto error = v.isUnsigned() && v.getUnsigned() > 0x80000000 ? OVERFLOW_RANGE : OK;
     stack.pushSigned(-v.getSigned());
     return error;
-});
+}
 
-static const Operator OP_UNARY_PLUS(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+static Error unary_plus(ValueStack &stack) {
     const auto v = stack.pop().getUnsigned();
     stack.pushUnsigned(v);
     return OK;
-});
+}
 
-static const Operator OP_MUL(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error multiply(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -76,9 +76,9 @@ static const Operator OP_MUL(5, Operator::LEFT, 2, [](ValueStack &stack) {
         stack.pushUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
     }
     return OK;
-});
+}
 
-static const Operator OP_DIV(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error divide(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     auto error = OK;
@@ -91,9 +91,9 @@ static const Operator OP_DIV(5, Operator::LEFT, 2, [](ValueStack &stack) {
         stack.pushUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
     }
     return error;
-});
+}
 
-static const Operator OP_MOD(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error modulo(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     auto error = OK;
@@ -106,9 +106,9 @@ static const Operator OP_MOD(5, Operator::LEFT, 2, [](ValueStack &stack) {
         stack.pushUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
     }
     return error;
-});
+}
 
-static const Operator OP_ADD(6, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error add(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -117,9 +117,9 @@ static const Operator OP_ADD(6, Operator::LEFT, 2, [](ValueStack &stack) {
         stack.pushUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
     }
     return OK;
-});
+}
 
-static const Operator OP_SUB(6, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error subtract(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -130,20 +130,13 @@ static const Operator OP_SUB(6, Operator::LEFT, 2, [](ValueStack &stack) {
         stack.pushUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
     }
     return OK;
-});
+}
 
 static uint32_t shift_left(uint32_t value, uint8_t count) {
     for (uint8_t i = 0; i <= 32 && i < count; i++)
         value <<= 1;
     return value;
 }
-
-static const Operator OP_SHIFT_LEFT(7, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(shift_left(lhs, rhs));
-    return OK;
-});
 
 static uint32_t shift_right(uint32_t value, uint8_t count) {
     for (uint8_t i = 0; i <= 32 && i < count; i++)
@@ -160,7 +153,14 @@ static int32_t shift_right_signed(int32_t value, uint8_t count) {
     return value;
 }
 
-static const Operator OP_SHIFT_RIGHT(7, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error logical_shift_left(ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(shift_left(lhs, rhs));
+    return OK;
+}
+
+static Error arithmetic_shift_right(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop();
     if (lhs.isSigned()) {
@@ -169,9 +169,9 @@ static const Operator OP_SHIFT_RIGHT(7, Operator::LEFT, 2, [](ValueStack &stack)
         stack.pushUnsigned(shift_right(lhs.getUnsigned(), rhs));
     }
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_LT(9, Operator::NONE, 2, [](ValueStack &stack) {
+static Error less_than(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -180,9 +180,9 @@ static const Operator OP_LOGICAL_LT(9, Operator::NONE, 2, [](ValueStack &stack) 
         stack.pushUnsigned(lhs.getUnsigned() < rhs.getUnsigned());
     }
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_LE(9, Operator::NONE, 2, [](ValueStack &stack) {
+static Error less_than_or_equal(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -191,9 +191,9 @@ static const Operator OP_LOGICAL_LE(9, Operator::NONE, 2, [](ValueStack &stack) 
         stack.pushUnsigned(lhs.getUnsigned() <= rhs.getUnsigned());
     }
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_GE(9, Operator::NONE, 2, [](ValueStack &stack) {
+static Error greater_than_or_equal(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -202,9 +202,9 @@ static const Operator OP_LOGICAL_GE(9, Operator::NONE, 2, [](ValueStack &stack) 
         stack.pushUnsigned(lhs.getUnsigned() >= rhs.getUnsigned());
     }
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_GT(9, Operator::NONE, 2, [](ValueStack &stack) {
+static Error greater_than(ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
     if (lhs.isSigned() || rhs.isSigned()) {
@@ -213,63 +213,92 @@ static const Operator OP_LOGICAL_GT(9, Operator::NONE, 2, [](ValueStack &stack) 
         stack.pushUnsigned(lhs.getUnsigned() > rhs.getUnsigned());
     }
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_EQ(10, Operator::NONE, 2, [](ValueStack &stack) {
+static Error logical_equal(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs == rhs);
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_NE(10, Operator::NONE, 2, [](ValueStack &stack) {
+static Error logical_not_equal(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs != rhs);
     return OK;
-});
+}
 
-static const Operator OP_BITWISE_AND(11, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error bitwise_and(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs & rhs);
     return OK;
-});
+}
 
-static const Operator OP_BITWISE_XOR(12, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error bitwise_xor(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs ^ rhs);
     return OK;
-});
+}
 
-static const Operator OP_BITWISE_OR(13, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error bitwise_or(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs | rhs);
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_AND(14, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error logical_and(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs && rhs);
 
     return OK;
-});
+}
 
-static const Operator OP_LOGICAL_OR(15, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error logical_or(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(lhs || rhs);
     return OK;
-});
+}
+
+constexpr Operator::Assoc R = Operator::RIGHT;
+constexpr Operator::Assoc L = Operator::LEFT;
+constexpr Operator::Assoc N = Operator::NONE;
+
+// clang-format off
+static const Operator OP_BITWISE_NOT( 3, R, 1, bitwise_not);
+static const Operator OP_LOGICAL_NOT( 3, R, 1, logical_not);
+static const Operator OP_UNARY_MINUS( 3, R, 1, unary_minus);
+static const Operator OP_UNARY_PLUS(  3, R, 1, unary_plus);
+static const Operator OP_MUL(         5, L, 2, multiply);
+static const Operator OP_DIV(         5, L, 2, divide);
+static const Operator OP_MOD(         5, L, 2, modulo);
+static const Operator OP_ADD(         6, L, 2, add);
+static const Operator OP_SUB(         6, L, 2, subtract);
+static const Operator OP_SHIFT_LEFT(  7, L, 2, logical_shift_left);
+static const Operator OP_SHIFT_RIGHT( 7, L, 2, arithmetic_shift_right);
+static const Operator OP_LOGICAL_LT(  9, N, 2, less_than);
+static const Operator OP_LOGICAL_LE(  9, N, 2, less_than_or_equal);
+static const Operator OP_LOGICAL_GE(  9, N, 2, greater_than_or_equal);
+static const Operator OP_LOGICAL_GT(  9, N, 2, greater_than);
+static const Operator OP_LOGICAL_EQ( 10, N, 2, logical_equal);
+static const Operator OP_LOGICAL_NE( 10, N, 2, logical_not_equal);
+static const Operator OP_BITWISE_AND(11, L, 2, bitwise_and);
+static const Operator OP_BITWISE_XOR(12, L, 2, bitwise_xor);
+static const Operator OP_BITWISE_OR( 13, L, 2, bitwise_or);
+static const Operator OP_LOGICAL_AND(14, L, 2, logical_and);
+static const Operator OP_LOGICAL_OR( 15, L, 2, logical_or);
+// clang-format on
 
 const Operator *CStyleOperatorParser::readOperator(
-        StrScanner &scan, ErrorAt &error, OperatorType type) const {
+        StrScanner &scan, ErrorAt &error, Operator::Type type) const {
     auto p = scan;
     const Operator *opr = nullptr;
-    if (type == PREFIX) {
+    if (type == Operator::PREFIX) {
         if (p.expect('~')) {
             opr = &OP_BITWISE_NOT;
         } else if (p.expect('!') && *p != '=') {
@@ -279,7 +308,7 @@ const Operator *CStyleOperatorParser::readOperator(
         } else if (p.expect('+')) {
             opr = &OP_UNARY_PLUS;
         }
-    } else if (type == INFIX) {
+    } else if (type == Operator::INFIX) {
         if (p.expect('*')) {
             opr = &OP_MUL;
         } else if (p.expect('/')) {
@@ -337,7 +366,7 @@ static BASE power(BASE base, uint32_t exp) {
     }
 }
 
-static const Operator MC68_EXPONENTIAL(5, Operator::RIGHT, 2, [](ValueStack &stack) {
+static Error exponential(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop();
     if (lhs.isSigned() && lhs.getSigned() < 0) {
@@ -346,62 +375,52 @@ static const Operator MC68_EXPONENTIAL(5, Operator::RIGHT, 2, [](ValueStack &sta
         stack.pushUnsigned(power<uint32_t>(lhs.getUnsigned(), rhs));
     }
     return OK;
-});
+}
 
-static const Operator MC68_ROTATE_LEFT(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error rotate_left_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
     const auto v = shift_left(lhs, rhs) | shift_right(lhs, 16 - rhs);
     stack.pushUnsigned(v & 0xFFFF);
     return OK;
-});
+}
 
-static const Operator MC68_ROTATE_RIGHT(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error rotate_right_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
     const auto v = shift_right(lhs, rhs) | shift_left(lhs, 16 - rhs);
     stack.pushUnsigned(v & 0xFFFF);
     return OK;
-});
+}
 
-static const Operator MC68_SHIFT_LEFT(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error logical_shift_left_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned();
     stack.pushUnsigned(shift_left(lhs, rhs) & 0xFFFF);
     return OK;
-});
+}
 
-static const Operator MC68_SHIFT_RIGHT(5, Operator::LEFT, 2, [](ValueStack &stack) {
+static Error logical_shift_right_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
     stack.pushUnsigned(shift_right(lhs, rhs));
     return OK;
-});
+}
 
-static const Operator MC68_BITWISE_AND(5, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs & rhs);
-    return OK;
-});
-
-static const Operator MC68_BITWISE_XOR(5, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs ^ rhs);
-    return OK;
-});
-
-static const Operator MC68_BITWISE_OR(5, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
-    stack.pushUnsigned(lhs | rhs);
-    return OK;
-});
+// clang-format off
+static const Operator MC68_EXPONENTIAL( 5, R, 2, exponential);
+static const Operator MC68_ROTATE_LEFT( 5, L, 2, rotate_left_16bit);
+static const Operator MC68_ROTATE_RIGHT(5, L, 2, rotate_right_16bit);
+static const Operator MC68_SHIFT_LEFT(  5, L, 2, logical_shift_left_16bit);
+static const Operator MC68_SHIFT_RIGHT( 5, L, 2, logical_shift_right_16bit);
+static const Operator MC68_BITWISE_AND( 5, L, 2, bitwise_and);
+static const Operator MC68_BITWISE_XOR( 5, L, 2, bitwise_xor);
+static const Operator MC68_BITWISE_OR(  5, L, 2, bitwise_or);
+// clang-format on
 
 const Operator *Mc68xxOperatorParser::readOperator(
-        StrScanner &scan, ErrorAt &error, OperatorType type) const {
-    if (type == INFIX) {
+        StrScanner &scan, ErrorAt &error, Operator::Type type) const {
+    if (type == Operator::INFIX) {
         auto p = scan;
         if (p.expect('!')) {
             const Operator *opr = nullptr;

@@ -76,7 +76,15 @@ Value ValueParser::eval(
             break;
 
         const auto at = scan;
+        const Operator *opr = nullptr;
         if (maybe_prefix) {
+            // Prefix operator may consist of alpha numeric text. Check operator before handling
+            // symbols.
+            opr = _operator.readOperator(scan, error, Operator::PREFIX);
+            if (error.hasError())
+                return Value();
+        }
+        if (maybe_prefix && opr == nullptr) {
             Value val;
             auto err = parseConstant(scan, val);
             if (err == OK) {
@@ -92,7 +100,7 @@ Value ValueParser::eval(
                 return val;
             }
 
-             const auto fn = _function->parseFunction(scan, error);
+            const auto fn = _function->parseFunction(scan, error);
             if (fn) {
                 if (*scan.skipSpaces() != '(') {
                     error.setError(at, MISSING_FUNC_ARGUMENT);
@@ -124,17 +132,18 @@ Value ValueParser::eval(
             }
         }
 
-        const auto oprPos = scan;
-        const auto oprType = maybe_prefix ? OperatorParser::PREFIX : OperatorParser::INFIX;
-        const auto *opr = _operator.readOperator(scan, error, oprType);
-        if (error.hasError())
-            return Value();
+        if (opr == nullptr) {
+            const auto oprType = maybe_prefix ? Operator::PREFIX : Operator::INFIX;
+            opr = _operator.readOperator(scan, error, oprType);
+            if (error.hasError())
+                return Value();
+        }
         if (opr) {
             while (!ostack.empty()) {
                 const auto top = ostack.top();
                 if (top.isNoneAssoc(*opr)) {
                     // This can be warning and continue as left associative.
-                    error.setErrorIf(oprPos, OPERATOR_NOT_ASSOCIATIVE);
+                    error.setErrorIf(at, OPERATOR_NOT_ASSOCIATIVE);
                     return Value();
                 }
                 if (!top.isHigher(*opr))
@@ -157,8 +166,7 @@ Value ValueParser::eval(
         }
 
         if (in_fn_args && scan.expect(',')) {
-            // non-zero |in_fn_args| ensures the existence of open
-            // parenthesis in |ostack|.
+            // non-zero |in_fn_args| ensures the existence of open parenthesis in |ostack|.
             while (!ostack.top().isOpenParen()) {
                 const auto op = ostack.pop();
                 const auto err = op.eval(vstack);

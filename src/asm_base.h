@@ -77,7 +77,6 @@ private:
 protected:
     entry::Table &_table;
     PseudoBase &_pseudos;
-    char _commentChar;
     SymbolTable *_symtab;
     const Options _commonOptions;
 

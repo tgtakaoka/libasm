@@ -15,9 +15,11 @@
  */
 
 #include "asm_ns32000.h"
-#include "text_ns32000.h"
 
 #include <stdlib.h>
+
+#include "table_ns32000.h"
+#include "text_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
@@ -28,6 +30,35 @@ using text::ns32000::TEXT_PMMU;
 
 static const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 static const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+
+struct AsmNs32000::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint32_t val32;
+    uint32_t disp2;
+    double float64;
+    RegName index;
+    OprSize size;
+    Operand()
+        : mode(M_NONE),
+          reg(REG_UNDEF),
+          val32(0),
+          disp2(0),
+          float64(0),
+          index(REG_UNDEF),
+          size(SZ_NONE) {}
+};
+
+AsmNs32000::AsmNs32000()
+    : Assembler(_parser, TableNs32000::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {
+    reset();
+}
+
+void AsmNs32000::reset() {
+    TableNs32000::TABLE.reset();
+}
 
 AsmNs32000::OptPmmu::OptPmmu(PseudoNs32000 &pseudos)
     : OptionBase(TEXT_PMMU, OPT_DESC_PMMU, OPT_TEXT), _pseudos(pseudos) {}

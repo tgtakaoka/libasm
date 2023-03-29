@@ -21,22 +21,16 @@
 #include "config_ns32000.h"
 #include "insn_ns32000.h"
 #include "reg_ns32000.h"
-#include "table_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
 
 class AsmNs32000 : public Assembler, public Config {
 public:
-    AsmNs32000()
-        : Assembler(_parser, TableNs32000::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmNs32000();
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { TableNs32000::TABLE.reset(); }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:
@@ -65,24 +59,7 @@ private:
     } _opt_fpu{_pseudos, _opt_pmmu};
     const Options _options{_opt_fpu};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        uint32_t val32;
-        uint32_t disp2;
-        double float64;
-        RegName index;
-        OprSize size;
-        Operand()
-            : mode(M_NONE),
-              reg(REG_UNDEF),
-              val32(0),
-              disp2(0),
-              float64(0),
-              index(REG_UNDEF),
-              size(SZ_NONE) {}
-    };
-
+    struct Operand;
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;
     Error parseConfigNames(StrScanner &scan, Operand &op) const;
     Error parseRegisterList(StrScanner &scan, Operand &op) const;

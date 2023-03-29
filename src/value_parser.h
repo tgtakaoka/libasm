@@ -82,7 +82,6 @@ public:
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
-    // const FunCallParser *setFunCallParser(const FunCallParser *funCall = nullptr);
     const FunctionParser *setFunctionParser(const FunctionParser *function = nullptr);
 
 private:
