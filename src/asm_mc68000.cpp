@@ -326,7 +326,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             scan = p;
             return OK;
         }
-        op.val32 = parseExpr32(p, op);
+        op.val32 = parseExpr32(p, op, ')');
         if (op.hasError())
             return op.getError();
         if (p.skipSpaces().expect(')')) {

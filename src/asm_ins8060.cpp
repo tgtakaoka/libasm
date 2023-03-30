@@ -29,25 +29,25 @@ static Config::uintptr_t offset(Config::uintptr_t addr) {
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(const Arguments &args, Value &val) const override {
-        val.setUnsigned((args.at(1).getUnsigned() >> 8) & 0xFF);
+    Error eval(ValueStack &stack, uint8_t argc) const override {
+        stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
         return OK;
     }
 } FN_HIGH;
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(const Arguments &args, Value &val) const override {
-        val.setUnsigned(args.at(1).getUnsigned() & 0xFF);
+    Error eval(ValueStack &stack, uint8_t argc) const override {
+        stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
         return OK;
     }
 } FN_LOW;
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(const Arguments &args, Value &val) const override {
-        const auto v = args.at(1).getUnsigned();
-        val.setUnsigned(page(v) | offset(v - 1));
+    Error eval(ValueStack &stack, uint8_t argc) const override {
+        const auto v = stack.pop().getUnsigned();
+        stack.pushUnsigned(page(v) | offset(v - 1));
         return OK;
     }
 } FN_ADDR;
@@ -57,7 +57,7 @@ const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(
     auto p = scan;
     p.trimStart([](char c) { return c != '(' && !isspace(c); });
     const auto name = StrScanner(scan.str(), p.str());
-    auto fn = &Functor::FN_NONE;
+    const Functor *fn = nullptr;
     if (name.iequals_P(PSTR("H"))) {
         fn = &FN_HIGH;
     } else if (name.iequals_P(PSTR("L"))) {
@@ -65,7 +65,7 @@ const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(
     } else if (name.iequals_P(PSTR("ADDR"))) {
         fn = &FN_ADDR;
     }
-    if (fn != &Functor::FN_NONE)
+    if (fn)
         scan = p;
     return fn;
 }

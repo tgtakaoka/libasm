@@ -263,14 +263,17 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
         if (reg != REG_UNDEF)
             return false;
 
-        ErrorAt error;
-        error.setAt(p);
-        const auto bitp = parseExpr32(p, error);
-        if (op.hasError())
+        ErrorAt save(op);
+        op.setError(p, OK);
+        const auto bitp = parseExpr32(p, op);
+        if (op.hasError()) {
+            op.setError(save);
             return false;
+        }
+        if (save.getError())
+            op.setError(save);
         if (bitp >= 8)
-            error.setErrorIf(ILLEGAL_BIT_NUMBER);
-        op.setErrorIf(error);
+            op.setErrorIf(ILLEGAL_BIT_NUMBER);
         op.extra = bitp;
         scan = p;
         return true;

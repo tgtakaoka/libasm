@@ -94,151 +94,197 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
 }
 
 Value ValueParser::eval(
-        StrScanner &expr, ErrorAt &error, const SymbolTable *symtab, char delim) const {
-    Stack<const Operator *> ostack;
-    Stack<Value> vstack;
-    ostack.push(&Operator::OP_NONE);
-    return parseExpr(expr, error, ostack, vstack, symtab, delim);
-}
-
-Value ValueParser::parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
-        Stack<Value> &vstack, const SymbolTable *symtab, char delim) const {
-    Value value;
+        StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
+    ValueStack vstack;
+    OperatorStack ostack;
+    char end_of_expr = delim;
+    uint8_t in_paren = 0;
+    bool maybe_prefix = true;
+    bool expect_fn_args = false;
+    uint8_t in_fn_args = 0;
     while (true) {
-        value = parseAtom(scan.skipSpaces(), error, ostack, vstack, symtab);
-        if (error.hasError())
+        if (endOfLine(scan.skipSpaces()))
             break;
-        const auto *opr = *scan.skipSpaces() == delim ? &Operator::OP_NONE
-                                                      : _operator.readBinary(scan, error);
-        if (error.hasError())
+        // expression ends with |delim|
+        if (*scan == end_of_expr && !vstack.empty())
             break;
-        while (ostack.top()->hasHigherPriority(*opr)) {
-            if (ostack.top() == &Operator::OP_NONE) {
-                ostack.pop();
-                return value;
+
+        if (maybe_prefix) {
+            Value val;
+            auto err = parseConstant(scan, val);
+            if (err == OK) {
+                if (vstack.full()) {
+                    error.setError(TOO_COMPLEX_EXPRESSION);
+                    return Value();
+                }
+                vstack.push(val);
+                maybe_prefix = false;
+                continue;
+            } else if (err != NOT_AN_EXPECTED) {
+                error.setError(scan, err);
+                return val;
             }
-            const auto err = ostack.top()->eval(value, vstack.top(), value);
-            if (err)
-                error.setErrorIf(err);
-            ostack.pop();
-            vstack.pop();
+
+            const auto fn = _function->parseFunction(scan, error);
+            if (fn) {
+                if (*scan.skipSpaces() != '(') {
+                    error.setError(scan, MISSING_FUNC_ARGUMENT);
+                    return Value();
+                }
+                const Operator opr(fn);
+                ostack.push(opr);
+                maybe_prefix = false;
+                expect_fn_args = true;
+                in_fn_args++;
+                continue;
+            }
+
+            const auto sym = scan;
+            const auto symbol = readSymbol(scan);
+            if (symbol.size()) {
+                if (vstack.full()) {
+                    error.setError(TOO_COMPLEX_EXPRESSION);
+                    return Value();
+                }
+                if (symtab && symtab->hasSymbol(symbol)) {
+                    vstack.pushSigned(symtab->lookupSymbol(symbol));
+                } else {
+                    error.setError(sym, UNDEFINED_SYMBOL);
+                    vstack.push(Value());
+                }
+                maybe_prefix = false;
+                continue;
+            }
         }
-        if (ostack.full() || vstack.full()) {
-            error.setError(scan, TOO_COMPLEX_EXPRESSION);
-            break;
+
+        const auto oprType = maybe_prefix ? OperatorParser::PREFIX : OperatorParser::INFIX;
+        const auto *opr = _operator.readOperator(scan, error, oprType);
+        if (error.hasError())
+            return Value();
+        if (opr) {
+            while (!ostack.empty() && ostack.top().isHigher(*opr)) {
+                const auto err = ostack.pop().eval(vstack);
+                if (err) {
+                    error.setErrorIf(err);
+                    return Value();
+                }
+            }
+            if (ostack.full()) {
+                error.setErrorIf(TOO_COMPLEX_EXPRESSION);
+                return Value();
+            }
+            ostack.push(*opr);
+            maybe_prefix = true;
+            continue;
         }
-        ostack.push(opr);
-        vstack.push(value);
+
+        if (in_fn_args && scan.expect(',')) {
+            // non-zero |in_fn_args| ensures the existence of open
+            // parenthesis in |ostack|.
+            while (!ostack.top().isOpenParen()) {
+                const auto err = ostack.pop().eval(vstack);
+                if (err) {
+                    error.setErrorIf(err);
+                    return Value();
+                }
+            }
+            maybe_prefix = true;
+            continue;
+        }
+
+        if (scan.expect('(')) {
+            // expression ends with '('
+            if (!maybe_prefix && !expect_fn_args) {
+                --scan;
+                break;
+            }
+            if (ostack.full()) {
+                error.setErrorIf(TOO_COMPLEX_EXPRESSION);
+                return Value();
+            }
+            Operator openParen(vstack.size());
+            ostack.push(openParen);
+            end_of_expr = 0;
+            in_paren++;
+            maybe_prefix = true;
+            expect_fn_args = false;
+            continue;
+        }
+
+        if (scan.expect(')')) {
+            while (!ostack.empty() && !ostack.top().isOpenParen()) {
+                const auto err = ostack.pop().eval(vstack);
+                if (err) {
+                    error.setErrorIf(err);
+                    return Value();
+                }
+            }
+            // expression ends with ')'
+            if (ostack.empty())
+                break;
+
+            const auto openParen = ostack.pop();
+            if (!ostack.empty() && ostack.top().isFunction()) {
+                const auto argc = vstack.size() - openParen.stackPosition();
+                const auto err = ostack.pop().eval(vstack, argc);
+                if (err) {
+                    error.setErrorIf(err);
+                    return Value();
+                }
+                in_fn_args--;
+            }
+            if (--in_paren == 0)
+                end_of_expr = delim;
+            maybe_prefix = false;
+            continue;
+        }
+
+        break;
     }
-    return value;
+
+    while (!ostack.empty()) {
+        const auto op = ostack.pop();
+        if (op.isOpenParen()) {
+            error.setErrorIf(MISSING_CLOSING_PAREN);
+            return Value();
+        }
+        const auto err = op.eval(vstack);
+        if (err) {
+            error.setErrorIf(err);
+            return Value();
+        }
+    }
+    return vstack.pop();
 }
 
-Value ValueParser::parseAtom(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
-        Stack<Value> &vstack, const SymbolTable *symtab) const {
+Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
     auto p = scan;
-    Value val;
-    if (p.expect('(')) {
-        if (ostack.full()) {
-            error.setError(p, TOO_COMPLEX_EXPRESSION);
-        } else {
-            ostack.push(&Operator::OP_NONE);
-            val = parseExpr(p, error, ostack, vstack, symtab);
-            if (!p.skipSpaces().expect(')'))
-                error.setErrorIf(p, MISSING_CLOSING_PAREN);
-            scan = p;
-        }
-        return val;
-    }
-
-    const auto *opr = _operator.readUnary(p, error);
-    if (error.hasError())
-        return val;
-    if (opr != &Operator::OP_NONE) {
-        const auto atom = parseAtom(p.skipSpaces(), error, ostack, vstack, symtab);
-        scan = p;
-        const auto err = opr->eval(val, atom);
-        if (err)
-            error.setErrorIf(err);
-        return val;
-    }
 
     char letter;
     auto err = _letter.parseLetter(p, letter);
     if (err == OK) {
+        val.setUnsigned(letter);
         scan = p;
-        return val.setUnsigned(letter);
-    } else if (err != NOT_AN_EXPECTED) {
-        error.setError(p, err);
-        return val;
+        return OK;
     }
+    if (err != NOT_AN_EXPECTED)
+        return err;
 
     err = _number.parseNumber(p, val);
-    if (err != NOT_AN_EXPECTED) {
-        if (err)
-            error.setErrorIf(scan, err);
+    if (err == OK) {
         scan = p;
-        return val;
+        return OK;
     }
+    if (err != NOT_AN_EXPECTED)
+        return err;
 
     if (_location.locationSymbol(p)) {
+        val.setUnsigned(_origin);
         scan = p;
-        return val.setUnsigned(_origin);
+        return OK;
     }
 
-    const auto *fun = _function->parseFunction(p, error);
-    if (fun != &Functor::FN_NONE) {
-        if (!p.skipSpaces().expect('(')) {
-            error.setError(p, MISSING_FUNC_ARGUMENT);
-            return val;
-        }
-        p.skipSpaces();
-        Functor::Arguments args;
-        while (true) {
-            if (p.expect(')'))
-                break;
-            val = eval(p, error, symtab);
-            if (error.hasError())
-                break;
-            if (args.full()) {
-                error.setErrorIf(TOO_MANY_FUNC_ARGUMENT);
-                break;
-            }
-            args.push(val);
-
-            if (*p.skipSpaces() == ')' || p.expect(','))
-                continue;
-            error.setError(p, MISSING_CLOSING_PAREN);
-            break;
-        }
-        scan = p;
-        if (error.isOK()) {
-            const auto nargs = fun->nargs();
-            if (nargs < 0 || args.size() == nargs) {
-                err = fun->eval(args, val);
-            } else if (args.size() < nargs) {
-                err = TOO_FEW_FUNC_ARGUMENT;
-            } else {
-                err = TOO_MANY_FUNC_ARGUMENT;
-            }
-            if (err)
-                error.setErrorIf(err);
-        }
-        return val;
-    }
-
-    const auto symbol = readSymbol(p);
-    if (symbol.size()) {
-        scan = p;
-        if (symtab && symtab->hasSymbol(symbol)) {
-            const uint32_t v = symtab->lookupSymbol(symbol);
-            return val.setSigned(v);
-        }
-        error.setErrorIf(symbol, UNDEFINED_SYMBOL);
-        return val;
-    }
-
-    error.setError(ILLEGAL_CONSTANT);
-    return Value();
+    return NOT_AN_EXPECTED;
 }
 
 const FunctionParser *ValueParser::setFunctionParser(const FunctionParser *function) {

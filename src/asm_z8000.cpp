@@ -448,7 +448,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
         if (p.skipSpaces().expect('(')) {
             op.base = op.reg;
             if (p.skipSpaces().expect('#')) {
-                op.val32 = parseExpr32(p, op);
+                op.val32 = parseExpr32(p, op, ')');
                 if (op.hasError())
                     return op.getError();
                 if (!p.skipSpaces().expect(')'))

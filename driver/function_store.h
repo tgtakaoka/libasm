@@ -46,7 +46,7 @@ private:
                 const ValueParser &parser);
         // Functor
         int8_t nargs() const override { return params.size(); }
-        Error eval(const Arguments &args, Value &val) const override;
+        Error eval(ValueStack &stack, uint8_t argc) const override;
 
     private:
         std::string body;

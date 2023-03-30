@@ -177,7 +177,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         const auto regp = p.skipSpaces();
         op.reg = RegZ80::parseRegName(p);
         if (op.reg == REG_UNDEF) {
-            op.val16 = parseExpr16(p, op);
+            op.val16 = parseExpr16(p, op, ')');
             if (op.hasError())
                 return getError();
             if (!p.skipSpaces().expect(')'))
@@ -213,7 +213,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (*p == '+' || *p == '-') {
             if (op.reg == REG_IX || op.reg == REG_IY) {
-                op.val16 = parseExpr16(p, op);
+                op.val16 = parseExpr16(p, op, ')');
                 if (op.hasError())
                     return getError();
                 if (!p.skipSpaces().expect(')'))

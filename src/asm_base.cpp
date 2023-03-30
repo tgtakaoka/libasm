@@ -54,17 +54,17 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     return error;
 }
 
-uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error) const {
+uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {
     auto p = expr;
-    const auto value = _parser.eval(p, error, _symtab);
+    const auto value = _parser.eval(p, error, _symtab, delim);
     if (value.overflowUint16())
         error.setErrorIf(expr, OVERFLOW_RANGE);
     expr = p;
     return value.getUnsigned();
 }
 
-uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error) const {
-    return _parser.eval(expr, error, _symtab).getUnsigned();
+uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error, char delim) const {
+    return _parser.eval(expr, error, _symtab, delim).getUnsigned();
 }
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {

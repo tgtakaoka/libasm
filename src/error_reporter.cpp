@@ -106,10 +106,10 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Too many function arguments");
     case DUPLICATE_FUNCTION:
         return PSTR("Duplicate function");
-    case SYMBOL_REQUIRE:
-        return PSTR("Symbol name required");
     case NOT_AN_EXPECTED:
         return PSTR("Not an expected entity");
+    case MISSING_OPERAND:
+        return PSTR("Missing operand");
 
     // AsmDirective
     case UNKNOWN_DIRECTIVE:

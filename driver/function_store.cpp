@@ -53,35 +53,39 @@ const Functor *FunctionStore::parseFunction(StrScanner &scan, ErrorAt &error) co
     const std::string name(scan.str(), p.str() - scan.str());
     const auto it = _functions.find(name);
     if (it == _functions.end())
-        return _parent ? _parent->parseFunction(scan, error) : &Functor::FN_NONE;
+        return _parent ? _parent->parseFunction(scan, error) : nullptr;
     scan = p;
     return &it->second;
 }
 
-Error FunctionStore::Function::eval(const Arguments &args, Value &val) const {
+Error FunctionStore::Function::eval(ValueStack &stack, uint8_t argc) const {
     struct Binding : SymbolTable {
-        Binding(const std::list<std::string> &params, const Functor::Arguments &args)
-            : _args(args) {
-            int index = 1;
+        Binding(const std::list<std::string> &params, const ValueStack &stack, uint8_t argc)
+            : _stack(stack) {
             for (const std::string &param : params)
-                _params.emplace(param, index++);
+                _params.emplace(param, --argc);
         }
         bool hasSymbol(const StrScanner &symbol) const override {
             return _params.find(std::string(symbol.str(), symbol.size())) != _params.end();
         }
         uint32_t lookupSymbol(const StrScanner &symbol) const override {
             const auto it = _params.find(std::string(symbol.str(), symbol.size()));
-            return _args.at(it->second).getUnsigned();
+            return _stack.at(it->second).getUnsigned();
         }
         const char *lookupValue(uint32_t address) const override { return nullptr; }
 
     private:
-        const Functor::Arguments &_args;
+        const ValueStack &_stack;
         std::map<std::string, int, std::less<>> _params;
-    } binding{params, args};
+    } binding{params, stack, argc};
     StrScanner body_scan(body.c_str());
     ErrorAt error;
-    val = parser.eval(body_scan, error, &binding);
+    const auto val = parser.eval(body_scan, error, &binding);
+    while (argc) {
+        stack.pop();
+        argc--;
+    }
+    stack.push(val);
     return error.getError();
 }
 

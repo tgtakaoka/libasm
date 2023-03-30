@@ -203,11 +203,11 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     auto t = p;
-    const auto indir = p.expect('(');
+    const auto indir = p.expect('(') ? ')' : 0;
     const auto preDec = (*t == '-' && *++t == '(');
     if (indir || preDec)
         ++t;
-    const auto r(t);
+    const auto r = t;
     op.reg = RegMn1610::parseRegName(t);
     if (op.reg != REG_UNDEF) {
         // r, (r), -(r), (r)+
@@ -251,9 +251,11 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
         scan = t;
         return OK;
     }
+    if (preDec)
+        return op.setError(UNKNOWN_OPERAND);
 
     // v, (v), (v)(r), v(r), (v(r))
-    op.val32 = parseExpr32(p, op);
+    op.val32 = parseExpr32(p, op, indir);
     if (op.hasError())
         return getError();
     if (endOfLine(p.skipSpaces()) || *p == ',') {

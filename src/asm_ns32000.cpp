@@ -191,7 +191,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         if (reg == REG_EXT) {
             if (!p.expect('('))
                 return op.setError(p, UNKNOWN_OPERAND);
-            op.val32 = parseExpr32(p, op);
+            op.val32 = parseExpr32(p, op, ')');
             if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
@@ -267,11 +267,11 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
 
     op.disp2 = op.val32;
     ErrorAt save(op);
-    op.val32 = parseExpr32(p, op);
+    op.val32 = parseExpr32(p, op, ')');
     if (op.hasError())
         return op.getError();
     if (save.getError())
-        op.setErrorIf(save);
+        op.setError(save);
     if (!p.skipSpaces().expect('('))
         return op.setErrorIf(p, UNKNOWN_OPERAND);
     const auto x = p;

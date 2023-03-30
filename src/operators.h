@@ -18,40 +18,29 @@
 #define __OPERATORS_H__
 
 #include "error_reporter.h"
+#include "stack.h"
 #include "value.h"
 
 #include <stdint.h>
 
 namespace libasm {
 
+struct ValueStack : Stack<Value, 8> {
+    ValueStack() : Stack() {}
+    void pushSigned(int32_t val) { _contents[_size++].setSigned(val); }
+    void pushUnsigned(uint32_t val) { _contents[_size++].setUnsigned(val); }
+    /** Returns |pos|-th element from stack top */
+    const Value &at(uint8_t pos) const { return _contents[_size - pos - 1]; }
+};
+
 /**
  * Immutable instance to represent a function.
  */
 struct Functor {
-    /** Arguments for function calliing. The maimum number of arguments is |MAX_ARGS| */
-    struct Arguments {
-        Arguments() : _size(0) {}
-
-        uint8_t size() const { return _size; }
-        bool full() const { return _size == MAX_ARGS; }
-        void push(const Value &val) { _content[_size++] = val; }
-        /** Returns |index|-th argument. |index| is from 1 to |size()|. */
-        const Value &at(uint8_t index) const { return _content[index - 1]; }
-
-        static constexpr auto MAX_ARGS = 4;
-
-    private:
-        uint8_t _size;
-        Value _content[MAX_ARGS];
-    };
-
     /** Returns the number of required qrguments. Negative value means variable arguments. */
     virtual int8_t nargs() const { return -1; }
     /** Evaluate function with |arguments|. */
-    virtual Error eval(const Arguments &args, Value &val) const { return OK; }
-
-    /** The singleton for not a function */
-    static const Functor FN_NONE;
+    virtual Error eval(ValueStack &stack, uint8_t argc) const { return OK; }
 };
 
 /**
@@ -59,47 +48,79 @@ struct Functor {
  */
 struct FunctionParser {
     /**
-     * Parsing |scan| and returns a Functor pointer for a function. |scan| should point an opening
-     * parenthes for arguments list. Returning Functor::FN_NONE means there is no function call and
-     * |scan| shoud be unchanged.
+     * Parsing |scan| and returns  a Functor pointer for a function. |scan|  should point an
+     * opening parenthes  for arguments  list. Returns  nullptr  if no  function  call and
+     * |scan| shoud  be unchanged.
      */
-    virtual const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const {
-        return &Functor::FN_NONE;
-    }
+    virtual const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const { return nullptr; }
 };
 
 /**
- * Immutable instance to represent unary or binary operator.
+ * Immutable instance to represent prefix or infix operators and functions.
  */
 struct Operator {
-    /** Evaluate as unary operator with |rhs| as an argument. */
-    virtual Error eval(Value &val, const Value &rhs) const { return OK; }
-    /** Evaluate as binary operator with |lhs| and |rhs| as arguments. */
-    virtual Error eval(Value &val, const Value &lhs, const Value &rhs) const { return OK; }
-    bool hasHigherPriority(const Operator &o) const { return _precedence <= o._precedence; }
+    enum Assoc : uint8_t {
+        LEFT,
+        RIGHT,
+    };
 
-    /** The singleton for not an operator */
-    static const struct Operator OP_NONE;
+    Operator() : _prec(255), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(nullptr) {}
 
-protected:
-    Operator(uint8_t precedence) : _precedence(precedence) {}
+    void operator=(const Operator &o) {
+        _prec = o._prec;
+        _assoc = o._assoc;
+        _nargs = o._nargs;
+        _op = o._op;
+        _fn = o._fn;
+    }
+
+    /** Pop operands in |stack|, evaluate and push  result onto |stack|. */
+    Error eval(ValueStack &stack, uint8_t argc = 0) const;
+    /** Returns true when |this| operator has higher precedence than |o| */
+    bool isHigher(const Operator &o) const;
+
+    /** Constructor for operators */
+    typedef Error(OperatorEval)(ValueStack &stack);
+    Operator(uint8_t prec, Assoc assoc, int8_t nargs = 0, OperatorEval *op = nullptr)
+        : _prec(prec), _assoc(assoc), _nargs(nargs), _op(op), _fn(nullptr) {}
+
+    /** Constructor for function */
+    Operator(const Functor *fn) : _prec(2), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(fn) {}
+    bool isFunction() const { return _fn != nullptr; }
+
+    /**
+     * Constructor for opening parenthesis which records the stack position of possible function
+     * argument list.
+     */
+    Operator(uint8_t stackPosition)
+        : _prec(254), _assoc(LEFT), _nargs(stackPosition), _op(nullptr), _fn(nullptr) {}
+    bool isOpenParen() const { return _prec == 254; }
+    uint8_t stackPosition() const { return _nargs; }
 
 private:
-    /** Operator precedence (smaller value means higher precedence). */
-    const uint8_t _precedence;
+    /** Operator prec (smaller value means higher precedence). */
+    uint8_t _prec;
+    Assoc _assoc;
+    int8_t _nargs;
+    OperatorEval *_op;
+    const Functor *_fn;
 };
 
 /**
- * Parsing unary and binary operator.
+ * Parsing prefix and infix operator.
  */
 struct OperatorParser {
-    virtual const Operator *readUnary(StrScanner &scan, ErrorAt &error) const = 0;
-    virtual const Operator *readBinary(StrScanner &scan, ErrorAt &error) const = 0;
+    enum OperatorType : uint8_t {
+        PREFIX,
+        INFIX,
+    };
+    virtual const Operator *readOperator(
+            StrScanner &scan, ErrorAt &error, OperatorType type) const = 0;
 };
 
 struct CStyleOperatorParser : OperatorParser {
-    const Operator *readUnary(StrScanner &scan, ErrorAt &error) const override;
-    const Operator *readBinary(StrScanner &scan, ErrorAt &error) const override;
+    const Operator *readOperator(
+            StrScanner &scan, ErrorAt &error, OperatorType type) const override;
 };
 
 }  // namespace libasm

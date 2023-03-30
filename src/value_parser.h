@@ -18,6 +18,7 @@
 #define __VALUE_PARSER_H__
 
 #include "parsers.h"
+#include "stack.h"
 
 #include <stdint.h>
 
@@ -86,25 +87,12 @@ private:
     const FunctionParser _nullFunction;
     const CStyleOperatorParser _cstyleOperators;
 
-    template <typename E>
-    struct Stack {
-        Stack() : _size(0) {}
-        bool empty() const { return _size == 0; }
-        bool full() const { return _size >= capacity; }
-        const E &top() const { return _values[_size - 1]; }
-        void push(const E v) { _values[_size++] = v; }
-        void pop() { _size--; }
-
-    private:
-        static constexpr uint8_t capacity = 8;
-        uint8_t _size;
-        E _values[capacity];
+    struct OperatorStack : Stack<Operator, 8> {
+        OperatorStack() : Stack() {}
+        const Operator &top() const { return _contents[_size - 1]; }
     };
 
-    Value parseExpr(StrScanner &scan, ErrorAt &error, Stack<const Operator *> &ostack,
-            Stack<Value> &vstack, const SymbolTable *symtab, char delim = 0) const;
-    Value parseAtom(StrScanner &scan, ErrorAt &errpr, Stack<const Operator *> &ostack,
-            Stack<Value> &vstack, const SymbolTable *symtab) const;
+    Error parseConstant(StrScanner &scan, Value &val) const;
 };
 
 }  // namespace libasm

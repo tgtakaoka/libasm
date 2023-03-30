@@ -348,24 +348,26 @@ static void test_function() {
     // clang-format on
     static const struct : Functor {
         int8_t nargs() const override { return 0; }
-        Error eval(const Arguments &args, Value &val) const override {
-            val.setUnsigned(0x31415926);
+        Error eval(ValueStack &stack, uint8_t argc) const override {
+            stack.pushUnsigned(0x31415926);
             return OK;
         }
     } FN_PI;
     static const struct : Functor {
         int8_t nargs() const override { return 2; }
-        Error eval(const Arguments &args, Value &val) const override {
-            val.setSigned(args.at(1).getSigned() - args.at(2).getSigned());
+        Error eval(ValueStack &stack, uint8_t argc) const override {
+            const auto rhs = stack.pop();
+            const auto lhs = stack.pop();
+            stack.pushSigned(lhs.getSigned() - rhs.getSigned());
             return OK;
         }
     } FN_SUB;
     static const struct : Functor {
-        Error eval(const Arguments &args, Value &val) const override {
+        Error eval(ValueStack &stack, uint8_t argc) const override {
             int32_t sum = 0;
-            for (auto i = 1; i <= args.size(); ++i)
-                sum += args.at(i).getSigned();
-            val.setSigned(sum);
+            for (auto i = 0; i < argc; i++)
+                sum += stack.pop().getSigned();
+            stack.pushSigned(sum);
             return OK;
         }
     } FN_SUM;
@@ -374,7 +376,7 @@ static void test_function() {
             auto p = scan;
             p.trimStart([](char c) { return isalnum(c); });
             const auto name = StrScanner(scan.str(), p.str());
-            auto fn = &Functor::FN_NONE;
+            const Functor *fn = nullptr;
             if (name.iequals_P(PSTR("PI"))) {
                 fn = &FN_PI;
             } else if (name.iequals_P(PSTR("SUB"))) {
@@ -382,7 +384,7 @@ static void test_function() {
             } else if (name.iequals_P(PSTR("SUM"))) {
                 fn = &FN_SUM;
             }
-            if (fn != &Functor::FN_NONE)
+            if (fn)
                 scan = p;
             return fn;
         }
@@ -405,7 +407,12 @@ static void test_function() {
     E16("sum(1, -2)",          -1, OK);
     E16("sum(1, -2, 3)",        2, OK);
     E16("sum(1, -2, 3, -4)",   -2, OK);
-    E16("sum(1, -2, 3, -4, 5)", 0, TOO_MANY_FUNC_ARGUMENT);
+    E16("sum(1, -2, 3, -4, 5)", 3, OK);
+    E16("sum(1,2,3,4,5,6,7,8)", 36, OK);
+    E16("sum(1,2,3,4,5,6,7,8,9)", 0, TOO_COMPLEX_EXPRESSION);
+    E32("1+sum(1+sub(1,2)+2,3)",  6, OK);
+    SCAN(',', "1+sum(1+sub(1,2)+2,3),x", "1+sum(1+sub(1,2)+2,3)");
+    E32("2*", 0, MISSING_OPERAND);
 }
 
 static void test_scan() {
@@ -434,8 +441,8 @@ static void test_errors() {
     E32("456789A", 0, GARBAGE_AT_END);
     E32("2*(1+3",  0, MISSING_CLOSING_PAREN);
     E32("2*(1+3]", 0, MISSING_CLOSING_PAREN);
-    E32(" (((((((0)))))))",     0, OK);
-    E32("((((((((0))))))))",    0, TOO_COMPLEX_EXPRESSION);
+    E32(" ((((((((0))))))))",   0, OK);
+    E32("(((((((((0)))))))))",  0, TOO_COMPLEX_EXPRESSION);
     E32("   1+(2+(3+(4+5)))",  15, OK);
     E32("0+(1+(2+(3+(4+5))))", 15, TOO_COMPLEX_EXPRESSION);
     E32("8 | 7 ^ 3 & 4 >> 1",         13, OK);

@@ -67,9 +67,9 @@ public:
     virtual bool hasSetInstruction() const { return false; }
 
     /** Parse |expr| text and get value as unsigned 16 bit. */
-    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error) const;
+    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text and get value as unsigned 32 bit. */
-    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error) const;
+    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 

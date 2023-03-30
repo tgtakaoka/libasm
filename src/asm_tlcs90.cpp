@@ -136,7 +136,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         const auto regp = p.skipSpaces();
         reg = RegTlcs90::parseRegName(p);
         if (reg == REG_UNDEF) {  // (nnnn)
-            op.val16 = parseExpr16(p, op);
+            op.val16 = parseExpr16(p, op, ')');
             if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))
@@ -169,7 +169,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
             }
         }
         if (*p == '+' || *p == '-') {  // (rr+n)
-            op.val16 = parseExpr16(p, op);
+            op.val16 = parseExpr16(p, op, ')');
             if (op.hasError())
                 return op.getError();
             if (!p.skipSpaces().expect(')'))

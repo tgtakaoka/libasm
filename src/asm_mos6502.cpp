@@ -135,26 +135,26 @@ Error AsmMos6502::parseOpenIndirect(StrScanner &scan, Operand &op, char &indirec
     if (scan.expect('(')) {
         if (indirect)
             return op.setError(UNKNOWN_OPERAND);
-        indirect = '(';
+        indirect = ')';
         op.mode = I_FLAG;
     } else if (scan.expect('[')) {
         if (indirect)
             return op.setError(UNKNOWN_OPERAND);
-        indirect = '[';
+        indirect = ']';
         op.mode = L_FLAG;
     } else if (indirect) {
-        op.mode = indirect == '(' ? I_FLAG : L_FLAG;
+        op.mode = indirect == ')' ? I_FLAG : L_FLAG;
     }
     return OK;
 }
 
 Error AsmMos6502::parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const {
     if (scan.skipSpaces().expect(')')) {
-        if (indirect != '(')
+        if (indirect != ')')
             return op.setError(UNKNOWN_OPERAND);
         indirect = 0;
     } else if (scan.expect(']')) {
-        if (indirect != '[')
+        if (indirect != ']')
             return op.setError(UNKNOWN_OPERAND);
         indirect = 0;
     }
@@ -196,7 +196,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
         op.mode = regName2AddrMode(reg);
     } else {
         const auto size = parseSizeOverride(p);
-        op.val32 = parseExpr32(p, op);
+        op.val32 = parseExpr32(p, op, indirect);
         if (op.hasError())
             return op.getError();
         if (selectMode(size, op, M_DPG, M_ABS, M_ABSL))

@@ -90,12 +90,9 @@ private:
 
     uint32_t _value;
     ValueType _type;
-
-    Value(uint32_t value, ValueType type) : _value(value), _type(type) {}
 };
 
 }  // namespace libasm
-
 #endif
 
 // Local Variables:

@@ -318,7 +318,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
             op.setError(UNKNOWN_OPERAND);
         op.reg = RegZ8::parseRegName(p);
         if (op.reg == REG_UNDEF) {
-            const auto val16 = parseExpr16(p, op);
+            const auto val16 = parseExpr16(p, op, ')');
             if (op.hasError())
                 return getError();
             if (!_pseudos.isWorkReg(val16))

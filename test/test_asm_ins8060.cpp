@@ -275,7 +275,7 @@ static void test_error() {
     ERUS("LD (P3)", "P3)", 0xC0, 0x00);
     ERUS("LD (E)",  "E)",  0xC0, 0x00);
     ERRT("LD 1(E)", UNKNOWN_OPERAND, "1(E)");
-    ERRT("LDI #1",  ILLEGAL_CONSTANT, "#1");
+    ERRT("LDI #1",  GARBAGE_AT_END, "#1");
     ERRT("LD 1(P3 ;comment", MISSING_CLOSING_PAREN, " ;comment");
 }
 // clang-format on

@@ -22,230 +22,221 @@
 
 namespace libasm {
 
-const Functor Functor::FN_NONE;
-
-const Operator Operator::OP_NONE(18);
-
-static const struct OpBitwiseNot : Operator {
-    OpBitwiseNot() : Operator(3) {}
-    Error eval(Value &val, const Value &rhs) const override {
-        val.setUnsigned(~rhs.getUnsigned());
-        return OK;
-    }
-} OP_BITWISE_NOT;
-
-static const struct OpMinus : Operator {
-    OpMinus() : Operator(3) {}
-    Error eval(Value &val, const Value &rhs) const override {
-        if (rhs.isUnsigned() && rhs.getUnsigned() > 0x80000000)
-            return OVERFLOW_RANGE;
-        val.setSigned(-rhs.getSigned());
-        return OK;
-    }
-} OP_MINUS;
-
-static const struct OpPlus : Operator {
-    OpPlus() : Operator(3) {}
-    Error eval(Value &val, const Value &rhs) const override {
-        val.setUnsigned(rhs.getUnsigned());
-        return OK;
-    }
-} OP_PLUS;
-
-static const struct OpMultiplication : Operator {
-    OpMultiplication() : Operator(5) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() * rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_MULTIPLICATION;
-
-static const struct OpDivision : Operator {
-    OpDivision() : Operator(5) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (rhs.getUnsigned() == 0) {
-            val.clear();
-            return DIVIDE_BY_ZERO;
-        }
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() / rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_DIVISION;
-
-static const struct OpRemainder : Operator {
-    OpRemainder() : Operator(5) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (rhs.getUnsigned() == 0) {
-            val.clear();
-            return DIVIDE_BY_ZERO;
-        }
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() % rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_REMAINDER;
-
-static const struct OpAddition : Operator {
-    OpAddition() : Operator(6) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() + rhs.getSigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_ADDITION;
-
-static const struct OpSubtraction : Operator {
-    OpSubtraction() : Operator(6) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() || rhs.isSigned()) {
-            val.setSigned(lhs.getSigned() - rhs.getSigned());
-        } else if (lhs.getUnsigned() < rhs.getUnsigned()) {
-            val.setSigned(lhs.getUnsigned() - rhs.getUnsigned());
-        } else {
-            val.setUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
-        }
-        return OK;
-    }
-} OP_SUBTRACTION;
-
-static const struct OpBitwiseShiftLeft : Operator {
-    OpBitwiseShiftLeft() : Operator(7) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
-        return OK;
-    }
-
-    static uint32_t shift_left(uint32_t value, uint8_t count) {
-        for (unsigned i = 0; i <= 32 && i < count; i++)
-            value <<= 1;
-        return value;
-    }
-
-} OP_BITWISE_SHIFT_LEFT;
-
-static const struct OpBitwiseShiftRight : Operator {
-    OpBitwiseShiftRight() : Operator(7) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        if (lhs.isSigned() && lhs.getSigned() < 0) {
-            val.setSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
-        } else {
-            val.setUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
-        }
-        return OK;
-    }
-
-    static uint32_t shift_right(uint32_t value, uint8_t count) {
-        for (unsigned i = 0; i <= 32 && i < count; i++)
-            value >>= 1;
-        return value;
-    }
-
-    static int32_t shift_right_negative(int32_t value, uint8_t count) {
-        for (unsigned i = 0; i <= 32 && i < count; i++) {
-            value >>= 1;
-            value |= 0x80000000;
-        }
-        return value;
-    }
-
-} OP_BITWISE_SHIFT_RIGHT;
-
-static const struct OpBitwiseAnd : Operator {
-    OpBitwiseAnd() : Operator(11) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
-        return OK;
-    }
-} OP_BITWISE_AND;
-
-static const struct OpBitwiseXor : Operator {
-    OpBitwiseXor() : Operator(12) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
-        return OK;
-    }
-} OP_BITWISE_XOR;
-
-static const struct OpBitwiseOr : Operator {
-    OpBitwiseOr() : Operator(13) {}
-    Error eval(Value &val, const Value &lhs, const Value &rhs) const override {
-        val.setUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
-        return OK;
-    }
-} OP_BITWISE_OR;
-
-const Operator *CStyleOperatorParser::readUnary(StrScanner &scan, ErrorAt &error) const {
-    switch (*scan++) {
-    case 0:
-        return &Operator::OP_NONE;
-    case '~':
-        return &OP_BITWISE_NOT;
-    case '-':
-        if (*scan != '-' && *scan != '+')
-            return &OP_MINUS;
-        error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    case '+':
-        if (*scan != '+' && *scan != '-')
-            return &OP_PLUS;
-        error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    default:
-        break;
-    }
-    --scan;
-    return &Operator::OP_NONE;
+bool Operator::isHigher(const Operator &o) const {
+    return _prec < o._prec || (_prec == o._prec && o._assoc == LEFT);
 }
 
-const Operator *CStyleOperatorParser::readBinary(StrScanner &scan, ErrorAt &error) const {
-    switch (*scan++) {
-    case 0:
-        return &Operator::OP_NONE;
-    case '*':
-        return &OP_MULTIPLICATION;
-    case '/':
-        return &OP_DIVISION;
-    case '%':
-        return &OP_REMAINDER;
-    case '+':
-        return &OP_ADDITION;
-    case '-':
-        return &OP_SUBTRACTION;
-    case '<':
-        if (scan.expect('<'))
-            return &OP_BITWISE_SHIFT_LEFT;
-        error.setError(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    case '>':
-        if (scan.expect('>'))
-            return &OP_BITWISE_SHIFT_RIGHT;
-        error.setError(scan, UNKNOWN_EXPR_OPERATOR);
-        break;
-    case '&':
-        return &OP_BITWISE_AND;
-    case '^':
-        return &OP_BITWISE_XOR;
-    case '|':
-        return &OP_BITWISE_OR;
-    default:
-        break;
+Error Operator::eval(ValueStack &stack, uint8_t argc) const {
+    if (argc == 0)
+        argc = stack.size();
+    if (_fn) {
+        const auto nargs = _fn->nargs();
+        if (nargs < 0 || argc == nargs)
+            return _fn->eval(stack, argc);
+        return argc > nargs ? TOO_MANY_FUNC_ARGUMENT : TOO_FEW_FUNC_ARGUMENT;
+    }
+    return argc >= _nargs ? (*_op)(stack) : MISSING_OPERAND;
+}
+
+static const Operator OP_BITWISE_NOT(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+    const auto v = stack.pop();
+    stack.pushUnsigned(~v.getUnsigned());
+    return OK;
+});
+
+static Operator OP_UNARY_MINUS(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+    const auto v = stack.pop();
+    const auto error = v.isUnsigned() && v.getUnsigned() > 0x80000000 ? OVERFLOW_RANGE : OK;
+    stack.pushSigned(-v.getSigned());
+    return error;
+});
+
+static const Operator OP_UNARY_PLUS(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+    const auto v = stack.pop();
+    stack.pushUnsigned(v.getUnsigned());
+    return OK;
+});
+
+static const Operator OP_MUL(5, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushSigned(lhs.getSigned() * rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() * rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static const Operator OP_DIV(5, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    auto error = OK;
+    if (rhs.getUnsigned() == 0) {
+        stack.push(Value());
+        error = DIVIDE_BY_ZERO;
+    } else if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushSigned(lhs.getSigned() / rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() / rhs.getUnsigned());
+    }
+    return error;
+});
+
+static const Operator OP_MOD(5, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    auto error = OK;
+    if (rhs.getUnsigned() == 0) {
+        stack.push(Value());
+        error = DIVIDE_BY_ZERO;
+    } else if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushSigned(lhs.getSigned() % rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() % rhs.getUnsigned());
+    }
+    return error;
+});
+
+static const Operator OP_ADD(6, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushSigned(lhs.getSigned() + rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() + rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static const Operator OP_SUB(6, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushSigned(lhs.getSigned() - rhs.getSigned());
+    } else if (lhs.getUnsigned() < rhs.getUnsigned()) {
+        stack.pushSigned(lhs.getUnsigned() - rhs.getUnsigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() - rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static uint32_t shift_left(uint32_t value, uint8_t count) {
+    for (unsigned i = 0; i <= 32 && i < count; i++)
+        value <<= 1;
+    return value;
+}
+static const Operator OP_SHIFT_LEFT(7, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.pushUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+    return OK;
+});
+
+static uint32_t shift_right(uint32_t value, uint8_t count) {
+    for (unsigned i = 0; i <= 32 && i < count; i++)
+        value >>= 1;
+    return value;
+}
+static int32_t shift_right_negative(int32_t value, uint8_t count) {
+    for (unsigned i = 0; i <= 32 && i < count; i++) {
+        value >>= 1;
+        value |= 0x80000000;
+    }
+    return value;
+}
+static const Operator OP_SHIFT_RIGHT(7, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() && lhs.getSigned() < 0) {
+        stack.pushSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
+    } else {
+        stack.pushUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
+    }
+    return OK;
+});
+
+static const Operator OP_BITWISE_AND(11, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.pushUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
+
+    return OK;
+});
+
+static const Operator OP_BITWISE_XOR(12, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.pushUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
+    return OK;
+});
+
+static const Operator OP_BITWISE_OR(13, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    stack.pushUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
+    return OK;
+});
+
+const Operator *CStyleOperatorParser::readOperator(
+        StrScanner &scan, ErrorAt &error, OperatorType type) const {
+    const auto c = *scan++;
+    if (type == PREFIX) {
+        switch (c) {
+        case 0:
+            return nullptr;
+        case '~':
+            return &OP_BITWISE_NOT;
+        case '-':
+            if (*scan != '-' && *scan != '+')
+                return &OP_UNARY_MINUS;
+            error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
+            break;
+        case '+':
+            if (*scan != '+' && *scan != '-')
+                return &OP_UNARY_PLUS;
+            error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
+            break;
+        default:
+            break;
+        }
+    } else if (type == INFIX) {
+        switch (c) {
+        case 0:
+            return nullptr;
+        case '*':
+            return &OP_MUL;
+        case '/':
+            return &OP_DIV;
+        case '%':
+            return &OP_MOD;
+        case '+':
+            return &OP_ADD;
+        case '-':
+            return &OP_SUB;
+        case '<':
+            if (scan.expect('<'))
+                return &OP_SHIFT_LEFT;
+            error.setError(scan, UNKNOWN_EXPR_OPERATOR);
+            break;
+        case '>':
+            if (scan.expect('>'))
+                return &OP_SHIFT_RIGHT;
+            error.setError(scan, UNKNOWN_EXPR_OPERATOR);
+            break;
+        case '&':
+            return &OP_BITWISE_AND;
+        case '^':
+            return &OP_BITWISE_XOR;
+        case '|':
+            return &OP_BITWISE_OR;
+        default:
+            break;
+        }
     }
     --scan;
-    return &Operator::OP_NONE;
+    return nullptr;
 }
 
 }  // namespace libasm
