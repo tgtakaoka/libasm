@@ -32,7 +32,7 @@ extern TestSymtab symtab;
 extern TestAsserter asserter;
 
 void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
-        const Error expected_error, size_t size, ValueParser &);
+        const ErrorAt &expected_error, size_t size, ValueParser &);
 void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
         const char *expected, ValueFormatter &);
 void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
@@ -51,12 +51,24 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
         StrScanner actual(text, p.str());                                    \
         asserter.equals(__FILE__, __LINE__, "scan " text, expected, actual); \
     } while (0)
-#define E8(expr, expected, expected_error) \
-    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint8_t), parser)
-#define E16(expr, expected, expected_error) \
-    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint16_t), parser)
-#define E32(expr, expected, expected_error) \
-    val_assert(__FILE__, __LINE__, expr, expected, expected_error, sizeof(uint32_t), parser)
+#define _EXPR(expr, expected, expected_error, error_at, expr_type)                        \
+    do {                                                                                  \
+        ErrorAt error;                                                                    \
+        error.setError(error_at, expected_error);                                         \
+        val_assert(__FILE__, __LINE__, expr, expected, error, sizeof(expr_type), parser); \
+    } while (0)
+#define _EXPR8(expr, expected, expected_error, error_at) \
+    _EXPR(expr, expected, expected_error, error_at, uint8_t)
+#define _EXPR16(expr, expected, expected_error, error_at) \
+    _EXPR(expr, expected, expected_error, error_at, uint16_t)
+#define _EXPR32(expr, expected, expected_error, error_at) \
+    _EXPR(expr, expected, expected_error, error_at, uint32_t)
+#define X8(expr, expected_error, error_at) _EXPR8(expr, 0, expected_error, error_at)
+#define X16(expr, expected_error, error_at) _EXPR16(expr, 0, expected_error, error_at)
+#define X32(expr, expected_error, error_at) _EXPR32(expr, 0, expected_error, error_at)
+#define E8(expr, expected) _EXPR8(expr, expected, OK, "")
+#define E16(expr, expected) _EXPR16(expr, expected, OK, "")
+#define E32(expr, expected) _EXPR32(expr, expected, OK, "")
 
 #define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
 #define HEX(value, bits, relax, expected) \

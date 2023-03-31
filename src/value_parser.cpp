@@ -109,12 +109,13 @@ Value ValueParser::eval(
         if (*scan == end_of_expr && !vstack.empty())
             break;
 
+        const auto at = scan;
         if (maybe_prefix) {
             Value val;
             auto err = parseConstant(scan, val);
             if (err == OK) {
                 if (vstack.full()) {
-                    error.setError(TOO_COMPLEX_EXPRESSION);
+                    error.setError(at, TOO_COMPLEX_EXPRESSION);
                     return Value();
                 }
                 vstack.push(val);
@@ -125,31 +126,31 @@ Value ValueParser::eval(
                 return val;
             }
 
-            const auto fn = _function->parseFunction(scan, error);
+             const auto fn = _function->parseFunction(scan, error);
             if (fn) {
                 if (*scan.skipSpaces() != '(') {
-                    error.setError(scan, MISSING_FUNC_ARGUMENT);
+                    error.setError(at, MISSING_FUNC_ARGUMENT);
                     return Value();
                 }
                 const Operator opr(fn);
                 ostack.push(opr);
+                ostack.top().setAt(at);
                 maybe_prefix = false;
                 expect_fn_args = true;
                 in_fn_args++;
                 continue;
             }
 
-            const auto sym = scan;
             const auto symbol = readSymbol(scan);
             if (symbol.size()) {
                 if (vstack.full()) {
-                    error.setError(TOO_COMPLEX_EXPRESSION);
+                    error.setError(at, TOO_COMPLEX_EXPRESSION);
                     return Value();
                 }
                 if (symtab && symtab->hasSymbol(symbol)) {
                     vstack.pushSigned(symtab->lookupSymbol(symbol));
                 } else {
-                    error.setError(sym, UNDEFINED_SYMBOL);
+                    error.setError(at, UNDEFINED_SYMBOL);
                     vstack.push(Value());
                 }
                 maybe_prefix = false;
@@ -163,17 +164,19 @@ Value ValueParser::eval(
             return Value();
         if (opr) {
             while (!ostack.empty() && ostack.top().isHigher(*opr)) {
-                const auto err = ostack.pop().eval(vstack);
+                const auto op = ostack.pop();
+                const auto err = op.eval(vstack);
                 if (err) {
-                    error.setErrorIf(err);
+                    error.setErrorIf(op, err);
                     return Value();
                 }
             }
             if (ostack.full()) {
-                error.setErrorIf(TOO_COMPLEX_EXPRESSION);
+                error.setErrorIf(at, TOO_COMPLEX_EXPRESSION);
                 return Value();
             }
             ostack.push(*opr);
+            ostack.top().setAt(at);
             maybe_prefix = true;
             continue;
         }
@@ -182,9 +185,10 @@ Value ValueParser::eval(
             // non-zero |in_fn_args| ensures the existence of open
             // parenthesis in |ostack|.
             while (!ostack.top().isOpenParen()) {
-                const auto err = ostack.pop().eval(vstack);
+                const auto op = ostack.pop();
+                const auto err = op.eval(vstack);
                 if (err) {
-                    error.setErrorIf(err);
+                    error.setErrorIf(op, err);
                     return Value();
                 }
             }
@@ -199,11 +203,12 @@ Value ValueParser::eval(
                 break;
             }
             if (ostack.full()) {
-                error.setErrorIf(TOO_COMPLEX_EXPRESSION);
+                error.setErrorIf(at, TOO_COMPLEX_EXPRESSION);
                 return Value();
             }
             Operator openParen(vstack.size());
             ostack.push(openParen);
+            ostack.top().setAt(at);
             end_of_expr = 0;
             in_paren++;
             maybe_prefix = true;
@@ -213,9 +218,10 @@ Value ValueParser::eval(
 
         if (scan.expect(')')) {
             while (!ostack.empty() && !ostack.top().isOpenParen()) {
-                const auto err = ostack.pop().eval(vstack);
+                const auto op = ostack.pop();
+                const auto err = op.eval(vstack);
                 if (err) {
-                    error.setErrorIf(err);
+                    error.setErrorIf(op, err);
                     return Value();
                 }
             }
@@ -226,9 +232,10 @@ Value ValueParser::eval(
             const auto openParen = ostack.pop();
             if (!ostack.empty() && ostack.top().isFunction()) {
                 const auto argc = vstack.size() - openParen.stackPosition();
-                const auto err = ostack.pop().eval(vstack, argc);
+                const auto fn = ostack.pop();
+                const auto err = fn.eval(vstack, argc);
                 if (err) {
-                    error.setErrorIf(err);
+                    error.setErrorIf(fn, err);
                     return Value();
                 }
                 in_fn_args--;
@@ -245,12 +252,12 @@ Value ValueParser::eval(
     while (!ostack.empty()) {
         const auto op = ostack.pop();
         if (op.isOpenParen()) {
-            error.setErrorIf(MISSING_CLOSING_PAREN);
+            error.setErrorIf(op, MISSING_CLOSING_PAREN);
             return Value();
         }
         const auto err = op.eval(vstack);
         if (err) {
-            error.setErrorIf(err);
+            error.setErrorIf(op, err);
             return Value();
         }
     }

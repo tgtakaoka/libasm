@@ -89,7 +89,7 @@ private:
 
     struct OperatorStack : Stack<Operator, 8> {
         OperatorStack() : Stack() {}
-        const Operator &top() const { return _contents[_size - 1]; }
+        Operator &top() { return _contents[_size - 1]; }
     };
 
     Error parseConstant(StrScanner &scan, Value &val) const;

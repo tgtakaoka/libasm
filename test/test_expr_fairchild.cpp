@@ -37,171 +37,171 @@ static void tear_down() {
 
 // clang-format off
 static void test_char_constant() {
-    E8("'a'",   0x61, OK);
-    E8("'a'+5", 0x66, OK);
-    E8("5+'a'", 0x66, OK);
-    E8("'a",    0x61, OK);
-    E8("'a+5",  0x66, OK);
-    E8("5+'a",  0x66, OK);
-    E8("#a",    0x61, OK);
-    E8("#a+5",  0x66, OK);
-    E8("5+#a",  0x66, OK);
-    E8("# ",    0x20, OK);
-    E8("#'",    0x27, OK);
-    E8("' ",    0x20, OK);
-    E8("''",    0x27, OK);
-    E8("'';",   0x27, OK);
-    E8("''''",  0,    GARBAGE_AT_END);
+    E8("'a'",   0x61);
+    E8("'a'+5", 0x66);
+    E8("5+'a'", 0x66);
+    E8("'a",    0x61);
+    E8("'a+5",  0x66);
+    E8("5+'a",  0x66);
+    E8("#a",    0x61);
+    E8("#a+5",  0x66);
+    E8("5+#a",  0x66);
+    E8("# ",    0x20);
+    E8("#'",    0x27);
+    E8("' ",    0x20);
+    E8("''",    0x27);
+    E8("'';",   0x27);
+    X8("''''",  GARBAGE_AT_END, "'");
 
-    E8("c'a'",   0x61, OK);
-    E8("C'a'+5", 0x66, OK);
-    E8("5+c'a'", 0x66, OK);
-    E8("c'a",    0,    MISSING_CLOSING_QUOTE);
-    E8("C'a+5",  0,    MISSING_CLOSING_QUOTE);
-    E8("5+c'a",  0,    MISSING_CLOSING_QUOTE);
-    E8("c' ",    0,    MISSING_CLOSING_QUOTE);
-    E8("c''",    0,    MISSING_CLOSING_QUOTE);
-    E8("c'''",   0,    MISSING_CLOSING_QUOTE);
-    E8("c''''",  0x27, OK);
+    E8("c'a'",   0x61);
+    E8("C'a'+5", 0x66);
+    E8("5+c'a'", 0x66);
+    X8("c'a",    MISSING_CLOSING_QUOTE, "c'a");
+    X8("C'a+5",  MISSING_CLOSING_QUOTE, "C'a+5");
+    X8("5+c'a",  MISSING_CLOSING_QUOTE, "c'a");
+    X8("c' ",    MISSING_CLOSING_QUOTE, "c' ");
+    X8("c''",    MISSING_CLOSING_QUOTE, "c''");
+    X8("c'''",   MISSING_CLOSING_QUOTE, "c'''");
+    E8("c''''",  0x27);
 
-    E16("'a'", 0x61, OK);
-    E32("'a'", 0x61, OK);
+    E16("'a'", 0x61);
+    E32("'a'", 0x61);
 }
 
 static void test_dec_constant() {
-    E32("2147483647",    0x7fffffff, OK);
-    E32("d'2147483647",  0x7fffffff, MISSING_CLOSING_QUOTE);
-    E32("D'2147483647",  0x7fffffff, MISSING_CLOSING_QUOTE);
-    E32("d'2147483647'", 0x7fffffff, OK);
-    E32("D'2147483647'", 0x7fffffff, OK);
+    E32("2147483647",    0x7fffffff);
+    X32("d'2147483647",  MISSING_CLOSING_QUOTE, "d'2147483647");
+    X32("D'2147483647",  MISSING_CLOSING_QUOTE, "D'2147483647");
+    E32("d'2147483647'", 0x7fffffff);
+    E32("D'2147483647'", 0x7fffffff);
 }
 
 static void test_hex_constant() {
-    E8("h'0'",   0x00, OK);
-    E8("h'7f'",  0x7f, OK);
-    E8("h'80'",  0x80, OK);
-    E8("h'FF",   0xff, MISSING_CLOSING_QUOTE);
-    E8("h'100'", 0,    OVERFLOW_RANGE);
+    E8("h'0'",   0x00);
+    E8("h'7f'",  0x7f);
+    E8("h'80'",  0x80);
+    X8("h'FF",   MISSING_CLOSING_QUOTE, "h'FF");
+    X8("h'100'", OVERFLOW_RANGE, "h'100'");
 
-    E16("h'0'",     0x0000, OK);
-    E16("h'7fff'",  0x7fff, OK);
-    E16("h'8000'",  0x8000, OK);
-    E16("h'ffff'",  0xffff, OK);
-    E16("h'10000'", 0,      OVERFLOW_RANGE);
+    E16("h'0'",     0x0000);
+    E16("h'7fff'",  0x7fff);
+    E16("h'8000'",  0x8000);
+    E16("h'ffff'",  0xffff);
+    X16("h'10000'", OVERFLOW_RANGE, "h'10000'");
 
-    E32("h'0'",         0x00000000, OK);
-    E32("h'7FFFFFFF'",  0x7fffffff, OK);
-    E32("H'7FFFFFFF'",  0x7fffffff, OK);
-    E32("h'80000000'",  0x80000000, OK);
-    E32("h'FFFFffff'",  0xffffffff, OK);
-    E32("h'100000000'", 0,          OVERFLOW_RANGE);
+    E32("h'0'",         0x00000000);
+    E32("h'7FFFFFFF'",  0x7fffffff);
+    E32("H'7FFFFFFF'",  0x7fffffff);
+    E32("h'80000000'",  0x80000000);
+    E32("h'FFFFffff'",  0xffffffff);
+    X32("h'100000000'", OVERFLOW_RANGE, "h'100000000'");
 
-    E8("$0",   0x00, OK);
-    E8("$7f",  0x7f, OK);
-    E8("$80",  0x80, OK);
-    E8("$FF",  0xff, OK);
-    E8("$100", 0,    OVERFLOW_RANGE);
+    E8("$0",   0x00);
+    E8("$7f",  0x7f);
+    E8("$80",  0x80);
+    E8("$FF",  0xff);
+    X8("$100", OVERFLOW_RANGE, "$100");
 
-    E16("$0",     0x0000, OK);
-    E16("$7fff",  0x7fff, OK);
-    E16("$8000",  0x8000, OK);
-    E16("$ffff",  0xffff, OK);
-    E16("$10000", 0,      OVERFLOW_RANGE);
+    E16("$0",     0x0000);
+    E16("$7fff",  0x7fff);
+    E16("$8000",  0x8000);
+    E16("$ffff",  0xffff);
+    X16("$10000", OVERFLOW_RANGE, "$10000");
 
-    E32("$0",         0x00000000, OK);
-    E32("$7FFFFFFF",  0x7fffffff, OK);
-    E32("$80000000",  0x80000000, OK);
-    E32("$FFFFffff",  0xffffffff, OK);
-    E32("$100000000", 0,          OVERFLOW_RANGE);
+    E32("$0",         0x00000000);
+    E32("$7FFFFFFF",  0x7fffffff);
+    E32("$80000000",  0x80000000);
+    E32("$FFFFffff",  0xffffffff);
+    X32("$100000000", OVERFLOW_RANGE, "$100000000");
 
-    E32("0x0",         0x00000000, OK);
-    E32("0x7FFFFFFF",  0x7fffffff, OK);
-    E32("0x80000000",  0x80000000, OK);
-    E32("0xFFFFffff",  0xffffffff, OK);
-    E32("0x100000000", 0,          OVERFLOW_RANGE);
+    E32("0x0",         0x00000000);
+    E32("0x7FFFFFFF",  0x7fffffff);
+    E32("0x80000000",  0x80000000);
+    E32("0xFFFFffff",  0xffffffff);
+    X32("0x100000000", OVERFLOW_RANGE, "0x100000000");
 }
 
 static void test_oct_constant() {
-    E8("o'0'",   0x00, OK);
-    E8("o'177'", 0x7f, OK);
-    E8("o'200",  0x80, MISSING_CLOSING_QUOTE);
-    E8("o'377'", 0xff, OK);
-    E8("o'400'", 0,    OVERFLOW_RANGE);
+    E8("o'0'",   0x00);
+    E8("o'177'", 0x7f);
+    X8("o'200",  MISSING_CLOSING_QUOTE, "o'200");
+    E8("o'377'", 0xff);
+    X8("o'400'", OVERFLOW_RANGE, "o'400'");
 
-    E16("o'0'",      0x0000, OK);
-    E16("o'077777'", 0x7fff, OK);
-    E16("o'100000'", 0x8000, OK);
-    E16("o'177777'", 0xffff, OK);
-    E16("o'200000'", 0,      OVERFLOW_RANGE);
+    E16("o'0'",      0x0000);
+    E16("o'077777'", 0x7fff);
+    E16("o'100000'", 0x8000);
+    E16("o'177777'", 0xffff);
+    X16("o'200000'", OVERFLOW_RANGE, "o'200000'");
 
-    E32("o'0'",           0x00000000, OK);
-    E32("o'17777777777'", 0x7fffffff, OK);
-    E32("o'20000000000'", 0x80000000, OK);
-    E32("o'37777777777'", 0xffffffff, OK);
-    E32("O'37777777777'", 0xffffffff, OK);
-    E32("o'37777777777'", 0xffffffff, OK);
-    E32("O'37777777777'", 0xffffffff, OK);
-    E32("o'40000000000'", 0,          OVERFLOW_RANGE);
+    E32("o'0'",           0x00000000);
+    E32("o'17777777777'", 0x7fffffff);
+    E32("o'20000000000'", 0x80000000);
+    E32("o'37777777777'", 0xffffffff);
+    E32("O'37777777777'", 0xffffffff);
+    E32("o'37777777777'", 0xffffffff);
+    E32("O'37777777777'", 0xffffffff);
+    X32("o'40000000000'", OVERFLOW_RANGE, "o'40000000000'");
 
-    E32("00",           0x00000000, OK);
-    E32("017777777777", 0x7fffffff, OK);
-    E32("020000000000", 0x80000000, OK);
-    E32("037777777777", 0xffffffff, OK);
-    E32("040000000000", 0,          OVERFLOW_RANGE);
+    E32("00",           0x00000000);
+    E32("017777777777", 0x7fffffff);
+    E32("020000000000", 0x80000000);
+    E32("037777777777", 0xffffffff);
+    X32("040000000000", OVERFLOW_RANGE, "040000000000");
 }
 
 static void test_bin_constant() {
-    E8("b'0'",        0x00, OK);
-    E8("b'01111111'", 0x7f, OK);
-    E8("b'10000000",  0x80, MISSING_CLOSING_QUOTE);
-    E8("b'11111111'", 0xff, OK);
-    E8("b'100000000'", 0,    OVERFLOW_RANGE);
+    E8("b'0'",         0x00);
+    E8("b'01111111'",  0x7f);
+    X8("b'10000000",   MISSING_CLOSING_QUOTE, "b'10000000");
+    E8("b'11111111'",  0xff);
+    X8("b'100000000'", OVERFLOW_RANGE, "b'100000000'");
 
-    E16("b'0'",                0x0000, OK);
-    E16("b'0111111111111111'", 0x7fff, OK);
-    E16("b'1000000000000000'", 0x8000, OK);
-    E16("b'1111111111111111'", 0xffff, OK);
-    E16("b'10000000000000000'", 0,      OVERFLOW_RANGE);
+    E16("b'0'",                 0x0000);
+    E16("b'0111111111111111'",  0x7fff);
+    E16("b'1000000000000000'",  0x8000);
+    E16("b'1111111111111111'",  0xffff);
+    X16("b'10000000000000000'", OVERFLOW_RANGE, "b'10000000000000000'");
 
-    E32("b'0'",                                0x00000000, OK);
-    E32("b'01111111111111111111111111111111'", 0x7fffffff, OK);
-    E32("b'10000000000000000000000000000000'", 0x80000000, OK);
-    E32("b'11111111111111111111111111111111'", 0xffffffff, OK);
-    E32("B'11111111111111111111111111111111'", 0xffffffff, OK);
-    E32("b'11111111111111111111111111111111'", 0xffffffff, OK);
-    E32("B'11111111111111111111111111111111'", 0xffffffff, OK);
-    E32("b'100000000000000000000000000000000'", 0,          OVERFLOW_RANGE);
+    E32("b'0'",                                 0x00000000);
+    E32("b'01111111111111111111111111111111'",  0x7fffffff);
+    E32("b'10000000000000000000000000000000'",  0x80000000);
+    E32("b'11111111111111111111111111111111'",  0xffffffff);
+    E32("B'11111111111111111111111111111111'",  0xffffffff);
+    E32("b'11111111111111111111111111111111'",  0xffffffff);
+    E32("B'11111111111111111111111111111111'",  0xffffffff);
+    X32("b'100000000000000000000000000000000'", OVERFLOW_RANGE, "b'100000000000000000000000000000000'");
 
-    E32("0b0",                                 0x00000000, OK);
-    E32("0b01111111111111111111111111111111",  0x7fffffff, OK);
-    E32("0b10000000000000000000000000000000",  0x80000000, OK);
-    E32("0b11111111111111111111111111111111",  0xffffffff, OK);
-    E32("0b100000000000000000000000000000000", 0,          OVERFLOW_RANGE);
+    E32("0b0",                                 0x00000000);
+    E32("0b01111111111111111111111111111111",  0x7fffffff);
+    E32("0b10000000000000000000000000000000",  0x80000000);
+    E32("0b11111111111111111111111111111111",  0xffffffff);
+    X32("0b100000000000000000000000000000000", OVERFLOW_RANGE, "0b100000000000000000000000000000000");
 }
 
 static void test_current_address() {
     parser.setCurrentOrigin(0x1000);
 
-    E16("*",         0x1000, OK);
-    E16("*+2",       0x1002, OK);
-    E16("*-2",       0x0FFE, OK);
-    E16("*+h'F000'", 0,      OVERFLOW_RANGE);
-    E16("*-h'1001'", 0xFFFF, OK);
-    E16("*+$F000",   0,      OVERFLOW_RANGE);
-    E16("*-$1001",   0xFFFF, OK);
-    E16("*+0xF000",  0,      OVERFLOW_RANGE);
-    E16("*-$1001",   0xFFFF, OK);
-    E32("*+h'F000'", 0x00010000, OK);
-    E32("*-h'1001'", 0xFFFFFFFF, OK);
-    E32("*+$F000",   0x00010000, OK);
-    E32("*-$1001",   0xFFFFFFFF, OK);
-    E32("*+0xF000",  0x00010000, OK);
-    E32("*-0x1001",  0xFFFFFFFF, OK);
+    E16("*",         0x1000);
+    E16("*+2",       0x1002);
+    E16("*-2",       0x0FFE);
+    X16("*+h'F000'", OVERFLOW_RANGE, "*+h'F000'");
+    E16("*-h'1001'", 0xFFFF);
+    X16("*+$F000",   OVERFLOW_RANGE, "*+$F000");
+    E16("*-$1001",   0xFFFF);
+    X16("*+0xF000",  OVERFLOW_RANGE, "*+0xF000");
+    E16("*-$1001",   0xFFFF);
+    E32("*+h'F000'", 0x00010000);
+    E32("*-h'1001'", 0xFFFFFFFF);
+    E32("*+$F000",   0x00010000);
+    E32("*-$1001",   0xFFFFFFFF);
+    E32("*+0xF000",  0x00010000);
+    E32("*-0x1001",  0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
     parser.setCurrentOrigin(0x1100);
-    E16("*-table",     0x100, OK);
-    E16("(*-table)/2", 0x80,  OK);
+    E16("*-table",     0x100);
+    E16("(*-table)/2", 0x080);
 }
 
 static void test_scan() {
@@ -224,10 +224,10 @@ static void test_scan() {
 }
 
 static void test_errors() {
-    E32("h'bcdefg'", 0, MISSING_CLOSING_QUOTE);
-    E32("o'345678'", 0, MISSING_CLOSING_QUOTE);
-    E32("b'101012'", 0, MISSING_CLOSING_QUOTE);
-    E32("456789a",   0, GARBAGE_AT_END);
+    X32("h'bcdefg'", MISSING_CLOSING_QUOTE, "h'bcdefg'");
+    X32("o'345678'", MISSING_CLOSING_QUOTE, "o'345678'");
+    X32("b'101012'", MISSING_CLOSING_QUOTE, "b'101012'");
+    X32("456789a",   GARBAGE_AT_END,        "a");
 }
 
 static void test_formatter_8bit() {

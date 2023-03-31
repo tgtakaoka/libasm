@@ -25,29 +25,32 @@ TestAsserter asserter;
 TestSymtab symtab;
 
 void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
-        const Error expected_error, size_t size, ValueParser &parser) {
+        const ErrorAt &expected_error, size_t size, ValueParser &parser) {
     Value val;
-    ErrorAt error;
-    StrScanner scan(expr);
-    val = parser.eval(scan, error, &symtab);
+    ErrorAt actual_error;
+    StrScanner scan = expr;
+    val = parser.eval(scan, actual_error, &symtab);
     uint32_t actual = val.getUnsigned();
     if (size == 1) {
-        if (val.overflowUint8() && error.isOK())
-            error.setError(OVERFLOW_RANGE);
+        if (val.overflowUint8())
+            actual_error.setErrorIf(expr, OVERFLOW_RANGE);
         actual = static_cast<uint8_t>(actual);
         expected = static_cast<uint8_t>(expected);
     }
     if (size == 2) {
-        if (val.overflowUint16() && error.isOK())
-            error.setError(OVERFLOW_RANGE);
+        if (val.overflowUint16())
+            actual_error.setErrorIf(expr, OVERFLOW_RANGE);
         actual = static_cast<uint16_t>(actual);
         expected = static_cast<uint16_t>(expected);
     }
     if (!parser.endOfLine(scan))
-        error.setErrorIf(scan, GARBAGE_AT_END);
-    asserter.equals(file, line, expr, expected_error, error);
-    if (error.isOK())
+        actual_error.setErrorIf(scan, GARBAGE_AT_END);
+    asserter.equals(file, line, expr, expected_error.getError(), actual_error);
+    if (expected_error.isOK()) {
         asserter.equals(file, line, expr, expected, actual);
+    } else {
+        asserter.equals(file, line, expr, expected_error.errorAt(), actual_error.errorAt());
+    }
 }
 
 void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,

@@ -58,15 +58,16 @@ struct FunctionParser {
 /**
  * Immutable instance to represent prefix or infix operators and functions.
  */
-struct Operator {
+struct Operator : ErrorAt {
     enum Assoc : uint8_t {
         LEFT,
         RIGHT,
     };
 
-    Operator() : _prec(255), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(nullptr) {}
+    Operator() : ErrorAt(), _prec(255), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(nullptr) {}
 
     void operator=(const Operator &o) {
+        setError(o);
         _prec = o._prec;
         _assoc = o._assoc;
         _nargs = o._nargs;
@@ -82,10 +83,11 @@ struct Operator {
     /** Constructor for operators */
     typedef Error(OperatorEval)(ValueStack &stack);
     Operator(uint8_t prec, Assoc assoc, int8_t nargs = 0, OperatorEval *op = nullptr)
-        : _prec(prec), _assoc(assoc), _nargs(nargs), _op(op), _fn(nullptr) {}
+        : ErrorAt(), _prec(prec), _assoc(assoc), _nargs(nargs), _op(op), _fn(nullptr) {}
 
     /** Constructor for function */
-    Operator(const Functor *fn) : _prec(2), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(fn) {}
+    Operator(const Functor *fn)
+        : ErrorAt(), _prec(2), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(fn) {}
     bool isFunction() const { return _fn != nullptr; }
 
     /**
@@ -93,7 +95,7 @@ struct Operator {
      * argument list.
      */
     Operator(uint8_t stackPosition)
-        : _prec(254), _assoc(LEFT), _nargs(stackPosition), _op(nullptr), _fn(nullptr) {}
+        : ErrorAt(), _prec(254), _assoc(LEFT), _nargs(stackPosition), _op(nullptr), _fn(nullptr) {}
     bool isOpenParen() const { return _prec == 254; }
     uint8_t stackPosition() const { return _nargs; }
 

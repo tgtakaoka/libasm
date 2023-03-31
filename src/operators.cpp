@@ -181,62 +181,58 @@ static const Operator OP_BITWISE_OR(13, Operator::LEFT, 2, [](ValueStack &stack)
 
 const Operator *CStyleOperatorParser::readOperator(
         StrScanner &scan, ErrorAt &error, OperatorType type) const {
-    const auto c = *scan++;
+    auto p = scan;
+    const Operator *opr = nullptr;
     if (type == PREFIX) {
-        switch (c) {
-        case 0:
-            return nullptr;
-        case '~':
-            return &OP_BITWISE_NOT;
-        case '-':
-            if (*scan != '-' && *scan != '+')
-                return &OP_UNARY_MINUS;
-            error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-            break;
-        case '+':
-            if (*scan != '+' && *scan != '-')
-                return &OP_UNARY_PLUS;
-            error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-            break;
-        default:
-            break;
+        if (p.expect('~')) {
+            opr = &OP_BITWISE_NOT;
+        } else if (p.expect('-')) {
+            if (*p == '-' || *p == '+') {
+                error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
+            } else {
+                opr = &OP_UNARY_MINUS;
+            }
+        } else if (p.expect('+')) {
+            if (*p == '+' || *p == '-') {
+                error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
+            } else {
+                opr = &OP_UNARY_PLUS;
+            }
         }
     } else if (type == INFIX) {
-        switch (c) {
-        case 0:
-            return nullptr;
-        case '*':
-            return &OP_MUL;
-        case '/':
-            return &OP_DIV;
-        case '%':
-            return &OP_MOD;
-        case '+':
-            return &OP_ADD;
-        case '-':
-            return &OP_SUB;
-        case '<':
-            if (scan.expect('<'))
-                return &OP_SHIFT_LEFT;
-            error.setError(scan, UNKNOWN_EXPR_OPERATOR);
-            break;
-        case '>':
-            if (scan.expect('>'))
-                return &OP_SHIFT_RIGHT;
-            error.setError(scan, UNKNOWN_EXPR_OPERATOR);
-            break;
-        case '&':
-            return &OP_BITWISE_AND;
-        case '^':
-            return &OP_BITWISE_XOR;
-        case '|':
-            return &OP_BITWISE_OR;
-        default:
-            break;
+        if (p.expect('*')) {
+            opr = &OP_MUL;
+        } else if (p.expect('/')) {
+            opr = &OP_DIV;
+        } else if (p.expect('%')) {
+            opr = &OP_MOD;
+        } else if (p.expect('+')) {
+            opr = &OP_ADD;
+        } else if (p.expect('-')) {
+            opr = &OP_SUB;
+        } else if (p.expect('<')) {
+            if (p.expect('<')) {
+                opr = &OP_SHIFT_LEFT;
+            } else {
+                error.setError(scan, UNKNOWN_EXPR_OPERATOR);
+            }
+        } else if (p.expect('>')) {
+            if (p.expect('>')) {
+                opr = &OP_SHIFT_RIGHT;
+            } else {
+                error.setError(scan, UNKNOWN_EXPR_OPERATOR);
+            }
+        } else if (p.expect('&')) {
+            opr = &OP_BITWISE_AND;
+        } else if (p.expect('^')) {
+            opr = &OP_BITWISE_XOR;
+        } else if (p.expect('|')) {
+            opr = &OP_BITWISE_OR;
         }
     }
-    --scan;
-    return nullptr;
+    if (opr)
+        scan = p;
+    return opr;
 }
 
 }  // namespace libasm
