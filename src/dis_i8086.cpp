@@ -73,13 +73,14 @@ RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos po
 }
 
 Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
-    int16_t disp;
+    int16_t delta;
     if (mode == M_REL8) {
-        disp = static_cast<int8_t>(insn.readByte(memory));
+        delta = static_cast<int8_t>(insn.readByte(memory));
     } else {
-        disp = static_cast<int16_t>(insn.readUint16(memory));
+        delta = static_cast<int16_t>(insn.readUint16(memory));
     }
-    const Config::uintptr_t target = insn.address() + insn.length() + disp;
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
     return setError(insn);
 }

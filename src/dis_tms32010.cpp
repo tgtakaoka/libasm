@@ -104,12 +104,10 @@ Error DisTms32010::decodeOperand(
     case M_IM8:
         outDec(out, static_cast<uint8_t>(opc), 8);
         break;
-    case M_IM13: {
+    case M_IM13:
         // Sign extends 13-bit number as 0x1000 is a sign bit.
-        const int16_t im13 = (opc & 0xFFF) - (opc & 0x1000);
-        outDec(out, im13, -13);
+        outDec(out, signExtend(opc, 13), -13);
         break;
-    }
     case M_PMA: {
         uint16_t pma = insn.readUint16(memory);
         if (pma & 0xF000)

@@ -2308,14 +2308,14 @@ static void test_program() {
     TEST("BLE *", 0060000 | 0xF00 | 0xFE);
 
     // DBcc Dn,labelL 005|cc|31|Dn
-    TEST("DBRA D2,*-$7FFE", 0050312 | 0x100, 0x8000);
-    TEST("DBRA D2,*-$007E", 0050312 | 0x100, 0xFF80);
-    TEST("DBRA D2,*",       0050312 | 0x100, 0xFFFE);
-    TEST("DBRA D2,*+2",     0050312 | 0x100, 0x0000);
-    TEST("DBRA D2,*+$0080", 0050312 | 0x100, 0x007E);
-    TEST("DBRA D2,*+$8000", 0050312 | 0x100, 0x7FFE);
-    ERRT("DBRA D2,*+3",     OPERAND_NOT_ALIGNED, "*+3", 0050312 | 0x100, 0x0001);
-    ERRT("DBRA D2,*-3",     OPERAND_NOT_ALIGNED, "*-3", 0050312 | 0x100, 0xFFFB);
+    ATEST(0x10000, "DBRA D2,*-$7FFE", 0050312 | 0x100, 0x8000);
+    ATEST(0x10000, "DBRA D2,*-$007E", 0050312 | 0x100, 0xFF80);
+    ATEST(0x10000, "DBRA D2,*",       0050312 | 0x100, 0xFFFE);
+    ATEST(0x10000, "DBRA D2,*+2",     0050312 | 0x100, 0x0000);
+    ATEST(0x10000, "DBRA D2,*+$0080", 0050312 | 0x100, 0x007E);
+    ATEST(0x10000, "DBRA D2,*+$8000", 0050312 | 0x100, 0x7FFE);
+    AERRT(0x10000, "DBRA D2,*+3",     OPERAND_NOT_ALIGNED, "*+3", 0050312 | 0x100, 0x0001);
+    AERRT(0x10000, "DBRA D2,*-3",     OPERAND_NOT_ALIGNED, "*-3", 0050312 | 0x100, 0xFFFB);
     TEST("DBT  D2,*", 0050312 | 0x000, 0xFFFE);
     TEST("DBHI D2,*", 0050312 | 0x200, 0xFFFE);
     TEST("DBLS D2,*", 0050312 | 0x300, 0xFFFE);
@@ -2527,30 +2527,30 @@ static void test_program() {
     ERRT("SLE #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
 
     // BRA label: 00600|disp
-    TEST("BRA   *-$7FFE", 0060000, 0x8000);
-    TEST("BRA.W *-$007E", 0060000, 0xFF80);
-    TEST("BRA   *-$7E",   0060000 | 0x80);
-    TEST("BRA   *",       0060000 | 0xFE);
-    TEST("BRA.W *",       0060000, 0xFFFE);
-    TEST("BRA.W *+2",     0060000, 0x0000);
-    TEST("BRA   *+$80",   0060000 | 0x7E);
-    TEST("BRA.W *+$0080", 0060000, 0x007E);
-    TEST("BRA   *+$8000", 0060000, 0x7FFE);
-    ERRT("BRA *+3",       OPERAND_NOT_ALIGNED, "*+3", 0060000 | 0x01);
-    ERRT("BRA *-3",       OPERAND_NOT_ALIGNED, "*-3", 0060000 | 0xFB);
+    ATEST(0x10000, "BRA   *-$7FFE", 0060000, 0x8000);
+    ATEST(0x10000, "BRA.W *-$007E", 0060000, 0xFF80);
+    ATEST(0x10000, "BRA   *-$7E",   0060000 | 0x80);
+    ATEST(0x10000, "BRA   *",       0060000 | 0xFE);
+    ATEST(0x10000, "BRA.W *",       0060000, 0xFFFE);
+    ATEST(0x10000, "BRA.W *+2",     0060000, 0x0000);
+    ATEST(0x10000, "BRA   *+$80",   0060000 | 0x7E);
+    ATEST(0x10000, "BRA.W *+$0080", 0060000, 0x007E);
+    ATEST(0x10000, "BRA   *+$8000", 0060000, 0x7FFE);
+    AERRT(0x10000, "BRA *+3",       OPERAND_NOT_ALIGNED, "*+3", 0060000 | 0x01);
+    AERRT(0x10000, "BRA *-3",       OPERAND_NOT_ALIGNED, "*-3", 0060000 | 0xFB);
 
     // BSR label: 00604|disp
-    TEST("BSR   *-$7FFE", 0060400, 0x8000);
-    TEST("BSR.W *-$007E", 0060400, 0xFF80);
-    TEST("BSR   *-$7E",   0060400 | 0x80);
-    TEST("BSR   *",       0060400 | 0xFE);
-    TEST("BSR.W *",       0060400, 0xFFFE);
-    TEST("BSR.W *+2",     0060400, 0x0000);
-    TEST("BSR   *+$80",   0060400 | 0x7E);
-    TEST("BSR.W *+$0080", 0060400, 0x007E);
-    TEST("BSR.W *+$8000", 0060400, 0x7FFE);
-    ERRT("BSR *+3",       OPERAND_NOT_ALIGNED, "*+3", 0060400 | 0x01);
-    ERRT("BSR *-3",       OPERAND_NOT_ALIGNED, "*-3", 0060400 | 0xFB);
+    ATEST(0x10000, "BSR   *-$7FFE", 0060400, 0x8000);
+    ATEST(0x10000, "BSR.W *-$007E", 0060400, 0xFF80);
+    ATEST(0x10000, "BSR   *-$7E",   0060400 | 0x80);
+    ATEST(0x10000, "BSR   *",       0060400 | 0xFE);
+    ATEST(0x10000, "BSR.W *",       0060400, 0xFFFE);
+    ATEST(0x10000, "BSR.W *+2",     0060400, 0x0000);
+    ATEST(0x10000, "BSR   *+$80",   0060400 | 0x7E);
+    ATEST(0x10000, "BSR.W *+$0080", 0060400, 0x007E);
+    ATEST(0x10000, "BSR.W *+$8000", 0060400, 0x7FFE);
+    AERRT(0x10000, "BSR *+3",       OPERAND_NOT_ALIGNED, "*+3", 0060400 | 0x01);
+    AERRT(0x10000, "BSR *-3",       OPERAND_NOT_ALIGNED, "*-3", 0060400 | 0xFB);
 
     // JMP dst: 00473|M|Rn
     ERRT("JMP D2",              OPERAND_NOT_ALLOWED, "D2");

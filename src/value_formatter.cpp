@@ -16,6 +16,8 @@
 
 #include "value_formatter.h"
 
+#include "config_base.h"
+
 #include <stdlib.h>
 
 namespace libasm {
@@ -53,12 +55,14 @@ uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits)
     uint8_t bw = bits;
     if (bits < 0) {
         bw = -bits;
-        if (val & (1UL << (bw - 1))) {
+        const auto sign = ConfigBase::shiftLeftOne(bw - 1);
+        if (val & sign) {
             val = ~val + 1;
             out.letter('-');
         }
     }
-    return val & ((1UL << bw) - 1);
+    const auto mask = ConfigBase::shiftLeftOne(bw) - 1;
+    return val & mask;
 }
 
 StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {

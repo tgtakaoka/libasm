@@ -17,6 +17,7 @@
 #ifndef __VALUE_H__
 #define __VALUE_H__
 
+#include "config_base.h"
 #include "error_reporter.h"
 #include "str_scanner.h"
 
@@ -51,8 +52,8 @@ public:
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned() const { return _type == NEGATIVE; }
     bool isUnsigned() const { return _type == UNSIGNED; }
-    bool overflowUint8() const { return overflowUint8(_value); }
-    bool overflowUint16() const { return overflowUint16(_value); }
+    bool overflowUint8() const { return ConfigBase::overflowUint8(_value); }
+    bool overflowUint16() const { return ConfigBase::overflowUint16(_value); }
 
     int32_t getSigned() const { return static_cast<int32_t>(_value); }
     uint32_t getUnsigned() const { return _value; }
@@ -72,14 +73,6 @@ public:
         _type = UNDEFINED;
         return *this;
     }
-
-    static bool overflowRel8(int16_t s16);
-    static bool overflowRel8(int32_t s32);
-    static bool overflowRel16(int32_t s32);
-    static bool overflowUint8(uint16_t u16);
-    static bool overflowUint8(uint32_t u32);
-    static bool overflowUint16(uint32_t u32);
-    static bool overflowUint(uint32_t, uint8_t bitw);
 
 private:
     enum ValueType : uint8_t {

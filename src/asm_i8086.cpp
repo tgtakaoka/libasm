@@ -204,7 +204,7 @@ AddrMode AsmI8086::Operand::immediateMode() const {
         return M_VAL1;
     if (val32 == 3)
         return M_VAL3;
-    if (!overflowRel8(static_cast<int32_t>(val32)))
+    if (!overflowInt8(static_cast<int32_t>(val32)))
         return M_IMM8;
     return M_IMM;
 }
@@ -223,11 +223,11 @@ void AsmI8086::emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, u
 }
 
 void AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
-    const uint32_t base = insn.address() + (mode == M_REL8 ? 2 : 3);
-    const uint32_t target = op.getError() ? base : op.val32;
-    const int32_t delta = target - base;
+    const auto base = insn.address() + (mode == M_REL8 ? 2 : 3);
+    const auto target = op.getError() ? base : op.val32;
+    const auto delta = branchDelta(base, target, op);
     if (mode == M_REL8) {
-        const auto overflow = overflowRel8(delta);
+        const auto overflow = overflowInt8(delta);
         if (insn.opCode() == 0xEB && (overflow || op.getError())) {
             insn.setOpCode(0xE9, 0);
             emitRelative(insn, op, M_REL);
@@ -239,7 +239,7 @@ void AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
         return;
     }
     // M_REL
-    if (overflowRel16(delta))
+    if (overflowInt16(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand16(delta);
 }
@@ -275,7 +275,7 @@ uint8_t AsmI8086::Operand::encodeMod() const {
             (reg == REG_BP && index == REG_UNDEF) || (hasVal && (val32 || getError()));
     if (needDisp) {
         const auto val = static_cast<int32_t>(val32);
-        return overflowRel8(val) || getError() ? 2 : 1;
+        return overflowInt8(val) || getError() ? 2 : 1;
     }
     return 0;
 }
@@ -337,7 +337,7 @@ void AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
             insn.embedModReg(modReg);
         }
         if (mod == 1) {
-            if (overflowRel8(static_cast<int32_t>(op.val32)))
+            if (overflowInt8(static_cast<int32_t>(op.val32)))
                 setErrorIf(op, OVERFLOW_RANGE);
             insn.emitOperand8(op.val32);
         } else if (mod == 2) {

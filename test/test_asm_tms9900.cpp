@@ -314,11 +314,11 @@ static void test_rel() {
     ATEST(0x1000, "JH  >0FF8", 0x1BFB);
     ATEST(0x1000, "JOP >0FF6", 0x1CFA);
 
-    AERRT(0x1000, "JMP >1001", OPERAND_NOT_ALIGNED, ">1001", 0x10FF);
-    ATEST(0x1000, "JMP $+256",                               0x107F);
-    ATEST(0x1000, "JMP $-254",                               0x1080);
-    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR,     "$+258", 0x1080);
-    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR,     "$-256", 0x107F);
+    AERRT(0x1000, "JMP >1001", OPERAND_NOT_ALIGNED, ">1001", 0x1000);
+    ATEST(0x1000, "JMP $+256",                                   0x107F);
+    ATEST(0x1000, "JMP $-254",                                   0x1080);
+    AERRT(0x1000, "JMP $+258", OPERAND_TOO_FAR,         "$+258", 0x1080);
+    AERRT(0x1000, "JMP $-256", OPERAND_TOO_FAR,         "$-256", 0x107F);
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");

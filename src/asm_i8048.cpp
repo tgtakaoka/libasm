@@ -148,8 +148,7 @@ void AsmI8048::encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand
         insn.emitOperand8(op.val16);
         return;
     }
-    const Config::uintptr_t max = 1UL << uint8_t(config().addressWidth());
-    if (op.val16 >= max)
+    if (checkAddr(op.val16))
         setErrorIf(op, OVERFLOW_RANGE);
     insn.embed((op.val16 >> 3) & 0xE0);
     insn.emitOperand8(op.val16);

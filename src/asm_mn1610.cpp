@@ -20,10 +20,8 @@ namespace libasm {
 namespace mn1610 {
 
 void AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
-    if (checkAddress(op.val32, op))
-        setErrorIf(op, getError());
-    const int32_t delta = op.val32 - insn.address();
-    if (overflowRel8(delta))
+    const auto delta = branchDelta(insn.address(), op.val32, op);
+    if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     const Config::opcode_t mode = (op.mode == M_IABS) ? 3 : 1;
     insn.embed(mode << 11);
@@ -62,7 +60,7 @@ void AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
         if (op.reg == REG_IC) {
             if (op.mode == M_IDIX)
                 setErrorIf(op, REGISTER_NOT_ALLOWED);
-            if (overflowRel8(static_cast<int32_t>(op.val32)))
+            if (overflowInt8(static_cast<int32_t>(op.val32)))
                 setErrorIf(op, OPERAND_TOO_FAR);
             // Relative: d(IC), Relative indirect: (d(IC))
             insn.embed(static_cast<uint8_t>(op.val32));
@@ -169,12 +167,14 @@ void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode
             setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(static_cast<uint8_t>(val32));
         break;
-    case M_ABS:
+    case M_ABS: {
         // TODO: calculate/check segment/offset
-        if (checkAddress(op.val32, op))
-            setErrorIf(op, getError());
+        const auto err = checkAddr(op.val32);
+        if (err)
+            setErrorIf(op, err);
         insn.emitOperand16(op.val32);
         break;
+    }
     case M_GEN:
         encodeGenericAddress(insn, op);
         break;

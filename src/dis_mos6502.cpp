@@ -64,8 +64,11 @@ Error DisMos6502::decodeImmediate(
 
 Error DisMos6502::decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
     uint32_t target = insn.readUint16(memory);
-    const uint8_t bank = insn.readByte(memory);
+    const auto bank = insn.readByte(memory);
     target |= static_cast<uint32_t>(bank) << 16;
+    const auto err = config().checkAddr(target);
+    if (err)
+        setErrorIf(err);
     // JSL has only ABS_LONG addressing
     if (insn.opCode() == TableMos6502::JSL) {
         outAbsAddr(out, target);
@@ -79,11 +82,11 @@ Error DisMos6502::decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBu
             outAbsAddr(out, target);
         }
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
-    const uint16_t addr = insn.readUint16(memory);
+    const auto addr = insn.readUint16(memory);
     const auto label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
@@ -96,7 +99,7 @@ Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer
 }
 
 Error DisMos6502::decodeDirectPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
-    const uint8_t zp = insn.readByte(memory);
+    const auto zp = insn.readByte(memory);
     const auto label = lookup(zp);
     if (label) {
         out.letter('<').text(label);
@@ -108,30 +111,18 @@ Error DisMos6502::decodeDirectPage(DisMemory &memory, InsnMos6502 &insn, StrBuff
 
 Error DisMos6502::decodeRelative(
         DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
-    Config::ptrdiff_t delta;
+    int16_t delta;
     if (mode == M_RELL) {
         delta = static_cast<int16_t>(insn.readUint16(memory));
     } else {
         delta = static_cast<int8_t>(insn.readByte(memory));
     }
-    const uint16_t origin = insn.address();
-    const uint16_t base = origin + insn.length();
-    const uint16_t target = base + delta;
-    if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
-        return setError(OPERAND_TOO_FAR);
-    if (addressWidth() == ADDRESS_24BIT) {
-        const Config::uintptr_t orig = insn.address();
-        const Config::uintptr_t addr = orig + insn.length() + delta;
-        if (orig >> 16 != addr >> 16)
-            return setError(OPERAND_TOO_FAR);
-        const uint8_t deltaBits = (mode == M_RELL) ? 16 : 8;
-        outRelAddr(out, addr, orig, deltaBits);
-    } else if (mode == M_RELL) {
-        outRelAddr(out, target, origin, 16);
-    } else {
-        outRelAddr(out, target, origin, 8);
-    }
-    return setError(insn);
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
+    if ((target >> 16) != (insn.address() >> 16))
+        setErrorIf(OPERAND_TOO_FAR);
+    outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
+    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out) {
@@ -176,9 +167,7 @@ Error DisMos6502::decodeOperand(
     default:
         break;
     }
-    if (isOK())
-        setError(insn);
-    return getError();
+    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {

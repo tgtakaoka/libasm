@@ -51,7 +51,6 @@ private:
 
     StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
-    Error checkAddressRange(Config::uintptr_t addr);
     Error decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);

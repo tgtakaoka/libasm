@@ -19,7 +19,7 @@ build asm: link asm.o asm_commander.o file_reader.o file_printer.o $
   error_reporter.o option_base.o str_buffer.o str_scanner.o value_formatter.o value_parser.o $
   parsers.o operators.o bin_memory.o bin_decoder.o bin_encoder.o list_formatter.o intel_hex.o $
   moto_srec.o $
-  asm_driver.o asm_directive.o asm_formatter.o function_store.o $
+  config_base.o asm_driver.o asm_directive.o asm_formatter.o function_store.o $
   asm_base.o asm_mc6809.o asm_mc6800.o asm_mc6805.o asm_mos6502.o asm_i8048.o asm_i8051.o $
   asm_i8080.o asm_i8096.o asm_z80.o asm_z8.o asm_tlcs90.o asm_ins8060.o asm_ins8070.o asm_cdp1802.o $
   asm_scn2650.o asm_f3850.o asm_i8086.o asm_tms9900.o asm_tms32010.o asm_mc68000.o asm_z8000.o $
@@ -36,7 +36,7 @@ build asm: link asm.o asm_commander.o file_reader.o file_printer.o $
 build dis: link dis.o dis_commander.o file_reader.o file_printer.o $
   error_reporter.o option_base.o str_buffer.o str_scanner.o value_formatter.o $
   bin_memory.o bin_decoder.o bin_encoder.o list_formatter.o intel_hex.o moto_srec.o $
-  dis_driver.o dis_formatter.o $
+  config_base.o dis_driver.o dis_formatter.o $
   dis_base.o dis_mc6809.o dis_mc6800.o dis_mc6805.o dis_mos6502.o dis_i8048.o dis_i8051.o $
   dis_i8080.o dis_i8096.o dis_z80.o dis_z8.o dis_tlcs90.o dis_ins8060.o dis_ins8070.o dis_cdp1802.o $
   dis_scn2650.o dis_f3850.o dis_i8086.o dis_tms9900.o dis_tms32010.o dis_mc68000.o dis_z8000.o $

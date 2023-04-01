@@ -28,9 +28,9 @@ DisF3850::OptUseScratchpad::OptUseScratchpad(bool &var)
     : BoolOption(OPT_BOOL_USE_SCRATCHPAD, OPT_DESC_USE_SCRATCHPAD, var) {}
 
 Error DisF3850::decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out) {
-    const int8_t delta = insn.readByte(memory);
-    const Config::uintptr_t base = insn.address() + 1;
-    const Config::uintptr_t target = base + delta;
+    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+    const auto base = insn.address() + 1;
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
     return OK;
 }

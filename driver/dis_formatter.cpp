@@ -69,8 +69,9 @@ Error DisFormatter::setCpu(const char *cpu) {
 Error DisFormatter::setOrigin(uint32_t origin) {
     reset();
     StrBuffer buf(_operands, sizeof(_operands));
-    if (_disassembler.checkAddress(origin))
-        return _disassembler.getError();
+    const auto err = config().checkAddr(origin);
+    if (err)
+        return err;
     _insnBase.reset(origin);
     _insnBase.nameBuffer().text_P(PSTR("ORG"), _uppercase);
     _disassembler.formatter().formatHex(buf, origin, config().addressWidth(), false);

@@ -195,26 +195,21 @@ Error DisZ8000::decodeRelativeAddressing(
     int16_t delta = 0;
     if (mode == M_RA) {
         delta = static_cast<int16_t>(insn.readUint16(memory));
-    }
-    if (mode == M_RA12) {
+    } else if (mode == M_RA12) {
         // Sign extends 12-bit number as 0x800 is a sign bit.
-        const int16_t ra12 = (insn.opCode() & 0x7FF) - (insn.opCode() & 0x800);
+        const auto ra12 = signExtend(insn.opCode(), 12);
         delta = -ra12 * 2;
-    }
-    if (mode == M_RA8) {
+    } else if (mode == M_RA8) {
         // Sign extends 8-bit number as 0x80 is a sign bit
-        const int16_t ra8 = (insn.opCode() & 0x7F) - (insn.opCode() & 0x80);
+        const auto ra8 = signExtend(insn.opCode(), 8);
         delta = ra8 * 2;
-    }
-    if (mode == M_RA7) {
+    } else if (mode == M_RA7) {
         // Unsigned 7-bit as always negative offset.
-        const uint16_t ra7 = insn.opCode() & 0x7F;
+        const auto ra7 = insn.opCode() & 0x7F;
         delta = -static_cast<int16_t>(ra7) * 2;
     }
-    const Config::uintptr_t base = insn.address() + insn.length();
-    const Config::uintptr_t target = base + delta;
-    if (mode == M_RA12 && (target % 2) != 0)
-        return setError(OPERAND_NOT_ALIGNED);
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
     return setError(insn);
 }

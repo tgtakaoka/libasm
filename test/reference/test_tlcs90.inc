@@ -520,8 +520,8 @@
 
         LDAR    HL,$+3
         LDAR    HL,$
-        LDAR    HL,$-7FFEH
-        LDAR    HL,$+8001H
+        LDAR    HL,$-4FEH
+        LDAR    HL,$+401H
 
         EX      (BC),BC
         EX      (DE),BC
@@ -1579,8 +1579,8 @@
 
         JRL     $+3
         JRL     $
-        JRL     $-7FFEH
-        JRL     $+8001H
+        JRL     $-4FEH
+        JRL     $+401H
 
         JP      (1234H)
 
@@ -1638,8 +1638,8 @@
 
         CALR    $+3
         CALR    $
-        CALR    $-7FFEH
-        CALR    $+8001H
+        CALR    $-4FEH
+        CALR    $+401H
 
         DJNZ    $+2
         DJNZ    $

@@ -21,7 +21,8 @@
       ADD   IY, 1716H
       ADD   SP, 1817H
       LDAR  HL, $+191AH
-      LDAR  HL, $-7FE6H
+      LDAR  HL, $-00E6H
+      LDAR  HL, $
       DJNZ  $+27
       DJNZ  $-126
       DJNZ  $
@@ -30,10 +31,12 @@
       DJNZ  BC, $
       JP    (1C1BH)
       JRL   $+1D1EH
-      JRL   $-7FE2H
+      JRL   $-00E2H
+      JRL   $
       CALL  (1E1DH)
       CALR  $+1F20H
-      CALR  $-7FE0H
+      CALR  $-00E0H
+      CALR  $
       RET
       RETI
       LD    A, B

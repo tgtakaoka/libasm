@@ -56,17 +56,18 @@ Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &
 
 Error DisIns8070::decodeRelative(
         DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode) {
-    const Config::ptrdiff_t disp = static_cast<int8_t>(insn.readByte(memory));
-    const auto base = _regs.decodePointerReg(insn.opCode());
+    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+    const auto ptr = _regs.decodePointerReg(insn.opCode());
     if (mode == M_PCR) {
-        const uint8_t fetch = insn.execute() ? 1 : 0;
-        const Config::uintptr_t target = insn.address() + 1 + disp + fetch;
+        const auto fetch = insn.execute() ? 1 : 0;
+        const auto base = insn.address() + 1 + fetch;
+        const auto target = branchTarget(base, delta);
         outRelAddr(out, target, insn.address(), 8);
         if (fetch == 0)
             outRegister(out.letter(','), REG_PC);
     } else {
-        outDec(out, disp, -8).letter(',');
-        outRegister(out, base);
+        outDec(out, delta, -8).letter(',');
+        outRegister(out, ptr);
     }
     return setError(insn);
 }

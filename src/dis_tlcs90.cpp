@@ -70,15 +70,15 @@ Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode,
 
 Error DisTlcs90::decodeRelative(
         InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
-    Config::ptrdiff_t delta;
+    int16_t delta;
     if (mode == M_REL8) {
         delta = static_cast<int8_t>(op.val16);
     } else {
         delta = static_cast<int16_t>(op.val16);
     }
-    const Config::uintptr_t target = insn.address() + 2 + delta;
-    const uint8_t deltaWidth = mode == M_REL8 ? 8 : 16;
-    outRelAddr(out, target, insn.address(), deltaWidth);
+    const auto base = insn.address() + 2;
+    const auto target = branchTarget(base, delta);
+    outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
     return OK;
 }
 

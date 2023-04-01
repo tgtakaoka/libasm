@@ -79,12 +79,12 @@ void AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
 }
 
 void AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + 1;
+    const auto base = insn.address() + 1;
     // PC will be +1 before feting instruction
-    const uint8_t fetch = insn.execute() ? 1 : 0;
-    const Config::uintptr_t target = (op.getError() ? base + fetch : op.val16) - fetch;
-    const Config::ptrdiff_t offset = target - base;
-    if (overflowRel8(offset))
+    const auto fetch = insn.execute() ? 1 : 0;
+    const auto target = (op.getError() ? base + fetch : op.val16) - fetch;
+    const auto offset = branchDelta(base, target, op);
+    if (overflowInt8(offset))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(offset);
 }
@@ -112,7 +112,7 @@ void AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     if (op.autoIndex)
         insn.embed(4);
     const auto offset = static_cast<Config::ptrdiff_t>(op.val16);
-    if (overflowRel8(offset))
+    if (overflowInt8(offset))
         setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand8(offset);
 }

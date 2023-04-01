@@ -20,6 +20,7 @@
 #include <stdint.h>
 
 #include "config_host.h"
+#include "error_reporter.h"
 #include "type_traits.h"
 
 namespace libasm {
@@ -58,6 +59,20 @@ struct ConfigBase {
     virtual Endian endian() const = 0;
     virtual uint8_t codeMax() const = 0;
     virtual uint8_t nameMax() const = 0;
+
+    Error checkAddr(uint32_t addr, uint8_t width = 0) const;
+
+    static uint32_t shiftLeftOne(uint8_t width);
+
+    static int32_t signExtend(uint32_t u32, uint8_t bitw);
+    static bool overflowInt8(int16_t s16);
+    static bool overflowInt8(int32_t s32);
+    static bool overflowInt16(int32_t s32);
+    static bool overflowInt(int32_t s32, uint8_t bitw);
+    static bool overflowUint8(uint16_t u16);
+    static bool overflowUint8(uint32_t u32);
+    static bool overflowUint16(uint32_t u32);
+    static bool overflowUint(uint32_t, uint8_t bitw);
 };
 
 namespace {

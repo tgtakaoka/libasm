@@ -152,27 +152,25 @@ void AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
 }
 
 void AsmZ8000::emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + (mode == M_RA ? 4 : 2);
-    const Config::uintptr_t target = op.getError() ? base : op.val32;
-    Config::ptrdiff_t delta = target - base;
+    const auto base = insn.address() + (mode == M_RA ? 4 : 2);
+    const auto target = op.getError() ? base : op.val32;
     if (mode == M_RA) {
-        if (overflowRel16(delta))
+        const auto delta = target - base;
+        if (overflowInt16(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(static_cast<uint16_t>(delta));
         return;
     }
-    if (target % 2)
-        setErrorIf(op, OPERAND_NOT_ALIGNED);
-    delta /= 2;
+    auto delta = branchDelta(base, target, op) / 2;
     if (mode == M_RA12) {
         delta = -delta;
-        if (delta < -0x800 || delta >= 0x800)
+        if (overflowInt(delta, 12))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFFF));
         return;
     }
     if (mode == M_RA8) {
-        if (overflowRel8(delta))
+        if (overflowInt8(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint16_t>(delta & 0xFF));
         return;
@@ -192,7 +190,7 @@ void AsmZ8000::emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op) 
 
 void AsmZ8000::emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op) {
     const int32_t disp = static_cast<int32_t>(op.val32);
-    if (overflowRel16(disp))
+    if (overflowInt16(disp))
         setErrorIf(op, OVERFLOW_RANGE);
     emitIndirectRegister(insn, op, field, op.base);
     insn.emitOperand16(static_cast<uint16_t>(disp));

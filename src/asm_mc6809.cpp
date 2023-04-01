@@ -29,11 +29,11 @@ AsmMc6809::OptSetdp::OptSetdp(AsmMc6809::PseudoMc6809 &pseudos)
 
 void AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
     const auto length = (insn.hasPrefix() ? 1 : 0) + (mode == M_LREL ? 3 : 2);
-    const auto base = static_cast<Config::uintptr_t>(insn.address()) + length;
-    const auto target = op.getError() ? base : static_cast<Config::uintptr_t>(op.val32);
-    const auto delta = static_cast<Config::ptrdiff_t>(target - base);
+    const auto base = insn.address() + length;
+    const auto target = op.getError() ? base : op.val32;
+    const auto delta = branchDelta(base, target, op);
     if (mode == M_REL) {
-        if (overflowRel8(delta))
+        if (overflowInt8(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
     } else {
@@ -70,7 +70,7 @@ void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
             size = 0;
         } else if (!pc && !spec.indir && disp >= -16 && disp < 16) {
             size = 5;
-        } else if (!overflowRel8(disp)) {
+        } else if (!overflowInt8(disp)) {
             size = 8;
         } else {
             if (spec.base == REG_PCR)

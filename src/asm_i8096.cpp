@@ -85,7 +85,7 @@ void AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
         if (op.isOK() && op.val16 == 0)
             goto indir;
         insn.embedAa(AA_IDX);
-        if (op.isOK() && !overflowRel8(static_cast<int16_t>(op.val16))) {
+        if (op.isOK() && !overflowInt8(static_cast<int16_t>(op.val16))) {
             insn.emitOperand8(op.regno);
             insn.emitOperand8(op.val16);
         } else {
@@ -107,34 +107,29 @@ void AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
 }
 
 void AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
-    Config::uintptr_t target;
-    Config::uintptr_t base;
-    Config::ptrdiff_t delta;
-    switch (mode) {
-    case M_REL8:
+    if (mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
-        base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
-        target = op.getError() ? base : op.val16;
-        delta = target - base;
-        if (overflowRel8(delta))
+        const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
+        const auto target = op.getError() ? base : op.val16;
+        const auto delta = branchDelta(base, target, op);
+        if (overflowInt8(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
-        return;
-    case M_REL11:
-        base = insn.address() + 2;
-        target = op.getError() ? base : op.val16;
-        delta = target - base;
-        if (delta < -0x400 || delta >= 0x400)
+    } else if (mode == M_REL11) {
+        const auto base = insn.address() + 2;
+        const auto target = op.getError() ? base : op.val16;
+        const auto delta = branchDelta(base, target, op);
+        if (overflowInt(delta, 11))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
         insn.emitOperand8(delta);
-        return;
-    default:  // M_REL16
-        base = insn.address() + 3;
-        target = op.getError() ? base : op.val16;
-        delta = target - base;
+    } else { // M_REL16
+        const auto base = insn.address() + 3;
+        const auto target = op.getError() ? base : op.val16;
+        const auto delta = branchDelta(base, target, op);
+        if (overflowInt16(delta))
+            setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(delta);
-        return;
     }
 }
 

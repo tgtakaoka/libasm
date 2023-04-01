@@ -26,7 +26,6 @@ namespace libasm {
 
 enum Error : uint8_t {
     OK = 0,
-    INSTRUCTION_NOT_ALIGNED = 1,
 
     // Disassembler
     NO_MEMORY = 2,
@@ -99,8 +98,11 @@ public:
 
     Error resetError() { return setOK(); }
     Error setOK() { return setError(OK); }
+
     Error setError(Error error) { return _error = error; }
-    Error setError(const ErrorReporter &reporter) { return setError(reporter.getError()); }
+    Error setErrorIf(Error error) { return _error ? _error : setError(error); }
+    Error setError(const ErrorReporter &o) { return setError(o.getError()); }
+    Error setErrorIf(const ErrorReporter &o) { return setErrorIf(o.getError()); }
 
     const /*PROGMEM*/ char *errorText_P() const { return errorText_P(_error); }
     static const /*PROGMEM*/ char *errorText_P(Error error);
@@ -116,34 +118,24 @@ public:
     bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
 
     Error setError(Error error) { return ErrorReporter::setError(error); }
+    Error setErrorIf(Error error) { return ErrorReporter::setErrorIf(error); }
+    Error setError(const ErrorReporter &o) { return ErrorReporter::setError(o); }
+    Error setErrorIf(const ErrorReporter &o) { return ErrorReporter::setErrorIf(o.getError()); }
+    Error setError(const ErrorAt &o) {
+        setAt(o._at);
+        return ErrorReporter::setError(o.getError());
+    }
+    Error setErrorIf(const ErrorAt &o) { return getError() ? getError() : setError(o); }
+    Error setError(const ErrorAt &o, Error error) { return setError(o._at, error); }
+    Error setErrorIf(const ErrorAt &o, Error error) {
+        return getError() ? getError() : setError(o, error);
+    }
     Error setError(const StrScanner &at, Error error) {
         setAt(at);
-        return setError(error);
-    }
-    Error setError(const ErrorAt &o) { return setError(o._at, o.getError()); }
-    Error setError(const ErrorAt &o, Error error) { return setError(o._at, error); }
-    Error setErrorIf(Error error) {
-        if (getError())
-            return getError();
-        return setError(_at, error);
-    }
-    Error setErrorIf(ErrorReporter &o) {
-        return setErrorIf(_at, o.getError());
-    }
-    Error setErrorIf(const ErrorAt &o) {
-        if (getError())
-            return getError();
-        return setError(o._at, o.getError());
+        return ErrorReporter::setError(error);
     }
     Error setErrorIf(const StrScanner &at, Error error) {
-        if (getError())
-            return getError();
-        return setError(at, error);
-    }
-    Error setErrorIf(const ErrorAt &o, Error error) {
-        if (getError())
-            return getError();
-        return setError(o._at, error);
+        return getError() ? getError() : setError(at, error);
     }
 
     void setAt(const StrScanner &at) { _at = at.str(); }

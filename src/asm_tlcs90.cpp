@@ -20,13 +20,13 @@ namespace libasm {
 namespace tlcs90 {
 
 void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? base : op.val16;
-    const Config::ptrdiff_t delta = target - base;
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, op);
     if (mode == M_REL16) {
         insn.emitUint16(delta);
     } else {
-        if (overflowRel8(delta))
+        if (overflowInt8(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitByte(delta);
     }
@@ -62,7 +62,7 @@ void AsmTlcs90::encodeOperand(
         insn.emitInsn(opc | RegTlcs90::encodeReg16(op.reg));
         return;
     case M_IDX:
-        if (overflowRel8(static_cast<int16_t>(op.val16)))
+        if (overflowInt8(static_cast<int16_t>(op.val16)))
             setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | RegTlcs90::encodeIndexReg(op.reg));
         insn.emitByte(op.val16);

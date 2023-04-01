@@ -61,7 +61,8 @@ static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
         if (insn.opCode() & 0x80)
             val8 |= 1;
         // Sign extends 4-bit number.
-        val8 = (val8 & 7) - (val8 & 8);
+        //val8 = (val8 & 7) - (val8 & 8);
+        val8 = ConfigBase::signExtend(val8, 4);
         return val8;
     }
     return 0;
@@ -93,26 +94,26 @@ Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displac
     if ((head & 0x80) == 0) {
         // 0xxx|xxxx
         // Sign extends 7-bit number as 0x40 is a sign bit.
-        const int8_t val8 = (head & 0x3F) - (head & 0x40);
-        disp.val32 = val8;
+        disp.val32 = signExtend(head, 7);
         disp.bits = 7;
     } else {
         // Sign extends 14-bit number as 0x2000 is a sign bit.
-        const int8_t val8 = (head & 0x1F) - (head & 0x20);
-        const int16_t val16 = (static_cast<int16_t>(val8) << 8) | insn.readByte(memory);
+        const auto lsb = insn.readByte(memory);
+        const auto val16 = (static_cast<uint16_t>(head) << 8) | lsb;
         if ((head & 0x40) == 0) {
             // 10xx|xxxx
-            disp.val32 = static_cast<int32_t>(val16);
+            disp.val32 = signExtend(val16, 14);
             disp.bits = 14;
         } else {
             // 11xx|xxxx
             if (head == 0xE0)
                 return setError(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
-            const int32_t val32 = (static_cast<int32_t>(val16) << 16) | insn.readUint16(memory);
-            if (val32 < -0x1F000000L || val32 >= 0x20000000L)
-                return setError(OVERFLOW_RANGE);
-            disp.val32 = val32;
+            const auto lsw = insn.readUint16(memory);
+            const auto val32 = (static_cast<uint32_t>(val16) << 16) | lsw;
+            disp.val32 = signExtend(val32, 30);
             disp.bits = 30;
+            if (disp.val32 < -0x1F000000L)
+                return setError(OVERFLOW_RANGE);
         }
     }
     return setError(insn);
@@ -210,12 +211,9 @@ Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn, StrBuffer
     Displacement disp;
     if (readDisplacement(memory, insn, disp))
         return getError();
-    const Config::uintptr_t target = insn.address() + disp.val32;
-    const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
-    if (target >= max)
-        return setError(OVERFLOW_RANGE);
+    const auto target = branchTarget(insn.address(), disp.val32);
     outRelAddr(out, target, insn.address(), disp.bits);
-    return OK;
+    return getError();
 }
 
 Error DisNs32000::decodeConfig(const InsnNs32000 &insn, StrBuffer &out, OprPos pos) {
@@ -334,15 +332,12 @@ Error DisNs32000::decodeGeneric(
             return setError(OPERAND_NOT_ALLOWED);
         return decodeImmediate(memory, insn, out, mode);
     case 0x15:  // M_ABS
-        if (readDisplacement(memory, insn, disp)) {
+        if (readDisplacement(memory, insn, disp))
             return getError();
-        } else {
-            // Check absolute address is in 24bit integer range.
-            const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
-            if (static_cast<uint32_t>(disp.val32 + (max >> 1)) > max - 1)
-                return setError(OVERFLOW_RANGE);
-            outAbsAddr(out.letter('@'), disp.val32);
-        }
+        // Check absolute address is in 24bit unsigned integer range.
+        if (overflowUint(disp.val32, addressWidth()))
+            return setErrorIf(OVERFLOW_RANGE);
+        outAbsAddr(out.letter('@'), disp.val32);
         break;
     case 0x16:  // M_EXT
         if (_externalParen) {
@@ -381,8 +376,7 @@ Error DisNs32000::decodeGeneric(
             return getError();
         if (reg == REG_PC) {
             const Config::uintptr_t target = insn.address() + disp.val32;
-            const Config::uintptr_t max = 1UL << uint8_t(addressWidth());
-            if (target >= max)
+            if (checkAddr(target))
                 return setError(OVERFLOW_RANGE);
             if (_pcRelativeParen) {
                 outAbsAddr(out, target);

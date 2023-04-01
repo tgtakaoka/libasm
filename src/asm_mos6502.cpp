@@ -40,14 +40,13 @@ Error AsmMos6502::OptLongA::set(bool value) const {
 void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t bank = insn.address() & ~0xFFFF;
     const auto len = insn.length();
-    const uint16_t base = insn.address() + (len ? len : 1) + (mode == M_REL ? 1 : 2);
-    const uint16_t target = op.getError() ? base : op.val32;
-    checkAddress(target, op);
-    const int16_t delta = target - base;
-    if (addressWidth() == ADDRESS_24BIT && op.isOK() && (op.val32 & ~0xFFFF) != bank)
+    const auto base = insn.address() + (len ? len : 1) + (mode == M_REL ? 1 : 2);
+    const auto target = op.getError() ? base : op.val32;
+    const auto delta = branchDelta(base, target, op);
+    if (op.isOK() && (op.val32 & ~0xFFFF) != bank)
         setErrorIf(op, OPERAND_TOO_FAR);
     if (mode == M_REL) {
-        if (overflowRel8(delta))
+        if (overflowInt8(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
     } else {
@@ -77,16 +76,19 @@ void AsmMos6502::encodeOperand(InsnMos6502 &insn, AddrMode modeAndFlags, const O
         emitImmediate(insn, op, TableMos6502::TABLE.longIndex());
         break;
     case M_ABS:
-        checkAddress(op.val32, op);
+        if (checkAddr(op.val32, ADDRESS_16BIT))
+            setErrorIf(op, OVERFLOW_RANGE);
         emitImmediate(insn, op, true);
         break;
     case M_ABSL:
-        checkAddress(op.val32, op);
+        if (checkAddr(op.val32))
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val32);
         insn.emitOperand8(op.val32 >> 16);
         break;
     case M_DPG:
-        checkAddress(op.val32, op);
+        if (checkAddr(op.val32, 8))
+            setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
         emitImmediate(insn, op, false);

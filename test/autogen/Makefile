@@ -82,7 +82,7 @@ asm-test: $(ASM) clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
-ASL_exclude = gen_i8086
+ASL_exclude = gen_mb8861 gen_i8086
 ASL_SRCS = $(foreach t,$(ASM_TESTS),$(if $(filter $(t),$(ASL_exclude)),,$(t)))
 ASL_TESTS = $(ASL_SRCS) \
 	$(foreach t,$(patsubst %.asl,%,$(wildcard gen_*.asl)),$(if $(filter $(t),$(ASL_SRCS)),,$(t)))

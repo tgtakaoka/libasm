@@ -124,16 +124,16 @@ Error DisMc68000::decodeEffectiveAddr(
 
 Error DisMc68000::decodeRelative(
         DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, uint8_t rel8) {
-    Config::uintptr_t target = insn.address() + 2;
+    const auto base = insn.address() + 2;
+    int16_t delta;
     if (rel8) {
-        target += static_cast<int8_t>(rel8);
+        delta = static_cast<int8_t>(rel8);
     } else {
-        target += static_cast<int16_t>(insn.readUint16(memory));
+        delta = static_cast<int16_t>(insn.readUint16(memory));
     }
-    if (target % 2)
-        return setError(OPERAND_NOT_ALIGNED);
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), rel8 ? 8 : 16);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 static RegName decodeMoveMltReg(int8_t regno) {

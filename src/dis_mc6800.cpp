@@ -50,9 +50,9 @@ Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &
 }
 
 Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
-    const int8_t delta8 = static_cast<int8_t>(insn.readByte(memory));
-    const Config::uintptr_t base = insn.address() + insn.length();
-    const Config::uintptr_t target = base + delta8;
+    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
     return OK;
 }
@@ -130,9 +130,7 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
     default:
         return OK;
     }
-    if (isOK())
-        setError(insn);
-    return getError();
+    return setErrorIf(insn);
 }
 
 Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {

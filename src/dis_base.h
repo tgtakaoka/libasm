@@ -55,8 +55,6 @@ public:
     const Options &commonOptions() const { return _commonOptions; }
     virtual const Options &options() const { return Options::EMPTY; }
 
-    Error checkAddress(uint32_t addr);
-
 private:
     ValueFormatter &_formatter;
 
@@ -89,84 +87,34 @@ protected:
     Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym);
 
     /** Lookup |addr| value and returns symbol. */
-    template <typename Addr>
-    const char *lookup(Addr addr) const {
-        const char *symbol = nullptr;
-        if (_symtab) {
-            symbol = _symtab->lookupValue(addr);
-            if (!symbol) {
-                auto value = static_cast<typename make_signed<Addr>::type>(addr);
-                symbol = _symtab->lookupValue(static_cast<int32_t>(value));
-            }
-        }
-        return symbol;
-    }
+    const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;
 
     /**
      * Convert |val| as |bits| decimal integer. Treat |val| as signed
      * integer when |bits| is negative.
      */
-    template <typename T>
-    StrBuffer &outDec(StrBuffer &out, T val, int8_t bits) const {
-        const char *label = lookup(val);
-        if (label)
-            return out.text(label);
-        return _formatter.formatDec(out, val, bits);
-    }
+    StrBuffer &outDec(StrBuffer &out, uint32_t val, int8_t bits) const;
 
     /**
      * Convert |val| as |bits| hexadecimal integer. Treat |val| as
      * signed integer when |bits| is negative. Output symbol label when
      * |val| is in symbol table.
      */
-    template <typename T>
-    StrBuffer &outHex(StrBuffer &out, T val, int8_t bits, bool relax = true) const {
-        const char *label = lookup(val);
-        if (label)
-            return out.text(label);
-        return _formatter.formatHex(out, val, bits, relax);
-    }
+    StrBuffer &outHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax = true) const;
 
     /**
      * Convert |val| as |addrWidth| bit absolute address. Use default
      * configured address width when |addrWdith| is ommitted. Output
      * symbol label when |val| is in symbol table.
      */
-    template <typename Addr>
-    StrBuffer &outAbsAddr(StrBuffer &out, Addr val, uint8_t addrWidth = 0) const {
-        const char *label = lookup(val);
-        if (label)
-            return out.text(label);
-        if (addrWidth == 0)
-            addrWidth = uint8_t(config().addressWidth());
-        return _formatter.formatHex(out, val, addrWidth, false);
-    }
+    StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
 
     /**
      * Convert |target| as relative |deltaBits| offset from |origin|.
      */
-    template <typename Addr>
-    StrBuffer &outRelAddr(StrBuffer &out, Addr target, Addr origin, uint8_t deltaBits) const {
-        if (!_relativeTarget)
-            return outAbsAddr(out, target);
-        out.letter(_curSym);
-        const auto delta = static_cast<typename make_signed<Addr>::type>(target - origin);
-        if (delta == 0)
-            return out;
-        Addr val;
-        if (delta < 0) {
-            out.letter('-');
-            val = static_cast<Addr>(-delta);
-        } else {
-            out.letter('+');
-            val = static_cast<Addr>(delta);
-        }
-        if (deltaBits <= 14) {
-            return _formatter.formatDec(out, val, deltaBits);
-        } else {
-            return _formatter.formatHex(out, val, deltaBits);
-        }
-    }
+    StrBuffer &outRelAddr(StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const;
+
+    uint32_t branchTarget(uint32_t base, int32_t delta);
 
 private:
     virtual Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) = 0;

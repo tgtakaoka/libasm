@@ -388,10 +388,10 @@ static void test_branch() {
     TEST(B, "400H",  0xF900, 0x0400);
     TEST(B, "800H",  0xF900, 0x0800);
     TEST(B, "0FFFH", 0xF900, 0x0FFF);
-    ERVR(B, "1000H", 0xF900, 0x1000);
-    ERVR(B, "2000H", 0xF900, 0x2000);
-    ERVR(B, "4000H", 0xF900, 0x4000);
-    ERVR(B, "8000H", 0xF900, 0x8000);
+    ERRT(B, "1000H", OVERFLOW_RANGE, 0xF900, 0x1000);
+    ERRT(B, "2000H", OVERFLOW_RANGE, 0xF900, 0x2000);
+    ERRT(B, "4000H", OVERFLOW_RANGE, 0xF900, 0x4000);
+    ERRT(B, "8000H", OVERFLOW_RANGE, 0xF900, 0x8000);
 
     TEST(BANZ, "900H",  0xF400, 0x0900);
     TEST(BGEZ, "900H",  0xFD00, 0x0900);
@@ -429,9 +429,9 @@ static void test_control() {
     TEST(SST, "80H",     0x7C00);
     TEST(SST, "8FH",     0x7C0F);
     if (is32010()) {
-        ERVR(SST, "90H", 0x7C10);
+        ERRT(SST, "90H", OVERFLOW_RANGE, 0x7C10);
     } else {
-        TEST(SST, "90H", 0x7C10);
+        TEST(SST, "90H",                  0x7C10);
     }
     TEST(SST, "*",       0x7C88);
     TEST(SST, "*-",      0x7C98);

@@ -38,10 +38,10 @@ CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_test = test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
-OBJS_asm  = asm_base.o test_asm_helper.o value_parser.o parsers.o operators.o
-OBJS_dis  = dis_base.o test_dis_helper.o value_formatter.o
-OBJS_expr = test_expr_helper.o value_parser.o parsers.o operators.o value_formatter.o
-OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o dis_formatter.o \
+OBJS_asm  = asm_base.o config_base.o test_asm_helper.o value_parser.o parsers.o operators.o
+OBJS_dis  = dis_base.o config_base.o test_dis_helper.o value_formatter.o
+OBJS_expr = config_base.o test_expr_helper.o value_parser.o parsers.o operators.o value_formatter.o
+OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o dis_formatter.o config_base.o \
             dis_base.o value_formatter.o list_formatter.o
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)

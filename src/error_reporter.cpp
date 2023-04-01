@@ -22,8 +22,6 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
     switch (error) {
     case OK:
         return PSTR("OK");
-    case INSTRUCTION_NOT_ALIGNED:
-        return PSTR("Instruction not aligned");
 
     // Disassembler
     case NO_MEMORY:

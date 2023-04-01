@@ -87,7 +87,7 @@ Error AsmMc68000::checkAlignment(OprSize size, const Operand &op) {
 }
 
 void AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
-    if (overflowRel8(disp))
+    if (overflowInt8(disp))
         setErrorIf(op, OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
     ext |= RegMc68000::encodeGeneralRegNo(op.indexReg) << 12;
@@ -99,24 +99,22 @@ void AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config
 }
 
 void AsmMc68000::emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
-    if (overflowRel16(disp))
+    if (overflowInt16(disp))
         setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand16(static_cast<uint16_t>(disp));
 }
 
 void AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? base : op.val32;
-    if (target % 2)
-        setErrorIf(op, OPERAND_NOT_ALIGNED);
-    const Config::ptrdiff_t disp = target - base;
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val32;
+    const auto disp = branchDelta(base, target, op);
     if (mode == M_REL8) {
-        if (!overflowRel8(disp)) {
+        if (!overflowInt8(disp)) {
             insn.embed(static_cast<uint8_t>(disp));
             return;
         }
     }
-    if (overflowRel16(disp))
+    if (overflowInt16(disp))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand16(static_cast<uint16_t>(disp));
 }
@@ -216,7 +214,7 @@ Error AsmMc68000::emitEffectiveAddr(
         }
         if (mode == M_IM8) {
             // Signed 8-bit.
-            if (overflowRel8(static_cast<int32_t>(op.val32)))
+            if (overflowInt8(static_cast<int32_t>(op.val32)))
                 setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(static_cast<uint8_t>(op.val32));
             break;
@@ -228,7 +226,7 @@ Error AsmMc68000::emitEffectiveAddr(
             break;
         }
         if (mode == M_IMDSP) {
-            if (overflowRel16(static_cast<int32_t>(op.val32)))
+            if (overflowInt16(static_cast<int32_t>(op.val32)))
                 setErrorIf(op, OVERFLOW_RANGE);
             insn.emitOperand16(static_cast<uint16_t>(op.val32));
             break;
@@ -276,7 +274,7 @@ void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool rev
                 setErrorIf(UNKNOWN_OPERAND);
         }
         for (uint8_t i = s; i <= e; i++) {
-            const uint32_t bm = (1 << i);
+            const auto bm = shiftLeftOne(i);
             if (bits & bm)
                 setErrorIf(p, DUPLICATE_REGISTER);
             bits |= bm;
@@ -331,10 +329,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
         if (p.skipSpaces().expect(')')) {
             const auto size = RegMc68000::parseSize(p.skipSpaces());
-            bool over16 = overflowRel16(op.val32);
+            bool over16 = overflowInt16(op.val32);
             if (over16) {
                 // check if it is near the end of address space.
-                const auto max = 1UL << uint8_t(addressWidth());
+                const auto max = shiftLeftOne(uint8_t(addressWidth()));
                 if (op.val32 <= max - 1 && op.val32 >= (max - 0x8000))
                     over16 = false;
             }

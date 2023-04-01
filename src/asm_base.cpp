@@ -18,23 +18,14 @@
 
 namespace libasm {
 
-Error Assembler::checkAddress(uint32_t addr, const ErrorAt &at) {
-    const uint32_t max = 1UL << config().addressWidth();
-    if (max && (addr & ~(max - 1)))
-        return setError(at, OVERFLOW_RANGE);
-    if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
-        if (addr % 2)
-            return setError(at, INSTRUCTION_NOT_ALIGNED);
-    }
-    return OK;
-}
-
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
     _parser.setCurrentOrigin(insn.address());
     setAt(line);
-    if (checkAddress(insn.address(), *this))
-        return getError();
+    const auto err = config().checkAddr(insn.address());
+    if (err)
+        return setError(err);
+
     StrScanner scan(line);
     setError(scan, OK);
     if (_parser.commentLine(scan.skipSpaces()))
@@ -69,6 +60,16 @@ uint32_t Assembler::parseExpr32(StrScanner &expr, ErrorAt &error, char delim) co
 
 Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
     return _parser.eval(expr, error, _symtab, delim);
+}
+
+int32_t Assembler::branchDelta(uint32_t base, uint32_t target, const ErrorAt &at) {
+    const auto err = config().checkAddr(target);
+    if (err)
+        setErrorIf(at, err);
+    const auto delta = config().signExtend(target - base, config().addressWidth());
+    if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
+        setErrorIf(at, OVERFLOW_RANGE);
+    return delta;
 }
 
 }  // namespace libasm

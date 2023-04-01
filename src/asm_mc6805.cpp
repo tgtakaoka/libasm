@@ -102,17 +102,16 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 void AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
-    const Config::uintptr_t target = op.getError() ? base : op.val16;
-    checkAddress(target, op);
-    const Config::ptrdiff_t delta = target - base;
-    if (overflowRel8(delta))
+    const auto base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, op);
+    if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
 void AsmMc6805::emitBitNumber(InsnMc6805 &insn, const Operand &op) {
-    const uint8_t imm = 1 << (op.val16 & 7);
+    const uint8_t imm = shiftLeftOne(op.val16 & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }
@@ -172,7 +171,8 @@ void AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) 
         break;
     case M_EXT:
     ext:
-        checkAddress(op.val16, op);
+        if (checkAddr(op.val16))
+            setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val16);
         break;
     case M_REL:

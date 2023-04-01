@@ -114,8 +114,9 @@ Error DisZ8::decodeAbsolute(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, End
 }
 
 Error DisZ8::decodeRelative(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
-    const int8_t disp = static_cast<int8_t>(insn.readByte(memory));
-    const Config::uintptr_t target = insn.address() + insn.length() + disp;
+    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }

@@ -190,22 +190,22 @@ static void test_extended() {
     TEST(JSR, ">ext0090",  0xCD, 0x00, 0x90);
 
     dis6805.setOption("pc-bits", "11"); // MC68HC05J for instance
-    TEST(         LDA, "$7FF", 0xC6, 0x07, 0xFF);
-    ERVR(         LDA, "$800", 0xC6, 0x08, 0x00);
-    ATEST(0x07F0, BSR, "$7FF", 0xAD, 0x0D);
-    AERVR(0x07F0, BSR, "$800", 0xAD, 0x0E);
+    TEST(         LDA, "$7FF",                 0xC6, 0x07, 0xFF);
+    ERRT(         LDA, "$800", OVERFLOW_RANGE, 0xC6, 0x08, 0x00);
+    ATEST(0x07F0, BSR, "$7FF",                 0xAD, 0x0D);
+    AERRT(0x07F0, BSR, "$800", OVERFLOW_RANGE, 0xAD, 0x0E);
 
     dis6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
-    TEST(         LDA, "$1FFF", 0xC6, 0x1F, 0xFF);
-    ERVR(         LDA, "$2000", 0xC6, 0x20, 0x00);
-    ATEST(0x1FF0, BSR, "$1FFF", 0xAD, 0x0D);
-    AERVR(0x1FF0, BSR, "$2000", 0xAD, 0x0E);
+    TEST(         LDA, "$1FFF",                 0xC6, 0x1F, 0xFF);
+    ERRT(         LDA, "$2000", OVERFLOW_RANGE, 0xC6, 0x20, 0x00);
+    ATEST(0x1FF0, BSR, "$1FFF",                 0xAD, 0x0D);
+    AERRT(0x1FF0, BSR, "$2000", OVERFLOW_RANGE, 0xAD, 0x0E);
 
     dis6805.setOption("pc-bits", "14"); // MC68HC05X for instance
-    TEST(         LDA, "$3FFF", 0xC6, 0x3F, 0xFF);
-    ERVR(         LDA, "$4000", 0xC6, 0x40, 0x00);
-    ATEST(0x3FF0, BSR, "$3FFF", 0xAD, 0x0D);
-    AERVR(0x3FF0, BSR, "$4000", 0xAD, 0x0E);
+    TEST(         LDA, "$3FFF",                 0xC6, 0x3F, 0xFF);
+    ERRT(         LDA, "$4000", OVERFLOW_RANGE, 0xC6, 0x40, 0x00);
+    ATEST(0x3FF0, BSR, "$3FFF",                 0xAD, 0x0D);
+    AERRT(0x3FF0, BSR, "$4000", OVERFLOW_RANGE, 0xAD, 0x0E);
 }
 
 static void test_indexed() {
@@ -323,7 +323,7 @@ static void test_relative() {
     ATEST(0x1000, BSR, "*",     0xAD, 0xFE);
     ATEST(0x1000, BSR, "*+2",   0xAD, 0x00);
     ATEST(0x1000, BSR, "*+129", 0xAD, 0x7F);
-    AERVR(0x1FF0, BSR, "*+16",  0xAD, 0x0E);
+    AERRT(0x1FF0, BSR, "*+16",  OVERFLOW_RANGE, 0xAD, 0x0E);
 }
 
 static void test_bit_ops() {
@@ -337,7 +337,7 @@ static void test_bit_ops() {
     ATEST(0x1000, BRSET, "7, $90, *-125", 0x0E, 0x90, 0x80);
     ATEST(0x1000, BRCLR, "0, $90, *+130", 0x01, 0x90, 0x7F);
     ATEST(0x1000, BRCLR, "7, $90, *-125", 0x0F, 0x90, 0x80);
-    AERVR(0x1FF0, BRCLR, "7, $90, *+16",  0x0F, 0x90, 0x0E);
+    AERRT(0x1FF0, BRCLR, "7, $90, *+16",  OVERFLOW_RANGE, 0x0F, 0x90, 0x0E);
     disassembler.setOption("relative", "disable");
 
     symtab.intern(0x90, "dir90");

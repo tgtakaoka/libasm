@@ -38,9 +38,25 @@ StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) cons
     return out;
 }
 
-StrBuffer &DisI8096::outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op) const {
-    Config::uintptr_t base, target;
-    Config::ptrdiff_t offset;
+StrBuffer &DisI8096::outRelative(StrBuffer &out, const InsnI8096 &insn, const Operand &op) {
+    if (op.mode == M_REL8) {
+        // Jx: 2 bytes, DJNZ/JBx: 3 bytes
+        const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
+        const auto target = branchTarget(base, op.int8());
+        return outRelAddr(out, target, insn.address(), 8);
+    } else if (op.mode == M_REL11) {
+        const auto base = insn.address() + 2;
+        // Sign exetends 11-bit number.
+        const auto offset = signExtend(op.val16, 11);
+        const auto target = branchTarget(base, offset);
+        return outRelAddr(out, target, insn.address(), 11);
+    } else { // M_REL16:
+        const auto base = insn.address() + 3;
+        const auto target = branchTarget(base, op.int16());
+        return outRelAddr(out, target, insn.address(), 16);
+    }
+}
+StrBuffer &DisI8096::outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op) {
     switch (op.mode) {
     case M_COUNT:
         if (op.regno < 16)
@@ -53,30 +69,13 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, const InsnI8096 &insn, const Ope
     case M_INDIR:
         return outRegister(out, op.regno, true);
     case M_IDX8:
-        offset = static_cast<int8_t>(op.val16);
-        return outRegister(outDec(out, offset, -8), op.regno, true);
+        return outRegister(outDec(out, op.int8(), -8), op.regno, true);
     case M_IDX16:
         return outRegister(outAbsAddr(out, op.val16, 16), op.regno, true);
     case M_REL8:
-        // Jx: 2 bytes, DJNZ/JBx: 3 bytes
-        base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
-        offset = static_cast<int8_t>(op.val16);
-        target = base + offset;
-        return outRelAddr(out, target, insn.address(), 8);
     case M_REL11:
-        base = insn.address() + 2;
-        // Sign exetends 11-bit number.
-        offset = (op.val16 & 0x3FF) - (op.val16 & 0x400);
-        target = base + offset;
-        return outRelAddr(out, target, insn.address(), 11);
     case M_REL16:
-        base = insn.address() + 3;
-        offset = static_cast<int16_t>(op.val16);
-        if (_relativeTarget) {
-            target = base + offset;
-            return outRelAddr(out, target, insn.address(), 16);
-        }
-        return outAbsAddr(out, base + offset);
+        return outRelative(out, insn, op);
     case M_BITNO:
         return outHex(out, op.val16, 3);
     case M_IMM8:

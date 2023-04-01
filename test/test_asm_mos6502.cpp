@@ -783,28 +783,28 @@ static void test_rel() {
 
     if (w65c816()) {
         // W65C816
-        ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
-        ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
-        ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
-        AERRT(0x0000, "BCS *-126", OPERAND_TOO_FAR, "*-126", 0xB0, 0x80);
+        AERRT(0x0000, "BCS $FF82", OPERAND_TOO_FAR, "$FF82", 0xB0, 0x80);
+        AERRT(0xFFFE, "BNE $0000", OPERAND_TOO_FAR, "$0000", 0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ $0071", OPERAND_TOO_FAR, "$0071", 0xF0, 0x7F);
+        AERRT(0x0000, "BCS *-126", OVERFLOW_RANGE,  "*-126", 0xB0, 0x80);
         AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
         AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
     } else {
-        ATEST(0x0000, "BCS $FF82", 0xB0, 0x80);
-        ATEST(0xFFFE, "BNE $0000", 0xD0, 0x00);
-        ATEST(0xFFF0, "BEQ $0071", 0xF0, 0x7F);
-        ATEST(0x0000, "BCS *-126", 0xB0, 0x80);
-        ATEST(0xFFFE, "BNE *+2",   0xD0, 0x00);
-        ATEST(0xFFF0, "BEQ *+129", 0xF0, 0x7F);
+        AERRT(0x0000, "BCS $FF82", OVERFLOW_RANGE, "$FF82", 0xB0, 0x80);
+        AERRT(0xFFFE, "BNE $0000", OVERFLOW_RANGE, "$0000", 0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ $0071", OVERFLOW_RANGE, "$0071", 0xF0, 0x7F);
+        AERRT(0x0000, "BCS *-126", OVERFLOW_RANGE, "*-126", 0xB0, 0x80);
+        AERRT(0xFFFE, "BNE *+2",   OVERFLOW_RANGE, "*+2",   0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ *+129", OVERFLOW_RANGE, "*+129", 0xF0, 0x7F);
     }
 
     if (w65c816()) {
-        ATEST(0x120000, "BCS $12FF82", 0xB0, 0x80);
-        ATEST(0x12FFFE, "BNE $120000", 0xD0, 0x00);
-        ATEST(0x12FFF0, "BEQ $120071", 0xF0, 0x7F);
-        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR, "*-126", 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
+        AERRT(0x120000, "BCS $12FF82", OPERAND_TOO_FAR, "$12FF82", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE $120000", OPERAND_TOO_FAR, "$120000", 0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ $120071", OPERAND_TOO_FAR, "$120071", 0xF0, 0x7F);
+        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR, "*-126",   0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2",     0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129",   0xF0, 0x7F);
 
         AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82", 0xB0, 0x80);
         AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000", 0xB0, 0x00);

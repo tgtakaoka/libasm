@@ -29,10 +29,6 @@ static constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
     return addr & 0x1FFF;
 }
 
-static constexpr Config::ptrdiff_t signedOffset(const Config::uintptr_t addr) {
-    return (addr & (0x1000 - 1)) - (addr & 0x1000);
-}
-
 static constexpr Config::uintptr_t inpage(
         const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
     return page(addr) | offset(addr + delta);
@@ -40,10 +36,6 @@ static constexpr Config::uintptr_t inpage(
 
 static constexpr Config::uintptr_t inspace(const Config::uintptr_t addr) {
     return addr < 0x8000;
-}
-
-static bool overflowInt13(Config::ptrdiff_t delta) {
-    return delta < -0x40 || delta >= 0x40;
 }
 
 Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
@@ -139,8 +131,8 @@ void AsmScn2650::emitZeroPage(InsnScn2650 &insn, const Operand &op) {
     if (page(target) != 0)
         setErrorIf(op, OVERFLOW_RANGE);
     // Sign extends 13-bit number
-    const auto offset = signedOffset(target);
-    if (overflowInt13(offset))
+    const auto offset = signExtend(target, 13);
+    if (overflowInt(offset, 7))
         setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = target & 0x7F;
     if (op.indir)
@@ -154,8 +146,8 @@ void AsmScn2650::emitRelative(InsnScn2650 &insn, const Operand &op) {
     if (page(target) != page(base))
         setErrorIf(op, OVERWRAP_PAGE);
     // Sign extends 13-bit number.
-    const auto delta = signedOffset(offset(target) - offset(base));
-    if (overflowInt13(delta))
+    const auto delta = signExtend(offset(target) - offset(base), 13);
+    if (overflowInt(delta, 7))
         setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = delta & 0x7F;
     if (op.indir)

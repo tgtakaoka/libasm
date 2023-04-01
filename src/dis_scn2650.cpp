@@ -76,7 +76,7 @@ Error DisScn2650::decodeRelative(
     if (opr & 0x80)
         out.letter('*');
     // Sign extends 7-bit number
-    const auto delta = (opr & 0x3F) - (opr & 0x40);
+    const auto delta = signExtend(opr, 7);
     if (mode == M_REL7) {
         const auto base = inpage(insn.address(), insn.length());
         const auto target = inpage(base, delta);

@@ -743,9 +743,9 @@ static void test_rel() {
         ATEST(0x001000, BVC, "$001004", 0x50, 0x02);
         ATEST(0x001000, BVS, "$001081", 0x70, 0x7F);
         ATEST(0x001000, BCC, "$000F82", 0x90, 0x80);
-        AERRF(0x120000, BCS, "$12FF82", 0xB0, 0x80);
-        AERRF(0x12FFFE, BNE, "$120000", 0xD0, 0x00);
-        AERRF(0x12FFF0, BEQ, "$120071", 0xF0, 0x7F);
+        AERRT(0x120000, BCS, "$12FF82", OPERAND_TOO_FAR, 0xB0, 0x80);
+        AERRT(0x12FFFE, BNE, "$120000", OPERAND_TOO_FAR, 0xD0, 0x00);
+        AERRT(0x12FFF0, BEQ, "$120071", OPERAND_TOO_FAR, 0xF0, 0x7F);
     } else {
         // MOS6502
         ATEST(0x1000, BPL, "$1002", 0x10, 0x00);
@@ -753,9 +753,9 @@ static void test_rel() {
         ATEST(0x1000, BVC, "$1004", 0x50, 0x02);
         ATEST(0x1000, BVS, "$1081", 0x70, 0x7F);
         ATEST(0x1000, BCC, "$0F82", 0x90, 0x80);
-        AERRF(0x0000, BCS, "$FF82", 0xB0, 0x80);
-        ATEST(0xFFFE, BNE, "$0000", 0xD0, 0x00);
-        AERRF(0xFFF0, BEQ, "$0071", 0xF0, 0x7F);
+        AERRT(0x0000, BCS, "$FF82", OVERFLOW_RANGE, 0xB0, 0x80);
+        AERRT(0xFFFE, BNE, "$0000", OVERFLOW_RANGE, 0xD0, 0x00);
+        AERRT(0xFFF0, BEQ, "$0071", OVERFLOW_RANGE, 0xF0, 0x7F);
     }
     if (w65c816()) {
         ATEST(0x121000, BRA, "$121002", 0x80, 0x00);
@@ -767,8 +767,8 @@ static void test_rel() {
         // W65C816
         ATEST(0x121000, BRL, "$121234", 0x82, 0x31, 0x02);
         ATEST(0x121000, PER, "$121234", 0x62, 0x31, 0x02);
-        AERRF(0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
-        AERRF(0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
+        AERRT(0x121000, BRL, "$129003", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
+        AERRT(0x129000, PER, "$121002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -791,15 +791,15 @@ static void test_rel() {
     ATEST(0x2000, BPL, "*+2",   0x10, 0x00);
     ATEST(0x2000, BPL, "*+129", 0x10, 0x7F);
     if (w65c816()) {
-        AERRF(0x120000, BCS, "$12FF82", 0xB0, 0x80);
-        AERRF(0x12FFFE, BNE, "$120000", 0xD0, 0x00);
-        AERRF(0x12FFF0, BEQ, "$120071", 0xF0, 0x7F);
-        AERRF(0x121000, BRL, "$129003", 0x82, 0x00, 0x80);
-        AERRF(0x129000, PER, "$121002", 0x62, 0xFF, 0x7F);
+        AERRT(0x120000, BCS, "$12FF82", OPERAND_TOO_FAR, 0xB0, 0x80);
+        AERRT(0x12FFFE, BNE, "$120000", OPERAND_TOO_FAR, 0xD0, 0x00);
+        AERRT(0x12FFF0, BEQ, "$120071", OPERAND_TOO_FAR, 0xF0, 0x7F);
+        AERRT(0x121000, BRL, "$129003", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
+        AERRT(0x129000, PER, "$121002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
     } else {
-        AERRF(0x0000, BCS, "*-126", 0xB0, 0x80);
-        ATEST(0xFFFE, BNE, "*+2",   0xD0, 0x00);
-        AERRF(0xFFF0, BEQ, "*+129", 0xF0, 0x7F);
+        AERRT(0x0000, BCS, "*-126", OVERFLOW_RANGE, 0xB0, 0x80);
+        AERRT(0xFFFE, BNE, "*+2",   OVERFLOW_RANGE, 0xD0, 0x00);
+        AERRT(0xFFF0, BEQ, "*+129", OVERFLOW_RANGE, 0xF0, 0x7F);
     }
 }
 

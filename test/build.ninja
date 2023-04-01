@@ -20,279 +20,279 @@ subninja ${root}/test/ninja.rules
 
 # mc6809
 build test_asm_mc6809: run test_asm_mc6809.o asm_mc6809.o reg_mc6809.o table_mc6809.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_mc6809: run test_dis_mc6809.o dis_mc6809.o reg_mc6809.o table_mc6809.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_mc6809:      link gen_mc6809.o dis_mc6809.o reg_mc6809.o table_mc6809.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # mc6800
 build test_asm_mc6800: run test_asm_mc6800.o asm_mc6800.o reg_mc6800.o table_mc6800.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_mc6800: run test_dis_mc6800.o dis_mc6800.o reg_mc6800.o table_mc6800.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_mc6800:      link gen_mc6800.o dis_mc6800.o reg_mc6800.o table_mc6800.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # mc6805
 build test_asm_mc6805: run test_asm_mc6805.o asm_mc6805.o reg_mc6805.o table_mc6805.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_mc6805: run test_dis_mc6805.o dis_mc6805.o reg_mc6805.o table_mc6805.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_mc6805:      link gen_mc6805.o dis_mc6805.o reg_mc6805.o table_mc6805.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # mos6502
 build test_asm_mos6502: run test_asm_mos6502.o asm_mos6502.o reg_mos6502.o table_mos6502.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_mos6502: run test_dis_mos6502.o dis_mos6502.o reg_mos6502.o table_mos6502.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_mos6502:      link gen_mos6502.o dis_mos6502.o reg_mos6502.o table_mos6502.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # i8048
 build test_asm_i8048: run test_asm_i8048.o asm_i8048.o reg_i8048.o table_i8048.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_i8048: run test_dis_i8048.o dis_i8048.o reg_i8048.o table_i8048.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_i8048:      link gen_i8048.o dis_i8048.o reg_i8048.o table_i8048.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # i8051
 build test_asm_i8051: run test_asm_i8051.o asm_i8051.o reg_i8051.o table_i8051.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_i8051: run test_dis_i8051.o dis_i8051.o reg_i8051.o table_i8051.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_i8051:      link gen_i8051.o dis_i8051.o reg_i8051.o table_i8051.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # i8080
 build test_asm_i8080: run test_asm_i8080.o asm_i8080.o reg_i8080.o table_i8080.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_i8080: run test_dis_i8080.o dis_i8080.o reg_i8080.o table_i8080.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_i8080:      link gen_i8080.o dis_i8080.o reg_i8080.o table_i8080.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # i8096
 build test_asm_i8096: run test_asm_i8096.o asm_i8096.o reg_i8096.o table_i8096.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_i8096: run test_dis_i8096.o dis_i8096.o reg_i8096.o table_i8096.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_i8096:      link gen_i8096.o dis_i8096.o reg_i8096.o table_i8096.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # z80
 build test_asm_z80: run test_asm_z80.o asm_z80.o reg_z80.o table_z80.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_z80: run test_dis_z80.o dis_z80.o reg_z80.o table_z80.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_z80:      link gen_z80.o dis_z80.o reg_z80.o table_z80.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # z8
 build test_asm_z8: run test_asm_z8.o asm_z8.o reg_z8.o table_z8.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_z8: run test_dis_z8.o dis_z8.o reg_z8.o table_z8.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_z8:      link gen_z8.o dis_z8.o reg_z8.o table_z8.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # tlcs90
 build test_asm_tlcs90: run test_asm_tlcs90.o asm_tlcs90.o reg_tlcs90.o table_tlcs90.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_tlcs90: run test_dis_tlcs90.o dis_tlcs90.o reg_tlcs90.o table_tlcs90.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_tlcs90:      link gen_tlcs90.o dis_tlcs90.o reg_tlcs90.o table_tlcs90.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # ins8060
 build test_asm_ins8060: run test_asm_ins8060.o asm_ins8060.o reg_ins8060.o table_ins8060.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_ins8060: run test_dis_ins8060.o dis_ins8060.o reg_ins8060.o table_ins8060.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_ins8060:      link gen_ins8060.o dis_ins8060.o reg_ins8060.o table_ins8060.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # ins8070
 build test_asm_ins8070: run test_asm_ins8070.o asm_ins8070.o reg_ins8070.o table_ins8070.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_ins8070: run test_dis_ins8070.o dis_ins8070.o reg_ins8070.o table_ins8070.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_ins8070:      link gen_ins8070.o dis_ins8070.o reg_ins8070.o table_ins8070.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # cdp1802
 build test_asm_cdp1802: run test_asm_cdp1802.o asm_cdp1802.o reg_cdp1802.o table_cdp1802.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_cdp1802: run test_dis_cdp1802.o dis_cdp1802.o reg_cdp1802.o table_cdp1802.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_cdp1802:      link gen_cdp1802.o dis_cdp1802.o reg_cdp1802.o table_cdp1802.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # scn2650
 build test_asm_scn2650: run test_asm_scn2650.o asm_scn2650.o reg_scn2650.o table_scn2650.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_scn2650: run test_dis_scn2650.o dis_scn2650.o reg_scn2650.o table_scn2650.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_scn2650:      link gen_scn2650.o dis_scn2650.o reg_scn2650.o table_scn2650.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # f3850
 build test_asm_f3850: run test_asm_f3850.o asm_f3850.o reg_f3850.o table_f3850.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_f3850: run test_dis_f3850.o dis_f3850.o reg_f3850.o table_f3850.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_f3850:      link gen_f3850.o dis_f3850.o reg_f3850.o table_f3850.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # i8086
 build test_asm_i8086: run test_asm_i8086.o asm_i8086.o reg_i8086.o table_i8086.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_i8086: run test_dis_i8086.o dis_i8086.o reg_i8086.o table_i8086.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_i8086:      link gen_i8086.o dis_i8086.o reg_i8086.o table_i8086.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # tms9900
 build test_asm_tms9900: run test_asm_tms9900.o asm_tms9900.o reg_tms9900.o table_tms9900.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_tms9900: run test_dis_tms9900.o dis_tms9900.o reg_tms9900.o table_tms9900.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_tms9900:      link gen_tms9900.o dis_tms9900.o reg_tms9900.o table_tms9900.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # tms32010
 build test_asm_tms32010: run test_asm_tms32010.o asm_tms32010.o reg_tms32010.o table_tms32010.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_tms32010: run test_dis_tms32010.o dis_tms32010.o reg_tms32010.o table_tms32010.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_tms32010:      link gen_tms32010.o dis_tms32010.o reg_tms32010.o table_tms32010.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # mc68000
 build test_asm_mc68000: run test_asm_mc68000.o asm_mc68000.o reg_mc68000.o table_mc68000.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_mc68000: run test_dis_mc68000.o dis_mc68000.o reg_mc68000.o table_mc68000.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_mc68000:      link gen_mc68000.o dis_mc68000.o reg_mc68000.o table_mc68000.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # z8000
 build test_asm_z8000: run test_asm_z8000.o asm_z8000.o reg_z8000.o table_z8000.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_z8000: run test_dis_z8000.o dis_z8000.o reg_z8000.o table_z8000.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_z8000:      link gen_z8000.o dis_z8000.o reg_z8000.o table_z8000.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # ns32000
 build test_asm_ns32000: run test_asm_ns32000.o asm_ns32000.o reg_ns32000.o table_ns32000.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_ns32000: run test_dis_ns32000.o dis_ns32000.o reg_ns32000.o table_ns32000.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_ns32000:      link gen_ns32000.o dis_ns32000.o reg_ns32000.o table_ns32000.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # mn1610
 build test_asm_mn1610: run test_asm_mn1610.o asm_mn1610.o reg_mn1610.o table_mn1610.o $
-  test_asm_helper.o asm_base.o value_parser.o parsers.o operators.o $
+  test_asm_helper.o asm_base.o config_base.o value_parser.o parsers.o operators.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_mn1610: run test_dis_mn1610.o dis_mn1610.o reg_mn1610.o table_mn1610.o $
-  test_dis_helper.o dis_base.o value_formatter.o $
+  test_dis_helper.o dis_base.o config_base.o value_formatter.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build gen_mn1610:      link gen_mn1610.o dis_mn1610.o reg_mn1610.o table_mn1610.o $
-  dis_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o str_scanner.o $
-  gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
+  dis_base.o config_base.o value_formatter.o error_reporter.o option_base.o str_buffer.o $
+  str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o list_formatter.o
 
 # expr
 build test_expr_base: run test_expr_base.o $
-  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o $
+  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_expr_intel: run test_expr_intel.o $
-  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o $
+  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_expr_motorola: run test_expr_motorola.o $
-  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o $
+  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_expr_national: run test_expr_national.o $
-  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o $
+  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_expr_fairchild: run test_expr_fairchild.o $
-  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o $
+  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_expr: phony test_expr_base test_expr_intel test_expr_motorola test_expr_national $
   test_expr_fairchild
 
 build gen: phony gen_mc6809 gen_mc6800 gen_mc6805 gen_mos6502 gen_i8048 gen_i8051 $
   gen_i8080 gen_i8096 gen_z80 gen_z8 gen_tlcs90 gen_ins8060 gen_ins8070 $
-  gen_cdp1802 gen_scn2650 gen_f3850.o gen_i8086 gen_tms9900 gen_tms32010 gen_mc68000 $
+  gen_cdp1802 gen_scn2650 gen_f3850 gen_i8086 gen_tms9900 gen_tms32010 gen_mc68000 $
   gen_z8000 gen_ns32000 gen_mn1610
 
 build test_mc6809:   phony test_asm_mc6809 test_dis_mc6809

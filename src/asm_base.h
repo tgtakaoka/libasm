@@ -61,8 +61,6 @@ public:
     const Options &commonOptions() const { return _commonOptions; }
     virtual const Options &options() const { return Options::EMPTY; }
 
-    Error checkAddress(uint32_t addr, const ErrorAt &at);
-
     /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
     virtual bool hasSetInstruction() const { return false; }
 
@@ -87,14 +85,7 @@ protected:
         : ErrorAt(), _parser(parser), _table(table), _pseudos(pseudos) {}
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
-
-    static bool overflowRel8(int16_t s16) { return Value::overflowRel8(s16); }
-    static bool overflowRel8(int32_t s32) { return Value::overflowRel8(s32); }
-    static bool overflowRel16(int32_t s32) { return Value::overflowRel16(s32); }
-    static bool overflowUint8(uint16_t u16) { return Value::overflowUint8(u16); }
-    static bool overflowUint8(uint32_t u32) { return Value::overflowUint8(u32); }
-    static bool overflowUint16(uint32_t u32) { return Value::overflowUint16(u32); }
-    static bool overflowUint(uint32_t u32, uint8_t bitw) { return Value::overflowUint(u32, bitw); }
+    int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
 
 private:
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;

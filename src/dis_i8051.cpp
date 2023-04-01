@@ -26,8 +26,9 @@ StrBuffer &DisI8051::outRegister(StrBuffer &out, RegName regName) {
 }
 
 Error DisI8051::decodeRelative(DisMemory &memory, InsnI8051 &insn, StrBuffer &out) {
-    const Config::ptrdiff_t delta = static_cast<int8_t>(insn.readByte(memory));
-    const Config::uintptr_t target = insn.address() + insn.length() + delta;
+    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }

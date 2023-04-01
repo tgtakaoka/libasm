@@ -243,22 +243,22 @@ static void test_load_and_exchange() {
         TEST(LDM, "R12, 561234H, #4",       0x5C01, 0x0C03, 0xD600, 0x1234);
         TEST(LDM, "R1, |120034H|(R2), #5",  0x5C21, 0x0104, 0x1234);
         TEST(LDM, "R0, 561234H(R2), #16",   0x5C21, 0x000F, 0xD600, 0x1234);
-        ERVR(LDM, "R15, @RR2, #2",          0x1C21, 0x0F01);
+        ERRT(LDM, "R15, @RR2, #2",          OVERFLOW_RANGE, 0x1C21, 0x0F01);
         TEST(LDM, "@RR2, R15, #1",          0x1C29, 0x0F00);
         TEST(LDM, "@RR2, R1, #2",           0x1C29, 0x0101);
         TEST(LDM, "|120034H|, R13, #3",     0x5C09, 0x0D02, 0x1234);
         TEST(LDM, "561234H, R12, #4",       0x5C09, 0x0C03, 0xD600, 0x1234);
         TEST(LDM, "|120034H|(R2), R1, #5",  0x5C29, 0x0104, 0x1234);
         TEST(LDM, "561234H(R2), R0, #16",   0x5C29, 0x000F, 0xD600, 0x1234);
-        ERVR(LDM, "@RR2, R15, #2",           0x1C29, 0x0F01);
+        ERRT(LDM, "@RR2, R15, #2",          OVERFLOW_RANGE,  0x1C29, 0x0F01);
     } else {
         TEST(LDM, "R9, @R2, #7",        0x1C21, 0x0906);
-        ERVR(LDM, "R9, @R2, #8",        0x1C21, 0x0907);
+        ERRT(LDM, "R9, @R2, #8",        OVERFLOW_RANGE, 0x1C21, 0x0907);
         TEST(LDM, "R1, @R2, #8",        0x1C21, 0x0107);
         TEST(LDM, "R7, 1234H, #9",      0x5C01, 0x0708, 0x1234);
         TEST(LDM, "R0, 1234H(R2), #16", 0x5C21, 0x000F, 0x1234);
         TEST(LDM, "@R2, R9, #7",        0x1C29, 0x0906);
-        ERVR(LDM, "@R2, R9, #8",        0x1C29, 0x0907);
+        ERRT(LDM, "@R2, R9, #8",        OVERFLOW_RANGE, 0x1C29, 0x0907);
         TEST(LDM, "@R2, R1, #8",        0x1C29, 0x0107);
         TEST(LDM, "1234H, R7, #9",      0x5C09, 0x0708, 0x1234);
         TEST(LDM, "1234H(R2), R0, #16", 0x5C29, 0x000F, 0x1234);

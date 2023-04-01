@@ -45,16 +45,18 @@ Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
         return setError(UNDEFINED_SYMBOL);
     setAt(line);
-    if (assembler().checkAddress(value.getUnsigned(), *this))
-        return setError(assembler());
+    const auto err = assembler().config().checkAddr(value.getUnsigned());
+    if (err)
+        return setError(err);
     list.setStartAddress(driver.setOrigin(value.getUnsigned()));
     return setOK();
 }
 
 Error AsmDirective::setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver) {
     const auto addr = (driver.origin() + (alignment - 1)) & ~(alignment - 1);
-    if (assembler().checkAddress(addr, *this))
-        return setError(assembler());
+    const auto err = assembler().config().checkAddr(addr);
+    if (err)
+        return setError(err);
     driver.setOrigin(addr);
     list.setStartAddress(driver.origin());
     return setOK();
@@ -64,7 +66,7 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
     const auto line = scan;
     auto &parser = assembler().parser();
     ErrorAt error;
-    auto value = parser.eval(scan, error, &driver);
+    const auto value = parser.eval(scan, error, &driver);
     // TODO line end check
     if (error.getError())
         return setError(error);

@@ -61,7 +61,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
         char prefix = 0;
         if (spec.size == 5) {
             // Sign extends 5-bit number as 0x10 is a sign bit.
-            offset = (post & 0xF) - (post & 0x10);
+            offset = signExtend(post, 5); //
             if (offset == 0)
                 prefix = '{';
         } else if (spec.size == 8) {
@@ -69,16 +69,17 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
             if (spec.indir && offset == 0)
                 prefix = '<';
             // Check offset is in 5-bit integer range.
-            if (!spec.indir && static_cast<uint16_t>(offset + 16) < 32)
+            if (!spec.indir && !overflowInt(offset, 5))
                 prefix = '<';
         } else {
             offset = static_cast<int16_t>(insn.readUint16(memory));
             // Check offset is in 8-bit integer range.
-            if (static_cast<uint16_t>(offset + 128) < 256)
+            if (!overflowInt8(offset))
                 prefix = '>';
         }
         if (spec.base == REG_PCR) {
-            const Config::uintptr_t target = insn.address() + insn.length() + offset;
+            const auto base = insn.address() + insn.length();
+            const auto target = branchTarget(base, offset);
             outRelAddr(out, target, insn.address(), spec.size);
         } else {
             if (prefix) {
@@ -118,7 +119,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
     }
     if (spec.indir)
         out.letter(']');
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMc6809::decodeRelative(
@@ -129,11 +130,10 @@ Error DisMc6809::decodeRelative(
     } else {
         delta = static_cast<Config::ptrdiff_t>(insn.readUint16(memory));
     }
-    const Config::uintptr_t base = insn.address() + insn.length();
-    const Config::uintptr_t target = base + delta;
-    const uint8_t deltaWidth = mode == M_REL ? 8 : 16;
-    outRelAddr(out, target, insn.address(), deltaWidth);
-    return setError(insn);
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
+    outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
+    return setErrorIf(insn);
 }
 
 Error DisMc6809::decodeImmediate(
@@ -158,7 +158,7 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
     const bool push = (insn.opCode() & 1) == 0;
     for (uint8_t i = 0, n = 0; i < 8; i++) {
         const uint8_t bitPos = push ? 7 - i : i;
-        if (post & (1 << bitPos)) {
+        if (post & shiftLeftOne(bitPos)) {
             if (n != 0)
                 out.letter(',');
             auto reg = _regs.decodeStackReg(bitPos, userStack);

@@ -89,10 +89,10 @@ void AsmZ8::encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &sr
 }
 
 void AsmZ8::encodeRelative(InsnZ8 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + insn.emitLength();
+    const auto base = insn.address() + insn.emitLength();
     const auto target = op.getError() ? base : op.val16;
-    const Config::ptrdiff_t delta = target - base;
-    if (overflowRel8(delta))
+    const auto delta = branchDelta(base, target, op);
+    if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }

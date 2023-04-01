@@ -20,10 +20,10 @@ namespace libasm {
 namespace z80 {
 
 void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? base : op.val16;
-    const Config::ptrdiff_t delta = target - base;
-    if (overflowRel8(delta))
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, op);
+    if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
@@ -51,7 +51,7 @@ void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, cons
         insn.emitOperand8(val16);
         return;
     case M_INDX:
-        if (overflowRel8(static_cast<int16_t>(val16)))
+        if (overflowInt8(static_cast<int16_t>(val16)))
             setErrorIf(op, OVERFLOW_RANGE);
         if (insn.indexBit())
             return encodeIndexedBitOp(insn, op);

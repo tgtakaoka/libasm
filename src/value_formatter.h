@@ -35,7 +35,7 @@ public:
      * integer when |bits| is negative.  Leading zero will be
      * suppressed.
      */
-    StrBuffer &formatDec(StrBuffer &out, uint32_t val, int8_t bits) const;
+    StrBuffer &formatDec(StrBuffer &out, uint32_t val, int8_t bits = 0) const;
 
     /*
      * Convert |val| as |bits| hexadecimal integer.  Treat |val| as
@@ -43,7 +43,7 @@ public:
      * suppress when |relax| is true and |val| is less than 32 in
      * absolute value.
      */
-    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax = true) const;
+    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0, bool relax = true) const;
 
 protected:
     bool _cstyle;

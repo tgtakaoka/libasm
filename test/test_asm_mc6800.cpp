@@ -362,6 +362,8 @@ static void test_indexed_y() {
 
 static void test_relative() {
     ATEST(0x1000, "BRA $1002", 0x20, 0x00);
+    AERRT(0x0010, "BRA $FF92", OVERFLOW_RANGE, "$FF92", 0x20, 0x80);
+    AERRT(0xFFF0, "BRA $0071", OVERFLOW_RANGE, "$0071", 0x20, 0x7F);
     ATEST(0x1000, "BHI $1004", 0x22, 0x02);
     ATEST(0x1000, "BLS $0F82", 0x23, 0x80);
     ATEST(0x1000, "BHS $1081", 0x24, 0x7F);

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2021 Tadashi G. Takaoka
  *
@@ -40,13 +39,6 @@ StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
     return _regs.outRegName(out, regName);
 }
 
-Error DisMc6805::checkAddressRange(Config::uintptr_t addr) {
-    const uint32_t max = 1UL << uint8_t(_addrWidth);
-    if (max && addr >= max)
-        return setError(OVERFLOW_RANGE);
-    return OK;
-}
-
 Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
     const uint8_t dir = insn.readByte(memory);
     const auto label = lookup(dir);
@@ -60,17 +52,17 @@ Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer
 
 Error DisMc6805::decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16(memory);
-    if (checkAddressRange(addr))
-        return getError();
+    if (checkAddr(addr))
+        setErrorIf(OVERFLOW_RANGE);
     const auto label = lookup(addr);
     if (label) {
         out.letter('>').text(label);
     } else {
         if (addr < 0x100)
             out.letter('>');
-        outAbsAddr(out, addr);
+        outAbsAddr(out, addr, isOK() ? 0 : ADDRESS_16BIT);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMc6805::decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode) {
@@ -89,17 +81,15 @@ Error DisMc6805::decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &o
         outDec(out, disp8, 8).letter(',');
         outRegister(out, REG_X);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMc6805::decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
-    const int8_t delta8 = static_cast<int8_t>(insn.readByte(memory));
-    const Config::uintptr_t base = insn.address() + insn.length();
-    const Config::uintptr_t target = base + delta8;
-    if (checkAddressRange(target))
-        return getError();
+    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+    const auto base = insn.address() + insn.length();
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMc6805::decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode) {

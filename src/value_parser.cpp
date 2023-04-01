@@ -16,45 +16,11 @@
 
 #include "value_parser.h"
 
+#include "config_base.h"
+
 #include <ctype.h>
 
 namespace libasm {
-
-bool Value::overflowRel8(int16_t s16) {
-    return s16 < -128 || s16 >= 128;
-}
-
-bool Value::overflowRel8(int32_t s32) {
-    return s32 < -128 || s32 >= 128;
-}
-
-bool Value::overflowRel16(int32_t s32) {
-    return s32 < -32768L || s32 >= 32768L;
-}
-
-bool Value::overflowUint8(uint16_t u16) {
-    const auto s16 = static_cast<int16_t>(u16);
-    return s16 < -128 || (s16 >= 0 && u16 >= 256);
-}
-
-bool Value::overflowUint8(uint32_t u32) {
-    const auto s32 = static_cast<int32_t>(u32);
-    return s32 < -128 || (s32 >= 0 && u32 >= 0x100);
-}
-
-bool Value::overflowUint16(uint32_t u32) {
-    const auto s32 = static_cast<int32_t>(u32);
-    return s32 < -32768L || (s32 >= 0 && u32 >= 0x10000L);
-}
-
-bool Value::overflowUint(uint32_t u32, uint8_t bitw) {
-    const auto s32 = static_cast<int32_t>(u32);
-    if (bitw >= 32)
-        return false;
-    const uint32_t max = 1UL << bitw;
-    const int32_t sign = max >> 1;
-    return s32 < -sign || (s32 >= 0 && u32 >= max);
-}
 
 char ValueParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     return _letter.readLetter(scan, error);

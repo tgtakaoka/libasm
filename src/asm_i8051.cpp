@@ -128,7 +128,7 @@ void AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand
         const Config::uintptr_t base = insn.address() + len + 1;
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         const Config::ptrdiff_t delta = target - base;
-        if (overflowRel8(delta))
+        if (overflowInt8(delta))
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return;

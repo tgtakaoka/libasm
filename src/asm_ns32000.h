@@ -89,7 +89,7 @@ private:
     Error parseBaseOperand(StrScanner &scan, Operand &op);
     Error parseOperand(StrScanner &scan, Operand &op);
     void emitDisplacement(
-            InsnNs32000 &insn, const Operand &op, uint32_t val32, Error error = OVERFLOW_RANGE);
+            InsnNs32000 &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE);
     void emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
     void emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len);
     void emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);

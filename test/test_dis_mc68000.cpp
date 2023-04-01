@@ -1836,51 +1836,51 @@ static void test_program() {
     disassembler.setOption("relative", "true");
 
     // Bcc label: 006|cc|disp
-    TEST(BRA, "*", 0060000 | 0x000 | 0xFE);
-    TEST(BSR, "*", 0060000 | 0x100 | 0xFE);
-    TEST(BHI, "*", 0060000 | 0x200 | 0xFE);
-    TEST(BLS, "*", 0060000 | 0x300 | 0xFE);
-    TEST(BCC, "*", 0060000 | 0x400 | 0xFE);
-    TEST(BCS, "*", 0060000 | 0x500 | 0xFE);
-    TEST(BNE, "*", 0060000 | 0x600 | 0xFE);
-    TEST(BEQ, "*", 0060000 | 0x700 | 0xFE);
-    TEST(BVC, "*", 0060000 | 0x800 | 0xFE);
-    TEST(BVS, "*", 0060000 | 0x900 | 0xFE);
-    TEST(BPL, "*", 0060000 | 0xA00 | 0xFE);
-    TEST(BMI, "*", 0060000 | 0xB00 | 0xFE);
-    TEST(BGE, "*", 0060000 | 0xC00 | 0xFE);
-    TEST(BLT, "*", 0060000 | 0xD00 | 0xFE);
-    TEST(BGT, "*", 0060000 | 0xE00 | 0xFE);
-    TEST(BLE, "*", 0060000 | 0xF00 | 0xFE);
+    ATEST(0x10000, BRA, "*", 0060000 | 0x000 | 0xFE);
+    ATEST(0x10000, BSR, "*", 0060000 | 0x100 | 0xFE);
+    ATEST(0x10000, BHI, "*", 0060000 | 0x200 | 0xFE);
+    ATEST(0x10000, BLS, "*", 0060000 | 0x300 | 0xFE);
+    ATEST(0x10000, BCC, "*", 0060000 | 0x400 | 0xFE);
+    ATEST(0x10000, BCS, "*", 0060000 | 0x500 | 0xFE);
+    ATEST(0x10000, BNE, "*", 0060000 | 0x600 | 0xFE);
+    ATEST(0x10000, BEQ, "*", 0060000 | 0x700 | 0xFE);
+    ATEST(0x10000, BVC, "*", 0060000 | 0x800 | 0xFE);
+    ATEST(0x10000, BVS, "*", 0060000 | 0x900 | 0xFE);
+    ATEST(0x10000, BPL, "*", 0060000 | 0xA00 | 0xFE);
+    ATEST(0x10000, BMI, "*", 0060000 | 0xB00 | 0xFE);
+    ATEST(0x10000, BGE, "*", 0060000 | 0xC00 | 0xFE);
+    ATEST(0x10000, BLT, "*", 0060000 | 0xD00 | 0xFE);
+    ATEST(0x10000, BGT, "*", 0060000 | 0xE00 | 0xFE);
+    ATEST(0x10000, BLE, "*", 0060000 | 0xF00 | 0xFE);
 
     // DBcc Dn,labelL 005|cc|31|Dn
-    TEST(DBRA, "D2, *-$7FFE", 0050312 | 0x100, 0x8000);
-    TEST(DBRA, "D2, *-$007E", 0050312 | 0x100, 0xFF80);
-    TEST(DBRA, "D2, *",       0050312 | 0x100, 0xFFFE);
-    TEST(DBRA, "D2, *+2",     0050312 | 0x100, 0x0000);
-    TEST(DBRA, "D2, *+$0080", 0050312 | 0x100, 0x007E);
-    TEST(DBRA, "D2, *+$8000", 0050312 | 0x100, 0x7FFE);
-    ERNA(DBRA, "D2, *-$7FFF", 0050312 | 0x100, 0x8001);
-    ERNA(DBRA, "D2, *+$8001", 0050312 | 0x100, 0x7FFF);
-    TEST(DBT,  "D2, *",       0050312 | 0x000, 0xFFFE);
-    TEST(DBHI, "D2, *",       0050312 | 0x200, 0xFFFE);
-    TEST(DBLS, "D2, *",       0050312 | 0x300, 0xFFFE);
-    TEST(DBCC, "D2, *",       0050312 | 0x400, 0xFFFE);
-    TEST(DBCS, "D2, *",       0050312 | 0x500, 0xFFFE);
-    TEST(DBNE, "D2, *",       0050312 | 0x600, 0xFFFE);
-    TEST(DBEQ, "D2, *",       0050312 | 0x700, 0xFFFE);
-    TEST(DBVC, "D2, *",       0050312 | 0x800, 0xFFFE);
-    TEST(DBVS, "D2, *",       0050312 | 0x900, 0xFFFE);
-    TEST(DBPL, "D2, *",       0050312 | 0xA00, 0xFFFE);
-    TEST(DBMI, "D2, *",       0050312 | 0xB00, 0xFFFE);
-    TEST(DBGE, "D2, *",       0050312 | 0xC00, 0xFFFE);
-    TEST(DBLT, "D2, *",       0050312 | 0xD00, 0xFFFE);
-    TEST(DBGT, "D2, *",       0050312 | 0xE00, 0xFFFE);
-    TEST(DBLE, "D2, *",       0050312 | 0xF00, 0xFFFE);
+    ATEST(0x10000, DBRA, "D2, *-$7FFE", 0050312 | 0x100, 0x8000);
+    ATEST(0x10000, DBRA, "D2, *-$007E", 0050312 | 0x100, 0xFF80);
+    ATEST(0x10000, DBRA, "D2, *",       0050312 | 0x100, 0xFFFE);
+    ATEST(0x10000, DBRA, "D2, *+2",     0050312 | 0x100, 0x0000);
+    ATEST(0x10000, DBRA, "D2, *+$0080", 0050312 | 0x100, 0x007E);
+    ATEST(0x10000, DBRA, "D2, *+$8000", 0050312 | 0x100, 0x7FFE);
+    AERRT(0x10000, DBRA, "D2, *-$7FFF", OPERAND_NOT_ALIGNED, 0050312 | 0x100, 0x8001);
+    AERRT(0x10000, DBRA, "D2, *+$8001", OPERAND_NOT_ALIGNED, 0050312 | 0x100, 0x7FFF);
+    ATEST(0x10000, DBT,  "D2, *",       0050312 | 0x000, 0xFFFE);
+    ATEST(0x10000, DBHI, "D2, *",       0050312 | 0x200, 0xFFFE);
+    ATEST(0x10000, DBLS, "D2, *",       0050312 | 0x300, 0xFFFE);
+    ATEST(0x10000, DBCC, "D2, *",       0050312 | 0x400, 0xFFFE);
+    ATEST(0x10000, DBCS, "D2, *",       0050312 | 0x500, 0xFFFE);
+    ATEST(0x10000, DBNE, "D2, *",       0050312 | 0x600, 0xFFFE);
+    ATEST(0x10000, DBEQ, "D2, *",       0050312 | 0x700, 0xFFFE);
+    ATEST(0x10000, DBVC, "D2, *",       0050312 | 0x800, 0xFFFE);
+    ATEST(0x10000, DBVS, "D2, *",       0050312 | 0x900, 0xFFFE);
+    ATEST(0x10000, DBPL, "D2, *",       0050312 | 0xA00, 0xFFFE);
+    ATEST(0x10000, DBMI, "D2, *",       0050312 | 0xB00, 0xFFFE);
+    ATEST(0x10000, DBGE, "D2, *",       0050312 | 0xC00, 0xFFFE);
+    ATEST(0x10000, DBLT, "D2, *",       0050312 | 0xD00, 0xFFFE);
+    ATEST(0x10000, DBGT, "D2, *",       0050312 | 0xE00, 0xFFFE);
+    ATEST(0x10000, DBLE, "D2, *",       0050312 | 0xF00, 0xFFFE);
 
     // Scc dst: 005|cc|3|M|Rn
     TEST(ST, "D2",           0050302 | 0x000);
-    TEST(DBT, "D2, *+2",      0050312 | 0x000, 0); // DBT
+    TEST(DBT, "D2, *+2",     0050312 | 0x000, 0); // DBT
     TEST(ST, "(A2)",         0050322 | 0x000);
     TEST(ST, "(A2)+",        0050332 | 0x000);
     TEST(ST, "-(A2)",        0050342 | 0x000);
@@ -2073,38 +2073,38 @@ static void test_program() {
     EROA(SLE, "#nnnn",        0050374 | 0xF00);
 
     // BRA label: 00600|disp
-    TEST(BRA, "*-$7FFE", 0060000, 0x8000);
-    TEST(BRA, "*-$007E", 0060000, 0xFF80);
-    TEST(BRA, "*-126",   0060000 | 0x80);
-    TEST(BRA, "*",       0060000 | 0xFE);
-    TEST(BRA, "*",       0060000, 0xFFFE);
-    TEST(BRA, "*+2",     0060000, 0x0000);
-    TEST(BRA, "*+128",   0060000 | 0x7E);
-    TEST(BRA, "*+$0080", 0060000, 0x007E);
-    TEST(BRA, "*+$8000", 0060000, 0x7FFE);
-    ERNA(BRA, "*-$7FFF", 0060000, 0x8001);
-    ERNA(BRA, "*-127",   0060000 | 0x81);
-    ERNA(BRA, "*+1",     0060000 | 0xFF);
-    ERNA(BRA, "*+3",     0060000 | 0x01);
-    ERNA(BRA, "*+129",   0060000 | 0x7F);
-    ERNA(BRA, "*+$8001", 0060000, 0x7FFF);
+    ATEST(0x10000, BRA, "*-$7FFE", 0060000, 0x8000);
+    ATEST(0x10000, BRA, "*-$007E", 0060000, 0xFF80);
+    ATEST(0x10000, BRA, "*-126",   0060000 | 0x80);
+    ATEST(0x10000, BRA, "*",       0060000 | 0xFE);
+    ATEST(0x10000, BRA, "*",       0060000, 0xFFFE);
+    ATEST(0x10000, BRA, "*+2",     0060000, 0x0000);
+    ATEST(0x10000, BRA, "*+128",   0060000 | 0x7E);
+    ATEST(0x10000, BRA, "*+$0080", 0060000, 0x007E);
+    ATEST(0x10000, BRA, "*+$8000", 0060000, 0x7FFE);
+    AERRT(0x10000, BRA, "*-$7FFF", OPERAND_NOT_ALIGNED, 0060000, 0x8001);
+    AERRT(0x10000, BRA, "*-127",   OPERAND_NOT_ALIGNED, 0060000 | 0x81);
+    AERRT(0x10000, BRA, "*+1",     OPERAND_NOT_ALIGNED, 0060000 | 0xFF);
+    AERRT(0x10000, BRA, "*+3",     OPERAND_NOT_ALIGNED, 0060000 | 0x01);
+    AERRT(0x10000, BRA, "*+129",   OPERAND_NOT_ALIGNED, 0060000 | 0x7F);
+    AERRT(0x10000, BRA, "*+$8001", OPERAND_NOT_ALIGNED, 0060000, 0x7FFF);
 
     // BSR label: 00604|disp
-    TEST(BSR, "*-$7FFE", 0060400, 0x8000);
-    TEST(BSR, "*-$007E", 0060400, 0xFF80);
-    TEST(BSR, "*-126",   0060400 | 0x80);
-    TEST(BSR, "*",       0060400 | 0xFE);
-    TEST(BSR, "*",       0060400, 0xFFFE);
-    TEST(BSR, "*+2",     0060400, 0x0000);
-    TEST(BSR, "*+128",   0060400 | 0x7E);
-    TEST(BSR, "*+$0080", 0060400, 0x007E);
-    TEST(BSR, "*+$8000", 0060400, 0x7FFE);
-    ERNA(BSR, "*-$7FFF", 0060400, 0x8001);
-    ERNA(BSR, "*-127",   0060400 | 0x81);
-    ERNA(BSR, "*+1",     0060400 | 0xFF);
-    ERNA(BSR, "*+3",     0060400 | 0x01);
-    ERNA(BSR, "*+129",   0060400 | 0x7F);
-    ERNA(BSR, "*+$8001", 0060400, 0x7FFF);
+    ATEST(0x10000, BSR, "*-$7FFE", 0060400, 0x8000);
+    ATEST(0x10000, BSR, "*-$007E", 0060400, 0xFF80);
+    ATEST(0x10000, BSR, "*-126",   0060400 | 0x80);
+    ATEST(0x10000, BSR, "*",       0060400 | 0xFE);
+    ATEST(0x10000, BSR, "*",       0060400, 0xFFFE);
+    ATEST(0x10000, BSR, "*+2",     0060400, 0x0000);
+    ATEST(0x10000, BSR, "*+128",   0060400 | 0x7E);
+    ATEST(0x10000, BSR, "*+$0080", 0060400, 0x007E);
+    ATEST(0x10000, BSR, "*+$8000", 0060400, 0x7FFE);
+    AERRT(0x10000, BSR, "*-$7FFF", OPERAND_NOT_ALIGNED, 0060400, 0x8001);
+    AERRT(0x10000, BSR, "*-127",   OPERAND_NOT_ALIGNED, 0060400 | 0x81);
+    AERRT(0x10000, BSR, "*+1",     OPERAND_NOT_ALIGNED, 0060400 | 0xFF);
+    AERRT(0x10000, BSR, "*+3",     OPERAND_NOT_ALIGNED, 0060400 | 0x01);
+    AERRT(0x10000, BSR, "*+129",   OPERAND_NOT_ALIGNED, 0060400 | 0x7F);
+    AERRT(0x10000, BSR, "*+$8001", OPERAND_NOT_ALIGNED, 0060400, 0x7FFF);
 
     // JMP dst: 00473|M|Rn
     EROA(JMP, "D2",             0047302);
@@ -2198,11 +2198,11 @@ static void test_system() {
     TEST(MOVE_W, "($1234,A2), SR",     0043352, 0x1234);
     TEST(MOVE_W, "(18,A2,D3.W), SR",   0043362, 0x3012);
     TEST(MOVE_W, "($001234).W, SR",    0043370, 0x1234);
-    ERNA(MOVE_W, "($001233).W, SR",    0043370, 0x1233);
+    ERRT(MOVE_W, "($001233).W, SR",    OPERAND_NOT_ALIGNED, 0043370, 0x1233);
     TEST(MOVE_W, "($234568).L, SR",    0043371, 0x0023, 0x4568);
-    ERNA(MOVE_W, "($234567).L, SR",    0043371, 0x0023, 0x4567);
+    ERRT(MOVE_W, "($234567).L, SR",    OPERAND_NOT_ALIGNED, 0043371, 0x0023, 0x4567);
     TEST(MOVE_W, "(*+$1234,PC), SR",   0043372, 0x1232);
-    ERNA(MOVE_W, "(*+$1235,PC), SR",   0043372, 0x1233);
+    ERRT(MOVE_W, "(*+$1235,PC), SR",   OPERAND_NOT_ALIGNED, 0043372, 0x1233);
     TEST(MOVE_W, "(*-16,PC,D3.L), SR", 0043373, 0x38EE);
     TEST(MOVE_W, "#$3456, SR",         0043374, 0x3456);
 
@@ -2215,9 +2215,9 @@ static void test_system() {
     TEST(MOVE_W, "SR, ($1234,A2)",   0040352, 0x1234);
     TEST(MOVE_W, "SR, (18,A2,D3.W)", 0040362, 0x3012);
     TEST(MOVE_W, "SR, ($001234).W",  0040370, 0x1234);
-    ERNA(MOVE_W, "SR, ($001233).W",  0040370, 0x1233);
+    ERRT(MOVE_W, "SR, ($001233).W",  OPERAND_NOT_ALIGNED, 0040370, 0x1233);
     TEST(MOVE_W, "SR, ($234568).L",  0040371, 0x0023, 0x4568);
-    ERNA(MOVE_W, "SR, ($234567).L",  0040371, 0x0023, 0x4567);
+    ERRT(MOVE_W, "SR, ($234567).L",  OPERAND_NOT_ALIGNED, 0040371, 0x0023, 0x4567);
     EROA(MOVE_W, "SR, (d16,PC)",     0040372, 0x1232);
     EROA(MOVE_W, "SR, (d8,PC,Xn)",   0040373);
     EROA(MOVE_W, "SR, #nnnn",        0040374);
@@ -2279,11 +2279,11 @@ static void test_system() {
     TEST(MOVE_W, "($1234,A2), CCR",     0042352, 0x1234);
     TEST(MOVE_W, "(18,A2,D3.W), CCR",   0042362, 0x3012);
     TEST(MOVE_W, "($001234).W, CCR",    0042370, 0x1234);
-    ERNA(MOVE_W, "($001233).W, CCR",    0042370, 0x1235);
+    ERRT(MOVE_W, "($001233).W, CCR",    OPERAND_NOT_ALIGNED, 0042370, 0x1235);
     TEST(MOVE_W, "($234568).L, CCR",    0042371, 0x0023, 0x4568);
-    ERNA(MOVE_W, "($234567).L, CCR",    0042371, 0x0023, 0x4569);
+    ERRT(MOVE_W, "($234567).L, CCR",    OPERAND_NOT_ALIGNED, 0042371, 0x0023, 0x4569);
     TEST(MOVE_W, "(*+$1234,PC), CCR",   0042372, 0x1232);
-    ERNA(MOVE_W, "(*+$1233,PC), CCR",   0042372, 0x1233);
+    ERRT(MOVE_W, "(*+$1233,PC), CCR",   OPERAND_NOT_ALIGNED, 0042372, 0x1233);
     TEST(MOVE_W, "(*-16,PC,D3.L), CCR", 0042373, 0x38EE);
     TEST(MOVE_W, "#$34, CCR",           0042374, 0x0034);
 

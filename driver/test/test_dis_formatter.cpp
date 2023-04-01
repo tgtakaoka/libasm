@@ -159,7 +159,7 @@ void test_mc6805() {
             "test.bin: $1237: error: Unknown instruction\n"
             "    1237 : 82\n"
             "test.bin: $1238: error: Overflow range\n"
-            "    1238 : c6 20 00                   lda\n",
+            "    1238 : c6 20 00                   lda   $2000\n",
             0xdf, 0x40, 0x00, 0x82, 0xC6, 0x20, 0x00);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x3456));
@@ -204,7 +204,7 @@ void test_w65816() {
             "  ABCDEF : EF F0 F1 F2                SBC   $F2F1F0\n"
             "  ABCDF3 : 69 34 12                   ADC   #$1234\n"
             "test.bin: $ABCDF6: error: Operand too far\n"
-            "  ABCDF6 : 82 FF 7F                   BRL\n",
+            "  ABCDF6 : 82 FF 7F                   BRL   $AC4DF8\n",
             0xef, 0xf0, 0xf1, 0xf2, 0x69, 0x34, 0x12, 0x82, 0xFF, 0x7F);
 }
 
@@ -479,7 +479,7 @@ void test_tms9900() {
             "    9ac4 : 0383                       mid\n",
             0x002a, 0x4861, 0x4a4b, 0x4c4d, 0x0383);
 
-    EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCD));
+    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCD));
 }
 
 void test_tms32010() {
@@ -525,10 +525,10 @@ void test_mc68000() {
             "test.bin: $9abce8: error: Operand not allowed\n"
             "  9abce8 : 43fc                       lea\n"
             "test.bin: $9abcea: error: Operand not aligned\n"
-            "  9abcea : 617f                       bsr\n",
+            "  9abcea : 617f                       bsr     $9abd6b\n",
             0x00b9, 0xbdbe, 0xbfc0, 0x00c2, 0xc3c4, 0041774, 0060400 | 0x7F);
 
-    EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCDEF));
+    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCDEF));
 }
 
 void test_ns32000() {
@@ -578,7 +578,7 @@ void test_z8001() {
             0x4c15, 0x1617, 0x1919, 0x9745);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x89abcd));
-    EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0x789abd));
+    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0x789abd));
 }
 
 void test_z8002() {
@@ -600,7 +600,7 @@ void test_z8002() {
             0x1000, 0x0102, 0x0304, 0x5144);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x10000));
-    EQ("org", INSTRUCTION_NOT_ALIGNED, listing.setOrigin(0xABCD));
+    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCD));
 }
 
 void test_mn1610() {

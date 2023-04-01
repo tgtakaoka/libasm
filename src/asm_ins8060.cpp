@@ -77,7 +77,7 @@ void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
             delta = -128;
         } else {
             delta = static_cast<Config::ptrdiff_t>(op.val16);
-            if (overflowRel8(delta) || delta == -128)
+            if (overflowInt8(delta) || delta == -128)
                 setErrorIf(op, OVERFLOW_RANGE);
         }
         insn.embed(RegIns8060::encodePointerReg(op.reg));
@@ -90,11 +90,11 @@ void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
         // Program space is paged by 4kB.
         if (page(target) != page(base))
             setErrorIf(op, OVERWRAP_PAGE);
-        auto diff = offset(target - fetch) - offset(base);
+        const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
-        delta = static_cast<Config::ptrdiff_t>((diff & 0x7FF) - (diff & 0x800));
+        delta = signExtend(diff, 12);
         // delta -128 is for E reg.
-        if (overflowRel8(delta) || delta == -128)
+        if (overflowInt8(delta) || delta == -128)
             setErrorIf(op, OPERAND_TOO_FAR);
         if (op.getError())
             delta = 0;
@@ -118,7 +118,7 @@ void AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
     auto disp = static_cast<Config::ptrdiff_t>(op.val16);
     if (op.index == REG_E) {
         disp = -128;
-    } else if (overflowRel8(disp) || disp == -128) {
+    } else if (overflowInt8(disp) || disp == -128) {
         setErrorIf(op, OVERFLOW_RANGE);
     }
     insn.emitInsn();

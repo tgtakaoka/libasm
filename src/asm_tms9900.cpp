@@ -20,19 +20,17 @@ namespace libasm {
 namespace tms9900 {
 
 void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? base : op.val16;
-    if (target % 2)
-        setErrorIf(op, OPERAND_NOT_ALIGNED);
-    const Config::ptrdiff_t delta = (target - base) >> 1;
-    if (overflowRel8(delta))
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, op) / 2;
+    if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.embed(static_cast<uint8_t>(delta));
 }
 
 void AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
     const int16_t offset = static_cast<int16_t>(op.val16);
-    if (overflowRel16(offset))
+    if (overflowInt16(offset))
         setErrorIf(op, OVERFLOW_RANGE);
     insn.embed(static_cast<uint8_t>(offset));
 }

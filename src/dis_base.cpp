@@ -55,21 +55,11 @@ Error Disassembler::OptUppercase::set(bool value) const {
     return OK;
 }
 
-Error Disassembler::checkAddress(uint32_t addr) {
-    const uint32_t max = 1UL << config().addressWidth();
-    if (max && (addr & ~(max - 1)))
-        return setError(OVERFLOW_RANGE);
-    if (config().opCodeWidth() == OPCODE_16BIT && config().addressUnit() == ADDRESS_BYTE) {
-        if (addr % 2)
-            return setError(INSTRUCTION_NOT_ALIGNED);
-    }
-    return setOK();
-}
-
 Error Disassembler::decode(
         DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {
     _symtab = symtab;
-    if (checkAddress(insn.address()))
+    // This setError also reset error of Disassembler.
+    if (setError(config().checkAddr(insn.address())))
         return getError();
     StrBuffer out(operands, size);
     auto mark = insn.clearNameBuffer().mark();
@@ -79,6 +69,85 @@ Error Disassembler::decode(
     if (isOK())
         setError(out);
     return getError();
+}
+
+const char *Disassembler::lookup(uint32_t addr, uint8_t addrWidth) const {
+    const char *symbol = nullptr;
+    if (_symtab) {
+        symbol = _symtab->lookupValue(addr);
+        if (!symbol)
+            symbol = _symtab->lookupValue(config().signExtend(addr, addrWidth));
+    }
+    return symbol;
+}
+
+StrBuffer &Disassembler::outDec(StrBuffer &out, uint32_t val, int8_t bits) const {
+    const auto bw = bits >= 0 ? bits : -bits;
+    const char *label = lookup(val, bw);
+    if (label)
+        return out.text(label);
+    return _formatter.formatDec(out, val, bits);
+}
+
+/**
+ * Convert |val| as |bits| hexadecimal integer. Treat |val| as
+ * signed integer when |bits| is negative. Output symbol label when
+ * |val| is in symbol table.
+ */
+StrBuffer &Disassembler::outHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
+    const auto bw = bits >= 0 ? bits : -bits;
+    const char *label = lookup(val, bw);
+    if (label)
+        return out.text(label);
+    return _formatter.formatHex(out, val, bits, relax);
+}
+
+/**
+ * Convert |val| as |addrWidth| bit absolute address. Use default
+ * configured address width when |addrWdith| is ommitted. Output
+ * symbol label when |val| is in symbol table.
+ */
+StrBuffer &Disassembler::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth) const {
+    const char *label = lookup(val, addrWidth);
+    if (label)
+        return out.text(label);
+    if (addrWidth == 0)
+        addrWidth = uint8_t(config().addressWidth());
+    return _formatter.formatHex(out, val, addrWidth, false);
+}
+
+/**
+ * Convert |target| as relative |deltaBits| offset from |origin|.
+ */
+StrBuffer &Disassembler::outRelAddr(
+        StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const {
+    if (!_relativeTarget)
+        return outAbsAddr(out, target);
+    out.letter(_curSym);
+    const auto delta = static_cast<int32_t>(target - origin);
+    if (delta == 0)
+        return out;
+    uint32_t val;
+    if (delta < 0) {
+        out.letter('-');
+        val = static_cast<uint32_t>(-delta);
+    } else {
+        out.letter('+');
+        val = static_cast<uint32_t>(delta);
+    }
+    if (deltaBits <= 14) {
+        return _formatter.formatDec(out, val, deltaBits);
+    } else {
+        return _formatter.formatHex(out, val, deltaBits);
+    }
+}
+
+uint32_t Disassembler::branchTarget(uint32_t base, int32_t delta) {
+    const auto target = base + delta;
+    const auto err = config().checkAddr(target);
+    if (err)
+        setErrorIf(err);
+    return target;
 }
 
 }  // namespace libasm

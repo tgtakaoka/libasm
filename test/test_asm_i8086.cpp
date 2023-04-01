@@ -2049,8 +2049,8 @@ static void test_error() {
     ERRT("MOV [SI], 34H", OPERAND_NOT_ALLOWED, "[SI], 34H");
     ERRT("INC [SI]",      OPERAND_NOT_ALLOWED, "[SI]");
 
-    ERRT("JE $+130", OPERAND_TOO_FAR, "$+130", 0x74, 0x80);
-    ERRT("JE $-127", OPERAND_TOO_FAR, "$-127", 0x74, 0x7F);
+    AERRT(0x1000, "JE $+130", OPERAND_TOO_FAR, "$+130", 0x74, 0x80);
+    AERRT(0x1000, "JE $-127", OPERAND_TOO_FAR, "$-127", 0x74, 0x7F);
 
     ERRT("MOVSB ES:[DI],[SI+0]", ILLEGAL_OPERAND, "[SI+0]",         0xA4);
     ERRT("MOVSB ES:[DI],[DI]",   ILLEGAL_OPERAND, "[DI]",           0xA4);

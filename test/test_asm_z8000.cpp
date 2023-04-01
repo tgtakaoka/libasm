@@ -804,26 +804,26 @@ static void test_program_control() {
     }
 
     // Call Procedure Relative
-    TEST("CALR $+2",      0xD000);
-    TEST("CALR $+10",     0xDFFC);
-    TEST("CALR $+0x1002", 0xD800);
-    TEST("CALR $-0x0FFC", 0xD7FF);
-    ERRT("CALR $+0x1004", OPERAND_TOO_FAR, "$+0x1004", 0xD7FF);
-    ERRT("CALR $-0x0FFE", OPERAND_TOO_FAR, "$-0x0FFE", 0xD800);
-    TEST("CALR $-10",     0xD006);
-    TEST("CALR $",        0xD001);
-    ERRT("CALR $+13",     OPERAND_NOT_ALIGNED, "$+13", 0xDFFB);
-    ERRT("CALR $-13",     OPERAND_NOT_ALIGNED, "$-13", 0xD007);
+    ATEST(0x1000, "CALR $+2",      0xD000);
+    ATEST(0x1000, "CALR $+10",     0xDFFC);
+    ATEST(0x1000, "CALR $+0x1002", 0xD800);
+    ATEST(0x1000, "CALR $-0x0FFC", 0xD7FF);
+    AERRT(0x1000, "CALR $+0x1004", OPERAND_TOO_FAR, "$+0x1004", 0xD7FF);
+    AERRT(0x1000, "CALR $-0x0FFE", OPERAND_TOO_FAR, "$-0x0FFE", 0xD800);
+    ATEST(0x1000, "CALR $-10",     0xD006);
+    ATEST(0x1000, "CALR $",        0xD001);
+    AERRT(0x1000, "CALR $+13",     OPERAND_NOT_ALIGNED, "$+13", 0xDFFB);
+    AERRT(0x1000, "CALR $-13",     OPERAND_NOT_ALIGNED, "$-13", 0xD007);
 
     // Decrement and Jump if Not Zero
-    TEST("DJNZ  R2,$",      0xF281);
-    TEST("DBJNZ RL0,$",     0xF801);
-    TEST("DBJNZ RL0,$+2",   0xF800);
-    ERRT("DBJNZ RL0,$+3",   OPERAND_NOT_ALIGNED, "$+3", 0xF800);
-    ERRT("DBJNZ RL0,$+4",   OPERAND_TOO_FAR,     "$+4", 0xF87F);
-    TEST("DBJNZ RL0,$-252", 0xF87F);
-    ERRT("DBJNZ RL0,$-253", OPERAND_NOT_ALIGNED, "$-253", 0xF87F);
-    ERRT("DBJNZ RL0,$-254", OPERAND_TOO_FAR,     "$-254", 0xF800);
+    ATEST(0x1000, "DJNZ  R2,$",      0xF281);
+    ATEST(0x1000, "DBJNZ RL0,$",     0xF801);
+    ATEST(0x1000, "DBJNZ RL0,$+2",   0xF800);
+    AERRT(0x1000, "DBJNZ RL0,$+3",   OPERAND_NOT_ALIGNED, "$+3", 0xF800);
+    AERRT(0x1000, "DBJNZ RL0,$+4",   OPERAND_TOO_FAR,     "$+4", 0xF87F);
+    ATEST(0x1000, "DBJNZ RL0,$-252", 0xF87F);
+    AERRT(0x1000, "DBJNZ RL0,$-253", OPERAND_NOT_ALIGNED, "$-253", 0xF87F);
+    AERRT(0x1000, "DBJNZ RL0,$-254", OPERAND_TOO_FAR,     "$-254", 0xF800);
 
     // Interrupt Return
     TEST("IRET  ", 0x7B00);
@@ -1007,32 +1007,32 @@ static void test_program_control() {
     }
 
     // Jump Relative
-    TEST("JR F,$",   0xE0FF);
-    TEST("JR LT,$",  0xE1FF);
-    TEST("JR LE,$",  0xE2FF);
-    TEST("JR ULE,$", 0xE3FF);
-    TEST("JR OV,$",  0xE4FF);
-    TEST("JR MI,$",  0xE5FF);
-    TEST("JR Z,$",   0xE6FF);
-    TEST("JR C,$",   0xE7FF);
-    TEST("JR $",     0xE8FF);
-    TEST("JR GE,$",  0xE9FF);
-    TEST("JR GT,$",  0xEAFF);
-    TEST("JR UGT,$", 0xEBFF);
-    TEST("JR NOV,$", 0xECFF);
-    TEST("JR PL,$",  0xEDFF);
-    TEST("JR NZ,$",  0xEEFF);
-    TEST("JR NC,$",  0xEFFF);
-    TEST("JR EQ,$",  0xE6FF);
-    TEST("JR ULT,$", 0xE7FF);
-    TEST("JR NE,$",  0xEEFF);
-    TEST("JR UGE,$", 0xEFFF);
-    TEST("JR $-254", 0xE880);
-    ERRT("JR $-255", OPERAND_NOT_ALIGNED, "$-255", 0xE880);
-    ERRT("JR $-256", OPERAND_TOO_FAR,     "$-256", 0xE87F);
-    TEST("JR $+256", 0xE87F);
-    ERRT("JR $+257", OPERAND_NOT_ALIGNED, "$+257", 0xE87F);
-    ERRT("JR $+258", OPERAND_TOO_FAR,     "$+258", 0xE880);
+    ATEST(0x1000, "JR F,$",   0xE0FF);
+    ATEST(0x1000, "JR LT,$",  0xE1FF);
+    ATEST(0x1000, "JR LE,$",  0xE2FF);
+    ATEST(0x1000, "JR ULE,$", 0xE3FF);
+    ATEST(0x1000, "JR OV,$",  0xE4FF);
+    ATEST(0x1000, "JR MI,$",  0xE5FF);
+    ATEST(0x1000, "JR Z,$",   0xE6FF);
+    ATEST(0x1000, "JR C,$",   0xE7FF);
+    ATEST(0x1000, "JR $",     0xE8FF);
+    ATEST(0x1000, "JR GE,$",  0xE9FF);
+    ATEST(0x1000, "JR GT,$",  0xEAFF);
+    ATEST(0x1000, "JR UGT,$", 0xEBFF);
+    ATEST(0x1000, "JR NOV,$", 0xECFF);
+    ATEST(0x1000, "JR PL,$",  0xEDFF);
+    ATEST(0x1000, "JR NZ,$",  0xEEFF);
+    ATEST(0x1000, "JR NC,$",  0xEFFF);
+    ATEST(0x1000, "JR EQ,$",  0xE6FF);
+    ATEST(0x1000, "JR ULT,$", 0xE7FF);
+    ATEST(0x1000, "JR NE,$",  0xEEFF);
+    ATEST(0x1000, "JR UGE,$", 0xEFFF);
+    ATEST(0x1000, "JR $-254", 0xE880);
+    AERRT(0x1000, "JR $-255", OPERAND_NOT_ALIGNED, "$-255", 0xE880);
+    AERRT(0x1000, "JR $-256", OPERAND_TOO_FAR,     "$-256", 0xE87F);
+    ATEST(0x1000, "JR $+256", 0xE87F);
+    AERRT(0x1000, "JR $+257", OPERAND_NOT_ALIGNED, "$+257", 0xE87F);
+    AERRT(0x1000, "JR $+258", OPERAND_TOO_FAR,     "$+258", 0xE880);
 
     // Return from Procedure
     TEST("RET F",   0x9E00);

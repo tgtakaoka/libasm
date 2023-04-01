@@ -49,12 +49,15 @@ private:
         AddrMode mode;
         uint8_t regno;
         uint16_t val16;
+        int16_t int16() const { return static_cast<int16_t>(val16); }
+        int8_t int8() const { return static_cast<int8_t>(val16); }
         Operand() : mode(M_NONE), regno(0), val16(0) {}
         Error read(DisMemory &memory, InsnI8096 &insn, AddrMode mode);
     };
 
     StrBuffer &outRegister(StrBuffer &out, uint8_t regno, bool indir = false) const;
-    StrBuffer &outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op) const;
+    StrBuffer &outRelative(StrBuffer &out, const InsnI8096 &insn, const Operand &op);
+    StrBuffer &outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 };
 

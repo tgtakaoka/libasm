@@ -71,10 +71,10 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 void AsmMc6800::emitRelative(InsnMc6800 &insn, const Operand &op) {
-    const Config::uintptr_t base = insn.address() + (insn.length() == 0 ? 2 : insn.length() + 1);
-    const Config::uintptr_t target = op.getError() ? base : op.val16;
-    const Config::ptrdiff_t delta = target - base;
-    if (overflowRel8(delta))
+    const auto base = insn.address() + (insn.length() == 0 ? 2 : insn.length() + 1);
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, op);
+    if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
@@ -90,7 +90,7 @@ void AsmMc6800::emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op
 }
 
 void AsmMc6800::emitBitNumber(InsnMc6800 &insn, const Operand &op) {
-    const uint8_t imm = 1 << (op.val16 & 7);
+    const uint8_t imm = shiftLeftOne(op.val16 & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }

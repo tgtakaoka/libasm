@@ -74,8 +74,9 @@ Error DisTms9900::decodeModeReg(
 
 Error DisTms9900::decodeRelative(InsnTms9900 &insn, StrBuffer &out) {
     int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
-    delta <<= 1;
-    const Config::uintptr_t target = insn.address() + 2 + delta;
+    delta *= 2;
+    const auto base = insn.address() + 2;
+    const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 9);
     return OK;
 }

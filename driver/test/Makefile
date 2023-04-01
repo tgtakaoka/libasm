@@ -37,11 +37,11 @@ CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o
 OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
 OBJS_formatter = list_formatter.o value_formatter.o
-OBJS_asm = asm_base.o asm_formatter.o value_parser.o parsers.o operators.o option_base.o \
-	   asm_driver.o asm_directive.o function_store.o str_buffer.o bin_memory.o bin_encoder.o \
-	   bin_decoder.o moto_srec.o intel_hex.o \
+OBJS_asm = asm_base.o config_base.o asm_formatter.o value_parser.o parsers.o operators.o \
+           option_base.o asm_driver.o asm_directive.o function_store.o str_buffer.o bin_memory.o \
+           bin_encoder.o bin_decoder.o moto_srec.o intel_hex.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../../src/asm_$(a).cpp),asm_$(a).o $(OBJS_$(a))))
-OBJS_dis = dis_base.o dis_formatter.o option_base.o bin_memory.o str_buffer.o \
+OBJS_dis = dis_base.o config_base.o dis_formatter.o option_base.o bin_memory.o str_buffer.o \
            $(foreach a,$(ARCHS),$(if $(wildcard ../../src/dis_$(a).cpp),dis_$(a).o $(OBJS_$(a))))
 BINS = $(TESTS)
 
