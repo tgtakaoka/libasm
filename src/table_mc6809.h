@@ -43,6 +43,7 @@ public:
     static TableMc6809 TABLE;
 
     Error searchName(InsnMc6809 &insn) const;
+    Error hasName(InsnMc6809 &insn) const;
     Error searchOpCode(InsnMc6809 &insn) const;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 

@@ -242,22 +242,21 @@ void AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op
 }
 
 bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
-    // check leading space
-    StrScanner p(op.errorAt());
-    p.trimEndAt(scan);
-    p.trimEnd(isspace);
-    if (p.str() + p.size() != scan.str() && *scan == '.')
-        return false;
-    // '.n' must be just after register name or direct page address.
-    // ',n' can have spaces after ','.
-    p = scan;
-    if (p.expect('.') || p.skipSpaces().expect(',')) {
-        if (endOfLine(p.skipSpaces()))
+    auto p = scan;
+    if (*p == '.' || *p.skipSpaces() == ',') {
+        const auto sep = *p++;
+        if (sep == ',')
+            p.skipSpaces();
+        if (endOfLine(p) || (sep == '.' && isspace(*p)))
             return false;
-        const auto reg = RegMc6809::parseRegName(p);
+
+        auto r = p;
+        // Exclude register list or index addressing
+        const auto reg = RegMc6809::parseRegName(r);
         if (reg == REG_0) {
+            // Constant zero is paresd as REG_0
             op.extra = 0;
-            scan = p;
+            scan = r;
             return true;
         }
         if (reg != REG_UNDEF)
@@ -273,7 +272,7 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
         if (save.getError())
             op.setError(save);
         if (bitp >= 8)
-            op.setErrorIf(ILLEGAL_BIT_NUMBER);
+            op.setErrorIf(scan, ILLEGAL_BIT_NUMBER);
         op.extra = bitp;
         scan = p;
         return true;
@@ -281,7 +280,37 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
     return false;
 }
 
-Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
+bool AsmMc6809::parseMemBit(StrScanner &scan, Operand &op) const {
+    auto end = scan;
+    while (!endOfLine(end))
+        ++end;
+    auto p = scan;
+    p.trimEndAt(end);
+    p.trimEnd([](char c) { return c != '.'; });
+
+    // There is no '.' in operand.
+    if (p.size() < 2) {
+        op.val32 = parseExpr32(scan, op);
+        return parseBitPosition(scan, op);
+    } else if (isspace(p[p.size() - 2])) {
+        op.val32 = parseExpr32(scan, op);
+        return false;
+    }
+
+    p += p.size() - 1;  // |p| points '.'
+    auto expr = scan;
+    expr.trimEndAt(p);
+    auto bit = scan;
+    bit.trimStartAt(p);
+    op.val32 = parseExpr32(expr, op);
+    if (parseBitPosition(bit, op)) {
+        scan = bit;
+        return true;
+    }
+    return false;
+}
+
+Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
@@ -314,11 +343,18 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
     const auto index = RegMc6809::parseRegName(p);
     if (index != REG_UNDEF) {
         auto a = p;
-        if (!op.indir && parseBitPosition(a, op)) {
-            op.mode = M_RBIT;
-            op.base = index;
-            scan = a;
-            return OK;
+        if (hint == M_RBIT) {
+            if (op.indir || index == REG_0)
+                return op.setError(UNKNOWN_OPERAND);
+            if (parseBitPosition(a, op)) {
+                if (!RegMc6809::isBitOpReg(index))
+                    return op.setError(scan, ILLEGAL_REGISTER);
+                op.mode = M_RBIT;
+                op.base = index;
+                scan = a;
+                return OK;
+            }
+            return op.setError(UNKNOWN_OPERAND);
         }
         const auto autoindex = a.expect([](char c) { return c == '+' || c == '-'; });
         if (!op.indir && autoindex) {
@@ -331,18 +367,17 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op) const {
             return OK;
         }
     } else if (indexBits) {
-        const auto index = p;
-        op.val32 = parseExpr32(p, op);
-        if (op.hasError())
-            return op.getError();
-
-        if (parseBitPosition(p, op)) {
-            if (op.isOK() && !_pseudos.inDirectPage(op.val32) && indexBits != 8)
-                return op.setError(index, OPERAND_NOT_ALLOWED);
-            op.mode = M_DBIT;
-            scan = p;
-            return OK;
+        if (hint == M_DBIT) {
+            if (parseMemBit(p, op)) {
+                if (op.isOK() && !_pseudos.inDirectPage(op.val32) && indexBits != 8)
+                    return op.setError(scan, OPERAND_NOT_ALLOWED);
+                op.mode = M_DBIT;
+                scan = p;
+                return OK;
+            }
+            return op.setError(scan, UNKNOWN_OPERAND);
         }
+        op.val32 = parseExpr32(p, op);
     }
 
     const auto endOfIndex = p.skipSpaces();
@@ -453,11 +488,15 @@ Error AsmMc6809::PseudoMc6809::setDp(int32_t value) {
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6809 insn(_insn);
+    auto error = TableMc6809::TABLE.hasName(insn);
+    if (error)
+        return setError(error);
+
     Operand op1, op2;
-    if (parseOperand(scan, op1) && op1.hasError())
+    if (parseOperand(scan, op1, insn.mode1()) && op1.hasError())
         return setError(op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2) && op2.hasError())
+        if (parseOperand(scan, op2, insn.mode2()) && op2.hasError())
             return setError(op2);
         scan.skipSpaces();
     }
@@ -467,7 +506,7 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    const auto error = TableMc6809::TABLE.searchName(insn);
+    error = TableMc6809::TABLE.searchName(insn);
     if (error)
         return setError(op1, error);
 

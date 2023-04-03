@@ -658,6 +658,15 @@ Error TableMc6809::searchName(InsnMc6809 &insn) const {
     return insn.getError();
 }
 
+static bool acceptAll(InsnMc6809 &insn, const Entry *entry) {
+    return true;
+}
+
+Error TableMc6809::hasName(InsnMc6809 &insn) const {
+    _cpu->searchName(insn, acceptAll);
+    return insn.getError();
+}
+
 static bool matchOpCode(InsnMc6809 &insn, const Entry *entry, const TableMc6809::EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();

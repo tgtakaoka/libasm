@@ -375,15 +375,15 @@ static void test_relative() {
     ATEST(0x1000, "BSR  $1042", 0x8D, 0x40);
     ATEST(0x1000, "LBSR $1043", 0x17, 0x00, 0x40);
 
-    symtab.intern(0x0F82, "sub0F82");
-    symtab.intern(0x1081, "sub1081");
-    symtab.intern(0x9002, "sub9002");
-    symtab.intern(0x9003, "sub9003");
+    symtab.intern(0x0F82, ".sub_0F82");
+    symtab.intern(0x1081, ".sub$1081");
+    symtab.intern(0x9002, "sub.9002");
+    symtab.intern(0x9003, "sub$9003");
 
-    ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
-    ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
-    ATEST(0x1000, "LBSR sub9002", 0x17, 0x7F, 0xFF);
-    AERRT(0x1000, "LBSR sub9003", OVERFLOW_RANGE, "sub9003", 0x17, 0x80, 0x00);
+    ATEST(0x1000, "BSR .sub$1081", 0x8D, 0x7F);
+    ATEST(0x1000, "BSR .sub_0F82", 0x8D, 0x80);
+    ATEST(0x1000, "LBSR sub.9002", 0x17, 0x7F, 0xFF);
+    AERRT(0x1000, "LBSR sub$9003", OVERFLOW_RANGE, "sub$9003", 0x17, 0x80, 0x00);
 }
 
 static void test_immediate() {
@@ -920,7 +920,7 @@ static void test_indexed() {
     TEST("STD  ,S", 0xED, 0xE4);
     TEST("CMPD ,S", 0x10, 0xA3, 0xE4);
 
-    TEST("CMPX 2,Y", 0xAC, 0x22);
+    TEST("CMPX 2,Y ; 2,X A.2", 0xAC, 0x22);
     TEST("LDX  2,Y", 0xAE, 0x22);
     TEST("STX  2,Y", 0xAF, 0x22);
 
@@ -1343,11 +1343,13 @@ static void test_transfer() {
 static void test_bit_position() {
     if (is6309()) {
         // HD6309
-        TEST("BAND  A.1,$34.2",                                 0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A.9,$34.2",  ILLEGAL_BIT_NUMBER, "9,$34.2", 0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A.1,$34.10", ILLEGAL_BIT_NUMBER, "10",      0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A,9,$34,2",  ILLEGAL_BIT_NUMBER, "9,$34,2", 0x11, 0x30, 0x51, 0x34);
-        ERRT("BAND  A,1,$34,10", ILLEGAL_BIT_NUMBER, "10",      0x11, 0x30, 0x51, 0x34);
+        TEST("BAND  A.1,$34.2",                                     0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.9,$34.2",   ILLEGAL_BIT_NUMBER, ".9,$34.2",   0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.1,$34,10",  ILLEGAL_BIT_NUMBER, ",10",        0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A.1,$34.2*8", ILLEGAL_BIT_NUMBER, ".2*8",       0x11, 0x30, 0x41, 0x34);
+        ERRT("BAND  A,9,$34,2",   ILLEGAL_BIT_NUMBER, ",9,$34,2",   0x11, 0x30, 0x51, 0x34);
+        ERRT("BAND  A,2+9,$34,2", ILLEGAL_BIT_NUMBER, ",2+9,$34,2", 0x11, 0x30, 0x53, 0x34);
+        ERRT("BAND  A,1,$34,10",  ILLEGAL_BIT_NUMBER, ",10",        0x11, 0x30, 0x51, 0x34);
         TEST("BIAND A.1,$34.2",   0x11, 0x31, 0x51, 0x34);
         TEST("BOR   A.1,$34.2",   0x11, 0x32, 0x51, 0x34);
         TEST("BIAND A.1,$34,2",   0x11, 0x31, 0x51, 0x34);
@@ -1359,7 +1361,6 @@ static void test_bit_position() {
         TEST("STBT  A.1,<$5634.2", 0x11, 0x37, 0x51, 0x34);
         TEST("LDBT  A,1,$1234,2",  0x11, 0x36, 0x51, 0x34);
         TEST("STBT  B,0,<$5634.2", 0x11, 0x37, 0x90, 0x34);
-        ERRT("BEOR  A,1,$34,2",    OPERAND_NOT_ALLOWED, "$34,2");
 
         TEST("SETDP 0");
         TEST("LDBT CC.1,$34.7", 0x11, 0x36, 0x39, 0x34);
@@ -1381,13 +1382,18 @@ static void test_bit_position() {
         symtab.intern(4, "bit");
 
         TEST("SETDP 0");
-        TEST("LDBT  CC.0,dir34.7",    0x11, 0x36, 0x38, 0x34);
-        TEST("LDBT  B.2,<sym9030.4",  0x11, 0x36, 0xA2, 0x30);
+        TEST("LDBT  CC.0, dir34.7",   0x11, 0x36, 0x38, 0x34);
+        TEST("LDBT  CC,0, dir34,7",   0x11, 0x36, 0x38, 0x34);
+        TEST("LDBT  B.2, <sym9030.4", 0x11, 0x36, 0xA2, 0x30);
+        TEST("LDBT  B,2, <sym9030,4", 0x11, 0x36, 0xA2, 0x30);
         TEST("SETDP $90");
-        TEST("LDBT  B.2,sym9030.2*2", 0x11, 0x36, 0xA2, 0x30);
+        TEST("LDBT  B.6-bit, sym9030.2*bit/2", 0x11, 0x36, 0xA2, 0x30);
+        TEST("LDBT  B,6-bit, sym9030,2*bit/2", 0x11, 0x36, 0xA2, 0x30);
 
-        TEST("LDBT  B.6-bit,2+sym9030.bit",   0x11, 0x36, 0xA2, 0x32);
-        TEST("LDBT  B.bit-1,sym9030-2.bit/2", 0x11, 0x36, 0x93, 0x2E);
+        TEST("LDBT  B.6-bit, 2+sym9030.bit",   0x11, 0x36, 0xA2, 0x32);
+        TEST("LDBT  B.6-bit, sym9030+2.bit",   0x11, 0x36, 0xA2, 0x32);
+        TEST("LDBT  B.bit-1, sym9030-2.bit/2", 0x11, 0x36, 0x93, 0x2E);
+        TEST("LDBT  B.bit-1,-2+sym9030.bit/2", 0x11, 0x36, 0x93, 0x2E);
     } else {
         ERUI("BAND  A.1,$34.2");
         ERUI("BIAND A.1,$34.2");
@@ -1467,8 +1473,19 @@ static void test_error() {
         ERRT("TFM D+ , X +", UNKNOWN_OPERAND, "X +");
         ERRT("TFM X - , Y-", UNKNOWN_OPERAND, "X - , Y-");
         ERRT("TFM X- , Y -", UNKNOWN_OPERAND, "Y -");
+        ERRT("BOR D.1, $34.2",      ILLEGAL_REGISTER, "D.1, $34.2");
+        ERRT("BOR $3456, $34.2",    UNKNOWN_OPERAND, "$3456, $34.2");
+        ERRT("BOR A,X, $34.2",      UNKNOWN_OPERAND, "A,X, $34.2");
+        ERRT("BOR A.X, $34.2",      UNKNOWN_OPERAND, "A.X, $34.2");
+        ERRT("BOR [A.1], $34.2",    UNKNOWN_OPERAND, "[A.1], $34.2");
+        ERRT("BOR A.1, $34.Y",      UNKNOWN_OPERAND, "$34.Y");
+        ERRT("BOR A.1, $34,Y",      UNKNOWN_OPERAND, "$34,Y");
+        ERRT("BOR CC.1, [$34]",     UNKNOWN_OPERAND, "[$34]");
+        ERRT("BOR CC.1, $3456",     UNKNOWN_OPERAND, "$3456");
         ERRT("BOR A . 1 , $34 , 2", UNKNOWN_OPERAND, "A . 1 , $34 , 2");
-        ERRT("BOR A , 1 , $34 . 2", GARBAGE_AT_END, ". 2");
+        ERRT("BOR A.1 , $34 ,",     UNKNOWN_OPERAND, "$34 ,");
+        ERRT("BOR A.1 , $34. ; comment",   UNKNOWN_OPERAND, "$34. ; comment");
+        ERRT("BOR A , 1 , $34 . 2; $34.2", UNKNOWN_OPERAND, "$34 . 2; $34.2");
         TEST("BOR A , 1 , $34 , 2", 0x11, 0x32, 0x51, 0x34);
     }
 }

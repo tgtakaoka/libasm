@@ -43,7 +43,7 @@ private:
     ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
     struct PseudoMc6809 : PseudoBase {
@@ -83,7 +83,8 @@ private:
     };
 
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
-    Error parseOperand(StrScanner &scan, Operand &op) const;
+    bool parseMemBit(StrScanner &scan, Operand &op) const;
+    Error parseOperand(StrScanner &scan, Operand &op, AddrMode hint) const;
 
     void encodeRegisterList(InsnMc6809 &insn, const Operand &op);
     void encodeRegisterPair(InsnMc6809 &insn, const Operand &op);
