@@ -124,12 +124,21 @@ Value ValueParser::eval(
             }
         }
 
+        const auto oprPos = scan;
         const auto oprType = maybe_prefix ? OperatorParser::PREFIX : OperatorParser::INFIX;
         const auto *opr = _operator.readOperator(scan, error, oprType);
         if (error.hasError())
             return Value();
         if (opr) {
-            while (!ostack.empty() && ostack.top().isHigher(*opr)) {
+            while (!ostack.empty()) {
+                const auto top = ostack.top();
+                if (top.isNoneAssoc(*opr)) {
+                    // This can be warning and continue as left associative.
+                    error.setErrorIf(oprPos, OPERATOR_NOT_ASSOCIATIVE);
+                    return Value();
+                }
+                if (!top.isHigher(*opr))
+                    break;
                 const auto op = ostack.pop();
                 const auto err = op.eval(vstack);
                 if (err) {

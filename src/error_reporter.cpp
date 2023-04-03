@@ -88,8 +88,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Missing closing single quote");
     case UNKNOWN_ESCAPE_SEQUENCE:
         return PSTR("Unknown escape sequence");
-    case UNKNOWN_EXPR_OPERATOR:
-        return PSTR("Unknown expression operator");
+    case OPERATOR_NOT_ASSOCIATIVE:
+        return PSTR("Operator is not associative");
     case DIVIDE_BY_ZERO:
         return PSTR("Divided by zero");
     case UNDEFINED_SYMBOL:

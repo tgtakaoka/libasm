@@ -26,6 +26,10 @@ bool Operator::isHigher(const Operator &o) const {
     return _prec < o._prec || (_prec == o._prec && o._assoc == LEFT);
 }
 
+bool Operator::isNoneAssoc(const Operator &o) const {
+    return _prec == o._prec && _assoc == NONE;
+}
+
 Error Operator::eval(ValueStack &stack, uint8_t argc) const {
     if (argc == 0)
         argc = stack.size();
@@ -39,8 +43,14 @@ Error Operator::eval(ValueStack &stack, uint8_t argc) const {
 }
 
 static const Operator OP_BITWISE_NOT(3, Operator::RIGHT, 1, [](ValueStack &stack) {
-    const auto v = stack.pop();
-    stack.pushUnsigned(~v.getUnsigned());
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned(~v);
+    return OK;
+});
+
+static const Operator OP_LOGICAL_NOT(3, Operator::RIGHT, 1, [](ValueStack &stack) {
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned(!v);
     return OK;
 });
 
@@ -52,8 +62,8 @@ static Operator OP_UNARY_MINUS(3, Operator::RIGHT, 1, [](ValueStack &stack) {
 });
 
 static const Operator OP_UNARY_PLUS(3, Operator::RIGHT, 1, [](ValueStack &stack) {
-    const auto v = stack.pop();
-    stack.pushUnsigned(v.getUnsigned());
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned(v);
     return OK;
 });
 
@@ -127,10 +137,11 @@ static uint32_t shift_left(uint32_t value, uint8_t count) {
         value <<= 1;
     return value;
 }
+
 static const Operator OP_SHIFT_LEFT(7, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop();
-    const auto lhs = stack.pop();
-    stack.pushUnsigned(shift_left(lhs.getUnsigned(), rhs.getUnsigned()));
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(shift_left(lhs, rhs));
     return OK;
 });
 
@@ -139,6 +150,7 @@ static uint32_t shift_right(uint32_t value, uint8_t count) {
         value >>= 1;
     return value;
 }
+
 static int32_t shift_right_negative(int32_t value, uint8_t count) {
     for (unsigned i = 0; i <= 32 && i < count; i++) {
         value >>= 1;
@@ -146,36 +158,110 @@ static int32_t shift_right_negative(int32_t value, uint8_t count) {
     }
     return value;
 }
+
 static const Operator OP_SHIFT_RIGHT(7, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop();
+    const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop();
     if (lhs.isSigned() && lhs.getSigned() < 0) {
-        stack.pushSigned(shift_right_negative(lhs.getSigned(), rhs.getUnsigned()));
+        stack.pushSigned(shift_right_negative(lhs.getSigned(), rhs));
     } else {
-        stack.pushUnsigned(shift_right(lhs.getUnsigned(), rhs.getUnsigned()));
+        stack.pushUnsigned(shift_right(lhs.getUnsigned(), rhs));
     }
     return OK;
 });
 
-static const Operator OP_BITWISE_AND(11, Operator::LEFT, 2, [](ValueStack &stack) {
+static const Operator OP_LOGICAL_LT(9, Operator::NONE, 2, [](ValueStack &stack) {
     const auto rhs = stack.pop();
     const auto lhs = stack.pop();
-    stack.pushUnsigned(lhs.getUnsigned() & rhs.getUnsigned());
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushUnsigned(lhs.getSigned() < rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() < rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static const Operator OP_LOGICAL_LE(9, Operator::NONE, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushUnsigned(lhs.getSigned() <= rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() <= rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static const Operator OP_LOGICAL_GE(9, Operator::NONE, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushUnsigned(lhs.getSigned() >= rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() >= rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static const Operator OP_LOGICAL_GT(9, Operator::NONE, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop();
+    const auto lhs = stack.pop();
+    if (lhs.isSigned() || rhs.isSigned()) {
+        stack.pushUnsigned(lhs.getSigned() > rhs.getSigned());
+    } else {
+        stack.pushUnsigned(lhs.getUnsigned() > rhs.getUnsigned());
+    }
+    return OK;
+});
+
+static const Operator OP_LOGICAL_EQ(10, Operator::NONE, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs == rhs);
+    return OK;
+});
+
+static const Operator OP_LOGICAL_NE(10, Operator::NONE, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs != rhs);
+    return OK;
+});
+
+static const Operator OP_BITWISE_AND(11, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs & rhs);
 
     return OK;
 });
 
 static const Operator OP_BITWISE_XOR(12, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop();
-    const auto lhs = stack.pop();
-    stack.pushUnsigned(lhs.getUnsigned() ^ rhs.getUnsigned());
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs ^ rhs);
     return OK;
 });
 
 static const Operator OP_BITWISE_OR(13, Operator::LEFT, 2, [](ValueStack &stack) {
-    const auto rhs = stack.pop();
-    const auto lhs = stack.pop();
-    stack.pushUnsigned(lhs.getUnsigned() | rhs.getUnsigned());
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs | rhs);
+    return OK;
+});
+
+static const Operator OP_LOGICAL_AND(14, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs && rhs);
+
+    return OK;
+});
+
+static const Operator OP_LOGICAL_OR(15, Operator::LEFT, 2, [](ValueStack &stack) {
+    const auto rhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned();
+    stack.pushUnsigned(lhs || rhs);
     return OK;
 });
 
@@ -186,18 +272,12 @@ const Operator *CStyleOperatorParser::readOperator(
     if (type == PREFIX) {
         if (p.expect('~')) {
             opr = &OP_BITWISE_NOT;
+        } else if (p.expect('!') && *p != '=') {
+            opr = &OP_LOGICAL_NOT;
         } else if (p.expect('-')) {
-            if (*p == '-' || *p == '+') {
-                error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-            } else {
-                opr = &OP_UNARY_MINUS;
-            }
+            opr = &OP_UNARY_MINUS;
         } else if (p.expect('+')) {
-            if (*p == '+' || *p == '-') {
-                error.setErrorIf(scan, UNKNOWN_EXPR_OPERATOR);
-            } else {
-                opr = &OP_UNARY_PLUS;
-            }
+            opr = &OP_UNARY_PLUS;
         }
     } else if (type == INFIX) {
         if (p.expect('*')) {
@@ -213,21 +293,31 @@ const Operator *CStyleOperatorParser::readOperator(
         } else if (p.expect('<')) {
             if (p.expect('<')) {
                 opr = &OP_SHIFT_LEFT;
+            } else if (p.expect('=')) {
+                opr = &OP_LOGICAL_LE;
             } else {
-                error.setError(scan, UNKNOWN_EXPR_OPERATOR);
+                opr = &OP_LOGICAL_LT;
             }
         } else if (p.expect('>')) {
             if (p.expect('>')) {
                 opr = &OP_SHIFT_RIGHT;
+            } else if (p.expect('=')) {
+                opr = &OP_LOGICAL_GE;
             } else {
-                error.setError(scan, UNKNOWN_EXPR_OPERATOR);
+                opr = &OP_LOGICAL_GT;
             }
         } else if (p.expect('&')) {
-            opr = &OP_BITWISE_AND;
+            opr = p.expect('&') ? &OP_LOGICAL_AND : &OP_BITWISE_AND;
         } else if (p.expect('^')) {
             opr = &OP_BITWISE_XOR;
         } else if (p.expect('|')) {
-            opr = &OP_BITWISE_OR;
+            opr = p.expect('|') ? &OP_LOGICAL_OR : &OP_BITWISE_OR;
+        } else if (p.expect('!')) {
+            if (p.expect('='))
+                opr = &OP_LOGICAL_NE;
+        } else if (p.expect('=')) {
+            if (p.expect('='))
+                opr = &OP_LOGICAL_EQ;
         }
     }
     if (opr)

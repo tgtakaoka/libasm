@@ -59,9 +59,11 @@ struct FunctionParser {
  * Immutable instance to represent prefix or infix operators and functions.
  */
 struct Operator : ErrorAt {
+    /** Associativity of an operator */
     enum Assoc : uint8_t {
         LEFT,
         RIGHT,
+        NONE,
     };
 
     Operator() : ErrorAt(), _prec(255), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(nullptr) {}
@@ -79,6 +81,9 @@ struct Operator : ErrorAt {
     Error eval(ValueStack &stack, uint8_t argc = 0) const;
     /** Returns true when |this| operator has higher precedence than |o| */
     bool isHigher(const Operator &o) const;
+    /** Returns true when |this| operator is none associative and has the same precedence of
+        |o|. */
+    bool isNoneAssoc(const Operator &o) const;
 
     /** Constructor for operators */
     typedef Error(OperatorEval)(ValueStack &stack);
