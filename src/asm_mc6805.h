@@ -30,7 +30,7 @@ class AsmMc6805 : public Assembler, public Config {
 public:
     AsmMc6805()
         : Assembler(_parser, TableMc6805::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
+          _parser(_number, _comment, _symbol, _letter, _location, _operators),
           _pseudos() {
         reset();
     }
@@ -48,6 +48,7 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
+    const Mc68xxOperatorParser _operators;
     struct PseudoBase _pseudos;
 
     uint8_t _pc_bits;

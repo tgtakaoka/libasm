@@ -284,27 +284,6 @@ static void test_binary_operator() {
     E32("0 || !2 || 0", 0);
 }
 
-static void test_overflow() {
-    E8("0x1000-0x1080", -128);
-    X8("0x1000-0x1081", OVERFLOW_RANGE, "0x1000-0x1081");
-    E8("0x10ff-0x1000", 255);
-    X8("0x1100-0x1000", OVERFLOW_RANGE, "0x1100-0x1000");
-    E8("0xE000-0xE080", -128);
-    X8("0xE000-0xE081", OVERFLOW_RANGE, "0xE000-0xE081");
-    E8("0xE0ff-0xE000", 255);
-    X8("0xE100-0xE000", OVERFLOW_RANGE, "0xE100-0xE000");
-
-    E16("0xE000-0x6000", 0x8000);
-    E16("0xE000-0x5fff", 0x8001);
-    E16("0xE000-0xE001", 0xFFFF);
-    E16("0x2000-0xA000", -32768);
-    X16("0x2000-0xA001", OVERFLOW_RANGE, "0x2000-0xA001");
-    E16("0x3000-0x3001", -1);
-
-    E16("0xE000+(-0x2000)", 0xC000);
-    E16("(-0x2000)+0xE000", 0xC000);
-}
-
 static void test_precedence() {
     E16("1+2-3+4",    4);
     E16("1+2*3+4",   11);
@@ -391,6 +370,27 @@ static void test_precedence() {
     E32(" 0 &&(1 || 1)", 0);
     E32(" 1 || 1 && 0",  1);
     E32("(1 || 1)&& 0",  0);
+}
+
+static void test_overflow() {
+    E8("0x1000-0x1080", -128);
+    X8("0x1000-0x1081", OVERFLOW_RANGE, "0x1000-0x1081");
+    E8("0x10ff-0x1000", 255);
+    X8("0x1100-0x1000", OVERFLOW_RANGE, "0x1100-0x1000");
+    E8("0xE000-0xE080", -128);
+    X8("0xE000-0xE081", OVERFLOW_RANGE, "0xE000-0xE081");
+    E8("0xE0ff-0xE000", 255);
+    X8("0xE100-0xE000", OVERFLOW_RANGE, "0xE100-0xE000");
+
+    E16("0xE000-0x6000", 0x8000);
+    E16("0xE000-0x5fff", 0x8001);
+    E16("0xE000-0xE001", 0xFFFF);
+    E16("0x2000-0xA000", -32768);
+    X16("0x2000-0xA001", OVERFLOW_RANGE, "0x2000-0xA001");
+    E16("0x3000-0x3001", -1);
+
+    E16("0xE000+(-0x2000)", 0xC000);
+    E16("(-0x2000)+0xE000", 0xC000);
 }
 
 static void test_current_address() {
@@ -931,8 +931,8 @@ void run_tests() {
     RUN_TEST(test_bin_constant);
     RUN_TEST(test_unary_operator);
     RUN_TEST(test_binary_operator);
-    RUN_TEST(test_overflow);
     RUN_TEST(test_precedence);
+    RUN_TEST(test_overflow);
     RUN_TEST(test_current_address);
     RUN_TEST(test_function);
     RUN_TEST(test_scan);
@@ -953,3 +953,4 @@ void run_tests() {
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
+

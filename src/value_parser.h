@@ -38,6 +38,17 @@ public:
           _origin(0) {}
     ValueParser(const NumberParser &number, const CommentParser &comment,
             const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
+            const OperatorParser &operators)
+        : _number(number),
+          _comment(comment),
+          _symbol(symbol),
+          _letter(letter),
+          _location(location),
+          _operator(operators),
+          _function(&_nullFunction),
+          _origin(0) {}
+    ValueParser(const NumberParser &number, const CommentParser &comment,
+            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
             const FunctionParser &function)
         : _number(number),
           _comment(comment),

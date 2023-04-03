@@ -130,6 +130,11 @@ struct CStyleOperatorParser : OperatorParser {
             StrScanner &scan, ErrorAt &error, OperatorType type) const override;
 };
 
+struct Mc68xxOperatorParser : CStyleOperatorParser {
+    const Operator *readOperator(
+            StrScanner &scan, ErrorAt &error, OperatorType type) const override;
+};
+
 }  // namespace libasm
 
 #endif

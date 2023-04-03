@@ -30,7 +30,7 @@ class AsmMc6809 : public Assembler, public Config {
 public:
     AsmMc6809()
         : Assembler(_parser, TableMc6809::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
+          _parser(_number, _comment, _symbol, _letter, _location, _operators),
           _pseudos() {
         reset();
     }
@@ -46,6 +46,7 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
+    const Mc68xxOperatorParser _operators;
     struct PseudoMc6809 : PseudoBase {
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
         bool inDirectPage(Config::uintptr_t addr) const {

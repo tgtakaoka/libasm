@@ -30,7 +30,7 @@ class AsmMc6800 : public Assembler, public Config {
 public:
     AsmMc6800()
         : Assembler(_parser, TableMc6800::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
+          _parser(_number, _comment, _symbol, _letter, _location, _operators),
           _pseudos() {}
 
     const ConfigBase &config() const override { return *this; }
@@ -42,6 +42,7 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
+    const Mc68xxOperatorParser _operators;
     struct PseudoBase _pseudos;
 
     struct Operand : public OperandBase {
