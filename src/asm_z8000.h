@@ -45,7 +45,7 @@ private:
     ValueParser _parser;
     const ZilogNumberParser _number;
     const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::UNDER};
     const ZilogLetterParser _letter;
     const DollarLocationParser _location;
     PseudoBase _pseudos;

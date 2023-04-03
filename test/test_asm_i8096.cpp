@@ -280,6 +280,14 @@ static void test_move() {
     TEST("POP   5634H[18]",    0xCF, 0x13, 0x34, 0x56);
     TEST("PUSHF ",             0xF2);
     TEST("POPF  ",             0xF3);
+
+    symtab.intern(255,    "?255");
+    symtab.intern(-129,   "_129");
+    symtab.intern(0x1234, "A_?9");
+
+    TEST("LDB   35, ?255",  0xB0, 0xFF, 0x23);
+    TEST("LD    86, #_129", 0xA1, 0x7F, 0xFF, 0x56);
+    TEST("LD    86, #A_?9", 0xA1, 0x34, 0x12, 0x56);
 }
 
 static void test_jump() {

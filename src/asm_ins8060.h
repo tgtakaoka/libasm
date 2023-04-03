@@ -39,7 +39,7 @@ private:
     ValueParser _parser;
     const NationalNumberParser _number{'X'};
     const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
     const DefaultLetterParser _letter;
     const NationalLocationParser _location{'$'};
     const struct Ins8060FunctionParser : FunctionParser {

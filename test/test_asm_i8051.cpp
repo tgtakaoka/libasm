@@ -231,19 +231,19 @@ static void test_immediate() {
 
     TEST("MOV DPTR,#9192H", 0x90, 0x91, 0x92);
 
-    symtab.intern(-129, "minus129");
-    symtab.intern(-128, "minus128");
-    symtab.intern(255,  "plus255");
-    symtab.intern(256,  "plus256");
+    symtab.intern(-129, "_129");
+    symtab.intern(-128, "_128");
+    symtab.intern(255,  "?255");
+    symtab.intern(256,  "?256");
     symtab.intern(0x30, "dir30");
     symtab.intern(0x1234, "sym1234");
 
-    TEST("ADD A,#minus128", 0x24, 0x80);
-    TEST("XRL A,#plus255",  0x64, 0xFF);
-    ERRT("ADD A,#minus129", OVERFLOW_RANGE, "#minus129", 0x24, 0x7F);
-    ERRT("ORL A,#plus256",  OVERFLOW_RANGE, "#plus256",  0x44, 0x00);
-    TEST("MOV dir30,#minus128", 0x75, 0x30, 0x80);
-    TEST("MOV  DPTR,#sym1234",  0x90, 0x12, 0x34);
+    TEST("ADD A,#_128", 0x24, 0x80);
+    TEST("XRL A,#?255", 0x64, 0xFF);
+    ERRT("ADD A,#_129", OVERFLOW_RANGE, "#_129", 0x24, 0x7F);
+    ERRT("ORL A,#?256", OVERFLOW_RANGE, "#?256", 0x44, 0x00);
+    TEST("MOV dir30,#_128",   0x75, 0x30, 0x80);
+    TEST("MOV DPTR,#sym1234", 0x90, 0x12, 0x34);
 }
 
 static void test_relative() {

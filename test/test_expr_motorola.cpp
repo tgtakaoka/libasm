@@ -21,7 +21,7 @@ using namespace libasm::test;
 
 const MotorolaNumberParser number;
 const AsteriskCommentParser comment;
-const DefaultSymbolParser symbol;
+const SimpleSymbolParser symbol{SymbolParser::DOLLAR_DOT_UNDER};
 const MotorolaLetterParser letter;
 const AsteriskLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};

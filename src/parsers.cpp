@@ -138,7 +138,7 @@ Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     } else if (p.istarts_P(PSTR("%(2)"))) {
         p += 4;
         radix = RADIX_2;
-    } else if (p.expect('%') && isxdigit(*p)){
+    } else if (p.expect('%') && isxdigit(*p)) {
         radix = RADIX_16;
     } else {
         return IntelNumberParser::parseNumber(scan, val);
@@ -228,6 +228,24 @@ Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
 
 bool DefaultSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return headOfSymbol ? isalpha(c) : isalnum(c);
+}
+
+const /*PROGMEM*/ char SymbolParser::NONE[] PROGMEM = "";
+const /*PROGMEM*/ char SymbolParser::DOLLAR[] PROGMEM = "$";
+const /*PROGMEM*/ char SymbolParser::DOT[] PROGMEM = ".";
+const /*PROGMEM*/ char SymbolParser::UNDER[] PROGMEM = "_";
+const /*PROGMEM*/ char SymbolParser::ATMARK_QUESTION[] PROGMEM = "@?";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_UNDER[] PROGMEM = "$_";
+const /*PROGMEM*/ char SymbolParser::DOT_UNDER[] PROGMEM = "._";
+const /*PROGMEM*/ char SymbolParser::QUESTION_UNDER[] PROGMEM = "?_";
+const /*PROGMEM*/ char SymbolParser::ATMARK_QUESTION_UNDER[] PROGMEM = "@?_";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_UNDER[] PROGMEM = "$._";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION_UNDER[] PROGMEM = "$?_";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION_UNDER[] PROGMEM = "$.?_";
+
+bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
+    return DefaultSymbolParser::symbolLetter(c, headOfSymbol) ||
+           strchr_P(headOfSymbol ? _prefix_P : _extra_P, c);
 }
 
 Error CStyleLetterParser::parseLetter(StrScanner &scan, char &letter) const {
@@ -420,6 +438,22 @@ Error FairchildLetterParser::hasSuffix(StrScanner &scan, char prefix) {
     // closing quote is optional for 'x'
     scan.expect('\'');
     return OK;
+}
+
+bool AsteriskLocationParser::locationSymbol(StrScanner &scan) const {
+    return scan.expect('*') && !isalnum(*scan);
+}
+
+bool DollarLocationParser::locationSymbol(StrScanner &scan) const {
+    return scan.expect('$') && !isalnum(*scan);
+}
+
+bool NationalLocationParser::locationSymbol(StrScanner &scan) const {
+    return (scan.expect('.') || (_extra && scan.expect(_extra))) && !isalnum(*scan);
+}
+
+bool FairchildLocationParser::locationSymbol(StrScanner &scan) const {
+    return (scan.expect('*') || scan.expect('$')) && !isalnum(*scan);
 }
 
 }  // namespace libasm

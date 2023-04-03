@@ -273,25 +273,25 @@ static void test_indexed_y() {
         TEST("STX 128,Y", 0xCD, 0xEF, 0x80);
         TEST("CPX 255,Y", 0xCD, 0xAC, 0xFF);
 
-        symtab.intern(0,   "offset0");
+        symtab.intern(0,   ".offset0");
         symtab.intern(128, "offset128");
         symtab.intern(255, "offset255");
 
         // MC68HC11
-        TEST("NEG    offset0,Y", 0x18, 0x60, 0x00);
+        TEST("NEG   .offset0,Y", 0x18, 0x60, 0x00);
         TEST("COM  offset255,Y", 0x18, 0x63, 0xFF);
-        TEST("CMPA   offset0,Y", 0x18, 0xA1, 0x00);
+        TEST("CMPA  .offset0,Y", 0x18, 0xA1, 0x00);
         TEST("ADDB offset255,Y", 0x18, 0xEB, 0xFF);
-        TEST("JMP    offset0,Y", 0x18, 0x6E, 0x00);
+        TEST("JMP   .offset0,Y", 0x18, 0x6E, 0x00);
         TEST("JSR  offset255,Y", 0x18, 0xAD, 0xFF);
 
-        TEST("SUBD   offset0,Y", 0x18, 0xA3, 0x00);
+        TEST("SUBD  .offset0,Y", 0x18, 0xA3, 0x00);
         TEST("ADDD offset255,Y", 0x18, 0xE3, 0xFF);
-        TEST("LDD    offset0,Y", 0x18, 0xEC, 0x00);
+        TEST("LDD   .offset0,Y", 0x18, 0xEC, 0x00);
         TEST("STD  offset255,Y", 0x18, 0xED, 0xFF);
 
-        TEST("CPD   offset0,Y", 0xCD, 0xA3, 0x00);
-        TEST("LDX   offset0,Y", 0xCD, 0xEE, 0x00);
+        TEST("CPD  .offset0,Y", 0xCD, 0xA3, 0x00);
+        TEST("LDX  .offset0,Y", 0xCD, 0xEE, 0x00);
         TEST("STX offset128,Y", 0xCD, 0xEF, 0x80);
         TEST("CPX offset255,Y", 0xCD, 0xAC, 0xFF);
     } else {
@@ -392,8 +392,8 @@ static void test_relative() {
     symtab.intern(0x0F82, "sub0F82");
     symtab.intern(0x1081, "sub1081");
 
-    ATEST(0x1000, "BSR  sub1081", 0x8D, 0x7F);
-    ATEST(0x1000, "BSR  sub0F82", 0x8D, 0x80);
+    ATEST(0x1000, "BSR sub1081", 0x8D, 0x7F);
+    ATEST(0x1000, "BSR sub0F82", 0x8D, 0x80);
 
     if (m6801()) {
         // MC6801
@@ -467,24 +467,24 @@ static void test_immediate() {
         ERUI("STY #$90A0");
     }
 
-    symtab.intern(0x90, "dir90");
+    symtab.intern(0x90, ".dir_90");
     symtab.intern(0x90A0, "dir90A0");
 
-    TEST("LDAA #dir90",  0x86, 0x90);
-    TEST("CPX #dir90A0", 0x8C, 0x90, 0xA0);
-    TEST("LDX #dir90A0", 0xCE, 0x90, 0xA0);
-    TEST("LDS #dir90A0", 0x8E, 0x90, 0xA0);
+    TEST("LDAA #.dir_90", 0x86, 0x90);
+    TEST("CPX #dir90A0",  0x8C, 0x90, 0xA0);
+    TEST("LDX #dir90A0",  0xCE, 0x90, 0xA0);
+    TEST("LDS #dir90A0",  0x8E, 0x90, 0xA0);
 
     if (m6801()) {
         // MC6801
         TEST("LDD  #dir90A0", 0xCC, 0x90, 0xA0);
-        TEST("ADDD #dir90",   0xC3, 0x00, 0x90);
+        TEST("ADDD #.dir_90", 0xC3, 0x00, 0x90);
     }
 
     if (m68hc11()) {
         // MC68HC11
         TEST("CPY #dir90A0", 0x18, 0x8C, 0x90, 0xA0);
-        TEST("LDY #dir90",   0x18, 0xCE, 0x00, 0x90);
+        TEST("LDY #.dir_90", 0x18, 0xCE, 0x00, 0x90);
         TEST("CPD #dir90A0", 0x1A, 0x83, 0x90, 0xA0);
     }
 }
@@ -553,31 +553,31 @@ static void test_direct() {
         ERUI("CPD $90");
     }
 
-    symtab.intern(0x10, "dir10");
-    symtab.intern(0x22, "dir22");
-    symtab.intern(0x90, "dir90");
+    symtab.intern(0x10, "dir_10");
+    symtab.intern(0x22, "dir$22");
+    symtab.intern(0x90, "dir.90");
 
-    TEST("LDAA <dir90", 0x96, 0x90);
-    TEST("STAB  dir90", 0xD7, 0x90);
-    TEST("CPX  <dir22", 0x9C, 0x22);
-    TEST("LDX   dir22", 0xDE, 0x22);
-    TEST("STX  <dir22", 0xDF, 0x22);
-    TEST("LDS   dir90", 0x9E, 0x90);
-    TEST("STS  <dir90", 0x9F, 0x90);
+    TEST("LDAA <dir.90", 0x96, 0x90);
+    TEST("STAB  dir.90", 0xD7, 0x90);
+    TEST("CPX  <dir$22", 0x9C, 0x22);
+    TEST("LDX   dir$22", 0xDE, 0x22);
+    TEST("STX  <dir_10", 0xDF, 0x10);
+    TEST("LDS   dir.90", 0x9E, 0x90);
+    TEST("STS  <dir.90", 0x9F, 0x90);
 
     if (m6801()) {
         // MC6801
-        TEST("LDD  <dir90", 0xDC, 0x90);
-        TEST("SUBD  dir90", 0x93, 0x90);
-        TEST("ADDD  dir22", 0xD3, 0x22);
-        TEST("JSR  <dir22", 0x9D, 0x22);
+        TEST("LDD  <dir.90", 0xDC, 0x90);
+        TEST("SUBD  dir.90", 0x93, 0x90);
+        TEST("ADDD  dir_10", 0xD3, 0x10);
+        TEST("JSR  <dir$22", 0x9D, 0x22);
     }
 
     if (m68hc11()) {
         // MC68HC11
-        TEST("CPY <dir90", 0x18, 0x9C, 0x90);
-        TEST("STY <dir22", 0x18, 0xDF, 0x22);
-        TEST("CPD <dir90", 0x1A, 0x93, 0x90);
+        TEST("CPY <dir.90", 0x18, 0x9C, 0x90);
+        TEST("STY <dir$22", 0x18, 0xDF, 0x22);
+        TEST("CPD <dir.90", 0x1A, 0x93, 0x90);
     }
 }
 

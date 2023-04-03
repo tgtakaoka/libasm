@@ -47,6 +47,19 @@ struct LocationParser {
  */
 struct SymbolParser {
     virtual bool symbolLetter(char c, bool headOfSymbol = false) const = 0;
+
+    static const /*PROGMEM*/ char NONE[] PROGMEM;                       // ""
+    static const /*PROGMEM*/ char DOLLAR[] PROGMEM;                     // "$"
+    static const /*PROGMEM*/ char DOT[] PROGMEM;                        // "."
+    static const /*PROGMEM*/ char UNDER[] PROGMEM;                      // "_"
+    static const /*PROGMEM*/ char ATMARK_QUESTION[] PROGMEM;            // "@?";
+    static const /*PROGMEM*/ char DOLLAR_UNDER[] PROGMEM;               // "$_"
+    static const /*PROGMEM*/ char DOT_UNDER[] PROGMEM;                  // "._"
+    static const /*PROGMEM*/ char QUESTION_UNDER[] PROGMEM;             // "?_"
+    static const /*PROGMEM*/ char ATMARK_QUESTION_UNDER[] PROGMEM;      // "@?_"
+    static const /*PROGMEM*/ char DOLLAR_DOT_UNDER[] PROGMEM;           // "$._"
+    static const /*PROGMEM*/ char DOLLAR_QUESTION_UNDER[] PROGMEM;      // "$?_"
+    static const /*PROGMEM*/ char DOLLAR_DOT_QUESTION_UNDER[] PROGMEM;  // "$.?_"
 };
 
 /**
@@ -239,6 +252,20 @@ struct DefaultSymbolParser : SymbolParser {
     bool symbolLetter(char c, bool headOfSymbol = false) const override;
 };
 
+/**
+ * Simple symbol is '([:alpha:]|[prefix])([:alnum:]|[extra])*'.
+ */
+struct SimpleSymbolParser : DefaultSymbolParser {
+    SimpleSymbolParser(const /*PROGMEM*/ char *extra_P) : _prefix_P(extra_P), _extra_P(extra_P) {}
+    SimpleSymbolParser(const /*PROGMEM*/ char *prefix_P, const /*PROGMEM*/ char *extra_P)
+        : _prefix_P(prefix_P), _extra_P(extra_P) {}
+    bool symbolLetter(char c, bool headOfSymbol = false) const override;
+
+private:
+    const /*PROGMEMD*/ char *const _prefix_P;
+    const /*PROGMEMD*/ char *const _extra_P;
+};
+
 struct CStyleLetterParser : LetterParser {
     /** C-style letter is enclosed by sigle quotes */
     Error parseLetter(StrScanner &scan, char &letter) const override;
@@ -302,27 +329,23 @@ private:
 };
 
 struct AsteriskLocationParser : LocationParser {
-    bool locationSymbol(StrScanner &scan) const override { return scan.expect('*'); }
+    bool locationSymbol(StrScanner &scan) const override;
 };
 
 struct DollarLocationParser : LocationParser {
-    bool locationSymbol(StrScanner &scan) const override { return scan.expect('$'); }
+    bool locationSymbol(StrScanner &scan) const override;
 };
 
 struct NationalLocationParser : LocationParser {
     NationalLocationParser(char extra = 0) : _extra(extra) {}
-    bool locationSymbol(StrScanner &scan) const override {
-        return scan.expect('.') || (_extra && scan.expect(_extra));
-    }
+    bool locationSymbol(StrScanner &scan) const override;
 
 private:
     const char _extra;
 };
 
 struct FairchildLocationParser : LocationParser {
-    bool locationSymbol(StrScanner &scan) const override {
-        return scan.expect('*') || scan.expect('$');
-    }
+    bool locationSymbol(StrScanner &scan) const override;
 };
 
 }  // namespace libasm

@@ -142,20 +142,22 @@ static void test_immediate() {
     ERRT("ILD =0x1234", OPERAND_NOT_ALLOWED, "=0x1234");
     ERRT("DLD =0x1234", OPERAND_NOT_ALLOWED, "=0x1234");
 
-    symtab.intern(0x12,   "sym12");
-    symtab.intern(0x1234, "sym1234");
+    symtab.intern(0x12,   "$sym12");
+    symtab.intern(0x1234, "$sym1234");
 
-    TEST("AND S,=sym12",    0x39, 0x12);
-    TEST("LD  A,=sym12",    0xC4, 0x12);
-    TEST("AND A,=sym12",    0xD4, 0x12);
-    TEST("SUB A,=sym12",    0xFC, 0x12);
+    TEST("AND S,=$sym12",    0x39, 0x12);
+    TEST("LD  A,=$sym12",    0xC4, 0x12);
+    TEST("AND A,=$sym12",    0xD4, 0x12);
+    TEST("SUB A,=$sym12",    0xFC, 0x12);
 
-    TEST("PLI P2,=sym1234", 0x22, 0x34, 0x12);
-    TEST("LD  SP,=sym1234", 0x25, 0x34, 0x12);
-    TEST("LD  P3,=sym1234", 0x27, 0x34, 0x12);
-    TEST("LD  EA,=sym1234", 0x84, 0x34, 0x12);
-    TEST("LD  T,=sym1234",  0xA4, 0x34, 0x12);
-    TEST("ADD EA,=sym1234", 0xB4, 0x34, 0x12);
+    TEST("PLI P2,=$sym1234", 0x22, 0x34, 0x12);
+    TEST("LD  SP,=$sym1234", 0x25, 0x34, 0x12);
+    TEST("LD  P3,=$sym1234", 0x27, 0x34, 0x12);
+    TEST("LD  EA,=$sym1234", 0x84, 0x34, 0x12);
+    TEST("LD  T,=$sym1234",  0xA4, 0x34, 0x12);
+    TEST("ADD EA,=$sym1234", 0xB4, 0x34, 0x12);
+    ATEST(0x1234, "PLI P2,=$",         0x22, 0x34, 0x12);
+    ATEST(0x1000, "LD  T,=$sym1234-$", 0xA4, 0x34, 0x02);
 }
 
 static void test_absolute() {
@@ -207,11 +209,13 @@ static void test_relative() {
     symtab.intern(0x1005, "sym1005");
     symtab.intern(0x1081, "sym1081");
     symtab.intern(0x1082, "sym1082");
+    symtab.intern(0x1009, "$9");
 
     ATEST(0x1000, "BP  sym1000", 0x64, 0xFE);
     ATEST(0x1100, "BZ  sym1082", 0x6C, 0x80);
     ATEST(0x1000, "BRA sym1081", 0x74, 0x7F);
     ATEST(0x1000, "BNZ sym1005", 0x7C, 0x03);
+    ATEST(0x1000, "BRA $9",      0x74, 0x07);
 }
 
 static void test_indexed() {

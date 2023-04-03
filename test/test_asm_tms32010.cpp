@@ -126,6 +126,12 @@ static void test_accumrator() {
     TEST("LACK 0",   0x7E00);
     TEST("LACK 255", 0x7EFF);
 
+    symtab.intern(0x00, "$zero_data");
+    symtab.intern(0xFF, "_max$data");
+
+    TEST("LACK $zero_data", 0x7E00);
+    TEST("LACK _max$data",  0x7EFF);
+
     TEST("OR 70H",     0x7A70);
     TEST("OR *",       0x7A88);
     TEST("OR *-",      0x7A98);

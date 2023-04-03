@@ -43,7 +43,7 @@ private:
     ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION_UNDER};
     const DefaultLetterParser _letter;
     const DollarLocationParser _location;
     PseudoBase _pseudos;

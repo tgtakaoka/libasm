@@ -2055,48 +2055,48 @@ static void test_cpu_conrtol() {
 }
 
 static void test_short_direct() {
-    symtab.intern(0x0034, "soff");
-    symtab.intern(0x1234, "loff");
+    symtab.intern(0x0034, "s_off");
+    symtab.intern(0x1234, "l_off");
     symtab.intern(0x560000, "seg");
 
-    TEST("CLR 0x560034       ; auto short",  0x4D08, 0x5634);
-    TEST("CLR 0x561234       ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR 0x560034(R2)   ; auto short",  0x4D28, 0x5634);
-    TEST("CLR 0x561234(R2)   ; long offset", 0x4D28, 0xD600, 0x1234);
-    TEST("CLR seg|soff       ; auto short",  0x4D08, 0x5634);
-    TEST("CLR seg+soff(R2)   ; auto short",  0x4D28, 0x5634);
-    TEST("CLR (seg+soff)     ; auto short",  0x4D08, 0x5634);
-    TEST("CLR (seg|soff)(R2) ; auto short",  0x4D28, 0x5634);
-    TEST("CLR seg+loff       ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR seg|loff(R2)   ; long offset", 0x4D28, 0xD600, 0x1234);
-    TEST("CLR (seg|loff)     ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR (seg+loff)(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR 0x560034        ; auto short",  0x4D08, 0x5634);
+    TEST("CLR 0x561234        ; long offset", 0x4D08, 0xD600, 0x1234);
+    TEST("CLR 0x560034(R2)    ; auto short",  0x4D28, 0x5634);
+    TEST("CLR 0x561234(R2)    ; long offset", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR seg|s_off       ; auto short",  0x4D08, 0x5634);
+    TEST("CLR seg+s_off(R2)   ; auto short",  0x4D28, 0x5634);
+    TEST("CLR (seg+s_off)     ; auto short",  0x4D08, 0x5634);
+    TEST("CLR (seg|s_off)(R2) ; auto short",  0x4D28, 0x5634);
+    TEST("CLR seg+l_off       ; long offset", 0x4D08, 0xD600, 0x1234);
+    TEST("CLR seg|l_off(R2)   ; long offset", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR (seg|l_off)     ; long offset", 0x4D08, 0xD600, 0x1234);
+    TEST("CLR (seg+l_off)(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
 
     asm8000.setOption("short-direct", "disable");
 
-    TEST("CLR 0x560034",       0x4D08, 0xD600, 0x0034);
-    TEST("CLR 0x561234",       0x4D08, 0xD600, 0x1234);
-    TEST("CLR 0x560034(R2)",   0x4D28, 0xD600, 0x0034);
-    TEST("CLR 0x561234(R2)",   0x4D28, 0xD600, 0x1234);
-    TEST("CLR seg+soff",       0x4D08, 0xD600, 0x0034);
-    TEST("CLR seg|soff(R2)",   0x4D28, 0xD600, 0x0034);
-    TEST("CLR seg|loff",       0x4D08, 0xD600, 0x1234);
-    TEST("CLR seg+loff(R2)",   0x4D28, 0xD600, 0x1234);
-    TEST("CLR (seg|soff)",     0x4D08, 0xD600, 0x0034);
-    TEST("CLR (seg+loff)",     0x4D08, 0xD600, 0x1234);
-    TEST("CLR (seg+soff)(R2)", 0x4D28, 0xD600, 0x0034);
-    TEST("CLR (seg|loff)(R2)", 0x4D28, 0xD600, 0x1234);
+    TEST("CLR 0x560034",        0x4D08, 0xD600, 0x0034);
+    TEST("CLR 0x561234",        0x4D08, 0xD600, 0x1234);
+    TEST("CLR 0x560034(R2)",    0x4D28, 0xD600, 0x0034);
+    TEST("CLR 0x561234(R2)",    0x4D28, 0xD600, 0x1234);
+    TEST("CLR seg+s_off",       0x4D08, 0xD600, 0x0034);
+    TEST("CLR seg|s_off(R2)",   0x4D28, 0xD600, 0x0034);
+    TEST("CLR seg|l_off",       0x4D08, 0xD600, 0x1234);
+    TEST("CLR seg+l_off(R2)",   0x4D28, 0xD600, 0x1234);
+    TEST("CLR (seg|s_off)",     0x4D08, 0xD600, 0x0034);
+    TEST("CLR (seg+l_off)",     0x4D08, 0xD600, 0x1234);
+    TEST("CLR (seg+s_off)(R2)", 0x4D28, 0xD600, 0x0034);
+    TEST("CLR (seg|l_off)(R2)", 0x4D28, 0xD600, 0x1234);
 
-    TEST("CLR |0x560034|       ; short direct", 0x4D08, 0x5634);
-    TEST("CLR |0x560034|(R2)   ; short direct", 0x4D28, 0x5634);
-    TEST("CLR |seg+soff|(R2)   ; short direct", 0x4D28, 0x5634);
-    TEST("CLR |(seg|soff)|     ; short direct", 0x4D08, 0x5634);
-    TEST("CLR |(seg+soff)|(R2) ; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |0x561234|       ; long offset",  OVERFLOW_RANGE, "|0x561234|       ; long offset", 0x4D08, 0x5634);
-    ERRT("CLR |0x561234|(R2)   ; long offset",  OVERFLOW_RANGE, "|0x561234|(R2)   ; long offset", 0x4D28, 0x5634);
-    ERRT("CLR |seg+loff|       ; long offset",  OVERFLOW_RANGE, "|seg+loff|       ; long offset", 0x4D08, 0x5634);
-    ERRT("CLR |(seg|loff)|     ; long offset",  OVERFLOW_RANGE, "|(seg|loff)|     ; long offset", 0x4D08, 0x5634);
-    ERRT("CLR |(seg|loff)|(R2) ; long offset",  OVERFLOW_RANGE, "|(seg|loff)|(R2) ; long offset", 0x4D28, 0x5634);
+    TEST("CLR |0x560034|        ; short direct", 0x4D08, 0x5634);
+    TEST("CLR |0x560034|(R2)    ; short direct", 0x4D28, 0x5634);
+    TEST("CLR |seg+s_off|(R2)   ; short direct", 0x4D28, 0x5634);
+    TEST("CLR |(seg|s_off)|     ; short direct", 0x4D08, 0x5634);
+    TEST("CLR |(seg+s_off)|(R2) ; short direct", 0x4D28, 0x5634);
+    ERRT("CLR |0x561234|        ; long offset",  OVERFLOW_RANGE, "|0x561234|        ; long offset", 0x4D08, 0x5634);
+    ERRT("CLR |0x561234|(R2)    ; long offset",  OVERFLOW_RANGE, "|0x561234|(R2)    ; long offset", 0x4D28, 0x5634);
+    ERRT("CLR |seg+l_off|       ; long offset",  OVERFLOW_RANGE, "|seg+l_off|       ; long offset", 0x4D08, 0x5634);
+    ERRT("CLR |(seg|l_off)|     ; long offset",  OVERFLOW_RANGE, "|(seg|l_off)|     ; long offset", 0x4D08, 0x5634);
+    ERRT("CLR |(seg|l_off)|(R2) ; long offset",  OVERFLOW_RANGE, "|(seg|l_off)|(R2) ; long offset", 0x4D28, 0x5634);
 }
 
 static void test_comment() {

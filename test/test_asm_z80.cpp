@@ -224,6 +224,13 @@ static void test_move_immediate() {
     TEST("LD DE,1234H",  0x11, 0x34, 0x12);
     TEST("LD HL,0BEEFH", 0x21, 0xEF, 0xBE);
     TEST("LD SP,6789H",  0x31, 0x89, 0x67);
+
+
+    symtab.intern(-1,  "minus_1");
+    symtab.intern(255, "max?255");
+
+    TEST("LD B, minus_1", 0x06, 0xFF);
+    TEST("LD C, max?255", 0x0E, 0xFF);
 }
 
 static void test_move_direct() {

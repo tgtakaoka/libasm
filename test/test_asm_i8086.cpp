@@ -282,6 +282,16 @@ static void test_data_transfer() {
         TEST("INS DL, 12", 0x0F, 0x39, 0302, 0x0C);
         TEST("INS DH, 15", 0x0F, 0x39, 0306, 0x0F);
     }
+
+    symtab.intern(-128,   "@128");
+    symtab.intern(255,    "?255");
+    symtab.intern(-129,   "_129");
+    symtab.intern(0x1234, "A_@?9");
+
+    TEST("MOV AL, @128",  0260, 0x80);
+    TEST("MOV AL, ?255",  0260, 0xFF);
+    TEST("MOV AX, _129",  0270, 0x7F, 0xFF);
+    TEST("MOV AX, A_@?9", 0270, 0x34, 0x12);
 }
 
 static void test_arithmetic() {

@@ -43,7 +43,7 @@ private:
     ValueParser _parser;
     const ZilogNumberParser _number;
     const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION_UNDER};
     const ZilogLetterParser _letter;
     const DollarLocationParser _location;
     struct PseudoZ8 : PseudoBase {

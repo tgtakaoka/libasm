@@ -299,6 +299,12 @@ static void test_8bit_transfer() {
     TEST("LD (IY-34H),56H", 0xF5, 0xCC, 0x37, 0x56);
     TEST("LD (SP+34H),56H", 0xF6, 0x34, 0x37, 0x56);
     TEST("LD (HL+A),56H",   0xF7, 0x37, 0x56);
+
+    symtab.intern(-1,  "minus_1");
+    symtab.intern(255, "max?255");
+
+    TEST("LD B, minus_1", 0x30, 0xFF);
+    TEST("LD B, max?255", 0x30, 0xFF);
 }
 
 static void test_16bit_transfer() {

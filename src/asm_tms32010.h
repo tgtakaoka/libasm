@@ -39,7 +39,7 @@ private:
     ValueParser _parser;
     const IntelNumberParser _number;
     const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_UNDER};
     const DefaultLetterParser _letter;
     const DollarLocationParser _location;
     PseudoBase _pseudos;

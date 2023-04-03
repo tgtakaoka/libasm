@@ -21,7 +21,7 @@ using namespace libasm::test;
 
 const IntelNumberParser number;
 const SemicolonCommentParser comment;
-const DefaultSymbolParser symbol;
+const SimpleSymbolParser symbol{SymbolParser::ATMARK_QUESTION, SymbolParser::NONE};
 const DefaultLetterParser letter;
 const DollarLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};

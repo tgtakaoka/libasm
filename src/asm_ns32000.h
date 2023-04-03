@@ -43,7 +43,7 @@ private:
     ValueParser _parser;
     const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
     const SharpCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOT_UNDER};
     const CStyleLetterParser _letter;
     const NationalLocationParser _location{'*'};
     struct PseudoNs32000 : PseudoBase {

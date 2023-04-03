@@ -624,6 +624,15 @@ static void test_data_move() {
     ERRT("UNLK (*+$1234,PC)",    OPERAND_NOT_ALLOWED, "(*+$1234,PC)");
     ERRT("UNLK (*+$12,PC,A3.L)", OPERAND_NOT_ALLOWED, "(*+$12,PC,A3.L)");
     ERRT("UNLK #$1234",          OPERAND_NOT_ALLOWED, "#$1234");
+
+    symtab.intern(0x00000034, "data$34");
+    symtab.intern(0x00345678, "long_data");
+    symtab.intern(0x00005678, ".offset");
+
+    TEST("MOVE.B #data$34,D7",           0017074, 0x0034);
+    TEST("MOVE.W #data$34,(A6)",         0036274, 0x0034);
+    TEST("MOVE.L #long_data,(A6)+",      0026374, 0x0034, 0x5678);
+    TEST("MOVE.W #data$34,(.offset,A6)", 0036574, 0x0034, 0x5678);
 }
 
 static void test_integer() {

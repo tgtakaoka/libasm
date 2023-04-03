@@ -21,7 +21,7 @@ using namespace libasm::test;
 
 const NationalNumberParser number{0, 'B', 'Q'};
 const SemicolonCommentParser comment;
-const DefaultSymbolParser symbol;
+const SimpleSymbolParser symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
 const DefaultLetterParser letter;
 const DollarLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};

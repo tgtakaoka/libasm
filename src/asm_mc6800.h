@@ -39,7 +39,7 @@ private:
     ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
     struct PseudoBase _pseudos;

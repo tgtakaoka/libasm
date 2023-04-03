@@ -40,7 +40,7 @@ private:
     ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
     const DefaultLetterParser _letter;
     const DollarLocationParser _location;
     PseudoBase _pseudos;

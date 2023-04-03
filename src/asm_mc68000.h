@@ -43,11 +43,7 @@ private:
     ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
-    const struct : DefaultSymbolParser {
-        bool symbolLetter(char c, bool headOfSymbol) const {
-            return DefaultSymbolParser::symbolLetter(c, headOfSymbol) || c == '.';
-        }
-    } _symbol;
+    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter{/*closingQuote*/ true};
     const AsteriskLocationParser _location;
     PseudoBase _pseudos;

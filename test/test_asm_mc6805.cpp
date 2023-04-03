@@ -173,11 +173,12 @@ static void test_immediate() {
     ERRT("JSR #$90", OPERAND_NOT_ALLOWED, "#$90");
     ERRT("JMP #$90", OPERAND_NOT_ALLOWED, "#$90");
 
-    symtab.intern(0x90, "dir90");
+    symtab.intern(0x90, ".dir_90");
     symtab.intern(0x90A0, "dir90A0");
 
-    TEST("LDA #dir90", 0xA6, 0x90);
-    TEST("LDX #dir90", 0xAE, 0x90);
+    TEST("LDA #.dir_90",     0xA6, 0x90);
+    ERRT("LDX #dir90A0",     OVERFLOW_RANGE, "#dir90A0", 0xAE, 0xA0);
+    TEST("LDX #dir90A0&$FF", 0xAE, 0xA0);
 }
 
 static void test_direct() {
@@ -197,17 +198,18 @@ static void test_direct() {
     TEST("LDX $90", 0xBE, 0x90);
     TEST("STX $90", 0xBF, 0x90);
 
-    TEST("JSR  $90", 0xBD, 0x90);
+    TEST("JSR $90", 0xBD, 0x90);
 
-    symtab.intern(0x10, "dir10");
-    symtab.intern(0x22, "dir22");
-    symtab.intern(0x90, "dir90");
+    symtab.intern(0x10, "dir_10");
+    symtab.intern(0x22, "dir$22");
+    symtab.intern(0x90, "dir.90");
 
-    TEST("LDA <dir90", 0xB6, 0x90);
-    TEST("STA  dir90", 0xB7, 0x90);
-    TEST("CPX <dir22", 0xB3, 0x22);
-    TEST("LDX  dir22", 0xBE, 0x22);
-    TEST("STX <dir22", 0xBF, 0x22);
+    TEST("LDA  dir.90", 0xB6, 0x90);
+    TEST("STA  dir_10", 0xB7, 0x10);
+    TEST("CMP <dir_10", 0xB1, 0x10);
+    TEST("CPX <dir.90", 0xB3, 0x90);
+    TEST("LDX  dir$22", 0xBE, 0x22);
+    TEST("STX <dir$22", 0xBF, 0x22);
 }
 
 static void test_extended() {
@@ -369,15 +371,15 @@ static void test_indexed() {
     TEST("JMP <0,X",  0xEC, 0x00);
     TEST("JSR 255,X", 0xED, 0xFF);
 
-    symtab.intern(0,   "offset0");
+    symtab.intern(0,   ".offset0");
     symtab.intern(128, "offset128");
     symtab.intern(255, "offset255");
 
-    TEST("NEG  <offset0,X", 0x60, 0x00);
+    TEST("NEG <.offset0,X", 0x60, 0x00);
     TEST("COM offset255,X", 0x63, 0xFF);
-    TEST("CMP  <offset0,X", 0xE1, 0x00);
+    TEST("CMP <.offset0,X", 0xE1, 0x00);
     TEST("ADD offset255,X", 0xEB, 0xFF);
-    TEST("JMP  <offset0,X", 0xEC, 0x00);
+    TEST("JMP <.offset0,X", 0xEC, 0x00);
     TEST("JSR offset255,X", 0xED, 0xFF);
 }
 

@@ -108,12 +108,14 @@ static void test_jump() {
 
     symtab.intern(0x0FF0, "label0FF0");
     symtab.intern(0x1000, "label1000");
+    symtab.intern(0x1036, "$1");
     symtab.intern(127,    "disp0x7F");
     symtab.intern(-127,   "disp0x81");
     symtab.intern(-128,   "disp0x80");
 
     ATEST(0x1000, "JMP label1000", 0x90, 0xFE);
     AERRT(0x1000, "JMP label0FF0", OVERWRAP_PAGE, "label0FF0", 0x90, 0xEE);
+    ATEST(0x1024, "JMP $1",        0x90, 0x10);
 
     TEST("JMP E(PC)",        0x90, 0x80);
     TEST("JMP disp0x7F(P1)", 0x91, 0x7F);
@@ -198,9 +200,10 @@ static void test_alu_immediate() {
     TEST("ADI 0x12", 0xF4, 0x12);
     TEST("CAI 0x34", 0xFC, 0x34);
 
-    symtab.intern(-1, "minus1");
+    symtab.intern(-1, "$minus1");
 
-    TEST("LDI minus1", 0xC4, 0xFF);
+    ATEST(0x1024, "LDI $minus1",      0xC4, 0xFF);
+    ATEST(0x1024, "LDI L($)+$minus1", 0xC4, 0x23);
 }
 
 static void test_page_boundary() {
