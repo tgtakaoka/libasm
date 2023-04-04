@@ -64,6 +64,9 @@ public:
     bool hasSymbol(const StrScanner &symbol) const override;
     uint32_t lookupSymbol(const StrScanner &symbol) const override;
     Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false);
+    bool symbolInTable(const StrScanner &symbol) const;
+    void setLineSymbol(const StrScanner &symbol);
+    Error internLineSymbol(uint32_t value);
 
     bool hasFunction(const StrScanner &name) const { return _functions.hasFunction(name); }
     Error internFunction(const StrScanner &name, const std::list<StrScanner> &params,
@@ -89,6 +92,7 @@ private:
     void setFunctionStore(FunctionStore *functionStore);
     AsmDirective *switchDirective(AsmDirective *dir);
 
+    const StrScanner *_lineSymbol;
     std::map<std::string, uint32_t, std::less<>> _symbols;
     std::map<std::string, uint32_t, std::less<>> _variables;
 };

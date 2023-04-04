@@ -50,6 +50,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     parser.setCurrentOrigin(startAddress());
 
     _line_symbol = parser.readSymbol(scan);
+    _driver.setLineSymbol(_line_symbol);
     if (_line_symbol.size())
         scan.expect(':');  // skip optional trailing ':' for label.
     scan.skipSpaces();
@@ -64,7 +65,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
         if (_errorAt.isOK()) {
             if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
-                const auto error = _driver.internSymbol(startAddress(), _line_symbol);
+                const auto error = _driver.internLineSymbol(startAddress());
                 if (error) {
                     _line_value.clear();
                     return _errorAt.setError(_line_symbol, error);
@@ -78,7 +79,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
 
     if (_line_symbol.size()) {
         // If |label| isn't consumed, assign the origin.
-        const auto error = _driver.internSymbol(startAddress(), _line_symbol);
+        const auto error = _driver.internLineSymbol(startAddress());
         if (error)
             return _errorAt.setError(_line_symbol, error);
     }

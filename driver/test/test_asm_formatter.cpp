@@ -97,7 +97,9 @@ void test_symbols() {
             "var1    .set  3456H\n"
             "        org   1234H\n"
             "label1  set   0, b\n"  // Z80 has SET instruction
-            "var1\n",
+            "var1\n"
+            "label2  jr    label2\n"
+            "label3  dw    label3\n",
             "       1/       0 : =1234              label1  equ   1234H\n"
             "z80:2: error: Duplicate label\n"
             "       2/       0 :                    label1  :=    1234H\n"  // SET
@@ -112,7 +114,9 @@ void test_symbols() {
             "       9/    1234 :                            org   1234H\n"
             "      10/    1234 : CB C0              label1  set   0, b\n"
             "z80:11:1: error: Duplicate label\n"
-            "      11/    1236 :                    var1\n");
+            "      11/    1236 :                    var1\n"
+            "      12/    1236 : 18 FE              label2  jr    label2\n"
+            "      13/    1238 : 38 12              label3  dw    label3\n");
 }
 
 void test_mc6809() {

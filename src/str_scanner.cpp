@@ -22,6 +22,10 @@ namespace libasm {
 
 StrScanner StrScanner::EMPTY("");
 
+bool StrScanner::iequals(const StrScanner &text) const {
+    return size() == text.size() && strncasecmp(str(), text.str(), size()) == 0;
+}
+
 bool StrScanner::iequals_P(const /*PROGMEM*/ char *text_P) const {
     const auto len = strlen_P(text_P);
     return size() == len && strncasecmp_P(_str, text_P, len) == 0;

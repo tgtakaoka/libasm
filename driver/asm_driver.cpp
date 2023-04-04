@@ -144,12 +144,33 @@ const char *AsmDriver::lookupValue(uint32_t address) const {
     return nullptr;
 }
 
+void AsmDriver::setLineSymbol(const StrScanner &symbol) {
+    _lineSymbol = symbol.size() ? &symbol : nullptr;
+}
+
+Error AsmDriver::internLineSymbol(uint32_t value) {
+    auto err = OK;
+    if (_lineSymbol) {
+        err = internSymbol(value, *_lineSymbol);
+        _lineSymbol = nullptr;
+    }
+    return err;
+}
+
 bool AsmDriver::hasSymbol(const StrScanner &symbol) const {
+    if (_lineSymbol && _lineSymbol->iequals(symbol))
+        return true;
+    return symbolInTable(symbol);
+}
+
+bool AsmDriver::symbolInTable(const StrScanner &symbol) const {
     const auto key = std::string(symbol.str(), symbol.size());
     return _symbols.find(key) != _symbols.end() || _variables.find(key) != _variables.end();
 }
 
 uint32_t AsmDriver::lookupSymbol(const StrScanner &symbol) const {
+    if (_lineSymbol && _lineSymbol->iequals(symbol))
+        return _origin;
     const auto key = std::string(symbol.str(), symbol.size());
     const auto s = _symbols.find(key);
     if (s != _symbols.end())

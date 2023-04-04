@@ -142,9 +142,9 @@ void test_trim() {
 
 void test_compare() {
     const char text1[] = "text1";
-    StrScanner scan1(text1);
+    const StrScanner scan1(text1);
     const char text2[] = "text2";
-    StrScanner scan2(text2);
+    const StrScanner scan2(text2);
 
     TRUE("iequals_P", scan1.iequals_P(PSTR("TEXT1")));
     FALSE("iequals_P", scan2.iequals_P(PSTR("TEXT1")));
@@ -152,6 +152,16 @@ void test_compare() {
     TRUE("istarts_P", scan1.istarts_P(PSTR("TEXT")));
     TRUE("istarts_P", scan2.istarts_P(PSTR("TEXT1"), 4));
     FALSE("istarts_P", scan2.istarts_P(PSTR("TEXT123"), 5));
+
+    const char text3[] = "TEXT1";
+    const StrScanner scan3(text3);
+    const char text4[] = "TEXT123";
+    const StrScanner scan4(text4);
+
+    TRUE("iequals", scan1.iequals(scan3));
+    TRUE("iequals", scan3.iequals(scan1));
+    FALSE("iequals", scan1.iequals(scan2));
+    FALSE("iequals", scan1.iequals(scan4));
 }
 
 void run_tests() {

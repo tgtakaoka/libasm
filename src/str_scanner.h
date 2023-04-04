@@ -137,6 +137,9 @@ public:
         return expect([c](char s) { return toupper(s) == toupper(c); });
     }
 
+    /** return true if this equals to |text| with ignore case. */
+    bool iequals(const StrScanner &text) const;
+
     /** return true if this equals to |text_P| with ignore case. */
     bool iequals_P(const /*PROGMEM*/ char *text_P) const;
 

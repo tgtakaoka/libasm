@@ -341,7 +341,7 @@ Error AsmDirective::allocateSpaces(
 Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     if (list.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
-    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasSymbol(list.lineSymbol()))
+    if (driver.symbolMode() == REPORT_DUPLICATE && driver.symbolInTable(list.lineSymbol()))
         return setError(DUPLICATE_LABEL);
     const auto &parser = assembler().parser();
     std::list<StrScanner> params;
