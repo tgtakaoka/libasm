@@ -45,38 +45,18 @@ public:
     Error searchName(InsnMc6809 &insn) const;
     Error hasName(InsnMc6809 &insn) const;
     Error searchOpCode(InsnMc6809 &insn) const;
-    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
+    bool isPrefix(uint8_t code) const;
 
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     int16_t searchPostSpec(PostSpec &spec) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
     CpuType cpuType() const;
 
-    struct PostEntry : PostSpec {
-        uint8_t mask;
-        uint8_t byte;
-        constexpr PostEntry(RegName _index, RegName _base, int8_t _size, bool _indir, uint8_t _mask,
-                uint8_t _byte)
-            : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
-    };
-    typedef TableBase<TableMc6809::PostEntry> PostPage;
-
     typedef EntryTableBase<Entry> EntryPage;
-    struct Cpu : CpuBase<CpuType, EntryPage> {
-        constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name,
-                const /*PROGMEM*/ EntryPage *table, const /*PROGMEM*/ EntryPage *end,
-                const /*PROGMEM*/ PostPage *postTable, const /*PROGMEM*/ PostPage *postEnd)
-            : CpuBase(cpuType, name, table, end), _post_table(postTable), _post_end(postEnd) {}
-        const PostPage *postTable() const;
-        const PostPage *postEnd() const;
-
-    private:
-        const PostPage *_post_table;
-        const PostPage *_post_end;
-    };
+    struct Cpu;
 
 private:
     const Cpu *_cpu;

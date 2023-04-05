@@ -23,45 +23,76 @@
 namespace libasm {
 
 /**
- * Base class for any table.
+ * Base class for any table in PROGMEM.
+ *
+ * A table consists of a constant araay of |ITEM| in PROGMEM. So that special consideration, such as
+ * using |pgm_read_byte| etc., is necessary to read any conents via |ITEM| pointer.
  */
-template <typename ENTRY>
-struct TableBase {
-    const ENTRY *table() const { return reinterpret_cast<const ENTRY *>(pgm_read_ptr(&_table)); }
-    const ENTRY *end() const { return reinterpret_cast<const ENTRY *>(pgm_read_ptr(&_end)); }
+template <typename /*PROGMEM*/ ITEM>
+struct Table {
+    const ITEM *table() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_table)); }
+    const ITEM *end() const { return reinterpret_cast<const ITEM *>(pgm_read_ptr(&_end)); }
 
-    constexpr TableBase(const ENTRY *table, const ENTRY *end) : _table(table), _end(end) {}
+    constexpr Table(const /*PROGMEM*/ ITEM *table, const /*PROGMEM*/ ITEM *end)
+        : _table(table), _end(end) {}
+
+    /**
+     * Linear searching an item which satisfies |match| and returns the pointer to the |ITEM|.  Also
+     * updates |data| via |fetcher|. Returns nullptr if such item is not found.
+     */
+    template <typename DATA, typename EXTRA>
+    using Matcher = bool (*)(DATA &, const ITEM *, EXTRA);
+    template <typename DATA, typename EXTRA>
+    using Fetcher = void (*)(DATA &, const ITEM *, EXTRA);
 
     template <typename DATA, typename EXTRA>
-    const ENTRY *searchEntry(DATA &data, bool (*matcher)(DATA &, const ENTRY *, EXTRA),
-            void (*fetcher)(DATA &, const ENTRY *, EXTRA), EXTRA extra) const {
-        for (const auto *entry = table(); entry < end(); entry++) {
-            if (matcher(data, entry, extra)) {
-                fetcher(data, entry, extra);
-                return entry;
+    const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, Fetcher<DATA, EXTRA> fetcher,
+            EXTRA extra) const {
+        for (const auto *item = table(); item < end(); item++) {
+            if (matcher(data, item, extra)) {
+                fetcher(data, item, extra);
+                return item;
             }
         }
         return nullptr;
     }
 
 private:
-    const ENTRY *_table;
-    const ENTRY *_end;
+    const ITEM *_table;
+    const ITEM *_end;
 };
 
 /**
- * Base class for indexed table.
+ *  class for indexed table in template.
+ *
  */
-template <typename ENTRY, typename INDEX>
-struct IndexedTableBase : TableBase<ENTRY> {
-    constexpr IndexedTableBase(
-            const ENTRY *table, const ENTRY *end, const INDEX *itable, const INDEX *iend)
-        : TableBase<ENTRY>(table, end), _indexes(itable, iend) {}
+template <typename /*PROGMEM*/ ITEM, typename INDEX>
+struct IndexedTable {
+    constexpr IndexedTable(const /*PROGMEM*/ ITEM *table, const /*PROGMEM*/ ITEM *end,
+            const /*PROGMEM*/ INDEX *itable, const /*PROGMEM*/ INDEX *iend)
+        : _items(table, end), _indexes(itable, iend) {}
+
+    bool notExactMatch(const ITEM *item) const { return item == _items.end(); }
 
     template <typename DATA, typename EXTRA>
-    const ENTRY *searchIndexedEntry(DATA &data, int (*comparator)(DATA &, const ENTRY *),
-            bool (*matcher)(DATA &, const ENTRY *), void (*fetcher)(DATA &, const ENTRY *, EXTRA),
+    using Matcher = bool (*)(DATA &, const ITEM *, EXTRA);
+    template <typename DATA, typename EXTRA>
+    using Fetcher = void (*)(DATA &, const ITEM *, EXTRA);
+
+    template <typename DATA, typename EXTRA>
+    const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, Fetcher<DATA, EXTRA> fetcher,
             EXTRA extra) const {
+        return _items.linearSearch(data, matcher, fetcher, extra);
+    }
+
+    template <typename DATA>
+    using Comparator = int (*)(DATA &, const ITEM *);
+    template <typename DATA>
+    using Matcher2 = bool (*)(DATA &, const ITEM *);
+
+    template <typename DATA, typename EXTRA>
+    const ITEM *binarySearch(DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher,
+            Fetcher<DATA, EXTRA> fetcher, EXTRA extra) const {
         const auto *first = _indexes.table();
         const auto *last = _indexes.end();
         for (;;) {
@@ -70,22 +101,22 @@ struct IndexedTableBase : TableBase<ENTRY> {
                 break;
             const auto *middle = first;
             middle += diff / 2;
-            if (comparator(data, entryAt(middle)) > 0) {
+            if (comparator(data, itemAt(middle)) > 0) {
                 first = ++middle;
             } else {
                 last = middle;
             }
         }
-        // Search for the same key entries.
-        const ENTRY *found = nullptr;
+        // Search for the same key items.
+        const ITEM *found = nullptr;
         while (first < _indexes.end()) {
-            const auto *entry = entryAt(first);
-            if (comparator(data, entry))
+            const auto *item = itemAt(first);
+            if (comparator(data, item))
                 return found;
-            found = TableBase<ENTRY>::end();
-            if (matcher(data, entry)) {
-                fetcher(data, entry, extra);
-                return entry;
+            found = _items.end();
+            if (matcher(data, item)) {
+                fetcher(data, item, extra);
+                return item;
             }
             ++first;
         }
@@ -93,13 +124,14 @@ struct IndexedTableBase : TableBase<ENTRY> {
     }
 
 private:
-    const TableBase<INDEX> _indexes;
+    const Table<ITEM> _items;
+    const Table<INDEX> _indexes;
 
-    const ENTRY *entryAt(const INDEX *index) const {
+    const ITEM *itemAt(const INDEX *index) const {
         if (sizeof(INDEX) == 1) {
-            return TableBase<ENTRY>::table() + pgm_read_byte(index);
+            return _items.table() + pgm_read_byte(index);
         } else {
-            return TableBase<ENTRY>::table() + pgm_read_word(index);
+            return _items.table() + pgm_read_word(index);
         }
     }
 };

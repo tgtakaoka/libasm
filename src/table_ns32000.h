@@ -38,50 +38,14 @@ public:
     bool isPrefixCode(uint8_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    bool setFpu(StrScanner fpu);
-    bool setMmu(StrScanner mmu);
-    FpuType getFpu() const { return _fpu->cpuType(); }
-    MmuType getMmu() const { return _mmu->cpuType(); }
+    bool setFpu(const StrScanner &fpu);
+    bool setMmu(const StrScanner &mmu);
 
-    struct EntryPage : EntryTableBase<Entry> {
-        constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
-                const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-            : EntryTableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
-
-        Config::opcode_t mask() const;
-        Config::opcode_t post() const;
-
-    private:
-        Config::opcode_t _mask;
-        uint8_t _post;
-    };
-
-    template <typename CPUTYPE_T>
-    struct CpuCommon : CpuBase<CPUTYPE_T, EntryPage> {
-        constexpr CpuCommon(CPUTYPE_T cpuType, const /* PROGMEM */ char *name_P,
-                const EntryPage *table, const EntryPage *end)
-            : CpuBase<CPUTYPE_T, EntryPage>(cpuType, name_P, table, end) {}
-
-        Error searchNameCommon(InsnNs32000 &insn, bool (*accept)(InsnNs32000 &, const Entry *),
-                void (*pageSetup)(InsnNs32000 &, const EntryPage *)) const {
-            this->searchName(insn, accept, pageSetup);
-            return insn.getError();
-        }
-
-        Error searchOpCodeCommon(InsnNs32000 &insn, DisMemory &memory,
-                bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
-                void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
-            auto entry = this->searchOpCode(insn, matchOpCode, readEntryName);
-            if (entry && insn.hasPost())
-                insn.readPost(memory);
-            return insn.getError();
-        }
-    };
-    typedef CpuCommon<CpuType> Cpu;
-    typedef CpuCommon<FpuType> Fpu;
-    typedef CpuCommon<MmuType> Mmu;
+    struct Cpu;
+    struct Fpu;
+    struct Mmu;
 
 private:
     const Cpu *const _cpu;

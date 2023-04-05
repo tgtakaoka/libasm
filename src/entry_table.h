@@ -26,36 +26,60 @@ namespace libasm {
 /**
  * Base class for instruction entry table.
  */
-template <typename ENTRY_T>
-struct EntryTableBase : IndexedTableBase<ENTRY_T, uint8_t> {
+template <typename ENTRY>
+struct EntryTableBase {
     uint8_t prefix() const { return pgm_read_byte(&_prefix); }
     bool prefixMatch(uint8_t code) const { return code == prefix(); }
 
-    constexpr EntryTableBase(uint8_t prefix, const ENTRY_T *table, const ENTRY_T *end,
+    constexpr EntryTableBase(uint8_t prefix, const ENTRY *table, const ENTRY *end,
             const uint8_t *index, const uint8_t *iend)
-        : IndexedTableBase<ENTRY_T, uint8_t>(table, end, index, iend), _prefix(prefix) {}
+        : _entries(table, end, index, iend), _prefix(prefix) {}
 
     constexpr EntryTableBase(
-            const ENTRY_T *table, const ENTRY_T *end, const uint8_t *index, const uint8_t *iend)
-        : IndexedTableBase<ENTRY_T, uint8_t>(table, end, index, iend), _prefix(0) {}
+            const ENTRY *table, const ENTRY *end, const uint8_t *index, const uint8_t *iend)
+        : _entries(table, end, index, iend), _prefix(0) {}
+
+    template <typename DATA, typename EXTRA>
+    using Matcher = bool (*)(DATA &, const ENTRY *, EXTRA);
+    template <typename DATA, typename EXTRA>
+    using Fetcher = void (*)(DATA &, const ENTRY *, EXTRA);
+
+    template <typename DATA, typename EXTRA>
+    const ENTRY *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher,
+            Fetcher<DATA, EXTRA> fetcher, EXTRA extra) const {
+        return _entries.linearSearch(data, matcher, fetcher, extra);
+    }
+
+    template <typename DATA>
+    using Comparator = int (*)(DATA &, const ENTRY *);
+    template <typename DATA>
+    using Matcher2 = bool (*)(DATA &, const ENTRY *);
+
+    template <typename DATA, typename EXTRA>
+    const ENTRY *binarySearch(DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher,
+            Fetcher<DATA, EXTRA> fetcher, EXTRA extra) const {
+        return _entries.binarySearch(data, comparator, matcher, fetcher, extra);
+    }
+
+    bool notExactMatch(const ENTRY *entry) const { return _entries.notExactMatch(entry); }
 
 private:
+    const IndexedTable<ENTRY, uint8_t> _entries;
     const uint8_t _prefix;
 };
 
 /**
  * Base class for CPU entry.
  */
-template <typename CPUTYPE_T, typename PAGE_T>
-struct CpuBase : TableBase<PAGE_T> {
-public:
-    CPUTYPE_T cpuType() const { return static_cast<CPUTYPE_T>(pgm_read_byte(&_cpuType)); }
+template <typename CPUTYPE, typename ENTRY_PAGE>
+struct CpuBase {
+    CPUTYPE cpuType() const { return static_cast<CPUTYPE>(pgm_read_byte(&_cpuType)); }
     const /* PROGMEM */ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
     template <typename CPU_T>
-    static const CPU_T *search(CPUTYPE_T cpuType, const CPU_T *table, const CPU_T *end) {
+    static const CPU_T *search(CPUTYPE cpuType, const CPU_T *table, const CPU_T *end) {
         for (const auto *t = table; t < end; t++) {
             if (cpuType == t->cpuType())
                 return t;
@@ -72,12 +96,12 @@ public:
         return nullptr;
     }
 
-    constexpr CpuBase(CPUTYPE_T cpuType, const /* PROGMEM */ char *name_P, const PAGE_T *table,
-            const PAGE_T *end)
-        : TableBase<PAGE_T>(table, end), _cpuType(cpuType), _name_P(name_P) {}
+    constexpr CpuBase(CPUTYPE cpuType, const /*PROGMEM*/ char *name_P, const ENTRY_PAGE *table,
+            const ENTRY_PAGE *end)
+        : _pages(table, end), _cpuType(cpuType), _name_P(name_P) {}
 
     bool isPrefix(uint8_t code) const {
-        for (const auto *page = this->table(); page < this->end(); page++) {
+        for (const auto *page = _pages.table(); page < _pages.end(); page++) {
             const auto prefix = page->prefix();
             if (prefix == 0)
                 continue;
@@ -87,35 +111,32 @@ public:
         return false;
     }
 
-    template <typename E, typename I>
-    static int nameComparator(I &insn, const E *entry) {
+    template <typename INSN, typename ENTRY>
+    static int nameComparator(INSN &insn, const ENTRY *entry) {
         return strcasecmp_P(insn.name(), entry->name_P());
     }
 
     /**
-     * Binary search an entry from all instruction page tables which
-     * are sorted and indexed from |page->index()| until
-     * |page->iend()| where an entry has |insn.name()| and
-     * |acceptOperands(insn, entry)| returns true.  Also updates |insn| error
-     * code if any.
+     * Binary search an entry from all instruction |_pages| table where an entry has |insn.name()|
+     * and |acceptOperands(insn, entry)| returns true.  Also updates |insn| error code if any.
      */
-    template <typename E, typename P, typename I>
-    static void defaultReadCode(I &insn, const E *entry, const P *page) {
+    template <typename INSN, typename ENTRY>
+    static void defaultReadCode(INSN &insn, const ENTRY *entry, const ENTRY_PAGE *page) {
         insn.setFlags(entry->flags());
         insn.setOpCode(entry->opCode(), page->prefix());
     }
 
-    template <typename E, typename I>
-    const E *searchName(
-            I &insn, bool (*acceptOperands)(I &, const E *),
-            void (*pageSetup)(I &, const PAGE_T *) = [](I &, const PAGE_T *) {},
-            void (*readCode)(I &, const E *, const PAGE_T *) = defaultReadCode) const {
+    template <typename INSN, typename ENTRY>
+    const ENTRY *searchName(
+            INSN &insn, bool (*acceptOperands)(INSN &, const ENTRY *),
+            void (*pageSetup)(INSN &, const ENTRY_PAGE *) = [](INSN &, const ENTRY_PAGE *) {},
+            void (*readCode)(INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultReadCode) const {
         auto found = false;
-        for (auto page = this->table(); page < this->end(); page++) {
+        for (auto page = _pages.table(); page < _pages.end(); page++) {
             pageSetup(insn, page);
             const auto *entry =
-                    page->searchIndexedEntry(insn, nameComparator, acceptOperands, readCode, page);
-            if (entry == page->end()) {
+                    page->binarySearch(insn, nameComparator, acceptOperands, readCode, page);
+            if (page->notExactMatch(entry)) {
                 found = true;
             } else if (entry) {
                 return entry;
@@ -126,29 +147,28 @@ public:
     }
 
     /**
-     * Lookup instruction page tables from |tabel()| until |end()| to
-     * find an entry which satisfis |matchCode|, then call |readName|
-     * to read the table entry into |insn|. Also updates |insn| error
-     * code if any.
+     * Lookup instruction |_pages| table to find an entry which satisfis |matchCode|, then call
+     * |readName| to read the table entry into |insn|. Also updates |insn| error code if any.
      */
-    template <typename E, typename P, typename I>
-    static bool defaultMatchOpCode(I &insn, const E *entry, const P *page) {
+    template <typename INSN, typename ENTRY>
+    static bool defaultMatchOpCode(INSN &insn, const ENTRY *entry, const ENTRY_PAGE *page) {
         return insn.opCode() == entry->opCode();
     }
 
-    template <typename E, typename P, typename I>
-    static void defaultReadEntryName(I &insn, const E *entry, const P *page) {
+    template <typename INSN, typename ENTRY>
+    static void defaultReadEntryName(INSN &insn, const ENTRY *entry, const ENTRY_PAGE *page) {
         insn.setFlags(entry->flags());
         insn.nameBuffer().text_P(entry->name_P());
     }
 
-    template <typename E, typename I>
-    const E *searchOpCode(I &insn,
-            bool (*matchCode)(I &, const E *, const PAGE_T *) = defaultMatchOpCode,
-            void (*readName)(I &, const E *, const PAGE_T *) = defaultReadEntryName) const {
-        for (auto page = this->table(); page < this->end(); page++) {
+    template <typename INSN, typename ENTRY>
+    const ENTRY *searchOpCode(INSN &insn,
+            bool (*matchCode)(INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultMatchOpCode,
+            void (*readName)(
+                    INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultReadEntryName) const {
+        for (const ENTRY_PAGE *page = _pages.table(); page < _pages.end(); page++) {
             if (page->prefixMatch(insn.prefix())) {
-                const auto *entry = page->searchEntry(insn, matchCode, readName, page);
+                const auto *entry = page->linearSearch(insn, matchCode, readName, page);
                 if (entry)
                     return entry;
             }
@@ -157,8 +177,9 @@ public:
         return nullptr;
     }
 
-private:
-    CPUTYPE_T _cpuType;
+protected:
+    const Table<ENTRY_PAGE> _pages;
+    CPUTYPE _cpuType;
     const /* PROGMEM */ char *_name_P;
 };
 

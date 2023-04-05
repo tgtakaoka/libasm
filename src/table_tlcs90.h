@@ -47,22 +47,10 @@ public:
     Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
+    const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    struct EntryPage : EntryTableBase<Entry> {
-        constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
-                const Entry *end, const uint8_t *index, const uint8_t *iend)
-            : EntryTableBase(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
-
-        AddrMode mode() const;
-        bool prefixMatch(Config::opcode_t code) const;
-
-    private:
-        uint8_t _mode;
-    };
-
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    struct Cpu;
 
 private:
     const Cpu *const _cpu;

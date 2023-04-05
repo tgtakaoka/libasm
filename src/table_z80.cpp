@@ -190,7 +190,6 @@ static constexpr uint8_t INDEX_I8085[] PROGMEM = {
       1,  // TEXT_LD
 };
 
-static constexpr Config::opcode_t PREFIX_00 = 0x00;
 static constexpr Entry TABLE_Z80[] PROGMEM = {
     E2(0x08, TEXT_EX,   R_AF,   R_AFP),
     E1(0x10, TEXT_DJNZ, M_REL),
@@ -206,7 +205,6 @@ static constexpr uint8_t INDEX_Z80[] PROGMEM = {
       3,  // TEXT_JR
 };
 
-static constexpr Config::opcode_t PREFIX_CB = 0xCB;
 static constexpr Entry TABLE_CB[] PROGMEM = {
     E1(0x00, TEXT_RLC,  M_REG),
     E1(0x08, TEXT_RRC,  M_REG),
@@ -252,7 +250,6 @@ static constexpr uint8_t INDEX_CB[] PROGMEM = {
      16,  // TEXT_SRL
 };
 
-static constexpr Config::opcode_t PREFIX_ED = 0xED;
 static constexpr Entry TABLE_ED[] PROGMEM = {
     U2(0x70, TEXT_IN,   I_HL,   I_C), // IN (HL),(C)
     E2(0x40, TEXT_IN,   M_DST,  I_C),

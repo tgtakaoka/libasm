@@ -803,16 +803,21 @@ static constexpr uint8_t INDEX_14_2[] PROGMEM = {
 };
 // clang-format on
 
-Config::opcode_t TableNs32000::EntryPage::mask() const {
-    return pgm_read_byte(&_mask);
-}
+struct EntryPage : EntryTableBase<Entry> {
+    Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
+    Config::opcode_t post() const { return pgm_read_byte(&_post); }
 
-Config::opcode_t TableNs32000::EntryPage::post() const {
-    return pgm_read_byte(&_post);
-}
+    constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
+            const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
+        : EntryTableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+
+private:
+    const Config::opcode_t _mask;
+    const uint8_t _post;
+};
 
 // Standard Instructions
-static constexpr TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
+static constexpr EntryPage NS32032_PAGES[] PROGMEM = {
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_0), ARRAY_RANGE(INDEX_0)},
         {0x00, 0x00, 0, ARRAY_RANGE(FORMAT_1), ARRAY_RANGE(INDEX_1)},
         {0x00, 0xC0, 1, ARRAY_RANGE(FORMAT_4), ARRAY_RANGE(INDEX_4)},
@@ -837,16 +842,55 @@ static constexpr TableNs32000::EntryPage NS32032_PAGES[] PROGMEM = {
 };
 
 // Floating point instructions
-static constexpr TableNs32000::EntryPage NS32081_PAGES[] PROGMEM = {
+static constexpr EntryPage NS32081_PAGES[] PROGMEM = {
         {0x3E, 0xC0, 1, ARRAY_RANGE(FORMAT_9), ARRAY_RANGE(INDEX_9)},
         {0xBE, 0xC0, 1, ARRAY_RANGE(FORMAT_11), ARRAY_RANGE(INDEX_11)},
 };
 
 // Memory management instructions
-static constexpr TableNs32000::EntryPage NS32082_PAGES[] PROGMEM = {
+static constexpr EntryPage NS32082_PAGES[] PROGMEM = {
         {0xAE, 0xC0, 1, ARRAY_RANGE(FORMAT_8_3_1), ARRAY_RANGE(INDEX_8_3_1)},
         {0x1E, 0x00, 1, ARRAY_RANGE(FORMAT_14_1), ARRAY_RANGE(INDEX_14_1)},
         {0x1E, 0x80, 1, ARRAY_RANGE(FORMAT_14_2), ARRAY_RANGE(INDEX_14_2)},
+};
+
+template <typename CPUTYPE>
+struct ProcessorCpuCommon : CpuBase<CPUTYPE, EntryPage> {
+    constexpr ProcessorCpuCommon(CPUTYPE cpuType, const /* PROGMEM */ char *name_P,
+            const EntryPage *table, const EntryPage *end)
+        : CpuBase<CPUTYPE, EntryPage>(cpuType, name_P, table, end) {}
+
+    Error searchName(InsnNs32000 &insn, bool (*accept)(InsnNs32000 &, const Entry *),
+            void (*pageSetup)(InsnNs32000 &, const EntryPage *)) const {
+        CpuBase<CPUTYPE, EntryPage>::searchName(insn, accept, pageSetup);
+        return insn.getError();
+    }
+
+    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory,
+            bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
+            void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
+        const auto entry =
+                CpuBase<CPUTYPE, EntryPage>::searchOpCode(insn, matchOpCode, readEntryName);
+        if (entry && insn.hasPost())
+            insn.readPost(memory);
+        return insn.getError();
+    }
+};
+
+struct TableNs32000::Cpu : ProcessorCpuCommon<CpuType> {
+    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
+            const EntryPage *end)
+        : ProcessorCpuCommon<CpuType>(cpuType, name_P, table, end) {}
+};
+struct TableNs32000::Fpu : ProcessorCpuCommon<FpuType> {
+    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
+            const EntryPage *end)
+        : ProcessorCpuCommon<FpuType>(fpuType, name_P, table, end) {}
+};
+struct TableNs32000::Mmu : ProcessorCpuCommon<MmuType> {
+    constexpr Mmu(MmuType mmuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
+            const EntryPage *end)
+        : ProcessorCpuCommon<MmuType>(mmuType, name_P, table, end) {}
 };
 
 static constexpr TableNs32000::Cpu CPU_TABLE[] PROGMEM = {
@@ -892,7 +936,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static void searchPageSetup(InsnNs32000 &insn, const TableNs32000::EntryPage *page) {
+static void searchPageSetup(InsnNs32000 &insn, const EntryPage *page) {
     insn.setPost(0, page->post() != 0);
 }
 
@@ -904,40 +948,38 @@ static bool acceptModes(InsnNs32000 &insn, const Entry *entry) {
 }
 
 Error TableNs32000::searchName(InsnNs32000 &insn) const {
-    _cpu->searchNameCommon(insn, acceptModes, searchPageSetup);
+    _cpu->searchName(insn, acceptModes, searchPageSetup);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        _fpu->searchNameCommon(insn, acceptModes, searchPageSetup);
+        _fpu->searchName(insn, acceptModes, searchPageSetup);
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        _mmu->searchNameCommon(insn, acceptModes, searchPageSetup);
+        _mmu->searchName(insn, acceptModes, searchPageSetup);
     }
     return insn.getError();
 }
 
-static bool matchOpCode(
-        InsnNs32000 &insn, const Entry *entry, const TableNs32000::EntryPage *page) {
+static bool matchOpCode(InsnNs32000 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     opCode &= ~page->mask();
     return opCode == entry->opCode();
 }
 
-static void readEntryName(
-        InsnNs32000 &insn, const Entry *entry, const TableNs32000::EntryPage *page) {
+static void readEntryName(InsnNs32000 &insn, const Entry *entry, const EntryPage *page) {
     TableNs32000::Cpu::defaultReadEntryName(insn, entry, page);
     insn.setPost(0, page->post() != 0);
 }
 
 Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
-    NS32032_CPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+    NS32032_CPU.searchOpCode(insn, memory, matchOpCode, readEntryName);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        NS32081_FPU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+        NS32081_FPU.searchOpCode(insn, memory, matchOpCode, readEntryName);
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        NS32082_MMU.searchOpCodeCommon(insn, memory, matchOpCode, readEntryName);
+        NS32082_MMU.searchOpCode(insn, memory, matchOpCode, readEntryName);
     }
     return insn.getError();
 }
@@ -971,13 +1013,17 @@ const /* PROGMEM */ char *TableNs32000::listCpu_P() const {
     return TEXT_CPU_LIST;
 }
 
+const /* PROGMEM */ char *TableNs32000::cpu_P() const {
+    return _cpu->name_P();
+}
+
 bool TableNs32000::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_NS, 2) == 0)
         cpu += 2;
     return strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
 }
 
-bool TableNs32000::setFpu(StrScanner fpu) {
+bool TableNs32000::setFpu(const StrScanner &fpu) {
     if (fpu.iequals_P(TEXT_FPU_NS32081))
         return setFpu(FPU_NS32081);
     if (fpu.iequals_P(TEXT_none))
@@ -985,7 +1031,7 @@ bool TableNs32000::setFpu(StrScanner fpu) {
     return false;
 }
 
-bool TableNs32000::setMmu(StrScanner mmu) {
+bool TableNs32000::setMmu(const StrScanner &mmu) {
     if (mmu.iequals_P(TEXT_MMU_NS32082))
         return setMmu(MMU_NS32082);
     if (mmu.iequals_P(TEXT_none))
