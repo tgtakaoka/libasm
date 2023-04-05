@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "reg_base.h"
-
 #ifndef __REG_MN1610_H__
 #define __REG_MN1610_H__
+
+#include "reg_base.h"
 
 namespace libasm {
 namespace mn1610 {

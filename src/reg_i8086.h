@@ -17,9 +17,8 @@
 #ifndef __REG_I8086_H__
 #define __REG_I8086_H__
 
-#include "reg_base.h"
-
 #include "entry_i8086.h"
+#include "reg_base.h"
 
 namespace libasm {
 namespace i8086 {

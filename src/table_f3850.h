@@ -18,13 +18,13 @@
 #define __TABLE_F3850_H__
 
 #include "config_f3850.h"
+#include "entry_table.h"
 #include "insn_f3850.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace f3850 {
 
-class TableF3850 : public TableBase {
+class TableF3850 : public EntryTable {
 public:
     TableF3850();
 
@@ -37,7 +37,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

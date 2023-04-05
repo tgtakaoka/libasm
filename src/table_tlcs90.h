@@ -19,9 +19,9 @@
 
 #include "asm_base.h"
 #include "config_tlcs90.h"
+#include "entry_table.h"
 #include "entry_tlcs90.h"
 #include "reg_tlcs90.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace tlcs90 {
@@ -36,7 +36,7 @@ struct Operand : public OperandBase {
     Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
-class TableTlcs90 : public TableBase {
+class TableTlcs90 : public EntryTable {
 public:
     TableTlcs90();
 
@@ -50,10 +50,10 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    struct EntryPage : EntryPageBase<Entry> {
+    struct EntryPage : EntryTableBase<Entry> {
         constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
                 const Entry *end, const uint8_t *index, const uint8_t *iend)
-            : EntryPageBase(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
+            : EntryTableBase(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
 
         AddrMode mode() const;
         bool prefixMatch(Config::opcode_t code) const;

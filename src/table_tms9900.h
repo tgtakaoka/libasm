@@ -18,13 +18,13 @@
 #define __TABLE_TMS9900_H__
 
 #include "config_tms9900.h"
+#include "entry_table.h"
 #include "insn_tms9900.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace tms9900 {
 
-class TableTms9900 : public TableBase {
+class TableTms9900 : public EntryTable {
 public:
     TableTms9900();
 
@@ -37,7 +37,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

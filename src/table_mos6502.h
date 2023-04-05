@@ -18,13 +18,13 @@
 #define __TABLE_MOS6502_H__
 
 #include "config_mos6502.h"
+#include "entry_table.h"
 #include "insn_mos6502.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace mos6502 {
 
-class TableMos6502 : public TableBase {
+class TableMos6502 : public EntryTable {
 public:
     TableMos6502() { reset(); }
     void reset();
@@ -49,7 +49,7 @@ public:
     static constexpr Config::opcode_t WDM = 0x42;
     static constexpr Config::opcode_t JSL = 0x22;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

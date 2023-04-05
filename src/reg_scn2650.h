@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_scn2650.h"
-#include "reg_base.h"
-
 #ifndef __REG_SCN2650_H__
 #define __REG_SCN2650_H__
+
+#include "config_scn2650.h"
+#include "reg_base.h"
 
 namespace libasm {
 namespace scn2650 {

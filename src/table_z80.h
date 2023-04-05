@@ -18,13 +18,13 @@
 #define __TABLE_Z80_H__
 
 #include "config_z80.h"
+#include "entry_table.h"
 #include "insn_z80.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace z80 {
 
-class TableZ80 : public TableBase {
+class TableZ80 : public EntryTable {
 public:
     TableZ80();
 
@@ -41,7 +41,7 @@ public:
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

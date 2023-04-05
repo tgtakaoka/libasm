@@ -18,13 +18,13 @@
 #define __TABLE_MN1610_H__
 
 #include "config_mn1610.h"
+#include "entry_table.h"
 #include "insn_mn1610.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace mn1610 {
 
-class TableMn1610 : public TableBase {
+class TableMn1610 : public EntryTable {
 public:
     TableMn1610();
 
@@ -39,7 +39,7 @@ public:
 
     AddressWidth addressWidth() const;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

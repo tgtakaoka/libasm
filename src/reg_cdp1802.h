@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "reg_base.h"
-
 #ifndef __REG_CDP1802_H__
 #define __REG_CDP1802_H__
+
+#include "reg_base.h"
 
 namespace libasm {
 namespace cdp1802 {

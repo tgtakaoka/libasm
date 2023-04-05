@@ -18,9 +18,9 @@
 #define __TABLE_MC6809_H__
 
 #include "config_mc6809.h"
+#include "entry_table.h"
 #include "insn_mc6809.h"
 #include "reg_mc6809.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -36,7 +36,7 @@ struct PostSpec {
         : index(_index), base(_base), size(_size), indir(_indir) {}
 };
 
-class TableMc6809 : public TableBase {
+class TableMc6809 : public EntryTable {
 public:
     TableMc6809();
 
@@ -62,9 +62,9 @@ public:
                 uint8_t _byte)
             : PostSpec(_index, _base, _size, _indir), mask(_mask), byte(_byte) {}
     };
-    typedef PageBase<TableMc6809::PostEntry> PostPage;
+    typedef TableBase<TableMc6809::PostEntry> PostPage;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     struct Cpu : CpuBase<CpuType, EntryPage> {
         constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name,
                 const /*PROGMEM*/ EntryPage *table, const /*PROGMEM*/ EntryPage *end,

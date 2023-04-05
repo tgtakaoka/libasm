@@ -19,14 +19,14 @@
 
 #include "config_ns32000.h"
 #include "dis_memory.h"
+#include "entry_table.h"
 #include "insn_ns32000.h"
 #include "str_scanner.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace ns32000 {
 
-class TableNs32000 : public TableBase {
+class TableNs32000 : public EntryTable {
 public:
     TableNs32000();
 
@@ -45,10 +45,10 @@ public:
     FpuType getFpu() const { return _fpu->cpuType(); }
     MmuType getMmu() const { return _mmu->cpuType(); }
 
-    struct EntryPage : EntryPageBase<Entry> {
+    struct EntryPage : EntryTableBase<Entry> {
         constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
                 const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-            : EntryPageBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+            : EntryTableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
 
         Config::opcode_t mask() const;
         Config::opcode_t post() const;

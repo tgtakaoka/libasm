@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "reg_base.h"
-
 #ifndef __REG_INS8070_H__
 #define __REG_INS8070_H__
+
+#include "reg_base.h"
 
 namespace libasm {
 namespace ins8070 {

@@ -19,13 +19,13 @@
 
 #include "config_z8.h"
 #include "dis_memory.h"
+#include "entry_table.h"
 #include "insn_z8.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace z8 {
 
-class TableZ8 : public TableBase {
+class TableZ8 : public EntryTable {
 public:
     TableZ8();
 
@@ -41,7 +41,7 @@ public:
 
     static constexpr Config::opcode_t SRP = 0x31;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

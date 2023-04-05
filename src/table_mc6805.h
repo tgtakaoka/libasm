@@ -19,13 +19,13 @@
 
 #include "config_mc6805.h"
 #include "entry_mc6805.h"
+#include "entry_table.h"
 #include "insn_mc6805.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace mc6805 {
 
-class TableMc6805 : public TableBase {
+class TableMc6805 : public EntryTable {
 public:
     TableMc6805();
 
@@ -38,7 +38,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

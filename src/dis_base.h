@@ -22,13 +22,13 @@
 
 #include "config_base.h"
 #include "dis_memory.h"
+#include "entry_table.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "option_base.h"
 #include "reg_base.h"
 #include "str_buffer.h"
 #include "symbol_table.h"
-#include "table_base.h"
 #include "type_traits.h"
 #include "value_formatter.h"
 
@@ -60,7 +60,7 @@ private:
 
 protected:
     RegBase &_regBase;
-    TableBase &_table;
+    EntryTable &_table;
 
     struct DisassemblerOption {
     protected:
@@ -84,7 +84,7 @@ protected:
     bool _relativeTarget = false;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, TableBase &table, char curSym);
+    Disassembler(ValueFormatter &formatter, RegBase &regs, EntryTable &table, char curSym);
 
     /** Lookup |addr| value and returns symbol. */
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;
@@ -112,7 +112,8 @@ protected:
     /**
      * Convert |target| as relative |deltaBits| offset from |origin|.
      */
-    StrBuffer &outRelAddr(StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const;
+    StrBuffer &outRelAddr(
+            StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const;
 
     uint32_t branchTarget(uint32_t base, int32_t delta);
 

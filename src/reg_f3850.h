@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_f3850.h"
-#include "reg_base.h"
-
 #ifndef __REG_F3850_H__
 #define __REG_F3850_H__
+
+#include "config_f3850.h"
+#include "reg_base.h"
 
 namespace libasm {
 namespace f3850 {

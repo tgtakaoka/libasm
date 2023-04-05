@@ -18,13 +18,13 @@
 #define __TABLE_I8080_H__
 
 #include "config_i8080.h"
+#include "entry_table.h"
 #include "insn_i8080.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace i8080 {
 
-class TableI8080 : public TableBase {
+class TableI8080 : public EntryTable {
 public:
     TableI8080();
 
@@ -38,7 +38,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

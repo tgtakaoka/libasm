@@ -20,12 +20,12 @@
 #include <stdint.h>
 
 #include "config_base.h"
+#include "entry_table.h"
 #include "error_reporter.h"
 #include "insn_base.h"
 #include "option_base.h"
 #include "parsers.h"
 #include "symbol_table.h"
-#include "table_base.h"
 #include "value_parser.h"
 
 namespace libasm {
@@ -75,13 +75,13 @@ private:
     ValueParser &_parser;
 
 protected:
-    TableBase &_table;
+    EntryTable &_table;
     PseudoBase &_pseudos;
     char _commentChar;
     SymbolTable *_symtab;
     const Options _commonOptions;
 
-    Assembler(ValueParser &parser, TableBase &table, PseudoBase &pseudos)
+    Assembler(ValueParser &parser, EntryTable &table, PseudoBase &pseudos)
         : ErrorAt(), _parser(parser), _table(table), _pseudos(pseudos) {}
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }

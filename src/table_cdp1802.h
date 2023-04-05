@@ -18,13 +18,13 @@
 #define __TABLE_CDP1802_H__
 
 #include "config_cdp1802.h"
+#include "entry_table.h"
 #include "insn_cdp1802.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace cdp1802 {
 
-class TableCdp1802 : public TableBase {
+class TableCdp1802 : public EntryTable {
 public:
     TableCdp1802();
 
@@ -38,7 +38,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

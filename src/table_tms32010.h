@@ -18,13 +18,13 @@
 #define __TABLE_TMS32010_H__
 
 #include "config_tms32010.h"
+#include "entry_table.h"
 #include "insn_tms32010.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace tms32010 {
 
-class TableTms32010 : public TableBase {
+class TableTms32010 : public EntryTable {
 public:
     TableTms32010();
 
@@ -38,7 +38,7 @@ public:
     bool setCpu(const char *cpu) override;
     uint16_t dataMemoryLimit() const;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

@@ -19,14 +19,14 @@
 
 #include "config_i8086.h"
 #include "dis_memory.h"
+#include "entry_table.h"
 #include "insn_i8086.h"
 #include "reg_i8086.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace i8086 {
 
-class TableI8086 : public TableBase {
+class TableI8086 : public EntryTable {
 public:
     TableI8086();
 
@@ -44,7 +44,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

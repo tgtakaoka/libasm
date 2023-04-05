@@ -18,13 +18,13 @@
 #define __TABLE_MC68000_H__
 
 #include "config_mc68000.h"
+#include "entry_table.h"
 #include "insn_mc68000.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace mc68000 {
 
-class TableMc68000 : public TableBase {
+class TableMc68000 : public EntryTable {
 public:
     TableMc68000();
 
@@ -39,7 +39,7 @@ public:
 
     void setAlias(bool enable);
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

@@ -42,11 +42,15 @@ public:
 #define NAME_ENTRY(name) \
     { name, TEXT_##name }
 
-        inline uint8_t name() const { return pgm_read_byte(&this->_name); }
+        inline uint8_t name() const {
+            return pgm_read_byte(&this->_name);
+        }
         inline const /*PROGMEM*/ char *text_P() const {
             return reinterpret_cast<const char *>(pgm_read_ptr(&this->_text_P));
         }
-        inline uint8_t len() const { return strlen_P(text_P()); }
+        inline uint8_t len() const {
+            return strlen_P(text_P());
+        }
     };
 
 protected:
@@ -54,7 +58,9 @@ protected:
 
     RegBase() : _uppercase(false) {}
 
-    static bool isidchar(char c) { return isalnum(c) || c == '_'; }
+    static bool isidchar(char c) {
+        return isalnum(c) || c == '_';
+    }
 
     /**
      * Parse register number from 0 to less than 20.

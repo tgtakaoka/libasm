@@ -18,13 +18,13 @@
 #define __TABLE_SCN2650_H__
 
 #include "config_scn2650.h"
+#include "entry_table.h"
 #include "insn_scn2650.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace scn2650 {
 
-class TableScn2650 : public TableBase {
+class TableScn2650 : public EntryTable {
 public:
     TableScn2650();
 
@@ -37,7 +37,7 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:

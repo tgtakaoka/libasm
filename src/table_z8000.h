@@ -19,13 +19,13 @@
 
 #include "config_z8000.h"
 #include "dis_memory.h"
+#include "entry_table.h"
 #include "insn_z8000.h"
-#include "table_base.h"
 
 namespace libasm {
 namespace z8000 {
 
-class TableZ8000 : public TableBase {
+class TableZ8000 : public EntryTable {
 public:
     TableZ8000();
 
@@ -41,7 +41,7 @@ public:
     bool segmentedModel() const;
     AddressWidth addressWidth() const;
 
-    typedef EntryPageBase<Entry> EntryPage;
+    typedef EntryTableBase<Entry> EntryPage;
     typedef CpuBase<CpuType, EntryPage> Cpu;
 
 private:
