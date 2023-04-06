@@ -20,21 +20,20 @@
 #include "config_tlcs90.h"
 #include "dis_base.h"
 #include "insn_tlcs90.h"
-#include "reg_tlcs90.h"
-#include "table_tlcs90.h"
 
 namespace libasm {
 namespace tlcs90 {
 
+struct Operand;
+
 class DisTlcs90 : public Disassembler, public Config {
 public:
-    DisTlcs90() : Disassembler(_formatter, _regs, TableTlcs90::TABLE, '$'), _formatter(), _regs() {}
+    DisTlcs90();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegTlcs90 _regs;
 
     Error readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op);
     Error decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);

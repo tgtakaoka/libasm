@@ -74,31 +74,31 @@ enum CcName : int8_t {
     CC_UGE = 16 + 15,  // == NC(15)
 };
 
-class RegTlcs90 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-    static bool isReg16(RegName name);
-    static bool isRegIndex(RegName name);
+namespace reg {
 
-    static uint8_t encodeReg8(RegName name);
-    static RegName decodeReg8(uint8_t num);
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
+bool isReg16(RegName name);
+bool isRegIndex(RegName name);
 
-    static uint8_t encodeReg16(RegName name);
-    static RegName decodeReg16(uint8_t num);
+uint8_t encodeReg8(RegName name);
+RegName decodeReg8(uint8_t num);
 
-    static uint8_t encodeIndexReg(RegName name);
-    static RegName decodeIndexReg(uint8_t num);
+uint8_t encodeReg16(RegName name);
+RegName decodeReg16(uint8_t num);
 
-    static uint8_t encodeStackReg(RegName name);
-    static RegName decodeStackReg(uint8_t num);
+uint8_t encodeIndexReg(RegName name);
+RegName decodeIndexReg(uint8_t num);
 
-    static CcName parseCcName(StrScanner &scan);
-    StrBuffer &outCcName(StrBuffer &out, CcName cc) const;
-    static uint8_t encodeCcName(CcName name);
-    static CcName decodeCcName(uint8_t num);
-};
+uint8_t encodeStackReg(RegName name);
+RegName decodeStackReg(uint8_t num);
 
+CcName parseCcName(StrScanner &scan);
+StrBuffer &outCcName(StrBuffer &out, CcName cc);
+uint8_t encodeCcName(CcName name);
+CcName decodeCcName(uint8_t num);
+
+}  // namespace reg
 }  // namespace tlcs90
 }  // namespace libasm
 

@@ -21,19 +21,13 @@
 #include "config_i8086.h"
 #include "insn_i8086.h"
 #include "reg_i8086.h"
-#include "table_i8086.h"
 
 namespace libasm {
 namespace i8086 {
 
 class AsmI8086 : public Assembler, public Config {
 public:
-    AsmI8086()
-        : Assembler(_parser, TableI8086::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmI8086();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _optimizeSegment = false; }
@@ -54,30 +48,7 @@ private:
     } _opt_optimizeSegment{_optimizeSegment};
     const Options _options{_opt_optimizeSegment};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName ptr;
-        RegName seg;
-        RegName reg;
-        RegName index;
-        bool hasVal;
-        uint32_t val32;
-        uint16_t seg16;
-        Operand()
-            : mode(M_NONE),
-              ptr(REG_UNDEF),
-              seg(REG_UNDEF),
-              reg(REG_UNDEF),
-              index(REG_UNDEF),
-              hasVal(false),
-              val32(0),
-              seg16(0) {}
-        uint8_t encodeMod() const;
-        uint8_t encodeR_m() const;
-        AddrMode immediateMode() const;
-        void print(const char *) const;
-    };
-
+    struct Operand;
     Error parseStringInst(StrScanner &scan, Operand &op) const;
     Error parsePointerSize(StrScanner &scan, Operand &op) const;
     void parseSegmentOverride(StrScanner &scan, Operand &op) const;

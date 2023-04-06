@@ -47,13 +47,13 @@ enum RegName : uint8_t {
     REG_D = 14 + 16,   // Indirect ISAR with post decrement
 };
 
-class RegF3850 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    static RegName decodeRegName(Config::opcode_t opc);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-};
+namespace reg {
 
+RegName parseRegName(StrScanner &scan);
+RegName decodeRegName(Config::opcode_t opc);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
+
+}  // namespace reg
 }  // namespace f3850
 }  // namespace libasm
 

@@ -16,11 +16,46 @@
 
 #include "asm_i8086.h"
 
+#include "table_i8086.h"
+
 namespace libasm {
 namespace i8086 {
 
+using namespace reg;
+
 static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+
+struct AsmI8086::Operand : public OperandBase {
+    AddrMode mode;
+    RegName ptr;
+    RegName seg;
+    RegName reg;
+    RegName index;
+    bool hasVal;
+    uint32_t val32;
+    uint16_t seg16;
+    Operand()
+        : mode(M_NONE),
+          ptr(REG_UNDEF),
+          seg(REG_UNDEF),
+          reg(REG_UNDEF),
+          index(REG_UNDEF),
+          hasVal(false),
+          val32(0),
+          seg16(0) {}
+    uint8_t encodeMod() const;
+    uint8_t encodeR_m() const;
+    AddrMode immediateMode() const;
+    void print(const char *) const;
+};
+
+AsmI8086::AsmI8086()
+    : Assembler(_parser, TableI8086::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {
+    reset();
+}
 
 AsmI8086::OptOptimizeSeg::OptOptimizeSeg(bool &var)
     : BoolOption(OPT_BOOL_OPTIMIZE_SEGMENT, OPT_DESC_OPTIMIZE_SEGMENT, var) {}
@@ -43,10 +78,10 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
 
 Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = RegI8086::parseRegName(p);
+    const auto reg = parseRegName(p);
     if (reg == REG_BYTE || reg == REG_WORD) {
         // Pointer size override
-        if (RegI8086::parseRegName(p.skipSpaces()) == REG_PTR) {
+        if (parseRegName(p.skipSpaces()) == REG_PTR) {
             op.ptr = reg;
             scan = p.skipSpaces();
             return OK;
@@ -58,8 +93,8 @@ Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = RegI8086::parseRegName(p);
-    if (RegI8086::isSegmentReg(reg)) {
+    const auto reg = parseRegName(p);
+    if (isSegmentReg(reg)) {
         // Segment Override
         if (p.skipSpaces().expect(':')) {
             op.seg = reg;
@@ -70,7 +105,7 @@ void AsmI8086::parseSegmentOverride(StrScanner &scan, Operand &op) const {
 
 void AsmI8086::parseBaseRegister(StrScanner &scan, Operand &op) const {
     auto p = scan;
-    const auto reg = RegI8086::parseRegName(p);
+    const auto reg = parseRegName(p);
     if (reg == REG_BX || reg == REG_BP) {
         op.reg = reg;
         scan = p.skipSpaces();
@@ -84,7 +119,7 @@ void AsmI8086::parseIndexRegister(StrScanner &scan, Operand &op) const {
             return;
         p.skipSpaces();
     }
-    const auto reg = RegI8086::parseRegName(p);
+    const auto reg = parseRegName(p);
     if (reg == REG_SI || reg == REG_DI) {
         op.index = reg;
         scan = p.skipSpaces();
@@ -141,8 +176,8 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     auto a = p;
-    const auto reg = RegI8086::parseRegName(a);
-    if (RegI8086::isGeneralReg(reg)) {
+    const auto reg = parseRegName(a);
+    if (isGeneralReg(reg)) {
         op.reg = reg;
         switch (reg) {
         case REG_AL:
@@ -158,13 +193,13 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_DX;
             break;
         default:
-            op.mode = (RegI8086::generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
+            op.mode = (generalRegSize(reg) == SZ_BYTE) ? M_BREG : M_WREG;
             break;
         }
         scan = a;
         return OK;
     }
-    if (RegI8086::isSegmentReg(reg)) {
+    if (isSegmentReg(reg)) {
         op.reg = reg;
         op.mode = (reg == REG_CS) ? M_CS : M_SREG;
         scan = a;
@@ -245,7 +280,7 @@ void AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
 }
 
 void AsmI8086::emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos) {
-    const auto num = RegI8086::encodeRegNum(op.reg);
+    const auto num = encodeRegNum(op.reg);
     switch (pos) {
     case P_OREG:
         insn.embed(num);

@@ -16,25 +16,28 @@
 
 #include "dis_z80.h"
 
+#include "reg_z80.h"
 #include "table_z80.h"
 
 namespace libasm {
 namespace z80 {
 
+using namespace reg;
+
+DisZ80::DisZ80() : Disassembler(_formatter, TableZ80::TABLE, '$'), _formatter() {
+    reset();
+}
+
 StrBuffer &DisZ80::outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits) {
     return outHex(out.letter('('), addr, bits).letter(')');
 }
 
-StrBuffer &DisZ80::outRegister(StrBuffer &out, RegName reg) {
-    return _regs.outRegName(out, reg);
-}
-
 StrBuffer &DisZ80::outIndirectReg(StrBuffer &out, RegName reg) {
-    return outRegister(out.letter('('), reg).letter(')');
+    return outRegName(out.letter('('), reg).letter(')');
 }
 
 StrBuffer &DisZ80::outIndexOffset(StrBuffer &out, RegName reg, int8_t offset) {
-    outRegister(out.letter('('), reg);
+    outRegName(out.letter('('), reg);
     if (offset >= 0)
         out.letter('+');
     return outDec(out, offset, -8).letter(')');
@@ -43,7 +46,7 @@ StrBuffer &DisZ80::outIndexOffset(StrBuffer &out, RegName reg, int8_t offset) {
 StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) {
     if (reg == REG_HL)
         return outIndirectReg(out, reg);
-    return outRegister(out, reg);
+    return outRegName(out, reg);
 }
 
 Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &out) {
@@ -56,13 +59,13 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     if (TableZ80::TABLE.searchOpCode(ixBit, out))
         return setError(ixBit);
 
-    const auto reg = RegZ80::decodeDataReg(opc);
+    const auto reg = decodeDataReg(opc);
     if (reg != REG_HL)
         return setError(UNKNOWN_INSTRUCTION);
     const auto dst = ixBit.dst();
     if (dst == M_BIT)
         outHex(out, (opc >> 3) & 7, 3).comma();
-    outIndexOffset(out, RegZ80::decodeIndexReg(insn), offset);
+    outIndexOffset(out, decodeIndexReg(insn), offset);
     return setError(insn);
 }
 
@@ -90,31 +93,31 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, Ad
         outIndirectAddr(out, insn.readByte(memory), 8);
         break;
     case M_INDX:
-        outIndexOffset(out, RegZ80::decodeIndexReg(insn), insn.readByte(memory));
+        outIndexOffset(out, decodeIndexReg(insn), insn.readByte(memory));
         break;
     case M_CC4:
-        _regs.outCcName(out, RegZ80::decodeCcName((opc >> 3) & 3));
+        outCcName(out, decodeCcName((opc >> 3) & 3));
         return OK;
     case M_CC8:
-        _regs.outCcName(out, RegZ80::decodeCcName(opc >> 3));
+        outCcName(out, decodeCcName(opc >> 3));
         return OK;
     case M_REL:
         return decodeRelative(memory, insn, out);
     case M_PTR:
     case M_PIX:
-        outRegister(out, RegZ80::decodePointerReg(opc >> 4, insn));
+        outRegName(out, decodePointerReg(opc >> 4, insn));
         return OK;
     case M_STK:
-        outRegister(out, RegZ80::decodeStackReg(opc >> 4));
+        outRegName(out, decodeStackReg(opc >> 4));
         return OK;
     case I_BCDE:
-        outIndirectReg(out, RegZ80::decodeIndirectBase(opc >> 4));
+        outIndirectReg(out, decodeIndirectBase(opc >> 4));
         return OK;
     case M_REG:
-        outDataReg(out, RegZ80::decodeDataReg(opc));
+        outDataReg(out, decodeDataReg(opc));
         return OK;
     case M_DST:
-        outDataReg(out, RegZ80::decodeDataReg(opc >> 3));
+        outDataReg(out, decodeDataReg(opc >> 3));
         return OK;
     case M_VEC:
         outHex(out, opc & 0x38, 8);
@@ -131,34 +134,34 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, Ad
         out.letter(opc + '0');
         return OK;
     case R_IR:
-        outRegister(out, RegZ80::decodeIrReg(opc >> 3));
+        outRegName(out, decodeIrReg(opc >> 3));
         return OK;
     case R_IXIY:
-        outRegister(out, RegZ80::decodeIndexReg(insn));
+        outRegName(out, decodeIndexReg(insn));
         return OK;
     case R_A:
-        outRegister(out, REG_A);
+        outRegName(out, REG_A);
         return OK;
     case R_DE:
-        outRegister(out, REG_DE);
+        outRegName(out, REG_DE);
         return OK;
     case R_HL:
-        outRegister(out, REG_HL);
+        outRegName(out, REG_HL);
         return OK;
     case R_SP:
-        outRegister(out, REG_SP);
+        outRegName(out, REG_SP);
         return OK;
     case R_AF:
-        outRegister(out, REG_AF);
+        outRegName(out, REG_AF);
         return OK;
     case R_AFP:
-        outRegister(out, REG_AFP);
+        outRegName(out, REG_AFP);
         return OK;
     case R_IM:
-        outRegister(out, REG_IM);
+        outRegName(out, REG_IM);
         return OK;
     case I_IXIY:
-        outIndirectReg(out, RegZ80::decodeIndexReg(insn));
+        outIndirectReg(out, decodeIndexReg(insn));
         return OK;
     case I_C:
         outIndirectReg(out, REG_C);

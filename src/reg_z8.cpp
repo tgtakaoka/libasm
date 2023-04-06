@@ -20,19 +20,21 @@
 #include "text_z8.h"
 
 using namespace libasm::text::z8;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace z8 {
+namespace reg {
 
-bool RegZ8::isWorkRegAlias(uint8_t addr) {
+bool isWorkRegAlias(uint8_t addr) {
     return (addr & 0xF0) == (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
 }
 
-uint8_t RegZ8::encodeWorkRegAddr(RegName name) {
+uint8_t encodeWorkRegAddr(RegName name) {
     return encodeRegName(name) | (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
 }
 
-RegName RegZ8::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('R')) {
         if (p.iexpect('R')) {
@@ -54,32 +56,32 @@ RegName RegZ8::parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-uint8_t RegZ8::encodeRegName(RegName name) {
+uint8_t encodeRegName(RegName name) {
     return uint8_t(name) & 0xF;
 }
 
-RegName RegZ8::decodeRegNum(uint8_t num) {
+RegName decodeRegNum(uint8_t num) {
     return RegName(num & 0xF);
 }
 
-RegName RegZ8::decodePairRegNum(uint8_t num) {
+RegName decodePairRegNum(uint8_t num) {
     if (num % 2)
         return REG_UNDEF;
     return RegName((num & 0xF) + 16);
 }
 
-bool RegZ8::isPairReg(RegName name) {
+bool isPairReg(RegName name) {
     return int8_t(name) >= 16;
 }
 
-StrBuffer &RegZ8::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto num = uint8_t(name);
     if (num < 16)
         return outRegNumber(out.letter('R'), num);
     return outRegNumber(out.text_P(PSTR("RR")), num - 16);
 }
 
-static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_F),
         NAME_ENTRY(CC_LT),
         NAME_ENTRY(CC_LE),
@@ -104,30 +106,31 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_T),
 };
 
-CcName RegZ8::parseCcName(StrScanner &scan) {
+CcName parseCcName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
 }
 
-StrBuffer &RegZ8::outCcName(StrBuffer &out, CcName name) const {
+StrBuffer &outCcName(StrBuffer &out, CcName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-uint8_t RegZ8::encodeCcName(CcName name) {
+uint8_t encodeCcName(CcName name) {
     const auto cc = uint8_t(name);
     if (cc < 16)
         return cc;
     return cc - 16;  // Aliases
 }
 
-CcName RegZ8::decodeCcNum(uint8_t num) {
+CcName decodeCcNum(uint8_t num) {
     return CcName(num);
 }
 
+}  // namespace reg
 }  // namespace z8
 }  // namespace libasm
 

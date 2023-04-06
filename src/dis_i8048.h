@@ -20,23 +20,18 @@
 #include "config_i8048.h"
 #include "dis_base.h"
 #include "insn_i8048.h"
-#include "reg_i8048.h"
-#include "table_i8048.h"
 
 namespace libasm {
 namespace i8048 {
 
 class DisI8048 : public Disassembler, public Config {
 public:
-    DisI8048() : Disassembler(_formatter, _regs, TableI8048::TABLE, '$'), _formatter(), _regs() {}
+    DisI8048();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegI8048 _regs;
-
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodeRReg(InsnI8048 &insn, StrBuffer &out, const AddrMode mode);
     Error decodeAddress(DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode);

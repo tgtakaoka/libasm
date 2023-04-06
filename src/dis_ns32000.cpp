@@ -16,10 +16,13 @@
 
 #include "dis_ns32000.h"
 
+#include "reg_ns32000.h"
 #include "table_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
+
+using namespace reg;
 
 static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
 static const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
@@ -29,6 +32,10 @@ static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
 static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
 static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
 static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
+
+DisNs32000::DisNs32000() : Disassembler(_formatter, TableNs32000::TABLE, '*'), _formatter() {
+    reset();
+}
 
 void DisNs32000::reset() {
     Disassembler::reset();
@@ -223,7 +230,7 @@ Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn, StrBuffer
 
 Error DisNs32000::decodeConfig(const InsnNs32000 &insn, StrBuffer &out, OprPos pos) {
     const uint8_t configs = getOprField(insn, pos);
-    _regs.outConfigNames(out, configs);
+    outConfigNames(out, configs);
     return OK;
 }
 
@@ -231,7 +238,7 @@ Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, StrBuffer &out, OprPos p
     const uint8_t strOpts = getOprField(insn, pos);
     if (_stringOptionBracket)
         out.letter('[');
-    _regs.outStrOptNames(out, strOpts);
+    outStrOptNames(out, strOpts);
     if (_stringOptionBracket)
         out.letter(']');
     return OK;
@@ -251,7 +258,7 @@ Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBu
         if (list & mask) {
             if (sep)
                 out.letter(sep);
-            _regs.outRegName(out, RegNs32000::decodeRegName(reg));
+            outRegName(out, decodeRegName(reg));
             sep = ',';
         }
         if (push)
@@ -272,7 +279,7 @@ Error DisNs32000::decodeGeneric(
     if (scaledIndex) {
         size = OprSize(gen & 0x3);
         const uint8_t indexByte = insn.indexByte(pos);
-        index = RegNs32000::decodeRegName(indexByte);
+        index = decodeRegName(indexByte);
         gen = indexByte >> 3;
     }
     Displacement disp, disp2;
@@ -288,10 +295,10 @@ Error DisNs32000::decodeGeneric(
     case 7:  // M_GREG, M_FREG
         if (mode == M_GENA)
             return setError(REGISTER_NOT_ALLOWED);
-        reg = RegNs32000::decodeRegName(gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
+        reg = decodeRegName(gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
         if (scaledIndex)
             out.letter('0').letter('(');
-        _regs.outRegName(out, reg);
+        outRegName(out, reg);
         if (scaledIndex)
             out.letter(')');
         break;
@@ -303,11 +310,11 @@ Error DisNs32000::decodeGeneric(
     case 13:
     case 14:
     case 15:  // M_RREL
-        reg = RegNs32000::decodeRegName(gen);
+        reg = decodeRegName(gen);
         if (readDisplacement(memory, insn, disp))
             return getError();
         outDisplacement(out, disp);
-        _regs.outRegName(out.letter('('), reg).letter(')');
+        outRegName(out.letter('('), reg).letter(')');
         break;
     case 0x10:
         reg = REG_FP;
@@ -326,7 +333,7 @@ Error DisNs32000::decodeGeneric(
         if (reg != REG_EXT || disp2.val32)
             outDisplacement(out, disp2).letter('(');
         outDisplacement(out, disp);
-        _regs.outRegName(out.letter('('), reg).letter(')');
+        outRegName(out.letter('('), reg).letter(')');
         if (reg != REG_EXT || disp2.val32)
             out.letter(')');
         break;
@@ -353,7 +360,7 @@ Error DisNs32000::decodeGeneric(
             return getError();
         if (readDisplacement(memory, insn, disp2))
             return getError();
-        _regs.outRegName(out, REG_EXT);
+        outRegName(out, REG_EXT);
         outDisplacement(out.letter('('), disp).letter(')');
         out.letter('+');
         if (disp2.val32 < 0)
@@ -363,7 +370,7 @@ Error DisNs32000::decodeGeneric(
             out.letter(')');
         break;
     case 0x17:  // M_TOS
-        _regs.outRegName(out, REG_TOS);
+        outRegName(out, REG_TOS);
         break;
     case 0x18:
         reg = REG_FP;
@@ -396,16 +403,13 @@ Error DisNs32000::decodeGeneric(
         } else {
             outDisplacement(out, disp);
         }
-        _regs.outRegName(out.letter('('), reg).letter(')');
+        outRegName(out.letter('('), reg).letter(')');
         break;
     default:
         return setError(ILLEGAL_OPERAND_MODE);
     }
     if (index != REG_UNDEF) {
-        _regs.outRegName(out.letter('['), index)
-                .letter(':')
-                .letter(_regs.indexSizeChar(size))
-                .letter(']');
+        outRegName(out.letter('['), index).letter(':').letter(indexSizeChar(size)).letter(']');
     }
     return OK;
 }
@@ -415,20 +419,20 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
     const uint8_t field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
-        _regs.outRegName(out, RegNs32000::decodeRegName(field));
+        outRegName(out, decodeRegName(field));
         break;
     case M_PREG: {
-        const auto preg = RegNs32000::decodePregName(field);
+        const auto preg = decodePregName(field);
         if (preg == PREG_UNDEF)
             return setError(UNKNOWN_REGISTER);
-        _regs.outPregName(out, preg);
+        outPregName(out, preg);
         break;
     }
     case M_MREG: {
-        const auto mreg = RegNs32000::decodeMregName(field);
+        const auto mreg = decodeMregName(field);
         if (mreg == MREG_UNDEF)
             return setError(UNKNOWN_REGISTER);
-        _regs.outMregName(out, mreg);
+        outMregName(out, mreg);
         break;
     }
     case M_CONF:

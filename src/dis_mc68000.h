@@ -21,23 +21,19 @@
 #include "dis_base.h"
 #include "insn_mc68000.h"
 #include "reg_mc68000.h"
-#include "table_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
 
 class DisMc68000 : public Disassembler, public Config {
 public:
-    DisMc68000()
-        : Disassembler(_formatter, _regs, TableMc68000::TABLE, '*'), _formatter(), _regs() {}
+    DisMc68000();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     MotorolaValueFormatter _formatter;
-    RegMc68000 _regs;
 
-    StrBuffer &outRegName(StrBuffer &out, RegName regName);
     StrBuffer &outOprSize(StrBuffer &out, OprSize size);
     StrBuffer &outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suffix);
     StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, bool pop,

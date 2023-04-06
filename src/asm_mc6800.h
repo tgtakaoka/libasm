@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_mc6800.h"
 #include "insn_mc6800.h"
-#include "reg_mc6800.h"
-#include "table_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
 
 class AsmMc6800 : public Assembler, public Config {
 public:
-    AsmMc6800()
-        : Assembler(_parser, TableMc6800::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location, _operators),
-          _pseudos() {}
+    AsmMc6800();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -45,13 +40,7 @@ private:
     const Mc68xxOperatorParser _operators;
     struct PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        uint8_t size;
-        uint16_t val16;
-        Operand() : mode(M_NONE), size(0), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void emitRelative(InsnMc6800 &insn, const Operand &op);
     void emitImmediate(InsnMc6800 &insn, AddrMode mode, const Operand &op);

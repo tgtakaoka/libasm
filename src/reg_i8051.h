@@ -41,16 +41,16 @@ enum RegName : int8_t {
     REG_DPTR = 4 + 8,
 };
 
-class RegI8051 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static bool isRReg(RegName name);
-    static uint8_t encodeRReg(RegName name);
-    static RegName decodeRReg(uint8_t num);
-};
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
+bool isRReg(RegName name);
+uint8_t encodeRRegName(RegName name);
+RegName decodeRRegNum(uint8_t num);
+
+}  // namespace reg
 }  // namespace i8051
 }  // namespace libasm
 

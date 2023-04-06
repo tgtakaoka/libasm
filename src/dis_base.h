@@ -82,7 +82,7 @@ protected:
     bool _relativeTarget = false;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, entry::Table &table, char curSym);
+    Disassembler(ValueFormatter &formatter, entry::Table &table, char curSym);
 
     /** Lookup |addr| value and returns symbol. */
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;

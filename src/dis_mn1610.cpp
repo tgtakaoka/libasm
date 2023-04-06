@@ -16,20 +16,31 @@
 
 #include "dis_mn1610.h"
 
+#include "reg_mn1610.h"
 #include "table_mn1610.h"
 
 namespace libasm {
 namespace mn1610 {
 
-Error DisMn1610::outCcName(StrBuffer &out, CcName cc) {
+using namespace reg;
+
+DisMn1610::DisMn1610() : Disassembler(_formatter, TableMn1610::TABLE, '*'), _formatter(true) {
+    reset();
+}
+
+AddressWidth DisMn1610::addressWidth() const {
+    return TableMn1610::TABLE.addressWidth();
+}
+
+Error DisMn1610::outConditionCode(StrBuffer &out, CcName cc) {
     if (cc == CC_UNDEF)
         return setError(ILLEGAL_OPERAND);
     if (cc != CC_NONE)
-        _regs.outCcName(out, cc);
+        outCcName(out, cc);
     return OK;
 }
 
-Error DisMn1610::outRegName(StrBuffer &out, RegName reg, AddrMode mode) {
+Error DisMn1610::outRegister(StrBuffer &out, RegName reg, AddrMode mode) {
     if (reg == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
     if (reg == REG_STR && (mode == M_RDG || mode == M_RSG))
@@ -40,7 +51,7 @@ Error DisMn1610::outRegName(StrBuffer &out, RegName reg, AddrMode mode) {
         return OK;
     if (reg == REG_SIR && mode == M_RHW)
         reg = REG_SOR;
-    _regs.outRegName(out, reg);
+    outRegName(out, reg);
     return OK;
 }
 
@@ -65,7 +76,7 @@ Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::ui
             outRelAddr(out, target, base, 8);
         } else {
             outAbsAddr(out, target).letter('-').letter(_curSym);
-            _regs.outRegName(out.letter('('), REG_IC).letter(')');
+            outRegName(out.letter('('), REG_IC).letter(')');
         }
         if (mode == 3)
             out.letter(')');
@@ -78,7 +89,7 @@ Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::ui
     case 7:
         outAbsAddr(out.letter('('), addr, 8).letter(')');
     print_index:
-        _regs.outRegName(out.letter('('), (mode == 4 || mode == 6) ? REG_X0 : REG_X1).letter(')');
+        outRegName(out.letter('('), (mode == 4 || mode == 6) ? REG_X0 : REG_X1).letter(')');
         break;
     }
     return OK;
@@ -88,17 +99,17 @@ Error DisMn1610::decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &o
     auto opc = insn.opCode();
     switch (mode) {
     case M_SKIP:
-        return outCcName(out, RegMn1610::decodeSkip(opc >> 4));
+        return outConditionCode(out, decodeSkip(opc >> 4));
     case M_RD:
     case M_RDG:
-        return outRegName(out, RegMn1610::decodeRegNum(opc >> 8), mode);
+        return outRegister(out, decodeRegNum(opc >> 8), mode);
     case M_RS:
     case M_RSG:
-        return outRegName(out, RegMn1610::decodeRegNum(opc), mode);
+        return outRegister(out, decodeRegNum(opc), mode);
     case M_GEN:
         return outGenericAddr(out, opc, insn.address());
     case M_EOP:
-        return outCcName(out, RegMn1610::decodeEop(opc));
+        return outConditionCode(out, decodeEop(opc));
     case M_IM4:
     case M_BIT:
         outDec(out, opc & 0xF, 4);
@@ -120,38 +131,38 @@ Error DisMn1610::decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &o
         outAbsAddr(out, insn.readUint16(memory), 16);
         return OK;
     case M_R0:
-        return outRegName(out, REG_R0, mode);
+        return outRegister(out, REG_R0, mode);
     case M_DR0:
-        return outRegName(out, REG_DR0, mode);
+        return outRegister(out, REG_DR0, mode);
     case M_RI1:
     case M_RI2:
-        outRegName(out.letter('('), mode == M_RI1 ? REG_R1 : REG_R2, mode);
+        outRegister(out.letter('('), mode == M_RI1 ? REG_R1 : REG_R2, mode);
         out.letter(')');
         return OK;
     case M_RI:
-        outRegName(out.letter('('), RegMn1610::decodeIndirect(opc), mode);
+        outRegister(out.letter('('), decodeIndirect(opc), mode);
         out.letter(')');
         return OK;
     case M_RIAU:
         return outIndirect(out, opc);
     case M_SB:
-        if (RegMn1610::decodeSegment((opc >> 4) & 3) == REG_CSBR)
+        if (decodeSegment((opc >> 4) & 3) == REG_CSBR)
             return OK;  // Can be omitted.
-        return outRegName(out, RegMn1610::decodeSegment((opc >> 4) & 3), mode);
+        return outRegister(out, decodeSegment((opc >> 4) & 3), mode);
     case M_IABS:
         outAbsAddr(out.letter('('), insn.readUint16(memory), 16);
         out.letter(')');
         return OK;
     case M_COP:
-        return outCcName(out, RegMn1610::decodeCop(opc >> 3));
+        return outConditionCode(out, decodeCop(opc >> 3));
     case M_RBW:
     case M_RB:
-        return outRegName(out, RegMn1610::decodeSegment(opc >> 4), mode);
+        return outRegister(out, decodeSegment(opc >> 4), mode);
     case M_RHW:
     case M_RHR:
-        return outRegName(out, RegMn1610::decodeHardware(opc >> 4), mode);
+        return outRegister(out, decodeHardware(opc >> 4), mode);
     case M_RP:
-        return outRegName(out, RegMn1610::decodeSpecial(opc >> 4), mode);
+        return outRegister(out, decodeSpecial(opc >> 4), mode);
     default:
         return OK;
     }
@@ -163,20 +174,20 @@ Error DisMn1610::outIndirect(StrBuffer &out, Config::opcode_t opc) {
         return setError(ILLEGAL_OPERAND_MODE);
     if (mode == 2)
         out.letter('-');
-    _regs.outRegName(out.letter('('), RegMn1610::decodeIndirect(opc)).letter(')');
+    outRegName(out.letter('('), decodeIndirect(opc)).letter(')');
     if (mode == 3)
         out.letter('+');
     return OK;
 }
 
 StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode) {
-    if (mode == M_SKIP && RegMn1610::decodeSkip(opc >> 4) == CC_NONE)
+    if (mode == M_SKIP && decodeSkip(opc >> 4) == CC_NONE)
         return out;
-    if (mode == M_EOP && RegMn1610::decodeEop(opc) == CC_NONE)
+    if (mode == M_EOP && decodeEop(opc) == CC_NONE)
         return out;
-    if (mode == M_COP && RegMn1610::decodeCop(opc >> 3) == CC_NONE)
+    if (mode == M_COP && decodeCop(opc >> 3) == CC_NONE)
         return out;
-    if (mode == M_SB && RegMn1610::decodeSegment((opc >> 4) & 3) == REG_CSBR)
+    if (mode == M_SB && decodeSegment((opc >> 4) & 3) == REG_CSBR)
         return out;
     return out.comma();
 }

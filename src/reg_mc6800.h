@@ -29,12 +29,12 @@ enum RegName : char {
     REG_Y = 'Y',
 };
 
-class RegMc6800 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-};
+namespace reg {
 
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
+
+}  // namespace reg
 }  // namespace mc6800
 }  // namespace libasm
 

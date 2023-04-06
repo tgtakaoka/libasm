@@ -18,8 +18,13 @@
 
 #include <ctype.h>
 
+#include "reg_z8.h"
+#include "table_z8.h"
+
 namespace libasm {
 namespace z8 {
+
+using namespace reg;
 
 static const char OPT_INT_SETRP[] PROGMEM = "setrp";
 static const char OPT_DESC_SETRP[] PROGMEM = "set register pointer";
@@ -27,6 +32,21 @@ static const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
 static const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
 static const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
 static const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+
+struct AsmZ8::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+};
+
+AsmZ8::AsmZ8()
+    : Assembler(_parser, TableZ8::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {
+    reset();
+}
 
 AsmZ8::OptSetrp1::OptSetrp1(AsmZ8::PseudoZ8 &pseudos)
     : IntOptionBase(OPT_INT_SETRP1, OPT_DESC_SETRP1), _pseudos(pseudos) {}
@@ -72,7 +92,7 @@ void AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op) 
     if (mode == M_NONE)
         return;
     if (op.reg != REG_UNDEF && (mode == M_R || mode == M_IR || mode == M_IRR)) {
-        insn.emitOperand8(RegZ8::encodeWorkRegAddr(op.reg));
+        insn.emitOperand8(encodeWorkRegAddr(op.reg));
         return;
     }
     if ((mode != M_IM || overflowUint8(op.val16)) && op.val16 >= 0x100)
@@ -84,7 +104,7 @@ void AsmZ8::encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &sr
     const auto dst = insn.dst();
     const auto &op = (dst == M_DA) ? dstOp : srcOp;
     if (dst == M_cc)
-        insn.embed(RegZ8::encodeCcName(dstOp.cc) << 4);
+        insn.embed(encodeCcName(dstOp.cc) << 4);
     insn.emitOperand16(op.val16);
 }
 
@@ -103,7 +123,7 @@ void AsmZ8::encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &src
     const auto reg = (dst == M_X) ? srcOp.reg : dstOp.reg;
     if (overflowUint8(static_cast<uint16_t>(op.val16)))
         setErrorIf(op, OVERFLOW_RANGE);
-    const auto opr1 = RegZ8::encodeRegName(op.reg) | (RegZ8::encodeRegName(reg) << 4);
+    const auto opr1 = encodeRegName(op.reg) | (encodeRegName(reg) << 4);
     insn.emitOperand8(opr1);
     insn.emitOperand8(op.val16);
 }
@@ -112,7 +132,7 @@ void AsmZ8::encodeIndirectRegPair(InsnZ8 &insn, const Operand &dstOp, const Oper
     const auto dst = insn.dst();
     const auto pair = (dst == M_Irr) ? dstOp.reg : srcOp.reg;
     const auto reg = (dst == M_Irr) ? srcOp.reg : dstOp.reg;
-    const auto opr = RegZ8::encodeRegName(pair) | (RegZ8::encodeRegName(reg) << 4);
+    const auto opr = encodeRegName(pair) | (encodeRegName(reg) << 4);
     insn.emitOperand8(opr);
 }
 
@@ -122,7 +142,7 @@ void AsmZ8::encodeInOpCode(InsnZ8 &insn, const Operand &dstOp, const Operand &sr
     const auto reg = (dst == M_r) ? dstOp.reg : srcOp.reg;
     const auto &op = (dst == M_r) ? srcOp : dstOp;
     const auto mode = (dst == M_r) ? src : dst;
-    insn.embed(RegZ8::encodeRegName(reg) << 4);
+    insn.embed(encodeRegName(reg) << 4);
     encodeOperand(insn, mode, op);
 }
 
@@ -131,13 +151,13 @@ void AsmZ8::encodeMultiOperands(
     const auto dst = insn.dst();
     const auto src = insn.src();
     if (src == M_Ir && insn.ext() == M_RA) {
-        const auto opr1 = RegZ8::encodeRegName(dstOp.reg) | (RegZ8::encodeRegName(srcOp.reg) << 4);
+        const auto opr1 = encodeRegName(dstOp.reg) | (encodeRegName(srcOp.reg) << 4);
         insn.emitOperand8(opr1);
         encodeRelative(insn, extOp);
         return;
     }
     if (dst == M_r && (src == M_r || src == M_Ir)) {
-        const auto opr = RegZ8::encodeRegName(srcOp.reg) | (RegZ8::encodeRegName(dstOp.reg) << 4);
+        const auto opr = encodeRegName(srcOp.reg) | (encodeRegName(dstOp.reg) << 4);
         insn.emitOperand8(opr);
         return;
     }
@@ -147,16 +167,14 @@ void AsmZ8::encodeMultiOperands(
         return;
     }
     if (dst == M_r || dst == M_Ir) {
-        const auto opr1 = RegZ8::encodeRegName(srcOp.reg) | (RegZ8::encodeRegName(dstOp.reg) << 4);
+        const auto opr1 = encodeRegName(srcOp.reg) | (encodeRegName(dstOp.reg) << 4);
         insn.emitOperand8(opr1);
         return;
     }
     const auto dstFirst = insn.dstFirst();
-    const auto dstVal =
-            (dstOp.reg == REG_UNDEF) ? dstOp.val16 : RegZ8::encodeWorkRegAddr(dstOp.reg);
-    const auto srcVal = (srcOp.reg == REG_UNDEF || src == M_IM)
-                                ? srcOp.val16
-                                : RegZ8::encodeWorkRegAddr(srcOp.reg);
+    const auto dstVal = (dstOp.reg == REG_UNDEF) ? dstOp.val16 : encodeWorkRegAddr(dstOp.reg);
+    const auto srcVal =
+            (srcOp.reg == REG_UNDEF || src == M_IM) ? srcOp.val16 : encodeWorkRegAddr(srcOp.reg);
     if (src == M_IM && overflowUint8(srcOp.val16))
         setErrorIf(srcOp, OVERFLOW_RANGE);
     insn.emitOperand8(dstFirst ? dstVal : srcVal);
@@ -192,7 +210,7 @@ void AsmZ8::encodePostByte(
     }
     if (dst == M_DA || src == M_DA) {  // P4: LDC, LDE
         const auto reg = (dst == M_DA) ? srcOp.reg : dstOp.reg;
-        uint8_t opr1 = RegZ8::encodeRegName(reg) << 4;
+        uint8_t opr1 = encodeRegName(reg) << 4;
         if (post == PF4_1)
             opr1 |= 1;
         insn.emitOperand8(opr1);
@@ -202,7 +220,7 @@ void AsmZ8::encodePostByte(
     if (dst == M_Irr || src == M_Irr) {  // P1: LDCxx, LDExx
         const auto regL = (dst == M_Irr) ? dstOp.reg : srcOp.reg;
         const auto regH = (dst == M_Irr) ? srcOp.reg : dstOp.reg;
-        uint8_t opr1 = (RegZ8::encodeRegName(regH) << 4) | RegZ8::encodeRegName(regL);
+        uint8_t opr1 = (encodeRegName(regH) << 4) | encodeRegName(regL);
         if (post == PF1_1)
             opr1 |= 1;
         insn.emitOperand8(opr1);
@@ -212,7 +230,7 @@ void AsmZ8::encodePostByte(
         const auto dstIdx = (dst == M_XL || dst == M_XS);
         const auto &idx = dstIdx ? dstOp : srcOp;
         const auto &op = dstIdx ? srcOp : dstOp;
-        uint8_t opr1 = (RegZ8::encodeRegName(op.reg) << 4) | RegZ8::encodeRegName(idx.reg);
+        uint8_t opr1 = (encodeRegName(op.reg) << 4) | encodeRegName(idx.reg);
         if (post == PF1_1)
             opr1 |= 1;
         insn.emitOperand8(opr1);
@@ -228,7 +246,7 @@ void AsmZ8::encodePostByte(
             setErrorIf(extOp, ILLEGAL_BIT_NUMBER);
             bitNo &= 7;
         }
-        uint8_t opr1 = (RegZ8::encodeRegName(srcOp.reg) << 4) | (bitNo << 1);
+        uint8_t opr1 = (encodeRegName(srcOp.reg) << 4) | (bitNo << 1);
         if (post == PF1_1)
             opr1 |= 1;
         insn.emitOperand8(opr1);
@@ -242,7 +260,7 @@ void AsmZ8::encodePostByte(
             setErrorIf(srcOp, ILLEGAL_BIT_NUMBER);
             bitNo &= 7;
         }
-        uint8_t opr1 = (RegZ8::encodeRegName(dstOp.reg) << 4) | (bitNo << 1);
+        uint8_t opr1 = (encodeRegName(dstOp.reg) << 4) | (bitNo << 1);
         if (post == PF1_1)
             opr1 |= 1;
         insn.emitOperand8(opr1);
@@ -257,7 +275,7 @@ void AsmZ8::encodePostByte(
         setErrorIf(bitOp, ILLEGAL_BIT_NUMBER);
         bitNo &= 7;
     }
-    uint8_t opr1 = (RegZ8::encodeRegName(reg) << 4) | (bitNo << 1);
+    uint8_t opr1 = (encodeRegName(reg) << 4) | (bitNo << 1);
     if (post == PF1_1)
         opr1 |= 1;
     insn.emitOperand8(opr1);
@@ -272,7 +290,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    op.cc = RegZ8::parseCcName(p);
+    op.cc = parseCcName(p);
     if (op.cc != CC_UNDEF) {
         op.mode = M_cc;
         scan = p;
@@ -292,17 +310,17 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir && isspace(*p))
         return op.setError(UNKNOWN_OPERAND);
 
-    op.reg = RegZ8::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (op.reg == REG_ILLEGAL)
             return op.setError(ILLEGAL_REGISTER);
-        const auto pair = RegZ8::isPairReg(op.reg);
+        const auto pair = isPairReg(op.reg);
         if (indir) {
             op.mode = pair ? M_Irr : M_Ir;
         } else {
             op.mode = pair ? M_rr : M_r;
         }
-        op.val16 = RegZ8::encodeWorkRegAddr(op.reg);
+        op.val16 = encodeWorkRegAddr(op.reg);
         scan = p;
         return OK;
     }
@@ -316,14 +334,14 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     if (p.skipSpaces().expect('(')) {
         if (indir || forceRegAddr)
             op.setError(UNKNOWN_OPERAND);
-        op.reg = RegZ8::parseRegName(p);
+        op.reg = parseRegName(p);
         if (op.reg == REG_UNDEF) {
             const auto val16 = parseExpr16(p, op, ')');
             if (op.hasError())
                 return getError();
             if (!_pseudos.isWorkReg(val16))
                 return op.setError(UNKNOWN_OPERAND);
-            op.reg = RegZ8::decodeRegNum(val16 & 0xF);
+            op.reg = decodeRegNum(val16 & 0xF);
         }
         if (!p.skipSpaces().expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
@@ -345,7 +363,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
             op.setErrorIf(OVERFLOW_RANGE);
         if (!forceRegAddr && _pseudos.isWorkReg(op.val16)) {
             op.mode = (op.val16 & 1) == 0 ? M_IWW : M_IW;
-            op.reg = RegZ8::decodeRegNum(op.val16 & 0xF);
+            op.reg = decodeRegNum(op.val16 & 0xF);
             return OK;
         }
         op.mode = (op.val16 & 1) == 0 ? M_IRR : M_IR;
@@ -363,7 +381,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (_pseudos.isWorkReg(op.val16)) {
         op.mode = (op.val16 & 1) == 0 ? M_WW : M_W;
-        op.reg = RegZ8::decodeRegNum(op.val16 & 0xF);
+        op.reg = decodeRegNum(op.val16 & 0xF);
         return OK;
     }
     op.mode = (op.val16 & 1) == 0 ? M_RR : M_R;
@@ -438,9 +456,9 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
             encodeAbsolute(insn, dstOp, srcOp);
         } else if (dst == M_RA || src == M_RA) {
             if (dst == M_cc)
-                insn.embed(RegZ8::encodeCcName(dstOp.cc) << 4);
+                insn.embed(encodeCcName(dstOp.cc) << 4);
             if (dst == M_r)
-                insn.embed(RegZ8::encodeRegName(dstOp.reg) << 4);
+                insn.embed(encodeRegName(dstOp.reg) << 4);
             encodeRelative(insn, dst == M_RA ? dstOp : srcOp);
         } else if (dst == M_X || src == M_X) {
             encodeIndexed(insn, dstOp, srcOp);

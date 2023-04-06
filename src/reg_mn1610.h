@@ -91,42 +91,42 @@ enum CcName : int8_t {
     CC_CE = 3 + 48,
 };
 
-class RegMn1610 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    static bool isGeneric(RegName name);
-    static bool isIndex(RegName name);
-    static bool isIndirect(RegName name);
-    static bool isSegmentBase(RegName name);
-    static bool isSegment(RegName name);
-    static bool isHardware(RegName name);
-    static bool isSpecial(RegName name);
-    static uint16_t encodeGeneric(RegName name);
-    static uint16_t encodeIndex(RegName name);
-    static uint16_t encodeIndirect(RegName name);
-    static uint16_t encodeSegment(RegName name);
-    static uint16_t encodeHardware(RegName name);
-    static uint16_t encodeSpecial(RegName name);
-    static RegName decodeRegNum(uint8_t num);
-    static RegName decodeIndirect(uint8_t num);
-    static RegName decodeSegment(uint8_t num);
-    static RegName decodeHardware(uint8_t num);
-    static RegName decodeSpecial(uint8_t num);
-    StrBuffer &outRegName(StrBuffer &out, RegName name) const;
+namespace reg {
 
-    static CcName parseCcName(StrScanner &scan);
-    static bool isSkip(CcName name);
-    static bool isCop(CcName name);
-    static bool isEop(CcName name);
-    static uint16_t encodeSkip(CcName name);
-    static uint16_t encodeCop(CcName name);
-    static uint16_t encodeEop(CcName name);
-    static CcName decodeSkip(uint8_t num);
-    static CcName decodeCop(uint8_t num);
-    static CcName decodeEop(uint8_t num);
-    StrBuffer &outCcName(StrBuffer &out, CcName name) const;
-};
+RegName parseRegName(StrScanner &scan);
+bool isGeneric(RegName name);
+bool isIndex(RegName name);
+bool isIndirect(RegName name);
+bool isSegmentBase(RegName name);
+bool isSegment(RegName name);
+bool isHardware(RegName name);
+bool isSpecial(RegName name);
+uint16_t encodeGeneric(RegName name);
+uint16_t encodeIndex(RegName name);
+uint16_t encodeIndirect(RegName name);
+uint16_t encodeSegment(RegName name);
+uint16_t encodeHardware(RegName name);
+uint16_t encodeSpecial(RegName name);
+RegName decodeRegNum(uint8_t num);
+RegName decodeIndirect(uint8_t num);
+RegName decodeSegment(uint8_t num);
+RegName decodeHardware(uint8_t num);
+RegName decodeSpecial(uint8_t num);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
+CcName parseCcName(StrScanner &scan);
+bool isSkip(CcName name);
+bool isCop(CcName name);
+bool isEop(CcName name);
+uint16_t encodeSkip(CcName name);
+uint16_t encodeCop(CcName name);
+uint16_t encodeEop(CcName name);
+CcName decodeSkip(uint8_t num);
+CcName decodeCop(uint8_t num);
+CcName decodeEop(uint8_t num);
+StrBuffer &outCcName(StrBuffer &out, CcName name);
+
+}  // namespace reg
 }  // namespace mn1610
 }  // namespace libasm
 

@@ -20,20 +20,13 @@
 #include "asm_base.h"
 #include "config_z8.h"
 #include "insn_z8.h"
-#include "reg_z8.h"
-#include "table_z8.h"
 
 namespace libasm {
 namespace z8 {
 
 class AsmZ8 : public Assembler, public Config {
 public:
-    AsmZ8()
-        : Assembler(_parser, TableZ8::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmZ8();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _pseudos.setRegPointer(-1); }
@@ -78,14 +71,7 @@ private:
     } _opt_setrp{_pseudos, _opt_setrp0};
     const Options _options{_opt_setrp};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        CcName cc;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);

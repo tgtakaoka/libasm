@@ -16,14 +16,32 @@
 
 #include "asm_mc6805.h"
 
+#include "reg_mc6805.h"
+#include "table_mc6805.h"
+
 namespace libasm {
 namespace mc6805 {
+
+using namespace reg;
 
 static const char OPT_INT_PCBITS[] = "pc-bits";
 static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
-AsmMc6805::OptPcBits::OptPcBits(uint8_t &var)
-    : IntOption(OPT_INT_PCBITS, OPT_DESC_PCBITS, var) {}
+struct AsmMc6805::Operand : public OperandBase {
+    AddrMode mode;
+    int8_t size;
+    uint16_t val16;
+    Operand() : mode(M_NONE), size(0), val16(0) {}
+};
+
+AsmMc6805::AsmMc6805()
+    : Assembler(_parser, TableMc6805::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location, _operators),
+      _pseudos() {
+    reset();
+}
+
+AsmMc6805::OptPcBits::OptPcBits(uint8_t &var) : IntOption(OPT_INT_PCBITS, OPT_DESC_PCBITS, var) {}
 
 Error AsmMc6805::OptPcBits::check(int32_t value) const {
     return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
@@ -51,7 +69,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     if (p.expect(',')) {
-        const auto reg = RegMc6805::parseRegName(p);
+        const auto reg = parseRegName(p);
         if (reg == REG_X) {
             op.mode = M_IX0;
             scan = p;
@@ -72,7 +90,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
 
     auto a = p;
     if (a.skipSpaces().expect(',')) {
-        const auto reg = RegMc6805::parseRegName(a.skipSpaces());
+        const auto reg = parseRegName(a.skipSpaces());
         if (reg == REG_X) {
             if (op.size == 8) {
                 op.mode = M_IDX;

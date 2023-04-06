@@ -16,10 +16,13 @@
 
 #include "reg_cdp1802.h"
 
+using namespace libasm::reg;
+
 namespace libasm {
 namespace cdp1802 {
+namespace reg {
 
-RegName RegCdp1802::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('R')) {
         const auto num = parseRegNumber(p, 16);
@@ -31,10 +34,11 @@ RegName RegCdp1802::parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-StrBuffer &RegCdp1802::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     return outRegNumber(out.letter('R'), int8_t(name));
 }
 
+}  // namespace reg
 }  // namespace cdp1802
 }  // namespace libasm
 

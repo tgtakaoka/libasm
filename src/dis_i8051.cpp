@@ -16,13 +16,16 @@
 
 #include "dis_i8051.h"
 
+#include "reg_i8051.h"
 #include "table_i8051.h"
 
 namespace libasm {
 namespace i8051 {
 
-StrBuffer &DisI8051::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
+using namespace reg;
+
+DisI8051::DisI8051() : Disassembler(_formatter, TableI8051::TABLE, '$'), _formatter() {
+    reset();
 }
 
 Error DisI8051::decodeRelative(DisMemory &memory, InsnI8051 &insn, StrBuffer &out) {
@@ -43,10 +46,10 @@ Error DisI8051::decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out
 }
 
 Error DisI8051::decodeRReg(InsnI8051 &insn, StrBuffer &out, const AddrMode mode) {
-    const auto reg = _regs.decodeRReg(insn.opCode() & (mode == M_IDIRR ? 1 : 7));
+    const auto reg = decodeRRegNum(insn.opCode() & (mode == M_IDIRR ? 1 : 7));
     if (mode == M_IDIRR)
         out.letter('@');
-    outRegister(out, reg);
+    outRegName(out, reg);
     return setOK();
 }
 
@@ -85,22 +88,22 @@ Error DisI8051::decodeOperand(
     case M_REL:
         return decodeRelative(memory, insn, out);
     case M_AREG:
-        outRegister(out, REG_A);
+        outRegName(out, REG_A);
         break;
     case M_RREG:
     case M_IDIRR:
         return decodeRReg(insn, out, mode);
     case M_CREG:
-        outRegister(out, REG_C);
+        outRegName(out, REG_C);
         break;
     case M_IDIRD:
         out.letter('@');
         /* Fall-through */
     case M_DREG:
-        outRegister(out, REG_DPTR);
+        outRegName(out, REG_DPTR);
         break;
     case M_ABREG:
-        outRegister(out, REG_AB);
+        outRegName(out, REG_AB);
         break;
     case M_ADR8:
     case M_ADR11:
@@ -115,12 +118,12 @@ Error DisI8051::decodeOperand(
     case M_IMM16:
         return decodeImmediate(memory, insn, out, mode);
     case M_INDXD:
-        outRegister(out.letter('@'), REG_A).letter('+');
-        outRegister(out, REG_DPTR);
+        outRegName(out.letter('@'), REG_A).letter('+');
+        outRegName(out, REG_DPTR);
         break;
     case M_INDXP:
-        outRegister(out.letter('@'), REG_A).letter('+');
-        outRegister(out, REG_PC);
+        outRegName(out.letter('@'), REG_A).letter('+');
+        outRegName(out, REG_PC);
         break;
     }
     return setOK();

@@ -21,16 +21,13 @@
 #include "dis_base.h"
 #include "insn_i8086.h"
 #include "reg_i8086.h"
-#include "table_i8086.h"
 
 namespace libasm {
 namespace i8086 {
 
 class DisI8086 : public Disassembler, public Config {
 public:
-    DisI8086() : Disassembler(_formatter, _regs, TableI8086::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisI8086();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -38,7 +35,6 @@ public:
 
 private:
     IntelValueFormatter _formatter;
-    RegI8086 _regs;
     bool _segOverrideInsn;
     bool _repeatHasStringInst;
     const struct OptStringInsn : public BoolOption {

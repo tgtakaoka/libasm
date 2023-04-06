@@ -22,6 +22,7 @@
 namespace libasm {
 namespace ns32000 {
 
+using namespace reg;
 using text::ns32000::TEXT_FPU;
 using text::ns32000::TEXT_PMMU;
 
@@ -46,7 +47,7 @@ Error AsmNs32000::parseStrOptNames(StrScanner &scan, Operand &op, bool braket) c
     auto p = scan;
     uint8_t strOpt = 0;
     while (true) {
-        const auto name = RegNs32000::parseStrOptName(p);
+        const auto name = parseStrOptName(p);
         if (name == STROPT_UNDEF)
             return UNKNOWN_OPERAND;
         if (strOpt & uint8_t(name))
@@ -72,7 +73,7 @@ Error AsmNs32000::parseConfigNames(StrScanner &scan, Operand &op) const {
     while (true) {
         if (p.expect(']'))
             break;
-        const auto name = RegNs32000::parseConfigName(p);
+        const auto name = parseConfigName(p);
         if (name == CONFIG_UNDEF)
             return UNKNOWN_OPERAND;
         configs |= uint8_t(name);
@@ -93,10 +94,10 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
     uint8_t list = 0;
     uint8_t n = 0;
     while (true) {
-        const auto name = RegNs32000::parseRegName(p);
-        if (!RegNs32000::isGeneric(name))
+        const auto name = parseRegName(p);
+        if (!isGeneric(name))
             return UNKNOWN_OPERAND;
-        list |= shiftLeftOne(RegNs32000::encodeRegName(name));
+        list |= shiftLeftOne(encodeRegName(name));
         n++;
         if (p.skipSpaces().expect(']'))
             break;
@@ -153,32 +154,32 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
         return OK;
     }
 
-    const auto preg = RegNs32000::parsePregName(p);
+    const auto preg = parsePregName(p);
     if (preg != PREG_UNDEF) {
-        op.val32 = RegNs32000::encodePregName(preg);
+        op.val32 = encodePregName(preg);
         op.mode = M_PREG;
         scan = p;
         return OK;
     }
 
-    const auto mreg = RegNs32000::parseMregName(p);
+    const auto mreg = parseMregName(p);
     if (mreg != MREG_UNDEF) {
-        op.val32 = RegNs32000::encodeMregName(mreg);
+        op.val32 = encodeMregName(mreg);
         op.mode = M_MREG;
         scan = p;
         return OK;
     }
 
-    auto reg = RegNs32000::parseRegName(p);
+    auto reg = parseRegName(p);
     if (reg != REG_UNDEF) {
-        if (RegNs32000::isGeneric(reg)) {
+        if (isGeneric(reg)) {
             op.reg = reg;
             op.mode = M_GREG;
             scan = p;
             return OK;
         }
 
-        if (RegNs32000::isFloat(reg)) {
+        if (isFloat(reg)) {
             op.reg = reg;
             op.mode = M_FREG;
             scan = p;
@@ -248,11 +249,11 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     if (!p.expect('('))
         return op.setError(p, UNKNOWN_OPERAND);
     const auto r = p;
-    reg = RegNs32000::parseRegName(p);
+    reg = parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
             return op.setErrorIf(p, MISSING_CLOSING_PAREN);
-        if (RegNs32000::isGeneric(reg)) {
+        if (isGeneric(reg)) {
             op.reg = reg;
             op.mode = M_RREL;
             scan = p;
@@ -277,7 +278,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     if (!p.skipSpaces().expect('('))
         return op.setErrorIf(p, UNKNOWN_OPERAND);
     const auto x = p;
-    reg = RegNs32000::parseRegName(p);
+    reg = parseRegName(p);
     if (reg != REG_UNDEF) {
         if (!p.expect(')'))
             return op.setErrorIf(p, MISSING_CLOSING_PAREN);
@@ -303,13 +304,13 @@ Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {
         if (!p.skipSpaces().expect('['))
             return OK;
         const auto indexp = p;
-        const auto index = RegNs32000::parseRegName(p);
-        if (!RegNs32000::isGeneric(index))
+        const auto index = parseRegName(p);
+        if (!isGeneric(index))
             return op.setError(indexp, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(':'))
             return op.setError(p, UNKNOWN_OPERAND);
         const auto sizep = p;
-        const auto indexSize = RegNs32000::parseIndexSize(p);
+        const auto indexSize = parseIndexSize(p);
         if (indexSize == SZ_NONE)
             return op.setError(sizep, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(']'))
@@ -452,9 +453,9 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
     switch (mode) {
     case M_GREG:
     case M_FREG:
-        return RegNs32000::encodeRegName(reg);
+        return encodeRegName(reg);
     case M_RREL:
-        return RegNs32000::encodeRegName(reg) | 0x08;
+        return encodeRegName(reg) | 0x08;
     case M_MREL:
         if (reg == REG_FP)
             return 0x10;
@@ -490,8 +491,7 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
 void AsmNs32000::emitIndexByte(InsnNs32000 &insn, const Operand &op) const {
     if (op.index == REG_UNDEF)
         return;
-    const auto indexByte =
-            (encodeGenericField(op.mode, op.reg) << 3) | RegNs32000::encodeRegName(op.index);
+    const auto indexByte = (encodeGenericField(op.mode, op.reg) << 3) | encodeRegName(op.index);
     insn.emitOperand8(indexByte);
 }
 
@@ -550,7 +550,7 @@ void AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, con
     constexpr uint8_t RESTORE = 0x72;
     switch (mode) {
     case M_GREG:
-        embedOprField(insn, pos, RegNs32000::encodeRegName(op.reg));
+        embedOprField(insn, pos, encodeRegName(op.reg));
         break;
     case M_PREG:
     case M_MREG:
@@ -569,13 +569,12 @@ void AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, con
         break;
     case M_FENR:
     case M_FENW:
-        if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) &&
-                !RegNs32000::isRegPair(op.reg))
+        if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) && !isRegPair(op.reg))
             setErrorIf(op, REGISTER_NOT_ALLOWED);
         goto emit_generic;
     case M_GENR:
     case M_GENW:
-        if (op.mode == M_GREG && size == SZ_QUAD && !RegNs32000::isRegPair(op.reg))
+        if (op.mode == M_GREG && size == SZ_QUAD && !isRegPair(op.reg))
             setErrorIf(op, REGISTER_NOT_ALLOWED);
         goto emit_generic;
     case M_GENC:

@@ -77,24 +77,24 @@ enum CcName : int8_t {
     CC_UGE = 15 + 16,  // == NC(15)
 };
 
-class RegZ8 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, RegName name) const;
-    static bool isPairReg(RegName);
-    static uint8_t encodeRegName(RegName name);
-    static RegName decodeRegNum(uint8_t num);
-    static RegName decodePairRegNum(uint8_t num);
+namespace reg {
 
-    static CcName parseCcName(StrScanner &scan);
-    StrBuffer &outCcName(StrBuffer &out, CcName name) const;
-    static uint8_t encodeCcName(CcName name);
-    static CcName decodeCcNum(uint8_t num);
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
+bool isPairReg(RegName);
+uint8_t encodeRegName(RegName name);
+RegName decodeRegNum(uint8_t num);
+RegName decodePairRegNum(uint8_t num);
 
-    static bool isWorkRegAlias(uint8_t addr);
-    static uint8_t encodeWorkRegAddr(RegName name);
-};
+CcName parseCcName(StrScanner &scan);
+StrBuffer &outCcName(StrBuffer &out, CcName name);
+uint8_t encodeCcName(CcName name);
+CcName decodeCcNum(uint8_t num);
 
+bool isWorkRegAlias(uint8_t addr);
+uint8_t encodeWorkRegAddr(RegName name);
+
+}  // namespace reg
 }  // namespace z8
 }  // namespace libasm
 

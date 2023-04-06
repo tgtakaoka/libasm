@@ -16,10 +16,13 @@
 
 #include "reg_mos6502.h"
 
+using namespace libasm::reg;
+
 namespace libasm {
 namespace mos6502 {
+namespace reg {
 
-RegName RegMos6502::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     auto reg = REG_UNDEF;
     if (p.iexpect('A')) {
@@ -39,10 +42,11 @@ RegName RegMos6502::parseRegName(StrScanner &scan) {
     return reg;
 }
 
-StrBuffer &RegMos6502::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     return out.letter(char(name));
 }
 
+}  // namespace reg
 }  // namespace mos6502
 }  // namespace libasm
 

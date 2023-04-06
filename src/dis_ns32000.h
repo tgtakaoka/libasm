@@ -20,18 +20,13 @@
 #include "config_ns32000.h"
 #include "dis_base.h"
 #include "insn_ns32000.h"
-#include "reg_ns32000.h"
-#include "table_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
 
 class DisNs32000 : public Disassembler, public Config {
 public:
-    DisNs32000()
-        : Disassembler(_formatter, _regs, TableNs32000::TABLE, '*'), _formatter(), _regs() {
-        reset();
-    }
+    DisNs32000();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -39,7 +34,6 @@ public:
 
 private:
     NationalValueFormatter _formatter;
-    RegNs32000 _regs;
     bool _stringOptionBracket;
     bool _pcRelativeParen;
     bool _externalParen;

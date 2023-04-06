@@ -20,23 +20,18 @@
 #include "config_i8051.h"
 #include "dis_base.h"
 #include "insn_i8051.h"
-#include "reg_i8051.h"
-#include "table_i8051.h"
 
 namespace libasm {
 namespace i8051 {
 
 class DisI8051 : public Disassembler, public Config {
 public:
-    DisI8051() : Disassembler(_formatter, _regs, TableI8051::TABLE, '$'), _formatter(), _regs() {}
+    DisI8051();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegI8051 _regs;
-
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodeRelative(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);
     Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);

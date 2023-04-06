@@ -16,13 +16,13 @@
 
 #include "table_tlcs90.h"
 
-#include "config_tlcs90.h"
+#include <ctype.h>
+#include <string.h>
+
 #include "entry_tlcs90.h"
 #include "insn_tlcs90.h"
 #include "text_tlcs90.h"
-
-#include <ctype.h>
-#include <string.h>
+#include "reg_tlcs90.h"
 
 using namespace libasm::text::tlcs90;
 
@@ -572,17 +572,17 @@ Error TableTlcs90::Cpu::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &o
             op.val16 = insn.readByte(memory);
             break;
         case M_IND:
-            op.reg = RegTlcs90::decodeReg16(code);
+            op.reg = reg::decodeReg16(code);
             break;
         case M_IDX:
-            op.reg = RegTlcs90::decodeIndexReg(code);
+            op.reg = reg::decodeIndexReg(code);
             op.val16 = static_cast<int8_t>(insn.readByte(memory));
             break;
         case M_REG8:
-            op.reg = RegTlcs90::decodeReg8(code);
+            op.reg = reg::decodeReg8(code);
             break;
         case M_CC:
-            op.cc = RegTlcs90::decodeCcName(code);
+            op.cc = reg::decodeCcName(code);
             break;
         default:
             break;

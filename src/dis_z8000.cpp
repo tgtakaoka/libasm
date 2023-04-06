@@ -16,15 +16,22 @@
 
 #include "dis_z8000.h"
 
+#include "reg_z8000.h"
 #include "table_z8000.h"
 
 namespace libasm {
 namespace z8000 {
 
+using namespace reg;
+
 static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
 static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
 static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
+
+DisZ8000::DisZ8000() : Disassembler(_formatter, TableZ8000::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisZ8000::reset() {
     Disassembler::reset();
@@ -32,20 +39,15 @@ void DisZ8000::reset() {
     _shortDirect = true;
 }
 
+AddressWidth DisZ8000::addressWidth() const {
+    return TableZ8000::TABLE.addressWidth();
+}
+
 DisZ8000::OptIoaddrPrefix::OptIoaddrPrefix(bool &var)
     : BoolOption(OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX, var) {}
 
 DisZ8000::OptShortDirect::OptShortDirect(bool &var, const OptionBase &next)
     : BoolOption(OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, var, next) {}
-
-StrBuffer &DisZ8000::outRegister(StrBuffer &out, RegName name) {
-    return _regs.outRegName(out, name);
-}
-
-StrBuffer &DisZ8000::outConditionCode(StrBuffer &out, uint8_t num) {
-    const CcName cc = _regs.decodeCcNum(num);
-    return _regs.outCcName(out, cc);
-}
 
 StrBuffer &DisZ8000::outImmediate(StrBuffer &out, uint8_t data, AddrMode mode) {
     uint8_t val = data;
@@ -91,17 +93,17 @@ Error DisZ8000::decodeFlags(StrBuffer &out, uint8_t flags) {
     flags &= 0xF;
     if (flags == 0)
         return setError(OPCODE_HAS_NO_EFFECT);
-    _regs.outFlagNames(out, flags);
+    outFlagNames(out, flags);
     return OK;
 }
 
 Error DisZ8000::decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect) {
-    const auto reg = _regs.decodeRegNum(num, size);
+    const auto reg = decodeRegNum(num, size);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
     if (indirect)
         out.letter('@');
-    outRegister(out, reg);
+    outRegName(out, reg);
     return OK;
 }
 
@@ -116,14 +118,14 @@ Error DisZ8000::decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize s
 }
 
 Error DisZ8000::decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size) {
-    const auto reg = _regs.decodeCtlReg(ctlNum);
+    const auto reg = decodeCtlReg(ctlNum);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS)
         return setError(ILLEGAL_SIZE);
     if (size == SZ_WORD && reg == REG_FLAGS)
         return setError(ILLEGAL_SIZE);
-    outRegister(out, reg);
+    outRegName(out, reg);
     return OK;
 }
 
@@ -249,7 +251,7 @@ Error DisZ8000::decodeOperand(
     case M_BX:
         return decodeBaseAddressing(memory, insn, out, mode, num);
     case M_CC:
-        outConditionCode(out, num);
+        outCcName(out, decodeCcNum(num));
         return OK;
     case M_CTL:
         return decodeControlRegister(out, num, insn.size());
@@ -275,7 +277,7 @@ Error DisZ8000::decodeOperand(
         num &= 3;
         if (num == 3)
             return setError(OPCODE_HAS_NO_EFFECT);
-        _regs.outIntrNames(out, num);
+        outIntrNames(out, num);
         return OK;
     case M_RA:
     case M_RA12:
@@ -356,10 +358,10 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
     const auto snum = modeField(insn, insn.srcField());
     const auto dsize = registerSize(insn, dmode);
     const auto ssize = registerSize(insn, smode);
-    const auto dst = RegZ8000::decodeRegNum(dnum, dsize);
-    const auto src = RegZ8000::decodeRegNum(snum, ssize);
+    const auto dst = decodeRegNum(dnum, dsize);
+    const auto src = decodeRegNum(snum, ssize);
     if (insn.isPushPopInsn()) {
-        if (RegZ8000::checkOverlap(dst, src))
+        if (checkOverlap(dst, src))
             return setError(REGISTERS_OVERLAPPED);
         return OK;
     }
@@ -368,7 +370,7 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
     if (snum == 0)
         return setError(REGISTER_NOT_ALLOWED);
     const auto cnum = modeField(insn, MF_P8);
-    const auto cnt = RegZ8000::decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
+    const auto cnt = decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!TableZ8000::TABLE.segmentedModel() && (dnum == 1 || snum == 1))
@@ -380,14 +382,14 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
 
     if (dst == REG_ILLEGAL || src == REG_ILLEGAL)
         return OK;
-    if (RegZ8000::checkOverlap(dst, src, cnt))
+    if (checkOverlap(dst, src, cnt))
         return setError(REGISTERS_OVERLAPPED);
     return OK;
 }
 
 StrBuffer &DisZ8000::outComma(
         StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field) {
-    if (mode == M_CC && _regs.decodeCcNum(modeField(insn, field)) == CC_T)
+    if (mode == M_CC && decodeCcNum(modeField(insn, field)) == CC_T)
         return out;
     return out.comma();
 }

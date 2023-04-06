@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_ins8060.h"
 #include "insn_ins8060.h"
-#include "reg_ins8060.h"
-#include "table_ins8060.h"
 
 namespace libasm {
 namespace ins8060 {
 
 class AsmIns8060 : public Assembler, public Config {
 public:
-    AsmIns8060()
-        : Assembler(_parser, TableIns8060::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location, _function),
-          _pseudos() {}
+    AsmIns8060();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -47,14 +42,7 @@ private:
     } _function;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        RegName index;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), index(REG_UNDEF), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeRel8(InsnIns8060 &insn, const Operand &op);

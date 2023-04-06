@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_f3850.h"
 #include "insn_f3850.h"
-#include "reg_f3850.h"
-#include "table_f3850.h"
 
 namespace libasm {
 namespace f3850 {
 
 class AsmF3850 : public Assembler, public Config {
 public:
-    AsmF3850()
-        : Assembler(_parser, TableF3850::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmF3850();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -43,14 +38,8 @@ private:
     const FairchildLetterParser _letter;
     const FairchildLocationParser _location;
     PseudoBase _pseudos;
-    RegF3850 _regs;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        uint16_t val16;
-        Operand() : mode(M_NONE), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void emitImmediate(InsnF3850 &insn, const Operand &op, AddrMode mode);

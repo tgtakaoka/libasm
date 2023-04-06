@@ -52,36 +52,36 @@ enum RegSize : uint8_t {
     SZ_NONE = 2,
 };
 
-class RegMc6809 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    static RegSize regSize(RegName name) __attribute__((noinline));
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static RegName decodeDataReg(uint8_t num);
-    static bool isDataReg(RegName name);
-    static uint8_t encodeDataReg(RegName name);
+RegName parseRegName(StrScanner &scan);
+RegSize regSize(RegName name) __attribute__((noinline));
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
-    static RegName decodeBaseReg(uint8_t num);
-    static bool isBaseReg(RegName name);
-    static bool isIndexedBase(RegName name);
-    static uint8_t encodeBaseReg(RegName name);
+RegName decodeDataReg(uint8_t num);
+bool isDataReg(RegName name);
+uint8_t encodeDataReg(RegName name);
 
-    static RegName decodeStackReg(uint8_t bitPos, bool userStack);
-    static uint8_t encodeStackReg(RegName name, bool userStack) __attribute__((noinline));
+RegName decodeBaseReg(uint8_t num);
+bool isBaseReg(RegName name);
+bool isIndexedBase(RegName name);
+uint8_t encodeBaseReg(RegName name);
 
-    static RegName decodeBitOpReg(uint8_t num);
-    static bool isBitOpReg(RegName name);
-    static uint8_t encodeBitOpReg(RegName name);
+RegName decodeStackReg(uint8_t bitPos, bool userStack);
+uint8_t encodeStackReg(RegName name, bool userStack) __attribute__((noinline));
 
-    static RegName decodeTfmBaseReg(uint8_t num);
-    static bool isTfmBaseReg(RegName name);
-    static uint8_t encodeTfmBaseReg(RegName name);
-    static int8_t encodeTfmMode(char src, char dst);
-    static char tfmSrcModeChar(uint8_t mode);
-    static char tfmDstModeChar(uint8_t mode);
-};
+RegName decodeBitOpReg(uint8_t num);
+bool isBitOpReg(RegName name);
+uint8_t encodeBitOpReg(RegName name);
 
+RegName decodeTfmBaseReg(uint8_t num);
+bool isTfmBaseReg(RegName name);
+uint8_t encodeTfmBaseReg(RegName name);
+int8_t encodeTfmMode(char src, char dst);
+char tfmSrcModeChar(uint8_t mode);
+char tfmDstModeChar(uint8_t mode);
+
+}  // namespace reg
 }  // namespace mc6809
 }  // namespace libasm
 

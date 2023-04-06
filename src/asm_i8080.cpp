@@ -16,8 +16,25 @@
 
 #include "asm_i8080.h"
 
+#include "reg_i8080.h"
+#include "table_i8080.h"
+
 namespace libasm {
 namespace i8080 {
+
+using namespace reg;
+
+struct AsmI8080::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
+AsmI8080::AsmI8080()
+    : Assembler(_parser, TableI8080::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
@@ -35,19 +52,19 @@ void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) 
         insn.emitOperand16(op.val16);
         return;
     case M_PTR:
-        insn.embed(RegI8080::encodePointerReg(op.reg) << 4);
+        insn.embed(encodePointerReg(op.reg) << 4);
         return;
     case M_STK:
-        insn.embed(RegI8080::encodeStackReg(op.reg) << 4);
+        insn.embed(encodeStackReg(op.reg) << 4);
         return;
     case M_IDX:
-        insn.embed(RegI8080::encodeIndexReg(op.reg) << 4);
+        insn.embed(encodeIndexReg(op.reg) << 4);
         return;
     case M_REG:
-        insn.embed(RegI8080::encodeDataReg(op.reg));
+        insn.embed(encodeDataReg(op.reg));
         return;
     case M_DST:
-        insn.embed(RegI8080::encodeDataReg(op.reg) << 3);
+        insn.embed(encodeDataReg(op.reg) << 3);
         return;
     case M_VEC:
         if (op.val16 >= 8)
@@ -65,7 +82,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(p))
         return OK;
 
-    op.reg = RegI8080::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
         case REG_H:

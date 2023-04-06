@@ -20,18 +20,15 @@
 #include "asm_base.h"
 #include "config_tlcs90.h"
 #include "insn_tlcs90.h"
-#include "reg_tlcs90.h"
-#include "table_tlcs90.h"
 
 namespace libasm {
 namespace tlcs90 {
 
+struct Operand;
+
 class AsmTlcs90 : public Assembler, public Config {
 public:
-    AsmTlcs90()
-        : Assembler(_parser, TableTlcs90::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmTlcs90();
 
     const ConfigBase &config() const override { return *this; }
     bool hasSetInstruction() const override { return true; }

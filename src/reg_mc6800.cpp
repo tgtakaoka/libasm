@@ -16,12 +16,13 @@
 
 #include "reg_mc6800.h"
 
-#include "config_mc6800.h"
+using namespace libasm::reg;
 
 namespace libasm {
 namespace mc6800 {
+namespace reg {
 
-RegName RegMc6800::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     auto reg = REG_UNDEF;
     if (p.iexpect('X')) {
@@ -37,10 +38,11 @@ RegName RegMc6800::parseRegName(StrScanner &scan) {
     return reg;
 }
 
-StrBuffer &RegMc6800::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     return out.letter(char(name));
 }
 
+}  // namespace reg
 }  // namespace mc6800
 }  // namespace libasm
 

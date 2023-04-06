@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_tms9900.h"
 #include "insn_tms9900.h"
-#include "reg_tms9900.h"
-#include "table_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
 
 class AsmTms9900 : public Assembler, public Config {
 public:
-    AsmTms9900()
-        : Assembler(_parser, TableTms9900::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmTms9900();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -44,13 +39,7 @@ private:
     const DollarLocationParser _location;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeRelative(InsnTms9900 &insn, const Operand &op);

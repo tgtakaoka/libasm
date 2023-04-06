@@ -16,10 +16,13 @@
 
 #include "reg_tms32010.h"
 
+using namespace libasm::reg;
+
 namespace libasm {
 namespace tms32010 {
+namespace reg {
 
-RegName RegTms32010::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('A') && p.iexpect('R')) {
         const auto num = parseRegNumber(p, 2);
@@ -37,7 +40,7 @@ RegName RegTms32010::parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-StrBuffer &RegTms32010::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isAuxiliary(name))
         return outRegNumber(out.text_P(PSTR("AR")), int8_t(name));
 
@@ -45,15 +48,16 @@ StrBuffer &RegTms32010::outRegName(StrBuffer &out, RegName name) const {
     return outRegNumber(out.text_P(PSTR("PA")), num);
 }
 
-bool RegTms32010::isAuxiliary(RegName name) {
+bool isAuxiliary(RegName name) {
     return name == REG_AR0 || name == REG_AR1;
 }
 
-bool RegTms32010::isPortAddress(RegName name) {
+bool isPortAddress(RegName name) {
     const auto num = int8_t(name);
     return num >= int8_t(REG_PA0) && num <= int8_t(REG_PA7);
 }
 
+}  // namespace reg
 }  // namespace tms32010
 }  // namespace libasm
 

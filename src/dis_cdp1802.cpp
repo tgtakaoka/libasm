@@ -16,13 +16,20 @@
 
 #include "dis_cdp1802.h"
 
+#include "reg_cdp1802.h"
 #include "table_cdp1802.h"
 
 namespace libasm {
 namespace cdp1802 {
 
+using namespace reg;
+
 static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
+
+DisCdp1802::DisCdp1802() : Disassembler(_formatter, TableCdp1802::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisCdp1802::reset() {
     Disassembler::reset();
@@ -47,7 +54,7 @@ Error DisCdp1802::decodeOperand(
     case M_REG1:
     case M_REGN:
         if (_useReg) {
-            _regs.outRegName(out, RegName(opCode & 0x0F));
+            outRegName(out, RegName(opCode & 0x0F));
         } else {
             outDec(out, opCode & 0xF, 4);
         }

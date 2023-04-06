@@ -54,20 +54,20 @@ enum RegName : int8_t {
     REG_PTR = 2 + 20,
 };
 
-class RegI8086 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static RegName decodeByteReg(uint8_t num);
-    static RegName decodeWordReg(uint8_t num);
-    static RegName decodeSegReg(uint8_t num);
-    static uint8_t encodeRegNum(RegName name);
-    static bool isGeneralReg(RegName name);
-    static bool isSegmentReg(RegName name);
-    static OprSize generalRegSize(RegName name);
-};
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
+RegName decodeByteReg(uint8_t num);
+RegName decodeWordReg(uint8_t num);
+RegName decodeSegReg(uint8_t num);
+uint8_t encodeRegNum(RegName name);
+bool isGeneralReg(RegName name);
+bool isSegmentReg(RegName name);
+OprSize generalRegSize(RegName name);
+
+}  // namespace reg
 }  // namespace i8086
 }  // namespace libasm
 

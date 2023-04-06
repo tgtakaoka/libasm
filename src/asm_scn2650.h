@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_scn2650.h"
 #include "insn_scn2650.h"
-#include "reg_scn2650.h"
-#include "table_scn2650.h"
 
 namespace libasm {
 namespace scn2650 {
 
 class AsmScn2650 : public Assembler, public Config {
 public:
-    AsmScn2650()
-        : Assembler(_parser, TableScn2650::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmScn2650();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -43,18 +38,8 @@ private:
     const IbmLetterParser _letter{/*prefix*/ 'A'};
     const DollarLocationParser _location;
     PseudoBase _pseudos;
-    RegScn2650 _regs;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        CcName cc;
-        bool indir;
-        char sign;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode);

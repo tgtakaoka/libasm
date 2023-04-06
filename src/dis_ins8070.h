@@ -20,18 +20,13 @@
 #include "config_ins8070.h"
 #include "dis_base.h"
 #include "insn_ins8070.h"
-#include "reg_ins8070.h"
-#include "table_ins8070.h"
 
 namespace libasm {
 namespace ins8070 {
 
 class DisIns8070 : public Disassembler, public Config {
 public:
-    DisIns8070()
-        : Disassembler(_formatter, _regs, TableIns8070::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisIns8070();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -39,14 +34,11 @@ public:
 
 private:
     NationalValueFormatter _formatter;
-    RegIns8070 _regs;
     bool _immediatePrefix;
     const struct OptImmediatePrefix : public BoolOption {
         OptImmediatePrefix(bool &var);
     } _opt_immPrefix{_immediatePrefix};
     const Options _options{_opt_immPrefix};
-
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);

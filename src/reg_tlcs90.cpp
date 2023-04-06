@@ -19,11 +19,13 @@
 #include "text_tlcs90.h"
 
 using namespace libasm::text::tlcs90;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace tlcs90 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_BC),
         NAME_ENTRY(REG_DE),
         NAME_ENTRY(REG_HL),
@@ -41,55 +43,55 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_L),
 };
 
-RegName RegTlcs90::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegTlcs90::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-bool RegTlcs90::isReg16(RegName name) {
+bool isReg16(RegName name) {
     return uint8_t(name) <= uint8_t(REG_SP);
 }
 
-bool RegTlcs90::isRegIndex(RegName name) {
+bool isRegIndex(RegName name) {
     return isReg16(name) && uint8_t(name) >= uint8_t(REG_IX);
 }
 
-uint8_t RegTlcs90::encodeReg8(RegName name) {
+uint8_t encodeReg8(RegName name) {
     return int8_t(name) - 16;
 }
 
-RegName RegTlcs90::decodeReg8(uint8_t num) {
+RegName decodeReg8(uint8_t num) {
     num &= 7;
     if (num == 7)
         return REG_UNDEF;
     return RegName(num + 16);
 }
 
-uint8_t RegTlcs90::encodeReg16(RegName name) {
+uint8_t encodeReg16(RegName name) {
     return int8_t(name);
 }
 
-RegName RegTlcs90::decodeReg16(uint8_t num) {
+RegName decodeReg16(uint8_t num) {
     num &= 7;
     if (num == 3 || num == 7)
         return REG_UNDEF;
     return RegName(num);
 }
 
-uint8_t RegTlcs90::encodeStackReg(RegName name) {
+uint8_t encodeStackReg(RegName name) {
     if (name == REG_AF)
         return 6;
     return uint8_t(name);
 }
 
-RegName RegTlcs90::decodeStackReg(uint8_t num) {
+RegName decodeStackReg(uint8_t num) {
     num &= 7;
     if (num == 3 || num == 7)
         return REG_UNDEF;
@@ -98,18 +100,18 @@ RegName RegTlcs90::decodeStackReg(uint8_t num) {
     return RegName(num);
 }
 
-uint8_t RegTlcs90::encodeIndexReg(RegName name) {
+uint8_t encodeIndexReg(RegName name) {
     return int8_t(name) - 4;
 }
 
-RegName RegTlcs90::decodeIndexReg(uint8_t num) {
+RegName decodeIndexReg(uint8_t num) {
     num &= 3;
     if (num == 3)
         return REG_UNDEF;
     return RegName(num + 4);
 }
 
-static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_F),
         NAME_ENTRY(CC_LT),
         NAME_ENTRY(CC_LE),
@@ -138,28 +140,29 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_T),
 };
 
-CcName RegTlcs90::parseCcName(StrScanner &scan) {
+CcName parseCcName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
     return name == CC_T ? CC_UNDEF : name;
 }
 
-StrBuffer &RegTlcs90::outCcName(StrBuffer &out, const CcName name) const {
+StrBuffer &outCcName(StrBuffer &out, const CcName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-uint8_t RegTlcs90::encodeCcName(const CcName name) {
+uint8_t encodeCcName(const CcName name) {
     const auto cc = uint8_t(name);
     return cc >= 16 ? cc - 16 : cc;
 }
 
-CcName RegTlcs90::decodeCcName(uint8_t num) {
+CcName decodeCcName(uint8_t num) {
     return CcName(num & 0xF);
 }
 
+}  // namespace reg
 }  // namespace tlcs90
 }  // namespace libasm
 

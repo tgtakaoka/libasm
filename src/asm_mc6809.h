@@ -20,20 +20,13 @@
 #include "asm_base.h"
 #include "config_mc6809.h"
 #include "insn_mc6809.h"
-#include "reg_mc6809.h"
-#include "table_mc6809.h"
 
 namespace libasm {
 namespace mc6809 {
 
 class AsmMc6809 : public Assembler, public Config {
 public:
-    AsmMc6809()
-        : Assembler(_parser, TableMc6809::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location, _operators),
-          _pseudos() {
-        reset();
-    }
+    AsmMc6809();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _pseudos.setDp(0); }
@@ -65,24 +58,7 @@ private:
     } _opt_setdp{_pseudos};
     const Options _options{_opt_setdp};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName index;
-        RegName base;
-        bool indir;
-        int8_t extra;
-        uint32_t val32;
-        StrScanner list;
-        Operand()
-            : mode(M_NONE),
-              index(REG_UNDEF),
-              base(REG_UNDEF),
-              indir(false),
-              extra(0),
-              val32(0),
-              list() {}
-    };
-
+    struct Operand;
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
     bool parseMemBit(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op, AddrMode hint) const;

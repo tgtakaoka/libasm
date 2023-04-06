@@ -20,21 +20,16 @@
 #include "asm_base.h"
 #include "config_mn1610.h"
 #include "insn_mn1610.h"
-#include "reg_mn1610.h"
-#include "table_mn1610.h"
 
 namespace libasm {
 namespace mn1610 {
 
 class AsmMn1610 : public Assembler, public Config {
 public:
-    AsmMn1610()
-        : Assembler(_parser, TableMn1610::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmMn1610();
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMn1610::TABLE.addressWidth(); }
+    AddressWidth addressWidth() const override;
 
 private:
     ValueParser _parser;
@@ -45,14 +40,7 @@ private:
     const AsteriskLocationParser _location;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        CcName cc;
-        uint32_t val32;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeIcRelative(InsnMn1610 &insn, const Operand &op);

@@ -18,11 +18,41 @@
 
 #include <ctype.h>
 
+#include "reg_mc6809.h"
+#include "table_mc6809.h"
+
 namespace libasm {
 namespace mc6809 {
 
+using namespace reg;
+
 static const char OPT_INT_SETDP[] PROGMEM = "setdp";
 static const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+
+struct AsmMc6809::Operand : public OperandBase {
+    AddrMode mode;
+    RegName index;
+    RegName base;
+    bool indir;
+    int8_t extra;
+    uint32_t val32;
+    StrScanner list;
+    Operand()
+        : mode(M_NONE),
+          index(REG_UNDEF),
+          base(REG_UNDEF),
+          indir(false),
+          extra(0),
+          val32(0),
+          list() {}
+};
+
+AsmMc6809::AsmMc6809()
+    : Assembler(_parser, TableMc6809::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location, _operators),
+      _pseudos() {
+    reset();
+}
 
 AsmMc6809::OptSetdp::OptSetdp(AsmMc6809::PseudoMc6809 &pseudos)
     : IntOptionBase(OPT_INT_SETDP, OPT_DESC_SETDP), _pseudos(pseudos) {}
@@ -87,7 +117,7 @@ void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
     if (size == 5)
         post |= disp & 0x1F;
     if (spec.base == REG_X)
-        post |= (RegMc6809::encodeBaseReg(op.base) << 5);
+        post |= (encodeBaseReg(op.base) << 5);
     insn.emitOperand8(post);
     if (size == 8)
         insn.emitOperand8(disp);
@@ -98,14 +128,14 @@ void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
 void AsmMc6809::encodeRegisterPair(InsnMc6809 &insn, const Operand &op) {
     const auto reg1 = op.mode == M_RBIT ? op.base : op.index;
     const auto reg2 = op.mode == M_RBIT ? REG_0 : op.base;
-    if (!RegMc6809::isDataReg(reg1) || !RegMc6809::isDataReg(reg2))
+    if (!isDataReg(reg1) || !isDataReg(reg2))
         setErrorIf(op, UNKNOWN_REGISTER);
-    const auto size1 = RegMc6809::regSize(reg1);
-    const auto size2 = RegMc6809::regSize(reg2);
+    const auto size1 = regSize(reg1);
+    const auto size2 = regSize(reg2);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         setErrorIf(op, ILLEGAL_SIZE);
-    const auto post1 = RegMc6809::encodeDataReg(reg1);
-    const auto post2 = RegMc6809::encodeDataReg(reg2);
+    const auto post1 = encodeDataReg(reg1);
+    const auto post2 = encodeDataReg(reg2);
     insn.emitOperand8((post1 << 4) | post2);
 }
 
@@ -120,10 +150,10 @@ void AsmMc6809::encodeRegisterList(InsnMc6809 &insn, const Operand &op) {
     while (true) {
         p.skipSpaces();
         const auto r = p;
-        auto reg = RegMc6809::parseRegName(p);
+        auto reg = parseRegName(p);
         if (reg == REG_UNDEF)
             setErrorIf(p, UNKNOWN_OPERAND);
-        const auto bit = RegMc6809::encodeStackReg(reg, userStack);
+        const auto bit = encodeStackReg(reg, userStack);
         if (bit == 0)
             setErrorIf(r, REGISTER_NOT_ALLOWED);
         if (post & bit)
@@ -199,7 +229,7 @@ void AsmMc6809::encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode
     case M_LIST:
         return encodeRegisterList(insn, op);
     case M_RBIT:
-        insn.setPost(RegMc6809::encodeBitOpReg(op.base) << 6);
+        insn.setPost(encodeBitOpReg(op.base) << 6);
         insn.embedPost(op.extra & 7);
         break;
     case M_DBIT:
@@ -215,7 +245,7 @@ char AsmMc6809::transferMemoryMode(Operand &op) const {
     if (op.mode == M_RTFM) {
         return (char)op.extra;
     } else if (op.mode == M_LIST && op.extra == 1) {
-        if (!RegMc6809::isTfmBaseReg(op.index))
+        if (!isTfmBaseReg(op.index))
             op.setErrorIf(REGISTER_NOT_ALLOWED);
         return 0;
     }
@@ -228,15 +258,15 @@ void AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op
     const auto dst = transferMemoryMode(op2);
     setErrorIf(op1);
     setErrorIf(op2);
-    auto mode = RegMc6809::encodeTfmMode(src, dst);
+    auto mode = encodeTfmMode(src, dst);
     if (mode < 0) {
         mode = 0;
         setErrorIf(op1, UNKNOWN_OPERAND);
     }
     insn.embed(mode);
 
-    const auto post1 = RegMc6809::encodeTfmBaseReg(op1.index);
-    const auto post2 = RegMc6809::encodeTfmBaseReg(op2.index);
+    const auto post1 = encodeTfmBaseReg(op1.index);
+    const auto post2 = encodeTfmBaseReg(op2.index);
     const auto post = (post1 << 4) | post2;
     insn.emitOperand8(post);
 }
@@ -252,7 +282,7 @@ bool AsmMc6809::parseBitPosition(StrScanner &scan, Operand &op) const {
 
         auto r = p;
         // Exclude register list or index addressing
-        const auto reg = RegMc6809::parseRegName(r);
+        const auto reg = parseRegName(r);
         if (reg == REG_0) {
             // Constant zero is paresd as REG_0
             op.extra = 0;
@@ -340,14 +370,14 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         indexBits = 0;  // ,X
     }
 
-    const auto index = RegMc6809::parseRegName(p);
+    const auto index = parseRegName(p);
     if (index != REG_UNDEF) {
         auto a = p;
         if (hint == M_RBIT) {
             if (op.indir || index == REG_0)
                 return op.setError(UNKNOWN_OPERAND);
             if (parseBitPosition(a, op)) {
-                if (!RegMc6809::isBitOpReg(index))
+                if (!isBitOpReg(index))
                     return op.setError(scan, ILLEGAL_REGISTER);
                 op.mode = M_RBIT;
                 op.base = index;
@@ -358,7 +388,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         }
         const auto autoindex = a.expect([](char c) { return c == '+' || c == '-'; });
         if (!op.indir && autoindex) {
-            if (!RegMc6809::isTfmBaseReg(index))
+            if (!isTfmBaseReg(index))
                 op.setError(REGISTER_NOT_ALLOWED);
             op.index = index;
             op.mode = M_RTFM;
@@ -418,7 +448,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
     }
     if (indexBits)
         p.skipSpaces();
-    const auto base = RegMc6809::parseRegName(p);
+    const auto base = parseRegName(p);
     if (base == REG_UNDEF)
         return op.setError(UNKNOWN_OPERAND);
     // Just after |base| register

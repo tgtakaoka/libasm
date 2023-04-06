@@ -16,17 +16,20 @@
 
 #include "dis_ins8060.h"
 
+#include "reg_ins8060.h"
 #include "table_ins8060.h"
 
 namespace libasm {
 namespace ins8060 {
 
-StrBuffer &DisIns8060::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
+using namespace reg;
+
+DisIns8060::DisIns8060() : Disassembler(_formatter, TableIns8060::TABLE, '$'), _formatter() {
+    reset();
 }
 
 Error DisIns8060::decodePntr(InsnIns8060 &insn, StrBuffer &out) {
-    outRegister(out, _regs.decodePointerReg(insn.opCode()));
+    outRegName(out, decodePointerReg(insn.opCode()));
     return setOK();
 }
 
@@ -36,7 +39,7 @@ Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
 }
 
 Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode) {
-    const auto reg = _regs.decodePointerReg(insn.opCode());
+    const auto reg = decodePointerReg(insn.opCode());
     const auto opr = insn.readByte(memory);
     if (hasMode && (insn.opCode() & 4) != 0)
         out.letter('@');
@@ -57,12 +60,12 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
         }
     } else {
         if (opr == 0x80) {  // E(Pn)
-            outRegister(out, REG_E);
+            outRegName(out, REG_E);
         } else {
             const int8_t disp = static_cast<int8_t>(opr);
             outDec(out, disp, -8);
         }
-        outRegister(out.letter('('), reg).letter(')');
+        outRegName(out.letter('('), reg).letter(')');
     }
     return setError(insn);
 }

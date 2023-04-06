@@ -18,8 +18,24 @@
 
 #include <ctype.h>
 
+#include "reg_f3850.h"
+#include "table_f3850.h"
+
 namespace libasm {
 namespace f3850 {
+
+using namespace reg;
+
+struct AsmF3850::Operand : public OperandBase {
+    AddrMode mode;
+    uint16_t val16;
+    Operand() : mode(M_NONE), val16(0) {}
+};
+
+AsmF3850::AsmF3850()
+    : Assembler(_parser, TableF3850::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(scan.skipSpaces());
@@ -27,7 +43,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     auto p = scan;
-    auto reg = RegF3850::parseRegName(p);
+    auto reg = parseRegName(p);
     if (reg != REG_UNDEF) {
         if (uint8_t(reg) < uint8_t(REG_alias)) {
             op.mode = AddrMode(uint8_t(reg));

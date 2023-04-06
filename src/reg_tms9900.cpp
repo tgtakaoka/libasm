@@ -16,10 +16,13 @@
 
 #include "reg_tms9900.h"
 
+using namespace libasm::reg;
+
 namespace libasm {
 namespace tms9900 {
+namespace reg {
 
-RegName RegTms9900::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('R')) {
         const auto num = parseRegNumber(p, 16);
@@ -31,15 +34,16 @@ RegName RegTms9900::parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-StrBuffer &RegTms9900::outRegName(StrBuffer &out, uint8_t num) const {
+StrBuffer &outRegName(StrBuffer &out, uint8_t num) {
     num &= 0x0f;
     return outRegNumber(out.letter('R'), num);
 }
 
-uint8_t RegTms9900::encodeRegNumber(RegName name) {
+uint8_t encodeRegNumber(RegName name) {
     return uint8_t(name);
 }
 
+}  // namespace reg
 }  // namespace tms9900
 }  // namespace libasm
 

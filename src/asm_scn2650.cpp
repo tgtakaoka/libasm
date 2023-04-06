@@ -18,8 +18,28 @@
 
 #include <ctype.h>
 
+#include "reg_scn2650.h"
+#include "table_scn2650.h"
+
 namespace libasm {
 namespace scn2650 {
+
+using namespace reg;
+
+struct AsmScn2650::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    bool indir;
+    char sign;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
+};
+
+AsmScn2650::AsmScn2650()
+    : Assembler(_parser, TableScn2650::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 static constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
     return addr & ~0x1FFF;  // 8k bytes per page
@@ -45,13 +65,13 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     auto p = scan;
-    op.reg = RegScn2650::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         op.mode = op.reg == REG_R0 ? M_REG0 : M_R123;
         scan = p;
         return OK;
     }
-    op.cc = RegScn2650::parseCcName(p);
+    op.cc = parseCcName(p);
     if (op.cc != CC_UNDEF) {
         op.mode = op.cc == CC_UN ? M_CCVN : M_C012;
         scan = p;
@@ -63,7 +83,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     if (op.hasError())
         return op.getError();
     if (p.expect(',')) {
-        op.reg = RegScn2650::parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF)
             return op.setError(UNKNOWN_OPERAND);
         if (p.skipSpaces().expect(',')) {
@@ -94,7 +114,7 @@ void AsmScn2650::emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mod
     if (mode == M_IX15) {
         if (op.reg != REG_R3 && op.reg != REG_UNDEF)
             setErrorIf(op, REGISTER_NOT_ALLOWED);
-        insn.embed(RegScn2650::encodeRegName(REG_R3));
+        insn.embed(encodeRegName(REG_R3));
     }
     insn.emitOperand16(opr);
 }
@@ -110,7 +130,7 @@ void AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode
     if (op.indir)
         opr |= 0x8000;
     if (mode == M_IX13) {
-        insn.embed(RegScn2650::encodeRegName(op.reg));
+        insn.embed(encodeRegName(op.reg));
         switch (op.sign) {
         case '+':
             opr |= 0x2000;
@@ -160,11 +180,11 @@ void AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mo
     case M_REGN:
     case M_REG0:
     case M_R123:
-        insn.embed(RegScn2650::encodeRegName(op.reg));
+        insn.embed(encodeRegName(op.reg));
         break;
     case M_CCVN:
     case M_C012:
-        insn.embed(RegScn2650::encodeCcName(op.cc));
+        insn.embed(encodeCcName(op.cc));
         break;
     case M_IMM8:
         insn.emitOperand8(op.val16);
@@ -221,7 +241,7 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
         return setError(opr1, error);
 
     if (insnWithReg)
-        _regs.outRegName(insn.nameBuffer().letter(','), opr1.reg);
+        outRegName(insn.nameBuffer().letter(','), opr1.reg);
     encodeOperand(insn, opr1, insn.mode1());
     encodeOperand(insn, opr2, insn.mode2());
     insn.emitInsn();

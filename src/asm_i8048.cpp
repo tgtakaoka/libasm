@@ -18,8 +18,25 @@
 
 #include <ctype.h>
 
+#include "reg_i8048.h"
+#include "table_i8048.h"
+
 namespace libasm {
 namespace i8048 {
+
+using namespace reg;
+
+struct AsmI8048::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
+AsmI8048::AsmI8048()
+    : Assembler(_parser, TableI8048::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
@@ -41,7 +58,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     const auto regp = p;
-    op.reg = RegI8048::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (indir) {
             switch (op.reg) {
@@ -120,7 +137,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_TCNTI;
             break;
         default:
-            if (RegI8048::isRReg(op.reg)) {
+            if (isRReg(op.reg)) {
                 op.mode = M_R;
             } else {
                 return op.setError(UNKNOWN_OPERAND);
@@ -159,11 +176,11 @@ void AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand
     case M_IR:
     case M_IR3:
     case M_R:
-        insn.embed(RegI8048::encodeRReg(op.reg));
+        insn.embed(encodeRRegName(op.reg));
         return;
     case M_P12:
     case M_PEXT:
-        insn.embed(RegI8048::encodePort(op.reg));
+        insn.embed(encodePortName(op.reg));
         return;
     case M_AD08:
     case M_AD11:

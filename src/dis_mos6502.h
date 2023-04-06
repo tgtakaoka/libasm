@@ -20,27 +20,21 @@
 #include "config_mos6502.h"
 #include "dis_base.h"
 #include "insn_mos6502.h"
-#include "reg_mos6502.h"
-#include "table_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
 
 class DisMos6502 : public Disassembler, public Config {
 public:
-    DisMos6502()
-        : Disassembler(_formatter, _regs, TableMos6502::TABLE, '*'), _formatter(), _regs() {
-        reset();
-    }
+    DisMos6502();
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
+    AddressWidth addressWidth() const override;
     void reset() override;
     const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
-    RegMos6502 _regs;
     const struct OptIndirectLong : public BoolOptionBase {
         OptIndirectLong();
         Error set(bool value) const override;

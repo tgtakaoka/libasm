@@ -16,8 +16,25 @@
 
 #include "asm_tms9900.h"
 
+#include "reg_tms9900.h"
+#include "table_tms9900.h"
+
 namespace libasm {
 namespace tms9900 {
+
+using namespace reg;
+
+struct AsmTms9900::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
+AsmTms9900::AsmTms9900()
+    : Assembler(_parser, TableTms9900::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
     const auto base = insn.address() + 2;
@@ -38,7 +55,7 @@ void AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
 void AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
     if (mode == M_SRC2 && insn.dst() == M_BIT2 && op.mode == M_INCR)
         setErrorIf(op, OPERAND_NOT_ALLOWED);
-    auto opc = RegTms9900::encodeRegNumber(op.reg);
+    auto opc = encodeRegNumber(op.reg);
     switch (op.mode) {
     case M_REG:
         break;
@@ -82,10 +99,10 @@ void AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mo
         insn.emitOperand16(op.val16);
         return;
     case M_REG:
-        insn.embed(RegTms9900::encodeRegNumber(op.reg));
+        insn.embed(encodeRegNumber(op.reg));
         return;
     case M_DREG:
-        insn.embed(RegTms9900::encodeRegNumber(op.reg) << 6);
+        insn.embed(encodeRegNumber(op.reg) << 6);
         return;
     case M_DST2:
         insn.embedPost(0x4000);
@@ -161,7 +178,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (p.expect('*')) {
-        op.reg = RegTms9900::parseRegName(p);
+        op.reg = parseRegName(p);
         if (op.reg == REG_UNDEF)
             return op.setError(UNKNOWN_OPERAND);
         op.mode = p.expect('+') ? M_INCR : M_IREG;
@@ -174,7 +191,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
         if (p.skipSpaces().expect('(')) {
             const auto regp = p.skipSpaces();
-            op.reg = RegTms9900::parseRegName(p);
+            op.reg = parseRegName(p);
             if (op.reg == REG_UNDEF)
                 return op.setError(UNKNOWN_OPERAND);
             if (op.reg == REG_R0)
@@ -188,7 +205,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    op.reg = RegTms9900::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         op.mode = M_REG;
         scan = p;

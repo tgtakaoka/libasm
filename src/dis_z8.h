@@ -21,16 +21,13 @@
 #include "dis_base.h"
 #include "insn_z8.h"
 #include "reg_z8.h"
-#include "table_z8.h"
 
 namespace libasm {
 namespace z8 {
 
 class DisZ8 : public Disassembler, public Config {
 public:
-    DisZ8() : Disassembler(_formatter, _regs, TableZ8::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisZ8();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -38,17 +35,14 @@ public:
 
 private:
     IntelValueFormatter _formatter;
-    RegZ8 _regs;
     bool _useWorkRegister;
     const struct OptWorkRegister : public BoolOption {
         OptWorkRegister(bool &var);
     } _opt_workRegister{_useWorkRegister};
     const Options _options{_opt_workRegister};
 
-    StrBuffer &outCcName(StrBuffer &out, Config::opcode_t opCode);
+    StrBuffer &outConditionCode(StrBuffer &out, Config::opcode_t opCode);
     StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);
-    StrBuffer &outWorkReg(StrBuffer &out, uint8_t regNum, bool indir = false);
-    StrBuffer &outPairReg(StrBuffer &out, uint8_t regNum, bool indir = false);
     StrBuffer &outRegAddr(StrBuffer &out, uint8_t regAddr, bool indir = false);
     StrBuffer &outPairAddr(StrBuffer &out, uint8_t regAddr, bool indir = false);
     StrBuffer &outBitPos(StrBuffer &out, uint8_t bitPos);

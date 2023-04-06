@@ -16,13 +16,20 @@
 
 #include "dis_z8.h"
 
+#include "reg_z8.h"
 #include "table_z8.h"
 
 namespace libasm {
 namespace z8 {
 
+using namespace reg;
+
 static const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
 static const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
+
+DisZ8::DisZ8() : Disassembler(_formatter, TableZ8::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisZ8::reset() {
     Disassembler::reset();
@@ -32,29 +39,29 @@ void DisZ8::reset() {
 DisZ8::OptWorkRegister::OptWorkRegister(bool &var)
     : BoolOption(OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER, var) {}
 
-StrBuffer &DisZ8::outCcName(StrBuffer &out, Config::opcode_t opCode) {
-    const auto cc = _regs.decodeCcNum(opCode >> 4);
+StrBuffer &DisZ8::outConditionCode(StrBuffer &out, Config::opcode_t opCode) {
+    const auto cc = decodeCcNum(opCode >> 4);
     if (cc != CC_T)
-        _regs.outCcName(out, cc).comma();
+        outCcName(out, cc).comma();
     return out;
 }
 
-StrBuffer &DisZ8::outWorkReg(StrBuffer &out, uint8_t num, bool indir) {
-    const auto reg = _regs.decodeRegNum(num);
+static StrBuffer &outWorkReg(StrBuffer &out, uint8_t num, bool indir = false) {
+    const auto reg = decodeRegNum(num);
     if (indir)
         out.letter('@');
-    return _regs.outRegName(out, reg);
+    return outRegName(out, reg);
 }
 
-StrBuffer &DisZ8::outPairReg(StrBuffer &out, uint8_t num, bool indir) {
-    const auto reg = _regs.decodePairRegNum(num);
+static StrBuffer &outPairReg(StrBuffer &out, uint8_t num, bool indir = false) {
+    const auto reg = decodePairRegNum(num);
     if (indir)
         out.letter('@');
-    return _regs.outRegName(out, reg);
+    return outRegName(out, reg);
 }
 
 StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
-    if (_useWorkRegister && _regs.isWorkRegAlias(addr))
+    if (_useWorkRegister && isWorkRegAlias(addr))
         return outWorkReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
@@ -67,7 +74,7 @@ StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
 }
 
 StrBuffer &DisZ8::outPairAddr(StrBuffer &out, uint8_t addr, bool indir) {
-    if (_useWorkRegister && _regs.isWorkRegAlias(addr))
+    if (_useWorkRegister && isWorkRegAlias(addr))
         return outPairReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
@@ -156,7 +163,7 @@ Error DisZ8::decodeIndexed(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, uint
     } else {
         base16 = insn.readByte(memory);
     }
-    const auto idx = pair ? _regs.decodePairRegNum(opr1) : _regs.decodeRegNum(opr1);
+    const auto idx = pair ? decodePairRegNum(opr1) : decodeRegNum(opr1);
     if (idx == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
     if (dst == M_r) {
@@ -371,12 +378,12 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return decodePostByte(memory, insn, out);
     if (dst == M_DA || src == M_DA) {
         if (dst == M_cc)
-            outCcName(out, opCode);
+            outConditionCode(out, opCode);
         return decodeAbsolute(memory, insn, out);
     }
     if (dst == M_RA || src == M_RA) {
         if (dst == M_cc)
-            outCcName(out, opCode);
+            outConditionCode(out, opCode);
         else if (dst == M_r) {
             outWorkReg(out, opCode >> 4).comma();
         }

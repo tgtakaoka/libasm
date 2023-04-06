@@ -127,46 +127,45 @@ enum IntrName : int8_t {
     INTR_VI = 2,   // Vectored Interrupt
 };
 
-class RegZ8000 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, RegName name) const;
-    static uint8_t encodeGeneralRegName(RegName name);
-    static RegName decodeRegNum(uint8_t num, OprSize size);
-    static RegName decodeByteReg(uint8_t num);
-    static RegName decodeWordReg(uint8_t num);
-    static RegName decodeLongReg(uint8_t num);
-    static RegName decodeQuadReg(uint8_t num);
-    static bool isByteReg(RegName name);
-    static bool isWordReg(RegName name);
-    static bool isLongReg(RegName name);
-    static bool isQuadReg(RegName name);
+namespace reg {
 
-    static RegName parseCtlReg(StrScanner &scan);
-    static RegName decodeCtlReg(uint8_t num);
-    static bool isCtlReg(RegName name);
-    static int8_t encodeCtlReg(RegName name);
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
+uint8_t encodeGeneralRegName(RegName name);
+RegName decodeRegNum(uint8_t num, OprSize size);
+RegName decodeByteReg(uint8_t num);
+RegName decodeWordReg(uint8_t num);
+RegName decodeLongReg(uint8_t num);
+RegName decodeQuadReg(uint8_t num);
+bool isByteReg(RegName name);
+bool isWordReg(RegName name);
+bool isLongReg(RegName name);
+bool isQuadReg(RegName name);
 
-    static CcName parseCcName(StrScanner &scan);
-    StrBuffer &outCcName(StrBuffer &out, CcName name) const;
-    static uint8_t encodeCcName(CcName name);
-    static CcName decodeCcNum(uint8_t num);
+RegName parseCtlReg(StrScanner &scan);
+RegName decodeCtlReg(uint8_t num);
+bool isCtlReg(RegName name);
+int8_t encodeCtlReg(RegName name);
 
-    static FlagName parseFlagName(StrScanner &scan);
-    StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags) const;
-    static uint8_t encodeFlagName(FlagName name);
+CcName parseCcName(StrScanner &scan);
+StrBuffer &outCcName(StrBuffer &out, CcName name);
+uint8_t encodeCcName(CcName name);
+CcName decodeCcNum(uint8_t num);
 
-    static IntrName parseIntrName(StrScanner &scan);
-    StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs) const;
-    static uint8_t encodeIntrName(IntrName name);
+FlagName parseFlagName(StrScanner &scan);
+StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags);
+uint8_t encodeFlagName(FlagName name);
 
-    static bool checkOverlap(RegName dst, RegName src, RegName cnt = REG_UNDEF);
+IntrName parseIntrName(StrScanner &scan);
+StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs);
+uint8_t encodeIntrName(IntrName name);
 
-private:
-    StrBuffer &outCtlName(StrBuffer &out, RegName name) const;
-    static uint8_t ctlRegLen(RegName name);
-};
+bool checkOverlap(RegName dst, RegName src, RegName cnt = REG_UNDEF);
 
+StrBuffer &outCtlName(StrBuffer &out, RegName name);
+uint8_t ctlRegLen(RegName name);
+
+}  // namespace reg
 }  // namespace z8000
 }  // namespace libasm
 

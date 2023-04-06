@@ -16,15 +16,22 @@
 
 #include "dis_i8086.h"
 
+#include "reg_i8086.h"
 #include "table_i8086.h"
 
 namespace libasm {
 namespace i8086 {
 
+using namespace reg;
+
 static const char OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
 static const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
 static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+
+DisI8086::DisI8086() : Disassembler(_formatter, TableI8086::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisI8086::reset() {
     Disassembler::reset();
@@ -43,7 +50,7 @@ StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix
         return out;
     if (prefix)
         out.letter(prefix);
-    return _regs.outRegName(out, name);
+    return outRegName(out, name);
 }
 
 RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos pos) {
@@ -68,11 +75,11 @@ RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos po
     }
     switch (mode) {
     case M_BREG:
-        return _regs.decodeByteReg(num);
+        return decodeByteReg(num);
     case M_WREG:
-        return _regs.decodeWordReg(num);
+        return decodeWordReg(num);
     case M_SREG:
-        return _regs.decodeSegReg(num);
+        return decodeSegReg(num);
     default:
         return REG_UNDEF;
     }

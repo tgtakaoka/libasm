@@ -16,13 +16,16 @@
 
 #include "dis_mc6800.h"
 
+#include "reg_mc6800.h"
 #include "table_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
 
-StrBuffer &DisMc6800::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
+using namespace reg;
+
+DisMc6800::DisMc6800() : Disassembler(_formatter, TableMc6800::TABLE, '*'), _formatter() {
+    reset();
 }
 
 Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
@@ -97,7 +100,8 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
     case M_IDX:
     case M_IDY:
     idx:
-        outRegister(outDec(out, insn.readByte(memory), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
+        outRegName(
+                outDec(out, insn.readByte(memory), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
         break;
     case M_REL:
         decodeRelative(memory, insn, out);

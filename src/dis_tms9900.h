@@ -20,22 +20,18 @@
 #include "config_tms9900.h"
 #include "dis_base.h"
 #include "insn_tms9900.h"
-#include "reg_tms9900.h"
-#include "table_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
 
 class DisTms9900 : public Disassembler, public Config {
 public:
-    DisTms9900()
-        : Disassembler(_formatter, _regs, TableTms9900::TABLE, '$'), _formatter(), _regs() {}
+    DisTms9900();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegTms9900 _regs;
 
     Error decodeRelative(InsnTms9900 &insn, StrBuffer &out);
     Error checkPostWord(InsnTms9900 &insn, StrBuffer &out);

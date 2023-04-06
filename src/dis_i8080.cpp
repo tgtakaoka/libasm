@@ -16,13 +16,16 @@
 
 #include "dis_i8080.h"
 
+#include "reg_i8080.h"
 #include "table_i8080.h"
 
 namespace libasm {
 namespace i8080 {
 
-StrBuffer &DisI8080::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
+using namespace reg;
+
+DisI8080::DisI8080() : Disassembler(_formatter, TableI8080::TABLE, '$'), _formatter() {
+    reset();
 }
 
 Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode) {
@@ -36,19 +39,19 @@ Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out
         outHex(out, insn.readUint16(memory), 16);
         break;
     case M_PTR:
-        outRegister(out, RegI8080::decodePointerReg(insn.opCode() >> 4));
+        outRegName(out, decodePointerReg(insn.opCode() >> 4));
         return OK;
     case M_STK:
-        outRegister(out, RegI8080::decodeStackReg(insn.opCode() >> 4));
+        outRegName(out, decodeStackReg(insn.opCode() >> 4));
         return OK;
     case M_IDX:
-        outRegister(out, RegI8080::decodeIndexReg(insn.opCode() >> 4));
+        outRegName(out, decodeIndexReg(insn.opCode() >> 4));
         return OK;
     case M_REG:
-        outRegister(out, RegI8080::decodeDataReg(insn.opCode()));
+        outRegName(out, decodeDataReg(insn.opCode()));
         return OK;
     case M_DST:
-        outRegister(out, RegI8080::decodeDataReg(insn.opCode() >> 3));
+        outRegName(out, decodeDataReg(insn.opCode() >> 3));
         return OK;
     case M_VEC:
         outHex(out, (insn.opCode() >> 3) & 7, 3);

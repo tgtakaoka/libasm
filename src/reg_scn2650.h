@@ -39,19 +39,19 @@ enum CcName : int8_t {
     CC_UN = 3,  // Unconditional, Always
 };
 
-class RegScn2650 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    static uint8_t encodeRegName(RegName name);
-    static RegName decodeRegName(Config::opcode_t opc);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static CcName parseCcName(StrScanner &scan);
-    static uint8_t encodeCcName(CcName name);
-    static CcName decodeCcName(Config::opcode_t opc);
-    StrBuffer &outCcName(StrBuffer &out, const CcName name) const;
-};
+RegName parseRegName(StrScanner &scan);
+uint8_t encodeRegName(RegName name);
+RegName decodeRegName(Config::opcode_t opc);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
+CcName parseCcName(StrScanner &scan);
+uint8_t encodeCcName(CcName name);
+CcName decodeCcName(Config::opcode_t opc);
+StrBuffer &outCcName(StrBuffer &out, const CcName name);
+
+}  // namespace reg
 }  // namespace scn2650
 }  // namespace libasm
 

@@ -20,23 +20,18 @@
 #include "config_i8080.h"
 #include "dis_base.h"
 #include "insn_i8080.h"
-#include "reg_i8080.h"
-#include "table_i8080.h"
 
 namespace libasm {
 namespace i8080 {
 
 class DisI8080 : public Disassembler, public Config {
 public:
-    DisI8080() : Disassembler(_formatter, _regs, TableI8080::TABLE, '$'), _formatter(), _regs() {}
+    DisI8080();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegI8080 _regs;
-
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

@@ -16,8 +16,25 @@
 
 #include "asm_mc6800.h"
 
+#include "reg_mc6800.h"
+#include "table_mc6800.h"
+
 namespace libasm {
 namespace mc6800 {
+
+using namespace reg;
+
+struct AsmMc6800::Operand : public OperandBase {
+    AddrMode mode;
+    uint8_t size;
+    uint16_t val16;
+    Operand() : mode(M_NONE), size(0), val16(0) {}
+};
+
+AsmMc6800::AsmMc6800()
+    : Assembler(_parser, TableMc6800::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location, _operators),
+      _pseudos() {}
 
 Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
@@ -49,7 +66,7 @@ Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
 
     auto a = p;
     if (a.skipSpaces().expect(',')) {
-        const auto reg = RegMc6800::parseRegName(a.skipSpaces());
+        const auto reg = parseRegName(a.skipSpaces());
         if (reg != REG_UNDEF) {
             op.mode = (reg == REG_X) ? M_IDX : M_IDY;
             scan = a;

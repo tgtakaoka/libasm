@@ -27,6 +27,8 @@ using namespace libasm::text::i8086;
 namespace libasm {
 namespace i8086 {
 
+using namespace reg;
+
 #define E3(_opc, _name, _sz, _dst, _src, _ext, _dpos, _spos, _epos) \
     { _opc, Entry::Flags::create(_dst, _src, _ext, _dpos, _spos, _epos, SZ_##_sz), _name }
 #define E2(_opc, _name, _sz, _dst, _src, _dpos, _spos) \

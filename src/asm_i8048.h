@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_i8048.h"
 #include "insn_i8048.h"
-#include "reg_i8048.h"
-#include "table_i8048.h"
 
 namespace libasm {
 namespace i8048 {
 
 class AsmI8048 : public Assembler, public Config {
 public:
-    AsmI8048()
-        : Assembler(_parser, TableI8048::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmI8048();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -44,13 +39,7 @@ private:
     const DollarLocationParser _location;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op);

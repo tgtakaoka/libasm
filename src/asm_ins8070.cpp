@@ -17,8 +17,26 @@
 
 #include "asm_ins8070.h"
 
+#include "reg_ins8070.h"
+#include "table_ins8070.h"
+
 namespace libasm {
 namespace ins8070 {
+
+using namespace reg;
+
+struct AsmIns8070::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    bool autoIndex;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), autoIndex(false), val16(0) {}
+};
+
+AsmIns8070::AsmIns8070()
+    : Assembler(_parser, TableIns8070::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location, _function),
+      _pseudos() {}
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
@@ -108,7 +126,7 @@ void AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
         return;
     }
 
-    insn.embed(RegIns8070::encodePointerReg(op.reg));
+    insn.embed(encodePointerReg(op.reg));
     if (op.autoIndex)
         insn.embed(4);
     const auto offset = static_cast<Config::ptrdiff_t>(op.val16);
@@ -121,7 +139,7 @@ void AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op
     switch (mode) {
     case M_P23:
     case M_PTR:
-        insn.embed(RegIns8070::encodePointerReg(op.reg));
+        insn.embed(encodePointerReg(op.reg));
         break;
     case M_VEC:
         insn.embed(op.val16 & 0x0F);
@@ -159,7 +177,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    const RegName reg = RegIns8070::parseRegName(p);
+    const RegName reg = parseRegName(p);
     if (reg != REG_UNDEF) {
         AddrMode mode;
         switch (reg) {
@@ -206,8 +224,8 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
         if (!autoIndex)
             autoIndex = p.expect('@');
         const auto ptrp = p;
-        const auto ptr = RegIns8070::parseRegName(p);
-        if (!RegIns8070::isPointerReg(ptr))
+        const auto ptr = parseRegName(p);
+        if (!isPointerReg(ptr))
             op.setError(UNKNOWN_OPERAND);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
             return op.setError(ptrp, REGISTER_NOT_ALLOWED);

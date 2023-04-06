@@ -18,8 +18,25 @@
 
 #include <ctype.h>
 
+#include "reg_i8051.h"
+#include "table_i8051.h"
+
 namespace libasm {
 namespace i8051 {
+
+using namespace reg;
+
+struct AsmI8051::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
+AsmI8051::AsmI8051()
+    : Assembler(_parser, TableI8051::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
@@ -41,10 +58,10 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     const auto regp = p;
-    op.reg = RegI8051::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         if (indir && op.reg == REG_A && p.expect('+')) {
-            const auto base = RegI8051::parseRegName(p);
+            const auto base = parseRegName(p);
             if (base == REG_DPTR || base == REG_PC) {
                 op.mode = (base == REG_DPTR) ? M_INDXD : M_INDXP;
                 scan = p;
@@ -64,7 +81,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
             }
             return op.setError(UNKNOWN_OPERAND);
         }
-        if (RegI8051::isRReg(op.reg)) {
+        if (isRReg(op.reg)) {
             op.mode = M_RREG;
             return OK;
         }
@@ -135,7 +152,7 @@ void AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand
     }
     case M_RREG:
     case M_IDIRR:
-        insn.embed(RegI8051::encodeRReg(op.reg));
+        insn.embed(encodeRRegName(op.reg));
         return;
     case M_ADR8:
         if (op.val16 >= 0x100)

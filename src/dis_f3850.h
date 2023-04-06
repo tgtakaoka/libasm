@@ -20,17 +20,13 @@
 #include "config_f3850.h"
 #include "dis_base.h"
 #include "insn_f3850.h"
-#include "reg_f3850.h"
-#include "table_f3850.h"
 
 namespace libasm {
 namespace f3850 {
 
 class DisF3850 : public Disassembler, public Config {
 public:
-    DisF3850() : Disassembler(_formatter, _regs, TableF3850::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisF3850();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -38,7 +34,6 @@ public:
 
 private:
     FairchildValueFormatter _formatter;
-    RegF3850 _regs;
     bool _useScratchpad;
     const struct OptUseScratchpad : public BoolOption {
         OptUseScratchpad(bool &var);

@@ -16,13 +16,20 @@
 
 #include "dis_mc6805.h"
 
+#include "reg_mc6805.h"
 #include "table_mc6805.h"
 
 namespace libasm {
 namespace mc6805 {
 
+using namespace reg;
+
 static const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
 static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+
+DisMc6805::DisMc6805() : Disassembler(_formatter, TableMc6805::TABLE, '*'), _formatter() {
+    reset();
+}
 
 AddressWidth DisMc6805::addressWidth() const {
     return AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
@@ -42,10 +49,6 @@ Error DisMc6805::OptPcBits::check(int32_t value) const {
 
 void DisMc6805::OptPcBits::set(int32_t value) const {
     _var = value;
-}
-
-StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
 }
 
 Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {
@@ -76,19 +79,19 @@ Error DisMc6805::decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &
 
 Error DisMc6805::decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode) {
     if (mode == M_IX0) {
-        outRegister(out.letter(','), REG_X);
+        outRegName(out.letter(','), REG_X);
     } else if (mode == M_IX2) {
         const uint16_t disp16 = insn.readUint16(memory);
         if (disp16 < 0x100)
             out.letter('>');
         outDec(out, disp16, 16).letter(',');
-        outRegister(out, REG_X);
+        outRegName(out, REG_X);
     } else {
         const uint8_t disp8 = insn.readByte(memory);
         if (disp8 == 0)
             out.letter('<');
         outDec(out, disp8, 8).letter(',');
-        outRegister(out, REG_X);
+        outRegName(out, REG_X);
     }
     return setErrorIf(insn);
 }

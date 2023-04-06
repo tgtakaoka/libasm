@@ -17,14 +17,30 @@
 #include "asm_cdp1802.h"
 
 #include "reg_cdp1802.h"
+#include "table_cdp1802.h"
 
 namespace libasm {
 namespace cdp1802 {
+
+using namespace reg;
 
 static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 static const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
 static const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 static const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+
+struct AsmCdp1802::Operand : public OperandBase {
+    AddrMode mode;
+    uint16_t val16;
+    Operand() : mode(M_NONE), val16(0) {}
+};
+
+AsmCdp1802::AsmCdp1802()
+    : Assembler(_parser, TableCdp1802::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {
+    reset();
+}
 
 AsmCdp1802::OptSmartBranch::OptSmartBranch(bool &var)
     : BoolOption(OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH, var) {}
@@ -111,7 +127,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
 
     if (_useReg) {
-        const auto reg = RegCdp1802::parseRegName(p);
+        const auto reg = parseRegName(p);
         if (reg != REG_UNDEF) {
             op.val16 = int8_t(reg);
             op.mode = M_REGN;

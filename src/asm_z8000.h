@@ -21,22 +21,16 @@
 #include "config_z8000.h"
 #include "insn_z8000.h"
 #include "reg_z8000.h"
-#include "table_z8000.h"
 
 namespace libasm {
 namespace z8000 {
 
 class AsmZ8000 : public Assembler, public Config {
 public:
-    AsmZ8000()
-        : Assembler(_parser, TableZ8000::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmZ8000();
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
+    AddressWidth addressWidth() const override;
     void reset() override { _autoShortDirect = false; }
     const Options &options() const override { return _options; }
     bool hasSetInstruction() const override { return true; }
@@ -56,17 +50,10 @@ private:
     } _opt_shortDitrect{_autoShortDirect};
     const Options _options{_opt_shortDitrect};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
-        RegName base;    // M_BA/M_BX
-        CcName cc;       // M_CC/M_DA/M_X
-        uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
-        Operand() : mode(M_NONE), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
-    };
-
     int8_t parseIntrNames(StrScanner &scan) const;
     int8_t parseFlagNames(StrScanner &scan) const;
+
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op);
 
     void emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);

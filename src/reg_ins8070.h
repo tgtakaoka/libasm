@@ -37,16 +37,16 @@ enum RegName : int8_t {
     REG_S = 5 + 4,
 };
 
-class RegIns8070 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static bool isPointerReg(RegName name);
-    static uint8_t encodePointerReg(RegName name);
-    static RegName decodePointerReg(uint8_t num);
-};
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
+bool isPointerReg(RegName name);
+uint8_t encodePointerReg(RegName name);
+RegName decodePointerReg(uint8_t num);
+
+}  // namespace reg
 }  // namespace ins8070
 }  // namespace libasm
 

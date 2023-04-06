@@ -19,11 +19,13 @@
 #include "text_i8051.h"
 
 using namespace libasm::text::i8051;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace i8051 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_C),
         NAME_ENTRY(REG_AB),
@@ -39,32 +41,33 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_DPTR),
 };
 
-RegName RegI8051::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegI8051::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-bool RegI8051::isRReg(RegName name) {
+bool isRReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 0 && num < 8;
 }
 
-uint8_t RegI8051::encodeRReg(RegName name) {
+uint8_t encodeRRegName(RegName name) {
     return uint8_t(name);
 }
 
-RegName RegI8051::decodeRReg(const uint8_t num) {
+RegName decodeRRegNum(const uint8_t num) {
     return RegName(num);
 }
 
 }  // namespace i8051
+}  // namespace reg
 }  // namespace libasm
 
 // Local Variables:

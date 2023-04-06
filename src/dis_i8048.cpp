@@ -16,12 +16,17 @@
 
 #include "dis_i8048.h"
 
-#include "entry_i8048.h"
-#include "error_reporter.h"
+#include "reg_i8048.h"
 #include "table_i8048.h"
 
 namespace libasm {
 namespace i8048 {
+
+using namespace reg;
+
+DisI8048::DisI8048() : Disassembler(_formatter, TableI8048::TABLE, '$'), _formatter() {
+    reset();
+}
 
 Error DisI8048::decodeOperand(
         DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode) {
@@ -31,33 +36,33 @@ Error DisI8048::decodeOperand(
         out.letter('@');
         // Fall-through
     case M_A:
-        _regs.outRegName(out, REG_A);
+        outRegName(out, REG_A);
         break;
     case M_IR:
     case M_IR3:
         out.letter('@');
         // Fall-through
     case M_R:
-        _regs.outRegName(out, _regs.decodeRReg(opc & 7));
+        outRegName(out, decodeRRegNum(opc & 7));
         break;
     case M_BUS:
-        _regs.outRegName(out, REG_BUS);
+        outRegName(out, REG_BUS);
         break;
     case M_P12:
         if ((opc & 7) == 0 || (opc & 7) == 3)
             return setError(UNKNOWN_INSTRUCTION);
         // Fall-through
     case M_PEXT:
-        _regs.outRegName(out, _regs.decodePort(opc & 7));
+        outRegName(out, decodePortNum(opc & 7));
         break;
     case M_P:
-        _regs.outRegName(out, REG_P);
+        outRegName(out, REG_P);
         break;
     case M_P1:
-        _regs.outRegName(out, REG_P1);
+        outRegName(out, REG_P1);
         break;
     case M_P2:
-        _regs.outRegName(out, REG_P2);
+        outRegName(out, REG_P2);
         break;
     case M_AD08:
         outAbsAddr(out, ((insn.address() + 1) & ~0xFF) | insn.readByte(memory));
@@ -75,37 +80,37 @@ Error DisI8048::decodeOperand(
         outHex(out.letter('#'), insn.readByte(memory), 8, false);
         break;
     case M_PSW:
-        _regs.outRegName(out, REG_PSW);
+        outRegName(out, REG_PSW);
         break;
     case M_C:
-        _regs.outRegName(out, REG_C);
+        outRegName(out, REG_C);
         break;
     case M_F:
-        _regs.outRegName(out, (opc & 0x20) ? REG_F1 : REG_F0);
+        outRegName(out, (opc & 0x20) ? REG_F1 : REG_F0);
         break;
     case M_RB:
-        _regs.outRegName(out, (opc & 0x10) ? REG_RB1 : REG_RB0);
+        outRegName(out, (opc & 0x10) ? REG_RB1 : REG_RB0);
         break;
     case M_MB:
-        _regs.outRegName(out, (opc & 0x10) ? REG_MB1 : REG_MB0);
+        outRegName(out, (opc & 0x10) ? REG_MB1 : REG_MB0);
         break;
     case M_I:
-        _regs.outRegName(out, REG_I);
+        outRegName(out, REG_I);
         break;
     case M_T:
-        _regs.outRegName(out, REG_T);
+        outRegName(out, REG_T);
         break;
     case M_CNT:
-        _regs.outRegName(out, REG_CNT);
+        outRegName(out, REG_CNT);
         break;
     case M_TCNT:
-        _regs.outRegName(out, REG_TCNT);
+        outRegName(out, REG_TCNT);
         break;
     case M_TCNTI:
-        _regs.outRegName(out, REG_TCNTI);
+        outRegName(out, REG_TCNTI);
         break;
     case M_CLK:
-        _regs.outRegName(out, REG_CLK);
+        outRegName(out, REG_CLK);
         break;
     default:
         break;

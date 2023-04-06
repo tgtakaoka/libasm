@@ -20,20 +20,13 @@
 #include "asm_base.h"
 #include "config_mc6805.h"
 #include "insn_mc6805.h"
-#include "reg_mc6805.h"
-#include "table_mc6805.h"
 
 namespace libasm {
 namespace mc6805 {
 
 class AsmMc6805 : public Assembler, public Config {
 public:
-    AsmMc6805()
-        : Assembler(_parser, TableMc6805::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location, _operators),
-          _pseudos() {
-        reset();
-    }
+    AsmMc6805();
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
@@ -58,13 +51,7 @@ private:
     } _opt_pc_bits{_pc_bits};
     const Options _options{_opt_pc_bits};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        int8_t size;
-        uint16_t val16;
-        Operand() : mode(M_NONE), size(0), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void emitRelative(InsnMc6805 &insn, const Operand &op);
     void emitBitNumber(InsnMc6805 &insn, const Operand &op);

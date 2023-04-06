@@ -16,10 +16,13 @@
 
 #include "dis_mos6502.h"
 
+#include "reg_mos6502.h"
 #include "table_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
+
+using namespace reg;
 
 static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
 static const char OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
@@ -28,9 +31,17 @@ static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
 static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
 static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
 
+DisMos6502::DisMos6502() : Disassembler(_formatter, TableMos6502::TABLE, '*'), _formatter() {
+    reset();
+}
+
 void DisMos6502::reset() {
     Disassembler::reset();
     TableMos6502::TABLE.reset();
+}
+
+AddressWidth DisMos6502::addressWidth() const {
+    return TableMos6502::TABLE.addressWidth();
 }
 
 DisMos6502::OptIndirectLong::OptIndirectLong()
@@ -145,16 +156,16 @@ Error DisMos6502::decodeOperand(
     const auto mode = InsnMos6502::baseMode(modeAndFlags);
     switch (mode) {
     case M_REGA:
-        _regs.outRegName(out, REG_A);
+        outRegName(out, REG_A);
         break;
     case M_REGX:
-        _regs.outRegName(out, REG_X);
+        outRegName(out, REG_X);
         break;
     case M_REGY:
-        _regs.outRegName(out, REG_Y);
+        outRegName(out, REG_Y);
         break;
     case M_REGS:
-        _regs.outRegName(out, REG_S);
+        outRegName(out, REG_S);
         break;
     case M_IMA:
     case M_IMX:

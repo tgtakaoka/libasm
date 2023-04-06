@@ -21,23 +21,20 @@
 #include "dis_base.h"
 #include "insn_z80.h"
 #include "reg_z80.h"
-#include "table_z80.h"
 
 namespace libasm {
 namespace z80 {
 
 class DisZ80 : public Disassembler, public Config {
 public:
-    DisZ80() : Disassembler(_formatter, _regs, TableZ80::TABLE, '$'), _formatter(), _regs() {}
+    DisZ80();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegZ80 _regs;
 
     StrBuffer &outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits);
-    StrBuffer &outRegister(StrBuffer &out, RegName reg);
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg);
     StrBuffer &outIndexOffset(StrBuffer &out, RegName reg, int8_t offset);
     StrBuffer &outDataReg(StrBuffer &out, RegName reg);

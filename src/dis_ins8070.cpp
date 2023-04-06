@@ -16,13 +16,20 @@
 
 #include "dis_ins8070.h"
 
+#include "reg_ins8070.h"
 #include "table_ins8070.h"
 
 namespace libasm {
 namespace ins8070 {
 
+using namespace reg;
+
 static const char OPT_BOOL_IMM_PREFIX[] PROGMEM = "imm-prefix";
 static const char OPT_DESC_IMM_PREFIX[] PROGMEM = "immediate prefix # (default =)";
+
+DisIns8070::DisIns8070() : Disassembler(_formatter, TableIns8070::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisIns8070::reset() {
     Disassembler::reset();
@@ -31,10 +38,6 @@ void DisIns8070::reset() {
 
 DisIns8070::OptImmediatePrefix::OptImmediatePrefix(bool &var)
     : BoolOption(OPT_BOOL_IMM_PREFIX, OPT_DESC_IMM_PREFIX, var) {}
-
-StrBuffer &DisIns8070::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
-}
 
 Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
     out.letter(_immediatePrefix ? '#' : '=');
@@ -62,17 +65,17 @@ Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &
 Error DisIns8070::decodeRelative(
         DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode) {
     const auto delta = static_cast<int8_t>(insn.readByte(memory));
-    const auto ptr = _regs.decodePointerReg(insn.opCode());
+    const auto ptr = decodePointerReg(insn.opCode());
     if (mode == M_PCR) {
         const auto fetch = insn.execute() ? 1 : 0;
         const auto base = insn.address() + 1 + fetch;
         const auto target = branchTarget(base, delta);
         outRelAddr(out, target, insn.address(), 8);
         if (fetch == 0)
-            outRegister(out.letter(','), REG_PC);
+            outRegName(out.letter(','), REG_PC);
     } else {
         outDec(out, delta, -8).letter(',');
-        outRegister(out, ptr);
+        outRegName(out, ptr);
     }
     return setError(insn);
 }
@@ -99,25 +102,25 @@ Error DisIns8070::decodeOperand(
         DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_AR:
-        outRegister(out, REG_A);
+        outRegName(out, REG_A);
         break;
     case M_ER:
-        outRegister(out, REG_E);
+        outRegName(out, REG_E);
         break;
     case M_SR:
-        outRegister(out, REG_S);
+        outRegName(out, REG_S);
         break;
     case M_EA:
-        outRegister(out, REG_EA);
+        outRegName(out, REG_EA);
         break;
     case M_P23:
-        outRegister(out, (insn.opCode() & 1) ? REG_P3 : REG_P2);
+        outRegName(out, (insn.opCode() & 1) ? REG_P3 : REG_P2);
         break;
     case M_PTR:
-        outRegister(out, RegIns8070::decodePointerReg(insn.opCode()));
+        outRegName(out, decodePointerReg(insn.opCode()));
         break;
     case M_TR:
-        outRegister(out, REG_T);
+        outRegName(out, REG_T);
         break;
     case M_IMM:
         decodeImmediate(memory, insn, out);

@@ -16,8 +16,30 @@
 
 #include "asm_mn1610.h"
 
+#include "reg_mn1610.h"
+#include "table_mn1610.h"
+
 namespace libasm {
 namespace mn1610 {
+
+using namespace reg;
+
+struct AsmMn1610::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    uint32_t val32;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+};
+
+AsmMn1610::AsmMn1610()
+    : Assembler(_parser, TableMn1610::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
+
+AddressWidth AsmMn1610::addressWidth() const {
+    return TableMn1610::TABLE.addressWidth();
+}
 
 void AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
     const auto delta = branchDelta(insn.address(), op.val32, op);
@@ -45,15 +67,14 @@ void AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
     case M_IXID:
     case M_INDX:
     case M_IDIX:
-        if (RegMn1610::isIndex(op.reg)) {
+        if (isIndex(op.reg)) {
             if (op.mode == M_IXID)
                 setErrorIf(op, REGISTER_NOT_ALLOWED);
             if (op.val32 >= 0x100)
                 setErrorIf(op, OVERFLOW_RANGE);
             // Direct index: D(Xj), Indirect index: (D)(Xj)
             insn.embed(static_cast<uint8_t>(op.val32));
-            const Config::opcode_t mode =
-                    (op.mode == M_IDIX ? 2 : 0) | RegMn1610::encodeIndex(op.reg);
+            const Config::opcode_t mode = (op.mode == M_IDIX ? 2 : 0) | encodeIndex(op.reg);
             insn.embed(mode << 11);
             break;
         }
@@ -88,14 +109,14 @@ void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode
             setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RD:
-        insn.embed(RegMn1610::encodeGeneric(op.reg) << 8);
+        insn.embed(encodeGeneric(op.reg) << 8);
         break;
     case M_RSG:
         if (op.reg == REG_STR)
             setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RS:
-        insn.embed(RegMn1610::encodeGeneric(op.reg));
+        insn.embed(encodeGeneric(op.reg));
         break;
     case M_RBW:
         if (op.reg == REG_CSBR)
@@ -103,33 +124,33 @@ void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode
         // Fall-Through
     case M_SB:
     case M_RB:
-        insn.embed(RegMn1610::encodeSegment(op.reg) << 4);
+        insn.embed(encodeSegment(op.reg) << 4);
         break;
     case M_RHR:
     case M_RHW:
         if ((mode == M_RHR && op.reg == REG_SOR) || (mode == M_RHW && op.reg == REG_SIR))
             setErrorIf(op, REGISTER_NOT_ALLOWED);
-        insn.embed(RegMn1610::encodeHardware(op.reg) << 4);
+        insn.embed(encodeHardware(op.reg) << 4);
         break;
     case M_RP:
-        insn.embed(RegMn1610::encodeSpecial(op.reg) << 4);
+        insn.embed(encodeSpecial(op.reg) << 4);
         break;
     case M_RIAU:
         insn.embed((op.mode == M_RIAU ? (op.val32 == 1 ? 3 : 2) : 1) << 6);
         // Fall-through
     case M_RI:
-        insn.embed(RegMn1610::encodeIndirect(op.reg));
+        insn.embed(encodeIndirect(op.reg));
         break;
     case M_SKIP:
         if (op.mode == M_SKIP)  // op.mode may be M_NONE
-            insn.embed(RegMn1610::encodeSkip(op.cc) << 4);
+            insn.embed(encodeSkip(op.cc) << 4);
         break;
     case M_EOP:
-        insn.embed(RegMn1610::encodeEop(op.cc));
+        insn.embed(encodeEop(op.cc));
         break;
     case M_COP:
         if (op.mode == M_COP) {
-            insn.embed(RegMn1610::encodeCop(op.cc) << 3);
+            insn.embed(encodeCop(op.cc) << 3);
             break;
         }
         if (op.val32 >= 2)
@@ -189,13 +210,13 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     if (endOfLine(p))
         return OK;
 
-    op.cc = RegMn1610::parseCcName(p);
+    op.cc = parseCcName(p);
     if (op.cc != CC_UNDEF) {
-        if (RegMn1610::isSkip(op.cc)) {
+        if (isSkip(op.cc)) {
             op.mode = M_SKIP;
-        } else if (RegMn1610::isCop(op.cc)) {
+        } else if (isCop(op.cc)) {
             op.mode = M_COP;
-        } else if (RegMn1610::isEop(op.cc)) {
+        } else if (isEop(op.cc)) {
             op.mode = M_EOP;
         }
         scan = p;
@@ -208,7 +229,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir || preDec)
         ++t;
     const auto r = t;
-    op.reg = RegMn1610::parseRegName(t);
+    op.reg = parseRegName(t);
     if (op.reg != REG_UNDEF) {
         // r, (r), -(r), (r)+
         t.skipSpaces();
@@ -217,7 +238,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
                 op.mode = M_RI1;
             } else if (op.reg == REG_R2) {
                 op.mode = M_RI2;
-            } else if (RegMn1610::isIndirect(op.reg)) {
+            } else if (isIndirect(op.reg)) {
                 op.mode = M_RI;
             } else {
                 return op.setError(r, REGISTER_NOT_ALLOWED);
@@ -234,17 +255,17 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
         } else {
             if (op.reg == REG_R0) {
                 op.mode = M_R0;
-            } else if (RegMn1610::isGeneric(op.reg)) {
+            } else if (isGeneric(op.reg)) {
                 op.mode = (op.reg == REG_STR) ? M_RD : M_RDG;
-            } else if (RegMn1610::isSegmentBase(op.reg)) {
+            } else if (isSegmentBase(op.reg)) {
                 op.mode = M_SB;
             } else if (op.reg == REG_DR0) {
                 op.mode = M_DR0;
-            } else if (RegMn1610::isSegment(op.reg)) {
+            } else if (isSegment(op.reg)) {
                 op.mode = M_RB;
-            } else if (RegMn1610::isSpecial(op.reg)) {
+            } else if (isSpecial(op.reg)) {
                 op.mode = M_RP;
-            } else if (RegMn1610::isHardware(op.reg)) {
+            } else if (isHardware(op.reg)) {
                 op.mode = M_RHR;
             }
         }
@@ -272,7 +293,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('(')) {
         // v(r), (v(r))
-        op.reg = RegMn1610::parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces());
         if (op.reg == REG_UNDEF)
             return op.setError(p, UNKNOWN_OPERAND);
         if (!p.skipSpaces().expect(')'))
@@ -294,7 +315,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('(')) {
         // (v)(r)
-        op.reg = RegMn1610::parseRegName(p.skipSpaces());
+        op.reg = parseRegName(p.skipSpaces());
         if (op.reg != REG_UNDEF) {
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);

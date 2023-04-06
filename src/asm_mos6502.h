@@ -20,24 +20,17 @@
 #include "asm_base.h"
 #include "config_mos6502.h"
 #include "insn_mos6502.h"
-#include "reg_mos6502.h"
-#include "table_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
 
 class AsmMos6502 : public Assembler, public Config {
 public:
-    AsmMos6502()
-        : Assembler(_parser, TableMos6502::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmMos6502();
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
-    void reset() override { TableMos6502::TABLE.reset(); }
+    AddressWidth addressWidth() const override;
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:
@@ -51,8 +44,7 @@ private:
         Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
 
     private:
-        Error parseTableOnOff(
-                StrScanner &scan, Assembler &assembler, bool (TableMos6502::*set)(bool val));
+        Error parseTableOnOff(StrScanner &scan, Assembler &assembler, bool (*set)(bool val));
     } _pseudos;
 
     const struct OptLongI : public BoolOptionBase {
@@ -65,16 +57,7 @@ private:
     } _opt_longa{_opt_longi};
     const Options _options{_opt_longa};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        uint32_t val32;
-        Operand() : mode(M_NONE), val32(0) {}
-        void embed(AddrMode indirectFlags) {
-            mode = AddrMode(uint8_t(InsnMos6502::indirectFlags(indirectFlags)) |
-                            uint8_t(InsnMos6502::baseMode(mode)));
-        }
-    };
-
+    struct Operand;
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
     Error parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;

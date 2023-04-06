@@ -19,11 +19,13 @@
 #include "text_i8080.h"
 
 using namespace libasm::text::i8080;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace i8080 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_B),
         NAME_ENTRY(REG_C),
@@ -36,19 +38,19 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_PSW),
 };
 
-RegName RegI8080::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegI8080::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-bool RegI8080::isPointerReg(RegName name) {
+bool isPointerReg(RegName name) {
     switch (name) {
     case REG_B:
     case REG_D:
@@ -60,13 +62,13 @@ bool RegI8080::isPointerReg(RegName name) {
     }
 }
 
-uint8_t RegI8080::encodePointerReg(RegName name) {
+uint8_t encodePointerReg(RegName name) {
     if (name == REG_SP)
         return 3;
     return (uint8_t(name) >> 1);
 }
 
-bool RegI8080::isStackReg(RegName name) {
+bool isStackReg(RegName name) {
     switch (name) {
     case REG_B:
     case REG_D:
@@ -78,30 +80,30 @@ bool RegI8080::isStackReg(RegName name) {
     }
 }
 
-uint8_t RegI8080::encodeStackReg(RegName name) {
+uint8_t encodeStackReg(RegName name) {
     if (name == REG_PSW)
         return 3;
     return (uint8_t(name) >> 1);
 }
 
-bool RegI8080::isIndexReg(RegName name) {
+bool isIndexReg(RegName name) {
     return name == REG_B || name == REG_D;
 }
 
-uint8_t RegI8080::encodeIndexReg(RegName name) {
+uint8_t encodeIndexReg(RegName name) {
     return (uint8_t(name) >> 1);
 }
 
-bool RegI8080::isDataReg(RegName name) {
+bool isDataReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 0 && num < 8;
 }
 
-uint8_t RegI8080::encodeDataReg(RegName name) {
+uint8_t encodeDataReg(RegName name) {
     return uint8_t(name);
 }
 
-RegName RegI8080::decodePointerReg(uint8_t num) {
+RegName decodePointerReg(uint8_t num) {
     switch (num & 3) {
     case 0:
         return REG_B;
@@ -114,7 +116,7 @@ RegName RegI8080::decodePointerReg(uint8_t num) {
     }
 }
 
-RegName RegI8080::decodeStackReg(uint8_t num) {
+RegName decodeStackReg(uint8_t num) {
     switch (num & 3) {
     case 0:
         return REG_B;
@@ -127,14 +129,15 @@ RegName RegI8080::decodeStackReg(uint8_t num) {
     }
 }
 
-RegName RegI8080::decodeIndexReg(uint8_t num) {
+RegName decodeIndexReg(uint8_t num) {
     return RegName((num & 1) << 1);
 }
 
-RegName RegI8080::decodeDataReg(uint8_t num) {
+RegName decodeDataReg(uint8_t num) {
     return RegName(num & 7);
 }
 
+}  // namespace reg
 }  // namespace i8080
 }  // namespace libasm
 

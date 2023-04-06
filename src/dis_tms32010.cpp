@@ -16,10 +16,17 @@
 
 #include "dis_tms32010.h"
 
+#include "reg_tms32010.h"
 #include "table_tms32010.h"
 
 namespace libasm {
 namespace tms32010 {
+
+using namespace reg;
+
+DisTms32010::DisTms32010() : Disassembler(_formatter, TableTms32010::TABLE, '$'), _formatter() {
+    reset();
+}
 
 Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
     // Store Status Register can access Data Page 1 only.
@@ -56,7 +63,7 @@ Error DisTms32010::decodeNextArp(StrBuffer &out, uint8_t mam) {
     if (mam & (1 << 3))  // No next auxilialy register pointer
         return (mam & 7) == 0 ? OK : setError(UNKNOWN_INSTRUCTION);
     const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
-    _regs.outRegName(out.comma(), arp);
+    outRegName(out.comma(), arp);
     return OK;
 }
 
@@ -90,13 +97,13 @@ Error DisTms32010::decodeOperand(
     case M_LS0:
         return decodeShiftCount(out, (opc >> 8) & 7, opc, mode);
     case M_AR:
-        _regs.outRegName(out, (opc & (1 << 8)) == 0 ? REG_AR0 : REG_AR1);
+        outRegName(out, (opc & (1 << 8)) == 0 ? REG_AR0 : REG_AR1);
         break;
     case M_PA:
-        _regs.outRegName(out, RegName(((opc >> 8) & 7) + int8_t(REG_PA0)));
+        outRegName(out, RegName(((opc >> 8) & 7) + int8_t(REG_PA0)));
         break;
     case M_ARK:
-        _regs.outRegName(out, (opc & 1) == 0 ? REG_AR0 : REG_AR1);
+        outRegName(out, (opc & 1) == 0 ? REG_AR0 : REG_AR1);
         break;
     case M_DPK:
         out.letter((opc & 1) == 0 ? '0' : '1');

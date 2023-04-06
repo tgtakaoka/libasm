@@ -16,8 +16,26 @@
 
 #include "asm_ins8060.h"
 
+#include "reg_ins8060.h"
+#include "table_ins8060.h"
+
 namespace libasm {
 namespace ins8060 {
+
+using namespace reg;
+
+struct AsmIns8060::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    RegName index;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), index(REG_UNDEF), val16(0) {}
+};
+
+AsmIns8060::AsmIns8060()
+    : Assembler(_parser, TableIns8060::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location, _function),
+      _pseudos() {}
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFFF;
@@ -80,7 +98,7 @@ void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
             if (overflowInt8(delta) || delta == -128)
                 setErrorIf(op, OVERFLOW_RANGE);
         }
-        insn.embed(RegIns8060::encodePointerReg(op.reg));
+        insn.embed(encodePointerReg(op.reg));
     } else {
         // PC points the last byte of instruction.
         const Config::uintptr_t base = insn.address() + 1;
@@ -98,7 +116,7 @@ void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
             setErrorIf(op, OPERAND_TOO_FAR);
         if (op.getError())
             delta = 0;
-        insn.embed(RegIns8060::encodePointerReg(REG_PC));
+        insn.embed(encodePointerReg(REG_PC));
     }
     insn.emitInsn();
     insn.emitByte(delta);
@@ -109,7 +127,7 @@ void AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
         encodeRel8(insn, op);
         return;
     }
-    insn.embed(RegIns8060::encodePointerReg(op.reg));
+    insn.embed(encodePointerReg(op.reg));
     if (op.mode == M_INDX) {  // auto displacement mode
         if (insn.addrMode() != M_INDX)
             setErrorIf(op, OPERAND_NOT_ALLOWED);
@@ -134,7 +152,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     const auto autoDisp = p.expect('@');
-    const auto reg = RegIns8060::parseRegName(p);
+    const auto reg = parseRegName(p);
     if (reg == REG_E) {
         op.index = REG_E;
     } else if (reg != REG_UNDEF) {
@@ -148,8 +166,8 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
             return op.getError();
     }
     if (p.skipSpaces().expect('(')) {
-        const auto base = RegIns8060::parseRegName(p);
-        if (!RegIns8060::isPointerReg(base))
+        const auto base = parseRegName(p);
+        if (!isPointerReg(base))
             return op.setError(UNKNOWN_OPERAND);
         if (!p.expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
@@ -188,7 +206,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
         encodeRel8(insn, op);
         break;
     case M_PNTR:
-        insn.embed(RegIns8060::encodePointerReg(op.reg));
+        insn.embed(encodePointerReg(op.reg));
         insn.emitInsn();
         break;
     case M_DISP:

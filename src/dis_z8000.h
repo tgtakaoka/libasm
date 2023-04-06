@@ -20,26 +20,21 @@
 #include "config_z8000.h"
 #include "dis_base.h"
 #include "insn_z8000.h"
-#include "reg_z8000.h"
-#include "table_z8000.h"
 
 namespace libasm {
 namespace z8000 {
 
 class DisZ8000 : public Disassembler, public Config {
 public:
-    DisZ8000() : Disassembler(_formatter, _regs, TableZ8000::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisZ8000();
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
+    AddressWidth addressWidth() const override;
     void reset() override;
     const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
-    RegZ8000 _regs;
     bool _ioAddressPrefix;
     bool _shortDirect;
     const struct OptIoaddrPrefix : public BoolOption {
@@ -50,8 +45,6 @@ private:
     } _opt_shortDirect{_shortDirect, _opt_ioaddrPrefix};
     const Options _options{_opt_shortDirect};
 
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
-    StrBuffer &outConditionCode(StrBuffer &out, uint8_t ccNum);
     StrBuffer &outImmediate(StrBuffer &out, uint8_t data, AddrMode mode);
     StrBuffer &outComma(StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field);
     Error decodeImmediate(

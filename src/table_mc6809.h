@@ -25,6 +25,8 @@
 namespace libasm {
 namespace mc6809 {
 
+using namespace reg;
+
 struct PostSpec {
     RegName index;
     RegName base;

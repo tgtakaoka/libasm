@@ -4,6 +4,7 @@
 build asm_base.o:        cxx ${root}/src/asm_base.cpp
 build dis_base.o:        cxx ${root}/src/dis_base.cpp
 build config_base.o:     cxx ${root}/src/config_base.cpp
+build reg_base.o:        cxx ${root}/src/reg_base.cpp
 build error_reporter.o:  cxx ${root}/src/error_reporter.cpp
 build option_base.o:     cxx ${root}/src/option_base.cpp
 build str_buffer.o:      cxx ${root}/src/str_buffer.cpp

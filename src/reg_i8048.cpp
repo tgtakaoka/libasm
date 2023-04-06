@@ -19,11 +19,13 @@
 #include "text_i8048.h"
 
 using namespace libasm::text::i8048;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace i8048 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_BUS),
         NAME_ENTRY(REG_C),
@@ -57,50 +59,50 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_TCNTI),
 };
 
-RegName RegI8048::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegI8048::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-bool RegI8048::isRReg(RegName name) {
+bool isRReg(RegName name) {
     const auto num = int8_t(name);
     return num >= int8_t(REG_R0) && num <= int8_t(REG_R7);
 }
 
-bool RegI8048::isPort(RegName name) {
+bool isPort(RegName name) {
     const auto num = int8_t(name);
     return num >= int8_t(REG_P1) && num <= int8_t(REG_P7);
 }
 
-bool RegI8048::isTimer(RegName name) {
+bool isTimer(RegName name) {
     const auto num = int8_t(name);
     return num >= int8_t(REG_T) && num <= int8_t(REG_TCNTI);
 }
 
-uint8_t RegI8048::encodeRReg(RegName name) {
+uint8_t encodeRRegName(RegName name) {
     return int8_t(name);
 }
 
-RegName RegI8048::decodeRReg(const uint8_t num) {
+RegName decodeRRegNum(const uint8_t num) {
     return RegName(num & 7);
 }
 
-
-uint8_t RegI8048::encodePort(RegName name) {
+uint8_t encodePortName(RegName name) {
     return int8_t(name) - int8_t(REG_BUS);
 }
 
-RegName RegI8048::decodePort(const uint8_t num) {
+RegName decodePortNum(const uint8_t num) {
     return RegName((num & 7) + int8_t(REG_BUS));
 }
 
+}  // namespace reg
 }  // namespace i8048
 }  // namespace libasm
 

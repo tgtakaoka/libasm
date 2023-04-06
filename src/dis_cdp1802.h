@@ -20,18 +20,13 @@
 #include "config_cdp1802.h"
 #include "dis_base.h"
 #include "insn_cdp1802.h"
-#include "reg_cdp1802.h"
-#include "table_cdp1802.h"
 
 namespace libasm {
 namespace cdp1802 {
 
 class DisCdp1802 : public Disassembler, public Config {
 public:
-    DisCdp1802()
-        : Disassembler(_formatter, _regs, TableCdp1802::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisCdp1802();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -39,7 +34,6 @@ public:
 
 private:
     IntelValueFormatter _formatter;
-    RegCdp1802 _regs;
     bool _useReg;
     const struct OptUseRegister : public BoolOption {
         OptUseRegister(bool &var);

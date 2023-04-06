@@ -16,8 +16,25 @@
 
 #include "asm_z80.h"
 
+#include "reg_z80.h"
+#include "table_z80.h"
+
 namespace libasm {
 namespace z80 {
+
+using namespace reg;
+
+struct AsmZ80::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
+AsmZ80::AsmZ80()
+    : Assembler(_parser, TableZ80::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
     const auto base = insn.address() + 2;
@@ -30,10 +47,10 @@ void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
 
 void AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
     const auto opc = insn.opCode();  // Bit opcode.
-    insn.setOpCode(insn.prefix());               // Make 0xCB prefix as opcode.
-    RegZ80::encodeIndexReg(insn, op.reg);        // Add 0xDD/0xFD prefix
-    insn.emitOperand8(op.val16);                 // Index offset.
-    insn.emitOperand8(opc);                      // Bit opcode.
+    insn.setOpCode(insn.prefix());   // Make 0xCB prefix as opcode.
+    encodeIndexReg(insn, op.reg);    // Add 0xDD/0xFD prefix
+    insn.emitOperand8(op.val16);     // Index offset.
+    insn.emitOperand8(opc);          // Bit opcode.
     insn.emitInsn();
 }
 
@@ -59,7 +76,7 @@ void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, cons
         /* Fall-through */
     case R_IXIY:
     case I_IXIY:
-        RegZ80::encodeIndexReg(insn, op.reg);
+        encodeIndexReg(insn, op.reg);
         return;
     case M_IM16:
     case M_ABS:
@@ -72,25 +89,25 @@ void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, cons
         insn.embed(static_cast<uint8_t>(val16) << 3);
         return;
     case M_PTR:
-        insn.embed(RegZ80::encodePointerReg(op.reg) << 4);
+        insn.embed(encodePointerReg(op.reg) << 4);
         return;
     case M_PIX:
-        insn.embed(RegZ80::encodePointerRegIx(op.reg, other.reg) << 4);
+        insn.embed(encodePointerRegIx(op.reg, other.reg) << 4);
         return;
     case M_STK:
-        insn.embed(RegZ80::encodeStackReg(op.reg) << 4);
+        insn.embed(encodeStackReg(op.reg) << 4);
         return;
     case I_BCDE:
-        insn.embed(RegZ80::encodeIndirectBase(op.reg) << 4);
+        insn.embed(encodeIndirectBase(op.reg) << 4);
         return;
     case M_REG:
-        insn.embed(RegZ80::encodeDataReg(op.reg));
+        insn.embed(encodeDataReg(op.reg));
         return;
     case M_DST:
-        insn.embed(RegZ80::encodeDataReg(op.reg) << 3);
+        insn.embed(encodeDataReg(op.reg) << 3);
         return;
     case R_IR:
-        insn.embed(RegZ80::encodeIrReg(op.reg) << 3);
+        insn.embed(encodeIrReg(op.reg) << 3);
         return;
     case M_VEC:
         if ((val16 & ~0x38) != 0) {
@@ -131,24 +148,24 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
 
     // 'C' is either C-reg or C-condition
     auto a = p;
-    const auto reg = RegZ80::parseRegName(a);
+    const auto reg = parseRegName(a);
     if (reg == REG_C) {
         op.mode = R_C;
         op.reg = REG_C;
-        op.val16 = RegZ80::encodeCcName(CC_C);
+        op.val16 = encodeCcName(CC_C);
         scan = a;
         return OK;
     }
 
-    const auto cc = RegZ80::parseCcName(p);
+    const auto cc = parseCcName(p);
     if (cc != CC_UNDEF) {
-        op.mode = RegZ80::isCc4Name(cc) ? M_CC4 : M_CC8;
-        op.val16 = RegZ80::encodeCcName(cc);
+        op.mode = isCc4Name(cc) ? M_CC4 : M_CC8;
+        op.val16 = encodeCcName(cc);
         scan = p;
         return OK;
     }
 
-    op.reg = RegZ80::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
         switch (op.reg) {
         case REG_IX:
@@ -175,7 +192,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (p.expect('(')) {
         const auto regp = p.skipSpaces();
-        op.reg = RegZ80::parseRegName(p);
+        op.reg = parseRegName(p);
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p, op, ')');
             if (op.hasError())

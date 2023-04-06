@@ -16,13 +16,16 @@
 
 #include "dis_mc6809.h"
 
+#include "reg_mc6809.h"
 #include "table_mc6809.h"
 
 namespace libasm {
 namespace mc6809 {
 
-StrBuffer &DisMc6809::outRegister(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
+using namespace reg;
+
+DisMc6809::DisMc6809() : Disassembler(_formatter, TableMc6809::TABLE, '*'), _formatter() {
+    reset();
 }
 
 Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
@@ -95,7 +98,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
         }
     }
     if (spec.index != REG_UNDEF)  // A,X
-        outRegister(out, spec.index);
+        outRegName(out, spec.index);
     if (spec.base == REG_UNDEF) {  // [nnnn]
         outAbsAddr(out, insn.readUint16(memory));
     } else {
@@ -107,10 +110,10 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
             out.letter('-');
     }
     if (spec.base == REG_X) {
-        const auto base = _regs.decodeBaseReg(post >> 5);
-        outRegister(out, base);
+        const auto base = decodeBaseReg(post >> 5);
+        outRegName(out, base);
     } else if (spec.base != REG_UNDEF) {
-        outRegister(out, spec.base);
+        outRegName(out, spec.base);
     }
     if (spec.size == 1 || spec.size == 2) {  // ,X+ ,X++
         out.letter('+');
@@ -161,10 +164,10 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
         if (post & shiftLeftOne(bitPos)) {
             if (n != 0)
                 out.letter(',');
-            auto reg = _regs.decodeStackReg(bitPos, userStack);
+            auto reg = decodeStackReg(bitPos, userStack);
             if (reg == REG_B && hasDreg)
                 reg = REG_D;
-            outRegister(out, reg);
+            outRegName(out, reg);
             n++;
         }
     }
@@ -173,25 +176,25 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
 
 Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const auto dst = _regs.decodeDataReg(post);
-    const auto src = _regs.decodeDataReg(post >> 4);
+    const auto dst = decodeDataReg(post);
+    const auto src = decodeDataReg(post >> 4);
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    const auto size2 = _regs.regSize(dst);
-    const auto size1 = _regs.regSize(src);
+    const auto size2 = regSize(dst);
+    const auto size1 = regSize(src);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
         return setError(ILLEGAL_SIZE);
-    outRegister(out, src).comma();
-    outRegister(out, dst);
+    outRegName(out, src).comma();
+    outRegName(out, dst);
     return setError(insn);
 }
 
 Error DisMc6809::decodeRegBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const auto reg = _regs.decodeBitOpReg(post >> 6);
+    const auto reg = decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    outRegister(out, reg).letter('.');
+    outRegName(out, reg).letter('.');
     outHex(out, post & 7, 3);
     return OK;
 }
@@ -206,18 +209,18 @@ Error DisMc6809::decodeDirBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &ou
 
 Error DisMc6809::decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const auto src = _regs.decodeTfmBaseReg(post >> 4);
-    const auto dst = _regs.decodeTfmBaseReg(post);
+    const auto src = decodeTfmBaseReg(post >> 4);
+    const auto dst = decodeTfmBaseReg(post);
     const uint8_t mode = insn.opCode() & 0x3;
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
-    outRegister(out, src);
-    const char srcModeChar = _regs.tfmSrcModeChar(mode);
+    outRegName(out, src);
+    const char srcModeChar = tfmSrcModeChar(mode);
     if (srcModeChar)
         out.letter(srcModeChar);
     out.comma();
-    outRegister(out, dst);
-    const char dstModeChar = _regs.tfmDstModeChar(mode);
+    outRegName(out, dst);
+    const char dstModeChar = tfmDstModeChar(mode);
     if (dstModeChar)
         out.letter(dstModeChar);
     return setError(insn);

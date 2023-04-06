@@ -19,11 +19,13 @@
 #include "text_i8086.h"
 
 using namespace libasm::text::i8086;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace i8086 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_AL),
         NAME_ENTRY(REG_AH),
         NAME_ENTRY(REG_AX),
@@ -49,46 +51,46 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_WORD),
 };
 
-RegName RegI8086::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegI8086::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-RegName RegI8086::decodeByteReg(uint8_t num) {
+RegName decodeByteReg(uint8_t num) {
     return RegName((num & 7) + 8);
 }
 
-RegName RegI8086::decodeWordReg(uint8_t num) {
+RegName decodeWordReg(uint8_t num) {
     return RegName(num & 7);
 }
 
-RegName RegI8086::decodeSegReg(uint8_t num) {
+RegName decodeSegReg(uint8_t num) {
     return RegName((num & 3) + 16);
 }
 
-bool RegI8086::isGeneralReg(RegName name) {
+bool isGeneralReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 0 && num < 16;
 }
 
-bool RegI8086::isSegmentReg(RegName name) {
+bool isSegmentReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 16 && num < 20;
 }
 
-OprSize RegI8086::generalRegSize(RegName name) {
+OprSize generalRegSize(RegName name) {
     const auto num = int8_t(name);
     return num < 8 ? SZ_WORD : SZ_BYTE;
 }
 
-uint8_t RegI8086::encodeRegNum(RegName name) {
+uint8_t encodeRegNum(RegName name) {
     const auto num = uint8_t(name);
     if (num < 8)
         return num;
@@ -97,6 +99,7 @@ uint8_t RegI8086::encodeRegNum(RegName name) {
     return num - 16;
 }
 
+}  // namespace reg
 }  // namespace i8086
 }  // namespace libasm
 

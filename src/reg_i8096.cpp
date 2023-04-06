@@ -18,15 +18,17 @@
 
 namespace libasm {
 namespace i8096 {
+namespace reg {
 
-bool RegI8096::isWreg(uint8_t regno) {
+bool isWreg(uint8_t regno) {
     return (regno & 1) == 0;
 }
 
-bool RegI8096::isLreg(uint8_t regno) {
+bool isLreg(uint8_t regno) {
     return (regno & 3) == 0;
 }
 
+}  // namespace reg
 }  // namespace i8096
 }  // namespace libasm
 

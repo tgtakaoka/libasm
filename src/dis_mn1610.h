@@ -21,25 +21,22 @@
 #include "dis_base.h"
 #include "insn_mn1610.h"
 #include "reg_mn1610.h"
-#include "table_mn1610.h"
 
 namespace libasm {
 namespace mn1610 {
 
 class DisMn1610 : public Disassembler, public Config {
 public:
-    DisMn1610()
-        : Disassembler(_formatter, _regs, TableMn1610::TABLE, '*'), _formatter(true), _regs() {}
+    DisMn1610();
 
     const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override { return TableMn1610::TABLE.addressWidth(); }
+    AddressWidth addressWidth() const override;
 
 private:
     NationalValueFormatter _formatter;
-    RegMn1610 _regs;
 
-    Error outCcName(StrBuffer &out, CcName cc);
-    Error outRegName(StrBuffer &out, RegName reg, AddrMode mode);
+    Error outRegister(StrBuffer &out, RegName reg, AddrMode mode);
+    Error outConditionCode(StrBuffer &out, CcName cc);
     Error outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base);
     Error outIndirect(StrBuffer &out, Config::opcode_t opc);
     StrBuffer &outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode);

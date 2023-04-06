@@ -20,25 +20,18 @@
 #include "config_scn2650.h"
 #include "dis_base.h"
 #include "insn_scn2650.h"
-#include "reg_scn2650.h"
-#include "table_scn2650.h"
 
 namespace libasm {
 namespace scn2650 {
 
 class DisScn2650 : public Disassembler, public Config {
 public:
-    DisScn2650()
-        : Disassembler(_formatter, _regs, TableScn2650::TABLE, '$'), _formatter(), _regs() {}
+    DisScn2650();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegScn2650 _regs;
-
-    StrBuffer &appendRegName(InsnScn2650 &insn, StrBuffer &out, RegName name) const;
-    StrBuffer &appendCcName(InsnScn2650 &insn, StrBuffer &out, CcName name) const;
 
     Error decodeAbsolute(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode);
     Error decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out);

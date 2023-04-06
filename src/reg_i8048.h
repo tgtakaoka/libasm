@@ -42,40 +42,40 @@ enum RegName : int8_t {
     REG_P6 = 6 + 8,
     REG_P7 = 7 + 8,
     // Accumulator & Program Status Word.
-    REG_A  = 0 + 16,
+    REG_A = 0 + 16,
     REG_PSW = 1 + 16,
-    REG_P = 2 + 16,             // MSM80C39/MSM80C48
+    REG_P = 2 + 16,  // MSM80C39/MSM80C48
     // Flags.
     REG_F0 = 0 + 24,
     REG_F1 = 1 + 24,
-    REG_C  = 2 + 24,
-    REG_I  = 3 + 24,
+    REG_C = 2 + 24,
+    REG_I = 3 + 24,
     REG_RB0 = 4 + 24,
     REG_RB1 = 5 + 24,
     REG_MB0 = 6 + 24,
     REG_MB1 = 7 + 24,
     // Timer & Counter.
-    REG_T  = 0 + 32,
+    REG_T = 0 + 32,
     REG_CLK = 1 + 32,
     REG_CNT = 2 + 32,
     REG_TCNT = 3 + 32,
     REG_TCNTI = 4 + 32,
 };
 
-class RegI8048 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static bool isRReg(RegName name);
-    static bool isPort(RegName name);
-    static bool isTimer(RegName name);
-    static uint8_t encodeRReg(RegName name);
-    static RegName decodeRReg(uint8_t num);
-    static uint8_t encodePort(RegName name);
-    static RegName decodePort(uint8_t num);
-};
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
+bool isRReg(RegName name);
+bool isPort(RegName name);
+bool isTimer(RegName name);
+uint8_t encodeRRegName(RegName name);
+RegName decodeRRegNum(uint8_t num);
+uint8_t encodePortName(RegName name);
+RegName decodePortNum(uint8_t num);
+
+}  // namespace reg
 }  // namespace i8048
 }  // namespace libasm
 

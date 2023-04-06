@@ -16,8 +16,26 @@
 
 #include "asm_i8096.h"
 
+#include "reg_i8096.h"
+#include "table_i8096.h"
+
 namespace libasm {
 namespace i8096 {
+
+using namespace reg;
+
+struct AsmI8096::Operand : public OperandBase {
+    AddrMode mode;
+    uint8_t regno;
+    Error regerr;
+    uint16_t val16;
+    Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
+};
+
+AsmI8096::AsmI8096()
+    : Assembler(_parser, TableI8096::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {
     Operand regop;
@@ -123,7 +141,7 @@ void AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
             setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
         insn.emitOperand8(delta);
-    } else { // M_REL16
+    } else {  // M_REL16
         const auto base = insn.address() + 3;
         const auto target = op.getError() ? base : op.val16;
         const auto delta = branchDelta(base, target, op);

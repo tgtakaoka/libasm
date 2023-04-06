@@ -20,19 +20,13 @@
 #include "asm_base.h"
 #include "config_cdp1802.h"
 #include "insn_cdp1802.h"
-#include "table_cdp1802.h"
 
 namespace libasm {
 namespace cdp1802 {
 
 class AsmCdp1802 : public Assembler, public Config {
 public:
-    AsmCdp1802()
-        : Assembler(_parser, TableCdp1802::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmCdp1802();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useReg = _smartBranch = false; }
@@ -62,12 +56,7 @@ private:
     } _opt_useReg{_useReg, _opt_smartBranch};
     const Options _options{_opt_useReg};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        uint16_t val16;
-        Operand() : mode(M_NONE), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);

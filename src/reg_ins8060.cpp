@@ -19,11 +19,13 @@
 #include "text_ins8060.h"
 
 using namespace libasm::text::ins8060;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace ins8060 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_E),
         NAME_ENTRY(REG_P1),
         NAME_ENTRY(REG_P2),
@@ -32,19 +34,19 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_P0),
 };
 
-RegName RegIns8060::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegIns8060::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-bool RegIns8060::isPointerReg(RegName name) {
+bool isPointerReg(RegName name) {
     switch (name) {
     case REG_PC:
     case REG_P1:
@@ -57,16 +59,17 @@ bool RegIns8060::isPointerReg(RegName name) {
     }
 }
 
-uint8_t RegIns8060::encodePointerReg(RegName name) {
+uint8_t encodePointerReg(RegName name) {
     if (name == REG_P0)
         return 0;
     return uint8_t(name);
 }
 
-RegName RegIns8060::decodePointerReg(uint8_t num) {
+RegName decodePointerReg(uint8_t num) {
     return RegName(num & 3);
 }
 
+}  // namespace reg
 }  // namespace ins8060
 }  // namespace libasm
 

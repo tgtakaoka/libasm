@@ -36,14 +36,14 @@ enum RegName : int8_t {
     REG_PA7 = 15,  // Port address 7
 };
 
-class RegTms32010 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, RegName name) const;
-    static bool isAuxiliary(RegName name);
-    static bool isPortAddress(RegName name);
-};
+namespace reg {
 
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
+bool isAuxiliary(RegName name);
+bool isPortAddress(RegName name);
+
+}  // namespace reg
 }  // namespace tms32010
 }  // namespace libasm
 

@@ -20,24 +20,18 @@
 #include "config_ins8060.h"
 #include "dis_base.h"
 #include "insn_ins8060.h"
-#include "reg_ins8060.h"
-#include "table_ins8060.h"
 
 namespace libasm {
 namespace ins8060 {
 
 class DisIns8060 : public Disassembler, public Config {
 public:
-    DisIns8060()
-        : Disassembler(_formatter, _regs, TableIns8060::TABLE, '$'), _formatter(), _regs() {}
+    DisIns8060();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     NationalValueFormatter _formatter;
-    RegIns8060 _regs;
-
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodePntr(InsnIns8060 &insn, StrBuffer &out);
     Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out);

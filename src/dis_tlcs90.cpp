@@ -22,6 +22,12 @@
 namespace libasm {
 namespace tlcs90 {
 
+using namespace reg;
+
+DisTlcs90::DisTlcs90() : Disassembler(_formatter, TableTlcs90::TABLE, '$'), _formatter() {
+    reset();
+}
+
 Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op) {
     const Config::opcode_t opc = insn.opCode();
     op.mode = mode;
@@ -40,25 +46,25 @@ Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode,
         op.val16 = insn.readUint16(memory);
         break;
     case M_CC:
-        op.cc = RegTlcs90::decodeCcName(opc);
+        op.cc = decodeCcName(opc);
         break;
     case M_STACK:
-        op.reg = RegTlcs90::decodeStackReg(opc);
+        op.reg = decodeStackReg(opc);
         if (op.reg == REG_UNDEF)
             return setError(UNKNOWN_INSTRUCTION);
         break;
     case M_REG8:
-        op.reg = RegTlcs90::decodeReg8(opc);
+        op.reg = decodeReg8(opc);
         if (op.reg == REG_UNDEF)
             return setError(UNKNOWN_INSTRUCTION);
         break;
     case M_REG16:
-        op.reg = RegTlcs90::decodeReg16(opc);
+        op.reg = decodeReg16(opc);
         if (op.reg == REG_UNDEF)
             return setError(UNKNOWN_INSTRUCTION);
         break;
     case M_REGIX:
-        op.reg = RegTlcs90::decodeIndexReg(opc);
+        op.reg = decodeIndexReg(opc);
         if (op.reg == REG_UNDEF)
             return setError(UNKNOWN_INSTRUCTION);
         break;
@@ -103,26 +109,26 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, 
     case M_REL16:
         return decodeRelative(insn, out, mode, op);
     case M_IND:
-        _regs.outRegName(out.letter('('), op.reg).letter(')');
+        outRegName(out.letter('('), op.reg).letter(')');
         break;
     case M_IDX:
-        _regs.outRegName(out.letter('('), op.reg);
+        outRegName(out.letter('('), op.reg);
         if (val8 >= 0)
             out.letter('+');
         outHex(out, val8, -8).letter(')');
         break;
     case M_BASE:
-        _regs.outRegName(out.letter('('), REG_HL).letter('+');
-        _regs.outRegName(out, REG_A).letter(')');
+        outRegName(out.letter('('), REG_HL).letter('+');
+        outRegName(out, REG_A).letter(')');
         break;
     case M_CC:
-        _regs.outCcName(out, op.cc);
+        outCcName(out, op.cc);
         break;
     case M_STACK:
     case M_REG8:
     case M_REG16:
     case M_REGIX:
-        _regs.outRegName(out, op.reg);
+        outRegName(out, op.reg);
         break;
     case R_BC:
     case R_DE:
@@ -131,7 +137,7 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, 
     case R_AF:
     case R_AFP:
     case R_A:
-        _regs.outRegName(out, RegName(uint8_t(mode) - 16));
+        outRegName(out, RegName(uint8_t(mode) - 16));
         break;
     default:
         break;
@@ -166,7 +172,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (insn.prefix() == 0xFB)
             return setError(UNKNOWN_INSTRUCTION);
         preOp.mode = M_REG16;
-        preOp.reg = RegTlcs90::decodeReg16(insn.prefix());
+        preOp.reg = decodeReg16(insn.prefix());
     }
     if (out.mark() != start)  // skip CC_T because it's empty.
         out.comma();

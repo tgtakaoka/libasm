@@ -16,13 +16,20 @@
 
 #include "dis_f3850.h"
 
+#include "reg_f3850.h"
 #include "table_f3850.h"
 
 namespace libasm {
 namespace f3850 {
 
+using namespace reg;
+
 static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
 static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
+
+DisF3850::DisF3850() : Disassembler(_formatter, TableF3850::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisF3850::reset() {
     Disassembler::reset();
@@ -45,9 +52,9 @@ Error DisF3850::decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out
     switch (mode) {
     case M_REG:
         if (_useScratchpad) {
-            const auto name = RegF3850::decodeRegName(opCode);
+            const auto name = decodeRegName(opCode);
             if (name != REG_UNDEF) {
-                _regs.outRegName(out, name);
+                outRegName(out, name);
                 break;
             }
         }
@@ -76,11 +83,11 @@ Error DisF3850::decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out
     case M_NONE:
         return OK;
     case M_J:
-        _regs.outRegName(out, REG_J);
+        outRegName(out, REG_J);
         return OK;
     default:
         if (uint8_t(mode) < uint8_t(M_REG))
-            _regs.outRegName(out, RegName(uint8_t(mode)));
+            outRegName(out, RegName(uint8_t(mode)));
         return OK;
     }
     return setError(insn);

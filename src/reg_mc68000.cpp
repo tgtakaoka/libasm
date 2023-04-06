@@ -19,11 +19,13 @@
 #include "text_mc68000.h"
 
 using namespace libasm::text::mc68000;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace mc68000 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_D0),
         NAME_ENTRY(REG_D1),
         NAME_ENTRY(REG_D2),
@@ -46,54 +48,54 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_USP),
 };
 
-RegName RegMc68000::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &RegMc68000::outRegName(StrBuffer &out, RegName name) {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-bool RegMc68000::isDataReg(RegName name) {
+bool isDataReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 0 && num < 8;
 }
 
-bool RegMc68000::isAddrReg(RegName name) {
+bool isAddrReg(RegName name) {
     const auto num = int8_t(name) - 8;
     return num >= 0 && num < 8;
 }
 
-bool RegMc68000::isGeneralReg(RegName name) {
+bool isGeneralReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 0 && num < 16;
 }
 
-Config::opcode_t RegMc68000::encodeGeneralRegNo(RegName name) {
+Config::opcode_t encodeGeneralRegNo(RegName name) {
     return int8_t(name) & 7;
 }
 
-uint8_t RegMc68000::encodeGeneralRegPos(RegName name) {
+uint8_t encodeGeneralRegPos(RegName name) {
     return uint8_t(name);
 }
 
-RegName RegMc68000::decodeGeneralReg(uint8_t regno) {
+RegName decodeGeneralReg(uint8_t regno) {
     return RegName(regno & 0xF);
 }
 
-RegName RegMc68000::decodeDataReg(uint8_t regno) {
+RegName decodeDataReg(uint8_t regno) {
     return RegName(regno & 7);
 }
 
-RegName RegMc68000::decodeAddrReg(uint8_t regno) {
+RegName decodeAddrReg(uint8_t regno) {
     return RegName((regno & 7) + 8);
 }
 
-OprSize RegMc68000::parseSize(StrScanner &scan) {
+OprSize parseSize(StrScanner &scan) {
     auto p = scan;
     if (p.expect('.')) {
         auto size = SZ_ERROR;
@@ -112,24 +114,25 @@ OprSize RegMc68000::parseSize(StrScanner &scan) {
     return SZ_NONE;
 }
 
-uint8_t RegMc68000::sizeNameLen(OprSize size) {
+uint8_t sizeNameLen(OprSize size) {
     return size == SZ_NONE || size == SZ_ERROR ? 0 : 2;
 }
 
-char RegMc68000::sizeSuffix(OprSize size) const {
-    char base = isUppercase() ? 0 : 'a' - 'A';
+char sizeSuffix(OprSize size) {
     switch (size) {
     case SZ_BYTE:
-        return base + 'B';
+        return 'B';
     case SZ_WORD:
-        return base + 'W';
+        return 'W';
         break;
     case SZ_LONG:
-        return base + 'L';
+        return 'L';
     default:
         return 0;
     }
 }
+
+}  // namespace reg
 
 Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
     const auto m = static_cast<uint8_t>(mode);
@@ -139,7 +142,7 @@ Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
 Config::opcode_t EaMc68000::encodeRegNo(AddrMode mode, RegName reg) {
     const auto m = static_cast<uint8_t>(mode);
     if (m < 8)
-        return RegMc68000::encodeGeneralRegNo(reg);
+        return reg::encodeGeneralRegNo(reg);
     return m - 8;
 }
 
@@ -151,8 +154,7 @@ EaMc68000::EaMc68000(OprSize size_, uint8_t raw_mode, uint8_t regno) {
         reg = REG_UNDEF;
     } else {
         mode = AddrMode(raw_mode);
-        reg = (mode == M_DREG) ? RegMc68000::decodeDataReg(regno)
-                               : RegMc68000::decodeAddrReg(regno);
+        reg = (mode == M_DREG) ? reg::decodeDataReg(regno) : reg::decodeAddrReg(regno);
     }
 }
 
@@ -161,7 +163,7 @@ OprSize BriefExt::indexSize() const {
 }
 
 RegName BriefExt::index() const {
-    return RegMc68000::decodeGeneralReg(word >> 12);
+    return reg::decodeGeneralReg(word >> 12);
 }
 
 uint8_t BriefExt::disp() const {

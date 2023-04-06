@@ -16,10 +16,13 @@
 
 #include "reg_mc6805.h"
 
+using namespace libasm::reg;
+
 namespace libasm {
 namespace mc6805 {
+namespace reg {
 
-RegName RegMc6805::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('X')) {
         if (isidchar(*p))
@@ -30,10 +33,11 @@ RegName RegMc6805::parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-StrBuffer &RegMc6805::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     return out.letter(char(name));
 }
 
+}  // namespace reg
 }  // namespace mc6805
 }  // namespace libasm
 

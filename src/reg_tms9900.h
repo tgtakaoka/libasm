@@ -42,14 +42,14 @@ enum RegName : int8_t {
     REG_R15 = 15,
 };
 
-class RegTms9900 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, uint8_t num) const;
+namespace reg {
 
-    static uint8_t encodeRegNumber(RegName name);
-};
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, uint8_t num);
 
+uint8_t encodeRegNumber(RegName name);
+
+}  // namespace reg
 }  // namespace tms9900
 }  // namespace libasm
 

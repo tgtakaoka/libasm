@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_z80.h"
 #include "insn_z80.h"
-#include "reg_z80.h"
-#include "table_z80.h"
 
 namespace libasm {
 namespace z80 {
 
 class AsmZ80 : public Assembler, public Config {
 public:
-    AsmZ80()
-        : Assembler(_parser, TableZ80::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmZ80();
 
     const ConfigBase &config() const override { return *this; }
     bool hasSetInstruction() const override { return true; }
@@ -45,13 +40,7 @@ private:
     const DollarLocationParser _location;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeRelative(InsnZ80 &insn, const Operand &op);

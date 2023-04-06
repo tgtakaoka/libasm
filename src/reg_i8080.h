@@ -38,26 +38,26 @@ enum RegName : int8_t {
     REG_PSW = 1 + 8,
 };
 
-class RegI8080 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static bool isPointerReg(RegName name);
-    static uint8_t encodePointerReg(RegName name);
-    static bool isStackReg(RegName name);
-    static uint8_t encodeStackReg(RegName name);
-    static bool isIndexReg(RegName name);
-    static uint8_t encodeIndexReg(RegName name);
-    static bool isDataReg(RegName name);
-    static uint8_t encodeDataReg(RegName name);
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
-    static RegName decodePointerReg(uint8_t num);
-    static RegName decodeStackReg(uint8_t num);
-    static RegName decodeIndexReg(uint8_t num);
-    static RegName decodeDataReg(uint8_t num);
-};
+bool isPointerReg(RegName name);
+uint8_t encodePointerReg(RegName name);
+bool isStackReg(RegName name);
+uint8_t encodeStackReg(RegName name);
+bool isIndexReg(RegName name);
+uint8_t encodeIndexReg(RegName name);
+bool isDataReg(RegName name);
+uint8_t encodeDataReg(RegName name);
 
+RegName decodePointerReg(uint8_t num);
+RegName decodeStackReg(uint8_t num);
+RegName decodeIndexReg(uint8_t num);
+RegName decodeDataReg(uint8_t num);
+
+}  // namespace reg
 }  // namespace i8080
 }  // namespace libasm
 

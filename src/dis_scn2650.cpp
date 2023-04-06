@@ -16,10 +16,17 @@
 
 #include "dis_scn2650.h"
 
+#include "reg_scn2650.h"
 #include "table_scn2650.h"
 
 namespace libasm {
 namespace scn2650 {
+
+using namespace reg;
+
+DisScn2650::DisScn2650() : Disassembler(_formatter, TableScn2650::TABLE, '$'), _formatter() {
+    reset();
+}
 
 static constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
     return addr & ~0x1FFF;  // 8k bytes per page
@@ -34,16 +41,16 @@ static constexpr Config::uintptr_t inpage(
     return page(addr) | offset(addr + delta);
 }
 
-StrBuffer &DisScn2650::appendRegName(InsnScn2650 &insn, StrBuffer &out, RegName name) const {
+static StrBuffer &appendRegName(InsnScn2650 &insn, StrBuffer &out, RegName name) {
     auto save = out;
-    _regs.outRegName(insn.nameBuffer().over(out).letter(','), name);
+    outRegName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
 
-StrBuffer &DisScn2650::appendCcName(InsnScn2650 &insn, StrBuffer &out, CcName name) const {
+static StrBuffer &appendCcName(InsnScn2650 &insn, StrBuffer &out, CcName name) {
     auto save = out;
-    _regs.outCcName(insn.nameBuffer().over(out).letter(','), name);
+    outCcName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
@@ -56,7 +63,7 @@ Error DisScn2650::decodeAbsolute(
     outAbsAddr(out, opr & ~0x8000);
     if (mode == M_IX15) {
         out.comma();
-        _regs.outRegName(out, REG_R3);
+        outRegName(out, REG_R3);
     }
     return OK;
 }
@@ -68,11 +75,11 @@ Error DisScn2650::decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer 
     const auto base = inpage(insn.address(), insn.length());
     const auto target = page(base) | offset(opr);
     outAbsAddr(out, target);
-    auto dst = RegScn2650::decodeRegName(insn.opCode());
+    auto dst = decodeRegName(insn.opCode());
     const auto idxMode = opr & 0x6000;
     if (idxMode) {
         out.comma();
-        _regs.outRegName(out, dst);
+        outRegName(out, dst);
         dst = REG_R0;
         if (idxMode == 0x2000) {
             out.comma().letter('+');
@@ -111,11 +118,11 @@ Error DisScn2650::decodeOperand(
         // destination register R0 will be handled at |decodeIndexed|.
         if (insn.mode2() == M_IX13)
             break;
-        appendRegName(insn, out, RegScn2650::decodeRegName(insn.opCode()));
+        appendRegName(insn, out, decodeRegName(insn.opCode()));
         break;
     case M_C012:
     case M_CCVN:
-        appendCcName(insn, out, RegScn2650::decodeCcName(insn.opCode()));
+        appendCcName(insn, out, decodeCcName(insn.opCode()));
         break;
     case M_IMM8:
         outHex(out, insn.readByte(memory), 8);

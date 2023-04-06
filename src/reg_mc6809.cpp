@@ -20,11 +20,13 @@
 #include "text_mc6809.h"
 
 using namespace libasm::text::mc6809;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace mc6809 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_B),
         NAME_ENTRY(REG_D),
@@ -44,12 +46,12 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_0),
 };
 
-RegName RegMc6809::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-RegSize RegMc6809::regSize(RegName name) {
+RegSize regSize(RegName name) {
     const auto num = int8_t(name);
     if (num < 0)
         return SZ_NONE;  // REG_UNDEF
@@ -62,14 +64,14 @@ RegSize RegMc6809::regSize(RegName name) {
     return SZ_NONE;      // REG_Z..REG_0
 }
 
-StrBuffer &RegMc6809::outRegName(StrBuffer &out, const RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, const RegName name) {
     const auto *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-RegName RegMc6809::decodeDataReg(uint8_t num) {
+RegName decodeDataReg(uint8_t num) {
     num &= 0xF;
     const auto name = RegName(num);
     if (TableMc6809::TABLE.cpuType() == MC6809) {
@@ -79,7 +81,7 @@ RegName RegMc6809::decodeDataReg(uint8_t num) {
     return (name == REG_0) ? REG_Z : name;
 }
 
-bool RegMc6809::isDataReg(RegName name) {
+bool isDataReg(RegName name) {
     if (name == REG_UNDEF)
         return false;
     switch (name) {
@@ -97,17 +99,17 @@ bool RegMc6809::isDataReg(RegName name) {
     }
 }
 
-uint8_t RegMc6809::encodeDataReg(RegName name) {
+uint8_t encodeDataReg(RegName name) {
     if (name == REG_0)
         name = REG_Z;
     return uint8_t(name);
 }
 
-RegName RegMc6809::decodeBaseReg(uint8_t num) {
+RegName decodeBaseReg(uint8_t num) {
     return RegName((num & 3) + 1);
 }
 
-bool RegMc6809::isBaseReg(RegName name) {
+bool isBaseReg(RegName name) {
     switch (name) {
     case REG_X:
     case REG_Y:
@@ -120,7 +122,7 @@ bool RegMc6809::isBaseReg(RegName name) {
     }
 }
 
-bool RegMc6809::isIndexedBase(RegName name) {
+bool isIndexedBase(RegName name) {
     switch (name) {
     case REG_X:
     case REG_Y:
@@ -135,7 +137,7 @@ bool RegMc6809::isIndexedBase(RegName name) {
     }
 }
 
-uint8_t RegMc6809::encodeBaseReg(RegName name) {
+uint8_t encodeBaseReg(RegName name) {
     // REG_W is handled separately in TableMc6809::searchPostSpec().
     return uint8_t(name) - 1;
 }
@@ -146,7 +148,7 @@ static constexpr RegName SYSTEM_STACK_REGS[8] PROGMEM = {
 static constexpr RegName USER_STACK_REGS[8] PROGMEM = {
         REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_S, REG_PC};
 
-uint8_t RegMc6809::encodeStackReg(RegName name, bool userStack) {
+uint8_t encodeStackReg(RegName name, bool userStack) {
     if (name == REG_D)
         return 0x06;
     auto *reg = userStack ? ARRAY_BEGIN(USER_STACK_REGS) : ARRAY_BEGIN(SYSTEM_STACK_REGS);
@@ -161,12 +163,12 @@ uint8_t RegMc6809::encodeStackReg(RegName name, bool userStack) {
     return bit;
 }
 
-RegName RegMc6809::decodeStackReg(uint8_t bitPos, bool userStack) {
+RegName decodeStackReg(uint8_t bitPos, bool userStack) {
     auto *reg = userStack ? ARRAY_BEGIN(USER_STACK_REGS) : ARRAY_BEGIN(SYSTEM_STACK_REGS);
     return RegName(pgm_read_byte(reg + bitPos));
 }
 
-RegName RegMc6809::decodeBitOpReg(uint8_t num) {
+RegName decodeBitOpReg(uint8_t num) {
     switch (num) {
     case 0:
         return REG_CC;
@@ -179,32 +181,32 @@ RegName RegMc6809::decodeBitOpReg(uint8_t num) {
     }
 }
 
-bool RegMc6809::isBitOpReg(RegName name) {
+bool isBitOpReg(RegName name) {
     const auto num = uint8_t(name);
     return num >= 8 && num < 11;
 }
 
-uint8_t RegMc6809::encodeBitOpReg(RegName name) {
+uint8_t encodeBitOpReg(RegName name) {
     if (name == REG_CC)
         return 0;
     return uint8_t(name) - uint8_t(REG_A) + 1;
 }
 
-RegName RegMc6809::decodeTfmBaseReg(uint8_t num) {
+RegName decodeTfmBaseReg(uint8_t num) {
     num &= 0xF;
     return num < 5 ? RegName(num) : REG_UNDEF;
 }
 
-bool RegMc6809::isTfmBaseReg(RegName name) {
+bool isTfmBaseReg(RegName name) {
     const auto num = int8_t(name);
     return num >= 0 && num < 5;
 }
 
-uint8_t RegMc6809::encodeTfmBaseReg(RegName name) {
+uint8_t encodeTfmBaseReg(RegName name) {
     return uint8_t(name);
 }
 
-int8_t RegMc6809::encodeTfmMode(char src, char dst) {
+int8_t encodeTfmMode(char src, char dst) {
     if (src && src == dst)
         return src == '-' ? 1 : 0;
     if (src == '+' && dst == 0)
@@ -214,18 +216,19 @@ int8_t RegMc6809::encodeTfmMode(char src, char dst) {
     return -1;
 }
 
-char RegMc6809::tfmSrcModeChar(uint8_t mode) {
+char tfmSrcModeChar(uint8_t mode) {
     if (mode == 0 || mode == 2)
         return '+';
     return mode == 1 ? '-' : 0;
 }
 
-char RegMc6809::tfmDstModeChar(uint8_t mode) {
+char tfmDstModeChar(uint8_t mode) {
     if (mode == 0 || mode == 3)
         return '+';
     return mode == 1 ? '-' : 0;
 }
 
+}  // namespace reg
 }  // namespace mc6809
 }  // namespace libasm
 

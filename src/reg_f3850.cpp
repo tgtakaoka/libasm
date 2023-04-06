@@ -19,11 +19,13 @@
 #include "text_f3850.h"
 
 using namespace libasm::text::f3850;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace f3850 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_W),
         NAME_ENTRY(REG_IS),
@@ -45,19 +47,19 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_D),
 };
 
-RegName RegF3850::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     const auto *entry = searchText(p, ARRAY_RANGE(REG_TABLE));
     if (entry == nullptr)
         return REG_UNDEF;
     const auto name = RegName(entry->name());
     if ((name == REG_H || name == REG_D) && p.expect('\''))
-        return REG_UNDEF;       // H'xx' and D'xx'
+        return REG_UNDEF;  // H'xx' and D'xx'
     scan = p;
     return name;
 }
 
-RegName RegF3850::decodeRegName(Config::opcode_t opc) {
+RegName decodeRegName(Config::opcode_t opc) {
     static constexpr auto regJ = uint8_t(REG_J) - uint8_t(REG_alias);
     static constexpr auto regD = uint8_t(REG_D) - uint8_t(REG_alias);
     const auto regno = opc & 0xF;
@@ -66,13 +68,14 @@ RegName RegF3850::decodeRegName(Config::opcode_t opc) {
     return REG_UNDEF;
 }
 
-StrBuffer &RegF3850::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
+}  // namespace reg
 }  // namespace f3850
 }  // namespace libasm
 

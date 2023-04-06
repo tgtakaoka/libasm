@@ -50,24 +50,6 @@ enum RegName : int8_t {
     REG_USP = 3 + 16,
 };
 
-class RegMc68000 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, RegName name);
-    static bool isDataReg(RegName name);
-    static bool isAddrReg(RegName name);
-    static bool isGeneralReg(RegName name);
-    static Config::opcode_t encodeGeneralRegNo(RegName name);
-    static uint8_t encodeGeneralRegPos(RegName name);
-    static RegName decodeGeneralReg(uint8_t regno);
-    static RegName decodeDataReg(uint8_t regno);
-    static RegName decodeAddrReg(uint8_t regno);
-
-    static OprSize parseSize(StrScanner &scan);
-    static uint8_t sizeNameLen(OprSize size);
-    char sizeSuffix(OprSize size) const;
-};
-
 struct EaMc68000 {
     EaMc68000(OprSize size, uint8_t mode, uint8_t regno);
 
@@ -88,6 +70,24 @@ struct BriefExt {
     uint8_t disp() const;
 };
 
+namespace reg {
+
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
+bool isDataReg(RegName name);
+bool isAddrReg(RegName name);
+bool isGeneralReg(RegName name);
+Config::opcode_t encodeGeneralRegNo(RegName name);
+uint8_t encodeGeneralRegPos(RegName name);
+RegName decodeGeneralReg(uint8_t regno);
+RegName decodeDataReg(uint8_t regno);
+RegName decodeAddrReg(uint8_t regno);
+
+OprSize parseSize(StrScanner &scan);
+uint8_t sizeNameLen(OprSize size);
+char sizeSuffix(OprSize size);
+
+}  // namespace reg
 }  // namespace mc68000
 }  // namespace libasm
 

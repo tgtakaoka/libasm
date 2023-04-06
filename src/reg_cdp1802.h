@@ -54,12 +54,12 @@ enum RegName : int8_t {
     REG_R15 = 15,
 };
 
-class RegCdp1802 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-};
+namespace reg {
 
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
+
+}  // namespace reg
 }  // namespace cdp1802
 }  // namespace libasm
 

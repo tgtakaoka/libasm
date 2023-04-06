@@ -20,23 +20,18 @@
 #include "config_mc6800.h"
 #include "dis_base.h"
 #include "insn_mc6800.h"
-#include "reg_mc6800.h"
-#include "table_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
 
 class DisMc6800 : public Disassembler, public Config {
 public:
-    DisMc6800() : Disassembler(_formatter, _regs, TableMc6800::TABLE, '*'), _formatter(), _regs() {}
+    DisMc6800();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     MotorolaValueFormatter _formatter;
-    RegMc6800 _regs;
-
-    StrBuffer &outRegister(StrBuffer &out, RegName regName);
 
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
     Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);

@@ -16,13 +16,19 @@
 
 #include "dis_tms9900.h"
 
+#include "reg_tms9900.h"
 #include "table_tms9900.h"
 #include "text_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
 
+using namespace reg;
 using text::tms9900::TEXT_MID;
+
+DisTms9900::DisTms9900() : Disassembler(_formatter, TableTms9900::TABLE, '$'), _formatter() {
+    reset();
+}
 
 Error DisTms9900::checkPostWord(InsnTms9900 &insn, StrBuffer &out) {
     const Config::opcode_t post = insn.post();
@@ -62,14 +68,14 @@ Error DisTms9900::decodeModeReg(
         out.letter('*');
         /* Fall-through */
     case 0:
-        _regs.outRegName(out, reg);
+        outRegName(out, reg);
         if (mode == 3)
             out.letter('+');
         break;
     default:
         outHex(out.letter('@'), insn.readUint16(memory), 16);
         if (reg & 0xF)
-            _regs.outRegName(out.letter('('), reg).letter(')');
+            outRegName(out.letter('('), reg).letter(')');
         break;
     }
     return setError(insn);
@@ -94,10 +100,10 @@ Error DisTms9900::decodeOperand(
         outHex(out, insn.readUint16(memory), 16);
         return setError(insn);
     case M_REG:
-        _regs.outRegName(out, opc);
+        outRegName(out, opc);
         return OK;
     case M_DREG:
-        _regs.outRegName(out, opc >> 6);
+        outRegName(out, opc >> 6);
         return OK;
     case M_SRC2:
         if (checkPostWord(insn, out)) {
@@ -116,7 +122,7 @@ Error DisTms9900::decodeOperand(
     case M_CNT:
         val8 = (((mode == M_CNT2) ? post : opc) >> 6) & 0xF;
         if (mode == M_CNT2 && val8 == 0) {
-            _regs.outRegName(out, REG_R0);
+            outRegName(out, REG_R0);
             return OK;
         }
         if (mode == M_CNT && val8 == 0)
@@ -132,7 +138,7 @@ Error DisTms9900::decodeOperand(
     case M_SCNT:
         val8 = (opc >> 4) & 0xF;
         if (val8 == 0)
-            _regs.outRegName(out, REG_R0);
+            outRegName(out, REG_R0);
         else
             outDec(out, val8, 4);
         return OK;
@@ -185,14 +191,3 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
-
-
-
-
-
-
-
-
-
-
-

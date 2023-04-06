@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_i8096.h"
 #include "insn_i8096.h"
-#include "reg_i8096.h"
-#include "table_i8096.h"
 
 namespace libasm {
 namespace i8096 {
 
 class AsmI8096 : public Assembler, public Config {
 public:
-    AsmI8096()
-        : Assembler(_parser, TableI8096::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmI8096();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -44,14 +39,7 @@ private:
     const DollarLocationParser _location;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        uint8_t regno;
-        Error regerr;
-        uint16_t val16;
-        Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
-    };
-
+    struct Operand;
     Error parseIndirect(StrScanner &scan, Operand &opr) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
     void emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op);

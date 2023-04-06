@@ -20,24 +20,19 @@
 #include "asm_base.h"
 #include "config_mc68000.h"
 #include "insn_mc68000.h"
-#include "reg_mc68000.h"
-#include "table_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
 
 class AsmMc68000 : public Assembler, public Config {
 public:
-    AsmMc68000()
-        : Assembler(_parser, TableMc68000::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {
-        reset();
-    }
+    AsmMc68000();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
     const Options &options() const override { return _options; }
+
+    void setAlias(bool enable);
 
 private:
     ValueParser _parser;
@@ -55,23 +50,7 @@ private:
     } _opt_alias{*this};
     const Options _options{_opt_alias};
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        RegName indexReg;
-        OprSize indexSize;
-        uint32_t val32;
-        StrScanner list;
-        Operand()
-            : mode(M_NONE),
-              reg(REG_UNDEF),
-              indexReg(REG_UNDEF),
-              indexSize(SZ_NONE),
-              val32(0),
-              list() {}
-        Config::uintptr_t offset(const InsnMc68000 &insn) const;
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);
 
@@ -83,8 +62,6 @@ private:
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
-    void setAlias(bool enable) { TableMc68000::TABLE.setAlias(enable); }
 };
 
 }  // namespace mc68000

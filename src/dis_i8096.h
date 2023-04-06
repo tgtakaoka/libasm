@@ -20,17 +20,13 @@
 #include "config_i8096.h"
 #include "dis_base.h"
 #include "insn_i8096.h"
-#include "reg_i8096.h"
-#include "table_i8096.h"
 
 namespace libasm {
 namespace i8096 {
 
 class DisI8096 : public Disassembler, public Config {
 public:
-    DisI8096() : Disassembler(_formatter, _regs, TableI8096::TABLE, '$'), _formatter(), _regs() {
-        reset();
-    }
+    DisI8096();
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
@@ -38,7 +34,6 @@ public:
 
 private:
     IntelValueFormatter _formatter;
-    RegI8096 _regs;
     bool _useAbsolute;
     const struct OptUseAbsolute : public BoolOption {
         OptUseAbsolute(bool &var);

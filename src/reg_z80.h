@@ -63,37 +63,37 @@ enum CcName : int8_t {
     CC_M = 7,
 };
 
-class RegZ80 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
+namespace reg {
 
-    static uint8_t encodeDataReg(RegName name);
-    static RegName decodeDataReg(uint8_t num);
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
 
-    static uint8_t encodePointerReg(RegName name);
-    static uint8_t encodePointerRegIx(RegName name, RegName ix);
-    static RegName decodePointerReg(uint8_t num, const InsnZ80 &xinsn);
+uint8_t encodeDataReg(RegName name);
+RegName decodeDataReg(uint8_t num);
 
-    static uint8_t encodeStackReg(RegName name);
-    static RegName decodeStackReg(uint8_t num);
+uint8_t encodePointerReg(RegName name);
+uint8_t encodePointerRegIx(RegName name, RegName ix);
+RegName decodePointerReg(uint8_t num, const InsnZ80 &xinsn);
 
-    static uint8_t encodeIndirectBase(RegName name);
-    static RegName decodeIndirectBase(uint8_t num);
+uint8_t encodeStackReg(RegName name);
+RegName decodeStackReg(uint8_t num);
 
-    static void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
-    static RegName decodeIndexReg(const InsnZ80 &insn);
+uint8_t encodeIndirectBase(RegName name);
+RegName decodeIndirectBase(uint8_t num);
 
-    static uint8_t encodeIrReg(RegName name);
-    static RegName decodeIrReg(uint8_t num);
+void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
+RegName decodeIndexReg(const InsnZ80 &insn);
 
-    static CcName parseCcName(StrScanner &scan);
-    StrBuffer &outCcName(StrBuffer &out, CcName cc) const;
-    static bool isCc4Name(CcName name);
-    static uint8_t encodeCcName(CcName name);
-    static CcName decodeCcName(uint8_t num);
-};
+uint8_t encodeIrReg(RegName name);
+RegName decodeIrReg(uint8_t num);
 
+CcName parseCcName(StrScanner &scan);
+StrBuffer &outCcName(StrBuffer &out, CcName cc);
+bool isCc4Name(CcName name);
+uint8_t encodeCcName(CcName name);
+CcName decodeCcName(uint8_t num);
+
+}  // namespace reg
 }  // namespace z80
 }  // namespace libasm
 

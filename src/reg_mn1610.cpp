@@ -19,11 +19,13 @@
 #include "text_mn1610.h"
 
 using namespace libasm::text::mn1610;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace mn1610 {
+namespace reg {
 
-static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
+static constexpr NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_R0),
         NAME_ENTRY(REG_R1),
         NAME_ENTRY(REG_R2),
@@ -64,112 +66,112 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_NPP),
 };
 
-RegName RegMn1610::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-bool RegMn1610::isGeneric(RegName name) {
+bool isGeneric(RegName name) {
     if (name == REG_X0 || name == REG_X1)
         return true;
     const auto n = int8_t(name);
     return n >= int8_t(REG_R0) && n <= int8_t(REG_STR);
 }
 
-bool RegMn1610::isIndex(RegName name) {
+bool isIndex(RegName name) {
     return name == REG_X0 || name == REG_X1 || name == REG_R3 || name == REG_R4;
 }
 
-bool RegMn1610::isIndirect(RegName name) {
+bool isIndirect(RegName name) {
     if (name == REG_X0 || name == REG_X1)
         return true;
     const auto n = int8_t(name);
     return n >= int8_t(REG_R1) && n <= int8_t(REG_R4);
 }
 
-bool RegMn1610::isSegmentBase(RegName name) {
+bool isSegmentBase(RegName name) {
     const auto n = int8_t(name);
     return n >= int8_t(REG_CSBR) && n <= int8_t(REG_TSR1);
 }
 
-bool RegMn1610::isSegment(RegName name) {
+bool isSegment(RegName name) {
     const auto n = int8_t(name);
     return n >= int8_t(REG_CSBR) && n <= int8_t(REG_OSR3);
 }
 
-bool RegMn1610::isHardware(RegName name) {
+bool isHardware(RegName name) {
     const auto n = int8_t(name);
     return n >= int8_t(REG_TCR) && n <= int8_t(REG_SOR);
 }
 
-bool RegMn1610::isSpecial(RegName name) {
+bool isSpecial(RegName name) {
     const auto n = int8_t(name);
     return n >= int8_t(REG_SBRB) && n <= int8_t(REG_NPP);
 }
 
-uint16_t RegMn1610::encodeGeneric(RegName name) {
+uint16_t encodeGeneric(RegName name) {
     uint8_t n = int8_t(name);
     if (name == REG_X0 || name == REG_X1)
         n -= 8;
     return n;
 }
 
-uint16_t RegMn1610::encodeIndex(RegName name) {
+uint16_t encodeIndex(RegName name) {
     return (name == REG_X0 || name == REG_R3) ? 4 : 5;
 }
 
-uint16_t RegMn1610::encodeIndirect(RegName name) {
+uint16_t encodeIndirect(RegName name) {
     uint8_t n = int8_t(name);
     if (name == REG_X0 || name == REG_X1)
         n -= 8;
     return n - 1;
 }
 
-uint16_t RegMn1610::encodeSegment(RegName name) {
+uint16_t encodeSegment(RegName name) {
     return int8_t(name) - 16;
 }
 
-uint16_t RegMn1610::encodeHardware(RegName name) {
+uint16_t encodeHardware(RegName name) {
     if (name == REG_SOR)
         return 5;
     return int8_t(name) - 24;
 }
 
-uint16_t RegMn1610::encodeSpecial(RegName name) {
+uint16_t encodeSpecial(RegName name) {
     return int8_t(name) - 32;
 }
 
-RegName RegMn1610::decodeRegNum(uint8_t num) {
+RegName decodeRegNum(uint8_t num) {
     const auto r = num & 7;
     return r == 7 ? REG_UNDEF : RegName(r);
 }
 
-RegName RegMn1610::decodeIndirect(uint8_t num) {
+RegName decodeIndirect(uint8_t num) {
     return RegName((num & 3) + 1);
 }
 
-RegName RegMn1610::decodeSegment(uint8_t num) {
+RegName decodeSegment(uint8_t num) {
     return RegName((num & 7) + 16);
 }
 
-RegName RegMn1610::decodeHardware(uint8_t num) {
+RegName decodeHardware(uint8_t num) {
     const auto r = num & 7;
     return r == 7 ? REG_UNDEF : RegName(r + 24);
 }
 
-RegName RegMn1610::decodeSpecial(uint8_t num) {
+RegName decodeSpecial(uint8_t num) {
     const auto r = num & 7;
     return r >= 3 ? REG_UNDEF : RegName(r + 32);
 }
 
-StrBuffer &RegMn1610::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_SKP),
         NAME_ENTRY(CC_M),
         NAME_ENTRY(CC_PZ),
@@ -198,7 +200,7 @@ static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_NONE),
 };
 
-CcName RegMn1610::parseCcName(StrScanner &scan) {
+CcName parseCcName(StrScanner &scan) {
     auto p = scan;
     const auto *entry = searchText(p, ARRAY_RANGE(CC_TABLE));
     const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
@@ -208,52 +210,53 @@ CcName RegMn1610::parseCcName(StrScanner &scan) {
     return name == CC_NONE ? CC_UNDEF : name;
 }
 
-bool RegMn1610::isSkip(CcName name) {
+bool isSkip(CcName name) {
     const auto n = int8_t(name);
     return n >= int8_t(CC_SKP) && n <= int8_t(CC_NE);
 }
 
-bool RegMn1610::isCop(CcName name) {
+bool isCop(CcName name) {
     return name == CC_C;
 }
 
-bool RegMn1610::isEop(CcName name) {
+bool isEop(CcName name) {
     const auto n = int8_t(name);
     return n >= int8_t(CC_RE);
 }
 
-uint16_t RegMn1610::encodeSkip(CcName name) {
+uint16_t encodeSkip(CcName name) {
     return int8_t(name) & 0x0F;
 }
 
-uint16_t RegMn1610::encodeCop(CcName name) {
+uint16_t encodeCop(CcName name) {
     return name == CC_NONE ? 0 : 1;
 }
 
-uint16_t RegMn1610::encodeEop(CcName name) {
+uint16_t encodeEop(CcName name) {
     return name == CC_NONE ? 0 : int8_t(name) - 48;
 }
 
-CcName RegMn1610::decodeSkip(uint8_t num) {
+CcName decodeSkip(uint8_t num) {
     return CcName(num & 0xF);
 }
 
-CcName RegMn1610::decodeCop(uint8_t num) {
+CcName decodeCop(uint8_t num) {
     return (num & 1) == 0 ? CC_NONE : CC_C;
 }
 
-CcName RegMn1610::decodeEop(uint8_t num) {
+CcName decodeEop(uint8_t num) {
     const auto eop = num & 3;
     return eop == 0 ? CC_NONE : CcName(eop + 48);
 }
 
-StrBuffer &RegMn1610::outCcName(StrBuffer &out, CcName name) const {
+StrBuffer &outCcName(StrBuffer &out, CcName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
+}  // namespace reg
 }  // namespace mn1610
 }  // namespace libasm
 

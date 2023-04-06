@@ -30,12 +30,12 @@ enum RegName : char {
     REG_S = 'S',
 };
 
-class RegMos6502 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-};
+namespace reg {
 
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
+
+}  // namespace reg
 }  // namespace mos6502
 }  // namespace libasm
 

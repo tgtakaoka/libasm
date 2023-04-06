@@ -16,17 +16,20 @@
 
 #include "dis_mc68000.h"
 
+#include "reg_mc68000.h"
 #include "table_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
 
-StrBuffer &DisMc68000::outRegName(StrBuffer &out, RegName regName) {
-    return _regs.outRegName(out, regName);
+using namespace reg;
+
+DisMc68000::DisMc68000() : Disassembler(_formatter, TableMc68000::TABLE, '*'), _formatter() {
+    reset();
 }
 
 StrBuffer &DisMc68000::outOprSize(StrBuffer &out, OprSize size) {
-    const auto suffix = _regs.sizeSuffix(size);
+    const auto suffix = sizeSuffix(size);
     if (suffix)
         out.letter('.').letter(suffix);
     return out;
@@ -137,7 +140,7 @@ Error DisMc68000::decodeRelative(
 }
 
 static RegName decodeMoveMltReg(int8_t regno) {
-    return (regno < 8) ? RegMc68000::decodeDataReg(regno) : RegMc68000::decodeAddrReg(regno - 8);
+    return (regno < 8) ? decodeDataReg(regno) : decodeAddrReg(regno - 8);
 }
 
 StrBuffer &DisMc68000::outMoveMltRegList(StrBuffer &out, uint16_t list, bool push,
@@ -185,7 +188,7 @@ Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, StrBuffer 
     case M_DISP:
         ea.size = s;
         ea.mode = mode;
-        ea.reg = _regs.decodeAddrReg(r);
+        ea.reg = decodeAddrReg(r);
         /* Fall-through */
     case M_RADDR:
     case M_WADDR:
@@ -200,7 +203,7 @@ Error DisMc68000::decodeOperand(DisMemory &memory, InsnMc68000 &insn, StrBuffer 
     case M_DREG:
         ea.size = s;
         ea.mode = M_DREG;
-        ea.reg = _regs.decodeDataReg(r);
+        ea.reg = decodeDataReg(r);
         return decodeEffectiveAddr(memory, insn, out, ea);
     case M_IM3:
         r = (insn.opCode() >> 9) & 7;
@@ -380,7 +383,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     const auto iSize = insn.insnSize();
     const auto oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
-    const auto suffix = _regs.sizeSuffix(oSize);
+    const auto suffix = sizeSuffix(oSize);
     if (suffix) {
         StrBuffer save(out);
         insn.nameBuffer().over(out);

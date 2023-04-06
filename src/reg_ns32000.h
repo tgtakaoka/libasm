@@ -88,36 +88,36 @@ enum StrOptName : uint8_t {
     STROPT_U = 0xC,  // Until Match
 };
 
-class RegNs32000 : public RegBase {
-public:
-    static RegName parseRegName(StrScanner &scan);
-    StrBuffer &outRegName(StrBuffer &out, const RegName name) const;
-    static uint8_t encodeRegName(RegName name);
-    static bool isGeneric(RegName name);
-    static RegName decodeRegName(uint8_t num, bool floating = false);
-    static bool isFloat(RegName name);
-    static bool isRegPair(RegName name);
+namespace reg {
 
-    static PregName parsePregName(StrScanner &scan);
-    StrBuffer &outPregName(StrBuffer &out, PregName name) const;
-    static PregName decodePregName(uint8_t num);
-    static uint8_t encodePregName(PregName name);
+RegName parseRegName(StrScanner &scan);
+StrBuffer &outRegName(StrBuffer &out, const RegName name);
+uint8_t encodeRegName(RegName name);
+bool isGeneric(RegName name);
+RegName decodeRegName(uint8_t num, bool floating = false);
+bool isFloat(RegName name);
+bool isRegPair(RegName name);
 
-    static MregName parseMregName(StrScanner &scan);
-    StrBuffer &outMregName(StrBuffer &out, MregName name) const;
-    static MregName decodeMregName(uint8_t num);
-    static uint8_t encodeMregName(MregName name);
+PregName parsePregName(StrScanner &scan);
+StrBuffer &outPregName(StrBuffer &out, PregName name);
+PregName decodePregName(uint8_t num);
+uint8_t encodePregName(PregName name);
 
-    static ConfigName parseConfigName(StrScanner &scan);
-    StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs) const;
+MregName parseMregName(StrScanner &scan);
+StrBuffer &outMregName(StrBuffer &out, MregName name);
+MregName decodeMregName(uint8_t num);
+uint8_t encodeMregName(MregName name);
 
-    static StrOptName parseStrOptName(StrScanner &scan);
-    StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts) const;
+ConfigName parseConfigName(StrScanner &scan);
+StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs);
 
-    static OprSize parseIndexSize(StrScanner &scan);
-    char indexSizeChar(OprSize size) const;
-};
+StrOptName parseStrOptName(StrScanner &scan);
+StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts);
 
+OprSize parseIndexSize(StrScanner &scan);
+char indexSizeChar(OprSize size);
+
+}  // namespace reg
 }  // namespace ns32000
 }  // namespace libasm
 

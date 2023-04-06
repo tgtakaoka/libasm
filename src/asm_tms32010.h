@@ -20,18 +20,13 @@
 #include "asm_base.h"
 #include "config_tms32010.h"
 #include "insn_tms32010.h"
-#include "reg_tms32010.h"
-#include "table_tms32010.h"
 
 namespace libasm {
 namespace tms32010 {
 
 class AsmTms32010 : public Assembler, public Config {
 public:
-    AsmTms32010()
-        : Assembler(_parser, TableTms32010::TABLE, _pseudos),
-          _parser(_number, _comment, _symbol, _letter, _location),
-          _pseudos() {}
+    AsmTms32010();
 
     const ConfigBase &config() const override { return *this; }
 
@@ -44,13 +39,7 @@ private:
     const DollarLocationParser _location;
     PseudoBase _pseudos;
 
-    struct Operand : public OperandBase {
-        AddrMode mode;
-        RegName reg;
-        uint16_t val16;
-        Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-    };
-
+    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode);

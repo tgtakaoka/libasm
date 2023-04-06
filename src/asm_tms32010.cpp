@@ -16,8 +16,25 @@
 
 #include "asm_tms32010.h"
 
+#include "reg_tms32010.h"
+#include "table_tms32010.h"
+
 namespace libasm {
 namespace tms32010 {
+
+using namespace reg;
+
+struct AsmTms32010::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
+AsmTms32010::AsmTms32010()
+    : Assembler(_parser, TableTms32010::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {}
 
 static AddrMode constantType(uint16_t val) {
     if (val == 0)
@@ -116,9 +133,9 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    op.reg = RegTms32010::parseRegName(p);
+    op.reg = parseRegName(p);
     if (op.reg != REG_UNDEF) {
-        if (RegTms32010::isAuxiliary(op.reg)) {
+        if (isAuxiliary(op.reg)) {
             op.mode = M_AR;
             op.val16 = int8_t(op.reg) - int8_t(REG_AR0);
         } else {

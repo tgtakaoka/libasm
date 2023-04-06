@@ -19,11 +19,13 @@
 #include "text_scn2650.h"
 
 using namespace libasm::text::scn2650;
+using namespace libasm::reg;
 
 namespace libasm {
 namespace scn2650 {
+namespace reg {
 
-RegName RegScn2650::parseRegName(StrScanner &scan) {
+RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('R')) {
         const auto num = parseRegNumber(p, 4);
@@ -35,45 +37,46 @@ RegName RegScn2650::parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-uint8_t RegScn2650::encodeRegName(RegName name) {
+uint8_t encodeRegName(RegName name) {
     return uint8_t(name);
 }
 
-RegName RegScn2650::decodeRegName(uint8_t opc) {
+RegName decodeRegName(uint8_t opc) {
     return RegName(opc & 0x3);
 }
 
-StrBuffer &RegScn2650::outRegName(StrBuffer &out, RegName name) const {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     return outRegNumber(out.letter('R'), int8_t(name));
 }
 
-static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
+static constexpr NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_EQ),
         NAME_ENTRY(CC_GT),
         NAME_ENTRY(CC_LT),
         NAME_ENTRY(CC_UN),
 };
 
-CcName RegScn2650::parseCcName(StrScanner &scan) {
+CcName parseCcName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
     return entry ? CcName(entry->name()) : CC_UNDEF;
 }
 
-uint8_t RegScn2650::encodeCcName(CcName name) {
+uint8_t encodeCcName(CcName name) {
     return uint8_t(name);
 }
 
-CcName RegScn2650::decodeCcName(uint8_t opc) {
+CcName decodeCcName(uint8_t opc) {
     return CcName(opc & 0x3);
 }
 
-StrBuffer &RegScn2650::outCcName(StrBuffer &out, CcName name) const {
+StrBuffer &outCcName(StrBuffer &out, CcName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
+}  // namespace reg
 }  // namespace scn2650
 }  // namespace libasm
 

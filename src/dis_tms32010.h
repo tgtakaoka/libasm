@@ -20,22 +20,18 @@
 #include "config_tms32010.h"
 #include "dis_base.h"
 #include "insn_tms32010.h"
-#include "reg_tms32010.h"
-#include "table_tms32010.h"
 
 namespace libasm {
 namespace tms32010 {
 
 class DisTms32010 : public Disassembler, public Config {
 public:
-    DisTms32010()
-        : Disassembler(_formatter, _regs, TableTms32010::TABLE, '$'), _formatter(), _regs() {}
+    DisTms32010();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
     IntelValueFormatter _formatter;
-    RegTms32010 _regs;
 
     Error decodeDirect(StrBuffer &out, Config::opcode_t opc);
     Error decodeIndirect(StrBuffer &out, uint8_t mam);

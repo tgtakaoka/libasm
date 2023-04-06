@@ -16,13 +16,20 @@
 
 #include "dis_i8096.h"
 
+#include "reg_i8096.h"
 #include "table_i8096.h"
 
 namespace libasm {
 namespace i8096 {
 
+using namespace reg;
+
 static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "absolute";
 static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
+
+DisI8096::DisI8096() : Disassembler(_formatter, TableI8096::TABLE, '$'), _formatter() {
+    reset();
+}
 
 void DisI8096::reset() {
     Disassembler::reset();
@@ -101,12 +108,12 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
     case M_WREG:
     case M_INDIR:
         regno = insn.readByte(memory);
-        if (!RegI8096::isWreg(regno))
+        if (!isWreg(regno))
             return setError(REGISTER_NOT_ALLOWED);
         break;
     case M_LREG:
         regno = insn.readByte(memory);
-        if (!RegI8096::isLreg(regno))
+        if (!isLreg(regno))
             return setError(REGISTER_NOT_ALLOWED);
         break;
     case M_BAOP:
@@ -121,13 +128,13 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
             break;
         case AA_INDIR:
             regno = insn.readByte(memory);
-            if (!RegI8096::isWreg(regno))
+            if (!isWreg(regno))
                 return setError(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
             regno = insn.readByte(memory);
-            if (RegI8096::isWreg(regno)) {  // 8bit displacement
+            if (isWreg(regno)) {  // 8bit displacement
                 val16 = static_cast<int16_t>(insn.readByte(memory));
                 mode = M_IDX8;
             } else {
@@ -142,7 +149,7 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
         switch (insn.aa()) {
         case AA_REG:
             regno = insn.readByte(memory);
-            if (!RegI8096::isWreg(regno))
+            if (!isWreg(regno))
                 return setError(REGISTER_NOT_ALLOWED);
             mode = M_WREG;
             break;
@@ -152,13 +159,13 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
             break;
         case AA_INDIR:
             regno = insn.readByte(memory);
-            if (!RegI8096::isWreg(regno))
+            if (!isWreg(regno))
                 return setError(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
             regno = insn.readByte(memory);
-            if (RegI8096::isWreg(regno)) {  // 8bit displacement
+            if (isWreg(regno)) {  // 8bit displacement
                 val16 = static_cast<int16_t>(insn.readByte(memory));
                 mode = M_IDX8;
             } else {

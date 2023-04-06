@@ -16,11 +16,39 @@
 
 #include "asm_mc68000.h"
 
+#include "reg_mc68000.h"
+#include "table_mc68000.h"
+
 namespace libasm {
 namespace mc68000 {
 
+using namespace reg;
+
 static const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
 static const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+
+struct AsmMc68000::Operand : public OperandBase {
+    AddrMode mode;
+    RegName reg;
+    RegName indexReg;
+    OprSize indexSize;
+    uint32_t val32;
+    StrScanner list;
+    Operand()
+        : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0), list() {}
+    Config::uintptr_t offset(const InsnMc68000 &insn) const;
+};
+
+AsmMc68000::AsmMc68000()
+    : Assembler(_parser, TableMc68000::TABLE, _pseudos),
+      _parser(_number, _comment, _symbol, _letter, _location),
+      _pseudos() {
+    reset();
+}
+
+void AsmMc68000::setAlias(bool enable) {
+    TableMc68000::TABLE.setAlias(enable);
+}
 
 AsmMc68000::OptAlias::OptAlias(AsmMc68000 &assembler)
     : BoolOptionBase(OPT_BOOL_ALIAS, OPT_DESC_ALIAS), _assembler(assembler) {}
@@ -90,8 +118,8 @@ void AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config
     if (overflowInt8(disp))
         setErrorIf(op, OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
-    ext |= RegMc68000::encodeGeneralRegNo(op.indexReg) << 12;
-    if (RegMc68000::isAddrReg(op.indexReg))
+    ext |= encodeGeneralRegNo(op.indexReg) << 12;
+    if (isAddrReg(op.indexReg))
         ext |= (1 << 15);
     if (op.indexSize == SZ_LONG)
         ext |= (1 << 11);
@@ -258,18 +286,18 @@ void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool rev
     uint16_t bits = 0;
     for (;;) {
         auto a = p;
-        const auto start = RegMc68000::parseRegName(a);
-        if (!RegMc68000::isGeneralReg(start))
+        const auto start = parseRegName(a);
+        if (!isGeneralReg(start))
             setErrorIf(p, REGISTER_NOT_ALLOWED);
-        const uint8_t s = RegMc68000::encodeGeneralRegPos(start);
+        const uint8_t s = encodeGeneralRegPos(start);
         uint8_t e = s;
         if (*a == '-') {
             ++a;
             p = a.skipSpaces();
-            const auto last = RegMc68000::parseRegName(a);
-            if (!RegMc68000::isGeneralReg(last))
+            const auto last = parseRegName(a);
+            if (!isGeneralReg(last))
                 setErrorIf(p, REGISTER_NOT_ALLOWED);
-            e = RegMc68000::encodeGeneralRegPos(last);
+            e = encodeGeneralRegPos(last);
             if (e < s)
                 setErrorIf(UNKNOWN_OPERAND);
         }
@@ -310,8 +338,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     if (pdec)
         p = a;
     if (p.expect('(')) {
-        op.reg = RegMc68000::parseRegName(p.skipSpaces());
-        if (RegMc68000::isAddrReg(op.reg)) {
+        op.reg = parseRegName(p.skipSpaces());
+        if (isAddrReg(op.reg)) {
             if (!p.skipSpaces().expect(')'))
                 return op.setError(MISSING_CLOSING_PAREN);
             if (pdec) {
@@ -328,7 +356,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         if (op.hasError())
             return op.getError();
         if (p.skipSpaces().expect(')')) {
-            const auto size = RegMc68000::parseSize(p.skipSpaces());
+            const auto size = parseSize(p.skipSpaces());
             bool over16 = overflowInt16(op.val32);
             if (over16) {
                 // check if it is near the end of address space.
@@ -344,8 +372,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         }
         if (p.expect(',')) {
             a = p.skipSpaces();
-            op.reg = RegMc68000::parseRegName(a);
-            if (!RegMc68000::isAddrReg(op.reg) && op.reg != REG_PC)
+            op.reg = parseRegName(a);
+            if (!isAddrReg(op.reg) && op.reg != REG_PC)
                 return op.setError(a, REGISTER_NOT_ALLOWED);
             if (a.skipSpaces().expect(')')) {
                 op.mode = (op.reg == REG_PC) ? M_PCDSP : M_DISP;
@@ -355,10 +383,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             if (!a.expect(','))
                 return op.setError(a, MISSING_COMMA);
             p = a.skipSpaces();
-            op.indexReg = RegMc68000::parseRegName(p);
-            if (!RegMc68000::isGeneralReg(op.indexReg))
+            op.indexReg = parseRegName(p);
+            if (!isGeneralReg(op.indexReg))
                 return op.setError(UNKNOWN_OPERAND);
-            op.indexSize = RegMc68000::parseSize(p);
+            op.indexSize = parseSize(p);
             if (op.indexSize == SZ_ERROR)
                 return op.setError(UNKNOWN_OPERAND);
             if (op.indexSize == SZ_NONE)
@@ -372,19 +400,19 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
     }
 
-    op.reg = RegMc68000::parseRegName(a = p);
+    op.reg = parseRegName(a = p);
     if (op.reg != REG_UNDEF) {
         a.skipSpaces();
-        if ((*a == '/' || *a == '-') && RegMc68000::isGeneralReg(op.reg)) {
+        if ((*a == '/' || *a == '-') && isGeneralReg(op.reg)) {
             while (*a != ',' && !endOfLine(a))
                 ++a;
             op.mode = M_MULT;
             scan = a;
             return op.getError();
         }
-        if (RegMc68000::isAddrReg(op.reg)) {
+        if (isAddrReg(op.reg)) {
             op.mode = M_AREG;
-        } else if (RegMc68000::isDataReg(op.reg)) {
+        } else if (isDataReg(op.reg)) {
             op.mode = M_DREG;
         } else if (op.reg == REG_USP) {
             op.mode = M_USP;
@@ -409,7 +437,7 @@ OprSize InsnMc68000::parseInsnSize() {
     StrScanner p(name());
     p.trimStart([](char c) { return c != '.'; });
     char *eos = const_cast<char *>(p.str());
-    const auto isize = RegMc68000::parseSize(p);
+    const auto isize = parseSize(p);
     *eos = 0;
     return isize;
 }
