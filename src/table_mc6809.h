@@ -36,8 +36,7 @@ struct PostSpec {
         : index(_index), base(_base), size(_size), indir(_indir) {}
 };
 
-class TableMc6809 : public EntryTable {
-public:
+struct TableMc6809 : entry::Table {
     TableMc6809();
 
     static TableMc6809 TABLE;
@@ -55,7 +54,7 @@ public:
     bool setCpu(const char *cpu) override;
     CpuType cpuType() const;
 
-    typedef EntryTableBase<Entry> EntryPage;
+    typedef entry::TableBase<Entry> EntryPage;
     struct Cpu;
 
 private:

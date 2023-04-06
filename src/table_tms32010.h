@@ -24,7 +24,7 @@
 namespace libasm {
 namespace tms32010 {
 
-class TableTms32010 : public EntryTable {
+struct TableTms32010 : entry::Table {
 public:
     TableTms32010();
 
@@ -38,8 +38,8 @@ public:
     bool setCpu(const char *cpu) override;
     uint16_t dataMemoryLimit() const;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

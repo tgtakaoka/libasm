@@ -25,7 +25,7 @@
 namespace libasm {
 namespace z8000 {
 
-class TableZ8000 : public EntryTable {
+struct TableZ8000 : entry::Table {
 public:
     TableZ8000();
 
@@ -41,8 +41,8 @@ public:
     bool segmentedModel() const;
     AddressWidth addressWidth() const;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

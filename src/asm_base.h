@@ -75,13 +75,13 @@ private:
     ValueParser &_parser;
 
 protected:
-    EntryTable &_table;
+    entry::Table &_table;
     PseudoBase &_pseudos;
     char _commentChar;
     SymbolTable *_symtab;
     const Options _commonOptions;
 
-    Assembler(ValueParser &parser, EntryTable &table, PseudoBase &pseudos)
+    Assembler(ValueParser &parser, entry::Table &table, PseudoBase &pseudos)
         : ErrorAt(), _parser(parser), _table(table), _pseudos(pseudos) {}
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }

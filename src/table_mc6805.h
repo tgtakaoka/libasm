@@ -25,8 +25,7 @@
 namespace libasm {
 namespace mc6805 {
 
-class TableMc6805 : public EntryTable {
-public:
+struct TableMc6805 : entry::Table {
     TableMc6805();
 
     static TableMc6805 TABLE;
@@ -38,8 +37,8 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

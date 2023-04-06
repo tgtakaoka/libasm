@@ -25,7 +25,7 @@
 namespace libasm {
 namespace z8 {
 
-class TableZ8 : public EntryTable {
+struct TableZ8 : entry::Table {
 public:
     TableZ8();
 
@@ -41,8 +41,8 @@ public:
 
     static constexpr Config::opcode_t SRP = 0x31;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

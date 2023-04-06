@@ -79,8 +79,7 @@ enum AddrMode : uint8_t {
     // Block move:                           M_DPG,  M_DPG,  M_NONE
 };
 
-class Entry : public EntryBase<Config> {
-public:
+struct Entry : entry::Base<Config> {
     struct Flags {
         uint16_t _attr;
 
@@ -99,7 +98,7 @@ public:
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : EntryBase(name, opCode), _flags(flags) {}
+        : Base(name, opCode), _flags(flags) {}
 
     Flags flags() const { return _flags.read(); }
 

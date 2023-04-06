@@ -803,13 +803,13 @@ static constexpr uint8_t INDEX_14_2[] PROGMEM = {
 };
 // clang-format on
 
-struct EntryPage : EntryTableBase<Entry> {
+struct EntryPage : entry::TableBase<Entry> {
     Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
     Config::opcode_t post() const { return pgm_read_byte(&_post); }
 
     constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
             const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : EntryTableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+        : TableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
 
 private:
     const Config::opcode_t _mask;
@@ -855,14 +855,14 @@ static constexpr EntryPage NS32082_PAGES[] PROGMEM = {
 };
 
 template <typename CPUTYPE>
-struct ProcessorCpuCommon : CpuBase<CPUTYPE, EntryPage> {
+struct ProcessorCpuCommon : entry::CpuBase<CPUTYPE, EntryPage> {
     constexpr ProcessorCpuCommon(CPUTYPE cpuType, const /* PROGMEM */ char *name_P,
             const EntryPage *table, const EntryPage *end)
-        : CpuBase<CPUTYPE, EntryPage>(cpuType, name_P, table, end) {}
+        : entry::CpuBase<CPUTYPE, EntryPage>(cpuType, name_P, table, end) {}
 
     Error searchName(InsnNs32000 &insn, bool (*accept)(InsnNs32000 &, const Entry *),
             void (*pageSetup)(InsnNs32000 &, const EntryPage *)) const {
-        CpuBase<CPUTYPE, EntryPage>::searchName(insn, accept, pageSetup);
+        entry::CpuBase<CPUTYPE, EntryPage>::searchName(insn, accept, pageSetup);
         return insn.getError();
     }
 
@@ -870,7 +870,7 @@ struct ProcessorCpuCommon : CpuBase<CPUTYPE, EntryPage> {
             bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
             void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
         const auto entry =
-                CpuBase<CPUTYPE, EntryPage>::searchOpCode(insn, matchOpCode, readEntryName);
+            entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(insn, matchOpCode, readEntryName);
         if (entry && insn.hasPost())
             insn.readPost(memory);
         return insn.getError();

@@ -21,6 +21,7 @@
 #include "error_reporter.h"
 
 namespace libasm {
+namespace table {
 
 /**
  * Base class for any table in PROGMEM.
@@ -64,15 +65,12 @@ private:
 
 /**
  *  class for indexed table in template.
- *
  */
 template <typename /*PROGMEM*/ ITEM, typename INDEX>
 struct IndexedTable {
     constexpr IndexedTable(const /*PROGMEM*/ ITEM *table, const /*PROGMEM*/ ITEM *end,
             const /*PROGMEM*/ INDEX *itable, const /*PROGMEM*/ INDEX *iend)
         : _items(table, end), _indexes(itable, iend) {}
-
-    bool notExactMatch(const ITEM *item) const { return item == _items.end(); }
 
     template <typename DATA, typename EXTRA>
     using Matcher = bool (*)(DATA &, const ITEM *, EXTRA);
@@ -89,6 +87,8 @@ struct IndexedTable {
     using Comparator = int (*)(DATA &, const ITEM *);
     template <typename DATA>
     using Matcher2 = bool (*)(DATA &, const ITEM *);
+
+    bool notExactMatch(const ITEM *item) const { return item == _items.end(); }
 
     template <typename DATA, typename EXTRA>
     const ITEM *binarySearch(DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher,
@@ -136,6 +136,7 @@ private:
     }
 };
 
+}  // namespace table
 }  // namespace libasm
 
 #endif  // __TABLE_BASE_H__

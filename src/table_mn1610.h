@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mn1610 {
 
-class TableMn1610 : public EntryTable {
+struct TableMn1610 : entry::Table {
 public:
     TableMn1610();
 
@@ -39,8 +39,8 @@ public:
 
     AddressWidth addressWidth() const;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

@@ -60,7 +60,7 @@ private:
 
 protected:
     RegBase &_regBase;
-    EntryTable &_table;
+    entry::Table &_table;
 
     struct DisassemblerOption {
     protected:
@@ -84,7 +84,7 @@ protected:
     bool _relativeTarget = false;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(ValueFormatter &formatter, RegBase &regs, EntryTable &table, char curSym);
+    Disassembler(ValueFormatter &formatter, RegBase &regs, entry::Table &table, char curSym);
 
     /** Lookup |addr| value and returns symbol. */
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;

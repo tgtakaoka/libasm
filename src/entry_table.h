@@ -22,21 +22,21 @@
 #include <string.h>
 
 namespace libasm {
+namespace entry {
 
 /**
  * Base class for instruction entry table.
  */
 template <typename ENTRY>
-struct EntryTableBase {
+struct TableBase {
     uint8_t prefix() const { return pgm_read_byte(&_prefix); }
     bool prefixMatch(uint8_t code) const { return code == prefix(); }
 
-    constexpr EntryTableBase(uint8_t prefix, const ENTRY *table, const ENTRY *end,
-            const uint8_t *index, const uint8_t *iend)
+    constexpr TableBase(uint8_t prefix, const ENTRY *table, const ENTRY *end, const uint8_t *index,
+            const uint8_t *iend)
         : _entries(table, end, index, iend), _prefix(prefix) {}
 
-    constexpr EntryTableBase(
-            const ENTRY *table, const ENTRY *end, const uint8_t *index, const uint8_t *iend)
+    constexpr TableBase(const ENTRY *table, const ENTRY *end, const uint8_t *index, const uint8_t *iend)
         : _entries(table, end, index, iend), _prefix(0) {}
 
     template <typename DATA, typename EXTRA>
@@ -64,7 +64,7 @@ struct EntryTableBase {
     bool notExactMatch(const ENTRY *entry) const { return _entries.notExactMatch(entry); }
 
 private:
-    const IndexedTable<ENTRY, uint8_t> _entries;
+    const table::IndexedTable<ENTRY, uint8_t> _entries;
     const uint8_t _prefix;
 };
 
@@ -178,7 +178,7 @@ struct CpuBase {
     }
 
 protected:
-    const Table<ENTRY_PAGE> _pages;
+    const table::Table<ENTRY_PAGE> _pages;
     CPUTYPE _cpuType;
     const /* PROGMEM */ char *_name_P;
 };
@@ -186,13 +186,13 @@ protected:
 /**
  * Base class for instruction table.
  */
-class EntryTable {
-public:
+struct Table {
     virtual /* PROGMEM */ const char *listCpu_P() const = 0;
     virtual /* PROGMEM */ const char *cpu_P() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
 };
 
+}  // namespace entry
 }  // namespace libasm
 
 #endif  // __ENTRY_TABLE_H__
@@ -203,3 +203,9 @@ public:
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
+
+
+
+
+
+

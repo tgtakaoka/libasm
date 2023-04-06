@@ -24,7 +24,7 @@
 namespace libasm {
 namespace i8080 {
 
-class TableI8080 : public EntryTable {
+struct TableI8080 : entry::Table {
 public:
     TableI8080();
 
@@ -38,8 +38,8 @@ public:
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

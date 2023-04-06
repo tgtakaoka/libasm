@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class TableMc68000 : public EntryTable {
+struct TableMc68000 : entry::Table {
 public:
     TableMc68000();
 
@@ -39,8 +39,8 @@ public:
 
     void setAlias(bool enable);
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

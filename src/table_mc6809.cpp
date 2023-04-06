@@ -611,7 +611,8 @@ static constexpr PostEntry HD6309_POSTBYTE[] PROGMEM = {
         {REG_UNDEF, REG_W, -2, true, 0xFF, 0xF0},   // [,--W]
 };
 
-using PostPage = Table<PostEntry>;
+using PostPage = table::Table<PostEntry>;
+
 static constexpr PostPage MC6809_POSTS[] PROGMEM = {
         {ARRAY_RANGE(MC6809_POSTBYTE)},
 };
@@ -621,7 +622,7 @@ static constexpr PostPage HD6309_POSTS[] PROGMEM = {
         {ARRAY_RANGE(HD6309_POSTBYTE)},
 };
 
-struct TableMc6809::Cpu : CpuBase<CpuType, EntryPage> {
+struct TableMc6809::Cpu : entry::CpuBase<CpuType, EntryPage> {
     constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name, const /*PROGMEM*/ EntryPage *table,
             const /*PROGMEM*/ EntryPage *end, const /*PROGMEM*/ PostPage *postTable,
             const /*PROGMEM*/ PostPage *postEnd)
@@ -633,7 +634,7 @@ struct TableMc6809::Cpu : CpuBase<CpuType, EntryPage> {
     int16_t searchPostSpec(PostSpec &spec) const;
 
 private:
-    const Table<PostPage> _postCodes;
+    const table::Table<PostPage> _postCodes;
 };
 
 static constexpr TableMc6809::Cpu CPU_TABLE[] PROGMEM = {

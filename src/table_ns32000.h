@@ -26,7 +26,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class TableNs32000 : public EntryTable {
+struct TableNs32000 : entry::Table {
 public:
     TableNs32000();
 

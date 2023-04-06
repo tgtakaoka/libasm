@@ -61,8 +61,7 @@ enum AddrMode : uint8_t {
     M_IDIX = 32,  // (v)(r)
 };
 
-class Entry : public EntryBase<Config> {
-public:
+struct Entry : entry::Base<Config> {
     struct Flags {
         uint8_t _opr1;
         uint8_t _opr2;
@@ -85,7 +84,7 @@ public:
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : EntryBase(name, opCode), _flags(flags) {}
+        : Base(name, opCode), _flags(flags) {}
 
     Flags flags() const { return _flags.read(); }
 

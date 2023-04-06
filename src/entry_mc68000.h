@@ -93,8 +93,7 @@ enum OprPos : uint8_t {
     OP___ = 4,  // ___|___|___|___
 };
 
-class Entry : public EntryBase<Config> {
-public:
+struct Entry : entry::Base<Config> {
     struct Flags {
         uint8_t _src;
         uint8_t _dst;
@@ -128,7 +127,7 @@ public:
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : EntryBase(name, opCode), _flags(flags) {}
+        : Base(name, opCode), _flags(flags) {}
 
     Flags flags() const { return _flags.read(); }
 

@@ -116,8 +116,7 @@ enum ModeField : uint8_t {
     MF_P8 = 6,
 };
 
-class Entry : public EntryBase<Config> {
-public:
+struct Entry : entry::Base<Config> {
     struct Flags {
         uint8_t _dst;
         uint8_t _src;
@@ -155,7 +154,7 @@ public:
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
-        : EntryBase(name, opCode), _flags(flags) {}
+        : Base(name, opCode), _flags(flags) {}
 
     Flags flags() const { return _flags.read(); }
 

@@ -36,7 +36,7 @@ struct Operand : public OperandBase {
     Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
-class TableTlcs90 : public EntryTable {
+struct TableTlcs90 : entry::Table {
 public:
     TableTlcs90();
 

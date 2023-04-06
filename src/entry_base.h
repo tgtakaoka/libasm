@@ -20,14 +20,14 @@
 #include "config_base.h"
 
 namespace libasm {
+namespace entry {
 
 /**
  * Base class for instruction table entry.
  */
 template <typename Conf>
-class EntryBase {
-public:
-    constexpr EntryBase(const /* PROGMEM */ char *name_P, typename Conf::opcode_t opCode)
+struct Base {
+    constexpr Base(const /* PROGMEM */ char *name_P, typename Conf::opcode_t opCode)
         : _name_P(name_P), _opCode(opCode) {}
 
     const /* PROGMEM */ char *name_P() const {
@@ -47,6 +47,7 @@ private:
     typename Conf::opcode_t _opCode;
 };
 
+}  // namespace entry
 }  // namespace libasm
 
 #endif  // __ENTRY_BASE_H__

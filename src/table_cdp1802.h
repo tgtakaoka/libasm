@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class TableCdp1802 : public EntryTable {
+struct TableCdp1802 : entry::Table {
 public:
     TableCdp1802();
 
@@ -38,8 +38,8 @@ public:
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

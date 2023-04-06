@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mos6502 {
 
-class TableMos6502 : public EntryTable {
-public:
+struct TableMos6502 : entry::Table {
     TableMos6502() { reset(); }
     void reset();
 
@@ -49,8 +48,8 @@ public:
     static constexpr Config::opcode_t WDM = 0x42;
     static constexpr Config::opcode_t JSL = 0x22;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;

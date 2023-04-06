@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z80 {
 
-class TableZ80 : public EntryTable {
+struct TableZ80 : entry::Table {
 public:
     TableZ80();
 
@@ -41,8 +41,8 @@ public:
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
 
-    typedef EntryTableBase<Entry> EntryPage;
-    typedef CpuBase<CpuType, EntryPage> Cpu;
+    typedef entry::TableBase<Entry> EntryPage;
+    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
 
 private:
     const Cpu *_cpu;
