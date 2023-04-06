@@ -53,7 +53,7 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     InsnZ80 ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
     ixBit.clearNameBuffer();
-    if (TableZ80::TABLE.searchOpCode(ixBit))
+    if (TableZ80::TABLE.searchOpCode(ixBit, out))
         return setError(ixBit);
 
     const auto reg = RegZ80::decodeDataReg(opc);
@@ -187,7 +187,7 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableZ80::TABLE.searchOpCode(insn))
+    if (TableZ80::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

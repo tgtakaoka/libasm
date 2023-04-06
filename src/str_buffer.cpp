@@ -32,7 +32,14 @@ StrBuffer &StrBuffer::reset(char *buffer, size_t size) {
     return *this;
 }
 
-StrBuffer &StrBuffer::letter(char letter) {
+StrBuffer &StrBuffer::over(StrBuffer &heir) const {
+    heir._out = _out;
+    heir._end = _end;
+    heir.setError(getError());
+    return heir;
+}
+
+StrBuffer &StrBuffer::rletter(char letter) {
     if (_out < _end) {
         *_out++ = letter;
         *_out = 0;
@@ -42,6 +49,10 @@ StrBuffer &StrBuffer::letter(char letter) {
     return *this;
 }
 
+StrBuffer &StrBuffer::letter(char letter) {
+    return rletter(letter);
+}
+
 StrBuffer &StrBuffer::text(const char *text) {
     char c;
     while ((c = *text++) != 0)
@@ -49,11 +60,10 @@ StrBuffer &StrBuffer::text(const char *text) {
     return *this;
 }
 
-StrBuffer &StrBuffer::text(const char *text, bool uppercase) {
-    const auto &conv = uppercase ? toupper : tolower;
+StrBuffer &StrBuffer::rtext(const char *text) {
     char c;
     while ((c = *text++) != 0)
-        letter(conv(c));
+        rletter(c);
     return *this;
 }
 
@@ -65,12 +75,11 @@ StrBuffer &StrBuffer::text(const StrScanner &scan) {
     return *this;
 }
 
-StrBuffer &StrBuffer::text(const StrScanner &scan, bool uppercase) {
-    const auto &conv = uppercase ? toupper : tolower;
+StrBuffer &StrBuffer::rtext(const StrScanner &scan) {
     auto text = scan;
     char c;
     while ((c = *text++) != 0)
-        letter(conv(c));
+        rletter(c);
     return *this;
 }
 
@@ -84,13 +93,12 @@ StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P) {
     return *this;
 }
 
-StrBuffer &StrBuffer::text_P(const /*PROGMEM*/ char *text_P, bool uppercase) {
-    const auto &conv = uppercase ? toupper : tolower;
+StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
     while (true) {
         const char c = pgm_read_byte(text_P++);
         if (c == 0)
             break;
-        letter(conv(c));
+        rletter(c);
     }
     return *this;
 }
@@ -108,7 +116,7 @@ StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, ...) {
 }
 
 StrBuffer &StrBuffer::comma() {
-    return letter(',').letter(' ');
+    return rletter(',').rletter(' ');
 }
 
 StrBuffer &StrBuffer::reverse(char *start) {
@@ -120,14 +128,6 @@ StrBuffer &StrBuffer::reverse(char *start) {
             *start++ = *end;
             *end-- = c;
         }
-    }
-    return *this;
-}
-
-StrBuffer &StrBuffer::lowercase(char *start) {
-    while (start < _out) {
-        *start = tolower(*start);
-        start++;
     }
     return *this;
 }

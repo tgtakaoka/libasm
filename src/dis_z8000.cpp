@@ -26,6 +26,12 @@ static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (defa
 static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
 
+void DisZ8000::reset() {
+    Disassembler::reset();
+    _ioAddressPrefix = 0;
+    _shortDirect = true;
+}
+
 DisZ8000::OptIoaddrPrefix::OptIoaddrPrefix(bool &var)
     : BoolOption(OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX, var) {}
 
@@ -60,7 +66,7 @@ Error DisZ8000::decodeImmediate(
         const int16_t count =
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
-            if (TableZ8000::TABLE.searchOpCodeAlias(insn, memory))
+            if (TableZ8000::TABLE.searchOpCodeAlias(insn, out, memory))
                 return setError(insn);
             data = -count;
         }
@@ -393,7 +399,7 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableZ8000::TABLE.searchOpCode(insn, memory))
+    if (TableZ8000::TABLE.searchOpCode(insn, out, memory))
         return setError(insn);
     if (checkPostWord(insn))
         return getError();

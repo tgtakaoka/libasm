@@ -33,7 +33,7 @@ RegName RegTms9900::parseRegName(StrScanner &scan) {
 
 StrBuffer &RegTms9900::outRegName(StrBuffer &out, uint8_t num) const {
     num &= 0x0f;
-    return outRegNumber(out.letter('R', isUppercase()), num);
+    return outRegNumber(out.letter('R'), num);
 }
 
 uint8_t RegTms9900::encodeRegNumber(RegName name) {

@@ -314,6 +314,12 @@ static void test_rel() {
     ATEST(0x1000, JH,  "0FF8H", 0x1BFB);
     ATEST(0x1000, JOP, "0FF6H", 0x1CFA);
 
+    disassembler.setOption("relative", "true");
+    ATEST(0x1000, JMP, "$-254", 0x1080);
+    ATEST(0x1000, JMP, "$",     0x10FF);
+    ATEST(0x1000, JMP, "$+2",   0x1000);
+    ATEST(0x1000, JMP, "$+256", 0x107F);
+
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1002, "sym1002");
@@ -323,12 +329,6 @@ static void test_rel() {
     ATEST(0x1000, JLT, "sym1000", 0x11FF);
     ATEST(0x1000, JLE, "sym1100", 0x127F);
     ATEST(0x1000, JEQ, "sym0F02", 0x1380);
-
-    disassembler.setOption("relative", "true");
-    ATEST(0x1000, JMP, "$-254", 0x1080);
-    ATEST(0x1000, JMP, "$",     0x10FF);
-    ATEST(0x1000, JMP, "$+2",   0x1000);
-    ATEST(0x1000, JMP, "$+256", 0x107F);
 }
 
 static void test_cru_off() {

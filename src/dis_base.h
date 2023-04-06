@@ -39,7 +39,7 @@ public:
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
-    virtual void reset() {}
+    virtual void reset();
 
     ValueFormatter &formatter() { return _formatter; }
 
@@ -47,6 +47,8 @@ public:
     const /*PROGMEM*/ char *cpu_P() const { return _table.cpu_P(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
 
+    void setUpperHex(bool enable);
+    void setUppercase(bool enable);
     Error setOption(const char *name, const char *text) {
         if (_commonOptions.setOption(name, text) == OK)
             return getError();
@@ -59,7 +61,6 @@ private:
     ValueFormatter &_formatter;
 
 protected:
-    RegBase &_regBase;
     entry::Table &_table;
 
     struct DisassemblerOption {
@@ -73,14 +74,11 @@ protected:
         OptCStyle(Disassembler *dis, const OptionBase &next);
         Error set(bool value) const override;
     } _opt_cstyle;
-    const struct OptUppercase : public BoolOptionBase, DisassemblerOption {
-        OptUppercase(Disassembler *dis, const OptionBase &next);
-        Error set(bool value) const override;
-    } _opt_uppercase;
     const BoolOption _opt_relative;
     const Options _commonOptions;
 
     char _curSym;
+    bool _uppercase = false;
     bool _relativeTarget = false;
     SymbolTable *_symtab = nullptr;
 

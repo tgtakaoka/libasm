@@ -20,8 +20,6 @@ namespace libasm {
 
 static const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
 static const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
-static const char OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
-static const char OPT_DESC_UPPERCASE[] PROGMEM = "uppercase instruction and register name";
 static const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
 static const char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
 static const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
@@ -30,30 +28,34 @@ static const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 Disassembler::Disassembler(
         ValueFormatter &formatter, RegBase &regs, entry::Table &table, char curSym)
     : _formatter(formatter),
-      _regBase(regs),
       _table(table),
       _opt_curSym(OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, _curSym),
       _opt_cstyle(this, _opt_curSym),
-      _opt_uppercase(this, _opt_cstyle),
-      _opt_relative(OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE, _relativeTarget, _opt_uppercase),
+      _opt_relative(OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE, _relativeTarget, _opt_cstyle),
       _commonOptions(_opt_relative),
-      _curSym(curSym) {}
+      _curSym(curSym) {
+    reset();
+}
+
+void Disassembler::reset() {
+    setUpperHex(true);
+    setUppercase(true);
+}
 
 Disassembler::OptCStyle::OptCStyle(Disassembler *dis, const OptionBase &next)
     : BoolOptionBase(OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, next), DisassemblerOption(dis) {}
 
 Error Disassembler::OptCStyle::set(bool value) const {
-    _dis->_formatter.setCStyle(value);
+    _dis->formatter().setCStyle(value);
     return OK;
 }
 
-Disassembler::OptUppercase::OptUppercase(Disassembler *dis, const OptionBase &next)
-    : BoolOptionBase(OPT_BOOL_UPPERCASE, OPT_DESC_UPPERCASE, next), DisassemblerOption(dis) {}
+void Disassembler::setUpperHex(bool enable) {
+    _formatter.setUpperHex(enable);
+}
 
-Error Disassembler::OptUppercase::set(bool value) const {
-    _dis->_formatter.setUppercase(value);
-    _dis->_regBase.setUppercase(value);
-    return OK;
+void Disassembler::setUppercase(bool enable) {
+    _uppercase = enable;
 }
 
 Error Disassembler::decode(
@@ -62,13 +64,12 @@ Error Disassembler::decode(
     // This setError also reset error of Disassembler.
     if (setError(config().checkAddr(insn.address())))
         return getError();
-    StrBuffer out(operands, size);
-    auto mark = insn.clearNameBuffer().mark();
-    decodeImpl(memory, insn, out);
-    if (!_regBase.isUppercase())
-        insn.nameBuffer().lowercase(mark);
+    UppercaseBuffer upper(operands, size);
+    LowercaseBuffer lower(operands, size);
+    StrBuffer *out = _uppercase ? upper.ptr() : lower.ptr();
+    decodeImpl(memory, insn, *out);
     if (isOK())
-        setError(out);
+        setError(*out);
     return getError();
 }
 
@@ -86,7 +87,7 @@ StrBuffer &Disassembler::outDec(StrBuffer &out, uint32_t val, int8_t bits) const
     const auto bw = bits >= 0 ? bits : -bits;
     const char *label = lookup(val, bw);
     if (label)
-        return out.text(label);
+        return out.rtext(label);
     return _formatter.formatDec(out, val, bits);
 }
 
@@ -99,7 +100,7 @@ StrBuffer &Disassembler::outHex(StrBuffer &out, uint32_t val, int8_t bits, bool 
     const auto bw = bits >= 0 ? bits : -bits;
     const char *label = lookup(val, bw);
     if (label)
-        return out.text(label);
+        return out.rtext(label);
     return _formatter.formatHex(out, val, bits, relax);
 }
 
@@ -111,7 +112,7 @@ StrBuffer &Disassembler::outHex(StrBuffer &out, uint32_t val, int8_t bits, bool 
 StrBuffer &Disassembler::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth) const {
     const char *label = lookup(val, addrWidth);
     if (label)
-        return out.text(label);
+        return out.rtext(label);
     if (addrWidth == 0)
         addrWidth = uint8_t(config().addressWidth());
     return _formatter.formatHex(out, val, addrWidth, false);
@@ -124,6 +125,9 @@ StrBuffer &Disassembler::outRelAddr(
         StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const {
     if (!_relativeTarget)
         return outAbsAddr(out, target);
+    const char *label = lookup(target, config().addressWidth());
+    if (label)
+        return out.rtext(label);
     out.letter(_curSym);
     const auto delta = static_cast<int32_t>(target - origin);
     if (delta == 0)

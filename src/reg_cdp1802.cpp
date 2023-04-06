@@ -32,7 +32,7 @@ RegName RegCdp1802::parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &RegCdp1802::outRegName(StrBuffer &out, RegName name) const {
-    return outRegNumber(out.letter('R', isUppercase()), int8_t(name));
+    return outRegNumber(out.letter('R'), int8_t(name));
 }
 
 }  // namespace cdp1802

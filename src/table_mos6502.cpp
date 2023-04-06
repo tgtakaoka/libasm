@@ -749,9 +749,9 @@ static bool matchOpCode(
     return true;
 }
 
-Error TableMos6502::searchOpCode(InsnMos6502 &insn) const {
+Error TableMos6502::searchOpCode(InsnMos6502 &insn, StrBuffer &out) const {
     insn.setAllowIndirectLong(_useIndirectLong);
-    _cpu->searchOpCode(insn, matchOpCode);
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

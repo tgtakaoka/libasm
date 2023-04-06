@@ -126,7 +126,7 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    if (TableTms32010::TABLE.searchOpCode(insn))
+    if (TableTms32010::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

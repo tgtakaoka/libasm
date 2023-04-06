@@ -24,6 +24,11 @@ namespace f3850 {
 static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
 static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
 
+void DisF3850::reset() {
+    Disassembler::reset();
+    _useScratchpad = false;
+}
+
 DisF3850::OptUseScratchpad::OptUseScratchpad(bool &var)
     : BoolOption(OPT_BOOL_USE_SCRATCHPAD, OPT_DESC_USE_SCRATCHPAD, var) {}
 
@@ -88,7 +93,7 @@ Error DisF3850::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableF3850::TABLE.searchOpCode(insn))
+    if (TableF3850::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

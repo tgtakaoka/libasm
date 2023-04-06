@@ -672,8 +672,8 @@ static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *p
     return opCode == entry->opCode();
 }
 
-Error TableTlcs90::searchOpCode(InsnTlcs90 &insn) const {
-    _cpu->searchOpCode(insn, matchOpCode);
+Error TableTlcs90::searchOpCode(InsnTlcs90 &insn, StrBuffer &out) const {
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

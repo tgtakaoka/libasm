@@ -24,6 +24,11 @@ namespace ins8070 {
 static const char OPT_BOOL_IMM_PREFIX[] PROGMEM = "imm-prefix";
 static const char OPT_DESC_IMM_PREFIX[] PROGMEM = "immediate prefix # (default =)";
 
+void DisIns8070::reset() {
+    Disassembler::reset();
+    _immediatePrefix = false;
+}
+
 DisIns8070::OptImmediatePrefix::OptImmediatePrefix(bool &var)
     : BoolOption(OPT_BOOL_IMM_PREFIX, OPT_DESC_IMM_PREFIX, var) {}
 
@@ -145,7 +150,7 @@ Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableIns8070::TABLE.searchOpCode(insn))
+    if (TableIns8070::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

@@ -284,7 +284,7 @@ static bool acceptModes(InsnI8096 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
-        acceptMode(flags.src2(), table.src2())) {
+            acceptMode(flags.src2(), table.src2())) {
         if (table.undefined())
             insn.setError(OPERAND_NOT_ALLOWED);
         return true;
@@ -312,8 +312,8 @@ static bool matchOpCode(InsnI8096 &insn, const Entry *entry, const TableI8096::E
     return opCode == entry->opCode();
 }
 
-Error TableI8096::searchOpCode(InsnI8096 &insn) const {
-    const auto entry = _cpu->searchOpCode(insn, matchOpCode);
+Error TableI8096::searchOpCode(InsnI8096 &insn, StrBuffer &out) const {
+    const auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();

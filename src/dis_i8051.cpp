@@ -133,7 +133,7 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8051::TABLE.searchOpCode(insn))
+    if (TableI8051::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

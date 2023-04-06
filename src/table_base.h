@@ -38,22 +38,17 @@ struct Table {
         : _table(table), _end(end) {}
 
     /**
-     * Linear searching an item which satisfies |match| and returns the pointer to the |ITEM|.  Also
-     * updates |data| via |fetcher|. Returns nullptr if such item is not found.
+     * Linear searching an item which satisfies |match| and returns the pointer to the |ITEM|.
+     * Returns nullptr if such item is not found.
      */
     template <typename DATA, typename EXTRA>
     using Matcher = bool (*)(DATA &, const ITEM *, EXTRA);
-    template <typename DATA, typename EXTRA>
-    using Fetcher = void (*)(DATA &, const ITEM *, EXTRA);
 
     template <typename DATA, typename EXTRA>
-    const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, Fetcher<DATA, EXTRA> fetcher,
-            EXTRA extra) const {
+    const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, EXTRA extra) const {
         for (const auto *item = table(); item < end(); item++) {
-            if (matcher(data, item, extra)) {
-                fetcher(data, item, extra);
+            if (matcher(data, item, extra))
                 return item;
-            }
         }
         return nullptr;
     }
@@ -74,13 +69,10 @@ struct IndexedTable {
 
     template <typename DATA, typename EXTRA>
     using Matcher = bool (*)(DATA &, const ITEM *, EXTRA);
-    template <typename DATA, typename EXTRA>
-    using Fetcher = void (*)(DATA &, const ITEM *, EXTRA);
 
     template <typename DATA, typename EXTRA>
-    const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, Fetcher<DATA, EXTRA> fetcher,
-            EXTRA extra) const {
-        return _items.linearSearch(data, matcher, fetcher, extra);
+    const ITEM *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, EXTRA extra) const {
+        return _items.linearSearch(data, matcher, extra);
     }
 
     template <typename DATA>
@@ -90,9 +82,9 @@ struct IndexedTable {
 
     bool notExactMatch(const ITEM *item) const { return item == _items.end(); }
 
-    template <typename DATA, typename EXTRA>
-    const ITEM *binarySearch(DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher,
-            Fetcher<DATA, EXTRA> fetcher, EXTRA extra) const {
+    template <typename DATA>
+    const ITEM *binarySearch(
+            DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher2) const {
         const auto *first = _indexes.table();
         const auto *last = _indexes.end();
         for (;;) {
@@ -114,10 +106,8 @@ struct IndexedTable {
             if (comparator(data, item))
                 return found;
             found = _items.end();
-            if (matcher(data, item)) {
-                fetcher(data, item, extra);
+            if (matcher2(data, item))
                 return item;
-            }
             ++first;
         }
         return found;

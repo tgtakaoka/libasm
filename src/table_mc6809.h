@@ -43,7 +43,7 @@ struct TableMc6809 : entry::Table {
 
     Error searchName(InsnMc6809 &insn) const;
     Error hasName(InsnMc6809 &insn) const;
-    Error searchOpCode(InsnMc6809 &insn) const;
+    Error searchOpCode(InsnMc6809 &insn, StrBuffer &out) const;
     bool isPrefix(uint8_t code) const;
 
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;

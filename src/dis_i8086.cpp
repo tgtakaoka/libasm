@@ -26,6 +26,12 @@ static const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruc
 static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
 
+void DisI8086::reset() {
+    Disassembler::reset();
+    _segOverrideInsn = true;
+    _repeatHasStringInst = false;
+}
+
 DisI8086::OptStringInsn::OptStringInsn(bool &var)
     : BoolOption(OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN, var) {}
 
@@ -235,7 +241,7 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &ou
         InsnI8086 istr(_istr);
         const auto opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
-        if (TableI8086::TABLE.searchOpCode(istr))
+        if (TableI8086::TABLE.searchOpCode(istr, out))
             return setError(istr);
         if (!istr.stringInst())
             return setError(UNKNOWN_INSTRUCTION);
@@ -386,7 +392,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn))
         return getError();
-    if (TableI8086::TABLE.searchOpCode(insn))
+    if (TableI8086::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     insn.readModReg(memory);

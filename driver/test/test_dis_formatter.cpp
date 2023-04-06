@@ -101,7 +101,7 @@ void tear_down() {}
 void test_mc6809() {
     PREP(mc6809::DisMc6809);
 
-    listing.setUpperHex(true);
+    listing.setUppercase(false);
 
     DIS8("mc6809", 0xabcd,
             "      cpu   mc6809\n"
@@ -124,19 +124,19 @@ void test_mc6809() {
 void test_mc6800() {
     PREP(mc6800::DisMc6800);
 
-    listing.setUpperHex(false);
+    listing.setUppercase(true);
 
     DIS8("mc6800", 0xabcd,
-            "      cpu   mc6800\n"
-            "      org   $abcd\n"
-            "      subb  $f1f2\n"
-            "; test.bin: $abd0: error: Unknown instruction\n"
-            ";     abd0 : 83\n",
-            "       0 :                            cpu   mc6800\n"
-            "    abcd :                            org   $abcd\n"
-            "    abcd : f0 f1 f2                   subb  $f1f2\n"
-            "test.bin: $abd0: error: Unknown instruction\n"
-            "    abd0 : 83\n",
+            "      CPU   MC6800\n"
+            "      ORG   $ABCD\n"
+            "      SUBB  $F1F2\n"
+            "; test.bin: $ABD0: error: Unknown instruction\n"
+            ";     ABD0 : 83\n",
+            "       0 :                            CPU   MC6800\n"
+            "    ABCD :                            ORG   $ABCD\n"
+            "    ABCD : F0 F1 F2                   SUBB  $F1F2\n"
+            "test.bin: $ABD0: error: Unknown instruction\n"
+            "    ABD0 : 83\n",
             0xf0, 0xf1, 0xf2, 0x83);
 }
 
@@ -144,22 +144,23 @@ void test_mc6805() {
     PREP(mc6805::DisMc6805);
 
     listing.setUpperHex(false);
+    listing.setUppercase(true);
 
     DIS8("mc146805", 0x1234,
-            "      cpu   mc146805\n"
-            "      org   $1234\n"
-            "      stx   16384,x\n"
+            "      CPU   MC146805\n"
+            "      ORG   $1234\n"
+            "      STX   16384,X\n"
             "; test.bin: $1237: error: Unknown instruction\n"
             ";     1237 : 82\n"
             "; test.bin: $1238: error: Overflow range\n"
             ";     1238 : c6 20 00\n",
-            "       0 :                            cpu   mc146805\n"
-            "    1234 :                            org   $1234\n"
-            "    1234 : df 40 00                   stx   16384,x\n"
+            "       0 :                            CPU   MC146805\n"
+            "    1234 :                            ORG   $1234\n"
+            "    1234 : df 40 00                   STX   16384,X\n"
             "test.bin: $1237: error: Unknown instruction\n"
             "    1237 : 82\n"
             "test.bin: $1238: error: Overflow range\n"
-            "    1238 : c6 20 00                   lda   $2000\n",
+            "    1238 : c6 20 00                   LDA   $2000\n",
             0xdf, 0x40, 0x00, 0x82, 0xC6, 0x20, 0x00);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x3456));
@@ -187,7 +188,6 @@ void test_mos6502() {
 void test_w65816() {
     PREP(mos6502::DisMos6502);
 
-    listing.setUpperHex(true);
     listing.setUppercase(true);
     TRUE("setcpu", disassembler.setCpu("w65c816"));
     EQ("longa", OK, disassembler.setOption("longa", "on"));
@@ -211,7 +211,6 @@ void test_w65816() {
 void test_i8048() {
     PREP(i8048::DisI8048);
 
-    listing.setUpperHex(true);
     listing.setUppercase(true);
 
     DIS8("i8039", 0xbcd,

@@ -868,11 +868,12 @@ struct ProcessorCpuCommon : entry::CpuBase<CPUTYPE, EntryPage> {
         return insn.getError();
     }
 
-    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory,
+    Error searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory,
             bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
-            void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
-        const auto entry =
-                entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(insn, matchOpCode, readEntryName);
+            void (*readEntryName)(
+                    InsnNs32000 &, const Entry *, StrBuffer &, const EntryPage *)) const {
+        const auto entry = entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(
+                insn, out, matchOpCode, readEntryName);
         if (entry && insn.hasPost())
             insn.readPost(memory);
         return insn.getError();
@@ -968,20 +969,21 @@ static bool matchOpCode(InsnNs32000 &insn, const Entry *entry, const EntryPage *
     return opCode == entry->opCode();
 }
 
-static void readEntryName(InsnNs32000 &insn, const Entry *entry, const EntryPage *page) {
-    TableNs32000::Cpu::defaultReadEntryName(insn, entry, page);
+static void readEntryName(
+        InsnNs32000 &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
+    TableNs32000::Cpu::defaultReadEntryName(insn, entry, out, page);
     insn.setPost(0, page->post() != 0);
 }
 
-Error TableNs32000::searchOpCode(InsnNs32000 &insn, DisMemory &memory) const {
-    NS32032_CPU.searchOpCode(insn, memory, matchOpCode, readEntryName);
+Error TableNs32000::searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory) const {
+    NS32032_CPU.searchOpCode(insn, out, memory, matchOpCode, readEntryName);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        NS32081_FPU.searchOpCode(insn, memory, matchOpCode, readEntryName);
+        NS32081_FPU.searchOpCode(insn, out, memory, matchOpCode, readEntryName);
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        NS32082_MMU.searchOpCode(insn, memory, matchOpCode, readEntryName);
+        NS32082_MMU.searchOpCode(insn, out, memory, matchOpCode, readEntryName);
     }
     return insn.getError();
 }

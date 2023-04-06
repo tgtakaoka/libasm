@@ -25,23 +25,20 @@ DisFormatter::DisFormatter(Disassembler &disassembler, const char *input_name)
     : ListFormatter(),
       _disassembler(disassembler),
       _input_name(input_name),
-      _upper_hex(true),
-      _uppercase(false),
       _insn(0),
       _insnBase(_insn) {
-    _disassembler.formatter().setUppercase(true);
+    setUpperHex(true);
+    setUppercase(false);
 }
 
 void DisFormatter::setUpperHex(bool enable) {
-    _upper_hex = enable;
     ListFormatter::setUpperHex(enable);
-    _disassembler.formatter().setUppercase(enable);
+    _disassembler.setUpperHex(enable);
 }
 
 void DisFormatter::setUppercase(bool enable) {
     _uppercase = enable;
-    _disassembler.setOption("uppercase", _uppercase ? "on" : "off");
-    _disassembler.formatter().setUppercase(_upper_hex);
+    _disassembler.setUppercase(enable);
 }
 
 void DisFormatter::reset() {
@@ -59,22 +56,35 @@ Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {
 
 Error DisFormatter::setCpu(const char *cpu) {
     reset();
-    StrBuffer buf(_operands, sizeof(_operands));
     _insnBase.reset(_insn.address() + _insn.length());
-    _insnBase.nameBuffer().text_P(PSTR("CPU"), _uppercase);
-    buf.text(cpu, _uppercase);
+    {
+        LowercaseBuffer lower(_insnBase.clearNameBuffer());
+        UppercaseBuffer upper(lower);
+        auto name = _uppercase ? upper.ptr() : lower.ptr();
+        name->text_P(PSTR("CPU")).over(_insn.nameBuffer());
+    }
+    {
+        LowercaseBuffer lower(_operands, sizeof(_operands));
+        UppercaseBuffer upper(lower);
+        auto operands = _uppercase ? upper.ptr() : lower.ptr();
+        operands->text(cpu);
+    }
     return _disassembler.setCpu(cpu) ? UNSUPPORTED_CPU : OK;
 }
 
 Error DisFormatter::setOrigin(uint32_t origin) {
     reset();
-    StrBuffer buf(_operands, sizeof(_operands));
     const auto err = config().checkAddr(origin);
     if (err)
         return err;
     _insnBase.reset(origin);
-    _insnBase.nameBuffer().text_P(PSTR("ORG"), _uppercase);
-    _disassembler.formatter().formatHex(buf, origin, config().addressWidth(), false);
+    LowercaseBuffer lower(_insnBase.nameBuffer());
+    UppercaseBuffer upper(lower);
+    auto name = _uppercase ? upper.ptr() : lower.ptr();
+    name->text_P(PSTR("ORG"));
+
+    StrBuffer operands(_operands, sizeof(_operands));
+    _disassembler.formatter().formatHex(operands, origin, config().addressWidth(), false);
     return OK;
 }
 

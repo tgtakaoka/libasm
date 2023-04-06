@@ -503,8 +503,8 @@ static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const TableZ80::Entry
     return opCode == entry->opCode();
 }
 
-Error TableZ80::searchOpCode(InsnZ80 &insn) const {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+Error TableZ80::searchOpCode(InsnZ80 &insn, StrBuffer &out) const {
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 

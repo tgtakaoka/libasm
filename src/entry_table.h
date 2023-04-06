@@ -17,9 +17,10 @@
 #ifndef __ENTRY_TABLE_H__
 #define __ENTRY_TABLE_H__
 
-#include "table_base.h"
-
 #include <string.h>
+
+#include "str_buffer.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace entry {
@@ -36,18 +37,16 @@ struct TableBase {
             const uint8_t *iend)
         : _entries(table, end, index, iend), _prefix(prefix) {}
 
-    constexpr TableBase(const ENTRY *table, const ENTRY *end, const uint8_t *index, const uint8_t *iend)
+    constexpr TableBase(
+            const ENTRY *table, const ENTRY *end, const uint8_t *index, const uint8_t *iend)
         : _entries(table, end, index, iend), _prefix(0) {}
 
     template <typename DATA, typename EXTRA>
     using Matcher = bool (*)(DATA &, const ENTRY *, EXTRA);
-    template <typename DATA, typename EXTRA>
-    using Fetcher = void (*)(DATA &, const ENTRY *, EXTRA);
 
     template <typename DATA, typename EXTRA>
-    const ENTRY *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher,
-            Fetcher<DATA, EXTRA> fetcher, EXTRA extra) const {
-        return _entries.linearSearch(data, matcher, fetcher, extra);
+    const ENTRY *linearSearch(DATA &data, Matcher<DATA, EXTRA> matcher, EXTRA extra) const {
+        return _entries.linearSearch(data, matcher, extra);
     }
 
     template <typename DATA>
@@ -55,10 +54,10 @@ struct TableBase {
     template <typename DATA>
     using Matcher2 = bool (*)(DATA &, const ENTRY *);
 
-    template <typename DATA, typename EXTRA>
-    const ENTRY *binarySearch(DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher,
-            Fetcher<DATA, EXTRA> fetcher, EXTRA extra) const {
-        return _entries.binarySearch(data, comparator, matcher, fetcher, extra);
+    template <typename DATA>
+    const ENTRY *binarySearch(
+            DATA &data, Comparator<DATA> comparator, Matcher2<DATA> matcher2) const {
+        return _entries.binarySearch(data, comparator, matcher2);
     }
 
     bool notExactMatch(const ENTRY *entry) const { return _entries.notExactMatch(entry); }
@@ -134,11 +133,11 @@ struct CpuBase {
         auto found = false;
         for (auto page = _pages.table(); page < _pages.end(); page++) {
             pageSetup(insn, page);
-            const auto *entry =
-                    page->binarySearch(insn, nameComparator, acceptOperands, readCode, page);
+            const auto *entry = page->binarySearch(insn, nameComparator, acceptOperands);
             if (page->notExactMatch(entry)) {
                 found = true;
             } else if (entry) {
+                readCode(insn, entry, page);
                 return entry;
             }
         }
@@ -156,21 +155,26 @@ struct CpuBase {
     }
 
     template <typename INSN, typename ENTRY>
-    static void defaultReadEntryName(INSN &insn, const ENTRY *entry, const ENTRY_PAGE *page) {
+    static void defaultReadEntryName(
+            INSN &insn, const ENTRY *entry, StrBuffer &out, const ENTRY_PAGE *page) {
+        auto save = out;
         insn.setFlags(entry->flags());
-        insn.nameBuffer().text_P(entry->name_P());
+        insn.nameBuffer().over(out).text_P(entry->name_P()).over(insn.nameBuffer());
+        save.over(out);
     }
 
     template <typename INSN, typename ENTRY>
-    const ENTRY *searchOpCode(INSN &insn,
+    const ENTRY *searchOpCode(INSN &insn, StrBuffer &out,
             bool (*matchCode)(INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultMatchOpCode,
-            void (*readName)(
-                    INSN &, const ENTRY *, const ENTRY_PAGE *) = defaultReadEntryName) const {
+            void (*readName)(INSN &, const ENTRY *, StrBuffer &,
+                    const ENTRY_PAGE *) = defaultReadEntryName) const {
         for (const ENTRY_PAGE *page = _pages.table(); page < _pages.end(); page++) {
             if (page->prefixMatch(insn.prefix())) {
-                const auto *entry = page->linearSearch(insn, matchCode, readName, page);
-                if (entry)
+                const auto *entry = page->linearSearch(insn, matchCode, page);
+                if (entry) {
+                    readName(insn, entry, out, page);
                     return entry;
+                }
             }
         }
         insn.setError(UNKNOWN_INSTRUCTION);
@@ -203,9 +207,3 @@ struct Table {
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
-
-
-
-
-
-

@@ -34,9 +34,7 @@ public:
     }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override {
-        _stringOptionBracket = _pcRelativeParen = _externalParen = _floatPrefix = false;
-    }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:

@@ -597,8 +597,8 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableMc68000::searchOpCode(InsnMc68000 &insn) const {
-    _cpu->searchOpCode(insn, matchOpCode);
+Error TableMc68000::searchOpCode(InsnMc68000 &insn, StrBuffer &out) const {
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

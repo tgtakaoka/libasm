@@ -26,145 +26,282 @@ void set_up() {}
 void tear_down() {}
 
 void test_letter() {
-    char buffer[8];
-    StrBuffer buf(buffer, sizeof(buffer));
+    char buffer[9];
+    StrBuffer out(buffer, sizeof(buffer));
+    LowercaseBuffer lower(out);
+    UppercaseBuffer upper(out);
 
     EQ("empty", "", buffer);
+    EQ("ctor", sizeof(buffer) - 1, out.size());
+    EQ("ctor", sizeof(buffer) - 1, lower.size());
+    EQ("ctor", sizeof(buffer) - 1, upper.size());
 
-    buf.letter('a').letter('B', false).letter('c', true);
-    EQ("letter alpha", "abC", buffer);
+    out.letter('a').over(lower).letter('B').over(upper).letter('c').over(out).letter('D');
+    EQ("letter alpha", "abCD", buffer);
+    EQ("letter alpha", sizeof(buffer) - 3, lower.size());
+    EQ("letter alpha", sizeof(buffer) - 4, upper.size());
+    EQ("letter alpha", sizeof(buffer) - 5, out.size());
 
-    buf.letter('0', true).letter('1', false).letter('2');
-    EQ("letter digit", "abC012", buffer);
+    out.over(upper).letter('0').over(lower).letter('1').over(out).letter('2');
+    EQ("letter digit", OK, out.getError());
+    EQ("letter digit", "abCD012", buffer);
+    EQ("letter digit", sizeof(buffer) - 8, out.size());
 
-    buf.letter('X');
-    EQ("letter 7", OK, buf.getError());
-    EQ("letter X", "abC012X", buffer);
+    out.letter('x').letter('Y');
+    EQ("letter xY", BUFFER_OVERFLOW, out.getError());
+    EQ("letter xY", "abCD012x", buffer);
+    EQ("letter xY", 0, out.size());
 
-    buf.letter('Y');
-    EQ("letter 8", BUFFER_OVERFLOW, buf.getError());
-    EQ("letter XY", "abC012X", buffer);
-
-    buf.letter('Z');
-    EQ("letter 9", BUFFER_OVERFLOW, buf.getError());
-    EQ("letter XYZ", "abC012X", buffer);
+    out.letter('z').letter('W');
+    EQ("letter zW", BUFFER_OVERFLOW, out.getError());
+    EQ("letter zW", "abCD012x", buffer);
+    EQ("letter zW", 0, out.size());
 }
 
 void test_text() {
     char buffer[10];
-    StrBuffer buf(buffer, sizeof(buffer));
+    StrBuffer out(buffer, sizeof(buffer));
+    LowercaseBuffer lower(out);
+    UppercaseBuffer upper(out);
 
-    buf.text("ab").text("cD", false).text("eF", true);
-    EQ("text alpha", "abcdEF", buffer);
+    out.text("aB").over(lower).text("cD").over(upper).text("eF").over(out).text("gH");
+    EQ("text alpha", "aBcdEFgH", buffer);
+    EQ("text alpha", sizeof(buffer) - 5, lower.size());
+    EQ("text alpha", sizeof(buffer) - 7, upper.size());
+    EQ("text alpha", sizeof(buffer) - 9, out.size());
 
-    buf.text("XY");
-    EQ("text XY", OK, buf.getError());
-    EQ("text XY", "abcdEFXY", buffer);
+    out.text("xY");
+    EQ("text xY", BUFFER_OVERFLOW, out.getError());
+    EQ("text xY", "aBcdEFgHx", buffer);
+    EQ("text alpha", sizeof(buffer) - 10, out.size());
 
-    buf.text("ZW");
-    EQ("text ZW", BUFFER_OVERFLOW, buf.getError());
-    EQ("text ZW", "abcdEFXYZ", buffer);
+    out.text("zW");
+    EQ("text zW", BUFFER_OVERFLOW, out.getError());
+    EQ("text zW", "aBcdEFgHx", buffer);
 }
 
 void test_text_P() {
     char buffer[10];
-    StrBuffer buf(buffer, sizeof(buffer));
+    StrBuffer out(buffer, sizeof(buffer));
+    LowercaseBuffer lower(out);
+    UppercaseBuffer upper(out);
 
-    buf.text(PSTR("ab")).text(PSTR("cD"), false).text(PSTR("eF"), true);
-    EQ("text alpha", "abcdEF", buffer);
+    out.text_P(PSTR("aB"))
+            .over(lower)
+            .text_P(PSTR("cD"))
+            .over(upper)
+            .text_P(PSTR("eF"))
+            .over(out)
+            .text_P(PSTR("gH"));
 
-    static const char XY[] PROGMEM = "XY";
-    buf.text(XY);
-    EQ("text XY", OK, buf.getError());
-    EQ("text XY", "abcdEFXY", buffer);
+    EQ("text alpha", "aBcdEFgH", buffer);
+    EQ("text alpha", sizeof(buffer) - 5, lower.size());
+    EQ("text alpha", sizeof(buffer) - 7, upper.size());
+    EQ("text alpha", sizeof(buffer) - 9, out.size());
 
-    static const char ZW[] PROGMEM = "ZW";
-    buf.text(ZW);
-    EQ("text ZW", BUFFER_OVERFLOW, buf.getError());
-    EQ("text ZW", "abcdEFXYZ", buffer);
+    static const char xY[] PROGMEM = "xY";
+    out.text_P(xY);
+    EQ("text xY", BUFFER_OVERFLOW, out.getError());
+    EQ("text xY", "aBcdEFgHx", buffer);
+    EQ("text alpha", sizeof(buffer) - 10, out.size());
+
+    static const char zW[] PROGMEM = "zW";
+    out.text_P(zW);
+    EQ("text zW", BUFFER_OVERFLOW, out.getError());
+    EQ("text zW", "aBcdEFgHx", buffer);
 }
 
 void test_scanner() {
-    static const char text[] = "abcDeFXYZW";
-    const StrScanner ab(text + 0, text + 2);
+    static const char text[] = "aBcDeFgHxYzW";
+    const StrScanner aB(text + 0, text + 2);
     const StrScanner cD(text + 2, text + 4);
     const StrScanner eF(text + 4, text + 6);
-    const StrScanner XY(text + 6, text + 8);
-    const StrScanner ZW(text + 8);
+    const StrScanner gH(text + 6, text + 8);
+    const StrScanner xY(text + 8, text + 10);
+    const StrScanner zW(text + 10);
 
     char buffer[10];
-    StrBuffer buf(buffer, sizeof(buffer));
+    StrBuffer out(buffer, sizeof(buffer));
+    LowercaseBuffer lower(out);
+    UppercaseBuffer upper(out);
 
-    buf.text(ab).text(cD, false).text(eF, true);
-    EQ("text alpha", "abcdEF", buffer);
+    out.text(aB).over(lower).text(cD).over(upper).text(eF).over(out).text(gH);
+    EQ("text alpha", "aBcdEFgH", buffer);
+    EQ("text alpha", sizeof(buffer) - 5, lower.size());
+    EQ("text alpha", sizeof(buffer) - 7, upper.size());
+    EQ("text alpha", sizeof(buffer) - 9, out.size());
 
-    buf.text(XY);
-    EQ("text XY", OK, buf.getError());
-    EQ("text XY", "abcdEFXY", buffer);
+    out.text(xY);
+    EQ("text xY", BUFFER_OVERFLOW, out.getError());
+    EQ("text xY", "aBcdEFgHx", buffer);
+    EQ("text alpha", sizeof(buffer) - 10, out.size());
 
-    buf.text(ZW);
-    EQ("text ZW", BUFFER_OVERFLOW, buf.getError());
-    EQ("text ZW", "abcdEFXYZ", buffer);
+    out.text(zW);
+    EQ("text zW", BUFFER_OVERFLOW, out.getError());
+    EQ("text zW", "aBcdEFgHx", buffer);
+}
+
+void test_rtext() {
+    char buffer[10];
+    StrBuffer out(buffer, sizeof(buffer));
+    LowercaseBuffer lower(out);
+    UppercaseBuffer upper(out);
+
+    // rletter(char)
+    {
+        out.rletter('a').over(lower).rletter('B').over(upper).rletter('c').over(out).rletter('D');
+        EQ("rletter alpha", "aBcD", buffer);
+        EQ("rletter alpha", sizeof(buffer) - 3, lower.size());
+        EQ("rletter alpha", sizeof(buffer) - 4, upper.size());
+        EQ("rletter alpha", sizeof(buffer) - 5, out.size());
+
+        out.over(upper).rletter('0').over(lower).rletter('1').over(out).rletter('2').letter('3');
+        EQ("rletter digit", OK, out.getError());
+        EQ("rletter digit", "aBcD0123", buffer);
+        EQ("rletter digit", sizeof(buffer) - 9, out.size());
+
+        out.rletter('x').rletter('Y');
+        EQ("rletter xY", BUFFER_OVERFLOW, out.getError());
+        EQ("rletter xY", "aBcD0123x", buffer);
+        EQ("rletter xY", 0, out.size());
+
+        out.rletter('z').rletter('W');
+        EQ("rletter zW", BUFFER_OVERFLOW, out.getError());
+        EQ("rletter zW", "aBcD0123x", buffer);
+        EQ("rletter zW", 0, out.size());
+    }
+
+    out.reset(buffer, sizeof(buffer));
+    out.over(lower).over(upper);
+    EQ("over", sizeof(buffer) - 1, out.size());
+    EQ("over", sizeof(buffer) - 1, lower.size());
+    EQ("over", sizeof(buffer) - 1, upper.size());
+
+    // rtext(const char *)
+    {
+        out.rtext("aB").over(lower).rtext("cD").over(upper).rtext("eF").over(out).rtext("gH");
+        EQ("rtext alpha", "aBcDeFgH", buffer);
+        EQ("rtext alpha", sizeof(buffer) - 5, lower.size());
+        EQ("rtext alpha", sizeof(buffer) - 7, upper.size());
+        EQ("rtext alpha", sizeof(buffer) - 9, out.size());
+
+        out.rtext("xY");
+        EQ("rtext xY", BUFFER_OVERFLOW, out.getError());
+        EQ("rtext xY", "aBcDeFgHx", buffer);
+        EQ("rtext alpha", sizeof(buffer) - 10, out.size());
+
+        out.rtext("zW");
+        EQ("rtext zW", BUFFER_OVERFLOW, out.getError());
+        EQ("rtext zW", "aBcDeFgHx", buffer);
+    }
+
+    out.reset(buffer, sizeof(buffer));
+    out.over(lower).over(upper);
+
+    // rtext_P(const StrScanner &)
+    {
+        static const char xY[] PROGMEM = "xY";
+        static const char zW[] PROGMEM = "zW";
+        out.rtext_P(PSTR("aB"))
+                .over(lower)
+                .rtext_P(PSTR("cD"))
+                .over(upper)
+                .rtext_P(PSTR("eF"))
+                .over(out)
+                .rtext_P(PSTR("gH"));
+
+        EQ("rtext alpha", "aBcDeFgH", buffer);
+        EQ("rtext alpha", sizeof(buffer) - 5, lower.size());
+        EQ("rtext alpha", sizeof(buffer) - 7, upper.size());
+        EQ("rtext alpha", sizeof(buffer) - 9, out.size());
+
+        out.rtext_P(xY);
+        EQ("rtext xY", BUFFER_OVERFLOW, out.getError());
+        EQ("rtext xY", "aBcDeFgHx", buffer);
+        EQ("rtext xY", sizeof(buffer) - 10, out.size());
+
+        out.rtext_P(zW);
+        EQ("rtext zW", BUFFER_OVERFLOW, out.getError());
+        EQ("rtext zW", "aBcDeFgHx", buffer);
+    }
+
+    out.reset(buffer, sizeof(buffer));
+    out.over(lower).over(upper);
+
+    // rtext(const StrScanner &)
+    {
+        static const char text[] = "aBcDeFgHxYzW";
+        const StrScanner aB(text + 0, text + 2);
+        const StrScanner cD(text + 2, text + 4);
+        const StrScanner eF(text + 4, text + 6);
+        const StrScanner gH(text + 6, text + 8);
+        const StrScanner xY(text + 8, text + 10);
+        const StrScanner zW(text + 10);
+
+        out.rtext(aB).over(lower).rtext(cD).over(upper).rtext(eF).over(out).rtext(gH);
+        EQ("rtext alpha", "aBcDeFgH", buffer);
+        EQ("rtext alpha", sizeof(buffer) - 5, lower.size());
+        EQ("rtext alpha", sizeof(buffer) - 7, upper.size());
+        EQ("rtext alpha", sizeof(buffer) - 9, out.size());
+
+        out.rtext(xY);
+        EQ("rtext xY", BUFFER_OVERFLOW, out.getError());
+        EQ("rtext xY", "aBcDeFgHx", buffer);
+        EQ("rtext xY", sizeof(buffer) - 10, out.size());
+
+        out.rtext(zW);
+        EQ("rtext zW", BUFFER_OVERFLOW, out.getError());
+        EQ("rtext zW", "aBcDeFgHx", buffer);
+    }
 }
 
 void test_comma() {
     char buffer[8];
-    StrBuffer buf(buffer, sizeof(buffer));
+    StrBuffer out(buffer, sizeof(buffer));
+    LowercaseBuffer lower(out);
+    UppercaseBuffer upper(out);
 
-    buf.comma().comma().comma();
-    EQ("comma", OK, buf.getError());
+    out.comma().over(lower).comma().over(upper).comma().over(out);
+    EQ("comma", OK, out.getError());
     EQ("comma", ", , , ", buffer);
 
-    buf.comma();
-    EQ("over", BUFFER_OVERFLOW, buf.getError());
+    out.comma();
+    EQ("over", BUFFER_OVERFLOW, out.getError());
     EQ("comma", ", , , ,", buffer);
 }
 
 void test_reverse() {
     char buffer[10];
-    StrBuffer buf(buffer, sizeof(buffer));
+    StrBuffer out(buffer, sizeof(buffer));
 
-    buf.text("abc");
-    char *m = buf.mark();
-    buf.text("123");
+    out.text("abc");
+    char *m = out.mark();
+    out.text("123");
     EQ("before", "abc123", buffer);
-    buf.reverse(m);
+    out.reverse(m);
     EQ("after", "abc321", buffer);
 
-    buf.text("XY");
-    buf.reverse(buffer);
-    EQ("whole", "YX123cba", buffer);
+    out.text("xY");
+    out.reverse(buffer);
+    EQ("whole", "Yx123cba", buffer);
 
-    buf.reverse(buffer + 8);
-    EQ("overwrap", OVERWRAP_PAGE, buf.getError());
-    EQ("error", "YX123cba", buffer);
+    out.reverse(buffer + 8);
+    EQ("overwrap", OVERWRAP_PAGE, out.getError());
+    EQ("error", "Yx123cba", buffer);
 }
 
 void test_reset() {
     char buffer[8];
-    StrBuffer buf(buffer, sizeof(buffer));
+    StrBuffer out(buffer, sizeof(buffer));
 
-    buf.text("ABCDEFXY");
-    EQ("reset", BUFFER_OVERFLOW, buf.getError());
-    buf.reset(buffer + 4, sizeof(buffer) - 4);
-    EQ("reset", OK, buf.getError());
+    EQ("reset", sizeof(buffer) - 1, out.size());
+    out.text("ABCDEFxY");
+    EQ("reset", BUFFER_OVERFLOW, out.getError());
+    EQ("reset", 0, out.size());
+    out.reset(buffer + 4, sizeof(buffer) - 4);
+    EQ("reset", OK, out.getError());
+    EQ("reset", sizeof(buffer) - 5, out.size());
     EQ("reset", "ABCD", buffer);
-}
-
-void test_lowercase() {
-    char buffer[10];
-    StrBuffer buf(buffer, sizeof(buffer));
-
-    buf.text("AB");
-    char *mark = buf.mark();
-    buf.text("CD");
-    EQ("lowercase", OK, buf.getError());
-    buf.lowercase(mark);
-    EQ("lowercase", "ABcd", buffer);
-    buf.text("XY");
-    EQ("lowercase", "ABcdXY", buffer);
-    buf.lowercase(mark);
-    EQ("lowercase", "ABcdxy", buffer);
 }
 
 void run_tests() {
@@ -172,10 +309,10 @@ void run_tests() {
     RUN_TEST(test_text);
     RUN_TEST(test_text_P);
     RUN_TEST(test_scanner);
+    RUN_TEST(test_rtext);
     RUN_TEST(test_comma);
     RUN_TEST(test_reverse);
     RUN_TEST(test_reset);
-    RUN_TEST(test_lowercase);
 }
 
 }  // namespace test

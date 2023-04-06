@@ -24,6 +24,11 @@ namespace cdp1802 {
 static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
 
+void DisCdp1802::reset() {
+    Disassembler::reset();
+    _useReg = false;
+}
+
 DisCdp1802::OptUseRegister::OptUseRegister(bool &var)
     : BoolOption(OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, var) {}
 
@@ -77,7 +82,7 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableCdp1802::TABLE.searchOpCode(insn))
+    if (TableCdp1802::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

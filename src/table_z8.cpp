@@ -578,9 +578,9 @@ static bool matchOpCode(InsnZ8 &insn, const Entry *entry, const TableZ8::EntryPa
     return true;
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn, DisMemory &memory) const {
+Error TableZ8::searchOpCode(InsnZ8 &insn, StrBuffer &out, DisMemory &memory) const {
     insn.setMemory(memory);
-    _cpu->searchOpCode(insn, matchOpCode);
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

@@ -29,7 +29,7 @@ Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer
     const uint8_t dir = insn.readByte(memory);
     const auto label = lookup(dir);
     if (label) {
-        out.letter('<').text(label);
+        out.letter('<').rtext(label);
     } else {
         outAbsAddr(out, dir, 8);
     }
@@ -40,7 +40,7 @@ Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &
     const Config::uintptr_t addr = insn.readUint16(memory);
     const auto label = lookup(addr);
     if (label) {
-        out.letter('>').text(label);
+        out.letter('>').rtext(label);
     } else {
         if (addr < 0x100)
             out.letter('>');
@@ -70,7 +70,7 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
-        if (TableMc6800::TABLE.searchOpCodeAlias(insn))
+        if (TableMc6800::TABLE.searchOpCodeAlias(insn, out))
             return setError(insn);
         outHex(out, bitNum, 3);
     } else {
@@ -145,7 +145,7 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6800::TABLE.searchOpCode(insn))
+    if (TableMc6800::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

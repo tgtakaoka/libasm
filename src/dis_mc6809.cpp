@@ -29,7 +29,7 @@ Error DisMc6809::decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer
     const uint8_t dir = insn.readByte(memory);
     const auto label = lookup(dir);
     if (label) {
-        out.letter('<').text(label);
+        out.letter('<').rtext(label);
     } else {
         outAbsAddr(out, dir, 8);
     }
@@ -40,7 +40,7 @@ Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
     const Config::uintptr_t addr = insn.readUint16(memory);
     const auto label = lookup(addr);
     if (label) {
-        out.letter('>').text(label);
+        out.letter('>').rtext(label);
     } else {
         if (addr < 0x100)
             out.letter('>');
@@ -61,7 +61,7 @@ Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &o
         char prefix = 0;
         if (spec.size == 5) {
             // Sign extends 5-bit number as 0x10 is a sign bit.
-            offset = signExtend(post, 5); //
+            offset = signExtend(post, 5);  //
             if (offset == 0)
                 prefix = '{';
         } else if (spec.size == 8) {
@@ -286,7 +286,7 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6809::TABLE.searchOpCode(insn))
+    if (TableMc6809::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     if (decodeOperand(memory, insn, out, insn.mode1()))

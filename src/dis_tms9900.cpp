@@ -24,7 +24,7 @@ namespace tms9900 {
 
 using text::tms9900::TEXT_MID;
 
-Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
+Error DisTms9900::checkPostWord(InsnTms9900 &insn, StrBuffer &out) {
     const Config::opcode_t post = insn.post();
     const uint8_t src = (post >> 4 & 3);
     switch (insn.dst()) {
@@ -44,11 +44,13 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     default:
         return OK;
     }
-    return decodeMacroInstructionDetect(insn);
+    return decodeMacroInstructionDetect(insn, out);
 }
 
-Error DisTms9900::decodeMacroInstructionDetect(InsnTms9900 &insn) {
-    insn.clearNameBuffer().text_P(TEXT_MID);
+Error DisTms9900::decodeMacroInstructionDetect(InsnTms9900 &insn, StrBuffer &out) {
+    auto save = out;
+    insn.clearNameBuffer().over(out).text_P(TEXT_MID).over(insn.nameBuffer());
+    save.over(out);
     return setError(UNKNOWN_INSTRUCTION);
 }
 
@@ -98,8 +100,9 @@ Error DisTms9900::decodeOperand(
         _regs.outRegName(out, opc >> 6);
         return OK;
     case M_SRC2:
-        if (checkPostWord(insn))
+        if (checkPostWord(insn, out)) {
             return getError();
+        }
         /* Fall-through */
     case M_SRC:
         val8 = (mode == M_SRC) ? opc : post;
@@ -113,7 +116,7 @@ Error DisTms9900::decodeOperand(
     case M_CNT:
         val8 = (((mode == M_CNT2) ? post : opc) >> 6) & 0xF;
         if (mode == M_CNT2 && val8 == 0) {
-            _regs.outRegName(out, 0);
+            _regs.outRegName(out, REG_R0);
             return OK;
         }
         if (mode == M_CNT && val8 == 0)
@@ -129,7 +132,7 @@ Error DisTms9900::decodeOperand(
     case M_SCNT:
         val8 = (opc >> 4) & 0xF;
         if (val8 == 0)
-            _regs.outRegName(out, 0);
+            _regs.outRegName(out, REG_R0);
         else
             outDec(out, val8, 4);
         return OK;
@@ -144,7 +147,7 @@ Error DisTms9900::decodeOperand(
                 outHex(out, val8, 7);
             return OK;
         }
-        return decodeMacroInstructionDetect(insn);
+        return decodeMacroInstructionDetect(insn, out);
     default:
         return OK;
     }
@@ -155,8 +158,8 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    if (TableTms9900::TABLE.searchOpCode(insn))
-        return decodeMacroInstructionDetect(insn);
+    if (TableTms9900::TABLE.searchOpCode(insn, out))
+        return decodeMacroInstructionDetect(insn, out);
     insn.readPost(memory);
     if (setError(insn))
         return getError();
@@ -182,3 +185,14 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
+
+
+
+
+
+
+
+
+
+
+

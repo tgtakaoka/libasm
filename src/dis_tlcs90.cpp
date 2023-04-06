@@ -144,7 +144,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Operand preOp;
     if (TableTlcs90::TABLE.readInsn(memory, insn, preOp))
         return setError(insn);
-    if (TableTlcs90::TABLE.searchOpCode(insn))
+    if (TableTlcs90::TABLE.searchOpCode(insn, out))
         return setError(insn);
     const auto dst = insn.dst();
     if (dst == M_NONE)

@@ -31,7 +31,7 @@ struct TableMc6805 : entry::Table {
     static TableMc6805 TABLE;
 
     Error searchName(InsnMc6805 &insn) const;
-    Error searchOpCode(InsnMc6805 &insn) const;
+    Error searchOpCode(InsnMc6805 &insn, StrBuffer &out) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

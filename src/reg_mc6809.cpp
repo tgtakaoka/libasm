@@ -65,7 +65,7 @@ RegSize RegMc6809::regSize(RegName name) {
 StrBuffer &RegMc6809::outRegName(StrBuffer &out, const RegName name) const {
     const auto *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 

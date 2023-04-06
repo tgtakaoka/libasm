@@ -31,7 +31,7 @@ public:
     static TableCdp1802 TABLE;
 
     Error searchName(InsnCdp1802 &insn) const;
-    Error searchOpCode(InsnCdp1802 &insn) const;
+    Error searchOpCode(InsnCdp1802 &insn, StrBuffer &out) const;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
     const /* PROGMEM */ char *listCpu_P() const override;

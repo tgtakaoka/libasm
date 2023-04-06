@@ -35,7 +35,7 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableMos6502::TABLE.addressWidth(); }
-    void reset() override { TableMos6502::TABLE.reset(); }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:

@@ -30,6 +30,11 @@ static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as exten
 static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
 static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
 
+void DisNs32000::reset() {
+    Disassembler::reset();
+    _stringOptionBracket = _pcRelativeParen = _externalParen = _floatPrefix = false;
+}
+
 DisNs32000::OptFloatPrefix::OptFloatPrefix(bool &var)
     : BoolOption(OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX, var) {}
 
@@ -61,7 +66,7 @@ static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
         if (insn.opCode() & 0x80)
             val8 |= 1;
         // Sign extends 4-bit number.
-        //val8 = (val8 & 7) - (val8 & 8);
+        // val8 = (val8 & 7) - (val8 & 8);
         val8 = ConfigBase::signExtend(val8, 4);
         return val8;
     }
@@ -479,7 +484,7 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableNs32000::TABLE.searchOpCode(insn, memory))
+    if (TableNs32000::TABLE.searchOpCode(insn, out, memory))
         return setError(insn);
     if (readIndexByte(memory, insn, insn.src(), insn.srcPos()))
         return getError();

@@ -33,10 +33,7 @@ public:
     }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override {
-        _segOverrideInsn = true;
-        _repeatHasStringInst = false;
-    }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:

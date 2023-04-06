@@ -69,7 +69,7 @@ RegName RegF3850::decodeRegName(Config::opcode_t opc) {
 StrBuffer &RegF3850::outRegName(StrBuffer &out, RegName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 

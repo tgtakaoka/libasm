@@ -23,13 +23,14 @@
 namespace libasm {
 
 StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+    const auto base = _upperHex ? 'A' : 'a';
     const auto start = out.mark();
     while (val) {
         const uint8_t digit = val & 0xF;
         if (digit < 10)
             out.letter(digit + '0');
         else
-            out.letter(digit - 10 + 'A', _uppercase);
+            out.rletter(digit - 10 + base);
         val >>= 4;
     }
     const uint8_t bw = abs(bits);
@@ -81,7 +82,7 @@ StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) 
 
 StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle)
-        out.letter('0').letter('x');
+        out.letter('0').rletter('x');
     const auto start = out.mark();
     return outHex(out, val, bits).reverse(start);
 }
@@ -89,7 +90,7 @@ StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_
 StrBuffer &MotorolaValueFormatter::formatPositiveHex(
         StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle) {
-        out.letter('0').letter('x');
+        out.letter('0').rletter('x');
     } else {
         out.letter('$');
     }
@@ -99,22 +100,24 @@ StrBuffer &MotorolaValueFormatter::formatPositiveHex(
 
 StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
     if (_cstyle)
-        out.letter('0').letter('x');
+        out.letter('0').rletter('x');
     const auto start = out.mark();
     auto *top = outHex(out, val, bits).mark();
     if (_cstyle)
         return out.reverse(start);
     if (top[-1] > '9')
         out.letter('0');
-    return out.reverse(start).letter('H', _uppercase);
+    const auto suffix = _upperHex ? 'H' : 'h';
+    return out.reverse(start).rletter(suffix);
 }
 
 StrBuffer &NationalValueFormatter::formatPositiveHex(
         StrBuffer &out, uint32_t val, int8_t bits) const {
+    const auto prefix = _upperHex ? toupper(_hexPrefix) : tolower(_hexPrefix);
     if (_cstyle) {
-        out.letter('0').letter('x');
+        out.letter('0').rletter('x');
     } else {
-        out.letter(_hexPrefix, _uppercase).letter('\'');
+        out.rletter(prefix).letter('\'');
     }
     const auto start = out.mark();
     outHex(out, val, bits).reverse(start);

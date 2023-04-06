@@ -74,7 +74,7 @@ Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableIns8060::TABLE.searchOpCode(insn))
+    if (TableIns8060::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     switch (insn.addrMode()) {

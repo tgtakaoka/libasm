@@ -24,7 +24,16 @@ namespace mc6805 {
 static const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
 static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
-DisMc6805::OptPcBits::OptPcBits(AddressWidth &var)
+AddressWidth DisMc6805::addressWidth() const {
+    return AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
+}
+
+void DisMc6805::reset() {
+    Disassembler::reset();
+    _pc_bits = 0;
+}
+
+DisMc6805::OptPcBits::OptPcBits(uint8_t &var)
     : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _var(var) {}
 
 Error DisMc6805::OptPcBits::check(int32_t value) const {
@@ -32,7 +41,7 @@ Error DisMc6805::OptPcBits::check(int32_t value) const {
 }
 
 void DisMc6805::OptPcBits::set(int32_t value) const {
-    _var = AddressWidth(value ?: 13);
+    _var = value;
 }
 
 StrBuffer &DisMc6805::outRegister(StrBuffer &out, RegName regName) {
@@ -43,7 +52,7 @@ Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer
     const uint8_t dir = insn.readByte(memory);
     const auto label = lookup(dir);
     if (label) {
-        out.letter('<').text(label);
+        out.letter('<').rtext(label);
     } else {
         outAbsAddr(out, dir, 8);
     }
@@ -56,7 +65,7 @@ Error DisMc6805::decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &
         setErrorIf(OVERFLOW_RANGE);
     const auto label = lookup(addr);
     if (label) {
-        out.letter('>').text(label);
+        out.letter('>').rtext(label);
     } else {
         if (addr < 0x100)
             out.letter('>');
@@ -141,7 +150,7 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6805::TABLE.searchOpCode(insn))
+    if (TableMc6805::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

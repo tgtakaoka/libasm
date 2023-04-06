@@ -29,6 +29,7 @@ ValueFormatter formatter;
 
 static void set_up() {
     formatter.setCStyle(true);
+    formatter.setUpperHex(false);
 }
 
 static void tear_down() {

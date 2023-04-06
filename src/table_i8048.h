@@ -32,7 +32,7 @@ public:
     static TableI8048 TABLE;
 
     Error searchName(InsnI8048 &insn) const;
-    Error searchOpCode(InsnI8048 &insn) const;
+    Error searchOpCode(InsnI8048 &insn, StrBuffer &out) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

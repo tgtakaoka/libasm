@@ -233,8 +233,8 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableTms32010::searchOpCode(InsnTms32010 &insn) const {
-    _cpu->searchOpCode(insn, matchOpCode);
+Error TableTms32010::searchOpCode(InsnTms32010 &insn, StrBuffer &out) const {
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

@@ -1093,8 +1093,8 @@ static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const TableI8086::E
     return opCode == entry->opCode();
 }
 
-Error TableI8086::searchOpCode(InsnI8086 &insn) const {
-    _cpu->searchOpCode(insn, matchOpCode);
+Error TableI8086::searchOpCode(InsnI8086 &insn, StrBuffer &out) const {
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

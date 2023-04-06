@@ -54,7 +54,7 @@ RegName RegMc68000::parseRegName(StrScanner &scan) {
 StrBuffer &RegMc68000::outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 

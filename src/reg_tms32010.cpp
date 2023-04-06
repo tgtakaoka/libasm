@@ -39,10 +39,10 @@ RegName RegTms32010::parseRegName(StrScanner &scan) {
 
 StrBuffer &RegTms32010::outRegName(StrBuffer &out, RegName name) const {
     if (isAuxiliary(name))
-        return outRegNumber(out.text_P(PSTR("AR"), isUppercase()), int8_t(name));
+        return outRegNumber(out.text_P(PSTR("AR")), int8_t(name));
 
     const int8_t num = int8_t(name) - int8_t(REG_PA0);
-    return outRegNumber(out.text_P(PSTR("PA"), isUppercase()), num);
+    return outRegNumber(out.text_P(PSTR("PA")), num);
 }
 
 bool RegTms32010::isAuxiliary(RegName name) {

@@ -29,6 +29,7 @@ FairchildValueFormatter formatter;
 
 static void set_up() {
     formatter.setCStyle(false);
+    formatter.setUpperHex(false);
 }
 
 static void tear_down() {

@@ -265,8 +265,8 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableScn2650::searchOpCode(InsnScn2650 &insn) const {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+Error TableScn2650::searchOpCode(InsnScn2650 &insn, StrBuffer &out) const {
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();

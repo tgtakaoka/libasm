@@ -29,6 +29,7 @@ NationalValueFormatter formatter;
 
 static void set_up() {
     formatter.setCStyle(false);
+    formatter.setUpperHex(false);
 }
 
 static void tear_down() {
@@ -525,6 +526,8 @@ static void test_formatter_32bit() {
 
 static void test_formatter_suffix() {
     NationalValueFormatter formatter(true);
+    formatter.setUpperHex(false);
+
     HEX(255,  8, false, "x'ff'");
     HEX(0xffffff,    24, true, "x'ffffff'");
 }

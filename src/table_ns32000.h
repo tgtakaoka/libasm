@@ -34,7 +34,7 @@ public:
 
     void reset();
     Error searchName(InsnNs32000 &insn) const;
-    Error searchOpCode(InsnNs32000 &insn, DisMemory &memory) const;
+    Error searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory) const;
     bool isPrefixCode(uint8_t opCode) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;

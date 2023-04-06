@@ -165,7 +165,7 @@ RegName RegMn1610::decodeSpecial(uint8_t num) {
 StrBuffer &RegMn1610::outRegName(StrBuffer &out, RegName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 
@@ -250,7 +250,7 @@ CcName RegMn1610::decodeEop(uint8_t num) {
 StrBuffer &RegMn1610::outCcName(StrBuffer &out, CcName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 

@@ -28,6 +28,11 @@ static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
 static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
 static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
 
+void DisMos6502::reset() {
+    Disassembler::reset();
+    TableMos6502::TABLE.reset();
+}
+
 DisMos6502::OptIndirectLong::OptIndirectLong()
     : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, OPT_DESC_INDIRECT_LONG) {}
 
@@ -75,7 +80,7 @@ Error DisMos6502::decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBu
     } else {
         const auto label = lookup(target);
         if (label) {
-            out.letter('>').letter('>').text(label);
+            out.letter('>').letter('>').rtext(label);
         } else {
             if (target < 0x10000)
                 out.letter('>').letter('>');
@@ -89,7 +94,7 @@ Error DisMos6502::decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer
     const auto addr = insn.readUint16(memory);
     const auto label = lookup(addr);
     if (label) {
-        out.letter('>').text(label);
+        out.letter('>').rtext(label);
     } else {
         if (addr < 0x100)
             out.letter('>');
@@ -102,7 +107,7 @@ Error DisMos6502::decodeDirectPage(DisMemory &memory, InsnMos6502 &insn, StrBuff
     const auto zp = insn.readByte(memory);
     const auto label = lookup(zp);
     if (label) {
-        out.letter('<').text(label);
+        out.letter('<').rtext(label);
     } else {
         outAbsAddr(out, zp, 8);
     }
@@ -177,7 +182,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableMos6502::TABLE.searchOpCode(insn))
+    if (TableMos6502::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

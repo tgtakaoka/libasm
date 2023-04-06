@@ -175,8 +175,8 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+Error TableIns8060::searchOpCode(InsnIns8060 &insn, StrBuffer &out) const {
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();

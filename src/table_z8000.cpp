@@ -633,19 +633,19 @@ static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const TableZ8000::E
     return true;
 }
 
-Error TableZ8000::searchOpCode(InsnZ8000 &insn, DisMemory &memory) const {
+Error TableZ8000::searchOpCode(InsnZ8000 &insn, StrBuffer &out, DisMemory &memory) const {
     insn.setMemory(memory);
-    _cpu->searchOpCode(insn, matchOpCode);
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, DisMemory &memory) const {
+Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, StrBuffer &out, DisMemory &memory) const {
     insn.setMemory(memory);
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry) {
         entry++;
-        insn.setFlags(entry->flags());
-        insn.clearNameBuffer().text_P(entry->name_P());
+        insn.clearNameBuffer();
+        Cpu::defaultReadEntryName(insn, entry, out, nullptr);
     }
     return insn.getError();
 }

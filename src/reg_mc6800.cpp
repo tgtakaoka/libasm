@@ -38,7 +38,7 @@ RegName RegMc6800::parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &RegMc6800::outRegName(StrBuffer &out, const RegName name) const {
-    return out.letter(char(name), isUppercase());
+    return out.letter(char(name));
 }
 
 }  // namespace mc6800

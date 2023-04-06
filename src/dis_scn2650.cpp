@@ -34,6 +34,20 @@ static constexpr Config::uintptr_t inpage(
     return page(addr) | offset(addr + delta);
 }
 
+StrBuffer &DisScn2650::appendRegName(InsnScn2650 &insn, StrBuffer &out, RegName name) const {
+    auto save = out;
+    _regs.outRegName(insn.nameBuffer().over(out).letter(','), name);
+    out.over(insn.nameBuffer());
+    return save.over(out);
+}
+
+StrBuffer &DisScn2650::appendCcName(InsnScn2650 &insn, StrBuffer &out, CcName name) const {
+    auto save = out;
+    _regs.outCcName(insn.nameBuffer().over(out).letter(','), name);
+    out.over(insn.nameBuffer());
+    return save.over(out);
+}
+
 Error DisScn2650::decodeAbsolute(
         DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode) {
     const auto opr = insn.readUint16(memory);
@@ -66,7 +80,7 @@ Error DisScn2650::decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer 
             out.comma().letter('-');
         }
     }
-    _regs.outRegName(insn.nameBuffer().letter(','), dst);
+    appendRegName(insn, out, dst);
     return OK;
 }
 
@@ -97,11 +111,11 @@ Error DisScn2650::decodeOperand(
         // destination register R0 will be handled at |decodeIndexed|.
         if (insn.mode2() == M_IX13)
             break;
-        _regs.outRegName(insn.nameBuffer().letter(','), RegScn2650::decodeRegName(insn.opCode()));
+        appendRegName(insn, out, RegScn2650::decodeRegName(insn.opCode()));
         break;
     case M_C012:
     case M_CCVN:
-        _regs.outCcName(insn.nameBuffer().letter(','), RegScn2650::decodeCcName(insn.opCode()));
+        appendCcName(insn, out, RegScn2650::decodeCcName(insn.opCode()));
         break;
     case M_IMM8:
         outHex(out, insn.readByte(memory), 8);
@@ -128,7 +142,7 @@ Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableScn2650::TABLE.searchOpCode(insn))
+    if (TableScn2650::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     if (decodeOperand(memory, insn, out, insn.mode1()))

@@ -355,7 +355,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableMc68000::TABLE.searchOpCode(insn))
+    if (TableMc68000::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto src = insn.src();
@@ -381,8 +381,12 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto iSize = insn.insnSize();
     const auto oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
     const auto suffix = _regs.sizeSuffix(oSize);
-    if (suffix)
-        insn.nameBuffer().letter('.').letter(suffix);
+    if (suffix) {
+        StrBuffer save(out);
+        insn.nameBuffer().over(out);
+        out.letter('.').letter(suffix).over(insn.nameBuffer());
+        save.over(out);
+    }
 
     if (src == M_NONE)
         return setOK();

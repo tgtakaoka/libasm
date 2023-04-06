@@ -319,11 +319,11 @@ static void test_relative() {
 
     disassembler.setOption("relative", "enable");
 
-    ATEST(0x1000, BSR, "*-126", 0xAD, 0x80);
-    ATEST(0x1000, BSR, "*",     0xAD, 0xFE);
-    ATEST(0x1000, BSR, "*+2",   0xAD, 0x00);
-    ATEST(0x1000, BSR, "*+129", 0xAD, 0x7F);
-    AERRT(0x1FF0, BSR, "*+16",  OVERFLOW_RANGE, 0xAD, 0x0E);
+    ATEST(0x1000, BSR, "sub0F82", 0xAD, 0x80);
+    ATEST(0x1000, BSR, "*",       0xAD, 0xFE);
+    ATEST(0x1000, BSR, "*+2",     0xAD, 0x00);
+    ATEST(0x1000, BSR, "sub1081", 0xAD, 0x7F);
+    AERRT(0x1FF0, BSR, "*+16",    OVERFLOW_RANGE, 0xAD, 0x0E);
 }
 
 static void test_bit_ops() {

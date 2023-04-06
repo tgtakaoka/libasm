@@ -283,7 +283,7 @@ static bool acceptModes(InsnMc6805 &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
-        acceptMode(flags.mode3(), table.mode3())) {
+            acceptMode(flags.mode3(), table.mode3())) {
         if (table.undefined())
             insn.setError(OPERAND_NOT_ALLOWED);
         return true;
@@ -312,8 +312,8 @@ static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const TableMc6805:
     return opCode == entry->opCode();
 }
 
-Error TableMc6805::searchOpCode(InsnMc6805 &insn) const {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+Error TableMc6805::searchOpCode(InsnMc6805 &insn, StrBuffer &out) const {
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();

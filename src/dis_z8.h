@@ -33,7 +33,7 @@ public:
     }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _useWorkRegister = true; }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:

@@ -651,8 +651,8 @@ static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const TableMc6800:
     return opCode == entry->opCode();
 }
 
-const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn, StrBuffer &out) const {
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined()) {
         insn.setError(UNKNOWN_INSTRUCTION);
         entry = nullptr;
@@ -660,20 +660,20 @@ const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn) const {
     return entry;
 }
 
-Error TableMc6800::searchOpCode(InsnMc6800 &insn) const {
-    searchOpCodeImpl(insn);
+Error TableMc6800::searchOpCode(InsnMc6800 &insn, StrBuffer &out) const {
+    searchOpCodeImpl(insn, out);
     return insn.getError();
 }
 
-Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn) const {
-    auto entry = searchOpCodeImpl(insn);
+    Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn, StrBuffer &out) const {
+        auto entry = searchOpCodeImpl(insn, out);
     if (entry == nullptr)
         return insn.setError(INTERNAL_ERROR);
     entry += 1;
     if (entry->opCode() != insn.opCode())
         return insn.setError(INTERNAL_ERROR);
-    insn.setFlags(entry->flags());
-    insn.clearNameBuffer().text_P(entry->name_P());
+    insn.clearNameBuffer();
+    Cpu::defaultReadEntryName(insn, entry, out, nullptr);
     return OK;
 }
 

@@ -31,8 +31,8 @@ struct TableMc6800 : entry::Table {
     static TableMc6800 TABLE;
 
     Error searchName(InsnMc6800 &insn) const;
-    Error searchOpCode(InsnMc6800 &insn) const;
-    Error searchOpCodeAlias(InsnMc6800 &insn) const;
+    Error searchOpCode(InsnMc6800 &insn, StrBuffer &out) const;
+    Error searchOpCodeAlias(InsnMc6800 &insn, StrBuffer &out) const;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
     const /* PROGMEM */ char *listCpu_P() const override;
@@ -46,7 +46,7 @@ private:
     const Cpu *_cpu;
 
     bool setCpu(CpuType cpuType);
-    const Entry *searchOpCodeImpl(InsnMc6800 &insn) const;
+    const Entry *searchOpCodeImpl(InsnMc6800 &insn, StrBuffer &out) const;
 };
 
 }  // namespace mc6800

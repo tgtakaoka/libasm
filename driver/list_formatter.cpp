@@ -23,11 +23,11 @@ namespace driver {
 
 ListFormatter::ListFormatter()
     : _formatter(/*cstyle*/ false), _out(_out_buffer, sizeof(_out_buffer)) {
-    _formatter.setUppercase(true);
+    setUpperHex(true);
 }
 
 void ListFormatter::setUpperHex(bool enable) {
-    _formatter.setUppercase(enable);
+    _formatter.setUpperHex(enable);
 }
 
 void ListFormatter::formatDec(uint32_t val, int8_t width) {

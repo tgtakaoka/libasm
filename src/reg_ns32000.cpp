@@ -58,7 +58,7 @@ RegName RegNs32000::parseRegName(StrScanner &scan) {
 StrBuffer &RegNs32000::outRegName(StrBuffer &out, RegName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 
@@ -106,7 +106,7 @@ PregName RegNs32000::parsePregName(StrScanner &scan) {
 StrBuffer &RegNs32000::outPregName(StrBuffer &out, PregName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 
@@ -141,7 +141,7 @@ MregName RegNs32000::parseMregName(StrScanner &scan) {
 StrBuffer &RegNs32000::outMregName(StrBuffer &out, MregName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 
@@ -176,7 +176,7 @@ StrBuffer &RegNs32000::outConfigNames(StrBuffer &out, uint8_t configs) const {
             if (sep)
                 out.letter(sep);
             const auto *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
-            out.text_P(entry->text_P(), isUppercase());
+            out.text_P(entry->text_P());
             sep = ',';
         }
     }
@@ -197,14 +197,14 @@ StrOptName RegNs32000::parseStrOptName(StrScanner &scan) {
 StrBuffer &RegNs32000::outStrOptNames(StrBuffer &out, uint8_t strOpts) const {
     char sep = 0;
     if (strOpts & uint8_t(STROPT_B)) {
-        out.text_P(TEXT_STROPT_B, isUppercase());
+        out.text_P(TEXT_STROPT_B);
         sep = ',';
     }
     const auto *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
     if (entry) {
         if (sep)
             out.letter(sep);
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     }
     return out;
 }

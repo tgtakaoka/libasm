@@ -75,8 +75,8 @@ bool RegZ8::isPairReg(RegName name) {
 StrBuffer &RegZ8::outRegName(StrBuffer &out, RegName name) const {
     const auto num = uint8_t(name);
     if (num < 16)
-        return outRegNumber(out.letter('R', isUppercase()), num);
-    return outRegNumber(out.text_P(PSTR("RR"), isUppercase()), num - 16);
+        return outRegNumber(out.letter('R'), num);
+    return outRegNumber(out.text_P(PSTR("RR")), num - 16);
 }
 
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
@@ -113,7 +113,7 @@ CcName RegZ8::parseCcName(StrScanner &scan) {
 StrBuffer &RegZ8::outCcName(StrBuffer &out, CcName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 

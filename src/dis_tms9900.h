@@ -38,8 +38,8 @@ private:
     RegTms9900 _regs;
 
     Error decodeRelative(InsnTms9900 &insn, StrBuffer &out);
-    Error checkPostWord(InsnTms9900 &insn);
-    Error decodeMacroInstructionDetect(InsnTms9900 &insn);
+    Error checkPostWord(InsnTms9900 &insn, StrBuffer &out);
+    Error decodeMacroInstructionDetect(InsnTms9900 &insn, StrBuffer &out);
     Error decodeModeReg(
             DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, uint8_t mode, uint8_t reg);
     Error decodeOperand(DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, AddrMode mode);

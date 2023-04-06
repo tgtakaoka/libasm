@@ -24,6 +24,11 @@ namespace i8096 {
 static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "absolute";
 static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
 
+void DisI8096::reset() {
+    Disassembler::reset();
+    _useAbsolute = false;
+}
+
 DisI8096::OptUseAbsolute::OptUseAbsolute(bool &var)
     : BoolOption(OPT_BOOL_ABSOLUTE, OPT_DESC_ABSOLUTE, var) {}
 
@@ -50,7 +55,7 @@ StrBuffer &DisI8096::outRelative(StrBuffer &out, const InsnI8096 &insn, const Op
         const auto offset = signExtend(op.val16, 11);
         const auto target = branchTarget(base, offset);
         return outRelAddr(out, target, insn.address(), 11);
-    } else { // M_REL16:
+    } else {  // M_REL16:
         const auto base = insn.address() + 3;
         const auto target = branchTarget(base, op.int16());
         return outRelAddr(out, target, insn.address(), 16);
@@ -191,7 +196,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         insn.setOpCode(opc);
     }
 
-    if (TableI8096::TABLE.searchOpCode(insn))
+    if (TableI8096::TABLE.searchOpCode(insn, out))
         return setError(insn);
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;

@@ -34,10 +34,7 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override { return TableZ8000::TABLE.addressWidth(); }
-    void reset() override {
-        _ioAddressPrefix = 0;
-        _shortDirect = true;
-    }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:

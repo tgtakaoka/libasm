@@ -714,8 +714,8 @@ static bool matchOpCode(InsnMc6809 &insn, const Entry *entry, const TableMc6809:
     return false;
 }
 
-Error TableMc6809::searchOpCode(InsnMc6809 &insn) const {
-    _cpu->searchOpCode(insn, matchOpCode);
+Error TableMc6809::searchOpCode(InsnMc6809 &insn, StrBuffer &out) const {
+    _cpu->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

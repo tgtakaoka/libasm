@@ -33,7 +33,7 @@ public:
     }
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _useScratchpad = false; }
+    void reset() override;
     const Options &options() const override { return _options; }
 
 private:

@@ -359,8 +359,8 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableCdp1802::searchOpCode(InsnCdp1802 &insn) const {
-    auto entry = _cpu->searchOpCode(insn, matchOpCode);
+Error TableCdp1802::searchOpCode(InsnCdp1802 &insn, StrBuffer &out) const {
+    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();

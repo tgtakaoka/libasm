@@ -83,7 +83,7 @@ StrBuffer &RegZ8000::outRegName(StrBuffer &out, RegName name) const {
         num -= int8_t(REG_RL0);
         prefix_P = PSTR("RL");
     }
-    return outRegNumber(out.text_P(prefix_P, isUppercase()), num);
+    return outRegNumber(out.text_P(prefix_P), num);
 }
 
 uint8_t RegZ8000::encodeGeneralRegName(RegName name) {
@@ -179,7 +179,7 @@ RegName RegZ8000::parseCtlReg(StrScanner &scan) {
 StrBuffer &RegZ8000::outCtlName(StrBuffer &out, RegName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 
@@ -216,13 +216,13 @@ IntrName RegZ8000::parseIntrName(StrScanner &scan) {
 StrBuffer &RegZ8000::outIntrNames(StrBuffer &out, uint8_t intrs) const {
     char c = 0;
     if ((intrs & int8_t(INTR_VI)) == 0) {
-        out.text_P(TEXT_INTR_VI, isUppercase());
+        out.text_P(TEXT_INTR_VI);
         c = ',';
     }
     if ((intrs & int8_t(INTR_NVI)) == 0) {
         if (c)
             out.letter(c);
-        out.text_P(TEXT_INTR_NVI, isUppercase());
+        out.text_P(TEXT_INTR_NVI);
     }
     return out;
 }
@@ -273,7 +273,7 @@ CcName RegZ8000::decodeCcNum(uint8_t num) {
 StrBuffer &RegZ8000::outCcName(StrBuffer &out, CcName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 
@@ -298,7 +298,7 @@ StrBuffer &RegZ8000::outFlagNames(StrBuffer &out, uint8_t flags) const {
                 out.letter(sep);
             sep = ',';
             const auto *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
-            out.text_P(entry->text_P(), isUppercase());
+            out.text_P(entry->text_P());
         }
     }
     return out;

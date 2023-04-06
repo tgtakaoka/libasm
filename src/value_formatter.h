@@ -25,10 +25,10 @@ namespace libasm {
 
 class ValueFormatter {
 public:
-    ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _uppercase(false) {}
+    ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _upperHex(true) {}
 
     void setCStyle(bool enable) { _cstyle = enable; }
-    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    void setUpperHex(bool enable) { _upperHex = enable; }
 
     /*
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed
@@ -47,7 +47,7 @@ public:
 
 protected:
     bool _cstyle;
-    bool _uppercase;
+    bool _upperHex;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const
             __attribute__((noinline));
@@ -74,7 +74,7 @@ protected:
 
 class NationalValueFormatter : public ValueFormatter {
 public:
-    NationalValueFormatter(bool suffix = false, char hexPrefix = 'X')
+    NationalValueFormatter(bool suffix = false, char hexPrefix = 'x')
         : ValueFormatter(false), _suffix(suffix), _hexPrefix(hexPrefix) {}
 
 protected:
@@ -87,7 +87,7 @@ private:
 
 class FairchildValueFormatter : public NationalValueFormatter {
 public:
-    FairchildValueFormatter() : NationalValueFormatter(true, 'H') {}
+    FairchildValueFormatter() : NationalValueFormatter(true, 'h') {}
 };
 
 }  // namespace libasm

@@ -44,7 +44,7 @@ RegName RegScn2650::decodeRegName(uint8_t opc) {
 }
 
 StrBuffer &RegScn2650::outRegName(StrBuffer &out, RegName name) const {
-    return outRegNumber(out.letter('R', isUppercase()), int8_t(name));
+    return outRegNumber(out.letter('R'), int8_t(name));
 }
 
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
@@ -70,7 +70,7 @@ CcName RegScn2650::decodeCcName(uint8_t opc) {
 StrBuffer &RegScn2650::outCcName(StrBuffer &out, CcName name) const {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
     if (entry)
-        out.text_P(entry->text_P(), isUppercase());
+        out.text_P(entry->text_P());
     return out;
 }
 

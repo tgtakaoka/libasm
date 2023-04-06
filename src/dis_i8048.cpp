@@ -120,7 +120,7 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8048::TABLE.searchOpCode(insn))
+    if (TableI8048::TABLE.searchOpCode(insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

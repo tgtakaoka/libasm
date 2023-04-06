@@ -24,6 +24,11 @@ namespace z8 {
 static const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
 static const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
 
+void DisZ8::reset() {
+    Disassembler::reset();
+    _useWorkRegister = true;
+}
+
 DisZ8::OptWorkRegister::OptWorkRegister(bool &var)
     : BoolOption(OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER, var) {}
 
@@ -355,7 +360,7 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableZ8::TABLE.searchOpCode(insn, memory))
+    if (TableZ8::TABLE.searchOpCode(insn, out, memory))
         return setError(insn);
 
     const auto dst = insn.dst();

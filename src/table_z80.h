@@ -31,7 +31,7 @@ public:
     static TableZ80 TABLE;
 
     Error searchName(InsnZ80 &insn) const;
-    Error searchOpCode(InsnZ80 &insn) const;
+    Error searchOpCode(InsnZ80 &insn, StrBuffer &out) const;
 
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }

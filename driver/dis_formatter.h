@@ -48,16 +48,15 @@ public:
 protected:
     Disassembler &_disassembler;
     const char *_input_name;
-    bool _upper_hex;
-    bool _uppercase;
+    Insn _insn;
+    InsnBase _insnBase;
 
+    bool _uppercase;
     int _nextContent;
     bool _errorContent;
     int _nextLine;
     bool _errorLine;
 
-    Insn _insn;
-    InsnBase _insnBase;
     char _operands[256];
 
     void reset();
