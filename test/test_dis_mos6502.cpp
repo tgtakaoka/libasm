@@ -55,37 +55,40 @@ static void tear_down() {
 
 // clang-format off
 void test_cpu() {
-    EQUALS("cpu 6502", true,   disassembler.setCpu("6502"));
+    EQUALS("cpu 6502", true, disassembler.setCpu("6502"));
     EQUALS_P("cpu 6502", "6502", disassembler.cpu_P());
 
-    EQUALS("cpu 65SC02", true,     disassembler.setCpu("65SC02"));
+    EQUALS("cpu 65SC02", true, disassembler.setCpu("65SC02"));
     EQUALS_P("cpu 65SC02", "65SC02", disassembler.cpu_P());
 
-    EQUALS("cpu 65C02", true,    disassembler.setCpu("65C02"));
+    EQUALS("cpu 65C02", true, disassembler.setCpu("65C02"));
     EQUALS_P("cpu 65C02", "65C02", disassembler.cpu_P());
 
-    EQUALS("cpu MOS6502", true,   disassembler.setCpu("MOS6502"));
+    EQUALS("cpu MOS6502", true, disassembler.setCpu("MOS6502"));
     EQUALS_P("cpu MOS6502", "6502", disassembler.cpu_P());
 
-    EQUALS("cpu G65SC02", true,     disassembler.setCpu("G65SC02"));
+    EQUALS("cpu G65SC02", true, disassembler.setCpu("G65SC02"));
     EQUALS_P("cpu G65SC02", "65SC02", disassembler.cpu_P());
 
-    EQUALS("cpu R65C02", true,    disassembler.setCpu("R65C02"));
+    EQUALS("cpu R65C02", true, disassembler.setCpu("R65C02"));
     EQUALS_P("cpu R65C02", "65C02", disassembler.cpu_P());
 
-    EQUALS("cpu W65C02S", true,      disassembler.setCpu("W65C02S"));
+    EQUALS("cpu W65C02", true, disassembler.setCpu("W65C02"));
+    EQUALS_P("cpu W65C02", "W65C02S", disassembler.cpu_P());
+
+    EQUALS("cpu W65C02S", true, disassembler.setCpu("W65C02S"));
     EQUALS_P("cpu W65C02S", "W65C02S", disassembler.cpu_P());
 
-    EQUALS("cpu 65816", true,    disassembler.setCpu("65816"));
+    EQUALS("cpu 65816", true, disassembler.setCpu("65816"));
     EQUALS_P("cpu 65816", "65816", disassembler.cpu_P());
 
-    EQUALS("cpu W65816", true,    disassembler.setCpu("W65816"));
+    EQUALS("cpu W65816", true, disassembler.setCpu("W65816"));
     EQUALS_P("cpu W65816", "65816", disassembler.cpu_P());
 
-    EQUALS("cpu W65C816", true,    disassembler.setCpu("W65C816"));
+    EQUALS("cpu W65C816", true, disassembler.setCpu("W65C816"));
     EQUALS_P("cpu W65C816", "65816", disassembler.cpu_P());
 
-    EQUALS("cpu W65C816S", true,    disassembler.setCpu("W65C816S"));
+    EQUALS("cpu W65C816S", true, disassembler.setCpu("W65C816S"));
     EQUALS_P("cpu W65C816S", "65816", disassembler.cpu_P());
 }
 

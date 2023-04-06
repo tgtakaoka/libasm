@@ -17,9 +17,12 @@
 #include "dis_tms9900.h"
 
 #include "table_tms9900.h"
+#include "text_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
+
+using text::tms9900::TEXT_MID;
 
 Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     const Config::opcode_t post = insn.post();
@@ -43,8 +46,6 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn) {
     }
     return decodeMacroInstructionDetect(insn);
 }
-
-static constexpr char TEXT_MID[] PROGMEM = "MID";
 
 Error DisTms9900::decodeMacroInstructionDetect(InsnTms9900 &insn) {
     insn.clearNameBuffer().text_P(TEXT_MID);

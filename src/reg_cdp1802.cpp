@@ -16,8 +16,6 @@
 
 #include "reg_cdp1802.h"
 
-#include <ctype.h>
-
 namespace libasm {
 namespace cdp1802 {
 

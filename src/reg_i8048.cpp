@@ -16,43 +16,13 @@
 
 #include "reg_i8048.h"
 
+#include "text_i8048.h"
+
+using namespace libasm::text::i8048;
+
 namespace libasm {
 namespace i8048 {
 
-// clang-format off
-static constexpr char TEXT_REG_A[]    PROGMEM = "A";
-static constexpr char TEXT_REG_BUS[]  PROGMEM = "BUS";
-static constexpr char TEXT_REG_C[]    PROGMEM = "C";
-static constexpr char TEXT_REG_CLK[]  PROGMEM = "CLK";
-static constexpr char TEXT_REG_CNT[]  PROGMEM = "CNT";
-static constexpr char TEXT_REG_F0[]   PROGMEM = "F0";
-static constexpr char TEXT_REG_F1[]   PROGMEM = "F1";
-static constexpr char TEXT_REG_I[]    PROGMEM = "I";
-static constexpr char TEXT_REG_MB0[]  PROGMEM = "MB0";
-static constexpr char TEXT_REG_MB1[]  PROGMEM = "MB1";
-static constexpr char TEXT_REG_P[]    PROGMEM = "P";
-static constexpr char TEXT_REG_P1[]   PROGMEM = "P1";
-static constexpr char TEXT_REG_P2[]   PROGMEM = "P2";
-static constexpr char TEXT_REG_P4[]   PROGMEM = "P4";
-static constexpr char TEXT_REG_P5[]   PROGMEM = "P5";
-static constexpr char TEXT_REG_P6[]   PROGMEM = "P6";
-static constexpr char TEXT_REG_P7[]   PROGMEM = "P7";
-static constexpr char TEXT_REG_PSW[]  PROGMEM = "PSW";
-static constexpr char TEXT_REG_R0[]   PROGMEM = "R0";
-static constexpr char TEXT_REG_R1[]   PROGMEM = "R1";
-static constexpr char TEXT_REG_R2[]   PROGMEM = "R2";
-static constexpr char TEXT_REG_R3[]   PROGMEM = "R3";
-static constexpr char TEXT_REG_R4[]   PROGMEM = "R4";
-static constexpr char TEXT_REG_R5[]   PROGMEM = "R5";
-static constexpr char TEXT_REG_R6[]   PROGMEM = "R6";
-static constexpr char TEXT_REG_R7[]   PROGMEM = "R7";
-static constexpr char TEXT_REG_RB0[]  PROGMEM = "RB0";
-static constexpr char TEXT_REG_RB1[]  PROGMEM = "RB1";
-static constexpr char TEXT_REG_T[]    PROGMEM = "T";
-static constexpr char TEXT_REG_TCNT[] PROGMEM = "TCNT";
-static constexpr char TEXT_REG_TCNTI[] PROGMEM = "TCNTI";
-
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_BUS),

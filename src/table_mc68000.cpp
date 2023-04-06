@@ -22,6 +22,8 @@
 #include "entry_mc68000.h"
 #include "text_mc68000.h"
 
+using namespace libasm::text::mc68000;
+
 namespace libasm {
 namespace mc68000 {
 
@@ -609,12 +611,12 @@ void TableMc68000::setAlias(bool enable) {
 }
 
 const /* PROGMEM */ char *TableMc68000::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_MC68000;
 }
 
 bool TableMc68000::setCpu(const char *cpu) {
     auto p = cpu;
-    if (strncasecmp_P(cpu, TEXT_CPU_MC, 2) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_MC68000, 2) == 0)
         p += 2;
     return strcmp_P(p, TEXT_CPU_68000) == 0;
 }

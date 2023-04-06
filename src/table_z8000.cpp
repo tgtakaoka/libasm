@@ -21,6 +21,8 @@
 
 #include <string.h>
 
+using namespace libasm::text::z8000;
+
 namespace libasm {
 namespace z8000 {
 

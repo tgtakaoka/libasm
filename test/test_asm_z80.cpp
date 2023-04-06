@@ -25,7 +25,7 @@ AsmZ80 asz80;
 Assembler &assembler(asz80);
 
 static bool isZ80() {
-    return strcmp_P("Z80", assembler.cpu_P()) == 0;
+    return strcasecmp_P("Z80", assembler.cpu_P()) == 0;
 }
 
 static bool is8085() {
@@ -33,7 +33,7 @@ static bool is8085() {
 }
 
 static bool v30emu() {
-    return strcmp_P("V30EMU", assembler.cpu_P()) == 0;
+    return strcasecmp_P("V30EMU", assembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -73,8 +73,8 @@ void test_cpu() {
     EQUALS("cpu i8080zilog", true, assembler.setCpu("i8080Zilog"));
     EQUALS_P("get cpu", "8080", assembler.cpu_P());
 
-    EQUALS("cpu i8085zilog", true, assembler.setCpu("i8085zilog"));
-    EQUALS_P("get cpu", "8085", assembler.cpu_P());
+    EQUALS("cpu v30emuZ", true, assembler.setCpu("v30emuZ"));
+    EQUALS_P("get cpu", "V30EMU", assembler.cpu_P());
 
     EQUALS("has SET", true, assembler.hasSetInstruction());
 }

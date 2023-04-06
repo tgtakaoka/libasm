@@ -15,26 +15,28 @@
  */
 
 #include "asm_ns32000.h"
+#include "text_ns32000.h"
 
 #include <stdlib.h>
 
 namespace libasm {
 namespace ns32000 {
 
-static const char OPT_TEXT_FPU[] PROGMEM = "fpu";
+using text::ns32000::TEXT_FPU;
+using text::ns32000::TEXT_PMMU;
+
 static const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
-static const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
 static const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
 AsmNs32000::OptPmmu::OptPmmu(PseudoNs32000 &pseudos)
-    : OptionBase(OPT_TEXT_PMMU, OPT_DESC_PMMU, OPT_TEXT), _pseudos(pseudos) {}
+    : OptionBase(TEXT_PMMU, OPT_DESC_PMMU, OPT_TEXT), _pseudos(pseudos) {}
 
 Error AsmNs32000::OptPmmu::set(StrScanner &scan) const {
     return _pseudos.setPmmu(scan);
 }
 
 AsmNs32000::OptFpu::OptFpu(PseudoNs32000 &pseudos, const OptionBase &next)
-    : OptionBase(OPT_TEXT_FPU, OPT_DESC_FPU, OPT_TEXT, next), _pseudos(pseudos) {}
+    : OptionBase(TEXT_FPU, OPT_DESC_FPU, OPT_TEXT, next), _pseudos(pseudos) {}
 
 Error AsmNs32000::OptFpu::set(StrScanner &scan) const {
     return _pseudos.setFpu(scan);
@@ -631,12 +633,12 @@ Error AsmNs32000::PseudoNs32000::processPseudo(StrScanner &scan, Insn &insn, Ass
     auto p = scan.skipSpaces();
     auto &parser = assembler.parser();
     auto error = UNKNOWN_DIRECTIVE;
-    if (strcasecmp_P(insn.name(), OPT_TEXT_FPU) == 0) {
+    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         error = setFpu(parser.readSymbol(p));
         if (error)
             assembler.setError(scan, error);
     }
-    if (strcasecmp_P(insn.name(), OPT_TEXT_PMMU) == 0) {
+    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
         error = setPmmu(parser.readSymbol(p));
         if (error)
             assembler.setError(scan, error);

@@ -23,6 +23,8 @@
 #include "entry_i8048.h"
 #include "text_i8048.h"
 
+using namespace libasm::text::i8048;
+
 namespace libasm {
 namespace i8048 {
 
@@ -379,7 +381,7 @@ bool TableI8048::setCpu(const char *cpu) {
     const auto *t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t == nullptr)
         return false;
-    if (strncasecmp_P(cpu + 1, TEXT_CPU_MSM, 3) == 0)
+    if (strncasecmp_P(cpu + 1, TEXT_CPU_MSM80C48, 3) == 0)
         return false;
     return setCpu(t->cpuType());
 }

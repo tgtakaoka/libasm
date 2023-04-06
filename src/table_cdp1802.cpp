@@ -23,6 +23,8 @@
 #include "entry_cdp1802.h"
 #include "text_cdp1802.h"
 
+using namespace libasm::text::cdp1802;
+
 namespace libasm {
 namespace cdp1802 {
 
@@ -381,7 +383,7 @@ const /* PROGMEM */ char *TableCdp1802::listCpu_P() const {
 }
 
 bool TableCdp1802::setCpu(const char *cpu) {
-    if (strncasecmp_P(cpu, TEXT_CPU_CDP, 3) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
         cpu += 3;
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)

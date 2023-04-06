@@ -16,21 +16,13 @@
 
 #include "reg_i8080.h"
 
+#include "text_i8080.h"
+
+using namespace libasm::text::i8080;
+
 namespace libasm {
 namespace i8080 {
 
-// clang-format off
-static constexpr char TEXT_REG_A[]   PROGMEM  = "A";
-static constexpr char TEXT_REG_B[]   PROGMEM  = "B";
-static constexpr char TEXT_REG_C[]   PROGMEM  = "C";
-static constexpr char TEXT_REG_D[]   PROGMEM  = "D";
-static constexpr char TEXT_REG_E[]   PROGMEM  = "E";
-static constexpr char TEXT_REG_H[]   PROGMEM  = "H";
-static constexpr char TEXT_REG_L[]   PROGMEM  = "L";
-static constexpr char TEXT_REG_M[]   PROGMEM  = "M";
-static constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
-static constexpr char TEXT_REG_PSW[] PROGMEM = "PSW";
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_B),

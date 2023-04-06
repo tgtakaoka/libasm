@@ -24,6 +24,8 @@
 #include <ctype.h>
 #include <string.h>
 
+using namespace libasm::text::tlcs90;
+
 namespace libasm {
 namespace tlcs90 {
 

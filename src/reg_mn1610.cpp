@@ -16,40 +16,13 @@
 
 #include "reg_mn1610.h"
 
+#include "text_mn1610.h"
+
+using namespace libasm::text::mn1610;
+
 namespace libasm {
 namespace mn1610 {
 
-// clang-format off
-static constexpr char TEXT_REG_R0[]   PROGMEM = "R0";
-static constexpr char TEXT_REG_R1[]   PROGMEM = "R1";
-static constexpr char TEXT_REG_R2[]   PROGMEM = "R2";
-static constexpr char TEXT_REG_R3[]   PROGMEM = "R3";
-static constexpr char TEXT_REG_R4[]   PROGMEM = "R4";
-static constexpr char TEXT_REG_SP[]   PROGMEM = "SP";
-static constexpr char TEXT_REG_STR[]  PROGMEM = "STR";
-static constexpr char TEXT_REG_IC[]   PROGMEM = "IC";
-static constexpr char TEXT_REG_DR0[]  PROGMEM = "DR0";
-static constexpr char TEXT_REG_X0[]   PROGMEM = "X0";
-static constexpr char TEXT_REG_X1[]   PROGMEM = "X1";
-static constexpr char TEXT_REG_CSBR[] PROGMEM = "CSBR";
-static constexpr char TEXT_REG_SSBR[] PROGMEM = "SSBR";
-static constexpr char TEXT_REG_TSR0[] PROGMEM = "TSR0";
-static constexpr char TEXT_REG_TSR1[] PROGMEM = "TSR1";
-static constexpr char TEXT_REG_OSR0[] PROGMEM = "OSR0";
-static constexpr char TEXT_REG_OSR1[] PROGMEM = "OSR1";
-static constexpr char TEXT_REG_OSR2[] PROGMEM = "OSR2";
-static constexpr char TEXT_REG_OSR3[] PROGMEM = "OSR3";
-static constexpr char TEXT_REG_TCR[]  PROGMEM = "TCR";
-static constexpr char TEXT_REG_TIR[]  PROGMEM = "TIR";
-static constexpr char TEXT_REG_TSR[]  PROGMEM = "TSR";
-static constexpr char TEXT_REG_SCR[]  PROGMEM = "SCR";
-static constexpr char TEXT_REG_SSR[]  PROGMEM = "SSR";
-static constexpr char TEXT_REG_SIR[]  PROGMEM = "SIR";
-static constexpr char TEXT_REG_SOR[]  PROGMEM = "SOR";
-static constexpr char TEXT_REG_IISR[] PROGMEM = "IISR";
-static constexpr char TEXT_REG_SBRB[] PROGMEM = "SBRB";
-static constexpr char TEXT_REG_ICB[]  PROGMEM = "ICB";
-static constexpr char TEXT_REG_NPP[]  PROGMEM = "NPP";
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_R0),
         NAME_ENTRY(REG_R1),
@@ -90,7 +63,6 @@ static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_ICB),
         NAME_ENTRY(REG_NPP),
 };
-// clang-format on
 
 RegName RegMn1610::parseRegName(StrScanner &scan) {
     const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
@@ -197,30 +169,6 @@ StrBuffer &RegMn1610::outRegName(StrBuffer &out, RegName name) const {
     return out;
 }
 
-// clang-format off
-static constexpr char TEXT_CC_SKP[] PROGMEM = "SKP";
-static constexpr char TEXT_CC_M[]   PROGMEM = "M";
-static constexpr char TEXT_CC_PZ[]  PROGMEM = "PZ";
-static constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
-static constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
-static constexpr char TEXT_CC_MZ[]  PROGMEM = "MZ";
-static constexpr char TEXT_CC_P[]   PROGMEM = "P";
-static constexpr char TEXT_CC_EZ[]  PROGMEM = "EZ";
-static constexpr char TEXT_CC_ENZ[] PROGMEM = "ENZ";
-static constexpr char TEXT_CC_OZ[]  PROGMEM = "OZ";
-static constexpr char TEXT_CC_ONZ[] PROGMEM = "ONZ";
-static constexpr char TEXT_CC_LMZ[] PROGMEM = "LMZ";
-static constexpr char TEXT_CC_LP[]  PROGMEM = "LP";
-static constexpr char TEXT_CC_LPZ[] PROGMEM = "LPZ";
-static constexpr char TEXT_CC_LM[]  PROGMEM = "LM";
-static constexpr char TEXT_CC_E[]   PROGMEM = "E";
-static constexpr char TEXT_CC_NE[]  PROGMEM = "NE";
-static constexpr char TEXT_CC_C[]   PROGMEM = "C";
-static constexpr char TEXT_CC_RE[]  PROGMEM = "RE";
-static constexpr char TEXT_CC_SE[]  PROGMEM = "SE";
-static constexpr char TEXT_CC_CE[]  PROGMEM = "CE";
-static constexpr char TEXT_CC_NONE[] PROGMEM = "";
-// clang-format on
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_SKP),
         NAME_ENTRY(CC_M),

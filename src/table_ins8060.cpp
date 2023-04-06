@@ -23,6 +23,8 @@
 #include "entry_ins8060.h"
 #include "text_ins8060.h"
 
+using namespace libasm::text::ins8060;
+
 namespace libasm {
 namespace ins8060 {
 
@@ -183,12 +185,12 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn) const {
 TableIns8060::TableIns8060() : _cpu(&INS8060_CPU) {}
 
 const /* PROGMEM */ char *TableIns8060::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_INS8060;
 }
 
 bool TableIns8060::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_SCMP) == 0 || strcasecmp_P(cpu, TEXT_CPU_INS8060) == 0 ||
-           strcasecmp_P(cpu, TEXT_CPU_8060) == 0;
+           strcasecmp_P(cpu, TEXT_CPU_INS8060 + 3) == 0;
 }
 
 TableIns8060 TableIns8060::TABLE;

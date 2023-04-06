@@ -22,6 +22,8 @@
 #include "entry_mc6800.h"
 #include "text_mc6800.h"
 
+using namespace libasm::text::mc6800;
+
 namespace libasm {
 namespace mc6800 {
 
@@ -693,7 +695,7 @@ const /* PROGMEM */ char *TableMc6800::listCpu_P() const {
 
 bool TableMc6800::setCpu(const char *cpu) {
     auto p = cpu;
-    if (strncasecmp_P(p, TEXT_CPU_MC, 2) == 0)
+    if (strncasecmp_P(p, TEXT_CPU_LIST, 2) == 0)
         p += 2;
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     if (t)
@@ -702,7 +704,7 @@ bool TableMc6800::setCpu(const char *cpu) {
         return setCpu(MC68HC11);
 
     p = cpu;
-    if (strncasecmp_P(p, TEXT_CPU_HD, 2) == 0)
+    if (strncasecmp_P(p, TEXT_CPU_LIST + 24, 2) == 0)
         p += 2;
     if (strcasecmp_P(p, TEXT_CPU_6301) == 0)
         return setCpu(HD6301);

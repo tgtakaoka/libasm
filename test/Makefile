@@ -38,11 +38,12 @@ CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_test = test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
-OBJS_asm  = asm_base.o config_base.o test_asm_helper.o value_parser.o parsers.o operators.o
-OBJS_dis  = dis_base.o config_base.o test_dis_helper.o value_formatter.o
+OBJS_asm  = asm_base.o config_base.o test_asm_helper.o value_parser.o parsers.o operators.o \
+            text_common.o
+OBJS_dis  = dis_base.o config_base.o test_dis_helper.o value_formatter.o text_common.o
 OBJS_expr = config_base.o test_expr_helper.o value_parser.o parsers.o operators.o value_formatter.o
 OBJS_gen  = gen_driver.o test_generator.o tokenized_text.o dis_formatter.o config_base.o \
-            dis_base.o value_formatter.o list_formatter.o
+            dis_base.o value_formatter.o list_formatter.o text_common.o
 
 TEST_OBJS = $(ARCHS:%=test_asm_%.o) $(ARCHS:%=test_dis_%.o)
 EXPR_OBJS = $(EXPRS:%=test_expr_%.o)
@@ -58,9 +59,9 @@ BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
 
 # make rule for testing an architecture.
 define test-rule # arch
-test_asm_$(1): test_asm_$(1).o asm_$(1).o $$(OBJS_$(1)) $$(OBJS_asm) $$(OBJS_test)
+test_asm_$(1): test_asm_$(1).o asm_$(1).o text_$(1).o $$(OBJS_$(1)) $$(OBJS_asm) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
-test_dis_$(1): test_dis_$(1).o dis_$(1).o $$(OBJS_$(1)) $$(OBJS_dis) $$(OBJS_test)
+test_dis_$(1): test_dis_$(1).o dis_$(1).o text_$(1).o $$(OBJS_$(1)) $$(OBJS_dis) $$(OBJS_test)
 	$$(CXX) -o $$@ $$(CXXFLAGS) $$^
 test_$(1): $(if $(wildcard test_asm_$(1).cpp),test_asm_$(1)) \
            $(if $(wildcard test_dis_$(1).cpp),test_dis_$(1))
@@ -93,7 +94,7 @@ unit-test:
 
 define gen-rule
 gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) \
-          dis_$(1).o $$(OBJS_$(1)) $$(OBJS_gen) $$(OBJS_test)
+          dis_$(1).o text_$(1).o $$(OBJS_$(1)) $$(OBJS_gen) $$(OBJS_test)
 	$(if $(wildcard gen_$(1).cpp),$$(CXX) -o $$@ $$(CXXFLAGS) $$^)
 
 endef

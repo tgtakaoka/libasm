@@ -23,6 +23,8 @@
 #include <ctype.h>
 #include <string.h>
 
+using namespace libasm::text::tms32010;
+
 namespace libasm {
 namespace tms32010 {
 
@@ -257,7 +259,7 @@ const /* PROGMEM */ char *TableTms32010::listCpu_P() const {
 }
 
 bool TableTms32010::setCpu(const char *cpu) {
-    if (strncasecmp_P(cpu, TEXT_CPU_TMS, 3) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
         cpu += 3;
     if (strcmp_P(cpu, TEXT_CPU_32010) == 0)
         return setCpu(TMS32010);

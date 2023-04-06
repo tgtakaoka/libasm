@@ -40,7 +40,7 @@ ARCHS = \
 
 # define OBJS_arch variable which contains architecture related objects.
 define objs-arch # arch
-OBJS_$(1) = table_$(1).o reg_$(1).o
+OBJS_$(1) = table_$(1).o reg_$(1).o text_$(1).o
 
 endef
 $(eval $(foreach a,$(ARCHS),$(call objs-arch,$(a))))

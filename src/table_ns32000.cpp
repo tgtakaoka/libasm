@@ -22,6 +22,8 @@
 
 #include <string.h>
 
+using namespace libasm::text::ns32000;
+
 namespace libasm {
 namespace ns32000 {
 
@@ -870,7 +872,7 @@ struct ProcessorCpuCommon : entry::CpuBase<CPUTYPE, EntryPage> {
             bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
             void (*readEntryName)(InsnNs32000 &, const Entry *, const EntryPage *)) const {
         const auto entry =
-            entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(insn, matchOpCode, readEntryName);
+                entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(insn, matchOpCode, readEntryName);
         if (entry && insn.hasPost())
             insn.readPost(memory);
         return insn.getError();
@@ -1010,7 +1012,7 @@ bool TableNs32000::setMmu(MmuType mmuType) {
 }
 
 const /* PROGMEM */ char *TableNs32000::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_NS32032;
 }
 
 const /* PROGMEM */ char *TableNs32000::cpu_P() const {
@@ -1018,9 +1020,7 @@ const /* PROGMEM */ char *TableNs32000::cpu_P() const {
 }
 
 bool TableNs32000::setCpu(const char *cpu) {
-    if (strncasecmp_P(cpu, TEXT_CPU_NS, 2) == 0)
-        cpu += 2;
-    return strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
+    return strncasecmp_P(cpu, TEXT_CPU_NS32032, 2) == 0 || strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
 }
 
 bool TableNs32000::setFpu(const StrScanner &fpu) {

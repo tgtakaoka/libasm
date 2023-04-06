@@ -67,6 +67,21 @@ void test_cpu() {
 
     EQUALS("cpu Z80", true, disassembler.setCpu("z80"));
     EQUALS_P("get cpu", "Z80", disassembler.cpu_P());
+
+    EQUALS("cpu 8080zilog", true, disassembler.setCpu("8080Z"));
+    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
+
+    EQUALS("cpu 8085zilog", true, disassembler.setCpu("8085z"));
+    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+
+    EQUALS("cpu i8080zilog", true, disassembler.setCpu("i8080Zilog"));
+    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
+
+    EQUALS("cpu i8085zilog", true, disassembler.setCpu("i8085zilog"));
+    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+
+    EQUALS("cpu V30EMUzilog", true, disassembler.setCpu("V30EMUzilog"));
+    EQUALS_P("get cpu", "V30EMU", disassembler.cpu_P());
 }
 
 static void test_move_inherent() {

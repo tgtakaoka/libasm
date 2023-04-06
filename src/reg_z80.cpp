@@ -17,30 +17,13 @@
 #include "reg_z80.h"
 
 #include "table_z80.h"
+#include "text_z80.h"
+
+using namespace libasm::text::z80;
 
 namespace libasm {
 namespace z80 {
 
-// clang-format off
-static constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
-static constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
-static constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
-static constexpr char TEXT_REG_IX[]  PROGMEM = "IX";
-static constexpr char TEXT_REG_IY[]  PROGMEM = "IY";
-static constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
-static constexpr char TEXT_REG_AFP[] PROGMEM = "AF'";
-static constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
-static constexpr char TEXT_REG_A[]   PROGMEM = "A";
-static constexpr char TEXT_REG_B[]   PROGMEM = "B";
-static constexpr char TEXT_REG_C[]   PROGMEM = "C";
-static constexpr char TEXT_REG_D[]   PROGMEM = "D";
-static constexpr char TEXT_REG_E[]   PROGMEM = "E";
-static constexpr char TEXT_REG_H[]   PROGMEM = "H";
-static constexpr char TEXT_REG_L[]   PROGMEM = "L";
-static constexpr char TEXT_REG_IM[]  PROGMEM = "IM";
-static constexpr char TEXT_REG_R[]   PROGMEM = "R";
-static constexpr char TEXT_REG_I[]   PROGMEM = "I";
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_BC),
         NAME_ENTRY(REG_DE),
@@ -148,16 +131,6 @@ RegName RegZ80::decodeIrReg(uint8_t num) {
     return RegName((num & 1) + 16);
 }
 
-// clang-format off
-static constexpr char TEXT_CC_NZ[] PROGMEM = "NZ";
-static constexpr char TEXT_CC_Z[]  PROGMEM = "Z";
-static constexpr char TEXT_CC_NC[] PROGMEM = "NC";
-static constexpr char TEXT_CC_C[]  PROGMEM = "C";
-static constexpr char TEXT_CC_PO[] PROGMEM = "PO";
-static constexpr char TEXT_CC_PE[] PROGMEM = "PE";
-static constexpr char TEXT_CC_P[]  PROGMEM = "P";
-static constexpr char TEXT_CC_M[]  PROGMEM = "M";
-// clang-format off
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_NZ),
         NAME_ENTRY(CC_Z),

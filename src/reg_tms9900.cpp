@@ -16,8 +16,6 @@
 
 #include "reg_tms9900.h"
 
-#include <ctype.h>
-
 namespace libasm {
 namespace tms9900 {
 

@@ -23,6 +23,8 @@
 #include "entry_ins8070.h"
 #include "text_ins8070.h"
 
+using namespace libasm::text::ins8070;
+
 namespace libasm {
 namespace ins8070 {
 
@@ -262,7 +264,7 @@ Error TableIns8070::searchOpCode(InsnIns8070 &insn) const {
 TableIns8070::TableIns8070() : _cpu(&INS8070_CPU) {}
 
 const /* PROGMEM */ char *TableIns8070::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_INS8070;
 }
 
 bool TableIns8070::setCpu(const char *cpu) {

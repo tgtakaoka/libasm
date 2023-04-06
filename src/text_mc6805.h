@@ -17,43 +17,111 @@
 #ifndef __TEXT_MC6805__
 #define __TEXT_MC6805__
 
-#include "config_host.h"
+#include "text_common.h"
 
 namespace libasm {
+namespace text {
 namespace mc6805 {
 
 // clang-format off
-static const char TEXT_CPU_LIST_6805[] PROGMEM = "MC6805, MC146805, MC68HC05";
-static const char TEXT_CPU_6805[] PROGMEM = "6805";
-static const char TEXT_CPU_146805[] PROGMEM = "146805";
-static constexpr const char *TEXT_CPU_68HC05 = (TEXT_CPU_LIST_6805 + 20);
-static constexpr const char *TEXT_CPU_6805_MC   = TEXT_CPU_LIST_6805;
+extern const char TEXT_CPU_LIST[] PROGMEM;
+extern const char TEXT_CPU_6805[] PROGMEM;
+extern const char TEXT_CPU_146805[] PROGMEM;
+extern const char TEXT_CPU_68HC05[] PROGMEM;
 
-static const char TEXT_ASRX[] PROGMEM = "ASRX";
-static const char TEXT_ASLX[] PROGMEM = "ASLX";
-static const char TEXT_BHCC[] PROGMEM = "BHCC";
-static const char TEXT_BHCS[] PROGMEM = "BHCS";
-static const char TEXT_BIH[]  PROGMEM = "BIH";
-static const char TEXT_BIL[]  PROGMEM = "BIL";
-static const char TEXT_BMC[]  PROGMEM = "BMC";
-static const char TEXT_BMS[]  PROGMEM = "BMS";
-static const char TEXT_CLRX[] PROGMEM = "CLRX";
-static const char TEXT_COMX[] PROGMEM = "COMX";
-static const char TEXT_DECX[] PROGMEM = "DECX";
-static const char TEXT_INCX[] PROGMEM = "INCX";
-static const char TEXT_LSLX[] PROGMEM = "LSLX";
-static const char TEXT_LSRX[] PROGMEM = "LSRX";
-static const char TEXT_NEGX[] PROGMEM = "NEGX";
-static const char TEXT_ROLX[] PROGMEM = "ROLX";
-static const char TEXT_RORX[] PROGMEM = "RORX";
-static const char TEXT_RSP[]  PROGMEM = "RSP";
-static const char TEXT_TAX[]  PROGMEM = "TAX";
-static const char TEXT_TSTX[] PROGMEM = "TSTX";
-static const char TEXT_TXA[]  PROGMEM = "TXA";
-static const char TEXT_WAIT[] PROGMEM = "WAIT";
+using common::TEXT_ADC;
+using common::TEXT_ADD;
+using common::TEXT_AND;
+using common::TEXT_ASR;
+using common::TEXT_ASRA;
+extern const char TEXT_ASRX[] PROGMEM;
+using common::TEXT_ASL;
+using common::TEXT_ASLA;
+extern const char TEXT_ASLX[] PROGMEM;
+using common::TEXT_BCC;
+using common::TEXT_BCLR;
+using common::TEXT_BCS;
+using common::TEXT_BEQ;
+extern const char TEXT_BHCC[] PROGMEM;
+extern const char TEXT_BHCS[] PROGMEM;
+using common::TEXT_BHI;
+using common::TEXT_BHS;
+extern const char TEXT_BIH[]  PROGMEM;
+extern const char TEXT_BIL[]  PROGMEM;
+using common::TEXT_BIT;
+using common::TEXT_BLO;
+using common::TEXT_BLS;
+extern const char TEXT_BMC[]  PROGMEM;
+using common::TEXT_BMI;
+extern const char TEXT_BMS[]  PROGMEM;
+using common::TEXT_BNE;
+using common::TEXT_BPL;
+using common::TEXT_BRA;
+using common::TEXT_BRCLR;
+using common::TEXT_BRN;
+using common::TEXT_BRSET;
+using common::TEXT_BSET;
+using common::TEXT_BSR;
+using common::TEXT_CLC;
+using common::TEXT_CLI;
+using common::TEXT_CLR;
+using common::TEXT_CLRA;
+extern const char TEXT_CLRX[] PROGMEM;
+using common::TEXT_CMP;
+using common::TEXT_COM;
+using common::TEXT_COMA;
+extern const char TEXT_COMX[] PROGMEM;
+using common::TEXT_CPX;
+using common::TEXT_DEC;
+using common::TEXT_DECA;
+using common::TEXT_DECX;
+using common::TEXT_EOR;
+using common::TEXT_INC;
+using common::TEXT_INCA;
+using common::TEXT_INCX;
+using common::TEXT_JMP;
+using common::TEXT_JSR;
+using common::TEXT_LDA;
+using common::TEXT_LDX;
+using common::TEXT_LSL;
+using common::TEXT_LSLA;
+extern const char TEXT_LSLX[] PROGMEM;
+using common::TEXT_LSR;
+using common::TEXT_LSRA;
+extern const char TEXT_LSRX[] PROGMEM;
+using common::TEXT_MUL;
+using common::TEXT_NEG;
+using common::TEXT_NEGA;
+using common::TEXT_NEGX;
+using common::TEXT_NOP;
+using common::TEXT_ORA;
+using common::TEXT_ROL;
+using common::TEXT_ROLA;
+extern const char TEXT_ROLX[] PROGMEM;
+using common::TEXT_ROR;
+using common::TEXT_RORA;
+extern const char TEXT_RORX[] PROGMEM;
+extern const char TEXT_RSP[]  PROGMEM;
+using common::TEXT_RTI;
+using common::TEXT_RTS;
+using common::TEXT_SBC;
+using common::TEXT_SEC;
+using common::TEXT_SEI;
+using common::TEXT_STA;
+using common::TEXT_STOP;
+using common::TEXT_STX;
+using common::TEXT_SUB;
+using common::TEXT_SWI;
+using common::TEXT_TAX;
+using common::TEXT_TST;
+using common::TEXT_TSTA;
+extern const char TEXT_TSTX[] PROGMEM;
+using common::TEXT_TXA;
+using common::TEXT_WAIT;
 // clang-format on
 
 }  // namespace mc6805
+}  // namespace text
 }  // namespace libasm
 
 #endif  // __TEXT_MC6805__

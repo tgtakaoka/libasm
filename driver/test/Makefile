@@ -34,7 +34,7 @@ vpath %.cpp ../../test
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 
-OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o
+OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o text_common.o
 OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
 OBJS_formatter = list_formatter.o value_formatter.o
 OBJS_asm = asm_base.o config_base.o asm_formatter.o value_parser.o parsers.o operators.o \

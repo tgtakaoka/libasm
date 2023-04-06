@@ -23,6 +23,8 @@
 #include "entry_f3850.h"
 #include "text_f3850.h"
 
+using namespace libasm::text::f3850;
+
 namespace libasm {
 namespace f3850 {
 
@@ -254,7 +256,7 @@ Error TableF3850::searchOpCode(InsnF3850 &insn) const {
 TableF3850::TableF3850() : _cpu(&F3850_CPU) {}
 
 const /* PROGMEM */ char *TableF3850::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_F3850;
 }
 
 bool TableF3850::setCpu(const char *cpu) {

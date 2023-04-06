@@ -17,65 +17,80 @@
 #ifndef __TEXT_I8051__
 #define __TEXT_I8051__
 
-#include "config_host.h"
+#include "text_common.h"
 
 namespace libasm {
+namespace text {
 namespace i8051 {
 
 // clang-format off
-static const char TEXT_CPU_I8051[] PROGMEM = "i8051";
-static constexpr const char *TEXT_CPU_8051 = (TEXT_CPU_I8051 + 1);
-static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_I8051;
+extern const char TEXT_CPU_LIST[] PROGMEM;
+extern const char TEXT_CPU_8051[] PROGMEM;
 
-static const char TEXT_ACALL[] PROGMEM = "ACALL";
-static const char TEXT_ADD[]   PROGMEM = "ADD";
-static const char TEXT_ADDC[]  PROGMEM = "ADDC";
-static const char TEXT_AJMP[]  PROGMEM = "AJMP";
-static const char TEXT_ANL[]   PROGMEM = "ANL";
-static const char TEXT_CJNE[]  PROGMEM = "CJNE";
-static const char TEXT_CLR[]   PROGMEM = "CLR";
-static const char TEXT_CPL[]   PROGMEM = "CPL";
-static const char TEXT_CPU[]   PROGMEM = "CPU";
-static const char TEXT_DA[]    PROGMEM = "DA";
-static const char TEXT_DEC[]   PROGMEM = "DEC";
-static const char TEXT_DIV[]   PROGMEM = "DIV";
-static const char TEXT_DJNZ[]  PROGMEM = "DJNZ";
-static const char TEXT_END[]   PROGMEM = "END";
-static const char TEXT_INC[]   PROGMEM = "INC";
-static const char TEXT_JB[]    PROGMEM = "JB";
-static const char TEXT_JBC[]   PROGMEM = "JBC";
-static const char TEXT_JC[]    PROGMEM = "JC";
-static const char TEXT_JMP[]   PROGMEM = "JMP";
-static const char TEXT_JNB[]   PROGMEM = "JNB";
-static const char TEXT_JNC[]   PROGMEM = "JNC";
-static const char TEXT_JNZ[]   PROGMEM = "JNZ";
-static const char TEXT_JZ[]    PROGMEM = "JZ";
-static const char TEXT_LCALL[] PROGMEM = "LCALL";
-static const char TEXT_LJMP[]  PROGMEM = "LJMP";
-static const char TEXT_MOV[]   PROGMEM = "MOV";
-static const char TEXT_MOVC[]  PROGMEM = "MOVC";
-static const char TEXT_MOVX[]  PROGMEM = "MOVX";
-static const char TEXT_MUL[]   PROGMEM = "MUL";
-static const char TEXT_NOP[]   PROGMEM = "NOP";
-static const char TEXT_ORL[]   PROGMEM = "ORL";
-static const char TEXT_POP[]   PROGMEM = "POP";
-static const char TEXT_PUSH[]  PROGMEM = "PUSH";
-static const char TEXT_RET[]   PROGMEM = "RET";
-static const char TEXT_RETI[]  PROGMEM = "RETI";
-static const char TEXT_RL[]    PROGMEM = "RL";
-static const char TEXT_RLC[]   PROGMEM = "RLC";
-static const char TEXT_RR[]    PROGMEM = "RR";
-static const char TEXT_RRC[]   PROGMEM = "RRC";
-static const char TEXT_SETB[]  PROGMEM = "SETB";
-static const char TEXT_SJMP[]  PROGMEM = "SJMP";
-static const char TEXT_SUBB[]  PROGMEM = "SUBB";
-static const char TEXT_SWAP[]  PROGMEM = "SWAP";
-static const char TEXT_XCH[]   PROGMEM = "XCH";
-static const char TEXT_XCHD[]  PROGMEM = "XCHD";
-static const char TEXT_XRL[]   PROGMEM = "XRL";
+extern const char TEXT_ACALL[] PROGMEM;
+using common::TEXT_ADD;
+using common::TEXT_ADDC;
+extern const char TEXT_AJMP[]  PROGMEM;
+using common::TEXT_ANL;
+extern const char TEXT_CJNE[]  PROGMEM;
+using common::TEXT_CLR;
+using common::TEXT_CPL;
+using common::TEXT_CPU;
+using common::TEXT_DA;
+using common::TEXT_DEC;
+using common::TEXT_DIV;
+using common::TEXT_DJNZ;
+using common::TEXT_INC;
+using common::TEXT_JB;
+using common::TEXT_JBC;
+using common::TEXT_JC;
+using common::TEXT_JMP;
+using common::TEXT_JNB;
+using common::TEXT_JNC;
+using common::TEXT_JNZ;
+using common::TEXT_JZ;
+using common::TEXT_LCALL;
+using common::TEXT_LJMP;
+using common::TEXT_MOV;
+extern const char TEXT_MOVC[]  PROGMEM;
+using common::TEXT_MOVX;
+using common::TEXT_MUL;
+using common::TEXT_NOP;
+using common::TEXT_ORL;
+using common::TEXT_POP;
+using common::TEXT_PUSH;
+using common::TEXT_RET;
+using common::TEXT_RETI;
+using common::TEXT_RL;
+using common::TEXT_RLC;
+using common::TEXT_RR;
+using common::TEXT_RRC;
+using common::TEXT_SETB;
+using common::TEXT_SJMP;
+using common::TEXT_SUBB;
+using common::TEXT_SWAP;
+using common::TEXT_XCH;
+using common::TEXT_XCHD;
+using common::TEXT_XRL;
+
+// clang-format off
+using common::TEXT_REG_A;
+using common::TEXT_REG_C;
+extern const char TEXT_REG_AB[]   PROGMEM;
+using common::TEXT_REG_R0;
+using common::TEXT_REG_R1;
+using common::TEXT_REG_R2;
+using common::TEXT_REG_R3;
+using common::TEXT_REG_R4;
+using common::TEXT_REG_R5;
+using common::TEXT_REG_R6;
+using common::TEXT_REG_R7;
+using common::TEXT_REG_PC;
+extern const char TEXT_REG_DPTR[] PROGMEM;
 // clang-format on
 
 }  // namespace i8051
+}  // namespace text
 }  // namespace libasm
 
 #endif  // __TEXT_I8051__

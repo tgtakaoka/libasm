@@ -23,6 +23,8 @@
 #include "entry_scn2650.h"
 #include "text_scn2650.h"
 
+using namespace libasm::text::scn2650;
+
 namespace libasm {
 namespace scn2650 {
 
@@ -273,7 +275,7 @@ Error TableScn2650::searchOpCode(InsnScn2650 &insn) const {
 TableScn2650::TableScn2650() : _cpu(&SCN2650_CPU) {}
 
 const /* PROGMEM */ char *TableScn2650::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_SCN2650;
 }
 
 bool TableScn2650::setCpu(const char *cpu) {

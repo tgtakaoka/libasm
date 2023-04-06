@@ -17,151 +17,153 @@
 #ifndef __TEXT_CDP1802__
 #define __TEXT_CDP1802__
 
-#include "config_host.h"
+#include "text_common.h"
 
 namespace libasm {
+namespace text {
 namespace cdp1802 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM  = "CDP1802, CDP1804, CDP1804A";
-static const char TEXT_CPU_1802[] PROGMEM  = "1802";
-static const char TEXT_CPU_1804[] PROGMEM  = "1804";
-static constexpr const char *TEXT_CPU_CDP  = &TEXT_CPU_LIST[0];
-static constexpr const char *TEXT_CPU_1804A = &TEXT_CPU_LIST[21];
-static constexpr const char *TEXT_null = &TEXT_CPU_1802[4];
+extern const char TEXT_CPU_LIST[]  PROGMEM;
+extern const char TEXT_CPU_1802[]  PROGMEM;
+extern const char TEXT_CPU_1804[]  PROGMEM;
+extern const char TEXT_CPU_1804A[] PROGMEM;
+
+using common::TEXT_null;
 
 // CDP1802
-static const char TEXT_ADC[]  PROGMEM = "ADC";
-static const char TEXT_ADCI[] PROGMEM = "ADCI";
-static const char TEXT_ADD[]  PROGMEM = "ADD";
-static const char TEXT_ADI[]  PROGMEM = "ADI";
-static const char TEXT_AND[]  PROGMEM = "AND";
-static const char TEXT_ANI[]  PROGMEM = "ANI";
-static const char TEXT_B1[]   PROGMEM = "B1";
-static const char TEXT_B2[]   PROGMEM = "B2";
-static const char TEXT_B3[]   PROGMEM = "B3";
-static const char TEXT_B4[]   PROGMEM = "B4";
-static const char TEXT_BDF[]  PROGMEM = "BDF";
-static const char TEXT_BGE[]  PROGMEM = "BGE";
-static const char TEXT_BL[]   PROGMEM = "BL";
-static const char TEXT_BM[]   PROGMEM = "BM";
-static const char TEXT_BN1[]  PROGMEM = "BN1";
-static const char TEXT_BN2[]  PROGMEM = "BN2";
-static const char TEXT_BN3[]  PROGMEM = "BN3";
-static const char TEXT_BN4[]  PROGMEM = "BN4";
-static const char TEXT_BNF[]  PROGMEM = "BNF";
-static const char TEXT_BNQ[]  PROGMEM = "BNQ";
-static const char TEXT_BNZ[]  PROGMEM = "BNZ";
-static const char TEXT_BPZ[]  PROGMEM = "BPZ";
-static const char TEXT_BQ[]   PROGMEM = "BQ";
-static const char TEXT_BR[]   PROGMEM = "BR";
-static const char TEXT_BZ[]   PROGMEM = "BZ";
-static const char TEXT_DEC[]  PROGMEM = "DEC";
-static const char TEXT_DIS[]  PROGMEM = "DIS";
-static const char TEXT_GHI[]  PROGMEM = "GHI";
-static const char TEXT_GLO[]  PROGMEM = "GLO";
-static const char TEXT_IDL[]  PROGMEM = "IDL";
-static const char TEXT_INC[]  PROGMEM = "INC";
-static const char TEXT_INP[]  PROGMEM = "INP";
-static const char TEXT_IRX[]  PROGMEM = "IRX";
-static const char TEXT_LBDF[] PROGMEM = "LBDF";
-static const char TEXT_LBPZ[] PROGMEM = "LBPZ";
-static const char TEXT_LBGE[] PROGMEM = "LBGE";
-static const char TEXT_LBNF[] PROGMEM = "LBNF";
-static const char TEXT_LBM[]  PROGMEM = "LBM";
-static const char TEXT_LBL[]  PROGMEM = "LBL";
-static const char TEXT_LBNQ[] PROGMEM = "LBNQ";
-static const char TEXT_LBNZ[] PROGMEM = "LBNZ";
-static const char TEXT_LBQ[]  PROGMEM = "LBQ";
-static const char TEXT_LBR[]  PROGMEM = "LBR";
-static const char TEXT_LBZ[]  PROGMEM = "LBZ";
-static const char TEXT_LDA[]  PROGMEM = "LDA";
-static const char TEXT_LDI[]  PROGMEM = "LDI";
-static const char TEXT_LDN[]  PROGMEM = "LDN";
-static const char TEXT_LDX[]  PROGMEM = "LDX";
-static const char TEXT_LDXA[] PROGMEM = "LDXA";
-static const char TEXT_LSDF[] PROGMEM = "LSDF";
-static const char TEXT_LSIE[] PROGMEM = "LSIE";
-static const char TEXT_LSKP[] PROGMEM = "LSKP";
-static const char TEXT_LSNF[] PROGMEM = "LSNF";
-static const char TEXT_LSNQ[] PROGMEM = "LSNQ";
-static const char TEXT_LSNZ[] PROGMEM = "LSNZ";
-static const char TEXT_LSQ[]  PROGMEM = "LSQ";
-static const char TEXT_LSZ[]  PROGMEM = "LSZ";
-static const char TEXT_MARK[] PROGMEM = "MARK";
-static const char TEXT_NBR[]  PROGMEM = "NBR";
-static const char TEXT_NLBR[] PROGMEM = "NLBR";
-static const char TEXT_NOP[]  PROGMEM = "NOP";
-static const char TEXT_OR[]   PROGMEM = "OR";
-static const char TEXT_ORI[]  PROGMEM = "ORI";
-static const char TEXT_OUT[]  PROGMEM = "OUT";
-static const char TEXT_PHI[]  PROGMEM = "PHI";
-static const char TEXT_PLO[]  PROGMEM = "PLO";
-static const char TEXT_REQ[]  PROGMEM = "REQ";
-static const char TEXT_RET[]  PROGMEM = "RET";
-static const char TEXT_RSHL[] PROGMEM = "RSHL";
-static const char TEXT_RSHR[] PROGMEM = "RSHR";
-static const char TEXT_SAV[]  PROGMEM = "SAV";
-static const char TEXT_SD[]   PROGMEM = "SD";
-static const char TEXT_SDB[]  PROGMEM = "SDB";
-static const char TEXT_SDBI[] PROGMEM = "SDBI";
-static const char TEXT_SDI[]  PROGMEM = "SDI";
-static const char TEXT_SEP[]  PROGMEM = "SEP";
-static const char TEXT_SEQ[]  PROGMEM = "SEQ";
-static const char TEXT_SEX[]  PROGMEM = "SEX";
-static const char TEXT_SHL[]  PROGMEM = "SHL";
-static const char TEXT_SHLC[] PROGMEM = "SHLC";
-static const char TEXT_SHR[]  PROGMEM = "SHR";
-static const char TEXT_SHRC[] PROGMEM = "SHRC";
-static const char TEXT_SKP[]  PROGMEM = "SKP";
-static const char TEXT_SM[]   PROGMEM = "SM";
-static const char TEXT_SMB[]  PROGMEM = "SMB";
-static const char TEXT_SMBI[] PROGMEM = "SMBI";
-static const char TEXT_SMI[]  PROGMEM = "SMI";
-static const char TEXT_STR[]  PROGMEM = "STR";
-static const char TEXT_STXD[] PROGMEM = "STXD";
-static const char TEXT_XOR[]  PROGMEM = "XOR";
-static const char TEXT_XRI[]  PROGMEM = "XRI";
+using common::TEXT_ADC;
+extern const char TEXT_ADCI[] PROGMEM;
+using common::TEXT_ADD;
+using common::TEXT_ADI;
+using common::TEXT_AND;
+using common::TEXT_ANI;
+extern const char TEXT_B1[]   PROGMEM;
+extern const char TEXT_B2[]   PROGMEM;
+extern const char TEXT_B3[]   PROGMEM;
+extern const char TEXT_B4[]   PROGMEM;
+extern const char TEXT_BDF[]  PROGMEM;
+using common::TEXT_BGE;
+using common::TEXT_BL;
+using common::TEXT_BM;
+extern const char TEXT_BN1[]  PROGMEM;
+extern const char TEXT_BN2[]  PROGMEM;
+extern const char TEXT_BN3[]  PROGMEM;
+extern const char TEXT_BN4[]  PROGMEM;
+extern const char TEXT_BNF[]  PROGMEM;
+extern const char TEXT_BNQ[]  PROGMEM;
+using common::TEXT_BNZ;
+extern const char TEXT_BPZ[]  PROGMEM;
+extern const char TEXT_BQ[]   PROGMEM;
+using common::TEXT_BR;
+using common::TEXT_BZ;
+using common::TEXT_DEC;
+using common::TEXT_DIS;
+extern const char TEXT_GHI[]  PROGMEM;
+extern const char TEXT_GLO[]  PROGMEM;
+using common::TEXT_IDL;
+using common::TEXT_INC;
+extern const char TEXT_INP[]  PROGMEM;
+extern const char TEXT_IRX[]  PROGMEM;
+extern const char TEXT_LBDF[] PROGMEM;
+extern const char TEXT_LBPZ[] PROGMEM;
+using common::TEXT_LBGE;
+extern const char TEXT_LBNF[] PROGMEM;
+extern const char TEXT_LBM[]  PROGMEM;
+extern const char TEXT_LBL[]  PROGMEM;
+extern const char TEXT_LBNQ[] PROGMEM;
+extern const char TEXT_LBNZ[] PROGMEM;
+extern const char TEXT_LBQ[]  PROGMEM;
+extern const char TEXT_LBR[]  PROGMEM;
+extern const char TEXT_LBZ[]  PROGMEM;
+using common::TEXT_LDA;
+using common::TEXT_LDI;
+extern const char TEXT_LDN[]  PROGMEM;
+using common::TEXT_LDX;
+extern const char TEXT_LDXA[] PROGMEM;
+extern const char TEXT_LSDF[] PROGMEM;
+extern const char TEXT_LSIE[] PROGMEM;
+extern const char TEXT_LSKP[] PROGMEM;
+extern const char TEXT_LSNF[] PROGMEM;
+extern const char TEXT_LSNQ[] PROGMEM;
+extern const char TEXT_LSNZ[] PROGMEM;
+extern const char TEXT_LSQ[]  PROGMEM;
+extern const char TEXT_LSZ[]  PROGMEM;
+extern const char TEXT_MARK[] PROGMEM;
+extern const char TEXT_NBR[]  PROGMEM;
+extern const char TEXT_NLBR[] PROGMEM;
+extern const char TEXT_NOP[]  PROGMEM;
+extern const char TEXT_OR[]   PROGMEM;
+extern const char TEXT_ORI[]  PROGMEM;
+extern const char TEXT_OUT[]  PROGMEM;
+extern const char TEXT_PHI[]  PROGMEM;
+extern const char TEXT_PLO[]  PROGMEM;
+extern const char TEXT_REQ[]  PROGMEM;
+extern const char TEXT_RET[]  PROGMEM;
+extern const char TEXT_RSHL[] PROGMEM;
+extern const char TEXT_RSHR[] PROGMEM;
+extern const char TEXT_SAV[]  PROGMEM;
+extern const char TEXT_SD[]   PROGMEM;
+extern const char TEXT_SDB[]  PROGMEM;
+extern const char TEXT_SDBI[] PROGMEM;
+extern const char TEXT_SDI[]  PROGMEM;
+extern const char TEXT_SEP[]  PROGMEM;
+extern const char TEXT_SEQ[]  PROGMEM;
+extern const char TEXT_SEX[]  PROGMEM;
+extern const char TEXT_SHL[]  PROGMEM;
+extern const char TEXT_SHLC[] PROGMEM;
+extern const char TEXT_SHR[]  PROGMEM;
+extern const char TEXT_SHRC[] PROGMEM;
+extern const char TEXT_SKP[]  PROGMEM;
+extern const char TEXT_SM[]   PROGMEM;
+extern const char TEXT_SMB[]  PROGMEM;
+extern const char TEXT_SMBI[] PROGMEM;
+extern const char TEXT_SMI[]  PROGMEM;
+extern const char TEXT_STR[]  PROGMEM;
+extern const char TEXT_STXD[] PROGMEM;
+extern const char TEXT_XOR[]  PROGMEM;
+extern const char TEXT_XRI[]  PROGMEM;
 
 // CDP1804
-static const char TEXT_BCI[]  PROGMEM = "BCI";
-static const char TEXT_BXI[]  PROGMEM = "BXI";
-static const char TEXT_CID[]  PROGMEM = "CID";
-static const char TEXT_CIE[]  PROGMEM = "CIE";
-static const char TEXT_DTC[]  PROGMEM = "DTC";
-static const char TEXT_ETQ[]  PROGMEM = "ETQ";
-static const char TEXT_GEC[]  PROGMEM = "GEC";
-static const char TEXT_LDC[]  PROGMEM = "LDC";
-static const char TEXT_RLDI[] PROGMEM = "RLDI";
-static const char TEXT_RLXA[] PROGMEM = "RLXA";
-static const char TEXT_RNX[]  PROGMEM = "RNX";
-static const char TEXT_RSXD[] PROGMEM = "RSXD";
-static const char TEXT_SCAL[] PROGMEM = "SCAL";
-static const char TEXT_SCM1[] PROGMEM = "SCM1";
-static const char TEXT_SCM2[] PROGMEM = "SCM2";
-static const char TEXT_SPM1[] PROGMEM = "SPM1";
-static const char TEXT_SPM2[] PROGMEM = "SPM2";
-static const char TEXT_SRET[] PROGMEM = "SRET";
-static const char TEXT_STM[]  PROGMEM = "STM";
-static const char TEXT_STPC[] PROGMEM = "STPC";
-static const char TEXT_XID[]  PROGMEM = "XID";
-static const char TEXT_XIE[]  PROGMEM = "XIE";
+extern const char TEXT_BCI[]  PROGMEM;
+extern const char TEXT_BXI[]  PROGMEM;
+extern const char TEXT_CID[]  PROGMEM;
+extern const char TEXT_CIE[]  PROGMEM;
+extern const char TEXT_DTC[]  PROGMEM;
+extern const char TEXT_ETQ[]  PROGMEM;
+extern const char TEXT_GEC[]  PROGMEM;
+extern const char TEXT_LDC[]  PROGMEM;
+extern const char TEXT_RLDI[] PROGMEM;
+extern const char TEXT_RLXA[] PROGMEM;
+extern const char TEXT_RNX[]  PROGMEM;
+extern const char TEXT_RSXD[] PROGMEM;
+extern const char TEXT_SCAL[] PROGMEM;
+extern const char TEXT_SCM1[] PROGMEM;
+extern const char TEXT_SCM2[] PROGMEM;
+extern const char TEXT_SPM1[] PROGMEM;
+extern const char TEXT_SPM2[] PROGMEM;
+extern const char TEXT_SRET[] PROGMEM;
+extern const char TEXT_STM[]  PROGMEM;
+extern const char TEXT_STPC[] PROGMEM;
+extern const char TEXT_XID[]  PROGMEM;
+extern const char TEXT_XIE[]  PROGMEM;
 
 // CDP1804A
-static const char TEXT_DACI[] PROGMEM = "DACI";
-static const char TEXT_DADC[] PROGMEM = "DADC";
-static const char TEXT_DADD[] PROGMEM = "DADD";
-static const char TEXT_DADI[] PROGMEM = "DADI";
-static const char TEXT_DBNZ[] PROGMEM = "DBNZ";
-static const char TEXT_DSAV[] PROGMEM = "DSAV";
-static const char TEXT_DSBI[] PROGMEM = "DSBI";
-static const char TEXT_DSM[]  PROGMEM = "DSM";
-static const char TEXT_DSMB[] PROGMEM = "DSMB";
-static const char TEXT_DSMI[] PROGMEM = "DSMI";
+extern const char TEXT_DACI[] PROGMEM;
+extern const char TEXT_DADC[] PROGMEM;
+extern const char TEXT_DADD[] PROGMEM;
+extern const char TEXT_DADI[] PROGMEM;
+extern const char TEXT_DBNZ[] PROGMEM;
+extern const char TEXT_DSAV[] PROGMEM;
+extern const char TEXT_DSBI[] PROGMEM;
+extern const char TEXT_DSM[]  PROGMEM;
+extern const char TEXT_DSMB[] PROGMEM;
+extern const char TEXT_DSMI[] PROGMEM;
 
-// clang-format off
+// clang-format om
 
 } // namespace cdp1802
+} // namespace text
 } // namespace libasm
 
 #endif // __TEXT_CDP1802__

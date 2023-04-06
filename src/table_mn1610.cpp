@@ -23,6 +23,8 @@
 #include <ctype.h>
 #include <string.h>
 
+using namespace libasm::text::mn1610;
+
 namespace libasm {
 namespace mn1610 {
 
@@ -405,11 +407,11 @@ bool TableMn1610::setCpu(const char *cpu) {
     const auto *t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
-    if (strcmp_P(cpu, TEXT_CPU_1610) == 0)
+    if (strcmp_P(cpu, TEXT_CPU_MN1610 + 2) == 0)
         return setCpu(MN1610);
-    if (strcmp_P(cpu, TEXT_CPU_1613) == 0)
+    if (strcmp_P(cpu, TEXT_CPU_MN1613 + 2) == 0)
         return setCpu(MN1613);
-    if (strcmp_P(cpu, TEXT_CPU_1613A) == 0)
+    if (strcasecmp_P(cpu, TEXT_CPU_MN1613A + 2) == 0)
         return setCpu(MN1613A);
     return false;
 }

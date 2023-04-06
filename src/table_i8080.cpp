@@ -23,6 +23,8 @@
 #include "entry_i8080.h"
 #include "text_i8080.h"
 
+using namespace libasm::text::i8080;
+
 namespace libasm {
 namespace i8080 {
 
@@ -307,9 +309,11 @@ bool TableI8080::setCpu(const char *cpu) {
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
-    if (strcasecmp_P(cpu, TEXT_CPU_I8080) == 0)
+    if (toupper(*cpu) == 'I')
+        cpu++;
+    if (strcasecmp_P(cpu, TEXT_CPU_8080) == 0)
         return setCpu(I8080);
-    if (strcasecmp_P(cpu, TEXT_CPU_I8085) == 0)
+    if (strcasecmp_P(cpu, TEXT_CPU_8085) == 0)
         return setCpu(I8085);
     return false;
 }

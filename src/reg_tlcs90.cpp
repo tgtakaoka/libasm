@@ -16,26 +16,13 @@
 
 #include "reg_tlcs90.h"
 
+#include "text_tlcs90.h"
+
+using namespace libasm::text::tlcs90;
+
 namespace libasm {
 namespace tlcs90 {
 
-// clang-format off
-static constexpr char TEXT_REG_BC[]  PROGMEM = "BC";
-static constexpr char TEXT_REG_DE[]  PROGMEM = "DE";
-static constexpr char TEXT_REG_HL[]  PROGMEM = "HL";
-static constexpr char TEXT_REG_IX[]  PROGMEM = "IX";
-static constexpr char TEXT_REG_IY[]  PROGMEM = "IY";
-static constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
-static constexpr char TEXT_REG_AFP[] PROGMEM = "AF'";
-static constexpr char TEXT_REG_AF[]  PROGMEM = "AF";
-static constexpr char TEXT_REG_A[]   PROGMEM = "A";
-static constexpr char TEXT_REG_B[]   PROGMEM = "B";
-static constexpr char TEXT_REG_C[]   PROGMEM = "C";
-static constexpr char TEXT_REG_D[]   PROGMEM = "D";
-static constexpr char TEXT_REG_E[]   PROGMEM = "E";
-static constexpr char TEXT_REG_H[]   PROGMEM = "H";
-static constexpr char TEXT_REG_L[]   PROGMEM = "L";
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_BC),
         NAME_ENTRY(REG_DE),
@@ -122,32 +109,6 @@ RegName RegTlcs90::decodeIndexReg(uint8_t num) {
     return RegName(num + 4);
 }
 
-// clang-format off
-static constexpr char TEXT_CC_F[]   PROGMEM = "F";
-static constexpr char TEXT_CC_LT[]  PROGMEM = "LT";
-static constexpr char TEXT_CC_LE[]  PROGMEM = "LE";
-static constexpr char TEXT_CC_ULE[] PROGMEM = "ULE";
-static constexpr char TEXT_CC_OV[]  PROGMEM = "OV";
-static constexpr char TEXT_CC_MI[]  PROGMEM = "MI";
-static constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
-static constexpr char TEXT_CC_C[]   PROGMEM = "C";
-static constexpr char TEXT_CC_T[]   PROGMEM = "";
-static constexpr char TEXT_CC_GE[]  PROGMEM = "GE";
-static constexpr char TEXT_CC_GT[]  PROGMEM = "GT";
-static constexpr char TEXT_CC_UGT[] PROGMEM = "UGT";
-static constexpr char TEXT_CC_NOV[] PROGMEM = "NOV";
-static constexpr char TEXT_CC_PL[]  PROGMEM = "PL";
-static constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
-static constexpr char TEXT_CC_NC[]  PROGMEM = "NC";
-static constexpr char TEXT_CC_PE[]  PROGMEM = "PE";
-static constexpr char TEXT_CC_M[]   PROGMEM = "M";
-static constexpr char TEXT_CC_EQ[]  PROGMEM = "EQ";
-static constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
-static constexpr char TEXT_CC_PO[]  PROGMEM = "PO";
-static constexpr char TEXT_CC_P[]   PROGMEM = "P";
-static constexpr char TEXT_CC_NE[]  PROGMEM = "NE";
-static constexpr char TEXT_CC_UGE[] PROGMEM = "UGE";
-// clang-format on
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_F),
         NAME_ENTRY(CC_LT),

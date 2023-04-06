@@ -22,6 +22,8 @@
 #include "entry_mc6809.h"
 #include "text_mc6809.h"
 
+using namespace libasm::text::mc6809;
+
 namespace libasm {
 namespace mc6809 {
 

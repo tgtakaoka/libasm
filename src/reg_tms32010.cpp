@@ -16,8 +16,6 @@
 
 #include "reg_tms32010.h"
 
-#include <ctype.h>
-
 namespace libasm {
 namespace tms32010 {
 

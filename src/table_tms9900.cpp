@@ -23,6 +23,8 @@
 #include <ctype.h>
 #include <string.h>
 
+using namespace libasm::text::tms9900;
+
 namespace libasm {
 namespace tms9900 {
 
@@ -311,7 +313,7 @@ const /* PROGMEM */ char *TableTms9900::listCpu_P() const {
 }
 
 bool TableTms9900::setCpu(const char *cpu) {
-    if (strncasecmp_P(cpu, TEXT_CPU_TMS, 3) == 0)
+    if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
         cpu += 3;
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)

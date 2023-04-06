@@ -22,6 +22,8 @@
 #include "entry_i8086.h"
 #include "text_i8086.h"
 
+using namespace libasm::text::i8086;
+
 namespace libasm {
 namespace i8086 {
 
@@ -1120,10 +1122,13 @@ bool TableI8086::setCpu(const char *cpu) {
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)
         return setCpu(t->cpuType());
-    if (strcasecmp_P(cpu, TEXT_CPU_I8086) == 0)
-        return setCpu(I8086);
-    if (strcasecmp_P(cpu, TEXT_CPU_I80186) == 0)
-        return setCpu(I80186);
+    if (toupper(*cpu) == 'I') {
+        cpu++;
+        if (strcmp_P(cpu, TEXT_CPU_8086) == 0)
+            return setCpu(I8086);
+        if (strcmp_P(cpu, TEXT_CPU_80186) == 0)
+            return setCpu(I80186);
+    }
     return false;
 }
 

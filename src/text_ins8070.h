@@ -17,50 +17,61 @@
 #ifndef __TEXT_INS8070__
 #define __TEXT_INS8070__
 
-#include "config_host.h"
+#include "text_common.h"
 
 namespace libasm {
+namespace text {
 namespace ins8070 {
 
 // clang-format off
-static const char TEXT_CPU_INS8070[] PROGMEM = "INS8070";
-static constexpr const char *TEXT_CPU_LIST = TEXT_CPU_INS8070;
-static constexpr const char *TEXT_CPU_8070 = (TEXT_CPU_INS8070 + 3);
+extern const char TEXT_CPU_INS8070[] PROGMEM;
+extern const char TEXT_CPU_8070[]    PROGMEM;
 
-static const char TEXT_ADD[]  PROGMEM = "ADD";
-static const char TEXT_AND[]  PROGMEM = "AND";
-static const char TEXT_BND[]  PROGMEM = "BND";
-static const char TEXT_BNZ[]  PROGMEM = "BNZ";
-static const char TEXT_BP[]   PROGMEM = "BP";
-static const char TEXT_BRA[]  PROGMEM = "BRA";
-static const char TEXT_BZ[]   PROGMEM = "BZ";
-static const char TEXT_CALL[] PROGMEM = "CALL";
-static const char TEXT_DIV[]  PROGMEM = "DIV";
-static const char TEXT_DLD[]  PROGMEM = "DLD";
-static const char TEXT_ILD[]  PROGMEM = "ILD";
-static const char TEXT_JMP[]  PROGMEM = "JMP";
-static const char TEXT_JSR[]  PROGMEM = "JSR";
-static const char TEXT_LD[]   PROGMEM = "LD";
-static const char TEXT_MPY[]  PROGMEM = "MPY";
-static const char TEXT_NOP[]  PROGMEM = "NOP";
-static const char TEXT_OR[]   PROGMEM = "OR";
-static const char TEXT_PLI[]  PROGMEM = "PLI";
-static const char TEXT_POP[]  PROGMEM = "POP";
-static const char TEXT_PUSH[] PROGMEM = "PUSH";
-static const char TEXT_RET[]  PROGMEM = "RET";
-static const char TEXT_RRL[]  PROGMEM = "RRL";
-static const char TEXT_RR[]   PROGMEM = "RR";
-static const char TEXT_SL[]   PROGMEM = "SL";
-static const char TEXT_SRL[]  PROGMEM = "SRL";
-static const char TEXT_SR[]   PROGMEM = "SR";
-static const char TEXT_SSM[]  PROGMEM = "SSM";
-static const char TEXT_ST[]   PROGMEM = "ST";
-static const char TEXT_SUB[]  PROGMEM = "SUB";
-static const char TEXT_XCH[]  PROGMEM = "XCH";
-static const char TEXT_XOR[]  PROGMEM = "XOR";
+using common::TEXT_ADD;
+using common::TEXT_AND;
+extern const char TEXT_BND[]  PROGMEM;
+using common::TEXT_BNZ;
+using common::TEXT_BP;
+using common::TEXT_BRA;
+using common::TEXT_BZ;
+using common::TEXT_CALL;
+using common::TEXT_DIV;
+using common::TEXT_DLD;
+using common::TEXT_ILD;
+using common::TEXT_JMP;
+using common::TEXT_JSR;
+using common::TEXT_LD;
+using common::TEXT_MPY;
+using common::TEXT_NOP;
+using common::TEXT_OR;
+extern const char TEXT_PLI[]  PROGMEM;
+using common::TEXT_POP;
+using common::TEXT_PUSH;
+using common::TEXT_RET;
+using common::TEXT_RRL;
+using common::TEXT_RR;
+using common::TEXT_SL;
+using common::TEXT_SRL;
+using common::TEXT_SR;
+extern const char TEXT_SSM[]  PROGMEM;
+using common::TEXT_ST;
+using common::TEXT_SUB;
+using common::TEXT_XCH;
+using common::TEXT_XOR;
+
+using common::TEXT_REG_A;
+using common::TEXT_REG_E;
+extern const char TEXT_REG_EA[] PROGMEM;
+using common::TEXT_REG_T;
+using common::TEXT_REG_S;
+using common::TEXT_REG_PC;
+using common::TEXT_REG_SP;
+using common::TEXT_REG_P2;
+using common::TEXT_REG_P3;
 // clang-format on
 
 }  // namespace ins8070
+}  // namespace text
 }  // namespace libasm
 
 #endif  // __TEXT_INS8070__

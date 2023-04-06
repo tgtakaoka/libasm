@@ -23,6 +23,8 @@
 #include "entry_i8051.h"
 #include "text_i8051.h"
 
+using namespace libasm::text::i8051;
+
 namespace libasm {
 namespace i8051 {
 
@@ -316,11 +318,13 @@ Error TableI8051::searchOpCode(InsnI8051 &insn) const {
 TableI8051::TableI8051() : _cpu(&I8051_CPU) {}
 
 const /* PROGMEM */ char *TableI8051::listCpu_P() const {
-    return TEXT_CPU_I8051;
+    return TEXT_CPU_LIST;
 }
 
 bool TableI8051::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_8051) == 0 || strcasecmp_P(cpu, TEXT_CPU_I8051) == 0;
+    if (toupper(*cpu) == 'I')
+        cpu++;
+    return strcasecmp_P(cpu, TEXT_CPU_8051) == 0;
 }
 
 TableI8051 TableI8051::TABLE;

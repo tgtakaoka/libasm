@@ -16,9 +16,9 @@
 
 #include "reg_scn2650.h"
 
-#include "table_scn2650.h"
+#include "text_scn2650.h"
 
-#include <ctype.h>
+using namespace libasm::text::scn2650;
 
 namespace libasm {
 namespace scn2650 {
@@ -47,12 +47,6 @@ StrBuffer &RegScn2650::outRegName(StrBuffer &out, RegName name) const {
     return outRegNumber(out.letter('R', isUppercase()), int8_t(name));
 }
 
-// clang-format off
-static constexpr char TEXT_CC_EQ[] PROGMEM = "EQ";
-static constexpr char TEXT_CC_GT[] PROGMEM = "GT";
-static constexpr char TEXT_CC_LT[] PROGMEM = "LT";
-static constexpr char TEXT_CC_UN[] PROGMEM = "UN";
-// clang-format on
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_EQ),
         NAME_ENTRY(CC_GT),

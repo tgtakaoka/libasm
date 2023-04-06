@@ -16,20 +16,13 @@
 
 #include "reg_ins8070.h"
 
+#include "text_ins8070.h"
+
+using namespace libasm::text::ins8070;
+
 namespace libasm {
 namespace ins8070 {
 
-// clang-format off
-static constexpr char TEXT_REG_A[]  PROGMEM  = "A";
-static constexpr char TEXT_REG_E[]  PROGMEM  = "E";
-static constexpr char TEXT_REG_EA[] PROGMEM = "EA";
-static constexpr char TEXT_REG_T[]  PROGMEM  = "T";
-static constexpr char TEXT_REG_S[]  PROGMEM  = "S";
-static constexpr char TEXT_REG_PC[] PROGMEM = "PC";
-static constexpr char TEXT_REG_SP[] PROGMEM = "SP";
-static constexpr char TEXT_REG_P2[] PROGMEM = "P2";
-static constexpr char TEXT_REG_P3[] PROGMEM = "P3";
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_E),

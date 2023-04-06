@@ -23,6 +23,8 @@
 #include <ctype.h>
 #include <string.h>
 
+using namespace libasm::text::z8;
+
 namespace libasm {
 namespace z8 {
 

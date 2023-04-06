@@ -22,6 +22,8 @@
 #include "entry_i8096.h"
 #include "text_i8096.h"
 
+using namespace libasm::text::i8096;
+
 namespace libasm {
 namespace i8096 {
 
@@ -320,7 +322,7 @@ Error TableI8096::searchOpCode(InsnI8096 &insn) const {
 TableI8096::TableI8096() : _cpu(&CPU_I8096) {}
 
 const /* PROGMEM */ char *TableI8096::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_CPU_I8096;
 }
 
 const /* PROGMEM */ char *TableI8096::cpu_P() const {

@@ -16,35 +16,13 @@
 
 #include "reg_f3850.h"
 
-#include "table_f3850.h"
+#include "text_f3850.h"
 
-#include <ctype.h>
+using namespace libasm::text::f3850;
 
 namespace libasm {
 namespace f3850 {
 
-// clang-format off
-static constexpr char TEXT_REG_A[]  PROGMEM = "A";
-static constexpr char TEXT_REG_W[]  PROGMEM = "W";
-static constexpr char TEXT_REG_IS[] PROGMEM = "IS";
-static constexpr char TEXT_REG_KU[] PROGMEM = "KU";
-static constexpr char TEXT_REG_KL[] PROGMEM = "KL";
-static constexpr char TEXT_REG_QU[] PROGMEM = "QU";
-static constexpr char TEXT_REG_QL[] PROGMEM = "QL";
-static constexpr char TEXT_REG_H[]  PROGMEM = "H";
-static constexpr char TEXT_REG_K[]  PROGMEM = "K";
-static constexpr char TEXT_REG_Q[]  PROGMEM = "Q";
-static constexpr char TEXT_REG_P[]  PROGMEM = "P";
-static constexpr char TEXT_REG_P0[] PROGMEM = "P0";
-static constexpr char TEXT_REG_DC[] PROGMEM = "DC";
-// register alias
-static constexpr char TEXT_REG_J[]  PROGMEM = "J";
-static constexpr char TEXT_REG_HU[] PROGMEM = "HU";
-static constexpr char TEXT_REG_HL[] PROGMEM = "HL";
-static constexpr char TEXT_REG_S[]  PROGMEM = "S";
-static constexpr char TEXT_REG_I[]  PROGMEM = "I";
-static constexpr char TEXT_REG_D[]  PROGMEM = "D";
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_W),

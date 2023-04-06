@@ -17,7 +17,6 @@
 #include "reg_mc6800.h"
 
 #include "config_mc6800.h"
-#include "table_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {

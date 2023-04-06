@@ -17,8 +17,9 @@
 #include "reg_z8.h"
 
 #include "table_z8.h"
+#include "text_z8.h"
 
-#include <ctype.h>
+using namespace libasm::text::z8;
 
 namespace libasm {
 namespace z8 {
@@ -78,28 +79,6 @@ StrBuffer &RegZ8::outRegName(StrBuffer &out, RegName name) const {
     return outRegNumber(out.text_P(PSTR("RR"), isUppercase()), num - 16);
 }
 
-// clang-format off
-static constexpr char TEXT_CC_F[]   PROGMEM = "F";
-static constexpr char TEXT_CC_LT[]  PROGMEM = "LT";
-static constexpr char TEXT_CC_LE[]  PROGMEM = "LE";
-static constexpr char TEXT_CC_ULE[] PROGMEM = "ULE";
-static constexpr char TEXT_CC_OV[]  PROGMEM = "OV";
-static constexpr char TEXT_CC_MI[]  PROGMEM = "MI";
-static constexpr char TEXT_CC_Z[]   PROGMEM = "Z";
-static constexpr char TEXT_CC_C[]   PROGMEM = "C";
-static constexpr char TEXT_CC_T[]   PROGMEM = "";
-static constexpr char TEXT_CC_GE[]  PROGMEM = "GE";
-static constexpr char TEXT_CC_GT[]  PROGMEM = "GT";
-static constexpr char TEXT_CC_UGT[] PROGMEM = "UGT";
-static constexpr char TEXT_CC_NOV[] PROGMEM = "NOV";
-static constexpr char TEXT_CC_PL[]  PROGMEM = "PL";
-static constexpr char TEXT_CC_NZ[]  PROGMEM = "NZ";
-static constexpr char TEXT_CC_NC[]  PROGMEM = "NC";
-static constexpr char TEXT_CC_EQ[]  PROGMEM = "EQ";
-static constexpr char TEXT_CC_ULT[] PROGMEM = "ULT";
-static constexpr char TEXT_CC_NE[]  PROGMEM = "NE";
-static constexpr char TEXT_CC_UGE[] PROGMEM = "UGE";
-// clang-format on
 static constexpr RegBase::NameEntry CC_TABLE[] PROGMEM = {
         NAME_ENTRY(CC_F),
         NAME_ENTRY(CC_LT),

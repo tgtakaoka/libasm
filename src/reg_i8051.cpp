@@ -16,24 +16,13 @@
 
 #include "reg_i8051.h"
 
+#include "text_i8051.h"
+
+using namespace libasm::text::i8051;
+
 namespace libasm {
 namespace i8051 {
 
-// clang-format off
-static constexpr char TEXT_REG_A[]    PROGMEM = "A";
-static constexpr char TEXT_REG_C[]    PROGMEM = "C";
-static constexpr char TEXT_REG_AB[]   PROGMEM = "AB";
-static constexpr char TEXT_REG_R0[]   PROGMEM = "R0";
-static constexpr char TEXT_REG_R1[]   PROGMEM = "R1";
-static constexpr char TEXT_REG_R2[]   PROGMEM = "R2";
-static constexpr char TEXT_REG_R3[]   PROGMEM = "R3";
-static constexpr char TEXT_REG_R4[]   PROGMEM = "R4";
-static constexpr char TEXT_REG_R5[]   PROGMEM = "R5";
-static constexpr char TEXT_REG_R6[]   PROGMEM = "R6";
-static constexpr char TEXT_REG_R7[]   PROGMEM = "R7";
-static constexpr char TEXT_REG_PC[]   PROGMEM = "PC";
-static constexpr char TEXT_REG_DPTR[] PROGMEM = "DPTR";
-// clang-format on
 static constexpr RegBase::NameEntry REG_TABLE[] PROGMEM = {
         NAME_ENTRY(REG_A),
         NAME_ENTRY(REG_C),

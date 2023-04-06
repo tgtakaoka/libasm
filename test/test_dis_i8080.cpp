@@ -33,7 +33,7 @@ static bool is8085() {
 }
 
 static bool v30emu() {
-    return strcmp_P("V30EMU", disassembler.cpu_P()) == 0;
+    return strcasecmp_P("V30EMU", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {

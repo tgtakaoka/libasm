@@ -17,97 +17,124 @@
 #ifndef __TEXT_Z80__
 #define __TEXT_Z80__
 
-#include "config_host.h"
+#include "text_common.h"
 
 namespace libasm {
+namespace text {
 namespace z80 {
 
 // clang-format off
-static const char TEXT_CPU_LIST[] PROGMEM = "Z80, i8080, i8085, V30EMU";
-static const char TEXT_CPU_Z80[]  PROGMEM = "Z80";
-static const char TEXT_CPU_I8080[] PROGMEM = "i8080";
-static const char TEXT_CPU_I8085[] PROGMEM = "i8085";
-static constexpr const char *TEXT_CPU_8080 = TEXT_CPU_I8080 + 1;
-static constexpr const char *TEXT_CPU_8085 = TEXT_CPU_I8085 + 1;
-static constexpr const char *TEXT_CPU_V30EMU = TEXT_CPU_LIST + 19;
+extern const char TEXT_CPU_LIST[]   PROGMEM;
+extern const char TEXT_CPU_Z80[]    PROGMEM;
+using common::TEXT_CPU_8080;
+using common::TEXT_CPU_8085;
+using common::TEXT_CPU_V30EMU;
 
-static const char TEXT_ADC[]  PROGMEM = "ADC";
-static const char TEXT_ADD[]  PROGMEM = "ADD";
-static const char TEXT_AND[]  PROGMEM = "AND";
-static const char TEXT_BIT[]  PROGMEM = "BIT";
-static const char TEXT_CALL[] PROGMEM = "CALL";
-static const char TEXT_CCF[]  PROGMEM = "CCF";
-static const char TEXT_CP[]   PROGMEM = "CP";
-static const char TEXT_CPD[]  PROGMEM = "CPD";
-static const char TEXT_CPDR[] PROGMEM = "CPDR";
-static const char TEXT_CPI[]  PROGMEM = "CPI";
-static const char TEXT_CPIR[] PROGMEM = "CPIR";
-static const char TEXT_CPL[]  PROGMEM = "CPL";
-static const char TEXT_DAA[]  PROGMEM = "DAA";
-static const char TEXT_DEC[]  PROGMEM = "DEC";
-static const char TEXT_DI[]   PROGMEM = "DI";
-static const char TEXT_DJNZ[] PROGMEM = "DJNZ";
-static const char TEXT_EI[]   PROGMEM = "EI";
-static const char TEXT_EX[]   PROGMEM = "EX";
-static const char TEXT_EXX[]  PROGMEM = "EXX";
-static const char TEXT_HALT[] PROGMEM = "HALT";
-static const char TEXT_HLT[]  PROGMEM = "HLT";
-static const char TEXT_IM[]   PROGMEM = "IM";
-static const char TEXT_IN[]   PROGMEM = "IN";
-static const char TEXT_INC[]  PROGMEM = "INC";
-static const char TEXT_IND[]  PROGMEM = "IND";
-static const char TEXT_INDR[] PROGMEM = "INDR";
-static const char TEXT_INI[]  PROGMEM = "INI";
-static const char TEXT_INIR[] PROGMEM = "INIR";
-static const char TEXT_JP[]   PROGMEM = "JP";
-static const char TEXT_JR[]   PROGMEM = "JR";
-static const char TEXT_LD[]   PROGMEM = "LD";
-static const char TEXT_LDD[]  PROGMEM = "LDD";
-static const char TEXT_LDDR[] PROGMEM = "LDDR";
-static const char TEXT_LDI[]  PROGMEM = "LDI";
-static const char TEXT_LDIR[] PROGMEM = "LDIR";
-static const char TEXT_NEG[]  PROGMEM = "NEG";
-static const char TEXT_NOP[]  PROGMEM = "NOP";
-static const char TEXT_OR[]   PROGMEM = "OR";
-static const char TEXT_OTDR[] PROGMEM = "OTDR";
-static const char TEXT_OTIR[] PROGMEM = "OTIR";
-static const char TEXT_OUT[]  PROGMEM = "OUT";
-static const char TEXT_OUTD[] PROGMEM = "OUTD";
-static const char TEXT_OUTI[] PROGMEM = "OUTI";
-static const char TEXT_POP[]  PROGMEM = "POP";
-static const char TEXT_PUSH[] PROGMEM = "PUSH";
-static const char TEXT_RER[]  PROGMEM = "RER";
-static const char TEXT_RES[]  PROGMEM = "RES";
-static const char TEXT_RET[]  PROGMEM = "RET";
-static const char TEXT_RETI[] PROGMEM = "RETI";
-static const char TEXT_RETN[] PROGMEM = "RETN";
-static const char TEXT_RL[]   PROGMEM = "RL";
-static const char TEXT_RLA[]  PROGMEM = "RLA";
-static const char TEXT_RLC[]  PROGMEM = "RLC";
-static const char TEXT_RLCA[] PROGMEM = "RLCA";
-static const char TEXT_RLD[]  PROGMEM = "RLD";
-static const char TEXT_RR[]   PROGMEM = "RR";
-static const char TEXT_RRA[]  PROGMEM = "RRA";
-static const char TEXT_RRC[]  PROGMEM = "RRC";
-static const char TEXT_RRCA[] PROGMEM = "RRCA";
-static const char TEXT_RRD[]  PROGMEM = "RRD";
-static const char TEXT_RST[]  PROGMEM = "RST";
-static const char TEXT_SBC[]  PROGMEM = "SBC";
-static const char TEXT_SCF[]  PROGMEM = "SCF";
-static const char TEXT_SET[]  PROGMEM = "SET";
-static const char TEXT_SLA[]  PROGMEM = "SLA";
-static const char TEXT_SRA[]  PROGMEM = "SRA";
-static const char TEXT_SRL[]  PROGMEM = "SRL";
-static const char TEXT_SUB[]  PROGMEM = "SUB";
-static const char TEXT_XOR[]  PROGMEM = "XOR";
+using common::TEXT_ADC;
+using common::TEXT_ADD;
+using common::TEXT_AND;
+using common::TEXT_BIT;
+using common::TEXT_CALL;
+using common::TEXT_CCF;
+using common::TEXT_CP;
+using common::TEXT_CPD;
+using common::TEXT_CPDR;
+using common::TEXT_CPI;
+using common::TEXT_CPIR;
+using common::TEXT_CPL;
+using common::TEXT_DAA;
+using common::TEXT_DEC;
+using common::TEXT_DI;
+using common::TEXT_DJNZ;
+using common::TEXT_EI;
+using common::TEXT_EX;
+using common::TEXT_EXX;
+using common::TEXT_HALT;
+using common::TEXT_HLT;
+extern const char TEXT_IM[]   PROGMEM;
+using common::TEXT_IN;
+using common::TEXT_INC;
+using common::TEXT_IND;
+using common::TEXT_INDR;
+using common::TEXT_INI;
+using common::TEXT_INIR;
+using common::TEXT_JP;
+using common::TEXT_JR;
+using common::TEXT_LD;
+using common::TEXT_LDD;
+using common::TEXT_LDDR;
+using common::TEXT_LDI;
+using common::TEXT_LDIR;
+using common::TEXT_NEG;
+using common::TEXT_NOP;
+using common::TEXT_OR;
+using common::TEXT_OTDR;
+using common::TEXT_OTIR;
+using common::TEXT_OUT;
+using common::TEXT_OUTD;
+using common::TEXT_OUTI;
+using common::TEXT_POP;
+using common::TEXT_PUSH;
+extern const char TEXT_RER[]  PROGMEM;
+using common::TEXT_RES;
+using common::TEXT_RET;
+using common::TEXT_RETI;
+extern const char TEXT_RETN[] PROGMEM;
+using common::TEXT_RL;
+using common::TEXT_RLA;
+using common::TEXT_RLC;
+using common::TEXT_RLCA;
+using common::TEXT_RLD;
+using common::TEXT_RR;
+using common::TEXT_RRA;
+using common::TEXT_RRC;
+using common::TEXT_RRCA;
+using common::TEXT_RRD;
+using common::TEXT_RST;
+using common::TEXT_SBC;
+using common::TEXT_SCF;
+using common::TEXT_SET;
+using common::TEXT_SLA;
+using common::TEXT_SRA;
+using common::TEXT_SRL;
+using common::TEXT_SUB;
+using common::TEXT_XOR;
 
 // V30EMU
-static const char TEXT_CALLN[] PROGMEM = "CALLN";
-static const char TEXT_RETEM[] PROGMEM = "RETEM";
+using common::TEXT_CALLN;
+using common::TEXT_RETEM;
 
+using common::TEXT_REG_BC;
+using common::TEXT_REG_DE;
+using common::TEXT_REG_HL;
+using common::TEXT_REG_IX;
+using common::TEXT_REG_IY;
+using common::TEXT_REG_SP;
+using common::TEXT_REG_AFP;
+using common::TEXT_REG_AF;
+using common::TEXT_REG_A;
+using common::TEXT_REG_B;
+using common::TEXT_REG_C;
+using common::TEXT_REG_D;
+using common::TEXT_REG_E;
+using common::TEXT_REG_H;
+using common::TEXT_REG_L;
+extern const char TEXT_REG_IM[]  PROGMEM;
+extern const char TEXT_REG_R[]   PROGMEM;
+using common::TEXT_REG_I;
+
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_Z;
+using common::TEXT_CC_NC;
+using common::TEXT_CC_C;
+using common::TEXT_CC_PO;
+using common::TEXT_CC_PE;
+using common::TEXT_CC_P;
+using common::TEXT_CC_M;
 // clang-format on
 
 }  // namespace z80
+}  // namespace text
 }  // namespace libasm
 
 #endif  // __TEXT_Z80__

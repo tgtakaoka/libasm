@@ -22,6 +22,8 @@
 
 #include <string.h>
 
+using namespace libasm::text::mos6502;
+
 namespace libasm {
 namespace mos6502 {
 
@@ -737,7 +739,8 @@ Error TableMos6502::searchName(InsnMos6502 &insn) const {
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMos6502 &insn, const Entry *entry, const TableMos6502::EntryPage *page) {
+static bool matchOpCode(
+        InsnMos6502 &insn, const Entry *entry, const TableMos6502::EntryPage *page) {
     if (insn.opCode() != entry->opCode())
         return false;
     const auto mode = entry->flags().mode1();
@@ -791,9 +794,14 @@ bool TableMos6502::setCpu(const char *cpu) {
         return setCpu(R65C02);
     if (strcasecmp_P(cpu, TEXT_CPU_G65SC02) == 0)
         return setCpu(G65SC02);
-    if (strcasecmp_P(cpu, TEXT_CPU_W65816) == 0 || strcasecmp_P(cpu, TEXT_CPU_W65C816) == 0 ||
-            strcasecmp_P(cpu, TEXT_CPU_W65C816S) == 0)
-        return setCpu(W65C816);
+    if (toupper(*cpu) == 'W') {
+        ++cpu;
+        if (strcasecmp_P(cpu, TEXT_CPU_65C02) == 0)
+            return setCpu(W65C02S);
+        if (strcasecmp_P(cpu, TEXT_CPU_65816) == 0 || strcasecmp_P(cpu, TEXT_CPU_65C816) == 0 ||
+                strcasecmp_P(cpu, TEXT_CPU_65C816S) == 0)
+            return setCpu(W65C816);
+    }
     return false;
 }
 

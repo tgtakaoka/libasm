@@ -20,10 +20,9 @@
 
 #include "config_mc6805.h"
 #include "entry_mc6805.h"
-#include "text_mc6800.h"
 #include "text_mc6805.h"
 
-using namespace libasm::mc6800;
+using namespace libasm::text::mc6805;
 
 namespace libasm {
 namespace mc6805 {
@@ -333,12 +332,12 @@ bool TableMc6805::setCpu(CpuType cpuType) {
 }
 
 const /* PROGMEM */ char *TableMc6805::listCpu_P() const {
-    return TEXT_CPU_LIST_6805;
+    return TEXT_CPU_LIST;
 }
 
 bool TableMc6805::setCpu(const char *cpu) {
     auto p = cpu;
-    if (strncasecmp_P(p, TEXT_CPU_6805_MC, 2) == 0)
+    if (strncasecmp_P(p, TEXT_CPU_LIST, 2) == 0)
         p += 2;
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
     return t ? setCpu(t->cpuType()) : false;

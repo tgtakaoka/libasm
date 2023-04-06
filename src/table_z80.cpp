@@ -23,6 +23,8 @@
 #include <ctype.h>
 #include <string.h>
 
+using namespace libasm::text::z80;
+
 namespace libasm {
 namespace z80 {
 
@@ -523,18 +525,18 @@ const /* PROGMEM */ char *TableZ80::listCpu_P() const {
 }
 
 bool TableZ80::setCpu(const char *cpu) {
-    StrScanner p(cpu);
-    p.iexpect('i');
-    auto t = Cpu::search(p.str(), ARRAY_RANGE(CPU_TABLE));
-    if (t) {
+    const auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
+    if (t)
         return setCpu(t->cpuType());
-    } else if (p.istarts_P(TEXT_CPU_8080)) {
-        if ((p += 4).iexpect('z'))
-            return setCpu(I8080);
-    } else if (p.istarts_P(TEXT_CPU_8085)) {
-        if ((p += 4).iexpect('z'))
-            return setCpu(I8085);
-    }
+    if (strncasecmp_P(cpu, TEXT_CPU_V30EMU, 6) == 0 && toupper(cpu[6]) == 'Z')
+        return setCpu(V30EMU);
+    if (toupper(*cpu) == 'I')
+        cpu++;
+    const auto z80syn = toupper(cpu[4]) == 'Z' || cpu[4] == 0;
+    if (strncasecmp_P(cpu, TEXT_CPU_8080, 4) == 0 && z80syn)
+        return setCpu(I8080);
+    if (strncasecmp_P(cpu, TEXT_CPU_8085, 4) == 0 && z80syn)
+        return setCpu(I8085);
     return false;
 }
 

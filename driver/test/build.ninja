@@ -46,7 +46,11 @@ build test_asm_formatter: test test_asm_formatter.o test_driver_helper.o test_as
   table_mc6809.o table_mc6800.o table_mc6805.o table_mos6502.o table_i8048.o table_i8051.o $
   table_i8080.o table_i8096.o table_z80.o table_z8.o table_tlcs90.o table_ins8060.o $
   table_ins8070.o table_cdp1802.o table_scn2650.o table_f3850.o table_i8086.o table_tms9900.o $
-  table_tms32010.o table_mc68000.o table_z8000.o table_ns32000.o table_mn1610.o
+  table_tms32010.o table_mc68000.o table_z8000.o table_ns32000.o table_mn1610.o $
+  text_common.o text_mc6809.o text_mc6800.o text_mc6805.o text_mos6502.o text_i8048.o $
+  text_i8051.o text_i8080.o text_i8096.o text_z80.o text_z8.o text_tlcs90.o text_ins8060.o $
+  text_ins8070.o text_cdp1802.o text_scn2650.o text_f3850.o text_i8086.o text_tms9900.o $
+  text_tms32010.o text_mc68000.o text_z8000.o text_ns32000.o text_mn1610.o
 
 build test_dis_formatter: test test_dis_formatter.o test_driver_helper.o test_asserter.o $
   list_formatter.o dis_formatter.o dis_driver.o function_store.o bin_memory.o bin_encoder.o $
@@ -64,7 +68,11 @@ build test_dis_formatter: test test_dis_formatter.o test_driver_helper.o test_as
   table_mc6809.o table_mc6800.o table_mc6805.o table_mos6502.o table_i8048.o table_i8051.o $
   table_i8080.o table_i8096.o table_z80.o table_z8.o table_tlcs90.o table_ins8060.o $
   table_ins8070.o table_cdp1802.o table_scn2650.o table_f3850.o table_i8086.o table_tms9900.o $
-  table_tms32010.o table_mc68000.o table_z8000.o table_ns32000.o table_mn1610.o
+  table_tms32010.o table_mc68000.o table_z8000.o table_ns32000.o table_mn1610.o $
+  text_common.o text_mc6809.o text_mc6800.o text_mc6805.o text_mos6502.o text_i8048.o $
+  text_i8051.o text_i8080.o text_i8096.o text_z80.o text_z8.o text_tlcs90.o text_ins8060.o $
+  text_ins8070.o text_cdp1802.o text_scn2650.o text_f3850.o text_i8086.o text_tms9900.o $
+  text_tms32010.o text_mc68000.o text_z8000.o text_ns32000.o text_mn1610.o
 
 build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_asm_formatter test_dis_formatter

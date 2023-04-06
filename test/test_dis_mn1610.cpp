@@ -55,13 +55,13 @@ void test_cpu() {
     EQUALS("cpu 1613A", true,      disassembler.setCpu("1613A"));
     EQUALS_P("cpu 1613A", "MN1613A", disassembler.cpu_P());
 
-    EQUALS("cpu MN1610", true,     disassembler.setCpu("mn1610"));
+    EQUALS("cpu mn1610", true,     disassembler.setCpu("mn1610"));
     EQUALS_P("cpu MN1610", "MN1610", disassembler.cpu_P());
 
-    EQUALS("cpu MN1613", true,     disassembler.setCpu("mn1613"));
+    EQUALS("cpu mn1613", true,     disassembler.setCpu("mn1613"));
     EQUALS_P("cpu MN1613", "MN1613", disassembler.cpu_P());
 
-    EQUALS("cpu MN1613A", true,      disassembler.setCpu("mn1613a"));
+    EQUALS("cpu mn1613a", true,      disassembler.setCpu("mn1613a"));
     EQUALS_P("cpu MN1613A", "MN1613A", disassembler.cpu_P());
 }
 
