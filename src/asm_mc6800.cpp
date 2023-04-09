@@ -32,8 +32,8 @@ struct AsmMc6800::Operand : public OperandBase {
 };
 
 AsmMc6800::AsmMc6800()
-    : Assembler(_parser, TableMc6800::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location, _operators),
+    : Assembler(TableMc6800::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
+              _location, &_operators),
       _pseudos() {}
 
 Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {

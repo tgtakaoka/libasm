@@ -24,14 +24,13 @@
 namespace libasm {
 namespace i8096 {
 
-class AsmI8096 : public Assembler, public Config {
+class AsmI8096 final : public Assembler, public Config {
 public:
     AsmI8096();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER};

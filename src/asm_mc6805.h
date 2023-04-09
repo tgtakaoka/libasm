@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc6805 {
 
-class AsmMc6805 : public Assembler, public Config {
+class AsmMc6805 final : public Assembler, public Config {
 public:
     AsmMc6805();
 
@@ -35,7 +35,6 @@ public:
     Error setPcBits(int32_t val);
 
 private:
-    ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};

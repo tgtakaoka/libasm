@@ -33,8 +33,8 @@ struct AsmF3850::Operand : public OperandBase {
 };
 
 AsmF3850::AsmF3850()
-    : Assembler(_parser, TableF3850::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(
+              TableF3850::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
       _pseudos() {}
 
 Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {

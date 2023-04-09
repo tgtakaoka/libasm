@@ -25,7 +25,7 @@
 namespace libasm {
 namespace z8000 {
 
-class AsmZ8000 : public Assembler, public Config {
+class AsmZ8000 final : public Assembler, public Config {
 public:
     AsmZ8000();
 
@@ -38,7 +38,6 @@ public:
     bool hasSetInstruction() const override { return true; }
 
 private:
-    ValueParser _parser;
     const ZilogNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::UNDER};

@@ -55,8 +55,8 @@ struct AsmNs32000::Operand : public OperandBase {
 };
 
 AsmNs32000::AsmNs32000()
-    : Assembler(_parser, TableNs32000::TABLE, _pseudos, &_opt_fpu),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableNs32000::TABLE, _pseudos, &_opt_fpu, _number, _comment, _symbol, _letter,
+              _location),
       _opt_fpu(this, &AsmNs32000::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
       _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU),
       _pseudos() {

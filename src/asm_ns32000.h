@@ -25,7 +25,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class AsmNs32000 : public Assembler, public Config {
+class AsmNs32000 final : public Assembler, public Config {
 public:
     AsmNs32000();
 
@@ -36,7 +36,6 @@ public:
     Error setPmmu(StrScanner &scan);
 
 private:
-    ValueParser _parser;
     const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
     const SharpCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOT_UNDER};

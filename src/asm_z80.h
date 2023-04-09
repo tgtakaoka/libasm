@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z80 {
 
-class AsmZ80 : public Assembler, public Config {
+class AsmZ80 final : public Assembler, public Config {
 public:
     AsmZ80();
 
@@ -32,7 +32,6 @@ public:
     bool hasSetInstruction() const override { return true; }
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};

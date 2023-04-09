@@ -25,8 +25,8 @@ namespace tlcs90 {
 using namespace reg;
 
 AsmTlcs90::AsmTlcs90()
-    : Assembler(_parser, TableTlcs90::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableTlcs90::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
+              _location),
       _pseudos() {}
 
 void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {

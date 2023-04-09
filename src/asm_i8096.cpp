@@ -33,8 +33,8 @@ struct AsmI8096::Operand : public OperandBase {
 };
 
 AsmI8096::AsmI8096()
-    : Assembler(_parser, TableI8096::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(
+              TableI8096::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
       _pseudos() {}
 
 Error AsmI8096::parseIndirect(StrScanner &scan, Operand &op) const {

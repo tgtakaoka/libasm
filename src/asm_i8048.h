@@ -24,14 +24,13 @@
 namespace libasm {
 namespace i8048 {
 
-class AsmI8048 : public Assembler, public Config {
+class AsmI8048 final : public Assembler, public Config {
 public:
     AsmI8048();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
     const DefaultSymbolParser _symbol;

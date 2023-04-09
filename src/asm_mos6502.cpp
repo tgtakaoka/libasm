@@ -37,8 +37,8 @@ struct AsmMos6502::Operand : public OperandBase {
 };
 
 AsmMos6502::AsmMos6502()
-    : Assembler(_parser, TableMos6502::TABLE, _pseudos, &_opt_longa),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableMos6502::TABLE, _pseudos, &_opt_longa, _number, _comment, _symbol, _letter,
+              _location),
       _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
       _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI),
       _pseudos() {

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class AsmMc6809 : public Assembler, public Config {
+class AsmMc6809 final : public Assembler, public Config {
 public:
     AsmMc6809();
 
@@ -34,7 +34,6 @@ public:
     Error setDirectPage(int32_t val);
 
 private:
-    ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};

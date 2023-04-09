@@ -26,7 +26,7 @@ namespace tlcs90 {
 
 struct Operand;
 
-class AsmTlcs90 : public Assembler, public Config {
+class AsmTlcs90 final : public Assembler, public Config {
 public:
     AsmTlcs90();
 
@@ -34,7 +34,6 @@ public:
     bool hasSetInstruction() const override { return true; }
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mos6502 {
 
-class AsmMos6502 : public Assembler, public Config {
+class AsmMos6502 final : public Assembler, public Config {
 public:
     AsmMos6502();
 
@@ -36,7 +36,6 @@ public:
     Error setLongIndex(bool enable);
 
 private:
-    ValueParser _parser;
     const MotorolaNumberParser _number;
     const SemicolonCommentParser _comment;
     const DefaultSymbolParser _symbol;

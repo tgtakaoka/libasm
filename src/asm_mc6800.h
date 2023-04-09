@@ -24,14 +24,13 @@
 namespace libasm {
 namespace mc6800 {
 
-class AsmMc6800 : public Assembler, public Config {
+class AsmMc6800 final : public Assembler, public Config {
 public:
     AsmMc6800();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};

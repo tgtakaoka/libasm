@@ -24,14 +24,13 @@
 namespace libasm {
 namespace scn2650 {
 
-class AsmScn2650 : public Assembler, public Config {
+class AsmScn2650 final : public Assembler, public Config {
 public:
     AsmScn2650();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const SigneticsNumberParser _number;
     const AsteriskCommentParser _comment;
     const DefaultSymbolParser _symbol;

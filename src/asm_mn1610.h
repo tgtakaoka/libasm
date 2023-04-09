@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mn1610 {
 
-class AsmMn1610 : public Assembler, public Config {
+class AsmMn1610 final : public Assembler, public Config {
 public:
     AsmMn1610();
 
@@ -32,7 +32,6 @@ public:
     AddressWidth addressWidth() const override;
 
 private:
-    ValueParser _parser;
     const IbmNumberParser _number{'X'};
     const AsteriskCommentParser _comment;
     const DefaultSymbolParser _symbol;

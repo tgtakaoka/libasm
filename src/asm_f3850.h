@@ -24,14 +24,13 @@
 namespace libasm {
 namespace f3850 {
 
-class AsmF3850 : public Assembler, public Config {
+class AsmF3850 final : public Assembler, public Config {
 public:
     AsmF3850();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const FairchildNumberParser _number;
     const AsteriskCommentParser _comment;
     const DefaultSymbolParser _symbol;

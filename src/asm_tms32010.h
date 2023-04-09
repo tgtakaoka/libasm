@@ -24,14 +24,13 @@
 namespace libasm {
 namespace tms32010 {
 
-class AsmTms32010 : public Assembler, public Config {
+class AsmTms32010 final : public Assembler, public Config {
 public:
     AsmTms32010();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const AsteriskCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_UNDER};

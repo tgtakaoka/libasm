@@ -34,8 +34,8 @@ struct AsmI8048::Operand : public OperandBase {
 };
 
 AsmI8048::AsmI8048()
-    : Assembler(_parser, TableI8048::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(
+              TableI8048::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
       _pseudos() {}
 
 Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {

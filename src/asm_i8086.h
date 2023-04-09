@@ -25,7 +25,7 @@
 namespace libasm {
 namespace i8086 {
 
-class AsmI8086 : public Assembler, public Config {
+class AsmI8086 final : public Assembler, public Config {
 public:
     AsmI8086();
 
@@ -35,7 +35,6 @@ public:
     Error setOptimizeSegment(bool enable);
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION_UNDER};

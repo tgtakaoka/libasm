@@ -33,8 +33,8 @@ struct AsmMn1610::Operand : public OperandBase {
 };
 
 AsmMn1610::AsmMn1610()
-    : Assembler(_parser, TableMn1610::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableMn1610::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
+              _location),
       _pseudos() {}
 
 AddressWidth AsmMn1610::addressWidth() const {

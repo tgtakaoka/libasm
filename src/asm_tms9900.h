@@ -24,14 +24,13 @@
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900 : public Assembler, public Config {
+class AsmTms9900 final : public Assembler, public Config {
 public:
     AsmTms9900();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const TexasNumberParser _number;
     const AsteriskCommentParser _comment;
     const DefaultSymbolParser _symbol;

@@ -32,8 +32,8 @@ struct AsmI8080::Operand : public OperandBase {
 };
 
 AsmI8080::AsmI8080()
-    : Assembler(_parser, TableI8080::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(
+              TableI8080::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
       _pseudos() {}
 
 void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {

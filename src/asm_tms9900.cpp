@@ -32,8 +32,8 @@ struct AsmTms9900::Operand : public OperandBase {
 };
 
 AsmTms9900::AsmTms9900()
-    : Assembler(_parser, TableTms9900::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableTms9900::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
+              _location),
       _pseudos() {}
 
 void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {

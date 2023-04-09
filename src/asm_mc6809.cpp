@@ -48,8 +48,8 @@ struct AsmMc6809::Operand : public OperandBase {
 };
 
 AsmMc6809::AsmMc6809()
-    : Assembler(_parser, TableMc6809::TABLE, _pseudos, &_opt_setdp),
-      _parser(_number, _comment, _symbol, _letter, _location, _operators),
+    : Assembler(TableMc6809::TABLE, _pseudos, &_opt_setdp, _number, _comment, _symbol, _letter,
+              _location, &_operators),
       _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP),
       _pseudos() {
     reset();

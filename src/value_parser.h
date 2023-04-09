@@ -27,36 +27,15 @@ namespace libasm {
 class ValueParser {
 public:
     ValueParser(const NumberParser &number, const CommentParser &comment,
-            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location)
-        : _number(number),
-          _comment(comment),
-          _symbol(symbol),
-          _letter(letter),
-          _location(location),
-          _operator(_cstyleOperators),
-          _function(&_nullFunction),
-          _origin(0) {}
-    ValueParser(const NumberParser &number, const CommentParser &comment,
             const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
-            const OperatorParser &operators)
+            const OperatorParser *operators = nullptr, const FunctionParser *function = nullptr)
         : _number(number),
           _comment(comment),
           _symbol(symbol),
           _letter(letter),
           _location(location),
-          _operator(operators),
-          _function(&_nullFunction),
-          _origin(0) {}
-    ValueParser(const NumberParser &number, const CommentParser &comment,
-            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
-            const FunctionParser &function)
-        : _number(number),
-          _comment(comment),
-          _symbol(symbol),
-          _letter(letter),
-          _location(location),
-          _operator(_cstyleOperators),
-          _function(&function),
+          _operator(operators ? *operators : _cstyleOperators),
+          _function(function ? function : &_nullFunction),
           _origin(0) {}
 
     /**

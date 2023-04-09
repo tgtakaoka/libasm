@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z8 {
 
-class AsmZ8 : public Assembler, public Config {
+class AsmZ8 final : public Assembler, public Config {
 public:
     AsmZ8();
 
@@ -36,7 +36,6 @@ public:
     Error setRegPointer1(int32_t rp);
 
 private:
-    ValueParser _parser;
     const ZilogNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION_UNDER};

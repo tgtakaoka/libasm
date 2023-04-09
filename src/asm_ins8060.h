@@ -24,14 +24,13 @@
 namespace libasm {
 namespace ins8060 {
 
-class AsmIns8060 : public Assembler, public Config {
+class AsmIns8060 final : public Assembler, public Config {
 public:
     AsmIns8060();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const NationalNumberParser _number{'X'};
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};

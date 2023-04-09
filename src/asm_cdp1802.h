@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class AsmCdp1802 : public Assembler, public Config {
+class AsmCdp1802 final : public Assembler, public Config {
 public:
     AsmCdp1802();
 
@@ -35,7 +35,6 @@ public:
     Error setSmartBranch(bool enable);
 
 private:
-    ValueParser _parser;
     const RcaNumberParser _number;
     const struct : SemicolonCommentParser {
         bool commentLine(const StrScanner &scan) const {

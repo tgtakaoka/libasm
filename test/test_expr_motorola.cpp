@@ -25,7 +25,7 @@ const SimpleSymbolParser symbol{SymbolParser::DOLLAR_DOT_UNDER};
 const MotorolaLetterParser letter;
 const AsteriskLocationParser location;
 const Mc68xxOperatorParser operators;
-ValueParser parser{number, comment, symbol, letter, location, operators};
+ValueParser parser{number, comment, symbol, letter, location, &operators};
 const PrefixHexFormatter hexFormatter{HexFormatter::DOLLAR};
 ValueFormatter formatter{hexFormatter};
 

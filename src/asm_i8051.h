@@ -24,14 +24,13 @@
 namespace libasm {
 namespace i8051 {
 
-class AsmI8051 : public Assembler, public Config {
+class AsmI8051 final : public Assembler, public Config {
 public:
     AsmI8051();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER, SymbolParser::NONE};

@@ -42,8 +42,8 @@ struct AsmZ8::Operand : public OperandBase {
 };
 
 AsmZ8::AsmZ8()
-    : Assembler(_parser, TableZ8::TABLE, _pseudos, &_opt_setrp),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableZ8::TABLE, _pseudos, &_opt_setrp, _number, _comment, _symbol, _letter,
+              _location),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
       _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1),

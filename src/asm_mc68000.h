@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class AsmMc68000 : public Assembler, public Config {
+class AsmMc68000 final : public Assembler, public Config {
 public:
     AsmMc68000();
 
@@ -34,7 +34,6 @@ public:
     Error setAlias(bool enable);
 
 private:
-    ValueParser _parser;
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};

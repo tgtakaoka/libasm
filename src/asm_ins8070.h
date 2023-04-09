@@ -24,14 +24,13 @@
 namespace libasm {
 namespace ins8070 {
 
-class AsmIns8070 : public Assembler, public Config {
+class AsmIns8070 final : public Assembler, public Config {
 public:
     AsmIns8070();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    ValueParser _parser;
     const NationalNumberParser _number{'X'};
     const SemicolonCommentParser _comment;
     const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};

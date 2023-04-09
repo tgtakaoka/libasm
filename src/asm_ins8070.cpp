@@ -34,8 +34,8 @@ struct AsmIns8070::Operand : public OperandBase {
 };
 
 AsmIns8070::AsmIns8070()
-    : Assembler(_parser, TableIns8070::TABLE, _pseudos),
-      _parser(_number, _comment, _symbol, _letter, _location, _function),
+    : Assembler(TableIns8070::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
+              _location, nullptr, &_function),
       _pseudos() {}
 
 static const struct : Functor {

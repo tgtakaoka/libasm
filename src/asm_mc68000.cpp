@@ -40,8 +40,8 @@ struct AsmMc68000::Operand : public OperandBase {
 };
 
 AsmMc68000::AsmMc68000()
-    : Assembler(_parser, TableMc68000::TABLE, _pseudos, &_opt_alias),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableMc68000::TABLE, _pseudos, &_opt_alias, _number, _comment, _symbol, _letter,
+              _location),
       _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS),
       _pseudos() {
     reset();

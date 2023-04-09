@@ -37,8 +37,8 @@ struct AsmZ8000::Operand : public OperandBase {
 };
 
 AsmZ8000::AsmZ8000()
-    : Assembler(_parser, TableZ8000::TABLE, _pseudos, &_opt_shortDitrect),
-      _parser(_number, _comment, _symbol, _letter, _location),
+    : Assembler(TableZ8000::TABLE, _pseudos, &_opt_shortDitrect, _number, _comment, _symbol,
+              _letter, _location),
       _opt_shortDitrect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT),
       _pseudos() {
