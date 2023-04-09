@@ -73,7 +73,7 @@
         EQ("origin", OK, listing.setOrigin(_org));                        \
         EQ("content", contents.readLine(), listing.getContent());         \
         EQ("line", lines.readLine(), listing.getLine());                  \
-        const auto unit = disassembler.config().addressUnit();            \
+        const auto unit = disassembler.addressUnit();                     \
         auto reader = _memory.iterator();                                 \
         while (reader.hasNext()) {                                        \
             const auto addr = reader.address() / unit;                    \
@@ -90,8 +90,8 @@
 
 #define DIS16(_cpu, _org, _contents, _expected, ...)                            \
     do {                                                                        \
-        const auto unit = disassembler.config().addressUnit();                  \
-        const auto endian = disassembler.config().endian();                     \
+        const auto unit = disassembler.addressUnit();                           \
+        const auto endian = disassembler.endian();                              \
         const uint16_t _memory[] = {__VA_ARGS__};                               \
         const ArrayMemory memory(_org *unit, _memory, sizeof(_memory), endian); \
         DIS(_cpu, _org, _contents, _expected, memory);                          \

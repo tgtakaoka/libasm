@@ -16,11 +16,8 @@
 
 #include "table_i8080.h"
 
-#include <ctype.h>
-#include <string.h>
-
-#include "config_i8080.h"
 #include "entry_i8080.h"
+#include "entry_table.h"
 #include "text_i8080.h"
 
 using namespace libasm::text::i8080;
@@ -218,25 +215,33 @@ static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
 
 // clang-format on
 
-static constexpr TableI8080::EntryPage I8080_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage I8080_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
-static constexpr TableI8080::EntryPage I8085_PAGES[] PROGMEM = {
+static constexpr EntryPage I8085_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 
-static constexpr TableI8080::EntryPage V30EMU_PAGES[] PROGMEM = {
+static constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
 };
 
-static constexpr TableI8080::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -256,12 +261,12 @@ static bool acceptModes(InsnI8080 &insn, const Entry *entry) {
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src());
 }
 
-Error TableI8080::searchName(InsnI8080 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableI8080::searchName(CpuType cpuType, InsnI8080 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnI8080 &insn, const Entry *entry, const TableI8080::EntryPage *page) {
+static bool matchOpCode(InsnI8080 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto &flags = entry->flags();
     const auto dst = flags.dst();
@@ -280,41 +285,42 @@ static bool matchOpCode(InsnI8080 &insn, const Entry *entry, const TableI8080::E
     return opCode == entry->opCode();
 }
 
-Error TableI8080::searchOpCode(InsnI8080 &insn, StrBuffer &out) const {
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableI8080::searchOpCode(CpuType cpuType, InsnI8080 &insn, StrBuffer &out) const {
+
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableI8080::TableI8080() {
-    setCpu(I8080);
+bool TableI8080::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+    return cpu(cpuType)->isPrefix(code);
 }
 
-bool TableI8080::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableI8080::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableI8080::cpu_P() const {
-    return _cpu->name_P();
+const /*PROGMEM*/ char *TableI8080::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableI8080::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (toupper(*cpu) == 'I')
-        cpu++;
-    if (strcasecmp_P(cpu, TEXT_CPU_8080) == 0)
-        return setCpu(I8080);
-    if (strcasecmp_P(cpu, TEXT_CPU_8085) == 0)
-        return setCpu(I8085);
-    return false;
+Error TableI8080::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+    } else {
+        name.iexpect('i');
+        if (name.iequals(TEXT_CPU_8080)) {
+            cpuType = I8080;
+        } else if (name.iequals(TEXT_CPU_8085)) {
+            cpuType = I8085;
+        } else {
+            return UNSUPPORTED_CPU;
+        }
+    }
+    return OK;
 }
 
-TableI8080 TableI8080::TABLE;
+const TableI8080 TABLE;
 
 }  // namespace i8080
 }  // namespace libasm

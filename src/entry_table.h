@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include "str_buffer.h"
+#include "str_scanner.h"
 #include "table_base.h"
 
 namespace libasm {
@@ -87,9 +88,9 @@ struct CpuBase {
     }
 
     template <typename CPU_T>
-    static const CPU_T *search(const char *name, const CPU_T *table, const CPU_T *end) {
+    static const CPU_T *search(const StrScanner &name, const CPU_T *table, const CPU_T *end) {
         for (const auto *t = table; t < end; t++) {
-            if (strcasecmp_P(name, t->name_P()) == 0)
+            if (name.iequals(t->name_P()))
                 return t;
         }
         return nullptr;
@@ -185,14 +186,6 @@ protected:
     const table::Table<ENTRY_PAGE> _pages;
     CPUTYPE _cpuType;
     const /* PROGMEM */ char *_name_P;
-};
-
-/**
- * Base class for instruction table.
- */
-struct Table {
-    virtual /* PROGMEM */ const char *cpu_P() const = 0;
-    virtual bool setCpu(const char *cpu) = 0;
 };
 
 }  // namespace entry

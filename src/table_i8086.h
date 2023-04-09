@@ -18,7 +18,6 @@
 #define __TABLE_I8086_H__
 
 #include "config_i8086.h"
-#include "dis_memory.h"
 #include "entry_table.h"
 #include "insn_i8086.h"
 #include "reg_i8086.h"
@@ -26,31 +25,20 @@
 namespace libasm {
 namespace i8086 {
 
-struct TableI8086 : entry::Table {
-public:
-    TableI8086();
+struct TableI8086 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableI8086 TABLE;
-
-    Error searchName(InsnI8086 &insn) const;
-    Error searchOpCode(InsnI8086 &insn, StrBuffer &out) const;
-    bool isRepeatPrefix(Config::opcode_t opcode) const;
+    Error searchName(CpuType, InsnI8086 &insn) const;
+    Error searchOpCode(CpuType, InsnI8086 &insn, StrBuffer &out) const;
     bool isSegmentPrefix(Config::opcode_t opcode) const;
     RegName overrideSeg(Config::opcode_t opcode) const;
     Config::opcode_t segOverridePrefix(RegName name) const;
-    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
-
-    const /* PROGMEM */ char *cpu_P() const override;
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    bool isPrefix(CpuType, Config::opcode_t code) const;
 };
+
+extern const TableI8086 TABLE;
 
 }  // namespace i8086
 }  // namespace libasm

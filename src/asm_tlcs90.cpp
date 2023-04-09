@@ -25,7 +25,7 @@ namespace tlcs90 {
 using namespace reg;
 
 AsmTlcs90::AsmTlcs90()
-    : Assembler(TableTlcs90::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -217,7 +217,7 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    const auto error = TableTlcs90::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
 

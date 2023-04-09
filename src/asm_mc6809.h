@@ -28,7 +28,6 @@ class AsmMc6809 final : public Assembler, public Config {
 public:
     AsmMc6809();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setDirectPage(int32_t val);
@@ -62,6 +61,9 @@ private:
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc6809

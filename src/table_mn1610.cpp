@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_mn1610.h"
+#include "table_mn1610.h"
 
 #include "entry_mn1610.h"
-#include "table_mn1610.h"
+#include "entry_table.h"
 #include "text_mn1610.h"
-
-#include <ctype.h>
-#include <string.h>
 
 using namespace libasm::text::mn1610;
 
@@ -271,22 +268,30 @@ static constexpr uint8_t INDEX_MN1613[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableMn1610::EntryPage MN1610_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage MN1610_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
-static constexpr TableMn1610::EntryPage MN1613_PAGES[] PROGMEM = {
+static constexpr EntryPage MN1613_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_MN1613), ARRAY_RANGE(INDEX_MN1613)},
         {ARRAY_RANGE(TABLE_MN1610), ARRAY_RANGE(INDEX_MN1610)},
 };
 
-static constexpr TableMn1610::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MN1610, TEXT_CPU_MN1610, ARRAY_RANGE(MN1610_PAGES)},
         {MN1613, TEXT_CPU_MN1613, ARRAY_RANGE(MN1613_PAGES)},
         {MN1613A, TEXT_CPU_MN1613A, ARRAY_RANGE(MN1613_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (table == opr)
@@ -336,12 +341,12 @@ static bool acceptModes(InsnMn1610 &insn, const Entry *entry) {
            acceptMode(flags.mode3(), table.mode3()) && acceptMode(flags.mode4(), table.mode4());
 }
 
-Error TableMn1610::searchName(InsnMn1610 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableMn1610::searchName(CpuType cpuType, InsnMn1610 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const TableMn1610::EntryPage *page) {
+static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto mode1 = entry->flags().mode1();
     const auto mode2 = entry->flags().mode2();
@@ -378,41 +383,36 @@ static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const TableMn1610:
     return opCode == entry->opCode();
 }
 
-Error TableMn1610::searchOpCode(InsnMn1610 &insn, StrBuffer &out) const {
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableMn1610::searchOpCode(CpuType cpuType, InsnMn1610 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableMn1610::TableMn1610() {
-    setCpu(MN1610);
+const /*PROGMEM*/ char *TableMn1610::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-AddressWidth TableMn1610::addressWidth() const {
-    return (_cpu->cpuType() == MN1610) ? ADDRESS_16BIT : ADDRESS_18BIT;
+const /*PROGMEM*/ char *TableMn1610::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableMn1610::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+Error TableMn1610::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+    } else if (name.iequals_P(TEXT_CPU_MN1610 + 2)) {
+        cpuType = MN1610;
+    } else if (name.iequals_P(TEXT_CPU_MN1613 + 2)) {
+        cpuType = MN1613;;
+    } else if (name.iequals_P(TEXT_CPU_MN1613A + 2)) {
+        cpuType = MN1613A;
+    } else {
+        return UNSUPPORTED_CPU;
+    }
+    return OK;
 }
 
-bool TableMn1610::setCpu(const char *cpu) {
-    const auto *t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (strcmp_P(cpu, TEXT_CPU_MN1610 + 2) == 0)
-        return setCpu(MN1610);
-    if (strcmp_P(cpu, TEXT_CPU_MN1613 + 2) == 0)
-        return setCpu(MN1613);
-    if (strcasecmp_P(cpu, TEXT_CPU_MN1613A + 2) == 0)
-        return setCpu(MN1613A);
-    return false;
-}
-
-TableMn1610 TableMn1610::TABLE;
+const TableMn1610 TABLE;
 
 }  // namespace mn1610
 }  // namespace libasm

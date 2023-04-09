@@ -16,10 +16,8 @@
 
 #include "table_mc6805.h"
 
-#include <string.h>
-
-#include "config_mc6805.h"
 #include "entry_mc6805.h"
+#include "entry_table.h"
 #include "text_mc6805.h"
 
 using namespace libasm::text::mc6805;
@@ -241,26 +239,34 @@ static constexpr uint8_t MC68HC05_INDEX[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableMc6805::EntryPage MC6805_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage MC6805_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
 };
 
-static constexpr TableMc6805::EntryPage MC146805_PAGES[] PROGMEM = {
+static constexpr EntryPage MC146805_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
         {ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
 };
 
-static constexpr TableMc6805::EntryPage MC68HC05_PAGES[] PROGMEM = {
+static constexpr EntryPage MC68HC05_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC6805_TABLE), ARRAY_RANGE(MC6805_INDEX)},
         {ARRAY_RANGE(MC146805_TABLE), ARRAY_RANGE(MC146805_INDEX)},
         {ARRAY_RANGE(MC68HC05_TABLE), ARRAY_RANGE(MC68HC05_INDEX)},
 };
 
-static constexpr TableMc6805::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC6805, TEXT_CPU_6805, ARRAY_RANGE(MC6805_PAGES)},
         {MC146805, TEXT_CPU_146805, ARRAY_RANGE(MC146805_PAGES)},
         {MC68HC05, TEXT_CPU_68HC05, ARRAY_RANGE(MC68HC05_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -291,12 +297,12 @@ static bool acceptModes(InsnMc6805 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableMc6805::searchName(InsnMc6805 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableMc6805::searchName(CpuType cpuType, InsnMc6805 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const TableMc6805::EntryPage *page) {
+static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -312,34 +318,33 @@ static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const TableMc6805:
     return opCode == entry->opCode();
 }
 
-Error TableMc6805::searchOpCode(InsnMc6805 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableMc6805::searchOpCode(CpuType cpuType, InsnMc6805 &insn, StrBuffer &out) const {
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 
-TableMc6805::TableMc6805() {
-    setCpu(MC6805);
+const /*PROGMEM*/ char *TableMc6805::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-bool TableMc6805::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableMc6805::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableMc6805::setCpu(const char *cpu) {
-    auto p = cpu;
-    if (strncasecmp_P(p, TEXT_CPU_LIST, 2) == 0)
-        p += 2;
-    auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
-    return t ? setCpu(t->cpuType()) : false;
+Error TableMc6805::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.istarts_P(TEXT_CPU_LIST, 2))
+        name += 2;
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
 }
 
-TableMc6805 TableMc6805::TABLE;
+const TableMc6805 TABLE;
 
 }  // namespace mc6805
 }  // namespace libasm

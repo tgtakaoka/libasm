@@ -24,8 +24,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class InsnIns8070 : public InsnImpl<Config, Entry> {
-public:
+struct InsnIns8070 final : InsnImpl<Config, Entry> {
     InsnIns8070(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode dst() const { return flags().dst(); }

@@ -46,8 +46,8 @@ enum AddrMode : uint8_t {
     M_DEC = 16,   // _P: "*-"  Indirect then auto decrement addressing
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint16_t _attr;
 
         static constexpr Flags create(AddrMode opr1, AddrMode opr2, AddrMode opr3) {

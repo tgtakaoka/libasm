@@ -16,6 +16,8 @@
 
 #include "reg_cdp1802.h"
 
+#include "reg_base.h"
+
 using namespace libasm::reg;
 
 namespace libasm {

@@ -73,8 +73,8 @@ enum OprOrder : uint8_t {
     SRC_FIRST = 1,   // source first, destination second.
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _dst;
         uint8_t _src;
         uint8_t _ext;

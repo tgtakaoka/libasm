@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 Tadashi G. Takaoka
  *
@@ -30,8 +31,6 @@ class DisTlcs90 final : public Disassembler, public Config {
 public:
     DisTlcs90();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
@@ -39,6 +38,9 @@ private:
     Error decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);
     Error decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace tlcs90

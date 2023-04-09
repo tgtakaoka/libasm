@@ -24,24 +24,16 @@
 namespace libasm {
 namespace ins8060 {
 
-struct TableIns8060 : entry::Table {
-public:
-    TableIns8060();
+struct TableIns8060 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableIns8060 TABLE;
-
-    Error searchName(InsnIns8060 &insn) const;
-    Error searchOpCode(InsnIns8060 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *const _cpu;
+    Error searchName(CpuType, InsnIns8060 &insn) const;
+    Error searchOpCode(CpuType, InsnIns8060 &insn, StrBuffer &out) const;
 };
+
+extern const TableIns8060 TABLE;
 
 }  // namespace ins8060
 }  // namespace libasm

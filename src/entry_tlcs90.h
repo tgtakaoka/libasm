@@ -56,8 +56,8 @@ enum AddrMode : uint8_t {
     M_DST = 62,
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _dst;
         uint8_t _src;
 

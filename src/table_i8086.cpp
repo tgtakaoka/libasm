@@ -16,10 +16,8 @@
 
 #include "table_i8086.h"
 
-#include <string.h>
-
-#include "config_i8086.h"
 #include "entry_i8086.h"
+#include "entry_table.h"
 #include "text_i8086.h"
 
 using namespace libasm::text::i8086;
@@ -895,7 +893,9 @@ static constexpr uint8_t V30INDEX_0F[] PROGMEM = {
 
 // clang-format on
 
-static constexpr TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage I8086_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
         {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
         {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
@@ -915,7 +915,7 @@ static constexpr TableI8086::EntryPage I8086_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static constexpr TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
+static constexpr EntryPage I80186_PAGES[] PROGMEM = {
         // I80186
         {0x00, ARRAY_RANGE(TABLE_I80186), ARRAY_RANGE(INDEX_I80186)},
         {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
@@ -940,7 +940,7 @@ static constexpr TableI8086::EntryPage I80186_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static constexpr TableI8086::EntryPage V30_PAGES[] PROGMEM = {
+static constexpr EntryPage V30_PAGES[] PROGMEM = {
         // V30
         {0x00, ARRAY_RANGE(V30TABLE_00), ARRAY_RANGE(V30INDEX_00)},
         {0x0F, ARRAY_RANGE(V30TABLE_0F), ARRAY_RANGE(V30INDEX_0F)},
@@ -968,11 +968,17 @@ static constexpr TableI8086::EntryPage V30_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-static constexpr TableI8086::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
         {I80186, TEXT_CPU_80186, ARRAY_RANGE(I80186_PAGES)},
         {V30, TEXT_CPU_V30, ARRAY_RANGE(V30_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -1034,17 +1040,9 @@ static bool acceptModes(InsnI8086 &insn, const Entry *entry) {
            acceptMode(insn.ext(), table.ext()) && acceptSize(insn, entry);
 }
 
-Error TableI8086::searchName(InsnI8086 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableI8086::searchName(CpuType cpuType, InsnI8086 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
-}
-
-bool TableI8086::isRepeatPrefix(Config::opcode_t opCode) const {
-    if (opCode == 0xF2 || opCode == 0xF3)
-        return true;
-    if (_cpu->cpuType() == V30)
-        return opCode == 0x0F;
-    return false;
 }
 
 bool TableI8086::isSegmentPrefix(Config::opcode_t opCode) const {
@@ -1081,7 +1079,7 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
     }
 }
 
-static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const TableI8086::EntryPage *page) {
+static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto dstPos = entry->flags().dstPos();
     const auto srcPos = entry->flags().srcPos();
@@ -1095,42 +1093,41 @@ static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const TableI8086::E
     return opCode == entry->opCode();
 }
 
-Error TableI8086::searchOpCode(InsnI8086 &insn, StrBuffer &out) const {
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableI8086::searchOpCode(CpuType cpuType, InsnI8086 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableI8086::TableI8086() {
-    setCpu(I8086);
+bool TableI8086::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+    return cpu(cpuType)->isPrefix(code);
 }
 
-bool TableI8086::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableI8086::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-const /* PROGMEM */ char *TableI8086::cpu_P() const {
-    return _cpu->name_P();
+const /*PROGMEM*/ char *TableI8086::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableI8086::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (toupper(*cpu) == 'I') {
-        cpu++;
-        if (strcmp_P(cpu, TEXT_CPU_8086) == 0)
-            return setCpu(I8086);
-        if (strcmp_P(cpu, TEXT_CPU_80186) == 0)
-            return setCpu(I80186);
+Error TableI8086::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+    } else {
+        name.iexpect('i');
+        if (name.iequals(TEXT_CPU_8086)) {
+            cpuType = I8086;
+        } else if (name.iequals(TEXT_CPU_80186)) {
+            cpuType = I80186;
+        } else {
+            return UNSUPPORTED_CPU;
+        }
     }
-    return false;
+    return OK;
 }
 
-TableI8086 TableI8086::TABLE;
+const TableI8086 TABLE;
 
 }  // namespace i8086
 }  // namespace libasm

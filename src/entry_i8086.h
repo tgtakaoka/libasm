@@ -89,8 +89,8 @@ enum OprSize : uint8_t {
     SZ_SOFF = 3,  // Segment:Offset
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _dst;
         uint8_t _src;
         uint8_t _ext;

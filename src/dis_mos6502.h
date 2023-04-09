@@ -24,12 +24,9 @@
 namespace libasm {
 namespace mos6502 {
 
-class DisMos6502 final : public Disassembler, public Config {
-public:
+struct DisMos6502 final : Disassembler, Config {
     DisMos6502();
 
-    const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override;
     void reset() override;
 
     Error setLongAccumulator(bool enable);
@@ -42,6 +39,11 @@ private:
     const BoolOption<DisMos6502> _opt_longi;
     const BoolOption<DisMos6502> _opt_indirectLong;
 
+    bool _longAccumulator;
+    bool _longIndex;
+    bool _useIndirectLong;
+    bool longImmediate(AddrMode mode) const;
+
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
     Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
@@ -50,6 +52,9 @@ private:
     Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mos6502

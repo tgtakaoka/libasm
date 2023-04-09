@@ -24,9 +24,9 @@
 namespace libasm {
 namespace z8000 {
 
-class InsnZ8000 : public InsnImpl<Config, Entry> {
-public:
-    InsnZ8000(Insn &insn) : InsnImpl(insn) {}
+struct InsnZ8000 final : InsnImpl<Config, Entry> {
+    InsnZ8000(Insn &insn) : InsnImpl(insn), _memory(nullptr) {}
+    InsnZ8000(Insn &insn, DisMemory &memory) : InsnImpl(insn), _memory(&memory) {}
 
     OprSize size() const { return flags().size(); }
     AddrMode dst() const { return flags().dst(); }
@@ -42,9 +42,10 @@ public:
         setFlags(Entry::Flags::create(dst, src, ex1, ex2));
     }
 
-    void setMemory(DisMemory &memory) { _memory = &memory; }
-    void readPost() { setPost(readUint16(*_memory)); }
-    void readPost(DisMemory &memory) { setPost(readUint16(memory)); }
+    void readPost() {
+        if (_memory)
+            setPost(readUint16(*_memory));
+    }
 
     void emitInsn() {
         emitUint16(opCode(), 0);
@@ -77,7 +78,7 @@ public:
     }
 
 private:
-    DisMemory *_memory;
+    DisMemory *const _memory;
 
     uint8_t operandPos() {
         uint8_t pos = length();

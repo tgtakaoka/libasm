@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_z8000.h"
-
 namespace libasm {
 namespace z8000 {
 
@@ -29,8 +27,15 @@ enum CpuType : uint8_t {
     Z8002,
 };
 
-struct Config : ConfigImpl<ADDRESS_23BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6,
-                        text::z8000::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_23BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z8001) {}
+
+    AddressWidth addressWidth() const override {
+        return segmentedModel() ? ADDRESS_23BIT : ADDRESS_16BIT;
+    }
+
+    bool segmentedModel() const { return cpuType() == Z8001; }
+};
 
 }  // namespace z8000
 }  // namespace libasm

@@ -18,38 +18,22 @@
 #define __TABLE_NS32000_H__
 
 #include "config_ns32000.h"
-#include "dis_memory.h"
-#include "entry_table.h"
 #include "insn_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
 
-struct TableNs32000 : entry::Table {
-public:
-    TableNs32000();
+struct TableNs32000 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableNs32000 TABLE;
-
-    Error searchName(InsnNs32000 &insn) const;
-    Error searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory) const;
-    bool isPrefixCode(uint8_t opCode) const;
-
-    const /* PROGMEM */ char *cpu_P() const override;
-    bool setCpu(const char *cpu) override;
-
-    bool setFpu(FpuType fpuType);
-    bool setMmu(MmuType mmuType);
-
-    struct Cpu;
-    struct Fpu;
-    struct Mmu;
-
-private:
-    const Cpu *const _cpu;
-    const Fpu *_fpu;
-    const Mmu *_mmu;
+    Error searchName(const CpuSpec &, InsnNs32000 &insn) const;
+    Error searchOpCode(const CpuSpec &, InsnNs32000 &insn, StrBuffer &out) const;
+    bool isPrefixCode(const CpuSpec &, Config::opcode_t opCode) const;
 };
+
+extern const TableNs32000 TABLE;
 
 }  // namespace ns32000
 }  // namespace libasm

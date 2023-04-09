@@ -27,7 +27,7 @@ using namespace reg;
 static const char OPT_INT_PCBITS[] = "pc-bits";
 static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
-struct AsmMc6805::Operand : public OperandBase {
+struct AsmMc6805::Operand final : ErrorAt {
     AddrMode mode;
     int8_t size;
     uint16_t val16;
@@ -35,8 +35,8 @@ struct AsmMc6805::Operand : public OperandBase {
 };
 
 AsmMc6805::AsmMc6805()
-    : Assembler(TableMc6805::TABLE, &_opt_pc_bits, _number, _comment, _symbol, _letter, _location,
-              &_operators),
+    : Assembler(&_opt_pc_bits, _number, _comment, _symbol, _letter, _location, &_operators),
+      Config(TABLE),
       _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();
 }
@@ -236,7 +236,7 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    const auto error = TableMc6805::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

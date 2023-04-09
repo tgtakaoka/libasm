@@ -28,8 +28,6 @@ class AsmI8048 final : public Assembler, public Config {
 public:
     AsmI8048();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
@@ -43,6 +41,9 @@ private:
     void encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op);
     void encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8048

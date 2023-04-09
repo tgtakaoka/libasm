@@ -24,7 +24,7 @@ namespace mc6800 {
 
 using namespace reg;
 
-DisMc6800::DisMc6800() : Disassembler(_hexFormatter, TableMc6800::TABLE, '*') {
+    DisMc6800::DisMc6800() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
     reset();
 }
 
@@ -73,7 +73,7 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
-        if (TableMc6800::TABLE.searchOpCodeAlias(insn, out))
+        if (TABLE.searchOpCodeAlias(cpuType(), insn, out))
             return setError(insn);
         outHex(out, bitNum, 3);
     } else {
@@ -141,7 +141,7 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6800 insn(_insn);
     auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableMc6800::TABLE.isPrefix(opCode)) {
+    if (TABLE.isPrefix(cpuType(), opCode)) {
         const auto prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -149,7 +149,7 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6800::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

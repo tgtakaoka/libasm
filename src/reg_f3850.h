@@ -17,8 +17,10 @@
 #ifndef __REG_F3850_H__
 #define __REG_F3850_H__
 
-#include "config_f3850.h"
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace f3850 {
@@ -50,8 +52,8 @@ enum RegName : uint8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-RegName decodeRegName(Config::opcode_t opc);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+RegName decodeRegName(uint8_t opc);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 }  // namespace reg
 }  // namespace f3850

@@ -24,7 +24,7 @@ namespace i8096 {
 
 using namespace reg;
 
-struct AsmI8096::Operand : public OperandBase {
+struct AsmI8096::Operand final : ErrorAt {
     AddrMode mode;
     uint8_t regno;
     Error regerr;
@@ -33,7 +33,7 @@ struct AsmI8096::Operand : public OperandBase {
 };
 
 AsmI8096::AsmI8096()
-    : Assembler(TableI8096::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -214,7 +214,7 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(src2);
 
     insn.setAddrMode(dst.mode, src1.mode, src2.mode);
-    const auto error = TableI8096::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dst, error);
 

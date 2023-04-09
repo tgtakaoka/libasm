@@ -16,6 +16,8 @@
 
 #include "option_base.h"
 
+#include <ctype.h>
+
 namespace libasm {
 
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) {
@@ -38,6 +40,12 @@ Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) {
     if (end != scan.str() && *end == 0)
         return OK;
     return ILLEGAL_CONSTANT;
+}
+
+StrScanner OptionBase::readSymbol(StrScanner &scan) {
+    auto p = scan.skipSpaces();
+    p.trimStart([](char c) { return !isspace(c); });
+    return StrScanner(scan.str(), p.str());
 }
 
 Error Options::setOption(const char *name, const char *text) const {

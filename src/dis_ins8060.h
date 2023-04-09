@@ -28,8 +28,6 @@ class DisIns8060 final : public Disassembler, public Config {
 public:
     DisIns8060();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
 
@@ -40,6 +38,9 @@ private:
 
     static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }
     static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace ins8060

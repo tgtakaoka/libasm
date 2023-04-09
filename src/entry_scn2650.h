@@ -41,20 +41,18 @@ enum AddrMode : uint8_t {
     M_AB15 = 12,  // (*)a: Absolute jump, 15 bit, optionally indirect
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _attr;
 
         static constexpr Flags create(AddrMode opr1, AddrMode opr2) {
-            return Flags{
-                    static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
-                                         (static_cast<uint8_t>(opr2) << opr2_gp))};
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(opr1) << opr1_gp) |
+                                              (static_cast<uint8_t>(opr2) << opr2_gp))};
         }
 
         static constexpr Flags undef() {
-            return Flags{
-                    static_cast<uint8_t>((static_cast<uint8_t>(M_NONE) << opr1_gp) |
-                                         (static_cast<uint8_t>(M_REGN) << opr2_gp))};
+            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(M_NONE) << opr1_gp) |
+                                              (static_cast<uint8_t>(M_REGN) << opr2_gp))};
         }
 
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }

@@ -26,7 +26,7 @@ namespace i8048 {
 
 using namespace reg;
 
-struct AsmI8048::Operand : public OperandBase {
+struct AsmI8048::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint16_t val16;
@@ -34,7 +34,7 @@ struct AsmI8048::Operand : public OperandBase {
 };
 
 AsmI8048::AsmI8048()
-    : Assembler(TableI8048::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -227,7 +227,7 @@ Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    const auto error = TableI8048::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
 

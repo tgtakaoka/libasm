@@ -28,7 +28,8 @@ static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "use-absolute";
 static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
 
 DisI8096::DisI8096()
-    : Disassembler(_hexFormatter, TableI8096::TABLE, '$', &_opt_absolute),
+    : Disassembler(_hexFormatter, '$', &_opt_absolute),
+      Config(TABLE),
       _opt_absolute(this, &DisI8096::setUseAbsolute, OPT_BOOL_ABSOLUTE, OPT_DESC_ABSOLUTE) {
     reset();
 }
@@ -201,13 +202,13 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
 Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8096 insn(_insn);
     const auto opc = insn.readByte(memory);
-    if (TableI8096::TABLE.isPrefix(opc)) {
+    if (TABLE.isPrefix(cpuType(), opc)) {
         insn.setOpCode(insn.readByte(memory), opc);
     } else {
         insn.setOpCode(opc);
     }
 
-    if (TableI8096::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;

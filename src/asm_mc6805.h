@@ -28,7 +28,6 @@ class AsmMc6805 final : public Assembler, public Config {
 public:
     AsmMc6805();
 
-    const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override;
 
@@ -51,6 +50,9 @@ private:
     void emitBitNumber(InsnMc6805 &insn, const Operand &op);
     void emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc6805

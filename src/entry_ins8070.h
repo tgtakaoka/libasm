@@ -49,8 +49,8 @@ enum AddrMode : uint8_t {
     M_GEN = 14,  // nnnn/nnnn,PC/nn,SP/nn,Pn/@nn,Pn/nn,@Pn/0xFFnn
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint16_t _attr;
 
         static constexpr Flags create(AddrMode dst, AddrMode src, OprSize size) {

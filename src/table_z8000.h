@@ -18,36 +18,22 @@
 #define __TABLE_Z8000_H__
 
 #include "config_z8000.h"
-#include "dis_memory.h"
-#include "entry_table.h"
 #include "insn_z8000.h"
 
 namespace libasm {
 namespace z8000 {
 
-struct TableZ8000 : entry::Table {
-public:
-    TableZ8000();
+struct TableZ8000 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableZ8000 TABLE;
-
-    Error searchName(InsnZ8000 &insn) const;
-    Error searchOpCode(InsnZ8000 &insn, StrBuffer &out, DisMemory &memory) const;
-    Error searchOpCodeAlias(InsnZ8000 &insn, StrBuffer &out, DisMemory &memory) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-    bool segmentedModel() const;
-    AddressWidth addressWidth() const;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnZ8000 &insn) const;
+    Error searchOpCode(CpuType, InsnZ8000 &insn, StrBuffer &out) const;
+    Error searchOpCodeAlias(CpuType, InsnZ8000 &insn, StrBuffer &out) const;
 };
+
+extern const TableZ8000 TABLE;
 
 }  // namespace z8000
 }  // namespace libasm

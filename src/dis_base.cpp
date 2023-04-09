@@ -18,10 +18,6 @@
 
 namespace libasm {
 
-static const char OPT_BOOL_UPPER_HEX[] PROGMEM = "upper-hex";
-static const char OPT_DESC_UPPER_HEX[] PROGMEM = "use upper case letter for hexadecimal";
-static const char OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
-static const char OPT_DESC_UPPERCASE[] PROGMEM = "use upper case letter for output";
 static const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
 static const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
 static const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
@@ -29,10 +25,8 @@ static const char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant"
 static const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 static const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
-Disassembler::Disassembler(const HexFormatter &hexFormatter, entry::Table &table, char curSym,
-        const OptionBase *option)
+Disassembler::Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option)
     : _formatter(hexFormatter),
-      _table(table),
       _commonOptions(&_opt_relative),
       _options(option),
       _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,

@@ -28,8 +28,6 @@ class DisScn2650 final : public Disassembler, public Config {
 public:
     DisScn2650();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
@@ -38,6 +36,9 @@ private:
     Error decodeRelative(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode);
     Error decodeOperand(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, const AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace scn2650

@@ -16,6 +16,7 @@
 
 #include "reg_f3850.h"
 
+#include "reg_base.h"
 #include "text_f3850.h"
 
 using namespace libasm::text::f3850;
@@ -59,7 +60,7 @@ RegName parseRegName(StrScanner &scan) {
     return name;
 }
 
-RegName decodeRegName(Config::opcode_t opc) {
+RegName decodeRegName(uint8_t opc) {
     static constexpr auto regJ = uint8_t(REG_J) - uint8_t(REG_alias);
     static constexpr auto regD = uint8_t(REG_D) - uint8_t(REG_alias);
     const auto regno = opc & 0xF;

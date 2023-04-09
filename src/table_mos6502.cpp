@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_mos6502.h"
+#include "table_mos6502.h"
 
 #include "entry_mos6502.h"
-#include "table_mos6502.h"
+#include "entry_table.h"
 #include "text_mos6502.h"
-
-#include <string.h>
 
 using namespace libasm::text::mos6502;
 
@@ -675,38 +673,46 @@ static constexpr uint8_t W65C816_INDEX[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableMos6502::EntryPage MOS6502_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage MOS6502_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
 };
-static constexpr TableMos6502::EntryPage G65SC02_PAGES[] PROGMEM = {
+static constexpr EntryPage G65SC02_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
 };
-static constexpr TableMos6502::EntryPage R65C02_PAGES[] PROGMEM = {
+static constexpr EntryPage R65C02_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
 };
-static constexpr TableMos6502::EntryPage W65C02S_PAGES[] PROGMEM = {
+static constexpr EntryPage W65C02S_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(R65C02_TABLE), ARRAY_RANGE(R65C02_INDEX)},
         {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
 };
-static constexpr TableMos6502::EntryPage W65C816_PAGES[] PROGMEM = {
+static constexpr EntryPage W65C816_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MOS6502_TABLE), ARRAY_RANGE(MOS6502_INDEX)},
         {ARRAY_RANGE(G65SC02_TABLE), ARRAY_RANGE(G65SC02_INDEX)},
         {ARRAY_RANGE(W65C02S_TABLE), ARRAY_RANGE(W65C02S_INDEX)},
         {ARRAY_RANGE(W65C816_TABLE), ARRAY_RANGE(W65C816_INDEX)},
 };
 
-static constexpr TableMos6502::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MOS6502, TEXT_CPU_6502, ARRAY_RANGE(MOS6502_PAGES)},
         {G65SC02, TEXT_CPU_65SC02, ARRAY_RANGE(G65SC02_PAGES)},
         {R65C02, TEXT_CPU_65C02, ARRAY_RANGE(R65C02_PAGES)},
         {W65C02S, TEXT_CPU_W65C02S, ARRAY_RANGE(W65C02S_PAGES)},
         {W65C816, TEXT_CPU_65816, ARRAY_RANGE(W65C816_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -734,13 +740,12 @@ static bool acceptModes(InsnMos6502 &insn, const Entry *entry) {
            acceptMode(flags.mode3(), table.mode3());
 }
 
-Error TableMos6502::searchName(InsnMos6502 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableMos6502::searchName(CpuType cpuType, InsnMos6502 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(
-        InsnMos6502 &insn, const Entry *entry, const TableMos6502::EntryPage *page) {
+static bool matchOpCode(InsnMos6502 &insn, const Entry *entry, const EntryPage *page) {
     if (insn.opCode() != entry->opCode())
         return false;
     const auto mode = entry->flags().mode1();
@@ -749,98 +754,45 @@ static bool matchOpCode(
     return true;
 }
 
-Error TableMos6502::searchOpCode(InsnMos6502 &insn, StrBuffer &out) const {
-    insn.setAllowIndirectLong(_useIndirectLong);
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableMos6502::searchOpCode(CpuType cpuType, InsnMos6502 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableMos6502::TableMos6502() {
-    _cpu = nullptr;
-    reset();
+const /*PROGMEM*/ char *TableMos6502::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-void TableMos6502::reset() {
-    if (_cpu == nullptr)
-        setCpu(MOS6502);
-    setLongAccumulator(false);
-    setLongIndex(false);
-    useIndirectLong(false);
+const /*PROGMEM*/ char *TableMos6502::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableMos6502::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    useIndirectLong(_cpu->cpuType() == W65C816);
-    return true;
-}
-
-AddressWidth TableMos6502::addressWidth() const {
-    return _cpu->cpuType() == W65C816 ? ADDRESS_24BIT : ADDRESS_16BIT;
-}
-
-CpuType TableMos6502::cpuType() const {
-    return _cpu->cpuType();
-}
-
-bool TableMos6502::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (strcasecmp_P(cpu, TEXT_CPU_MOS6502) == 0)
-        return setCpu(MOS6502);
-    if (strcasecmp_P(cpu, TEXT_CPU_R65C02) == 0)
-        return setCpu(R65C02);
-    if (strcasecmp_P(cpu, TEXT_CPU_G65SC02) == 0)
-        return setCpu(G65SC02);
-    if (toupper(*cpu) == 'W') {
-        ++cpu;
-        if (strcasecmp_P(cpu, TEXT_CPU_65C02) == 0)
-            return setCpu(W65C02S);
-        if (strcasecmp_P(cpu, TEXT_CPU_65816) == 0 || strcasecmp_P(cpu, TEXT_CPU_65C816) == 0 ||
-                strcasecmp_P(cpu, TEXT_CPU_65C816S) == 0)
-            return setCpu(W65C816);
+Error TableMos6502::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+    } else if (name.iequals(TEXT_CPU_MOS6502)) {
+        cpuType = MOS6502;
+    } else if (name.iequals(TEXT_CPU_R65C02)) {
+        cpuType = R65C02;
+    } else if (name.iequals(TEXT_CPU_G65SC02)) {
+        cpuType = G65SC02;
+    } else if (name.iexpect('W')) {
+        if (name.iequals(TEXT_CPU_65C02)) {
+            cpuType = W65C02S;
+        } else if (name.iequals(TEXT_CPU_65816) || name.iequals(TEXT_CPU_65C816) ||
+                   name.iequals(TEXT_CPU_65C816S)) {
+            cpuType = W65C816;
+        } else {
+            return UNSUPPORTED_CPU;
+        }
+    } else {
+        return UNSUPPORTED_CPU;
     }
-    return false;
+    return OK;
 }
 
-bool TableMos6502::useIndirectLong(bool enable) {
-    _useIndirectLong = enable;
-    if (_cpu->cpuType() == W65C816)
-        return true;
-    _useIndirectLong = false;
-    return !enable;
-}
-
-bool TableMos6502::setLongAccumulator(bool on) {
-    _longAccumulator = on;
-    if (_cpu->cpuType() == W65C816)
-        return true;
-    _longAccumulator = false;
-    return !on;
-}
-
-bool TableMos6502::setLongIndex(bool on) {
-    _longIndex = on;
-    if (_cpu->cpuType() == W65C816)
-        return true;
-    _longIndex = false;
-    return !on;
-}
-
-bool TableMos6502::longImmediate(AddrMode mode) const {
-    if (_cpu->cpuType() == W65C816) {
-        if (mode == M_IMA)
-            return _longAccumulator;
-        if (mode == M_IMX)
-            return _longIndex;
-    }
-    return false;
-}
-
-TableMos6502 TableMos6502::TABLE;
+const TableMos6502 TABLE;
 
 }  // namespace mos6502
 }  // namespace libasm

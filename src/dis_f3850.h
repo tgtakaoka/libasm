@@ -28,7 +28,6 @@ class DisF3850 final : public Disassembler, public Config {
 public:
     DisF3850();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setUseScratchpadName(bool enable);
@@ -42,6 +41,9 @@ private:
     Error decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace f3850

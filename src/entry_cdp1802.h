@@ -35,8 +35,8 @@ enum AddrMode : uint8_t {
     M_IOAD = 6,  // IO address, 1~7
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _attr;
 
         static constexpr Flags create(AddrMode opr1, AddrMode opr2) {

@@ -18,46 +18,24 @@
 #define __TABLE_MOS6502_H__
 
 #include "config_mos6502.h"
-#include "entry_table.h"
 #include "insn_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
 
-struct TableMos6502 : entry::Table {
-    TableMos6502();
-    void reset();
+struct TableMos6502 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableMos6502 TABLE;
-
-    Error searchName(InsnMos6502 &insn) const;
-    Error searchOpCode(InsnMos6502 &insn, StrBuffer &out) const;
-    bool useIndirectLong(bool enable);
-    bool longAccumulator() const { return _longAccumulator; }
-    bool setLongAccumulator(bool on);
-    bool longIndex() const { return _longIndex; }
-    bool setLongIndex(bool on);
-    bool longImmediate(AddrMode mode) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    CpuType cpuType() const;
-    bool setCpu(const char *cpu) override;
-    AddressWidth addressWidth() const;
+    Error searchName(CpuType, InsnMos6502 &insn) const;
+    Error searchOpCode(CpuType, InsnMos6502 &insn, StrBuffer &out) const;
 
     static constexpr Config::opcode_t WDM = 0x42;
     static constexpr Config::opcode_t JSL = 0x22;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-    bool _useIndirectLong;
-    bool _longAccumulator;
-    bool _longIndex;
-
-    bool setCpu(CpuType cpuType);
 };
+
+extern const TableMos6502 TABLE;
 
 }  // namespace mos6502
 }  // namespace libasm

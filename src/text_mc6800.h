@@ -30,6 +30,7 @@ extern const char TEXT_CPU_6801[]  PROGMEM;
 extern const char TEXT_CPU_6301[]  PROGMEM;
 extern const char TEXT_CPU_6811[]  PROGMEM;
 extern const char TEXT_CPU_68HC11[] PROGMEM;
+extern const char TEXT_CPU_HD6301[] PROGMEM;
 extern const char TEXT_CPU_MB8861[] PROGMEM;
 
 // MC6800

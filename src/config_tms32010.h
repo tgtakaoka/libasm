@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_tms32010.h"
-
 namespace libasm {
 namespace tms32010 {
 
@@ -29,8 +27,14 @@ enum CpuType : uint8_t {
     TMS32015,
 };
 
-struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_LITTLE, 4, 4,
-                        text::tms32010::TEXT_CPU_LIST> {};
+struct Config
+    : ConfigImpl<CpuType, ADDRESS_12BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_LITTLE, 4, 4> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, TMS32010) {}
+
+    uint16_t dataMemoryLimit() const {
+        return cpuType() == TMS32010 ? 0x8F : 0xFF;
+    }
+};
 
 }  // namespace tms32010
 }  // namespace libasm

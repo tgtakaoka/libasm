@@ -28,8 +28,6 @@ class DisTms32010 final : public Disassembler, public Config {
 public:
     DisTms32010();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
@@ -39,6 +37,9 @@ private:
     Error decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mnode);
     Error decodeOperand(DisMemory &memory, InsnTms32010 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace tms32010

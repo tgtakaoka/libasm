@@ -30,7 +30,7 @@ static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
 
 DisI8086::DisI8086()
-    : Disassembler(_hexFormatter, TableI8086::TABLE, '$', &_opt_segmentInsn),
+    : Disassembler(_hexFormatter, '$', &_opt_segmentInsn), Config(TABLE),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
               OPT_DESC_SEGMENT_INSN, _opt_stringInsn),
       _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
@@ -247,7 +247,7 @@ Error DisI8086::decodeMemReg(
         return OK;
     }
     const uint8_t r_m = insn.modReg() & 07;
-    return outMemReg(memory, insn, out, TableI8086::TABLE.overrideSeg(insn.segment()), mod, r_m);
+    return outMemReg(memory, insn, out, TABLE.overrideSeg(insn.segment()), mod, r_m);
 }
 
 Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &out) {
@@ -256,7 +256,7 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &ou
         InsnI8086 istr(_istr);
         const auto opc = rep.readByte(memory);
         istr.setOpCode(opc, 0);
-        if (TableI8086::TABLE.searchOpCode(istr, out))
+        if (TABLE.searchOpCode(cpuType(), istr, out))
             return setError(istr);
         if (!istr.stringInst())
             return setError(UNKNOWN_INSTRUCTION);
@@ -313,7 +313,7 @@ Error DisI8086::decodeOperand(
         return decodeImmediate(memory, insn, out, mode);
     case M_BDIR:
     case M_WDIR:
-        return outMemReg(memory, insn, out, TableI8086::TABLE.overrideSeg(insn.segment()), 0, 6);
+        return outMemReg(memory, insn, out, TABLE.overrideSeg(insn.segment()), 0, 6);
     case M_REL:
     case M_REL8:
         return decodeRelative(memory, insn, out, mode);
@@ -351,7 +351,7 @@ static bool validSegOverride(const InsnI8086 &insn) {
 
 Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out) {
     if (insn.segment()) {
-        const auto seg = TableI8086::TABLE.overrideSeg(insn.segment());
+        const auto seg = TABLE.overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {
         case 0xA4:  // MOVS ES:[DI],DS:[SI]
         case 0x20:  // ADD4S ES:[DI],DS:[SI]
@@ -380,14 +380,14 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
 
 Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
     auto opCode = insn.readByte(memory);
-    while (!_segOverrideInsn && TableI8086::TABLE.isSegmentPrefix(opCode)) {
+    while (!_segOverrideInsn && TABLE.isSegmentPrefix(opCode)) {
         if (insn.segment())
             return setError(ILLEGAL_SEGMENT);
         insn.setSegment(opCode);
         opCode = insn.readByte(memory);
     }
     auto prefix = 0;
-    if (TableI8086::TABLE.isPrefix(opCode)) {
+    if (TABLE.isPrefix(cpuType(), opCode)) {
         prefix = opCode;
         opCode = insn.readByte(memory);
     }
@@ -407,7 +407,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8086 insn(_insn);
     if (readCodes(memory, insn))
         return getError();
-    if (TableI8086::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     insn.readModReg(memory);

@@ -28,8 +28,6 @@ class AsmI8096 final : public Assembler, public Config {
 public:
     AsmI8096();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
@@ -44,6 +42,9 @@ private:
     void emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op);
     void emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8096

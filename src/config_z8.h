@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_z8.h"
-
 namespace libasm {
 namespace z8 {
 
@@ -30,8 +28,11 @@ enum CpuType : uint8_t {
     SUPER8,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 7,
-                        text::z8::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 7> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z8) {}
+
+    bool isSuper8() const { return cpuType() == SUPER8; }
+};
 
 }  // namespace z8
 }  // namespace libasm

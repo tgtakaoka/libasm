@@ -29,8 +29,6 @@ class DisZ80 final : public Disassembler, public Config {
 public:
     DisZ80();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
@@ -43,6 +41,9 @@ private:
     Error decodeRelative(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace z80

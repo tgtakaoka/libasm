@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_ins8060.h"
-
 namespace libasm {
 namespace ins8060 {
 
@@ -28,8 +26,9 @@ enum CpuType : uint8_t {
     INS8060,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 2, 4,
-                        text::ins8060::TEXT_CPU_SCMP> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 2, 4> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, INS8060) {}
+};
 
 }  // namespace ins8060
 }  // namespace libasm

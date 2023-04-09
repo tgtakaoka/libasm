@@ -16,10 +16,8 @@
 
 #include "table_mc68000.h"
 
-#include <string.h>
-
-#include "config_mc68000.h"
 #include "entry_mc68000.h"
+#include "entry_table.h"
 #include "text_mc68000.h"
 
 using namespace libasm::text::mc68000;
@@ -474,21 +472,28 @@ static constexpr uint8_t ALIAS_INDEX[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableMc68000::EntryPage MC68000_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage MC68000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-static constexpr TableMc68000::EntryPage ALIAS_PAGES[] PROGMEM = {
+static constexpr EntryPage ALIAS_PAGES[] PROGMEM = {
         {ARRAY_RANGE(ALIAS_TABLE), ARRAY_RANGE(ALIAS_INDEX)},
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-static constexpr TableMc68000::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(ALIAS_PAGES)},
 };
-static constexpr const TableMc68000::Cpu &MC68000_CPU = CPU_TABLE[0];
-static constexpr const TableMc68000::Cpu &MC68000_CPU_WITH_ALIAS = CPU_TABLE[1];
+static constexpr const Cpu &MC68000_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType, bool acceptAlias = false) {
+    return acceptAlias ? &MC68000_CPU + 1 : &MC68000_CPU;
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -542,8 +547,8 @@ static bool acceptModes(InsnMc68000 &insn, const Entry *entry) {
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
-Error TableMc68000::searchName(InsnMc68000 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableMc68000::searchName(CpuType cpuType, InsnMc68000 &insn, bool acceptAlias) const {
+    cpu(cpuType, acceptAlias)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
@@ -590,34 +595,36 @@ static Config::opcode_t getInsnMask(Entry::Flags flags) {
            getInsnMask(flags.oprSize());
 }
 
-static bool matchOpCode(
-        InsnMc68000 &insn, const Entry *entry, const TableMc68000::EntryPage *page) {
+static bool matchOpCode(InsnMc68000 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     opCode &= ~getInsnMask(entry->flags());
     return opCode == entry->opCode();
 }
 
-Error TableMc68000::searchOpCode(InsnMc68000 &insn, StrBuffer &out) const {
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableMc68000::searchOpCode(CpuType cpuType, InsnMc68000 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableMc68000::TableMc68000() {
-    setAlias(false);
+const /*PROGMEM*/ char *TableMc68000::listCpu_P() const {
+    return TEXT_CPU_MC68000;
 }
 
-void TableMc68000::setAlias(bool enable) {
-    _cpu = enable ? &MC68000_CPU_WITH_ALIAS : &MC68000_CPU;
+const /*PROGMEM*/ char *TableMc68000::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableMc68000::setCpu(const char *cpu) {
-    auto p = cpu;
-    if (strncasecmp_P(cpu, TEXT_CPU_MC68000, 2) == 0)
-        p += 2;
-    return strcmp_P(p, TEXT_CPU_68000) == 0;
+Error TableMc68000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.istarts_P(TEXT_CPU_MC68000, 2))
+        name += 2;
+    if (name.iequals_P(TEXT_CPU_68000)) {
+        cpuType = MC68000;
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
 }
 
-TableMc68000 TableMc68000::TABLE;
+const TableMc68000 TABLE;
 
 }  // namespace mc68000
 }  // namespace libasm

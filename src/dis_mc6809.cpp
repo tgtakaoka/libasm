@@ -24,7 +24,7 @@ namespace mc6809 {
 
 using namespace reg;
 
-DisMc6809::DisMc6809() : Disassembler(_hexFormatter, TableMc6809::TABLE, '*') {
+DisMc6809::DisMc6809() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
     reset();
 }
 
@@ -55,7 +55,7 @@ Error DisMc6809::decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
 Error DisMc6809::decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
     PostSpec spec;
-    if (TableMc6809::TABLE.searchPostByte(post, spec))
+    if (TABLE.searchPostByte(cpuType(), post, spec))
         return setError(UNKNOWN_POSTBYTE);
     if (spec.indir)
         out.letter('[');
@@ -176,8 +176,9 @@ Error DisMc6809::decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &
 
 Error DisMc6809::decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out) {
     const uint8_t post = insn.readPost(memory);
-    const auto dst = decodeDataReg(post);
-    const auto src = decodeDataReg(post >> 4);
+    const auto cpu = cpuType();
+    const auto dst = decodeDataReg(cpu, post);
+    const auto src = decodeDataReg(cpu, post >> 4);
     if (src == REG_UNDEF || dst == REG_UNDEF)
         return setError(ILLEGAL_REGISTER);
     const auto size2 = regSize(dst);
@@ -281,7 +282,7 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnMc6809 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableMc6809::TABLE.isPrefix(opCode)) {
+    if (TABLE.isPrefix(cpuType(), opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -289,7 +290,7 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableMc6809::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     if (decodeOperand(memory, insn, out, insn.mode1()))

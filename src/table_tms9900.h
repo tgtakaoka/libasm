@@ -18,32 +18,21 @@
 #define __TABLE_TMS9900_H__
 
 #include "config_tms9900.h"
-#include "entry_table.h"
 #include "insn_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
 
-struct TableTms9900 : entry::Table {
-public:
-    TableTms9900();
+struct TableTms9900 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableTms9900 TABLE;
-
-    Error searchName(InsnTms9900 &insn) const;
-    Error searchOpCode(InsnTms9900 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnTms9900 &insn) const;
+    Error searchOpCode(CpuType, InsnTms9900 &insn, StrBuffer &out) const;
 };
+
+extern const TableTms9900 TABLE;
 
 }  // namespace tms9900
 }  // namespace libasm

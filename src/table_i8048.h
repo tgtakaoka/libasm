@@ -18,33 +18,21 @@
 #define __TABLE_I8048_H__
 
 #include "config_i8048.h"
-#include "entry_i8048.h"
-#include "entry_table.h"
 #include "insn_i8048.h"
 
 namespace libasm {
 namespace i8048 {
 
-struct TableI8048 : entry::Table {
-public:
-    TableI8048();
+struct TableI8048 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableI8048 TABLE;
-
-    Error searchName(InsnI8048 &insn) const;
-    Error searchOpCode(InsnI8048 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnI8048 &insn) const;
+    Error searchOpCode(CpuType, InsnI8048 &insn, StrBuffer &out) const;
 };
+
+extern const TableI8048 TABLE;
 
 }  // namespace i8048
 }  // namespace libasm

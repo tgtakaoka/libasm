@@ -24,7 +24,7 @@ namespace tms9900 {
 
 using namespace reg;
 
-struct AsmTms9900::Operand : public OperandBase {
+struct AsmTms9900::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint16_t val16;
@@ -32,8 +32,7 @@ struct AsmTms9900::Operand : public OperandBase {
 };
 
 AsmTms9900::AsmTms9900()
-    : Assembler(TableTms9900::TABLE, nullptr, _number, _comment, _symbol, _letter,
-                _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -237,7 +236,7 @@ Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-    const auto error = TableTms9900::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(srcOp, error);
 

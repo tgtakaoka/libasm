@@ -24,28 +24,16 @@
 namespace libasm {
 namespace mn1610 {
 
-struct TableMn1610 : entry::Table {
-public:
-    TableMn1610();
+struct TableMn1610 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableMn1610 TABLE;
-
-    Error searchName(InsnMn1610 &insn) const;
-    Error searchOpCode(InsnMn1610 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    AddressWidth addressWidth() const;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnMn1610 &insn) const;
+    Error searchOpCode(CpuType, InsnMn1610 &insn, StrBuffer &out) const;
 };
+
+extern const TableMn1610 TABLE;
 
 }  // namespace mn1610
 }  // namespace libasm

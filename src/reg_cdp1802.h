@@ -17,7 +17,10 @@
 #ifndef __REG_CDP1802_H__
 #define __REG_CDP1802_H__
 
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_scanner.h"
+#include "str_buffer.h"
 
 namespace libasm {
 namespace cdp1802 {
@@ -57,7 +60,7 @@ enum RegName : int8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 }  // namespace reg
 }  // namespace cdp1802

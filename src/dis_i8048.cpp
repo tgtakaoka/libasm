@@ -24,7 +24,7 @@ namespace i8048 {
 
 using namespace reg;
 
-DisI8048::DisI8048() : Disassembler(_hexFormatter, TableI8048::TABLE, '$') {
+DisI8048::DisI8048() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -125,7 +125,7 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8048::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

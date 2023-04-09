@@ -28,8 +28,6 @@ class AsmTms32010 final : public Assembler, public Config {
 public:
     AsmTms32010();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const IntelNumberParser _number;
     const AsteriskCommentParser _comment;
@@ -42,6 +40,9 @@ private:
 
     void encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace tms32010

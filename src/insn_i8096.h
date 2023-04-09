@@ -24,8 +24,7 @@
 namespace libasm {
 namespace i8096 {
 
-class InsnI8096 : public InsnImpl<Config, Entry> {
-public:
+struct InsnI8096 final : InsnImpl<Config, Entry> {
     InsnI8096(Insn &insn) : InsnImpl(insn) {}
 
     AaMode aa() const { return AaMode(opCode() & 3); }

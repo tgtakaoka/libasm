@@ -29,7 +29,6 @@ class DisI8086 final : public Disassembler, public Config {
 public:
     DisI8086();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setStringInsn(bool enable);
@@ -58,6 +57,9 @@ private:
     Error readCodes(DisMemory &memory, InsnI8086 &insn);
     Error decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8086

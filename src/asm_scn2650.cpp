@@ -26,7 +26,7 @@ namespace scn2650 {
 
 using namespace reg;
 
-struct AsmScn2650::Operand : public OperandBase {
+struct AsmScn2650::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
@@ -37,7 +37,7 @@ struct AsmScn2650::Operand : public OperandBase {
 };
 
 AsmScn2650::AsmScn2650()
-    : Assembler(TableScn2650::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -236,7 +236,7 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(opr2);
 
     insn.setAddrMode(opr1.mode, opr2.mode);
-    const auto error = TableScn2650::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(opr1, error);
 

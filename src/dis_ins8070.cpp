@@ -28,7 +28,8 @@ static const char OPT_BOOL_USE_SHARP[] PROGMEM = "use-sharp";
 static const char OPT_DESC_USE_SHARP[] PROGMEM = "use # (default =) for immediate";
 
 DisIns8070::DisIns8070()
-    : Disassembler(_hexFormatter, TableIns8070::TABLE, '$', &_opt_useSharp),
+    : Disassembler(_hexFormatter, '$', &_opt_useSharp),
+      Config(TABLE),
       _opt_useSharp(
               this, &DisIns8070::setUseSharpImmediate, OPT_BOOL_USE_SHARP, OPT_DESC_USE_SHARP) {
     reset();
@@ -158,7 +159,7 @@ Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableIns8070::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

@@ -18,36 +18,25 @@
 #define __TABLE_Z80_H__
 
 #include "config_z80.h"
-#include "entry_table.h"
 #include "insn_z80.h"
 
 namespace libasm {
 namespace z80 {
 
-struct TableZ80 : entry::Table {
-public:
-    TableZ80();
+struct TableZ80 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableZ80 TABLE;
-
-    Error searchName(InsnZ80 &insn) const;
-    Error searchOpCode(InsnZ80 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
+    Error searchName(CpuType, InsnZ80 &insn) const;
+    Error searchOpCode(CpuType, InsnZ80 &insn, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code) const;
 
     static constexpr Config::opcode_t PREFIX_IX = 0xDD;
     static constexpr Config::opcode_t PREFIX_IY = 0xFD;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
 };
+
+extern const TableZ80 TABLE;
 
 }  // namespace z80
 }  // namespace libasm

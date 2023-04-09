@@ -24,7 +24,7 @@ namespace mn1610 {
 
 using namespace reg;
 
-struct AsmMn1610::Operand : public OperandBase {
+struct AsmMn1610::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
@@ -33,12 +33,8 @@ struct AsmMn1610::Operand : public OperandBase {
 };
 
 AsmMn1610::AsmMn1610()
-    : Assembler(TableMn1610::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
-}
-
-AddressWidth AsmMn1610::addressWidth() const {
-    return TableMn1610::TABLE.addressWidth();
 }
 
 void AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
@@ -355,7 +351,7 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op4);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode, op4.mode);
-    const auto error = TableMn1610::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

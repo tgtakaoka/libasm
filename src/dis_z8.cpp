@@ -28,7 +28,8 @@ static const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
 static const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
 
 DisZ8::DisZ8()
-    : Disassembler(_hexFormatter, TableZ8::TABLE, '$', &_opt_workRegister),
+    : Disassembler(_hexFormatter, '$', &_opt_workRegister),
+      Config(TABLE),
       _opt_workRegister(
               this, &DisZ8::setUseWorkRegister, OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER) {
     reset();
@@ -66,7 +67,7 @@ static StrBuffer &outPairReg(StrBuffer &out, uint8_t num, bool indir = false) {
 }
 
 StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
-    if (_useWorkRegister && isWorkRegAlias(addr))
+    if (_useWorkRegister && isWorkRegAlias(isSuper8(), addr))
         return outWorkReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
@@ -79,7 +80,7 @@ StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
 }
 
 StrBuffer &DisZ8::outPairAddr(StrBuffer &out, uint8_t addr, bool indir) {
-    if (_useWorkRegister && isWorkRegAlias(addr))
+    if (_useWorkRegister && isWorkRegAlias(isSuper8(), addr))
         return outPairReg(out, addr & 0xF, indir);
     if (indir)
         out.letter('@');
@@ -366,13 +367,13 @@ Error DisZ8::decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out) {
 }
 
 Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnZ8 insn(_insn);
+    InsnZ8 insn(_insn, memory);
     const Config::opcode_t opCode = insn.readByte(memory);
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableZ8::TABLE.searchOpCode(insn, out, memory))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

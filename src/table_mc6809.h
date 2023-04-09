@@ -18,7 +18,6 @@
 #define __TABLE_MC6809_H__
 
 #include "config_mc6809.h"
-#include "entry_table.h"
 #include "insn_mc6809.h"
 #include "reg_mc6809.h"
 
@@ -38,31 +37,21 @@ struct PostSpec {
         : index(_index), base(_base), size(_size), indir(_indir) {}
 };
 
-struct TableMc6809 : entry::Table {
-    TableMc6809();
+struct TableMc6809 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableMc6809 TABLE;
+    Error hasName(CpuType, InsnMc6809 &insn) const;
+    Error searchName(CpuType, InsnMc6809 &insn) const;
+    Error searchOpCode(CpuType, InsnMc6809 &insn, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code) const;
 
-    Error searchName(InsnMc6809 &insn) const;
-    Error hasName(InsnMc6809 &insn) const;
-    Error searchOpCode(InsnMc6809 &insn, StrBuffer &out) const;
-    bool isPrefix(uint8_t code) const;
-
-    Error searchPostByte(const uint8_t post, PostSpec &spec) const;
-    int16_t searchPostSpec(PostSpec &spec) const;
-
-    const /* PROGMEM */ char *cpu_P() const override;
-    bool setCpu(const char *cpu) override;
-    CpuType cpuType() const;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    struct Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchPostByte(CpuType, Config::opcode_t post, PostSpec &spec) const;
+    int16_t searchPostSpec(CpuType, PostSpec &spec) const;
 };
+
+extern const TableMc6809 TABLE;
 
 }  // namespace mc6809
 }  // namespace libasm

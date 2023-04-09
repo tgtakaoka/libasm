@@ -16,7 +16,6 @@
 
 #include "reg_z8.h"
 
-#include "table_z8.h"
 #include "text_z8.h"
 
 using namespace libasm::text::z8;
@@ -26,12 +25,12 @@ namespace libasm {
 namespace z8 {
 namespace reg {
 
-bool isWorkRegAlias(uint8_t addr) {
-    return (addr & 0xF0) == (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
+bool isWorkRegAlias(bool super8, uint8_t addr) {
+    return (addr & 0xF0) == (super8 ? 0xC0 : 0xE0);
 }
 
-uint8_t encodeWorkRegAddr(RegName name) {
-    return encodeRegName(name) | (TableZ8::TABLE.isSuper8() ? 0xC0 : 0xE0);
+uint8_t encodeWorkRegAddr(bool super8, RegName name) {
+    return encodeRegName(name) | (super8 ? 0xC0 : 0xE0);
 }
 
 RegName parseRegName(StrScanner &scan) {

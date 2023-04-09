@@ -28,7 +28,6 @@ class AsmZ8 final : public Assembler, public Config {
 public:
     AsmZ8();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setRegPointer(int32_t rp);
@@ -67,6 +66,9 @@ private:
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace z8

@@ -16,11 +16,8 @@
 
 #include "table_ins8070.h"
 
-#include <ctype.h>
-#include <string.h>
-
-#include "config_ins8070.h"
 #include "entry_ins8070.h"
+#include "entry_table.h"
 #include "text_ins8070.h"
 
 using namespace libasm::text::ins8070;
@@ -186,14 +183,18 @@ static constexpr uint8_t INDEX_INS8070[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableIns8070::EntryPage INS8070_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage INS8070_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_INS8070), ARRAY_RANGE(INDEX_INS8070)},
 };
 
-static constexpr TableIns8070::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {INS8070, TEXT_CPU_8070, ARRAY_RANGE(INS8070_PAGES)},
 };
-static constexpr const TableIns8070::Cpu &INS8070_CPU = CPU_TABLE[0];
+static constexpr const Cpu &INS8070_CPU = CPU_TABLE[0];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -224,8 +225,8 @@ static bool acceptModes(InsnIns8070 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableIns8070::searchName(InsnIns8070 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableIns8070::searchName(CpuType cpuType, InsnIns8070 &insn) const {
+    INS8070_CPU.searchName(insn, acceptModes);
     return insn.getError();
 }
 
@@ -245,8 +246,7 @@ static Config::opcode_t maskCode(AddrMode mode) {
     }
 }
 
-static bool matchOpCode(
-        InsnIns8070 &insn, const Entry *entry, const TableIns8070::EntryPage *page) {
+static bool matchOpCode(InsnIns8070 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     opCode &= maskCode(flags.dst());
@@ -254,20 +254,30 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableIns8070::searchOpCode(InsnIns8070 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableIns8070::searchOpCode(CpuType cpuType, InsnIns8070 &insn, StrBuffer &out) const {
+    auto entry = INS8070_CPU.searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 
-TableIns8070::TableIns8070() : _cpu(&INS8070_CPU) {}
-
-bool TableIns8070::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_INS8070) == 0 || strcasecmp_P(cpu, TEXT_CPU_8070) == 0;
+const /*PROGMEM*/ char *TableIns8070::listCpu_P() const {
+    return TEXT_CPU_INS8070;
 }
 
-TableIns8070 TableIns8070::TABLE;
+const /*PROGMEM*/ char *TableIns8070::cpuName_P(CpuType cpuType) const {
+    return INS8070_CPU.name_P();
+}
+
+Error TableIns8070::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals_P(TEXT_CPU_INS8070) || name.iequals_P(TEXT_CPU_INS8070 + 3)) {
+        cpuType = INS8070;
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
+}
+
+const TableIns8070 TABLE;
 
 }  // namespace ins8070
 }  // namespace libasm

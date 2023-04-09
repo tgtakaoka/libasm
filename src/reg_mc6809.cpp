@@ -16,7 +16,6 @@
 
 #include "reg_mc6809.h"
 
-#include "table_mc6809.h"
 #include "text_mc6809.h"
 
 using namespace libasm::text::mc6809;
@@ -64,24 +63,24 @@ RegSize regSize(RegName name) {
     return SZ_NONE;      // REG_Z..REG_0
 }
 
-StrBuffer &outRegName(StrBuffer &out, const RegName name) {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());
     return out;
 }
 
-RegName decodeDataReg(uint8_t num) {
+RegName decodeDataReg(CpuType cpuType, uint8_t num) {
     num &= 0xF;
     const auto name = RegName(num);
-    if (TableMc6809::TABLE.cpuType() == MC6809) {
+    if (cpuType == MC6809) {
         if (name == REG_W || name == REG_V || num >= 12)
             return REG_UNDEF;
     }
     return (name == REG_0) ? REG_Z : name;
 }
 
-bool isDataReg(RegName name) {
+bool isDataReg(CpuType cpuType, RegName name) {
     if (name == REG_UNDEF)
         return false;
     switch (name) {
@@ -91,7 +90,7 @@ bool isDataReg(RegName name) {
     case REG_F:
     case REG_Z:
     case REG_0:
-        return TableMc6809::TABLE.cpuType() == HD6309;
+        return cpuType == HD6309;
     case REG_PCR:
         return false;
     default:

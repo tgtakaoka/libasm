@@ -24,7 +24,7 @@ namespace ins8060 {
 
 using namespace reg;
 
-DisIns8060::DisIns8060() : Disassembler(_hexFormatter, TableIns8060::TABLE, '$') {
+DisIns8060::DisIns8060() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -77,7 +77,7 @@ Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableIns8060::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     switch (insn.addrMode()) {

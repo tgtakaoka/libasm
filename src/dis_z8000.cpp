@@ -30,16 +30,13 @@ static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
 
 DisZ8000::DisZ8000()
-    : Disassembler(_hexFormatter, TableZ8000::TABLE, '$', &_opt_shortDirect),
+    : Disassembler(_hexFormatter, '$', &_opt_shortDirect),
+      Config(TABLE),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, _opt_ioaddrPrefix),
       _opt_ioaddrPrefix(
               this, &DisZ8000::setIoAddressPrefix, OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX) {
     reset();
-}
-
-AddressWidth DisZ8000::addressWidth() const {
-    return TableZ8000::TABLE.addressWidth();
 }
 
 void DisZ8000::reset() {
@@ -77,7 +74,7 @@ Error DisZ8000::decodeImmediate(
         const int16_t count =
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
-            if (TableZ8000::TABLE.searchOpCodeAlias(insn, out, memory))
+            if (TABLE.searchOpCodeAlias(cpuType(), insn, out))
                 return setError(insn);
             data = -count;
         }
@@ -107,7 +104,7 @@ Error DisZ8000::decodeFlags(StrBuffer &out, uint8_t flags) {
 }
 
 Error DisZ8000::decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect) {
-    const auto reg = decodeRegNum(num, size);
+    const auto reg = decodeRegNum(segmentedModel(), num, size);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
     if (indirect)
@@ -127,7 +124,7 @@ Error DisZ8000::decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize s
 }
 
 Error DisZ8000::decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size) {
-    const auto reg = decodeCtlReg(ctlNum);
+    const auto reg = decodeCtlReg(segmentedModel(), ctlNum);
     if (reg == REG_ILLEGAL)
         return setError(ILLEGAL_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS)
@@ -185,7 +182,7 @@ Error DisZ8000::decodeGenericAddressing(
 
 Error DisZ8000::decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, StrBuffer &out) {
     const uint16_t addr = insn.readUint16(memory);
-    if (TableZ8000::TABLE.segmentedModel()) {
+    if (segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
         uint16_t off = static_cast<uint8_t>(addr);
         auto shortDirect = _shortDirect;
@@ -367,8 +364,8 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
     const auto snum = modeField(insn, insn.srcField());
     const auto dsize = registerSize(insn, dmode);
     const auto ssize = registerSize(insn, smode);
-    const auto dst = decodeRegNum(dnum, dsize);
-    const auto src = decodeRegNum(snum, ssize);
+    const auto dst = decodeRegNum(segmentedModel(), dnum, dsize);
+    const auto src = decodeRegNum(segmentedModel(), snum, ssize);
     if (insn.isPushPopInsn()) {
         if (checkOverlap(dst, src))
             return setError(REGISTERS_OVERLAPPED);
@@ -379,10 +376,10 @@ Error DisZ8000::checkRegisterOverlap(const InsnZ8000 &insn) {
     if (snum == 0)
         return setError(REGISTER_NOT_ALLOWED);
     const auto cnum = modeField(insn, MF_P8);
-    const auto cnt = decodeRegNum(modeField(insn, MF_P8), SZ_WORD);
+    const auto cnt = decodeRegNum(segmentedModel(), modeField(insn, MF_P8), SZ_WORD);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
-        if (!TableZ8000::TABLE.segmentedModel() && (dnum == 1 || snum == 1))
+        if (!segmentedModel() && (dnum == 1 || snum == 1))
             return setError(REGISTER_NOT_ALLOWED);
         // R1 isn't allowed as cnt.
         if (cnum == 1)
@@ -404,13 +401,13 @@ StrBuffer &DisZ8000::outComma(
 }
 
 Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnZ8000 insn(_insn);
+    InsnZ8000 insn(_insn, memory);
     const Config::opcode_t opCode = insn.readUint16(memory);
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableZ8000::TABLE.searchOpCode(insn, out, memory))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
     if (checkPostWord(insn))
         return getError();

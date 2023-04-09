@@ -28,7 +28,6 @@ class DisCdp1802 final : public Disassembler, public Config {
 public:
     DisCdp1802();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setUseRegsterName(bool enable);
@@ -41,6 +40,9 @@ private:
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace cdp1802

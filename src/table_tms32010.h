@@ -18,33 +18,21 @@
 #define __TABLE_TMS32010_H__
 
 #include "config_tms32010.h"
-#include "entry_table.h"
 #include "insn_tms32010.h"
 
 namespace libasm {
 namespace tms32010 {
 
-struct TableTms32010 : entry::Table {
-public:
-    TableTms32010();
+struct TableTms32010 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableTms32010 TABLE;
-
-    Error searchName(InsnTms32010 &insn) const;
-    Error searchOpCode(InsnTms32010 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-    uint16_t dataMemoryLimit() const;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnTms32010 &insn) const;
+    Error searchOpCode(CpuType, InsnTms32010 &insn, StrBuffer &out) const;
 };
+
+extern const TableTms32010 TABLE;
 
 }  // namespace tms32010
 }  // namespace libasm

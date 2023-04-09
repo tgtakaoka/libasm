@@ -26,7 +26,7 @@ namespace mos6502 {
 using namespace reg;
 using namespace text::mos6502;
 
-struct AsmMos6502::Operand : public OperandBase {
+struct AsmMos6502::Operand final : ErrorAt {
     AddrMode mode;
     uint32_t val32;
     Operand() : mode(M_NONE), val32(0) {}
@@ -37,29 +37,33 @@ struct AsmMos6502::Operand : public OperandBase {
 };
 
 AsmMos6502::AsmMos6502()
-    : Assembler(TableMos6502::TABLE, &_opt_longa, _number, _comment, _symbol, _letter, _location),
+    : Assembler(&_opt_longa, _number, _comment, _symbol, _letter, _location),
+      Config(TABLE),
       _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
       _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI) {
     reset();
 }
 
-AddressWidth AsmMos6502::addressWidth() const {
-    return TableMos6502::TABLE.addressWidth();
-}
-
 void AsmMos6502::reset() {
     Assembler::reset();
-    TableMos6502::TABLE.reset();
     setLongAccumulator(false);
     setLongIndex(false);
 }
 
 Error AsmMos6502::setLongAccumulator(bool enable) {
-    return TableMos6502::TABLE.setLongAccumulator(enable) ? OK : OPERAND_NOT_ALLOWED;
+    _longAccumulator = enable;
+    if (cpuType() == W65C816)
+        return OK;
+    _longAccumulator = false;
+    return enable ? OPERAND_NOT_ALLOWED : OK;
 }
 
 Error AsmMos6502::setLongIndex(bool enable) {
-    return TableMos6502::TABLE.setLongIndex(enable) ? OK : OPERAND_NOT_ALLOWED;
+    _longIndex = enable;
+    if (cpuType() == W65C816)
+        return OK;
+    _longIndex = false;
+    return enable ? OPERAND_NOT_ALLOWED : OK;
 }
 
 void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
@@ -95,10 +99,10 @@ void AsmMos6502::encodeOperand(InsnMos6502 &insn, AddrMode modeAndFlags, const O
     const auto mode = InsnMos6502::baseMode(modeAndFlags);
     switch (mode) {
     case M_IMA:
-        emitImmediate(insn, op, TableMos6502::TABLE.longAccumulator());
+        emitImmediate(insn, op, _longAccumulator);
         break;
     case M_IMX:
-        emitImmediate(insn, op, TableMos6502::TABLE.longIndex());
+        emitImmediate(insn, op, _longIndex);
         break;
     case M_ABS:
         if (checkAddr(op.val32, ADDRESS_16BIT))
@@ -262,8 +266,8 @@ static bool hasRegister(AddrMode mode) {
     return base >= uint8_t(M_REGA) && base <= uint8_t(M_REGS);
 }
 
-static bool maybeStackRelativeIndirect(AddrMode mode3) {
-    return TableMos6502::TABLE.cpuType() == W65C816 && hasRegister(mode3);
+static bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
+    return cpuType == W65C816 && hasRegister(mode3);
 }
 
 Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
@@ -291,11 +295,11 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    const auto error = TableMos6502::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error == OPERAND_NOT_ALLOWED) {
         if (hasRegister(op1.mode))
             return setError(op1, REGISTER_NOT_ALLOWED);
-        if (hasRegister(op2.mode) && !maybeStackRelativeIndirect(op3.mode))
+        if (hasRegister(op2.mode) && !maybeStackRelativeIndirect(cpuType(), op3.mode))
             return setError(op2, REGISTER_NOT_ALLOWED);
         if (hasRegister(op3.mode))
             return setError(op3, REGISTER_NOT_ALLOWED);

@@ -24,8 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class InsnCdp1802 : public InsnImpl<Config, Entry> {
-public:
+struct InsnCdp1802 final : InsnImpl<Config, Entry> {
     InsnCdp1802(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode mode1() const { return flags().mode1(); }

@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_mn1610.h"
-
 namespace libasm {
 namespace mn1610 {
 
@@ -30,8 +28,13 @@ enum CpuType : uint8_t {
     MN1613A,
 };
 
-struct Config : ConfigImpl<ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4,
-                        text::mn1610::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MN1610) {}
+
+    AddressWidth addressWidth() const override {
+        return cpuType() == MN1610 ? ADDRESS_16BIT : ADDRESS_18BIT;
+    }
+};
 
 }  // namespace mn1610
 }  // namespace libasm

@@ -28,8 +28,6 @@ class DisMc6800 final : public Disassembler, public Config {
 public:
     DisMc6800();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
@@ -39,6 +37,9 @@ private:
     Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc6800

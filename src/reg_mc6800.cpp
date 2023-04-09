@@ -38,7 +38,7 @@ RegName parseRegName(StrScanner &scan) {
     return reg;
 }
 
-StrBuffer &outRegName(StrBuffer &out, const RegName name) {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     return out.letter(char(name));
 }
 

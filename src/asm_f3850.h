@@ -28,8 +28,6 @@ class AsmF3850 final : public Assembler, public Config {
 public:
     AsmF3850();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const FairchildNumberParser _number;
     const AsteriskCommentParser _comment;
@@ -44,6 +42,9 @@ private:
     void emitRelative(InsnF3850 &insn, const Operand &op);
     void encodeOperand(InsnF3850 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace f3850

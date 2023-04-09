@@ -33,8 +33,9 @@ enum CpuType : uint8_t {
     MSM80C39,
 };
 
-struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 2, 5,
-                        text::i8048::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_12BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 2, 5> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8048) {}
+};
 
 }  // namespace i8048
 }  // namespace libasm

@@ -29,7 +29,6 @@ class AsmI8086 final : public Assembler, public Config {
 public:
     AsmI8086();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setOptimizeSegment(bool enable);
@@ -63,6 +62,9 @@ private:
     void emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
     void emitStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8086

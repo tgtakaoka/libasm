@@ -32,7 +32,7 @@ namespace libasm {
 /**
  * General instruction code interface for Assembler and Disassembler.
  */
-class Insn {
+class Insn final {
 public:
     Insn(uint32_t addr) : _address(addr), _length(0), _buffer(_name, sizeof(_name)) {}
     uint32_t address() const { return _address; }
@@ -76,8 +76,7 @@ private:
 /**
  * Base instruction code class.
  */
-class InsnBase : public ErrorReporter {
-public:
+struct InsnBase : ErrorReporter {
     InsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
 
     uint32_t address() const { return _insn.address(); }
@@ -229,8 +228,7 @@ private:
 };
 
 template <typename Conf, typename Entry>
-class InsnImpl : public InsnBase {
-public:
+struct InsnImpl : InsnBase {
     typename Conf::uintptr_t address() const { return InsnBase::address(); }
 
     void reset() { InsnBase::reset(address()); }

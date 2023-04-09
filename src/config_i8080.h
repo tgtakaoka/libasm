@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_i8080.h"
-
 namespace libasm {
 namespace i8080 {
 
@@ -30,8 +28,9 @@ enum CpuType : uint8_t {
     V30EMU,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 3, 5,
-                        text::i8080::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 3, 5> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8080) {}
+};
 
 }  // namespace i8080
 }  // namespace libasm

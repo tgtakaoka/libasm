@@ -49,8 +49,8 @@ enum AddrMode : uint8_t {
     M_INDX = 20,  // Indexed Addressing: @TABLE(Rn)
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _src;
         uint8_t _dst;
 

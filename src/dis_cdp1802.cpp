@@ -28,7 +28,8 @@ static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
 
 DisCdp1802::DisCdp1802()
-    : Disassembler(_hexFormatter, TableCdp1802::TABLE, '$', &_opt_useReg),
+    : Disassembler(_hexFormatter, '$', &_opt_useReg),
+      Config(TABLE),
       _opt_useReg(
               this, &DisCdp1802::setUseRegsterName, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER) {
     reset();
@@ -86,7 +87,7 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnCdp1802 insn(_insn);
     auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableCdp1802::TABLE.isPrefix(opCode)) {
+    if (TABLE.isPrefix(cpuType(), opCode)) {
         const auto prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -94,7 +95,7 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableCdp1802::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

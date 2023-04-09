@@ -46,8 +46,8 @@ enum AddrMode : uint8_t {
     M_INDXP = 17,  // @A+PC
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint16_t _attr;
 
         static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext) {

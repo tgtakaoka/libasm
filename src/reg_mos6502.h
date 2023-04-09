@@ -17,7 +17,8 @@
 #ifndef __REG_MOS6502_H__
 #define __REG_MOS6502_H__
 
-#include "reg_base.h"
+#include "str_scanner.h"
+#include "str_buffer.h"
 
 namespace libasm {
 namespace mos6502 {
@@ -33,7 +34,7 @@ enum RegName : char {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 }  // namespace reg
 }  // namespace mos6502

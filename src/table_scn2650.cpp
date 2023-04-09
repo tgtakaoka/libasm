@@ -16,11 +16,8 @@
 
 #include "table_scn2650.h"
 
-#include <ctype.h>
-#include <string.h>
-
-#include "config_scn2650.h"
 #include "entry_scn2650.h"
+#include "entry_table.h"
 #include "text_scn2650.h"
 
 using namespace libasm::text::scn2650;
@@ -214,14 +211,18 @@ static constexpr uint8_t INDEX_2650[] PROGMEM = {
 
 // clang-format on
 
-static constexpr TableScn2650::EntryPage SCN2650_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage SCN2650_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_2650), ARRAY_RANGE(INDEX_2650)},
 };
 
-static constexpr TableScn2650::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SCN2650, TEXT_CPU_2650, ARRAY_RANGE(SCN2650_PAGES)},
 };
-static constexpr const TableScn2650::Cpu &SCN2650_CPU = CPU_TABLE[0];
+static constexpr const Cpu &SCN2650_CPU = CPU_TABLE[0];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -246,13 +247,12 @@ static bool acceptModes(InsnScn2650 &insn, const Entry *entry) {
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
-Error TableScn2650::searchName(InsnScn2650 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableScn2650::searchName(CpuType cpuType, InsnScn2650 &insn) const {
+    SCN2650_CPU.searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(
-        InsnScn2650 &insn, const Entry *entry, const TableScn2650::EntryPage *page) {
+static bool matchOpCode(InsnScn2650 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -265,20 +265,30 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableScn2650::searchOpCode(InsnScn2650 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableScn2650::searchOpCode(CpuType cpuType, InsnScn2650 &insn, StrBuffer &out) const {
+    auto entry = SCN2650_CPU.searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 
-TableScn2650::TableScn2650() : _cpu(&SCN2650_CPU) {}
-
-bool TableScn2650::setCpu(const char *cpu) {
-    return strcmp_P(cpu, TEXT_CPU_2650) == 0 || strcasecmp_P(cpu, TEXT_CPU_SCN2650) == 0;
+const /*PROGMEM*/ char *TableScn2650::listCpu_P() const {
+    return SCN2650_CPU.name_P();
 }
 
-TableScn2650 TableScn2650::TABLE;
+const /*PROGMEM*/ char *TableScn2650::cpuName_P(CpuType cpuType) const {
+    return SCN2650_CPU.name_P();
+}
+
+Error TableScn2650::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals(TEXT_CPU_2650) || name.iequals(TEXT_CPU_SCN2650)) {
+        cpuType = SCN2650;
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
+}
+
+const TableScn2650 TABLE;
 
 }  // namespace scn2650
 }  // namespace libasm

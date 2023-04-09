@@ -29,7 +29,7 @@ using namespace reg;
 static const char OPT_INT_SETDP[] PROGMEM = "setdp";
 static const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
 
-struct AsmMc6809::Operand : public OperandBase {
+struct AsmMc6809::Operand final : ErrorAt {
     AddrMode mode;
     RegName index;
     RegName base;
@@ -48,8 +48,8 @@ struct AsmMc6809::Operand : public OperandBase {
 };
 
 AsmMc6809::AsmMc6809()
-    : Assembler(TableMc6809::TABLE, &_opt_setdp, _number, _comment, _symbol, _letter, _location,
-              &_operators),
+    : Assembler(&_opt_setdp, _number, _comment, _symbol, _letter, _location, &_operators),
+      Config(TABLE),
       _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP) {
     reset();
 }
@@ -122,7 +122,7 @@ void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
         }
         spec.size = size;
     }
-    const auto postSpec = TableMc6809::TABLE.searchPostSpec(spec);
+    const auto postSpec = TABLE.searchPostSpec(cpuType(), spec);
     if (postSpec < 0)
         setErrorIf(op, UNKNOWN_OPERAND);
     uint8_t post = postSpec;
@@ -141,7 +141,8 @@ void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
 void AsmMc6809::encodeRegisterPair(InsnMc6809 &insn, const Operand &op) {
     const auto reg1 = op.mode == M_RBIT ? op.base : op.index;
     const auto reg2 = op.mode == M_RBIT ? REG_0 : op.base;
-    if (!isDataReg(reg1) || !isDataReg(reg2))
+    const auto cpu = cpuType();
+    if (!isDataReg(cpu, reg1) || !isDataReg(cpu, reg2))
         setErrorIf(op, UNKNOWN_REGISTER);
     const auto size1 = regSize(reg1);
     const auto size2 = regSize(reg2);
@@ -522,7 +523,7 @@ Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMc6809 insn(_insn);
-    auto error = TableMc6809::TABLE.hasName(insn);
+    auto error = TABLE.hasName(cpuType(), insn);
     if (error)
         return setError(error);
 
@@ -540,7 +541,7 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    error = TableMc6809::TABLE.searchName(insn);
+    error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

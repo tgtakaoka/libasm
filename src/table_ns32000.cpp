@@ -16,11 +16,9 @@
 
 #include "table_ns32000.h"
 
-#include "config_ns32000.h"
 #include "entry_ns32000.h"
+#include "entry_table.h"
 #include "text_ns32000.h"
-
-#include <string.h>
 
 using namespace libasm::text::ns32000;
 
@@ -868,55 +866,57 @@ struct ProcessorCpuCommon : entry::CpuBase<CPUTYPE, EntryPage> {
         return insn.getError();
     }
 
-    Error searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory,
+    Error searchOpCode(InsnNs32000 &insn, StrBuffer &out,
             bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
             void (*readEntryName)(
                     InsnNs32000 &, const Entry *, StrBuffer &, const EntryPage *)) const {
         const auto entry = entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(
                 insn, out, matchOpCode, readEntryName);
         if (entry && insn.hasPost())
-            insn.readPost(memory);
+            insn.readPost();
         return insn.getError();
     }
 };
 
-struct TableNs32000::Cpu : ProcessorCpuCommon<CpuType> {
+struct Cpu : ProcessorCpuCommon<CpuType> {
     constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
             const EntryPage *end)
         : ProcessorCpuCommon<CpuType>(cpuType, name_P, table, end) {}
 };
-struct TableNs32000::Fpu : ProcessorCpuCommon<FpuType> {
+struct Fpu : ProcessorCpuCommon<FpuType> {
     constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
             const EntryPage *end)
         : ProcessorCpuCommon<FpuType>(fpuType, name_P, table, end) {}
 };
-struct TableNs32000::Mmu : ProcessorCpuCommon<MmuType> {
+struct Mmu : ProcessorCpuCommon<MmuType> {
     constexpr Mmu(MmuType mmuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
             const EntryPage *end)
         : ProcessorCpuCommon<MmuType>(mmuType, name_P, table, end) {}
 };
 
-static constexpr TableNs32000::Cpu CPU_TABLE[] PROGMEM = {
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)},
 };
-static constexpr const TableNs32000::Cpu &NS32032_CPU = CPU_TABLE[0];
+static constexpr const Cpu &NS32032_CPU = CPU_TABLE[0];
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
-static constexpr TableNs32000::Fpu FPU_TABLE[] PROGMEM = {
+static constexpr Fpu FPU_TABLE[] PROGMEM = {
         {FPU_NS32081, TEXT_FPU_NS32081, ARRAY_RANGE(NS32081_PAGES)},
         {FPU_NONE, TEXT_none, EMPTY_RANGE(NS32081_PAGES)},
 };
-static constexpr const TableNs32000::Fpu &NS32081_FPU = FPU_TABLE[0];
 
-static constexpr TableNs32000::Mmu MMU_TABLE[] PROGMEM = {
+static const Fpu *fpu(FpuType fpuType) {
+    return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
+}
+
+static constexpr Mmu MMU_TABLE[] PROGMEM = {
         {MMU_NS32082, TEXT_MMU_NS32082, ARRAY_RANGE(NS32082_PAGES)},
         {MMU_NONE, TEXT_none, EMPTY_RANGE(NS32082_PAGES)},
 };
-static constexpr const TableNs32000::Mmu &NS32082_MMU = MMU_TABLE[0];
 
-bool TableNs32000::isPrefixCode(uint8_t code) const {
-    return NS32032_CPU.isPrefix(code) || NS32081_FPU.isPrefix(code) || NS32082_MMU.isPrefix(code);
+static const Mmu *mmu(MmuType mmuType) {
+    return Mmu::search(mmuType, ARRAY_RANGE(MMU_TABLE));
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -950,15 +950,15 @@ static bool acceptModes(InsnNs32000 &insn, const Entry *entry) {
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableNs32000::searchName(InsnNs32000 &insn) const {
-    _cpu->searchName(insn, acceptModes, searchPageSetup);
+Error TableNs32000::searchName(const CpuSpec &cpuSpec, InsnNs32000 &insn) const {
+    NS32032_CPU.searchName(insn, acceptModes, searchPageSetup);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        _fpu->searchName(insn, acceptModes, searchPageSetup);
+        fpu(cpuSpec.fpu)->searchName(insn, acceptModes, searchPageSetup);
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        _mmu->searchName(insn, acceptModes, searchPageSetup);
+        mmu(cpuSpec.mmu)->searchName(insn, acceptModes, searchPageSetup);
     }
     return insn.getError();
 }
@@ -971,53 +971,45 @@ static bool matchOpCode(InsnNs32000 &insn, const Entry *entry, const EntryPage *
 
 static void readEntryName(
         InsnNs32000 &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
-    TableNs32000::Cpu::defaultReadEntryName(insn, entry, out, page);
+    Cpu::defaultReadEntryName(insn, entry, out, page);
     insn.setPost(0, page->post() != 0);
 }
 
-Error TableNs32000::searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory) const {
-    NS32032_CPU.searchOpCode(insn, out, memory, matchOpCode, readEntryName);
+Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, InsnNs32000 &insn, StrBuffer &out) const {
+    NS32032_CPU.searchOpCode(insn, out, matchOpCode, readEntryName);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        NS32081_FPU.searchOpCode(insn, out, memory, matchOpCode, readEntryName);
+        fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        NS32082_MMU.searchOpCode(insn, out, memory, matchOpCode, readEntryName);
+        mmu(cpuSpec.mmu)->searchOpCode(insn, out, matchOpCode, readEntryName);
     }
     return insn.getError();
 }
 
-TableNs32000::TableNs32000() : _cpu(&NS32032_CPU) {
-    setFpu(FPU_NONE);
-    setMmu(MMU_NONE);
+bool TableNs32000::isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) const {
+    return NS32032_CPU.isPrefix(code) || fpu(cpuSpec.fpu)->isPrefix(code) ||
+           mmu(cpuSpec.mmu)->isPrefix(code);
 }
 
-bool TableNs32000::setFpu(FpuType fpuType) {
-    auto t = Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _fpu = t;
-    return true;
+const /*PROGMEM*/ char *TableNs32000::listCpu_P() const {
+    return TEXT_CPU_NS32032;
 }
 
-bool TableNs32000::setMmu(MmuType mmuType) {
-    auto t = Mmu::search(mmuType, ARRAY_RANGE(MMU_TABLE));
-    if (t == nullptr)
-        return false;
-    _mmu = t;
-    return true;
+const /*PROGMEM*/ char *TableNs32000::cpuName_P(CpuType cpuType) const {
+    return NS32032_CPU.name_P();
 }
 
-const /* PROGMEM */ char *TableNs32000::cpu_P() const {
-    return _cpu->name_P();
+Error TableNs32000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals(TEXT_CPU_NS32032) || name.iequals(TEXT_CPU_32032)) {
+        cpuType = NS32032;
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
 }
 
-bool TableNs32000::setCpu(const char *cpu) {
-    return strncasecmp_P(cpu, TEXT_CPU_NS32032, 2) == 0 || strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
-}
-
-TableNs32000 TableNs32000::TABLE;
+const TableNs32000 TABLE;
 
 }  // namespace ns32000
 }  // namespace libasm

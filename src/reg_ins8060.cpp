@@ -39,7 +39,7 @@ RegName parseRegName(StrScanner &scan) {
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
-StrBuffer &outRegName(StrBuffer &out, const RegName name) {
+StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
     if (entry)
         out.text_P(entry->text_P());

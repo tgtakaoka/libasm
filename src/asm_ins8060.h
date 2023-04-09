@@ -28,8 +28,6 @@ class AsmIns8060 final : public Assembler, public Config {
 public:
     AsmIns8060();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const NationalNumberParser _number{'X'};
     const SemicolonCommentParser _comment;
@@ -47,6 +45,9 @@ private:
     void encodeIndx(InsnIns8060 &insn, const Operand &op);
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace ins8060

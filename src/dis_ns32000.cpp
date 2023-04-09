@@ -34,7 +34,8 @@ static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
 static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
 
 DisNs32000::DisNs32000()
-    : Disassembler(_hexFormatter, TableNs32000::TABLE, '*', &_opt_pcrelParen),
+    : Disassembler(_hexFormatter, '*', &_opt_pcrelParen),
+      Config(TABLE),
       _opt_pcrelParen(this, &DisNs32000::setPcRelativeParen, OPT_BOOL_PCREL_PAREN,
               OPT_DESC_PCREL_PAREN, _opt_externalParen),
       _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,
@@ -497,10 +498,10 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
 }
 
 Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnNs32000 insn(_insn);
+    InsnNs32000 insn(_insn, memory);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableNs32000::TABLE.isPrefixCode(opCode)) {
+    if (TABLE.isPrefixCode(_cpuSpec, opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -508,7 +509,7 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableNs32000::TABLE.searchOpCode(insn, out, memory))
+    if (TABLE.searchOpCode(_cpuSpec, insn, out))
         return setError(insn);
     if (readIndexByte(memory, insn, insn.src(), insn.srcPos()))
         return getError();

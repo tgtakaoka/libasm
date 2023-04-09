@@ -28,8 +28,6 @@ class DisZ8000 final : public Disassembler, public Config {
 public:
     DisZ8000();
 
-    const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override;
     void reset() override;
 
     Error setShortDirect(bool enable);
@@ -63,6 +61,9 @@ private:
     Error checkPostWord(const InsnZ8000 &insn);
     Error checkRegisterOverlap(const InsnZ8000 &insn);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace z8000

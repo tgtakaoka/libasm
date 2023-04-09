@@ -24,12 +24,9 @@
 namespace libasm {
 namespace mos6502 {
 
-class AsmMos6502 final : public Assembler, public Config {
-public:
+struct AsmMos6502 final : Assembler, Config {
     AsmMos6502();
 
-    const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override;
     void reset() override;
 
     Error setLongAccumulator(bool enable);
@@ -43,6 +40,9 @@ private:
     const AsteriskLocationParser _location;
     const BoolOption<AsmMos6502> _opt_longa;
     const BoolOption<AsmMos6502> _opt_longi;
+
+    bool _longAccumulator;
+    bool _longIndex;
 
     struct Operand;
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
@@ -58,6 +58,9 @@ private:
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mos6502

@@ -30,12 +30,7 @@
 
 namespace libasm {
 
-class Assembler;
-
-struct OperandBase : ErrorAt {};
-
-class Assembler : public ErrorAt {
-public:
+struct Assembler : ErrorAt {
     Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
@@ -44,8 +39,9 @@ public:
     bool endOfLine(const StrScanner &scan) const { return _parser.endOfLine(scan); }
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
-    const /* PROGMEM */ char *cpu_P() const { return _table.cpu_P(); }
-    bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
+    const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
+    bool setCpu(const char *name) { return configSetter().setCpuName(name); }
+    Error setCpu(StrScanner &scan) { return configSetter().setCpuName(scan); }
 
     Error setOption(const char *name, const char *text) {
         if (_commonOptions.setOption(name, text) == OK)
@@ -58,6 +54,19 @@ public:
     /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
     virtual bool hasSetInstruction() const { return false; }
 
+protected:
+    const Options _options;
+    const Options _commonOptions{nullptr};
+    ValueParser _parser;
+
+    SymbolTable *_symtab;
+
+    Assembler(const OptionBase *option, const NumberParser &number, const CommentParser &comment,
+            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
+            const OperatorParser *operators = nullptr, const FunctionParser *function = nullptr);
+
+    int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
+
     /** Parse |expr| text and get value as unsigned 16 bit. */
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text and get value as unsigned 32 bit. */
@@ -65,23 +74,8 @@ public:
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
-protected:
-    entry::Table &_table;
-    const Options _options;
-    const Options _commonOptions{nullptr};
-    ValueParser _parser;
-
-    SymbolTable *_symtab;
-
-    Assembler(entry::Table &table, const OptionBase *option, const NumberParser &number,
-            const CommentParser &comment, const SymbolParser &symbol, const LetterParser &letter,
-            const LocationParser &location, const OperatorParser *operators = nullptr,
-            const FunctionParser *function = nullptr);
-
-    uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
-    int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
-
 private:
+    virtual ConfigSetter &configSetter() = 0;
     virtual Error processPseudo(StrScanner &scan, Insn &insn);
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
 };

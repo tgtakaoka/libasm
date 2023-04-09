@@ -34,8 +34,7 @@
 
 namespace libasm {
 
-class Disassembler : public ErrorReporter {
-public:
+struct Disassembler : ErrorReporter {
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
@@ -44,8 +43,9 @@ public:
     ValueFormatter &formatter() { return _formatter; }
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
-    const /*PROGMEM*/ char *cpu_P() const { return _table.cpu_P(); }
-    bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
+    const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
+    bool setCpu(const char *name) { return configSetter().setCpuName(name); }
+    Error setCpu(StrScanner &scan) { return configSetter().setCpuName(scan); }
 
     Error setOption(const char *name, const char *text) {
         if (_commonOptions.setOption(name, text) == OK)
@@ -63,7 +63,6 @@ public:
 
 protected:
     ValueFormatter _formatter;
-    entry::Table &_table;
     const Options _commonOptions;
     const Options _options;
     const BoolOption<Disassembler> _opt_relative;
@@ -76,8 +75,7 @@ protected:
     bool _relativeTarget;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(const HexFormatter &hexFormatter, entry::Table &table, char curSym,
-            const OptionBase *option = nullptr);
+    Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option = nullptr);
 
     /** Lookup |addr| value and returns symbol. */
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;
@@ -111,6 +109,7 @@ protected:
     uint32_t branchTarget(uint32_t base, int32_t delta);
 
 private:
+    virtual ConfigSetter &configSetter() = 0;
     virtual Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) = 0;
 };
 

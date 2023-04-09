@@ -62,8 +62,8 @@ enum AddrMode : uint8_t {
     R_IM = 26 + 18,  // REG_IM (8085)
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _dst;
         uint8_t _src;
 

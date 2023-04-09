@@ -28,8 +28,6 @@ class AsmIns8070 final : public Assembler, public Config {
 public:
     AsmIns8070();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const NationalNumberParser _number{'X'};
     const SemicolonCommentParser _comment;
@@ -49,6 +47,9 @@ private:
     void emitGeneric(InsnIns8070 &insn, const Operand &op);
     void emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace ins8070

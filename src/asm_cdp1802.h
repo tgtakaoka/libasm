@@ -28,7 +28,6 @@ class AsmCdp1802 final : public Assembler, public Config {
 public:
     AsmCdp1802();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setUseReg(bool enable);
@@ -56,6 +55,9 @@ private:
     void emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     void encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace cdp1802

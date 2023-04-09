@@ -28,7 +28,6 @@ class DisI8096 final : public Disassembler, public Config {
 public:
     DisI8096();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setUseAbsolute(bool enable);
@@ -53,6 +52,9 @@ private:
     StrBuffer &outRelative(StrBuffer &out, const InsnI8096 &insn, const Operand &op);
     StrBuffer &outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8096

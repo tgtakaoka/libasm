@@ -65,7 +65,7 @@ enum RegName : int8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 bool isRReg(RegName name);
 bool isPort(RegName name);

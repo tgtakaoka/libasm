@@ -24,12 +24,8 @@ namespace mn1610 {
 
 using namespace reg;
 
-DisMn1610::DisMn1610() : Disassembler(_hexFormatter, TableMn1610::TABLE, '*') {
+DisMn1610::DisMn1610() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
     reset();
-}
-
-AddressWidth DisMn1610::addressWidth() const {
-    return TableMn1610::TABLE.addressWidth();
 }
 
 Error DisMn1610::outConditionCode(StrBuffer &out, CcName cc) {
@@ -197,7 +193,7 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto opc = insn.readUint16(memory);
 
     insn.setOpCode(opc);
-    if (TableMn1610::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
     if (setError(insn))
         return getError();

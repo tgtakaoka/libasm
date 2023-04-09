@@ -24,7 +24,7 @@ namespace z80 {
 
 using namespace reg;
 
-DisZ80::DisZ80() : Disassembler(_hexFormatter, TableZ80::TABLE, '$') {
+DisZ80::DisZ80() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -56,7 +56,7 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     InsnZ80 ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
     ixBit.clearNameBuffer();
-    if (TableZ80::TABLE.searchOpCode(ixBit, out))
+    if (TABLE.searchOpCode(cpuType(), ixBit, out))
         return setError(ixBit);
 
     const auto reg = decodeDataReg(opc);
@@ -182,7 +182,7 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnZ80 insn(_insn);
     Config::opcode_t opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableZ80::TABLE.isPrefix(opCode)) {
+    if (TABLE.isPrefix(cpuType(), opCode)) {
         const Config::opcode_t prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -190,7 +190,7 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableZ80::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

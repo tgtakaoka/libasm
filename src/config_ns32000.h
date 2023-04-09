@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_ns32000.h"
-
 namespace libasm {
 namespace ns32000 {
 
@@ -37,8 +35,29 @@ enum MmuType : uint8_t {
     MMU_NS32082,
 };
 
-struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 22, 7,
-                        text::ns32000::TEXT_CPU_NS32032> {};
+struct CpuSpec final {
+    CpuSpec(CpuType cpu_, FpuType fpu_, MmuType mmu_) : cpu(cpu_), fpu(fpu_), mmu(mmu_) {}
+    CpuType cpu;
+    FpuType fpu;
+    MmuType mmu;
+};
+
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 22, 7> {
+    Config(const InsnTable<CpuType> &table)
+        : ConfigImpl(table, NS32032), _cpuSpec(NS32032, FPU_NS32081, MMU_NS32082) {}
+
+    void setCpuType(CpuType cpuType) override {
+        _cpuSpec.cpu = cpuType;
+        ConfigImpl::setCpuType(cpuType);
+    }
+    void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
+    void setMmuType(MmuType mmuType) { _cpuSpec.mmu = mmuType; }
+    FpuType fpuType() const { return _cpuSpec.fpu; }
+    MmuType mmuType() const { return _cpuSpec.mmu; }
+
+protected:
+    CpuSpec _cpuSpec;
+};
 
 }  // namespace ns32000
 }  // namespace libasm

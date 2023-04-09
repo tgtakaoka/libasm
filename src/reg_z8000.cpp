@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 Tadashi G. Takaoka
  *
@@ -16,7 +17,6 @@
 
 #include "reg_z8000.h"
 
-#include "table_z8000.h"
 #include "text_z8000.h"
 
 using namespace libasm::text::z8000;
@@ -92,7 +92,7 @@ uint8_t encodeGeneralRegName(RegName name) {
     return uint8_t(name) & 0xF;
 }
 
-RegName decodeRegNum(uint8_t num, OprSize size) {
+RegName decodeRegNum(bool segmentedModel, uint8_t num, OprSize size) {
     switch (size) {
     case SZ_BYTE:
         return decodeByteReg(num);
@@ -103,7 +103,7 @@ RegName decodeRegNum(uint8_t num, OprSize size) {
     case SZ_QUAD:
         return decodeQuadReg(num);
     case SZ_ADDR:
-        return TableZ8000::TABLE.segmentedModel() ? decodeLongReg(num) : decodeWordReg(num);
+        return segmentedModel ? decodeLongReg(num) : decodeWordReg(num);
     default:
         return REG_UNDEF;
     }
@@ -185,20 +185,20 @@ StrBuffer &outCtlName(StrBuffer &out, RegName name) {
     return out;
 }
 
-RegName decodeCtlReg(uint8_t num) {
+RegName decodeCtlReg(bool segmentedModel, uint8_t num) {
     num &= 7;
     const auto *entry = searchName(num + 64, ARRAY_RANGE(CTL_TABLE));
     auto name = entry ? RegName(entry->name()) : REG_ILLEGAL;
-    if (!TableZ8000::TABLE.segmentedModel() && isSegCtlReg(name)) {
+    if (!segmentedModel && isSegCtlReg(name)) {
         name = RegName(entry->name() + 8);
         return isNonSegCtlReg(name) ? name : REG_ILLEGAL;
     }
     return name;
 }
 
-int8_t encodeCtlReg(RegName name) {
+int8_t encodeCtlReg(bool segmentedModel, RegName name) {
     const int8_t num = (static_cast<int8_t>(name) - 64) & 7;
-    if (TableZ8000::TABLE.segmentedModel())
+    if (segmentedModel)
         return isNonSegCtlReg(name) ? -1 : num;
     return isSegCtlReg(name) ? -1 : num;
 }

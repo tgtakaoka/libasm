@@ -18,32 +18,21 @@
 #define __TABLE_MC68000_H__
 
 #include "config_mc68000.h"
-#include "entry_table.h"
 #include "insn_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
 
-struct TableMc68000 : entry::Table {
-public:
-    TableMc68000();
+struct TableMc68000 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableMc68000 TABLE;
-
-    Error searchName(InsnMc68000 &insn) const;
-    Error searchOpCode(InsnMc68000 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    void setAlias(bool enable);
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
+    Error searchName(CpuType, InsnMc68000 &insn, bool acceptAlias = true) const;
+    Error searchOpCode(CpuType, InsnMc68000 &insn, StrBuffer &out) const;
 };
+
+extern const TableMc68000 TABLE;
 
 }  // namespace mc68000
 }  // namespace libasm

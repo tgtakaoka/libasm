@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class InsnTms9900 : public InsnImpl<Config, Entry> {
-public:
+struct InsnTms9900 final : InsnImpl<Config, Entry> {
     InsnTms9900(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode src() const { return flags().src(); }

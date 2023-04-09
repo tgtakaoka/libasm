@@ -27,6 +27,7 @@ const char TEXT_CPU_6801[] PROGMEM = "6801";
 const char TEXT_CPU_6301[] PROGMEM = "6301";
 const char TEXT_CPU_6811[] PROGMEM = "6811";
 const char TEXT_CPU_68HC11[] PROGMEM = "68HC11";
+const char TEXT_CPU_HD6301[] PROGMEM = "HD6301";
 const char TEXT_CPU_MB8861[] PROGMEM = "MB8861";
 
 // MC6800

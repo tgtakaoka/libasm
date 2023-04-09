@@ -18,35 +18,23 @@
 #define __TABLE_MC6800_H__
 
 #include "config_mc6800.h"
-#include "entry_mc6800.h"
-#include "entry_table.h"
 #include "insn_mc6800.h"
 
 namespace libasm {
 namespace mc6800 {
 
-struct TableMc6800 : entry::Table {
-    TableMc6800();
+struct TableMc6800 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableMc6800 TABLE;
-
-    Error searchName(InsnMc6800 &insn) const;
-    Error searchOpCode(InsnMc6800 &insn, StrBuffer &out) const;
-    Error searchOpCodeAlias(InsnMc6800 &insn, StrBuffer &out) const;
-    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
-    const Entry *searchOpCodeImpl(InsnMc6800 &insn, StrBuffer &out) const;
+    Error searchName(CpuType, InsnMc6800 &insn) const;
+    Error searchOpCode(CpuType, InsnMc6800 &insn, StrBuffer &out) const;
+    Error searchOpCodeAlias(CpuType, InsnMc6800 &insn, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code) const;
 };
+
+extern const TableMc6800 TABLE;
 
 }  // namespace mc6800
 }  // namespace libasm

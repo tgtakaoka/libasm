@@ -16,10 +16,8 @@
 
 #include "table_mc6800.h"
 
-#include <string.h>
-
-#include "config_mc6800.h"
 #include "entry_mc6800.h"
+#include "entry_table.h"
 #include "text_mc6800.h"
 
 using namespace libasm::text::mc6800;
@@ -565,27 +563,29 @@ static constexpr uint8_t MC68HC11_ICD[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableMc6800::EntryPage MC6800_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage MC6800_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
 };
 
-static constexpr TableMc6800::EntryPage MB8861_PAGES[] PROGMEM = {
+static constexpr EntryPage MB8861_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
         {0x00, ARRAY_RANGE(MB8861_TABLE), ARRAY_RANGE(MB8861_INDEX)},
 };
 
-static constexpr TableMc6800::EntryPage MC6801_PAGES[] PROGMEM = {
+static constexpr EntryPage MC6801_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6801_TABLE), ARRAY_RANGE(MC6801_INDEX)},
         {0x00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
 };
 
-static constexpr TableMc6800::EntryPage HD6301_PAGES[] PROGMEM = {
+static constexpr EntryPage HD6301_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(HD6301_TABLE), ARRAY_RANGE(HD6301_INDEX)},
         {0x00, ARRAY_RANGE(MC6801_TABLE), ARRAY_RANGE(MC6801_INDEX)},
         {0x00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
 };
 
-static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
+static constexpr EntryPage MC68HC11_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC68HC11_P00), ARRAY_RANGE(MC68HC11_I00)},
         {0x00, ARRAY_RANGE(MC6801_TABLE), ARRAY_RANGE(MC6801_INDEX)},
         {0x00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
@@ -594,13 +594,19 @@ static constexpr TableMc6800::EntryPage MC68HC11_PAGES[] PROGMEM = {
         {0xCD, ARRAY_RANGE(MC68HC11_PCD), ARRAY_RANGE(MC68HC11_ICD)},
 };
 
-static constexpr TableMc6800::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC6800, TEXT_CPU_6800, ARRAY_RANGE(MC6800_PAGES)},
         {MB8861, TEXT_CPU_MB8861, ARRAY_RANGE(MB8861_PAGES)},
         {MC6801, TEXT_CPU_6801, ARRAY_RANGE(MC6801_PAGES)},
         {HD6301, TEXT_CPU_6301, ARRAY_RANGE(HD6301_PAGES)},
         {MC68HC11, TEXT_CPU_6811, ARRAY_RANGE(MC68HC11_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -632,12 +638,12 @@ static bool acceptModes(InsnMc6800 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableMc6800::searchName(InsnMc6800 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableMc6800::searchName(CpuType cpuType, InsnMc6800 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const TableMc6800::EntryPage *page) {
+static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -651,8 +657,8 @@ static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const TableMc6800:
     return opCode == entry->opCode();
 }
 
-const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+static const Entry *searchOpCodeImpl(const Cpu *cpu, InsnMc6800 &insn, StrBuffer &out) {
+    auto entry = cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined()) {
         insn.setError(UNKNOWN_INSTRUCTION);
         entry = nullptr;
@@ -660,13 +666,13 @@ const Entry *TableMc6800::searchOpCodeImpl(InsnMc6800 &insn, StrBuffer &out) con
     return entry;
 }
 
-Error TableMc6800::searchOpCode(InsnMc6800 &insn, StrBuffer &out) const {
-    searchOpCodeImpl(insn, out);
+Error TableMc6800::searchOpCode(CpuType cpuType, InsnMc6800 &insn, StrBuffer &out) const {
+    searchOpCodeImpl(cpu(cpuType), insn, out);
     return insn.getError();
 }
 
-    Error TableMc6800::searchOpCodeAlias(InsnMc6800 &insn, StrBuffer &out) const {
-        auto entry = searchOpCodeImpl(insn, out);
+Error TableMc6800::searchOpCodeAlias(CpuType cpuType, InsnMc6800 &insn, StrBuffer &out) const {
+    auto entry = searchOpCodeImpl(cpu(cpuType), insn, out);
     if (entry == nullptr)
         return insn.setError(INTERNAL_ERROR);
     entry += 1;
@@ -677,37 +683,36 @@ Error TableMc6800::searchOpCode(InsnMc6800 &insn, StrBuffer &out) const {
     return OK;
 }
 
-TableMc6800::TableMc6800() {
-    setCpu(MC6800);
+bool TableMc6800::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+    return cpu(cpuType)->isPrefix(code);
 }
 
-bool TableMc6800::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableMc6800::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-bool TableMc6800::setCpu(const char *cpu) {
-    auto p = cpu;
-    if (strncasecmp_P(p, TEXT_CPU_LIST, 2) == 0)
+const /*PROGMEM*/ char *TableMc6800::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
+}
+
+Error TableMc6800::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    auto p = name;
+    if (p.istarts_P(TEXT_CPU_LIST, 2))
         p += 2;
     auto t = Cpu::search(p, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (strcasecmp_P(p, TEXT_CPU_68HC11) == 0)
-        return setCpu(MC68HC11);
-
-    p = cpu;
-    if (strncasecmp_P(p, TEXT_CPU_LIST + 24, 2) == 0)
-        p += 2;
-    if (strcasecmp_P(p, TEXT_CPU_6301) == 0)
-        return setCpu(HD6301);
-    return false;
+    if (t) {
+        cpuType = t->cpuType();
+    } else if (p.iequals_P(TEXT_CPU_68HC11)) {
+        cpuType = MC68HC11;
+    } else if (name.iequals_P(TEXT_CPU_HD6301)) {
+        cpuType = HD6301;
+    } else {
+        return UNSUPPORTED_CPU;
+    }
+    return OK;
 }
 
-TableMc6800 TableMc6800::TABLE;
+const TableMc6800 TABLE;
 
 }  // namespace mc6800
 }  // namespace libasm

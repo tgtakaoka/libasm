@@ -24,8 +24,7 @@
 namespace libasm {
 namespace i8048 {
 
-class InsnI8048 : public InsnImpl<Config, Entry> {
-public:
+struct InsnI8048 final : InsnImpl<Config, Entry> {
     InsnI8048(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode dst() const { return flags().dst(); }

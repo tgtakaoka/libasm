@@ -66,7 +66,7 @@ enum CcName : int8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 uint8_t encodeDataReg(RegName name);
 RegName decodeDataReg(uint8_t num);

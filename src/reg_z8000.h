@@ -132,7 +132,7 @@ namespace reg {
 RegName parseRegName(StrScanner &scan);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 uint8_t encodeGeneralRegName(RegName name);
-RegName decodeRegNum(uint8_t num, OprSize size);
+RegName decodeRegNum(bool segmentedModel, uint8_t num, OprSize size);
 RegName decodeByteReg(uint8_t num);
 RegName decodeWordReg(uint8_t num);
 RegName decodeLongReg(uint8_t num);
@@ -143,9 +143,9 @@ bool isLongReg(RegName name);
 bool isQuadReg(RegName name);
 
 RegName parseCtlReg(StrScanner &scan);
-RegName decodeCtlReg(uint8_t num);
+RegName decodeCtlReg(bool segmentedModel, uint8_t num);
 bool isCtlReg(RegName name);
-int8_t encodeCtlReg(RegName name);
+int8_t encodeCtlReg(bool segmentedModel, RegName name);
 
 CcName parseCcName(StrScanner &scan);
 StrBuffer &outCcName(StrBuffer &out, CcName name);

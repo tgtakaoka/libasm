@@ -25,7 +25,7 @@ namespace ins8070 {
 
 using namespace reg;
 
-struct AsmIns8070::Operand : public OperandBase {
+struct AsmIns8070::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     bool autoIndex;
@@ -34,8 +34,8 @@ struct AsmIns8070::Operand : public OperandBase {
 };
 
 AsmIns8070::AsmIns8070()
-    : Assembler(TableIns8070::TABLE, nullptr, _number, _comment, _symbol, _letter, _location,
-              nullptr, &_function) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location, nullptr, &_function),
+      Config(TABLE) {
     reset();
 }
 
@@ -258,7 +258,7 @@ Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(src);
 
     insn.setAddrMode(dst.mode, src.mode);
-    const auto error = TableIns8070::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dst, error);
 

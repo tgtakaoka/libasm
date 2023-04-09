@@ -15,11 +15,10 @@
  */
 
 #include "table_z8000.h"
-#include "config_z8000.h"
+
+#include "entry_table.h"
 #include "entry_z8000.h"
 #include "text_z8000.h"
-
-#include <string.h>
 
 using namespace libasm::text::z8000;
 
@@ -576,14 +575,22 @@ static constexpr uint8_t INDEX_Z8000[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableZ8000::EntryPage Z8000_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage Z8000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8000), ARRAY_RANGE(INDEX_Z8000)},
 };
 
-static constexpr TableZ8000 ::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {Z8001, TEXT_CPU_Z8001, ARRAY_RANGE(Z8000_PAGES)},
         {Z8002, TEXT_CPU_Z8002, ARRAY_RANGE(Z8000_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -615,12 +622,12 @@ static bool acceptModes(InsnZ8000 &insn, const Entry *entry) {
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableZ8000::searchName(InsnZ8000 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableZ8000::searchName(CpuType cpuType, InsnZ8000 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const TableZ8000::EntryPage *page) {
+static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const EntryPage *page) {
     const auto flags = entry->flags();
     if ((insn.opCode() & flags.codeMask()) != entry->opCode())
         return false;
@@ -633,15 +640,13 @@ static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const TableZ8000::E
     return true;
 }
 
-Error TableZ8000::searchOpCode(InsnZ8000 &insn, StrBuffer &out, DisMemory &memory) const {
-    insn.setMemory(memory);
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableZ8000::searchOpCode(CpuType cpuType, InsnZ8000 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, StrBuffer &out, DisMemory &memory) const {
-    insn.setMemory(memory);
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableZ8000::searchOpCodeAlias(CpuType cpuType, InsnZ8000 &insn, StrBuffer &out) const {
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry) {
         entry++;
         insn.clearNameBuffer();
@@ -650,35 +655,26 @@ Error TableZ8000::searchOpCodeAlias(InsnZ8000 &insn, StrBuffer &out, DisMemory &
     return insn.getError();
 }
 
-TableZ8000::TableZ8000() {
-    setCpu(Z8001);
+const /*PROGMEM*/ char *TableZ8000::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-bool TableZ8000::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableZ8000::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableZ8000::setCpu(const char *cpu) {
-    if (strcasecmp_P(cpu, TEXT_CPU_Z8001) == 0)
-        return setCpu(Z8001);
-    if (strcasecmp_P(cpu, TEXT_CPU_Z8002) == 0)
-        return setCpu(Z8002);
-    return false;
+Error TableZ8000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals(TEXT_CPU_Z8001)) {
+        cpuType = Z8001;
+    } else if (name.iequals_P(TEXT_CPU_Z8002)) {
+        cpuType = Z8002;
+    } else {
+        return UNSUPPORTED_CPU;
+    }
+    return OK;
 }
 
-AddressWidth TableZ8000::addressWidth() const {
-    return segmentedModel() ? ADDRESS_23BIT : ADDRESS_16BIT;
-}
-
-bool TableZ8000::segmentedModel() const {
-    return _cpu->cpuType() == Z8001;
-}
-
-TableZ8000 TableZ8000::TABLE;
+const TableZ8000 TABLE;
 
 }  // namespace z8000
 }  // namespace libasm

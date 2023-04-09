@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_mos6502.h"
-
 namespace libasm {
 namespace mos6502 {
 
@@ -32,8 +30,13 @@ enum CpuType : uint8_t {
     W65C816,
 };
 
-struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4,
-                        text::mos6502::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MOS6502) {}
+
+    AddressWidth addressWidth() const override {
+        return cpuType() == W65C816 ? ADDRESS_24BIT : ADDRESS_16BIT;
+    }
+};
 
 }  // namespace mos6502
 }  // namespace libasm

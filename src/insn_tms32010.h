@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms32010 {
 
-class InsnTms32010 : public InsnImpl<Config, Entry> {
-public:
+struct InsnTms32010 final : InsnImpl<Config, Entry> {
     InsnTms32010(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode mode1() const { return flags().mode1(); }

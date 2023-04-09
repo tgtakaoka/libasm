@@ -30,7 +30,6 @@ class AsmTlcs90 final : public Assembler, public Config {
 public:
     AsmTlcs90();
 
-    const ConfigBase &config() const override { return *this; }
     bool hasSetInstruction() const override { return true; }
 
 private:
@@ -44,6 +43,9 @@ private:
     void encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
     void encodeOperand(InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace tlcs90

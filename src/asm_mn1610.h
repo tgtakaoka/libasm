@@ -28,9 +28,6 @@ class AsmMn1610 final : public Assembler, public Config {
 public:
     AsmMn1610();
 
-    const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override;
-
 private:
     const IbmNumberParser _number{'X'};
     const AsteriskCommentParser _comment;
@@ -45,6 +42,9 @@ private:
     void encodeGenericAddress(InsnMn1610 &insn, const Operand &op);
     void encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mn1610

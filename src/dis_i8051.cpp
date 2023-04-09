@@ -24,7 +24,7 @@ namespace i8051 {
 
 using namespace reg;
 
-DisI8051::DisI8051() : Disassembler(_hexFormatter, TableI8051::TABLE, '$') {
+DisI8051::DisI8051() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -136,7 +136,7 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8051::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

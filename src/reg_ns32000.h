@@ -91,7 +91,7 @@ enum StrOptName : uint8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 uint8_t encodeRegName(RegName name);
 bool isGeneric(RegName name);
 RegName decodeRegName(uint8_t num, bool floating = false);

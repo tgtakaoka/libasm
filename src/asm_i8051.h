@@ -28,8 +28,6 @@ class AsmI8051 final : public Assembler, public Config {
 public:
     AsmI8051();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const IntelNumberParser _number;
     const SemicolonCommentParser _comment;
@@ -42,6 +40,9 @@ private:
 
     void encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8051

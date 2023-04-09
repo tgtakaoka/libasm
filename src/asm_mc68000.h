@@ -28,7 +28,6 @@ class AsmMc68000 final : public Assembler, public Config {
 public:
     AsmMc68000();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setAlias(bool enable);
@@ -40,6 +39,8 @@ private:
     const MotorolaLetterParser _letter{/*closingQuote*/ true};
     const AsteriskLocationParser _location;
     const BoolOption<AsmMc68000> _opt_alias;
+
+    bool _acceptAlias;
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
@@ -53,6 +54,9 @@ private:
     Error emitEffectiveAddr(
             InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc68000

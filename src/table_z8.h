@@ -18,36 +18,24 @@
 #define __TABLE_Z8_H__
 
 #include "config_z8.h"
-#include "dis_memory.h"
 #include "entry_table.h"
 #include "insn_z8.h"
 
 namespace libasm {
 namespace z8 {
 
-struct TableZ8 : entry::Table {
-public:
-    TableZ8();
+struct TableZ8 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableZ8 TABLE;
-
-    Error searchName(InsnZ8 &insn) const;
-    Error searchOpCode(InsnZ8 &insn, StrBuffer &out, DisMemory &memory) const;
-    bool isSuper8() const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
+    Error searchName(CpuType, InsnZ8 &insn) const;
+    Error searchOpCode(CpuType, InsnZ8 &insn, StrBuffer &out) const;
 
     static constexpr Config::opcode_t SRP = 0x31;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
 };
+
+extern const TableZ8 TABLE;
 
 }  // namespace z8
 }  // namespace libasm

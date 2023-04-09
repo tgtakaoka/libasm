@@ -26,14 +26,14 @@ namespace f3850 {
 
 using namespace reg;
 
-struct AsmF3850::Operand : public OperandBase {
+struct AsmF3850::Operand final : ErrorAt {
     AddrMode mode;
     uint16_t val16;
     Operand() : mode(M_NONE), val16(0) {}
 };
 
 AsmF3850::AsmF3850()
-    : Assembler(TableF3850::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -144,7 +144,7 @@ Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    const auto error = TableF3850::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

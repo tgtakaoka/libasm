@@ -18,12 +18,11 @@
 
 namespace libasm {
 
-Assembler::Assembler(entry::Table &table, const OptionBase *option, const NumberParser &number,
+Assembler::Assembler(const OptionBase *option, const NumberParser &number,
         const CommentParser &comment, const SymbolParser &symbol, const LetterParser &letter,
         const LocationParser &location, const OperatorParser *operators,
         const FunctionParser *function)
     : ErrorAt(),
-      _table(table),
       _options(option),
       _parser(number, comment, symbol, letter, location, operators, function) {}
 

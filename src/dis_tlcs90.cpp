@@ -24,7 +24,7 @@ namespace tlcs90 {
 
 using namespace reg;
 
-DisTlcs90::DisTlcs90() : Disassembler(_hexFormatter, TableTlcs90::TABLE, '$') {
+DisTlcs90::DisTlcs90() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -147,11 +147,14 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, 
 
 Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTlcs90 insn(_insn);
+    const auto opCode = insn.readByte(memory);
+    insn.setOpCode(opCode);
     Operand preOp;
-    if (TableTlcs90::TABLE.readInsn(memory, insn, preOp))
+    if (TABLE.isPrefix(cpuType(), opCode, preOp.mode))
+        insn.readOpCode(memory, preOp);
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
-    if (TableTlcs90::TABLE.searchOpCode(insn, out))
-        return setError(insn);
+
     const auto dst = insn.dst();
     if (dst == M_NONE)
         return OK;

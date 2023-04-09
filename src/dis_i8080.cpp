@@ -24,7 +24,7 @@ namespace i8080 {
 
 using namespace reg;
 
-DisI8080::DisI8080() : Disassembler(_hexFormatter, TableI8080::TABLE, '$') {
+    DisI8080::DisI8080() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -66,7 +66,7 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnI8080 insn(_insn);
     auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);
-    if (TableI8080::TABLE.isPrefix(opCode)) {
+    if (TABLE.isPrefix(cpuType(), opCode)) {
         const auto prefix = opCode;
         opCode = insn.readByte(memory);
         insn.setOpCode(opCode, prefix);
@@ -74,7 +74,7 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableI8080::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();

@@ -28,7 +28,6 @@ class DisIns8070 final : public Disassembler, public Config {
 public:
     DisIns8070();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setUseSharpImmediate(bool enable);
@@ -46,6 +45,9 @@ private:
     Error decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace ins8070

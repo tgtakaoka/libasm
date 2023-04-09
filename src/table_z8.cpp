@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_z8.h"
-
-#include "entry_z8.h"
 #include "table_z8.h"
-#include "text_z8.h"
 
-#include <ctype.h>
-#include <string.h>
+#include "entry_table.h"
+#include "entry_z8.h"
+#include "text_z8.h"
 
 using namespace libasm::text::z8;
 
@@ -469,28 +466,36 @@ static constexpr uint8_t INDEX_SUPER8_POST[] PROGMEM {
 };
 // clang-format on
 
-static constexpr TableZ8::EntryPage Z8_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage Z8_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8), ARRAY_RANGE(INDEX_Z8)},
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
-static constexpr TableZ8::EntryPage Z86C_PAGES[] PROGMEM = {
+static constexpr EntryPage Z86C_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_Z8), ARRAY_RANGE(INDEX_Z8)},
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
         {ARRAY_RANGE(TABLE_Z86C), ARRAY_RANGE(INDEX_Z86C)},
 };
 
-static constexpr TableZ8::EntryPage SUPER8_PAGES[] PROGMEM = {
+static constexpr EntryPage SUPER8_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_SUPER8), ARRAY_RANGE(INDEX_SUPER8)},
         {ARRAY_RANGE(TABLE_SUPER8_POST), ARRAY_RANGE(INDEX_SUPER8_POST)},
         {ARRAY_RANGE(TABLE_COMMON), ARRAY_RANGE(INDEX_COMMON)},
 };
 
-static constexpr TableZ8::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {Z8, TEXT_CPU_Z8, ARRAY_RANGE(Z8_PAGES)},
         {Z86C, TEXT_CPU_Z86C, ARRAY_RANGE(Z86C_PAGES)},
         {SUPER8, TEXT_CPU_Z88, ARRAY_RANGE(SUPER8_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -536,8 +541,8 @@ static bool acceptModes(InsnZ8 &insn, const Entry *entry) {
            acceptMode(flags.ext(), table.ext());
 }
 
-Error TableZ8::searchName(InsnZ8 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableZ8::searchName(CpuType cpuType, InsnZ8 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
@@ -562,7 +567,7 @@ static bool matchPostByte(Config::opcode_t post, PostFormat format) {
     }
 }
 
-static bool matchOpCode(InsnZ8 &insn, const Entry *entry, const TableZ8::EntryPage *page) {
+static bool matchOpCode(InsnZ8 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     if (InsnZ8::operandInOpCode(entry->opCode()))
         opCode &= 0x0f;
@@ -578,42 +583,36 @@ static bool matchOpCode(InsnZ8 &insn, const Entry *entry, const TableZ8::EntryPa
     return true;
 }
 
-Error TableZ8::searchOpCode(InsnZ8 &insn, StrBuffer &out, DisMemory &memory) const {
-    insn.setMemory(memory);
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableZ8::searchOpCode(CpuType cpuType, InsnZ8 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableZ8::TableZ8() {
-    setCpu(Z8);
+const /*PROGMEM*/ char *TableZ8::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-bool TableZ8::isSuper8() const {
-    return _cpu->cpuType() == SUPER8;
+const /*PROGMEM*/ char *TableZ8::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableZ8::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+Error TableZ8::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+    } else if (name.istarts_P(TEXT_CPU_Z86C)) {
+        cpuType = Z86C;
+    } else if (name.istarts_P(TEXT_CPU_Z86)) {
+        cpuType = Z8;
+    } else if (name.istarts_P(TEXT_CPU_Z88) || name.iequals_P(TEXT_CPU_SUPER8)) {
+        cpuType = SUPER8;
+    } else {
+        return UNSUPPORTED_CPU;
+    }
+    return OK;
 }
 
-bool TableZ8::setCpu(const char *cpu) {
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (strncasecmp_P(cpu, TEXT_CPU_Z86C, 4) == 0)
-        return setCpu(Z86C);
-    if (strncasecmp_P(cpu, TEXT_CPU_Z86, 3) == 0)
-        return setCpu(Z8);
-    if (strncasecmp_P(cpu, TEXT_CPU_Z88, 3) == 0 || strcasecmp_P(cpu, TEXT_CPU_SUPER8) == 0)
-        return setCpu(SUPER8);
-    return false;
-}
-
-TableZ8 TableZ8::TABLE;
+const TableZ8 TABLE;
 
 }  // namespace z8
 }  // namespace libasm

@@ -56,10 +56,10 @@ namespace reg {
 
 RegName parseRegName(StrScanner &scan);
 RegSize regSize(RegName name) __attribute__((noinline));
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
-RegName decodeDataReg(uint8_t num);
-bool isDataReg(RegName name);
+RegName decodeDataReg(CpuType cpuType, uint8_t num);
+bool isDataReg(CpuType cpuType, RegName name);
 uint8_t encodeDataReg(RegName name);
 
 RegName decodeBaseReg(uint8_t num);

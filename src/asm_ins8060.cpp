@@ -24,7 +24,7 @@ namespace ins8060 {
 
 using namespace reg;
 
-struct AsmIns8060::Operand : public OperandBase {
+struct AsmIns8060::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     RegName index;
@@ -33,8 +33,8 @@ struct AsmIns8060::Operand : public OperandBase {
 };
 
 AsmIns8060::AsmIns8060()
-    : Assembler(TableIns8060::TABLE, nullptr, _number, _comment, _symbol, _letter, _location,
-              nullptr, &_function) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location, nullptr, &_function),
+      Config(TABLE) {
     reset();
 }
 
@@ -195,7 +195,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op);
 
     insn.setAddrMode(op.mode);
-    const auto error = TableIns8060::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op, error);
 

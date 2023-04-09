@@ -28,8 +28,6 @@ class AsmMc6800 final : public Assembler, public Config {
 public:
     AsmMc6800();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const MotorolaNumberParser _number;
     const AsteriskCommentParser _comment;
@@ -45,6 +43,9 @@ private:
     void emitBitNumber(InsnMc6800 &insn, const Operand &op);
     void emitOperand(InsnMc6800 &insn, AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc6800

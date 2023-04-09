@@ -20,19 +20,27 @@
 #include "config_tlcs90.h"
 #include "entry_tlcs90.h"
 #include "insn_base.h"
+#include "reg_tlcs90.h"
 
 namespace libasm {
 namespace tlcs90 {
 
-class InsnTlcs90 : public InsnImpl<Config, Entry> {
-public:
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    uint16_t val16;
+    Operand() : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
+};
+
+struct InsnTlcs90 final : InsnImpl<Config, Entry> {
     InsnTlcs90(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
-    AddrMode pre() const { return _preMode; }
+    AddrMode pre() const { return _prefixMode; }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
-    void setPreMode(AddrMode pre) { _preMode = pre; }
+    void setPrefixMode(AddrMode mode) { _prefixMode = mode; }
 
     void setEmitInsn() { _emitInsn = true; }
     void emitInsn(Config::opcode_t opc) {
@@ -42,8 +50,36 @@ public:
         }
     }
 
+    void readOpCode(DisMemory &memory, Operand &op) {
+        const auto prefix = opCode();
+        switch (op.mode) {
+        case M_EXT:
+            op.val16 = readUint16(memory);
+            break;
+        case M_DIR:
+            op.val16 = readByte(memory);
+            break;
+        case M_IND:
+            op.reg = reg::decodeReg16(prefix);
+            break;
+        case M_IDX:
+            op.reg = reg::decodeIndexReg(prefix);
+            op.val16 = static_cast<int8_t>(readByte(memory));
+            break;
+        case M_REG8:
+            op.reg = reg::decodeReg8(prefix);
+            break;
+        case M_CC:
+            op.cc = reg::decodeCcName(prefix);
+            break;
+        default:
+            break;
+        }
+        setOpCode(readByte(memory), prefix);
+    }
+
 private:
-    AddrMode _preMode;
+    AddrMode _prefixMode;
     bool _emitInsn;
 };
 

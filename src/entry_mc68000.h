@@ -93,8 +93,8 @@ enum OprPos : uint8_t {
     OP___ = 4,  // ___|___|___|___
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _src;
         uint8_t _dst;
         uint8_t _pos;

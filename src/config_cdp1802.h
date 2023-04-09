@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_cdp1802.h"
-
 namespace libasm {
 namespace cdp1802 {
 
@@ -30,8 +28,9 @@ enum CpuType : uint8_t {
     CDP1804A,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 4,
-                        text::cdp1802::TEXT_CPU_LIST> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 4, 4> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, CDP1802){};
+};
 
 }  // namespace cdp1802
 }  // namespace libasm

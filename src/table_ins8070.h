@@ -18,30 +18,21 @@
 #define __TABLE_INS8070_H__
 
 #include "config_ins8070.h"
-#include "entry_table.h"
 #include "insn_ins8070.h"
 
 namespace libasm {
 namespace ins8070 {
 
-struct TableIns8070 : entry::Table {
-public:
-    TableIns8070();
+struct TableIns8070 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableIns8070 TABLE;
-
-    Error searchName(InsnIns8070 &insn) const;
-    Error searchOpCode(InsnIns8070 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *const _cpu;
+    Error searchName(CpuType, InsnIns8070 &insn) const;
+    Error searchOpCode(CpuType, InsnIns8070 &insn, StrBuffer &out) const;
 };
+
+extern const TableIns8070 TABLE;
 
 }  // namespace ins8070
 }  // namespace libasm

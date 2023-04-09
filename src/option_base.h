@@ -42,6 +42,7 @@ struct OptionBase {
 
     static Error parseBoolOption(StrScanner &scan, bool &var);
     static Error parseIntOption(StrScanner &scan, int32_t &var);
+    static StrScanner readSymbol(StrScanner &scan);
 
 protected:
     OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec,

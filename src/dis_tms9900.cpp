@@ -26,7 +26,7 @@ namespace tms9900 {
 using namespace reg;
 using text::tms9900::TEXT_MID;
 
-DisTms9900::DisTms9900() : Disassembler(_hexFormatter, TableTms9900::TABLE, '$') {
+DisTms9900::DisTms9900() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -161,10 +161,10 @@ Error DisTms9900::decodeOperand(
 
 Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     InsnTms9900 insn(_insn);
-    Config::opcode_t opCode = insn.readUint16(memory);
+    const Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    if (TableTms9900::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return decodeMacroInstructionDetect(insn, out);
     insn.readPost(memory);
     if (setError(insn))

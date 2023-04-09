@@ -29,7 +29,6 @@ class DisZ8 final : public Disassembler, public Config {
 public:
     DisZ8();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setUseWorkRegister(bool enable);
@@ -56,6 +55,9 @@ private:
     Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
     Error decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace z8

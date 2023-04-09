@@ -18,30 +18,21 @@
 #define __TABLE_SCN2650_H__
 
 #include "config_scn2650.h"
-#include "entry_table.h"
 #include "insn_scn2650.h"
 
 namespace libasm {
 namespace scn2650 {
 
-struct TableScn2650 : entry::Table {
-public:
-    TableScn2650();
+struct TableScn2650 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableScn2650 TABLE;
-
-    Error searchName(InsnScn2650 &insn) const;
-    Error searchOpCode(InsnScn2650 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *const _cpu;
+    Error searchName(CpuType, InsnScn2650 &insn) const;
+    Error searchOpCode(CpuType, InsnScn2650 &insn, StrBuffer &out) const;
 };
+
+extern const TableScn2650 TABLE;
 
 }  // namespace scn2650
 }  // namespace libasm

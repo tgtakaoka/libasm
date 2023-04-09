@@ -24,9 +24,9 @@
 namespace libasm {
 namespace ns32000 {
 
-class InsnNs32000 : public InsnImpl<Config, Entry> {
-public:
-    InsnNs32000(Insn &insn) : InsnImpl(insn) {}
+struct InsnNs32000 final : InsnImpl<Config, Entry> {
+    InsnNs32000(Insn &insn) : InsnImpl(insn), _memory(nullptr) {}
+    InsnNs32000(Insn &insn, DisMemory &memory) : InsnImpl(insn), _memory(&memory) {}
 
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
@@ -41,7 +41,10 @@ public:
         setFlags(Entry::Flags::create(src, dst, ex1, ex2));
     }
 
-    void readPost(DisMemory &memory) { setPost(readByte(memory)); }
+    void readPost() {
+        if (_memory)
+            setPost(readByte(*_memory));
+    }
 
     void setIndexByte(uint8_t data, OprPos pos) {
         if (pos == P_GEN1)
@@ -67,6 +70,7 @@ public:
     void emitOpFloat64(double float64) { emitFloat64(float64, operandPos()); }
 
 private:
+    DisMemory *const _memory;
     uint8_t _indexByte1;
     uint8_t _indexByte2;
 

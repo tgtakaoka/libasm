@@ -28,8 +28,6 @@ class AsmTms9900 final : public Assembler, public Config {
 public:
     AsmTms9900();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const TexasNumberParser _number;
     const AsteriskCommentParser _comment;
@@ -45,6 +43,9 @@ private:
     void encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
     void encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace tms9900

@@ -116,8 +116,8 @@ enum ModeField : uint8_t {
     MF_P8 = 6,
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _dst;
         uint8_t _src;
         uint8_t _ext;

@@ -17,7 +17,7 @@
 #ifndef __ENTRY_BASE_H__
 #define __ENTRY_BASE_H__
 
-#include "config_base.h"
+#include "config_host.h"
 
 namespace libasm {
 namespace entry {
@@ -25,17 +25,17 @@ namespace entry {
 /**
  * Base class for instruction table entry.
  */
-template <typename Conf>
+template <typename OPCODE>
 struct Base {
-    constexpr Base(const /* PROGMEM */ char *name_P, typename Conf::opcode_t opCode)
+    constexpr Base(const /* PROGMEM */ char *name_P, OPCODE opCode)
         : _name_P(name_P), _opCode(opCode) {}
 
     const /* PROGMEM */ char *name_P() const {
         return reinterpret_cast<const char *>(pgm_read_ptr(&_name_P));
     }
 
-    typename Conf::opcode_t opCode() const {
-        if (sizeof(typename Conf::opcode_t) == 1) {
+    OPCODE opCode() const {
+        if (sizeof(OPCODE) == 1) {
             return pgm_read_byte(&_opCode);
         } else {
             return pgm_read_word(&_opCode);
@@ -44,7 +44,7 @@ struct Base {
 
 private:
     const /* PROGMEM */ char *_name_P;
-    typename Conf::opcode_t _opCode;
+    OPCODE _opCode;
 };
 
 }  // namespace entry

@@ -26,7 +26,7 @@ using namespace reg;
 static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
 
-struct AsmI8086::Operand : public OperandBase {
+struct AsmI8086::Operand final : ErrorAt {
     AddrMode mode;
     RegName ptr;
     RegName seg;
@@ -51,8 +51,8 @@ struct AsmI8086::Operand : public OperandBase {
 };
 
 AsmI8086::AsmI8086()
-    : Assembler(TableI8086::TABLE, &_opt_optimizeSegment, _number, _comment, _symbol, _letter,
-              _location),
+    : Assembler(&_opt_optimizeSegment, _number, _comment, _symbol, _letter, _location),
+      Config(TABLE),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {
     reset();
@@ -74,7 +74,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     auto p = scan;
     insn.nameBuffer().text(_parser.readSymbol(p));
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
-    if (TableI8086::TABLE.searchName(insn))
+    if (TABLE.searchName(cpuType(), insn))
         return UNKNOWN_INSTRUCTION;
     if (!insn.stringInst())
         return UNKNOWN_INSTRUCTION;
@@ -341,7 +341,7 @@ uint8_t AsmI8086::Operand::encodeR_m() const {
 Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) {
     if (seg == REG_UNDEF)
         return 0;
-    const Config::opcode_t segPrefix = TableI8086::TABLE.segOverridePrefix(seg);
+    const Config::opcode_t segPrefix = TABLE.segOverridePrefix(seg);
     if (_optimizeSegment) {
         if (base == REG_BP || base == REG_SP)
             return seg == REG_SS ? 0 : segPrefix;
@@ -482,7 +482,7 @@ void AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg
     if (seg == REG_ES && op.seg != REG_ES)
         setErrorIf(op, ILLEGAL_SEGMENT);
     if (seg == REG_DS && op.seg != REG_UNDEF && op.seg != REG_DS)
-        insn.setSegment(TableI8086::TABLE.segOverridePrefix(op.seg));
+        insn.setSegment(TABLE.segOverridePrefix(op.seg));
 }
 
 void AsmI8086::emitStringInst(InsnI8086 &insn, const Operand &dst, const Operand &src) {
@@ -532,7 +532,7 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    const auto error = TableI8086::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
     insn.prepairModReg();

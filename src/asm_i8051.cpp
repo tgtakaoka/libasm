@@ -26,7 +26,7 @@ namespace i8051 {
 
 using namespace reg;
 
-struct AsmI8051::Operand : public OperandBase {
+struct AsmI8051::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint16_t val16;
@@ -34,7 +34,7 @@ struct AsmI8051::Operand : public OperandBase {
 };
 
 AsmI8051::AsmI8051()
-    : Assembler(TableI8051::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -211,7 +211,7 @@ Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    const auto error = TableI8051::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
 

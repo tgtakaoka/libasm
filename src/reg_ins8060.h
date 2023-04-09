@@ -37,7 +37,7 @@ enum RegName : int8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 bool isPointerReg(RegName name);
 uint8_t encodePointerReg(RegName name);

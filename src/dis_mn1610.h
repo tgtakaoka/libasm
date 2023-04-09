@@ -29,9 +29,6 @@ class DisMn1610 final : public Disassembler, public Config {
 public:
     DisMn1610();
 
-    const ConfigBase &config() const override { return *this; }
-    AddressWidth addressWidth() const override;
-
 private:
     const SurroundHexFormatter _hexFormatter{HexFormatter::X_DASH, '\''};
 
@@ -42,6 +39,9 @@ private:
     StrBuffer &outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode);
     Error decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mn1610

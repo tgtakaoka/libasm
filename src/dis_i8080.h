@@ -28,13 +28,14 @@ class DisI8080 final : public Disassembler, public Config {
 public:
     DisI8080();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
     Error decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8080

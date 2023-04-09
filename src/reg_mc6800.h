@@ -32,7 +32,7 @@ enum RegName : char {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 }  // namespace reg
 }  // namespace mc6800

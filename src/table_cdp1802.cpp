@@ -16,11 +16,8 @@
 
 #include "table_cdp1802.h"
 
-#include <ctype.h>
-#include <string.h>
-
-#include "config_cdp1802.h"
 #include "entry_cdp1802.h"
+#include "entry_table.h"
 #include "text_cdp1802.h"
 
 using namespace libasm::text::cdp1802;
@@ -303,26 +300,34 @@ static constexpr uint8_t INDEX_CDP1804A[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableCdp1802::EntryPage CDP1802_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage CDP1802_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
 };
 
-static constexpr TableCdp1802::EntryPage CDP1804_PAGES[] PROGMEM = {
+static constexpr EntryPage CDP1804_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
 };
 
-static constexpr TableCdp1802::EntryPage CDP1804A_PAGES[] PROGMEM = {
+static constexpr EntryPage CDP1804A_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_CDP1802), ARRAY_RANGE(INDEX_CDP1802)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804), ARRAY_RANGE(INDEX_CDP1804)},
         {0x68, ARRAY_RANGE(TABLE_CDP1804A), ARRAY_RANGE(INDEX_CDP1804A)},
 };
 
-static constexpr TableCdp1802::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {CDP1802, TEXT_CPU_1802, ARRAY_RANGE(CDP1802_PAGES)},
         {CDP1804, TEXT_CPU_1804, ARRAY_RANGE(CDP1804_PAGES)},
         {CDP1804A, TEXT_CPU_1804A, ARRAY_RANGE(CDP1804A_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -341,13 +346,12 @@ static bool acceptModes(InsnCdp1802 &insn, const Entry *entry) {
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
-Error TableCdp1802::searchName(InsnCdp1802 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableCdp1802::searchName(CpuType cpuType, InsnCdp1802 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(
-        InsnCdp1802 &insn, const Entry *entry, const TableCdp1802::EntryPage *page) {
+static bool matchOpCode(InsnCdp1802 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     auto flags = entry->flags();
     auto mode = flags.mode1();
@@ -359,35 +363,37 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableCdp1802::searchOpCode(InsnCdp1802 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableCdp1802::searchOpCode(CpuType cpuType, InsnCdp1802 &insn, StrBuffer &out) const {
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 
-TableCdp1802::TableCdp1802() {
-    setCpu(CDP1802);
+bool TableCdp1802::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+    return cpu(cpuType)->isPrefix(code);
 }
 
-bool TableCdp1802::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableCdp1802::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-bool TableCdp1802::setCpu(const char *cpu) {
-    if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
-        cpu += 3;
-    auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    return false;
+const /*PROGMEM*/ char *TableCdp1802::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-TableCdp1802 TableCdp1802::TABLE;
+Error TableCdp1802::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.istarts_P(TEXT_CPU_LIST, 3))
+        name += 3;
+    const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
+}
+
+const TableCdp1802 TABLE;
 
 }  // namespace cdp1802
 }  // namespace libasm

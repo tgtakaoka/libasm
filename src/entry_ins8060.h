@@ -34,8 +34,8 @@ enum AddrMode : uint8_t {
     M_INDX = 6,  // Indexed, M_DISP + @dd(Pn), @E(Pn)
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _attr;
 
         static constexpr Flags create(AddrMode mode) {

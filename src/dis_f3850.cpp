@@ -28,7 +28,8 @@ static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
 static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
 
 DisF3850::DisF3850()
-    : Disassembler(_hexFormatter, TableF3850::TABLE, '$', &_opt_useScratchpad),
+    : Disassembler(_hexFormatter, '$', &_opt_useScratchpad),
+      Config(TABLE),
       _opt_useScratchpad(this, &DisF3850::setUseScratchpadName, OPT_BOOL_USE_SCRATCHPAD,
               OPT_DESC_USE_SCRATCHPAD) {
     reset();
@@ -105,7 +106,7 @@ Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) {
     if (setError(insn))
         return getError();
 
-    if (TableF3850::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

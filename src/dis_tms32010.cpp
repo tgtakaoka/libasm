@@ -24,7 +24,7 @@ namespace tms32010 {
 
 using namespace reg;
 
-DisTms32010::DisTms32010() : Disassembler(_hexFormatter, TableTms32010::TABLE, '$') {
+DisTms32010::DisTms32010() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -34,7 +34,7 @@ Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
     uint8_t dma = static_cast<uint8_t>(opc) & 0x7F;
     if ((opc >> 8) == SST) {
         dma |= (1 << 7);
-        if (dma > TableTms32010::TABLE.dataMemoryLimit())
+        if (dma > dataMemoryLimit())
             return setError(OVERFLOW_RANGE);
     }
     outAbsAddr(out, dma, 8);
@@ -133,7 +133,7 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Config::opcode_t opCode = insn.readUint16(memory);
 
     insn.setOpCode(opCode);
-    if (TableTms32010::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

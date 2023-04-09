@@ -24,9 +24,9 @@
 namespace libasm {
 namespace z8 {
 
-class InsnZ8 : public InsnImpl<Config, Entry> {
-public:
-    InsnZ8(Insn &insn) : InsnImpl(insn) {}
+struct InsnZ8 final : InsnImpl<Config, Entry> {
+    InsnZ8(Insn &insn) : InsnImpl(insn), _memory(nullptr) {}
+    InsnZ8(Insn &insn, DisMemory &memory) : InsnImpl(insn), _memory(&memory) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -37,8 +37,10 @@ public:
         setFlags(Entry::Flags::create(dst, src, ext, ORDER_NONE, PF_NONE));
     }
 
-    void setMemory(DisMemory &memory) { _memory = &memory; }
-    void readPost() { setPost(readByte(*_memory)); }
+    void readPost() {
+        if (_memory)
+            setPost(readByte(*_memory));
+    }
 
     static bool operandInOpCode(Config::opcode_t opCode) {
         const Config::opcode_t low4 = opCode & 0xF;

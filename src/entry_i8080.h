@@ -40,8 +40,8 @@ enum AddrMode : uint8_t {
     M_REGH = 11,  // H register
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _attr;
 
         static constexpr Flags create(AddrMode dst, AddrMode src) {

@@ -24,7 +24,7 @@ namespace mc68000 {
 
 using namespace reg;
 
-DisMc68000::DisMc68000() : Disassembler(_hexFormatter, TableMc68000::TABLE, '*') {
+DisMc68000::DisMc68000() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
     reset();
 }
 
@@ -358,7 +358,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableMc68000::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto src = insn.src();

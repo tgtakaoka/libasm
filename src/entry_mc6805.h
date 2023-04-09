@@ -39,8 +39,8 @@ enum AddrMode : uint8_t {
     M_MEM = 10,  // Generic memory, M_DIR/M_IDX/M_IX0
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint16_t _attr;
 
         static constexpr Flags create(AddrMode opr1, AddrMode opr2, AddrMode opr3) {

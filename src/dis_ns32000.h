@@ -28,7 +28,6 @@ class DisNs32000 final : public Disassembler, public Config {
 public:
     DisNs32000();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
     Error setPcRelativeParen(bool enable);
@@ -72,6 +71,9 @@ private:
             OprPos pos, OprSize size);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace ns32000

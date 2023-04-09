@@ -24,8 +24,7 @@
 namespace libasm {
 namespace f3850 {
 
-class InsnF3850 : public InsnImpl<Config, Entry> {
-public:
+struct InsnF3850 final : InsnImpl<Config, Entry> {
     InsnF3850(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode mode1() const { return flags().mode1(); }

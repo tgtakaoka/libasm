@@ -19,8 +19,6 @@
 
 #include "config_base.h"
 
-#include "text_f3850.h"
-
 namespace libasm {
 namespace f3850 {
 
@@ -28,8 +26,9 @@ enum CpuType : uint8_t {
     F3850,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 4,
-                        text::f3850::TEXT_CPU_F3850> {};
+struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 4> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, F3850) {}
+};
 
 }  // namespace f3850
 }  // namespace libasm

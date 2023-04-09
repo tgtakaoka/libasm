@@ -24,7 +24,7 @@ namespace z80 {
 
 using namespace reg;
 
-struct AsmZ80::Operand : public OperandBase {
+struct AsmZ80::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint16_t val16;
@@ -32,7 +32,7 @@ struct AsmZ80::Operand : public OperandBase {
 };
 
 AsmZ80::AsmZ80()
-    : Assembler(TableZ80::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -266,7 +266,7 @@ Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(srcOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode);
-    const auto error = TableZ80::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
 

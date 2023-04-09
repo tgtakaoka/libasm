@@ -61,8 +61,8 @@ enum AddrMode : uint8_t {
     M_IDIX = 32,  // (v)(r)
 };
 
-struct Entry : entry::Base<Config> {
-    struct Flags {
+struct Entry final : entry::Base<Config::opcode_t> {
+    struct Flags final {
         uint8_t _opr1;
         uint8_t _opr2;
         uint8_t _opr3;

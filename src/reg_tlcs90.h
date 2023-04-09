@@ -77,7 +77,7 @@ enum CcName : int8_t {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 bool isReg16(RegName name);
 bool isRegIndex(RegName name);
 

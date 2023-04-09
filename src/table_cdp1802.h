@@ -18,33 +18,23 @@
 #define __TABLE_CDP1802_H__
 
 #include "config_cdp1802.h"
-#include "entry_table.h"
 #include "insn_cdp1802.h"
+#include "str_buffer.h"
 
 namespace libasm {
 namespace cdp1802 {
 
-struct TableCdp1802 : entry::Table {
-public:
-    TableCdp1802();
+struct TableCdp1802 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableCdp1802 TABLE;
-
-    Error searchName(InsnCdp1802 &insn) const;
-    Error searchOpCode(InsnCdp1802 &insn, StrBuffer &out) const;
-    bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnCdp1802 &insn) const;
+    Error searchOpCode(CpuType, InsnCdp1802 &insn, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code) const;
 };
+
+extern const TableCdp1802 TABLE;
 
 }  // namespace cdp1802
 }  // namespace libasm

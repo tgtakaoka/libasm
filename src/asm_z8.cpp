@@ -33,7 +33,7 @@ static const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
 static const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
 static const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
 
-struct AsmZ8::Operand : public OperandBase {
+struct AsmZ8::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     CcName cc;
@@ -42,7 +42,8 @@ struct AsmZ8::Operand : public OperandBase {
 };
 
 AsmZ8::AsmZ8()
-    : Assembler(TableZ8::TABLE, &_opt_setrp, _number, _comment, _symbol, _letter, _location),
+    : Assembler(&_opt_setrp, _number, _comment, _symbol, _letter, _location),
+      Config(TABLE),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
       _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1) {
@@ -89,7 +90,7 @@ void AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op) 
     if (mode == M_NONE)
         return;
     if (op.reg != REG_UNDEF && (mode == M_R || mode == M_IR || mode == M_IRR)) {
-        insn.emitOperand8(encodeWorkRegAddr(op.reg));
+        insn.emitOperand8(encodeWorkRegAddr(isSuper8(), op.reg));
         return;
     }
     if ((mode != M_IM || overflowUint8(op.val16)) && op.val16 >= 0x100)
@@ -169,9 +170,11 @@ void AsmZ8::encodeMultiOperands(
         return;
     }
     const auto dstFirst = insn.dstFirst();
-    const auto dstVal = (dstOp.reg == REG_UNDEF) ? dstOp.val16 : encodeWorkRegAddr(dstOp.reg);
-    const auto srcVal =
-            (srcOp.reg == REG_UNDEF || src == M_IM) ? srcOp.val16 : encodeWorkRegAddr(srcOp.reg);
+    const auto dstVal =
+            (dstOp.reg == REG_UNDEF) ? dstOp.val16 : encodeWorkRegAddr(isSuper8(), dstOp.reg);
+    const auto srcVal = (srcOp.reg == REG_UNDEF || src == M_IM)
+                                ? srcOp.val16
+                                : encodeWorkRegAddr(isSuper8(), srcOp.reg);
     if (src == M_IM && overflowUint8(srcOp.val16))
         setErrorIf(srcOp, OVERFLOW_RANGE);
     insn.emitOperand8(dstFirst ? dstVal : srcVal);
@@ -317,7 +320,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         } else {
             op.mode = pair ? M_rr : M_r;
         }
-        op.val16 = encodeWorkRegAddr(op.reg);
+        op.val16 = encodeWorkRegAddr(isSuper8(), op.reg);
         scan = p;
         return OK;
     }
@@ -402,7 +405,7 @@ Error AsmZ8::setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter) {
 Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
         return setRp(scan, &AsmZ8::setRegPointer);
-    if (TableZ8::TABLE.isSuper8()) {
+    if (isSuper8()) {
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0)
             return setRp(scan, &AsmZ8::setRegPointer0);
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
@@ -433,7 +436,7 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(extOp);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
-    const auto error = TableZ8::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
     const auto dst = insn.dst();

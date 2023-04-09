@@ -29,11 +29,10 @@ class AsmNs32000 final : public Assembler, public Config {
 public:
     AsmNs32000();
 
-    const ConfigBase &config() const override { return *this; }
     void reset() override;
 
-    Error setFpu(StrScanner &scan);
-    Error setPmmu(StrScanner &scan);
+    Error setFpuName(StrScanner &scan);
+    Error setPmmuName(StrScanner &scan);
 
 private:
     const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
@@ -64,6 +63,9 @@ private:
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace ns32000

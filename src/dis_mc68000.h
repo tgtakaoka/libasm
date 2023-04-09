@@ -29,8 +29,6 @@ class DisMc68000 final : public Disassembler, public Config {
 public:
     DisMc68000();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
@@ -48,6 +46,9 @@ private:
     Error checkOperand(AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc68000

@@ -44,7 +44,7 @@ namespace reg {
 RegName parseRegName(StrScanner &scan);
 uint8_t encodeRegName(RegName name);
 RegName decodeRegName(Config::opcode_t opc);
-StrBuffer &outRegName(StrBuffer &out, const RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 CcName parseCcName(StrScanner &scan);
 uint8_t encodeCcName(CcName name);

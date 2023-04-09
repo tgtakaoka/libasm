@@ -26,7 +26,7 @@ using namespace reg;
 static const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
 static const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
 
-struct AsmMc68000::Operand : public OperandBase {
+struct AsmMc68000::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     RegName indexReg;
@@ -39,7 +39,7 @@ struct AsmMc68000::Operand : public OperandBase {
 };
 
 AsmMc68000::AsmMc68000()
-    : Assembler(TableMc68000::TABLE, &_opt_alias, _number, _comment, _symbol, _letter, _location),
+    : Assembler(&_opt_alias, _number, _comment, _symbol, _letter, _location), Config(TABLE),
       _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS) {
     reset();
 }
@@ -50,7 +50,7 @@ void AsmMc68000::reset() {
 }
 
 Error AsmMc68000::setAlias(bool enable) {
-    TableMc68000::TABLE.setAlias(enable);
+    _acceptAlias = enable;
     return OK;
 }
 
@@ -459,7 +459,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-    const auto error = TableMc68000::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn, _acceptAlias);
     if (error)
         return setError(srcOp, error);
 

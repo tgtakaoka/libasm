@@ -24,7 +24,7 @@ namespace tms32010 {
 
 using namespace reg;
 
-struct AsmTms32010::Operand : public OperandBase {
+struct AsmTms32010::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint16_t val16;
@@ -32,7 +32,7 @@ struct AsmTms32010::Operand : public OperandBase {
 };
 
 AsmTms32010::AsmTms32010()
-    : Assembler(TableTms32010::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
     reset();
 }
 
@@ -72,7 +72,7 @@ void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode 
             insn.embed(0x98);
             break;
         default:
-            if (op.val16 > TableTms32010::TABLE.dataMemoryLimit())
+            if (op.val16 > dataMemoryLimit())
                 setErrorIf(op, OVERFLOW_RANGE);
             if (insn.opCode() == SST && op.val16 < 0x80)
                 setErrorIf(op, OVERFLOW_RANGE);
@@ -176,7 +176,7 @@ Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    const auto error = TableTms32010::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

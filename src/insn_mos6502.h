@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mos6502 {
 
-class InsnMos6502 : public InsnImpl<Config, Entry> {
-public:
+struct InsnMos6502 final : InsnImpl<Config, Entry> {
     InsnMos6502(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode mode1() const { return flags().mode1(); }

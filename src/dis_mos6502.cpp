@@ -30,7 +30,8 @@ static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
 static const char OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
 
 DisMos6502::DisMos6502()
-    : Disassembler(_hexFormatter, TableMos6502::TABLE, '*', &_opt_longa),
+    : Disassembler(_hexFormatter, '*', &_opt_longa),
+      Config(TABLE),
       _opt_longa(this, &DisMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
       _opt_longi(
               this, &DisMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI, _opt_indirectLong),
@@ -41,32 +42,46 @@ DisMos6502::DisMos6502()
 
 void DisMos6502::reset() {
     Disassembler::reset();
-    TableMos6502::TABLE.reset();
     setLongAccumulator(false);
     setLongIndex(false);
-    setUseIndirectLong(false);
-}
-
-AddressWidth DisMos6502::addressWidth() const {
-    return TableMos6502::TABLE.addressWidth();
+    setUseIndirectLong(true);
 }
 
 Error DisMos6502::setLongAccumulator(bool enable) {
-    return TableMos6502::TABLE.setLongAccumulator(enable) ? OK : OPERAND_NOT_ALLOWED;
+    _longAccumulator = enable;
+    if (cpuType() == W65C816)
+        return OK;
+    return enable ? OPERAND_NOT_ALLOWED : OK;
 }
 
 Error DisMos6502::setLongIndex(bool enable) {
-    return TableMos6502::TABLE.setLongIndex(enable) ? OK : OPERAND_NOT_ALLOWED;
+    _longIndex = enable;
+    if (cpuType() == W65C816)
+        return OK;
+    return enable ? OPERAND_NOT_ALLOWED : OK;
 }
 
 Error DisMos6502::setUseIndirectLong(bool enable) {
-    return TableMos6502::TABLE.useIndirectLong(enable) ? OK : OPERAND_NOT_ALLOWED;
+    _useIndirectLong = enable;
+    if (cpuType() == W65C816)
+        return OK;
+    return enable ? OPERAND_NOT_ALLOWED : OK;
+}
+
+bool DisMos6502::longImmediate(AddrMode mode) const {
+    if (cpuType() == W65C816) {
+        if (mode == M_IMA)
+            return _longAccumulator;
+        if (mode == M_IMX)
+            return _longIndex;
+    }
+    return false;
 }
 
 Error DisMos6502::decodeImmediate(
         DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode) {
     out.letter('#');
-    if (TableMos6502::TABLE.longImmediate(mode)) {
+    if (longImmediate(mode)) {
         outHex(out, insn.readUint16(memory), 16);
     } else {
         outHex(out, insn.readByte(memory), 8);
@@ -191,7 +206,8 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     insn.setOpCode(opCode);
 
-    if (TableMos6502::TABLE.searchOpCode(insn, out))
+    insn.setAllowIndirectLong(_useIndirectLong);
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();

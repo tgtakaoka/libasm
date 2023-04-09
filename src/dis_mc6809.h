@@ -28,8 +28,6 @@ class DisMc6809 final : public Disassembler, public Config {
 public:
     DisMc6809();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
@@ -48,6 +46,9 @@ private:
 
     Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc6809

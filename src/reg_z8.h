@@ -91,8 +91,8 @@ StrBuffer &outCcName(StrBuffer &out, CcName name);
 uint8_t encodeCcName(CcName name);
 CcName decodeCcNum(uint8_t num);
 
-bool isWorkRegAlias(uint8_t addr);
-uint8_t encodeWorkRegAddr(RegName name);
+bool isWorkRegAlias(bool super8, uint8_t addr);
+uint8_t encodeWorkRegAddr(bool super8, RegName name);
 
 }  // namespace reg
 }  // namespace z8

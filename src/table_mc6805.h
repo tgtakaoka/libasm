@@ -18,32 +18,21 @@
 #define __TABLE_MC6805_H__
 
 #include "config_mc6805.h"
-#include "entry_mc6805.h"
-#include "entry_table.h"
 #include "insn_mc6805.h"
 
 namespace libasm {
 namespace mc6805 {
 
-struct TableMc6805 : entry::Table {
-    TableMc6805();
+struct TableMc6805 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableMc6805 TABLE;
-
-    Error searchName(InsnMc6805 &insn) const;
-    Error searchOpCode(InsnMc6805 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *_cpu;
-
-    bool setCpu(CpuType cpuType);
+    Error searchName(CpuType, InsnMc6805 &insn) const;
+    Error searchOpCode(CpuType, InsnMc6805 &insn, StrBuffer &out) const;
 };
+
+extern const TableMc6805 TABLE;
 
 }  // namespace mc6805
 }  // namespace libasm

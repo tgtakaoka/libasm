@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-#include "config_tms32010.h"
-
-#include "entry_tms32010.h"
 #include "table_tms32010.h"
-#include "text_tms32010.h"
 
-#include <ctype.h>
-#include <string.h>
+#include "entry_table.h"
+#include "entry_tms32010.h"
+#include "text_tms32010.h"
 
 using namespace libasm::text::tms32010;
 
@@ -162,14 +159,22 @@ static constexpr uint8_t INDEX_TMS32010[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableTms32010::EntryPage TMS32010_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage TMS32010_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_TMS32010), ARRAY_RANGE(INDEX_TMS32010)},
 };
 
-static constexpr TableTms32010::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS32010, TEXT_CPU_32010, ARRAY_RANGE(TMS32010_PAGES)},
         {TMS32015, TEXT_CPU_32015, ARRAY_RANGE(TMS32010_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -200,13 +205,12 @@ static bool acceptModes(InsnTms32010 &insn, const Entry *entry) {
            acceptMode(flags.mode3(), table.mode3());
 }
 
-Error TableTms32010::searchName(InsnTms32010 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableTms32010::searchName(CpuType cpuType, InsnTms32010 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(
-        InsnTms32010 &insn, const Entry *entry, const TableTms32010::EntryPage *page) {
+static bool matchOpCode(InsnTms32010 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -233,38 +237,33 @@ static bool matchOpCode(
     return opCode == entry->opCode();
 }
 
-Error TableTms32010::searchOpCode(InsnTms32010 &insn, StrBuffer &out) const {
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableTms32010::searchOpCode(CpuType cpuType, InsnTms32010 &insn, StrBuffer &out) const {
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-uint16_t TableTms32010::dataMemoryLimit() const {
-    return _cpu->cpuType() == TMS32010 ? 0x8F : 0xFF;
+const /*PROGMEM*/ char *TableTms32010::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-TableTms32010::TableTms32010() {
-    setCpu(TMS32010);
+const /*PROGMEM*/ char *TableTms32010::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-bool TableTms32010::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+Error TableTms32010::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.istarts_P(TEXT_CPU_LIST, 3))
+        name += 3;
+    if (name.iequals_P(TEXT_CPU_32010)) {
+        cpuType = TMS32010;
+    } else if (name.iequals_P(TEXT_CPU_32015)) {
+        cpuType = TMS32015;
+    } else {
+        return UNSUPPORTED_CPU;
+    }
+    return OK;
 }
 
-bool TableTms32010::setCpu(const char *cpu) {
-    if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
-        cpu += 3;
-    if (strcmp_P(cpu, TEXT_CPU_32010) == 0)
-        return setCpu(TMS32010);
-    if (strcmp_P(cpu, TEXT_CPU_32015) == 0)
-        return setCpu(TMS32015);
-    return false;
-}
-
-TableTms32010 TableTms32010::TABLE;
+const TableTms32010 TABLE;
 
 }  // namespace tms32010
 }  // namespace libasm

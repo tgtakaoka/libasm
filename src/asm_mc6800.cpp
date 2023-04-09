@@ -24,7 +24,7 @@ namespace mc6800 {
 
 using namespace reg;
 
-struct AsmMc6800::Operand : public OperandBase {
+struct AsmMc6800::Operand final : ErrorAt {
     AddrMode mode;
     uint8_t size;
     uint16_t val16;
@@ -32,8 +32,8 @@ struct AsmMc6800::Operand : public OperandBase {
 };
 
 AsmMc6800::AsmMc6800()
-    : Assembler(TableMc6800::TABLE, nullptr, _number, _comment, _symbol, _letter, _location,
-              &_operators) {
+    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location, &_operators),
+      Config(TABLE) {
     reset();
 }
 
@@ -190,7 +190,7 @@ Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op3);
 
     insn.setAddrMode(op1.mode, op2.mode, op3.mode);
-    const auto error = TableMc6800::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

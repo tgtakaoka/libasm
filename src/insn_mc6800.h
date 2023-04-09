@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class InsnMc6800 : public InsnImpl<Config, Entry> {
-public:
+struct InsnMc6800 final : InsnImpl<Config, Entry> {
     InsnMc6800(Insn &insn) : InsnImpl(insn) {}
 
     AddrMode mode1() const { return flags().mode1(); }

@@ -28,8 +28,6 @@ class DisTms9900 final : public Disassembler, public Config {
 public:
     DisTms9900();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
@@ -40,6 +38,9 @@ private:
             DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, uint8_t mode, uint8_t reg);
     Error decodeOperand(DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace tms9900

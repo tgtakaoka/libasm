@@ -29,14 +29,15 @@ static const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
 static const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 static const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
 
-struct AsmCdp1802::Operand : public OperandBase {
+struct AsmCdp1802::Operand final : ErrorAt {
     AddrMode mode;
     uint16_t val16;
     Operand() : mode(M_NONE), val16(0) {}
 };
 
 AsmCdp1802::AsmCdp1802()
-    : Assembler(TableCdp1802::TABLE, &_opt_useReg, _number, _comment, _symbol, _letter, _location),
+    : Assembler(&_opt_useReg, _number, _comment, _symbol, _letter, _location),
+      Config(TABLE),
       _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
               _opt_smartBranch),
       _opt_smartBranch(
@@ -171,7 +172,7 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(op2);
 
     insn.setAddrMode(op1.mode, op2.mode);
-    const auto error = TableCdp1802::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(op1, error);
 

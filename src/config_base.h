@@ -21,6 +21,8 @@
 
 #include "config_host.h"
 #include "error_reporter.h"
+#include "option_base.h"
+#include "str_scanner.h"
 #include "type_traits.h"
 
 namespace libasm {
@@ -38,8 +40,8 @@ enum AddressWidth : uint8_t {
 };
 
 enum AddressUnit : uint8_t {
-    ADDRESS_BYTE = 1,  // Instruction is byte addressable.
-    ADDRESS_WORD = 2,  // Instruction is word addressable.
+    ADDRESS_BYTE = 1,  // memory is byte addressable.
+    ADDRESS_WORD = 2,  // memory is word addressable.
 };
 
 enum OpCodeWidth : uint8_t {
@@ -52,6 +54,7 @@ enum Endian : uint8_t {
     ENDIAN_LITTLE,
 };
 
+/** Interface for CPU configuration  */
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
     virtual AddressUnit addressUnit() const = 0;
@@ -59,8 +62,14 @@ struct ConfigBase {
     virtual Endian endian() const = 0;
     virtual uint8_t codeMax() const = 0;
     virtual uint8_t nameMax() const = 0;
-    virtual /*PROGMEM*/ const char *listCpu_P() const = 0;
+    virtual const /*PROGMEM*/ char *listCpu_P() const = 0;
+    virtual const /*PROGMEM*/ char *cpu_P() const = 0;
 
+    /**
+     * Check |addr| is in |width| address space. When |width| is zero, |addressWidth()| will be
+     * used.  This also check whether |addr| is word alined when configutation is OPCODE_16BIT and
+     * ADDRESS_BYTE.
+     */
     Error checkAddr(uint32_t addr, uint8_t width = 0) const;
 
     static uint32_t shiftLeftOne(uint8_t width);
@@ -115,9 +124,27 @@ template <>
 struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 }  // namespace
 
-template <AddressWidth AddrWE, AddressUnit AddrUE, OpCodeWidth CodeWE, Endian EndianE,
-        uint8_t MaxCode, uint8_t MaxName, const char CPU_LIST[] PROGMEM>
-struct ConfigImpl : public ConfigBase {
+/** Interface for setting CPU */
+struct ConfigSetter {
+    virtual Error setCpuName(StrScanner &scan) = 0;
+    bool setCpuName(const char *name) {
+        StrScanner scan(name);
+        return setCpuName(scan) == OK;
+    }
+};
+
+/** Base class for instruction table fo |CPUTYPE|. */
+template <typename CPUTYPE>
+struct InsnTable {
+    virtual const /*PROGMEM*/ char *listCpu_P() const = 0;
+    virtual const /*PROGMEM*/ char *cpuName_P(CPUTYPE cpuType) const = 0;
+    virtual Error searchCpuName(StrScanner &name, CPUTYPE &cpuType) const = 0;
+};
+
+/** Base class for holding a CPU configuration. */
+template <typename CPUTYPE, AddressWidth AddrWE, AddressUnit AddrUE, OpCodeWidth CodeWE,
+        Endian EndianE, uint8_t MaxCode, uint8_t MaxName>
+struct ConfigImpl : ConfigBase, ConfigSetter {
     typedef typename __address_type<AddrWE>::uintptr_t uintptr_t;
     typedef typename __address_type<AddrWE>::ptrdiff_t ptrdiff_t;
     typedef typename __opcode_type<CodeWE>::opcode_t opcode_t;
@@ -131,7 +158,31 @@ struct ConfigImpl : public ConfigBase {
     Endian endian() const override { return EndianE; }
     uint8_t codeMax() const override { return MaxCode; }
     uint8_t nameMax() const override { return MaxName; }
-    const /*PROGMEM*/ char *listCpu_P() const override { return CPU_LIST; }
+    const /*PROGMEM*/ char *listCpu_P() const override { return _table.listCpu_P(); }
+    const /*PROGMEM*/ char *cpu_P() const override { return _table.cpuName_P(_cpuType); }
+
+    CPUTYPE cpuType() const { return _cpuType; }
+    virtual void setCpuType(CPUTYPE cpuType) { _cpuType = cpuType; }
+
+    Error setCpuName(StrScanner &scan) override {
+        auto p = scan.skipSpaces();
+        auto name = OptionBase::readSymbol(p);
+        CPUTYPE cpuType;
+        const auto error = _table.searchCpuName(name, cpuType);
+        if (error == OK) {
+            setCpuType(cpuType);
+            scan = p;
+        }
+        return error;
+    }
+
+private:
+    const InsnTable<CPUTYPE> &_table;
+    CPUTYPE _cpuType;
+
+protected:
+    ConfigImpl(const InsnTable<CPUTYPE> &table, CPUTYPE defaultCpu)
+        : _table(table), _cpuType(defaultCpu) {}
 };
 
 }  // namespace libasm

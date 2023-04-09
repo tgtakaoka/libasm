@@ -27,7 +27,7 @@ using namespace reg;
 static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
 
-struct AsmZ8000::Operand : public OperandBase {
+struct AsmZ8000::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
     RegName base;    // M_BA/M_BX
@@ -37,15 +37,11 @@ struct AsmZ8000::Operand : public OperandBase {
 };
 
 AsmZ8000::AsmZ8000()
-    : Assembler(TableZ8000::TABLE, &_opt_shortDitrect, _number, _comment, _symbol, _letter,
-              _location),
+    : Assembler(&_opt_shortDitrect, _number, _comment, _symbol, _letter, _location),
+      Config(TABLE),
       _opt_shortDitrect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT) {
     reset();
-}
-
-AddressWidth AsmZ8000::addressWidth() const {
-    return TableZ8000::TABLE.addressWidth();
 }
 
 void AsmZ8000::reset() {
@@ -76,7 +72,7 @@ void AsmZ8000::emitRegister(InsnZ8000 &insn, ModeField field, RegName reg) {
 
 void AsmZ8000::emitIndirectRegister(
         InsnZ8000 &insn, const Operand &op, ModeField field, RegName reg) {
-    if (TableZ8000::TABLE.segmentedModel()) {
+    if (segmentedModel()) {
         if (!isLongReg(reg))
             setErrorIf(op, REGISTER_NOT_ALLOWED);
     } else {
@@ -161,7 +157,7 @@ void AsmZ8000::emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, co
 
 void AsmZ8000::emitDirectAddress(InsnZ8000 &insn, const Operand &op) {
     const uint32_t addr = op.val32;
-    if (TableZ8000::TABLE.segmentedModel()) {
+    if (segmentedModel()) {
         if (addr >= 0x800000L)
             setErrorIf(op, OVERFLOW_RANGE);
         const uint16_t seg = (addr >> 8) & 0x7F00;
@@ -257,7 +253,7 @@ void AsmZ8000::emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &
         setErrorIf(op, ILLEGAL_SIZE);
     if (insn.size() == SZ_WORD && op.reg == REG_FLAGS)
         setErrorIf(op, ILLEGAL_SIZE);
-    int8_t data = encodeCtlReg(op.reg);
+    int8_t data = encodeCtlReg(segmentedModel(),op.reg);
     if (data < 0) {
         setErrorIf(op, ILLEGAL_REGISTER);
         data = 0;
@@ -395,7 +391,7 @@ void AsmZ8000::checkRegisterOverlap(
     checkRegisterOverlap(dstOp, srcOp, cntOp.reg);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
-        if (!TableZ8000::TABLE.segmentedModel()) {
+        if (!segmentedModel()) {
             if (dstOp.reg == REG_R1)
                 setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
             if (srcOp.reg == REG_R1)
@@ -593,7 +589,7 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(ex2Op);
 
     insn.setAddrMode(dstOp.mode, srcOp.mode, ex1Op.mode, ex2Op.mode);
-    const auto error = TableZ8000::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(dstOp, error);
 

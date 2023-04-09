@@ -24,7 +24,7 @@ namespace scn2650 {
 
 using namespace reg;
 
-DisScn2650::DisScn2650() : Disassembler(_hexFormatter, TableScn2650::TABLE, '$') {
+DisScn2650::DisScn2650() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
@@ -149,7 +149,7 @@ Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (setError(insn))
         return getError();
 
-    if (TableScn2650::TABLE.searchOpCode(insn, out))
+    if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     if (decodeOperand(memory, insn, out, insn.mode1()))

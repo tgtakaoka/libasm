@@ -28,7 +28,6 @@ class DisMc6805 final : public Disassembler, public Config {
 public:
     DisMc6805();
 
-    const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override;
 
@@ -46,6 +45,9 @@ private:
     Error decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace mc6805

@@ -28,8 +28,6 @@ class DisI8051 final : public Disassembler, public Config {
 public:
     DisI8051();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
@@ -40,6 +38,9 @@ private:
     Error decodeImmediate(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
     Error decodeOperand(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace i8051

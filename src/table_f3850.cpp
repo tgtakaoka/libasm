@@ -16,11 +16,8 @@
 
 #include "table_f3850.h"
 
-#include <ctype.h>
-#include <string.h>
-
-#include "config_f3850.h"
 #include "entry_f3850.h"
+#include "entry_table.h"
 #include "text_f3850.h"
 
 using namespace libasm::text::f3850;
@@ -202,14 +199,18 @@ static constexpr uint8_t INDEX_3850[] PROGMEM = {
 
 // clang-format on
 
-static constexpr TableF3850::EntryPage F3850_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage F3850_PAGES[] PROGMEM = {
         {ARRAY_RANGE(TABLE_3850), ARRAY_RANGE(INDEX_3850)},
 };
 
-static constexpr TableF3850::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {F3850, TEXT_CPU_3850, ARRAY_RANGE(F3850_PAGES)},
 };
-static constexpr const TableF3850::Cpu &F3850_CPU = CPU_TABLE[0];
+static constexpr const Cpu &F3850_CPU = CPU_TABLE[0];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -228,12 +229,12 @@ static bool acceptModes(InsnF3850 &insn, const Entry *entry) {
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2());
 }
 
-Error TableF3850::searchName(InsnF3850 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableF3850::searchName(CpuType cpuType, InsnF3850 &insn) const {
+    F3850_CPU.searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnF3850 &insn, const Entry *entry, const TableF3850::EntryPage *page) {
+static bool matchOpCode(InsnF3850 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -246,20 +247,30 @@ static bool matchOpCode(InsnF3850 &insn, const Entry *entry, const TableF3850::E
     return opCode == entry->opCode();
 }
 
-Error TableF3850::searchOpCode(InsnF3850 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableF3850::searchOpCode(CpuType cpuType, InsnF3850 &insn, StrBuffer &out) const {
+    auto entry = F3850_CPU.searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 
-TableF3850::TableF3850() : _cpu(&F3850_CPU) {}
-
-bool TableF3850::setCpu(const char *cpu) {
-    return strcmp_P(cpu, TEXT_CPU_3850) == 0 || strcasecmp_P(cpu, TEXT_CPU_F3850) == 0;
+const /*PROGMEM*/ char *TableF3850::listCpu_P() const {
+    return F3850_CPU.name_P();
 }
 
-TableF3850 TableF3850::TABLE;
+const /*PROGMEM*/ char *TableF3850::cpuName_P(CpuType cpuType) const {
+    return F3850_CPU.name_P();
+}
+
+Error TableF3850::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals(TEXT_CPU_3850) || name.iequals(TEXT_CPU_F3850)) {
+        cpuType = F3850;
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
+}
+
+const TableF3850 TABLE;
 
 }  // namespace f3850
 }  // namespace libasm

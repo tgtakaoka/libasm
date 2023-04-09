@@ -15,13 +15,10 @@
  */
 
 #include "table_z80.h"
-#include "config_z80.h"
-#include "entry_z80.h"
-#include "str_scanner.h"
-#include "text_z80.h"
 
-#include <ctype.h>
-#include <string.h>
+#include "entry_table.h"
+#include "entry_z80.h"
+#include "text_z80.h"
 
 using namespace libasm::text::z80;
 
@@ -405,16 +402,18 @@ static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
 };
 // clang-format on
 
-static constexpr TableZ80::EntryPage I8080_PAGES[] PROGMEM = {
+using EntryPage = entry::TableBase<Entry>;
+
+static constexpr EntryPage I8080_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
-static constexpr TableZ80::EntryPage I8085_PAGES[] PROGMEM = {
+static constexpr EntryPage I8085_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0x00, ARRAY_RANGE(TABLE_I8085), ARRAY_RANGE(INDEX_I8085)},
 };
 
-static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
+static constexpr EntryPage Z80_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_Z80), ARRAY_RANGE(INDEX_Z80)},
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
         {0xCB, ARRAY_RANGE(TABLE_CB), ARRAY_RANGE(INDEX_CB)},
@@ -423,17 +422,23 @@ static constexpr TableZ80::EntryPage Z80_PAGES[] PROGMEM = {
         {TableZ80::PREFIX_IY, ARRAY_RANGE(TABLE_IX), ARRAY_RANGE(INDEX_IX)},
 };
 
-static constexpr TableZ80::EntryPage V30EMU_PAGES[] PROGMEM = {
+static constexpr EntryPage V30EMU_PAGES[] PROGMEM = {
         {0xED, ARRAY_RANGE(TABLE_V30EMU), ARRAY_RANGE(INDEX_V30EMU)},
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},
 };
 
-static constexpr TableZ80::Cpu CPU_TABLE[] PROGMEM = {
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
+
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {Z80, TEXT_CPU_Z80, ARRAY_RANGE(Z80_PAGES)},
         {I8080, TEXT_CPU_8080, ARRAY_RANGE(I8080_PAGES)},
         {I8085, TEXT_CPU_8085, ARRAY_RANGE(I8085_PAGES)},
         {V30EMU, TEXT_CPU_V30EMU, ARRAY_RANGE(V30EMU_PAGES)},
 };
+
+static const Cpu *cpu(CpuType cpuType) {
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -475,12 +480,12 @@ static bool acceptModes(InsnZ80 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableZ80::searchName(InsnZ80 &insn) const {
-    _cpu->searchName(insn, acceptModes);
+Error TableZ80::searchName(CpuType cpuType, InsnZ80 &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const TableZ80::EntryPage *page) {
+static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
@@ -503,40 +508,48 @@ static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const TableZ80::Entry
     return opCode == entry->opCode();
 }
 
-Error TableZ80::searchOpCode(InsnZ80 &insn, StrBuffer &out) const {
-    auto entry = _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableZ80::searchOpCode(CpuType cpuType, InsnZ80 &insn, StrBuffer &out) const {
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
-TableZ80::TableZ80() {
-    setCpu(Z80);
+
+bool TableZ80::isPrefix(CpuType cpuType, Config::opcode_t code) const {
+    return cpu(cpuType)->isPrefix(code);
 }
 
-bool TableZ80::setCpu(CpuType cpuType) {
-    auto t = Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
-    if (t == nullptr)
-        return false;
-    _cpu = t;
-    return true;
+const /*PROGMEM*/ char *TableZ80::listCpu_P() const {
+    return TEXT_CPU_LIST;
 }
 
-bool TableZ80::setCpu(const char *cpu) {
-    const auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
-    if (t)
-        return setCpu(t->cpuType());
-    if (strncasecmp_P(cpu, TEXT_CPU_V30EMU, 6) == 0 && toupper(cpu[6]) == 'Z')
-        return setCpu(V30EMU);
-    if (toupper(*cpu) == 'I')
-        cpu++;
-    const auto z80syn = toupper(cpu[4]) == 'Z' || cpu[4] == 0;
-    if (strncasecmp_P(cpu, TEXT_CPU_8080, 4) == 0 && z80syn)
-        return setCpu(I8080);
-    if (strncasecmp_P(cpu, TEXT_CPU_8085, 4) == 0 && z80syn)
-        return setCpu(I8085);
-    return false;
+const /*PROGMEM*/ char *TableZ80::cpuName_P(CpuType cpuType) const {
+    return cpu(cpuType)->name_P();
 }
 
-TableZ80 TableZ80::TABLE;
+Error TableZ80::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+        return OK;
+    }
+    if (name.istarts_P(TEXT_CPU_V30EMU)) {
+        if ((name += 6).size() == 0 || name.iexpect('z')) {
+            cpuType = V30EMU;
+            return OK;
+        }
+    } else {
+        name.iexpect('i');
+        const auto i8080 = name.istarts_P(TEXT_CPU_8080);
+        const auto i8085 = name.istarts_P(TEXT_CPU_8085);
+        if ((i8080  || i8085) && ((name += 4).size() == 0 || name.iexpect('z'))) {
+            cpuType = i8080 ? I8080 : I8085;
+            return OK;
+        }
+    }
+    return UNSUPPORTED_CPU;
+}
+
+const TableZ80 TABLE;
 
 }  // namespace z80
 }  // namespace libasm

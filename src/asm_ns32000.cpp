@@ -36,7 +36,7 @@ static const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 static const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
 static const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
-struct AsmNs32000::Operand : public OperandBase {
+struct AsmNs32000::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint32_t val32;
@@ -55,41 +55,38 @@ struct AsmNs32000::Operand : public OperandBase {
 };
 
 AsmNs32000::AsmNs32000()
-    : Assembler(TableNs32000::TABLE, &_opt_fpu, _number, _comment, _symbol, _letter, _location),
-      _opt_fpu(this, &AsmNs32000::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
-      _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
+    : Assembler(&_opt_fpu, _number, _comment, _symbol, _letter, _location),
+      Config(TABLE),
+      _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
+      _opt_pmmu(this, &AsmNs32000::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }
 
 void AsmNs32000::reset() {
     Assembler::reset();
-    TableNs32000::TABLE.setFpu(FPU_NONE);
-    TableNs32000::TABLE.setMmu(MMU_NONE);
+    setFpuType(FPU_NONE);
+    setMmuType(MMU_NONE);
 }
 
-Error AsmNs32000::setFpu(StrScanner &scan) {
-    auto fpu = FPU_NONE;
+Error AsmNs32000::setFpuName(StrScanner &scan) {
     if (scan.iequals_P(TEXT_FPU_NS32081)) {
-        fpu = FPU_NS32081;
+        setFpuType(FPU_NS32081);
     } else if (scan.iequals_P(TEXT_none)) {
-        fpu = FPU_NONE;
+        setFpuType(FPU_NONE);
     } else {
         return UNKNOWN_OPERAND;
     }
-    TableNs32000::TABLE.setFpu(fpu);
     return OK;
 }
 
-Error AsmNs32000::setPmmu(StrScanner &scan) {
-    auto mmu = MMU_NONE;
+Error AsmNs32000::setPmmuName(StrScanner &scan) {
     if (scan.iequals_P(TEXT_MMU_NS32082)) {
-        mmu = MMU_NS32082;
+        setMmuType(MMU_NS32082);
     } else if (scan.iequals_P(TEXT_none)) {
-        mmu = MMU_NONE;
+        setMmuType(MMU_NONE);
     } else {
         return UNKNOWN_OPERAND;
     }
-    TableNs32000::TABLE.setMmu(mmu);
     return OK;
 }
 
@@ -675,16 +672,16 @@ Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     auto opr = parser().readSymbol(p);
     auto error = OK;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        error = setFpu(opr);
+        error = setFpuName(opr);
     } else if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
-        error = setPmmu(opr);
+        error = setPmmuName(opr);
     } else {
         return UNKNOWN_DIRECTIVE;
-    }        
+    }
     if (error)
         return setError(scan, error);
     scan = p;
-    return OK;    
+    return OK;
 }
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
@@ -715,7 +712,7 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(ex2Op);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode, ex1Op.mode, ex2Op.mode);
-    const auto error = TableNs32000::TABLE.searchName(insn);
+    const auto error = TABLE.searchName(_cpuSpec, insn);
     if (error)
         return setError(srcOp, error);
 

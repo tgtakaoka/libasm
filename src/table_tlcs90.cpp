@@ -16,13 +16,9 @@
 
 #include "table_tlcs90.h"
 
-#include <ctype.h>
-#include <string.h>
-
+#include "entry_table.h"
 #include "entry_tlcs90.h"
-#include "insn_tlcs90.h"
 #include "text_tlcs90.h"
-#include "reg_tlcs90.h"
 
 using namespace libasm::text::tlcs90;
 
@@ -545,58 +541,26 @@ static constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
         {0xFE, M_NONE, ARRAY_RANGE(TABLE_BLOCK), ARRAY_RANGE(INDEX_BLOCK)},
 };
 
-struct TableTlcs90::Cpu : entry::CpuBase<CpuType, EntryPage> {
+struct Cpu : entry::CpuBase<CpuType, EntryPage> {
     constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *table,
             const EntryPage *end)
         : CpuBase(cpuType, name_P, table, end) {}
 
-    Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const;
+    bool isPrefix(Config::opcode_t code, AddrMode &mode) const {
+        for (auto page = _pages.table(); page < _pages.end(); page++) {
+            if (page->prefix() && page->prefixMatch(code)) {
+                mode = page->mode();
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
-static constexpr TableTlcs90::Cpu CPU_TABLE[] PROGMEM = {
+static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TLCS90, TEXT_CPU_TLCS90, ARRAY_RANGE(TLCS90_PAGES)},
 };
-static constexpr const TableTlcs90::Cpu &TLCS90_CPU = CPU_TABLE[0];
-
-Error TableTlcs90::Cpu::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
-    const auto code = insn.readByte(memory);
-    for (auto page = _pages.table(); page < _pages.end(); page++) {
-        if (page->prefix() == 0 || !page->prefixMatch(code))
-            continue;
-        op.mode = page->mode();
-        switch (op.mode) {
-        case M_EXT:
-            op.val16 = insn.readUint16(memory);
-            break;
-        case M_DIR:
-            op.val16 = insn.readByte(memory);
-            break;
-        case M_IND:
-            op.reg = reg::decodeReg16(code);
-            break;
-        case M_IDX:
-            op.reg = reg::decodeIndexReg(code);
-            op.val16 = static_cast<int8_t>(insn.readByte(memory));
-            break;
-        case M_REG8:
-            op.reg = reg::decodeReg8(code);
-            break;
-        case M_CC:
-            op.cc = reg::decodeCcName(code);
-            break;
-        default:
-            break;
-        }
-        insn.setOpCode(insn.readByte(memory), code);
-        return insn.getError();
-    }
-    insn.setOpCode(code);
-    return insn.getError();
-}
-
-Error TableTlcs90::readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const {
-    return _cpu->readInsn(memory, insn, op);
-}
+static constexpr const Cpu &TLCS90_CPU = CPU_TABLE[0];
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -621,7 +585,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static void searchPageSetup(InsnTlcs90 &insn, const EntryPage *page) {
-    insn.setPreMode(page->mode());
+    insn.setPrefixMode(page->mode());
 }
 
 static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
@@ -634,7 +598,7 @@ static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
 }
 
 static void readCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *page) {
-    TableTlcs90::Cpu::defaultReadCode(insn, entry, page);
+    Cpu::defaultReadCode(insn, entry, page);
 
     // Update prefix mode.
     auto tableDst = entry->flags().dst();
@@ -643,16 +607,16 @@ static void readCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *page
     auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
     insn.setAddrMode(dst, src);
     if (tableDst == M_DST) {
-        insn.setPreMode(M_DST);
+        insn.setPrefixMode(M_DST);
     } else if (tableSrc == M_SRC || tableSrc == M_SRC16) {
-        insn.setPreMode(M_SRC);
+        insn.setPrefixMode(M_SRC);
     } else {
-        insn.setPreMode(M_NONE);
+        insn.setPrefixMode(M_NONE);
     }
 }
 
-Error TableTlcs90::searchName(InsnTlcs90 &insn) const {
-    _cpu->searchName(insn, acceptModes, searchPageSetup, readCode);
+Error TableTlcs90::searchName(CpuType cpuType, InsnTlcs90 &insn) const {
+    TLCS90_CPU.searchName(insn, acceptModes, searchPageSetup, readCode);
     return insn.getError();
 }
 
@@ -672,22 +636,32 @@ static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *p
     return opCode == entry->opCode();
 }
 
-Error TableTlcs90::searchOpCode(InsnTlcs90 &insn, StrBuffer &out) const {
-    _cpu->searchOpCode(insn, out, matchOpCode);
+Error TableTlcs90::searchOpCode(CpuType cpuType, InsnTlcs90 &insn, StrBuffer &out) const {
+    TLCS90_CPU.searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-TableTlcs90::TableTlcs90() : _cpu(&TLCS90_CPU) {}
-
-const /* PROGMEM */ char *TableTlcs90::cpu_P() const {
-    return _cpu->name_P();
+bool TableTlcs90::isPrefix(CpuType cpuType, Config::opcode_t code, AddrMode &mode) const {
+    return TLCS90_CPU.isPrefix(code, mode);
 }
 
-bool TableTlcs90::setCpu(const char *cpu) {
-    return strcasecmp_P(cpu, TEXT_CPU_TLCS90) == 0;
+const /*PROGMEM*/ char *TableTlcs90::listCpu_P() const {
+    return TEXT_CPU_TLCS90;
 }
 
-TableTlcs90 TableTlcs90::TABLE;
+const /*PROGMEM*/ char *TableTlcs90::cpuName_P(CpuType cpuType) const {
+    return TLCS90_CPU.name_P();
+}
+
+Error TableTlcs90::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+    if (name.iequals(TEXT_CPU_TLCS90)) {
+        cpuType = TLCS90;
+        return OK;
+    }
+    return UNSUPPORTED_CPU;
+}
+
+const TableTlcs90 TABLE;
 
 }  // namespace tlcs90
 }  // namespace libasm

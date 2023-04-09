@@ -18,30 +18,21 @@
 #define __TABLE_F3850_H__
 
 #include "config_f3850.h"
-#include "entry_table.h"
 #include "insn_f3850.h"
 
 namespace libasm {
 namespace f3850 {
 
-struct TableF3850 : entry::Table {
-public:
-    TableF3850();
+struct TableF3850 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    static TableF3850 TABLE;
-
-    Error searchName(InsnF3850 &insn) const;
-    Error searchOpCode(InsnF3850 &insn, StrBuffer &out) const;
-
-    const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
-    bool setCpu(const char *cpu) override;
-
-    typedef entry::TableBase<Entry> EntryPage;
-    typedef entry::CpuBase<CpuType, EntryPage> Cpu;
-
-private:
-    const Cpu *const _cpu;
+    Error searchName(CpuType, InsnF3850 &insn) const;
+    Error searchOpCode(CpuType, InsnF3850 &insn, StrBuffer &out) const;
 };
+
+extern const TableF3850 TABLE;
 
 }  // namespace f3850
 }  // namespace libasm

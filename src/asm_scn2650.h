@@ -28,8 +28,6 @@ class AsmScn2650 final : public Assembler, public Config {
 public:
     AsmScn2650();
 
-    const ConfigBase &config() const override { return *this; }
-
 private:
     const SigneticsNumberParser _number;
     const AsteriskCommentParser _comment;
@@ -46,6 +44,9 @@ private:
     void emitRelative(InsnScn2650 &insn, const Operand &op);
     void encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
+
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
 };
 
 }  // namespace scn2650
