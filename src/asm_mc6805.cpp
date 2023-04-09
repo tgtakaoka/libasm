@@ -35,10 +35,9 @@ struct AsmMc6805::Operand : public OperandBase {
 };
 
 AsmMc6805::AsmMc6805()
-    : Assembler(TableMc6805::TABLE, _pseudos, &_opt_pc_bits, _number, _comment, _symbol, _letter,
-              _location, &_operators),
-      _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS),
-      _pseudos() {
+    : Assembler(TableMc6805::TABLE, &_opt_pc_bits, _number, _comment, _symbol, _letter, _location,
+              &_operators),
+      _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();
 }
 

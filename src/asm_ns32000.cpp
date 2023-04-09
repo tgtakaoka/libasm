@@ -55,11 +55,9 @@ struct AsmNs32000::Operand : public OperandBase {
 };
 
 AsmNs32000::AsmNs32000()
-    : Assembler(TableNs32000::TABLE, _pseudos, &_opt_fpu, _number, _comment, _symbol, _letter,
-              _location),
+    : Assembler(TableNs32000::TABLE, &_opt_fpu, _number, _comment, _symbol, _letter, _location),
       _opt_fpu(this, &AsmNs32000::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
-      _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU),
-      _pseudos() {
+      _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }
 
@@ -672,24 +670,21 @@ void AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, con
     }
 }
 
-Error AsmNs32000::PseudoNs32000::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
+Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     auto p = scan.skipSpaces();
-    auto asm32k = static_cast<AsmNs32000 *>(assembler);
-    StrScanner opr = asm32k->parser().readSymbol(p);
-    auto error = UNKNOWN_DIRECTIVE;
+    auto opr = parser().readSymbol(p);
+    auto error = OK;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        error = asm32k->setFpu(opr);
-        if (error)
-            asm32k->setError(scan, error);
-    }
-    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
-        error = asm32k->setPmmu(opr);
-        if (error)
-            asm32k->setError(scan, error);
-    }
-    if (error == OK)
-        scan = p;
-    return error;
+        error = setFpu(opr);
+    } else if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
+        error = setPmmu(opr);
+    } else {
+        return UNKNOWN_DIRECTIVE;
+    }        
+    if (error)
+        return setError(scan, error);
+    scan = p;
+    return OK;    
 }
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {

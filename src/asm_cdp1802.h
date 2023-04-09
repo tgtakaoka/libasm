@@ -47,7 +47,6 @@ private:
     const BoolOption<AsmCdp1802> _opt_useReg;
     const BoolOption<AsmCdp1802> _opt_smartBranch;
 
-    PseudoBase _pseudos;
     bool _useReg;
     bool _smartBranch;
 

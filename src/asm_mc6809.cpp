@@ -48,10 +48,9 @@ struct AsmMc6809::Operand : public OperandBase {
 };
 
 AsmMc6809::AsmMc6809()
-    : Assembler(TableMc6809::TABLE, _pseudos, &_opt_setdp, _number, _comment, _symbol, _letter,
-              _location, &_operators),
-      _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP),
-      _pseudos() {
+    : Assembler(TableMc6809::TABLE, &_opt_setdp, _number, _comment, _symbol, _letter, _location,
+              &_operators),
+      _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP) {
     reset();
 }
 
@@ -513,11 +512,10 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
     return OK;
 }
 
-Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
+Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
-        const auto val = assembler->parseExpr32(scan, *assembler);
-        auto asm6809 = static_cast<AsmMc6809 *>(assembler);
-        return assembler->isOK() ? asm6809->setDirectPage(val) : assembler->getError();
+        const auto val = parseExpr32(scan, *this);
+        return isOK() ? setDirectPage(val) : getError();
     }
     return UNKNOWN_DIRECTIVE;
 }

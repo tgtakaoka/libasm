@@ -42,12 +42,10 @@ struct AsmZ8::Operand : public OperandBase {
 };
 
 AsmZ8::AsmZ8()
-    : Assembler(TableZ8::TABLE, _pseudos, &_opt_setrp, _number, _comment, _symbol, _letter,
-              _location),
+    : Assembler(TableZ8::TABLE, &_opt_setrp, _number, _comment, _symbol, _letter, _location),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
-      _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1),
-      _pseudos() {
+      _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1) {
     reset();
 }
 
@@ -387,30 +385,28 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ8::PseudoZ8::setRp(
-        StrScanner &scan, AsmZ8 *asmZ8, IntOption<AsmZ8>::Setter setter) const {
+Error AsmZ8::setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter) {
     auto p = scan.skipSpaces();
-    const int32_t rp = asmZ8->parseExpr32(p, *asmZ8);
-    if (asmZ8->isOK()) {
-        const auto error = (asmZ8->*setter)(rp);
+    const int32_t rp = parseExpr32(p, *this);
+    if (isOK()) {
+        const auto error = (this->*setter)(rp);
         if (error)
-            return asmZ8->setError(scan, error);
+            return setError(scan, error);
         scan = p;
         return OK;
     }
-    asmZ8->setError(scan, OPERAND_NOT_ALLOWED);
+    setError(scan, OPERAND_NOT_ALLOWED);
     return OK;
 }
 
-Error AsmZ8::PseudoZ8::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
-    auto asmZ8 = static_cast<AsmZ8 *>(assembler);
+Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
-        return setRp(scan, asmZ8, &AsmZ8::setRegPointer);
+        return setRp(scan, &AsmZ8::setRegPointer);
     if (TableZ8::TABLE.isSuper8()) {
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0)
-            return setRp(scan, asmZ8, &AsmZ8::setRegPointer0);
+            return setRp(scan, &AsmZ8::setRegPointer0);
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
-            return setRp(scan, asmZ8, &AsmZ8::setRegPointer1);
+            return setRp(scan, &AsmZ8::setRegPointer1);
     }
     return UNKNOWN_DIRECTIVE;
 }

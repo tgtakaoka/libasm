@@ -43,7 +43,6 @@ private:
     const Mc68xxOperatorParser _operators;
     const IntOption<AsmMc6805> _opt_pc_bits;
 
-    PseudoBase _pseudos;
     uint8_t _pc_bits;
 
     struct Operand;

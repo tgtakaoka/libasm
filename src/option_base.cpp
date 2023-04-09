@@ -18,7 +18,7 @@
 
 namespace libasm {
 
-Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) const {
+Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) {
     if (scan.iequals_P(PSTR("on")) || scan.iequals_P(PSTR("true")) || scan.iequals_P(PSTR("yes")) ||
             scan.iequals_P(PSTR("enable"))) {
         value = true;
@@ -32,7 +32,7 @@ Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) const {
     return ILLEGAL_CONSTANT;
 }
 
-Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) const {
+Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) {
     char *end = nullptr;
     value = strtol(scan.str(), &end, 10);
     if (end != scan.str() && *end == 0)

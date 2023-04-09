@@ -39,7 +39,6 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
     const DefaultLetterParser _letter;
     const DollarLocationParser _location;
-    PseudoBase _pseudos;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);

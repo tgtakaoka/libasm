@@ -34,9 +34,9 @@ struct AsmI8048::Operand : public OperandBase {
 };
 
 AsmI8048::AsmI8048()
-    : Assembler(
-              TableI8048::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
-      _pseudos() {}
+    : Assembler(TableI8048::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();

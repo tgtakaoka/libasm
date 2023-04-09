@@ -32,8 +32,9 @@ struct AsmZ80::Operand : public OperandBase {
 };
 
 AsmZ80::AsmZ80()
-    : Assembler(TableZ80::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
-      _pseudos() {}
+    : Assembler(TableZ80::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
     const auto base = insn.address() + 2;

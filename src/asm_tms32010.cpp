@@ -32,9 +32,9 @@ struct AsmTms32010::Operand : public OperandBase {
 };
 
 AsmTms32010::AsmTms32010()
-    : Assembler(TableTms32010::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location),
-      _pseudos() {}
+    : Assembler(TableTms32010::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 static AddrMode constantType(uint16_t val) {
     if (val == 0)

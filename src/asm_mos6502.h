@@ -44,14 +44,6 @@ private:
     const BoolOption<AsmMos6502> _opt_longa;
     const BoolOption<AsmMos6502> _opt_longi;
 
-    struct PseudoMos6502 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
-
-    private:
-        Error parseTableOnOff(
-                StrScanner &scan, Assembler *assembler, BoolOption<AsmMos6502>::Setter setter);
-    } _pseudos;
-
     struct Operand;
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
     Error parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const;
@@ -62,6 +54,9 @@ private:
     void encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
     void encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
 
+    Error parseTableOnOff(StrScanner &scan, BoolOption<AsmMos6502>::Setter setter);
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

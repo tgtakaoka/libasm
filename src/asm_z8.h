@@ -45,17 +45,11 @@ private:
     const IntOption<AsmZ8> _opt_setrp0;
     const IntOption<AsmZ8> _opt_setrp1;
 
-    struct PseudoZ8 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
-
-    private:
-        Error setRp(StrScanner &scan, AsmZ8 *asmZ8, IntOption<AsmZ8>::Setter setter) const;
-    } _pseudos;
-
     int16_t _regPointer0;
     int16_t _regPointer1;
 
     bool isWorkReg(uint8_t regAddr) const;
+    Error setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter);
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
@@ -71,6 +65,7 @@ private:
     void encodePostByte(
             InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

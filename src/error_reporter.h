@@ -89,8 +89,7 @@ enum Error : uint8_t {
     UNKNOWN_OPTION = 200,
 };
 
-class ErrorReporter {
-public:
+struct ErrorReporter {
     ErrorReporter() : _error(OK) {}
 
     bool isOK() const { return _error == OK; }
@@ -111,8 +110,7 @@ private:
     Error _error;
 };
 
-class ErrorAt : public ErrorReporter {
-public:
+struct ErrorAt : ErrorReporter {
     ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
 
     bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }

@@ -44,10 +44,6 @@ private:
     const TextOption<AsmNs32000> _opt_fpu;
     const TextOption<AsmNs32000> _opt_pmmu;
 
-    struct PseudoNs32000 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
-    } _pseudos;
-
     struct Operand;
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;
     Error parseConfigNames(StrScanner &scan, Operand &op) const;
@@ -66,6 +62,7 @@ private:
     void emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

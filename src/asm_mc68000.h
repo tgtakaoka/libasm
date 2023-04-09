@@ -41,8 +41,6 @@ private:
     const AsteriskLocationParser _location;
     const BoolOption<AsmMc68000> _opt_alias;
 
-    PseudoBase _pseudos;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);

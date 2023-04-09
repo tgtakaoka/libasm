@@ -32,9 +32,10 @@ struct AsmMc6800::Operand : public OperandBase {
 };
 
 AsmMc6800::AsmMc6800()
-    : Assembler(TableMc6800::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location, &_operators),
-      _pseudos() {}
+    : Assembler(TableMc6800::TABLE, nullptr, _number, _comment, _symbol, _letter, _location,
+              &_operators) {
+    reset();
+}
 
 Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();

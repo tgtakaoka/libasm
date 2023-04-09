@@ -33,9 +33,9 @@ struct AsmF3850::Operand : public OperandBase {
 };
 
 AsmF3850::AsmF3850()
-    : Assembler(
-              TableF3850::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
-      _pseudos() {}
+    : Assembler(TableF3850::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(scan.skipSpaces());

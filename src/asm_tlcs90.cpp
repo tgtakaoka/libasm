@@ -25,9 +25,9 @@ namespace tlcs90 {
 using namespace reg;
 
 AsmTlcs90::AsmTlcs90()
-    : Assembler(TableTlcs90::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location),
-      _pseudos() {}
+    : Assembler(TableTlcs90::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
     const auto base = insn.address() + 2;

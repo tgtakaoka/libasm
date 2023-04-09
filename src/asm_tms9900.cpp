@@ -32,9 +32,10 @@ struct AsmTms9900::Operand : public OperandBase {
 };
 
 AsmTms9900::AsmTms9900()
-    : Assembler(TableTms9900::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location),
-      _pseudos() {}
+    : Assembler(TableTms9900::TABLE, nullptr, _number, _comment, _symbol, _letter,
+                _location) {
+    reset();
+}
 
 void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
     const auto base = insn.address() + 2;

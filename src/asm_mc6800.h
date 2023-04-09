@@ -37,7 +37,6 @@ private:
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
     const Mc68xxOperatorParser _operators;
-    struct PseudoBase _pseudos;
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

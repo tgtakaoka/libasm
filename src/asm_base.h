@@ -32,13 +32,7 @@ namespace libasm {
 
 class Assembler;
 
-struct OperandBase : public ErrorAt {};
-
-struct PseudoBase {
-    virtual Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
-        return UNKNOWN_DIRECTIVE;
-    }
-};
+struct OperandBase : ErrorAt {};
 
 class Assembler : public ErrorAt {
 public:
@@ -73,27 +67,22 @@ public:
 
 protected:
     entry::Table &_table;
-    PseudoBase &_pseudos;
     const Options _options;
     const Options _commonOptions{nullptr};
     ValueParser _parser;
 
     SymbolTable *_symtab;
 
-    Assembler(entry::Table &table, PseudoBase &pseudos, const OptionBase *option,
-            const NumberParser &number, const CommentParser &comment, const SymbolParser &symbol,
-            const LetterParser &letter, const LocationParser &location,
-            const OperatorParser *operators = nullptr, const FunctionParser *function = nullptr)
-        : ErrorAt(),
-          _table(table),
-          _pseudos(pseudos),
-          _options(option),
-          _parser(number, comment, symbol, letter, location, operators, function) {}
+    Assembler(entry::Table &table, const OptionBase *option, const NumberParser &number,
+            const CommentParser &comment, const SymbolParser &symbol, const LetterParser &letter,
+            const LocationParser &location, const OperatorParser *operators = nullptr,
+            const FunctionParser *function = nullptr);
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
     int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
 
 private:
+    virtual Error processPseudo(StrScanner &scan, Insn &insn);
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
 };
 

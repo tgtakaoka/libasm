@@ -36,7 +36,6 @@ private:
     const DefaultSymbolParser _symbol;
     const DefaultLetterParser _letter;
     const DollarLocationParser _location;
-    PseudoBase _pseudos;
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

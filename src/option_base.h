@@ -40,6 +40,9 @@ struct OptionBase {
     virtual Error set(StrScanner &scan) const = 0;
     const OptionBase *next() const { return _next; }
 
+    static Error parseBoolOption(StrScanner &scan, bool &var);
+    static Error parseIntOption(StrScanner &scan, int32_t &var);
+
 protected:
     OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec,
             const OptionBase &next)
@@ -47,9 +50,6 @@ protected:
 
     OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec)
         : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(nullptr) {}
-
-    Error parseBoolOption(StrScanner &scan, bool &var) const;
-    Error parseIntOption(StrScanner &scan, int32_t &var) const;
 
 private:
     const /*PROGMEM*/ char *_name_P;

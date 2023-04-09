@@ -51,11 +51,10 @@ struct AsmI8086::Operand : public OperandBase {
 };
 
 AsmI8086::AsmI8086()
-    : Assembler(TableI8086::TABLE, _pseudos, &_opt_optimizeSegment, _number, _comment, _symbol,
-              _letter, _location),
+    : Assembler(TableI8086::TABLE, &_opt_optimizeSegment, _number, _comment, _symbol, _letter,
+              _location),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
-              OPT_DESC_OPTIMIZE_SEGMENT),
-      _pseudos() {
+              OPT_DESC_OPTIMIZE_SEGMENT) {
     reset();
 }
 

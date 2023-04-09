@@ -34,9 +34,10 @@ struct AsmIns8070::Operand : public OperandBase {
 };
 
 AsmIns8070::AsmIns8070()
-    : Assembler(TableIns8070::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location, nullptr, &_function),
-      _pseudos() {}
+    : Assembler(TableIns8070::TABLE, nullptr, _number, _comment, _symbol, _letter, _location,
+              nullptr, &_function) {
+    reset();
+}
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }

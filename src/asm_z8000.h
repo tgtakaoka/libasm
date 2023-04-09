@@ -45,7 +45,6 @@ private:
     const DollarLocationParser _location;
     const BoolOption<AsmZ8000> _opt_shortDitrect;
 
-    PseudoBase _pseudos;
     bool _autoShortDirect;
 
     int8_t parseIntrNames(StrScanner &scan) const;

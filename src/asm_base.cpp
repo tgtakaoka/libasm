@@ -18,6 +18,15 @@
 
 namespace libasm {
 
+Assembler::Assembler(entry::Table &table, const OptionBase *option, const NumberParser &number,
+        const CommentParser &comment, const SymbolParser &symbol, const LetterParser &letter,
+        const LocationParser &location, const OperatorParser *operators,
+        const FunctionParser *function)
+    : ErrorAt(),
+      _table(table),
+      _options(option),
+      _parser(number, comment, symbol, letter, location, operators, function) {}
+
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
     _parser.setCurrentOrigin(insn.address());
@@ -35,7 +44,7 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (symbol.size() == 0)
         return setError(scan, UNKNOWN_INSTRUCTION);
     insn.clearNameBuffer().text(symbol);
-    auto error = _pseudos.processPseudo(scan, insn, this);
+    auto error = processPseudo(scan, insn);
     if (error != UNKNOWN_DIRECTIVE)
         return setError(error);
 
@@ -43,6 +52,10 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (error == UNKNOWN_INSTRUCTION)
         setAt(line);
     return error;
+}
+
+Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
+    return UNKNOWN_DIRECTIVE;
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {

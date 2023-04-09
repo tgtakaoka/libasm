@@ -37,9 +37,9 @@ struct AsmScn2650::Operand : public OperandBase {
 };
 
 AsmScn2650::AsmScn2650()
-    : Assembler(TableScn2650::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location),
-      _pseudos() {}
+    : Assembler(TableScn2650::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 static constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
     return addr & ~0x1FFF;  // 8k bytes per page

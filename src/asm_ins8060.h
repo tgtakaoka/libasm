@@ -39,7 +39,6 @@ private:
     const struct Ins8060FunctionParser : FunctionParser {
         const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const override;
     } _function;
-    PseudoBase _pseudos;
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

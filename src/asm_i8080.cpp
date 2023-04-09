@@ -32,9 +32,9 @@ struct AsmI8080::Operand : public OperandBase {
 };
 
 AsmI8080::AsmI8080()
-    : Assembler(
-              TableI8080::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter, _location),
-      _pseudos() {}
+    : Assembler(TableI8080::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
     switch (mode) {

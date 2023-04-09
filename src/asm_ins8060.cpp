@@ -33,9 +33,10 @@ struct AsmIns8060::Operand : public OperandBase {
 };
 
 AsmIns8060::AsmIns8060()
-    : Assembler(TableIns8060::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location, nullptr, &_function),
-      _pseudos() {}
+    : Assembler(TableIns8060::TABLE, nullptr, _number, _comment, _symbol, _letter, _location,
+              nullptr, &_function) {
+    reset();
+}
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFFF;

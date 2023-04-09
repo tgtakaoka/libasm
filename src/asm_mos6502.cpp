@@ -37,11 +37,9 @@ struct AsmMos6502::Operand : public OperandBase {
 };
 
 AsmMos6502::AsmMos6502()
-    : Assembler(TableMos6502::TABLE, _pseudos, &_opt_longa, _number, _comment, _symbol, _letter,
-              _location),
+    : Assembler(TableMos6502::TABLE, &_opt_longa, _number, _comment, _symbol, _letter, _location),
       _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
-      _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI),
-      _pseudos() {
+      _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI) {
     reset();
 }
 
@@ -238,27 +236,24 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
     return OK;
 }
 
-Error AsmMos6502::PseudoMos6502::parseTableOnOff(
-        StrScanner &scan, Assembler *assembler, BoolOption<AsmMos6502>::Setter setter) {
+Error AsmMos6502::parseTableOnOff(StrScanner &scan, BoolOption<AsmMos6502>::Setter setter) {
     auto p = scan.skipSpaces();
-    auto asm6502 = static_cast<AsmMos6502 *>(assembler);
-    const auto name = asm6502->parser().readSymbol(p);
-    Error error = UNKNOWN_OPERAND;
-    if (name.iequals_P(PSTR("on"))) {
-        error = (asm6502->*setter)(true);
-    } else if (name.iequals_P(PSTR("off"))) {
-        error = (asm6502->*setter)(false);
-    }
+    auto name = parser().readSymbol(p);
+    auto value = false;
+    auto error = OptionBase::parseBoolOption(name, value);
     if (error == OK)
-        scan = p;
-    return asm6502->setError(scan, error);
+        error = (this->*setter)(value);
+    if (error)
+        return setError(scan, error);
+    scan = p;
+    return OK;
 }
 
-Error AsmMos6502::PseudoMos6502::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
-    if (strcasecmp_P(insn.name(), PSTR("longa")) == 0)
-        return parseTableOnOff(scan, assembler, &AsmMos6502::setLongAccumulator);
-    if (strcasecmp_P(insn.name(), PSTR("longi")) == 0)
-        return parseTableOnOff(scan, assembler, &AsmMos6502::setLongIndex);
+Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), OPT_BOOL_LONGA) == 0)
+        return parseTableOnOff(scan, &AsmMos6502::setLongAccumulator);
+    if (strcasecmp_P(insn.name(), OPT_BOOL_LONGI) == 0)
+        return parseTableOnOff(scan, &AsmMos6502::setLongIndex);
     return UNKNOWN_DIRECTIVE;
 }
 

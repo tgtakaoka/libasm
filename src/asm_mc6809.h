@@ -42,9 +42,6 @@ private:
     const Mc68xxOperatorParser _operators;
     const IntOption<AsmMc6809> _opt_setdp;
 
-    struct PseudoMc6809 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
-    } _pseudos;
     uint8_t _direct_page;
 
     bool onDirectPage(Config::uintptr_t addr) const;
@@ -63,6 +60,7 @@ private:
     void encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
     void encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 };
 

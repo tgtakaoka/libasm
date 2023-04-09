@@ -42,7 +42,6 @@ private:
     const DollarLocationParser _location;
     const BoolOption<AsmI8086> _opt_optimizeSegment;
 
-    PseudoBase _pseudos;
     bool _optimizeSegment;
 
     struct Operand;

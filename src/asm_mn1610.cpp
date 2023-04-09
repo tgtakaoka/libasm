@@ -33,9 +33,9 @@ struct AsmMn1610::Operand : public OperandBase {
 };
 
 AsmMn1610::AsmMn1610()
-    : Assembler(TableMn1610::TABLE, _pseudos, nullptr, _number, _comment, _symbol, _letter,
-              _location),
-      _pseudos() {}
+    : Assembler(TableMn1610::TABLE, nullptr, _number, _comment, _symbol, _letter, _location) {
+    reset();
+}
 
 AddressWidth AsmMn1610::addressWidth() const {
     return TableMn1610::TABLE.addressWidth();
