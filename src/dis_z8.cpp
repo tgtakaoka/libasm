@@ -27,7 +27,7 @@ using namespace reg;
 static const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
 static const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
 
-DisZ8::DisZ8() : Disassembler(_formatter, TableZ8::TABLE, '$'), _formatter() {
+DisZ8::DisZ8() : Disassembler(_formatter, TableZ8::TABLE, '$', &_opt_workRegister), _formatter() {
     reset();
 }
 

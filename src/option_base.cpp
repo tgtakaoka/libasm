@@ -18,8 +18,6 @@
 
 namespace libasm {
 
-const Options Options::EMPTY{};
-
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) const {
     if (scan.iequals_P(PSTR("on")) || scan.iequals_P(PSTR("true")) || scan.iequals_P(PSTR("yes")) ||
             scan.iequals_P(PSTR("enable"))) {

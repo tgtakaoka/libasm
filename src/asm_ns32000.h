@@ -31,7 +31,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     ValueParser _parser;
@@ -57,7 +56,6 @@ private:
         Error set(StrScanner &scan) const override;
         PseudoNs32000 &_pseudos;
     } _opt_fpu{_pseudos, _opt_pmmu};
-    const Options _options{_opt_fpu};
 
     struct Operand;
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;

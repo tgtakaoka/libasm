@@ -35,7 +35,7 @@ struct AsmMc6805::Operand : public OperandBase {
 };
 
 AsmMc6805::AsmMc6805()
-    : Assembler(_parser, TableMc6805::TABLE, _pseudos),
+    : Assembler(_parser, TableMc6805::TABLE, _pseudos, &_opt_pc_bits),
       _parser(_number, _comment, _symbol, _letter, _location, _operators),
       _pseudos() {
     reset();

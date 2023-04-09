@@ -50,7 +50,7 @@ struct AsmNs32000::Operand : public OperandBase {
 };
 
 AsmNs32000::AsmNs32000()
-    : Assembler(_parser, TableNs32000::TABLE, _pseudos),
+    : Assembler(_parser, TableNs32000::TABLE, _pseudos, &_opt_fpu),
       _parser(_number, _comment, _symbol, _letter, _location),
       _pseudos() {
     reset();

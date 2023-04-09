@@ -55,13 +55,15 @@ public:
         return options().setOption(name, text);
     }
     const Options &commonOptions() const { return _commonOptions; }
-    virtual const Options &options() const { return Options::EMPTY; }
+    const Options &options() const { return _options; }
 
 private:
     ValueFormatter &_formatter;
 
 protected:
     entry::Table &_table;
+    const Options _commonOptions;
+    const Options _options;
 
     struct DisassemblerOption {
     protected:
@@ -75,14 +77,14 @@ protected:
         Error set(bool value) const override;
     } _opt_cstyle;
     const BoolOption _opt_relative;
-    const Options _commonOptions;
 
     char _curSym;
     bool _uppercase = false;
     bool _relativeTarget = false;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(ValueFormatter &formatter, entry::Table &table, char curSym);
+    Disassembler(ValueFormatter &formatter, entry::Table &table, char curSym,
+            const OptionBase *option = nullptr);
 
     /** Lookup |addr| value and returns symbol. */
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;

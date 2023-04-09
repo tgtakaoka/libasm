@@ -32,8 +32,6 @@ public:
     AddressWidth addressWidth() const override;
     void reset() override { _pc_bits = 0; }
 
-    const Options &options() const override { return _options; }
-
 private:
     ValueParser _parser;
     const MotorolaNumberParser _number;
@@ -49,7 +47,6 @@ private:
         OptPcBits(uint8_t &var);
         Error check(int32_t value) const override;
     } _opt_pc_bits{_pc_bits};
-    const Options _options{_opt_pc_bits};
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

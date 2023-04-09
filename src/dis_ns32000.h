@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     NationalValueFormatter _formatter;
@@ -49,8 +48,7 @@ private:
     } _opt_externalParen{_externalParen, _opt_stroptBracket};
     const struct OptPcrelParen : public BoolOption {
         OptPcrelParen(bool &var, const OptionBase &next);
-    } _opt_pcrelParel{_pcRelativeParen, _opt_externalParen};
-    const Options _options{_opt_pcrelParel};
+    } _opt_pcrelParen{_pcRelativeParen, _opt_externalParen};
 
     struct Displacement {
         int32_t val32;

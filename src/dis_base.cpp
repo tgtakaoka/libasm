@@ -25,13 +25,15 @@ static const char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant"
 static const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 static const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
-Disassembler::Disassembler(ValueFormatter &formatter, entry::Table &table, char curSym)
+Disassembler::Disassembler(
+        ValueFormatter &formatter, entry::Table &table, char curSym, const OptionBase *option)
     : _formatter(formatter),
       _table(table),
+      _commonOptions(&_opt_relative),
+      _options(option),
       _opt_curSym(OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, _curSym),
       _opt_cstyle(this, _opt_curSym),
       _opt_relative(OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE, _relativeTarget, _opt_cstyle),
-      _commonOptions(_opt_relative),
       _curSym(curSym) {
     reset();
 }

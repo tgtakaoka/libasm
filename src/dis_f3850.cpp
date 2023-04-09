@@ -27,7 +27,8 @@ using namespace reg;
 static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
 static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
 
-DisF3850::DisF3850() : Disassembler(_formatter, TableF3850::TABLE, '$'), _formatter() {
+DisF3850::DisF3850()
+    : Disassembler(_formatter, TableF3850::TABLE, '$', &_opt_useScratchpad), _formatter() {
     reset();
 }
 

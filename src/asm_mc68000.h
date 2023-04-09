@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { setAlias(true); }
-    const Options &options() const override { return _options; }
 
     void setAlias(bool enable);
 
@@ -48,7 +47,6 @@ private:
         Error set(bool value) const override;
         AsmMc68000 &_assembler;
     } _opt_alias{*this};
-    const Options _options{_opt_alias};
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

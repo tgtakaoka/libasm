@@ -31,7 +31,6 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
@@ -42,7 +41,6 @@ private:
         void set(int32_t value) const override;
         uint8_t &_var;
     } _opt_pc_bits{_pc_bits};
-    const Options _options{_opt_pc_bits};
 
     Error decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);

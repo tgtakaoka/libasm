@@ -27,7 +27,8 @@ using namespace reg;
 static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "absolute";
 static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
 
-DisI8096::DisI8096() : Disassembler(_formatter, TableI8096::TABLE, '$'), _formatter() {
+DisI8096::DisI8096()
+    : Disassembler(_formatter, TableI8096::TABLE, '$', &_opt_absolute), _formatter() {
     reset();
 }
 

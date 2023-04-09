@@ -37,7 +37,7 @@ struct AsmZ8000::Operand : public OperandBase {
 };
 
 AsmZ8000::AsmZ8000()
-    : Assembler(_parser, TableZ8000::TABLE, _pseudos),
+    : Assembler(_parser, TableZ8000::TABLE, _pseudos, &_opt_shortDitrect),
       _parser(_number, _comment, _symbol, _letter, _location),
       _pseudos() {
     reset();

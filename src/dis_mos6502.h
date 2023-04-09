@@ -31,7 +31,6 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     MotorolaValueFormatter _formatter;
@@ -47,7 +46,6 @@ private:
         OptLongA(const OptionBase &next);
         Error set(bool value) const override;
     } _opt_longa{_opt_longi};
-    const Options _options{_opt_longa};
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);

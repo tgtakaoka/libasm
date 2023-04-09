@@ -29,7 +29,8 @@ static const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruc
 static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
 
-DisI8086::DisI8086() : Disassembler(_formatter, TableI8086::TABLE, '$'), _formatter() {
+DisI8086::DisI8086()
+    : Disassembler(_formatter, TableI8086::TABLE, '$', &_opt_segmentInsn), _formatter() {
     reset();
 }
 

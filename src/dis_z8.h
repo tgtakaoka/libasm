@@ -31,7 +31,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
@@ -39,7 +38,6 @@ private:
     const struct OptWorkRegister : public BoolOption {
         OptWorkRegister(bool &var);
     } _opt_workRegister{_useWorkRegister};
-    const Options _options{_opt_workRegister};
 
     StrBuffer &outConditionCode(StrBuffer &out, Config::opcode_t opCode);
     StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);

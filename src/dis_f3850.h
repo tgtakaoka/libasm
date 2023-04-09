@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     FairchildValueFormatter _formatter;
@@ -38,7 +37,6 @@ private:
     const struct OptUseScratchpad : public BoolOption {
         OptUseScratchpad(bool &var);
     } _opt_useScratchpad{_useScratchpad};
-    const Options _options{_opt_useScratchpad};
 
     Error decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode);

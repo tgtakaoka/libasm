@@ -31,7 +31,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
@@ -43,7 +42,6 @@ private:
     const struct OptSegmentInsn : public BoolOption {
         OptSegmentInsn(bool &var, const OptionBase &next);
     } _opt_segmentInsn{_segOverrideInsn, _opt_stringInsn};
-    const Options _options{_opt_segmentInsn};
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
     Error outMemReg(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mode,

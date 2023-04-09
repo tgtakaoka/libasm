@@ -40,7 +40,7 @@ struct AsmMos6502::Operand : public OperandBase {
 };
 
 AsmMos6502::AsmMos6502()
-    : Assembler(_parser, TableMos6502::TABLE, _pseudos),
+    : Assembler(_parser, TableMos6502::TABLE, _pseudos, &_opt_longa),
       _parser(_number, _comment, _symbol, _letter, _location),
       _pseudos() {
     reset();

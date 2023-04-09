@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
@@ -38,7 +37,6 @@ private:
     const struct OptUseRegister : public BoolOption {
         OptUseRegister(bool &var);
     } _opt_useReg{_useReg};
-    const Options _options{_opt_useReg};
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

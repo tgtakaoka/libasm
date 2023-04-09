@@ -33,7 +33,8 @@ static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as exten
 static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
 static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
 
-DisNs32000::DisNs32000() : Disassembler(_formatter, TableNs32000::TABLE, '*'), _formatter() {
+DisNs32000::DisNs32000()
+    : Disassembler(_formatter, TableNs32000::TABLE, '*', &_opt_pcrelParen), _formatter() {
     reset();
 }
 

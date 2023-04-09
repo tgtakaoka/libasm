@@ -59,7 +59,7 @@ public:
         return options().setOption(name, text);
     }
     const Options &commonOptions() const { return _commonOptions; }
-    virtual const Options &options() const { return Options::EMPTY; }
+    const Options &options() const { return _options; }
 
     /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
     virtual bool hasSetInstruction() const { return false; }
@@ -77,11 +77,19 @@ private:
 protected:
     entry::Table &_table;
     PseudoBase &_pseudos;
-    SymbolTable *_symtab;
     const Options _commonOptions;
+    const Options _options;
 
-    Assembler(ValueParser &parser, entry::Table &table, PseudoBase &pseudos)
-        : ErrorAt(), _parser(parser), _table(table), _pseudos(pseudos) {}
+    SymbolTable *_symtab;
+
+    Assembler(ValueParser &parser, entry::Table &table, PseudoBase &pseudos,
+            const OptionBase *option = nullptr)
+        : ErrorAt(),
+          _parser(parser),
+          _table(table),
+          _pseudos(pseudos),
+          _commonOptions(nullptr),
+          _options(option) {}
 
     uint8_t addrUnit() { return uint8_t(config().addressUnit()); }
     int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);

@@ -31,7 +31,8 @@ static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
 static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
 static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
 
-DisMos6502::DisMos6502() : Disassembler(_formatter, TableMos6502::TABLE, '*'), _formatter() {
+DisMos6502::DisMos6502()
+    : Disassembler(_formatter, TableMos6502::TABLE, '*', &_opt_longa), _formatter() {
     reset();
 }
 

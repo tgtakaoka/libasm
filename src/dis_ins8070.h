@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     NationalValueFormatter _formatter;
@@ -38,7 +37,6 @@ private:
     const struct OptImmediatePrefix : public BoolOption {
         OptImmediatePrefix(bool &var);
     } _opt_immPrefix{_immediatePrefix};
-    const Options _options{_opt_immPrefix};
 
     Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);

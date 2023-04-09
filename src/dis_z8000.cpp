@@ -29,7 +29,8 @@ static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (defa
 static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
 
-DisZ8000::DisZ8000() : Disassembler(_formatter, TableZ8000::TABLE, '$'), _formatter() {
+DisZ8000::DisZ8000()
+    : Disassembler(_formatter, TableZ8000::TABLE, '$', &_opt_shortDirect), _formatter() {
     reset();
 }
 

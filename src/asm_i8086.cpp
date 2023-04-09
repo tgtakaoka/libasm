@@ -51,7 +51,7 @@ struct AsmI8086::Operand : public OperandBase {
 };
 
 AsmI8086::AsmI8086()
-    : Assembler(_parser, TableI8086::TABLE, _pseudos),
+    : Assembler(_parser, TableI8086::TABLE, _pseudos, &_opt_optimizeSegment),
       _parser(_number, _comment, _symbol, _letter, _location),
       _pseudos() {
     reset();

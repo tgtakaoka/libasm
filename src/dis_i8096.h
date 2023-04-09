@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
@@ -38,7 +37,6 @@ private:
     const struct OptUseAbsolute : public BoolOption {
         OptUseAbsolute(bool &var);
     } _opt_absolute{_useAbsolute};
-    const Options _options{_opt_absolute};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

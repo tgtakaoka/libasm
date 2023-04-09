@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _pseudos.setRegPointer(-1); }
-    const Options &options() const override { return _options; }
 
 private:
     ValueParser _parser;
@@ -69,7 +68,6 @@ private:
         void set(int32_t value) const override { _pseudos.setRegPointer(value); }
         PseudoZ8 &_pseudos;
     } _opt_setrp{_pseudos, _opt_setrp0};
-    const Options _options{_opt_setrp};
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

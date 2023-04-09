@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _pseudos.setDp(0); }
-    const Options &options() const override { return _options; }
 
 private:
     ValueParser _parser;
@@ -55,8 +54,7 @@ private:
         OptSetdp(PseudoMc6809 &pseudo);
         void set(int32_t value) const override { _pseudos.setDp(value); }
         PseudoMc6809 &_pseudos;
-    } _opt_setdp{_pseudos};
-    const Options _options{_opt_setdp};
+    } _opt_setdp;
 
     struct Operand;
     bool parseBitPosition(StrScanner &scan, Operand &op) const;

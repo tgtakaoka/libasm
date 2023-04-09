@@ -42,7 +42,7 @@ struct AsmZ8::Operand : public OperandBase {
 };
 
 AsmZ8::AsmZ8()
-    : Assembler(_parser, TableZ8::TABLE, _pseudos),
+    : Assembler(_parser, TableZ8::TABLE, _pseudos, &_opt_setrp),
       _parser(_number, _comment, _symbol, _letter, _location),
       _pseudos() {
     reset();

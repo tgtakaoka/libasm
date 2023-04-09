@@ -27,7 +27,8 @@ using namespace reg;
 static const char OPT_BOOL_IMM_PREFIX[] PROGMEM = "imm-prefix";
 static const char OPT_DESC_IMM_PREFIX[] PROGMEM = "immediate prefix # (default =)";
 
-DisIns8070::DisIns8070() : Disassembler(_formatter, TableIns8070::TABLE, '$'), _formatter() {
+DisIns8070::DisIns8070()
+    : Disassembler(_formatter, TableIns8070::TABLE, '$', &_opt_immPrefix), _formatter() {
     reset();
 }
 

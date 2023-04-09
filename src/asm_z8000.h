@@ -32,7 +32,7 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override { _autoShortDirect = false; }
-    const Options &options() const override { return _options; }
+
     bool hasSetInstruction() const override { return true; }
 
 private:
@@ -48,7 +48,6 @@ private:
     const struct OptAutoShortDirect : public BoolOption {
         OptAutoShortDirect(bool &var);
     } _opt_shortDitrect{_autoShortDirect};
-    const Options _options{_opt_shortDitrect};
 
     int8_t parseIntrNames(StrScanner &scan) const;
     int8_t parseFlagNames(StrScanner &scan) const;

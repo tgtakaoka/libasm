@@ -142,13 +142,11 @@ private:
 
 class Options {
 public:
-    Options() : _head(nullptr) {}
-    Options(const OptionBase &head) : _head(&head) {}
+    Options(const OptionBase *head) : _head(head) {}
 
     const OptionBase *head() const { return _head; }
     Error setOption(const char *name, const char *text) const;
 
-    static const Options EMPTY;
     static const char *nameof(OptionBase::OptionSpec spec);
 
 private:

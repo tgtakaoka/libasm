@@ -31,7 +31,6 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     IntelValueFormatter _formatter;
@@ -43,7 +42,6 @@ private:
     const struct OptShortDirect : public BoolOption {
         OptShortDirect(bool &var, const OptionBase &next);
     } _opt_shortDirect{_shortDirect, _opt_ioaddrPrefix};
-    const Options _options{_opt_shortDirect};
 
     StrBuffer &outImmediate(StrBuffer &out, uint8_t data, AddrMode mode);
     StrBuffer &outComma(StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field);

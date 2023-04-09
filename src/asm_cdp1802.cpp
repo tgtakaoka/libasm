@@ -36,7 +36,7 @@ struct AsmCdp1802::Operand : public OperandBase {
 };
 
 AsmCdp1802::AsmCdp1802()
-    : Assembler(_parser, TableCdp1802::TABLE, _pseudos),
+    : Assembler(_parser, TableCdp1802::TABLE, _pseudos, &_opt_useReg),
       _parser(_number, _comment, _symbol, _letter, _location),
       _pseudos() {
     reset();

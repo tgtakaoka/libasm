@@ -31,7 +31,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _optimizeSegment = false; }
-    const Options &options() const override { return _options; }
 
 private:
     ValueParser _parser;
@@ -46,7 +45,6 @@ private:
     const struct OptOptimizeSeg : public BoolOption {
         OptOptimizeSeg(bool &var);
     } _opt_optimizeSegment{_optimizeSegment};
-    const Options _options{_opt_optimizeSegment};
 
     struct Operand;
     Error parseStringInst(StrScanner &scan, Operand &op) const;

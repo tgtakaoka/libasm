@@ -48,9 +48,10 @@ struct AsmMc6809::Operand : public OperandBase {
 };
 
 AsmMc6809::AsmMc6809()
-    : Assembler(_parser, TableMc6809::TABLE, _pseudos),
+    : Assembler(_parser, TableMc6809::TABLE, _pseudos, &_opt_setdp),
       _parser(_number, _comment, _symbol, _letter, _location, _operators),
-      _pseudos() {
+      _pseudos(),
+      _opt_setdp(_pseudos) {
     reset();
 }
 

@@ -31,7 +31,6 @@ public:
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
     void reset() override;
-    const Options &options() const override { return _options; }
 
 private:
     ValueParser _parser;
@@ -55,7 +54,6 @@ private:
         OptLongA(const OptionBase &next);
         Error set(bool value) const override;
     } _opt_longa{_opt_longi};
-    const Options _options{_opt_longa};
 
     struct Operand;
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;

@@ -30,7 +30,6 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     void reset() override { _useReg = _smartBranch = false; }
-    const Options &options() const override { return _options; }
 
 private:
     ValueParser _parser;
@@ -54,7 +53,6 @@ private:
     const struct OptUseRegister : public BoolOption {
         OptUseRegister(bool &var, const OptionBase &next);
     } _opt_useReg{_useReg, _opt_smartBranch};
-    const Options _options{_opt_useReg};
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
