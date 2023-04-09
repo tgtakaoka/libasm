@@ -25,7 +25,7 @@
 namespace libasm {
 namespace mn1610 {
 
-class DisMn1610 : public Disassembler, public Config {
+class DisMn1610 final : public Disassembler, public Config {
 public:
     DisMn1610();
 
@@ -33,7 +33,7 @@ public:
     AddressWidth addressWidth() const override;
 
 private:
-    NationalValueFormatter _formatter;
+    const SurroundHexFormatter _hexFormatter{HexFormatter::X_DASH, '\''};
 
     Error outRegister(StrBuffer &out, RegName reg, AddrMode mode);
     Error outConditionCode(StrBuffer &out, CcName cc);

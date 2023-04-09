@@ -24,14 +24,14 @@
 namespace libasm {
 namespace mc6800 {
 
-class DisMc6800 : public Disassembler, public Config {
+class DisMc6800 final : public Disassembler, public Config {
 public:
     DisMc6800();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    MotorolaValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
     Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
     Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);

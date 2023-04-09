@@ -30,8 +30,7 @@ static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
 
 DisI8086::DisI8086()
-    : Disassembler(_formatter, TableI8086::TABLE, '$', &_opt_segmentInsn),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableI8086::TABLE, '$', &_opt_segmentInsn),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
               OPT_DESC_SEGMENT_INSN, _opt_stringInsn),
       _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {

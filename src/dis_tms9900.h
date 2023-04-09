@@ -24,14 +24,14 @@
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900 : public Disassembler, public Config {
+class DisTms9900 final : public Disassembler, public Config {
 public:
     DisTms9900();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     Error decodeRelative(InsnTms9900 &insn, StrBuffer &out);
     Error checkPostWord(InsnTms9900 &insn, StrBuffer &out);

@@ -823,13 +823,15 @@ static void test_formatter_32bit() {
     DEC(-0x80000000, -32, "-2147483648");
     DEC(-0xffffffff, -32, "1");
 
+    formatter.setUpperHex(true);
+
     HEX(0,           32, true, "0");
     HEX(32,          32, true, "32");
     HEX(33,          32, true, "0x00000021");
     HEX(0x80000000,  32, true, "0x80000000");
-    HEX(0xffffffff,  32, true, "0xffffffff");
-    HEX(-32,         32, true, "0xffffffe0");
-    HEX(-33,         32, true, "0xffffffdf");
+    HEX(0xffffffff,  32, true, "0xFFFFFFFF");
+    HEX(-32,         32, true, "0xFFFFFFE0");
+    HEX(-33,         32, true, "0xFFFFFFDF");
     HEX(-0x80000000, 32, true, "0x80000000");
     HEX(-0xffffffff, 32, true, "1");
 
@@ -846,8 +848,8 @@ static void test_formatter_32bit() {
     HEX(0,           32, false, "0x00000000");
     HEX(32,          32, false, "0x00000020");
     HEX(0x80000000,  32, false, "0x80000000");
-    HEX(0xffffffff,  32, false, "0xffffffff");
-    HEX(-32,         32, false, "0xffffffe0");
+    HEX(0xffffffff,  32, false, "0xFFFFFFFF");
+    HEX(-32,         32, false, "0xFFFFFFE0");
     HEX(-0x80000000, 32, false, "0x80000000");
     HEX(-0xffffffff, 32, false, "0x00000001");
 
@@ -913,13 +915,15 @@ static void test_formatter_bare_hex() {
     HEX(-0x80000000, 32, false, "80000000");
     HEX(-0xffffffff, 32, false, "00000001");
 
+    formatter.setUpperHex(true);
+
     HEX(-128 *2, 9, false, "100");
     HEX(   0 *2, 9, false, "000");
-    HEX(+127 *2, 9, false, "0fe");
+    HEX(+127 *2, 9, false, "0FE");
 
     HEX(-2048 *2, 13, false, "1000");
     HEX(    0 *2, 13, false, "0000");
-    HEX(+2047 *2, 13, false, "0ffe");
+    HEX(+2047 *2, 13, false, "0FFE");
 }
 
 // clang-format on

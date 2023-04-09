@@ -25,7 +25,7 @@
 namespace libasm {
 namespace i8086 {
 
-class DisI8086 : public Disassembler, public Config {
+class DisI8086 final : public Disassembler, public Config {
 public:
     DisI8086();
 
@@ -36,7 +36,7 @@ public:
     Error setSegmentInsn(bool enable);
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisI8086> _opt_segmentInsn;
     const BoolOption<DisI8086> _opt_stringInsn;
 

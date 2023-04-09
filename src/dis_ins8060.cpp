@@ -24,7 +24,7 @@ namespace ins8060 {
 
 using namespace reg;
 
-DisIns8060::DisIns8060() : Disassembler(_formatter, TableIns8060::TABLE, '$'), _formatter() {
+DisIns8060::DisIns8060() : Disassembler(_hexFormatter, TableIns8060::TABLE, '$') {
     reset();
 }
 

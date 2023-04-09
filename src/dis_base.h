@@ -61,10 +61,8 @@ public:
     Error setCStyle(bool enable);
     Error setCurSym(char curSym);
 
-private:
-    ValueFormatter &_formatter;
-
 protected:
+    ValueFormatter _formatter;
     entry::Table &_table;
     const Options _commonOptions;
     const Options _options;
@@ -78,7 +76,7 @@ protected:
     bool _relativeTarget;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(ValueFormatter &formatter, entry::Table &table, char curSym,
+    Disassembler(const HexFormatter &hexFormatter, entry::Table &table, char curSym,
             const OptionBase *option = nullptr);
 
     /** Lookup |addr| value and returns symbol. */

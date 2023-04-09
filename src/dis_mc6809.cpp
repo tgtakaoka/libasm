@@ -24,7 +24,7 @@ namespace mc6809 {
 
 using namespace reg;
 
-DisMc6809::DisMc6809() : Disassembler(_formatter, TableMc6809::TABLE, '*'), _formatter() {
+DisMc6809::DisMc6809() : Disassembler(_hexFormatter, TableMc6809::TABLE, '*') {
     reset();
 }
 

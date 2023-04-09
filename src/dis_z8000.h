@@ -24,7 +24,7 @@
 namespace libasm {
 namespace z8000 {
 
-class DisZ8000 : public Disassembler, public Config {
+class DisZ8000 final : public Disassembler, public Config {
 public:
     DisZ8000();
 
@@ -36,7 +36,7 @@ public:
     Error setIoAddressPrefix(bool enable);
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisZ8000> _opt_shortDirect;
     const BoolOption<DisZ8000> _opt_ioaddrPrefix;
 

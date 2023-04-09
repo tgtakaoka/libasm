@@ -26,7 +26,7 @@ namespace tms9900 {
 using namespace reg;
 using text::tms9900::TEXT_MID;
 
-DisTms9900::DisTms9900() : Disassembler(_formatter, TableTms9900::TABLE, '$'), _formatter() {
+DisTms9900::DisTms9900() : Disassembler(_hexFormatter, TableTms9900::TABLE, '$') {
     reset();
 }
 

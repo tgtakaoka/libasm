@@ -22,7 +22,7 @@ namespace libasm {
 namespace driver {
 
 ListFormatter::ListFormatter()
-    : _formatter(/*cstyle*/ false), _out(_out_buffer, sizeof(_out_buffer)) {
+    : _formatter(), _out(_out_buffer, sizeof(_out_buffer)) {
     setUpperHex(true);
 }
 

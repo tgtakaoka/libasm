@@ -24,14 +24,14 @@
 namespace libasm {
 namespace i8051 {
 
-class DisI8051 : public Disassembler, public Config {
+class DisI8051 final : public Disassembler, public Config {
 public:
     DisI8051();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     Error decodeRelative(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);
     Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);

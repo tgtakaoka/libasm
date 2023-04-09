@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mos6502 {
 
-class DisMos6502 : public Disassembler, public Config {
+class DisMos6502 final : public Disassembler, public Config {
 public:
     DisMos6502();
 
@@ -37,7 +37,7 @@ public:
     Error setUseIndirectLong(bool enable);
 
 private:
-    MotorolaValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
     const BoolOption<DisMos6502> _opt_longa;
     const BoolOption<DisMos6502> _opt_longi;
     const BoolOption<DisMos6502> _opt_indirectLong;

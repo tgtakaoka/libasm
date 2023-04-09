@@ -25,7 +25,7 @@
 namespace libasm {
 namespace z8 {
 
-class DisZ8 : public Disassembler, public Config {
+class DisZ8 final : public Disassembler, public Config {
 public:
     DisZ8();
 
@@ -35,7 +35,7 @@ public:
     Error setUseWorkRegister(bool enable);
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisZ8> _opt_workRegister;
 
     bool _useWorkRegister;

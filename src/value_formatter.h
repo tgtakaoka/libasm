@@ -23,9 +23,75 @@
 
 namespace libasm {
 
+/**
+ * Hexadecimal number formatter
+ */
+struct HexFormatter {
+    /** Format unsingned |val| as |width| bit hexadecimal. */
+    virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
+
+    static const /*PROGMEM*/ char ZERO_X[] PROGMEM;
+    static const /*PROGMEM*/ char DOLLAR[] PROGMEM;
+    static const /*PROGMEM*/ char X_DASH[] PROGMEM;
+    static const /*PROGMEM*/ char H_DASH[] PROGMEM;
+
+protected:
+    /**
+     * Helper function to format unsigned |val| as |width| bit hexadecimal in reverse digit order.
+     */
+    static StrBuffer &outHex(StrBuffer &out, uint32_t val, uint8_t width);
+};
+
+/**
+ * C-Style hexadecimal number is "0xFF"
+ */
+struct CStyleHexFormatter final : HexFormatter {
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+};
+
+/**
+ * Hexadecimal number is prefixed with |prefix|.
+ */
+struct PrefixHexFormatter final : HexFormatter {
+    PrefixHexFormatter(const /*PROGMEM*/ char *prefix_P) : _prefix_P(prefix_P) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+protected:
+    const char *const _prefix_P;
+};
+
+/**
+ * Hexadecimal number is suffixed with |suffix|. It is also prefixed with '0' when it starts with
+ * non-digit letter.
+ */
+struct SuffixHexFormatter final : HexFormatter {
+    SuffixHexFormatter(char suffix) : _suffix(suffix) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+private:
+    const char _suffix;
+};
+
+/**
+ * Hexadecimal number is surrounded by |prefix| and |suffix|.
+ */
+struct SurroundHexFormatter final : HexFormatter {
+    SurroundHexFormatter(const /*PROGMEM*/ char *prefix_P, char suffix)
+        : _prefix_P(prefix_P), _suffix(suffix) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+private:
+    const char *const _prefix_P;
+    const char _suffix;
+};
+
 class ValueFormatter {
 public:
-    ValueFormatter(bool cstyle = true) : _cstyle(cstyle), _upperHex(true) {}
+    ValueFormatter(const HexFormatter &hexFormatter = _DefaultHex)
+        : _hexFormatter(hexFormatter), _cstyle(false), _upperHex(true) {}
 
     void setCStyle(bool enable) { _cstyle = enable; }
     void setUpperHex(bool enable) { _upperHex = enable; }
@@ -45,49 +111,16 @@ public:
      */
     StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0, bool relax = true) const;
 
-protected:
+private:
+    const HexFormatter &_hexFormatter;
     bool _cstyle;
     bool _upperHex;
 
-    uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const
-            __attribute__((noinline));
-    virtual StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const;
-    StrBuffer &outHex(StrBuffer &out, uint32_t val, int8_t bits) const;
-    StrBuffer &outDec(StrBuffer &out, uint32_t val) const __attribute__((noinline));
-};
+    static const HexFormatter _DefaultHex;
+    static const CStyleHexFormatter _CStyleHex;
 
-class MotorolaValueFormatter : public ValueFormatter {
-public:
-    MotorolaValueFormatter() : ValueFormatter(false) {}
-
-protected:
-    StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
-};
-
-class IntelValueFormatter : public ValueFormatter {
-public:
-    IntelValueFormatter() : ValueFormatter(false) {}
-
-protected:
-    StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
-};
-
-class NationalValueFormatter : public ValueFormatter {
-public:
-    NationalValueFormatter(bool suffix = false, char hexPrefix = 'x')
-        : ValueFormatter(false), _suffix(suffix), _hexPrefix(hexPrefix) {}
-
-protected:
-    StrBuffer &formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const override;
-
-private:
-    const bool _suffix;
-    const char _hexPrefix;
-};
-
-class FairchildValueFormatter : public NationalValueFormatter {
-public:
-    FairchildValueFormatter() : NationalValueFormatter(true, 'h') {}
+    uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;
+    static StrBuffer &outDec(StrBuffer &out, uint32_t val);
 };
 
 }  // namespace libasm

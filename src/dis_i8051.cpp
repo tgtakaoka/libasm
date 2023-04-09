@@ -24,7 +24,7 @@ namespace i8051 {
 
 using namespace reg;
 
-DisI8051::DisI8051() : Disassembler(_formatter, TableI8051::TABLE, '$'), _formatter() {
+DisI8051::DisI8051() : Disassembler(_hexFormatter, TableI8051::TABLE, '$') {
     reset();
 }
 

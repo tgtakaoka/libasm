@@ -24,7 +24,7 @@
 namespace libasm {
 namespace f3850 {
 
-class DisF3850 : public Disassembler, public Config {
+class DisF3850 final : public Disassembler, public Config {
 public:
     DisF3850();
 
@@ -34,7 +34,7 @@ public:
     Error setUseScratchpadName(bool enable);
 
 private:
-    FairchildValueFormatter _formatter;
+    const SurroundHexFormatter _hexFormatter{HexFormatter::H_DASH, '\''};
     const BoolOption<DisF3850> _opt_useScratchpad;
 
     bool _useScratchpad;

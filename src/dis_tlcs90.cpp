@@ -24,7 +24,7 @@ namespace tlcs90 {
 
 using namespace reg;
 
-DisTlcs90::DisTlcs90() : Disassembler(_formatter, TableTlcs90::TABLE, '$'), _formatter() {
+DisTlcs90::DisTlcs90() : Disassembler(_hexFormatter, TableTlcs90::TABLE, '$') {
     reset();
 }
 

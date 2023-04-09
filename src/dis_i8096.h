@@ -24,7 +24,7 @@
 namespace libasm {
 namespace i8096 {
 
-class DisI8096 : public Disassembler, public Config {
+class DisI8096 final : public Disassembler, public Config {
 public:
     DisI8096();
 
@@ -34,7 +34,7 @@ public:
     Error setUseAbsolute(bool enable);
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisI8096> _opt_absolute;
 
     bool _useAbsolute;

@@ -22,34 +22,35 @@
 
 namespace libasm {
 
-StrBuffer &ValueFormatter::outHex(StrBuffer &out, uint32_t val, int8_t bits) const {
-    const auto base = _upperHex ? 'A' : 'a';
+const /*PROGMEM*/ char HexFormatter::ZERO_X[] PROGMEM = "0x";
+const /*PROGMEM*/ char HexFormatter::DOLLAR[] PROGMEM = "$";
+const /*PROGMEM*/ char HexFormatter::X_DASH[] PROGMEM = "x'";
+const /*PROGMEM*/ char HexFormatter::H_DASH[] PROGMEM = "h'";
+
+const HexFormatter ValueFormatter::_DefaultHex;
+const CStyleHexFormatter ValueFormatter::_CStyleHex;
+
+StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
+    val = makePositive(out, val, bits);
     const auto start = out.mark();
-    while (val) {
-        const uint8_t digit = val & 0xF;
-        if (digit < 10)
-            out.letter(digit + '0');
-        else
-            out.rletter(digit - 10 + base);
-        val >>= 4;
-    }
-    const uint8_t bw = abs(bits);
-    const int8_t width = bw / 4 + (bw % 4 ? 1 : 0);
-    while (out.mark() - start < width && out.isOK())
-        out.letter('0');
-    return out;
+    return outDec(out, val).reverse(start);
 }
 
-StrBuffer &ValueFormatter::outDec(StrBuffer &out, uint32_t val) const {
+StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
+    val = makePositive(out, val, bits);
     const auto start = out.mark();
-    while (val) {
-        const uint8_t digit = val % 10;
-        out.letter(digit + '0');
-        val /= 10;
+
+    if (relax && val <= 32)
+        return outDec(out, val).reverse(start);
+
+    const HexFormatter *formatter = _cstyle ? &_CStyleHex : &_hexFormatter;
+
+    const uint8_t width = abs(bits);
+    if (_upperHex) {
+        UppercaseBuffer upper(out);
+        return formatter->format(upper, val, width).over(out);
     }
-    if (out.mark() == start)
-        out.letter('0');
-    return out;
+    return formatter->format(out, val, width);
 }
 
 uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits) const {
@@ -66,64 +67,61 @@ uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits)
     return val & mask;
 }
 
-StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
-    val = makePositive(out, val, bits);
+StrBuffer &ValueFormatter::outDec(StrBuffer &out, uint32_t val) {
     const auto start = out.mark();
-    if (relax && val <= 32)
-        return outDec(out, val).reverse(start);
-    return formatPositiveHex(out, val, bits);
-}
-
-StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
-    val = makePositive(out, val, bits);
-    const auto start = out.mark();
-    return outDec(out, val).reverse(start);
-}
-
-StrBuffer &ValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
-    if (_cstyle)
-        out.letter('0').rletter('x');
-    const auto start = out.mark();
-    return outHex(out, val, bits).reverse(start);
-}
-
-StrBuffer &MotorolaValueFormatter::formatPositiveHex(
-        StrBuffer &out, uint32_t val, int8_t bits) const {
-    if (_cstyle) {
-        out.letter('0').rletter('x');
-    } else {
-        out.letter('$');
+    while (val) {
+        const uint8_t digit = val % 10;
+        out.letter(digit + '0');
+        val /= 10;
     }
-    const auto start = out.mark();
-    return outHex(out, val, bits).reverse(start);
-}
-
-StrBuffer &IntelValueFormatter::formatPositiveHex(StrBuffer &out, uint32_t val, int8_t bits) const {
-    if (_cstyle)
-        out.letter('0').rletter('x');
-    const auto start = out.mark();
-    auto *top = outHex(out, val, bits).mark();
-    if (_cstyle)
-        return out.reverse(start);
-    if (top[-1] > '9')
+    if (out.mark() == start)
         out.letter('0');
-    const auto suffix = _upperHex ? 'H' : 'h';
-    return out.reverse(start).rletter(suffix);
+    return out;
 }
 
-StrBuffer &NationalValueFormatter::formatPositiveHex(
-        StrBuffer &out, uint32_t val, int8_t bits) const {
-    const auto prefix = _upperHex ? toupper(_hexPrefix) : tolower(_hexPrefix);
-    if (_cstyle) {
-        out.letter('0').rletter('x');
-    } else {
-        out.rletter(prefix).letter('\'');
-    }
+StrBuffer &HexFormatter::outHex(StrBuffer &out, uint32_t val, uint8_t width) {
     const auto start = out.mark();
-    outHex(out, val, bits).reverse(start);
-    if (!_cstyle && _suffix)
-        out.letter('\'');
+    while (val) {
+        const uint8_t digit = val & 0xF;
+        if (digit < 10)
+            out.letter(digit + '0');
+        else
+            out.letter(digit - 10 + 'a');
+        val >>= 4;
+    }
+    // zero filling
+    const int8_t digit = width / 4 + (width % 4 ? 1 : 0);
+    while (out.mark() - start < digit && out.isOK())
+        out.letter('0');
     return out;
+}
+
+StrBuffer &HexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    const auto start = out.mark();
+    return outHex(out, val, width).reverse(start);
+}
+
+StrBuffer &CStyleHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    out.rtext_P(HexFormatter::ZERO_X);  // raw text
+    return HexFormatter::format(out, val, width);
+}
+
+StrBuffer &PrefixHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    out.text_P(_prefix_P);
+    return HexFormatter::format(out, val, width);
+}
+
+StrBuffer &SuffixHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    const auto start = out.mark();
+    const auto top = outHex(out, val, width).mark();
+    if (top[-1] > '9')
+        out.letter('0');  // prefixed with '0'
+    return out.reverse(start).letter(_suffix);
+}
+
+StrBuffer &SurroundHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    out.text_P(_prefix_P);
+    return HexFormatter::format(out, val, width).letter(_suffix);
 }
 
 }  // namespace libasm

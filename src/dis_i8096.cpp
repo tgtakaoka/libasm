@@ -28,8 +28,7 @@ static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "use-absolute";
 static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
 
 DisI8096::DisI8096()
-    : Disassembler(_formatter, TableI8096::TABLE, '$', &_opt_absolute),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableI8096::TABLE, '$', &_opt_absolute),
       _opt_absolute(this, &DisI8096::setUseAbsolute, OPT_BOOL_ABSOLUTE, OPT_DESC_ABSOLUTE) {
     reset();
 }

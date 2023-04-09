@@ -24,14 +24,14 @@
 namespace libasm {
 namespace ins8060 {
 
-class DisIns8060 : public Disassembler, public Config {
+class DisIns8060 final : public Disassembler, public Config {
 public:
     DisIns8060();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    NationalValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
 
     Error decodePntr(InsnIns8060 &insn, StrBuffer &out);
     Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out);

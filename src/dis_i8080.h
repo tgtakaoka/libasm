@@ -24,14 +24,14 @@
 namespace libasm {
 namespace i8080 {
 
-class DisI8080 : public Disassembler, public Config {
+class DisI8080 final : public Disassembler, public Config {
 public:
     DisI8080();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     Error decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

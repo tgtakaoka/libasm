@@ -24,14 +24,14 @@
 namespace libasm {
 namespace mc6809 {
 
-class DisMc6809 : public Disassembler, public Config {
+class DisMc6809 final : public Disassembler, public Config {
 public:
     DisMc6809();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    MotorolaValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
     // MC6809
     Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);

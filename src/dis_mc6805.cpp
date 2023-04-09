@@ -28,8 +28,7 @@ static const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
 static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
 DisMc6805::DisMc6805()
-    : Disassembler(_formatter, TableMc6805::TABLE, '*', &_opt_pc_bits),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableMc6805::TABLE, '*', &_opt_pc_bits),
       _opt_pc_bits(this, &DisMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();
 }

@@ -24,7 +24,7 @@ namespace tms32010 {
 
 using namespace reg;
 
-DisTms32010::DisTms32010() : Disassembler(_formatter, TableTms32010::TABLE, '$'), _formatter() {
+DisTms32010::DisTms32010() : Disassembler(_hexFormatter, TableTms32010::TABLE, '$') {
     reset();
 }
 

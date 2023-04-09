@@ -25,7 +25,8 @@ const SimpleSymbolParser symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
 const DefaultLetterParser letter;
 const DollarLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};
-NationalValueFormatter formatter;
+const PrefixHexFormatter hexFormatter{HexFormatter::X_DASH};
+ValueFormatter formatter{hexFormatter};
 
 static void set_up() {
     formatter.setCStyle(false);
@@ -507,29 +508,23 @@ static void test_formatter_32bit() {
     HEX(-0x80000000, -32, true, "-x'80000000");
     HEX(-0xffffffff, -32, true, "1");
 
-    HEX(0,           32, false, "x'00000000");
-    HEX(32,          32, false, "x'00000020");
-    HEX(0x80000000,  32, false, "x'80000000");
-    HEX(0xffffffff,  32, false, "x'ffffffff");
-    HEX(-32,         32, false, "x'ffffffe0");
-    HEX(-0x80000000, 32, false, "x'80000000");
-    HEX(-0xffffffff, 32, false, "x'00000001");
+    formatter.setUpperHex(true);
 
-    HEX(0,           -32, false, "x'00000000");
-    HEX(32,          -32, false, "x'00000020");
-    HEX(0x80000000,  -32, false, "-x'80000000");
-    HEX(0xffffffff,  -32, false, "-x'00000001");
-    HEX(-32,         -32, false, "-x'00000020");
-    HEX(-0x80000000, -32, false, "-x'80000000");
-    HEX(-0xffffffff, -32, false, "x'00000001");
-}
+    HEX(0,           32, false, "X'00000000");
+    HEX(32,          32, false, "X'00000020");
+    HEX(0x80000000,  32, false, "X'80000000");
+    HEX(0xffffffff,  32, false, "X'FFFFFFFF");
+    HEX(-32,         32, false, "X'FFFFFFE0");
+    HEX(-0x80000000, 32, false, "X'80000000");
+    HEX(-0xffffffff, 32, false, "X'00000001");
 
-static void test_formatter_suffix() {
-    NationalValueFormatter formatter(true);
-    formatter.setUpperHex(false);
-
-    HEX(255,  8, false, "x'ff'");
-    HEX(0xffffff,    24, true, "x'ffffff'");
+    HEX(0,           -32, false, "X'00000000");
+    HEX(32,          -32, false, "X'00000020");
+    HEX(0x80000000,  -32, false, "-X'80000000");
+    HEX(0xffffffff,  -32, false, "-X'00000001");
+    HEX(-32,         -32, false, "-X'00000020");
+    HEX(-0x80000000, -32, false, "-X'80000000");
+    HEX(-0xffffffff, -32, false, "X'00000001");
 }
 
 static void test_formatter_cstyle() {
@@ -573,13 +568,15 @@ static void test_formatter_cstyle() {
     HEX(-0x80000000, 32, false, "0x80000000");
     HEX(-0xffffffff, 32, false, "0x00000001");
 
+    formatter.setUpperHex(true);
+
     HEX(-128 *2, 9, false, "0x100");
     HEX(   0 *2, 9, false, "0x000");
-    HEX(+127 *2, 9, false, "0x0fe");
+    HEX(+127 *2, 9, false, "0x0FE");
 
     HEX(-2048 *2, 13, false, "0x1000");
     HEX(    0 *2, 13, false, "0x0000");
-    HEX(+2047 *2, 13, false, "0x0ffe");
+    HEX(+2047 *2, 13, false, "0x0FFE");
 }
 
 // clang-format on
@@ -597,7 +594,6 @@ void run_tests() {
     RUN_TEST(test_formatter_16bit);
     RUN_TEST(test_formatter_24bit);
     RUN_TEST(test_formatter_32bit);
-    RUN_TEST(test_formatter_suffix);
     RUN_TEST(test_formatter_cstyle);
 }
 

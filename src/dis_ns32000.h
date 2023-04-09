@@ -24,7 +24,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class DisNs32000 : public Disassembler, public Config {
+class DisNs32000 final : public Disassembler, public Config {
 public:
     DisNs32000();
 
@@ -37,7 +37,7 @@ public:
     Error setFloatPrefix(bool enable);
 
 private:
-    NationalValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
     const BoolOption<DisNs32000> _opt_pcrelParen;
     const BoolOption<DisNs32000> _opt_externalParen;
     const BoolOption<DisNs32000> _opt_stroptBracket;

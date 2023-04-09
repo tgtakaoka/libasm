@@ -24,7 +24,7 @@ namespace scn2650 {
 
 using namespace reg;
 
-DisScn2650::DisScn2650() : Disassembler(_formatter, TableScn2650::TABLE, '$'), _formatter() {
+DisScn2650::DisScn2650() : Disassembler(_hexFormatter, TableScn2650::TABLE, '$') {
     reset();
 }
 

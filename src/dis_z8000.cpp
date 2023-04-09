@@ -30,8 +30,7 @@ static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
 
 DisZ8000::DisZ8000()
-    : Disassembler(_formatter, TableZ8000::TABLE, '$', &_opt_shortDirect),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableZ8000::TABLE, '$', &_opt_shortDirect),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, _opt_ioaddrPrefix),
       _opt_ioaddrPrefix(

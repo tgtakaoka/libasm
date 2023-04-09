@@ -28,8 +28,7 @@ static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
 
 DisCdp1802::DisCdp1802()
-    : Disassembler(_formatter, TableCdp1802::TABLE, '$', &_opt_useReg),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableCdp1802::TABLE, '$', &_opt_useReg),
       _opt_useReg(
               this, &DisCdp1802::setUseRegsterName, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER) {
     reset();

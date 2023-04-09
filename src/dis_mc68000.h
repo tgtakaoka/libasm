@@ -25,14 +25,14 @@
 namespace libasm {
 namespace mc68000 {
 
-class DisMc68000 : public Disassembler, public Config {
+class DisMc68000 final : public Disassembler, public Config {
 public:
     DisMc68000();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    MotorolaValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
     StrBuffer &outOprSize(StrBuffer &out, OprSize size);
     StrBuffer &outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suffix);

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class DisIns8070 : public Disassembler, public Config {
+class DisIns8070 final : public Disassembler, public Config {
 public:
     DisIns8070();
 
@@ -34,7 +34,7 @@ public:
     Error setUseSharpImmediate(bool enable);
 
 private:
-    NationalValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
     const BoolOption<DisIns8070> _opt_useSharp;
 
     bool _useSharp;

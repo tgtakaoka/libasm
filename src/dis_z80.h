@@ -25,14 +25,14 @@
 namespace libasm {
 namespace z80 {
 
-class DisZ80 : public Disassembler, public Config {
+class DisZ80 final : public Disassembler, public Config {
 public:
     DisZ80();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     StrBuffer &outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits);
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg);

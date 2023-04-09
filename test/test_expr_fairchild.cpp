@@ -25,7 +25,8 @@ const DefaultSymbolParser symbol;
 const FairchildLetterParser letter;
 const AsteriskLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};
-FairchildValueFormatter formatter;
+const SurroundHexFormatter hexFormatter{HexFormatter::H_DASH, '\''};
+ValueFormatter formatter{hexFormatter};
 
 static void set_up() {
     formatter.setCStyle(false);
@@ -542,21 +543,23 @@ static void test_formatter_32bit() {
     HEX(-0x80000000, -32, true, "-h'80000000'");
     HEX(-0xffffffff, -32, true, "1");
 
-    HEX(0,           32, false, "h'00000000'");
-    HEX(32,          32, false, "h'00000020'");
-    HEX(0x80000000,  32, false, "h'80000000'");
-    HEX(0xffffffff,  32, false, "h'ffffffff'");
-    HEX(-32,         32, false, "h'ffffffe0'");
-    HEX(-0x80000000, 32, false, "h'80000000'");
-    HEX(-0xffffffff, 32, false, "h'00000001'");
+    formatter.setUpperHex(true);
 
-    HEX(0,           -32, false, "h'00000000'");
-    HEX(32,          -32, false, "h'00000020'");
-    HEX(0x80000000,  -32, false, "-h'80000000'");
-    HEX(0xffffffff,  -32, false, "-h'00000001'");
-    HEX(-32,         -32, false, "-h'00000020'");
-    HEX(-0x80000000, -32, false, "-h'80000000'");
-    HEX(-0xffffffff, -32, false, "h'00000001'");
+    HEX(0,           32, false, "H'00000000'");
+    HEX(32,          32, false, "H'00000020'");
+    HEX(0x80000000,  32, false, "H'80000000'");
+    HEX(0xffffffff,  32, false, "H'FFFFFFFF'");
+    HEX(-32,         32, false, "H'FFFFFFE0'");
+    HEX(-0x80000000, 32, false, "H'80000000'");
+    HEX(-0xffffffff, 32, false, "H'00000001'");
+
+    HEX(0,           -32, false, "H'00000000'");
+    HEX(32,          -32, false, "H'00000020'");
+    HEX(0x80000000,  -32, false, "-H'80000000'");
+    HEX(0xffffffff,  -32, false, "-H'00000001'");
+    HEX(-32,         -32, false, "-H'00000020'");
+    HEX(-0x80000000, -32, false, "-H'80000000'");
+    HEX(-0xffffffff, -32, false, "H'00000001'");
 }
 
 static void test_formatter_cstyle() {
@@ -600,13 +603,15 @@ static void test_formatter_cstyle() {
     HEX(-0x80000000, 32, false, "0x80000000");
     HEX(-0xffffffff, 32, false, "0x00000001");
 
+    formatter.setUpperHex(true);
+
     HEX(-128 *2, 9, false, "0x100");
     HEX(   0 *2, 9, false, "0x000");
-    HEX(+127 *2, 9, false, "0x0fe");
+    HEX(+127 *2, 9, false, "0x0FE");
 
     HEX(-2048 *2, 13, false, "0x1000");
     HEX(    0 *2, 13, false, "0x0000");
-    HEX(+2047 *2, 13, false, "0x0ffe");
+    HEX(+2047 *2, 13, false, "0x0FFE");
 }
 
 // clang-format on

@@ -26,14 +26,14 @@ namespace tlcs90 {
 
 struct Operand;
 
-class DisTlcs90 : public Disassembler, public Config {
+class DisTlcs90 final : public Disassembler, public Config {
 public:
     DisTlcs90();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     Error readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op);
     Error decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);

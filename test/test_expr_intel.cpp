@@ -25,7 +25,8 @@ const SimpleSymbolParser symbol{SymbolParser::ATMARK_QUESTION, SymbolParser::NON
 const DefaultLetterParser letter;
 const DollarLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};
-IntelValueFormatter formatter;
+const SuffixHexFormatter hexFormatter{'h'};
+ValueFormatter formatter{hexFormatter};
 
 static void set_up() {
     formatter.setCStyle(false);
@@ -502,21 +503,23 @@ static void test_formatter_32bit() {
     HEX(-0x80000000, -32, true, "-80000000h");
     HEX(-0xffffffff, -32, true, "1");
 
-    HEX(0,           32, false, "00000000h");
-    HEX(32,          32, false, "00000020h");
-    HEX(0x80000000,  32, false, "80000000h");
-    HEX(0xffffffff,  32, false, "0ffffffffh");
-    HEX(-32,         32, false, "0ffffffe0h");
-    HEX(-0x80000000, 32, false, "80000000h");
-    HEX(-0xffffffff, 32, false, "00000001h");
+    formatter.setUpperHex(true);
 
-    HEX(0,           -32, false, "00000000h");
-    HEX(32,          -32, false, "00000020h");
-    HEX(0x80000000,  -32, false, "-80000000h");
-    HEX(0xffffffff,  -32, false, "-00000001h");
-    HEX(-32,         -32, false, "-00000020h");
-    HEX(-0x80000000, -32, false, "-80000000h");
-    HEX(-0xffffffff, -32, false, "00000001h");
+    HEX(0,           32, false, "00000000H");
+    HEX(32,          32, false, "00000020H");
+    HEX(0x80000000,  32, false, "80000000H");
+    HEX(0xffffffff,  32, false, "0FFFFFFFFH");
+    HEX(-32,         32, false, "0FFFFFFE0H");
+    HEX(-0x80000000, 32, false, "80000000H");
+    HEX(-0xffffffff, 32, false, "00000001H");
+
+    HEX(0,           -32, false, "00000000H");
+    HEX(32,          -32, false, "00000020H");
+    HEX(0x80000000,  -32, false, "-80000000H");
+    HEX(0xffffffff,  -32, false, "-00000001H");
+    HEX(-32,         -32, false, "-00000020H");
+    HEX(-0x80000000, -32, false, "-80000000H");
+    HEX(-0xffffffff, -32, false, "00000001H");
 }
 
 static void test_formatter_cstyle() {
@@ -560,13 +563,15 @@ static void test_formatter_cstyle() {
     HEX(-0x80000000, 32, false, "0x80000000");
     HEX(-0xffffffff, 32, false, "0x00000001");
 
+    formatter.setUpperHex(true);
+
     HEX(-128 *2, 9, false, "0x100");
     HEX(   0 *2, 9, false, "0x000");
-    HEX(+127 *2, 9, false, "0x0fe");
+    HEX(+127 *2, 9, false, "0x0FE");
 
     HEX(-2048 *2, 13, false, "0x1000");
     HEX(    0 *2, 13, false, "0x0000");
-    HEX(+2047 *2, 13, false, "0x0ffe");
+    HEX(+2047 *2, 13, false, "0x0FFE");
 }
 
 // clang-format on

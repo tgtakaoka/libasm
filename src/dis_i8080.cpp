@@ -24,7 +24,7 @@ namespace i8080 {
 
 using namespace reg;
 
-DisI8080::DisI8080() : Disassembler(_formatter, TableI8080::TABLE, '$'), _formatter() {
+DisI8080::DisI8080() : Disassembler(_hexFormatter, TableI8080::TABLE, '$') {
     reset();
 }
 

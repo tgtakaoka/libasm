@@ -24,14 +24,14 @@
 namespace libasm {
 namespace tms32010 {
 
-class DisTms32010 : public Disassembler, public Config {
+class DisTms32010 final : public Disassembler, public Config {
 public:
     DisTms32010();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     Error decodeDirect(StrBuffer &out, Config::opcode_t opc);
     Error decodeIndirect(StrBuffer &out, uint8_t mam);

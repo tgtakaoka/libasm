@@ -24,7 +24,7 @@ namespace z80 {
 
 using namespace reg;
 
-DisZ80::DisZ80() : Disassembler(_formatter, TableZ80::TABLE, '$'), _formatter() {
+DisZ80::DisZ80() : Disassembler(_hexFormatter, TableZ80::TABLE, '$') {
     reset();
 }
 

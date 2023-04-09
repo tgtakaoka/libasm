@@ -34,8 +34,7 @@ static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
 static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
 
 DisNs32000::DisNs32000()
-    : Disassembler(_formatter, TableNs32000::TABLE, '*', &_opt_pcrelParen),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableNs32000::TABLE, '*', &_opt_pcrelParen),
       _opt_pcrelParen(this, &DisNs32000::setPcRelativeParen, OPT_BOOL_PCREL_PAREN,
               OPT_DESC_PCREL_PAREN, _opt_externalParen),
       _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,

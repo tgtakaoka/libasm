@@ -24,7 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class DisCdp1802 : public Disassembler, public Config {
+class DisCdp1802 final : public Disassembler, public Config {
 public:
     DisCdp1802();
 
@@ -34,7 +34,7 @@ public:
     Error setUseRegsterName(bool enable);
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisCdp1802> _opt_useReg;
 
     bool _useReg;

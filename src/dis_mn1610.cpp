@@ -24,7 +24,7 @@ namespace mn1610 {
 
 using namespace reg;
 
-DisMn1610::DisMn1610() : Disassembler(_formatter, TableMn1610::TABLE, '*'), _formatter(true) {
+DisMn1610::DisMn1610() : Disassembler(_hexFormatter, TableMn1610::TABLE, '*') {
     reset();
 }
 

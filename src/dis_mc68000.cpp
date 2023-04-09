@@ -24,7 +24,7 @@ namespace mc68000 {
 
 using namespace reg;
 
-DisMc68000::DisMc68000() : Disassembler(_formatter, TableMc68000::TABLE, '*'), _formatter() {
+DisMc68000::DisMc68000() : Disassembler(_hexFormatter, TableMc68000::TABLE, '*') {
     reset();
 }
 

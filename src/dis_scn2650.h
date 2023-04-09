@@ -24,14 +24,14 @@
 namespace libasm {
 namespace scn2650 {
 
-class DisScn2650 : public Disassembler, public Config {
+class DisScn2650 final : public Disassembler, public Config {
 public:
     DisScn2650();
 
     const ConfigBase &config() const override { return *this; }
 
 private:
-    IntelValueFormatter _formatter;
+    const SuffixHexFormatter _hexFormatter{'h'};
 
     Error decodeAbsolute(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode);
     Error decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out);

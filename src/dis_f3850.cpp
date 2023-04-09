@@ -28,8 +28,7 @@ static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
 static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
 
 DisF3850::DisF3850()
-    : Disassembler(_formatter, TableF3850::TABLE, '$', &_opt_useScratchpad),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableF3850::TABLE, '$', &_opt_useScratchpad),
       _opt_useScratchpad(this, &DisF3850::setUseScratchpadName, OPT_BOOL_USE_SCRATCHPAD,
               OPT_DESC_USE_SCRATCHPAD) {
     reset();

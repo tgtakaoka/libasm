@@ -28,8 +28,7 @@ static const char OPT_BOOL_USE_SHARP[] PROGMEM = "use-sharp";
 static const char OPT_DESC_USE_SHARP[] PROGMEM = "use # (default =) for immediate";
 
 DisIns8070::DisIns8070()
-    : Disassembler(_formatter, TableIns8070::TABLE, '$', &_opt_useSharp),
-      _formatter(),
+    : Disassembler(_hexFormatter, TableIns8070::TABLE, '$', &_opt_useSharp),
       _opt_useSharp(
               this, &DisIns8070::setUseSharpImmediate, OPT_BOOL_USE_SHARP, OPT_DESC_USE_SHARP) {
     reset();

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc6805 {
 
-class DisMc6805 : public Disassembler, public Config {
+class DisMc6805 final : public Disassembler, public Config {
 public:
     DisMc6805();
 
@@ -35,7 +35,7 @@ public:
     Error setPcBits(int32_t val);
 
 private:
-    MotorolaValueFormatter _formatter;
+    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
     const IntOption<DisMc6805> _opt_pc_bits;
 
     uint8_t _pc_bits;
