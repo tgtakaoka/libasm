@@ -32,12 +32,13 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setUseWorkRegister(bool enable);
+
 private:
     IntelValueFormatter _formatter;
+    const BoolOption<DisZ8> _opt_workRegister;
+
     bool _useWorkRegister;
-    const struct OptWorkRegister : public BoolOption {
-        OptWorkRegister(bool &var);
-    } _opt_workRegister{_useWorkRegister};
 
     StrBuffer &outConditionCode(StrBuffer &out, Config::opcode_t opCode);
     StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);

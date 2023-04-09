@@ -18,6 +18,10 @@
 
 namespace libasm {
 
+static const char OPT_BOOL_UPPER_HEX[] PROGMEM = "upper-hex";
+static const char OPT_DESC_UPPER_HEX[] PROGMEM = "use upper case letter for hexadecimal";
+static const char OPT_BOOL_UPPERCASE[] PROGMEM = "uppercase";
+static const char OPT_DESC_UPPERCASE[] PROGMEM = "use upper case letter for output";
 static const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
 static const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
 static const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
@@ -31,32 +35,45 @@ Disassembler::Disassembler(
       _table(table),
       _commonOptions(&_opt_relative),
       _options(option),
-      _opt_curSym(OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN, _curSym),
-      _opt_cstyle(this, _opt_curSym),
-      _opt_relative(OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE, _relativeTarget, _opt_cstyle),
-      _curSym(curSym) {
+      _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
+              _opt_cstyle),
+      _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_curSym),
+      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN),
+      _defaultCurSym(curSym) {
     reset();
 }
 
 void Disassembler::reset() {
     setUpperHex(true);
     setUppercase(true);
+    setRelativeTarget(false);
+    setCStyle(false);
+    setCurSym(0);
 }
 
-Disassembler::OptCStyle::OptCStyle(Disassembler *dis, const OptionBase &next)
-    : BoolOptionBase(OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, next), DisassemblerOption(dis) {}
-
-Error Disassembler::OptCStyle::set(bool value) const {
-    _dis->formatter().setCStyle(value);
+Error Disassembler::setUpperHex(bool enable) {
+    _formatter.setUpperHex(enable);
     return OK;
 }
 
-void Disassembler::setUpperHex(bool enable) {
-    _formatter.setUpperHex(enable);
+Error Disassembler::setUppercase(bool enable) {
+    _uppercase = enable;
+    return OK;
 }
 
-void Disassembler::setUppercase(bool enable) {
-    _uppercase = enable;
+Error Disassembler::setRelativeTarget(bool enable) {
+    _relativeTarget = enable;
+    return OK;
+}
+
+Error Disassembler::setCStyle(bool enable) {
+    formatter().setCStyle(enable);
+    return OK;
+}
+
+Error Disassembler::setCurSym(char curSym) {
+    _curSym = curSym ? curSym : _defaultCurSym;
+    return OK;
 }
 
 Error Disassembler::decode(

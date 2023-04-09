@@ -50,13 +50,26 @@ struct AsmMc6809::Operand : public OperandBase {
 AsmMc6809::AsmMc6809()
     : Assembler(_parser, TableMc6809::TABLE, _pseudos, &_opt_setdp),
       _parser(_number, _comment, _symbol, _letter, _location, _operators),
-      _pseudos(),
-      _opt_setdp(_pseudos) {
+      _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP),
+      _pseudos() {
     reset();
 }
 
-AsmMc6809::OptSetdp::OptSetdp(AsmMc6809::PseudoMc6809 &pseudos)
-    : IntOptionBase(OPT_INT_SETDP, OPT_DESC_SETDP), _pseudos(pseudos) {}
+void AsmMc6809::reset() {
+    Assembler::reset();
+    setDirectPage(0);
+}
+
+Error AsmMc6809::setDirectPage(int32_t val) {
+    if (overflowUint8(static_cast<uint32_t>(val)))
+        return OVERFLOW_RANGE;
+    _direct_page = val;
+    return OK;
+}
+
+bool AsmMc6809::onDirectPage(Config::uintptr_t addr) const {
+    return static_cast<uint8_t>(addr >> 8) == _direct_page;
+}
 
 void AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
     const auto length = (insn.hasPrefix() ? 1 : 0) + (mode == M_LREL ? 3 : 2);
@@ -400,7 +413,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
     } else if (indexBits) {
         if (hint == M_DBIT) {
             if (parseMemBit(p, op)) {
-                if (op.isOK() && !_pseudos.inDirectPage(op.val32) && indexBits != 8)
+                if (op.isOK() && !onDirectPage(op.val32) && indexBits != 8)
                     return op.setError(scan, OPERAND_NOT_ALLOWED);
                 op.mode = M_DBIT;
                 scan = p;
@@ -424,7 +437,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
             }
             if (indexBits < 0) {
                 const auto addr = static_cast<Config::uintptr_t>(op.val32);
-                indexBits = _pseudos.inDirectPage(addr) ? 8 : 16;
+                indexBits = onDirectPage(addr) ? 8 : 16;
             }
             op.extra = indexBits;
             op.mode = (indexBits == 8) ? M_DIR : M_EXT;
@@ -500,21 +513,13 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
     return OK;
 }
 
-Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
+Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
-        auto p = scan;
-        const auto val = assembler.parseExpr32(scan, assembler);
-        if (assembler.isOK())
-            setDp(val);
-        scan = p;
-        return OK;
+        const auto val = assembler->parseExpr32(scan, *assembler);
+        auto asm6809 = reinterpret_cast<AsmMc6809 *>(assembler);
+        return assembler->isOK() ? asm6809->setDirectPage(val) : assembler->getError();
     }
     return UNKNOWN_DIRECTIVE;
-}
-
-Error AsmMc6809::PseudoMc6809::setDp(int32_t value) {
-    _direct_page = value;
-    return OK;
 }
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {

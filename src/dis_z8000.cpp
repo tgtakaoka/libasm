@@ -30,25 +30,34 @@ static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
 
 DisZ8000::DisZ8000()
-    : Disassembler(_formatter, TableZ8000::TABLE, '$', &_opt_shortDirect), _formatter() {
+    : Disassembler(_formatter, TableZ8000::TABLE, '$', &_opt_shortDirect),
+      _formatter(),
+      _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
+              OPT_DESC_SHORT_DIRECT, _opt_ioaddrPrefix),
+      _opt_ioaddrPrefix(
+              this, &DisZ8000::setIoAddressPrefix, OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX) {
     reset();
-}
-
-void DisZ8000::reset() {
-    Disassembler::reset();
-    _ioAddressPrefix = 0;
-    _shortDirect = true;
 }
 
 AddressWidth DisZ8000::addressWidth() const {
     return TableZ8000::TABLE.addressWidth();
 }
 
-DisZ8000::OptIoaddrPrefix::OptIoaddrPrefix(bool &var)
-    : BoolOption(OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX, var) {}
+void DisZ8000::reset() {
+    Disassembler::reset();
+    setShortDirect(true);
+    setIoAddressPrefix(false);
+}
 
-DisZ8000::OptShortDirect::OptShortDirect(bool &var, const OptionBase &next)
-    : BoolOption(OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT, var, next) {}
+Error DisZ8000::setShortDirect(bool enable) {
+    _shortDirect = enable;
+    return OK;
+}
+
+Error DisZ8000::setIoAddressPrefix(bool enable) {
+    _ioAddressPrefix = enable;
+    return OK;
+}
 
 StrBuffer &DisZ8000::outImmediate(StrBuffer &out, uint8_t data, AddrMode mode) {
     uint8_t val = data;

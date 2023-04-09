@@ -29,7 +29,9 @@ public:
     AsmMc6809();
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _pseudos.setDp(0); }
+    void reset() override;
+
+    Error setDirectPage(int32_t val);
 
 private:
     ValueParser _parser;
@@ -39,23 +41,15 @@ private:
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
     const Mc68xxOperatorParser _operators;
+    const IntOption<AsmMc6809> _opt_setdp;
+
     struct PseudoMc6809 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
-        bool inDirectPage(Config::uintptr_t addr) const {
-            return static_cast<uint8_t>(addr >> 8) == _direct_page;
-        }
-        Error setDp(int32_t value);
-
-    private:
-        uint8_t _direct_page;
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
     } _pseudos;
+    uint8_t _direct_page;
 
-    const struct OptSetdp : public IntOptionBase {
-        OptSetdp(PseudoMc6809 &pseudo);
-        void set(int32_t value) const override { _pseudos.setDp(value); }
-        PseudoMc6809 &_pseudos;
-    } _opt_setdp;
-
+    bool onDirectPage(Config::uintptr_t addr) const;
+    
     struct Operand;
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
     bool parseMemBit(StrScanner &scan, Operand &op) const;

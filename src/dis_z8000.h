@@ -32,16 +32,16 @@ public:
     AddressWidth addressWidth() const override;
     void reset() override;
 
+    Error setShortDirect(bool enable);
+    Error setIoAddressPrefix(bool enable);
+
 private:
     IntelValueFormatter _formatter;
-    bool _ioAddressPrefix;
+    const BoolOption<DisZ8000> _opt_shortDirect;
+    const BoolOption<DisZ8000> _opt_ioaddrPrefix;
+
     bool _shortDirect;
-    const struct OptIoaddrPrefix : public BoolOption {
-        OptIoaddrPrefix(bool &var);
-    } _opt_ioaddrPrefix{_ioAddressPrefix};
-    const struct OptShortDirect : public BoolOption {
-        OptShortDirect(bool &var, const OptionBase &next);
-    } _opt_shortDirect{_shortDirect, _opt_ioaddrPrefix};
+    bool _ioAddressPrefix;
 
     StrBuffer &outImmediate(StrBuffer &out, uint8_t data, AddrMode mode);
     StrBuffer &outComma(StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field);

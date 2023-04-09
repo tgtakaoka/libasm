@@ -21,7 +21,6 @@
 #include "dis_memory.h"
 #include "entry_table.h"
 #include "insn_ns32000.h"
-#include "str_scanner.h"
 
 namespace libasm {
 namespace ns32000 {
@@ -32,7 +31,6 @@ public:
 
     static TableNs32000 TABLE;
 
-    void reset();
     Error searchName(InsnNs32000 &insn) const;
     Error searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory) const;
     bool isPrefixCode(uint8_t opCode) const;
@@ -40,8 +38,9 @@ public:
     const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
-    bool setFpu(const StrScanner &fpu);
-    bool setMmu(const StrScanner &mmu);
+
+    bool setFpu(FpuType fpuType);
+    bool setMmu(MmuType mmuType);
 
     struct Cpu;
     struct Fpu;
@@ -51,9 +50,6 @@ private:
     const Cpu *const _cpu;
     const Fpu *_fpu;
     const Mmu *_mmu;
-
-    bool setFpu(FpuType fpuType);
-    bool setMmu(MmuType mmuType);
 };
 
 }  // namespace ns32000

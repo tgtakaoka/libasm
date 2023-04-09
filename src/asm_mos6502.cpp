@@ -18,16 +18,13 @@
 
 #include "reg_mos6502.h"
 #include "table_mos6502.h"
+#include "text_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
 
 using namespace reg;
-
-static const char OPT_BOOL_LONGA[] PROGMEM = "longa";
-static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
-static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
-static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
+using namespace text::mos6502;
 
 struct AsmMos6502::Operand : public OperandBase {
     AddrMode mode;
@@ -42,6 +39,8 @@ struct AsmMos6502::Operand : public OperandBase {
 AsmMos6502::AsmMos6502()
     : Assembler(_parser, TableMos6502::TABLE, _pseudos, &_opt_longa),
       _parser(_number, _comment, _symbol, _letter, _location),
+      _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
+      _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI),
       _pseudos() {
     reset();
 }
@@ -51,20 +50,18 @@ AddressWidth AsmMos6502::addressWidth() const {
 }
 
 void AsmMos6502::reset() {
+    Assembler::reset();
     TableMos6502::TABLE.reset();
+    setLongAccumulator(false);
+    setLongIndex(false);
 }
 
-AsmMos6502::OptLongI::OptLongI() : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI) {}
-
-Error AsmMos6502::OptLongI::set(bool value) const {
-    return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
+Error AsmMos6502::setLongAccumulator(bool enable) {
+    return TableMos6502::TABLE.setLongAccumulator(enable) ? OK : OPERAND_NOT_ALLOWED;
 }
 
-AsmMos6502::OptLongA::OptLongA(const OptionBase &next)
-    : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
-
-Error AsmMos6502::OptLongA::set(bool value) const {
-    return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+Error AsmMos6502::setLongIndex(bool enable) {
+    return TableMos6502::TABLE.setLongIndex(enable) ? OK : OPERAND_NOT_ALLOWED;
 }
 
 void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
@@ -242,33 +239,26 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 }
 
 Error AsmMos6502::PseudoMos6502::parseTableOnOff(
-        StrScanner &scan, Assembler &assembler, bool (*set)(bool val)) {
+        StrScanner &scan, Assembler *assembler, BoolOption<AsmMos6502>::Setter setter) {
     auto p = scan.skipSpaces();
-    const auto name = assembler.parser().readSymbol(p);
+    auto asm6502 = reinterpret_cast<AsmMos6502 *>(assembler);
+    const auto name = asm6502->parser().readSymbol(p);
     Error error = UNKNOWN_OPERAND;
     if (name.iequals_P(PSTR("on"))) {
-        error = (*set)(true) ? OK : OPERAND_NOT_ALLOWED;
+        error = (asm6502->*setter)(true);
     } else if (name.iequals_P(PSTR("off"))) {
-        error = (*set)(false) ? OK : OPERAND_NOT_ALLOWED;
+        error = (asm6502->*setter)(false);
     }
     if (error == OK)
         scan = p;
-    return assembler.setError(scan, error);
+    return asm6502->setError(scan, error);
 }
 
-static bool setLongAccumulator(bool val) {
-    return TableMos6502::TABLE.setLongAccumulator(val);
-}
-
-static bool setLongIndex(bool val) {
-    return TableMos6502::TABLE.setLongIndex(val);
-}
-
-Error AsmMos6502::PseudoMos6502::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
+Error AsmMos6502::PseudoMos6502::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
     if (strcasecmp_P(insn.name(), PSTR("longa")) == 0)
-        return parseTableOnOff(scan, assembler, setLongAccumulator);
+        return parseTableOnOff(scan, assembler, &AsmMos6502::setLongAccumulator);
     if (strcasecmp_P(insn.name(), PSTR("longi")) == 0)
-        return parseTableOnOff(scan, assembler, setLongIndex);
+        return parseTableOnOff(scan, assembler, &AsmMos6502::setLongIndex);
     return UNKNOWN_DIRECTIVE;
 }
 

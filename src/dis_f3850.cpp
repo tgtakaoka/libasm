@@ -28,19 +28,24 @@ static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
 static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
 
 DisF3850::DisF3850()
-    : Disassembler(_formatter, TableF3850::TABLE, '$', &_opt_useScratchpad), _formatter() {
+    : Disassembler(_formatter, TableF3850::TABLE, '$', &_opt_useScratchpad),
+      _formatter(),
+      _opt_useScratchpad(this, &DisF3850::setUseScratchpadName, OPT_BOOL_USE_SCRATCHPAD,
+              OPT_DESC_USE_SCRATCHPAD) {
     reset();
 }
 
 void DisF3850::reset() {
     Disassembler::reset();
-    _useScratchpad = false;
+    setUseScratchpadName(false);
 }
 
-DisF3850::OptUseScratchpad::OptUseScratchpad(bool &var)
-    : BoolOption(OPT_BOOL_USE_SCRATCHPAD, OPT_DESC_USE_SCRATCHPAD, var) {}
+Error DisF3850::setUseScratchpadName(bool enable) {
+    _useScratchpad = enable;
+    return OK;
+}
 
-Error DisF3850::decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out) {
+Error DisF3850::decodeRelative(DisMemory& memory, InsnF3850& insn, StrBuffer& out) {
     const auto delta = static_cast<int8_t>(insn.readByte(memory));
     const auto base = insn.address() + 1;
     const auto target = branchTarget(base, delta);
@@ -48,7 +53,7 @@ Error DisF3850::decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &ou
     return OK;
 }
 
-Error DisF3850::decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode) {
+Error DisF3850::decodeOperand(DisMemory& memory, InsnF3850& insn, StrBuffer& out, AddrMode mode) {
     const auto opCode = insn.opCode();
     switch (mode) {
     case M_REG:
@@ -94,7 +99,7 @@ Error DisF3850::decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out
     return setError(insn);
 }
 
-Error DisF3850::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) {
     InsnF3850 insn(_insn);
     auto opCode = insn.readByte(memory);
     insn.setOpCode(opCode);

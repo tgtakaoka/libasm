@@ -47,8 +47,6 @@ public:
     const /*PROGMEM*/ char *cpu_P() const { return _table.cpu_P(); }
     bool setCpu(const char *cpu) { return _table.setCpu(cpu); }
 
-    void setUpperHex(bool enable);
-    void setUppercase(bool enable);
     Error setOption(const char *name, const char *text) {
         if (_commonOptions.setOption(name, text) == OK)
             return getError();
@@ -57,6 +55,12 @@ public:
     const Options &commonOptions() const { return _commonOptions; }
     const Options &options() const { return _options; }
 
+    Error setUpperHex(bool enable);
+    Error setUppercase(bool enable);
+    Error setRelativeTarget(bool enable);
+    Error setCStyle(bool enable);
+    Error setCurSym(char curSym);
+
 private:
     ValueFormatter &_formatter;
 
@@ -64,23 +68,14 @@ protected:
     entry::Table &_table;
     const Options _commonOptions;
     const Options _options;
-
-    struct DisassemblerOption {
-    protected:
-        DisassemblerOption(Disassembler *dis) : _dis(dis) {}
-        Disassembler *_dis;
-    };
-
-    const CharOption _opt_curSym;
-    const struct OptCStyle : public BoolOptionBase, DisassemblerOption {
-        OptCStyle(Disassembler *dis, const OptionBase &next);
-        Error set(bool value) const override;
-    } _opt_cstyle;
-    const BoolOption _opt_relative;
+    const BoolOption<Disassembler> _opt_relative;
+    const BoolOption<Disassembler> _opt_cstyle;
+    const CharOption<Disassembler> _opt_curSym;
+    const char _defaultCurSym;
 
     char _curSym;
-    bool _uppercase = false;
-    bool _relativeTarget = false;
+    bool _uppercase;
+    bool _relativeTarget;
     SymbolTable *_symtab = nullptr;
 
     Disassembler(ValueFormatter &formatter, entry::Table &table, char curSym,

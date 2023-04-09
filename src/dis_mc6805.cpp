@@ -28,7 +28,9 @@ static const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
 static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
 DisMc6805::DisMc6805()
-    : Disassembler(_formatter, TableMc6805::TABLE, '*', &_opt_pc_bits), _formatter() {
+    : Disassembler(_formatter, TableMc6805::TABLE, '*', &_opt_pc_bits),
+      _formatter(),
+      _opt_pc_bits(this, &DisMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();
 }
 
@@ -38,18 +40,15 @@ AddressWidth DisMc6805::addressWidth() const {
 
 void DisMc6805::reset() {
     Disassembler::reset();
-    _pc_bits = 0;
+    setPcBits(0);
 }
 
-DisMc6805::OptPcBits::OptPcBits(uint8_t &var)
-    : IntOptionBase(OPT_INT_PCBITS, OPT_DESC_PCBITS), _var(var) {}
-
-Error DisMc6805::OptPcBits::check(int32_t value) const {
-    return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
-}
-
-void DisMc6805::OptPcBits::set(int32_t value) const {
-    _var = value;
+Error DisMc6805::setPcBits(int32_t value) {
+    if (value >= 0 && value <= 16) {
+        _pc_bits = value;
+        return OK;
+    }
+    return OVERFLOW_RANGE;
 }
 
 Error DisMc6805::decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out) {

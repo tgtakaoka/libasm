@@ -42,19 +42,18 @@ struct AsmMc68000::Operand : public OperandBase {
 AsmMc68000::AsmMc68000()
     : Assembler(_parser, TableMc68000::TABLE, _pseudos, &_opt_alias),
       _parser(_number, _comment, _symbol, _letter, _location),
+      _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS),
       _pseudos() {
     reset();
 }
 
-void AsmMc68000::setAlias(bool enable) {
-    TableMc68000::TABLE.setAlias(enable);
+void AsmMc68000::reset() {
+    Assembler::reset();
+    setAlias(true);
 }
 
-AsmMc68000::OptAlias::OptAlias(AsmMc68000 &assembler)
-    : BoolOptionBase(OPT_BOOL_ALIAS, OPT_DESC_ALIAS), _assembler(assembler) {}
-
-Error AsmMc68000::OptAlias::set(bool value) const {
-    _assembler.setAlias(value);
+Error AsmMc68000::setAlias(bool enable) {
+    TableMc68000::TABLE.setAlias(enable);
     return OK;
 }
 

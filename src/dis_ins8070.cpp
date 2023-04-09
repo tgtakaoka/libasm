@@ -24,24 +24,29 @@ namespace ins8070 {
 
 using namespace reg;
 
-static const char OPT_BOOL_IMM_PREFIX[] PROGMEM = "imm-prefix";
-static const char OPT_DESC_IMM_PREFIX[] PROGMEM = "immediate prefix # (default =)";
+static const char OPT_BOOL_USE_SHARP[] PROGMEM = "use-sharp";
+static const char OPT_DESC_USE_SHARP[] PROGMEM = "use # (default =) for immediate";
 
 DisIns8070::DisIns8070()
-    : Disassembler(_formatter, TableIns8070::TABLE, '$', &_opt_immPrefix), _formatter() {
+    : Disassembler(_formatter, TableIns8070::TABLE, '$', &_opt_useSharp),
+      _formatter(),
+      _opt_useSharp(
+              this, &DisIns8070::setUseSharpImmediate, OPT_BOOL_USE_SHARP, OPT_DESC_USE_SHARP) {
     reset();
 }
 
 void DisIns8070::reset() {
     Disassembler::reset();
-    _immediatePrefix = false;
+    setUseSharpImmediate(false);
 }
 
-DisIns8070::OptImmediatePrefix::OptImmediatePrefix(bool &var)
-    : BoolOption(OPT_BOOL_IMM_PREFIX, OPT_DESC_IMM_PREFIX, var) {}
+Error DisIns8070::setUseSharpImmediate(bool enable) {
+    _useSharp = enable;
+    return OK;
+}
 
 Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
-    out.letter(_immediatePrefix ? '#' : '=');
+    out.letter(_useSharp ? '#' : '=');
     if (insn.oprSize() == SZ_WORD) {
         outHex(out, insn.readUint16(memory), 16);
     } else {

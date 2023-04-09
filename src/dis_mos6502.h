@@ -32,20 +32,15 @@ public:
     AddressWidth addressWidth() const override;
     void reset() override;
 
+    Error setLongAccumulator(bool enable);
+    Error setLongIndex(bool enable);
+    Error setUseIndirectLong(bool enable);
+
 private:
     MotorolaValueFormatter _formatter;
-    const struct OptIndirectLong : public BoolOptionBase {
-        OptIndirectLong();
-        Error set(bool value) const override;
-    } _opt_indirectLong{};
-    const struct OptLongI : public BoolOptionBase {
-        OptLongI(const OptionBase &next);
-        Error set(bool value) const override;
-    } _opt_longi{_opt_indirectLong};
-    const struct OptLongA : public BoolOptionBase {
-        OptLongA(const OptionBase &next);
-        Error set(bool value) const override;
-    } _opt_longa{_opt_longi};
+    const BoolOption<DisMos6502> _opt_longa;
+    const BoolOption<DisMos6502> _opt_longi;
+    const BoolOption<DisMos6502> _opt_indirectLong;
 
     Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);

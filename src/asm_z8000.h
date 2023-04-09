@@ -31,7 +31,9 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
-    void reset() override { _autoShortDirect = false; }
+    void reset() override;
+
+    Error setShortDirect(bool enable);
 
     bool hasSetInstruction() const override { return true; }
 
@@ -42,12 +44,10 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::UNDER};
     const ZilogLetterParser _letter;
     const DollarLocationParser _location;
-    PseudoBase _pseudos;
+    const BoolOption<AsmZ8000> _opt_shortDitrect;
 
+    PseudoBase _pseudos;
     bool _autoShortDirect;
-    const struct OptAutoShortDirect : public BoolOption {
-        OptAutoShortDirect(bool &var);
-    } _opt_shortDitrect{_autoShortDirect};
 
     int8_t parseIntrNames(StrScanner &scan) const;
     int8_t parseFlagNames(StrScanner &scan) const;

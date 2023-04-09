@@ -35,7 +35,7 @@ class Assembler;
 struct OperandBase : public ErrorAt {};
 
 struct PseudoBase {
-    virtual Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
+    virtual Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
         return UNKNOWN_DIRECTIVE;
     }
 };

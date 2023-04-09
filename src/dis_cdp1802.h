@@ -31,12 +31,13 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setUseRegsterName(bool enable);
+
 private:
     IntelValueFormatter _formatter;
+    const BoolOption<DisCdp1802> _opt_useReg;
+
     bool _useReg;
-    const struct OptUseRegister : public BoolOption {
-        OptUseRegister(bool &var);
-    } _opt_useReg{_useReg};
 
     Error decodeOperand(DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

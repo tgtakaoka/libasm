@@ -44,20 +44,19 @@ struct AsmZ8::Operand : public OperandBase {
 AsmZ8::AsmZ8()
     : Assembler(_parser, TableZ8::TABLE, _pseudos, &_opt_setrp),
       _parser(_number, _comment, _symbol, _letter, _location),
+      _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
+      _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
+      _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1),
       _pseudos() {
     reset();
 }
 
-AsmZ8::OptSetrp1::OptSetrp1(AsmZ8::PseudoZ8 &pseudos)
-    : IntOptionBase(OPT_INT_SETRP1, OPT_DESC_SETRP1), _pseudos(pseudos) {}
+void AsmZ8::reset() {
+    Assembler::reset();
+    setRegPointer(-1);
+}
 
-AsmZ8::OptSetrp0::OptSetrp0(AsmZ8::PseudoZ8 &pseudos, const OptionBase &next)
-    : IntOptionBase(OPT_INT_SETRP0, OPT_DESC_SETRP0, next), _pseudos(pseudos) {}
-
-AsmZ8::OptSetrp::OptSetrp(AsmZ8::PseudoZ8 &pseudos, const OptionBase &next)
-    : IntOptionBase(OPT_INT_SETRP, OPT_DESC_SETRP, next), _pseudos(pseudos) {}
-
-Error AsmZ8::PseudoZ8::setRegPointer(int32_t rp) {
+Error AsmZ8::setRegPointer(int32_t rp) {
     if (rp >= 0 && (rp & ~0xFF))
         return ILLEGAL_OPERAND;
     const auto error0 = setRegPointer0(rp);
@@ -65,21 +64,21 @@ Error AsmZ8::PseudoZ8::setRegPointer(int32_t rp) {
     return error0 ? error0 : error1;
 }
 
-Error AsmZ8::PseudoZ8::setRegPointer0(int32_t rp0) {
+Error AsmZ8::setRegPointer0(int32_t rp0) {
     if (rp0 >= 0 && (rp0 & ~0xF8))
         return ILLEGAL_OPERAND;
     _regPointer0 = rp0;
     return OK;
 }
 
-Error AsmZ8::PseudoZ8::setRegPointer1(int32_t rp1) {
+Error AsmZ8::setRegPointer1(int32_t rp1) {
     if (rp1 >= 0 && (rp1 & ~0xF8))
         return ILLEGAL_OPERAND;
     _regPointer1 = rp1;
     return OK;
 }
 
-bool AsmZ8::PseudoZ8::isWorkReg(uint8_t regAddr) const {
+bool AsmZ8::isWorkReg(uint8_t regAddr) const {
     const auto regPage = (regAddr & 0xF8);
     if (_regPointer0 >= 0 && regPage == _regPointer0)
         return true;
@@ -339,7 +338,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
             const auto val16 = parseExpr16(p, op, ')');
             if (op.hasError())
                 return getError();
-            if (!_pseudos.isWorkReg(val16))
+            if (!isWorkReg(val16))
                 return op.setError(UNKNOWN_OPERAND);
             op.reg = decodeRegNum(val16 & 0xF);
         }
@@ -361,7 +360,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     if (indir) {
         if (op.val16 >= 0x100)
             op.setErrorIf(OVERFLOW_RANGE);
-        if (!forceRegAddr && _pseudos.isWorkReg(op.val16)) {
+        if (!forceRegAddr && isWorkReg(op.val16)) {
             op.mode = (op.val16 & 1) == 0 ? M_IWW : M_IW;
             op.reg = decodeRegNum(op.val16 & 0xF);
             return OK;
@@ -379,7 +378,7 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
         op.mode = M_DA;
         return OK;
     }
-    if (_pseudos.isWorkReg(op.val16)) {
+    if (isWorkReg(op.val16)) {
         op.mode = (op.val16 & 1) == 0 ? M_WW : M_W;
         op.reg = decodeRegNum(op.val16 & 0xF);
         return OK;
@@ -389,28 +388,29 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmZ8::PseudoZ8::setRp(
-        StrScanner &scan, Assembler &assembler, Error (AsmZ8::PseudoZ8::*set)(int32_t)) {
+        StrScanner &scan, AsmZ8 *asmZ8, IntOption<AsmZ8>::Setter setter) const {
     auto p = scan.skipSpaces();
-    const int32_t rp = assembler.parseExpr32(p, assembler);
-    if (assembler.isOK()) {
-        const auto error = (this->*set)(rp);
+    const int32_t rp = asmZ8->parseExpr32(p, *asmZ8);
+    if (asmZ8->isOK()) {
+        const auto error = (asmZ8->*setter)(rp);
         if (error)
-            return assembler.setError(scan, error);
+            return asmZ8->setError(scan, error);
         scan = p;
         return OK;
     }
-    assembler.setError(scan, OPERAND_NOT_ALLOWED);
+    asmZ8->setError(scan, OPERAND_NOT_ALLOWED);
     return OK;
 }
 
-Error AsmZ8::PseudoZ8::processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) {
+Error AsmZ8::PseudoZ8::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
+    auto asmZ8 = reinterpret_cast<AsmZ8 *>(assembler);
     if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
-        return setRp(scan, assembler, &AsmZ8::PseudoZ8::setRegPointer);
+        return setRp(scan, asmZ8, &AsmZ8::setRegPointer);
     if (TableZ8::TABLE.isSuper8()) {
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0)
-            return setRp(scan, assembler, &AsmZ8::PseudoZ8::setRegPointer0);
+            return setRp(scan, asmZ8, &AsmZ8::setRegPointer0);
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
-            return setRp(scan, assembler, &AsmZ8::PseudoZ8::setRegPointer1);
+            return setRp(scan, asmZ8, &AsmZ8::setRegPointer1);
     }
     return UNKNOWN_DIRECTIVE;
 }

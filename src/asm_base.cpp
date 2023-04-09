@@ -35,7 +35,7 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (symbol.size() == 0)
         return setError(scan, UNKNOWN_INSTRUCTION);
     insn.clearNameBuffer().text(symbol);
-    auto error = _pseudos.processPseudo(scan, insn, *this);
+    auto error = _pseudos.processPseudo(scan, insn, this);
     if (error != UNKNOWN_DIRECTIVE)
         return setError(error);
 

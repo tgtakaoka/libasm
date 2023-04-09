@@ -28,17 +28,22 @@ static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
 
 DisCdp1802::DisCdp1802()
-    : Disassembler(_formatter, TableCdp1802::TABLE, '$', &_opt_useReg), _formatter() {
+    : Disassembler(_formatter, TableCdp1802::TABLE, '$', &_opt_useReg),
+      _formatter(),
+      _opt_useReg(
+              this, &DisCdp1802::setUseRegsterName, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER) {
     reset();
 }
 
 void DisCdp1802::reset() {
     Disassembler::reset();
-    _useReg = false;
+    setUseRegsterName(false);
 }
 
-DisCdp1802::OptUseRegister::OptUseRegister(bool &var)
-    : BoolOption(OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, var) {}
+Error DisCdp1802::setUseRegsterName(bool enable) {
+    _useReg = enable;
+    return OK;
+}
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;

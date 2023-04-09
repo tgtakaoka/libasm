@@ -32,6 +32,9 @@ public:
     AddressWidth addressWidth() const override;
     void reset() override;
 
+    Error setLongAccumulator(bool enable);
+    Error setLongIndex(bool enable);
+
 private:
     ValueParser _parser;
     const MotorolaNumberParser _number;
@@ -39,21 +42,16 @@ private:
     const DefaultSymbolParser _symbol;
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
+    const BoolOption<AsmMos6502> _opt_longa;
+    const BoolOption<AsmMos6502> _opt_longi;
+
     struct PseudoMos6502 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
 
     private:
-        Error parseTableOnOff(StrScanner &scan, Assembler &assembler, bool (*set)(bool val));
+        Error parseTableOnOff(
+                StrScanner &scan, Assembler *assembler, BoolOption<AsmMos6502>::Setter setter);
     } _pseudos;
-
-    const struct OptLongI : public BoolOptionBase {
-        OptLongI();
-        Error set(bool value) const override;
-    } _opt_longi{};
-    const struct OptLongA : public BoolOptionBase {
-        OptLongA(const OptionBase &next);
-        Error set(bool value) const override;
-    } _opt_longa{_opt_longi};
 
     struct Operand;
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;

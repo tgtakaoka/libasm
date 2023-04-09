@@ -54,90 +54,90 @@ protected:
 private:
     const /*PROGMEM*/ char *_name_P;
     const /*PROGMEM*/ char *_desc_P;
-    OptionSpec _spec;
+    const OptionSpec _spec;
     const OptionBase *_next;
 };
 
-struct BoolOptionBase : public OptionBase {
-    BoolOptionBase(
-            const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, const OptionBase &next)
-        : OptionBase(name_P, desc_P, OPT_BOOL, next) {}
-    BoolOptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
-        : OptionBase(name_P, desc_P, OPT_BOOL) {}
+template <typename APP>
+struct BoolOption : public OptionBase {
+    using Setter = Error (APP::*)(bool);
+
+    BoolOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+        : OptionBase(name_P, desc_P, OPT_BOOL, next), _app(app), _setter(setter) {}
+    BoolOption(
+            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
+        : OptionBase(name_P, desc_P, OPT_BOOL), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
         bool value = false;
         const auto error = parseBoolOption(scan, value);
-        return error ? error : set(value);
+        return error ? error : (_app->*_setter)(value);
     }
-    virtual Error set(bool value) const = 0;
-};
-
-struct BoolOption : public OptionBase {
-    BoolOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, bool &var,
-            const OptionBase &next)
-        : OptionBase(name_P, desc_P, OPT_BOOL, next), _var(var) {}
-    BoolOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, bool &var)
-        : OptionBase(name_P, desc_P, OPT_BOOL), _var(var) {}
-
-    Error set(StrScanner &scan) const override { return parseBoolOption(scan, _var); }
 
 private:
-    bool &_var;
+    APP *const _app;
+    const Setter _setter;
 };
 
-struct IntOptionBase : public OptionBase {
-    IntOptionBase(
-            const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, const OptionBase &next)
-        : OptionBase(name_P, desc_P, OPT_INT, next) {}
-    IntOptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
-        : OptionBase(name_P, desc_P, OPT_INT) {}
+template <typename APP>
+struct IntOption : public OptionBase {
+    using Setter = Error (APP::*)(int32_t);
+
+    IntOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+        : OptionBase(name_P, desc_P, OPT_INT, next), _app(app), _setter(setter) {}
+    IntOption(
+            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
+        : OptionBase(name_P, desc_P, OPT_INT), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
         int32_t value = 0;
-        auto error = parseIntOption(scan, value);
-        if (error == OK && (error = check(value)) == OK)
-            set(value);
-        return error;
+        const auto error = parseIntOption(scan, value);
+        return error ? error : (_app->*_setter)(value);
     }
-    virtual Error check(int32_t value) const {
-        (void)value;
-        return OK;
-    }
-    virtual void set(int32_t value) const = 0;
-};
-
-template <typename T>
-struct IntOption : public IntOptionBase {
-    IntOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, T &var,
-            const OptionBase &next)
-        : IntOptionBase(name_P, desc_P, next), _var(var) {}
-    IntOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, T &var)
-        : IntOptionBase(name_P, desc_P), _var(var) {}
-
-    void set(int32_t value) const override { _var = value; }
 
 private:
-    T &_var;
+    APP *const _app;
+    const Setter _setter;
 };
 
+template <typename APP>
 struct CharOption : public OptionBase {
-    CharOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, char &var,
-            const OptionBase &next)
-        : OptionBase(name_P, desc_P, OPT_CHAR, next), _var(var) {}
-    CharOption(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, char &var)
-        : OptionBase(name_P, desc_P, OPT_CHAR), _var(var) {}
+    using Setter = Error (APP::*)(char);
+
+    CharOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+        : OptionBase(name_P, desc_P, OPT_CHAR, next), _app(app), _setter(setter) {}
+    CharOption(
+            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
+        : OptionBase(name_P, desc_P, OPT_CHAR), _app(app), _setter(setter) {}
 
     Error set(StrScanner &scan) const override {
-        if (scan.size() == 1) {
-            _var = *scan;
-            return OK;
-        }
-        return ILLEGAL_CONSTANT;
+        return scan.size() == 1 ? (_app->*_setter)(*scan) : ILLEGAL_CONSTANT;
     }
 
 private:
-    char &_var;
+    APP *const _app;
+    const Setter _setter;
+};
+
+template <typename APP>
+struct TextOption : public OptionBase {
+    using Setter = Error (APP::*)(StrScanner &scan);
+
+    TextOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+        : OptionBase(name_P, desc_P, OPT_TEXT, next), _app(app), _setter(setter) {}
+    TextOption(
+            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
+        : OptionBase(name_P, desc_P, OPT_TEXT), _app(app), _setter(setter) {}
+
+    Error set(StrScanner &scan) const override { return (_app->*_setter)(scan); }
+
+private:
+    APP *const _app;
+    const Setter _setter;
 };
 
 class Options {

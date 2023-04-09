@@ -184,6 +184,11 @@ extern const char TEXT_LDAL[] PROGMEM;
 extern const char TEXT_ORAL[] PROGMEM;
 extern const char TEXT_SBCL[] PROGMEM;
 extern const char TEXT_STAL[] PROGMEM;
+
+extern const char OPT_BOOL_LONGA[] PROGMEM;
+extern const char OPT_DESC_LONGA[] PROGMEM;
+extern const char OPT_BOOL_LONGI[] PROGMEM;
+extern const char OPT_DESC_LONGI[] PROGMEM;
 // clang-format on
 
 }  // namespace mos6502

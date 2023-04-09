@@ -27,7 +27,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis8070.setOption("relative", "enable");
-    dis8070.setOption("imm-prefix", "enable");
+    dis8070.setOption("use-sharp", "enable");
     dis8070.setOption("c-style", "enable");
 
     TestGenerator generator(driver, dis8070, 0x0100);

@@ -32,16 +32,16 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setStringInsn(bool enable);
+    Error setSegmentInsn(bool enable);
+
 private:
     IntelValueFormatter _formatter;
+    const BoolOption<DisI8086> _opt_segmentInsn;
+    const BoolOption<DisI8086> _opt_stringInsn;
+
     bool _segOverrideInsn;
     bool _repeatHasStringInst;
-    const struct OptStringInsn : public BoolOption {
-        OptStringInsn(bool &var);
-    } _opt_stringInsn{_repeatHasStringInst};
-    const struct OptSegmentInsn : public BoolOption {
-        OptSegmentInsn(bool &var, const OptionBase &next);
-    } _opt_segmentInsn{_segOverrideInsn, _opt_stringInsn};
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
     Error outMemReg(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mode,

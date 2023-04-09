@@ -30,21 +30,29 @@ static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
 
 DisI8086::DisI8086()
-    : Disassembler(_formatter, TableI8086::TABLE, '$', &_opt_segmentInsn), _formatter() {
+    : Disassembler(_formatter, TableI8086::TABLE, '$', &_opt_segmentInsn),
+      _formatter(),
+      _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
+              OPT_DESC_SEGMENT_INSN, _opt_stringInsn),
+      _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
     reset();
 }
 
 void DisI8086::reset() {
     Disassembler::reset();
-    _segOverrideInsn = true;
-    _repeatHasStringInst = false;
+    setSegmentInsn(true);
+    setStringInsn(false);
 }
 
-DisI8086::OptStringInsn::OptStringInsn(bool &var)
-    : BoolOption(OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN, var) {}
+Error DisI8086::setSegmentInsn(bool enable) {
+    _segOverrideInsn = enable;
+    return OK;
+}
 
-DisI8086::OptSegmentInsn::OptSegmentInsn(bool &var, const OptionBase &next)
-    : BoolOption(OPT_BOOL_SEGMENT_INSN, OPT_DESC_SEGMENT_INSN, var, next) {}
+Error DisI8086::setStringInsn(bool enable) {
+    _repeatHasStringInst = enable;
+    return OK;
+}
 
 StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix) {
     if (name == REG_UNDEF)

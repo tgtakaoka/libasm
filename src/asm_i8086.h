@@ -30,7 +30,9 @@ public:
     AsmI8086();
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _optimizeSegment = false; }
+    void reset() override;
+
+    Error setOptimizeSegment(bool enable);
 
 private:
     ValueParser _parser;
@@ -39,12 +41,10 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION_UNDER};
     const DefaultLetterParser _letter;
     const DollarLocationParser _location;
-    PseudoBase _pseudos;
+    const BoolOption<AsmI8086> _opt_optimizeSegment;
 
+    PseudoBase _pseudos;
     bool _optimizeSegment;
-    const struct OptOptimizeSeg : public BoolOption {
-        OptOptimizeSeg(bool &var);
-    } _opt_optimizeSegment{_optimizeSegment};
 
     struct Operand;
     Error parseStringInst(StrScanner &scan, Operand &op) const;

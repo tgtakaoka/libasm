@@ -756,11 +756,10 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn, StrBuffer &out) const {
 }
 
 void TableMos6502::reset() {
-    if (_cpu == nullptr)
-        setCpu(MOS6502);
-    useIndirectLong(true);
+    setCpu(MOS6502);
     setLongAccumulator(false);
     setLongIndex(false);
+    useIndirectLong(false);
 }
 
 bool TableMos6502::setCpu(CpuType cpuType) {
@@ -806,30 +805,30 @@ bool TableMos6502::setCpu(const char *cpu) {
 }
 
 bool TableMos6502::useIndirectLong(bool enable) {
-    if (enable && _cpu->cpuType() != W65C816) {
-        _useIndirectLong = false;
-        return false;
+    if (_cpu->cpuType() == W65C816) {
+        _useIndirectLong = enable;
+        return true;
     }
-    _useIndirectLong = enable;
-    return true;
+    _useIndirectLong = false;
+    return !enable;
 }
 
 bool TableMos6502::setLongAccumulator(bool on) {
-    if (on && _cpu->cpuType() != W65C816) {
-        _longAccumulator = false;
-        return false;
+    if (_cpu->cpuType() == W65C816) {
+        _longAccumulator = on;
+        return true;
     }
-    _longAccumulator = on;
-    return true;
+    _longAccumulator = false;
+    return !on;
 }
 
 bool TableMos6502::setLongIndex(bool on) {
-    if (on && _cpu->cpuType() != W65C816) {
-        _longIndex = false;
-        return false;
+    if (_cpu->cpuType() == W65C816) {
+        _longIndex = on;
+        return true;
     }
-    _longIndex = on;
-    return true;
+    _longIndex = false;
+    return !on;
 }
 
 bool TableMos6502::longImmediate(AddrMode mode) const {

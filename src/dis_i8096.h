@@ -31,12 +31,13 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setUseAbsolute(bool enable);
+
 private:
     IntelValueFormatter _formatter;
+    const BoolOption<DisI8096> _opt_absolute;
+
     bool _useAbsolute;
-    const struct OptUseAbsolute : public BoolOption {
-        OptUseAbsolute(bool &var);
-    } _opt_absolute{_useAbsolute};
 
     struct Operand : public ErrorReporter {
         AddrMode mode;

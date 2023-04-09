@@ -92,9 +92,8 @@ usage: asm [-o <output>] [-l <list>] <input>
   -h          : use lowe case letter for hexadecimal
   -n          : output line number to list file
   -v          : print progress verbosely
-  -X<name>=<vale>
+  --<name>=<vale>
               : extra options (<type> [, <CPU>])
-  comment-char    : line comment starting letter  (char)
   pc-bits         : program counter width in bit, default 13  (int, 6805)
   setdp           : set direct page register  (int, 6809)
   longa           : enable 16-bit accumulator  (bool, 6502)
@@ -136,10 +135,9 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   -h          : use lower case letter for hexadecimal
   -u          : use upper case letter for output
   -v          : print progress verbosely
-  -X<name>=<vale>
+  --<name>=<vale>
               : extra options (<type> [, <CPU>])
   relative        : program counter relative branch target  (bool)
-  uppercase       : uppercase instruction and register name  (bool)
   c-style         : C language style number constant  (bool)
   origin-char     : letter for origin symbol  (char)
   pc-bits         : program counter width in bit, default 13  (int, 6805)
@@ -147,12 +145,12 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   longi           : enable 16-bit index registers  (bool, 6502)
   indirect-long   : [] for indirect long operand  (bool, 6502)
   work-register   : prefer work register name than alias address  (bool, Z8)
-  imm-prefix      : immediate prefix # (default =)  (bool, 8070)
+  use-sharp       : use # (default =) for immediate  (bool, 8070)
   use-register    : use register name Rn  (bool, 1802)
   use-scratchpad  : use name for scratchpad  (bool, 3850)
   segment-insn    : segment override as instruction  (bool, 8086)
   string-insn     : string instruction as repeat operand  (bool, 8086)
-  absolute        : zero register indexing as absolute addressing  (bool, 8096)
+  use-absolute    : zero register indexing as absolute addressing  (bool, 8096)
   short-direct    : short direct addressing as ||  (bool, Z8001)
   ioaddr-prefix   : I/O address prefix # (default none)  (bool, Z8001)
   pcrel-paren     : addr(pc) as program counter relative  (bool, 32032)

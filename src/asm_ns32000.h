@@ -32,6 +32,9 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setFpu(StrScanner &scan);
+    Error setPmmu(StrScanner &scan);
+
 private:
     ValueParser _parser;
     const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
@@ -39,23 +42,12 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOT_UNDER};
     const CStyleLetterParser _letter;
     const NationalLocationParser _location{'*'};
+    const TextOption<AsmNs32000> _opt_fpu;
+    const TextOption<AsmNs32000> _opt_pmmu;
+
     struct PseudoNs32000 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
-
-        Error setFpu(const StrScanner &scan) const;
-        Error setPmmu(const StrScanner &scan) const;
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
     } _pseudos;
-
-    const struct OptPmmu : public OptionBase {
-        OptPmmu(PseudoNs32000 &pseudos);
-        Error set(StrScanner &scan) const override;
-        PseudoNs32000 &_pseudos;
-    } _opt_pmmu{_pseudos};
-    const struct OptFpu : public OptionBase {
-        OptFpu(PseudoNs32000 &pseudos, const OptionBase &next);
-        Error set(StrScanner &scan) const override;
-        PseudoNs32000 &_pseudos;
-    } _opt_fpu{_pseudos, _opt_pmmu};
 
     struct Operand;
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;

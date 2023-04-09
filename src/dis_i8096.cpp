@@ -24,21 +24,25 @@ namespace i8096 {
 
 using namespace reg;
 
-static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "absolute";
+static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "use-absolute";
 static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
 
 DisI8096::DisI8096()
-    : Disassembler(_formatter, TableI8096::TABLE, '$', &_opt_absolute), _formatter() {
+    : Disassembler(_formatter, TableI8096::TABLE, '$', &_opt_absolute),
+      _formatter(),
+      _opt_absolute(this, &DisI8096::setUseAbsolute, OPT_BOOL_ABSOLUTE, OPT_DESC_ABSOLUTE) {
     reset();
 }
 
 void DisI8096::reset() {
     Disassembler::reset();
-    _useAbsolute = false;
+    setUseAbsolute(false);
 }
 
-DisI8096::OptUseAbsolute::OptUseAbsolute(bool &var)
-    : BoolOption(OPT_BOOL_ABSOLUTE, OPT_DESC_ABSOLUTE, var) {}
+Error DisI8096::setUseAbsolute(bool enable) {
+    _useAbsolute = enable;
+    return OK;
+}
 
 StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) const {
     if (regno == 0 && indir && _useAbsolute)  // omit [0]

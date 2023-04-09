@@ -37,18 +37,26 @@ struct AsmMc6805::Operand : public OperandBase {
 AsmMc6805::AsmMc6805()
     : Assembler(_parser, TableMc6805::TABLE, _pseudos, &_opt_pc_bits),
       _parser(_number, _comment, _symbol, _letter, _location, _operators),
+      _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS),
       _pseudos() {
     reset();
 }
 
-AsmMc6805::OptPcBits::OptPcBits(uint8_t &var) : IntOption(OPT_INT_PCBITS, OPT_DESC_PCBITS, var) {}
-
-Error AsmMc6805::OptPcBits::check(int32_t value) const {
-    return value >= 0 && value <= 16 ? OK : OVERFLOW_RANGE;
+void AsmMc6805::reset() {
+    Assembler::reset();
+    setPcBits(0);
 }
 
 AddressWidth AsmMc6805::addressWidth() const {
     return AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
+}
+
+Error AsmMc6805::setPcBits(int32_t value) {
+    if (value >= 0 && value <= 16) {
+        _pc_bits = value;
+        return OK;
+    }
+    return OVERFLOW_RANGE;
 }
 
 Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {

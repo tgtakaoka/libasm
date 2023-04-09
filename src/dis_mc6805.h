@@ -32,15 +32,13 @@ public:
     AddressWidth addressWidth() const override;
     void reset() override;
 
+    Error setPcBits(int32_t val);
+
 private:
     MotorolaValueFormatter _formatter;
+    const IntOption<DisMc6805> _opt_pc_bits;
+
     uint8_t _pc_bits;
-    const struct OptPcBits : public IntOptionBase {
-        OptPcBits(uint8_t &var);
-        Error check(int32_t value) const override;
-        void set(int32_t value) const override;
-        uint8_t &_var;
-    } _opt_pc_bits{_pc_bits};
 
     Error decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
     Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);

@@ -215,7 +215,7 @@ int AsmCommander::usage() {
             "  -h          : use lowe case letter for hexadecimal\n"
             "  -n          : output line number to list file\n"
             "  -v          : print progress verbosely\n"
-            "  -X<name>=<vale>\n"
+            "  --<name>=<vale>\n"
             "              : extra options (<type> [, <CPU>])\n",
             _prog_name, list.c_str());
     auto common = true;
@@ -307,15 +307,10 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
             case 'v':
                 _verbose = true;
                 break;
-            case 'X':
-                if (*++opt) {
-                    if (parseOptionValue(opt) == 0)
-                        break;
-                } else if (++i < argc) {
-                    if (parseOptionValue(argv[i]) == 0)
-                        break;
-                }
-                fprintf(stderr, "-X requires option=value\n");
+            case '-':
+                if (parseOptionValue(++opt) == 0)
+                    break;
+                fprintf(stderr, "long option requires option=value\n");
                 return 1;
             default:
                 fprintf(stderr, "unknown option: %s\n", opt);

@@ -53,12 +53,21 @@ struct AsmI8086::Operand : public OperandBase {
 AsmI8086::AsmI8086()
     : Assembler(_parser, TableI8086::TABLE, _pseudos, &_opt_optimizeSegment),
       _parser(_number, _comment, _symbol, _letter, _location),
+      _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
+              OPT_DESC_OPTIMIZE_SEGMENT),
       _pseudos() {
     reset();
 }
 
-AsmI8086::OptOptimizeSeg::OptOptimizeSeg(bool &var)
-    : BoolOption(OPT_BOOL_OPTIMIZE_SEGMENT, OPT_DESC_OPTIMIZE_SEGMENT, var) {}
+void AsmI8086::reset() {
+    Assembler::reset();
+    setOptimizeSegment(false);
+}
+
+Error AsmI8086::setOptimizeSegment(bool enable) {
+    _optimizeSegment = enable;
+    return OK;
+}
 
 Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);

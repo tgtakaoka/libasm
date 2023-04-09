@@ -31,24 +31,22 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setPcRelativeParen(bool enable);
+    Error setExternalParen(bool enable);
+    Error setStringOptionBracket(bool enable);
+    Error setFloatPrefix(bool enable);
+
 private:
     NationalValueFormatter _formatter;
+    const BoolOption<DisNs32000> _opt_pcrelParen;
+    const BoolOption<DisNs32000> _opt_externalParen;
+    const BoolOption<DisNs32000> _opt_stroptBracket;
+    const BoolOption<DisNs32000> _opt_floatPrefix;
+
     bool _stringOptionBracket;
     bool _pcRelativeParen;
     bool _externalParen;
     bool _floatPrefix;
-    const struct OptFloatPrefix : public BoolOption {
-        OptFloatPrefix(bool &var);
-    } _opt_floatPrefix{_floatPrefix};
-    const struct OptStroptBracket : public BoolOption {
-        OptStroptBracket(bool &var, const OptionBase &next);
-    } _opt_stroptBracket{_stringOptionBracket, _opt_floatPrefix};
-    const struct OptExteranlParen : public BoolOption {
-        OptExteranlParen(bool &var, const OptionBase &next);
-    } _opt_externalParen{_externalParen, _opt_stroptBracket};
-    const struct OptPcrelParen : public BoolOption {
-        OptPcrelParen(bool &var, const OptionBase &next);
-    } _opt_pcrelParen{_pcRelativeParen, _opt_externalParen};
 
     struct Displacement {
         int32_t val32;

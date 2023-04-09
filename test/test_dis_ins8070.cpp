@@ -142,7 +142,7 @@ static void test_immediate() {
     TEST(LD,  "T, =sym1234",  0xA4, 0x34, 0x12);
     TEST(ADD, "EA, =sym1234", 0xB4, 0x34, 0x12);
 
-    disassembler.setOption("imm-prefix", "true");
+    disassembler.setOption("use-sharp", "true");
     TEST(PLI, "P2, #sym1234", 0x22, 0x34, 0x12);
 }
 

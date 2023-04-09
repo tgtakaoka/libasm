@@ -38,15 +38,28 @@ struct AsmCdp1802::Operand : public OperandBase {
 AsmCdp1802::AsmCdp1802()
     : Assembler(_parser, TableCdp1802::TABLE, _pseudos, &_opt_useReg),
       _parser(_number, _comment, _symbol, _letter, _location),
+      _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
+              _opt_smartBranch),
+      _opt_smartBranch(
+              this, &AsmCdp1802::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH),
       _pseudos() {
     reset();
 }
 
-AsmCdp1802::OptSmartBranch::OptSmartBranch(bool &var)
-    : BoolOption(OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH, var) {}
+void AsmCdp1802::reset() {
+    setUseReg(false);
+    setSmartBranch(false);
+}
 
-AsmCdp1802::OptUseRegister::OptUseRegister(bool &var, const OptionBase &next)
-    : BoolOption(OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER, var, next) {}
+Error AsmCdp1802::setUseReg(bool enable) {
+    _useReg = enable;
+    return OK;
+}
+
+Error AsmCdp1802::setSmartBranch(bool enable) {
+    _smartBranch = enable;
+    return OK;
+}
 
 static Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;

@@ -31,12 +31,13 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setUseSharpImmediate(bool enable);
+
 private:
     NationalValueFormatter _formatter;
-    bool _immediatePrefix;
-    const struct OptImmediatePrefix : public BoolOption {
-        OptImmediatePrefix(bool &var);
-    } _opt_immPrefix{_immediatePrefix};
+    const BoolOption<DisIns8070> _opt_useSharp;
+
+    bool _useSharp;
 
     Error decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);
     Error decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out);

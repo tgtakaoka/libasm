@@ -181,6 +181,12 @@ const char TEXT_LDAL[] PROGMEM = "LDAL";
 const char TEXT_ORAL[] PROGMEM = "ORAL";
 const char TEXT_SBCL[] PROGMEM = "SBCL";
 const char TEXT_STAL[] PROGMEM = "STAL";
+
+const char OPT_BOOL_LONGA[] PROGMEM = "longa";
+const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
+const char OPT_BOOL_LONGI[] PROGMEM = "longi";
+const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
+
 // clang-format on
 
 }  // namespace mos6502

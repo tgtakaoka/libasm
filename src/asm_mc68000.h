@@ -29,9 +29,9 @@ public:
     AsmMc68000();
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { setAlias(true); }
+    void reset() override;
 
-    void setAlias(bool enable);
+    Error setAlias(bool enable);
 
 private:
     ValueParser _parser;
@@ -40,13 +40,9 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
     const MotorolaLetterParser _letter{/*closingQuote*/ true};
     const AsteriskLocationParser _location;
-    PseudoBase _pseudos;
+    const BoolOption<AsmMc68000> _opt_alias;
 
-    const struct OptAlias : public BoolOptionBase {
-        OptAlias(AsmMc68000 &assembler);
-        Error set(bool value) const override;
-        AsmMc68000 &_assembler;
-    } _opt_alias{*this};
+    PseudoBase _pseudos;
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

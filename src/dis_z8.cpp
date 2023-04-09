@@ -27,17 +27,23 @@ using namespace reg;
 static const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
 static const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
 
-DisZ8::DisZ8() : Disassembler(_formatter, TableZ8::TABLE, '$', &_opt_workRegister), _formatter() {
+DisZ8::DisZ8()
+    : Disassembler(_formatter, TableZ8::TABLE, '$', &_opt_workRegister),
+      _formatter(),
+      _opt_workRegister(
+              this, &DisZ8::setUseWorkRegister, OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER) {
     reset();
 }
 
 void DisZ8::reset() {
     Disassembler::reset();
-    _useWorkRegister = true;
+    setUseWorkRegister(true);
 }
 
-DisZ8::OptWorkRegister::OptWorkRegister(bool &var)
-    : BoolOption(OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER, var) {}
+Error DisZ8::setUseWorkRegister(bool enable) {
+    _useWorkRegister = enable;
+    return OK;
+}
 
 StrBuffer &DisZ8::outConditionCode(StrBuffer &out, Config::opcode_t opCode) {
     const auto cc = decodeCcNum(opCode >> 4);

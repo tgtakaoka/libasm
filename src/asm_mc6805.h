@@ -30,7 +30,9 @@ public:
 
     const ConfigBase &config() const override { return *this; }
     AddressWidth addressWidth() const override;
-    void reset() override { _pc_bits = 0; }
+    void reset() override;
+
+    Error setPcBits(int32_t val);
 
 private:
     ValueParser _parser;
@@ -40,13 +42,10 @@ private:
     const MotorolaLetterParser _letter;
     const AsteriskLocationParser _location;
     const Mc68xxOperatorParser _operators;
-    struct PseudoBase _pseudos;
+    const IntOption<AsmMc6805> _opt_pc_bits;
 
+    PseudoBase _pseudos;
     uint8_t _pc_bits;
-    const struct OptPcBits : public IntOption<uint8_t> {
-        OptPcBits(uint8_t &var);
-        Error check(int32_t value) const override;
-    } _opt_pc_bits{_pc_bits};
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

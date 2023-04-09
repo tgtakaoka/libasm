@@ -29,7 +29,10 @@ public:
     AsmCdp1802();
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _useReg = _smartBranch = false; }
+    void reset() override;
+
+    Error setUseReg(bool enable);
+    Error setSmartBranch(bool enable);
 
 private:
     ValueParser _parser;
@@ -39,20 +42,15 @@ private:
             return (scan[0] == '.' && scan[1] == '.') || endOfLine(scan);
         }
     } _comment;
-
     const DefaultSymbolParser _symbol;
     const IbmLetterParser _letter{/*prefix*/ 'T'};
     const AsteriskLocationParser _location;
-    PseudoBase _pseudos;
+    const BoolOption<AsmCdp1802> _opt_useReg;
+    const BoolOption<AsmCdp1802> _opt_smartBranch;
 
+    PseudoBase _pseudos;
     bool _useReg;
     bool _smartBranch;
-    const struct OptSmartBranch : public BoolOption {
-        OptSmartBranch(bool &var);
-    } _opt_smartBranch{_smartBranch};
-    const struct OptUseRegister : public BoolOption {
-        OptUseRegister(bool &var, const OptionBase &next);
-    } _opt_useReg{_useReg, _opt_smartBranch};
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

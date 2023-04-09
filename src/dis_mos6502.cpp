@@ -18,52 +18,50 @@
 
 #include "reg_mos6502.h"
 #include "table_mos6502.h"
+#include "text_mos6502.h"
 
 namespace libasm {
 namespace mos6502 {
 
 using namespace reg;
+using namespace text::mos6502;
 
 static const char OPT_BOOL_INDIRECT_LONG[] PROGMEM = "indirect-long";
 static const char OPT_DESC_INDIRECT_LONG[] PROGMEM = "[] for indirect long operand";
-static const char OPT_BOOL_LONGA[] PROGMEM = "longa";
-static const char OPT_DESC_LONGA[] PROGMEM = "enable 16-bit accumulator";
-static const char OPT_BOOL_LONGI[] PROGMEM = "longi";
-static const char OPT_DESC_LONGI[] PROGMEM = "enable 16-bit index registers";
 
 DisMos6502::DisMos6502()
-    : Disassembler(_formatter, TableMos6502::TABLE, '*', &_opt_longa), _formatter() {
+    : Disassembler(_formatter, TableMos6502::TABLE, '*', &_opt_longa),
+      _formatter(),
+      _opt_longa(this, &DisMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
+      _opt_longi(
+              this, &DisMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI, _opt_indirectLong),
+      _opt_indirectLong(this, &DisMos6502::setUseIndirectLong, OPT_BOOL_INDIRECT_LONG,
+              OPT_DESC_INDIRECT_LONG) {
     reset();
 }
 
 void DisMos6502::reset() {
     Disassembler::reset();
     TableMos6502::TABLE.reset();
+    setLongAccumulator(false);
+    setLongIndex(false);
+    setUseIndirectLong(false);
 }
 
 AddressWidth DisMos6502::addressWidth() const {
     return TableMos6502::TABLE.addressWidth();
 }
 
-DisMos6502::OptIndirectLong::OptIndirectLong()
-    : BoolOptionBase(OPT_BOOL_INDIRECT_LONG, OPT_DESC_INDIRECT_LONG) {}
-
-Error DisMos6502::OptIndirectLong::set(bool value) const {
-    return TableMos6502::TABLE.useIndirectLong(value) ? OK : OPERAND_NOT_ALLOWED;
+Error DisMos6502::setLongAccumulator(bool enable) {
+    return TableMos6502::TABLE.setLongAccumulator(enable) ? OK : OPERAND_NOT_ALLOWED;
 }
 
-DisMos6502::OptLongI::OptLongI(const OptionBase &next)
-    : BoolOptionBase(OPT_BOOL_LONGI, OPT_DESC_LONGI, next) {}
-
-Error DisMos6502::OptLongI::set(bool value) const {
-    return TableMos6502::TABLE.setLongIndex(value) ? OK : OPERAND_NOT_ALLOWED;
+Error DisMos6502::setLongIndex(bool enable) {
+    return TableMos6502::TABLE.setLongIndex(enable) ? OK : OPERAND_NOT_ALLOWED;
 }
 
-DisMos6502::OptLongA::OptLongA(const OptionBase &next)
-    : BoolOptionBase(OPT_BOOL_LONGA, OPT_DESC_LONGA, next) {}
-
-Error DisMos6502::OptLongA::set(bool value) const {
-    return TableMos6502::TABLE.setLongAccumulator(value) ? OK : OPERAND_NOT_ALLOWED;
+Error DisMos6502::setUseIndirectLong(bool enable) {
+    return TableMos6502::TABLE.useIndirectLong(enable) ? OK : OPERAND_NOT_ALLOWED;
 }
 
 Error DisMos6502::decodeImmediate(

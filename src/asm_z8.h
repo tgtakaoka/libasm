@@ -29,7 +29,11 @@ public:
     AsmZ8();
 
     const ConfigBase &config() const override { return *this; }
-    void reset() override { _pseudos.setRegPointer(-1); }
+    void reset() override;
+
+    Error setRegPointer(int32_t rp);
+    Error setRegPointer0(int32_t rp);
+    Error setRegPointer1(int32_t rp);
 
 private:
     ValueParser _parser;
@@ -38,36 +42,21 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION_UNDER};
     const ZilogLetterParser _letter;
     const DollarLocationParser _location;
-    struct PseudoZ8 : PseudoBase {
-        Error processPseudo(StrScanner &scan, Insn &insn, Assembler &assembler) override;
+    const IntOption<AsmZ8> _opt_setrp;
+    const IntOption<AsmZ8> _opt_setrp0;
+    const IntOption<AsmZ8> _opt_setrp1;
 
-        bool isWorkReg(uint8_t regAddr) const;
-        Error setRegPointer(int32_t rp);
-        Error setRegPointer0(int32_t rp);
-        Error setRegPointer1(int32_t rp);
+    struct PseudoZ8 : PseudoBase {
+        Error processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) override;
 
     private:
-        Error setRp(StrScanner &scan, Assembler &assembler, Error (AsmZ8::PseudoZ8::*)(int32_t));
-
-        int16_t _regPointer0;
-        int16_t _regPointer1;
+        Error setRp(StrScanner &scan, AsmZ8 *asmZ8, IntOption<AsmZ8>::Setter setter) const;
     } _pseudos;
 
-    struct OptSetrp1 : public IntOptionBase {
-        OptSetrp1(PseudoZ8 &pseudos);
-        void set(int32_t value) const override { _pseudos.setRegPointer1(value); }
-        PseudoZ8 &_pseudos;
-    } _opt_setrp1{_pseudos};
-    struct OptSetrp0 : public IntOptionBase {
-        OptSetrp0(PseudoZ8 &pseudos, const OptionBase &next);
-        void set(int32_t value) const override { _pseudos.setRegPointer0(value); }
-        PseudoZ8 &_pseudos;
-    } _opt_setrp0{_pseudos, _opt_setrp1};
-    struct OptSetrp : public IntOptionBase {
-        OptSetrp(PseudoZ8 &pseudos, const OptionBase &next);
-        void set(int32_t value) const override { _pseudos.setRegPointer(value); }
-        PseudoZ8 &_pseudos;
-    } _opt_setrp{_pseudos, _opt_setrp0};
+    int16_t _regPointer0;
+    int16_t _regPointer1;
+
+    bool isWorkReg(uint8_t regAddr) const;
 
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

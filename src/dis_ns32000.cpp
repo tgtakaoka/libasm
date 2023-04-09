@@ -24,36 +24,56 @@ namespace ns32000 {
 
 using namespace reg;
 
-static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
-static const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
 static const char OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
 static const char OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
 static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
 static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
+static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
+static const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
 static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
 static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
 
 DisNs32000::DisNs32000()
-    : Disassembler(_formatter, TableNs32000::TABLE, '*', &_opt_pcrelParen), _formatter() {
+    : Disassembler(_formatter, TableNs32000::TABLE, '*', &_opt_pcrelParen),
+      _formatter(),
+      _opt_pcrelParen(this, &DisNs32000::setPcRelativeParen, OPT_BOOL_PCREL_PAREN,
+              OPT_DESC_PCREL_PAREN, _opt_externalParen),
+      _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,
+              OPT_DESC_EXTERNAL_PAREN, _opt_stroptBracket),
+      _opt_stroptBracket(this, &DisNs32000::setStringOptionBracket, OPT_BOOL_STROPT_BRACKET,
+              OPT_DESC_STROPT_BRACKET, _opt_floatPrefix),
+      _opt_floatPrefix(
+              this, &DisNs32000::setFloatPrefix, OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX) {
     reset();
 }
 
 void DisNs32000::reset() {
     Disassembler::reset();
-    _stringOptionBracket = _pcRelativeParen = _externalParen = _floatPrefix = false;
+    setPcRelativeParen(false);
+    setExternalParen(false);
+    setStringOptionBracket(false);
+    setFloatPrefix(false);
 }
 
-DisNs32000::OptFloatPrefix::OptFloatPrefix(bool &var)
-    : BoolOption(OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX, var) {}
+Error DisNs32000::setPcRelativeParen(bool enable) {
+    _pcRelativeParen = enable;
+    return OK;
+}
 
-DisNs32000::OptStroptBracket::OptStroptBracket(bool &var, const OptionBase &next)
-    : BoolOption(OPT_BOOL_STROPT_BRACKET, OPT_DESC_STROPT_BRACKET, var, next) {}
+Error DisNs32000::setExternalParen(bool enable) {
+    _externalParen = enable;
+    return OK;
+}
 
-DisNs32000::OptExteranlParen::OptExteranlParen(bool &var, const OptionBase &next)
-    : BoolOption(OPT_BOOL_EXTERNAL_PAREN, OPT_DESC_EXTERNAL_PAREN, var, next) {}
+Error DisNs32000::setStringOptionBracket(bool enable) {
+    _stringOptionBracket = enable;
+    return OK;
+}
 
-DisNs32000::OptPcrelParen::OptPcrelParen(bool &var, const OptionBase &next)
-    : BoolOption(OPT_BOOL_PCREL_PAREN, OPT_DESC_PCREL_PAREN, var, next) {}
+Error DisNs32000::setFloatPrefix(bool enable) {
+    _floatPrefix = enable;
+    return OK;
+}
 
 static bool isGenMode(AddrMode mode) {
     return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA || mode == M_FENR ||

@@ -31,12 +31,13 @@ public:
     const ConfigBase &config() const override { return *this; }
     void reset() override;
 
+    Error setUseScratchpadName(bool enable);
+
 private:
     FairchildValueFormatter _formatter;
+    const BoolOption<DisF3850> _opt_useScratchpad;
+
     bool _useScratchpad;
-    const struct OptUseScratchpad : public BoolOption {
-        OptUseScratchpad(bool &var);
-    } _opt_useScratchpad{_useScratchpad};
 
     Error decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out);
     Error decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode);

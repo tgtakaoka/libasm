@@ -989,10 +989,6 @@ Error TableNs32000::searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &m
 }
 
 TableNs32000::TableNs32000() : _cpu(&NS32032_CPU) {
-    reset();
-}
-
-void TableNs32000::reset() {
     setFpu(FPU_NONE);
     setMmu(MMU_NONE);
 }
@@ -1023,22 +1019,6 @@ const /* PROGMEM */ char *TableNs32000::cpu_P() const {
 
 bool TableNs32000::setCpu(const char *cpu) {
     return strncasecmp_P(cpu, TEXT_CPU_NS32032, 2) == 0 || strcasecmp_P(cpu, TEXT_CPU_32032) == 0;
-}
-
-bool TableNs32000::setFpu(const StrScanner &fpu) {
-    if (fpu.iequals_P(TEXT_FPU_NS32081))
-        return setFpu(FPU_NS32081);
-    if (fpu.iequals_P(TEXT_none))
-        return setFpu(FPU_NONE);
-    return false;
-}
-
-bool TableNs32000::setMmu(const StrScanner &mmu) {
-    if (mmu.iequals_P(TEXT_MMU_NS32082))
-        return setMmu(MMU_NS32082);
-    if (mmu.iequals_P(TEXT_none))
-        return setMmu(MMU_NONE);
-    return false;
 }
 
 TableNs32000 TableNs32000::TABLE;
