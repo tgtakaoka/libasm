@@ -674,7 +674,7 @@ void AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, con
 
 Error AsmNs32000::PseudoNs32000::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
     auto p = scan.skipSpaces();
-    auto asm32k = reinterpret_cast<AsmNs32000 *>(assembler);
+    auto asm32k = static_cast<AsmNs32000 *>(assembler);
     StrScanner opr = asm32k->parser().readSymbol(p);
     auto error = UNKNOWN_DIRECTIVE;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {

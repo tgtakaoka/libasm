@@ -79,7 +79,7 @@ AsmDirective *AsmDriver::restrictCpu(const char *cpu) {
 void AsmDriver::setFunctionStore(FunctionStore *functionStore) {
     _functionStore = functionStore;
     _savedFunctionParser = current()->assembler().parser().setFunctionParser(
-            reinterpret_cast<const FunctionParser *>(functionStore));
+            static_cast<const FunctionParser *>(functionStore));
     _functionStore->setParent(_savedFunctionParser);
 }
 

@@ -138,6 +138,7 @@ public:
         return getError() ? getError() : setError(at, error);
     }
 
+    void setAt(const char *at) { _at = at; }
     void setAt(const StrScanner &at) { _at = at.str(); }
     const char *errorAt() const { return _at; }
 

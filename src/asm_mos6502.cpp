@@ -241,7 +241,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 Error AsmMos6502::PseudoMos6502::parseTableOnOff(
         StrScanner &scan, Assembler *assembler, BoolOption<AsmMos6502>::Setter setter) {
     auto p = scan.skipSpaces();
-    auto asm6502 = reinterpret_cast<AsmMos6502 *>(assembler);
+    auto asm6502 = static_cast<AsmMos6502 *>(assembler);
     const auto name = asm6502->parser().readSymbol(p);
     Error error = UNKNOWN_OPERAND;
     if (name.iequals_P(PSTR("on"))) {

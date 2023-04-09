@@ -516,7 +516,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
 Error AsmMc6809::PseudoMc6809::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
         const auto val = assembler->parseExpr32(scan, *assembler);
-        auto asm6809 = reinterpret_cast<AsmMc6809 *>(assembler);
+        auto asm6809 = static_cast<AsmMc6809 *>(assembler);
         return assembler->isOK() ? asm6809->setDirectPage(val) : assembler->getError();
     }
     return UNKNOWN_DIRECTIVE;

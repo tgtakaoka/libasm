@@ -403,7 +403,7 @@ Error AsmZ8::PseudoZ8::setRp(
 }
 
 Error AsmZ8::PseudoZ8::processPseudo(StrScanner &scan, Insn &insn, Assembler *assembler) {
-    auto asmZ8 = reinterpret_cast<AsmZ8 *>(assembler);
+    auto asmZ8 = static_cast<AsmZ8 *>(assembler);
     if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
         return setRp(scan, asmZ8, &AsmZ8::setRegPointer);
     if (TableZ8::TABLE.isSuper8()) {

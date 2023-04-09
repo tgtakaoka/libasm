@@ -444,7 +444,7 @@ Error AsmDirective::processPseudo(
 
 MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {
     registerPseudo(".fcb", &MotorolaDirective::defineUint8s);
-    registerPseudo(".fcc", reinterpret_cast<PseudoHandler>(&MotorolaDirective::defineString));
+    registerPseudo(".fcc", static_cast<PseudoHandler>(&MotorolaDirective::defineString));
     registerPseudo(".fdb", &MotorolaDirective::defineUint16s);
     registerPseudo(".rmb", &MotorolaDirective::allocateUint8s);
     registerPseudo(".dfs", &MotorolaDirective::allocateUint8s);
@@ -459,8 +459,7 @@ IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
     registerPseudo(".dw", &IntelDirective::defineUint16s);
     registerPseudo(".dd", &IntelDirective::defineUint32s);
     registerPseudo(".ds", &IntelDirective::allocateUint8s);
-    registerPseudo(
-            ".z80syntax", reinterpret_cast<PseudoHandler>(&IntelDirective::switchIntelZilog));
+    registerPseudo(".z80syntax", static_cast<PseudoHandler>(&IntelDirective::switchIntelZilog));
 }
 
 BinEncoder &IntelDirective::defaultEncoder() {
