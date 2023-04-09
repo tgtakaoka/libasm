@@ -662,10 +662,6 @@ bool TableZ8000::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableZ8000::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableZ8000::setCpu(const char *cpu) {
     if (strcasecmp_P(cpu, TEXT_CPU_Z8001) == 0)
         return setCpu(Z8001);

@@ -255,10 +255,6 @@ Error TableF3850::searchOpCode(InsnF3850 &insn, StrBuffer &out) const {
 
 TableF3850::TableF3850() : _cpu(&F3850_CPU) {}
 
-const /* PROGMEM */ char *TableF3850::listCpu_P() const {
-    return TEXT_CPU_F3850;
-}
-
 bool TableF3850::setCpu(const char *cpu) {
     return strcmp_P(cpu, TEXT_CPU_3850) == 0 || strcasecmp_P(cpu, TEXT_CPU_F3850) == 0;
 }

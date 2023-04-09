@@ -33,7 +33,6 @@ public:
     Error searchName(InsnZ80 &insn) const;
     Error searchOpCode(InsnZ80 &insn, StrBuffer &out) const;
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }

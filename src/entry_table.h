@@ -191,7 +191,6 @@ protected:
  * Base class for instruction table.
  */
 struct Table {
-    virtual /* PROGMEM */ const char *listCpu_P() const = 0;
     virtual /* PROGMEM */ const char *cpu_P() const = 0;
     virtual bool setCpu(const char *cpu) = 0;
 };

@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_tms9900.h"
+
 namespace libasm {
 namespace tms9900 {
 
@@ -28,7 +30,8 @@ enum CpuType : uint8_t {
     TMS99105,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 8, 4> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 8, 4,
+                        text::tms9900::TEXT_CPU_LIST> {};
 
 }  // namespace tms9900
 }  // namespace libasm

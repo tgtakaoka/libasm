@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_tms32010.h"
+
 namespace libasm {
 namespace tms32010 {
 
@@ -27,7 +29,8 @@ enum CpuType : uint8_t {
     TMS32015,
 };
 
-struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_LITTLE, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_LITTLE, 4, 4,
+                        text::tms32010::TEXT_CPU_LIST> {};
 
 }  // namespace tms32010
 }  // namespace libasm

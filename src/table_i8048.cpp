@@ -370,10 +370,6 @@ bool TableI8048::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableI8048::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableI8048::setCpu(const char *cpu) {
     const char *p = cpu;
     if (toupper(*p) == 'I')

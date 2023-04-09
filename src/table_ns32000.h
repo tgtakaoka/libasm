@@ -35,7 +35,6 @@ public:
     Error searchOpCode(InsnNs32000 &insn, StrBuffer &out, DisMemory &memory) const;
     bool isPrefixCode(uint8_t opCode) const;
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 

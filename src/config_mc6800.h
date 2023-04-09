@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_mc6800.h"
+
 namespace libasm {
 namespace mc6800 {
 
@@ -30,7 +32,8 @@ enum CpuType : uint8_t {
     MC68HC11,
 };
 
-struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 5, 5> {};
+struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 5, 5,
+                        text::mc6800::TEXT_CPU_LIST> {};
 
 }  // namespace mc6800
 }  // namespace libasm

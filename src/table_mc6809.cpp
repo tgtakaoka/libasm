@@ -801,10 +801,6 @@ CpuType TableMc6809::cpuType() const {
     return _cpu->cpuType();
 }
 
-const /* PROGMEM */ char *TableMc6809::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 const /* PROGMEM */ char *TableMc6809::cpu_P() const {
     return _cpu->name_P();
 }

@@ -263,10 +263,6 @@ Error TableIns8070::searchOpCode(InsnIns8070 &insn, StrBuffer &out) const {
 
 TableIns8070::TableIns8070() : _cpu(&INS8070_CPU) {}
 
-const /* PROGMEM */ char *TableIns8070::listCpu_P() const {
-    return TEXT_CPU_INS8070;
-}
-
 bool TableIns8070::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_INS8070) == 0 || strcasecmp_P(cpu, TEXT_CPU_8070) == 0;
 }

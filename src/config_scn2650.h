@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_scn2650.h"
+
 namespace libasm {
 namespace scn2650 {
 
@@ -26,7 +28,8 @@ enum CpuType : uint8_t {
     SCN2650,
 };
 
-struct Config : ConfigImpl<ADDRESS_15BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 7> {};
+struct Config : ConfigImpl<ADDRESS_15BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 7,
+                        text::scn2650::TEXT_CPU_SCN2650> {};
 
 }  // namespace scn2650
 }  // namespace libasm

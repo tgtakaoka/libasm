@@ -317,10 +317,6 @@ Error TableI8051::searchOpCode(InsnI8051 &insn, StrBuffer &out) const {
 
 TableI8051::TableI8051() : _cpu(&I8051_CPU) {}
 
-const /* PROGMEM */ char *TableI8051::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableI8051::setCpu(const char *cpu) {
     if (toupper(*cpu) == 'I')
         cpu++;

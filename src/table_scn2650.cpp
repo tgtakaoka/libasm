@@ -274,10 +274,6 @@ Error TableScn2650::searchOpCode(InsnScn2650 &insn, StrBuffer &out) const {
 
 TableScn2650::TableScn2650() : _cpu(&SCN2650_CPU) {}
 
-const /* PROGMEM */ char *TableScn2650::listCpu_P() const {
-    return TEXT_CPU_SCN2650;
-}
-
 bool TableScn2650::setCpu(const char *cpu) {
     return strcmp_P(cpu, TEXT_CPU_2650) == 0 || strcasecmp_P(cpu, TEXT_CPU_SCN2650) == 0;
 }

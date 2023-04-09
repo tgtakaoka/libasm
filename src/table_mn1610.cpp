@@ -399,10 +399,6 @@ bool TableMn1610::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableMn1610::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableMn1610::setCpu(const char *cpu) {
     const auto *t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)

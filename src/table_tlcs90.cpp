@@ -679,10 +679,6 @@ Error TableTlcs90::searchOpCode(InsnTlcs90 &insn, StrBuffer &out) const {
 
 TableTlcs90::TableTlcs90() : _cpu(&TLCS90_CPU) {}
 
-const /* PROGMEM */ char *TableTlcs90::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 const /* PROGMEM */ char *TableTlcs90::cpu_P() const {
     return _cpu->name_P();
 }

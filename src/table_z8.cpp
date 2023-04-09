@@ -600,10 +600,6 @@ bool TableZ8::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableZ8::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableZ8::setCpu(const char *cpu) {
     auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)

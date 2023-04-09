@@ -610,10 +610,6 @@ void TableMc68000::setAlias(bool enable) {
     _cpu = enable ? &MC68000_CPU_WITH_ALIAS : &MC68000_CPU;
 }
 
-const /* PROGMEM */ char *TableMc68000::listCpu_P() const {
-    return TEXT_CPU_MC68000;
-}
-
 bool TableMc68000::setCpu(const char *cpu) {
     auto p = cpu;
     if (strncasecmp_P(cpu, TEXT_CPU_MC68000, 2) == 0)

@@ -321,10 +321,6 @@ Error TableI8096::searchOpCode(InsnI8096 &insn, StrBuffer &out) const {
 
 TableI8096::TableI8096() : _cpu(&CPU_I8096) {}
 
-const /* PROGMEM */ char *TableI8096::listCpu_P() const {
-    return TEXT_CPU_I8096;
-}
-
 const /* PROGMEM */ char *TableI8096::cpu_P() const {
     return _cpu->name_P();
 }

@@ -33,7 +33,6 @@ public:
     Error searchName(InsnTms9900 &insn) const;
     Error searchOpCode(InsnTms9900 &insn, StrBuffer &out) const;
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 

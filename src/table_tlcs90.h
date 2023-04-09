@@ -46,7 +46,6 @@ public:
     Error searchOpCode(InsnTlcs90 &insn, StrBuffer &out) const;
     Error readInsn(DisMemory &memory, InsnTlcs90 &insn, Operand &op) const;
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 

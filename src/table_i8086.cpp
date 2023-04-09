@@ -1112,10 +1112,6 @@ bool TableI8086::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableI8086::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 const /* PROGMEM */ char *TableI8086::cpu_P() const {
     return _cpu->name_P();
 }

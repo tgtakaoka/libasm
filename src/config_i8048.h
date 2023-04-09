@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_i8048.h"
+
 namespace libasm {
 namespace i8048 {
 
@@ -31,7 +33,8 @@ enum CpuType : uint8_t {
     MSM80C39,
 };
 
-struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 2, 5> {};
+struct Config : ConfigImpl<ADDRESS_12BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 2, 5,
+                        text::i8048::TEXT_CPU_LIST> {};
 
 }  // namespace i8048
 }  // namespace libasm

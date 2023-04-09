@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_mos6502.h"
+
 namespace libasm {
 namespace mos6502 {
 
@@ -30,7 +32,8 @@ enum CpuType : uint8_t {
     W65C816,
 };
 
-struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 4, 4,
+                        text::mos6502::TEXT_CPU_LIST> {};
 
 }  // namespace mos6502
 }  // namespace libasm

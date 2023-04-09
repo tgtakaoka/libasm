@@ -520,10 +520,6 @@ bool TableZ80::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableZ80::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableZ80::setCpu(const char *cpu) {
     const auto t = Cpu::search(cpu, ARRAY_RANGE(CPU_TABLE));
     if (t)

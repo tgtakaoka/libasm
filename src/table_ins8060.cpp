@@ -184,10 +184,6 @@ Error TableIns8060::searchOpCode(InsnIns8060 &insn, StrBuffer &out) const {
 
 TableIns8060::TableIns8060() : _cpu(&INS8060_CPU) {}
 
-const /* PROGMEM */ char *TableIns8060::listCpu_P() const {
-    return TEXT_CPU_INS8060;
-}
-
 bool TableIns8060::setCpu(const char *cpu) {
     return strcasecmp_P(cpu, TEXT_CPU_SCMP) == 0 || strcasecmp_P(cpu, TEXT_CPU_INS8060) == 0 ||
            strcasecmp_P(cpu, TEXT_CPU_INS8060 + 3) == 0;

@@ -378,10 +378,6 @@ bool TableCdp1802::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableCdp1802::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableCdp1802::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
         cpu += 3;

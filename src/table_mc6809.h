@@ -51,7 +51,6 @@ struct TableMc6809 : entry::Table {
     Error searchPostByte(const uint8_t post, PostSpec &spec) const;
     int16_t searchPostSpec(PostSpec &spec) const;
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
     CpuType cpuType() const;

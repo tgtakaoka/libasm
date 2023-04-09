@@ -297,10 +297,6 @@ bool TableI8080::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableI8080::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 const /* PROGMEM */ char *TableI8080::cpu_P() const {
     return _cpu->name_P();
 }

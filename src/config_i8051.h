@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_i8051.h"
+
 namespace libasm {
 namespace i8051 {
 
@@ -26,7 +28,8 @@ enum CpuType : uint8_t {
     I8051,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5,
+                        text::i8051::TEXT_CPU_I8051> {};
 
 }  // namespace i8051
 }  // namespace libasm

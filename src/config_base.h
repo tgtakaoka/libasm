@@ -59,6 +59,7 @@ struct ConfigBase {
     virtual Endian endian() const = 0;
     virtual uint8_t codeMax() const = 0;
     virtual uint8_t nameMax() const = 0;
+    virtual /*PROGMEM*/ const char *listCpu_P() const = 0;
 
     Error checkAddr(uint32_t addr, uint8_t width = 0) const;
 
@@ -115,7 +116,7 @@ struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 }  // namespace
 
 template <AddressWidth AddrWE, AddressUnit AddrUE, OpCodeWidth CodeWE, Endian EndianE,
-        uint8_t MaxCode, uint8_t MaxName>
+        uint8_t MaxCode, uint8_t MaxName, const char CPU_LIST[] PROGMEM>
 struct ConfigImpl : public ConfigBase {
     typedef typename __address_type<AddrWE>::uintptr_t uintptr_t;
     typedef typename __address_type<AddrWE>::ptrdiff_t ptrdiff_t;
@@ -130,6 +131,7 @@ struct ConfigImpl : public ConfigBase {
     Endian endian() const override { return EndianE; }
     uint8_t codeMax() const override { return MaxCode; }
     uint8_t nameMax() const override { return MaxName; }
+    const /*PROGMEM*/ char *listCpu_P() const override { return CPU_LIST; }
 };
 
 }  // namespace libasm

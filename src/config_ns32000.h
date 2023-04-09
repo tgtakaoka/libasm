@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_ns32000.h"
+
 namespace libasm {
 namespace ns32000 {
 
@@ -35,7 +37,8 @@ enum MmuType : uint8_t {
     MMU_NS32082,
 };
 
-struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 22, 7> {};
+struct Config : ConfigImpl<ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 22, 7,
+                        text::ns32000::TEXT_CPU_NS32032> {};
 
 }  // namespace ns32000
 }  // namespace libasm

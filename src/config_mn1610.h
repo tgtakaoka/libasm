@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_mn1610.h"
+
 namespace libasm {
 namespace mn1610 {
 
@@ -28,7 +30,8 @@ enum CpuType : uint8_t {
     MN1613A,
 };
 
-struct Config : ConfigImpl<ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4> {};
+struct Config : ConfigImpl<ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, ENDIAN_BIG, 4, 4,
+                        text::mn1610::TEXT_CPU_LIST> {};
 
 }  // namespace mn1610
 }  // namespace libasm

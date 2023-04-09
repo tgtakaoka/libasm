@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_i8096.h"
+
 namespace libasm {
 namespace i8096 {
 
@@ -26,7 +28,8 @@ enum CpuType : uint8_t {
     I8096,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 5,
+                        text::i8096::TEXT_CPU_I8096> {};
 
 }  // namespace i8096
 }  // namespace libasm

@@ -24,8 +24,8 @@ namespace text {
 namespace i8051 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[] PROGMEM;
-extern const char TEXT_CPU_8051[] PROGMEM;
+extern const char TEXT_CPU_I8051[] PROGMEM;
+extern const char TEXT_CPU_8051[]  PROGMEM;
 
 extern const char TEXT_ACALL[] PROGMEM;
 using common::TEXT_ADD;

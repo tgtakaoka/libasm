@@ -34,7 +34,6 @@ public:
     Error searchOpCode(InsnCdp1802 &insn, StrBuffer &out) const;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override { return _cpu->name_P(); }
     bool setCpu(const char *cpu) override;
 

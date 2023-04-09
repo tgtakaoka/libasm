@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_tlcs90.h"
+
 namespace libasm {
 namespace tlcs90 {
 
@@ -26,7 +28,8 @@ enum CpuType : uint8_t {
     TLCS90,
 };
 
-struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 4> {};
+struct Config : ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 6, 4,
+                        text::tlcs90::TEXT_CPU_TLCS90> {};
 
 }  // namespace tlcs90
 }  // namespace libasm

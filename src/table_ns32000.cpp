@@ -1009,10 +1009,6 @@ bool TableNs32000::setMmu(MmuType mmuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableNs32000::listCpu_P() const {
-    return TEXT_CPU_NS32032;
-}
-
 const /* PROGMEM */ char *TableNs32000::cpu_P() const {
     return _cpu->name_P();
 }

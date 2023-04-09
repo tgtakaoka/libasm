@@ -775,10 +775,6 @@ AddressWidth TableMos6502::addressWidth() const {
     return _cpu->cpuType() == W65C816 ? ADDRESS_24BIT : ADDRESS_16BIT;
 }
 
-const /* PROGMEM */ char *TableMos6502::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 CpuType TableMos6502::cpuType() const {
     return _cpu->cpuType();
 }

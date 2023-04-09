@@ -331,10 +331,6 @@ bool TableMc6805::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableMc6805::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableMc6805::setCpu(const char *cpu) {
     auto p = cpu;
     if (strncasecmp_P(p, TEXT_CPU_LIST, 2) == 0)

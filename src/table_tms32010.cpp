@@ -254,10 +254,6 @@ bool TableTms32010::setCpu(CpuType cpuType) {
     return true;
 }
 
-const /* PROGMEM */ char *TableTms32010::listCpu_P() const {
-    return TEXT_CPU_LIST;
-}
-
 bool TableTms32010::setCpu(const char *cpu) {
     if (strncasecmp_P(cpu, TEXT_CPU_LIST, 3) == 0)
         cpu += 3;

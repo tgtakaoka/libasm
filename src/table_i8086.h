@@ -40,7 +40,6 @@ public:
     Config::opcode_t segOverridePrefix(RegName name) const;
     bool isPrefix(uint8_t code) const { return _cpu->isPrefix(code); }
 
-    const /* PROGMEM */ char *listCpu_P() const override;
     const /* PROGMEM */ char *cpu_P() const override;
     bool setCpu(const char *cpu) override;
 

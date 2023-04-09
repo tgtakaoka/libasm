@@ -19,6 +19,8 @@
 
 #include "config_base.h"
 
+#include "text_mc6805.h"
+
 namespace libasm {
 namespace mc6805 {
 
@@ -28,7 +30,8 @@ enum CpuType : uint8_t {
     MC68HC05,
 };
 
-struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5> {};
+struct Config : public ConfigImpl<ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 3, 5,
+                        text::mc6805::TEXT_CPU_LIST> {};
 
 }  // namespace mc6805
 }  // namespace libasm
