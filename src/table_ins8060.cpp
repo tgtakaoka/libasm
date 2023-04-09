@@ -183,7 +183,7 @@ Error TableIns8060::searchOpCode(CpuType cpuType, InsnIns8060 &insn, StrBuffer &
 }
 
 const /*PROGMEM*/ char *TableIns8060::listCpu_P() const {
-    return TEXT_CPU_SCMP;
+    return TEXT_CPU_INS8060;
 }
 
 const /*PROGMEM*/ char *TableIns8060::cpuName_P(CpuType cpuType) const {

@@ -255,7 +255,7 @@ Error TableF3850::searchOpCode(CpuType cpuType, InsnF3850 &insn, StrBuffer &out)
 }
 
 const /*PROGMEM*/ char *TableF3850::listCpu_P() const {
-    return F3850_CPU.name_P();
+    return TEXT_CPU_F3850;
 }
 
 const /*PROGMEM*/ char *TableF3850::cpuName_P(CpuType cpuType) const {

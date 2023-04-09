@@ -64,6 +64,7 @@ struct Disassembler : ErrorReporter {
 private:
     const ValueFormatter _formatter;
     static const ValueFormatter CSTYLE_FORMATTER;
+
 protected:
     const Options _commonOptions;
     const Options _options;

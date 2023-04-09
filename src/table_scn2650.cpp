@@ -273,7 +273,7 @@ Error TableScn2650::searchOpCode(CpuType cpuType, InsnScn2650 &insn, StrBuffer &
 }
 
 const /*PROGMEM*/ char *TableScn2650::listCpu_P() const {
-    return SCN2650_CPU.name_P();
+    return TEXT_CPU_SCN2650;
 }
 
 const /*PROGMEM*/ char *TableScn2650::cpuName_P(CpuType cpuType) const {
