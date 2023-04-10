@@ -15,9 +15,6 @@
 help:
 	@echo '"make test"     run tests of libasm::driver'
 
-TESTS = test_helpers test_bin_memory test_intel_hex test_moto_srec \
-        test_asm_formatter test_dis_formatter
-
 .PHONY:: help test clean clean-objs
 
 clean: clean-objs
@@ -26,6 +23,10 @@ clean-objs:
 	-rm -f *.o *.d *~
 
 include ../../src/Makefile.arch
+
+TESTS = test_helpers test_bin_memory test_intel_hex test_moto_srec \
+        $(foreach a,$(ARCHS),$(if $(wildcard ../../src/asm_$(a).cpp),test_formatter_$(a),)) \
+        test_asm_formatter
 
 vpath %.cpp ../../driver
 vpath %.cpp ../../src
@@ -36,14 +37,16 @@ CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 
 OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o text_common.o
 OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
-OBJS_formatter = list_formatter.o value_formatter.o
-OBJS_asm = asm_base.o config_base.o reg_base.o asm_formatter.o value_parser.o parsers.o \
-           operators.o option_base.o asm_driver.o asm_directive.o function_store.o str_buffer.o \
-           bin_memory.o bin_encoder.o bin_decoder.o moto_srec.o intel_hex.o \
-           $(foreach a,$(ARCHS),$(if $(wildcard ../../src/asm_$(a).cpp),asm_$(a).o $(OBJS_$(a))))
-OBJS_dis = dis_base.o config_base.o reg_base.o dis_formatter.o option_base.o bin_memory.o \
-           str_buffer.o \
-           $(foreach a,$(ARCHS),$(if $(wildcard ../../src/dis_$(a).cpp),dis_$(a).o $(OBJS_$(a))))
+OBJS_formatter = list_formatter.o value_formatter.o config_base.o reg_base.o option_base.o \
+           str_buffer.o bin_memory.o \
+           dis_base.o dis_formatter.o
+OBJS_asm = asm_base.o asm_formatter.o value_parser.o parsers.o operators.o \
+           asm_driver.o asm_directive.o function_store.o \
+           bin_encoder.o bin_decoder.o moto_srec.o intel_hex.o
+ARCHS_test_asm_formatter =i8080 ins8060 mc6809 mos6502 z80
+OBJS_test_asm_formatter = $(OBJS_formatter) $(OBJS_common) $(OBJS_asm) \
+        $(foreach a,$(ARCHS_test_asm_formatter),asm_$(a).o $(OBJS_$(a)))
+
 BINS = $(TESTS)
 
 -include $(OBJS:%=%.d)
@@ -55,6 +58,14 @@ test:: $(1)
 endef
 $(eval $(foreach t,$(TESTS),$(call test-rule,$(t))))
 
+define test-formatter # arch
+test_formatter_$(1): test_formatter_$(1).o $(OBJS_asm) $(OBJS_dis) $(OBJS_common) \
+                     $(OBJS_formatter) asm_$(1).o dis_$(1).o $(OBJS_$(1))
+	$$(CXX) -o $$@ $$^
+
+endef
+$(eval $(foreach a,$(ARCHS),$(call test-formatter,$(a))))
+
 test_helpers: test_helpers.o bin_memory.o $(OBJS_common)
 	$(CXX) -o $@ $^
 test_bin_memory: test_bin_memory.o bin_memory.o $(OBJS_common)
@@ -63,9 +74,7 @@ test_intel_hex: test_intel_hex.o $(OBJS_encdec) $(OBJS_common)
 	$(CXX) -o $@ $^
 test_moto_srec: test_moto_srec.o $(OBJS_encdec) $(OBJS_common)
 	$(CXX) -o $@ $^
-test_asm_formatter: test_asm_formatter.o $(OBJS_formatter) $(OBJS_common) $(OBJS_asm)
-	$(CXX) -o $@ $^
-test_dis_formatter: test_dis_formatter.o $(OBJS_formatter) $(OBJS_common) $(OBJS_dis)
+test_asm_formatter: test_asm_formatter.o $(OBJS_test_asm_formatter)
 	$(CXX) -o $@ $^
 
 # Local Variables:

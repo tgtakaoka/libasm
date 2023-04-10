@@ -8,3 +8,27 @@ build test_driver_helper.o: cxx test_driver_helper.cpp
 build test_helpers.o:       cxx test_helpers.cpp
 build test_intel_hex.o:     cxx test_intel_hex.cpp
 build test_moto_srec.o:     cxx test_moto_srec.cpp
+
+build test_formatter_mc6809.o:   cxx test_formatter_mc6809.cpp
+build test_formatter_mc6800.o:   cxx test_formatter_mc6800.cpp
+build test_formatter_mc6805.o:   cxx test_formatter_mc6805.cpp
+build test_formatter_mos6502.o:  cxx test_formatter_mos6502.cpp
+build test_formatter_i8048.o:    cxx test_formatter_i8048.cpp
+build test_formatter_i8051.o:    cxx test_formatter_i8051.cpp
+build test_formatter_i8080.o:    cxx test_formatter_i8080.cpp
+build test_formatter_i8096.o:    cxx test_formatter_i8096.cpp
+build test_formatter_z80.o:      cxx test_formatter_z80.cpp
+build test_formatter_z8.o:       cxx test_formatter_z8.cpp
+build test_formatter_tlcs90.o:   cxx test_formatter_tlcs90.cpp
+build test_formatter_ins8060.o:  cxx test_formatter_ins8060.cpp
+build test_formatter_ins8070.o:  cxx test_formatter_ins8070.cpp
+build test_formatter_cdp1802.o:  cxx test_formatter_cdp1802.cpp
+build test_formatter_scn2650.o:  cxx test_formatter_scn2650.cpp
+build test_formatter_f3850.o:    cxx test_formatter_f3850.cpp
+build test_formatter_i8086.o:    cxx test_formatter_i8086.cpp
+build test_formatter_tms9900.o:  cxx test_formatter_tms9900.cpp
+build test_formatter_tms32010.o: cxx test_formatter_tms32010.cpp
+build test_formatter_mc68000.o:  cxx test_formatter_mc68000.cpp
+build test_formatter_z8000.o:    cxx test_formatter_z8000.cpp
+build test_formatter_ns32000.o:  cxx test_formatter_ns32000.cpp
+build test_formatter_mn1610.o:   cxx test_formatter_mn1610.cpp
