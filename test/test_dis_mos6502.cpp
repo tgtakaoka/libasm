@@ -47,6 +47,7 @@ static bool w65c816() {
 static void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "no");
+    disassembler.setOption("indirect-long", "on");
 }
 
 static void tear_down() {

@@ -25,7 +25,7 @@ namespace libasm {
 namespace mos6502 {
 
 struct TableMos6502 : entry::Table {
-    TableMos6502() { reset(); }
+    TableMos6502();
     void reset();
 
     static TableMos6502 TABLE;

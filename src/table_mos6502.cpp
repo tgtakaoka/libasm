@@ -755,8 +755,14 @@ Error TableMos6502::searchOpCode(InsnMos6502 &insn, StrBuffer &out) const {
     return insn.getError();
 }
 
+TableMos6502::TableMos6502() {
+    _cpu = nullptr;
+    reset();
+}
+
 void TableMos6502::reset() {
-    setCpu(MOS6502);
+    if (_cpu == nullptr)
+        setCpu(MOS6502);
     setLongAccumulator(false);
     setLongIndex(false);
     useIndirectLong(false);
@@ -801,28 +807,25 @@ bool TableMos6502::setCpu(const char *cpu) {
 }
 
 bool TableMos6502::useIndirectLong(bool enable) {
-    if (_cpu->cpuType() == W65C816) {
-        _useIndirectLong = enable;
+    _useIndirectLong = enable;
+    if (_cpu->cpuType() == W65C816)
         return true;
-    }
     _useIndirectLong = false;
     return !enable;
 }
 
 bool TableMos6502::setLongAccumulator(bool on) {
-    if (_cpu->cpuType() == W65C816) {
-        _longAccumulator = on;
+    _longAccumulator = on;
+    if (_cpu->cpuType() == W65C816)
         return true;
-    }
     _longAccumulator = false;
     return !on;
 }
 
 bool TableMos6502::setLongIndex(bool on) {
-    if (_cpu->cpuType() == W65C816) {
-        _longIndex = on;
+    _longIndex = on;
+    if (_cpu->cpuType() == W65C816)
         return true;
-    }
     _longIndex = false;
     return !on;
 }
