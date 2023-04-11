@@ -164,22 +164,25 @@ int DisCommander::usage() {
             "  -r          : use program counter relative notation\n"
             "  -h          : use lower case letter for hexadecimal\n"
             "  -u          : use upper case letter for output\n"
-            "  -v          : print progress verbosely\n"
-            "  --<name>=<vale>\n"
-            "              : extra options (<type> [, <CPU>])\n",
+            "  -v          : print progress verbosely\n",
             _prog_name, cpuOption, list.c_str());
-    auto common = true;
-    for (const auto *dis : _driver) {
-        if (common) {
-            common = false;
-            for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
-                fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
-                        Options::nameof(opt->spec()));
-            }
+    bool longOptions = false;
+    for (const auto *dis : _driver)
+        longOptions |= (dis->commonOptions().head() || dis->options().head());
+    if (longOptions) {
+        fprintf(stderr,
+                "  --<name>=<vale>\n"
+                "              : extra options (<type> [, <CPU>])\n");
+        const auto dis = *_driver.begin();
+        for (const auto *opt = dis->commonOptions().head(); opt; opt = opt->next()) {
+            fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
+                    Options::nameof(opt->spec()));
         }
-        for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
-            fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
-                    Options::nameof(opt->spec()), dis->cpu_P());
+        for (const auto *dis : _driver) {
+            for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
+                fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
+                        Options::nameof(opt->spec()), dis->cpu_P());
+            }
         }
     }
     return 2;
@@ -326,7 +329,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
             }
         }
         if (!valid) {
-            fprintf(stderr, "unknown option -X%s=%s\n", option.first.c_str(),
+            fprintf(stderr, "unknown option --%s=%s\n", option.first.c_str(),
                     option.second.c_str());
             return 1;
         }

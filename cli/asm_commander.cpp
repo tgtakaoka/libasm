@@ -214,23 +214,26 @@ int AsmCommander::usage() {
             "(max 32)\n"
             "  -h          : use lowe case letter for hexadecimal\n"
             "  -n          : output line number to list file\n"
-            "  -v          : print progress verbosely\n"
-            "  --<name>=<vale>\n"
-            "              : extra options (<type> [, <CPU>])\n",
+            "  -v          : print progress verbosely\n",
             _prog_name, list.c_str());
-    auto common = true;
-    for (const auto *dir : _driver) {
-        if (common) {
-            common = false;
-            for (const auto *opt = dir->assembler().commonOptions().head(); opt;
-                    opt = opt->next()) {
-                fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
-                        Options::nameof(opt->spec()));
-            }
+    bool longOptions = false;
+    for (const auto *dir : _driver)
+        longOptions |=
+                (dir->assembler().commonOptions().head() || dir->assembler().options().head());
+    if (longOptions) {
+        fprintf(stderr,
+                "  --<name>=<vale>\n"
+                "              : extra options (<type> [, <CPU>])\n");
+        const auto dir = *_driver.begin();
+        for (const auto *opt = dir->assembler().commonOptions().head(); opt; opt = opt->next()) {
+            fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
+                    Options::nameof(opt->spec()));
         }
-        for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
-            fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
-                    Options::nameof(opt->spec()), dir->assembler().cpu_P());
+        for (const auto *dir : _driver) {
+            for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
+                fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
+                        Options::nameof(opt->spec()), dir->assembler().cpu_P());
+            }
         }
     }
     return 2;
@@ -357,7 +360,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
             }
         }
         if (!valid) {
-            fprintf(stderr, "unknown option -X%s=%s\n", option.first.c_str(),
+            fprintf(stderr, "unknown option --%s=%s\n", option.first.c_str(),
                     option.second.c_str());
             return 1;
         }
