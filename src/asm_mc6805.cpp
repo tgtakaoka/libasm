@@ -24,8 +24,12 @@ namespace mc6805 {
 
 using namespace reg;
 
-static const char OPT_INT_PCBITS[] = "pc-bits";
-static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+namespace {
+
+const char OPT_INT_PCBITS[] = "pc-bits";
+const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+
+}  // namespace
 
 struct AsmMc6805::Operand final : ErrorAt {
     AddrMode mode;
@@ -34,8 +38,25 @@ struct AsmMc6805::Operand final : ErrorAt {
     Operand() : mode(M_NONE), size(0), val16(0) {}
 };
 
-AsmMc6805::AsmMc6805()
-    : Assembler(&_opt_pc_bits, _number, _comment, _symbol, _letter, _location, &_operators),
+const ValueParser::Plugins &AsmMc6805::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+        const OperatorParser &operators() const override {
+            return Mc68xxOperatorParser::singleton();
+        }
+        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmMc6805::AsmMc6805(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_pc_bits, plugins),
       Config(TABLE),
       _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();

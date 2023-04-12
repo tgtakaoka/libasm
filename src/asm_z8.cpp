@@ -26,12 +26,16 @@ namespace z8 {
 
 using namespace reg;
 
-static const char OPT_INT_SETRP[] PROGMEM = "setrp";
-static const char OPT_DESC_SETRP[] PROGMEM = "set register pointer";
-static const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
-static const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
-static const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
-static const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+namespace {
+
+const char OPT_INT_SETRP[] PROGMEM = "setrp";
+const char OPT_DESC_SETRP[] PROGMEM = "set register pointer";
+const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
+const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
+const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
+const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+
+}  // namespace
 
 struct AsmZ8::Operand final : ErrorAt {
     AddrMode mode;
@@ -41,8 +45,18 @@ struct AsmZ8::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
-AsmZ8::AsmZ8()
-    : Assembler(&_opt_setrp, _number, _comment, _symbol, _letter, _location),
+const ValueParser::Plugins &AsmZ8::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
+        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_setrp, plugins),
       Config(TABLE),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),

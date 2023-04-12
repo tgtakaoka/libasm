@@ -26,15 +26,9 @@ namespace tms32010 {
 
 class AsmTms32010 final : public Assembler, public Config {
 public:
-    AsmTms32010();
+    AsmTms32010(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const IntelNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_UNDER};
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -43,6 +37,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace tms32010

@@ -26,15 +26,9 @@ namespace i8048 {
 
 class AsmI8048 final : public Assembler, public Config {
 public:
-    AsmI8048();
+    AsmI8048(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const IntelNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -44,6 +38,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace i8048

@@ -31,9 +31,25 @@ struct AsmMc6800::Operand final : ErrorAt {
     Operand() : mode(M_NONE), size(0), val16(0) {}
 };
 
-AsmMc6800::AsmMc6800()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location, &_operators),
-      Config(TABLE) {
+const ValueParser::Plugins &AsmMc6800::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+        const OperatorParser &operators() const override {
+            return Mc68xxOperatorParser::singleton();
+        }
+        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmMc6800::AsmMc6800(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

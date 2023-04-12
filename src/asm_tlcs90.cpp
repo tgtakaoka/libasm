@@ -24,9 +24,18 @@ namespace tlcs90 {
 
 using namespace reg;
 
-AsmTlcs90::AsmTlcs90()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+AsmTlcs90::AsmTlcs90(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
+}
+
+const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
 }
 
 void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {

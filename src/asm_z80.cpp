@@ -31,8 +31,16 @@ struct AsmZ80::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
-AsmZ80::AsmZ80()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmZ80::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmZ80::AsmZ80(const ValueParser::Plugins &plugins) : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

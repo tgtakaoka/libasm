@@ -26,6 +26,14 @@
 #define ARRAY_END(array) (&(array)[sizeof(array) / sizeof(array[0])])
 #define ARRAY_RANGE(array) ARRAY_BEGIN(array), ARRAY_END(array)
 
+template <typename CLASS>
+struct Singleton {
+    static const CLASS &singleton() {
+        static const CLASS INSTANCE{};
+        return INSTANCE;
+    }
+};
+
 #if defined(AVR)
 #include <avr/pgmspace.h>
 

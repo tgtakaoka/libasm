@@ -26,7 +26,7 @@ namespace cdp1802 {
 
 class AsmCdp1802 final : public Assembler, public Config {
 public:
-    AsmCdp1802();
+    AsmCdp1802(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -34,15 +34,6 @@ public:
     Error setSmartBranch(bool enable);
 
 private:
-    const RcaNumberParser _number;
-    const struct : SemicolonCommentParser {
-        bool commentLine(const StrScanner &scan) const {
-            return (scan[0] == '.' && scan[1] == '.') || endOfLine(scan);
-        }
-    } _comment;
-    const DefaultSymbolParser _symbol;
-    const IbmLetterParser _letter{/*prefix*/ 'T'};
-    const AsteriskLocationParser _location;
     const BoolOption<AsmCdp1802> _opt_useReg;
     const BoolOption<AsmCdp1802> _opt_smartBranch;
 
@@ -58,6 +49,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace cdp1802

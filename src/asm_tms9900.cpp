@@ -31,8 +31,16 @@ struct AsmTms9900::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
-AsmTms9900::AsmTms9900()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmTms9900::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return TexasNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

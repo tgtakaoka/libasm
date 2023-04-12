@@ -26,15 +26,9 @@ namespace scn2650 {
 
 class AsmScn2650 final : public Assembler, public Config {
 public:
-    AsmScn2650();
+    AsmScn2650(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const SigneticsNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
-    const IbmLetterParser _letter{/*prefix*/ 'A'};
-    const DollarLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -47,6 +41,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace scn2650

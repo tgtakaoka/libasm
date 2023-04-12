@@ -26,18 +26,13 @@ namespace mc68000 {
 
 class AsmMc68000 final : public Assembler, public Config {
 public:
-    AsmMc68000();
+    AsmMc68000(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setAlias(bool enable);
 
 private:
-    const MotorolaNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
-    const MotorolaLetterParser _letter{/*closingQuote*/ true};
-    const AsteriskLocationParser _location;
     const BoolOption<AsmMc68000> _opt_alias;
 
     bool _acceptAlias;
@@ -57,6 +52,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace mc68000

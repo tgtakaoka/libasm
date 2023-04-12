@@ -26,15 +26,9 @@ namespace f3850 {
 
 class AsmF3850 final : public Assembler, public Config {
 public:
-    AsmF3850();
+    AsmF3850(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const FairchildNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
-    const FairchildLetterParser _letter;
-    const FairchildLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -45,6 +39,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace f3850

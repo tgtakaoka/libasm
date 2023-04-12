@@ -32,8 +32,21 @@ struct AsmMn1610::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
 };
 
-AsmMn1610::AsmMn1610()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return _number; }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const LetterParser &letter() const override { return IbmLetterParser::singleton(); }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+        const IbmNumberParser _number{'X'};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmMn1610::AsmMn1610(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

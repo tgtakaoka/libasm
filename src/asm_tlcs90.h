@@ -28,17 +28,11 @@ struct Operand;
 
 class AsmTlcs90 final : public Assembler, public Config {
 public:
-    AsmTlcs90();
+    AsmTlcs90(const ValueParser::Plugins &plugins = defaultPlugins());
 
     bool hasSetInstruction() const override { return true; }
 
 private:
-    const IntelNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
-
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
     void encodeOperand(InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
@@ -46,6 +40,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace tlcs90

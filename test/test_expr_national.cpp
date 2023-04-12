@@ -19,16 +19,17 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const NationalNumberParser number{0, 'B', 'Q'};
-const SemicolonCommentParser comment;
-const SimpleSymbolParser symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
-const DefaultLetterParser letter;
-const DollarLocationParser location;
+const struct MotorolaPlugins : ValueParser::Plugins {
+    const NumberParser &number() const override { return _number; }
+    const SymbolParser &symbol() const override { return _symbol; }
+    const NationalNumberParser _number{0, 'B', 'Q'};
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
+} plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;
     uint32_t currentLocation() const { return location; }
 } locator;
-const ValueParser parser{number, comment, symbol, letter, location, locator};
+const ValueParser parser{plugins, locator};
 
 const PrefixHexFormatter hexFormatter{HexFormatter::X_DASH};
 const ValueFormatter formatter{hexFormatter};

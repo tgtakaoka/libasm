@@ -26,15 +26,9 @@ namespace i8051 {
 
 class AsmI8051 final : public Assembler, public Config {
 public:
-    AsmI8051();
+    AsmI8051(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const IntelNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER, SymbolParser::NONE};
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -43,6 +37,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace i8051

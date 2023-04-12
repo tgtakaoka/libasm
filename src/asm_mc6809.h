@@ -26,25 +26,19 @@ namespace mc6809 {
 
 class AsmMc6809 final : public Assembler, public Config {
 public:
-    AsmMc6809();
+    AsmMc6809(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setDirectPage(int32_t val);
 
 private:
-    const MotorolaNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
-    const MotorolaLetterParser _letter;
-    const AsteriskLocationParser _location;
-    const Mc68xxOperatorParser _operators;
     const IntOption<AsmMc6809> _opt_setdp;
 
     uint8_t _direct_page;
 
     bool onDirectPage(Config::uintptr_t addr) const;
-    
+
     struct Operand;
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
     bool parseMemBit(StrScanner &scan, Operand &op) const;
@@ -64,6 +58,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace mc6809

@@ -26,7 +26,7 @@ namespace z8 {
 
 class AsmZ8 final : public Assembler, public Config {
 public:
-    AsmZ8();
+    AsmZ8(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -35,11 +35,6 @@ public:
     Error setRegPointer1(int32_t rp);
 
 private:
-    const ZilogNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION_UNDER};
-    const ZilogLetterParser _letter;
-    const DollarLocationParser _location;
     const IntOption<AsmZ8> _opt_setrp;
     const IntOption<AsmZ8> _opt_setrp0;
     const IntOption<AsmZ8> _opt_setrp1;
@@ -69,6 +64,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace z8

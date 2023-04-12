@@ -64,9 +64,7 @@ protected:
     SymbolTable *_symtab;
     uint32_t _currentLocation;
 
-    Assembler(const OptionBase *option, const NumberParser &number, const CommentParser &comment,
-            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
-            const OperatorParser *operators = nullptr, const FunctionParser *function = nullptr);
+    Assembler(const OptionBase *option, const ValueParser::Plugins &plugins);
 
     int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
 

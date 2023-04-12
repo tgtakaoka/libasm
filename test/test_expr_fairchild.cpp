@@ -19,22 +19,28 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const FairchildNumberParser number;
-const AsteriskCommentParser comment;
-const DefaultSymbolParser symbol;
-const FairchildLetterParser letter;
-const AsteriskLocationParser location;
+const struct MotorolaPlugins : ValueParser::Plugins {
+    const NumberParser &number() const override { return _number; }
+    const CommentParser &comment() const override { return _comment; }
+    const LetterParser &letter() const override { return _letter; }
+    const LocationParser &location() const override { return _location; }
+
+private:
+    const FairchildNumberParser _number{};
+    const AsteriskCommentParser _comment{};
+    const FairchildLetterParser _letter;
+    const AsteriskLocationParser _location{};
+} plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;
     uint32_t currentLocation() const { return location; }
 } locator;
-const ValueParser parser{number, comment, symbol, letter, location, locator};
+const ValueParser parser{plugins, locator};
 
 const SurroundHexFormatter hexFormatter{HexFormatter::H_DASH, '\''};
 const ValueFormatter formatter{hexFormatter};
 
-static void set_up() {
-}
+static void set_up() {}
 
 static void tear_down() {
     symtab.reset();

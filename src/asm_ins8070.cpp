@@ -25,6 +25,15 @@ namespace ins8070 {
 
 using namespace reg;
 
+namespace {
+
+struct Ins8070FunctionParser final : FunctionParser {
+    const Functor *parseFunction(
+            StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
+};
+
+}  // namespace
+
 struct AsmIns8070::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
@@ -33,13 +42,28 @@ struct AsmIns8070::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), autoIndex(false), val16(0) {}
 };
 
-AsmIns8070::AsmIns8070()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location, nullptr, &_function),
-      Config(TABLE) {
+const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return NationalNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LocationParser &location() const override {
+            return NationalLocationParser::singleton();
+        }
+        const FunctionParser &function() const override { return _function; }
+        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
+        const Ins8070FunctionParser _function{};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmIns8070::AsmIns8070(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 
-static const struct : Functor {
+namespace {
+
+const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
@@ -47,7 +71,7 @@ static const struct : Functor {
     }
 } FN_HIGH;
 
-static const struct : Functor {
+const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
@@ -55,7 +79,7 @@ static const struct : Functor {
     }
 } FN_LOW;
 
-static const struct : Functor {
+const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() - 1) & 0xFFFF);
@@ -63,7 +87,7 @@ static const struct : Functor {
     }
 } FN_ADDR;
 
-const Functor *AsmIns8070::Ins8070FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
+const Functor *Ins8070FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
         const SymbolParser &symParser, const SymbolTable *symtab) const {
     auto p = scan;
     const auto name = readFunctionName(p, symParser);
@@ -81,6 +105,8 @@ const Functor *AsmIns8070::Ins8070FunctionParser::parseFunction(StrScanner &scan
     }
     return FunctionParser::parseFunction(scan, error, symParser, symtab);
 }
+
+}  // namespace
 
 void AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {
     // PC will be +1 before fetching instruction.

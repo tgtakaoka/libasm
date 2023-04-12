@@ -36,8 +36,19 @@ struct AsmMos6502::Operand final : ErrorAt {
     }
 };
 
-AsmMos6502::AsmMos6502()
-    : Assembler(&_opt_longa, _number, _comment, _symbol, _letter, _location),
+const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmMos6502::AsmMos6502(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_longa, plugins),
       Config(TABLE),
       _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
       _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI) {
@@ -149,7 +160,9 @@ Error AsmMos6502::selectMode(
     return OK;
 }
 
-static AddrMode regName2AddrMode(RegName reg) {
+namespace {
+
+AddrMode regName2AddrMode(RegName reg) {
     switch (reg) {
     case REG_X:
         return M_REGX;
@@ -161,6 +174,8 @@ static AddrMode regName2AddrMode(RegName reg) {
         return M_REGA;
     }
 }
+
+}  // namespace
 
 Error AsmMos6502::parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const {
     if (scan.expect('(')) {
@@ -192,7 +207,9 @@ Error AsmMos6502::parseCloseIndirect(StrScanner &scan, Operand &op, char &indire
     return OK;
 }
 
-static char parseSizeOverride(StrScanner &p) {
+namespace {
+
+char parseSizeOverride(StrScanner &p) {
     if (p.expect('<'))
         return '<';
     if (p.expect('>')) {
@@ -202,6 +219,8 @@ static char parseSizeOverride(StrScanner &p) {
     }
     return 0;
 }
+
+}  // namespace
 
 Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) const {
     auto p = scan.skipSpaces();
@@ -261,14 +280,18 @@ Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
     return UNKNOWN_DIRECTIVE;
 }
 
-static bool hasRegister(AddrMode mode) {
+namespace {
+
+bool hasRegister(AddrMode mode) {
     const auto base = uint8_t(InsnMos6502::baseMode(mode));
     return base >= uint8_t(M_REGA) && base <= uint8_t(M_REGS);
 }
 
-static bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
+bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
     return cpuType == W65C816 && hasRegister(mode3);
 }
+
+}  // namespace
 
 Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
     InsnMos6502 insn(_insn);

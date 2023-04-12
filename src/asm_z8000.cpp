@@ -24,8 +24,12 @@ namespace z8000 {
 
 using namespace reg;
 
-static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+namespace {
+
+const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+
+}  // namespace
 
 struct AsmZ8000::Operand final : ErrorAt {
     AddrMode mode;
@@ -36,8 +40,18 @@ struct AsmZ8000::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
 };
 
-AsmZ8000::AsmZ8000()
-    : Assembler(&_opt_shortDitrect, _number, _comment, _symbol, _letter, _location),
+const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
+        const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_shortDitrect, plugins),
       Config(TABLE),
       _opt_shortDitrect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT) {
@@ -253,7 +267,7 @@ void AsmZ8000::emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &
         setErrorIf(op, ILLEGAL_SIZE);
     if (insn.size() == SZ_WORD && op.reg == REG_FLAGS)
         setErrorIf(op, ILLEGAL_SIZE);
-    int8_t data = encodeCtlReg(segmentedModel(),op.reg);
+    int8_t data = encodeCtlReg(segmentedModel(), op.reg);
     if (data < 0) {
         setErrorIf(op, ILLEGAL_REGISTER);
         data = 0;

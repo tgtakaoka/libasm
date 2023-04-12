@@ -24,6 +24,15 @@ namespace ins8060 {
 
 using namespace reg;
 
+namespace {
+
+struct Ins8060FunctionParser final : FunctionParser {
+    const Functor *parseFunction(
+            StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
+};
+
+}  // namespace
+
 struct AsmIns8060::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
@@ -32,21 +41,37 @@ struct AsmIns8060::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), index(REG_UNDEF), val16(0) {}
 };
 
-AsmIns8060::AsmIns8060()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location, nullptr, &_function),
-      Config(TABLE) {
+const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return NationalNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LocationParser &location() const override {
+            return NationalLocationParser::singleton();
+        }
+        const FunctionParser &function() const override { return _function; }
+
+        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
+        const Ins8060FunctionParser _function{};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmIns8060::AsmIns8060(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 
-static Config::uintptr_t page(Config::uintptr_t addr) {
+namespace {
+
+Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFFF;
 }
 
-static Config::uintptr_t offset(Config::uintptr_t addr) {
+Config::uintptr_t offset(Config::uintptr_t addr) {
     return addr & 0xFFF;
 }
 
-static const struct : Functor {
+const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
@@ -54,7 +79,7 @@ static const struct : Functor {
     }
 } FN_HIGH;
 
-static const struct : Functor {
+const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
@@ -62,7 +87,7 @@ static const struct : Functor {
     }
 } FN_LOW;
 
-static const struct : Functor {
+const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         const auto v = stack.pop().getUnsigned();
@@ -71,7 +96,7 @@ static const struct : Functor {
     }
 } FN_ADDR;
 
-const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
+const Functor *Ins8060FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
         const SymbolParser &symParser, const SymbolTable *symtab) const {
     auto p = scan;
     const auto name = readFunctionName(p, symParser);
@@ -89,6 +114,8 @@ const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(StrScanner &scan
     }
     return FunctionParser::parseFunction(scan, error, symParser, symtab);
 }
+
+}  // namespace
 
 void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
     Config::ptrdiff_t delta;

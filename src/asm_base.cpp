@@ -18,13 +18,8 @@
 
 namespace libasm {
 
-Assembler::Assembler(const OptionBase *option, const NumberParser &number,
-        const CommentParser &comment, const SymbolParser &symbol, const LetterParser &letter,
-        const LocationParser &location, const OperatorParser *operators,
-        const FunctionParser *function)
-    : ErrorAt(),
-      _options(option),
-      _parser(number, comment, symbol, letter, location, *this, operators, function) {}
+Assembler::Assembler(const OptionBase *option, const ValueParser::Plugins &plugins)
+    : ErrorAt(), _options(option), _parser(plugins, *this) {}
 
 Error Assembler::setCurrentLocation(uint32_t location) {
     return config().checkAddr(_currentLocation = location);

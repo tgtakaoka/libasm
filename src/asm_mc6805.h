@@ -26,7 +26,7 @@ namespace mc6805 {
 
 class AsmMc6805 final : public Assembler, public Config {
 public:
-    AsmMc6805();
+    AsmMc6805(const ValueParser::Plugins &plugins = defaultPlugins());
 
     AddressWidth addressWidth() const override;
     void reset() override;
@@ -34,12 +34,6 @@ public:
     Error setPcBits(int32_t val);
 
 private:
-    const MotorolaNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
-    const MotorolaLetterParser _letter;
-    const AsteriskLocationParser _location;
-    const Mc68xxOperatorParser _operators;
     const IntOption<AsmMc6805> _opt_pc_bits;
 
     uint8_t _pc_bits;
@@ -53,6 +47,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace mc6805

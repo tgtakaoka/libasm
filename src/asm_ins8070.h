@@ -26,19 +26,9 @@ namespace ins8070 {
 
 class AsmIns8070 final : public Assembler, public Config {
 public:
-    AsmIns8070();
+    AsmIns8070(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const NationalNumberParser _number{'X'};
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
-    const DefaultLetterParser _letter;
-    const NationalLocationParser _location{'$'};
-    const struct Ins8070FunctionParser final : FunctionParser {
-        const Functor *parseFunction(
-                StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
-    } _function;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -51,6 +41,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace ins8070

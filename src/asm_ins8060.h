@@ -26,19 +26,9 @@ namespace ins8060 {
 
 class AsmIns8060 final : public Assembler, public Config {
 public:
-    AsmIns8060();
+    AsmIns8060(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const NationalNumberParser _number{'X'};
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
-    const DefaultLetterParser _letter;
-    const NationalLocationParser _location{'$'};
-    const struct Ins8060FunctionParser final : FunctionParser {
-        const Functor *parseFunction(
-                StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
-    } _function;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -49,6 +39,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace ins8060

@@ -32,12 +32,24 @@ struct AsmTms32010::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
-AsmTms32010::AsmTms32010()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmTms32010::AsmTms32010(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 
-static AddrMode constantType(uint16_t val) {
+namespace {
+
+AddrMode constantType(uint16_t val) {
     if (val == 0)
         return M_LS0;
     if (val == 1)
@@ -52,6 +64,8 @@ static AddrMode constantType(uint16_t val) {
         return M_IM8;
     return M_IM13;
 }
+
+}  // namespace
 
 void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode) {
     static constexpr Config::opcode_t SST = 0x7C00;

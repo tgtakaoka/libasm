@@ -25,16 +25,21 @@ namespace libasm {
 namespace ns32000 {
 
 using namespace reg;
+
 using text::ns32000::TEXT_FPU;
 using text::ns32000::TEXT_FPU_NS32081;
 using text::ns32000::TEXT_MMU_NS32082;
 using text::ns32000::TEXT_none;
 using text::ns32000::TEXT_PMMU;
 
-static const char OPT_TEXT_FPU[] PROGMEM = "fpu";
-static const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
-static const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
-static const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+namespace {
+
+const char OPT_TEXT_FPU[] PROGMEM = "fpu";
+const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
+const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
+const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+
+}  // namespace
 
 struct AsmNs32000::Operand final : ErrorAt {
     AddrMode mode;
@@ -54,8 +59,22 @@ struct AsmNs32000::Operand final : ErrorAt {
           size(SZ_NONE) {}
 };
 
-AsmNs32000::AsmNs32000()
-    : Assembler(&_opt_fpu, _number, _comment, _symbol, _letter, _location),
+const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return _number; }
+        const CommentParser &comment() const override { return SharpCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return CStyleLetterParser::singleton(); }
+        const LocationParser &location() const override { return _location; }
+        const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
+        const SimpleSymbolParser _symbol{SymbolParser::DOT_UNDER};
+        const NationalLocationParser _location{'*'};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_fpu, plugins),
       Config(TABLE),
       _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
       _opt_pmmu(this, &AsmNs32000::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
@@ -191,7 +210,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     }
 
     auto l = p;
-    if (_location.locationSymbol(l)) {
+    if (parser().locationSymbol(l)) {
         op.val32 = parseExpr32(p, op);
         if (op.hasError())
             return op.getError();
@@ -369,13 +388,15 @@ Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {
     return OK;
 }
 
-static uint16_t reverseBits(uint8_t bits) {
+namespace {
+
+uint16_t reverseBits(uint8_t bits) {
     bits = (bits & 0x55) << 1 | (bits & 0xAA) >> 1;
     bits = (bits & 0x33) << 2 | (bits & 0xCC) >> 2;
     return bits << 4 | bits >> 4;
 }
 
-static uint8_t encodeScaledIndex(OprSize indexSize) {
+uint8_t encodeScaledIndex(OprSize indexSize) {
     switch (indexSize) {
     case SZ_BYTE:
         return 0x1C;
@@ -390,7 +411,7 @@ static uint8_t encodeScaledIndex(OprSize indexSize) {
     }
 }
 
-static void embedOprField(InsnNs32000 &insn, OprPos pos, uint8_t opr) {
+void embedOprField(InsnNs32000 &insn, OprPos pos, uint8_t opr) {
     if (pos == P_GEN1) {
         opr &= 0x1F;
         opr <<= 3;
@@ -414,6 +435,8 @@ static void embedOprField(InsnNs32000 &insn, OprPos pos, uint8_t opr) {
         insn.embed(opr << 7);
     }
 }
+
+}  // namespace
 
 void AsmNs32000::emitDisplacement(
         InsnNs32000 &insn, const Operand &op, int32_t val32, Error error) {

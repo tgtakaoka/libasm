@@ -32,8 +32,20 @@ struct AsmF3850::Operand final : ErrorAt {
     Operand() : mode(M_NONE), val16(0) {}
 };
 
-AsmF3850::AsmF3850()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmF3850::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return FairchildNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const LetterParser &letter() const override { return FairchildLetterParser::singleton(); }
+        const LocationParser &location() const override {
+            return FairchildLocationParser::singleton();
+        }
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmF3850::AsmF3850(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

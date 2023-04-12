@@ -31,8 +31,17 @@ struct AsmI8080::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
-AsmI8080::AsmI8080()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmI8080::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION, SymbolParser::NONE};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmI8080::AsmI8080(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

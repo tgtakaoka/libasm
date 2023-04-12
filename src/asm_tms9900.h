@@ -26,15 +26,9 @@ namespace tms9900 {
 
 class AsmTms9900 final : public Assembler, public Config {
 public:
-    AsmTms9900();
+    AsmTms9900(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const TexasNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -46,6 +40,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace tms9900

@@ -27,7 +27,7 @@ namespace ns32000 {
 
 class AsmNs32000 final : public Assembler, public Config {
 public:
-    AsmNs32000();
+    AsmNs32000(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -35,11 +35,6 @@ public:
     Error setPmmuName(StrScanner &scan);
 
 private:
-    const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
-    const SharpCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOT_UNDER};
-    const CStyleLetterParser _letter;
-    const NationalLocationParser _location{'*'};
     const TextOption<AsmNs32000> _opt_fpu;
     const TextOption<AsmNs32000> _opt_pmmu;
 
@@ -66,6 +61,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace ns32000

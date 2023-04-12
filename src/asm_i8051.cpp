@@ -26,6 +26,15 @@ namespace i8051 {
 
 using namespace reg;
 
+const ValueParser::Plugins &AsmI8051::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER, SymbolParser::NONE};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
 struct AsmI8051::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
@@ -33,8 +42,8 @@ struct AsmI8051::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
-AsmI8051::AsmI8051()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+AsmI8051::AsmI8051(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

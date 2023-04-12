@@ -27,7 +27,7 @@ namespace z8000 {
 
 class AsmZ8000 final : public Assembler, public Config {
 public:
-    AsmZ8000();
+    AsmZ8000(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -36,11 +36,6 @@ public:
     bool hasSetInstruction() const override { return true; }
 
 private:
-    const ZilogNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::UNDER};
-    const ZilogLetterParser _letter;
-    const DollarLocationParser _location;
     const BoolOption<AsmZ8000> _opt_shortDitrect;
 
     bool _autoShortDirect;
@@ -70,6 +65,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace z8000

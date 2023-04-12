@@ -19,17 +19,21 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const MotorolaNumberParser number;
-const AsteriskCommentParser comment;
-const SimpleSymbolParser symbol{SymbolParser::DOLLAR_DOT_UNDER};
-const MotorolaLetterParser letter;
-const AsteriskLocationParser location;
-const Mc68xxOperatorParser operators;
+const struct MotorolaPlugins : ValueParser::Plugins {
+    const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+    const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+    const SymbolParser &symbol() const override { return _symbol;}
+    const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
+    const LocationParser &location() const override { return AsteriskLocationParser::singleton();}
+    const OperatorParser &operators() const override { return Mc68xxOperatorParser::singleton(); }
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_UNDER};
+} plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;
     uint32_t currentLocation() const { return location; }
 } locator;
-const ValueParser parser{number, comment, symbol, letter, location, locator, &operators};
+const ValueParser parser{plugins, locator};
+
 const PrefixHexFormatter hexFormatter{HexFormatter::DOLLAR};
 const ValueFormatter formatter{hexFormatter};
 
@@ -57,8 +61,11 @@ static void test_char_constant() {
 }
 
 static void test_char_closing() {
-    const MotorolaLetterParser letter{true};
-    const ValueParser parser{number, comment, symbol, letter, location, locator};
+    const struct : MotorolaPlugins {
+        const LetterParser &letter() const override { return _letter; }
+        const MotorolaLetterParser _letter{true};
+    } plugins{};
+    const ValueParser parser{plugins, locator};
 
     X8("'a",   MISSING_CLOSING_QUOTE, "'a");
     X8("'a+5", MISSING_CLOSING_QUOTE, "'a+5");

@@ -19,16 +19,16 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const IntelNumberParser number;
-const SemicolonCommentParser comment;
-const SimpleSymbolParser symbol{SymbolParser::ATMARK_QUESTION, SymbolParser::NONE};
-const DefaultLetterParser letter;
-const DollarLocationParser location;
+const struct IntelPlugins : ValueParser::Plugins {
+    const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+    const SymbolParser &symbol() const override { return _symbol; }
+    const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION, SymbolParser::NONE};
+} plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;
     uint32_t currentLocation() const { return location; }
 } locator;
-const ValueParser parser{number, comment, symbol, letter, location, locator};
+const ValueParser parser{plugins, locator};
 
 const SuffixHexFormatter hexFormatter{'h'};
 const ValueFormatter formatter{hexFormatter};

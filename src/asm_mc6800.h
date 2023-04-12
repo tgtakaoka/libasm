@@ -26,16 +26,9 @@ namespace mc6800 {
 
 class AsmMc6800 final : public Assembler, public Config {
 public:
-    AsmMc6800();
+    AsmMc6800(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const MotorolaNumberParser _number;
-    const AsteriskCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
-    const MotorolaLetterParser _letter;
-    const AsteriskLocationParser _location;
-    const Mc68xxOperatorParser _operators;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void emitRelative(InsnMc6800 &insn, const Operand &op);
@@ -46,6 +39,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace mc6800

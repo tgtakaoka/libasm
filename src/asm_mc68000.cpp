@@ -23,8 +23,12 @@ namespace mc68000 {
 
 using namespace reg;
 
-static const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
-static const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+namespace {
+
+const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
+const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+
+}  // namespace
 
 struct AsmMc68000::Operand final : ErrorAt {
     AddrMode mode;
@@ -38,8 +42,24 @@ struct AsmMc68000::Operand final : ErrorAt {
     Config::uintptr_t offset(const InsnMc68000 &insn) const;
 };
 
-AsmMc68000::AsmMc68000()
-    : Assembler(&_opt_alias, _number, _comment, _symbol, _letter, _location), Config(TABLE),
+const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return _letter; }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
+        const MotorolaLetterParser _letter{/*closingQuote*/ true};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_alias, plugins),
+      Config(TABLE),
       _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS) {
     reset();
 }
@@ -54,7 +74,9 @@ Error AsmMc68000::setAlias(bool enable) {
     return OK;
 }
 
-static int8_t modePos(OprPos pos) {
+namespace {
+
+int8_t modePos(OprPos pos) {
     switch (pos) {
     case OP_10:
         return 3;
@@ -65,7 +87,7 @@ static int8_t modePos(OprPos pos) {
     }
 }
 
-static int8_t regPos(OprPos pos) {
+int8_t regPos(OprPos pos) {
     switch (pos) {
     case OP_10:
     case OP__0:
@@ -77,6 +99,8 @@ static int8_t regPos(OprPos pos) {
         return -1;
     }
 }
+
+}  // namespace
 
 void emitOprSize(InsnMc68000 &insn, OprSize size) {
     Config::opcode_t sz = 0;
@@ -270,12 +294,16 @@ Error AsmMc68000::emitEffectiveAddr(
     return getError();
 }
 
-static uint16_t reverseBits(uint16_t bits) {
+namespace {
+
+uint16_t reverseBits(uint16_t bits) {
     bits = (bits & 0x5555) << 1 | (bits & 0xAAAA) >> 1;
     bits = (bits & 0x3333) << 2 | (bits & 0xCCCC) >> 2;
     bits = (bits & 0x0F0F) << 4 | (bits & 0xF0F0) >> 4;
     return bits << 8 | bits >> 8;
 }
+
+}  // namespace
 
 void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse) {
     auto p = op.list;

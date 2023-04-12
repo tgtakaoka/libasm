@@ -16,9 +16,10 @@
 
 #include "value_parser.h"
 
-#include "config_base.h"
-
 #include <ctype.h>
+
+#include "config_base.h"
+#include "stack.h"
 
 namespace libasm {
 
@@ -26,17 +27,21 @@ char ValueParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     return _letter.readLetter(scan, error);
 }
 
-static bool isValidDigit(const char c, const Radix radix) {
+namespace {
+
+bool isValidDigit(const char c, const Radix radix) {
     if (radix == RADIX_16)
         return isxdigit(c);
     return c >= '0' && c < '0' + uint8_t(radix);
 }
 
-static uint8_t toNumber(const char c, const Radix radix) {
+uint8_t toNumber(const char c, const Radix radix) {
     if (radix == RADIX_16 && c >= 'A')
         return (c & ~0x20) - 'A' + 10;
     return c - '0';
 }
+
+}  // namespace
 
 Error Value::parseNumber(StrScanner &scan, Radix radix) {
     auto p = scan;
@@ -59,8 +64,10 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
     return error;
 }
 
-const CStyleOperatorParser ValueParser::CSTYLE_OPERATORS;
-const FunctionParser ValueParser::DEFAULT_FUNCTION;
+struct OperatorStack : Stack<Operator, 8> {
+    OperatorStack() : Stack() {}
+    Operator &top() { return _contents[_size - 1]; }
+};
 
 Value ValueParser::eval(
         StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
@@ -83,7 +90,7 @@ Value ValueParser::eval(
         if (maybe_prefix) {
             // Prefix operator may consist of alpha numeric text. Check operator before handling
             // symbols.
-            opr = _operator.readOperator(scan, error, Operator::PREFIX);
+            opr = _operators.readOperator(scan, error, Operator::PREFIX);
             if (error.hasError())
                 return Value();
         }
@@ -137,7 +144,7 @@ Value ValueParser::eval(
 
         if (opr == nullptr) {
             const auto oprType = maybe_prefix ? Operator::PREFIX : Operator::INFIX;
-            opr = _operator.readOperator(scan, error, oprType);
+            opr = _operators.readOperator(scan, error, oprType);
             if (error.hasError())
                 return Value();
         }

@@ -23,8 +23,12 @@ namespace i8086 {
 
 using namespace reg;
 
-static const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
-static const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+namespace {
+
+const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
+const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+
+}  // namespace
 
 struct AsmI8086::Operand final : ErrorAt {
     AddrMode mode;
@@ -50,8 +54,17 @@ struct AsmI8086::Operand final : ErrorAt {
     void print(const char *) const;
 };
 
-AsmI8086::AsmI8086()
-    : Assembler(&_opt_optimizeSegment, _number, _comment, _symbol, _letter, _location),
+const ValueParser::Plugins &AsmI8086::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_optimizeSegment, plugins),
       Config(TABLE),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {

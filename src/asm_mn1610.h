@@ -26,15 +26,9 @@ namespace mn1610 {
 
 class AsmMn1610 final : public Assembler, public Config {
 public:
-    AsmMn1610();
+    AsmMn1610(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    const IbmNumberParser _number{'X'};
-    const AsteriskCommentParser _comment;
-    const DefaultSymbolParser _symbol;
-    const IbmLetterParser _letter{'C'};
-    const AsteriskLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -45,6 +39,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace mn1610

@@ -20,19 +20,23 @@
 
 namespace libasm {
 
-static bool isoctal(char c) {
+namespace {
+
+bool isoctal(char c) {
     return c >= '0' && c < '8';
 }
 
-static bool isbinary(char c) {
+bool isbinary(char c) {
     return c == '0' || c == '1';
 }
 
-static bool isValidDigit(const char c, const Radix radix) {
+bool isValidDigit(const char c, const Radix radix) {
     if (radix == RADIX_16)
         return isxdigit(c);
     return c >= '0' && c < '0' + uint8_t(radix);
 }
+
+}  // namespace
 
 Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
@@ -74,7 +78,7 @@ Error MotorolaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     } else if (p.expect('&')) {
         radix = RADIX_10;
     } else {
-        return CStyleNumberParser::parseNumber(scan, val);
+        return CStyleNumberParser::singleton().parseNumber(scan, val);
     }
 
     const auto err = val.parseNumber(p, radix);
@@ -97,7 +101,7 @@ Error IntelNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     } else if (scanNumberEnd(p, RADIX_10, 'D') == OK) {
         radix = RADIX_10;
     } else {
-        return CStyleNumberParser::parseNumber(scan, val);
+        return CStyleNumberParser::singleton().parseNumber(scan, val);
     }
 
     const auto err = val.parseNumber(scan, radix);
@@ -141,7 +145,7 @@ Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     } else if (p.expect('%') && isxdigit(*p)) {
         radix = RADIX_16;
     } else {
-        return IntelNumberParser::parseNumber(scan, val);
+        return IntelNumberParser::singleton().parseNumber(scan, val);
     }
 
     const auto err = val.parseNumber(p, radix);
@@ -164,7 +168,7 @@ Error IbmNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     } else if (_dec && p.iexpect(_dec)) {
         radix = RADIX_10;
     } else {
-        return CStyleNumberParser::parseNumber(scan, val);
+        return CStyleNumberParser::singleton().parseNumber(scan, val);
     }
 
     if (!p.expect('\'') || !isValidDigit(*p, radix))
@@ -188,7 +192,7 @@ Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val) const {
             scan = p;
         return err;
     }
-    return IbmNumberParser::parseNumber(scan, val);
+    return _ibm.parseNumber(scan, val);
 }
 
 Error RcaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
@@ -202,14 +206,14 @@ Error RcaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     const auto err = _intel.parseNumber(scan, val);
     if (err == OK)
         return OK;
-    return IbmNumberParser::parseNumber(scan, val);
+    return _ibm.parseNumber(scan, val);
 }
 
 Error SigneticsNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     const auto err = _intel.parseNumber(scan, val);
     if (err == OK)
         return OK;
-    return IbmNumberParser::parseNumber(scan, val);
+    return _ibm.parseNumber(scan, val);
 }
 
 Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
@@ -223,7 +227,7 @@ Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     const auto err = _intel.parseNumber(scan, val);
     if (err == OK)
         return OK;
-    return CStyleNumberParser::parseNumber(scan, val);
+    return CStyleNumberParser::singleton().parseNumber(scan, val);
 }
 
 StrScanner SymbolParser::readSymbol(StrScanner &scan) const {
@@ -254,20 +258,9 @@ const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION_UNDER[] PROGMEM = "$?_";
 const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION_UNDER[] PROGMEM = "$.?_";
 
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return DefaultSymbolParser::symbolLetter(c, headOfSymbol) ||
+    return DefaultSymbolParser::singleton().symbolLetter(c, headOfSymbol) ||
            strchr_P(headOfSymbol ? _prefix_P : _extra_P, c);
 }
-
-static const struct : Functor {
-    Error eval(ValueStack &stack, uint8_t argc) const {
-        while (argc != 0) {
-            stack.pop();
-            --argc;
-        }
-        stack.pushUndefined();
-        return OK;
-    }
-} FN_VARARGS_UNDEF;
 
 const Functor *FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
         const SymbolParser &symParser, const SymbolTable *symtab) const {
@@ -280,6 +273,16 @@ const Functor *FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
         if (*p.skipSpaces() != '(')
             return nullptr;
         scan = p;
+        static const struct final : Functor {
+            Error eval(ValueStack &stack, uint8_t argc) const {
+                while (argc != 0) {
+                    stack.pop();
+                    --argc;
+                }
+                stack.pushUndefined();
+                return OK;
+            }
+        } FN_VARARGS_UNDEF;
         return &FN_VARARGS_UNDEF;
     }
 
@@ -295,12 +298,28 @@ StrScanner FunctionParser::readFunctionName(StrScanner &scan, const SymbolParser
     return symParser.readSymbol(scan);
 }
 
-Error CStyleLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
     if (!scan.expect('\''))
         return NOT_AN_EXPECTED;
     ErrorAt error;
     letter = readLetter(scan, error);
     return error.getError() ? error.getError() : (scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE);
+}
+
+char LetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+    const auto c = *scan;
+    if (c == 0) {
+        error.setError(ILLEGAL_CONSTANT);
+    } else if (c == '\'') {
+        if (scan[1] == '\'') {
+            scan += 2;  // successive single quoite
+        } else {
+            error.setError(MISSING_CLOSING_QUOTE);
+        }
+    } else {
+        scan += 1;
+    }
+    return c;
 }
 
 char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
@@ -377,30 +396,6 @@ char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     return c;
 }
 
-Error DefaultLetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    if (!scan.expect('\''))
-        return NOT_AN_EXPECTED;
-    ErrorAt error;
-    letter = readLetter(scan, error);
-    return error.getError() ? error.getError() : (scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE);
-}
-
-char DefaultLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
-    const auto c = *scan;
-    if (c == 0) {
-        error.setError(ILLEGAL_CONSTANT);
-    } else if (c == '\'') {
-        if (scan[1] == '\'') {
-            scan += 2;  // successive single quoite
-        } else {
-            error.setError(MISSING_CLOSING_QUOTE);
-        }
-    } else {
-        scan += 1;
-    }
-    return c;
-}
-
 Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     if (!scan.expect('\''))
         return NOT_AN_EXPECTED;
@@ -411,7 +406,7 @@ Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
 
 char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     if (_closingQuote)
-        return DefaultLetterParser::readLetter(scan, error);
+        return LetterParser::readLetter(scan, error);
     const auto c = *scan;
     if (c == 0) {
         error.setError(ILLEGAL_CONSTANT);
@@ -468,7 +463,7 @@ Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     if (prefix == 'C') {
         letter = readLetter(scan, error);
     } else {
-        letter = _motorolaLetter.readLetter(scan, error);
+        letter = MotorolaLetterParser::singleton().readLetter(scan, error);
     }
     return error.getError() ? error.getError() : hasSuffix(scan, prefix);
 }

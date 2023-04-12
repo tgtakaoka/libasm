@@ -19,16 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const CStyleNumberParser number;
-const SemicolonCommentParser comment;
-const DefaultSymbolParser symbol;
-const DefaultLetterParser letter;
-const DollarLocationParser location;
+const ValueParser::Plugins plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;
     uint32_t currentLocation() const { return location; }
 } locator;
-const ValueParser parser{number, comment, symbol, letter, location, locator};
+const ValueParser parser{plugins, locator};
 
 const CStyleHexFormatter hexFormatter;
 const ValueFormatter formatter{hexFormatter};

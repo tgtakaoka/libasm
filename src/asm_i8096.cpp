@@ -32,8 +32,17 @@ struct AsmI8096::Operand final : ErrorAt {
     Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
 };
 
-AsmI8096::AsmI8096()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmI8096::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 

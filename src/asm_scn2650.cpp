@@ -36,27 +36,40 @@ struct AsmScn2650::Operand final : ErrorAt {
     Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
 };
 
-AsmScn2650::AsmScn2650()
-    : Assembler(nullptr, _number, _comment, _symbol, _letter, _location), Config(TABLE) {
+const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return SigneticsNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const LetterParser &letter() const override { return _letter; }
+        const IbmLetterParser _letter{'A'};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmScn2650::AsmScn2650(const ValueParser::Plugins &plugins)
+    : Assembler(nullptr, plugins), Config(TABLE) {
     reset();
 }
 
-static constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
+namespace {
+
+constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
     return addr & ~0x1FFF;  // 8k bytes per page
 }
 
-static constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
+constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
     return addr & 0x1FFF;
 }
 
-static constexpr Config::uintptr_t inpage(
-        const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
+constexpr Config::uintptr_t inpage(const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
     return page(addr) | offset(addr + delta);
 }
 
-static constexpr Config::uintptr_t inspace(const Config::uintptr_t addr) {
+constexpr Config::uintptr_t inspace(const Config::uintptr_t addr) {
     return addr < 0x8000;
 }
+
+}  // namespace
 
 Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     // Do not skip preceding spaces.

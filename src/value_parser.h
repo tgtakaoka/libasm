@@ -20,28 +20,36 @@
 #include <stdint.h>
 
 #include "parsers.h"
-#include "stack.h"
 
 namespace libasm {
 
 class ValueParser {
 public:
+    struct Plugins {
+        virtual const NumberParser &number() const { return CStyleNumberParser::singleton(); }
+        virtual const CommentParser &comment() const { return SemicolonCommentParser::singleton(); }
+        virtual const SymbolParser &symbol() const { return DefaultSymbolParser::singleton(); }
+        virtual const LetterParser &letter() const { return DefaultLetterParser::singleton(); }
+        virtual const LocationParser &location() const { return DollarLocationParser::singleton(); }
+        virtual const OperatorParser &operators() const {
+            return CStyleOperatorParser::singleton();
+        }
+        virtual const FunctionParser &function() const { return FunctionParser::singleton(); }
+    };
+
     struct Locator {
         virtual uint32_t currentLocation() const = 0;
     };
 
-    ValueParser(const NumberParser &number, const CommentParser &comment,
-            const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
-            const Locator &locator, const OperatorParser *operators = nullptr,
-            const FunctionParser *function = nullptr)
-        : _number(number),
-          _comment(comment),
-          _symbol(symbol),
-          _letter(letter),
-          _location(location),
-          _locator(locator),
-          _operator(operators ? *operators : CSTYLE_OPERATORS),
-          _function(function ? *function : DEFAULT_FUNCTION) {}
+    ValueParser(const Plugins &plugins, const Locator &locator)
+        : _number(plugins.number()),
+          _comment(plugins.comment()),
+          _symbol(plugins.symbol()),
+          _letter(plugins.letter()),
+          _location(plugins.location()),
+          _operators(plugins.operators()),
+          _function(plugins.function()),
+          _locator(locator) {}
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined
@@ -62,7 +70,7 @@ public:
      */
     StrScanner readSymbol(StrScanner &scan) const { return _symbol.readSymbol(scan); }
     bool symbolLetter(char c, bool head = false) const { return _symbol.symbolLetter(c, head); }
-
+    bool locationSymbol(StrScanner &scan) const { return _location.locationSymbol(scan); }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
 
@@ -72,17 +80,9 @@ private:
     const SymbolParser &_symbol;
     const LetterParser &_letter;
     const LocationParser &_location;
-    const Locator &_locator;
-    const OperatorParser &_operator;
+    const OperatorParser &_operators;
     const FunctionParser &_function;
-
-    static const CStyleOperatorParser CSTYLE_OPERATORS;
-    static const FunctionParser DEFAULT_FUNCTION;
-
-    struct OperatorStack : Stack<Operator, 8> {
-        OperatorStack() : Stack() {}
-        Operator &top() { return _contents[_size - 1]; }
-    };
+    const Locator &_locator;
 
     Error parseConstant(StrScanner &scan, Value &val) const;
 };

@@ -25,7 +25,7 @@ namespace libasm {
 namespace mos6502 {
 
 struct AsmMos6502 final : Assembler, Config {
-    AsmMos6502();
+    AsmMos6502(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -33,11 +33,6 @@ struct AsmMos6502 final : Assembler, Config {
     Error setLongIndex(bool enable);
 
 private:
-    const MotorolaNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const DefaultSymbolParser _symbol;
-    const MotorolaLetterParser _letter;
-    const AsteriskLocationParser _location;
     const BoolOption<AsmMos6502> _opt_longa;
     const BoolOption<AsmMos6502> _opt_longi;
 
@@ -61,6 +56,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace mos6502

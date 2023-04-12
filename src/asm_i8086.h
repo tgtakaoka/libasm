@@ -27,18 +27,13 @@ namespace i8086 {
 
 class AsmI8086 final : public Assembler, public Config {
 public:
-    AsmI8086();
+    AsmI8086(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setOptimizeSegment(bool enable);
 
 private:
-    const IntelNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION_UNDER};
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
     const BoolOption<AsmI8086> _opt_optimizeSegment;
 
     bool _optimizeSegment;
@@ -65,6 +60,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace i8086

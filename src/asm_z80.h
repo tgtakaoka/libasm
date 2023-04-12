@@ -26,17 +26,11 @@ namespace z80 {
 
 class AsmZ80 final : public Assembler, public Config {
 public:
-    AsmZ80();
+    AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
 
     bool hasSetInstruction() const override { return true; }
 
 private:
-    const IntelNumberParser _number;
-    const SemicolonCommentParser _comment;
-    const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
-    const DefaultLetterParser _letter;
-    const DollarLocationParser _location;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
@@ -47,6 +41,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
 
 }  // namespace z80

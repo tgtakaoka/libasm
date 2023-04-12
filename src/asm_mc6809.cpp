@@ -26,8 +26,12 @@ namespace mc6809 {
 
 using namespace reg;
 
-static const char OPT_INT_SETDP[] PROGMEM = "setdp";
-static const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+namespace {
+
+const char OPT_INT_SETDP[] PROGMEM = "setdp";
+const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+
+}  // namespace
 
 struct AsmMc6809::Operand final : ErrorAt {
     AddrMode mode;
@@ -47,8 +51,25 @@ struct AsmMc6809::Operand final : ErrorAt {
           list() {}
 };
 
-AsmMc6809::AsmMc6809()
-    : Assembler(&_opt_setdp, _number, _comment, _symbol, _letter, _location, &_operators),
+const ValueParser::Plugins &AsmMc6809::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+        const OperatorParser &operators() const override {
+            return Mc68xxOperatorParser::singleton();
+        }
+        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmMc6809::AsmMc6809(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_setdp, plugins),
       Config(TABLE),
       _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP) {
     reset();

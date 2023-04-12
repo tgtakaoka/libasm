@@ -447,7 +447,7 @@ const Operator *Mc68xxOperatorParser::readOperator(
             }
         }
     }
-    return CStyleOperatorParser::readOperator(scan, error, type);
+    return CStyleOperatorParser::singleton().readOperator(scan, error, type);
 }
 
 }  // namespace libasm

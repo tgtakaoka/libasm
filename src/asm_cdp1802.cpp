@@ -24,10 +24,14 @@ namespace cdp1802 {
 
 using namespace reg;
 
-static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-static const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
-static const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
-static const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+namespace {
+
+const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
+const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
+const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+
+}  // namespace
 
 struct AsmCdp1802::Operand final : ErrorAt {
     AddrMode mode;
@@ -35,8 +39,21 @@ struct AsmCdp1802::Operand final : ErrorAt {
     Operand() : mode(M_NONE), val16(0) {}
 };
 
-AsmCdp1802::AsmCdp1802()
-    : Assembler(&_opt_useReg, _number, _comment, _symbol, _letter, _location),
+const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
+    static const struct final : ValueParser::Plugins {
+        const NumberParser &number() const override { return RcaNumberParser::singleton(); }
+        const CommentParser &comment() const override { return RcaCommentParser::singleton(); }
+        const LetterParser &letter() const override { return _letter; }
+        const LocationParser &location() const override {
+            return AsteriskLocationParser::singleton();
+        }
+        const IbmLetterParser _letter{'T'};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+AsmCdp1802::AsmCdp1802(const ValueParser::Plugins &plugins)
+    : Assembler(&_opt_useReg, plugins),
       Config(TABLE),
       _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
               _opt_smartBranch),
@@ -60,9 +77,13 @@ Error AsmCdp1802::setSmartBranch(bool enable) {
     return OK;
 }
 
-static Config::uintptr_t page(Config::uintptr_t addr) {
+namespace {
+
+Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;
 }
+
+}  // namespace
 
 void AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
