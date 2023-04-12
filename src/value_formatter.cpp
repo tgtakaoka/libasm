@@ -27,8 +27,7 @@ const /*PROGMEM*/ char HexFormatter::DOLLAR[] PROGMEM = "$";
 const /*PROGMEM*/ char HexFormatter::X_DASH[] PROGMEM = "x'";
 const /*PROGMEM*/ char HexFormatter::H_DASH[] PROGMEM = "h'";
 
-const HexFormatter ValueFormatter::_DefaultHex;
-const CStyleHexFormatter ValueFormatter::_CStyleHex;
+const HexFormatter ValueFormatter::DEFAULT_HEX;
 
 StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
     val = makePositive(out, val, bits);
@@ -36,21 +35,18 @@ StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) 
     return outDec(out, val).reverse(start);
 }
 
-StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
+StrBuffer &ValueFormatter::formatHex(
+        StrBuffer &out, uint32_t val, int8_t bits, bool upperHex, bool relax) const {
     val = makePositive(out, val, bits);
     const auto start = out.mark();
-
     if (relax && val <= 32)
         return outDec(out, val).reverse(start);
 
-    const HexFormatter *formatter = _cstyle ? &_CStyleHex : &_hexFormatter;
-
     const uint8_t width = abs(bits);
-    if (_upperHex) {
-        UppercaseBuffer upper(out);
-        return formatter->format(upper, val, width).over(out);
-    }
-    return formatter->format(out, val, width);
+    UppercaseBuffer upper(out);
+    LowercaseBuffer lower(out);
+    StrBuffer *outHex = upperHex ? upper.ptr() : lower.ptr();
+    return _hexFormatter.format(*outHex, val, width).over(out);
 }
 
 uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits) const {

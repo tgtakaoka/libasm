@@ -84,7 +84,8 @@ Error DisFormatter::setOrigin(uint32_t origin) {
     name->text_P(PSTR("ORG"));
 
     StrBuffer operands(_operands, sizeof(_operands));
-    _disassembler.formatter().formatHex(operands, origin, config().addressWidth(), false);
+    _disassembler.formatter().formatHex(
+            operands, origin, config().addressWidth(), _upperHex, false);
     return OK;
 }
 
@@ -103,7 +104,7 @@ const char *DisFormatter::getContent() {
             _errorContent = true;
             _out.text("; ").text(_input_name).text(": ");
             _disassembler.formatter().formatHex(
-                    _out, startAddress(), config().addressWidth(), false);
+                    _out, startAddress(), config().addressWidth(), _upperHex, false);
             _out.text(": error: ").text_P(_disassembler.errorText_P());
             _nextContent = 0;
         } else {
@@ -134,7 +135,8 @@ const char *DisFormatter::getLine() {
     if (isError() && !_errorLine) {
         _errorLine = true;
         _out.text(_input_name).text(": ");
-        _disassembler.formatter().formatHex(_out, startAddress(), config().addressWidth(), false);
+        _disassembler.formatter().formatHex(
+                _out, startAddress(), config().addressWidth(), _upperHex, false);
         _out.text(": error: ").text_P(_disassembler.errorText_P());
         _nextLine = 0;
     } else {

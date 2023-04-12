@@ -341,7 +341,7 @@ static void test_auto_indexed() {
 }
 
 static void test_formatter() {
-    disassembler.formatter().setCStyle(false);
+    disassembler.setCStyle(false);
     TEST(XOR, "A, =X'55",  0xE4, 0x55);
     TEST(ADD, "A, =X'AA",  0xF4, 0xAA);
     TEST(SUB, "A, =X'FF",  0xFC, 0xFF);

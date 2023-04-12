@@ -88,36 +88,27 @@ private:
     const char _suffix;
 };
 
-class ValueFormatter {
-public:
-    ValueFormatter(const HexFormatter &hexFormatter = _DefaultHex)
-        : _hexFormatter(hexFormatter), _cstyle(false), _upperHex(true) {}
-
-    void setCStyle(bool enable) { _cstyle = enable; }
-    void setUpperHex(bool enable) { _upperHex = enable; }
+struct ValueFormatter final {
+    ValueFormatter(const HexFormatter &hexFormatter = DEFAULT_HEX) : _hexFormatter(hexFormatter) {}
 
     /*
-     * Convert |val| as |bits| decimal integer.  Treat |val| as signed
-     * integer when |bits| is negative.  Leading zero will be
-     * suppressed.
+     * Convert |val| as |bits| decimal integer.  Treat |val| as signed integer when |bits| is
+     * negative.  Leading zero will be suppressed.
      */
     StrBuffer &formatDec(StrBuffer &out, uint32_t val, int8_t bits = 0) const;
 
     /*
-     * Convert |val| as |bits| hexadecimal integer.  Treat |val| as
-     * signed integer when |bits| is negative. Use base 10 and zero
-     * suppress when |relax| is true and |val| is less than 32 in
-     * absolute value.
+     * Convert |val| as |bits| hexadecimal integer.  Treat |val| as signed integer when |bits| is
+     * negative. Use uppercase letter to represent digit larger than 9 when |upperHex| is turu.  Use
+     * base 10 and zero suppress when |relax| is true and |val| is less than 32 in absolute value.
      */
-    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0, bool relax = true) const;
+    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0, bool upperHex = false,
+            bool relax = false) const;
 
 private:
     const HexFormatter &_hexFormatter;
-    bool _cstyle;
-    bool _upperHex;
 
-    static const HexFormatter _DefaultHex;
-    static const CStyleHexFormatter _CStyleHex;
+    static const HexFormatter DEFAULT_HEX;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;
     static StrBuffer &outDec(StrBuffer &out, uint32_t val);

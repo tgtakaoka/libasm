@@ -24,7 +24,7 @@ namespace test {
 TestAsserter asserter;
 TestSymtab symtab;
 
-void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
+void val_assert(const char *file, int line, const char *expr, uint32_t expected,
         const ErrorAt &expected_error, size_t size, ValueParser &parser) {
     Value val;
     ErrorAt actual_error;
@@ -53,8 +53,8 @@ void val_assert(const char *file, const int line, const char *expr, uint32_t exp
     }
 }
 
-void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const char *expected, ValueFormatter &formatter) {
+void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
+        const ValueFormatter &formatter) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
@@ -63,13 +63,13 @@ void dec_assert(const char *file, const int line, const uint32_t value, int8_t b
     asserter.equals(file, line, msg, expected, actual);
 }
 
-void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const bool relax, const char *expected, ValueFormatter &formatter) {
+void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
+        const ValueFormatter &formatter, bool upperHex, bool relax) {
     char msg[80];
     sprintf(msg, "%#x", value);
     char actual[80];
     StrBuffer buf(actual, sizeof(actual));
-    formatter.formatHex(buf, value, bitWidth, relax);
+    formatter.formatHex(buf, value, bitWidth, upperHex, relax);
     asserter.equals(file, line, msg, expected, actual);
 }
 

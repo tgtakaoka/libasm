@@ -27,12 +27,9 @@ const AsteriskLocationParser location;
 const Mc68xxOperatorParser operators;
 ValueParser parser{number, comment, symbol, letter, location, &operators};
 const PrefixHexFormatter hexFormatter{HexFormatter::DOLLAR};
-ValueFormatter formatter{hexFormatter};
+const ValueFormatter formatter{hexFormatter};
 
-static void set_up() {
-    formatter.setCStyle(false);
-    formatter.setUpperHex(false);
-}
+static void set_up() {}
 
 static void tear_down() {
     symtab.reset();
@@ -549,49 +546,51 @@ static void test_formatter_8bit() {
     DEC(-255, -8, "1");
     DEC(-256, -8, "0");
 
-    HEX(0,    8, true, "0");
-    HEX(32,   8, true, "32");
-    HEX(33,   8, true, "$21");
-    HEX(128,  8, true, "$80");
-    HEX(255,  8, true, "$ff");
-    HEX(256,  8, true, "0");
-    HEX(-32,  8, true, "$e0");
-    HEX(-33,  8, true, "$df");
-    HEX(-128, 8, true, "$80");
-    HEX(-255, 8, true, "1");
-    HEX(-256, 8, true, "0");
+    HEX(0,    8, "$00");
+    HEX(32,   8, "$20");
+    HEX(128,  8, "$80");
+    HEX(255,  8, "$ff");
+    HEX(256,  8, "$00");
+    HEX(-32,  8, "$e0");
+    HEX(-128, 8, "$80");
+    HEX(-255, 8, "$01");
+    HEX(-256, 8, "$00");
 
-    HEX(0,   -8, true, "0");
-    HEX(32,  -8, true, "32");
-    HEX(33,  -8, true, "$21");
-    HEX(128, -8, true, "-$80");
-    HEX(255, -8, true, "-1");
-    HEX(256, -8, true, "0");
-    HEX(-32, -8, true, "-32");
-    HEX(-33, -8, true, "-$21");
-    HEX(-128,-8, true, "-$80");
-    HEX(-255,-8, true, "1");
-    HEX(-256,-8, true, "0");
+    HEX(0,   -8, "$00");
+    HEX(32,  -8, "$20");
+    HEX(128, -8, "-$80");
+    HEX(255, -8, "-$01");
+    HEX(256, -8, "$00");
+    HEX(-32, -8, "-$20");
+    HEX(-128,-8, "-$80");
+    HEX(-255,-8, "$01");
+    HEX(-256,-8, "$00");
 
-    HEX(0,    8, false, "$00");
-    HEX(32,   8, false, "$20");
-    HEX(128,  8, false, "$80");
-    HEX(255,  8, false, "$ff");
-    HEX(256,  8, false, "$00");
-    HEX(-32,  8, false, "$e0");
-    HEX(-128, 8, false, "$80");
-    HEX(-255, 8, false, "$01");
-    HEX(-256, 8, false, "$00");
+    // Relax
 
-    HEX(0,   -8, false, "$00");
-    HEX(32,  -8, false, "$20");
-    HEX(128, -8, false, "-$80");
-    HEX(255, -8, false, "-$01");
-    HEX(256, -8, false, "$00");
-    HEX(-32, -8, false, "-$20");
-    HEX(-128,-8, false, "-$80");
-    HEX(-255,-8, false, "$01");
-    HEX(-256,-8, false, "$00");
+    RHEX(0,    8, "0");
+    RHEX(32,   8, "32");
+    RHEX(33,   8, "$21");
+    RHEX(128,  8, "$80");
+    RHEX(255,  8, "$ff");
+    RHEX(256,  8, "0");
+    RHEX(-32,  8, "$e0");
+    RHEX(-33,  8, "$df");
+    RHEX(-128, 8, "$80");
+    RHEX(-255, 8, "1");
+    RHEX(-256, 8, "0");
+
+    RHEX(0,   -8, "0");
+    RHEX(32,  -8, "32");
+    RHEX(33,  -8, "$21");
+    RHEX(128, -8, "-$80");
+    RHEX(255, -8, "-1");
+    RHEX(256, -8, "0");
+    RHEX(-32, -8, "-32");
+    RHEX(-33, -8, "-$21");
+    RHEX(-128,-8, "-$80");
+    RHEX(-255,-8, "1");
+    RHEX(-256,-8, "0");
 }
 
 static void test_formatter_16bit() {
@@ -635,49 +634,51 @@ static void test_formatter_16bit() {
     DEC(-0xffff,  -16, "1");
     DEC(-0x10000, -16, "0");
 
-    HEX(0,         16, true, "0");
-    HEX(32,        16, true, "32");
-    HEX(33,        16, true, "$0021");
-    HEX(0x8000,    16, true, "$8000");
-    HEX(0xffff,    16, true, "$ffff");
-    HEX(0x10000,   16, true, "0");
-    HEX(-32,       16, true, "$ffe0");
-    HEX(-33,       16, true, "$ffdf");
-    HEX(-0x8000,   16, true, "$8000");
-    HEX(-0xffff,   16, true, "1");
-    HEX(-0x10000,  16, true, "0");
+    HEX(0,         16, "$0000");
+    HEX(32,        16, "$0020");
+    HEX(0x8000,    16, "$8000");
+    HEX(0xffff,    16, "$ffff");
+    HEX(0x10000,   16, "$0000");
+    HEX(-32,       16, "$ffe0");
+    HEX(-0x8000,   16, "$8000");
+    HEX(-0xffff,   16, "$0001");
+    HEX(-0x10000,  16, "$0000");
 
-    HEX(0,        -16, true, "0");
-    HEX(32,       -16, true, "32");
-    HEX(33,       -16, true, "$0021");
-    HEX(0x8000,   -16, true, "-$8000");
-    HEX(0xffff,   -16, true, "-1");
-    HEX(0x10000,  -16, true, "0");
-    HEX(-32,      -16, true, "-32");
-    HEX(-33,      -16, true, "-$0021");
-    HEX(-0x8000,  -16, true, "-$8000");
-    HEX(-0xffff,  -16, true, "1");
-    HEX(-0x10000, -16, true, "0");
+    HEX(0,        -16, "$0000");
+    HEX(32,       -16, "$0020");
+    HEX(0x8000,   -16, "-$8000");
+    HEX(0xffff,   -16, "-$0001");
+    HEX(0x10000,  -16, "$0000");
+    HEX(-32,      -16, "-$0020");
+    HEX(-0x8000,  -16, "-$8000");
+    HEX(-0xffff,  -16, "$0001");
+    HEX(-0x10000, -16, "$0000");
 
-    HEX(0,         16, false, "$0000");
-    HEX(32,        16, false, "$0020");
-    HEX(0x8000,    16, false, "$8000");
-    HEX(0xffff,    16, false, "$ffff");
-    HEX(0x10000,   16, false, "$0000");
-    HEX(-32,       16, false, "$ffe0");
-    HEX(-0x8000,   16, false, "$8000");
-    HEX(-0xffff,   16, false, "$0001");
-    HEX(-0x10000,  16, false, "$0000");
+    // Relax
 
-    HEX(0,        -16, false, "$0000");
-    HEX(32,       -16, false, "$0020");
-    HEX(0x8000,   -16, false, "-$8000");
-    HEX(0xffff,   -16, false, "-$0001");
-    HEX(0x10000,  -16, false, "$0000");
-    HEX(-32,      -16, false, "-$0020");
-    HEX(-0x8000,  -16, false, "-$8000");
-    HEX(-0xffff,  -16, false, "$0001");
-    HEX(-0x10000, -16, false, "$0000");
+    RHEX(0,         16, "0");
+    RHEX(32,        16, "32");
+    RHEX(33,        16, "$0021");
+    RHEX(0x8000,    16, "$8000");
+    RHEX(0xffff,    16, "$ffff");
+    RHEX(0x10000,   16, "0");
+    RHEX(-32,       16, "$ffe0");
+    RHEX(-33,       16, "$ffdf");
+    RHEX(-0x8000,   16, "$8000");
+    RHEX(-0xffff,   16, "1");
+    RHEX(-0x10000,  16, "0");
+
+    RHEX(0,        -16, "0");
+    RHEX(32,       -16, "32");
+    RHEX(33,       -16, "$0021");
+    RHEX(0x8000,   -16, "-$8000");
+    RHEX(0xffff,   -16, "-1");
+    RHEX(0x10000,  -16, "0");
+    RHEX(-32,      -16, "-32");
+    RHEX(-33,      -16, "-$0021");
+    RHEX(-0x8000,  -16, "-$8000");
+    RHEX(-0xffff,  -16, "1");
+    RHEX(-0x10000, -16, "0");
 }
 
 static void test_formatter_24bit() {
@@ -721,49 +722,51 @@ static void test_formatter_24bit() {
     DEC(-0xffffff,  -24, "1");
     DEC(-0x1000000, -24, "0");
 
-    HEX(0,           24, true, "0");
-    HEX(32,          24, true, "32");
-    HEX(33,          24, true, "$000021");
-    HEX(0x800000,    24, true, "$800000");
-    HEX(0xffffff,    24, true, "$ffffff");
-    HEX(0x1000000,   24, true, "0");
-    HEX(-32,         24, true, "$ffffe0");
-    HEX(-33,         24, true, "$ffffdf");
-    HEX(-0x800000,   24, true, "$800000");
-    HEX(-0xffffff,   24, true, "1");
-    HEX(-0x1000000,  24, true, "0");
+    HEX(0,           24, "$000000");
+    HEX(32,          24, "$000020");
+    HEX(0x800000,    24, "$800000");
+    HEX(0xffffff,    24, "$ffffff");
+    HEX(0x1000000,   24, "$000000");
+    HEX(-32,         24, "$ffffe0");
+    HEX(-0x800000,   24, "$800000");
+    HEX(-0xffffff,   24, "$000001");
+    HEX(-0x1000000,  24, "$000000");
 
-    HEX(0,          -24, true, "0");
-    HEX(32,         -24, true, "32");
-    HEX(33,         -24, true, "$000021");
-    HEX(0x800000,   -24, true, "-$800000");
-    HEX(0xffffff,   -24, true, "-1");
-    HEX(0x1000000,  -24, true, "0");
-    HEX(-32,        -24, true, "-32");
-    HEX(-33,        -24, true, "-$000021");
-    HEX(-0x800000,  -24, true, "-$800000");
-    HEX(-0xffffff,  -24, true, "1");
-    HEX(-0x1000000, -24, true, "0");
+    HEX(0,          -24, "$000000");
+    HEX(32,         -24, "$000020");
+    HEX(0x800000,   -24, "-$800000");
+    HEX(0xffffff,   -24, "-$000001");
+    HEX(0x1000000,  -24, "$000000");
+    HEX(-32,        -24, "-$000020");
+    HEX(-0x800000,  -24, "-$800000");
+    HEX(-0xffffff,  -24, "$000001");
+    HEX(-0x1000000, -24, "$000000");
 
-    HEX(0,           24, false, "$000000");
-    HEX(32,          24, false, "$000020");
-    HEX(0x800000,    24, false, "$800000");
-    HEX(0xffffff,    24, false, "$ffffff");
-    HEX(0x1000000,   24, false, "$000000");
-    HEX(-32,         24, false, "$ffffe0");
-    HEX(-0x800000,   24, false, "$800000");
-    HEX(-0xffffff,   24, false, "$000001");
-    HEX(-0x1000000,  24, false, "$000000");
+    // Relax
 
-    HEX(0,          -24, false, "$000000");
-    HEX(32,         -24, false, "$000020");
-    HEX(0x800000,   -24, false, "-$800000");
-    HEX(0xffffff,   -24, false, "-$000001");
-    HEX(0x1000000,  -24, false, "$000000");
-    HEX(-32,        -24, false, "-$000020");
-    HEX(-0x800000,  -24, false, "-$800000");
-    HEX(-0xffffff,  -24, false, "$000001");
-    HEX(-0x1000000, -24, false, "$000000");
+    RHEX(0,           24, "0");
+    RHEX(32,          24, "32");
+    RHEX(33,          24, "$000021");
+    RHEX(0x800000,    24, "$800000");
+    RHEX(0xffffff,    24, "$ffffff");
+    RHEX(0x1000000,   24, "0");
+    RHEX(-32,         24, "$ffffe0");
+    RHEX(-33,         24, "$ffffdf");
+    RHEX(-0x800000,   24, "$800000");
+    RHEX(-0xffffff,   24, "1");
+    RHEX(-0x1000000,  24, "0");
+
+    RHEX(0,          -24, "0");
+    RHEX(32,         -24, "32");
+    RHEX(33,         -24, "$000021");
+    RHEX(0x800000,   -24, "-$800000");
+    RHEX(0xffffff,   -24, "-1");
+    RHEX(0x1000000,  -24, "0");
+    RHEX(-32,        -24, "-32");
+    RHEX(-33,        -24, "-$000021");
+    RHEX(-0x800000,  -24, "-$800000");
+    RHEX(-0xffffff,  -24, "1");
+    RHEX(-0x1000000, -24, "0");
 }
 
 static void test_formatter_32bit() {
@@ -799,97 +802,89 @@ static void test_formatter_32bit() {
     DEC(-0x80000000, -32, "-2147483648");
     DEC(-0xffffffff, -32, "1");
 
-    HEX(0,           32, true, "0");
-    HEX(32,          32, true, "32");
-    HEX(33,          32, true, "$00000021");
-    HEX(0x80000000,  32, true, "$80000000");
-    HEX(0xffffffff,  32, true, "$ffffffff");
-    HEX(-32,         32, true, "$ffffffe0");
-    HEX(-33,         32, true, "$ffffffdf");
-    HEX(-0x80000000, 32, true, "$80000000");
-    HEX(-0xffffffff, 32, true, "1");
+    HEX(0,           32, "$00000000");
+    HEX(32,          32, "$00000020");
+    HEX(33,          32, "$00000021");
+    HEX(0x80000000,  32, "$80000000");
+    HEX(0xffffffff,  32, "$ffffffff");
+    HEX(-32,         32, "$ffffffe0");
+    HEX(-33,         32, "$ffffffdf");
+    HEX(-0x80000000, 32, "$80000000");
+    HEX(-0xffffffff, 32, "$00000001");
 
-    HEX(0,           -32, true, "0");
-    HEX(32,          -32, true, "32");
-    HEX(33,          -32, true, "$00000021");
-    HEX(0x80000000,  -32, true, "-$80000000");
-    HEX(0xffffffff,  -32, true, "-1");
-    HEX(-32,         -32, true, "-32");
-    HEX(-33,         -32, true, "-$00000021");
-    HEX(-0x80000000, -32, true, "-$80000000");
-    HEX(-0xffffffff, -32, true, "1");
+    HEX(0,           -32, "$00000000");
+    HEX(32,          -32, "$00000020");
+    HEX(33,          -32, "$00000021");
+    HEX(0x80000000,  -32, "-$80000000");
+    HEX(0xffffffff,  -32, "-$00000001");
+    HEX(-32,         -32, "-$00000020");
+    HEX(-33,         -32, "-$00000021");
+    HEX(-0x80000000, -32, "-$80000000");
+    HEX(-0xffffffff, -32, "$00000001");
 
-    formatter.setUpperHex(true);
+    // Relax
 
-    HEX(0,           32, false, "$00000000");
-    HEX(32,          32, false, "$00000020");
-    HEX(0x80000000,  32, false, "$80000000");
-    HEX(0xffffffff,  32, false, "$FFFFFFFF");
-    HEX(-32,         32, false, "$FFFFFFE0");
-    HEX(-0x80000000, 32, false, "$80000000");
-    HEX(-0xffffffff, 32, false, "$00000001");
+    RHEX(0,           32, "0");
+    RHEX(32,          32, "32");
+    RHEX(33,          32, "$00000021");
+    RHEX(0x80000000,  32, "$80000000");
+    RHEX(0xffffffff,  32, "$ffffffff");
+    RHEX(-32,         32, "$ffffffe0");
+    RHEX(-33,         32, "$ffffffdf");
+    RHEX(-0x80000000, 32, "$80000000");
+    RHEX(-0xffffffff, 32, "1");
 
-    HEX(0,           -32, false, "$00000000");
-    HEX(32,          -32, false, "$00000020");
-    HEX(0x80000000,  -32, false, "-$80000000");
-    HEX(0xffffffff,  -32, false, "-$00000001");
-    HEX(-32,         -32, false, "-$00000020");
-    HEX(-0x80000000, -32, false, "-$80000000");
-    HEX(-0xffffffff, -32, false, "$00000001");
+    RHEX(0,           -32, "0");
+    RHEX(32,          -32, "32");
+    RHEX(33,          -32, "$00000021");
+    RHEX(0x80000000,  -32, "-$80000000");
+    RHEX(0xffffffff,  -32, "-1");
+    RHEX(-32,         -32, "-32");
+    RHEX(-33,         -32, "-$00000021");
+    RHEX(-0x80000000, -32, "-$80000000");
+    RHEX(-0xffffffff, -32, "1");
+
+    // Uppercase
+
+    UHEX(0,           32, "$00000000");
+    UHEX(32,          32, "$00000020");
+    UHEX(0x80000000,  32, "$80000000");
+    UHEX(0xffffffff,  32, "$FFFFFFFF");
+    UHEX(-32,         32, "$FFFFFFE0");
+    UHEX(-0x80000000, 32, "$80000000");
+    UHEX(-0xffffffff, 32, "$00000001");
+
+    UHEX(0,           -32, "$00000000");
+    UHEX(32,          -32, "$00000020");
+    UHEX(0x80000000,  -32, "-$80000000");
+    UHEX(0xffffffff,  -32, "-$00000001");
+    UHEX(-32,         -32, "-$00000020");
+    UHEX(-0x80000000, -32, "-$80000000");
+    UHEX(-0xffffffff, -32, "$00000001");
+
+    // Uppercase and Relax
+
+    URHEX(0,           32, "0");
+    URHEX(32,          32, "32");
+    URHEX(33,          32, "$00000021");
+    URHEX(0x80000000,  32, "$80000000");
+    URHEX(0xffffffff,  32, "$FFFFFFFF");
+    URHEX(-32,         32, "$FFFFFFE0");
+    URHEX(-33,         32, "$FFFFFFDF");
+    URHEX(-0x80000000, 32, "$80000000");
+    URHEX(-0xffffffff, 32, "1");
+
+    URHEX(0,           -32, "0");
+    URHEX(32,          -32, "32");
+    URHEX(33,          -32, "$00000021");
+    URHEX(0x80000000,  -32, "-$80000000");
+    URHEX(0xffffffff,  -32, "-1");
+    URHEX(-32,         -32, "-32");
+    URHEX(-33,         -32, "-$00000021");
+    URHEX(-0x80000000, -32, "-$80000000");
+    URHEX(-0xffffffff, -32, "1");
+
 }
-
-static void test_formatter_cstyle() {
-    formatter.setCStyle(true);
-
-    HEX(0,    8, false, "0x00");
-    HEX(32,   8, false, "0x20");
-    HEX(128,  8, false, "0x80");
-    HEX(255,  8, false, "0xff");
-    HEX(256,  8, false, "0x00");
-    HEX(-32,  8, false, "0xe0");
-    HEX(-128, 8, false, "0x80");
-    HEX(-255, 8, false, "0x01");
-    HEX(-256, 8, false, "0x00");
-
-    HEX(0,         16, false, "0x0000");
-    HEX(32,        16, false, "0x0020");
-    HEX(0x8000,    16, false, "0x8000");
-    HEX(0xffff,    16, false, "0xffff");
-    HEX(0x10000,   16, false, "0x0000");
-    HEX(-32,       16, false, "0xffe0");
-    HEX(-0x8000,   16, false, "0x8000");
-    HEX(-0xffff,   16, false, "0x0001");
-    HEX(-0x10000,  16, false, "0x0000");
-
-    HEX(0,           24, false, "0x000000");
-    HEX(32,          24, false, "0x000020");
-    HEX(0x800000,    24, false, "0x800000");
-    HEX(0xffffff,    24, false, "0xffffff");
-    HEX(0x1000000,   24, false, "0x000000");
-    HEX(-32,         24, false, "0xffffe0");
-    HEX(-0x800000,   24, false, "0x800000");
-    HEX(-0xffffff,   24, false, "0x000001");
-    HEX(-0x1000000,  24, false, "0x000000");
-
-    HEX(0,           32, false, "0x00000000");
-    HEX(32,          32, false, "0x00000020");
-    HEX(0x80000000,  32, false, "0x80000000");
-    HEX(0xffffffff,  32, false, "0xffffffff");
-    HEX(-32,         32, false, "0xffffffe0");
-    HEX(-0x80000000, 32, false, "0x80000000");
-    HEX(-0xffffffff, 32, false, "0x00000001");
-
-    formatter.setUpperHex(true);
-
-    HEX(-128 *2, 9, false, "0x100");
-    HEX(   0 *2, 9, false, "0x000");
-    HEX(+127 *2, 9, false, "0x0FE");
-
-    HEX(-2048 *2, 13, false, "0x1000");
-    HEX(    0 *2, 13, false, "0x0000");
-    HEX(+2047 *2, 13, false, "0x0FFE");
-}
-
 // clang-format on
 
 void run_tests() {
@@ -909,7 +904,6 @@ void run_tests() {
     RUN_TEST(test_formatter_16bit);
     RUN_TEST(test_formatter_24bit);
     RUN_TEST(test_formatter_32bit);
-    RUN_TEST(test_formatter_cstyle);
 }
 
 // Local Variables:

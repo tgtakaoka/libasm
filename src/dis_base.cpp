@@ -25,6 +25,9 @@ static const char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant"
 static const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 static const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
+static const CStyleHexFormatter CSTYLE_HEX_FORMATTER;
+const ValueFormatter Disassembler::CSTYLE_FORMATTER{CSTYLE_HEX_FORMATTER};
+
 Disassembler::Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option)
     : _formatter(hexFormatter),
       _commonOptions(&_opt_relative),
@@ -45,8 +48,12 @@ void Disassembler::reset() {
     setCurSym(0);
 }
 
+const ValueFormatter &Disassembler::formatter() const {
+    return _cstyle ? CSTYLE_FORMATTER : _formatter;
+}
+
 Error Disassembler::setUpperHex(bool enable) {
-    _formatter.setUpperHex(enable);
+    _upperHex = enable;
     return OK;
 }
 
@@ -61,7 +68,7 @@ Error Disassembler::setRelativeTarget(bool enable) {
 }
 
 Error Disassembler::setCStyle(bool enable) {
-    formatter().setCStyle(enable);
+    _cstyle = enable;
     return OK;
 }
 
@@ -100,7 +107,7 @@ StrBuffer &Disassembler::outDec(StrBuffer &out, uint32_t val, int8_t bits) const
     const char *label = lookup(val, bw);
     if (label)
         return out.rtext(label);
-    return _formatter.formatDec(out, val, bits);
+    return formatter().formatDec(out, val, bits);
 }
 
 /**
@@ -113,7 +120,7 @@ StrBuffer &Disassembler::outHex(StrBuffer &out, uint32_t val, int8_t bits, bool 
     const char *label = lookup(val, bw);
     if (label)
         return out.rtext(label);
-    return _formatter.formatHex(out, val, bits, relax);
+    return formatter().formatHex(out, val, bits, _upperHex, relax);
 }
 
 /**
@@ -127,7 +134,7 @@ StrBuffer &Disassembler::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWi
         return out.rtext(label);
     if (addrWidth == 0)
         addrWidth = uint8_t(config().addressWidth());
-    return _formatter.formatHex(out, val, addrWidth, false);
+    return formatter().formatHex(out, val, addrWidth, _upperHex);
 }
 
 /**
@@ -153,9 +160,9 @@ StrBuffer &Disassembler::outRelAddr(
         val = static_cast<uint32_t>(delta);
     }
     if (deltaBits <= 14) {
-        return _formatter.formatDec(out, val, deltaBits);
+        return formatter().formatDec(out, val, deltaBits);
     } else {
-        return _formatter.formatHex(out, val, deltaBits);
+        return formatter().formatHex(out, val, deltaBits, _upperHex, true);
     }
 }
 

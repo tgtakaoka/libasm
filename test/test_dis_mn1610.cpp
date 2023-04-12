@@ -661,7 +661,7 @@ static void test_misc() {
 }
 
 static void test_formatter() {
-    disassembler.formatter().setCStyle(false);
+    disassembler.setCStyle(false);
     TEST(L,  "R1, X'10'",       0xC000|(0<<11)|(1<<8)|0x10);
     TEST(ST, "R3, (X'FF')",     0x8000|(2<<11)|(3<<8)|0xFF);
 

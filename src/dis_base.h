@@ -40,7 +40,7 @@ struct Disassembler : ErrorReporter {
     virtual const ConfigBase &config() const = 0;
     virtual void reset();
 
-    ValueFormatter &formatter() { return _formatter; }
+    const ValueFormatter &formatter() const;
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
     const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
@@ -61,8 +61,10 @@ struct Disassembler : ErrorReporter {
     Error setCStyle(bool enable);
     Error setCurSym(char curSym);
 
+private:
+    const ValueFormatter _formatter;
+    static const ValueFormatter CSTYLE_FORMATTER;
 protected:
-    ValueFormatter _formatter;
     const Options _commonOptions;
     const Options _options;
     const BoolOption<Disassembler> _opt_relative;
@@ -70,9 +72,11 @@ protected:
     const CharOption<Disassembler> _opt_curSym;
     const char _defaultCurSym;
 
-    char _curSym;
+    bool _upperHex;
     bool _uppercase;
     bool _relativeTarget;
+    bool _cstyle;
+    char _curSym;
     SymbolTable *_symtab = nullptr;
 
     Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option = nullptr);

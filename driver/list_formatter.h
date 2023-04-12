@@ -38,8 +38,9 @@ public:
 protected:
     ListFormatter();
 
-    ValueFormatter _formatter;
+    const ValueFormatter _formatter;
     StrBuffer _out;
+    bool _upperHex;
     char _out_buffer[256];
 
     void resetOut() { _out.reset(_out_buffer, sizeof(_out_buffer)); }

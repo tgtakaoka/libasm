@@ -668,7 +668,7 @@ static void test_generic_addressing() {
 }
 
 static void test_formatter() {
-    disassembler.formatter().setCStyle(false);
+    disassembler.setCStyle(false);
     ATEST(0x800000, BGT, "*-X'00800000", 0x6A, 0xFF, 0x80, 0x00, 0x00);
     ATEST(0x000000, BLS, "*+X'00FFFFFF", 0x5A, 0xC0, 0xFF, 0xFF, 0xFF);
     TEST(RET,  "-X'1F000000",            0x12, 0xE1, 0x00, 0x00, 0x00);

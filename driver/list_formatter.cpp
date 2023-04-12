@@ -27,7 +27,7 @@ ListFormatter::ListFormatter()
 }
 
 void ListFormatter::setUpperHex(bool enable) {
-    _formatter.setUpperHex(enable);
+    _upperHex = enable;
 }
 
 void ListFormatter::formatDec(uint32_t val, int8_t width) {
@@ -57,7 +57,7 @@ void ListFormatter::formatHex(uint32_t val, uint8_t bits, bool zeroSuppress) {
         }
     }
     auto start = _out.mark();
-    _formatter.formatHex(_out, val, bits, false);
+    _formatter.formatHex(_out, val, bits, _upperHex, false);
     if (zeroSuppress) {
         while (*start == '0' && start[1])
             *start++ = ' ';

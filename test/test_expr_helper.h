@@ -31,12 +31,12 @@ namespace test {
 extern TestSymtab symtab;
 extern TestAsserter asserter;
 
-void val_assert(const char *file, const int line, const char *expr, uint32_t expected,
+void val_assert(const char *file, int line, const char *expr, uint32_t expected,
         const ErrorAt &expected_error, size_t size, ValueParser &);
-void dec_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const char *expected, ValueFormatter &);
-void hex_assert(const char *file, const int line, const uint32_t value, int8_t bitWidth,
-        const bool relax, const char *expected, ValueFormatter &);
+void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
+        const ValueFormatter &);
+void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
+        const ValueFormatter &, bool upperHex, bool relax);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -71,8 +71,14 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define E32(expr, expected) _EXPR32(expr, expected, OK, "")
 
 #define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
-#define HEX(value, bits, relax, expected) \
-    hex_assert(__FILE__, __LINE__, value, bits, relax, expected, formatter)
+#define HEX(value, bits, expected) \
+    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, false, false)
+#define RHEX(value, bits, expected) \
+    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, false, true)
+#define UHEX(value, bits, expected) \
+    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, true, false)
+#define URHEX(value, bits, expected) \
+    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, true, true)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

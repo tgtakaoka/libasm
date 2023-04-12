@@ -221,7 +221,7 @@ static void test_page_boundary() {
 }
 
 static void test_formatter() {
-    disassembler.formatter().setCStyle(false);
+    disassembler.setCStyle(false);
     TEST(LDI, "0",    0xC4, 0x00);
     TEST(ANI, "X'FF", 0xD4, 0xFF);
     TEST(ORI, "1",    0xDC, 0x01);

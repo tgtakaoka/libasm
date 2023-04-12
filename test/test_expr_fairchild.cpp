@@ -26,11 +26,9 @@ const FairchildLetterParser letter;
 const AsteriskLocationParser location;
 ValueParser parser{number, comment, symbol, letter, location};
 const SurroundHexFormatter hexFormatter{HexFormatter::H_DASH, '\''};
-ValueFormatter formatter{hexFormatter};
+const ValueFormatter formatter{hexFormatter};
 
 static void set_up() {
-    formatter.setCStyle(false);
-    formatter.setUpperHex(false);
 }
 
 static void tear_down() {
@@ -273,49 +271,51 @@ static void test_formatter_8bit() {
     DEC(-255, -8, "1");
     DEC(-256, -8, "0");
 
-    HEX(0,    8, true, "0");
-    HEX(32,   8, true, "32");
-    HEX(33,   8, true, "h'21'");
-    HEX(128,  8, true, "h'80'");
-    HEX(255,  8, true, "h'ff'");
-    HEX(256,  8, true, "0");
-    HEX(-32,  8, true, "h'e0'");
-    HEX(-33,  8, true, "h'df'");
-    HEX(-128, 8, true, "h'80'");
-    HEX(-255, 8, true, "1");
-    HEX(-256, 8, true, "0");
+    HEX(0,    8, "h'00'");
+    HEX(32,   8, "h'20'");
+    HEX(128,  8, "h'80'");
+    HEX(255,  8, "h'ff'");
+    HEX(256,  8, "h'00'");
+    HEX(-32,  8, "h'e0'");
+    HEX(-128, 8, "h'80'");
+    HEX(-255, 8, "h'01'");
+    HEX(-256, 8, "h'00'");
 
-    HEX(0,   -8, true, "0");
-    HEX(32,  -8, true, "32");
-    HEX(33,  -8, true, "h'21'");
-    HEX(128, -8, true, "-h'80'");
-    HEX(255, -8, true, "-1");
-    HEX(256, -8, true, "0");
-    HEX(-32, -8, true, "-32");
-    HEX(-33, -8, true, "-h'21'");
-    HEX(-128,-8, true, "-h'80'");
-    HEX(-255,-8, true, "1");
-    HEX(-256,-8, true, "0");
+    HEX(0,   -8, "h'00'");
+    HEX(32,  -8, "h'20'");
+    HEX(128, -8, "-h'80'");
+    HEX(255, -8, "-h'01'");
+    HEX(256, -8, "h'00'");
+    HEX(-32, -8, "-h'20'");
+    HEX(-128,-8, "-h'80'");
+    HEX(-255,-8, "h'01'");
+    HEX(-256,-8, "h'00'");
 
-    HEX(0,    8, false, "h'00'");
-    HEX(32,   8, false, "h'20'");
-    HEX(128,  8, false, "h'80'");
-    HEX(255,  8, false, "h'ff'");
-    HEX(256,  8, false, "h'00'");
-    HEX(-32,  8, false, "h'e0'");
-    HEX(-128, 8, false, "h'80'");
-    HEX(-255, 8, false, "h'01'");
-    HEX(-256, 8, false, "h'00'");
+    // Relax
 
-    HEX(0,   -8, false, "h'00'");
-    HEX(32,  -8, false, "h'20'");
-    HEX(128, -8, false, "-h'80'");
-    HEX(255, -8, false, "-h'01'");
-    HEX(256, -8, false, "h'00'");
-    HEX(-32, -8, false, "-h'20'");
-    HEX(-128,-8, false, "-h'80'");
-    HEX(-255,-8, false, "h'01'");
-    HEX(-256,-8, false, "h'00'");
+    RHEX(0,    8, "0");
+    RHEX(32,   8, "32");
+    RHEX(33,   8, "h'21'");
+    RHEX(128,  8, "h'80'");
+    RHEX(255,  8, "h'ff'");
+    RHEX(256,  8, "0");
+    RHEX(-32,  8, "h'e0'");
+    RHEX(-33,  8, "h'df'");
+    RHEX(-128, 8, "h'80'");
+    RHEX(-255, 8, "1");
+    RHEX(-256, 8, "0");
+
+    RHEX(0,   -8, "0");
+    RHEX(32,  -8, "32");
+    RHEX(33,  -8, "h'21'");
+    RHEX(128, -8, "-h'80'");
+    RHEX(255, -8, "-1");
+    RHEX(256, -8, "0");
+    RHEX(-32, -8, "-32");
+    RHEX(-33, -8, "-h'21'");
+    RHEX(-128,-8, "-h'80'");
+    RHEX(-255,-8, "1");
+    RHEX(-256,-8, "0");
 }
 
 static void test_formatter_16bit() {
@@ -359,49 +359,51 @@ static void test_formatter_16bit() {
     DEC(-0xffff,  -16, "1");
     DEC(-0x10000, -16, "0");
 
-    HEX(0,         16, true, "0");
-    HEX(32,        16, true, "32");
-    HEX(33,        16, true, "h'0021'");
-    HEX(0x8000,    16, true, "h'8000'");
-    HEX(0xffff,    16, true, "h'ffff'");
-    HEX(0x10000,   16, true, "0");
-    HEX(-32,       16, true, "h'ffe0'");
-    HEX(-33,       16, true, "h'ffdf'");
-    HEX(-0x8000,   16, true, "h'8000'");
-    HEX(-0xffff,   16, true, "1");
-    HEX(-0x10000,  16, true, "0");
+    HEX(0,         16, "h'0000'");
+    HEX(32,        16, "h'0020'");
+    HEX(0x8000,    16, "h'8000'");
+    HEX(0xffff,    16, "h'ffff'");
+    HEX(0x10000,   16, "h'0000'");
+    HEX(-32,       16, "h'ffe0'");
+    HEX(-0x8000,   16, "h'8000'");
+    HEX(-0xffff,   16, "h'0001'");
+    HEX(-0x10000,  16, "h'0000'");
 
-    HEX(0,        -16, true, "0");
-    HEX(32,       -16, true, "32");
-    HEX(33,       -16, true, "h'0021'");
-    HEX(0x8000,   -16, true, "-h'8000'");
-    HEX(0xffff,   -16, true, "-1");
-    HEX(0x10000,  -16, true, "0");
-    HEX(-32,      -16, true, "-32");
-    HEX(-33,      -16, true, "-h'0021'");
-    HEX(-0x8000,  -16, true, "-h'8000'");
-    HEX(-0xffff,  -16, true, "1");
-    HEX(-0x10000, -16, true, "0");
+    HEX(0,        -16, "h'0000'");
+    HEX(32,       -16, "h'0020'");
+    HEX(0x8000,   -16, "-h'8000'");
+    HEX(0xffff,   -16, "-h'0001'");
+    HEX(0x10000,  -16, "h'0000'");
+    HEX(-32,      -16, "-h'0020'");
+    HEX(-0x8000,  -16, "-h'8000'");
+    HEX(-0xffff,  -16, "h'0001'");
+    HEX(-0x10000, -16, "h'0000'");
 
-    HEX(0,         16, false, "h'0000'");
-    HEX(32,        16, false, "h'0020'");
-    HEX(0x8000,    16, false, "h'8000'");
-    HEX(0xffff,    16, false, "h'ffff'");
-    HEX(0x10000,   16, false, "h'0000'");
-    HEX(-32,       16, false, "h'ffe0'");
-    HEX(-0x8000,   16, false, "h'8000'");
-    HEX(-0xffff,   16, false, "h'0001'");
-    HEX(-0x10000,  16, false, "h'0000'");
+    // Relax
 
-    HEX(0,        -16, false, "h'0000'");
-    HEX(32,       -16, false, "h'0020'");
-    HEX(0x8000,   -16, false, "-h'8000'");
-    HEX(0xffff,   -16, false, "-h'0001'");
-    HEX(0x10000,  -16, false, "h'0000'");
-    HEX(-32,      -16, false, "-h'0020'");
-    HEX(-0x8000,  -16, false, "-h'8000'");
-    HEX(-0xffff,  -16, false, "h'0001'");
-    HEX(-0x10000, -16, false, "h'0000'");
+    RHEX(0,         16, "0");
+    RHEX(32,        16, "32");
+    RHEX(33,        16, "h'0021'");
+    RHEX(0x8000,    16, "h'8000'");
+    RHEX(0xffff,    16, "h'ffff'");
+    RHEX(0x10000,   16, "0");
+    RHEX(-32,       16, "h'ffe0'");
+    RHEX(-33,       16, "h'ffdf'");
+    RHEX(-0x8000,   16, "h'8000'");
+    RHEX(-0xffff,   16, "1");
+    RHEX(-0x10000,  16, "0");
+
+    RHEX(0,        -16, "0");
+    RHEX(32,       -16, "32");
+    RHEX(33,       -16, "h'0021'");
+    RHEX(0x8000,   -16, "-h'8000'");
+    RHEX(0xffff,   -16, "-1");
+    RHEX(0x10000,  -16, "0");
+    RHEX(-32,      -16, "-32");
+    RHEX(-33,      -16, "-h'0021'");
+    RHEX(-0x8000,  -16, "-h'8000'");
+    RHEX(-0xffff,  -16, "1");
+    RHEX(-0x10000, -16, "0");
 }
 
 static void test_formatter_24bit() {
@@ -445,49 +447,51 @@ static void test_formatter_24bit() {
     DEC(-0xffffff,  -24, "1");
     DEC(-0x1000000, -24, "0");
 
-    HEX(0,           24, true, "0");
-    HEX(32,          24, true, "32");
-    HEX(33,          24, true, "h'000021'");
-    HEX(0x800000,    24, true, "h'800000'");
-    HEX(0xffffff,    24, true, "h'ffffff'");
-    HEX(0x1000000,   24, true, "0");
-    HEX(-32,         24, true, "h'ffffe0'");
-    HEX(-33,         24, true, "h'ffffdf'");
-    HEX(-0x800000,   24, true, "h'800000'");
-    HEX(-0xffffff,   24, true, "1");
-    HEX(-0x1000000,  24, true, "0");
+    HEX(0,           24, "h'000000'");
+    HEX(32,          24, "h'000020'");
+    HEX(0x800000,    24, "h'800000'");
+    HEX(0xffffff,    24, "h'ffffff'");
+    HEX(0x1000000,   24, "h'000000'");
+    HEX(-32,         24, "h'ffffe0'");
+    HEX(-0x800000,   24, "h'800000'");
+    HEX(-0xffffff,   24, "h'000001'");
+    HEX(-0x1000000,  24, "h'000000'");
 
-    HEX(0,          -24, true, "0");
-    HEX(32,         -24, true, "32");
-    HEX(33,         -24, true, "h'000021'");
-    HEX(0x800000,   -24, true, "-h'800000'");
-    HEX(0xffffff,   -24, true, "-1");
-    HEX(0x1000000,  -24, true, "0");
-    HEX(-32,        -24, true, "-32");
-    HEX(-33,        -24, true, "-h'000021'");
-    HEX(-0x800000,  -24, true, "-h'800000'");
-    HEX(-0xffffff,  -24, true, "1");
-    HEX(-0x1000000, -24, true, "0");
+    HEX(0,          -24, "h'000000'");
+    HEX(32,         -24, "h'000020'");
+    HEX(0x800000,   -24, "-h'800000'");
+    HEX(0xffffff,   -24, "-h'000001'");
+    HEX(0x1000000,  -24, "h'000000'");
+    HEX(-32,        -24, "-h'000020'");
+    HEX(-0x800000,  -24, "-h'800000'");
+    HEX(-0xffffff,  -24, "h'000001'");
+    HEX(-0x1000000, -24, "h'000000'");
 
-    HEX(0,           24, false, "h'000000'");
-    HEX(32,          24, false, "h'000020'");
-    HEX(0x800000,    24, false, "h'800000'");
-    HEX(0xffffff,    24, false, "h'ffffff'");
-    HEX(0x1000000,   24, false, "h'000000'");
-    HEX(-32,         24, false, "h'ffffe0'");
-    HEX(-0x800000,   24, false, "h'800000'");
-    HEX(-0xffffff,   24, false, "h'000001'");
-    HEX(-0x1000000,  24, false, "h'000000'");
+    // Relax
 
-    HEX(0,          -24, false, "h'000000'");
-    HEX(32,         -24, false, "h'000020'");
-    HEX(0x800000,   -24, false, "-h'800000'");
-    HEX(0xffffff,   -24, false, "-h'000001'");
-    HEX(0x1000000,  -24, false, "h'000000'");
-    HEX(-32,        -24, false, "-h'000020'");
-    HEX(-0x800000,  -24, false, "-h'800000'");
-    HEX(-0xffffff,  -24, false, "h'000001'");
-    HEX(-0x1000000, -24, false, "h'000000'");
+    RHEX(0,           24, "0");
+    RHEX(32,          24, "32");
+    RHEX(33,          24, "h'000021'");
+    RHEX(0x800000,    24, "h'800000'");
+    RHEX(0xffffff,    24, "h'ffffff'");
+    RHEX(0x1000000,   24, "0");
+    RHEX(-32,         24, "h'ffffe0'");
+    RHEX(-33,         24, "h'ffffdf'");
+    RHEX(-0x800000,   24, "h'800000'");
+    RHEX(-0xffffff,   24, "1");
+    RHEX(-0x1000000,  24, "0");
+
+    RHEX(0,          -24, "0");
+    RHEX(32,         -24, "32");
+    RHEX(33,         -24, "h'000021'");
+    RHEX(0x800000,   -24, "-h'800000'");
+    RHEX(0xffffff,   -24, "-1");
+    RHEX(0x1000000,  -24, "0");
+    RHEX(-32,        -24, "-32");
+    RHEX(-33,        -24, "-h'000021'");
+    RHEX(-0x800000,  -24, "-h'800000'");
+    RHEX(-0xffffff,  -24, "1");
+    RHEX(-0x1000000, -24, "0");
 }
 
 static void test_formatter_32bit() {
@@ -523,95 +527,88 @@ static void test_formatter_32bit() {
     DEC(-0x80000000, -32, "-2147483648");
     DEC(-0xffffffff, -32, "1");
 
-    HEX(0,           32, true, "0");
-    HEX(32,          32, true, "32");
-    HEX(33,          32, true, "h'00000021'");
-    HEX(0x80000000,  32, true, "h'80000000'");
-    HEX(0xffffffff,  32, true, "h'ffffffff'");
-    HEX(-32,         32, true, "h'ffffffe0'");
-    HEX(-33,         32, true, "h'ffffffdf'");
-    HEX(-0x80000000, 32, true, "h'80000000'");
-    HEX(-0xffffffff, 32, true, "1");
+    HEX(0,           32, "h'00000000'");
+    HEX(32,          32, "h'00000020'");
+    HEX(33,          32, "h'00000021'");
+    HEX(0x80000000,  32, "h'80000000'");
+    HEX(0xffffffff,  32, "h'ffffffff'");
+    HEX(-32,         32, "h'ffffffe0'");
+    HEX(-33,         32, "h'ffffffdf'");
+    HEX(-0x80000000, 32, "h'80000000'");
+    HEX(-0xffffffff, 32, "h'00000001'");
 
-    HEX(0,           -32, true, "0");
-    HEX(32,          -32, true, "32");
-    HEX(33,          -32, true, "h'00000021'");
-    HEX(0x80000000,  -32, true, "-h'80000000'");
-    HEX(0xffffffff,  -32, true, "-1");
-    HEX(-32,         -32, true, "-32");
-    HEX(-33,         -32, true, "-h'00000021'");
-    HEX(-0x80000000, -32, true, "-h'80000000'");
-    HEX(-0xffffffff, -32, true, "1");
+    HEX(0,           -32, "h'00000000'");
+    HEX(32,          -32, "h'00000020'");
+    HEX(33,          -32, "h'00000021'");
+    HEX(0x80000000,  -32, "-h'80000000'");
+    HEX(0xffffffff,  -32, "-h'00000001'");
+    HEX(-32,         -32, "-h'00000020'");
+    HEX(-33,         -32, "-h'00000021'");
+    HEX(-0x80000000, -32, "-h'80000000'");
+    HEX(-0xffffffff, -32, "h'00000001'");
 
-    formatter.setUpperHex(true);
+    // Relax
 
-    HEX(0,           32, false, "H'00000000'");
-    HEX(32,          32, false, "H'00000020'");
-    HEX(0x80000000,  32, false, "H'80000000'");
-    HEX(0xffffffff,  32, false, "H'FFFFFFFF'");
-    HEX(-32,         32, false, "H'FFFFFFE0'");
-    HEX(-0x80000000, 32, false, "H'80000000'");
-    HEX(-0xffffffff, 32, false, "H'00000001'");
+    RHEX(0,           32, "0");
+    RHEX(32,          32, "32");
+    RHEX(33,          32, "h'00000021'");
+    RHEX(0x80000000,  32, "h'80000000'");
+    RHEX(0xffffffff,  32, "h'ffffffff'");
+    RHEX(-32,         32, "h'ffffffe0'");
+    RHEX(-33,         32, "h'ffffffdf'");
+    RHEX(-0x80000000, 32, "h'80000000'");
+    RHEX(-0xffffffff, 32, "1");
 
-    HEX(0,           -32, false, "H'00000000'");
-    HEX(32,          -32, false, "H'00000020'");
-    HEX(0x80000000,  -32, false, "-H'80000000'");
-    HEX(0xffffffff,  -32, false, "-H'00000001'");
-    HEX(-32,         -32, false, "-H'00000020'");
-    HEX(-0x80000000, -32, false, "-H'80000000'");
-    HEX(-0xffffffff, -32, false, "H'00000001'");
-}
+    RHEX(0,           -32, "0");
+    RHEX(32,          -32, "32");
+    RHEX(33,          -32, "h'00000021'");
+    RHEX(0x80000000,  -32, "-h'80000000'");
+    RHEX(0xffffffff,  -32, "-1");
+    RHEX(-32,         -32, "-32");
+    RHEX(-33,         -32, "-h'00000021'");
+    RHEX(-0x80000000, -32, "-h'80000000'");
+    RHEX(-0xffffffff, -32, "1");
 
-static void test_formatter_cstyle() {
-    formatter.setCStyle(true);
+    // Uppercase
 
-    HEX(0,    8, false, "0x00");
-    HEX(32,   8, false, "0x20");
-    HEX(128,  8, false, "0x80");
-    HEX(255,  8, false, "0xff");
-    HEX(256,  8, false, "0x00");
-    HEX(-32,  8, false, "0xe0");
-    HEX(-128, 8, false, "0x80");
-    HEX(-255, 8, false, "0x01");
-    HEX(-256, 8, false, "0x00");
+    UHEX(0,           32, "H'00000000'");
+    UHEX(32,          32, "H'00000020'");
+    UHEX(0x80000000,  32, "H'80000000'");
+    UHEX(0xffffffff,  32, "H'FFFFFFFF'");
+    UHEX(-32,         32, "H'FFFFFFE0'");
+    UHEX(-0x80000000, 32, "H'80000000'");
+    UHEX(-0xffffffff, 32, "H'00000001'");
 
-    HEX(0,         16, false, "0x0000");
-    HEX(32,        16, false, "0x0020");
-    HEX(0x8000,    16, false, "0x8000");
-    HEX(0xffff,    16, false, "0xffff");
-    HEX(0x10000,   16, false, "0x0000");
-    HEX(-32,       16, false, "0xffe0");
-    HEX(-0x8000,   16, false, "0x8000");
-    HEX(-0xffff,   16, false, "0x0001");
-    HEX(-0x10000,  16, false, "0x0000");
+    UHEX(0,           -32, "H'00000000'");
+    UHEX(32,          -32, "H'00000020'");
+    UHEX(0x80000000,  -32, "-H'80000000'");
+    UHEX(0xffffffff,  -32, "-H'00000001'");
+    UHEX(-32,         -32, "-H'00000020'");
+    UHEX(-0x80000000, -32, "-H'80000000'");
+    UHEX(-0xffffffff, -32, "H'00000001'");
 
-    HEX(0,           24, false, "0x000000");
-    HEX(32,          24, false, "0x000020");
-    HEX(0x800000,    24, false, "0x800000");
-    HEX(0xffffff,    24, false, "0xffffff");
-    HEX(0x1000000,   24, false, "0x000000");
-    HEX(-32,         24, false, "0xffffe0");
-    HEX(-0x800000,   24, false, "0x800000");
-    HEX(-0xffffff,   24, false, "0x000001");
-    HEX(-0x1000000,  24, false, "0x000000");
 
-    HEX(0,           32, false, "0x00000000");
-    HEX(32,          32, false, "0x00000020");
-    HEX(0x80000000,  32, false, "0x80000000");
-    HEX(0xffffffff,  32, false, "0xffffffff");
-    HEX(-32,         32, false, "0xffffffe0");
-    HEX(-0x80000000, 32, false, "0x80000000");
-    HEX(-0xffffffff, 32, false, "0x00000001");
+    // Uppercase and Relax
 
-    formatter.setUpperHex(true);
+    URHEX(0,           32, "0");
+    URHEX(32,          32, "32");
+    URHEX(33,          32, "H'00000021'");
+    URHEX(0x80000000,  32, "H'80000000'");
+    URHEX(0xffffffff,  32, "H'FFFFFFFF'");
+    URHEX(-32,         32, "H'FFFFFFE0'");
+    URHEX(-33,         32, "H'FFFFFFDF'");
+    URHEX(-0x80000000, 32, "H'80000000'");
+    URHEX(-0xffffffff, 32, "1");
 
-    HEX(-128 *2, 9, false, "0x100");
-    HEX(   0 *2, 9, false, "0x000");
-    HEX(+127 *2, 9, false, "0x0FE");
-
-    HEX(-2048 *2, 13, false, "0x1000");
-    HEX(    0 *2, 13, false, "0x0000");
-    HEX(+2047 *2, 13, false, "0x0FFE");
+    URHEX(0,           -32, "0");
+    URHEX(32,          -32, "32");
+    URHEX(33,          -32, "H'00000021'");
+    URHEX(0x80000000,  -32, "-H'80000000'");
+    URHEX(0xffffffff,  -32, "-1");
+    URHEX(-32,         -32, "-32");
+    URHEX(-33,         -32, "-H'00000021'");
+    URHEX(-0x80000000, -32, "-H'80000000'");
+    URHEX(-0xffffffff, -32, "1");
 }
 
 // clang-format on
@@ -629,7 +626,6 @@ void run_tests() {
     RUN_TEST(test_formatter_16bit);
     RUN_TEST(test_formatter_24bit);
     RUN_TEST(test_formatter_32bit);
-    RUN_TEST(test_formatter_cstyle);
 }
 
 // Local Variables:
