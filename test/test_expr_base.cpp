@@ -32,7 +32,6 @@ static void set_up() {}
 
 static void tear_down() {
     symtab.reset();
-    parser.setFunctionParser();
 }
 
 // clang-format off
@@ -420,41 +419,24 @@ static void test_function() {
     static const struct : Functor {
         int8_t nargs() const override { return 2; }
         Error eval(ValueStack &stack, uint8_t argc) const override {
-            const auto rhs = stack.pop();
-            const auto lhs = stack.pop();
-            stack.pushSigned(lhs.getSigned() - rhs.getSigned());
+            const auto rhs = stack.pop().getSigned();
+            const auto lhs = stack.pop().getSigned();
+            stack.pushSigned(lhs - rhs);
             return OK;
         }
     } FN_SUB;
     static const struct : Functor {
         Error eval(ValueStack &stack, uint8_t argc) const override {
             int32_t sum = 0;
-            for (auto i = 0; i < argc; i++)
+            while (argc--)
                 sum += stack.pop().getSigned();
             stack.pushSigned(sum);
             return OK;
         }
     } FN_SUM;
-    const struct : FunctionParser {
-        const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const {
-            auto p = scan;
-            p.trimStart([](char c) { return isalnum(c); });
-            const auto name = StrScanner(scan.str(), p.str());
-            const Functor *fn = nullptr;
-            if (name.iequals_P(PSTR("PI"))) {
-                fn = &FN_PI;
-            } else if (name.iequals_P(PSTR("SUB"))) {
-                fn = &FN_SUB;
-            } else if (name.iequals_P(PSTR("SUM"))) {
-                fn = &FN_SUM;
-            }
-            if (fn)
-                scan = p;
-            return fn;
-        }
-
-    } function;
-    parser.setFunctionParser(&function);
+    symtab.internFunction(&FN_PI, "pi");
+    symtab.internFunction(&FN_SUB, "sub");
+    symtab.internFunction(&FN_SUM, "sum");
     // clang-format off
 
     X16("hi (0x1234)", UNDEFINED_SYMBOL, "hi (0x1234)");

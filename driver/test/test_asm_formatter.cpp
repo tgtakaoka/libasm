@@ -139,7 +139,7 @@ void test_function() {
     ASM("ins8060",
             "        cpu   ins8060\n"
             "high:   function v  , v >> 8 ; high 8-bit\n"
-            "low:    function v, v & x'FF ; low 8-bit\n"
+            "low:    function v, L(v)     ; predefined\n"
             "cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
             "CONS:   function -1\n"
             "label:  org   x'abcd\n"
@@ -149,6 +149,7 @@ void test_function() {
             "        dw    cons(h(label), l(label))\n"
             "        dw    cons (high(x'1234),low(x'3456))\n"
             "        dw    CONS (  ) \n"
+            "        dw    ADDR(label)\n"
             "high:   function x,x  ; duplicate\n"
             "label:  function y,y  ; symbol\n"
             "cons:   equ   0       ; function\n"
@@ -157,7 +158,7 @@ void test_function() {
             "        dw    CONS    ; missing\n",
             "          0 :                            cpu   ins8060\n"
             "          0 :                    high:   function v  , v >> 8 ; high 8-bit\n"
-            "          0 :                    low:    function v, v & x'FF ; low 8-bit\n"
+            "          0 :                    low:    function v, L(v)     ; predefined\n"
             "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
             "          0 :                    CONS:   function -1\n"
             "       ABCD :                    label:  org   x'abcd\n"
@@ -167,18 +168,19 @@ void test_function() {
             "       ABD1 : CD AB                      dw    cons(h(label), l(label))\n"
             "       ABD3 : 56 12                      dw    cons (high(x'1234),low(x'3456))\n"
             "       ABD5 : FF FF                      dw    CONS (  ) \n"
-            "ins8060:13: error: Duplicate function\n"
-            "       ABD7 :                    high:   function x,x  ; duplicate\n"
-            "ins8060:14: error: Duplicate label\n"
-            "       ABD7 :                    label:  function y,y  ; symbol\n"
+            "       ABD7 : CC AB                      dw    ADDR(label)\n"
+            "ins8060:14: error: Duplicate function\n"
+            "       ABD9 :                    high:   function x,x  ; duplicate\n"
             "ins8060:15: error: Duplicate label\n"
-            "       ABD7 :                    cons:   equ   0       ; function\n"
-            "ins8060:16: error: Too few function arguments\n"
-            "       ABD7 :                            dw    cons(0) ; requires 2\n"
-            "ins8060:17: error: Too many function arguments\n"
-            "       ABD7 :                            dw    CONS(0) ; requires 0\n"
-            "ins8060:18: error: Missing function arguments\n"
-            "       ABD7 :                            dw    CONS    ; missing\n");
+            "       ABD9 :                    label:  function y,y  ; symbol\n"
+            "ins8060:16: error: Duplicate label\n"
+            "       ABD9 :                    cons:   equ   0       ; function\n"
+            "ins8060:17: error: Too few function arguments\n"
+            "       ABD9 :                            dw    cons(0) ; requires 2\n"
+            "ins8060:18: error: Too many function arguments\n"
+            "       ABD9 :                            dw    CONS(0) ; requires 0\n"
+            "ins8060:19: error: Missing function arguments\n"
+            "       ABD9 :                            dw    CONS    ; missing\n");
 }
 
 void run_tests() {

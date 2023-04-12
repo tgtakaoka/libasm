@@ -226,6 +226,16 @@ Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     return CStyleNumberParser::parseNumber(scan, val);
 }
 
+StrScanner SymbolParser::readSymbol(StrScanner &scan) const {
+    auto p = scan;
+    if (!symbolLetter(*p++, true))
+        return StrScanner(scan.str(), scan.str());
+    p.trimStart([this](char c) { return symbolLetter(c); });
+    auto symbol = StrScanner(scan.str(), p.str());
+    scan = p;
+    return symbol;
+}
+
 bool DefaultSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return headOfSymbol ? isalpha(c) : isalnum(c);
 }
@@ -246,6 +256,43 @@ const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION_UNDER[] PROGMEM = "$.?_
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return DefaultSymbolParser::symbolLetter(c, headOfSymbol) ||
            strchr_P(headOfSymbol ? _prefix_P : _extra_P, c);
+}
+
+static const struct : Functor {
+    Error eval(ValueStack &stack, uint8_t argc) const {
+        while (argc != 0) {
+            stack.pop();
+            --argc;
+        }
+        stack.pushUndefined();
+        return OK;
+    }
+} FN_VARARGS_UNDEF;
+
+const Functor *FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
+        const SymbolParser &symParser, const SymbolTable *symtab) const {
+    auto p = scan;
+    const StrScanner name = readFunctionName(p, symParser);
+    if (name.size() == 0)
+        return nullptr;
+
+    if (symtab == nullptr) {
+        if (*p.skipSpaces() != '(')
+            return nullptr;
+        scan = p;
+        return &FN_VARARGS_UNDEF;
+    }
+
+    auto fn = symtab->lookupFunction(name);
+    if (fn) {
+        scan = p;
+        return reinterpret_cast<const Functor *>(fn);
+    }
+    return nullptr;
+}
+
+StrScanner FunctionParser::readFunctionName(StrScanner &scan, const SymbolParser &symParser) const {
+    return symParser.readSymbol(scan);
 }
 
 Error CStyleLetterParser::parseLetter(StrScanner &scan, char &letter) const {

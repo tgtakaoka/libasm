@@ -344,7 +344,7 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
     if (driver.symbolMode() == REPORT_DUPLICATE && driver.symbolInTable(list.lineSymbol()))
         return setError(DUPLICATE_LABEL);
     const auto &parser = assembler().parser();
-    std::list<StrScanner> params;
+    FunctionStore::Parameters params;
     for (;;) {
         auto p = scan.skipSpaces();
         const auto param = parser.readSymbol(p);

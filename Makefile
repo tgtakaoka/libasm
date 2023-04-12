@@ -14,10 +14,15 @@
 
 help:
 	@echo '"make clean"  remove unnecessary files'
+	@echo '"make test"   run test'
 	@echo '"make pio"    run PlatformIO CI'
 
 PIO_CI_BOARDS=nano_every nano_33_iot pico
 _BOARDS=$(foreach b,$(PIO_CI_BOARDS),--board=$(b))
+
+test:
+	$(MAKE) -C test test
+	$(MAKE) -C driver/test test
 
 pio: examples
 	@for ex in $(shell make -s -C examples examples); do \
@@ -36,7 +41,7 @@ clean:
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_log')
 
-.PHONY: help clean pio
+.PHONY: help clean test pio
 
 # Local Variables:
 # mode: makefile-gmake

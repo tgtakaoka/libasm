@@ -17,16 +17,17 @@
 #ifndef __OPERATORS_H__
 #define __OPERATORS_H__
 
+#include <stdint.h>
+
 #include "error_reporter.h"
 #include "stack.h"
 #include "value.h"
-
-#include <stdint.h>
 
 namespace libasm {
 
 struct ValueStack : Stack<Value, 8> {
     ValueStack() : Stack() {}
+    void pushUndefined() { _contents[_size++].clear(); }
     void pushSigned(int32_t val) { _contents[_size++].setSigned(val); }
     void pushUnsigned(uint32_t val) { _contents[_size++].setUnsigned(val); }
     /** Returns |pos|-th element from stack top */
@@ -41,18 +42,6 @@ struct Functor {
     virtual int8_t nargs() const { return -1; }
     /** Evaluate function with |arguments|. */
     virtual Error eval(ValueStack &stack, uint8_t argc) const { return OK; }
-};
-
-/**
- * Parsing function call.
- */
-struct FunctionParser {
-    /**
-     * Parsing |scan| and returns  a Functor pointer for a function. |scan|  should point an
-     * opening parenthes  for arguments  list. Returns  nullptr  if no  function  call and
-     * |scan| shoud  be unchanged.
-     */
-    virtual const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const { return nullptr; }
 };
 
 /**

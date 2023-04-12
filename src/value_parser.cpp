@@ -59,6 +59,9 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
     return error;
 }
 
+const CStyleOperatorParser ValueParser::CSTYLE_OPERATORS;
+const FunctionParser ValueParser::DEFAULT_FUNCTION;
+
 Value ValueParser::eval(
         StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
     ValueStack vstack;
@@ -100,7 +103,7 @@ Value ValueParser::eval(
                 return val;
             }
 
-            const auto fn = _function->parseFunction(scan, error);
+            const auto fn = _function.parseFunction(scan, error, _symbol, symtab);
             if (fn) {
                 if (*scan.skipSpaces() != '(') {
                     error.setError(at, MISSING_FUNC_ARGUMENT);
@@ -275,22 +278,6 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
     }
 
     return NOT_AN_EXPECTED;
-}
-
-const FunctionParser *ValueParser::setFunctionParser(const FunctionParser *function) {
-    const auto prev = _function;
-    _function = function ? function : &_nullFunction;
-    return prev;
-}
-
-StrScanner ValueParser::readSymbol(StrScanner &scan) const {
-    auto p = scan;
-    if (!_symbol.symbolLetter(*p++, true))
-        return StrScanner::EMPTY;
-    p.trimStart([this](char c) { return _symbol.symbolLetter(c); });
-    auto symbol = StrScanner(scan.str(), p.str());
-    scan = p;
-    return symbol;
 }
 
 }  // namespace libasm

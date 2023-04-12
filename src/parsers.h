@@ -46,6 +46,7 @@ struct LocationParser {
  * Symbol Parser
  */
 struct SymbolParser {
+    StrScanner readSymbol(StrScanner &scan) const;
     virtual bool symbolLetter(char c, bool headOfSymbol = false) const = 0;
 
     static const /*PROGMEM*/ char NONE[] PROGMEM;                       // ""
@@ -60,6 +61,26 @@ struct SymbolParser {
     static const /*PROGMEM*/ char DOLLAR_DOT_UNDER[] PROGMEM;           // "$._"
     static const /*PROGMEM*/ char DOLLAR_QUESTION_UNDER[] PROGMEM;      // "$?_"
     static const /*PROGMEM*/ char DOLLAR_DOT_QUESTION_UNDER[] PROGMEM;  // "$.?_"
+};
+
+/**
+ * Parsing function call.
+ */
+struct FunctionParser {
+    /**
+     * Parsing |scan| and returns a Functor pointer for a function. |scan|  should point an
+     * opening parenthes  for arguments  list.
+     *
+     * - Returns nullptr if no function call and |scan| shoud be unchanged.
+     *
+     * - Returns the no-operation varargs function which returns undefined value when |symtab| is
+     *   nullptr and found '(' after function name.
+     */
+    virtual const Functor *parseFunction(StrScanner &scan, ErrorAt &error,
+            const SymbolParser &symParser, const SymbolTable *symtab) const;
+
+protected:
+    virtual StrScanner readFunctionName(StrScanner &scan, const SymbolParser &symParser) const;
 };
 
 /**

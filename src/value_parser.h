@@ -17,10 +17,10 @@
 #ifndef __VALUE_PARSER_H__
 #define __VALUE_PARSER_H__
 
+#include <stdint.h>
+
 #include "parsers.h"
 #include "stack.h"
-
-#include <stdint.h>
 
 namespace libasm {
 
@@ -34,8 +34,8 @@ public:
           _symbol(symbol),
           _letter(letter),
           _location(location),
-          _operator(operators ? *operators : _cstyleOperators),
-          _function(function ? function : &_nullFunction),
+          _operator(operators ? *operators : CSTYLE_OPERATORS),
+          _function(function ? *function : DEFAULT_FUNCTION),
           _origin(0) {}
 
     /**
@@ -55,13 +55,12 @@ public:
     /**
      * Parse |scan| and read a symbol. Returns StrScanner::EMPTY when error.
      */
-    StrScanner readSymbol(StrScanner &scan) const;
+    StrScanner readSymbol(StrScanner &scan) const { return _symbol.readSymbol(scan); }
     bool symbolLetter(char c, bool head = false) const { return _symbol.symbolLetter(c, head); }
 
     void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
-    const FunctionParser *setFunctionParser(const FunctionParser *function = nullptr);
 
 private:
     const NumberParser &_number;
@@ -70,11 +69,11 @@ private:
     const LetterParser &_letter;
     const LocationParser &_location;
     const OperatorParser &_operator;
-    const FunctionParser *_function;
+    const FunctionParser &_function;
     uint32_t _origin;
 
-    const FunctionParser _nullFunction;
-    const CStyleOperatorParser _cstyleOperators;
+    static const CStyleOperatorParser CSTYLE_OPERATORS;
+    static const FunctionParser DEFAULT_FUNCTION;
 
     struct OperatorStack : Stack<Operator, 8> {
         OperatorStack() : Stack() {}

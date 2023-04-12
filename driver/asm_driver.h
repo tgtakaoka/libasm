@@ -63,6 +63,10 @@ public:
     const char *lookupValue(uint32_t address) const override;
     bool hasSymbol(const StrScanner &symbol) const override;
     uint32_t lookupSymbol(const StrScanner &symbol) const override;
+    const void *lookupFunction(const StrScanner &symbol) const override {
+        return _functions.lookupFunction(symbol);
+    }
+
     Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false);
     bool symbolInTable(const StrScanner &symbol) const;
     void setLineSymbol(const StrScanner &symbol);
@@ -71,7 +75,7 @@ public:
     bool hasFunction(const StrScanner &name) const { return _functions.hasFunction(name); }
     Error internFunction(const StrScanner &name, const std::list<StrScanner> &params,
             const StrScanner &body, const ValueParser &parser) {
-        return _functions.internFunction(name, params, body, parser);
+        return _functions.internFunction(name, params, body, parser, this);
     }
     Error openSource(const StrScanner &filename);
 
@@ -82,14 +86,11 @@ private:
     std::list<AsmDirective *> _directives;
     AsmDirective *_current;
     AsmSources &_sources;
-    FunctionStore *_functionStore;
-    const FunctionParser *_savedFunctionParser;
+    FunctionStore _functions;
 
     uint32_t _origin;
     SymbolMode _symbolMode;
 
-    FunctionStore _functions;
-    void setFunctionStore(FunctionStore *functionStore);
     AsmDirective *switchDirective(AsmDirective *dir);
 
     const StrScanner *_lineSymbol;

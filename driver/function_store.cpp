@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "function_store.h"
-
 #include <cctype>
 #include <cstring>
+
+#include "function_store.h"
 
 namespace libasm {
 namespace driver {
@@ -27,57 +27,49 @@ void FunctionStore::reset() {
 }
 
 bool FunctionStore::hasFunction(const StrScanner &_name) const {
-    const std::string name(_name.str(), _name.size());
-    return _functions.find(name) != _functions.end();
+    return lookupFunction(_name) != nullptr;
 }
 
-FunctionStore::Function::Function(
-        const StrScanner &b, const std::list<StrScanner> &plist, const ValueParser &_parser)
-    : body(b.str(), b.size()), parser(_parser) {
-    for (const auto &p : plist)
-        params.emplace_back(p.str(), p.size());
+const void *FunctionStore::lookupFunction(const StrScanner &name) const {
+    auto it = _functions.find(std::string(name.str(), name.size()));
+    if (it == _functions.end())
+        return nullptr;
+    const Function *fn = &it->second;
+    return reinterpret_cast<const void *>(fn);
 }
 
-Error FunctionStore::internFunction(const StrScanner &_name, const std::list<StrScanner> &params,
-        const StrScanner &body, const ValueParser &parser) {
-    const std::string name(_name.str(), _name.size());
+Error FunctionStore::internFunction(const StrScanner &name_, const Parameters &params,
+        const StrScanner &body, const ValueParser &parser, const SymbolTable *symtab) {
+    const std::string name(name_.str(), name_.size());
     if (_functions.find(name) != _functions.end())
         return DUPLICATE_FUNCTION;
-    _functions.emplace(name, Function{body, params, parser});
+    auto argc = params.size();
+    ParametersAt paramsAt;
+    for (const auto &param : params)
+        paramsAt.emplace(std::string(param.str(), param.size()), --argc);
+    _functions.emplace(
+            name, Function{std::string(body.str(), body.size()), paramsAt, parser, symtab});
     return OK;
 }
 
-const Functor *FunctionStore::parseFunction(StrScanner &scan, ErrorAt &error) const {
-    auto p = scan;
-    p.trimStart([](char c) { return c != '(' && !isspace(c); });
-    const std::string name(scan.str(), p.str() - scan.str());
-    const auto it = _functions.find(name);
-    if (it == _functions.end())
-        return _parent ? _parent->parseFunction(scan, error) : nullptr;
-    scan = p;
-    return &it->second;
+bool FunctionStore::Binding::hasSymbol(const StrScanner &symbol) const {
+    return paramsAt.find(std::string(symbol.str(), symbol.size())) != paramsAt.end() ||
+           parent->hasSymbol(symbol);
+}
+
+uint32_t FunctionStore::Binding::lookupSymbol(const StrScanner &symbol) const {
+    const auto it = paramsAt.find(std::string(symbol.str(), symbol.size()));
+    if (it == paramsAt.end())
+        return parent->lookupSymbol(symbol);
+    return stack.at(it->second).getUnsigned();
+}
+
+const void *FunctionStore::Binding::lookupFunction(const StrScanner &symbol) const {
+    return parent->lookupFunction(symbol);
 }
 
 Error FunctionStore::Function::eval(ValueStack &stack, uint8_t argc) const {
-    struct Binding : SymbolTable {
-        Binding(const std::list<std::string> &params, const ValueStack &stack, uint8_t argc)
-            : _stack(stack) {
-            for (const std::string &param : params)
-                _params.emplace(param, --argc);
-        }
-        bool hasSymbol(const StrScanner &symbol) const override {
-            return _params.find(std::string(symbol.str(), symbol.size())) != _params.end();
-        }
-        uint32_t lookupSymbol(const StrScanner &symbol) const override {
-            const auto it = _params.find(std::string(symbol.str(), symbol.size()));
-            return _stack.at(it->second).getUnsigned();
-        }
-        const char *lookupValue(uint32_t address) const override { return nullptr; }
-
-    private:
-        const ValueStack &_stack;
-        std::map<std::string, int, std::less<>> _params;
-    } binding{params, stack, argc};
+    Binding binding{paramsAt, stack, symtab};
     StrScanner body_scan(body.c_str());
     ErrorAt error;
     const auto val = parser.eval(body_scan, error, &binding);

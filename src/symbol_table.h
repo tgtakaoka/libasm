@@ -24,9 +24,10 @@
 namespace libasm {
 
 struct SymbolTable {
-    virtual const char *lookupValue(uint32_t value) const = 0;
+    virtual const char *lookupValue(uint32_t value) const { return nullptr; }
     virtual bool hasSymbol(const StrScanner &symbol) const = 0;
     virtual uint32_t lookupSymbol(const StrScanner &symbol) const = 0;
+    virtual const void *lookupFunction(const StrScanner &symbol) const = 0;
 };
 
 }  // namespace libasm

@@ -76,34 +76,15 @@ AsmDirective *AsmDriver::restrictCpu(const char *cpu) {
     return dir;
 }
 
-void AsmDriver::setFunctionStore(FunctionStore *functionStore) {
-    _functionStore = functionStore;
-    _savedFunctionParser = current()->assembler().parser().setFunctionParser(
-            static_cast<const FunctionParser *>(functionStore));
-    _functionStore->setParent(_savedFunctionParser);
-}
-
 AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
-    if (current())
-        current()->assembler().parser().setFunctionParser(_savedFunctionParser);
     _current = dir;
-    if (_functionStore == nullptr) {
-        ;  // defer setting FunctionStore until |_functionStore| is set.
-    } else {
-        setFunctionStore(_functionStore);
-    }
     return dir;
 }
 
 AsmDriver::AsmDriver(
         AsmDirective **begin, AsmDirective **end, AsmSources &sources, SymbolMode symbolMode)
-    : _directives(begin, end),
-      _current(nullptr),
-      _sources(sources),
-      _functionStore(nullptr),
-      _savedFunctionParser(nullptr) {
+    : _directives(begin, end), _current(nullptr), _sources(sources), _functions() {
     switchDirective(_directives.front());
-    setFunctionStore(&_functions);
     _origin = 0;
     _symbolMode = symbolMode;
 }

@@ -28,34 +28,51 @@
 namespace libasm {
 namespace driver {
 
-struct FunctionStore : FunctionParser {
-    FunctionStore() : _parent(nullptr) {}
-
+struct FunctionStore final {
     void reset();
-    void setParent(const FunctionParser *parent) { _parent = parent; }
 
     bool hasFunction(const StrScanner &name) const;
-    Error internFunction(const StrScanner &name, const std::list<StrScanner> &params,
-            const StrScanner &body, const ValueParser &parser);
+    const void *lookupFunction(const StrScanner &symbol) const;
 
-    const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const override;
+    using Parameters = std::list<StrScanner>;
+    Error internFunction(const StrScanner &name, const Parameters &params, const StrScanner &body,
+            const ValueParser &parser, const SymbolTable *symtab);
 
 private:
-    struct Function : Functor {
-        Function(const StrScanner &body, const std::list<StrScanner> &params,
-                const ValueParser &parser);
+    using ParametersAt = std::map<const std::string, int>;
+
+    struct Function final : Functor {
+        Function(const std::string &body_, const ParametersAt &paramsAt_,
+                const ValueParser &parser_, const SymbolTable *symtab_)
+            : body(body_), paramsAt(paramsAt_), parser(parser_), symtab(symtab_) {}
         // Functor
-        int8_t nargs() const override { return params.size(); }
+        int8_t nargs() const override { return paramsAt.size(); }
         Error eval(ValueStack &stack, uint8_t argc) const override;
 
     private:
-        std::string body;
+        const std::string body;
+        const ParametersAt paramsAt;
         const ValueParser &parser;
-        std::list<std::string> params;
+        const SymbolTable *const symtab;
     };
 
-    const FunctionParser *_parent;
-    std::map<std::string, Function, std::less<>> _functions;
+    /**
+     * Intermediate symbol table to bind function parameters to actual arguments in |stack|.
+     */
+    struct Binding final : SymbolTable {
+        Binding(const ParametersAt &paramsAt_, const ValueStack &stack_, const SymbolTable *parent_)
+            : paramsAt(paramsAt_), stack(stack_), parent(parent_) {}
+        bool hasSymbol(const StrScanner &symbol) const override;
+        uint32_t lookupSymbol(const StrScanner &symbol) const override;
+        const void *lookupFunction(const StrScanner &symbol) const override;
+
+    private:
+        const ParametersAt &paramsAt;
+        const ValueStack &stack;
+        const SymbolTable *const parent;
+    };
+
+    std::map<const std::string, const Function, std::less<>> _functions;
 };
 
 }  // namespace driver

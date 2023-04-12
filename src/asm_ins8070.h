@@ -34,8 +34,9 @@ private:
     const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
     const DefaultLetterParser _letter;
     const NationalLocationParser _location{'$'};
-    const struct Ins8070FunctionParser : FunctionParser {
-        const Functor *parseFunction(StrScanner &scan, ErrorAt &error) const override;
+    const struct Ins8070FunctionParser final : FunctionParser {
+        const Functor *parseFunction(
+                StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
     } _function;
 
     struct Operand;

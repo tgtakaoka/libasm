@@ -71,11 +71,10 @@ static const struct : Functor {
     }
 } FN_ADDR;
 
-const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(
-        StrScanner &scan, ErrorAt &error) const {
+const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
+        const SymbolParser &symParser, const SymbolTable *symtab) const {
     auto p = scan;
-    p.trimStart([](char c) { return c != '(' && !isspace(c); });
-    const auto name = StrScanner(scan.str(), p.str());
+    const auto name = readFunctionName(p, symParser);
     const Functor *fn = nullptr;
     if (name.iequals_P(PSTR("H"))) {
         fn = &FN_HIGH;
@@ -84,9 +83,11 @@ const Functor *AsmIns8060::Ins8060FunctionParser::parseFunction(
     } else if (name.iequals_P(PSTR("ADDR"))) {
         fn = &FN_ADDR;
     }
-    if (fn)
+    if (fn) {
         scan = p;
-    return fn;
+        return fn;
+    }
+    return FunctionParser::parseFunction(scan, error, symParser, symtab);
 }
 
 void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {

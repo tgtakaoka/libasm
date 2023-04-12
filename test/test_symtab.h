@@ -27,43 +27,46 @@
 namespace libasm {
 namespace test {
 
-class TestSymtab : public SymbolTable {
-public:
+struct TestSymtab final : SymbolTable {
     const char *lookupValue(uint32_t addr) const override {
-        auto it = _value_to_symbol.find(addr);
-        return it == _value_to_symbol.end() ? nullptr : it->second.c_str();
+        auto it = _values.find(addr);
+        return it == _values.end() ? nullptr : it->second.c_str();
     }
+
     bool hasSymbol(const StrScanner &symbol) const override {
-        return hasSymbol(std::string(symbol.str(), symbol.size()));
+        const std::string key(symbol.str(), symbol.size());
+        return _symbols.find(key) != _symbols.end();
     }
+
     uint32_t lookupSymbol(const StrScanner &symbol) const override {
-        return lookup(std::string(symbol.str(), symbol.size()));
+        const std::string key(symbol.str(), symbol.size());
+        auto it = _symbols.find(key);
+        return it == _symbols.end() ? 0 : it->second;
     }
 
-    void intern(uint32_t value, const char *symbol) { intern(value, std::string(symbol)); }
-
-    void reset() {
-        _symbol_to_value.clear();
-        _value_to_symbol.clear();
-    }
-
-private:
-    std::map<std::string, uint32_t, std::less<>> _symbol_to_value;
-    std::map<uint32_t, std::string> _value_to_symbol;
-
-    bool hasSymbol(const std::string &key) const {
-        return _symbol_to_value.find(key) != _symbol_to_value.end();
-    }
-
-    uint32_t lookup(const std::string &key) const {
-        auto it = _symbol_to_value.find(key);
-        return it == _symbol_to_value.end() ? 0 : it->second;
+    const void *lookupFunction(const StrScanner &symbol) const override {
+        const std::string key(symbol.str(), symbol.size());
+        auto it = _functions.find(key);
+        return it == _functions.end() ? nullptr : it->second;
     }
 
     void intern(uint32_t value, const std::string &key) {
-        _symbol_to_value[key] = value;
-        _value_to_symbol[value] = key;
+        _symbols[key] = value;
+        _values[value] = key;
     }
+
+    void internFunction(const void *value, const std::string &key) { _functions[key] = value; }
+
+    void reset() {
+        _symbols.clear();
+        _values.clear();
+        _functions.clear();
+    }
+
+private:
+    std::map<std::string, uint32_t, std::less<>> _symbols;
+    std::map<uint32_t, std::string> _values;
+    std::map<std::string, const void *, std::less<>> _functions;
 };
 
 }  // namespace test
