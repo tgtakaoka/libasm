@@ -24,13 +24,16 @@ Assembler::Assembler(const OptionBase *option, const NumberParser &number,
         const FunctionParser *function)
     : ErrorAt(),
       _options(option),
-      _parser(number, comment, symbol, letter, location, operators, function) {}
+      _parser(number, comment, symbol, letter, location, *this, operators, function) {}
+
+Error Assembler::setCurrentLocation(uint32_t location) {
+    return config().checkAddr(_currentLocation = location);
+}
 
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
-    _parser.setCurrentOrigin(insn.address());
     setAt(line);
-    const auto err = config().checkAddr(insn.address());
+    const auto err = setCurrentLocation(insn.address());
     if (err)
         return setError(err);
 

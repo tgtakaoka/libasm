@@ -25,7 +25,7 @@ TestAsserter asserter;
 TestSymtab symtab;
 
 void val_assert(const char *file, int line, const char *expr, uint32_t expected,
-        const ErrorAt &expected_error, size_t size, ValueParser &parser) {
+        const ErrorAt &expected_error, size_t size, const ValueParser &parser) {
     Value val;
     ErrorAt actual_error;
     StrScanner scan = expr;

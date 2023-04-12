@@ -32,7 +32,7 @@ extern TestSymtab symtab;
 extern TestAsserter asserter;
 
 void val_assert(const char *file, int line, const char *expr, uint32_t expected,
-        const ErrorAt &expected_error, size_t size, ValueParser &);
+        const ErrorAt &expected_error, size_t size, const ValueParser &);
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &);
 void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,

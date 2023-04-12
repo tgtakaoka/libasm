@@ -154,7 +154,7 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
     return setOK();
 }
 
-static bool isString(StrScanner &scan, ValueParser &parser) {
+static bool isString(StrScanner &scan, const ValueParser &parser) {
     auto p = scan;
     const auto delim = *p++;
     if (delim == '"' || delim == '\'') {

@@ -272,7 +272,7 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
         return err;
 
     if (_location.locationSymbol(p)) {
-        val.setUnsigned(_origin);
+        val.setUnsigned(_locator.currentLocation());
         scan = p;
         return OK;
     }

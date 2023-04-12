@@ -25,7 +25,11 @@ const SimpleSymbolParser symbol{SymbolParser::DOLLAR_DOT_UNDER};
 const MotorolaLetterParser letter;
 const AsteriskLocationParser location;
 const Mc68xxOperatorParser operators;
-ValueParser parser{number, comment, symbol, letter, location, &operators};
+struct : ValueParser::Locator {
+    uint32_t location = 0;
+    uint32_t currentLocation() const { return location; }
+} locator;
+const ValueParser parser{number, comment, symbol, letter, location, locator, &operators};
 const PrefixHexFormatter hexFormatter{HexFormatter::DOLLAR};
 const ValueFormatter formatter{hexFormatter};
 
@@ -54,7 +58,7 @@ static void test_char_constant() {
 
 static void test_char_closing() {
     const MotorolaLetterParser letter{true};
-    ValueParser parser{number, comment, symbol, letter, location};
+    const ValueParser parser{number, comment, symbol, letter, location, locator};
 
     X8("'a",   MISSING_CLOSING_QUOTE, "'a");
     X8("'a+5", MISSING_CLOSING_QUOTE, "'a+5");
@@ -469,7 +473,7 @@ static void test_precedence() {
 }
 
 static void test_current_address() {
-    parser.setCurrentOrigin(0x1000);
+    locator.location = 0x1000;
     E16("*",       0x1000);
     E16("*+2",     0x1002);
     E16("*-2",     0x0FFE);
@@ -479,7 +483,7 @@ static void test_current_address() {
     E32("*-$1001", 0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
-    parser.setCurrentOrigin(0x1100);
+    locator.location = 0x1100;
     E16("*-table",     0x100);
     E16("(*-table)/2", 0x080);
 }

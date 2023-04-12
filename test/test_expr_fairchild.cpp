@@ -24,7 +24,12 @@ const AsteriskCommentParser comment;
 const DefaultSymbolParser symbol;
 const FairchildLetterParser letter;
 const AsteriskLocationParser location;
-ValueParser parser{number, comment, symbol, letter, location};
+struct : ValueParser::Locator {
+    uint32_t location = 0;
+    uint32_t currentLocation() const { return location; }
+} locator;
+const ValueParser parser{number, comment, symbol, letter, location, locator};
+
 const SurroundHexFormatter hexFormatter{HexFormatter::H_DASH, '\''};
 const ValueFormatter formatter{hexFormatter};
 
@@ -180,8 +185,7 @@ static void test_bin_constant() {
 }
 
 static void test_current_address() {
-    parser.setCurrentOrigin(0x1000);
-
+    locator.location = 0x1000;
     E16("*",         0x1000);
     E16("*+2",       0x1002);
     E16("*-2",       0x0FFE);
@@ -199,7 +203,7 @@ static void test_current_address() {
     E32("*-0x1001",  0xFFFFFFFF);
 
     symtab.intern(0x1000, "table");
-    parser.setCurrentOrigin(0x1100);
+    locator.location = 0x1100;
     E16("*-table",     0x100);
     E16("(*-table)/2", 0x080);
 }

@@ -26,17 +26,22 @@ namespace libasm {
 
 class ValueParser {
 public:
+    struct Locator {
+        virtual uint32_t currentLocation() const = 0;
+    };
+
     ValueParser(const NumberParser &number, const CommentParser &comment,
             const SymbolParser &symbol, const LetterParser &letter, const LocationParser &location,
-            const OperatorParser *operators = nullptr, const FunctionParser *function = nullptr)
+            const Locator &locator, const OperatorParser *operators = nullptr,
+            const FunctionParser *function = nullptr)
         : _number(number),
           _comment(comment),
           _symbol(symbol),
           _letter(letter),
           _location(location),
+          _locator(locator),
           _operator(operators ? *operators : CSTYLE_OPERATORS),
-          _function(function ? *function : DEFAULT_FUNCTION),
-          _origin(0) {}
+          _function(function ? *function : DEFAULT_FUNCTION) {}
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined
@@ -58,7 +63,6 @@ public:
     StrScanner readSymbol(StrScanner &scan) const { return _symbol.readSymbol(scan); }
     bool symbolLetter(char c, bool head = false) const { return _symbol.symbolLetter(c, head); }
 
-    void setCurrentOrigin(uint32_t origin) { _origin = origin; }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
 
@@ -68,9 +72,9 @@ private:
     const SymbolParser &_symbol;
     const LetterParser &_letter;
     const LocationParser &_location;
+    const Locator &_locator;
     const OperatorParser &_operator;
     const FunctionParser &_function;
-    uint32_t _origin;
 
     static const CStyleOperatorParser CSTYLE_OPERATORS;
     static const FunctionParser DEFAULT_FUNCTION;

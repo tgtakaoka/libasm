@@ -35,19 +35,18 @@ void AsmFormatter::reset() {
 }
 
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
+    auto &assembler = _driver.current()->assembler();
+    auto &parser = assembler.parser();
+
     reset();
     _reportError = reportError;
-    _line = li;
-    setStartAddress(_driver.origin());
+    _conf = &assembler.config();
+    auto scan = _line = li;
     _length = 0;
     _line_value.clear();
     _line_symbol = StrScanner::EMPTY;
-    auto &assembler = _driver.current()->assembler();
-    _conf = &assembler.config();
-
-    auto scan = _line;
-    auto &parser = assembler.parser();
-    parser.setCurrentOrigin(startAddress());
+    setStartAddress(_driver.origin());
+    assembler.setCurrentLocation(_driver.origin());
 
     _line_symbol = parser.readSymbol(scan);
     _driver.setLineSymbol(_line_symbol);
