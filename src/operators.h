@@ -41,7 +41,7 @@ struct Functor {
     /** Returns the number of required qrguments. Negative value means variable arguments. */
     virtual int8_t nargs() const { return -1; }
     /** Evaluate function with |arguments|. */
-    virtual Error eval(ValueStack &stack, uint8_t argc) const { return OK; }
+    virtual Error eval(ValueStack &, uint8_t) const { return OK; }
 };
 
 /**
@@ -60,7 +60,10 @@ struct Operator : ErrorAt {
     };
 
     Operator() : ErrorAt(), _prec(255), _assoc(LEFT), _nargs(0), _op(nullptr), _fn(nullptr) {}
-
+    Operator(const Operator &o)
+        : ErrorAt(), _prec(o._prec), _assoc(o._assoc), _nargs(o._nargs), _op(o._op), _fn(o._fn) {
+        setError(o);
+    }
     void operator=(const Operator &o) {
         setError(o);
         _prec = o._prec;

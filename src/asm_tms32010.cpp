@@ -28,6 +28,7 @@ struct AsmTms32010::Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
     uint16_t val16;
+    int16_t signedVal16() const { return static_cast<int16_t>(val16); }
     Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
@@ -50,11 +51,6 @@ static AddrMode constantType(uint16_t val) {
     if (val < 0x100)
         return M_IM8;
     return M_IM13;
-}
-
-static bool overflowInt13(uint16_t uval) {
-    const auto sval = static_cast<int16_t>(uval);
-    return sval >= 0x1000 || sval < -0x1000;
 }
 
 void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode) {
@@ -102,7 +98,7 @@ void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode 
         insn.embed(op.val16);
         break;
     case M_IM13:
-        if (overflowInt13(op.val16))
+        if (overflowInt(op.signedVal16(), 13))
             setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(op.val16 & 0x1FFF);
         break;

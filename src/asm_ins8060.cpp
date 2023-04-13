@@ -48,7 +48,7 @@ static Config::uintptr_t offset(Config::uintptr_t addr) {
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t argc) const override {
+    Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
         return OK;
     }
@@ -56,7 +56,7 @@ static const struct : Functor {
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t argc) const override {
+    Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
         return OK;
     }
@@ -64,7 +64,7 @@ static const struct : Functor {
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t argc) const override {
+    Error eval(ValueStack &stack, uint8_t) const override {
         const auto v = stack.pop().getUnsigned();
         stack.pushUnsigned(page(v) | offset(v - 1));
         return OK;

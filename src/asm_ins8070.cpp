@@ -41,7 +41,7 @@ AsmIns8070::AsmIns8070()
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t argc) const override {
+    Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
         return OK;
     }
@@ -49,7 +49,7 @@ static const struct : Functor {
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t argc) const override {
+    Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
         return OK;
     }
@@ -57,7 +57,7 @@ static const struct : Functor {
 
 static const struct : Functor {
     int8_t nargs() const override { return 1; }
-    Error eval(ValueStack &stack, uint8_t argc) const override {
+    Error eval(ValueStack &stack, uint8_t) const override {
         stack.pushUnsigned((stack.pop().getUnsigned() - 1) & 0xFFFF);
         return OK;
     }

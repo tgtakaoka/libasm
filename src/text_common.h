@@ -389,81 +389,71 @@ extern const char TEXT_ABS[]   PROGMEM;
 extern const char TEXT_CPU_8080[]   PROGMEM;
 extern const char TEXT_CPU_8085[]   PROGMEM;
 extern const char TEXT_CPU_V30EMU[] PROGMEM;
-}
 
-    //#define CHECK
-#ifdef CHECK
-#define EXTERN extern const int
-namespace mn1610 {
-#else
-#define EXTERN extern const char
-namespace common {
-#endif
+extern const char TEXT_REG_A[]   PROGMEM;
+extern const char TEXT_REG_SP[]  PROGMEM;
+extern const char TEXT_REG_PC[]  PROGMEM;
+extern const char TEXT_REG_E[]   PROGMEM;
+extern const char TEXT_REG_D[]   PROGMEM;
+extern const char TEXT_REG_C[]   PROGMEM;
+extern const char TEXT_REG_H[]   PROGMEM;
+extern const char TEXT_REG_B[]   PROGMEM;
+extern const char TEXT_REG_S[]   PROGMEM;
+extern const char TEXT_REG_R7[]  PROGMEM;
+extern const char TEXT_REG_R6[]  PROGMEM;
+extern const char TEXT_REG_R5[]  PROGMEM;
+extern const char TEXT_REG_R4[]  PROGMEM;
+extern const char TEXT_REG_R3[]  PROGMEM;
+extern const char TEXT_REG_R2[]  PROGMEM;
+extern const char TEXT_REG_R1[]  PROGMEM;
+extern const char TEXT_REG_R0[]  PROGMEM;
+extern const char TEXT_REG_P2[]  PROGMEM;
+extern const char TEXT_REG_L[]   PROGMEM;
+extern const char TEXT_REG_I[]   PROGMEM;
+extern const char TEXT_REG_HL[]  PROGMEM;
+extern const char TEXT_REG_W[]   PROGMEM;
+extern const char TEXT_REG_T[]   PROGMEM;
+extern const char TEXT_REG_PSW[] PROGMEM;
+extern const char TEXT_REG_P[]   PROGMEM;
+extern const char TEXT_REG_P3[]  PROGMEM;
+extern const char TEXT_REG_P1[]  PROGMEM;
+extern const char TEXT_REG_P0[]  PROGMEM;
+extern const char TEXT_REG_IY[]  PROGMEM;
+extern const char TEXT_REG_IX[]  PROGMEM;
+extern const char TEXT_REG_F1[]  PROGMEM;
+extern const char TEXT_REG_F0[]  PROGMEM;
+extern const char TEXT_REG_DE[]  PROGMEM;
+extern const char TEXT_REG_BC[]  PROGMEM;
+extern const char TEXT_REG_AF[]  PROGMEM;
+extern const char TEXT_REG_AFP[] PROGMEM;
 
-EXTERN TEXT_REG_A[]   PROGMEM;
-EXTERN TEXT_REG_SP[]  PROGMEM;
-EXTERN TEXT_REG_PC[]  PROGMEM;
-EXTERN TEXT_REG_E[]   PROGMEM;
-EXTERN TEXT_REG_D[]   PROGMEM;
-EXTERN TEXT_REG_C[]   PROGMEM;
-EXTERN TEXT_REG_H[]   PROGMEM;
-EXTERN TEXT_REG_B[]   PROGMEM;
-EXTERN TEXT_REG_S[]   PROGMEM;
-EXTERN TEXT_REG_R7[]  PROGMEM;
-EXTERN TEXT_REG_R6[]  PROGMEM;
-EXTERN TEXT_REG_R5[]  PROGMEM;
-EXTERN TEXT_REG_R4[]  PROGMEM;
-EXTERN TEXT_REG_R3[]  PROGMEM;
-EXTERN TEXT_REG_R2[]  PROGMEM;
-EXTERN TEXT_REG_R1[]  PROGMEM;
-EXTERN TEXT_REG_R0[]  PROGMEM;
-EXTERN TEXT_REG_P2[]  PROGMEM;
-EXTERN TEXT_REG_L[]   PROGMEM;
-EXTERN TEXT_REG_I[]   PROGMEM;
-EXTERN TEXT_REG_HL[]  PROGMEM;
-EXTERN TEXT_REG_W[]   PROGMEM;
-EXTERN TEXT_REG_T[]   PROGMEM;
-EXTERN TEXT_REG_PSW[] PROGMEM;
-EXTERN TEXT_REG_P[]   PROGMEM;
-EXTERN TEXT_REG_P3[]  PROGMEM;
-EXTERN TEXT_REG_P1[]  PROGMEM;
-EXTERN TEXT_REG_P0[]  PROGMEM;
-EXTERN TEXT_REG_IY[]  PROGMEM;
-EXTERN TEXT_REG_IX[]  PROGMEM;
-EXTERN TEXT_REG_F1[]  PROGMEM;
-EXTERN TEXT_REG_F0[]  PROGMEM;
-EXTERN TEXT_REG_DE[]  PROGMEM;
-EXTERN TEXT_REG_BC[]  PROGMEM;
-EXTERN TEXT_REG_AF[]  PROGMEM;
-EXTERN TEXT_REG_AFP[] PROGMEM;
-
-EXTERN TEXT_CC_Z[]   PROGMEM;
-EXTERN TEXT_CC_NZ[]  PROGMEM;
-EXTERN TEXT_CC_NC[]  PROGMEM;
-EXTERN TEXT_CC_LT[]  PROGMEM;
-EXTERN TEXT_CC_GT[]  PROGMEM;
-EXTERN TEXT_CC_EQ[]  PROGMEM;
-EXTERN TEXT_CC_C[]   PROGMEM;
-EXTERN TEXT_CC_ULT[] PROGMEM;
-EXTERN TEXT_CC_ULE[] PROGMEM;
-EXTERN TEXT_CC_UGT[] PROGMEM;
-EXTERN TEXT_CC_UGE[] PROGMEM;
-EXTERN TEXT_CC_T[]   PROGMEM;
-EXTERN TEXT_CC_PL[]  PROGMEM;
-EXTERN TEXT_CC_OV[]  PROGMEM;
-EXTERN TEXT_CC_NOV[] PROGMEM;
-EXTERN TEXT_CC_NE[]  PROGMEM;
-EXTERN TEXT_CC_MI[]  PROGMEM;
-EXTERN TEXT_CC_LE[]  PROGMEM;
-EXTERN TEXT_CC_GE[]  PROGMEM;
-EXTERN TEXT_CC_F[]   PROGMEM;
-EXTERN TEXT_CC_P[]   PROGMEM;
-EXTERN TEXT_CC_PO[]  PROGMEM;
-EXTERN TEXT_CC_PE[]  PROGMEM;
-EXTERN TEXT_CC_M[]   PROGMEM;
+extern const char TEXT_CC_Z[]   PROGMEM;
+extern const char TEXT_CC_NZ[]  PROGMEM;
+extern const char TEXT_CC_NC[]  PROGMEM;
+extern const char TEXT_CC_LT[]  PROGMEM;
+extern const char TEXT_CC_GT[]  PROGMEM;
+extern const char TEXT_CC_EQ[]  PROGMEM;
+extern const char TEXT_CC_C[]   PROGMEM;
+extern const char TEXT_CC_ULT[] PROGMEM;
+extern const char TEXT_CC_ULE[] PROGMEM;
+extern const char TEXT_CC_UGT[] PROGMEM;
+extern const char TEXT_CC_UGE[] PROGMEM;
+extern const char TEXT_CC_T[]   PROGMEM;
+extern const char TEXT_CC_PL[]  PROGMEM;
+extern const char TEXT_CC_OV[]  PROGMEM;
+extern const char TEXT_CC_NOV[] PROGMEM;
+extern const char TEXT_CC_NE[]  PROGMEM;
+extern const char TEXT_CC_MI[]  PROGMEM;
+extern const char TEXT_CC_LE[]  PROGMEM;
+extern const char TEXT_CC_GE[]  PROGMEM;
+extern const char TEXT_CC_F[]   PROGMEM;
+extern const char TEXT_CC_P[]   PROGMEM;
+extern const char TEXT_CC_PO[]  PROGMEM;
+extern const char TEXT_CC_PE[]  PROGMEM;
+extern const char TEXT_CC_M[]   PROGMEM;
 // clang-format on
 
-}  // namespace mc6809
+}  // namespace common
 }  // namespace text
 }  // namespace libasm
 
