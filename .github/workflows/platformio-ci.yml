@@ -38,7 +38,6 @@ jobs:
           - mc6809
           - mn1610
           - mos6502
-          - ns32000
           - ins8060
           - ins8070
           - tlcs90
@@ -47,6 +46,8 @@ jobs:
           - z8
           - z80
           - z8000
+          - asm32000
+          - dis32000
 
     steps:
       - uses: actions/checkout@v2
@@ -69,7 +70,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
       - name: Install library dependency
-        run: pio lib install libcli@1.2.3
+        run: pio lib install libcli@1.2.4
       - name: Run PlatformIO
         run: pio ci --lib="." --board=nano_every --board=nano_33_iot --board=pico
         env:
