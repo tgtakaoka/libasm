@@ -30,7 +30,7 @@ jobs:
           - arduino:megaavr:nona4809
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Compile Example
         uses: arduino/compile-sketches@v1
         with:
