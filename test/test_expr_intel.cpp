@@ -89,6 +89,14 @@ static void test_hex_constant() {
     E16("8000H",  0x8000);
     E16("0ffffh", 0xffff);
     X16("10000H", OVERFLOW_RANGE, "10000H");
+    X16("ECH",    UNDEFINED_SYMBOL, "ECH");
+    E16("0ECH",   0xEC);
+    E16("9ECH",   0x9EC);
+    X16("AECH",   UNDEFINED_SYMBOL, "AECH");
+    X16("ECHO",   UNDEFINED_SYMBOL, "ECHO");
+    X16("0ECHO",  GARBAGE_AT_END,   "O");
+    X16("9ECHO",  GARBAGE_AT_END,   "O");
+    X16("ACHO",   UNDEFINED_SYMBOL, "ACHO");
 
     E32("0H",         0x00000000);
     E32("7FFFFFFFH",  0x7fffffff);

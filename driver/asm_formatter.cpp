@@ -71,9 +71,8 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
         auto p = scan;
         p.trimStart([](char s) { return !isspace(s); });
         directive.trimEndAt(p);
-        _errorAt.setError(
-                _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver));
-        if (_errorAt.isOK()) {
+        auto error = _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver);
+        if (error == OK) {
             if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
                 const auto error = _driver.internLineSymbol(startAddress());
@@ -84,8 +83,8 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             }
             return OK;
         }
-        if (_errorAt.getError() != UNKNOWN_DIRECTIVE)
-            return _errorAt.getError();
+        if (error != UNKNOWN_DIRECTIVE)
+            return _errorAt.setError(error);
     }
 
     if (_line_symbol.size()) {

@@ -119,6 +119,8 @@ Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffi
         p = scan;
     }
     if (isValidDigit(*p, radix)) {
+        if (radix == RADIX_16 && !isValidDigit(*p, RADIX_10))
+            return NOT_AN_EXPECTED;
         p.trimStart([radix](char c) { return isValidDigit(c, radix); });
         if (suffix == 0) {
             if (!isalnum(*p)) {
