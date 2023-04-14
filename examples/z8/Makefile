@@ -20,20 +20,24 @@ PIO_FLAGS ?= --no-ansi
 PIO_ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)
 PIO_BOARDS = $(shell grep -Po '^board *= *\K[\w]+' platformio.ini)
 LIB_ENVS = $(PIO_ENVS:%=.pio/libdeps/%)
+LIB_DEPS = $(PWD)/.pio/libdeps
 
-install-local-lib:
+install-local-lib: $(LIB_DEPS)
+	mkdir -p $(LIB_DEPS)
+	(cd ../..; pio pkg pack -o $(LIB_DEPS)/libasm.tar.gz)
 	for lib in $(LIB_ENVS); do \
-	    test -h $${lib}/libasm && continue; \
-	    mkdir -p $${lib} && rm -rf $${lib}/libasm; \
-	    ln -s $${PWD}/../.. $${lib}/libasm; \
+	    test -d $${lib} || continue; \
+	    rm -rf $${lib}/libasm; \
+	    mkdir -p $${lib}/libasm; \
+	    tar xf $(LIB_DEPS)/libasm.tar.gz -C $${lib}/libasm; \
 	done
 
-pio: install-local-lib
+pio:
 	pio $(PIO_FLAGS) run $(PIO_RUN_FLAGS) $(PIO_ENVS:%=-e %)
 
 pio-envs: platformio.ini
-	@echo $(PIO_ENV)
-pio-boards: platformio.init
+	@echo $(PIO_ENVS)
+pio-boards: platformio.ini
 	@echo $(PIO_BOARDS)
 
 clean:
