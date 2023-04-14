@@ -36,7 +36,7 @@ const ValueParser::Plugins &AsmI8096::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER};
+        const SimpleSymbolParser _symbol{SymbolParser::QUESTION};
     } PLUGINS{};
     return PLUGINS;
 }

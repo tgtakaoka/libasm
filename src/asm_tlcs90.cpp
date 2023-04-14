@@ -33,7 +33,7 @@ const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION_UNDER};
+        const SimpleSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION};
     } PLUGINS{};
     return PLUGINS;
 }

@@ -241,21 +241,17 @@ StrScanner SymbolParser::readSymbol(StrScanner &scan) const {
 }
 
 bool DefaultSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return headOfSymbol ? isalpha(c) : isalnum(c);
+    return isalpha(c) || c == '_' || (!headOfSymbol && isdigit(c));
 }
 
 const /*PROGMEM*/ char SymbolParser::NONE[] PROGMEM = "";
 const /*PROGMEM*/ char SymbolParser::DOLLAR[] PROGMEM = "$";
 const /*PROGMEM*/ char SymbolParser::DOT[] PROGMEM = ".";
-const /*PROGMEM*/ char SymbolParser::UNDER[] PROGMEM = "_";
+const /*PROGMEM*/ char SymbolParser::QUESTION[] PROGMEM = "?";
 const /*PROGMEM*/ char SymbolParser::ATMARK_QUESTION[] PROGMEM = "@?";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_UNDER[] PROGMEM = "$_";
-const /*PROGMEM*/ char SymbolParser::DOT_UNDER[] PROGMEM = "._";
-const /*PROGMEM*/ char SymbolParser::QUESTION_UNDER[] PROGMEM = "?_";
-const /*PROGMEM*/ char SymbolParser::ATMARK_QUESTION_UNDER[] PROGMEM = "@?_";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_UNDER[] PROGMEM = "$._";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION_UNDER[] PROGMEM = "$?_";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION_UNDER[] PROGMEM = "$.?_";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT[] PROGMEM = "$.";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION[] PROGMEM = "$?";
+const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION[] PROGMEM = "$.?";
 
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return DefaultSymbolParser::singleton().symbolLetter(c, headOfSymbol) ||
@@ -314,7 +310,7 @@ char LetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
         if (scan[1] == '\'') {
             scan += 2;  // successive single quoite
         } else {
-            error.setError(MISSING_CLOSING_QUOTE);
+            return error.setError(scan, MISSING_CLOSING_QUOTE);
         }
     } else {
         scan += 1;

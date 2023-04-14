@@ -67,7 +67,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const LetterParser &letter() const override { return CStyleLetterParser::singleton(); }
         const LocationParser &location() const override { return _location; }
         const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
-        const SimpleSymbolParser _symbol{SymbolParser::DOT_UNDER};
+        const SimpleSymbolParser _symbol{SymbolParser::DOT};
         const NationalLocationParser _location{'*'};
     } PLUGINS{};
     return PLUGINS;

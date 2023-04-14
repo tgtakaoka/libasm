@@ -37,7 +37,7 @@ const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_UNDER};
+        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR};
     } PLUGINS{};
     return PLUGINS;
 }

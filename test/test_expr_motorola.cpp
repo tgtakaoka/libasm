@@ -26,7 +26,7 @@ const struct MotorolaPlugins : ValueParser::Plugins {
     const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
     const LocationParser &location() const override { return AsteriskLocationParser::singleton();}
     const OperatorParser &operators() const override { return Mc68xxOperatorParser::singleton(); }
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_UNDER};
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT};
 } plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;

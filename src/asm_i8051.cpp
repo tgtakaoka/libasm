@@ -30,7 +30,7 @@ const ValueParser::Plugins &AsmI8051::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const SimpleSymbolParser _symbol{SymbolParser::QUESTION_UNDER, SymbolParser::NONE};
+        const SimpleSymbolParser _symbol{SymbolParser::QUESTION, SymbolParser::NONE};
     } PLUGINS{};
     return PLUGINS;
 }

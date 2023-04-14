@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <ctype.h>
+
 #include "asm_formatter.h"
 
 #include "asm_directive.h"
@@ -48,13 +50,23 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     setStartAddress(_driver.origin());
     assembler.setCurrentLocation(_driver.origin());
 
+    if (parser.commentLine(scan))
+        return OK;
+
     _line_symbol = parser.readSymbol(scan);
     _driver.setLineSymbol(_line_symbol);
-    if (_line_symbol.size())
-        scan.expect(':');  // skip optional trailing ':' for label.
+    if (_line_symbol.size()) {
+        if (scan.expect(':')) {
+            ;  // skip optional trailing ':' for label.
+        } else if (parser.endOfLine(scan) || isspace(*scan)) {
+            ;  // valid line symbol
+        } else {
+            return _errorAt.setError(scan, ILLEGAL_LABEL);
+        }
+    }
     scan.skipSpaces();
 
-    if (!assembler.endOfLine(scan)) {
+    if (!parser.endOfLine(scan)) {
         auto directive = scan;
         auto p = scan;
         p.trimStart([](char s) { return !isspace(s); });
@@ -83,7 +95,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
             return _errorAt.setError(_line_symbol, error);
     }
 
-    if (assembler.endOfLine(scan))
+    if (parser.endOfLine(scan))
         return OK;  // skip comment
 
     _insn.reset(startAddress());

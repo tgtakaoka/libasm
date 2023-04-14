@@ -49,18 +49,14 @@ struct SymbolParser {
     StrScanner readSymbol(StrScanner &scan) const;
     virtual bool symbolLetter(char c, bool headOfSymbol = false) const = 0;
 
-    static const /*PROGMEM*/ char NONE[];                       // ""
-    static const /*PROGMEM*/ char DOLLAR[];                     // "$"
-    static const /*PROGMEM*/ char DOT[];                        // "."
-    static const /*PROGMEM*/ char UNDER[];                      // "_"
-    static const /*PROGMEM*/ char ATMARK_QUESTION[];            // "@?";
-    static const /*PROGMEM*/ char DOLLAR_UNDER[];               // "$_"
-    static const /*PROGMEM*/ char DOT_UNDER[];                  // "._"
-    static const /*PROGMEM*/ char QUESTION_UNDER[];             // "?_"
-    static const /*PROGMEM*/ char ATMARK_QUESTION_UNDER[];      // "@?_"
-    static const /*PROGMEM*/ char DOLLAR_DOT_UNDER[];           // "$._"
-    static const /*PROGMEM*/ char DOLLAR_QUESTION_UNDER[];      // "$?_"
-    static const /*PROGMEM*/ char DOLLAR_DOT_QUESTION_UNDER[];  // "$.?_"
+    static const /*PROGMEM*/ char NONE[];                 // ""
+    static const /*PROGMEM*/ char DOLLAR[];               // "$"
+    static const /*PROGMEM*/ char DOT[];                  // "."
+    static const /*PROGMEM*/ char QUESTION[];             // "?"
+    static const /*PROGMEM*/ char ATMARK_QUESTION[];      // "@?";
+    static const /*PROGMEM*/ char DOLLAR_DOT[];           // "$."
+    static const /*PROGMEM*/ char DOLLAR_QUESTION[];      // "$?"
+    static const /*PROGMEM*/ char DOLLAR_DOT_QUESTION[];  // "$.?"
 };
 
 /**

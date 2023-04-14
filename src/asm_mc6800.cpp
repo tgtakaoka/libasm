@@ -43,7 +43,7 @@ const ValueParser::Plugins &AsmMc6800::defaultPlugins() {
         const OperatorParser &operators() const override {
             return Mc68xxOperatorParser::singleton();
         }
-        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
+        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT};
     } PLUGINS{};
     return PLUGINS;
 }

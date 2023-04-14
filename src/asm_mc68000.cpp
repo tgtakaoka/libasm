@@ -51,7 +51,7 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
-        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT_UNDER};
+        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT};
         const MotorolaLetterParser _letter{/*closingQuote*/ true};
     } PLUGINS{};
     return PLUGINS;
