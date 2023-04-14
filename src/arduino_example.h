@@ -23,7 +23,7 @@
 #include "config_base.h"
 #include "dis_base.h"
 
-typedef libcli::Cli::State State;
+using State = libcli::State;
 
 namespace libasm {
 namespace arduino {
@@ -40,8 +40,8 @@ public:
           _aend(_abegin + 1),
           _dbegin(nullptr),
           _dend(nullptr),
-          _current(Prog::ASM),
-          _cli(libcli::Cli::instance()) {}
+          _current(ASM),
+          _cli() {}
     Example(Disassembler &current)
         : _asm(nullptr),
           _dis(&current),
@@ -49,8 +49,8 @@ public:
           _aend(nullptr),
           _dbegin(&_dis),
           _dend(_dbegin + 1),
-          _current(Prog::DIS),
-          _cli(libcli::Cli::instance()) {}
+          _current(DIS),
+          _cli() {}
     Example(Assembler **abegin, Assembler **aend)
         : _asm(*abegin),
           _dis(nullptr),
@@ -58,8 +58,8 @@ public:
           _aend(aend),
           _dbegin(nullptr),
           _dend(nullptr),
-          _current(Prog::ASM),
-          _cli(libcli::Cli::instance()) {}
+          _current(ASM),
+          _cli() {}
     Example(Disassembler **dbegin, Disassembler **dend)
         : _asm(nullptr),
           _dis(*dbegin),
@@ -67,8 +67,8 @@ public:
           _aend(nullptr),
           _dbegin(dbegin),
           _dend(dend),
-          _current(Prog::DIS),
-          _cli(libcli::Cli::instance()) {}
+          _current(DIS),
+          _cli() {}
     Example(Assembler &assembler, Disassembler &disassembler)
         : _asm(&assembler),
           _dis(&disassembler),
@@ -76,8 +76,8 @@ public:
           _aend(_abegin + 1),
           _dbegin(&_dis),
           _dend(_dbegin + 1),
-          _current(Prog::ASM),
-          _cli(libcli::Cli::instance()) {}
+          _current(ASM),
+          _cli() {}
     Example(Assembler **abegin, Assembler **aend, Disassembler **dbegin, Disassembler **dend)
         : _asm(*abegin),
           _dis(*dbegin),
@@ -85,8 +85,8 @@ public:
           _aend(aend),
           _dbegin(dbegin),
           _dend(dend),
-          _current(Prog::ASM),
-          _cli(libcli::Cli::instance()) {}
+          _current(ASM),
+          _cli() {}
 
     void begin(Stream &console) {
         _cli.begin(console);
@@ -99,13 +99,13 @@ protected:
     Assembler *_asm;
     Disassembler *_dis;
 
-    bool isAsm() const { return _current == Prog::ASM; }
+    bool isAsm() const { return _current == ASM; }
     const char *cpu_P() const { return isAsm() ? _asm->cpu_P() : _dis->cpu_P(); }
 
     virtual bool processPseudo(const char *line) {
         if (strcasecmp_P(line, PSTR("ASM")) == 0) {
             if (_abegin) {
-                _current = Prog::ASM;
+                _current = ASM;
             } else {
                 _cli.println(F("No assembler"));
             }
@@ -113,7 +113,7 @@ protected:
         }
         if (strcasecmp_P(line, PSTR("DIS")) == 0) {
             if (_dbegin) {
-                _current = Prog::DIS;
+                _current = DIS;
             } else {
                 _cli.println(F("No disassembler"));
             }
@@ -171,7 +171,7 @@ private:
     Disassembler **_dend;
     enum Prog : uint8_t { ASM, DIS } _current;
     /* command line interface: libcli */
-    libcli::Cli &_cli;
+    libcli::Cli _cli;
     uint32_t _origin;
     char buffer[80];
 
