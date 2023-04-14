@@ -297,11 +297,14 @@ StrScanner FunctionParser::readFunctionName(StrScanner &scan, const SymbolParser
 }
 
 Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    if (!scan.expect('\''))
-        return NOT_AN_EXPECTED;
-    ErrorAt error;
-    letter = readLetter(scan, error);
-    return error.getError() ? error.getError() : (scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE);
+    if (scan.expect('\'')) {
+        ErrorAt error;
+        letter = readLetter(scan, error);
+        if (error.isOK())
+            return scan.expect('\'') ? OK : error.setError(scan, MISSING_CLOSING_QUOTE);
+        return error.getError();
+    }
+    return NOT_AN_EXPECTED;
 }
 
 char LetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
@@ -350,7 +353,7 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
                 c = 0x0d;
                 break;
             default:
-                error.setError(UNKNOWN_ESCAPE_SEQUENCE);
+                error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
             }
             scan = p;
             return c;
@@ -358,16 +361,15 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
         Value value;
         const auto err = value.parseNumber(p, radix);
         scan = p;
-        if (err != OK)
-            error.setError(err);
-        if (value.overflowUint8())
-            error.setError(OVERFLOW_RANGE);
-        return value.getUnsigned();
+        if (err == OK) {
+            if (value.overflowUint8())
+                error.setError(OVERFLOW_RANGE);
+            return value.getUnsigned();
+        }
+        return error.setError(err);
     }
 
-    const auto c = *p++;
-    scan = p;
-    return c;
+    return *scan++;
 }
 
 char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
@@ -381,11 +383,13 @@ char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
             Value value;
             const auto err = value.parseNumber(p, RADIX_16);
             scan = p;
-            if (err != OK)
+            if (err == OK) {
+                if (value.overflowUint8())
+                    error.setError(OVERFLOW_RANGE);
+                c = value.getUnsigned();
+            } else {
                 error.setError(UNKNOWN_ESCAPE_SEQUENCE);
-            if (value.overflowUint8())
-                error.setError(OVERFLOW_RANGE);
-            c = value.getUnsigned();
+            }
         }
     } else if (c == '\'') {
         error.setError(MISSING_CLOSING_QUOTE);
@@ -420,16 +424,17 @@ Error MotorolaLetterParser::hasSuffix(StrScanner &scan) const {
 
 Error IbmLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     auto p = scan;
-    if (!p.iexpect(_prefix) || !p.expect('\''))
-        return NOT_AN_EXPECTED;
-    ErrorAt error;
-    letter = readLetter(p, error);
-    if (!p.expect('\'')) {
+    if (p.iexpect(_prefix) && p.expect('\'')) {
+        ErrorAt error;
+        letter = readLetter(p, error);
+        if (p.expect('\'')) {
+            scan = p;
+            return error.getError() ? error.getError() : OK;
+        }
         scan = p;
         return MISSING_CLOSING_QUOTE;
     }
-    scan = p;
-    return error.getError() ? error.getError() : OK;
+    return DefaultLetterParser::singleton().parseLetter(scan, letter);
 }
 
 Error FairchildLetterParser::hasPrefix(StrScanner &scan, char &prefix) {
