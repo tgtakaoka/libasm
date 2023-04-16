@@ -411,7 +411,7 @@ uint8_t encodeScaledIndex(OprSize indexSize) {
     }
 }
 
-void embedOprField(InsnNs32000 &insn, OprPos pos, uint8_t opr) {
+void embedOprField(AsmInsn &insn, OprPos pos, uint8_t opr) {
     if (pos == P_GEN1) {
         opr &= 0x1F;
         opr <<= 3;
@@ -439,7 +439,7 @@ void embedOprField(InsnNs32000 &insn, OprPos pos, uint8_t opr) {
 }  // namespace
 
 void AsmNs32000::emitDisplacement(
-        InsnNs32000 &insn, const Operand &op, int32_t val32, Error error) {
+        AsmInsn &insn, const Operand &op, int32_t val32, Error error) {
     if (overflowInt(val32, 30) || val32 < -0x1F000000L) {
         setErrorIf(op, error);
         val32 = val32 < 0 ? -0x1F000000 : 0x1FFFFFFF;
@@ -453,7 +453,7 @@ void AsmNs32000::emitDisplacement(
     }
 }
 
-void AsmNs32000::emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op) {
+void AsmNs32000::emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) {
     uint8_t len = op.getError() ? 0 : op.val32;
     if (op.isOK()) {
         const auto val = static_cast<int32_t>(op.val32);
@@ -483,7 +483,7 @@ void AsmNs32000::emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op)
 }
 
 void AsmNs32000::emitBitField(
-        InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len) {
+        AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) {
     if (mode == M_BFOFF)
         return;
     if (off.val32 >= 8)
@@ -497,7 +497,7 @@ void AsmNs32000::emitBitField(
     insn.emitOperand8(data);
 }
 
-void AsmNs32000::emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size) {
+void AsmNs32000::emitImmediate(AsmInsn &insn, const Operand &op, OprSize size) {
     switch (size) {
     case SZ_BYTE:
         insn.emitOperand8(op.val32);
@@ -558,14 +558,14 @@ uint8_t AsmNs32000::encodeGenericField(AddrMode mode, RegName reg) const {
     return 0;
 }
 
-void AsmNs32000::emitIndexByte(InsnNs32000 &insn, const Operand &op) const {
+void AsmNs32000::emitIndexByte(AsmInsn &insn, const Operand &op) const {
     if (op.index == REG_UNDEF)
         return;
     const auto indexByte = (encodeGenericField(op.mode, op.reg) << 3) | encodeRegName(op.index);
     insn.emitOperand8(indexByte);
 }
 
-void AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos) {
+void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) {
     const auto field = (op.index == REG_UNDEF) ? encodeGenericField(op.mode, op.reg)
                                                : encodeScaledIndex(op.size);
     embedOprField(insn, pos, field);
@@ -602,7 +602,7 @@ void AsmNs32000::emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op
     }
 }
 
-void AsmNs32000::emitRelative(InsnNs32000 &insn, const Operand &op) {
+void AsmNs32000::emitRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address();
     const auto target = op.getError() ? base : op.val32;
     const auto err = checkAddr(target);
@@ -614,7 +614,7 @@ void AsmNs32000::emitRelative(InsnNs32000 &insn, const Operand &op) {
     emitDisplacement(insn, op, delta, OPERAND_TOO_FAR);
 }
 
-void AsmNs32000::emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op,
+void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const Operand &op,
         OprPos pos, const Operand &prevOp) {
     constexpr uint8_t SAVE = 0x62;
     constexpr uint8_t RESTORE = 0x72;
@@ -708,7 +708,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnNs32000 insn(_insn);
+    AsmInsn insn(_insn);
     Operand srcOp, dstOp, ex1Op, ex2Op;
     if (parseOperand(scan, srcOp) && srcOp.hasError())
         return setError(srcOp);

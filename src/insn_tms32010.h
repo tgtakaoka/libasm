@@ -24,23 +24,25 @@
 namespace libasm {
 namespace tms32010 {
 
-struct InsnTms32010 final : InsnImpl<Config, Entry> {
-    InsnTms32010(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
     void setAddrMode(AddrMode opr1, AddrMode opr2, AddrMode opr3) {
         setFlags(Entry::Flags::create(opr1, opr2, opr3));
     }
+};
 
-    void emitInsn() {
-        emitUint16(opCode(), 0);
-    }
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
-    void emitOperand16(Config::opcode_t opr) {
-        emitUint16(opr, sizeof(Config::opcode_t));
-    }
+    void emitInsn() { emitUint16(opCode(), 0); }
+
+    void emitOperand16(Config::opcode_t opr) { emitUint16(opr, sizeof(Config::opcode_t)); }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace tms32010

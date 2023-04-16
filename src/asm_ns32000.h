@@ -45,20 +45,19 @@ private:
     Error parseBaseOperand(StrScanner &scan, Operand &op);
     Error parseOperand(StrScanner &scan, Operand &op);
     void emitDisplacement(
-            InsnNs32000 &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE);
-    void emitLength(InsnNs32000 &insn, AddrMode mode, const Operand &op);
-    void emitBitField(InsnNs32000 &insn, AddrMode mode, const Operand &off, const Operand &len);
-    void emitImmediate(InsnNs32000 &insn, const Operand &op, OprSize size);
-    void emitIndexByte(InsnNs32000 &insn, const Operand &op) const;
+            AsmInsn &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE);
+    void emitLength(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitBitField(AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len);
+    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size);
+    void emitIndexByte(AsmInsn &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
-    void emitGeneric(InsnNs32000 &insn, AddrMode mode, const Operand &op, OprPos pos);
-    void emitRelative(InsnNs32000 &insn, const Operand &op);
-    void emitOperand(InsnNs32000 &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
+    void emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos);
+    void emitRelative(AsmInsn &insn, const Operand &op);
+    void emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
             const Operand &prevOp);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

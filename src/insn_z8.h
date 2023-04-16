@@ -24,10 +24,7 @@
 namespace libasm {
 namespace z8 {
 
-struct InsnZ8 final : InsnImpl<Config, Entry> {
-    InsnZ8(Insn &insn) : InsnImpl(insn), _memory(nullptr) {}
-    InsnZ8(Insn &insn, DisMemory &memory) : InsnImpl(insn), _memory(&memory) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     AddrMode ext() const { return flags().ext(); }
@@ -37,20 +34,14 @@ struct InsnZ8 final : InsnImpl<Config, Entry> {
         setFlags(Entry::Flags::create(dst, src, ext, ORDER_NONE, PF_NONE));
     }
 
-    void readPost() {
-        if (_memory)
-            setPost(readByte(*_memory));
-    }
-
     static bool operandInOpCode(Config::opcode_t opCode) {
         const Config::opcode_t low4 = opCode & 0xF;
         return low4 >= 0x8 && low4 < 0xF;
     }
+};
 
-    bool singleByteOpCode() const {
-        const Config::opcode_t low4 = opCode() & 0xF;
-        return low4 == 0x0E || low4 == 0xF;
-    }
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     uint8_t emitLength() const { return operandPos() + 1; }
     void emitInsn() { emitByte(opCode(), 0); }
@@ -59,11 +50,17 @@ struct InsnZ8 final : InsnImpl<Config, Entry> {
     void emitOperand16Le(uint16_t val) { emitUint16Le(val, operandPos()); }
 
 private:
-    DisMemory *_memory;
-
     uint8_t operandPos() const {
         uint8_t pos = length();
         return pos == 0 ? 1 : pos;
+    }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    void readPost() {
+        setPost(readByte());
     }
 };
 

@@ -32,7 +32,7 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op);
+    void encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
     const ConfigBase &config() const override { return *this; }

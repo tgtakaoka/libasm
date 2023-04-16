@@ -24,18 +24,14 @@
 namespace libasm {
 namespace mc6809 {
 
-struct InsnMc6809 final : InsnImpl<Config, Entry> {
-    InsnMc6809(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     void setAddrMode(AddrMode opr1, AddrMode opr2) { setFlags(Entry::Flags::create(opr1, opr2)); }
+};
 
-    Config::opcode_t readPost(DisMemory &memory) {
-        if (!hasPost())
-            setPost(readByte(memory));
-        return post();
-    }
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() {
         uint8_t pos = 0;
@@ -53,6 +49,16 @@ private:
         if (pos == 0)
             pos = hasPrefix() ? 2 : 1;
         return pos;
+    }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    Config::opcode_t readPost() {
+        if (!hasPost())
+            setPost(readByte());
+        return post();
     }
 };
 

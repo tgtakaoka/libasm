@@ -30,7 +30,7 @@ DisTms9900::DisTms9900() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
-Error DisTms9900::checkPostWord(InsnTms9900 &insn, StrBuffer &out) {
+Error DisTms9900::checkPostWord(DisInsn &insn, StrBuffer &out) {
     const Config::opcode_t post = insn.post();
     const uint8_t src = (post >> 4 & 3);
     switch (insn.dst()) {
@@ -53,15 +53,14 @@ Error DisTms9900::checkPostWord(InsnTms9900 &insn, StrBuffer &out) {
     return decodeMacroInstructionDetect(insn, out);
 }
 
-Error DisTms9900::decodeMacroInstructionDetect(InsnTms9900 &insn, StrBuffer &out) {
+Error DisTms9900::decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out) {
     auto save = out;
     insn.clearNameBuffer().over(out).text_P(TEXT_MID).over(insn.nameBuffer());
     save.over(out);
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error DisTms9900::decodeModeReg(
-        DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, uint8_t mode, uint8_t reg) {
+Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t mode, uint8_t reg) {
     switch (mode &= 3) {
     case 1:
     case 3:
@@ -73,7 +72,7 @@ Error DisTms9900::decodeModeReg(
             out.letter('+');
         break;
     default:
-        outHex(out.letter('@'), insn.readUint16(memory), 16);
+        outHex(out.letter('@'), insn.readUint16(), 16);
         if (reg & 0xF)
             outRegName(out.letter('('), reg).letter(')');
         break;
@@ -81,7 +80,7 @@ Error DisTms9900::decodeModeReg(
     return setError(insn);
 }
 
-Error DisTms9900::decodeRelative(InsnTms9900 &insn, StrBuffer &out) {
+Error DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) {
     int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
     delta *= 2;
     const auto base = insn.address() + 2;
@@ -90,14 +89,13 @@ Error DisTms9900::decodeRelative(InsnTms9900 &insn, StrBuffer &out) {
     return OK;
 }
 
-Error DisTms9900::decodeOperand(
-        DisMemory &memory, InsnTms9900 &insn, StrBuffer &out, AddrMode mode) {
+Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const Config::opcode_t opc = insn.opCode();
     const Config::opcode_t post = insn.post();
     uint8_t val8;
     switch (mode) {
     case M_IMM:
-        outHex(out, insn.readUint16(memory), 16);
+        outHex(out, insn.readUint16(), 16);
         return setError(insn);
     case M_REG:
         outRegName(out, opc);
@@ -112,11 +110,11 @@ Error DisTms9900::decodeOperand(
         /* Fall-through */
     case M_SRC:
         val8 = (mode == M_SRC) ? opc : post;
-        return decodeModeReg(memory, insn, out, val8 >> 4, val8);
+        return decodeModeReg(insn, out, val8 >> 4, val8);
     case M_DST2:
     case M_DST:
         val8 = ((mode == M_DST) ? opc : post) >> 6;
-        return decodeModeReg(memory, insn, out, val8 >> 4, val8);
+        return decodeModeReg(insn, out, val8 >> 4, val8);
     case M_CNT2:
     case M_XOP:
     case M_CNT:
@@ -160,26 +158,26 @@ Error DisTms9900::decodeOperand(
 }
 
 Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnTms9900 insn(_insn);
-    const Config::opcode_t opCode = insn.readUint16(memory);
+    DisInsn insn(_insn, memory);
+    const Config::opcode_t opCode = insn.readUint16();
 
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return decodeMacroInstructionDetect(insn, out);
-    insn.readPost(memory);
+    insn.readPost();
     if (setError(insn))
         return getError();
 
     const auto src = insn.src();
     if (src == M_NONE)
         return OK;
-    if (decodeOperand(memory, insn, out, src))
+    if (decodeOperand(insn, out, src))
         return getError();
     const auto dst = insn.dst();
     if (dst == M_NONE)
         return OK;
     out.comma();
-    return decodeOperand(memory, insn, out, dst);
+    return decodeOperand(insn, out, dst);
 }
 
 }  // namespace tms9900

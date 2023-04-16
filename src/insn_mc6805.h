@@ -24,15 +24,17 @@
 namespace libasm {
 namespace mc6805 {
 
-struct InsnMc6805 final : InsnImpl<Config, Entry> {
-    InsnMc6805(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
     void setAddrMode(const AddrMode opr1, const AddrMode opr2, const AddrMode opr3) {
         setFlags(Entry::Flags::create(opr1, opr2, opr3));
     }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
@@ -45,6 +47,10 @@ private:
             pos = 1;
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace mc6805

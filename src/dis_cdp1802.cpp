@@ -53,8 +53,7 @@ static Config::uintptr_t inpage(Config::uintptr_t base, uint8_t offset) {
     return page(base) | offset;
 }
 
-Error DisCdp1802::decodeOperand(
-        DisMemory &memory, InsnCdp1802 &insn, StrBuffer &out, AddrMode mode) {
+Error DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const auto opCode = insn.opCode();
     switch (mode) {
     case M_REG1:
@@ -66,16 +65,16 @@ Error DisCdp1802::decodeOperand(
         }
         return OK;
     case M_IMM8:
-        outHex(out, insn.readByte(memory), 8);
+        outHex(out, insn.readByte(), 8);
         break;
     case M_IOAD:
         outHex(out, opCode & 7, 3);
         return OK;
     case M_ADDR:
-        outAbsAddr(out, insn.readUint16(memory));
+        outAbsAddr(out, insn.readUint16());
         break;
     case M_PAGE:
-        outAbsAddr(out, inpage(insn.address() + 2, insn.readByte(memory)));
+        outAbsAddr(out, inpage(insn.address() + 2, insn.readByte()));
         break;
     default:
         return OK;
@@ -84,12 +83,12 @@ Error DisCdp1802::decodeOperand(
 }
 
 Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnCdp1802 insn(_insn);
-    auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.isPrefix(cpuType(), opCode)) {
         const auto prefix = opCode;
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
     if (setError(insn))
@@ -101,13 +100,13 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return OK;
-    if (decodeOperand(memory, insn, out, mode1))
+    if (decodeOperand(insn, out, mode1))
         return getError();
     const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return OK;
     out.comma();
-    return decodeOperand(memory, insn, out, mode2);
+    return decodeOperand(insn, out, mode2);
 }
 
 }  // namespace cdp1802

@@ -92,7 +92,7 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
     const auto waop = (mode == M_WAOP);
     switch (op.mode) {
     case M_IMM16:
@@ -133,7 +133,7 @@ void AsmI8096::emitAop(InsnI8096 &insn, AddrMode mode, const Operand &op) {
     }
 }
 
-void AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) {
     if (mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
@@ -160,7 +160,7 @@ void AsmI8096::emitRelative(InsnI8096 &insn, AddrMode mode, const Operand &op) {
     }
 }
 
-void AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     auto val16 = op.val16;
     switch (mode) {
     case M_LREG:
@@ -202,7 +202,7 @@ void AsmI8096::emitOperand(InsnI8096 &insn, AddrMode mode, const Operand &op) {
 }
 
 Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnI8096 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dst, src1, src2;
     if (parseOperand(scan, dst) && dst.hasError())
         return setError(dst);

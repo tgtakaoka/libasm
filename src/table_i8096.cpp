@@ -284,7 +284,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnI8096 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
@@ -296,12 +296,12 @@ static bool acceptModes(InsnI8096 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableI8096::searchName(CpuType cpuType, InsnI8096 &insn) const {
+Error TableI8096::searchName(CpuType cpuType, AsmInsn &insn) const {
     I8096_CPU.searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnI8096 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
@@ -316,7 +316,7 @@ static bool matchOpCode(InsnI8096 &insn, const Entry *entry, const EntryPage *pa
     return opCode == entry->opCode();
 }
 
-Error TableI8096::searchOpCode(CpuType cpuType, InsnI8096 &insn, StrBuffer &out) const {
+Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     const auto entry = I8096_CPU.searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);

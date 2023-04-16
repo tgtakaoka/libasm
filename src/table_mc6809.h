@@ -42,9 +42,9 @@ struct TableMc6809 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error hasName(CpuType, InsnMc6809 &insn) const;
-    Error searchName(CpuType, InsnMc6809 &insn) const;
-    Error searchOpCode(CpuType, InsnMc6809 &insn, StrBuffer &out) const;
+    Error hasName(CpuType, AsmInsn &insn) const;
+    Error searchName(CpuType, AsmInsn &insn) const;
+    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
     bool isPrefix(CpuType, Config::opcode_t code) const;
 
     Error searchPostByte(CpuType, Config::opcode_t post, PostSpec &spec) const;

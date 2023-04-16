@@ -24,20 +24,24 @@
 namespace libasm {
 namespace cdp1802 {
 
-struct InsnCdp1802 final : InsnImpl<Config, Entry> {
-    InsnCdp1802(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
-    void setAddrMode(AddrMode opr1, AddrMode opr2) {
-        setFlags(Entry::Flags::create(opr1, opr2));
-    }
+    void setAddrMode(AddrMode opr1, AddrMode opr2) { setFlags(Entry::Flags::create(opr1, opr2)); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() {
         if (hasPrefix())
             emitByte(prefix());
         emitByte(opCode());
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace cdp1802

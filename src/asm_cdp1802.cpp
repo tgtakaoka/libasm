@@ -85,7 +85,7 @@ Config::uintptr_t page(Config::uintptr_t addr) {
 
 }  // namespace
 
-void AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
+void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     if (mode == M_PAGE) {
@@ -106,7 +106,7 @@ void AsmCdp1802::encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op)
     insn.emitUint16(op.val16);
 }
 
-void AsmCdp1802::emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op) {
+void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     auto val16 = op.val16;
     switch (mode) {
     case M_REG1:
@@ -177,7 +177,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnCdp1802 insn(_insn);
+    AsmInsn insn(_insn);
     Operand op1, op2;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

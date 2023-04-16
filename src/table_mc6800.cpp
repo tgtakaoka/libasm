@@ -626,7 +626,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnMc6800 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
@@ -638,12 +638,12 @@ static bool acceptModes(InsnMc6800 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableMc6800::searchName(CpuType cpuType, InsnMc6800 &insn) const {
+Error TableMc6800::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -657,7 +657,7 @@ static bool matchOpCode(InsnMc6800 &insn, const Entry *entry, const EntryPage *p
     return opCode == entry->opCode();
 }
 
-static const Entry *searchOpCodeImpl(const Cpu *cpu, InsnMc6800 &insn, StrBuffer &out) {
+static const Entry *searchOpCodeImpl(const Cpu *cpu, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined()) {
         insn.setError(UNKNOWN_INSTRUCTION);
@@ -666,12 +666,12 @@ static const Entry *searchOpCodeImpl(const Cpu *cpu, InsnMc6800 &insn, StrBuffer
     return entry;
 }
 
-Error TableMc6800::searchOpCode(CpuType cpuType, InsnMc6800 &insn, StrBuffer &out) const {
+Error TableMc6800::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     searchOpCodeImpl(cpu(cpuType), insn, out);
     return insn.getError();
 }
 
-Error TableMc6800::searchOpCodeAlias(CpuType cpuType, InsnMc6800 &insn, StrBuffer &out) const {
+Error TableMc6800::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = searchOpCodeImpl(cpu(cpuType), insn, out);
     if (entry == nullptr)
         return insn.setError(INTERNAL_ERROR);

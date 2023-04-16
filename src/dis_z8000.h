@@ -42,26 +42,21 @@ private:
     bool _ioAddressPrefix;
 
     StrBuffer &outImmediate(StrBuffer &out, uint8_t data, AddrMode mode);
-    StrBuffer &outComma(StrBuffer &out, const InsnZ8000 &insn, AddrMode mode, ModeField field);
-    Error decodeImmediate(
-            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, OprSize size);
+    StrBuffer &outComma(StrBuffer &out, const DisInsn &insn, AddrMode mode, ModeField field);
+    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, OprSize size);
     Error decodeFlags(StrBuffer &out, uint8_t flags);
     Error decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect = false);
     Error decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize size);
     Error decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size);
-    Error decodeBaseAddressing(
-            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, uint8_t num);
-    Error decodeGenericAddressing(
-            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, uint8_t num);
-    Error decodeDirectAddress(DisMemory &memory, InsnZ8000 &insn, StrBuffer &out);
-    Error decodeRelativeAddressing(
-            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeOperand(
-            DisMemory &memory, InsnZ8000 &insn, StrBuffer &out, AddrMode mode, ModeField field);
-    Error checkPostWord(const InsnZ8000 &insn);
-    Error checkRegisterOverlap(const InsnZ8000 &insn);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num);
+    Error decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num);
+    Error decodeDirectAddress(DisInsn &insn, StrBuffer &out);
+    Error decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, ModeField field);
+    Error checkPostWord(const DisInsn &insn);
+    Error checkRegisterOverlap(const DisInsn &insn);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

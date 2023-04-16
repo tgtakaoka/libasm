@@ -164,7 +164,7 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmI8048::encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand &op) {
+void AsmI8048::encodeAddress(AsmInsn &insn, const AddrMode mode, const Operand &op) {
     if (mode == M_AD08) {
         const Config::uintptr_t page = (insn.address() + 1) & ~0xFF;
         if ((op.val16 & ~0xFF) != page)
@@ -178,7 +178,7 @@ void AsmI8048::encodeAddress(InsnI8048 &insn, const AddrMode mode, const Operand
     insn.emitOperand8(op.val16);
 }
 
-void AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand &op) {
+void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_IR:
     case M_IR3:
@@ -219,7 +219,7 @@ void AsmI8048::encodeOperand(InsnI8048 &insn, const AddrMode mode, const Operand
 }
 
 Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnI8048 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

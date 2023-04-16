@@ -67,7 +67,7 @@ AddrMode constantType(uint16_t val) {
 
 }  // namespace
 
-void AsmTms32010::encodeOperand(InsnTms32010 &insn, const Operand &op, AddrMode mode) {
+void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     static constexpr Config::opcode_t SST = 0x7C00;
     switch (mode) {
     case M_MAM:
@@ -165,7 +165,7 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnTms32010 insn(_insn);
+    AsmInsn insn(_insn);
     Operand op1, op2, op3;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

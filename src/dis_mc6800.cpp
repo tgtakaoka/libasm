@@ -24,12 +24,12 @@ namespace mc6800 {
 
 using namespace reg;
 
-    DisMc6800::DisMc6800() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
+DisMc6800::DisMc6800() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
     reset();
 }
 
-Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
-    const uint8_t dir = insn.readByte(memory);
+Error DisMc6800::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
+    const uint8_t dir = insn.readByte();
     const auto label = lookup(dir);
     if (label) {
         out.letter('<').rtext(label);
@@ -39,8 +39,8 @@ Error DisMc6800::decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer
     return OK;
 }
 
-Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
-    const Config::uintptr_t addr = insn.readUint16(memory);
+Error DisMc6800::decodeExtended(DisInsn &insn, StrBuffer &out) {
+    const Config::uintptr_t addr = insn.readUint16();
     const auto label = lookup(addr);
     if (label) {
         out.letter('>').rtext(label);
@@ -52,8 +52,8 @@ Error DisMc6800::decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &
     return OK;
 }
 
-Error DisMc6800::decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
-    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+Error DisMc6800::decodeRelative(DisInsn &insn, StrBuffer &out) {
+    const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
@@ -68,8 +68,8 @@ static int8_t bitNumber(uint8_t val) {
     return -1;
 }
 
-Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out) {
-    const uint8_t val8 = insn.readByte(memory);
+Error DisMc6800::decodeBitNumber(DisInsn &insn, StrBuffer &out) {
+    const uint8_t val8 = insn.readByte();
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
@@ -82,12 +82,12 @@ Error DisMc6800::decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer 
     return OK;
 }
 
-Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode) {
+Error DisMc6800::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const auto gn = insn.opCode() & 0x30;
     switch (mode) {
     case M_DIR:
     dir:
-        decodeDirectPage(memory, insn, out);
+        decodeDirectPage(insn, out);
         break;
     case M_GMEM:
         if ((insn.opCode() & 0xF0) == 0x60)
@@ -95,16 +95,15 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
         // Fall-through
     case M_EXT:
     ext:
-        decodeExtended(memory, insn, out);
+        decodeExtended(insn, out);
         break;
     case M_IDX:
     case M_IDY:
     idx:
-        outRegName(
-                outDec(out, insn.readByte(memory), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
+        outRegName(outDec(out, insn.readByte(), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
         break;
     case M_REL:
-        decodeRelative(memory, insn, out);
+        decodeRelative(insn, out);
         break;
     case M_GN8:
         if (gn == 0x10)
@@ -115,7 +114,7 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
             goto ext;
         // Fall-through
     case M_IM8:
-        outHex(out.letter('#'), insn.readByte(memory), 8);
+        outHex(out.letter('#'), insn.readByte(), 8);
         break;
     case M_GN16:
         if (gn == 0x10)
@@ -126,10 +125,10 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
             goto ext;
         // Fall-through
     case M_IM16:
-        outHex(out.letter('#'), insn.readUint16(memory), 16);
+        outHex(out.letter('#'), insn.readUint16(), 16);
         break;
     case M_BMM:
-        decodeBitNumber(memory, insn, out);
+        decodeBitNumber(insn, out);
         break;
     default:
         return OK;
@@ -138,12 +137,12 @@ Error DisMc6800::decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &o
 }
 
 Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnMc6800 insn(_insn);
-    auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.isPrefix(cpuType(), opCode)) {
         const auto prefix = opCode;
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
     if (setError(insn))
@@ -155,21 +154,21 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, out, mode1))
+    if (decodeOperand(insn, out, mode1))
         return getError();
 
     const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return setOK();
     out.comma();
-    if (decodeOperand(memory, insn, out, mode2))
+    if (decodeOperand(insn, out, mode2))
         return getError();
 
     const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
         return setOK();
     out.comma();
-    return decodeOperand(memory, insn, out, mode3);
+    return decodeOperand(insn, out, mode3);
 }
 
 }  // namespace mc6800

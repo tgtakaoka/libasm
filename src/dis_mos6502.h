@@ -44,15 +44,15 @@ private:
     bool _useIndirectLong;
     bool longImmediate(AddrMode mode) const;
 
-    Error decodeImmediate(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeAbsoluteLong(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
-    Error decodeAbsolute(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
-    Error decodeDirectPage(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
-    Error decodeRelative(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeBlockMove(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out);
-    Error decodeOperand(DisMemory &memory, InsnMos6502 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeAbsoluteLong(DisInsn &insn, StrBuffer &out);
+    Error decodeAbsolute(DisInsn &insn, StrBuffer &out);
+    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeBlockMove(DisInsn &insn, StrBuffer &out);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

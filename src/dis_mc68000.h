@@ -37,16 +37,14 @@ private:
     StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, bool pop,
             StrBuffer &(DisMc68000::*outRegs)(StrBuffer &, RegName, RegName, char));
 
-    Error decodeImmediateData(DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, OprSize eaSize);
-    Error decodeEffectiveAddr(
-            DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, const EaMc68000 &ea);
-    Error decodeRelative(DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, uint8_t rel8);
-    Error decodeOperand(DisMemory &memory, InsnMc68000 &insn, StrBuffer &out, AddrMode mode,
-            uint8_t modePos, uint8_t regPos, OprSize size, uint16_t opr16);
+    Error decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize);
+    Error decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68000 &ea);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t modePos,
+            uint8_t regPos, OprSize size, uint16_t opr16);
     Error checkOperand(AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

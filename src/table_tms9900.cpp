@@ -261,18 +261,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnTms9900 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst());
 }
 
-Error TableTms9900::searchName(CpuType cpuType, InsnTms9900 &insn) const {
+Error TableTms9900::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnTms9900 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto src = flags.src();
@@ -295,7 +295,7 @@ static bool matchOpCode(InsnTms9900 &insn, const Entry *entry, const EntryPage *
     return opCode == entry->opCode();
 }
 
-Error TableTms9900::searchOpCode(CpuType cpuType, InsnTms9900 &insn, StrBuffer &out) const {
+Error TableTms9900::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

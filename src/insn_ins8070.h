@@ -24,9 +24,7 @@
 namespace libasm {
 namespace ins8070 {
 
-struct InsnIns8070 final : InsnImpl<Config, Entry> {
-    InsnIns8070(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     OprSize oprSize() const { return flags().size(); }
@@ -34,6 +32,10 @@ struct InsnIns8070 final : InsnImpl<Config, Entry> {
     void setAddrMode(AddrMode dst, AddrMode src) {
         setFlags(Entry::Flags::create(dst, src, SZ_NONE));
     }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
@@ -46,6 +48,10 @@ private:
             pos = 1;
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace ins8070

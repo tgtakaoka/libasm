@@ -24,10 +24,7 @@
 namespace libasm {
 namespace ns32000 {
 
-struct InsnNs32000 final : InsnImpl<Config, Entry> {
-    InsnNs32000(Insn &insn) : InsnImpl(insn), _memory(nullptr) {}
-    InsnNs32000(Insn &insn, DisMemory &memory) : InsnImpl(insn), _memory(&memory) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode ex1() const { return flags().ex1(); }
@@ -40,19 +37,10 @@ struct InsnNs32000 final : InsnImpl<Config, Entry> {
     void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
         setFlags(Entry::Flags::create(src, dst, ex1, ex2));
     }
+};
 
-    void readPost() {
-        if (_memory)
-            setPost(readByte(*_memory));
-    }
-
-    void setIndexByte(uint8_t data, OprPos pos) {
-        if (pos == P_GEN1)
-            _indexByte1 = data;
-        if (pos == P_GEN2)
-            _indexByte2 = data;
-    }
-    uint8_t indexByte(OprPos pos) const { return pos == P_GEN1 ? _indexByte1 : _indexByte2; }
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() {
         uint8_t pos = 0;
@@ -70,10 +58,6 @@ struct InsnNs32000 final : InsnImpl<Config, Entry> {
     void emitOpFloat64(double float64) { emitFloat64(float64, operandPos()); }
 
 private:
-    DisMemory *const _memory;
-    uint8_t _indexByte1;
-    uint8_t _indexByte2;
-
     uint8_t operandPos() {
         uint8_t pos = length();
         if (pos == 0) {
@@ -85,6 +69,24 @@ private:
         }
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    void readPost() { setPost(readByte()); }
+
+    uint8_t indexByte(OprPos pos) const { return pos == P_GEN1 ? _indexByte1 : _indexByte2; }
+    void setIndexByte(uint8_t data, OprPos pos) {
+        if (pos == P_GEN1)
+            _indexByte1 = data;
+        if (pos == P_GEN2)
+            _indexByte2 = data;
+    }
+
+private:
+    uint8_t _indexByte1;
+    uint8_t _indexByte2;
 };
 
 }  // namespace ns32000

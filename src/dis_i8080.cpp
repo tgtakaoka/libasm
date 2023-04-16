@@ -24,19 +24,19 @@ namespace i8080 {
 
 using namespace reg;
 
-    DisI8080::DisI8080() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+DisI8080::DisI8080() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
-Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode) {
+Error DisI8080::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_IM8:
     case M_IOA:
-        outHex(out, insn.readByte(memory), 8);
+        outHex(out, insn.readByte(), 8);
         break;
     case M_IM16:
     case M_ABS:
-        outHex(out, insn.readUint16(memory), 16);
+        outHex(out, insn.readUint16(), 16);
         break;
     case M_PTR:
         outRegName(out, decodePointerReg(insn.opCode() >> 4));
@@ -63,12 +63,12 @@ Error DisI8080::decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out
 }
 
 Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnI8080 insn(_insn);
-    auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.isPrefix(cpuType(), opCode)) {
         const auto prefix = opCode;
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
     if (setError(insn))
@@ -80,13 +80,13 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto dst = insn.dst();
     if (dst == M_NONE)
         return OK;
-    if (decodeOperand(memory, insn, out, dst))
+    if (decodeOperand(insn, out, dst))
         return getError();
     const auto src = insn.src();
     if (src == M_NONE)
         return OK;
     out.comma();
-    return decodeOperand(memory, insn, out, src);
+    return decodeOperand(insn, out, src);
 }
 
 }  // namespace i8080

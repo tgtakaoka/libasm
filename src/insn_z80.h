@@ -24,13 +24,15 @@
 namespace libasm {
 namespace z80 {
 
-struct InsnZ80 final : InsnImpl<Config, Entry> {
-    InsnZ80(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     bool indexBit() const { return flags().indexBit(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() {
         uint8_t pos = 0;
@@ -51,6 +53,11 @@ private:
         }
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+    DisInsn(DisInsn &insn) : DisInsnImpl(insn._insn, insn._memory) {}
 };
 
 }  // namespace z80

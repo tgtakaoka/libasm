@@ -83,7 +83,7 @@ Error AsmI8086::setOptimizeSegment(bool enable) {
 
 Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
-    InsnI8086 insn(_insn);
+    AsmInsn insn(_insn);
     auto p = scan;
     insn.nameBuffer().text(_parser.readSymbol(p));
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
@@ -265,7 +265,7 @@ AddrMode AsmI8086::Operand::immediateMode() const {
     return M_IMM;
 }
 
-void AsmI8086::emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val) {
+void AsmI8086::emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, uint32_t val) {
     if (size == SZ_BYTE) {
         if (overflowUint8(val))
             setErrorIf(op, OVERFLOW_RANGE);
@@ -278,7 +278,7 @@ void AsmI8086::emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, u
     }
 }
 
-void AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
+void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) {
     const auto base = insn.address() + (mode == M_REL8 ? 2 : 3);
     const auto target = op.getError() ? base : op.val32;
     const auto delta = branchDelta(base, target, op);
@@ -300,7 +300,7 @@ void AsmI8086::emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode) {
     insn.emitOperand16(delta);
 }
 
-void AsmI8086::emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos) {
+void AsmI8086::emitRegister(AsmInsn &insn, const Operand &op, OprPos pos) {
     const auto num = encodeRegNum(op.reg);
     switch (pos) {
     case P_OREG:
@@ -363,7 +363,7 @@ Config::opcode_t AsmI8086::encodeSegmentOverride(RegName seg, RegName base) {
     return segPrefix;
 }
 
-void AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
+void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) {
     uint8_t mod;
     uint8_t modReg;
     switch (op.mode) {
@@ -407,7 +407,7 @@ void AsmI8086::emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos) {
     }
 }
 
-void AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
+void AsmI8086::emitDirect(AsmInsn &insn, const Operand &op, OprPos pos) {
     insn.setSegment(encodeSegmentOverride(op.seg, REG_UNDEF));
     if (pos == P_MOD)
         insn.embedModReg(0006);
@@ -416,7 +416,7 @@ void AsmI8086::emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos) {
     emitImmediate(insn, op, SZ_WORD, op.val32);
 }
 
-void AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos) {
+void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) {
     int32_t sval32 = static_cast<int32_t>(op.val32);
     switch (mode) {
     case M_CS:
@@ -487,7 +487,7 @@ void AsmI8086::emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, Op
     }
 }
 
-void AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index) {
+void AsmI8086::emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index) {
     if (op.mode == M_NONE)
         return;
     if (op.reg != REG_UNDEF || op.index != index || op.hasVal)
@@ -498,7 +498,7 @@ void AsmI8086::emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg
         insn.setSegment(TABLE.segOverridePrefix(op.seg));
 }
 
-void AsmI8086::emitStringInst(InsnI8086 &insn, const Operand &dst, const Operand &src) {
+void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &src) {
     switch (insn.opCode() & ~1) {
     case 0xA4:  // MOVS ES:[DI],DS:[SI]
     case 0x20:  // ADD4S ES:[DI],DS:[SI]
@@ -524,7 +524,7 @@ void AsmI8086::emitStringInst(InsnI8086 &insn, const Operand &dst, const Operand
 }
 
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnI8086 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

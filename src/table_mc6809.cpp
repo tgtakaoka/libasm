@@ -674,7 +674,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnMc6809 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2())) {
@@ -685,21 +685,21 @@ static bool acceptModes(InsnMc6809 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableMc6809::searchName(CpuType cpuType, InsnMc6809 &insn) const {
+Error TableMc6809::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool acceptAll(InsnMc6809 &insn, const Entry *entry) {
+static bool acceptAll(AsmInsn &insn, const Entry *entry) {
     return true;
 }
 
-Error TableMc6809::hasName(CpuType cpuType, InsnMc6809 &insn) const {
+Error TableMc6809::hasName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptAll);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMc6809 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -718,7 +718,7 @@ static bool matchOpCode(InsnMc6809 &insn, const Entry *entry, const EntryPage *p
     return false;
 }
 
-Error TableMc6809::searchOpCode(CpuType cpuType, InsnMc6809 &insn, StrBuffer &out) const {
+Error TableMc6809::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

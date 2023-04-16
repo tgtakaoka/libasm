@@ -44,18 +44,17 @@ private:
     bool parseMemBit(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op, AddrMode hint) const;
 
-    void encodeRegisterList(InsnMc6809 &insn, const Operand &op);
-    void encodeRegisterPair(InsnMc6809 &insn, const Operand &op);
-    void encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode);
-    Config::ptrdiff_t calculateDisplacement(const InsnMc6809 &insn, const Operand &op) const;
-    void encodeIndexed(InsnMc6809 &insn, const Operand &op);
+    void encodeRegisterList(AsmInsn &insn, const Operand &op);
+    void encodeRegisterPair(AsmInsn &insn, const Operand &op);
+    void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode);
+    Config::ptrdiff_t calculateDisplacement(const AsmInsn &insn, const Operand &op) const;
+    void encodeIndexed(AsmInsn &insn, const Operand &op);
     char transferMemoryMode(Operand &op) const;
-    void encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2);
-    void encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode);
+    void encodeTransferMemory(AsmInsn &insn, Operand &op1, Operand &op2);
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

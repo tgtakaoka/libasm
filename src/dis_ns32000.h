@@ -54,24 +54,21 @@ private:
 
     StrBuffer &outDisplacement(StrBuffer &out, const Displacement &disp);
 
-    Error readIndexByte(DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos);
-    Error readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displacement &disp);
+    Error readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos);
+    Error readDisplacement(DisInsn &insn, Displacement &disp);
 
-    Error decodeLength(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeBitField(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeDisplacement(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out);
-    Error decodeConfig(const InsnNs32000 &insn, StrBuffer &out, OprPos pos);
-    Error decodeStrOpt(const InsnNs32000 &insn, StrBuffer &out, OprPos pos);
-    Error decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out);
-    Error decodeGeneric(
-            DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode, OprPos pos);
-    Error decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode,
-            OprPos pos, OprSize size);
+    Error decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeBitField(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeConfig(const DisInsn &insn, StrBuffer &out, OprPos pos);
+    Error decodeStrOpt(const DisInsn &insn, StrBuffer &out, OprPos pos);
+    Error decodeRegisterList(DisInsn &insn, StrBuffer &out);
+    Error decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

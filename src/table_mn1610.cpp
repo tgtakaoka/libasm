@@ -334,19 +334,19 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     }
 }
 
-static bool acceptModes(InsnMn1610 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
            acceptMode(flags.mode3(), table.mode3()) && acceptMode(flags.mode4(), table.mode4());
 }
 
-Error TableMn1610::searchName(CpuType cpuType, InsnMn1610 &insn) const {
+Error TableMn1610::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto mode1 = entry->flags().mode1();
     const auto mode2 = entry->flags().mode2();
@@ -383,7 +383,7 @@ static bool matchOpCode(InsnMn1610 &insn, const Entry *entry, const EntryPage *p
     return opCode == entry->opCode();
 }
 
-Error TableMn1610::searchOpCode(CpuType cpuType, InsnMn1610 &insn, StrBuffer &out) const {
+Error TableMn1610::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

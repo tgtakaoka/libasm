@@ -41,23 +41,22 @@ static constexpr Config::uintptr_t inpage(
     return page(addr) | offset(addr + delta);
 }
 
-static StrBuffer &appendRegName(InsnScn2650 &insn, StrBuffer &out, RegName name) {
+static StrBuffer &appendRegName(DisInsn &insn, StrBuffer &out, RegName name) {
     auto save = out;
     outRegName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
 
-static StrBuffer &appendCcName(InsnScn2650 &insn, StrBuffer &out, CcName name) {
+static StrBuffer &appendCcName(DisInsn &insn, StrBuffer &out, CcName name) {
     auto save = out;
     outCcName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
 
-Error DisScn2650::decodeAbsolute(
-        DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode) {
-    const auto opr = insn.readUint16(memory);
+Error DisScn2650::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+    const auto opr = insn.readUint16();
     if (opr & 0x8000)
         out.letter('*');
     outAbsAddr(out, opr & ~0x8000);
@@ -68,8 +67,8 @@ Error DisScn2650::decodeAbsolute(
     return OK;
 }
 
-Error DisScn2650::decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out) {
-    const auto opr = insn.readUint16(memory);
+Error DisScn2650::decodeIndexed(DisInsn &insn, StrBuffer &out) {
+    const auto opr = insn.readUint16();
     if (opr & 0x8000)
         out.letter('*');
     const auto base = inpage(insn.address(), insn.length());
@@ -91,9 +90,8 @@ Error DisScn2650::decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer 
     return OK;
 }
 
-Error DisScn2650::decodeRelative(
-        DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode) {
-    const auto opr = insn.readByte(memory);
+Error DisScn2650::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+    const auto opr = insn.readByte();
     if (opr & 0x80)
         out.letter('*');
     // Sign extends 7-bit number
@@ -109,8 +107,7 @@ Error DisScn2650::decodeRelative(
     return OK;
 }
 
-Error DisScn2650::decodeOperand(
-        DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, const AddrMode mode) {
+Error DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) {
     switch (mode) {
     case M_REG0:
     case M_R123:
@@ -125,17 +122,17 @@ Error DisScn2650::decodeOperand(
         appendCcName(insn, out, decodeCcName(insn.opCode()));
         break;
     case M_IMM8:
-        outHex(out, insn.readByte(memory), 8);
+        outHex(out, insn.readByte(), 8);
         break;
     case M_REL7:
     case M_ABS7:
-        return decodeRelative(memory, insn, out, mode);
+        return decodeRelative(insn, out, mode);
     case M_IX13:
     case M_AB13:
-        return decodeIndexed(memory, insn, out);
+        return decodeIndexed(insn, out);
     case M_IX15:
     case M_AB15:
-        return decodeAbsolute(memory, insn, out, mode);
+        return decodeAbsolute(insn, out, mode);
     default:
         break;
     }
@@ -143,8 +140,8 @@ Error DisScn2650::decodeOperand(
 }
 
 Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnScn2650 insn(_insn);
-    const Config::opcode_t opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    const Config::opcode_t opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (setError(insn))
         return getError();
@@ -152,9 +149,9 @@ Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    if (decodeOperand(memory, insn, out, insn.mode1()))
+    if (decodeOperand(insn, out, insn.mode1()))
         return getError();
-    if (decodeOperand(memory, insn, out, insn.mode2()))
+    if (decodeOperand(insn, out, insn.mode2()))
         return getError();
     return setError(insn);
 }

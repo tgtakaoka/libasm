@@ -24,15 +24,17 @@
 namespace libasm {
 namespace i8051 {
 
-struct InsnI8051 final : InsnImpl<Config, Entry> {
-    InsnI8051(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     AddrMode ext() const { return flags().ext(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
         setFlags(Entry::Flags::create(dst, src, ext));
     }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val) { emitByte(val, operandPos()); }
@@ -45,6 +47,10 @@ private:
             pos = 1;
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace i8051

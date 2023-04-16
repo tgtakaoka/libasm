@@ -30,7 +30,8 @@ static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
 static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
 
 DisI8086::DisI8086()
-    : Disassembler(_hexFormatter, '$', &_opt_segmentInsn), Config(TABLE),
+    : Disassembler(_hexFormatter, '$', &_opt_segmentInsn),
+      Config(TABLE),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
               OPT_DESC_SEGMENT_INSN, _opt_stringInsn),
       _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
@@ -61,7 +62,7 @@ StrBuffer &DisI8086::outRegister(StrBuffer &out, RegName name, const char prefix
     return outRegName(out, name);
 }
 
-RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos pos) {
+RegName DisI8086::decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos) {
     uint8_t num = 0;
     switch (pos) {
     case P_OREG:
@@ -93,12 +94,12 @@ RegName DisI8086::decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos po
     }
 }
 
-Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
+Error DisI8086::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     int16_t delta;
     if (mode == M_REL8) {
-        delta = static_cast<int8_t>(insn.readByte(memory));
+        delta = static_cast<int8_t>(insn.readByte());
     } else {
-        delta = static_cast<int16_t>(insn.readUint16(memory));
+        delta = static_cast<int16_t>(insn.readUint16());
     }
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
@@ -106,26 +107,26 @@ Error DisI8086::decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &ou
     return setError(insn);
 }
 
-Error DisI8086::decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode) {
+Error DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     if (mode == M_IMM && insn.size() == SZ_WORD) {
-        outHex(out, insn.readUint16(memory), 16);
+        outHex(out, insn.readUint16(), 16);
     } else if ((mode == M_IMM && insn.size() == SZ_BYTE) || mode == M_IOA) {
-        outHex(out, insn.readByte(memory), 8);
+        outHex(out, insn.readByte(), 8);
     } else if (mode == M_IMM8) {
-        outHex(out, insn.readByte(memory), -8);
+        outHex(out, insn.readByte(), -8);
     } else if (mode == M_UI16) {
-        outDec(out, insn.readUint16(memory), 16);
+        outDec(out, insn.readUint16(), 16);
     } else if (mode == M_UI8) {
-        outDec(out, insn.readByte(memory), 8);
+        outDec(out, insn.readByte(), 8);
     } else if (mode == M_BIT) {
-        const auto bit = insn.readByte(memory);
+        const auto bit = insn.readByte();
         if (bit >= 16 || (insn.size() == SZ_BYTE && bit >= 8))
             return setError(OVERFLOW_RANGE);
         outDec(out, bit, 4);
     } else {
         // M_FAR
-        const uint16_t offset = insn.readUint16(memory);
-        const uint16_t segment = insn.readUint16(memory);
+        const uint16_t offset = insn.readUint16();
+        const uint16_t segment = insn.readUint16();
         outAbsAddr(out, segment, 16).letter(':');
         outAbsAddr(out, offset, 16);
     }
@@ -148,7 +149,7 @@ static RegName getIndexReg(uint8_t r_m) {
     return r_m % 2 == 0 ? REG_SI : REG_DI;
 }
 
-static OprSize operandSize(const InsnI8086 &insn, AddrMode mode) {
+static OprSize operandSize(const DisInsn &insn, AddrMode mode) {
     switch (mode) {
     case M_AL:
     case M_BREG:
@@ -165,7 +166,7 @@ static OprSize operandSize(const InsnI8086 &insn, AddrMode mode) {
     }
 }
 
-static OprSize operandSize(const InsnI8086 &insn) {
+static OprSize operandSize(const DisInsn &insn) {
     if (insn.stringInst())
         return insn.size();
     OprSize size;
@@ -176,7 +177,7 @@ static OprSize operandSize(const InsnI8086 &insn) {
     return SZ_NONE;
 }
 
-static OprSize pointerSize(const InsnI8086 &insn, AddrMode mode) {
+static OprSize pointerSize(const DisInsn &insn, AddrMode mode) {
     const OprSize size = insn.size();
     if (size == SZ_NONE)
         return size;
@@ -192,7 +193,7 @@ static OprSize pointerSize(const InsnI8086 &insn, AddrMode mode) {
     }
 }
 
-static RegName pointerReg(const InsnI8086 &insn) {
+static RegName pointerReg(const DisInsn &insn) {
     OprSize size;
     if ((size = pointerSize(insn, insn.dst())) == SZ_NONE &&
             (size = pointerSize(insn, insn.src())) == SZ_NONE)
@@ -200,8 +201,7 @@ static RegName pointerReg(const InsnI8086 &insn) {
     return size == SZ_BYTE ? REG_BYTE : REG_WORD;
 }
 
-Error DisI8086::outMemReg(
-        DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mod, uint8_t r_m) {
+Error DisI8086::outMemReg(DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mod, uint8_t r_m) {
     if (operandSize(insn) == SZ_NONE) {
         const RegName ptr = pointerReg(insn);
         if (ptr != REG_UNDEF) {
@@ -222,7 +222,7 @@ Error DisI8086::outMemReg(
     if (index != REG_UNDEF)
         sep = '+';
     if (mod == 1) {
-        const int8_t disp8 = static_cast<int8_t>(insn.readByte(memory));
+        const int8_t disp8 = static_cast<int8_t>(insn.readByte());
         if (disp8 >= 0)
             out.letter(sep);
         outDec(out, disp8, -8);
@@ -230,14 +230,13 @@ Error DisI8086::outMemReg(
     if (mod == 2 || (mod == 0 && r_m == 6)) {
         if (sep)
             out.letter(sep);
-        outAbsAddr(out, insn.readUint16(memory), 16);
+        outAbsAddr(out, insn.readUint16(), 16);
     }
     out.letter(']');
     return setError(insn);
 }
 
-Error DisI8086::decodeMemReg(
-        DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
+Error DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
     const uint8_t mod = insn.modReg() >> 6;
     if (mod == 3) {
         if (mode == M_BMEM || mode == M_WMEM)
@@ -247,14 +246,14 @@ Error DisI8086::decodeMemReg(
         return OK;
     }
     const uint8_t r_m = insn.modReg() & 07;
-    return outMemReg(memory, insn, out, TABLE.overrideSeg(insn.segment()), mod, r_m);
+    return outMemReg(insn, out, TABLE.overrideSeg(insn.segment()), mod, r_m);
 }
 
-Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &out) {
+Error DisI8086::decodeRepeatStr(DisInsn &rep, StrBuffer &out) {
     if (_repeatHasStringInst) {
         Insn _istr(0);
-        InsnI8086 istr(_istr);
-        const auto opc = rep.readByte(memory);
+        DisInsn istr(_istr, rep);
+        const auto opc = rep.readByte();
         istr.setOpCode(opc, 0);
         if (TABLE.searchOpCode(cpuType(), istr, out))
             return setError(istr);
@@ -265,8 +264,7 @@ Error DisI8086::decodeRepeatStr(DisMemory &memory, InsnI8086 &rep, StrBuffer &ou
     return OK;
 }
 
-Error DisI8086::decodeOperand(
-        DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
+Error DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
     RegName name;
     switch (mode) {
     case M_NONE:
@@ -296,7 +294,7 @@ Error DisI8086::decodeOperand(
     case M_WMOD:
     case M_BMEM:
     case M_WMEM:
-        return decodeMemReg(memory, insn, out, mode, pos);
+        return decodeMemReg(insn, out, mode, pos);
     case M_VAL1:
         outHex(out, 1, 3);
         break;
@@ -310,15 +308,15 @@ Error DisI8086::decodeOperand(
     case M_FAR:
     case M_IOA:
     case M_BIT:
-        return decodeImmediate(memory, insn, out, mode);
+        return decodeImmediate(insn, out, mode);
     case M_BDIR:
     case M_WDIR:
-        return outMemReg(memory, insn, out, TABLE.overrideSeg(insn.segment()), 0, 6);
+        return outMemReg(insn, out, TABLE.overrideSeg(insn.segment()), 0, 6);
     case M_REL:
     case M_REL8:
-        return decodeRelative(memory, insn, out, mode);
+        return decodeRelative(insn, out, mode);
     case M_ISTR:
-        return decodeRepeatStr(memory, insn, out);
+        return decodeRepeatStr(insn, out);
     default:
         return setError(INTERNAL_ERROR);
     }
@@ -340,7 +338,7 @@ static bool validSegOverride(AddrMode mode, uint8_t mod) {
     }
 }
 
-static bool validSegOverride(const InsnI8086 &insn) {
+static bool validSegOverride(const DisInsn &insn) {
     if (insn.segment() == 0)
         return true;
     if (insn.stringInst())
@@ -349,7 +347,7 @@ static bool validSegOverride(const InsnI8086 &insn) {
     return validSegOverride(insn.dst(), mod) || validSegOverride(insn.src(), mod);
 }
 
-Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out) {
+Error DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) {
     if (insn.segment()) {
         const auto seg = TABLE.overrideSeg(insn.segment());
         switch (insn.opCode() & ~1) {
@@ -357,17 +355,17 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
         case 0x20:  // ADD4S ES:[DI],DS:[SI]
         case 0x22:  // SUB4S ES:[DI],DS:[SI]
         case 0x26:  // CMP4S ES:[DI],DS:[SI]
-            outMemReg(memory, insn, out, REG_ES, 0, 5);
+            outMemReg(insn, out, REG_ES, 0, 5);
             out.comma();
             /* Fall-through */
         case 0xAC:  // LODS DS:[SI]
         case 0x6E:  // OUTS DS:[SI]
-            outMemReg(memory, insn, out, seg, 0, 4);
+            outMemReg(insn, out, seg, 0, 4);
             break;
         case 0xA6:  // CMPS DS:[SI],ES:[DI]
-            outMemReg(memory, insn, out, seg, 0, 4);
+            outMemReg(insn, out, seg, 0, 4);
             out.comma();
-            outMemReg(memory, insn, out, REG_ES, 0, 5);
+            outMemReg(insn, out, REG_ES, 0, 5);
             break;
         case 0xAA:  // STOS ES:[DI]
         case 0xAE:  // SCAS ES:[DI]
@@ -378,24 +376,24 @@ Error DisI8086::decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &
     return setOK();
 }
 
-Error DisI8086::readCodes(DisMemory &memory, InsnI8086 &insn) {
-    auto opCode = insn.readByte(memory);
+Error DisI8086::readCodes(DisInsn &insn) {
+    auto opCode = insn.readByte();
     while (!_segOverrideInsn && TABLE.isSegmentPrefix(opCode)) {
         if (insn.segment())
             return setError(ILLEGAL_SEGMENT);
         insn.setSegment(opCode);
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
     }
     auto prefix = 0;
     if (TABLE.isPrefix(cpuType(), opCode)) {
         prefix = opCode;
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
     }
     insn.setOpCode(opCode, prefix);
     return setError(insn);
 }
 
-static bool imulHasSameDstSrc(const InsnI8086 &insn) {
+static bool imulHasSameDstSrc(const DisInsn &insn) {
     const auto modreg = insn.modReg();
     const auto reg = (modreg >> 3) & 7;
     return (insn.opCode() & ~2) == 0x69 &&  // IMUL
@@ -404,35 +402,35 @@ static bool imulHasSameDstSrc(const InsnI8086 &insn) {
 }
 
 Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnI8086 insn(_insn);
-    if (readCodes(memory, insn))
+    DisInsn insn(_insn, memory);
+    if (readCodes(insn))
         return getError();
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    insn.readModReg(memory);
+    insn.readModReg();
     if (setError(insn))
         return getError();
     if (!validSegOverride(insn))
         return setError(ILLEGAL_SEGMENT);
 
     if (insn.stringInst())
-        return decodeStringInst(memory, insn, out);
-    if (decodeOperand(memory, insn, out, insn.dst(), insn.dstPos()))
+        return decodeStringInst(insn, out);
+    if (decodeOperand(insn, out, insn.dst(), insn.dstPos()))
         return getError();
 
     if (insn.src() == M_NONE)
         return setOK();
     if (!imulHasSameDstSrc(insn)) {
         out.comma();
-        if (decodeOperand(memory, insn, out, insn.src(), insn.srcPos()))
+        if (decodeOperand(insn, out, insn.src(), insn.srcPos()))
             return getError();
     }
 
     if (insn.ext() == M_NONE)
         return setOK();
     out.comma();
-    if (decodeOperand(memory, insn, out, insn.ext(), insn.extPos()))
+    if (decodeOperand(insn, out, insn.ext(), insn.extPos()))
         return getError();
     return setOK();
 }

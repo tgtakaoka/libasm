@@ -39,13 +39,13 @@ private:
 
     uint8_t _pc_bits;
 
-    Error decodeDirectPage(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
-    Error decodeExtended(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
-    Error decodeIndexed(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out);
-    Error decodeOperand(DisMemory &memory, InsnMc6805 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
+    Error decodeExtended(DisInsn &insn, StrBuffer &out);
+    Error decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

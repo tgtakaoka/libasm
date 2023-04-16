@@ -469,7 +469,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnZ80 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src())) {
@@ -480,12 +480,12 @@ static bool acceptModes(InsnZ80 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableZ80::searchName(CpuType cpuType, InsnZ80 &insn) const {
+Error TableZ80::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
@@ -508,7 +508,7 @@ static bool matchOpCode(InsnZ80 &insn, const Entry *entry, const EntryPage *page
     return opCode == entry->opCode();
 }
 
-Error TableZ80::searchOpCode(CpuType cpuType, InsnZ80 &insn, StrBuffer &out) const {
+Error TableZ80::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }

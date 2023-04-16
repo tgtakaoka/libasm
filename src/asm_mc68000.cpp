@@ -39,7 +39,7 @@ struct AsmMc68000::Operand final : ErrorAt {
     StrScanner list;
     Operand()
         : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0), list() {}
-    Config::uintptr_t offset(const InsnMc68000 &insn) const;
+    Config::uintptr_t offset(const AsmInsn &insn) const;
 };
 
 const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
@@ -102,7 +102,7 @@ int8_t regPos(OprPos pos) {
 
 }  // namespace
 
-void emitOprSize(InsnMc68000 &insn, OprSize size) {
+void emitOprSize(AsmInsn &insn, OprSize size) {
     Config::opcode_t sz = 0;
     switch (insn.oprSize()) {
     case SZ_DATA:
@@ -134,7 +134,7 @@ Error AsmMc68000::checkAlignment(OprSize size, const Operand &op) {
     return OK;
 }
 
-void AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
+void AsmMc68000::emitBriefExtension(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) {
     if (overflowInt8(disp))
         setErrorIf(op, OVERFLOW_RANGE);
     uint16_t ext = static_cast<uint8_t>(disp);
@@ -146,13 +146,13 @@ void AsmMc68000::emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config
     insn.emitOperand16(ext);
 }
 
-void AsmMc68000::emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp) {
+void AsmMc68000::emitDisplacement(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) {
     if (overflowInt16(disp))
         setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand16(static_cast<uint16_t>(disp));
 }
 
-void AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op) {
+void AsmMc68000::emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val32;
     const auto disp = branchDelta(base, target, op);
@@ -168,7 +168,7 @@ void AsmMc68000::emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operan
 }
 
 void AsmMc68000::emitImmediateData(
-        InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data) {
+        AsmInsn &insn, const Operand &op, OprSize size, uint32_t data) {
     switch (size) {
     case SZ_LONG:
         insn.emitOperand32(data);
@@ -188,7 +188,7 @@ void AsmMc68000::emitImmediateData(
     }
 }
 
-Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
+Config::uintptr_t AsmMc68000::Operand::offset(const AsmInsn &insn) const {
     if (getError())
         return 0;
     uint8_t len = insn.length();
@@ -198,7 +198,7 @@ Config::uintptr_t AsmMc68000::Operand::offset(const InsnMc68000 &insn) const {
 }
 
 Error AsmMc68000::emitEffectiveAddr(
-        InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) {
+        AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) {
     if (mode == M_NONE) {
         if (op.mode != M_NONE)
             setErrorIf(op, UNKNOWN_OPERAND);
@@ -305,7 +305,7 @@ uint16_t reverseBits(uint16_t bits) {
 
 }  // namespace
 
-void AsmMc68000::emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse) {
+void AsmMc68000::emitRegisterList(AsmInsn &insn, const Operand &op, bool reverse) {
     auto p = op.list;
     uint16_t bits = 0;
     for (;;) {
@@ -457,7 +457,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-OprSize InsnMc68000::parseInsnSize() {
+OprSize AsmInsn::parseInsnSize() {
     StrScanner p(name());
     p.trimStart([](char c) { return c != '.'; });
     char *eos = const_cast<char *>(p.str());
@@ -467,7 +467,7 @@ OprSize InsnMc68000::parseInsnSize() {
 }
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnMc68000 insn(_insn);
+    AsmInsn insn(_insn);
     const auto isize = insn.parseInsnSize();
     if (isize == SZ_ERROR)
         return setError(scan, ILLEGAL_SIZE);

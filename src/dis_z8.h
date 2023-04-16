@@ -45,17 +45,16 @@ private:
     StrBuffer &outPairAddr(StrBuffer &out, uint8_t regAddr, bool indir = false);
     StrBuffer &outBitPos(StrBuffer &out, uint8_t bitPos);
 
-    Error decodeOperand(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeAbsolute(
-            DisMemory &memory, InsnZ8 &insn, StrBuffer &out, Endian endian = ENDIAN_BIG);
-    Error decodeRelative(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
-    Error decodeIndexed(DisMemory &memory, InsnZ8 &insn, StrBuffer &out, uint8_t opr1);
-    Error decodeIndirectRegPair(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
-    Error decodeInOpCode(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
-    Error decodeTwoOperands(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
-    Error decodePostByte(DisMemory &memory, InsnZ8 &insn, StrBuffer &out);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeAbsolute(DisInsn &insn, StrBuffer &out, Endian endian = ENDIAN_BIG);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeIndexed(DisInsn &insn, StrBuffer &out, uint8_t opr1);
+    Error decodeIndirectRegPair(DisInsn &insn, StrBuffer &out);
+    Error decodeInOpCode(DisInsn &insn, StrBuffer &out);
+    Error decodeTwoOperands(DisInsn &insn, StrBuffer &out);
+    Error decodePostByte(DisInsn &insn, StrBuffer &out);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

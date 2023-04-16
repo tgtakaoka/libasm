@@ -28,8 +28,8 @@ struct TableNs32000 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(const CpuSpec &, InsnNs32000 &insn) const;
-    Error searchOpCode(const CpuSpec &, InsnNs32000 &insn, StrBuffer &out) const;
+    Error searchName(const CpuSpec &, AsmInsn &insn) const;
+    Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out) const;
     bool isPrefixCode(const CpuSpec &, Config::opcode_t opCode) const;
 };
 

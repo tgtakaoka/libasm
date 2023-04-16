@@ -1020,7 +1020,7 @@ static bool hasSize(AddrMode mode) {
            mode == M_BREG || mode == M_CS || mode == M_SREG;
 }
 
-static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
+static bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     auto dst = insn.dst();
     auto src = insn.src();
     auto flags = entry->flags();
@@ -1034,13 +1034,13 @@ static bool acceptSize(const InsnI8086 &insn, const Entry *entry) {
     return true;
 }
 
-static bool acceptModes(InsnI8086 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto table = entry->flags();
     return acceptMode(insn.dst(), table.dst()) && acceptMode(insn.src(), table.src()) &&
            acceptMode(insn.ext(), table.ext()) && acceptSize(insn, entry);
 }
 
-Error TableI8086::searchName(CpuType cpuType, InsnI8086 &insn) const {
+Error TableI8086::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
@@ -1079,7 +1079,7 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
     }
 }
 
-static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto dstPos = entry->flags().dstPos();
     const auto srcPos = entry->flags().srcPos();
@@ -1093,7 +1093,7 @@ static bool matchOpCode(InsnI8086 &insn, const Entry *entry, const EntryPage *pa
     return opCode == entry->opCode();
 }
 
-Error TableI8086::searchOpCode(CpuType cpuType, InsnI8086 &insn, StrBuffer &out) const {
+Error TableI8086::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

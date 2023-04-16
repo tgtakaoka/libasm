@@ -45,32 +45,31 @@ Error DisIns8070::setUseSharpImmediate(bool enable) {
     return OK;
 }
 
-Error DisIns8070::decodeImmediate(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
+Error DisIns8070::decodeImmediate(DisInsn &insn, StrBuffer &out) {
     out.letter(_useSharp ? '#' : '=');
     if (insn.oprSize() == SZ_WORD) {
-        outHex(out, insn.readUint16(memory), 16);
+        outHex(out, insn.readUint16(), 16);
     } else {
-        outHex(out, insn.readByte(memory), 8);
+        outHex(out, insn.readByte(), 8);
     }
     return setError(insn);
 }
 
-Error DisIns8070::decodeAbsolute(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
+Error DisIns8070::decodeAbsolute(DisInsn &insn, StrBuffer &out) {
     const uint8_t fetch = insn.execute() ? 1 : 0;
-    const Config::uintptr_t target = insn.readUint16(memory) + fetch;
+    const Config::uintptr_t target = insn.readUint16() + fetch;
     outAbsAddr(out, target);
     return setError(insn);
 }
 
-Error DisIns8070::decodeDirect(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
-    const Config::uintptr_t target = 0xFF00 | insn.readByte(memory);
+Error DisIns8070::decodeDirect(DisInsn &insn, StrBuffer &out) {
+    const Config::uintptr_t target = 0xFF00 | insn.readByte();
     outAbsAddr(out, target);
     return setError(insn);
 }
 
-Error DisIns8070::decodeRelative(
-        DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode) {
-    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+Error DisIns8070::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+    const auto delta = static_cast<int8_t>(insn.readByte());
     const auto ptr = decodePointerReg(insn.opCode());
     if (mode == M_PCR) {
         const auto fetch = insn.execute() ? 1 : 0;
@@ -86,26 +85,25 @@ Error DisIns8070::decodeRelative(
     return setError(insn);
 }
 
-Error DisIns8070::decodeGeneric(DisMemory &memory, InsnIns8070 &insn, StrBuffer &out) {
+Error DisIns8070::decodeGeneric(DisInsn &insn, StrBuffer &out) {
     const uint8_t mode = insn.opCode() & 7;
     switch (mode) {
     case 0:
-        return decodeRelative(memory, insn, out, M_PCR);
+        return decodeRelative(insn, out, M_PCR);
     case 1:
     case 2:
     case 3:
-        return decodeRelative(memory, insn, out, M_IDX);
+        return decodeRelative(insn, out, M_IDX);
     case 4:
-        return decodeImmediate(memory, insn, out);
+        return decodeImmediate(insn, out);
     case 5:
-        return decodeDirect(memory, insn, out);
+        return decodeDirect(insn, out);
     default:  // 6, 7
-        return decodeRelative(memory, insn, out.letter('@'), M_IDX);
+        return decodeRelative(insn, out.letter('@'), M_IDX);
     }
 }
 
-Error DisIns8070::decodeOperand(
-        DisMemory &memory, InsnIns8070 &insn, StrBuffer &out, AddrMode mode) {
+Error DisIns8070::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_AR:
         outRegName(out, REG_A);
@@ -129,20 +127,20 @@ Error DisIns8070::decodeOperand(
         outRegName(out, REG_T);
         break;
     case M_IMM:
-        decodeImmediate(memory, insn, out);
+        decodeImmediate(insn, out);
         break;
     case M_ADR:
-        decodeAbsolute(memory, insn, out);
+        decodeAbsolute(insn, out);
         break;
     case M_VEC:
         outDec(out, insn.opCode() & 15, 4);
         break;
     case M_IDX:
     case M_PCR:
-        decodeRelative(memory, insn, out, mode);
+        decodeRelative(insn, out, mode);
         break;
     case M_GEN:
-        decodeGeneric(memory, insn, out);
+        decodeGeneric(insn, out);
         break;
     default:
         return OK;
@@ -153,8 +151,8 @@ Error DisIns8070::decodeOperand(
 }
 
 Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnIns8070 insn(_insn);
-    const auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    const auto opCode = insn.readByte();
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);
@@ -165,14 +163,14 @@ Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto dst = insn.dst();
     if (dst == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, out, dst))
+    if (decodeOperand(insn, out, dst))
         return getError();
 
     const auto src = insn.src();
     if (src == M_NONE)
         return setOK();
     out.comma();
-    return decodeOperand(memory, insn, out, src);
+    return decodeOperand(insn, out, src);
 }
 
 }  // namespace ins8070

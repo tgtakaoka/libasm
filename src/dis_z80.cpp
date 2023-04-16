@@ -49,11 +49,11 @@ StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) {
     return outRegName(out, reg);
 }
 
-Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &out) {
-    const int8_t offset = insn.readByte(memory);
-    const Config::opcode_t opc = insn.readByte(memory);
+Error DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) {
+    const int8_t offset = insn.readByte();
+    const Config::opcode_t opc = insn.readByte();
 
-    InsnZ80 ixBit(insn);  // |ixBit| will share internal implementation with |insn|
+    DisInsn ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
     ixBit.clearNameBuffer();
     if (TABLE.searchOpCode(cpuType(), ixBit, out))
@@ -69,31 +69,31 @@ Error DisZ80::decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &ou
     return setError(insn);
 }
 
-Error DisZ80::decodeRelative(DisMemory &memory, InsnZ80 &insn, StrBuffer &out) {
-    const auto delta = static_cast<int8_t>(insn.readByte(memory));
+Error DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) {
+    const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
     return setError(insn);
 }
 
-Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, AddrMode mode) {
+Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_IM8:
-        outHex(out, insn.readByte(memory), 8);
+        outHex(out, insn.readByte(), 8);
         break;
     case M_IM16:
-        outHex(out, insn.readUint16(memory), 16);
+        outHex(out, insn.readUint16(), 16);
         break;
     case M_ABS:
-        outIndirectAddr(out, insn.readUint16(memory), 16);
+        outIndirectAddr(out, insn.readUint16(), 16);
         break;
     case M_IOA:
-        outIndirectAddr(out, insn.readByte(memory), 8);
+        outIndirectAddr(out, insn.readByte(), 8);
         break;
     case M_INDX:
-        outIndexOffset(out, decodeIndexReg(insn), insn.readByte(memory));
+        outIndexOffset(out, decodeIndexReg(insn), insn.readByte());
         break;
     case M_CC4:
         outCcName(out, decodeCcName((opc >> 3) & 3));
@@ -102,7 +102,7 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, Ad
         outCcName(out, decodeCcName(opc >> 3));
         return OK;
     case M_REL:
-        return decodeRelative(memory, insn, out);
+        return decodeRelative(insn, out);
     case M_PTR:
     case M_PIX:
         outRegName(out, decodePointerReg(opc >> 4, insn));
@@ -179,12 +179,12 @@ Error DisZ80::decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, Ad
 }
 
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnZ80 insn(_insn);
-    Config::opcode_t opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    Config::opcode_t opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.isPrefix(cpuType(), opCode)) {
         const Config::opcode_t prefix = opCode;
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
     if (setError(insn))
@@ -197,14 +197,14 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (dst == M_NONE)
         return OK;
     if (dst == T_IXB)
-        return decodeIndexedBitOp(memory, insn, out);
-    if (decodeOperand(memory, insn, out, dst))
+        return decodeIndexedBitOp(insn, out);
+    if (decodeOperand(insn, out, dst))
         return getError();
     const auto src = insn.src();
     if (src == M_NONE)
         return OK;
     out.comma();
-    return decodeOperand(memory, insn, out, src);
+    return decodeOperand(insn, out, src);
 }
 
 }  // namespace z80

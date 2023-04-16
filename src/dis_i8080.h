@@ -31,9 +31,9 @@ public:
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
-    Error decodeOperand(DisMemory &memory, InsnI8080 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

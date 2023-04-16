@@ -49,7 +49,6 @@ protected:
     Disassembler &_disassembler;
     const char *_input_name;
     Insn _insn;
-    InsnBase _insnBase;
 
     bool _uppercase;
     int _nextContent;

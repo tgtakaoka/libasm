@@ -117,7 +117,7 @@ const Functor *Ins8060FunctionParser::parseFunction(StrScanner &scan, ErrorAt &e
 
 }  // namespace
 
-void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
+void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) {
     Config::ptrdiff_t delta;
     if (op.mode == M_DISP) {
         if (op.index == REG_E) {
@@ -151,7 +151,7 @@ void AsmIns8060::encodeRel8(InsnIns8060 &insn, const Operand &op) {
     insn.emitByte(delta);
 }
 
-void AsmIns8060::encodeIndx(InsnIns8060 &insn, const Operand &op) {
+void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) {
     if (op.mode == M_REL8) {
         encodeRel8(insn, op);
         return;
@@ -214,7 +214,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnIns8060 insn(_insn);
+    AsmInsn insn(_insn);
     Operand op;
     if (parseOperand(scan, op) && op.hasError())
         return setError(op);

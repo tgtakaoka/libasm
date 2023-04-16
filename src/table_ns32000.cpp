@@ -860,16 +860,15 @@ struct ProcessorCpuCommon : entry::CpuBase<CPUTYPE, EntryPage> {
             const EntryPage *table, const EntryPage *end)
         : entry::CpuBase<CPUTYPE, EntryPage>(cpuType, name_P, table, end) {}
 
-    Error searchName(InsnNs32000 &insn, bool (*accept)(InsnNs32000 &, const Entry *),
-            void (*pageSetup)(InsnNs32000 &, const EntryPage *)) const {
+    Error searchName(AsmInsn &insn, bool (*accept)(AsmInsn &, const Entry *),
+            void (*pageSetup)(AsmInsn &, const EntryPage *)) const {
         entry::CpuBase<CPUTYPE, EntryPage>::searchName(insn, accept, pageSetup);
         return insn.getError();
     }
 
-    Error searchOpCode(InsnNs32000 &insn, StrBuffer &out,
-            bool (*matchOpCode)(InsnNs32000 &, const Entry *, const EntryPage *),
-            void (*readEntryName)(
-                    InsnNs32000 &, const Entry *, StrBuffer &, const EntryPage *)) const {
+    Error searchOpCode(DisInsn &insn, StrBuffer &out,
+            bool (*matchOpCode)(DisInsn &, const Entry *, const EntryPage *),
+            void (*readEntryName)(DisInsn &, const Entry *, StrBuffer &, const EntryPage *)) const {
         const auto entry = entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(
                 insn, out, matchOpCode, readEntryName);
         if (entry && insn.hasPost())
@@ -939,18 +938,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static void searchPageSetup(InsnNs32000 &insn, const EntryPage *page) {
+static void searchPageSetup(AsmInsn &insn, const EntryPage *page) {
     insn.setPost(0, page->post() != 0);
 }
 
-static bool acceptModes(InsnNs32000 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableNs32000::searchName(const CpuSpec &cpuSpec, InsnNs32000 &insn) const {
+Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
     NS32032_CPU.searchName(insn, acceptModes, searchPageSetup);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
@@ -963,19 +962,19 @@ Error TableNs32000::searchName(const CpuSpec &cpuSpec, InsnNs32000 &insn) const 
     return insn.getError();
 }
 
-static bool matchOpCode(InsnNs32000 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     opCode &= ~page->mask();
     return opCode == entry->opCode();
 }
 
 static void readEntryName(
-        InsnNs32000 &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
+        DisInsn &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
     Cpu::defaultReadEntryName(insn, entry, out, page);
     insn.setPost(0, page->post() != 0);
 }
 
-Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, InsnNs32000 &insn, StrBuffer &out) const {
+Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
     NS32032_CPU.searchOpCode(insn, out, matchOpCode, readEntryName);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();

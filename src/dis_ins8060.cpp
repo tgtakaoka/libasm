@@ -28,19 +28,19 @@ DisIns8060::DisIns8060() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
-Error DisIns8060::decodePntr(InsnIns8060 &insn, StrBuffer &out) {
+Error DisIns8060::decodePntr(DisInsn &insn, StrBuffer &out) {
     outRegName(out, decodePointerReg(insn.opCode()));
     return setOK();
 }
 
-Error DisIns8060::decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out) {
-    outHex(out, insn.readByte(memory), 8);
+Error DisIns8060::decodeImm8(DisInsn &insn, StrBuffer &out) {
+    outHex(out, insn.readByte(), 8);
     return setError(insn);
 }
 
-Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode) {
+Error DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) {
     const auto reg = decodePointerReg(insn.opCode());
-    const auto opr = insn.readByte(memory);
+    const auto opr = insn.readByte();
     if (hasMode && (insn.opCode() & 4) != 0)
         out.letter('@');
     if (reg == REG_PC && opr != 0x80) {  // PC relative
@@ -71,8 +71,8 @@ Error DisIns8060::decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &ou
 }
 
 Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnIns8060 insn(_insn);
-    const auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    const auto opCode = insn.readByte();
     if (setError(insn))
         return getError();
     insn.setOpCode(opCode);
@@ -85,14 +85,14 @@ Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         decodePntr(insn, out);
         break;
     case M_IMM8:
-        decodeImm8(memory, insn, out);
+        decodeImm8(insn, out);
         break;
     case M_REL8:
     case M_DISP:
-        decodeIndx(memory, insn, out, false);
+        decodeIndx(insn, out, false);
         break;
     case M_INDX:
-        decodeIndx(memory, insn, out, true);
+        decodeIndx(insn, out, true);
         break;
     default:
         setOK();

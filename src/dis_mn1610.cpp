@@ -91,7 +91,7 @@ Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::ui
     return OK;
 }
 
-Error DisMn1610::decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &out, AddrMode mode) {
+Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     auto opc = insn.opCode();
     switch (mode) {
     case M_SKIP:
@@ -111,7 +111,7 @@ Error DisMn1610::decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &o
         outDec(out, opc & 0xF, 4);
         return OK;
     case M_IM8W:
-        opc = insn.readUint16(memory);
+        opc = insn.readUint16();
         // Fall-through
     case M_IM8:
         outDec(out, opc & 0xFF, 8);
@@ -124,7 +124,7 @@ Error DisMn1610::decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &o
         return OK;
     case M_IM16:
     case M_ABS:
-        outAbsAddr(out, insn.readUint16(memory), 16);
+        outAbsAddr(out, insn.readUint16(), 16);
         return OK;
     case M_R0:
         return outRegister(out, REG_R0, mode);
@@ -146,7 +146,7 @@ Error DisMn1610::decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &o
             return OK;  // Can be omitted.
         return outRegister(out, decodeSegment((opc >> 4) & 3), mode);
     case M_IABS:
-        outAbsAddr(out.letter('('), insn.readUint16(memory), 16);
+        outAbsAddr(out.letter('('), insn.readUint16(), 16);
         out.letter(')');
         return OK;
     case M_COP:
@@ -189,9 +189,8 @@ StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mo
 }
 
 Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnMn1610 insn(_insn);
-    const auto opc = insn.readUint16(memory);
-
+    DisInsn insn(_insn, memory);
+    const auto opc = insn.readUint16();
     insn.setOpCode(opc);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
@@ -201,22 +200,22 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, out, mode1))
+    if (decodeOperand(insn, out, mode1))
         return getError();
     const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, outComma(out, opc, mode2), mode2))
+    if (decodeOperand(insn, outComma(out, opc, mode2), mode2))
         return getError();
     const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
         return setOK();
-    if (decodeOperand(memory, insn, outComma(out, opc, mode3), mode3))
+    if (decodeOperand(insn, outComma(out, opc, mode3), mode3))
         return getError();
     const auto mode4 = insn.mode4();
     if (mode4 == M_NONE)
         return setOK();
-    return decodeOperand(memory, insn, outComma(out, opc, mode4), mode4);
+    return decodeOperand(insn, outComma(out, opc, mode4), mode4);
 }
 
 }  // namespace mn1610

@@ -285,7 +285,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnMc6805 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
@@ -297,12 +297,12 @@ static bool acceptModes(InsnMc6805 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableMc6805::searchName(CpuType cpuType, InsnMc6805 &insn) const {
+Error TableMc6805::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -318,7 +318,7 @@ static bool matchOpCode(InsnMc6805 &insn, const Entry *entry, const EntryPage *p
     return opCode == entry->opCode();
 }
 
-Error TableMc6805::searchOpCode(CpuType cpuType, InsnMc6805 &insn, StrBuffer &out) const {
+Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);

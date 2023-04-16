@@ -82,7 +82,7 @@ uint8_t encodePointerRegIx(RegName name, RegName ix) {
     return encodePointerReg(name == ix ? REG_HL : name);
 }
 
-RegName decodePointerReg(uint8_t num, const InsnZ80 &insn) {
+RegName decodePointerReg(uint8_t num, const DisInsn &insn) {
     const auto name = RegName(num & 3);
     if (name == REG_HL) {
         const auto ix = decodeIndexReg(insn);
@@ -111,12 +111,12 @@ RegName decodeIndirectBase(uint8_t num) {
     return RegName(num & 1);
 }
 
-void encodeIndexReg(InsnZ80 &insn, RegName ixReg) {
+void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
     const Config::opcode_t prefix = (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
     insn.setOpCode(insn.opCode(), prefix);
 }
 
-RegName decodeIndexReg(const InsnZ80 &insn) {
+RegName decodeIndexReg(const DisInsn &insn) {
     const Config::opcode_t prefix = insn.prefix();
     if (prefix == TableZ80::PREFIX_IX)
         return REG_IX;

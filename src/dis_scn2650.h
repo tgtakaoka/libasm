@@ -31,12 +31,12 @@ public:
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
-    Error decodeAbsolute(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeIndexed(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out);
-    Error decodeRelative(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeOperand(DisMemory &memory, InsnScn2650 &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeIndexed(DisInsn &insn, StrBuffer &out);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

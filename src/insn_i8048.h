@@ -24,15 +24,21 @@
 namespace libasm {
 namespace i8048 {
 
-struct InsnI8048 final : InsnImpl<Config, Entry> {
-    InsnI8048(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+};
 
-    void emitInsn() { emitByte(opCode(), 0); }
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
     void emitOperand8(uint8_t val) { emitByte(val, 1); }
+    void emitInsn() { emitByte(opCode(), 0); }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace i8048

@@ -50,7 +50,7 @@ AsmMn1610::AsmMn1610(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
+void AsmMn1610::encodeIcRelative(AsmInsn &insn, const Operand &op) {
     const auto delta = branchDelta(insn.address(), op.val32, op);
     if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
@@ -59,7 +59,7 @@ void AsmMn1610::encodeIcRelative(InsnMn1610 &insn, const Operand &op) {
     insn.embed(static_cast<uint8_t>(delta));
 }
 
-void AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
+void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) {
     switch (op.mode) {
     case M_IABS:
         if (op.val32 < 0x100) {  // Zero-page indirect: (D)
@@ -110,7 +110,7 @@ void AsmMn1610::encodeGenericAddress(InsnMn1610 &insn, const Operand &op) {
     }
 }
 
-void AsmMn1610::encodeOperand(InsnMn1610 &insn, const Operand &op, AddrMode mode) {
+void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     auto val32 = op.val32;
     switch (mode) {
     case M_RDG:
@@ -337,7 +337,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnMn1610 insn(_insn);
+    AsmInsn insn(_insn);
     Operand op1, op2, op3, op4;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

@@ -615,19 +615,19 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptModes(InsnZ8000 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
            acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
 }
 
-Error TableZ8000::searchName(CpuType cpuType, InsnZ8000 &insn) const {
+Error TableZ8000::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     const auto flags = entry->flags();
     if ((insn.opCode() & flags.codeMask()) != entry->opCode())
         return false;
@@ -640,12 +640,12 @@ static bool matchOpCode(InsnZ8000 &insn, const Entry *entry, const EntryPage *pa
     return true;
 }
 
-Error TableZ8000::searchOpCode(CpuType cpuType, InsnZ8000 &insn, StrBuffer &out) const {
+Error TableZ8000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
-Error TableZ8000::searchOpCodeAlias(CpuType cpuType, InsnZ8000 &insn, StrBuffer &out) const {
+Error TableZ8000::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry) {
         entry++;

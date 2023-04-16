@@ -44,7 +44,7 @@ AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
+void AsmTms9900::encodeRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, op) / 2;
@@ -53,14 +53,14 @@ void AsmTms9900::encodeRelative(InsnTms9900 &insn, const Operand &op) {
     insn.embed(static_cast<uint8_t>(delta));
 }
 
-void AsmTms9900::encodeCruOffset(InsnTms9900 &insn, const Operand &op) {
+void AsmTms9900::encodeCruOffset(AsmInsn &insn, const Operand &op) {
     const int16_t offset = static_cast<int16_t>(op.val16);
     if (overflowInt16(offset))
         setErrorIf(op, OVERFLOW_RANGE);
     insn.embed(static_cast<uint8_t>(offset));
 }
 
-void AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
+void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) {
     if (mode == M_SRC2 && insn.dst() == M_BIT2 && op.mode == M_INCR)
         setErrorIf(op, OPERAND_NOT_ALLOWED);
     auto opc = encodeRegNumber(op.reg);
@@ -100,7 +100,7 @@ void AsmTms9900::encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mo
     }
 }
 
-void AsmTms9900::encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode) {
+void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     uint16_t val16 = op.val16;
     switch (mode) {
     case M_IMM:
@@ -229,7 +229,7 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnTms9900 insn(_insn);
+    AsmInsn insn(_insn);
     Operand srcOp, dstOp;
     if (parseOperand(scan, srcOp) && srcOp.hasError())
         return setError(srcOp);

@@ -43,21 +43,18 @@ private:
     bool _repeatHasStringInst;
 
     StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
-    Error outMemReg(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, RegName seg, uint8_t mode,
-            uint8_t r_m);
+    Error outMemReg(DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mode, uint8_t r_m);
 
-    RegName decodeRegister(const InsnI8086 &insn, AddrMode mode, OprPos pos);
-    Error decodeRelative(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRepeatStr(DisMemory &memory, InsnI8086 &insn, StrBuffer &out);
-    Error decodeMemReg(
-            DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos);
-    Error decodeOperand(
-            DisMemory &memory, InsnI8086 &insn, StrBuffer &out, AddrMode mode, OprPos pos);
-    Error readCodes(DisMemory &memory, InsnI8086 &insn);
-    Error decodeStringInst(DisMemory &memory, InsnI8086 &insn, StrBuffer &out);
+    RegName decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRepeatStr(DisInsn &insn, StrBuffer &out);
+    Error decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos);
+    Error readCodes(DisInsn &insn);
+    Error decodeStringInst(DisInsn &insn, StrBuffer &out);
+
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

@@ -28,7 +28,7 @@ DisTlcs90::DisTlcs90() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
-Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op) {
+Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) {
     const Config::opcode_t opc = insn.opCode();
     op.mode = mode;
     switch (mode) {
@@ -38,12 +38,12 @@ Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode,
     case M_IMM8:
     case M_REL8:
     case M_DIR:
-        op.val16 = insn.readByte(memory);
+        op.val16 = insn.readByte();
         break;
     case M_IMM16:
     case M_REL16:
     case M_EXT:
-        op.val16 = insn.readUint16(memory);
+        op.val16 = insn.readUint16();
         break;
     case M_CC:
         op.cc = decodeCcName(opc);
@@ -74,8 +74,7 @@ Error DisTlcs90::readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode,
     return setError(insn);
 }
 
-Error DisTlcs90::decodeRelative(
-        InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
     int16_t delta;
     if (mode == M_REL8) {
         delta = static_cast<int8_t>(op.val16);
@@ -88,7 +87,7 @@ Error DisTlcs90::decodeRelative(
     return OK;
 }
 
-Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
+Error DisTlcs90::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
     uint16_t val16 = op.val16;
     int8_t val8 = static_cast<int8_t>(val16);
     switch (mode) {
@@ -146,12 +145,12 @@ Error DisTlcs90::decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, 
 }
 
 Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnTlcs90 insn(_insn);
-    const auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     Operand preOp;
     if (TABLE.isPrefix(cpuType(), opCode, preOp.mode))
-        insn.readOpCode(memory, preOp);
+        insn.readOpCode(preOp);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
@@ -163,7 +162,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         decodeOperand(insn, out, preOp.mode, preOp);
     } else {
         Operand op;
-        if (readOperand(memory, insn, dst, op) == OK)
+        if (readOperand(insn, dst, op) == OK)
             decodeOperand(insn, out, dst, op);
     }
     if (getError())
@@ -183,7 +182,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         decodeOperand(insn, out, preOp.mode, preOp);
     } else {
         Operand op;
-        if (readOperand(memory, insn, src, op) == OK)
+        if (readOperand(insn, src, op) == OK)
             decodeOperand(insn, out, src, op);
     }
     return getError();

@@ -28,8 +28,8 @@ struct TableMos6502 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(CpuType, InsnMos6502 &insn) const;
-    Error searchOpCode(CpuType, InsnMos6502 &insn, StrBuffer &out) const;
+    Error searchName(CpuType, AsmInsn &insn) const;
+    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 
     static constexpr Config::opcode_t WDM = 0x42;
     static constexpr Config::opcode_t JSL = 0x22;

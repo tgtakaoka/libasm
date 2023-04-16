@@ -28,8 +28,7 @@ DisI8048::DisI8048() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
     reset();
 }
 
-Error DisI8048::decodeOperand(
-        DisMemory &memory, InsnI8048 &insn, StrBuffer &out, const AddrMode mode) {
+Error DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) {
     const auto opc = insn.opCode();
     switch (mode) {
     case M_IA:
@@ -65,19 +64,19 @@ Error DisI8048::decodeOperand(
         outRegName(out, REG_P2);
         break;
     case M_AD08:
-        outAbsAddr(out, ((insn.address() + 1) & ~0xFF) | insn.readByte(memory));
+        outAbsAddr(out, ((insn.address() + 1) & ~0xFF) | insn.readByte());
         break;
     case M_AD11:
-        outAbsAddr(out, (static_cast<Config::uintptr_t>(opc & 0xE0) << 3) | insn.readByte(memory));
+        outAbsAddr(out, (static_cast<Config::uintptr_t>(opc & 0xE0) << 3) | insn.readByte());
         break;
     case M_BITN:
         outDec(out, (opc & 0xE0) >> 5, 3);
         break;
     case M_IMM8:
-        outDec(out.letter('#'), insn.readByte(memory), 8);
+        outDec(out.letter('#'), insn.readByte(), 8);
         break;
     case M_BIT8:
-        outHex(out.letter('#'), insn.readByte(memory), 8, false);
+        outHex(out.letter('#'), insn.readByte(), 8, false);
         break;
     case M_PSW:
         outRegName(out, REG_PSW);
@@ -119,8 +118,8 @@ Error DisI8048::decodeOperand(
 }
 
 Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnI8048 insn(_insn);
-    const auto opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (setError(insn))
         return getError();
@@ -130,16 +129,15 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     const auto dst = insn.dst();
     if (dst != M_NONE) {
-        if (decodeOperand(memory, insn, out, dst))
+        if (decodeOperand(insn, out, dst))
             return getError();
     }
     const auto src = insn.src();
     if (src != M_NONE) {
         out.comma();
-        if (decodeOperand(memory, insn, out, src))
+        if (decodeOperand(insn, out, src))
             return getError();
     }
-    insn.emitInsn();
     return setError(insn);
 }
 

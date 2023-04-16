@@ -147,7 +147,7 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
+void AsmMc6805::emitRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, op);
@@ -156,13 +156,13 @@ void AsmMc6805::emitRelative(InsnMc6805 &insn, const Operand &op) {
     insn.emitOperand8(delta);
 }
 
-void AsmMc6805::emitBitNumber(InsnMc6805 &insn, const Operand &op) {
+void AsmMc6805::emitBitNumber(AsmInsn &insn, const Operand &op) {
     const uint8_t imm = shiftLeftOne(op.val16 & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }
 
-void AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) {
+void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_GEN:
         insn.setOpCode(insn.opCode() & 0x0F);
@@ -236,7 +236,7 @@ void AsmMc6805::emitOperand(InsnMc6805 &insn, AddrMode mode, const Operand &op) 
 }
 
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnMc6805 insn(_insn);
+    AsmInsn insn(_insn);
     Operand op1, op2, op3;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

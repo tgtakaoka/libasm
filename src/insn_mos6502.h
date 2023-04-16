@@ -24,9 +24,7 @@
 namespace libasm {
 namespace mos6502 {
 
-struct InsnMos6502 final : InsnImpl<Config, Entry> {
-    InsnMos6502(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
@@ -34,25 +32,34 @@ struct InsnMos6502 final : InsnImpl<Config, Entry> {
         setFlags(Entry::Flags::create(opr1, opr2, opr3));
     }
 
-    void setAllowIndirectLong(bool allow) { _allowIndirectLong = allow; }
-    bool allowIndirectLong() const { return _allowIndirectLong; }
+    static AddrMode baseMode(AddrMode mode) { return Entry::baseMode(mode); }
+    static AddrMode indirectFlags(AddrMode mode) { return Entry::indirectFlags(mode); }
+    static bool indirect(AddrMode mode) { return Entry::indirect(mode); }
+    static bool longIndirect(AddrMode mode) { return Entry::longIndirect(mode); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
-    static AddrMode baseMode(AddrMode mode) { return Entry::baseMode(mode); }
-    static AddrMode indirectFlags(AddrMode mode) { return Entry::indirectFlags(mode); }
-    static bool indirect(AddrMode mode) { return Entry::indirect(mode); }
-    static bool longIndirect(AddrMode mode) { return Entry::longIndirect(mode); }
-
 private:
-    bool _allowIndirectLong;    // allow [] to represent indirect long
-
     uint8_t operandPos() const {
         uint8_t pos = length();
         return pos == 0 ? 1 : pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    void setAllowIndirectLong(bool allow) { _allowIndirectLong = allow; }
+    bool allowIndirectLong() const { return _allowIndirectLong; }
+
+private:
+    bool _allowIndirectLong;  // allow [] to represent indirect long
 };
 
 }  // namespace mos6502

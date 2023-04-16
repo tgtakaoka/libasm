@@ -43,10 +43,10 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitOperand(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
-    void encodePage(InsnCdp1802 &insn, AddrMode mode, const Operand &op);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void encodePage(AsmInsn &insn, AddrMode mode, const Operand &op);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

@@ -32,13 +32,13 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitAbsolute(InsnIns8070 &insn, const Operand &op);
-    void emitImmediate(InsnIns8070 &insn, const Operand &op);
-    void emitRelative(InsnIns8070 &insn, const Operand &op);
-    void emitGeneric(InsnIns8070 &insn, const Operand &op);
-    void emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    void emitAbsolute(AsmInsn &insn, const Operand &op);
+    void emitImmediate(AsmInsn &insn, const Operand &op);
+    void emitRelative(AsmInsn &insn, const Operand &op);
+    void emitGeneric(AsmInsn &insn, const Operand &op);
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

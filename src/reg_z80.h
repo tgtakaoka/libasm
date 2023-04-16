@@ -73,7 +73,7 @@ RegName decodeDataReg(uint8_t num);
 
 uint8_t encodePointerReg(RegName name);
 uint8_t encodePointerRegIx(RegName name, RegName ix);
-RegName decodePointerReg(uint8_t num, const InsnZ80 &xinsn);
+RegName decodePointerReg(uint8_t num, const DisInsn &xinsn);
 
 uint8_t encodeStackReg(RegName name);
 RegName decodeStackReg(uint8_t num);
@@ -81,8 +81,8 @@ RegName decodeStackReg(uint8_t num);
 uint8_t encodeIndirectBase(RegName name);
 RegName decodeIndirectBase(uint8_t num);
 
-void encodeIndexReg(InsnZ80 &insn, RegName ixReg);
-RegName decodeIndexReg(const InsnZ80 &insn);
+void encodeIndexReg(AsmInsn &insn, RegName ixReg);
+RegName decodeIndexReg(const DisInsn &insn);
 
 uint8_t encodeIrReg(RegName name);
 RegName decodeIrReg(uint8_t num);

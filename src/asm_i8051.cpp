@@ -145,7 +145,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand &op) {
+void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_REL: {
         auto len = insn.length();
@@ -199,7 +199,7 @@ void AsmI8051::encodeOperand(InsnI8051 &insn, const AddrMode mode, const Operand
 }
 
 Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnI8051 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

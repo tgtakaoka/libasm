@@ -82,7 +82,8 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message, expected, actual);
+    printf("%s:%d: %s: expected '%s'\n", file, line, message, expected);
+    printf("%s:%d: %s:   actual '%s'\n", file, line, message, actual);
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
@@ -106,7 +107,8 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message, expected, actual);
+    printf("%s:%d: %s: expected '%s'\n", file, line, message, expected);
+    printf("%s:%d: %s:   actual '%s'\n", file, line, message, actual);
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message,
@@ -129,8 +131,8 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%s': actual '%.*s'\n", file, line, message, expected,
-            (int)actual.size(), actual.str());
+    printf("%s:%d: %s: expected '%s'\n", file, line, message, expected);
+    printf("%s:%d: %s:   actual '%.*s'\n", file, line, message, (int)actual.size(), actual.str());
 }
 
 void TestAsserter::equals_P(const char *file, const int line, const char *message,
@@ -147,8 +149,8 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message,
-            ErrorReporter::errorText_P(expected), actual.errorText_P());
+    printf("%s:%d: %s: expected '%s'\n", file, line, message, ErrorReporter::errorText_P(expected));
+    printf("%s:%d: %s:   actual '%s'\n", file, line, message, actual.errorText_P());
 }
 
 void TestAsserter::equals(const char *file, const int line, const char *message, Error expected,
@@ -159,11 +161,12 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
     }
     _fail_count++;
     if (actual.getError() == OK) {
-        printf("%s:%d: %s: expected '%s': actual '%s'\n", file, line, message,
-                ErrorAt::errorText_P(expected), actual.errorText_P());
+        printf("%s:%d: %s: expected '%s'\n", file, line, message, ErrorAt::errorText_P(expected));
+        printf("%s:%d: %s:   actual '%s'\n", file, line, message, actual.errorText_P());
     } else {
-        printf("%s:%d: %s: expected '%s': actual '%s' at '%s'\n", file, line, message,
-                ErrorAt::errorText_P(expected), actual.errorText_P(), actual.errorAt());
+        printf("%s:%d: %s: expected '%s'\n", file, line, message, ErrorAt::errorText_P(expected));
+        printf("%s:%d: %s:   actual '%s' at '%s'\n", file, line, message, actual.errorText_P(),
+                actual.errorAt());
     }
 }
 
@@ -186,7 +189,8 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
             printf(" ");
         printf("%02" PRIX8, it.readByte());
     }
-    printf("]: actual [");
+    printf("]\n");
+    printf("%s:%d: %s:   actual [", file, line, message);
     for (i = 0; i < actual_len; i++) {
         if (i)
             printf(" ");
@@ -207,8 +211,8 @@ void TestAsserter::not_equals(const char *file, const int line, const char *mess
         return;
     }
     _fail_count++;
-    printf("%s:%d: %s: not expected '%s': actual '%s'\n", file, line, message, not_expected,
-            actual);
+    printf("%s:%d: %s: not expected '%s'\n", file, line, message, not_expected);
+    printf("%s:%d: %s:       actual '%s'\n", file, line, message, actual);
 }
 
 }  // namespace test

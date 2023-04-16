@@ -22,11 +22,7 @@ namespace libasm {
 namespace driver {
 
 DisFormatter::DisFormatter(Disassembler &disassembler, const char *input_name)
-    : ListFormatter(),
-      _disassembler(disassembler),
-      _input_name(input_name),
-      _insn(0),
-      _insnBase(_insn) {
+    : ListFormatter(), _disassembler(disassembler), _input_name(input_name), _insn(0) {
     setUpperHex(true);
     setUppercase(false);
 }
@@ -50,15 +46,15 @@ void DisFormatter::reset() {
 
 Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {
     reset();
-    _insnBase.reset(addr);
+    _insn.reset(addr);
     return _disassembler.decode(memory, _insn, _operands, sizeof(_operands));
 }
 
 Error DisFormatter::setCpu(const char *cpu) {
     reset();
-    _insnBase.reset(_insn.address() + _insn.length());
+    _insn.reset(_insn.address());
     {
-        LowercaseBuffer lower(_insnBase.clearNameBuffer());
+        LowercaseBuffer lower(_insn.clearNameBuffer());
         UppercaseBuffer upper(lower);
         auto name = _uppercase ? upper.ptr() : lower.ptr();
         name->text_P(PSTR("CPU")).over(_insn.nameBuffer());
@@ -77,11 +73,11 @@ Error DisFormatter::setOrigin(uint32_t origin) {
     const auto err = config().checkAddr(origin);
     if (err)
         return err;
-    _insnBase.reset(origin);
-    LowercaseBuffer lower(_insnBase.nameBuffer());
+    _insn.reset(origin);
+    LowercaseBuffer lower(_insn.clearNameBuffer());
     UppercaseBuffer upper(lower);
     auto name = _uppercase ? upper.ptr() : lower.ptr();
-    name->text_P(PSTR("ORG"));
+    name->text_P(PSTR("ORG")).over(_insn.nameBuffer());
 
     StrBuffer operands(_operands, sizeof(_operands));
     _disassembler.formatter().formatHex(

@@ -146,7 +146,7 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
 };
 static constexpr const Cpu &INS8060_CPU = CPU_TABLE[0];
 
-static bool acceptMode(InsnIns8060 &insn, const Entry *entry) {
+static bool acceptMode(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto opr = flags.mode();
     auto table = entry->flags().mode();
@@ -159,12 +159,12 @@ static bool acceptMode(InsnIns8060 &insn, const Entry *entry) {
     return false;
 }
 
-Error TableIns8060::searchName(CpuType cpuType, InsnIns8060 &insn) const {
+Error TableIns8060::searchName(CpuType cpuType, AsmInsn &insn) const {
     INS8060_CPU.searchName(insn, acceptMode);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnIns8060 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto mode = entry->flags().mode();
     if (mode == M_INDX) {
@@ -175,7 +175,7 @@ static bool matchOpCode(InsnIns8060 &insn, const Entry *entry, const EntryPage *
     return opCode == entry->opCode();
 }
 
-Error TableIns8060::searchOpCode(CpuType cpuType, InsnIns8060 &insn, StrBuffer &out) const {
+Error TableIns8060::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = INS8060_CPU.searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);

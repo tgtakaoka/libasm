@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #ifndef __ASM_Z8000_H__
 #define __ASM_Z8000_H__
 
@@ -46,23 +45,23 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op);
 
-    void emitData(InsnZ8000 &insn, ModeField field, Config::opcode_t data);
-    void emitRegister(InsnZ8000 &insn, ModeField field, RegName reg);
-    void emitIndirectRegister(InsnZ8000 &insn, const Operand &op, ModeField field, RegName reg);
-    void emitImmediate(InsnZ8000 &insn, ModeField field, AddrMode mode, const Operand &op);
-    void emitDirectAddress(InsnZ8000 &insn, const Operand &op);
-    void emitRelative(InsnZ8000 &insn, AddrMode mode, const Operand &op);
-    void emitIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
-    void emitBaseAddress(InsnZ8000 &insn, ModeField field, const Operand &op);
-    void emitBaseIndexed(InsnZ8000 &insn, ModeField field, const Operand &op);
-    void emitFlags(InsnZ8000 &insn, ModeField field, const Operand &op);
-    void emitCtlRegister(InsnZ8000 &insn, ModeField field, const Operand &op);
-    void emitOperand(InsnZ8000 &insn, AddrMode mode, const Operand &op, ModeField field);
+    void emitData(AsmInsn &insn, ModeField field, Config::opcode_t data);
+    void emitRegister(AsmInsn &insn, ModeField field, RegName reg);
+    void emitIndirectRegister(AsmInsn &insn, const Operand &op, ModeField field, RegName reg);
+    void emitImmediate(AsmInsn &insn, ModeField field, AddrMode mode, const Operand &op);
+    void emitDirectAddress(AsmInsn &insn, const Operand &op);
+    void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitIndexed(AsmInsn &insn, ModeField field, const Operand &op);
+    void emitBaseAddress(AsmInsn &insn, ModeField field, const Operand &op);
+    void emitBaseIndexed(AsmInsn &insn, ModeField field, const Operand &op);
+    void emitFlags(AsmInsn &insn, ModeField field, const Operand &op);
+    void emitCtlRegister(AsmInsn &insn, ModeField field, const Operand &op);
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, ModeField field);
     void checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt = REG_UNDEF);
-    void checkRegisterOverlap(const InsnZ8000 &insn, const Operand &dstOp, const Operand &srcOp,
-            const Operand &cntOp);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    void checkRegisterOverlap(
+            const AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

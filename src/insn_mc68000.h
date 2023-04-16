@@ -24,9 +24,7 @@
 namespace libasm {
 namespace mc68000 {
 
-struct InsnMc68000 final : InsnImpl<Config, Entry> {
-    InsnMc68000(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     OprPos srcPos() const { return flags().srcPos(); }
@@ -37,12 +35,17 @@ struct InsnMc68000 final : InsnImpl<Config, Entry> {
     bool hasSize() const { return flags().hasSize(); }
     void setAddrMode(AddrMode src, AddrMode dst) { flags().setAddrMode(src, dst); }
 
-    OprSize parseInsnSize();
     void setInsnSize(OprSize osize) { flags().setInsnSize(InsnSize(osize)); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitUint16(opCode(), 0); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
+
+    OprSize parseInsnSize();
 
 private:
     uint8_t operandPos() const {
@@ -51,6 +54,10 @@ private:
             pos = sizeof(Config::opcode_t);
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace mc68000

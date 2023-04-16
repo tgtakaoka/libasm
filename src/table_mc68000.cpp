@@ -540,14 +540,14 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
     return false;
 }
 
-static bool acceptModes(InsnMc68000 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
     return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
-Error TableMc68000::searchName(CpuType cpuType, InsnMc68000 &insn, bool acceptAlias) const {
+Error TableMc68000::searchName(CpuType cpuType, AsmInsn &insn, bool acceptAlias) const {
     cpu(cpuType, acceptAlias)->searchName(insn, acceptModes);
     return insn.getError();
 }
@@ -595,13 +595,13 @@ static Config::opcode_t getInsnMask(Entry::Flags flags) {
            getInsnMask(flags.oprSize());
 }
 
-static bool matchOpCode(InsnMc68000 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     opCode &= ~getInsnMask(entry->flags());
     return opCode == entry->opCode();
 }
 
-Error TableMc68000::searchOpCode(CpuType cpuType, InsnMc68000 &insn, StrBuffer &out) const {
+Error TableMc68000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

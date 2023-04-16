@@ -31,13 +31,13 @@ public:
 private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
-    Error decodeDirectPage(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeExtended(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeRelative(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeBitNumber(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out);
-    Error decodeOperand(DisMemory &memory, InsnMc6800 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
+    Error decodeExtended(DisInsn &insn, StrBuffer &out);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeBitNumber(DisInsn &insn, StrBuffer &out);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

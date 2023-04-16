@@ -32,11 +32,10 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRel8(InsnIns8060 &insn, const Operand &op);
-    void encodeIndx(InsnIns8060 &insn, const Operand &op);
+    void encodeRel8(AsmInsn &insn, const Operand &op);
+    void encodeIndx(AsmInsn &insn, const Operand &op);
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

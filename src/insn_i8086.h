@@ -24,8 +24,8 @@
 namespace libasm {
 namespace i8086 {
 
-struct InsnI8086 final : InsnImpl<Config, Entry> {
-    InsnI8086(Insn &insn) : InsnImpl(insn), _segment(0), _modReg(0), _hasModReg(false) {}
+struct EntryInsn : EntryInsnBase<Config, Entry> {
+    EntryInsn() : _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -42,14 +42,13 @@ struct InsnI8086 final : InsnImpl<Config, Entry> {
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
 
-    void readModReg(DisMemory &memory) {
-        const OprPos dst = dstPos();
-        const OprPos src = srcPos();
-        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
-            _modReg = readByte(memory);
-        else if (dst == P_OMOD || src == P_OMOD)
-            _modReg = opCode();
-    }
+protected:
+    Config::opcode_t _segment;
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _modReg(0), _hasModReg(false) {}
+
     void embedModReg(Config::opcode_t data) {
         _modReg |= data;
         _hasModReg = true;
@@ -79,7 +78,6 @@ struct InsnI8086 final : InsnImpl<Config, Entry> {
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
 
 private:
-    Config::opcode_t _segment;
     Config::opcode_t _modReg;
     bool _hasModReg;
 
@@ -96,6 +94,24 @@ private:
         }
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+    DisInsn(Insn &insn, DisInsn &dis) : DisInsnImpl(insn, dis._memory) {}
+
+    void readModReg() {
+        const OprPos dst = dstPos();
+        const OprPos src = srcPos();
+        if (dst == P_MOD || dst == P_REG || src == P_MOD || src == P_REG)
+            _modReg = readByte();
+        else if (dst == P_OMOD || src == P_OMOD)
+            _modReg = opCode();
+    }
+    Config::opcode_t modReg() const { return _modReg; }
+
+private:
+    Config::opcode_t _modReg;
 };
 
 }  // namespace i8086

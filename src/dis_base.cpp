@@ -86,6 +86,7 @@ Error Disassembler::decode(
     UppercaseBuffer upper(operands, size);
     LowercaseBuffer lower(operands, size);
     StrBuffer *out = _uppercase ? upper.ptr() : lower.ptr();
+    insn.clearNameBuffer();
     decodeImpl(memory, insn, *out);
     if (isOK())
         setError(*out);

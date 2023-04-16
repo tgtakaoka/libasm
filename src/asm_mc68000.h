@@ -41,15 +41,15 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);
 
-    void emitBriefExtension(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
-    void emitDisplacement(InsnMc68000 &insn, const Operand &op, Config::ptrdiff_t disp);
-    void emitRelativeAddr(InsnMc68000 &insn, AddrMode mode, const Operand &op);
-    void emitImmediateData(InsnMc68000 &insn, const Operand &op, OprSize size, uint32_t data);
-    void emitRegisterList(InsnMc68000 &insn, const Operand &op, bool reverse = false);
+    void emitBriefExtension(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp);
+    void emitDisplacement(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp);
+    void emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitImmediateData(AsmInsn &insn, const Operand &op, OprSize size, uint32_t data);
+    void emitRegisterList(AsmInsn &insn, const Operand &op, bool reverse = false);
     Error emitEffectiveAddr(
-            InsnMc68000 &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+            AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

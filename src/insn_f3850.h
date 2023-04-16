@@ -24,18 +24,24 @@
 namespace libasm {
 namespace f3850 {
 
-struct InsnF3850 final : InsnImpl<Config, Entry> {
-    InsnF3850(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     void setAddrMode(AddrMode mode1, AddrMode mode2) {
         setFlags(Entry::Flags::create(mode1, mode2));
     }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val) { emitByte(val, 1); }
     void emitOperand16(uint16_t val) { emitUint16(val, 1); }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace f3850

@@ -48,20 +48,19 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op);
-    void encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    void encodeRelative(InsnZ8 &insn, const Operand &op);
-    void encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    void encodeIndirectRegPair(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
-    void encodeInOpCode(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
+    void encodeAbsolute(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeRelative(AsmInsn &insn, const Operand &op);
+    void encodeIndexed(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeIndirectRegPair(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeInOpCode(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
     void encodeMultiOperands(
-            InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
+            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
     void encodePostByte(
-            InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
+            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

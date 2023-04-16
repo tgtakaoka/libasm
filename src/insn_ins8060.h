@@ -24,13 +24,19 @@
 namespace libasm {
 namespace ins8060 {
 
-struct InsnIns8060 final : InsnImpl<Config, Entry> {
-    InsnIns8060(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode addrMode() const { return flags().mode(); }
     void setAddrMode(AddrMode mode) { setFlags(Entry::Flags::create(mode)); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() { emitByte(opCode()); }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace ins8060

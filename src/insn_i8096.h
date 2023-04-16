@@ -24,9 +24,7 @@
 namespace libasm {
 namespace i8096 {
 
-struct InsnI8096 final : InsnImpl<Config, Entry> {
-    InsnI8096(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AaMode aa() const { return AaMode(opCode() & 3); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode src1() const { return flags().src1(); }
@@ -35,6 +33,10 @@ struct InsnI8096 final : InsnImpl<Config, Entry> {
     void setAddrMode(AddrMode dst, AddrMode src1, AddrMode src2) {
         setFlags(Entry::Flags::create(dst, src1, src2));
     }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() {
         uint8_t pos = 0;
@@ -52,6 +54,10 @@ private:
             pos = hasPrefix() ? 2 : 1;
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 };
 
 }  // namespace i8096

@@ -93,7 +93,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmF3850::emitRelative(InsnF3850 &insn, const Operand &op) {
+void AsmF3850::emitRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + 1;
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, op);
@@ -102,7 +102,7 @@ void AsmF3850::emitRelative(InsnF3850 &insn, const Operand &op) {
     insn.emitOperand8(delta);
 }
 
-void AsmF3850::encodeOperand(InsnF3850 &insn, const Operand &op, AddrMode mode) {
+void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_REG:
         if (op.val16 >= 16)
@@ -141,7 +141,7 @@ void AsmF3850::encodeOperand(InsnF3850 &insn, const Operand &op, AddrMode mode) 
 }
 
 Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnF3850 insn(_insn);
+    AsmInsn insn(_insn);
     Operand op1, op2;
     if (parseOperand(scan, op1) && op1.hasError())
         return setError(op1);

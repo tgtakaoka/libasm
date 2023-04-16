@@ -32,19 +32,19 @@ private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
 
     // MC6809
-    Error decodeDirectPage(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
-    Error decodeIndexed(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
-    Error decodeExtended(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
-    Error decodeRelative(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
-    Error decodePushPull(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
-    Error decodeRegisters(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
+    Error decodeIndexed(DisInsn &insn, StrBuffer &out);
+    Error decodeExtended(DisInsn &insn, StrBuffer &out);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodePushPull(DisInsn &insn, StrBuffer &out);
+    Error decodeRegisters(DisInsn &insn, StrBuffer &out);
     // HD6309
-    Error decodeRegBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
-    Error decodeDirBit(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
-    Error decodeTransferMemory(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out);
+    Error decodeRegBit(DisInsn &insn, StrBuffer &out);
+    Error decodeDirBit(DisInsn &insn, StrBuffer &out);
+    Error decodeTransferMemory(DisInsn &insn, StrBuffer &out);
 
-    Error decodeOperand(DisMemory &memory, InsnMc6809 &insn, StrBuffer &out, AddrMode mode);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     const ConfigBase &config() const override { return *this; }

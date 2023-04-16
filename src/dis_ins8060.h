@@ -31,9 +31,9 @@ public:
 private:
     const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
 
-    Error decodePntr(InsnIns8060 &insn, StrBuffer &out);
-    Error decodeImm8(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out);
-    Error decodeIndx(DisMemory &memory, InsnIns8060 &insn, StrBuffer &out, bool hasMode);
+    Error decodePntr(DisInsn &insn, StrBuffer &out);
+    Error decodeImm8(DisInsn &insn, StrBuffer &out);
+    Error decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
 
     static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }

@@ -55,7 +55,7 @@ StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) cons
     return out;
 }
 
-StrBuffer &DisI8096::outRelative(StrBuffer &out, const InsnI8096 &insn, const Operand &op) {
+StrBuffer &DisI8096::outRelative(StrBuffer &out, const DisInsn &insn, const Operand &op) {
     if (op.mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
@@ -73,7 +73,7 @@ StrBuffer &DisI8096::outRelative(StrBuffer &out, const InsnI8096 &insn, const Op
         return outRelAddr(out, target, insn.address(), 16);
     }
 }
-StrBuffer &DisI8096::outOperand(StrBuffer &out, const InsnI8096 &insn, const Operand &op) {
+StrBuffer &DisI8096::outOperand(StrBuffer &out, const DisInsn &insn, const Operand &op) {
     switch (op.mode) {
     case M_COUNT:
         if (op.regno < 16)
@@ -104,47 +104,47 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, const InsnI8096 &insn, const Ope
     }
 }
 
-Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMode) {
+Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     switch (mode = opMode) {
     case M_BREG:
     case M_COUNT:
-        regno = insn.readByte(memory);
+        regno = insn.readByte();
         break;
     case M_WREG:
     case M_INDIR:
-        regno = insn.readByte(memory);
+        regno = insn.readByte();
         if (!isWreg(regno))
             return setError(REGISTER_NOT_ALLOWED);
         break;
     case M_LREG:
-        regno = insn.readByte(memory);
+        regno = insn.readByte();
         if (!isLreg(regno))
             return setError(REGISTER_NOT_ALLOWED);
         break;
     case M_BAOP:
         switch (insn.aa()) {
         case AA_REG:
-            regno = insn.readByte(memory);
+            regno = insn.readByte();
             mode = M_BREG;
             break;
         case AA_IMM:
-            val16 = insn.readByte(memory);
+            val16 = insn.readByte();
             mode = M_IMM8;
             break;
         case AA_INDIR:
-            regno = insn.readByte(memory);
+            regno = insn.readByte();
             if (!isWreg(regno))
                 return setError(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
-            regno = insn.readByte(memory);
+            regno = insn.readByte();
             if (isWreg(regno)) {  // 8bit displacement
-                val16 = static_cast<int16_t>(insn.readByte(memory));
+                val16 = static_cast<int16_t>(insn.readByte());
                 mode = M_IDX8;
             } else {
                 regno &= ~1;
-                val16 = insn.readUint16(memory);
+                val16 = insn.readUint16();
                 mode = M_IDX16;
             }
             break;
@@ -153,42 +153,42 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
     case M_WAOP:
         switch (insn.aa()) {
         case AA_REG:
-            regno = insn.readByte(memory);
+            regno = insn.readByte();
             if (!isWreg(regno))
                 return setError(REGISTER_NOT_ALLOWED);
             mode = M_WREG;
             break;
         case AA_IMM:
-            val16 = insn.readUint16(memory);
+            val16 = insn.readUint16();
             mode = M_IMM16;
             break;
         case AA_INDIR:
-            regno = insn.readByte(memory);
+            regno = insn.readByte();
             if (!isWreg(regno))
                 return setError(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
-            regno = insn.readByte(memory);
+            regno = insn.readByte();
             if (isWreg(regno)) {  // 8bit displacement
-                val16 = static_cast<int16_t>(insn.readByte(memory));
+                val16 = static_cast<int16_t>(insn.readByte());
                 mode = M_IDX8;
             } else {
                 regno &= ~1;
-                val16 = insn.readUint16(memory);
+                val16 = insn.readUint16();
                 mode = M_IDX16;
             }
             break;
         }
         break;
     case M_REL8:
-        val16 = insn.readByte(memory);
+        val16 = insn.readByte();
         break;
     case M_REL11:
-        val16 = (static_cast<int16_t>(insn.opCode() & 7) << 8) | insn.readByte(memory);
+        val16 = (static_cast<int16_t>(insn.opCode() & 7) << 8) | insn.readByte();
         break;
     case M_REL16:
-        val16 = insn.readUint16(memory);
+        val16 = insn.readUint16();
         break;
     case M_BITNO:
         val16 = insn.opCode() & 7;
@@ -200,10 +200,10 @@ Error DisI8096::Operand::read(DisMemory &memory, InsnI8096 &insn, AddrMode opMod
 }
 
 Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnI8096 insn(_insn);
-    const auto opc = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    const auto opc = insn.readByte();
     if (TABLE.isPrefix(cpuType(), opc)) {
-        insn.setOpCode(insn.readByte(memory), opc);
+        insn.setOpCode(insn.readByte(), opc);
     } else {
         insn.setOpCode(opc);
     }
@@ -213,13 +213,13 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (jbx_djnz) {
-        dst.read(memory, insn, insn.dst());
-        src1.read(memory, insn, insn.src1());
-        src2.read(memory, insn, insn.src2());
+        dst.read(insn, insn.dst());
+        src1.read(insn, insn.src1());
+        src2.read(insn, insn.src2());
     } else {
-        src2.read(memory, insn, insn.src2());
-        src1.read(memory, insn, insn.src1());
-        dst.read(memory, insn, insn.dst());
+        src2.read(insn, insn.src2());
+        src1.read(insn, insn.src1());
+        dst.read(insn, insn.dst());
     }
     if (src2.getError())
         return setError(src2);

@@ -117,7 +117,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmScn2650::emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) {
     const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
     if (!inspace(target))
         setErrorIf(op, OVERFLOW_RANGE);
@@ -132,7 +132,7 @@ void AsmScn2650::emitAbsolute(InsnScn2650 &insn, const Operand &op, AddrMode mod
     insn.emitOperand16(opr);
 }
 
-void AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) {
     const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
     if (!inspace(target))
         setErrorIf(op, OVERFLOW_RANGE);
@@ -159,7 +159,7 @@ void AsmScn2650::emitIndexed(InsnScn2650 &insn, const Operand &op, AddrMode mode
     insn.emitOperand16(opr);
 }
 
-void AsmScn2650::emitZeroPage(InsnScn2650 &insn, const Operand &op) {
+void AsmScn2650::emitZeroPage(AsmInsn &insn, const Operand &op) {
     const auto target = op.val16;
     if (page(target) != 0)
         setErrorIf(op, OVERFLOW_RANGE);
@@ -173,7 +173,7 @@ void AsmScn2650::emitZeroPage(InsnScn2650 &insn, const Operand &op) {
     insn.emitOperand8(opr);
 }
 
-void AsmScn2650::emitRelative(InsnScn2650 &insn, const Operand &op) {
+void AsmScn2650::emitRelative(AsmInsn &insn, const Operand &op) {
     const auto base = inpage(insn.address(), 2);
     const auto target = op.getError() ? base : op.val16;
     if (page(target) != page(base))
@@ -188,7 +188,7 @@ void AsmScn2650::emitRelative(InsnScn2650 &insn, const Operand &op) {
     insn.emitOperand8(opr);
 }
 
-void AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_REGN:
     case M_REG0:
@@ -222,7 +222,7 @@ void AsmScn2650::encodeOperand(InsnScn2650 &insn, const Operand &op, AddrMode mo
 }
 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnScn2650 insn(_insn);
+    AsmInsn insn(_insn);
     Operand opr1, opr2;
     bool insnWithReg = false;
     if (scan.expect(',')) {

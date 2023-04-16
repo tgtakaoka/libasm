@@ -81,8 +81,7 @@ Error DisTms32010::decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, 
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error DisTms32010::decodeOperand(
-        DisMemory &memory, InsnTms32010 &insn, StrBuffer &out, AddrMode mode) {
+Error DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_MAM:
@@ -116,7 +115,7 @@ Error DisTms32010::decodeOperand(
         outDec(out, signExtend(opc, 13), -13);
         break;
     case M_PMA: {
-        uint16_t pma = insn.readUint16(memory);
+        uint16_t pma = insn.readUint16();
         if (pma & 0xF000)
             return setError(OVERFLOW_RANGE);
         outAbsAddr(out, pma);
@@ -129,8 +128,8 @@ Error DisTms32010::decodeOperand(
 }
 
 Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnTms32010 insn(_insn);
-    Config::opcode_t opCode = insn.readUint16(memory);
+    DisInsn insn(_insn, memory);
+    Config::opcode_t opCode = insn.readUint16();
 
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
@@ -139,19 +138,19 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto mode1 = insn.mode1();
     if (mode1 == M_NONE)
         return OK;
-    if (decodeOperand(memory, insn, out, mode1))
+    if (decodeOperand(insn, out, mode1))
         return getError();
     const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
         return OK;
     if (!(mode2 == M_LS4 || mode2 == M_LS3 || mode2 == M_LS0 || mode2 == M_NARP))
         out.comma();
-    if (decodeOperand(memory, insn, out, mode2))
+    if (decodeOperand(insn, out, mode2))
         return getError();
     const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
         return OK;
-    return decodeOperand(memory, insn, out, mode3);
+    return decodeOperand(insn, out, mode3);
 }
 
 }  // namespace tms32010

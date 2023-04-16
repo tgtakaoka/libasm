@@ -38,7 +38,7 @@ const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
     return PLUGINS;
 }
 
-void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op) {
+void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, op);
@@ -52,7 +52,7 @@ void AsmTlcs90::encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &o
 }
 
 void AsmTlcs90::encodeOperand(
-        InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) {
+        AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) {
     switch (mode) {
     case M_IMM8:
         if (overflowUint8(op.val16))
@@ -211,7 +211,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnTlcs90 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.getError() != UNDEFINED_SYMBOL)
         return setError(dstOp);

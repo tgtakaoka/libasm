@@ -76,8 +76,8 @@ private:
 /**
  * Base instruction code class.
  */
-struct InsnBase : ErrorReporter {
-    InsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
+struct AsmInsnBase : ErrorReporter {
+    AsmInsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
 
     uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
@@ -170,68 +170,90 @@ struct InsnBase : ErrorReporter {
         emitUint32Le(data >> 32, pos + 4);
     }
 
-    /** Read 8 bit data from |memory| (Disassembler). */
-    uint8_t readByte(DisMemory &memory) {
-        if (!memory.hasNext()) {
-            setError(NO_MEMORY);
-            return 0;
-        }
-        const uint8_t data = memory.readByte();
-        emitByte(data);
-        return data;
-    }
-
-    /** Read 16 bit big endian data from |memory| (Disassembler). */
-    uint16_t readUint16Be(DisMemory &memory) {
-        const uint8_t msb = readByte(memory);
-        const uint8_t lsb = readByte(memory);
-        return static_cast<uint16_t>(msb) << 8 | lsb;
-    }
-
-    /** Read 16 bit little endian data from |memory| (Disassembler). */
-    uint16_t readUint16Le(DisMemory &memory) {
-        const uint8_t lsb = readByte(memory);
-        const uint8_t msb = readByte(memory);
-        return static_cast<uint16_t>(msb) << 8 | lsb;
-    }
-
-    /** Read 32 bit big endian data from |memory| (Disassembler). */
-    uint32_t readUint32Be(DisMemory &memory) {
-        const uint16_t msw = readUint16Be(memory);
-        const uint16_t lsw = readUint16Be(memory);
-        return static_cast<uint32_t>(msw) << 16 | lsw;
-    }
-
-    /** Read 32 bit little endian data from |memory| (Disassembler). */
-    uint32_t readUint32Le(DisMemory &memory) {
-        const uint16_t lsw = readUint16Le(memory);
-        const uint16_t msw = readUint16Le(memory);
-        return static_cast<uint32_t>(msw) << 16 | lsw;
-    }
-
-    /** Read 64 bit big endian data from |memory| (Disassembler). */
-    uint64_t readUint64Be(DisMemory &memory) {
-        const uint32_t msw = readUint32Be(memory);
-        const uint32_t lsw = readUint32Be(memory);
-        return static_cast<uint64_t>(msw) << 32 | lsw;
-    }
-
-    /** Read 64 bit little endian data from |memory| (Disassembler). */
-    uint64_t readUint64Le(DisMemory &memory) {
-        const uint32_t lsw = readUint32Le(memory);
-        const uint32_t msw = readUint32Le(memory);
-        return static_cast<uint64_t>(msw) << 32 | lsw;
-    }
-
 private:
     Insn &_insn;
 };
 
-template <typename Conf, typename Entry>
-struct InsnImpl : InsnBase {
-    typename Conf::uintptr_t address() const { return InsnBase::address(); }
+/**
+ * Base instruction code class.
+ */
+struct DisInsnBase : ErrorReporter {
+    DisInsnBase(Insn &insn, DisMemory &memory) : ErrorReporter(), _insn(insn), _memory(memory) {}
 
-    void reset() { InsnBase::reset(address()); }
+    uint32_t address() const { return _insn.address(); }
+    const uint8_t *bytes() const { return _insn.bytes(); }
+    uint8_t length() const { return _insn.length(); }
+    const char *name() const { return _insn.name(); }
+    StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
+    StrBuffer &clearNameBuffer() { return _insn.clearNameBuffer(); }
+
+    void reset(uint32_t addr) {
+        resetError();
+        _insn.reset(addr);
+        clearNameBuffer();
+    }
+
+    /** Read 8 bit data from |memory| (Disassembler). */
+    uint8_t readByte() {
+        if (!_memory.hasNext()) {
+            setError(NO_MEMORY);
+            return 0;
+        }
+        const uint8_t data = _memory.readByte();
+        _insn.emitByte(data);
+        return data;
+    }
+
+    /** Read 16 bit big endian data from |memory| (Disassembler). */
+    uint16_t readUint16Be() {
+        const uint8_t msb = readByte();
+        const uint8_t lsb = readByte();
+        return static_cast<uint16_t>(msb) << 8 | lsb;
+    }
+
+    /** Read 16 bit little endian data from |memory| (Disassembler). */
+    uint16_t readUint16Le() {
+        const uint8_t lsb = readByte();
+        const uint8_t msb = readByte();
+        return static_cast<uint16_t>(msb) << 8 | lsb;
+    }
+
+    /** Read 32 bit big endian data from |memory| (Disassembler). */
+    uint32_t readUint32Be() {
+        const uint16_t msw = readUint16Be();
+        const uint16_t lsw = readUint16Be();
+        return static_cast<uint32_t>(msw) << 16 | lsw;
+    }
+
+    /** Read 32 bit little endian data from |memory| (Disassembler). */
+    uint32_t readUint32Le() {
+        const uint16_t lsw = readUint16Le();
+        const uint16_t msw = readUint16Le();
+        return static_cast<uint32_t>(msw) << 16 | lsw;
+    }
+
+    /** Read 64 bit big endian data from |memory| (Disassembler). */
+    uint64_t readUint64Be() {
+        const uint32_t msw = readUint32Be();
+        const uint32_t lsw = readUint32Be();
+        return static_cast<uint64_t>(msw) << 32 | lsw;
+    }
+
+    /** Read 64 bit little endian data from |memory| (Disassembler). */
+    uint64_t readUint64Le() {
+        const uint32_t lsw = readUint32Le();
+        const uint32_t msw = readUint32Le();
+        return static_cast<uint64_t>(msw) << 32 | lsw;
+    }
+
+protected:
+    Insn &_insn;
+    DisMemory &_memory;
+};
+
+template <typename Conf, typename Entry>
+struct EntryInsnBase {
+    EntryInsnBase() : _opCode(0), _prefix(0), _post(0), _hasPost(false), _flags() {}
     void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
         _opCode = opCode;
         _prefix = prefix;
@@ -250,6 +272,20 @@ struct InsnImpl : InsnBase {
     void setFlags(typename Entry::Flags flags) { _flags = flags; }
     typename Entry::Flags flags() const { return _flags; }
     typename Entry::Flags &flags() { return _flags; }
+
+private:
+    typename Conf::opcode_t _opCode;
+    typename Conf::opcode_t _prefix;
+    typename Conf::opcode_t _post;
+    bool _hasPost;
+    typename Entry::Flags _flags;
+};
+
+template <typename Conf>
+struct AsmInsnImpl : AsmInsnBase {
+    typename Conf::uintptr_t address() const { return AsmInsnBase::address(); }
+
+    void reset() { AsmInsnBase::reset(address()); }
 
     /* Generate 16 bit |data| (Assembler). */
     void emitUint16(uint16_t data) {
@@ -361,64 +397,65 @@ struct InsnImpl : InsnBase {
         }
     }
 
+protected:
+    AsmInsnImpl(Insn &insn) : AsmInsnBase(insn) {}
+};
+
+template <typename Conf>
+struct DisInsnImpl : DisInsnBase {
+    typename Conf::uintptr_t address() const { return DisInsnBase::address(); }
+
+    void reset() { DisInsnBase::reset(address()); }
+
     /** Read 16 bit data from |memory| (Disassembler). */
-    uint16_t readUint16(DisMemory &memory) {
+    uint16_t readUint16() {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            return readUint16Be(memory);
+            return readUint16Be();
         } else {
-            return readUint16Le(memory);
+            return readUint16Le();
         }
     }
 
     /** Read 32 bit data from |memory| (Disassembler). */
-    uint32_t readUint32(DisMemory &memory) {
+    uint32_t readUint32() {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            return readUint32Be(memory);
+            return readUint32Be();
         } else {
-            return readUint32Le(memory);
+            return readUint32Le();
         }
     }
 
     /** Read 64 bit data from |memory| (Disassembler). */
-    uint64_t readUint64(DisMemory &memory) {
+    uint64_t readUint64() {
         if (Conf::ENDIAN == ENDIAN_BIG) {
-            return readUint64Be(memory);
+            return readUint64Be();
         } else {
-            return readUint64Le(memory);
+            return readUint64Le();
         }
     }
 
     /** Read 32 bit floating point data from |memory| (Disassembler). */
-    float readFloat32(DisMemory &memory) {
+    float readFloat32() {
         union {
             float float32;
             uint32_t data32;
         } bytes;
-        bytes.data32 = readUint32(memory);
+        bytes.data32 = readUint32();
         return bytes.float32;
     }
 
     /** Read 64 bit floating point data from |memory| (Disassembler). */
-    double readFloat64(DisMemory &memory) {
+    double readFloat64() {
         union {
             double float64;
             uint64_t data64;
         } bytes;
-        bytes.data64 = readUint64(memory);
+        bytes.data64 = readUint64();
         return bytes.float64;
     }
 
 protected:
-    InsnImpl(Insn &insn)
-        : InsnBase(insn), _opCode(0), _prefix(0), _post(0), _hasPost(false), _flags() {}
-
-private:
-    typename Conf::opcode_t _opCode;
-    typename Conf::opcode_t _prefix;
-    typename Conf::opcode_t _post;
-    bool _hasPost;
-
-    typename Entry::Flags _flags;
+    DisInsnImpl(Insn &insn, DisMemory &memory) : DisInsnBase(insn, memory) {}
 };
 
 }  // namespace libasm

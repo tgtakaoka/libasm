@@ -100,7 +100,7 @@ bool AsmZ8::isWorkReg(uint8_t regAddr) const {
     return false;
 }
 
-void AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op) {
+void AsmZ8::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) {
     if (mode == M_NONE)
         return;
     if (op.reg != REG_UNDEF && (mode == M_R || mode == M_IR || mode == M_IRR)) {
@@ -112,7 +112,7 @@ void AsmZ8::encodeOperand(InsnZ8 &insn, const AddrMode mode, const Operand &op) 
     insn.emitOperand8(op.val16);
 }
 
-void AsmZ8::encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+void AsmZ8::encodeAbsolute(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) {
     const auto dst = insn.dst();
     const auto &op = (dst == M_DA) ? dstOp : srcOp;
     if (dst == M_cc)
@@ -120,7 +120,7 @@ void AsmZ8::encodeAbsolute(InsnZ8 &insn, const Operand &dstOp, const Operand &sr
     insn.emitOperand16(op.val16);
 }
 
-void AsmZ8::encodeRelative(InsnZ8 &insn, const Operand &op) {
+void AsmZ8::encodeRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + insn.emitLength();
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, op);
@@ -129,7 +129,7 @@ void AsmZ8::encodeRelative(InsnZ8 &insn, const Operand &op) {
     insn.emitOperand8(delta);
 }
 
-void AsmZ8::encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+void AsmZ8::encodeIndexed(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) {
     const auto dst = insn.dst();
     const auto &op = (dst == M_X) ? dstOp : srcOp;
     const auto reg = (dst == M_X) ? srcOp.reg : dstOp.reg;
@@ -140,7 +140,7 @@ void AsmZ8::encodeIndexed(InsnZ8 &insn, const Operand &dstOp, const Operand &src
     insn.emitOperand8(op.val16);
 }
 
-void AsmZ8::encodeIndirectRegPair(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+void AsmZ8::encodeIndirectRegPair(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) {
     const auto dst = insn.dst();
     const auto pair = (dst == M_Irr) ? dstOp.reg : srcOp.reg;
     const auto reg = (dst == M_Irr) ? srcOp.reg : dstOp.reg;
@@ -148,7 +148,7 @@ void AsmZ8::encodeIndirectRegPair(InsnZ8 &insn, const Operand &dstOp, const Oper
     insn.emitOperand8(opr);
 }
 
-void AsmZ8::encodeInOpCode(InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp) {
+void AsmZ8::encodeInOpCode(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) {
     const auto dst = insn.dst();
     const auto src = insn.src();
     const auto reg = (dst == M_r) ? dstOp.reg : srcOp.reg;
@@ -159,7 +159,7 @@ void AsmZ8::encodeInOpCode(InsnZ8 &insn, const Operand &dstOp, const Operand &sr
 }
 
 void AsmZ8::encodeMultiOperands(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) {
+        AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) {
     const auto dst = insn.dst();
     const auto src = insn.src();
     if (src == M_Ir && insn.ext() == M_RA) {
@@ -196,7 +196,7 @@ void AsmZ8::encodeMultiOperands(
 }
 
 void AsmZ8::encodePostByte(
-        InsnZ8 &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) {
+        AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) {
     const auto dst = insn.dst();
     const auto src = insn.src();
     const auto post = insn.postFormat();
@@ -429,7 +429,7 @@ Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnZ8 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp, extOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);
@@ -477,7 +477,7 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
             encodeIndexed(insn, dstOp, srcOp);
         } else if (dst == M_Irr || src == M_Irr) {
             encodeIndirectRegPair(insn, dstOp, srcOp);
-        } else if (InsnZ8::operandInOpCode(insn.opCode())) {
+        } else if (AsmInsn::operandInOpCode(insn.opCode())) {
             encodeInOpCode(insn, dstOp, srcOp);
         } else if (src == M_NONE) {
             encodeOperand(insn, dst, dstOp);

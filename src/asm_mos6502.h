@@ -45,15 +45,14 @@ private:
     Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseOperand(StrScanner &scan, Operand &op, char &indirect) const;
 
-    void emitImmediate(InsnMos6502 &insn, const Operand &op, bool imm16);
-    void encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op);
-    void encodeOperand(InsnMos6502 &insn, AddrMode mode, const Operand &op);
+    void emitImmediate(AsmInsn &insn, const Operand &op, bool imm16);
+    void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
 
     Error parseTableOnOff(StrScanner &scan, BoolOption<AsmMos6502>::Setter setter);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

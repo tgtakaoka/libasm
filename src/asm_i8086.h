@@ -47,17 +47,17 @@ private:
     Error parseDisplacement(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
 
-    void emitImmediate(InsnI8086 &insn, const Operand &op, OprSize size, uint32_t val);
-    void emitRelative(InsnI8086 &insn, const Operand &op, AddrMode mode);
-    void emitRegister(InsnI8086 &insn, const Operand &op, OprPos pos);
+    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, uint32_t val);
+    void emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void emitRegister(AsmInsn &insn, const Operand &op, OprPos pos);
     Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);
-    void emitModReg(InsnI8086 &insn, const Operand &op, OprPos pos);
-    void emitDirect(InsnI8086 &insn, const Operand &op, OprPos pos);
-    void emitOperand(InsnI8086 &insn, AddrMode mode, const Operand &op, OprPos pos);
-    void emitStringOperand(InsnI8086 &insn, const Operand &op, RegName seg, RegName index);
-    void emitStringInst(InsnI8086 &insn, const Operand &src, const Operand &dst);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    void emitModReg(AsmInsn &insn, const Operand &op, OprPos pos);
+    void emitDirect(AsmInsn &insn, const Operand &op, OprPos pos);
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos);
+    void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index);
+    void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

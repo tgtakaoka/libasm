@@ -35,9 +35,9 @@ private:
     Error decodeIndirect(StrBuffer &out, uint8_t mam);
     Error decodeNextArp(StrBuffer &out, uint8_t mam);
     Error decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mnode);
-    Error decodeOperand(DisMemory &memory, InsnTms32010 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

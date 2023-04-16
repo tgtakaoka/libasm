@@ -45,7 +45,7 @@ AsmI8080::AsmI8080(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmI8080::encodeOperand(InsnI8080 &insn, const Operand &op, AddrMode mode) {
+void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_IOA:
         if (op.val16 >= 0x100)
@@ -123,7 +123,7 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnI8080 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

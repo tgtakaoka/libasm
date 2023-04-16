@@ -38,10 +38,10 @@ private:
 
     bool _useScratchpad;
 
-    Error decodeRelative(DisMemory &memory, InsnF3850 &insn, StrBuffer &out);
-    Error decodeOperand(DisMemory &memory, InsnF3850 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

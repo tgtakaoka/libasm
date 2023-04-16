@@ -91,7 +91,7 @@ bool AsmMc6809::onDirectPage(Config::uintptr_t addr) const {
     return static_cast<uint8_t>(addr >> 8) == _direct_page;
 }
 
-void AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
+void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) {
     const auto length = (insn.hasPrefix() ? 1 : 0) + (mode == M_LREL ? 3 : 2);
     const auto base = insn.address() + length;
     const auto target = op.getError() ? base : op.val32;
@@ -106,7 +106,7 @@ void AsmMc6809::encodeRelative(InsnMc6809 &insn, const Operand &op, AddrMode mod
 }
 
 Config::ptrdiff_t AsmMc6809::calculateDisplacement(
-        const InsnMc6809 &insn, const Operand &op) const {
+        const AsmInsn &insn, const Operand &op) const {
     const auto disp = static_cast<Config::ptrdiff_t>(op.val32);
     if (op.base == REG_PCR && op.isOK()) {
         // assuming 8-bit displacement (post byte + 8-bit displacement)
@@ -119,7 +119,7 @@ Config::ptrdiff_t AsmMc6809::calculateDisplacement(
     return disp;
 }
 
-void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
+void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) {
     PostSpec spec = {op.index, op.base, op.extra, op.indir};
     if (spec.index == REG_0)  // 0,X [0,X]
         spec.index = REG_UNDEF;
@@ -159,7 +159,7 @@ void AsmMc6809::encodeIndexed(InsnMc6809 &insn, const Operand &op) {
         insn.emitOperand16(disp);
 }
 
-void AsmMc6809::encodeRegisterPair(InsnMc6809 &insn, const Operand &op) {
+void AsmMc6809::encodeRegisterPair(AsmInsn &insn, const Operand &op) {
     const auto reg1 = op.mode == M_RBIT ? op.base : op.index;
     const auto reg2 = op.mode == M_RBIT ? REG_0 : op.base;
     const auto cpu = cpuType();
@@ -174,7 +174,7 @@ void AsmMc6809::encodeRegisterPair(InsnMc6809 &insn, const Operand &op) {
     insn.emitOperand8((post1 << 4) | post2);
 }
 
-void AsmMc6809::encodeRegisterList(InsnMc6809 &insn, const Operand &op) {
+void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) {
     if (op.mode == M_NONE || op.mode == M_IM32) {
         insn.emitOperand8(op.val32);
         return;
@@ -204,7 +204,7 @@ void AsmMc6809::encodeRegisterList(InsnMc6809 &insn, const Operand &op) {
     insn.emitOperand8(post);
 }
 
-void AsmMc6809::encodeOperand(InsnMc6809 &insn, const Operand &op, AddrMode mode) {
+void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     switch (mode) {
     case M_REL:
     case M_LREL:
@@ -288,7 +288,7 @@ char AsmMc6809::transferMemoryMode(Operand &op) const {
     return 0;
 }
 
-void AsmMc6809::encodeTransferMemory(InsnMc6809 &insn, Operand &op1, Operand &op2) {
+void AsmMc6809::encodeTransferMemory(AsmInsn &insn, Operand &op1, Operand &op2) {
     const auto src = transferMemoryMode(op1);
     const auto dst = transferMemoryMode(op2);
     setErrorIf(op1);
@@ -543,7 +543,7 @@ Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnMc6809 insn(_insn);
+    AsmInsn insn(_insn);
     auto error = TABLE.hasName(cpuType(), insn);
     if (error)
         return setError(error);

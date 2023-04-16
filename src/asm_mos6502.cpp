@@ -31,8 +31,8 @@ struct AsmMos6502::Operand final : ErrorAt {
     uint32_t val32;
     Operand() : mode(M_NONE), val32(0) {}
     void embed(AddrMode indirectFlags) {
-        mode = AddrMode(uint8_t(InsnMos6502::indirectFlags(indirectFlags)) |
-                        uint8_t(InsnMos6502::baseMode(mode)));
+        mode = AddrMode(uint8_t(AsmInsn::indirectFlags(indirectFlags)) |
+                        uint8_t(AsmInsn::baseMode(mode)));
     }
 };
 
@@ -77,7 +77,7 @@ Error AsmMos6502::setLongIndex(bool enable) {
     return enable ? OPERAND_NOT_ALLOWED : OK;
 }
 
-void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand &op) {
+void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) {
     const Config::uintptr_t bank = insn.address() & ~0xFFFF;
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len : 1) + (mode == M_REL ? 1 : 2);
@@ -94,7 +94,7 @@ void AsmMos6502::encodeRelative(InsnMos6502 &insn, AddrMode mode, const Operand 
     }
 }
 
-void AsmMos6502::emitImmediate(InsnMos6502 &insn, const Operand &op, bool imm16) {
+void AsmMos6502::emitImmediate(AsmInsn &insn, const Operand &op, bool imm16) {
     if (imm16) {
         if (overflowUint16(op.val32))
             setErrorIf(op, OVERFLOW_RANGE);
@@ -106,8 +106,8 @@ void AsmMos6502::emitImmediate(InsnMos6502 &insn, const Operand &op, bool imm16)
     }
 }
 
-void AsmMos6502::encodeOperand(InsnMos6502 &insn, AddrMode modeAndFlags, const Operand &op) {
-    const auto mode = InsnMos6502::baseMode(modeAndFlags);
+void AsmMos6502::encodeOperand(AsmInsn &insn, AddrMode modeAndFlags, const Operand &op) {
+    const auto mode = AsmInsn::baseMode(modeAndFlags);
     switch (mode) {
     case M_IMA:
         emitImmediate(insn, op, _longAccumulator);
@@ -283,7 +283,7 @@ Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
 namespace {
 
 bool hasRegister(AddrMode mode) {
-    const auto base = uint8_t(InsnMos6502::baseMode(mode));
+    const auto base = uint8_t(AsmInsn::baseMode(mode));
     return base >= uint8_t(M_REGA) && base <= uint8_t(M_REGS);
 }
 
@@ -294,7 +294,7 @@ bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
 }  // namespace
 
 Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnMos6502 insn(_insn);
+    AsmInsn insn(_insn);
     char indirect = 0;
     Operand op1, op2, op3;
     if (parseOperand(scan, op1, indirect) && op1.hasError())

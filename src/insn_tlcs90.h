@@ -33,13 +33,16 @@ struct Operand final : ErrorAt {
     Operand() : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
-struct InsnTlcs90 final : InsnImpl<Config, Entry> {
-    InsnTlcs90(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
-    AddrMode pre() const { return _prefixMode; }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    AddrMode pre() const { return _prefixMode; }
     void setPrefixMode(AddrMode mode) { _prefixMode = mode; }
 
     void setEmitInsn() { _emitInsn = true; }
@@ -50,21 +53,29 @@ struct InsnTlcs90 final : InsnImpl<Config, Entry> {
         }
     }
 
-    void readOpCode(DisMemory &memory, Operand &op) {
+private:
+    AddrMode _prefixMode;
+    bool _emitInsn;
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    void readOpCode(Operand &op) {
         const auto prefix = opCode();
         switch (op.mode) {
         case M_EXT:
-            op.val16 = readUint16(memory);
+            op.val16 = readUint16();
             break;
         case M_DIR:
-            op.val16 = readByte(memory);
+            op.val16 = readByte();
             break;
         case M_IND:
             op.reg = reg::decodeReg16(prefix);
             break;
         case M_IDX:
             op.reg = reg::decodeIndexReg(prefix);
-            op.val16 = static_cast<int8_t>(readByte(memory));
+            op.val16 = static_cast<int8_t>(readByte());
             break;
         case M_REG8:
             op.reg = reg::decodeReg8(prefix);
@@ -75,12 +86,8 @@ struct InsnTlcs90 final : InsnImpl<Config, Entry> {
         default:
             break;
         }
-        setOpCode(readByte(memory), prefix);
+        setOpCode(readByte(), prefix);
     }
-
-private:
-    AddrMode _prefixMode;
-    bool _emitInsn;
 };
 
 }  // namespace tlcs90

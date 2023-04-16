@@ -108,13 +108,13 @@ const Functor *Ins8070FunctionParser::parseFunction(StrScanner &scan, ErrorAt &e
 
 }  // namespace
 
-void AsmIns8070::emitAbsolute(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitAbsolute(AsmInsn &insn, const Operand &op) {
     // PC will be +1 before fetching instruction.
     const auto target = op.getError() ? 0 : op.val16 - 1;
     insn.emitOperand16(target);
 }
 
-void AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitImmediate(AsmInsn &insn, const Operand &op) {
     if (insn.oprSize() == SZ_WORD) {
         insn.emitOperand16(op.val16);
     } else {
@@ -124,7 +124,7 @@ void AsmIns8070::emitImmediate(InsnIns8070 &insn, const Operand &op) {
     }
 }
 
-void AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const auto fetch = insn.execute() ? 1 : 0;
@@ -135,7 +135,7 @@ void AsmIns8070::emitRelative(InsnIns8070 &insn, const Operand &op) {
     insn.emitOperand8(offset);
 }
 
-void AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
+void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) {
     if (op.mode == M_IMM) {
         insn.embed(4);
         emitImmediate(insn, op);
@@ -163,7 +163,7 @@ void AsmIns8070::emitGeneric(InsnIns8070 &insn, const Operand &op) {
     insn.emitOperand8(offset);
 }
 
-void AsmIns8070::emitOperand(InsnIns8070 &insn, AddrMode mode, const Operand &op) {
+void AsmIns8070::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     switch (mode) {
     case M_P23:
     case M_PTR:
@@ -270,7 +270,7 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnIns8070 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dst, src;
     if (parseOperand(scan, dst) && dst.hasError())
         return setError(dst);

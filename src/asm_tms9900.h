@@ -32,12 +32,12 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRelative(InsnTms9900 &insn, const Operand &op);
-    void encodeCruOffset(InsnTms9900 &insn, const Operand &op);
-    void encodeModeReg(InsnTms9900 &insn, const Operand &op, AddrMode mode);
-    void encodeOperand(InsnTms9900 &insn, const Operand &op, AddrMode mode);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    void encodeRelative(AsmInsn &insn, const Operand &op);
+    void encodeCruOffset(AsmInsn &insn, const Operand &op);
+    void encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

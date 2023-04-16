@@ -29,8 +29,8 @@ struct TableIns8060 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(CpuType, InsnIns8060 &insn) const;
-    Error searchOpCode(CpuType, InsnIns8060 &insn, StrBuffer &out) const;
+    Error searchName(CpuType, AsmInsn &insn) const;
+    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TableIns8060 TABLE;

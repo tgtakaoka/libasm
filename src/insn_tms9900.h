@@ -24,17 +24,14 @@
 namespace libasm {
 namespace tms9900 {
 
-struct InsnTms9900 final : InsnImpl<Config, Entry> {
-    InsnTms9900(Insn &insn) : InsnImpl(insn) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     void setAddrMode(AddrMode src, AddrMode dst) { setFlags(Entry::Flags::create(src, dst)); }
+};
 
-    void readPost(DisMemory &memory) {
-        if (src() == M_SRC2)
-            setPost(readUint16(memory));
-    }
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
     void emitInsn() {
         emitUint16(opCode(), 0);
@@ -52,6 +49,15 @@ private:
         if (src() == M_SRC2 && pos < 4)
             pos = 4;
         return pos;
+    }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    void readPost() {
+        if (src() == M_SRC2)
+            setPost(readUint16());
     }
 };
 

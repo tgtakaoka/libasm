@@ -31,14 +31,14 @@ public:
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
-    Error decodeRelative(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);
-    Error decodeBitAddr(DisMemory &memory, InsnI8051 &insn, StrBuffer &out);
-    Error decodeRReg(InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeAddress(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeImmediate(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeOperand(DisMemory &memory, InsnI8051 &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeBitAddr(DisInsn &insn, StrBuffer &out);
+    Error decodeRReg(DisInsn &insn, StrBuffer &out, const AddrMode mode);
+    Error decodeAddress(DisInsn &insn, StrBuffer &out, const AddrMode mode);
+    Error decodeImmediate(DisInsn &insn, StrBuffer &out, const AddrMode mode);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

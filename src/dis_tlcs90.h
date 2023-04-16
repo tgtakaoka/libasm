@@ -34,11 +34,11 @@ public:
 private:
     const SuffixHexFormatter _hexFormatter{'h'};
 
-    Error readOperand(DisMemory &memory, InsnTlcs90 &insn, AddrMode mode, Operand &op);
-    Error decodeRelative(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);
-    Error decodeOperand(InsnTlcs90 &insn, StrBuffer &out, AddrMode mode, const Operand &op);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error readOperand(DisInsn &insn, AddrMode mode, Operand &op);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

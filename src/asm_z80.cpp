@@ -44,7 +44,7 @@ AsmZ80::AsmZ80(const ValueParser::Plugins &plugins) : Assembler(nullptr, plugins
     reset();
 }
 
-void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
+void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, op);
@@ -53,7 +53,7 @@ void AsmZ80::encodeRelative(InsnZ80 &insn, const Operand &op) {
     insn.emitOperand8(delta);
 }
 
-void AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
+void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) {
     const auto opc = insn.opCode();  // Bit opcode.
     insn.setOpCode(insn.prefix());   // Make 0xCB prefix as opcode.
     encodeIndexReg(insn, op.reg);    // Add 0xDD/0xFD prefix
@@ -62,7 +62,7 @@ void AsmZ80::encodeIndexedBitOp(InsnZ80 &insn, const Operand &op) {
     insn.emitInsn();
 }
 
-void AsmZ80::encodeOperand(InsnZ80 &insn, const Operand &op, AddrMode mode, const Operand &other) {
+void AsmZ80::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) {
     auto val16 = op.val16;
     switch (mode) {
     case M_IM8:
@@ -259,7 +259,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
-    InsnZ80 insn(_insn);
+    AsmInsn insn(_insn);
     Operand dstOp, srcOp;
     if (parseOperand(scan, dstOp) && dstOp.hasError())
         return setError(dstOp);

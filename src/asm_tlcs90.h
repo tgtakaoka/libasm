@@ -34,10 +34,10 @@ public:
 
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    void encodeRelative(InsnTlcs90 &insn, AddrMode mode, const Operand &op);
-    void encodeOperand(InsnTlcs90 &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
 
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

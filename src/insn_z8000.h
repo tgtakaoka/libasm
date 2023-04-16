@@ -24,10 +24,7 @@
 namespace libasm {
 namespace z8000 {
 
-struct InsnZ8000 final : InsnImpl<Config, Entry> {
-    InsnZ8000(Insn &insn) : InsnImpl(insn), _memory(nullptr) {}
-    InsnZ8000(Insn &insn, DisMemory &memory) : InsnImpl(insn), _memory(&memory) {}
-
+struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprSize size() const { return flags().size(); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -41,25 +38,6 @@ struct InsnZ8000 final : InsnImpl<Config, Entry> {
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
         setFlags(Entry::Flags::create(dst, src, ex1, ex2));
     }
-
-    void readPost() {
-        if (_memory)
-            setPost(readUint16(*_memory));
-    }
-
-    void emitInsn() {
-        emitUint16(opCode(), 0);
-        const PostFormat format = postFormat();
-        if (format == PF_0XX8)
-            embedPost(0x8);
-        if (format == PF_0XXE)
-            embedPost(0xE);
-        if (format != PF_NONE)
-            emitUint16(post(), 2);
-    }
-    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
-
     bool isThreeRegsInsn() const {
         const uint8_t opc = opCode() >> 8;
         return opc == 0xB8 || opc == 0xBA || opc == 0xBB;
@@ -76,16 +54,36 @@ struct InsnZ8000 final : InsnImpl<Config, Entry> {
         const uint8_t opc = (opCode() >> 8) & ~0xC0;
         return opc == 0x11 || opc == 0x13 || opc == 0x15 || opc == 0x17;
     }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    void emitInsn() {
+        emitUint16(opCode(), 0);
+        const PostFormat format = postFormat();
+        if (format == PF_0XX8)
+            embedPost(0x8);
+        if (format == PF_0XXE)
+            embedPost(0xE);
+        if (format != PF_NONE)
+            emitUint16(post(), 2);
+    }
+    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
+    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
 
 private:
-    DisMemory *const _memory;
-
     uint8_t operandPos() {
         uint8_t pos = length();
         if (pos == 0)
             pos = postFormat() != PF_NONE ? 4 : 2;
         return pos;
     }
+};
+
+struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
+    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+
+    void readPost() { setPost(readUint16()); }
 };
 
 }  // namespace z8000

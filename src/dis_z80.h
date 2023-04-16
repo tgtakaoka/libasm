@@ -37,11 +37,11 @@ private:
     StrBuffer &outIndexOffset(StrBuffer &out, RegName reg, int8_t offset);
     StrBuffer &outDataReg(StrBuffer &out, RegName reg);
 
-    Error decodeIndexedBitOp(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
-    Error decodeRelative(DisMemory &memory, InsnZ80 &insn, StrBuffer &out);
-    Error decodeOperand(DisMemory &memory, InsnZ80 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeIndexedBitOp(DisInsn &insn, StrBuffer &out);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

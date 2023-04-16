@@ -37,9 +37,9 @@ private:
     Error outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base);
     Error outIndirect(StrBuffer &out, Config::opcode_t opc);
     StrBuffer &outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode);
-    Error decodeOperand(DisMemory &memory, InsnMn1610 &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
 };

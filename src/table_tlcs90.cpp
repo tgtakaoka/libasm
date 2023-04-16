@@ -584,11 +584,11 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static void searchPageSetup(InsnTlcs90 &insn, const EntryPage *page) {
+static void searchPageSetup(AsmInsn &insn, const EntryPage *page) {
     insn.setPrefixMode(page->mode());
 }
 
-static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto table = entry->flags();
     auto tableDst = table.dst();
     auto tableSrc = table.src();
@@ -597,7 +597,7 @@ static bool acceptModes(InsnTlcs90 &insn, const Entry *entry) {
     return acceptMode(insn.dst(), dst) && acceptMode(insn.src(), src);
 }
 
-static void readCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *page) {
+static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
     Cpu::defaultReadCode(insn, entry, page);
 
     // Update prefix mode.
@@ -615,12 +615,12 @@ static void readCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *page
     }
 }
 
-Error TableTlcs90::searchName(CpuType cpuType, InsnTlcs90 &insn) const {
+Error TableTlcs90::searchName(CpuType cpuType, AsmInsn &insn) const {
     TLCS90_CPU.searchName(insn, acceptModes, searchPageSetup, readCode);
     return insn.getError();
 }
 
-static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *page) {
+static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
@@ -636,7 +636,7 @@ static bool matchOpCode(InsnTlcs90 &insn, const Entry *entry, const EntryPage *p
     return opCode == entry->opCode();
 }
 
-Error TableTlcs90::searchOpCode(CpuType cpuType, InsnTlcs90 &insn, StrBuffer &out) const {
+Error TableTlcs90::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     TLCS90_CPU.searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }

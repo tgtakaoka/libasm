@@ -80,7 +80,7 @@ static bool isGenMode(AddrMode mode) {
            mode == M_FENW;
 }
 
-static uint8_t getOprField(const InsnNs32000 &insn, OprPos pos) {
+static uint8_t getOprField(const DisInsn &insn, OprPos pos) {
     if (pos == P_GEN1)
         return (insn.hasPost() ? insn.post() : insn.opCode()) >> 3;
     if (pos == P_GEN2 && insn.hasPost()) {
@@ -105,9 +105,9 @@ static bool isScaledIndex(uint8_t gen) {
     return gen >= 0x1c;
 }
 
-Error DisNs32000::readIndexByte(DisMemory &memory, InsnNs32000 &insn, AddrMode mode, OprPos pos) {
+Error DisNs32000::readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) {
     if (isGenMode(mode) && isScaledIndex(getOprField(insn, pos)))
-        insn.setIndexByte(insn.readByte(memory), pos);
+        insn.setIndexByte(insn.readByte(), pos);
     return setError(insn);
 }
 
@@ -122,8 +122,8 @@ StrBuffer &DisNs32000::outDisplacement(StrBuffer &out, const Displacement &disp)
     }
 }
 
-Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displacement &disp) {
-    const uint8_t head = insn.readByte(memory);
+Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
+    const uint8_t head = insn.readByte();
     if ((head & 0x80) == 0) {
         // 0xxx|xxxx
         // Sign extends 7-bit number as 0x40 is a sign bit.
@@ -131,7 +131,7 @@ Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displac
         disp.bits = 7;
     } else {
         // Sign extends 14-bit number as 0x2000 is a sign bit.
-        const auto lsb = insn.readByte(memory);
+        const auto lsb = insn.readByte();
         const auto val16 = (static_cast<uint16_t>(head) << 8) | lsb;
         if ((head & 0x40) == 0) {
             // 10xx|xxxx
@@ -141,7 +141,7 @@ Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displac
             // 11xx|xxxx
             if (head == 0xE0)
                 return setError(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
-            const auto lsw = insn.readUint16(memory);
+            const auto lsw = insn.readUint16();
             const auto val32 = (static_cast<uint32_t>(val16) << 16) | lsw;
             disp.val32 = signExtend(val32, 30);
             disp.bits = 30;
@@ -152,10 +152,9 @@ Error DisNs32000::readDisplacement(DisMemory &memory, InsnNs32000 &insn, Displac
     return setError(insn);
 }
 
-Error DisNs32000::decodeLength(
-        DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
+Error DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     Displacement disp;
-    if (readDisplacement(memory, insn, disp))
+    if (readDisplacement(insn, disp))
         return getError();
     if (disp.val32 < 0)
         return setError(ILLEGAL_CONSTANT);
@@ -177,11 +176,10 @@ Error DisNs32000::decodeLength(
     return OK;
 }
 
-Error DisNs32000::decodeBitField(
-        DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
+Error DisNs32000::decodeBitField(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     if (mode == M_BFLEN)
         return OK;
-    const uint8_t data = insn.readByte(memory);
+    const uint8_t data = insn.readByte();
     const uint8_t len = (data & 0x1F) + 1;
     const uint8_t off = (data >> 5);
     outHex(out, off, 3);  // M_BFOFF
@@ -190,32 +188,31 @@ Error DisNs32000::decodeBitField(
     return setError(insn);
 }
 
-Error DisNs32000::decodeImmediate(
-        DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
+Error DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const auto size = (mode == M_GENC) ? SZ_BYTE : insn.size();
     switch (size) {
     case SZ_BYTE:
         if (mode == M_GENC) {
-            outDec(out, static_cast<int8_t>(insn.readByte(memory)), -8);
+            outDec(out, static_cast<int8_t>(insn.readByte()), -8);
         } else {
-            outHex(out, insn.readByte(memory), 8);
+            outHex(out, insn.readByte(), 8);
         }
         break;
     case SZ_WORD:
-        outHex(out, insn.readUint16(memory), 16);
+        outHex(out, insn.readUint16(), 16);
         break;
     case SZ_DOUBLE:
-        outHex(out, insn.readUint32(memory), 32);
+        outHex(out, insn.readUint32(), 32);
         break;
     case SZ_FLOAT:
         if (_floatPrefix)
             out.letter('0').letter('f');
-        out.format_P(PSTR("%.8g"), insn.readFloat32(memory));
+        out.format_P(PSTR("%.8g"), insn.readFloat32());
         break;
     case SZ_LONG:
         if (_floatPrefix)
             out.letter('0').letter('f');
-        out.format_P(PSTR("%.16lg"), insn.readFloat64(memory));
+        out.format_P(PSTR("%.16lg"), insn.readFloat64());
         break;
     default:
         break;
@@ -223,10 +220,9 @@ Error DisNs32000::decodeImmediate(
     return setError(insn);
 }
 
-Error DisNs32000::decodeDisplacement(
-        DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode) {
+Error DisNs32000::decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     Displacement disp;
-    if (readDisplacement(memory, insn, disp))
+    if (readDisplacement(insn, disp))
         return getError();
     if (mode == M_LEN32) {
         if (disp.val32 <= 0)
@@ -240,22 +236,22 @@ Error DisNs32000::decodeDisplacement(
     return OK;
 }
 
-Error DisNs32000::decodeRelative(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out) {
+Error DisNs32000::decodeRelative(DisInsn &insn, StrBuffer &out) {
     Displacement disp;
-    if (readDisplacement(memory, insn, disp))
+    if (readDisplacement(insn, disp))
         return getError();
     const auto target = branchTarget(insn.address(), disp.val32);
     outRelAddr(out, target, insn.address(), disp.bits);
     return getError();
 }
 
-Error DisNs32000::decodeConfig(const InsnNs32000 &insn, StrBuffer &out, OprPos pos) {
+Error DisNs32000::decodeConfig(const DisInsn &insn, StrBuffer &out, OprPos pos) {
     const uint8_t configs = getOprField(insn, pos);
     outConfigNames(out, configs);
     return OK;
 }
 
-Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, StrBuffer &out, OprPos pos) {
+Error DisNs32000::decodeStrOpt(const DisInsn &insn, StrBuffer &out, OprPos pos) {
     const uint8_t strOpts = getOprField(insn, pos);
     if (_stringOptionBracket)
         out.letter('[');
@@ -265,8 +261,8 @@ Error DisNs32000::decodeStrOpt(const InsnNs32000 &insn, StrBuffer &out, OprPos p
     return OK;
 }
 
-Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out) {
-    uint8_t list = insn.readByte(memory);
+Error DisNs32000::decodeRegisterList(DisInsn &insn, StrBuffer &out) {
+    uint8_t list = insn.readByte();
     if (setError(insn))
         return getError();
     if (list == 0)
@@ -291,8 +287,7 @@ Error DisNs32000::decodeRegisterList(DisMemory &memory, InsnNs32000 &insn, StrBu
     return OK;
 }
 
-Error DisNs32000::decodeGeneric(
-        DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
+Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
     uint8_t gen = getOprField(insn, pos);
     auto index = REG_UNDEF;
     auto size = SZ_NONE;
@@ -332,7 +327,7 @@ Error DisNs32000::decodeGeneric(
     case 14:
     case 15:  // M_RREL
         reg = decodeRegName(gen);
-        if (readDisplacement(memory, insn, disp))
+        if (readDisplacement(insn, disp))
             return getError();
         outDisplacement(out, disp);
         outRegName(out.letter('('), reg).letter(')');
@@ -347,9 +342,9 @@ Error DisNs32000::decodeGeneric(
         reg = REG_SB;
         goto m_mrel;
     m_mrel:  // M_MREL
-        if (readDisplacement(memory, insn, disp))
+        if (readDisplacement(insn, disp))
             return getError();
-        if (readDisplacement(memory, insn, disp2))
+        if (readDisplacement(insn, disp2))
             return getError();
         if (reg != REG_EXT || disp2.val32)
             outDisplacement(out, disp2).letter('(');
@@ -363,9 +358,9 @@ Error DisNs32000::decodeGeneric(
     case 0x14:  // M_IMM
         if (mode == M_GENW || mode == M_GENA || mode == M_FENW || scaledIndex)
             return setError(OPERAND_NOT_ALLOWED);
-        return decodeImmediate(memory, insn, out, mode);
+        return decodeImmediate(insn, out, mode);
     case 0x15:  // M_ABS
-        if (readDisplacement(memory, insn, disp))
+        if (readDisplacement(insn, disp))
             return getError();
         // Check absolute address is in 24bit unsigned integer range.
         if (overflowUint(disp.val32, addressWidth()))
@@ -377,9 +372,9 @@ Error DisNs32000::decodeGeneric(
             reg = REG_EXT;
             goto m_mrel;
         }
-        if (readDisplacement(memory, insn, disp))
+        if (readDisplacement(insn, disp))
             return getError();
-        if (readDisplacement(memory, insn, disp2))
+        if (readDisplacement(insn, disp2))
             return getError();
         outRegName(out, REG_EXT);
         outDisplacement(out.letter('('), disp).letter(')');
@@ -405,7 +400,7 @@ Error DisNs32000::decodeGeneric(
     case 0x1B:
         reg = REG_PC;
     m_mem:  // M_MEM
-        if (readDisplacement(memory, insn, disp))
+        if (readDisplacement(insn, disp))
             return getError();
         if (reg == REG_PC) {
             const Config::uintptr_t target = insn.address() + disp.val32;
@@ -435,8 +430,8 @@ Error DisNs32000::decodeGeneric(
     return OK;
 }
 
-Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer &out, AddrMode mode,
-        OprPos pos, OprSize size) {
+Error DisNs32000::decodeOperand(
+        DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size) {
     const uint8_t field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
@@ -461,7 +456,7 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
     case M_SOPT:
         return decodeStrOpt(insn, out, pos);
     case M_RLST:
-        return decodeRegisterList(memory, insn, out);
+        return decodeRegisterList(insn, out);
     case M_FENW:
     case M_FENR:
         if (field < 8 && field % 2 != 0 && (size == SZ_LONG || size == SZ_QUAD))
@@ -475,22 +470,22 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
     case M_GENC:
     case M_GENA:
     decode_generic:
-        return decodeGeneric(memory, insn, out, mode, pos);
+        return decodeGeneric(insn, out, mode, pos);
     case M_INT4:
         outDec(out, static_cast<int8_t>(getOprField(insn, pos)), -4);
         break;
     case M_BFOFF:
     case M_BFLEN:
-        return decodeBitField(memory, insn, out, mode);
+        return decodeBitField(insn, out, mode);
     case M_REL:
-        return decodeRelative(memory, insn, out);
+        return decodeRelative(insn, out);
     case M_DISP:
     case M_LEN32:
-        return decodeDisplacement(memory, insn, out, mode);
+        return decodeDisplacement(insn, out, mode);
     case M_LEN16:
     case M_LEN8:
     case M_LEN4:
-        return decodeLength(memory, insn, out, mode);
+        return decodeLength(insn, out, mode);
     default:
         return setError(INTERNAL_ERROR);
     }
@@ -498,12 +493,12 @@ Error DisNs32000::decodeOperand(DisMemory &memory, InsnNs32000 &insn, StrBuffer 
 }
 
 Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    InsnNs32000 insn(_insn, memory);
-    Config::opcode_t opCode = insn.readByte(memory);
+    DisInsn insn(_insn, memory);
+    Config::opcode_t opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.isPrefixCode(_cpuSpec, opCode)) {
         const Config::opcode_t prefix = opCode;
-        opCode = insn.readByte(memory);
+        opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
     if (setError(insn))
@@ -511,11 +506,11 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     if (TABLE.searchOpCode(_cpuSpec, insn, out))
         return setError(insn);
-    if (readIndexByte(memory, insn, insn.src(), insn.srcPos()))
+    if (readIndexByte(insn, insn.src(), insn.srcPos()))
         return getError();
-    if (readIndexByte(memory, insn, insn.dst(), insn.dstPos()))
+    if (readIndexByte(insn, insn.dst(), insn.dstPos()))
         return getError();
-    if (readIndexByte(memory, insn, insn.ex1(), insn.ex1Pos()))
+    if (readIndexByte(insn, insn.ex1(), insn.ex1Pos()))
         return getError();
 
     const auto src = insn.src();
@@ -526,23 +521,23 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (src == M_NONE)
         return setOK();
     const auto srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
-    if (decodeOperand(memory, insn, out, src, insn.srcPos(), srcSize))
+    if (decodeOperand(insn, out, src, insn.srcPos(), srcSize))
         return getError();
     if (dst == M_NONE)
         return setOK();
     out.comma();
     const auto dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
-    if (decodeOperand(memory, insn, out, dst, insn.dstPos(), dstSize))
+    if (decodeOperand(insn, out, dst, insn.dstPos(), dstSize))
         return getError();
     if (ex1 == M_NONE)
         return setOK();
     out.comma();
-    if (decodeOperand(memory, insn, out, ex1, insn.ex1Pos(), size))
+    if (decodeOperand(insn, out, ex1, insn.ex1Pos(), size))
         return getError();
     if (ex2 == M_NONE || ex2 == M_BFLEN)
         return setOK();
     out.comma();
-    if (decodeOperand(memory, insn, out, ex2, insn.ex2Pos(), size))
+    if (decodeOperand(insn, out, ex2, insn.ex2Pos(), size))
         return getError();
     return setOK();
 }
