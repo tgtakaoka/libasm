@@ -10,16 +10,16 @@
 
 [platformio]
 src_dir = .
-default_envs = nano_every, nano_33_iot, pico
+default_envs = atmega644p, nano_every, nano_33_iot, pico
 
 [env]
 lib_deps =
-         tgtakaoka/libcli@1.3.0
+         tgtakaoka/libcli@1.2.4
          tgtakaoka/libasm@1.6.29
 
-[env:promicro16]
+[env:atmega644p]
 platform = atmelavr
-board = sparkfun_promicro16
+board = ATmega644P
 framework = arduino
 
 [env:nano_every]

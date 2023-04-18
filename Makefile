@@ -17,7 +17,7 @@ help:
 	@echo '"make test"   run test'
 	@echo '"make pio"    run PlatformIO CI'
 
-PIO_CI_BOARDS=nano_every nano_33_iot pico
+PIO_CI_BOARDS=ATmega644P nano_every nano_33_iot pico
 _BOARDS=$(foreach b,$(PIO_CI_BOARDS),--board=$(b))
 
 test:

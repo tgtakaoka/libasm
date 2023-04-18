@@ -72,6 +72,6 @@ jobs:
       - name: Install library dependency
         run: pio lib install libcli@1.3.0
       - name: Run PlatformIO
-        run: pio ci --lib="." --board=nano_every --board=nano_33_iot --board=pico
+        run: pio ci --lib="." --board=ATmega644P --board=nano_every --board=nano_33_iot --board=pico
         env:
           PLATFORMIO_CI_SRC: ./examples/${{ matrix.arch }}/${{ matrix.arch }}.ino
