@@ -16,6 +16,7 @@
 
 #include "asm_i8080.h"
 
+#include "operators.h"
 #include "reg_i8080.h"
 #include "table_i8080.h"
 
@@ -36,6 +37,9 @@ const ValueParser::Plugins &AsmI8080::defaultPlugins() {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION};
+        const OperatorParser &operators() const override {
+            return IntelOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }

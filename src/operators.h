@@ -117,12 +117,17 @@ struct OperatorParser {
             StrScanner &scan, ErrorAt &error, Operator::Type type) const = 0;
 };
 
-struct CStyleOperatorParser : OperatorParser, Singleton<CStyleOperatorParser> {
+struct CStyleOperatorParser final : OperatorParser, Singleton<CStyleOperatorParser> {
     const Operator *readOperator(
             StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
 };
 
-struct Mc68xxOperatorParser : OperatorParser, Singleton<Mc68xxOperatorParser> {
+struct Mc68xxOperatorParser final : OperatorParser, Singleton<Mc68xxOperatorParser> {
+    const Operator *readOperator(
+            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
+};
+
+struct IntelOperatorParser final : OperatorParser, Singleton<IntelOperatorParser> {
     const Operator *readOperator(
             StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
 };

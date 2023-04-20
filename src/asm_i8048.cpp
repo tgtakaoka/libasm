@@ -18,6 +18,7 @@
 
 #include <ctype.h>
 
+#include "operators.h"
 #include "reg_i8048.h"
 #include "table_i8048.h"
 
@@ -36,6 +37,9 @@ struct AsmI8048::Operand final : ErrorAt {
 const ValueParser::Plugins &AsmI8048::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
+        const OperatorParser &operators() const override {
+            return IntelOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }

@@ -18,6 +18,7 @@
 
 #include <ctype.h>
 
+#include "operators.h"
 #include "reg_i8051.h"
 #include "table_i8051.h"
 
@@ -31,6 +32,9 @@ const ValueParser::Plugins &AsmI8051::defaultPlugins() {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const SimpleSymbolParser _symbol{SymbolParser::QUESTION, SymbolParser::NONE};
+        const OperatorParser &operators() const override {
+            return IntelOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }

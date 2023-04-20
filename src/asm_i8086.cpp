@@ -16,6 +16,7 @@
 
 #include "asm_i8086.h"
 
+#include "operators.h"
 #include "table_i8086.h"
 
 namespace libasm {
@@ -59,6 +60,9 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION};
+        const OperatorParser &operators() const override {
+            return IntelOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }

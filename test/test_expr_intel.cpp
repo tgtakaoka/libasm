@@ -16,12 +16,15 @@
 
 #include "test_expr_helper.h"
 
+#include "operators.h"
+
 using namespace libasm;
 using namespace libasm::test;
 
 const struct IntelPlugins : ValueParser::Plugins {
     const NumberParser &number() const override { return IntelNumberParser::singleton(); }
     const SymbolParser &symbol() const override { return _symbol; }
+    const OperatorParser &operators() const override { return IntelOperatorParser::singleton(); }
     const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION, SymbolParser::NONE};
 } plugins{};
 struct : ValueParser::Locator {
@@ -161,6 +164,130 @@ static void test_bin_constant() {
     E32("0b10000000000000000000000000000000",  0x80000000);
     E32("0b11111111111111111111111111111111",  0xffffffff);
     X32("0b100000000000000000000000000000000", OVERFLOW_RANGE, "0b100000000000000000000000000000000");
+}
+
+static void test_unary_operator() {
+    E8("NOT +0",    0xFF);
+    E8("NOT (1|8)", 0xF6);
+    E8("NOT -1",    0x00);
+
+    E16("NOT 0x0",     0xFFFF);
+    E16("NOT (1|010)", 0xFFF6);
+    E16("NOT -0b1",    0x0000);
+
+    E32("NOT +0",    0xFFFFFFFF);
+    E32("NOT (1|8)", 0xFFFFFFF6);
+    E32("NOT -1",    0x00000000);
+
+    E16("HIGH 1234H", 0x12);
+    E16("LOW  1234H", 0x34);
+
+    E16("HIGH 1234H+1", 0x13); // (HIGH 1234H) + 1
+    E16("LOW  1234H+1", 0x35); // (LOW 1234H) + 1
+
+    E16("NOT HIGH 1234H", 0xFFED); // NOT (HIGH 1234H)
+    E16("HIGH (NOT 1234H)", 0xED); // HIGH (NOT 1234H)
+
+    E32("HIGH LSW 12345678H", 0x56); // HIGH (LSW 12345678H)
+    E32("LOW MSW 12345678H", 0x34);  // LOW (MSW 12345678H)
+}
+
+static void test_binary_operator() {
+    E8("( 20) MOD ( 3)",  2);
+    E8("( 20) MOD (-3)",  2);
+    E8("(-20) MOD ( 3)", -2);
+    E8("(-20) MOD (-3)", -2);
+
+    E8("1 SHL 0", 1);
+    E8("1 SHL 7", 128);
+    X8("1 SHL 8", OVERFLOW_RANGE, "1 SHL 8");
+    E8("0 SHL 8", 0);
+    E8("-1 SHR 8", 0);        // logical shift
+    X8("-1 SHL 8", OVERFLOW_RANGE, "-1 SHL 8");
+    E8("-128 SHR 1", -64);
+    E8("-128 SHR 7", 255);
+    E8("-128 SHR 8", 0);      // logical shift
+    E8("0x80 SHR 7", 0x01);
+    E8("0x80 SHR 8", 0);
+    E8("0xFF SHR 4", 0x0F);
+    X8("0xFF SHL 4", OVERFLOW_RANGE, "0xFF SHL 4");
+    E8("(0xFF SHL 4)&0xFF", 0xF0);
+
+    E8("0b0001 OR 0b0100", 0x05);
+    E8("0b1011 AND 0b0110", 0x02);
+    E8("0b0110 XOR 0b0011", 0x05);
+
+    E32("( 20) MOD ( 3)",  2);
+    E32("( 20) MOD (-3)",  2);
+    E32("(-20) MOD ( 3)", -2);
+    E32("(-20) MOD (-3)", -2);
+
+    E32("0x00000001 SHL 31", 0); // 16 bit value
+    E32("0x00000001 SHL 32", 0);
+    E32("0x80000000 SHR 31", 0); // 16 bit value
+    E32("0x80000000 SHR 32", 0);
+    E32("1 SHR (-1)", 0);
+    E32("1 SHL (-1)", 0);
+    E32("-1 SHL 31", 0);        // 16 bit value
+    E32("-1 SHL 32", 0);
+    E32("-1 SHR 31", 0);        // 16 bit value
+    E32("-1 SHR 32", 0);        // 16 bit value
+
+    E32("0b0001 OR 0b0100", 0x05);
+    E32("0b1011 AND 0b0110", 0x02);
+    E32("0b0110 XOR -1",    0xfffffff9);
+}
+
+static void test_precedence() {
+    E16("1+2-3+4",    4);
+    E16("1+2*3+4",   11);
+    E16("1+2-7/3",    1);
+    E16("1-8 MOD 3*3",   -5);
+    E16("(1+2)*3+4", 13);
+    E16("1+(2-7)/3",  0);
+    E16("(1-8) MOD 3*3", -3);
+
+    E8("1 SHL 2+3", 7);  // (1 SHL 2) + 3
+    E8("(1 SHL 2)+3" , 7);
+    E8("1 SHL 2*3", 12); // (1 SHL 2) * 3
+    E8("(1 SHL 2)*3", 12);
+    E8("0x20 SHR 2+3",   11); // (0x20 SHR 2) + 3
+    E8("(0x20 SHR 2)+3", 11);
+    E8("0x40 SHR 2*3",   48); // (0x40 SHR 2) * 3
+    E8("(0x40 SHR 2)*3", 48);
+
+    E8("1 SHL 4 SHR 1",   8);
+    E8("1 SHL (4 SHR 1)", 4);
+    E8("4 SHR 1 SHL 1",   4);
+    E8("4 SHR (1 SHL 1)", 1);
+
+    E8("1 OR 2 AND 6 XOR 8", 11);
+    E8("1 OR 2 XOR 4 AND 12", 7);
+    E8("1 AND 3 OR 4 XOR 8", 13);
+    E8("1 XOR 2 OR 4 AND 12", 7);
+    E8("1 AND 3 XOR 4 OR 8", 13);
+    E8("1 XOR 2 AND 6 OR 8", 11);
+
+    E8("(1 OR 2) AND 6 XOR 8", 10);
+    E8("(1 OR 2) XOR 4 AND 12", 7);
+    E8("1 AND (3 OR 4) XOR 8",  9);
+    E8("1 XOR (2 OR 4) AND 12", 5);
+    E8("1 AND 3 XOR (4 OR 8)", 13);
+    E8("1 XOR 2 AND (6 OR 8)",  3);
+
+    E8("1 OR 2 AND (6 XOR 8)",  3);
+    E8("1 OR (2 XOR 4) AND 12", 5);
+    E8("1 AND 3 OR (4 XOR 8)", 13);
+    E8("(1 XOR 2) OR 4 AND 12", 7);
+    E8("1 AND (3 XOR 4) OR 8",  9);
+    E8("(1 XOR 2) AND 6 OR 8", 10);
+
+    E8("1 OR 2 SHL 3",   17);
+    E8("(1 OR 2) SHL 3", 24);
+    E8("3 AND 7 SHL 1",    2);
+    E8("(3 AND 7) SHL 1",  6);
+    E8("1 XOR 3 SHL 3",   25);
+    E8("(1 XOR 3) SHL 3", 16);
 }
 
 static void test_current_address() {
@@ -590,6 +717,9 @@ void run_tests() {
     RUN_TEST(test_hex_constant);
     RUN_TEST(test_oct_constant);
     RUN_TEST(test_bin_constant);
+    RUN_TEST(test_unary_operator);
+    RUN_TEST(test_binary_operator);
+    RUN_TEST(test_precedence);
     RUN_TEST(test_current_address);
     RUN_TEST(test_scan);
     RUN_TEST(test_errors);

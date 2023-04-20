@@ -16,6 +16,7 @@
 
 #include "asm_i8096.h"
 
+#include "operators.h"
 #include "reg_i8096.h"
 #include "table_i8096.h"
 
@@ -37,6 +38,9 @@ const ValueParser::Plugins &AsmI8096::defaultPlugins() {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const SimpleSymbolParser _symbol{SymbolParser::QUESTION};
+        const OperatorParser &operators() const override {
+            return IntelOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }

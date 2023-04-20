@@ -16,9 +16,9 @@
 
 #include "operators.h"
 
-#include "str_scanner.h"
-
 #include <ctype.h>
+
+#include "str_scanner.h"
 
 namespace libasm {
 
@@ -395,7 +395,7 @@ static Error rotate_right_16bit(ValueStack &stack) {
 
 static Error logical_shift_left_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
-    const auto lhs = stack.pop().getUnsigned();
+    const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
     stack.pushUnsigned(shift_left(lhs, rhs) & 0xFFFF);
     return OK;
 }
@@ -403,7 +403,7 @@ static Error logical_shift_left_16bit(ValueStack &stack) {
 static Error logical_shift_right_16bit(ValueStack &stack) {
     const auto rhs = stack.pop().getUnsigned();
     const auto lhs = stack.pop().getUnsigned() & 0xFFFF;
-    stack.pushUnsigned(shift_right(lhs, rhs));
+    stack.pushUnsigned(shift_right(lhs, rhs) & 0xFFFF);
     return OK;
 }
 
@@ -445,6 +445,109 @@ const Operator *Mc68xxOperatorParser::readOperator(
                 scan = p;
                 return opr;
             }
+        }
+    }
+    return CStyleOperatorParser::singleton().readOperator(scan, error, type);
+}
+
+static Error most_siginificant_byte(ValueStack &stack) {
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned((v >> 8) & 0xFF);
+    return OK;
+}
+
+static Error least_significant_byte(ValueStack &stack) {
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned(v & 0xFF);
+    return OK;
+}
+
+static Error most_siginificant_word(ValueStack &stack) {
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned((v >> 16) & 0xFFFF);
+    return OK;
+}
+
+static Error least_significant_word(ValueStack &stack) {
+    const auto v = stack.pop().getUnsigned();
+    stack.pushUnsigned(v & 0xFFFF);
+    return OK;
+}
+
+// clang-format off
+static const Operator INTEL_HIGH(        3, R, 1, most_siginificant_byte);
+static const Operator INTEL_LOW(         3, R, 1, least_significant_byte);
+static const Operator INTEL_MSW(         3, R, 1, most_siginificant_word);
+static const Operator INTEL_LSW(         3, R, 1, least_significant_word);
+static const Operator INTEL_SHIFT_RIGHT( 5, L, 1, logical_shift_right_16bit);
+static const Operator INTEL_SHIFT_LEFT(  5, L, 1, logical_shift_left_16bit);
+static const Operator INTEL_UNARY_MINUS( 6, R, 1, unary_minus);
+static const Operator INTEL_UNARY_PLUS(  6, R, 1, unary_plus);
+static const Operator INTEL_LOGICAL_EQ(  9, N, 2, logical_equal);
+static const Operator INTEL_LOGICAL_NE(  9, N, 2, logical_not_equal);
+static const Operator INTEL_BITWISE_NOT(10, R, 1, bitwise_not);
+static const Operator INTEL_BITWISE_AND(11, L, 2, bitwise_and);
+static const Operator INTEL_BITWISE_XOR(12, L, 2, bitwise_xor);
+static const Operator INTEL_BITWISE_OR( 12, L, 2, bitwise_or);
+// clang-format on
+
+const Operator *IntelOperatorParser::readOperator(
+        StrScanner &scan, ErrorAt &error, Operator::Type type) const {
+    auto p = scan;
+    // TODO: Use SymbolParser
+    p.trimStart(isalnum);
+    const StrScanner name(scan.str(), p.str());
+    const Operator *opr = nullptr;
+    if (type == Operator::PREFIX) {
+        if (scan.expect('-')) {
+            return &INTEL_UNARY_MINUS;
+        } else if (scan.expect('+')) {
+            return &INTEL_UNARY_PLUS;
+        }
+        if (name.iequals_P(PSTR("NOT"))) {
+            opr = &INTEL_BITWISE_NOT;
+        } else if (name.iequals_P(PSTR("HIGH"))) {
+            opr = &INTEL_HIGH;
+        } else if (name.iequals_P(PSTR("LOW"))) {
+            opr = &INTEL_LOW;
+        } else if (name.iequals_P(PSTR("MSW"))) {
+            opr = &INTEL_MSW;
+        } else if (name.iequals_P(PSTR("LSW"))) {
+            opr = &INTEL_LSW;
+        }
+        if (opr) {
+            scan += name.size();
+            return opr;
+        }
+    } else if (type == Operator::INFIX) {
+        if (name.iequals_P(PSTR("MOD"))) {
+            opr = &OP_MOD;
+        } else if (name.iequals_P(PSTR("AND"))) {
+            opr = &INTEL_BITWISE_AND;
+        } else if (name.iequals_P(PSTR("OR"))) {
+            opr = &INTEL_BITWISE_OR;
+        } else if (name.iequals_P(PSTR("XOR"))) {
+            opr = &INTEL_BITWISE_XOR;
+        } else if (name.iequals_P(PSTR("SHR"))) {
+            opr = &INTEL_SHIFT_RIGHT;
+        } else if (name.iequals_P(PSTR("SHL"))) {
+            opr = &INTEL_SHIFT_LEFT;
+        } else if (name.iequals_P(PSTR("EQ"))) {
+            opr = &INTEL_LOGICAL_EQ;
+        } else if (name.iequals_P(PSTR("NE"))) {
+            opr = &INTEL_LOGICAL_NE;
+        } else if (name.iequals_P(PSTR("LT"))) {
+            opr = &OP_LOGICAL_LT;
+        } else if (name.iequals_P(PSTR("LE"))) {
+            opr = &OP_LOGICAL_LE;
+        } else if (name.iequals_P(PSTR("GE"))) {
+            opr = &OP_LOGICAL_GE;
+        } else if (name.iequals_P(PSTR("GT"))) {
+            opr = &OP_LOGICAL_GT;
+        }
+        if (opr) {
+            scan += name.size();
+            return opr;
         }
     }
     return CStyleOperatorParser::singleton().readOperator(scan, error, type);
