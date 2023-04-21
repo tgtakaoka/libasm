@@ -35,7 +35,7 @@ enum AddrMode : uint8_t {
     M_C012 = 6,   // eq/gt/lt: Condition code
     M_REL7 = 7,   // (*)a: Relative, 7 bit, optionally indirect
     M_ABS7 = 8,   // (*)a: First page relative. 7 bit. optionally indirect.
-    M_AB13 = 9,   // (*)a: Absolute, 13 bit, optionnally indirect
+    M_AB13 = 9,   // (*)a: Absolute, 13 bit, optionally indirect
     M_IX13 = 10,  // (*)a,rx(,[+-]): Indexed, 13bit (indirect and auto increment/decrement)
     M_IX15 = 11,  // (*)a,r3: Indexed with r3, 15bit, optionally indirect
     M_AB15 = 12,  // (*)a: Absolute jump, 15 bit, optionally indirect

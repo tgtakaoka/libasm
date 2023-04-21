@@ -26,8 +26,8 @@ namespace table {
 /**
  * Base class for any table in PROGMEM.
  *
- * A table consists of a constant araay of |ITEM| in PROGMEM. So that special consideration, such as
- * using |pgm_read_byte| etc., is necessary to read any conents via |ITEM| pointer.
+ * A table consists of a constant array of |ITEM| in PROGMEM. So that special consideration, such as
+ * using |pgm_read_byte| etc., is necessary to read any contents via |ITEM| pointer.
  */
 template <typename /*PROGMEM*/ ITEM>
 struct Table {

@@ -50,7 +50,7 @@ public:
     /** dereference; returns character at the head, or 0 otherwise */
     char operator*() const { return (*this)[0]; }
 
-    /** indexing; character at offset delta, 0 if delte beyonds end */
+    /** indexing; character at offset delta, 0 if |delt| beyonds end */
     char operator[](int delta) const {
         const char *p = _str + delta;
         return p < _end ? *p : 0;

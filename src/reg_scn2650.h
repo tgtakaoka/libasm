@@ -35,7 +35,7 @@ enum CcName : int8_t {
     CC_UNDEF = -1,
     CC_EQ = 0,  // Equal, Zero
     CC_GT = 1,  // Greater Than, Positive
-    CC_LT = 2,  // Less Than, Negavtive
+    CC_LT = 2,  // Less Than, Negative
     CC_UN = 3,  // Unconditional, Always
 };
 

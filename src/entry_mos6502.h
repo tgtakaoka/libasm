@@ -45,7 +45,7 @@ enum AddrMode : uint8_t {
     I_REGX = 2 | indir_bm,  // Indirect X: (S)
     M_REGY = 3,             // Index register: Y
     M_REGS = 4,             // Stack pointer: S
-    I_REGS = 4 | indir_bm,  // Stack indirec: (S)
+    I_REGS = 4 | indir_bm,  // Stack indirect: (S)
     // Memory addressing
     M_IMA = 5,              // Immediate for A: #nn
     M_IMX = 6,              // Immediate for X: #nn
@@ -73,7 +73,7 @@ enum AddrMode : uint8_t {
     // Absolute long indexed with X:         M_ABSL, M_REGX, M_NONE
     // Absolute long indirect:               L_ABS,  M_NONE, M_NONE
     // Stack relative:                       M_DPG,  M_REGS, M_NONE
-    // Stacl relative indirect indexed:      I_DPG,  I_REGS, M_REGY
+    // Stack relative indirect indexed:      I_DPG,  I_REGS, M_REGY
     // Direct page indirect long:            L_DPG,  M_NONE, M_NONE
     // Direct page indirect long indexed:    L_DPG,  M_REGY, M_NONE
     // Block move:                           M_DPG,  M_DPG,  M_NONE

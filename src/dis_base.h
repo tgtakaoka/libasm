@@ -86,22 +86,20 @@ protected:
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;
 
     /**
-     * Convert |val| as |bits| decimal integer. Treat |val| as signed
-     * integer when |bits| is negative.
+     * Convert |val| as |bits| decimal integer. Treat |val| as signed integer when |bits| is
+     * negative.
      */
     StrBuffer &outDec(StrBuffer &out, uint32_t val, int8_t bits) const;
 
     /**
-     * Convert |val| as |bits| hexadecimal integer. Treat |val| as
-     * signed integer when |bits| is negative. Output symbol label when
-     * |val| is in symbol table.
+     * Convert |val| as |bits| hexadecimal integer. Treat |val| as signed integer when |bits| is
+     * negative. Output symbol label when |val| is in symbol table.
      */
     StrBuffer &outHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax = true) const;
 
     /**
-     * Convert |val| as |addrWidth| bit absolute address. Use default
-     * configured address width when |addrWdith| is ommitted. Output
-     * symbol label when |val| is in symbol table.
+     * Convert |val| as |addrWidth| bit absolute address. Use default configured address width when
+     * |addrWdith| is omitted. Output symbol label when |val| is in symbol table.
      */
     StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
 

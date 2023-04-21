@@ -52,16 +52,14 @@ public:
           _locator(locator) {}
 
     /**
-     * Parse |scan| text and return expression |value|.  Undefined
-     * symbol reference in expression should be checked by
-     * |value.isUndefined()|. Other error should be checked by
-     * |getError()|.
+     * Parse |scan| text and return expression |value|.  Undefined symbol reference in expression
+     * should be checked by |value.isUndefined()|. Other error should be checked by |getError()|.
      */
     Value eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim = 0) const;
 
     /**
-     * Parse |scan| text and convert letter constant to |val|.
-     * Error should be checked by |getError()|.
+     * Parse |scan| text and convert letter constant to |val|.  Error should be checked by
+     * |getError()|.
      */
     char readLetter(StrScanner &scan, ErrorAt &error) const;
 

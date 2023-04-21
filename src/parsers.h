@@ -65,9 +65,9 @@ struct SymbolParser {
 struct FunctionParser : Singleton<FunctionParser> {
     /**
      * Parsing |scan| and returns a Functor pointer for a function. |scan|  should point an
-     * opening parenthes  for arguments  list.
+     * opening parenthesis  for arguments  list.
      *
-     * - Returns nullptr if no function call and |scan| shoud be unchanged.
+     * - Returns nullptr if no function call and |scan| should be unchanged.
      *
      * - Returns the no-operation varargs function which returns undefined value when |symtab| is
      *   nullptr and found '(' after function name.
@@ -86,12 +86,11 @@ struct LetterParser {
     /**
      * Parse |scan| as a letter constant.  Default style letter is enclosed by single quotes.
      *
-     * - Returns OK when |scan| is recognized as a valid letter, and
-     *   updates |scan| at the end of a letter.
-     * - Returns ILLEGAL_CONSTANT when |scan| seems a letter but not
-     *   ended as expected. |scan| is updated at the error.
-     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
-     *   letter. |scan| is unchanged.
+     * - Returns OK when |scan| is recognized as a valid letter, and updates |scan| at the end of a
+     *   letter.
+     * - Returns ILLEGAL_CONSTANT when |scan| seems a letter but not ended as expected. |scan| is
+     *   updated at the error.
+     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a letter. |scan| is unchanged.
      */
     virtual Error parseLetter(StrScanner &scan, char &letter) const;
 
@@ -107,12 +106,11 @@ struct LetterParser {
 /**
  * Parse text |scan| as a number.
  *
- * - Returns OK when |scan| is recognized as a valid number, and
- *   updates |scan| at the end of a number.
- * - Returns ILLEGAL_CONSTANT when |scan| seems a number but not
- *   ended as expected. |scan| is updated at the error.
- * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
- *   number. |scan| is unchanged.
+ * - Returns OK when |scan| is recognized as a valid number, and updates |scan| at the end of a
+ *   number.
+ * - Returns ILLEGAL_CONSTANT when |scan| seems a number but not ended as expected. |scan| is
+ *   updated at the error.
+ * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a number. |scan| is unchanged.
  */
 struct NumberParser {
     virtual Error parseNumber(StrScanner &scan, Value &val) const = 0;
@@ -153,10 +151,10 @@ struct IntelNumberParser final : NumberParser, Singleton<IntelNumberParser> {
 private:
     /**
      * Search |scan| as a |radix| based number with optional |suffix|.
-     * - Returns OK when |scan| looks a valid number, and |scan| is
-     *   updated to the end of a number including |suffix|.
-     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a
-     *   number, or lacks |suffix|.
+     *
+     * - Returns OK when |scan| looks a valid number, and |scan| is updated to the end of a number
+     *   including |suffix|.
+     * - Returns NOT_AN_EXPECTED when |scan| doesn't look like a number, or lacks |suffix|.
      */
     static Error scanNumberEnd(StrScanner &scan, Radix radix, char suffix = 0);
 };
@@ -251,8 +249,7 @@ private:
 };
 
 /**
- * Texas Instrument style numbers are the same as C-Style and '>hh' as
- * hexadecimal.
+ * Texas Instrument style numbers are the same as C-Style and '>hh' as hexadecimal.
  */
 struct TexasNumberParser final : NumberParser, Singleton<TexasNumberParser> {
     TexasNumberParser() : _intel() {}
@@ -319,8 +316,8 @@ struct MotorolaLetterParser final : LetterParser, Singleton<MotorolaLetterParser
     MotorolaLetterParser(bool closingQuote = false) : _closingQuote(closingQuote) {}
 
     /**
-     * Motorola style letter is follwed after a single quote and
-     * optionally closed with another single quote
+     * Motorola style letter is followed after a single quote and optionally closed with another
+     * single quote
      */
     Error parseLetter(StrScanner &scan, char &letter) const override;
     char readLetter(StrScanner &scan, ErrorAt &error) const override;
@@ -332,9 +329,8 @@ private:
 
 struct ZilogLetterParser final : LetterParser, Singleton<ZilogLetterParser> {
     /**
-     * Zilog style letter is follwed after a single quote and
-     * hexadecimal escape sequence with '%hh'. Also a single quote is
-     * expressed as %Q.
+     * Zilog style letter is followed after a single quote and hexadecimal escape sequence with
+     * '%hh'. Also a single quote is expressed as %Q.
      */
     char readLetter(StrScanner &scan, ErrorAt &error) const override;
 };

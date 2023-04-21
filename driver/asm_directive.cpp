@@ -141,7 +141,7 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
         auto p = scan;
         while (!p.expect(delim)) {
             if (*p == 0)
-                return setError(p, MISSING_CLOSING_DELIMITOR);
+                return setError(p, MISSING_CLOSING_DELIMITER);
             const auto c = *p++;
             list.emitByte(base, c);
         }

@@ -40,12 +40,12 @@ public:
     /**
      * Parse text |scan| as a number of |radix| based.
      *
-     * - Returns OK when |scan| is recognized as valid |radix| based
-     *   number, and updates |scan| at the end of number.
-     * - Returns OVERFLOW_RANGE when a number exceeds UINT_MAX, and
-     *   updates |scan| at the end of a number.
-     * - Returns ILLEGAL_CONSTANT when there is no valid digit found
-     *   at |scan|, and |scan} is unchanged.
+     * - Returns OK when |scan| is recognized as valid |radix| based number, and updates |scan| at
+     *   the end of number.
+     * - Returns OVERFLOW_RANGE when a number exceeds UINT_MAX, and updates |scan| at the end of a
+     *   number.
+     * - Returns ILLEGAL_CONSTANT when there is no valid digit found at |scan|, and |scan} is
+     *   unchanged.
      */
     Error parseNumber(StrScanner &scan, Radix radix);
 

@@ -43,7 +43,7 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
     case BUFFER_OVERFLOW:
         return PSTR("Buffer overflow");
     case OVERWRAP_PAGE:
-        return PSTR("Overwarp page boundary");
+        return PSTR("Overwrap page boundary");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:
@@ -126,8 +126,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Too many include");
     case NO_INCLUDE_FOUND:
         return PSTR("Include file not found");
-    case MISSING_CLOSING_DELIMITOR:
-        return PSTR("Missing closing delimitor");
+    case MISSING_CLOSING_DELIMITER:
+        return PSTR("Missing closing delimiter");
     case END_ASSEMBLE:
         return PSTR("End assemble");
 

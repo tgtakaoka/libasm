@@ -38,7 +38,7 @@ struct ValueStack : Stack<Value, 8> {
  * Immutable instance to represent a function.
  */
 struct Functor {
-    /** Returns the number of required qrguments. Negative value means variable arguments. */
+    /** Returns the number of required arguments. Negative value means variable arguments. */
     virtual int8_t nargs() const { return -1; }
     /** Evaluate function with |arguments|. */
     virtual Error eval(ValueStack &, uint8_t) const { return OK; }
@@ -101,7 +101,7 @@ struct Operator : ErrorAt {
     uint8_t stackPosition() const { return _nargs; }
 
 private:
-    /** Operator prec (smaller value means higher precedence). */
+    /** Operator precedence (smaller value means higher precedence). */
     uint8_t _prec;
     Assoc _assoc;
     int8_t _nargs;

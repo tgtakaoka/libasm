@@ -56,6 +56,7 @@ const NameEntry *searchText(StrScanner &scan, const NameEntry *begin, const Name
 
 /**
  * Parse register number from 0 to less than 20.
+ *
  * returns -1 if number is invalid or greater than |max|.
  */
 int8_t parseRegNumber(StrScanner &scan, int8_t max);

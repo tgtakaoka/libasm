@@ -20,8 +20,8 @@ namespace libasm {
 namespace reg {
 
 /**
- * Parse register number from 0 to less than 20.
- * returns -1 if number is invalid or greater than |max|.
+ * Parse register number from 0 to less than 20.  returns -1 if number is invalid or greater than
+ * |max|.
  */
 int8_t parseRegNumber(StrScanner &scan, int8_t max) {
     const auto c1 = scan.expect(isdigit);

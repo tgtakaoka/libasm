@@ -39,7 +39,7 @@ enum AddrMode : uint8_t {
     M_LS4 = 9,    // TP: [0-15]  4-bit left shift    ---- SSSS ---- ----
     M_IM8 = 10,   // TP: [0-255] 8-bit unsigned      ---- ---- KKKK KKKK
     M_MAM = 11,   // T_: [0-255] Memory addressing mode      ---- ---- Immm mmmm
-    M_PMA = 12,   // TP: [0-4095] Programm address   ---- PPPP PPPP PPPP
+    M_PMA = 12,   // TP: [0-4095] Program address    ---- PPPP PPPP PPPP
     M_IM13 = 13,  // TP: [-4096-4095] 13-bit signed  ---K KKKK KKKK KKKK
     M_ARP = 14,   // _P: "*"   Indirect addressing
     M_INC = 15,   // _P: "*+"  Indirect then auto increment addressing

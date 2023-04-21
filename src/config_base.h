@@ -67,7 +67,7 @@ struct ConfigBase {
 
     /**
      * Check |addr| is in |width| address space. When |width| is zero, |addressWidth()| will be
-     * used.  This also check whether |addr| is word alined when configutation is OPCODE_16BIT and
+     * used.  This also check whether |addr| is word aligned when configuration is OPCODE_16BIT and
      * ADDRESS_BYTE.
      */
     Error checkAddr(uint32_t addr, uint8_t width = 0) const;
