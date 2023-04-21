@@ -170,22 +170,21 @@ static bool isString(StrScanner &scan, const ValueParser &parser) {
     const auto delim = *p++;
     if (delim == '"' || delim == '\'') {
         while (true) {
-            if (*p == 0)
-                return false;
+            if (parser.endOfLine(p))
+                break;
             ErrorAt error;
             parser.readLetter(p, error);
             if (error.getError())
-                return false;
+                break;
             if (*p == delim) {
-                if (p[1] == ',')
-                    break;
-                parser.readLetter(p, error);
-                if (error.getError())
-                    break;
+                auto a = p;
+                a += 1;  // skip delim
+                if (parser.endOfLine(a.skipSpaces()) || *a == ',') {
+                    scan = p;
+                    return true;
+                }
             }
         }
-        scan = p;
-        return true;
     }
     return false;
 }
