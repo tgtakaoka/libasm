@@ -68,7 +68,7 @@ z8000::AsmZ8000 asmz8000;
 ns32000::AsmNs32000 asm32000;
 mn1610::AsmMn1610 asm1610;
 
-MotorolaDirective dir6502(asm6502);
+MostekDirective dir6502(asm6502);
 MotorolaDirective dir6800(asm6800);
 MotorolaDirective dir6805(asm6805);
 MotorolaDirective dir6809(asm6809);

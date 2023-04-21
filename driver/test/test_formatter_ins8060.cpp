@@ -30,22 +30,22 @@ void test_asm_ins8060() {
     PREP_ASM(ins8060::AsmIns8060, NationalDirective);
 
     ASM("ins8060",
-            "        cpu   ins8060\n"
+            "        cpu    ins8060\n"
             "; comment line\n"
-            "label:  org   x'abcd\n"
-            "        and   @e(p1)\n"
-            "        db    h(label)\n"
-            "        db    l(label)\n"
-            "        dw    addr(label)\n"
-            "        dw    addr(x'1000)\n",
-            "          0 :                            cpu   ins8060\n"
+            "label:  .=     x'abcd\n"
+            "        and    @e(p1)\n"
+            "        .byte  h(label)\n"
+            "        .byte  l(label)\n"
+            "        .dbyte addr(label)\n"
+            "        .dbyte addr(x'1000)\n",
+            "          0 :                            cpu    ins8060\n"
             "          0 :                    ; comment line\n"
-            "       ABCD :                    label:  org   x'abcd\n"
-            "       ABCD : D5 80                      and   @e(p1)\n"
-            "       ABCF : AB                         db    h(label)\n"
-            "       ABD0 : CD                         db    l(label)\n"
-            "       ABD1 : CC AB                      dw    addr(label)\n"
-            "       ABD3 : FF 1F                      dw    addr(x'1000)\n");
+            "       ABCD :                    label:  .=     x'abcd\n"
+            "       ABCD : D5 80                      and    @e(p1)\n"
+            "       ABCF : AB                         .byte  h(label)\n"
+            "       ABD0 : CD                         .byte  l(label)\n"
+            "       ABD1 : CC AB                      .dbyte addr(label)\n"
+            "       ABD3 : FF 1F                      .dbyte addr(x'1000)\n");
 }
 
 void test_dis_ins8060() {

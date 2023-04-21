@@ -65,6 +65,41 @@ void test_symbols_mc6809() {
             "      11/    1236 : 12 36              label3  fdb   label3\n");
 }
 
+void test_symbols_ins8060() {
+    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
+
+    listing.setUpperHex(true);
+    listing.enableLineNumber(true);
+
+    ASM("ins8060",
+            "label1  =     X'1234\n"
+            "        .set  label1, X'1234\n"
+            "label1  =     X'3456\n"
+            "        .set  var1, X'1234\n"
+            "var1    =     X'1234\n"
+            "        .set  var1, X'1234\n"
+            "        .set  var1, X'3456\n"
+            "        .=X'1234\n"
+            "var1\n"
+            "label2  jmp    label2\n"
+            "label3  .dbyte label3\n",
+            "       1/       0 : =1234              label1  =     X'1234\n"
+            "ins8060:2: error: Duplicate label\n"
+            "       2/       0 :                            .set  label1, X'1234\n"
+            "ins8060:3: error: Duplicate label\n"
+            "       3/       0 :                    label1  =     X'3456\n"
+            "       4/       0 : =1234                      .set  var1, X'1234\n"
+            "ins8060:5: error: Duplicate label\n"
+            "       5/       0 :                    var1    =     X'1234\n"
+            "       6/       0 : =1234                      .set  var1, X'1234\n"
+            "       7/       0 : =3456                      .set  var1, X'3456\n"
+            "       8/    1234 :                            .=X'1234\n"
+            "ins8060:9:1: error: Duplicate label\n"
+            "       9/    1234 :                    var1\n"
+            "      10/    1234 : 90 FE              label2  jmp    label2\n"
+            "      11/    1236 : 36 12              label3  .dbyte label3\n");
+}
+
 void test_symbols_z80() {
     PREP_ASM_SYMBOL(z80::AsmZ80, Z80Directive, REPORT_DUPLICATE);
 
@@ -104,7 +139,7 @@ void test_switch_cpu() {
     mc6809::AsmMc6809 asm6809;
     MotorolaDirective dir6809(asm6809);
     mos6502::AsmMos6502 asm6502;
-    MotorolaDirective dir6502(asm6502);
+    MostekDirective dir6502(asm6502);
     i8080::AsmI8080 asm8080;
     IntelDirective dir8080(asm8080);
     z80::AsmZ80 asmz80;
@@ -134,7 +169,7 @@ void test_switch_cpu() {
             "        longi off\n"
             "        lda   #$1234\n"
             "        ldx   #$12\n"
-            "        org   $123456\n"
+            "        *=$123456\n"
             "        longa off\n"
             "        longi on\n"
             "        lda   #$12\n"
@@ -157,7 +192,7 @@ void test_switch_cpu() {
             "       1012 :                            longi off\n"
             "       1012 : A9 34 12                   lda   #$1234\n"
             "       1015 : A2 12                      ldx   #$12\n"
-            "     123456 :                            org   $123456\n"
+            "     123456 :                            *=$123456\n"
             "     123456 :                            longa off\n"
             "     123456 :                            longi on\n"
             "     123456 : A9 12                      lda   #$12\n"
@@ -168,54 +203,56 @@ void test_function() {
     PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
 
     ASM("ins8060",
-            "        cpu   ins8060\n"
+            "        cpu    ins8060\n"
             "high:   function v  , v >> 8 ; high 8-bit\n"
             "low:    function v, L(v)     ; predefined\n"
             "cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
             "CONS:   function -1\n"
-            "label:  org   x'abcd\n"
-            "        and   @e(p1)\n"
-            "        db    high(label)\n"
-            "        db    low(label)\n"
-            "        dw    cons(h(label), l(label))\n"
-            "        dw    cons (high(x'1234),low(x'3456))\n"
-            "        dw    CONS (  ) \n"
-            "        dw    ADDR(label)\n"
-            "high:   function x,x  ; duplicate\n"
-            "label:  function y,y  ; symbol\n"
-            "cons:   equ   0       ; function\n"
-            "        dw    cons(0) ; requires 2\n"
-            "        dw    CONS(0) ; requires 0\n"
-            "        dw    CONS    ; missing\n",
-            "          0 :                            cpu   ins8060\n"
+            "label:  .=x'abcd\n"
+            "        and    @e(p1)\n"
+            "        .byte  high(label)\n"
+            "        .byte  low(label)\n"
+            "        .dbyte cons(h(label), l(label))\n"
+            "        .dbyte cons (high(x'1234),low(x'3456))\n"
+            "        .dbyte CONS (  ) \n"
+            "        .dbyte ADDR(label)\n"
+            "high:   function x,x   ; duplicate\n"
+            "label:  function y,y   ; symbol\n"
+            "cons=0                 ; function\n"
+            "        .dbyte cons(0) ; requires 2\n"
+            "        .dbyte CONS(0) ; requires 0\n"
+            "        .dbyte CONS    ; missing\n",
+            "          0 :                            cpu    ins8060\n"
             "          0 :                    high:   function v  , v >> 8 ; high 8-bit\n"
             "          0 :                    low:    function v, L(v)     ; predefined\n"
-            "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; 16-bit\n"
+            "          0 :                    cons:   function hi, lo, (hi << 8) | lo ; "
+            "16-bit\n"
             "          0 :                    CONS:   function -1\n"
-            "       ABCD :                    label:  org   x'abcd\n"
-            "       ABCD : D5 80                      and   @e(p1)\n"
-            "       ABCF : AB                         db    high(label)\n"
-            "       ABD0 : CD                         db    low(label)\n"
-            "       ABD1 : CD AB                      dw    cons(h(label), l(label))\n"
-            "       ABD3 : 56 12                      dw    cons (high(x'1234),low(x'3456))\n"
-            "       ABD5 : FF FF                      dw    CONS (  ) \n"
-            "       ABD7 : CC AB                      dw    ADDR(label)\n"
+            "       ABCD :                    label:  .=x'abcd\n"
+            "       ABCD : D5 80                      and    @e(p1)\n"
+            "       ABCF : AB                         .byte  high(label)\n"
+            "       ABD0 : CD                         .byte  low(label)\n"
+            "       ABD1 : CD AB                      .dbyte cons(h(label), l(label))\n"
+            "       ABD3 : 56 12                      .dbyte cons (high(x'1234),low(x'3456))\n"
+            "       ABD5 : FF FF                      .dbyte CONS (  ) \n"
+            "       ABD7 : CC AB                      .dbyte ADDR(label)\n"
             "ins8060:14: error: Duplicate function\n"
-            "       ABD9 :                    high:   function x,x  ; duplicate\n"
+            "       ABD9 :                    high:   function x,x   ; duplicate\n"
             "ins8060:15: error: Duplicate label\n"
-            "       ABD9 :                    label:  function y,y  ; symbol\n"
+            "       ABD9 :                    label:  function y,y   ; symbol\n"
             "ins8060:16: error: Duplicate label\n"
-            "       ABD9 :                    cons:   equ   0       ; function\n"
+            "       ABD9 :                    cons=0                 ; function\n"
             "ins8060:17: error: Too few function arguments\n"
-            "       ABD9 :                            dw    cons(0) ; requires 2\n"
+            "       ABD9 :                            .dbyte cons(0) ; requires 2\n"
             "ins8060:18: error: Too many function arguments\n"
-            "       ABD9 :                            dw    CONS(0) ; requires 0\n"
+            "       ABD9 :                            .dbyte CONS(0) ; requires 0\n"
             "ins8060:19: error: Missing function arguments\n"
-            "       ABD9 :                            dw    CONS    ; missing\n");
+            "       ABD9 :                            .dbyte CONS    ; missing\n");
 }
 
 void run_tests() {
     RUN_TEST(test_symbols_mc6809);
+    RUN_TEST(test_symbols_ins8060);
     RUN_TEST(test_symbols_z80);
     RUN_TEST(test_switch_cpu);
     RUN_TEST(test_function);

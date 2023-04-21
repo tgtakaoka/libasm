@@ -82,16 +82,26 @@ Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver 
 }
 
 Error AsmDirective::defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineSymbol(scan, list, driver, /*variable*/ false);
+    return defineSymbol(scan, list, driver, list.lineSymbol(), /*variable*/ false);
 }
 
 Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineSymbol(scan, list, driver, /*variable*/ true);
+    return defineSymbol(scan, list, driver, list.lineSymbol(), /*variable*/ true);
 }
 
-Error AsmDirective::defineSymbol(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable) {
-    const StrScanner &symbol = list.lineSymbol();
+Error NationalDirective::setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+    if (list.lineSymbol().size())
+        return setError(ILLEGAL_LABEL);
+    StrScanner symbol = assembler().parser().readSymbol(scan);
+    if (symbol.size() == 0)
+        return setError(MISSING_LABEL);
+    if (scan.skipSpaces().expect(','))
+        return defineSymbol(scan.skipSpaces(), list, driver, symbol, /*variable*/ true);
+    return setError(MISSING_COMMA);
+}
+
+Error AsmDirective::defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver,
+        const StrScanner &symbol, bool variable) {
     if (symbol.size() == 0)
         return setError(MISSING_LABEL);
     if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasFunction(symbol))
@@ -403,11 +413,9 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     // TODO: implement listing after "end".
     registerPseudo(".end", &AsmDirective::endAssemble);
     registerPseudo(".equ", &AsmDirective::defineConstant);
-    registerPseudo("=", &AsmDirective::defineConstant);
     registerPseudo(".set", &AsmDirective::defineVariable);
     if (a.hasSetInstruction())
         disablePseudo("set");
-    registerPseudo(":=", &AsmDirective::defineVariable);
     registerPseudo(".org", &AsmDirective::defineOrigin);
     registerPseudo(".align", &AsmDirective::alignOrigin);
     registerPseudo(".string", &AsmDirective::defineData8s);
@@ -467,6 +475,15 @@ BinEncoder &IntelDirective::defaultEncoder() {
     return IntelHex::encoder();
 }
 
+MostekDirective::MostekDirective(Assembler &assembler) : AsmDirective(assembler) {
+    registerPseudo("=", &MostekDirective::defineConstant);
+    registerPseudo("*=", &MostekDirective::defineOrigin);
+}
+
+BinEncoder &MostekDirective::defaultEncoder() {
+    return MotoSrec::encoder();
+}
+
 Z80Directive::Z80Directive(Assembler &assembler) : IntelDirective(assembler) {
     registerPseudo("defb", &Z80Directive::defineData8s);
     registerPseudo("defw", &Z80Directive::defineUint16s);
@@ -476,6 +493,11 @@ Z80Directive::Z80Directive(Assembler &assembler) : IntelDirective(assembler) {
 }
 
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
+    disablePseudo(".set");
+    disablePseudo("set");
+    registerPseudo("=", &NationalDirective::defineConstant);
+    registerPseudo(".=", &NationalDirective::defineOrigin);
+    registerPseudo(".set", static_cast<PseudoHandler>(&NationalDirective::setVariable));
     registerPseudo(".dbyte", &NationalDirective::defineUint16s);
 }
 

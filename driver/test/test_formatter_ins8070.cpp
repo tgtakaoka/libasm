@@ -32,22 +32,22 @@ void test_asm_ins8070() {
     listing.setUpperHex(false);
 
     ASM("ins8070",
-            "        cpu   ins8070\n"
+            "        cpu    ins8070\n"
             "; comment line\n"
-            "label:  org   x'abcd\n"
-            "        pli   p2, =x'2423\n"
-            "        db    h(label)\n"
-            "        db    l(label)\n"
-            "        dw    addr(label)\n"
-            "        dw    addr(x'1000)\n",
-            "          0 :                            cpu   ins8070\n"
+            "label:  .=     x'abcd\n"
+            "        pli    p2, =x'2423\n"
+            "        .byte  h(label)\n"
+            "        .byte  l(label)\n"
+            "        .dbyte addr(label)\n"
+            "        .dbyte addr(x'1000)\n",
+            "          0 :                            cpu    ins8070\n"
             "          0 :                    ; comment line\n"
-            "       abcd :                    label:  org   x'abcd\n"
-            "       abcd : 22 23 24                   pli   p2, =x'2423\n"
-            "       abd0 : ab                         db    h(label)\n"
-            "       abd1 : cd                         db    l(label)\n"
-            "       abd2 : cc ab                      dw    addr(label)\n"
-            "       abd4 : ff 0f                      dw    addr(x'1000)\n");
+            "       abcd :                    label:  .=     x'abcd\n"
+            "       abcd : 22 23 24                   pli    p2, =x'2423\n"
+            "       abd0 : ab                         .byte  h(label)\n"
+            "       abd1 : cd                         .byte  l(label)\n"
+            "       abd2 : cc ab                      .dbyte addr(label)\n"
+            "       abd4 : ff 0f                      .dbyte addr(x'1000)\n");
 }
 
 void test_dis_ins8070() {

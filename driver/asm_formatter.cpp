@@ -58,7 +58,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     if (_line_symbol.size()) {
         if (scan.expect(':')) {
             ;  // skip optional trailing ':' for label.
-        } else if (parser.endOfLine(scan) || isspace(*scan)) {
+        } else if (parser.endOfLine(scan) || isspace(*scan) || *scan == '=') {
             ;  // valid line symbol
         } else {
             return _errorAt.setError(scan, ILLEGAL_LABEL);
@@ -69,7 +69,11 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     if (!parser.endOfLine(scan)) {
         auto directive = scan;
         auto p = scan;
-        p.trimStart([](char s) { return !isspace(s); });
+        while (!parser.endOfLine(p) && !isspace(*p)) {
+            const auto c = *p++;
+            if (c == '=')       // for '=' and '*='
+                break;
+        }
         directive.trimEndAt(p);
         auto error = _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver);
         if (error == OK) {

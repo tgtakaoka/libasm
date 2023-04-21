@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_mos6502() {
-    PREP_ASM(mos6502::AsmMos6502, MotorolaDirective);
+    PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
     listing.setUpperHex(false);
     driver.internSymbol(0xf1f2, "label1");
@@ -35,16 +35,16 @@ void test_asm_mos6502() {
     ASM("mos6502",
             "        cpu   mos6502\n"
             "; comment line\n"
-            "        org   $abcd\n"
+            "        *=$abcd\n"
             "        sbc   label1\n",
             "          0 :                            cpu   mos6502\n"
             "          0 :                    ; comment line\n"
-            "       abcd :                            org   $abcd\n"
+            "       abcd :                            *=$abcd\n"
             "       abcd : ed f2 f1                   sbc   label1\n");
 }
 
 void test_asm_w65816() {
-    PREP_ASM(mos6502::AsmMos6502, MotorolaDirective);
+    PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
     listing.setUpperHex(false);
     driver.internSymbol(0xf2f1f0, "label1");

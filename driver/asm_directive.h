@@ -80,7 +80,8 @@ protected:
     Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
     // PseudoHanlder helper
-    Error defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable);
+    Error defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver,
+            const StrScanner &symbol, bool variable);
     Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool acceptString);
     Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int width);
     Error setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver);
@@ -104,6 +105,12 @@ private:
     Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
+class MostekDirective : public AsmDirective {
+public:
+    MostekDirective(Assembler &assembler);
+    BinEncoder &defaultEncoder() override;
+};
+
 class Z80Directive : public IntelDirective {
 public:
     Z80Directive(Assembler &assembler);
@@ -112,6 +119,9 @@ public:
 class NationalDirective : public IntelDirective {
 public:
     NationalDirective(Assembler &assembler);
+
+private:
+    Error setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
 class FairchildDirective : public AsmDirective {
