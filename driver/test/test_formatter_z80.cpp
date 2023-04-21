@@ -27,14 +27,14 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_z80() {
-    PREP_ASM(z80::AsmZ80, IntelDirective);
+    PREP_ASM(z80::AsmZ80, Z80Directive);
 
     TestReader inc("data/db.inc");
     sources.add(inc);
-    inc.add("        dw    1234H, 5678H, 9ABCH\n"
-            "        db    'a,', 'bc''de', 0\n"  // DB requires surrounding quotes
-            "        ds    2\n"                  // DS allocate spaces
-            "        db    'A', '''', 'C'+80H, 'a''c'\n");
+    inc.add("        defw  1234H, 5678H, 9ABCH\n"
+            "        defb  'a,', 'bc''de', 0\n"  // DB requires surrounding quotes
+            "        defs  2\n"                  // DS allocate spaces
+            "        defm  'A', '''', 'C'+80H, 'a''c'\n");
 
     listing.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
@@ -49,11 +49,11 @@ void test_asm_z80() {
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd :                            include \"data/db.inc\"\n"
-            "(1)    abcd : 34 12 78 56 bc 9a          dw    1234H, 5678H, 9ABCH\n"
-            "(1)    abd3 : 61 2c 62 63 27 64          db    'a,', 'bc''de', 0\n"
+            "(1)    abcd : 34 12 78 56 bc 9a          defw  1234H, 5678H, 9ABCH\n"
+            "(1)    abd3 : 61 2c 62 63 27 64          defb  'a,', 'bc''de', 0\n"
             "       abd9 : 65 00\n"
-            "(1)    abdb :                            ds    2\n"
-            "(1)    abdd : 41 27 c3 61 27 63          db    'A', '''', 'C'+80H, 'a''c'\n"
+            "(1)    abdb :                            defs  2\n"
+            "(1)    abdd : 41 27 c3 61 27 63          defm  'A', '''', 'C'+80H, 'a''c'\n"
             "       abe3 : fd cb 80 86                res   0, (iy-128)\n");
 }
 

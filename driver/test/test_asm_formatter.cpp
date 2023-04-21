@@ -30,43 +30,74 @@ void set_up() {}
 
 void tear_down() {}
 
-void test_symbols() {
-    PREP_ASM_SYMBOL(z80::AsmZ80, IntelDirective, REPORT_DUPLICATE);
+void test_symbols_mc6809() {
+    PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective, REPORT_DUPLICATE);
+
+    listing.setUpperHex(true);
+    listing.enableLineNumber(true);
+
+    ASM("mc6809",
+            "label1  equ   $1234\n"
+            "label1  set   $1234\n"
+            "label1  equ   $3456\n"
+            "var1    set   $1234\n"
+            "var1    equ   $1234\n"
+            "var1    set   $1234\n"
+            "var1    set   $3456\n"
+            "        org   $1234\n"
+            "var1\n"
+            "label2  bra   label2\n"
+            "label3  fdb   label3\n",
+            "       1/       0 : =1234              label1  equ   $1234\n"
+            "mc6809:2: error: Duplicate label\n"
+            "       2/       0 :                    label1  set   $1234\n"
+            "mc6809:3: error: Duplicate label\n"
+            "       3/       0 :                    label1  equ   $3456\n"
+            "       4/       0 : =1234              var1    set   $1234\n"
+            "mc6809:5: error: Duplicate label\n"
+            "       5/       0 :                    var1    equ   $1234\n"
+            "       6/       0 : =1234              var1    set   $1234\n"
+            "       7/       0 : =3456              var1    set   $3456\n"
+            "       8/    1234 :                            org   $1234\n"
+            "mc6809:9:1: error: Duplicate label\n"
+            "       9/    1234 :                    var1\n"
+            "      10/    1234 : 20 FE              label2  bra   label2\n"
+            "      11/    1236 : 12 36              label3  fdb   label3\n");
+}
+
+void test_symbols_z80() {
+    PREP_ASM_SYMBOL(z80::AsmZ80, Z80Directive, REPORT_DUPLICATE);
 
     listing.setUpperHex(true);
     listing.enableLineNumber(true);
 
     ASM("z80",
             "label1  equ   1234H\n"
-            "label1  :=    1234H\n"
-            "label1  =     1234H\n"
+            "label1  defl  1234H\n"
             "label1  equ   3456H\n"
-            "var1    :=    1234H\n"
+            "var1    defl  1234H\n"
             "var1    equ   1234H\n"
-            "var1    .set  1234H\n"
-            "var1    .set  3456H\n"
+            "var1    defl  3456H\n"
             "        org   1234H\n"
             "label1  set   0, b\n"  // Z80 has SET instruction
             "var1\n"
             "label2  jr    label2\n"
-            "label3  dw    label3\n",
+            "label3  defw  label3\n",
             "       1/       0 : =1234              label1  equ   1234H\n"
             "z80:2: error: Duplicate label\n"
-            "       2/       0 :                    label1  :=    1234H\n"  // SET
-            "       3/       0 : =1234              label1  =     1234H\n"  // EQU
-            "z80:4: error: Duplicate label\n"
-            "       4/       0 :                    label1  equ   3456H\n"
-            "       5/       0 : =1234              var1    :=    1234H\n"  // SET
-            "z80:6: error: Duplicate label\n"
-            "       6/       0 :                    var1    equ   1234H\n"
-            "       7/       0 : =1234              var1    .set  1234H\n"
-            "       8/       0 : =3456              var1    .set  3456H\n"
-            "       9/    1234 :                            org   1234H\n"
-            "      10/    1234 : CB C0              label1  set   0, b\n"
-            "z80:11:1: error: Duplicate label\n"
-            "      11/    1236 :                    var1\n"
-            "      12/    1236 : 18 FE              label2  jr    label2\n"
-            "      13/    1238 : 38 12              label3  dw    label3\n");
+            "       2/       0 :                    label1  defl  1234H\n"  // SET
+            "z80:3: error: Duplicate label\n"
+            "       3/       0 :                    label1  equ   3456H\n"
+            "       4/       0 : =1234              var1    defl  1234H\n"
+            "z80:5: error: Duplicate label\n"
+            "       5/       0 :                    var1    equ   1234H\n"
+            "       6/       0 : =3456              var1    defl  3456H\n"
+            "       7/    1234 :                            org   1234H\n"
+            "       8/    1234 : CB C0              label1  set   0, b\n"
+            "z80:9:1: error: Duplicate label\n"
+            "       9/    1236 :                    var1\n"
+            "      10/    1236 : 18 FE              label2  jr    label2\n"
+            "      11/    1238 : 38 12              label3  defw  label3\n");
 }
 
 void test_switch_cpu() {
@@ -77,7 +108,7 @@ void test_switch_cpu() {
     i8080::AsmI8080 asm8080;
     IntelDirective dir8080(asm8080);
     z80::AsmZ80 asmz80;
-    IntelDirective dirz80(asmz80);
+    Z80Directive dirz80(asmz80);
     AsmDirective *dirs[] = {&dir6809, &dir6502, &dir8080, &dirz80};
     TestSources sources;
     AsmDriver driver(&dirs[0], &dirs[4], sources);
@@ -184,7 +215,8 @@ void test_function() {
 }
 
 void run_tests() {
-    RUN_TEST(test_symbols);
+    RUN_TEST(test_symbols_mc6809);
+    RUN_TEST(test_symbols_z80);
     RUN_TEST(test_switch_cpu);
     RUN_TEST(test_function);
 }

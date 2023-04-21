@@ -104,6 +104,11 @@ private:
     Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
+class Z80Directive : public IntelDirective {
+public:
+    Z80Directive(Assembler &assembler);
+};
+
 class NationalDirective : public IntelDirective {
 public:
     NationalDirective(Assembler &assembler);

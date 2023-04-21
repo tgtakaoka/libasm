@@ -91,10 +91,11 @@ Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriv
 
 Error AsmDirective::defineSymbol(
         StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool variable) {
-    if (list.lineSymbol().size() == 0)
+    const StrScanner &symbol = list.lineSymbol();
+    if (symbol.size() == 0)
         return setError(MISSING_LABEL);
-    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasFunction(list.lineSymbol()))
-        return setError(DUPLICATE_LABEL);
+    if (driver.symbolMode() == REPORT_DUPLICATE && driver.hasFunction(symbol))
+        return setError(symbol, DUPLICATE_LABEL);
     auto &parser = assembler().parser();
     ErrorAt error;
     auto &value = list.lineValue() = parser.eval(scan, error, &driver);
@@ -103,11 +104,11 @@ Error AsmDirective::defineSymbol(
         return setError(error);
     }
     if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-        return setError(UNDEFINED_SYMBOL);
+        return setError(symbol, UNDEFINED_SYMBOL);
     // TODO line end check
-    const auto err = driver.internSymbol(value.getUnsigned(), list.lineSymbol(), variable);
+    const auto err = driver.internSymbol(value.getUnsigned(), symbol, variable);
     if (err) {
-        setError(list.lineSymbol(), err);
+        setError(symbol, err);
         value.clear();
     }
     list.lineSymbol() = StrScanner::EMPTY;
@@ -464,6 +465,14 @@ IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
 
 BinEncoder &IntelDirective::defaultEncoder() {
     return IntelHex::encoder();
+}
+
+Z80Directive::Z80Directive(Assembler &assembler) : IntelDirective(assembler) {
+    registerPseudo("defb", &Z80Directive::defineData8s);
+    registerPseudo("defw", &Z80Directive::defineUint16s);
+    registerPseudo("defm", &Z80Directive::defineData8s);  // TODO: DEFT 'str' which has length byte
+    registerPseudo("defs", &Z80Directive::allocateUint8s);
+    registerPseudo("defl", &Z80Directive::defineVariable);
 }
 
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
