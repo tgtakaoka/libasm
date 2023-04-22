@@ -51,14 +51,87 @@ public:
     /** No assignment operator. */
     void operator=(Insn const &) = delete;
 
-    void emitByte(uint8_t val) { emitByte(val, _length); }
+    Error emitByte(uint8_t val) { return emitByte(val, _length); }
 
-    void emitByte(uint8_t val, uint8_t pos) {
-        if (pos < MAX_CODE) {
-            _bytes[pos++] = val;
-            if (_length < pos)
-                _length = pos;
-        }
+    Error emitByte(uint8_t val, uint8_t pos) {
+        if (pos >= MAX_CODE)
+            return NO_MEMORY;
+        _bytes[pos++] = val;
+        if (_length < pos)
+            _length = pos;
+        return OK;
+    }
+
+    /** Generate 16 bit big endian |data| (Assembler). */
+    Error emitUint16Be(uint16_t data) {
+        emitByte(data >> 8);
+        return emitByte(data >> 0);
+    }
+
+    /** Generate 16 bit little endian |data| (Assembler). */
+    Error emitUint16Le(uint16_t data) {
+        emitByte(data >> 0);
+        return emitByte(data >> 8);
+    }
+
+    /** Generate 16 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint16Be(uint16_t data, uint8_t pos) {
+        emitByte(data >> 8, pos + 0);
+        return emitByte(data >> 0, pos + 1);
+    }
+
+    /** Generate 16 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint16Le(uint16_t data, uint8_t pos) {
+        emitByte(data >> 0, pos + 0);
+        return emitByte(data >> 8, pos + 1);
+    }
+
+    /** Generate 32 bit big endian |data| (Assembler). */
+    Error emitUint32Be(uint32_t data) {
+        emitUint16Be(data >> 16);
+        return emitUint16Be(data >> 0);
+    }
+
+    /** Generate 32 bit little endian |data| (Assembler). */
+    Error emitUint32Le(uint32_t data) {
+        emitUint16Le(data >> 0);
+        return emitUint16Le(data >> 16);
+    }
+
+    /** Generate 32 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint32Be(uint32_t data, uint8_t pos) {
+        emitUint16Be(data >> 16, pos + 0);
+        return emitUint16Be(data >> 0, pos + 2);
+    }
+
+    /** Generate 32 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint32Le(uint32_t data, uint8_t pos) {
+        emitUint16Le(data >> 0, pos + 0);
+        return emitUint16Le(data >> 16, pos + 2);
+    }
+
+    /** Generate 64 bit big enditan |data| (Assembler). */
+    Error emitUint64Be(uint64_t data) {
+        emitUint32Be(data >> 32);
+        return emitUint32Be(data >> 0);
+    }
+
+    /** Generate 64 bit little endian |data| (Assembler). */
+    Error emitUint64Le(uint64_t data) {
+        emitUint32Le(data >> 0);
+        return emitUint32Le(data >> 32);
+    }
+
+    /** Generate 64 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint64Be(uint64_t data, uint8_t pos) {
+        emitUint32Be(data >> 32, pos + 0);
+        return emitUint32Be(data >> 0, pos + 4);
+    }
+
+    /** Generate 64 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint64Le(uint64_t data, uint8_t pos) {
+        emitUint32Le(data >> 0, pos + 0);
+        return emitUint32Le(data >> 32, pos + 4);
     }
 
 private:
@@ -66,19 +139,17 @@ private:
     uint8_t _length;
     StrBuffer _buffer;
 
-    static constexpr size_t MAX_CODE = 24;
-    uint8_t _bytes[MAX_CODE];
-
     static constexpr size_t MAX_NAME = 11;
     char _name[MAX_NAME + 1];
+
+    static constexpr size_t MAX_CODE = 64;
+    uint8_t _bytes[MAX_CODE];
 };
 
 /**
  * Base instruction code class.
  */
 struct AsmInsnBase : ErrorReporter {
-    AsmInsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
-
     uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
@@ -93,82 +164,61 @@ struct AsmInsnBase : ErrorReporter {
     }
 
     /** Generate 8 bit |data| (Assembler). */
-    void emitByte(uint8_t data) { _insn.emitByte(data); }
+    Error emitByte(uint8_t data) { return setError(_insn.emitByte(data)); }
 
     /** Generate 8 bit |data| at |pos| (Assembler). */
-    void emitByte(uint8_t data, uint8_t pos) { _insn.emitByte(data, pos); }
+    Error emitByte(uint8_t data, uint8_t pos) { return setError(_insn.emitByte(data, pos)); }
 
     /** Generate 16 bit big endian |data| (Assembler). */
-    void emitUint16Be(uint16_t data) {
-        emitByte(data >> 8);
-        emitByte(data >> 0);
-    }
+    Error emitUint16Be(uint16_t data) { return setError(_insn.emitUint16Be(data)); }
 
     /** Generate 16 bit little endian |data| (Assembler). */
-    void emitUint16Le(uint16_t data) {
-        emitByte(data >> 0);
-        emitByte(data >> 8);
-    }
+    Error emitUint16Le(uint16_t data) { return setError(_insn.emitUint16Le(data)); }
 
     /** Generate 16 bit big endian |data| at |pos| (Assembler). */
-    void emitUint16Be(uint16_t data, uint8_t pos) {
-        emitByte(data >> 8, pos + 0);
-        emitByte(data >> 0, pos + 1);
+    Error emitUint16Be(uint16_t data, uint8_t pos) {
+        return setError(_insn.emitUint16Be(data, pos));
     }
 
     /** Generate 16 bit little endian |data| at |pos| (Assembler). */
-    void emitUint16Le(uint16_t data, uint8_t pos) {
-        emitByte(data >> 0, pos + 0);
-        emitByte(data >> 8, pos + 1);
+    Error emitUint16Le(uint16_t data, uint8_t pos) {
+        return setError(_insn.emitUint16Le(data, pos));
     }
 
     /** Generate 32 bit big endian |data| (Assembler). */
-    void emitUint32Be(uint32_t data) {
-        emitUint16Be(data >> 16);
-        emitUint16Be(data >> 0);
-    }
+    Error emitUint32Be(uint32_t data) { return setError(_insn.emitUint32Be(data)); }
 
     /** Generate 32 bit little endian |data| (Assembler). */
-    void emitUint32Le(uint32_t data) {
-        emitUint16Le(data >> 0);
-        emitUint16Le(data >> 16);
-    }
+    Error emitUint32Le(uint32_t data) { return setError(_insn.emitUint32Le(data)); }
 
     /** Generate 32 bit big endian |data| at |pos| (Assembler). */
-    void emitUint32Be(uint32_t data, uint8_t pos) {
-        emitUint16Be(data >> 16, pos + 0);
-        emitUint16Be(data >> 0, pos + 2);
+    Error emitUint32Be(uint32_t data, uint8_t pos) {
+        return setError(_insn.emitUint32Be(data, pos));
     }
 
     /** Generate 32 bit little endian |data| at |pos| (Assembler). */
-    void emitUint32Le(uint32_t data, uint8_t pos) {
-        emitUint16Le(data >> 0, pos + 0);
-        emitUint16Le(data >> 16, pos + 2);
+    Error emitUint32Le(uint32_t data, uint8_t pos) {
+        return setError(_insn.emitUint32Le(data, pos));
     }
 
-    /** Generate 64 bit big little |data| (Assembler). */
-    void emitUint64Be(uint64_t data) {
-        emitUint32Be(data >> 32);
-        emitUint32Be(data >> 0);
-    }
+    /** Generate 64 bit big endian |data| (Assembler). */
+    Error emitUint64Be(uint64_t data) { return setError(_insn.emitUint64Be(data)); }
 
-    /** Generate 64 bit big little |data| (Assembler). */
-    void emitUint64Le(uint64_t data) {
-        emitUint32Le(data >> 0);
-        emitUint32Le(data >> 32);
-    }
+    /** Generate 64 bit little endian |data| (Assembler). */
+    Error emitUint64Le(uint64_t data) { return setError(_insn.emitUint64Le(data)); }
 
     /** Generate 64 bit big endian |data| at |pos| (Assembler). */
-    void emitUint64Be(uint64_t data, uint8_t pos) {
-        emitUint32Be(data >> 32, pos + 0);
-        emitUint32Be(data >> 0, pos + 4);
+    Error emitUint64Be(uint64_t data, uint8_t pos) {
+        return setError(_insn.emitUint64Be(data, pos));
     }
 
-    /** Generate 64 bit big little |data| at |pos| (Assembler). */
-    void emitUint64Le(uint64_t data, uint8_t pos) {
-        emitUint32Le(data >> 0, pos + 0);
-        emitUint32Le(data >> 32, pos + 4);
+    /** Generate 64 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint64Le(uint64_t data, uint8_t pos) {
+        return setError(_insn.emitUint64Le(data, pos));
     }
+
+protected:
+    AsmInsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
 
 private:
     Insn &_insn;
@@ -178,8 +228,6 @@ private:
  * Base instruction code class.
  */
 struct DisInsnBase : ErrorReporter {
-    DisInsnBase(Insn &insn, DisMemory &memory) : ErrorReporter(), _insn(insn), _memory(memory) {}
-
     uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
@@ -193,7 +241,7 @@ struct DisInsnBase : ErrorReporter {
         clearNameBuffer();
     }
 
-    /** Read 8 bit data from |memory| (Disassembler). */
+    /** Read 8 bit data. */
     uint8_t readByte() {
         if (!_memory.hasNext()) {
             setError(NO_MEMORY);
@@ -204,42 +252,42 @@ struct DisInsnBase : ErrorReporter {
         return data;
     }
 
-    /** Read 16 bit big endian data from |memory| (Disassembler). */
+    /** Read 16 bit big endian data */
     uint16_t readUint16Be() {
         const uint8_t msb = readByte();
         const uint8_t lsb = readByte();
         return static_cast<uint16_t>(msb) << 8 | lsb;
     }
 
-    /** Read 16 bit little endian data from |memory| (Disassembler). */
+    /** Read 16 bit little endian data */
     uint16_t readUint16Le() {
         const uint8_t lsb = readByte();
         const uint8_t msb = readByte();
         return static_cast<uint16_t>(msb) << 8 | lsb;
     }
 
-    /** Read 32 bit big endian data from |memory| (Disassembler). */
+    /** Read 32 bit big endian data */
     uint32_t readUint32Be() {
         const uint16_t msw = readUint16Be();
         const uint16_t lsw = readUint16Be();
         return static_cast<uint32_t>(msw) << 16 | lsw;
     }
 
-    /** Read 32 bit little endian data from |memory| (Disassembler). */
+    /** Read 32 bit little endian data */
     uint32_t readUint32Le() {
         const uint16_t lsw = readUint16Le();
         const uint16_t msw = readUint16Le();
         return static_cast<uint32_t>(msw) << 16 | lsw;
     }
 
-    /** Read 64 bit big endian data from |memory| (Disassembler). */
+    /** Read 64 bit big endian data */
     uint64_t readUint64Be() {
         const uint32_t msw = readUint32Be();
         const uint32_t lsw = readUint32Be();
         return static_cast<uint64_t>(msw) << 32 | lsw;
     }
 
-    /** Read 64 bit little endian data from |memory| (Disassembler). */
+    /** Read 64 bit little endian data */
     uint64_t readUint64Le() {
         const uint32_t lsw = readUint32Le();
         const uint32_t msw = readUint32Le();
@@ -247,6 +295,11 @@ struct DisInsnBase : ErrorReporter {
     }
 
 protected:
+    DisInsnBase(Insn &insn, DisMemory &memory) : ErrorReporter(), _insn(insn), _memory(memory) {}
+    DisInsnBase(Insn &insn, DisInsnBase &o) : ErrorReporter(), _insn(insn), _memory(o._memory) {}
+    DisInsnBase(DisInsnBase &o) : ErrorReporter(), _insn(o._insn), _memory(o._memory) {}
+
+private:
     Insn &_insn;
     DisMemory &_memory;
 };
@@ -287,118 +340,75 @@ struct AsmInsnImpl : AsmInsnBase {
 
     void reset() { AsmInsnBase::reset(address()); }
 
-    /* Generate 16 bit |data| (Assembler). */
-    void emitUint16(uint16_t data) {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint16Be(data);
-        } else {
-            emitUint16Le(data);
-        }
+    /** Generate 16 bit |data| */
+    Error emitUint16(uint16_t data) { return big ? emitUint16Be(data) : emitUint16Le(data); }
+
+    /** Generate 16 bit |data| at |pos| */
+    Error emitUint16(uint16_t data, uint8_t pos) {
+        return big ? emitUint16Be(data, pos) : emitUint16Le(data, pos);
     }
 
-    /* Generate 16 bit |data| at |pos| (Assembler). */
-    void emitUint16(uint16_t data, uint8_t pos) {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint16Be(data, pos);
-        } else {
-            emitUint16Le(data, pos);
-        }
+    /** Generate 32 bit |data| */
+    Error emitUint32(uint32_t data) { return big ? emitUint32Be(data) : emitUint32Le(data); }
+
+    /** Generate 32 bit |data| at |pos| */
+    Error emitUint32(uint32_t data, uint8_t pos) {
+        return big ? emitUint32Be(data, pos) : emitUint32Le(data, pos);
     }
 
-    /* Generate 32 bit |data| (Assembler). */
-    void emitUint32(uint32_t data) {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint32Be(data);
-        } else {
-            emitUint32Le(data);
-        }
+    /** Generate 64 bit |data| */
+    Error emitUint64(uint64_t data) { return big ? emitUint64Be(data) : emitUint64Le(data); }
+
+    /** Generate 64 bit |data| at |pos| */
+    Error emitUint64(uint64_t data, uint8_t pos) {
+        return big ? emitUint64Be(data, pos) : emitUint64Le(data, pos);
     }
 
-    /* Generate 32 bit |data| at |pos| (Assembler). */
-    void emitUint32(uint32_t data, uint8_t pos) {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint32Be(data, pos);
-        } else {
-            emitUint32Le(data, pos);
-        }
-    }
-
-    /* Generate 64 bit |data| (Assembler). */
-    void emitUint64(uint64_t data) {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint64Be(data);
-        } else {
-            emitUint64Le(data);
-        }
-    }
-
-    /* Generate 64 bit |data| at |pos| (Assembler). */
-    void emitUint64(uint32_t data, uint8_t pos) {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint64Be(data, pos);
-        } else {
-            emitUint64Le(data, pos);
-        }
-    }
-
-    /* Generate 32 bit floating point |data| (Assembler). */
-    void emitFloat32(float data) {
+    /** Generate 32 bit floating point |data| */
+    Error emitFloat32(float data) {
         union {
             float float32;
             uint32_t data32;
         } bytes;
         bytes.float32 = data;
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint32Be(bytes.data32);
-        } else {
-            emitUint32Le(bytes.data32);
-        }
+        return emitUint32(bytes.data32);
     }
 
-    /* Generate 32 bit floating point |data| at |pos| (Assembler). */
-    void emitFloat32(float data, uint8_t pos) {
+    /** Generate 32 bit floating point |data| at |pos| */
+    Error emitFloat32(float data, uint8_t pos) {
         union {
             float float32;
             uint32_t data32;
         } bytes;
         bytes.float32 = data;
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint32Be(bytes.data32, pos);
-        } else {
-            emitUint32Le(bytes.data32, pos);
-        }
+        return emitUint32(bytes.data32, pos);
     }
 
-    /* Generate 64 bit floating point |data| (Assembler). */
-    void emitFloat64(double data) {
+    /** Generate 64 bit floating point |data| */
+    Error emitFloat64(double data) {
         union {
             double float64;
             uint64_t data64;
         } bytes;
         bytes.float64 = data;
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint64Be(bytes.data64);
-        } else {
-            emitUint64Le(bytes.data64);
-        }
+        return emitUint64(bytes.data64);
     }
 
-    /* Generate 64 bit floating point |data| at |pos| (Assembler). */
-    void emitFloat64(double data, uint8_t pos) {
+    /** Generate 64 bit floating point |data| at |pos| */
+    Error emitFloat64(double data, uint8_t pos) {
         union {
             double float64;
             uint64_t data64;
         } bytes;
         bytes.float64 = data;
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            emitUint64Be(bytes.data64, pos);
-        } else {
-            emitUint64Le(bytes.data64, pos);
-        }
+        return emitUint64(bytes.data64, pos);
     }
 
 protected:
     AsmInsnImpl(Insn &insn) : AsmInsnBase(insn) {}
+
+private:
+    static constexpr bool big = Conf::ENDIAN == ENDIAN_BIG;
 };
 
 template <typename Conf>
@@ -407,34 +417,16 @@ struct DisInsnImpl : DisInsnBase {
 
     void reset() { DisInsnBase::reset(address()); }
 
-    /** Read 16 bit data from |memory| (Disassembler). */
-    uint16_t readUint16() {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            return readUint16Be();
-        } else {
-            return readUint16Le();
-        }
-    }
+    /** Read 16 bit data */
+    uint16_t readUint16() { return big ? readUint16Be() : readUint16Le(); }
 
-    /** Read 32 bit data from |memory| (Disassembler). */
-    uint32_t readUint32() {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            return readUint32Be();
-        } else {
-            return readUint32Le();
-        }
-    }
+    /** Read 32 bit data */
+    uint32_t readUint32() { return big ? readUint32Be() : readUint32Le(); }
 
-    /** Read 64 bit data from |memory| (Disassembler). */
-    uint64_t readUint64() {
-        if (Conf::ENDIAN == ENDIAN_BIG) {
-            return readUint64Be();
-        } else {
-            return readUint64Le();
-        }
-    }
+    /** Read 64 bit data */
+    uint64_t readUint64() { return big ? readUint64Be() : readUint64Le(); }
 
-    /** Read 32 bit floating point data from |memory| (Disassembler). */
+    /** Read 32 bit floating point data */
     float readFloat32() {
         union {
             float float32;
@@ -444,7 +436,7 @@ struct DisInsnImpl : DisInsnBase {
         return bytes.float32;
     }
 
-    /** Read 64 bit floating point data from |memory| (Disassembler). */
+    /** Read 64 bit floating point data */
     double readFloat64() {
         union {
             double float64;
@@ -456,6 +448,11 @@ struct DisInsnImpl : DisInsnBase {
 
 protected:
     DisInsnImpl(Insn &insn, DisMemory &memory) : DisInsnBase(insn, memory) {}
+    DisInsnImpl(Insn &insn, DisInsnImpl &o) : DisInsnBase(insn, o) {}
+    DisInsnImpl(DisInsnImpl &o) : DisInsnBase(o) {}
+
+private:
+    static constexpr bool big = Conf::ENDIAN == ENDIAN_BIG;
 };
 
 }  // namespace libasm

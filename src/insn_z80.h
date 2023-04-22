@@ -57,7 +57,7 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
-    DisInsn(DisInsn &insn) : DisInsnImpl(insn._insn, insn._memory) {}
+    DisInsn(DisInsn &o) : DisInsnImpl(o) {}
 };
 
 }  // namespace z80
