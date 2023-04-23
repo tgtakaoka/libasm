@@ -386,6 +386,25 @@ static void test_undefined_symbol() {
     AERUS(0x1000, "JMP UNDEF", "UNDEF", 0x1000);
     AERUS(0x1000, "JNE UNDEF", "UNDEF", 0x1600);
 }
+
+static void test_data_constant() {
+    BTEST("BYTE -128, 255", 0x80, 0xFF);
+    BTEST("BYTE 'A', '\"'", 0x41, 0x22);
+    BTEST("BYTE '9'-'0'",   0x09);
+    BTEST("BYTE ''''",      0x27);
+    ERRT("BYTE '''",        MISSING_CLOSING_QUOTE, "'''");
+    BTEST("BYTE 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("BYTE 'A''B,0",    MISSING_CLOSING_QUOTE, "'A''B,0");
+    BTEST("DATA -128, 255", 0xFF, 0x80, 0x00, 0xFF);
+    BTEST("DATA 'X'",       0x58, 0x00);
+    BTEST("DATA 'X'+0",     0x00, 0x58);
+    BTEST("DATA 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DATA  'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    BTEST("TEXT 'X'",       0x58);
+    BTEST("TEXT 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
+    ERRT("TEXT 'A''B\"C",   MISSING_CLOSING_QUOTE, "'A''B\"C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -404,6 +423,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_cru_off);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

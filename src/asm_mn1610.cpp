@@ -336,6 +336,20 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     return op.setError(UNKNOWN_OPERAND);
 }
 
+Error AsmMn1610::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("dc")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0)
+        return allocateSpaces(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("loc")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand op1, op2, op3, op4;

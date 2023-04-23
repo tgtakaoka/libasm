@@ -769,6 +769,23 @@ static void test_usereg() {
     }
 }
 
+static void test_data_constant() {
+    TEST("DC -128, 255",   0x80, 0xFF);
+    TEST("DC -129, 256",   0xFF, 0x7F, 0x01, 0x00);
+    TEST("DC A(0)",        0x00, 0x00);
+    TEST("DC A.1(A(0))",   0x00);
+    TEST("DC A.1(x'100')", 0x01);
+    TEST("DC A.0(x'123')", 0x23);
+    TEST("DC #0D0A, ''''", 0x0D, 0x0A, 0x27);
+    TEST("DC T'A'+X'80'",  0xC1);
+    TEST("DC X'20'+'A'",   0x61);
+    TEST("DC T'A''B'",     0x41, 0x27, 0x42);
+    TEST("DC 'TEXT'",      0x54, 0x45, 0x58, 0x54);
+    ERRT("DC T'A",         MISSING_CLOSING_QUOTE, "T'A");
+    ERRT("DC T'TEXT",      MISSING_CLOSING_QUOTE, "T'TEXT");
+    ERRT("DC 'TEXT",       MISSING_CLOSING_QUOTE, "'TEXT");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -788,6 +805,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_usereg);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

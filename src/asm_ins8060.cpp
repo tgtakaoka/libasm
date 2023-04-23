@@ -213,6 +213,40 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+Error AsmIns8060::defineAddressConstant(StrScanner &scan, Insn &insn) {
+    do {
+        auto p = scan.skipSpaces();
+        ErrorAt error;
+        const auto value = parseExpr(p, error);
+        if (error.getError())
+            return setError(error);
+        const auto v = value.getUnsigned();
+        insn.emitUint16Le(page(v) | offset(v - 1));
+        scan = p;
+    } while (scan.skipSpaces().expect(','));
+
+    if (!endOfLine(scan.skipSpaces()))
+        return setError(scan, GARBAGE_AT_END);
+    return OK;
+}
+
+Error AsmIns8060::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0 ||
+            strcasecmp_P(insn.name(), PSTR(".ascii")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR(".dbyte")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR(".addr")) == 0)
+        return defineAddressConstant(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR(".=")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand op;

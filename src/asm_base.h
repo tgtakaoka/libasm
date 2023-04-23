@@ -35,7 +35,7 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
 
-    const ValueParser &parser() { return _parser; }
+    const ValueParser &parser() const { return _parser; }
     bool endOfLine(const StrScanner &scan) const { return _parser.endOfLine(scan); }
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
@@ -55,6 +55,7 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     virtual bool hasSetInstruction() const { return false; }
 
     Error setCurrentLocation(uint32_t location);
+    uint32_t currentLocation() const { return _currentLocation; }
 
 protected:
     const Options _options;
@@ -75,8 +76,25 @@ protected:
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
+    Error defineOrigin(StrScanner &scan, Insn &insn, uintptr_t extra = 0);
+    Error alignOrigin(StrScanner &scan, Insn &insn, uintptr_t extra = 0);
+    Error allocateSpaces(StrScanner &scan, Insn &insn, uintptr_t extra);
+    Error defineString(StrScanner &scan, Insn &insn, uintptr_t extra = 0);
+    Error isString(StrScanner &scan, ErrorAt &error) const;
+    enum DataType : uint8_t {
+        DATA_BYTE,
+        DATA_BYTE_OR_WORD,
+        DATA_BYTE_IN_WORD,
+        DATA_BYTE_NO_STRING,
+        DATA_WORD,
+        DATA_WORD_NO_STRING,
+        DATA_LONG,
+        DATA_WORD_ALIGN2,
+        DATA_LONG_ALIGN2,
+    };
+    Error defineDataConstant(StrScanner &scan, Insn &insn, uintptr_t extra);
+
 private:
-    uint32_t currentLocation() const { return _currentLocation; }
     virtual ConfigSetter &configSetter() = 0;
     virtual Error processPseudo(StrScanner &scan, Insn &insn);
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;

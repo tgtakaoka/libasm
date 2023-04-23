@@ -36,6 +36,7 @@ void test_asm_cdp1802() {
             ".. comment line\n"
             "        org   x'abcd'\n"
             "        scal  3, #8485\n"
+            "label:  dc    a(label)\n"
             "symbol  =     x'1234'\n"
             "        ldi   a.0(symbol)\n"
             "        ldi   a.1(symbol)\n",
@@ -43,9 +44,12 @@ void test_asm_cdp1802() {
             "          0 :                    .. comment line\n"
             "       abcd :                            org   x'abcd'\n"
             "       abcd : 68 83 84 85                scal  3, #8485\n"
-            "       abd1 : =1234              symbol  =     x'1234'\n"
-            "       abd1 : f8 34                      ldi   a.0(symbol)\n"
-            "       abd3 : f8 12                      ldi   a.1(symbol)\n");
+            "       abd1 : ab d1              label:  dc    a(label)\n"
+            "       abd3 : =1234              symbol  =     x'1234'\n"
+            "       abd3 : f8 34                      ldi   a.0(symbol)\n"
+            "       abd5 : f8 12                      ldi   a.1(symbol)\n"
+
+    );
 
     assembler.setOption("use-register", "on");
 

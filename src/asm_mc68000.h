@@ -49,6 +49,7 @@ private:
     Error emitEffectiveAddr(
             AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

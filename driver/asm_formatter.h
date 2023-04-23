@@ -43,7 +43,6 @@ public:
     const char *getLine() override;
 
     // Interface to AsmDirective
-    void emitByte(uint32_t base, uint8_t val);
     void setStartAddress(uint32_t addr) { _address = addr; }
     int byteLength() const { return generatedSize(); }
     StrScanner &lineSymbol() { return _line_symbol; }

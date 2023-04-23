@@ -46,12 +46,22 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     do {                                                                          \
         const auto unit = assembler.config().addressUnit();                       \
         const auto endian = assembler.config().endian();                          \
-        const Config::opcode_t expected[] = {__VA_ARGS__};                      \
+        const Config::opcode_t expected[] = {__VA_ARGS__};                        \
+        const ArrayMemory memory(addr *unit, expected, sizeof(expected), endian); \
+        asm_assert(file, line, error, src, memory);                               \
+    } while (0)
+#define __BVASSERT(file, line, error, addr, src, ...)                             \
+    do {                                                                          \
+        const auto unit = assembler.config().addressUnit();                       \
+        const auto endian = assembler.config().endian();                          \
+        const uint8_t expected[] = {__VA_ARGS__};                                 \
         const ArrayMemory memory(addr *unit, expected, sizeof(expected), endian); \
         asm_assert(file, line, error, src, memory);                               \
     } while (0)
 #define VASSERT(error, addr, src, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, src, ##__VA_ARGS__)
+#define BVASSERT(error, addr, src, ...) \
+    __BVASSERT(__FILE__, __LINE__, error, addr, src, ##__VA_ARGS__)
 #define AERRT(addr, src, error, at, ...)                                          \
     do {                                                                          \
         VASSERT(error, addr, src, ##__VA_ARGS__);                                 \
@@ -67,6 +77,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define ERUS(src, at, ...) AERUS(0x0000, src, at, __VA_ARGS__)
 #define ERUI(src, ...) ERRT(src, UNKNOWN_INSTRUCTION, src, ##__VA_ARGS__);
 #define TEST(src, ...) VASSERT(OK, 0x0000, src, __VA_ARGS__)
+#define BTEST(src, ...) BVASSERT(OK, 0x0000, src, __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

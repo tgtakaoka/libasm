@@ -230,6 +230,21 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     }
 }
 
+Error AsmScn2650::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("data")) == 0 ||
+            strcasecmp_P(insn.name(), PSTR("alit")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("acon")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("res")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand opr1, opr2;

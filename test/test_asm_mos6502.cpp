@@ -1072,6 +1072,22 @@ static void test_error() {
         ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     }
 }
+
+static void test_data_constant() {
+    TEST(".BYTE -128, 255", 0x80, 0xFF);
+    TEST(".BYTE 'A', '\"'", 0x41, 0x22);
+    TEST(".BYTE '9'-'0'",   0x09);
+    TEST(".BYTE ''''",      0x27);
+    TEST(".BYTE '''",       0x27);
+    TEST(".BYTE 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT(".BYTE 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST(".WORD -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST(".WORD 'X'",       0x58, 0x00);
+    TEST(".WORD 'X'+0",     0x58, 0x00);
+    TEST(".WORD 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT(".WORD 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -1097,6 +1113,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_error);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

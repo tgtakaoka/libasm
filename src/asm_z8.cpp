@@ -426,6 +426,18 @@ Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
             return setRp(scan, &AsmZ8::setRegPointer1);
     }
+    if (strcasecmp_P(insn.name(), PSTR("db")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("dl")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
     return UNKNOWN_DIRECTIVE;
 }
 

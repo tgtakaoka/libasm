@@ -32,16 +32,22 @@ void test_asm_tms32010() {
     listing.setUpperHex(false);
 
     ASM("tms32010",
-            "        cpu   tms32010\n"
+            "        .cpu  tms32010\n"
             "* comment line\n"
-            "        org   789h\n"
+            "        .org  789h\n"
             "        call  0fedh\n"
-            "        sacl  *+, 0, ar0\n",
-            "          0 :                            cpu   tms32010\n"
+            "        sacl  *+, 0, ar0\n"
+            "label:  .word label\n"
+            "        .byte 1,'''',3\n"
+            "        .string \"A\"\"B'C\"\n",
+            "          0 :                            .cpu  tms32010\n"
             "          0 :                    * comment line\n"
-            "        789 :                            org   789h\n"
+            "        789 :                            .org  789h\n"
             "        789 : f800 0fed                  call  0fedh\n"
-            "        78b : 50a0                       sacl  *+, 0, ar0\n");
+            "        78b : 50a0                       sacl  *+, 0, ar0\n"
+            "        78c : 078c               label:  .word label\n"
+            "        78d : 0001 0027 0003             .byte 1,'''',3\n"
+            "        790 : 2241 2742 0043             .string \"A\"\"B'C\"\n");
 }
 
 void test_dis_tms32010() {

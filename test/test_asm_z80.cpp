@@ -1021,6 +1021,34 @@ static void test_undefined_symbol() {
         AERUS(0x1000, "DJNZ UNDEF",  "UNDEF", 0x10, 0x00);
     }
 }
+
+static void test_data_constant() {
+    TEST("DB -128, 255", 0x80, 0xFF);
+    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST("DB '9'-'0'",   0x09);
+    TEST("DB ''''",      0x27);
+    ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST("DL 12345678H", 0x78, 0x56, 0x34, 0x12);
+    TEST("DL 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT("DL 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+    TEST("DEFB -128, 255", 0x80, 0xFF);
+    TEST("DEFB 'A', '\"'", 0x41, 0x22);
+    TEST("DEFB '9'-'0'",   0x09);
+    TEST("DEFB ''''",      0x27);
+    ERRT("DEFB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DEFB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DEFB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DEFW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST("DEFW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DEFW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST("DEFM 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -1045,6 +1073,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bitop_indexed);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

@@ -501,6 +501,19 @@ static void test_dataio() {
     ERUS("OUT *+, UNDEF, AR1", "UNDEF, AR1", 0x48A1);
     ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
 }
+
+static void test_data_constant() {
+    BTEST(".byte -128, 255",    0x80, 0x00, 0xFF, 0x00);
+    BTEST(".byte 1234H",        0x34, 0x00);
+    BTEST(".word -128, 256",    0x80, 0xFF, 0x00, 0x01);
+    BTEST(".long 12345678H",    0x78, 0x56, 0x34, 0x12);
+    BTEST(".byte '''','\"'",    0x27, 0x00, 0x22, 0x00);
+    BTEST(".byte \"ABC\"",      0x41, 0x42, 0x43, 0x00);
+    BTEST(".word \"ABC\"",      0x41, 0x42, 0x43, 0x00);
+    BTEST(".long \"ABC\"",      0x41, 0x42, 0x43, 0x00);
+    BTEST(".string \"A\"\"B\"", 0x41, 0x22, 0x42, 0x00);
+    ERRT(".string \"A\"\"B",   MISSING_CLOSING_DQUOTE, "\"A\"\"B");
+}
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -511,6 +524,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_control);
     RUN_TEST(test_dataio);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

@@ -36,11 +36,15 @@ void test_asm_i8080() {
             "        cpu   i8080\n"
             "; comment line\n"
             "        org   0abcdh\n"
-            "        jpe   label1\n",
+            "        jpe   label1\n"
+            "        db    'z'-'a', 'A''B', 0\n"
+            "label2  dw    label2\n",
             "          0 :                            cpu   i8080\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
-            "       abcd : ea ec eb                   jpe   label1\n");
+            "       abcd : ea ec eb                   jpe   label1\n"
+            "       abd0 : 19 41 27 42 00             db    'z'-'a', 'A''B', 0\n"
+            "       abd5 : d5 ab              label2  dw    label2\n");
 }
 
 void test_dis_i8080() {

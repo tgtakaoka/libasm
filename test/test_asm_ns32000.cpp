@@ -723,6 +723,34 @@ static void test_undefined_symbol() {
     ERUS("CMPF F0, UNDEF", "UNDEF",     0xBE, 0x09, 0x05, 0x00, 0x00, 0x00, 0x00);
     ERUS("CMPL F0, UNDEF", "UNDEF",     0xBE, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 }
+
+static void test_data_constant() {
+    TEST(".byte   -128, 255",    0x80, 0xFF);
+    TEST(".byte   'A', '\"'",    0x41, 0x22);
+    TEST(".byte   '9'-'0'",      0x09);
+    TEST(".byte   '\\''",        0x27);
+    ERRT(".byte   '''",          ILLEGAL_CONSTANT, "'''");
+    ERRT(".byte   ''",           ILLEGAL_CONSTANT, "''");
+    TEST(".byte   \"A\\\"B\",0", 0x41, 0x22, 0x42, 0x00);
+    ERRT(".byte   \"A\\\"B,0",   MISSING_CLOSING_DQUOTE, "\"A\\\"B,0");
+    TEST(".byte   \"\\x12\"",    0x78, 0x31, 0x32);
+    TEST(".ascii  \"A'B\\\"C\"", 0x41, 0x27, 0x42, 0x22, 0x43);
+    TEST(".ascii  \"A\", \"C\"", 0x41, 0x43);
+    TEST(".ascii   \"\\x12\"",   0x78, 0x31, 0x32);
+    TEST(".word   -128, 255",    0xFF, 0x80, 0x00, 0xFF);
+    TEST(".word   'X'",          0x00, 0x58);
+    TEST(".word   'X'+0",        0x00, 0x58);
+    TEST(".word   \"X\"",        0x58, 0x00);
+    TEST(".word   \"A'B\"",      0x41, 0x27, 0x42, 0x00);
+    ERRT(".word   \"A'B",        MISSING_CLOSING_DQUOTE, "\"A'B");
+    TEST(".double x'1234",       0x00, 0x00, 0x12, 0x34);
+    TEST(".double x'12345678",   0x12, 0x34, 0x56, 0x78);
+    TEST(".double 'X'",          0x00, 0x00, 0x00, 0x58);
+    TEST(".double \"X\"",        0x58, 0x00, 0x00, 0x00);
+    TEST(".double \"A'B\\\"C\"", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT(".double \"A'B\\\"C",   MISSING_CLOSING_DQUOTE, "\"A'B\\\"C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -743,6 +771,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_generic_addressing);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

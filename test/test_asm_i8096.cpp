@@ -552,6 +552,22 @@ static void test_undefined_symbol() {
     AERUS(0x2000, "JBS 18, 7, UNDEF", "UNDEF", 0x3F, 0x12, 0x00);
 }
 
+static void test_data_constant() {
+    TEST("DCB -128, 255", 0x80, 0xFF);
+    TEST("DcB 'A', '\"'", 0x41, 0x22);
+    TEST("DCB '9'-'0'",   0x09);
+    TEST("DCB ''''",      0x27);
+    ERRT("DCB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DCB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DCB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DCW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST("DCW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DCW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST("DCL 12345678H", 0x78, 0x56, 0x34, 0x12);
+    TEST("DCL 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT("DCL 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -564,6 +580,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

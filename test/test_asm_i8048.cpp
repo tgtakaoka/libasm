@@ -448,6 +448,19 @@ static void test_control() {
     }
 }
 
+static void test_data_constant() {
+    TEST("DB -128, 255", 0x80, 0xFF);
+    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST("DB '9'-'0'",   0x09);
+    TEST("DB ''''",      0x27);
+    ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DW -128, 255", 0xFF, 0x80, 0x00, 0xFF);
+    TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -461,6 +474,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_move);
     RUN_TEST(test_timer_counter);
     RUN_TEST(test_control);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

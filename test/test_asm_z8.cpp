@@ -915,6 +915,26 @@ static void test_error() {
     EZ88("BXOR R2,R8,#8",  ILLEGAL_BIT_NUMBER, "#8",  0x27, 0x20, 0xC8);
     EZ88("BXOR R2,R8,#-1", ILLEGAL_BIT_NUMBER, "#-1", 0x27, 0x2E, 0xC8);
 }
+
+static void test_data_constant() {
+    TEST("DB -128, 255", 0x80, 0xFF);
+    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST("DB '9'-'0'",   0x09);
+    TEST("DB '%27'",     0x27);
+    ERRT("DB '%2'",      UNKNOWN_ESCAPE_SEQUENCE, "%2'");
+    TEST("DB '%q'",      0x27);
+    ERRT("DB '''",       MISSING_CLOSING_QUOTE, "");
+    TEST("DB 'A%22B',0", 0x41, 0x22, 0x42, 0x00);
+    TEST("DB 'A%QB',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DB 'A%QB,0",   MISSING_CLOSING_QUOTE, "'A%QB,0");
+    TEST("DW -128, 255", 0xFF, 0x80, 0x00, 0xFF);
+    TEST("DW 'A%QB'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DW 'A%QB",     MISSING_CLOSING_QUOTE, "'A%QB");
+    TEST("DL 12345678H", 0x12, 0x34, 0x56, 0x78);
+    TEST("DL 'A%QB%22C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT("DL 'A%QB%22C",  MISSING_CLOSING_QUOTE, "'A%QB%22C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -932,6 +952,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_error);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

@@ -574,6 +574,21 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     return OK;
 }
 
+Error AsmZ8000::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("byte")) == 0 ||
+            strcasecmp_P(insn.name(), PSTR("string")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("word")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD_ALIGN2);
+    if (strcasecmp_P(insn.name(), PSTR("long")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG_ALIGN2);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand dstOp, srcOp, ex1Op, ex2Op;

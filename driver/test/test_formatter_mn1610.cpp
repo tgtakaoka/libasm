@@ -33,11 +33,17 @@ void test_asm_mn1610() {
             "        cpu   mn1610\n"
             "* comment line\n"
             "        org   x'abcd'\n"
-            "        tbit  r3, 5, nz\n",
+            "        tbit  r3, 5, nz\n"
+            "label:  dc    label\n"
+            "        ds    2\n"
+            "        dc    c'ABC',3\n",
             "          0 :                            cpu   mn1610\n"
             "          0 :                    * comment line\n"
             "       ABCD :                            org   x'abcd'\n"
-            "       ABCD : 2B55                       tbit  r3, 5, nz\n");
+            "       ABCD : 2B55                       tbit  r3, 5, nz\n"
+            "       ABCE : ABCE               label:  dc    label\n"
+            "       ABCF :                            ds    2\n"
+            "       ABD1 : 4142 4300 0003             dc    c'ABC',3\n");
 }
 
 void test_asm_mn1613() {

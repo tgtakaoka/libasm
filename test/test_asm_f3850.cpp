@@ -247,6 +247,19 @@ void test_control() {
     TEST("NOP ", 0x2B);
 }
 
+void test_data_constant() {
+    TEST("DC -128,255",    0x80, 0xFF);
+    TEST("DA -128,255",    0xFF, 0x80, 0x00, 0xFF);
+    TEST("DC #A,C'B','C'", 0x41, 0x42, 0x43);
+    TEST("DC C'C'+1",      0x44);
+    ERRT("DC C'C+1",       MISSING_CLOSING_QUOTE, "C'C+1");
+    TEST("DC ''''+1",      0x28);
+    TEST("DC '''-1",       0x26);
+    TEST("DC #'",      0x27);
+    TEST("DC c'A''C'",     0x41, 0x27, 0x43);
+    TEST("DC 'A''C'",      0x41, 0x27, 0x43);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -262,6 +275,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_io);
     RUN_TEST(test_control);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

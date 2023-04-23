@@ -71,7 +71,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
         auto p = scan;
         while (!parser.endOfLine(p) && !isspace(*p)) {
             const auto c = *p++;
-            if (c == '=')       // for '=' and '*='
+            if (c == '=')  // for '=' and '*='
                 break;
         }
         directive.trimEndAt(p);
@@ -104,14 +104,20 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     _insn.reset(startAddress());
     assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver);
     _errorAt.setError(assembler);
+    // maybe be modified because of alignment required by constant generating pseudos.
+    setStartAddress(_insn.address());
     const auto allowUndef =
             _errorAt.getError() == UNDEFINED_SYMBOL && _driver.symbolMode() != REPORT_UNDEFINED;
     if (_errorAt.isOK() || allowUndef) {
-        if (_insn.length() > 0) {
+        if (_insn.length() == 0) {
+            // set location or allocate memory space.
+            _driver.setOrigin(assembler.currentLocation());
+        } else {
             const uint8_t unit = assembler.config().addressUnit();
             const uint32_t base = _insn.address() * unit;
             for (auto offset = 0; offset < _insn.length(); offset++) {
-                emitByte(base, _insn.bytes()[offset]);
+                _memory.writeByte(base + _length, _insn.bytes()[offset]);
+                _length++;
             }
             _driver.setOrigin(startAddress() + _insn.length() / unit);
         }
@@ -122,10 +128,6 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
 
 bool AsmFormatter::isError() const {
     return _reportError && _errorAt.getError() != OK && _errorAt.getError() != END_ASSEMBLE;
-}
-
-void AsmFormatter::emitByte(uint32_t base, uint8_t val) {
-    _memory.writeByte(base + _length++, val);
 }
 
 bool AsmFormatter::hasNextLine() const {

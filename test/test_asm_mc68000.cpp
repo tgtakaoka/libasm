@@ -2857,6 +2857,32 @@ static void test_undefined_symbol() {
     AERUS(0x1000, "MOVEA (UNDEF,PC),A1",      "UNDEF,PC),A1",      0031172, 0x0000);
     AERUS(0x1000, "MOVEA (UNDEF,PC,D1.L),A1", "UNDEF,PC,D1.L),A1", 0031173, 0x1800);
 }
+
+static void test_data_constant() {
+    BTEST("DC.B -128, 255", 0x80, 0xFF);
+    BTEST("DC.B 'A', '\"'", 0x41, 0x22);
+    BTEST("DC.B '9'-'0'",   0x09);
+    BTEST("DC.B ''''",      0x27);
+    ERRT("DC.B '''",        MISSING_CLOSING_QUOTE, "'''");
+    BTEST("DC.B 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DC.B 'A''B,0",    MISSING_CLOSING_QUOTE, "'A''B,0");
+    BTEST("DC.W -128, 255", 0xFF, 0x80, 0x00, 0xFF);
+    BTEST("DC.W 'X'",       0x58, 0x00);
+    BTEST("DC.W 'X'+0",     0x00, 0x58);
+    BTEST("DC.W 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DC.W 'A''B",      MISSING_CLOSING_QUOTE, "'A''B");
+    BTEST("DC 'X'+0, 'Y'",  0x00, 0x58, 0x59, 0x00);
+    BTEST("DC   -128, 255", 0xFF, 0x80, 0x00, 0xFF);
+    BTEST("DC   'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DC   'A''B",      MISSING_CLOSING_QUOTE, "'A''B");
+    BTEST("DC.L $1234",     0x00, 0x00, 0x12, 0x34);
+    BTEST("DC.L $12345678", 0x12, 0x34, 0x56, 0x78);
+    BTEST("DC.L 'X'",       0x58, 0x00, 0x00, 0x00);
+    BTEST("DC.L 'X'+0",     0x00, 0x00, 0x00, 0x58);
+    BTEST("DC.L 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT("DC.L 'A''B\"C",   MISSING_CLOSING_QUOTE, "'A''B\"C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -2873,6 +2899,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_alias);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

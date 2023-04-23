@@ -222,6 +222,20 @@ void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
     }
 }
 
+Error AsmI8048::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("db")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand dstOp, srcOp;

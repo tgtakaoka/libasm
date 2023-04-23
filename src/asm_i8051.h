@@ -33,8 +33,9 @@ private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
     void encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

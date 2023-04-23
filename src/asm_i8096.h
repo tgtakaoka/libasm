@@ -36,6 +36,7 @@ private:
     void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
     void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

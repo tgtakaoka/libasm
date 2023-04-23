@@ -184,6 +184,22 @@ void AsmMc6800::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     }
 }
 
+Error AsmMc6800::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("fcb")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE_NO_STRING);
+    if (strcasecmp_P(insn.name(), PSTR("fdb")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD_NO_STRING);
+    if (strcasecmp_P(insn.name(), PSTR("fcc")) == 0)
+        return defineString(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("rmb")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand op1, op2, op3;

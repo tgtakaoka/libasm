@@ -410,6 +410,24 @@ static void test_error() {
     ERRT("LD A,@1(P3)", MISSING_COMMA,    "@1(P3)"); // SC/MP style
     ERRT("LD A,1,(EA)", GARBAGE_AT_END,   "(EA)");
 }
+
+static void test_data_constant() {
+    TEST(".byte  -128, 255", 0x80, 0xFF);
+    TEST(".byte  'A', '\"'", 0x41, 0x22);
+    TEST(".byte  '9'-'0'",   0x09);
+    TEST(".byte  ''''",      0x27);
+    ERRT(".byte  '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST(".byte  'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT(".byte  'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST(".ascii 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT(".ascii 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST(".dbyte -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST(".dbyte 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT(".dbyte 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST(".addr  x'0100",    0xFF, 0x00);
+    TEST(".addr  x'1000",    0xFF, 0x0F);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -425,6 +443,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_error);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

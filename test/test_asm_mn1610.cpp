@@ -752,6 +752,21 @@ static void test_undefined_symbol() {
     }
 }
 
+static void test_data_constant() {
+    TEST("DC -128,255",    0xFF80, 0x00FF);
+    TEST("DC -129,256",    0xFF7F, 0x0100);
+    TEST("DC C'TEXTa'",    0x5445, 0x5854, 0x6100);
+    TEST("DC C'X'",        0x5800);
+    TEST("DC C'X'+0",      0x0058);
+    TEST("DC 'X'",         0x5800);
+    TEST("DC 'X'+0",       0x0058);
+    TEST("DC C'A''B'",     0x4127, 0x4200);
+    TEST("DC 'TEXT'",      0x5445, 0x5854);
+    ERRT("DC C'A",         MISSING_CLOSING_QUOTE, "C'A");
+    ERRT("DC C'TEXT",      MISSING_CLOSING_QUOTE, "C'TEXT");
+    ERRT("DC 'TEXT",       MISSING_CLOSING_QUOTE, "'TEXT");
+}
+
 void run_tests(const char *cpu) {
     assembler.setCpu(cpu);
     RUN_TEST(test_transfer);
@@ -763,6 +778,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_misc);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

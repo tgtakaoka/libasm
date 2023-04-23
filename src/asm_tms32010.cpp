@@ -37,7 +37,14 @@ const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
+        const LetterParser &letter() const override { return _letter; }
         const SimpleSymbolParser _symbol{SymbolParser::DOLLAR};
+        const struct : LetterParser {
+            char stringDelimiter() const override { return '"'; }
+            char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
+                return readLetter(scan, error, '"');
+            }
+        } _letter{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -162,6 +169,24 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = constantType(op.val16);
     scan = p;
     return OK;
+}
+
+Error AsmTms32010::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE_IN_WORD);
+    if (strcasecmp_P(insn.name(), PSTR(".word")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR(".long")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR(".string")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR(".org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {

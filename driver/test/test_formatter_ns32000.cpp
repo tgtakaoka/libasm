@@ -36,13 +36,13 @@ void test_asm_ns32000() {
     driver.internSymbol(0x778899, "off1");
 
     ASM("ns32032",
-            "        cpu     ns32032\n"
+            "        .cpu    ns32032\n"
             "# comment line\n"
-            "        org     x'abcdef\n"
+            "        .org    x'abcdef\n"
             "        extd    r1, disp2(disp1(fp))[r3:w], off2(off1(sb))[r4:w], 32\n",
-            "          0 :                            cpu     ns32032\n"
+            "          0 :                            .cpu    ns32032\n"
             "          0 :                    # comment line\n"
-            "     abcdef :                            org     x'abcdef\n"
+            "     abcdef :                            .org    x'abcdef\n"
             // clang-format off
             "     abcdef : 2e 4b ef 83 94 c0          extd    r1, disp2(disp1(fp))[r3:w], off2(off1(sb))[r4:w], 32\n"
             // clang-format on

@@ -282,6 +282,16 @@ Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
         return parseTableOnOff(scan, &AsmMos6502::setLongAccumulator);
     if (strcasecmp_P(insn.name(), OPT_BOOL_LONGI) == 0)
         return parseTableOnOff(scan, &AsmMos6502::setLongIndex);
+    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR(".word")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("*=")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
     return UNKNOWN_DIRECTIVE;
 }
 

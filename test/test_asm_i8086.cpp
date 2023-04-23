@@ -2107,6 +2107,23 @@ static void test_error() {
         ERRT("OUTSB DX, [BX]",   ILLEGAL_OPERAND, "[BX]",   0x6E);
     }
 }
+
+static void test_data_constant() {
+    TEST("DB -128, 255", 0x80, 0xFF);
+    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST("DB '9'-'0'",   0x09);
+    TEST("DB ''''",      0x27);
+    ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    TEST("DD 12345678H", 0x78, 0x56, 0x34, 0x12);
+    TEST("DD 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT("DD 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -2121,6 +2138,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_comment);
     RUN_TEST(test_error);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

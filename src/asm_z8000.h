@@ -61,6 +61,7 @@ private:
     void checkRegisterOverlap(
             const AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp);
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

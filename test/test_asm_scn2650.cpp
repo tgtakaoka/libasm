@@ -717,6 +717,16 @@ static void test_error() {
     AERRT(0x3000, "BSXA H'FFFF',R3", OVERFLOW_RANGE, "H'FFFF',R3", 0xBF, 0xFF, 0xFF);
 }
 
+static void test_data_constant() {
+    TEST("DATA -128,255",  0x80, 0xFF);
+    TEST("DATA -129,256",  0x7F, 0x00);
+    TEST("ACON 0",         0x00, 0x00);
+    TEST("DATA A'TE''XT'", 0x54, 0x45, 0x27, 0x58, 0x54);
+    TEST("ALIT A'TE\"XT'", 0x54, 0x45, 0x22, 0x58, 0x54);
+    TEST("DATA 'TE\"XT'",  0x54, 0x45, 0x22, 0x58, 0x54);
+    TEST("ALIT 'TE''XT'",  0x54, 0x45, 0x27, 0x58, 0x54);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -731,6 +741,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_misc);
     RUN_TEST(test_undefined);
     RUN_TEST(test_error);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

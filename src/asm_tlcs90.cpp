@@ -210,6 +210,24 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+Error AsmTlcs90::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("db")) == 0 ||
+            strcasecmp_P(insn.name(), PSTR("defb")) == 0 ||
+            strcasecmp_P(insn.name(), PSTR("defm")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0 || strcasecmp_P(insn.name(), PSTR("defw")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("dl")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0 || strcasecmp_P(insn.name(), PSTR("defs")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand dstOp, srcOp;

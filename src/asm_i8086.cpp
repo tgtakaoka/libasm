@@ -527,6 +527,26 @@ void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &
     }
 }
 
+Error AsmI8086::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("db")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("dd")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0 || strcasecmp_P(insn.name(), PSTR("resb")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("resw")) == 0)
+        return allocateSpaces(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("resd")) == 0)
+        return allocateSpaces(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand dstOp, srcOp, extOp;

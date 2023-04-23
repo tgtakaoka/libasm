@@ -539,6 +539,18 @@ Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
         const auto val = parseExpr32(scan, *this);
         return isOK() ? setDirectPage(val) : getError();
     }
+    if (strcasecmp_P(insn.name(), PSTR("fcb")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE_NO_STRING);
+    if (strcasecmp_P(insn.name(), PSTR("fdb")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD_NO_STRING);
+    if (strcasecmp_P(insn.name(), PSTR("fcc")) == 0)
+        return defineString(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("rmb")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
     return UNKNOWN_DIRECTIVE;
 }
 

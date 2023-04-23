@@ -441,6 +441,23 @@ static void test_undefined_symbol() {
     ERUS("BRA 2+UNDEF", "UNDEF",   0x20, 0x00);
     ERUS("BSR UNDEF",   "UNDEF",   0xAD, 0x00);
 }
+
+static void test_data_constant() {
+    TEST("FCB -128, 255", 0x80, 0xFF);
+    TEST("FCB 'A', '\"'", 0x41, 0x22);
+    TEST("FCB '9'-'0'",   0x09);
+    TEST("FCB '''",       0x27);
+    TEST("FCB ''",        0x27);
+    ERRT("FCB '",         ILLEGAL_CONSTANT, "'");
+    TEST("FCB 'A,'','B",  0x41, 0x27, 0x42);
+    TEST("FDB -128, 255", 0xFF, 0x80, 0x00, 0xFF);
+    TEST("FDB 'A, '\"",   0x00, 0x41, 0x00, 0x22);
+    TEST("FCC 'ABC'",     0x41, 0x42, 0x43);
+    TEST("FCC /ABC/",     0x41, 0x42, 0x43);
+    ERRT("FCC 'ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);
+    ERRT("FCC /ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -454,6 +471,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bit_ops);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

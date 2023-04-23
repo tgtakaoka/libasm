@@ -54,7 +54,7 @@ static void test_load_and_exchange() {
     TEST("clrb rh2", 0x8C28);
     if (z8001()) {
         TEST("CLR  @RR2",         0x0D28);
-        TEST("CLR  0x120034",     0x4D08, 0x1234);
+        TEST("CLR  %120034",      0x4D08, 0x1234);
         TEST("CLR  0x561234",     0x4D08, 0xD600, 0x1234);
         TEST("CLR  0x7FFFFF",     0x4D08, 0xFF00, 0xFFFF);
         ERRT("CLR  0x800000",     OVERFLOW_RANGE, "0x800000", 0x4D08, 0x0000);
@@ -207,8 +207,8 @@ static void test_load_and_exchange() {
         TEST("LD  0x561234,#0x5678",     0x4D05, 0xD600, 0x1234, 0x5678);
         TEST("LD  0x120034(R2),#0x5678", 0x4D25, 0x1234, 0x5678);
         TEST("LD  0x561234(R2),#0x5678", 0x4D25, 0xD600, 0x1234, 0x5678);
-        TEST("LDB RH2,#0x56",            0xC256);
-        TEST("LDB @RR2,#0x56",           0x0C25, 0x5656);
+        TEST("LDB RH2,#%(2)01010110",    0xC256);
+        TEST("LDB @RR2,#%(8)126",        0x0C25, 0x5656);
         TEST("LDB 0x120034,#0x56",       0x4C05, 0x1234, 0x5656);
         TEST("LDB 0x561234,#0x56",       0x4C05, 0xD600, 0x1234, 0x5656);
         TEST("LDB 0x120034(R2),#0x56",   0x4C25, 0x1234, 0x5656);
@@ -2208,6 +2208,26 @@ static void test_undefined_symbol() {
     ERUS("IN  R1,#UNDEF", "UNDEF",    0x3B14, 0x0000);
     ERUS("OUT #UNDEF,R1", "UNDEF,R1", 0x3B16, 0x0000);
 }
+
+static void test_data_constant() {
+    BTEST("byte -128, 255",  0x80, 0xFF);
+    BTEST("byte 'A', '\"'",  0x41, 0x22);
+    BTEST("byte '9'-'0'",    0x09);
+    BTEST("byte '%27'",      0x27);
+    ERRT("byte '%2'",        UNKNOWN_ESCAPE_SEQUENCE, "%2'");
+    BTEST("byte '%q'",       0x27);
+    ERRT("byte '''",         MISSING_CLOSING_QUOTE, "");
+    BTEST("byte 'A%22B',0",  0x41, 0x22, 0x42, 0x00);
+    BTEST("byte 'A%QB',0",   0x41, 0x27, 0x42, 0x00);
+    ERRT("byte 'A%QB,0",     MISSING_CLOSING_QUOTE, "'A%QB,0");
+    BTEST("word -128, 255",  0xFF, 0x80, 0x00, 0xFF);
+    BTEST("word 'A%QB'",     0x41, 0x27, 0x42, 0x00);
+    ERRT("word 'A%QB",       MISSING_CLOSING_QUOTE, "'A%QB");
+    BTEST("long 12345678H",  0x12, 0x34, 0x56, 0x78);
+    BTEST("long 'A%QB%22C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
+    ERRT("long 'A%QB%22C",   MISSING_CLOSING_QUOTE, "'A%QB%22C");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -2229,6 +2249,7 @@ void run_tests(const char *cpu) {
     }
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

@@ -710,18 +710,42 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
 Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     auto p = scan.skipSpaces();
     auto opr = parser().readSymbol(p);
-    auto error = OK;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        error = setFpuName(opr);
-    } else if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
-        error = setPmmuName(opr);
-    } else {
-        return UNKNOWN_DIRECTIVE;
+        auto error = setFpuName(opr);
+        if (error)
+            return setError(scan, error);
+        scan = p;
+        return OK;
     }
-    if (error)
-        return setError(scan, error);
-    scan = p;
-    return OK;
+    if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
+        auto error = setPmmuName(opr);
+        if (error)
+            return setError(scan, error);
+        scan = p;
+        return OK;
+    }
+    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0 ||
+            strcasecmp_P(insn.name(), PSTR(".ascii")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR(".word")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR(".double")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR(".blkb")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR(".blkw")) == 0)
+        return allocateSpaces(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR(".blkd")) == 0)
+        return allocateSpaces(scan, insn, DATA_LONG);
+    if (strcasecmp_P(insn.name(), PSTR(".space")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR(".org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {

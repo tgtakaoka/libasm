@@ -45,6 +45,12 @@ public:
         _address = addr;
         _length = 0;
     }
+    uint32_t align(uint8_t step) {
+        const uint8_t rem = _address % step;
+        if (rem)
+            _address += step - rem;
+        return _address;
+    }
 
     /** No copy constructor. */
     Insn(Insn const &) = delete;

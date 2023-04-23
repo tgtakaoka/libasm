@@ -140,6 +140,20 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     }
 }
 
+Error AsmF3850::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("dc")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE_OR_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("da")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD);
+    if (strcasecmp_P(insn.name(), PSTR("rs")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
+}
+
 Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     Operand op1, op2;

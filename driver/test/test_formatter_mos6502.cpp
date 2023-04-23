@@ -52,13 +52,13 @@ void test_asm_w65816() {
     ASM("w65c816",
             "        cpu   w65c816\n"
             "; comment line\n"
-            "        org   $abcdef\n"
+            "        *=$abcdef\n"
             "        sbc   label1\n"
             "        longa on\n"
             "        adc   #$1234\n",
             "          0 :                            cpu   w65c816\n"
             "          0 :                    ; comment line\n"
-            "     abcdef :                            org   $abcdef\n"
+            "     abcdef :                            *=$abcdef\n"
             "     abcdef : ef f0 f1 f2                sbc   label1\n"
             "     abcdf3 :                            longa on\n"
             "     abcdf3 : 69 34 12                   adc   #$1234\n");

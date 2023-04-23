@@ -59,22 +59,9 @@ protected:
     void disablePseudo(const char *name);
 
     // Common PseudoHandler
-    Error defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineData8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineUint32sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error allocateUint32sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
@@ -82,9 +69,6 @@ protected:
     // PseudoHanlder helper
     Error defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver,
             const StrScanner &symbol, bool variable);
-    Error defineBytes(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool acceptString);
-    Error allocateSpaces(StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int width);
-    Error setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver);
 };
 
 class MotorolaDirective : public AsmDirective {

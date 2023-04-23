@@ -431,6 +431,20 @@ static void test_undefined_symbol() {
     ERUS("OUT  UNDEF", "UNDEF", 0xD3, 0x00);
     ERUS("IN   UNDEF", "UNDEF", 0xDB, 0x00);
 }
+
+static void test_data_constant() {
+    TEST("DB -128, 255", 0x80, 0xFF);
+    TEST("DB 'A', '\"'", 0x41, 0x22);
+    TEST("DB '9'-'0'",   0x09);
+    TEST("DB ''''",      0x27);
+    ERRT("DB '''",       MISSING_CLOSING_QUOTE, "'''");
+    TEST("DB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("DB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("DW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    TEST("DW 'A''B'",    0x41, 0x27, 0x42, 0x00);
+    ERRT("DW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+}
+
 // clang-format on
 
 void run_tests(const char *cpu) {
@@ -446,6 +460,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_io);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_data_constant);
 }
 
 // Local Variables:

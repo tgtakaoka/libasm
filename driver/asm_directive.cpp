@@ -34,53 +34,6 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 
 // PseudoHandler
 
-Error AsmDirective::defineOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    const auto line = scan;
-    auto &parser = assembler().parser();
-    ErrorAt error;
-    auto value = parser.eval(scan, error, &driver);
-    // TODO line end check
-    if (error.getError())
-        return setError(error);
-    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-        return setError(UNDEFINED_SYMBOL);
-    setAt(line);
-    const auto err = assembler().config().checkAddr(value.getUnsigned());
-    if (err)
-        return setError(err);
-    list.setStartAddress(driver.setOrigin(value.getUnsigned()));
-    return setOK();
-}
-
-Error AsmDirective::setAlignment(uint32_t alignment, AsmFormatter &list, AsmDriver &driver) {
-    const auto addr = (driver.origin() + (alignment - 1)) & ~(alignment - 1);
-    const auto err = assembler().config().checkAddr(addr);
-    if (err)
-        return setError(err);
-    driver.setOrigin(addr);
-    list.setStartAddress(driver.origin());
-    return setOK();
-}
-
-Error AsmDirective::alignOrigin(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    const auto line = scan;
-    auto &parser = assembler().parser();
-    ErrorAt error;
-    const auto value = parser.eval(scan, error, &driver);
-    // TODO line end check
-    if (error.getError())
-        return setError(error);
-    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-        return setError(UNDEFINED_SYMBOL);
-    if (value.overflowUint16())
-        return setError(OVERFLOW_RANGE);
-    setAt(line);
-    const auto alignment = value.getUnsigned();
-    if (alignment > 0x1000)
-        setError(ILLEGAL_OPERAND);
-    return setAlignment(alignment, list, driver);
-}
-
 Error AsmDirective::defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     return defineSymbol(scan, list, driver, list.lineSymbol(), /*variable*/ false);
 }
@@ -142,221 +95,6 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver 
     }
     scan = p;
     return setError(driver.openSource(filename));
-}
-
-Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = driver.origin() * unit;
-    do {
-        const auto delim = *scan.skipSpaces()++;
-        auto p = scan;
-        while (!p.expect(delim)) {
-            if (*p == 0)
-                return setError(p, MISSING_CLOSING_DELIMITER);
-            const auto c = *p++;
-            list.emitByte(base, c);
-        }
-        scan = p;
-    } while (scan.skipSpaces().expect(','));
-    scan.skipSpaces();
-    if (!assembler().endOfLine(scan))
-        return setError(scan, GARBAGE_AT_END);
-    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setOK();
-}
-
-namespace {
-
-Error isString(StrScanner &scan, ErrorAt &error, const ValueParser &parser) {
-    auto p = scan;
-    // Check prefix for string constant if any.
-    const auto prefix = parser.stringPrefix();
-    if (prefix)
-        p.iexpect(prefix);  // string prefix is optional
-
-    // Check opening string delimiter.
-    const auto delim = parser.stringDelimiter();
-    if (!p.expect(delim))
-        return NOT_AN_EXPECTED;
-
-    while (true) {
-        // If reached to the end of line, it means we can't find closing delimiter.
-        if (parser.endOfLine(p))
-            return error.setError(
-                    scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-        parser.readLetterInString(p, error);
-        if (error.getError())
-            return error.getError();
-        if (*p == delim) {
-            auto a = p;
-            a += 1;  // skip possible delimiter and check the end.
-            if (parser.endOfLine(a.skipSpaces()) || *a == ',') {
-                scan = p;
-                return OK;
-            }
-            // Successive two delimiters for escaping.
-        }
-    }
-}
-
-}  // namespace
-
-Error AsmDirective::defineData8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineBytes(scan, list, driver, true);
-}
-
-Error AsmDirective::defineUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineBytes(scan, list, driver, false);
-}
-
-Error AsmDirective::defineBytes(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, bool acceptString) {
-    auto &parser = assembler().parser();
-    const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = driver.origin() * unit;
-    do {
-        auto p = scan.skipSpaces();
-        ErrorAt strErr;
-        if (acceptString && isString(p, strErr, parser) == OK) {
-            // a string surrounded by string delimiters
-            const auto prefix = parser.stringPrefix();
-            if (prefix)
-                scan.iexpect(prefix);  // skip prefix
-            ++scan;                    // skip opening delimniter
-            while (scan.str() < p.str()) {
-                ErrorAt error;
-                const auto c = parser.readLetterInString(scan, error);
-                list.emitByte(base, c);
-            }
-            ++scan;  // skip closing delimitor
-            continue;
-        }
-
-        ErrorAt exprErr;
-        const auto value = parser.eval(p, exprErr, &driver);
-        if (!parser.endOfLine(p.skipSpaces()) && *p != ',')
-            exprErr.setError(scan, ILLEGAL_CONSTANT);
-        if (!exprErr.hasError()) {
-            list.emitByte(base, value.getUnsigned());
-            scan = p;
-            continue;
-        }
-
-        return setError(strErr.getError() ? strErr : exprErr);
-    } while (scan.skipSpaces().expect(','));
-
-    if (!parser.endOfLine(scan.skipSpaces()))
-        return setError(scan, GARBAGE_AT_END);
-    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setOK();
-}
-
-Error AsmDirective::defineUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    auto &parser = assembler().parser();
-    const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = driver.origin() * unit;
-    const auto endian = assembler().config().endian();
-    for (;;) {
-        ErrorAt error;
-        auto value = parser.eval(scan, error, &driver);
-        if (error.getError())
-            return setError(error);
-        if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-            return setError(UNDEFINED_SYMBOL);
-        if (value.overflowUint16())
-            return setError(OVERFLOW_RANGE);
-        const uint16_t val16 = value.getUnsigned();
-        const uint8_t val8lo = val16;
-        const uint8_t val8hi = val16 >> 8;
-        list.emitByte(base, endian == ENDIAN_BIG ? val8hi : val8lo);
-        list.emitByte(base, endian == ENDIAN_BIG ? val8lo : val8hi);
-        if (!scan.skipSpaces().expect(','))
-            break;
-    }
-    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setOK();
-}
-
-Error AsmDirective::defineUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    auto &parser = assembler().parser();
-    const uint8_t unit = assembler().config().addressUnit();
-    const uint32_t base = driver.origin() * unit;
-    const auto endian = assembler().config().endian();
-    for (;;) {
-        ErrorAt error;
-        auto value = parser.eval(scan, error, &driver);
-        if (error.getError())
-            return setError(error);
-        if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-            return setError(UNDEFINED_SYMBOL);
-        auto val32 = value.getUnsigned();
-        for (auto i = 0; i < 4; i++) {
-            if (endian == ENDIAN_BIG) {
-                list.emitByte(base, val32 >> 24);
-                val32 <<= 8;
-            } else {
-                list.emitByte(base, val32);
-                val32 >>= 8;
-            }
-        }
-        if (!scan.skipSpaces().expect(','))
-            break;
-    }
-    driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
-    return setOK();
-}
-
-Error AsmDirective::defineUint16sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    setAlignment(2, list, driver);
-    return defineUint16s(scan, list, driver);
-}
-
-Error AsmDirective::defineUint32sAligned(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    setAlignment(2, list, driver);
-    return defineUint32s(scan, list, driver);
-}
-
-Error AsmDirective::allocateUint8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return allocateSpaces(scan, list, driver, sizeof(uint8_t));
-}
-
-Error AsmDirective::allocateUint16s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return allocateSpaces(scan, list, driver, sizeof(uint16_t));
-}
-
-Error AsmDirective::allocateUint32s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return allocateSpaces(scan, list, driver, sizeof(uint32_t));
-}
-
-Error AsmDirective::allocateUint16sAligned(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    setAlignment(2, list, driver);
-    return allocateUint16s(scan, list, driver);
-}
-
-Error AsmDirective::allocateUint32sAligned(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    setAlignment(2, list, driver);
-    return allocateUint32s(scan, list, driver);
-}
-
-Error AsmDirective::allocateSpaces(
-        StrScanner &scan, AsmFormatter &list, AsmDriver &driver, int spaceUnit) {
-    auto &parser = assembler().parser();
-    auto value = parser.eval(scan, *this, &driver);
-    if (getError())
-        return getError();
-    if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-        return setError(UNDEFINED_SYMBOL);
-    if (value.overflowUint16())
-        return setError(OVERFLOW_RANGE);
-    const auto size = value.getUnsigned() * spaceUnit;
-    const auto origin = driver.origin();
-    if (origin + size < origin)
-        return setError(OVERFLOW_RANGE);
-    const uint8_t unit = assembler().config().addressUnit();
-    driver.setOrigin(origin + ((size + unit - 1) & -unit) / unit);
-    return setOK();
 }
 
 Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
@@ -426,19 +164,6 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(".set", &AsmDirective::defineVariable);
     if (a.hasSetInstruction())
         disablePseudo("set");
-    registerPseudo(".org", &AsmDirective::defineOrigin);
-    registerPseudo(".align", &AsmDirective::alignOrigin);
-    registerPseudo(".string", &AsmDirective::defineData8s);
-    registerPseudo(".ascii", &AsmDirective::defineData8s);
-    registerPseudo(".byte", &AsmDirective::defineData8s);
-    registerPseudo(".word", &AsmDirective::defineUint16s);
-    registerPseudo(".long", &AsmDirective::defineUint32s);
-    registerPseudo("dc.b", &AsmDirective::defineData8s);
-    registerPseudo("dc.w", &AsmDirective::defineUint16sAligned);
-    registerPseudo("dc.l", &AsmDirective::defineUint32sAligned);
-    registerPseudo("ds.b", &AsmDirective::allocateUint8s);
-    registerPseudo("ds.w", &AsmDirective::allocateUint16sAligned);
-    registerPseudo("ds.l", &AsmDirective::allocateUint32sAligned);
     registerPseudo(".function", &AsmDirective::defineFunction);
 }
 
@@ -461,23 +186,13 @@ Error AsmDirective::processPseudo(
     return (this->*fp)(scan, list, driver);
 }
 
-MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".fcb", &MotorolaDirective::defineUint8s);
-    registerPseudo(".fcc", static_cast<PseudoHandler>(&MotorolaDirective::defineString));
-    registerPseudo(".fdb", &MotorolaDirective::defineUint16s);
-    registerPseudo(".rmb", &MotorolaDirective::allocateUint8s);
-    registerPseudo(".dfs", &MotorolaDirective::allocateUint8s);
-}
+MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinEncoder &MotorolaDirective::defaultEncoder() {
     return MotoSrec::encoder();
 }
 
 IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".db", &IntelDirective::defineData8s);
-    registerPseudo(".dw", &IntelDirective::defineUint16s);
-    registerPseudo(".dd", &IntelDirective::defineUint32s);
-    registerPseudo(".ds", &IntelDirective::allocateUint8s);
     registerPseudo(".z80syntax", static_cast<PseudoHandler>(&IntelDirective::switchIntelZilog));
 }
 
@@ -487,7 +202,6 @@ BinEncoder &IntelDirective::defaultEncoder() {
 
 MostekDirective::MostekDirective(Assembler &assembler) : AsmDirective(assembler) {
     registerPseudo("=", &MostekDirective::defineConstant);
-    registerPseudo("*=", &MostekDirective::defineOrigin);
 }
 
 BinEncoder &MostekDirective::defaultEncoder() {
@@ -495,10 +209,6 @@ BinEncoder &MostekDirective::defaultEncoder() {
 }
 
 Z80Directive::Z80Directive(Assembler &assembler) : IntelDirective(assembler) {
-    registerPseudo("defb", &Z80Directive::defineData8s);
-    registerPseudo("defw", &Z80Directive::defineUint16s);
-    registerPseudo("defm", &Z80Directive::defineData8s);  // TODO: DEFT 'str' which has length byte
-    registerPseudo("defs", &Z80Directive::allocateUint8s);
     registerPseudo("defl", &Z80Directive::defineVariable);
 }
 
@@ -510,16 +220,10 @@ NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(asse
     disablePseudo(".set");
     disablePseudo("set");
     registerPseudo("=", &NationalDirective::defineConstant);
-    registerPseudo(".=", &NationalDirective::defineOrigin);
     registerPseudo(".set", static_cast<PseudoHandler>(&NationalDirective::setVariable));
-    registerPseudo(".dbyte", &NationalDirective::defineUint16s);
 }
 
-FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".dc", &FairchildDirective::defineData8s);
-    registerPseudo(".da", &FairchildDirective::defineUint16s);
-    registerPseudo(".rs", &FairchildDirective::allocateUint8s);
-}
+FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
 BinEncoder &FairchildDirective::defaultEncoder() {
     return IntelHex::encoder();

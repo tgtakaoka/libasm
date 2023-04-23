@@ -129,7 +129,7 @@ void emitOprSize(AsmInsn &insn, OprSize size) {
 Error AsmMc68000::checkAlignment(OprSize size, const Operand &op) {
     if (size == SZ_WORD && (op.val32 % 2))
         return setError(op, OPERAND_NOT_ALIGNED);
-    if (size == SZ_LONG && (op.val32 % 4))
+    if (size == SZ_LONG && (op.val32 % 2))
         return setError(op, OPERAND_NOT_ALIGNED);
     return OK;
 }
@@ -167,8 +167,7 @@ void AsmMc68000::emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &o
     insn.emitOperand16(static_cast<uint16_t>(disp));
 }
 
-void AsmMc68000::emitImmediateData(
-        AsmInsn &insn, const Operand &op, OprSize size, uint32_t data) {
+void AsmMc68000::emitImmediateData(AsmInsn &insn, const Operand &op, OprSize size, uint32_t data) {
     switch (size) {
     case SZ_LONG:
         insn.emitOperand32(data);
@@ -464,6 +463,28 @@ OprSize AsmInsn::parseInsnSize() {
     const auto isize = parseSize(p);
     *eos = 0;
     return isize;
+}
+
+Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
+    if (strcasecmp_P(insn.name(), PSTR("dc.b")) == 0)
+        return defineDataConstant(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("dc.w")) == 0 || strcasecmp_P(insn.name(), PSTR("dc")) == 0)
+        return defineDataConstant(scan, insn, DATA_WORD_ALIGN2);
+    if (strcasecmp_P(insn.name(), PSTR("dc.l")) == 0)
+        return defineDataConstant(scan, insn, DATA_LONG_ALIGN2);
+    if (strcasecmp_P(insn.name(), PSTR("ds.b")) == 0)
+        return allocateSpaces(scan, insn, DATA_BYTE);
+    if (strcasecmp_P(insn.name(), PSTR("ds.w")) == 0)
+        return allocateSpaces(scan, insn, DATA_WORD_ALIGN2);
+    if (strcasecmp_P(insn.name(), PSTR("ds.l")) == 0)
+        return allocateSpaces(scan, insn, DATA_LONG_ALIGN2);
+    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
+        return defineOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
+        return alignOrigin(scan, insn);
+    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
+        return alignOrigin(scan, insn);
+    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
