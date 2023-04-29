@@ -31,8 +31,8 @@ struct AsmMos6502::Operand final : ErrorAt {
     uint32_t val32;
     Operand() : mode(M_NONE), val32(0) {}
     void embed(AddrMode indirectFlags) {
-        mode = AddrMode(uint8_t(AsmInsn::indirectFlags(indirectFlags)) |
-                        uint8_t(AsmInsn::baseMode(mode)));
+        mode = AddrMode(
+                uint8_t(AsmInsn::indirectFlags(indirectFlags)) | uint8_t(AsmInsn::baseMode(mode)));
     }
 };
 
@@ -229,9 +229,14 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
         return OK;
 
     if (p.expect('#')) {  // #nn
+        const auto bop = p.expect([](char c) { return c == '<' || c == '>'; });
         op.val32 = parseExpr32(p, op);
         if (op.hasError())
             return getError();
+        if (bop == '<')
+            op.val32 &= 0xFF;
+        if (bop == '>')
+            op.val32 = (op.val32 >> 8) & 0xFF;
         op.mode = M_IMA;
         scan = p;
         return OK;

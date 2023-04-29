@@ -262,11 +262,14 @@ static void test_imm() {
     symtab.intern(0x0010, "zero10");
     symtab.intern(0x00FF, "zeroFF");
     symtab.intern(0x0090, "zero90");
+    symtab.intern(0x1234, "HERE");
 
     // MOS6502
     TEST("LDX #zero10", 0xA2, 0x10);
     TEST("CPY #zeroFF", 0xC0, 0xFF);
     TEST("SBC #zero90", 0xE9, 0x90);
+    TEST("LDA #<HERE",  0xA9, 0x34);
+    TEST("LDA #>HERE",  0xA9, 0x12);
 
     if (m6502()) {
         ERRT("BIT #zero90", OPERAND_NOT_ALLOWED, "#zero90");
