@@ -491,6 +491,10 @@ Z80Directive::Z80Directive(Assembler &assembler) : IntelDirective(assembler) {
     registerPseudo("defl", &Z80Directive::defineVariable);
 }
 
+RcaDirective::RcaDirective(Assembler &assembler) : IntelDirective(assembler) {
+    registerPseudo("=", &RcaDirective::defineConstant);
+}
+
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
     disablePseudo(".set");
     disablePseudo("set");

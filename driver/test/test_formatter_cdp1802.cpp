@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_cdp1802() {
-    PREP_ASM(cdp1802::AsmCdp1802, IntelDirective);
+    PREP_ASM(cdp1802::AsmCdp1802, RcaDirective);
 
     listing.setUpperHex(false);
 
@@ -35,11 +35,17 @@ void test_asm_cdp1802() {
             "        cpu   cdp1804\n"
             ".. comment line\n"
             "        org   x'abcd'\n"
-            "        scal  3, #8485\n",
+            "        scal  3, #8485\n"
+            "symbol  =     x'1234'\n"
+            "        ldi   a.0(symbol)\n"
+            "        ldi   a.1(symbol)\n",
             "          0 :                            cpu   cdp1804\n"
             "          0 :                    .. comment line\n"
             "       abcd :                            org   x'abcd'\n"
-            "       abcd : 68 83 84 85                scal  3, #8485\n");
+            "       abcd : 68 83 84 85                scal  3, #8485\n"
+            "       abd1 : =1234              symbol  =     x'1234'\n"
+            "       abd1 : f8 34                      ldi   a.0(symbol)\n"
+            "       abd3 : f8 12                      ldi   a.1(symbol)\n");
 
     assembler.setOption("use-register", "on");
 

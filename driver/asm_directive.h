@@ -116,6 +116,11 @@ public:
     Z80Directive(Assembler &assembler);
 };
 
+class RcaDirective : public IntelDirective {
+public:
+    RcaDirective(Assembler &assembler);
+};
+
 class NationalDirective : public IntelDirective {
 public:
     NationalDirective(Assembler &assembler);

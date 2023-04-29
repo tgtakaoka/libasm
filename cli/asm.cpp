@@ -79,7 +79,7 @@ Z80Directive dirz80(asmz80);
 IntelDirective dirz8(asmz8);
 NationalDirective dir8060(asm8060);
 NationalDirective dir8070(asm8070);
-IntelDirective dir1802(asm1802);
+RcaDirective dir1802(asm1802);
 IntelDirective dir2650(asm2650);
 FairchildDirective dir3850(asm3850);
 IntelDirective dir8086(asm8086);
