@@ -91,13 +91,14 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
+    const auto bop = p.expect([](char c) { return c == '<' || c == '>'; });
     op.indir = p.expect('*');
     op.val16 = parseExpr16(p.skipSpaces(), op);
     if (op.hasError())
         return op.getError();
     if (p.expect(',')) {
         op.reg = parseRegName(p.skipSpaces());
-        if (op.reg == REG_UNDEF)
+        if (op.reg == REG_UNDEF || bop)
             return op.setError(UNKNOWN_OPERAND);
         if (p.skipSpaces().expect(',')) {
             op.sign = p.skipSpaces().expect([](char c) { return c == '+' || c == '-'; });
@@ -112,7 +113,15 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    op.mode = op.indir ? M_AB15 : M_IMM8;
+    if (op.indir) {
+        op.mode = M_AB15;
+    } else {
+        if (bop == '<')
+            op.val16 &= 0xFF;   // LSB
+        if (bop == '>')
+            op.val16 >>= 8;     // MSB;
+        op.mode = M_IMM8;
+    }
     scan = p;
     return OK;
 }
