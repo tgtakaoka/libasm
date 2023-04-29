@@ -31,6 +31,11 @@ const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
 const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
 
+struct Cdp1802FunctionParser final : FunctionParser {
+    const Functor *parseFunction(
+            StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
+};
+
 }  // namespace
 
 struct AsmCdp1802::Operand final : ErrorAt {
@@ -47,7 +52,9 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
+        const FunctionParser &function() const override { return _function; }
         const IbmLetterParser _letter{'T'};
+        const Cdp1802FunctionParser _function{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -81,6 +88,53 @@ namespace {
 
 Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;
+}
+
+const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, uint8_t) const override {
+        // Mark that this is 2 bytes value.
+        stack.pushUnsigned(stack.pop().getUnsigned() | 0x10000);
+        return OK;
+    }
+} FN_A;
+
+const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, uint8_t) const override {
+        stack.pushUnsigned(stack.pop().getUnsigned() & 0xFF);
+        return OK;
+    }
+} FN_A0;
+
+const struct : Functor {
+    int8_t nargs() const override { return 1; }
+    Error eval(ValueStack &stack, uint8_t) const override {
+        stack.pushUnsigned((stack.pop().getUnsigned() >> 8) & 0xFF);
+        return OK;
+    }
+} FN_A1;
+
+const Functor *Cdp1802FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
+        const SymbolParser &symParser, const SymbolTable *symtab) const {
+    auto p = scan;
+    if (p.iexpect('A')) {
+        const Functor *fn = nullptr;
+        if (p.expect('.')) {
+            if (p.expect('0')) {
+                fn = &FN_A0;
+            } else if (p.expect('1')) {
+                fn = &FN_A1;
+            }
+        } else {
+            fn = &FN_A;
+        }
+        if (*p.skipSpaces() == '(' && fn) {
+            scan = p;
+            return fn;
+        }
+    }
+    return FunctionParser::parseFunction(scan, error, symParser, symtab);
 }
 
 }  // namespace
@@ -168,7 +222,7 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
             return OK;
         }
     }
-    op.val16 = parseExpr16(p, op);
+    op.val16 = parseExpr(p, op).getUnsigned();
     if (op.hasError())
         return op.getError();
     op.mode = M_ADDR;
