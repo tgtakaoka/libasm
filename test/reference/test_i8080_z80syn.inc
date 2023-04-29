@@ -273,7 +273,7 @@
         cp      0ffH
         rst     38H
 
-        org     $+32-($&31)
+        align   32
 ;;; SUB/AND/XOR/OR/CP instruction can omit destination A register.
 
         sub     b

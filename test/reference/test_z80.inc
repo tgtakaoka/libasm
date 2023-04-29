@@ -528,7 +528,7 @@
         set     6,(iy-11)
         set     7,(iy-3)
 
-        org     $+32-($&31)
+        align   32
 ;;; SUB/AND/XOR/OR/CP instruction can omit destination A register.
 
         sub     (ix-105)
