@@ -60,9 +60,9 @@ static void test_char_constant() {
     E8("# ",    0x20);
     E8("#'",    0x27);
     E8("' ",    0x20);
-    E8("''",    0x27);
-    E8("'';",   0x27);
-    X8("''''",  GARBAGE_AT_END, "'");
+    X8("''",    MISSING_CLOSING_QUOTE, "''");
+    E8("'''",   0x27);
+    E8("''''",  0x27);
 
     E8("c'a'",   0x61);
     E8("C'a'+5", 0x66);

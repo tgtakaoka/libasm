@@ -64,11 +64,29 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const NumberParser &number() const override { return _number; }
         const CommentParser &comment() const override { return SharpCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return CStyleLetterParser::singleton(); }
+        const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override { return _location; }
         const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
         const SimpleSymbolParser _symbol{SymbolParser::DOT};
         const NationalLocationParser _location{'*'};
+        const struct : LetterParser {
+            char readLetter(StrScanner &scan, ErrorAt &error) const override {
+                return readLetter(scan, error, '\'');
+            }
+            char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
+                return readLetter(scan, error, '"');
+            }
+            char stringDelimiter() const override { return '"'; }
+            static char readLetter(StrScanner &scan, ErrorAt &error, char delim) {
+                auto c = *scan++;
+                if (c == '\\' && *scan) {
+                    c = *scan++;
+                } else if (c == delim) {
+                    error.setError(ILLEGAL_CONSTANT);
+                }
+                return c;
+            }
+        } _letter;
     } PLUGINS{};
     return PLUGINS;
 }
@@ -438,8 +456,7 @@ void embedOprField(AsmInsn &insn, OprPos pos, uint8_t opr) {
 
 }  // namespace
 
-void AsmNs32000::emitDisplacement(
-        AsmInsn &insn, const Operand &op, int32_t val32, Error error) {
+void AsmNs32000::emitDisplacement(AsmInsn &insn, const Operand &op, int32_t val32, Error error) {
     if (overflowInt(val32, 30) || val32 < -0x1F000000L) {
         setErrorIf(op, error);
         val32 = val32 < 0 ? -0x1F000000 : 0x1FFFFFFF;

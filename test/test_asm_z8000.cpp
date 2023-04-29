@@ -109,6 +109,13 @@ static void test_load_and_exchange() {
     TEST("ldl rr2,rr8", 0x9482);
     TEST("LD  R2,#0x5678",      0x2102, 0x5678);
     TEST("LDB RH2,#0x56",       0xC256);
+    TEST("LDB RH2,#'%%'",       0xC225);
+    TEST("LDB RH2,#'%q'",       0xC227);
+    TEST("LDB RH2,#'%l'",       0xC20A);
+    TEST("LDB RH2,#'%t'",       0xC209);
+    TEST("LDB RH2,#'%r'",       0xC20D);
+    TEST("LDB RH2,#'%p'",       0xC20C);
+    TEST("LDB RH2,#'%1b'",      0xC21B);
     TEST("LDL RR2,#0x12345678", 0x1402, 0x1234, 0x5678);
     if (z8001()) {
         TEST("LD  R9,@RR2",          0x2129);

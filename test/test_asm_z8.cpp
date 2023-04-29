@@ -224,7 +224,13 @@ static void test_operand_in_opcode() {
     TEST("LD 0FAH,R15", 0xF9, 0xFA);
 
     TEST("LD  R0,#13",   0x0C, 0x0D);
-    TEST("LD  R1,#0",    0x1C, 0x00);
+    TEST("LD R1,#'%%'",  0x1C, 0x25);
+    TEST("LD R1,#'%q'",  0x1C, 0x27);
+    TEST("LD R1,#'%l'",  0x1C, 0x0A);
+    TEST("LD R1,#'%r'",  0x1C, 0x0D);
+    TEST("LD R1,#'%t'",  0x1C, 0x09);
+    TEST("LD R1,#'%p'",  0x1C, 0x0C);
+    TEST("LD R1,#'%1B'", 0x1C, 0x1B);
     TEST("LD  R2,#15",   0x2C, 0x0F);
     TEST("LD  R3,#10H",  0x3C, 0x10);
     TEST("LD  R4,#4DH",  0x4C, 0x4D);

@@ -165,29 +165,41 @@ Error MotorolaDirective::defineString(StrScanner &scan, AsmFormatter &list, AsmD
     return setOK();
 }
 
-static bool isString(StrScanner &scan, const ValueParser &parser) {
+namespace {
+
+Error isString(StrScanner &scan, ErrorAt &error, const ValueParser &parser) {
     auto p = scan;
-    const auto delim = *p++;
-    if (delim == '"' || delim == '\'') {
-        while (true) {
-            if (parser.endOfLine(p))
-                break;
-            ErrorAt error;
-            parser.readLetter(p, error);
-            if (error.getError())
-                break;
-            if (*p == delim) {
-                auto a = p;
-                a += 1;  // skip delim
-                if (parser.endOfLine(a.skipSpaces()) || *a == ',') {
-                    scan = p;
-                    return true;
-                }
+    // Check prefix for string constant if any.
+    const auto prefix = parser.stringPrefix();
+    if (prefix)
+        p.iexpect(prefix);  // string prefix is optional
+
+    // Check opening string delimiter.
+    const auto delim = parser.stringDelimiter();
+    if (!p.expect(delim))
+        return NOT_AN_EXPECTED;
+
+    while (true) {
+        // If reached to the end of line, it means we can't find closing delimiter.
+        if (parser.endOfLine(p))
+            return error.setError(
+                    scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+        parser.readLetterInString(p, error);
+        if (error.getError())
+            return error.getError();
+        if (*p == delim) {
+            auto a = p;
+            a += 1;  // skip possible delimiter and check the end.
+            if (parser.endOfLine(a.skipSpaces()) || *a == ',') {
+                scan = p;
+                return OK;
             }
+            // Successive two delimiters for escaping.
         }
     }
-    return false;
 }
+
+}  // namespace
 
 Error AsmDirective::defineData8s(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     return defineBytes(scan, list, driver, true);
@@ -204,37 +216,36 @@ Error AsmDirective::defineBytes(
     const uint32_t base = driver.origin() * unit;
     do {
         auto p = scan.skipSpaces();
-        ErrorAt error;
-        auto value = parser.eval(p, error, &driver);
-        if (error.isOK() && (parser.endOfLine(p.skipSpaces()) || *p == ',')) {
-            // a byte expression.
-            if (value.isUndefined() && driver.symbolMode() == REPORT_UNDEFINED)
-                return setError(UNDEFINED_SYMBOL);
-            if (value.overflowUint8())
-                return setError(OVERFLOW_RANGE);
-            const uint8_t val8 = value.getUnsigned();
-            list.emitByte(base, val8);
+        ErrorAt strErr;
+        if (acceptString && isString(p, strErr, parser) == OK) {
+            // a string surrounded by string delimiters
+            const auto prefix = parser.stringPrefix();
+            if (prefix)
+                scan.iexpect(prefix);  // skip prefix
+            ++scan;                    // skip opening delimniter
+            while (scan.str() < p.str()) {
+                ErrorAt error;
+                const auto c = parser.readLetterInString(scan, error);
+                list.emitByte(base, c);
+            }
+            ++scan;  // skip closing delimitor
+            continue;
+        }
+
+        ErrorAt exprErr;
+        const auto value = parser.eval(p, exprErr, &driver);
+        if (!parser.endOfLine(p.skipSpaces()) && *p != ',')
+            exprErr.setError(scan, ILLEGAL_CONSTANT);
+        if (!exprErr.hasError()) {
+            list.emitByte(base, value.getUnsigned());
             scan = p;
             continue;
         }
-        if (acceptString) {
-            p = scan;
-            if (isString(p, parser)) {
-                // a string surrounded by double quotes, single quotes
-                ++scan;  // skip delimitor
-                while (scan.str() < p.str()) {
-                    ErrorAt error;
-                    const auto c = parser.readLetter(scan, error);
-                    list.emitByte(base, c);
-                }
-                ++scan;  // skip delimitor
-                continue;
-            }
-        }
-        return setError(error);
+
+        return setError(strErr.getError() ? strErr : exprErr);
     } while (scan.skipSpaces().expect(','));
-    scan.skipSpaces();
-    if (!assembler().endOfLine(scan))
+
+    if (!parser.endOfLine(scan.skipSpaces()))
         return setError(scan, GARBAGE_AT_END);
     driver.setOrigin(driver.origin() + ((list.byteLength() + unit - 1) & -unit) / unit);
     return setOK();

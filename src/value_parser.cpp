@@ -23,10 +23,6 @@
 
 namespace libasm {
 
-char ValueParser::readLetter(StrScanner &scan, ErrorAt &error) const {
-    return _letter.readLetter(scan, error);
-}
-
 namespace {
 
 bool isValidDigit(const char c, const Radix radix) {

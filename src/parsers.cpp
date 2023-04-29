@@ -30,6 +30,10 @@ bool isbinary(char c) {
     return c == '0' || c == '1';
 }
 
+uint8_t tonumbert(char c) {
+    return isdigit(c) ? c - '0' : toupper(c) - 'A' + 10;
+}
+
 bool isValidDigit(const char c, const Radix radix) {
     if (radix == RADIX_16)
         return isxdigit(c);
@@ -307,15 +311,18 @@ Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
     return NOT_AN_EXPECTED;
 }
 
-char LetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+char LetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) {
     const auto c = *scan;
     if (c == 0) {
         error.setError(ILLEGAL_CONSTANT);
-    } else if (c == '\'') {
-        if (scan[1] == '\'') {
-            scan += 2;  // successive single quoite
+        return c;
+    }
+    if (c == delim) {
+        if (scan[1] == delim) {
+            scan += 2;  // successive delimiters
         } else {
-            return error.setError(scan, MISSING_CLOSING_QUOTE);
+            return error.setError(
+                    scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
         }
     } else {
         scan += 1;
@@ -323,53 +330,64 @@ char LetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     return c;
 }
 
-char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) {
     auto p = scan;
-    if (p.expect('\\')) {
+    auto c = *p++;
+    if (c == '\\') {
         // Backslash escape sequence
-        Radix radix = RADIX_NONE;
         if (p.iexpect('x')) {
-            radix = RADIX_16;
-        } else if (isoctal(*p)) {
-            radix = RADIX_8;
-        } else {
-            auto c = *p++;
-            switch (c) {
-            case '\'':
-            case '"':
-            case '?':
-            case '\\':
-                break;
-            case 'b':
-                c = 0x08;
-                break;
-            case 't':
-                c = 0x09;
-                break;
-            case 'n':
-                c = 0x0a;
-                break;
-            case 'r':
-                c = 0x0d;
-                break;
-            default:
-                error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
+            // hexadecimal digits.
+            uint32_t n = 0;
+            while (isxdigit(*p)) {
+                n *= 16;
+                n += tonumbert(*p++);
             }
             scan = p;
-            return c;
-        }
-        Value value;
-        const auto err = value.parseNumber(p, radix);
-        scan = p;
-        if (err == OK) {
-            if (value.overflowUint8())
+            if (ConfigBase::overflowUint8(n))
                 error.setError(OVERFLOW_RANGE);
-            return value.getUnsigned();
+            return n;
         }
-        return error.setError(err);
+        if (isoctal(*p)) {
+            // 1~3 octal digits.
+            uint16_t n = 0;
+            for (auto i = 0; isoctal(*p) && i < 3; i++) {
+                n *= 8;
+                n += tonumbert(*p++);
+            }
+            scan = p;
+            if (ConfigBase::overflowUint8(n))
+                error.setError(scan, OVERFLOW_RANGE);
+            return n;
+        }
+        c = *p++;
+        switch (c) {
+        case '\'':
+        case '"':
+        case '?':
+        case '\\':
+            break;
+        case 'b':
+            c = 0x08;
+            break;
+        case 't':
+            c = 0x09;
+            break;
+        case 'n':
+            c = 0x0a;
+            break;
+        case 'r':
+            c = 0x0d;
+            break;
+        default:
+            error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
+        }
+        scan = p;
+        return c;
     }
-
-    return *scan++;
+    scan = p;
+    if (c == delim)
+        error.setError(ILLEGAL_CONSTANT);
+    return c;
 }
 
 char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
@@ -377,18 +395,31 @@ char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     auto c = *p++;
     if (c == '%') {
         // Percent escape sequence
-        if (p.expect('Q')) {
-            c = '\'';
+        if (isxdigit(p[0]) && isxdigit(p[1])) {
+            c = tonumbert(p[0]) * 16 + tonumbert(p[1]);
+            p += 2;
         } else {
-            Value value;
-            const auto err = value.parseNumber(p, RADIX_16);
-            scan = p;
-            if (err == OK) {
-                if (value.overflowUint8())
-                    error.setError(OVERFLOW_RANGE);
-                c = value.getUnsigned();
-            } else {
-                error.setError(UNKNOWN_ESCAPE_SEQUENCE);
+            c = *p++;
+            switch (toupper(c)) {
+            case 'L':
+                c = 0x0A;
+                break;
+            case 'T':
+                c = 0x09;
+                break;
+            case 'R':
+                c = 0x0D;
+                break;
+            case 'P':
+                c = 0x0C;
+                break;
+            case '%':
+                break;
+            case 'Q':
+                c = '\'';
+                break;
+            default:
+                error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
             }
         }
     } else if (c == '\'') {
@@ -408,7 +439,7 @@ Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
 
 char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     if (_closingQuote)
-        return LetterParser::readLetter(scan, error);
+        return DefaultLetterParser::singleton().readLetter(scan, error);
     const auto c = *scan;
     if (c == 0) {
         error.setError(ILLEGAL_CONSTANT);
@@ -416,6 +447,10 @@ char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
         scan += 1;
     }
     return c;
+}
+
+char MotorolaLetterParser::readLetterInString(StrScanner &scan, ErrorAt &error) const {
+    return LetterParser::readLetter(scan, error, '\'');
 }
 
 Error MotorolaLetterParser::hasSuffix(StrScanner &scan) const {
@@ -463,10 +498,10 @@ Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     if (hasPrefix(scan, prefix) != OK)
         return NOT_AN_EXPECTED;
     ErrorAt error;
-    if (prefix == 'C') {
-        letter = readLetter(scan, error);
-    } else {
+    if (prefix == '#') {
         letter = MotorolaLetterParser::singleton().readLetter(scan, error);
+    } else {
+        letter = readLetter(scan, error);
     }
     return error.getError() ? error.getError() : hasSuffix(scan, prefix);
 }

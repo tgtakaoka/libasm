@@ -53,15 +53,22 @@ public:
 
     /**
      * Parse |scan| text and return expression |value|.  Undefined symbol reference in expression
-     * should be checked by |value.isUndefined()|. Other error should be checked by |getError()|.
+     * will be checked by UNDEFINED_SYMBOL in |error|.
      */
     Value eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim = 0) const;
 
     /**
-     * Parse |scan| text and convert letter constant to |val|.  Error should be checked by
-     * |getError()|.
+     * Parse |scan| text and return letter constant.
      */
-    char readLetter(StrScanner &scan, ErrorAt &error) const;
+    char readLetter(StrScanner &scan, ErrorAt &error) const {
+        return _letter.readLetter(scan, error);
+    }
+    /**
+     * Parse |scan| text and return a letter in a string.
+     */
+    char readLetterInString(StrScanner &scan, ErrorAt &error) const {
+        return _letter.readLetterInString(scan, error);
+    }
 
     /**
      * Parse |scan| and read a symbol. Returns StrScanner::EMPTY when error.
@@ -71,6 +78,8 @@ public:
     bool locationSymbol(StrScanner &scan) const { return _location.locationSymbol(scan); }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
+    char stringPrefix() const { return _letter.stringPrefix(); }
+    char stringDelimiter() const { return _letter.stringDelimiter(); }
 
 private:
     const NumberParser &_number;

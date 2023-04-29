@@ -100,7 +100,32 @@ struct LetterParser {
      * When |scan| points text which doesn't make sense as a letter, |error| is set as
      * ILLEGAL_CONSTANT.
      */
-    virtual char readLetter(StrScanner &scan, ErrorAt &error) const;
+    virtual char readLetter(StrScanner &scan, ErrorAt &error) const {
+        return readLetter(scan, error, '\'');
+    }
+
+    /**
+     * A prefix for a string surrounded by string delimiters. Returns zero if no prefix is required.
+     */
+    virtual char stringPrefix() const { return 0; }
+
+    /**
+     * A delimiter which encloses a string.
+     */
+    virtual char stringDelimiter() const { return '\''; }
+
+    /**
+     * Read a letter in string from |scan| and return it.  Default style letter is: [:print:], ''
+     *
+     * When |scan| points text which doesn't make sense as a letter, |error| is set as
+     * ILLEGAL_CONSTANT.
+     */
+    virtual char readLetterInString(StrScanner &scan, ErrorAt &error) const {
+        return readLetter(scan, error);
+    }
+
+protected:
+    static char readLetter(StrScanner &scan, ErrorAt &error, char delim);
 };
 
 /**
@@ -307,7 +332,18 @@ private:
 
 struct CStyleLetterParser final : LetterParser, Singleton<CStyleLetterParser> {
     /** C-style letter is: [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
-    char readLetter(StrScanner &scan, ErrorAt &error) const override;
+    char readLetter(StrScanner &scan, ErrorAt &error) const override {
+        return readLetter(scan, error, '\'');
+    }
+
+    char stringDelimiter() const override { return '"'; }
+
+    char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
+        return readLetter(scan, error, '"');
+    }
+
+private:
+    static char readLetter(StrScanner &scan, ErrorAt &error, char delim);
 };
 
 struct DefaultLetterParser final : LetterParser, Singleton<DefaultLetterParser> {};
@@ -321,6 +357,7 @@ struct MotorolaLetterParser final : LetterParser, Singleton<MotorolaLetterParser
      */
     Error parseLetter(StrScanner &scan, char &letter) const override;
     char readLetter(StrScanner &scan, ErrorAt &error) const override;
+    char readLetterInString(StrScanner &scan, ErrorAt &error) const override;
 
 private:
     const bool _closingQuote;
@@ -341,6 +378,8 @@ struct IbmLetterParser final : LetterParser, Singleton<IbmLetterParser> {
     /** IBM style letter constant is C'c'. */
     Error parseLetter(StrScanner &scan, char &letter) const override;
 
+    char stringPrefix() const override { return _prefix; }
+
 private:
     const char _prefix;
 };
@@ -350,6 +389,8 @@ struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterPars
 
     /** Fairchild style letter is: [cC]'[:print:]', #[:print:], '[:print:]'? */
     Error parseLetter(StrScanner &scan, char &letter) const override;
+
+    char stringPrefix() const override { return 'C'; }
 
 private:
     static Error hasPrefix(StrScanner &scan, char &prefix);
