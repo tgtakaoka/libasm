@@ -14,29 +14,29 @@
 
 # List of architectures.
 ARCHS = \
-	mc6809  \
-	mc6800  \
-	mc6805  \
-	mos6502 \
-	i8048   \
-	i8051   \
-	i8080   \
-	i8096   \
-	z80     \
-	z8      \
-	tlcs90  \
-	ins8060 \
-	ins8070 \
-	cdp1802 \
-	scn2650 \
-	f3850   \
-	i8086   \
-	tms9900 \
+	cdp1802  \
+	f3850    \
+	i8048    \
+	i8051    \
+	i8080    \
+	i8086    \
+	i8096    \
+	ins8060  \
+	ins8070  \
+	mc6800   \
+	mc68000  \
+	mc6805   \
+	mc6809   \
+	mn1610   \
+	mos6502  \
+	ns32000  \
+	scn2650  \
+	tlcs90   \
 	tms32010 \
-	mc68000 \
-	z8000   \
-	ns32000 \
-	mn1610
+	tms9900  \
+	z8       \
+	z80      \
+	z8000
 
 # define OBJS_arch variable which contains architecture related objects.
 define objs-arch # arch

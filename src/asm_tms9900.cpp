@@ -18,11 +18,30 @@
 
 #include "reg_tms9900.h"
 #include "table_tms9900.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace tms9900 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+const char TEXT_BSS[] PROGMEM = "bss";
+const char TEXT_TEXT[] PROGMEM = "text";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_BSS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+};
+
+}  // namespace
 
 struct AsmTms9900::Operand final : ErrorAt {
     AddrMode mode;
@@ -40,7 +59,7 @@ const ValueParser::Plugins &AsmTms9900::defaultPlugins() {
 }
 
 AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -226,21 +245,6 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = M_IMM;
     scan = p;
     return OK;
-}
-
-Error AsmTms9900::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("byte")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR("text")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("data")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("bss")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {

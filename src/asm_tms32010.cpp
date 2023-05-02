@@ -18,11 +18,29 @@
 
 #include "reg_tms32010.h"
 #include "table_tms32010.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace tms32010 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD},
+        Pseudo{TEXT_dLONG, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+        Pseudo{TEXT_dORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+
+}  // namespace
 
 struct AsmTms32010::Operand final : ErrorAt {
     AddrMode mode;
@@ -50,7 +68,7 @@ const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
 }
 
 AsmTms32010::AsmTms32010(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -169,24 +187,6 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = constantType(op.val16);
     scan = p;
     return OK;
-}
-
-Error AsmTms32010::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE_IN_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".word")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".long")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR(".string")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {

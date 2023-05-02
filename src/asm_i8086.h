@@ -57,7 +57,6 @@ private:
     void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index);
     void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

@@ -18,16 +18,28 @@
 
 #include "reg_mc6805.h"
 #include "table_mc6805.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mc6805 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
 const char OPT_INT_PCBITS[] = "pc-bits";
 const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
+        Pseudo{TEXT_FCC, &Assembler::defineString},
+        Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+};
 
 }  // namespace
 
@@ -56,7 +68,7 @@ const ValueParser::Plugins &AsmMc6805::defaultPlugins() {
 }
 
 AsmMc6805::AsmMc6805(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_pc_bits, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_pc_bits),
       Config(TABLE),
       _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();
@@ -233,22 +245,6 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     default:
         break;
     }
-}
-
-Error AsmMc6805::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("fcb")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE_NO_STRING);
-    if (strcasecmp_P(insn.name(), PSTR("fdb")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_NO_STRING);
-    if (strcasecmp_P(insn.name(), PSTR("fcc")) == 0)
-        return defineString(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("rmb")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {

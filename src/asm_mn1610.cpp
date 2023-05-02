@@ -18,11 +18,28 @@
 
 #include "reg_mn1610.h"
 #include "table_mn1610.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mn1610 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+const char TEXT_LOC[] PROGMEM = "loc";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_WORD},
+        Pseudo{TEXT_LOC, &Assembler::defineOrigin},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+
+}  // namespace
 
 struct AsmMn1610::Operand final : ErrorAt {
     AddrMode mode;
@@ -46,7 +63,7 @@ const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
 }
 
 AsmMn1610::AsmMn1610(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -334,20 +351,6 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
         }
     }
     return op.setError(UNKNOWN_OPERAND);
-}
-
-Error AsmMn1610::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("dc")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0)
-        return allocateSpaces(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("loc")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {

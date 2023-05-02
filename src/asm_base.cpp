@@ -18,8 +18,9 @@
 
 namespace libasm {
 
-Assembler::Assembler(const OptionBase *option, const ValueParser::Plugins &plugins)
-    : ErrorAt(), _options(option), _parser(plugins, *this) {}
+Assembler::Assembler(const ValueParser::Plugins &plugins, const /*PROGMEM*/ pseudo::Pseudo *ptable,
+        const /*PROGMEM*/ pseudo::Pseudo *pend, const OptionBase *option)
+    : ErrorAt(), _parser(plugins, *this), _pseudos(ptable, pend), _options(option) {}
 
 Error Assembler::setCurrentLocation(uint32_t location) {
     return config().checkAddr(_currentLocation = location);
@@ -60,7 +61,8 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
-    return UNKNOWN_DIRECTIVE;
+    const auto *p = _pseudos.search(insn);
+    return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {
@@ -90,7 +92,7 @@ int32_t Assembler::branchDelta(uint32_t base, uint32_t target, const ErrorAt &at
     return delta;
 }
 
-Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uintptr_t extra) {
+Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     (void)extra;
     auto p = scan;
     ErrorAt error;
@@ -107,7 +109,7 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uintptr_t extra) {
     return OK;
 }
 
-Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uintptr_t extra) {
+Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     (void)extra;
     auto p = scan;
     ErrorAt error;
@@ -121,7 +123,7 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uintptr_t extra) {
     return setCurrentLocation(insn.align(value.getUnsigned()));
 }
 
-Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uintptr_t extra) {
+Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra) {
     const auto type = static_cast<DataType>(extra);
     if (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2)
         setCurrentLocation(insn.align(2));
@@ -151,7 +153,7 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uintptr_t extra) {
     return OK;
 }
 
-Error Assembler::defineString(StrScanner &scan, Insn &insn, uintptr_t extra) {
+Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t extra) {
     (void)extra;
     do {
         const auto delim = *scan.skipSpaces()++;
@@ -205,7 +207,7 @@ Error Assembler::isString(StrScanner &scan, ErrorAt &error) const {
     }
 }
 
-Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uintptr_t extra) {
+Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra) {
     const auto type = static_cast<DataType>(extra);
     // Do alignment if requested.
     if (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2)

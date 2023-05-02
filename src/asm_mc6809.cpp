@@ -16,20 +16,30 @@
 
 #include "asm_mc6809.h"
 
-#include <ctype.h>
-
 #include "reg_mc6809.h"
 #include "table_mc6809.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mc6809 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
 const char OPT_INT_SETDP[] PROGMEM = "setdp";
 const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
+        Pseudo{TEXT_FCC, &Assembler::defineString},
+        Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+};
 
 }  // namespace
 
@@ -69,7 +79,7 @@ const ValueParser::Plugins &AsmMc6809::defaultPlugins() {
 }
 
 AsmMc6809::AsmMc6809(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_setdp, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_setdp),
       Config(TABLE),
       _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP) {
     reset();
@@ -105,8 +115,7 @@ void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) 
     }
 }
 
-Config::ptrdiff_t AsmMc6809::calculateDisplacement(
-        const AsmInsn &insn, const Operand &op) const {
+Config::ptrdiff_t AsmMc6809::calculateDisplacement(const AsmInsn &insn, const Operand &op) const {
     const auto disp = static_cast<Config::ptrdiff_t>(op.val32);
     if (op.base == REG_PCR && op.isOK()) {
         // assuming 8-bit displacement (post byte + 8-bit displacement)
@@ -539,19 +548,7 @@ Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
         const auto val = parseExpr32(scan, *this);
         return isOK() ? setDirectPage(val) : getError();
     }
-    if (strcasecmp_P(insn.name(), PSTR("fcb")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE_NO_STRING);
-    if (strcasecmp_P(insn.name(), PSTR("fdb")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_NO_STRING);
-    if (strcasecmp_P(insn.name(), PSTR("fcc")) == 0)
-        return defineString(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("rmb")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    return Assembler::processPseudo(scan, insn);
 }
 
 Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {

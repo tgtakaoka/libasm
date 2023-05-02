@@ -25,6 +25,7 @@
 #include "insn_base.h"
 #include "option_base.h"
 #include "parsers.h"
+#include "pseudos.h"
 #include "symbol_table.h"
 #include "value_parser.h"
 
@@ -57,29 +58,10 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     Error setCurrentLocation(uint32_t location);
     uint32_t currentLocation() const { return _currentLocation; }
 
-protected:
-    const Options _options;
-    const Options _commonOptions{nullptr};
-    const ValueParser _parser;
-
-    SymbolTable *_symtab;
-    uint32_t _currentLocation;
-
-    Assembler(const OptionBase *option, const ValueParser::Plugins &plugins);
-
-    int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
-
-    /** Parse |expr| text and get value as unsigned 16 bit. */
-    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
-    /** Parse |expr| text and get value as unsigned 32 bit. */
-    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
-    /** Parse |expr| text and get value. */
-    Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
-
-    Error defineOrigin(StrScanner &scan, Insn &insn, uintptr_t extra = 0);
-    Error alignOrigin(StrScanner &scan, Insn &insn, uintptr_t extra = 0);
-    Error allocateSpaces(StrScanner &scan, Insn &insn, uintptr_t extra);
-    Error defineString(StrScanner &scan, Insn &insn, uintptr_t extra = 0);
+    Error defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
+    Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
+    Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra);
+    Error defineString(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error isString(StrScanner &scan, ErrorAt &error) const;
     enum DataType : uint8_t {
         DATA_BYTE,
@@ -92,11 +74,33 @@ protected:
         DATA_WORD_ALIGN2,
         DATA_LONG_ALIGN2,
     };
-    Error defineDataConstant(StrScanner &scan, Insn &insn, uintptr_t extra);
+    Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra);
+
+protected:
+    const ValueParser _parser;
+    const pseudo::Pseudos _pseudos;
+    const Options _options;
+    const Options _commonOptions{nullptr};
+
+    SymbolTable *_symtab;
+    uint32_t _currentLocation;
+
+    Assembler(const ValueParser::Plugins &plugins, const /*PROGMEM*/ pseudo::Pseudo *ptable,
+            const /*PROGMEM*/ pseudo::Pseudo *pend, const OptionBase *option = nullptr);
+
+    int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
+
+    /** Parse |expr| text and get value as unsigned 16 bit. */
+    uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
+    /** Parse |expr| text and get value as unsigned 32 bit. */
+    uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
+    /** Parse |expr| text and get value. */
+    Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
+
+    virtual Error processPseudo(StrScanner &scan, Insn &insn);
 
 private:
     virtual ConfigSetter &configSetter() = 0;
-    virtual Error processPseudo(StrScanner &scan, Insn &insn);
     virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
 };
 

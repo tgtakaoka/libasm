@@ -18,13 +18,25 @@
 
 #include "reg_ins8060.h"
 #include "table_ins8060.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace ins8060 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_dequal, &Assembler::defineOrigin},
+        Pseudo{TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dDBYTE, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
 
 struct Ins8060FunctionParser final : FunctionParser {
     const Functor *parseFunction(
@@ -57,7 +69,7 @@ const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
 }
 
 AsmIns8060::AsmIns8060(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -101,11 +113,11 @@ const Functor *Ins8060FunctionParser::parseFunction(StrScanner &scan, ErrorAt &e
     auto p = scan;
     const auto name = readFunctionName(p, symParser);
     const Functor *fn = nullptr;
-    if (name.iequals_P(PSTR("H"))) {
+    if (name.iequals_P(TEXT_FN_H)) {
         fn = &FN_HIGH;
-    } else if (name.iequals_P(PSTR("L"))) {
+    } else if (name.iequals_P(TEXT_FN_L)) {
         fn = &FN_LOW;
-    } else if (name.iequals_P(PSTR("ADDR"))) {
+    } else if (name.iequals_P(TEXT_FN_ADDR)) {
         fn = &FN_ADDR;
     }
     if (fn) {
@@ -213,7 +225,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmIns8060::defineAddressConstant(StrScanner &scan, Insn &insn) {
+Error AsmIns8060::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
         ErrorAt error;
@@ -231,20 +243,9 @@ Error AsmIns8060::defineAddressConstant(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmIns8060::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR(".ascii")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR(".dbyte")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".addr")) == 0)
-        return defineAddressConstant(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR(".=")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    if (strcasecmp_P(insn.name(), TEXT_dADDR) == 0)
+        return defineAddrConstant(scan, insn);
+    return Assembler::processPseudo(scan, insn);
 }
 
 Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {

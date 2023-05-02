@@ -35,7 +35,6 @@ private:
     void encodeAddress(AsmInsn &insn, const AddrMode mode, const Operand &op);
     void encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

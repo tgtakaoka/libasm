@@ -24,7 +24,9 @@
 namespace libasm {
 namespace ns32000 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 using text::ns32000::TEXT_FPU;
 using text::ns32000::TEXT_FPU_NS32081;
@@ -38,6 +40,27 @@ const char OPT_TEXT_FPU[] PROGMEM = "fpu";
 const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
 const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+
+const char TEXT_dBLKB[] PROGMEM = ".blkb";
+const char TEXT_dBLKD[] PROGMEM = ".blkd";
+const char TEXT_dBLKW[] PROGMEM = ".blkw";
+const char TEXT_dDOUBLE[] PROGMEM = ".double";
+const char TEXT_dSPACE[] PROGMEM = ".space";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dBLKB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dBLKD, &Assembler::allocateSpaces, Assembler::DATA_LONG},
+        Pseudo{TEXT_dBLKW, &Assembler::allocateSpaces, Assembler::DATA_WORD},
+        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+        Pseudo{TEXT_dORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_dSPACE, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
 
 }  // namespace
 
@@ -92,7 +115,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
 }
 
 AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_fpu, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_fpu),
       Config(TABLE),
       _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
       _opt_pmmu(this, &AsmNs32000::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
@@ -724,28 +747,7 @@ Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
         scan = p;
         return OK;
     }
-    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR(".ascii")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR(".word")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".double")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR(".blkb")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR(".blkw")) == 0)
-        return allocateSpaces(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".blkd")) == 0)
-        return allocateSpaces(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR(".space")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR(".org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    return Assembler::processPseudo(scan, insn);
 }
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {

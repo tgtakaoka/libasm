@@ -18,14 +18,34 @@
 
 #include "reg_tlcs90.h"
 #include "table_tlcs90.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace tlcs90 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DEFS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+
+}  // namespace
 
 AsmTlcs90::AsmTlcs90(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -208,24 +228,6 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = M_IMM16;
     scan = p;
     return OK;
-}
-
-Error AsmTlcs90::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("db")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR("defb")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR("defm")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0 || strcasecmp_P(insn.name(), PSTR("defw")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("dl")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0 || strcasecmp_P(insn.name(), PSTR("defs")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {

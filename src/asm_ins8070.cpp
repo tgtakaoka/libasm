@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2020 Tadashi G. Takaoka
  *
@@ -19,13 +18,25 @@
 
 #include "reg_ins8070.h"
 #include "table_ins8070.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace ins8070 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_dequal, &Assembler::defineOrigin},
+        Pseudo{TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dDBYTE, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
 
 struct Ins8070FunctionParser final : FunctionParser {
     const Functor *parseFunction(
@@ -57,7 +68,7 @@ const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
 }
 
 AsmIns8070::AsmIns8070(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -92,11 +103,11 @@ const Functor *Ins8070FunctionParser::parseFunction(StrScanner &scan, ErrorAt &e
     auto p = scan;
     const auto name = readFunctionName(p, symParser);
     const Functor *fn = nullptr;
-    if (name.iequals_P(PSTR("H"))) {
+    if (name.iequals_P(TEXT_FN_H)) {
         fn = &FN_HIGH;
-    } else if (name.iequals_P(PSTR("L"))) {
+    } else if (name.iequals_P(TEXT_FN_L)) {
         fn = &FN_LOW;
-    } else if (name.iequals_P(PSTR("ADDR"))) {
+    } else if (name.iequals_P(TEXT_FN_ADDR)) {
         fn = &FN_ADDR;
     }
     if (fn) {
@@ -269,15 +280,15 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmIns8070::defineAddressConstant(StrScanner &scan, Insn &insn) {
+Error AsmIns8070::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
         ErrorAt error;
         const auto value = parseExpr(p, error);
         if (error.getError())
             return setError(error);
-        const auto v = (value.getUnsigned() - 1) & 0xFFFF;
-        insn.emitUint16Le(v);
+        const auto v = value.getUnsigned();
+        insn.emitUint16Le((v - 1) & 0xFFFF);
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
@@ -287,20 +298,9 @@ Error AsmIns8070::defineAddressConstant(StrScanner &scan, Insn &insn) {
 }
 
 Error AsmIns8070::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR(".ascii")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR(".dbyte")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR(".addr")) == 0)
-        return defineAddressConstant(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR(".=")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    if (strcasecmp_P(insn.name(), TEXT_dADDR) == 0)
+        return defineAddrConstant(scan, insn);
+    return Assembler::processPseudo(scan, insn);
 }
 
 Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {

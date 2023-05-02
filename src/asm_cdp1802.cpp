@@ -18,11 +18,14 @@
 
 #include "reg_cdp1802.h"
 #include "table_cdp1802.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace cdp1802 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
@@ -34,6 +37,12 @@ const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch"
 struct Cdp1802FunctionParser final : FunctionParser {
     const Functor *parseFunction(
             StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
+};
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin, 0},
+        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin, 0},
 };
 
 }  // namespace
@@ -60,7 +69,7 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
 }
 
 AsmCdp1802::AsmCdp1802(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_useReg, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_useReg),
       Config(TABLE),
       _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
               _opt_smartBranch),
@@ -228,16 +237,6 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = M_ADDR;
     scan = p;
     return OK;
-}
-
-Error AsmCdp1802::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("dc")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE_OR_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {

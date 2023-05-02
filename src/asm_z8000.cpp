@@ -18,16 +18,32 @@
 
 #include "reg_z8000.h"
 #include "table_z8000.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace z8000 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
 const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
 const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+
+const char TEXT_LONG[] PROGMEM = "long";
+const char TEXT_STRING[] PROGMEM = "string";
+const char TEXT_WORD[] PROGMEM = "word";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_LONG, &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_WORD, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+};
 
 }  // namespace
 
@@ -44,13 +60,15 @@ const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
-        const OperatorParser &operators() const override { return ZilogOperatorParser::singleton(); }
+        const OperatorParser &operators() const override {
+            return ZilogOperatorParser::singleton();
+        }
     } PLUGINS{};
     return PLUGINS;
 }
 
 AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_shortDitrect, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_shortDitrect),
       Config(TABLE),
       _opt_shortDitrect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT) {
@@ -572,21 +590,6 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) {
     op.mode = M_DA;
     scan = p;
     return OK;
-}
-
-Error AsmZ8000::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("byte")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR("string")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("word")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("long")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {

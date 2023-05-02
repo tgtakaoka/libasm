@@ -19,11 +19,29 @@
 #include "operators.h"
 #include "reg_i8096.h"
 #include "table_i8096.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace i8096 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DCL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+        Pseudo{TEXT_DCW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_DSB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DSL, &Assembler::allocateSpaces, Assembler::DATA_LONG},
+        Pseudo{TEXT_DSW, &Assembler::allocateSpaces, Assembler::DATA_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+
+}  // namespace
 
 struct AsmI8096::Operand final : ErrorAt {
     AddrMode mode;
@@ -46,7 +64,7 @@ const ValueParser::Plugins &AsmI8096::defaultPlugins() {
 }
 
 AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -203,26 +221,6 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     default:
         return;
     }
-}
-
-Error AsmI8096::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("dcb")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dcw")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("dcl")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("dsb")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dsw")) == 0)
-        return allocateSpaces(scan, insn, DATA_WORD_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("dsl")) == 0)
-        return allocateSpaces(scan, insn, DATA_LONG_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {

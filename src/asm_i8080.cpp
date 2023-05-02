@@ -19,11 +19,26 @@
 #include "operators.h"
 #include "reg_i8080.h"
 #include "table_i8080.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace i8080 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+
+}  // namespace
 
 struct AsmI8080::Operand final : ErrorAt {
     AddrMode mode;
@@ -45,7 +60,7 @@ const ValueParser::Plugins &AsmI8080::defaultPlugins() {
 }
 
 AsmI8080::AsmI8080(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -124,20 +139,6 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
     op.mode = M_IM16;
     scan = p;
     return OK;
-}
-
-Error AsmI8080::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("db")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {

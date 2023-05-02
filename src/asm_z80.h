@@ -38,7 +38,6 @@ private:
     void encodeIndexedBitOp(AsmInsn &insn, const Operand &op);
     void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

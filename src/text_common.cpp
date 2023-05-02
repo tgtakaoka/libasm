@@ -387,7 +387,6 @@ const char TEXT_CPU_8080[]   PROGMEM = "8080";
 const char TEXT_CPU_8085[]   PROGMEM = "8085";
 const char TEXT_CPU_V30EMU[] PROGMEM = "V30EMU";
 
-#ifndef CHECK
 const char TEXT_REG_A[]   PROGMEM = "A";
 const char TEXT_REG_SP[]  PROGMEM = "SP";
 const char TEXT_REG_PC[]  PROGMEM = "PC";
@@ -449,7 +448,47 @@ const char TEXT_CC_P[]   PROGMEM = "P";
 const char TEXT_CC_PO[]  PROGMEM = "PO";
 const char TEXT_CC_PE[]  PROGMEM = "PE";
 const char TEXT_CC_M[]   PROGMEM = "M";
-#endif
+
+const char TEXT_FN_ADDR[] PROGMEM = "ADDR";
+const char TEXT_FN_H[]    PROGMEM = "H";
+const char TEXT_FN_L[]    PROGMEM = "L";
+
+const char TEXT_dADDR[]  PROGMEM = ".addr";
+const char TEXT_dALIGN[] PROGMEM = ".align";
+const char TEXT_dASCII[] PROGMEM = ".ascii";
+const char TEXT_dBYTE[]  PROGMEM = ".byte";
+const char TEXT_dDBYTE[] PROGMEM = ".dbyte";
+const char TEXT_dequal[] PROGMEM = ".=";
+const char TEXT_dLONG[]  PROGMEM = ".long";
+const char TEXT_dORG[]   PROGMEM = ".org";
+const char TEXT_dSTRING[] PROGMEM = ".string";
+const char TEXT_dWORD[]  PROGMEM = ".word";
+const char TEXT_ALIGN[] PROGMEM = "align";
+const char TEXT_BYTE[]  PROGMEM = "byte";
+const char TEXT_DATA[]  PROGMEM = "data";
+const char TEXT_DB[]    PROGMEM = "db";
+const char TEXT_DCB[]   PROGMEM = "dcb";
+const char TEXT_DCL[]   PROGMEM = "dcl";
+const char TEXT_DC[]    PROGMEM = "dc";
+const char TEXT_DCW[]   PROGMEM = "dcw";
+const char TEXT_DD[]    PROGMEM = "dd";
+const char TEXT_DEFB[]  PROGMEM = "defb";
+const char TEXT_DEFL[]  PROGMEM = "defl";
+const char TEXT_DEFM[]  PROGMEM = "defm";
+const char TEXT_DEFS[]  PROGMEM = "defs";
+const char TEXT_DEFW[]  PROGMEM = "defw";
+const char TEXT_DL[]    PROGMEM = "dl";
+const char TEXT_DSB[]   PROGMEM = "dsb";
+const char TEXT_DSL[]   PROGMEM = "dsl";
+const char TEXT_DS[]    PROGMEM = "ds";
+const char TEXT_DSW[]   PROGMEM = "dsw";
+const char TEXT_DW[]    PROGMEM = "dw";
+const char TEXT_FCB[]   PROGMEM = "fcb";
+const char TEXT_FCC[]   PROGMEM = "fcc";
+const char TEXT_FDB[]   PROGMEM = "fdb";
+const char TEXT_ORG[]   PROGMEM = "org";
+const char TEXT_RMB[]   PROGMEM = "rmb";
+
 // clang-format on
 
 }  // namespace common

@@ -23,8 +23,25 @@
 namespace libasm {
 namespace mos6502 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 using namespace text::mos6502;
+
+namespace {
+
+const char TEXT_aequal[] PROGMEM = "*=";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_aequal, &Assembler::defineOrigin},
+        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+
+}  // namespace
 
 struct AsmMos6502::Operand final : ErrorAt {
     AddrMode mode;
@@ -48,7 +65,7 @@ const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
 }
 
 AsmMos6502::AsmMos6502(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_longa, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_longa),
       Config(TABLE),
       _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
       _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI) {
@@ -282,17 +299,7 @@ Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
         return parseTableOnOff(scan, &AsmMos6502::setLongAccumulator);
     if (strcasecmp_P(insn.name(), OPT_BOOL_LONGI) == 0)
         return parseTableOnOff(scan, &AsmMos6502::setLongIndex);
-    if (strcasecmp_P(insn.name(), PSTR(".byte")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR(".word")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("*=")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    return Assembler::processPseudo(scan, insn);
 }
 
 namespace {

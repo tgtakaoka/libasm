@@ -16,15 +16,16 @@
 
 #include "asm_z8.h"
 
-#include <ctype.h>
-
 #include "reg_z8.h"
 #include "table_z8.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace z8 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
@@ -34,6 +35,15 @@ const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
 const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
 const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
 const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
 
 }  // namespace
 
@@ -50,14 +60,16 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
-        const OperatorParser &operators() const override { return ZilogOperatorParser::singleton(); }
+        const OperatorParser &operators() const override {
+            return ZilogOperatorParser::singleton();
+        }
         const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION};
     } PLUGINS{};
     return PLUGINS;
 }
 
 AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_setrp, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_setrp),
       Config(TABLE),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
@@ -426,19 +438,7 @@ Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
         if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
             return setRp(scan, &AsmZ8::setRegPointer1);
     }
-    if (strcasecmp_P(insn.name(), PSTR("db")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("dl")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    return Assembler::processPseudo(scan, insn);
 }
 
 Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {

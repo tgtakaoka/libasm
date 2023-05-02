@@ -35,7 +35,7 @@ private:
     void encodeRel8(AsmInsn &insn, const Operand &op);
     void encodeIndx(AsmInsn &insn, const Operand &op);
 
-    Error defineAddressConstant(StrScanner &scan, Insn &insn);
+    Error defineAddrConstant(StrScanner &scan, Insn &insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

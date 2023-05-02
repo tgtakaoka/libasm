@@ -18,16 +18,35 @@
 
 #include "operators.h"
 #include "table_i8086.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace i8086 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
 const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+
+const char TEXT_RESB[] PROGMEM = "resb";
+const char TEXT_RESD[] PROGMEM = "resd";
+const char TEXT_RESW[] PROGMEM = "resw";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DD, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_RESB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_RESD, &Assembler::allocateSpaces, Assembler::DATA_LONG},
+        Pseudo{TEXT_RESW, &Assembler::allocateSpaces, Assembler::DATA_WORD},
+};
 
 }  // namespace
 
@@ -68,7 +87,7 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 }
 
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_optimizeSegment, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_optimizeSegment),
       Config(TABLE),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {
@@ -525,26 +544,6 @@ void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &
         emitStringOperand(insn, src, REG_DS, REG_SI);
         break;
     }
-}
-
-Error AsmI8086::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("db")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dw")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("dd")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR("ds")) == 0 || strcasecmp_P(insn.name(), PSTR("resb")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("resw")) == 0)
-        return allocateSpaces(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("resd")) == 0)
-        return allocateSpaces(scan, insn, DATA_LONG);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {

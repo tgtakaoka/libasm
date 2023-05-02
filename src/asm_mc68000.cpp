@@ -13,20 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "asm_mc68000.h"
 
 #include "reg_mc68000.h"
 #include "table_mc68000.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mc68000 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
 const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
 const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+
+const char TEXT_DC_B[] PROGMEM = "dc.b";
+const char TEXT_DC_L[] PROGMEM = "dc.l";
+const char TEXT_DC_W[] PROGMEM = "dc.w";
+const char TEXT_DS_B[] PROGMEM = "ds.b";
+const char TEXT_DS_L[] PROGMEM = "ds.l";
+const char TEXT_DS_W[] PROGMEM = "ds.w";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+        Pseudo{TEXT_DC_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DC_L, &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
+        Pseudo{TEXT_DC_W, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DS_B, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DS_L, &Assembler::allocateSpaces, Assembler::DATA_LONG_ALIGN2},
+        Pseudo{TEXT_DS_W, &Assembler::allocateSpaces, Assembler::DATA_WORD_ALIGN2},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
 
 }  // namespace
 
@@ -58,7 +83,7 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 }
 
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
-    : Assembler(&_opt_alias, plugins),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_alias),
       Config(TABLE),
       _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS) {
     reset();
@@ -463,28 +488,6 @@ OprSize AsmInsn::parseInsnSize() {
     const auto isize = parseSize(p);
     *eos = 0;
     return isize;
-}
-
-Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("dc.b")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("dc.w")) == 0 || strcasecmp_P(insn.name(), PSTR("dc")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("dc.l")) == 0)
-        return defineDataConstant(scan, insn, DATA_LONG_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("ds.b")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("ds.w")) == 0)
-        return allocateSpaces(scan, insn, DATA_WORD_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("ds.l")) == 0)
-        return allocateSpaces(scan, insn, DATA_LONG_ALIGN2);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR(".align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {

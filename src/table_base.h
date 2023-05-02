@@ -53,6 +53,30 @@ struct Table {
         return nullptr;
     }
 
+    template <typename DATA>
+    using Comparator = int (*)(DATA &, const ITEM *);
+
+    template <typename DATA>
+    const ITEM *binarySearch(DATA &data, Comparator<DATA> comparator) const {
+        const auto *first = table();
+        const auto *last = end();
+        for (;;) {
+            const auto diff = last - first;
+            if (diff == 0)
+                return nullptr;
+            const auto *middle = first;
+            middle += diff / 2;
+            const auto res = comparator(data, middle);
+            if (res == 0) {
+                return middle;
+            } else if (res > 0) {
+                first = middle + 1;
+            } else {
+                last = middle;
+            }
+        }
+    }
+
 private:
     const ITEM *_table;
     const ITEM *_end;
@@ -94,7 +118,7 @@ struct IndexedTable {
             const auto *middle = first;
             middle += diff / 2;
             if (comparator(data, itemAt(middle)) > 0) {
-                first = ++middle;
+                first = middle + 1;
             } else {
                 last = middle;
             }

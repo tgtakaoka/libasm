@@ -18,11 +18,27 @@
 
 #include "reg_mc6800.h"
 #include "table_mc6800.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mc6800 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
+        Pseudo{TEXT_FCC, &Assembler::defineString},
+        Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+};
+
+}  // namespace
 
 struct AsmMc6800::Operand final : ErrorAt {
     AddrMode mode;
@@ -49,7 +65,7 @@ const ValueParser::Plugins &AsmMc6800::defaultPlugins() {
 }
 
 AsmMc6800::AsmMc6800(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -182,22 +198,6 @@ void AsmMc6800::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     default:
         break;
     }
-}
-
-Error AsmMc6800::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("fcb")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE_NO_STRING);
-    if (strcasecmp_P(insn.name(), PSTR("fdb")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD_NO_STRING);
-    if (strcasecmp_P(insn.name(), PSTR("fcc")) == 0)
-        return defineString(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("rmb")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {

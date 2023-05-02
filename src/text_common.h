@@ -451,6 +451,46 @@ extern const char TEXT_CC_P[]   PROGMEM;
 extern const char TEXT_CC_PO[]  PROGMEM;
 extern const char TEXT_CC_PE[]  PROGMEM;
 extern const char TEXT_CC_M[]   PROGMEM;
+
+extern const char TEXT_FN_ADDR[] PROGMEM;
+extern const char TEXT_FN_H[]    PROGMEM;
+extern const char TEXT_FN_L[]    PROGMEM;
+
+extern const char TEXT_dADDR[]  PROGMEM; // .addr
+extern const char TEXT_dALIGN[] PROGMEM; // .align
+extern const char TEXT_dASCII[] PROGMEM; // .ascii
+extern const char TEXT_dBYTE[]  PROGMEM; // .byte
+extern const char TEXT_dDBYTE[] PROGMEM; // .dbyte
+extern const char TEXT_dequal[] PROGMEM; // .=
+extern const char TEXT_dLONG[]  PROGMEM; // .long
+extern const char TEXT_dORG[]   PROGMEM; // .org
+extern const char TEXT_dSTRING[] PROGMEM; // .string
+extern const char TEXT_dWORD[]  PROGMEM; // .word
+extern const char TEXT_ALIGN[] PROGMEM;
+extern const char TEXT_BYTE[]  PROGMEM;
+extern const char TEXT_DATA[]  PROGMEM;
+extern const char TEXT_DB[]    PROGMEM;
+extern const char TEXT_DCB[]   PROGMEM;
+extern const char TEXT_DCL[]   PROGMEM;
+extern const char TEXT_DC[]    PROGMEM;
+extern const char TEXT_DCW[]   PROGMEM;
+extern const char TEXT_DD[]    PROGMEM;
+extern const char TEXT_DEFB[]  PROGMEM;
+extern const char TEXT_DEFL[]  PROGMEM;
+extern const char TEXT_DEFM[]  PROGMEM;
+extern const char TEXT_DEFS[]  PROGMEM;
+extern const char TEXT_DEFW[]  PROGMEM;
+extern const char TEXT_DL[]    PROGMEM;
+extern const char TEXT_DSB[]   PROGMEM;
+extern const char TEXT_DSL[]   PROGMEM;
+extern const char TEXT_DS[]    PROGMEM;
+extern const char TEXT_DSW[]   PROGMEM;
+extern const char TEXT_DW[]    PROGMEM;
+extern const char TEXT_FCB[]   PROGMEM;
+extern const char TEXT_FCC[]   PROGMEM;
+extern const char TEXT_FDB[]   PROGMEM;
+extern const char TEXT_ORG[]   PROGMEM;
+extern const char TEXT_RMB[]   PROGMEM;
 // clang-format on
 
 }  // namespace common

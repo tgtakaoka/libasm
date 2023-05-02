@@ -38,7 +38,7 @@ private:
     void emitGeneric(AsmInsn &insn, const Operand &op);
     void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
 
-    Error defineAddressConstant(StrScanner &scan, Insn &insn);
+    Error defineAddrConstant(StrScanner &scan, Insn &insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

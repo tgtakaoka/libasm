@@ -16,15 +16,33 @@
 
 #include "asm_scn2650.h"
 
-#include <ctype.h>
-
 #include "reg_scn2650.h"
 #include "table_scn2650.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace scn2650 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+const char TEXT_ACON[] PROGMEM = "acon";
+const char TEXT_ALIT[] PROGMEM = "alit";
+const char TEXT_RES[] PROGMEM = "res";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_RES, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+};
+
+}  // namespace
 
 struct AsmScn2650::Operand final : ErrorAt {
     AddrMode mode;
@@ -47,7 +65,7 @@ const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
 }
 
 AsmScn2650::AsmScn2650(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -117,9 +135,9 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
         op.mode = M_AB15;
     } else {
         if (bop == '<')
-            op.val16 &= 0xFF;   // LSB
+            op.val16 &= 0xFF;  // LSB
         if (bop == '>')
-            op.val16 >>= 8;     // MSB;
+            op.val16 >>= 8;  // MSB;
         op.mode = M_IMM8;
     }
     scan = p;
@@ -228,21 +246,6 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     default:
         break;
     }
-}
-
-Error AsmScn2650::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("data")) == 0 ||
-            strcasecmp_P(insn.name(), PSTR("alit")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("acon")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("res")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {

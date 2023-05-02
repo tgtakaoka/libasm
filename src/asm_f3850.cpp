@@ -16,15 +16,30 @@
 
 #include "asm_f3850.h"
 
-#include <ctype.h>
-
 #include "reg_f3850.h"
 #include "table_f3850.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace f3850 {
 
+using namespace pseudo;
 using namespace reg;
+using namespace text::common;
+
+namespace {
+
+const char TEXT_RS[] PROGMEM = "rs";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_DA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+        Pseudo{TEXT_RS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+};
+
+}  // namespace
 
 struct AsmF3850::Operand final : ErrorAt {
     AddrMode mode;
@@ -45,7 +60,7 @@ const ValueParser::Plugins &AsmF3850::defaultPlugins() {
 }
 
 AsmF3850::AsmF3850(const ValueParser::Plugins &plugins)
-    : Assembler(nullptr, plugins), Config(TABLE) {
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
     reset();
 }
 
@@ -138,20 +153,6 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     default:
         break;
     }
-}
-
-Error AsmF3850::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), PSTR("dc")) == 0)
-        return defineDataConstant(scan, insn, DATA_BYTE_OR_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("da")) == 0)
-        return defineDataConstant(scan, insn, DATA_WORD);
-    if (strcasecmp_P(insn.name(), PSTR("rs")) == 0)
-        return allocateSpaces(scan, insn, DATA_BYTE);
-    if (strcasecmp_P(insn.name(), PSTR("org")) == 0)
-        return defineOrigin(scan, insn);
-    if (strcasecmp_P(insn.name(), PSTR("align")) == 0)
-        return alignOrigin(scan, insn);
-    return UNKNOWN_DIRECTIVE;
 }
 
 Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {

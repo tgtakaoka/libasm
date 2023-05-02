@@ -37,7 +37,6 @@ private:
     void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
     void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
 
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
