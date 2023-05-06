@@ -44,6 +44,7 @@ const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
+        const OperatorParser &operators() const override { return ZilogOperatorParser::singleton(); }
     } PLUGINS{};
     return PLUGINS;
 }

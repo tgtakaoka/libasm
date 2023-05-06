@@ -133,3 +133,4 @@ build test_expr_intel.o:    cxx ${root}/test/test_expr_intel.cpp
 build test_expr_motorola.o: cxx ${root}/test/test_expr_motorola.cpp
 build test_expr_national.o: cxx ${root}/test/test_expr_national.cpp
 build test_expr_fairchild.o: cxx ${root}/test/test_expr_fairchild.cpp
+build test_expr_zilog.o:    cxx ${root}/test/test_expr_zilog.cpp

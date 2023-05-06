@@ -553,6 +553,61 @@ const Operator *IntelOperatorParser::readOperator(
     return CStyleOperatorParser::singleton().readOperator(scan, error, type);
 }
 
+// clang-format off
+static const Operator ZILOG_HIGH16(     3, R, 1, most_siginificant_word);
+static const Operator ZILOG_LOW16(      3, R, 1, least_significant_word);
+static const Operator ZILOG_SHIFT_RIGHT(5, L, 1, logical_shift_right_16bit);
+static const Operator ZILOG_SHIFT_LEFT( 5, L, 1, logical_shift_left_16bit);
+static const Operator ZILOG_BITWISE_AND(5, L, 2, bitwise_and);
+static const Operator ZILOG_BITWISE_XOR(6, L, 2, bitwise_xor);
+static const Operator ZILOG_BITWISE_OR( 6, L, 2, bitwise_or);
+// clang-format on
+
+const Operator *ZilogOperatorParser::readOperator(
+        StrScanner &scan, ErrorAt &error, Operator::Type type) const {
+    auto p = scan;
+    // TODO: Use SymbolParser
+    p.trimStart(isalnum);
+    const StrScanner name(scan.str(), p.str());
+    const Operator *opr = nullptr;
+    if (type == Operator::PREFIX) {
+        if (name.iequals_P(PSTR("LNOT"))) {
+            opr = &OP_BITWISE_NOT;
+        } else if (name.iequals_P(PSTR("HIGH"))) {
+            opr = &INTEL_HIGH;
+        } else if (name.iequals_P(PSTR("LOW"))) {
+            opr = &INTEL_LOW;
+        } else if (name.iequals_P(PSTR("HIGH16"))) {
+            opr = &ZILOG_HIGH16;
+        } else if (name.iequals_P(PSTR("LOW16"))) {
+            opr = &ZILOG_LOW16;
+        }
+        if (opr) {
+            scan += name.size();
+            return opr;
+        }
+    } else if (type == Operator::INFIX) {
+        if (name.iequals_P(PSTR("MOD"))) {
+            opr = &OP_MOD;
+        } else if (name.iequals_P(PSTR("SHR"))) {
+            opr = &ZILOG_SHIFT_RIGHT;
+        } else if (name.iequals_P(PSTR("SHL"))) {
+            opr = &ZILOG_SHIFT_LEFT;
+        } else if (name.iequals_P(PSTR("LAND"))) {
+            opr = &ZILOG_BITWISE_AND;
+        } else if (name.iequals_P(PSTR("LOR"))) {
+            opr = &ZILOG_BITWISE_OR;
+        } else if (name.iequals_P(PSTR("LXOR"))) {
+            opr = &ZILOG_BITWISE_XOR;
+        }
+        if (opr) {
+            scan += name.size();
+            return opr;
+        }
+    }
+    return CStyleOperatorParser::singleton().readOperator(scan, error, type);
+}
+
 }  // namespace libasm
 
 // Local Variables:

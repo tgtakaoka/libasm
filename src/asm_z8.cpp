@@ -50,6 +50,7 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
+        const OperatorParser &operators() const override { return ZilogOperatorParser::singleton(); }
         const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION};
     } PLUGINS{};
     return PLUGINS;

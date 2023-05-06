@@ -132,6 +132,11 @@ struct IntelOperatorParser final : OperatorParser, Singleton<IntelOperatorParser
             StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
 };
 
+struct ZilogOperatorParser final : OperatorParser, Singleton<ZilogOperatorParser> {
+    const Operator *readOperator(
+            StrScanner &scan, ErrorAt &error, Operator::Type type) const override;
+};
+
 }  // namespace libasm
 
 #endif

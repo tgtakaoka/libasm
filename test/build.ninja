@@ -379,8 +379,11 @@ build test_expr_national: run test_expr_national.o $
 build test_expr_fairchild: run test_expr_fairchild.o $
   test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
   test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
+build test_expr_zilog: run test_expr_zilog.o $
+  test_expr_helper.o value_formatter.o value_parser.o parsers.o operators.o config_base.o $
+  test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_expr: phony test_expr_base test_expr_intel test_expr_motorola test_expr_national $
-  test_expr_fairchild
+  test_expr_fairchild test_expr_zilog
 
 build gen: phony gen_mc6809 gen_mc6800 gen_mc6805 gen_mos6502 gen_i8048 gen_i8051 $
   gen_i8080 gen_i8096 gen_z80 gen_z8 gen_tlcs90 gen_ins8060 gen_ins8070 $
@@ -415,6 +418,7 @@ build test: phony test_mc6809 test_mc6800 test_mc6805 test_mos6502 test_i8048 te
   test_i8080 test_i8096 test_z80 test_z8 test_tlcs90 test_ins8060 test_ins8070 $
   test_cdp1802 test_scn2650 test_f3850 test_i8086 test_tms9900 test_tms32010 test_mc68000 $
   test_z8000 test_ns32000 test_mn1610 $
-  test_expr_base test_expr_intel test_expr_motorola test_expr_national test_expr_fairchild
+  test_expr_base test_expr_intel test_expr_motorola test_expr_national test_expr_fairchild $
+  test_expr_zilog
 
 default test
