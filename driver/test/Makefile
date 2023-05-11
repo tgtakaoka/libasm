@@ -20,13 +20,13 @@ help:
 clean: clean-objs
 	-rm -f $(BINS)
 clean-objs:
-	-rm -f *.o *.d *~
+	-rm -f *.o *.d *~ compile_commands.json
 
 include ../../src/Makefile.arch
 
+SRCS_TEST_FORMATTER = $(wildcard test_formatter_*.cpp)
 TESTS = test_helpers test_bin_memory test_intel_hex test_moto_srec \
-        $(foreach a,$(ARCHS),$(if $(wildcard ../../src/asm_$(a).cpp),test_formatter_$(a),)) \
-        test_asm_formatter
+	$(SRCS_TEST_FORMATTER:%.cpp=%)
 
 vpath %.cpp ../../driver
 vpath %.cpp ../../src
@@ -43,11 +43,13 @@ OBJS_formatter = list_formatter.o value_formatter.o config_base.o reg_base.o opt
 OBJS_asm = asm_base.o asm_formatter.o value_parser.o parsers.o operators.o \
            asm_driver.o asm_directive.o function_store.o \
            bin_encoder.o bin_decoder.o moto_srec.o intel_hex.o
-ARCHS_test_asm_formatter =i8080 ins8060 mc6809 mos6502 z80
+ARCHS_test_asm_formatter = i8080 ins8060 mc6809 mos6502 z80
 OBJS_test_asm_formatter = $(OBJS_formatter) $(OBJS_common) $(OBJS_asm) \
         $(foreach a,$(ARCHS_test_asm_formatter),asm_$(a).o $(OBJS_$(a)))
 
 BINS = $(TESTS)
+OBJS = $(OBJS_common) $(OBJS_encdec) $(OBJS_formatter) $(OBJS_asm) \
+       $(SRCS_TEST_FORMATTER:%.cpp=%.o)
 
 -include $(OBJS:%=%.d)
 
@@ -76,6 +78,21 @@ test_moto_srec: test_moto_srec.o $(OBJS_encdec) $(OBJS_common)
 	$(CXX) -o $@ $^
 test_asm_formatter: test_asm_formatter.o $(OBJS_test_asm_formatter)
 	$(CXX) -o $@ $^
+
+compile_commands.json:
+	bear -- $(MAKE) test
+SRCS=\
+$(foreach s,$(sort $(OBJS:%.o=%.cpp)),\
+    $(if $(wildcard $(s)),$(s),\
+    $(if $(wildcard ../$(s)),../$(s),)))
+define tidy-rule # target
+.PHONY:: $(1).tidy
+$(1).tidy: compile_commands.json $(1).cpp
+	clang-tidy $(1).cpp
+
+endef
+$(eval $(foreach t,$(SRCS:%.cpp=%),$(call tidy-rule,$(t))))
+tidy: $(SRCS:%.cpp=%.tidy)
 
 # Local Variables:
 # mode: makefile-gmake

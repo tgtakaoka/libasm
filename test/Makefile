@@ -26,9 +26,9 @@ generate: gen
 	$(MAKE) -C autogen generate
 
 clean: clean-objs
-	-rm -f $(BINS) compile_commands.json
+	-rm -f $(BINS)
 clean-objs:
-	-rm -f $(OBJS) *.d *~
+	-rm -f $(OBJS) *.d *~ compile_commands.json
 	$(MAKE) -C unittest clean
 
 vpath %.cpp ../src
@@ -103,14 +103,17 @@ $(eval $(foreach a,$(ARCHS),$(call gen-rule,$(a))))
 gen: $(GEN_OBJS:.o=)
 
 compile_commands.json:
-	bear $(MAKE) $(BINS:%=%.o)
+	bear -- $(MAKE) $(BINS:%=%.o)
 define tidy-rule # target
 .PHONY:: $(1).tidy
 $(1).tidy: compile_commands.json $(1).cpp
 	clang-tidy $(1).cpp
 
 endef
-SRCS=$(wildcard *.cpp)
+SRCS=\
+$(foreach s,$(sort $(OBJS:%.o=%.cpp)),\
+    $(if $(wildcard $(s)),$(s),\
+    $(if $(wildcard ../src/$(s)),../src/$(s),)))
 $(eval $(foreach t,$(SRCS:%.cpp=%),$(call tidy-rule,$(t))))
 tidy: $(SRCS:%.cpp=%.tidy)
 

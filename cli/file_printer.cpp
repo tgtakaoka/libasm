@@ -55,6 +55,7 @@ void FilePrinter::format(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     vfprintf(_file, fmt, args);
+    va_end(args);
     fflush(_file);
 }
 

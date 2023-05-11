@@ -50,7 +50,7 @@ int DisCommander::disassemble() {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
-    if (readBinary(input, memory) != 0)
+    if (readBinary(input, memory) < 0)
         return 1;
     input.close();
 

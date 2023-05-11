@@ -36,7 +36,7 @@ int BinDecoder::decode(TextReader &in, BinMemory &memory) {
                 decoder = &IntelHex::decoder();
                 break;
             default:
-                return 1;
+                return -1;
             }
             decoder->reset();
         }
@@ -45,7 +45,7 @@ int BinDecoder::decode(TextReader &in, BinMemory &memory) {
             return len;
         size += len;
     }
-    return 0;
+    return size;
 }
 
 static uint8_t parseHex(char c) {

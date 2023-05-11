@@ -277,11 +277,10 @@ private:
  * Texas Instrument style numbers are the same as C-Style and '>hh' as hexadecimal.
  */
 struct TexasNumberParser final : NumberParser, Singleton<TexasNumberParser> {
-    TexasNumberParser() : _intel() {}
     Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IntelNumberParser _intel;
+    const IntelNumberParser _intel{};
 };
 
 struct SemicolonCommentParser final : CommentParser, Singleton<SemicolonCommentParser> {
@@ -301,7 +300,7 @@ struct SharpCommentParser final : CommentParser, Singleton<SharpCommentParser> {
     }
 
 private:
-    const SemicolonCommentParser _semicolon;
+    const SemicolonCommentParser _semicolon{};
 };
 
 struct AsteriskCommentParser final : CommentParser, Singleton<AsteriskCommentParser> {

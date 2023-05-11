@@ -30,10 +30,10 @@ cli: $(BINS)
 install: $(BINS)
 	install -s $(BINS) ${INSTALL_DIR}
 
-clean-objs:
-	-rm -f $(OBJS)
 clean: clean-objs
-	-rm -f $(BINS) *.d *~ compile_commands.json
+	-rm -f $(BINS)
+clean-objs:
+	-rm -f $(OBJS) *.d *~ compile_commands.json
 
 vpath %.cpp ../driver
 vpath %.cpp ../src
@@ -64,8 +64,11 @@ endef
 $(eval $(foreach b,$(BINS),$(call bin-rule,$(b))))
 
 compile_commands.json:
-	bear $(MAKE) cli
-SRCS=$(foreach s,$(sort $(OBJS:%.o=%.cpp)),$(if $(wildcard $(s)),$(s),../src/$(s)))
+	bear -- $(MAKE) cli
+SRCS=\
+$(foreach s,$(sort $(OBJS:%.o=%.cpp)),\
+    $(if $(wildcard $(s)),$(s),\
+    $(if $(wildcard ../driver/$(s)),../driver/$(s),)))
 define tidy-rule # target
 .PHONY:: $(1).tidy
 $(1).tidy: compile_commands.json $(1).cpp

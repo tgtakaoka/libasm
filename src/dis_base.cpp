@@ -36,9 +36,7 @@ Disassembler::Disassembler(const HexFormatter &hexFormatter, char curSym, const 
               _opt_cstyle),
       _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_curSym),
       _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN),
-      _defaultCurSym(curSym) {
-    reset();
-}
+      _defaultCurSym(curSym) {}
 
 void Disassembler::reset() {
     setUpperHex(true);

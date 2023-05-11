@@ -106,7 +106,8 @@ StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
 StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    char *end = _out + vsnprintf_P(_out, _end - _out, fmt, args);
+    const auto end = _out + vsnprintf_P(_out, _end - _out, fmt, args);
+    va_end(args);
     if (end < _end) {
         _out = end;
     } else {

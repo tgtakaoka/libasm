@@ -151,7 +151,7 @@ void test_decoder() {
             .add(":12340000112233445566778899AABBCCDDEEFF0012347C")
             .add(":00000001FF");
     BinMemory mem16_32;
-    EQ("16bit-32block1", 0, BinDecoder::decode(hex, mem16_32));
+    EQ("16bit-32block1", 18, BinDecoder::decode(hex, mem16_32));
     EQ("16bit-32block1", start_expected16, mem16_32.startAddress());
     EQ("16bit-32block1", end_expected16, mem16_32.endAddress());
     MEM_EQ("16bit-32block1", expected16, mem16_32, start_expected16);
@@ -161,7 +161,7 @@ void test_decoder() {
             .add(":02341000123474")
             .add(":00000001FF");
     BinMemory mem16_8;
-    EQ("16bit-8block1", 0, BinDecoder::decode(hex, mem16_8));
+    EQ("16bit-8block1", 18, BinDecoder::decode(hex, mem16_8));
     EQ("16bit-8block1", start_expected16, mem16_8.startAddress());
     EQ("16bit-8block1", end_expected16, mem16_8.endAddress());
     MEM_EQ("16bit-8block1", expected16, mem16_8, start_expected16);
@@ -175,7 +175,7 @@ void test_decoder() {
             .add(":02341000123474")
             .add(":00000001FF");
     BinMemory mem24_16;
-    EQ("24bit-16block1", 0, BinDecoder::decode(hex, mem24_16));
+    EQ("24bit-16block1", 18, BinDecoder::decode(hex, mem24_16));
     EQ("24bit-16block1", start_expected24, mem24_16.startAddress());
     EQ("24bit-16block1", end_expected24, mem24_16.endAddress());
     MEM_EQ("24bit-32block1", expected16, mem24_16, start_expected24);
@@ -189,7 +189,7 @@ void test_decoder() {
             .add(":020000001234B8")
             .add(":00000001FF");
     BinMemory mem32_16;
-    EQ("32bit-16block1", 0, BinDecoder::decode(hex, mem32_16));
+    EQ("32bit-16block1", 18, BinDecoder::decode(hex, mem32_16));
     EQ("32bit-16block1", start_expected32, mem32_16.startAddress());
     EQ("32bit-16block1", end_expected32, mem32_16.endAddress());
     MEM_EQ("32bit-32block1", expected16, mem32_16, start_expected32);
@@ -208,7 +208,7 @@ void test_decoder_blocks() {
             .add(":03FF1000456789B9")
             .add(":00000001FF");
     BinMemory mem;
-    EQ("blocks", 0, BinDecoder::decode(hex, mem));
+    EQ("blocks", 37, BinDecoder::decode(hex, mem));
     EQ("blocks", start_block1, mem.startAddress());
     EQ("blocks", end_block2, mem.endAddress());
     MEM_EQ("block1", expected1, mem, start_block1);

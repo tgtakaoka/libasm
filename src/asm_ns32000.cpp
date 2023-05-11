@@ -86,7 +86,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
                 }
                 return c;
             }
-        } _letter;
+        } _letter{};
     } PLUGINS{};
     return PLUGINS;
 }

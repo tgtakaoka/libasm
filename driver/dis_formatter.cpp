@@ -22,9 +22,13 @@ namespace libasm {
 namespace driver {
 
 DisFormatter::DisFormatter(Disassembler &disassembler, const char *input_name)
-    : ListFormatter(), _disassembler(disassembler), _input_name(input_name), _insn(0) {
-    setUpperHex(true);
-    setUppercase(false);
+    : ListFormatter(),
+      _disassembler(disassembler),
+      _input_name(input_name),
+      _insn(0),
+      _uppercase(false) {
+    _disassembler.setUpperHex(true);
+    _disassembler.setUppercase(false);
 }
 
 void DisFormatter::setUpperHex(bool enable) {
