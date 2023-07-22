@@ -490,6 +490,7 @@ extern const char TEXT_FCB[]   PROGMEM;
 extern const char TEXT_FCC[]   PROGMEM;
 extern const char TEXT_FDB[]   PROGMEM;
 extern const char TEXT_ORG[]   PROGMEM;
+extern const char TEXT_OPTION[] PROGMEM;
 extern const char TEXT_RMB[]   PROGMEM;
 // clang-format on
 

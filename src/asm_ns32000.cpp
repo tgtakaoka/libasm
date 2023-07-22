@@ -58,8 +58,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dORG, &Assembler::defineOrigin},
         Pseudo{TEXT_dSPACE, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 }  // namespace
@@ -128,7 +126,7 @@ void AsmNs32000::reset() {
     setMmuType(MMU_NONE);
 }
 
-Error AsmNs32000::setFpuName(StrScanner &scan) {
+Error AsmNs32000::setFpuName(const StrScanner &scan) {
     if (scan.iequals_P(TEXT_FPU_NS32081)) {
         setFpuType(FPU_NS32081);
     } else if (scan.iequals_P(TEXT_none)) {
@@ -139,7 +137,7 @@ Error AsmNs32000::setFpuName(StrScanner &scan) {
     return OK;
 }
 
-Error AsmNs32000::setPmmuName(StrScanner &scan) {
+Error AsmNs32000::setPmmuName(const StrScanner &scan) {
     if (scan.iequals_P(TEXT_MMU_NS32082)) {
         setMmuType(MMU_NS32082);
     } else if (scan.iequals_P(TEXT_none)) {

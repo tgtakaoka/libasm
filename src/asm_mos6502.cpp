@@ -37,8 +37,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 }  // namespace

@@ -44,7 +44,7 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     bool setCpu(const char *name) { return configSetter().setCpuName(name); }
     Error setCpu(StrScanner &scan) { return configSetter().setCpuName(scan); }
 
-    Error setOption(const char *name, const char *text) {
+    Error setOption(const StrScanner &name, const StrScanner &text) {
         if (_commonOptions.setOption(name, text) == OK)
             return getError();
         return options().setOption(name, text);
@@ -58,6 +58,7 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     Error setCurrentLocation(uint32_t location);
     uint32_t currentLocation() const { return _currentLocation; }
 
+    Error setOption(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra);

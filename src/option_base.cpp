@@ -20,40 +20,37 @@
 
 namespace libasm {
 
-Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) {
-    if (scan.iequals_P(PSTR("on")) || scan.iequals_P(PSTR("true")) || scan.iequals_P(PSTR("yes")) ||
-            scan.iequals_P(PSTR("enable"))) {
+Error OptionBase::parseBoolOption(const StrScanner &scan, bool &value) {
+    if (scan.iequals_P(PSTR("enable")) || scan.iequals_P(PSTR("true")) ||
+            scan.iequals_P(PSTR("yes")) || scan.iequals_P(PSTR("on"))) {
         value = true;
         return OK;
     }
-    if (scan.iequals_P(PSTR("off")) || scan.iequals_P(PSTR("false")) ||
-            scan.iequals_P(PSTR("no")) || scan.iequals_P(PSTR("disable"))) {
+    if (scan.iequals_P(PSTR("disable")) || scan.iequals_P(PSTR("false")) ||
+            scan.iequals_P(PSTR("no")) || scan.iequals_P(PSTR("off"))) {
         value = false;
         return OK;
     }
     return ILLEGAL_CONSTANT;
 }
 
-Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) {
+Error OptionBase::parseIntOption(const StrScanner &scan, int32_t &value) {
     char *end = nullptr;
     value = strtol(scan.str(), &end, 10);
-    if (end != scan.str() && *end == 0)
-        return OK;
-    return ILLEGAL_CONSTANT;
+    return end == scan.str() ? ILLEGAL_CONSTANT : OK;
 }
 
-StrScanner OptionBase::readSymbol(StrScanner &scan) {
-    auto p = scan.skipSpaces();
+StrScanner OptionBase::readSymbol(const StrScanner &scan) {
+    auto p = scan;
+    const auto name = p.skipSpaces();
     p.trimStart([](char c) { return !isspace(c); });
-    return StrScanner(scan.str(), p.str());
+    return StrScanner(name.str(), p.str());
 }
 
-Error Options::setOption(const char *name, const char *text) const {
+Error Options::setOption(const StrScanner &name, const StrScanner &text) const {
     for (auto option = _head; option != nullptr; option = option->next()) {
-        if (strcmp_P(name, option->name_P()) == 0) {
-            StrScanner scan(text);
-            return option->set(scan);
-        }
+        if (name.iequals_P(option->name_P()))
+            return option->set(text);
     }
     return UNKNOWN_OPTION;
 }

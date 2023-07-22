@@ -16,7 +16,21 @@
 
 #include "asm_base.h"
 
+#include "text_common.h"
+
 namespace libasm {
+
+using namespace pseudo;
+using namespace text::common;
+
+namespace {
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
+        Pseudo{TEXT_OPTION, &Assembler::setOption},
+        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+};
+const Pseudos common_pseudos(ARRAY_RANGE(PSEUDOS));
+}  // namespace
 
 Assembler::Assembler(const ValueParser::Plugins &plugins, const /*PROGMEM*/ pseudo::Pseudo *ptable,
         const /*PROGMEM*/ pseudo::Pseudo *pend, const OptionBase *option)
@@ -61,8 +75,10 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p = _pseudos.search(insn);
-    return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
+    const auto *p= _pseudos.search(insn);
+    if ((p = _pseudos.search(insn)) || (p = common_pseudos.search(insn)))
+        return p->invoke(this, scan, insn);
+    return UNKNOWN_DIRECTIVE;
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {
@@ -90,6 +106,28 @@ int32_t Assembler::branchDelta(uint32_t base, uint32_t target, const ErrorAt &at
     if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
         setErrorIf(at, OVERFLOW_RANGE);
     return delta;
+}
+
+Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
+    // parse "name", "text" in |scan|
+    auto p = scan.skipSpaces();
+    if (!p.expect('"'))
+        return ILLEGAL_OPERAND;
+    auto name = p;
+    name.trimEndAt(p.trimStart([](char c) { return c && c != '"'; }));
+    if (!p.expect('"'))
+        return ILLEGAL_OPERAND;
+    if (!p.skipSpaces().expect(','))
+        return MISSING_COMMA;
+    if (!p.skipSpaces().expect('"'))
+        return ILLEGAL_OPERAND;
+    auto text = p;
+    text.trimEndAt(p.trimStart([](char c) { return c && c != '"'; }));
+    if (!p.expect('"'))
+        return ILLEGAL_OPERAND;
+    if (!endOfLine(p.skipSpaces()))
+        return GARBAGE_AT_END;
+    return setOption(name, text);
 }
 
 Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {

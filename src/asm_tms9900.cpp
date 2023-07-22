@@ -33,11 +33,9 @@ const char TEXT_BSS[] PROGMEM = "bss";
 const char TEXT_TEXT[] PROGMEM = "text";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_BSS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
         Pseudo{TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
 };
 

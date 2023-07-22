@@ -37,12 +37,10 @@ const char TEXT_RESD[] PROGMEM = "resd";
 const char TEXT_RESW[] PROGMEM = "resw";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DD, &Assembler::defineDataConstant, Assembler::DATA_LONG},
         Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
         Pseudo{TEXT_RESB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_RESD, &Assembler::allocateSpaces, Assembler::DATA_LONG},
         Pseudo{TEXT_RESW, &Assembler::allocateSpaces, Assembler::DATA_WORD},

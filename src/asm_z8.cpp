@@ -39,12 +39,10 @@ const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
 const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
         Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 }  // namespace

@@ -37,10 +37,8 @@ const char TEXT_STRING[] PROGMEM = "string";
 const char TEXT_WORD[] PROGMEM = "word";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_LONG, &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
         Pseudo{TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_WORD, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
 };

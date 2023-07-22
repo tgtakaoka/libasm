@@ -31,8 +31,8 @@ public:
 
     void reset() override;
 
-    Error setFpuName(StrScanner &scan);
-    Error setPmmuName(StrScanner &scan);
+    Error setFpuName(const StrScanner &scan);
+    Error setPmmuName(const StrScanner &scan);
 
 private:
     const TextOption<AsmNs32000> _opt_fpu;

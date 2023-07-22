@@ -31,11 +31,9 @@ using namespace text::common;
 namespace {
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 }  // namespace

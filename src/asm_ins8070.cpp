@@ -34,8 +34,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_dDBYTE, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 struct Ins8070FunctionParser final : FunctionParser {

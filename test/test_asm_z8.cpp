@@ -788,12 +788,12 @@ static void test_setrp() {
     TZ86("CALL @24H", 0xD4, 0x24);
     TZ88("CALL @24H", 0xF4, 0x24);
 
-    assembler.setOption("reg-alias", "false");
+    TEST("option \"reg-alias\", \"disable\"");
     TEST("LD  01H,0EH",  0x18, 0x0E);
     TEST("LD   R4,0EH",  0x48, 0x0E);
     TEST("CLR 0EH",      0xB0, 0x0E);
     TEST("JP   @04H", 0x30, 0x04);
-    assembler.setOption("reg-alias", "true");
+    TEST("option \"reg-alias\", \"enable\"");
 
     TEST("SETRP 21H & 0F0H");
     TEST("LD  21H,R4",   0x18, R(4));

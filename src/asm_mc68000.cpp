@@ -41,7 +41,6 @@ const char TEXT_DS_W[] PROGMEM = "ds.w";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
         Pseudo{TEXT_DC_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DC_L, &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
@@ -50,7 +49,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_DS_B, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_DS_L, &Assembler::allocateSpaces, Assembler::DATA_LONG_ALIGN2},
         Pseudo{TEXT_DS_W, &Assembler::allocateSpaces, Assembler::DATA_WORD_ALIGN2},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 }  // namespace

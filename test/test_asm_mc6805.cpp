@@ -263,7 +263,7 @@ static void test_extended() {
     TEST("JMP  ext1ABC", 0xCC, 0x1A, 0xBC);
     TEST("JSR  ext0090", 0xBD, 0x90);
 
-    as6805.setOption("pc-bits", "11"); // MC68HC05J for instance
+    TEST("option \"pc-bits\", \"11\""); // MC68HC05J for instance
     TEST(         "LDA $07FF",                          0xC6, 0x07, 0xFF);
     ERRT(         "LDA $0800", OVERFLOW_RANGE, "$0800", 0xC6, 0x08, 0x00);
     ATEST(0x07F0, "BSR $07FF",                          0xAD, 0x0D);

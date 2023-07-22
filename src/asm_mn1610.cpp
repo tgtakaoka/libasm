@@ -32,11 +32,9 @@ namespace {
 const char TEXT_LOC[] PROGMEM = "loc";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_WORD},
         Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_WORD},
         Pseudo{TEXT_LOC, &Assembler::defineOrigin},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 
 }  // namespace

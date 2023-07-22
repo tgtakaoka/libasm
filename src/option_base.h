@@ -37,12 +37,12 @@ struct OptionBase {
     const /*PROGMEM*/ char *name_P() const { return _name_P; }
     OptionSpec spec() const { return _spec; }
     const /*PROGMEM*/ char *description_P() const { return _desc_P; }
-    virtual Error set(StrScanner &scan) const = 0;
+    virtual Error set(const StrScanner &scan) const = 0;
     const OptionBase *next() const { return _next; }
 
-    static Error parseBoolOption(StrScanner &scan, bool &var);
-    static Error parseIntOption(StrScanner &scan, int32_t &var);
-    static StrScanner readSymbol(StrScanner &scan);
+    static Error parseBoolOption(const StrScanner &scan, bool &var);
+    static Error parseIntOption(const StrScanner &scan, int32_t &var);
+    static StrScanner readSymbol(const StrScanner &scan);
 
 protected:
     OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec,
@@ -70,7 +70,7 @@ struct BoolOption : public OptionBase {
             APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
         : OptionBase(name_P, desc_P, OPT_BOOL), _app(app), _setter(setter) {}
 
-    Error set(StrScanner &scan) const override {
+    Error set(const StrScanner &scan) const override {
         bool value = false;
         const auto error = parseBoolOption(scan, value);
         return error ? error : (_app->*_setter)(value);
@@ -92,7 +92,7 @@ struct IntOption : public OptionBase {
             APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
         : OptionBase(name_P, desc_P, OPT_INT), _app(app), _setter(setter) {}
 
-    Error set(StrScanner &scan) const override {
+    Error set(const StrScanner &scan) const override {
         int32_t value = 0;
         const auto error = parseIntOption(scan, value);
         return error ? error : (_app->*_setter)(value);
@@ -114,7 +114,7 @@ struct CharOption : public OptionBase {
             APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
         : OptionBase(name_P, desc_P, OPT_CHAR), _app(app), _setter(setter) {}
 
-    Error set(StrScanner &scan) const override {
+    Error set(const StrScanner &scan) const override {
         return scan.size() == 1 ? (_app->*_setter)(*scan) : ILLEGAL_CONSTANT;
     }
 
@@ -125,7 +125,7 @@ private:
 
 template <typename APP>
 struct TextOption : public OptionBase {
-    using Setter = Error (APP::*)(StrScanner &scan);
+    using Setter = Error (APP::*)(const StrScanner &scan);
 
     TextOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
             const /*PROGMEM*/ char *desc_P, const OptionBase &next)
@@ -134,7 +134,7 @@ struct TextOption : public OptionBase {
             APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
         : OptionBase(name_P, desc_P, OPT_TEXT), _app(app), _setter(setter) {}
 
-    Error set(StrScanner &scan) const override { return (_app->*_setter)(scan); }
+    Error set(const StrScanner &scan) const override { return (_app->*_setter)(scan); }
 
 private:
     APP *const _app;
@@ -146,7 +146,7 @@ public:
     Options(const OptionBase *head) : _head(head) {}
 
     const OptionBase *head() const { return _head; }
-    Error setOption(const char *name, const char *text) const;
+    Error setOption(const StrScanner &name, const StrScanner &text) const;
 
     static const char *nameof(OptionBase::OptionSpec spec);
 

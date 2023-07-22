@@ -32,10 +32,8 @@ namespace {
 const char TEXT_RS[] PROGMEM = "rs";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_DA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
         Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
         Pseudo{TEXT_RS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
 };
 

@@ -35,10 +35,8 @@ const char TEXT_RES[] PROGMEM = "res";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
         Pseudo{TEXT_RES, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
 };
 

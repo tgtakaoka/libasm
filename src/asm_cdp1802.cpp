@@ -40,9 +40,7 @@ struct Cdp1802FunctionParser final : FunctionParser {
 };
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin, 0},
         Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin, 0},
 };
 
 }  // namespace

@@ -486,6 +486,7 @@ const char TEXT_DW[]    PROGMEM = "dw";
 const char TEXT_FCB[]   PROGMEM = "fcb";
 const char TEXT_FCC[]   PROGMEM = "fcc";
 const char TEXT_FDB[]   PROGMEM = "fdb";
+const char TEXT_OPTION[] PROGMEM = "option";
 const char TEXT_ORG[]   PROGMEM = "org";
 const char TEXT_RMB[]   PROGMEM = "rmb";
 

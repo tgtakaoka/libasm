@@ -33,11 +33,9 @@ const char OPT_INT_PCBITS[] = "pc-bits";
 const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
         Pseudo{TEXT_FCC, &Assembler::defineString},
         Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
         Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
 };
 
