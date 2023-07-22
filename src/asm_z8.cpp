@@ -29,6 +29,8 @@ using namespace text::common;
 
 namespace {
 
+const char OPT_BOOL_ALIAS[] PROGMEM = "reg-alias";
+const char OPT_DESC_ALIAS[] PROGMEM = "emit register alias regarding setrp value";
 const char OPT_INT_SETRP[] PROGMEM = "setrp";
 const char OPT_DESC_SETRP[] PROGMEM = "set register pointer";
 const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
@@ -69,8 +71,9 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
 }
 
 AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_setrp),
+    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_reg_alias),
       Config(TABLE),
+      _opt_reg_alias(this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, _opt_setrp),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
       _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1) {
@@ -79,7 +82,13 @@ AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
 
 void AsmZ8::reset() {
     Assembler::reset();
+    setRegAlias(true);
     setRegPointer(-1);
+}
+
+Error AsmZ8::setRegAlias(bool enable) {
+    _reg_alias = enable;
+    return OK;
 }
 
 Error AsmZ8::setRegPointer(int32_t rp) {
@@ -117,7 +126,8 @@ void AsmZ8::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op)
     if (mode == M_NONE)
         return;
     if (op.reg != REG_UNDEF && (mode == M_R || mode == M_IR || mode == M_IRR)) {
-        insn.emitOperand8(encodeWorkRegAddr(isSuper8(), op.reg));
+        const auto opr = _reg_alias ? encodeWorkRegAddr(isSuper8(), op.reg) : op.val16;
+        insn.emitOperand8(opr);
         return;
     }
     if ((mode != M_IM || overflowUint8(op.val16)) && op.val16 >= 0x100)

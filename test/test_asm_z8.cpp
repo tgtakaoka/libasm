@@ -747,6 +747,8 @@ static void test_setrp() {
     TEST("LD @0EH,24H",  0xF5, 0x24, 0x0E);
     TEST("ADD 0EH,24H",  0x04, 0x24, 0x0E);
     TEST("ADD 0EH,@24H", 0x05, 0x24, 0x0E);
+    TEST("CLR R14",      0xB0, R(14));
+    TEST("CLR 0EH",      0xB0, 0x0E);
     TEST("SETRP 0");
     TEST("LD  01H,R4",   0x18, R(4));
     TEST("LD  01H,0EH",  0x18, R(14));
@@ -765,6 +767,8 @@ static void test_setrp() {
     TEST("ADD 0EH,@24H", 0x05, 0x24, R(14));
     TEST("ADD 21H,24H",  0x04, 0x24, 0x21);
     TEST("ADD 21H,@24H", 0x05, 0x24, 0x21);
+    TEST("CLR R14",      0xB0, R(14));
+    TEST("CLR 0EH",      0xB0, R(14));
     ERRT("LD  21H,33H(R4)", OPERAND_NOT_ALLOWED, "21H,33H(R4)"); // LD R,dd(r)
     ERRT("LD 33H(21H),R4",  UNKNOWN_OPERAND, "33H(21H),R4"); // LD dd(R),r
     TZ86("LDE  R1,@RR4", 0x82, 0x14);
@@ -783,6 +787,13 @@ static void test_setrp() {
     TEST("JP   @24H", 0x30, 0x24);
     TZ86("CALL @24H", 0xD4, 0x24);
     TZ88("CALL @24H", 0xF4, 0x24);
+
+    assembler.setOption("reg-alias", "false");
+    TEST("LD  01H,0EH",  0x18, 0x0E);
+    TEST("LD   R4,0EH",  0x48, 0x0E);
+    TEST("CLR 0EH",      0xB0, 0x0E);
+    TEST("JP   @04H", 0x30, 0x04);
+    assembler.setOption("reg-alias", "true");
 
     TEST("SETRP 21H & 0F0H");
     TEST("LD  21H,R4",   0x18, R(4));
@@ -820,6 +831,15 @@ static void test_setrp() {
     TEST("JP   @24H",  0x30, R(4));
     TZ86("CALL @24H", 0xD4, R(4));
     TZ88("CALL @24H", 0xF4, R(4));
+
+    assembler.setOption("reg-alias", "false");
+    TEST("LD  R4,21H",   0x48, 0x21);
+    TEST("LD  21H,24H",  0x18, 0x24);
+    TEST("LD  24H,21H",  0X48, 0x21);
+    TEST("JP   @24H",  0x30, 0x24);
+    TZ86("CALL @24H", 0xD4, 0x24);
+    TZ88("CALL @24H", 0xF4, 0x24);
+    assembler.setOption("reg-alias", "true");
 
     TEST("SETRP -1");
     ERRT("SETRP 100H",  ILLEGAL_OPERAND,     "100H");

@@ -30,15 +30,18 @@ public:
 
     void reset() override;
 
+    Error setRegAlias(bool enable);
     Error setRegPointer(int32_t rp);
     Error setRegPointer0(int32_t rp);
     Error setRegPointer1(int32_t rp);
 
 private:
+    const BoolOption<AsmZ8> _opt_reg_alias;
     const IntOption<AsmZ8> _opt_setrp;
     const IntOption<AsmZ8> _opt_setrp0;
     const IntOption<AsmZ8> _opt_setrp1;
 
+    bool _reg_alias;
     int16_t _regPointer0;
     int16_t _regPointer1;
 
