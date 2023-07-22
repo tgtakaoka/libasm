@@ -86,7 +86,7 @@ Error AsmZ8::setRegPointer(int32_t rp) {
     if (rp >= 0 && (rp & ~0xFF))
         return ILLEGAL_OPERAND;
     const auto error0 = setRegPointer0(rp);
-    const auto error1 = setRegPointer1(rp);
+    const auto error1 = setRegPointer1(rp >= 0 ? rp + 8 : rp);
     return error0 ? error0 : error1;
 }
 

@@ -731,18 +731,42 @@ static void test_bit_operation() {
 }
 
 static void test_setrp() {
+    TEST("SETRP -1");
+    TEST("LD  01H,R4",   0x49, 0x01);
+    TEST("LD  01H,0EH",  0xE4, 0x0E, 0x01);
+    TEST("LD   R4,0EH",  0x48, 0x0E);
+    TEST("LD  21H,R4",   0x49, 0x21);
+    TEST("LD   R4,21H",  0x48, 0x21);
+    TEST("LD  00H,#66H", 0xE6, 0x00, 0x66);
+    TEST("LD  0FH,#66H", 0xE6, 0x0F, 0x66);
+    TEST("LD  21H,#66H", 0xE6, 0x21, 0x66);
+    TEST("LD  0EH,24H",  0xE4, 0x24, 0x0E);
+    TEST("LD  24H,01H",  0XE4, 0x01, 0x24);
+    TEST("LD  0EH,@24H", 0xE5, 0x24, 0x0E);
+    TEST("LD  21H,@0EH", 0xE5, 0x0E, 0x21);
+    TEST("LD @0EH,24H",  0xF5, 0x24, 0x0E);
+    TEST("ADD 0EH,24H",  0x04, 0x24, 0x0E);
+    TEST("ADD 0EH,@24H", 0x05, 0x24, 0x0E);
     TEST("SETRP 0");
-    TEST("LD  21H,R4",      0x49, 0x21);
-    TEST("LD   R4,21H",     0x48, 0x21);
-    TEST("LD  21H,#66H",    0xE6, 0x21, 0x66);
-    ERRT("LD  21H,33H(R4)", OPERAND_NOT_ALLOWED, "21H,33H(R4)"); // LD R,dd(r)
-    ERRT("LD 33H(21H),R4",  UNKNOWN_OPERAND, "33H(21H),R4"); // LD dd(R),r
-    TEST("LD  21H,24H",     0xE4, 0x24, 0x21);
-    TEST("LD  24H,21H",     0XE4, 0x21, 0x24);
-    TEST("LD  21H,@24H",    0xE5, 0x24, 0x21);
-    TEST("LD @21H,24H",     0xF5, 0x24, 0x21);
+    TEST("LD  01H,R4",   0x18, R(4));
+    TEST("LD  01H,0EH",  0x18, R(14));
+    TEST("LD   R4,0EH",  0x48, R(14));
+    TEST("LD  21H,R4",   0x49, 0x21);
+    TEST("LD   R4,21H",  0x48, 0x21);
+    TEST("LD  00H,#66H", 0x0C, 0x66);
+    TEST("LD  0FH,#66H", 0xFC, 0x66);
+    TEST("LD  21H,#66H", 0xE6, 0x21, 0x66);
+    TEST("LD  0EH,24H",  0xE8, 0x24);
+    TEST("LD  24H,01H",  0X19, 0x24);
+    TEST("LD  0EH,@24H", 0xE5, 0x24, R(14));
+    TEST("LD  21H,@0EH", 0xE5, R(14), 0x21);
+    TEST("LD @0EH,24H",  0xF5, 0x24, R(14));
+    TEST("ADD 0EH,24H",  0x04, 0x24, R(14));
+    TEST("ADD 0EH,@24H", 0x05, 0x24, R(14));
     TEST("ADD 21H,24H",  0x04, 0x24, 0x21);
     TEST("ADD 21H,@24H", 0x05, 0x24, 0x21);
+    ERRT("LD  21H,33H(R4)", OPERAND_NOT_ALLOWED, "21H,33H(R4)"); // LD R,dd(r)
+    ERRT("LD 33H(21H),R4",  UNKNOWN_OPERAND, "33H(21H),R4"); // LD dd(R),r
     TZ86("LDE  R1,@RR4", 0x82, 0x14);
     TZ88("LDE  R1,@RR4", 0xC3, 0x14 +1);
     TZ86("LDE  @RR4,R1", 0x92, 0x14);
@@ -751,7 +775,11 @@ static void test_setrp() {
     EZ88("LDEI @R1,@RR4", OPERAND_NOT_ALLOWED, "@R1,@RR4");
     TZ86("LDEI @RR4,@R1", 0x93, 0x14);
     EZ88("LDEI @RR4,@R1", OPERAND_NOT_ALLOWED, "@RR4,@R1");
-    TEST("DJNZ R1,$", 0x1A, 0xFE);
+    TEST("DJNZ  R1,$", 0x1A, 0xFE);
+    TEST("DJNZ 0EH,$", 0xEA, 0xFE);
+    ERRT("DJNZ 21H,$", OPERAND_NOT_ALLOWED, "21H,$");
+    TEST("JP   @RR4", 0x30, R(4));
+    TEST("JP   @04H", 0x30, R(4));
     TEST("JP   @24H", 0x30, 0x24);
     TZ86("CALL @24H", 0xD4, 0x24);
     TZ88("CALL @24H", 0xF4, 0x24);
