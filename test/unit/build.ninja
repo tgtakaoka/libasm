@@ -1,4 +1,4 @@
-# Ninja build script for libasm/src/test
+# Ninja build script for libasm/test/unit
 
 root = ../..
 cxxflags = -std=c++14 -Wall -O ${debug_flags}
@@ -13,7 +13,7 @@ rule test
 
 subninja ${root}/src/ninja.rules
 subninja ${root}/test/ninja.rules
-subninja ${root}/test/unittest/ninja.rules
+subninja ${root}/test/unit/ninja.rules
 
 build test_array_memory: test test_array_memory.o $
   test_src_helper.o test_asserter.o error_reporter.o

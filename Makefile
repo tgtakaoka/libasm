@@ -22,7 +22,6 @@ _BOARDS=$(foreach b,$(PIO_CI_BOARDS),--board=$(b))
 
 test:
 	$(MAKE) -C test test
-	$(MAKE) -C driver/test test
 
 pio: examples
 	@for ex in $(shell make -s -C examples examples); do \
@@ -33,10 +32,6 @@ pio: examples
 clean: 
 	$(MAKE) -C cli clean
 	$(MAKE) -C test clean
-	$(MAKE) -C test/unittest clean
-	$(MAKE) -C test/autogen clean
-	$(MAKE) -C test/reference clean
-	$(MAKE) -C driver/test clean
 	$(MAKE) -C examples clean
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_log')

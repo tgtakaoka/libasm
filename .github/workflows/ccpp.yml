@@ -31,7 +31,5 @@ jobs:
       run: cd test; make test
     - name: build generator
       run: cd test; make gen
-    - name: driver test
-      run: cd driver/test; make test
     - name: build command line interface
       run: cd cli; make cli

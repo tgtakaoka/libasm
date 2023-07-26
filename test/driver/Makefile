@@ -26,7 +26,7 @@ include ../../src/Makefile.arch
 
 SRCS_TEST_FORMATTER = $(wildcard test_formatter_*.cpp)
 TESTS = test_helpers test_bin_memory test_intel_hex test_moto_srec \
-	$(SRCS_TEST_FORMATTER:%.cpp=%)
+	test_asm_formatter $(SRCS_TEST_FORMATTER:%.cpp=%)
 
 vpath %.cpp ../../driver
 vpath %.cpp ../../src

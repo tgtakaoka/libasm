@@ -1,4 +1,4 @@
-# Ninja build script for libasm/driver/test
+# Ninja build script for libasm/test/driver
 
 root = ../..
 cxxflags = -std=c++14 -Wall -O ${debug_flags}
@@ -12,7 +12,7 @@ rule test
   command = g++ ${cxxflags} ${in} -o ${out} && ./${out}
 
 subninja ${root}/driver/ninja.rules
-subninja ${root}/driver/test/ninja.rules
+subninja ${root}/test/driver/ninja.rules
 subninja ${root}/src/ninja.rules
 subninja ${root}/test/ninja.rules
 

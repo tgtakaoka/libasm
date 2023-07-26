@@ -29,7 +29,10 @@ clean: clean-objs
 	-rm -f $(BINS)
 clean-objs:
 	-rm -f $(OBJS) *.d *~ compile_commands.json
-	$(MAKE) -C unittest clean
+	$(MAKE) -C driver clean
+	$(MAKE) -C unit clean
+	$(MAKE) -C autogen clean
+	$(MAKE) -C reference clean
 
 vpath %.cpp ../src
 vpath %.cpp ../driver
@@ -87,10 +90,13 @@ test_expr:: test_expr_$(1)
 endef
 $(eval $(foreach e,$(EXPRS),$(call exec-test,$(e))))
 
-test: $(foreach a,$(ARCHS),test_$(a)) test_expr unit-test
+test: $(foreach a,$(ARCHS),test_$(a)) test_expr driver-test unit-test
+
+driver-test:
+	$(MAKE) -C driver test
 
 unit-test:
-	$(MAKE) -C unittest test
+	$(MAKE) -C unit test
 
 define gen-rule
 gen_$(1): $(if $(wildcard gen_$(1).cpp),gen_$(1).o) \

@@ -1,7 +1,0 @@
-# Ninja build script for libasm/test/unittest
-# Variable root should be set before subninja
-
-build test_array_memory.o: cxx ${root}/test/unittest/test_array_memory.cpp
-build test_src_helper.o:   cxx ${root}/test/unittest/test_src_helper.cpp
-build test_str_buffer.o:   cxx ${root}/test/unittest/test_str_buffer.cpp
-build test_str_scanner.o:  cxx ${root}/test/unittest/test_str_scanner.cpp
