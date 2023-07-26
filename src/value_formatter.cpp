@@ -24,6 +24,7 @@ namespace libasm {
 
 const /*PROGMEM*/ char HexFormatter::ZERO_X[] PROGMEM = "0x";
 const /*PROGMEM*/ char HexFormatter::DOLLAR[] PROGMEM = "$";
+const /*PROGMEM*/ char HexFormatter::PERCENT[] PROGMEM = "%";
 const /*PROGMEM*/ char HexFormatter::X_DASH[] PROGMEM = "x'";
 const /*PROGMEM*/ char HexFormatter::H_DASH[] PROGMEM = "h'";
 

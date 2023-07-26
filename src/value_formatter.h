@@ -32,6 +32,7 @@ struct HexFormatter {
 
     static const /*PROGMEM*/ char ZERO_X[] PROGMEM;
     static const /*PROGMEM*/ char DOLLAR[] PROGMEM;
+    static const /*PROGMEM*/ char PERCENT[] PROGMEM;
     static const /*PROGMEM*/ char X_DASH[] PROGMEM;
     static const /*PROGMEM*/ char H_DASH[] PROGMEM;
 

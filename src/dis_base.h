@@ -59,17 +59,18 @@ struct Disassembler : ErrorReporter {
     Error setUppercase(bool enable);
     Error setRelativeTarget(bool enable);
     Error setCStyle(bool enable);
+    Error setIntelHex(bool enable);
     Error setCurSym(char curSym);
 
 private:
     const ValueFormatter _formatter;
-    static const ValueFormatter CSTYLE_FORMATTER;
 
 protected:
     const Options _commonOptions;
     const Options _options;
     const BoolOption<Disassembler> _opt_relative;
     const BoolOption<Disassembler> _opt_cstyle;
+    const BoolOption<Disassembler> _opt_intelhex;
     const CharOption<Disassembler> _opt_curSym;
     const char _defaultCurSym;
 
@@ -77,6 +78,7 @@ protected:
     bool _uppercase;
     bool _relativeTarget;
     bool _cstyle;
+    bool _intelHex;
     char _curSym;
     SymbolTable *_symtab = nullptr;
 

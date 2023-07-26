@@ -34,7 +34,7 @@ public:
     Error setUseWorkRegister(bool enable);
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
+    const PrefixHexFormatter _hexFormatter{HexFormatter::PERCENT};
     const BoolOption<DisZ8> _opt_workRegister;
 
     bool _useWorkRegister;

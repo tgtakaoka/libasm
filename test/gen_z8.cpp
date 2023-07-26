@@ -28,6 +28,7 @@ int main(int argc, const char **argv) {
 
     disz8.setOption("relative", "enable");
     disz8.setOption("work-register", "disable");
+    disz8.setOption("intel-hex", "enable");
 
     TestGenerator generator(driver, disz8, 0x0100);
     generator.generate();

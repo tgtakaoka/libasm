@@ -66,14 +66,14 @@ void test_dis_z8001() {
 
     DIS16("z8001", 0x789abc,
             "      CPU    Z8001\n"
-            "      ORG    789ABCH\n"
-            "      LDB    |160017H|(R1), #25\n"
-            "; test.bin: 789AC2H: error: Registers overlapped\n"
+            "      ORG    %789ABC\n"
+            "      LDB    |%160017|(R1), #25\n"
+            "; test.bin: %789AC2: error: Registers overlapped\n"
             ";   789AC2 : 9745\n",
             "       0 :                            CPU    Z8001\n"
-            "  789ABC :                            ORG    789ABCH\n"
-            "  789ABC : 4C15 1617 1919             LDB    |160017H|(R1), #25\n"
-            "test.bin: 789AC2H: error: Registers overlapped\n"
+            "  789ABC :                            ORG    %789ABC\n"
+            "  789ABC : 4C15 1617 1919             LDB    |%160017|(R1), #25\n"
+            "test.bin: %789AC2: error: Registers overlapped\n"
             "  789AC2 : 9745                       POP\n",
             0x4c15, 0x1617, 0x1919, 0x9745);
 
@@ -88,14 +88,14 @@ void test_dis_z8002() {
 
     DIS16("z8002", 0x9abc,
             "      cpu    z8002\n"
-            "      org    9abch\n"
-            "      cpl    rr0, #01020304h\n"
-            "; test.bin: 9ac2h: error: Registers overlapped\n"
+            "      org    %9abc\n"
+            "      cpl    rr0, #%01020304\n"
+            "; test.bin: %9ac2: error: Registers overlapped\n"
             ";     9ac2 : 5144\n",
             "       0 :                            cpu    z8002\n"
-            "    9abc :                            org    9abch\n"
-            "    9abc : 1000 0102 0304             cpl    rr0, #01020304h\n"
-            "test.bin: 9ac2h: error: Registers overlapped\n"
+            "    9abc :                            org    %9abc\n"
+            "    9abc : 1000 0102 0304             cpl    rr0, #%01020304\n"
+          "test.bin: %9ac2: error: Registers overlapped\n"
             "    9ac2 : 5144                       pushl\n",
             0x1000, 0x0102, 0x0304, 0x5144);
 

@@ -34,7 +34,7 @@ public:
     Error setIoAddressPrefix(bool enable);
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
+    const PrefixHexFormatter _hexFormatter{HexFormatter::PERCENT};
     const BoolOption<DisZ8000> _opt_shortDirect;
     const BoolOption<DisZ8000> _opt_ioaddrPrefix;
 
