@@ -60,7 +60,7 @@ void test_asm_cdp1802() {
             "       abcd : 68 83 84 85                scal  r3, x'8485'\n");
 }
 
-void test_asm_dis_cdp1802() {
+void test_dis_cdp1802() {
     PREP_DIS(cdp1802::DisCdp1802);
 
     listing.setUpperHex(false);
@@ -82,7 +82,7 @@ void test_asm_dis_cdp1802() {
 
 void run_tests() {
     RUN_TEST(test_asm_cdp1802);
-    RUN_TEST(test_asm_dis_cdp1802);
+    RUN_TEST(test_dis_cdp1802);
 }
 
 }  // namespace test
