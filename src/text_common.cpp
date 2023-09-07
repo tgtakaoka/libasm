@@ -475,6 +475,7 @@ const char TEXT_dORG[]   PROGMEM = ".org";
 const char TEXT_dSTRING[] PROGMEM = ".string";
 const char TEXT_dWORD[]  PROGMEM = ".word";
 const char TEXT_ALIGN[] PROGMEM = "align";
+const char TEXT_BSS[]   PROGMEM = "bss";
 const char TEXT_BYTE[]  PROGMEM = "byte";
 const char TEXT_DATA[]  PROGMEM = "data";
 const char TEXT_DB[]    PROGMEM = "db";
@@ -500,6 +501,7 @@ const char TEXT_FDB[]   PROGMEM = "fdb";
 const char TEXT_OPTION[] PROGMEM = "option";
 const char TEXT_ORG[]   PROGMEM = "org";
 const char TEXT_RMB[]   PROGMEM = "rmb";
+const char TEXT_TEXT[]  PROGMEM = "text";
 
 // clang-format on
 

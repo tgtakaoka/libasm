@@ -74,7 +74,7 @@ const NameEntry *NameTable::searchSymbol(StrScanner &scan, bool (*predicator)(ch
     return entry;
 }
 
-int8_t parseRegNumber(StrScanner &scan) {
+int16_t parseRegNumber(StrScanner &scan) {
     auto p = scan;
     int16_t val = 0;
     int8_t leading_zero = 0;

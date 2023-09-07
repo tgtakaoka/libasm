@@ -135,6 +135,7 @@ build table_i8086.o: cxx ${root}/src/table_i8086.cpp
 build text_i8086.o:  cxx ${root}/src/text_i8086.cpp
 
 # tms7000
+build asm_tms7000.o:   cxx ${root}/src/asm_tms7000.cpp
 build dis_tms7000.o:   cxx ${root}/src/dis_tms7000.cpp
 build reg_tms7000.o:   cxx ${root}/src/reg_tms7000.cpp
 build table_tms7000.o: cxx ${root}/src/table_tms7000.cpp

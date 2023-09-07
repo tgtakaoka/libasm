@@ -274,6 +274,10 @@ build gen_i8086:      link gen_i8086.o dis_i8086.o reg_i8086.o table_i8086.o $
   list_formatter.o
 
 # tms7000
+build test_asm_tms7000: run test_asm_tms7000.o asm_tms7000.o reg_tms7000.o table_tms7000.o $
+  text_tms7000.o text_common.o $
+  test_asm_helper.o asm_base.o config_base.o reg_base.o value_parser.o parsers.o operators.o $
+  test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
 build test_dis_tms7000: run test_dis_tms7000.o dis_tms7000.o reg_tms7000.o table_tms7000.o $
   text_tms7000.o text_common.o $
   test_dis_helper.o dis_base.o config_base.o reg_base.o value_formatter.o $
@@ -418,7 +422,7 @@ build test_cdp1802:  phony test_asm_cdp1802 test_dis_cdp1802
 build test_scn2650:  phony test_asm_scn2650 test_dis_scn2650
 build test_f3850:    phony test_asm_f3850 test_dis_f3850
 build test_i8086:    phony test_asm_i8086 test_dis_i8086
-build test_tms7000:  phony                test_dis_tms7000
+build test_tms7000:  phony test_asm_tms7000 test_dis_tms7000
 build test_tms9900:  phony test_asm_tms9900 test_dis_tms9900
 build test_tms32010: phony test_asm_tms32010 test_dis_tms32010
 build test_mc68000:  phony test_asm_mc68000 test_dis_mc68000

@@ -85,7 +85,7 @@ private:
 /**
  * Parse register number.  returns -1 if number is invalid number.
  */
-int8_t parseRegNumber(StrScanner &scan);
+int16_t parseRegNumber(StrScanner &scan);
 
 }  // namespace reg
 }  // namespace libasm

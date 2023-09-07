@@ -478,6 +478,7 @@ extern const char TEXT_dORG[]   PROGMEM; // .org
 extern const char TEXT_dSTRING[] PROGMEM; // .string
 extern const char TEXT_dWORD[]  PROGMEM; // .word
 extern const char TEXT_ALIGN[] PROGMEM;
+extern const char TEXT_BSS[]   PROGMEM;
 extern const char TEXT_BYTE[]  PROGMEM;
 extern const char TEXT_DATA[]  PROGMEM;
 extern const char TEXT_DB[]    PROGMEM;
@@ -503,6 +504,7 @@ extern const char TEXT_FDB[]   PROGMEM;
 extern const char TEXT_ORG[]   PROGMEM;
 extern const char TEXT_OPTION[] PROGMEM;
 extern const char TEXT_RMB[]   PROGMEM;
+extern const char TEXT_TEXT[]  PROGMEM;
 // clang-format on
 
 }  // namespace common

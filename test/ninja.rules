@@ -98,6 +98,7 @@ build test_dis_i8086.o: cxx ${root}/test/test_dis_i8086.cpp
 build gen_i8086.o:      cxx ${root}/test/gen_i8086.cpp
 
 # tms7000
+build test_asm_tms7000.o: cxx ${root}/test/test_asm_tms7000.cpp
 build test_dis_tms7000.o: cxx ${root}/test/test_dis_tms7000.cpp
 build gen_tms7000.o:      cxx ${root}/test/gen_tms7000.cpp
 

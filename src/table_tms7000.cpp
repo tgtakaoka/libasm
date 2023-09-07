@@ -44,6 +44,23 @@ static constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E0(0x0B, TEXT_RETI),
 	E0(0x0D, TEXT_LDSP),
 	E1(0x0E, TEXT_PUSH,  M_ST),
+	E2(0xC0, TEXT_MOV,   M_A,    M_B),
+	E2(0x62, TEXT_MOV,   M_B,    M_A),
+	E2(0xD0, TEXT_MOV,   M_A,    M_RN),
+	E2(0xD1, TEXT_MOV,   M_B,    M_RN),
+	E2(0x63, TEXT_AND,   M_B,    M_A),
+	E2(0x64, TEXT_OR,    M_B,    M_A),
+	E2(0x65, TEXT_XOR,   M_B,    M_A),
+	E3(0x66, TEXT_BTJO,  M_B,    M_A,   M_REL),
+	E3(0x67, TEXT_BTJZ,  M_B,    M_A,   M_REL),
+	E2(0x68, TEXT_ADD,   M_B,    M_A),
+	E2(0x69, TEXT_ADC,   M_B,    M_A),
+	E2(0x6A, TEXT_SUB,   M_B,    M_A),
+	E2(0x6B, TEXT_SBB,   M_B,    M_A),
+	E2(0x6C, TEXT_MPY,   M_B,    M_A),
+	E2(0x6D, TEXT_CMP,   M_B,    M_A),
+	E2(0x6E, TEXT_DAC,   M_B,    M_A),
+	E2(0x6F, TEXT_DSB,   M_B,    M_A),
 	E2(0x12, TEXT_MOV,   M_RN,   M_A),
 	E2(0x13, TEXT_AND,   M_RN,   M_A),
 	E2(0x14, TEXT_OR,    M_RN,   M_A),
@@ -114,20 +131,6 @@ static constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E2(0x5D, TEXT_CMP,   M_IM8,  M_B),
 	E2(0x5E, TEXT_DAC,   M_IM8,  M_B),
 	E2(0x5F, TEXT_DSB,   M_IM8,  M_B),
-	E2(0x62, TEXT_MOV,   M_B,    M_A),
-	E2(0x63, TEXT_AND,   M_B,    M_A),
-	E2(0x64, TEXT_OR,    M_B,    M_A),
-	E2(0x65, TEXT_XOR,   M_B,    M_A),
-	E3(0x66, TEXT_BTJO,  M_B,    M_A,   M_REL),
-	E3(0x67, TEXT_BTJZ,  M_B,    M_A,   M_REL),
-	E2(0x68, TEXT_ADD,   M_B,    M_A),
-	E2(0x69, TEXT_ADC,   M_B,    M_A),
-	E2(0x6A, TEXT_SUB,   M_B,    M_A),
-	E2(0x6B, TEXT_SBB,   M_B,    M_A),
-	E2(0x6C, TEXT_MPY,   M_B,    M_A),
-	E2(0x6D, TEXT_CMP,   M_B,    M_A),
-	E2(0x6E, TEXT_DAC,   M_B,    M_A),
-	E2(0x6F, TEXT_DSB,   M_B,    M_A),
 	E2(0x72, TEXT_MOV,   M_IM8,  M_RN),
 	E2(0x73, TEXT_AND,   M_IM8,  M_RN),
 	E2(0x74, TEXT_OR,    M_IM8,  M_RN),
@@ -196,7 +199,6 @@ static constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E1(0xBD, TEXT_RRC,   M_A),
 	E1(0xBE, TEXT_RL,    M_A),
 	E1(0xBF, TEXT_RLC,   M_A),
-	E2(0xC0, TEXT_MOV,   M_A,    M_B),
 	E0(0xC1, TEXT_TSTB),
 	E1(0xC2, TEXT_DEC,   M_B),
 	E1(0xC3, TEXT_INC,   M_B),
@@ -212,8 +214,6 @@ static constexpr Entry TMS7000_TABLE[] PROGMEM = {
 	E1(0xCD, TEXT_RRC,   M_B),
 	E1(0xCE, TEXT_RL,    M_B),
 	E1(0xCF, TEXT_RLC,   M_B),
-	E2(0xD0, TEXT_MOV,   M_A,    M_RN),
-	E2(0xD1, TEXT_MOV,   M_B,    M_RN),
 	E1(0xD2, TEXT_DEC,   M_RN),
 	E1(0xD3, TEXT_INC,   M_RN),
 	E1(0xD4, TEXT_INV,   M_RN),
@@ -247,101 +247,101 @@ static constexpr Entry TMS7000_TABLE[] PROGMEM = {
 };
 
 static constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
-     18,  // TEXT_ADC
-     32,  // TEXT_ADC
-     46,  // TEXT_ADC
-     60,  // TEXT_ADC
-     74,  // TEXT_ADC
-     88,  // TEXT_ADC
-    102,  // TEXT_ADC
-     17,  // TEXT_ADD
-     31,  // TEXT_ADD
-     45,  // TEXT_ADD
-     59,  // TEXT_ADD
-     73,  // TEXT_ADD
-     87,  // TEXT_ADD
-    101,  // TEXT_ADD
-     12,  // TEXT_AND
-     26,  // TEXT_AND
-     40,  // TEXT_AND
-     54,  // TEXT_AND
-     68,  // TEXT_AND
-     82,  // TEXT_AND
-     96,  // TEXT_AND
-    111,  // TEXT_ANDP
-    124,  // TEXT_ANDP
-    136,  // TEXT_ANDP
-    119,  // TEXT_BR
-    132,  // TEXT_BR
-    144,  // TEXT_BR
-     15,  // TEXT_BTJO
-     29,  // TEXT_BTJO
-     43,  // TEXT_BTJO
-     57,  // TEXT_BTJO
-     71,  // TEXT_BTJO
-     85,  // TEXT_BTJO
-     99,  // TEXT_BTJO
-    114,  // TEXT_BTJOP
-    127,  // TEXT_BTJOP
-    139,  // TEXT_BTJOP
-     16,  // TEXT_BTJZ
-     30,  // TEXT_BTJZ
-     44,  // TEXT_BTJZ
-     58,  // TEXT_BTJZ
-     72,  // TEXT_BTJZ
-     86,  // TEXT_BTJZ
-    100,  // TEXT_BTJZ
-    115,  // TEXT_BTJZP
-    128,  // TEXT_BTJZP
-    140,  // TEXT_BTJZP
-    121,  // TEXT_CALL
-    134,  // TEXT_CALL
-    146,  // TEXT_CALL
-    152,  // TEXT_CLR
-    168,  // TEXT_CLR
+     21,  // TEXT_ADC
+     35,  // TEXT_ADC
+     49,  // TEXT_ADC
+     63,  // TEXT_ADC
+     77,  // TEXT_ADC
+     91,  // TEXT_ADC
+    105,  // TEXT_ADC
+     20,  // TEXT_ADD
+     34,  // TEXT_ADD
+     48,  // TEXT_ADD
+     62,  // TEXT_ADD
+     76,  // TEXT_ADD
+     90,  // TEXT_ADD
+    104,  // TEXT_ADD
+     15,  // TEXT_AND
+     29,  // TEXT_AND
+     43,  // TEXT_AND
+     57,  // TEXT_AND
+     71,  // TEXT_AND
+     85,  // TEXT_AND
+     99,  // TEXT_AND
+    114,  // TEXT_ANDP
+    127,  // TEXT_ANDP
+    139,  // TEXT_ANDP
+    122,  // TEXT_BR
+    135,  // TEXT_BR
+    147,  // TEXT_BR
+     18,  // TEXT_BTJO
+     32,  // TEXT_BTJO
+     46,  // TEXT_BTJO
+     60,  // TEXT_BTJO
+     74,  // TEXT_BTJO
+     88,  // TEXT_BTJO
+    102,  // TEXT_BTJO
+    117,  // TEXT_BTJOP
+    130,  // TEXT_BTJOP
+    142,  // TEXT_BTJOP
+     19,  // TEXT_BTJZ
+     33,  // TEXT_BTJZ
+     47,  // TEXT_BTJZ
+     61,  // TEXT_BTJZ
+     75,  // TEXT_BTJZ
+     89,  // TEXT_BTJZ
+    103,  // TEXT_BTJZ
+    118,  // TEXT_BTJZP
+    131,  // TEXT_BTJZP
+    143,  // TEXT_BTJZP
+    124,  // TEXT_CALL
+    137,  // TEXT_CALL
+    149,  // TEXT_CALL
+    155,  // TEXT_CLR
+    170,  // TEXT_CLR
     184,  // TEXT_CLR
-    148,  // TEXT_CLRC
-     22,  // TEXT_CMP
-     36,  // TEXT_CMP
-     50,  // TEXT_CMP
-     64,  // TEXT_CMP
-     78,  // TEXT_CMP
-     92,  // TEXT_CMP
-    106,  // TEXT_CMP
-    120,  // TEXT_CMPA
-    133,  // TEXT_CMPA
-    145,  // TEXT_CMPA
-     23,  // TEXT_DAC
-     37,  // TEXT_DAC
-     51,  // TEXT_DAC
-     65,  // TEXT_DAC
-     79,  // TEXT_DAC
-     93,  // TEXT_DAC
-    107,  // TEXT_DAC
-    149,  // TEXT_DEC
-    165,  // TEXT_DEC
+    151,  // TEXT_CLRC
+     25,  // TEXT_CMP
+     39,  // TEXT_CMP
+     53,  // TEXT_CMP
+     67,  // TEXT_CMP
+     81,  // TEXT_CMP
+     95,  // TEXT_CMP
+    109,  // TEXT_CMP
+    123,  // TEXT_CMPA
+    136,  // TEXT_CMPA
+    148,  // TEXT_CMPA
+     26,  // TEXT_DAC
+     40,  // TEXT_DAC
+     54,  // TEXT_DAC
+     68,  // TEXT_DAC
+     82,  // TEXT_DAC
+     96,  // TEXT_DAC
+    110,  // TEXT_DAC
+    152,  // TEXT_DEC
+    167,  // TEXT_DEC
     181,  // TEXT_DEC
-    158,  // TEXT_DECD
-    174,  // TEXT_DECD
+    161,  // TEXT_DECD
+    176,  // TEXT_DECD
     190,  // TEXT_DECD
       3,  // TEXT_DINT
-    157,  // TEXT_DJNZ
-    173,  // TEXT_DJNZ
+    160,  // TEXT_DJNZ
+    175,  // TEXT_DJNZ
     189,  // TEXT_DJNZ
-     24,  // TEXT_DSB
-     38,  // TEXT_DSB
-     52,  // TEXT_DSB
-     66,  // TEXT_DSB
-     80,  // TEXT_DSB
-     94,  // TEXT_DSB
-    108,  // TEXT_DSB
+     27,  // TEXT_DSB
+     41,  // TEXT_DSB
+     55,  // TEXT_DSB
+     69,  // TEXT_DSB
+     83,  // TEXT_DSB
+     97,  // TEXT_DSB
+    111,  // TEXT_DSB
       2,  // TEXT_EINT
       1,  // TEXT_IDLE
-    150,  // TEXT_INC
-    166,  // TEXT_INC
+    153,  // TEXT_INC
+    168,  // TEXT_INC
     182,  // TEXT_INC
-    151,  // TEXT_INV
-    167,  // TEXT_INV
+    154,  // TEXT_INV
+    169,  // TEXT_INV
     183,  // TEXT_INV
     200,  // TEXT_JC
     199,  // TEXT_JEQ
@@ -358,106 +358,106 @@ static constexpr uint8_t TMS7000_INDEX[] PROGMEM = {
     202,  // TEXT_JP
     204,  // TEXT_JPZ
     198,  // TEXT_JZ
-    117,  // TEXT_LDA
-    130,  // TEXT_LDA
-    142,  // TEXT_LDA
+    120,  // TEXT_LDA
+    133,  // TEXT_LDA
+    145,  // TEXT_LDA
       9,  // TEXT_LDSP
      11,  // TEXT_MOV
-     25,  // TEXT_MOV
-     39,  // TEXT_MOV
-     53,  // TEXT_MOV
-     67,  // TEXT_MOV
-     81,  // TEXT_MOV
-     95,  // TEXT_MOV
-    163,  // TEXT_MOV
-    179,  // TEXT_MOV
-    180,  // TEXT_MOV
-    116,  // TEXT_MOVD
-    129,  // TEXT_MOVD
-    141,  // TEXT_MOVD
-    109,  // TEXT_MOVP
-    110,  // TEXT_MOVP
-    122,  // TEXT_MOVP
-    123,  // TEXT_MOVP
-    135,  // TEXT_MOVP
-     21,  // TEXT_MPY
-     35,  // TEXT_MPY
-     49,  // TEXT_MPY
-     63,  // TEXT_MPY
-     77,  // TEXT_MPY
-     91,  // TEXT_MPY
-    105,  // TEXT_MPY
+     12,  // TEXT_MOV
+     13,  // TEXT_MOV
+     14,  // TEXT_MOV
+     28,  // TEXT_MOV
+     42,  // TEXT_MOV
+     56,  // TEXT_MOV
+     70,  // TEXT_MOV
+     84,  // TEXT_MOV
+     98,  // TEXT_MOV
+    119,  // TEXT_MOVD
+    132,  // TEXT_MOVD
+    144,  // TEXT_MOVD
+    112,  // TEXT_MOVP
+    113,  // TEXT_MOVP
+    125,  // TEXT_MOVP
+    126,  // TEXT_MOVP
+    138,  // TEXT_MOVP
+     24,  // TEXT_MPY
+     38,  // TEXT_MPY
+     52,  // TEXT_MPY
+     66,  // TEXT_MPY
+     80,  // TEXT_MPY
+     94,  // TEXT_MPY
+    108,  // TEXT_MPY
       0,  // TEXT_NOP
-     13,  // TEXT_OR
-     27,  // TEXT_OR
-     41,  // TEXT_OR
-     55,  // TEXT_OR
-     69,  // TEXT_OR
-     83,  // TEXT_OR
-     97,  // TEXT_OR
-    112,  // TEXT_ORP
-    125,  // TEXT_ORP
-    137,  // TEXT_ORP
+     16,  // TEXT_OR
+     30,  // TEXT_OR
+     44,  // TEXT_OR
+     58,  // TEXT_OR
+     72,  // TEXT_OR
+     86,  // TEXT_OR
+    100,  // TEXT_OR
+    115,  // TEXT_ORP
+    128,  // TEXT_ORP
+    140,  // TEXT_ORP
       5,  // TEXT_POP
-    156,  // TEXT_POP
-    172,  // TEXT_POP
+    159,  // TEXT_POP
+    174,  // TEXT_POP
     188,  // TEXT_POP
      10,  // TEXT_PUSH
-    155,  // TEXT_PUSH
-    171,  // TEXT_PUSH
+    158,  // TEXT_PUSH
+    173,  // TEXT_PUSH
     187,  // TEXT_PUSH
       8,  // TEXT_RETI
       7,  // TEXT_RETS
-    161,  // TEXT_RL
-    177,  // TEXT_RL
+    164,  // TEXT_RL
+    179,  // TEXT_RL
     193,  // TEXT_RL
-    162,  // TEXT_RLC
-    178,  // TEXT_RLC
+    165,  // TEXT_RLC
+    180,  // TEXT_RLC
     194,  // TEXT_RLC
-    159,  // TEXT_RR
-    175,  // TEXT_RR
+    162,  // TEXT_RR
+    177,  // TEXT_RR
     191,  // TEXT_RR
-    160,  // TEXT_RRC
-    176,  // TEXT_RRC
+    163,  // TEXT_RRC
+    178,  // TEXT_RRC
     192,  // TEXT_RRC
-     20,  // TEXT_SBB
-     34,  // TEXT_SBB
-     48,  // TEXT_SBB
-     62,  // TEXT_SBB
-     76,  // TEXT_SBB
-     90,  // TEXT_SBB
-    104,  // TEXT_SBB
+     23,  // TEXT_SBB
+     37,  // TEXT_SBB
+     51,  // TEXT_SBB
+     65,  // TEXT_SBB
+     79,  // TEXT_SBB
+     93,  // TEXT_SBB
+    107,  // TEXT_SBB
       4,  // TEXT_SETC
-    118,  // TEXT_STA
-    131,  // TEXT_STA
-    143,  // TEXT_STA
+    121,  // TEXT_STA
+    134,  // TEXT_STA
+    146,  // TEXT_STA
       6,  // TEXT_STSP
-     19,  // TEXT_SUB
-     33,  // TEXT_SUB
-     47,  // TEXT_SUB
-     61,  // TEXT_SUB
-     75,  // TEXT_SUB
-     89,  // TEXT_SUB
-    103,  // TEXT_SUB
-    154,  // TEXT_SWAP
-    170,  // TEXT_SWAP
+     22,  // TEXT_SUB
+     36,  // TEXT_SUB
+     50,  // TEXT_SUB
+     64,  // TEXT_SUB
+     78,  // TEXT_SUB
+     92,  // TEXT_SUB
+    106,  // TEXT_SUB
+    157,  // TEXT_SWAP
+    172,  // TEXT_SWAP
     186,  // TEXT_SWAP
     210,  // TEXT_TRAP
-    147,  // TEXT_TSTA
-    164,  // TEXT_TSTB
-    153,  // TEXT_XCHB
-    169,  // TEXT_XCHB
+    150,  // TEXT_TSTA
+    166,  // TEXT_TSTB
+    156,  // TEXT_XCHB
+    171,  // TEXT_XCHB
     185,  // TEXT_XCHB
-     14,  // TEXT_XOR
-     28,  // TEXT_XOR
-     42,  // TEXT_XOR
-     56,  // TEXT_XOR
-     70,  // TEXT_XOR
-     84,  // TEXT_XOR
-     98,  // TEXT_XOR
-    113,  // TEXT_XORP
-    126,  // TEXT_XORP
-    138,  // TEXT_XORP
+     17,  // TEXT_XOR
+     31,  // TEXT_XOR
+     45,  // TEXT_XOR
+     59,  // TEXT_XOR
+     73,  // TEXT_XOR
+     87,  // TEXT_XOR
+    101,  // TEXT_XOR
+    116,  // TEXT_XORP
+    129,  // TEXT_XORP
+    141,  // TEXT_XORP
 };
 
 // clang-format on
@@ -474,6 +474,32 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS7000, TEXT_CPU_TMS7000, ARRAY_RANGE(TMS7000_PAGES)},
 };
 static constexpr const Cpu &TMS7000_CPU = CPU_TABLE[0];
+
+static bool acceptMode(AddrMode opr, AddrMode table) {
+    if (opr == table)
+        return true;
+    if (opr == M_A || opr == M_B)
+        return table == M_RN;
+    if (opr == M_IM8)
+        return table == M_IM16;
+    if (opr == M_ADRR)
+        return table == M_RN || table == M_REL || table == M_TRAP;
+    if (opr == M_ADRP)
+        return table == M_PN || table == M_REL;
+    return false;
+}
+
+static bool acceptModes(AsmInsn &insn, const Entry *entry) {
+    auto flags = insn.flags();
+    auto table = entry->flags();
+    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
+           acceptMode(flags.ext(), table.ext());
+}
+
+Error TableTms7000::searchName(CpuType cpuType, AsmInsn &insn) const {
+    TMS7000_CPU.searchName(insn, acceptModes);
+    return insn.getError();
+}
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     auto opCode = insn.opCode();

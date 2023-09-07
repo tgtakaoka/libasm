@@ -35,6 +35,7 @@
 #include "asm_scn2650.h"
 #include "asm_tlcs90.h"
 #include "asm_tms32010.h"
+#include "asm_tms7000.h"
 #include "asm_tms9900.h"
 #include "asm_z8.h"
 #include "asm_z80.h"
@@ -61,6 +62,7 @@ f3850::AsmF3850 asm3850;
 i8086::AsmI8086 asm8086;
 i8096::AsmI8096 asm8096;
 tlcs90::AsmTlcs90 asm90;
+tms7000::AsmTms7000 asm7000;
 tms9900::AsmTms9900 asm9900;
 tms32010::AsmTms32010 asm32010;
 mc68000::AsmMc68000 asm68000;
@@ -85,6 +87,7 @@ FairchildDirective dir3850(asm3850);
 IntelDirective dir8086(asm8086);
 IntelDirective dir8096(asm8096);
 IntelDirective dir90(asm90);
+IntelDirective dir7000(asm7000);
 IntelDirective dir9900(asm9900);
 IntelDirective dir32010(asm32010);
 MotorolaDirective dir68000(asm68000);
@@ -108,6 +111,7 @@ AsmDirective *directives[] = {
         &dir1802,
         &dir2650,
         &dir3850,
+        &dir7000,
         &dir32010,
         &dir8086,
         &dir8096,

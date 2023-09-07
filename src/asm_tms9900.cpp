@@ -29,9 +29,6 @@ using namespace text::common;
 
 namespace {
 
-const char TEXT_BSS[] PROGMEM = "bss";
-const char TEXT_TEXT[] PROGMEM = "text";
-
 constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_BSS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},

@@ -26,6 +26,30 @@ namespace libasm {
 namespace tms7000 {
 namespace reg {
 
+RegName parseRegName(StrScanner &scan) {
+    if (scan.iexpectText_P(TEXT_REG_A, 1, true))
+        return REG_A;
+    if (scan.iexpectText_P(TEXT_REG_B, 1, true))
+        return REG_B;
+    auto p = scan;
+    if (p.iexpect('R')) {
+        const auto num = parseRegNumber(p);
+        if (num >= 0 && num < 256) {
+            scan = p;
+            return toRegName(num);
+        }
+    }
+    if ((p = scan).iexpect('P')) {
+        const auto num = parseRegNumber(p);
+        if (num >= 0 && num < 256) {
+            scan = p;
+            return toPortName(num);
+        }
+    }
+    if (scan.iexpectText_P(TEXT_REG_ST, 2, true))
+        return REG_ST;
+    return REG_UNDEF;
+}
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (name == REG_A || name == REG_B)

@@ -14,30 +14,39 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_TMS7000_H__
-#define __TABLE_TMS7000_H__
+#ifndef __ASM_TMS7000_H__
+#define __ASM_TMS7000_H__
 
+#include "asm_base.h"
 #include "config_tms7000.h"
 #include "insn_tms7000.h"
 
 namespace libasm {
 namespace tms7000 {
 
-struct TableTms7000 final : InsnTable<CpuType> {
-    const /*PROGMEM*/ char *listCpu_P() const override;
-    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
-    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
+class AsmTms7000 final : public Assembler, public Config {
+public:
+    AsmTms7000(const ValueParser::Plugins &plugins = defaultPlugins());
 
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
+private:
+    struct Operand;
+    bool hasIndexB(StrScanner &scan, ErrorAt &error) const;
+    Error parseOperand(StrScanner &scan, Operand &op) const;
+
+    void emitImmediate(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void emitRelative(AsmInsn &insn, const Operand &op);
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+
+    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
+    static const ValueParser::Plugins &defaultPlugins();
 };
-
-extern const TableTms7000 TABLE;
 
 }  // namespace tms7000
 }  // namespace libasm
 
-#endif  // __TABLE_TMS7000_H__
+#endif  // __ASM_TMS7000_H__
 
 // Local Variables:
 // mode: c++

@@ -34,6 +34,7 @@ enum RegName : int16_t {
 
 namespace reg {
 
+RegName parseRegName(StrScanner &scan);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 constexpr bool isRegName(RegName name) {

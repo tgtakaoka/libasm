@@ -40,6 +40,9 @@ enum AddrMode : uint8_t {
     M_IM16 = 11,  // 16-bit immediate
     M_BIMM = 12,  // 16-bit immediate with B
     M_TRAP = 13,  // Trap vector: 0~23
+    // for assembler
+    M_ADRR = 14,  // 8-bit immediate, register address
+    M_ADRP = 15,  // 8-bit immediate, port address
 };
 
 namespace {

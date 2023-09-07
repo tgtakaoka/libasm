@@ -97,6 +97,8 @@ extern const char TEXT_XCHB[] PROGMEM;
 using common::TEXT_XOR;
 extern const char TEXT_XORP[] PROGMEM;
 
+using common::TEXT_REG_A;
+using common::TEXT_REG_B;
 extern const char TEXT_REG_ST[] PROGMEM;
 
 // clang-format on
