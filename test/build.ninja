@@ -273,6 +273,17 @@ build gen_i8086:      link gen_i8086.o dis_i8086.o reg_i8086.o table_i8086.o $
   str_buffer.o str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o $
   list_formatter.o
 
+# tms7000
+build test_dis_tms7000: run test_dis_tms7000.o dis_tms7000.o reg_tms7000.o table_tms7000.o $
+  text_tms7000.o text_common.o $
+  test_dis_helper.o dis_base.o config_base.o reg_base.o value_formatter.o $
+  test_asserter.o error_reporter.o option_base.o str_buffer.o str_scanner.o
+build gen_tms7000:      link gen_tms7000.o dis_tms7000.o reg_tms7000.o table_tms7000.o $
+  text_tms7000.o text_common.o $
+  dis_base.o config_base.o reg_base.o value_formatter.o error_reporter.o option_base.o $
+  str_buffer.o str_scanner.o gen_driver.o test_generator.o tokenized_text.o dis_formatter.o $
+  list_formatter.o
+
 # tms9900
 build test_asm_tms9900: run test_asm_tms9900.o asm_tms9900.o reg_tms9900.o table_tms9900.o $
   text_tms9900.o text_common.o $
@@ -387,8 +398,8 @@ build test_expr: phony test_expr_base test_expr_intel test_expr_motorola test_ex
 
 build gen: phony gen_mc6809 gen_mc6800 gen_mc6805 gen_mos6502 gen_i8048 gen_i8051 $
   gen_i8080 gen_i8096 gen_z80 gen_z8 gen_tlcs90 gen_ins8060 gen_ins8070 $
-  gen_cdp1802 gen_scn2650 gen_f3850 gen_i8086 gen_tms9900 gen_tms32010 gen_mc68000 $
-  gen_z8000 gen_ns32000 gen_mn1610
+  gen_cdp1802 gen_scn2650 gen_f3850 gen_i8086 gen_tms7000 gen_tms9900 gen_tms32010 $
+  gen_mc68000 gen_z8000 gen_ns32000 gen_mn1610
 
 build test_mc6809:   phony test_asm_mc6809 test_dis_mc6809
 build test_mc6800:   phony test_asm_mc6800 test_dis_mc6800
@@ -407,6 +418,7 @@ build test_cdp1802:  phony test_asm_cdp1802 test_dis_cdp1802
 build test_scn2650:  phony test_asm_scn2650 test_dis_scn2650
 build test_f3850:    phony test_asm_f3850 test_dis_f3850
 build test_i8086:    phony test_asm_i8086 test_dis_i8086
+build test_tms7000:  phony                test_dis_tms7000
 build test_tms9900:  phony test_asm_tms9900 test_dis_tms9900
 build test_tms32010: phony test_asm_tms32010 test_dis_tms32010
 build test_mc68000:  phony test_asm_mc68000 test_dis_mc68000
@@ -416,8 +428,8 @@ build test_mn1610:   phony test_asm_mn1610 test_dis_mn1610
 
 build test: phony test_mc6809 test_mc6800 test_mc6805 test_mos6502 test_i8048 test_i8051 $
   test_i8080 test_i8096 test_z80 test_z8 test_tlcs90 test_ins8060 test_ins8070 $
-  test_cdp1802 test_scn2650 test_f3850 test_i8086 test_tms9900 test_tms32010 test_mc68000 $
-  test_z8000 test_ns32000 test_mn1610 $
+  test_cdp1802 test_scn2650 test_f3850 test_i8086 test_tms7000 test_tms9900 test_tms32010 $
+  test_mc68000 test_z8000 test_ns32000 test_mn1610 $
   test_expr_base test_expr_intel test_expr_motorola test_expr_national test_expr_fairchild $
   test_expr_zilog
 

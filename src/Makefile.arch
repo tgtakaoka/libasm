@@ -33,6 +33,7 @@ ARCHS = \
 	scn2650  \
 	tlcs90   \
 	tms32010 \
+	tms7000  \
 	tms9900  \
 	z8       \
 	z80      \
@@ -65,6 +66,7 @@ TGT_ns32000  = ns32000 ns32k
 TGT_scn2650  = scn2650
 TGT_tlcs90   = tlcs90
 TGT_tms32010 = tms32010
+TGT_tms7000  = tms7000
 TGT_tms9900  = tms9900 tms9995 tms99105
 TGT_z8000    = z8001 z8002 z8k1 z8k2
 TGT_z80      = z80 i8080_z80syn i8085_z80syn v30emu_z80syn
@@ -110,6 +112,7 @@ CPU_r65c02   = 65C02
 CPU_scn2650  = 2650
 CPU_tlcs90   = TLCS90
 CPU_tms32010 = 32010
+CPU_tms7000  = TMS7000
 CPU_tms9900  = TMS9900
 CPU_tms99105 = TMS99105
 CPU_tms9995  = TMS9995

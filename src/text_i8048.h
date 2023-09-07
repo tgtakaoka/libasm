@@ -66,7 +66,7 @@ extern const char TEXT_JTF[]  PROGMEM;
 using common::TEXT_JZ;
 using common::TEXT_MOV;
 using common::TEXT_MOVD;
-extern const char TEXT_MOVP[] PROGMEM;
+using common::TEXT_MOVP;
 extern const char TEXT_MOVP3[] PROGMEM;
 using common::TEXT_MOVX;
 using common::TEXT_NOP;

@@ -34,6 +34,7 @@
 #include "dis_scn2650.h"
 #include "dis_tlcs90.h"
 #include "dis_tms32010.h"
+#include "dis_tms7000.h"
 #include "dis_tms9900.h"
 #include "dis_z8.h"
 #include "dis_z80.h"
@@ -61,6 +62,7 @@ i8086::DisI8086 dis8086;
 i8096::DisI8096 dis8096;
 tlcs90::DisTlcs90 dis90;
 tms32010::DisTms32010 dis32010;
+tms7000::DisTms7000 dis7000;
 tms9900::DisTms9900 dis9900;
 mc68000::DisMc68000 dis68000;
 z8000::DisZ8000 disz8000;
@@ -83,6 +85,7 @@ Disassembler *disassemblers[] = {
         &dis1802,
         &dis2650,
         &dis3850,
+        &dis7000,
         &dis32010,
         &dis8086,
         &dis8096,

@@ -203,7 +203,7 @@ using common::TEXT_COMD;
 extern const char TEXT_COME[]  PROGMEM;
 extern const char TEXT_COMF[]  PROGMEM;
 using common::TEXT_COMW;
-extern const char TEXT_DECD[]  PROGMEM;
+using common::TEXT_DECD;
 extern const char TEXT_DECE[]  PROGMEM;
 extern const char TEXT_DECF[]  PROGMEM;
 using common::TEXT_DECW;

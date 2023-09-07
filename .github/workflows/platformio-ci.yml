@@ -27,27 +27,29 @@ jobs:
     strategy:
       matrix:
         arch:
+          - asm32000
           - cdp1802
+          - dis32000
+          - f3850
           - i8048
           - i8051
           - i8080
           - i8086
           - i8096
+          - ins8060
+          - ins8070
           - mc6800
           - mc68000
           - mc6809
           - mn1610
           - mos6502
-          - ins8060
-          - ins8070
+          - scn2650
           - tlcs90
           - tms32010
           - tms9900
           - z8
           - z80
           - z8000
-          - asm32000
-          - dis32000
 
     steps:
       - uses: actions/checkout@v3

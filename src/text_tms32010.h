@@ -49,7 +49,7 @@ extern const char TEXT_CALA[] PROGMEM;
 using common::TEXT_CALL;
 using common::TEXT_DINT;
 extern const char TEXT_DMOV[] PROGMEM;
-extern const char TEXT_EINT[] PROGMEM;
+using common::TEXT_EINT;
 using common::TEXT_IN;
 extern const char TEXT_LAC[]  PROGMEM;
 extern const char TEXT_LACK[] PROGMEM;
