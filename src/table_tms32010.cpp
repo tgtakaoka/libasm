@@ -251,8 +251,7 @@ const /*PROGMEM*/ char *TableTms32010::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableTms32010::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.istarts_P(TEXT_CPU_LIST, 3))
-        name += 3;
+    name.iexpectText_P(TEXT_CPU_LIST, 3);
     if (name.iequals_P(TEXT_CPU_32010)) {
         cpuType = TMS32010;
     } else if (name.iequals_P(TEXT_CPU_32015)) {

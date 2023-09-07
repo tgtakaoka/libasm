@@ -23,7 +23,8 @@ namespace libasm {
 const StrScanner StrScanner::EMPTY("");
 
 bool StrScanner::iequals(const StrScanner &text) const {
-    return size() == text.size() && strncasecmp(str(), text.str(), size()) == 0;
+    const auto len = text.size();
+    return size() == len && strncasecmp(str(), text.str(), len) == 0;
 }
 
 bool StrScanner::iequals_P(const /*PROGMEM*/ char *text_P) const {
@@ -31,10 +32,18 @@ bool StrScanner::iequals_P(const /*PROGMEM*/ char *text_P) const {
     return size() == len && strncasecmp_P(_str, text_P, len) == 0;
 }
 
-bool StrScanner::istarts_P(const /*PROGMEM*/ char *text_P, size_t len) const {
+bool StrScanner::iexpectText_P(const /*PROGMEM*/ char *text_P, size_t len, bool word) {
     if (len == 0)
         len = strlen_P(text_P);
-    return strncasecmp_P(_str, text_P, len) == 0;
+    if (strncasecmp_P(_str, text_P, len) != 0)
+        return false;
+    if (word) {
+        const auto c = _str[len];
+        if (isalnum(c) || c == '_')
+            return false;
+    }
+    _str += len;
+    return true;
 }
 
 }  // namespace libasm

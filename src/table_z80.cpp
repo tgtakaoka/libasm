@@ -532,18 +532,23 @@ Error TableZ80::searchCpuName(StrScanner &name, CpuType &cpuType) const {
         cpuType = t->cpuType();
         return OK;
     }
-    if (name.istarts_P(TEXT_CPU_V30EMU)) {
-        if ((name += 6).size() == 0 || name.iexpect('z')) {
+    if (name.iexpectText_P(TEXT_CPU_V30EMU)) {
+        if (name.size() == 0 || name.iexpect('z')) {
             cpuType = V30EMU;
             return OK;
         }
     } else {
         name.iexpect('i');
-        const auto i8080 = name.istarts_P(TEXT_CPU_8080);
-        const auto i8085 = name.istarts_P(TEXT_CPU_8085);
-        if ((i8080  || i8085) && ((name += 4).size() == 0 || name.iexpect('z'))) {
-            cpuType = i8080 ? I8080 : I8085;
-            return OK;
+        if (name.iexpectText_P(TEXT_CPU_8080)) {
+            if (name.size() == 0 || name.iexpect('z')) {
+                cpuType = I8080;
+                return OK;
+            }
+        } else if (name.iexpectText_P(TEXT_CPU_8085)) {
+            if (name.size() == 0 || name.iexpect('z')) {
+                cpuType = I8085;
+                return OK;
+            }
         }
     }
     return UNSUPPORTED_CPU;

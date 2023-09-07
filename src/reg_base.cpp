@@ -52,9 +52,9 @@ uint8_t nameLen(uint8_t name, const NameEntry *begin, const NameEntry *end) {
 const NameEntry *searchText(StrScanner &scan, const NameEntry *begin, const NameEntry *end) {
     for (const auto *entry = begin; entry < end; entry++) {
         const /*PROGMEM*/ char *text_P = entry->text_P();
-        const uint8_t len = entry->len();
-        if (scan.istarts_P(text_P, len) && !isidchar(scan[len])) {
-            scan += len;
+        auto p = scan;
+        if (p.iexpectText_P(text_P) && !isidchar(*p)) {
+            scan = p;
             return entry;
         }
     }

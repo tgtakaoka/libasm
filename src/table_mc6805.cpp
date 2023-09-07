@@ -334,8 +334,7 @@ const /*PROGMEM*/ char *TableMc6805::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableMc6805::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.istarts_P(TEXT_CPU_LIST, 2))
-        name += 2;
+    name.iexpectText_P(TEXT_CPU_LIST, 2);
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->cpuType();

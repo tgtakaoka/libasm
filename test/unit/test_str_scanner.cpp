@@ -118,7 +118,9 @@ void test_trim() {
     EQ("trimStart.size", 10, scan1.size());
     EQ("trimEnd", &text1[5], scan1.trimEnd(isxdigit).str());
     EQ("trimEnd.size", 1, scan1.size());
+}
 
+void test_expect() {
     const char text2[] = " \tteXT21:   ";
     StrScanner scan2(text2);
     EQ("scan2.size", 12, scan2.size());
@@ -140,28 +142,51 @@ void test_trim() {
     EQ("scan2.skipSpaces.str", "", scan2.skipSpaces().str());
 }
 
+void test_expectText() {
+    StrScanner scan1("text1");
+    TRUE("scan1", scan1.iexpectText_P(PSTR("TEXT")));
+    EQ("scan1", "1", scan1.str());
+
+    StrScanner scan2("text2");
+    TRUE("scan2", scan2.iexpectText_P(PSTR("TEXT1"), 4));
+    EQ("scan2", "2", scan2.str());
+
+    StrScanner scan3("text3");
+    FALSE("scan3", scan3.iexpectText_P(PSTR("TEXT345")));
+    EQ("scan3", "text3", scan3.str());
+}
+
+void test_expectWord() {
+    StrScanner scan1("text1.text2");
+    TRUE("scan1", scan1.iexpectText_P(PSTR("TEXT1"), 0, true));
+    EQ("scan1", ".text2", scan1.str());
+
+    StrScanner scan2("text2");
+    TRUE("scan2", scan2.iexpectText_P(PSTR("TEXT2"), 0, true));
+    EQ("scan2", "", scan2.str());
+
+    StrScanner scan3("text345");
+    FALSE("scan3", scan3.iexpectText_P(PSTR("TEXT3"), 0, true));
+    EQ("scan3", "text345", scan3.str());
+
+    StrScanner scan4("text4text5");
+    FALSE("scan4", scan4.iexpectText_P(PSTR("TEXT4"), 0, true));
+    EQ("scan4", "text4text5", scan4.str());
+
+    StrScanner scan5("text5_text6");
+    FALSE("scan5", scan5.iexpectText_P(PSTR("TEXT3"), 0, true));
+    EQ("scan5", "text5_text6", scan5.str());
+}
+
 void test_compare() {
-    const char text1[] = "text1";
-    const StrScanner scan1(text1);
-    const char text2[] = "text2";
-    const StrScanner scan2(text2);
+    const StrScanner textA("textA");
+    const StrScanner scanA("textA");
+    const StrScanner scanB("textB");
 
-    TRUE("iequals_P", scan1.iequals_P(PSTR("TEXT1")));
-    FALSE("iequals_P", scan2.iequals_P(PSTR("TEXT1")));
-
-    TRUE("istarts_P", scan1.istarts_P(PSTR("TEXT")));
-    TRUE("istarts_P", scan2.istarts_P(PSTR("TEXT1"), 4));
-    FALSE("istarts_P", scan2.istarts_P(PSTR("TEXT123"), 5));
-
-    const char text3[] = "TEXT1";
-    const StrScanner scan3(text3);
-    const char text4[] = "TEXT123";
-    const StrScanner scan4(text4);
-
-    TRUE("iequals", scan1.iequals(scan3));
-    TRUE("iequals", scan3.iequals(scan1));
-    FALSE("iequals", scan1.iequals(scan2));
-    FALSE("iequals", scan1.iequals(scan4));
+    TRUE("textA == scanA", textA.iequals(scanA));
+    TRUE("scanA == textA", scanA.iequals(textA));
+    FALSE("textA != scanB", textA.iequals(scanB));
+    FALSE("scanB != textA", scanB.iequals(textA));
 }
 
 void run_tests() {
@@ -169,6 +194,9 @@ void run_tests() {
     RUN_TEST(test_constructor);
     RUN_TEST(test_reference);
     RUN_TEST(test_trim);
+    RUN_TEST(test_expect);
+    RUN_TEST(test_expectText);
+    RUN_TEST(test_expectWord);
     RUN_TEST(test_compare);
 }
 

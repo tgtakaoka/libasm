@@ -142,11 +142,9 @@ Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffi
 Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     auto radix = RADIX_NONE;
-    if (p.istarts_P(PSTR("%(8)"))) {
-        p += 4;
+    if (p.iexpectText_P(PSTR("%(8)"))) {
         radix = RADIX_8;
-    } else if (p.istarts_P(PSTR("%(2)"))) {
-        p += 4;
+    } else if (p.iexpectText_P(PSTR("%(2)"))) {
         radix = RADIX_2;
     } else if (p.expect('%') && isxdigit(*p)) {
         radix = RADIX_16;

@@ -383,8 +383,7 @@ const /*PROGMEM*/ char *TableCdp1802::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableCdp1802::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.istarts_P(TEXT_CPU_LIST, 3))
-        name += 3;
+    name.iexpectText_P(TEXT_CPU_LIST, 3);
     const auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->cpuType();

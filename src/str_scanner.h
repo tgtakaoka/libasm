@@ -134,14 +134,18 @@ public:
         return expect([c](char s) { return toupper(s) == toupper(c); });
     }
 
+    /**
+     * return true if this starts with |text_P| of |len| with ignore
+     * case, then dvance. Otherwise return false.  If |word| is true,
+     * a text in scanner must end with non-alphanumeric (or '_').
+     */
+    bool iexpectText_P(const /*PROGMEM*/ char *text_P, size_t len = 0, bool word = false);
+
     /** return true if this equals to |text| with ignore case. */
     bool iequals(const StrScanner &text) const;
 
     /** return true if this equals to |text_P| with ignore case. */
     bool iequals_P(const /*PROGMEM*/ char *text_P) const;
-
-    /** return true if this starts with |text_P| with ignore case. */
-    bool istarts_P(const /*PROGMEM*/ char *text_P, size_t len = 0) const;
 
     static const StrScanner EMPTY;
 

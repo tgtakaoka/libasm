@@ -615,8 +615,7 @@ const /*PROGMEM*/ char *TableMc68000::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableMc68000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.istarts_P(TEXT_CPU_MC68000, 2))
-        name += 2;
+    name.iexpectText_P(TEXT_CPU_MC68000, 2);
     if (name.iequals_P(TEXT_CPU_68000)) {
         cpuType = MC68000;
         return OK;

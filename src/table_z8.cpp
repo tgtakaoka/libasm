@@ -600,11 +600,11 @@ Error TableZ8::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->cpuType();
-    } else if (name.istarts_P(TEXT_CPU_Z86C)) {
+    } else if (name.iexpectText_P(TEXT_CPU_Z86C)) {
         cpuType = Z86C;
-    } else if (name.istarts_P(TEXT_CPU_Z86)) {
+    } else if (name.iexpectText_P(TEXT_CPU_Z86)) {
         cpuType = Z8;
-    } else if (name.istarts_P(TEXT_CPU_Z88) || name.iequals_P(TEXT_CPU_SUPER8)) {
+    } else if (name.iexpectText_P(TEXT_CPU_Z88) || name.iequals_P(TEXT_CPU_SUPER8)) {
         cpuType = SUPER8;
     } else {
         return UNSUPPORTED_CPU;
