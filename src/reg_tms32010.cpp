@@ -42,10 +42,10 @@ RegName parseRegName(StrScanner &scan) {
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isAuxiliary(name))
-        return outRegNumber(out.text_P(PSTR("AR")), int8_t(name));
+        return out.text_P(PSTR("AR")).uint8(int8_t(name));
 
-    const int8_t num = int8_t(name) - int8_t(REG_PA0);
-    return outRegNumber(out.text_P(PSTR("PA")), num);
+    const auto num = int8_t(name) - int8_t(REG_PA0);
+    return out.text_P(PSTR("PA")).uint8(num);
 }
 
 bool isAuxiliary(RegName name) {

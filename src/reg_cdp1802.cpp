@@ -37,7 +37,7 @@ RegName parseRegName(StrScanner &scan) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    return outRegNumber(out.letter('R'), int8_t(name));
+    return out.letter('R').uint8(int8_t(name));
 }
 
 }  // namespace reg

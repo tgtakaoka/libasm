@@ -29,10 +29,10 @@ public:
     StrScanner(const char *str) : _str(str), _end(str + strlen(str)) {}
 
     /** construct from string from |str| to |end| */
-    StrScanner(const char *str, const char *end) : _str(str), _end(end) {}
+    constexpr StrScanner(const char *str, const char *end) : _str(str), _end(end) {}
 
     /** copy construct from |scan|, or |EMPTY| */
-    StrScanner(const StrScanner &scan = EMPTY) : _str(scan._str), _end(scan._end) {}
+    constexpr StrScanner(const StrScanner &scan = EMPTY) : _str(scan._str), _end(scan._end) {}
 
     /** assignment */
     StrScanner &operator=(const StrScanner &scan) {
@@ -42,19 +42,16 @@ public:
     }
 
     /** return head of underlying string */
-    const char *str() const { return _str; }
+    constexpr const char *str() const { return _str; }
 
     /** return remaining size */
-    size_t size() const { return _end - _str; }
+    constexpr size_t size() const { return _end - _str; }
 
     /** dereference; returns character at the head, or 0 otherwise */
-    char operator*() const { return (*this)[0]; }
+    constexpr char operator*() const { return (*this)[0]; }
 
     /** indexing; character at offset delta, 0 if |delt| beyonds end */
-    char operator[](int delta) const {
-        const char *p = _str + delta;
-        return p < _end ? *p : 0;
-    }
+    constexpr char operator[](int delta) const { return (_str + delta) < _end ? _str[delta] : 0; }
 
     /** pre-increment */
     StrScanner &operator++() { return *this += 1; }
@@ -146,7 +143,7 @@ public:
     /** return true if this starts with |text_P| with ignore case. */
     bool istarts_P(const /*PROGMEM*/ char *text_P, size_t len = 0) const;
 
-    static StrScanner EMPTY;
+    static const StrScanner EMPTY;
 
 private:
     /** |str| must not be greater than |_end|. */

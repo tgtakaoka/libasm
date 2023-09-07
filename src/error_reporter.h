@@ -90,10 +90,10 @@ enum Error : uint8_t {
 };
 
 struct ErrorReporter {
-    ErrorReporter() : _error(OK) {}
+    constexpr ErrorReporter() : _error(OK) {}
 
-    bool isOK() const { return _error == OK; }
-    Error getError() const { return _error; }
+    constexpr bool isOK() const { return _error == OK; }
+    constexpr Error getError() const { return _error; }
 
     Error resetError() { return setOK(); }
     Error setOK() { return setError(OK); }
@@ -111,20 +111,25 @@ private:
 };
 
 struct ErrorAt : ErrorReporter {
-    ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
+    constexpr ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
 
-    bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
+    constexpr bool hasError() const { return getError() && getError() != UNDEFINED_SYMBOL; }
 
     Error setError(Error error) { return ErrorReporter::setError(error); }
     Error setErrorIf(Error error) { return ErrorReporter::setErrorIf(error); }
     Error setError(const ErrorReporter &o) { return ErrorReporter::setError(o); }
-    Error setErrorIf(const ErrorReporter &o) { return ErrorReporter::setErrorIf(o.getError()); }
+    Error setErrorIf(const ErrorReporter &o) {
+        return ErrorReporter::setErrorIf(o.getError());
+    }
     Error setError(const ErrorAt &o) {
         setAt(o._at);
         return ErrorReporter::setError(o.getError());
     }
     Error setErrorIf(const ErrorAt &o) { return getError() ? getError() : setError(o); }
-    Error setError(const ErrorAt &o, Error error) { return setError(o._at, error); }
+    Error setError(const ErrorAt &o, Error error) {
+        setAt(o._at);
+        return setError(error);
+    }
     Error setErrorIf(const ErrorAt &o, Error error) {
         return getError() ? getError() : setError(o, error);
     }
@@ -138,7 +143,7 @@ struct ErrorAt : ErrorReporter {
 
     void setAt(const char *at) { _at = at; }
     void setAt(const StrScanner &at) { _at = at.str(); }
-    const char *errorAt() const { return _at; }
+    constexpr const char *errorAt() const { return _at; }
 
 private:
     const char *_at;

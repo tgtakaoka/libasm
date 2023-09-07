@@ -36,15 +36,6 @@ int8_t parseRegNumber(StrScanner &scan, int8_t max) {
     return -1;
 }
 
-/** Output register number from 0 to less than 20. */
-StrBuffer &outRegNumber(StrBuffer &out, int8_t num) {
-    if (num >= 10) {
-        out.letter('1');
-        num -= 10;
-    }
-    return out.letter(num + '0');
-}
-
 const NameEntry *searchName(uint8_t name, const NameEntry *begin, const NameEntry *end) {
     for (const auto *entry = begin; entry < end; entry++) {
         if (name == entry->name())

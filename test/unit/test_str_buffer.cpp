@@ -255,6 +255,19 @@ void test_rtext() {
     }
 }
 
+void test_uint8() {
+    char buffer[8];
+    StrBuffer out(buffer, sizeof(buffer));
+
+    out.uint8(0);
+    EQ("uint8-0", "0", buffer);
+
+    out.reset(buffer, sizeof(buffer));
+    out.uint8(255);
+    EQ("uint8-255", "255", buffer);
+
+}
+
 void test_comma() {
     char buffer[8];
     StrBuffer out(buffer, sizeof(buffer));
@@ -310,6 +323,7 @@ void run_tests() {
     RUN_TEST(test_text_P);
     RUN_TEST(test_scanner);
     RUN_TEST(test_rtext);
+    RUN_TEST(test_uint8);
     RUN_TEST(test_comma);
     RUN_TEST(test_reverse);
     RUN_TEST(test_reset);

@@ -103,6 +103,15 @@ StrBuffer &StrBuffer::rtext_P(const /*PROGMEM*/ char *text_P) {
     return *this;
 }
 
+StrBuffer &StrBuffer::uint8(uint8_t num) {
+    auto *start = mark();
+    do {
+        letter(num % 10 + '0');
+        num /= 10;
+    } while (num);
+      return reverse(start);
+}
+
 StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, ...) {
     va_list args;
     va_start(args, fmt);

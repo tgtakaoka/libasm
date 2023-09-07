@@ -68,24 +68,16 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
     auto num = int8_t(name);
     if (num < 0)
         return out;
-    const /*PROGMEM*/ char *prefix_P;
-    if (isWordReg(name)) {
-        num -= int8_t(REG_R0);
-        prefix_P = PSTR("R");
-    } else if (isLongReg(name)) {
-        num -= int8_t(REG_RR0);
-        prefix_P = PSTR("RR");
-    } else if (isQuadReg(name)) {
-        num -= int8_t(REG_RQ0);
-        prefix_P = PSTR("RQ");
-    } else if (num < int8_t(REG_RH0) + 8) {
-        num -= int8_t(REG_RH0);
-        prefix_P = PSTR("RH");
-    } else {
-        num -= int8_t(REG_RL0);
-        prefix_P = PSTR("RL");
-    }
-    return outRegNumber(out.text_P(prefix_P), num);
+    out.letter('R');
+    if (isWordReg(name))
+        return out.uint8(num - int8_t(REG_R0));
+    if (isLongReg(name))
+        return out.letter('R').uint8(num - int8_t(REG_RR0));
+    if (isQuadReg(name))
+        return out.letter('Q').uint8(num - int8_t(REG_RQ0));
+    if (num < int8_t(REG_RH0) + 8)
+        return out.letter('H').uint8(num - int8_t(REG_RH0));
+    return out.letter('L').uint8(num - int8_t(REG_RL0));
 }
 
 uint8_t encodeGeneralRegName(RegName name) {

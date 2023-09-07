@@ -21,6 +21,7 @@
 #include "str_scanner.h"
 
 #include <ctype.h>
+#include <stdint.h>
 
 namespace libasm {
 
@@ -28,7 +29,7 @@ struct StrBuffer : ErrorReporter {
     StrBuffer(char *buffer, size_t size) : ErrorReporter() { reset(buffer, size); }
     StrBuffer(const StrBuffer &o) : _out(o._out), _end(o._end) { setError(o.getError()); }
 
-    StrBuffer *ptr() { return static_cast<StrBuffer *>(this); }
+    StrBuffer *ptr() { return reinterpret_cast<StrBuffer *>(this); }
     size_t size() const { return _end - _out; }
     char *mark() const { return _out; }
 
@@ -54,6 +55,9 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &rtext(const StrScanner &scan);
     StrBuffer &rtext_P(const /*PROGMEM*/ char *text_P);
 
+    /** Outpur |num| as decimal number. */
+    StrBuffer &uint8(uint8_t num);
+
     /** Output |...| arguments using |fmt| as |vsprintf| */
     StrBuffer &format_P(const /*PROGMEM*/ char *fmt, ...);
 
@@ -64,7 +68,7 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &reverse(char *start);
 
 protected:
-    StrBuffer &ref() { return static_cast<StrBuffer &>(*this); }
+    StrBuffer &ref() { return reinterpret_cast<StrBuffer &>(*this); }
 
 private:
     char *_out;

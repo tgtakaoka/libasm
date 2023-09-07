@@ -76,8 +76,8 @@ bool isPairReg(RegName name) {
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     const auto num = uint8_t(name);
     if (num < 16)
-        return outRegNumber(out.letter('R'), num);
-    return outRegNumber(out.text_P(PSTR("RR")), num - 16);
+        return out.letter('R').uint8(num);
+    return out.text_P(PSTR("RR")).uint8(num - 16);
 }
 
 static constexpr NameEntry CC_TABLE[] PROGMEM = {

@@ -61,9 +61,6 @@ const NameEntry *searchText(StrScanner &scan, const NameEntry *begin, const Name
  */
 int8_t parseRegNumber(StrScanner &scan, int8_t max);
 
-/** Output register number from 0 to less than 20. */
-StrBuffer &outRegNumber(StrBuffer &out, int8_t num);
-
 }  // namespace reg
 }  // namespace libasm
 

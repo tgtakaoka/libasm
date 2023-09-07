@@ -20,7 +20,7 @@
 
 namespace libasm {
 
-StrScanner StrScanner::EMPTY("");
+const StrScanner StrScanner::EMPTY("");
 
 bool StrScanner::iequals(const StrScanner &text) const {
     return size() == text.size() && strncasecmp(str(), text.str(), size()) == 0;
