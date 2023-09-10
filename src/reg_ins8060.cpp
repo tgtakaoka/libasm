@@ -16,34 +16,41 @@
 
 #include "reg_ins8060.h"
 
+#include "reg_base.h"
 #include "text_ins8060.h"
 
-using namespace libasm::text::ins8060;
 using namespace libasm::reg;
+using namespace libasm::text::ins8060;
 
 namespace libasm {
 namespace ins8060 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_E),
-        NAME_ENTRY(REG_P1),
-        NAME_ENTRY(REG_P2),
-        NAME_ENTRY(REG_P3),
-        NAME_ENTRY(REG_PC),
-        NAME_ENTRY(REG_P0),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_E,  REG_E  },
+    { TEXT_REG_P0, REG_P0 },
+    { TEXT_REG_P1, REG_P1 },
+    { TEXT_REG_P2, REG_P2 },
+    { TEXT_REG_P3, REG_P3 },
+    { TEXT_REG_PC, REG_PC },
 };
 
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 bool isPointerReg(RegName name) {

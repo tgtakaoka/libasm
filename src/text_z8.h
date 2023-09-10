@@ -123,7 +123,6 @@ using common::TEXT_CC_OV;
 using common::TEXT_CC_MI;
 using common::TEXT_CC_Z;
 using common::TEXT_CC_C;
-using common::TEXT_CC_T;
 using common::TEXT_CC_GE;
 using common::TEXT_CC_GT;
 using common::TEXT_CC_UGT;
@@ -135,6 +134,9 @@ using common::TEXT_CC_EQ;
 using common::TEXT_CC_ULT;
 using common::TEXT_CC_NE;
 using common::TEXT_CC_UGE;
+
+using common::TEXT_REG_RR;
+
 // clang-format on
 
 }  // namespace z8

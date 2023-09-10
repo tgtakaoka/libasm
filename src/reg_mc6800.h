@@ -17,12 +17,15 @@
 #ifndef __REG_MC6800_H__
 #define __REG_MC6800_H__
 
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace mc6800 {
 
-enum RegName : char {
+enum RegName : int8_t {
     REG_UNDEF = 0,
     REG_X = 'X',
     // MC68HC11

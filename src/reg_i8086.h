@@ -17,8 +17,11 @@
 #ifndef __REG_I8086_H__
 #define __REG_I8086_H__
 
+#include <stdint.h>
+
 #include "entry_i8086.h"
-#include "reg_base.h"
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace i8086 {

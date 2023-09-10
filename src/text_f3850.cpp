@@ -19,8 +19,8 @@
 namespace libasm {
 namespace text {
 namespace f3850 {
-
 // clang-format off
+
 const char TEXT_CPU_F3850[] PROGMEM = "F3850";
 const char TEXT_CPU_3850[]  PROGMEM = "3850";
 
@@ -82,29 +82,27 @@ const char TEXT_XI[]   PROGMEM = "XI";
 const char TEXT_XM[]   PROGMEM = "XM";
 const char TEXT_XS[]   PROGMEM = "XS";
 
-// clang-format off
 // const char TEXT_REG_A[]  PROGMEM = "A";
-// const char TEXT_REG_W[]  PROGMEM = "W";
-const char TEXT_REG_IS[] PROGMEM = "IS";
-const char TEXT_REG_KU[] PROGMEM = "KU";
-const char TEXT_REG_KL[] PROGMEM = "KL";
-const char TEXT_REG_QU[] PROGMEM = "QU";
-const char TEXT_REG_QL[] PROGMEM = "QL";
-// const char TEXT_REG_H[]  PROGMEM = "H";
-const char TEXT_REG_K[]  PROGMEM = "K";
-const char TEXT_REG_Q[]  PROGMEM = "Q";
-// const char TEXT_REG_P[]  PROGMEM = "P";
-// const char TEXT_REG_P0[] PROGMEM = "P0";
 const char TEXT_REG_DC[] PROGMEM = "DC";
-// register alias
-const char TEXT_REG_J[]  PROGMEM = "J";
-const char TEXT_REG_HU[] PROGMEM = "HU";
-// const char TEXT_REG_HL[] PROGMEM = "HL";
-// const char TEXT_REG_S[]  PROGMEM = "S";
-// const char TEXT_REG_I[]  PROGMEM = "I";
 // const char TEXT_REG_D[]  PROGMEM = "D";
-// clang-format on
+// const char TEXT_REG_HL[] PROGMEM = "HL";
+// const char TEXT_REG_H[]  PROGMEM = "H";
+const char TEXT_REG_HU[] PROGMEM = "HU";
+// const char TEXT_REG_I[]  PROGMEM = "I";
+const char TEXT_REG_IS[] PROGMEM = "IS";
+const char TEXT_REG_J[]  PROGMEM = "J";
+const char TEXT_REG_KL[] PROGMEM = "KL";
+const char TEXT_REG_K[]  PROGMEM = "K";
+const char TEXT_REG_KU[] PROGMEM = "KU";
+const char TEXT_REG_P0[] PROGMEM = "P0";
+// const char TEXT_REG_P[]  PROGMEM = "P";
+const char TEXT_REG_QL[] PROGMEM = "QL";
+const char TEXT_REG_Q[]  PROGMEM = "Q";
+const char TEXT_REG_QU[] PROGMEM = "QU";
+// const char TEXT_REG_S[]  PROGMEM = "S";
+// const char TEXT_REG_W[]  PROGMEM = "W";
 
+// clang-format on
 }  // namespace f3850
 }  // namespace text
 }  // namespace libasm

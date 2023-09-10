@@ -16,23 +16,39 @@
 
 #include "reg_scn2650.h"
 
+#include "reg_base.h"
 #include "text_scn2650.h"
 
-using namespace libasm::text::scn2650;
 using namespace libasm::reg;
+using namespace libasm::text::scn2650;
 
 namespace libasm {
 namespace scn2650 {
 namespace reg {
 
+namespace {
+// clang-format off
+
+constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+    { TEXT_CC_EQ, CC_EQ },
+    { TEXT_CC_GT, CC_GT },
+    { TEXT_CC_LT, CC_LT },
+    { TEXT_CC_UN, CC_UN },
+};
+
+PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('R')) {
-        const auto num = parseRegNumber(p, 4);
-        if (num >= 0) {
-            scan = p;
-            return RegName(num);
-        }
+        const auto num = parseRegNumber(p);
+        if (num < 0 || num >= 4)
+            return REG_UNDEF;
+        scan = p;
+        return RegName(REG_R0 + num);
     }
     return REG_UNDEF;
 }
@@ -49,15 +65,8 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
     return out.letter('R').uint8(int8_t(name));
 }
 
-static constexpr NameEntry CC_TABLE[] PROGMEM = {
-        NAME_ENTRY(CC_EQ),
-        NAME_ENTRY(CC_GT),
-        NAME_ENTRY(CC_LT),
-        NAME_ENTRY(CC_UN),
-};
-
 CcName parseCcName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    const auto *entry = CC_TABLE.searchText(scan);
     return entry ? CcName(entry->name()) : CC_UNDEF;
 }
 
@@ -70,10 +79,8 @@ CcName decodeCcName(uint8_t opc) {
 }
 
 StrBuffer &outCcName(StrBuffer &out, CcName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = CC_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 }  // namespace reg

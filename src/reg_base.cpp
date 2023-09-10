@@ -16,49 +16,82 @@
 
 #include "reg_base.h"
 
+#include <ctype.h>
+#include <string.h>
+
 namespace libasm {
 namespace reg {
 
-/**
- * Parse register number from 0 to less than 20.  returns -1 if number is invalid or greater than
- * |max|.
- */
-int8_t parseRegNumber(StrScanner &scan, int8_t max) {
-    const auto c1 = scan.expect(isdigit);
-    if (c1) {
-        int8_t num = c1 - '0';
-        const auto c2 = scan.expect(isdigit);
-        if (c2)
-            num = c2 - '0' + 10;
-        if (num < max && !isidchar(*scan))
-            return num;
-    }
-    return -1;
+namespace {
+
+bool nameMatcher(int8_t &name, const NameEntry *item, int extra) {
+    return name == item->name();
 }
 
-const NameEntry *searchName(uint8_t name, const NameEntry *begin, const NameEntry *end) {
-    for (const auto *entry = begin; entry < end; entry++) {
-        if (name == entry->name())
-            return entry;
-    }
-    return nullptr;
+int textMatcher(StrScanner &symbol, const NameEntry *item) {
+    const auto *text_P = item->text_P();
+    const auto res = strncasecmp_P(symbol.str(), text_P, symbol.size());
+    // |symbol| diffrs |item|.
+    if (res)
+        return res;
+    // |symbol| length may be shorter than |item|.
+    return symbol.size() < strlen_P(text_P) ? -1 : 0;
 }
 
-uint8_t nameLen(uint8_t name, const NameEntry *begin, const NameEntry *end) {
-    const auto *entry = searchName(name, begin, end);
-    return entry ? entry->len() : 0;
+// Some architrectures have registers whose name contains a single
+// quote, such as AFP'.  Some architrectures represent constant
+// using prefix and surrounded by single quotes, such as C'x'.
+bool isNameLetter(char c) {
+    return isalnum(c) || c == '\'';
 }
 
-const NameEntry *searchText(StrScanner &scan, const NameEntry *begin, const NameEntry *end) {
-    for (const auto *entry = begin; entry < end; entry++) {
-        const /*PROGMEM*/ char *text_P = entry->text_P();
-        auto p = scan;
-        if (p.iexpectText_P(text_P) && !isidchar(*p)) {
-            scan = p;
-            return entry;
-        }
+bool isPrefixLetter(char c) {
+    return isalpha(c);
+}
+
+}  // namespace
+
+const NameEntry *NameTable::searchName(int8_t name) const {
+    return _table.linearSearch(name, nameMatcher, 0);
+}
+
+const NameEntry *NameTable::searchText(StrScanner &scan) const {
+    return searchSymbol(scan, isNameLetter);
+}
+
+const NameEntry *NameTable::searchPrefix(StrScanner &scan) const {
+    return searchSymbol(scan, isPrefixLetter);
+}
+
+const NameEntry *NameTable::searchSymbol(StrScanner &scan, bool (*predicator)(char)) const {
+    auto symbol = scan;
+    auto next = symbol.takeWhile(predicator);
+    if (symbol.size() == 0)
+        return nullptr;
+    const auto *entry = _table.binarySearch(symbol, textMatcher);
+    if (entry)
+        scan = next;
+    return entry;
+}
+
+int8_t parseRegNumber(StrScanner &scan) {
+    auto p = scan;
+    int16_t val = 0;
+    int8_t leading_zero = 0;
+    char c;
+    while (isdigit(c = *p) && val < 1000) {
+        if (val == 0 && c == '0')
+            leading_zero++;
+        val *= 10;
+        val += c - '0';
+        ++p;
     }
-    return nullptr;
+    if (isIdLetter(c))
+        return -1;
+    if ((val == 0 && leading_zero != 1) || (val != 0 && leading_zero >= 1))
+        return -1;
+    scan = p;
+    return val;
 }
 
 }  // namespace reg

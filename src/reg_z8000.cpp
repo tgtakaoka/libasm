@@ -17,6 +17,7 @@
 
 #include "reg_z8000.h"
 
+#include "reg_base.h"
 #include "text_z8000.h"
 
 using namespace libasm::text::z8000;
@@ -26,58 +27,109 @@ namespace libasm {
 namespace z8000 {
 namespace reg {
 
+namespace {
+// clang-format off
+
+constexpr NameEntry CTL_ENTRIES[] PROGMEM = {
+    { TEXT_REG_FCW,     REG_FCW     },
+    { TEXT_REG_FLAGS,   REG_FLAGS   },
+    { TEXT_REG_NSP,     REG_NSP     },
+    { TEXT_REG_NSPOFF,  REG_NSPOFF  },
+    { TEXT_REG_NSPSEG,  REG_NSPSEG  },
+    { TEXT_REG_PSAP,    REG_PSAP    },
+    { TEXT_REG_PSAPOFF, REG_PSAPOFF },
+    { TEXT_REG_PSAPSEG, REG_PSAPSEG },
+    { TEXT_REG_REFRESH, REG_REFRESH },
+};
+
+constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+    { TEXT_CC_C,   CC_C   },
+    { TEXT_CC_EQ,  CC_EQ  },
+    { TEXT_CC_F,   CC_F   },
+    { TEXT_CC_GE,  CC_GE  },
+    { TEXT_CC_GT,  CC_GT  },
+    { TEXT_CC_LE,  CC_LE  },
+    { TEXT_CC_LT,  CC_LT  },
+    { TEXT_CC_MI,  CC_MI  },
+    { TEXT_CC_NC,  CC_NC  },
+    { TEXT_CC_NE,  CC_NE  },
+    { TEXT_CC_NOV, CC_NOV },
+    { TEXT_CC_NZ,  CC_NZ  },
+    { TEXT_CC_OV,  CC_OV  },
+    { TEXT_CC_PL,  CC_PL  },
+    { TEXT_CC_UGE, CC_UGE },
+    { TEXT_CC_UGT, CC_UGT },
+    { TEXT_CC_ULE, CC_ULE },
+    { TEXT_CC_ULT, CC_ULT },
+    { TEXT_CC_Z,   CC_Z   },
+};
+
+constexpr NameEntry FLAG_ENTRIES[] PROGMEM = {
+    { TEXT_FLAG_C, FLAG_C },
+    { TEXT_FLAG_P, FLAG_P },
+    { TEXT_FLAG_S, FLAG_S },
+    { TEXT_FLAG_V, FLAG_V },
+    { TEXT_FLAG_Z, FLAG_Z },
+};
+
+PROGMEM constexpr NameTable CTL_TABLE{ARRAY_RANGE(CTL_ENTRIES)};
+PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+PROGMEM constexpr NameTable FLAG_TABLE{ARRAY_RANGE(FLAG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    auto p = scan;
-    if (p.iexpect('R')) {
-        auto base = REG_UNDEF;
-        int8_t num = -1;
-        if (p.iexpect('H')) {
-            base = REG_RH0;
-            num = parseRegNumber(p, 8);
-        } else if (p.iexpect('L')) {
-            base = REG_RL0;
-            num = parseRegNumber(p, 8);
-        } else if (p.iexpect('R')) {
-            base = REG_RR0;
-            num = parseRegNumber(p, 16);
-            if (num % 2)
-                num = -1;
-        } else if (p.iexpect('Q')) {
-            base = REG_RQ0;
-            num = parseRegNumber(p, 16);
-            if (num % 4)
-                num = -1;
-        } else if (isdigit(*p)) {
-            base = REG_R0;
-            num = parseRegNumber(p, 16);
-        }
-        if (base != REG_UNDEF) {
-            if (num < 0)
-                return REG_ILLEGAL;
-            scan = p;
-            return RegName(num + int8_t(base));
-        }
+    const auto save = scan;
+    if (scan.iexpect('R')) {
+        const auto num = parseRegNumber(scan);
+        if (num >= 0 && num < 16)
+            return RegName(REG_R0 + num);
+        scan = save;
+    }
+    if (scan.iexpectText_P(TEXT_REG_RR)) {
+        const auto num = parseRegNumber(scan);
+        if (num < 0 || num >= 16)
+            return REG_UNDEF;
+        if (num % 2)
+            return REG_ILLEGAL;
+        return RegName(REG_RR0 + num);
+    }
+    if (scan.iexpectText_P(TEXT_REG_RL)) {
+        const auto num = parseRegNumber(scan);
+        if (num < 0 || num >= 8)
+            return REG_UNDEF;
+        return RegName(REG_RL0 + num);
+    }
+    if (scan.iexpectText_P(TEXT_REG_RH)) {
+        const auto num = parseRegNumber(scan);
+        if (num < 0 || num >= 8)
+            return REG_UNDEF;
+        return RegName(REG_RH0 + num);
+    }
+    if (scan.iexpectText_P(TEXT_REG_RQ)) {
+        const auto num = parseRegNumber(scan);
+        if (num < 0 || num >= 16)
+            return REG_UNDEF;
+        if (num % 4)
+            return REG_ILLEGAL;
+        return RegName(REG_RQ0 + num);
     }
     return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    if (isCtlReg(name))
-        return outCtlName(out, name);
-
-    auto num = int8_t(name);
-    if (num < 0)
-        return out;
-    out.letter('R');
     if (isWordReg(name))
-        return out.uint8(num - int8_t(REG_R0));
+        return out.letter('R').uint8(name - REG_R0);
     if (isLongReg(name))
-        return out.letter('R').uint8(num - int8_t(REG_RR0));
+        return out.text_P(TEXT_REG_RR).uint8(name - REG_RR0);
+    if (isByteReg(name))
+        return name < REG_RL0 ?
+            out.text_P(TEXT_REG_RH).uint8(name - REG_RH0) :
+            out.text_P(TEXT_REG_RL).uint8(name- REG_RL0);
     if (isQuadReg(name))
-        return out.letter('Q').uint8(num - int8_t(REG_RQ0));
-    if (num < int8_t(REG_RH0) + 8)
-        return out.letter('H').uint8(num - int8_t(REG_RH0));
-    return out.letter('L').uint8(num - int8_t(REG_RL0));
+        return out.text_P(TEXT_REG_RQ).uint8(name - REG_RQ0);
+    return outCtlName(out, name);
 }
 
 uint8_t encodeGeneralRegName(RegName name) {
@@ -145,41 +197,27 @@ bool isCtlReg(RegName name) {
     return static_cast<int8_t>(name) >= 64;
 }
 
-static constexpr NameEntry CTL_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_FLAGS),
-        NAME_ENTRY(REG_FCW),
-        NAME_ENTRY(REG_REFRESH),
-        NAME_ENTRY(REG_PSAPSEG),
-        NAME_ENTRY(REG_PSAPOFF),
-        NAME_ENTRY(REG_PSAP),
-        NAME_ENTRY(REG_NSPSEG),
-        NAME_ENTRY(REG_NSPOFF),
-        NAME_ENTRY(REG_NSP),
-};
-
-static bool isSegCtlReg(RegName name) {
+bool isSegCtlReg(RegName name) {
     return name == REG_PSAPSEG || name == REG_PSAPOFF || name == REG_NSPSEG || name == REG_NSPOFF;
 }
 
-static bool isNonSegCtlReg(RegName name) {
+bool isNonSegCtlReg(RegName name) {
     return name == REG_PSAP || name == REG_NSP;
 }
 
 RegName parseCtlReg(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CTL_TABLE));
+    const auto *entry = CTL_TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outCtlName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CTL_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = CTL_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 RegName decodeCtlReg(bool segmentedModel, uint8_t num) {
     num &= 7;
-    const auto *entry = searchName(num + 64, ARRAY_RANGE(CTL_TABLE));
+    const auto *entry = CTL_TABLE.searchName(num + 64);
     auto name = entry ? RegName(entry->name()) : REG_ILLEGAL;
     if (!segmentedModel && isSegCtlReg(name)) {
         name = RegName(entry->name() + 8);
@@ -195,16 +233,12 @@ int8_t encodeCtlReg(bool segmentedModel, RegName name) {
     return isSegCtlReg(name) ? -1 : num;
 }
 
-static constexpr char TEXT_INTR_VI[] PROGMEM = "VI";
-static constexpr char TEXT_INTR_NVI[] PROGMEM = "NVI";
-static constexpr NameEntry INTR_TABLE[] PROGMEM = {
-        NAME_ENTRY(INTR_NVI),
-        NAME_ENTRY(INTR_VI),
-};
-
 IntrName parseIntrName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(INTR_TABLE));
-    return entry ? IntrName(entry->name()) : INTR_UNDEF;
+    if (scan.iexpectText_P(TEXT_INTR_VI, 0, true))
+        return INTR_VI;
+    if (scan.iexpectText_P(TEXT_INTR_NVI, 0, true))
+        return INTR_NVI;
+    return INTR_UNDEF;
 }
 
 StrBuffer &outIntrNames(StrBuffer &out, uint8_t intrs) {
@@ -225,35 +259,9 @@ uint8_t encodeIntrName(IntrName name) {
     return uint8_t(name);
 }
 
-static constexpr NameEntry CC_TABLE[] PROGMEM = {
-        NAME_ENTRY(CC_F),
-        NAME_ENTRY(CC_LT),
-        NAME_ENTRY(CC_LE),
-        NAME_ENTRY(CC_ULE),
-        NAME_ENTRY(CC_OV),
-        NAME_ENTRY(CC_MI),
-        NAME_ENTRY(CC_Z),
-        NAME_ENTRY(CC_C),
-        NAME_ENTRY(CC_GE),
-        NAME_ENTRY(CC_GT),
-        NAME_ENTRY(CC_UGT),
-        NAME_ENTRY(CC_NOV),
-        NAME_ENTRY(CC_PL),
-        NAME_ENTRY(CC_NZ),
-        NAME_ENTRY(CC_NC),
-        // Aliases
-        NAME_ENTRY(CC_EQ),
-        NAME_ENTRY(CC_ULT),
-        NAME_ENTRY(CC_NE),
-        NAME_ENTRY(CC_UGE),
-        // Empty text.
-        NAME_ENTRY(CC_T),
-};
-
 CcName parseCcName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
-    const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
-    return name == CC_T ? CC_UNDEF : name;
+    const auto *entry = CC_TABLE.searchText(scan);
+    return entry ? CcName(entry->name()) : CC_UNDEF;
 }
 
 uint8_t encodeCcName(CcName name) {
@@ -265,33 +273,23 @@ CcName decodeCcNum(uint8_t num) {
 }
 
 StrBuffer &outCcName(StrBuffer &out, CcName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = CC_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
-static constexpr NameEntry FLAG_TABLE[] PROGMEM = {
-        NAME_ENTRY(FLAG_C),
-        NAME_ENTRY(FLAG_Z),
-        NAME_ENTRY(FLAG_S),
-        NAME_ENTRY(FLAG_P),
-        NAME_ENTRY(FLAG_V),
-};
-
 FlagName parseFlagName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(FLAG_TABLE));
+    const auto *entry = FLAG_TABLE.searchText(scan);
     return entry ? FlagName(entry->name()) : FLAG_UNDEF;
 }
 
 StrBuffer &outFlagNames(StrBuffer &out, uint8_t flags) {
     char sep = 0;
-    for (uint8_t bit = 0x8; bit; bit >>= 1) {
+    for (int8_t bit = 0x8; bit; bit >>= 1) {
         if (flags & bit) {
             if (sep)
                 out.letter(sep);
             sep = ',';
-            const auto *entry = searchName(bit, ARRAY_RANGE(FLAG_TABLE));
+            const auto *entry = FLAG_TABLE.searchName(bit);
             out.text_P(entry->text_P());
         }
     }

@@ -17,7 +17,10 @@
 #ifndef __REG_TMS32010_H__
 #define __REG_TMS32010_H__
 
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace tms32010 {

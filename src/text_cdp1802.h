@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace cdp1802 {
-
 // clang-format off
+
 extern const char TEXT_CPU_LIST[]  PROGMEM;
 extern const char TEXT_CPU_1802[]  PROGMEM;
 extern const char TEXT_CPU_1804[]  PROGMEM;
@@ -161,7 +161,6 @@ extern const char TEXT_DSMB[] PROGMEM;
 extern const char TEXT_DSMI[] PROGMEM;
 
 // clang-format om
-
 } // namespace cdp1802
 } // namespace text
 } // namespace libasm

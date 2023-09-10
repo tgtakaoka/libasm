@@ -17,7 +17,10 @@
 #ifndef __REG_I8051_H__
 #define __REG_I8051_H__
 
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace i8051 {

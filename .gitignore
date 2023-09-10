@@ -6,3 +6,4 @@ build
 .cache
 compile_commands.json
 .ninja_log
+.gdb_history

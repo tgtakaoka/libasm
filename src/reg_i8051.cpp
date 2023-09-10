@@ -16,41 +16,48 @@
 
 #include "reg_i8051.h"
 
+#include "reg_base.h"
 #include "text_i8051.h"
 
-using namespace libasm::text::i8051;
 using namespace libasm::reg;
+using namespace libasm::text::i8051;
 
 namespace libasm {
 namespace i8051 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_A),
-        NAME_ENTRY(REG_C),
-        NAME_ENTRY(REG_AB),
-        NAME_ENTRY(REG_R0),
-        NAME_ENTRY(REG_R1),
-        NAME_ENTRY(REG_R2),
-        NAME_ENTRY(REG_R3),
-        NAME_ENTRY(REG_R4),
-        NAME_ENTRY(REG_R5),
-        NAME_ENTRY(REG_R6),
-        NAME_ENTRY(REG_R7),
-        NAME_ENTRY(REG_PC),
-        NAME_ENTRY(REG_DPTR),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A,    REG_A    },
+    { TEXT_REG_AB,   REG_AB   },
+    { TEXT_REG_C,    REG_C    },
+    { TEXT_REG_DPTR, REG_DPTR },
+    { TEXT_REG_PC,   REG_PC   },
+    { TEXT_REG_R0,   REG_R0   },
+    { TEXT_REG_R1,   REG_R1   },
+    { TEXT_REG_R2,   REG_R2   },
+    { TEXT_REG_R3,   REG_R3   },
+    { TEXT_REG_R4,   REG_R4   },
+    { TEXT_REG_R5,   REG_R5   },
+    { TEXT_REG_R6,   REG_R6   },
+    { TEXT_REG_R7,   REG_R7   },
 };
 
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 bool isRReg(RegName name) {
@@ -66,8 +73,8 @@ RegName decodeRRegNum(const uint8_t num) {
     return RegName(num);
 }
 
-}  // namespace i8051
 }  // namespace reg
+}  // namespace i8051
 }  // namespace libasm
 
 // Local Variables:

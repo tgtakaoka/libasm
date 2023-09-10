@@ -16,6 +16,7 @@
 
 #include "reg_z80.h"
 
+#include "reg_base.h"
 #include "table_z80.h"
 #include "text_z80.h"
 
@@ -26,37 +27,55 @@ namespace libasm {
 namespace z80 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_BC),
-        NAME_ENTRY(REG_DE),
-        NAME_ENTRY(REG_HL),
-        NAME_ENTRY(REG_IX),
-        NAME_ENTRY(REG_IY),
-        NAME_ENTRY(REG_SP),
-        NAME_ENTRY(REG_AFP),
-        NAME_ENTRY(REG_AF),
-        NAME_ENTRY(REG_A),
-        NAME_ENTRY(REG_B),
-        NAME_ENTRY(REG_C),
-        NAME_ENTRY(REG_D),
-        NAME_ENTRY(REG_E),
-        NAME_ENTRY(REG_H),
-        NAME_ENTRY(REG_L),
-        NAME_ENTRY(REG_IM),
-        NAME_ENTRY(REG_R),
-        NAME_ENTRY(REG_I),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A,   REG_A   },
+    { TEXT_REG_AF,  REG_AF  },
+    { TEXT_REG_AFP, REG_AFP },
+    { TEXT_REG_B,   REG_B   },
+    { TEXT_REG_BC,  REG_BC  },
+    { TEXT_REG_C,   REG_C   },
+    { TEXT_REG_D,   REG_D   },
+    { TEXT_REG_DE,  REG_DE  },
+    { TEXT_REG_E,   REG_E   },
+    { TEXT_REG_H,   REG_H   },
+    { TEXT_REG_HL,  REG_HL  },
+    { TEXT_REG_I,   REG_I   },
+    { TEXT_REG_IM,  REG_IM  },
+    { TEXT_REG_IX,  REG_IX  },
+    { TEXT_REG_IY,  REG_IY  },
+    { TEXT_REG_L,   REG_L   },
+    { TEXT_REG_R,   REG_R   },
+    { TEXT_REG_SP,  REG_SP  },
 };
 
+constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+    { TEXT_CC_C,  CC_C  },
+    { TEXT_CC_M,  CC_M  },
+    { TEXT_CC_NC, CC_NC },
+    { TEXT_CC_NZ, CC_NZ },
+    { TEXT_CC_P,  CC_P  },
+    { TEXT_CC_PE, CC_PE },
+    { TEXT_CC_PO, CC_PO },
+    { TEXT_CC_Z,  CC_Z  },
+};
+
+PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = REG_TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = REG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 uint8_t encodeDataReg(RegName name) {
@@ -133,27 +152,14 @@ RegName decodeIrReg(uint8_t num) {
     return RegName((num & 1) + 16);
 }
 
-static constexpr NameEntry CC_TABLE[] PROGMEM = {
-        NAME_ENTRY(CC_NZ),
-        NAME_ENTRY(CC_Z),
-        NAME_ENTRY(CC_NC),
-        NAME_ENTRY(CC_C),
-        NAME_ENTRY(CC_PO),
-        NAME_ENTRY(CC_PE),
-        NAME_ENTRY(CC_P),
-        NAME_ENTRY(CC_M),
-};
-
 CcName parseCcName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
+    const auto *entry = CC_TABLE.searchText(scan);
     return entry ? CcName(entry->name()) : CC_UNDEF;
 }
 
 StrBuffer &outCcName(StrBuffer &out, const CcName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = CC_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 bool isCc4Name(CcName name) {

@@ -19,47 +19,73 @@
 
 #include <ctype.h>
 
-#include "config_host.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
+#include "table_base.h"
 
 namespace libasm {
 namespace reg {
 
-/**
- * Entry of registers, condition codes and flags table.
- */
-struct NameEntry {
-    const uint8_t _name;
-    const /*PROGMEM*/ char *const _text_P;
-#define NAME_ENTRY(name) \
-    { name, TEXT_##name }
-
-    inline uint8_t name() const {
-        return pgm_read_byte(&this->_name);
-    }
-    inline const /*PROGMEM*/ char *text_P() const {
-        return reinterpret_cast<const char *>(pgm_read_ptr(&this->_text_P));
-    }
-    inline uint8_t len() const {
-        return strlen_P(text_P());
-    }
-};
-
-static inline bool isidchar(char c) {
+static inline bool isIdLetter(char c) {
     return isalnum(c) || c == '_';
 }
 
-const NameEntry *searchName(uint8_t name, const NameEntry *begin, const NameEntry *end);
-uint8_t nameLen(uint8_t name, const NameEntry *begin, const NameEntry *end);
-const NameEntry *searchText(StrScanner &scan, const NameEntry *begin, const NameEntry *end);
+/**
+ * Entry of register, condition codes, and flags table.
+ */
+struct NameEntry {
+    constexpr NameEntry(const /*PROGMEM*/ char *text_P, int8_t name)
+        : _text_P(text_P), _name(name) {}
+
+    constexpr const /*PROGMEM*/ char *text_P() const { return _text_P; }
+    constexpr int8_t name() const { return _name; }
+
+    StrBuffer &outText(StrBuffer &out) const { return out.text_P(_text_P); }
+
+private:
+    const /*PROGMEM*/ char *const _text_P;
+    const int8_t _name;
+};
 
 /**
- * Parse register number from 0 to less than 20.
- *
- * returns -1 if number is invalid or greater than |max|.
+ * Name table
  */
-int8_t parseRegNumber(StrScanner &scan, int8_t max);
+struct NameTable {
+    /**
+     * NameEntry array |table|~|end| must be sorted by NameEntry::text_P.
+     */
+    constexpr NameTable(const /*PROGMEM*/ NameEntry *table, const /*PROGMEM*/ NameEntry *end)
+        : _table(table, end) {}
+
+    /**
+     * Return pointer to an entry which has |name| as NameEntry::name,
+     * otherwise nullptr.
+     */
+    const NameEntry *searchName(int8_t name) const;
+
+    /**
+     * Return pointer to an entrey which has |scan| as
+     * NameEntry::text_P, then advance |scan| including alphanumerics
+     * and single quote letters. Otherwise return |nullptr|.
+     */
+    const NameEntry *searchText(StrScanner &scan) const;
+
+    /**
+     * Similar to searchText(StrScanner&) but checks only alphabet
+     * letters in |scan|.
+     */
+    const NameEntry *searchPrefix(StrScanner &scan) const;
+
+private:
+    const table::Table<NameEntry> _table;
+
+    const NameEntry *searchSymbol(StrScanner &scan, bool (*)(char)) const;
+};
+
+/**
+ * Parse register number.  returns -1 if number is invalid number.
+ */
+int8_t parseRegNumber(StrScanner &scan);
 
 }  // namespace reg
 }  // namespace libasm

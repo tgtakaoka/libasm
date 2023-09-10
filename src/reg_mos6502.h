@@ -17,13 +17,15 @@
 #ifndef __REG_MOS6502_H__
 #define __REG_MOS6502_H__
 
-#include "str_scanner.h"
+#include <stdint.h>
+
 #include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace mos6502 {
 
-enum RegName : char {
+enum RegName : int8_t {
     REG_UNDEF = 0,
     REG_A = 'A',
     REG_X = 'X',

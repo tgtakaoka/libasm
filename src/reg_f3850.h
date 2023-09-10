@@ -25,8 +25,8 @@
 namespace libasm {
 namespace f3850 {
 
-enum RegName : uint8_t {
-    REG_UNDEF = 0,
+enum RegName : int8_t {
+    REG_UNDEF = -1,
     REG_A = 1,         // Accumulator
     REG_W = 2,         // Status register
     REG_IS = 3,        // ISAR (Indirect scratchpad address register)

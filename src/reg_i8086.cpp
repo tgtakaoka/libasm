@@ -16,51 +16,58 @@
 
 #include "reg_i8086.h"
 
+#include "reg_base.h"
 #include "text_i8086.h"
 
-using namespace libasm::text::i8086;
 using namespace libasm::reg;
+using namespace libasm::text::i8086;
 
 namespace libasm {
 namespace i8086 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_AL),
-        NAME_ENTRY(REG_AH),
-        NAME_ENTRY(REG_AX),
-        NAME_ENTRY(REG_BL),
-        NAME_ENTRY(REG_BH),
-        NAME_ENTRY(REG_BX),
-        NAME_ENTRY(REG_CL),
-        NAME_ENTRY(REG_CH),
-        NAME_ENTRY(REG_CX),
-        NAME_ENTRY(REG_DL),
-        NAME_ENTRY(REG_DH),
-        NAME_ENTRY(REG_DX),
-        NAME_ENTRY(REG_BP),
-        NAME_ENTRY(REG_SP),
-        NAME_ENTRY(REG_SI),
-        NAME_ENTRY(REG_DI),
-        NAME_ENTRY(REG_CS),
-        NAME_ENTRY(REG_DS),
-        NAME_ENTRY(REG_ES),
-        NAME_ENTRY(REG_SS),
-        NAME_ENTRY(REG_PTR),
-        NAME_ENTRY(REG_BYTE),
-        NAME_ENTRY(REG_WORD),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_AH,   REG_AH   },
+    { TEXT_REG_AL,   REG_AL   },
+    { TEXT_REG_AX,   REG_AX   },
+    { TEXT_REG_BH,   REG_BH   },
+    { TEXT_REG_BL,   REG_BL   },
+    { TEXT_REG_BP,   REG_BP   },
+    { TEXT_REG_BX,   REG_BX   },
+    { TEXT_REG_BYTE, REG_BYTE },
+    { TEXT_REG_CH,   REG_CH   },
+    { TEXT_REG_CL,   REG_CL   },
+    { TEXT_REG_CS,   REG_CS   },
+    { TEXT_REG_CX,   REG_CX   },
+    { TEXT_REG_DH,   REG_DH   },
+    { TEXT_REG_DI,   REG_DI   },
+    { TEXT_REG_DL,   REG_DL   },
+    { TEXT_REG_DS,   REG_DS   },
+    { TEXT_REG_DX,   REG_DX   },
+    { TEXT_REG_ES,   REG_ES   },
+    { TEXT_REG_PTR,  REG_PTR  },
+    { TEXT_REG_SI,   REG_SI   },
+    { TEXT_REG_SP,   REG_SP   },
+    { TEXT_REG_SS,   REG_SS   },
+    { TEXT_REG_WORD, REG_WORD },
 };
 
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 RegName decodeByteReg(uint8_t num) {

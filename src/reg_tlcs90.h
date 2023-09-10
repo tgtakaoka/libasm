@@ -17,7 +17,10 @@
 #ifndef __REG_TLCS90_H__
 #define __REG_TLCS90_H__
 
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace tlcs90 {

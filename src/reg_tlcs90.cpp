@@ -16,43 +16,77 @@
 
 #include "reg_tlcs90.h"
 
+#include "reg_base.h"
 #include "text_tlcs90.h"
 
-using namespace libasm::text::tlcs90;
 using namespace libasm::reg;
+using namespace libasm::text::tlcs90;
 
 namespace libasm {
 namespace tlcs90 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_BC),
-        NAME_ENTRY(REG_DE),
-        NAME_ENTRY(REG_HL),
-        NAME_ENTRY(REG_IX),
-        NAME_ENTRY(REG_IY),
-        NAME_ENTRY(REG_SP),
-        NAME_ENTRY(REG_AFP),
-        NAME_ENTRY(REG_AF),
-        NAME_ENTRY(REG_A),
-        NAME_ENTRY(REG_B),
-        NAME_ENTRY(REG_C),
-        NAME_ENTRY(REG_D),
-        NAME_ENTRY(REG_E),
-        NAME_ENTRY(REG_H),
-        NAME_ENTRY(REG_L),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A,   REG_A   },
+    { TEXT_REG_AF,  REG_AF  },
+    { TEXT_REG_AFP, REG_AFP },
+    { TEXT_REG_B,   REG_B   },
+    { TEXT_REG_BC,  REG_BC  },
+    { TEXT_REG_C,   REG_C   },
+    { TEXT_REG_D,   REG_D   },
+    { TEXT_REG_DE,  REG_DE  },
+    { TEXT_REG_E,   REG_E   },
+    { TEXT_REG_H,   REG_H   },
+    { TEXT_REG_HL,  REG_HL  },
+    { TEXT_REG_IX,  REG_IX  },
+    { TEXT_REG_IY,  REG_IY  },
+    { TEXT_REG_L,   REG_L   },
+    { TEXT_REG_SP,  REG_SP  },
 };
 
+constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+    { TEXT_CC_C,   CC_C   },
+    { TEXT_CC_EQ,  CC_EQ  },
+    { TEXT_CC_F,   CC_F   },
+    { TEXT_CC_GE,  CC_GE  },
+    { TEXT_CC_GT,  CC_GT  },
+    { TEXT_CC_LE,  CC_LE  },
+    { TEXT_CC_LT,  CC_LT  },
+    { TEXT_CC_M,   CC_M   },
+    { TEXT_CC_MI,  CC_MI  },
+    { TEXT_CC_NC,  CC_NC  },
+    { TEXT_CC_NE,  CC_NE  },
+    { TEXT_CC_NOV, CC_NOV },
+    { TEXT_CC_NZ,  CC_NZ  },
+    { TEXT_CC_OV,  CC_OV  },
+    { TEXT_CC_P,   CC_P   },
+    { TEXT_CC_PE,  CC_PE  },
+    { TEXT_CC_PL,  CC_PL  },
+    { TEXT_CC_PO,  CC_PO  },
+    { TEXT_CC_UGE, CC_UGE },
+    { TEXT_CC_UGT, CC_UGT },
+    { TEXT_CC_ULE, CC_ULE },
+    { TEXT_CC_ULT, CC_ULT },
+    { TEXT_CC_Z,   CC_Z   },
+};
+
+PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = REG_TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = REG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 bool isReg16(RegName name) {
@@ -111,46 +145,14 @@ RegName decodeIndexReg(uint8_t num) {
     return RegName(num + 4);
 }
 
-static constexpr NameEntry CC_TABLE[] PROGMEM = {
-        NAME_ENTRY(CC_F),
-        NAME_ENTRY(CC_LT),
-        NAME_ENTRY(CC_LE),
-        NAME_ENTRY(CC_ULE),
-        NAME_ENTRY(CC_OV),
-        NAME_ENTRY(CC_MI),
-        NAME_ENTRY(CC_Z),
-        NAME_ENTRY(CC_C),
-        NAME_ENTRY(CC_GE),
-        NAME_ENTRY(CC_GT),
-        NAME_ENTRY(CC_UGT),
-        NAME_ENTRY(CC_NOV),
-        NAME_ENTRY(CC_PL),
-        NAME_ENTRY(CC_NZ),
-        NAME_ENTRY(CC_NC),
-        // Aliases
-        NAME_ENTRY(CC_PE),
-        NAME_ENTRY(CC_M),
-        NAME_ENTRY(CC_EQ),
-        NAME_ENTRY(CC_ULT),
-        NAME_ENTRY(CC_PO),
-        NAME_ENTRY(CC_P),
-        NAME_ENTRY(CC_NE),
-        NAME_ENTRY(CC_UGE),
-        // Empty text
-        NAME_ENTRY(CC_T),
-};
-
 CcName parseCcName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CC_TABLE));
-    const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
-    return name == CC_T ? CC_UNDEF : name;
+    const auto *entry = CC_TABLE.searchText(scan);
+    return entry ? CcName(entry->name()) : CC_UNDEF;
 }
 
 StrBuffer &outCcName(StrBuffer &out, const CcName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = CC_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 uint8_t encodeCcName(const CcName name) {

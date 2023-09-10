@@ -16,58 +16,84 @@
 
 #include "reg_mn1610.h"
 
+#include "reg_base.h"
 #include "text_mn1610.h"
 
-using namespace libasm::text::mn1610;
 using namespace libasm::reg;
+using namespace libasm::text::mn1610;
 
 namespace libasm {
 namespace mn1610 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_R0),
-        NAME_ENTRY(REG_R1),
-        NAME_ENTRY(REG_R2),
-        NAME_ENTRY(REG_R3),
-        NAME_ENTRY(REG_R4),
-        NAME_ENTRY(REG_SP),
-        NAME_ENTRY(REG_STR),
-        // None generic register
-        NAME_ENTRY(REG_IC),
-        NAME_ENTRY(REG_DR0),
-        // Register alias
-        NAME_ENTRY(REG_X0),
-        NAME_ENTRY(REG_X1),
-        // none generic register
-        NAME_ENTRY(REG_IC),
-        NAME_ENTRY(REG_DR0),
-        // Segment base register
-        NAME_ENTRY(REG_CSBR),
-        NAME_ENTRY(REG_SSBR),
-        NAME_ENTRY(REG_TSR0),
-        NAME_ENTRY(REG_TSR1),
-        NAME_ENTRY(REG_OSR0),
-        NAME_ENTRY(REG_OSR1),
-        NAME_ENTRY(REG_OSR2),
-        NAME_ENTRY(REG_OSR3),
-        // Hardware control register
-        NAME_ENTRY(REG_TCR),
-        NAME_ENTRY(REG_TIR),
-        NAME_ENTRY(REG_TSR),
-        NAME_ENTRY(REG_SCR),
-        NAME_ENTRY(REG_SSR),
-        NAME_ENTRY(REG_SIR),
-        NAME_ENTRY(REG_SOR),
-        NAME_ENTRY(REG_IISR),
-        // Special register
-        NAME_ENTRY(REG_SBRB),
-        NAME_ENTRY(REG_ICB),
-        NAME_ENTRY(REG_NPP),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_CSBR, REG_CSBR },
+    { TEXT_REG_DR0,  REG_DR0  },
+    { TEXT_REG_IC,   REG_IC   },
+    { TEXT_REG_ICB,  REG_ICB  },
+    { TEXT_REG_IISR, REG_IISR },
+    { TEXT_REG_NPP,  REG_NPP  },
+    { TEXT_REG_OSR0, REG_OSR0 },
+    { TEXT_REG_OSR1, REG_OSR1 },
+    { TEXT_REG_OSR2, REG_OSR2 },
+    { TEXT_REG_OSR3, REG_OSR3 },
+    { TEXT_REG_R0,   REG_R0   },
+    { TEXT_REG_R1,   REG_R1   },
+    { TEXT_REG_R2,   REG_R2   },
+    { TEXT_REG_R3,   REG_R3   },
+    { TEXT_REG_R4,   REG_R4   },
+    { TEXT_REG_SBRB, REG_SBRB },
+    { TEXT_REG_SCR,  REG_SCR  },
+    { TEXT_REG_SIR,  REG_SIR  },
+    { TEXT_REG_SOR,  REG_SOR  },
+    { TEXT_REG_SP,   REG_SP   },
+    { TEXT_REG_SSBR, REG_SSBR },
+    { TEXT_REG_SSR,  REG_SSR  },
+    { TEXT_REG_STR,  REG_STR  },
+    { TEXT_REG_TCR,  REG_TCR  },
+    { TEXT_REG_TIR,  REG_TIR  },
+    { TEXT_REG_TSR,  REG_TSR  },
+    { TEXT_REG_TSR0, REG_TSR0 },
+    { TEXT_REG_TSR1, REG_TSR1 },
+    { TEXT_REG_X0,   REG_X0   },
+    { TEXT_REG_X1,   REG_X1   },
 };
 
+constexpr NameEntry CC_ENTRIES[] PROGMEM = {
+    { TEXT_CC_C,   CC_C   },
+    { TEXT_CC_CE,  CC_CE  },
+    { TEXT_CC_E,   CC_E   },
+    { TEXT_CC_ENZ, CC_ENZ },
+    { TEXT_CC_EZ,  CC_EZ  },
+    { TEXT_CC_LM,  CC_LM  },
+    { TEXT_CC_LMZ, CC_LMZ },
+    { TEXT_CC_LP,  CC_LP  },
+    { TEXT_CC_LPZ, CC_LPZ },
+    { TEXT_CC_M,   CC_M   },
+    { TEXT_CC_MZ,  CC_MZ  },
+    { TEXT_CC_NE,  CC_NE  },
+    { TEXT_CC_NZ,  CC_NZ  },
+    { TEXT_CC_ONZ, CC_ONZ },
+    { TEXT_CC_OZ,  CC_OZ  },
+    { TEXT_CC_P,   CC_P   },
+    { TEXT_CC_PZ,  CC_PZ  },
+    { TEXT_CC_RE,  CC_RE  },
+    { TEXT_CC_SE,  CC_SE  },
+    { TEXT_CC_SKP, CC_SKP },
+    { TEXT_CC_Z,   CC_Z   },
+};
+
+PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+PROGMEM constexpr NameTable CC_TABLE{ARRAY_RANGE(CC_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = REG_TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
@@ -165,49 +191,16 @@ RegName decodeSpecial(uint8_t num) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = REG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
-
-static constexpr NameEntry CC_TABLE[] PROGMEM = {
-        NAME_ENTRY(CC_SKP),
-        NAME_ENTRY(CC_M),
-        NAME_ENTRY(CC_PZ),
-        NAME_ENTRY(CC_Z),
-        NAME_ENTRY(CC_NZ),
-        NAME_ENTRY(CC_MZ),
-        NAME_ENTRY(CC_P),
-        NAME_ENTRY(CC_EZ),
-        NAME_ENTRY(CC_ENZ),
-        NAME_ENTRY(CC_OZ),
-        NAME_ENTRY(CC_ONZ),
-        NAME_ENTRY(CC_LMZ),
-        NAME_ENTRY(CC_LP),
-        NAME_ENTRY(CC_LPZ),
-        NAME_ENTRY(CC_LM),
-        // Aliases
-        NAME_ENTRY(CC_E),
-        NAME_ENTRY(CC_NE),
-        // Carry mode
-        NAME_ENTRY(CC_C),
-        // E register operation
-        NAME_ENTRY(CC_RE),
-        NAME_ENTRY(CC_SE),
-        NAME_ENTRY(CC_CE),
-        // Empty text.
-        NAME_ENTRY(CC_NONE),
-};
 
 CcName parseCcName(StrScanner &scan) {
     auto p = scan;
-    const auto *entry = searchText(p, ARRAY_RANGE(CC_TABLE));
+    const auto *entry = CC_TABLE.searchText(p);
     const auto name = entry ? CcName(entry->name()) : CC_UNDEF;
-    if (name == CC_C && *p == '\'')
-        return CC_UNDEF;  // Letter constant C'x'
     scan = p;
-    return name == CC_NONE ? CC_UNDEF : name;
+    return name;
 }
 
 bool isSkip(CcName name) {
@@ -250,10 +243,8 @@ CcName decodeEop(uint8_t num) {
 }
 
 StrBuffer &outCcName(StrBuffer &out, CcName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(CC_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = CC_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 }  // namespace reg

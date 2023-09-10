@@ -22,8 +22,8 @@
 namespace libasm {
 namespace text {
 namespace f3850 {
-
 // clang-format off
+
 extern const char TEXT_CPU_F3850[] PROGMEM;
 extern const char TEXT_CPU_3850[]  PROGMEM;
 
@@ -86,28 +86,26 @@ extern const char TEXT_XM[]   PROGMEM;
 extern const char TEXT_XS[]   PROGMEM;
 
 using common::TEXT_REG_A;
-using common::TEXT_REG_W;
-extern const char TEXT_REG_IS[] PROGMEM;
-extern const char TEXT_REG_KU[] PROGMEM;
-extern const char TEXT_REG_KL[] PROGMEM;
-extern const char TEXT_REG_QU[] PROGMEM;
-extern const char TEXT_REG_QL[] PROGMEM;
-using common::TEXT_REG_H;
-extern const char TEXT_REG_K[]  PROGMEM;
-extern const char TEXT_REG_Q[]  PROGMEM;
-using common::TEXT_REG_P;
-using common::TEXT_REG_P0;
-extern const char TEXT_REG_DC[] PROGMEM;
-// register alias
-extern const char TEXT_REG_J[]  PROGMEM;
-extern const char TEXT_REG_HU[] PROGMEM;
-using common::TEXT_REG_HL;
-using common::TEXT_REG_S;
-using common::TEXT_REG_I;
 using common::TEXT_REG_D;
+extern const char TEXT_REG_DC[] PROGMEM;
+using common::TEXT_REG_H;
+using common::TEXT_REG_HL;
+extern const char TEXT_REG_HU[] PROGMEM;
+using common::TEXT_REG_I;
+extern const char TEXT_REG_IS[] PROGMEM;
+extern const char TEXT_REG_J[]  PROGMEM;
+extern const char TEXT_REG_KL[] PROGMEM;
+extern const char TEXT_REG_K[]  PROGMEM;
+extern const char TEXT_REG_KU[] PROGMEM;
+using common::TEXT_REG_P;
+extern const char TEXT_REG_P0[] PROGMEM;
+extern const char TEXT_REG_QL[] PROGMEM;
+extern const char TEXT_REG_Q[]  PROGMEM;
+extern const char TEXT_REG_QU[] PROGMEM;
+using common::TEXT_REG_S;
+using common::TEXT_REG_W;
 
 // clang-format on
-
 }  // namespace f3850
 }  // namespace text
 }  // namespace libasm

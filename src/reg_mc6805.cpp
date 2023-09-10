@@ -16,6 +16,8 @@
 
 #include "reg_mc6805.h"
 
+#include "reg_base.h"
+
 using namespace libasm::reg;
 
 namespace libasm {
@@ -24,9 +26,7 @@ namespace reg {
 
 RegName parseRegName(StrScanner &scan) {
     auto p = scan;
-    if (p.iexpect('X')) {
-        if (isidchar(*p))
-            return REG_UNDEF;
+    if (p.iexpect('X') && !isIdLetter(*p)) {
         scan = p;
         return REG_X;
     }

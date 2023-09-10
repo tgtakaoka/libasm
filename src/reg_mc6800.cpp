@@ -16,26 +16,22 @@
 
 #include "reg_mc6800.h"
 
+#include "reg_base.h"
+#include "text_mc6800.h"
+
 using namespace libasm::reg;
+using namespace libasm::text::mc6800;
 
 namespace libasm {
 namespace mc6800 {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan) {
-    auto p = scan;
-    auto reg = REG_UNDEF;
-    if (p.iexpect('X')) {
-        reg = REG_X;
-    } else if (p.iexpect('Y')) {
-        reg = REG_Y;
-    } else {
-        return REG_UNDEF;
-    }
-    if (isidchar(*p))
-        return REG_UNDEF;
-    scan = p;
-    return reg;
+    if (scan.iexpectText_P(TEXT_REG_X, 1, true))
+        return REG_X;
+    if (scan.iexpectText_P(TEXT_REG_Y, 1, true))
+        return REG_Y;
+    return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {

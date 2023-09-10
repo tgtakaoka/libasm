@@ -70,14 +70,14 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan;
     auto reg = parseRegName(p);
     if (reg != REG_UNDEF) {
-        if (uint8_t(reg) < uint8_t(REG_alias)) {
+        if (int8_t(reg) < int8_t(REG_alias)) {
             op.mode = AddrMode(uint8_t(reg));
         } else if (reg == REG_J) {
             op.mode = M_J;
         } else {
             op.mode = M_REG;
         }
-        op.val16 = uint8_t(reg) - uint8_t(REG_alias);
+        op.val16 = int8_t(reg) - int8_t(REG_alias);
         scan = p;
         return OK;
     }

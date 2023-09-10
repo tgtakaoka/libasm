@@ -19,8 +19,8 @@
 namespace libasm {
 namespace text {
 namespace cdp1802 {
-
 // clang-format off
+
 const char TEXT_CPU_LIST[]  PROGMEM = "CDP1802, CDP1804, CDP1804A";
 const char TEXT_CPU_1802[]  PROGMEM = "1802";
 const char TEXT_CPU_1804[]  PROGMEM = "1804";
@@ -158,7 +158,6 @@ const char TEXT_DSMB[] PROGMEM = "DSMB";
 const char TEXT_DSMI[] PROGMEM = "DSMI";
 
 // clang-format om
-
 } // namespace cdp1802
 } // namespace text
 } // namespace libasm

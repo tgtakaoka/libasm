@@ -17,8 +17,11 @@
 #ifndef __REG_NS32000_H__
 #define __REG_NS32000_H__
 
+#include <stdint.h>
+
 #include "entry_ns32000.h"
-#include "reg_base.h"
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace ns32000 {
@@ -73,7 +76,7 @@ enum MregName : int8_t {
     MREG_EIA = 15,   // EIA
 };
 
-enum ConfigName : uint8_t {
+enum ConfigName : int8_t {
     CONFIG_UNDEF = 0,
     CONFIG_I = 1,  // Vectored Interrupt
     CONFIG_F = 2,  // Floating Point
@@ -81,7 +84,7 @@ enum ConfigName : uint8_t {
     CONFIG_C = 8,  // Custom
 };
 
-enum StrOptName : uint8_t {
+enum StrOptName : int8_t {
     STROPT_UNDEF = 0,
     STROPT_B = 0x2,  // Backward
     STROPT_W = 0x4,  // While Match

@@ -51,6 +51,24 @@ void TestAsserter::isFalse(const char *file, const int line, const char *message
     printf("%s:%d: %s: expected 'false': actual 'true'\n", file, line, message);
 }
 
+void TestAsserter::isNull(const char *file, const int line, const char *message, const void *actual) {
+    if (actual == nullptr) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s:%d: %s: expected 'nullptr': actual '%p'\n", file, line, message, actual);
+}
+
+void TestAsserter::isNotNull(const char *file, const int line, const char *message, const void *actual) {
+    if (actual != nullptr) {
+        _pass_count++;
+        return;
+    }
+    _fail_count++;
+    printf("%s:%d: %s: expected not 'nullptr': actual 'nullptr'\n", file, line, message);
+}
+
 void TestAsserter::equals(
         const char *file, const int line, const char *message, uint32_t expected, uint32_t actual) {
     if (expected == actual) {

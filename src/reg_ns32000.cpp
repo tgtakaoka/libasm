@@ -16,52 +16,88 @@
 
 #include "reg_ns32000.h"
 
+#include "reg_base.h"
 #include "text_ns32000.h"
 
-using namespace libasm::text::ns32000;
 using namespace libasm::reg;
+using namespace libasm::text::ns32000;
 
 namespace libasm {
 namespace ns32000 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_R0),
-        NAME_ENTRY(REG_R1),
-        NAME_ENTRY(REG_R2),
-        NAME_ENTRY(REG_R3),
-        NAME_ENTRY(REG_R4),
-        NAME_ENTRY(REG_R5),
-        NAME_ENTRY(REG_R6),
-        NAME_ENTRY(REG_R7),
-        NAME_ENTRY(REG_FP),
-        NAME_ENTRY(REG_SP),
-        NAME_ENTRY(REG_SB),
-        NAME_ENTRY(REG_PC),
-        NAME_ENTRY(REG_TOS),
+namespace {
+// clang-format off
 
-        NAME_ENTRY(REG_F0),
-        NAME_ENTRY(REG_F1),
-        NAME_ENTRY(REG_F2),
-        NAME_ENTRY(REG_F3),
-        NAME_ENTRY(REG_F4),
-        NAME_ENTRY(REG_F5),
-        NAME_ENTRY(REG_F6),
-        NAME_ENTRY(REG_F7),
-
-        NAME_ENTRY(REG_EXT),
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_EXT, REG_EXT },
+    { TEXT_REG_F0,  REG_F0  },
+    { TEXT_REG_F1,  REG_F1  },
+    { TEXT_REG_F2,  REG_F2  },
+    { TEXT_REG_F3,  REG_F3  },
+    { TEXT_REG_F4,  REG_F4  },
+    { TEXT_REG_F5,  REG_F5  },
+    { TEXT_REG_F6,  REG_F6  },
+    { TEXT_REG_F7,  REG_F7  },
+    { TEXT_REG_FP,  REG_FP  },
+    { TEXT_REG_PC,  REG_PC  },
+    { TEXT_REG_R0,  REG_R0  },
+    { TEXT_REG_R1,  REG_R1  },
+    { TEXT_REG_R2,  REG_R2  },
+    { TEXT_REG_R3,  REG_R3  },
+    { TEXT_REG_R4,  REG_R4  },
+    { TEXT_REG_R5,  REG_R5  },
+    { TEXT_REG_R6,  REG_R6  },
+    { TEXT_REG_R7,  REG_R7  },
+    { TEXT_REG_SB,  REG_SB  },
+    { TEXT_REG_SP,  REG_SP  },
+    { TEXT_REG_TOS, REG_TOS },
 };
 
+constexpr NameEntry PREG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_FP,      PREG_FP      },
+    { TEXT_REG_INTBASE, PREG_INTBASE },
+    { TEXT_REG_MOD,     PREG_MOD     },
+    { TEXT_REG_PSR,     PREG_PSR     },
+    { TEXT_REG_SB,      PREG_SB      },
+    { TEXT_REG_SP,      PREG_SP      },
+    { TEXT_REG_UPSR,    PREG_UPSR    },
+    { TEXT_REG_US,      PREG_UPSR    },
+};
+
+constexpr NameEntry MREG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_BCNT, MREG_BCNT },
+    { TEXT_REG_BPR0, MREG_BPR0 },
+    { TEXT_REG_BPR1, MREG_BPR1 },
+    { TEXT_REG_EIA,  MREG_EIA  },
+    { TEXT_REG_MSR,  MREG_MSR  },
+    { TEXT_REG_PTB0, MREG_PTB0 },
+    { TEXT_REG_PTB1, MREG_PTB1 },
+};
+
+constexpr NameEntry CONFIG_ENTRIES[] PROGMEM = {
+    { TEXT_CONFIG_C, CONFIG_C },
+    { TEXT_CONFIG_F, CONFIG_F },
+    { TEXT_CONFIG_I, CONFIG_I },
+    { TEXT_CONFIG_M, CONFIG_M },
+};
+
+PROGMEM constexpr NameTable REG_TABLE{ARRAY_RANGE(REG_ENTRIES)};
+PROGMEM constexpr NameTable PREG_TABLE{ARRAY_RANGE(PREG_ENTRIES)};
+PROGMEM constexpr NameTable MREG_TABLE{ARRAY_RANGE(MREG_ENTRIES)};
+PROGMEM constexpr NameTable CONFIG_TABLE{ARRAY_RANGE(CONFIG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = REG_TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = REG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 RegName decodeRegName(uint8_t num, bool floating) {
@@ -89,27 +125,14 @@ bool isRegPair(RegName name) {
     return num >= 0 && num < 16 && num % 2 == 0;
 }
 
-static constexpr NameEntry PREG_TABLE[] PROGMEM = {
-        NAME_ENTRY(PREG_UPSR),
-        {PREG_UPSR, TEXT_PREG_US},
-        {PREG_FP, TEXT_REG_FP},
-        {PREG_SP, TEXT_REG_SP},
-        {PREG_SB, TEXT_REG_SB},
-        NAME_ENTRY(PREG_PSR),
-        NAME_ENTRY(PREG_INTBASE),
-        NAME_ENTRY(PREG_MOD),
-};
-
 PregName parsePregName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(PREG_TABLE));
+    const auto *entry = PREG_TABLE.searchText(scan);
     return entry ? PregName(entry->name()) : PREG_UNDEF;
 }
 
 StrBuffer &outPregName(StrBuffer &out, PregName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(PREG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = PREG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 PregName decodePregName(uint8_t num) {
@@ -125,26 +148,14 @@ uint8_t encodePregName(PregName name) {
     return uint8_t(name);
 }
 
-static constexpr NameEntry MREG_TABLE[] PROGMEM = {
-        NAME_ENTRY(MREG_BPR0),
-        NAME_ENTRY(MREG_BPR1),
-        NAME_ENTRY(MREG_MSR),
-        NAME_ENTRY(MREG_BCNT),
-        NAME_ENTRY(MREG_PTB0),
-        NAME_ENTRY(MREG_PTB1),
-        NAME_ENTRY(MREG_EIA),
-};
-
 MregName parseMregName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(MREG_TABLE));
+    const auto *entry = MREG_TABLE.searchText(scan);
     return entry ? MregName(entry->name()) : MREG_UNDEF;
 }
 
 StrBuffer &outMregName(StrBuffer &out, MregName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(MREG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = MREG_TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 MregName decodeMregName(uint8_t num) {
@@ -158,55 +169,54 @@ uint8_t encodeMregName(MregName name) {
     return uint8_t(name);
 }
 
-static constexpr NameEntry CONFIG_TABLE[] PROGMEM = {
-        NAME_ENTRY(CONFIG_I),
-        NAME_ENTRY(CONFIG_M),
-        NAME_ENTRY(CONFIG_F),
-        NAME_ENTRY(CONFIG_C),
-};
-
 ConfigName parseConfigName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(CONFIG_TABLE));
+    const auto *entry = CONFIG_TABLE.searchText(scan);
     return entry ? ConfigName(entry->name()) : CONFIG_UNDEF;
 }
 
 StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs) {
     out.letter('[');
     char sep = 0;
-    for (uint8_t mask = 0x01; mask < 0x10; mask <<= 1) {
+    for (int8_t mask = 0x01; mask < 0x10; mask <<= 1) {
         if (configs & mask) {
             if (sep)
                 out.letter(sep);
-            const auto *entry = searchName(mask, ARRAY_RANGE(CONFIG_TABLE));
-            out.text_P(entry->text_P());
+            const auto *entry = CONFIG_TABLE.searchName(mask);
+            entry->outText(out);
             sep = ',';
         }
     }
     return out.letter(']');
 }
 
-static constexpr NameEntry STROPT_TABLE[] PROGMEM = {
-        NAME_ENTRY(STROPT_B),
-        NAME_ENTRY(STROPT_W),
-        NAME_ENTRY(STROPT_U),
-};
-
 StrOptName parseStrOptName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(STROPT_TABLE));
-    return entry ? StrOptName(entry->name()) : STROPT_UNDEF;
+    auto p = scan;
+    auto strOpt = STROPT_UNDEF;
+    if (p.iexpect('B')) {
+        strOpt = STROPT_B;
+    } else if (p.iexpect('W')) {
+        strOpt = STROPT_W;
+    } else if (p.iexpect('U')) {
+        strOpt = STROPT_U;
+    }
+    if (strOpt == STROPT_UNDEF || isIdLetter(*p))
+        return STROPT_UNDEF;
+    scan = p;
+    return strOpt;
 }
 
 StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts) {
     char sep = 0;
     if (strOpts & uint8_t(STROPT_B)) {
-        out.text_P(TEXT_STROPT_B);
+        out.letter('B');
         sep = ',';
     }
-    const auto *entry = searchName(strOpts & 0xC, ARRAY_RANGE(STROPT_TABLE));
-    if (entry) {
-        if (sep)
-            out.letter(sep);
-        out.text_P(entry->text_P());
+    if ((strOpts &= 0xC) != 0 && sep)
+        out.letter(sep);
+    if (strOpts == int8_t(STROPT_W)) {
+        out.letter('W');
+    } else if (strOpts == int(STROPT_U)) {
+        out.letter('U');
     }
     return out;
 }
@@ -223,7 +233,7 @@ OprSize parseIndexSize(StrScanner &scan) {
     } else if (p.iexpect('Q')) {
         size = SZ_QUAD;
     }
-    if (size == SZ_NONE || isidchar(*p))
+    if (size == SZ_NONE || isIdLetter(*p))
         return SZ_NONE;
     scan = p;
     return size;

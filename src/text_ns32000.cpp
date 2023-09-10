@@ -363,29 +363,25 @@ const char TEXT_REG_F5[] PROGMEM = "F5";
 const char TEXT_REG_F6[] PROGMEM = "F6";
 const char TEXT_REG_F7[] PROGMEM = "F7";
 
-const char TEXT_PREG_UPSR[]    PROGMEM = "UPSR";
-const char TEXT_PREG_US[]      PROGMEM = "US";
-const char TEXT_PREG_PSR[]     PROGMEM = "PSR";
-const char TEXT_PREG_INTBASE[] PROGMEM = "INTBASE";
-const char TEXT_PREG_MOD[]     PROGMEM = "MOD";
+const char TEXT_REG_UPSR[]    PROGMEM = "UPSR";
+const char TEXT_REG_US[]      PROGMEM = "US";
+const char TEXT_REG_PSR[]     PROGMEM = "PSR";
+const char TEXT_REG_INTBASE[] PROGMEM = "INTBASE";
+const char TEXT_REG_MOD[]     PROGMEM = "MOD";
 
 // NS32082/MMU registers.
-const char TEXT_MREG_BPR0[] PROGMEM = "BPR0";
-const char TEXT_MREG_BPR1[] PROGMEM = "BPR1";
-const char TEXT_MREG_MSR[]  PROGMEM = "MSR";
-const char TEXT_MREG_BCNT[] PROGMEM = "BCNT";
-const char TEXT_MREG_PTB0[] PROGMEM = "PTB0";
-const char TEXT_MREG_PTB1[] PROGMEM = "PTB1";
-const char TEXT_MREG_EIA[]  PROGMEM = "EIA";
+const char TEXT_REG_BPR0[] PROGMEM = "BPR0";
+const char TEXT_REG_BPR1[] PROGMEM = "BPR1";
+const char TEXT_REG_MSR[]  PROGMEM = "MSR";
+const char TEXT_REG_BCNT[] PROGMEM = "BCNT";
+const char TEXT_REG_PTB0[] PROGMEM = "PTB0";
+const char TEXT_REG_PTB1[] PROGMEM = "PTB1";
+const char TEXT_REG_EIA[]  PROGMEM = "EIA";
 
 const char TEXT_CONFIG_I[] PROGMEM = "I";
 const char TEXT_CONFIG_F[] PROGMEM = "F";
 const char TEXT_CONFIG_M[] PROGMEM = "M";
 const char TEXT_CONFIG_C[] PROGMEM = "C";
-
-const char TEXT_STROPT_B[] PROGMEM = "B";
-const char TEXT_STROPT_W[] PROGMEM = "W";
-const char TEXT_STROPT_U[] PROGMEM = "U";
 // clang-format on
 
 }  // namespace ns32000

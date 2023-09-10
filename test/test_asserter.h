@@ -43,6 +43,10 @@ public:
     void isTrue(const char *file, int line, const char *message, bool actual);
     void isFalse(const char *file, int line, const char *message, bool actual);
 
+    /** assert nullptr */
+    void isNull(const char *file, int line, const char *message, const void *actual);
+    void isNotNull(const char *file, int line, const char *message, const void *actual);
+
     /** assert uint32_t */
     void equals(
             const char *file, int line, const char *message, uint32_t expected, uint32_t actual);

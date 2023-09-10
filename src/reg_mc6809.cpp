@@ -16,37 +16,54 @@
 
 #include "reg_mc6809.h"
 
+#include "reg_base.h"
 #include "text_mc6809.h"
 
-using namespace libasm::text::mc6809;
 using namespace libasm::reg;
+using namespace libasm::text::mc6809;
 
 namespace libasm {
 namespace mc6809 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_A),
-        NAME_ENTRY(REG_B),
-        NAME_ENTRY(REG_D),
-        NAME_ENTRY(REG_X),
-        NAME_ENTRY(REG_Y),
-        NAME_ENTRY(REG_U),
-        NAME_ENTRY(REG_S),
-        NAME_ENTRY(REG_PC),
-        NAME_ENTRY(REG_CC),
-        NAME_ENTRY(REG_DP),
-        NAME_ENTRY(REG_PCR),
-        NAME_ENTRY(REG_W),
-        NAME_ENTRY(REG_E),
-        NAME_ENTRY(REG_F),
-        NAME_ENTRY(REG_V),
-        NAME_ENTRY(REG_Z),
-        NAME_ENTRY(REG_0),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_0,   REG_0   },
+    { TEXT_REG_A,   REG_A   },
+    { TEXT_REG_B,   REG_B   },
+    { TEXT_REG_CC,  REG_CC  },
+    { TEXT_REG_D,   REG_D   },
+    { TEXT_REG_DP,  REG_DP  },
+    { TEXT_REG_E,   REG_E   },
+    { TEXT_REG_F,   REG_F   },
+    { TEXT_REG_PC,  REG_PC  },
+    { TEXT_REG_PCR, REG_PCR },
+    { TEXT_REG_S,   REG_S   },
+    { TEXT_REG_U,   REG_U   },
+    { TEXT_REG_V,   REG_V   },
+    { TEXT_REG_W,   REG_W   },
+    { TEXT_REG_X,   REG_X   },
+    { TEXT_REG_Y,   REG_Y   },
+    { TEXT_REG_Z,   REG_Z   },
 };
 
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+constexpr RegName SYSTEM_STACK_REGS[8] PROGMEM = {
+    REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC,
+};
+
+constexpr RegName USER_STACK_REGS[8] PROGMEM = {
+    REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_S, REG_PC,
+};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
@@ -64,10 +81,8 @@ RegSize regSize(RegName name) {
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(name, ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 RegName decodeDataReg(CpuType cpuType, uint8_t num) {
@@ -140,12 +155,6 @@ uint8_t encodeBaseReg(RegName name) {
     // REG_W is handled separately in TableMc6809::searchPostSpec().
     return uint8_t(name) - 1;
 }
-
-static constexpr RegName SYSTEM_STACK_REGS[8] PROGMEM = {
-        REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_U, REG_PC};
-
-static constexpr RegName USER_STACK_REGS[8] PROGMEM = {
-        REG_CC, REG_A, REG_B, REG_DP, REG_X, REG_Y, REG_S, REG_PC};
 
 uint8_t encodeStackReg(RegName name, bool userStack) {
     if (name == REG_D)

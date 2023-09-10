@@ -366,29 +366,25 @@ extern const char TEXT_REG_F5[] PROGMEM;
 extern const char TEXT_REG_F6[] PROGMEM;
 extern const char TEXT_REG_F7[] PROGMEM;
 
-extern const char TEXT_PREG_UPSR[]    PROGMEM;
-extern const char TEXT_PREG_US[]      PROGMEM;
-extern const char TEXT_PREG_PSR[]     PROGMEM;
-extern const char TEXT_PREG_INTBASE[] PROGMEM;
-extern const char TEXT_PREG_MOD[]     PROGMEM;
+extern const char TEXT_REG_UPSR[]    PROGMEM;
+extern const char TEXT_REG_US[]      PROGMEM;
+extern const char TEXT_REG_PSR[]     PROGMEM;
+extern const char TEXT_REG_INTBASE[] PROGMEM;
+extern const char TEXT_REG_MOD[]     PROGMEM;
 
 // NS32082/MMU registers.
-extern const char TEXT_MREG_BPR0[] PROGMEM;
-extern const char TEXT_MREG_BPR1[] PROGMEM;
-extern const char TEXT_MREG_MSR[]  PROGMEM;
-extern const char TEXT_MREG_BCNT[] PROGMEM;
-extern const char TEXT_MREG_PTB0[] PROGMEM;
-extern const char TEXT_MREG_PTB1[] PROGMEM;
-extern const char TEXT_MREG_EIA[]  PROGMEM;
+extern const char TEXT_REG_BPR0[] PROGMEM;
+extern const char TEXT_REG_BPR1[] PROGMEM;
+extern const char TEXT_REG_MSR[]  PROGMEM;
+extern const char TEXT_REG_BCNT[] PROGMEM;
+extern const char TEXT_REG_PTB0[] PROGMEM;
+extern const char TEXT_REG_PTB1[] PROGMEM;
+extern const char TEXT_REG_EIA[]  PROGMEM;
 
 extern const char TEXT_CONFIG_I[] PROGMEM;
 extern const char TEXT_CONFIG_F[] PROGMEM;
 extern const char TEXT_CONFIG_M[] PROGMEM;
 extern const char TEXT_CONFIG_C[] PROGMEM;
-
-extern const char TEXT_STROPT_B[] PROGMEM;
-extern const char TEXT_STROPT_W[] PROGMEM;
-extern const char TEXT_STROPT_U[] PROGMEM;
 // clang-format on
 
 }  // namespace ns32000

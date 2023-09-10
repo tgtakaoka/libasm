@@ -1,5 +1,6 @@
 /*
- * Copyright 2020 Tadashi G. Takaoka
+
+* Copyright 2020 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,35 +18,38 @@
 #include "reg_mos6502.h"
 
 #include "reg_base.h"
+#include "text_mos6502.h"
 
 using namespace libasm::reg;
+using namespace libasm::text::mos6502;
 
 namespace libasm {
 namespace mos6502 {
 namespace reg {
 
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A, REG_A },
+    { TEXT_REG_S, REG_S },
+    { TEXT_REG_X, REG_X },
+    { TEXT_REG_Y, REG_Y },
+};
+
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    auto p = scan;
-    auto reg = REG_UNDEF;
-    if (p.iexpect('A')) {
-        reg = REG_A;
-    } else if (p.iexpect('X')) {
-        reg = REG_X;
-    } else if (p.iexpect('Y')) {
-        reg = REG_Y;
-    } else if (p.iexpect('S')) {
-        reg = REG_S;
-    } else {
-        return REG_UNDEF;
-    }
-    if (isidchar(*p))
-        return REG_UNDEF;
-    scan = p;
-    return reg;
+    const auto *entry = TABLE.searchText(scan);
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    return out.letter(char(name));
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 }  // namespace reg

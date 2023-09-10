@@ -17,8 +17,10 @@
 #ifndef __REG_SCN2650_H__
 #define __REG_SCN2650_H__
 
-#include "config_scn2650.h"
-#include "reg_base.h"
+#include <stdint.h>
+
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace scn2650 {
@@ -43,12 +45,12 @@ namespace reg {
 
 RegName parseRegName(StrScanner &scan);
 uint8_t encodeRegName(RegName name);
-RegName decodeRegName(Config::opcode_t opc);
+RegName decodeRegName(uint8_t opc);
 StrBuffer &outRegName(StrBuffer &out, RegName name);
 
 CcName parseCcName(StrScanner &scan);
 uint8_t encodeCcName(CcName name);
-CcName decodeCcName(Config::opcode_t opc);
+CcName decodeCcName(uint8_t opc);
 StrBuffer &outCcName(StrBuffer &out, const CcName name);
 
 }  // namespace reg

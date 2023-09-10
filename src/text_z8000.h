@@ -218,42 +218,49 @@ extern const char TEXT_TSETB[]  PROGMEM;
 using common::TEXT_XOR;
 using common::TEXT_XORB;
 
-extern const char TEXT_REG_FLAGS[]   PROGMEM;
 extern const char TEXT_REG_FCW[]     PROGMEM;
-extern const char TEXT_REG_REFRESH[] PROGMEM;
-extern const char TEXT_REG_PSAPSEG[] PROGMEM;
-extern const char TEXT_REG_PSAPOFF[] PROGMEM;
-extern const char TEXT_REG_PSAP[]    PROGMEM;
-extern const char TEXT_REG_NSPSEG[]  PROGMEM;
+extern const char TEXT_REG_FLAGS[]   PROGMEM;
 extern const char TEXT_REG_NSPOFF[]  PROGMEM;
 extern const char TEXT_REG_NSP[]     PROGMEM;
+extern const char TEXT_REG_NSPSEG[]  PROGMEM;
+extern const char TEXT_REG_PSAPOFF[] PROGMEM;
+extern const char TEXT_REG_PSAP[]    PROGMEM;
+extern const char TEXT_REG_PSAPSEG[] PROGMEM;
+extern const char TEXT_REG_REFRESH[] PROGMEM;
+extern const char TEXT_REG_RH[]      PROGMEM;
+extern const char TEXT_REG_RL[]      PROGMEM;
+extern const char TEXT_REG_RQ[]      PROGMEM;
+using common::TEXT_REG_RR;
 
-using common::TEXT_CC_F;
-using common::TEXT_CC_LT;
-using common::TEXT_CC_LE;
-using common::TEXT_CC_ULE;
-using common::TEXT_CC_OV;
-using common::TEXT_CC_MI;
-using common::TEXT_CC_Z;
 using common::TEXT_CC_C;
-using common::TEXT_CC_T;
+using common::TEXT_CC_EQ;
+using common::TEXT_CC_F;
 using common::TEXT_CC_GE;
 using common::TEXT_CC_GT;
-using common::TEXT_CC_UGT;
-using common::TEXT_CC_NOV;
-using common::TEXT_CC_PL;
-using common::TEXT_CC_NZ;
+using common::TEXT_CC_LE;
+using common::TEXT_CC_LT;
+using common::TEXT_CC_MI;
 using common::TEXT_CC_NC;
-using common::TEXT_CC_EQ;
-using common::TEXT_CC_ULT;
 using common::TEXT_CC_NE;
+using common::TEXT_CC_NOV;
+using common::TEXT_CC_NZ;
+using common::TEXT_CC_OV;
+using common::TEXT_CC_PL;
 using common::TEXT_CC_UGE;
+using common::TEXT_CC_UGT;
+using common::TEXT_CC_ULE;
+using common::TEXT_CC_ULT;
+using common::TEXT_CC_Z;
 
 extern const char TEXT_FLAG_C[] PROGMEM;
 extern const char TEXT_FLAG_Z[] PROGMEM;
 extern const char TEXT_FLAG_S[] PROGMEM;
 extern const char TEXT_FLAG_P[] PROGMEM;
 extern const char TEXT_FLAG_V[] PROGMEM;
+
+extern const char TEXT_INTR_VI[]  PROGMEM;
+extern const char TEXT_INTR_NVI[] PROGMEM;
+
 // clang-format on
 
 }  // namespace z8000

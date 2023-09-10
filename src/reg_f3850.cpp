@@ -26,54 +26,53 @@ namespace libasm {
 namespace f3850 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_A),
-        NAME_ENTRY(REG_W),
-        NAME_ENTRY(REG_IS),
-        NAME_ENTRY(REG_KU),
-        NAME_ENTRY(REG_KL),
-        NAME_ENTRY(REG_K),
-        NAME_ENTRY(REG_QU),
-        NAME_ENTRY(REG_QL),
-        NAME_ENTRY(REG_Q),
-        NAME_ENTRY(REG_HU),
-        NAME_ENTRY(REG_HL),
-        NAME_ENTRY(REG_H),
-        NAME_ENTRY(REG_P),
-        NAME_ENTRY(REG_P0),
-        NAME_ENTRY(REG_DC),
-        NAME_ENTRY(REG_J),
-        NAME_ENTRY(REG_S),
-        NAME_ENTRY(REG_I),
-        NAME_ENTRY(REG_D),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A,  REG_A  },
+    { TEXT_REG_D,  REG_D  },
+    { TEXT_REG_DC, REG_DC },
+    { TEXT_REG_H,  REG_H  },
+    { TEXT_REG_HL, REG_HL },
+    { TEXT_REG_HU, REG_HU },
+    { TEXT_REG_I,  REG_I  },
+    { TEXT_REG_IS, REG_IS },
+    { TEXT_REG_J,  REG_J  },
+    { TEXT_REG_K,  REG_K  },
+    { TEXT_REG_KL, REG_KL },
+    { TEXT_REG_KU, REG_KU },
+    { TEXT_REG_P,  REG_P  },
+    { TEXT_REG_P0, REG_P0 },
+    { TEXT_REG_Q,  REG_Q  },
+    { TEXT_REG_QL, REG_QL },
+    { TEXT_REG_QU, REG_QU },
+    { TEXT_REG_S,  REG_S  },
+    { TEXT_REG_W,  REG_W  },
 };
 
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+// clang-format off
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    auto p = scan;
-    const auto *entry = searchText(p, ARRAY_RANGE(REG_TABLE));
-    if (entry == nullptr)
-        return REG_UNDEF;
-    const auto name = RegName(entry->name());
-    if ((name == REG_H || name == REG_D) && p.expect('\''))
-        return REG_UNDEF;  // H'xx' and D'xx'
-    scan = p;
-    return name;
+    const auto *entry = TABLE.searchText(scan);
+    return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 RegName decodeRegName(uint8_t opc) {
-    static constexpr auto regJ = uint8_t(REG_J) - uint8_t(REG_alias);
-    static constexpr auto regD = uint8_t(REG_D) - uint8_t(REG_alias);
     const auto regno = opc & 0xF;
+    constexpr auto regJ = int8_t(REG_J) - int8_t(REG_alias);
+    constexpr auto regD = int8_t(REG_D) - int8_t(REG_alias);
     if (regno >= regJ && regno <= regD)
-        return RegName(regno + uint8_t(REG_alias));
+        return RegName(regno + int8_t(REG_alias));
     return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 }  // namespace reg

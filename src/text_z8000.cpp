@@ -215,42 +215,50 @@ const char TEXT_TSETB[]  PROGMEM = "TSETB";
 // const char TEXT_XOR[]    PROGMEM = "XOR";
 // const char TEXT_XORB[]   PROGMEM = "XORB";
 
-const char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
 const char TEXT_REG_FCW[]     PROGMEM = "FCW";
-const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
-const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
-const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
-const char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
-const char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
+const char TEXT_REG_FLAGS[]   PROGMEM = "FLAGS";
 const char TEXT_REG_NSPOFF[]  PROGMEM = "NSPOFF";
 const char TEXT_REG_NSP[]     PROGMEM = "NSP";
+const char TEXT_REG_NSPSEG[]  PROGMEM = "NSPSEG";
+const char TEXT_REG_PSAPOFF[] PROGMEM = "PSAPOFF";
+const char TEXT_REG_PSAP[]    PROGMEM = "PSAP";
+const char TEXT_REG_PSAPSEG[] PROGMEM = "PSAPSEG";
+const char TEXT_REG_REFRESH[] PROGMEM = "REFRESH";
+const char TEXT_REG_RH[]      PROGMEM = "RH";
+const char TEXT_REG_RL[]      PROGMEM = "RL";
+const char TEXT_REG_RQ[]      PROGMEM = "RQ";
+// const char TEXT_REG_RR[]      PROGMEM = "RR";
 
-// const char TEXT_CC_F[]   PROGMEM = "F";
-// const char TEXT_CC_LT[]  PROGMEM = "LT";
-// const char TEXT_CC_LE[]  PROGMEM = "LE";
-// const char TEXT_CC_ULE[] PROGMEM = "ULE";
-// const char TEXT_CC_OV[]  PROGMEM = "OV";
-// const char TEXT_CC_MI[]  PROGMEM = "MI";
-// const char TEXT_CC_Z[]   PROGMEM = "Z";
 // const char TEXT_CC_C[]   PROGMEM = "C";
-// const char TEXT_CC_T[]   PROGMEM = "";
+// const char TEXT_CC_EQ[]  PROGMEM = "EQ";
+// const char TEXT_CC_F[]   PROGMEM = "F";
 // const char TEXT_CC_GE[]  PROGMEM = "GE";
 // const char TEXT_CC_GT[]  PROGMEM = "GT";
-// const char TEXT_CC_UGT[] PROGMEM = "UGT";
-// const char TEXT_CC_NOV[] PROGMEM = "NOV";
-// const char TEXT_CC_PL[]  PROGMEM = "PL";
-// const char TEXT_CC_NZ[]  PROGMEM = "NZ";
+// const char TEXT_CC_LE[]  PROGMEM = "LE";
+// const char TEXT_CC_LT[]  PROGMEM = "LT";
+// const char TEXT_CC_MI[]  PROGMEM = "MI";
 // const char TEXT_CC_NC[]  PROGMEM = "NC";
-// const char TEXT_CC_EQ[]  PROGMEM = "EQ";
-// const char TEXT_CC_ULT[] PROGMEM = "ULT";
 // const char TEXT_CC_NE[]  PROGMEM = "NE";
+// const char TEXT_CC_NOV[] PROGMEM = "NOV";
+// const char TEXT_CC_NZ[]  PROGMEM = "NZ";
+// const char TEXT_CC_OV[]  PROGMEM = "OV";
+// const char TEXT_CC_PL[]  PROGMEM = "PL";
+// const char TEXT_CC_T[]   PROGMEM = "";
 // const char TEXT_CC_UGE[] PROGMEM = "UGE";
+// const char TEXT_CC_UGT[] PROGMEM = "UGT";
+// const char TEXT_CC_ULE[] PROGMEM = "ULE";
+// const char TEXT_CC_ULT[] PROGMEM = "ULT";
+// const char TEXT_CC_Z[]   PROGMEM = "Z";
 
 const char TEXT_FLAG_C[] PROGMEM = "C";
 const char TEXT_FLAG_Z[] PROGMEM = "Z";
 const char TEXT_FLAG_S[] PROGMEM = "S";
 const char TEXT_FLAG_P[] PROGMEM = "P";
 const char TEXT_FLAG_V[] PROGMEM = "V";
+
+const char TEXT_INTR_VI[]  PROGMEM = "VI";
+const char TEXT_INTR_NVI[] PROGMEM = "NVI";
+
 // clang-format on
 
 }  // namespace z8000
@@ -263,3 +271,4 @@ const char TEXT_FLAG_V[] PROGMEM = "V";
 // tab-width: 4
 // End:
 // vim: set ft=cpp et ts=4 sw=4:
+

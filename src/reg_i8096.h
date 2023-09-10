@@ -17,8 +17,7 @@
 #ifndef __REG_I8096_H__
 #define __REG_I8096_H__
 
-#include "entry_i8096.h"
-#include "reg_base.h"
+#include <stdint.h>
 
 namespace libasm {
 namespace i8096 {

@@ -25,14 +25,13 @@ namespace cdp1802 {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan) {
-    auto p = scan;
-    if (p.iexpect('R')) {
-        const auto num = parseRegNumber(p, 16);
-        if (num >= 0) {
-            scan = p;
+    auto save = scan;
+    if (scan.iexpect('R')) {
+        const auto num = parseRegNumber(scan);
+        if (num >= 0 && num < 16)
             return RegName(num);
-        }
     }
+    scan = save;
     return REG_UNDEF;
 }
 

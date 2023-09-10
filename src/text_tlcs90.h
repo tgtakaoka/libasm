@@ -125,7 +125,6 @@ using common::TEXT_CC_OV;
 using common::TEXT_CC_MI;
 using common::TEXT_CC_Z;
 using common::TEXT_CC_C;
-using common::TEXT_CC_T;
 using common::TEXT_CC_GE;
 using common::TEXT_CC_GT;
 using common::TEXT_CC_UGT;

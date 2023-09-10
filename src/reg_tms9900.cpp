@@ -16,6 +16,8 @@
 
 #include "reg_tms9900.h"
 
+#include "reg_base.h"
+
 using namespace libasm::reg;
 
 namespace libasm {
@@ -25,11 +27,11 @@ namespace reg {
 RegName parseRegName(StrScanner &scan) {
     auto p = scan;
     if (p.iexpect('R')) {
-        const auto num = parseRegNumber(p, 16);
-        if (num >= 0) {
-            scan = p;
-            return RegName(num);
-        }
+        const auto num = parseRegNumber(p);
+        if (num < 0 || num >= 16)
+            return REG_UNDEF;
+        scan = p;
+        return RegName(num);
     }
     return REG_UNDEF;
 }

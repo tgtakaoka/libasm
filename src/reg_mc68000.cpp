@@ -16,48 +16,55 @@
 
 #include "reg_mc68000.h"
 
+#include "reg_base.h"
 #include "text_mc68000.h"
 
-using namespace libasm::text::mc68000;
 using namespace libasm::reg;
+using namespace libasm::text::mc68000;
 
 namespace libasm {
 namespace mc68000 {
 namespace reg {
 
-static constexpr NameEntry REG_TABLE[] PROGMEM = {
-        NAME_ENTRY(REG_D0),
-        NAME_ENTRY(REG_D1),
-        NAME_ENTRY(REG_D2),
-        NAME_ENTRY(REG_D3),
-        NAME_ENTRY(REG_D4),
-        NAME_ENTRY(REG_D5),
-        NAME_ENTRY(REG_D6),
-        NAME_ENTRY(REG_D7),
-        NAME_ENTRY(REG_A0),
-        NAME_ENTRY(REG_A1),
-        NAME_ENTRY(REG_A2),
-        NAME_ENTRY(REG_A3),
-        NAME_ENTRY(REG_A4),
-        NAME_ENTRY(REG_A5),
-        NAME_ENTRY(REG_A6),
-        NAME_ENTRY(REG_A7),
-        NAME_ENTRY(REG_PC),
-        NAME_ENTRY(REG_SR),
-        NAME_ENTRY(REG_CCR),
-        NAME_ENTRY(REG_USP),
+namespace {
+// clang-format off
+
+constexpr NameEntry REG_ENTRIES[] PROGMEM = {
+    { TEXT_REG_A0,  REG_A0  },
+    { TEXT_REG_A1,  REG_A1  },
+    { TEXT_REG_A2,  REG_A2  },
+    { TEXT_REG_A3,  REG_A3  },
+    { TEXT_REG_A4,  REG_A4  },
+    { TEXT_REG_A5,  REG_A5  },
+    { TEXT_REG_A6,  REG_A6  },
+    { TEXT_REG_A7,  REG_A7  },
+    { TEXT_REG_CCR, REG_CCR },
+    { TEXT_REG_D0,  REG_D0  },
+    { TEXT_REG_D1,  REG_D1  },
+    { TEXT_REG_D2,  REG_D2  },
+    { TEXT_REG_D3,  REG_D3  },
+    { TEXT_REG_D4,  REG_D4  },
+    { TEXT_REG_D5,  REG_D5  },
+    { TEXT_REG_D6,  REG_D6  },
+    { TEXT_REG_D7,  REG_D7  },
+    { TEXT_REG_PC,  REG_PC  },
+    { TEXT_REG_SR,  REG_SR  },
+    { TEXT_REG_USP, REG_USP },
 };
 
+PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
+
+// clang-format on
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
-    const auto *entry = searchText(scan, ARRAY_RANGE(REG_TABLE));
+    const auto *entry = TABLE.searchText(scan);
     return entry ? RegName(entry->name()) : REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
-    const auto *entry = searchName(uint8_t(name), ARRAY_RANGE(REG_TABLE));
-    if (entry)
-        out.text_P(entry->text_P());
-    return out;
+    const auto *entry = TABLE.searchName(name);
+    return entry ? entry->outText(out) : out;
 }
 
 bool isDataReg(RegName name) {
@@ -106,7 +113,7 @@ OprSize parseSize(StrScanner &scan) {
         } else if (p.iexpect('L')) {
             size = SZ_LONG;
         }
-        if (size == SZ_ERROR || isidchar(*p))
+        if (size == SZ_ERROR || isIdLetter(*p))
             return SZ_ERROR;
         scan = p;
         return size;

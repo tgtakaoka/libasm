@@ -17,8 +17,11 @@
 #ifndef __REG_Z8000_H__
 #define __REG_Z8000_H__
 
+#include <stdint.h>
+
 #include "entry_z8000.h"
-#include "reg_base.h"
+#include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace z8000 {

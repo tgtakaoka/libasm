@@ -189,6 +189,12 @@ extern const char OPT_BOOL_LONGA[] PROGMEM;
 extern const char OPT_DESC_LONGA[] PROGMEM;
 extern const char OPT_BOOL_LONGI[] PROGMEM;
 extern const char OPT_DESC_LONGI[] PROGMEM;
+
+using common::TEXT_REG_A;
+using common::TEXT_REG_X;
+using common::TEXT_REG_Y;
+using common::TEXT_REG_S;
+
 // clang-format on
 
 }  // namespace mos6502

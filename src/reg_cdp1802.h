@@ -19,8 +19,8 @@
 
 #include <stdint.h>
 
-#include "str_scanner.h"
 #include "str_buffer.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace cdp1802 {

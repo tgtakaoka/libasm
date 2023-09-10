@@ -5,3 +5,4 @@ build test_array_memory.o: cxx ${root}/test/unit/test_array_memory.cpp
 build test_src_helper.o:   cxx ${root}/test/unit/test_src_helper.cpp
 build test_str_buffer.o:   cxx ${root}/test/unit/test_str_buffer.cpp
 build test_str_scanner.o:  cxx ${root}/test/unit/test_str_scanner.cpp
+build test_reg_base.o:     cxx ${root}/test/unit/test_reg_base.cpp

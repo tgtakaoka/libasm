@@ -210,6 +210,10 @@ using common::TEXT_STY;
 extern const char TEXT_TSY[]   PROGMEM;
 extern const char TEXT_TYS[]   PROGMEM;
 extern const char TEXT_XGDY[]  PROGMEM;
+
+using common::TEXT_REG_X;
+using common::TEXT_REG_Y;
+
 // clang-format on
 
 }  // namespace mc6800

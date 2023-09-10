@@ -16,36 +16,44 @@
 
 #include "reg_tms32010.h"
 
+#include "reg_base.h"
+
 using namespace libasm::reg;
 
 namespace libasm {
 namespace tms32010 {
 namespace reg {
 
+namespace {
+
+const char TEXT_REG_AR[] PROGMEM = "AR";
+const char TEXT_REG_PA[] PROGMEM = "PA";
+
+}  // namespace
+
 RegName parseRegName(StrScanner &scan) {
     auto p = scan;
-    if (p.iexpect('A') && p.iexpect('R')) {
-        const auto num = parseRegNumber(p, 2);
-        if (num >= 0) {
-            scan = p;
-            return RegName(num);
-        }
-    } else if (p.iexpect('P') && p.iexpect('A')) {
-        const auto num = parseRegNumber(p, 8);
-        if (num >= 0) {
-            scan = p;
-            return RegName(num + int8_t(REG_PA0));
-        }
+    if (p.iexpectText_P(TEXT_REG_AR)) {
+        const auto num = parseRegNumber(p);
+        if (num < 0 || num >= 2)
+            return REG_UNDEF;
+        scan = p;
+        return RegName(REG_AR0 + num);
+    }
+    if (p.iexpectText_P(TEXT_REG_PA)) {
+        const auto num = parseRegNumber(p);
+        if (num < 0 || num >= 8)
+            return REG_UNDEF;
+        scan = p;
+        return RegName(REG_PA0 + num);
     }
     return REG_UNDEF;
 }
 
 StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isAuxiliary(name))
-        return out.text_P(PSTR("AR")).uint8(int8_t(name));
-
-    const auto num = int8_t(name) - int8_t(REG_PA0);
-    return out.text_P(PSTR("PA")).uint8(num);
+        return out.text_P(TEXT_REG_AR).uint8(name - REG_AR0);
+    return out.text_P(TEXT_REG_PA).uint8(name - REG_PA0);
 }
 
 bool isAuxiliary(RegName name) {
@@ -53,8 +61,7 @@ bool isAuxiliary(RegName name) {
 }
 
 bool isPortAddress(RegName name) {
-    const auto num = int8_t(name);
-    return num >= int8_t(REG_PA0) && num <= int8_t(REG_PA7);
+    return name >= REG_PA0 && name <= REG_PA7;
 }
 
 }  // namespace reg
