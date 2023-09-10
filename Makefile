@@ -13,9 +13,10 @@
 # limitations under the License.
 
 help:
-	@echo '"make clean"  remove unnecessary files'
-	@echo '"make test"   run test'
-	@echo '"make pio"    run PlatformIO CI'
+	@echo '"make clean"   remove unnecessary files'
+	@echo '"make test"    run test'
+	@echo '"make full-pio run PlatformIO CI for all examples and boards'
+	@echo '"make a-pio"   run PlatformIO CI for an example and a board'
 
 PIO_CI_BOARDS=ATmega644P nano_every nano_33_iot pico
 _BOARDS=$(foreach b,$(PIO_CI_BOARDS),--board=$(b))
@@ -23,10 +24,13 @@ _BOARDS=$(foreach b,$(PIO_CI_BOARDS),--board=$(b))
 test:
 	$(MAKE) -C test test
 
-pio: examples
+a-pio:
+	@echo PIO_FLAGS=$(PIO_FLAGS)
+
+full-pio: examples
 	@for ex in $(shell make -s -C examples examples); do \
-	    echo pio ci --lib="." $(PIO_CI_FLAGS) $(_BOARDS) examples/$${ex}/$${ex}.ino; \
-	    pio ci --lib="." $(PIO_CI_FLAGS) $(_BOARDS) examples/$${ex}/$${ex}.ino; \
+	    echo pio $(PIO_FLAGS) ci -l . $(PIO_CI_FLAGS) $(_BOARDS) examples/$${ex}/$${ex}.ino; \
+	    pio $(PIO_FLAGS) ci -l . $(PIO_CI_FLAGS) $(_BOARDS) examples/$${ex}/$${ex}.ino; \
 	done
 
 clean: 
@@ -36,7 +40,7 @@ clean:
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_log')
 
-.PHONY: help clean test pio
+.PHONY: help clean test a-pio full-pio
 
 # Local Variables:
 # mode: makefile-gmake

@@ -114,7 +114,7 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (!p.expect('"'))
         return ILLEGAL_OPERAND;
     auto name = p;
-    name.trimEndAt(p.trimStart([](char c) { return c && c != '"'; }));
+    p = name.takeWhile([](char c) { return c && c != '"'; });
     if (!p.expect('"'))
         return ILLEGAL_OPERAND;
     if (!p.skipSpaces().expect(','))
@@ -122,7 +122,7 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (!p.skipSpaces().expect('"'))
         return ILLEGAL_OPERAND;
     auto text = p;
-    text.trimEndAt(p.trimStart([](char c) { return c && c != '"'; }));
+    p = text.takeWhile([](char c) { return c && c != '"'; });
     if (!p.expect('"'))
         return ILLEGAL_OPERAND;
     if (!endOfLine(p.skipSpaces()))

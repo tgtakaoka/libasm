@@ -67,14 +67,13 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     scan.skipSpaces();
 
     if (!parser.endOfLine(scan)) {
-        auto directive = scan;
         auto p = scan;
         while (!parser.endOfLine(p) && !isspace(*p)) {
             const auto c = *p++;
             if (c == '=')  // for '=' and '*='
                 break;
         }
-        directive.trimEndAt(p);
+        StrScanner directive{scan.str(), p.str()};
         auto error = _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver);
         if (error == OK) {
             if (_line_symbol.size()) {

@@ -356,25 +356,23 @@ bool AsmMc6809::parseMemBit(StrScanner &scan, Operand &op) const {
     auto end = scan;
     while (!endOfLine(end))
         ++end;
-    auto p = scan;
-    p.trimEndAt(end);
-    p.trimEnd([](char c) { return c != '.'; });
+    StrScanner operand{scan.str(), end.str()};
+    operand.trimEnd([](char c) { return c != '.'; });
 
     // There is no '.' in operand.
-    if (p.size() < 2) {
+    if (operand.size() < 2) {
         op.val32 = parseExpr32(scan, op);
         return parseBitPosition(scan, op);
-    } else if (isspace(p[p.size() - 2])) {
+    } else if (isspace(operand[operand.size() - 2])) {
         op.val32 = parseExpr32(scan, op);
         return false;
     }
 
-    p += p.size() - 1;  // |p| points '.'
-    auto expr = scan;
-    expr.trimEndAt(p);
-    auto bit = scan;
-    bit.trimStartAt(p);
+    // |operand| points '.'
+    operand += operand.size() - 1;
+    StrScanner expr{scan.str(), operand.str()};
     op.val32 = parseExpr32(expr, op);
+    StrScanner bit{operand.str(), scan.str() + scan.size()};
     if (parseBitPosition(bit, op)) {
         scan = bit;
         return true;

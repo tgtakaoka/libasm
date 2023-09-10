@@ -120,26 +120,52 @@ void test_trim() {
     EQ("trimEnd.size", 1, scan1.size());
 }
 
+void test_take() {
+    const char text1[] = "  text1";
+    StrScanner scan1(text1);
+    auto cont = scan1.takeWhile(isspace);
+    EQ("scan1", text1, scan1.str());
+    EQ("scan1", 2, scan1.size());
+    EQ("scan1", "text1", cont.str());
+    EQ("scan1", 5, cont.size());
+
+    const char text2[] = "text123ab_cdf";
+    StrScanner scan2(text2);
+    cont = scan2.takeWhile(isalpha);
+    EQ("scan2", text2, scan2.str());
+    EQ("scan2", 4, scan2.size());
+    EQ("scan2", "123ab_cdf", cont.str());
+    EQ("scan2", 9, cont.size());
+
+    const char text3[] = "text123ab_cdf, x";
+    StrScanner scan3(text3);
+    cont = scan3.takeWhile([](char c) { return isalnum(c) || c == '_'; });
+    EQ("scan3", text3, scan3.str());
+    EQ("scan3", 13, scan3.size());
+    EQ("scan3", ", x", cont.str());
+    EQ("scan3", 3, cont.size());
+}
+
 void test_expect() {
     const char text2[] = " \tteXT21:   ";
-    StrScanner scan2(text2);
-    EQ("scan2.size", 12, scan2.size());
-    EQ("expect", ' ', scan2.expect(' '));
-    EQ("scan2.str", &text2[1], scan2.str());
-    EQ("scan2.size", 11, scan2.size());
-    EQ("expect", '\t', scan2.expect(isspace));
-    EQ("scan2.str", &text2[2], scan2.str());
-    EQ("scan2.size", 10, scan2.size());
-    EQ("scan2.iexpect", 't', scan2.iexpect('T'));
-    EQ("scan2.iexpect", 'e', scan2.iexpect('e'));
-    EQ("scan2.iexpect", 'X', scan2.iexpect('X'));
-    EQ("scan2.iexpect", 'T', scan2.iexpect('t'));
-    EQ("scan2.expect", 0, scan2.expect(isalpha));
-    EQ("scan2.expect", '2', scan2.expect(isdigit));
-    EQ("scan2.iexpect", '1', scan2.expect('1'));
-    EQ("scan2.expect", 0, scan2.expect([](char c) { return c != ':'; }));
-    EQ("scan2.expect", ':', scan2.expect(':'));
-    EQ("scan2.skipSpaces.str", "", scan2.skipSpaces().str());
+    StrScanner scan3(text2);
+    EQ("scan3.size", 12, scan3.size());
+    EQ("expect", ' ', scan3.expect(' '));
+    EQ("scan3.str", &text2[1], scan3.str());
+    EQ("scan3.size", 11, scan3.size());
+    EQ("expect", '\t', scan3.expect(isspace));
+    EQ("scan3.str", &text2[2], scan3.str());
+    EQ("scan3.size", 10, scan3.size());
+    EQ("scan3.iexpect", 't', scan3.iexpect('T'));
+    EQ("scan3.iexpect", 'e', scan3.iexpect('e'));
+    EQ("scan3.iexpect", 'X', scan3.iexpect('X'));
+    EQ("scan3.iexpect", 'T', scan3.iexpect('t'));
+    EQ("scan3.expect", 0, scan3.expect(isalpha));
+    EQ("scan3.expect", '2', scan3.expect(isdigit));
+    EQ("scan3.iexpect", '1', scan3.expect('1'));
+    EQ("scan3.expect", 0, scan3.expect([](char c) { return c != ':'; }));
+    EQ("scan3.expect", ':', scan3.expect(':'));
+    EQ("scan3.skipSpaces.str", "", scan3.skipSpaces().str());
 }
 
 void test_expectText() {
@@ -161,13 +187,13 @@ void test_expectWord() {
     TRUE("scan1", scan1.iexpectText_P(PSTR("TEXT1"), 0, true));
     EQ("scan1", ".text2", scan1.str());
 
-    StrScanner scan2("text2");
-    TRUE("scan2", scan2.iexpectText_P(PSTR("TEXT2"), 0, true));
-    EQ("scan2", "", scan2.str());
+    StrScanner scan3("text2");
+    TRUE("scan3", scan3.iexpectText_P(PSTR("TEXT2"), 0, true));
+    EQ("scan3", "", scan3.str());
 
-    StrScanner scan3("text345");
-    FALSE("scan3", scan3.iexpectText_P(PSTR("TEXT3"), 0, true));
-    EQ("scan3", "text345", scan3.str());
+    StrScanner scan2("text345");
+    FALSE("scan2", scan2.iexpectText_P(PSTR("TEXT3"), 0, true));
+    EQ("scan2", "text345", scan2.str());
 
     StrScanner scan4("text4text5");
     FALSE("scan4", scan4.iexpectText_P(PSTR("TEXT4"), 0, true));
@@ -178,7 +204,7 @@ void test_expectWord() {
     EQ("scan5", "text5_text6", scan5.str());
 }
 
-void test_compare() {
+void test_iequals() {
     const StrScanner textA("textA");
     const StrScanner scanA("textA");
     const StrScanner scanB("textB");
@@ -194,10 +220,11 @@ void run_tests() {
     RUN_TEST(test_constructor);
     RUN_TEST(test_reference);
     RUN_TEST(test_trim);
+    RUN_TEST(test_take);
     RUN_TEST(test_expect);
     RUN_TEST(test_expectText);
     RUN_TEST(test_expectWord);
-    RUN_TEST(test_compare);
+    RUN_TEST(test_iequals);
 }
 
 }  // namespace test

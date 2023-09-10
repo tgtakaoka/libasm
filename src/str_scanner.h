@@ -50,7 +50,7 @@ public:
     /** dereference; returns character at the head, or 0 otherwise */
     constexpr char operator*() const { return (*this)[0]; }
 
-    /** indexing; character at offset delta, 0 if |delt| beyonds end */
+    /** indexing; character at offset |delta|, 0 if |delta| beyonds end */
     constexpr char operator[](int delta) const { return (_str + delta) < _end ? _str[delta] : 0; }
 
     /** pre-increment */
@@ -98,20 +98,22 @@ public:
         return *this;
     }
 
+    /**
+     * take letters from start while |predicate(char)| return true,
+     * then return a StrScanner instance which points the continuation
+     */
+    template <typename P>
+    StrScanner takeWhile(const P &predicate) {
+        auto *p = _str;
+        while (p < _end && predicate(*p))
+            p++;
+        StrScanner cont{p, _end};
+        _end = p;
+        return cont;
+    }
+
     /** skip spaces */
     StrScanner &skipSpaces() { return trimStart(isspace); }
-
-    /** trim start to |at|, or make it empty. */
-    StrScanner &trimStartAt(const StrScanner &at) {
-        _str = (at._str < _end) ? at._str : _end;
-        return *this;
-    }
-
-    /** trim end to |at|, or make it empty. */
-    StrScanner &trimEndAt(const StrScanner &at) {
-        _end = (_str < at._str) ? at._str : _str;
-        return *this;
-    }
 
     /** return char if |predicate(char)| return true, otherwise zero */
     template <typename P>

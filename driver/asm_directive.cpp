@@ -85,13 +85,11 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver 
     auto filename = scan;
     auto p = scan;
     if (quote) {
-        p.trimStart([quote](char s) { return s != quote; });
-        filename.trimEndAt(p);
+        p = filename.takeWhile([quote](char s) { return s != quote; });
         if (!p.expect(quote))
             return setError(p, quote == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
     } else {
-        p.trimStart([](char s) { return !isspace(s); });
-        filename.trimEndAt(p);
+        p = filename.takeWhile([](char s) { return !isspace(s); });
     }
     scan = p;
     return setError(driver.openSource(filename));
@@ -119,13 +117,11 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
 }
 
 Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    auto p = scan;
-    p.trimStart([](char s) { return !isspace(s); });
-    scan.trimEndAt(p);
-    std::string cpu(scan.str(), scan.size());
+    auto name = scan;
+    scan = name.takeWhile([](char s) { return !isspace(s); });
+    std::string cpu(name.str(), name.size());
     if (driver.setCpu(cpu.c_str()) == nullptr)
         return setError(UNSUPPORTED_CPU);
-    scan = p;
     return setOK();
 }
 
