@@ -60,21 +60,24 @@ struct Table {
     const ITEM *binarySearch(DATA &data, Comparator<DATA> comparator) const {
         const auto *first = table();
         const auto *last = end();
+        const ITEM *found = nullptr;
         for (;;) {
             const auto diff = last - first;
             if (diff == 0)
-                return nullptr;
+                break;
             const auto *middle = first;
             middle += diff / 2;
             const auto res = comparator(data, middle);
-            if (res == 0) {
-                return middle;
-            } else if (res > 0) {
+            if (res > 0) {
                 first = middle + 1;
-            } else {
+            } else if (res < 0) {
                 last = middle;
+            } else {
+                // search the first occurrence in table
+                last = found = middle;
             }
         }
+        return found;
     }
 
 private:
@@ -120,18 +123,24 @@ struct IndexedTable {
             if (comparator(data, itemAt(middle)) > 0) {
                 first = middle + 1;
             } else {
+                // If |res| == 0, search the first occurrence in table
                 last = middle;
             }
         }
-        // Search for the same key items.
+        // Search for an item which satisfies |matcher2|
         const ITEM *found = nullptr;
         while (first < _indexes.end()) {
             const auto *item = itemAt(first);
-            if (comparator(data, item))
-                return found;
+            // |first| may point an item which doesn't satisfies |comparator|
+            if (comparator(data, item) != 0)
+                break;
+            if (matcher2(data, item)) {
+                found = item;
+                break;
+            }
+            // assign a marker to |found| because there is an item doesn't
+            // sattisfies |matcher2|
             found = _items.end();
-            if (matcher2(data, item))
-                return item;
             ++first;
         }
         return found;
