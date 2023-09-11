@@ -13,34 +13,34 @@
 # limitations under the License.
 
 help:
-	@echo '"make clean"   remove unnecessary files'
-	@echo '"make test"    run test'
-	@echo '"make full-pio run PlatformIO CI for all examples and boards'
-	@echo '"make a-pio"   run PlatformIO CI for an example and a board'
+	@echo '"make clean"    remove unnecessary files'
+	@echo '"make check"    run test and pio-ci'
+	@echo '"make test"     run test'
+	@echo '"make pio-ci"   run PlatformIO CI for an example and a board'
+	@echo  "                   (default BOARD=$(BOARD)), EX=$(EX))"
 
-PIO_CI_BOARDS=ATmega644P nano_every nano_33_iot pico
-_BOARDS=$(foreach b,$(PIO_CI_BOARDS),--board=$(b))
+EXS = $(shell $(MAKE) -s -C examples examples)
+EX ?= $(firstword $(EXS))
+
+BOARDS = $(shell $(MAKE) -s -C examples boards)
+BOARD = $(firstword $(BOARDS))
+
+check: test pio-ci
 
 test:
 	$(MAKE) -C test test
 
-a-pio:
-	@echo PIO_FLAGS=$(PIO_FLAGS)
-
-full-pio: examples
-	@for ex in $(shell make -s -C examples examples); do \
-	    echo pio $(PIO_FLAGS) ci -l . $(PIO_CI_FLAGS) $(_BOARDS) examples/$${ex}/$${ex}.ino; \
-	    pio $(PIO_FLAGS) ci -l . $(PIO_CI_FLAGS) $(_BOARDS) examples/$${ex}/$${ex}.ino; \
-	done
+pio-ci: examples
+	$(MAKE) -C examples pio-ci
 
 clean: 
-	$(MAKE) -C cli clean
-	$(MAKE) -C test clean
-	$(MAKE) -C examples clean
+	$(MAKE) -s -C cli clean
+	$(MAKE) -s -C test clean
+	$(MAKE) -s -C examples clean
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_log')
 
-.PHONY: help clean test a-pio full-pio
+.PHONY: help clean check test pio-ci
 
 # Local Variables:
 # mode: makefile-gmake

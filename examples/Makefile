@@ -13,36 +13,89 @@
 # limitations under the License.
 
 help:
-	@echo '"make clean"  remove unnecessary files'
-	@echo '"make pio"    build sketches using PlatformIO'
-	@echo '"make update" propagate common files to sketches'
+	@echo '"make clean"    remove unnecessary files'
+	@echo '"make pio-ci"   run PlatformIO CI for an example and a board'
+	@echo  "                   (default BOARD=$(BOARD), EX=$(EX))"
+	@echo '"make pio-run"  build an example for an environment'
+	@echo  "                   (default ENV=$(ENV), EX=$(EX))"
+	@echo '"make update"   propagate common files to sketches'
 
-EXAMPLES = \
-        mc6800 mc6809 mos6502 i8048 i8051 i8080 z80 z8 tlcs90 \
-        ins8060 ins8070 cdp1802 tms32010 i8086 i8096 mc68000 \
-        scn2650 f3850 tms9900 z8000 mn1610 \
-        asm32000 dis32000
+EXS = \
+	asm32000 \
+	cdp1802  \
+	dis32000 \
+	f3850    \
+	i8048    \
+	i8051    \
+	i8080    \
+	i8086    \
+	i8096    \
+	ins8060  \
+	ins8070  \
+	mc6800   \
+	mc68000  \
+	mc6809   \
+	mn1610   \
+	mos6502  \
+	scn2650  \
+	tlcs90   \
+	tms32010 \
+	tms9900  \
+	z8       \
+	z80      \
+	z8000
 
-pio: update $(EXAMPLES)
-	for ex in $(EXAMPLES); do \
-	    $(MAKE) -C $${ex} pio PIO_RUN_FLAGS=--silent; \
-	done
-
-update: Makefile.common platformio.common
-	for ex in $(EXAMPLES); do \
-	    cp -f Makefile.common $${ex}/Makefile; \
-	    cp -f platformio.common $${ex}/platformio.ini; \
-	done
+EX ?= $(firstword $(EXS))
 
 examples:
-	@echo $(EXAMPLES)
+	@echo $(EXS)
 
-clean: $(EXAMPLES)
-	@for ex in $(EXAMPLES); do \
-	    $(MAKE) -C $${ex} clean; \
-	done
+ENVS = $(shell $(MAKE) -s -C $(firstword $(EXS)) pio-envs)
+ENV ?= $(firstword $(ENVS))
 
-.PHONY: all clean update
+environments:
+	@echo $(ENVS)
+
+BOARDS = $(shell $(MAKE) -s -C $(firstword $(EXS)) pio-boards)
+BOARD ?= $(firstword $(BOARDS))
+
+boards:
+	@echo $(BOARDS)
+
+define update # example
+	cp -f Makefile.common $(1)/Makefile
+	cp -f platformio.common $(1)/platformio.ini
+
+endef
+
+update: Makefile.common platformio.common
+	$(foreach ex,$(EXS),$(call update,$(ex)))
+
+define pio-ci # example, board
+	$(MAKE) -C $(1) pio-ci BORAD=$(2)
+
+endef
+
+pio-ci:
+	$(call pio-ci,$(EX),$(BOARD))
+
+define pio-run # example, env
+	$(MAKE) -C $(1) pio-run ENV=$(2)
+
+endef
+
+pio-run:
+	$(call pio-run,$(EX),$(ENV))
+
+define clean-ex # ex
+	$(MAKE) -s -C $(1) clean
+
+endef
+
+clean: $(EXS)
+	$(foreach ex,$(EXS),$(call clean-ex,$(ex)))
+
+.PHONY: all clean update pio-ci pio-run
 
 # Local Variables:
 # mode: makefile-gmake

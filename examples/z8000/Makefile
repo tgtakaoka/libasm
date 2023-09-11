@@ -13,37 +13,63 @@
 # limitations under the License.
 
 help:
-	@echo '"make clean"    remove unnecessary files'
-	@echo '"make pio"      build sketch using PlatformIO'
+	@echo '"make clean"       remove unnecessary files'
+	@echo '"make pio-ci"      run PlatformIO CI for a board'
+	@echo  "                      (default BOARD=$(BOARD))"
+	@echo '"make pio-ci-all"  run PlatformIO CI for all boards'
+	@echo  "                      ($(BOARDS))"
+	@echo '"make pio-run"     build sketch for an environment'
+	@echo  "                      (default ENV=$(ENV))"
+	@echo '"make pio-run-all" build sketch for all environments'
+	@echo  "                      ($(ENVS))"
 
-PIO_FLAGS ?= --no-ansi
-PIO_ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)
-PIO_BOARDS = $(shell grep -Po '^board *= *\K[\w]+' platformio.ini)
-LIB_ENVS = $(PIO_ENVS:%=.pio/libdeps/%)
-LIB_DEPS = $(PWD)/.pio/libdeps
+ifdef INSIDE_EMACS
+ifeq ($(filter $(PIO_FLAGS),"--no-ansi"),)
+PIO_FLAGS += --no-ansi
+endif
+endif
 
-install-local-lib: $(LIB_DEPS)
-	mkdir -p $(LIB_DEPS)
-	(cd ../..; pio pkg pack -o $(LIB_DEPS)/libasm.tar.gz)
-	for lib in $(LIB_ENVS); do \
-	    test -d $${lib} || continue; \
-	    rm -rf $${lib}/libasm; \
-	    mkdir -p $${lib}/libasm; \
-	    tar xf $(LIB_DEPS)/libasm.tar.gz -C $${lib}/libasm; \
-	done
+PIO_CI_FLAGS = -l ~/libcli
 
-pio:
-	pio $(PIO_FLAGS) run $(PIO_RUN_FLAGS) $(PIO_ENVS:%=-e %)
+ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)
+ENV ?= $(firstword $(ENVS))
+
+BOARDS = $(shell grep -Po '^board *= *\K[\w]+' platformio.ini)
+BOARD ?= $(firstword $(BOARDS))
+
+EXAMPLE = $(shell basename $(CURDIR))
+
+define pio-ci # board
+	pio $(PIO_FLAGS) ci -l $(CURDIR)/../.. $(PIO_CI_FLAGS) -b $(1) $(EXAMPLE).ino
+
+endef
+
+pio-ci:
+	$(call pio-ci,$(BOARD))
+
+pio-ci-all:
+	$(foreach board,$(BOARDS),$(call pio-ci,$(board)))
+
+define pio-run # env
+	pio $(PIO_FLAGS) run $(PIO_RUN_FLAGS) -e $(1)
+
+endef
+
+pio-run:
+	$(call pio-run,$(ENV))
+
+pio-run-all:
+	$(foreach env,$(ENVS),$(call pio-run,$(env)))
 
 pio-envs: platformio.ini
-	@echo $(PIO_ENVS)
+	@echo $(ENVS)
 pio-boards: platformio.ini
-	@echo $(PIO_BOARDS)
+	@echo $(BOARDS)
 
 clean:
 	rm -rf $$(find . -type d -a -name .pio)
 
-.PHONY: help clean pio pio-boards pio-envs install-local-lib
+.PHONY: help clean pio-run pio-run-all pio-ci pio-ci-all pio-boards pio-envs
 
 # Local Variables:
 # mode: makefile-gmake
