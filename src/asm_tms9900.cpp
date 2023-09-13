@@ -30,6 +30,7 @@ using namespace text::common;
 namespace {
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
+        Pseudo{TEXT_AORG, &Assembler::defineOrigin},
         Pseudo{TEXT_BSS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},

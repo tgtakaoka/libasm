@@ -475,6 +475,7 @@ const char TEXT_dORG[]   PROGMEM = ".org";
 const char TEXT_dSTRING[] PROGMEM = ".string";
 const char TEXT_dWORD[]  PROGMEM = ".word";
 const char TEXT_ALIGN[] PROGMEM = "align";
+const char TEXT_AORG[]  PROGMEM = "aorg";
 const char TEXT_BSS[]   PROGMEM = "bss";
 const char TEXT_BYTE[]  PROGMEM = "byte";
 const char TEXT_DATA[]  PROGMEM = "data";

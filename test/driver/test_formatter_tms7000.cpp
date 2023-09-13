@@ -34,11 +34,11 @@ void test_asm_tms7000() {
     ASM("tms7000",
             "        cpu     tms7000\n"
             "* comment line\n"
-            "        org     >7BCD\n"
+            "        aorg    >7BCD\n"
             "        movd    %>a9aa(b), r171\n",
             "          0 :                            cpu     tms7000\n"
             "          0 :                    * comment line\n"
-            "       7BCD :                            org     >7BCD\n"
+            "       7BCD :                            aorg    >7BCD\n"
             "       7BCD : A8 A9 AA AB                movd    %>a9aa(b), r171\n");
 }
 

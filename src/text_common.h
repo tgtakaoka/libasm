@@ -478,6 +478,7 @@ extern const char TEXT_dORG[]   PROGMEM; // .org
 extern const char TEXT_dSTRING[] PROGMEM; // .string
 extern const char TEXT_dWORD[]  PROGMEM; // .word
 extern const char TEXT_ALIGN[] PROGMEM;
+extern const char TEXT_AORG[]  PROGMEM;
 extern const char TEXT_BSS[]   PROGMEM;
 extern const char TEXT_BYTE[]  PROGMEM;
 extern const char TEXT_DATA[]  PROGMEM;

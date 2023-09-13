@@ -34,11 +34,11 @@ void test_asm_tms9900() {
     ASM("tms99105",
             "        cpu   tms99105\n"
             "* comment line\n"
-            "        org   >9abc\n"
+            "        aorg  >9abc\n"
             "        am    @>4a4b(r1), @>4c4d(r1)\n",
             "          0 :                            cpu   tms99105\n"
             "          0 :                    * comment line\n"
-            "       9abc :                            org   >9abc\n"
+            "       9abc :                            aorg  >9abc\n"
             "       9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)\n"
             "       9ac2 : 4c4d\n");
 }
