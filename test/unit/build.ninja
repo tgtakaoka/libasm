@@ -1,15 +1,17 @@
 # Ninja build script for libasm/test/unit
 
 root = ../..
+cxx      = g++
 cxxflags = -std=c++14 -Wall -O ${debug_flags}
 cppflags = -I${root}/src -I${root}/test
 
 rule cxx
+  deps    = gcc
   depfile = ${out}.d
-  command = g++ ${cxxflags} ${cppflags} -MD -MF ${out}.d -c ${in} -o ${out}
+  command = ${cxx} ${cxxflags} ${cppflags} -MMD -MP -MF ${out}.d -c ${in} -o ${out}
 
 rule test
-  command = g++ ${cxxflags} ${in} -o ${out} && ./${out}
+  command = ${cxx} ${cxxflags} ${in} -o ${out} && ./${out}
 
 subninja ${root}/src/ninja.rules
 subninja ${root}/test/ninja.rules

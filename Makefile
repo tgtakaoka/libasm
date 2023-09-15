@@ -38,7 +38,7 @@ clean:
 	$(MAKE) -s -C test clean
 	$(MAKE) -s -C examples clean
 	rm -f $$(find . -type f -a -name '*~')
-	rm -f $$(find . -type f -a -name '.ninja_log')
+	rm -f $$(find . -type f -a -name '.ninja_*')
 
 .PHONY: help clean check test pio-ci
 
