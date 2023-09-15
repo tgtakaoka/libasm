@@ -31,14 +31,20 @@ void test_asm_mc68000() {
 
     TestReader inc("data/dc.inc");
     sources.add(inc);
-    inc.add("        dc.b    1\n"                     // DC.B generates bytes
-            "        dc.l    $12345678, $9abcdef0\n"  // DC.L requires 2 byte alignment
-            "        dc.b    2\n"                     // DC.B generates bytes
-            "        ds.l    1\n"                     // DS.L allocates 2 byte aligned spaces
-            "        ds.b    3\n"                     // DS.B allocates spaces
+    inc.add("        dc.b    1, 2, 3\n"               // DC.B generates odd bytes at even address
+            "        dc.b    4, 5, 6\n"               // DC.B generates odd bytes at odd address
+            "        dc.b    7, 8, 9\n"               // DC.B generates odd bytes at even address
             "        dc.w    $1234, $5678, $9abc\n"   // DC.W requires 2 byte alignment
-            "        dc.b    'a,', 'bc''de', 4, 0\n"  // DC.B can generate odd bytes
-            "        ds.w    1\n"                     // DS.W allocates 2 byte aligned spaces
+            "        dc.b    1, 2, 3\n"               // DC.B generates odd bytes at even address
+            "        dc.l    $12345678, $9abcdef0\n"  // DC.L requires 2 byte alignment
+            "        dc.b    1, 2, 3\n"               // DC.B generates odd bytes at even address
+            "        ds.b    1\n"                     // DS.B allocates odd spaces at odd address
+            "        ds.b    3\n"                     // DS.B allocates odd spaces at even address
+            "        ds.b    5\n"                     // DS.B allocates odd spaces at even address
+            "        ds.w    2\n"                     // DS.W allocates 2 byte aligned spaces
+            "        ds.b    1\n"                     // DS.B allocates odd spaces at even address
+            "        ds.l    3\n"                     // DS.L allocates 2 byte aligned spaces
+            "        dc.b    'a,', 'bc''de', 4, 0\n"  // DC.B can generate odd bytes at even address
             "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");  // DC.B doesn't care alignment
 
     listing.setUpperHex(false);
@@ -55,17 +61,23 @@ void test_asm_mc68000() {
             "     9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "     9abce4 : 00c2 c3c4\n"
             "     9abce8 :                            include \"data/dc.inc\"\n"
-            "(1)  9abce8 : 01                         dc.b    1\n"
-            "(1)  9abcea : 1234 5678 9abc             dc.l    $12345678, $9abcdef0\n"
-            "     9abcf0 : def0\n"
-            "(1)  9abcf2 : 02                         dc.b    2\n"
-            "(1)  9abcf4 :                            ds.l    1\n"
-            "(1)  9abcf8 :                            ds.b    3\n"
-            "(1)  9abcfc : 1234 5678 9abc             dc.w    $1234, $5678, $9abc\n"
-            "(1)  9abd02 : 612c 6263 2764             dc.b    'a,', 'bc''de', 4, 0\n"
-            "     9abd08 : 6504 00\n"
-            "(1)  9abd0c :                            ds.w    1\n"
-            "(1)  9abd0e : 4127 c361 2763             dc.b    'A', '''', 'C'+$80, 'a''c'\n");
+            "(1)  9abce8 : 0102 03                    dc.b    1, 2, 3\n"
+            "(1)  9abceb :   04 0506                  dc.b    4, 5, 6\n"
+            "(1)  9abcee : 0708 09                    dc.b    7, 8, 9\n"
+            "(1)  9abcf2 : 1234 5678 9abc             dc.w    $1234, $5678, $9abc\n"
+            "(1)  9abcf8 : 0102 03                    dc.b    1, 2, 3\n"
+            "(1)  9abcfc : 1234 5678 9abc             dc.l    $12345678, $9abcdef0\n"
+            "     9abd02 : def0\n"
+            "(1)  9abd04 : 0102 03                    dc.b    1, 2, 3\n"
+            "(1)  9abd07 :                            ds.b    1\n"
+            "(1)  9abd08 :                            ds.b    3\n"
+            "(1)  9abd0b :                            ds.b    5\n"
+            "(1)  9abd10 :                            ds.w    2\n"
+            "(1)  9abd14 :                            ds.b    1\n"
+            "(1)  9abd16 :                            ds.l    3\n"
+            "(1)  9abd22 : 612c 6263 2764             dc.b    'a,', 'bc''de', 4, 0\n"
+            "     9abd28 : 6504 00\n"
+            "(1)  9abd2b :   41 27c3 6127 63          dc.b    'A', '''', 'C'+$80, 'a''c'\n");
 }
 
 void test_dis_mc68000() {

@@ -34,6 +34,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_BSS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
         Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
         Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+        Pseudo{TEXT_EVEN, &Assembler::alignOrigin, 2},
         Pseudo{TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
 };
 

@@ -499,11 +499,12 @@ extern const char TEXT_DSL[]   PROGMEM;
 extern const char TEXT_DS[]    PROGMEM;
 extern const char TEXT_DSW[]   PROGMEM;
 extern const char TEXT_DW[]    PROGMEM;
+extern const char TEXT_EVEN[]  PROGMEM;
 extern const char TEXT_FCB[]   PROGMEM;
 extern const char TEXT_FCC[]   PROGMEM;
 extern const char TEXT_FDB[]   PROGMEM;
-extern const char TEXT_ORG[]   PROGMEM;
 extern const char TEXT_OPTION[] PROGMEM;
+extern const char TEXT_ORG[]   PROGMEM;
 extern const char TEXT_RMB[]   PROGMEM;
 extern const char TEXT_TEXT[]  PROGMEM;
 // clang-format on

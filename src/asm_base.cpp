@@ -75,7 +75,7 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
-    const auto *p= _pseudos.search(insn);
+    const auto *p = _pseudos.search(insn);
     if ((p = _pseudos.search(insn)) || (p = common_pseudos.search(insn)))
         return p->invoke(this, scan, insn);
     return UNKNOWN_DIRECTIVE;
@@ -148,17 +148,22 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
 }
 
 Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
-    (void)extra;
     auto p = scan;
-    ErrorAt error;
-    const auto value = parseExpr(p, error);
-    if (error.getError())
-        return setError(error);
+    Value value;
+    if (extra) {
+        value.setUnsigned(extra);
+    } else {
+        ErrorAt error;
+        value = parseExpr(p, error);
+        if (error.getError())
+            return setError(error);
+    }
     if (!endOfLine(p))
         return setError(p, GARBAGE_AT_END);
     if (value.overflowUint8())
         return setError(scan, OVERFLOW_RANGE);
-    return setCurrentLocation(insn.align(value.getUnsigned()));
+    insn.align(value.getUnsigned());
+    return setCurrentLocation(insn.address());
 }
 
 Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra) {

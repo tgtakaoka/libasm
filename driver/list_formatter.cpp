@@ -22,8 +22,7 @@ namespace libasm {
 namespace driver {
 
 ListFormatter::ListFormatter()
-    : _formatter(), _out(_out_buffer, sizeof(_out_buffer)), _upperHex(true) {
-}
+    : _formatter(), _out(_out_buffer, sizeof(_out_buffer)), _upperHex(true) {}
 
 void ListFormatter::setUpperHex(bool enable) {
     _upperHex = enable;
@@ -69,34 +68,46 @@ void ListFormatter::formatAddress(uint32_t addr, bool fixedWidth) {
 }
 
 int ListFormatter::formatBytes(int base) {
+    const auto unit = config().addressUnit();
+    const auto width = config().opCodeWidth();
+    const auto baseAddr = base + startAddress();
+    const auto endian = config().endian();
     const auto generated = generatedSize();
-    const auto bytes = bytesInLine();
-    int i = 0;
-    if (config().opCodeWidth() == OPCODE_8BIT) {
-        while (base + i < generated && i < bytes) {
-            const uint8_t val8 = getByte(base + i++);
-            _out.letter(' ');
-            formatHex(val8, 8);
-        }
-    } else {  // OPCODE_16BIT
-        while (base + i < generated && i < bytes) {
-            uint16_t val16 = getByte(base + i++);
-            if (base + i < generated) {
-                const uint16_t next8 = getByte(base + i++);
-                if (config().endian() == ENDIAN_BIG) {
-                    val16 = (val16 << 8) | next8;
+    auto n = 0;
+    for (auto pos = 0; base + n < generated && pos < bytesInLine(); pos++) {
+        _out.letter(' ');
+        uint16_t val = getByte(base + n++);
+        if (width == OPCODE_16BIT && unit == ADDRESS_BYTE) {
+            if (pos == 0 && baseAddr % 2 != 0) { // the first byte
+                if (endian == ENDIAN_BIG) {
+                    _out.letter(' ').letter(' ');
+                    formatHex(val, 8);  // __HH
                 } else {
-                    val16 |= (next8 << 8);
+                    formatHex(val, 8);
+                    _out.letter(' ').letter(' ');  // HH__
                 }
-                _out.letter(' ');
-                formatHex(val16, 16);
-            } else {
-                _out.letter(' ');
-                formatHex(val16, 8);
+                continue;
+            }
+            if (base + n == generated) { // the last byte
+                if (endian == ENDIAN_BIG) {
+                    formatHex(val, 8);  // HH
+                } else {
+                    _out.letter(' ').letter(' ');  // __HH
+                    formatHex(val, 8);
+                }
+                continue;
             }
         }
+        if (width == OPCODE_16BIT) {
+            const auto next8 = getByte(base + n++);
+            val = endian == ENDIAN_BIG ? (val << 8) | next8 : val | (next8 << 8);
+            formatHex(val, 16);
+            pos++;
+        } else {
+            formatHex(val, 8);
+        }
     }
-    return i;
+    return n;
 }
 
 void ListFormatter::formatTab(int tabPosition, int delta) {

@@ -496,6 +496,7 @@ const char TEXT_DSL[]   PROGMEM = "dsl";
 const char TEXT_DS[]    PROGMEM = "ds";
 const char TEXT_DSW[]   PROGMEM = "dsw";
 const char TEXT_DW[]    PROGMEM = "dw";
+const char TEXT_EVEN[]  PROGMEM = "even";
 const char TEXT_FCB[]   PROGMEM = "fcb";
 const char TEXT_FCC[]   PROGMEM = "fcc";
 const char TEXT_FDB[]   PROGMEM = "fdb";
