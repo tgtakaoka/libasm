@@ -31,8 +31,8 @@ DisTms9900::DisTms9900() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
 }
 
 Error DisTms9900::checkPostWord(DisInsn &insn, StrBuffer &out) {
-    const Config::opcode_t post = insn.post();
-    const uint8_t src = (post >> 4 & 3);
+    const auto post = insn.post();
+    const auto src = (post >> 4 & 3);
     switch (insn.dst()) {
     case M_DST2:
         if ((post & 0xF000) == 0x4000)
@@ -60,24 +60,24 @@ Error DisTms9900::decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out) {
     return setError(UNKNOWN_INSTRUCTION);
 }
 
-Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t mode, uint8_t reg) {
-    switch (mode &= 3) {
-    case 1:
-    case 3:
-        out.letter('*');
-        /* Fall-through */
-    case 0:
+Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) {
+    const auto mode = (modeReg >> 4) & 3;
+    const auto reg = modeReg & 0xF;
+    if (mode != 2) {
+        if (mode == 1 || mode == 3)
+            out.letter('*');
         outRegName(out, reg);
         if (mode == 3)
             out.letter('+');
-        break;
-    default:
-        outHex(out.letter('@'), insn.readUint16(), 16);
-        if (reg & 0xF)
-            outRegName(out.letter('('), reg).letter(')');
-        break;
+        return OK;
     }
-    return setError(insn);
+    const auto addr = insn.readUint16();
+    if (reg == 0 && !insn.byteOp() && addr % 2 != 0)
+        setErrorIf(OPERAND_NOT_ALIGNED);
+    outHex(out.letter('@'), addr, 16);
+    if (reg != 0)
+        outRegName(out.letter('('), reg).letter(')');
+    return setErrorIf(insn);
 }
 
 Error DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) {
@@ -90,8 +90,8 @@ Error DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) {
 }
 
 Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
-    const Config::opcode_t opc = insn.opCode();
-    const Config::opcode_t post = insn.post();
+    const auto opc = insn.opCode();
+    const auto post = insn.post();
     uint8_t val8;
     switch (mode) {
     case M_IMM:
@@ -110,11 +110,11 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         /* Fall-through */
     case M_SRC:
         val8 = (mode == M_SRC) ? opc : post;
-        return decodeModeReg(insn, out, val8 >> 4, val8);
+        return decodeModeReg(insn, out, val8);
     case M_DST2:
     case M_DST:
         val8 = ((mode == M_DST) ? opc : post) >> 6;
-        return decodeModeReg(insn, out, val8 >> 4, val8);
+        return decodeModeReg(insn, out, val8);
     case M_CNT2:
     case M_XOP:
     case M_CNT:
@@ -159,7 +159,7 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
 
 Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    const Config::opcode_t opCode = insn.readUint16();
+    const auto opCode = insn.readUint16();
 
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))

@@ -27,6 +27,7 @@ namespace tms9900 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
+    bool byteOp() const { return flags().byteOp(); }
     void setAddrMode(AddrMode src, AddrMode dst) { setFlags(Entry::Flags::create(src, dst)); }
 };
 

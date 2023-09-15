@@ -90,6 +90,11 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
         break;
     case M_SYBL:
         opc = (2 << 4);
+        if (op.getError() != UNDEFINED_SYMBOL) {
+            const auto error = checkAddr(op.val16);
+            if (!insn.byteOp() && error == OPERAND_NOT_ALIGNED)
+                setErrorIf(op, error);
+        }
         insn.emitOperand16(op.val16);
         break;
     default:  // M_INDX

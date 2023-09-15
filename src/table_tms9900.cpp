@@ -27,6 +27,8 @@ namespace tms9900 {
 
 #define E2(_opc, _name, _src, _dst) \
     { _opc, Entry::Flags::create(_src, _dst), _name }
+#define B2(_opc, _name, _src, _dst) \
+    { _opc, Entry::Flags::create(_src, _dst, true), _name }
 #define E1(_opc, _name, _src) E2(_opc, _name, _src, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
 
@@ -90,17 +92,17 @@ static constexpr Entry TABLE_TMS9900[] PROGMEM = {
     E2(0x3800, TEXT_MPY,  M_SRC,  M_DREG),
     E2(0x3C00, TEXT_DIV,  M_SRC,  M_DREG),
     E2(0x4000, TEXT_SZC,  M_SRC,  M_DST),
-    E2(0x5000, TEXT_SZCB, M_SRC,  M_DST),
+    B2(0x5000, TEXT_SZCB, M_SRC,  M_DST),
     E2(0x6000, TEXT_S,    M_SRC,  M_DST),
-    E2(0x7000, TEXT_SB,   M_SRC,  M_DST),
+    B2(0x7000, TEXT_SB,   M_SRC,  M_DST),
     E2(0x8000, TEXT_C,    M_SRC,  M_DST),
-    E2(0x9000, TEXT_CB,   M_SRC,  M_DST),
+    B2(0x9000, TEXT_CB,   M_SRC,  M_DST),
     E2(0xA000, TEXT_A,    M_SRC,  M_DST),
-    E2(0xB000, TEXT_AB,   M_SRC,  M_DST),
+    B2(0xB000, TEXT_AB,   M_SRC,  M_DST),
     E2(0xC000, TEXT_MOV,  M_SRC,  M_DST),
-    E2(0xD000, TEXT_MOVB, M_SRC,  M_DST),
+    B2(0xD000, TEXT_MOVB, M_SRC,  M_DST),
     E2(0xE000, TEXT_SOC,  M_SRC,  M_DST),
-    E2(0xF000, TEXT_SOCB, M_SRC,  M_DST),
+    B2(0xF000, TEXT_SOCB, M_SRC,  M_DST),
 };
 
 static constexpr uint8_t INDEX_TMS9900[] PROGMEM = {

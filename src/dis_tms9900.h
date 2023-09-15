@@ -34,7 +34,7 @@ private:
     Error decodeRelative(DisInsn &insn, StrBuffer &out);
     Error checkPostWord(DisInsn &insn, StrBuffer &out);
     Error decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out);
-    Error decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t mode, uint8_t reg);
+    Error decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg);
     Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

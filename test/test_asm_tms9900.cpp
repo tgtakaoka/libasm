@@ -135,7 +135,8 @@ static void test_cnt_reg() {
 }
 
 static void test_src() {
-    TEST("BLWP @>9876", 0x0420, 0x9876);
+    TEST("BLWP @>9876",                                0x0420, 0x9876);
+    ERRT("BLWP @>9877", OPERAND_NOT_ALIGNED, "@>9877", 0x0420, 0x9877);
     TEST("B    R13",    0x044D);
     TEST("X    *R10",   0x049A);
     TEST("CLR  *R12+",  0x04FC);
@@ -261,7 +262,15 @@ static void test_xop_src() {
 
 static void test_dst_src() {
     TEST("SZC  @>1234(R10),@>5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST("SZCB @>1234,@>5678",   0x5820, 0x1234, 0x5678);
+    TEST("SZC  @>1235(R10),@>5679(R11)", 0x4AEA, 0x1235, 0x5679);
+    TEST("SZC  @>1234,@>5678",                                        0x4820, 0x1234, 0x5678);
+    ERRT("SZC  @>1234,@>5679", OPERAND_NOT_ALIGNED, "@>5679",         0x4820, 0x1234, 0x5679);
+    ERRT("SZC  @>1235,@>5678", OPERAND_NOT_ALIGNED, "@>1235,@>5678",  0x4820, 0x1235, 0x5678);
+    ERRT("SZC  @>1235,@>5679", OPERAND_NOT_ALIGNED, "@>1235,@>5679",  0x4820, 0x1235, 0x5679);
+    TEST("SZCB @>1234,@>5678", 0x5820, 0x1234, 0x5678);
+    TEST("SZCB @>1234,@>5679", 0x5820, 0x1234, 0x5679);
+    TEST("SZCB @>1235,@>5678", 0x5820, 0x1235, 0x5678);
+    TEST("SZCB @>1235,@>5679", 0x5820, 0x1235, 0x5679);
     TEST("S    *R10,*R11",       0x66DA);
     TEST("SB   *R10+,*R11+",     0x7EFA);
     TEST("C    *R10+,*R10+",     0x8EBA);

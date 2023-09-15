@@ -52,15 +52,16 @@ enum AddrMode : uint8_t {
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _src;
-        uint8_t _dst;
+        uint8_t _attr;
 
-        static constexpr Flags create(AddrMode src, AddrMode dst) {
-            return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst)};
+        static constexpr Flags create(AddrMode src, AddrMode dst, bool byteOp = false) {
+            return Flags{static_cast<uint8_t>(src), attr(dst, byteOp)};
         }
-        Flags read() const { return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst)}; }
+        Flags read() const { return Flags{pgm_read_byte(&_src), pgm_read_byte(&_attr)}; }
 
         AddrMode src() const { return AddrMode(_src); }
-        AddrMode dst() const { return AddrMode(_dst); }
+        AddrMode dst() const { return AddrMode((_attr >> dst_gp) & dst_gm); }
+        bool byteOp() const { return (_attr & (1 << byteOp_bp)) != 0; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -70,6 +71,14 @@ struct Entry final : entry::Base<Config::opcode_t> {
 
 private:
     Flags _flags;
+
+    // |_attr|
+    static constexpr int dst_gp = 0;
+    static constexpr uint8_t dst_gm = 0x1F;
+    static constexpr int byteOp_bp = 7;
+    static constexpr uint8_t attr(AddrMode dst, bool byteOp) {
+        return ((static_cast<uint8_t>(dst) & dst_gm) << dst_gp) | (byteOp ? (1 << byteOp_bp) : 0);
+    }
 };
 
 }  // namespace tms9900
