@@ -24,12 +24,17 @@ namespace tms9900 {
 
 enum CpuType : uint8_t {
     TMS9900,
+    TMS9980,
     TMS9995,
     TMS99105,
 };
 
 struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 8, 4> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, TMS9900) {}
+
+    AddressWidth addressWidth() const override {
+        return cpuType() == TMS9980 ? ADDRESS_14BIT : ADDRESS_16BIT;
+    }
 };
 
 }  // namespace tms9900

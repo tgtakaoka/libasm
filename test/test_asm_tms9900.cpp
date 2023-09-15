@@ -32,6 +32,10 @@ static bool is9995() {
     return strcmp_P("9995", assembler.cpu_P()) == 0 || is99105();
 }
 
+static bool is9980() {
+    return strcmp_P("9980", assembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -45,6 +49,9 @@ void test_cpu() {
     EQUALS("cpu 9900", true,   assembler.setCpu("9900"));
     EQUALS_P("cpu 9900", "9900", assembler.cpu_P());
 
+    EQUALS("cpu 9980", true,   assembler.setCpu("9980"));
+    EQUALS_P("cpu 9980", "9980", assembler.cpu_P());
+
     EQUALS("cpu 9995", true,   assembler.setCpu("9995"));
     EQUALS_P("cpu 9995", "9995", assembler.cpu_P());
 
@@ -53,6 +60,9 @@ void test_cpu() {
 
     EQUALS("cpu tms9900", true,   assembler.setCpu("tms9900"));
     EQUALS_P("cpu tms9900", "9900", assembler.cpu_P());
+
+    EQUALS("cpu tms9980", true,   assembler.setCpu("tms9980"));
+    EQUALS_P("cpu tms9980", "9980", assembler.cpu_P());
 
     EQUALS("cpu tms9995", true,   assembler.setCpu("tms9995"));
     EQUALS_P("cpu tms9995", "9995", assembler.cpu_P());
@@ -135,8 +145,16 @@ static void test_cnt_reg() {
 }
 
 static void test_src() {
-    TEST("BLWP @>9876",                                0x0420, 0x9876);
-    ERRT("BLWP @>9877", OPERAND_NOT_ALIGNED, "@>9877", 0x0420, 0x9877);
+    TEST("BLWP @>1000", 0x0420, 0x1000);
+    TEST("BLWP @>3FFE", 0x0420, 0x3FFE);
+    ERRT("BLWP @>3FFF", OPERAND_NOT_ALIGNED, "@>3FFF", 0x0420, 0x3FFF);
+    if (is9980()) {
+        ERRT("BLWP @>4000", OVERFLOW_RANGE,  "@>4000", 0x0420, 0x4000);
+        ERRT("BLWP @>FFFE", OVERFLOW_RANGE,  "@>FFFE", 0x0420, 0xFFFE);
+    } else {
+        TEST("BLWP @>4000", 0x0420, 0x4000);
+        TEST("BLWP @>FFFE", 0x0420, 0xFFFE);
+    }
     TEST("B    R13",    0x044D);
     TEST("X    *R10",   0x049A);
     TEST("CLR  *R12+",  0x04FC);
@@ -190,7 +208,7 @@ static void test_src() {
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    TEST("BLWP @sym9876",     0x0420, 0x9876);
+    TEST("BLWP @sym1234",     0x0420, 0x1234);
     TEST("DEC  @neg2(R7)",    0x0627, 0xFFFE);
 
     if (is9995()) {
@@ -247,30 +265,30 @@ static void test_cnt_src() {
 }
 
 static void test_xop_src() {
-    TEST("XOP @>9876,0",                             0x2C20, 0x9876);
-    TEST("XOP @>9876,15",                            0x2FE0, 0x9876);
-    ERRT("XOP @>9876,16", OVERFLOW_RANGE,      "16", 0x2C20, 0x9876);
-    ERRT("XOP @>9876,R0", OPERAND_NOT_ALLOWED, "@>9876,R0");
+    TEST("XOP @>1234,0",                             0x2C20, 0x1234);
+    TEST("XOP @>1234,15",                            0x2FE0, 0x1234);
+    ERRT("XOP @>1234,16", OVERFLOW_RANGE,      "16", 0x2C20, 0x1234);
+    ERRT("XOP @>1234,R0", OPERAND_NOT_ALLOWED, "@>1234,R0");
 
     symtab.intern(10, "xop10");
-    symtab.intern(0x9876, "sym9876");
+    symtab.intern(0x1234, "sym1234");
 
-    TEST("XOP @sym9876,xop10",   0x2EA0, 0x9876);
-    TEST("XOP @sym9876(R1),8",   0x2E21, 0x9876);
+    TEST("XOP @sym1234,xop10",   0x2EA0, 0x1234);
+    TEST("XOP @sym1234(R1),8",   0x2E21, 0x1234);
     TEST("XOP @>1234(R1),xop10", 0x2EA1, 0x1234);
 }
 
 static void test_dst_src() {
     TEST("SZC  @>1234(R10),@>5678(R11)", 0x4AEA, 0x1234, 0x5678);
     TEST("SZC  @>1235(R10),@>5679(R11)", 0x4AEA, 0x1235, 0x5679);
-    TEST("SZC  @>1234,@>5678",                                        0x4820, 0x1234, 0x5678);
-    ERRT("SZC  @>1234,@>5679", OPERAND_NOT_ALIGNED, "@>5679",         0x4820, 0x1234, 0x5679);
-    ERRT("SZC  @>1235,@>5678", OPERAND_NOT_ALIGNED, "@>1235,@>5678",  0x4820, 0x1235, 0x5678);
-    ERRT("SZC  @>1235,@>5679", OPERAND_NOT_ALIGNED, "@>1235,@>5679",  0x4820, 0x1235, 0x5679);
-    TEST("SZCB @>1234,@>5678", 0x5820, 0x1234, 0x5678);
-    TEST("SZCB @>1234,@>5679", 0x5820, 0x1234, 0x5679);
-    TEST("SZCB @>1235,@>5678", 0x5820, 0x1235, 0x5678);
-    TEST("SZCB @>1235,@>5679", 0x5820, 0x1235, 0x5679);
+    TEST("SZC  @>1234,@>3456",                                        0x4820, 0x1234, 0x3456);
+    ERRT("SZC  @>1234,@>3457", OPERAND_NOT_ALIGNED, "@>3457",         0x4820, 0x1234, 0x3457);
+    ERRT("SZC  @>1235,@>3456", OPERAND_NOT_ALIGNED, "@>1235,@>3456",  0x4820, 0x1235, 0x3456);
+    ERRT("SZC  @>1235,@>3457", OPERAND_NOT_ALIGNED, "@>1235,@>3457",  0x4820, 0x1235, 0x3457);
+    TEST("SZCB @>1234,@>3456", 0x5820, 0x1234, 0x3456);
+    TEST("SZCB @>1234,@>3457", 0x5820, 0x1234, 0x3457);
+    TEST("SZCB @>1235,@>3456", 0x5820, 0x1235, 0x3456);
+    TEST("SZCB @>1235,@>3457", 0x5820, 0x1235, 0x3457);
     TEST("S    *R10,*R11",       0x66DA);
     TEST("SB   *R10+,*R11+",     0x7EFA);
     TEST("C    *R10+,*R10+",     0x8EBA);
@@ -279,29 +297,29 @@ static void test_dst_src() {
     TEST("AB   R10,@>4000(R11)", 0xBACA, 0x4000);
     TEST("MOV  @0(R10),@1(R11)", 0xCAEA, 0x0000, 0x0001);
     TEST("MOVB R10,R11",         0xD2CA);
-    TEST("SOC  @>1234,@>5678(R11)", 0xEAE0, 0x1234, 0x5678);
-    TEST("SOCB @>1234(R10),@>5678", 0xF82A, 0x1234, 0x5678);
+    TEST("SOC  @>1234,@>2345(R11)", 0xEAE0, 0x1234, 0x2345);
+    TEST("SOCB @>1234(R10),@>2345", 0xF82A, 0x1234, 0x2345);
 
     symtab.intern(0x0000, "zero");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x4000, "sym4000");
-    symtab.intern(0x5678, "sym5678");
+    symtab.intern(0x2345, "sym2345");
 
-    TEST("SZC  @sym1234(R10),@sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST("SZCB @sym1234,@sym5678",      0x5820, 0x1234, 0x5678);
+    TEST("SZC  @sym1234(R10),@sym2345(R11)", 0x4AEA, 0x1234, 0x2345);
+    TEST("SZCB @sym1234,@sym2345",      0x5820, 0x1234, 0x2345);
     TEST("AB   R10,@sym4000(R11)",      0xBACA, 0x4000);
     TEST("MOV  @zero(R10),@>0001(R11)", 0xCAEA, 0x0000, 0x0001);
-    TEST("SOC  @sym1234,@sym5678(R11)", 0xEAE0, 0x1234, 0x5678);
-    TEST("SOCB @sym1234(R10),@sym5678", 0xF82A, 0x1234, 0x5678);
+    TEST("SOC  @sym1234,@sym2345(R11)", 0xEAE0, 0x1234, 0x2345);
+    TEST("SOCB @sym1234(R10),@sym2345", 0xF82A, 0x1234, 0x2345);
 
     if (is99105()) {
         // TMS99105
-        TEST("SM @sym1234(R10),@sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
-        TEST("SM @sym1234,@sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
+        TEST("SM @sym2345(R10),@sym4000(R11)", 0x0029, 0x4AEA, 0x2345, 0x4000);
+        TEST("SM @sym1234,@sym4000",           0x0029, 0x4820, 0x1234, 0x4000);
         TEST("SM R10,@sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
         TEST("AM @zero(R10),@1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
-        TEST("AM @sym1234,@sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
-        TEST("AM @sym1234(R10),@sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
+        TEST("AM @sym1234,@sym2345(R11)",      0x002A, 0x4AE0, 0x1234, 0x2345);
+        TEST("AM @sym2345(R10),@sym4000",      0x002A, 0x482A, 0x2345, 0x4000);
     } else {
         ERUI("SM R10,@sym4000(R11)");
         ERUI("AM @zero(R10),@1(R11)");
@@ -363,12 +381,12 @@ static void test_comment() {
     ERRT("X * R10  ; comment",     UNKNOWN_OPERAND, "* R10  ; comment");
     TEST("CLR *R12+  ; comment",   0x04FC);
     ERRT("CLR * R12+ ; comment",   UNKNOWN_OPERAND, "* R12+ ; comment");
-    TEST("BLWP @ >9876 ; comment", 0x0420, 0x9876);
+    TEST("BLWP @ >3456 ; comment", 0x0420, 0x3456);
     TEST("SBO  0       ; comment", 0x1D00);
     TEST("INC  @ 2 ( R7 )  ; comment", 0x05A7, 0x0002);
     TEST("LDCR *R13+  , 16 ; comment", 0x303D);
     ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND, "* R13+ , 16 ; comment");
-    TEST("SZC  @ >1234 ( R10 ) , @ >5678 ( R11 ) ; comment", 0x4AEA, 0x1234, 0x5678);
+    TEST("SZC  @ >1234 ( R10 ) , @ >2345 ( R11 ) ; comment", 0x4AEA, 0x1234, 0x2345);
     ATEST(0x1000, "JMP >1002 ; comment", 0x1000);
     ERRT("CLR  *R12 + ; comment",     GARBAGE_AT_END, "+ ; comment");
     ERRT("LDCR *R13 +, 16 ; comment", GARBAGE_AT_END, "+, 16 ; comment");
@@ -388,7 +406,7 @@ static void test_undefined_symbol() {
     ERUS("XOP  @UNDEF,15",    "UNDEF,15",    0x2FE0, 0x0000);
     ERUS("XOP  @>9876,UNDEF", "UNDEF",       0x2C20, 0x9876);
     ERUS("XOP  @UNDEF,UNDEF", "UNDEF,UNDEF", 0x2C20, 0x0000);
-    ERUS("SZC  @UNDEF(R10),@>5678(R11)", "UNDEF(R10),@>5678(R11)", 0x4AEA, 0x0000, 0x5678);
+    ERUS("SZC  @UNDEF(R10),@>2345(R11)", "UNDEF(R10),@>2345(R11)", 0x4AEA, 0x0000, 0x2345);
     ERUS("SZC  @>1234(R10),@UNDEF(R11)", "UNDEF(R11)",             0x4AEA, 0x1234, 0x0000);
     ERUS("SZC  @UNDEF(R10),@UNDEF(R11)", "UNDEF(R10),@UNDEF(R11)", 0x4AEA, 0x0000, 0x0000);
 

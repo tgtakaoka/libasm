@@ -63,6 +63,9 @@ AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
 void AsmTms9900::encodeRelative(AsmInsn &insn, const Operand &op) {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
+    const auto error = checkAddr(target);
+    if (error)
+        setErrorIf(op, error);
     const auto delta = branchDelta(base, target, op) / 2;
     if (overflowInt8(delta))
         setErrorIf(op, OPERAND_TOO_FAR);
@@ -93,7 +96,9 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
         opc = (2 << 4);
         if (op.getError() != UNDEFINED_SYMBOL) {
             const auto error = checkAddr(op.val16);
-            if (!insn.byteOp() && error == OPERAND_NOT_ALIGNED)
+            if (error == OPERAND_NOT_ALIGNED && !insn.byteOp())
+                setErrorIf(op, error);
+            if (error == OVERFLOW_RANGE)
                 setErrorIf(op, error);
         }
         insn.emitOperand16(op.val16);
