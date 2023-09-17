@@ -74,7 +74,7 @@ On POSIX environment, assembler command line interface is provided.
 It can generate Intel HEX or Motorola S-Record output.
 
 ----
-libasm assembler (version 1.6.32)
+libasm assembler (version 1.6.35)
 usage: asm [-o <output>] [-l <list>] <input>
   -C <CPU>    : target CPU
                 MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
@@ -82,8 +82,8 @@ usage: asm [-o <output>] [-l <list>] <input>
                 W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051
                 i8080 i8085 V30EMU Z80 Z8 Z86C Z88 TLCS90 INS8060 INS8070
                 CDP1802 CDP1804 CDP1804A SCN2650 F3850 TMS7000 TMS32010
-                TMS32015 i8086 i80186 V30 i8096 MC68000 TMS9900 TMS9995
-                TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
+                TMS32015 i8086 i80186 V30 i8096 MC68000 TMS9900 TMS9980
+                TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
   -o <output> : output file
   -l <list>   : list file
   -S[<bytes>] : output Motorola S-Record format
@@ -117,7 +117,7 @@ On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
 ----
-libasm disassembler (version 1.6.32)
+libasm disassembler (version 1.6.35)
 usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   -C <CPU>    : target CPU
                 MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
@@ -125,8 +125,8 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
                 W65C816S i8039 i8048 i80C39 i80C48 MSM80C39 MSM80C48 i8051
                 i8080 i8085 V30EMU Z80 Z8 Z86C Z88 TLCS90 INS8060 INS8070
                 CDP1802 CDP1804 CDP1804A SCN2650 F3850 TMS7000 TMS32010
-                TMS32015 i8086 i80186 V30 i8096 MC68000 TMS9900 TMS9995
-                TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
+                TMS32015 i8086 i80186 V30 i8096 MC68000 TMS9900 TMS9980
+                TMS9995 TMS99105 Z8001 Z8002 NS32032 MN1610 MN1613 MN1613A
   -o <output> : output file
   -l <list>   : list file
   <input>     : file can be Motorola S-Record or Intel HEX format
