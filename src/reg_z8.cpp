@@ -65,17 +65,21 @@ uint8_t encodeWorkRegAddr(bool super8, RegName name) {
 }
 
 RegName parseRegName(StrScanner &scan) {
-    if (scan.iexpectText_P(TEXT_REG_RR)) {
-        const auto num = parseRegNumber(scan);
+    auto p = scan;
+    if (p.iexpectText_P(TEXT_REG_RR)) {
+        const auto num = parseRegNumber(p);
         if (num < 0 || num >= 16)
             return REG_UNDEF;
         if (num % 2)
             return REG_ILLEGAL;
+        scan = p;
         return RegName(REG_RR0 + num);
-    } else if (scan.iexpect('R')) {
-        const auto num = parseRegNumber(scan);
+    }
+    if (p.iexpect('R')) {
+        const auto num = parseRegNumber(p);
         if (num < 0 || num >= 16)
             return REG_UNDEF;
+        scan = p;
         return RegName(REG_R0 + num);
     }
     return REG_UNDEF;

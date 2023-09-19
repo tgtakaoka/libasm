@@ -1041,6 +1041,18 @@ static void test_program_control() {
     AERRT(0x1000, "JR $+257", OPERAND_NOT_ALIGNED, "$+257", 0xE87F);
     AERRT(0x1000, "JR $+258", OPERAND_TOO_FAR,     "$+258", 0xE880);
 
+    symtab.intern(0x1040, "rrx40");
+    symtab.intern(0x1040, "rlx40");
+    symtab.intern(0x1040, "rhx40");
+    symtab.intern(0x1040, "rqx40");
+    symtab.intern(0x1040, "rx40");
+
+    ATEST(0x1000, "JR rrx40", 0xE81F);
+    ATEST(0x1000, "JR rlx40", 0xE81F);
+    ATEST(0x1000, "JR rhx40", 0xE81F);
+    ATEST(0x1000, "JR rqx40", 0xE81F);
+    ATEST(0x1000, "JR rx40",  0xE81F);
+
     // Return from Procedure
     TEST("RET F",   0x9E00);
     TEST("RET LT",  0x9E01);

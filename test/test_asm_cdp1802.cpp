@@ -497,10 +497,10 @@ static void test_branch() {
     TEST("LSNQ", 0xC5);
     TEST("LSIE", 0xCC);
 
-    symtab.intern(0x1031, "sym1031");
+    symtab.intern(0x1031, "rrr1031");
     symtab.intern(0x1131, "sym1131");
 
-    ATEST(0x10FD, "BR sym1031", 0x30, 0x31);
+    ATEST(0x10FD, "BR rrr1031", 0x30, 0x31);
     ATEST(0x10FE, "BR sym1131", 0x30, 0x31);
     ATEST(0x10FF, "BR sym1131", 0x30, 0x31);
 

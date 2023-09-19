@@ -80,39 +80,45 @@ PROGMEM constexpr NameTable FLAG_TABLE{ARRAY_RANGE(FLAG_ENTRIES)};
 }  // namespace
 
 RegName parseRegName(StrScanner &scan) {
-    const auto save = scan;
-    if (scan.iexpect('R')) {
-        const auto num = parseRegNumber(scan);
-        if (num >= 0 && num < 16)
+    auto p = scan;
+    if (p.iexpect('R')) {
+        const auto num = parseRegNumber(p);
+        if (num >= 0 && num < 16) {
+            scan = p;
             return RegName(REG_R0 + num);
-        scan = save;
+        }
     }
-    if (scan.iexpectText_P(TEXT_REG_RR)) {
-        const auto num = parseRegNumber(scan);
+    p = scan;
+    if (p.iexpectText_P(TEXT_REG_RR)) {
+        const auto num = parseRegNumber(p);
         if (num < 0 || num >= 16)
             return REG_UNDEF;
         if (num % 2)
             return REG_ILLEGAL;
+        scan = p;
         return RegName(REG_RR0 + num);
     }
-    if (scan.iexpectText_P(TEXT_REG_RL)) {
-        const auto num = parseRegNumber(scan);
+    if (p.iexpectText_P(TEXT_REG_RL)) {
+        const auto num = parseRegNumber(p);
         if (num < 0 || num >= 8)
             return REG_UNDEF;
+        scan = p;
         return RegName(REG_RL0 + num);
     }
-    if (scan.iexpectText_P(TEXT_REG_RH)) {
-        const auto num = parseRegNumber(scan);
+    if (p.iexpectText_P(TEXT_REG_RH)) {
+        const auto num = parseRegNumber(p);
         if (num < 0 || num >= 8)
             return REG_UNDEF;
+        scan = p;
         return RegName(REG_RH0 + num);
     }
-    if (scan.iexpectText_P(TEXT_REG_RQ)) {
-        const auto num = parseRegNumber(scan);
+    if (p.iexpectText_P(TEXT_REG_RQ)) {
+        const auto num = parseRegNumber(p);
         if (num < 0 || num >= 16)
             return REG_UNDEF;
         if (num % 4)
             return REG_ILLEGAL;
+        scan = p;
         return RegName(REG_RQ0 + num);
     }
     return REG_UNDEF;

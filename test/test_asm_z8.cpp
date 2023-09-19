@@ -142,6 +142,8 @@ static void test_absolute() {
 static void test_relative() {
     symtab.intern(0x106E, "?s$106E");
     symtab.intern(0x0F8E, ".s_0F8E");
+    symtab.intern(0x1040, "rx40");
+    symtab.intern(0x1040, "rr40");
 
     ATEST(0x1000, "JR F,   %100E", 0x0B, 0x0C);
     ATEST(0x1000, "JR LT,  %101E", 0x1B, 0x1C);
@@ -163,6 +165,9 @@ static void test_relative() {
     ATEST(0x1000, "JR NE,  %0FEE", 0xEB, 0xEC);
     ATEST(0x1000, "JR NC,  %0FFE", 0xFB, 0xFC);
     ATEST(0x1000, "JR UGE, %0FFE", 0xFB, 0xFC);
+
+    ATEST(0x1000, "JR rx40", 0x8B, 0x3E);
+    ATEST(0x1000, "JR rr40", 0x8B, 0x3E);
 
     ATEST(0x1000, "djnz  r0,100dh", 0x0A, 0x0B);
     ATEST(0x1000, "DJNZ  R1,%101D", 0x1A, 0x1B);
