@@ -25,11 +25,9 @@ namespace libasm {
 namespace tms9900 {
 
 struct DisTms9900 final : Disassembler, Config {
-    DisTms9900();
+    DisTms9900(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
-
     Error decodeRelative(DisInsn &insn, StrBuffer &out);
     Error checkPostWord(DisInsn &insn, StrBuffer &out);
     Error decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out);
@@ -39,6 +37,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace tms9900

@@ -25,11 +25,9 @@ namespace libasm {
 namespace scn2650 {
 
 struct DisScn2650 final : Disassembler, Config {
-    DisScn2650();
+    DisScn2650(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
-
     Error decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode);
     Error decodeIndexed(DisInsn &insn, StrBuffer &out);
     Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
@@ -38,6 +36,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace scn2650

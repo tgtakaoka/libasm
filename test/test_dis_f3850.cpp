@@ -66,7 +66,8 @@ void test_accumlator() {
     TEST(AI,  "4",     0x24, 0x04);
     TEST(AI,  "H'FB'", 0x24, 0xFB);
     TEST(CI,  "5",     0x25, 0x05);
-    TEST(CI,  "H'FA'", 0x25, 0xFA);
+    disassembler.setOption("intel-hex", "on");
+    TEST(CI,  "0FAH",  0x25, 0xFA);
 }
 
 void test_status() {
@@ -227,9 +228,12 @@ void test_branch() {
     ATEST(0x1000, BF,  "10, H'0F81'", 0x9A, 0x80);
     ATEST(0x1000, BF,  "11, H'1002'", 0x9B, 0x01);
     ATEST(0x1000, BF,  "12, H'1002'", 0x9C, 0x01);
-    ATEST(0x1000, BF,  "13, H'1002'", 0x9D, 0x01);
-    ATEST(0x1000, BF,  "14, H'1002'", 0x9E, 0x01);
-    ATEST(0x1000, BF,  "15, H'1002'", 0x9F, 0x01);
+    disassembler.setOption("relative", "on");
+    ATEST(0x1000, BF,  "13, $+2",     0x9D, 0x01);
+    disassembler.setOption("origin-char", ".");
+    ATEST(0x1000, BF,  "14, .+2",     0x9E, 0x01);
+    disassembler.setOption("origin-char", "");
+    ATEST(0x1000, BF,  "15, $+2",     0x9F, 0x01);
 }
 
 void test_io() {

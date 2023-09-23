@@ -24,7 +24,11 @@ namespace z80 {
 
 using namespace reg;
 
-DisZ80::DisZ80() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisZ80::defaultPlugins() {
+    return ValueFormatter::Plugins::intel();
+}
+
+DisZ80::DisZ80(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

@@ -24,13 +24,21 @@ namespace z8000 {
 
 using namespace reg;
 
-static const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
-static const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
-static const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-static const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
+namespace {
 
-DisZ8000::DisZ8000()
-    : Disassembler(_hexFormatter, '$', &_opt_shortDirect),
+const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
+const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
+const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisZ8000::defaultPlugins() {
+    return ValueFormatter::Plugins::zilog();
+}
+
+DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_shortDirect),
       Config(TABLE),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
               OPT_DESC_SHORT_DIRECT, _opt_ioaddrPrefix),
@@ -224,7 +232,9 @@ Error DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode
     return setError(insn);
 }
 
-static uint8_t modeField(const DisInsn &insn, ModeField field) {
+namespace {
+
+uint8_t modeField(const DisInsn &insn, ModeField field) {
     switch (field) {
     case MF_C0:
         return (insn.opCode() & 0xF);
@@ -242,6 +252,8 @@ static uint8_t modeField(const DisInsn &insn, ModeField field) {
         return 0;
     }
 }
+
+}  // namespace
 
 Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, ModeField field) {
     uint8_t num = modeField(insn, field);
@@ -344,13 +356,17 @@ Error DisZ8000::checkPostWord(const DisInsn &insn) {
     return OK;
 }
 
-static OprSize registerSize(const DisInsn &insn, AddrMode mode) {
+namespace {
+
+OprSize registerSize(const DisInsn &insn, AddrMode mode) {
     if (mode == M_IR)
         return SZ_ADDR;
     if (mode == M_GEND && (insn.opCode() >> 14) == 2)  // M_R
         return insn.size();
     return SZ_WORD;
 }
+
+}  // namespace
 
 Error DisZ8000::checkRegisterOverlap(const DisInsn &insn) {
     const auto dmode = insn.dst();

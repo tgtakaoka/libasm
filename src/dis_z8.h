@@ -26,14 +26,13 @@ namespace libasm {
 namespace z8 {
 
 struct DisZ8 final : Disassembler, Config {
-    DisZ8();
+    DisZ8(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setUseWorkRegister(bool enable);
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::PERCENT};
     const BoolOption<DisZ8> _opt_workRegister;
 
     bool _useWorkRegister;
@@ -56,6 +55,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace z8

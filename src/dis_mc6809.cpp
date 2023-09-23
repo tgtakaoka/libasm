@@ -24,7 +24,12 @@ namespace mc6809 {
 
 using namespace reg;
 
-DisMc6809::DisMc6809() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
+const ValueFormatter::Plugins &DisMc6809::defaultPlugins() {
+    return ValueFormatter::Plugins::motorola();
+}
+
+DisMc6809::DisMc6809(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

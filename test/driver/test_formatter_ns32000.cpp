@@ -62,8 +62,8 @@ void test_dis_ns32000() {
             // clang-format off
             "      extd    r1, x'00112233(x'00334455(fp))[r3:w], x'00556677(x'00778899(sb))[r4:w], 32\n"
             // clang-format on
-            "; test.bin: x'abce05: error: Register not allowed\n"
-            ";   abce05 : ce ec 08\n",
+            "# test.bin: x'abce05: error: Register not allowed\n"
+            "#   abce05 : ce ec 08\n",
             "       0 :                            cpu     ns32032\n"
             "  abcdef :                            org     x'abcdef\n"
             // clang-format off

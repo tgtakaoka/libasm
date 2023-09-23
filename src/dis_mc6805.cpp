@@ -24,11 +24,20 @@ namespace mc6805 {
 
 using namespace reg;
 
-static const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
-static const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+namespace {
 
-DisMc6805::DisMc6805()
-    : Disassembler(_hexFormatter, '*', &_opt_pc_bits), Config(TABLE),
+const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
+const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisMc6805::defaultPlugins() {
+    return ValueFormatter::Plugins::motorola();
+}
+
+DisMc6805::DisMc6805(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_pc_bits),
+      Config(TABLE),
       _opt_pc_bits(this, &DisMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();
 }

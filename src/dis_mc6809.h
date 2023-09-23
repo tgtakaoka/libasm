@@ -25,11 +25,9 @@ namespace libasm {
 namespace mc6809 {
 
 struct DisMc6809 final : Disassembler, Config {
-    DisMc6809();
+    DisMc6809(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
-
     // MC6809
     Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
     Error decodeIndexed(DisInsn &insn, StrBuffer &out);
@@ -48,6 +46,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace mc6809

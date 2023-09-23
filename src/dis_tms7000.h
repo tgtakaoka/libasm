@@ -25,13 +25,11 @@ namespace libasm {
 namespace tms7000 {
 
 struct DisTms7000 final : Disassembler, Config {
-    DisTms7000();
+    DisTms7000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::LESS};
-
     Error decodeRegister(DisInsn &insn, StrBuffer &out);
     Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode);
@@ -41,6 +39,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace tms7000

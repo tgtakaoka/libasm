@@ -24,13 +24,21 @@ namespace i8086 {
 
 using namespace reg;
 
-static const char OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
-static const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
-static const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
-static const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+namespace {
 
-DisI8086::DisI8086()
-    : Disassembler(_hexFormatter, '$', &_opt_segmentInsn),
+const char OPT_BOOL_SEGMENT_INSN[] PROGMEM = "segment-insn";
+const char OPT_DESC_SEGMENT_INSN[] PROGMEM = "segment override as instruction";
+const char OPT_BOOL_STRING_INSN[] PROGMEM = "string-insn";
+const char OPT_DESC_STRING_INSN[] PROGMEM = "string instruction as repeat operand";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisI8086::defaultPlugins() {
+    return ValueFormatter::Plugins::intel();
+}
+
+DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_segmentInsn),
       Config(TABLE),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
               OPT_DESC_SEGMENT_INSN, _opt_stringInsn),
@@ -133,7 +141,9 @@ Error DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     return setError(insn);
 }
 
-static RegName getBaseReg(uint8_t mod, uint8_t r_m) {
+namespace {
+
+RegName getBaseReg(uint8_t mod, uint8_t r_m) {
     if (r_m <= 1 || r_m == 7)
         return REG_BX;
     if (r_m <= 3)
@@ -143,13 +153,13 @@ static RegName getBaseReg(uint8_t mod, uint8_t r_m) {
     return REG_UNDEF;
 }
 
-static RegName getIndexReg(uint8_t r_m) {
+RegName getIndexReg(uint8_t r_m) {
     if (r_m >= 6)
         return REG_UNDEF;
     return r_m % 2 == 0 ? REG_SI : REG_DI;
 }
 
-static OprSize operandSize(const DisInsn &insn, AddrMode mode) {
+OprSize operandSize(const DisInsn &insn, AddrMode mode) {
     switch (mode) {
     case M_AL:
     case M_BREG:
@@ -166,7 +176,7 @@ static OprSize operandSize(const DisInsn &insn, AddrMode mode) {
     }
 }
 
-static OprSize operandSize(const DisInsn &insn) {
+OprSize operandSize(const DisInsn &insn) {
     if (insn.stringInst())
         return insn.size();
     OprSize size;
@@ -177,7 +187,7 @@ static OprSize operandSize(const DisInsn &insn) {
     return SZ_NONE;
 }
 
-static OprSize pointerSize(const DisInsn &insn, AddrMode mode) {
+OprSize pointerSize(const DisInsn &insn, AddrMode mode) {
     const OprSize size = insn.size();
     if (size == SZ_NONE)
         return size;
@@ -193,13 +203,15 @@ static OprSize pointerSize(const DisInsn &insn, AddrMode mode) {
     }
 }
 
-static RegName pointerReg(const DisInsn &insn) {
+RegName pointerReg(const DisInsn &insn) {
     OprSize size;
     if ((size = pointerSize(insn, insn.dst())) == SZ_NONE &&
             (size = pointerSize(insn, insn.src())) == SZ_NONE)
         return REG_UNDEF;
     return size == SZ_BYTE ? REG_BYTE : REG_WORD;
 }
+
+}  // namespace
 
 Error DisI8086::outMemReg(DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mod, uint8_t r_m) {
     if (operandSize(insn) == SZ_NONE) {
@@ -323,7 +335,9 @@ Error DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprP
     return OK;
 }
 
-static bool validSegOverride(AddrMode mode, uint8_t mod) {
+namespace {
+
+bool validSegOverride(AddrMode mode, uint8_t mod) {
     switch (mode) {
     case M_BDIR:
     case M_WDIR:
@@ -338,7 +352,7 @@ static bool validSegOverride(AddrMode mode, uint8_t mod) {
     }
 }
 
-static bool validSegOverride(const DisInsn &insn) {
+bool validSegOverride(const DisInsn &insn) {
     if (insn.segment() == 0)
         return true;
     if (insn.stringInst())
@@ -346,6 +360,8 @@ static bool validSegOverride(const DisInsn &insn) {
     const uint8_t mod = insn.modReg() >> 6;
     return validSegOverride(insn.dst(), mod) || validSegOverride(insn.src(), mod);
 }
+
+}  // namespace
 
 Error DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) {
     if (insn.segment()) {
@@ -393,13 +409,17 @@ Error DisI8086::readCodes(DisInsn &insn) {
     return setError(insn);
 }
 
-static bool imulHasSameDstSrc(const DisInsn &insn) {
+namespace {
+
+bool imulHasSameDstSrc(const DisInsn &insn) {
     const auto modreg = insn.modReg();
     const auto reg = (modreg >> 3) & 7;
     return (insn.opCode() & ~2) == 0x69 &&  // IMUL
            (modreg >> 6) == 3 &&            // regsiter
            (modreg & 7) == reg;             // dst==src
 }
+
+}  // namespace
 
 Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);

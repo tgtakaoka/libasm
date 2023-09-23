@@ -24,11 +24,19 @@ namespace ins8070 {
 
 using namespace reg;
 
-static const char OPT_BOOL_USE_SHARP[] PROGMEM = "use-sharp";
-static const char OPT_DESC_USE_SHARP[] PROGMEM = "use # (default =) for immediate";
+namespace {
 
-DisIns8070::DisIns8070()
-    : Disassembler(_hexFormatter, '$', &_opt_useSharp),
+const char OPT_BOOL_USE_SHARP[] PROGMEM = "use-sharp";
+const char OPT_DESC_USE_SHARP[] PROGMEM = "use # (default =) for immediate";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisIns8070::defaultPlugins() {
+    return ValueFormatter::Plugins::national();
+}
+
+DisIns8070::DisIns8070(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_useSharp),
       Config(TABLE),
       _opt_useSharp(
               this, &DisIns8070::setUseSharpImmediate, OPT_BOOL_USE_SHARP, OPT_DESC_USE_SHARP) {

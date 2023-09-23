@@ -25,16 +25,15 @@ namespace libasm {
 namespace i8080 {
 
 struct DisI8080 final : Disassembler, Config {
-    DisI8080();
+    DisI8080(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
-
     Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace i8080

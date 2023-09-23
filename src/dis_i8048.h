@@ -25,11 +25,9 @@ namespace libasm {
 namespace i8048 {
 
 struct DisI8048 final : Disassembler, Config {
-    DisI8048();
+    DisI8048(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
-
     Error decodeRReg(DisInsn &insn, StrBuffer &out, const AddrMode mode);
     Error decodeAddress(DisInsn &insn, StrBuffer &out, const AddrMode mode);
     Error decodeImmediate(DisInsn &insn, StrBuffer &out, const AddrMode mode);
@@ -38,6 +36,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace i8048

@@ -25,19 +25,18 @@ namespace libasm {
 namespace i8096 {
 
 struct DisI8096 final : Disassembler, Config {
-    DisI8096();
+    DisI8096(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setUseAbsolute(bool enable);
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisI8096> _opt_absolute;
 
     bool _useAbsolute;
 
-    struct Operand : public ErrorReporter {
+    struct Operand : ErrorReporter {
         AddrMode mode;
         uint8_t regno;
         uint16_t val16;
@@ -54,6 +53,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace i8096

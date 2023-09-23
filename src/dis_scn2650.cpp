@@ -24,33 +24,46 @@ namespace scn2650 {
 
 using namespace reg;
 
-DisScn2650::DisScn2650() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisScn2650::defaultPlugins() {
+    static const struct final : ValueFormatter::Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
+        const SurroundHexFormatter _hex{HexFormatter::H_DASH, '\''};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+DisScn2650::DisScn2650(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 
-static constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
+namespace {
+
+constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
     return addr & ~0x1FFF;  // 8k bytes per page
 }
 
-static constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
+constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
     return addr & 0x1FFF;
 }
 
-static constexpr Config::uintptr_t inpage(
-        const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
+constexpr Config::uintptr_t inpage(const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
     return page(addr) | offset(addr + delta);
 }
 
-static StrBuffer &appendRegName(DisInsn &insn, StrBuffer &out, RegName name) {
+StrBuffer &appendCcName(DisInsn &insn, StrBuffer &out, CcName name) {
     auto save = out;
-    outRegName(insn.nameBuffer().over(out).letter(','), name);
+    outCcName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
 
-static StrBuffer &appendCcName(DisInsn &insn, StrBuffer &out, CcName name) {
+}  // namespace
+
+StrBuffer &appendRegName(DisInsn &insn, StrBuffer &out, RegName name) {
     auto save = out;
-    outCcName(insn.nameBuffer().over(out).letter(','), name);
+    outRegName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }

@@ -24,7 +24,11 @@ namespace i8051 {
 
 using namespace reg;
 
-DisI8051::DisI8051() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisI8051::defaultPlugins() {
+    return ValueFormatter::Plugins::intel();
+}
+
+DisI8051::DisI8051(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

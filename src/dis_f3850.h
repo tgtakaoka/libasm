@@ -25,14 +25,13 @@ namespace libasm {
 namespace f3850 {
 
 struct DisF3850 final : Disassembler, Config {
-    DisF3850();
+    DisF3850(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setUseScratchpadName(bool enable);
 
 private:
-    const SurroundHexFormatter _hexFormatter{HexFormatter::H_DASH, '\''};
     const BoolOption<DisF3850> _opt_useScratchpad;
 
     bool _useScratchpad;
@@ -43,6 +42,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace f3850

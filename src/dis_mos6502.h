@@ -25,7 +25,7 @@ namespace libasm {
 namespace mos6502 {
 
 struct DisMos6502 final : Disassembler, Config {
-    DisMos6502();
+    DisMos6502(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -34,7 +34,6 @@ struct DisMos6502 final : Disassembler, Config {
     Error setUseIndirectLong(bool enable);
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
     const BoolOption<DisMos6502> _opt_longa;
     const BoolOption<DisMos6502> _opt_longi;
     const BoolOption<DisMos6502> _opt_indirectLong;
@@ -55,6 +54,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace mos6502

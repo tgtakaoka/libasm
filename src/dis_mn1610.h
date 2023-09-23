@@ -26,11 +26,9 @@ namespace libasm {
 namespace mn1610 {
 
 struct DisMn1610 final : Disassembler, Config {
-    DisMn1610();
+    DisMn1610(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SurroundHexFormatter _hexFormatter{HexFormatter::X_DASH, '\''};
-
     Error outRegister(StrBuffer &out, RegName reg, AddrMode mode);
     Error outConditionCode(StrBuffer &out, CcName cc);
     Error outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base);
@@ -41,6 +39,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace mn1610

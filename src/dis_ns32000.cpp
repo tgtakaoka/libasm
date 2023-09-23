@@ -24,17 +24,30 @@ namespace ns32000 {
 
 using namespace reg;
 
-static const char OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
-static const char OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
-static const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
-static const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
-static const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
-static const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
-static const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
-static const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
+namespace {
 
-DisNs32000::DisNs32000()
-    : Disassembler(_hexFormatter, '*', &_opt_pcrelParen),
+const char OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
+const char OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
+const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
+const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
+const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
+const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
+const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
+const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
+    static const struct final : ValueFormatter::Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("#"); }
+        const PrefixHexFormatter _hex{HexFormatter::X_DASH};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_pcrelParen),
       Config(TABLE),
       _opt_pcrelParen(this, &DisNs32000::setPcRelativeParen, OPT_BOOL_PCREL_PAREN,
               OPT_DESC_PCREL_PAREN, _opt_externalParen),
@@ -75,12 +88,14 @@ Error DisNs32000::setFloatPrefix(bool enable) {
     return OK;
 }
 
-static bool isGenMode(AddrMode mode) {
+namespace {
+
+bool isGenMode(AddrMode mode) {
     return mode == M_GENR || mode == M_GENW || mode == M_GENC || mode == M_GENA || mode == M_FENR ||
            mode == M_FENW;
 }
 
-static uint8_t getOprField(const DisInsn &insn, OprPos pos) {
+uint8_t getOprField(const DisInsn &insn, OprPos pos) {
     if (pos == P_GEN1)
         return (insn.hasPost() ? insn.post() : insn.opCode()) >> 3;
     if (pos == P_GEN2 && insn.hasPost()) {
@@ -101,9 +116,11 @@ static uint8_t getOprField(const DisInsn &insn, OprPos pos) {
     return 0;
 }
 
-static bool isScaledIndex(uint8_t gen) {
+bool isScaledIndex(uint8_t gen) {
     return gen >= 0x1c;
 }
+
+}  // namespace
 
 Error DisNs32000::readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) {
     if (isGenMode(mode) && isScaledIndex(getOprField(insn, pos)))

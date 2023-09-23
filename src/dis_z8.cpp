@@ -24,11 +24,19 @@ namespace z8 {
 
 using namespace reg;
 
-static const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
-static const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
+namespace {
 
-DisZ8::DisZ8()
-    : Disassembler(_hexFormatter, '$', &_opt_workRegister),
+const char OPT_BOOL_WORK_REGISTER[] PROGMEM = "work-register";
+const char OPT_DESC_WORK_REGISTER[] PROGMEM = "prefer work register name than alias address";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisZ8::defaultPlugins() {
+    return ValueFormatter::Plugins::zilog();
+}
+
+DisZ8::DisZ8(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_workRegister),
       Config(TABLE),
       _opt_workRegister(
               this, &DisZ8::setUseWorkRegister, OPT_BOOL_WORK_REGISTER, OPT_DESC_WORK_REGISTER) {
@@ -52,19 +60,23 @@ StrBuffer &DisZ8::outConditionCode(StrBuffer &out, Config::opcode_t opCode) {
     return out;
 }
 
-static StrBuffer &outWorkReg(StrBuffer &out, uint8_t num, bool indir = false) {
+namespace {
+
+StrBuffer &outWorkReg(StrBuffer &out, uint8_t num, bool indir = false) {
     const auto reg = decodeRegNum(num);
     if (indir)
         out.letter('@');
     return outRegName(out, reg);
 }
 
-static StrBuffer &outPairReg(StrBuffer &out, uint8_t num, bool indir = false) {
+StrBuffer &outPairReg(StrBuffer &out, uint8_t num, bool indir = false) {
     const auto reg = decodePairRegNum(num);
     if (indir)
         out.letter('@');
     return outRegName(out, reg);
 }
+
+}  // namespace
 
 StrBuffer &DisZ8::outRegAddr(StrBuffer &out, uint8_t addr, bool indir) {
     if (_useWorkRegister && isWorkRegAlias(isSuper8(), addr))

@@ -25,11 +25,9 @@ namespace libasm {
 namespace ins8060 {
 
 struct DisIns8060 final : Disassembler, Config {
-    DisIns8060();
+    DisIns8060(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
-
     Error decodePntr(DisInsn &insn, StrBuffer &out);
     Error decodeImm8(DisInsn &insn, StrBuffer &out);
     Error decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode);
@@ -40,6 +38,7 @@ private:
 
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace ins8060

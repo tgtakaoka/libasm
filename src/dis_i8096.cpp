@@ -24,11 +24,19 @@ namespace i8096 {
 
 using namespace reg;
 
-static const char OPT_BOOL_ABSOLUTE[] PROGMEM = "use-absolute";
-static const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
+namespace {
 
-DisI8096::DisI8096()
-    : Disassembler(_hexFormatter, '$', &_opt_absolute),
+const char OPT_BOOL_ABSOLUTE[] PROGMEM = "use-absolute";
+const char OPT_DESC_ABSOLUTE[] PROGMEM = "zero register indexing as absolute addressing";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisI8096::defaultPlugins() {
+    return ValueFormatter::Plugins::intel();
+}
+
+DisI8096::DisI8096(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_absolute),
       Config(TABLE),
       _opt_absolute(this, &DisI8096::setUseAbsolute, OPT_BOOL_ABSOLUTE, OPT_DESC_ABSOLUTE) {
     reset();

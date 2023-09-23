@@ -25,11 +25,9 @@ namespace libasm {
 namespace tms32010 {
 
 struct DisTms32010 final : Disassembler, Config {
-    DisTms32010();
+    DisTms32010(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
-
     Error decodeDirect(StrBuffer &out, Config::opcode_t opc);
     Error decodeIndirect(StrBuffer &out, uint8_t mam);
     Error decodeNextArp(StrBuffer &out, uint8_t mam);
@@ -39,6 +37,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace tms32010

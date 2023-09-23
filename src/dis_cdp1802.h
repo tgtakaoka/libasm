@@ -25,14 +25,13 @@ namespace libasm {
 namespace cdp1802 {
 
 struct DisCdp1802 final : Disassembler, Config {
-    DisCdp1802();
+    DisCdp1802(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setUseRegsterName(bool enable);
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisCdp1802> _opt_useReg;
 
     bool _useReg;
@@ -42,6 +41,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace cdp1802

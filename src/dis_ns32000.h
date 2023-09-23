@@ -25,7 +25,7 @@ namespace libasm {
 namespace ns32000 {
 
 struct DisNs32000 final : Disassembler, Config {
-    DisNs32000();
+    DisNs32000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -35,7 +35,6 @@ struct DisNs32000 final : Disassembler, Config {
     Error setFloatPrefix(bool enable);
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
     const BoolOption<DisNs32000> _opt_pcrelParen;
     const BoolOption<DisNs32000> _opt_externalParen;
     const BoolOption<DisNs32000> _opt_stroptBracket;
@@ -70,6 +69,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace ns32000

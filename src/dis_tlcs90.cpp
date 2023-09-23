@@ -24,7 +24,12 @@ namespace tlcs90 {
 
 using namespace reg;
 
-DisTlcs90::DisTlcs90() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisTlcs90::defaultPlugins() {
+    return ValueFormatter::Plugins::intel();
+}
+
+DisTlcs90::DisTlcs90(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

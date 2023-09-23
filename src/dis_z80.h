@@ -26,11 +26,9 @@ namespace libasm {
 namespace z80 {
 
 struct DisZ80 final : Disassembler, Config {
-    DisZ80();
+    DisZ80(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
-
     StrBuffer &outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits);
     StrBuffer &outIndirectReg(StrBuffer &out, RegName reg);
     StrBuffer &outIndexOffset(StrBuffer &out, RegName reg, int8_t offset);
@@ -43,6 +41,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace z80

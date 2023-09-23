@@ -26,7 +26,7 @@ namespace libasm {
 namespace i8086 {
 
 struct DisI8086 final : Disassembler, Config {
-    DisI8086();
+    DisI8086(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -34,7 +34,6 @@ struct DisI8086 final : Disassembler, Config {
     Error setSegmentInsn(bool enable);
 
 private:
-    const SuffixHexFormatter _hexFormatter{'h'};
     const BoolOption<DisI8086> _opt_segmentInsn;
     const BoolOption<DisI8086> _opt_stringInsn;
 
@@ -56,6 +55,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace i8086

@@ -31,17 +31,6 @@ const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
 }  // namespace
 
-Disassembler::Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option)
-    : _formatter(hexFormatter, curSym),
-      _commonOptions(&_opt_relative),
-      _options(option),
-      _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
-              _opt_cstyle),
-      _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_intelhex),
-      _opt_intelhex(
-              this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, _opt_curSym),
-      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN) {}
-
 Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option)
     : _formatter(plugins),
       _commonOptions(&_opt_relative),

@@ -68,14 +68,14 @@ void test_dis_cdp1802() {
 
     DIS8("cdp1804", 0xabcd,
             "      cpu   cdp1804\n"
-            "      org   0abcdh\n"
-            "      scal  r3, 8485h\n"
-            "; test.bin: 0abd1h: error: Unknown instruction\n"
-            ";     abd1 : 68 0f\n",
+            "      org   x'abcd'\n"
+            "      scal  r3, x'8485'\n"
+            ".. test.bin: x'abd1': error: Unknown instruction\n"
+            "..     abd1 : 68 0f\n",
             "       0 :                            cpu   cdp1804\n"
-            "    abcd :                            org   0abcdh\n"
-            "    abcd : 68 83 84 85                scal  r3, 8485h\n"
-            "test.bin: 0abd1h: error: Unknown instruction\n"
+            "    abcd :                            org   x'abcd'\n"
+            "    abcd : 68 83 84 85                scal  r3, x'8485'\n"
+            "test.bin: x'abd1': error: Unknown instruction\n"
             "    abd1 : 68 0f\n",
             0x68, 0x83, 0x84, 0x85, 0x68, 0x0f);
 }

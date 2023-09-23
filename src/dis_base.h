@@ -82,8 +82,6 @@ protected:
     char _curSym;
     SymbolTable *_symtab = nullptr;
 
-    Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option = nullptr);
-
     Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option = nullptr);
 
     /** Lookup |addr| value and returns symbol. */

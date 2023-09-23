@@ -26,11 +26,9 @@ namespace libasm {
 namespace mc68000 {
 
 struct DisMc68000 final : Disassembler, Config {
-    DisMc68000();
+    DisMc68000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
-
     StrBuffer &outOprSize(StrBuffer &out, OprSize size);
     StrBuffer &outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suffix);
     StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, bool pop,
@@ -46,6 +44,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace mc68000

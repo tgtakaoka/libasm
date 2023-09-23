@@ -24,7 +24,11 @@ namespace i8080 {
 
 using namespace reg;
 
-DisI8080::DisI8080() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisI8080::defaultPlugins() {
+    return ValueFormatter::Plugins::intel();
+}
+
+DisI8080::DisI8080(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

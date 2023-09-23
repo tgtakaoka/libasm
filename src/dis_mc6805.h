@@ -25,7 +25,7 @@ namespace libasm {
 namespace mc6805 {
 
 struct DisMc6805 final : Disassembler, Config {
-    DisMc6805();
+    DisMc6805(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     AddressWidth addressWidth() const override;
     void reset() override;
@@ -33,7 +33,6 @@ struct DisMc6805 final : Disassembler, Config {
     Error setPcBits(int32_t val);
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
     const IntOption<DisMc6805> _opt_pc_bits;
 
     uint8_t _pc_bits;
@@ -47,6 +46,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace mc6805

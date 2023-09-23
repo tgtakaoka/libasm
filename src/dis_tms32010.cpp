@@ -24,7 +24,18 @@ namespace tms32010 {
 
 using namespace reg;
 
-DisTms32010::DisTms32010() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisTms32010::defaultPlugins() {
+    static const struct final : ValueFormatter::Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        char locationSymbol() const override { return '$'; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
+        const SuffixHexFormatter _hex{'h'};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+DisTms32010::DisTms32010(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

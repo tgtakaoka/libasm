@@ -24,7 +24,18 @@ namespace mn1610 {
 
 using namespace reg;
 
-DisMn1610::DisMn1610() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
+const ValueFormatter::Plugins &DisMn1610::defaultPlugins() {
+    static const struct final : ValueFormatter::Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        char locationSymbol() const override { return '*'; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
+        const SurroundHexFormatter _hex{HexFormatter::X_DASH, '\''};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+DisMn1610::DisMn1610(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

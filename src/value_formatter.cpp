@@ -88,6 +88,7 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::motorola() {
         const OctFormatter &oct() const override { return _oct; }
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
         const PrefixBinFormatter _bin{BinFormatter::PERCENT};
         const PrefixOctFormatter _oct{OctFormatter::ATMARK};
         const PrefixHexFormatter _hex{HexFormatter::DOLLAR};
@@ -104,6 +105,16 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::national() {
         const PrefixBinFormatter _bin{BinFormatter::B_DASH};
         const PrefixOctFormatter _oct{OctFormatter::O_DASH};
         const PrefixHexFormatter _hex{HexFormatter::X_DASH};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+const ValueFormatter::Plugins &ValueFormatter::Plugins::texas() {
+    static const struct fianl : Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        char locationSymbol() const override { return '$'; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
+        const PrefixHexFormatter _hex{HexFormatter::LESS};
     } PLUGINS{};
     return PLUGINS;
 }

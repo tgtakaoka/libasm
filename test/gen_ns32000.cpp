@@ -28,6 +28,7 @@ int main(int argc, const char **argv) {
 
     dis32000.setOption("relative", "enable");
     dis32000.setOption("c-style", "enable");
+    dis32000.setOption("origin-char", "*");
     if (driver.generateGas()) {
         dis32000.setOption("stropt-bracket", "enable");
         dis32000.setOption("origin-char", ".");

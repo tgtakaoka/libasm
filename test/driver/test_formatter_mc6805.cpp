@@ -53,10 +53,10 @@ void test_dis_mc6805() {
             "      CPU   MC146805\n"
             "      ORG   $1234\n"
             "      STX   16384,X\n"
-            "; test.bin: $1237: error: Unknown instruction\n"
-            ";     1237 : 82\n"
-            "; test.bin: $1238: error: Overflow range\n"
-            ";     1238 : c6 20 00\n",
+            "* test.bin: $1237: error: Unknown instruction\n"
+            "*     1237 : 82\n"
+            "* test.bin: $1238: error: Overflow range\n"
+            "*     1238 : c6 20 00\n",
             "       0 :                            CPU   MC146805\n"
             "    1234 :                            ORG   $1234\n"
             "    1234 : df 40 00                   STX   16384,X\n"

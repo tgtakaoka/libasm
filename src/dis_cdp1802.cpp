@@ -24,11 +24,25 @@ namespace cdp1802 {
 
 using namespace reg;
 
-static const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-static const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
+namespace {
 
-DisCdp1802::DisCdp1802()
-    : Disassembler(_hexFormatter, '$', &_opt_useReg),
+const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+const char OPT_DESC_USE_REGISTER[] PROGMEM = "use register name Rn";
+
+}  // namespace
+
+const ValueFormatter::Plugins &DisCdp1802::defaultPlugins() {
+    static const struct final : ValueFormatter::Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        char locationSymbol() const override { return '$'; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR(".."); }
+        const SurroundHexFormatter _hex{HexFormatter::X_DASH, '\''};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+DisCdp1802::DisCdp1802(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins, &_opt_useReg),
       Config(TABLE),
       _opt_useReg(
               this, &DisCdp1802::setUseRegsterName, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER) {
@@ -45,13 +59,17 @@ Error DisCdp1802::setUseRegsterName(bool enable) {
     return OK;
 }
 
-static Config::uintptr_t page(Config::uintptr_t addr) {
+namespace {
+
+Config::uintptr_t page(Config::uintptr_t addr) {
     return addr & ~0xFF;
 }
 
-static Config::uintptr_t inpage(Config::uintptr_t base, uint8_t offset) {
+Config::uintptr_t inpage(Config::uintptr_t base, uint8_t offset) {
     return page(base) | offset;
 }
+
+}  // namespace
 
 Error DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const auto opCode = insn.opCode();

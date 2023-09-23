@@ -89,10 +89,10 @@ void test_dis_mc68000() {
             "      cpu     mc68000\n"
             "      org     $9abcde\n"
             "      ori.l   #$bdbebfc0, ($c2c3c4).l\n"
-            "; test.bin: $9abce8: error: Operand not allowed\n"
-            ";   9abce8 : 43fc\n"
-            "; test.bin: $9abcea: error: Operand not aligned\n"
-            ";   9abcea : 617f\n",
+            "* test.bin: $9abce8: error: Operand not allowed\n"
+            "*   9abce8 : 43fc\n"
+            "* test.bin: $9abcea: error: Operand not aligned\n"
+            "*   9abcea : 617f\n",
             "       0 :                            cpu     mc68000\n"
             "  9abcde :                            org     $9abcde\n"
             "  9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"

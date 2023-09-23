@@ -38,6 +38,7 @@ struct ValueFormatter final {
         static const Plugins &intel();
         static const Plugins &motorola();
         static const Plugins &national();
+        static const Plugins &texas();
         static const Plugins &zilog();
     };
 
@@ -48,14 +49,6 @@ struct ValueFormatter final {
           _hex(plugins.hex()),
           _locationSymbol(plugins.locationSymbol()),
           _lineComment_P(plugins.lineComment_P()) {}
-
-    ValueFormatter(const HexFormatter &hex, char curSym)
-        : _dec(DecFormatter::singleton()),
-          _bin(BinFormatter::singleton()),
-          _oct(OctFormatter::singleton()),
-          _hex(hex),
-          _locationSymbol(curSym),
-          _lineComment_P(PSTR(";")) {}
 
     /**
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed integer when |bits| is

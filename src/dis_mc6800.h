@@ -25,11 +25,9 @@ namespace libasm {
 namespace mc6800 {
 
 struct DisMc6800 final : Disassembler, Config {
-    DisMc6800();
+    DisMc6800(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::DOLLAR};
-
     Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
     Error decodeExtended(DisInsn &insn, StrBuffer &out);
     Error decodeRelative(DisInsn &insn, StrBuffer &out);
@@ -39,6 +37,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace mc6800

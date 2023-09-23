@@ -71,10 +71,10 @@ void test_dis_mc6809() {
             "      cpu   mc6809\n"
             "      org   $ABCD\n"
             "      cmpd  [$1234,y]\n"
-            "; test.bin: $ABD2: error: Unknown instruction\n"
-            ";     ABD2 : 01\n"
-            "; test.bin: $ABD3: error: Unknown post-byte\n"
-            ";     ABD3 : A6 87\n",
+            "* test.bin: $ABD2: error: Unknown instruction\n"
+            "*     ABD2 : 01\n"
+            "* test.bin: $ABD3: error: Unknown post-byte\n"
+            "*     ABD3 : A6 87\n",
             "       0 :                            cpu   mc6809\n"
             "    ABCD :                            org   $ABCD\n"
             "    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y]\n"

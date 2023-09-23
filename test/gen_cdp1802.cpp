@@ -26,6 +26,8 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
+    dis1802.setOption("intel-hex", "true");
+
     TestGenerator generator(driver, dis1802, 0x0100);
     generator.generate().generate(0x68);
 

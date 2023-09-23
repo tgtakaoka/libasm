@@ -24,7 +24,12 @@ namespace mc68000 {
 
 using namespace reg;
 
-DisMc68000::DisMc68000() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
+const ValueFormatter::Plugins &DisMc68000::defaultPlugins() {
+    return ValueFormatter::Plugins::motorola();
+}
+
+DisMc68000::DisMc68000(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 
@@ -136,9 +141,13 @@ Error DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8) {
     return setErrorIf(insn);
 }
 
-static RegName decodeMoveMltReg(int8_t regno) {
+namespace {
+
+RegName decodeMoveMltReg(int8_t regno) {
     return (regno < 8) ? decodeDataReg(regno) : decodeAddrReg(regno - 8);
 }
+
+}  // namespace
 
 StrBuffer &DisMc68000::outMoveMltRegList(StrBuffer &out, uint16_t list, bool push,
         StrBuffer &(DisMc68000::*outRegs)(StrBuffer &, RegName, RegName, char)) {
@@ -303,7 +312,9 @@ Error DisMc68000::checkOperand(AddrMode mode, uint8_t m, uint8_t r, OprSize s) {
     return OK;
 }
 
-static uint8_t modeVal(Config::opcode_t opc, OprPos pos) {
+namespace {
+
+uint8_t modeVal(Config::opcode_t opc, OprPos pos) {
     switch (pos) {
     case OP_10:
         return (opc >> 3) & 7;
@@ -313,7 +324,8 @@ static uint8_t modeVal(Config::opcode_t opc, OprPos pos) {
         return 0;
     }
 }
-static uint8_t regVal(Config::opcode_t opc, OprPos pos) {
+
+uint8_t regVal(Config::opcode_t opc, OprPos pos) {
     switch (pos) {
     case OP_10:
     case OP__0:
@@ -326,7 +338,7 @@ static uint8_t regVal(Config::opcode_t opc, OprPos pos) {
     }
 }
 
-static OprSize sizeVal(const DisInsn &insn) {
+OprSize sizeVal(const DisInsn &insn) {
     const auto size = insn.oprSize();
     const auto opc = insn.opCode();
     if (size == SZ_DATA) {
@@ -347,6 +359,8 @@ static OprSize sizeVal(const DisInsn &insn) {
         return (opc & (1 << 8)) ? SZ_LONG : SZ_WORD;
     return size;
 }
+
+}  // namespace
 
 Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);

@@ -24,11 +24,25 @@ namespace f3850 {
 
 using namespace reg;
 
-static const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
-static const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
+namespace {
 
-DisF3850::DisF3850()
-    : Disassembler(_hexFormatter, '$', &_opt_useScratchpad),
+const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
+const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
+
+}  // namespace
+
+const ValueFormatter::Plugins& DisF3850::defaultPlugins() {
+    static const struct fianl : ValueFormatter::Plugins {
+        const HexFormatter &hex() const override { return _hex; }
+        char locationSymbol() const override { return '$'; }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
+        const SurroundHexFormatter _hex{HexFormatter::H_DASH, '\''};
+    } PLUGINS{};
+    return PLUGINS;
+}
+
+DisF3850::DisF3850(const ValueFormatter::Plugins& plugins)
+    : Disassembler(plugins, &_opt_useScratchpad),
       Config(TABLE),
       _opt_useScratchpad(this, &DisF3850::setUseScratchpadName, OPT_BOOL_USE_SCRATCHPAD,
               OPT_DESC_USE_SCRATCHPAD) {

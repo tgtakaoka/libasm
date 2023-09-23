@@ -24,7 +24,12 @@ namespace mc6800 {
 
 using namespace reg;
 
-DisMc6800::DisMc6800() : Disassembler(_hexFormatter, '*'), Config(TABLE) {
+const ValueFormatter::Plugins &DisMc6800::defaultPlugins() {
+    return ValueFormatter::Plugins::motorola();
+}
+
+DisMc6800::DisMc6800(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 
@@ -60,13 +65,17 @@ Error DisMc6800::decodeRelative(DisInsn &insn, StrBuffer &out) {
     return OK;
 }
 
-static int8_t bitNumber(uint8_t val) {
+namespace {
+
+int8_t bitNumber(uint8_t val) {
     for (uint8_t pos = 0, mask = 0x01; pos < 8; pos++, mask <<= 1) {
         if (val == mask)
             return pos;
     }
     return -1;
 }
+
+}  // namespace
 
 Error DisMc6800::decodeBitNumber(DisInsn &insn, StrBuffer &out) {
     const uint8_t val8 = insn.readByte();

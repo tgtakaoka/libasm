@@ -71,8 +71,8 @@ void test_dis_mn1610() {
             "      cpu   mn1610\n"
             "      org   x'abcd'\n"
             "      tbit  r3, 5, nz\n"
-            "; test.bin: x'abce': error: Illegal register\n"
-            ";     abce : 0f06\n",
+            "* test.bin: x'abce': error: Illegal register\n"
+            "*     abce : 0f06\n",
             "       0 :                            cpu   mn1610\n"
             "    abcd :                            org   x'abcd'\n"
             "    abcd : 2b55                       tbit  r3, 5, nz\n"
@@ -92,8 +92,8 @@ void test_dis_mn1613() {
             "      cpu   mn1613\n"
             "      org   x'34567'\n"
             "      mvwi  str, x'5678', skp\n"
-            "; test.bin: x'34569': error: Register not allowed\n"
-            ";    34569 : 0f06\n",
+            "* test.bin: x'34569': error: Register not allowed\n"
+            "*    34569 : 0f06\n",
             "       0 :                            cpu   mn1613\n"
             "   34567 :                            org   x'34567'\n"
             "   34567 : 7e1f 5678                  mvwi  str, x'5678', skp\n"

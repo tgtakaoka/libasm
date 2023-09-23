@@ -30,7 +30,12 @@ namespace {
 const char TEXT_IDXB[] PROGMEM = "(B)";
 }
 
-DisTms7000::DisTms7000() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisTms7000::defaultPlugins() {
+    return ValueFormatter::Plugins::texas();
+}
+
+DisTms7000::DisTms7000(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

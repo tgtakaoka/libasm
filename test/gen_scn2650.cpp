@@ -27,6 +27,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis2650.setOption("relative", "disable");
+    dis2650.setOption("intel-hex", "enable");
 
     TestGenerator generator(driver, dis2650, 0x0100);
     generator.generate();

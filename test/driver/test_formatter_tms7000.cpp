@@ -51,8 +51,8 @@ void test_dis_tms7000() {
             "      cpu   tms7000\n"
             "      org   >7bcd\n"
             "      movd  %>a9aa(b), r171\n"
-            "; test.bin: >7bd1: error: Unknown instruction\n"
-            ";     7bd1 : af\n",
+            "* test.bin: >7bd1: error: Unknown instruction\n"
+            "*     7bd1 : af\n",
             "       0 :                            cpu   tms7000\n"
             "    7bcd :                            org   >7bcd\n"
             "    7bcd : a8 a9 aa ab                movd  %>a9aa(b), r171\n"

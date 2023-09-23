@@ -25,7 +25,7 @@ namespace libasm {
 namespace z8000 {
 
 struct DisZ8000 final : Disassembler, Config {
-    DisZ8000();
+    DisZ8000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -33,7 +33,6 @@ struct DisZ8000 final : Disassembler, Config {
     Error setIoAddressPrefix(bool enable);
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::PERCENT};
     const BoolOption<DisZ8000> _opt_shortDirect;
     const BoolOption<DisZ8000> _opt_ioaddrPrefix;
 
@@ -58,6 +57,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace z8000

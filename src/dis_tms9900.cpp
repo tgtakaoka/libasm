@@ -26,7 +26,12 @@ namespace tms9900 {
 using namespace reg;
 using text::tms9900::TEXT_MID;
 
-DisTms9900::DisTms9900() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisTms9900::defaultPlugins() {
+    return ValueFormatter::Plugins::texas();
+}
+
+DisTms9900::DisTms9900(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 

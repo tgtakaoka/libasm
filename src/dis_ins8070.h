@@ -25,14 +25,13 @@ namespace libasm {
 namespace ins8070 {
 
 struct DisIns8070 final : Disassembler, Config {
-    DisIns8070();
+    DisIns8070(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
     Error setUseSharpImmediate(bool enable);
 
 private:
-    const PrefixHexFormatter _hexFormatter{HexFormatter::X_DASH};
     const BoolOption<DisIns8070> _opt_useSharp;
 
     bool _useSharp;
@@ -47,6 +46,7 @@ private:
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
 };
 
 }  // namespace ins8070

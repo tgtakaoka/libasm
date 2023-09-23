@@ -27,6 +27,7 @@ struct : ValueParser::Locator {
 const ValueParser parser{plugins, locator};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
+
 static void set_up() {}
 
 static void tear_down() {

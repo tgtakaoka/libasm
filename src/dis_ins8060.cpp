@@ -24,7 +24,12 @@ namespace ins8060 {
 
 using namespace reg;
 
-DisIns8060::DisIns8060() : Disassembler(_hexFormatter, '$'), Config(TABLE) {
+const ValueFormatter::Plugins &DisIns8060::defaultPlugins() {
+    return ValueFormatter::Plugins::national();
+}
+
+DisIns8060::DisIns8060(const ValueFormatter::Plugins &plugins)
+    : Disassembler(plugins), Config(TABLE) {
     reset();
 }
 
