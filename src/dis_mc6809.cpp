@@ -161,7 +161,7 @@ Error DisMc6809::decodePushPull(DisInsn &insn, StrBuffer &out) {
     const bool push = (insn.opCode() & 1) == 0;
     for (uint8_t i = 0, n = 0; i < 8; i++) {
         const uint8_t bitPos = push ? 7 - i : i;
-        if (post & shiftLeftOne(bitPos)) {
+        if (post & (1U << bitPos)) {
             if (n != 0)
                 out.letter(',');
             auto reg = decodeStackReg(bitPos, userStack);

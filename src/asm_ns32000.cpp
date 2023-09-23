@@ -202,7 +202,7 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
         const auto name = parseRegName(p);
         if (!isGeneric(name))
             return UNKNOWN_OPERAND;
-        list |= shiftLeftOne(encodeRegName(name));
+        list |= 1U << encodeRegName(name);
         n++;
         if (p.skipSpaces().expect(']'))
             break;

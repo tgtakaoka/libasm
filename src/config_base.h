@@ -73,8 +73,6 @@ struct ConfigBase {
      */
     Error checkAddr(uint32_t addr, uint8_t width = 0) const;
 
-    static uint32_t shiftLeftOne(uint8_t width);
-
     static int32_t signExtend(uint32_t u32, uint8_t bitw);
     static bool overflowInt8(int16_t s16);
     static bool overflowInt8(int32_t s32);

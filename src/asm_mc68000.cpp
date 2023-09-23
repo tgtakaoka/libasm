@@ -348,7 +348,7 @@ void AsmMc68000::emitRegisterList(AsmInsn &insn, const Operand &op, bool reverse
                 setErrorIf(UNKNOWN_OPERAND);
         }
         for (uint8_t i = s; i <= e; i++) {
-            const auto bm = shiftLeftOne(i);
+            const auto bm = 1U << i;
             if (bits & bm)
                 setErrorIf(p, DUPLICATE_REGISTER);
             bits |= bm;
@@ -406,7 +406,7 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             bool over16 = overflowInt16(op.val32);
             if (over16) {
                 // check if it is near the end of address space.
-                const auto max = shiftLeftOne(uint8_t(addressWidth()));
+                const auto max = 1UL << uint8_t(addressWidth());
                 if (op.val32 <= max - 1 && op.val32 >= (max - 0x8000))
                     over16 = false;
             }

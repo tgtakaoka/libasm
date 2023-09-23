@@ -176,7 +176,7 @@ private:
     char buffer[80];
 
     const ConfigBase &config() const { return isAsm() ? _asm->config() : _dis->config(); }
-    uint32_t addrMax() const { return ConfigBase::shiftLeftOne(uint8_t(config().addressWidth())); }
+    uint32_t addrMax() const { return 1UL << uint8_t(config().addressWidth()); }
     uint8_t addrUnit() const { return uint8_t(config().addressUnit()); }
     uint8_t addrDigits() const { return ((uint8_t(config().addressWidth()) + 3) & -4) / 4; }
 

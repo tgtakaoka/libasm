@@ -167,7 +167,7 @@ void AsmMc6805::emitRelative(AsmInsn &insn, const Operand &op) {
 }
 
 void AsmMc6805::emitBitNumber(AsmInsn &insn, const Operand &op) {
-    const uint8_t imm = shiftLeftOne(op.val16 & 7);
+    const uint8_t imm = 1U << (op.val16 & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }

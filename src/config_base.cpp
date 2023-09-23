@@ -31,7 +31,7 @@ bool ConfigBase::overflowInt16(int32_t s32) {
 }
 
 bool ConfigBase::overflowInt(int32_t s32, uint8_t bitw) {
-    const int32_t sign = ConfigBase::shiftLeftOne(bitw - 1);
+    const int32_t sign = 1UL << (bitw - 1);
     return s32 < -sign || s32 >= sign;
 }
 
@@ -54,64 +54,26 @@ bool ConfigBase::overflowUint(uint32_t u32, uint8_t bitw) {
     const auto s32 = static_cast<int32_t>(u32);
     if (bitw >= 32)
         return false;
-    const uint32_t max = ConfigBase::shiftLeftOne(bitw);
-    const int32_t sign = ConfigBase::shiftLeftOne(bitw - 1);
+    const int32_t sign = 1UL << (bitw - 1);
+    const uint32_t max = sign << 1;
     return s32 < -sign || (s32 >= 0 && u32 >= max);
 }
 
 int32_t ConfigBase::signExtend(uint32_t u32, uint8_t width) {
-    const uint32_t mask = shiftLeftOne(width) - 1;
-    const uint32_t sign = shiftLeftOne(width - 1);
+    const uint32_t sign = 1UL << (width - 1);
+    const uint32_t mask = (sign << 1) - 1;
     return static_cast<int32_t>(((u32 + sign) & mask) - sign);
 }
 
 Error ConfigBase::checkAddr(uint32_t addr, uint8_t width) const {
     if (width == 0)
         width = static_cast<uint8_t>(addressWidth());
-    const uint32_t max = shiftLeftOne(width);
+    const uint32_t max = 1UL << width;
     if (addr & ~(max - 1))
         return OVERFLOW_RANGE;
     if (opCodeWidth() == OPCODE_16BIT && addressUnit() == ADDRESS_BYTE && addr % 2)
         return OPERAND_NOT_ALIGNED;
     return OK;
-}
-
-uint32_t ConfigBase::shiftLeftOne(uint8_t width) {
-    static const uint32_t table[32] PROGMEM = {
-            0b00000000000000000000000000000001,
-            0b00000000000000000000000000000010,
-            0b00000000000000000000000000000100,
-            0b00000000000000000000000000001000,
-            0b00000000000000000000000000010000,
-            0b00000000000000000000000000100000,
-            0b00000000000000000000000001000000,
-            0b00000000000000000000000010000000,
-            0b00000000000000000000000100000000,
-            0b00000000000000000000001000000000,
-            0b00000000000000000000010000000000,
-            0b00000000000000000000100000000000,
-            0b00000000000000000001000000000000,
-            0b00000000000000000010000000000000,
-            0b00000000000000000100000000000000,
-            0b00000000000000001000000000000000,
-            0b00000000000000010000000000000000,
-            0b00000000000000100000000000000000,
-            0b00000000000001000000000000000000,
-            0b00000000000010000000000000000000,
-            0b00000000000100000000000000000000,
-            0b00000000001000000000000000000000,
-            0b00000000010000000000000000000000,
-            0b00000000100000000000000000000000,
-            0b00000001000000000000000000000000,
-            0b00000010000000000000000000000000,
-            0b00000100000000000000000000000000,
-            0b00001000000000000000000000000000,
-            0b00010000000000000000000000000000,
-            0b00100000000000000000000000000000,
-            0b01000000000000000000000000000000,
-            0b10000000000000000000000000000000,
-    };
-    return width >= 32 ? 0 : pgm_read_dword(&table[width]);
 }
 
 }  // namespace libasm
