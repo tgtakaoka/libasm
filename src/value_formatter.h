@@ -19,79 +19,14 @@
 
 #include <stdint.h>
 
+#include "formatters.h"
 #include "str_buffer.h"
 
 namespace libasm {
 
-/**
- * Hexadecimal number formatter
- */
-struct HexFormatter {
-    /** Format unsigned |val| as |width| bit hexadecimal. */
-    virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
-
-    static const /*PROGMEM*/ char ZERO_X[] PROGMEM;
-    static const /*PROGMEM*/ char DOLLAR[] PROGMEM;
-    static const /*PROGMEM*/ char PERCENT[] PROGMEM;
-    static const /*PROGMEM*/ char LESS[] PROGMEM;
-    static const /*PROGMEM*/ char X_DASH[] PROGMEM;
-    static const /*PROGMEM*/ char H_DASH[] PROGMEM;
-
-protected:
-    /**
-     * Helper function to format unsigned |val| as |width| bit hexadecimal in reverse digit order.
-     */
-    static StrBuffer &outHex(StrBuffer &out, uint32_t val, uint8_t width);
-};
-
-/**
- * C-Style hexadecimal number is "0xFF"
- */
-struct CStyleHexFormatter final : HexFormatter {
-    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
-};
-
-/**
- * Hexadecimal number is prefixed with |prefix|.
- */
-struct PrefixHexFormatter final : HexFormatter {
-    PrefixHexFormatter(const /*PROGMEM*/ char *prefix_P) : _prefix_P(prefix_P) {}
-
-    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
-
-protected:
-    const char *const _prefix_P;
-};
-
-/**
- * Hexadecimal number is suffixed with |suffix|. It is also prefixed with '0' when it starts with
- * non-digit letter.
- */
-struct SuffixHexFormatter final : HexFormatter {
-    SuffixHexFormatter(char suffix) : _suffix(suffix) {}
-
-    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
-
-private:
-    const char _suffix;
-};
-
-/**
- * Hexadecimal number is surrounded by |prefix| and |suffix|.
- */
-struct SurroundHexFormatter final : HexFormatter {
-    SurroundHexFormatter(const /*PROGMEM*/ char *prefix_P, char suffix)
-        : _prefix_P(prefix_P), _suffix(suffix) {}
-
-    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
-
-private:
-    const char *const _prefix_P;
-    const char _suffix;
-};
-
 struct ValueFormatter final {
-    ValueFormatter(const HexFormatter &hexFormatter = DEFAULT_HEX) : _hexFormatter(hexFormatter) {}
+    ValueFormatter(const HexFormatter &hexFormatter = HexFormatter::singleton())
+        : _hexFormatter(hexFormatter) {}
 
     /**
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed integer when |bits| is
@@ -109,8 +44,6 @@ struct ValueFormatter final {
 
 private:
     const HexFormatter &_hexFormatter;
-
-    static const HexFormatter DEFAULT_HEX;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;
     static StrBuffer &outDec(StrBuffer &out, uint32_t val);

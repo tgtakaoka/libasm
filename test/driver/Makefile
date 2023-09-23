@@ -35,14 +35,18 @@ vpath %.cpp ../../test
 CXXFLAGS = -std=c++14 -Wall -O $(DEBUG_FLAGS)
 CPPFLAGS = -I../../driver -I../../src -I../../test -MD -MF $@.d
 
-OBJS_common = test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o text_common.o
-OBJS_encdec = bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
-OBJS_formatter = list_formatter.o value_formatter.o config_base.o reg_base.o option_base.o \
-           str_buffer.o bin_memory.o \
-           dis_base.o dis_formatter.o
-OBJS_asm = asm_base.o asm_formatter.o value_parser.o parsers.o operators.o \
-           asm_driver.o asm_directive.o function_store.o \
-           bin_encoder.o bin_decoder.o moto_srec.o intel_hex.o
+OBJS_common = \
+    test_driver_helper.o test_asserter.o error_reporter.o str_scanner.o \
+    text_common.o
+OBJS_encdec = \
+    bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
+OBJS_formatter = \
+    list_formatter.o value_formatter.o config_base.o formatters.o reg_base.o \
+    option_base.o str_buffer.o bin_memory.o dis_base.o dis_formatter.o
+OBJS_asm = \
+    asm_base.o asm_formatter.o value_parser.o parsers.o operators.o \
+    asm_driver.o asm_directive.o function_store.o bin_encoder.o bin_decoder.o \
+    moto_srec.o intel_hex.o
 ARCHS_test_asm_formatter = i8080 ins8060 mc6809 mos6502 z80
 OBJS_test_asm_formatter = $(OBJS_formatter) $(OBJS_common) $(OBJS_asm) \
         $(foreach a,$(ARCHS_test_asm_formatter),asm_$(a).o $(OBJS_$(a)))
