@@ -32,10 +32,7 @@ struct : ValueParser::Locator {
 } locator;
 const ValueParser parser{plugins, locator};
 
-const PrefixHexFormatter hexFormatter{HexFormatter::PERCENT};
-const PrefixOctFormatter octFormatter{OctFormatter::PERCENT8};
-const PrefixBinFormatter binFormatter{BinFormatter::PERCENT2};
-const ValueFormatter formatter{hexFormatter, octFormatter, binFormatter};
+const ValueFormatter formatter{ValueFormatter::Plugins::zilog()};
 
 static void set_up() {}
 

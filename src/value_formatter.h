@@ -25,14 +25,37 @@
 namespace libasm {
 
 struct ValueFormatter final {
-    ValueFormatter(const HexFormatter &hexFormatter = HexFormatter::singleton(),
-            const OctFormatter &octFormatter = OctFormatter::singleton(),
-            const BinFormatter &binFormatter = BinFormatter::singleton(),
-            const DecFormatter &decFormatter = DecFormatter::singleton())
-        : _hexFormatter(hexFormatter),
-          _octFormatter(octFormatter),
-          _binFormatter(binFormatter),
-          _decFormatter(decFormatter) {}
+    struct Plugins : Singleton<Plugins> {
+        virtual const DecFormatter &dec() const;
+        virtual const BinFormatter &bin() const;
+        virtual const OctFormatter &oct() const;
+        virtual const HexFormatter &hex() const;
+        virtual char locationSymbol() const;
+        virtual const /*PROGMEM*/ char *lineComment_P() const;
+
+        static const Plugins &cstyle();
+        static const Plugins &fairchild();
+        static const Plugins &intel();
+        static const Plugins &motorola();
+        static const Plugins &national();
+        static const Plugins &zilog();
+    };
+
+    ValueFormatter(const Plugins &plugins = Plugins::singleton())
+        : _dec(plugins.dec()),
+          _bin(plugins.bin()),
+          _oct(plugins.oct()),
+          _hex(plugins.hex()),
+          _locationSymbol(plugins.locationSymbol()),
+          _lineComment_P(plugins.lineComment_P()) {}
+
+    ValueFormatter(const HexFormatter &hex, char curSym)
+        : _dec(DecFormatter::singleton()),
+          _bin(BinFormatter::singleton()),
+          _oct(OctFormatter::singleton()),
+          _hex(hex),
+          _locationSymbol(curSym),
+          _lineComment_P(PSTR(";")) {}
 
     /**
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed integer when |bits| is
@@ -60,11 +83,16 @@ struct ValueFormatter final {
     StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0, bool upperHex = false,
             bool relax = false) const;
 
+    char locationSymbol() const { return _locationSymbol; }
+    const /*PROGMEM*/ char *lineComment_P() const { return _lineComment_P; }
+
 private:
-    const HexFormatter &_hexFormatter;
-    const OctFormatter &_octFormatter;
-    const BinFormatter &_binFormatter;
-    const DecFormatter &_decFormatter;
+    const DecFormatter &_dec;
+    const BinFormatter &_bin;
+    const OctFormatter &_oct;
+    const HexFormatter &_hex;
+    const char _locationSymbol;
+    const /*PROGMEM*/ char *_lineComment_P;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;
 };

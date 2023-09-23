@@ -102,13 +102,13 @@ const char *DisFormatter::getContent() {
     if (isError()) {
         if (!_errorContent) {
             _errorContent = true;
-            _out.text("; ").text(_input_name).text(": ");
+            _out.text_P(_disassembler.lineComment_P()).letter(' ').text(_input_name).text(": ");
             _disassembler.formatter().formatHex(
                     _out, startAddress(), config().addressWidth(), _upperHex, false);
             _out.text(": error: ").text_P(_disassembler.errorText_P());
             _nextContent = 0;
         } else {
-            _out.text("; ");
+            _out.text_P(_disassembler.lineComment_P()).letter(' ');
             formatAddress(startAddress() + _nextContent);
             _nextContent += formatBytes(_nextContent);
         }

@@ -41,6 +41,7 @@ struct Disassembler : ErrorReporter {
     virtual void reset();
 
     const ValueFormatter &formatter() const;
+    const /*PROGMEM*/ char *lineComment_P() const { return _formatter.lineComment_P(); }
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
     const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
@@ -72,7 +73,6 @@ protected:
     const BoolOption<Disassembler> _opt_cstyle;
     const BoolOption<Disassembler> _opt_intelhex;
     const CharOption<Disassembler> _opt_curSym;
-    const char _defaultCurSym;
 
     bool _upperHex;
     bool _uppercase;
@@ -83,6 +83,8 @@ protected:
     SymbolTable *_symtab = nullptr;
 
     Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option = nullptr);
+
+    Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option = nullptr);
 
     /** Lookup |addr| value and returns symbol. */
     const char *lookup(uint32_t addr, uint8_t addrWidth = 0) const;

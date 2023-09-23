@@ -19,6 +19,7 @@
 namespace libasm {
 
 namespace {
+
 const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
 const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
 const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
@@ -28,14 +29,10 @@ const char OPT_DESC_INTELHEX[] PROGMEM = "Intel style hexadecimal";
 const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
 const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
-const CStyleHexFormatter CSTYLE_HEX_FORMATTER;
-const ValueFormatter CSTYLE_FORMATTER{CSTYLE_HEX_FORMATTER};
-const SuffixHexFormatter INTEL_HEX_FORMATTER{'h'};
-const ValueFormatter INTEL_FORMATTER{INTEL_HEX_FORMATTER};
 }  // namespace
 
 Disassembler::Disassembler(const HexFormatter &hexFormatter, char curSym, const OptionBase *option)
-    : _formatter(hexFormatter),
+    : _formatter(hexFormatter, curSym),
       _commonOptions(&_opt_relative),
       _options(option),
       _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
@@ -43,8 +40,18 @@ Disassembler::Disassembler(const HexFormatter &hexFormatter, char curSym, const 
       _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_intelhex),
       _opt_intelhex(
               this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, _opt_curSym),
-      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN),
-      _defaultCurSym(curSym) {}
+      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN) {}
+
+Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option)
+    : _formatter(plugins),
+      _commonOptions(&_opt_relative),
+      _options(option),
+      _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
+              _opt_cstyle),
+      _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_intelhex),
+      _opt_intelhex(
+              this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, _opt_curSym),
+      _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN) {}
 
 void Disassembler::reset() {
     setUpperHex(true);
@@ -56,10 +63,14 @@ void Disassembler::reset() {
 }
 
 const ValueFormatter &Disassembler::formatter() const {
-    if (_cstyle)
-        return CSTYLE_FORMATTER;
-    if (_intelHex)
-        return INTEL_FORMATTER;
+    if (_cstyle) {
+        static ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
+        return formatter;
+    }
+    if (_intelHex) {
+        static ValueFormatter formatter{ValueFormatter::Plugins::intel()};
+        return formatter;
+    }
     return _formatter;
 }
 
@@ -89,7 +100,7 @@ Error Disassembler::setIntelHex(bool enable) {
 }
 
 Error Disassembler::setCurSym(char curSym) {
-    _curSym = curSym ? curSym : _defaultCurSym;
+    _curSym = curSym ? curSym : _formatter.locationSymbol();
     return OK;
 }
 

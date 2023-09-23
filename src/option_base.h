@@ -115,7 +115,7 @@ struct CharOption : public OptionBase {
         : OptionBase(name_P, desc_P, OPT_CHAR), _app(app), _setter(setter) {}
 
     Error set(const StrScanner &scan) const override {
-        return scan.size() == 1 ? (_app->*_setter)(*scan) : ILLEGAL_CONSTANT;
+        return scan.size() <= 1 ? (_app->*_setter)(*scan) : ILLEGAL_CONSTANT;
     }
 
 private:

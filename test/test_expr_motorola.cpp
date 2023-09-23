@@ -34,10 +34,7 @@ struct : ValueParser::Locator {
 } locator;
 const ValueParser parser{plugins, locator};
 
-const PrefixHexFormatter hexFormatter{HexFormatter::DOLLAR};
-const PrefixOctFormatter octFormatter{OctFormatter::ATMARK};
-const PrefixBinFormatter binFormatter{BinFormatter::PERCENT};
-const ValueFormatter formatter{hexFormatter, octFormatter, binFormatter};
+const ValueFormatter formatter{ValueFormatter::Plugins::motorola()};
 
 static void set_up() {}
 

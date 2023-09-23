@@ -33,10 +33,7 @@ struct : ValueParser::Locator {
 } locator;
 const ValueParser parser{plugins, locator};
 
-const SuffixHexFormatter hexFormatter{'h'};
-const SuffixOctFormatter octFormatter{'q'};
-const SuffixBinFormatter binFormatter{'b'};
-const ValueFormatter formatter{hexFormatter, octFormatter, binFormatter};
+const ValueFormatter formatter{ValueFormatter::Plugins::intel()};
 
 static void set_up() {}
 
