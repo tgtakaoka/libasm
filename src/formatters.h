@@ -38,6 +38,25 @@ protected:
 };
 
 /**
+ * Binary number formatter
+ */
+struct BinFormatter : Singleton<BinFormatter> {
+    /** Format unsigned |val| as |width| bit binary. */
+    virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
+
+    static const /*PROGMEM*/ char ZERO_B[] PROGMEM;
+    static const /*PROGMEM*/ char PERCENT[] PROGMEM;
+    static const /*PROGMEM*/ char PERCENT2[] PROGMEM;
+    static const /*PROGMEM*/ char B_DASH[] PROGMEM;
+
+protected:
+    /**
+     * Helper function to format unsigned |val| as |width| bit binary in reverse digit order.
+     */
+    static StrBuffer &outBin(StrBuffer &out, uint32_t val, uint8_t width);
+};
+
+/**
  * Octal number formatter
  */
 struct OctFormatter : Singleton<OctFormatter> {
@@ -77,6 +96,18 @@ protected:
 };
 
 /**
+ * Binary number is prefixed with |prefix|.
+ */
+struct PrefixBinFormatter final : BinFormatter {
+    PrefixBinFormatter(const /*PROGMEM*/ char *prefix_P) : _prefix_P(prefix_P) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+protected:
+    const char *const _prefix_P;
+};
+
+/**
  * Octal number is prefixed with |prefix|.
  */
 struct PrefixOctFormatter final : OctFormatter {
@@ -101,6 +132,18 @@ protected:
 };
 
 /**
+ * Binary number is suffixed with |suffix|.
+ */
+struct SuffixBinFormatter final : BinFormatter {
+    SuffixBinFormatter(char suffix) : _suffix(suffix) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+private:
+    const char _suffix;
+};
+
+/**
  * Octal number is suffixed with |suffix|.
  */
 struct SuffixOctFormatter final : OctFormatter {
@@ -122,6 +165,20 @@ struct SuffixHexFormatter final : HexFormatter {
     StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
 
 private:
+    const char _suffix;
+};
+
+/**
+ * Binary number is surrounded by |prefix| and |suffix|.
+ */
+struct SurroundBinFormatter final : BinFormatter {
+    SurroundBinFormatter(const /*PROGMEM*/ char *prefix_P, char suffix)
+        : _prefix_P(prefix_P), _suffix(suffix) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+private:
+    const char *const _prefix_P;
     const char _suffix;
 };
 
@@ -151,6 +208,13 @@ struct SurroundHexFormatter final : HexFormatter {
 private:
     const char *const _prefix_P;
     const char _suffix;
+};
+
+/**
+ * C-Style binary number is "0b11"
+ */
+struct CStyleBinFormatter final : BinFormatter {
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
 };
 
 /**

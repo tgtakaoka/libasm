@@ -25,6 +25,11 @@ StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) 
     return _decFormatter.format(out, val);
 }
 
+StrBuffer &ValueFormatter::formatBin(StrBuffer &out, uint32_t val, int8_t bits) const {
+    val = makePositive(out, val, bits);
+    return _binFormatter.format(out, val, abs(bits));
+}
+
 StrBuffer &ValueFormatter::formatOct(StrBuffer &out, uint32_t val, int8_t bits) const {
     val = makePositive(out, val, bits);
     return _octFormatter.format(out, val, abs(bits));

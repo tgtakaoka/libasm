@@ -18,6 +18,11 @@
 
 namespace libasm {
 
+const /*PROGMEM*/ char BinFormatter::ZERO_B[] PROGMEM = "0b";
+const /*PROGMEM*/ char BinFormatter::PERCENT[] PROGMEM = "%";
+const /*PROGMEM*/ char BinFormatter::PERCENT2[] PROGMEM = "%(2)";
+const /*PROGMEM*/ char BinFormatter::B_DASH[] PROGMEM = "b'";
+
 const /*PROGMEM*/ char OctFormatter::ATMARK[] PROGMEM = "@";
 const /*PROGMEM*/ char OctFormatter::PERCENT8[] PROGMEM = "%(8)";
 const /*PROGMEM*/ char OctFormatter::O_DASH[] PROGMEM = "o'";
@@ -46,6 +51,47 @@ StrBuffer &DecFormatter::outDec(StrBuffer &out, uint32_t val) {
     return out;
 }
 
+StrBuffer &BinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    const auto start = out.mark();
+    return outBin(out, val, width).reverse(start);
+}
+
+
+StrBuffer &BinFormatter::outBin(StrBuffer &out, uint32_t val, uint8_t width) {
+    const auto start = out.mark();
+    while (val) {
+        const uint8_t digit = val & 1;
+        out.letter(digit + '0');
+        val >>= 1;
+    }
+    // zero filling
+    while (out.mark() - start < width && out.isOK())
+        out.letter('0');
+    return out;
+}
+
+StrBuffer &PrefixBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    return BinFormatter::format(out.text_P(_prefix_P), val, width);
+}
+
+StrBuffer &SuffixBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    return BinFormatter::format(out, val, width).letter(_suffix);
+}
+
+StrBuffer &SurroundBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    out.text_P(_prefix_P);
+    return BinFormatter::format(out, val, width).letter(_suffix);
+}
+
+StrBuffer &CStyleBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    return BinFormatter::format(out.rtext_P(ZERO_B), val, width);
+}
+
+StrBuffer &OctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    const auto start = out.mark();
+    return outOct(out, val, width).reverse(start);
+}
+
 StrBuffer &OctFormatter::outOct(StrBuffer &out, uint32_t val, uint8_t width) {
     const auto start = out.mark();
     while (val) {
@@ -58,11 +104,6 @@ StrBuffer &OctFormatter::outOct(StrBuffer &out, uint32_t val, uint8_t width) {
     while (out.mark() - start < digit && out.isOK())
         out.letter('0');
     return out;
-}
-
-StrBuffer &OctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    const auto start = out.mark();
-    return outOct(out, val, width).reverse(start);
 }
 
 StrBuffer &PrefixOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
