@@ -24,6 +24,20 @@
 namespace libasm {
 
 /**
+ * Decimal number formatter
+ */
+struct DecFormatter : Singleton<DecFormatter> {
+    /** Format unsigned |val| as decimal. */
+    virtual StrBuffer &format(StrBuffer &out, uint32_t val) const;
+
+protected:
+    /**
+     * Helper function to format unsigned |val| as decimal in reverse digit order.
+     */
+    static StrBuffer &outDec(StrBuffer &out, uint32_t val);
+};
+
+/**
  * Hexadecimal number formatter
  */
 struct HexFormatter : Singleton<HexFormatter> {

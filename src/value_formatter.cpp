@@ -22,22 +22,18 @@ namespace libasm {
 
 StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
     val = makePositive(out, val, bits);
-    const auto start = out.mark();
-    return outDec(out, val).reverse(start);
+    return _decFormatter.format(out, val);
 }
 
 StrBuffer &ValueFormatter::formatHex(
         StrBuffer &out, uint32_t val, int8_t bits, bool upperHex, bool relax) const {
     val = makePositive(out, val, bits);
-    const auto start = out.mark();
     if (relax && val <= 32)
-        return outDec(out, val).reverse(start);
-
-    const uint8_t width = abs(bits);
+        return _decFormatter.format(out, val);
     UppercaseBuffer upper(out);
     LowercaseBuffer lower(out);
     StrBuffer *outHex = upperHex ? upper.ptr() : lower.ptr();
-    return _hexFormatter.format(*outHex, val, width).over(out);
+    return _hexFormatter.format(*outHex, val, abs(bits)).over(out);
 }
 
 uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits) const {
@@ -52,18 +48,6 @@ uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits)
     }
     const auto mask = (1UL << bw) - 1;
     return val & mask;
-}
-
-StrBuffer &ValueFormatter::outDec(StrBuffer &out, uint32_t val) {
-    const auto start = out.mark();
-    while (val) {
-        const uint8_t digit = val % 10;
-        out.letter(digit + '0');
-        val /= 10;
-    }
-    if (out.mark() == start)
-        out.letter('0');
-    return out;
 }
 
 }  // namespace libasm

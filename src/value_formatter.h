@@ -25,8 +25,9 @@
 namespace libasm {
 
 struct ValueFormatter final {
-    ValueFormatter(const HexFormatter &hexFormatter = HexFormatter::singleton())
-        : _hexFormatter(hexFormatter) {}
+    ValueFormatter(const HexFormatter &hexFormatter = HexFormatter::singleton(),
+             const DecFormatter &decFormatter = DecFormatter::singleton())
+        : _hexFormatter(hexFormatter), _decFormatter(decFormatter) {}
 
     /**
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed integer when |bits| is
@@ -44,9 +45,9 @@ struct ValueFormatter final {
 
 private:
     const HexFormatter &_hexFormatter;
+    const DecFormatter &_decFormatter;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;
-    static StrBuffer &outDec(StrBuffer &out, uint32_t val);
 };
 
 }  // namespace libasm

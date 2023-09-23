@@ -25,6 +25,23 @@ const /*PROGMEM*/ char HexFormatter::LESS[] PROGMEM = ">";
 const /*PROGMEM*/ char HexFormatter::X_DASH[] PROGMEM = "x'";
 const /*PROGMEM*/ char HexFormatter::H_DASH[] PROGMEM = "h'";
 
+StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val) const {
+    const auto start = out.mark();
+    return outDec(out, val).reverse(start);
+}
+
+StrBuffer &DecFormatter::outDec(StrBuffer &out, uint32_t val) {
+    const auto start = out.mark();
+    while (val) {
+        const uint8_t digit = val % 10;
+        out.letter(digit + '0');
+        val /= 10;
+    }
+    if (out.mark() == start)
+        out.letter('0');
+    return out;
+}
+
 StrBuffer &HexFormatter::outHex(StrBuffer &out, uint32_t val, uint8_t width) {
     const auto start = out.mark();
     while (val) {
