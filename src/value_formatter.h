@@ -26,14 +26,21 @@ namespace libasm {
 
 struct ValueFormatter final {
     ValueFormatter(const HexFormatter &hexFormatter = HexFormatter::singleton(),
-             const DecFormatter &decFormatter = DecFormatter::singleton())
-        : _hexFormatter(hexFormatter), _decFormatter(decFormatter) {}
+            const OctFormatter &octFormatter = OctFormatter::singleton(),
+            const DecFormatter &decFormatter = DecFormatter::singleton())
+        : _hexFormatter(hexFormatter), _octFormatter(octFormatter), _decFormatter(decFormatter) {}
 
     /**
      * Convert |val| as |bits| decimal integer.  Treat |val| as signed integer when |bits| is
      * negative.  Leading zero will be suppressed.
      */
     StrBuffer &formatDec(StrBuffer &out, uint32_t val, int8_t bits = 0) const;
+
+    /**
+     * Convert |val| as |bits| octal integer.  Treat |val| as signed integer when |bits| is
+     * negative.
+     */
+    StrBuffer &formatOct(StrBuffer &out, uint32_t val, int8_t bits = 0) const;
 
     /**
      * Convert |val| as |bits| hexadecimal integer.  Treat |val| as signed integer when |bits| is
@@ -45,6 +52,7 @@ struct ValueFormatter final {
 
 private:
     const HexFormatter &_hexFormatter;
+    const OctFormatter &_octFormatter;
     const DecFormatter &_decFormatter;
 
     uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;

@@ -38,6 +38,24 @@ protected:
 };
 
 /**
+ * Octal number formatter
+ */
+struct OctFormatter : Singleton<OctFormatter> {
+    /** Format unsigned |val| as |width| bit hexadecimal. */
+    virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
+
+    static const /*PROGMEM*/ char ATMARK[] PROGMEM;
+    static const /*PROGMEM*/ char PERCENT8[] PROGMEM;
+    static const /*PROGMEM*/ char O_DASH[] PROGMEM;
+
+protected:
+    /**
+     * Helper function to format unsigned |val| as |width| bit octal in reverse digit order.
+     */
+    static StrBuffer &outOct(StrBuffer &out, uint32_t val, uint8_t width);
+};
+
+/**
  * Hexadecimal number formatter
  */
 struct HexFormatter : Singleton<HexFormatter> {
@@ -59,6 +77,18 @@ protected:
 };
 
 /**
+ * Octal number is prefixed with |prefix|.
+ */
+struct PrefixOctFormatter final : OctFormatter {
+    PrefixOctFormatter(const /*PROGMEM*/ char *prefix_P) : _prefix_P(prefix_P) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+protected:
+    const char *const _prefix_P;
+};
+
+/**
  * Hexadecimal number is prefixed with |prefix|.
  */
 struct PrefixHexFormatter final : HexFormatter {
@@ -68,6 +98,18 @@ struct PrefixHexFormatter final : HexFormatter {
 
 protected:
     const char *const _prefix_P;
+};
+
+/**
+ * Octal number is suffixed with |suffix|.
+ */
+struct SuffixOctFormatter final : OctFormatter {
+    SuffixOctFormatter(char suffix) : _suffix(suffix) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+private:
+    const char _suffix;
 };
 
 /**
@@ -84,6 +126,20 @@ private:
 };
 
 /**
+ * Octal number is surrounded by |prefix| and |suffix|.
+ */
+struct SurroundOctFormatter final : OctFormatter {
+    SurroundOctFormatter(const /*PROGMEM*/ char *prefix_P, char suffix)
+        : _prefix_P(prefix_P), _suffix(suffix) {}
+
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
+
+private:
+    const char *const _prefix_P;
+    const char _suffix;
+};
+
+/**
  * Hexadecimal number is surrounded by |prefix| and |suffix|.
  */
 struct SurroundHexFormatter final : HexFormatter {
@@ -95,6 +151,13 @@ struct SurroundHexFormatter final : HexFormatter {
 private:
     const char *const _prefix_P;
     const char _suffix;
+};
+
+/**
+ * C-Style octal number is "0377"
+ */
+struct CStyleOctFormatter final : OctFormatter {
+    StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const override;
 };
 
 /**

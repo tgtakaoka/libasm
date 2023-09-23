@@ -63,6 +63,16 @@ void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, con
     asserter.equals(file, line, msg, expected, actual);
 }
 
+void oct_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
+        const ValueFormatter &formatter) {
+    char msg[80];
+    sprintf(msg, "%d", value);
+    char actual[80];
+    StrBuffer buf(actual, sizeof(actual));
+    formatter.formatOct(buf, value, bitWidth);
+    asserter.equals(file, line, msg, expected, actual);
+}
+
 void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &formatter, bool upperHex, bool relax) {
     char msg[80];

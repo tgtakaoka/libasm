@@ -35,6 +35,8 @@ void val_assert(const char *file, int line, const char *expr, uint32_t expected,
         const ErrorAt &expected_error, size_t size, const ValueParser &);
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &);
+void oct_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
+        const ValueFormatter &);
 void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
         const ValueFormatter &, bool upperHex, bool relax);
 
@@ -71,6 +73,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define E32(expr, expected) _EXPR32(expr, expected, OK, "")
 
 #define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
+#define OCT(value, bits, expected) oct_assert(__FILE__, __LINE__, value, bits, expected, formatter)
 #define HEX(value, bits, expected) \
     hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, false, false)
 #define RHEX(value, bits, expected) \

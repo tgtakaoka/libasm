@@ -18,6 +18,10 @@
 
 namespace libasm {
 
+const /*PROGMEM*/ char OctFormatter::ATMARK[] PROGMEM = "@";
+const /*PROGMEM*/ char OctFormatter::PERCENT8[] PROGMEM = "%(8)";
+const /*PROGMEM*/ char OctFormatter::O_DASH[] PROGMEM = "o'";
+
 const /*PROGMEM*/ char HexFormatter::ZERO_X[] PROGMEM = "0x";
 const /*PROGMEM*/ char HexFormatter::DOLLAR[] PROGMEM = "$";
 const /*PROGMEM*/ char HexFormatter::PERCENT[] PROGMEM = "%";
@@ -40,6 +44,42 @@ StrBuffer &DecFormatter::outDec(StrBuffer &out, uint32_t val) {
     if (out.mark() == start)
         out.letter('0');
     return out;
+}
+
+StrBuffer &OctFormatter::outOct(StrBuffer &out, uint32_t val, uint8_t width) {
+    const auto start = out.mark();
+    while (val) {
+        const uint8_t digit = val & 7;
+        out.letter(digit + '0');
+        val >>= 3;
+    }
+    // zero filling
+    const int8_t digit = width / 3 + (width % 3 ? 1 : 0);
+    while (out.mark() - start < digit && out.isOK())
+        out.letter('0');
+    return out;
+}
+
+StrBuffer &OctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    const auto start = out.mark();
+    return outOct(out, val, width).reverse(start);
+}
+
+StrBuffer &PrefixOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    return OctFormatter::format(out.text_P(_prefix_P), val, width);
+}
+
+StrBuffer &SuffixOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    return OctFormatter::format(out, val, width).letter(_suffix);
+}
+
+StrBuffer &SurroundOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    out.text_P(_prefix_P);
+    return OctFormatter::format(out, val, width).letter(_suffix);
+}
+
+StrBuffer &CStyleOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+    return OctFormatter::format(out.letter('0'), val, width);
 }
 
 StrBuffer &HexFormatter::outHex(StrBuffer &out, uint32_t val, uint8_t width) {
