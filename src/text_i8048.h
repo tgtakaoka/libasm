@@ -24,7 +24,7 @@ namespace text {
 namespace i8048 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[]     PROGMEM;
+extern const char TEXT_I8048_LIST[]     PROGMEM;
 extern const char TEXT_CPU_8039[]     PROGMEM;
 extern const char TEXT_CPU_8048[]     PROGMEM;
 extern const char TEXT_CPU_80C39[]    PROGMEM;

@@ -1103,7 +1103,7 @@ bool TableI8086::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 const /*PROGMEM*/ char *TableI8086::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_I8086_LIST;
 }
 
 const /*PROGMEM*/ char *TableI8086::cpuName_P(CpuType cpuType) const {

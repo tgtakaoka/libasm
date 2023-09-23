@@ -519,7 +519,7 @@ bool TableZ80::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 const /*PROGMEM*/ char *TableZ80::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_Z80_LIST;
 }
 
 const /*PROGMEM*/ char *TableZ80::cpuName_P(CpuType cpuType) const {

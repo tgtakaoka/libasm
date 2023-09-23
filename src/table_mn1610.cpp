@@ -389,7 +389,7 @@ Error TableMn1610::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
 }
 
 const /*PROGMEM*/ char *TableMn1610::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_MN1610_LIST;
 }
 
 const /*PROGMEM*/ char *TableMn1610::cpuName_P(CpuType cpuType) const {

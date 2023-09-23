@@ -21,7 +21,7 @@ namespace text {
 namespace mc6805 {
 
 // clang-format off
-const char TEXT_CPU_LIST[] PROGMEM = "MC6805, MC146805, MC68HC05";
+const char TEXT_MC6805_LIST[] PROGMEM = "MC6805, MC146805, MC68HC05";
 const char TEXT_CPU_6805[] PROGMEM = "6805";
 const char TEXT_CPU_146805[] PROGMEM = "146805";
 const char TEXT_CPU_68HC05[] PROGMEM = "68HC05";

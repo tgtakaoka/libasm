@@ -295,7 +295,7 @@ bool TableI8080::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 const /*PROGMEM*/ char *TableI8080::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_I8080_LIST;
 }
 
 const /*PROGMEM*/ char *TableI8080::cpuName_P(CpuType cpuType) const {

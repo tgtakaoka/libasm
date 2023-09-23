@@ -24,7 +24,7 @@ namespace text {
 namespace mn1610 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[]    PROGMEM;
+extern const char TEXT_MN1610_LIST[] PROGMEM;
 extern const char TEXT_CPU_MN1610[]  PROGMEM;
 extern const char TEXT_CPU_MN1613[]  PROGMEM;
 extern const char TEXT_CPU_MN1613A[] PROGMEM;

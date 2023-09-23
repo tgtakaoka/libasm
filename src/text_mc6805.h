@@ -24,7 +24,7 @@ namespace text {
 namespace mc6805 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[] PROGMEM;
+extern const char TEXT_MC6805_LIST[] PROGMEM;
 extern const char TEXT_CPU_6805[] PROGMEM;
 extern const char TEXT_CPU_146805[] PROGMEM;
 extern const char TEXT_CPU_68HC05[] PROGMEM;

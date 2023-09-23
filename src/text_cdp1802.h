@@ -24,7 +24,7 @@ namespace text {
 namespace cdp1802 {
 // clang-format off
 
-extern const char TEXT_CPU_LIST[]  PROGMEM;
+extern const char TEXT_CDP1802_LIST[]  PROGMEM;
 extern const char TEXT_CPU_1802[]  PROGMEM;
 extern const char TEXT_CPU_1804[]  PROGMEM;
 extern const char TEXT_CPU_1804A[] PROGMEM;

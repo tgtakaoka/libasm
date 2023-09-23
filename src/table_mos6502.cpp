@@ -760,7 +760,7 @@ Error TableMos6502::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out)
 }
 
 const /*PROGMEM*/ char *TableMos6502::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_MOS6502_LIST;
 }
 
 const /*PROGMEM*/ char *TableMos6502::cpuName_P(CpuType cpuType) const {

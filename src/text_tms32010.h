@@ -24,7 +24,7 @@ namespace text {
 namespace tms32010 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[]  PROGMEM;
+extern const char TEXT_TMS32010_LIST[]  PROGMEM;
 extern const char TEXT_CPU_32010[] PROGMEM;
 extern const char TEXT_CPU_32015[] PROGMEM;
 

@@ -24,7 +24,7 @@ namespace text {
 namespace mos6502 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[]    PROGMEM;
+extern const char TEXT_MOS6502_LIST[] PROGMEM;
 extern const char TEXT_CPU_6502[]    PROGMEM;
 extern const char TEXT_CPU_65SC02[]  PROGMEM;
 extern const char TEXT_CPU_65C02[]   PROGMEM;

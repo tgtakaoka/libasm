@@ -790,7 +790,7 @@ bool TableMc6809::isPrefix(CpuType cpuType, Config::opcode_t code) const {
 }
 
 const /*PROGMEM*/ char *TableMc6809::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_MC6809_LIST;
 }
 
 const /*PROGMEM*/ char *TableMc6809::cpuName_P(CpuType cpuType) const {

@@ -21,7 +21,7 @@ namespace text {
 namespace z8000 {
 
 // clang-format off
-const char TEXT_CPU_LIST[]  PROGMEM = "Z8001, Z8002";
+const char TEXT_Z8000_LIST[] PROGMEM = "Z8001, Z8002";
 const char TEXT_CPU_Z8001[] PROGMEM = "Z8001";
 const char TEXT_CPU_Z8002[] PROGMEM = "Z8002";
 

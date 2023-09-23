@@ -589,7 +589,7 @@ Error TableZ8::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) cons
 }
 
 const /*PROGMEM*/ char *TableZ8::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_Z8_LIST;
 }
 
 const /*PROGMEM*/ char *TableZ8::cpuName_P(CpuType cpuType) const {

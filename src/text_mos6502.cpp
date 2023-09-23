@@ -21,7 +21,7 @@ namespace text {
 namespace mos6502 {
 
 // clang-format off
-const char TEXT_CPU_LIST[]    PROGMEM = "MOS6502, R65C02, G65SC02, W65C02S, W65C816S";
+const char TEXT_MOS6502_LIST[] PROGMEM = "MOS6502, R65C02, G65SC02, W65C02S, W65C816S";
 const char TEXT_CPU_6502[]    PROGMEM = "6502";
 const char TEXT_CPU_65SC02[]  PROGMEM = "65SC02";
 const char TEXT_CPU_65C02[]   PROGMEM = "65C02";

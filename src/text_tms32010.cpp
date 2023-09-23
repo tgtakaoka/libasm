@@ -21,7 +21,7 @@ namespace text {
 namespace tms32010 {
 
 // clang-format off
-const char TEXT_CPU_LIST[] PROGMEM = "TMS32010, TMS32015";
+const char TEXT_TMS32010_LIST[] PROGMEM = "TMS32010, TMS32015";
 const char TEXT_CPU_32010[] PROGMEM = "32010";
 const char TEXT_CPU_32015[] PROGMEM = "32015";
 

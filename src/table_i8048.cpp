@@ -364,7 +364,7 @@ Error TableI8048::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) c
 }
 
 const /*PROGMEM*/ char *TableI8048::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_I8048_LIST;
 }
 
 const /*PROGMEM*/ char *TableI8048::cpuName_P(CpuType cpuType) const {

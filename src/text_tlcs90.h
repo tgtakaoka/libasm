@@ -24,7 +24,6 @@ namespace text {
 namespace tlcs90 {
 
 extern const char TEXT_CPU_TLCS90[] PROGMEM;
-constexpr const char *TEXT_CPU_LIST = TEXT_CPU_TLCS90;
 
 // clang-format off
 using common::TEXT_ADC;

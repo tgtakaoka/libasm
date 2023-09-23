@@ -326,7 +326,7 @@ Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
 }
 
 const /*PROGMEM*/ char *TableMc6805::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_MC6805_LIST;
 }
 
 const /*PROGMEM*/ char *TableMc6805::cpuName_P(CpuType cpuType) const {
@@ -334,7 +334,7 @@ const /*PROGMEM*/ char *TableMc6805::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableMc6805::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    name.iexpectText_P(TEXT_CPU_LIST, 2);
+    name.iexpectText_P(TEXT_MC6805_LIST, 2);
     auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
     if (t) {
         cpuType = t->cpuType();

@@ -656,7 +656,7 @@ Error TableZ8000::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &o
 }
 
 const /*PROGMEM*/ char *TableZ8000::listCpu_P() const {
-    return TEXT_CPU_LIST;
+    return TEXT_Z8000_LIST;
 }
 
 const /*PROGMEM*/ char *TableZ8000::cpuName_P(CpuType cpuType) const {

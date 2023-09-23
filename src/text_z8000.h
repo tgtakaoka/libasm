@@ -24,7 +24,7 @@ namespace text {
 namespace z8000 {
 
 // clang-format off
-extern const char TEXT_CPU_LIST[]  PROGMEM;
+extern const char TEXT_Z8000_LIST[] PROGMEM;
 extern const char TEXT_CPU_Z8001[] PROGMEM;
 extern const char TEXT_CPU_Z8002[] PROGMEM;
 
