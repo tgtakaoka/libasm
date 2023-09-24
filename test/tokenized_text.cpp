@@ -62,17 +62,15 @@ static bool isNumber(const char *p, const char *&r) {
     return false;
 }
 
-static constexpr uint8_t TOKEN_DIGITS = 0x80;
-
 TokenizedText::TokenizedText(const char *text) : _tokens(tokenize(text)), _count(0) {}
 
-std::vector<uint8_t> TokenizedText::tokenize(const char *text) {
-    std::vector<uint8_t> t;
+std::string TokenizedText::tokenize(const char *text) {
+    std::string t;
     const char *b = text;
     while (*b) {
         const char *tmp;
         if (isNumber(b, tmp)) {
-            t.push_back(TOKEN_DIGITS);
+            t.push_back('n');
             b = tmp;
         } else {
             t.push_back(*b++);
@@ -81,15 +79,15 @@ std::vector<uint8_t> TokenizedText::tokenize(const char *text) {
     return t;
 }
 
-std::size_t TokenizedText::hash::operator()(const TokenizedText &it) const {
-    std::size_t seed = it.length();
-    for (auto t : it._tokens) {
+std::size_t TokenizedText::hash() const {
+    std::size_t seed = _tokens.size();
+    for (auto t : _tokens) {
         seed ^= t + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
     return seed;
 }
 
-}  // namespace test
+}  // namespace gen
 }  // namespace libasm
 
 // Local Variables:

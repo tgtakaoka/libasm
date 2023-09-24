@@ -20,11 +20,11 @@
       SBA
       CBA
       BRSET $13, #20, *+25
-      BRSET $13, #19, *-124
-      BRSET $13, #19, *
+      BRSET $13, #20, *-124
+      BRSET $13, #20, *
       BRCLR $14, #21, *+26
-      BRCLR $14, #20, *-124
-      BRCLR $14, #20, *
+      BRCLR $14, #21, *-124
+      BRCLR $14, #21, *
       BSET  $15, #22
       BCLR  $16, #23
       TAB
@@ -32,11 +32,11 @@
       BSET  29,Y, #30
       BCLR  30,Y, #31
       BRSET 31,Y, #32, *+38
-      BRSET 30,Y, #30, *-123
-      BRSET 30,Y, #30, *
+      BRSET 31,Y, #32, *-123
+      BRSET 31,Y, #32, *
       BRCLR 32,Y, #$21, *+39
-      BRCLR 31,Y, #31, *-123
-      BRCLR 31,Y, #31, *
+      BRCLR 32,Y, #$21, *-123
+      BRCLR 32,Y, #$21, *
       TSY
       TYS
       PULY
@@ -74,7 +74,7 @@
       LDS   175,Y
       STS   176,Y
       CPY   $BDBE
-      CPY   >$00BE
+      CPY   >$0001
       LDY   #$CFD0
       LDY   $DF
       STY   $E0
@@ -95,9 +95,9 @@
       LDY   239,Y
       STY   240,Y
       LDY   $FF00
-      LDY   >$0000
+      LDY   >$0001
       STY   >$0001
-      STY   $0101
+      STY   $0102
       INY
       DEY
       DAA
@@ -106,18 +106,18 @@
       CPD   164,X
       CPY   173,X
       CPD   $B4B5
-      CPD   >$00B5
+      CPD   >$0001
       LDY   239,X
       STY   240,X
       ABA
       BSET  29,X, #30
       BCLR  30,X, #31
       BRSET 31,X, #32, *+37
-      BRSET 31,X, #31, *-124
-      BRSET 31,X, #31, *
+      BRSET 31,X, #32, *-124
+      BRSET 31,X, #32, *
       BRCLR 32,X, #$21, *+38
-      BRCLR 32,X, #32, *-124
-      BRCLR 32,X, #32, *
+      BRCLR 32,X, #$21, *-124
+      BRCLR 32,X, #$21, *
       BRA   *+35
       BRA   *-126
       BRA   *
@@ -217,17 +217,29 @@
       JMP   111,X
       CLR   112,X
       NEG   $7172
+      NEG   >$0001
       COM   $7475
+      COM   >$0001
       LSR   $7576
+      LSR   >$0001
       ROR   $7778
+      ROR   >$0001
       ASR   $7879
+      ASR   >$0001
       ASL   $797A
+      ASL   >$0001
       ROL   $7A7B
+      ROL   >$0001
       DEC   $7B7C
+      DEC   >$0001
       INC   $7D7E
+      INC   >$0001
       TST   $7E7F
+      TST   >$0001
       JMP   $7F80
+      JMP   >$0001
       CLR   $8081
+      CLR   >$0001
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
@@ -278,20 +290,35 @@
       LDS   175,X
       STS   176,X
       SUBA  $B1B2
+      SUBA  >$0001
       CMPA  $B2B3
+      CMPA  >$0001
       SBCA  $B3B4
+      SBCA  >$0001
       SUBD  $B4B5
+      SUBD  >$0001
       ANDA  $B5B6
+      ANDA  >$0001
       BITA  $B6B7
+      BITA  >$0001
       LDAA  $B7B8
+      LDAA  >$0001
       STAA  $B8B9
+      STAA  >$0001
       EORA  $B9BA
+      EORA  >$0001
       ADCA  $BABB
+      ADCA  >$0001
       ORAA  $BBBC
+      ORAA  >$0001
       ADDA  $BCBD
+      ADDA  >$0001
       CPX   $BDBE
+      CPX   >$0001
       JSR   $BEBF
+      JSR   >$0001
       LDS   $BFC0
+      LDS   >$0001
       STS   $C0C1
       STS   >$0001
       SUBB  #$C1

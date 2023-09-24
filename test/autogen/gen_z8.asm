@@ -36,9 +36,12 @@
       ADC     R1, @R4
       ADC     16H, 15H
       ADC     >00H, 15H
+      ADC     >01H, >00H
+      ADC     10H, >00H
       ADC     17H, @16H
       ADC     >00H, @16H
       ADC     17H, #24
+      ADC     >00H, #1
       ADC     @18H, #25
       JR      LT, $+30
       JR      LT, $-126
@@ -51,9 +54,12 @@
       SUB     R2, @R4
       SUB     26H, 25H
       SUB     >00H, 25H
+      SUB     >01H, >00H
+      SUB     10H, >00H
       SUB     27H, @26H
       SUB     >00H, @26H
       SUB     27H, #28H
+      SUB     >00H, #1
       SUB     @28H, #29H
       JR      LE, $+46
       JR      LE, $-126
@@ -65,9 +71,12 @@
       SBC     R3, @R4
       SBC     36H, 35H
       SBC     >00H, 35H
+      SBC     >01H, >00H
+      SBC     10H, >00H
       SBC     37H, @36H
       SBC     >00H, @36H
       SBC     37H, #38H
+      SBC     >00H, #1
       SBC     @38H, #39H
       JR      ULE, $+62
       JR      ULE, $-126
@@ -80,9 +89,12 @@
       OR      R4, @R4
       OR      46H, 45H
       OR      >00H, 45H
+      OR      >01H, >00H
+      OR      10H, >00H
       OR      47H, @46H
       OR      >00H, @46H
       OR      47H, #48H
+      OR      >00H, #1
       OR      @48H, #49H
       JR      OV, $+78
       JR      OV, $-126
@@ -95,9 +107,12 @@
       AND     R5, @R4
       AND     56H, 55H
       AND     >00H, 55H
+      AND     >01H, >00H
+      AND     10H, >00H
       AND     57H, @56H
       AND     >00H, @56H
       AND     57H, #58H
+      AND     >00H, #1
       AND     @58H, #59H
       JR      MI, $+94
       JR      MI, $-126
@@ -110,9 +125,12 @@
       TCM     R6, @R4
       TCM     66H, 65H
       TCM     >00H, 65H
+      TCM     >01H, >00H
+      TCM     10H, >00H
       TCM     67H, @66H
       TCM     >00H, @66H
       TCM     67H, #68H
+      TCM     >00H, #1
       TCM     @68H, #69H
       JR      Z, $+110
       JR      Z, $-126
@@ -125,9 +143,12 @@
       TM      R7, @R4
       TM      76H, 75H
       TM      >00H, 75H
+      TM      >01H, >00H
+      TM      10H, >00H
       TM      77H, @76H
       TM      >00H, @76H
       TM      77H, #78H
+      TM      >00H, #1
       TM      @78H, #79H
       JR      C, $+126
       JR      C, $-126
@@ -160,9 +181,12 @@
       CP      R10, @R4
       CP      0A6H, 0A5H
       CP      >00H, 0A5H
+      CP      >01H, >00H
+      CP      10H, >00H
       CP      0A7H, @0A6H
       CP      >00H, @0A6H
       CP      0A7H, #0A8H
+      CP      >00H, #1
       CP      @0A8H, #0A9H
       JR      GT, $-82
       JR      GT, $
@@ -176,9 +200,12 @@
       XOR     R11, @R4
       XOR     0B6H, 0B5H
       XOR     >00H, 0B5H
+      XOR     >01H, >00H
+      XOR     10H, >00H
       XOR     0B7H, @0B6H
       XOR     >00H, @0B6H
       XOR     0B7H, #0B8H
+      XOR     >00H, #1
       XOR     @0B8H, #0B9H
       JR      UGT, $-66
       JR      UGT, $

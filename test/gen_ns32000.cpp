@@ -36,7 +36,7 @@ int main(int argc, const char **argv) {
         dis32000.setOption("float-prefix", "enable");
     }
     TestGenerator generator(driver, dis32000, 0x10000);
-    generator.generate();
+    generator.hasLongInstruction().generate();
 
     return driver.close();
 }

@@ -18,8 +18,9 @@
 #define __TOKENIZED_TEXT_H__
 
 #include <cstdint>
+#include <cstring>
 #include <string>
-#include <vector>
+#include <unordered_set>
 
 namespace libasm {
 namespace gen {
@@ -27,23 +28,27 @@ namespace gen {
 struct TokenizedText {
     TokenizedText(const char *text);
 
-    std::size_t length() const { return _tokens.size(); }
-    int count() const { return ++_count; }
+    std::size_t hash() const;
+    uint32_t increment() const { return ++_count; }
+    uint32_t count() const { return _count; }
+    const std::string &tokens() const { return _tokens; }
 
-    struct hash {
-        std::size_t operator()(const TokenizedText &it) const;
+    struct hashOp {
+        std::size_t operator()(const TokenizedText &t) const { return t.hash(); }
     };
-    struct eq {
+    struct eqOp {
         bool operator()(const TokenizedText &a, const TokenizedText &b) const {
             return a._tokens == b._tokens;
         }
     };
 
-private:
-    const std::vector<uint8_t> _tokens;
-    mutable int _count;
+    typedef std::unordered_set<TokenizedText, TokenizedText::hashOp, TokenizedText::eqOp> Set;
 
-    static std::vector<uint8_t> tokenize(const char *text);
+private:
+    const std::string _tokens;
+    mutable uint32_t _count;
+
+    static std::string tokenize(const char *text);
 };
 
 }  // namespace gen

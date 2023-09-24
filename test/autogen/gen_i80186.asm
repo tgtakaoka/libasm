@@ -7685,49 +7685,49 @@
       BOUND  SP, [BP+SI-128]
       PUSH   6A69H
       IMUL   BP, [BP+SI+107], 6D6CH
-      IMUL   BP, [BP+SI-128], 6D6CH
+      IMUL   BP, [BP+SI-128], 8281H
       IMUL   BP, [BP+DI+108], 6E6DH
-      IMUL   BP, [BP+DI-128], 6E6DH
+      IMUL   BP, [BP+DI-128], 8281H
       IMUL   BP, [SI+109], 6F6EH
-      IMUL   BP, [SI-128], 6F6EH
+      IMUL   BP, [SI-128], 8281H
       IMUL   BP, [DI+110], 706FH
-      IMUL   BP, [DI-128], 706FH
+      IMUL   BP, [DI-128], 8281H
       IMUL   BP, [BP+111], 7170H
-      IMUL   BP, [BP-128], 7170H
+      IMUL   BP, [BP-128], 8281H
       IMUL   BP, [BX+112], 7271H
-      IMUL   BP, [BX-128], 7271H
+      IMUL   BP, [BX-128], 8281H
       IMUL   SI, [BX+SI+113], 7372H
-      IMUL   SI, [BX+SI-128], 7372H
+      IMUL   SI, [BX+SI-128], 8281H
       IMUL   SI, [BX+DI+114], 7473H
-      IMUL   SI, [BX+DI-128], 7473H
+      IMUL   SI, [BX+DI-128], 8281H
       IMUL   SI, [BP+SI+115], 7574H
-      IMUL   SI, [BP+SI-128], 7574H
+      IMUL   SI, [BP+SI-128], 8281H
       IMUL   SI, [BP+DI+116], 7675H
-      IMUL   SI, [BP+DI-128], 7675H
+      IMUL   SI, [BP+DI-128], 8281H
       IMUL   SI, [SI+117], 7776H
-      IMUL   SI, [SI-128], 7776H
+      IMUL   SI, [SI-128], 8281H
       IMUL   SI, [DI+118], 7877H
-      IMUL   SI, [DI-128], 7877H
+      IMUL   SI, [DI-128], 8281H
       IMUL   SI, [BP+119], 7978H
-      IMUL   SI, [BP-128], 7978H
+      IMUL   SI, [BP-128], 8281H
       IMUL   SI, [BX+120], 7A79H
-      IMUL   SI, [BX-128], 7A79H
+      IMUL   SI, [BX-128], 8281H
       IMUL   DI, [BX+SI+121], 7B7AH
-      IMUL   DI, [BX+SI-128], 7B7AH
+      IMUL   DI, [BX+SI-128], 8281H
       IMUL   DI, [BX+DI+122], 7C7BH
-      IMUL   DI, [BX+DI-128], 7C7BH
+      IMUL   DI, [BX+DI-128], 8281H
       IMUL   DI, [BP+SI+123], 7D7CH
-      IMUL   DI, [BP+SI-128], 7D7CH
+      IMUL   DI, [BP+SI-128], 8281H
       IMUL   DI, [BP+DI+124], 7E7DH
-      IMUL   DI, [BP+DI-128], 7E7DH
+      IMUL   DI, [BP+DI-128], 8281H
       IMUL   DI, [SI+125], 7F7EH
-      IMUL   DI, [SI-128], 7F7EH
+      IMUL   DI, [SI-128], 8281H
       IMUL   DI, [DI+126], 807FH
-      IMUL   DI, [DI-128], 807FH
+      IMUL   DI, [DI-128], 8281H
       IMUL   DI, [BP+127], 8180H
-      IMUL   DI, [BP-128], 8180H
+      IMUL   DI, [BP-128], 8281H
       IMUL   DI, [BX-128], 8281H
-      IMUL   DI, [BX+0], 8281H
+      IMUL   DI, [BX+0], 0201H
       IMUL   AX, [BX+SI+8281H], 8483H
       IMUL   AX, [BX+DI+8382H], 8584H
       IMUL   AX, [BP+SI+8483H], 8685H
@@ -7921,151 +7921,171 @@
       IMUL   DI, [403FH], 4241H
       IMUL   DI, [BX], 4140H
       IMUL   AX, [BX+SI+65], 4342H
-      IMUL   AX, [BX+SI-128], 4342H
+      IMUL   AX, [BX+SI-128], 8281H
       IMUL   AX, [BX+DI+66], 4443H
-      IMUL   AX, [BX+DI-128], 4443H
+      IMUL   AX, [BX+DI-128], 8281H
       IMUL   AX, [BP+SI+67], 4544H
-      IMUL   AX, [BP+SI-128], 4544H
+      IMUL   AX, [BP+SI-128], 8281H
       IMUL   AX, [BP+DI+68], 4645H
-      IMUL   AX, [BP+DI-128], 4645H
+      IMUL   AX, [BP+DI-128], 8281H
       IMUL   AX, [SI+69], 4746H
-      IMUL   AX, [SI-128], 4746H
+      IMUL   AX, [SI-128], 8281H
       IMUL   AX, [DI+70], 4847H
-      IMUL   AX, [DI-128], 4847H
+      IMUL   AX, [DI-128], 8281H
       IMUL   AX, [BP+71], 4948H
-      IMUL   AX, [BP-128], 4948H
+      IMUL   AX, [BP-128], 8281H
       IMUL   AX, [BX+72], 4A49H
-      IMUL   AX, [BX-128], 4A49H
+      IMUL   AX, [BX-128], 8281H
       IMUL   CX, [BX+SI+73], 4B4AH
-      IMUL   CX, [BX+SI-128], 4B4AH
+      IMUL   CX, [BX+SI-128], 8281H
       IMUL   CX, [BX+DI+74], 4C4BH
-      IMUL   CX, [BX+DI-128], 4C4BH
+      IMUL   CX, [BX+DI-128], 8281H
       IMUL   CX, [BP+SI+75], 4D4CH
-      IMUL   CX, [BP+SI-128], 4D4CH
+      IMUL   CX, [BP+SI-128], 8281H
       IMUL   CX, [BP+DI+76], 4E4DH
-      IMUL   CX, [BP+DI-128], 4E4DH
+      IMUL   CX, [BP+DI-128], 8281H
       IMUL   CX, [SI+77], 4F4EH
-      IMUL   CX, [SI-128], 4F4EH
+      IMUL   CX, [SI-128], 8281H
       IMUL   CX, [DI+78], 504FH
-      IMUL   CX, [DI-128], 504FH
+      IMUL   CX, [DI-128], 8281H
       IMUL   CX, [BP+79], 5150H
-      IMUL   CX, [BP-128], 5150H
+      IMUL   CX, [BP-128], 8281H
       IMUL   CX, [BX+80], 5251H
-      IMUL   CX, [BX-128], 5251H
+      IMUL   CX, [BX-128], 8281H
       IMUL   DX, [BX+SI+81], 5352H
-      IMUL   DX, [BX+SI-128], 5352H
+      IMUL   DX, [BX+SI-128], 8281H
       IMUL   DX, [BX+DI+82], 5453H
-      IMUL   DX, [BX+DI-128], 5453H
+      IMUL   DX, [BX+DI-128], 8281H
       IMUL   DX, [BP+SI+83], 5554H
-      IMUL   DX, [BP+SI-128], 5554H
+      IMUL   DX, [BP+SI-128], 8281H
       IMUL   DX, [BP+DI+84], 5655H
-      IMUL   DX, [BP+DI-128], 5655H
+      IMUL   DX, [BP+DI-128], 8281H
       IMUL   DX, [SI+85], 5756H
-      IMUL   DX, [SI-128], 5756H
+      IMUL   DX, [SI-128], 8281H
       IMUL   DX, [DI+86], 5857H
-      IMUL   DX, [DI-128], 5857H
+      IMUL   DX, [DI-128], 8281H
       IMUL   DX, [BP+87], 5958H
-      IMUL   DX, [BP-128], 5958H
+      IMUL   DX, [BP-128], 8281H
       IMUL   DX, [BX+88], 5A59H
-      IMUL   DX, [BX-128], 5A59H
+      IMUL   DX, [BX-128], 8281H
       IMUL   BX, [BX+SI+89], 5B5AH
-      IMUL   BX, [BX+SI-128], 5B5AH
+      IMUL   BX, [BX+SI-128], 8281H
       IMUL   BX, [BX+DI+90], 5C5BH
-      IMUL   BX, [BX+DI-128], 5C5BH
+      IMUL   BX, [BX+DI-128], 8281H
       IMUL   BX, [BP+SI+91], 5D5CH
-      IMUL   BX, [BP+SI-128], 5D5CH
+      IMUL   BX, [BP+SI-128], 8281H
       IMUL   BX, [BP+DI+92], 5E5DH
-      IMUL   BX, [BP+DI-128], 5E5DH
+      IMUL   BX, [BP+DI-128], 8281H
       IMUL   BX, [SI+93], 5F5EH
-      IMUL   BX, [SI-128], 5F5EH
+      IMUL   BX, [SI-128], 8281H
       IMUL   BX, [DI+94], 605FH
-      IMUL   BX, [DI-128], 605FH
+      IMUL   BX, [DI-128], 8281H
       IMUL   BX, [BP+95], 6160H
-      IMUL   BX, [BP-128], 6160H
+      IMUL   BX, [BP-128], 8281H
       IMUL   BX, [BX+96], 6261H
-      IMUL   BX, [BX-128], 6261H
+      IMUL   BX, [BX-128], 8281H
       IMUL   SP, [BX+SI+97], 6362H
-      IMUL   SP, [BX+SI-128], 6362H
+      IMUL   SP, [BX+SI-128], 8281H
       IMUL   SP, [BX+DI+98], 6463H
-      IMUL   SP, [BX+DI-128], 6463H
+      IMUL   SP, [BX+DI-128], 8281H
       IMUL   SP, [BP+SI+99], 6564H
-      IMUL   SP, [BP+SI-128], 6564H
+      IMUL   SP, [BP+SI-128], 8281H
       IMUL   SP, [BP+DI+100], 6665H
-      IMUL   SP, [BP+DI-128], 6665H
+      IMUL   SP, [BP+DI-128], 8281H
       IMUL   SP, [SI+101], 6766H
-      IMUL   SP, [SI-128], 6766H
+      IMUL   SP, [SI-128], 8281H
       IMUL   SP, [DI+102], 6867H
-      IMUL   SP, [DI-128], 6867H
+      IMUL   SP, [DI-128], 8281H
       IMUL   SP, [BP+103], 6968H
-      IMUL   SP, [BP-128], 6968H
+      IMUL   SP, [BP-128], 8281H
       IMUL   SP, [BX+104], 6A69H
-      IMUL   SP, [BX-128], 6A69H
+      IMUL   SP, [BX-128], 8281H
       IMUL   BP, [BX+SI+105], 6B6AH
-      IMUL   BP, [BX+SI-128], 6B6AH
+      IMUL   BP, [BX+SI-128], 8281H
       IMUL   BP, [BX+DI+106], 6C6BH
-      IMUL   BP, [BX+DI-128], 6C6BH
+      IMUL   BP, [BX+DI-128], 8281H
       PUSH   6BH
       PUSH   -80H
       IMUL   BP, [SI+109], 6EH
-      IMUL   BP, [SI-128], 6EH
-      IMUL   BP, [SI+108], -80H
+      IMUL   BP, [SI+109], -80H
+      IMUL   BP, [SI-128], -7FH
+      IMUL   BP, [SI-128], 0
       IMUL   BP, [DI+110], 6FH
-      IMUL   BP, [DI-128], 6FH
-      IMUL   BP, [DI+109], -80H
+      IMUL   BP, [DI+110], -80H
+      IMUL   BP, [DI-128], -7FH
+      IMUL   BP, [DI-128], 0
       IMUL   BP, [BP+111], 70H
-      IMUL   BP, [BP-128], 70H
-      IMUL   BP, [BP+110], -80H
+      IMUL   BP, [BP+111], -80H
+      IMUL   BP, [BP-128], -7FH
+      IMUL   BP, [BP-128], 0
       IMUL   BP, [BX+112], 71H
-      IMUL   BP, [BX-128], 71H
-      IMUL   BP, [BX+111], -80H
+      IMUL   BP, [BX+112], -80H
+      IMUL   BP, [BX-128], -7FH
+      IMUL   BP, [BX-128], 0
       IMUL   SI, [BX+SI+113], 72H
-      IMUL   SI, [BX+SI-128], 72H
-      IMUL   SI, [BX+SI+112], -80H
+      IMUL   SI, [BX+SI+113], -80H
+      IMUL   SI, [BX+SI-128], -7FH
+      IMUL   SI, [BX+SI-128], 0
       IMUL   SI, [BX+DI+114], 73H
-      IMUL   SI, [BX+DI-128], 73H
-      IMUL   SI, [BX+DI+113], -80H
+      IMUL   SI, [BX+DI+114], -80H
+      IMUL   SI, [BX+DI-128], -7FH
+      IMUL   SI, [BX+DI-128], 0
       IMUL   SI, [BP+SI+115], 74H
-      IMUL   SI, [BP+SI-128], 74H
-      IMUL   SI, [BP+SI+114], -80H
+      IMUL   SI, [BP+SI+115], -80H
+      IMUL   SI, [BP+SI-128], -7FH
+      IMUL   SI, [BP+SI-128], 0
       IMUL   SI, [BP+DI+116], 75H
-      IMUL   SI, [BP+DI-128], 75H
-      IMUL   SI, [BP+DI+115], -80H
+      IMUL   SI, [BP+DI+116], -80H
+      IMUL   SI, [BP+DI-128], -7FH
+      IMUL   SI, [BP+DI-128], 0
       IMUL   SI, [SI+117], 76H
-      IMUL   SI, [SI-128], 76H
-      IMUL   SI, [SI+116], -80H
+      IMUL   SI, [SI+117], -80H
+      IMUL   SI, [SI-128], -7FH
+      IMUL   SI, [SI-128], 0
       IMUL   SI, [DI+118], 77H
-      IMUL   SI, [DI-128], 77H
-      IMUL   SI, [DI+117], -80H
+      IMUL   SI, [DI+118], -80H
+      IMUL   SI, [DI-128], -7FH
+      IMUL   SI, [DI-128], 0
       IMUL   SI, [BP+119], 78H
-      IMUL   SI, [BP-128], 78H
-      IMUL   SI, [BP+118], -80H
+      IMUL   SI, [BP+119], -80H
+      IMUL   SI, [BP-128], -7FH
+      IMUL   SI, [BP-128], 0
       IMUL   SI, [BX+120], 79H
-      IMUL   SI, [BX-128], 79H
-      IMUL   SI, [BX+119], -80H
+      IMUL   SI, [BX+120], -80H
+      IMUL   SI, [BX-128], -7FH
+      IMUL   SI, [BX-128], 0
       IMUL   DI, [BX+SI+121], 7AH
-      IMUL   DI, [BX+SI-128], 7AH
-      IMUL   DI, [BX+SI+120], -80H
+      IMUL   DI, [BX+SI+121], -80H
+      IMUL   DI, [BX+SI-128], -7FH
+      IMUL   DI, [BX+SI-128], 0
       IMUL   DI, [BX+DI+122], 7BH
-      IMUL   DI, [BX+DI-128], 7BH
-      IMUL   DI, [BX+DI+121], -80H
+      IMUL   DI, [BX+DI+122], -80H
+      IMUL   DI, [BX+DI-128], -7FH
+      IMUL   DI, [BX+DI-128], 0
       IMUL   DI, [BP+SI+123], 7CH
-      IMUL   DI, [BP+SI-128], 7CH
-      IMUL   DI, [BP+SI+122], -80H
+      IMUL   DI, [BP+SI+123], -80H
+      IMUL   DI, [BP+SI-128], -7FH
+      IMUL   DI, [BP+SI-128], 0
       IMUL   DI, [BP+DI+124], 7DH
-      IMUL   DI, [BP+DI-128], 7DH
-      IMUL   DI, [BP+DI+123], -80H
+      IMUL   DI, [BP+DI+124], -80H
+      IMUL   DI, [BP+DI-128], -7FH
+      IMUL   DI, [BP+DI-128], 0
       IMUL   DI, [SI+125], 7EH
-      IMUL   DI, [SI-128], 7EH
-      IMUL   DI, [SI+124], -80H
+      IMUL   DI, [SI+125], -80H
+      IMUL   DI, [SI-128], -7FH
+      IMUL   DI, [SI-128], 0
       IMUL   DI, [DI+126], 7FH
-      IMUL   DI, [DI-128], 7FH
-      IMUL   DI, [DI+125], -80H
+      IMUL   DI, [DI+126], -80H
+      IMUL   DI, [DI-128], -7FH
+      IMUL   DI, [DI-128], 0
       IMUL   DI, [BP+127], -80H
-      IMUL   DI, [BP-128], -80H
-      IMUL   DI, [BP+126], 7FH
+      IMUL   DI, [BP+127], 0
+      IMUL   DI, [BP-128], -7FH
+      IMUL   DI, [BP-128], 0
       IMUL   DI, [BX-128], -7FH
-      IMUL   DI, [BX+0], -7FH
-      IMUL   DI, [BX+127], 0
+      IMUL   DI, [BX-128], 0
+      IMUL   DI, [BX+0], 1
+      IMUL   DI, [BX+0], -80H
       IMUL   AX, [BX+SI+8281H], -7DH
       IMUL   AX, [BX+DI+8382H], -7CH
       IMUL   AX, [BP+SI+8483H], -7BH
@@ -8271,7 +8291,7 @@
       IMUL   AX, [DI], 6
       IMUL   AX, [DI], -80H
       IMUL   AX, [0807H], 9
-      IMUL   AX, [0606H], -80H
+      IMUL   AX, [0807H], -80H
       IMUL   AX, [BX], 8
       IMUL   AX, [BX], -80H
       IMUL   CX, [BX+SI], 9
@@ -8287,7 +8307,7 @@
       IMUL   CX, [DI], 14
       IMUL   CX, [DI], -80H
       IMUL   CX, [100FH], 17
-      IMUL   CX, [0E0EH], -80H
+      IMUL   CX, [100FH], -80H
       IMUL   CX, [BX], 16
       IMUL   CX, [BX], -80H
       IMUL   DX, [BX+SI], 17
@@ -8303,7 +8323,7 @@
       IMUL   DX, [DI], 22
       IMUL   DX, [DI], -80H
       IMUL   DX, [1817H], 25
-      IMUL   DX, [1616H], -80H
+      IMUL   DX, [1817H], -80H
       IMUL   DX, [BX], 24
       IMUL   DX, [BX], -80H
       IMUL   BX, [BX+SI], 25
@@ -8319,7 +8339,7 @@
       IMUL   BX, [DI], 30
       IMUL   BX, [DI], -80H
       IMUL   BX, [201FH], 21H
-      IMUL   BX, [1E1EH], -80H
+      IMUL   BX, [201FH], -80H
       IMUL   BX, [BX], 32
       IMUL   BX, [BX], -80H
       IMUL   SP, [BX+SI], 21H
@@ -8335,7 +8355,7 @@
       IMUL   SP, [DI], 26H
       IMUL   SP, [DI], -80H
       IMUL   SP, [2827H], 29H
-      IMUL   SP, [2626H], -80H
+      IMUL   SP, [2827H], -80H
       IMUL   SP, [BX], 28H
       IMUL   SP, [BX], -80H
       IMUL   BP, [BX+SI], 29H
@@ -8351,7 +8371,7 @@
       IMUL   BP, [DI], 2EH
       IMUL   BP, [DI], -80H
       IMUL   BP, [302FH], 31H
-      IMUL   BP, [2E2EH], -80H
+      IMUL   BP, [302FH], -80H
       IMUL   BP, [BX], 30H
       IMUL   BP, [BX], -80H
       IMUL   SI, [BX+SI], 31H
@@ -8367,7 +8387,7 @@
       IMUL   SI, [DI], 36H
       IMUL   SI, [DI], -80H
       IMUL   SI, [3837H], 39H
-      IMUL   SI, [3636H], -80H
+      IMUL   SI, [3837H], -80H
       IMUL   SI, [BX], 38H
       IMUL   SI, [BX], -80H
       IMUL   DI, [BX+SI], 39H
@@ -8383,141 +8403,185 @@
       IMUL   DI, [DI], 3EH
       IMUL   DI, [DI], -80H
       IMUL   DI, [403FH], 41H
-      IMUL   DI, [3E3EH], -80H
+      IMUL   DI, [403FH], -80H
       IMUL   DI, [BX], 40H
       IMUL   DI, [BX], -80H
       IMUL   AX, [BX+SI+65], 42H
-      IMUL   AX, [BX+SI-128], 42H
-      IMUL   AX, [BX+SI+64], -80H
+      IMUL   AX, [BX+SI+65], -80H
+      IMUL   AX, [BX+SI-128], -7FH
+      IMUL   AX, [BX+SI-128], 0
       IMUL   AX, [BX+DI+66], 43H
-      IMUL   AX, [BX+DI-128], 43H
-      IMUL   AX, [BX+DI+65], -80H
+      IMUL   AX, [BX+DI+66], -80H
+      IMUL   AX, [BX+DI-128], -7FH
+      IMUL   AX, [BX+DI-128], 0
       IMUL   AX, [BP+SI+67], 44H
-      IMUL   AX, [BP+SI-128], 44H
-      IMUL   AX, [BP+SI+66], -80H
+      IMUL   AX, [BP+SI+67], -80H
+      IMUL   AX, [BP+SI-128], -7FH
+      IMUL   AX, [BP+SI-128], 0
       IMUL   AX, [BP+DI+68], 45H
-      IMUL   AX, [BP+DI-128], 45H
-      IMUL   AX, [BP+DI+67], -80H
+      IMUL   AX, [BP+DI+68], -80H
+      IMUL   AX, [BP+DI-128], -7FH
+      IMUL   AX, [BP+DI-128], 0
       IMUL   AX, [SI+69], 46H
-      IMUL   AX, [SI-128], 46H
-      IMUL   AX, [SI+68], -80H
+      IMUL   AX, [SI+69], -80H
+      IMUL   AX, [SI-128], -7FH
+      IMUL   AX, [SI-128], 0
       IMUL   AX, [DI+70], 47H
-      IMUL   AX, [DI-128], 47H
-      IMUL   AX, [DI+69], -80H
+      IMUL   AX, [DI+70], -80H
+      IMUL   AX, [DI-128], -7FH
+      IMUL   AX, [DI-128], 0
       IMUL   AX, [BP+71], 48H
-      IMUL   AX, [BP-128], 48H
-      IMUL   AX, [BP+70], -80H
+      IMUL   AX, [BP+71], -80H
+      IMUL   AX, [BP-128], -7FH
+      IMUL   AX, [BP-128], 0
       IMUL   AX, [BX+72], 49H
-      IMUL   AX, [BX-128], 49H
-      IMUL   AX, [BX+71], -80H
+      IMUL   AX, [BX+72], -80H
+      IMUL   AX, [BX-128], -7FH
+      IMUL   AX, [BX-128], 0
       IMUL   CX, [BX+SI+73], 4AH
-      IMUL   CX, [BX+SI-128], 4AH
-      IMUL   CX, [BX+SI+72], -80H
+      IMUL   CX, [BX+SI+73], -80H
+      IMUL   CX, [BX+SI-128], -7FH
+      IMUL   CX, [BX+SI-128], 0
       IMUL   CX, [BX+DI+74], 4BH
-      IMUL   CX, [BX+DI-128], 4BH
-      IMUL   CX, [BX+DI+73], -80H
+      IMUL   CX, [BX+DI+74], -80H
+      IMUL   CX, [BX+DI-128], -7FH
+      IMUL   CX, [BX+DI-128], 0
       IMUL   CX, [BP+SI+75], 4CH
-      IMUL   CX, [BP+SI-128], 4CH
-      IMUL   CX, [BP+SI+74], -80H
+      IMUL   CX, [BP+SI+75], -80H
+      IMUL   CX, [BP+SI-128], -7FH
+      IMUL   CX, [BP+SI-128], 0
       IMUL   CX, [BP+DI+76], 4DH
-      IMUL   CX, [BP+DI-128], 4DH
-      IMUL   CX, [BP+DI+75], -80H
+      IMUL   CX, [BP+DI+76], -80H
+      IMUL   CX, [BP+DI-128], -7FH
+      IMUL   CX, [BP+DI-128], 0
       IMUL   CX, [SI+77], 4EH
-      IMUL   CX, [SI-128], 4EH
-      IMUL   CX, [SI+76], -80H
+      IMUL   CX, [SI+77], -80H
+      IMUL   CX, [SI-128], -7FH
+      IMUL   CX, [SI-128], 0
       IMUL   CX, [DI+78], 4FH
-      IMUL   CX, [DI-128], 4FH
-      IMUL   CX, [DI+77], -80H
+      IMUL   CX, [DI+78], -80H
+      IMUL   CX, [DI-128], -7FH
+      IMUL   CX, [DI-128], 0
       IMUL   CX, [BP+79], 50H
-      IMUL   CX, [BP-128], 50H
-      IMUL   CX, [BP+78], -80H
+      IMUL   CX, [BP+79], -80H
+      IMUL   CX, [BP-128], -7FH
+      IMUL   CX, [BP-128], 0
       IMUL   CX, [BX+80], 51H
-      IMUL   CX, [BX-128], 51H
-      IMUL   CX, [BX+79], -80H
+      IMUL   CX, [BX+80], -80H
+      IMUL   CX, [BX-128], -7FH
+      IMUL   CX, [BX-128], 0
       IMUL   DX, [BX+SI+81], 52H
-      IMUL   DX, [BX+SI-128], 52H
-      IMUL   DX, [BX+SI+80], -80H
+      IMUL   DX, [BX+SI+81], -80H
+      IMUL   DX, [BX+SI-128], -7FH
+      IMUL   DX, [BX+SI-128], 0
       IMUL   DX, [BX+DI+82], 53H
-      IMUL   DX, [BX+DI-128], 53H
-      IMUL   DX, [BX+DI+81], -80H
+      IMUL   DX, [BX+DI+82], -80H
+      IMUL   DX, [BX+DI-128], -7FH
+      IMUL   DX, [BX+DI-128], 0
       IMUL   DX, [BP+SI+83], 54H
-      IMUL   DX, [BP+SI-128], 54H
-      IMUL   DX, [BP+SI+82], -80H
+      IMUL   DX, [BP+SI+83], -80H
+      IMUL   DX, [BP+SI-128], -7FH
+      IMUL   DX, [BP+SI-128], 0
       IMUL   DX, [BP+DI+84], 55H
-      IMUL   DX, [BP+DI-128], 55H
-      IMUL   DX, [BP+DI+83], -80H
+      IMUL   DX, [BP+DI+84], -80H
+      IMUL   DX, [BP+DI-128], -7FH
+      IMUL   DX, [BP+DI-128], 0
       IMUL   DX, [SI+85], 56H
-      IMUL   DX, [SI-128], 56H
-      IMUL   DX, [SI+84], -80H
+      IMUL   DX, [SI+85], -80H
+      IMUL   DX, [SI-128], -7FH
+      IMUL   DX, [SI-128], 0
       IMUL   DX, [DI+86], 57H
-      IMUL   DX, [DI-128], 57H
-      IMUL   DX, [DI+85], -80H
+      IMUL   DX, [DI+86], -80H
+      IMUL   DX, [DI-128], -7FH
+      IMUL   DX, [DI-128], 0
       IMUL   DX, [BP+87], 58H
-      IMUL   DX, [BP-128], 58H
-      IMUL   DX, [BP+86], -80H
+      IMUL   DX, [BP+87], -80H
+      IMUL   DX, [BP-128], -7FH
+      IMUL   DX, [BP-128], 0
       IMUL   DX, [BX+88], 59H
-      IMUL   DX, [BX-128], 59H
-      IMUL   DX, [BX+87], -80H
+      IMUL   DX, [BX+88], -80H
+      IMUL   DX, [BX-128], -7FH
+      IMUL   DX, [BX-128], 0
       IMUL   BX, [BX+SI+89], 5AH
-      IMUL   BX, [BX+SI-128], 5AH
-      IMUL   BX, [BX+SI+88], -80H
+      IMUL   BX, [BX+SI+89], -80H
+      IMUL   BX, [BX+SI-128], -7FH
+      IMUL   BX, [BX+SI-128], 0
       IMUL   BX, [BX+DI+90], 5BH
-      IMUL   BX, [BX+DI-128], 5BH
-      IMUL   BX, [BX+DI+89], -80H
+      IMUL   BX, [BX+DI+90], -80H
+      IMUL   BX, [BX+DI-128], -7FH
+      IMUL   BX, [BX+DI-128], 0
       IMUL   BX, [BP+SI+91], 5CH
-      IMUL   BX, [BP+SI-128], 5CH
-      IMUL   BX, [BP+SI+90], -80H
+      IMUL   BX, [BP+SI+91], -80H
+      IMUL   BX, [BP+SI-128], -7FH
+      IMUL   BX, [BP+SI-128], 0
       IMUL   BX, [BP+DI+92], 5DH
-      IMUL   BX, [BP+DI-128], 5DH
-      IMUL   BX, [BP+DI+91], -80H
+      IMUL   BX, [BP+DI+92], -80H
+      IMUL   BX, [BP+DI-128], -7FH
+      IMUL   BX, [BP+DI-128], 0
       IMUL   BX, [SI+93], 5EH
-      IMUL   BX, [SI-128], 5EH
-      IMUL   BX, [SI+92], -80H
+      IMUL   BX, [SI+93], -80H
+      IMUL   BX, [SI-128], -7FH
+      IMUL   BX, [SI-128], 0
       IMUL   BX, [DI+94], 5FH
-      IMUL   BX, [DI-128], 5FH
-      IMUL   BX, [DI+93], -80H
+      IMUL   BX, [DI+94], -80H
+      IMUL   BX, [DI-128], -7FH
+      IMUL   BX, [DI-128], 0
       IMUL   BX, [BP+95], 60H
-      IMUL   BX, [BP-128], 60H
-      IMUL   BX, [BP+94], -80H
+      IMUL   BX, [BP+95], -80H
+      IMUL   BX, [BP-128], -7FH
+      IMUL   BX, [BP-128], 0
       IMUL   BX, [BX+96], 61H
-      IMUL   BX, [BX-128], 61H
-      IMUL   BX, [BX+95], -80H
+      IMUL   BX, [BX+96], -80H
+      IMUL   BX, [BX-128], -7FH
+      IMUL   BX, [BX-128], 0
       IMUL   SP, [BX+SI+97], 62H
-      IMUL   SP, [BX+SI-128], 62H
-      IMUL   SP, [BX+SI+96], -80H
+      IMUL   SP, [BX+SI+97], -80H
+      IMUL   SP, [BX+SI-128], -7FH
+      IMUL   SP, [BX+SI-128], 0
       IMUL   SP, [BX+DI+98], 63H
-      IMUL   SP, [BX+DI-128], 63H
-      IMUL   SP, [BX+DI+97], -80H
+      IMUL   SP, [BX+DI+98], -80H
+      IMUL   SP, [BX+DI-128], -7FH
+      IMUL   SP, [BX+DI-128], 0
       IMUL   SP, [BP+SI+99], 64H
-      IMUL   SP, [BP+SI-128], 64H
-      IMUL   SP, [BP+SI+98], -80H
+      IMUL   SP, [BP+SI+99], -80H
+      IMUL   SP, [BP+SI-128], -7FH
+      IMUL   SP, [BP+SI-128], 0
       IMUL   SP, [BP+DI+100], 65H
-      IMUL   SP, [BP+DI-128], 65H
-      IMUL   SP, [BP+DI+99], -80H
+      IMUL   SP, [BP+DI+100], -80H
+      IMUL   SP, [BP+DI-128], -7FH
+      IMUL   SP, [BP+DI-128], 0
       IMUL   SP, [SI+101], 66H
-      IMUL   SP, [SI-128], 66H
-      IMUL   SP, [SI+100], -80H
+      IMUL   SP, [SI+101], -80H
+      IMUL   SP, [SI-128], -7FH
+      IMUL   SP, [SI-128], 0
       IMUL   SP, [DI+102], 67H
-      IMUL   SP, [DI-128], 67H
-      IMUL   SP, [DI+101], -80H
+      IMUL   SP, [DI+102], -80H
+      IMUL   SP, [DI-128], -7FH
+      IMUL   SP, [DI-128], 0
       IMUL   SP, [BP+103], 68H
-      IMUL   SP, [BP-128], 68H
-      IMUL   SP, [BP+102], -80H
+      IMUL   SP, [BP+103], -80H
+      IMUL   SP, [BP-128], -7FH
+      IMUL   SP, [BP-128], 0
       IMUL   SP, [BX+104], 69H
-      IMUL   SP, [BX-128], 69H
-      IMUL   SP, [BX+103], -80H
+      IMUL   SP, [BX+104], -80H
+      IMUL   SP, [BX-128], -7FH
+      IMUL   SP, [BX-128], 0
       IMUL   BP, [BX+SI+105], 6AH
-      IMUL   BP, [BX+SI-128], 6AH
-      IMUL   BP, [BX+SI+104], -80H
+      IMUL   BP, [BX+SI+105], -80H
+      IMUL   BP, [BX+SI-128], -7FH
+      IMUL   BP, [BX+SI-128], 0
       IMUL   BP, [BX+DI+106], 6BH
-      IMUL   BP, [BX+DI-128], 6BH
-      IMUL   BP, [BX+DI+105], -80H
+      IMUL   BP, [BX+DI+106], -80H
+      IMUL   BP, [BX+DI-128], -7FH
+      IMUL   BP, [BX+DI-128], 0
       IMUL   BP, [BP+SI+107], 6CH
-      IMUL   BP, [BP+SI-128], 6CH
-      IMUL   BP, [BP+SI+106], -80H
+      IMUL   BP, [BP+SI+107], -80H
+      IMUL   BP, [BP+SI-128], -7FH
+      IMUL   BP, [BP+SI-128], 0
       IMUL   BP, [BP+DI+108], 6DH
-      IMUL   BP, [BP+DI-128], 6DH
-      IMUL   BP, [BP+DI+107], -80H
+      IMUL   BP, [BP+DI+108], -80H
+      IMUL   BP, [BP+DI-128], -7FH
+      IMUL   BP, [BP+DI-128], 0
       INSB
       INSW
       OUTSB
@@ -8738,133 +8802,133 @@
       CMP    BYTE PTR [403FH], 41H
       CMP    BYTE PTR [BX], 40H
       ADD    BYTE PTR [BX+SI+65], 42H
-      ADD    BYTE PTR [BX+SI-128], 42H
+      ADD    BYTE PTR [BX+SI-128], 81H
       ADD    BYTE PTR [BX+DI+66], 43H
-      ADD    BYTE PTR [BX+DI-128], 43H
+      ADD    BYTE PTR [BX+DI-128], 81H
       ADD    BYTE PTR [BP+SI+67], 44H
-      ADD    BYTE PTR [BP+SI-128], 44H
+      ADD    BYTE PTR [BP+SI-128], 81H
       ADD    BYTE PTR [BP+DI+68], 45H
-      ADD    BYTE PTR [BP+DI-128], 45H
+      ADD    BYTE PTR [BP+DI-128], 81H
       ADD    BYTE PTR [SI+69], 46H
-      ADD    BYTE PTR [SI-128], 46H
+      ADD    BYTE PTR [SI-128], 81H
       ADD    BYTE PTR [DI+70], 47H
-      ADD    BYTE PTR [DI-128], 47H
+      ADD    BYTE PTR [DI-128], 81H
       ADD    BYTE PTR [BP+71], 48H
-      ADD    BYTE PTR [BP-128], 48H
+      ADD    BYTE PTR [BP-128], 81H
       ADD    BYTE PTR [BX+72], 49H
-      ADD    BYTE PTR [BX-128], 49H
+      ADD    BYTE PTR [BX-128], 81H
       OR     BYTE PTR [BX+SI+73], 4AH
-      OR     BYTE PTR [BX+SI-128], 4AH
+      OR     BYTE PTR [BX+SI-128], 81H
       OR     BYTE PTR [BX+DI+74], 4BH
-      OR     BYTE PTR [BX+DI-128], 4BH
+      OR     BYTE PTR [BX+DI-128], 81H
       OR     BYTE PTR [BP+SI+75], 4CH
-      OR     BYTE PTR [BP+SI-128], 4CH
+      OR     BYTE PTR [BP+SI-128], 81H
       OR     BYTE PTR [BP+DI+76], 4DH
-      OR     BYTE PTR [BP+DI-128], 4DH
+      OR     BYTE PTR [BP+DI-128], 81H
       OR     BYTE PTR [SI+77], 4EH
-      OR     BYTE PTR [SI-128], 4EH
+      OR     BYTE PTR [SI-128], 81H
       OR     BYTE PTR [DI+78], 4FH
-      OR     BYTE PTR [DI-128], 4FH
+      OR     BYTE PTR [DI-128], 81H
       OR     BYTE PTR [BP+79], 50H
-      OR     BYTE PTR [BP-128], 50H
+      OR     BYTE PTR [BP-128], 81H
       OR     BYTE PTR [BX+80], 51H
-      OR     BYTE PTR [BX-128], 51H
+      OR     BYTE PTR [BX-128], 81H
       ADC    BYTE PTR [BX+SI+81], 52H
-      ADC    BYTE PTR [BX+SI-128], 52H
+      ADC    BYTE PTR [BX+SI-128], 81H
       ADC    BYTE PTR [BX+DI+82], 53H
-      ADC    BYTE PTR [BX+DI-128], 53H
+      ADC    BYTE PTR [BX+DI-128], 81H
       ADC    BYTE PTR [BP+SI+83], 54H
-      ADC    BYTE PTR [BP+SI-128], 54H
+      ADC    BYTE PTR [BP+SI-128], 81H
       ADC    BYTE PTR [BP+DI+84], 55H
-      ADC    BYTE PTR [BP+DI-128], 55H
+      ADC    BYTE PTR [BP+DI-128], 81H
       ADC    BYTE PTR [SI+85], 56H
-      ADC    BYTE PTR [SI-128], 56H
+      ADC    BYTE PTR [SI-128], 81H
       ADC    BYTE PTR [DI+86], 57H
-      ADC    BYTE PTR [DI-128], 57H
+      ADC    BYTE PTR [DI-128], 81H
       ADC    BYTE PTR [BP+87], 58H
-      ADC    BYTE PTR [BP-128], 58H
+      ADC    BYTE PTR [BP-128], 81H
       ADC    BYTE PTR [BX+88], 59H
-      ADC    BYTE PTR [BX-128], 59H
+      ADC    BYTE PTR [BX-128], 81H
       SBB    BYTE PTR [BX+SI+89], 5AH
-      SBB    BYTE PTR [BX+SI-128], 5AH
+      SBB    BYTE PTR [BX+SI-128], 81H
       SBB    BYTE PTR [BX+DI+90], 5BH
-      SBB    BYTE PTR [BX+DI-128], 5BH
+      SBB    BYTE PTR [BX+DI-128], 81H
       SBB    BYTE PTR [BP+SI+91], 5CH
-      SBB    BYTE PTR [BP+SI-128], 5CH
+      SBB    BYTE PTR [BP+SI-128], 81H
       SBB    BYTE PTR [BP+DI+92], 5DH
-      SBB    BYTE PTR [BP+DI-128], 5DH
+      SBB    BYTE PTR [BP+DI-128], 81H
       SBB    BYTE PTR [SI+93], 5EH
-      SBB    BYTE PTR [SI-128], 5EH
+      SBB    BYTE PTR [SI-128], 81H
       SBB    BYTE PTR [DI+94], 5FH
-      SBB    BYTE PTR [DI-128], 5FH
+      SBB    BYTE PTR [DI-128], 81H
       SBB    BYTE PTR [BP+95], 60H
-      SBB    BYTE PTR [BP-128], 60H
+      SBB    BYTE PTR [BP-128], 81H
       SBB    BYTE PTR [BX+96], 61H
-      SBB    BYTE PTR [BX-128], 61H
+      SBB    BYTE PTR [BX-128], 81H
       AND    BYTE PTR [BX+SI+97], 62H
-      AND    BYTE PTR [BX+SI-128], 62H
+      AND    BYTE PTR [BX+SI-128], 81H
       AND    BYTE PTR [BX+DI+98], 63H
-      AND    BYTE PTR [BX+DI-128], 63H
+      AND    BYTE PTR [BX+DI-128], 81H
       AND    BYTE PTR [BP+SI+99], 64H
-      AND    BYTE PTR [BP+SI-128], 64H
+      AND    BYTE PTR [BP+SI-128], 81H
       AND    BYTE PTR [BP+DI+100], 65H
-      AND    BYTE PTR [BP+DI-128], 65H
+      AND    BYTE PTR [BP+DI-128], 81H
       AND    BYTE PTR [SI+101], 66H
-      AND    BYTE PTR [SI-128], 66H
+      AND    BYTE PTR [SI-128], 81H
       AND    BYTE PTR [DI+102], 67H
-      AND    BYTE PTR [DI-128], 67H
+      AND    BYTE PTR [DI-128], 81H
       AND    BYTE PTR [BP+103], 68H
-      AND    BYTE PTR [BP-128], 68H
+      AND    BYTE PTR [BP-128], 81H
       AND    BYTE PTR [BX+104], 69H
-      AND    BYTE PTR [BX-128], 69H
+      AND    BYTE PTR [BX-128], 81H
       SUB    BYTE PTR [BX+SI+105], 6AH
-      SUB    BYTE PTR [BX+SI-128], 6AH
+      SUB    BYTE PTR [BX+SI-128], 81H
       SUB    BYTE PTR [BX+DI+106], 6BH
-      SUB    BYTE PTR [BX+DI-128], 6BH
+      SUB    BYTE PTR [BX+DI-128], 81H
       SUB    BYTE PTR [BP+SI+107], 6CH
-      SUB    BYTE PTR [BP+SI-128], 6CH
+      SUB    BYTE PTR [BP+SI-128], 81H
       SUB    BYTE PTR [BP+DI+108], 6DH
-      SUB    BYTE PTR [BP+DI-128], 6DH
+      SUB    BYTE PTR [BP+DI-128], 81H
       SUB    BYTE PTR [SI+109], 6EH
-      SUB    BYTE PTR [SI-128], 6EH
+      SUB    BYTE PTR [SI-128], 81H
       SUB    BYTE PTR [DI+110], 6FH
-      SUB    BYTE PTR [DI-128], 6FH
+      SUB    BYTE PTR [DI-128], 81H
       SUB    BYTE PTR [BP+111], 70H
-      SUB    BYTE PTR [BP-128], 70H
+      SUB    BYTE PTR [BP-128], 81H
       SUB    BYTE PTR [BX+112], 71H
-      SUB    BYTE PTR [BX-128], 71H
+      SUB    BYTE PTR [BX-128], 81H
       XOR    BYTE PTR [BX+SI+113], 72H
-      XOR    BYTE PTR [BX+SI-128], 72H
+      XOR    BYTE PTR [BX+SI-128], 81H
       XOR    BYTE PTR [BX+DI+114], 73H
-      XOR    BYTE PTR [BX+DI-128], 73H
+      XOR    BYTE PTR [BX+DI-128], 81H
       XOR    BYTE PTR [BP+SI+115], 74H
-      XOR    BYTE PTR [BP+SI-128], 74H
+      XOR    BYTE PTR [BP+SI-128], 81H
       XOR    BYTE PTR [BP+DI+116], 75H
-      XOR    BYTE PTR [BP+DI-128], 75H
+      XOR    BYTE PTR [BP+DI-128], 81H
       XOR    BYTE PTR [SI+117], 76H
-      XOR    BYTE PTR [SI-128], 76H
+      XOR    BYTE PTR [SI-128], 81H
       XOR    BYTE PTR [DI+118], 77H
-      XOR    BYTE PTR [DI-128], 77H
+      XOR    BYTE PTR [DI-128], 81H
       XOR    BYTE PTR [BP+119], 78H
-      XOR    BYTE PTR [BP-128], 78H
+      XOR    BYTE PTR [BP-128], 81H
       XOR    BYTE PTR [BX+120], 79H
-      XOR    BYTE PTR [BX-128], 79H
+      XOR    BYTE PTR [BX-128], 81H
       CMP    BYTE PTR [BX+SI+121], 7AH
-      CMP    BYTE PTR [BX+SI-128], 7AH
+      CMP    BYTE PTR [BX+SI-128], 81H
       CMP    BYTE PTR [BX+DI+122], 7BH
-      CMP    BYTE PTR [BX+DI-128], 7BH
+      CMP    BYTE PTR [BX+DI-128], 81H
       CMP    BYTE PTR [BP+SI+123], 7CH
-      CMP    BYTE PTR [BP+SI-128], 7CH
+      CMP    BYTE PTR [BP+SI-128], 81H
       CMP    BYTE PTR [BP+DI+124], 7DH
-      CMP    BYTE PTR [BP+DI-128], 7DH
+      CMP    BYTE PTR [BP+DI-128], 81H
       CMP    BYTE PTR [SI+125], 7EH
-      CMP    BYTE PTR [SI-128], 7EH
+      CMP    BYTE PTR [SI-128], 81H
       CMP    BYTE PTR [DI+126], 7FH
-      CMP    BYTE PTR [DI-128], 7FH
+      CMP    BYTE PTR [DI-128], 81H
       CMP    BYTE PTR [BP+127], 80H
-      CMP    BYTE PTR [BP-128], 80H
+      CMP    BYTE PTR [BP-128], 81H
       CMP    BYTE PTR [BX-128], 81H
-      CMP    BYTE PTR [BX+0], 81H
+      CMP    BYTE PTR [BX+0], 1
       ADD    BYTE PTR [BX+SI+8281H], 83H
       ADD    WORD PTR [BP+SI+8483H], 8685H
       ADD    WORD PTR [BP+DI+8584H], 8786H
@@ -9057,133 +9121,133 @@
       CMP    WORD PTR [403FH], 4241H
       CMP    WORD PTR [BX], 4140H
       ADD    WORD PTR [BX+SI+65], 4342H
-      ADD    WORD PTR [BX+SI-128], 4342H
+      ADD    WORD PTR [BX+SI-128], 8281H
       ADD    WORD PTR [BX+DI+66], 4443H
-      ADD    WORD PTR [BX+DI-128], 4443H
+      ADD    WORD PTR [BX+DI-128], 8281H
       ADD    WORD PTR [BP+SI+67], 4544H
-      ADD    WORD PTR [BP+SI-128], 4544H
+      ADD    WORD PTR [BP+SI-128], 8281H
       ADD    WORD PTR [BP+DI+68], 4645H
-      ADD    WORD PTR [BP+DI-128], 4645H
+      ADD    WORD PTR [BP+DI-128], 8281H
       ADD    WORD PTR [SI+69], 4746H
-      ADD    WORD PTR [SI-128], 4746H
+      ADD    WORD PTR [SI-128], 8281H
       ADD    WORD PTR [DI+70], 4847H
-      ADD    WORD PTR [DI-128], 4847H
+      ADD    WORD PTR [DI-128], 8281H
       ADD    WORD PTR [BP+71], 4948H
-      ADD    WORD PTR [BP-128], 4948H
+      ADD    WORD PTR [BP-128], 8281H
       ADD    WORD PTR [BX+72], 4A49H
-      ADD    WORD PTR [BX-128], 4A49H
+      ADD    WORD PTR [BX-128], 8281H
       OR     WORD PTR [BX+SI+73], 4B4AH
-      OR     WORD PTR [BX+SI-128], 4B4AH
+      OR     WORD PTR [BX+SI-128], 8281H
       OR     WORD PTR [BX+DI+74], 4C4BH
-      OR     WORD PTR [BX+DI-128], 4C4BH
+      OR     WORD PTR [BX+DI-128], 8281H
       OR     WORD PTR [BP+SI+75], 4D4CH
-      OR     WORD PTR [BP+SI-128], 4D4CH
+      OR     WORD PTR [BP+SI-128], 8281H
       OR     WORD PTR [BP+DI+76], 4E4DH
-      OR     WORD PTR [BP+DI-128], 4E4DH
+      OR     WORD PTR [BP+DI-128], 8281H
       OR     WORD PTR [SI+77], 4F4EH
-      OR     WORD PTR [SI-128], 4F4EH
+      OR     WORD PTR [SI-128], 8281H
       OR     WORD PTR [DI+78], 504FH
-      OR     WORD PTR [DI-128], 504FH
+      OR     WORD PTR [DI-128], 8281H
       OR     WORD PTR [BP+79], 5150H
-      OR     WORD PTR [BP-128], 5150H
+      OR     WORD PTR [BP-128], 8281H
       OR     WORD PTR [BX+80], 5251H
-      OR     WORD PTR [BX-128], 5251H
+      OR     WORD PTR [BX-128], 8281H
       ADC    WORD PTR [BX+SI+81], 5352H
-      ADC    WORD PTR [BX+SI-128], 5352H
+      ADC    WORD PTR [BX+SI-128], 8281H
       ADC    WORD PTR [BX+DI+82], 5453H
-      ADC    WORD PTR [BX+DI-128], 5453H
+      ADC    WORD PTR [BX+DI-128], 8281H
       ADC    WORD PTR [BP+SI+83], 5554H
-      ADC    WORD PTR [BP+SI-128], 5554H
+      ADC    WORD PTR [BP+SI-128], 8281H
       ADC    WORD PTR [BP+DI+84], 5655H
-      ADC    WORD PTR [BP+DI-128], 5655H
+      ADC    WORD PTR [BP+DI-128], 8281H
       ADC    WORD PTR [SI+85], 5756H
-      ADC    WORD PTR [SI-128], 5756H
+      ADC    WORD PTR [SI-128], 8281H
       ADC    WORD PTR [DI+86], 5857H
-      ADC    WORD PTR [DI-128], 5857H
+      ADC    WORD PTR [DI-128], 8281H
       ADC    WORD PTR [BP+87], 5958H
-      ADC    WORD PTR [BP-128], 5958H
+      ADC    WORD PTR [BP-128], 8281H
       ADC    WORD PTR [BX+88], 5A59H
-      ADC    WORD PTR [BX-128], 5A59H
+      ADC    WORD PTR [BX-128], 8281H
       SBB    WORD PTR [BX+SI+89], 5B5AH
-      SBB    WORD PTR [BX+SI-128], 5B5AH
+      SBB    WORD PTR [BX+SI-128], 8281H
       SBB    WORD PTR [BX+DI+90], 5C5BH
-      SBB    WORD PTR [BX+DI-128], 5C5BH
+      SBB    WORD PTR [BX+DI-128], 8281H
       SBB    WORD PTR [BP+SI+91], 5D5CH
-      SBB    WORD PTR [BP+SI-128], 5D5CH
+      SBB    WORD PTR [BP+SI-128], 8281H
       SBB    WORD PTR [BP+DI+92], 5E5DH
-      SBB    WORD PTR [BP+DI-128], 5E5DH
+      SBB    WORD PTR [BP+DI-128], 8281H
       SBB    WORD PTR [SI+93], 5F5EH
-      SBB    WORD PTR [SI-128], 5F5EH
+      SBB    WORD PTR [SI-128], 8281H
       SBB    WORD PTR [DI+94], 605FH
-      SBB    WORD PTR [DI-128], 605FH
+      SBB    WORD PTR [DI-128], 8281H
       SBB    WORD PTR [BP+95], 6160H
-      SBB    WORD PTR [BP-128], 6160H
+      SBB    WORD PTR [BP-128], 8281H
       SBB    WORD PTR [BX+96], 6261H
-      SBB    WORD PTR [BX-128], 6261H
+      SBB    WORD PTR [BX-128], 8281H
       AND    WORD PTR [BX+SI+97], 6362H
-      AND    WORD PTR [BX+SI-128], 6362H
+      AND    WORD PTR [BX+SI-128], 8281H
       AND    WORD PTR [BX+DI+98], 6463H
-      AND    WORD PTR [BX+DI-128], 6463H
+      AND    WORD PTR [BX+DI-128], 8281H
       AND    WORD PTR [BP+SI+99], 6564H
-      AND    WORD PTR [BP+SI-128], 6564H
+      AND    WORD PTR [BP+SI-128], 8281H
       AND    WORD PTR [BP+DI+100], 6665H
-      AND    WORD PTR [BP+DI-128], 6665H
+      AND    WORD PTR [BP+DI-128], 8281H
       AND    WORD PTR [SI+101], 6766H
-      AND    WORD PTR [SI-128], 6766H
+      AND    WORD PTR [SI-128], 8281H
       AND    WORD PTR [DI+102], 6867H
-      AND    WORD PTR [DI-128], 6867H
+      AND    WORD PTR [DI-128], 8281H
       AND    WORD PTR [BP+103], 6968H
-      AND    WORD PTR [BP-128], 6968H
+      AND    WORD PTR [BP-128], 8281H
       AND    WORD PTR [BX+104], 6A69H
-      AND    WORD PTR [BX-128], 6A69H
+      AND    WORD PTR [BX-128], 8281H
       SUB    WORD PTR [BX+SI+105], 6B6AH
-      SUB    WORD PTR [BX+SI-128], 6B6AH
+      SUB    WORD PTR [BX+SI-128], 8281H
       SUB    WORD PTR [BX+DI+106], 6C6BH
-      SUB    WORD PTR [BX+DI-128], 6C6BH
+      SUB    WORD PTR [BX+DI-128], 8281H
       SUB    WORD PTR [BP+SI+107], 6D6CH
-      SUB    WORD PTR [BP+SI-128], 6D6CH
+      SUB    WORD PTR [BP+SI-128], 8281H
       SUB    WORD PTR [BP+DI+108], 6E6DH
-      SUB    WORD PTR [BP+DI-128], 6E6DH
+      SUB    WORD PTR [BP+DI-128], 8281H
       SUB    WORD PTR [SI+109], 6F6EH
-      SUB    WORD PTR [SI-128], 6F6EH
+      SUB    WORD PTR [SI-128], 8281H
       SUB    WORD PTR [DI+110], 706FH
-      SUB    WORD PTR [DI-128], 706FH
+      SUB    WORD PTR [DI-128], 8281H
       SUB    WORD PTR [BP+111], 7170H
-      SUB    WORD PTR [BP-128], 7170H
+      SUB    WORD PTR [BP-128], 8281H
       SUB    WORD PTR [BX+112], 7271H
-      SUB    WORD PTR [BX-128], 7271H
+      SUB    WORD PTR [BX-128], 8281H
       XOR    WORD PTR [BX+SI+113], 7372H
-      XOR    WORD PTR [BX+SI-128], 7372H
+      XOR    WORD PTR [BX+SI-128], 8281H
       XOR    WORD PTR [BX+DI+114], 7473H
-      XOR    WORD PTR [BX+DI-128], 7473H
+      XOR    WORD PTR [BX+DI-128], 8281H
       XOR    WORD PTR [BP+SI+115], 7574H
-      XOR    WORD PTR [BP+SI-128], 7574H
+      XOR    WORD PTR [BP+SI-128], 8281H
       XOR    WORD PTR [BP+DI+116], 7675H
-      XOR    WORD PTR [BP+DI-128], 7675H
+      XOR    WORD PTR [BP+DI-128], 8281H
       XOR    WORD PTR [SI+117], 7776H
-      XOR    WORD PTR [SI-128], 7776H
+      XOR    WORD PTR [SI-128], 8281H
       XOR    WORD PTR [DI+118], 7877H
-      XOR    WORD PTR [DI-128], 7877H
+      XOR    WORD PTR [DI-128], 8281H
       XOR    WORD PTR [BP+119], 7978H
-      XOR    WORD PTR [BP-128], 7978H
+      XOR    WORD PTR [BP-128], 8281H
       XOR    WORD PTR [BX+120], 7A79H
-      XOR    WORD PTR [BX-128], 7A79H
+      XOR    WORD PTR [BX-128], 8281H
       CMP    WORD PTR [BX+SI+121], 7B7AH
-      CMP    WORD PTR [BX+SI-128], 7B7AH
+      CMP    WORD PTR [BX+SI-128], 8281H
       CMP    WORD PTR [BX+DI+122], 7C7BH
-      CMP    WORD PTR [BX+DI-128], 7C7BH
+      CMP    WORD PTR [BX+DI-128], 8281H
       CMP    WORD PTR [BP+SI+123], 7D7CH
-      CMP    WORD PTR [BP+SI-128], 7D7CH
+      CMP    WORD PTR [BP+SI-128], 8281H
       CMP    WORD PTR [BP+DI+124], 7E7DH
-      CMP    WORD PTR [BP+DI-128], 7E7DH
+      CMP    WORD PTR [BP+DI-128], 8281H
       CMP    WORD PTR [SI+125], 7F7EH
-      CMP    WORD PTR [SI-128], 7F7EH
+      CMP    WORD PTR [SI-128], 8281H
       CMP    WORD PTR [DI+126], 807FH
-      CMP    WORD PTR [DI-128], 807FH
+      CMP    WORD PTR [DI-128], 8281H
       CMP    WORD PTR [BP+127], 8180H
-      CMP    WORD PTR [BP-128], 8180H
+      CMP    WORD PTR [BP-128], 8281H
       CMP    WORD PTR [BX-128], 8281H
-      CMP    WORD PTR [BX+0], 8281H
+      CMP    WORD PTR [BX+0], 0201H
       ADD    WORD PTR [BX+SI+8281H], 8483H
       ADD    WORD PTR [BX+DI+8382H], 8584H
       ADD    WORD PTR [SI+8685H], -79H
@@ -9247,449 +9311,6 @@
       CMP    WORD PTR [BP+0C0BFH], -3FH
       CMP    WORD PTR [BX+0C1C0H], -3EH
       ADD    AX, -3FH
-      ADD    CX, -3EH
-      ADD    CX, 0
-      ADD    DX, -3DH
-      ADD    DX, 0
-      ADD    BX, -3CH
-      ADD    BX, 0
-      ADD    SP, -3BH
-      ADD    SP, 0
-      ADD    BP, -3AH
-      ADD    BP, 0
-      ADD    SI, -39H
-      ADD    SI, 0
-      ADD    DI, -38H
-      ADD    DI, 0
-      OR     AX, -37H
-      OR     CX, -36H
-      OR     CX, 0
-      OR     DX, -35H
-      OR     DX, 0
-      OR     BX, -34H
-      OR     BX, 0
-      OR     SP, -33H
-      OR     SP, 0
-      OR     BP, -32H
-      OR     BP, 0
-      OR     SI, -31H
-      OR     SI, 0
-      OR     DI, -30H
-      OR     DI, 0
-      ADC    AX, -2FH
-      ADC    CX, -2EH
-      ADC    CX, 0
-      ADC    DX, -2DH
-      ADC    DX, 0
-      ADC    BX, -2CH
-      ADC    BX, 0
-      ADC    SP, -2BH
-      ADC    SP, 0
-      ADC    BP, -2AH
-      ADC    BP, 0
-      ADC    SI, -29H
-      ADC    SI, 0
-      ADC    DI, -28H
-      ADC    DI, 0
-      SBB    AX, -27H
-      SBB    CX, -26H
-      SBB    CX, 0
-      SBB    DX, -25H
-      SBB    DX, 0
-      SBB    BX, -24H
-      SBB    BX, 0
-      SBB    SP, -23H
-      SBB    SP, 0
-      SBB    BP, -22H
-      SBB    BP, 0
-      SBB    SI, -21H
-      SBB    SI, 0
-      SBB    DI, -32
-      SBB    DI, 0
-      AND    AX, -31
-      AND    CX, -30
-      AND    CX, 0
-      AND    DX, -29
-      AND    DX, 0
-      AND    BX, -28
-      AND    BX, 0
-      AND    SP, -27
-      AND    SP, 0
-      AND    BP, -26
-      AND    BP, 0
-      AND    SI, -25
-      AND    SI, 0
-      AND    DI, -24
-      AND    DI, 0
-      SUB    AX, -23
-      SUB    CX, -22
-      SUB    CX, 0
-      SUB    DX, -21
-      SUB    DX, 0
-      SUB    BX, -20
-      SUB    BX, 0
-      SUB    SP, -19
-      SUB    SP, 0
-      SUB    BP, -18
-      SUB    BP, 0
-      SUB    SI, -17
-      SUB    SI, 0
-      SUB    DI, -16
-      SUB    DI, 0
-      XOR    AX, -15
-      XOR    CX, -14
-      XOR    CX, 0
-      XOR    DX, -13
-      XOR    DX, 0
-      XOR    BX, -12
-      XOR    BX, 0
-      XOR    SP, -11
-      XOR    SP, 0
-      XOR    BP, -10
-      XOR    BP, 0
-      XOR    SI, -9
-      XOR    SI, 0
-      XOR    DI, -8
-      XOR    DI, 0
-      CMP    AX, -7
-      CMP    CX, -6
-      CMP    CX, 0
-      CMP    DX, -5
-      CMP    DX, 0
-      CMP    BX, -4
-      CMP    BX, 0
-      CMP    SP, -3
-      CMP    SP, 0
-      CMP    BP, -2
-      CMP    BP, 0
-      CMP    SI, -1
-      CMP    SI, 0
-      CMP    DI, 0
-      CMP    DI, -80H
-      ADD    WORD PTR [BX+SI], 1
-      ADD    WORD PTR [BX+SI], -80H
-      ADD    WORD PTR [BX+DI], 2
-      ADD    WORD PTR [BX+DI], -80H
-      ADD    WORD PTR [BP+SI], 3
-      ADD    WORD PTR [BP+SI], -80H
-      ADD    WORD PTR [BP+DI], 4
-      ADD    WORD PTR [BP+DI], -80H
-      ADD    WORD PTR [SI], 5
-      ADD    WORD PTR [SI], -80H
-      ADD    WORD PTR [DI], 6
-      ADD    WORD PTR [DI], -80H
-      ADD    WORD PTR [0807H], 9
-      ADD    WORD PTR [0606H], -80H
-      ADD    WORD PTR [BX], 8
-      ADD    WORD PTR [BX], -80H
-      OR     WORD PTR [BX+SI], 9
-      OR     WORD PTR [BX+SI], -80H
-      OR     WORD PTR [BX+DI], 10
-      OR     WORD PTR [BX+DI], -80H
-      OR     WORD PTR [BP+SI], 11
-      OR     WORD PTR [BP+SI], -80H
-      OR     WORD PTR [BP+DI], 12
-      OR     WORD PTR [BP+DI], -80H
-      OR     WORD PTR [SI], 13
-      OR     WORD PTR [SI], -80H
-      OR     WORD PTR [DI], 14
-      OR     WORD PTR [DI], -80H
-      OR     WORD PTR [100FH], 17
-      OR     WORD PTR [0E0EH], -80H
-      OR     WORD PTR [BX], 16
-      OR     WORD PTR [BX], -80H
-      ADC    WORD PTR [BX+SI], 17
-      ADC    WORD PTR [BX+SI], -80H
-      ADC    WORD PTR [BX+DI], 18
-      ADC    WORD PTR [BX+DI], -80H
-      ADC    WORD PTR [BP+SI], 19
-      ADC    WORD PTR [BP+SI], -80H
-      ADC    WORD PTR [BP+DI], 20
-      ADC    WORD PTR [BP+DI], -80H
-      ADC    WORD PTR [SI], 21
-      ADC    WORD PTR [SI], -80H
-      ADC    WORD PTR [DI], 22
-      ADC    WORD PTR [DI], -80H
-      ADC    WORD PTR [1817H], 25
-      ADC    WORD PTR [1616H], -80H
-      ADC    WORD PTR [BX], 24
-      ADC    WORD PTR [BX], -80H
-      SBB    WORD PTR [BX+SI], 25
-      SBB    WORD PTR [BX+SI], -80H
-      SBB    WORD PTR [BX+DI], 26
-      SBB    WORD PTR [BX+DI], -80H
-      SBB    WORD PTR [BP+SI], 27
-      SBB    WORD PTR [BP+SI], -80H
-      SBB    WORD PTR [BP+DI], 28
-      SBB    WORD PTR [BP+DI], -80H
-      SBB    WORD PTR [SI], 29
-      SBB    WORD PTR [SI], -80H
-      SBB    WORD PTR [DI], 30
-      SBB    WORD PTR [DI], -80H
-      SBB    WORD PTR [201FH], 21H
-      SBB    WORD PTR [1E1EH], -80H
-      SBB    WORD PTR [BX], 32
-      SBB    WORD PTR [BX], -80H
-      AND    WORD PTR [BX+SI], 21H
-      AND    WORD PTR [BX+SI], -80H
-      AND    WORD PTR [BX+DI], 22H
-      AND    WORD PTR [BX+DI], -80H
-      AND    WORD PTR [BP+SI], 23H
-      AND    WORD PTR [BP+SI], -80H
-      AND    WORD PTR [BP+DI], 24H
-      AND    WORD PTR [BP+DI], -80H
-      AND    WORD PTR [SI], 25H
-      AND    WORD PTR [SI], -80H
-      AND    WORD PTR [DI], 26H
-      AND    WORD PTR [DI], -80H
-      AND    WORD PTR [2827H], 29H
-      AND    WORD PTR [2626H], -80H
-      AND    WORD PTR [BX], 28H
-      AND    WORD PTR [BX], -80H
-      SUB    WORD PTR [BX+SI], 29H
-      SUB    WORD PTR [BX+SI], -80H
-      SUB    WORD PTR [BX+DI], 2AH
-      SUB    WORD PTR [BX+DI], -80H
-      SUB    WORD PTR [BP+SI], 2BH
-      SUB    WORD PTR [BP+SI], -80H
-      SUB    WORD PTR [BP+DI], 2CH
-      SUB    WORD PTR [BP+DI], -80H
-      SUB    WORD PTR [SI], 2DH
-      SUB    WORD PTR [SI], -80H
-      SUB    WORD PTR [DI], 2EH
-      SUB    WORD PTR [DI], -80H
-      SUB    WORD PTR [302FH], 31H
-      SUB    WORD PTR [2E2EH], -80H
-      SUB    WORD PTR [BX], 30H
-      SUB    WORD PTR [BX], -80H
-      XOR    WORD PTR [BX+SI], 31H
-      XOR    WORD PTR [BX+SI], -80H
-      XOR    WORD PTR [BX+DI], 32H
-      XOR    WORD PTR [BX+DI], -80H
-      XOR    WORD PTR [BP+SI], 33H
-      XOR    WORD PTR [BP+SI], -80H
-      XOR    WORD PTR [BP+DI], 34H
-      XOR    WORD PTR [BP+DI], -80H
-      XOR    WORD PTR [SI], 35H
-      XOR    WORD PTR [SI], -80H
-      XOR    WORD PTR [DI], 36H
-      XOR    WORD PTR [DI], -80H
-      XOR    WORD PTR [3837H], 39H
-      XOR    WORD PTR [3636H], -80H
-      XOR    WORD PTR [BX], 38H
-      XOR    WORD PTR [BX], -80H
-      CMP    WORD PTR [BX+SI], 39H
-      CMP    WORD PTR [BX+SI], -80H
-      CMP    WORD PTR [BX+DI], 3AH
-      CMP    WORD PTR [BX+DI], -80H
-      CMP    WORD PTR [BP+SI], 3BH
-      CMP    WORD PTR [BP+SI], -80H
-      CMP    WORD PTR [BP+DI], 3CH
-      CMP    WORD PTR [BP+DI], -80H
-      CMP    WORD PTR [SI], 3DH
-      CMP    WORD PTR [SI], -80H
-      CMP    WORD PTR [DI], 3EH
-      CMP    WORD PTR [DI], -80H
-      CMP    WORD PTR [403FH], 41H
-      CMP    WORD PTR [3E3EH], -80H
-      CMP    WORD PTR [BX], 40H
-      CMP    WORD PTR [BX], -80H
-      ADD    WORD PTR [BX+SI+65], 42H
-      ADD    WORD PTR [BX+SI-128], 42H
-      ADD    WORD PTR [BX+SI+64], -80H
-      ADD    WORD PTR [BX+DI+66], 43H
-      ADD    WORD PTR [BX+DI-128], 43H
-      ADD    WORD PTR [BX+DI+65], -80H
-      ADD    WORD PTR [BP+SI+67], 44H
-      ADD    WORD PTR [BP+SI-128], 44H
-      ADD    WORD PTR [BP+SI+66], -80H
-      ADD    WORD PTR [BP+DI+68], 45H
-      ADD    WORD PTR [BP+DI-128], 45H
-      ADD    WORD PTR [BP+DI+67], -80H
-      ADD    WORD PTR [SI+69], 46H
-      ADD    WORD PTR [SI-128], 46H
-      ADD    WORD PTR [SI+68], -80H
-      ADD    WORD PTR [DI+70], 47H
-      ADD    WORD PTR [DI-128], 47H
-      ADD    WORD PTR [DI+69], -80H
-      ADD    WORD PTR [BP+71], 48H
-      ADD    WORD PTR [BP-128], 48H
-      ADD    WORD PTR [BP+70], -80H
-      ADD    WORD PTR [BX+72], 49H
-      ADD    WORD PTR [BX-128], 49H
-      ADD    WORD PTR [BX+71], -80H
-      OR     WORD PTR [BX+SI+73], 4AH
-      OR     WORD PTR [BX+SI-128], 4AH
-      OR     WORD PTR [BX+SI+72], -80H
-      OR     WORD PTR [BX+DI+74], 4BH
-      OR     WORD PTR [BX+DI-128], 4BH
-      OR     WORD PTR [BX+DI+73], -80H
-      OR     WORD PTR [BP+SI+75], 4CH
-      OR     WORD PTR [BP+SI-128], 4CH
-      OR     WORD PTR [BP+SI+74], -80H
-      OR     WORD PTR [BP+DI+76], 4DH
-      OR     WORD PTR [BP+DI-128], 4DH
-      OR     WORD PTR [BP+DI+75], -80H
-      OR     WORD PTR [SI+77], 4EH
-      OR     WORD PTR [SI-128], 4EH
-      OR     WORD PTR [SI+76], -80H
-      OR     WORD PTR [DI+78], 4FH
-      OR     WORD PTR [DI-128], 4FH
-      OR     WORD PTR [DI+77], -80H
-      OR     WORD PTR [BP+79], 50H
-      OR     WORD PTR [BP-128], 50H
-      OR     WORD PTR [BP+78], -80H
-      OR     WORD PTR [BX+80], 51H
-      OR     WORD PTR [BX-128], 51H
-      OR     WORD PTR [BX+79], -80H
-      ADC    WORD PTR [BX+SI+81], 52H
-      ADC    WORD PTR [BX+SI-128], 52H
-      ADC    WORD PTR [BX+SI+80], -80H
-      ADC    WORD PTR [BX+DI+82], 53H
-      ADC    WORD PTR [BX+DI-128], 53H
-      ADC    WORD PTR [BX+DI+81], -80H
-      ADC    WORD PTR [BP+SI+83], 54H
-      ADC    WORD PTR [BP+SI-128], 54H
-      ADC    WORD PTR [BP+SI+82], -80H
-      ADC    WORD PTR [BP+DI+84], 55H
-      ADC    WORD PTR [BP+DI-128], 55H
-      ADC    WORD PTR [BP+DI+83], -80H
-      ADC    WORD PTR [SI+85], 56H
-      ADC    WORD PTR [SI-128], 56H
-      ADC    WORD PTR [SI+84], -80H
-      ADC    WORD PTR [DI+86], 57H
-      ADC    WORD PTR [DI-128], 57H
-      ADC    WORD PTR [DI+85], -80H
-      ADC    WORD PTR [BP+87], 58H
-      ADC    WORD PTR [BP-128], 58H
-      ADC    WORD PTR [BP+86], -80H
-      ADC    WORD PTR [BX+88], 59H
-      ADC    WORD PTR [BX-128], 59H
-      ADC    WORD PTR [BX+87], -80H
-      SBB    WORD PTR [BX+SI+89], 5AH
-      SBB    WORD PTR [BX+SI-128], 5AH
-      SBB    WORD PTR [BX+SI+88], -80H
-      SBB    WORD PTR [BX+DI+90], 5BH
-      SBB    WORD PTR [BX+DI-128], 5BH
-      SBB    WORD PTR [BX+DI+89], -80H
-      SBB    WORD PTR [BP+SI+91], 5CH
-      SBB    WORD PTR [BP+SI-128], 5CH
-      SBB    WORD PTR [BP+SI+90], -80H
-      SBB    WORD PTR [BP+DI+92], 5DH
-      SBB    WORD PTR [BP+DI-128], 5DH
-      SBB    WORD PTR [BP+DI+91], -80H
-      SBB    WORD PTR [SI+93], 5EH
-      SBB    WORD PTR [SI-128], 5EH
-      SBB    WORD PTR [SI+92], -80H
-      SBB    WORD PTR [DI+94], 5FH
-      SBB    WORD PTR [DI-128], 5FH
-      SBB    WORD PTR [DI+93], -80H
-      SBB    WORD PTR [BP+95], 60H
-      SBB    WORD PTR [BP-128], 60H
-      SBB    WORD PTR [BP+94], -80H
-      SBB    WORD PTR [BX+96], 61H
-      SBB    WORD PTR [BX-128], 61H
-      SBB    WORD PTR [BX+95], -80H
-      AND    WORD PTR [BX+SI+97], 62H
-      AND    WORD PTR [BX+SI-128], 62H
-      AND    WORD PTR [BX+SI+96], -80H
-      AND    WORD PTR [BX+DI+98], 63H
-      AND    WORD PTR [BX+DI-128], 63H
-      AND    WORD PTR [BX+DI+97], -80H
-      AND    WORD PTR [BP+SI+99], 64H
-      AND    WORD PTR [BP+SI-128], 64H
-      AND    WORD PTR [BP+SI+98], -80H
-      AND    WORD PTR [BP+DI+100], 65H
-      AND    WORD PTR [BP+DI-128], 65H
-      AND    WORD PTR [BP+DI+99], -80H
-      AND    WORD PTR [SI+101], 66H
-      AND    WORD PTR [SI-128], 66H
-      AND    WORD PTR [SI+100], -80H
-      AND    WORD PTR [DI+102], 67H
-      AND    WORD PTR [DI-128], 67H
-      AND    WORD PTR [DI+101], -80H
-      AND    WORD PTR [BP+103], 68H
-      AND    WORD PTR [BP-128], 68H
-      AND    WORD PTR [BP+102], -80H
-      AND    WORD PTR [BX+104], 69H
-      AND    WORD PTR [BX-128], 69H
-      AND    WORD PTR [BX+103], -80H
-      SUB    WORD PTR [BX+SI+105], 6AH
-      SUB    WORD PTR [BX+SI-128], 6AH
-      SUB    WORD PTR [BX+SI+104], -80H
-      SUB    WORD PTR [BX+DI+106], 6BH
-      SUB    WORD PTR [BX+DI-128], 6BH
-      SUB    WORD PTR [BX+DI+105], -80H
-      SUB    WORD PTR [BP+SI+107], 6CH
-      SUB    WORD PTR [BP+SI-128], 6CH
-      SUB    WORD PTR [BP+SI+106], -80H
-      SUB    WORD PTR [BP+DI+108], 6DH
-      SUB    WORD PTR [BP+DI-128], 6DH
-      SUB    WORD PTR [BP+DI+107], -80H
-      SUB    WORD PTR [SI+109], 6EH
-      SUB    WORD PTR [SI-128], 6EH
-      SUB    WORD PTR [SI+108], -80H
-      SUB    WORD PTR [DI+110], 6FH
-      SUB    WORD PTR [DI-128], 6FH
-      SUB    WORD PTR [DI+109], -80H
-      SUB    WORD PTR [BP+111], 70H
-      SUB    WORD PTR [BP-128], 70H
-      SUB    WORD PTR [BP+110], -80H
-      SUB    WORD PTR [BX+112], 71H
-      SUB    WORD PTR [BX-128], 71H
-      SUB    WORD PTR [BX+111], -80H
-      XOR    WORD PTR [BX+SI+113], 72H
-      XOR    WORD PTR [BX+SI-128], 72H
-      XOR    WORD PTR [BX+SI+112], -80H
-      XOR    WORD PTR [BX+DI+114], 73H
-      XOR    WORD PTR [BX+DI-128], 73H
-      XOR    WORD PTR [BX+DI+113], -80H
-      XOR    WORD PTR [BP+SI+115], 74H
-      XOR    WORD PTR [BP+SI-128], 74H
-      XOR    WORD PTR [BP+SI+114], -80H
-      XOR    WORD PTR [BP+DI+116], 75H
-      XOR    WORD PTR [BP+DI-128], 75H
-      XOR    WORD PTR [BP+DI+115], -80H
-      XOR    WORD PTR [SI+117], 76H
-      XOR    WORD PTR [SI-128], 76H
-      XOR    WORD PTR [SI+116], -80H
-      XOR    WORD PTR [DI+118], 77H
-      XOR    WORD PTR [DI-128], 77H
-      XOR    WORD PTR [DI+117], -80H
-      XOR    WORD PTR [BP+119], 78H
-      XOR    WORD PTR [BP-128], 78H
-      XOR    WORD PTR [BP+118], -80H
-      XOR    WORD PTR [BX+120], 79H
-      XOR    WORD PTR [BX-128], 79H
-      XOR    WORD PTR [BX+119], -80H
-      CMP    WORD PTR [BX+SI+121], 7AH
-      CMP    WORD PTR [BX+SI-128], 7AH
-      CMP    WORD PTR [BX+SI+120], -80H
-      CMP    WORD PTR [BX+DI+122], 7BH
-      CMP    WORD PTR [BX+DI-128], 7BH
-      CMP    WORD PTR [BX+DI+121], -80H
-      CMP    WORD PTR [BP+SI+123], 7CH
-      CMP    WORD PTR [BP+SI-128], 7CH
-      CMP    WORD PTR [BP+SI+122], -80H
-      CMP    WORD PTR [BP+DI+124], 7DH
-      CMP    WORD PTR [BP+DI-128], 7DH
-      CMP    WORD PTR [BP+DI+123], -80H
-      CMP    WORD PTR [SI+125], 7EH
-      CMP    WORD PTR [SI-128], 7EH
-      CMP    WORD PTR [SI+124], -80H
-      CMP    WORD PTR [DI+126], 7FH
-      CMP    WORD PTR [DI-128], 7FH
-      CMP    WORD PTR [DI+125], -80H
-      CMP    WORD PTR [BP+127], -80H
-      CMP    WORD PTR [BP-128], -80H
-      CMP    WORD PTR [BP+126], 7FH
-      CMP    WORD PTR [BX-128], -7FH
-      CMP    WORD PTR [BX+0], -7FH
-      CMP    WORD PTR [BX+127], 0
-      ADD    WORD PTR [BX+SI+8281H], -7DH
-      ADD    WORD PTR [BX+DI+8382H], -7CH
-      ADD    WORD PTR [BP+SI+8483H], -7BH
-      ADD    WORD PTR [BP+DI+8584H], -7AH
       TEST   AL, [DI+8786H]
       TEST   AL, [BP+8887H]
       TEST   AL, [BX+8988H]
@@ -12276,13 +11897,318 @@
       MOV    BP, 0BFBEH
       MOV    SI, 0C0BFH
       MOV    DI, 0C1C0H
-      SAR    BH, 0
+      ROL    CL, 0
+      ROL    DL, 0
+      ROL    BL, 0
+      ROL    AH, 0
+      ROR    AL, 0
+      ROR    CL, 0
+      ROR    DL, 0
+      ROR    BL, 0
+      ROR    AH, 0
+      RCL    AL, 0
+      RCL    CL, 0
+      RCL    DL, 0
+      RCL    BL, 0
+      RCL    AH, 0
+      RCR    AL, 0
+      RCR    CL, 0
+      RCR    DL, 0
+      RCR    BL, 0
+      RCR    AH, 0
+      SHL    AL, 0
+      SHL    CL, 0
+      SHL    DL, 0
+      SHL    BL, 0
+      SHL    AH, 0
+      SHR    AL, 0
+      SHR    CL, 0
+      SHR    DL, 0
+      SHR    BL, 0
+      SHR    AH, 0
+      SAR    AL, 0
+      SAR    CL, 0
+      SAR    DL, 0
+      SAR    BL, 0
+      SAR    AH, 0
       ROL    BYTE PTR [BX+SI], 1
       ROL    BYTE PTR [BX+DI], 2
       ROL    BYTE PTR [BP+SI], 3
       ROL    BYTE PTR [BP+DI], 4
       ROL    BYTE PTR [SI], 5
       ROL    BYTE PTR [DI], 6
+      ROL    BYTE PTR [0807H], 0
+      ROL    BYTE PTR [BX], 0
+      ROR    BYTE PTR [BX+SI], 0
+      ROR    BYTE PTR [BX+DI], 0
+      ROR    BYTE PTR [BP+SI], 0
+      ROR    BYTE PTR [BP+DI], 0
+      ROR    BYTE PTR [SI], 0
+      ROR    BYTE PTR [DI], 0
+      ROR    BYTE PTR [100FH], 0
+      ROR    BYTE PTR [BX], 0
+      RCL    BYTE PTR [BX+SI], 0
+      RCL    BYTE PTR [BX+DI], 0
+      RCL    BYTE PTR [BP+SI], 0
+      RCL    BYTE PTR [BP+DI], 0
+      RCL    BYTE PTR [SI], 0
+      RCL    BYTE PTR [DI], 0
+      RCL    BYTE PTR [1817H], 0
+      RCL    BYTE PTR [BX], 0
+      RCR    BYTE PTR [BX+SI], 0
+      RCR    BYTE PTR [BX+DI], 0
+      RCR    BYTE PTR [BP+SI], 0
+      RCR    BYTE PTR [BP+DI], 0
+      RCR    BYTE PTR [SI], 0
+      RCR    BYTE PTR [DI], 0
+      RCR    BYTE PTR [201FH], 0
+      RCR    BYTE PTR [BX], 0
+      SHL    BYTE PTR [BX+SI], 0
+      SHL    BYTE PTR [BX+DI], 0
+      SHL    BYTE PTR [BP+SI], 0
+      SHL    BYTE PTR [BP+DI], 0
+      SHL    BYTE PTR [SI], 0
+      SHL    BYTE PTR [DI], 0
+      SHL    BYTE PTR [2827H], 0
+      SHL    BYTE PTR [BX], 0
+      SHR    BYTE PTR [BX+SI], 0
+      SHR    BYTE PTR [BX+DI], 0
+      SHR    BYTE PTR [BP+SI], 0
+      SHR    BYTE PTR [BP+DI], 0
+      SHR    BYTE PTR [SI], 0
+      SHR    BYTE PTR [DI], 0
+      SHR    BYTE PTR [302FH], 0
+      SHR    BYTE PTR [BX], 0
+      SAR    BYTE PTR [BX+SI], 0
+      SAR    BYTE PTR [BX+DI], 0
+      SAR    BYTE PTR [BP+SI], 0
+      SAR    BYTE PTR [BP+DI], 0
+      SAR    BYTE PTR [SI], 0
+      SAR    BYTE PTR [DI], 0
+      SAR    BYTE PTR [403FH], 0
+      SAR    BYTE PTR [BX], 0
+      ROL    BYTE PTR [BX+SI+65], 0
+      ROL    BYTE PTR [BX+SI-128], 0
+      ROL    BYTE PTR [BX+DI+66], 0
+      ROL    BYTE PTR [BX+DI-128], 0
+      ROL    BYTE PTR [BP+SI+67], 0
+      ROL    BYTE PTR [BP+SI-128], 0
+      ROL    BYTE PTR [BP+DI+68], 0
+      ROL    BYTE PTR [BP+DI-128], 0
+      ROL    BYTE PTR [SI+69], 0
+      ROL    BYTE PTR [SI-128], 0
+      ROL    BYTE PTR [DI+70], 0
+      ROL    BYTE PTR [DI-128], 0
+      ROL    BYTE PTR [BP+71], 0
+      ROL    BYTE PTR [BP-128], 0
+      ROL    BYTE PTR [BX+72], 0
+      ROL    BYTE PTR [BX-128], 0
+      ROR    BYTE PTR [BX+SI+73], 0
+      ROR    BYTE PTR [BX+SI-128], 0
+      ROR    BYTE PTR [BX+DI+74], 0
+      ROR    BYTE PTR [BX+DI-128], 0
+      ROR    BYTE PTR [BP+SI+75], 0
+      ROR    BYTE PTR [BP+SI-128], 0
+      ROR    BYTE PTR [BP+DI+76], 0
+      ROR    BYTE PTR [BP+DI-128], 0
+      ROR    BYTE PTR [SI+77], 0
+      ROR    BYTE PTR [SI-128], 0
+      ROR    BYTE PTR [DI+78], 0
+      ROR    BYTE PTR [DI-128], 0
+      ROR    BYTE PTR [BP+79], 0
+      ROR    BYTE PTR [BP-128], 0
+      ROR    BYTE PTR [BX+80], 0
+      ROR    BYTE PTR [BX-128], 0
+      RCL    BYTE PTR [BX+SI+81], 0
+      RCL    BYTE PTR [BX+SI-128], 0
+      RCL    BYTE PTR [BX+DI+82], 0
+      RCL    BYTE PTR [BX+DI-128], 0
+      RCL    BYTE PTR [BP+SI+83], 0
+      RCL    BYTE PTR [BP+SI-128], 0
+      RCL    BYTE PTR [BP+DI+84], 0
+      RCL    BYTE PTR [BP+DI-128], 0
+      RCL    BYTE PTR [SI+85], 0
+      RCL    BYTE PTR [SI-128], 0
+      RCL    BYTE PTR [DI+86], 0
+      RCL    BYTE PTR [DI-128], 0
+      RCL    BYTE PTR [BP+87], 0
+      RCL    BYTE PTR [BP-128], 0
+      RCL    BYTE PTR [BX+88], 0
+      RCL    BYTE PTR [BX-128], 0
+      RCR    BYTE PTR [BX+SI+89], 0
+      RCR    BYTE PTR [BX+SI-128], 0
+      RCR    BYTE PTR [BX+DI+90], 0
+      RCR    BYTE PTR [BX+DI-128], 0
+      RCR    BYTE PTR [BP+SI+91], 0
+      RCR    BYTE PTR [BP+SI-128], 0
+      RCR    BYTE PTR [BP+DI+92], 0
+      RCR    BYTE PTR [BP+DI-128], 0
+      RCR    BYTE PTR [SI+93], 0
+      RCR    BYTE PTR [SI-128], 0
+      RCR    BYTE PTR [DI+94], 0
+      RCR    BYTE PTR [DI-128], 0
+      RCR    BYTE PTR [BP+95], 0
+      RCR    BYTE PTR [BP-128], 0
+      RCR    BYTE PTR [BX+96], 0
+      RCR    BYTE PTR [BX-128], 0
+      SHL    BYTE PTR [BX+SI+97], 0
+      SHL    BYTE PTR [BX+SI-128], 0
+      SHL    BYTE PTR [BX+DI+98], 0
+      SHL    BYTE PTR [BX+DI-128], 0
+      SHL    BYTE PTR [BP+SI+99], 0
+      SHL    BYTE PTR [BP+SI-128], 0
+      SHL    BYTE PTR [BP+DI+100], 0
+      SHL    BYTE PTR [BP+DI-128], 0
+      SHL    BYTE PTR [SI+101], 0
+      SHL    BYTE PTR [SI-128], 0
+      SHL    BYTE PTR [DI+102], 0
+      SHL    BYTE PTR [DI-128], 0
+      SHL    BYTE PTR [BP+103], 0
+      SHL    BYTE PTR [BP-128], 0
+      SHL    BYTE PTR [BX+104], 0
+      SHL    BYTE PTR [BX-128], 0
+      SHR    BYTE PTR [BX+SI+105], 0
+      SHR    BYTE PTR [BX+SI-128], 0
+      SHR    BYTE PTR [BX+DI+106], 0
+      SHR    BYTE PTR [BX+DI-128], 0
+      SHR    BYTE PTR [BP+SI+107], 0
+      SHR    BYTE PTR [BP+SI-128], 0
+      SHR    BYTE PTR [BP+DI+108], 0
+      SHR    BYTE PTR [BP+DI-128], 0
+      SHR    BYTE PTR [SI+109], 0
+      SHR    BYTE PTR [SI-128], 0
+      SHR    BYTE PTR [DI+110], 0
+      SHR    BYTE PTR [DI-128], 0
+      SHR    BYTE PTR [BP+111], 0
+      SHR    BYTE PTR [BP-128], 0
+      SHR    BYTE PTR [BX+112], 0
+      SHR    BYTE PTR [BX-128], 0
+      SAR    BYTE PTR [BX+SI+121], 0
+      SAR    BYTE PTR [BX+SI-128], 0
+      SAR    BYTE PTR [BX+DI+122], 0
+      SAR    BYTE PTR [BX+DI-128], 0
+      SAR    BYTE PTR [BP+SI+123], 0
+      SAR    BYTE PTR [BP+SI-128], 0
+      SAR    BYTE PTR [BP+DI+124], 0
+      SAR    BYTE PTR [BP+DI-128], 0
+      SAR    BYTE PTR [SI+125], 0
+      SAR    BYTE PTR [SI-128], 0
+      SAR    BYTE PTR [DI+126], 0
+      SAR    BYTE PTR [DI-128], 0
+      SAR    BYTE PTR [BP+127], 0
+      SAR    BYTE PTR [BP-128], 0
+      SAR    BYTE PTR [BX-128], 0
+      SAR    BYTE PTR [BX+0], 1
+      ROL    BYTE PTR [BX+SI+8281H], 0
+      ROL    BYTE PTR [BX+DI+8382H], 0
+      ROL    BYTE PTR [BP+SI+8483H], 0
+      ROL    BYTE PTR [BP+DI+8584H], 0
+      ROL    BYTE PTR [SI+8685H], 0
+      ROL    BYTE PTR [DI+8786H], 0
+      ROL    BYTE PTR [BP+8887H], 0
+      ROL    BYTE PTR [BX+8988H], 0
+      ROR    BYTE PTR [BX+SI+8A89H], 0
+      ROR    BYTE PTR [BX+DI+8B8AH], 0
+      ROR    BYTE PTR [BP+SI+8C8BH], 0
+      ROR    BYTE PTR [BP+DI+8D8CH], 0
+      ROR    BYTE PTR [SI+8E8DH], 0
+      ROR    BYTE PTR [DI+8F8EH], 0
+      ROR    BYTE PTR [BP+908FH], 0
+      ROR    BYTE PTR [BX+9190H], 0
+      RCL    BYTE PTR [BX+SI+9291H], 0
+      RCL    BYTE PTR [BX+DI+9392H], 0
+      RCL    BYTE PTR [BP+SI+9493H], 0
+      RCL    BYTE PTR [BP+DI+9594H], 0
+      RCL    BYTE PTR [SI+9695H], 0
+      RCL    BYTE PTR [DI+9796H], 0
+      RCL    BYTE PTR [BP+9897H], 0
+      RCL    BYTE PTR [BX+9998H], 0
+      RCR    BYTE PTR [BX+SI+9A99H], 0
+      RCR    BYTE PTR [BX+DI+9B9AH], 0
+      RCR    BYTE PTR [BP+SI+9C9BH], 0
+      RCR    BYTE PTR [BP+DI+9D9CH], 0
+      RCR    BYTE PTR [SI+9E9DH], 0
+      RCR    BYTE PTR [DI+9F9EH], 0
+      RCR    BYTE PTR [BP+0A09FH], 0
+      RCR    BYTE PTR [BX+0A1A0H], 0
+      SHL    BYTE PTR [BX+SI+0A2A1H], 0
+      SHL    BYTE PTR [BX+DI+0A3A2H], 0
+      SHL    BYTE PTR [BP+SI+0A4A3H], 0
+      SHL    BYTE PTR [BP+DI+0A5A4H], 0
+      SHL    BYTE PTR [SI+0A6A5H], 0
+      SHL    BYTE PTR [DI+0A7A6H], 0
+      SHL    BYTE PTR [BP+0A8A7H], 0
+      SHL    BYTE PTR [BX+0A9A8H], 0
+      SHR    BYTE PTR [BX+SI+0AAA9H], 0
+      SHR    BYTE PTR [BX+DI+0ABAAH], 0
+      SHR    BYTE PTR [BP+SI+0ACABH], 0
+      SHR    BYTE PTR [BP+DI+0ADACH], 0
+      SHR    BYTE PTR [SI+0AEADH], 0
+      SHR    BYTE PTR [DI+0AFAEH], 0
+      SHR    BYTE PTR [BP+0B0AFH], 0
+      SHR    BYTE PTR [BX+0B1B0H], 0
+      SAR    BYTE PTR [BX+SI+0BAB9H], 0
+      SAR    BYTE PTR [BX+DI+0BBBAH], 0
+      SAR    BYTE PTR [BP+SI+0BCBBH], 0
+      SAR    BYTE PTR [BP+DI+0BDBCH], 0
+      SAR    BYTE PTR [SI+0BEBDH], 0
+      SAR    BYTE PTR [DI+0BFBEH], 0
+      SAR    BYTE PTR [BP+0C0BFH], 0
+      SAR    BYTE PTR [BX+0C1C0H], 0
+      ROL    AL, 0
+      ROL    DX, 0
+      ROL    BX, 0
+      ROL    SP, 0
+      ROL    BP, 0
+      ROL    SI, 0
+      ROL    DI, 0
+      ROR    AX, 0
+      ROR    CX, 0
+      ROR    DX, 0
+      ROR    BX, 0
+      ROR    SP, 0
+      ROR    BP, 0
+      ROR    SI, 0
+      ROR    DI, 0
+      RCL    AX, 0
+      RCL    CX, 0
+      RCL    DX, 0
+      RCL    BX, 0
+      RCL    SP, 0
+      RCL    BP, 0
+      RCL    SI, 0
+      RCL    DI, 0
+      RCR    AX, 0
+      RCR    CX, 0
+      RCR    DX, 0
+      RCR    BX, 0
+      RCR    SP, 0
+      RCR    BP, 0
+      RCR    SI, 0
+      RCR    DI, 0
+      SHL    AX, 0
+      SHL    CX, 0
+      SHL    DX, 0
+      SHL    BX, 0
+      SHL    SP, 0
+      SHL    BP, 0
+      SHL    SI, 0
+      SHL    DI, 0
+      SHR    AX, 0
+      SHR    CX, 0
+      SHR    DX, 0
+      SHR    BX, 0
+      SHR    SP, 0
+      SHR    BP, 0
+      SHR    SI, 0
+      SHR    DI, 0
+      SAR    AX, 0
+      SAR    CX, 0
+      SAR    DX, 0
+      SAR    BX, 0
+      SAR    SP, 0
+      SAR    BP, 0
+      SAR    SI, 0
       SAR    DI, 0
       ROL    WORD PTR [BX+SI], 1
       ROL    WORD PTR [BX+DI], 2
@@ -12298,6 +12224,218 @@
       ROR    WORD PTR [BP+DI], 12
       ROR    WORD PTR [SI], 13
       ROR    WORD PTR [DI], 14
+      ROR    WORD PTR [100FH], 0
+      ROR    WORD PTR [BX], 0
+      RCL    WORD PTR [BX+SI], 0
+      RCL    WORD PTR [BX+DI], 0
+      RCL    WORD PTR [BP+SI], 0
+      RCL    WORD PTR [BP+DI], 0
+      RCL    WORD PTR [SI], 0
+      RCL    WORD PTR [DI], 0
+      RCL    WORD PTR [1817H], 0
+      RCL    WORD PTR [BX], 0
+      RCR    WORD PTR [BX+SI], 0
+      RCR    WORD PTR [BX+DI], 0
+      RCR    WORD PTR [BP+SI], 0
+      RCR    WORD PTR [BP+DI], 0
+      RCR    WORD PTR [SI], 0
+      RCR    WORD PTR [DI], 0
+      RCR    WORD PTR [201FH], 0
+      RCR    WORD PTR [BX], 0
+      SHL    WORD PTR [BX+SI], 0
+      SHL    WORD PTR [BX+DI], 0
+      SHL    WORD PTR [BP+SI], 0
+      SHL    WORD PTR [BP+DI], 0
+      SHL    WORD PTR [SI], 0
+      SHL    WORD PTR [DI], 0
+      SHL    WORD PTR [2827H], 0
+      SHL    WORD PTR [BX], 0
+      SHR    WORD PTR [BX+SI], 0
+      SHR    WORD PTR [BX+DI], 0
+      SHR    WORD PTR [BP+SI], 0
+      SHR    WORD PTR [BP+DI], 0
+      SHR    WORD PTR [SI], 0
+      SHR    WORD PTR [DI], 0
+      SHR    WORD PTR [302FH], 0
+      SHR    WORD PTR [BX], 0
+      SAR    WORD PTR [BX+SI], 0
+      SAR    WORD PTR [BX+DI], 0
+      SAR    WORD PTR [BP+SI], 0
+      SAR    WORD PTR [BP+DI], 0
+      SAR    WORD PTR [SI], 0
+      SAR    WORD PTR [DI], 0
+      SAR    WORD PTR [403FH], 0
+      SAR    WORD PTR [BX], 0
+      ROL    WORD PTR [BX+SI+65], 0
+      ROL    WORD PTR [BX+SI-128], 0
+      ROL    WORD PTR [BX+DI+66], 0
+      ROL    WORD PTR [BX+DI-128], 0
+      ROL    WORD PTR [BP+SI+67], 0
+      ROL    WORD PTR [BP+SI-128], 0
+      ROL    WORD PTR [BP+DI+68], 0
+      ROL    WORD PTR [BP+DI-128], 0
+      ROL    WORD PTR [SI+69], 0
+      ROL    WORD PTR [SI-128], 0
+      ROL    WORD PTR [DI+70], 0
+      ROL    WORD PTR [DI-128], 0
+      ROL    WORD PTR [BP+71], 0
+      ROL    WORD PTR [BP-128], 0
+      ROL    WORD PTR [BX+72], 0
+      ROL    WORD PTR [BX-128], 0
+      ROR    WORD PTR [BX+SI+73], 0
+      ROR    WORD PTR [BX+SI-128], 0
+      ROR    WORD PTR [BX+DI+74], 0
+      ROR    WORD PTR [BX+DI-128], 0
+      ROR    WORD PTR [BP+SI+75], 0
+      ROR    WORD PTR [BP+SI-128], 0
+      ROR    WORD PTR [BP+DI+76], 0
+      ROR    WORD PTR [BP+DI-128], 0
+      ROR    WORD PTR [SI+77], 0
+      ROR    WORD PTR [SI-128], 0
+      ROR    WORD PTR [DI+78], 0
+      ROR    WORD PTR [DI-128], 0
+      ROR    WORD PTR [BP+79], 0
+      ROR    WORD PTR [BP-128], 0
+      ROR    WORD PTR [BX+80], 0
+      ROR    WORD PTR [BX-128], 0
+      RCL    WORD PTR [BX+SI+81], 0
+      RCL    WORD PTR [BX+SI-128], 0
+      RCL    WORD PTR [BX+DI+82], 0
+      RCL    WORD PTR [BX+DI-128], 0
+      RCL    WORD PTR [BP+SI+83], 0
+      RCL    WORD PTR [BP+SI-128], 0
+      RCL    WORD PTR [BP+DI+84], 0
+      RCL    WORD PTR [BP+DI-128], 0
+      RCL    WORD PTR [SI+85], 0
+      RCL    WORD PTR [SI-128], 0
+      RCL    WORD PTR [DI+86], 0
+      RCL    WORD PTR [DI-128], 0
+      RCL    WORD PTR [BP+87], 0
+      RCL    WORD PTR [BP-128], 0
+      RCL    WORD PTR [BX+88], 0
+      RCL    WORD PTR [BX-128], 0
+      RCR    WORD PTR [BX+SI+89], 0
+      RCR    WORD PTR [BX+SI-128], 0
+      RCR    WORD PTR [BX+DI+90], 0
+      RCR    WORD PTR [BX+DI-128], 0
+      RCR    WORD PTR [BP+SI+91], 0
+      RCR    WORD PTR [BP+SI-128], 0
+      RCR    WORD PTR [BP+DI+92], 0
+      RCR    WORD PTR [BP+DI-128], 0
+      RCR    WORD PTR [SI+93], 0
+      RCR    WORD PTR [SI-128], 0
+      RCR    WORD PTR [DI+94], 0
+      RCR    WORD PTR [DI-128], 0
+      RCR    WORD PTR [BP+95], 0
+      RCR    WORD PTR [BP-128], 0
+      RCR    WORD PTR [BX+96], 0
+      RCR    WORD PTR [BX-128], 0
+      SHL    WORD PTR [BX+SI+97], 0
+      SHL    WORD PTR [BX+SI-128], 0
+      SHL    WORD PTR [BX+DI+98], 0
+      SHL    WORD PTR [BX+DI-128], 0
+      SHL    WORD PTR [BP+SI+99], 0
+      SHL    WORD PTR [BP+SI-128], 0
+      SHL    WORD PTR [BP+DI+100], 0
+      SHL    WORD PTR [BP+DI-128], 0
+      SHL    WORD PTR [SI+101], 0
+      SHL    WORD PTR [SI-128], 0
+      SHL    WORD PTR [DI+102], 0
+      SHL    WORD PTR [DI-128], 0
+      SHL    WORD PTR [BP+103], 0
+      SHL    WORD PTR [BP-128], 0
+      SHL    WORD PTR [BX+104], 0
+      SHL    WORD PTR [BX-128], 0
+      SHR    WORD PTR [BX+SI+105], 0
+      SHR    WORD PTR [BX+SI-128], 0
+      SHR    WORD PTR [BX+DI+106], 0
+      SHR    WORD PTR [BX+DI-128], 0
+      SHR    WORD PTR [BP+SI+107], 0
+      SHR    WORD PTR [BP+SI-128], 0
+      SHR    WORD PTR [BP+DI+108], 0
+      SHR    WORD PTR [BP+DI-128], 0
+      SHR    WORD PTR [SI+109], 0
+      SHR    WORD PTR [SI-128], 0
+      SHR    WORD PTR [DI+110], 0
+      SHR    WORD PTR [DI-128], 0
+      SHR    WORD PTR [BP+111], 0
+      SHR    WORD PTR [BP-128], 0
+      SHR    WORD PTR [BX+112], 0
+      SHR    WORD PTR [BX-128], 0
+      SAR    WORD PTR [BX+SI+121], 0
+      SAR    WORD PTR [BX+SI-128], 0
+      SAR    WORD PTR [BX+DI+122], 0
+      SAR    WORD PTR [BX+DI-128], 0
+      SAR    WORD PTR [BP+SI+123], 0
+      SAR    WORD PTR [BP+SI-128], 0
+      SAR    WORD PTR [BP+DI+124], 0
+      SAR    WORD PTR [BP+DI-128], 0
+      SAR    WORD PTR [SI+125], 0
+      SAR    WORD PTR [SI-128], 0
+      SAR    WORD PTR [DI+126], 0
+      SAR    WORD PTR [DI-128], 0
+      SAR    WORD PTR [BP+127], 0
+      SAR    WORD PTR [BP-128], 0
+      SAR    WORD PTR [BX-128], 0
+      SAR    WORD PTR [BX+0], 1
+      ROL    WORD PTR [BX+SI+8281H], 0
+      ROL    WORD PTR [BX+DI+8382H], 0
+      ROL    WORD PTR [BP+SI+8483H], 0
+      ROL    WORD PTR [BP+DI+8584H], 0
+      ROL    WORD PTR [SI+8685H], 0
+      ROL    WORD PTR [DI+8786H], 0
+      ROL    WORD PTR [BP+8887H], 0
+      ROL    WORD PTR [BX+8988H], 0
+      ROR    WORD PTR [BX+SI+8A89H], 0
+      ROR    WORD PTR [BX+DI+8B8AH], 0
+      ROR    WORD PTR [BP+SI+8C8BH], 0
+      ROR    WORD PTR [BP+DI+8D8CH], 0
+      ROR    WORD PTR [SI+8E8DH], 0
+      ROR    WORD PTR [DI+8F8EH], 0
+      ROR    WORD PTR [BP+908FH], 0
+      ROR    WORD PTR [BX+9190H], 0
+      RCL    WORD PTR [BX+SI+9291H], 0
+      RCL    WORD PTR [BX+DI+9392H], 0
+      RCL    WORD PTR [BP+SI+9493H], 0
+      RCL    WORD PTR [BP+DI+9594H], 0
+      RCL    WORD PTR [SI+9695H], 0
+      RCL    WORD PTR [DI+9796H], 0
+      RCL    WORD PTR [BP+9897H], 0
+      RCL    WORD PTR [BX+9998H], 0
+      RCR    WORD PTR [BX+SI+9A99H], 0
+      RCR    WORD PTR [BX+DI+9B9AH], 0
+      RCR    WORD PTR [BP+SI+9C9BH], 0
+      RCR    WORD PTR [BP+DI+9D9CH], 0
+      RCR    WORD PTR [SI+9E9DH], 0
+      RCR    WORD PTR [DI+9F9EH], 0
+      RCR    WORD PTR [BP+0A09FH], 0
+      RCR    WORD PTR [BX+0A1A0H], 0
+      SHL    WORD PTR [BX+SI+0A2A1H], 0
+      SHL    WORD PTR [BX+DI+0A3A2H], 0
+      SHL    WORD PTR [BP+SI+0A4A3H], 0
+      SHL    WORD PTR [BP+DI+0A5A4H], 0
+      SHL    WORD PTR [SI+0A6A5H], 0
+      SHL    WORD PTR [DI+0A7A6H], 0
+      SHL    WORD PTR [BP+0A8A7H], 0
+      SHL    WORD PTR [BX+0A9A8H], 0
+      SHR    WORD PTR [BX+SI+0AAA9H], 0
+      SHR    WORD PTR [BX+DI+0ABAAH], 0
+      SHR    WORD PTR [BP+SI+0ACABH], 0
+      SHR    WORD PTR [BP+DI+0ADACH], 0
+      SHR    WORD PTR [SI+0AEADH], 0
+      SHR    WORD PTR [DI+0AFAEH], 0
+      SHR    WORD PTR [BP+0B0AFH], 0
+      SHR    WORD PTR [BX+0B1B0H], 0
+      SAR    WORD PTR [BX+SI+0BAB9H], 0
+      SAR    WORD PTR [BX+DI+0BBBAH], 0
+      SAR    WORD PTR [BP+SI+0BCBBH], 0
+      SAR    WORD PTR [BP+DI+0BDBCH], 0
+      SAR    WORD PTR [SI+0BEBDH], 0
+      SAR    WORD PTR [DI+0BFBEH], 0
+      SAR    WORD PTR [BP+0C0BFH], 0
+      SAR    WORD PTR [BX+0C1C0H], 0
+      ROL    AX, 0
+      ROL    CX, 0
       RET    50371
       RET
       LES    AX, [BX+SI]
@@ -12822,21 +12960,21 @@
       MOV    BYTE PTR [0807H], 9
       MOV    BYTE PTR [BX], 8
       MOV    BYTE PTR [BX+SI+65], 42H
-      MOV    BYTE PTR [BX+SI-128], 42H
+      MOV    BYTE PTR [BX+SI-128], 81H
       MOV    BYTE PTR [BX+DI+66], 43H
-      MOV    BYTE PTR [BX+DI-128], 43H
+      MOV    BYTE PTR [BX+DI-128], 81H
       MOV    BYTE PTR [BP+SI+67], 44H
-      MOV    BYTE PTR [BP+SI-128], 44H
+      MOV    BYTE PTR [BP+SI-128], 81H
       MOV    BYTE PTR [BP+DI+68], 45H
-      MOV    BYTE PTR [BP+DI-128], 45H
+      MOV    BYTE PTR [BP+DI-128], 81H
       MOV    BYTE PTR [SI+69], 46H
-      MOV    BYTE PTR [SI-128], 46H
+      MOV    BYTE PTR [SI-128], 81H
       MOV    BYTE PTR [DI+70], 47H
-      MOV    BYTE PTR [DI-128], 47H
+      MOV    BYTE PTR [DI-128], 81H
       MOV    BYTE PTR [BP+71], 48H
-      MOV    BYTE PTR [BP-128], 48H
+      MOV    BYTE PTR [BP-128], 81H
       MOV    BYTE PTR [BX+72], 49H
-      MOV    BYTE PTR [BX-128], 49H
+      MOV    BYTE PTR [BX-128], 81H
       MOV    BYTE PTR [BX+SI+8281H], 83H
       MOV    BYTE PTR [BX+DI+8382H], 84H
       MOV    BYTE PTR [BP+SI+8483H], 85H
@@ -12858,21 +12996,21 @@
       MOV    WORD PTR [0807H], 0A09H
       MOV    WORD PTR [BX], 0908H
       MOV    WORD PTR [BX+SI+65], 4342H
-      MOV    WORD PTR [BX+SI-128], 4342H
+      MOV    WORD PTR [BX+SI-128], 8281H
       MOV    WORD PTR [BX+DI+66], 4443H
-      MOV    WORD PTR [BX+DI-128], 4443H
+      MOV    WORD PTR [BX+DI-128], 8281H
       MOV    WORD PTR [BP+SI+67], 4544H
-      MOV    WORD PTR [BP+SI-128], 4544H
+      MOV    WORD PTR [BP+SI-128], 8281H
       MOV    WORD PTR [BP+DI+68], 4645H
-      MOV    WORD PTR [BP+DI-128], 4645H
+      MOV    WORD PTR [BP+DI-128], 8281H
       MOV    WORD PTR [SI+69], 4746H
-      MOV    WORD PTR [SI-128], 4746H
+      MOV    WORD PTR [SI-128], 8281H
       MOV    WORD PTR [DI+70], 4847H
-      MOV    WORD PTR [DI-128], 4847H
+      MOV    WORD PTR [DI-128], 8281H
       MOV    WORD PTR [BP+71], 4948H
-      MOV    WORD PTR [BP-128], 4948H
+      MOV    WORD PTR [BP-128], 8281H
       MOV    WORD PTR [BX+72], 4A49H
-      MOV    WORD PTR [BX-128], 4A49H
+      MOV    WORD PTR [BX-128], 8281H
       MOV    WORD PTR [BX+SI+8281H], 8483H
       MOV    WORD PTR [BX+DI+8382H], 8584H
       MOV    WORD PTR [BP+SI+8483H], 8685H
@@ -13089,62 +13227,6 @@
       SAR    BYTE PTR [BP-128], 1
       SAR    BYTE PTR [BX-128], 1
       SAR    BYTE PTR [BX+0], 1
-      ROL    BYTE PTR [BX+SI+8281H], 1
-      ROL    BYTE PTR [BX+DI+8382H], 1
-      ROL    BYTE PTR [BP+SI+8483H], 1
-      ROL    BYTE PTR [BP+DI+8584H], 1
-      ROL    BYTE PTR [SI+8685H], 1
-      ROL    BYTE PTR [DI+8786H], 1
-      ROL    BYTE PTR [BP+8887H], 1
-      ROL    BYTE PTR [BX+8988H], 1
-      ROR    BYTE PTR [BX+SI+8A89H], 1
-      ROR    BYTE PTR [BX+DI+8B8AH], 1
-      ROR    BYTE PTR [BP+SI+8C8BH], 1
-      ROR    BYTE PTR [BP+DI+8D8CH], 1
-      ROR    BYTE PTR [SI+8E8DH], 1
-      ROR    BYTE PTR [DI+8F8EH], 1
-      ROR    BYTE PTR [BP+908FH], 1
-      ROR    BYTE PTR [BX+9190H], 1
-      RCL    BYTE PTR [BX+SI+9291H], 1
-      RCL    BYTE PTR [BX+DI+9392H], 1
-      RCL    BYTE PTR [BP+SI+9493H], 1
-      RCL    BYTE PTR [BP+DI+9594H], 1
-      RCL    BYTE PTR [SI+9695H], 1
-      RCL    BYTE PTR [DI+9796H], 1
-      RCL    BYTE PTR [BP+9897H], 1
-      RCL    BYTE PTR [BX+9998H], 1
-      RCR    BYTE PTR [BX+SI+9A99H], 1
-      RCR    BYTE PTR [BX+DI+9B9AH], 1
-      RCR    BYTE PTR [BP+SI+9C9BH], 1
-      RCR    BYTE PTR [BP+DI+9D9CH], 1
-      RCR    BYTE PTR [SI+9E9DH], 1
-      RCR    BYTE PTR [DI+9F9EH], 1
-      RCR    BYTE PTR [BP+0A09FH], 1
-      RCR    BYTE PTR [BX+0A1A0H], 1
-      SHL    BYTE PTR [BX+SI+0A2A1H], 1
-      SHL    BYTE PTR [BX+DI+0A3A2H], 1
-      SHL    BYTE PTR [BP+SI+0A4A3H], 1
-      SHL    BYTE PTR [BP+DI+0A5A4H], 1
-      SHL    BYTE PTR [SI+0A6A5H], 1
-      SHL    BYTE PTR [DI+0A7A6H], 1
-      SHL    BYTE PTR [BP+0A8A7H], 1
-      SHL    BYTE PTR [BX+0A9A8H], 1
-      SHR    BYTE PTR [BX+SI+0AAA9H], 1
-      SHR    BYTE PTR [BX+DI+0ABAAH], 1
-      SHR    BYTE PTR [BP+SI+0ACABH], 1
-      SHR    BYTE PTR [BP+DI+0ADACH], 1
-      SHR    BYTE PTR [SI+0AEADH], 1
-      SHR    BYTE PTR [DI+0AFAEH], 1
-      SHR    BYTE PTR [BP+0B0AFH], 1
-      SHR    BYTE PTR [BX+0B1B0H], 1
-      SAR    BYTE PTR [BX+SI+0BAB9H], 1
-      SAR    BYTE PTR [BX+DI+0BBBAH], 1
-      SAR    BYTE PTR [BP+SI+0BCBBH], 1
-      SAR    BYTE PTR [BP+DI+0BDBCH], 1
-      SAR    BYTE PTR [SI+0BEBDH], 1
-      SAR    BYTE PTR [DI+0BFBEH], 1
-      SAR    BYTE PTR [BP+0C0BFH], 1
-      SAR    BYTE PTR [BX+0C1C0H], 1
       ROL    AL, 1
       ROL    CL, 1
       ROL    DL, 1
@@ -13362,62 +13444,6 @@
       SAR    WORD PTR [BP-128], 1
       SAR    WORD PTR [BX-128], 1
       SAR    WORD PTR [BX+0], 1
-      ROL    WORD PTR [BX+SI+8281H], 1
-      ROL    WORD PTR [BX+DI+8382H], 1
-      ROL    WORD PTR [BP+SI+8483H], 1
-      ROL    WORD PTR [BP+DI+8584H], 1
-      ROL    WORD PTR [SI+8685H], 1
-      ROL    WORD PTR [DI+8786H], 1
-      ROL    WORD PTR [BP+8887H], 1
-      ROL    WORD PTR [BX+8988H], 1
-      ROR    WORD PTR [BX+SI+8A89H], 1
-      ROR    WORD PTR [BX+DI+8B8AH], 1
-      ROR    WORD PTR [BP+SI+8C8BH], 1
-      ROR    WORD PTR [BP+DI+8D8CH], 1
-      ROR    WORD PTR [SI+8E8DH], 1
-      ROR    WORD PTR [DI+8F8EH], 1
-      ROR    WORD PTR [BP+908FH], 1
-      ROR    WORD PTR [BX+9190H], 1
-      RCL    WORD PTR [BX+SI+9291H], 1
-      RCL    WORD PTR [BX+DI+9392H], 1
-      RCL    WORD PTR [BP+SI+9493H], 1
-      RCL    WORD PTR [BP+DI+9594H], 1
-      RCL    WORD PTR [SI+9695H], 1
-      RCL    WORD PTR [DI+9796H], 1
-      RCL    WORD PTR [BP+9897H], 1
-      RCL    WORD PTR [BX+9998H], 1
-      RCR    WORD PTR [BX+SI+9A99H], 1
-      RCR    WORD PTR [BX+DI+9B9AH], 1
-      RCR    WORD PTR [BP+SI+9C9BH], 1
-      RCR    WORD PTR [BP+DI+9D9CH], 1
-      RCR    WORD PTR [SI+9E9DH], 1
-      RCR    WORD PTR [DI+9F9EH], 1
-      RCR    WORD PTR [BP+0A09FH], 1
-      RCR    WORD PTR [BX+0A1A0H], 1
-      SHL    WORD PTR [BX+SI+0A2A1H], 1
-      SHL    WORD PTR [BX+DI+0A3A2H], 1
-      SHL    WORD PTR [BP+SI+0A4A3H], 1
-      SHL    WORD PTR [BP+DI+0A5A4H], 1
-      SHL    WORD PTR [SI+0A6A5H], 1
-      SHL    WORD PTR [DI+0A7A6H], 1
-      SHL    WORD PTR [BP+0A8A7H], 1
-      SHL    WORD PTR [BX+0A9A8H], 1
-      SHR    WORD PTR [BX+SI+0AAA9H], 1
-      SHR    WORD PTR [BX+DI+0ABAAH], 1
-      SHR    WORD PTR [BP+SI+0ACABH], 1
-      SHR    WORD PTR [BP+DI+0ADACH], 1
-      SHR    WORD PTR [SI+0AEADH], 1
-      SHR    WORD PTR [DI+0AFAEH], 1
-      SHR    WORD PTR [BP+0B0AFH], 1
-      SHR    WORD PTR [BX+0B1B0H], 1
-      SAR    WORD PTR [BX+SI+0BAB9H], 1
-      SAR    WORD PTR [BX+DI+0BBBAH], 1
-      SAR    WORD PTR [BP+SI+0BCBBH], 1
-      SAR    WORD PTR [BP+DI+0BDBCH], 1
-      SAR    WORD PTR [SI+0BEBDH], 1
-      SAR    WORD PTR [DI+0BFBEH], 1
-      SAR    WORD PTR [BP+0C0BFH], 1
-      SAR    WORD PTR [BX+0C1C0H], 1
       ROL    AX, 1
       ROL    CX, 1
       ROL    DX, 1
@@ -14102,21 +14128,21 @@
       IDIV   BYTE PTR [403FH]
       IDIV   BYTE PTR [BX]
       TEST   BYTE PTR [BX+SI+65], 42H
-      TEST   BYTE PTR [BX+SI-128], 42H
+      TEST   BYTE PTR [BX+SI-128], 81H
       TEST   BYTE PTR [BX+DI+66], 43H
-      TEST   BYTE PTR [BX+DI-128], 43H
+      TEST   BYTE PTR [BX+DI-128], 81H
       TEST   BYTE PTR [BP+SI+67], 44H
-      TEST   BYTE PTR [BP+SI-128], 44H
+      TEST   BYTE PTR [BP+SI-128], 81H
       TEST   BYTE PTR [BP+DI+68], 45H
-      TEST   BYTE PTR [BP+DI-128], 45H
+      TEST   BYTE PTR [BP+DI-128], 81H
       TEST   BYTE PTR [SI+69], 46H
-      TEST   BYTE PTR [SI-128], 46H
+      TEST   BYTE PTR [SI-128], 81H
       TEST   BYTE PTR [DI+70], 47H
-      TEST   BYTE PTR [DI-128], 47H
+      TEST   BYTE PTR [DI-128], 81H
       TEST   BYTE PTR [BP+71], 48H
-      TEST   BYTE PTR [BP-128], 48H
+      TEST   BYTE PTR [BP-128], 81H
       TEST   BYTE PTR [BX+72], 49H
-      TEST   BYTE PTR [BX-128], 49H
+      TEST   BYTE PTR [BX-128], 81H
       NOT    BYTE PTR [BX+SI+81]
       NOT    BYTE PTR [BX+SI-128]
       NOT    BYTE PTR [BX+DI+82]
@@ -14363,21 +14389,21 @@
       IDIV   WORD PTR [403FH]
       IDIV   WORD PTR [BX]
       TEST   WORD PTR [BX+SI+65], 4342H
-      TEST   WORD PTR [BX+SI-128], 4342H
+      TEST   WORD PTR [BX+SI-128], 8281H
       TEST   WORD PTR [BX+DI+66], 4443H
-      TEST   WORD PTR [BX+DI-128], 4443H
+      TEST   WORD PTR [BX+DI-128], 8281H
       TEST   WORD PTR [BP+SI+67], 4544H
-      TEST   WORD PTR [BP+SI-128], 4544H
+      TEST   WORD PTR [BP+SI-128], 8281H
       TEST   WORD PTR [BP+DI+68], 4645H
-      TEST   WORD PTR [BP+DI-128], 4645H
+      TEST   WORD PTR [BP+DI-128], 8281H
       TEST   WORD PTR [SI+69], 4746H
-      TEST   WORD PTR [SI-128], 4746H
+      TEST   WORD PTR [SI-128], 8281H
       TEST   WORD PTR [DI+70], 4847H
-      TEST   WORD PTR [DI-128], 4847H
+      TEST   WORD PTR [DI-128], 8281H
       TEST   WORD PTR [BP+71], 4948H
-      TEST   WORD PTR [BP-128], 4948H
+      TEST   WORD PTR [BP-128], 8281H
       TEST   WORD PTR [BX+72], 4A49H
-      TEST   WORD PTR [BX-128], 4A49H
+      TEST   WORD PTR [BX-128], 8281H
       NOT    WORD PTR [BX+SI+81]
       NOT    WORD PTR [BX+SI-128]
       NOT    WORD PTR [BX+DI+82]
