@@ -60,10 +60,12 @@ struct AsmZ8000::Operand final : ErrorAt {
 const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return ZilogNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return ZilogLetterParser::singleton(); }
         const OperatorParser &operators() const override {
             return ZilogOperatorParser::singleton();
         }
+        const PrefixSymbolParser _symbol{nullptr, PSTR_UNDER};
     } PLUGINS{};
     return PLUGINS;
 }

@@ -19,12 +19,12 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const struct MotorolaPlugins : ValueParser::Plugins {
+const struct final : ValueParser::Plugins {
     const NumberParser &number() const override { return _number; }
     const SymbolParser &symbol() const override { return _symbol; }
     const LetterParser &letter() const override { return _letter; }
     const NationalNumberParser _number{0, 'B', 'Q'};
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR};
+    const SimpleSymbolParser _symbol{PSTR("$")};
     const IbmLetterParser _letter{'A'};
 } plugins{};
 struct : ValueParser::Locator {

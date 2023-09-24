@@ -24,6 +24,7 @@ namespace libasm {
 namespace mos6502 {
 
 using namespace reg;
+using namespace text::common;
 using namespace text::mos6502;
 
 namespace {
@@ -37,7 +38,7 @@ const ValueFormatter::Plugins &DisMos6502::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
-        const PrefixHexFormatter _hex{HexFormatter::DOLLAR};
+        const PrefixHexFormatter _hex{PSTR_DOLLAR};
     } PLUGINS{};
     return PLUGINS;
 }

@@ -18,11 +18,13 @@
 
 #include "reg_ns32000.h"
 #include "table_ns32000.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace ns32000 {
 
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
@@ -40,8 +42,8 @@ const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default 
 const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("#"); }
-        const PrefixHexFormatter _hex{HexFormatter::X_DASH};
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_SHARP; }
+        const PrefixHexFormatter _hex{PSTR_X_DASH};
     } PLUGINS{};
     return PLUGINS;
 }

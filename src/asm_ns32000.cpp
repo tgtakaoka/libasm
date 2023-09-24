@@ -64,7 +64,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Ns32000SymbolParser final : SimpleSymbolParser {
-    Ns32000SymbolParser() : SimpleSymbolParser(SymbolParser::DOT) {}
+    Ns32000SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOT) {}
     bool instructionLetter(char c) const override {
         return SimpleSymbolParser::instructionLetter(c) || c == '.';
     }
@@ -118,7 +118,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const LocationParser &location() const override { return _location; }
         const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
         const Ns32000SymbolParser _symbol{};
-        const NationalLocationParser _location{'*'};
+        const SimpleLocationParser _location{PSTR_DOT_STAR};
         const Ns32000LetterParser _letter{};
     } PLUGINS{};
     return PLUGINS;

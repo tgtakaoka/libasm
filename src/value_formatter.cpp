@@ -18,6 +18,8 @@
 
 #include <stdlib.h>
 
+#include "text_common.h"
+
 namespace libasm {
 
 const DecFormatter &ValueFormatter::Plugins::dec() const {
@@ -62,9 +64,9 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::fairchild() {
         const OctFormatter &oct() const override { return _oct; }
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
-        const SurroundBinFormatter _bin{BinFormatter::B_DASH, '\''};
-        const SurroundOctFormatter _oct{OctFormatter::O_DASH, '\''};
-        const SurroundHexFormatter _hex{HexFormatter::H_DASH, '\''};
+        const SurroundBinFormatter _bin{text::common::PSTR_B_DASH, '\''};
+        const SurroundOctFormatter _oct{text::common::PSTR_O_DASH, '\''};
+        const SurroundHexFormatter _hex{text::common::PSTR_H_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -88,10 +90,10 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::motorola() {
         const OctFormatter &oct() const override { return _oct; }
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
-        const PrefixBinFormatter _bin{BinFormatter::PERCENT};
-        const PrefixOctFormatter _oct{OctFormatter::ATMARK};
-        const PrefixHexFormatter _hex{HexFormatter::DOLLAR};
+        const /*PROGMEM*/ char *lineComment_P() const override { return text::common::PSTR_STAR; }
+        const PrefixBinFormatter _bin{text::common::PSTR_PERCENT};
+        const PrefixOctFormatter _oct{text::common::PSTR_AT};
+        const PrefixHexFormatter _hex{text::common::PSTR_DOLLAR};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -102,9 +104,9 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::national() {
         const OctFormatter &oct() const override { return _oct; }
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const PrefixBinFormatter _bin{BinFormatter::B_DASH};
-        const PrefixOctFormatter _oct{OctFormatter::O_DASH};
-        const PrefixHexFormatter _hex{HexFormatter::X_DASH};
+        const PrefixBinFormatter _bin{text::common::PSTR_B_DASH};
+        const PrefixOctFormatter _oct{text::common::PSTR_O_DASH};
+        const PrefixHexFormatter _hex{text::common::PSTR_X_DASH};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -113,8 +115,8 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::texas() {
     static const struct fianl : Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
-        const PrefixHexFormatter _hex{HexFormatter::LESS};
+        const /*PROGMEM*/ char *lineComment_P() const override { return text::common::PSTR_STAR; }
+        const PrefixHexFormatter _hex{text::common::PSTR_LESS};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -125,9 +127,9 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::zilog() {
         const OctFormatter &oct() const override { return _oct; }
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const PrefixBinFormatter _bin{BinFormatter::PERCENT2};
-        const PrefixOctFormatter _oct{OctFormatter::PERCENT8};
-        const PrefixHexFormatter _hex{HexFormatter::PERCENT};
+        const PrefixBinFormatter _bin{text::common::PSTR_PERCENT_2};
+        const PrefixOctFormatter _oct{text::common::PSTR_PERCENT_8};
+        const PrefixHexFormatter _hex{text::common::PSTR_PERCENT};
     } PLUGINS{};
     return PLUGINS;
 }

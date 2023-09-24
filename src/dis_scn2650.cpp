@@ -18,17 +18,19 @@
 
 #include "reg_scn2650.h"
 #include "table_scn2650.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace scn2650 {
 
 using namespace reg;
+using namespace text::common;
 
 const ValueFormatter::Plugins &DisScn2650::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
-        const SurroundHexFormatter _hex{HexFormatter::H_DASH, '\''};
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const SurroundHexFormatter _hex{PSTR_H_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;
 }

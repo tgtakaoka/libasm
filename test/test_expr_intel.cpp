@@ -21,11 +21,11 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const struct IntelPlugins : ValueParser::Plugins {
+const struct final : ValueParser::Plugins {
     const NumberParser &number() const override { return IntelNumberParser::singleton(); }
     const SymbolParser &symbol() const override { return _symbol; }
     const OperatorParser &operators() const override { return IntelOperatorParser::singleton(); }
-    const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION};
+    const SimpleSymbolParser _symbol{PSTR("_?@")};
 } plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;

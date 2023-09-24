@@ -18,17 +18,19 @@
 
 #include "reg_tms32010.h"
 #include "table_tms32010.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace tms32010 {
 
 using namespace reg;
+using namespace text::common;
 
 const ValueFormatter::Plugins &DisTms32010::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
         const SuffixHexFormatter _hex{'h'};
     } PLUGINS{};
     return PLUGINS;

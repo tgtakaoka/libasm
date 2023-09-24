@@ -18,11 +18,13 @@
 
 #include "reg_f3850.h"
 #include "table_f3850.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace f3850 {
 
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
@@ -33,10 +35,10 @@ const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
 
 const ValueFormatter::Plugins& DisF3850::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
-        const HexFormatter &hex() const override { return _hex; }
+        const HexFormatter& hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
-        const SurroundHexFormatter _hex{HexFormatter::H_DASH, '\''};
+        const /*PROGMEM*/ char* lineComment_P() const override { return PSTR_STAR; }
+        const SurroundHexFormatter _hex{PSTR_H_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;
 }

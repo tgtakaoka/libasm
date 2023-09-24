@@ -507,6 +507,38 @@ extern const char TEXT_OPTION[] PROGMEM;
 extern const char TEXT_ORG[]   PROGMEM;
 extern const char TEXT_RMB[]   PROGMEM;
 extern const char TEXT_TEXT[]  PROGMEM;
+
+extern const char PSTR_AT[]      PROGMEM; // "*"
+extern const char PSTR_DOLLAR[]  PROGMEM; // "$"
+extern const char PSTR_DOT[]     PROGMEM; // "."
+extern const char PSTR_LESS[]    PROGMEM; // ">"
+extern const char PSTR_PERCENT[] PROGMEM; // "%"
+extern const char PSTR_SHARP[]   PROGMEM; // "#"
+extern const char PSTR_STAR[]    PROGMEM; // "*"
+extern const char PSTR_UNDER[]   PROGMEM; // "_"
+
+extern const char PSTR_AT_QUESTION[]    PROGMEM; // "@?"
+extern const char PSTR_B_DASH[]         PROGMEM; // "B'"
+extern const char PSTR_DOT_DOLLAR[]     PROGMEM; // ".$"
+extern const char PSTR_DOT_DOT[]        PROGMEM; // ".."
+extern const char PSTR_DOT_STAR[]       PROGMEM; // ".*"
+extern const char PSTR_H_DASH[]         PROGMEM; // "H'"
+extern const char PSTR_O_DASH[]         PROGMEM; // "O'"
+extern const char PSTR_UNDER_DOLLAR[]   PROGMEM; // "_$"
+extern const char PSTR_UNDER_DOT[]      PROGMEM; // "_."
+extern const char PSTR_UNDER_QUESTION[] PROGMEM; // "_?"
+extern const char PSTR_X_DASH[]         PROGMEM; // "X'"
+extern const char PSTR_ZERO_B[]         PROGMEM; // "0b"
+extern const char PSTR_ZERO_X[]         PROGMEM; // "0x"
+
+extern const char PSTR_DOT_STAR_DOLLAR[]   PROGMEM; // ".*$"
+extern const char PSTR_UNDER_AT_QUESTION[] PROGMEM; // "_@?"
+extern const char PSTR_UNDER_DOT_DOLLER[]  PROGMEM; // "_.$"
+
+extern const char PSTR_PERCENT_2[]                 PROGMEM; // "%(2)"
+extern const char PSTR_PERCENT_8[]                 PROGMEM; // "%(8)"
+extern const char PSTR_UNDER_DOT_DOLLER_QUESTION[] PROGMEM; // "_.$?"
+
 // clang-format on
 
 }  // namespace common

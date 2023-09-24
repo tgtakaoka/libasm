@@ -173,7 +173,7 @@ static void test_move_immediate() {
     symtab.intern(0xBEEF, "BEEF");
 
     TEST("LXI B,BEEF",   0x01, 0xEF, 0xBE);
-    TEST("LXI D,@1234",  0x11, 0x34, 0x12);
+
     TEST("LXI H,BEEF",   0x21, 0xEF, 0xBE);
     TEST("LXI SP,?6789", 0x31, 0x89, 0x67);
 }

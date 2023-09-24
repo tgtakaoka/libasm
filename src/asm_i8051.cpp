@@ -42,14 +42,12 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 const ValueParser::Plugins &AsmI8051::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const PrefixSymbolParser _symbol{SymbolParser::QUESTION};
-        const OperatorParser &operators() const override {
-            return IntelOperatorParser::singleton();
-        }
-    } PLUGINS{};
+    static struct final : ValueParser::Plugins {
+        const NumberParser &number() const { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const { return _symbol; }
+        const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
+        const PrefixSymbolParser _symbol{PSTR_UNDER_QUESTION};
+    } PLUGINS;
     return PLUGINS;
 }
 

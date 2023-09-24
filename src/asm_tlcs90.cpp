@@ -54,7 +54,7 @@ const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const PrefixSymbolParser _symbol{SymbolParser::NONE, SymbolParser::QUESTION};
+        const PrefixSymbolParser _symbol{nullptr, PSTR_UNDER_QUESTION};
     } PLUGINS{};
     return PLUGINS;
 }

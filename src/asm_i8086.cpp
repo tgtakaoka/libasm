@@ -76,14 +76,12 @@ struct AsmI8086::Operand final : ErrorAt {
 };
 
 const ValueParser::Plugins &AsmI8086::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION};
-        const OperatorParser &operators() const override {
-            return IntelOperatorParser::singleton();
-        }
-    } PLUGINS{};
+    static struct final : ValueParser::Plugins {
+        const NumberParser &number() const { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const { return _symbol; }
+        const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
+        const SimpleSymbolParser _symbol{PSTR_UNDER_AT_QUESTION};
+    } PLUGINS;
     return PLUGINS;
 }
 

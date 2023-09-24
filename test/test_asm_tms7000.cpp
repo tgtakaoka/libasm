@@ -381,15 +381,13 @@ void test_extended() {
 }
 
 void test_error() {
-    ERRT("CLR R_214 ; comment", UNDEFINED_SYMBOL, "R_214 ; comment", 0xD5, 0x00);
-    ERRT("CLR R214_ ; comment", UNDEFINED_SYMBOL, "R214_ ; comment", 0xD5, 0x00);
+    ERRT("CLR R214X ; comment", UNDEFINED_SYMBOL, "R214X ; comment", 0xD5, 0x00);
     ERRT("CLR R000  ; comment", UNDEFINED_SYMBOL, "R000  ; comment", 0xD5, 0x00);
     ERRT("CLR R256  ; comment", UNDEFINED_SYMBOL, "R256  ; comment", 0xD5, 0x00);
     ERRT("CLR R     ; comment", UNDEFINED_SYMBOL, "R     ; comment", 0xD5, 0x00);
     ERRT("CLR > D6  ; comment", GARBAGE_AT_END,   "> D6  ; comment");
 
-    ERRT("ANDP A, P_132", OPERAND_NOT_ALLOWED, "A, P_132");
-    ERRT("ANDP A, P132_", OPERAND_NOT_ALLOWED, "A, P132_");
+    ERRT("ANDP A, P132X", OPERAND_NOT_ALLOWED, "A, P132X");
     ERRT("ANDP A, P000",  OPERAND_NOT_ALLOWED, "A, P000");
     ERRT("ANDP A, P256",  OPERAND_NOT_ALLOWED, "A, P256");
     ERRT("ANDP A, P",     OPERAND_NOT_ALLOWED, "A, P");

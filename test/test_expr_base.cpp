@@ -19,12 +19,8 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const ValueParser::Plugins plugins{};
-struct : ValueParser::Locator {
-    uint32_t location = 0;
-    uint32_t currentLocation() const { return location; }
-} locator;
-const ValueParser parser{plugins, locator};
+TestLocator locator{};
+const ValueParser parser{ValueParser::Plugins::singleton(), locator};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::cstyle()};
 

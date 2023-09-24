@@ -66,7 +66,7 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
         const OperatorParser &operators() const override {
             return ZilogOperatorParser::singleton();
         }
-        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT_QUESTION};
+        const SimpleSymbolParser _symbol{PSTR_UNDER_DOT_DOLLER_QUESTION};
     } PLUGINS{};
     return PLUGINS;
 }

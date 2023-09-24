@@ -49,14 +49,12 @@ struct AsmI8080::Operand final : ErrorAt {
 };
 
 const ValueParser::Plugins &AsmI8080::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const SymbolParser &symbol() const override { return _symbol; }
-        const SimpleSymbolParser _symbol{SymbolParser::ATMARK_QUESTION};
-        const OperatorParser &operators() const override {
-            return IntelOperatorParser::singleton();
-        }
-    } PLUGINS{};
+    static struct final : ValueParser::Plugins {
+        const NumberParser &number() const { return IntelNumberParser::singleton(); }
+        const SymbolParser &symbol() const { return _symbol; }
+        const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
+        const PrefixSymbolParser _symbol{PSTR_AT_QUESTION};
+    } PLUGINS;
     return PLUGINS;
 }
 
