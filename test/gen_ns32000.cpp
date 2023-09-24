@@ -30,13 +30,13 @@ int main(int argc, const char **argv) {
     dis32000.setOption("c-style", "enable");
     dis32000.setOption("origin-char", "*");
     if (driver.generateGas()) {
-        dis32000.setOption("stropt-bracket", "enable");
         dis32000.setOption("origin-char", ".");
+        dis32000.setOption("stropt-bracket", "enable");
         dis32000.setOption("pcrel-paren", "enable");
         dis32000.setOption("float-prefix", "enable");
     }
     TestGenerator generator(driver, dis32000, 0x10000);
-    generator.generate();
+    generator.ignoreSizeVariation().generate();
 
     return driver.close();
 }

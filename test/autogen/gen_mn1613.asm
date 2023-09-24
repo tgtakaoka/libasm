@@ -14,7 +14,7 @@
 
         cpu     mn1613
 
-        org     0x100
+        org     0100H
         include "gen_mn1610.inc"
         align   32
         include "gen_mn1613.inc"

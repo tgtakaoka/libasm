@@ -3,12 +3,12 @@
       MVI   R0, 0
       MVI   SP, 0
       MVI   STR, 0
-      WT    R0, 0x00
-      WT    SP, 0x00
-      WT    STR, 0x00
-      RD    R0, 0x00
-      RD    SP, 0x00
-      RD    STR, 0x00
+      WT    R0, 00H
+      WT    SP, 00H
+      WT    STR, 00H
+      RD    R0, 00H
+      RD    SP, 00H
+      RD    STR, 00H
       H
       PUSH  R0
       POP   R0
@@ -2370,10 +2370,10 @@
       MV    STR, R0, LM
       MV    STR, SP, LM
       MV    STR, STR, LM
-      ST    R0, 0x00
-      ST    SP, 0x00
-      DMS   0x00
-      BAL   0x00
+      ST    R0, 00H
+      ST    SP, 00H
+      DMS   00H
+      BAL   00H
       ST    R0, *
       ST    R0, *+1
       ST    R0, *-128
@@ -2386,10 +2386,10 @@
       BAL   *
       BAL   *+1
       BAL   *-128
-      ST    R0, (0x00)
-      ST    SP, (0x00)
-      DMS   (0x00)
-      BAL   (0x00)
+      ST    R0, (00H)
+      ST    SP, (00H)
+      DMS   (00H)
+      BAL   (00H)
       ST    R0, (*)
       ST    R0, (*+1)
       ST    R0, (*-128)
@@ -2406,14 +2406,14 @@
       ST    SP, 0(X0)
       DMS   0(X0)
       BAL   0(X0)
-      ST    R0, (0x00)(X0)
-      ST    SP, (0x00)(X0)
-      DMS   (0x00)(X0)
-      BAL   (0x00)(X0)
-      L     R0, 0x00
-      L     SP, 0x00
-      IMS   0x00
-      B     0x00
+      ST    R0, (00H)(X0)
+      ST    SP, (00H)(X0)
+      DMS   (00H)(X0)
+      BAL   (00H)(X0)
+      L     R0, 00H
+      L     SP, 00H
+      IMS   00H
+      B     00H
       L     R0, *
       L     R0, *+1
       L     R0, *-128
@@ -2426,10 +2426,10 @@
       B     *
       B     *+1
       B     *-128
-      L     R0, (0x00)
-      L     SP, (0x00)
-      IMS   (0x00)
-      B     (0x00)
+      L     R0, (00H)
+      L     SP, (00H)
+      IMS   (00H)
+      B     (00H)
       L     R0, (*)
       L     R0, (*+1)
       L     R0, (*-128)
@@ -2446,7 +2446,7 @@
       L     SP, 0(X0)
       IMS   0(X0)
       B     0(X0)
-      L     R0, (0x00)(X0)
-      L     SP, (0x00)(X0)
-      IMS   (0x00)(X0)
-      B     (0x00)(X0)
+      L     R0, (00H)(X0)
+      L     SP, (00H)(X0)
+      IMS   (00H)(X0)
+      B     (00H)(X0)

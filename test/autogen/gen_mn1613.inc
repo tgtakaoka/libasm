@@ -6,159 +6,159 @@
       SETS  R0, SBRB
       SETS  SP, SBRB
       SETS  STR, SBRB
-      LS    SBRB, 0x1011
+      LS    SBRB, 1010H
       SETB  R0, SSBR
       SETB  SP, SSBR
       SETB  STR, SSBR
-      LB    SSBR, 0x1819
+      LB    SSBR, 1018H
       SETS  R0, ICB
       SETS  SP, ICB
       SETS  STR, ICB
-      LS    ICB, 0x2021
+      LS    ICB, 1020H
       SETB  R0, TSR0
       SETB  SP, TSR0
       SETB  STR, TSR0
-      LB    TSR0, 0x2829
+      LB    TSR0, 1028H
       SETS  R0, NPP
       SETS  SP, NPP
       SETS  STR, NPP
-      LS    NPP, 0x3031
+      LS    NPP, 1030H
       SETB  R0, OSR0
       SETB  SP, OSR0
       SETB  STR, OSR0
-      LB    OSR0, 0x4849
+      LB    OSR0, 1048H
       CPYB  R0, CSBR
       CPYB  SP, CSBR
       CPYB  STR, CSBR
-      STB   CSBR, 0x8889
+      STB   CSBR, 1088H
       CPYS  R0, SBRB
       CPYS  SP, SBRB
       CPYS  STR, SBRB
-      STS   SBRB, 0x9091
+      STS   SBRB, 1090H
       CPYB  R0, SSBR
       CPYB  SP, SSBR
       CPYB  STR, SSBR
-      STB   SSBR, 0x9899
+      STB   SSBR, 1098H
       CPYS  R0, ICB
       CPYS  SP, ICB
       CPYS  STR, ICB
-      STS   ICB, 0xA0A1
+      STS   ICB, 10A0H
       CPYB  R0, TSR0
       CPYB  SP, TSR0
       CPYB  STR, TSR0
-      STB   TSR0, 0xA8A9
+      STB   TSR0, 10A8H
       CPYS  R0, NPP
       CPYS  SP, NPP
       CPYS  STR, NPP
-      STS   NPP, 0xB0B1
+      STS   NPP, 10B0H
       CPYB  R0, OSR0
       CPYB  SP, OSR0
       CPYB  STR, OSR0
-      STB   OSR0, 0xC8C9
-      WT    R0, 0x00
-      WT    SP, 0x00
-      WT    STR, 0x00
-      TRST  R0, 0x0102
-      TRST  SP, 0x0607
-      TRST  STR, 0x0708
+      STB   OSR0, 10C8H
+      WT    R0, 00H
+      WT    SP, 00H
+      WT    STR, 00H
+      TRST  R0, 1801H
+      TRST  SP, 1806H
+      TRST  STR, 1807H
       POPM
-      TSET  R0, 0x090A
-      TSET  SP, 0x0E0F
-      TSET  STR, 0x0F10
+      TSET  R0, 1809H
+      TSET  SP, 180EH
+      TSET  STR, 180FH
       PSHM
-      TRST  R0, 0x1112, SKP
-      TRST  SP, 0x1617, SKP
-      TRST  STR, 0x1718, SKP
-      TSET  R0, 0x191A, SKP
-      TSET  SP, 0x1E1F, SKP
-      TSET  STR, 0x1F20, SKP
-      TRST  R0, 0x2122, M
-      TRST  SP, 0x2627, M
-      TRST  STR, 0x2728, M
-      TSET  R0, 0x292A, M
-      TSET  SP, 0x2E2F, M
-      TSET  STR, 0x2F30, M
-      TRST  R0, 0x3132, PZ
-      TRST  SP, 0x3637, PZ
-      TRST  STR, 0x3738, PZ
-      TSET  R0, 0x393A, PZ
-      TSET  SP, 0x3E3F, PZ
-      TSET  STR, 0x3F40, PZ
-      TRST  R0, 0x4142, Z
-      TRST  SP, 0x4647, Z
-      TRST  STR, 0x4748, Z
-      TSET  R0, 0x494A, Z
-      TSET  SP, 0x4E4F, Z
-      TSET  STR, 0x4F50, Z
-      TRST  R0, 0x5152, NZ
-      TRST  SP, 0x5657, NZ
-      TRST  STR, 0x5758, NZ
-      TSET  R0, 0x595A, NZ
-      TSET  SP, 0x5E5F, NZ
-      TSET  STR, 0x5F60, NZ
-      TRST  R0, 0x6162, MZ
-      TRST  SP, 0x6667, MZ
-      TRST  STR, 0x6768, MZ
-      TSET  R0, 0x696A, MZ
-      TSET  SP, 0x6E6F, MZ
-      TSET  STR, 0x6F70, MZ
-      TRST  R0, 0x7172, P
-      TRST  SP, 0x7677, P
-      TRST  STR, 0x7778, P
-      TSET  R0, 0x797A, P
-      TSET  SP, 0x7E7F, P
-      TSET  STR, 0x7F80, P
-      TRST  R0, 0x8182, EZ
-      TRST  SP, 0x8687, EZ
-      TRST  STR, 0x8788, EZ
-      TSET  R0, 0x898A, EZ
-      TSET  SP, 0x8E8F, EZ
-      TSET  STR, 0x8F90, EZ
-      TRST  R0, 0x9192, ENZ
-      TRST  SP, 0x9697, ENZ
-      TRST  STR, 0x9798, ENZ
-      TSET  R0, 0x999A, ENZ
-      TSET  SP, 0x9E9F, ENZ
-      TSET  STR, 0x9FA0, ENZ
-      TRST  R0, 0xA1A2, OZ
-      TRST  SP, 0xA6A7, OZ
-      TRST  STR, 0xA7A8, OZ
-      TSET  R0, 0xA9AA, OZ
-      TSET  SP, 0xAEAF, OZ
-      TSET  STR, 0xAFB0, OZ
-      TRST  R0, 0xB1B2, ONZ
-      TRST  SP, 0xB6B7, ONZ
-      TRST  STR, 0xB7B8, ONZ
-      TSET  R0, 0xB9BA, ONZ
-      TSET  SP, 0xBEBF, ONZ
-      TSET  STR, 0xBFC0, ONZ
-      TRST  R0, 0xC1C2, LMZ
-      TRST  SP, 0xC6C7, LMZ
-      TRST  STR, 0xC7C8, LMZ
-      TSET  R0, 0xC9CA, LMZ
-      TSET  SP, 0xCECF, LMZ
-      TSET  STR, 0xCFD0, LMZ
-      TRST  R0, 0xD1D2, LP
-      TRST  SP, 0xD6D7, LP
-      TRST  STR, 0xD7D8, LP
-      TSET  R0, 0xD9DA, LP
-      TSET  SP, 0xDEDF, LP
-      TSET  STR, 0xDFE0, LP
-      TRST  R0, 0xE1E2, LPZ
-      TRST  SP, 0xE6E7, LPZ
-      TRST  STR, 0xE7E8, LPZ
-      TSET  R0, 0xE9EA, LPZ
-      TSET  SP, 0xEEEF, LPZ
-      TSET  STR, 0xEFF0, LPZ
-      TRST  R0, 0xF1F2, LM
-      TRST  SP, 0xF6F7, LM
-      TRST  STR, 0xF7F8, LM
-      TSET  R0, 0xF9FA, LM
-      TSET  SP, 0xFEFF, LM
-      TSET  STR, 0xFF00, LM
-      RD    R0, 0x00
-      RD    SP, 0x00
-      RD    STR, 0x00
+      TRST  R0, 1811H, SKP
+      TRST  SP, 1816H, SKP
+      TRST  STR, 1817H, SKP
+      TSET  R0, 1819H, SKP
+      TSET  SP, 181EH, SKP
+      TSET  STR, 181FH, SKP
+      TRST  R0, 1821H, M
+      TRST  SP, 1826H, M
+      TRST  STR, 1827H, M
+      TSET  R0, 1829H, M
+      TSET  SP, 182EH, M
+      TSET  STR, 182FH, M
+      TRST  R0, 1831H, PZ
+      TRST  SP, 1836H, PZ
+      TRST  STR, 1837H, PZ
+      TSET  R0, 1839H, PZ
+      TSET  SP, 183EH, PZ
+      TSET  STR, 183FH, PZ
+      TRST  R0, 1841H, Z
+      TRST  SP, 1846H, Z
+      TRST  STR, 1847H, Z
+      TSET  R0, 1849H, Z
+      TSET  SP, 184EH, Z
+      TSET  STR, 184FH, Z
+      TRST  R0, 1851H, NZ
+      TRST  SP, 1856H, NZ
+      TRST  STR, 1857H, NZ
+      TSET  R0, 1859H, NZ
+      TSET  SP, 185EH, NZ
+      TSET  STR, 185FH, NZ
+      TRST  R0, 1861H, MZ
+      TRST  SP, 1866H, MZ
+      TRST  STR, 1867H, MZ
+      TSET  R0, 1869H, MZ
+      TSET  SP, 186EH, MZ
+      TSET  STR, 186FH, MZ
+      TRST  R0, 1871H, P
+      TRST  SP, 1876H, P
+      TRST  STR, 1877H, P
+      TSET  R0, 1879H, P
+      TSET  SP, 187EH, P
+      TSET  STR, 187FH, P
+      TRST  R0, 1881H, EZ
+      TRST  SP, 1886H, EZ
+      TRST  STR, 1887H, EZ
+      TSET  R0, 1889H, EZ
+      TSET  SP, 188EH, EZ
+      TSET  STR, 188FH, EZ
+      TRST  R0, 1891H, ENZ
+      TRST  SP, 1896H, ENZ
+      TRST  STR, 1897H, ENZ
+      TSET  R0, 1899H, ENZ
+      TSET  SP, 189EH, ENZ
+      TSET  STR, 189FH, ENZ
+      TRST  R0, 18A1H, OZ
+      TRST  SP, 18A6H, OZ
+      TRST  STR, 18A7H, OZ
+      TSET  R0, 18A9H, OZ
+      TSET  SP, 18AEH, OZ
+      TSET  STR, 18AFH, OZ
+      TRST  R0, 18B1H, ONZ
+      TRST  SP, 18B6H, ONZ
+      TRST  STR, 18B7H, ONZ
+      TSET  R0, 18B9H, ONZ
+      TSET  SP, 18BEH, ONZ
+      TSET  STR, 18BFH, ONZ
+      TRST  R0, 18C1H, LMZ
+      TRST  SP, 18C6H, LMZ
+      TRST  STR, 18C7H, LMZ
+      TSET  R0, 18C9H, LMZ
+      TSET  SP, 18CEH, LMZ
+      TSET  STR, 18CFH, LMZ
+      TRST  R0, 18D1H, LP
+      TRST  SP, 18D6H, LP
+      TRST  STR, 18D7H, LP
+      TSET  R0, 18D9H, LP
+      TSET  SP, 18DEH, LP
+      TSET  STR, 18DFH, LP
+      TRST  R0, 18E1H, LPZ
+      TRST  SP, 18E6H, LPZ
+      TRST  STR, 18E7H, LPZ
+      TSET  R0, 18E9H, LPZ
+      TSET  SP, 18EEH, LPZ
+      TSET  STR, 18EFH, LPZ
+      TRST  R0, 18F1H, LM
+      TRST  SP, 18F6H, LM
+      TRST  STR, 18F7H, LM
+      TSET  R0, 18F9H, LM
+      TSET  SP, 18FEH, LM
+      TSET  STR, 18FFH, LM
+      RD    R0, 00H
+      RD    SP, 00H
+      RD    STR, 00H
       NEG   R0
       NEG   SP
       NEG   STR
@@ -440,8 +440,10 @@
       SL    R0, RE, LM
       SL    R0, SE, LM
       SL    R0, CE, LM
+      LR    SP, (R1)
       PUSH  SP
       POP   SP
+      STR   SP, (R1)
       SR    SP
       SR    SP, RE
       SR    SP, SE
@@ -476,8 +478,6 @@
       SL    SP, RE, PZ
       SL    SP, SE, PZ
       SL    SP, CE, PZ
-      LR    SP, (R1)
-      STR   SP, (R1)
       SR    SP, Z
       SR    SP, RE, Z
       SR    SP, SE, Z
@@ -592,7 +592,7 @@
       SL    SP, CE, LM
       PUSH  STR
       POP   STR
-      BD    0x0809
+      BD    2708H
       SR    STR
       SR    STR, RE
       SR    STR, SE
@@ -601,7 +601,7 @@
       SL    STR, RE
       SL    STR, SE
       SL    STR, CE
-      BALD  0x1819
+      BALD  2718H
       SR    STR, SKP
       SR    STR, RE, SKP
       SR    STR, SE, SKP
@@ -723,21 +723,21 @@
       SL    STR, SE, LM
       SL    STR, CE, LM
       BR    (R1)
-      LD    R0, 0x090A
-      LD    SP, 0x0E0F
-      BL    (0x1011)
+      LD    R0, 2809H
+      LD    SP, 280EH
+      BL    (2810H)
       BALR  (R1)
-      LD    R0, SSBR, 0x191A
-      LD    SP, SSBR, 0x1E1F
-      BALL  (0x2021)
-      LD    R0, TSR0, 0x292A
-      LD    SP, TSR0, 0x2E2F
-      STD   R0, 0x494A
-      STD   SP, 0x4E4F
-      STD   R0, SSBR, 0x595A
-      STD   SP, SSBR, 0x5E5F
-      STD   R0, TSR0, 0x696A
-      STD   SP, TSR0, 0x6E6F
+      LD    R0, SSBR, 2819H
+      LD    SP, SSBR, 281EH
+      BALL  (2820H)
+      LD    R0, TSR0, 2829H
+      LD    SP, TSR0, 282EH
+      STD   R0, 2849H
+      STD   SP, 284EH
+      STD   R0, SSBR, 2859H
+      STD   SP, SSBR, 285EH
+      STD   R0, TSR0, 2869H
+      STD   SP, TSR0, 286EH
       TBIT  R0, 0
       TBIT  R0, 0, SKP
       TBIT  R0, 0, M
@@ -1095,387 +1095,387 @@
       CB    R0, R0
       CB    R0, SP
       CB    R0, STR
-      CBI   R0, 9
+      CBI   R0, 8
       C     R0, R0
       C     R0, SP
       C     R0, STR
-      CWI   R0, 0x1011
+      CWI   R0, 5110H
       CB    R0, R0, SKP
       CB    R0, SP, SKP
       CB    R0, STR, SKP
-      CBI   R0, 25, SKP
+      CBI   R0, 24, SKP
       C     R0, R0, SKP
       C     R0, SP, SKP
       C     R0, STR, SKP
-      CWI   R0, 0x2021, SKP
+      CWI   R0, 5120H, SKP
       CB    R0, R0, M
       CB    R0, SP, M
       CB    R0, STR, M
-      CBI   R0, 41, M
+      CBI   R0, 40, M
       C     R0, R0, M
       C     R0, SP, M
       C     R0, STR, M
-      CWI   R0, 0x3031, M
+      CWI   R0, 5130H, M
       CB    R0, R0, PZ
       CB    R0, SP, PZ
       CB    R0, STR, PZ
-      CBI   R0, 57, PZ
+      CBI   R0, 56, PZ
       C     R0, R0, PZ
       C     R0, SP, PZ
       C     R0, STR, PZ
-      CWI   R0, 0x4041, PZ
+      CWI   R0, 5140H, PZ
       CB    R0, R0, Z
       CB    R0, SP, Z
       CB    R0, STR, Z
-      CBI   R0, 73, Z
+      CBI   R0, 72, Z
       C     R0, R0, Z
       C     R0, SP, Z
       C     R0, STR, Z
-      CWI   R0, 0x5051, Z
+      CWI   R0, 5150H, Z
       CB    R0, R0, NZ
       CB    R0, SP, NZ
       CB    R0, STR, NZ
-      CBI   R0, 89, NZ
+      CBI   R0, 88, NZ
       C     R0, R0, NZ
       C     R0, SP, NZ
       C     R0, STR, NZ
-      CWI   R0, 0x6061, NZ
+      CWI   R0, 5160H, NZ
       CB    R0, R0, MZ
       CB    R0, SP, MZ
       CB    R0, STR, MZ
-      CBI   R0, 105, MZ
+      CBI   R0, 104, MZ
       C     R0, R0, MZ
       C     R0, SP, MZ
       C     R0, STR, MZ
-      CWI   R0, 0x7071, MZ
+      CWI   R0, 5170H, MZ
       CB    R0, R0, P
       CB    R0, SP, P
       CB    R0, STR, P
-      CBI   R0, 121, P
+      CBI   R0, 120, P
       C     R0, R0, P
       C     R0, SP, P
       C     R0, STR, P
-      CWI   R0, 0x8081, P
+      CWI   R0, 5180H, P
       CB    R0, R0, EZ
       CB    R0, SP, EZ
       CB    R0, STR, EZ
-      CBI   R0, 137, EZ
+      CBI   R0, 136, EZ
       C     R0, R0, EZ
       C     R0, SP, EZ
       C     R0, STR, EZ
-      CWI   R0, 0x9091, EZ
+      CWI   R0, 5190H, EZ
       CB    R0, R0, ENZ
       CB    R0, SP, ENZ
       CB    R0, STR, ENZ
-      CBI   R0, 153, ENZ
+      CBI   R0, 152, ENZ
       C     R0, R0, ENZ
       C     R0, SP, ENZ
       C     R0, STR, ENZ
-      CWI   R0, 0xA0A1, ENZ
+      CWI   R0, 51A0H, ENZ
       CB    R0, R0, OZ
       CB    R0, SP, OZ
       CB    R0, STR, OZ
-      CBI   R0, 169, OZ
+      CBI   R0, 168, OZ
       C     R0, R0, OZ
       C     R0, SP, OZ
       C     R0, STR, OZ
-      CWI   R0, 0xB0B1, OZ
+      CWI   R0, 51B0H, OZ
       CB    R0, R0, ONZ
       CB    R0, SP, ONZ
       CB    R0, STR, ONZ
-      CBI   R0, 185, ONZ
+      CBI   R0, 184, ONZ
       C     R0, R0, ONZ
       C     R0, SP, ONZ
       C     R0, STR, ONZ
-      CWI   R0, 0xC0C1, ONZ
+      CWI   R0, 51C0H, ONZ
       CB    R0, R0, LMZ
       CB    R0, SP, LMZ
       CB    R0, STR, LMZ
-      CBI   R0, 201, LMZ
+      CBI   R0, 200, LMZ
       C     R0, R0, LMZ
       C     R0, SP, LMZ
       C     R0, STR, LMZ
-      CWI   R0, 0xD0D1, LMZ
+      CWI   R0, 51D0H, LMZ
       CB    R0, R0, LP
       CB    R0, SP, LP
       CB    R0, STR, LP
-      CBI   R0, 217, LP
+      CBI   R0, 216, LP
       C     R0, R0, LP
       C     R0, SP, LP
       C     R0, STR, LP
-      CWI   R0, 0xE0E1, LP
+      CWI   R0, 51E0H, LP
       CB    R0, R0, LPZ
       CB    R0, SP, LPZ
       CB    R0, STR, LPZ
-      CBI   R0, 233, LPZ
+      CBI   R0, 232, LPZ
       C     R0, R0, LPZ
       C     R0, SP, LPZ
       C     R0, STR, LPZ
-      CWI   R0, 0xF0F1, LPZ
+      CWI   R0, 51F0H, LPZ
       CB    R0, R0, LM
       CB    R0, SP, LM
       CB    R0, STR, LM
-      CBI   R0, 249, LM
+      CBI   R0, 248, LM
       C     R0, R0, LM
       C     R0, SP, LM
       C     R0, STR, LM
-      CWI   R0, 0x0001, LM
+      CWI   R0, 5200H, LM
       CB    SP, R0
       CB    SP, SP
       CB    SP, STR
-      CBI   SP, 9
+      CBI   SP, 8
       C     SP, R0
       C     SP, SP
       C     SP, STR
-      CWI   SP, 0x1011
+      CWI   SP, 5610H
       CB    SP, R0, SKP
       CB    SP, SP, SKP
       CB    SP, STR, SKP
-      CBI   SP, 25, SKP
+      CBI   SP, 24, SKP
       C     SP, R0, SKP
       C     SP, SP, SKP
       C     SP, STR, SKP
-      CWI   SP, 0x2021, SKP
+      CWI   SP, 5620H, SKP
       CB    SP, R0, M
       CB    SP, SP, M
       CB    SP, STR, M
-      CBI   SP, 41, M
+      CBI   SP, 40, M
       C     SP, R0, M
       C     SP, SP, M
       C     SP, STR, M
-      CWI   SP, 0x3031, M
+      CWI   SP, 5630H, M
       CB    SP, R0, PZ
       CB    SP, SP, PZ
       CB    SP, STR, PZ
-      CBI   SP, 57, PZ
+      CBI   SP, 56, PZ
       C     SP, R0, PZ
       C     SP, SP, PZ
       C     SP, STR, PZ
-      CWI   SP, 0x4041, PZ
+      CWI   SP, 5640H, PZ
       CB    SP, R0, Z
       CB    SP, SP, Z
       CB    SP, STR, Z
-      CBI   SP, 73, Z
+      CBI   SP, 72, Z
       C     SP, R0, Z
       C     SP, SP, Z
       C     SP, STR, Z
-      CWI   SP, 0x5051, Z
+      CWI   SP, 5650H, Z
       CB    SP, R0, NZ
       CB    SP, SP, NZ
       CB    SP, STR, NZ
-      CBI   SP, 89, NZ
+      CBI   SP, 88, NZ
       C     SP, R0, NZ
       C     SP, SP, NZ
       C     SP, STR, NZ
-      CWI   SP, 0x6061, NZ
+      CWI   SP, 5660H, NZ
       CB    SP, R0, MZ
       CB    SP, SP, MZ
       CB    SP, STR, MZ
-      CBI   SP, 105, MZ
+      CBI   SP, 104, MZ
       C     SP, R0, MZ
       C     SP, SP, MZ
       C     SP, STR, MZ
-      CWI   SP, 0x7071, MZ
+      CWI   SP, 5670H, MZ
       CB    SP, R0, P
       CB    SP, SP, P
       CB    SP, STR, P
-      CBI   SP, 121, P
+      CBI   SP, 120, P
       C     SP, R0, P
       C     SP, SP, P
       C     SP, STR, P
-      CWI   SP, 0x8081, P
+      CWI   SP, 5680H, P
       CB    SP, R0, EZ
       CB    SP, SP, EZ
       CB    SP, STR, EZ
-      CBI   SP, 137, EZ
+      CBI   SP, 136, EZ
       C     SP, R0, EZ
       C     SP, SP, EZ
       C     SP, STR, EZ
-      CWI   SP, 0x9091, EZ
+      CWI   SP, 5690H, EZ
       CB    SP, R0, ENZ
       CB    SP, SP, ENZ
       CB    SP, STR, ENZ
-      CBI   SP, 153, ENZ
+      CBI   SP, 152, ENZ
       C     SP, R0, ENZ
       C     SP, SP, ENZ
       C     SP, STR, ENZ
-      CWI   SP, 0xA0A1, ENZ
+      CWI   SP, 56A0H, ENZ
       CB    SP, R0, OZ
       CB    SP, SP, OZ
       CB    SP, STR, OZ
-      CBI   SP, 169, OZ
+      CBI   SP, 168, OZ
       C     SP, R0, OZ
       C     SP, SP, OZ
       C     SP, STR, OZ
-      CWI   SP, 0xB0B1, OZ
+      CWI   SP, 56B0H, OZ
       CB    SP, R0, ONZ
       CB    SP, SP, ONZ
       CB    SP, STR, ONZ
-      CBI   SP, 185, ONZ
+      CBI   SP, 184, ONZ
       C     SP, R0, ONZ
       C     SP, SP, ONZ
       C     SP, STR, ONZ
-      CWI   SP, 0xC0C1, ONZ
+      CWI   SP, 56C0H, ONZ
       CB    SP, R0, LMZ
       CB    SP, SP, LMZ
       CB    SP, STR, LMZ
-      CBI   SP, 201, LMZ
+      CBI   SP, 200, LMZ
       C     SP, R0, LMZ
       C     SP, SP, LMZ
       C     SP, STR, LMZ
-      CWI   SP, 0xD0D1, LMZ
+      CWI   SP, 56D0H, LMZ
       CB    SP, R0, LP
       CB    SP, SP, LP
       CB    SP, STR, LP
-      CBI   SP, 217, LP
+      CBI   SP, 216, LP
       C     SP, R0, LP
       C     SP, SP, LP
       C     SP, STR, LP
-      CWI   SP, 0xE0E1, LP
+      CWI   SP, 56E0H, LP
       CB    SP, R0, LPZ
       CB    SP, SP, LPZ
       CB    SP, STR, LPZ
-      CBI   SP, 233, LPZ
+      CBI   SP, 232, LPZ
       C     SP, R0, LPZ
       C     SP, SP, LPZ
       C     SP, STR, LPZ
-      CWI   SP, 0xF0F1, LPZ
+      CWI   SP, 56F0H, LPZ
       CB    SP, R0, LM
       CB    SP, SP, LM
       CB    SP, STR, LM
-      CBI   SP, 249, LM
+      CBI   SP, 248, LM
       C     SP, R0, LM
       C     SP, SP, LM
       C     SP, STR, LM
-      CWI   SP, 0x0001, LM
+      CWI   SP, 5700H, LM
       CB    STR, R0
       CB    STR, SP
       CB    STR, STR
-      CBI   STR, 9
+      CBI   STR, 8
       C     STR, R0
       C     STR, SP
       C     STR, STR
-      CWI   STR, 0x1011
+      CWI   STR, 5710H
       CB    STR, R0, SKP
       CB    STR, SP, SKP
       CB    STR, STR, SKP
-      CBI   STR, 25, SKP
+      CBI   STR, 24, SKP
       C     STR, R0, SKP
       C     STR, SP, SKP
       C     STR, STR, SKP
-      CWI   STR, 0x2021, SKP
+      CWI   STR, 5720H, SKP
       CB    STR, R0, M
       CB    STR, SP, M
       CB    STR, STR, M
-      CBI   STR, 41, M
+      CBI   STR, 40, M
       C     STR, R0, M
       C     STR, SP, M
       C     STR, STR, M
-      CWI   STR, 0x3031, M
+      CWI   STR, 5730H, M
       CB    STR, R0, PZ
       CB    STR, SP, PZ
       CB    STR, STR, PZ
-      CBI   STR, 57, PZ
+      CBI   STR, 56, PZ
       C     STR, R0, PZ
       C     STR, SP, PZ
       C     STR, STR, PZ
-      CWI   STR, 0x4041, PZ
+      CWI   STR, 5740H, PZ
       CB    STR, R0, Z
       CB    STR, SP, Z
       CB    STR, STR, Z
-      CBI   STR, 73, Z
+      CBI   STR, 72, Z
       C     STR, R0, Z
       C     STR, SP, Z
       C     STR, STR, Z
-      CWI   STR, 0x5051, Z
+      CWI   STR, 5750H, Z
       CB    STR, R0, NZ
       CB    STR, SP, NZ
       CB    STR, STR, NZ
-      CBI   STR, 89, NZ
+      CBI   STR, 88, NZ
       C     STR, R0, NZ
       C     STR, SP, NZ
       C     STR, STR, NZ
-      CWI   STR, 0x6061, NZ
+      CWI   STR, 5760H, NZ
       CB    STR, R0, MZ
       CB    STR, SP, MZ
       CB    STR, STR, MZ
-      CBI   STR, 105, MZ
+      CBI   STR, 104, MZ
       C     STR, R0, MZ
       C     STR, SP, MZ
       C     STR, STR, MZ
-      CWI   STR, 0x7071, MZ
+      CWI   STR, 5770H, MZ
       CB    STR, R0, P
       CB    STR, SP, P
       CB    STR, STR, P
-      CBI   STR, 121, P
+      CBI   STR, 120, P
       C     STR, R0, P
       C     STR, SP, P
       C     STR, STR, P
-      CWI   STR, 0x8081, P
+      CWI   STR, 5780H, P
       CB    STR, R0, EZ
       CB    STR, SP, EZ
       CB    STR, STR, EZ
-      CBI   STR, 137, EZ
+      CBI   STR, 136, EZ
       C     STR, R0, EZ
       C     STR, SP, EZ
       C     STR, STR, EZ
-      CWI   STR, 0x9091, EZ
+      CWI   STR, 5790H, EZ
       CB    STR, R0, ENZ
       CB    STR, SP, ENZ
       CB    STR, STR, ENZ
-      CBI   STR, 153, ENZ
+      CBI   STR, 152, ENZ
       C     STR, R0, ENZ
       C     STR, SP, ENZ
       C     STR, STR, ENZ
-      CWI   STR, 0xA0A1, ENZ
+      CWI   STR, 57A0H, ENZ
       CB    STR, R0, OZ
       CB    STR, SP, OZ
       CB    STR, STR, OZ
-      CBI   STR, 169, OZ
+      CBI   STR, 168, OZ
       C     STR, R0, OZ
       C     STR, SP, OZ
       C     STR, STR, OZ
-      CWI   STR, 0xB0B1, OZ
+      CWI   STR, 57B0H, OZ
       CB    STR, R0, ONZ
       CB    STR, SP, ONZ
       CB    STR, STR, ONZ
-      CBI   STR, 185, ONZ
+      CBI   STR, 184, ONZ
       C     STR, R0, ONZ
       C     STR, SP, ONZ
       C     STR, STR, ONZ
-      CWI   STR, 0xC0C1, ONZ
+      CWI   STR, 57C0H, ONZ
       CB    STR, R0, LMZ
       CB    STR, SP, LMZ
       CB    STR, STR, LMZ
-      CBI   STR, 201, LMZ
+      CBI   STR, 200, LMZ
       C     STR, R0, LMZ
       C     STR, SP, LMZ
       C     STR, STR, LMZ
-      CWI   STR, 0xD0D1, LMZ
+      CWI   STR, 57D0H, LMZ
       CB    STR, R0, LP
       CB    STR, SP, LP
       CB    STR, STR, LP
-      CBI   STR, 217, LP
+      CBI   STR, 216, LP
       C     STR, R0, LP
       C     STR, SP, LP
       C     STR, STR, LP
-      CWI   STR, 0xE0E1, LP
+      CWI   STR, 57E0H, LP
       CB    STR, R0, LPZ
       CB    STR, SP, LPZ
       CB    STR, STR, LPZ
-      CBI   STR, 233, LPZ
+      CBI   STR, 232, LPZ
       C     STR, R0, LPZ
       C     STR, SP, LPZ
       C     STR, STR, LPZ
-      CWI   STR, 0xF0F1, LPZ
+      CWI   STR, 57F0H, LPZ
       CB    STR, R0, LM
       CB    STR, SP, LM
       CB    STR, STR, LM
-      CBI   STR, 249, LM
+      CBI   STR, 248, LM
       C     STR, R0, LM
       C     STR, SP, LM
       C     STR, STR, LM
-      CWI   STR, 0x0001, LM
+      CWI   STR, 5800H, LM
       CBR   R0, (R1)
       DAS   R0, (R1)
       CWR   R0, (R1)
@@ -1543,387 +1543,387 @@
       S     R0, R0
       S     R0, SP
       S     R0, STR
-      SWI   R0, 0x0809
+      SWI   R0, 5908H
       A     R0, R0
       A     R0, SP
       A     R0, STR
-      AWI   R0, 0x1011
+      AWI   R0, 5910H
       S     R0, R0, SKP
       S     R0, SP, SKP
       S     R0, STR, SKP
-      SWI   R0, 0x1819, SKP
+      SWI   R0, 5918H, SKP
       A     R0, R0, SKP
       A     R0, SP, SKP
       A     R0, STR, SKP
-      AWI   R0, 0x2021, SKP
+      AWI   R0, 5920H, SKP
       S     R0, R0, M
       S     R0, SP, M
       S     R0, STR, M
-      SWI   R0, 0x2829, M
+      SWI   R0, 5928H, M
       A     R0, R0, M
       A     R0, SP, M
       A     R0, STR, M
-      AWI   R0, 0x3031, M
+      AWI   R0, 5930H, M
       S     R0, R0, PZ
       S     R0, SP, PZ
       S     R0, STR, PZ
-      SWI   R0, 0x3839, PZ
+      SWI   R0, 5938H, PZ
       A     R0, R0, PZ
       A     R0, SP, PZ
       A     R0, STR, PZ
-      AWI   R0, 0x4041, PZ
+      AWI   R0, 5940H, PZ
       S     R0, R0, Z
       S     R0, SP, Z
       S     R0, STR, Z
-      SWI   R0, 0x4849, Z
+      SWI   R0, 5948H, Z
       A     R0, R0, Z
       A     R0, SP, Z
       A     R0, STR, Z
-      AWI   R0, 0x5051, Z
+      AWI   R0, 5950H, Z
       S     R0, R0, NZ
       S     R0, SP, NZ
       S     R0, STR, NZ
-      SWI   R0, 0x5859, NZ
+      SWI   R0, 5958H, NZ
       A     R0, R0, NZ
       A     R0, SP, NZ
       A     R0, STR, NZ
-      AWI   R0, 0x6061, NZ
+      AWI   R0, 5960H, NZ
       S     R0, R0, MZ
       S     R0, SP, MZ
       S     R0, STR, MZ
-      SWI   R0, 0x6869, MZ
+      SWI   R0, 5968H, MZ
       A     R0, R0, MZ
       A     R0, SP, MZ
       A     R0, STR, MZ
-      AWI   R0, 0x7071, MZ
+      AWI   R0, 5970H, MZ
       S     R0, R0, P
       S     R0, SP, P
       S     R0, STR, P
-      SWI   R0, 0x7879, P
+      SWI   R0, 5978H, P
       A     R0, R0, P
       A     R0, SP, P
       A     R0, STR, P
-      AWI   R0, 0x8081, P
+      AWI   R0, 5980H, P
       S     R0, R0, EZ
       S     R0, SP, EZ
       S     R0, STR, EZ
-      SWI   R0, 0x8889, EZ
+      SWI   R0, 5988H, EZ
       A     R0, R0, EZ
       A     R0, SP, EZ
       A     R0, STR, EZ
-      AWI   R0, 0x9091, EZ
+      AWI   R0, 5990H, EZ
       S     R0, R0, ENZ
       S     R0, SP, ENZ
       S     R0, STR, ENZ
-      SWI   R0, 0x9899, ENZ
+      SWI   R0, 5998H, ENZ
       A     R0, R0, ENZ
       A     R0, SP, ENZ
       A     R0, STR, ENZ
-      AWI   R0, 0xA0A1, ENZ
+      AWI   R0, 59A0H, ENZ
       S     R0, R0, OZ
       S     R0, SP, OZ
       S     R0, STR, OZ
-      SWI   R0, 0xA8A9, OZ
+      SWI   R0, 59A8H, OZ
       A     R0, R0, OZ
       A     R0, SP, OZ
       A     R0, STR, OZ
-      AWI   R0, 0xB0B1, OZ
+      AWI   R0, 59B0H, OZ
       S     R0, R0, ONZ
       S     R0, SP, ONZ
       S     R0, STR, ONZ
-      SWI   R0, 0xB8B9, ONZ
+      SWI   R0, 59B8H, ONZ
       A     R0, R0, ONZ
       A     R0, SP, ONZ
       A     R0, STR, ONZ
-      AWI   R0, 0xC0C1, ONZ
+      AWI   R0, 59C0H, ONZ
       S     R0, R0, LMZ
       S     R0, SP, LMZ
       S     R0, STR, LMZ
-      SWI   R0, 0xC8C9, LMZ
+      SWI   R0, 59C8H, LMZ
       A     R0, R0, LMZ
       A     R0, SP, LMZ
       A     R0, STR, LMZ
-      AWI   R0, 0xD0D1, LMZ
+      AWI   R0, 59D0H, LMZ
       S     R0, R0, LP
       S     R0, SP, LP
       S     R0, STR, LP
-      SWI   R0, 0xD8D9, LP
+      SWI   R0, 59D8H, LP
       A     R0, R0, LP
       A     R0, SP, LP
       A     R0, STR, LP
-      AWI   R0, 0xE0E1, LP
+      AWI   R0, 59E0H, LP
       S     R0, R0, LPZ
       S     R0, SP, LPZ
       S     R0, STR, LPZ
-      SWI   R0, 0xE8E9, LPZ
+      SWI   R0, 59E8H, LPZ
       A     R0, R0, LPZ
       A     R0, SP, LPZ
       A     R0, STR, LPZ
-      AWI   R0, 0xF0F1, LPZ
+      AWI   R0, 59F0H, LPZ
       S     R0, R0, LM
       S     R0, SP, LM
       S     R0, STR, LM
-      SWI   R0, 0xF8F9, LM
+      SWI   R0, 59F8H, LM
       A     R0, R0, LM
       A     R0, SP, LM
       A     R0, STR, LM
-      AWI   R0, 0x0001, LM
+      AWI   R0, 5A00H, LM
       S     SP, R0
       S     SP, SP
       S     SP, STR
-      SWI   SP, 0x0809
+      SWI   SP, 5E08H
       A     SP, R0
       A     SP, SP
       A     SP, STR
-      AWI   SP, 0x1011
+      AWI   SP, 5E10H
       S     SP, R0, SKP
       S     SP, SP, SKP
       S     SP, STR, SKP
-      SWI   SP, 0x1819, SKP
+      SWI   SP, 5E18H, SKP
       A     SP, R0, SKP
       A     SP, SP, SKP
       A     SP, STR, SKP
-      AWI   SP, 0x2021, SKP
+      AWI   SP, 5E20H, SKP
       S     SP, R0, M
       S     SP, SP, M
       S     SP, STR, M
-      SWI   SP, 0x2829, M
+      SWI   SP, 5E28H, M
       A     SP, R0, M
       A     SP, SP, M
       A     SP, STR, M
-      AWI   SP, 0x3031, M
+      AWI   SP, 5E30H, M
       S     SP, R0, PZ
       S     SP, SP, PZ
       S     SP, STR, PZ
-      SWI   SP, 0x3839, PZ
+      SWI   SP, 5E38H, PZ
       A     SP, R0, PZ
       A     SP, SP, PZ
       A     SP, STR, PZ
-      AWI   SP, 0x4041, PZ
+      AWI   SP, 5E40H, PZ
       S     SP, R0, Z
       S     SP, SP, Z
       S     SP, STR, Z
-      SWI   SP, 0x4849, Z
+      SWI   SP, 5E48H, Z
       A     SP, R0, Z
       A     SP, SP, Z
       A     SP, STR, Z
-      AWI   SP, 0x5051, Z
+      AWI   SP, 5E50H, Z
       S     SP, R0, NZ
       S     SP, SP, NZ
       S     SP, STR, NZ
-      SWI   SP, 0x5859, NZ
+      SWI   SP, 5E58H, NZ
       A     SP, R0, NZ
       A     SP, SP, NZ
       A     SP, STR, NZ
-      AWI   SP, 0x6061, NZ
+      AWI   SP, 5E60H, NZ
       S     SP, R0, MZ
       S     SP, SP, MZ
       S     SP, STR, MZ
-      SWI   SP, 0x6869, MZ
+      SWI   SP, 5E68H, MZ
       A     SP, R0, MZ
       A     SP, SP, MZ
       A     SP, STR, MZ
-      AWI   SP, 0x7071, MZ
+      AWI   SP, 5E70H, MZ
       S     SP, R0, P
       S     SP, SP, P
       S     SP, STR, P
-      SWI   SP, 0x7879, P
+      SWI   SP, 5E78H, P
       A     SP, R0, P
       A     SP, SP, P
       A     SP, STR, P
-      AWI   SP, 0x8081, P
+      AWI   SP, 5E80H, P
       S     SP, R0, EZ
       S     SP, SP, EZ
       S     SP, STR, EZ
-      SWI   SP, 0x8889, EZ
+      SWI   SP, 5E88H, EZ
       A     SP, R0, EZ
       A     SP, SP, EZ
       A     SP, STR, EZ
-      AWI   SP, 0x9091, EZ
+      AWI   SP, 5E90H, EZ
       S     SP, R0, ENZ
       S     SP, SP, ENZ
       S     SP, STR, ENZ
-      SWI   SP, 0x9899, ENZ
+      SWI   SP, 5E98H, ENZ
       A     SP, R0, ENZ
       A     SP, SP, ENZ
       A     SP, STR, ENZ
-      AWI   SP, 0xA0A1, ENZ
+      AWI   SP, 5EA0H, ENZ
       S     SP, R0, OZ
       S     SP, SP, OZ
       S     SP, STR, OZ
-      SWI   SP, 0xA8A9, OZ
+      SWI   SP, 5EA8H, OZ
       A     SP, R0, OZ
       A     SP, SP, OZ
       A     SP, STR, OZ
-      AWI   SP, 0xB0B1, OZ
+      AWI   SP, 5EB0H, OZ
       S     SP, R0, ONZ
       S     SP, SP, ONZ
       S     SP, STR, ONZ
-      SWI   SP, 0xB8B9, ONZ
+      SWI   SP, 5EB8H, ONZ
       A     SP, R0, ONZ
       A     SP, SP, ONZ
       A     SP, STR, ONZ
-      AWI   SP, 0xC0C1, ONZ
+      AWI   SP, 5EC0H, ONZ
       S     SP, R0, LMZ
       S     SP, SP, LMZ
       S     SP, STR, LMZ
-      SWI   SP, 0xC8C9, LMZ
+      SWI   SP, 5EC8H, LMZ
       A     SP, R0, LMZ
       A     SP, SP, LMZ
       A     SP, STR, LMZ
-      AWI   SP, 0xD0D1, LMZ
+      AWI   SP, 5ED0H, LMZ
       S     SP, R0, LP
       S     SP, SP, LP
       S     SP, STR, LP
-      SWI   SP, 0xD8D9, LP
+      SWI   SP, 5ED8H, LP
       A     SP, R0, LP
       A     SP, SP, LP
       A     SP, STR, LP
-      AWI   SP, 0xE0E1, LP
+      AWI   SP, 5EE0H, LP
       S     SP, R0, LPZ
       S     SP, SP, LPZ
       S     SP, STR, LPZ
-      SWI   SP, 0xE8E9, LPZ
+      SWI   SP, 5EE8H, LPZ
       A     SP, R0, LPZ
       A     SP, SP, LPZ
       A     SP, STR, LPZ
-      AWI   SP, 0xF0F1, LPZ
+      AWI   SP, 5EF0H, LPZ
       S     SP, R0, LM
       S     SP, SP, LM
       S     SP, STR, LM
-      SWI   SP, 0xF8F9, LM
+      SWI   SP, 5EF8H, LM
       A     SP, R0, LM
       A     SP, SP, LM
       A     SP, STR, LM
-      AWI   SP, 0x0001, LM
+      AWI   SP, 5F00H, LM
       S     STR, R0
       S     STR, SP
       S     STR, STR
-      SWI   STR, 0x0809
+      SWI   STR, 5F08H
       A     STR, R0
       A     STR, SP
       A     STR, STR
-      AWI   STR, 0x1011
+      AWI   STR, 5F10H
       S     STR, R0, SKP
       S     STR, SP, SKP
       S     STR, STR, SKP
-      SWI   STR, 0x1819, SKP
+      SWI   STR, 5F18H, SKP
       A     STR, R0, SKP
       A     STR, SP, SKP
       A     STR, STR, SKP
-      AWI   STR, 0x2021, SKP
+      AWI   STR, 5F20H, SKP
       S     STR, R0, M
       S     STR, SP, M
       S     STR, STR, M
-      SWI   STR, 0x2829, M
+      SWI   STR, 5F28H, M
       A     STR, R0, M
       A     STR, SP, M
       A     STR, STR, M
-      AWI   STR, 0x3031, M
+      AWI   STR, 5F30H, M
       S     STR, R0, PZ
       S     STR, SP, PZ
       S     STR, STR, PZ
-      SWI   STR, 0x3839, PZ
+      SWI   STR, 5F38H, PZ
       A     STR, R0, PZ
       A     STR, SP, PZ
       A     STR, STR, PZ
-      AWI   STR, 0x4041, PZ
+      AWI   STR, 5F40H, PZ
       S     STR, R0, Z
       S     STR, SP, Z
       S     STR, STR, Z
-      SWI   STR, 0x4849, Z
+      SWI   STR, 5F48H, Z
       A     STR, R0, Z
       A     STR, SP, Z
       A     STR, STR, Z
-      AWI   STR, 0x5051, Z
+      AWI   STR, 5F50H, Z
       S     STR, R0, NZ
       S     STR, SP, NZ
       S     STR, STR, NZ
-      SWI   STR, 0x5859, NZ
+      SWI   STR, 5F58H, NZ
       A     STR, R0, NZ
       A     STR, SP, NZ
       A     STR, STR, NZ
-      AWI   STR, 0x6061, NZ
+      AWI   STR, 5F60H, NZ
       S     STR, R0, MZ
       S     STR, SP, MZ
       S     STR, STR, MZ
-      SWI   STR, 0x6869, MZ
+      SWI   STR, 5F68H, MZ
       A     STR, R0, MZ
       A     STR, SP, MZ
       A     STR, STR, MZ
-      AWI   STR, 0x7071, MZ
+      AWI   STR, 5F70H, MZ
       S     STR, R0, P
       S     STR, SP, P
       S     STR, STR, P
-      SWI   STR, 0x7879, P
+      SWI   STR, 5F78H, P
       A     STR, R0, P
       A     STR, SP, P
       A     STR, STR, P
-      AWI   STR, 0x8081, P
+      AWI   STR, 5F80H, P
       S     STR, R0, EZ
       S     STR, SP, EZ
       S     STR, STR, EZ
-      SWI   STR, 0x8889, EZ
+      SWI   STR, 5F88H, EZ
       A     STR, R0, EZ
       A     STR, SP, EZ
       A     STR, STR, EZ
-      AWI   STR, 0x9091, EZ
+      AWI   STR, 5F90H, EZ
       S     STR, R0, ENZ
       S     STR, SP, ENZ
       S     STR, STR, ENZ
-      SWI   STR, 0x9899, ENZ
+      SWI   STR, 5F98H, ENZ
       A     STR, R0, ENZ
       A     STR, SP, ENZ
       A     STR, STR, ENZ
-      AWI   STR, 0xA0A1, ENZ
+      AWI   STR, 5FA0H, ENZ
       S     STR, R0, OZ
       S     STR, SP, OZ
       S     STR, STR, OZ
-      SWI   STR, 0xA8A9, OZ
+      SWI   STR, 5FA8H, OZ
       A     STR, R0, OZ
       A     STR, SP, OZ
       A     STR, STR, OZ
-      AWI   STR, 0xB0B1, OZ
+      AWI   STR, 5FB0H, OZ
       S     STR, R0, ONZ
       S     STR, SP, ONZ
       S     STR, STR, ONZ
-      SWI   STR, 0xB8B9, ONZ
+      SWI   STR, 5FB8H, ONZ
       A     STR, R0, ONZ
       A     STR, SP, ONZ
       A     STR, STR, ONZ
-      AWI   STR, 0xC0C1, ONZ
+      AWI   STR, 5FC0H, ONZ
       S     STR, R0, LMZ
       S     STR, SP, LMZ
       S     STR, STR, LMZ
-      SWI   STR, 0xC8C9, LMZ
+      SWI   STR, 5FC8H, LMZ
       A     STR, R0, LMZ
       A     STR, SP, LMZ
       A     STR, STR, LMZ
-      AWI   STR, 0xD0D1, LMZ
+      AWI   STR, 5FD0H, LMZ
       S     STR, R0, LP
       S     STR, SP, LP
       S     STR, STR, LP
-      SWI   STR, 0xD8D9, LP
+      SWI   STR, 5FD8H, LP
       A     STR, R0, LP
       A     STR, SP, LP
       A     STR, STR, LP
-      AWI   STR, 0xE0E1, LP
+      AWI   STR, 5FE0H, LP
       S     STR, R0, LPZ
       S     STR, SP, LPZ
       S     STR, STR, LPZ
-      SWI   STR, 0xE8E9, LPZ
+      SWI   STR, 5FE8H, LPZ
       A     STR, R0, LPZ
       A     STR, SP, LPZ
       A     STR, STR, LPZ
-      AWI   STR, 0xF0F1, LPZ
+      AWI   STR, 5FF0H, LPZ
       S     STR, R0, LM
       S     STR, SP, LM
       S     STR, STR, LM
-      SWI   STR, 0xF8F9, LM
+      SWI   STR, 5FF8H, LM
       A     STR, R0, LM
       A     STR, SP, LM
       A     STR, STR, LM
-      AWI   STR, 0x0001, LM
+      AWI   STR, 6000H, LM
       SWR   R0, (R1)
       DAA   R0, (R1)
       AWR   R0, (R1)
@@ -1991,387 +1991,387 @@
       EOR   R0, R0
       EOR   R0, SP
       EOR   R0, STR
-      EORI  R0, 0x0809
+      EORI  R0, 6108H
       OR    R0, R0
       OR    R0, SP
       OR    R0, STR
-      ORI   R0, 0x1011
+      ORI   R0, 6110H
       EOR   R0, R0, SKP
       EOR   R0, SP, SKP
       EOR   R0, STR, SKP
-      EORI  R0, 0x1819, SKP
+      EORI  R0, 6118H, SKP
       OR    R0, R0, SKP
       OR    R0, SP, SKP
       OR    R0, STR, SKP
-      ORI   R0, 0x2021, SKP
+      ORI   R0, 6120H, SKP
       EOR   R0, R0, M
       EOR   R0, SP, M
       EOR   R0, STR, M
-      EORI  R0, 0x2829, M
+      EORI  R0, 6128H, M
       OR    R0, R0, M
       OR    R0, SP, M
       OR    R0, STR, M
-      ORI   R0, 0x3031, M
+      ORI   R0, 6130H, M
       EOR   R0, R0, PZ
       EOR   R0, SP, PZ
       EOR   R0, STR, PZ
-      EORI  R0, 0x3839, PZ
+      EORI  R0, 6138H, PZ
       OR    R0, R0, PZ
       OR    R0, SP, PZ
       OR    R0, STR, PZ
-      ORI   R0, 0x4041, PZ
+      ORI   R0, 6140H, PZ
       EOR   R0, R0, Z
       EOR   R0, SP, Z
       EOR   R0, STR, Z
-      EORI  R0, 0x4849, Z
+      EORI  R0, 6148H, Z
       OR    R0, R0, Z
       OR    R0, SP, Z
       OR    R0, STR, Z
-      ORI   R0, 0x5051, Z
+      ORI   R0, 6150H, Z
       EOR   R0, R0, NZ
       EOR   R0, SP, NZ
       EOR   R0, STR, NZ
-      EORI  R0, 0x5859, NZ
+      EORI  R0, 6158H, NZ
       OR    R0, R0, NZ
       OR    R0, SP, NZ
       OR    R0, STR, NZ
-      ORI   R0, 0x6061, NZ
+      ORI   R0, 6160H, NZ
       EOR   R0, R0, MZ
       EOR   R0, SP, MZ
       EOR   R0, STR, MZ
-      EORI  R0, 0x6869, MZ
+      EORI  R0, 6168H, MZ
       OR    R0, R0, MZ
       OR    R0, SP, MZ
       OR    R0, STR, MZ
-      ORI   R0, 0x7071, MZ
+      ORI   R0, 6170H, MZ
       EOR   R0, R0, P
       EOR   R0, SP, P
       EOR   R0, STR, P
-      EORI  R0, 0x7879, P
+      EORI  R0, 6178H, P
       OR    R0, R0, P
       OR    R0, SP, P
       OR    R0, STR, P
-      ORI   R0, 0x8081, P
+      ORI   R0, 6180H, P
       EOR   R0, R0, EZ
       EOR   R0, SP, EZ
       EOR   R0, STR, EZ
-      EORI  R0, 0x8889, EZ
+      EORI  R0, 6188H, EZ
       OR    R0, R0, EZ
       OR    R0, SP, EZ
       OR    R0, STR, EZ
-      ORI   R0, 0x9091, EZ
+      ORI   R0, 6190H, EZ
       EOR   R0, R0, ENZ
       EOR   R0, SP, ENZ
       EOR   R0, STR, ENZ
-      EORI  R0, 0x9899, ENZ
+      EORI  R0, 6198H, ENZ
       OR    R0, R0, ENZ
       OR    R0, SP, ENZ
       OR    R0, STR, ENZ
-      ORI   R0, 0xA0A1, ENZ
+      ORI   R0, 61A0H, ENZ
       EOR   R0, R0, OZ
       EOR   R0, SP, OZ
       EOR   R0, STR, OZ
-      EORI  R0, 0xA8A9, OZ
+      EORI  R0, 61A8H, OZ
       OR    R0, R0, OZ
       OR    R0, SP, OZ
       OR    R0, STR, OZ
-      ORI   R0, 0xB0B1, OZ
+      ORI   R0, 61B0H, OZ
       EOR   R0, R0, ONZ
       EOR   R0, SP, ONZ
       EOR   R0, STR, ONZ
-      EORI  R0, 0xB8B9, ONZ
+      EORI  R0, 61B8H, ONZ
       OR    R0, R0, ONZ
       OR    R0, SP, ONZ
       OR    R0, STR, ONZ
-      ORI   R0, 0xC0C1, ONZ
+      ORI   R0, 61C0H, ONZ
       EOR   R0, R0, LMZ
       EOR   R0, SP, LMZ
       EOR   R0, STR, LMZ
-      EORI  R0, 0xC8C9, LMZ
+      EORI  R0, 61C8H, LMZ
       OR    R0, R0, LMZ
       OR    R0, SP, LMZ
       OR    R0, STR, LMZ
-      ORI   R0, 0xD0D1, LMZ
+      ORI   R0, 61D0H, LMZ
       EOR   R0, R0, LP
       EOR   R0, SP, LP
       EOR   R0, STR, LP
-      EORI  R0, 0xD8D9, LP
+      EORI  R0, 61D8H, LP
       OR    R0, R0, LP
       OR    R0, SP, LP
       OR    R0, STR, LP
-      ORI   R0, 0xE0E1, LP
+      ORI   R0, 61E0H, LP
       EOR   R0, R0, LPZ
       EOR   R0, SP, LPZ
       EOR   R0, STR, LPZ
-      EORI  R0, 0xE8E9, LPZ
+      EORI  R0, 61E8H, LPZ
       OR    R0, R0, LPZ
       OR    R0, SP, LPZ
       OR    R0, STR, LPZ
-      ORI   R0, 0xF0F1, LPZ
+      ORI   R0, 61F0H, LPZ
       EOR   R0, R0, LM
       EOR   R0, SP, LM
       EOR   R0, STR, LM
-      EORI  R0, 0xF8F9, LM
+      EORI  R0, 61F8H, LM
       OR    R0, R0, LM
       OR    R0, SP, LM
       OR    R0, STR, LM
-      ORI   R0, 0x0001, LM
+      ORI   R0, 6200H, LM
       EOR   SP, R0
       EOR   SP, SP
       EOR   SP, STR
-      EORI  SP, 0x0809
+      EORI  SP, 6608H
       OR    SP, R0
       OR    SP, SP
       OR    SP, STR
-      ORI   SP, 0x1011
+      ORI   SP, 6610H
       EOR   SP, R0, SKP
       EOR   SP, SP, SKP
       EOR   SP, STR, SKP
-      EORI  SP, 0x1819, SKP
+      EORI  SP, 6618H, SKP
       OR    SP, R0, SKP
       OR    SP, SP, SKP
       OR    SP, STR, SKP
-      ORI   SP, 0x2021, SKP
+      ORI   SP, 6620H, SKP
       EOR   SP, R0, M
       EOR   SP, SP, M
       EOR   SP, STR, M
-      EORI  SP, 0x2829, M
+      EORI  SP, 6628H, M
       OR    SP, R0, M
       OR    SP, SP, M
       OR    SP, STR, M
-      ORI   SP, 0x3031, M
+      ORI   SP, 6630H, M
       EOR   SP, R0, PZ
       EOR   SP, SP, PZ
       EOR   SP, STR, PZ
-      EORI  SP, 0x3839, PZ
+      EORI  SP, 6638H, PZ
       OR    SP, R0, PZ
       OR    SP, SP, PZ
       OR    SP, STR, PZ
-      ORI   SP, 0x4041, PZ
+      ORI   SP, 6640H, PZ
       EOR   SP, R0, Z
       EOR   SP, SP, Z
       EOR   SP, STR, Z
-      EORI  SP, 0x4849, Z
+      EORI  SP, 6648H, Z
       OR    SP, R0, Z
       OR    SP, SP, Z
       OR    SP, STR, Z
-      ORI   SP, 0x5051, Z
+      ORI   SP, 6650H, Z
       EOR   SP, R0, NZ
       EOR   SP, SP, NZ
       EOR   SP, STR, NZ
-      EORI  SP, 0x5859, NZ
+      EORI  SP, 6658H, NZ
       OR    SP, R0, NZ
       OR    SP, SP, NZ
       OR    SP, STR, NZ
-      ORI   SP, 0x6061, NZ
+      ORI   SP, 6660H, NZ
       EOR   SP, R0, MZ
       EOR   SP, SP, MZ
       EOR   SP, STR, MZ
-      EORI  SP, 0x6869, MZ
+      EORI  SP, 6668H, MZ
       OR    SP, R0, MZ
       OR    SP, SP, MZ
       OR    SP, STR, MZ
-      ORI   SP, 0x7071, MZ
+      ORI   SP, 6670H, MZ
       EOR   SP, R0, P
       EOR   SP, SP, P
       EOR   SP, STR, P
-      EORI  SP, 0x7879, P
+      EORI  SP, 6678H, P
       OR    SP, R0, P
       OR    SP, SP, P
       OR    SP, STR, P
-      ORI   SP, 0x8081, P
+      ORI   SP, 6680H, P
       EOR   SP, R0, EZ
       EOR   SP, SP, EZ
       EOR   SP, STR, EZ
-      EORI  SP, 0x8889, EZ
+      EORI  SP, 6688H, EZ
       OR    SP, R0, EZ
       OR    SP, SP, EZ
       OR    SP, STR, EZ
-      ORI   SP, 0x9091, EZ
+      ORI   SP, 6690H, EZ
       EOR   SP, R0, ENZ
       EOR   SP, SP, ENZ
       EOR   SP, STR, ENZ
-      EORI  SP, 0x9899, ENZ
+      EORI  SP, 6698H, ENZ
       OR    SP, R0, ENZ
       OR    SP, SP, ENZ
       OR    SP, STR, ENZ
-      ORI   SP, 0xA0A1, ENZ
+      ORI   SP, 66A0H, ENZ
       EOR   SP, R0, OZ
       EOR   SP, SP, OZ
       EOR   SP, STR, OZ
-      EORI  SP, 0xA8A9, OZ
+      EORI  SP, 66A8H, OZ
       OR    SP, R0, OZ
       OR    SP, SP, OZ
       OR    SP, STR, OZ
-      ORI   SP, 0xB0B1, OZ
+      ORI   SP, 66B0H, OZ
       EOR   SP, R0, ONZ
       EOR   SP, SP, ONZ
       EOR   SP, STR, ONZ
-      EORI  SP, 0xB8B9, ONZ
+      EORI  SP, 66B8H, ONZ
       OR    SP, R0, ONZ
       OR    SP, SP, ONZ
       OR    SP, STR, ONZ
-      ORI   SP, 0xC0C1, ONZ
+      ORI   SP, 66C0H, ONZ
       EOR   SP, R0, LMZ
       EOR   SP, SP, LMZ
       EOR   SP, STR, LMZ
-      EORI  SP, 0xC8C9, LMZ
+      EORI  SP, 66C8H, LMZ
       OR    SP, R0, LMZ
       OR    SP, SP, LMZ
       OR    SP, STR, LMZ
-      ORI   SP, 0xD0D1, LMZ
+      ORI   SP, 66D0H, LMZ
       EOR   SP, R0, LP
       EOR   SP, SP, LP
       EOR   SP, STR, LP
-      EORI  SP, 0xD8D9, LP
+      EORI  SP, 66D8H, LP
       OR    SP, R0, LP
       OR    SP, SP, LP
       OR    SP, STR, LP
-      ORI   SP, 0xE0E1, LP
+      ORI   SP, 66E0H, LP
       EOR   SP, R0, LPZ
       EOR   SP, SP, LPZ
       EOR   SP, STR, LPZ
-      EORI  SP, 0xE8E9, LPZ
+      EORI  SP, 66E8H, LPZ
       OR    SP, R0, LPZ
       OR    SP, SP, LPZ
       OR    SP, STR, LPZ
-      ORI   SP, 0xF0F1, LPZ
+      ORI   SP, 66F0H, LPZ
       EOR   SP, R0, LM
       EOR   SP, SP, LM
       EOR   SP, STR, LM
-      EORI  SP, 0xF8F9, LM
+      EORI  SP, 66F8H, LM
       OR    SP, R0, LM
       OR    SP, SP, LM
       OR    SP, STR, LM
-      ORI   SP, 0x0001, LM
+      ORI   SP, 6700H, LM
       EOR   STR, R0
       EOR   STR, SP
       EOR   STR, STR
-      EORI  STR, 0x0809
+      EORI  STR, 6708H
       OR    STR, R0
       OR    STR, SP
       OR    STR, STR
-      ORI   STR, 0x1011
+      ORI   STR, 6710H
       EOR   STR, R0, SKP
       EOR   STR, SP, SKP
       EOR   STR, STR, SKP
-      EORI  STR, 0x1819, SKP
+      EORI  STR, 6718H, SKP
       OR    STR, R0, SKP
       OR    STR, SP, SKP
       OR    STR, STR, SKP
-      ORI   STR, 0x2021, SKP
+      ORI   STR, 6720H, SKP
       EOR   STR, R0, M
       EOR   STR, SP, M
       EOR   STR, STR, M
-      EORI  STR, 0x2829, M
+      EORI  STR, 6728H, M
       OR    STR, R0, M
       OR    STR, SP, M
       OR    STR, STR, M
-      ORI   STR, 0x3031, M
+      ORI   STR, 6730H, M
       EOR   STR, R0, PZ
       EOR   STR, SP, PZ
       EOR   STR, STR, PZ
-      EORI  STR, 0x3839, PZ
+      EORI  STR, 6738H, PZ
       OR    STR, R0, PZ
       OR    STR, SP, PZ
       OR    STR, STR, PZ
-      ORI   STR, 0x4041, PZ
+      ORI   STR, 6740H, PZ
       EOR   STR, R0, Z
       EOR   STR, SP, Z
       EOR   STR, STR, Z
-      EORI  STR, 0x4849, Z
+      EORI  STR, 6748H, Z
       OR    STR, R0, Z
       OR    STR, SP, Z
       OR    STR, STR, Z
-      ORI   STR, 0x5051, Z
+      ORI   STR, 6750H, Z
       EOR   STR, R0, NZ
       EOR   STR, SP, NZ
       EOR   STR, STR, NZ
-      EORI  STR, 0x5859, NZ
+      EORI  STR, 6758H, NZ
       OR    STR, R0, NZ
       OR    STR, SP, NZ
       OR    STR, STR, NZ
-      ORI   STR, 0x6061, NZ
+      ORI   STR, 6760H, NZ
       EOR   STR, R0, MZ
       EOR   STR, SP, MZ
       EOR   STR, STR, MZ
-      EORI  STR, 0x6869, MZ
+      EORI  STR, 6768H, MZ
       OR    STR, R0, MZ
       OR    STR, SP, MZ
       OR    STR, STR, MZ
-      ORI   STR, 0x7071, MZ
+      ORI   STR, 6770H, MZ
       EOR   STR, R0, P
       EOR   STR, SP, P
       EOR   STR, STR, P
-      EORI  STR, 0x7879, P
+      EORI  STR, 6778H, P
       OR    STR, R0, P
       OR    STR, SP, P
       OR    STR, STR, P
-      ORI   STR, 0x8081, P
+      ORI   STR, 6780H, P
       EOR   STR, R0, EZ
       EOR   STR, SP, EZ
       EOR   STR, STR, EZ
-      EORI  STR, 0x8889, EZ
+      EORI  STR, 6788H, EZ
       OR    STR, R0, EZ
       OR    STR, SP, EZ
       OR    STR, STR, EZ
-      ORI   STR, 0x9091, EZ
+      ORI   STR, 6790H, EZ
       EOR   STR, R0, ENZ
       EOR   STR, SP, ENZ
       EOR   STR, STR, ENZ
-      EORI  STR, 0x9899, ENZ
+      EORI  STR, 6798H, ENZ
       OR    STR, R0, ENZ
       OR    STR, SP, ENZ
       OR    STR, STR, ENZ
-      ORI   STR, 0xA0A1, ENZ
+      ORI   STR, 67A0H, ENZ
       EOR   STR, R0, OZ
       EOR   STR, SP, OZ
       EOR   STR, STR, OZ
-      EORI  STR, 0xA8A9, OZ
+      EORI  STR, 67A8H, OZ
       OR    STR, R0, OZ
       OR    STR, SP, OZ
       OR    STR, STR, OZ
-      ORI   STR, 0xB0B1, OZ
+      ORI   STR, 67B0H, OZ
       EOR   STR, R0, ONZ
       EOR   STR, SP, ONZ
       EOR   STR, STR, ONZ
-      EORI  STR, 0xB8B9, ONZ
+      EORI  STR, 67B8H, ONZ
       OR    STR, R0, ONZ
       OR    STR, SP, ONZ
       OR    STR, STR, ONZ
-      ORI   STR, 0xC0C1, ONZ
+      ORI   STR, 67C0H, ONZ
       EOR   STR, R0, LMZ
       EOR   STR, SP, LMZ
       EOR   STR, STR, LMZ
-      EORI  STR, 0xC8C9, LMZ
+      EORI  STR, 67C8H, LMZ
       OR    STR, R0, LMZ
       OR    STR, SP, LMZ
       OR    STR, STR, LMZ
-      ORI   STR, 0xD0D1, LMZ
+      ORI   STR, 67D0H, LMZ
       EOR   STR, R0, LP
       EOR   STR, SP, LP
       EOR   STR, STR, LP
-      EORI  STR, 0xD8D9, LP
+      EORI  STR, 67D8H, LP
       OR    STR, R0, LP
       OR    STR, SP, LP
       OR    STR, STR, LP
-      ORI   STR, 0xE0E1, LP
+      ORI   STR, 67E0H, LP
       EOR   STR, R0, LPZ
       EOR   STR, SP, LPZ
       EOR   STR, STR, LPZ
-      EORI  STR, 0xE8E9, LPZ
+      EORI  STR, 67E8H, LPZ
       OR    STR, R0, LPZ
       OR    STR, SP, LPZ
       OR    STR, STR, LPZ
-      ORI   STR, 0xF0F1, LPZ
+      ORI   STR, 67F0H, LPZ
       EOR   STR, R0, LM
       EOR   STR, SP, LM
       EOR   STR, STR, LM
-      EORI  STR, 0xF8F9, LM
+      EORI  STR, 67F8H, LM
       OR    STR, R0, LM
       OR    STR, SP, LM
       OR    STR, STR, LM
-      ORI   STR, 0x0001, LM
+      ORI   STR, 6800H, LM
       EORR  R0, (R1)
       FD    DR0, (R1)
       ORR   R0, (R1)
@@ -2439,387 +2439,387 @@
       LAD   R0, R0
       LAD   R0, SP
       LAD   R0, STR
-      LADI  R0, 0x0809
+      LADI  R0, 6908H
       AND   R0, R0
       AND   R0, SP
       AND   R0, STR
-      ANDI  R0, 0x1011
+      ANDI  R0, 6910H
       LAD   R0, R0, SKP
       LAD   R0, SP, SKP
       LAD   R0, STR, SKP
-      LADI  R0, 0x1819, SKP
+      LADI  R0, 6918H, SKP
       AND   R0, R0, SKP
       AND   R0, SP, SKP
       AND   R0, STR, SKP
-      ANDI  R0, 0x2021, SKP
+      ANDI  R0, 6920H, SKP
       LAD   R0, R0, M
       LAD   R0, SP, M
       LAD   R0, STR, M
-      LADI  R0, 0x2829, M
+      LADI  R0, 6928H, M
       AND   R0, R0, M
       AND   R0, SP, M
       AND   R0, STR, M
-      ANDI  R0, 0x3031, M
+      ANDI  R0, 6930H, M
       LAD   R0, R0, PZ
       LAD   R0, SP, PZ
       LAD   R0, STR, PZ
-      LADI  R0, 0x3839, PZ
+      LADI  R0, 6938H, PZ
       AND   R0, R0, PZ
       AND   R0, SP, PZ
       AND   R0, STR, PZ
-      ANDI  R0, 0x4041, PZ
+      ANDI  R0, 6940H, PZ
       LAD   R0, R0, Z
       LAD   R0, SP, Z
       LAD   R0, STR, Z
-      LADI  R0, 0x4849, Z
+      LADI  R0, 6948H, Z
       AND   R0, R0, Z
       AND   R0, SP, Z
       AND   R0, STR, Z
-      ANDI  R0, 0x5051, Z
+      ANDI  R0, 6950H, Z
       LAD   R0, R0, NZ
       LAD   R0, SP, NZ
       LAD   R0, STR, NZ
-      LADI  R0, 0x5859, NZ
+      LADI  R0, 6958H, NZ
       AND   R0, R0, NZ
       AND   R0, SP, NZ
       AND   R0, STR, NZ
-      ANDI  R0, 0x6061, NZ
+      ANDI  R0, 6960H, NZ
       LAD   R0, R0, MZ
       LAD   R0, SP, MZ
       LAD   R0, STR, MZ
-      LADI  R0, 0x6869, MZ
+      LADI  R0, 6968H, MZ
       AND   R0, R0, MZ
       AND   R0, SP, MZ
       AND   R0, STR, MZ
-      ANDI  R0, 0x7071, MZ
+      ANDI  R0, 6970H, MZ
       LAD   R0, R0, P
       LAD   R0, SP, P
       LAD   R0, STR, P
-      LADI  R0, 0x7879, P
+      LADI  R0, 6978H, P
       AND   R0, R0, P
       AND   R0, SP, P
       AND   R0, STR, P
-      ANDI  R0, 0x8081, P
+      ANDI  R0, 6980H, P
       LAD   R0, R0, EZ
       LAD   R0, SP, EZ
       LAD   R0, STR, EZ
-      LADI  R0, 0x8889, EZ
+      LADI  R0, 6988H, EZ
       AND   R0, R0, EZ
       AND   R0, SP, EZ
       AND   R0, STR, EZ
-      ANDI  R0, 0x9091, EZ
+      ANDI  R0, 6990H, EZ
       LAD   R0, R0, ENZ
       LAD   R0, SP, ENZ
       LAD   R0, STR, ENZ
-      LADI  R0, 0x9899, ENZ
+      LADI  R0, 6998H, ENZ
       AND   R0, R0, ENZ
       AND   R0, SP, ENZ
       AND   R0, STR, ENZ
-      ANDI  R0, 0xA0A1, ENZ
+      ANDI  R0, 69A0H, ENZ
       LAD   R0, R0, OZ
       LAD   R0, SP, OZ
       LAD   R0, STR, OZ
-      LADI  R0, 0xA8A9, OZ
+      LADI  R0, 69A8H, OZ
       AND   R0, R0, OZ
       AND   R0, SP, OZ
       AND   R0, STR, OZ
-      ANDI  R0, 0xB0B1, OZ
+      ANDI  R0, 69B0H, OZ
       LAD   R0, R0, ONZ
       LAD   R0, SP, ONZ
       LAD   R0, STR, ONZ
-      LADI  R0, 0xB8B9, ONZ
+      LADI  R0, 69B8H, ONZ
       AND   R0, R0, ONZ
       AND   R0, SP, ONZ
       AND   R0, STR, ONZ
-      ANDI  R0, 0xC0C1, ONZ
+      ANDI  R0, 69C0H, ONZ
       LAD   R0, R0, LMZ
       LAD   R0, SP, LMZ
       LAD   R0, STR, LMZ
-      LADI  R0, 0xC8C9, LMZ
+      LADI  R0, 69C8H, LMZ
       AND   R0, R0, LMZ
       AND   R0, SP, LMZ
       AND   R0, STR, LMZ
-      ANDI  R0, 0xD0D1, LMZ
+      ANDI  R0, 69D0H, LMZ
       LAD   R0, R0, LP
       LAD   R0, SP, LP
       LAD   R0, STR, LP
-      LADI  R0, 0xD8D9, LP
+      LADI  R0, 69D8H, LP
       AND   R0, R0, LP
       AND   R0, SP, LP
       AND   R0, STR, LP
-      ANDI  R0, 0xE0E1, LP
+      ANDI  R0, 69E0H, LP
       LAD   R0, R0, LPZ
       LAD   R0, SP, LPZ
       LAD   R0, STR, LPZ
-      LADI  R0, 0xE8E9, LPZ
+      LADI  R0, 69E8H, LPZ
       AND   R0, R0, LPZ
       AND   R0, SP, LPZ
       AND   R0, STR, LPZ
-      ANDI  R0, 0xF0F1, LPZ
+      ANDI  R0, 69F0H, LPZ
       LAD   R0, R0, LM
       LAD   R0, SP, LM
       LAD   R0, STR, LM
-      LADI  R0, 0xF8F9, LM
+      LADI  R0, 69F8H, LM
       AND   R0, R0, LM
       AND   R0, SP, LM
       AND   R0, STR, LM
-      ANDI  R0, 0x0001, LM
+      ANDI  R0, 6A00H, LM
       LAD   SP, R0
       LAD   SP, SP
       LAD   SP, STR
-      LADI  SP, 0x0809
+      LADI  SP, 6E08H
       AND   SP, R0
       AND   SP, SP
       AND   SP, STR
-      ANDI  SP, 0x1011
+      ANDI  SP, 6E10H
       LAD   SP, R0, SKP
       LAD   SP, SP, SKP
       LAD   SP, STR, SKP
-      LADI  SP, 0x1819, SKP
+      LADI  SP, 6E18H, SKP
       AND   SP, R0, SKP
       AND   SP, SP, SKP
       AND   SP, STR, SKP
-      ANDI  SP, 0x2021, SKP
+      ANDI  SP, 6E20H, SKP
       LAD   SP, R0, M
       LAD   SP, SP, M
       LAD   SP, STR, M
-      LADI  SP, 0x2829, M
+      LADI  SP, 6E28H, M
       AND   SP, R0, M
       AND   SP, SP, M
       AND   SP, STR, M
-      ANDI  SP, 0x3031, M
+      ANDI  SP, 6E30H, M
       LAD   SP, R0, PZ
       LAD   SP, SP, PZ
       LAD   SP, STR, PZ
-      LADI  SP, 0x3839, PZ
+      LADI  SP, 6E38H, PZ
       AND   SP, R0, PZ
       AND   SP, SP, PZ
       AND   SP, STR, PZ
-      ANDI  SP, 0x4041, PZ
+      ANDI  SP, 6E40H, PZ
       LAD   SP, R0, Z
       LAD   SP, SP, Z
       LAD   SP, STR, Z
-      LADI  SP, 0x4849, Z
+      LADI  SP, 6E48H, Z
       AND   SP, R0, Z
       AND   SP, SP, Z
       AND   SP, STR, Z
-      ANDI  SP, 0x5051, Z
+      ANDI  SP, 6E50H, Z
       LAD   SP, R0, NZ
       LAD   SP, SP, NZ
       LAD   SP, STR, NZ
-      LADI  SP, 0x5859, NZ
+      LADI  SP, 6E58H, NZ
       AND   SP, R0, NZ
       AND   SP, SP, NZ
       AND   SP, STR, NZ
-      ANDI  SP, 0x6061, NZ
+      ANDI  SP, 6E60H, NZ
       LAD   SP, R0, MZ
       LAD   SP, SP, MZ
       LAD   SP, STR, MZ
-      LADI  SP, 0x6869, MZ
+      LADI  SP, 6E68H, MZ
       AND   SP, R0, MZ
       AND   SP, SP, MZ
       AND   SP, STR, MZ
-      ANDI  SP, 0x7071, MZ
+      ANDI  SP, 6E70H, MZ
       LAD   SP, R0, P
       LAD   SP, SP, P
       LAD   SP, STR, P
-      LADI  SP, 0x7879, P
+      LADI  SP, 6E78H, P
       AND   SP, R0, P
       AND   SP, SP, P
       AND   SP, STR, P
-      ANDI  SP, 0x8081, P
+      ANDI  SP, 6E80H, P
       LAD   SP, R0, EZ
       LAD   SP, SP, EZ
       LAD   SP, STR, EZ
-      LADI  SP, 0x8889, EZ
+      LADI  SP, 6E88H, EZ
       AND   SP, R0, EZ
       AND   SP, SP, EZ
       AND   SP, STR, EZ
-      ANDI  SP, 0x9091, EZ
+      ANDI  SP, 6E90H, EZ
       LAD   SP, R0, ENZ
       LAD   SP, SP, ENZ
       LAD   SP, STR, ENZ
-      LADI  SP, 0x9899, ENZ
+      LADI  SP, 6E98H, ENZ
       AND   SP, R0, ENZ
       AND   SP, SP, ENZ
       AND   SP, STR, ENZ
-      ANDI  SP, 0xA0A1, ENZ
+      ANDI  SP, 6EA0H, ENZ
       LAD   SP, R0, OZ
       LAD   SP, SP, OZ
       LAD   SP, STR, OZ
-      LADI  SP, 0xA8A9, OZ
+      LADI  SP, 6EA8H, OZ
       AND   SP, R0, OZ
       AND   SP, SP, OZ
       AND   SP, STR, OZ
-      ANDI  SP, 0xB0B1, OZ
+      ANDI  SP, 6EB0H, OZ
       LAD   SP, R0, ONZ
       LAD   SP, SP, ONZ
       LAD   SP, STR, ONZ
-      LADI  SP, 0xB8B9, ONZ
+      LADI  SP, 6EB8H, ONZ
       AND   SP, R0, ONZ
       AND   SP, SP, ONZ
       AND   SP, STR, ONZ
-      ANDI  SP, 0xC0C1, ONZ
+      ANDI  SP, 6EC0H, ONZ
       LAD   SP, R0, LMZ
       LAD   SP, SP, LMZ
       LAD   SP, STR, LMZ
-      LADI  SP, 0xC8C9, LMZ
+      LADI  SP, 6EC8H, LMZ
       AND   SP, R0, LMZ
       AND   SP, SP, LMZ
       AND   SP, STR, LMZ
-      ANDI  SP, 0xD0D1, LMZ
+      ANDI  SP, 6ED0H, LMZ
       LAD   SP, R0, LP
       LAD   SP, SP, LP
       LAD   SP, STR, LP
-      LADI  SP, 0xD8D9, LP
+      LADI  SP, 6ED8H, LP
       AND   SP, R0, LP
       AND   SP, SP, LP
       AND   SP, STR, LP
-      ANDI  SP, 0xE0E1, LP
+      ANDI  SP, 6EE0H, LP
       LAD   SP, R0, LPZ
       LAD   SP, SP, LPZ
       LAD   SP, STR, LPZ
-      LADI  SP, 0xE8E9, LPZ
+      LADI  SP, 6EE8H, LPZ
       AND   SP, R0, LPZ
       AND   SP, SP, LPZ
       AND   SP, STR, LPZ
-      ANDI  SP, 0xF0F1, LPZ
+      ANDI  SP, 6EF0H, LPZ
       LAD   SP, R0, LM
       LAD   SP, SP, LM
       LAD   SP, STR, LM
-      LADI  SP, 0xF8F9, LM
+      LADI  SP, 6EF8H, LM
       AND   SP, R0, LM
       AND   SP, SP, LM
       AND   SP, STR, LM
-      ANDI  SP, 0x0001, LM
+      ANDI  SP, 6F00H, LM
       LAD   STR, R0
       LAD   STR, SP
       LAD   STR, STR
-      LADI  STR, 0x0809
+      LADI  STR, 6F08H
       AND   STR, R0
       AND   STR, SP
       AND   STR, STR
-      ANDI  STR, 0x1011
+      ANDI  STR, 6F10H
       LAD   STR, R0, SKP
       LAD   STR, SP, SKP
       LAD   STR, STR, SKP
-      LADI  STR, 0x1819, SKP
+      LADI  STR, 6F18H, SKP
       AND   STR, R0, SKP
       AND   STR, SP, SKP
       AND   STR, STR, SKP
-      ANDI  STR, 0x2021, SKP
+      ANDI  STR, 6F20H, SKP
       LAD   STR, R0, M
       LAD   STR, SP, M
       LAD   STR, STR, M
-      LADI  STR, 0x2829, M
+      LADI  STR, 6F28H, M
       AND   STR, R0, M
       AND   STR, SP, M
       AND   STR, STR, M
-      ANDI  STR, 0x3031, M
+      ANDI  STR, 6F30H, M
       LAD   STR, R0, PZ
       LAD   STR, SP, PZ
       LAD   STR, STR, PZ
-      LADI  STR, 0x3839, PZ
+      LADI  STR, 6F38H, PZ
       AND   STR, R0, PZ
       AND   STR, SP, PZ
       AND   STR, STR, PZ
-      ANDI  STR, 0x4041, PZ
+      ANDI  STR, 6F40H, PZ
       LAD   STR, R0, Z
       LAD   STR, SP, Z
       LAD   STR, STR, Z
-      LADI  STR, 0x4849, Z
+      LADI  STR, 6F48H, Z
       AND   STR, R0, Z
       AND   STR, SP, Z
       AND   STR, STR, Z
-      ANDI  STR, 0x5051, Z
+      ANDI  STR, 6F50H, Z
       LAD   STR, R0, NZ
       LAD   STR, SP, NZ
       LAD   STR, STR, NZ
-      LADI  STR, 0x5859, NZ
+      LADI  STR, 6F58H, NZ
       AND   STR, R0, NZ
       AND   STR, SP, NZ
       AND   STR, STR, NZ
-      ANDI  STR, 0x6061, NZ
+      ANDI  STR, 6F60H, NZ
       LAD   STR, R0, MZ
       LAD   STR, SP, MZ
       LAD   STR, STR, MZ
-      LADI  STR, 0x6869, MZ
+      LADI  STR, 6F68H, MZ
       AND   STR, R0, MZ
       AND   STR, SP, MZ
       AND   STR, STR, MZ
-      ANDI  STR, 0x7071, MZ
+      ANDI  STR, 6F70H, MZ
       LAD   STR, R0, P
       LAD   STR, SP, P
       LAD   STR, STR, P
-      LADI  STR, 0x7879, P
+      LADI  STR, 6F78H, P
       AND   STR, R0, P
       AND   STR, SP, P
       AND   STR, STR, P
-      ANDI  STR, 0x8081, P
+      ANDI  STR, 6F80H, P
       LAD   STR, R0, EZ
       LAD   STR, SP, EZ
       LAD   STR, STR, EZ
-      LADI  STR, 0x8889, EZ
+      LADI  STR, 6F88H, EZ
       AND   STR, R0, EZ
       AND   STR, SP, EZ
       AND   STR, STR, EZ
-      ANDI  STR, 0x9091, EZ
+      ANDI  STR, 6F90H, EZ
       LAD   STR, R0, ENZ
       LAD   STR, SP, ENZ
       LAD   STR, STR, ENZ
-      LADI  STR, 0x9899, ENZ
+      LADI  STR, 6F98H, ENZ
       AND   STR, R0, ENZ
       AND   STR, SP, ENZ
       AND   STR, STR, ENZ
-      ANDI  STR, 0xA0A1, ENZ
+      ANDI  STR, 6FA0H, ENZ
       LAD   STR, R0, OZ
       LAD   STR, SP, OZ
       LAD   STR, STR, OZ
-      LADI  STR, 0xA8A9, OZ
+      LADI  STR, 6FA8H, OZ
       AND   STR, R0, OZ
       AND   STR, SP, OZ
       AND   STR, STR, OZ
-      ANDI  STR, 0xB0B1, OZ
+      ANDI  STR, 6FB0H, OZ
       LAD   STR, R0, ONZ
       LAD   STR, SP, ONZ
       LAD   STR, STR, ONZ
-      LADI  STR, 0xB8B9, ONZ
+      LADI  STR, 6FB8H, ONZ
       AND   STR, R0, ONZ
       AND   STR, SP, ONZ
       AND   STR, STR, ONZ
-      ANDI  STR, 0xC0C1, ONZ
+      ANDI  STR, 6FC0H, ONZ
       LAD   STR, R0, LMZ
       LAD   STR, SP, LMZ
       LAD   STR, STR, LMZ
-      LADI  STR, 0xC8C9, LMZ
+      LADI  STR, 6FC8H, LMZ
       AND   STR, R0, LMZ
       AND   STR, SP, LMZ
       AND   STR, STR, LMZ
-      ANDI  STR, 0xD0D1, LMZ
+      ANDI  STR, 6FD0H, LMZ
       LAD   STR, R0, LP
       LAD   STR, SP, LP
       LAD   STR, STR, LP
-      LADI  STR, 0xD8D9, LP
+      LADI  STR, 6FD8H, LP
       AND   STR, R0, LP
       AND   STR, SP, LP
       AND   STR, STR, LP
-      ANDI  STR, 0xE0E1, LP
+      ANDI  STR, 6FE0H, LP
       LAD   STR, R0, LPZ
       LAD   STR, SP, LPZ
       LAD   STR, STR, LPZ
-      LADI  STR, 0xE8E9, LPZ
+      LADI  STR, 6FE8H, LPZ
       AND   STR, R0, LPZ
       AND   STR, SP, LPZ
       AND   STR, STR, LPZ
-      ANDI  STR, 0xF0F1, LPZ
+      ANDI  STR, 6FF0H, LPZ
       LAD   STR, R0, LM
       LAD   STR, SP, LM
       LAD   STR, STR, LM
-      LADI  STR, 0xF8F9, LM
+      LADI  STR, 6FF8H, LM
       AND   STR, R0, LM
       AND   STR, SP, LM
       AND   STR, STR, LM
-      ANDI  STR, 0x0001, LM
+      ANDI  STR, 7000H, LM
       LADR  R0, (R1)
       FS    DR0, (R1)
       ANDR  R0, (R1)
@@ -3226,336 +3226,336 @@
       MV    R0, R0
       MV    R0, SP
       MV    R0, STR
-      MVWI  R0, 0x1011
+      MVWI  R0, 7910H
       MVB   R0, R0, SKP
       MVB   R0, SP, SKP
       MVB   R0, STR, SKP
       MV    R0, R0, SKP
       MV    R0, SP, SKP
       MV    R0, STR, SKP
-      MVWI  R0, 0x2021, SKP
+      MVWI  R0, 7920H, SKP
       MVB   R0, R0, M
       MVB   R0, SP, M
       MVB   R0, STR, M
       MV    R0, R0, M
       MV    R0, SP, M
       MV    R0, STR, M
-      MVWI  R0, 0x3031, M
+      MVWI  R0, 7930H, M
       MVB   R0, R0, PZ
       MVB   R0, SP, PZ
       MVB   R0, STR, PZ
       MV    R0, R0, PZ
       MV    R0, SP, PZ
       MV    R0, STR, PZ
-      MVWI  R0, 0x4041, PZ
+      MVWI  R0, 7940H, PZ
       MVB   R0, R0, Z
       MVB   R0, SP, Z
       MVB   R0, STR, Z
       MV    R0, R0, Z
       MV    R0, SP, Z
       MV    R0, STR, Z
-      MVWI  R0, 0x5051, Z
+      MVWI  R0, 7950H, Z
       MVB   R0, R0, NZ
       MVB   R0, SP, NZ
       MVB   R0, STR, NZ
       MV    R0, R0, NZ
       MV    R0, SP, NZ
       MV    R0, STR, NZ
-      MVWI  R0, 0x6061, NZ
+      MVWI  R0, 7960H, NZ
       MVB   R0, R0, MZ
       MVB   R0, SP, MZ
       MVB   R0, STR, MZ
       MV    R0, R0, MZ
       MV    R0, SP, MZ
       MV    R0, STR, MZ
-      MVWI  R0, 0x7071, MZ
+      MVWI  R0, 7970H, MZ
       MVB   R0, R0, P
       MVB   R0, SP, P
       MVB   R0, STR, P
       MV    R0, R0, P
       MV    R0, SP, P
       MV    R0, STR, P
-      MVWI  R0, 0x8081, P
+      MVWI  R0, 7980H, P
       MVB   R0, R0, EZ
       MVB   R0, SP, EZ
       MVB   R0, STR, EZ
       MV    R0, R0, EZ
       MV    R0, SP, EZ
       MV    R0, STR, EZ
-      MVWI  R0, 0x9091, EZ
+      MVWI  R0, 7990H, EZ
       MVB   R0, R0, ENZ
       MVB   R0, SP, ENZ
       MVB   R0, STR, ENZ
       MV    R0, R0, ENZ
       MV    R0, SP, ENZ
       MV    R0, STR, ENZ
-      MVWI  R0, 0xA0A1, ENZ
+      MVWI  R0, 79A0H, ENZ
       MVB   R0, R0, OZ
       MVB   R0, SP, OZ
       MVB   R0, STR, OZ
       MV    R0, R0, OZ
       MV    R0, SP, OZ
       MV    R0, STR, OZ
-      MVWI  R0, 0xB0B1, OZ
+      MVWI  R0, 79B0H, OZ
       MVB   R0, R0, ONZ
       MVB   R0, SP, ONZ
       MVB   R0, STR, ONZ
       MV    R0, R0, ONZ
       MV    R0, SP, ONZ
       MV    R0, STR, ONZ
-      MVWI  R0, 0xC0C1, ONZ
+      MVWI  R0, 79C0H, ONZ
       MVB   R0, R0, LMZ
       MVB   R0, SP, LMZ
       MVB   R0, STR, LMZ
       MV    R0, R0, LMZ
       MV    R0, SP, LMZ
       MV    R0, STR, LMZ
-      MVWI  R0, 0xD0D1, LMZ
+      MVWI  R0, 79D0H, LMZ
       MVB   R0, R0, LP
       MVB   R0, SP, LP
       MVB   R0, STR, LP
       MV    R0, R0, LP
       MV    R0, SP, LP
       MV    R0, STR, LP
-      MVWI  R0, 0xE0E1, LP
+      MVWI  R0, 79E0H, LP
       MVB   R0, R0, LPZ
       MVB   R0, SP, LPZ
       MVB   R0, STR, LPZ
       MV    R0, R0, LPZ
       MV    R0, SP, LPZ
       MV    R0, STR, LPZ
-      MVWI  R0, 0xF0F1, LPZ
+      MVWI  R0, 79F0H, LPZ
       MVB   R0, R0, LM
       MVB   R0, SP, LM
       MVB   R0, STR, LM
       MV    R0, R0, LM
       MV    R0, SP, LM
       MV    R0, STR, LM
-      MVWI  R0, 0x0001, LM
+      MVWI  R0, 7A00H, LM
       MVB   SP, R0
       MVB   SP, SP
       MVB   SP, STR
       MV    SP, R0
       MV    SP, SP
       MV    SP, STR
-      MVWI  SP, 0x1011
+      MVWI  SP, 7E10H
       MVB   SP, R0, SKP
       MVB   SP, SP, SKP
       MVB   SP, STR, SKP
       MV    SP, R0, SKP
       MV    SP, SP, SKP
       MV    SP, STR, SKP
-      MVWI  SP, 0x2021, SKP
+      MVWI  SP, 7E20H, SKP
       MVB   SP, R0, M
       MVB   SP, SP, M
       MVB   SP, STR, M
       MV    SP, R0, M
       MV    SP, SP, M
       MV    SP, STR, M
-      MVWI  SP, 0x3031, M
+      MVWI  SP, 7E30H, M
       MVB   SP, R0, PZ
       MVB   SP, SP, PZ
       MVB   SP, STR, PZ
       MV    SP, R0, PZ
       MV    SP, SP, PZ
       MV    SP, STR, PZ
-      MVWI  SP, 0x4041, PZ
+      MVWI  SP, 7E40H, PZ
       MVB   SP, R0, Z
       MVB   SP, SP, Z
       MVB   SP, STR, Z
       MV    SP, R0, Z
       MV    SP, SP, Z
       MV    SP, STR, Z
-      MVWI  SP, 0x5051, Z
+      MVWI  SP, 7E50H, Z
       MVB   SP, R0, NZ
       MVB   SP, SP, NZ
       MVB   SP, STR, NZ
       MV    SP, R0, NZ
       MV    SP, SP, NZ
       MV    SP, STR, NZ
-      MVWI  SP, 0x6061, NZ
+      MVWI  SP, 7E60H, NZ
       MVB   SP, R0, MZ
       MVB   SP, SP, MZ
       MVB   SP, STR, MZ
       MV    SP, R0, MZ
       MV    SP, SP, MZ
       MV    SP, STR, MZ
-      MVWI  SP, 0x7071, MZ
+      MVWI  SP, 7E70H, MZ
       MVB   SP, R0, P
       MVB   SP, SP, P
       MVB   SP, STR, P
       MV    SP, R0, P
       MV    SP, SP, P
       MV    SP, STR, P
-      MVWI  SP, 0x8081, P
+      MVWI  SP, 7E80H, P
       MVB   SP, R0, EZ
       MVB   SP, SP, EZ
       MVB   SP, STR, EZ
       MV    SP, R0, EZ
       MV    SP, SP, EZ
       MV    SP, STR, EZ
-      MVWI  SP, 0x9091, EZ
+      MVWI  SP, 7E90H, EZ
       MVB   SP, R0, ENZ
       MVB   SP, SP, ENZ
       MVB   SP, STR, ENZ
       MV    SP, R0, ENZ
       MV    SP, SP, ENZ
       MV    SP, STR, ENZ
-      MVWI  SP, 0xA0A1, ENZ
+      MVWI  SP, 7EA0H, ENZ
       MVB   SP, R0, OZ
       MVB   SP, SP, OZ
       MVB   SP, STR, OZ
       MV    SP, R0, OZ
       MV    SP, SP, OZ
       MV    SP, STR, OZ
-      MVWI  SP, 0xB0B1, OZ
+      MVWI  SP, 7EB0H, OZ
       MVB   SP, R0, ONZ
       MVB   SP, SP, ONZ
       MVB   SP, STR, ONZ
       MV    SP, R0, ONZ
       MV    SP, SP, ONZ
       MV    SP, STR, ONZ
-      MVWI  SP, 0xC0C1, ONZ
+      MVWI  SP, 7EC0H, ONZ
       MVB   SP, R0, LMZ
       MVB   SP, SP, LMZ
       MVB   SP, STR, LMZ
       MV    SP, R0, LMZ
       MV    SP, SP, LMZ
       MV    SP, STR, LMZ
-      MVWI  SP, 0xD0D1, LMZ
+      MVWI  SP, 7ED0H, LMZ
       MVB   SP, R0, LP
       MVB   SP, SP, LP
       MVB   SP, STR, LP
       MV    SP, R0, LP
       MV    SP, SP, LP
       MV    SP, STR, LP
-      MVWI  SP, 0xE0E1, LP
+      MVWI  SP, 7EE0H, LP
       MVB   SP, R0, LPZ
       MVB   SP, SP, LPZ
       MVB   SP, STR, LPZ
       MV    SP, R0, LPZ
       MV    SP, SP, LPZ
       MV    SP, STR, LPZ
-      MVWI  SP, 0xF0F1, LPZ
+      MVWI  SP, 7EF0H, LPZ
       MVB   SP, R0, LM
       MVB   SP, SP, LM
       MVB   SP, STR, LM
       MV    SP, R0, LM
       MV    SP, SP, LM
       MV    SP, STR, LM
-      MVWI  SP, 0x0001, LM
+      MVWI  SP, 7F00H, LM
       MVB   STR, R0
       MVB   STR, SP
       MVB   STR, STR
       MV    STR, R0
       MV    STR, SP
       MV    STR, STR
-      MVWI  STR, 0x1011
+      MVWI  STR, 7F10H
       MVB   STR, R0, SKP
       MVB   STR, SP, SKP
       MVB   STR, STR, SKP
       MV    STR, R0, SKP
       MV    STR, SP, SKP
       MV    STR, STR, SKP
-      MVWI  STR, 0x2021, SKP
+      MVWI  STR, 7F20H, SKP
       MVB   STR, R0, M
       MVB   STR, SP, M
       MVB   STR, STR, M
       MV    STR, R0, M
       MV    STR, SP, M
       MV    STR, STR, M
-      MVWI  STR, 0x3031, M
+      MVWI  STR, 7F30H, M
       MVB   STR, R0, PZ
       MVB   STR, SP, PZ
       MVB   STR, STR, PZ
       MV    STR, R0, PZ
       MV    STR, SP, PZ
       MV    STR, STR, PZ
-      MVWI  STR, 0x4041, PZ
+      MVWI  STR, 7F40H, PZ
       MVB   STR, R0, Z
       MVB   STR, SP, Z
       MVB   STR, STR, Z
       MV    STR, R0, Z
       MV    STR, SP, Z
       MV    STR, STR, Z
-      MVWI  STR, 0x5051, Z
+      MVWI  STR, 7F50H, Z
       MVB   STR, R0, NZ
       MVB   STR, SP, NZ
       MVB   STR, STR, NZ
       MV    STR, R0, NZ
       MV    STR, SP, NZ
       MV    STR, STR, NZ
-      MVWI  STR, 0x6061, NZ
+      MVWI  STR, 7F60H, NZ
       MVB   STR, R0, MZ
       MVB   STR, SP, MZ
       MVB   STR, STR, MZ
       MV    STR, R0, MZ
       MV    STR, SP, MZ
       MV    STR, STR, MZ
-      MVWI  STR, 0x7071, MZ
+      MVWI  STR, 7F70H, MZ
       MVB   STR, R0, P
       MVB   STR, SP, P
       MVB   STR, STR, P
       MV    STR, R0, P
       MV    STR, SP, P
       MV    STR, STR, P
-      MVWI  STR, 0x8081, P
+      MVWI  STR, 7F80H, P
       MVB   STR, R0, EZ
       MVB   STR, SP, EZ
       MVB   STR, STR, EZ
       MV    STR, R0, EZ
       MV    STR, SP, EZ
       MV    STR, STR, EZ
-      MVWI  STR, 0x9091, EZ
+      MVWI  STR, 7F90H, EZ
       MVB   STR, R0, ENZ
       MVB   STR, SP, ENZ
       MVB   STR, STR, ENZ
       MV    STR, R0, ENZ
       MV    STR, SP, ENZ
       MV    STR, STR, ENZ
-      MVWI  STR, 0xA0A1, ENZ
+      MVWI  STR, 7FA0H, ENZ
       MVB   STR, R0, OZ
       MVB   STR, SP, OZ
       MVB   STR, STR, OZ
       MV    STR, R0, OZ
       MV    STR, SP, OZ
       MV    STR, STR, OZ
-      MVWI  STR, 0xB0B1, OZ
+      MVWI  STR, 7FB0H, OZ
       MVB   STR, R0, ONZ
       MVB   STR, SP, ONZ
       MVB   STR, STR, ONZ
       MV    STR, R0, ONZ
       MV    STR, SP, ONZ
       MV    STR, STR, ONZ
-      MVWI  STR, 0xC0C1, ONZ
+      MVWI  STR, 7FC0H, ONZ
       MVB   STR, R0, LMZ
       MVB   STR, SP, LMZ
       MVB   STR, STR, LMZ
       MV    STR, R0, LMZ
       MV    STR, SP, LMZ
       MV    STR, STR, LMZ
-      MVWI  STR, 0xD0D1, LMZ
+      MVWI  STR, 7FD0H, LMZ
       MVB   STR, R0, LP
       MVB   STR, SP, LP
       MVB   STR, STR, LP
       MV    STR, R0, LP
       MV    STR, SP, LP
       MV    STR, STR, LP
-      MVWI  STR, 0xE0E1, LP
+      MVWI  STR, 7FE0H, LP
       MVB   STR, R0, LPZ
       MVB   STR, SP, LPZ
       MVB   STR, STR, LPZ
       MV    STR, R0, LPZ
       MV    STR, SP, LPZ
       MV    STR, STR, LPZ
-      MVWI  STR, 0xF0F1, LPZ
+      MVWI  STR, 7FF0H, LPZ
       MVB   STR, R0, LM
       MVB   STR, SP, LM
       MVB   STR, STR, LM
       MV    STR, R0, LM
       MV    STR, SP, LM
       MV    STR, STR, LM
-      MVWI  STR, 0x0001, LM
+      MVWI  STR, 8000H, LM
       MVBR  R0, (R1)
       MVWR  R0, (R1)
       M     DR0, (R1)
@@ -3604,10 +3604,10 @@
       MVBR  R0, (R1), LM
       MVWR  R0, (R1), LM
       M     DR0, (R1), LM
-      ST    R0, 0x00
-      ST    SP, 0x00
-      DMS   0x00
-      BAL   0x00
+      ST    R0, 00H
+      ST    SP, 00H
+      DMS   00H
+      BAL   00H
       ST    R0, *
       ST    R0, *+1
       ST    R0, *-128
@@ -3620,10 +3620,10 @@
       BAL   *
       BAL   *+1
       BAL   *-128
-      ST    R0, (0x00)
-      ST    SP, (0x00)
-      DMS   (0x00)
-      BAL   (0x00)
+      ST    R0, (00H)
+      ST    SP, (00H)
+      DMS   (00H)
+      BAL   (00H)
       ST    R0, (*)
       ST    R0, (*+1)
       ST    R0, (*-128)
@@ -3640,14 +3640,14 @@
       ST    SP, 0(X0)
       DMS   0(X0)
       BAL   0(X0)
-      ST    R0, (0x00)(X0)
-      ST    SP, (0x00)(X0)
-      DMS   (0x00)(X0)
-      BAL   (0x00)(X0)
-      L     R0, 0x00
-      L     SP, 0x00
-      IMS   0x00
-      B     0x00
+      ST    R0, (00H)(X0)
+      ST    SP, (00H)(X0)
+      DMS   (00H)(X0)
+      BAL   (00H)(X0)
+      L     R0, 00H
+      L     SP, 00H
+      IMS   00H
+      B     00H
       L     R0, *
       L     R0, *+1
       L     R0, *-128
@@ -3660,10 +3660,10 @@
       B     *
       B     *+1
       B     *-128
-      L     R0, (0x00)
-      L     SP, (0x00)
-      IMS   (0x00)
-      B     (0x00)
+      L     R0, (00H)
+      L     SP, (00H)
+      IMS   (00H)
+      B     (00H)
       L     R0, (*)
       L     R0, (*+1)
       L     R0, (*-128)
@@ -3680,7 +3680,7 @@
       L     SP, 0(X0)
       IMS   0(X0)
       B     0(X0)
-      L     R0, (0x00)(X0)
-      L     SP, (0x00)(X0)
-      IMS   (0x00)(X0)
-      B     (0x00)(X0)
+      L     R0, (00H)(X0)
+      L     SP, (00H)(X0)
+      IMS   (00H)(X0)
+      B     (00H)(X0)

@@ -6,23 +6,23 @@
       LWP   R0
       DIVS  R0
       DIVS  *R0
-      DIVS  @0A1A2H
-      DIVS  @0A2A3H(R1)
+      DIVS  @02A2H
+      DIVS  @02A2H(R1)
       DIVS  *R0+
       MPYS  R0
       MPYS  *R0
-      MPYS  @0E1E2H
-      MPYS  @0E2E3H(R1)
+      MPYS  @02E2H
+      MPYS  @02E2H(R1)
       MPYS  *R0+
-      LI    R0, 0102H
-      AI    R0, 2122H
-      ANDI  R0, 4142H
-      ORI   R0, 6162H
-      CI    R0, 8182H
+      LI    R0, 0301H
+      AI    R0, 0321H
+      ANDI  R0, 0341H
+      ORI   R0, 0361H
+      CI    R0, 0381H
       STWP  R0
       STST  R0
-      LWPI  0E1E2H
-      LIMI  0102H
+      LWPI  03E1H
+      LIMI  0401H
       IDLE
       RSET
       RTWP
@@ -31,73 +31,73 @@
       LREX
       BLWP  R0
       BLWP  *R0
-      BLWP  @2122H
-      BLWP  @2223H(R1)
+      BLWP  @0522H
+      BLWP  @0522H(R1)
       BLWP  *R0+
       B     R0
       B     *R0
-      B     @6162H
-      B     @6263H(R1)
+      B     @0562H
+      B     @0562H(R1)
       B     *R0+
       X     R0
       X     *R0
-      X     @0A1A2H
-      X     @0A2A3H(R1)
+      X     @05A2H
+      X     @05A2H(R1)
       X     *R0+
       CLR   R0
       CLR   *R0
-      CLR   @0E1E2H
-      CLR   @0E2E3H(R1)
+      CLR   @05E2H
+      CLR   @05E2H(R1)
       CLR   *R0+
       NEG   R0
       NEG   *R0
-      NEG   @2122H
-      NEG   @2223H(R1)
+      NEG   @0622H
+      NEG   @0622H(R1)
       NEG   *R0+
       INV   R0
       INV   *R0
-      INV   @6162H
-      INV   @6263H(R1)
+      INV   @0662H
+      INV   @0662H(R1)
       INV   *R0+
       INC   R0
       INC   *R0
-      INC   @0A1A2H
-      INC   @0A2A3H(R1)
+      INC   @06A2H
+      INC   @06A2H(R1)
       INC   *R0+
       INCT  R0
       INCT  *R0
-      INCT  @0E1E2H
-      INCT  @0E2E3H(R1)
+      INCT  @06E2H
+      INCT  @06E2H(R1)
       INCT  *R0+
       DEC   R0
       DEC   *R0
-      DEC   @2122H
-      DEC   @2223H(R1)
+      DEC   @0722H
+      DEC   @0722H(R1)
       DEC   *R0+
       DECT  R0
       DECT  *R0
-      DECT  @6162H
-      DECT  @6263H(R1)
+      DECT  @0762H
+      DECT  @0762H(R1)
       DECT  *R0+
       BL    R0
       BL    *R0
-      BL    @0A1A2H
-      BL    @0A2A3H(R1)
+      BL    @07A2H
+      BL    @07A2H(R1)
       BL    *R0+
       SWPB  R0
       SWPB  *R0
-      SWPB  @0E1E2H
-      SWPB  @0E2E3H(R1)
+      SWPB  @07E2H
+      SWPB  @07E2H(R1)
       SWPB  *R0+
       SETO  R0
       SETO  *R0
-      SETO  @2122H
-      SETO  @2223H(R1)
+      SETO  @0822H
+      SETO  @0822H(R1)
       SETO  *R0+
       ABS   R0
       ABS   *R0
-      ABS   @6162H
-      ABS   @6263H(R1)
+      ABS   @0862H
+      ABS   @0862H(R1)
       ABS   *R0+
       SRA   R0, R0
       SRA   R0, 1
@@ -155,340 +155,340 @@
       COC   R0, R0
       COC   *R0, R0
       COC   @2122H, R0
-      COC   @2223H(R1), R0
+      COC   @2122H(R1), R0
       COC   *R0+, R0
       CZC   R0, R0
       CZC   *R0, R0
-      CZC   @2122H, R0
-      CZC   @2223H(R1), R0
+      CZC   @2522H, R0
+      CZC   @2522H(R1), R0
       CZC   *R0+, R0
       XOR   R0, R0
       XOR   *R0, R0
-      XOR   @2122H, R0
-      XOR   @2223H(R1), R0
+      XOR   @2922H, R0
+      XOR   @2922H(R1), R0
       XOR   *R0+, R0
       XOP   R0, 0
       XOP   *R0, 0
-      XOP   @2122H, 0
-      XOP   @2223H(R1), 0
+      XOP   @2D22H, 0
+      XOP   @2D22H(R1), 0
       XOP   *R0+, 0
       LDCR  R0, 16
       LDCR  *R0, 16
-      LDCR  @2122H, 16
-      LDCR  @2223H(R1), 16
+      LDCR  @3122H, 16
+      LDCR  @3122H(R1), 16
       LDCR  *R0+, 16
       STCR  R0, 16
       STCR  *R0, 16
-      STCR  @2122H, 16
-      STCR  @2223H(R1), 16
+      STCR  @3522H, 16
+      STCR  @3522H(R1), 16
       STCR  *R0+, 16
       MPY   R0, R0
       MPY   *R0, R0
-      MPY   @2122H, R0
-      MPY   @2223H(R1), R0
+      MPY   @3922H, R0
+      MPY   @3922H(R1), R0
       MPY   *R0+, R0
       DIV   R0, R0
       DIV   *R0, R0
-      DIV   @2122H, R0
-      DIV   @2223H(R1), R0
+      DIV   @3D22H, R0
+      DIV   @3D22H(R1), R0
       DIV   *R0+, R0
       SZC   R0, R0
       SZC   *R0, R0
-      SZC   @2122H, R0
-      SZC   @2223H(R1), R0
+      SZC   @4122H, R0
+      SZC   @4122H(R1), R0
       SZC   *R0+, R0
       SZC   R0, *R0
       SZC   *R0, *R0
-      SZC   @2122H, *R0
-      SZC   @2223H(R1), *R0
+      SZC   @4522H, *R0
+      SZC   @4522H(R1), *R0
       SZC   *R0+, *R0
-      SZC   R0, @0102H
-      SZC   *R0, @1112H
-      SZC   @2122H, @2324H
-      SZC   @2324H(R1), @2526H
-      SZC   *R0+, @3132H
-      SZC   R0, @4142H(R1)
-      SZC   *R0, @5152H(R1)
-      SZC   @6162H, @6364H(R1)
-      SZC   @6263H(R1), @6465H(R1)
-      SZC   *R0+, @7172H(R1)
+      SZC   R0, @4902H
+      SZC   *R0, @4912H
+      SZC   @4922H, @4A24H
+      SZC   @4922H(R1), @4A24H
+      SZC   *R0+, @4932H
+      SZC   R0, @4941H(R1)
+      SZC   *R0, @4951H(R1)
+      SZC   @4962H, @4A63H(R1)
+      SZC   @4962H(R1), @4A63H(R1)
+      SZC   *R0+, @4971H(R1)
       SZC   R0, *R0+
       SZC   *R0, *R0+
-      SZC   @2122H, *R0+
-      SZC   @2223H(R1), *R0+
+      SZC   @4D22H, *R0+
+      SZC   @4D22H(R1), *R0+
       SZC   *R0+, *R0+
       SZCB  R0, R0
       SZCB  *R0, R0
-      SZCB  @2122H, R0
-      SZCB  @2223H(R1), R0
+      SZCB  @5121H, R0
+      SZCB  @5122H(R1), R0
       SZCB  *R0+, R0
       SZCB  R0, *R0
       SZCB  *R0, *R0
-      SZCB  @2122H, *R0
-      SZCB  @2223H(R1), *R0
+      SZCB  @5521H, *R0
+      SZCB  @5522H(R1), *R0
       SZCB  *R0+, *R0
-      SZCB  R0, @0102H
-      SZCB  *R0, @1112H
-      SZCB  @2122H, @2324H
-      SZCB  @2223H(R1), @2425H
-      SZCB  *R0+, @3132H
-      SZCB  R0, @4142H(R1)
-      SZCB  *R0, @5152H(R1)
-      SZCB  @6162H, @6364H(R1)
-      SZCB  @6263H(R1), @6465H(R1)
-      SZCB  *R0+, @7172H(R1)
+      SZCB  R0, @5901H
+      SZCB  *R0, @5911H
+      SZCB  @5921H, @5A22H
+      SZCB  @5922H(R1), @5A23H
+      SZCB  *R0+, @5931H
+      SZCB  R0, @5941H(R1)
+      SZCB  *R0, @5951H(R1)
+      SZCB  @5961H, @5A62H(R1)
+      SZCB  @5962H(R1), @5A63H(R1)
+      SZCB  *R0+, @5971H(R1)
       SZCB  R0, *R0+
       SZCB  *R0, *R0+
-      SZCB  @2122H, *R0+
-      SZCB  @2223H(R1), *R0+
+      SZCB  @5D21H, *R0+
+      SZCB  @5D22H(R1), *R0+
       SZCB  *R0+, *R0+
       S     R0, R0
       S     *R0, R0
-      S     @2122H, R0
-      S     @2223H(R1), R0
+      S     @6122H, R0
+      S     @6122H(R1), R0
       S     *R0+, R0
       S     R0, *R0
       S     *R0, *R0
-      S     @2122H, *R0
-      S     @2223H(R1), *R0
+      S     @6522H, *R0
+      S     @6522H(R1), *R0
       S     *R0+, *R0
-      S     R0, @0102H
-      S     *R0, @1112H
-      S     @2122H, @2324H
-      S     @2324H(R1), @2526H
-      S     *R0+, @3132H
-      S     R0, @4142H(R1)
-      S     *R0, @5152H(R1)
-      S     @6162H, @6364H(R1)
-      S     @6263H(R1), @6465H(R1)
-      S     *R0+, @7172H(R1)
+      S     R0, @6902H
+      S     *R0, @6912H
+      S     @6922H, @6A24H
+      S     @6922H(R1), @6A24H
+      S     *R0+, @6932H
+      S     R0, @6941H(R1)
+      S     *R0, @6951H(R1)
+      S     @6962H, @6A63H(R1)
+      S     @6962H(R1), @6A63H(R1)
+      S     *R0+, @6971H(R1)
       S     R0, *R0+
       S     *R0, *R0+
-      S     @2122H, *R0+
-      S     @2223H(R1), *R0+
+      S     @6D22H, *R0+
+      S     @6D22H(R1), *R0+
       S     *R0+, *R0+
       SB    R0, R0
       SB    *R0, R0
-      SB    @2122H, R0
-      SB    @2223H(R1), R0
+      SB    @7121H, R0
+      SB    @7122H(R1), R0
       SB    *R0+, R0
       SB    R0, *R0
       SB    *R0, *R0
-      SB    @2122H, *R0
-      SB    @2223H(R1), *R0
+      SB    @7521H, *R0
+      SB    @7522H(R1), *R0
       SB    *R0+, *R0
-      SB    R0, @0102H
-      SB    *R0, @1112H
-      SB    @2122H, @2324H
-      SB    @2223H(R1), @2425H
-      SB    *R0+, @3132H
-      SB    R0, @4142H(R1)
-      SB    *R0, @5152H(R1)
-      SB    @6162H, @6364H(R1)
-      SB    @6263H(R1), @6465H(R1)
-      SB    *R0+, @7172H(R1)
+      SB    R0, @7901H
+      SB    *R0, @7911H
+      SB    @7921H, @7A22H
+      SB    @7922H(R1), @7A23H
+      SB    *R0+, @7931H
+      SB    R0, @7941H(R1)
+      SB    *R0, @7951H(R1)
+      SB    @7961H, @7A62H(R1)
+      SB    @7962H(R1), @7A63H(R1)
+      SB    *R0+, @7971H(R1)
       SB    R0, *R0+
       SB    *R0, *R0+
-      SB    @2122H, *R0+
-      SB    @2223H(R1), *R0+
+      SB    @7D21H, *R0+
+      SB    @7D22H(R1), *R0+
       SB    *R0+, *R0+
       C     R0, R0
       C     *R0, R0
-      C     @2122H, R0
-      C     @2223H(R1), R0
+      C     @8122H, R0
+      C     @8122H(R1), R0
       C     *R0+, R0
       C     R0, *R0
       C     *R0, *R0
-      C     @2122H, *R0
-      C     @2223H(R1), *R0
+      C     @8522H, *R0
+      C     @8522H(R1), *R0
       C     *R0+, *R0
-      C     R0, @0102H
-      C     *R0, @1112H
-      C     @2122H, @2324H
-      C     @2324H(R1), @2526H
-      C     *R0+, @3132H
-      C     R0, @4142H(R1)
-      C     *R0, @5152H(R1)
-      C     @6162H, @6364H(R1)
-      C     @6263H(R1), @6465H(R1)
-      C     *R0+, @7172H(R1)
+      C     R0, @8902H
+      C     *R0, @8912H
+      C     @8922H, @8A24H
+      C     @8922H(R1), @8A24H
+      C     *R0+, @8932H
+      C     R0, @8941H(R1)
+      C     *R0, @8951H(R1)
+      C     @8962H, @8A63H(R1)
+      C     @8962H(R1), @8A63H(R1)
+      C     *R0+, @8971H(R1)
       C     R0, *R0+
       C     *R0, *R0+
-      C     @2122H, *R0+
-      C     @2223H(R1), *R0+
+      C     @8D22H, *R0+
+      C     @8D22H(R1), *R0+
       C     *R0+, *R0+
       CB    R0, R0
       CB    *R0, R0
-      CB    @2122H, R0
-      CB    @2223H(R1), R0
+      CB    @9121H, R0
+      CB    @9122H(R1), R0
       CB    *R0+, R0
       CB    R0, *R0
       CB    *R0, *R0
-      CB    @2122H, *R0
-      CB    @2223H(R1), *R0
+      CB    @9521H, *R0
+      CB    @9522H(R1), *R0
       CB    *R0+, *R0
-      CB    R0, @0102H
-      CB    *R0, @1112H
-      CB    @2122H, @2324H
-      CB    @2223H(R1), @2425H
-      CB    *R0+, @3132H
-      CB    R0, @4142H(R1)
-      CB    *R0, @5152H(R1)
-      CB    @6162H, @6364H(R1)
-      CB    @6263H(R1), @6465H(R1)
-      CB    *R0+, @7172H(R1)
+      CB    R0, @9901H
+      CB    *R0, @9911H
+      CB    @9921H, @9A22H
+      CB    @9922H(R1), @9A23H
+      CB    *R0+, @9931H
+      CB    R0, @9941H(R1)
+      CB    *R0, @9951H(R1)
+      CB    @9961H, @9A62H(R1)
+      CB    @9962H(R1), @9A63H(R1)
+      CB    *R0+, @9971H(R1)
       CB    R0, *R0+
       CB    *R0, *R0+
-      CB    @2122H, *R0+
-      CB    @2223H(R1), *R0+
+      CB    @9D21H, *R0+
+      CB    @9D22H(R1), *R0+
       CB    *R0+, *R0+
       A     R0, R0
       A     *R0, R0
-      A     @2122H, R0
-      A     @2223H(R1), R0
+      A     @0A122H, R0
+      A     @0A122H(R1), R0
       A     *R0+, R0
       A     R0, *R0
       A     *R0, *R0
-      A     @2122H, *R0
-      A     @2223H(R1), *R0
+      A     @0A522H, *R0
+      A     @0A522H(R1), *R0
       A     *R0+, *R0
-      A     R0, @0102H
-      A     *R0, @1112H
-      A     @2122H, @2324H
-      A     @2324H(R1), @2526H
-      A     *R0+, @3132H
-      A     R0, @4142H(R1)
-      A     *R0, @5152H(R1)
-      A     @6162H, @6364H(R1)
-      A     @6263H(R1), @6465H(R1)
-      A     *R0+, @7172H(R1)
+      A     R0, @0A902H
+      A     *R0, @0A912H
+      A     @0A922H, @0AA24H
+      A     @0A922H(R1), @0AA24H
+      A     *R0+, @0A932H
+      A     R0, @0A941H(R1)
+      A     *R0, @0A951H(R1)
+      A     @0A962H, @0AA63H(R1)
+      A     @0A962H(R1), @0AA63H(R1)
+      A     *R0+, @0A971H(R1)
       A     R0, *R0+
       A     *R0, *R0+
-      A     @2122H, *R0+
-      A     @2223H(R1), *R0+
+      A     @0AD22H, *R0+
+      A     @0AD22H(R1), *R0+
       A     *R0+, *R0+
       AB    R0, R0
       AB    *R0, R0
-      AB    @2122H, R0
-      AB    @2223H(R1), R0
+      AB    @0B121H, R0
+      AB    @0B122H(R1), R0
       AB    *R0+, R0
       AB    R0, *R0
       AB    *R0, *R0
-      AB    @2122H, *R0
-      AB    @2223H(R1), *R0
+      AB    @0B521H, *R0
+      AB    @0B522H(R1), *R0
       AB    *R0+, *R0
-      AB    R0, @0102H
-      AB    *R0, @1112H
-      AB    @2122H, @2324H
-      AB    @2223H(R1), @2425H
-      AB    *R0+, @3132H
-      AB    R0, @4142H(R1)
-      AB    *R0, @5152H(R1)
-      AB    @6162H, @6364H(R1)
-      AB    @6263H(R1), @6465H(R1)
-      AB    *R0+, @7172H(R1)
+      AB    R0, @0B901H
+      AB    *R0, @0B911H
+      AB    @0B921H, @0BA22H
+      AB    @0B922H(R1), @0BA23H
+      AB    *R0+, @0B931H
+      AB    R0, @0B941H(R1)
+      AB    *R0, @0B951H(R1)
+      AB    @0B961H, @0BA62H(R1)
+      AB    @0B962H(R1), @0BA63H(R1)
+      AB    *R0+, @0B971H(R1)
       AB    R0, *R0+
       AB    *R0, *R0+
-      AB    @2122H, *R0+
-      AB    @2223H(R1), *R0+
+      AB    @0BD21H, *R0+
+      AB    @0BD22H(R1), *R0+
       AB    *R0+, *R0+
       MOV   R0, R0
       MOV   *R0, R0
-      MOV   @2122H, R0
-      MOV   @2223H(R1), R0
+      MOV   @0C122H, R0
+      MOV   @0C122H(R1), R0
       MOV   *R0+, R0
       MOV   R0, *R0
       MOV   *R0, *R0
-      MOV   @2122H, *R0
-      MOV   @2223H(R1), *R0
+      MOV   @0C522H, *R0
+      MOV   @0C522H(R1), *R0
       MOV   *R0+, *R0
-      MOV   R0, @0102H
-      MOV   *R0, @1112H
-      MOV   @2122H, @2324H
-      MOV   @2324H(R1), @2526H
-      MOV   *R0+, @3132H
-      MOV   R0, @4142H(R1)
-      MOV   *R0, @5152H(R1)
-      MOV   @6162H, @6364H(R1)
-      MOV   @6263H(R1), @6465H(R1)
-      MOV   *R0+, @7172H(R1)
+      MOV   R0, @0C902H
+      MOV   *R0, @0C912H
+      MOV   @0C922H, @0CA24H
+      MOV   @0C922H(R1), @0CA24H
+      MOV   *R0+, @0C932H
+      MOV   R0, @0C941H(R1)
+      MOV   *R0, @0C951H(R1)
+      MOV   @0C962H, @0CA63H(R1)
+      MOV   @0C962H(R1), @0CA63H(R1)
+      MOV   *R0+, @0C971H(R1)
       MOV   R0, *R0+
       MOV   *R0, *R0+
-      MOV   @2122H, *R0+
-      MOV   @2223H(R1), *R0+
+      MOV   @0CD22H, *R0+
+      MOV   @0CD22H(R1), *R0+
       MOV   *R0+, *R0+
       MOVB  R0, R0
       MOVB  *R0, R0
-      MOVB  @2122H, R0
-      MOVB  @2223H(R1), R0
+      MOVB  @0D121H, R0
+      MOVB  @0D122H(R1), R0
       MOVB  *R0+, R0
       MOVB  R0, *R0
       MOVB  *R0, *R0
-      MOVB  @2122H, *R0
-      MOVB  @2223H(R1), *R0
+      MOVB  @0D521H, *R0
+      MOVB  @0D522H(R1), *R0
       MOVB  *R0+, *R0
-      MOVB  R0, @0102H
-      MOVB  *R0, @1112H
-      MOVB  @2122H, @2324H
-      MOVB  @2223H(R1), @2425H
-      MOVB  *R0+, @3132H
-      MOVB  R0, @4142H(R1)
-      MOVB  *R0, @5152H(R1)
-      MOVB  @6162H, @6364H(R1)
-      MOVB  @6263H(R1), @6465H(R1)
-      MOVB  *R0+, @7172H(R1)
+      MOVB  R0, @0D901H
+      MOVB  *R0, @0D911H
+      MOVB  @0D921H, @0DA22H
+      MOVB  @0D922H(R1), @0DA23H
+      MOVB  *R0+, @0D931H
+      MOVB  R0, @0D941H(R1)
+      MOVB  *R0, @0D951H(R1)
+      MOVB  @0D961H, @0DA62H(R1)
+      MOVB  @0D962H(R1), @0DA63H(R1)
+      MOVB  *R0+, @0D971H(R1)
       MOVB  R0, *R0+
       MOVB  *R0, *R0+
-      MOVB  @2122H, *R0+
-      MOVB  @2223H(R1), *R0+
+      MOVB  @0DD21H, *R0+
+      MOVB  @0DD22H(R1), *R0+
       MOVB  *R0+, *R0+
       SOC   R0, R0
       SOC   *R0, R0
-      SOC   @2122H, R0
-      SOC   @2223H(R1), R0
+      SOC   @0E122H, R0
+      SOC   @0E122H(R1), R0
       SOC   *R0+, R0
       SOC   R0, *R0
       SOC   *R0, *R0
-      SOC   @2122H, *R0
-      SOC   @2223H(R1), *R0
+      SOC   @0E522H, *R0
+      SOC   @0E522H(R1), *R0
       SOC   *R0+, *R0
-      SOC   R0, @0102H
-      SOC   *R0, @1112H
-      SOC   @2122H, @2324H
-      SOC   @2324H(R1), @2526H
-      SOC   *R0+, @3132H
-      SOC   R0, @4142H(R1)
-      SOC   *R0, @5152H(R1)
-      SOC   @6162H, @6364H(R1)
-      SOC   @6263H(R1), @6465H(R1)
-      SOC   *R0+, @7172H(R1)
+      SOC   R0, @0E902H
+      SOC   *R0, @0E912H
+      SOC   @0E922H, @0EA24H
+      SOC   @0E922H(R1), @0EA24H
+      SOC   *R0+, @0E932H
+      SOC   R0, @0E941H(R1)
+      SOC   *R0, @0E951H(R1)
+      SOC   @0E962H, @0EA63H(R1)
+      SOC   @0E962H(R1), @0EA63H(R1)
+      SOC   *R0+, @0E971H(R1)
       SOC   R0, *R0+
       SOC   *R0, *R0+
-      SOC   @2122H, *R0+
-      SOC   @2223H(R1), *R0+
+      SOC   @0ED22H, *R0+
+      SOC   @0ED22H(R1), *R0+
       SOC   *R0+, *R0+
       SOCB  R0, R0
       SOCB  *R0, R0
-      SOCB  @2122H, R0
-      SOCB  @2223H(R1), R0
+      SOCB  @0F121H, R0
+      SOCB  @0F122H(R1), R0
       SOCB  *R0+, R0
       SOCB  R0, *R0
       SOCB  *R0, *R0
-      SOCB  @2122H, *R0
-      SOCB  @2223H(R1), *R0
+      SOCB  @0F521H, *R0
+      SOCB  @0F522H(R1), *R0
       SOCB  *R0+, *R0
-      SOCB  R0, @0102H
-      SOCB  *R0, @1112H
-      SOCB  @2122H, @2324H
-      SOCB  @2223H(R1), @2425H
-      SOCB  *R0+, @3132H
-      SOCB  R0, @4142H(R1)
-      SOCB  *R0, @5152H(R1)
-      SOCB  @6162H, @6364H(R1)
-      SOCB  @6263H(R1), @6465H(R1)
-      SOCB  *R0+, @7172H(R1)
+      SOCB  R0, @0F901H
+      SOCB  *R0, @0F911H
+      SOCB  @0F921H, @0FA22H
+      SOCB  @0F922H(R1), @0FA23H
+      SOCB  *R0+, @0F931H
+      SOCB  R0, @0F941H(R1)
+      SOCB  *R0, @0F951H(R1)
+      SOCB  @0F961H, @0FA62H(R1)
+      SOCB  @0F962H(R1), @0FA63H(R1)
+      SOCB  *R0+, @0F971H(R1)
       SOCB  R0, *R0+
       SOCB  *R0, *R0+
-      SOCB  @2122H, *R0+
-      SOCB  @2223H(R1), *R0+
+      SOCB  @0FD21H, *R0+
+      SOCB  @0FD22H(R1), *R0+
       SOCB  *R0+, *R0+

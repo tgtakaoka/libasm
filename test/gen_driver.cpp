@@ -90,6 +90,13 @@ void GenDriver::printList() {
     }
 }
 
+void GenDriver::flush() {
+    if (_output)
+        fflush(_output);
+    if (_list)
+        fflush(_list);
+}
+
 void GenDriver::setOrigin(uint32_t addr) {
     _listing.setOrigin(addr);
     if (!_includeTarget && !_generateGas) {
@@ -97,14 +104,9 @@ void GenDriver::setOrigin(uint32_t addr) {
     }
 }
 
-void GenDriver::info(const char *fmt, ...) {
-#if DEBUG_TRACE
-    if (_list) {
-        va_list args;
-        va_start(args, fmt);
+void GenDriver::info(const char *fmt, va_list args) {
+    if (_list)
         vfprintf(_list, fmt, args);
-    }
-#endif
 }
 
 int GenDriver::parseOption(int argc, const char **argv) {

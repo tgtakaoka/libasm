@@ -28,7 +28,7 @@ int main(int argc, const char **argv) {
 
     dis8070.setOption("relative", "enable");
     dis8070.setOption("use-sharp", "enable");
-    dis8070.setOption("c-style", "enable");
+    dis8070.setOption("intel-hex", "enable");
 
     TestGenerator generator(driver, dis8070, 0x0100);
     generator.generate();

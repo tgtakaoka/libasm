@@ -26,7 +26,7 @@ int main(int argc, const char **argv) {
     if (driver.main(argc, argv))
         return 1;
 
-    dis3850.setOption("c-style", "enable");
+    dis3850.setOption("intel-hex", "enable");
     dis3850.setOption("relative", "enable");
     dis3850.setOption("use-scratchpad", "on");
 

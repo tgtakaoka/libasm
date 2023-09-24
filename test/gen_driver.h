@@ -53,9 +53,10 @@ private:
     // TestGenerator::Formatter
     GenFormatter &listing() override final { return _listing; }
     void printList() override final;
+    void flush() override final;
     void setOrigin(uint32_t addr) override final;
 
-    void info(const char *fmt, ...) override final;
+    void info(const char *fmt, va_list args) override final;
 
     int parseOption(int argc, const char **argv);
     int usage() const;

@@ -27,7 +27,7 @@ int main(int argc, const char **argv) {
         return 1;
 
     dis1610.setOption("relative", "enable");
-    dis1610.setOption("c-style", "enable");
+    dis1610.setOption("intel-hex", "enable");
 
     TestGenerator generator(driver, dis1610, 0x0100);
     generator.generate();

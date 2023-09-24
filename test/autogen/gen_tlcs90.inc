@@ -389,64 +389,64 @@
       BIT   0, (HL)
       RES   0, (HL)
       SET   0, (HL)
-      RLD   (0F0EH)
-      RRD   (0E0EH)
-      MUL   HL, (0E0EH)
-      DIV   HL, (0E0EH)
-      ADD   IX, (0E0EH)
-      ADD   IY, (0E0EH)
-      ADD   SP, (0E0EH)
-      TSET  0, (0E0EH)
-      LD    B, (0E0EH)
-      LD    C, (0E0EH)
-      LD    D, (0E0EH)
-      LD    E, (0E0EH)
-      LD    H, (0E0EH)
-      LD    L, (0E0EH)
-      LD    A, (0E0EH)
-      LD    BC, (0E0EH)
-      LD    DE, (0E0EH)
-      LD    HL, (0E0EH)
-      LD    IX, (0E0EH)
-      LD    IY, (0E0EH)
-      LD    SP, (0E0EH)
-      EX    (0E0EH), BC
-      EX    (0E0EH), DE
-      EX    (0E0EH), HL
-      EX    (0E0EH), IX
-      EX    (0E0EH), IY
-      EX    (0E0EH), SP
-      ADD   A, (0E0EH)
-      ADC   A, (0E0EH)
-      SUB   A, (0E0EH)
-      SBC   A, (0E0EH)
-      AND   A, (0E0EH)
-      XOR   A, (0E0EH)
-      OR    A, (0E0EH)
-      CP    A, (0E0EH)
-      ADD   HL, (0E0EH)
-      ADC   HL, (0E0EH)
-      SUB   HL, (0E0EH)
-      SBC   HL, (0E0EH)
-      AND   HL, (0E0EH)
-      XOR   HL, (0E0EH)
-      OR    HL, (0E0EH)
-      CP    HL, (0E0EH)
-      INC   (0E0EH)
-      DEC   (0E0EH)
-      INCW  (0E0EH)
-      DECW  (0E0EH)
-      RLC   (0E0EH)
-      RRC   (0E0EH)
-      RL    (0E0EH)
-      RR    (0E0EH)
-      SLA   (0E0EH)
-      SRA   (0E0EH)
-      SLL   (0E0EH)
-      SRL   (0E0EH)
-      BIT   0, (0E0EH)
-      RES   0, (0E0EH)
-      SET   0, (0E0EH)
+      RLD   (0E5E4H)
+      RRD   (0E5E4H)
+      MUL   HL, (0E5E4H)
+      DIV   HL, (0E5E4H)
+      ADD   IX, (0E5E4H)
+      ADD   IY, (0E5E4H)
+      ADD   SP, (0E5E4H)
+      TSET  0, (0E5E4H)
+      LD    B, (0E5E4H)
+      LD    C, (0E5E4H)
+      LD    D, (0E5E4H)
+      LD    E, (0E5E4H)
+      LD    H, (0E5E4H)
+      LD    L, (0E5E4H)
+      LD    A, (0E5E4H)
+      LD    BC, (0E5E4H)
+      LD    DE, (0E5E4H)
+      LD    HL, (0E5E4H)
+      LD    IX, (0E5E4H)
+      LD    IY, (0E5E4H)
+      LD    SP, (0E5E4H)
+      EX    (0E5E4H), BC
+      EX    (0E5E4H), DE
+      EX    (0E5E4H), HL
+      EX    (0E5E4H), IX
+      EX    (0E5E4H), IY
+      EX    (0E5E4H), SP
+      ADD   A, (0E5E4H)
+      ADC   A, (0E5E4H)
+      SUB   A, (0E5E4H)
+      SBC   A, (0E5E4H)
+      AND   A, (0E5E4H)
+      XOR   A, (0E5E4H)
+      OR    A, (0E5E4H)
+      CP    A, (0E5E4H)
+      ADD   HL, (0E5E4H)
+      ADC   HL, (0E5E4H)
+      SUB   HL, (0E5E4H)
+      SBC   HL, (0E5E4H)
+      AND   HL, (0E5E4H)
+      XOR   HL, (0E5E4H)
+      OR    HL, (0E5E4H)
+      CP    HL, (0E5E4H)
+      INC   (0E5E4H)
+      DEC   (0E5E4H)
+      INCW  (0E5E4H)
+      DECW  (0E5E4H)
+      RLC   (0E5E4H)
+      RRC   (0E5E4H)
+      RL    (0E5E4H)
+      RR    (0E5E4H)
+      SLA   (0E5E4H)
+      SRA   (0E5E4H)
+      SLL   (0E5E4H)
+      SRL   (0E5E4H)
+      BIT   0, (0E5E4H)
+      RES   0, (0E5E4H)
+      SET   0, (0E5E4H)
       RLD   (IX)
       RRD   (IX)
       MUL   HL, (IX)
@@ -621,64 +621,64 @@
       BIT   0, (SP)
       RES   0, (SP)
       SET   0, (SP)
-      RLD   (0FF0FH)
-      RRD   (0FF0FH)
-      MUL   HL, (0FF0FH)
-      DIV   HL, (0FF0FH)
-      ADD   IX, (0FF0FH)
-      ADD   IY, (0FF0FH)
-      ADD   SP, (0FF0FH)
-      TSET  0, (0FF0FH)
-      LD    B, (0FF0FH)
-      LD    C, (0FF0FH)
-      LD    D, (0FF0FH)
-      LD    E, (0FF0FH)
-      LD    H, (0FF0FH)
-      LD    L, (0FF0FH)
-      LD    A, (0FF0FH)
-      LD    BC, (0FF0FH)
-      LD    DE, (0FF0FH)
-      LD    HL, (0FF0FH)
-      LD    IX, (0FF0FH)
-      LD    IY, (0FF0FH)
-      LD    SP, (0FF0FH)
-      EX    (0FF0FH), BC
-      EX    (0FF0FH), DE
-      EX    (0FF0FH), HL
-      EX    (0FF0FH), IX
-      EX    (0FF0FH), IY
-      EX    (0FF0FH), SP
-      ADD   A, (0FF0FH)
-      ADC   A, (0FF0FH)
-      SUB   A, (0FF0FH)
-      SBC   A, (0FF0FH)
-      AND   A, (0FF0FH)
-      XOR   A, (0FF0FH)
-      OR    A, (0FF0FH)
-      CP    A, (0FF0FH)
-      ADD   HL, (0FF0FH)
-      ADC   HL, (0FF0FH)
-      SUB   HL, (0FF0FH)
-      SBC   HL, (0FF0FH)
-      AND   HL, (0FF0FH)
-      XOR   HL, (0FF0FH)
-      OR    HL, (0FF0FH)
-      CP    HL, (0FF0FH)
-      INC   (0FF0FH)
-      DEC   (0FF0FH)
-      INCW  (0FF0FH)
-      DECW  (0FF0FH)
-      RLC   (0FF0FH)
-      RRC   (0FF0FH)
-      RL    (0FF0FH)
-      RR    (0FF0FH)
-      SLA   (0FF0FH)
-      SRA   (0FF0FH)
-      SLL   (0FF0FH)
-      SRL   (0FF0FH)
-      BIT   0, (0FF0FH)
-      RES   0, (0FF0FH)
-      SET   0, (0FF0FH)
+      RLD   (0FFE8H)
+      RRD   (0FFE8H)
+      MUL   HL, (0FFE8H)
+      DIV   HL, (0FFE8H)
+      ADD   IX, (0FFE8H)
+      ADD   IY, (0FFE8H)
+      ADD   SP, (0FFE8H)
+      TSET  0, (0FFE8H)
+      LD    B, (0FFE8H)
+      LD    C, (0FFE8H)
+      LD    D, (0FFE8H)
+      LD    E, (0FFE8H)
+      LD    H, (0FFE8H)
+      LD    L, (0FFE8H)
+      LD    A, (0FFE8H)
+      LD    BC, (0FFE8H)
+      LD    DE, (0FFE8H)
+      LD    HL, (0FFE8H)
+      LD    IX, (0FFE8H)
+      LD    IY, (0FFE8H)
+      LD    SP, (0FFE8H)
+      EX    (0FFE8H), BC
+      EX    (0FFE8H), DE
+      EX    (0FFE8H), HL
+      EX    (0FFE8H), IX
+      EX    (0FFE8H), IY
+      EX    (0FFE8H), SP
+      ADD   A, (0FFE8H)
+      ADC   A, (0FFE8H)
+      SUB   A, (0FFE8H)
+      SBC   A, (0FFE8H)
+      AND   A, (0FFE8H)
+      XOR   A, (0FFE8H)
+      OR    A, (0FFE8H)
+      CP    A, (0FFE8H)
+      ADD   HL, (0FFE8H)
+      ADC   HL, (0FFE8H)
+      SUB   HL, (0FFE8H)
+      SBC   HL, (0FFE8H)
+      AND   HL, (0FFE8H)
+      XOR   HL, (0FFE8H)
+      OR    HL, (0FFE8H)
+      CP    HL, (0FFE8H)
+      INC   (0FFE8H)
+      DEC   (0FFE8H)
+      INCW  (0FFE8H)
+      DECW  (0FFE8H)
+      RLC   (0FFE8H)
+      RRC   (0FFE8H)
+      RL    (0FFE8H)
+      RR    (0FFE8H)
+      SLA   (0FFE8H)
+      SRA   (0FFE8H)
+      SLL   (0FFE8H)
+      SRL   (0FFE8H)
+      BIT   0, (0FFE8H)
+      RES   0, (0FFE8H)
+      SET   0, (0FFE8H)
       LD    (BC), B
       LD    (BC), C
       LD    (BC), D
@@ -844,61 +844,61 @@
       CALL  PL, (HL)
       CALL  NZ, (HL)
       CALL  NC, (HL)
-      LD    (1F1EH), B
-      LD    (1E1EH), C
-      LD    (1E1EH), D
-      LD    (1E1EH), E
-      LD    (1E1EH), H
-      LD    (1E1EH), L
-      LD    (1E1EH), A
-      LD    (1E1EH), 38H
-      LDW   (1E1EH), 4140H
-      LD    (1E1EH), BC
-      LD    (1E1EH), DE
-      LD    (1E1EH), HL
-      LD    (1E1EH), IX
-      LD    (1E1EH), IY
-      LD    (1E1EH), SP
-      ADD   (1E1EH), 69H
-      ADC   (1E1EH), 6AH
-      SUB   (1E1EH), 6BH
-      SBC   (1E1EH), 6CH
-      AND   (1E1EH), 6DH
-      XOR   (1E1EH), 6EH
-      OR    (1E1EH), 6FH
-      CP    (1E1EH), 70H
-      JP    F, (1E1EH)
-      JP    LT, (1E1EH)
-      JP    LE, (1E1EH)
-      JP    ULE, (1E1EH)
-      JP    OV, (1E1EH)
-      JP    MI, (1E1EH)
-      JP    Z, (1E1EH)
-      JP    C, (1E1EH)
-      JP    (1E1EH)
-      JP    GE, (1E1EH)
-      JP    GT, (1E1EH)
-      JP    UGT, (1E1EH)
-      JP    NOV, (1E1EH)
-      JP    PL, (1E1EH)
-      JP    NZ, (1E1EH)
-      JP    NC, (1E1EH)
-      CALL  F, (1E1EH)
-      CALL  LT, (1E1EH)
-      CALL  LE, (1E1EH)
-      CALL  ULE, (1E1EH)
-      CALL  OV, (1E1EH)
-      CALL  MI, (1E1EH)
-      CALL  Z, (1E1EH)
-      CALL  C, (1E1EH)
-      CALL  (1E1EH)
-      CALL  GE, (1E1EH)
-      CALL  GT, (1E1EH)
-      CALL  UGT, (1E1EH)
-      CALL  NOV, (1E1EH)
-      CALL  PL, (1E1EH)
-      CALL  NZ, (1E1EH)
-      CALL  NC, (1E1EH)
+      LD    (0EDECH), B
+      LD    (0EDECH), C
+      LD    (0EDECH), D
+      LD    (0EDECH), E
+      LD    (0EDECH), H
+      LD    (0EDECH), L
+      LD    (0EDECH), A
+      LD    (0EDECH), 38H
+      LDW   (0EDECH), 4140H
+      LD    (0EDECH), BC
+      LD    (0EDECH), DE
+      LD    (0EDECH), HL
+      LD    (0EDECH), IX
+      LD    (0EDECH), IY
+      LD    (0EDECH), SP
+      ADD   (0EDECH), 69H
+      ADC   (0EDECH), 6AH
+      SUB   (0EDECH), 6BH
+      SBC   (0EDECH), 6CH
+      AND   (0EDECH), 6DH
+      XOR   (0EDECH), 6EH
+      OR    (0EDECH), 6FH
+      CP    (0EDECH), 70H
+      JP    F, (0EDECH)
+      JP    LT, (0EDECH)
+      JP    LE, (0EDECH)
+      JP    ULE, (0EDECH)
+      JP    OV, (0EDECH)
+      JP    MI, (0EDECH)
+      JP    Z, (0EDECH)
+      JP    C, (0EDECH)
+      JP    (0EDECH)
+      JP    GE, (0EDECH)
+      JP    GT, (0EDECH)
+      JP    UGT, (0EDECH)
+      JP    NOV, (0EDECH)
+      JP    PL, (0EDECH)
+      JP    NZ, (0EDECH)
+      JP    NC, (0EDECH)
+      CALL  F, (0EDECH)
+      CALL  LT, (0EDECH)
+      CALL  LE, (0EDECH)
+      CALL  ULE, (0EDECH)
+      CALL  OV, (0EDECH)
+      CALL  MI, (0EDECH)
+      CALL  Z, (0EDECH)
+      CALL  C, (0EDECH)
+      CALL  (0EDECH)
+      CALL  GE, (0EDECH)
+      CALL  GT, (0EDECH)
+      CALL  UGT, (0EDECH)
+      CALL  NOV, (0EDECH)
+      CALL  PL, (0EDECH)
+      CALL  NZ, (0EDECH)
+      CALL  NC, (0EDECH)
       LD    (IX), B
       LD    (IX), C
       LD    (IX), D
@@ -1064,377 +1064,377 @@
       CALL  PL, (SP)
       CALL  NZ, (SP)
       CALL  NC, (SP)
-      LD    (0FF1FH), B
-      LD    (0FF1FH), C
-      LD    (0FF1FH), D
-      LD    (0FF1FH), E
-      LD    (0FF1FH), H
-      LD    (0FF1FH), L
-      LD    (0FF1FH), A
-      LD    (0FF1FH), 38H
-      LDW   (0FF1FH), 4140H
-      LD    (0FF1FH), BC
-      LD    (0FF1FH), DE
-      LD    (0FF1FH), HL
-      LD    (0FF1FH), IX
-      LD    (0FF1FH), IY
-      LD    (0FF1FH), SP
-      ADD   (0FF1FH), 69H
-      ADC   (0FF1FH), 6AH
-      SUB   (0FF1FH), 6BH
-      SBC   (0FF1FH), 6CH
-      AND   (0FF1FH), 6DH
-      XOR   (0FF1FH), 6EH
-      OR    (0FF1FH), 6FH
-      CP    (0FF1FH), 70H
-      RLD   (IX+15)
-      RRD   (IX+15)
-      MUL   HL, (IX+15)
-      DIV   HL, (IX+15)
-      ADD   IX, (IX+15)
-      ADD   IY, (IX+15)
-      ADD   SP, (IX+15)
-      TSET  0, (IX+15)
-      LD    B, (IX+15)
-      LD    C, (IX+15)
-      LD    D, (IX+15)
-      LD    E, (IX+15)
-      LD    H, (IX+15)
-      LD    L, (IX+15)
-      LD    A, (IX+15)
-      LD    BC, (IX+15)
-      LD    DE, (IX+15)
-      LD    HL, (IX+15)
-      LD    IX, (IX+15)
-      LD    IY, (IX+15)
-      LD    SP, (IX+15)
-      EX    (IX+15), BC
-      EX    (IX+15), DE
-      EX    (IX+15), HL
-      EX    (IX+15), IX
-      EX    (IX+15), IY
-      EX    (IX+15), SP
-      ADD   A, (IX+15)
-      ADC   A, (IX+15)
-      SUB   A, (IX+15)
-      SBC   A, (IX+15)
-      AND   A, (IX+15)
-      XOR   A, (IX+15)
-      OR    A, (IX+15)
-      CP    A, (IX+15)
-      ADD   HL, (IX+15)
-      ADC   HL, (IX+15)
-      SUB   HL, (IX+15)
-      SBC   HL, (IX+15)
-      AND   HL, (IX+15)
-      XOR   HL, (IX+15)
-      OR    HL, (IX+15)
-      CP    HL, (IX+15)
-      INC   (IX+15)
-      DEC   (IX+15)
-      INCW  (IX+15)
-      DECW  (IX+15)
-      RLC   (IX+15)
-      RRC   (IX+15)
-      RL    (IX+15)
-      RR    (IX+15)
-      SLA   (IX+15)
-      SRA   (IX+15)
-      SLL   (IX+15)
-      SRL   (IX+15)
-      BIT   0, (IX+15)
-      RES   0, (IX+15)
-      SET   0, (IX+15)
-      INC   (IX-7AH)
-      DEC   (IX-7AH)
-      INCW  (IX-7AH)
-      DECW  (IX-7AH)
-      RLC   (IX-7AH)
-      RRC   (IX-7AH)
-      RL    (IX-7AH)
-      RR    (IX-7AH)
-      SLA   (IX-7AH)
-      SRA   (IX-7AH)
-      SLL   (IX-7AH)
-      SRL   (IX-7AH)
-      BIT   0, (IX-7AH)
-      RES   0, (IX-7AH)
-      SET   0, (IX-7AH)
-      RLD   (IX-7AH)
-      RRD   (IX-7AH)
-      MUL   HL, (IX-7AH)
-      DIV   HL, (IX-7AH)
-      ADD   IX, (IX-7AH)
-      ADD   IY, (IX-7AH)
-      ADD   SP, (IX-7AH)
-      TSET  0, (IX-7AH)
-      LD    B, (IX-7AH)
-      LD    C, (IX-7AH)
-      LD    D, (IX-7AH)
-      LD    E, (IX-7AH)
-      LD    H, (IX-7AH)
-      LD    L, (IX-7AH)
-      LD    A, (IX-7AH)
-      LD    BC, (IX-7AH)
-      LD    DE, (IX-7AH)
-      LD    HL, (IX-7AH)
-      LD    IX, (IX-7AH)
-      LD    IY, (IX-7AH)
-      LD    SP, (IX-7AH)
-      EX    (IX-7AH), BC
-      EX    (IX-7AH), DE
-      EX    (IX-7AH), HL
-      EX    (IX-7AH), IX
-      EX    (IX-7AH), IY
-      EX    (IX-7AH), SP
-      ADD   A, (IX-7AH)
-      ADC   A, (IX-7AH)
-      SUB   A, (IX-7AH)
-      SBC   A, (IX-7AH)
-      AND   A, (IX-7AH)
-      XOR   A, (IX-7AH)
-      OR    A, (IX-7AH)
-      CP    A, (IX-7AH)
-      ADD   HL, (IX-7AH)
-      ADC   HL, (IX-7AH)
-      SUB   HL, (IX-7AH)
-      SBC   HL, (IX-7AH)
-      AND   HL, (IX-7AH)
-      XOR   HL, (IX-7AH)
-      OR    HL, (IX-7AH)
-      CP    HL, (IX-7AH)
-      RLD   (IY+15)
-      RRD   (IY+15)
-      MUL   HL, (IY+15)
-      DIV   HL, (IY+15)
-      ADD   IX, (IY+15)
-      ADD   IY, (IY+15)
-      ADD   SP, (IY+15)
-      TSET  0, (IY+15)
-      LD    B, (IY+15)
-      LD    C, (IY+15)
-      LD    D, (IY+15)
-      LD    E, (IY+15)
-      LD    H, (IY+15)
-      LD    L, (IY+15)
-      LD    A, (IY+15)
-      LD    BC, (IY+15)
-      LD    DE, (IY+15)
-      LD    HL, (IY+15)
-      LD    IX, (IY+15)
-      LD    IY, (IY+15)
-      LD    SP, (IY+15)
-      EX    (IY+15), BC
-      EX    (IY+15), DE
-      EX    (IY+15), HL
-      EX    (IY+15), IX
-      EX    (IY+15), IY
-      EX    (IY+15), SP
-      ADD   A, (IY+15)
-      ADC   A, (IY+15)
-      SUB   A, (IY+15)
-      SBC   A, (IY+15)
-      AND   A, (IY+15)
-      XOR   A, (IY+15)
-      OR    A, (IY+15)
-      CP    A, (IY+15)
-      ADD   HL, (IY+15)
-      ADC   HL, (IY+15)
-      SUB   HL, (IY+15)
-      SBC   HL, (IY+15)
-      AND   HL, (IY+15)
-      XOR   HL, (IY+15)
-      OR    HL, (IY+15)
-      CP    HL, (IY+15)
-      INC   (IY+15)
-      DEC   (IY+15)
-      INCW  (IY+15)
-      DECW  (IY+15)
-      RLC   (IY+15)
-      RRC   (IY+15)
-      RL    (IY+15)
-      RR    (IY+15)
-      SLA   (IY+15)
-      SRA   (IY+15)
-      SLL   (IY+15)
-      SRL   (IY+15)
-      BIT   0, (IY+15)
-      RES   0, (IY+15)
-      SET   0, (IY+15)
-      INC   (IY-7AH)
-      DEC   (IY-7AH)
-      INCW  (IY-7AH)
-      DECW  (IY-7AH)
-      RLC   (IY-7AH)
-      RRC   (IY-7AH)
-      RL    (IY-7AH)
-      RR    (IY-7AH)
-      SLA   (IY-7AH)
-      SRA   (IY-7AH)
-      SLL   (IY-7AH)
-      SRL   (IY-7AH)
-      BIT   0, (IY-7AH)
-      RES   0, (IY-7AH)
-      SET   0, (IY-7AH)
-      RLD   (IY-7AH)
-      RRD   (IY-7AH)
-      MUL   HL, (IY-7AH)
-      DIV   HL, (IY-7AH)
-      ADD   IX, (IY-7AH)
-      ADD   IY, (IY-7AH)
-      ADD   SP, (IY-7AH)
-      TSET  0, (IY-7AH)
-      LD    B, (IY-7AH)
-      LD    C, (IY-7AH)
-      LD    D, (IY-7AH)
-      LD    E, (IY-7AH)
-      LD    H, (IY-7AH)
-      LD    L, (IY-7AH)
-      LD    A, (IY-7AH)
-      LD    BC, (IY-7AH)
-      LD    DE, (IY-7AH)
-      LD    HL, (IY-7AH)
-      LD    IX, (IY-7AH)
-      LD    IY, (IY-7AH)
-      LD    SP, (IY-7AH)
-      EX    (IY-7AH), BC
-      EX    (IY-7AH), DE
-      EX    (IY-7AH), HL
-      EX    (IY-7AH), IX
-      EX    (IY-7AH), IY
-      EX    (IY-7AH), SP
-      ADD   A, (IY-7AH)
-      ADC   A, (IY-7AH)
-      SUB   A, (IY-7AH)
-      SBC   A, (IY-7AH)
-      AND   A, (IY-7AH)
-      XOR   A, (IY-7AH)
-      OR    A, (IY-7AH)
-      CP    A, (IY-7AH)
-      ADD   HL, (IY-7AH)
-      ADC   HL, (IY-7AH)
-      SUB   HL, (IY-7AH)
-      SBC   HL, (IY-7AH)
-      AND   HL, (IY-7AH)
-      XOR   HL, (IY-7AH)
-      OR    HL, (IY-7AH)
-      CP    HL, (IY-7AH)
-      RLD   (SP+15)
-      RRD   (SP+15)
-      MUL   HL, (SP+15)
-      DIV   HL, (SP+15)
-      ADD   IX, (SP+15)
-      ADD   IY, (SP+15)
-      ADD   SP, (SP+15)
-      TSET  0, (SP+15)
-      LD    B, (SP+15)
-      LD    C, (SP+15)
-      LD    D, (SP+15)
-      LD    E, (SP+15)
-      LD    H, (SP+15)
-      LD    L, (SP+15)
-      LD    A, (SP+15)
-      LD    BC, (SP+15)
-      LD    DE, (SP+15)
-      LD    HL, (SP+15)
-      LD    IX, (SP+15)
-      LD    IY, (SP+15)
-      LD    SP, (SP+15)
-      EX    (SP+15), BC
-      EX    (SP+15), DE
-      EX    (SP+15), HL
-      EX    (SP+15), IX
-      EX    (SP+15), IY
-      EX    (SP+15), SP
-      ADD   A, (SP+15)
-      ADC   A, (SP+15)
-      SUB   A, (SP+15)
-      SBC   A, (SP+15)
-      AND   A, (SP+15)
-      XOR   A, (SP+15)
-      OR    A, (SP+15)
-      CP    A, (SP+15)
-      ADD   HL, (SP+15)
-      ADC   HL, (SP+15)
-      SUB   HL, (SP+15)
-      SBC   HL, (SP+15)
-      AND   HL, (SP+15)
-      XOR   HL, (SP+15)
-      OR    HL, (SP+15)
-      CP    HL, (SP+15)
-      INC   (SP+15)
-      DEC   (SP+15)
-      INCW  (SP+15)
-      DECW  (SP+15)
-      RLC   (SP+15)
-      RRC   (SP+15)
-      RL    (SP+15)
-      RR    (SP+15)
-      SLA   (SP+15)
-      SRA   (SP+15)
-      SLL   (SP+15)
-      SRL   (SP+15)
-      BIT   0, (SP+15)
-      RES   0, (SP+15)
-      SET   0, (SP+15)
-      INC   (SP-7AH)
-      DEC   (SP-7AH)
-      INCW  (SP-7AH)
-      DECW  (SP-7AH)
-      RLC   (SP-7AH)
-      RRC   (SP-7AH)
-      RL    (SP-7AH)
-      RR    (SP-7AH)
-      SLA   (SP-7AH)
-      SRA   (SP-7AH)
-      SLL   (SP-7AH)
-      SRL   (SP-7AH)
-      BIT   0, (SP-7AH)
-      RES   0, (SP-7AH)
-      SET   0, (SP-7AH)
-      RLD   (SP-7AH)
-      RRD   (SP-7AH)
-      MUL   HL, (SP-7AH)
-      DIV   HL, (SP-7AH)
-      ADD   IX, (SP-7AH)
-      ADD   IY, (SP-7AH)
-      ADD   SP, (SP-7AH)
-      TSET  0, (SP-7AH)
-      LD    B, (SP-7AH)
-      LD    C, (SP-7AH)
-      LD    D, (SP-7AH)
-      LD    E, (SP-7AH)
-      LD    H, (SP-7AH)
-      LD    L, (SP-7AH)
-      LD    A, (SP-7AH)
-      LD    BC, (SP-7AH)
-      LD    DE, (SP-7AH)
-      LD    HL, (SP-7AH)
-      LD    IX, (SP-7AH)
-      LD    IY, (SP-7AH)
-      LD    SP, (SP-7AH)
-      EX    (SP-7AH), BC
-      EX    (SP-7AH), DE
-      EX    (SP-7AH), HL
-      EX    (SP-7AH), IX
-      EX    (SP-7AH), IY
-      EX    (SP-7AH), SP
-      ADD   A, (SP-7AH)
-      ADC   A, (SP-7AH)
-      SUB   A, (SP-7AH)
-      SBC   A, (SP-7AH)
-      AND   A, (SP-7AH)
-      XOR   A, (SP-7AH)
-      OR    A, (SP-7AH)
-      CP    A, (SP-7AH)
-      ADD   HL, (SP-7AH)
-      ADC   HL, (SP-7AH)
-      SUB   HL, (SP-7AH)
-      SBC   HL, (SP-7AH)
-      AND   HL, (SP-7AH)
-      XOR   HL, (SP-7AH)
-      OR    HL, (SP-7AH)
-      CP    HL, (SP-7AH)
+      LD    (0FFF0H), B
+      LD    (0FFF0H), C
+      LD    (0FFF0H), D
+      LD    (0FFF0H), E
+      LD    (0FFF0H), H
+      LD    (0FFF0H), L
+      LD    (0FFF0H), A
+      LD    (0FFF0H), 38H
+      LDW   (0FFF0H), 4140H
+      LD    (0FFF0H), BC
+      LD    (0FFF0H), DE
+      LD    (0FFF0H), HL
+      LD    (0FFF0H), IX
+      LD    (0FFF0H), IY
+      LD    (0FFF0H), SP
+      ADD   (0FFF0H), 69H
+      ADC   (0FFF0H), 6AH
+      SUB   (0FFF0H), 6BH
+      SBC   (0FFF0H), 6CH
+      AND   (0FFF0H), 6DH
+      XOR   (0FFF0H), 6EH
+      OR    (0FFF0H), 6FH
+      CP    (0FFF0H), 70H
+      RLD   (IX-15)
+      RRD   (IX-15)
+      MUL   HL, (IX-15)
+      DIV   HL, (IX-15)
+      ADD   IX, (IX-15)
+      ADD   IY, (IX-15)
+      ADD   SP, (IX-15)
+      TSET  0, (IX-15)
+      LD    B, (IX-15)
+      LD    C, (IX-15)
+      LD    D, (IX-15)
+      LD    E, (IX-15)
+      LD    H, (IX-15)
+      LD    L, (IX-15)
+      LD    A, (IX-15)
+      LD    BC, (IX-15)
+      LD    DE, (IX-15)
+      LD    HL, (IX-15)
+      LD    IX, (IX-15)
+      LD    IY, (IX-15)
+      LD    SP, (IX-15)
+      EX    (IX-15), BC
+      EX    (IX-15), DE
+      EX    (IX-15), HL
+      EX    (IX-15), IX
+      EX    (IX-15), IY
+      EX    (IX-15), SP
+      ADD   A, (IX-15)
+      ADC   A, (IX-15)
+      SUB   A, (IX-15)
+      SBC   A, (IX-15)
+      AND   A, (IX-15)
+      XOR   A, (IX-15)
+      OR    A, (IX-15)
+      CP    A, (IX-15)
+      ADD   HL, (IX-15)
+      ADC   HL, (IX-15)
+      SUB   HL, (IX-15)
+      SBC   HL, (IX-15)
+      AND   HL, (IX-15)
+      XOR   HL, (IX-15)
+      OR    HL, (IX-15)
+      CP    HL, (IX-15)
+      INC   (IX-15)
+      DEC   (IX-15)
+      INCW  (IX-15)
+      DECW  (IX-15)
+      RLC   (IX-15)
+      RRC   (IX-15)
+      RL    (IX-15)
+      RR    (IX-15)
+      SLA   (IX-15)
+      SRA   (IX-15)
+      SLL   (IX-15)
+      SRL   (IX-15)
+      BIT   0, (IX-15)
+      RES   0, (IX-15)
+      SET   0, (IX-15)
+      RLD   (IX+0)
+      RRD   (IX+0)
+      MUL   HL, (IX+0)
+      DIV   HL, (IX+0)
+      ADD   IX, (IX+0)
+      ADD   IY, (IX+0)
+      ADD   SP, (IX+0)
+      TSET  0, (IX+0)
+      LD    B, (IX+0)
+      LD    C, (IX+0)
+      LD    D, (IX+0)
+      LD    E, (IX+0)
+      LD    H, (IX+0)
+      LD    L, (IX+0)
+      LD    A, (IX+0)
+      LD    BC, (IX+0)
+      LD    DE, (IX+0)
+      LD    HL, (IX+0)
+      LD    IX, (IX+0)
+      LD    IY, (IX+0)
+      LD    SP, (IX+0)
+      EX    (IX+0), BC
+      EX    (IX+0), DE
+      EX    (IX+0), HL
+      EX    (IX+0), IX
+      EX    (IX+0), IY
+      EX    (IX+0), SP
+      ADD   A, (IX+0)
+      ADC   A, (IX+0)
+      SUB   A, (IX+0)
+      SBC   A, (IX+0)
+      AND   A, (IX+0)
+      XOR   A, (IX+0)
+      OR    A, (IX+0)
+      CP    A, (IX+0)
+      ADD   HL, (IX+0)
+      ADC   HL, (IX+0)
+      SUB   HL, (IX+0)
+      SBC   HL, (IX+0)
+      AND   HL, (IX+0)
+      XOR   HL, (IX+0)
+      OR    HL, (IX+0)
+      CP    HL, (IX+0)
+      INC   (IX+0)
+      DEC   (IX+0)
+      INCW  (IX+0)
+      DECW  (IX+0)
+      RLC   (IX+0)
+      RRC   (IX+0)
+      RL    (IX+0)
+      RR    (IX+0)
+      SLA   (IX+0)
+      SRA   (IX+0)
+      SLL   (IX+0)
+      SRL   (IX+0)
+      BIT   0, (IX+0)
+      RES   0, (IX+0)
+      SET   0, (IX+0)
+      RLD   (IY-14)
+      RRD   (IY-14)
+      MUL   HL, (IY-14)
+      DIV   HL, (IY-14)
+      ADD   IX, (IY-14)
+      ADD   IY, (IY-14)
+      ADD   SP, (IY-14)
+      TSET  0, (IY-14)
+      LD    B, (IY-14)
+      LD    C, (IY-14)
+      LD    D, (IY-14)
+      LD    E, (IY-14)
+      LD    H, (IY-14)
+      LD    L, (IY-14)
+      LD    A, (IY-14)
+      LD    BC, (IY-14)
+      LD    DE, (IY-14)
+      LD    HL, (IY-14)
+      LD    IX, (IY-14)
+      LD    IY, (IY-14)
+      LD    SP, (IY-14)
+      EX    (IY-14), BC
+      EX    (IY-14), DE
+      EX    (IY-14), HL
+      EX    (IY-14), IX
+      EX    (IY-14), IY
+      EX    (IY-14), SP
+      ADD   A, (IY-14)
+      ADC   A, (IY-14)
+      SUB   A, (IY-14)
+      SBC   A, (IY-14)
+      AND   A, (IY-14)
+      XOR   A, (IY-14)
+      OR    A, (IY-14)
+      CP    A, (IY-14)
+      ADD   HL, (IY-14)
+      ADC   HL, (IY-14)
+      SUB   HL, (IY-14)
+      SBC   HL, (IY-14)
+      AND   HL, (IY-14)
+      XOR   HL, (IY-14)
+      OR    HL, (IY-14)
+      CP    HL, (IY-14)
+      INC   (IY-14)
+      DEC   (IY-14)
+      INCW  (IY-14)
+      DECW  (IY-14)
+      RLC   (IY-14)
+      RRC   (IY-14)
+      RL    (IY-14)
+      RR    (IY-14)
+      SLA   (IY-14)
+      SRA   (IY-14)
+      SLL   (IY-14)
+      SRL   (IY-14)
+      BIT   0, (IY-14)
+      RES   0, (IY-14)
+      SET   0, (IY-14)
+      RLD   (IY+0)
+      RRD   (IY+0)
+      MUL   HL, (IY+0)
+      DIV   HL, (IY+0)
+      ADD   IX, (IY+0)
+      ADD   IY, (IY+0)
+      ADD   SP, (IY+0)
+      TSET  0, (IY+0)
+      LD    B, (IY+0)
+      LD    C, (IY+0)
+      LD    D, (IY+0)
+      LD    E, (IY+0)
+      LD    H, (IY+0)
+      LD    L, (IY+0)
+      LD    A, (IY+0)
+      LD    BC, (IY+0)
+      LD    DE, (IY+0)
+      LD    HL, (IY+0)
+      LD    IX, (IY+0)
+      LD    IY, (IY+0)
+      LD    SP, (IY+0)
+      EX    (IY+0), BC
+      EX    (IY+0), DE
+      EX    (IY+0), HL
+      EX    (IY+0), IX
+      EX    (IY+0), IY
+      EX    (IY+0), SP
+      ADD   A, (IY+0)
+      ADC   A, (IY+0)
+      SUB   A, (IY+0)
+      SBC   A, (IY+0)
+      AND   A, (IY+0)
+      XOR   A, (IY+0)
+      OR    A, (IY+0)
+      CP    A, (IY+0)
+      ADD   HL, (IY+0)
+      ADC   HL, (IY+0)
+      SUB   HL, (IY+0)
+      SBC   HL, (IY+0)
+      AND   HL, (IY+0)
+      XOR   HL, (IY+0)
+      OR    HL, (IY+0)
+      CP    HL, (IY+0)
+      INC   (IY+0)
+      DEC   (IY+0)
+      INCW  (IY+0)
+      DECW  (IY+0)
+      RLC   (IY+0)
+      RRC   (IY+0)
+      RL    (IY+0)
+      RR    (IY+0)
+      SLA   (IY+0)
+      SRA   (IY+0)
+      SLL   (IY+0)
+      SRL   (IY+0)
+      BIT   0, (IY+0)
+      RES   0, (IY+0)
+      SET   0, (IY+0)
+      RLD   (SP-13)
+      RRD   (SP-13)
+      MUL   HL, (SP-13)
+      DIV   HL, (SP-13)
+      ADD   IX, (SP-13)
+      ADD   IY, (SP-13)
+      ADD   SP, (SP-13)
+      TSET  0, (SP-13)
+      LD    B, (SP-13)
+      LD    C, (SP-13)
+      LD    D, (SP-13)
+      LD    E, (SP-13)
+      LD    H, (SP-13)
+      LD    L, (SP-13)
+      LD    A, (SP-13)
+      LD    BC, (SP-13)
+      LD    DE, (SP-13)
+      LD    HL, (SP-13)
+      LD    IX, (SP-13)
+      LD    IY, (SP-13)
+      LD    SP, (SP-13)
+      EX    (SP-13), BC
+      EX    (SP-13), DE
+      EX    (SP-13), HL
+      EX    (SP-13), IX
+      EX    (SP-13), IY
+      EX    (SP-13), SP
+      ADD   A, (SP-13)
+      ADC   A, (SP-13)
+      SUB   A, (SP-13)
+      SBC   A, (SP-13)
+      AND   A, (SP-13)
+      XOR   A, (SP-13)
+      OR    A, (SP-13)
+      CP    A, (SP-13)
+      ADD   HL, (SP-13)
+      ADC   HL, (SP-13)
+      SUB   HL, (SP-13)
+      SBC   HL, (SP-13)
+      AND   HL, (SP-13)
+      XOR   HL, (SP-13)
+      OR    HL, (SP-13)
+      CP    HL, (SP-13)
+      INC   (SP-13)
+      DEC   (SP-13)
+      INCW  (SP-13)
+      DECW  (SP-13)
+      RLC   (SP-13)
+      RRC   (SP-13)
+      RL    (SP-13)
+      RR    (SP-13)
+      SLA   (SP-13)
+      SRA   (SP-13)
+      SLL   (SP-13)
+      SRL   (SP-13)
+      BIT   0, (SP-13)
+      RES   0, (SP-13)
+      SET   0, (SP-13)
+      RLD   (SP+0)
+      RRD   (SP+0)
+      MUL   HL, (SP+0)
+      DIV   HL, (SP+0)
+      ADD   IX, (SP+0)
+      ADD   IY, (SP+0)
+      ADD   SP, (SP+0)
+      TSET  0, (SP+0)
+      LD    B, (SP+0)
+      LD    C, (SP+0)
+      LD    D, (SP+0)
+      LD    E, (SP+0)
+      LD    H, (SP+0)
+      LD    L, (SP+0)
+      LD    A, (SP+0)
+      LD    BC, (SP+0)
+      LD    DE, (SP+0)
+      LD    HL, (SP+0)
+      LD    IX, (SP+0)
+      LD    IY, (SP+0)
+      LD    SP, (SP+0)
+      EX    (SP+0), BC
+      EX    (SP+0), DE
+      EX    (SP+0), HL
+      EX    (SP+0), IX
+      EX    (SP+0), IY
+      EX    (SP+0), SP
+      ADD   A, (SP+0)
+      ADC   A, (SP+0)
+      SUB   A, (SP+0)
+      SBC   A, (SP+0)
+      AND   A, (SP+0)
+      XOR   A, (SP+0)
+      OR    A, (SP+0)
+      CP    A, (SP+0)
+      ADD   HL, (SP+0)
+      ADC   HL, (SP+0)
+      SUB   HL, (SP+0)
+      SBC   HL, (SP+0)
+      AND   HL, (SP+0)
+      XOR   HL, (SP+0)
+      OR    HL, (SP+0)
+      CP    HL, (SP+0)
+      INC   (SP+0)
+      DEC   (SP+0)
+      INCW  (SP+0)
+      DECW  (SP+0)
+      RLC   (SP+0)
+      RRC   (SP+0)
+      RL    (SP+0)
+      RR    (SP+0)
+      SLA   (SP+0)
+      SRA   (SP+0)
+      SLL   (SP+0)
+      SRL   (SP+0)
+      BIT   0, (SP+0)
+      RES   0, (SP+0)
+      SET   0, (SP+0)
       RLD   (HL+A)
       RRD   (HL+A)
       MUL   HL, (HL+A)
@@ -1493,372 +1493,372 @@
       BIT   0, (HL+A)
       RES   0, (HL+A)
       SET   0, (HL+A)
-      LD    (IX+31), B
-      LD    (IX+31), C
-      LD    (IX+31), D
-      LD    (IX+31), E
-      LD    (IX+31), H
-      LD    (IX+31), L
-      LD    (IX+31), A
-      LD    (IX+31), 38H
-      LDA   BC, (IX+31)
-      LDA   DE, (IX+31)
-      LDA   HL, (IX+31)
-      LDA   IX, (IX+31)
-      LDA   IY, (IX+31)
-      LDA   SP, (IX+31)
-      LDW   (IX+31), 4140H
-      LD    (IX+31), BC
-      LD    (IX+31), DE
-      LD    (IX+31), HL
-      LD    (IX+31), IX
-      LD    (IX+31), IY
-      LD    (IX+31), SP
-      ADD   (IX+31), 69H
-      ADC   (IX+31), 6AH
-      SUB   (IX+31), 6BH
-      SBC   (IX+31), 6CH
-      AND   (IX+31), 6DH
-      XOR   (IX+31), 6EH
-      OR    (IX+31), 6FH
-      CP    (IX+31), 70H
-      JP    F, (IX+31)
-      JP    LT, (IX+31)
-      JP    LE, (IX+31)
-      JP    ULE, (IX+31)
-      JP    OV, (IX+31)
-      JP    MI, (IX+31)
-      JP    Z, (IX+31)
-      JP    C, (IX+31)
-      JP    (IX+31)
-      JP    GE, (IX+31)
-      JP    GT, (IX+31)
-      JP    UGT, (IX+31)
-      JP    NOV, (IX+31)
-      JP    PL, (IX+31)
-      JP    NZ, (IX+31)
-      JP    NC, (IX+31)
-      CALL  F, (IX+31)
-      CALL  LT, (IX+31)
-      CALL  LE, (IX+31)
-      CALL  ULE, (IX+31)
-      CALL  OV, (IX+31)
-      CALL  MI, (IX+31)
-      CALL  Z, (IX+31)
-      CALL  C, (IX+31)
-      CALL  (IX+31)
-      CALL  GE, (IX+31)
-      CALL  GT, (IX+31)
-      CALL  UGT, (IX+31)
-      CALL  NOV, (IX+31)
-      CALL  PL, (IX+31)
-      CALL  NZ, (IX+31)
-      CALL  NC, (IX+31)
-      JP    F, (IX-41H)
-      JP    LT, (IX-41H)
-      JP    LE, (IX-41H)
-      JP    ULE, (IX-41H)
-      JP    OV, (IX-41H)
-      JP    MI, (IX-41H)
-      JP    Z, (IX-41H)
-      JP    C, (IX-41H)
-      JP    (IX-41H)
-      JP    GE, (IX-41H)
-      JP    GT, (IX-41H)
-      JP    UGT, (IX-41H)
-      JP    NOV, (IX-41H)
-      JP    PL, (IX-41H)
-      JP    NZ, (IX-41H)
-      JP    NC, (IX-41H)
-      CALL  F, (IX-41H)
-      CALL  LT, (IX-41H)
-      CALL  LE, (IX-41H)
-      CALL  ULE, (IX-41H)
-      CALL  OV, (IX-41H)
-      CALL  MI, (IX-41H)
-      CALL  Z, (IX-41H)
-      CALL  C, (IX-41H)
-      CALL  (IX-41H)
-      CALL  GE, (IX-41H)
-      CALL  GT, (IX-41H)
-      CALL  UGT, (IX-41H)
-      CALL  NOV, (IX-41H)
-      CALL  PL, (IX-41H)
-      CALL  NZ, (IX-41H)
-      CALL  NC, (IX-41H)
-      LD    (IX-41H), B
-      LD    (IX-41H), C
-      LD    (IX-41H), D
-      LD    (IX-41H), E
-      LD    (IX-41H), H
-      LD    (IX-41H), L
-      LD    (IX-41H), A
-      LD    (IX-41H), 38H
-      LDA   BC, (IX-41H)
-      LDA   DE, (IX-41H)
-      LDA   HL, (IX-41H)
-      LDA   IX, (IX-41H)
-      LDA   IY, (IX-41H)
-      LDA   SP, (IX-41H)
-      LDW   (IX-41H), 4140H
-      LD    (IX-41H), BC
-      LD    (IX-41H), DE
-      LD    (IX-41H), HL
-      LD    (IX-41H), IX
-      LD    (IX-41H), IY
-      LD    (IX-41H), SP
-      ADD   (IX-41H), 69H
-      ADC   (IX-41H), 6AH
-      SUB   (IX-41H), 6BH
-      SBC   (IX-41H), 6CH
-      AND   (IX-41H), 6DH
-      XOR   (IX-41H), 6EH
-      OR    (IX-41H), 6FH
-      CP    (IX-41H), 70H
-      LD    (IY+31), B
-      LD    (IY+31), C
-      LD    (IY+31), D
-      LD    (IY+31), E
-      LD    (IY+31), H
-      LD    (IY+31), L
-      LD    (IY+31), A
-      LD    (IY+31), 38H
-      LDA   BC, (IY+31)
-      LDA   DE, (IY+31)
-      LDA   HL, (IY+31)
-      LDA   IX, (IY+31)
-      LDA   IY, (IY+31)
-      LDA   SP, (IY+31)
-      LDW   (IY+31), 4140H
-      LD    (IY+31), BC
-      LD    (IY+31), DE
-      LD    (IY+31), HL
-      LD    (IY+31), IX
-      LD    (IY+31), IY
-      LD    (IY+31), SP
-      ADD   (IY+31), 69H
-      ADC   (IY+31), 6AH
-      SUB   (IY+31), 6BH
-      SBC   (IY+31), 6CH
-      AND   (IY+31), 6DH
-      XOR   (IY+31), 6EH
-      OR    (IY+31), 6FH
-      CP    (IY+31), 70H
-      JP    F, (IY+31)
-      JP    LT, (IY+31)
-      JP    LE, (IY+31)
-      JP    ULE, (IY+31)
-      JP    OV, (IY+31)
-      JP    MI, (IY+31)
-      JP    Z, (IY+31)
-      JP    C, (IY+31)
-      JP    (IY+31)
-      JP    GE, (IY+31)
-      JP    GT, (IY+31)
-      JP    UGT, (IY+31)
-      JP    NOV, (IY+31)
-      JP    PL, (IY+31)
-      JP    NZ, (IY+31)
-      JP    NC, (IY+31)
-      CALL  F, (IY+31)
-      CALL  LT, (IY+31)
-      CALL  LE, (IY+31)
-      CALL  ULE, (IY+31)
-      CALL  OV, (IY+31)
-      CALL  MI, (IY+31)
-      CALL  Z, (IY+31)
-      CALL  C, (IY+31)
-      CALL  (IY+31)
-      CALL  GE, (IY+31)
-      CALL  GT, (IY+31)
-      CALL  UGT, (IY+31)
-      CALL  NOV, (IY+31)
-      CALL  PL, (IY+31)
-      CALL  NZ, (IY+31)
-      CALL  NC, (IY+31)
-      JP    F, (IY-41H)
-      JP    LT, (IY-41H)
-      JP    LE, (IY-41H)
-      JP    ULE, (IY-41H)
-      JP    OV, (IY-41H)
-      JP    MI, (IY-41H)
-      JP    Z, (IY-41H)
-      JP    C, (IY-41H)
-      JP    (IY-41H)
-      JP    GE, (IY-41H)
-      JP    GT, (IY-41H)
-      JP    UGT, (IY-41H)
-      JP    NOV, (IY-41H)
-      JP    PL, (IY-41H)
-      JP    NZ, (IY-41H)
-      JP    NC, (IY-41H)
-      CALL  F, (IY-41H)
-      CALL  LT, (IY-41H)
-      CALL  LE, (IY-41H)
-      CALL  ULE, (IY-41H)
-      CALL  OV, (IY-41H)
-      CALL  MI, (IY-41H)
-      CALL  Z, (IY-41H)
-      CALL  C, (IY-41H)
-      CALL  (IY-41H)
-      CALL  GE, (IY-41H)
-      CALL  GT, (IY-41H)
-      CALL  UGT, (IY-41H)
-      CALL  NOV, (IY-41H)
-      CALL  PL, (IY-41H)
-      CALL  NZ, (IY-41H)
-      CALL  NC, (IY-41H)
-      LD    (IY-41H), B
-      LD    (IY-41H), C
-      LD    (IY-41H), D
-      LD    (IY-41H), E
-      LD    (IY-41H), H
-      LD    (IY-41H), L
-      LD    (IY-41H), A
-      LD    (IY-41H), 38H
-      LDA   BC, (IY-41H)
-      LDA   DE, (IY-41H)
-      LDA   HL, (IY-41H)
-      LDA   IX, (IY-41H)
-      LDA   IY, (IY-41H)
-      LDA   SP, (IY-41H)
-      LDW   (IY-41H), 4140H
-      LD    (IY-41H), BC
-      LD    (IY-41H), DE
-      LD    (IY-41H), HL
-      LD    (IY-41H), IX
-      LD    (IY-41H), IY
-      LD    (IY-41H), SP
-      ADD   (IY-41H), 69H
-      ADC   (IY-41H), 6AH
-      SUB   (IY-41H), 6BH
-      SBC   (IY-41H), 6CH
-      AND   (IY-41H), 6DH
-      XOR   (IY-41H), 6EH
-      OR    (IY-41H), 6FH
-      CP    (IY-41H), 70H
-      LD    (SP+31), B
-      LD    (SP+31), C
-      LD    (SP+31), D
-      LD    (SP+31), E
-      LD    (SP+31), H
-      LD    (SP+31), L
-      LD    (SP+31), A
-      LD    (SP+31), 38H
-      LDA   BC, (SP+31)
-      LDA   DE, (SP+31)
-      LDA   HL, (SP+31)
-      LDA   IX, (SP+31)
-      LDA   IY, (SP+31)
-      LDA   SP, (SP+31)
-      LDW   (SP+31), 4140H
-      LD    (SP+31), BC
-      LD    (SP+31), DE
-      LD    (SP+31), HL
-      LD    (SP+31), IX
-      LD    (SP+31), IY
-      LD    (SP+31), SP
-      ADD   (SP+31), 69H
-      ADC   (SP+31), 6AH
-      SUB   (SP+31), 6BH
-      SBC   (SP+31), 6CH
-      AND   (SP+31), 6DH
-      XOR   (SP+31), 6EH
-      OR    (SP+31), 6FH
-      CP    (SP+31), 70H
-      JP    F, (SP+31)
-      JP    LT, (SP+31)
-      JP    LE, (SP+31)
-      JP    ULE, (SP+31)
-      JP    OV, (SP+31)
-      JP    MI, (SP+31)
-      JP    Z, (SP+31)
-      JP    C, (SP+31)
-      JP    (SP+31)
-      JP    GE, (SP+31)
-      JP    GT, (SP+31)
-      JP    UGT, (SP+31)
-      JP    NOV, (SP+31)
-      JP    PL, (SP+31)
-      JP    NZ, (SP+31)
-      JP    NC, (SP+31)
-      CALL  F, (SP+31)
-      CALL  LT, (SP+31)
-      CALL  LE, (SP+31)
-      CALL  ULE, (SP+31)
-      CALL  OV, (SP+31)
-      CALL  MI, (SP+31)
-      CALL  Z, (SP+31)
-      CALL  C, (SP+31)
-      CALL  (SP+31)
-      CALL  GE, (SP+31)
-      CALL  GT, (SP+31)
-      CALL  UGT, (SP+31)
-      CALL  NOV, (SP+31)
-      CALL  PL, (SP+31)
-      CALL  NZ, (SP+31)
-      CALL  NC, (SP+31)
-      JP    F, (SP-41H)
-      JP    LT, (SP-41H)
-      JP    LE, (SP-41H)
-      JP    ULE, (SP-41H)
-      JP    OV, (SP-41H)
-      JP    MI, (SP-41H)
-      JP    Z, (SP-41H)
-      JP    C, (SP-41H)
-      JP    (SP-41H)
-      JP    GE, (SP-41H)
-      JP    GT, (SP-41H)
-      JP    UGT, (SP-41H)
-      JP    NOV, (SP-41H)
-      JP    PL, (SP-41H)
-      JP    NZ, (SP-41H)
-      JP    NC, (SP-41H)
-      CALL  F, (SP-41H)
-      CALL  LT, (SP-41H)
-      CALL  LE, (SP-41H)
-      CALL  ULE, (SP-41H)
-      CALL  OV, (SP-41H)
-      CALL  MI, (SP-41H)
-      CALL  Z, (SP-41H)
-      CALL  C, (SP-41H)
-      CALL  (SP-41H)
-      CALL  GE, (SP-41H)
-      CALL  GT, (SP-41H)
-      CALL  UGT, (SP-41H)
-      CALL  NOV, (SP-41H)
-      CALL  PL, (SP-41H)
-      CALL  NZ, (SP-41H)
-      CALL  NC, (SP-41H)
-      LD    (SP-41H), B
-      LD    (SP-41H), C
-      LD    (SP-41H), D
-      LD    (SP-41H), E
-      LD    (SP-41H), H
-      LD    (SP-41H), L
-      LD    (SP-41H), A
-      LD    (SP-41H), 38H
-      LDA   BC, (SP-41H)
-      LDA   DE, (SP-41H)
-      LDA   HL, (SP-41H)
-      LDA   IX, (SP-41H)
-      LDA   IY, (SP-41H)
-      LDA   SP, (SP-41H)
-      LDW   (SP-41H), 4140H
-      LD    (SP-41H), BC
-      LD    (SP-41H), DE
-      LD    (SP-41H), HL
-      LD    (SP-41H), IX
-      LD    (SP-41H), IY
-      LD    (SP-41H), SP
-      ADD   (SP-41H), 69H
-      ADC   (SP-41H), 6AH
-      SUB   (SP-41H), 6BH
-      SBC   (SP-41H), 6CH
-      AND   (SP-41H), 6DH
-      XOR   (SP-41H), 6EH
-      OR    (SP-41H), 6FH
-      CP    (SP-41H), 70H
+      LD    (IX-11), B
+      LD    (IX-11), C
+      LD    (IX-11), D
+      LD    (IX-11), E
+      LD    (IX-11), H
+      LD    (IX-11), L
+      LD    (IX-11), A
+      LD    (IX-11), 38H
+      LDA   BC, (IX-11)
+      LDA   DE, (IX-11)
+      LDA   HL, (IX-11)
+      LDA   IX, (IX-11)
+      LDA   IY, (IX-11)
+      LDA   SP, (IX-11)
+      LDW   (IX-11), 4140H
+      LD    (IX-11), BC
+      LD    (IX-11), DE
+      LD    (IX-11), HL
+      LD    (IX-11), IX
+      LD    (IX-11), IY
+      LD    (IX-11), SP
+      ADD   (IX-11), 69H
+      ADC   (IX-11), 6AH
+      SUB   (IX-11), 6BH
+      SBC   (IX-11), 6CH
+      AND   (IX-11), 6DH
+      XOR   (IX-11), 6EH
+      OR    (IX-11), 6FH
+      CP    (IX-11), 70H
+      JP    F, (IX-11)
+      JP    LT, (IX-11)
+      JP    LE, (IX-11)
+      JP    ULE, (IX-11)
+      JP    OV, (IX-11)
+      JP    MI, (IX-11)
+      JP    Z, (IX-11)
+      JP    C, (IX-11)
+      JP    (IX-11)
+      JP    GE, (IX-11)
+      JP    GT, (IX-11)
+      JP    UGT, (IX-11)
+      JP    NOV, (IX-11)
+      JP    PL, (IX-11)
+      JP    NZ, (IX-11)
+      JP    NC, (IX-11)
+      CALL  F, (IX-11)
+      CALL  LT, (IX-11)
+      CALL  LE, (IX-11)
+      CALL  ULE, (IX-11)
+      CALL  OV, (IX-11)
+      CALL  MI, (IX-11)
+      CALL  Z, (IX-11)
+      CALL  C, (IX-11)
+      CALL  (IX-11)
+      CALL  GE, (IX-11)
+      CALL  GT, (IX-11)
+      CALL  UGT, (IX-11)
+      CALL  NOV, (IX-11)
+      CALL  PL, (IX-11)
+      CALL  NZ, (IX-11)
+      CALL  NC, (IX-11)
+      LD    (IX+0), B
+      LD    (IX+0), C
+      LD    (IX+0), D
+      LD    (IX+0), E
+      LD    (IX+0), H
+      LD    (IX+0), L
+      LD    (IX+0), A
+      LD    (IX+0), 38H
+      LDA   BC, (IX+0)
+      LDA   DE, (IX+0)
+      LDA   HL, (IX+0)
+      LDA   IX, (IX+0)
+      LDA   IY, (IX+0)
+      LDA   SP, (IX+0)
+      LDW   (IX+0), 4140H
+      LD    (IX+0), BC
+      LD    (IX+0), DE
+      LD    (IX+0), HL
+      LD    (IX+0), IX
+      LD    (IX+0), IY
+      LD    (IX+0), SP
+      ADD   (IX+0), 69H
+      ADC   (IX+0), 6AH
+      SUB   (IX+0), 6BH
+      SBC   (IX+0), 6CH
+      AND   (IX+0), 6DH
+      XOR   (IX+0), 6EH
+      OR    (IX+0), 6FH
+      CP    (IX+0), 70H
+      JP    F, (IX+0)
+      JP    LT, (IX+0)
+      JP    LE, (IX+0)
+      JP    ULE, (IX+0)
+      JP    OV, (IX+0)
+      JP    MI, (IX+0)
+      JP    Z, (IX+0)
+      JP    C, (IX+0)
+      JP    (IX+0)
+      JP    GE, (IX+0)
+      JP    GT, (IX+0)
+      JP    UGT, (IX+0)
+      JP    NOV, (IX+0)
+      JP    PL, (IX+0)
+      JP    NZ, (IX+0)
+      JP    NC, (IX+0)
+      CALL  F, (IX+0)
+      CALL  LT, (IX+0)
+      CALL  LE, (IX+0)
+      CALL  ULE, (IX+0)
+      CALL  OV, (IX+0)
+      CALL  MI, (IX+0)
+      CALL  Z, (IX+0)
+      CALL  C, (IX+0)
+      CALL  (IX+0)
+      CALL  GE, (IX+0)
+      CALL  GT, (IX+0)
+      CALL  UGT, (IX+0)
+      CALL  NOV, (IX+0)
+      CALL  PL, (IX+0)
+      CALL  NZ, (IX+0)
+      CALL  NC, (IX+0)
+      LD    (IY-10), B
+      LD    (IY-10), C
+      LD    (IY-10), D
+      LD    (IY-10), E
+      LD    (IY-10), H
+      LD    (IY-10), L
+      LD    (IY-10), A
+      LD    (IY-10), 38H
+      LDA   BC, (IY-10)
+      LDA   DE, (IY-10)
+      LDA   HL, (IY-10)
+      LDA   IX, (IY-10)
+      LDA   IY, (IY-10)
+      LDA   SP, (IY-10)
+      LDW   (IY-10), 4140H
+      LD    (IY-10), BC
+      LD    (IY-10), DE
+      LD    (IY-10), HL
+      LD    (IY-10), IX
+      LD    (IY-10), IY
+      LD    (IY-10), SP
+      ADD   (IY-10), 69H
+      ADC   (IY-10), 6AH
+      SUB   (IY-10), 6BH
+      SBC   (IY-10), 6CH
+      AND   (IY-10), 6DH
+      XOR   (IY-10), 6EH
+      OR    (IY-10), 6FH
+      CP    (IY-10), 70H
+      JP    F, (IY-10)
+      JP    LT, (IY-10)
+      JP    LE, (IY-10)
+      JP    ULE, (IY-10)
+      JP    OV, (IY-10)
+      JP    MI, (IY-10)
+      JP    Z, (IY-10)
+      JP    C, (IY-10)
+      JP    (IY-10)
+      JP    GE, (IY-10)
+      JP    GT, (IY-10)
+      JP    UGT, (IY-10)
+      JP    NOV, (IY-10)
+      JP    PL, (IY-10)
+      JP    NZ, (IY-10)
+      JP    NC, (IY-10)
+      CALL  F, (IY-10)
+      CALL  LT, (IY-10)
+      CALL  LE, (IY-10)
+      CALL  ULE, (IY-10)
+      CALL  OV, (IY-10)
+      CALL  MI, (IY-10)
+      CALL  Z, (IY-10)
+      CALL  C, (IY-10)
+      CALL  (IY-10)
+      CALL  GE, (IY-10)
+      CALL  GT, (IY-10)
+      CALL  UGT, (IY-10)
+      CALL  NOV, (IY-10)
+      CALL  PL, (IY-10)
+      CALL  NZ, (IY-10)
+      CALL  NC, (IY-10)
+      LD    (IY+0), B
+      LD    (IY+0), C
+      LD    (IY+0), D
+      LD    (IY+0), E
+      LD    (IY+0), H
+      LD    (IY+0), L
+      LD    (IY+0), A
+      LD    (IY+0), 38H
+      LDA   BC, (IY+0)
+      LDA   DE, (IY+0)
+      LDA   HL, (IY+0)
+      LDA   IX, (IY+0)
+      LDA   IY, (IY+0)
+      LDA   SP, (IY+0)
+      LDW   (IY+0), 4140H
+      LD    (IY+0), BC
+      LD    (IY+0), DE
+      LD    (IY+0), HL
+      LD    (IY+0), IX
+      LD    (IY+0), IY
+      LD    (IY+0), SP
+      ADD   (IY+0), 69H
+      ADC   (IY+0), 6AH
+      SUB   (IY+0), 6BH
+      SBC   (IY+0), 6CH
+      AND   (IY+0), 6DH
+      XOR   (IY+0), 6EH
+      OR    (IY+0), 6FH
+      CP    (IY+0), 70H
+      JP    F, (IY+0)
+      JP    LT, (IY+0)
+      JP    LE, (IY+0)
+      JP    ULE, (IY+0)
+      JP    OV, (IY+0)
+      JP    MI, (IY+0)
+      JP    Z, (IY+0)
+      JP    C, (IY+0)
+      JP    (IY+0)
+      JP    GE, (IY+0)
+      JP    GT, (IY+0)
+      JP    UGT, (IY+0)
+      JP    NOV, (IY+0)
+      JP    PL, (IY+0)
+      JP    NZ, (IY+0)
+      JP    NC, (IY+0)
+      CALL  F, (IY+0)
+      CALL  LT, (IY+0)
+      CALL  LE, (IY+0)
+      CALL  ULE, (IY+0)
+      CALL  OV, (IY+0)
+      CALL  MI, (IY+0)
+      CALL  Z, (IY+0)
+      CALL  C, (IY+0)
+      CALL  (IY+0)
+      CALL  GE, (IY+0)
+      CALL  GT, (IY+0)
+      CALL  UGT, (IY+0)
+      CALL  NOV, (IY+0)
+      CALL  PL, (IY+0)
+      CALL  NZ, (IY+0)
+      CALL  NC, (IY+0)
+      LD    (SP-9), B
+      LD    (SP-9), C
+      LD    (SP-9), D
+      LD    (SP-9), E
+      LD    (SP-9), H
+      LD    (SP-9), L
+      LD    (SP-9), A
+      LD    (SP-9), 38H
+      LDA   BC, (SP-9)
+      LDA   DE, (SP-9)
+      LDA   HL, (SP-9)
+      LDA   IX, (SP-9)
+      LDA   IY, (SP-9)
+      LDA   SP, (SP-9)
+      LDW   (SP-9), 4140H
+      LD    (SP-9), BC
+      LD    (SP-9), DE
+      LD    (SP-9), HL
+      LD    (SP-9), IX
+      LD    (SP-9), IY
+      LD    (SP-9), SP
+      ADD   (SP-9), 69H
+      ADC   (SP-9), 6AH
+      SUB   (SP-9), 6BH
+      SBC   (SP-9), 6CH
+      AND   (SP-9), 6DH
+      XOR   (SP-9), 6EH
+      OR    (SP-9), 6FH
+      CP    (SP-9), 70H
+      JP    F, (SP-9)
+      JP    LT, (SP-9)
+      JP    LE, (SP-9)
+      JP    ULE, (SP-9)
+      JP    OV, (SP-9)
+      JP    MI, (SP-9)
+      JP    Z, (SP-9)
+      JP    C, (SP-9)
+      JP    (SP-9)
+      JP    GE, (SP-9)
+      JP    GT, (SP-9)
+      JP    UGT, (SP-9)
+      JP    NOV, (SP-9)
+      JP    PL, (SP-9)
+      JP    NZ, (SP-9)
+      JP    NC, (SP-9)
+      CALL  F, (SP-9)
+      CALL  LT, (SP-9)
+      CALL  LE, (SP-9)
+      CALL  ULE, (SP-9)
+      CALL  OV, (SP-9)
+      CALL  MI, (SP-9)
+      CALL  Z, (SP-9)
+      CALL  C, (SP-9)
+      CALL  (SP-9)
+      CALL  GE, (SP-9)
+      CALL  GT, (SP-9)
+      CALL  UGT, (SP-9)
+      CALL  NOV, (SP-9)
+      CALL  PL, (SP-9)
+      CALL  NZ, (SP-9)
+      CALL  NC, (SP-9)
+      LD    (SP+0), B
+      LD    (SP+0), C
+      LD    (SP+0), D
+      LD    (SP+0), E
+      LD    (SP+0), H
+      LD    (SP+0), L
+      LD    (SP+0), A
+      LD    (SP+0), 38H
+      LDA   BC, (SP+0)
+      LDA   DE, (SP+0)
+      LDA   HL, (SP+0)
+      LDA   IX, (SP+0)
+      LDA   IY, (SP+0)
+      LDA   SP, (SP+0)
+      LDW   (SP+0), 4140H
+      LD    (SP+0), BC
+      LD    (SP+0), DE
+      LD    (SP+0), HL
+      LD    (SP+0), IX
+      LD    (SP+0), IY
+      LD    (SP+0), SP
+      ADD   (SP+0), 69H
+      ADC   (SP+0), 6AH
+      SUB   (SP+0), 6BH
+      SBC   (SP+0), 6CH
+      AND   (SP+0), 6DH
+      XOR   (SP+0), 6EH
+      OR    (SP+0), 6FH
+      CP    (SP+0), 70H
+      JP    F, (SP+0)
+      JP    LT, (SP+0)
+      JP    LE, (SP+0)
+      JP    ULE, (SP+0)
+      JP    OV, (SP+0)
+      JP    MI, (SP+0)
+      JP    Z, (SP+0)
+      JP    C, (SP+0)
+      JP    (SP+0)
+      JP    GE, (SP+0)
+      JP    GT, (SP+0)
+      JP    UGT, (SP+0)
+      JP    NOV, (SP+0)
+      JP    PL, (SP+0)
+      JP    NZ, (SP+0)
+      JP    NC, (SP+0)
+      CALL  F, (SP+0)
+      CALL  LT, (SP+0)
+      CALL  LE, (SP+0)
+      CALL  ULE, (SP+0)
+      CALL  OV, (SP+0)
+      CALL  MI, (SP+0)
+      CALL  Z, (SP+0)
+      CALL  C, (SP+0)
+      CALL  (SP+0)
+      CALL  GE, (SP+0)
+      CALL  GT, (SP+0)
+      CALL  UGT, (SP+0)
+      CALL  NOV, (SP+0)
+      CALL  PL, (SP+0)
+      CALL  NZ, (SP+0)
+      CALL  NC, (SP+0)
       LD    (HL+A), B
       LD    (HL+A), C
       LD    (HL+A), D

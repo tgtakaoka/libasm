@@ -29,7 +29,7 @@ int main(int argc, const char **argv) {
     disz80.setOption("relative", "enable");
 
     TestGenerator generator(driver, disz80, 0x0100);
-    generator.generate().generate(0xDD, 0xCB, 0x7F).generate(0xFD, 0xCB, 0x80);
+    generator.generate();
 
     return driver.close();
 }

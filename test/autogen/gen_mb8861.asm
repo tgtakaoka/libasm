@@ -111,21 +111,33 @@
       JMP   111,X
       CLR   112,X
       NEG   $7172
+      NEG   >$0001
       NIM   #$72, 115,X
       OIM   #$73, 116,X
       COM   $7475
+      COM   >$0001
       LSR   $7576
+      LSR   >$0001
       XIM   #$76, 119,X
       ROR   $7778
+      ROR   >$0001
       ASR   $7879
+      ASR   >$0001
       ASL   $797A
+      ASL   >$0001
       ROL   $7A7B
+      ROL   >$0001
       DEC   $7B7C
+      DEC   >$0001
       TMM   #$7C, 125,X
       INC   $7D7E
+      INC   >$0001
       TST   $7E7F
+      TST   >$0001
       JMP   $7F80
+      JMP   >$0001
       CLR   $8081
+      CLR   >$0001
       SUBA  #$81
       CMPA  #$82
       SBCA  #$83
@@ -171,19 +183,33 @@
       LDS   175,X
       STS   176,X
       SUBA  $B1B2
+      SUBA  >$0001
       CMPA  $B2B3
+      CMPA  >$0001
       SBCA  $B3B4
+      SBCA  >$0001
       ANDA  $B5B6
+      ANDA  >$0001
       BITA  $B6B7
+      BITA  >$0001
       LDAA  $B7B8
+      LDAA  >$0001
       STAA  $B8B9
+      STAA  >$0001
       EORA  $B9BA
+      EORA  >$0001
       ADCA  $BABB
+      ADCA  >$0001
       ORAA  $BBBC
+      ORAA  >$0001
       ADDA  $BCBD
+      ADDA  >$0001
       CPX   $BDBE
+      CPX   >$0001
       JSR   $BEBF
+      JSR   >$0001
       LDS   $BFC0
+      LDS   >$0001
       STS   $C0C1
       STS   >$0001
       SUBB  #$C1

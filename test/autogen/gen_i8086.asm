@@ -7641,133 +7641,133 @@
       CMP    BYTE PTR [403FH], 41H
       CMP    BYTE PTR [BX], 40H
       ADD    BYTE PTR [BX+SI+65], 42H
-      ADD    BYTE PTR [BX+SI-128], 42H
+      ADD    BYTE PTR [BX+SI-128], 81H
       ADD    BYTE PTR [BX+DI+66], 43H
-      ADD    BYTE PTR [BX+DI-128], 43H
+      ADD    BYTE PTR [BX+DI-128], 81H
       ADD    BYTE PTR [BP+SI+67], 44H
-      ADD    BYTE PTR [BP+SI-128], 44H
+      ADD    BYTE PTR [BP+SI-128], 81H
       ADD    BYTE PTR [BP+DI+68], 45H
-      ADD    BYTE PTR [BP+DI-128], 45H
+      ADD    BYTE PTR [BP+DI-128], 81H
       ADD    BYTE PTR [SI+69], 46H
-      ADD    BYTE PTR [SI-128], 46H
+      ADD    BYTE PTR [SI-128], 81H
       ADD    BYTE PTR [DI+70], 47H
-      ADD    BYTE PTR [DI-128], 47H
+      ADD    BYTE PTR [DI-128], 81H
       ADD    BYTE PTR [BP+71], 48H
-      ADD    BYTE PTR [BP-128], 48H
+      ADD    BYTE PTR [BP-128], 81H
       ADD    BYTE PTR [BX+72], 49H
-      ADD    BYTE PTR [BX-128], 49H
+      ADD    BYTE PTR [BX-128], 81H
       OR     BYTE PTR [BX+SI+73], 4AH
-      OR     BYTE PTR [BX+SI-128], 4AH
+      OR     BYTE PTR [BX+SI-128], 81H
       OR     BYTE PTR [BX+DI+74], 4BH
-      OR     BYTE PTR [BX+DI-128], 4BH
+      OR     BYTE PTR [BX+DI-128], 81H
       OR     BYTE PTR [BP+SI+75], 4CH
-      OR     BYTE PTR [BP+SI-128], 4CH
+      OR     BYTE PTR [BP+SI-128], 81H
       OR     BYTE PTR [BP+DI+76], 4DH
-      OR     BYTE PTR [BP+DI-128], 4DH
+      OR     BYTE PTR [BP+DI-128], 81H
       OR     BYTE PTR [SI+77], 4EH
-      OR     BYTE PTR [SI-128], 4EH
+      OR     BYTE PTR [SI-128], 81H
       OR     BYTE PTR [DI+78], 4FH
-      OR     BYTE PTR [DI-128], 4FH
+      OR     BYTE PTR [DI-128], 81H
       OR     BYTE PTR [BP+79], 50H
-      OR     BYTE PTR [BP-128], 50H
+      OR     BYTE PTR [BP-128], 81H
       OR     BYTE PTR [BX+80], 51H
-      OR     BYTE PTR [BX-128], 51H
+      OR     BYTE PTR [BX-128], 81H
       ADC    BYTE PTR [BX+SI+81], 52H
-      ADC    BYTE PTR [BX+SI-128], 52H
+      ADC    BYTE PTR [BX+SI-128], 81H
       ADC    BYTE PTR [BX+DI+82], 53H
-      ADC    BYTE PTR [BX+DI-128], 53H
+      ADC    BYTE PTR [BX+DI-128], 81H
       ADC    BYTE PTR [BP+SI+83], 54H
-      ADC    BYTE PTR [BP+SI-128], 54H
+      ADC    BYTE PTR [BP+SI-128], 81H
       ADC    BYTE PTR [BP+DI+84], 55H
-      ADC    BYTE PTR [BP+DI-128], 55H
+      ADC    BYTE PTR [BP+DI-128], 81H
       ADC    BYTE PTR [SI+85], 56H
-      ADC    BYTE PTR [SI-128], 56H
+      ADC    BYTE PTR [SI-128], 81H
       ADC    BYTE PTR [DI+86], 57H
-      ADC    BYTE PTR [DI-128], 57H
+      ADC    BYTE PTR [DI-128], 81H
       ADC    BYTE PTR [BP+87], 58H
-      ADC    BYTE PTR [BP-128], 58H
+      ADC    BYTE PTR [BP-128], 81H
       ADC    BYTE PTR [BX+88], 59H
-      ADC    BYTE PTR [BX-128], 59H
+      ADC    BYTE PTR [BX-128], 81H
       SBB    BYTE PTR [BX+SI+89], 5AH
-      SBB    BYTE PTR [BX+SI-128], 5AH
+      SBB    BYTE PTR [BX+SI-128], 81H
       SBB    BYTE PTR [BX+DI+90], 5BH
-      SBB    BYTE PTR [BX+DI-128], 5BH
+      SBB    BYTE PTR [BX+DI-128], 81H
       SBB    BYTE PTR [BP+SI+91], 5CH
-      SBB    BYTE PTR [BP+SI-128], 5CH
+      SBB    BYTE PTR [BP+SI-128], 81H
       SBB    BYTE PTR [BP+DI+92], 5DH
-      SBB    BYTE PTR [BP+DI-128], 5DH
+      SBB    BYTE PTR [BP+DI-128], 81H
       SBB    BYTE PTR [SI+93], 5EH
-      SBB    BYTE PTR [SI-128], 5EH
+      SBB    BYTE PTR [SI-128], 81H
       SBB    BYTE PTR [DI+94], 5FH
-      SBB    BYTE PTR [DI-128], 5FH
+      SBB    BYTE PTR [DI-128], 81H
       SBB    BYTE PTR [BP+95], 60H
-      SBB    BYTE PTR [BP-128], 60H
+      SBB    BYTE PTR [BP-128], 81H
       SBB    BYTE PTR [BX+96], 61H
-      SBB    BYTE PTR [BX-128], 61H
+      SBB    BYTE PTR [BX-128], 81H
       AND    BYTE PTR [BX+SI+97], 62H
-      AND    BYTE PTR [BX+SI-128], 62H
+      AND    BYTE PTR [BX+SI-128], 81H
       AND    BYTE PTR [BX+DI+98], 63H
-      AND    BYTE PTR [BX+DI-128], 63H
+      AND    BYTE PTR [BX+DI-128], 81H
       AND    BYTE PTR [BP+SI+99], 64H
-      AND    BYTE PTR [BP+SI-128], 64H
+      AND    BYTE PTR [BP+SI-128], 81H
       AND    BYTE PTR [BP+DI+100], 65H
-      AND    BYTE PTR [BP+DI-128], 65H
+      AND    BYTE PTR [BP+DI-128], 81H
       AND    BYTE PTR [SI+101], 66H
-      AND    BYTE PTR [SI-128], 66H
+      AND    BYTE PTR [SI-128], 81H
       AND    BYTE PTR [DI+102], 67H
-      AND    BYTE PTR [DI-128], 67H
+      AND    BYTE PTR [DI-128], 81H
       AND    BYTE PTR [BP+103], 68H
-      AND    BYTE PTR [BP-128], 68H
+      AND    BYTE PTR [BP-128], 81H
       AND    BYTE PTR [BX+104], 69H
-      AND    BYTE PTR [BX-128], 69H
+      AND    BYTE PTR [BX-128], 81H
       SUB    BYTE PTR [BX+SI+105], 6AH
-      SUB    BYTE PTR [BX+SI-128], 6AH
+      SUB    BYTE PTR [BX+SI-128], 81H
       SUB    BYTE PTR [BX+DI+106], 6BH
-      SUB    BYTE PTR [BX+DI-128], 6BH
+      SUB    BYTE PTR [BX+DI-128], 81H
       SUB    BYTE PTR [BP+SI+107], 6CH
-      SUB    BYTE PTR [BP+SI-128], 6CH
+      SUB    BYTE PTR [BP+SI-128], 81H
       SUB    BYTE PTR [BP+DI+108], 6DH
-      SUB    BYTE PTR [BP+DI-128], 6DH
+      SUB    BYTE PTR [BP+DI-128], 81H
       SUB    BYTE PTR [SI+109], 6EH
-      SUB    BYTE PTR [SI-128], 6EH
+      SUB    BYTE PTR [SI-128], 81H
       SUB    BYTE PTR [DI+110], 6FH
-      SUB    BYTE PTR [DI-128], 6FH
+      SUB    BYTE PTR [DI-128], 81H
       SUB    BYTE PTR [BP+111], 70H
-      SUB    BYTE PTR [BP-128], 70H
+      SUB    BYTE PTR [BP-128], 81H
       SUB    BYTE PTR [BX+112], 71H
-      SUB    BYTE PTR [BX-128], 71H
+      SUB    BYTE PTR [BX-128], 81H
       XOR    BYTE PTR [BX+SI+113], 72H
-      XOR    BYTE PTR [BX+SI-128], 72H
+      XOR    BYTE PTR [BX+SI-128], 81H
       XOR    BYTE PTR [BX+DI+114], 73H
-      XOR    BYTE PTR [BX+DI-128], 73H
+      XOR    BYTE PTR [BX+DI-128], 81H
       XOR    BYTE PTR [BP+SI+115], 74H
-      XOR    BYTE PTR [BP+SI-128], 74H
+      XOR    BYTE PTR [BP+SI-128], 81H
       XOR    BYTE PTR [BP+DI+116], 75H
-      XOR    BYTE PTR [BP+DI-128], 75H
+      XOR    BYTE PTR [BP+DI-128], 81H
       XOR    BYTE PTR [SI+117], 76H
-      XOR    BYTE PTR [SI-128], 76H
+      XOR    BYTE PTR [SI-128], 81H
       XOR    BYTE PTR [DI+118], 77H
-      XOR    BYTE PTR [DI-128], 77H
+      XOR    BYTE PTR [DI-128], 81H
       XOR    BYTE PTR [BP+119], 78H
-      XOR    BYTE PTR [BP-128], 78H
+      XOR    BYTE PTR [BP-128], 81H
       XOR    BYTE PTR [BX+120], 79H
-      XOR    BYTE PTR [BX-128], 79H
+      XOR    BYTE PTR [BX-128], 81H
       CMP    BYTE PTR [BX+SI+121], 7AH
-      CMP    BYTE PTR [BX+SI-128], 7AH
+      CMP    BYTE PTR [BX+SI-128], 81H
       CMP    BYTE PTR [BX+DI+122], 7BH
-      CMP    BYTE PTR [BX+DI-128], 7BH
+      CMP    BYTE PTR [BX+DI-128], 81H
       CMP    BYTE PTR [BP+SI+123], 7CH
-      CMP    BYTE PTR [BP+SI-128], 7CH
+      CMP    BYTE PTR [BP+SI-128], 81H
       CMP    BYTE PTR [BP+DI+124], 7DH
-      CMP    BYTE PTR [BP+DI-128], 7DH
+      CMP    BYTE PTR [BP+DI-128], 81H
       CMP    BYTE PTR [SI+125], 7EH
-      CMP    BYTE PTR [SI-128], 7EH
+      CMP    BYTE PTR [SI-128], 81H
       CMP    BYTE PTR [DI+126], 7FH
-      CMP    BYTE PTR [DI-128], 7FH
+      CMP    BYTE PTR [DI-128], 81H
       CMP    BYTE PTR [BP+127], 80H
-      CMP    BYTE PTR [BP-128], 80H
+      CMP    BYTE PTR [BP-128], 81H
       CMP    BYTE PTR [BX-128], 81H
-      CMP    BYTE PTR [BX+0], 81H
+      CMP    BYTE PTR [BX+0], 1
       ADD    BYTE PTR [BX+SI+8281H], 83H
       ADD    WORD PTR [BP+SI+8483H], 8685H
       ADD    WORD PTR [BP+DI+8584H], 8786H
@@ -7960,133 +7960,133 @@
       CMP    WORD PTR [403FH], 4241H
       CMP    WORD PTR [BX], 4140H
       ADD    WORD PTR [BX+SI+65], 4342H
-      ADD    WORD PTR [BX+SI-128], 4342H
+      ADD    WORD PTR [BX+SI-128], 8281H
       ADD    WORD PTR [BX+DI+66], 4443H
-      ADD    WORD PTR [BX+DI-128], 4443H
+      ADD    WORD PTR [BX+DI-128], 8281H
       ADD    WORD PTR [BP+SI+67], 4544H
-      ADD    WORD PTR [BP+SI-128], 4544H
+      ADD    WORD PTR [BP+SI-128], 8281H
       ADD    WORD PTR [BP+DI+68], 4645H
-      ADD    WORD PTR [BP+DI-128], 4645H
+      ADD    WORD PTR [BP+DI-128], 8281H
       ADD    WORD PTR [SI+69], 4746H
-      ADD    WORD PTR [SI-128], 4746H
+      ADD    WORD PTR [SI-128], 8281H
       ADD    WORD PTR [DI+70], 4847H
-      ADD    WORD PTR [DI-128], 4847H
+      ADD    WORD PTR [DI-128], 8281H
       ADD    WORD PTR [BP+71], 4948H
-      ADD    WORD PTR [BP-128], 4948H
+      ADD    WORD PTR [BP-128], 8281H
       ADD    WORD PTR [BX+72], 4A49H
-      ADD    WORD PTR [BX-128], 4A49H
+      ADD    WORD PTR [BX-128], 8281H
       OR     WORD PTR [BX+SI+73], 4B4AH
-      OR     WORD PTR [BX+SI-128], 4B4AH
+      OR     WORD PTR [BX+SI-128], 8281H
       OR     WORD PTR [BX+DI+74], 4C4BH
-      OR     WORD PTR [BX+DI-128], 4C4BH
+      OR     WORD PTR [BX+DI-128], 8281H
       OR     WORD PTR [BP+SI+75], 4D4CH
-      OR     WORD PTR [BP+SI-128], 4D4CH
+      OR     WORD PTR [BP+SI-128], 8281H
       OR     WORD PTR [BP+DI+76], 4E4DH
-      OR     WORD PTR [BP+DI-128], 4E4DH
+      OR     WORD PTR [BP+DI-128], 8281H
       OR     WORD PTR [SI+77], 4F4EH
-      OR     WORD PTR [SI-128], 4F4EH
+      OR     WORD PTR [SI-128], 8281H
       OR     WORD PTR [DI+78], 504FH
-      OR     WORD PTR [DI-128], 504FH
+      OR     WORD PTR [DI-128], 8281H
       OR     WORD PTR [BP+79], 5150H
-      OR     WORD PTR [BP-128], 5150H
+      OR     WORD PTR [BP-128], 8281H
       OR     WORD PTR [BX+80], 5251H
-      OR     WORD PTR [BX-128], 5251H
+      OR     WORD PTR [BX-128], 8281H
       ADC    WORD PTR [BX+SI+81], 5352H
-      ADC    WORD PTR [BX+SI-128], 5352H
+      ADC    WORD PTR [BX+SI-128], 8281H
       ADC    WORD PTR [BX+DI+82], 5453H
-      ADC    WORD PTR [BX+DI-128], 5453H
+      ADC    WORD PTR [BX+DI-128], 8281H
       ADC    WORD PTR [BP+SI+83], 5554H
-      ADC    WORD PTR [BP+SI-128], 5554H
+      ADC    WORD PTR [BP+SI-128], 8281H
       ADC    WORD PTR [BP+DI+84], 5655H
-      ADC    WORD PTR [BP+DI-128], 5655H
+      ADC    WORD PTR [BP+DI-128], 8281H
       ADC    WORD PTR [SI+85], 5756H
-      ADC    WORD PTR [SI-128], 5756H
+      ADC    WORD PTR [SI-128], 8281H
       ADC    WORD PTR [DI+86], 5857H
-      ADC    WORD PTR [DI-128], 5857H
+      ADC    WORD PTR [DI-128], 8281H
       ADC    WORD PTR [BP+87], 5958H
-      ADC    WORD PTR [BP-128], 5958H
+      ADC    WORD PTR [BP-128], 8281H
       ADC    WORD PTR [BX+88], 5A59H
-      ADC    WORD PTR [BX-128], 5A59H
+      ADC    WORD PTR [BX-128], 8281H
       SBB    WORD PTR [BX+SI+89], 5B5AH
-      SBB    WORD PTR [BX+SI-128], 5B5AH
+      SBB    WORD PTR [BX+SI-128], 8281H
       SBB    WORD PTR [BX+DI+90], 5C5BH
-      SBB    WORD PTR [BX+DI-128], 5C5BH
+      SBB    WORD PTR [BX+DI-128], 8281H
       SBB    WORD PTR [BP+SI+91], 5D5CH
-      SBB    WORD PTR [BP+SI-128], 5D5CH
+      SBB    WORD PTR [BP+SI-128], 8281H
       SBB    WORD PTR [BP+DI+92], 5E5DH
-      SBB    WORD PTR [BP+DI-128], 5E5DH
+      SBB    WORD PTR [BP+DI-128], 8281H
       SBB    WORD PTR [SI+93], 5F5EH
-      SBB    WORD PTR [SI-128], 5F5EH
+      SBB    WORD PTR [SI-128], 8281H
       SBB    WORD PTR [DI+94], 605FH
-      SBB    WORD PTR [DI-128], 605FH
+      SBB    WORD PTR [DI-128], 8281H
       SBB    WORD PTR [BP+95], 6160H
-      SBB    WORD PTR [BP-128], 6160H
+      SBB    WORD PTR [BP-128], 8281H
       SBB    WORD PTR [BX+96], 6261H
-      SBB    WORD PTR [BX-128], 6261H
+      SBB    WORD PTR [BX-128], 8281H
       AND    WORD PTR [BX+SI+97], 6362H
-      AND    WORD PTR [BX+SI-128], 6362H
+      AND    WORD PTR [BX+SI-128], 8281H
       AND    WORD PTR [BX+DI+98], 6463H
-      AND    WORD PTR [BX+DI-128], 6463H
+      AND    WORD PTR [BX+DI-128], 8281H
       AND    WORD PTR [BP+SI+99], 6564H
-      AND    WORD PTR [BP+SI-128], 6564H
+      AND    WORD PTR [BP+SI-128], 8281H
       AND    WORD PTR [BP+DI+100], 6665H
-      AND    WORD PTR [BP+DI-128], 6665H
+      AND    WORD PTR [BP+DI-128], 8281H
       AND    WORD PTR [SI+101], 6766H
-      AND    WORD PTR [SI-128], 6766H
+      AND    WORD PTR [SI-128], 8281H
       AND    WORD PTR [DI+102], 6867H
-      AND    WORD PTR [DI-128], 6867H
+      AND    WORD PTR [DI-128], 8281H
       AND    WORD PTR [BP+103], 6968H
-      AND    WORD PTR [BP-128], 6968H
+      AND    WORD PTR [BP-128], 8281H
       AND    WORD PTR [BX+104], 6A69H
-      AND    WORD PTR [BX-128], 6A69H
+      AND    WORD PTR [BX-128], 8281H
       SUB    WORD PTR [BX+SI+105], 6B6AH
-      SUB    WORD PTR [BX+SI-128], 6B6AH
+      SUB    WORD PTR [BX+SI-128], 8281H
       SUB    WORD PTR [BX+DI+106], 6C6BH
-      SUB    WORD PTR [BX+DI-128], 6C6BH
+      SUB    WORD PTR [BX+DI-128], 8281H
       SUB    WORD PTR [BP+SI+107], 6D6CH
-      SUB    WORD PTR [BP+SI-128], 6D6CH
+      SUB    WORD PTR [BP+SI-128], 8281H
       SUB    WORD PTR [BP+DI+108], 6E6DH
-      SUB    WORD PTR [BP+DI-128], 6E6DH
+      SUB    WORD PTR [BP+DI-128], 8281H
       SUB    WORD PTR [SI+109], 6F6EH
-      SUB    WORD PTR [SI-128], 6F6EH
+      SUB    WORD PTR [SI-128], 8281H
       SUB    WORD PTR [DI+110], 706FH
-      SUB    WORD PTR [DI-128], 706FH
+      SUB    WORD PTR [DI-128], 8281H
       SUB    WORD PTR [BP+111], 7170H
-      SUB    WORD PTR [BP-128], 7170H
+      SUB    WORD PTR [BP-128], 8281H
       SUB    WORD PTR [BX+112], 7271H
-      SUB    WORD PTR [BX-128], 7271H
+      SUB    WORD PTR [BX-128], 8281H
       XOR    WORD PTR [BX+SI+113], 7372H
-      XOR    WORD PTR [BX+SI-128], 7372H
+      XOR    WORD PTR [BX+SI-128], 8281H
       XOR    WORD PTR [BX+DI+114], 7473H
-      XOR    WORD PTR [BX+DI-128], 7473H
+      XOR    WORD PTR [BX+DI-128], 8281H
       XOR    WORD PTR [BP+SI+115], 7574H
-      XOR    WORD PTR [BP+SI-128], 7574H
+      XOR    WORD PTR [BP+SI-128], 8281H
       XOR    WORD PTR [BP+DI+116], 7675H
-      XOR    WORD PTR [BP+DI-128], 7675H
+      XOR    WORD PTR [BP+DI-128], 8281H
       XOR    WORD PTR [SI+117], 7776H
-      XOR    WORD PTR [SI-128], 7776H
+      XOR    WORD PTR [SI-128], 8281H
       XOR    WORD PTR [DI+118], 7877H
-      XOR    WORD PTR [DI-128], 7877H
+      XOR    WORD PTR [DI-128], 8281H
       XOR    WORD PTR [BP+119], 7978H
-      XOR    WORD PTR [BP-128], 7978H
+      XOR    WORD PTR [BP-128], 8281H
       XOR    WORD PTR [BX+120], 7A79H
-      XOR    WORD PTR [BX-128], 7A79H
+      XOR    WORD PTR [BX-128], 8281H
       CMP    WORD PTR [BX+SI+121], 7B7AH
-      CMP    WORD PTR [BX+SI-128], 7B7AH
+      CMP    WORD PTR [BX+SI-128], 8281H
       CMP    WORD PTR [BX+DI+122], 7C7BH
-      CMP    WORD PTR [BX+DI-128], 7C7BH
+      CMP    WORD PTR [BX+DI-128], 8281H
       CMP    WORD PTR [BP+SI+123], 7D7CH
-      CMP    WORD PTR [BP+SI-128], 7D7CH
+      CMP    WORD PTR [BP+SI-128], 8281H
       CMP    WORD PTR [BP+DI+124], 7E7DH
-      CMP    WORD PTR [BP+DI-128], 7E7DH
+      CMP    WORD PTR [BP+DI-128], 8281H
       CMP    WORD PTR [SI+125], 7F7EH
-      CMP    WORD PTR [SI-128], 7F7EH
+      CMP    WORD PTR [SI-128], 8281H
       CMP    WORD PTR [DI+126], 807FH
-      CMP    WORD PTR [DI-128], 807FH
+      CMP    WORD PTR [DI-128], 8281H
       CMP    WORD PTR [BP+127], 8180H
-      CMP    WORD PTR [BP-128], 8180H
+      CMP    WORD PTR [BP-128], 8281H
       CMP    WORD PTR [BX-128], 8281H
-      CMP    WORD PTR [BX+0], 8281H
+      CMP    WORD PTR [BX+0], 0201H
       ADD    WORD PTR [BX+SI+8281H], 8483H
       ADD    WORD PTR [BX+DI+8382H], 8584H
       ADD    WORD PTR [SI+8685H], -79H
@@ -8150,449 +8150,6 @@
       CMP    WORD PTR [BP+0C0BFH], -3FH
       CMP    WORD PTR [BX+0C1C0H], -3EH
       ADD    AX, -3FH
-      ADD    CX, -3EH
-      ADD    CX, 0
-      ADD    DX, -3DH
-      ADD    DX, 0
-      ADD    BX, -3CH
-      ADD    BX, 0
-      ADD    SP, -3BH
-      ADD    SP, 0
-      ADD    BP, -3AH
-      ADD    BP, 0
-      ADD    SI, -39H
-      ADD    SI, 0
-      ADD    DI, -38H
-      ADD    DI, 0
-      OR     AX, -37H
-      OR     CX, -36H
-      OR     CX, 0
-      OR     DX, -35H
-      OR     DX, 0
-      OR     BX, -34H
-      OR     BX, 0
-      OR     SP, -33H
-      OR     SP, 0
-      OR     BP, -32H
-      OR     BP, 0
-      OR     SI, -31H
-      OR     SI, 0
-      OR     DI, -30H
-      OR     DI, 0
-      ADC    AX, -2FH
-      ADC    CX, -2EH
-      ADC    CX, 0
-      ADC    DX, -2DH
-      ADC    DX, 0
-      ADC    BX, -2CH
-      ADC    BX, 0
-      ADC    SP, -2BH
-      ADC    SP, 0
-      ADC    BP, -2AH
-      ADC    BP, 0
-      ADC    SI, -29H
-      ADC    SI, 0
-      ADC    DI, -28H
-      ADC    DI, 0
-      SBB    AX, -27H
-      SBB    CX, -26H
-      SBB    CX, 0
-      SBB    DX, -25H
-      SBB    DX, 0
-      SBB    BX, -24H
-      SBB    BX, 0
-      SBB    SP, -23H
-      SBB    SP, 0
-      SBB    BP, -22H
-      SBB    BP, 0
-      SBB    SI, -21H
-      SBB    SI, 0
-      SBB    DI, -32
-      SBB    DI, 0
-      AND    AX, -31
-      AND    CX, -30
-      AND    CX, 0
-      AND    DX, -29
-      AND    DX, 0
-      AND    BX, -28
-      AND    BX, 0
-      AND    SP, -27
-      AND    SP, 0
-      AND    BP, -26
-      AND    BP, 0
-      AND    SI, -25
-      AND    SI, 0
-      AND    DI, -24
-      AND    DI, 0
-      SUB    AX, -23
-      SUB    CX, -22
-      SUB    CX, 0
-      SUB    DX, -21
-      SUB    DX, 0
-      SUB    BX, -20
-      SUB    BX, 0
-      SUB    SP, -19
-      SUB    SP, 0
-      SUB    BP, -18
-      SUB    BP, 0
-      SUB    SI, -17
-      SUB    SI, 0
-      SUB    DI, -16
-      SUB    DI, 0
-      XOR    AX, -15
-      XOR    CX, -14
-      XOR    CX, 0
-      XOR    DX, -13
-      XOR    DX, 0
-      XOR    BX, -12
-      XOR    BX, 0
-      XOR    SP, -11
-      XOR    SP, 0
-      XOR    BP, -10
-      XOR    BP, 0
-      XOR    SI, -9
-      XOR    SI, 0
-      XOR    DI, -8
-      XOR    DI, 0
-      CMP    AX, -7
-      CMP    CX, -6
-      CMP    CX, 0
-      CMP    DX, -5
-      CMP    DX, 0
-      CMP    BX, -4
-      CMP    BX, 0
-      CMP    SP, -3
-      CMP    SP, 0
-      CMP    BP, -2
-      CMP    BP, 0
-      CMP    SI, -1
-      CMP    SI, 0
-      CMP    DI, 0
-      CMP    DI, -80H
-      ADD    WORD PTR [BX+SI], 1
-      ADD    WORD PTR [BX+SI], -80H
-      ADD    WORD PTR [BX+DI], 2
-      ADD    WORD PTR [BX+DI], -80H
-      ADD    WORD PTR [BP+SI], 3
-      ADD    WORD PTR [BP+SI], -80H
-      ADD    WORD PTR [BP+DI], 4
-      ADD    WORD PTR [BP+DI], -80H
-      ADD    WORD PTR [SI], 5
-      ADD    WORD PTR [SI], -80H
-      ADD    WORD PTR [DI], 6
-      ADD    WORD PTR [DI], -80H
-      ADD    WORD PTR [0807H], 9
-      ADD    WORD PTR [0606H], -80H
-      ADD    WORD PTR [BX], 8
-      ADD    WORD PTR [BX], -80H
-      OR     WORD PTR [BX+SI], 9
-      OR     WORD PTR [BX+SI], -80H
-      OR     WORD PTR [BX+DI], 10
-      OR     WORD PTR [BX+DI], -80H
-      OR     WORD PTR [BP+SI], 11
-      OR     WORD PTR [BP+SI], -80H
-      OR     WORD PTR [BP+DI], 12
-      OR     WORD PTR [BP+DI], -80H
-      OR     WORD PTR [SI], 13
-      OR     WORD PTR [SI], -80H
-      OR     WORD PTR [DI], 14
-      OR     WORD PTR [DI], -80H
-      OR     WORD PTR [100FH], 17
-      OR     WORD PTR [0E0EH], -80H
-      OR     WORD PTR [BX], 16
-      OR     WORD PTR [BX], -80H
-      ADC    WORD PTR [BX+SI], 17
-      ADC    WORD PTR [BX+SI], -80H
-      ADC    WORD PTR [BX+DI], 18
-      ADC    WORD PTR [BX+DI], -80H
-      ADC    WORD PTR [BP+SI], 19
-      ADC    WORD PTR [BP+SI], -80H
-      ADC    WORD PTR [BP+DI], 20
-      ADC    WORD PTR [BP+DI], -80H
-      ADC    WORD PTR [SI], 21
-      ADC    WORD PTR [SI], -80H
-      ADC    WORD PTR [DI], 22
-      ADC    WORD PTR [DI], -80H
-      ADC    WORD PTR [1817H], 25
-      ADC    WORD PTR [1616H], -80H
-      ADC    WORD PTR [BX], 24
-      ADC    WORD PTR [BX], -80H
-      SBB    WORD PTR [BX+SI], 25
-      SBB    WORD PTR [BX+SI], -80H
-      SBB    WORD PTR [BX+DI], 26
-      SBB    WORD PTR [BX+DI], -80H
-      SBB    WORD PTR [BP+SI], 27
-      SBB    WORD PTR [BP+SI], -80H
-      SBB    WORD PTR [BP+DI], 28
-      SBB    WORD PTR [BP+DI], -80H
-      SBB    WORD PTR [SI], 29
-      SBB    WORD PTR [SI], -80H
-      SBB    WORD PTR [DI], 30
-      SBB    WORD PTR [DI], -80H
-      SBB    WORD PTR [201FH], 21H
-      SBB    WORD PTR [1E1EH], -80H
-      SBB    WORD PTR [BX], 32
-      SBB    WORD PTR [BX], -80H
-      AND    WORD PTR [BX+SI], 21H
-      AND    WORD PTR [BX+SI], -80H
-      AND    WORD PTR [BX+DI], 22H
-      AND    WORD PTR [BX+DI], -80H
-      AND    WORD PTR [BP+SI], 23H
-      AND    WORD PTR [BP+SI], -80H
-      AND    WORD PTR [BP+DI], 24H
-      AND    WORD PTR [BP+DI], -80H
-      AND    WORD PTR [SI], 25H
-      AND    WORD PTR [SI], -80H
-      AND    WORD PTR [DI], 26H
-      AND    WORD PTR [DI], -80H
-      AND    WORD PTR [2827H], 29H
-      AND    WORD PTR [2626H], -80H
-      AND    WORD PTR [BX], 28H
-      AND    WORD PTR [BX], -80H
-      SUB    WORD PTR [BX+SI], 29H
-      SUB    WORD PTR [BX+SI], -80H
-      SUB    WORD PTR [BX+DI], 2AH
-      SUB    WORD PTR [BX+DI], -80H
-      SUB    WORD PTR [BP+SI], 2BH
-      SUB    WORD PTR [BP+SI], -80H
-      SUB    WORD PTR [BP+DI], 2CH
-      SUB    WORD PTR [BP+DI], -80H
-      SUB    WORD PTR [SI], 2DH
-      SUB    WORD PTR [SI], -80H
-      SUB    WORD PTR [DI], 2EH
-      SUB    WORD PTR [DI], -80H
-      SUB    WORD PTR [302FH], 31H
-      SUB    WORD PTR [2E2EH], -80H
-      SUB    WORD PTR [BX], 30H
-      SUB    WORD PTR [BX], -80H
-      XOR    WORD PTR [BX+SI], 31H
-      XOR    WORD PTR [BX+SI], -80H
-      XOR    WORD PTR [BX+DI], 32H
-      XOR    WORD PTR [BX+DI], -80H
-      XOR    WORD PTR [BP+SI], 33H
-      XOR    WORD PTR [BP+SI], -80H
-      XOR    WORD PTR [BP+DI], 34H
-      XOR    WORD PTR [BP+DI], -80H
-      XOR    WORD PTR [SI], 35H
-      XOR    WORD PTR [SI], -80H
-      XOR    WORD PTR [DI], 36H
-      XOR    WORD PTR [DI], -80H
-      XOR    WORD PTR [3837H], 39H
-      XOR    WORD PTR [3636H], -80H
-      XOR    WORD PTR [BX], 38H
-      XOR    WORD PTR [BX], -80H
-      CMP    WORD PTR [BX+SI], 39H
-      CMP    WORD PTR [BX+SI], -80H
-      CMP    WORD PTR [BX+DI], 3AH
-      CMP    WORD PTR [BX+DI], -80H
-      CMP    WORD PTR [BP+SI], 3BH
-      CMP    WORD PTR [BP+SI], -80H
-      CMP    WORD PTR [BP+DI], 3CH
-      CMP    WORD PTR [BP+DI], -80H
-      CMP    WORD PTR [SI], 3DH
-      CMP    WORD PTR [SI], -80H
-      CMP    WORD PTR [DI], 3EH
-      CMP    WORD PTR [DI], -80H
-      CMP    WORD PTR [403FH], 41H
-      CMP    WORD PTR [3E3EH], -80H
-      CMP    WORD PTR [BX], 40H
-      CMP    WORD PTR [BX], -80H
-      ADD    WORD PTR [BX+SI+65], 42H
-      ADD    WORD PTR [BX+SI-128], 42H
-      ADD    WORD PTR [BX+SI+64], -80H
-      ADD    WORD PTR [BX+DI+66], 43H
-      ADD    WORD PTR [BX+DI-128], 43H
-      ADD    WORD PTR [BX+DI+65], -80H
-      ADD    WORD PTR [BP+SI+67], 44H
-      ADD    WORD PTR [BP+SI-128], 44H
-      ADD    WORD PTR [BP+SI+66], -80H
-      ADD    WORD PTR [BP+DI+68], 45H
-      ADD    WORD PTR [BP+DI-128], 45H
-      ADD    WORD PTR [BP+DI+67], -80H
-      ADD    WORD PTR [SI+69], 46H
-      ADD    WORD PTR [SI-128], 46H
-      ADD    WORD PTR [SI+68], -80H
-      ADD    WORD PTR [DI+70], 47H
-      ADD    WORD PTR [DI-128], 47H
-      ADD    WORD PTR [DI+69], -80H
-      ADD    WORD PTR [BP+71], 48H
-      ADD    WORD PTR [BP-128], 48H
-      ADD    WORD PTR [BP+70], -80H
-      ADD    WORD PTR [BX+72], 49H
-      ADD    WORD PTR [BX-128], 49H
-      ADD    WORD PTR [BX+71], -80H
-      OR     WORD PTR [BX+SI+73], 4AH
-      OR     WORD PTR [BX+SI-128], 4AH
-      OR     WORD PTR [BX+SI+72], -80H
-      OR     WORD PTR [BX+DI+74], 4BH
-      OR     WORD PTR [BX+DI-128], 4BH
-      OR     WORD PTR [BX+DI+73], -80H
-      OR     WORD PTR [BP+SI+75], 4CH
-      OR     WORD PTR [BP+SI-128], 4CH
-      OR     WORD PTR [BP+SI+74], -80H
-      OR     WORD PTR [BP+DI+76], 4DH
-      OR     WORD PTR [BP+DI-128], 4DH
-      OR     WORD PTR [BP+DI+75], -80H
-      OR     WORD PTR [SI+77], 4EH
-      OR     WORD PTR [SI-128], 4EH
-      OR     WORD PTR [SI+76], -80H
-      OR     WORD PTR [DI+78], 4FH
-      OR     WORD PTR [DI-128], 4FH
-      OR     WORD PTR [DI+77], -80H
-      OR     WORD PTR [BP+79], 50H
-      OR     WORD PTR [BP-128], 50H
-      OR     WORD PTR [BP+78], -80H
-      OR     WORD PTR [BX+80], 51H
-      OR     WORD PTR [BX-128], 51H
-      OR     WORD PTR [BX+79], -80H
-      ADC    WORD PTR [BX+SI+81], 52H
-      ADC    WORD PTR [BX+SI-128], 52H
-      ADC    WORD PTR [BX+SI+80], -80H
-      ADC    WORD PTR [BX+DI+82], 53H
-      ADC    WORD PTR [BX+DI-128], 53H
-      ADC    WORD PTR [BX+DI+81], -80H
-      ADC    WORD PTR [BP+SI+83], 54H
-      ADC    WORD PTR [BP+SI-128], 54H
-      ADC    WORD PTR [BP+SI+82], -80H
-      ADC    WORD PTR [BP+DI+84], 55H
-      ADC    WORD PTR [BP+DI-128], 55H
-      ADC    WORD PTR [BP+DI+83], -80H
-      ADC    WORD PTR [SI+85], 56H
-      ADC    WORD PTR [SI-128], 56H
-      ADC    WORD PTR [SI+84], -80H
-      ADC    WORD PTR [DI+86], 57H
-      ADC    WORD PTR [DI-128], 57H
-      ADC    WORD PTR [DI+85], -80H
-      ADC    WORD PTR [BP+87], 58H
-      ADC    WORD PTR [BP-128], 58H
-      ADC    WORD PTR [BP+86], -80H
-      ADC    WORD PTR [BX+88], 59H
-      ADC    WORD PTR [BX-128], 59H
-      ADC    WORD PTR [BX+87], -80H
-      SBB    WORD PTR [BX+SI+89], 5AH
-      SBB    WORD PTR [BX+SI-128], 5AH
-      SBB    WORD PTR [BX+SI+88], -80H
-      SBB    WORD PTR [BX+DI+90], 5BH
-      SBB    WORD PTR [BX+DI-128], 5BH
-      SBB    WORD PTR [BX+DI+89], -80H
-      SBB    WORD PTR [BP+SI+91], 5CH
-      SBB    WORD PTR [BP+SI-128], 5CH
-      SBB    WORD PTR [BP+SI+90], -80H
-      SBB    WORD PTR [BP+DI+92], 5DH
-      SBB    WORD PTR [BP+DI-128], 5DH
-      SBB    WORD PTR [BP+DI+91], -80H
-      SBB    WORD PTR [SI+93], 5EH
-      SBB    WORD PTR [SI-128], 5EH
-      SBB    WORD PTR [SI+92], -80H
-      SBB    WORD PTR [DI+94], 5FH
-      SBB    WORD PTR [DI-128], 5FH
-      SBB    WORD PTR [DI+93], -80H
-      SBB    WORD PTR [BP+95], 60H
-      SBB    WORD PTR [BP-128], 60H
-      SBB    WORD PTR [BP+94], -80H
-      SBB    WORD PTR [BX+96], 61H
-      SBB    WORD PTR [BX-128], 61H
-      SBB    WORD PTR [BX+95], -80H
-      AND    WORD PTR [BX+SI+97], 62H
-      AND    WORD PTR [BX+SI-128], 62H
-      AND    WORD PTR [BX+SI+96], -80H
-      AND    WORD PTR [BX+DI+98], 63H
-      AND    WORD PTR [BX+DI-128], 63H
-      AND    WORD PTR [BX+DI+97], -80H
-      AND    WORD PTR [BP+SI+99], 64H
-      AND    WORD PTR [BP+SI-128], 64H
-      AND    WORD PTR [BP+SI+98], -80H
-      AND    WORD PTR [BP+DI+100], 65H
-      AND    WORD PTR [BP+DI-128], 65H
-      AND    WORD PTR [BP+DI+99], -80H
-      AND    WORD PTR [SI+101], 66H
-      AND    WORD PTR [SI-128], 66H
-      AND    WORD PTR [SI+100], -80H
-      AND    WORD PTR [DI+102], 67H
-      AND    WORD PTR [DI-128], 67H
-      AND    WORD PTR [DI+101], -80H
-      AND    WORD PTR [BP+103], 68H
-      AND    WORD PTR [BP-128], 68H
-      AND    WORD PTR [BP+102], -80H
-      AND    WORD PTR [BX+104], 69H
-      AND    WORD PTR [BX-128], 69H
-      AND    WORD PTR [BX+103], -80H
-      SUB    WORD PTR [BX+SI+105], 6AH
-      SUB    WORD PTR [BX+SI-128], 6AH
-      SUB    WORD PTR [BX+SI+104], -80H
-      SUB    WORD PTR [BX+DI+106], 6BH
-      SUB    WORD PTR [BX+DI-128], 6BH
-      SUB    WORD PTR [BX+DI+105], -80H
-      SUB    WORD PTR [BP+SI+107], 6CH
-      SUB    WORD PTR [BP+SI-128], 6CH
-      SUB    WORD PTR [BP+SI+106], -80H
-      SUB    WORD PTR [BP+DI+108], 6DH
-      SUB    WORD PTR [BP+DI-128], 6DH
-      SUB    WORD PTR [BP+DI+107], -80H
-      SUB    WORD PTR [SI+109], 6EH
-      SUB    WORD PTR [SI-128], 6EH
-      SUB    WORD PTR [SI+108], -80H
-      SUB    WORD PTR [DI+110], 6FH
-      SUB    WORD PTR [DI-128], 6FH
-      SUB    WORD PTR [DI+109], -80H
-      SUB    WORD PTR [BP+111], 70H
-      SUB    WORD PTR [BP-128], 70H
-      SUB    WORD PTR [BP+110], -80H
-      SUB    WORD PTR [BX+112], 71H
-      SUB    WORD PTR [BX-128], 71H
-      SUB    WORD PTR [BX+111], -80H
-      XOR    WORD PTR [BX+SI+113], 72H
-      XOR    WORD PTR [BX+SI-128], 72H
-      XOR    WORD PTR [BX+SI+112], -80H
-      XOR    WORD PTR [BX+DI+114], 73H
-      XOR    WORD PTR [BX+DI-128], 73H
-      XOR    WORD PTR [BX+DI+113], -80H
-      XOR    WORD PTR [BP+SI+115], 74H
-      XOR    WORD PTR [BP+SI-128], 74H
-      XOR    WORD PTR [BP+SI+114], -80H
-      XOR    WORD PTR [BP+DI+116], 75H
-      XOR    WORD PTR [BP+DI-128], 75H
-      XOR    WORD PTR [BP+DI+115], -80H
-      XOR    WORD PTR [SI+117], 76H
-      XOR    WORD PTR [SI-128], 76H
-      XOR    WORD PTR [SI+116], -80H
-      XOR    WORD PTR [DI+118], 77H
-      XOR    WORD PTR [DI-128], 77H
-      XOR    WORD PTR [DI+117], -80H
-      XOR    WORD PTR [BP+119], 78H
-      XOR    WORD PTR [BP-128], 78H
-      XOR    WORD PTR [BP+118], -80H
-      XOR    WORD PTR [BX+120], 79H
-      XOR    WORD PTR [BX-128], 79H
-      XOR    WORD PTR [BX+119], -80H
-      CMP    WORD PTR [BX+SI+121], 7AH
-      CMP    WORD PTR [BX+SI-128], 7AH
-      CMP    WORD PTR [BX+SI+120], -80H
-      CMP    WORD PTR [BX+DI+122], 7BH
-      CMP    WORD PTR [BX+DI-128], 7BH
-      CMP    WORD PTR [BX+DI+121], -80H
-      CMP    WORD PTR [BP+SI+123], 7CH
-      CMP    WORD PTR [BP+SI-128], 7CH
-      CMP    WORD PTR [BP+SI+122], -80H
-      CMP    WORD PTR [BP+DI+124], 7DH
-      CMP    WORD PTR [BP+DI-128], 7DH
-      CMP    WORD PTR [BP+DI+123], -80H
-      CMP    WORD PTR [SI+125], 7EH
-      CMP    WORD PTR [SI-128], 7EH
-      CMP    WORD PTR [SI+124], -80H
-      CMP    WORD PTR [DI+126], 7FH
-      CMP    WORD PTR [DI-128], 7FH
-      CMP    WORD PTR [DI+125], -80H
-      CMP    WORD PTR [BP+127], -80H
-      CMP    WORD PTR [BP-128], -80H
-      CMP    WORD PTR [BP+126], 7FH
-      CMP    WORD PTR [BX-128], -7FH
-      CMP    WORD PTR [BX+0], -7FH
-      CMP    WORD PTR [BX+127], 0
-      ADD    WORD PTR [BX+SI+8281H], -7DH
-      ADD    WORD PTR [BX+DI+8382H], -7CH
-      ADD    WORD PTR [BP+SI+8483H], -7BH
-      ADD    WORD PTR [BP+DI+8584H], -7AH
       TEST   AL, [DI+8786H]
       TEST   AL, [BP+8887H]
       TEST   AL, [BX+8988H]
@@ -11703,21 +11260,21 @@
       MOV    BYTE PTR [0807H], 9
       MOV    BYTE PTR [BX], 8
       MOV    BYTE PTR [BX+SI+65], 42H
-      MOV    BYTE PTR [BX+SI-128], 42H
+      MOV    BYTE PTR [BX+SI-128], 81H
       MOV    BYTE PTR [BX+DI+66], 43H
-      MOV    BYTE PTR [BX+DI-128], 43H
+      MOV    BYTE PTR [BX+DI-128], 81H
       MOV    BYTE PTR [BP+SI+67], 44H
-      MOV    BYTE PTR [BP+SI-128], 44H
+      MOV    BYTE PTR [BP+SI-128], 81H
       MOV    BYTE PTR [BP+DI+68], 45H
-      MOV    BYTE PTR [BP+DI-128], 45H
+      MOV    BYTE PTR [BP+DI-128], 81H
       MOV    BYTE PTR [SI+69], 46H
-      MOV    BYTE PTR [SI-128], 46H
+      MOV    BYTE PTR [SI-128], 81H
       MOV    BYTE PTR [DI+70], 47H
-      MOV    BYTE PTR [DI-128], 47H
+      MOV    BYTE PTR [DI-128], 81H
       MOV    BYTE PTR [BP+71], 48H
-      MOV    BYTE PTR [BP-128], 48H
+      MOV    BYTE PTR [BP-128], 81H
       MOV    BYTE PTR [BX+72], 49H
-      MOV    BYTE PTR [BX-128], 49H
+      MOV    BYTE PTR [BX-128], 81H
       MOV    BYTE PTR [BX+SI+8281H], 83H
       MOV    BYTE PTR [BX+DI+8382H], 84H
       MOV    BYTE PTR [BP+SI+8483H], 85H
@@ -11739,21 +11296,21 @@
       MOV    WORD PTR [0807H], 0A09H
       MOV    WORD PTR [BX], 0908H
       MOV    WORD PTR [BX+SI+65], 4342H
-      MOV    WORD PTR [BX+SI-128], 4342H
+      MOV    WORD PTR [BX+SI-128], 8281H
       MOV    WORD PTR [BX+DI+66], 4443H
-      MOV    WORD PTR [BX+DI-128], 4443H
+      MOV    WORD PTR [BX+DI-128], 8281H
       MOV    WORD PTR [BP+SI+67], 4544H
-      MOV    WORD PTR [BP+SI-128], 4544H
+      MOV    WORD PTR [BP+SI-128], 8281H
       MOV    WORD PTR [BP+DI+68], 4645H
-      MOV    WORD PTR [BP+DI-128], 4645H
+      MOV    WORD PTR [BP+DI-128], 8281H
       MOV    WORD PTR [SI+69], 4746H
-      MOV    WORD PTR [SI-128], 4746H
+      MOV    WORD PTR [SI-128], 8281H
       MOV    WORD PTR [DI+70], 4847H
-      MOV    WORD PTR [DI-128], 4847H
+      MOV    WORD PTR [DI-128], 8281H
       MOV    WORD PTR [BP+71], 4948H
-      MOV    WORD PTR [BP-128], 4948H
+      MOV    WORD PTR [BP-128], 8281H
       MOV    WORD PTR [BX+72], 4A49H
-      MOV    WORD PTR [BX-128], 4A49H
+      MOV    WORD PTR [BX-128], 8281H
       MOV    WORD PTR [BX+SI+8281H], 8483H
       MOV    WORD PTR [BX+DI+8382H], 8584H
       MOV    WORD PTR [BP+SI+8483H], 8685H
@@ -12973,21 +12530,21 @@
       IDIV   BYTE PTR [403FH]
       IDIV   BYTE PTR [BX]
       TEST   BYTE PTR [BX+SI+65], 42H
-      TEST   BYTE PTR [BX+SI-128], 42H
+      TEST   BYTE PTR [BX+SI-128], 81H
       TEST   BYTE PTR [BX+DI+66], 43H
-      TEST   BYTE PTR [BX+DI-128], 43H
+      TEST   BYTE PTR [BX+DI-128], 81H
       TEST   BYTE PTR [BP+SI+67], 44H
-      TEST   BYTE PTR [BP+SI-128], 44H
+      TEST   BYTE PTR [BP+SI-128], 81H
       TEST   BYTE PTR [BP+DI+68], 45H
-      TEST   BYTE PTR [BP+DI-128], 45H
+      TEST   BYTE PTR [BP+DI-128], 81H
       TEST   BYTE PTR [SI+69], 46H
-      TEST   BYTE PTR [SI-128], 46H
+      TEST   BYTE PTR [SI-128], 81H
       TEST   BYTE PTR [DI+70], 47H
-      TEST   BYTE PTR [DI-128], 47H
+      TEST   BYTE PTR [DI-128], 81H
       TEST   BYTE PTR [BP+71], 48H
-      TEST   BYTE PTR [BP-128], 48H
+      TEST   BYTE PTR [BP-128], 81H
       TEST   BYTE PTR [BX+72], 49H
-      TEST   BYTE PTR [BX-128], 49H
+      TEST   BYTE PTR [BX-128], 81H
       NOT    BYTE PTR [BX+SI+81]
       NOT    BYTE PTR [BX+SI-128]
       NOT    BYTE PTR [BX+DI+82]
@@ -13234,21 +12791,21 @@
       IDIV   WORD PTR [403FH]
       IDIV   WORD PTR [BX]
       TEST   WORD PTR [BX+SI+65], 4342H
-      TEST   WORD PTR [BX+SI-128], 4342H
+      TEST   WORD PTR [BX+SI-128], 8281H
       TEST   WORD PTR [BX+DI+66], 4443H
-      TEST   WORD PTR [BX+DI-128], 4443H
+      TEST   WORD PTR [BX+DI-128], 8281H
       TEST   WORD PTR [BP+SI+67], 4544H
-      TEST   WORD PTR [BP+SI-128], 4544H
+      TEST   WORD PTR [BP+SI-128], 8281H
       TEST   WORD PTR [BP+DI+68], 4645H
-      TEST   WORD PTR [BP+DI-128], 4645H
+      TEST   WORD PTR [BP+DI-128], 8281H
       TEST   WORD PTR [SI+69], 4746H
-      TEST   WORD PTR [SI-128], 4746H
+      TEST   WORD PTR [SI-128], 8281H
       TEST   WORD PTR [DI+70], 4847H
-      TEST   WORD PTR [DI-128], 4847H
+      TEST   WORD PTR [DI-128], 8281H
       TEST   WORD PTR [BP+71], 4948H
-      TEST   WORD PTR [BP-128], 4948H
+      TEST   WORD PTR [BP-128], 8281H
       TEST   WORD PTR [BX+72], 4A49H
-      TEST   WORD PTR [BX-128], 4A49H
+      TEST   WORD PTR [BX-128], 8281H
       NOT    WORD PTR [BX+SI+81]
       NOT    WORD PTR [BX+SI-128]
       NOT    WORD PTR [BX+DI+82]

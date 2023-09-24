@@ -25,14 +25,15 @@ generate: gen
 	$(MAKE) -C autogen clean-gen
 	$(MAKE) -C autogen generate
 
-clean: clean-objs
-	-rm -f $(BINS)
-clean-objs:
-	-rm -f $(OBJS) *.d *~ compile_commands.json
+clean: clean-test
 	$(MAKE) -C driver clean
 	$(MAKE) -C unit clean
 	$(MAKE) -C autogen clean
 	$(MAKE) -C reference clean
+
+clean-test:
+	-rm -f $(BINS)
+	-rm -f $(OBJS) *.d *~ compile_commands.json
 
 vpath %.cpp ../src
 vpath %.cpp ../driver

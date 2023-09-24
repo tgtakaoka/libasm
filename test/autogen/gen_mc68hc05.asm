@@ -201,38 +201,38 @@
       LDX   $0102
       STX   >$0001
       STX   $0102
-      SUB   53714,X
-      SUB   >1,X
-      CMP   53971,X
-      CMP   >1,X
-      SBC   54228,X
-      SBC   >1,X
-      CPX   54485,X
-      CPX   >1,X
-      AND   54742,X
-      AND   >1,X
-      BIT   54999,X
-      BIT   >1,X
-      LDA   55256,X
-      LDA   >1,X
-      STA   55513,X
-      STA   >1,X
-      EOR   55770,X
-      EOR   >1,X
-      ADC   56027,X
-      ADC   >1,X
-      ORA   56284,X
-      ORA   >1,X
-      ADD   56541,X
-      ADD   >1,X
-      JMP   56798,X
-      JMP   >1,X
-      JSR   57055,X
-      JSR   >1,X
-      LDX   57312,X
-      LDX   >1,X
-      STX   57569,X
-      STX   >1,X
+      SUB   $D1D2,X
+      SUB   >$0001,X
+      CMP   $D2D3,X
+      CMP   >$0001,X
+      SBC   $D3D4,X
+      SBC   >$0001,X
+      CPX   $D4D5,X
+      CPX   >$0001,X
+      AND   $D5D6,X
+      AND   >$0001,X
+      BIT   $D6D7,X
+      BIT   >$0001,X
+      LDA   $D7D8,X
+      LDA   >$0001,X
+      STA   $D8D9,X
+      STA   >$0001,X
+      EOR   $D9DA,X
+      EOR   >$0001,X
+      ADC   $DADB,X
+      ADC   >$0001,X
+      ORA   $DBDC,X
+      ORA   >$0001,X
+      ADD   $DCDD,X
+      ADD   >$0001,X
+      JMP   $DDDE,X
+      JMP   >$0001,X
+      JSR   $DEDF,X
+      JSR   >$0001,X
+      LDX   $DFE0,X
+      LDX   >$0001,X
+      STX   $E0E1,X
+      STX   >$0001,X
       SUB   225,X
       SUB   <0,X
       CMP   226,X

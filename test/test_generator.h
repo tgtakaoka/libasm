@@ -17,49 +17,66 @@
 #ifndef __TEST_GENERATOR_H__
 #define __TEST_GENERATOR_H__
 
+#include <cstdarg>
+#include <string>
+#include <unordered_map>
+
 #include "dis_base.h"
 #include "gen_formatter.h"
 #include "tokenized_text.h"
-
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
 
 namespace libasm {
 namespace gen {
 
 struct GenDebugger {
-    virtual void info(const char *fmt, ...) = 0;
+    virtual void info(const char *fmt, va_list args) = 0;
+    void info(const char *fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+        info(fmt, args);
+        va_end(args);
+    }
 };
 
 struct DataGenerator {
-    int start() const { return _start; }
-    int length() const { return _start + _size; }
+    static DataGenerator *newGenerator(
+            uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger);
+    DataGenerator *newChild();
+    virtual ~DataGenerator();
+
+    uint8_t start() const { return _start; }
+    uint8_t length() const;
+    OpCodeWidth width() const { return _width; }
     virtual bool hasNext() const = 0;
-    virtual void next() = 0;
+    void next();
+    virtual void nextByte() {}
+    virtual void outData(uint16_t) = 0;
+    uint16_t data() const { return _data; }
 
-    void outByte(uint8_t data, int off = 0) { _buffer[_start + off] = data; }
-
-    void debug(const char *msg) const;
-    void dump(const char *msg, int start, int size) const;
+    void debug(const char *fmt, ...) const;
+    void dump(const char *fmt, ...) const;
 
 protected:
-    uint8_t *_buffer;
-    const int _bufSize;
-    const int _start;
-    const int _size;
-    int _count;
+    uint8_t *const _buffer;
+    const OpCodeWidth _width;
+    const Endian _endian;
+    const uint8_t _start;
     GenDebugger &_debugger;
+    uint32_t _count;
+    uint16_t _data;
 
-    DataGenerator(uint8_t *buffer, int bufSize, int start, int size, GenDebugger &debugger);
-    DataGenerator(DataGenerator &parent, int size);
-    void fill();
+    void genData();
+    void dump(const char *msg, int start, int size, va_list args) const;
+
+    DataGenerator(uint8_t *buffer, const ConfigBase &config, GenDebugger &debugger);
+    DataGenerator(DataGenerator &parent);
 };
 
 struct TestGenerator {
     struct Formatter : public GenDebugger {
         virtual GenFormatter &listing() = 0;
         virtual void printList() = 0;
+        virtual void flush() = 0;
         virtual void setOrigin(uint32_t addr) = 0;
     };
 
@@ -67,27 +84,30 @@ struct TestGenerator {
     virtual ~TestGenerator();
 
     TestGenerator &generate();
-    TestGenerator &generate(uint8_t opc1);
-    TestGenerator &generate(uint8_t opc1, uint8_t opc2, uint8_t opc3);
+    TestGenerator &ignoreSizeVariation();
 
 private:
     Formatter &_formatter;
     Disassembler &_disassembler;
     GenFormatter &_listing;
     const OpCodeWidth _opCodeWidth;
-    const int _memorySize;
     const Endian _endian;
-    const uint8_t _addr_unit;
-    uint32_t _mem_addr;
-    uint8_t *_memory;
-    std::unordered_map<std::string,
-            std::unordered_set<TokenizedText, TokenizedText::hash, TokenizedText::eq> >
-            _map;
+    const AddressUnit _addressUnit;
+    const int _codeMax;
+    uint8_t *const _memory;
+    uint32_t _address;
+    bool _ignoreSizeVariation;
 
-    TestGenerator &generate(DataGenerator &gen);
+    std::unordered_map<std::string, TokenizedText::Set> _map;
+    std::unordered_map<std::string, TokenizedText::Set> _error;
+
     void printInsn(const libasm::driver::DisFormatter &data);
-    int meaningfulTestData();
-    void generateTests(DataGenerator &gen);
+    const TokenizedText &meaningfulTestData(std::string &name, bool withSize = true);
+    const TokenizedText &meaningfulError(std::string &name);
+    static constexpr uint8_t MAX_DROP_BYTE = 22;
+    static uint8_t calcDrop(const TokenizedText &text);
+    uint8_t generateTests(DataGenerator &gen, const bool root);
+    void dump() const;
 };
 
 }  // namespace gen
