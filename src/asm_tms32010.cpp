@@ -42,7 +42,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Tms32010SymbolParser final : SimpleSymbolParser {
-    Tms32010SymbolParser() : SimpleSymbolParser(SymbolParser::DOLLAR) {}
+    Tms32010SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOLLAR) {}
     bool instructionLetter(char c) const override {
         return SimpleSymbolParser::instructionLetter(c) || c == '.';
     }

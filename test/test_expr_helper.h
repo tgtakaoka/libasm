@@ -44,6 +44,11 @@ void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, con
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
+struct TestLocator : ValueParser::Locator {
+    uint32_t location = 0;
+    uint32_t currentLocation() const override { return location; }
+};
+
 }  // namespace test
 }  // namespace libasm
 

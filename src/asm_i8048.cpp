@@ -49,12 +49,10 @@ struct AsmI8048::Operand final : ErrorAt {
 };
 
 const ValueParser::Plugins &AsmI8048::defaultPlugins() {
-    static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const OperatorParser &operators() const override {
-            return IntelOperatorParser::singleton();
-        }
-    } PLUGINS{};
+    static struct final : ValueParser::Plugins {
+        const NumberParser &number() const { return IntelNumberParser::singleton(); }
+        const OperatorParser &operators() const { return IntelOperatorParser::singleton(); }
+    } PLUGINS;
     return PLUGINS;
 }
 
@@ -247,7 +245,7 @@ Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
-        return setError(GARBAGE_AT_END);
+        return setError(scan, GARBAGE_AT_END);
     setErrorIf(dstOp);
     setErrorIf(srcOp);
 

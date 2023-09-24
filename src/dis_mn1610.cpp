@@ -18,18 +18,20 @@
 
 #include "reg_mn1610.h"
 #include "table_mn1610.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace mn1610 {
 
 using namespace reg;
+using namespace text::common;
 
 const ValueFormatter::Plugins &DisMn1610::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("*"); }
-        const SurroundHexFormatter _hex{HexFormatter::X_DASH, '\''};
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_STAR; }
+        const SurroundHexFormatter _hex{PSTR_X_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;
 }

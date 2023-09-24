@@ -505,6 +505,37 @@ constexpr char TEXT_ORG[]   PROGMEM = "org";
 constexpr char TEXT_RMB[]   PROGMEM = "rmb";
 constexpr char TEXT_TEXT[]  PROGMEM = "text";
 
+constexpr char PSTR_AT[]      PROGMEM = "@";
+constexpr char PSTR_DOLLAR[]  PROGMEM = "$";
+constexpr char PSTR_DOT[]     PROGMEM = ".";
+constexpr char PSTR_LESS[]    PROGMEM = ">";
+constexpr char PSTR_PERCENT[] PROGMEM = "%";
+constexpr char PSTR_SHARP[]   PROGMEM = "#";
+constexpr char PSTR_STAR[]    PROGMEM = "*";
+constexpr char PSTR_UNDER[]   PROGMEM = "_";
+
+constexpr char PSTR_AT_QUESTION[]    PROGMEM = "@?";
+constexpr char PSTR_B_DASH[]         PROGMEM = "b'";
+constexpr char PSTR_DOT_DOLLAR[]     PROGMEM = ".$";
+constexpr char PSTR_DOT_DOT[]        PROGMEM = "..";
+constexpr char PSTR_DOT_STAR[]       PROGMEM = ".*";
+constexpr char PSTR_H_DASH[]         PROGMEM = "h'";
+constexpr char PSTR_O_DASH[]         PROGMEM = "o'";
+constexpr char PSTR_UNDER_DOLLAR[]   PROGMEM = "_$";
+constexpr char PSTR_UNDER_DOT[]      PROGMEM = "_.";
+constexpr char PSTR_UNDER_QUESTION[] PROGMEM = "_?";
+constexpr char PSTR_X_DASH[]         PROGMEM = "x'";
+constexpr char PSTR_ZERO_B[]         PROGMEM = "0b";
+constexpr char PSTR_ZERO_X[]         PROGMEM = "0x";
+
+constexpr char PSTR_DOT_STAR_DOLLAR[]   PROGMEM = ".*$";
+constexpr char PSTR_UNDER_AT_QUESTION[] PROGMEM = "_@?";
+constexpr char PSTR_UNDER_DOT_DOLLER[]  PROGMEM = "_.$";
+
+constexpr char PSTR_PERCENT_2[]                 PROGMEM = "%(2)";
+constexpr char PSTR_PERCENT_8[]                 PROGMEM = "%(8)";
+constexpr char PSTR_UNDER_DOT_DOLLER_QUESTION[] PROGMEM = "_.$?";
+
 // clang-format on
 
 }  // namespace common

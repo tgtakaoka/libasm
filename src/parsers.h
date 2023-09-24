@@ -61,15 +61,6 @@ struct SymbolParser : Singleton<SymbolParser> {
 
     /** Function name is same as symbol */
     virtual bool functionNameLetter(char c) const { return symbolLetter(c); }
-
-    static const /*PROGMEM*/ char NONE[];                 // ""
-    static const /*PROGMEM*/ char DOLLAR[];               // "$"
-    static const /*PROGMEM*/ char DOT[];                  // "."
-    static const /*PROGMEM*/ char QUESTION[];             // "?"
-    static const /*PROGMEM*/ char ATMARK_QUESTION[];      // "@?";
-    static const /*PROGMEM*/ char DOLLAR_DOT[];           // "$."
-    static const /*PROGMEM*/ char DOLLAR_QUESTION[];      // "$?"
-    static const /*PROGMEM*/ char DOLLAR_DOT_QUESTION[];  // "$.?"
 };
 
 /**
@@ -208,7 +199,7 @@ struct ZilogNumberParser final : NumberParser, Singleton<ZilogNumberParser> {
  * - Octal:       "[oO]'[0-7]+'"
  * - Binary:      "[bB]'[01]+'"
  */
-struct IbmNumberParser final : NumberParser, Singleton<IbmNumberParser> {
+struct IbmNumberParser final : NumberParser {
     IbmNumberParser(char hex = 'H', bool closingQuote = true)
         : _hex(hex), _bin(0), _oct(0), _dec(0), _closingQuote(closingQuote) {}
     IbmNumberParser(char hex, char bin, bool closingQuote = true)
@@ -232,7 +223,7 @@ private:
  * - Octal:       "[oO]'[0-7]+'?"
  * - Binary:      "[bB]'[01]+'?"
  */
-struct NationalNumberParser final : NumberParser, Singleton<NationalNumberParser> {
+struct NationalNumberParser final : NumberParser {
     NationalNumberParser(char hex = 'X') : _ibm(hex, false) {}
     NationalNumberParser(char hex, char bin) : _ibm(hex, bin, false) {}
     NationalNumberParser(char hex, char bin, char oct) : _ibm(hex, bin, oct, false) {}
@@ -248,35 +239,30 @@ private:
  * Fairchild style numbers are the same as IBM plus '$hh' for hexadecimal.
  */
 struct FairchildNumberParser final : NumberParser, Singleton<FairchildNumberParser> {
-    FairchildNumberParser() : _ibm('H', 'B', 'O') {}
     Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IbmNumberParser _ibm;
+    const IbmNumberParser _ibm{'H', 'B', 'O'};
 };
 
 /**
  * RCA style numbers are the same as IBM plus '#hh' for hexadecimal.
  */
 struct RcaNumberParser final : NumberParser, Singleton<RcaNumberParser> {
-    RcaNumberParser() : _ibm('X', 'B'), _intel() {}
     Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IbmNumberParser _ibm;
-    const IntelNumberParser _intel;
+    const IbmNumberParser _ibm{'X', 'B'};
 };
 
 /**
  * Signetics style numbers are the same as IBM plus '#hh' for hexadecimal.
  */
 struct SigneticsNumberParser final : NumberParser, Singleton<SigneticsNumberParser> {
-    SigneticsNumberParser() : _ibm('H', 'B', 'O'), _intel() {}
     Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IbmNumberParser _ibm;
-    const IntelNumberParser _intel;
+    const IbmNumberParser _ibm{'H', 'B', 'O'};
 };
 
 /**
@@ -284,9 +270,6 @@ private:
  */
 struct TexasNumberParser final : NumberParser, Singleton<TexasNumberParser> {
     Error parseNumber(StrScanner &scan, Value &val) const override;
-
-private:
-    const IntelNumberParser _intel{};
 };
 
 struct SemicolonCommentParser final : CommentParser, Singleton<SemicolonCommentParser> {
@@ -302,11 +285,8 @@ struct RcaCommentParser final : CommentParser, Singleton<RcaCommentParser> {
 
 struct SharpCommentParser final : CommentParser, Singleton<SharpCommentParser> {
     bool endOfLine(const StrScanner &scan) const {
-        return *scan == '#' || _semicolon.endOfLine(scan);
+        return *scan == '#' || SemicolonCommentParser::singleton().endOfLine(scan);
     }
-
-private:
-    const SemicolonCommentParser _semicolon{};
 };
 
 struct AsteriskCommentParser final : CommentParser, Singleton<AsteriskCommentParser> {
@@ -357,8 +337,6 @@ private:
 struct DefaultLetterParser final : LetterParser, Singleton<DefaultLetterParser> {};
 
 struct MotorolaLetterParser final : LetterParser, Singleton<MotorolaLetterParser> {
-    MotorolaLetterParser(bool closingQuote = false) : _closingQuote(closingQuote) {}
-
     /**
      * Motorola style letter is followed after a single quote and optionally closed with another
      * single quote
@@ -366,10 +344,6 @@ struct MotorolaLetterParser final : LetterParser, Singleton<MotorolaLetterParser
     Error parseLetter(StrScanner &scan, char &letter) const override;
     char readLetter(StrScanner &scan, ErrorAt &error) const override;
     char readLetterInString(StrScanner &scan, ErrorAt &error) const override;
-
-private:
-    const bool _closingQuote;
-    Error hasSuffix(StrScanner &scan) const;
 };
 
 struct ZilogLetterParser final : LetterParser, Singleton<ZilogLetterParser> {
@@ -380,8 +354,8 @@ struct ZilogLetterParser final : LetterParser, Singleton<ZilogLetterParser> {
     char readLetter(StrScanner &scan, ErrorAt &error) const override;
 };
 
-struct IbmLetterParser final : LetterParser, Singleton<IbmLetterParser> {
-    IbmLetterParser(char prefix = 'C') : _prefix(prefix) {}
+struct IbmLetterParser final : LetterParser {
+    IbmLetterParser(char prefix) : _prefix(prefix) {}
 
     /** IBM style letter constant is C'c'. */
     Error parseLetter(StrScanner &scan, char &letter) const override;
@@ -393,8 +367,6 @@ private:
 };
 
 struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterParser> {
-    FairchildLetterParser() {}
-
     /** Fairchild style letter is: [cC]'[:print:]', #[:print:], '[:print:]'? */
     Error parseLetter(StrScanner &scan, char &letter) const override;
 
@@ -413,16 +385,12 @@ struct DollarLocationParser final : LocationParser, Singleton<DollarLocationPars
     bool locationSymbol(StrScanner &scan) const override;
 };
 
-struct NationalLocationParser final : LocationParser, Singleton<NationalLocationParser> {
-    NationalLocationParser(char extra = '$') : _extra(extra) {}
+struct SimpleLocationParser final : LocationParser {
+    SimpleLocationParser(const /*PROGMEM*/ char *letters) : _letters_P(letters) {}
     bool locationSymbol(StrScanner &scan) const override;
 
 private:
-    const char _extra;
-};
-
-struct FairchildLocationParser final : LocationParser, Singleton<FairchildLocationParser> {
-    bool locationSymbol(StrScanner &scan) const override;
+    const /*PROGMEM*/ char *_letters_P;
 };
 
 }  // namespace libasm

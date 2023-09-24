@@ -24,23 +24,22 @@
 namespace libasm {
 
 struct ValueParser {
-    struct Plugins {
-        virtual const NumberParser &number() const { return CStyleNumberParser::singleton(); }
-        virtual const CommentParser &comment() const { return SemicolonCommentParser::singleton(); }
-        virtual const SymbolParser &symbol() const { return SymbolParser::singleton(); }
-        virtual const LetterParser &letter() const { return DefaultLetterParser::singleton(); }
-        virtual const LocationParser &location() const { return DollarLocationParser::singleton(); }
-        virtual const OperatorParser &operators() const {
-            return CStyleOperatorParser::singleton();
-        }
-        virtual const FunctionTable &function() const { return FunctionTable::singleton(); }
+    struct Plugins : Singleton<Plugins> {
+        virtual const NumberParser &number() const;
+        virtual const CommentParser &comment() const;
+        virtual const SymbolParser &symbol() const;
+        virtual const LetterParser &letter() const;
+        virtual const LocationParser &location() const;
+        virtual const OperatorParser &operators() const;
+        virtual const FunctionTable &function() const;
     };
 
-    struct Locator {
-        virtual uint32_t currentLocation() const = 0;
+    struct Locator : Singleton<Locator> {
+        virtual uint32_t currentLocation() const { return 0; }
     };
 
-    ValueParser(const Plugins &plugins, const Locator &locator)
+    ValueParser(const Plugins &plugins = Plugins::singleton(),
+            const Locator &locator = Locator::singleton())
         : _number(plugins.number()),
           _comment(plugins.comment()),
           _symbol(plugins.symbol()),

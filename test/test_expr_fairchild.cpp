@@ -19,7 +19,7 @@
 using namespace libasm;
 using namespace libasm::test;
 
-const struct MotorolaPlugins : ValueParser::Plugins {
+const struct final : ValueParser::Plugins {
     const NumberParser &number() const override { return _number; }
     const CommentParser &comment() const override { return _comment; }
     const LetterParser &letter() const override { return _letter; }
@@ -28,13 +28,10 @@ const struct MotorolaPlugins : ValueParser::Plugins {
 private:
     const FairchildNumberParser _number{};
     const AsteriskCommentParser _comment{};
-    const FairchildLetterParser _letter;
+    const FairchildLetterParser _letter{};
     const AsteriskLocationParser _location{};
 } plugins{};
-struct : ValueParser::Locator {
-    uint32_t location = 0;
-    uint32_t currentLocation() const { return location; }
-} locator;
+TestLocator locator{};
 const ValueParser parser{plugins, locator};
 
 const ValueFormatter formatter{ValueFormatter::Plugins::fairchild()};

@@ -22,11 +22,11 @@ using namespace libasm::test;
 const struct MotorolaPlugins : ValueParser::Plugins {
     const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
     const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
-    const SymbolParser &symbol() const override { return _symbol;}
+    const SymbolParser &symbol() const override { return _symbol; }
     const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
-    const LocationParser &location() const override { return AsteriskLocationParser::singleton();}
+    const LocationParser &location() const override { return AsteriskLocationParser::singleton(); }
     const OperatorParser &operators() const override { return Mc68xxOperatorParser::singleton(); }
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR_DOT};
+    const SimpleSymbolParser _symbol{PSTR(".$")};
 } plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;
@@ -61,8 +61,7 @@ static void test_char_constant() {
 
 static void test_char_closing() {
     const struct : MotorolaPlugins {
-        const LetterParser &letter() const override { return _letter; }
-        const MotorolaLetterParser _letter{true};
+        const LetterParser &letter() const override { return DefaultLetterParser::singleton(); }
     } plugins{};
     const ValueParser parser{plugins, locator};
 

@@ -456,27 +456,27 @@ build gen_z8000:      link gen_z8000.o    $
 build test_expr_base: run test_expr_base.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
-  value_formatter.o value_parser.o
+  value_formatter.o value_parser.o text_common.o
 build test_expr_fairchild: run test_expr_fairchild.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
-  value_formatter.o value_parser.o
+  value_formatter.o value_parser.o text_common.o
 build test_expr_intel: run test_expr_intel.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
-  value_formatter.o value_parser.o
+  value_formatter.o value_parser.o text_common.o
 build test_expr_motorola: run test_expr_motorola.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
-  value_formatter.o value_parser.o
+  value_formatter.o value_parser.o text_common.o
 build test_expr_national: run test_expr_national.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
-  value_formatter.o value_parser.o
+  value_formatter.o value_parser.o text_common.o
 build test_expr_zilog: run test_expr_zilog.o $
   config_base.o error_reporter.o formatters.o operators.o option_base.o $
   parsers.o str_buffer.o str_scanner.o test_asserter.o test_expr_helper.o $
-  value_formatter.o value_parser.o
+  value_formatter.o value_parser.o text_common.o
 
 build test_cdp1802:  phony test_asm_cdp1802  test_dis_cdp1802
 build test_f3850:    phony test_asm_f3850    test_dis_f3850

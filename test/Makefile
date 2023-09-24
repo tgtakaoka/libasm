@@ -50,7 +50,7 @@ OBJS_dis  = \
     value_formatter.o text_common.o
 OBJS_expr = \
     config_base.o test_expr_helper.o formatters.o operators.o parsers.o \
-    value_formatter.o value_parser.o
+    value_formatter.o value_parser.o text_common.o
 OBJS_gen  = \
     gen_driver.o test_generator.o tokenized_text.o dis_formatter.o \
     config_base.o dis_base.o formatters.o reg_base.o value_formatter.o \

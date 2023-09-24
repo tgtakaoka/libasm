@@ -40,7 +40,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Ins8060SymbolParser final : PrefixSymbolParser {
-    Ins8060SymbolParser() : PrefixSymbolParser(SymbolParser::DOLLAR) {}
+    Ins8060SymbolParser() : PrefixSymbolParser(PSTR_DOLLAR) {}
     bool instructionLetter(char c) const override {
         return PrefixSymbolParser::instructionLetter(c) || c == '=' || c == '.';
     }
@@ -63,13 +63,13 @@ struct AsmIns8060::Operand final : ErrorAt {
 
 const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return NationalNumberParser::singleton(); }
+        const NumberParser &number() const override { return _number; }
         const SymbolParser &symbol() const override { return _symbol; }
-        const LocationParser &location() const override {
-            return NationalLocationParser::singleton();
-        }
+        const LocationParser &location() const override { return _location; }
         const FunctionTable &function() const override { return _function; }
+        const NationalNumberParser _number{};
         const Ins8060SymbolParser _symbol{};
+        const SimpleLocationParser _location{PSTR_DOT_DOLLAR};
         const Ins8060FunctionTable _function{};
     } PLUGINS{};
     return PLUGINS;

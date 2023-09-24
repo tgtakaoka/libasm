@@ -60,6 +60,34 @@ Error Value::parseNumber(StrScanner &scan, Radix radix) {
     return error;
 }
 
+const NumberParser &ValueParser::Plugins::number() const {
+    return CStyleNumberParser::singleton();
+}
+
+const CommentParser &ValueParser::Plugins::comment() const {
+    return SemicolonCommentParser::singleton();
+}
+
+const SymbolParser &ValueParser::Plugins::symbol() const {
+    return SymbolParser::singleton();
+}
+
+const LetterParser &ValueParser::Plugins::letter() const {
+    return DefaultLetterParser::singleton();
+}
+
+const LocationParser &ValueParser::Plugins::location() const {
+    return DollarLocationParser::singleton();
+}
+
+const OperatorParser &ValueParser::Plugins::operators() const {
+    return CStyleOperatorParser::singleton();
+}
+
+const FunctionTable &ValueParser::Plugins::function() const {
+    return FunctionTable::singleton();
+}
+
 struct OperatorStack : Stack<Operator, 8> {
     OperatorStack() : Stack() {}
     Operator &top() { return _contents[_size - 1]; }

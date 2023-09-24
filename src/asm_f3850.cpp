@@ -53,9 +53,8 @@ const ValueParser::Plugins &AsmF3850::defaultPlugins() {
         const NumberParser &number() const override { return FairchildNumberParser::singleton(); }
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
         const LetterParser &letter() const override { return FairchildLetterParser::singleton(); }
-        const LocationParser &location() const override {
-            return FairchildLocationParser::singleton();
-        }
+        const LocationParser &location() const override { return _location; }
+        const SimpleLocationParser _location{PSTR_DOT_STAR_DOLLAR};
     } PLUGINS{};
     return PLUGINS;
 }

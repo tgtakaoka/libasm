@@ -55,7 +55,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Mc68000SymbolParser final : PrefixSymbolParser {
-    Mc68000SymbolParser() : PrefixSymbolParser(SymbolParser::DOT, SymbolParser::DOLLAR_DOT) {}
+    Mc68000SymbolParser() : PrefixSymbolParser(PSTR_DOT, PSTR_UNDER_DOT_DOLLER) {}
     bool instructionLetter(char c) const override {
         return PrefixSymbolParser::instructionLetter(c) || c == '.';
     }
@@ -80,12 +80,10 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
         const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
         const Mc68000SymbolParser _symbol{};
-        const MotorolaLetterParser _letter{/*closingQuote*/ true};
     } PLUGINS{};
     return PLUGINS;
 }

@@ -18,6 +18,8 @@
 
 #include <ctype.h>
 
+#include "text_common.h"
+
 namespace libasm {
 
 namespace {
@@ -45,16 +47,15 @@ bool isValidDigit(const char c, const Radix radix) {
 Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     auto radix = RADIX_NONE;
-    if (p.expect('0')) {
+    if (p.iexpectText_P(text::common::PSTR_ZERO_X)) {
+        radix = RADIX_16;
+    } else if (p.iexpectText_P(text::common::PSTR_ZERO_B)) {
+        radix = RADIX_2;
+    } else if (p.expect('0')) {
         if (!isalnum(*p) || isoctal(*p)) {
             radix = RADIX_8;
             p = scan;
-        } else if (p.iexpect('X')) {
-            radix = RADIX_16;
-        } else if (p.iexpect('B')) {
-            radix = RADIX_2;
         } else {
-            scan = p;
             return ILLEGAL_CONSTANT;
         }
     } else if (isdigit(*p)) {
@@ -142,9 +143,9 @@ Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffi
 Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
     auto radix = RADIX_NONE;
-    if (p.iexpectText_P(PSTR("%(8)"))) {
+    if (p.iexpectText_P(text::common::PSTR_PERCENT_8)) {
         radix = RADIX_8;
-    } else if (p.iexpectText_P(PSTR("%(2)"))) {
+    } else if (p.iexpectText_P(text::common::PSTR_PERCENT_2)) {
         radix = RADIX_2;
     } else if (p.expect('%') && isxdigit(*p)) {
         radix = RADIX_16;
@@ -207,14 +208,14 @@ Error RcaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
             scan = p;
         return err;
     }
-    const auto err = _intel.parseNumber(scan, val);
+    const auto err = IntelNumberParser::singleton().parseNumber(scan, val);
     if (err == OK)
         return OK;
     return _ibm.parseNumber(scan, val);
 }
 
 Error SigneticsNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    const auto err = _intel.parseNumber(scan, val);
+    const auto err = IntelNumberParser::singleton().parseNumber(scan, val);
     if (err == OK)
         return OK;
     return _ibm.parseNumber(scan, val);
@@ -228,23 +229,14 @@ Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
             scan = p;
         return err;
     }
-    const auto err = _intel.parseNumber(scan, val);
+    const auto err = IntelNumberParser::singleton().parseNumber(scan, val);
     if (err == OK)
         return OK;
     return CStyleNumberParser::singleton().parseNumber(scan, val);
 }
 
-const /*PROGMEM*/ char SymbolParser::NONE[] PROGMEM = "";
-const /*PROGMEM*/ char SymbolParser::DOLLAR[] PROGMEM = "$";
-const /*PROGMEM*/ char SymbolParser::DOT[] PROGMEM = ".";
-const /*PROGMEM*/ char SymbolParser::QUESTION[] PROGMEM = "?";
-const /*PROGMEM*/ char SymbolParser::ATMARK_QUESTION[] PROGMEM = "@?";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT[] PROGMEM = "$.";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION[] PROGMEM = "$?";
-const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION[] PROGMEM = "$.?";
-
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return isalpha(c) || c == '_' || (!headOfSymbol && isdigit(c));
+    return isalpha(c) || (!headOfSymbol && isdigit(c));
 }
 
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
@@ -254,7 +246,7 @@ bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
 bool PrefixSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     if (SymbolParser::symbolLetter(c, headOfSymbol))
         return true;
-    if (headOfSymbol)
+    if (headOfSymbol && _prefix_P)
         return c && strchr_P(_prefix_P, c);
     if (_extra_P)
         return c && strchr_P(_extra_P, c);
@@ -395,27 +387,19 @@ Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
         return NOT_AN_EXPECTED;
     ErrorAt error;
     letter = readLetter(scan, error);
-    return error.getError() ? error.getError() : hasSuffix(scan);
+    if (error.isOK())
+        scan.expect('\'');
+    return error.getError();
 }
 
 char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
-    if (_closingQuote)
-        return DefaultLetterParser::singleton().readLetter(scan, error);
-    const auto c = *scan;
-    if (c == 0) {
+    if (*scan == 0)
         error.setError(ILLEGAL_CONSTANT);
-    } else {
-        scan += 1;
-    }
-    return c;
+    return *scan++;
 }
 
 char MotorolaLetterParser::readLetterInString(StrScanner &scan, ErrorAt &error) const {
     return LetterParser::readLetter(scan, error, '\'');
-}
-
-Error MotorolaLetterParser::hasSuffix(StrScanner &scan) const {
-    return (scan.expect('\'') || !_closingQuote) ? OK : MISSING_CLOSING_QUOTE;
 }
 
 Error IbmLetterParser::parseLetter(StrScanner &scan, char &letter) const {
@@ -460,7 +444,9 @@ Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
         return NOT_AN_EXPECTED;
     ErrorAt error;
     if (prefix == '#') {
-        letter = MotorolaLetterParser::singleton().readLetter(scan, error);
+        if (*scan == 0)
+            return error.setError(ILLEGAL_CONSTANT);
+        letter = *scan++;
     } else {
         letter = readLetter(scan, error);
     }
@@ -489,12 +475,14 @@ bool DollarLocationParser::locationSymbol(StrScanner &scan) const {
     return scan.expect('$') && !isalnum(*scan);
 }
 
-bool NationalLocationParser::locationSymbol(StrScanner &scan) const {
-    return (scan.expect('.') || (_extra && scan.expect(_extra))) && !isalnum(*scan);
-}
-
-bool FairchildLocationParser::locationSymbol(StrScanner &scan) const {
-    return (scan.expect('*') || scan.expect('$')) && !isalnum(*scan);
+bool SimpleLocationParser::locationSymbol(StrScanner &scan) const {
+    auto p = scan;
+    const auto c = *p++;
+    if (c && strchr_P(_letters_P, c) && !isalnum(*p)) {
+        scan = p;
+        return true;
+    }
+    return false;
 }
 
 }  // namespace libasm

@@ -16,23 +16,9 @@
 
 #include "formatters.h"
 
+#include "text_common.h"
+
 namespace libasm {
-
-const /*PROGMEM*/ char BinFormatter::ZERO_B[] PROGMEM = "0b";
-const /*PROGMEM*/ char BinFormatter::PERCENT[] PROGMEM = "%";
-const /*PROGMEM*/ char BinFormatter::PERCENT2[] PROGMEM = "%(2)";
-const /*PROGMEM*/ char BinFormatter::B_DASH[] PROGMEM = "b'";
-
-const /*PROGMEM*/ char OctFormatter::ATMARK[] PROGMEM = "@";
-const /*PROGMEM*/ char OctFormatter::PERCENT8[] PROGMEM = "%(8)";
-const /*PROGMEM*/ char OctFormatter::O_DASH[] PROGMEM = "o'";
-
-const /*PROGMEM*/ char HexFormatter::ZERO_X[] PROGMEM = "0x";
-const /*PROGMEM*/ char HexFormatter::DOLLAR[] PROGMEM = "$";
-const /*PROGMEM*/ char HexFormatter::PERCENT[] PROGMEM = "%";
-const /*PROGMEM*/ char HexFormatter::LESS[] PROGMEM = ">";
-const /*PROGMEM*/ char HexFormatter::X_DASH[] PROGMEM = "x'";
-const /*PROGMEM*/ char HexFormatter::H_DASH[] PROGMEM = "h'";
 
 StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val) const {
     const auto start = out.mark();
@@ -84,7 +70,7 @@ StrBuffer &SurroundBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t wi
 }
 
 StrBuffer &CStyleBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return BinFormatter::format(out.rtext_P(ZERO_B), val, width);
+    return BinFormatter::format(out.rtext_P(text::common::PSTR_ZERO_B), val, width);
 }
 
 StrBuffer &OctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
@@ -162,7 +148,7 @@ StrBuffer &SurroundHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t wi
 }
 
 StrBuffer &CStyleHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return HexFormatter::format(out.rtext_P(ZERO_X), val, width);
+    return HexFormatter::format(out.rtext_P(text::common::PSTR_ZERO_X), val, width);
 }
 
 }  // namespace libasm

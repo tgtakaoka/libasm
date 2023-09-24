@@ -18,11 +18,13 @@
 
 #include "reg_cdp1802.h"
 #include "table_cdp1802.h"
+#include "text_common.h"
 
 namespace libasm {
 namespace cdp1802 {
 
 using namespace reg;
+using namespace text::common;
 
 namespace {
 
@@ -35,8 +37,8 @@ const ValueFormatter::Plugins &DisCdp1802::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '$'; }
-        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR(".."); }
-        const SurroundHexFormatter _hex{HexFormatter::X_DASH, '\''};
+        const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_DOT_DOT; }
+        const SurroundHexFormatter _hex{PSTR_X_DASH, '\''};
     } PLUGINS{};
     return PLUGINS;
 }

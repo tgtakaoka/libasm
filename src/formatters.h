@@ -44,11 +44,6 @@ struct BinFormatter : Singleton<BinFormatter> {
     /** Format unsigned |val| as |width| bit binary. */
     virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
 
-    static const /*PROGMEM*/ char ZERO_B[] PROGMEM;
-    static const /*PROGMEM*/ char PERCENT[] PROGMEM;
-    static const /*PROGMEM*/ char PERCENT2[] PROGMEM;
-    static const /*PROGMEM*/ char B_DASH[] PROGMEM;
-
 protected:
     /**
      * Helper function to format unsigned |val| as |width| bit binary in reverse digit order.
@@ -63,10 +58,6 @@ struct OctFormatter : Singleton<OctFormatter> {
     /** Format unsigned |val| as |width| bit hexadecimal. */
     virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
 
-    static const /*PROGMEM*/ char ATMARK[] PROGMEM;
-    static const /*PROGMEM*/ char PERCENT8[] PROGMEM;
-    static const /*PROGMEM*/ char O_DASH[] PROGMEM;
-
 protected:
     /**
      * Helper function to format unsigned |val| as |width| bit octal in reverse digit order.
@@ -80,13 +71,6 @@ protected:
 struct HexFormatter : Singleton<HexFormatter> {
     /** Format unsigned |val| as |width| bit hexadecimal. */
     virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t width) const;
-
-    static const /*PROGMEM*/ char ZERO_X[] PROGMEM;
-    static const /*PROGMEM*/ char DOLLAR[] PROGMEM;
-    static const /*PROGMEM*/ char PERCENT[] PROGMEM;
-    static const /*PROGMEM*/ char LESS[] PROGMEM;
-    static const /*PROGMEM*/ char X_DASH[] PROGMEM;
-    static const /*PROGMEM*/ char H_DASH[] PROGMEM;
 
 protected:
     /**
