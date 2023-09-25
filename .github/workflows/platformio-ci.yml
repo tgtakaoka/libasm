@@ -26,10 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch:
-          - asm32000
+        example:
           - cdp1802
-          - dis32000
           - f3850
           - i8048
           - i8051
@@ -43,6 +41,7 @@ jobs:
           - mc6809
           - mn1610
           - mos6502
+          - ns32000
           - scn2650
           - tlcs90
           - tms32010
@@ -75,6 +74,6 @@ jobs:
       - name: Install library dependency
         run: pio lib install libcli@1.3.0
       - name: Run PlatformIO
-        run: pio ci --lib="." --board=ATmega644P --board=nano_every --board=nano_33_iot --board=pico
+        run: pio ci --lib="." --board=ATmega1284P --board=AVR128DA48 --board=teensy41
         env:
-          PLATFORMIO_CI_SRC: ./examples/${{ matrix.arch }}/${{ matrix.arch }}.ino
+          PLATFORMIO_CI_SRC: ./examples/${{matrix.example}}/${{matrix.example}}.ino

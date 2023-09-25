@@ -21,9 +21,7 @@ help:
 	@echo '"make update"   propagate common files to sketches'
 
 EXS = \
-	asm32000 \
 	cdp1802  \
-	dis32000 \
 	f3850    \
 	i8048    \
 	i8051    \
@@ -37,6 +35,7 @@ EXS = \
 	mc6809   \
 	mn1610   \
 	mos6502  \
+	ns32000  \
 	scn2650  \
 	tlcs90   \
 	tms32010 \
