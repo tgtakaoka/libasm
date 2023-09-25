@@ -397,7 +397,7 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, Mode
     }
 }
 
-void AsmZ8000::checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt) {
+void AsmZ8000::checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, const Operand *cntOp) {
     const auto dst = dstOp.reg;
     const auto src = srcOp.reg;
     const uint8_t dnum = encodeGeneralRegName(dst);
@@ -406,14 +406,15 @@ void AsmZ8000::checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, 
     const uint8_t ss = encodeGeneralRegName(src);
     const uint8_t se = isLongReg(src) ? ss + 1 : ss;
     if (ds == ss || ds == se || de == ss || de == se)
-        setErrorIf(dstOp, REGISTERS_OVERLAPPED);
-    if (cnt == REG_UNDEF)
+        setErrorIf(srcOp, REGISTERS_OVERLAPPED);
+    if (cntOp == nullptr)
         return;
+    const auto cnt = cntOp->reg;
     const uint8_t c = encodeGeneralRegName(cnt);
     if (ds == c || de == c)
-        setErrorIf(dstOp, REGISTERS_OVERLAPPED);
+        setErrorIf(*cntOp, REGISTERS_OVERLAPPED);
     if (ss == c || se == c)
-        setErrorIf(srcOp, REGISTERS_OVERLAPPED);
+        setErrorIf(*cntOp, REGISTERS_OVERLAPPED);
 }
 
 void AsmZ8000::checkRegisterOverlap(
@@ -422,19 +423,19 @@ void AsmZ8000::checkRegisterOverlap(
         setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
     if (srcOp.mode == M_IR && (srcOp.reg == REG_R0 || srcOp.reg == REG_RR0))
         setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
-    checkRegisterOverlap(dstOp, srcOp, cntOp.reg);
     if (insn.isTranslateInsn()) {
-        // @R1 isn't allowed as dst/src.
+        // Original content of RH1 are lost, so that R1 must not be used as dst/src.
         if (!segmentedModel()) {
             if (dstOp.reg == REG_R1)
                 setErrorIf(dstOp, REGISTER_NOT_ALLOWED);
             if (srcOp.reg == REG_R1)
                 setErrorIf(srcOp, REGISTER_NOT_ALLOWED);
         }
-        // R1 isn't allowed as cnt.
+        // R1 should not be used as cnt as well.
         if (cntOp.reg == REG_R1)
             setErrorIf(cntOp, REGISTER_NOT_ALLOWED);
     }
+    checkRegisterOverlap(dstOp, srcOp, &cntOp);
 }
 
 int8_t AsmZ8000::parseIntrNames(StrScanner &scan) const {

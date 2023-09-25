@@ -1232,341 +1232,555 @@ static void test_shift() {
     ERIO(SRLL, "RR2, #33", 0xB325, 0xFFDF);
 }
 
-static void test_block_transfer() {
+static void test_compare_block() {
     // Compare and Decrement
+    // @RR0 and @R0 must not be used as source register. The destination and
+    // counter register have no restriction. The source, destination, and
+    // count registers must be separated and non-overlapping registers
     if (z8001()) {
+        TEST(CPD,  "R1, @RR2, R4, F",   0xBB28, 0x0410);
         TEST(CPD,  "R0, @RR2, R4, F",   0xBB28, 0x0400);
+        TEST(CPD,  "R1, @RR2, R0, F",   0xBB28, 0x0010);
+        ERRT(CPD,  "R2, @RR0, R4, F",   REGISTER_NOT_ALLOWED, 0xBB08, 0x0420);
+        ERRT(CPD,  "R2, @RR2, R4, F",   REGISTERS_OVERLAPPED, 0xBB28, 0x0420);
+        ERRT(CPD,  "R1, @RR2, R1, F",   REGISTERS_OVERLAPPED, 0xBB28, 0x0110);
+        ERRT(CPD,  "R1, @RR2, R2, F",   REGISTERS_OVERLAPPED, 0xBB28, 0x0210);
+        TEST(CPDB, "RH5, @RR2, R4, LT", 0xBA28, 0x0451);
         TEST(CPDB, "RH0, @RR2, R4, LT", 0xBA28, 0x0401);
-        ERRR(CPD,  "R2, @RR0, R4, F",   0xBB08, 0x0420);
-        ERRR(CPDB, "RL2, @RR0, R4, LT", 0xBA08, 0x04A1);
+        TEST(CPDB, "RH5, @RR2, R0, LT", 0xBA28, 0x0051);
+        ERRT(CPDB, "RH5, @RR0, R4, LT", REGISTER_NOT_ALLOWED, 0xBA08, 0x0451);
+        ERRT(CPDB, "RH3, @RR2, R4, LT", REGISTERS_OVERLAPPED, 0xBA28, 0x0431);
+        ERRT(CPDB, "RH5, @RR2, R5, LT", REGISTERS_OVERLAPPED, 0xBA28, 0x0551);
+        ERRT(CPDB, "RH5, @RR2, R3, LT", REGISTERS_OVERLAPPED, 0xBA28, 0x0351);
     } else {
-        TEST(CPD,  "R0, @R1, R2, F",    0xBB18, 0x0200);
-        TEST(CPDB, "RH0, @R1, R2, LT",  0xBA18, 0x0201);
-        ERRR(CPD,  "R1, @R0, R4, F",    0xBB08, 0x0210);
-        ERRR(CPDB, "RH1, @R0, R4, LT",  0xBA08, 0x0211);
+        TEST(CPD,  "R3, @R1, R2, F",   0xBB18, 0x0230);
+        TEST(CPD,  "R0, @R1, R2, F",   0xBB18, 0x0200);
+        TEST(CPD,  "R3, @R1, R0, F",   0xBB18, 0x0030);
+        ERRT(CPD,  "R2, @R0, R4, F",   REGISTER_NOT_ALLOWED, 0xBB08, 0x0420);
+        ERRT(CPD,  "R3, @R3, R2, F",   REGISTERS_OVERLAPPED, 0xBB38, 0x0230);
+        ERRT(CPD,  "R3, @R1, R3, F",   REGISTERS_OVERLAPPED, 0xBB18, 0x0330);
+        ERRT(CPD,  "R3, @R1, R1, F",   REGISTERS_OVERLAPPED, 0xBB18, 0x0130);
+        TEST(CPDB, "RL3, @R1, R2, LT", 0xBA18, 0x02B1);
+        TEST(CPDB, "RL0, @R1, R2, LT", 0xBA18, 0x0281);
+        TEST(CPDB, "RL3, @R1, R0, LT", 0xBA18, 0x00B1);
+        ERRT(CPDB, "RL0, @R0, R4, LT", REGISTER_NOT_ALLOWED, 0xBA08, 0x0481);
+        ERRT(CPDB, "RL3, @R3, R2, LT", REGISTERS_OVERLAPPED, 0xBA38, 0x02B1);
+        ERRT(CPDB, "RL3, @R1, R3, LT", REGISTERS_OVERLAPPED, 0xBA18, 0x03B1);
+        ERRT(CPDB, "RL3, @R1, R1, LT", REGISTERS_OVERLAPPED, 0xBA18, 0x01B1);
     }
 
     // Compare, Decrement, and Repeat
     if (z8001()) {
         TEST(CPDR,  "R1, @RR4, R3, LE",   0xBB4C, 0x0312);
+        TEST(CPDR,  "R0, @RR4, R3, LE",   0xBB4C, 0x0302);
+        TEST(CPDR,  "R1, @RR4, R0, LE",   0xBB4C, 0x0012);
+        ERRT(CPDR,  "R1, @RR0, R4, LE",   REGISTER_NOT_ALLOWED, 0xBB0C, 0x0412);
+        ERRT(CPDR,  "R5, @RR4, R3, LE",   REGISTERS_OVERLAPPED, 0xBB4C, 0x0352);
+        ERRT(CPDR,  "R1, @RR4, R1, LE",   REGISTERS_OVERLAPPED, 0xBB4C, 0x0112);
+        ERRT(CPDR,  "R1, @RR4, R4, LE",   REGISTERS_OVERLAPPED, 0xBB4C, 0x0412);
         TEST(CPDRB, "RL1, @RR4, R3, ULE", 0xBA4C, 0x0393);
-        ERRR(CPDR,  "R1, @RR0, R4, LE",   0xBB0C, 0x0412);
-        ERRR(CPDRB, "RL1, @RR0, R4, ULE", 0xBA0C, 0x0493);
+        TEST(CPDRB, "RL0, @RR4, R3, ULE", 0xBA4C, 0x0383);
+        TEST(CPDRB, "RL1, @RR4, R0, ULE", 0xBA4C, 0x0093);
+        ERRT(CPDRB, "RL1, @RR0, R4, ULE", REGISTER_NOT_ALLOWED, 0xBA0C, 0x0493);
+        ERRT(CPDRB, "RL5, @RR4, R3, ULE", REGISTERS_OVERLAPPED, 0xBA4C, 0x03D3);
+        ERRT(CPDRB, "RL1, @RR4, R1, ULE", REGISTERS_OVERLAPPED, 0xBA4C, 0x0193);
+        ERRT(CPDRB, "RL1, @RR4, R4, ULE", REGISTERS_OVERLAPPED, 0xBA4C, 0x0493);
     } else {
-        TEST(CPDR,  "R3, @R4, R5, LE",    0xBB4C, 0x0532);
-        TEST(CPDRB, "RL3, @R4, R5, ULE",  0xBA4C, 0x05B3);
-        ERRR(CPDR,  "R1, @R0, R4, LE",    0xBB0C, 0x0412);
-        ERRR(CPDRB, "RL1, @R0, R4, ULE",  0xBA0C, 0x0493);
+        TEST(CPDR,  "R3, @R4, R5, LE",   0xBB4C, 0x0532);
+        TEST(CPDR,  "R0, @R4, R5, LE",   0xBB4C, 0x0502);
+        TEST(CPDR,  "R3, @R4, R0, LE",   0xBB4C, 0x0032);
+        ERRT(CPDR,  "R1, @R0, R4, LE",   REGISTER_NOT_ALLOWED, 0xBB0C, 0x0412);
+        ERRT(CPDR,  "R3, @R3, R5, LE",   REGISTERS_OVERLAPPED, 0xBB3C, 0x0532);
+        ERRT(CPDR,  "R3, @R4, R3, LE",   REGISTERS_OVERLAPPED, 0xBB4C, 0x0332);
+        ERRT(CPDR,  "R3, @R4, R4, LE",   REGISTERS_OVERLAPPED, 0xBB4C, 0x0432);
+        TEST(CPDRB, "RL3, @R4, R5, ULE", 0xBA4C, 0x05B3);
+        TEST(CPDRB, "RL0, @R4, R5, ULE", 0xBA4C, 0x0583);
+        TEST(CPDRB, "RL3, @R4, R0, ULE", 0xBA4C, 0x00B3);
+        ERRT(CPDRB, "RL1, @R0, R4, ULE", REGISTER_NOT_ALLOWED, 0xBA0C, 0x0493);
+        ERRT(CPDRB, "RL3, @R3, R5, ULE", REGISTERS_OVERLAPPED, 0xBA3C, 0x05B3);
+        ERRT(CPDRB, "RL3, @R4, R3, ULE", REGISTERS_OVERLAPPED, 0xBA4C, 0x03B3);
+        ERRT(CPDRB, "RL3, @R4, R4, ULE", REGISTERS_OVERLAPPED, 0xBA4C, 0x04B3);
     }
 
     // Compare and Increment
     if (z8001()) {
         TEST(CPI,  "R2, @RR6, R4, OV", 0xBB60, 0x0424);
-        TEST(CPIB, "RL2, @RR6, R4",    0xBA60, 0x04A8);
-        ERRR(CPI,  "R1, @RR0, R4, OV", 0xBB00, 0x0414);
-        ERRR(CPIB, "RL1, @RR0, R4",    0xBA00, 0x0498);
+        TEST(CPI,  "R0, @RR6, R4, OV", 0xBB60, 0x0404);
+        TEST(CPI,  "R2, @RR6, R0, OV", 0xBB60, 0x0024);
+        ERRT(CPI,  "R1, @RR0, R4, OV", REGISTER_NOT_ALLOWED, 0xBB00, 0x0414);
+        ERRT(CPI,  "R7, @RR6, R4, OV", REGISTERS_OVERLAPPED, 0xBB60, 0x0474);
+        ERRT(CPI,  "R2, @RR6, R2, OV", REGISTERS_OVERLAPPED, 0xBB60, 0x0224);
+        ERRT(CPI,  "R2, @RR6, R6, OV", REGISTERS_OVERLAPPED, 0xBB60, 0x0624);
+        TEST(CPIB, "RL2, @RR6, R4",   0xBA60, 0x04A8);
+        TEST(CPIB, "RL0, @RR6, R4",   0xBA60, 0x0488);
+        TEST(CPIB, "RL2, @RR6, R0",   0xBA60, 0x00A8);
+        ERRT(CPIB, "RL1, @RR0, R4",   REGISTER_NOT_ALLOWED, 0xBA00, 0x0498);
+        ERRT(CPIB, "RL7, @RR6, R4",   REGISTERS_OVERLAPPED, 0xBA60, 0x04F8);
+        ERRT(CPIB, "RL2, @RR6, R2",   REGISTERS_OVERLAPPED, 0xBA60, 0x02A8);
+        ERRT(CPIB, "RL2, @RR6, R7",   REGISTERS_OVERLAPPED, 0xBA60, 0x07A8);
     } else {
-        TEST(CPI,  "R6, @R7, R8, OV",  0xBB70, 0x0864);
-        TEST(CPIB, "RL6, @R7, R8",    0xBA70, 0x08E8);
-        ERRR(CPI,  "R1, @R0, R4, OV",  0xBB00, 0x0414);
-        ERRR(CPIB, "RL1, @R0, R4",    0xBA00, 0x0498);
+        TEST(CPI,  "R6, @R7, R8, OV", 0xBB70, 0x0864);
+        TEST(CPI,  "R0, @R7, R8, OV", 0xBB70, 0x0804);
+        TEST(CPI,  "R6, @R7, R0, OV", 0xBB70, 0x0064);
+        ERRT(CPI,  "R2, @R0, R4, OV", REGISTER_NOT_ALLOWED, 0xBB00, 0x0424);
+        ERRT(CPI,  "R6, @R6, R8, OV", REGISTERS_OVERLAPPED, 0xBB60, 0x0864);
+        ERRT(CPI,  "R6, @R7, R6, OV", REGISTERS_OVERLAPPED, 0xBB70, 0x0664);
+        ERRT(CPI,  "R6, @R7, R7, OV", REGISTERS_OVERLAPPED, 0xBB70, 0x0764);
+        TEST(CPIB, "RL6, @R7, R8",   0xBA70, 0x08E8);
+        TEST(CPIB, "RL0, @R7, R8",   0xBA70, 0x0888);
+        TEST(CPIB, "RL6, @R7, R0",   0xBA70, 0x00E8);
+        ERRT(CPIB, "RL0, @R0, R4",   REGISTER_NOT_ALLOWED, 0xBA00, 0x0488);
+        ERRT(CPIB, "RL6, @R6, R8",   REGISTERS_OVERLAPPED, 0xBA60, 0x08E8);
+        ERRT(CPIB, "RL6, @R7, R6",   REGISTERS_OVERLAPPED, 0xBA70, 0x06E8);
+        ERRT(CPIB, "RL6, @R7, R7",   REGISTERS_OVERLAPPED, 0xBA70, 0x07E8);
     }
 
     // Compare, Increment, and Repeat
     if (z8001()) {
-        TEST(CPIR,  "R3, @RR8, R5, Z",   0xBB84, 0x0536);
-        TEST(CPIRB, "RL3, @RR8, R5, C",  0xBA84, 0x05B7);
-        ERRR(CPIR,  "R1, @RR0, R4, Z",   0xBB04, 0x0416);
-        ERRR(CPIRB, "RL1, @RR0, R4, C",  0xBA04, 0x0497);
+        TEST(CPIR,  "R3, @RR8, R5, Z",  0xBB84, 0x0536);
+        TEST(CPIR,  "R0, @RR8, R5, Z",  0xBB84, 0x0506);
+        TEST(CPIR,  "R3, @RR8, R0, Z",  0xBB84, 0x0036);
+        ERRT(CPIR,  "R1, @RR0, R4, Z",  REGISTER_NOT_ALLOWED, 0xBB04, 0x0416);
+        ERRT(CPIR,  "R8, @RR8, R5, Z",  REGISTERS_OVERLAPPED, 0xBB84, 0x0586);
+        ERRT(CPIR,  "R3, @RR8, R3, Z",  REGISTERS_OVERLAPPED, 0xBB84, 0x0336);
+        ERRT(CPIR,  "R3, @RR8, R9, Z",  REGISTERS_OVERLAPPED, 0xBB84, 0x0936);
+        TEST(CPIRB, "RL3, @RR8, R5, C", 0xBA84, 0x05B7);
+        TEST(CPIRB, "RL0, @RR8, R5, C", 0xBA84, 0x0587);
+        TEST(CPIRB, "RL3, @RR8, R0, C", 0xBA84, 0x00B7);
+        ERRT(CPIRB, "RL1, @RR0, R4, C", REGISTER_NOT_ALLOWED, 0xBA04, 0x0497);
+        ERRT(CPIRB, "RL2, @RR2, R5, C", REGISTERS_OVERLAPPED, 0xBA24, 0x05A7);
+        ERRT(CPIRB, "RL3, @RR8, R3, C", REGISTERS_OVERLAPPED, 0xBA84, 0x03B7);
+        ERRT(CPIRB, "RL3, @RR8, R8, C", REGISTERS_OVERLAPPED, 0xBA84, 0x08B7);
     } else {
         TEST(CPIR,  "R9, @R10, R11, Z",  0xBBA4, 0x0B96);
+        TEST(CPIR,  "R0, @R10, R11, Z",  0xBBA4, 0x0B06);
+        TEST(CPIR,  "R9, @R10, R0, Z",   0xBBA4, 0x0096);
+        ERRT(CPIR,  "R1, @R0, R4, LE",   REGISTER_NOT_ALLOWED, 0xBB04, 0x0412);
+        ERRT(CPIR,  "R9, @R9, R11, Z",   REGISTERS_OVERLAPPED, 0xBB94, 0x0B96);
+        ERRT(CPIR,  "R9, @R10, R9, Z",   REGISTERS_OVERLAPPED, 0xBBA4, 0x0996);
+        ERRT(CPIR,  "R9, @R10, R10, Z",  REGISTERS_OVERLAPPED, 0xBBA4, 0x0A96);
         TEST(CPIRB, "RH1, @R10, R11, C", 0xBAA4, 0x0B17);
-        ERRR(CPIR,  "R1, @R0, R4, Z",    0xBB04, 0x0416);
-        ERRR(CPIRB, "RL1, @R0, R4, C",   0xBA04, 0x0497);
+        TEST(CPIRB, "RH0, @R10, R11, C", 0xBAA4, 0x0B07);
+        TEST(CPIRB, "RH1, @R10, R0, C",  0xBAA4, 0x0017);
+        ERRT(CPIRB, "RL1, @R0, R4, ULE", REGISTER_NOT_ALLOWED, 0xBA04, 0x0493);
+        ERRT(CPIRB, "RH2, @R2, R11, C",  REGISTERS_OVERLAPPED, 0xBA24, 0x0B27);
+        ERRT(CPIRB, "RH1, @R2, R1, C",   REGISTERS_OVERLAPPED, 0xBA24, 0x0117);
+        ERRT(CPIRB, "RH1, @R2, R2, C",   REGISTERS_OVERLAPPED, 0xBA24, 0x0217);
     }
 
+}
+
+static void test_block_transfer() {
     // Load and Decrement
     if (z8001()) {
         TEST(LDD,  "@RR2, @RR4, R6", 0xBB49, 0x0628);
+        TEST(LDD,  "@RR2, @RR4, R0", 0xBB49, 0x0028);
+        ERRT(LDD,  "@RR0, @RR4, R6", REGISTER_NOT_ALLOWED, 0xBB49, 0x0608);
+        ERRT(LDD,  "@RR2, @RR0, R6", REGISTER_NOT_ALLOWED, 0xBB09, 0x0628);
+        ERRT(LDD,  "@RR2, @RR2, R6", REGISTERS_OVERLAPPED, 0xBB29, 0x0628);
+        ERRT(LDD,  "@RR2, @RR4, R2", REGISTERS_OVERLAPPED, 0xBB49, 0x0228);
+        ERRT(LDD,  "@RR2, @RR4, R4", REGISTERS_OVERLAPPED, 0xBB49, 0x0428);
         TEST(LDDB, "@RR2, @RR4, R6", 0xBA49, 0x0628);
-        ERRR(LDD,  "@RR2, @RR0, R6", 0xBB09, 0x0628);
-        ERRR(LDDB, "@RR2, @RR0, R6", 0xBA09, 0x0628);
-        ERRR(LDD,  "@RR0, @RR4, R6", 0xBB49, 0x0608);
-        ERRR(LDDB, "@RR0, @RR4, R6", 0xBA49, 0x0608);
+        TEST(LDDB, "@RR2, @RR4, R0", 0xBA49, 0x0028);
+        ERRT(LDDB, "@RR0, @RR4, R6", REGISTER_NOT_ALLOWED, 0xBA49, 0x0608);
+        ERRT(LDDB, "@RR2, @RR0, R6", REGISTER_NOT_ALLOWED, 0xBA09, 0x0628);
+        ERRT(LDDB, "@RR2, @RR2, R6", REGISTERS_OVERLAPPED, 0xBA29, 0x0628);
+        ERRT(LDDB, "@RR2, @RR4, R2", REGISTERS_OVERLAPPED, 0xBA49, 0x0228);
+        ERRT(LDDB, "@RR2, @RR4, R4", REGISTERS_OVERLAPPED, 0xBA49, 0x0428);
     } else {
-        TEST(LDD,  "@R1, @R2, R3",   0xBB29, 0x0318);
-        TEST(LDDB, "@R1, @R2, R3",   0xBA29, 0x0318);
-        ERRR(LDD,  "@RR2, @RR0, R6", 0xBB09, 0x0628);
-        ERRR(LDDB, "@RR2, @RR0, R6", 0xBA09, 0x0628);
-        ERRR(LDD,  "@RR0, @RR4, R6", 0xBB49, 0x0608);
-        ERRR(LDDB, "@RR0, @RR4, R6", 0xBA49, 0x0608);
+        TEST(LDD,  "@R1, @R2, R3", 0xBB29, 0x0318);
+        TEST(LDD,  "@R1, @R2, R0", 0xBB29, 0x0018);
+        ERRT(LDD,  "@R0, @R2, R3", REGISTER_NOT_ALLOWED, 0xBB29, 0x0308);
+        ERRT(LDD,  "@R1, @R0, R3", REGISTER_NOT_ALLOWED, 0xBB09, 0x0318);
+        ERRT(LDD,  "@R1, @R1, R3", REGISTERS_OVERLAPPED, 0xBB19, 0x0318);
+        ERRT(LDD,  "@R1, @R2, R1", REGISTERS_OVERLAPPED, 0xBB29, 0x0118);
+        ERRT(LDD,  "@R1, @R2, R2", REGISTERS_OVERLAPPED, 0xBB29, 0x0218);
+        TEST(LDDB, "@R1, @R2, R3", 0xBA29, 0x0318);
+        TEST(LDDB, "@R1, @R2, R0", 0xBA29, 0x0018);
+        ERRT(LDDB, "@R0, @R2, R3", REGISTER_NOT_ALLOWED, 0xBA29, 0x0308);
+        ERRT(LDDB, "@R1, @R0, R3", REGISTER_NOT_ALLOWED, 0xBA09, 0x0318);
+        ERRT(LDDB, "@R1, @R1, R3", REGISTERS_OVERLAPPED, 0xBA19, 0x0318);
+        ERRT(LDDB, "@R1, @R2, R1", REGISTERS_OVERLAPPED, 0xBA29, 0x0118);
+        ERRT(LDDB, "@R1, @R2, R2", REGISTERS_OVERLAPPED, 0xBA29, 0x0218);
     }
 
     // Load, Decrement, and Repeat
     if (z8001()) {
         TEST(LDDR,  "@RR4, @RR6, R8", 0xBB69, 0x0840);
+        TEST(LDDR,  "@RR4, @RR6, R0", 0xBB69, 0x0040);
+        ERRT(LDDR,  "@RR0, @RR6, R8", REGISTER_NOT_ALLOWED, 0xBB69, 0x0800);
+        ERRT(LDDR,  "@RR4, @RR0, R8", REGISTER_NOT_ALLOWED, 0xBB09, 0x0840);
+        ERRT(LDDR,  "@RR4, @RR4, R8", REGISTERS_OVERLAPPED, 0xBB49, 0x0840);
+        ERRT(LDDR,  "@RR4, @RR6, R4", REGISTERS_OVERLAPPED, 0xBB69, 0x0440);
+        ERRT(LDDR,  "@RR4, @RR6, R6", REGISTERS_OVERLAPPED, 0xBB69, 0x0640);
         TEST(LDDRB, "@RR4, @RR6, R8", 0xBA69, 0x0840);
+        TEST(LDDRB, "@RR4, @RR6, R0", 0xBA69, 0x0040);
+        ERRT(LDDRB, "@RR0, @RR6, R8", REGISTER_NOT_ALLOWED, 0xBA69, 0x0800);
+        ERRT(LDDRB, "@RR4, @RR0, R8", REGISTER_NOT_ALLOWED, 0xBA09, 0x0840);
+        ERRT(LDDRB, "@RR4, @RR4, R8", REGISTERS_OVERLAPPED, 0xBA49, 0x0840);
+        ERRT(LDDRB, "@RR4, @RR6, R5", REGISTERS_OVERLAPPED, 0xBA69, 0x0540);
+        ERRT(LDDRB, "@RR4, @RR6, R7", REGISTERS_OVERLAPPED, 0xBA69, 0x0740);
     } else {
-        TEST(LDDR,  "@R4, @R5, R6",   0xBB59, 0x0640);
-        TEST(LDDRB, "@R4, @R5, R6",   0xBA59, 0x0640);
+        TEST(LDDR,  "@R4, @R5, R6", 0xBB59, 0x0640);
+        TEST(LDDR,  "@R4, @R5, R0", 0xBB59, 0x0040);
+        ERRT(LDDR,  "@R0, @R5, R6", REGISTER_NOT_ALLOWED, 0xBB59, 0x0600);
+        ERRT(LDDR,  "@R4, @R0, R6", REGISTER_NOT_ALLOWED, 0xBB09, 0x0640);
+        ERRT(LDDR,  "@R4, @R4, R6", REGISTERS_OVERLAPPED, 0xBB49, 0x0640);
+        ERRT(LDDR,  "@R4, @R5, R4", REGISTERS_OVERLAPPED, 0xBB59, 0x0440);
+        ERRT(LDDR,  "@R4, @R5, R5", REGISTERS_OVERLAPPED, 0xBB59, 0x0540);
+        TEST(LDDRB, "@R4, @R5, R6", 0xBA59, 0x0640);
+        TEST(LDDRB, "@R4, @R5, R0", 0xBA59, 0x0040);
+        ERRT(LDDRB, "@R0, @R5, R6", REGISTER_NOT_ALLOWED, 0xBA59, 0x0600);
+        ERRT(LDDRB, "@R4, @R0, R6", REGISTER_NOT_ALLOWED, 0xBA09, 0x0640);
+        ERRT(LDDRB, "@R4, @R4, R6", REGISTERS_OVERLAPPED, 0xBA49, 0x0640);
+        ERRT(LDDRB, "@R4, @R5, R4", REGISTERS_OVERLAPPED, 0xBA59, 0x0440);
+        ERRT(LDDRB, "@R4, @R5, R5", REGISTERS_OVERLAPPED, 0xBA59, 0x0540);
     }
-    ERRR(LDDR,  "@RR4, @RR0, R8", 0xBB09, 0x0840);
-    ERRR(LDDRB, "@RR4, @RR0, R8", 0xBA09, 0x0840);
-    ERRR(LDDR,  "@RR0, @RR6, R8", 0xBB69, 0x0800);
-    ERRR(LDDRB, "@RR0, @RR6, R8", 0xBA69, 0x0800);
 
     // Load and Increment
     if (z8001()) {
         TEST(LDI,  "@RR6, @RR8, R10", 0xBB81, 0x0A68);
+        TEST(LDI,  "@RR6, @RR8, R0",  0xBB81, 0x0068);
+        ERRT(LDI,  "@RR0, @RR8, R10", REGISTER_NOT_ALLOWED, 0xBB81, 0x0A08);
+        ERRT(LDI,  "@RR6, @RR0, R10", REGISTER_NOT_ALLOWED, 0xBB01, 0x0A68);
+        ERRT(LDI,  "@RR6, @RR6, R10", REGISTERS_OVERLAPPED, 0xBB61, 0x0A68);
+        ERRT(LDI,  "@RR6, @RR8, R7",  REGISTERS_OVERLAPPED, 0xBB81, 0x0768);
+        ERRT(LDI,  "@RR6, @RR8, R9",  REGISTERS_OVERLAPPED, 0xBB81, 0x0968);
         TEST(LDIB, "@RR6, @RR8, R10", 0xBA81, 0x0A68);
+        TEST(LDIB, "@RR6, @RR8, R0",  0xBA81, 0x0068);
+        ERRT(LDIB, "@RR0, @RR8, R10", REGISTER_NOT_ALLOWED, 0xBA81, 0x0A08);
+        ERRT(LDIB, "@RR6, @RR0, R10", REGISTER_NOT_ALLOWED, 0xBA01, 0x0A68);
+        ERRT(LDIB, "@RR6, @RR6, R10", REGISTERS_OVERLAPPED, 0xBA61, 0x0A68);
+        ERRT(LDIB, "@RR6, @RR8, R6",  REGISTERS_OVERLAPPED, 0xBA81, 0x0668);
+        ERRT(LDIB, "@RR6, @RR8, R8",  REGISTERS_OVERLAPPED, 0xBA81, 0x0868);
     } else {
-        TEST(LDI,  "@R7, @R8, R9",    0xBB81, 0x0978);
-        TEST(LDIB, "@R7, @R8, R9",    0xBA81, 0x0978);
+        TEST(LDI,  "@R7, @R8, R9", 0xBB81, 0x0978);
+        TEST(LDI,  "@R7, @R8, R0", 0xBB81, 0x0078);
+        ERRT(LDI,  "@R0, @R8, R9", REGISTER_NOT_ALLOWED, 0xBB81, 0x0908);
+        ERRT(LDI,  "@R7, @R0, R9", REGISTER_NOT_ALLOWED, 0xBB01, 0x0978);
+        ERRT(LDI,  "@R7, @R7, R9", REGISTERS_OVERLAPPED, 0xBB71, 0x0978);
+        ERRT(LDI,  "@R7, @R8, R7", REGISTERS_OVERLAPPED, 0xBB81, 0x0778);
+        ERRT(LDI,  "@R7, @R8, R8", REGISTERS_OVERLAPPED, 0xBB81, 0x0878);
+        TEST(LDIB, "@R7, @R8, R9", 0xBA81, 0x0978);
+        TEST(LDIB, "@R7, @R8, R0", 0xBA81, 0x0078);
+        ERRT(LDIB, "@R0, @R8, R9", REGISTER_NOT_ALLOWED, 0xBA81, 0x0908);
+        ERRT(LDIB, "@R7, @R0, R9", REGISTER_NOT_ALLOWED, 0xBA01, 0x0978);
+        ERRT(LDIB, "@R7, @R7, R9", REGISTERS_OVERLAPPED, 0xBA71, 0x0978);
+        ERRT(LDIB, "@R7, @R8, R7", REGISTERS_OVERLAPPED, 0xBA81, 0x0778);
+        ERRT(LDIB, "@R7, @R8, R8", REGISTERS_OVERLAPPED, 0xBA81, 0x0878);
     }
-    ERRR(LDI,  "@RR6, @RR0, R10", 0xBB01, 0x0A68);
-    ERRR(LDIB, "@RR6, @RR0, R10", 0xBA01, 0x0A68);
-    ERRR(LDI,  "@RR0, @RR8, R10", 0xBB81, 0x0A08);
-    ERRR(LDIB, "@RR0, @RR8, R10", 0xBA81, 0x0A08);
 
     // Load, Increment, and Repeat
     if (z8001()) {
         TEST(LDIR,  "@RR8, @RR10, R12", 0xBBA1, 0x0C80);
+        TEST(LDIR,  "@RR8, @RR10, R0",  0xBBA1, 0x0080);
+        ERRT(LDIR,  "@RR0, @RR10, R12", REGISTER_NOT_ALLOWED, 0xBBA1, 0x0C00);
+        ERRT(LDIR,  "@RR8, @RR0, R12",  REGISTER_NOT_ALLOWED, 0xBB01, 0x0C80);
+        ERRT(LDIR,  "@RR8, @RR8, R12",  REGISTERS_OVERLAPPED, 0xBB81, 0x0C80);
+        ERRT(LDIR,  "@RR8, @RR10, R9",  REGISTERS_OVERLAPPED, 0xBBA1, 0x0980);
+        ERRT(LDIR,  "@RR8, @RR10, R11", REGISTERS_OVERLAPPED, 0xBBA1, 0x0B80);
         TEST(LDIRB, "@RR8, @RR10, R12", 0xBAA1, 0x0C80);
+        TEST(LDIRB, "@RR8, @RR10, R0",  0xBAA1, 0x0080);
+        ERRT(LDIRB, "@RR0, @RR10, R12", REGISTER_NOT_ALLOWED, 0xBAA1, 0x0C00);
+        ERRT(LDIRB, "@RR8, @RR0, R12",  REGISTER_NOT_ALLOWED, 0xBA01, 0x0C80);
+        ERRT(LDIRB, "@RR8, @RR8, R12",  REGISTERS_OVERLAPPED, 0xBA81, 0x0C80);
+        ERRT(LDIRB, "@RR8, @RR10, R8",  REGISTERS_OVERLAPPED, 0xBAA1, 0x0880);
+        ERRT(LDIRB, "@RR8, @RR10, R10", REGISTERS_OVERLAPPED, 0xBAA1, 0x0A80);
     } else {
-        TEST(LDIR,  "@R10, @R11, R12",  0xBBB1, 0x0CA0);
-        TEST(LDIRB, "@R10, @R11, R12",  0xBAB1, 0x0CA0);
+        TEST(LDIR,  "@R10, @R11, R12", 0xBBB1, 0x0CA0);
+        TEST(LDIR,  "@R10, @R11, R0",  0xBBB1, 0x00A0);
+        ERRT(LDIR,  "@R0, @R11, R12",  REGISTER_NOT_ALLOWED, 0xBBB1, 0x0C00);
+        ERRT(LDIR,  "@R10, @R0, R12",  REGISTER_NOT_ALLOWED, 0xBB01, 0x0CA0);
+        ERRT(LDIR,  "@R10, @R10, R12", REGISTERS_OVERLAPPED, 0xBBA1, 0x0CA0);
+        ERRT(LDIR,  "@R10, @R11, R10", REGISTERS_OVERLAPPED, 0xBBB1, 0x0AA0);
+        ERRT(LDIR,  "@R10, @R11, R11", REGISTERS_OVERLAPPED, 0xBBB1, 0x0BA0);
+        TEST(LDIRB, "@R10, @R11, R12", 0xBAB1, 0x0CA0);
+        TEST(LDIRB, "@R10, @R11, R0",  0xBAB1, 0x00A0);
+        ERRT(LDIRB, "@R0, @R11, R12",  REGISTER_NOT_ALLOWED, 0xBAB1, 0x0C00);
+        ERRT(LDIRB, "@R10, @R0, R12",  REGISTER_NOT_ALLOWED, 0xBA01, 0x0CA0);
+        ERRT(LDIRB, "@R10, @R10, R12", REGISTERS_OVERLAPPED, 0xBAA1, 0x0CA0);
+        ERRT(LDIRB, "@R10, @R11, R10", REGISTERS_OVERLAPPED, 0xBAB1, 0x0AA0);
+        ERRT(LDIRB, "@R10, @R11, R11", REGISTERS_OVERLAPPED, 0xBAB1, 0x0BA0);
     }
-    ERRR(LDIR,  "@RR8, @RR0, R12",  0xBB01, 0x0C80);
-    ERRR(LDIRB, "@RR8, @RR0, R12",  0xBA01, 0x0C80);
-    ERRR(LDIR,  "@RR0, @RR10, R12", 0xBBA1, 0x0C00);
-    ERRR(LDIRB, "@RR0, @RR10, R12", 0xBAA1, 0x0C00);
 }
 
-static void test_string_manipulation() {
+static void test_compare_string() {
     // Compare String and Decrement
+    // @RR0 and @R0 mus not be used as source and destination registers. The
+    // counter register has no restriction. The source, destination, and
+    // counter registers must be separate and non-overlapping registers.
     if (z8001()) {
+        TEST(CPSD,  "@RR4, @RR2, R6",    0xBB2A, 0x0648);
         TEST(CPSD,  "@RR4, @RR2, R0",    0xBB2A, 0x0048);
+        ERRT(CPSD,  "@RR0, @RR2, R0",    REGISTER_NOT_ALLOWED, 0xBB2A, 0x0008);
+        ERRT(CPSD,  "@RR4, @RR0, R0",    REGISTER_NOT_ALLOWED, 0xBB0A, 0x0048);
         TEST(CPSDB, "@RR4, @RR2, R6, GE", 0xBA2A, 0x0649);
+        TEST(CPSDB, "@RR4, @RR2, R0, GE", 0xBA2A, 0x0049);
+        ERRT(CPSDB, "@RR0, @RR2, R4, GE", REGISTER_NOT_ALLOWED, 0xBA2A, 0x0409);
+        ERRT(CPSDB, "@RR2, @RR0, R4, GE", REGISTER_NOT_ALLOWED, 0xBA0A, 0x0429);
     } else {
         TEST(CPSD,  "@R3, @R1, R2",    0xBB1A, 0x0238);
+        TEST(CPSD,  "@R3, @R1, R0",    0xBB1A, 0x0038);
+        ERRT(CPSD,  "@R3, @R0, R2",    REGISTER_NOT_ALLOWED, 0xBB0A, 0x0238);
+        ERRT(CPSD,  "@R0, @R3, R2",    REGISTER_NOT_ALLOWED, 0xBB3A, 0x0208);
         TEST(CPSDB, "@R3, @R1, R2, GE", 0xBA1A, 0x0239);
+        TEST(CPSDB, "@R3, @R1, R0, GE", 0xBA1A, 0x0039);
+        ERRT(CPSDB, "@R3, @R0, R2, GE", REGISTER_NOT_ALLOWED, 0xBA0A, 0x0239);
+        ERRT(CPSDB, "@R0, @R3, R2, GE", REGISTER_NOT_ALLOWED, 0xBA3A, 0x0209);
     }
-    ERRR(CPSD,  "@RR4, @RR0, R6",    0xBB0A, 0x0648);
-    ERRR(CPSDB, "@RR4, @RR0, R6, GE", 0xBA0A, 0x0649);
-    ERRR(CPSD , "@RR0, @RR2, R6",    0xBB2A, 0x0608);
-    ERRR(CPSDB, "@RR0, @RR2, R6, GE", 0xBA2A, 0x0609);
 
     // Compare String, Decrement, and Repeat
     if (z8001()) {
         TEST(CPSDR,  "@RR2, @RR4, R6, GT",  0xBB4E, 0x062A);
+        TEST(CPSDR,  "@RR2, @RR4, R0, GT",  0xBB4E, 0x002A);
+        ERRT(CPSDR,  "@RR0, @RR4, R5, GT",  REGISTER_NOT_ALLOWED, 0xBB4E, 0x050A);
+        ERRT(CPSDR,  "@RR2, @RR0, R5, GT",  REGISTER_NOT_ALLOWED, 0xBB0E, 0x052A);
         TEST(CPSDRB, "@RR2, @RR4, R6, UGT", 0xBA4E, 0x062B);
+        TEST(CPSDRB, "@RR2, @RR4, R0, UGT", 0xBA4E, 0x002B);
+        ERRT(CPSDRB, "@RR0, @RR4, R5, UGT", REGISTER_NOT_ALLOWED, 0xBA4E, 0x050B);
+        ERRT(CPSDRB, "@RR2, @RR0, R5, UGT", REGISTER_NOT_ALLOWED, 0xBA0E, 0x052B);
     } else {
         TEST(CPSDR,  "@R3, @R4, R5, GT",  0xBB4E, 0x053A);
+        TEST(CPSDR,  "@R3, @R4, R0, GT",  0xBB4E, 0x003A);
+        ERRT(CPSDR,  "@R0, @R4, R5, GT",  REGISTER_NOT_ALLOWED, 0xBB4E, 0x050A);
+        ERRT(CPSDR,  "@R3, @R0, R5, GT",  REGISTER_NOT_ALLOWED, 0xBB0E, 0x053A);
+        TEST(CPSDRB, "@R3, @R4, R2, UGT", 0xBA4E, 0x023B);
         TEST(CPSDRB, "@R3, @R4, R0, UGT", 0xBA4E, 0x003B);
+        ERRT(CPSDRB, "@R0, @R4, R0, UGT", REGISTER_NOT_ALLOWED, 0xBA4E, 0x000B);
+        ERRT(CPSDRB, "@R3, @R0, R0, UGT", REGISTER_NOT_ALLOWED, 0xBA0E, 0x003B);
     }
-    ERRR(CPSDR,  "@RR2, @RR0, R5, GT",  0xBB0E, 0x052A);
-    ERRR(CPSDRB, "@RR2, @RR0, R5, UGT", 0xBA0E, 0x052B);
-    ERRR(CPSDR,  "@RR0, @RR4, R5, GT",  0xBB4E, 0x050A);
-    ERRR(CPSDRB, "@RR0, @RR4, R0, UGT", 0xBA4E, 0x000B);
 
     // Compare String and Increment
     if (z8001()) {
-        TEST(CPSI,  "@RR2, @RR6, R5, NOV", 0xBB62, 0x052C);
-        TEST(CPSIB, "@RR2, @RR6, R5, PL",  0xBA62, 0x052D);
+        TEST(CPSI,  "@RR4, @RR6, R2, NOV", 0xBB62, 0x024C);
+        TEST(CPSI,  "@RR4, @RR6, R0, NOV", 0xBB62, 0x004C);
+        ERRT(CPSI,  "@RR0, @RR6, R5, NOV", REGISTER_NOT_ALLOWED, 0xBB62, 0x050C);
+        ERRT(CPSI,  "@RR4, @RR0, R5, NOV", REGISTER_NOT_ALLOWED, 0xBB02, 0x054C);
+        TEST(CPSIB, "@RR4, @RR6, R2, PL",  0xBA62, 0x024D);
+        TEST(CPSIB, "@RR4, @RR6, R0, PL",  0xBA62, 0x004D);
+        ERRT(CPSIB, "@RR0, @RR6, R5, PL",  REGISTER_NOT_ALLOWED, 0xBA62, 0x050D);
+        ERRT(CPSIB, "@RR4, @RR0, R5, PL",  REGISTER_NOT_ALLOWED, 0xBA02, 0x054D);
     } else {
         TEST(CPSI,  "@R6, @R7, R8, NOV", 0xBB72, 0x086C);
+        TEST(CPSI,  "@R6, @R7, R0, NOV", 0xBB72, 0x006C);
+        ERRT(CPSI,  "@R0, @R7, R8, NOV", REGISTER_NOT_ALLOWED, 0xBB72, 0x080C);
+        ERRT(CPSI,  "@R6, @R0, R8, NOV", REGISTER_NOT_ALLOWED, 0xBB02, 0x086C);
         TEST(CPSIB, "@R6, @R7, R8, PL",  0xBA72, 0x086D);
+        TEST(CPSIB, "@R6, @R7, R0, PL",  0xBA72, 0x006D);
+        ERRT(CPSIB, "@R0, @R7, R8, PL",  REGISTER_NOT_ALLOWED, 0xBA72, 0x080D);
+        ERRT(CPSIB, "@R6, @R0, R8, PL",  REGISTER_NOT_ALLOWED, 0xBA02, 0x086D);
     }
-    ERRR(CPSI,  "@RR2, @RR0, R5, NOV", 0xBB02, 0x052C);
-    ERRR(CPSIB, "@RR2, @RR0, R5, PL",  0xBA02, 0x052D);
-    ERRR(CPSI,  "@RR0, @RR6, R5, NOV", 0xBB62, 0x050C);
-    ERRR(CPSIB, "@RR0, @RR6, R5, PL",  0xBA62, 0x050D);
 
     // Compare String, Increment, and Repeat
     if (z8001()) {
         TEST(CPSIR,  "@RR4, @RR8, R6, NZ", 0xBB86, 0x064E);
+        TEST(CPSIR,  "@RR4, @RR8, R0, NZ", 0xBB86, 0x004E);
+        ERRT(CPSIR,  "@RR0, @RR8, R6, NZ", REGISTER_NOT_ALLOWED, 0xBB86, 0x060E);
+        ERRT(CPSIR,  "@RR4, @RR0, R6, NZ", REGISTER_NOT_ALLOWED, 0xBB06, 0x064E);
         TEST(CPSIRB, "@RR4, @RR8, R6, NC", 0xBA86, 0x064F);
+        TEST(CPSIRB, "@RR4, @RR8, R0, NC", 0xBA86, 0x004F);
+        ERRT(CPSIRB, "@RR0, @RR8, R6, NC", REGISTER_NOT_ALLOWED, 0xBA86, 0x060F);
+        ERRT(CPSIRB, "@RR4, @RR0, R6, NC", REGISTER_NOT_ALLOWED, 0xBA06, 0x064F);
     } else {
         TEST(CPSIR,  "@R9, @R10, R11, NZ", 0xBBA6, 0x0B9E);
-        TEST(CPSIRB, "@R9, @R10, R11, NC", 0xBAA6, 0x0B9F);
+        TEST(CPSIR,  "@R9, @R10, R0, NZ",  0xBBA6, 0x009E);
+        ERRT(CPSIR,  "@R0, @R10, R11, NZ", REGISTER_NOT_ALLOWED, 0xBBA6, 0x0B0E);
+        ERRT(CPSIR,  "@R9, @R0, R11, NZ",  REGISTER_NOT_ALLOWED, 0xBB06, 0x0B9E);
+        TEST(CPSIRB, "@R1, @R10, R11, NC", 0xBAA6, 0x0B1F);
+        TEST(CPSIRB, "@R1, @R10, R0, NC",  0xBAA6, 0x001F);
+        ERRT(CPSIRB, "@R0, @R10, R11, NC", REGISTER_NOT_ALLOWED, 0xBAA6, 0x0B0F);
+        ERRT(CPSIRB, "@R1, @R0, R11, NC",  REGISTER_NOT_ALLOWED, 0xBA06, 0x0B1F);
     }
-    ERRR(CPSIR,  "@RR4, @RR0, R6, NZ", 0xBB06, 0x064E);
-    ERRR(CPSIRB, "@RR4, @RR0, R6, NC", 0xBA06, 0x064F);
-    ERRR(CPSIR,  "@RR0, @RR8, R6, NZ", 0xBB86, 0x060E);
-    ERRR(CPSIRB, "@RR0, @RR8, R6, NC", 0xBA86, 0x060F);
+}
 
+static void test_translation() {
     // Translate and Decrement
+    // Original content of RH1 are lost. R0/R1 or RR0 must not be used as a soure or destination
+    // R1 should not be used as a counter as welll
     if (z8001()) {
         TEST(TRDB, "@RR2, @RR4, R6", 0xB828, 0x0640);
         TEST(TRDB, "@RR2, @RR4, R0", 0xB828, 0x0040);
-        ERRR(TRDB, "@RR0, @RR4, R5", 0xB808, 0x0540);
-        ERRR(TRDB, "@RR2, @RR0, R5", 0xB828, 0x0500);
-        ERRR(TRDB, "@RR2, @RR4, R1", 0xB828, 0x0140);
+        ERRT(TRDB, "@RR0, @RR4, R6", REGISTER_NOT_ALLOWED, 0xB808, 0x0640);
+        ERRT(TRDB, "@RR2, @RR0, R6", REGISTER_NOT_ALLOWED, 0xB828, 0x0600);
+        ERRT(TRDB, "@RR2, @RR4, R1", REGISTER_NOT_ALLOWED, 0xB828, 0x0140);
+        ERRT(TRDB, "@RR2, @RR2, R6", REGISTERS_OVERLAPPED, 0xB828, 0x0620);
+        ERRT(TRDB, "@RR2, @RR4, R3", REGISTERS_OVERLAPPED, 0xB828, 0x0340);
+        ERRT(TRDB, "@RR2, @RR4, R5", REGISTERS_OVERLAPPED, 0xB828, 0x0540);
     } else {
-        TEST(TRDB, "@R2, @R3, R4", 0xB828, 0x0430);
-        TEST(TRDB, "@R2, @R3, R0", 0xB828, 0x0030);
-        ERRR(TRDB, "@R0, @R3, R4", 0xB808, 0x0430);
-        ERRR(TRDB, "@R1, @R3, R4", 0xB818, 0x0430);
-        ERRR(TRDB, "@R2, @R0, R4", 0xB828, 0x0400);
-        ERRR(TRDB, "@R2, @R1, R4", 0xB828, 0x0410);
-        ERRR(TRDB, "@R2, @R3, R1", 0xB828, 0x0130);
+        TEST(TRDB, "@R3, @R2, R4", 0xB838, 0x0420);
+        TEST(TRDB, "@R3, @R2, R0", 0xB838, 0x0020);
+        ERRT(TRDB, "@R0, @R2, R3", REGISTER_NOT_ALLOWED, 0xB808, 0x0320);
+        ERRT(TRDB, "@R1, @R2, R3", REGISTER_NOT_ALLOWED, 0xB818, 0x0320);
+        ERRT(TRDB, "@R2, @R0, R3", REGISTER_NOT_ALLOWED, 0xB828, 0x0300);
+        ERRT(TRDB, "@R2, @R1, R3", REGISTER_NOT_ALLOWED, 0xB828, 0x0310);
+        ERRT(TRDB, "@R3, @R2, R1", REGISTER_NOT_ALLOWED, 0xB838, 0x0120);
+        ERRT(TRDB, "@R3, @R3, R4", REGISTERS_OVERLAPPED, 0xB838, 0x0430);
+        ERRT(TRDB, "@R3, @R2, R3", REGISTERS_OVERLAPPED, 0xB838, 0x0320);
+        ERRT(TRDB, "@R3, @R2, R2", REGISTERS_OVERLAPPED, 0xB838, 0x0220);
     }
 
     // Translate, Decrement, and Repeat
     if (z8001()) {
-        TEST(TRDRB, "@RR2, @RR4, R6", 0xB82C, 0x0640);
-        TEST(TRDRB, "@RR2, @RR4, R0", 0xB82C, 0x0040);
-        ERRR(TRDRB, "@RR0, @RR4, R5", 0xB80C, 0x0540);
-        ERRR(TRDRB, "@RR2, @RR0, R5", 0xB82C, 0x0500);
-        ERRR(TRDRB, "@RR2, @RR4, R1", 0xB82C, 0x0140);
+        TEST(TRDRB, "@RR4, @RR6, R2", 0xB84C, 0x0260);
+        TEST(TRDRB, "@RR4, @RR6, R0", 0xB84C, 0x0060);
+        ERRT(TRDRB, "@RR0, @RR6, R2", REGISTER_NOT_ALLOWED, 0xB80C, 0x0260);
+        ERRT(TRDRB, "@RR4, @RR0, R2", REGISTER_NOT_ALLOWED, 0xB84C, 0x0200);
+        ERRT(TRDRB, "@RR4, @RR6, R1", REGISTER_NOT_ALLOWED, 0xB84C, 0x0160);
+        ERRT(TRDRB, "@RR4, @RR4, R2", REGISTERS_OVERLAPPED, 0xB84C, 0x0240);
+        ERRT(TRDRB, "@RR4, @RR6, R5", REGISTERS_OVERLAPPED, 0xB84C, 0x0560);
+        ERRT(TRDRB, "@RR4, @RR6, R7", REGISTERS_OVERLAPPED, 0xB84C, 0x0760);
     } else {
-        TEST(TRDRB, "@R2, @R3, R4", 0xB82C, 0x0430);
-        TEST(TRDRB, "@R2, @R3, R0", 0xB82C, 0x0030);
-        ERRR(TRDRB, "@R0, @R3, R4", 0xB80C, 0x0430);
-        ERRR(TRDRB, "@R1, @R3, R4", 0xB81C, 0x0430);
-        ERRR(TRDRB, "@R2, @R0, R4", 0xB82C, 0x0400);
-        ERRR(TRDRB, "@R2, @R1, R4", 0xB82C, 0x0410);
-        ERRR(TRDRB, "@R2, @R3, R1", 0xB82C, 0x0130);
+        TEST(TRDRB, "@R4, @R5, R6", 0xB84C, 0x0650);
+        TEST(TRDRB, "@R4, @R5, R0", 0xB84C, 0x0050);
+        ERRT(TRDRB, "@R0, @R5, R6", REGISTER_NOT_ALLOWED, 0xB80C, 0x0650);
+        ERRT(TRDRB, "@R1, @R5, R6", REGISTER_NOT_ALLOWED, 0xB81C, 0x0650);
+        ERRT(TRDRB, "@R4, @R0, R6", REGISTER_NOT_ALLOWED, 0xB84C, 0x0600);
+        ERRT(TRDRB, "@R4, @R1, R6", REGISTER_NOT_ALLOWED, 0xB84C, 0x0610);
+        ERRT(TRDRB, "@R4, @R5, R1", REGISTER_NOT_ALLOWED, 0xB84C, 0x0150);
+        ERRT(TRDRB, "@R4, @R4, R6", REGISTERS_OVERLAPPED, 0xB84C, 0x0640);
+        ERRT(TRDRB, "@R4, @R5, R4", REGISTERS_OVERLAPPED, 0xB84C, 0x0450);
+        ERRT(TRDRB, "@R4, @R5, R5", REGISTERS_OVERLAPPED, 0xB84C, 0x0550);
     }
 
     // Translate and Increment
     if (z8001()) {
-        TEST(TRIB, "@RR2, @RR4, R6", 0xB820, 0x0640);
-        TEST(TRIB, "@RR2, @RR4, R0", 0xB820, 0x0040);
-        ERRR(TRIB, "@RR0, @RR4, R5", 0xB800, 0x0540);
-        ERRR(TRIB, "@RR2, @RR0, R5", 0xB820, 0x0500);
-        ERRR(TRIB, "@RR2, @RR4, R1", 0xB820, 0x0140);
+        TEST(TRIB, "@RR6, @RR8, R3", 0xB860, 0x0380);
+        TEST(TRIB, "@RR6, @RR8, R0", 0xB860, 0x0080);
+        ERRT(TRIB, "@RR0, @RR8, R3", REGISTER_NOT_ALLOWED, 0xB800, 0x0380);
+        ERRT(TRIB, "@RR6, @RR0, R3", REGISTER_NOT_ALLOWED, 0xB860, 0x0300);
+        ERRT(TRIB, "@RR6, @RR8, R1", REGISTER_NOT_ALLOWED, 0xB860, 0x0180);
+        ERRT(TRIB, "@RR6, @RR6, R3", REGISTERS_OVERLAPPED, 0xB860, 0x0360);
+        ERRT(TRIB, "@RR6, @RR8, R7", REGISTERS_OVERLAPPED, 0xB860, 0x0780);
+        ERRT(TRIB, "@RR6, @RR8, R9", REGISTERS_OVERLAPPED, 0xB860, 0x0980);
     } else {
-        TEST(TRIB, "@R2, @R3, R4", 0xB820, 0x0430);
-        TEST(TRIB, "@R2, @R3, R0", 0xB820, 0x0030);
-        ERRR(TRIB, "@R0, @R3, R4", 0xB800, 0x0430);
-        ERRR(TRIB, "@R1, @R3, R4", 0xB810, 0x0430);
-        ERRR(TRIB, "@R2, @R0, R4", 0xB820, 0x0400);
-        ERRR(TRIB, "@R2, @R1, R4", 0xB820, 0x0410);
-        ERRR(TRIB, "@R2, @R3, R1", 0xB820, 0x0130);
+        TEST(TRIB, "@R7, @R8, R9", 0xB870, 0x0980);
+        TEST(TRIB, "@R7, @R8, R0", 0xB870, 0x0080);
+        ERRT(TRIB, "@R0, @R8, R9", REGISTER_NOT_ALLOWED, 0xB800, 0x0980);
+        ERRT(TRIB, "@R1, @R8, R9", REGISTER_NOT_ALLOWED, 0xB810, 0x0980);
+        ERRT(TRIB, "@R7, @R8, R1", REGISTER_NOT_ALLOWED, 0xB870, 0x0180);
+        ERRT(TRIB, "@R7, @R0, R9", REGISTER_NOT_ALLOWED, 0xB870, 0x0900);
+        ERRT(TRIB, "@R7, @R1, R9", REGISTER_NOT_ALLOWED, 0xB870, 0x0910);
+        ERRT(TRIB, "@R7, @R7, R9", REGISTERS_OVERLAPPED, 0xB870, 0x0970);
+        ERRT(TRIB, "@R7, @R8, R7", REGISTERS_OVERLAPPED, 0xB870, 0x0780);
+        ERRT(TRIB, "@R7, @R8, R8", REGISTERS_OVERLAPPED, 0xB870, 0x0880);
     }
 
     // Translate, Increment, and Repeat
     if (z8001()) {
-        TEST(TRIRB, "@RR2, @RR4, R6", 0xB824, 0x0640);
-        TEST(TRIRB, "@RR2, @RR4, R0", 0xB824, 0x0040);
-        ERRR(TRIRB, "@RR0, @RR4, R5", 0xB804, 0x0540);
-        ERRR(TRIRB, "@RR2, @RR0, R5", 0xB824, 0x0500);
-        ERRR(TRIRB, "@RR2, @RR4, R1", 0xB824, 0x0140);
+        TEST(TRIRB, "@RR8, @RR10, R12", 0xB884, 0x0CA0);
+        TEST(TRIRB, "@RR8, @RR10, R0",  0xB884, 0x00A0);
+        ERRT(TRIRB, "@RR0, @RR10, R12", REGISTER_NOT_ALLOWED, 0xB804, 0x0CA0);
+        ERRT(TRIRB, "@RR8, @RR0, R12",  REGISTER_NOT_ALLOWED, 0xB884, 0x0C00);
+        ERRT(TRIRB, "@RR8, @RR10, R1",  REGISTER_NOT_ALLOWED, 0xB884, 0x01A0);
+        ERRT(TRIRB, "@RR8, @RR8, R12",  REGISTERS_OVERLAPPED, 0xB884, 0x0C80);
+        ERRT(TRIRB, "@RR8, @RR10, R9",  REGISTERS_OVERLAPPED, 0xB884, 0x09A0);
+        ERRT(TRIRB, "@RR8, @RR10, R11", REGISTERS_OVERLAPPED, 0xB884, 0x0BA0);
     } else {
-        TEST(TRIRB, "@R2, @R3, R4", 0xB824, 0x0430);
-        TEST(TRIRB, "@R2, @R3, R0", 0xB824, 0x0030);
-        ERRR(TRIRB, "@R0, @R3, R4", 0xB804, 0x0430);
-        ERRR(TRIRB, "@R1, @R3, R4", 0xB814, 0x0430);
-        ERRR(TRIRB, "@R2, @R0, R4", 0xB824, 0x0400);
-        ERRR(TRIRB, "@R2, @R1, R4", 0xB824, 0x0410);
-        ERRR(TRIRB, "@R2, @R3, R1", 0xB824, 0x0130);
+        TEST(TRIRB, "@R10, @R11, R12", 0xB8A4, 0x0CB0);
+        TEST(TRIRB, "@R10, @R11, R0",  0xB8A4, 0x00B0);
+        ERRT(TRIRB, "@R0, @R11, R12",  REGISTER_NOT_ALLOWED, 0xB804, 0x0CB0);
+        ERRT(TRIRB, "@R1, @R11, R12",  REGISTER_NOT_ALLOWED, 0xB814, 0x0CB0);
+        ERRT(TRIRB, "@R10, @R11, R1",  REGISTER_NOT_ALLOWED, 0xB8A4, 0x01B0);
+        ERRT(TRIRB, "@R10, @R0, R12",  REGISTER_NOT_ALLOWED, 0xB8A4, 0x0C00);
+        ERRT(TRIRB, "@R10, @R1, R12",  REGISTER_NOT_ALLOWED, 0xB8A4, 0x0C10);
+        ERRT(TRIRB, "@R10, @R10, R12", REGISTERS_OVERLAPPED, 0xB8A4, 0x0CA0);
+        ERRT(TRIRB, "@R10, @R11, R10", REGISTERS_OVERLAPPED, 0xB8A4, 0x0AB0);
+        ERRT(TRIRB, "@R10, @R11, R11", REGISTERS_OVERLAPPED, 0xB8A4, 0x0BB0);
     }
 
     // Translate, Test, and Decrement
     if (z8001()) {
-        TEST(TRTDB, "@RR2, @RR4, R6", 0xB82A, 0x0640);
-        TEST(TRTDB, "@RR2, @RR4, R0", 0xB82A, 0x0040);
-        ERRR(TRTDB, "@RR0, @RR4, R5", 0xB80A, 0x0540);
-        ERRR(TRTDB, "@RR2, @RR0, R5", 0xB82A, 0x0500);
-        ERRR(TRTDB, "@RR2, @RR4, R1", 0xB82A, 0x0140);
+        TEST(TRTDB, "@RR10, @RR12, R9",  0xB8AA, 0x09C0);
+        TEST(TRTDB, "@RR10, @RR12, R0",  0xB8AA, 0x00C0);
+        ERRT(TRTDB, "@RR0, @RR12, R9",   REGISTER_NOT_ALLOWED, 0xB80A, 0x09C0);
+        ERRT(TRTDB, "@RR10, @RR0, R9",   REGISTER_NOT_ALLOWED, 0xB8AA, 0x0900);
+        ERRT(TRTDB, "@RR10, @RR12, R1",  REGISTER_NOT_ALLOWED, 0xB8AA, 0x01C0);
+        ERRT(TRTDB, "@RR10, @RR10, R9",  REGISTERS_OVERLAPPED, 0xB8AA, 0x09A0);
+        ERRT(TRTDB, "@RR10, @RR12, R10", REGISTERS_OVERLAPPED, 0xB8AA, 0x0AC0);
+        ERRT(TRTDB, "@RR10, @RR12, R13", REGISTERS_OVERLAPPED, 0xB8AA, 0x0DC0);
     } else {
-        TEST(TRTDB, "@R2, @R3, R4", 0xB82A, 0x0430);
-        TEST(TRTDB, "@R2, @R3, R0", 0xB82A, 0x0030);
-        ERRR(TRTDB, "@R0, @R3, R4", 0xB80A, 0x0430);
-        ERRR(TRTDB, "@R1, @R3, R4", 0xB81A, 0x0430);
-        ERRR(TRTDB, "@R2, @R0, R4", 0xB82A, 0x0400);
-        ERRR(TRTDB, "@R2, @R1, R4", 0xB82A, 0x0410);
-        ERRR(TRTDB, "@R2, @R3, R1", 0xB82A, 0x0130);
+        TEST(TRTDB, "@R13, @R14, R15", 0xB8DA, 0x0FE0);
+        TEST(TRTDB, "@R13, @R14, R0",  0xB8DA, 0x00E0);
+        ERRT(TRTDB, "@R0, @R14, R15",  REGISTER_NOT_ALLOWED, 0xB80A, 0x0FE0);
+        ERRT(TRTDB, "@R1, @R14, R15",  REGISTER_NOT_ALLOWED, 0xB81A, 0x0FE0);
+        ERRT(TRTDB, "@R13, @R14, R1",  REGISTER_NOT_ALLOWED, 0xB8DA, 0x01E0);
+        ERRT(TRTDB, "@R13, @R0, R15",  REGISTER_NOT_ALLOWED, 0xB8DA, 0x0F00);
+        ERRT(TRTDB, "@R13, @R1, R15",  REGISTER_NOT_ALLOWED, 0xB8DA, 0x0F10);
+        ERRT(TRTDB, "@R13, @R13, R15", REGISTERS_OVERLAPPED, 0xB8DA, 0x0FD0);
+        ERRT(TRTDB, "@R13, @R14, R13", REGISTERS_OVERLAPPED, 0xB8DA, 0x0DE0);
+        ERRT(TRTDB, "@R13, @R14, R14", REGISTERS_OVERLAPPED, 0xB8DA, 0x0EE0);
     }
 
     // Translate, Test, Decrement, and Repeat
     if (z8001()) {
-        TEST(TRTDRB, "@RR2, @RR4, R6", 0xB82E, 0x064E);
-        TEST(TRTDRB, "@RR2, @RR4, R0", 0xB82E, 0x004E);
-        ERRR(TRTDRB, "@RR0, @RR4, R5", 0xB80E, 0x054E);
-        ERRR(TRTDRB, "@RR2, @RR0, R5", 0xB82E, 0x050E);
-        ERRR(TRTDRB, "@RR2, @RR4, R1", 0xB82E, 0x014E);
+        TEST(TRTDRB, "@RR12, @RR14, R2",  0xB8CE, 0x02EE);
+        TEST(TRTDRB, "@RR12, @RR14, R0",  0xB8CE, 0x00EE);
+        ERRT(TRTDRB, "@RR0, @RR14, R2",   REGISTER_NOT_ALLOWED, 0xB80E, 0x02EE);
+        ERRT(TRTDRB, "@RR12, @RR0, R2",   REGISTER_NOT_ALLOWED, 0xB8CE, 0x020E);
+        ERRT(TRTDRB, "@RR12, @RR14, R1",  REGISTER_NOT_ALLOWED, 0xB8CE, 0x01EE);
+        ERRT(TRTDRB, "@RR12, @RR12, R2",  REGISTERS_OVERLAPPED, 0xB8CE, 0x02CE);
+        ERRT(TRTDRB, "@RR12, @RR14, R13", REGISTERS_OVERLAPPED, 0xB8CE, 0x0DEE);
+        ERRT(TRTDRB, "@RR12, @RR14, R14", REGISTERS_OVERLAPPED, 0xB8CE, 0x0EEE);
     } else {
-        TEST(TRTDRB, "@R2, @R3, R4", 0xB82E, 0x043E);
-        TEST(TRTDRB, "@R2, @R3, R0", 0xB82E, 0x003E);
-        ERRR(TRTDRB, "@R0, @R3, R4", 0xB80E, 0x043E);
-        ERRR(TRTDRB, "@R1, @R3, R4", 0xB81E, 0x043E);
-        ERRR(TRTDRB, "@R2, @R0, R4", 0xB82E, 0x040E);
-        ERRR(TRTDRB, "@R2, @R1, R4", 0xB82E, 0x041E);
-        ERRR(TRTDRB, "@R2, @R3, R1", 0xB82E, 0x013E);
+        TEST(TRTDRB, "@R15, @R14, R13", 0xB8FE, 0x0DEE);
+        TEST(TRTDRB, "@R15, @R14, R0",  0xB8FE, 0x00EE);
+        ERRT(TRTDRB, "@R0, @R14, R13",  REGISTER_NOT_ALLOWED, 0xB80E, 0x0DEE);
+        ERRT(TRTDRB, "@R1, @R14, R13",  REGISTER_NOT_ALLOWED, 0xB81E, 0x0DEE);
+        ERRT(TRTDRB, "@R15, @R14, R1",  REGISTER_NOT_ALLOWED, 0xB8FE, 0x01EE);
+        ERRT(TRTDRB, "@R15, @R0, R13",  REGISTER_NOT_ALLOWED, 0xB8FE, 0x0D0E);
+        ERRT(TRTDRB, "@R15, @R1, R13",  REGISTER_NOT_ALLOWED, 0xB8FE, 0x0D1E);
+        ERRT(TRTDRB, "@R15, @R15, R13", REGISTERS_OVERLAPPED, 0xB8FE, 0x0DFE);
+        ERRT(TRTDRB, "@R15, @R14, R15", REGISTERS_OVERLAPPED, 0xB8FE, 0x0FEE);
+        ERRT(TRTDRB, "@R15, @R14, R14", REGISTERS_OVERLAPPED, 0xB8FE, 0x0EEE);
     }
 
     // Translate, Test, and Increment
     if (z8001()) {
-        TEST(TRTIB, "@RR2, @RR4, R6", 0xB822, 0x0640);
-        TEST(TRTIB, "@RR2, @RR4, R0", 0xB822, 0x0040);
-        ERRR(TRTIB, "@RR0, @RR4, R5", 0xB802, 0x0540);
-        ERRR(TRTIB, "@RR2, @RR0, R5", 0xB822, 0x0500);
-        ERRR(TRTIB, "@RR2, @RR4, R1", 0xB822, 0x0140);
+        TEST(TRTIB, "@RR14, @RR12, R11", 0xB8E2, 0x0BC0);
+        TEST(TRTIB, "@RR14, @RR12, R0",  0xB8E2, 0x00C0);
+        ERRT(TRTIB, "@RR0, @RR12, R11",  REGISTER_NOT_ALLOWED, 0xB802, 0x0BC0);
+        ERRT(TRTIB, "@RR14, @RR0, R11",  REGISTER_NOT_ALLOWED, 0xB8E2, 0x0B00);
+        ERRT(TRTIB, "@RR14, @RR12, R1",  REGISTER_NOT_ALLOWED, 0xB8E2, 0x01C0);
+        ERRT(TRTIB, "@RR14, @RR14, R11", REGISTERS_OVERLAPPED, 0xB8E2, 0x0BE0);
+        ERRT(TRTIB, "@RR14, @RR12, R14", REGISTERS_OVERLAPPED, 0xB8E2, 0x0EC0);
+        ERRT(TRTIB, "@RR14, @RR12, R12", REGISTERS_OVERLAPPED, 0xB8E2, 0x0CC0);
     } else {
-        TEST(TRTIB, "@R2, @R3, R4", 0xB822, 0x0430);
-        TEST(TRTIB, "@R2, @R3, R0", 0xB822, 0x0030);
-        ERRR(TRTIB, "@R0, @R3, R4", 0xB802, 0x0430);
-        ERRR(TRTIB, "@R1, @R3, R4", 0xB812, 0x0430);
-        ERRR(TRTIB, "@R2, @R0, R4", 0xB822, 0x0400);
-        ERRR(TRTIB, "@R2, @R1, R4", 0xB822, 0x0410);
-        ERRR(TRTIB, "@R2, @R3, R1", 0xB822, 0x0130);
+        TEST(TRTIB, "@R12, @R11, R10", 0xB8C2, 0x0AB0);
+        TEST(TRTIB, "@R12, @R11, R0" , 0xB8C2, 0x00B0);
+        ERRT(TRTIB, "@R0, @R11, R10",  REGISTER_NOT_ALLOWED, 0xB802, 0x0AB0);
+        ERRT(TRTIB, "@R1, @R11, R10",  REGISTER_NOT_ALLOWED, 0xB812, 0x0AB0);
+        ERRT(TRTIB, "@R12, @R11, R1",  REGISTER_NOT_ALLOWED, 0xB8C2, 0x01B0);
+        ERRT(TRTIB, "@R12, @R0, R10",  REGISTER_NOT_ALLOWED, 0xB8C2, 0x0A00);
+        ERRT(TRTIB, "@R12, @R1, R10",  REGISTER_NOT_ALLOWED, 0xB8C2, 0x0A10);
+        ERRT(TRTIB, "@R12, @R12, R10", REGISTERS_OVERLAPPED, 0xB8C2, 0x0AC0);
+        ERRT(TRTIB, "@R12, @R11, R12", REGISTERS_OVERLAPPED, 0xB8C2, 0x0CB0);
+        ERRT(TRTIB, "@R12, @R11, R11", REGISTERS_OVERLAPPED, 0xB8C2, 0x0BB0);
     }
 
     // Translate, Test, Increment, and Repeat
     if (z8001()) {
-        TEST(TRTIRB, "@RR2, @RR4, R6", 0xB826, 0x064E);
-        TEST(TRTIRB, "@RR2, @RR4, R0", 0xB826, 0x004E);
-        ERRR(TRTIRB, "@RR0, @RR4, R5", 0xB806, 0x054E);
-        ERRR(TRTIRB, "@RR2, @RR0, R5", 0xB826, 0x050E);
-        ERRR(TRTIRB, "@RR2, @RR4, R1", 0xB826, 0x014E);
+        TEST(TRTIRB, "@RR10, @RR8, R7",  0xB8A6, 0x078E);
+        TEST(TRTIRB, "@RR10, @RR8, R0",  0xB8A6, 0x008E);
+        ERRT(TRTIRB, "@RR0, @RR8, R7",   REGISTER_NOT_ALLOWED, 0xB806, 0x078E);
+        ERRT(TRTIRB, "@RR10, @RR0, R7",  REGISTER_NOT_ALLOWED, 0xB8A6, 0x070E);
+        ERRT(TRTIRB, "@RR10, @RR8, R1",  REGISTER_NOT_ALLOWED, 0xB8A6, 0x018E);
+        ERRT(TRTIRB, "@RR10, @RR10, R7", REGISTERS_OVERLAPPED, 0xB8A6, 0x07AE);
+        ERRT(TRTIRB, "@RR10, @RR8, R11", REGISTERS_OVERLAPPED, 0xB8A6, 0x0B8E);
+        ERRT(TRTIRB, "@RR10, @RR8, R9",  REGISTERS_OVERLAPPED, 0xB8A6, 0x098E);
     } else {
-        TEST(TRTIRB, "@R2, @R3, R4", 0xB826, 0x043E);
-        TEST(TRTIRB, "@R2, @R3, R0", 0xB826, 0x003E);
-        ERRR(TRIIRB, "@R0, @R3, R4", 0xB806, 0x043E);
-        ERRR(TRIIRB, "@R1, @R3, R4", 0xB816, 0x043E);
-        ERRR(TRIIRB, "@R2, @R0, R4", 0xB826, 0x040E);
-        ERRR(TRIIRB, "@R2, @R1, R4", 0xB826, 0x041E);
-        ERRR(TRIIRB, "@R2, @R3, R1", 0xB826, 0x013E);
-    }
-
-    if (z8001()) {
-        ERRR(LDD, "@RR0, @RR4, R6",   0xBB49, 0x0608);
-        ERRR(LDD, "@RR2, @RR0, R6",   0xBB09, 0x0628);
-        ERIR(LDD, "@RR1, @RR4, R6",   0xBB49, 0x0618);
-        ERRV(LDD, "@RR2, @RR4, R4",   0xBB49, 0x0428);
-        ERRV(LDD, "@RR2, @RR4, R5",   0xBB49, 0x0428);
-        TEST(LDD, "@RR2, @RR4, R6",   0xBB49, 0x0628);
-        ERRV(LDD, "@RR4, @RR4, R6",   0xBB49, 0x0648);
-        ERRV(LDD, "@RR6, @RR4, R6",   0xBB49, 0x0668);
-        ERRV(LDD, "@RR6, @RR4, R7",   0xBB49, 0x0768);
-        TEST(LDD, "@RR8, @RR4, R0",   0xBB49, 0x0088);
-        TEST(LDD, "@RR8, @RR4, R1",   0xBB49, 0x0188);
-        TEST(LDD, "@RR10, @RR4, R6",  0xBB49, 0x06A8);
-        TEST(LDD, "@RR12, @RR4, R6",  0xBB49, 0x06C8);
-        ERRV(LDD, "@RR14, @RR4, R15", 0xBB49, 0x0FE8);
-    } else {
-        ERRR(LDD, "@R0, @R2, R3",  0xBB29, 0x0308);
-        ERRR(LDD, "@R2, @R0, R3",  0xBB09, 0x0328);
-        TEST(LDD, "@R1, @R2, R3",  0xBB29, 0x0318);
-        ERRV(LDD, "@R2, @R2, R3",  0xBB29, 0x0328);
-        ERRV(LDD, "@R3, @R2, R2",  0xBB29, 0x0238);
-        ERRV(LDD, "@R3, @R2, R3",  0xBB29, 0x0338);
-        TEST(LDD, "@R4, @R2, R3",  0xBB29, 0x0348);
-        TEST(LDD, "@R5, @R2, R3",  0xBB29, 0x0358);
-        TEST(LDD, "@R6, @R2, R3",  0xBB29, 0x0368);
-        TEST(LDD, "@R7, @R2, R3",  0xBB29, 0x0378);
-        TEST(LDD, "@R8, @R2, R3",  0xBB29, 0x0388);
-        TEST(LDD, "@R9, @R2, R3",  0xBB29, 0x0398);
-        TEST(LDD, "@R10, @R2, R3", 0xBB29, 0x03A8);
-        TEST(LDD, "@R11, @R2, R3", 0xBB29, 0x03B8);
-        TEST(LDD, "@R12, @R2, R3", 0xBB29, 0x03C8);
-        TEST(LDD, "@R13, @R2, R3", 0xBB29, 0x03D8);
-        TEST(LDD, "@R14, @R2, R3", 0xBB29, 0x03E8);
-        TEST(LDD, "@R15, @R2, R3", 0xBB29, 0x03F8);
+        TEST(TRTIRB, "@R9, @R8, R7", 0xB896, 0x078E);
+        TEST(TRTIRB, "@R9, @R8, R0", 0xB896, 0x008E);
+        ERRT(TRTIRB, "@R0, @R8, R7", REGISTER_NOT_ALLOWED, 0xB806, 0x078E);
+        ERRT(TRTIRB, "@R1, @R8, R7", REGISTER_NOT_ALLOWED, 0xB816, 0x078E);
+        ERRT(TRTIRB, "@R9, @R8, R1", REGISTER_NOT_ALLOWED, 0xB896, 0x018E);
+        ERRT(TRTIRB, "@R9, @R0, R7", REGISTER_NOT_ALLOWED, 0xB896, 0x070E);
+        ERRT(TRTIRB, "@R9, @R1, R7", REGISTER_NOT_ALLOWED, 0xB896, 0x071E);
+        ERRT(TRTIRB, "@R9, @R9, R7", REGISTERS_OVERLAPPED, 0xB896, 0x079E);
+        ERRT(TRTIRB, "@R9, @R8, R9", REGISTERS_OVERLAPPED, 0xB896, 0x098E);
+        ERRT(TRTIRB, "@R9, @R8, R8", REGISTERS_OVERLAPPED, 0xB896, 0x088E);
     }
 }
+
 
 static void test_input() {
     // Input
@@ -2012,8 +2226,10 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bit_manipulation);
     RUN_TEST(test_rotate);
     RUN_TEST(test_shift);
+    RUN_TEST(test_compare_block);
     RUN_TEST(test_block_transfer);
-    RUN_TEST(test_string_manipulation);
+    RUN_TEST(test_compare_string);
+    RUN_TEST(test_translation);
     RUN_TEST(test_input);
     RUN_TEST(test_output);
     RUN_TEST(test_cpu_conrtol);
