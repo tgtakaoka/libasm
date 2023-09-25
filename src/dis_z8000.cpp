@@ -363,6 +363,8 @@ OprSize registerSize(const DisInsn &insn, AddrMode mode) {
         return SZ_ADDR;
     if (mode == M_GEND && (insn.opCode() >> 14) == 2)  // M_R
         return insn.size();
+    if (mode == M_R)
+        return insn.size();
     return SZ_WORD;
 }
 

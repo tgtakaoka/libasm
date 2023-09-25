@@ -86,7 +86,7 @@
         ldm     r0,@rr2,#16
         ldm     r0,data1234,#15
         ldm     r0,data1234(r2),#14
-        ldm     @rr2,r1,#1
+        ldm     @rr2,r0,#16
         ldm     data1234,r1,#2
         ldm     data1234(r2),r1,#3
 ;# Load Relative
@@ -476,40 +476,72 @@
         srll    rr4,#3
 ;# Compare and Decrement
         cpd     r1,@rr2,r4,eq
+        cpd     r0,@rr2,r4,eq
+        cpd     r1,@rr2,r0,eq
         cpdb    rh1,@rr2,r4,ne
+        cpdb    rh0,@rr2,r4,ne
+        cpdb    rh1,@rr2,r0,ne
 ;# Compare, Decrement, and Repeat
         cpdr    r1,@rr2,r4,eq
+        cpdr    r0,@rr2,r4,eq
+        cpdr    r1,@rr2,r0,eq
         cpdrb   rh1,@rr2,r4,ne
+        cpdrb   rh0,@rr2,r4,ne
+        cpdrb   rh1,@rr2,r0,ne
 ;# Compare and Increment
         cpi     r1,@rr2,r4,eq
+        cpi     r0,@rr2,r4,eq
+        cpi     r1,@rr2,r0,eq
         cpib    rh1,@rr2,r4,ne
+        cpib    rh0,@rr2,r4,ne
+        cpib    rh1,@rr2,r0,ne
 ;# Compare, Increment, and Repeat
         cpir    r1,@rr2,r4,eq
+        cpir    r0,@rr2,r4,eq
+        cpir    r1,@rr2,r0,eq
         cpirb   rh1,@rr2,r4,ne
+        cpirb   rh0,@rr2,r4,ne
+        cpirb   rh1,@rr2,r0,ne
 ;# Compare String and Decrement
         cpsd    @rr2,@rr4,r6,eq
+        cpsd    @rr2,@rr4,r0,eq
         cpsdb   @rr2,@rr4,r6,ne
+        cpsdb   @rr2,@rr4,r0,ne
 ;# Compare String, Decrement, and Repeat
         cpsdr   @rr2,@rr4,r6,eq
+        cpsdr   @rr2,@rr4,r0,eq
         cpsdrb  @rr2,@rr4,r6,ne
+        cpsdrb  @rr2,@rr4,r0,ne
 ;# Compare Sring and Increment
         cpsi    @rr2,@rr4,r6,eq
+        cpsi    @rr2,@rr4,r0,eq
         cpsib   @rr2,@rr4,r6,ne
+        cpsib   @rr2,@rr4,r0,ne
 ;# Compare String, Increment, and Repeat
         cpsir   @rr2,@rr4,r6,eq
+        cpsir   @rr2,@rr4,r0,eq
         cpsirb  @rr2,@rr4,r6,ne
+        cpsirb  @rr2,@rr4,r0,ne
 ;# Load and Decrement
         ldd     @rr2,@rr4,r6
+        ldd     @rr2,@rr4,r0
         lddb    @rr2,@rr4,r6
+        lddb    @rr2,@rr4,r0
 ;# Load, Decrement, and Repeat
         lddr    @rr2,@rr4,r6
+        lddr    @rr2,@rr4,r0
         lddrb   @rr2,@rr4,r6
+        lddrb   @rr2,@rr4,r0
 ;# Load and Increment
         ldi     @rr2,@rr4,r6
+        ldi     @rr2,@rr4,r0
         ldib    @rr2,@rr4,r6
+        ldib    @rr2,@rr4,r0
 ;# Load, Increment, and Repeat
         ldir    @rr2,@rr4,r6
+        ldir    @rr2,@rr4,r0
         ldirb   @rr2,@rr4,r6
+        ldirb   @rr2,@rr4,r0
 ;# Translate and Decrement
         trdb    @rr2,@rr4,r6
 ;# Translate, Decrement, and Repeat

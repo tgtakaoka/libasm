@@ -56,7 +56,8 @@ private:
     void emitFlags(AsmInsn &insn, ModeField field, const Operand &op);
     void emitCtlRegister(AsmInsn &insn, ModeField field, const Operand &op);
     void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, ModeField field);
-    void checkRegisterOverlap(const Operand &dstOp, const Operand &srcOp, RegName cnt = REG_UNDEF);
+    void checkRegisterOverlap(
+            const Operand &dstOp, const Operand &srcOp, const Operand *cntOp = nullptr);
     void checkRegisterOverlap(
             const AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp);
 
