@@ -119,9 +119,8 @@ void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) 
 Config::ptrdiff_t AsmMc6809::calculateDisplacement(const AsmInsn &insn, const Operand &op) const {
     const auto disp = static_cast<Config::ptrdiff_t>(op.val32);
     if (op.base == REG_PCR && op.isOK()) {
-        // assuming 8-bit displacement (post byte + 8-bit displacement)
-        const auto length =
-                (insn.hasPrefix() ? 1 : 0) + (insn.length() == 0 ? 3 : insn.length() + 2);
+        const auto length = (insn.hasPrefix() ? 1 : 0) +
+                            (insn.length() == 0 ? 3 : insn.length() + 2) + (op.extra == 16 ? 1 : 0);
         const auto base = static_cast<Config::uintptr_t>(insn.address()) + length;
         const auto target = static_cast<Config::uintptr_t>(op.val32);
         return target - base;
