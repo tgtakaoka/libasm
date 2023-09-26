@@ -88,6 +88,8 @@ Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
         if (spec.base == REG_PCR) {
             const auto base = insn.address() + insn.length();
             const auto target = branchTarget(base, offset);
+            if (spec.size == 16 && !overflowInt8(offset))
+                out.letter('>');
             outRelAddr(out, target, insn.address(), spec.size);
         } else {
             if (prefix) {
@@ -130,8 +132,7 @@ Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
     return setErrorIf(insn);
 }
 
-Error DisMc6809::decodeRelative(
-        DisInsn &insn, StrBuffer &out, AddrMode mode) {
+Error DisMc6809::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     Config::ptrdiff_t delta;
     if (mode == M_REL) {
         delta = static_cast<int8_t>(insn.readByte());
@@ -144,8 +145,7 @@ Error DisMc6809::decodeRelative(
     return setErrorIf(insn);
 }
 
-Error DisMc6809::decodeImmediate(
-        DisInsn &insn, StrBuffer &out, AddrMode mode) {
+Error DisMc6809::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     out.letter('#');
     if (mode == M_IM8 || mode == M_GEN8) {
         outHex(out, insn.readByte(), 8);
