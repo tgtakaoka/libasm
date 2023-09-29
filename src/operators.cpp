@@ -296,6 +296,7 @@ static const Operator OP_LOGICAL_OR( 15, L, 2, logical_or);
 
 const Operator *CStyleOperatorParser::readOperator(
         StrScanner &scan, ErrorAt &error, Operator::Type type) const {
+    UNUSED(error);
     auto p = scan;
     const Operator *opr = nullptr;
     if (type == Operator::PREFIX) {

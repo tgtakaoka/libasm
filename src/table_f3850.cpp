@@ -210,7 +210,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {F3850, TEXT_CPU_3850, ARRAY_RANGE(F3850_PAGES)},
 };
-static constexpr const Cpu &F3850_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -230,11 +234,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableF3850::searchName(CpuType cpuType, AsmInsn &insn) const {
-    F3850_CPU.searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -248,7 +253,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableF3850::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = F3850_CPU.searchOpCode(insn, out, matchOpCode);
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
@@ -259,7 +264,7 @@ const /*PROGMEM*/ char *TableF3850::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableF3850::cpuName_P(CpuType cpuType) const {
-    return F3850_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableF3850::searchCpuName(StrScanner &name, CpuType &cpuType) const {

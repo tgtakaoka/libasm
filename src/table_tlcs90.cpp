@@ -560,7 +560,11 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TLCS90, TEXT_CPU_TLCS90, ARRAY_RANGE(TLCS90_PAGES)},
 };
-static constexpr const Cpu &TLCS90_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -616,11 +620,12 @@ static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
 }
 
 Error TableTlcs90::searchName(CpuType cpuType, AsmInsn &insn) const {
-    TLCS90_CPU.searchName(insn, acceptModes, searchPageSetup, readCode);
+    cpu(cpuType)->searchName(insn, acceptModes, searchPageSetup, readCode);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
@@ -637,12 +642,12 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableTlcs90::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    TLCS90_CPU.searchOpCode(insn, out, matchOpCode);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
 bool TableTlcs90::isPrefix(CpuType cpuType, Config::opcode_t code, AddrMode &mode) const {
-    return TLCS90_CPU.isPrefix(code, mode);
+    return cpu(cpuType)->isPrefix(code, mode);
 }
 
 const /*PROGMEM*/ char *TableTlcs90::listCpu_P() const {
@@ -650,7 +655,7 @@ const /*PROGMEM*/ char *TableTlcs90::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableTlcs90::cpuName_P(CpuType cpuType) const {
-    return TLCS90_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableTlcs90::searchCpuName(StrScanner &name, CpuType &cpuType) const {

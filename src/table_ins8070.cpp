@@ -194,7 +194,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {INS8070, TEXT_CPU_8070, ARRAY_RANGE(INS8070_PAGES)},
 };
-static constexpr const Cpu &INS8070_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -226,7 +230,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableIns8070::searchName(CpuType cpuType, AsmInsn &insn) const {
-    INS8070_CPU.searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
@@ -247,6 +251,7 @@ static Config::opcode_t maskCode(AddrMode mode) {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     opCode &= maskCode(flags.dst());
@@ -255,7 +260,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableIns8070::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = INS8070_CPU.searchOpCode(insn, out, matchOpCode);
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
@@ -266,7 +271,7 @@ const /*PROGMEM*/ char *TableIns8070::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableIns8070::cpuName_P(CpuType cpuType) const {
-    return INS8070_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableIns8070::searchCpuName(StrScanner &name, CpuType &cpuType) const {

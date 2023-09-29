@@ -25,6 +25,7 @@ namespace reg {
 namespace {
 
 bool nameMatcher(int8_t &name, const NameEntry *item, int extra) {
+    UNUSED(extra);
     return name == item->name();
 }
 

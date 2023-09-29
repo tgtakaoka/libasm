@@ -106,7 +106,7 @@ Value ValueParser::eval(
                 return val;
             }
 
-            const auto fn = _function.parseFunction(scan, error, _symbol, symtab);
+            const auto fn = _function.parseFunction(scan, _symbol, symtab);
             if (fn) {
                 if (*scan.skipSpaces() != '(') {
                     error.setError(at, MISSING_FUNC_ARGUMENT);

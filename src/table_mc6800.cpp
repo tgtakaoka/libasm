@@ -644,6 +644,7 @@ Error TableMc6800::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(*page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();

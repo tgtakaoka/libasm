@@ -73,7 +73,7 @@ Error DisTms7000::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     return setError(insn);
 }
 
-Error DisTms7000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+Error DisTms7000::decodeRelative(DisInsn &insn, StrBuffer &out) {
     int16_t delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
@@ -108,7 +108,7 @@ Error DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outRegName(out.letter('*'), toRegName(insn.readByte()));
         break;
     case M_REL:
-        return decodeRelative(insn, out, mode);
+        return decodeRelative(insn, out);
     case M_TRAP:
         outDec(out, 0x1F - (insn.opCode() & 0x1F), 5);
         break;

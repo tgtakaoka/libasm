@@ -628,6 +628,7 @@ Error TableZ8000::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     const auto flags = entry->flags();
     if ((insn.opCode() & flags.codeMask()) != entry->opCode())
         return false;

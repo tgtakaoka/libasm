@@ -272,7 +272,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8051, TEXT_CPU_8051, ARRAY_RANGE(I8051_PAGES)},
 };
-static constexpr const Cpu &I8051_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -292,11 +296,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableI8051::searchName(CpuType cpuType, AsmInsn &insn) const {
-    I8051_CPU.searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     auto flags = entry->flags();
     auto dst = flags.dst();
@@ -312,7 +317,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableI8051::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    I8051_CPU.searchOpCode(insn, out, matchOpCode);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
@@ -321,7 +326,7 @@ const /*PROGMEM*/ char *TableI8051::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableI8051::cpuName_P(CpuType cpuType) const {
-    return I8051_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableI8051::searchCpuName(StrScanner &name, CpuType &cpuType) const {

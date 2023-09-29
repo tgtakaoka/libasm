@@ -691,6 +691,8 @@ Error TableMc6809::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool acceptAll(AsmInsn &insn, const Entry *entry) {
+    UNUSED(insn);
+    UNUSED(entry);
     return true;
 }
 
@@ -700,6 +702,7 @@ Error TableMc6809::hasName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();

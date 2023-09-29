@@ -35,7 +35,7 @@ private:
     Error decodeRegister(DisInsn &insn, StrBuffer &out);
     Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
     Error decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error decodeRelative(DisInsn &insn, StrBuffer &out);
     Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

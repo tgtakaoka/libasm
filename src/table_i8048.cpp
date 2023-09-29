@@ -338,6 +338,7 @@ Error TableI8048::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();

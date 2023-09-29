@@ -72,8 +72,8 @@ struct FunctionParser : Singleton<FunctionParser> {
      * - Returns the no-operation varargs function which returns undefined value when |symtab| is
      *   nullptr and found '(' after function name.
      */
-    virtual const Functor *parseFunction(StrScanner &scan, ErrorAt &error,
-            const SymbolParser &symParser, const SymbolTable *symtab) const;
+    virtual const Functor *parseFunction(
+            StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const;
 
 protected:
     virtual StrScanner readFunctionName(StrScanner &scan, const SymbolParser &symParser) const;

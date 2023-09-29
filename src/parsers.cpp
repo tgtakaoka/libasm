@@ -262,8 +262,8 @@ bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
            strchr_P(headOfSymbol ? _prefix_P : _extra_P, c);
 }
 
-const Functor *FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
-        const SymbolParser &symParser, const SymbolTable *symtab) const {
+const Functor *FunctionParser::parseFunction(
+        StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const {
     auto p = scan;
     const StrScanner name = readFunctionName(p, symParser);
     if (name.size() == 0)

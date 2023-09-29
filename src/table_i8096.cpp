@@ -266,7 +266,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8096, TEXT_CPU_8096, ARRAY_RANGE(I8096_PAGES)},
 };
-static constexpr const Cpu &I8096_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -297,11 +301,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableI8096::searchName(CpuType cpuType, AsmInsn &insn) const {
-    I8096_CPU.searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
@@ -317,14 +322,14 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    const auto entry = I8096_CPU.searchOpCode(insn, out, matchOpCode);
+    const auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 
 bool TableI8096::isPrefix(CpuType cpuType, Config::opcode_t code) const {
-    return I8096_CPU.isPrefix(code);
+    return cpu(cpuType)->isPrefix(code);
 }
 
 const /*PROGMEM*/ char *TableI8096::listCpu_P() const {
@@ -332,7 +337,7 @@ const /*PROGMEM*/ char *TableI8096::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableI8096::cpuName_P(CpuType cpuType) const {
-    return I8096_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableI8096::searchCpuName(StrScanner &name, CpuType &cpuType) const {

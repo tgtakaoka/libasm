@@ -1080,6 +1080,7 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto dstPos = entry->flags().dstPos();
     const auto srcPos = entry->flags().srcPos();

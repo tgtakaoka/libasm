@@ -222,7 +222,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {SCN2650, TEXT_CPU_2650, ARRAY_RANGE(SCN2650_PAGES)},
 };
-static constexpr const Cpu &SCN2650_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -248,11 +252,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableScn2650::searchName(CpuType cpuType, AsmInsn &insn) const {
-    SCN2650_CPU.searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
@@ -266,7 +271,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableScn2650::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = SCN2650_CPU.searchOpCode(insn, out, matchOpCode);
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
@@ -277,7 +282,7 @@ const /*PROGMEM*/ char *TableScn2650::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableScn2650::cpuName_P(CpuType cpuType) const {
-    return SCN2650_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableScn2650::searchCpuName(StrScanner &name, CpuType &cpuType) const {

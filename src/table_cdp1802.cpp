@@ -352,6 +352,7 @@ Error TableCdp1802::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     auto flags = entry->flags();
     auto mode = flags.mode1();

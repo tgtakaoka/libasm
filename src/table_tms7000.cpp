@@ -473,7 +473,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {TMS7000, TEXT_CPU_TMS7000, ARRAY_RANGE(TMS7000_PAGES)},
 };
-static constexpr const Cpu &TMS7000_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
@@ -497,11 +501,12 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableTms7000::searchName(CpuType cpuType, AsmInsn &insn) const {
-    TMS7000_CPU.searchName(insn, acceptModes);
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto flags = entry->flags();
     const auto src = flags.src();
@@ -511,7 +516,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableTms7000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    TMS7000_CPU.searchOpCode(insn, out, matchOpCode);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
@@ -520,7 +525,7 @@ const /*PROGMEM*/ char *TableTms7000::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableTms7000::cpuName_P(CpuType cpuType) const {
-    return TMS7000_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableTms7000::searchCpuName(StrScanner &name, CpuType &cpuType) const {

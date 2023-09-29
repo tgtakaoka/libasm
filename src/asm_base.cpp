@@ -109,6 +109,8 @@ int32_t Assembler::branchDelta(uint32_t base, uint32_t target, const ErrorAt &at
 }
 
 Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
+    UNUSED(insn);
+    UNUSED(extra);
     // parse "name", "text" in |scan|
     auto p = scan.skipSpaces();
     if (!p.expect('"'))
@@ -131,7 +133,7 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
 }
 
 Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
-    (void)extra;
+    UNUSED(extra);
     auto p = scan;
     ErrorAt error;
     const auto value = parseExpr(p, error);
@@ -197,7 +199,7 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra) {
 }
 
 Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t extra) {
-    (void)extra;
+    UNUSED(extra);
     do {
         const auto delim = *scan.skipSpaces()++;
         auto p = scan;

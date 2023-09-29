@@ -347,6 +347,7 @@ Error TableMn1610::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto mode1 = entry->flags().mode1();
     const auto mode2 = entry->flags().mode2();

@@ -38,7 +38,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 
 struct Ins8070FunctionParser final : FunctionParser {
     const Functor *parseFunction(
-            StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
+            StrScanner &, const SymbolParser &, const SymbolTable *) const override;
 };
 
 }  // namespace
@@ -96,8 +96,8 @@ const struct : Functor {
     }
 } FN_ADDR;
 
-const Functor *Ins8070FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
-        const SymbolParser &symParser, const SymbolTable *symtab) const {
+const Functor *Ins8070FunctionParser::parseFunction(
+        StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const {
     auto p = scan;
     const auto name = readFunctionName(p, symParser);
     const Functor *fn = nullptr;
@@ -112,7 +112,7 @@ const Functor *Ins8070FunctionParser::parseFunction(StrScanner &scan, ErrorAt &e
         scan = p;
         return fn;
     }
-    return FunctionParser::parseFunction(scan, error, symParser, symtab);
+    return FunctionParser::parseFunction(scan, symParser, symtab);
 }
 
 }  // namespace

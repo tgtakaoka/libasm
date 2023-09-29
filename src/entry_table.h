@@ -158,6 +158,7 @@ struct CpuBase {
     template <typename INSN, typename ENTRY>
     static void defaultReadEntryName(
             INSN &insn, const ENTRY *entry, StrBuffer &out, const ENTRY_PAGE *page) {
+        UNUSED(page);
         auto save = out;
         insn.setFlags(entry->flags());
         insn.clearNameBuffer().over(out).text_P(entry->name_P()).over(insn.nameBuffer());

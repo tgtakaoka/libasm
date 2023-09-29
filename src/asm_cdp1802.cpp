@@ -36,7 +36,7 @@ const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch"
 
 struct Cdp1802FunctionParser final : FunctionParser {
     const Functor *parseFunction(
-            StrScanner &, ErrorAt &, const SymbolParser &, const SymbolTable *) const override;
+            StrScanner &, const SymbolParser &, const SymbolTable *) const override;
 };
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
@@ -122,8 +122,8 @@ const struct : Functor {
     }
 } FN_A1;
 
-const Functor *Cdp1802FunctionParser::parseFunction(StrScanner &scan, ErrorAt &error,
-        const SymbolParser &symParser, const SymbolTable *symtab) const {
+const Functor *Cdp1802FunctionParser::parseFunction(
+        StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const {
     auto p = scan;
     if (p.iexpect('A')) {
         const Functor *fn = nullptr;
@@ -141,7 +141,7 @@ const Functor *Cdp1802FunctionParser::parseFunction(StrScanner &scan, ErrorAt &e
             return fn;
         }
     }
-    return FunctionParser::parseFunction(scan, error, symParser, symtab);
+    return FunctionParser::parseFunction(scan, symParser, symtab);
 }
 
 }  // namespace

@@ -489,10 +489,10 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(ALIAS_PAGES)},
 };
-static constexpr const Cpu &MC68000_CPU = CPU_TABLE[0];
 
 static const Cpu *cpu(CpuType cpuType, bool acceptAlias = false) {
-    return acceptAlias ? &MC68000_CPU + 1 : &MC68000_CPU;
+    UNUSED(cpuType);
+    return &CPU_TABLE[acceptAlias ? 1 : 0];
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -596,6 +596,7 @@ static Config::opcode_t getInsnMask(Entry::Flags flags) {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     opCode &= ~getInsnMask(entry->flags());
     return opCode == entry->opCode();

@@ -568,6 +568,7 @@ static bool matchPostByte(Config::opcode_t post, PostFormat format) {
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     if (DisInsn::operandInOpCode(entry->opCode()))
         opCode &= 0x0f;

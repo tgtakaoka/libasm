@@ -896,7 +896,11 @@ struct Mmu : ProcessorCpuCommon<MmuType> {
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {NS32032, TEXT_CPU_32032, ARRAY_RANGE(NS32032_PAGES)},
 };
-static constexpr const Cpu &NS32032_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 #define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
 
@@ -950,7 +954,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
-    NS32032_CPU.searchName(insn, acceptModes, searchPageSetup);
+    cpu(cpuSpec.cpu)->searchName(insn, acceptModes, searchPageSetup);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
         fpu(cpuSpec.fpu)->searchName(insn, acceptModes, searchPageSetup);
@@ -975,7 +979,7 @@ static void readEntryName(
 }
 
 Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
-    NS32032_CPU.searchOpCode(insn, out, matchOpCode, readEntryName);
+    cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
         fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode, readEntryName);
@@ -988,7 +992,7 @@ Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffe
 }
 
 bool TableNs32000::isPrefixCode(const CpuSpec &cpuSpec, uint8_t code) const {
-    return NS32032_CPU.isPrefix(code) || fpu(cpuSpec.fpu)->isPrefix(code) ||
+    return cpu(cpuSpec.cpu)->isPrefix(code) || fpu(cpuSpec.fpu)->isPrefix(code) ||
            mmu(cpuSpec.mmu)->isPrefix(code);
 }
 
@@ -997,7 +1001,7 @@ const /*PROGMEM*/ char *TableNs32000::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableNs32000::cpuName_P(CpuType cpuType) const {
-    return NS32032_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableNs32000::searchCpuName(StrScanner &name, CpuType &cpuType) const {

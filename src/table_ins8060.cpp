@@ -144,7 +144,11 @@ using Cpu = entry::CpuBase<CpuType, EntryPage>;
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {INS8060, TEXT_CPU_SCMP, ARRAY_RANGE(INS8060_PAGES)},
 };
-static constexpr const Cpu &INS8060_CPU = CPU_TABLE[0];
+
+static const Cpu *cpu(CpuType cpuType) {
+    UNUSED(cpuType);
+    return &CPU_TABLE[0];
+}
 
 static bool acceptMode(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
@@ -160,11 +164,12 @@ static bool acceptMode(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableIns8060::searchName(CpuType cpuType, AsmInsn &insn) const {
-    INS8060_CPU.searchName(insn, acceptMode);
+    cpu(cpuType)->searchName(insn, acceptMode);
     return insn.getError();
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
+    UNUSED(page);
     auto opCode = insn.opCode();
     const auto mode = entry->flags().mode();
     if (mode == M_INDX) {
@@ -176,7 +181,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableIns8060::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = INS8060_CPU.searchOpCode(insn, out, matchOpCode);
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
         insn.setError(UNKNOWN_INSTRUCTION);
     return insn.getError();
@@ -187,7 +192,7 @@ const /*PROGMEM*/ char *TableIns8060::listCpu_P() const {
 }
 
 const /*PROGMEM*/ char *TableIns8060::cpuName_P(CpuType cpuType) const {
-    return INS8060_CPU.name_P();
+    return cpu(cpuType)->name_P();
 }
 
 Error TableIns8060::searchCpuName(StrScanner &name, CpuType &cpuType) const {
