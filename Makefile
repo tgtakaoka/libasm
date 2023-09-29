@@ -13,11 +13,13 @@
 # limitations under the License.
 
 help:
-	@echo '"make clean"    remove unnecessary files'
-	@echo '"make check"    run test and pio-ci'
-	@echo '"make test"     run test'
-	@echo '"make pio-ci"   run PlatformIO CI for an example and a board'
-	@echo  "                   (default BOARD=$(BOARD)), EX=$(EX))"
+	@echo '"make clean"       remove unnecessary files'
+	@echo '"make check"       run test, pio-ci, and arduino-ci'
+	@echo '"make test"        run test'
+	@echo '"make pio-ci"      run PlatformIO CI for an example and a board'
+	@echo  "                    (default BOARD=$(BOARD)), EX=$(EX))"
+	@echo '"make arduino-ci"  run Arduino CLI for an example and a board'
+	@echo  "                    (default FQBN=$(FQBN)), EX=$(EX))"
 
 EXS = $(shell $(MAKE) -s -C examples examples)
 EX ?= $(firstword $(EXS))
@@ -25,13 +27,19 @@ EX ?= $(firstword $(EXS))
 BOARDS = $(shell $(MAKE) -s -C examples boards)
 BOARD = $(firstword $(BOARDS))
 
-check: test pio-ci
+FQBNS = $(shell $(MAKE) -s -C examples fqbns)
+FQBN = $(firstword $(FQBNS))
+
+check: test pio-ci arduino-ci
 
 test:
 	$(MAKE) -C test test
 
 pio-ci: examples
 	$(MAKE) -C examples pio-ci
+
+arduino-ci: examples
+	$(MAKE) -C examples arduino-ci
 
 clean: 
 	$(MAKE) -s -C cli clean
@@ -40,7 +48,7 @@ clean:
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_*')
 
-.PHONY: help clean check test pio-ci
+.PHONY: help clean check test pio-ci arduino-ci
 
 # Local Variables:
 # mode: makefile-gmake

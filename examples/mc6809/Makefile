@@ -27,9 +27,13 @@ ifdef INSIDE_EMACS
 ifeq ($(filter $(PIO_FLAGS),"--no-ansi"),)
 PIO_FLAGS += --no-ansi
 endif
+ifeq ($(filter $(ARDUINO_FLAGS),"--no-color"),)
+ARDUINO_FLAGS += --no-color
+endif
 endif
 
 PIO_CI_FLAGS = -l ~/libcli
+ARDUINO_CI_FLAGS = --warnings all --library $(CURDIR)/../../
 
 ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)
 ENV ?= $(firstword $(ENVS))
@@ -66,10 +70,30 @@ pio-envs: platformio.ini
 pio-boards: platformio.ini
 	@echo $(BOARDS)
 
+define arduino-ci # fqbn
+	arduino-cli $(ARDUINO_FLAGS) compile -b $(1) $(ARDUINO_CI_FLAGS)
+
+endef
+
+FQBNS = \
+	MightyCore:avr:1284  \
+	DxCore:megaavr:avrda \
+	teensy:avr:teensy41
+
+fqbns:
+	@echo $(FQBNS)
+
+arduino-ci:
+	$(call arduino-ci,$(firstword $(FQBNS)))
+
+arduino-ci-all:
+	$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(fqbn)))
+
 clean:
 	rm -rf $$(find . -type d -a -name .pio)
 
-.PHONY: help clean pio-run pio-run-all pio-ci pio-ci-all pio-boards pio-envs
+.PHONY: help clean pio-run pio-run-all pio-ci pio-ci-all pio-boards pio-envs \
+	arduino-ci arduino-ci-all
 
 # Local Variables:
 # mode: makefile-gmake

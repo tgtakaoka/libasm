@@ -13,12 +13,14 @@
 # limitations under the License.
 
 help:
-	@echo '"make clean"    remove unnecessary files'
-	@echo '"make pio-ci"   run PlatformIO CI for an example and a board'
-	@echo  "                   (default BOARD=$(BOARD), EX=$(EX))"
-	@echo '"make pio-run"  build an example for an environment'
-	@echo  "                   (default ENV=$(ENV), EX=$(EX))"
-	@echo '"make update"   propagate common files to sketches'
+	@echo '"make clean"       remove unnecessary files'
+	@echo '"make pio-ci"      run PlatformIO CI for an example and a board'
+	@echo  "                    (default BOARD=$(BOARD), EX=$(EX))"
+	@echo '"make pio-run"     build an example for an environment'
+	@echo  "                    (default ENV=$(ENV), EX=$(EX))"
+	@echo '"make arduino-ci"  run Arduino CLI for an example and a board'
+	@echo  "                    (default FQBN=$(FQBN), EX=$(EX))"
+	@echo '"make update"      propagate common files to sketches'
 
 EXS = \
 	cdp1802  \
@@ -62,6 +64,9 @@ BOARD ?= $(firstword $(BOARDS))
 boards:
 	@echo $(BOARDS)
 
+fqbns:
+	@echo $(FQBNS)
+
 define update # example
 	cp -f Makefile.common $(1)/Makefile
 	cp -f platformio.common $(1)/platformio.ini
@@ -86,6 +91,14 @@ endef
 
 pio-run:
 	$(call pio-run,$(EX),$(ENV))
+
+define arduino-ci # example, fqbn
+	$(MAKE) -C $(1) arduino-ci FQBN=$(2)
+
+endef
+
+arduino-ci:
+	$(call arduino-ci,$(EX),$(BOARD))
 
 define clean-ex # ex
 	$(MAKE) -s -C $(1) clean
