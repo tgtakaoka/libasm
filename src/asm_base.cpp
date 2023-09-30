@@ -68,11 +68,9 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
         return setError(scan, OK);
 
     StrScanner symbol;
-    if (_parser.readInstruction(scan, symbol) != OK)
-        return setError(scan, UNKNOWN_INSTRUCTION);
-
+    _parser.readInstruction(scan, symbol);
     insn.nameBuffer().reset().text(symbol);
-    auto error = processPseudo(scan, insn);
+    auto error = processPseudo(scan.skipSpaces(), insn);
     if (error != UNKNOWN_DIRECTIVE)
         return setError(error);
 
@@ -161,11 +159,11 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
+Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
     auto p = scan;
     Value value;
-    if (extra) {
-        value.setUnsigned(extra);
+    if (step) {
+        value.setUnsigned(step);
     } else {
         ErrorAt error;
         value = parseExpr(p, error);
@@ -180,8 +178,8 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     return setCurrentLocation(insn.address());
 }
 
-Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra) {
-    const auto type = static_cast<DataType>(extra);
+Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) {
+    const auto type = static_cast<DataType>(dataType);
     if (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2)
         setCurrentLocation(insn.align(2));
     ErrorAt error;
@@ -210,18 +208,42 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t extra) {
-    UNUSED(extra);
+Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) {
+    const auto type = static_cast<StringType>(stringType);
     ErrorAt error;
     do {
+        uint8_t count = 0;
+        uint16_t val = 0;
         const auto delim = *scan.skipSpaces()++;
         auto p = scan;
         while (!p.expect(delim)) {
             const auto c = *p;
             if (c == 0)
                 return setErrorIf(p, MISSING_CLOSING_DELIMITER);
-            error.setErrorIf(p, insn.emitByte(c));
+            if (type == STR_ASCII) {
+                error.setErrorIf(p, insn.emitByte(c));
+            } else if (type == STR_DEC_6BIT) {
+                uint8_t dec6 = (c < 0x40) ? c : c - 0x40;
+                if (c < 0x20 || c >= 0x60) {
+                    error.setErrorIf(p, ILLEGAL_CONSTANT);
+                    dec6 = 0;
+                }
+                if (count % 2 == 0) {
+                    val = static_cast<uint16_t>(dec6) << 6;
+                } else {
+                    val |= dec6;
+                    error.setErrorIf(p, insn.emitUint16Be(val));
+                }
+            }
             ++p;
+            count++;
+        }
+        if (type == STR_DEC_6BIT) {
+            if (count % 2 == 0) {
+                error.setErrorIf(p, insn.emitUint16Be(0));
+            } else {
+                error.setErrorIf(p, insn.emitUint16Be(val));
+            }
         }
         scan = p;
     } while (scan.skipSpaces().expect(','));
@@ -266,8 +288,8 @@ Error Assembler::isString(StrScanner &scan, ErrorAt &error) const {
     }
 }
 
-Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra) {
-    const auto type = static_cast<DataType>(extra);
+Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
+    const auto type = static_cast<DataType>(dataType);
     // Do alignment if requested.
     if (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2)
         setCurrentLocation(insn.align(2));

@@ -609,6 +609,37 @@ const Operator *ZilogOperatorParser::readOperator(
     return CStyleOperatorParser::singleton().readOperator(scan, error, type);
 }
 
+const Operator *DecOperatorParser::readOperator(
+        StrScanner &scan, ErrorAt &error, Operator::Type type) const {
+    UNUSED(error);
+    auto p = scan;
+    const Operator *opr = nullptr;
+    if (type == Operator::PREFIX) {
+        if (p.expect('~')) {
+            opr = &OP_BITWISE_NOT;
+        } else if (p.expect('-')) {
+            opr = &OP_UNARY_MINUS;
+        } else if (p.expect('+')) {
+            opr = &OP_UNARY_PLUS;
+        }
+    } else if (type == Operator::INFIX) {
+        if (p.expect('+')) {
+            opr = &OP_ADD;
+        } else if (p.expect('-')) {
+            opr = &OP_SUB;
+        } else if (p.expect('&')) {
+            opr = &OP_BITWISE_AND;
+        } else if (p.expect('^')) {
+            opr = &OP_BITWISE_XOR;
+        } else if (p.expect('!')) {
+            opr = &OP_BITWISE_OR;
+        }
+    }
+    if (opr)
+        scan = p;
+    return opr;
+}
+
 }  // namespace libasm
 
 // Local Variables:

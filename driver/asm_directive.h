@@ -111,6 +111,12 @@ struct FairchildDirective : AsmDirective {
     BinEncoder &defaultEncoder() override;
 };
 
+class DecDirective : public AsmDirective {
+public:
+    DecDirective(Assembler &assembler);
+    BinEncoder &defaultEncoder() override;
+};
+
 }  // namespace driver
 }  // namespace libasm
 

@@ -136,7 +136,7 @@ Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     return error;
 }
 
-Radix IntelNumberParser::hasSuffix(StrScanner &scan) const {
+Radix IntelNumberParser::hasSuffix(StrScanner &scan) {
     if (scanNumberEnd(scan, RADIX_16, 'H') == OK)
         return RADIX_16;
     if (scanNumberEnd(scan, RADIX_8, 'O') == OK || scanNumberEnd(scan, RADIX_8, 'Q') == OK)

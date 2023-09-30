@@ -149,9 +149,9 @@ struct IntelNumberParser final : NumberParser, Singleton<IntelNumberParser> {
     Error parseNumber(StrScanner &scan, Value &val) const override;
     Error parseNumber(StrScanner &scan, Value &val, Radix radix, StrScanner &next) const;
 
+    static Radix hasSuffix(StrScanner &scan);
 
 private:
-    Radix hasSuffix(StrScanner &scan) const;
 
     /**
      * Search |scan| as a |radix| based number with optional |suffix|.

@@ -53,6 +53,7 @@ struct Value {
     bool isUnsigned() const { return _type == UNSIGNED; }
     bool overflowUint8() const { return ConfigBase::overflowUint8(_value); }
     bool overflowUint16() const { return ConfigBase::overflowUint16(_value); }
+    bool overflowUint(uint8_t bitw) const { return ConfigBase::overflowUint(_value, bitw); }
 
     int32_t getSigned() const { return static_cast<int32_t>(_value); }
     uint32_t getUnsigned() const { return _value; }
