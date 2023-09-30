@@ -65,6 +65,12 @@ build reg_i8096.o:   cxx ${root}/src/reg_i8096.cpp
 build table_i8096.o: cxx ${root}/src/table_i8096.cpp
 build text_i8096.o:  cxx ${root}/src/text_i8096.cpp
 
+# im6100
+build dis_im6100.o:   cxx ${root}/src/dis_im6100.cpp
+build reg_im6100.o:   cxx ${root}/src/reg_im6100.cpp
+build table_im6100.o: cxx ${root}/src/table_im6100.cpp
+build text_im6100.o:  cxx ${root}/src/text_im6100.cpp
+
 # ins8060
 build asm_ins8060.o:   cxx ${root}/src/asm_ins8060.cpp
 build dis_ins8060.o:   cxx ${root}/src/dis_ins8060.cpp

@@ -62,6 +62,7 @@ build dis: link $
   dis_i8080.o    reg_i8080.o    table_i8080.o    text_i8080.o    $
   dis_i8086.o    reg_i8086.o    table_i8086.o    text_i8086.o    $
   dis_i8096.o    reg_i8096.o    table_i8096.o    text_i8096.o    $
+  dis_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o   $
   dis_ins8060.o  reg_ins8060.o  table_ins8060.o  text_ins8060.o  $
   dis_ins8070.o  reg_ins8070.o  table_ins8070.o  text_ins8070.o  $
   dis_mc68000.o  reg_mc68000.o  table_mc68000.o  text_mc68000.o  $

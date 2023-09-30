@@ -48,6 +48,7 @@
 #include "dis_i8080.h"
 #include "dis_i8086.h"
 #include "dis_i8096.h"
+#include "dis_im6100.h"
 #include "dis_ins8060.h"
 #include "dis_ins8070.h"
 #include "dis_mc6800.h"

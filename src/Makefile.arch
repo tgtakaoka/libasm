@@ -21,6 +21,7 @@ ARCHS = \
 	i8080    \
 	i8086    \
 	i8096    \
+	im6100   \
 	ins8060  \
 	ins8070  \
 	mc6800   \
@@ -54,6 +55,7 @@ TGT_i8051    = i8051
 TGT_i8080    = i8080 i8085 v30emu
 TGT_i8086    = i8086 i80186 v30
 TGT_i8096    = i8096
+TGT_im6100   = im6100
 TGT_ins8060  = ins8060
 TGT_ins8070  = ins8070
 TGT_mc68000  = mc68000
@@ -92,6 +94,7 @@ CPU_i8086    = 8086
 CPU_i8096    = 8096
 CPU_i80c39   = 80C39
 CPU_i80c48   = 80C48
+CPU_im6100   = 6100
 CPU_ins8060  = SC/MP
 CPU_ins8070  = 8070
 CPU_mb8861   = MB8861

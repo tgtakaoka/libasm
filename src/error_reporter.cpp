@@ -44,6 +44,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Buffer overflow");
     case OVERWRAP_PAGE:
         return PSTR("Overwrap page boundary");
+    case INVALID_INSTRUCTION:
+        return PSTR("Invalid instruction combination");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:

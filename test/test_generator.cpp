@@ -158,7 +158,7 @@ TestGenerator &TestGenerator::generate() {
         const auto addr = _mem_addr / _addr_unit;
         _formatter.setOrigin(addr);
     }
-    if (_opCodeWidth == OPCODE_16BIT) {
+    if (_opCodeWidth == OPCODE_16BIT || _opCodeWidth == OPCODE_12BIT) {
         WordGenerator gen(_memory, _memorySize, _endian, 0, _formatter);
         return generate(gen);
     }

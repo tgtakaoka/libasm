@@ -38,6 +38,7 @@ enum Error : uint8_t {
     ILLEGAL_SEGMENT = 9,
     BUFFER_OVERFLOW = 10,
     OVERWRAP_PAGE = 11,
+    INVALID_INSTRUCTION = 12,
 
     // Assembler
     UNKNOWN_INSTRUCTION = 21,
