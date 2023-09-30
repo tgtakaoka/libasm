@@ -79,7 +79,6 @@ int DisCommander::disassemble() {
         }
         if (_verbose)
             fprintf(stderr, "%s: Opened for output\n", output.name().c_str());
-        output.println(listing.getContent());
     }
     FilePrinter listout;
     if (_list_name) {
@@ -89,7 +88,6 @@ int DisCommander::disassemble() {
         }
         if (_verbose)
             fprintf(stderr, "%s: Opened for listing\n", listout.name().c_str());
-        listout.println(listing.getLine());
     }
 
     listing.setCpu(_cpu);
