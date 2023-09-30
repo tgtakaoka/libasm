@@ -53,6 +53,7 @@ build test_dis_i8096.o: cxx ${root}/test/test_dis_i8096.cpp
 build gen_i8096.o:      cxx ${root}/test/gen_i8096.cpp
 
 # im6100
+build test_asm_im6100.o: cxx ${root}/test/test_asm_im6100.cpp
 build test_dis_im6100.o: cxx ${root}/test/test_dis_im6100.cpp
 build gen_im6100.o:      cxx ${root}/test/gen_im6100.cpp
 

@@ -54,6 +54,7 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
 
     Error setListRadix(int32_t radix);
     Radix listRadix() const { return _listRadix; }
+    Error setParserRadix(int32_t radix);
 
     /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
     virtual bool hasSetInstruction() const { return false; }
@@ -63,9 +64,12 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
 
     Error setOption(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra);
-    Error defineString(StrScanner &scan, Insn &insn, uint8_t extra = 0);
+    Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t step = 0);
+    enum StringType : uint8_t {
+        STR_ASCII = 0,
+        STR_DEC_6BIT = 1,
+    };
+    Error defineString(StrScanner &scan, Insn &insn, uint8_t stringType);
     Error isString(StrScanner &scan, ErrorAt &error) const;
     enum DataType : uint8_t {
         DATA_BYTE,
@@ -78,7 +82,8 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
         DATA_WORD_ALIGN2,
         DATA_LONG_ALIGN2,
     };
-    Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra);
+    Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
+    Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType);
 
 protected:
     const ValueParser _parser;
@@ -88,6 +93,7 @@ protected:
     const IntOption<Assembler> _opt_listRadix;
 
     Radix _listRadix;
+    Radix _parseRadix;
     SymbolTable *_symtab;
     uint32_t _currentLocation;
 

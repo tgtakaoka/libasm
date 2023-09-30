@@ -42,11 +42,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint16_t _bits;
 
         static constexpr Flags create(AddrMode mode, uint16_t bits = 0) {
-            return Flags{attr(mode, false), 0, bits};
+            return Flags{attr(mode, false, false), 0, bits};
         }
 
-        static constexpr Flags create(AddrMode mode, uint16_t bits, uint8_t selector) {
-            return Flags{attr(mode, true), selector, bits};
+        static constexpr Flags create(
+                AddrMode mode, uint16_t bits, uint8_t selector, bool multiGroup = false) {
+            return Flags{attr(mode, true, multiGroup), selector, bits};
         }
 
         Flags read() const {
@@ -55,6 +56,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode mode() const { return AddrMode((_attr >> mode_gp) & mode_gm); }
         uint16_t bits() const { return _bits; }
         bool combination() const { return (_attr & (1 << combination_bp)) != 0; }
+        bool multiGroup() const { return (_attr & (1 << multiGroup_bp)) != 0; }
         uint8_t selector() const { return _selector; }
     };
 
@@ -66,12 +68,13 @@ struct Entry final : entry::Base<Config::opcode_t> {
 private:
     Flags _flags;
 
-    static constexpr uint8_t attr(AddrMode mode, bool combination) {
+    static constexpr uint8_t attr(AddrMode mode, bool combination, bool multiGroup) {
         return ((static_cast<uint8_t>(mode) & mode_gm) << mode_gp) |
-               (combination ? (1 << combination_bp) : 0);
+               (multiGroup ? (1 << multiGroup_bp) : 0) | (combination ? (1 << combination_bp) : 0);
     }
 
     static constexpr int mode_gp = 0;
+    static constexpr int multiGroup_bp = 6;
     static constexpr int combination_bp = 7;
     static constexpr uint8_t mode_gm = 0x07;
 };

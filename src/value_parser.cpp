@@ -163,7 +163,7 @@ Value ValueParser::eval(
                 if (symtab && symtab->hasSymbol(symbol)) {
                     vstack.pushSigned(symtab->lookupSymbol(symbol));
                 } else {
-                    error.setError(at, UNDEFINED_SYMBOL);
+                    error.setErrorIf(at, UNDEFINED_SYMBOL);
                     vstack.push(Value());
                 }
                 maybe_prefix = false;
@@ -292,7 +292,7 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
     char letter;
     auto err = _letter.parseLetter(p, letter);
     if (err == OK) {
-        val.setUnsigned(letter);
+        val.setUnsigned(static_cast<uint8_t>(letter));
         scan = p;
         return OK;
     }

@@ -226,6 +226,14 @@ BinEncoder &FairchildDirective::defaultEncoder() {
     return IntelHex::encoder();
 }
 
+DecDirective::DecDirective(Assembler &assembler) : AsmDirective(assembler) {
+    registerPseudo("=", &DecDirective::defineConstant);
+}
+
+BinEncoder &DecDirective::defaultEncoder() {
+    return IntelHex::encoder();
+}
+
 }  // namespace driver
 }  // namespace libasm
 

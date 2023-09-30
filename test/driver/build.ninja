@@ -108,6 +108,15 @@ build test_formatter_i8096:  test test_formatter_i8096.o    $
   str_scanner.o text_common.o $
   asm_i8096.o    dis_i8096.o    reg_i8096.o    table_i8096.o    text_i8096.o
 
+build test_formatter_im6100:  test test_formatter_im6100.o   $
+  test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
+  asm_driver.o asm_directive.o function_store.o   bin_memory.o bin_encoder.o $
+  bin_decoder.o intel_hex.o moto_srec.o asm_base.o config_base.o formatters.o $
+  reg_base.o error_reporter.o value_formatter.o value_parser.o dis_base.o $
+  dis_formatter.o parsers.o operators.o option_base.o str_buffer.o $
+  str_scanner.o text_common.o $
+  asm_im6100.o   dis_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o
+
 build test_formatter_ins8060:  test test_formatter_ins8060.o  $
   test_driver_helper.o test_asserter.o list_formatter.o asm_formatter.o $
   asm_driver.o asm_directive.o function_store.o   bin_memory.o bin_encoder.o $
@@ -270,6 +279,7 @@ build test: phony test_helpers test_bin_memory test_intel_hex test_moto_srec $
   test_formatter_i8080    $
   test_formatter_i8086    $
   test_formatter_i8096    $
+  test_formatter_im6100   $
   test_formatter_ins8060  $
   test_formatter_ins8070  $
   test_formatter_mc6800   $
