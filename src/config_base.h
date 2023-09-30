@@ -47,6 +47,7 @@ enum AddressUnit : uint8_t {
 
 enum OpCodeWidth : uint8_t {
     OPCODE_8BIT = 8,
+    OPCODE_12BIT = 12,
     OPCODE_16BIT = 16,
 };
 
@@ -121,6 +122,8 @@ template <OpCodeWidth width>
 struct __opcode_type;
 template <>
 struct __opcode_type<OPCODE_8BIT> : public __opcode_helper<uint8_t> {};
+template <>
+struct __opcode_type<OPCODE_12BIT> : public __opcode_helper<uint16_t> {};
 template <>
 struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 }  // namespace

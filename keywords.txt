@@ -41,6 +41,7 @@ DisI8051        KEYWORD1        libasm
 DisI8080        KEYWORD1        libasm
 DisI8086        KEYWORD1        libasm
 DisI8096        KEYWORD1        libasm
+DisIn6100       KEYWORD1        libasm
 DisIns8060      KEYWORD1        libasm
 DisIns8070      KEYWORD1        libasm
 DisMc68000      KEYWORD1        libasm

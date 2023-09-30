@@ -57,7 +57,7 @@ struct TableBase {
 
     bool notExactMatch(const ENTRY *entry) const { return _entries.notExactMatch(entry); }
 
-private:
+protected:
     const table::IndexedTable<ENTRY, uint8_t> _entries;
 };
 

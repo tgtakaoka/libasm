@@ -44,13 +44,13 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
-#define __VASSERT(file, line, error, addr, name, opr, ...)                \
-    do {                                                                  \
-        const auto unit = disassembler.config().addressUnit();            \
-        const auto endian = disassembler.config().endian();               \
-        const Config::opcode_t name[] = {__VA_ARGS__};                    \
-        const ArrayMemory memory(addr *unit, name, sizeof(name), endian); \
-        dis_assert(file, line, error, memory, #name, opr);                \
+#define __VASSERT(file, line, error, addr, name, opr, ...)                  \
+    do {                                                                    \
+        const auto unit = disassembler.config().addressUnit();              \
+        const auto endian = disassembler.config().endian();                 \
+        const Config::opcode_t codes[] = {__VA_ARGS__};                     \
+        const ArrayMemory memory(addr *unit, codes, sizeof(codes), endian); \
+        dis_assert(file, line, error, memory, #name, opr);                  \
     } while (0)
 #define VASSERT(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
@@ -68,9 +68,11 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define ERRV(name, opr, ...) ERRT(name, opr, REGISTERS_OVERLAPPED, __VA_ARGS__)
 #define ERRR(name, opr, ...) ERRT(name, opr, REGISTER_NOT_ALLOWED, __VA_ARGS__)
 #define ERUI(name, opr, ...) ERRT(name, opr, UNKNOWN_INSTRUCTION, __VA_ARGS__)
+#define ERII(name, opr, ...) ERRT(name, opr, INVALID_INSTRUCTION, __VA_ARGS__)
 #define ERUR(name, opr, ...) ERRT(name, opr, UNKNOWN_REGISTER, __VA_ARGS__)
 #define ERNE(name, opr, ...) ERRT(name, opr, OPCODE_HAS_NO_EFFECT, __VA_ARGS__)
 #define ERSZ(name, opr, ...) ERRT(name, opr, ILLEGAL_SIZE, __VA_ARGS__)
+#define LITR(insn, ...) VASSERT(OK, 0, insn, "", __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

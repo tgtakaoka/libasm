@@ -18,9 +18,6 @@
 
 #include <string>
 
-#include "value.h"
-#include "value_formatter.h"
-
 namespace libasm {
 namespace driver {
 
@@ -141,7 +138,7 @@ int ListFormatter::formatBytes(int base) {
         }
         if (width == OPCODE_8BIT) {
             formatValue(val, 8);
-        } else if (width == OPCODE_16BIT) {
+        } else if (width == OPCODE_16BIT || width == OPCODE_12BIT) {
             const auto next8 = getByte(base + n++);
             val = endian == ENDIAN_BIG ? (val << 8) | next8 : val | (next8 << 8);
             formatValue(val, width);
