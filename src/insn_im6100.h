@@ -27,8 +27,16 @@ namespace im6100 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode() const { return flags().mode(); }
     Config::opcode_t bits() const { return flags().bits(); }
-    uint8_t selector() const { return flags().selector(); }
+    Config::opcode_t selector() const { return flags().selector(); }
+    bool combination() const { return flags().combination(); }
+    bool multiGroup() const { return flags().multiGroup(); }
     void setAddrMode(AddrMode opr) { setFlags(Entry::Flags::create(opr)); }
+};
+
+struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    void emitInsn() { emitUint16(opCode()); }
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {

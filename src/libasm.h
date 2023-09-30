@@ -24,6 +24,7 @@
 #include "asm_i8080.h"
 #include "asm_i8086.h"
 #include "asm_i8096.h"
+#include "asm_in6100.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
 #include "asm_mc6800.h"

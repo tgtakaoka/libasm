@@ -29,6 +29,8 @@ namespace im6100 {
     { _opc, Entry::Flags::create(_mode, _bits), _name }
 #define C(_opc, _name, _mode, _bits, _selector) \
     { _opc, Entry::Flags::create(_mode, _bits, _selector), _name }
+#define M(_opc, _name, _mode, _bits, _selector) \
+    { _opc, Entry::Flags::create(_mode, _bits, _selector, true), _name }
 
 // clang-format off
 
@@ -55,6 +57,12 @@ static constexpr Entry IM6100_MEM[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_IM6100_MEM[] PROGMEM = {
+      0,  // TEXT_AND
+      3,  // TEXT_DCA
+      2,  // TEXT_ISZ
+      5,  // TEXT_JMP
+      4,  // TEXT_JMS
+      1,  // TEXT_TAD
 };
 
 static constexpr uint8_t CLA = 0200;
@@ -71,7 +79,7 @@ static constexpr Entry IM6100_GR1[] PROGMEM = {
     C(07204, TEXT_GLK,  M_GR1, CLA|R1|R2|R3, 0),
     C(07120, TEXT_STL,  M_GR1, CLL|CML, 0),
     C(07240, TEXT_STA,  M_GR1, CLA|CMA, 0),
-    C(07200, TEXT_CLA,  M_GR1, CLA, 0), // Logical sequence 1
+    M(07200, TEXT_CLA,  M_GR1, CLA, 0), // Logical sequence 1
     C(07100, TEXT_CLL,  M_GR1, CLL, 0), // Logical sequence 1
     C(07041, TEXT_CIA,  M_GR1, CMA|IAC, 0),
     C(07040, TEXT_CMA,  M_GR1, CMA, 0),      // Logical sequence 2
@@ -85,6 +93,21 @@ static constexpr Entry IM6100_GR1[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_IM6100_GR1[] PROGMEM = {
+      9,  // TEXT_BSW
+      6,  // TEXT_CIA
+      4,  // TEXT_CLA
+      5,  // TEXT_CLL
+      7,  // TEXT_CMA
+      8,  // TEXT_CML
+      1,  // TEXT_GLK
+     14,  // TEXT_IAC
+      0,  // TEXT_NOP
+     10,  // TEXT_RAL
+     11,  // TEXT_RAR
+     12,  // TEXT_RTL
+     13,  // TEXT_RTR
+      3,  // TEXT_STA
+      2,  // TEXT_STL
 };
 
 static constexpr uint8_t SMA = 0100;
@@ -107,12 +130,24 @@ static constexpr Entry IM6100_GR2[] PROGMEM = {
     C(07420, TEXT_SNL,  M_GR2, SNL, B08), // Logical sequence 1
     C(07430, TEXT_SZL,  M_GR2, SZL, B08), // Logical sequence 1
     C(07604, TEXT_LAS,  M_GR2, CLA|OSR, 0),
-    C(07600, TEXT_CLA,  M_GR2, CLA, 0), // Logical sequence 2
+    M(07600, TEXT_CLA,  M_GR2, CLA, 0), // Logical sequence 2
     C(07404, TEXT_OSR,  M_GR2, OSR, 0), // Logical sequence 3
     C(07402, TEXT_HLT,  M_GR2, HLT, 0), // Logical sequence 3
 };
 
 static constexpr uint8_t INDEX_IM6100_GR2[] PROGMEM = {
+      9,  // TEXT_CLA
+     11,  // TEXT_HLT
+      8,  // TEXT_LAS
+      0,  // TEXT_NOP
+     10,  // TEXT_OSR
+      1,  // TEXT_SKP
+      2,  // TEXT_SMA
+      5,  // TEXT_SNA
+      6,  // TEXT_SNL
+      3,  // TEXT_SPA
+      4,  // TEXT_SZA
+      7,  // TEXT_SZL
 };
 
 static constexpr uint8_t MQA = 0100;
@@ -129,6 +164,13 @@ static constexpr Entry IM6100_GR3[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_IM6100_GR3[] PROGMEM = {
+      1,  // TEXT_ACL
+      2,  // TEXT_CAM
+      3,  // TEXT_CLA
+      5,  // TEXT_MQA
+      6,  // TEXT_MQL
+      0,  // TEXT_NOP
+      4,  // TEXT_SWP
 };
 
 static constexpr Entry IM6100_IOT[] PROGMEM = {
@@ -144,6 +186,15 @@ static constexpr Entry IM6100_IOT[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_IM6100_IOT[] PROGMEM = {
+      7,  // TEXT_CAF
+      4,  // TEXT_GTF
+      2,  // TEXT_IOF
+      1,  // TEXT_ION
+      8,  // TEXT_IOT
+      5,  // TEXT_RTF
+      6,  // TEXT_SGT
+      0,  // TEXT_SKON
+      3,  // TEXT_SRQ
 };
 
 // clang-format on
@@ -216,6 +267,28 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
 static const Cpu *cpu(CpuType cpuType) {
     UNUSED(cpuType);
     return &CPU_TABLE[0];
+}
+
+static bool acceptAll(AsmInsn &insn, const Entry *entry) {
+    UNUSED(insn);
+    UNUSED(entry);
+    return true;
+}
+
+Error TableIm6100::searchName(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptAll);
+    return insn.getError();
+}
+
+static bool acceptSameMode(AsmInsn &insn, const Entry *entry) {
+    return insn.mode() == entry->flags().mode();
+}
+
+Error TableIm6100::searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) const {
+    micro.setOK();
+    micro.setAddrMode(mode);
+    cpu(cpuType)->searchName(micro, acceptSameMode);
+    return micro.getError();
 }
 
 static bool pageMatcher(DisInsn &insn, const EntryPage *page) {

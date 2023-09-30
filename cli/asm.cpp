@@ -23,6 +23,7 @@
 #include "asm_i8080.h"
 #include "asm_i8086.h"
 #include "asm_i8096.h"
+#include "asm_im6100.h"
 #include "asm_ins8060.h"
 #include "asm_ins8070.h"
 #include "asm_mc6800.h"
@@ -52,6 +53,7 @@ i8051::AsmI8051 asm8051;
 i8080::AsmI8080 asm8080;
 i8086::AsmI8086 asm8086;
 i8096::AsmI8096 asm8096;
+im6100::AsmIm6100 asm6100;
 ins8060::AsmIns8060 asm8060;
 ins8070::AsmIns8070 asm8070;
 mc68000::AsmMc68000 asm68000;
@@ -70,6 +72,7 @@ z8000::AsmZ8000 asmz8000;
 z80::AsmZ80 asmz80;
 z8::AsmZ8 asmz8;
 
+DecDirective dir6100(asm6100);
 FairchildDirective dir3850(asm3850);
 IntelDirective dir1610(asm1610);
 IntelDirective dir2650(asm2650);
@@ -111,6 +114,7 @@ AsmDirective *directives[] = {
         &dir1802,
         &dir2650,
         &dir3850,
+        &dir6100,
         &dir7000,
         &dir32010,
         &dir8086,

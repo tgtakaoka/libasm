@@ -147,6 +147,11 @@ build gen_i8096:      link gen_i8096.o    $
   value_formatter.o
 
 # im6100
+build test_asm_im6100: run test_asm_im6100.o    $
+  asm_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o    $
+  asm_base.o config_base.o error_reporter.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o text_common.o $
+  value_parser.o test_asm_helper.o test_asserter.o
 build test_dis_im6100: run test_dis_im6100.o    $
   dis_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o    $
   dis_base.o config_base.o error_reporter.o option_base.o reg_base.o $
@@ -497,7 +502,7 @@ build test_i8051:    phony test_asm_i8051    test_dis_i8051
 build test_i8080:    phony test_asm_i8080    test_dis_i8080
 build test_i8086:    phony test_asm_i8086    test_dis_i8086
 build test_i8096:    phony test_asm_i8096    test_dis_i8096
-build test_im6100:   phony                   test_dis_im6100
+build test_im6100:   phony test_asm_im6100   test_dis_im6100
 build test_ins8060:  phony test_asm_ins8060  test_dis_ins8060
 build test_ins8070:  phony test_asm_ins8070  test_dis_ins8070
 build test_mc68000:  phony test_asm_mc68000  test_dis_mc68000
