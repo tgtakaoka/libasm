@@ -52,6 +52,9 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     const Options &commonOptions() const { return _commonOptions; }
     const Options &options() const { return _options; }
 
+    Error setListRadix(int32_t radix);
+    Radix listRadix() const { return _listRadix; }
+
     /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
     virtual bool hasSetInstruction() const { return false; }
 
@@ -80,9 +83,11 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
 protected:
     const ValueParser _parser;
     const pseudo::Pseudos _pseudos;
+    const Options _commonOptions;
     const Options _options;
-    const Options _commonOptions{nullptr};
+    const IntOption<Assembler> _opt_listRadix;
 
+    Radix _listRadix;
     SymbolTable *_symtab;
     uint32_t _currentLocation;
 

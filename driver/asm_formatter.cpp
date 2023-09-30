@@ -36,6 +36,10 @@ void AsmFormatter::reset() {
     _driver.current()->setOK();
 }
 
+void AsmFormatter::enableLineNumber(bool enable) {
+    _lineNumber = enable;
+}
+
 Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     auto &assembler = _driver.current()->assembler();
     auto &parser = assembler.parser();
@@ -60,6 +64,11 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
         StrScanner directive;
         parser.readInstruction(p, directive);
         auto error = _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver);
+        setListRadix(assembler.listRadix());
+        if (&_driver.current()->assembler() != &assembler) {
+            // Assembler may be switched by "cpu" directive
+            _driver.current()->assembler().setListRadix(assembler.listRadix());
+        }
         if (error == OK) {
             if (_line_symbol.size()) {
                 // If |label| isn't consumed, assign the origin.
@@ -88,6 +97,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     _insn.reset(startAddress());
     assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver);
     _errorAt.setError(assembler);
+    setListRadix(assembler.listRadix());
     // maybe be modified because of alignment required by constant generating pseudos.
     setStartAddress(_insn.address());
     const auto allowUndef =
@@ -123,7 +133,7 @@ const char *AsmFormatter::getLine() {
     if (isError() && !_errorLine) {
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
-        _formatter.formatDec(_out, _sources.current()->lineno(), 32);
+        formatDec(_sources.current()->lineno());
         const auto *line = _line.str();
         const auto *line_end = line + _line.size();
         const auto *at = _errorAt.errorAt();
@@ -144,7 +154,7 @@ const char *AsmFormatter::getLine() {
         auto formatted = 0;
         if (!_line_value.isUndefined()) {
             _out.text(" =");
-            formatHex(_line_value.getUnsigned(), 0, true);
+            formatValue(_line_value.getUnsigned());
         } else {
             formatted = formatBytes(_nextLine);
         }
@@ -154,7 +164,7 @@ const char *AsmFormatter::getLine() {
         }
         _nextLine += formatted;
     }
-    return _out_buffer;
+    return outBuffer();
 }
 
 void AsmFormatter::formatLineNumber() {
@@ -166,16 +176,14 @@ void AsmFormatter::formatLineNumber() {
             formatDec(include_nest - 1);
             _out.letter(')');
         } else {
-            _out.text("   ");
+            outSpaces(3);
         }
         if (_lineNumber) {
             formatDec(_sources.current()->lineno(), 5);
             _out.letter('/');
         }
     } else {
-        _out.text("   ");
-        if (_lineNumber)
-            _out.text("      ");
+        outSpaces(_lineNumber ? 3 + 6 : 3);
     }
 }
 

@@ -24,17 +24,34 @@ using namespace pseudo;
 using namespace text::common;
 
 namespace {
+
+const char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
+const char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
+
 constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
         Pseudo{TEXT_OPTION, &Assembler::setOption},
         Pseudo{TEXT_ORG, &Assembler::defineOrigin},
 };
 const Pseudos common_pseudos(ARRAY_RANGE(PSEUDOS));
+
 }  // namespace
 
 Assembler::Assembler(const ValueParser::Plugins &plugins, const /*PROGMEM*/ pseudo::Pseudo *ptable,
         const /*PROGMEM*/ pseudo::Pseudo *pend, const OptionBase *option)
-    : ErrorAt(), _parser(plugins, *this), _pseudos(ptable, pend), _options(option) {}
+    : ErrorAt(),
+      _parser(plugins, *this),
+      _pseudos(ptable, pend),
+      _commonOptions(&_opt_listRadix),
+      _options(option),
+      _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX) {
+    setListRadix(RADIX_16);
+}
+
+Error Assembler::setListRadix(int32_t radix) {
+    _listRadix = static_cast<Radix>(radix == 8 ? RADIX_8 : RADIX_16);
+    return OK;
+}
 
 Error Assembler::setCurrentLocation(uint32_t location) {
     return config().checkAddr(_currentLocation = location);

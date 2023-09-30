@@ -199,6 +199,52 @@ void test_switch_cpu() {
             "     123458 : A2 34 12                   ldx   #$1234\n");
 }
 
+void test_list_radix() {
+    mos6502::AsmMos6502 asm6502;
+    MostekDirective dir6502(asm6502);
+    z80::AsmZ80 asmz80;
+    Z80Directive dirz80(asmz80);
+    AsmDirective *dirs[] = {&dir6502, &dirz80};
+    TestSources sources;
+    std::map<std::string, std::string> options;
+    AsmDriver driver(&dirs[0], &dirs[2], sources, &options);
+    BinMemory memory;
+    AsmFormatter listing(driver, sources, memory);
+
+    options.emplace("list-radix", "8");
+    driver.applyOptions();
+
+    ASM("list-radix",
+            "        cpu   z80\n"
+            "        org   1234Q\n"
+            "        ld    hl, 1234H\n"
+            "        option \"list-radix\", \"16\"\n"
+            "        jr    $\n"
+            "        cpu   65816\n"
+            "        adc   #$34\n"
+            "        *=@1234567\n"
+            "        option \"list-radix\", \"8\"\n"
+            "        lda   #$34\n"
+            "        *=@3456\n"
+            "        ldx   #$12\n"
+            "        cpu   z80\n"
+            "        res   0, (iy-128)\n",
+            "          0 :                            cpu   z80\n"
+            "       1234 :                            org   1234Q\n"
+            "       1234 : 041 064 022                ld    hl, 1234H\n"
+            "        29F :                            option \"list-radix\", \"16\"\n"
+            "        29F : 18 FE                      jr    $\n"
+            "        2A1 :                            cpu   65816\n"
+            "        2A1 : 69 34                      adc   #$34\n"
+            "      53977 :                            *=@1234567\n"
+            "    1234567 :                            option \"list-radix\", \"8\"\n"
+            "    1234567 : 251 064                    lda   #$34\n"
+            "       3456 :                            *=@3456\n"
+            "       3456 : 242 022                    ldx   #$12\n"
+            "       3460 :                            cpu   z80\n"
+            "       3460 : 375 313 200 206            res   0, (iy-128)\n");
+}
+
 void test_function() {
     PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
 
@@ -255,6 +301,7 @@ void run_tests() {
     RUN_TEST(test_symbols_ins8060);
     RUN_TEST(test_symbols_z80);
     RUN_TEST(test_switch_cpu);
+    RUN_TEST(test_list_radix);
     RUN_TEST(test_function);
 }
 

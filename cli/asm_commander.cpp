@@ -77,7 +77,7 @@ Error AsmCommander::FileSources::closeCurrent() {
 }
 
 AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end)
-    : _sources(), _driver(begin, end, _sources) {}
+    : _sources(), _driver(begin, end, _sources, &_options) {}
 
 int AsmCommander::assemble() {
     if (_cpu && !_driver.setCpu(_cpu)) {
@@ -160,12 +160,6 @@ int AsmCommander::assemble(
     formatter.enableLineNumber(_line_number);
     if (_cpu)
         _driver.setCpu(_cpu);
-    for (auto dir : _driver) {
-        for (auto &opt : _options) {
-            dir->assembler().setOption(opt.first.c_str(), opt.second.c_str());
-        }
-    }
-
     return _driver.assemble(_sources, memory, formatter, listout, errorout, reportError);
 }
 

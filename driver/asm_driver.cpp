@@ -81,19 +81,33 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     return dir;
 }
 
-AsmDriver::AsmDriver(
-        AsmDirective **begin, AsmDirective **end, AsmSources &sources, SymbolMode symbolMode)
-    : _directives(begin, end), _current(nullptr), _sources(sources), _functions() {
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources,
+        std::map<std::string, std::string> *options, SymbolMode symbolMode)
+    : _directives(begin, end),
+      _current(nullptr),
+      _sources(sources),
+      _options(options),
+      _symbolMode(symbolMode),
+      _functions(),
+      _origin(0) {
     switchDirective(_directives.front());
-    _origin = 0;
-    _symbolMode = symbolMode;
+}
+
+void AsmDriver::applyOptions() const {
+    for (auto dir : _directives) {
+        auto &assembler = dir->assembler();
+        assembler.reset();
+        if (_options) {
+            for (auto &opt : *_options) {
+                assembler.setOption(opt.first.c_str(), opt.second.c_str());
+            }
+        }
+    }
 }
 
 int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
         TextPrinter &listout, TextPrinter &errorout, bool reportError) {
-    for (auto dir : _directives) {
-        dir->assembler().reset();
-    }
+    applyOptions();
     _functions.reset();
     setOrigin(0);
     _symbolMode = reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE;

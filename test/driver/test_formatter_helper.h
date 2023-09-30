@@ -28,13 +28,13 @@
 #include "test_reader.h"
 #include "test_sources.h"
 
-#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive, symbolMode) \
-    typeof_asm assembler;                                         \
-    typeof_directive directive(assembler);                        \
-    AsmDirective *dir = &directive;                               \
-    TestSources sources;                                          \
-    AsmDriver driver(&dir, &dir + 1, sources, symbolMode);        \
-    BinMemory memory;                                             \
+#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive, symbolMode)   \
+    typeof_asm assembler;                                           \
+    typeof_directive directive(assembler);                          \
+    AsmDirective *dir = &directive;                                 \
+    TestSources sources;                                            \
+    AsmDriver driver(&dir, &dir + 1, sources, nullptr, symbolMode); \
+    BinMemory memory;                                               \
     AsmFormatter listing(driver, sources, memory)
 
 #define PREP_ASM(typeof_asm, typeof_directive) \
