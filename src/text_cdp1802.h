@@ -114,7 +114,7 @@ extern const char TEXT_SHL[]  PROGMEM;
 extern const char TEXT_SHLC[] PROGMEM;
 extern const char TEXT_SHR[]  PROGMEM;
 extern const char TEXT_SHRC[] PROGMEM;
-extern const char TEXT_SKP[]  PROGMEM;
+using common::TEXT_SKP;
 extern const char TEXT_SM[]   PROGMEM;
 extern const char TEXT_SMB[]  PROGMEM;
 extern const char TEXT_SMBI[] PROGMEM;

@@ -90,6 +90,9 @@ private:
  */
 template <typename /*PROGMEM*/ ITEM, typename INDEX>
 struct IndexedTable {
+    const ITEM *table() const { return _items.table(); }
+    const ITEM *end() const { return _items.end(); }
+
     constexpr IndexedTable(const /*PROGMEM*/ ITEM *table, const /*PROGMEM*/ ITEM *end,
             const /*PROGMEM*/ INDEX *itable, const /*PROGMEM*/ INDEX *iend)
         : _items(table, end), _indexes(itable, iend) {}

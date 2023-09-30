@@ -22,6 +22,7 @@
 #include "dis_i8080.h"
 #include "dis_i8086.h"
 #include "dis_i8096.h"
+#include "dis_im6100.h"
 #include "dis_ins8060.h"
 #include "dis_ins8070.h"
 #include "dis_mc6800.h"
@@ -51,6 +52,7 @@ i8051::DisI8051 dis8051;
 i8080::DisI8080 dis8080;
 i8086::DisI8086 dis8086;
 i8096::DisI8096 dis8096;
+im6100::DisIm6100 dis6100;
 ins8060::DisIns8060 dis8060;
 ins8070::DisIns8070 dis8070;
 mc68000::DisMc68000 dis68000;
@@ -85,6 +87,7 @@ Disassembler *disassemblers[] = {
         &dis1802,
         &dis2650,
         &dis3850,
+        &dis6100,
         &dis7000,
         &dis32010,
         &dis8086,

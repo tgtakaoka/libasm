@@ -163,7 +163,7 @@ extern const char TEXT_PLB[] PROGMEM;
 extern const char TEXT_PLD[] PROGMEM;
 extern const char TEXT_PSD[] PROGMEM;
 using common::TEXT_REP;
-extern const char TEXT_RTL[] PROGMEM;
+using common::TEXT_RTL;
 using common::TEXT_SEP;
 extern const char TEXT_TCD[] PROGMEM;
 extern const char TEXT_TCS[] PROGMEM;
