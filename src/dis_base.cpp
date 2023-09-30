@@ -20,6 +20,8 @@ namespace libasm {
 
 namespace {
 
+const char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
+const char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
 const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
 const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
 const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
@@ -33,8 +35,10 @@ const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
 Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionBase *option)
     : _formatter(plugins),
-      _commonOptions(&_opt_relative),
+      _commonOptions(&_opt_listRadix),
       _options(option),
+      _opt_listRadix(this, &Disassembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
+              _opt_relative),
       _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
               _opt_cstyle),
       _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_intelhex),
@@ -45,6 +49,7 @@ Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionB
 void Disassembler::reset() {
     setUpperHex(true);
     setUppercase(true);
+    setListRadix(RADIX_16);
     setRelativeTarget(false);
     setCStyle(false);
     setIntelHex(false);
@@ -70,6 +75,11 @@ Error Disassembler::setUpperHex(bool enable) {
 
 Error Disassembler::setUppercase(bool enable) {
     _uppercase = enable;
+    return OK;
+}
+
+Error Disassembler::setListRadix(int32_t radix) {
+    _listRadix = static_cast<Radix>(radix == 8 ? RADIX_8 : RADIX_16);
     return OK;
 }
 
@@ -128,15 +138,17 @@ StrBuffer &Disassembler::outDec(StrBuffer &out, uint32_t val, int8_t bits) const
 }
 
 /**
- * Convert |val| as |bits| hexadecimal integer. Treat |val| as
- * signed integer when |bits| is negative. Output symbol label when
- * |val| is in symbol table.
+ * Convert |val| as |bits| octal integer. Treat |val| as signed
+ * integer when |bits| is negative. Output symbol label when |val| is
+ * in symbol table.
  */
 StrBuffer &Disassembler::outHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax) const {
     const auto bw = bits >= 0 ? bits : -bits;
     const char *label = lookup(val, bw);
     if (label)
         return out.rtext(label);
+    if (_listRadix == RADIX_8)
+        return formatter().formatOct(out, val, bits);
     return formatter().formatHex(out, val, bits, _upperHex, relax);
 }
 
@@ -151,6 +163,8 @@ StrBuffer &Disassembler::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWi
         return out.rtext(label);
     if (addrWidth == 0)
         addrWidth = uint8_t(config().addressWidth());
+    if (_listRadix == RADIX_8)
+        return formatter().formatOct(out, val, addrWidth);
     return formatter().formatHex(out, val, addrWidth, _upperHex);
 }
 
@@ -176,11 +190,11 @@ StrBuffer &Disassembler::outRelAddr(
         out.letter('+');
         val = static_cast<uint32_t>(delta);
     }
-    if (deltaBits <= 14) {
+    if (deltaBits <= 14)
         return formatter().formatDec(out, val, deltaBits);
-    } else {
-        return formatter().formatHex(out, val, deltaBits, _upperHex, true);
-    }
+    if (_listRadix == RADIX_8)
+        return formatter().formatOct(out, val, deltaBits);
+    return formatter().formatHex(out, val, deltaBits, _upperHex, true);
 }
 
 uint32_t Disassembler::branchTarget(uint32_t base, int32_t delta) {

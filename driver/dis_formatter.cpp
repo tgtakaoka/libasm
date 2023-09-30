@@ -29,6 +29,7 @@ DisFormatter::DisFormatter(Disassembler &disassembler, const char *input_name)
       _uppercase(false) {
     _disassembler.setUpperHex(true);
     _disassembler.setUppercase(false);
+    setListRadix(_disassembler.listRadix());
 }
 
 void DisFormatter::setUpperHex(bool enable) {
@@ -51,7 +52,9 @@ void DisFormatter::reset() {
 Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {
     reset();
     _insn.reset(addr);
-    return _disassembler.decode(memory, _insn, _operands, sizeof(_operands));
+    const auto error = _disassembler.decode(memory, _insn, _operands, sizeof(_operands));
+    setListRadix(_disassembler.listRadix());
+    return error;
 }
 
 Error DisFormatter::setCpu(const char *cpu) {
@@ -84,8 +87,7 @@ Error DisFormatter::setOrigin(uint32_t origin) {
     name->text_P(PSTR("ORG")).over(_insn.nameBuffer());
 
     StrBuffer operands(_operands, sizeof(_operands));
-    _disassembler.formatter().formatHex(
-            operands, origin, config().addressWidth(), _upperHex, false);
+    _disassembler.outAbsAddr(operands, origin);
     return OK;
 }
 
@@ -103,8 +105,7 @@ const char *DisFormatter::getContent() {
         if (!_errorContent) {
             _errorContent = true;
             _out.text_P(_disassembler.lineComment_P()).letter(' ').text(_input_name).text(": ");
-            _disassembler.formatter().formatHex(
-                    _out, startAddress(), config().addressWidth(), _upperHex, false);
+            _disassembler.outAbsAddr(_out, startAddress());
             _out.text(": error: ").text_P(_disassembler.errorText_P());
             _nextContent = 0;
         } else {
@@ -123,7 +124,7 @@ const char *DisFormatter::getContent() {
         }
         _nextContent = generatedSize();
     }
-    return _out_buffer;
+    return outBuffer();
 }
 
 bool DisFormatter::hasNextLine() const {
@@ -135,8 +136,7 @@ const char *DisFormatter::getLine() {
     if (isError() && !_errorLine) {
         _errorLine = true;
         _out.text(_input_name).text(": ");
-        _disassembler.formatter().formatHex(
-                _out, startAddress(), config().addressWidth(), _upperHex, false);
+        _disassembler.outAbsAddr(_out, startAddress());
         _out.text(": error: ").text_P(_disassembler.errorText_P());
         _nextLine = 0;
     } else {
@@ -158,7 +158,7 @@ const char *DisFormatter::getLine() {
         }
         _nextLine += formatted;
     }
-    return _out_buffer;
+    return outBuffer();
 }
 
 }  // namespace driver

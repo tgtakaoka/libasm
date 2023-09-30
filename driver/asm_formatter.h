@@ -34,7 +34,7 @@ struct BinMemory;
 struct AsmFormatter : ListFormatter {
     AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
 
-    void enableLineNumber(bool enable) { _lineNumber = enable; }
+    void enableLineNumber(bool enable);
 
     Error assemble(const StrScanner &line, bool reportError = false);
     bool isError() const;

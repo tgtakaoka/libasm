@@ -30,6 +30,7 @@
 #include "str_buffer.h"
 #include "symbol_table.h"
 #include "type_traits.h"
+#include "value.h"
 #include "value_formatter.h"
 
 namespace libasm {
@@ -58,10 +59,19 @@ struct Disassembler : ErrorReporter {
 
     Error setUpperHex(bool enable);
     Error setUppercase(bool enable);
+    Error setListRadix(int32_t radix);
     Error setRelativeTarget(bool enable);
     Error setCStyle(bool enable);
     Error setIntelHex(bool enable);
     Error setCurSym(char curSym);
+
+    Radix listRadix() const { return _listRadix; }
+
+    /**
+     * Convert |val| as |addrWidth| bit absolute address. Use default configured address width when
+     * |addrWdith| is omitted. Output symbol label when |val| is in symbol table.
+     */
+    StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
 
 private:
     const ValueFormatter _formatter;
@@ -69,6 +79,7 @@ private:
 protected:
     const Options _commonOptions;
     const Options _options;
+    const IntOption<Disassembler> _opt_listRadix;
     const BoolOption<Disassembler> _opt_relative;
     const BoolOption<Disassembler> _opt_cstyle;
     const BoolOption<Disassembler> _opt_intelhex;
@@ -76,6 +87,7 @@ protected:
 
     bool _upperHex;
     bool _uppercase;
+    Radix _listRadix;
     bool _relativeTarget;
     bool _cstyle;
     bool _intelHex;
@@ -98,12 +110,6 @@ protected:
      * negative. Output symbol label when |val| is in symbol table.
      */
     StrBuffer &outHex(StrBuffer &out, uint32_t val, int8_t bits, bool relax = true) const;
-
-    /**
-     * Convert |val| as |addrWidth| bit absolute address. Use default configured address width when
-     * |addrWdith| is omitted. Output symbol label when |val| is in symbol table.
-     */
-    StrBuffer &outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWidth = 0) const;
 
     /**
      * Convert |target| as relative |deltaBits| offset from |origin|.

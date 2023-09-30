@@ -43,6 +43,7 @@ enum SymbolMode {
 
 struct AsmDriver : SymbolTable {
     AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources,
+            std::map<std::string, std::string> *options = nullptr,
             SymbolMode symbolMode = REPORT_UNDEFINED);
 
     AsmDirective *restrictCpu(const char *cpu);
@@ -50,6 +51,7 @@ struct AsmDriver : SymbolTable {
     std::list<std::string> listCpu() const;
     AsmDirective *current() const { return _current; }
 
+    void applyOptions() const;
     int assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
             TextPrinter &listout, TextPrinter &errorout, bool reportError);
 
@@ -84,10 +86,11 @@ private:
     std::list<AsmDirective *> _directives;
     AsmDirective *_current;
     AsmSources &_sources;
-    FunctionStore _functions;
+    std::map<std::string, std::string> *_options;
 
-    uint32_t _origin;
     SymbolMode _symbolMode;
+    FunctionStore _functions;
+    uint32_t _origin;
 
     AsmDirective *switchDirective(AsmDirective *dir);
 

@@ -18,52 +18,93 @@
 
 #include <string>
 
+#include "value.h"
+#include "value_formatter.h"
+
 namespace libasm {
 namespace driver {
 
 ListFormatter::ListFormatter()
-    : _formatter(), _out(_out_buffer, sizeof(_out_buffer)), _upperHex(true) {}
+    : _out(_outBuffer, sizeof(_outBuffer)), _rawFormatter(), _upperHex(true) {
+    setListRadix(RADIX_16);
+}
 
 void ListFormatter::setUpperHex(bool enable) {
     _upperHex = enable;
 }
 
+void ListFormatter::setListRadix(Radix radix) {
+    _listRadix = radix;
+}
+
+static uint8_t getDigits(uint32_t val, Radix radix) {
+    const uint8_t base = uint8_t(radix);
+    int8_t n = 0;
+    do {
+        n++;
+        val /= base;
+    } while (val);
+    return n;
+}
+
 void ListFormatter::formatDec(uint32_t val, int8_t width) {
     if (width > 0) {
-        auto len = 1;
-        for (auto v = val; v >= 10; v /= 10)
-            len++;
-        for (; len < width; len++)
-            _out.letter(' ');
+        const auto len = getDigits(val, RADIX_10);
+        outSpaces(width - len);
     }
-    auto start = _out.mark();
-    _formatter.formatDec(_out, val, 32);
+    const auto *start = _out.mark();
+    _rawFormatter.formatDec(_out, val, 32);
     if (width < 0) {
-        width = -width;
-        for (auto len = _out.mark() - start; len < width; len++)
-            _out.letter(' ');
+        const auto len = _out.mark() - start;
+        outSpaces(-width - len);
     }
 }
 
-void ListFormatter::formatHex(uint32_t val, uint8_t bits, bool zeroSuppress) {
-    if (zeroSuppress && bits == 0) {
-        bits = 32;
-        uint32_t mask = 0x80000000;
-        while (mask >= 2 && (val & mask) == 0) {
-            mask >>= 1;
-            bits--;
-        }
+static uint8_t getBits(const uint32_t val) {
+    uint32_t mask = 0x80000000;
+    uint8_t bits = 32;
+    while (mask >= 2 && (val & mask) == 0) {
+        mask >>= 1;
+        bits--;
     }
-    auto start = _out.mark();
-    _formatter.formatHex(_out, val, bits, _upperHex, false);
-    if (zeroSuppress) {
-        while (*start == '0' && start[1])
-            *start++ = ' ';
+    return bits;
+}
+
+static uint8_t getRadixBits(Radix radix) {
+    return getBits(uint8_t(radix) - 1);
+}
+
+void ListFormatter::formatValue(uint32_t val, uint8_t bits, int8_t width, bool zeroSuppress) {
+    if (bits == 0)
+        bits = getBits(val);
+    if (width > 0) {
+        const auto radixBits = getRadixBits(_listRadix);
+        const auto len = bits / radixBits + (bits % radixBits == 0 ? 0 : 1);
+        outSpaces(width - len);
+    }
+    auto *start = _out.mark();
+    if (_listRadix == RADIX_16) {
+        _rawFormatter.formatHex(_out, val, bits, _upperHex);
+    } else if (_listRadix == RADIX_8) {
+        _rawFormatter.formatOct(_out, val, bits);
+    }
+    const auto *end = _out.mark();
+    auto nonZero = start;
+    if (zeroSuppress && *start == '0') {
+        while (*nonZero == '0' && nonZero[1])
+            nonZero++;
+    }
+    if (width < 0) {
+        for (auto *p = start; p < end; ++p)
+            *p = (nonZero < end) ? *nonZero++ : ' ';
+        const uint8_t len = end - start;
+        outSpaces(-width - len);
     }
 }
 
-void ListFormatter::formatAddress(uint32_t addr, bool fixedWidth) {
-    formatHex(addr, fixedWidth ? ADDRESS_32BIT : 0, true);
+void ListFormatter::formatAddress(uint32_t addr) {
+    const auto width = addressColumnWidth() - 2;
+    formatValue(addr, 0, width, true);
     _out.letter(' ').letter(':');
 }
 
@@ -78,33 +119,31 @@ int ListFormatter::formatBytes(int base) {
         _out.letter(' ');
         uint16_t val = getByte(base + n++);
         if (width == OPCODE_16BIT && unit == ADDRESS_BYTE) {
-            if (pos == 0 && baseAddr % 2 != 0) { // the first byte
+            const auto digits = getDigits(0xFFFF, _listRadix);
+            if (pos == 0 && baseAddr % 2 != 0) {  // the first byte
                 if (endian == ENDIAN_BIG) {
-                    _out.letter(' ').letter(' ');
-                    formatHex(val, 8);  // __HH
+                    formatValue(val, 8, digits);  // __HH
                 } else {
-                    formatHex(val, 8);
-                    _out.letter(' ').letter(' ');  // HH__
+                    formatValue(val, 8, -digits);  // HH__
                 }
                 continue;
             }
-            if (base + n == generated) { // the last byte
+            if (base + n == generated) {  // the last byte
                 if (endian == ENDIAN_BIG) {
-                    formatHex(val, 8);  // HH
+                    formatValue(val, 8);  // HH
                 } else {
-                    _out.letter(' ').letter(' ');  // __HH
-                    formatHex(val, 8);
+                    formatValue(val, 8, digits);  // __HH
                 }
                 continue;
             }
         }
-        if (width == OPCODE_16BIT) {
+        if (width == OPCODE_8BIT) {
+            formatValue(val, 8);
+        } else if (width == OPCODE_16BIT) {
             const auto next8 = getByte(base + n++);
             val = endian == ENDIAN_BIG ? (val << 8) | next8 : val | (next8 << 8);
-            formatHex(val, 16);
+            formatValue(val, width);
             pos++;
-        } else {
-            formatHex(val, 8);
         }
     }
     return n;
@@ -114,9 +153,14 @@ void ListFormatter::formatTab(int tabPosition, int delta) {
     auto pos = outLength();
     while (tabPosition < pos + 1)
         tabPosition += delta;
-    while (pos < tabPosition) {
+    outSpaces(tabPosition - pos);
+    pos = tabPosition;
+}
+
+void ListFormatter::outSpaces(int n) {
+    while (n > 0) {
         _out.letter(' ');
-        pos++;
+        n--;
     }
 }
 

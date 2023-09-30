@@ -62,7 +62,7 @@ private:
     char _encoder;
     size_t _record_bytes;
     bool _upper_hex;
-    ;
+
     bool _line_number;
     bool _verbose;
     std::map<std::string, std::string> _options;
