@@ -28,13 +28,13 @@ public:
     struct Plugins {
         virtual const NumberParser &number() const { return CStyleNumberParser::singleton(); }
         virtual const CommentParser &comment() const { return SemicolonCommentParser::singleton(); }
-        virtual const SymbolParser &symbol() const { return DefaultSymbolParser::singleton(); }
+        virtual const SymbolParser &symbol() const { return SymbolParser::singleton(); }
         virtual const LetterParser &letter() const { return DefaultLetterParser::singleton(); }
         virtual const LocationParser &location() const { return DollarLocationParser::singleton(); }
         virtual const OperatorParser &operators() const {
             return CStyleOperatorParser::singleton();
         }
-        virtual const FunctionParser &function() const { return FunctionParser::singleton(); }
+        virtual const FunctionTable &function() const { return FunctionTable::singleton(); }
     };
 
     struct Locator {
@@ -73,8 +73,7 @@ public:
     /**
      * Parse |scan| and read a symbol. Returns StrScanner::EMPTY when error.
      */
-    StrScanner readSymbol(StrScanner &scan) const { return _symbol.readSymbol(scan); }
-    bool symbolLetter(char c, bool head = false) const { return _symbol.symbolLetter(c, head); }
+    StrScanner readSymbol(StrScanner &scan) const;
     bool locationSymbol(StrScanner &scan) const { return _location.locationSymbol(scan); }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
@@ -88,10 +87,11 @@ private:
     const LetterParser &_letter;
     const LocationParser &_location;
     const OperatorParser &_operators;
-    const FunctionParser &_function;
+    const FunctionTable &_function;
     const Locator &_locator;
 
     Error parseConstant(StrScanner &scan, Value &val) const;
+    Error readFunctionName(StrScanner &scan, StrScanner &name) const;
 };
 
 }  // namespace libasm

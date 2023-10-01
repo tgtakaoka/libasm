@@ -47,7 +47,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     do {                                                                     \
         ErrorAt error;                                                       \
         StrScanner p(text);                                                  \
-        parser.eval(p, error, nullptr, delim);                               \
+        parser.eval(p, error, &symtab, delim);                               \
         StrScanner actual(text, p.str());                                    \
         asserter.equals(__FILE__, __LINE__, "scan " text, expected, actual); \
     } while (0)

@@ -34,9 +34,12 @@ const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
 const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
 
-struct Cdp1802FunctionParser final : FunctionParser {
-    const Functor *parseFunction(
-            StrScanner &, const SymbolParser &, const SymbolTable *) const override;
+struct Cdp1802SymbolParser final : SymbolParser {
+    bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
+};
+
+struct Cdp1802FunctionTable final : FunctionTable {
+    const Functor *lookupFunction(const StrScanner &name) const override;
 };
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
@@ -55,13 +58,15 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return RcaNumberParser::singleton(); }
         const CommentParser &comment() const override { return RcaCommentParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
-        const FunctionParser &function() const override { return _function; }
+        const FunctionTable &function() const override { return _function; }
+        const Cdp1802SymbolParser _symbol{};
         const IbmLetterParser _letter{'T'};
-        const Cdp1802FunctionParser _function{};
+        const Cdp1802FunctionTable _function{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -122,26 +127,14 @@ const struct : Functor {
     }
 } FN_A1;
 
-const Functor *Cdp1802FunctionParser::parseFunction(
-        StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const {
-    auto p = scan;
-    if (p.iexpect('A')) {
-        const Functor *fn = nullptr;
-        if (p.expect('.')) {
-            if (p.expect('0')) {
-                fn = &FN_A0;
-            } else if (p.expect('1')) {
-                fn = &FN_A1;
-            }
-        } else {
-            fn = &FN_A;
-        }
-        if (*p.skipSpaces() == '(' && fn) {
-            scan = p;
-            return fn;
-        }
-    }
-    return FunctionParser::parseFunction(scan, symParser, symtab);
+const Functor *Cdp1802FunctionTable::lookupFunction(const StrScanner &name) const {
+    if (name.iequals_P(PSTR("A.0")))
+        return &FN_A0;
+    if (name.iequals_P(PSTR("A.1")))
+        return &FN_A1;
+    if (name.iequals_P(PSTR("A")))
+        return &FN_A;
+    return nullptr;
 }
 
 }  // namespace

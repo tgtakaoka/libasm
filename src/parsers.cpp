@@ -234,17 +234,7 @@ Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     return CStyleNumberParser::singleton().parseNumber(scan, val);
 }
 
-StrScanner SymbolParser::readSymbol(StrScanner &scan) const {
-    auto p = scan;
-    if (!symbolLetter(*p++, true))
-        return StrScanner(scan.str(), scan.str());
-    p.trimStart([this](char c) { return symbolLetter(c); });
-    auto symbol = StrScanner(scan.str(), p.str());
-    scan = p;
-    return symbol;
-}
-
-bool DefaultSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
+bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return isalpha(c) || c == '_' || (!headOfSymbol && isdigit(c));
 }
 
@@ -258,44 +248,8 @@ const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION[] PROGMEM = "$?";
 const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION[] PROGMEM = "$.?";
 
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return DefaultSymbolParser::singleton().symbolLetter(c, headOfSymbol) ||
+    return SymbolParser::singleton().symbolLetter(c, headOfSymbol) ||
            strchr_P(headOfSymbol ? _prefix_P : _extra_P, c);
-}
-
-const Functor *FunctionParser::parseFunction(
-        StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const {
-    auto p = scan;
-    const StrScanner name = readFunctionName(p, symParser);
-    if (name.size() == 0)
-        return nullptr;
-
-    if (symtab == nullptr) {
-        if (*p.skipSpaces() != '(')
-            return nullptr;
-        scan = p;
-        static const struct final : Functor {
-            Error eval(ValueStack &stack, uint8_t argc) const {
-                while (argc != 0) {
-                    stack.pop();
-                    --argc;
-                }
-                stack.pushUndefined();
-                return OK;
-            }
-        } FN_VARARGS_UNDEF;
-        return &FN_VARARGS_UNDEF;
-    }
-
-    auto fn = symtab->lookupFunction(name);
-    if (fn) {
-        scan = p;
-        return reinterpret_cast<const Functor *>(fn);
-    }
-    return nullptr;
-}
-
-StrScanner FunctionParser::readFunctionName(StrScanner &scan, const SymbolParser &symParser) const {
-    return symParser.readSymbol(scan);
 }
 
 Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {

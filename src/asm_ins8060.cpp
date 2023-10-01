@@ -36,9 +36,8 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dDBYTE, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 
-struct Ins8060FunctionParser final : FunctionParser {
-    const Functor *parseFunction(
-            StrScanner &, const SymbolParser &, const SymbolTable *) const override;
+struct Ins8060FunctionTable final : FunctionTable {
+    const Functor *lookupFunction(const StrScanner &) const override;
 };
 
 }  // namespace
@@ -58,10 +57,10 @@ const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
         const LocationParser &location() const override {
             return NationalLocationParser::singleton();
         }
-        const FunctionParser &function() const override { return _function; }
+        const FunctionTable &function() const override { return _function; }
 
         const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
-        const Ins8060FunctionParser _function{};
+        const Ins8060FunctionTable _function{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -106,23 +105,14 @@ const struct : Functor {
     }
 } FN_ADDR;
 
-const Functor *Ins8060FunctionParser::parseFunction(
-        StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const {
-    auto p = scan;
-    const auto name = readFunctionName(p, symParser);
-    const Functor *fn = nullptr;
-    if (name.iequals_P(TEXT_FN_H)) {
-        fn = &FN_HIGH;
-    } else if (name.iequals_P(TEXT_FN_L)) {
-        fn = &FN_LOW;
-    } else if (name.iequals_P(TEXT_FN_ADDR)) {
-        fn = &FN_ADDR;
-    }
-    if (fn) {
-        scan = p;
-        return fn;
-    }
-    return FunctionParser::parseFunction(scan, symParser, symtab);
+const Functor *Ins8060FunctionTable::lookupFunction(const StrScanner &name) const {
+    if (name.iequals_P(TEXT_FN_H))
+        return &FN_HIGH;
+    if (name.iequals_P(TEXT_FN_L))
+        return &FN_LOW;
+    if (name.iequals_P(TEXT_FN_ADDR))
+        return &FN_ADDR;
+    return nullptr;
 }
 
 }  // namespace

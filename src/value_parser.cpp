@@ -106,22 +106,28 @@ Value ValueParser::eval(
                 return val;
             }
 
-            const auto fn = _function.parseFunction(scan, _symbol, symtab);
-            if (fn) {
-                if (*scan.skipSpaces() != '(') {
-                    error.setError(at, MISSING_FUNC_ARGUMENT);
-                    return Value();
+            StrScanner symbol;
+            if (readFunctionName(scan, symbol) == OK) {
+                auto fn = _function.lookupFunction(symbol);
+                if (fn == nullptr && symtab)
+                    fn = reinterpret_cast<const Functor *>(symtab->lookupFunction(symbol));
+                if (fn) {
+                    if (*scan.skipSpaces() != '(') {
+                        error.setError(at, MISSING_FUNC_ARGUMENT);
+                        return val;
+                    }
+                    const Operator opr(fn);
+                    ostack.push(opr);
+                    ostack.top().setAt(at);
+                    maybe_prefix = false;
+                    expect_fn_args = true;
+                    in_fn_args++;
+                    continue;
                 }
-                const Operator opr(fn);
-                ostack.push(opr);
-                ostack.top().setAt(at);
-                maybe_prefix = false;
-                expect_fn_args = true;
-                in_fn_args++;
-                continue;
+                scan = at;
             }
 
-            const auto symbol = readSymbol(scan);
+            symbol = readSymbol(scan);
             if (symbol.size()) {
                 if (vstack.full()) {
                     error.setError(at, TOO_COMPLEX_EXPRESSION);
@@ -280,6 +286,26 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
         return OK;
     }
 
+    return NOT_AN_EXPECTED;
+}
+
+StrScanner ValueParser::readSymbol(StrScanner &scan) const {
+    auto symbol = scan;
+    if (_symbol.symbolLetter(*symbol++, true)) {
+        scan = symbol.takeWhile([this](char c) { return _symbol.symbolLetter(c); });
+        --symbol;
+        return symbol;
+    }
+    return StrScanner::EMPTY;
+}
+
+Error ValueParser::readFunctionName(StrScanner &scan, StrScanner &name) const {
+    name = scan;
+    if (_symbol.symbolLetter(*name++, true)) {
+        scan = name.takeWhile([this](char c) { return _symbol.functionNameLetter(c); });
+        --name;
+        return OK;
+    }
     return NOT_AN_EXPECTED;
 }
 

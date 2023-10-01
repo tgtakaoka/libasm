@@ -58,7 +58,7 @@ OBJS = $(TEST_OBJS) $(OBJS_asm) $(OBJS_dis) $(OBJS_test) \
        $(foreach a,$(ARCHS),$(OBJS_$(a)))
 BINS = $(TEST_OBJS:.o=) $(EXPR_OBJS:.o=) $(GEN_OBJS:.o=)
 
--include $(OBJS:%=.%d)
+-include $(OBJS:%=%.d)
 
 # make rule for testing an architecture.
 define test-rule # arch

@@ -443,7 +443,7 @@ static void test_function() {
     X16("hi (0x1234)", UNDEFINED_SYMBOL, "hi (0x1234)");
     E32("pi()",        0x31415926);
     E32("pi ( ) + 1",  0x31415927);
-    X32("pi + 1",      MISSING_FUNC_ARGUMENT,  "pi + 1");
+    X32("pi + 1",      MISSING_FUNC_ARGUMENT, "pi + 1");
     X32("pi(1) + 1",   TOO_MANY_FUNC_ARGUMENT, "pi(1) + 1");
     E16("1 + sub(2, 10)",     -7);
     X16("1 + sub( 1 )",       TOO_FEW_FUNC_ARGUMENT,  "sub( 1 )");

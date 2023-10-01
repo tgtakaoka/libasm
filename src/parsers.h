@@ -45,9 +45,11 @@ struct LocationParser {
 /**
  * Symbol Parser
  */
-struct SymbolParser {
-    StrScanner readSymbol(StrScanner &scan) const;
-    virtual bool symbolLetter(char c, bool headOfSymbol = false) const = 0;
+struct SymbolParser : Singleton<SymbolParser> {
+    /** Default symbol is '[:alpha:][:alnum:]*' */
+    virtual bool symbolLetter(char c, bool headOfSymbol = false) const;
+    /** Default function name is same as symbol */
+    virtual bool functionNameLetter(char c) const { return symbolLetter(c); }
 
     static const /*PROGMEM*/ char NONE[];                 // ""
     static const /*PROGMEM*/ char DOLLAR[];               // "$"
@@ -60,23 +62,16 @@ struct SymbolParser {
 };
 
 /**
- * Parsing function call.
+ * Pre-defined function table.
  */
-struct FunctionParser : Singleton<FunctionParser> {
+struct FunctionTable : Singleton<FunctionTable> {
     /**
-     * Parsing |scan| and returns a Functor pointer for a function. |scan|  should point an
-     * opening parenthesis  for arguments  list.
-     *
-     * - Returns nullptr if no function call and |scan| should be unchanged.
-     *
-     * - Returns the no-operation varargs function which returns undefined value when |symtab| is
-     *   nullptr and found '(' after function name.
+     * Look up |name| and returns a Functor pointer for a function, otherwise return nullptr.
      */
-    virtual const Functor *parseFunction(
-            StrScanner &scan, const SymbolParser &symParser, const SymbolTable *symtab) const;
-
-protected:
-    virtual StrScanner readFunctionName(StrScanner &scan, const SymbolParser &symParser) const;
+    virtual const Functor *lookupFunction(const StrScanner &name) const {
+        UNUSED(name);
+        return nullptr;
+    }
 };
 
 /**
