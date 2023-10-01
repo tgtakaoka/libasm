@@ -24,7 +24,7 @@ const struct MotorolaPlugins : ValueParser::Plugins {
     const SymbolParser &symbol() const override { return _symbol; }
     const LetterParser &letter() const override { return _letter; }
     const NationalNumberParser _number{0, 'B', 'Q'};
-    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
+    const SimpleSymbolParser _symbol{SymbolParser::DOLLAR};
     const IbmLetterParser _letter{'A'};
 } plugins{};
 struct : ValueParser::Locator {

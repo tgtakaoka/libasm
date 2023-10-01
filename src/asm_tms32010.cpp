@@ -38,6 +38,13 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 
+struct Tms32010SymbolParser final : SimpleSymbolParser {
+    Tms32010SymbolParser() : SimpleSymbolParser(SymbolParser::DOLLAR) {}
+    bool instructionLetter(char c) const override {
+        return SimpleSymbolParser::instructionLetter(c) || c == '.';
+    }
+};
+
 }  // namespace
 
 struct AsmTms32010::Operand final : ErrorAt {
@@ -54,7 +61,7 @@ const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
-        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR};
+        const Tms32010SymbolParser _symbol{};
         const struct : LetterParser {
             char stringDelimiter() const override { return '"'; }
             char readLetterInString(StrScanner &scan, ErrorAt &error) const override {

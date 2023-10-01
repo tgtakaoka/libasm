@@ -51,6 +51,13 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_DS_W, &Assembler::allocateSpaces, Assembler::DATA_WORD_ALIGN2},
 };
 
+struct Mc68000SymbolParser final : PrefixSymbolParser {
+    Mc68000SymbolParser() : PrefixSymbolParser(SymbolParser::DOT, SymbolParser::DOLLAR_DOT) {}
+    bool instructionLetter(char c) const override {
+        return PrefixSymbolParser::instructionLetter(c) || c == '.';
+    }
+};
+
 }  // namespace
 
 struct AsmMc68000::Operand final : ErrorAt {
@@ -74,7 +81,7 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
-        const SimpleSymbolParser _symbol{SymbolParser::DOT, SymbolParser::DOLLAR_DOT};
+        const Mc68000SymbolParser _symbol{};
         const MotorolaLetterParser _letter{/*closingQuote*/ true};
     } PLUGINS{};
     return PLUGINS;

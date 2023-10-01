@@ -234,10 +234,6 @@ Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     return CStyleNumberParser::singleton().parseNumber(scan, val);
 }
 
-bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return isalpha(c) || c == '_' || (!headOfSymbol && isdigit(c));
-}
-
 const /*PROGMEM*/ char SymbolParser::NONE[] PROGMEM = "";
 const /*PROGMEM*/ char SymbolParser::DOLLAR[] PROGMEM = "$";
 const /*PROGMEM*/ char SymbolParser::DOT[] PROGMEM = ".";
@@ -247,9 +243,22 @@ const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT[] PROGMEM = "$.";
 const /*PROGMEM*/ char SymbolParser::DOLLAR_QUESTION[] PROGMEM = "$?";
 const /*PROGMEM*/ char SymbolParser::DOLLAR_DOT_QUESTION[] PROGMEM = "$.?";
 
+bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
+    return isalpha(c) || c == '_' || (!headOfSymbol && isdigit(c));
+}
+
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return SymbolParser::singleton().symbolLetter(c, headOfSymbol) ||
-           strchr_P(headOfSymbol ? _prefix_P : _extra_P, c);
+    return SymbolParser::symbolLetter(c, headOfSymbol) || (c && strchr_P(_extra_P, c));
+}
+
+bool PrefixSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
+    if (SymbolParser::symbolLetter(c, headOfSymbol))
+        return true;
+    if (headOfSymbol)
+        return c && strchr_P(_prefix_P, c);
+    if (_extra_P)
+        return c && strchr_P(_extra_P, c);
+    return false;
 }
 
 Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {

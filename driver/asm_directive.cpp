@@ -45,8 +45,8 @@ Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriv
 Error NationalDirective::setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     if (list.lineSymbol().size())
         return setError(ILLEGAL_LABEL);
-    StrScanner symbol = assembler().parser().readSymbol(scan);
-    if (symbol.size() == 0)
+    StrScanner symbol;
+    if (assembler().parser().readSymbol(scan, symbol) != OK)
         return setError(MISSING_LABEL);
     if (scan.skipSpaces().expect(','))
         return defineSymbol(scan.skipSpaces(), list, driver, symbol, /*variable*/ true);
@@ -104,8 +104,8 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
     FunctionStore::Parameters params;
     for (;;) {
         auto p = scan.skipSpaces();
-        const auto param = parser.readSymbol(p);
-        if (param.size() && p.skipSpaces().expect(',')) {
+        StrScanner param;
+        if (parser.readSymbol(p, param) == OK && p.skipSpaces().expect(',')) {
             params.emplace_back(param);
             scan = p;
         } else {
@@ -131,7 +131,8 @@ Error IntelDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, Asm
         return setError(UNKNOWN_DIRECTIVE);
     char cpu[strlen_P(cpu_P) + 1];
     strcpy_P(cpu, cpu_P);
-    auto option = assembler().parser().readSymbol(scan);
+    StrScanner option;
+    assembler().parser().readSymbol(scan, option);
     if (option.iequals_P(PSTR("on"))) {
         auto zilog = driver.setCpu("Z80");
         if (zilog == nullptr)

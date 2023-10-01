@@ -39,6 +39,13 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 
+struct Mos6502SymbolParser final : SymbolParser {
+    bool instructionLetter(char c) const override {
+        return SymbolParser::instructionLetter(c) || c == '.' || c == '=' || c == '*';
+    }
+    bool instructionTerminator(char c) const override { return c == '='; }
+};
+
 }  // namespace
 
 struct AsmMos6502::Operand final : ErrorAt {
@@ -54,10 +61,12 @@ struct AsmMos6502::Operand final : ErrorAt {
 const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
+        const Mos6502SymbolParser _symbol{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -281,7 +290,8 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
 
 Error AsmMos6502::parseTableOnOff(StrScanner &scan, BoolOption<AsmMos6502>::Setter setter) {
     auto p = scan.skipSpaces();
-    auto name = parser().readSymbol(p);
+    StrScanner name;
+    parser().readSymbol(p, name);
     auto value = false;
     auto error = OptionBase::parseBoolOption(name, value);
     if (error == OK)

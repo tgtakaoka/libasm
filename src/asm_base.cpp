@@ -48,17 +48,10 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (_parser.commentLine(scan.skipSpaces()))
         return setError(scan, OK);
 
-    auto p = scan;
-    while (!endOfLine(p) && !isspace(*p) && *p != ',') {
-        const auto c = *p++;
-        if (c == '=')  // for '=', '*=', and '.='
-            break;
-    }
-    const StrScanner symbol{scan.str(), p.str()};
-    if (symbol.size() == 0)
+    StrScanner symbol;
+    if (_parser.readInstruction(scan, symbol) != OK)
         return setError(scan, UNKNOWN_INSTRUCTION);
 
-    scan = p;
     insn.clearNameBuffer().text(symbol);
     auto error = processPseudo(scan, insn);
     if (error != UNKNOWN_DIRECTIVE)

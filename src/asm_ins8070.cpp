@@ -36,6 +36,14 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dDBYTE, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 
+struct Ins8070SymbolParser final : PrefixSymbolParser {
+    Ins8070SymbolParser() : PrefixSymbolParser(SymbolParser::DOLLAR) {}
+    bool instructionLetter(char c) const override {
+        return PrefixSymbolParser::instructionLetter(c) || c == '=' || c == '.';
+    }
+    bool instructionTerminator(char c) const override { return c == '='; }
+};
+
 struct Ins8070FunctionTable final : FunctionTable {
     const Functor *lookupFunction(const StrScanner &) const override;
 };
@@ -58,7 +66,7 @@ const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
             return NationalLocationParser::singleton();
         }
         const FunctionTable &function() const override { return _function; }
-        const SimpleSymbolParser _symbol{SymbolParser::DOLLAR, SymbolParser::NONE};
+        const Ins8070SymbolParser _symbol{};
         const Ins8070FunctionTable _function{};
     } PLUGINS{};
     return PLUGINS;

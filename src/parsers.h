@@ -25,8 +25,6 @@
 
 namespace libasm {
 
-class ValueParser;
-
 /**
  * Comment parser
  */
@@ -48,7 +46,20 @@ struct LocationParser {
 struct SymbolParser : Singleton<SymbolParser> {
     /** Default symbol is '[:alpha:][:alnum:]*' */
     virtual bool symbolLetter(char c, bool headOfSymbol = false) const;
-    /** Default function name is same as symbol */
+
+    /** Label may have delimitor letter */
+    virtual bool labelDelimitor(StrScanner &scan) const { return scan.expect(':'); }
+
+    /** Instruction and directive letter at end */
+    virtual bool instructionLetter(char c) const { return symbolLetter(c); }
+
+    /** Instruction terminates when this returns true */
+    virtual bool instructionTerminator(char c) const {
+        UNUSED(c);
+        return false;
+    }
+
+    /** Function name is same as symbol */
     virtual bool functionNameLetter(char c) const { return symbolLetter(c); }
 
     static const /*PROGMEM*/ char NONE[];                 // ""
@@ -304,18 +315,21 @@ struct AsteriskCommentParser final : CommentParser, Singleton<AsteriskCommentPar
 };
 
 /**
- * Default symbol is '[:alpha:][:alnum:]*'.
+ * Simple symbol is '([:alpha:]|[extra])([:alnum:]|[extra])*'.
  */
-struct DefaultSymbolParser final : SymbolParser, Singleton<DefaultSymbolParser> {
+struct SimpleSymbolParser : SymbolParser {
+    SimpleSymbolParser(const /*PROGMEM*/ char *extra_P) : _extra_P(extra_P) {}
     bool symbolLetter(char c, bool headOfSymbol = false) const override;
+
+private:
+    const /*PROGMEMD*/ char *const _extra_P;
 };
 
 /**
- * Simple symbol is '([:alpha:]|[prefix])([:alnum:]|[extra])*'.
+ * Prefix symbol is '([:alpha:]|[prefix])([:alnum:]|[extra])*'.
  */
-struct SimpleSymbolParser final : SymbolParser, Singleton<SimpleSymbolParser> {
-    SimpleSymbolParser(const /*PROGMEM*/ char *extra_P) : _prefix_P(extra_P), _extra_P(extra_P) {}
-    SimpleSymbolParser(const /*PROGMEM*/ char *prefix_P, const /*PROGMEM*/ char *extra_P)
+struct PrefixSymbolParser : SymbolParser {
+    PrefixSymbolParser(const /*PROGMEM*/ char *prefix_P, const /*PROGMEM*/ char *extra_P = nullptr)
         : _prefix_P(prefix_P), _extra_P(extra_P) {}
     bool symbolLetter(char c, bool headOfSymbol = false) const override;
 

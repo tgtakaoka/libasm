@@ -60,6 +60,32 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
         Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
 
+struct Ns32000SymbolParser final : SimpleSymbolParser {
+    Ns32000SymbolParser() : SimpleSymbolParser(SymbolParser::DOT) {}
+    bool instructionLetter(char c) const override {
+        return SimpleSymbolParser::instructionLetter(c) || c == '.';
+    }
+};
+
+struct Ns32000LetterParser final : LetterParser {
+    char readLetter(StrScanner &scan, ErrorAt &error) const override {
+        return readLetter(scan, error, '\'');
+    }
+    char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
+        return readLetter(scan, error, '"');
+    }
+    char stringDelimiter() const override { return '"'; }
+    static char readLetter(StrScanner &scan, ErrorAt &error, char delim) {
+        auto c = *scan++;
+        if (c == '\\' && *scan) {
+            c = *scan++;
+        } else if (c == delim) {
+            error.setError(ILLEGAL_CONSTANT);
+        }
+        return c;
+    }
+};
+
 }  // namespace
 
 struct AsmNs32000::Operand final : ErrorAt {
@@ -88,26 +114,9 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override { return _location; }
         const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
-        const SimpleSymbolParser _symbol{SymbolParser::DOT};
+        const Ns32000SymbolParser _symbol{};
         const NationalLocationParser _location{'*'};
-        const struct : LetterParser {
-            char readLetter(StrScanner &scan, ErrorAt &error) const override {
-                return readLetter(scan, error, '\'');
-            }
-            char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
-                return readLetter(scan, error, '"');
-            }
-            char stringDelimiter() const override { return '"'; }
-            static char readLetter(StrScanner &scan, ErrorAt &error, char delim) {
-                auto c = *scan++;
-                if (c == '\\' && *scan) {
-                    c = *scan++;
-                } else if (c == delim) {
-                    error.setError(ILLEGAL_CONSTANT);
-                }
-                return c;
-            }
-        } _letter{};
+        const Ns32000LetterParser _letter{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -730,7 +739,8 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
 
 Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     auto p = scan.skipSpaces();
-    auto opr = parser().readSymbol(p);
+    StrScanner opr;
+    parser().readSymbol(p, opr);
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         auto error = setFpuName(opr);
         if (error)

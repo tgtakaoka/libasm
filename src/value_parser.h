@@ -71,9 +71,11 @@ public:
     }
 
     /**
-     * Parse |scan| and read a symbol. Returns StrScanner::EMPTY when error.
+     * Parse |scan| and read a |symbol|, then return OK. Otherwise return NOT_AN_EXPECTED.
      */
-    StrScanner readSymbol(StrScanner &scan) const;
+    Error readSymbol(StrScanner &scan, StrScanner &symbol) const;
+    Error readLabel(StrScanner &scan, StrScanner &label) const;
+    Error readInstruction(StrScanner &scan, StrScanner &inst) const;
     bool locationSymbol(StrScanner &scan) const { return _location.locationSymbol(scan); }
     bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
     bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }

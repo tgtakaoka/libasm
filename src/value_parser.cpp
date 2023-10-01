@@ -127,8 +127,7 @@ Value ValueParser::eval(
                 scan = at;
             }
 
-            symbol = readSymbol(scan);
-            if (symbol.size()) {
+            if (readSymbol(scan, symbol) == OK) {
                 if (vstack.full()) {
                     error.setError(at, TOO_COMPLEX_EXPRESSION);
                     return Value();
@@ -289,14 +288,46 @@ Error ValueParser::parseConstant(StrScanner &scan, Value &val) const {
     return NOT_AN_EXPECTED;
 }
 
-StrScanner ValueParser::readSymbol(StrScanner &scan) const {
-    auto symbol = scan;
+Error ValueParser::readSymbol(StrScanner &scan, StrScanner &symbol) const {
+    symbol = scan;
     if (_symbol.symbolLetter(*symbol++, true)) {
         scan = symbol.takeWhile([this](char c) { return _symbol.symbolLetter(c); });
         --symbol;
-        return symbol;
+        return OK;
     }
-    return StrScanner::EMPTY;
+    symbol = StrScanner::EMPTY;
+    return NOT_AN_EXPECTED;
+}
+
+Error ValueParser::readLabel(StrScanner &scan, StrScanner &label) const {
+    label = scan;
+    if (_symbol.symbolLetter(*label++, true)) {
+        scan = label.takeWhile([this](char c) { return _symbol.symbolLetter(c); });
+        --label;
+        _symbol.labelDelimitor(scan);
+        return OK;
+    }
+    label = StrScanner::EMPTY;
+    return NOT_AN_EXPECTED;
+}
+
+Error ValueParser::readInstruction(StrScanner &scan, StrScanner &inst) const {
+    auto p = scan;
+    for (;;) {
+        const auto c = *p;
+        if (!_symbol.instructionLetter(c))
+            break;
+        ++p;
+        if (_symbol.instructionTerminator(c))
+            break;
+    }
+    if (p.str() != scan.str()) {
+        inst = StrScanner{scan.str(), p.str()};
+        scan = p;
+        return OK;
+    }
+    inst = StrScanner::EMPTY;
+    return NOT_AN_EXPECTED;
 }
 
 Error ValueParser::readFunctionName(StrScanner &scan, StrScanner &name) const {
@@ -306,6 +337,7 @@ Error ValueParser::readFunctionName(StrScanner &scan, StrScanner &name) const {
         --name;
         return OK;
     }
+    name = StrScanner::EMPTY;
     return NOT_AN_EXPECTED;
 }
 

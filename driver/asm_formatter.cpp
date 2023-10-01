@@ -46,34 +46,19 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     auto scan = _line = li;
     _length = 0;
     _line_value.clear();
-    _line_symbol = StrScanner::EMPTY;
     setStartAddress(_driver.origin());
     assembler.setCurrentLocation(_driver.origin());
 
     if (parser.commentLine(scan))
         return OK;
 
-    _line_symbol = parser.readSymbol(scan);
+    parser.readLabel(scan, _line_symbol);
     _driver.setLineSymbol(_line_symbol);
-    if (_line_symbol.size()) {
-        if (scan.expect(':')) {
-            ;  // skip optional trailing ':' for label.
-        } else if (parser.endOfLine(scan) || isspace(*scan) || *scan == '=') {
-            ;  // valid line symbol
-        } else {
-            return _errorAt.setError(scan, ILLEGAL_LABEL);
-        }
-    }
-    scan.skipSpaces();
 
-    if (!parser.endOfLine(scan)) {
+    if (!parser.endOfLine(scan.skipSpaces())) {
         auto p = scan;
-        while (!parser.endOfLine(p) && !isspace(*p)) {
-            const auto c = *p++;
-            if (c == '=')  // for '=' and '*='
-                break;
-        }
-        StrScanner directive{scan.str(), p.str()};
+        StrScanner directive;
+        parser.readInstruction(p, directive);
         auto error = _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver);
         if (error == OK) {
             if (_line_symbol.size()) {

@@ -36,6 +36,10 @@ const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch"
 
 struct Cdp1802SymbolParser final : SymbolParser {
     bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
+    bool instructionLetter(char c) const override {
+        return SymbolParser::instructionLetter(c) || c == '=';
+    }
+    bool instructionTerminator(char c) const override { return c == '='; }
 };
 
 struct Cdp1802FunctionTable final : FunctionTable {
