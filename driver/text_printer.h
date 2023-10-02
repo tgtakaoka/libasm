@@ -20,8 +20,7 @@
 namespace libasm {
 namespace driver {
 
-class TextPrinter {
-public:
+struct TextPrinter {
     virtual ~TextPrinter() {}
     virtual void println(const char *text) = 0;
     virtual void format(const char *fmt, ...) = 0;

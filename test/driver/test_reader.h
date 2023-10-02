@@ -26,8 +26,7 @@ namespace libasm {
 namespace driver {
 namespace test {
 
-class TestReader : public TextReader {
-public:
+struct TestReader : TextReader {
     TestReader(const char *name) { clear(name); }
 
     const std::string &name() const override { return _name; }

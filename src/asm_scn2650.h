@@ -24,8 +24,7 @@
 namespace libasm {
 namespace scn2650 {
 
-class AsmScn2650 final : public Assembler, public Config {
-public:
+struct AsmScn2650 final : Assembler, Config {
     AsmScn2650(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

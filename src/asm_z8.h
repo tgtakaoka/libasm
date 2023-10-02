@@ -24,8 +24,7 @@
 namespace libasm {
 namespace z8 {
 
-class AsmZ8 final : public Assembler, public Config {
-public:
+struct AsmZ8 final : Assembler, Config {
     AsmZ8(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;

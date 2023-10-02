@@ -23,8 +23,7 @@
 namespace libasm {
 namespace driver {
 
-class IntelHex : public BinDecoder, public BinEncoder {
-public:
+struct IntelHex : BinDecoder, BinEncoder {
     static BinDecoder &decoder();
     static BinEncoder &encoder();
 

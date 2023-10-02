@@ -29,8 +29,7 @@
 namespace libasm {
 namespace test {
 
-class TestAsserter {
-public:
+struct TestAsserter {
     TestAsserter() : _fail_count(0) {}
     void clear(const char *test_name) {
         _test_name = test_name;

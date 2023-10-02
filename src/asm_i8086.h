@@ -25,8 +25,7 @@
 namespace libasm {
 namespace i8086 {
 
-class AsmI8086 final : public Assembler, public Config {
-public:
+struct AsmI8086 final : Assembler, Config {
     AsmI8086(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;

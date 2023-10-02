@@ -23,7 +23,7 @@ namespace libasm {
 namespace entry {
 
 /**
- * Base class for instruction table entry.
+ * Base for instruction table entry.
  */
 template <typename OPCODE>
 struct Base {

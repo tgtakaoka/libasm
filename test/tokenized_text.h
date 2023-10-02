@@ -24,8 +24,7 @@
 namespace libasm {
 namespace gen {
 
-class TokenizedText {
-public:
+struct TokenizedText {
     TokenizedText(const char *text);
 
     std::size_t length() const { return _tokens.size(); }

@@ -26,8 +26,7 @@ namespace tlcs90 {
 
 struct Operand;
 
-class AsmTlcs90 final : public Assembler, public Config {
-public:
+struct AsmTlcs90 final : Assembler, Config {
     AsmTlcs90(const ValueParser::Plugins &plugins = defaultPlugins());
 
     bool hasSetInstruction() const override { return true; }

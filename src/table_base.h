@@ -24,7 +24,7 @@ namespace libasm {
 namespace table {
 
 /**
- * Base class for any table in PROGMEM.
+ * Template for any table in PROGMEM.
  *
  * A table consists of a constant array of |ITEM| in PROGMEM. So that special consideration, such as
  * using |pgm_read_byte| etc., is necessary to read any contents via |ITEM| pointer.
@@ -86,7 +86,7 @@ private:
 };
 
 /**
- *  class for indexed table in template.
+ *  Template for indexed table in template.
  */
 template <typename /*PROGMEM*/ ITEM, typename INDEX>
 struct IndexedTable {

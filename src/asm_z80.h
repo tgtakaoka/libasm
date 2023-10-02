@@ -24,8 +24,7 @@
 namespace libasm {
 namespace z80 {
 
-class AsmZ80 final : public Assembler, public Config {
-public:
+struct AsmZ80 final : Assembler, Config {
     AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
 
     bool hasSetInstruction() const override { return true; }

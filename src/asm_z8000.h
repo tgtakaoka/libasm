@@ -24,8 +24,7 @@
 namespace libasm {
 namespace z8000 {
 
-class AsmZ8000 final : public Assembler, public Config {
-public:
+struct AsmZ8000 final : Assembler, Config {
     AsmZ8000(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;

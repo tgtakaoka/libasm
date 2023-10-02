@@ -24,8 +24,7 @@
 namespace libasm {
 namespace f3850 {
 
-class DisF3850 final : public Disassembler, public Config {
-public:
+struct DisF3850 final : Disassembler, Config {
     DisF3850();
 
     void reset() override;

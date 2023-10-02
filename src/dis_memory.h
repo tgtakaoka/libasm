@@ -21,8 +21,7 @@
 
 namespace libasm {
 
-class DisMemory {
-public:
+struct DisMemory {
     virtual bool hasNext() const = 0;
     uint32_t address() const { return _address; }
     uint8_t readByte() {

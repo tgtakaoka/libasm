@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mc6800 {
 
-class AsmMc6800 final : public Assembler, public Config {
-public:
+struct AsmMc6800 final : Assembler, Config {
     AsmMc6800(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

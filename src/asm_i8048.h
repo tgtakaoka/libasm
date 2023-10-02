@@ -24,8 +24,7 @@
 namespace libasm {
 namespace i8048 {
 
-class AsmI8048 final : public Assembler, public Config {
-public:
+struct AsmI8048 final : Assembler, Config {
     AsmI8048(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

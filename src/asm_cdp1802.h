@@ -24,8 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class AsmCdp1802 final : public Assembler, public Config {
-public:
+struct AsmCdp1802 final : Assembler, Config {
     AsmCdp1802(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;

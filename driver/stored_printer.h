@@ -28,8 +28,7 @@
 namespace libasm {
 namespace driver {
 
-class StoredPrinter : public TextPrinter {
-public:
+struct StoredPrinter : TextPrinter {
     StoredPrinter() : _buffer() {}
 
     void println(const char *text) override {

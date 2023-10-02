@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms32010 {
 
-class AsmTms32010 final : public Assembler, public Config {
-public:
+struct AsmTms32010 final : Assembler, Config {
     AsmTms32010(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

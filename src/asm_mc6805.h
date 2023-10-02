@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mc6805 {
 
-class AsmMc6805 final : public Assembler, public Config {
-public:
+struct AsmMc6805 final : Assembler, Config {
     AsmMc6805(const ValueParser::Plugins &plugins = defaultPlugins());
 
     AddressWidth addressWidth() const override;

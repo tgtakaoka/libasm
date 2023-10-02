@@ -24,8 +24,7 @@
 namespace libasm {
 namespace driver {
 
-class TextReader {
-public:
+struct TextReader {
     virtual ~TextReader() {}
     virtual const std::string &name() const = 0;
     virtual int lineno() const = 0;

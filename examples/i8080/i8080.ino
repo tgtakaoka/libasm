@@ -25,8 +25,7 @@ libasm::i8080::DisI8080 dis8080;
 libasm::z80::AsmZ80 asmz80;
 libasm::z80::DisZ80 disz80;
 
-class Example : public libasm::arduino::Example {
-public:
+struct Example : libasm::arduino::Example {
     Example() : libasm::arduino::Example(asm8080, dis8080) {}
 
 protected:

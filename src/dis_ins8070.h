@@ -24,8 +24,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class DisIns8070 final : public Disassembler, public Config {
-public:
+struct DisIns8070 final : Disassembler, Config {
     DisIns8070();
 
     void reset() override;

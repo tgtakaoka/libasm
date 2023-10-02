@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class AsmMc6809 final : public Assembler, public Config {
-public:
+struct AsmMc6809 final : Assembler, Config {
     AsmMc6809(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;

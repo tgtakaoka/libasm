@@ -25,8 +25,7 @@
 namespace libasm {
 namespace mn1610 {
 
-class DisMn1610 final : public Disassembler, public Config {
-public:
+struct DisMn1610 final : Disassembler, Config {
     DisMn1610();
 
 private:

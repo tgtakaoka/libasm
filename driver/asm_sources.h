@@ -24,8 +24,7 @@
 namespace libasm {
 namespace driver {
 
-class AsmSources {
-public:
+struct AsmSources {
     /** open input source */
     virtual Error open(const StrScanner &name) = 0;
 

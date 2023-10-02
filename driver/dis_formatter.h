@@ -26,8 +26,7 @@
 namespace libasm {
 namespace driver {
 
-class DisFormatter : public ListFormatter {
-public:
+struct DisFormatter : ListFormatter {
     DisFormatter(Disassembler &disassembler, const char *input_name);
 
     void setUpperHex(bool enable) override;

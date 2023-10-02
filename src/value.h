@@ -33,8 +33,7 @@ enum Radix : uint8_t {
     RADIX_16 = 16,
 };
 
-class Value {
-public:
+struct Value {
     Value() : _value(0), _type(UNDEFINED) {}
 
     /**

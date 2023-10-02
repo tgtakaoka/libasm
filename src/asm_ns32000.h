@@ -25,8 +25,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class AsmNs32000 final : public Assembler, public Config {
-public:
+struct AsmNs32000 final : Assembler, Config {
     AsmNs32000(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;

@@ -32,8 +32,7 @@ struct GenDebugger {
     virtual void info(const char *fmt, ...) = 0;
 };
 
-class DataGenerator {
-public:
+struct DataGenerator {
     int start() const { return _start; }
     int length() const { return _start + _size; }
     virtual bool hasNext() const = 0;
@@ -57,8 +56,7 @@ protected:
     void fill();
 };
 
-class TestGenerator {
-public:
+struct TestGenerator {
     struct Formatter : public GenDebugger {
         virtual GenFormatter &listing() = 0;
         virtual void printList() = 0;

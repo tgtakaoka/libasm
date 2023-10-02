@@ -28,11 +28,9 @@ namespace libasm {
 /**
  * Byte addressable memory from array constant
  */
-class ArrayMemory {
-public:
+struct ArrayMemory {
     /** DisMemory interface of ArrayMemory */
-    class Iterator : public DisMemory {
-    public:
+    struct Iterator : DisMemory {
         bool hasNext() const override { return _index < _memory.size(); }
 
         /** rewind to the first byte */
@@ -42,7 +40,7 @@ public:
         }
 
     private:
-        friend class ArrayMemory;
+        friend ArrayMemory;
         Iterator(const ArrayMemory &memory)
             : DisMemory(memory.origin()), _memory(memory), _index(0) {}
         uint8_t nextByte() override { return _memory.byteAt(_memory.origin() + _index++); }

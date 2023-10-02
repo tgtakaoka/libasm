@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms32010 {
 
-class DisTms32010 final : public Disassembler, public Config {
-public:
+struct DisTms32010 final : Disassembler, Config {
     DisTms32010();
 
 private:

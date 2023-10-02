@@ -25,8 +25,7 @@
 namespace libasm {
 namespace cli {
 
-class FilePrinter : public libasm::driver::TextPrinter {
-public:
+struct FilePrinter : libasm::driver::TextPrinter {
     FilePrinter();
     ~FilePrinter();
     const std::string &name() const { return _name; }

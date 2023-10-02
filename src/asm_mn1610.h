@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mn1610 {
 
-class AsmMn1610 final : public Assembler, public Config {
-public:
+struct AsmMn1610 final : Assembler, Config {
     AsmMn1610(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

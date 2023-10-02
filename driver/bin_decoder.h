@@ -26,8 +26,7 @@
 namespace libasm {
 namespace driver {
 
-class BinDecoder {
-public:
+struct BinDecoder {
     /**
      * Decode text format binary into |memory|.
      * @return: number of read bytes or negative if error.

@@ -26,8 +26,7 @@
 namespace libasm {
 namespace driver {
 
-class ListFormatter {
-public:
+struct ListFormatter {
     virtual void setUpperHex(bool enable);
 
     bool hasNextContent() const;

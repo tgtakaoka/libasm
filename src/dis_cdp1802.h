@@ -24,8 +24,7 @@
 namespace libasm {
 namespace cdp1802 {
 
-class DisCdp1802 final : public Disassembler, public Config {
-public:
+struct DisCdp1802 final : Disassembler, Config {
     DisCdp1802();
 
     void reset() override;

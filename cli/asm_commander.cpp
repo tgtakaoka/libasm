@@ -32,8 +32,7 @@ namespace cli {
 
 using namespace libasm::driver;
 
-class NullPrinter : public TextPrinter {
-public:
+struct NullPrinter : TextPrinter {
     void println(const char *text) override {}
     void format(const char *fmt, ...) override {}
 };

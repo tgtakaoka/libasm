@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mc6809 {
 
-class DisMc6809 final : public Disassembler, public Config {
-public:
+struct DisMc6809 final : Disassembler, Config {
     DisMc6809();
 
 private:

@@ -24,13 +24,11 @@ namespace libasm {
 namespace driver {
 namespace test {
 
-class TestMemory : public BinMemory {
-public:
+struct TestMemory : BinMemory {
     TestMemory() : BinMemory() {}
 
     // write byte iterator
-    class ByteWriter {
-    public:
+    struct ByteWriter {
         uint32_t address() const { return _addr; }
         const BinMemory &memory() const { return _memory; }
         ByteWriter &add(uint8_t val) { return emitByte(val); }
@@ -42,7 +40,7 @@ public:
         }
 
     private:
-        friend class TestMemory;
+        friend TestMemory;
         ByteWriter(BinMemory &memory, uint32_t addr) : _memory(memory), _addr(addr) {}
 
         BinMemory &_memory;
@@ -50,14 +48,13 @@ public:
     };
 
     // write uint16_t iterator
-    class Uint16Writer : private ByteWriter {
-    public:
+    struct Uint16Writer : ByteWriter {
         uint32_t address() const { return ByteWriter::address(); }
         const BinMemory &memory() const { return ByteWriter::memory(); }
         Uint16Writer &add(uint16_t val) { return emitUint16(val); }
 
     private:
-        friend class TestMemory;
+        friend TestMemory;
         Uint16Writer(BinMemory &memory, uint32_t addr, Endian endian)
             : ByteWriter(memory, addr), _endian(endian) {}
         Uint16Writer &emitUint16(uint16_t val) {

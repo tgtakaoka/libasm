@@ -67,8 +67,7 @@ void DataGenerator::fill() {
     }
 }
 
-class ByteGenerator : public DataGenerator {
-public:
+struct ByteGenerator : DataGenerator {
     ByteGenerator(uint8_t *buffer, int bufSize, int start, int size, GenDebugger &debugger)
         : DataGenerator(buffer, bufSize, start, size, debugger), _off(0) {
         _data = initData();
@@ -98,8 +97,7 @@ private:
     uint8_t initData() const { return (_start > 0) ? _buffer[_start - 1] + 1 : 0; }
 };
 
-class WordGenerator : public DataGenerator {
-public:
+struct WordGenerator : DataGenerator {
     WordGenerator(uint8_t *buffer, int bufSize, Endian endian, int start, GenDebugger &debugger)
         : DataGenerator(buffer, bufSize, start, 2, debugger), _endian(endian) {
         _data = initData();

@@ -27,8 +27,7 @@ namespace libasm {
 namespace driver {
 namespace test {
 
-class TestSources : public driver::AsmSources {
-public:
+struct TestSources : driver::AsmSources {
     Error open(const StrScanner &name) override {
         const auto *parent = _sources.empty() ? nullptr : _sources.back();
         const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;

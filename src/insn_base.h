@@ -32,8 +32,7 @@ namespace libasm {
 /**
  * General instruction code interface for Assembler and Disassembler.
  */
-class Insn final {
-public:
+struct Insn final {
     Insn(uint32_t addr) : _address(addr), _length(0), _buffer(_name, sizeof(_name)) {}
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
@@ -153,7 +152,7 @@ private:
 };
 
 /**
- * Base instruction code class.
+ * Base for assembler instruction code.
  */
 struct AsmInsnBase : ErrorReporter {
     uint32_t address() const { return _insn.address(); }
@@ -231,7 +230,7 @@ private:
 };
 
 /**
- * Base instruction code class.
+ * Base for disassembler instruction code.
  */
 struct DisInsnBase : ErrorReporter {
     uint32_t address() const { return _insn.address(); }

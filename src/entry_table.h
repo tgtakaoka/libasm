@@ -27,7 +27,7 @@ namespace libasm {
 namespace entry {
 
 /**
- * Base class for instruction entry table.
+ * Base for instruction entry table.
  */
 template <typename ENTRY>
 struct TableBase {
@@ -69,7 +69,7 @@ private:
 };
 
 /**
- * Base class for CPU entry.
+ * Base for CPU entry.
  */
 template <typename CPUTYPE, typename ENTRY_PAGE>
 struct CpuBase {

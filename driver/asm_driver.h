@@ -30,20 +30,18 @@
 namespace libasm {
 namespace driver {
 
-class AsmDirective;
-class AsmSources;
-class BinMemory;
+struct AsmDirective;
+struct AsmDirective;
+struct AsmFormatter;
+struct AsmSources;
+struct BinMemory;
 
 enum SymbolMode {
     REPORT_UNDEFINED = 0,
     REPORT_DUPLICATE = 1,
 };
 
-class AsmDirective;
-class AsmFormatter;
-
-class AsmDriver : public SymbolTable {
-public:
+struct AsmDriver : SymbolTable {
     AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources,
             SymbolMode symbolMode = REPORT_UNDEFINED);
 

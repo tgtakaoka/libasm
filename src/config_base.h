@@ -134,7 +134,7 @@ struct ConfigSetter {
     }
 };
 
-/** Base class for instruction table fo |CPUTYPE|. */
+/** Base for instruction table fo |CPUTYPE|. */
 template <typename CPUTYPE>
 struct InsnTable {
     virtual const /*PROGMEM*/ char *listCpu_P() const = 0;
@@ -142,7 +142,7 @@ struct InsnTable {
     virtual Error searchCpuName(StrScanner &name, CPUTYPE &cpuType) const = 0;
 };
 
-/** Base class for holding a CPU configuration. */
+/** Base for holding a CPU configuration. */
 template <typename CPUTYPE, AddressWidth AddrWE, AddressUnit AddrUE, OpCodeWidth CodeWE,
         Endian EndianE, uint8_t MaxCode, uint8_t MaxName>
 struct ConfigImpl : ConfigBase, ConfigSetter {

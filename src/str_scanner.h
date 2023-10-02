@@ -23,8 +23,7 @@
 
 namespace libasm {
 
-class StrScanner {
-public:
+struct StrScanner {
     /** construct from C-string |str| to end of it */
     StrScanner(const char *str) : _str(str), _end(str + strlen(str)) {}
 

@@ -24,8 +24,7 @@
 namespace libasm {
 namespace scn2650 {
 
-class DisScn2650 final : public Disassembler, public Config {
-public:
+struct DisScn2650 final : Disassembler, Config {
     DisScn2650();
 
 private:

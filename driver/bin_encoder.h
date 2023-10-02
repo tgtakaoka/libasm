@@ -26,8 +26,7 @@
 namespace libasm {
 namespace driver {
 
-class BinEncoder {
-public:
+struct BinEncoder {
     virtual void reset(AddressWidth addrWidth, uint8_t recordSize);
     int encode(const BinMemory &memory, TextPrinter &out);
 

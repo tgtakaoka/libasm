@@ -27,8 +27,7 @@
 namespace libasm {
 namespace cli {
 
-class DisCommander {
-public:
+struct DisCommander {
     DisCommander(Disassembler **begin, Disassembler **end);
 
     int parseArgs(int argc, const char **argv);

@@ -141,8 +141,7 @@ private:
     const Setter _setter;
 };
 
-class Options {
-public:
+struct Options {
     Options(const OptionBase *head) : _head(head) {}
 
     const OptionBase *head() const { return _head; }

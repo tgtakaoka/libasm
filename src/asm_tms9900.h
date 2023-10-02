@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class AsmTms9900 final : public Assembler, public Config {
-public:
+struct AsmTms9900 final : Assembler, Config {
     AsmTms9900(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

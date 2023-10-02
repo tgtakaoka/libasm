@@ -24,8 +24,7 @@
 namespace libasm {
 namespace i8048 {
 
-class DisI8048 final : public Disassembler, public Config {
-public:
+struct DisI8048 final : Disassembler, Config {
     DisI8048();
 
 private:

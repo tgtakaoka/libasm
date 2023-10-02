@@ -23,8 +23,7 @@
 namespace libasm {
 namespace driver {
 
-class MotoSrec : public BinDecoder, public BinEncoder {
-public:
+struct MotoSrec : BinDecoder, BinEncoder {
     static BinDecoder &decoder();
     static BinEncoder &encoder();
 

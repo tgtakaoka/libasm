@@ -24,8 +24,7 @@
 namespace libasm {
 namespace mc6805 {
 
-class DisMc6805 final : public Disassembler, public Config {
-public:
+struct DisMc6805 final : Disassembler, Config {
     DisMc6805();
 
     AddressWidth addressWidth() const override;

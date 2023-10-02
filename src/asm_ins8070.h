@@ -24,8 +24,7 @@
 namespace libasm {
 namespace ins8070 {
 
-class AsmIns8070 final : public Assembler, public Config {
-public:
+struct AsmIns8070 final : Assembler, Config {
     AsmIns8070(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

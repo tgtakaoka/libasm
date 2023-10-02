@@ -24,8 +24,7 @@
 namespace libasm {
 namespace i8096 {
 
-class DisI8096 final : public Disassembler, public Config {
-public:
+struct DisI8096 final : Disassembler, Config {
     DisI8096();
 
     void reset() override;

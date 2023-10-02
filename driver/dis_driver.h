@@ -25,12 +25,11 @@
 namespace libasm {
 namespace driver {
 
-class TextPrinter;
-class BinMemory;
-class DisFormatter;
+struct TextPrinter;
+struct BinMemory;
+struct DisFormatter;
 
-class DisDriver {
-public:
+struct DisDriver {
     DisDriver(Disassembler **begin, Disassembler **end);
 
     Disassembler *restrictCpu(const char *cpu);

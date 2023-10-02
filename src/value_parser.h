@@ -23,8 +23,7 @@
 
 namespace libasm {
 
-class ValueParser {
-public:
+struct ValueParser {
     struct Plugins {
         virtual const NumberParser &number() const { return CStyleNumberParser::singleton(); }
         virtual const CommentParser &comment() const { return SemicolonCommentParser::singleton(); }

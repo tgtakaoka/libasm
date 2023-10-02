@@ -28,11 +28,10 @@
 namespace libasm {
 namespace driver {
 
-class AsmDriver;
-class BinEncoder;
+struct AsmDriver;
+struct BinEncoder;
 
-class AsmDirective : public ErrorAt {
-public:
+struct AsmDirective : ErrorAt {
     typedef Error (AsmDirective::*PseudoHandler)(
             StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
@@ -71,8 +70,7 @@ protected:
             const StrScanner &symbol, bool variable);
 };
 
-class MotorolaDirective : public AsmDirective {
-public:
+struct MotorolaDirective : AsmDirective {
     MotorolaDirective(Assembler &assembler);
     BinEncoder &defaultEncoder() override;
 
@@ -80,8 +78,7 @@ private:
     Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
-class IntelDirective : public AsmDirective {
-public:
+struct IntelDirective : AsmDirective {
     IntelDirective(Assembler &assembler);
     BinEncoder &defaultEncoder() override;
 
@@ -89,32 +86,27 @@ private:
     Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
-class MostekDirective : public AsmDirective {
-public:
+struct MostekDirective : AsmDirective {
     MostekDirective(Assembler &assembler);
     BinEncoder &defaultEncoder() override;
 };
 
-class Z80Directive : public IntelDirective {
-public:
+struct Z80Directive : IntelDirective {
     Z80Directive(Assembler &assembler);
 };
 
-class RcaDirective : public IntelDirective {
-public:
+struct RcaDirective : IntelDirective {
     RcaDirective(Assembler &assembler);
 };
 
-class NationalDirective : public IntelDirective {
-public:
+struct NationalDirective : IntelDirective {
     NationalDirective(Assembler &assembler);
 
 private:
     Error setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
-class FairchildDirective : public AsmDirective {
-public:
+struct FairchildDirective : AsmDirective {
     FairchildDirective(Assembler &assembler);
     BinEncoder &defaultEncoder() override;
 };

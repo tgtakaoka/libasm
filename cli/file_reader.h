@@ -24,8 +24,7 @@
 namespace libasm {
 namespace cli {
 
-class FileReader : public driver::TextReader {
-public:
+struct FileReader : driver::TextReader {
     FileReader(const std::string &name);
     ~FileReader();
     const std::string &name() const override { return _name; }

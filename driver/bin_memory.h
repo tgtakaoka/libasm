@@ -25,8 +25,7 @@
 namespace libasm {
 namespace driver {
 
-class BinMemory {
-public:
+struct BinMemory {
     BinMemory();
 
     bool hasByte(uint32_t addr) const;
@@ -40,13 +39,12 @@ public:
     uint32_t endAddress() const;
 
     // byte iterator
-    class ByteIterator : public DisMemory {
-    public:
+    struct ByteIterator : DisMemory {
         bool hasNext() const override { return _memory.hasByte(address()); }
         void setAddress(uint32_t addr) { DisMemory::resetAddress(addr); }
 
     private:
-        friend class BinMemory;
+        friend BinMemory;
         ByteIterator(const BinMemory &memory, uint32_t addr) : DisMemory(addr), _memory(memory) {}
         uint8_t nextByte() override { return _memory.readByte(address()); }
 

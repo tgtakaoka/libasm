@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms9900 {
 
-class DisTms9900 final : public Disassembler, public Config {
-public:
+struct DisTms9900 final : Disassembler, Config {
     DisTms9900();
 
 private:

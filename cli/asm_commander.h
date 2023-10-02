@@ -28,8 +28,7 @@
 namespace libasm {
 namespace cli {
 
-class AsmCommander {
-public:
+struct AsmCommander {
     AsmCommander(driver::AsmDirective **begin, driver::AsmDirective **end);
 
     int parseArgs(int argc, const char **argv);
@@ -37,7 +36,7 @@ public:
     int assemble();
 
 private:
-    class FileSources : public driver::AsmSources {
+    struct FileSources : driver::AsmSources {
     public:
         Error open(const StrScanner &name) override;
         Error closeCurrent() override;

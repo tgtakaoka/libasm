@@ -31,8 +31,7 @@ namespace arduino {
 /**
  * Assembler and disassembler example for Arduino.
  */
-class Example {
-public:
+struct Example {
     Example(Assembler &current)
         : _asm(&current),
           _dis(nullptr),
@@ -337,7 +336,7 @@ private:
         }
     }
 
-    template <class Prog>
+    template <typename Prog>
     bool printCpuList(Prog **begin, Prog **end) {
         for (auto p = begin; p < end; p++) {
             if (p != begin)
@@ -348,7 +347,7 @@ private:
         return true;
     }
 
-    template <class Prog>
+    template <typename Prog>
     Prog *searchCpu(const char *cpu, Prog **begin, Prog **end) {
         for (auto p = begin; p < end; p++) {
             if ((*p)->setCpu(cpu))
@@ -376,8 +375,7 @@ private:
     /**
      * Memory interface for disassmbeler on string of hexadecimal number list.
      */
-    class StrMemory : public DisMemory {
-    public:
+    struct StrMemory : DisMemory {
         StrMemory(uint32_t origin, const char *line, const ConfigBase &config)
             : DisMemory(origin),
               _origin(origin),

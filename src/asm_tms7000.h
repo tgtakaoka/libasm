@@ -24,8 +24,7 @@
 namespace libasm {
 namespace tms7000 {
 
-class AsmTms7000 final : public Assembler, public Config {
-public:
+struct AsmTms7000 final : Assembler, Config {
     AsmTms7000(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

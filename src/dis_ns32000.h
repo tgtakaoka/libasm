@@ -24,8 +24,7 @@
 namespace libasm {
 namespace ns32000 {
 
-class DisNs32000 final : public Disassembler, public Config {
-public:
+struct DisNs32000 final : Disassembler, Config {
     DisNs32000();
 
     void reset() override;

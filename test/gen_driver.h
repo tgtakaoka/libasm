@@ -27,8 +27,7 @@
 namespace libasm {
 namespace gen {
 
-class GenDriver : public TestGenerator::Formatter {
-public:
+struct GenDriver : TestGenerator::Formatter {
     GenDriver(Disassembler &disassembler);
 
     int main(int argc, const char **argv);

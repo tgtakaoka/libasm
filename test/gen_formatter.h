@@ -26,8 +26,7 @@
 namespace libasm {
 namespace gen {
 
-class GenFormatter : public libasm::driver::DisFormatter {
-public:
+struct GenFormatter : libasm::driver::DisFormatter {
     GenFormatter(Disassembler &disassembler) : DisFormatter(disassembler, "<TestGenerator>") {}
 
     const char *name() const { return _insn.name(); }

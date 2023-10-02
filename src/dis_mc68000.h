@@ -25,8 +25,7 @@
 namespace libasm {
 namespace mc68000 {
 
-class DisMc68000 final : public Disassembler, public Config {
-public:
+struct DisMc68000 final : Disassembler, Config {
     DisMc68000();
 
 private:

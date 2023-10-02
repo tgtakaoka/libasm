@@ -24,8 +24,7 @@
 namespace libasm {
 namespace i8051 {
 
-class AsmI8051 final : public Assembler, public Config {
-public:
+struct AsmI8051 final : Assembler, Config {
     AsmI8051(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:

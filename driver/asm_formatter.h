@@ -27,12 +27,11 @@
 namespace libasm {
 namespace driver {
 
-class AsmDriver;
-class AsmSources;
-class BinMemory;
+struct AsmDriver;
+struct AsmSources;
+struct BinMemory;
 
-class AsmFormatter : public ListFormatter {
-public:
+struct AsmFormatter : ListFormatter {
     AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
 
     void enableLineNumber(bool enable) { _lineNumber = enable; }

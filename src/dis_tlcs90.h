@@ -27,8 +27,7 @@ namespace tlcs90 {
 
 struct Operand;
 
-class DisTlcs90 final : public Disassembler, public Config {
-public:
+struct DisTlcs90 final : Disassembler, Config {
     DisTlcs90();
 
 private:

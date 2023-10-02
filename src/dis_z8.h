@@ -25,8 +25,7 @@
 namespace libasm {
 namespace z8 {
 
-class DisZ8 final : public Disassembler, public Config {
-public:
+struct DisZ8 final : Disassembler, Config {
     DisZ8();
 
     void reset() override;

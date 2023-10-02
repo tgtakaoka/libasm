@@ -24,8 +24,7 @@
 namespace libasm {
 namespace f3850 {
 
-class AsmF3850 final : public Assembler, public Config {
-public:
+struct AsmF3850 final : Assembler, Config {
     AsmF3850(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
