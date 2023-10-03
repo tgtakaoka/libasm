@@ -803,13 +803,13 @@ static constexpr uint8_t INDEX_14_2[] PROGMEM = {
 };
 // clang-format on
 
-struct EntryPage : entry::TableBase<Entry> {
+struct EntryPage : entry::PrefixTableBase<Entry> {
     Config::opcode_t mask() const { return pgm_read_byte(&_mask); }
     Config::opcode_t post() const { return pgm_read_byte(&_post); }
 
     constexpr EntryPage(Config::opcode_t prefix, Config::opcode_t mask, uint8_t post,
             const Entry *table, const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : TableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
+        : PrefixTableBase(prefix, table, end, index, iend), _mask(mask), _post(post) {}
 
 private:
     const Config::opcode_t _mask;
@@ -855,42 +855,48 @@ static constexpr EntryPage NS32082_PAGES[] PROGMEM = {
 };
 
 template <typename CPUTYPE>
-struct ProcessorCpuCommon : entry::CpuBase<CPUTYPE, EntryPage> {
-    constexpr ProcessorCpuCommon(CPUTYPE cpuType, const /* PROGMEM */ char *name_P,
-            const EntryPage *table, const EntryPage *end)
-        : entry::CpuBase<CPUTYPE, EntryPage>(cpuType, name_P, table, end) {}
+using ProcessorBase = entry::CpuBase<CPUTYPE, EntryPage>;
 
-    Error searchName(AsmInsn &insn, bool (*accept)(AsmInsn &, const Entry *),
-            void (*pageSetup)(AsmInsn &, const EntryPage *)) const {
-        entry::CpuBase<CPUTYPE, EntryPage>::searchName(insn, accept, pageSetup);
+template <typename CPUTYPE>
+struct Processor : ProcessorBase<CPUTYPE> {
+    constexpr Processor(CPUTYPE cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
+            const EntryPage *end)
+        : ProcessorBase<CPUTYPE>(cpuType, name_P, table, end) {}
+
+    static void pageSetup(AsmInsn &insn, const EntryPage *page) {
+        insn.setPost(0, page->post() != 0);
+    }
+
+    Error searchName(AsmInsn &insn, bool (*accept)(AsmInsn &, const Entry *)) const {
+        ProcessorBase<CPUTYPE>::searchName(insn, accept, pageSetup);
         return insn.getError();
     }
 
     Error searchOpCode(DisInsn &insn, StrBuffer &out,
             bool (*matchOpCode)(DisInsn &, const Entry *, const EntryPage *),
-            void (*readEntryName)(DisInsn &, const Entry *, StrBuffer &, const EntryPage *)) const {
-        const auto entry = entry::CpuBase<CPUTYPE, EntryPage>::searchOpCode(
-                insn, out, matchOpCode, readEntryName);
+            void (*readName)(DisInsn &, const Entry *, StrBuffer &, const EntryPage *)) const {
+        const auto entry = ProcessorBase<CPUTYPE>::searchOpCode(
+                insn, out, matchOpCode, ProcessorBase<CPUTYPE>::defaultPageMatcher, readName);
         if (entry && insn.hasPost())
             insn.readPost();
         return insn.getError();
     }
 };
 
-struct Cpu : ProcessorCpuCommon<CpuType> {
+struct Cpu : Processor<CpuType> {
     constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
             const EntryPage *end)
-        : ProcessorCpuCommon<CpuType>(cpuType, name_P, table, end) {}
+        : Processor<CpuType>(cpuType, name_P, table, end) {}
 };
-struct Fpu : ProcessorCpuCommon<FpuType> {
+struct Fpu : Processor<FpuType> {
     constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
             const EntryPage *end)
-        : ProcessorCpuCommon<FpuType>(fpuType, name_P, table, end) {}
+        : Processor<FpuType>(fpuType, name_P, table, end) {}
 };
-struct Mmu : ProcessorCpuCommon<MmuType> {
+struct Mmu : Processor<MmuType> {
     constexpr Mmu(MmuType mmuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
             const EntryPage *end)
-        : ProcessorCpuCommon<MmuType>(mmuType, name_P, table, end) {}
+        : Processor<MmuType>(mmuType, name_P, table, end) {}
 };
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
@@ -942,10 +948,6 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static void searchPageSetup(AsmInsn &insn, const EntryPage *page) {
-    insn.setPost(0, page->post() != 0);
-}
-
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto flags = insn.flags();
     auto table = entry->flags();
@@ -954,14 +956,14 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
 }
 
 Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
-    cpu(cpuSpec.cpu)->searchName(insn, acceptModes, searchPageSetup);
+    cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        fpu(cpuSpec.fpu)->searchName(insn, acceptModes, searchPageSetup);
+        fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
     }
     if (insn.getError() == UNKNOWN_INSTRUCTION) {
         insn.setOK();
-        mmu(cpuSpec.mmu)->searchName(insn, acceptModes, searchPageSetup);
+        mmu(cpuSpec.mmu)->searchName(insn, acceptModes);
     }
     return insn.getError();
 }
@@ -974,7 +976,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 
 static void readEntryName(
         DisInsn &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
-    Cpu::defaultReadEntryName(insn, entry, out, page);
+    Cpu::defaultReadName(insn, entry, out, page);
     insn.setPost(0, page->post() != 0);
 }
 

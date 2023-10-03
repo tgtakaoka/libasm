@@ -548,7 +548,7 @@ static constexpr uint8_t HD6309_I11[] PROGMEM = {
 };
 // clang-format on
 
-using EntryPage = entry::TableBase<Entry>;
+using EntryPage = entry::PrefixTableBase<Entry>;
 
 static constexpr EntryPage MC6809_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6809_P00), ARRAY_RANGE(MC6809_I00)},

@@ -215,7 +215,7 @@ static constexpr uint8_t INDEX_V30EMU[] PROGMEM = {
 
 // clang-format on
 
-using EntryPage = entry::TableBase<Entry>;
+using EntryPage = entry::PrefixTableBase<Entry>;
 
 static constexpr EntryPage I8080_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_I8080), ARRAY_RANGE(INDEX_I8080)},

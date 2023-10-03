@@ -651,7 +651,7 @@ Error TableZ8000::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &o
     if (entry) {
         entry++;
         insn.clearNameBuffer();
-        Cpu::defaultReadEntryName(insn, entry, out, nullptr);
+        Cpu::defaultReadName(insn, entry, out, nullptr);
     }
     return insn.getError();
 }
