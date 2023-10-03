@@ -491,11 +491,11 @@ static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 };
 // clang-format on
 
-struct EntryPage : entry::TableBase<Entry> {
+struct EntryPage : entry::PrefixTableBase<Entry> {
     AddrMode mode() const { return AddrMode(pgm_read_byte(&_mode)); }
-    bool prefixMatch(Config::opcode_t code) const {
-        const Config::opcode_t pre = prefix();
-        const Config::opcode_t reg = code & 7;
+    bool prefixMatcher(Config::opcode_t code) const {
+        const auto pre = prefix();
+        const auto reg = code & 7;
         switch (mode()) {
         case M_IND:
             return (code & ~7) == pre && reg != 3 && reg != 7;
@@ -512,10 +512,10 @@ struct EntryPage : entry::TableBase<Entry> {
 
     constexpr EntryPage(Config::opcode_t prefix, AddrMode mode, const Entry *table,
             const Entry *end, const uint8_t *index, const uint8_t *iend)
-        : TableBase(prefix, table, end, index, iend), _mode(uint8_t(mode)) {}
+        : PrefixTableBase(prefix, table, end, index, iend), _mode(mode) {}
 
 private:
-    uint8_t _mode;
+    const AddrMode _mode;
 };
 
 static constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
@@ -548,7 +548,7 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
 
     bool isPrefix(Config::opcode_t code, AddrMode &mode) const {
         for (auto page = _pages.table(); page < _pages.end(); page++) {
-            if (page->prefix() && page->prefixMatch(code)) {
+            if (page->prefix() && page->prefixMatcher(code)) {
                 mode = page->mode();
                 return true;
             }
@@ -588,7 +588,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static void searchPageSetup(AsmInsn &insn, const EntryPage *page) {
+static void pageSetup(AsmInsn &insn, const EntryPage *page) {
     insn.setPrefixMode(page->mode());
 }
 
@@ -620,8 +620,12 @@ static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {
 }
 
 Error TableTlcs90::searchName(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptModes, searchPageSetup, readCode);
+    cpu(cpuType)->searchName(insn, acceptModes, pageSetup, readCode);
     return insn.getError();
+}
+
+static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
+    return page->prefixMatcher(insn.prefix());
 }
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
@@ -642,7 +646,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableTlcs90::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode, prefixMatcher);
     return insn.getError();
 }
 

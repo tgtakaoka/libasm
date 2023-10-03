@@ -563,7 +563,7 @@ static constexpr uint8_t MC68HC11_ICD[] PROGMEM = {
 };
 // clang-format on
 
-using EntryPage = entry::TableBase<Entry>;
+using EntryPage = entry::PrefixTableBase<Entry>;
 
 static constexpr EntryPage MC6800_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(MC6800_TABLE), ARRAY_RANGE(MC6800_INDEX)},
@@ -680,7 +680,7 @@ Error TableMc6800::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &
     if (entry->opCode() != insn.opCode())
         return insn.setError(INTERNAL_ERROR);
     insn.clearNameBuffer();
-    Cpu::defaultReadEntryName(insn, entry, out, nullptr);
+    Cpu::defaultReadName(insn, entry, out, nullptr);
     return OK;
 }
 
