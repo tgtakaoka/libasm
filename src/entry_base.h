@@ -43,8 +43,8 @@ struct Base {
     }
 
 private:
-    const /* PROGMEM */ char *_name_P;
-    OPCODE _opCode;
+    const /* PROGMEM */ char *const _name_P;
+    const OPCODE _opCode;
 };
 
 }  // namespace entry

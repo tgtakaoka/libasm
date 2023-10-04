@@ -132,7 +132,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     Flags flags() const { return _flags.read(); }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 
     static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
         return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp) |

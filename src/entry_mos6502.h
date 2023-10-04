@@ -108,7 +108,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     static bool longIndirect(AddrMode mode) { return (uint8_t(mode) & longi_bm) != 0; }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 };
 
 }  // namespace mos6502

@@ -91,8 +91,8 @@ protected:
     SymbolTable *_symtab;
     uint32_t _currentLocation;
 
-    Assembler(const ValueParser::Plugins &plugins, const /*PROGMEM*/ pseudo::Pseudo *ptable,
-            const /*PROGMEM*/ pseudo::Pseudo *pend, const OptionBase *option = nullptr);
+    Assembler(const ValueParser::Plugins &plugins, const pseudo::Pseudos &pseudos,
+            const OptionBase *option = nullptr);
 
     int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
 

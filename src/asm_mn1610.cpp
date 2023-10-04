@@ -29,13 +29,16 @@ using namespace text::common;
 
 namespace {
 
-const char TEXT_LOC[] PROGMEM = "loc";
+// clang-format off
+constexpr char TEXT_LOC[] PROGMEM = "loc";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_WORD},
-        Pseudo{TEXT_LOC, &Assembler::defineOrigin},
+    {TEXT_DC,  &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DS,  &Assembler::allocateSpaces,     Assembler::DATA_WORD},
+    {TEXT_LOC, &Assembler::defineOrigin},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -61,7 +64,7 @@ const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
 }
 
 AsmMn1610::AsmMn1610(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

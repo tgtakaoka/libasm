@@ -29,12 +29,15 @@ using namespace text::common;
 
 namespace {
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
-        Pseudo{TEXT_FCC, &Assembler::defineString},
-        Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
-        Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+    {TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
+    {TEXT_FCC, &Assembler::defineString},
+    {TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
+    {TEXT_RMB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -63,7 +66,7 @@ const ValueParser::Plugins &AsmMc6800::defaultPlugins() {
 }
 
 AsmMc6800::AsmMc6800(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

@@ -30,14 +30,17 @@ using namespace text::mos6502;
 
 namespace {
 
-const char TEXT_aequal[] PROGMEM = "*=";
+// clang-format off
+constexpr char TEXT_aequal[] PROGMEM = "*=";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_aequal, &Assembler::defineOrigin},
-        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_aequal, &Assembler::defineOrigin},
+    {TEXT_dALIGN, &Assembler::alignOrigin},
+    {TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
+// clang-format off
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Mos6502SymbolParser final : SymbolParser {
     bool instructionLetter(char c) const override {
@@ -72,7 +75,7 @@ const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
 }
 
 AsmMos6502::AsmMos6502(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_longa),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_longa),
       Config(TABLE),
       _opt_longa(this, &AsmMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
       _opt_longi(this, &AsmMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI) {

@@ -29,27 +29,30 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_BOOL_ALIAS[] PROGMEM = "alias";
-const char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
+// clang-format off
+constexpr char OPT_BOOL_ALIAS[] PROGMEM = "alias";
+constexpr char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
 
-const char TEXT_DC_B[] PROGMEM = "dc.b";
-const char TEXT_DC_L[] PROGMEM = "dc.l";
-const char TEXT_DC_W[] PROGMEM = "dc.w";
-const char TEXT_DS_B[] PROGMEM = "ds.b";
-const char TEXT_DS_L[] PROGMEM = "ds.l";
-const char TEXT_DS_W[] PROGMEM = "ds.w";
+constexpr char TEXT_DC_B[] PROGMEM = "dc.b";
+constexpr char TEXT_DC_L[] PROGMEM = "dc.l";
+constexpr char TEXT_DC_W[] PROGMEM = "dc.w";
+constexpr char TEXT_DS_B[] PROGMEM = "ds.b";
+constexpr char TEXT_DS_L[] PROGMEM = "ds.l";
+constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-        Pseudo{TEXT_DC_B, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DC_L, &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
-        Pseudo{TEXT_DC_W, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DS_B, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DS_L, &Assembler::allocateSpaces, Assembler::DATA_LONG_ALIGN2},
-        Pseudo{TEXT_DS_W, &Assembler::allocateSpaces, Assembler::DATA_WORD_ALIGN2},
+    {TEXT_dALIGN, &Assembler::alignOrigin},
+    {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+    {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
+    {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+    {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG_ALIGN2},
+    {TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD_ALIGN2},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Mc68000SymbolParser final : PrefixSymbolParser {
     Mc68000SymbolParser() : PrefixSymbolParser(SymbolParser::DOT, SymbolParser::DOLLAR_DOT) {}
@@ -88,7 +91,7 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 }
 
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_alias),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_alias),
       Config(TABLE),
       _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS) {
     reset();

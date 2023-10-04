@@ -25,23 +25,25 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
-const char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
+// clang-format off
+constexpr char OPT_INT_LIST_RADIX[]  PROGMEM = "list-radix";
+constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_OPTION, &Assembler::setOption},
-        Pseudo{TEXT_ORG, &Assembler::defineOrigin},
+    {TEXT_ALIGN,  &Assembler::alignOrigin},
+    {TEXT_OPTION, &Assembler::setOption},
+    {TEXT_ORG,    &Assembler::defineOrigin},
 };
-const Pseudos common_pseudos(ARRAY_RANGE(PSEUDOS));
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-Assembler::Assembler(const ValueParser::Plugins &plugins, const /*PROGMEM*/ pseudo::Pseudo *ptable,
-        const /*PROGMEM*/ pseudo::Pseudo *pend, const OptionBase *option)
+Assembler::Assembler(
+        const ValueParser::Plugins &plugins, const Pseudos &pseudos, const OptionBase *option)
     : ErrorAt(),
       _parser(plugins, *this),
-      _pseudos(ptable, pend),
+      _pseudos(pseudos),
       _commonOptions(&_opt_listRadix),
       _options(option),
       _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX) {
@@ -86,9 +88,9 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
     const auto *p = _pseudos.search(insn);
-    if ((p = _pseudos.search(insn)) || (p = common_pseudos.search(insn)))
-        return p->invoke(this, scan, insn);
-    return UNKNOWN_DIRECTIVE;
+    if (p == nullptr)
+        p = PSEUDO_TABLE.search(insn);
+    return p ? p->invoke(this, scan, insn) : UNKNOWN_DIRECTIVE;
 }
 
 uint16_t Assembler::parseExpr16(StrScanner &expr, ErrorAt &error, char delim) const {

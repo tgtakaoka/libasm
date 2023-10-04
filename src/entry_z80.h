@@ -92,7 +92,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     Flags flags() const { return _flags.read(); }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 
     static constexpr uint8_t dst(AddrMode mode, bool ixbit) {
         return static_cast<uint8_t>(static_cast<uint8_t>(mode) | (ixbit ? ixbit_bm : 0));

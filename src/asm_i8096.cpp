@@ -30,14 +30,17 @@ using namespace text::common;
 
 namespace {
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DCL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-        Pseudo{TEXT_DCW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_DSB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DSL, &Assembler::allocateSpaces, Assembler::DATA_LONG},
-        Pseudo{TEXT_DSW, &Assembler::allocateSpaces, Assembler::DATA_WORD},
+    {TEXT_DCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DCL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_DCW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DSB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DSL, &Assembler::allocateSpaces,     Assembler::DATA_LONG},
+    {TEXT_DSW, &Assembler::allocateSpaces,     Assembler::DATA_WORD},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -62,7 +65,7 @@ const ValueParser::Plugins &AsmI8096::defaultPlugins() {
 }
 
 AsmI8096::AsmI8096(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

@@ -29,14 +29,17 @@ using namespace text::common;
 
 namespace {
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD},
-        Pseudo{TEXT_dLONG, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-        Pseudo{TEXT_dORG, &Assembler::defineOrigin},
-        Pseudo{TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_dALIGN,  &Assembler::alignOrigin},
+    {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE_IN_WORD},
+    {TEXT_dLONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_dORG,    &Assembler::defineOrigin},
+    {TEXT_dSTRING, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Tms32010SymbolParser final : SimpleSymbolParser {
     Tms32010SymbolParser() : SimpleSymbolParser(SymbolParser::DOLLAR) {}
@@ -73,7 +76,7 @@ const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
 }
 
 AsmTms32010::AsmTms32010(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

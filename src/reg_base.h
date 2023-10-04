@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 
+#include "config_host.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 #include "table_base.h"
@@ -37,10 +38,12 @@ struct NameEntry {
     constexpr NameEntry(const /*PROGMEM*/ char *text_P, int8_t name)
         : _text_P(text_P), _name(name) {}
 
-    constexpr const /*PROGMEM*/ char *text_P() const { return _text_P; }
-    constexpr int8_t name() const { return _name; }
+    const /*PROGMEM*/ char *text_P() const {
+        return reinterpret_cast<const char *>(pgm_read_ptr(&_text_P));
+    }
+    int8_t name() const { return pgm_read_byte(&_name); }
 
-    StrBuffer &outText(StrBuffer &out) const { return out.text_P(_text_P); }
+    StrBuffer &outText(StrBuffer &out) const { return out.text_P(text_P()); }
 
 private:
     const /*PROGMEM*/ char *const _text_P;

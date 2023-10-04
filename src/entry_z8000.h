@@ -159,7 +159,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     Flags flags() const { return _flags.read(); }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 
     static constexpr uint8_t opr(AddrMode mode, ModeField field) {
         return (static_cast<uint8_t>(mode) << mode_gp) |

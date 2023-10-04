@@ -103,7 +103,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     Flags flags() const { return _flags.read(); }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 
     static constexpr uint8_t fmt(OprOrder order, PostFormat post) {
         return static_cast<uint8_t>(post & post_gm) |
