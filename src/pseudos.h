@@ -44,9 +44,9 @@ struct Pseudo {
     }
 
 private:
-    const /*PROGMEM*/ char *_name_P;
-    Handler _handler;
-    uint8_t _extra;
+    const /*PROGMEM*/ char *const _name_P;
+    const Handler _handler;
+    const uint8_t _extra;
 
     Handler handler() const {
         Handler h;
@@ -57,12 +57,16 @@ private:
     uint8_t extra() const { return pgm_read_byte(&_extra); }
 };
 
-struct Pseudos : private table::Table<Pseudo> {
-    Pseudos(const /*PROGMEM*/ Pseudo *table, const /*PROGMEM*/ Pseudo *end) : Table(table, end) {}
+struct Pseudos {
+    constexpr Pseudos(const /*PROGMEM*/ Pseudo *table, const /*PROGMEM*/ Pseudo *end) : _table(table, end) {}
 
-    const Pseudo *search(const Insn &insn) const { return Table::binarySearch(insn, comparator); }
+    const Pseudo *search(const Insn &insn) const {
+        return _table.binarySearch(insn, comparator);
+    }
 
 private:
+    const table::Table<Pseudo> _table;
+
     static int comparator(const Insn &insn, const /*PROGMEM*/ Pseudo *item) {
         return strcasecmp_P(insn.name(), item->name_P());
     }

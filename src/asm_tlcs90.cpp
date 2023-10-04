@@ -29,21 +29,24 @@ using namespace text::common;
 
 namespace {
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DEFS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DEFS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DL,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
+// clang-format off
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
 AsmTlcs90::AsmTlcs90(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

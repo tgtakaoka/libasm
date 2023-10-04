@@ -29,15 +29,18 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_INT_PCBITS[] = "pc-bits";
-const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+// clang-format off
+constexpr char OPT_INT_PCBITS[]  PROGMEM = "pc-bits";
+constexpr char OPT_DESC_PCBITS[] PROGMEM = "program counter width in bit, default 13";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
-        Pseudo{TEXT_FCC, &Assembler::defineString},
-        Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
-        Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+    {TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
+    {TEXT_FCC, &Assembler::defineString},
+    {TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
+    {TEXT_RMB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -66,7 +69,7 @@ const ValueParser::Plugins &AsmMc6805::defaultPlugins() {
 }
 
 AsmMc6805::AsmMc6805(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_pc_bits),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_pc_bits),
       Config(TABLE),
       _opt_pc_bits(this, &AsmMc6805::setPcBits, OPT_INT_PCBITS, OPT_DESC_PCBITS) {
     reset();

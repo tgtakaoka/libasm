@@ -29,22 +29,25 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
-const char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
+// clang-format off
+constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
+constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
 
-const char TEXT_RESB[] PROGMEM = "resb";
-const char TEXT_RESD[] PROGMEM = "resd";
-const char TEXT_RESW[] PROGMEM = "resw";
+constexpr char TEXT_RESB[] PROGMEM = "resb";
+constexpr char TEXT_RESD[] PROGMEM = "resd";
+constexpr char TEXT_RESW[] PROGMEM = "resw";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DD, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_RESB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_RESD, &Assembler::allocateSpaces, Assembler::DATA_LONG},
-        Pseudo{TEXT_RESW, &Assembler::allocateSpaces, Assembler::DATA_WORD},
+    {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DD,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_RESB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG},
+    {TEXT_RESW, &Assembler::allocateSpaces,     Assembler::DATA_WORD},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -85,7 +88,7 @@ const ValueParser::Plugins &AsmI8086::defaultPlugins() {
 }
 
 AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_optimizeSegment),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_optimizeSegment),
       Config(TABLE),
       _opt_optimizeSegment(this, &AsmI8086::setOptimizeSegment, OPT_BOOL_OPTIMIZE_SEGMENT,
               OPT_DESC_OPTIMIZE_SEGMENT) {

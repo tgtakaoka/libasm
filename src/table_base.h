@@ -81,8 +81,8 @@ struct Table {
     }
 
 private:
-    const ITEM *_table;
-    const ITEM *_end;
+    const ITEM *const _table;
+    const ITEM *const _end;
 };
 
 /**

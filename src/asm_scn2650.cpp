@@ -29,16 +29,19 @@ using namespace text::common;
 
 namespace {
 
-const char TEXT_ACON[] PROGMEM = "acon";
-const char TEXT_ALIT[] PROGMEM = "alit";
-const char TEXT_RES[] PROGMEM = "res";
+// clang-format off
+constexpr char TEXT_ACON[] PROGMEM = "acon";
+constexpr char TEXT_ALIT[] PROGMEM = "alit";
+constexpr char TEXT_RES[]  PROGMEM = "res";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_RES, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+    {TEXT_ACON, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_ALIT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_RES,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
 };
+// clang-format off
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -63,7 +66,7 @@ const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
 }
 
 AsmScn2650::AsmScn2650(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

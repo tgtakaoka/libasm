@@ -29,19 +29,22 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
+// clang-format off
+constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "enable optimizing direct addressing";
 
-const char TEXT_LONG[] PROGMEM = "long";
-const char TEXT_STRING[] PROGMEM = "string";
-const char TEXT_WORD[] PROGMEM = "word";
+constexpr char TEXT_LONG[]   PROGMEM = "long";
+constexpr char TEXT_STRING[] PROGMEM = "string";
+constexpr char TEXT_WORD[]   PROGMEM = "word";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_LONG, &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
-        Pseudo{TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_WORD, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+    {TEXT_BYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_LONG,   &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
+    {TEXT_STRING, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_WORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -66,7 +69,7 @@ const ValueParser::Plugins &AsmZ8000::defaultPlugins() {
 }
 
 AsmZ8000::AsmZ8000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_shortDitrect),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_shortDitrect),
       Config(TABLE),
       _opt_shortDitrect(
               this, &AsmZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT, OPT_DESC_SHORT_DIRECT) {

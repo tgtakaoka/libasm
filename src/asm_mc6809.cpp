@@ -29,15 +29,18 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_INT_SETDP[] PROGMEM = "setdp";
-const char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
+// clang-format off
+constexpr char OPT_INT_SETDP[]  PROGMEM = "setdp";
+constexpr char OPT_DESC_SETDP[] PROGMEM = "set direct page register";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
-        Pseudo{TEXT_FCC, &Assembler::defineString},
-        Pseudo{TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
-        Pseudo{TEXT_RMB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+    {TEXT_FCB, &Assembler::defineDataConstant, Assembler::DATA_BYTE_NO_STRING},
+    {TEXT_FCC, &Assembler::defineString},
+    {TEXT_FDB, &Assembler::defineDataConstant, Assembler::DATA_WORD_NO_STRING},
+    {TEXT_RMB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -77,7 +80,7 @@ const ValueParser::Plugins &AsmMc6809::defaultPlugins() {
 }
 
 AsmMc6809::AsmMc6809(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_setdp),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_setdp),
       Config(TABLE),
       _opt_setdp(this, &AsmMc6809::setDirectPage, OPT_INT_SETDP, OPT_DESC_SETDP) {
     reset();

@@ -29,10 +29,17 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
-const char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
-const char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
-const char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+// clang-format off
+constexpr char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
+constexpr char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
+constexpr char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
+constexpr char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
+
+constexpr Pseudo PSEUDOS[] PROGMEM = {
+    {TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
+};
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Cdp1802SymbolParser final : SymbolParser {
     bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
@@ -44,10 +51,6 @@ struct Cdp1802SymbolParser final : SymbolParser {
 
 struct Cdp1802FunctionTable final : FunctionTable {
     const Functor *lookupFunction(const StrScanner &name) const override;
-};
-
-constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
 };
 
 }  // namespace
@@ -76,7 +79,7 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
 }
 
 AsmCdp1802::AsmCdp1802(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_useReg),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_useReg),
       Config(TABLE),
       _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
               _opt_smartBranch),

@@ -21,50 +21,50 @@ namespace text {
 namespace ins8070 {
 
 // clang-format off
-const char TEXT_CPU_INS8070[] PROGMEM = "INS8070";
-const char TEXT_CPU_8070[]    PROGMEM = "8070";
+constexpr char TEXT_CPU_INS8070[] PROGMEM = "INS8070";
+constexpr char TEXT_CPU_8070[]    PROGMEM = "8070";
 
-// const char TEXT_ADD[]  PROGMEM = "ADD";
-// const char TEXT_AND[]  PROGMEM = "AND";
-const char TEXT_BND[]  PROGMEM = "BND";
-// const char TEXT_BNZ[]  PROGMEM = "BNZ";
-// const char TEXT_BP[]   PROGMEM = "BP";
-// const char TEXT_BRA[]  PROGMEM = "BRA";
-// const char TEXT_BZ[]   PROGMEM = "BZ";
-// const char TEXT_CALL[] PROGMEM = "CALL";
-// const char TEXT_DIV[]  PROGMEM = "DIV";
-// const char TEXT_DLD[]  PROGMEM = "DLD";
-// const char TEXT_ILD[]  PROGMEM = "ILD";
-// const char TEXT_JMP[]  PROGMEM = "JMP";
-// const char TEXT_JSR[]  PROGMEM = "JSR";
-// const char TEXT_LD[]   PROGMEM = "LD";
-// const char TEXT_MPY[]  PROGMEM = "MPY";
-// const char TEXT_NOP[]  PROGMEM = "NOP";
-// const char TEXT_OR[]   PROGMEM = "OR";
-const char TEXT_PLI[]  PROGMEM = "PLI";
-// const char TEXT_POP[]  PROGMEM = "POP";
-// const char TEXT_PUSH[] PROGMEM = "PUSH";
-// const char TEXT_RET[]  PROGMEM = "RET";
-// const char TEXT_RRL[]  PROGMEM = "RRL";
-// const char TEXT_RR[]   PROGMEM = "RR";
-// const char TEXT_SL[]   PROGMEM = "SL";
-// const char TEXT_SRL[]  PROGMEM = "SRL";
-// const char TEXT_SR[]   PROGMEM = "SR";
-const char TEXT_SSM[]  PROGMEM = "SSM";
-// const char TEXT_ST[]   PROGMEM = "ST";
-// const char TEXT_SUB[]  PROGMEM = "SUB";
-// const char TEXT_XCH[]  PROGMEM = "XCH";
-// const char TEXT_XOR[]  PROGMEM = "XOR";
+// constexpr char TEXT_ADD[]  PROGMEM = "ADD";
+// constexpr char TEXT_AND[]  PROGMEM = "AND";
+constexpr char TEXT_BND[]  PROGMEM = "BND";
+// constexpr char TEXT_BNZ[]  PROGMEM = "BNZ";
+// constexpr char TEXT_BP[]   PROGMEM = "BP";
+// constexpr char TEXT_BRA[]  PROGMEM = "BRA";
+// constexpr char TEXT_BZ[]   PROGMEM = "BZ";
+// constexpr char TEXT_CALL[] PROGMEM = "CALL";
+// constexpr char TEXT_DIV[]  PROGMEM = "DIV";
+// constexpr char TEXT_DLD[]  PROGMEM = "DLD";
+// constexpr char TEXT_ILD[]  PROGMEM = "ILD";
+// constexpr char TEXT_JMP[]  PROGMEM = "JMP";
+// constexpr char TEXT_JSR[]  PROGMEM = "JSR";
+// constexpr char TEXT_LD[]   PROGMEM = "LD";
+// constexpr char TEXT_MPY[]  PROGMEM = "MPY";
+// constexpr char TEXT_NOP[]  PROGMEM = "NOP";
+// constexpr char TEXT_OR[]   PROGMEM = "OR";
+constexpr char TEXT_PLI[]  PROGMEM = "PLI";
+// constexpr char TEXT_POP[]  PROGMEM = "POP";
+// constexpr char TEXT_PUSH[] PROGMEM = "PUSH";
+// constexpr char TEXT_RET[]  PROGMEM = "RET";
+// constexpr char TEXT_RRL[]  PROGMEM = "RRL";
+// constexpr char TEXT_RR[]   PROGMEM = "RR";
+// constexpr char TEXT_SL[]   PROGMEM = "SL";
+// constexpr char TEXT_SRL[]  PROGMEM = "SRL";
+// constexpr char TEXT_SR[]   PROGMEM = "SR";
+constexpr char TEXT_SSM[]  PROGMEM = "SSM";
+// constexpr char TEXT_ST[]   PROGMEM = "ST";
+// constexpr char TEXT_SUB[]  PROGMEM = "SUB";
+// constexpr char TEXT_XCH[]  PROGMEM = "XCH";
+// constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 
-// const char TEXT_REG_A[]  PROGMEM  = "A";
-// const char TEXT_REG_E[]  PROGMEM  = "E";
-const char TEXT_REG_EA[] PROGMEM = "EA";
-// const char TEXT_REG_T[]  PROGMEM  = "T";
-// const char TEXT_REG_S[]  PROGMEM  = "S";
-// const char TEXT_REG_PC[] PROGMEM = "PC";
-// const char TEXT_REG_SP[] PROGMEM = "SP";
-// const char TEXT_REG_P2[] PROGMEM = "P2";
-// const char TEXT_REG_P3[] PROGMEM = "P3";
+// constexpr char TEXT_REG_A[]  PROGMEM  = "A";
+// constexpr char TEXT_REG_E[]  PROGMEM  = "E";
+constexpr char TEXT_REG_EA[] PROGMEM = "EA";
+// constexpr char TEXT_REG_T[]  PROGMEM  = "T";
+// constexpr char TEXT_REG_S[]  PROGMEM  = "S";
+// constexpr char TEXT_REG_PC[] PROGMEM = "PC";
+// constexpr char TEXT_REG_SP[] PROGMEM = "SP";
+// constexpr char TEXT_REG_P2[] PROGMEM = "P2";
+// constexpr char TEXT_REG_P3[] PROGMEM = "P3";
 // clang-format on
 
 }  // namespace ins8070

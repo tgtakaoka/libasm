@@ -30,11 +30,14 @@ using namespace text::common;
 
 namespace {
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
+// clang-format off
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -58,7 +61,7 @@ struct AsmI8051::Operand final : ErrorAt {
 };
 
 AsmI8051::AsmI8051(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

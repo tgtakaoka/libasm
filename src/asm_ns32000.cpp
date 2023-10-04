@@ -36,29 +36,32 @@ using text::ns32000::TEXT_PMMU;
 
 namespace {
 
-const char OPT_TEXT_FPU[] PROGMEM = "fpu";
-const char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
-const char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
-const char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
+// clang-format off
+constexpr char OPT_TEXT_FPU[]  PROGMEM = "fpu";
+constexpr char OPT_DESC_FPU[]  PROGMEM = "floating point co-processor";
+constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
+constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
-const char TEXT_dBLKB[] PROGMEM = ".blkb";
-const char TEXT_dBLKD[] PROGMEM = ".blkd";
-const char TEXT_dBLKW[] PROGMEM = ".blkw";
-const char TEXT_dDOUBLE[] PROGMEM = ".double";
-const char TEXT_dSPACE[] PROGMEM = ".space";
+constexpr char TEXT_dBLKB[]   PROGMEM = ".blkb";
+constexpr char TEXT_dBLKD[]   PROGMEM = ".blkd";
+constexpr char TEXT_dBLKW[]   PROGMEM = ".blkw";
+constexpr char TEXT_dDOUBLE[] PROGMEM = ".double";
+constexpr char TEXT_dSPACE[]  PROGMEM = ".space";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_dALIGN, &Assembler::alignOrigin},
-        Pseudo{TEXT_dASCII, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_dBLKB, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_dBLKD, &Assembler::allocateSpaces, Assembler::DATA_LONG},
-        Pseudo{TEXT_dBLKW, &Assembler::allocateSpaces, Assembler::DATA_WORD},
-        Pseudo{TEXT_dBYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-        Pseudo{TEXT_dORG, &Assembler::defineOrigin},
-        Pseudo{TEXT_dSPACE, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_dWORD, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_dALIGN,  &Assembler::alignOrigin},
+    {TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_dBLKB,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_dBLKD,   &Assembler::allocateSpaces,     Assembler::DATA_LONG},
+    {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
+    {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_dORG,    &Assembler::defineOrigin},
+    {TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 struct Ns32000SymbolParser final : SimpleSymbolParser {
     Ns32000SymbolParser() : SimpleSymbolParser(SymbolParser::DOT) {}
@@ -122,7 +125,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
 }
 
 AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_fpu),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
       _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
       _opt_pmmu(this, &AsmNs32000::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {

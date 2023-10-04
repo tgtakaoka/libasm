@@ -29,13 +29,16 @@ using namespace text::common;
 
 namespace {
 
-const char TEXT_RS[] PROGMEM = "rs";
+// clang-format off
+constexpr char TEXT_RS[] PROGMEM = "rs";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
-        Pseudo{TEXT_RS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
+    {TEXT_DA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
+    {TEXT_RS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -58,7 +61,7 @@ const ValueParser::Plugins &AsmF3850::defaultPlugins() {
 }
 
 AsmF3850::AsmF3850(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

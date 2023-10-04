@@ -70,7 +70,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     Flags flags() const { return _flags.read(); }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 
     // |_attr|
     static constexpr int dst_gp = 0;

@@ -29,13 +29,16 @@ using namespace text::common;
 
 namespace {
 
+// clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_AORG, &Assembler::defineOrigin},
-        Pseudo{TEXT_BSS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
-        Pseudo{TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_AORG, &Assembler::defineOrigin},
+    {TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
 };
+// clang-format off
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -54,7 +57,7 @@ const ValueParser::Plugins &AsmTms7000::defaultPlugins() {
 }
 
 AsmTms7000::AsmTms7000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS)), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 

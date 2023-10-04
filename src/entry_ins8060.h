@@ -58,7 +58,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
     Flags flags() const { return _flags.read(); }
 
 private:
-    Flags _flags;
+    const Flags _flags;
 
     static constexpr int mode_gp = 0;
     static constexpr int undef_bp = 7;

@@ -29,21 +29,24 @@ using namespace text::common;
 
 namespace {
 
-const char OPT_BOOL_ALIAS[] PROGMEM = "reg-alias";
-const char OPT_DESC_ALIAS[] PROGMEM = "emit register alias regarding setrp value";
-const char OPT_INT_SETRP[] PROGMEM = "setrp";
-const char OPT_DESC_SETRP[] PROGMEM = "set register pointer";
-const char OPT_INT_SETRP0[] PROGMEM = "setrp0";
-const char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
-const char OPT_INT_SETRP1[] PROGMEM = "setrp1";
-const char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+// clang-format off
+constexpr char OPT_BOOL_ALIAS[]  PROGMEM = "reg-alias";
+constexpr char OPT_DESC_ALIAS[]  PROGMEM = "emit register alias regarding setrp value";
+constexpr char OPT_INT_SETRP[]   PROGMEM = "setrp";
+constexpr char OPT_DESC_SETRP[]  PROGMEM = "set register pointer";
+constexpr char OPT_INT_SETRP0[]  PROGMEM = "setrp0";
+constexpr char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
+constexpr char OPT_INT_SETRP1[]  PROGMEM = "setrp1";
+constexpr char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-        Pseudo{TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
-        Pseudo{TEXT_DS, &Assembler::allocateSpaces, Assembler::DATA_BYTE},
-        Pseudo{TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
+    {TEXT_DL, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_DS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
+    {TEXT_DW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
+// clang-format on
+PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
@@ -69,7 +72,7 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
 }
 
 AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, ARRAY_RANGE(PSEUDOS), &_opt_reg_alias),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_reg_alias),
       Config(TABLE),
       _opt_reg_alias(this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, _opt_setrp),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
