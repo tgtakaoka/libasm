@@ -61,16 +61,12 @@ Error DisFormatter::setCpu(const char *cpu) {
     reset();
     _insn.reset(_insn.address());
     {
-        LowercaseBuffer lower(_insn.clearNameBuffer());
-        UppercaseBuffer upper(lower);
-        auto name = _uppercase ? upper.ptr() : lower.ptr();
-        name->text_P(PSTR("CPU")).over(_insn.nameBuffer());
+        StrCaseBuffer out{_insn.clearNameBuffer(), _uppercase};
+        out.text_P(PSTR("CPU")).over(_insn.nameBuffer());
     }
     {
-        LowercaseBuffer lower(_operands, sizeof(_operands));
-        UppercaseBuffer upper(lower);
-        auto operands = _uppercase ? upper.ptr() : lower.ptr();
-        operands->text(cpu);
+        StrCaseBuffer out{_operands, sizeof(_operands), _uppercase};
+        out.text(cpu);
     }
     return _disassembler.setCpu(cpu) ? UNSUPPORTED_CPU : OK;
 }
@@ -81,13 +77,14 @@ Error DisFormatter::setOrigin(uint32_t origin) {
     if (err)
         return err;
     _insn.reset(origin);
-    LowercaseBuffer lower(_insn.clearNameBuffer());
-    UppercaseBuffer upper(lower);
-    auto name = _uppercase ? upper.ptr() : lower.ptr();
-    name->text_P(PSTR("ORG")).over(_insn.nameBuffer());
-
-    StrBuffer operands(_operands, sizeof(_operands));
-    _disassembler.outAbsAddr(operands, origin);
+    {
+        StrCaseBuffer out{_insn.clearNameBuffer(), _uppercase};
+        out.text_P(PSTR("ORG")).over(_insn.nameBuffer());
+    }
+    {
+        StrCaseBuffer out{_operands, sizeof(_operands), _uppercase};
+        _disassembler.outAbsAddr(out, origin);
+    }
     return OK;
 }
 

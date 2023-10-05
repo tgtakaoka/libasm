@@ -133,43 +133,42 @@ const ValueFormatter::Plugins &ValueFormatter::Plugins::zilog() {
 }
 
 StrBuffer &ValueFormatter::formatDec(StrBuffer &out, uint32_t val, int8_t bits) const {
-    val = makePositive(out, val, bits);
-    return _dec.format(out, val);
+    return _dec.format(out, makePositive(out, val, bits));
 }
 
 StrBuffer &ValueFormatter::formatBin(StrBuffer &out, uint32_t val, int8_t bits) const {
-    val = makePositive(out, val, bits);
-    return _bin.format(out, val, abs(bits));
+    return _bin.format(out, makePositive(out, val, bits), abs(bits));
 }
 
 StrBuffer &ValueFormatter::formatOct(StrBuffer &out, uint32_t val, int8_t bits) const {
-    val = makePositive(out, val, bits);
-    return _oct.format(out, val, abs(bits));
+    return _oct.format(out, makePositive(out, val, bits), abs(bits));
 }
 
-StrBuffer &ValueFormatter::formatHex(
-        StrBuffer &out, uint32_t val, int8_t bits, bool upperHex, bool relax) const {
-    val = makePositive(out, val, bits);
-    if (relax && val <= 32)
-        return _dec.format(out, val);
-    UppercaseBuffer upper(out);
-    LowercaseBuffer lower(out);
-    StrBuffer *outHex = upperHex ? upper.ptr() : lower.ptr();
-    return _hex.format(*outHex, val, abs(bits)).over(out);
+StrBuffer &ValueFormatter::formatHex(StrBuffer &out, uint32_t val, int8_t bits) const {
+    return _hex.format(out, makePositive(out, val, bits), abs(bits));
 }
 
-uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits) const {
+bool ValueFormatter::absolute(uint32_t &val, int8_t bits) {
+    auto negative = false;
     uint8_t bw = bits;
     if (bits < 0) {
         bw = -bits;
         const auto sign = 1UL << (bw - 1);
         if (val & sign) {
+            negative = true;
             val = ~val + 1;
-            out.letter('-');
         }
     }
     const auto mask = (1UL << bw) - 1;
-    return val & mask;
+    val &= mask;
+    return negative;
+}
+
+uint32_t ValueFormatter::makePositive(StrBuffer &out, uint32_t val, int8_t bits) {
+    auto abs = val;
+    if (absolute(abs, bits))
+        out.letter('-');
+    return abs;
 }
 
 }  // namespace libasm

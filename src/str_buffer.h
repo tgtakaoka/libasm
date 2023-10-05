@@ -29,7 +29,6 @@ struct StrBuffer : ErrorReporter {
     StrBuffer(char *buffer, size_t size) : ErrorReporter() { reset(buffer, size); }
     StrBuffer(const StrBuffer &o) : _out(o._out), _end(o._end) { setError(o.getError()); }
 
-    StrBuffer *ptr() { return reinterpret_cast<StrBuffer *>(this); }
     size_t size() const { return _end - _out; }
     char *mark() const { return _out; }
 
@@ -67,34 +66,25 @@ struct StrBuffer : ErrorReporter {
     /** Reverse letters from |start| to |_out| */
     StrBuffer &reverse(char *start);
 
-protected:
-    StrBuffer &ref() { return reinterpret_cast<StrBuffer &>(*this); }
-
 private:
     char *_out;
     const char *_end;
 };
 
-struct LowercaseBuffer : StrBuffer {
-    LowercaseBuffer(char *buffer, size_t size) : StrBuffer(buffer, size) {}
-    LowercaseBuffer(const StrBuffer &o) : StrBuffer(o) {}
+struct StrCaseBuffer : StrBuffer {
+    StrCaseBuffer(char *buffer, size_t size, bool uppercase)
+        : StrBuffer(buffer, size), _converter(uppercase ? toupper : tolower) {}
+    StrCaseBuffer(const StrBuffer &o, bool uppercase)
+        : StrBuffer(o), _converter(uppercase ? toupper : tolower) {}
 
-    /** Output a |letter| as lowercase */
+    /** Output a |letter| with case covert */
     StrBuffer &letter(char c) override {
-        StrBuffer::letter(tolower(c));
-        return ref();
+        StrBuffer::letter(_converter(c));
+        return *this;
     }
-};
 
-struct UppercaseBuffer : StrBuffer {
-    UppercaseBuffer(char *buffer, size_t size) : StrBuffer(buffer, size) {}
-    UppercaseBuffer(const StrBuffer &o) : StrBuffer(o) {}
-
-    /** Output a |letter| as uppercase */
-    StrBuffer &letter(char c) override {
-        StrBuffer::letter(toupper(c));
-        return ref();
-    }
+private:
+    int (*const _converter)(int);
 };
 
 }  // namespace libasm

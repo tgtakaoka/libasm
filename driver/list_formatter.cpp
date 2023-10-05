@@ -52,8 +52,9 @@ void ListFormatter::formatDec(uint32_t val, int8_t width) {
         const auto len = getDigits(val, RADIX_10);
         outSpaces(width - len);
     }
-    const auto *start = _out.mark();
-    _rawFormatter.formatDec(_out, val, 32);
+    const auto *start =_out.mark();
+    StrCaseBuffer out{_out, _upperHex};
+    _rawFormatter.formatDec(out, val, 32).over(_out);
     if (width < 0) {
         const auto len = _out.mark() - start;
         outSpaces(-width - len);
@@ -83,10 +84,11 @@ void ListFormatter::formatValue(uint32_t val, uint8_t bits, int8_t width, bool z
         outSpaces(width - len);
     }
     auto *start = _out.mark();
+    StrCaseBuffer out{_out, _upperHex};
     if (_listRadix == RADIX_16) {
-        _rawFormatter.formatHex(_out, val, bits, _upperHex);
+        _rawFormatter.formatHex(out, val, bits).over(_out);
     } else if (_listRadix == RADIX_8) {
-        _rawFormatter.formatOct(_out, val, bits);
+        _rawFormatter.formatOct(out, val, bits).over(_out);
     }
     const auto *end = _out.mark();
     auto nonZero = start;
