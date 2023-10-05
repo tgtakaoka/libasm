@@ -78,6 +78,11 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define ERUI(src, ...) ERRT(src, UNKNOWN_INSTRUCTION, src, ##__VA_ARGS__);
 #define TEST(src, ...) VASSERT(OK, 0x0000, src, __VA_ARGS__)
 #define BTEST(src, ...) BVASSERT(OK, 0x0000, src, __VA_ARGS__)
+#define BERRT(src, error, at, ...)                                                \
+    do {                                                                          \
+        BVASSERT(error, 0x0000, src, ##__VA_ARGS__);                              \
+        asserter.equals(__FILE__, __LINE__, "error at", at, assembler.errorAt()); \
+    } while (0)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

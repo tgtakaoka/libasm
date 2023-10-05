@@ -765,6 +765,32 @@ static void test_data_constant() {
     ERRT("DC C'A",         MISSING_CLOSING_QUOTE, "C'A");
     ERRT("DC C'TEXT",      MISSING_CLOSING_QUOTE, "C'TEXT");
     ERRT("DC 'TEXT",       MISSING_CLOSING_QUOTE, "'TEXT");
+
+    ERRT("DC C'"
+         "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
+         "1234567890'",
+         NO_MEMORY,
+         "567890'",
+         0x3132, 0x3334, 0x3536, 0x3738, 0x3930,
+         0x3132, 0x3334, 0x3536, 0x3738, 0x3930,
+         0x3132, 0x3334, 0x3536, 0x3738, 0x3930,
+         0x3132, 0x3334, 0x3536, 0x3738, 0x3930,
+         0x3132, 0x3334, 0x3536, 0x3738, 0x3930,
+         0x3132, 0x3334, 0x3536, 0x3738, 0x3930,
+         0x3132, 0x3334);
+
+    ERRT("DC "
+         "X'1234', X'5678', X'9ABC', X'DEF0', X'1234', X'5678', X'9ABC', X'DEF0', "
+         "X'1234', X'5678', X'9ABC', X'DEF0', X'1234', X'5678', X'9ABC', X'DEF0', "
+         "X'1234', X'5678', X'9ABC', X'DEF0', X'1234', X'5678', X'9ABC', X'DEF0', "
+         "X'1234', X'5678', X'9ABC', X'DEF0', X'1234', X'5678', X'9ABC', X'DE', "
+         "X'AAAA', X'BBBB'",
+         NO_MEMORY,
+         "X'AAAA', X'BBBB'",
+         0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x9ABC, 0xDEF0,
+         0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x9ABC, 0xDEF0,
+         0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x9ABC, 0xDEF0,
+         0x1234, 0x5678, 0x9ABC, 0xDEF0, 0x1234, 0x5678, 0x9ABC, 0x00DE);
 }
 
 void run_tests(const char *cpu) {

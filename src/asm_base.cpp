@@ -212,21 +212,23 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t extra) {
 
 Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
+    ErrorAt error;
     do {
         const auto delim = *scan.skipSpaces()++;
         auto p = scan;
         while (!p.expect(delim)) {
-            if (*p == 0)
-                return setError(p, MISSING_CLOSING_DELIMITER);
-            const auto c = *p++;
-            insn.emitByte(c);
+            const auto c = *p;
+            if (c == 0)
+                return setErrorIf(p, MISSING_CLOSING_DELIMITER);
+            error.setErrorIf(p, insn.emitByte(c));
+            ++p;
         }
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
     if (!endOfLine(scan.skipSpaces()))
-        return setError(scan, GARBAGE_AT_END);
-    return OK;
+        return setErrorIf(scan, GARBAGE_AT_END);
+    return setErrorIf(error);
 }
 
 /**
@@ -247,7 +249,7 @@ Error Assembler::isString(StrScanner &scan, ErrorAt &error) const {
     while (true) {
         // If reached to the end of line, it means we can't find closing delimiter.
         if (endOfLine(p))
-            return error.setError(
+            return error.setErrorIf(
                     scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
         parser().readLetterInString(p, error);
         if (error.getError())
@@ -271,11 +273,12 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra)
         setCurrentLocation(insn.align(2));
 
     const auto big = config().endian() == ENDIAN_BIG;
-    const auto noString = (type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING);
+    const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING);
+    ErrorAt error;
     do {
         auto p = scan.skipSpaces();
         ErrorAt strErr;
-        if (!noString && isString(p, strErr) == OK) {
+        if (hasString && isString(p, strErr) == OK) {
             // a string surrounded by string delimiters
             const auto prefix = parser().stringPrefix();
             if (prefix)
@@ -283,9 +286,9 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra)
             ++scan;                    // skip opening delimiter
             uint8_t count = 0;
             while (scan.str() < p.str()) {
-                ErrorAt error;
-                const auto c = parser().readLetterInString(scan, error);
-                insn.emitByte(c);
+                const auto at = scan;
+                const auto c = parser().readLetterInString(scan, strErr);
+                error.setErrorIf(at, insn.emitByte(c));
                 count++;
             }
             ++scan;  // skip closing delimiter
@@ -294,37 +297,34 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra)
             case DATA_WORD:
             case DATA_WORD_ALIGN2:
                 if (count % 2)
-                    insn.emitByte(0);
+                    error.setErrorIf(p, insn.emitByte(0));
                 break;
             case DATA_LONG:
             case DATA_LONG_ALIGN2:
                 while (count % 4) {
-                    insn.emitByte(0);
+                    error.setErrorIf(p, insn.emitByte(0));
                     count++;
                 }
                 break;
             default:
                 if (config().addressUnit() == ADDRESS_WORD && count % 2)
-                    insn.emitByte(0);
+                    error.setErrorIf(p, insn.emitByte(0));
                 break;
             }
             continue;
         }
 
+        const auto at = p;
         ErrorAt exprErr;
         const auto value = parseExpr(p, exprErr);
         if (!endOfLine(p.skipSpaces()) && *p != ',')
-            exprErr.setError(scan, ILLEGAL_CONSTANT);
+            exprErr.setErrorIf(scan, ILLEGAL_CONSTANT);
         if (!exprErr.hasError()) {
             auto v = value.getUnsigned();
             switch (type) {
             case DATA_LONG:
             case DATA_LONG_ALIGN2:
-                if (big) {
-                    insn.emitUint32Be(v);
-                } else {
-                    insn.emitUint32Le(v);
-                }
+                error.setErrorIf(at, big ? insn.emitUint32Be(v) : insn.emitUint32Le(v));
                 break;
             case DATA_BYTE_IN_WORD:
                 v &= 0xFF;
@@ -333,11 +333,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra)
             case DATA_WORD_ALIGN2:
             case DATA_WORD_NO_STRING:
             emit_word:
-                if (big) {
-                    insn.emitUint16Be(v);
-                } else {
-                    insn.emitUint16Le(v);
-                }
+                error.setErrorIf(at, big ? insn.emitUint16Be(v) : insn.emitUint16Le(v));
                 break;
             case DATA_BYTE_OR_WORD:
                 if (value.overflowUint8())
@@ -345,7 +341,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra)
                 goto emit_byte;
             default:  // DATA_BYTE, DATA_BYTE_NO_STRING
             emit_byte:
-                insn.emitByte(v);
+                error.setErrorIf(at, insn.emitByte(v));
                 break;
             }
             scan = p;
@@ -356,8 +352,8 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t extra)
     } while (scan.skipSpaces().expect(','));
 
     if (!endOfLine(scan.skipSpaces()))
-        return setError(scan, GARBAGE_AT_END);
-    return OK;
+        return setErrorIf(scan, GARBAGE_AT_END);
+    return setErrorIf(error);
 }
 
 }  // namespace libasm

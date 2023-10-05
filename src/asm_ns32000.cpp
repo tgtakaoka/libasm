@@ -83,7 +83,7 @@ struct Ns32000LetterParser final : LetterParser {
         if (c == '\\' && *scan) {
             c = *scan++;
         } else if (c == delim) {
-            error.setError(ILLEGAL_CONSTANT);
+            error.setErrorIf(ILLEGAL_CONSTANT);
         }
         return c;
     }
