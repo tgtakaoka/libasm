@@ -175,9 +175,9 @@ struct CpuBase {
     static void defaultReadName(
             INSN &insn, const ENTRY *entry, StrBuffer &out, const ENTRY_PAGE *page) {
         UNUSED(page);
-        auto save = out;
         insn.setFlags(entry->flags());
-        insn.clearNameBuffer().over(out).text_P(entry->name_P()).over(insn.nameBuffer());
+        auto save = out;
+        insn.nameBuffer().reset().over(out).text_P(entry->name_P()).over(insn.nameBuffer());
         save.over(out);
     }
 

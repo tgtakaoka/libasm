@@ -130,7 +130,7 @@ bool AsmFormatter::hasNextLine() const {
 }
 
 const char *AsmFormatter::getLine() {
-    resetOut();
+    _out.reset();
     if (isError() && !_errorLine) {
         // TODO: In file included from...
         _out.text(_sources.current()->name().c_str()).letter(':');
@@ -151,7 +151,7 @@ const char *AsmFormatter::getLine() {
             _nextLine = 0;
         formatLineNumber();
         formatAddress(startAddress() + _nextLine);
-        const auto pos = outLength();
+        const auto pos = _out.len();
         auto formatted = 0;
         if (!_line_value.isUndefined()) {
             _out.text(" =");
@@ -165,7 +165,7 @@ const char *AsmFormatter::getLine() {
         }
         _nextLine += formatted;
     }
-    return outBuffer();
+    return _out.str();
 }
 
 void AsmFormatter::formatLineNumber() {

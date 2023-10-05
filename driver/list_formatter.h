@@ -49,10 +49,6 @@ private:
     Radix _listRadix;
 
 protected:
-    char *outBuffer() { return _outBuffer; }
-    void resetOut() { _out.reset(_outBuffer, sizeof(_outBuffer)); }
-    int outLength() const { return _out.mark() - _outBuffer; }
-
     virtual uint32_t startAddress() const = 0;
     virtual int generatedSize() const = 0;
     virtual uint8_t getByte(int offset) const = 0;

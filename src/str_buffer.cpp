@@ -24,15 +24,24 @@
 
 namespace libasm {
 
-StrBuffer &StrBuffer::reset(char *buffer, size_t size) {
-    _out = buffer;
-    _end = buffer + size - 1;
-    _out[0] = 0;
+StrBuffer::StrBuffer(char *buffer, size_t size)
+    : ErrorReporter(), _str(buffer), _out(buffer), _end(buffer + size - 1) {
+    *_out = 0;
+}
+
+StrBuffer::StrBuffer(const StrBuffer &o)
+    : ErrorReporter(), _str(o._str), _out(o._out), _end(o._end) {
+    setError(o.getError());
+}
+
+StrBuffer &StrBuffer::reset() {
+    *(_out = _str) = 0;
     resetError();
     return *this;
 }
 
 StrBuffer &StrBuffer::over(StrBuffer &heir) const {
+    heir._str = _str;
     heir._out = _out;
     heir._end = _end;
     heir.setError(getError());
@@ -109,7 +118,7 @@ StrBuffer &StrBuffer::uint8(uint8_t num) {
         letter(num % 10 + '0');
         num /= 10;
     } while (num);
-      return reverse(start);
+    return reverse(start);
 }
 
 StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, ...) {

@@ -110,7 +110,7 @@ Error Disassembler::decode(
     if (setError(config().checkAddr(insn.address())))
         return getError();
     StrCaseBuffer out(operands, size, _uppercase);
-    insn.clearNameBuffer();
+    insn.nameBuffer().reset();
     decodeImpl(memory, insn, out);
     if (isOK())
         setError(out);
