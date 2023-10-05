@@ -28,8 +28,8 @@ void tear_down() {}
 void test_letter() {
     char buffer[9];
     StrBuffer out(buffer, sizeof(buffer));
-    LowercaseBuffer lower(out);
-    UppercaseBuffer upper(out);
+    StrCaseBuffer lower(out, false);
+    StrCaseBuffer upper(out, true);
 
     EQ("empty", "", buffer);
     EQ("ctor", sizeof(buffer) - 1, out.size());
@@ -61,8 +61,8 @@ void test_letter() {
 void test_text() {
     char buffer[10];
     StrBuffer out(buffer, sizeof(buffer));
-    LowercaseBuffer lower(out);
-    UppercaseBuffer upper(out);
+    StrCaseBuffer lower(out, false);
+    StrCaseBuffer upper(out, true);
 
     out.text("aB").over(lower).text("cD").over(upper).text("eF").over(out).text("gH");
     EQ("text alpha", "aBcdEFgH", buffer);
@@ -83,8 +83,8 @@ void test_text() {
 void test_text_P() {
     char buffer[10];
     StrBuffer out(buffer, sizeof(buffer));
-    LowercaseBuffer lower(out);
-    UppercaseBuffer upper(out);
+    StrCaseBuffer lower(out, false);
+    StrCaseBuffer upper(out, true);
 
     out.text_P(PSTR("aB"))
             .over(lower)
@@ -122,8 +122,8 @@ void test_scanner() {
 
     char buffer[10];
     StrBuffer out(buffer, sizeof(buffer));
-    LowercaseBuffer lower(out);
-    UppercaseBuffer upper(out);
+    StrCaseBuffer lower(out, false);
+    StrCaseBuffer upper(out, true);
 
     out.text(aB).over(lower).text(cD).over(upper).text(eF).over(out).text(gH);
     EQ("text alpha", "aBcdEFgH", buffer);
@@ -144,8 +144,8 @@ void test_scanner() {
 void test_rtext() {
     char buffer[10];
     StrBuffer out(buffer, sizeof(buffer));
-    LowercaseBuffer lower(out);
-    UppercaseBuffer upper(out);
+    StrCaseBuffer lower(out, false);
+    StrCaseBuffer upper(out, true);
 
     // rletter(char)
     {
@@ -271,8 +271,8 @@ void test_uint8() {
 void test_comma() {
     char buffer[8];
     StrBuffer out(buffer, sizeof(buffer));
-    LowercaseBuffer lower(out);
-    UppercaseBuffer upper(out);
+    StrCaseBuffer lower(out, false);
+    StrCaseBuffer upper(out, true);
 
     out.comma().over(lower).comma().over(upper).comma().over(out);
     EQ("comma", OK, out.getError());

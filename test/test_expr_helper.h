@@ -34,13 +34,13 @@ extern TestAsserter asserter;
 void val_assert(const char *file, int line, const char *expr, uint32_t expected,
         const ErrorAt &expected_error, size_t size, const ValueParser &);
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &);
+        const ValueFormatter &, bool uppercase = false);
 void bin_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &);
+        const ValueFormatter &, bool uppercase = false);
 void oct_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &);
+        const ValueFormatter &, bool uppercase = false);
 void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &, bool upperHex, bool relax);
+        const ValueFormatter &, bool uppercase = false, bool relax = false);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
 
@@ -77,12 +77,17 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define DEC(value, bits, expected) dec_assert(__FILE__, __LINE__, value, bits, expected, formatter)
 #define BIN(value, bits, expected) bin_assert(__FILE__, __LINE__, value, bits, expected, formatter)
 #define OCT(value, bits, expected) oct_assert(__FILE__, __LINE__, value, bits, expected, formatter)
-#define HEX(value, bits, expected) \
-    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, false, false)
+#define HEX(value, bits, expected) hex_assert(__FILE__, __LINE__, value, bits, expected, formatter)
+#define UDEC(value, bits, expected) \
+    dec_assert(__FILE__, __LINE__, value, bits, expected, formatter, true)
+#define UBIN(value, bits, expected) \
+    bin_assert(__FILE__, __LINE__, value, bits, expected, formatter, true)
+#define UOCT(value, bits, expected) \
+    oct_assert(__FILE__, __LINE__, value, bits, expected, formatter, true)
+#define UHEX(value, bits, expected) \
+    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, true)
 #define RHEX(value, bits, expected) \
     hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, false, true)
-#define UHEX(value, bits, expected) \
-    hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, true, false)
 #define URHEX(value, bits, expected) \
     hex_assert(__FILE__, __LINE__, value, bits, expected, formatter, true, true)
 

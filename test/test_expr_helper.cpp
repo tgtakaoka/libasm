@@ -54,42 +54,48 @@ void val_assert(const char *file, int line, const char *expr, uint32_t expected,
 }
 
 void dec_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &formatter) {
+        const ValueFormatter &formatter, bool uppercase) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
-    StrBuffer buf(actual, sizeof(actual));
+    StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     formatter.formatDec(buf, value, bitWidth);
     asserter.equals(file, line, msg, expected, actual);
 }
 
 void bin_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &formatter) {
+        const ValueFormatter &formatter, bool uppercase) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
-    StrBuffer buf(actual, sizeof(actual));
+    StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     formatter.formatBin(buf, value, bitWidth);
     asserter.equals(file, line, msg, expected, actual);
 }
 
 void oct_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &formatter) {
+        const ValueFormatter &formatter, bool uppercase) {
     char msg[80];
     sprintf(msg, "%d", value);
     char actual[80];
-    StrBuffer buf(actual, sizeof(actual));
+    StrCaseBuffer buf(actual, sizeof(actual), uppercase);
     formatter.formatOct(buf, value, bitWidth);
     asserter.equals(file, line, msg, expected, actual);
 }
 
 void hex_assert(const char *file, int line, uint32_t value, int8_t bitWidth, const char *expected,
-        const ValueFormatter &formatter, bool upperHex, bool relax) {
+        const ValueFormatter &formatter, bool uppercase, bool relax) {
     char msg[80];
     sprintf(msg, "%#x", value);
     char actual[80];
-    StrBuffer buf(actual, sizeof(actual));
-    formatter.formatHex(buf, value, bitWidth, upperHex, relax);
+    StrCaseBuffer buf(actual, sizeof(actual), uppercase);
+    auto abs = value;
+    ValueFormatter::absolute(abs, bitWidth);
+    if (relax && abs <= 32) {
+        formatter.formatDec(buf, value, bitWidth);
+    } else {
+        formatter.formatHex(buf, value, bitWidth);
+    }
     asserter.equals(file, line, msg, expected, actual);
 }
 

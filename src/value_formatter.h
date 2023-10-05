@@ -70,11 +70,15 @@ struct ValueFormatter final {
 
     /**
      * Convert |val| as |bits| hexadecimal integer.  Treat |val| as signed integer when |bits| is
-     * negative. Use uppercase letter to represent digit larger than 9 when |upperHex| is true.  Use
-     * base 10 and zero suppress when |relax| is true and |val| is less than 32 in absolute value.
+     * negative.
      */
-    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0, bool upperHex = false,
-            bool relax = false) const;
+    StrBuffer &formatHex(StrBuffer &out, uint32_t val, int8_t bits = 0) const;
+
+    /**
+     * Calculate absolute value of |val| as |bits| integer, and return true if negative.  Treat
+     * |val| as signed integer when |bits| is negative.
+     */
+    static bool absolute(uint32_t &val, int8_t bits);
 
     char locationSymbol() const { return _locationSymbol; }
     const /*PROGMEM*/ char *lineComment_P() const { return _lineComment_P; }
@@ -87,7 +91,7 @@ private:
     const char _locationSymbol;
     const /*PROGMEM*/ char *_lineComment_P;
 
-    uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits) const;
+    static uint32_t makePositive(StrBuffer &out, uint32_t val, int8_t bits);
 };
 
 }  // namespace libasm

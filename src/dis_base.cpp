@@ -109,13 +109,11 @@ Error Disassembler::decode(
     // This setError also reset error of Disassembler.
     if (setError(config().checkAddr(insn.address())))
         return getError();
-    UppercaseBuffer upper(operands, size);
-    LowercaseBuffer lower(operands, size);
-    StrBuffer *out = _uppercase ? upper.ptr() : lower.ptr();
+    StrCaseBuffer out(operands, size, _uppercase);
     insn.clearNameBuffer();
-    decodeImpl(memory, insn, *out);
+    decodeImpl(memory, insn, out);
     if (isOK())
-        setError(*out);
+        setError(out);
     return getError();
 }
 
@@ -134,7 +132,8 @@ StrBuffer &Disassembler::outDec(StrBuffer &out, uint32_t val, int8_t bits) const
     const char *label = lookup(val, bw);
     if (label)
         return out.rtext(label);
-    return formatter().formatDec(out, val, bits);
+    StrCaseBuffer caseOut(out, _upperHex);
+    return formatter().formatDec(caseOut, val, bits).over(out);
 }
 
 /**
@@ -147,9 +146,16 @@ StrBuffer &Disassembler::outHex(StrBuffer &out, uint32_t val, int8_t bits, bool 
     const char *label = lookup(val, bw);
     if (label)
         return out.rtext(label);
+    StrCaseBuffer caseOut(out, _upperHex);
     if (_listRadix == RADIX_8)
-        return formatter().formatOct(out, val, bits);
-    return formatter().formatHex(out, val, bits, _upperHex, relax);
+        return formatter().formatOct(caseOut, val, bits).over(out);
+    if (relax) {
+        auto abs = val;
+        ValueFormatter::absolute(abs, bits);
+        if (abs <= 32)
+            return formatter().formatDec(caseOut, val, bits).over(out);
+    }
+    return formatter().formatHex(caseOut, val, bits).over(out);
 }
 
 /**
@@ -163,9 +169,10 @@ StrBuffer &Disassembler::outAbsAddr(StrBuffer &out, uint32_t val, uint8_t addrWi
         return out.rtext(label);
     if (addrWidth == 0)
         addrWidth = uint8_t(config().addressWidth());
+    StrCaseBuffer caseOut(out, _upperHex);
     if (_listRadix == RADIX_8)
-        return formatter().formatOct(out, val, addrWidth);
-    return formatter().formatHex(out, val, addrWidth, _upperHex);
+        return formatter().formatOct(caseOut, val, addrWidth).over(out);
+    return formatter().formatHex(caseOut, val, addrWidth).over(out);
 }
 
 /**
@@ -190,11 +197,12 @@ StrBuffer &Disassembler::outRelAddr(
         out.letter('+');
         val = static_cast<uint32_t>(delta);
     }
+    StrCaseBuffer caseOut(out, _upperHex);
     if (deltaBits <= 14)
-        return formatter().formatDec(out, val, deltaBits);
+        return formatter().formatDec(caseOut, val, deltaBits).over(out);
     if (_listRadix == RADIX_8)
-        return formatter().formatOct(out, val, deltaBits);
-    return formatter().formatHex(out, val, deltaBits, _upperHex, true);
+        return formatter().formatOct(caseOut, val, deltaBits).over(out);
+    return outHex(caseOut, val, deltaBits, true).over(out);
 }
 
 uint32_t Disassembler::branchTarget(uint32_t base, int32_t delta) {
