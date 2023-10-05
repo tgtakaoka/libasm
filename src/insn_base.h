@@ -33,16 +33,17 @@ namespace libasm {
  * General instruction code interface for Assembler and Disassembler.
  */
 struct Insn final {
-    Insn(uint32_t addr) : _address(addr), _length(0), _buffer(_name, sizeof(_name)) {}
+    Insn(uint32_t addr) : _address(addr), _length(0) {}
+
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
     StrBuffer &nameBuffer() { return _buffer; }
-    StrBuffer &clearNameBuffer() { return _buffer.reset(_name, sizeof(_name)); }
     void reset(uint32_t addr) {
         _address = addr;
         _length = 0;
+        _buffer.reset();
     }
     uint32_t align(uint8_t step) {
         const uint8_t rem = _address % step;
@@ -142,10 +143,10 @@ struct Insn final {
 private:
     uint32_t _address;
     uint8_t _length;
-    StrBuffer _buffer;
 
     static constexpr size_t MAX_NAME = 11;
     char _name[MAX_NAME + 1];
+    StrBuffer _buffer{_name, sizeof(_name)};
 
     static constexpr size_t MAX_CODE = 64;
     uint8_t _bytes[MAX_CODE];
@@ -160,12 +161,10 @@ struct AsmInsnBase : ErrorReporter {
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
-    StrBuffer &clearNameBuffer() { return _insn.clearNameBuffer(); }
 
     void reset(uint32_t addr) {
         resetError();
         _insn.reset(addr);
-        clearNameBuffer();
     }
 
     /** Generate 8 bit |data| (Assembler). */
@@ -238,12 +237,10 @@ struct DisInsnBase : ErrorReporter {
     uint8_t length() const { return _insn.length(); }
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
-    StrBuffer &clearNameBuffer() { return _insn.clearNameBuffer(); }
 
     void reset(uint32_t addr) {
         resetError();
         _insn.reset(addr);
-        clearNameBuffer();
     }
 
     /** Read 8 bit data. */

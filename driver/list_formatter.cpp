@@ -152,7 +152,7 @@ int ListFormatter::formatBytes(int base) {
 }
 
 void ListFormatter::formatTab(int tabPosition, int delta) {
-    auto pos = outLength();
+    auto pos = _out.len();
     while (tabPosition < pos + 1)
         tabPosition += delta;
     outSpaces(tabPosition - pos);

@@ -60,7 +60,7 @@ Error DisTms9900::checkPostWord(DisInsn &insn, StrBuffer &out) {
 
 Error DisTms9900::decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out) {
     auto save = out;
-    insn.clearNameBuffer().over(out).text_P(TEXT_MID).over(insn.nameBuffer());
+    insn.nameBuffer().reset().over(out).text_P(TEXT_MID).over(insn.nameBuffer());
     save.over(out);
     return setError(UNKNOWN_INSTRUCTION);
 }

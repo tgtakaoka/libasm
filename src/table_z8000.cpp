@@ -650,7 +650,6 @@ Error TableZ8000::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &o
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry) {
         entry++;
-        insn.clearNameBuffer();
         Cpu::defaultReadName(insn, entry, out, nullptr);
     }
     return insn.getError();

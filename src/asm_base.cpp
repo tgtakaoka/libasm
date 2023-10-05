@@ -71,7 +71,7 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     if (_parser.readInstruction(scan, symbol) != OK)
         return setError(scan, UNKNOWN_INSTRUCTION);
 
-    insn.clearNameBuffer().text(symbol);
+    insn.nameBuffer().reset().text(symbol);
     auto error = processPseudo(scan, insn);
     if (error != UNKNOWN_DIRECTIVE)
         return setError(error);

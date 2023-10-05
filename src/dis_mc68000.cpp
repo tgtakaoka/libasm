@@ -396,7 +396,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
     const auto suffix = sizeSuffix(oSize);
     if (suffix) {
-        StrBuffer save(out);
+        auto save = out;
         insn.nameBuffer().over(out);
         out.letter('.').letter(suffix).over(insn.nameBuffer());
         save.over(out);

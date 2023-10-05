@@ -26,14 +26,27 @@
 namespace libasm {
 
 struct StrBuffer : ErrorReporter {
-    StrBuffer(char *buffer, size_t size) : ErrorReporter() { reset(buffer, size); }
-    StrBuffer(const StrBuffer &o) : _out(o._out), _end(o._end) { setError(o.getError()); }
+    StrBuffer(char *buffer, size_t size);
+    StrBuffer(const StrBuffer &o);
 
-    size_t size() const { return _end - _out; }
+    /** Return the head of buffer. */
+    const char *str() const { return _str; }
+    operator const char *() const { return str(); }
+
+    /** Return character length. */
+    int len() const { return static_cast<int>(_out - _str); }
+
+    /** Return remaining length. */
+    size_t capacity() const { return _end - _out; }
+
+    /** Return whole length of buffer. */
+    size_t size() const { return _end - _str; }
+
+    /** Return the current output position */
     char *mark() const { return _out; }
 
-    /** Reset output buffer to |buffer|. */
-    StrBuffer &reset(char *buffer, size_t size);
+    /** Reset buffer to . */
+    StrBuffer &reset();
 
     /** Hand over output buffer to |heir| and return it. */
     StrBuffer &over(StrBuffer &heir) const;
@@ -67,6 +80,7 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &reverse(char *start);
 
 private:
+    char *_str;
     char *_out;
     const char *_end;
 };

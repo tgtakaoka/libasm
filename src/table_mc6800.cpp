@@ -679,7 +679,6 @@ Error TableMc6800::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &
     entry += 1;
     if (entry->opCode() != insn.opCode())
         return insn.setError(INTERNAL_ERROR);
-    insn.clearNameBuffer();
     Cpu::defaultReadName(insn, entry, out, nullptr);
     return OK;
 }
