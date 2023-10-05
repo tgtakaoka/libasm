@@ -59,7 +59,7 @@ Error DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) {
 
     DisInsn ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
-    ixBit.clearNameBuffer();
+    ixBit.nameBuffer().reset();
     if (TABLE.searchOpCode(cpuType(), ixBit, out))
         return setError(ixBit);
 

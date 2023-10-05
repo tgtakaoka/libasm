@@ -59,9 +59,9 @@ Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {
 
 Error DisFormatter::setCpu(const char *cpu) {
     reset();
-    _insn.reset(_insn.address());
     {
-        StrCaseBuffer out{_insn.clearNameBuffer(), _uppercase};
+        _insn.reset(_insn.address());
+        StrCaseBuffer out(_insn.nameBuffer(), _uppercase);
         out.text_P(PSTR("CPU")).over(_insn.nameBuffer());
     }
     {
@@ -76,9 +76,9 @@ Error DisFormatter::setOrigin(uint32_t origin) {
     const auto err = config().checkAddr(origin);
     if (err)
         return err;
-    _insn.reset(origin);
     {
-        StrCaseBuffer out{_insn.clearNameBuffer(), _uppercase};
+        _insn.reset(origin);
+        StrCaseBuffer out(_insn.nameBuffer(), _uppercase);
         out.text_P(PSTR("ORG")).over(_insn.nameBuffer());
     }
     {
@@ -97,7 +97,7 @@ static int max(int a, int b) {
 }
 
 const char *DisFormatter::getContent() {
-    resetOut();
+    _out.reset();
     if (isError()) {
         if (!_errorContent) {
             _errorContent = true;
@@ -112,7 +112,7 @@ const char *DisFormatter::getContent() {
         }
     } else {
         _out.text("      ");
-        const auto pos = outLength();
+        const auto pos = _out.len();
         _out.text(_insn.name());
         if (*_operands) {
             const auto nameWidth = max(config().nameMax(), min_nameWidth) + 1;
@@ -121,7 +121,7 @@ const char *DisFormatter::getContent() {
         }
         _nextContent = generatedSize();
     }
-    return outBuffer();
+    return _out.str();
 }
 
 bool DisFormatter::hasNextLine() const {
@@ -129,7 +129,7 @@ bool DisFormatter::hasNextLine() const {
 }
 
 const char *DisFormatter::getLine() {
-    resetOut();
+    _out.reset();
     if (isError() && !_errorLine) {
         _errorLine = true;
         _out.text(_input_name).text(": ");
@@ -140,12 +140,12 @@ const char *DisFormatter::getLine() {
         if (_nextLine < 0)
             _nextLine = 0;
         formatAddress(startAddress() + _nextLine);
-        auto pos = outLength();
+        auto pos = _out.len();
         const auto formatted = formatBytes(_nextLine);
         if (_nextLine == 0 && *_insn.name()) {
             formatTab(pos + bytesColumnWidth() + 1);
             _out.text("        ");
-            pos = outLength();
+            pos = _out.len();
             _out.text(_insn.name());
             if (*_operands) {
                 const auto nameWidth = max(config().nameMax(), min_nameWidth) + 1;
@@ -155,7 +155,7 @@ const char *DisFormatter::getLine() {
         }
         _nextLine += formatted;
     }
-    return outBuffer();
+    return _out.str();
 }
 
 }  // namespace driver

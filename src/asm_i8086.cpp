@@ -104,12 +104,12 @@ Error AsmI8086::setOptimizeSegment(bool enable) {
 }
 
 Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
-    Insn _insn(0);
-    AsmInsn insn(_insn);
     auto p = scan;
     StrScanner opr;
     if (parser().readSymbol(p, opr) != OK)
         return UNKNOWN_INSTRUCTION;
+    Insn _insn(0);
+    AsmInsn insn(_insn);
     insn.nameBuffer().text(opr);
     insn.setAddrMode(M_NONE, M_NONE, M_NONE);
     if (TABLE.searchName(cpuType(), insn))
