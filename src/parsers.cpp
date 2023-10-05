@@ -258,7 +258,7 @@ Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
         ErrorAt error;
         letter = readLetter(scan, error);
         if (error.isOK())
-            return scan.expect('\'') ? OK : error.setError(scan, MISSING_CLOSING_QUOTE);
+            return scan.expect('\'') ? OK : error.setErrorIf(scan, MISSING_CLOSING_QUOTE);
         return error.getError();
     }
     return NOT_AN_EXPECTED;
@@ -267,14 +267,14 @@ Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
 char LetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) {
     const auto c = *scan;
     if (c == 0) {
-        error.setError(ILLEGAL_CONSTANT);
+        error.setErrorIf(ILLEGAL_CONSTANT);
         return c;
     }
     if (c == delim) {
         if (scan[1] == delim) {
             scan += 2;  // successive delimiters
         } else {
-            return error.setError(
+            return error.setErrorIf(
                     scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
         }
     } else {
@@ -297,7 +297,7 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
             }
             scan = p;
             if (ConfigBase::overflowUint8(n))
-                error.setError(OVERFLOW_RANGE);
+                error.setErrorIf(OVERFLOW_RANGE);
             return n;
         }
         if (isoctal(*p)) {
@@ -309,7 +309,7 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
             }
             scan = p;
             if (ConfigBase::overflowUint8(n))
-                error.setError(scan, OVERFLOW_RANGE);
+                error.setErrorIf(scan, OVERFLOW_RANGE);
             return n;
         }
         c = *p++;
@@ -332,14 +332,14 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
             c = 0x0d;
             break;
         default:
-            error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
+            error.setErrorIf(scan, UNKNOWN_ESCAPE_SEQUENCE);
         }
         scan = p;
         return c;
     }
     scan = p;
     if (c == delim)
-        error.setError(ILLEGAL_CONSTANT);
+        error.setErrorIf(ILLEGAL_CONSTANT);
     return c;
 }
 
@@ -372,11 +372,11 @@ char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
                 c = '\'';
                 break;
             default:
-                error.setError(scan, UNKNOWN_ESCAPE_SEQUENCE);
+                error.setErrorIf(scan, UNKNOWN_ESCAPE_SEQUENCE);
             }
         }
     } else if (c == '\'') {
-        error.setError(MISSING_CLOSING_QUOTE);
+        error.setErrorIf(MISSING_CLOSING_QUOTE);
     }
     scan = p;
     return c;
@@ -394,7 +394,7 @@ Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
 
 char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
     if (*scan == 0)
-        error.setError(ILLEGAL_CONSTANT);
+        error.setErrorIf(ILLEGAL_CONSTANT);
     return *scan++;
 }
 
@@ -445,7 +445,7 @@ Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
     ErrorAt error;
     if (prefix == '#') {
         if (*scan == 0)
-            return error.setError(ILLEGAL_CONSTANT);
+            return error.setErrorIf(ILLEGAL_CONSTANT);
         letter = *scan++;
     } else {
         letter = readLetter(scan, error);
