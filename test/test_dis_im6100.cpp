@@ -24,6 +24,10 @@ using namespace libasm::test;
 DisIm6100 dis6100;
 Disassembler &disassembler(dis6100);
 
+static bool hd6120() {
+    return strcmp_P("6120", disassembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     disassembler.reset();
     disassembler.setOption("ignore-literal", "on");
@@ -38,38 +42,74 @@ void test_cpu() {
     EQUALS("cpu 6100", true,   disassembler.setCpu("6100"));
     EQUALS_P("cpu 6100", "6100", disassembler.cpu_P());
 
+    EQUALS("cpu 6120", true,   disassembler.setCpu("6120"));
+    EQUALS_P("cpu 6120", "6120", disassembler.cpu_P());
+
     EQUALS("cpu IM6100", true,   disassembler.setCpu("IM6100"));
     EQUALS_P("cpu IM6100", "6100", disassembler.cpu_P());
+
+    EQUALS("cpu HD6120", true,   disassembler.setCpu("HD6120"));
+    EQUALS_P("cpu HD6120", "6120", disassembler.cpu_P());
 }
 
 void test_memory_reference() {
     constexpr uint16_t IA = 0400;
-    ATEST(04000, AND, "0022",   00000|0022);
-    ATEST(04000, AND, "I 0043", 00000|0043|IA);
-    ATEST(04000, TAD, "0064",   01000|0064);
-    ATEST(04000, TAD, "I 0105", 01000|0105|IA);
-    ATEST(04000, ISZ, "0170",   02000|0170);
-    ATEST(04000, ISZ, "I 0147", 02000|0147|IA);
-    ATEST(04000, DCA, "0170",   03000|0170);
-    ATEST(04000, DCA, "I 0011", 03000|0011|IA);
-    ATEST(04000, JMS, "0032",   04000|0032);
-    ATEST(04000, JMS, "I 0053", 04000|0053|IA);
-    ATEST(04000, JMP, "0074",   05000|0074);
-    ATEST(04000, JMP, "I 0115", 05000|0115|IA);
+    if (hd6120()) {
+        ATEST(004000, AND, "00022",   00000|0022);
+        ATEST(004000, AND, "I 00043", 00000|0043|IA);
+        ATEST(004000, TAD, "00064",   01000|0064);
+        ATEST(004000, TAD, "I 00105", 01000|0105|IA);
+        ATEST(004000, ISZ, "00170",   02000|0170);
+        ATEST(004000, ISZ, "I 00147", 02000|0147|IA);
+        ATEST(004000, DCA, "00170",   03000|0170);
+        ATEST(004000, DCA, "I 00011", 03000|0011|IA);
+        ATEST(004000, JMS, "00032",   04000|0032);
+        ATEST(004000, JMS, "I 00053", 04000|0053|IA);
+        ATEST(004000, JMP, "00074",   05000|0074);
+        ATEST(004000, JMP, "I 00115", 05000|0115|IA);
+    } else {
+        ATEST(04000, AND, "0022",   00000|0022);
+        ATEST(04000, AND, "I 0043", 00000|0043|IA);
+        ATEST(04000, TAD, "0064",   01000|0064);
+        ATEST(04000, TAD, "I 0105", 01000|0105|IA);
+        ATEST(04000, ISZ, "0170",   02000|0170);
+        ATEST(04000, ISZ, "I 0147", 02000|0147|IA);
+        ATEST(04000, DCA, "0170",   03000|0170);
+        ATEST(04000, DCA, "I 0011", 03000|0011|IA);
+        ATEST(04000, JMS, "0032",   04000|0032);
+        ATEST(04000, JMS, "I 0053", 04000|0053|IA);
+        ATEST(04000, JMP, "0074",   05000|0074);
+        ATEST(04000, JMP, "I 0115", 05000|0115|IA);
+    }
 
     constexpr uint16_t MP = 0200;
-    ATEST(04000, AND, "4022",   00000|0022|MP);
-    ATEST(04000, AND, "I 4043", 00000|0043|MP|IA);
-    ATEST(04000, TAD, "4064",   01000|0064|MP);
-    ATEST(04000, TAD, "I 4105", 01000|0105|MP|IA);
-    ATEST(04000, ISZ, "4126",   02000|0126|MP);
-    ATEST(04000, ISZ, "I 4147", 02000|0147|MP|IA);
-    ATEST(04000, DCA, "4170",   03000|0170|MP);
-    ATEST(04000, DCA, "I 4011", 03000|0011|MP|IA);
-    ATEST(04000, JMS, "4032",   04000|0032|MP);
-    ATEST(04000, JMS, "I 4053", 04000|0053|MP|IA);
-    ATEST(04000, JMP, "4074",   05000|0074|MP);
-    ATEST(04000, JMP, "I 4115", 05000|0115|MP|IA);
+    if (hd6120()) {
+        ATEST(074000, AND, "74022",   00000|0022|MP);
+        ATEST(074000, AND, "I 74043", 00000|0043|MP|IA);
+        ATEST(074000, TAD, "74064",   01000|0064|MP);
+        ATEST(074000, TAD, "I 74105", 01000|0105|MP|IA);
+        ATEST(074000, ISZ, "74126",   02000|0126|MP);
+        ATEST(074000, ISZ, "I 74147", 02000|0147|MP|IA);
+        ATEST(074000, DCA, "74170",   03000|0170|MP);
+        ATEST(074000, DCA, "I 74011", 03000|0011|MP|IA);
+        ATEST(074000, JMS, "74032",   04000|0032|MP);
+        ATEST(074000, JMS, "I 74053", 04000|0053|MP|IA);
+        ATEST(074000, JMP, "74074",   05000|0074|MP);
+        ATEST(074000, JMP, "I 74115", 05000|0115|MP|IA);
+    } else {
+        ATEST(04000, AND, "4022",   00000|0022|MP);
+        ATEST(04000, AND, "I 4043", 00000|0043|MP|IA);
+        ATEST(04000, TAD, "4064",   01000|0064|MP);
+        ATEST(04000, TAD, "I 4105", 01000|0105|MP|IA);
+        ATEST(04000, ISZ, "4126",   02000|0126|MP);
+        ATEST(04000, ISZ, "I 4147", 02000|0147|MP|IA);
+        ATEST(04000, DCA, "4170",   03000|0170|MP);
+        ATEST(04000, DCA, "I 4011", 03000|0011|MP|IA);
+        ATEST(04000, JMS, "4032",   04000|0032|MP);
+        ATEST(04000, JMS, "I 4053", 04000|0053|MP|IA);
+        ATEST(04000, JMP, "4074",   05000|0074|MP);
+        ATEST(04000, JMP, "I 4115", 05000|0115|MP|IA);
+    }
 
     symtab.intern(00017, "auto017");
     symtab.intern(00020, "zero020");
@@ -95,8 +135,13 @@ void test_group1() {
     TEST(RAR, "IAC",         07011);
     TEST(RTR, "",            07012);
     TEST(RTR, "IAC",         07013);
-    ERUI(___, "",            07014);
-    ERII(___, "",            07015);
+    if (hd6120()) {
+        TEST(R3L, "",            07014);
+        TEST(R3L, "IAC",         07015);
+    } else {
+        ERUI(___, "",            07014);
+        ERII(___, "",            07015);
+    }
     ERUI(___, "",            07016);
     ERII(___, "",            07017);
     TEST(CML, "",            07020);
@@ -111,8 +156,13 @@ void test_group1() {
     TEST(CML, "RAR IAC",     07031);
     TEST(CML, "RTR",         07032);
     TEST(CML, "RTR IAC",     07033);
-    ERII(___, "",            07034);
-    ERII(___, "",            07035);
+    if (hd6120()) {
+        TEST(CML, "R3L",         07034);
+        TEST(CML, "R3L IAC",     07035);
+    } else {
+        ERII(___, "",            07034);
+        ERII(___, "",            07035);
+    }
     ERII(___, "",            07036);
     ERII(___, "",            07037);
     TEST(CMA, "",            07040);
@@ -127,8 +177,13 @@ void test_group1() {
     TEST(CIA, "RAR",         07051);
     TEST(CMA, "RTR",         07052);
     TEST(CIA, "RTR",         07053);
-    ERII(___, "",            07054);
-    ERII(___, "",            07055);       
+    if (hd6120()) {
+        TEST(CMA, "R3L",         07054);
+        TEST(CIA, "R3L",         07055);
+    } else {
+        ERII(___, "",            07054);
+        ERII(___, "",            07055);
+    }
     ERII(___, "",            07056);
     ERII(___, "",            07057);
     TEST(CMA, "CML",         07060);
@@ -143,8 +198,13 @@ void test_group1() {
     TEST(CIA, "CML RAR",     07071);
     TEST(CMA, "CML RTR",     07072);
     TEST(CIA, "CML RTR",     07073);
-    ERII(___, "",            07074);
-    ERII(___, "",            07075);
+    if (hd6120()) {
+        TEST(CMA, "CML R3L",     07074);
+        TEST(CIA, "CML R3L",     07075);
+    } else {
+        ERII(___, "",            07074);
+        ERII(___, "",            07075);
+    }
     ERII(___, "",            07076);
     ERII(___, "",            07077);
     TEST(CLL, "",            07100);
@@ -159,8 +219,13 @@ void test_group1() {
     TEST(CLL, "RAR IAC",     07111);
     TEST(CLL, "RTR",         07112);
     TEST(CLL, "RTR IAC",     07113);
-    ERII(___, "",            07114);
-    ERII(___, "",            07115);
+    if (hd6120()) {
+        TEST(CLL, "R3L",         07114);
+        TEST(CLL, "R3L IAC",     07115);
+    } else {
+        ERII(___, "",            07114);
+        ERII(___, "",            07115);
+    }
     ERII(___, "",            07116);
     ERII(___, "",            07117);
     TEST(STL, "",            07120);
@@ -175,8 +240,13 @@ void test_group1() {
     TEST(STL, "RAR IAC",     07131);
     TEST(STL, "RTR",         07132);
     TEST(STL, "RTR IAC",     07133);
-    ERII(___, "",            07134);
-    ERII(___, "",            07135);
+    if (hd6120()) {
+        TEST(STL, "R3L",         07134);
+        TEST(STL, "R3L IAC",     07135);
+    } else {
+        ERII(___, "",            07134);
+        ERII(___, "",            07135);
+    }
     ERII(___, "",            07136);
     ERII(___, "",            07137);
     TEST(CLL, "CMA",         07140);
@@ -191,8 +261,13 @@ void test_group1() {
     TEST(CLL, "CIA RAR",     07151);
     TEST(CLL, "CMA RTR",     07152);
     TEST(CLL, "CIA RTR",     07153);
-    ERII(___, "",            07154);
-    ERII(___, "",            07155);
+    if (hd6120()) {
+        TEST(CLL, "CMA R3L",     07154);
+        TEST(CLL, "CIA R3L",     07155);
+    } else {
+        ERII(___, "",            07154);
+        ERII(___, "",            07155);
+    }
     ERII(___, "",            07156);
     ERII(___, "",            07157);
     TEST(STL, "CMA",         07160);
@@ -207,8 +282,13 @@ void test_group1() {
     TEST(STL, "CIA RAR",     07171);
     TEST(STL, "CMA RTR",     07172);
     TEST(STL, "CIA RTR",     07173);
-    ERII(___, "",            07174);
-    ERII(___, "",            07175);
+    if (hd6120()) {
+        TEST(STL, "CMA R3L",     07174);
+        TEST(STL, "CIA R3L",     07175);
+    } else {
+        ERII(___, "",            07174);
+        ERII(___, "",            07175);
+    }
     ERII(___, "",            07176);
     ERII(___, "",            07177);
     TEST(CLA, "",            07200);
@@ -223,8 +303,13 @@ void test_group1() {
     TEST(CLA, "RAR IAC",     07211);
     TEST(CLA, "RTR",         07212);
     TEST(CLA, "RTR IAC",     07213);
-    ERII(___, "",            07214);
-    ERII(___, "",            07215);
+    if (hd6120()) {
+        TEST(CLA, "R3L",         07214);
+        TEST(CLA, "R3L IAC",     07215);
+    } else {
+        ERII(___, "",            07214);
+        ERII(___, "",            07215);
+    }
     ERII(___, "",            07216);
     ERII(___, "",            07217);
     TEST(CLA, "CML",         07220);
@@ -239,8 +324,13 @@ void test_group1() {
     TEST(CLA, "CML RAR IAC", 07231);
     TEST(CLA, "CML RTR",     07232);
     TEST(CLA, "CML RTR IAC", 07233);
-    ERII(___, "",            07234);
-    ERII(___, "",            07235);
+    if (hd6120()) {
+        TEST(CLA, "CML R3L",     07234);
+        TEST(CLA, "CML R3L IAC", 07235);
+    } else {
+        ERII(___, "",            07234);
+        ERII(___, "",            07235);
+    }
     ERII(___, "",            07236);
     ERII(___, "",            07237);
     TEST(STA, "",            07240);
@@ -255,8 +345,13 @@ void test_group1() {
     TEST(STA, "RAR IAC",     07251);
     TEST(STA, "RTR",         07252);
     TEST(STA, "RTR IAC",     07253);
-    ERII(___, "",            07254);
-    ERII(___, "",            07255);
+    if (hd6120()) {
+        TEST(STA, "R3L",         07254);
+        TEST(STA, "R3L IAC",     07255);
+    } else {
+        ERII(___, "",            07254);
+        ERII(___, "",            07255);
+    }
     ERII(___, "",            07256);
     ERII(___, "",            07257);
     TEST(STA, "CML",         07260);
@@ -271,8 +366,13 @@ void test_group1() {
     TEST(STA, "CML RAR IAC", 07271);
     TEST(STA, "CML RTR",     07272);
     TEST(STA, "CML RTR IAC", 07273);
-    ERII(___, "",            07274);
-    ERII(___, "",            07275);
+    if (hd6120()) {
+        TEST(STA, "CML R3L",     07274);
+        TEST(STA, "CML R3L IAC", 07275);
+    } else {
+        ERII(___, "",            07274);
+        ERII(___, "",            07275);
+    }
     ERII(___, "",            07276);
     ERII(___, "",            07277);
     TEST(CLA, "CLL",         07300);
@@ -287,8 +387,13 @@ void test_group1() {
     TEST(CLA, "CLL RAR IAC", 07311);
     TEST(CLA, "CLL RTR",     07312);
     TEST(CLA, "CLL RTR IAC", 07313);
-    ERII(___, "",            07314);
-    ERII(___, "",            07315);
+    if (hd6120()) {
+        TEST(CLA, "CLL R3L",     07314);
+        TEST(CLA, "CLL R3L IAC", 07315);
+    } else {
+        ERII(___, "",            07314);
+        ERII(___, "",            07315);
+    }
     ERII(___, "",            07316);
     ERII(___, "",            07317);
     TEST(STL, "CLA",         07320);
@@ -303,8 +408,13 @@ void test_group1() {
     TEST(STL, "CLA RAR IAC", 07331);
     TEST(STL, "CLA RTR",     07332);
     TEST(STL, "CLA RTR IAC", 07333);
-    ERII(___, "",            07334);
-    ERII(___, "",            07335);
+    if (hd6120()) {
+        TEST(STL, "CLA R3L",     07334);
+        TEST(STL, "CLA R3L IAC", 07335);
+    } else {
+        ERII(___, "",            07334);
+        ERII(___, "",            07335);
+    }
     ERII(___, "",            07336);
     ERII(___, "",            07337);
     TEST(STA, "CLL",         07340);
@@ -319,8 +429,13 @@ void test_group1() {
     TEST(STA, "CLL RAR IAC", 07351);
     TEST(STA, "CLL RTR",     07352);
     TEST(STA, "CLL RTR IAC", 07353);
-    ERII(___, "",            07354);
-    ERII(___, "",            07355);
+    if (hd6120()) {
+        TEST(STA, "CLL R3L",     07354);
+        TEST(STA, "CLL R3L IAC", 07355);
+    } else {
+        ERII(___, "",            07354);
+        ERII(___, "",            07355);
+    }
     ERII(___, "",            07356);
     ERII(___, "",            07357);
     TEST(STL, "STA",         07360);
@@ -335,8 +450,13 @@ void test_group1() {
     TEST(STL, "STA RAR IAC", 07371);
     TEST(STL, "STA RTR",     07372);
     TEST(STL, "STA RTR IAC", 07373);
-    ERII(___, "",            07374);
-    ERII(___, "",            07375);
+    if (hd6120()) {
+        TEST(STL, "STA R3L",     07374);
+        TEST(STL, "STA R3L IAC", 07375);
+    } else {
+        ERII(___, "",            07374);
+        ERII(___, "",            07375);
+    }
     ERII(___, "",            07376);
     ERII(___, "",            07377);
 }
@@ -486,18 +606,58 @@ void test_group3() {
     TEST(CLA, "SWP", 07721);
 }
 
+void test_stack_operation() {
+    TEST(PPC1, "", 06205);
+    TEST(PAC1, "", 06215);
+    TEST(RTN1, "", 06225);
+    TEST(POP1, "", 06235);
+    TEST(RSP1, "", 06207);
+    TEST(LSP1, "", 06217);
+
+    TEST(PPC2, "", 06245);
+    TEST(PAC2, "", 06255);
+    TEST(RTN2, "", 06265);
+    TEST(POP2, "", 06275);
+    TEST(RSP2, "", 06227);
+    TEST(LSP2, "", 06237);
+}
+
 void test_internal_control() {
     TEST(ION, "", 06001);
     TEST(IOF, "", 06002);
     TEST(RTF, "", 06005);
     TEST(SGT, "", 06006);
     TEST(CAF, "", 06007);
+    if (hd6120()) {
+        TEST(WSR, "", 06246);
+        TEST(GCF, "", 06256);
+    }
 }
 
 void test_main_memory() {
     TEST(SKON, "", 06000);
     TEST(SRQ,  "", 06003);
     TEST(GTF,  "", 06004);
+    if (hd6120()) {
+        TEST(PR0, "", 06206);
+        TEST(PR1, "", 06216);
+        TEST(PR2, "", 06226);
+        TEST(PR3, "", 06236);
+    }
+}
+
+void test_memory_extension() {
+    TEST(CDF,     "00", 06201);
+    TEST(CDF,     "70", 06271);
+    TEST(CIF,     "00", 06202);
+    TEST(CIF,     "70", 06272);
+    TEST(CDF, "CIF 00", 06203);
+    TEST(CDF, "CIF 70", 06273);
+
+    TEST(RDF, "", 06214);
+    TEST(RIF, "", 06224);
+    TEST(RIB, "", 06234);
+    TEST(RMF, "", 06244);
 }
 
 void test_io_transfer() {
@@ -518,68 +678,100 @@ void test_literal() {
     disassembler.setOption("ignore-literal", "off");
 
     // group 1
-    LITR(7014, 07014);
-    LITR(7015, 07015);
+    if (!hd6120()) {
+        LITR(7014, 07014);
+        LITR(7015, 07015);
+    }
     LITR(7016, 07016);
     LITR(7017, 07017);
-    LITR(7034, 07034);
-    LITR(7035, 07035);
+    if (!hd6120()) {
+        LITR(7034, 07034);
+        LITR(7035, 07035);
+    }
     LITR(7036, 07036);
     LITR(7037, 07037);
-    LITR(7054, 07054);
-    LITR(7055, 07055);
+    if (!hd6120()) {
+        LITR(7054, 07054);
+        LITR(7055, 07055);
+    }
     LITR(7056, 07056);
     LITR(7057, 07057);
-    LITR(7074, 07074);
-    LITR(7075, 07075);
+    if (!hd6120()) {
+        LITR(7074, 07074);
+        LITR(7075, 07075);
+    }
     LITR(7076, 07076);
     LITR(7077, 07077);
-    LITR(7114, 07114);
-    LITR(7115, 07115);
+    if (!hd6120()) {
+        LITR(7114, 07114);
+        LITR(7115, 07115);
+    }
     LITR(7116, 07116);
     LITR(7117, 07117);
-    LITR(7134, 07134);
-    LITR(7135, 07135);
+    if (!hd6120()) {
+        LITR(7134, 07134);
+        LITR(7135, 07135);
+    }
     LITR(7136, 07136);
     LITR(7137, 07137);
-    LITR(7154, 07154);
-    LITR(7155, 07155);
+    if (!hd6120()) {
+        LITR(7154, 07154);
+        LITR(7155, 07155);
+    }
     LITR(7156, 07156);
     LITR(7157, 07157);
-    LITR(7174, 07174);
-    LITR(7175, 07175);
+    if (!hd6120()) {
+        LITR(7174, 07174);
+        LITR(7175, 07175);
+    }
     LITR(7176, 07176);
     LITR(7177, 07177);
-    LITR(7214, 07214);
-    LITR(7215, 07215);
+    if (!hd6120()) {
+        LITR(7214, 07214);
+        LITR(7215, 07215);
+    }
     LITR(7216, 07216);
     LITR(7217, 07217);
-    LITR(7234, 07234);
-    LITR(7235, 07235);
+    if (!hd6120()) {
+        LITR(7234, 07234);
+        LITR(7235, 07235);
+    }
     LITR(7236, 07236);
     LITR(7237, 07237);
-    LITR(7254, 07254);
-    LITR(7255, 07255);
+    if (!hd6120()) {
+        LITR(7254, 07254);
+        LITR(7255, 07255);
+    }
     LITR(7256, 07256);
     LITR(7257, 07257);
-    LITR(7274, 07274);
-    LITR(7275, 07275);
+    if (!hd6120()) {
+        LITR(7274, 07274);
+        LITR(7275, 07275);
+    }
     LITR(7276, 07276);
     LITR(7277, 07277);
-    LITR(7314, 07314);
-    LITR(7315, 07315);
+    if (!hd6120()) {
+        LITR(7314, 07314);
+        LITR(7315, 07315);
+    }
     LITR(7316, 07316);
     LITR(7317, 07317);
-    LITR(7334, 07334);
-    LITR(7335, 07335);
+    if (!hd6120()) {
+        LITR(7334, 07334);
+        LITR(7335, 07335);
+    }
     LITR(7336, 07336);
     LITR(7337, 07337);
-    LITR(7354, 07354);
-    LITR(7355, 07355);
+    if (!hd6120()) {
+        LITR(7354, 07354);
+        LITR(7355, 07355);
+    }
     LITR(7356, 07356);
     LITR(7357, 07357);
-    LITR(7374, 07374);
-    LITR(7375, 07375);
+    if (!hd6120()) {
+        LITR(7374, 07374);
+        LITR(7375, 07375);
+    }
     LITR(7376, 07376);
     LITR(7377, 07377);
 
@@ -838,8 +1030,12 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_group1);
     RUN_TEST(test_group2);
     RUN_TEST(test_group3);
+    if (hd6120())
+        RUN_TEST(test_stack_operation);
     RUN_TEST(test_internal_control);
     RUN_TEST(test_main_memory);
+    if (hd6120())
+        RUN_TEST(test_memory_extension);
     RUN_TEST(test_io_transfer);
     RUN_TEST(test_literal);
     RUN_TEST(test_illegal);

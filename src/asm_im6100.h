@@ -32,6 +32,8 @@ struct AsmIm6100 final : Assembler, Config {
 private:
     Error parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn);
     Error parseIoTransferOperand(StrScanner &scan, AsmInsn &insn);
+    Error parseField(StrScanner &scan, AsmInsn &insn);
+    Error parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn);
     Error parseOperateOperand(StrScanner &scan, AsmInsn &insn);
 
     Error encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done);
@@ -39,6 +41,7 @@ private:
     Error setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra);
     Error defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra = 0);
+    Error defineField(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;

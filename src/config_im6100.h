@@ -24,11 +24,16 @@ namespace im6100 {
 
 enum CpuType : uint8_t {
     IM6100,
+    HD6120,
 };
 
 struct Config
     : ConfigImpl<CpuType, ADDRESS_12BIT, ADDRESS_WORD, OPCODE_12BIT, ENDIAN_BIG, 2, 4> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, IM6100) {}
+
+    AddressWidth addressWidth() const override {
+        return cpuType() == HD6120 ? ADDRESS_15BIT : ADDRESS_12BIT;
+    }
 };
 
 }  // namespace im6100

@@ -24,9 +24,13 @@ namespace text {
 namespace im6100 {
 // clang-format off
 
+extern const char TEXT_IM6100_LIST[] PROGMEM;
 extern const char TEXT_CPU_IM6100[] PROGMEM;
+extern const char TEXT_CPU_HD6120[] PROGMEM;
 extern const char TEXT_CPU_6100[]   PROGMEM;
+extern const char TEXT_CPU_6120[]   PROGMEM;
 
+// IM6100
 extern const char TEXT_ACL[]  PROGMEM;
 extern const char TEXT_AND[]  PROGMEM;
 extern const char TEXT_BSW[]  PROGMEM;
@@ -75,6 +79,33 @@ extern const char TEXT_SWP[]  PROGMEM;
 extern const char TEXT_SZA[]  PROGMEM;
 extern const char TEXT_SZL[]  PROGMEM;
 extern const char TEXT_TAD[]  PROGMEM;
+
+// HD6120
+extern const char TEXT_CDF[]  PROGMEM;
+extern const char TEXT_CIF[]  PROGMEM;
+extern const char TEXT_GCF[]  PROGMEM;
+extern const char TEXT_LSP1[] PROGMEM;
+extern const char TEXT_LSP2[] PROGMEM;
+extern const char TEXT_PAC1[] PROGMEM;
+extern const char TEXT_PAC2[] PROGMEM;
+extern const char TEXT_POP1[] PROGMEM;
+extern const char TEXT_POP2[] PROGMEM;
+extern const char TEXT_PPC1[] PROGMEM;
+extern const char TEXT_PPC2[] PROGMEM;
+extern const char TEXT_PR0[]  PROGMEM;
+extern const char TEXT_PR1[]  PROGMEM;
+extern const char TEXT_PR2[]  PROGMEM;
+extern const char TEXT_PR3[]  PROGMEM;
+extern const char TEXT_R3L[]  PROGMEM;
+extern const char TEXT_RDF[]  PROGMEM;
+extern const char TEXT_RIB[]  PROGMEM;
+extern const char TEXT_RIF[]  PROGMEM;
+extern const char TEXT_RMF[]  PROGMEM;
+extern const char TEXT_RSP1[] PROGMEM;
+extern const char TEXT_RSP2[] PROGMEM;
+extern const char TEXT_RTN1[] PROGMEM;
+extern const char TEXT_RTN2[] PROGMEM;
+extern const char TEXT_WSR[]  PROGMEM;
 
 // clang-format om
 } // namespace im6100

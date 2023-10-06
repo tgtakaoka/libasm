@@ -21,9 +21,13 @@ namespace text {
 namespace im6100 {
 // clang-format off
 
+constexpr char TEXT_IM6100_LIST[] PROGMEM = "IM6100, HD6120";
 constexpr char TEXT_CPU_IM6100[] PROGMEM = "IM6100";
+constexpr char TEXT_CPU_HD6120[] PROGMEM = "HD6120";
 constexpr char TEXT_CPU_6100[]   PROGMEM = "6100";
+constexpr char TEXT_CPU_6120[]   PROGMEM = "6120";
 
+// IM6100
 constexpr char TEXT_ACL[]  PROGMEM = "ACL";
 constexpr char TEXT_AND[]  PROGMEM = "AND";
 constexpr char TEXT_BSW[]  PROGMEM = "BSW";
@@ -72,6 +76,33 @@ constexpr char TEXT_SWP[]  PROGMEM = "SWP";
 constexpr char TEXT_SZA[]  PROGMEM = "SZA";
 constexpr char TEXT_SZL[]  PROGMEM = "SZL";
 constexpr char TEXT_TAD[]  PROGMEM = "TAD";
+
+// HD6120
+constexpr char TEXT_CDF[]  PROGMEM = "CDF";
+constexpr char TEXT_CIF[]  PROGMEM = "CIF";
+constexpr char TEXT_GCF[]  PROGMEM = "GCF";
+constexpr char TEXT_LSP1[] PROGMEM = "LSP1";
+constexpr char TEXT_LSP2[] PROGMEM = "LSP2";
+constexpr char TEXT_PAC1[] PROGMEM = "PAC1";
+constexpr char TEXT_PAC2[] PROGMEM = "PAC2";
+constexpr char TEXT_POP1[] PROGMEM = "POP1";
+constexpr char TEXT_POP2[] PROGMEM = "POP2";
+constexpr char TEXT_PPC1[] PROGMEM = "PPC1";
+constexpr char TEXT_PPC2[] PROGMEM = "PPC2";
+constexpr char TEXT_PR0[]  PROGMEM = "PR0";
+constexpr char TEXT_PR1[]  PROGMEM = "PR1";
+constexpr char TEXT_PR2[]  PROGMEM = "PR2";
+constexpr char TEXT_PR3[]  PROGMEM = "PR3";
+constexpr char TEXT_R3L[]  PROGMEM = "R3L";
+constexpr char TEXT_RDF[]  PROGMEM = "RDF";
+constexpr char TEXT_RIB[]  PROGMEM = "RIB";
+constexpr char TEXT_RIF[]  PROGMEM = "RIF";
+constexpr char TEXT_RMF[]  PROGMEM = "RMF";
+constexpr char TEXT_RSP1[] PROGMEM = "RSP1";
+constexpr char TEXT_RSP2[] PROGMEM = "RSP2";
+constexpr char TEXT_RTN1[] PROGMEM = "RTN1";
+constexpr char TEXT_RTN2[] PROGMEM = "RTN2";
+constexpr char TEXT_WSR[]  PROGMEM = "WSR";
 
 // clang-format om
 } // namespace cdp1802

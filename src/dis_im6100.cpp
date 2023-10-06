@@ -77,6 +77,10 @@ Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     } else if (mode == M_IOT) {
         outHex(out, (opc >> 3) & 077, 6);
         outHex(out.letter(' '), opc & 7, 3);
+    } else if (mode == M_MEX) {
+        if (out.len() > 0)
+            out.letter(' ');
+        outHex(out, opc & 070, 6);
     }
     return setErrorIf(insn);
 }

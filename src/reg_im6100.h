@@ -23,6 +23,10 @@ namespace libasm {
 namespace im6100 {
 namespace reg {
 
+constexpr uint8_t fieldOf(Config::uintptr_t addr) {
+    return (addr >> 12) & 07;
+}
+
 constexpr uint8_t pageOf(Config::uintptr_t addr) {
     return addr >> 7;
 }
@@ -31,8 +35,9 @@ constexpr uint8_t offsetOf(Config::opcode_t opc) {
     return opc & 0177;
 }
 
-constexpr Config::uintptr_t memoryAddress(uint8_t offset, uint8_t page) {
-    return offset | (static_cast<Config::uintptr_t>(page) << 7);
+constexpr Config::uintptr_t memoryAddress(uint8_t offset, uint8_t page, uint8_t field = 0) {
+    return offset | (static_cast<Config::uintptr_t>(page) << 7) |
+           (static_cast<Config::uintptr_t>(field) << 12);
 }
 
 }  // namespace reg

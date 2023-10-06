@@ -24,6 +24,10 @@ using namespace libasm::test;
 AsmIm6100 asm6100;
 Assembler &assembler(asm6100);
 
+static bool hd6120() {
+    return strcmp_P("6120", assembler.cpu_P()) == 0;
+}
+
 static void set_up() {
     assembler.reset();
 }
@@ -37,8 +41,14 @@ void test_cpu() {
     EQUALS("cpu 6100", true,   assembler.setCpu("6100"));
     EQUALS_P("cpu 6100", "6100", assembler.cpu_P());
 
+    EQUALS("cpu 6120", true,   assembler.setCpu("6120"));
+    EQUALS_P("cpu 6120", "6120", assembler.cpu_P());
+
     EQUALS("cpu IM6100", true,   assembler.setCpu("IM6100"));
     EQUALS_P("cpu IM6100", "6100", assembler.cpu_P());
+
+    EQUALS("cpu HD6120", true,   assembler.setCpu("HD6120"));
+    EQUALS_P("cpu HD6120", "6120", assembler.cpu_P());
 }
 
 void test_memory_reference() {
@@ -101,6 +111,10 @@ void test_group1() {
     TEST("RAR IAC",        07011);
     TEST("RTR",            07012);
     TEST("RTR IAC",        07013);
+    if (hd6120()) {
+        TEST("R3L",            07014);
+        TEST("R3L IAC",        07015);
+    }
 
     TEST("CML",             07020);
     TEST("CML IAC",         07021);
@@ -115,6 +129,11 @@ void test_group1() {
     TEST("CML RTR",         07032);
     TEST("CML RTR IAC",     07033);
     TEST("RTR IAC CML",     07033);
+    if (hd6120()) {
+        TEST("CML R3L",         07034);
+        TEST("CML R3L IAC",     07035);
+        TEST("R3L IAC CML",     07035);
+    }
 
     TEST("CMA",             07040);
     TEST("CMA IAC",         07041);
@@ -133,6 +152,14 @@ void test_group1() {
     TEST("CMA RTR",         07052);
     TEST("CIA RTR",         07053);
     TEST("IAC RTR CMA",     07053);
+    if (hd6120()) {
+        TEST("CMA R3L",         07054);
+        TEST("CIA R3L",         07055);
+        TEST("IAC R3L CMA",     07055);
+        TEST("CMA R3L",         07054);
+        TEST("CIA R3L",         07055);
+        TEST("IAC R3L CMA",     07055);
+    }
 
     TEST("CMA CML",         07060);
     TEST("CIA CML",         07061);
@@ -146,6 +173,10 @@ void test_group1() {
     TEST("CIA CML RAR",     07071);
     TEST("CMA CML RTR",     07072);
     TEST("CIA CML RTR",     07073);
+    if (hd6120()) {
+        TEST("CMA CML R3L",     07074);
+        TEST("CIA CML R3L",     07075);
+    }
 
     TEST("CLL",             07100);
     TEST("CLL IAC",         07101);
@@ -159,6 +190,10 @@ void test_group1() {
     TEST("CLL RAR IAC",     07111);
     TEST("CLL RTR",         07112);
     TEST("CLL RTR IAC",     07113);
+    if (hd6120()) {
+        TEST("CLL R3L",         07114);
+        TEST("CLL R3L IAC",     07115);
+    }
 
     TEST("CLL CML",         07120);
     TEST("STL",             07120);
@@ -174,6 +209,11 @@ void test_group1() {
     TEST("STL RTR",         07132);
     TEST("STL RTR IAC",     07133);
     TEST("RTR IAC STL",     07133);
+    if (hd6120()) {
+        TEST("STL R3L",         07134);
+        TEST("STL R3L IAC",     07135);
+        TEST("R3L IAC STL",     07135);
+    }
 
     TEST("CLL CMA",         07140);
     TEST("CLL CIA",         07141);
@@ -187,6 +227,10 @@ void test_group1() {
     TEST("CLL CIA RAR",     07151);
     TEST("CLL CMA RTR",     07152);
     TEST("CLL CIA RTR",     07153);
+    if (hd6120()) {
+        TEST("CLL CMA R3L",     07154);
+        TEST("CLL CIA R3L",     07155);
+    }
 
     TEST("STL CMA",         07160);
     TEST("STL CIA",         07161);
@@ -200,6 +244,10 @@ void test_group1() {
     TEST("STL CIA RAR",     07171);
     TEST("STL CMA RTR",     07172);
     TEST("STL CIA RTR",     07173);
+    if (hd6120()) {
+        TEST("STL CMA R3L",     07174);
+        TEST("STL CIA R3L",     07175);
+    }
 
     TEST("CLA",             07200);
     TEST("CLA IAC",         07201);
@@ -214,6 +262,10 @@ void test_group1() {
     TEST("CLA RAR IAC",     07211);
     TEST("CLA RTR",         07212);
     TEST("CLA RTR IAC",     07213);
+    if (hd6120()) {
+        TEST("CLA R3L",         07214);
+        TEST("CLA R3L IAC",     07215);
+    }
 
     TEST("CLA CML",         07220);
     TEST("CLA CML IAC",     07221);
@@ -227,6 +279,10 @@ void test_group1() {
     TEST("CLA CML RAR IAC", 07231);
     TEST("CLA CML RTR",     07232);
     TEST("CLA CML RTR IAC", 07233);
+    if (hd6120()) {
+        TEST("CLA CML R3L",     07234);
+        TEST("CLA CML R3L IAC", 07235);
+    }
 
     TEST("CMA CLA",         07240);
     TEST("STA",             07240);
@@ -241,6 +297,10 @@ void test_group1() {
     TEST("STA RAR IAC",     07251);
     TEST("STA RTR",         07252);
     TEST("STA RTR IAC",     07253);
+    if (hd6120()) {
+        TEST("STA R3L",         07254);
+        TEST("STA R3L IAC",     07255);
+    }
 
     TEST("STA CML",         07260);
     TEST("STA CML IAC",     07261);
@@ -254,6 +314,10 @@ void test_group1() {
     TEST("STA CML RAR IAC", 07271);
     TEST("STA CML RTR",     07272);
     TEST("STA CML RTR IAC", 07273);
+    if (hd6120()) {
+        TEST("STA CML R3L",     07274);
+        TEST("STA CML R3L IAC", 07275);
+    }
 
     TEST("CLA CLL",         07300);
     TEST("CLA CLL IAC",     07301);
@@ -267,6 +331,10 @@ void test_group1() {
     TEST("CLA CLL RAR IAC", 07311);
     TEST("CLA CLL RTR",     07312);
     TEST("CLA CLL RTR IAC", 07313);
+    if (hd6120()) {
+        TEST("CLA CLL R3L",     07314);
+        TEST("CLA CLL R3L IAC", 07315);
+    }
 
     TEST("STL CLA",         07320);
     TEST("STL CLA IAC",     07321);
@@ -280,6 +348,10 @@ void test_group1() {
     TEST("STL CLA RAR IAC", 07331);
     TEST("STL CLA RTR",     07332);
     TEST("STL CLA RTR IAC", 07333);
+    if (hd6120()) {
+        TEST("STL CLA R3L",     07334);
+        TEST("STL CLA R3L IAC", 07335);
+    }
 
     TEST("STA CLL",         07340);
     TEST("STA CLL IAC",     07341);
@@ -293,6 +365,10 @@ void test_group1() {
     TEST("STA CLL RAR IAC", 07351);
     TEST("STA CLL RTR",     07352);
     TEST("STA CLL RTR IAC", 07353);
+    if (hd6120()) {
+        TEST("STA CLL R3L",     07354);
+        TEST("STA CLL R3L IAC", 07355);
+    }
 
     TEST("STL STA",         07360);
     TEST("STL STA IAC",     07361);
@@ -307,6 +383,11 @@ void test_group1() {
     TEST("STL STA RTR",     07372);
     TEST("STL STA RTR IAC", 07373);
     TEST("CLA CLL CMA CML RTR IAC", 07373);
+    if (hd6120()) {
+        TEST("STL STA R3L",     07374);
+        TEST("STL STA R3L IAC", 07375);
+        TEST("CLA CLL CMA CML R3L IAC", 07375);
+    }
 }
 
 void test_group2() {
@@ -458,18 +539,69 @@ void test_group3() {
     TEST("CLA MQA MQL", 07721);
 }
 
+void test_stack_operation() {
+    TEST("PPC1", 06205);
+    TEST("PAC1", 06215);
+    TEST("RTN1", 06225);
+    TEST("POP1", 06235);
+    TEST("RSP1", 06207);
+    TEST("LSP1", 06217);
+
+    TEST("PPC2", 06245);
+    TEST("PAC2", 06255);
+    TEST("RTN2", 06265);
+    TEST("POP2", 06275);
+    TEST("RSP2", 06227);
+    TEST("LSP2", 06237);
+}
+
 void test_internal_control() {
     TEST("ION", 06001);
     TEST("IOF", 06002);
     TEST("RTF", 06005);
     TEST("SGT", 06006);
     TEST("CAF", 06007);
+    if (hd6120()) {
+        TEST("WSR", 06246);
+        TEST("GCF", 06256);
+    }
 }
 
 void test_main_memory() {
     TEST("SKON", 06000);
     TEST("SRQ",  06003);
     TEST("GTF",  06004);
+    if (hd6120()) {
+        TEST("PR0", 06206);
+        TEST("PR1", 06216);
+        TEST("PR2", 06226);
+        TEST("PR3", 06236);
+    }
+}
+
+void test_memory_extension() {
+    TEST("CDF 00",     06201);
+    TEST("CDF 70",     06271);
+    TEST("CIF 00",     06202);
+    TEST("CIF 70",     06272);
+    TEST("CDF CIF 00", 06203);
+    TEST("CIF CDF 70", 06273);
+
+    symtab.intern(000, "F0");
+    symtab.intern(010, "F1");
+    symtab.intern(070, "ROMFLD");
+
+    TEST("CDF F0",     06201);
+    TEST("CDF F1",     06211);
+    TEST("CIF ROMFLD", 06272);
+    TEST("CIF ROMFLD", 06272);
+    TEST("CDF CIF F0", 06203);
+    TEST("CIF CDF F1", 06213);
+
+    TEST("RDF",   06214);
+    TEST("RIF",   06224);
+    TEST("RIB",   06234);
+    TEST("RMF",   06244);
 }
 
 void test_io_transfer() {
@@ -583,8 +715,12 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_group1);
     RUN_TEST(test_group2);
     RUN_TEST(test_group3);
+    if (hd6120())
+        RUN_TEST(test_stack_operation);
     RUN_TEST(test_internal_control);
     RUN_TEST(test_main_memory);
+    if (hd6120())
+        RUN_TEST(test_memory_extension);
     RUN_TEST(test_io_transfer);
     RUN_TEST(test_undef);
     RUN_TEST(test_error);

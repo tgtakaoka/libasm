@@ -12,8 +12,9 @@
 ;;; See the License for the specific language governing permissions and
 ;;; limitations under the License.
 
-        cpu     6100
+        cpu     6120
         include "test_im6100.inc"
+        include "test_hd6120.inc"
         end
 
 ;;; Local Variables:
