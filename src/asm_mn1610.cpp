@@ -58,7 +58,7 @@ const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
-        const IbmNumberParser _number{'X'};
+        const IbmNumberParser _number{'X', 0, 0, 0};
         const IbmLetterParser _letter{'C'};
     } PLUGINS{};
     return PLUGINS;

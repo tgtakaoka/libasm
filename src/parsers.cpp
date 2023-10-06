@@ -44,75 +44,123 @@ bool isValidDigit(const char c, const Radix radix) {
 
 }  // namespace
 
+PrefixNumberParser::PrefixNumberParser(char hex, char bin, char oct, char dec)
+    : _hex(hex), _bin(bin), _oct(oct), _dec(dec) {}
+
+Radix PrefixNumberParser::hasPrefix(StrScanner &scan) const {
+    if (_hex && scan.iexpect(_hex))
+        return RADIX_16;
+    if (_bin && scan.iexpect(_bin))
+        return RADIX_2;
+    if (_oct && scan.iexpect(_oct))
+        return RADIX_8;
+    if (_dec && scan.iexpect(_dec))
+        return RADIX_10;
+    return RADIX_NONE;
+}
+
+Error PrefixNumberParser::parseNumber(StrScanner &scan, Value &val) const {
+    auto p = scan;
+    const auto radix = hasPrefix(p);
+    if (radix == RADIX_NONE)
+        return IntelNumberParser::singleton().parseNumber(scan, val);
+    const auto error = val.parseNumber(p, radix);
+    if (error == OK)
+        scan = p;
+    return error;
+}
+
+Error IbmNumberParser::parseNumber(StrScanner &scan, Value &val) const {
+    auto p = scan;
+    const auto radix = hasPrefix(p);
+    if (radix == RADIX_NONE)
+        return IntelNumberParser::singleton().parseNumber(scan, val);
+
+    if (!p.expect('\'') || !isValidDigit(*p, radix))
+        return NOT_AN_EXPECTED;
+
+    const auto error = val.parseNumber(p, radix);
+    if (p.expect('\'')) {
+        scan = p;
+        return error;
+    }
+    return MISSING_CLOSING_QUOTE;
+}
+
+Radix NationalNumberParser::hasPrefix(StrScanner &scan) const {
+    if (_hex == 0 && (scan.iexpect('X') || scan.iexpect('H')))
+        return RADIX_16;
+    if (_oct == 'Q' && scan.iexpect('O'))
+        return RADIX_8;
+    return PrefixNumberParser::hasPrefix(scan);
+}
+
+Error NationalNumberParser::parseNumber(StrScanner &scan, Value &val) const {
+    auto p = scan;
+    const auto radix = hasPrefix(p);
+    if (radix == RADIX_NONE)
+        return IntelNumberParser::singleton().parseNumber(scan, val);
+
+    if (!p.expect('\'') || !isValidDigit(*p, radix))
+        return NOT_AN_EXPECTED;
+
+    const auto error = val.parseNumber(p, radix);
+    if (error == OK) {
+        p.expect('\''); // closing quote is optional
+        scan = p;
+    }
+    return error;
+}
+
+Radix CStyleNumberParser::hasPrefix(StrScanner &scan) const {
+    if (scan.iexpectText_P(text::common::PSTR_ZERO_X))
+        return RADIX_16;
+    if (scan.iexpectText_P(text::common::PSTR_ZERO_B))
+        return RADIX_2;
+    if (*scan == '0' && isoctal(scan[1]))
+        return RADIX_8;
+    if (isdigit(*scan))
+        return RADIX_10;
+    return RADIX_NONE;
+}
+
 Error CStyleNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
-    auto radix = RADIX_NONE;
-    if (p.iexpectText_P(text::common::PSTR_ZERO_X)) {
-        radix = RADIX_16;
-    } else if (p.iexpectText_P(text::common::PSTR_ZERO_B)) {
-        radix = RADIX_2;
-    } else if (p.expect('0')) {
-        if (!isalnum(*p) || isoctal(*p)) {
-            radix = RADIX_8;
-            p = scan;
-        } else {
-            return ILLEGAL_CONSTANT;
-        }
-    } else if (isdigit(*p)) {
-        radix = RADIX_10;
-    }
-
+    const auto radix = hasPrefix(p);
     if (radix == RADIX_NONE)
         return NOT_AN_EXPECTED;
 
-    const auto err = val.parseNumber(p, radix);
-    if (err == OK)
+    const auto error = val.parseNumber(p, radix);
+    if (error == OK)
         scan = p;
-    return err;
+    return error;
 }
 
-Error MotorolaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    auto p = scan;
-    auto radix = RADIX_NONE;
-    if (p.expect('$')) {
-        radix = RADIX_16;
-    } else if (p.expect('@')) {
-        radix = RADIX_8;
-    } else if (p.expect('%')) {
-        radix = RADIX_2;
-    } else if (p.expect('&')) {
-        radix = RADIX_10;
-    } else {
-        return CStyleNumberParser::singleton().parseNumber(scan, val);
-    }
-
-    const auto err = val.parseNumber(p, radix);
-    if (err == OK)
-        scan = p;
-    return err;
+Radix IntelNumberParser::hasSuffix(StrScanner &scan) const {
+    if (scanNumberEnd(scan, RADIX_16, 'H') == OK)
+        return RADIX_16;
+    if (scanNumberEnd(scan, RADIX_8, 'O') == OK || scanNumberEnd(scan, RADIX_8, 'Q') == OK)
+        return RADIX_8;
+    if (scanNumberEnd(scan, RADIX_2, 'B') == OK)
+        return RADIX_2;
+    if (scanNumberEnd(scan, RADIX_10, 'D') == OK)
+        return RADIX_10;
+    return RADIX_NONE;
 }
 
 Error IntelNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
-    auto radix = RADIX_NONE;
-    if (scanNumberEnd(p, RADIX_16, 'H') == OK) {
-        radix = RADIX_16;
-    } else if (scanNumberEnd(p, RADIX_8, 'O') == OK) {
-        radix = RADIX_8;
-    } else if (scanNumberEnd(p, RADIX_8, 'Q') == OK) {
-        radix = RADIX_8;
-    } else if (scanNumberEnd(p, RADIX_2, 'B') == OK) {
-        radix = RADIX_2;
-    } else if (scanNumberEnd(p, RADIX_10, 'D') == OK) {
-        radix = RADIX_10;
-    } else {
-        return CStyleNumberParser::singleton().parseNumber(scan, val);
-    }
+    return parseNumber(scan, val, hasSuffix(p), p);
+}
 
-    const auto err = val.parseNumber(scan, radix);
-    if (err == OK)
-        scan = p;
-    return err;
+Error IntelNumberParser::parseNumber(
+        StrScanner &scan, Value &val, Radix radix, StrScanner &next) const {
+    if (radix == RADIX_NONE)
+        return CStyleNumberParser::singleton().parseNumber(scan, val);
+    const auto error = val.parseNumber(scan, radix);
+    if (error == OK)
+        scan = next;
+    return error;
 }
 
 Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffix) {
@@ -140,99 +188,48 @@ Error IntelNumberParser::scanNumberEnd(StrScanner &scan, Radix radix, char suffi
     return NOT_AN_EXPECTED;
 }
 
-Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    auto p = scan;
-    auto radix = RADIX_NONE;
-    if (p.iexpectText_P(text::common::PSTR_PERCENT_8)) {
-        radix = RADIX_8;
-    } else if (p.iexpectText_P(text::common::PSTR_PERCENT_2)) {
-        radix = RADIX_2;
-    } else if (p.expect('%') && isxdigit(*p)) {
-        radix = RADIX_16;
-    } else {
-        return IntelNumberParser::singleton().parseNumber(scan, val);
-    }
-
-    const auto err = val.parseNumber(p, radix);
-    if (err == OK)
-        scan = p;
-    return err;
+Radix ZilogNumberParser::hasPrefix(StrScanner &scan) const {
+    if (scan.iexpectText_P(text::common::PSTR_PERCENT_8))
+        return RADIX_8;
+    if (scan.iexpectText_P(text::common::PSTR_PERCENT_2))
+        return RADIX_2;
+    if (scan.expect('%') && isxdigit(*scan))
+        return RADIX_16;
+    return RADIX_NONE;
 }
 
-Error IbmNumberParser::parseNumber(StrScanner &scan, Value &val) const {
+Error ZilogNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     auto p = scan;
-    auto radix = RADIX_NONE;
-    if (_hex && p.iexpect(_hex)) {
-        radix = RADIX_16;
-    } else if (_hex == 0 && (p.iexpect('X') || p.iexpect('H'))) {
-        radix = RADIX_16;
-    } else if (_bin && p.iexpect(_bin)) {
-        radix = RADIX_2;
-    } else if (_oct && (p.iexpect(_oct) || p.iexpect('O'))) {
-        radix = RADIX_8;
-    } else if (_dec && p.iexpect(_dec)) {
-        radix = RADIX_10;
-    } else {
-        return CStyleNumberParser::singleton().parseNumber(scan, val);
-    }
+    const auto radix = hasPrefix(p);
+    if (radix == RADIX_NONE)
+        return IntelNumberParser::singleton().parseNumber(scan, val);
 
-    if (!p.expect('\'') || !isValidDigit(*p, radix))
-        return NOT_AN_EXPECTED;
-
-    const auto err = val.parseNumber(p, radix);
-    if (p.expect('\'')) {
+    const auto error = val.parseNumber(p, radix);
+    if (error == OK)
         scan = p;
-        return err;
-    }
-    scan = p;
-    // Closing quote is optional
-    return _closingQuote ? MISSING_CLOSING_QUOTE : err;
+    return error;
 }
 
 Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    if (*scan == '$' && isxdigit(scan[1])) {
-        auto p = scan;
-        const auto err = val.parseNumber(++p, RADIX_16);
-        if (err == OK)
+    auto p = scan;
+    if (*p == '$' && isxdigit(p[1])) {
+        const auto error = val.parseNumber(++p, RADIX_16);
+        if (error == OK)
             scan = p;
-        return err;
+        return error;
     }
     return _ibm.parseNumber(scan, val);
 }
 
 Error RcaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    if (*scan == '#' && isxdigit(scan[1])) {
-        auto p = scan;
-        const auto err = val.parseNumber(++p, RADIX_16);
-        if (err == OK)
+    auto p = scan;
+    if (*p == '#' && isxdigit(p[1])) {
+        const auto error = val.parseNumber(++p, RADIX_16);
+        if (error == OK)
             scan = p;
-        return err;
+        return error;
     }
-    const auto err = IntelNumberParser::singleton().parseNumber(scan, val);
-    if (err == OK)
-        return OK;
     return _ibm.parseNumber(scan, val);
-}
-
-Error SigneticsNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    const auto err = IntelNumberParser::singleton().parseNumber(scan, val);
-    if (err == OK)
-        return OK;
-    return _ibm.parseNumber(scan, val);
-}
-
-Error TexasNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    if (*scan == '>' && isxdigit(scan[1])) {
-        auto p = scan;
-        const auto err = val.parseNumber(++p, RADIX_16);
-        if (err == OK)
-            scan = p;
-        return err;
-    }
-    const auto err = IntelNumberParser::singleton().parseNumber(scan, val);
-    if (err == OK)
-        return OK;
-    return CStyleNumberParser::singleton().parseNumber(scan, val);
 }
 
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {

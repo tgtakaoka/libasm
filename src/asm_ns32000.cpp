@@ -116,7 +116,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override { return _location; }
-        const NationalNumberParser _number{/*'X' or 'H'*/ 0, 'B', /*'O' or*/ 'Q'};
+        const NationalNumberParser _number{/* 'X','H' */ 0, 'B', /* 'O' or */ 'Q', 'D'};
         const Ns32000SymbolParser _symbol{};
         const SimpleLocationParser _location{PSTR_DOT_STAR};
         const Ns32000LetterParser _letter{};

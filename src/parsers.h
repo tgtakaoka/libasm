@@ -139,28 +139,6 @@ struct NumberParser {
 };
 
 /**
-`* C-style numbers are
- * - Decimal:     "[1-9][0-9]*"
- * - Hexadecimal: "0[xX][0-9A-Fa-f]+"
- * - Octal:       "0[0-7]*"
- * - Binary:      "0[bB][01]+"
- */
-struct CStyleNumberParser final : NumberParser, Singleton<CStyleNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-};
-
-/**
- * Motorola style numbers are
- * - Decimal:     "{&}[0-9]+"
- * - Hexadecimal: "$[0-9A-Fa-f]+"
- * - Octal:       "@[0-7]+"
- * - Binary:      "%[01]+"
- */
-struct MotorolaNumberParser final : NumberParser, Singleton<MotorolaNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-};
-
-/**
  * Intel style numbers are
  * - Decimal:     "[0-9]+"
  * - Hexadecimal: "([0-9]|0[A-Fa-f])[0-9A-Fa-f]*[hH]"
@@ -169,8 +147,12 @@ struct MotorolaNumberParser final : NumberParser, Singleton<MotorolaNumberParser
  */
 struct IntelNumberParser final : NumberParser, Singleton<IntelNumberParser> {
     Error parseNumber(StrScanner &scan, Value &val) const override;
+    Error parseNumber(StrScanner &scan, Value &val, Radix radix, StrScanner &next) const;
+
 
 private:
+    Radix hasSuffix(StrScanner &scan) const;
+
     /**
      * Search |scan| as a |radix| based number with optional |suffix|.
      *
@@ -182,6 +164,20 @@ private:
 };
 
 /**
+`* C-style numbers are
+ * - Decimal:     "[1-9][0-9]*"
+ * - Hexadecimal: "0[xX][0-9A-Fa-f]+"
+ * - Octal:       "0[0-7]*"
+ * - Binary:      "0[bB][01]+"
+ */
+struct CStyleNumberParser final : NumberParser, Singleton<CStyleNumberParser> {
+    Error parseNumber(StrScanner &scan, Value &val) const override;
+
+private:
+    Radix hasPrefix(StrScanner &scan) const;
+};
+
+/**
  * Zilog style numbers are
  * - Decimal:     "[0-9]+"
  * - Hexadecimal: "%[0-9A-Fa-f]+"
@@ -190,6 +186,37 @@ private:
  */
 struct ZilogNumberParser final : NumberParser, Singleton<ZilogNumberParser> {
     Error parseNumber(StrScanner &scan, Value &val) const override;
+
+private:
+    Radix hasPrefix(StrScanner &scan) const;
+};
+
+/**
+ * Base for character prefixed number parser.
+ */
+struct PrefixNumberParser : NumberParser {
+    PrefixNumberParser(char hex, char bin, char oct, char dec);
+
+    Error parseNumber(StrScanner &scan, Value &val) const override;
+
+protected:
+    const char _hex;
+    const char _bin;
+    const char _oct;
+    const char _dec;
+
+    virtual Radix hasPrefix(StrScanner &scan) const;
+};
+
+/**
+ * Motorola style numbers are
+ * - Decimal:     "{&}[0-9]+"
+ * - Hexadecimal: "$[0-9A-Fa-f]+"
+ * - Octal:       "@[0-7]+"
+ * - Binary:      "%[01]+"
+ */
+struct MotorolaNumberParser final : PrefixNumberParser, Singleton<MotorolaNumberParser> {
+    MotorolaNumberParser() : PrefixNumberParser('$', '%', '@', '&') {}
 };
 
 /**
@@ -199,21 +226,10 @@ struct ZilogNumberParser final : NumberParser, Singleton<ZilogNumberParser> {
  * - Octal:       "[oO]'[0-7]+'"
  * - Binary:      "[bB]'[01]+'"
  */
-struct IbmNumberParser final : NumberParser {
-    IbmNumberParser(char hex = 'H', bool closingQuote = true)
-        : _hex(hex), _bin(0), _oct(0), _dec(0), _closingQuote(closingQuote) {}
-    IbmNumberParser(char hex, char bin, bool closingQuote = true)
-        : _hex(hex), _bin(bin), _oct(0), _dec('D'), _closingQuote(closingQuote) {}
-    IbmNumberParser(char hex, char bin, char oct, bool closingQuote = true)
-        : _hex(hex), _bin(bin), _oct(oct), _dec('D'), _closingQuote(closingQuote) {}
+struct IbmNumberParser : PrefixNumberParser {
+    IbmNumberParser(char hex, char bin, char oct, char dec)
+        : PrefixNumberParser(hex, bin, oct, dec) {}
     Error parseNumber(StrScanner &scan, Value &val) const override;
-
-private:
-    const char _hex;
-    const char _bin;
-    const char _oct;
-    const char _dec;
-    const bool _closingQuote;
 };
 
 /**
@@ -223,16 +239,13 @@ private:
  * - Octal:       "[oO]'[0-7]+'?"
  * - Binary:      "[bB]'[01]+'?"
  */
-struct NationalNumberParser final : NumberParser {
-    NationalNumberParser(char hex = 'X') : _ibm(hex, false) {}
-    NationalNumberParser(char hex, char bin) : _ibm(hex, bin, false) {}
-    NationalNumberParser(char hex, char bin, char oct) : _ibm(hex, bin, oct, false) {}
-    Error parseNumber(StrScanner &scan, Value &val) const override {
-        return _ibm.parseNumber(scan, val);
-    }
+struct NationalNumberParser final : IbmNumberParser {
+    NationalNumberParser(char hex, char bin, char oct, char dec)
+        : IbmNumberParser(hex, bin, oct, dec) {}
+    Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IbmNumberParser _ibm;
+    Radix hasPrefix(StrScanner &scan) const override;
 };
 
 /**
@@ -242,7 +255,7 @@ struct FairchildNumberParser final : NumberParser, Singleton<FairchildNumberPars
     Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IbmNumberParser _ibm{'H', 'B', 'O'};
+    IbmNumberParser _ibm{'H', 'B', 'O', 'D'};
 };
 
 /**
@@ -252,24 +265,21 @@ struct RcaNumberParser final : NumberParser, Singleton<RcaNumberParser> {
     Error parseNumber(StrScanner &scan, Value &val) const override;
 
 private:
-    const IbmNumberParser _ibm{'X', 'B'};
+    const IbmNumberParser _ibm{'X', 'B', 0, 'D'};
 };
 
 /**
- * Signetics style numbers are the same as IBM plus '#hh' for hexadecimal.
+ * Signetics style numbers are the same as IBM except H'hh' for hexadecimal.
  */
-struct SigneticsNumberParser final : NumberParser, Singleton<SigneticsNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-
-private:
-    const IbmNumberParser _ibm{'H', 'B', 'O'};
+struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberParser> {
+    SigneticsNumberParser() : IbmNumberParser('H', 'B', 'O', 'D') {}
 };
 
 /**
- * Texas Instrument style numbers are the same as C-Style and '>hh' as hexadecimal.
+ * Texas Instrument style numbers is '>hh' as hexadecimal.
  */
-struct TexasNumberParser final : NumberParser, Singleton<TexasNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
+struct TexasNumberParser final : PrefixNumberParser, Singleton<TexasNumberParser> {
+    TexasNumberParser() : PrefixNumberParser('>', 0, 0, 0) {}
 };
 
 struct SemicolonCommentParser final : CommentParser, Singleton<SemicolonCommentParser> {

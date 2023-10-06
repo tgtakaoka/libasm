@@ -67,7 +67,7 @@ const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
         const SymbolParser &symbol() const override { return _symbol; }
         const LocationParser &location() const override { return _location; }
         const FunctionTable &function() const override { return _function; }
-        const NationalNumberParser _number;
+        const NationalNumberParser _number{'X', 0, 0, 0};
         const Ins8070SymbolParser _symbol{};
         const SimpleLocationParser _location{PSTR_DOT_DOLLAR};
         const Ins8070FunctionTable _function{};

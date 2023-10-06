@@ -23,7 +23,7 @@ const struct final : ValueParser::Plugins {
     const NumberParser &number() const override { return _number; }
     const SymbolParser &symbol() const override { return _symbol; }
     const LetterParser &letter() const override { return _letter; }
-    const NationalNumberParser _number{0, 'B', 'Q'};
+    const NationalNumberParser _number{/* 'X' or 'H' */ 0, 'B', /* 'O' or */ 'Q', 'D'};
     const SimpleSymbolParser _symbol{PSTR("$")};
     const IbmLetterParser _letter{'A'};
 } plugins{};
@@ -196,9 +196,9 @@ static void test_scan() {
     SCAN('x', "0x1230xG",     "0x1230");
     SCAN('b', "0b1010b0",     "0b1010");
     SCAN('H', "H'1AB0HHX",    "H'1AB0");
-    SCAN('O', "1230OOX",      "1230");
+    SCAN('O', "1230OOX",      "1230O");
     SCAN('O', "1239OOX",      "1239");
-    SCAN('B', "1010BBX",      "1010");
+    SCAN('B', "1010BBX",      "1010B");
     SCAN('B', "1012BBX",      "1012");
     SCAN(',', "X'1230,",      "X'1230");
     SCAN(',', "X'1230',",     "X'1230'");
