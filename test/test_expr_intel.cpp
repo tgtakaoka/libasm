@@ -322,7 +322,7 @@ static void test_scan() {
 }
 
 static void test_errors() {
-    X32("0ABCGH", ILLEGAL_CONSTANT, "0ABCGH");
+    X32("0ABCGH", GARBAGE_AT_END, "ABCGH");
     X32("01778O", GARBAGE_AT_END, "8O");
     X32("01012B", GARBAGE_AT_END, "B");
     X32("56789A", GARBAGE_AT_END, "A");
