@@ -39,13 +39,19 @@ static constexpr Config::opcode_t MASK_MEM = 07000;
 static constexpr Config::opcode_t MASK_GR1 = 07400;
 static constexpr Config::opcode_t MASK_GR2 = 07401;
 static constexpr Config::opcode_t MASK_GR3 = 07401;
+static constexpr Config::opcode_t MASK_MEX = 07704;
+static constexpr Config::opcode_t MASK_I20 = 07704;
 static constexpr Config::opcode_t MASK_IOT = 07000;
 /** Trunk of |opCode| to identify group */
 static constexpr Config::opcode_t GID_MEM = 0; // wildcard
 static constexpr Config::opcode_t GID_GR1 = 07000;
 static constexpr Config::opcode_t GID_GR2 = 07400;
 static constexpr Config::opcode_t GID_GR3 = 07401;
+static constexpr Config::opcode_t GID_MEX = 06200;
+static constexpr Config::opcode_t GID_I20 = 06204;
 static constexpr Config::opcode_t GID_IOT = 06000;
+/** Clear variable part mask */
+static constexpr Config::opcode_t CLEAR_MEX = 00070;
 
 static constexpr Entry IM6100_MEM[] PROGMEM = {
     E(00000, TEXT_AND,  M_MEM, 0),
@@ -102,6 +108,44 @@ static constexpr uint8_t INDEX_IM6100_GR1[] PROGMEM = {
       1,  // TEXT_GLK
      14,  // TEXT_IAC
       0,  // TEXT_NOP
+     10,  // TEXT_RAL
+     11,  // TEXT_RAR
+     12,  // TEXT_RTL
+     13,  // TEXT_RTR
+      3,  // TEXT_STA
+      2,  // TEXT_STL
+};
+
+static constexpr Entry HD6120_GR1[] PROGMEM = {
+    C(07000, TEXT_NOP,  M_GR1, CLA|CLL|CMA|CML|IAC, R1|R2|R3),
+    C(07204, TEXT_GLK,  M_GR1, CLA|R1|R2|R3, 0),
+    C(07120, TEXT_STL,  M_GR1, CLL|CML, 0),
+    C(07240, TEXT_STA,  M_GR1, CLA|CMA, 0),
+    M(07200, TEXT_CLA,  M_GR1, CLA, 0), // Logical sequence 1
+    C(07100, TEXT_CLL,  M_GR1, CLL, 0), // Logical sequence 1
+    C(07041, TEXT_CIA,  M_GR1, CMA|IAC, 0),
+    C(07040, TEXT_CMA,  M_GR1, CMA, 0),      // Logical sequence 2
+    C(07020, TEXT_CML,  M_GR1, CML, 0),      // Logical sequence 2
+    C(07002, TEXT_BSW,  M_GR1, R1|R2|R3, 0), // Logical sequence 4
+    C(07004, TEXT_RAL,  M_GR1, R1|R2|R3, 0), // Logical sequence 4
+    C(07010, TEXT_RAR,  M_GR1, R1|R2|R3, 0), // Logical sequence 4
+    C(07006, TEXT_RTL,  M_GR1, R1|R2|R3, 0), // Logical sequence 4
+    C(07012, TEXT_RTR,  M_GR1, R1|R2|R3, 0), // Logical sequence 4
+    C(07014, TEXT_R3L,  M_GR1, R1|R2|R3, 0), // Logical sequence 4
+    C(07001, TEXT_IAC,  M_GR1, IAC, 0),      // Logical sequence 3
+};
+
+static constexpr uint8_t INDEX_HD6120_GR1[] PROGMEM = {
+      9,  // TEXT_BSW
+      6,  // TEXT_CIA
+      4,  // TEXT_CLA
+      5,  // TEXT_CLL
+      7,  // TEXT_CMA
+      8,  // TEXT_CML
+      1,  // TEXT_GLK
+     15,  // TEXT_IAC
+      0,  // TEXT_NOP
+     14,  // TEXT_R3L
      10,  // TEXT_RAL
      11,  // TEXT_RAR
      12,  // TEXT_RTL
@@ -197,6 +241,70 @@ static constexpr uint8_t INDEX_IM6100_IOT[] PROGMEM = {
       3,  // TEXT_SRQ
 };
 
+static constexpr uint8_t CDF = 0001;
+static constexpr uint8_t CIF = 0002;
+static constexpr uint8_t B09 = 0004;
+
+static constexpr Entry HD6120_MEX[] PROGMEM = {
+    C(06201, TEXT_CDF,  M_MEX, CDF, B09),
+    C(06202, TEXT_CIF,  M_MEX, CIF, B09),
+};
+
+static constexpr uint8_t INDEX_HD6120_MEX[] PROGMEM = {
+      0,  // TEXT_CDF
+      1,  // TEXT_CIF
+};
+
+static constexpr Entry HD6120_I20[] PROGMEM = {
+    E(06205, TEXT_PPC1, M_CMP, 00073),
+    E(06245, TEXT_PPC2, M_CMP, 00073),
+    E(06215, TEXT_PAC1, M_CMP, 00073),
+    E(06255, TEXT_PAC2, M_CMP, 00073),
+    E(06225, TEXT_RTN1, M_CMP, 00073),
+    E(06265, TEXT_RTN2, M_CMP, 00073),
+    E(06235, TEXT_POP1, M_CMP, 00073),
+    E(06275, TEXT_POP2, M_CMP, 00073),
+    E(06207, TEXT_RSP1, M_CMP, 00073),
+    E(06227, TEXT_RSP2, M_CMP, 00073),
+    E(06217, TEXT_LSP1, M_CMP, 00073),
+    E(06237, TEXT_LSP2, M_CMP, 00073),
+    E(06246, TEXT_WSR,  M_CMP, 00073),
+    E(06256, TEXT_GCF,  M_CMP, 00073),
+    E(06214, TEXT_RDF,  M_CMP, 00073),
+    E(06224, TEXT_RIF,  M_CMP, 00073),
+    E(06234, TEXT_RIB,  M_CMP, 00073),
+    E(06244, TEXT_RMF,  M_CMP, 00073),
+    E(06206, TEXT_PR0,  M_CMP, 00073),
+    E(06216, TEXT_PR1,  M_CMP, 00073),
+    E(06226, TEXT_PR2,  M_CMP, 00073),
+    E(06236, TEXT_PR3,  M_CMP, 00073),
+};
+
+static constexpr uint8_t INDEX_HD6120_I20[] PROGMEM = {
+     13,  // TEXT_GCF
+     10,  // TEXT_LSP1
+     11,  // TEXT_LSP2
+      2,  // TEXT_PAC1
+      3,  // TEXT_PAC2
+      6,  // TEXT_POP1
+      7,  // TEXT_POP2
+      0,  // TEXT_PPC1
+      1,  // TEXT_PPC2
+     18,  // TEXT_PR0
+     19,  // TEXT_PR1
+     20,  // TEXT_PR2
+     21,  // TEXT_PR3
+     14,  // TEXT_RDF
+     16,  // TEXT_RIB
+     15,  // TEXT_RIF
+     17,  // TEXT_RMF
+      8,  // TEXT_RSP1
+      9,  // TEXT_RSP2
+      4,  // TEXT_RTN1
+      5,  // TEXT_RTN2
+     12,  // TEXT_WSR
+};
+
 // clang-format on
 
 struct EntryPage : entry::TableBase<Entry> {
@@ -245,6 +353,8 @@ struct Cpu : entry::CpuBase<CpuType, EntryPage> {
         for (const auto *page = _pages.table(); page != _pages.end(); page++) {
             if (page->group() == insn.mode()) {
                 micros &= ~page->groupMask();
+                if (insn.mode() == M_MEX)
+                    micros &= ~CLEAR_MEX;
                 micros = page->appendMicros(insn, micros, out);
             }
         }
@@ -261,12 +371,23 @@ static constexpr EntryPage IM6100_PAGES[] PROGMEM = {
         {ARRAY_RANGE(IM6100_MEM), ARRAY_RANGE(INDEX_IM6100_MEM), MASK_MEM, GID_MEM},
 };
 
+static constexpr EntryPage HD6120_PAGES[] PROGMEM = {
+        {ARRAY_RANGE(HD6120_GR1), ARRAY_RANGE(INDEX_HD6120_GR1), MASK_GR1, GID_GR1},
+        {ARRAY_RANGE(IM6100_GR1), ARRAY_RANGE(INDEX_IM6100_GR1), MASK_GR1, GID_GR1},
+        {ARRAY_RANGE(IM6100_GR2), ARRAY_RANGE(INDEX_IM6100_GR2), MASK_GR2, GID_GR2},
+        {ARRAY_RANGE(IM6100_GR3), ARRAY_RANGE(INDEX_IM6100_GR3), MASK_GR3, GID_GR3},
+        {ARRAY_RANGE(HD6120_MEX), ARRAY_RANGE(INDEX_HD6120_MEX), MASK_MEX, GID_MEX},
+        {ARRAY_RANGE(HD6120_I20), ARRAY_RANGE(INDEX_HD6120_I20), MASK_I20, GID_I20},
+        {ARRAY_RANGE(IM6100_IOT), ARRAY_RANGE(INDEX_IM6100_IOT), MASK_IOT, GID_IOT},
+        {ARRAY_RANGE(IM6100_MEM), ARRAY_RANGE(INDEX_IM6100_MEM), MASK_MEM, GID_MEM},
+};
+
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {IM6100, TEXT_CPU_6100, ARRAY_RANGE(IM6100_PAGES)},
+        {HD6120, TEXT_CPU_6120, ARRAY_RANGE(HD6120_PAGES)},
 };
 static const Cpu *cpu(CpuType cpuType) {
-    UNUSED(cpuType);
-    return &CPU_TABLE[0];
+    return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
 static bool acceptAll(AsmInsn &insn, const Entry *entry) {
@@ -308,14 +429,14 @@ Error TableIm6100::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
     const auto *entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode, pageMatcher);
     if (entry) {
         const auto mode = insn.mode();
-        if (mode == M_GR1 || mode == M_GR2 || mode == M_GR3)
+        if (mode == M_GR1 || mode == M_GR2 || mode == M_GR3 || mode == M_MEX)
             cpu(cpuType)->appendMicros(insn, out);
     }
     return insn.getError();
 }
 
 const /*PROGMEM*/ char *TableIm6100::listCpu_P() const {
-    return TEXT_CPU_IM6100;
+    return TEXT_IM6100_LIST;
 }
 
 const /*PROGMEM*/ char *TableIm6100::cpuName_P(CpuType cpuType) const {
@@ -325,6 +446,10 @@ const /*PROGMEM*/ char *TableIm6100::cpuName_P(CpuType cpuType) const {
 Error TableIm6100::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     if (name.iequals(TEXT_CPU_6100) || name.iequals(TEXT_CPU_IM6100)) {
         cpuType = IM6100;
+        return OK;
+    }
+    if (name.iequals(TEXT_CPU_6120) || name.iequals(TEXT_CPU_HD6120)) {
+        cpuType = HD6120;
         return OK;
     }
     return UNSUPPORTED_CPU;
