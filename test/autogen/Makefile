@@ -47,22 +47,31 @@ endef
 define gen-opt
 $(if $(call gas-out,$(1)),-g,$(if $(call out-inc,$(1)),-i -u,-u))
 endef
+
 # make rule for auto generation file
-define gen-rule # arch target out opt
-#../gen_$(1)::
-#	+$(MAKE) -C .. gen_$(1)
+define gen-target # arch target out opt
+	../gen_$(1) $(4) -C $(CPU_$(2)) -o $(3) -l gen_$(2).lst
+endef
+define gen-target-rule # arch target out opt
 $(3): #../gen_$(1)
-	../gen_$(1) $(4) -C $(CPU_$(2)) -o $$@ -l gen_$(2).lst
+	$(call gen-target,$(1),$(2),$(3),$(4))
+
+endef
+define gen-arch-rule # arch
+clean_$(1):
+	rm -f $(foreach t,$(TGT_$(1)),$(call gen-out,$(t)))
+gen_$(1): clean_$(1) $(foreach t,$(TGT_$(1)),$(call gen-out,$(t)))
 
 endef
 
 GEN_OUTS = $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),$(call gen-out,$(t))))
 
 # rules for auto generations
+$(eval $(foreach a,$(ARCHS),$(call gen-arch-rule,$(a))))
 $(eval $(foreach a,$(ARCHS),$(foreach t,$(TGT_$(a)),\
-	$(call gen-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
+	$(call gen-target-rule,$(a),$(t),$(call gen-out,$(t)),$(call gen-opt,$(t))))))
 
-generate: clean-gen $(GEN_OUTS)
+generate: $(foreach a,$(ARCHS),gen_$(a))
 
 ASM=../../cli/asm
 $(ASM)-refresh:

@@ -33,6 +33,7 @@ namespace {
 constexpr char TEXT_star[]    PROGMEM = "*";
 constexpr char TEXT_OCTAL[]   PROGMEM = "OCTAL";
 constexpr char TEXT_DECIMAL[] PROGMEM = "DECIMAL";
+constexpr char TEXT_FIELD[]   PROGMEM = "FIELD";
 constexpr char TEXT_PAGE[]    PROGMEM = "PAGE";
 constexpr char TEXT_DUBL[]    PROGMEM = "DUBL";
 
@@ -155,7 +156,22 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
         if (getError())
             return getError();
     }
-    const auto addr = memoryAddress(0, page);
+    const auto field = fieldOf(insn.address());
+    const auto addr = memoryAddress(0, page, field);
+    const auto error = setCurrentLocation(addr);
+    if (error)
+        return setError(scan, error);
+    insn.reset(addr);
+    return OK;
+}
+
+Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
+    UNUSED(extra);
+    auto p = scan.skipSpaces();
+    const auto field = parseExpr(p, *this).getUnsigned();
+    if (getError())
+        return setError(scan, getError());
+    const auto addr = memoryAddress(0, 0, field);
     const auto error = setCurrentLocation(addr);
     if (error)
         return setError(scan, error);
@@ -221,6 +237,44 @@ Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode
     return OK;
 }
 
+Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) {
+    auto p = scan;
+    auto field = parseExpr(p, *this).getUnsigned();
+    if (!hasError()) {
+        if (field < 8) {
+            field <<= 3;
+        } else if (field & ~070) {
+            setErrorIf(scan, ILLEGAL_OPERAND);
+            field &= ~070;
+        }
+        insn.embed(field);
+        scan = p;
+    }
+    return getError();
+}
+
+Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) {
+    Insn _micro{0};
+    AsmInsn micro{_micro};
+    Config::opcode_t done = insn.opCode() & ~insn.bits();
+    while (!endOfLine(scan.skipSpaces())) {
+        auto p = scan;
+        StrScanner name;
+        if (_parser.readInstruction(p, name) != OK)
+            return parseField(scan, insn);
+        micro.nameBuffer().reset().text(name);
+        if (TABLE.searchName(cpuType(), micro) != OK)
+            return parseField(scan, insn);
+        if (TABLE.searchMicro(cpuType(), micro, M_MEX) != OK)
+            return parseField(scan, insn);
+        const auto error = encodeMicro(insn, micro, done);
+        if (error)
+            setErrorIf(scan, error);
+        scan = p;
+    }
+    return setError(MISSING_OPERAND);
+}
+
 Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) {
     Insn _micro{0};
     AsmInsn micro{_micro};
@@ -281,6 +335,8 @@ Error AsmIm6100::processPseudo(StrScanner &scan, Insn &insn) {
         return defineDoubleDecimal(scan, insn);
     if (strcasecmp_P(insn.name(), TEXT_PAGE) == 0)
         return alignOnPage(scan, insn);
+    if (cpuType() == HD6120 && strcasecmp_P(insn.name(), TEXT_FIELD) == 0)
+        return defineField(scan, insn);
     return Assembler::processPseudo(scan, insn);
 }
 
@@ -296,6 +352,8 @@ Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) {
             parseOperateOperand(scan, insn);
         } else if (mode == M_IOT) {
             parseIoTransferOperand(scan, insn);
+        } else if (mode == M_MEX) {
+            parseMemExtensionOperand(scan, insn);
         }
     } else {
         StrScanner p(errorAt());

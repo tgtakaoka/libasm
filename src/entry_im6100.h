@@ -33,6 +33,7 @@ enum AddrMode : uint8_t {
     M_MEM = 4,  // Memory reference:  |opc|IM| offset |
     M_CMP = 5,  // Composed
     M_IOT = 6,  // IOT instruction:   |110| device|ctl|
+    M_MEX = 7,  // Memory extenstion: |110|010|fld|0__|
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
