@@ -42,7 +42,7 @@ uint8_t toNumber(const char c, const Radix radix) {
 Error Value::parseNumber(StrScanner &scan, Radix radix) {
     auto p = scan;
     if (!isValidDigit(*p, radix))
-        return ILLEGAL_CONSTANT;
+        return NOT_AN_EXPECTED;
     const uint32_t limit = UINT32_MAX / uint8_t(radix);
     const uint8_t limit_digit = UINT32_MAX % uint8_t(radix);
     Error error = OK;

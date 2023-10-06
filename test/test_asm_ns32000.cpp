@@ -97,7 +97,7 @@ static void test_format_1() {
 
     // Various displacement.
     TEST("RET 0",          0x12, 0x00);
-    TEST("RET 63",         0x12, 0x3F);
+    TEST("RET D'63",       0x12, 0x3F);
     TEST("RET -64",        0x12, 0x40);
     TEST("RET 8191",       0x12, 0x9F, 0xFF);
     TEST("RET -8192",      0x12, 0xA0, 0x00);
