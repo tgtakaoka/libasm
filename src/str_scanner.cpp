@@ -32,18 +32,24 @@ bool StrScanner::iequals_P(const /*PROGMEM*/ char *text_P) const {
     return size() == len && strncasecmp_P(_str, text_P, len) == 0;
 }
 
-bool StrScanner::iexpectText_P(const /*PROGMEM*/ char *text_P, size_t len, bool word) {
-    if (len == 0)
-        len = strlen_P(text_P);
-    if (strncasecmp_P(_str, text_P, len) != 0)
-        return false;
-    if (word) {
-        const auto c = _str[len];
-        if (isalnum(c) || c == '_')
-            return false;
+bool StrScanner::iexpectText_P(const /*PROGMEM*/ char *text_P) {
+    return iexpectText_P(text_P, strlen_P(text_P));
+}
+
+bool StrScanner::iexpectText_P(const /*PROGMEM*/ char *text_P, size_t len) {
+    if (strncasecmp_P(_str, text_P, len) == 0) {
+        _str += len;
+        return true;
     }
-    _str += len;
-    return true;
+    return false;
+}
+
+bool StrScanner::iexpectWord_P(const /*PROGMEM*/ char *text_P) {
+    const auto p = _str;
+    if (iexpectText_P(text_P) && !(isalnum(*_str) || *_str == '_'))
+        return true;
+    _str = p;
+    return false;
 }
 
 }  // namespace libasm

@@ -240,9 +240,9 @@ int8_t encodeCtlReg(bool segmentedModel, RegName name) {
 }
 
 IntrName parseIntrName(StrScanner &scan) {
-    if (scan.iexpectText_P(TEXT_INTR_VI, 0, true))
+    if (scan.iexpectWord_P(TEXT_INTR_VI))
         return INTR_VI;
-    if (scan.iexpectText_P(TEXT_INTR_NVI, 0, true))
+    if (scan.iexpectWord_P(TEXT_INTR_NVI))
         return INTR_NVI;
     return INTR_UNDEF;
 }
