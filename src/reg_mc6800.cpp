@@ -27,9 +27,9 @@ namespace mc6800 {
 namespace reg {
 
 RegName parseRegName(StrScanner &scan) {
-    if (scan.iexpectText_P(TEXT_REG_X, 1, true))
+    if (scan.iexpectWord_P(TEXT_REG_X))
         return REG_X;
-    if (scan.iexpectText_P(TEXT_REG_Y, 1, true))
+    if (scan.iexpectWord_P(TEXT_REG_Y))
         return REG_Y;
     return REG_UNDEF;
 }
