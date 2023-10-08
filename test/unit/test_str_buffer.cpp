@@ -16,6 +16,9 @@
 
 #include "str_buffer.h"
 
+#include <float.h>
+#include <math.h>
+
 #include "test_src_helper.h"
 
 namespace libasm {
@@ -43,7 +46,7 @@ void test_letter() {
     EQ("ctor", sizeof(buffer) - 1, upper.capacity());
 
     out.letter('a').over(lower).letter('B').over(upper).letter('c').over(out).letter('D');
-    EQ("letter alpha", "abCD", out); // dereference
+    EQ("letter alpha", "abCD", out);  // dereference
     EQ("letter alpha", 2, lower.len());
     EQ("letter alpha", 3, upper.len());
     EQ("letter alpha", 4, out.len());
@@ -276,7 +279,62 @@ void test_uint8() {
     out.reset();
     out.uint8(255);
     EQ("uint8-255", "255", out.str());
+}
 
+void test_float32() {
+    char buffer[16];
+    StrBuffer out(buffer, sizeof(buffer));
+
+    out.float32(0);
+    EQ("float32-0", "0", out.str());
+
+    out.reset();
+    out.float32(FLT_EPSILON);
+    EQ("float32-epsilon", "1.1920929e-07", out.str());
+
+    out.reset();
+    out.float32(FLT_MIN);
+    EQ("float32-min", "1.17549435e-38", out.str());
+
+    out.reset();
+    out.float32(FLT_MAX);
+    EQ("float32-max", "3.40282347e+38", out.str());
+
+    out.reset();
+    out.float32(-INFINITY);
+    EQ("float32-inf", "-inf", out.str());
+
+    out.reset();
+    out.float32(-NAN);
+    EQ("float32-nan", "-nan", out.str());
+}
+
+void test_float64() {
+    char buffer[32];
+    StrCaseBuffer out(buffer, sizeof(buffer), true);
+
+    out.float64(0);
+    EQ("float64-0", "0", out.str());
+
+    out.reset();
+    out.float64(DBL_EPSILON);
+    EQ("float64-epsilon", "2.2204460492503131e-16", out.str());
+
+    out.reset();
+    out.float64(DBL_MIN);
+    EQ("float64-min", "2.2250738585072014e-308", out.str());
+
+    out.reset();
+    out.float64(DBL_MAX);
+    EQ("float64-max", "1.7976931348623157e+308", out.str());
+
+    out.reset();
+    out.float64(-INFINITY);
+    EQ("float64-inf", "-inf", out.str());
+
+    out.reset();
+    out.float64(-NAN);
+    EQ("float64-nan", "-nan", out.str());
 }
 
 void test_comma() {
@@ -335,6 +393,8 @@ void run_tests() {
     RUN_TEST(test_scanner);
     RUN_TEST(test_rtext);
     RUN_TEST(test_uint8);
+    RUN_TEST(test_float32);
+    RUN_TEST(test_float64);
     RUN_TEST(test_comma);
     RUN_TEST(test_reverse);
     RUN_TEST(test_reset);

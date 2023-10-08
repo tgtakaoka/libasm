@@ -226,12 +226,12 @@ Error DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) 
     case SZ_FLOAT:
         if (_floatPrefix)
             out.letter('0').letter('f');
-        out.format_P(PSTR("%.8g"), insn.readFloat32());
+        out.float32(insn.readFloat32());
         break;
     case SZ_LONG:
         if (_floatPrefix)
             out.letter('0').letter('f');
-        out.format_P(PSTR("%.16lg"), insn.readFloat64());
+        out.float64(insn.readFloat64());
         break;
     default:
         break;

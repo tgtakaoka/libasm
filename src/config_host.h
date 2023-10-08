@@ -66,7 +66,7 @@ typedef union {
 #include <strings.h>
 #define strcasecmp_P(d, s) strcasecmp((d), (s))
 #define strncasecmp_P(d, s, n) strncasecmp((d), (s), (n))
-#define vsnprintf_P(s, n, f, ...) vsnprintf((s), (n), (f), __VA_ARGS__)
+#define snprintf_P(s, n, f, ...) snprintf((s), (n), (f), __VA_ARGS__)
 
 #endif  // AVR
 
