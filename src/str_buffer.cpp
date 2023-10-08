@@ -121,11 +121,18 @@ StrBuffer &StrBuffer::uint8(uint8_t num) {
     return reverse(start);
 }
 
-StrBuffer &StrBuffer::format_P(const /*PROGMEM*/ char *fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    const auto end = _out + vsnprintf_P(_out, _end - _out, fmt, args);
-    va_end(args);
+StrBuffer &StrBuffer::float32(float num) {
+    const auto end = _out + snprintf_P(_out, _end - _out, PSTR("%.9g"), num);
+    if (end < _end) {
+        _out = end;
+    } else {
+        setError(BUFFER_OVERFLOW);
+    }
+    return *this;
+}
+
+StrBuffer &StrBuffer::float64(double num) {
+    const auto end = _out + snprintf_P(_out, _end - _out, PSTR("%.17lg"), num);
     if (end < _end) {
         _out = end;
     } else {

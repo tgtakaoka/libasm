@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #ifndef __STR_BUFFER_H__
 #define __STR_BUFFER_H__
 
@@ -25,8 +24,14 @@
 
 namespace libasm {
 
+/**
+ * Convenient and safe wrapper for C character buffer.
+ */
 struct StrBuffer : ErrorReporter {
+    /** constructor from C char buffer. */
     StrBuffer(char *buffer, size_t size);
+
+    /** copy constructor. */
     StrBuffer(const StrBuffer &o);
 
     /** Return the head of buffer. */
@@ -51,7 +56,7 @@ struct StrBuffer : ErrorReporter {
     /** Hand over output buffer to |heir| and return it. */
     StrBuffer &over(StrBuffer &heir) const;
 
-    /** Output a |letter| as is */
+    /** Output a |letter| as is. */
     StrBuffer &rletter(char c);
 
     /** Output a |letter| using specific case conversion. */
@@ -67,16 +72,19 @@ struct StrBuffer : ErrorReporter {
     StrBuffer &rtext(const StrScanner &scan);
     StrBuffer &rtext_P(const /*PROGMEM*/ char *text_P);
 
-    /** Outpur |num| as decimal number. */
+    /** Output |num| as decimal number. */
     StrBuffer &uint8(uint8_t num);
 
-    /** Output |...| arguments using |fmt| as |vsprintf| */
-    StrBuffer &format_P(const /*PROGMEM*/ char *fmt, ...);
+    /** Output |num| as 32-bit floating point number. */
+    StrBuffer &float32(float num);
+
+    /** Output |num| as 64-bit floating point number. */
+    StrBuffer &float64(double num);
 
     /** output ", " */
     StrBuffer &comma();
 
-    /** Reverse letters from |start| to |_out| */
+    /** Reverse letters from |start| to |_out|. */
     StrBuffer &reverse(char *start);
 
 private:
@@ -85,9 +93,15 @@ private:
     const char *_end;
 };
 
+/**
+ * Case converting StrBuffer.
+ */
 struct StrCaseBuffer : StrBuffer {
+    /** constructor from C char buffer. */
     StrCaseBuffer(char *buffer, size_t size, bool uppercase)
         : StrBuffer(buffer, size), _converter(uppercase ? toupper : tolower) {}
+
+    /** constroctor from StrBuffer. */
     StrCaseBuffer(const StrBuffer &o, bool uppercase)
         : StrBuffer(o), _converter(uppercase ? toupper : tolower) {}
 
