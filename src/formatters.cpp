@@ -16,8 +16,6 @@
 
 #include "formatters.h"
 
-#include "text_common.h"
-
 namespace libasm {
 
 StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val) const {
@@ -42,7 +40,6 @@ StrBuffer &BinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) con
     return outBin(out, val, width).reverse(start);
 }
 
-
 StrBuffer &BinFormatter::outBin(StrBuffer &out, uint32_t val, uint8_t width) {
     const auto start = out.mark();
     while (val) {
@@ -54,23 +51,6 @@ StrBuffer &BinFormatter::outBin(StrBuffer &out, uint32_t val, uint8_t width) {
     while (out.mark() - start < width && out.isOK())
         out.letter('0');
     return out;
-}
-
-StrBuffer &PrefixBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return BinFormatter::format(out.text_P(_prefix_P), val, width);
-}
-
-StrBuffer &SuffixBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return BinFormatter::format(out, val, width).letter(_suffix);
-}
-
-StrBuffer &SurroundBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    out.text_P(_prefix_P);
-    return BinFormatter::format(out, val, width).letter(_suffix);
-}
-
-StrBuffer &CStyleBinFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return BinFormatter::format(out.rtext_P(text::common::PSTR_ZERO_B), val, width);
 }
 
 StrBuffer &OctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
@@ -90,23 +70,6 @@ StrBuffer &OctFormatter::outOct(StrBuffer &out, uint32_t val, uint8_t width) {
     while (out.mark() - start < digit && out.isOK())
         out.letter('0');
     return out;
-}
-
-StrBuffer &PrefixOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return OctFormatter::format(out.text_P(_prefix_P), val, width);
-}
-
-StrBuffer &SuffixOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return OctFormatter::format(out, val, width).letter(_suffix);
-}
-
-StrBuffer &SurroundOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    out.text_P(_prefix_P);
-    return OctFormatter::format(out, val, width).letter(_suffix);
-}
-
-StrBuffer &CStyleOctFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return OctFormatter::format(out.letter('0'), val, width);
 }
 
 StrBuffer &HexFormatter::outHex(StrBuffer &out, uint32_t val, uint8_t width) {
@@ -131,24 +94,12 @@ StrBuffer &HexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) con
     return outHex(out, val, width).reverse(start);
 }
 
-StrBuffer &PrefixHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return HexFormatter::format(out.text_P(_prefix_P), val, width);
-}
-
-StrBuffer &SuffixHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
+StrBuffer &SuffixHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t bits) const {
     const auto start = out.mark();
-    const auto top = outHex(out, val, width).mark();
+    const auto top = outHex(out, val, bits).mark();
     if (top[-1] > '9')
         out.letter('0');  // prefixed with '0'
     return out.reverse(start).letter(_suffix);
-}
-
-StrBuffer &SurroundHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return HexFormatter::format(out.text_P(_prefix_P), val, width).letter(_suffix);
-}
-
-StrBuffer &CStyleHexFormatter::format(StrBuffer &out, uint32_t val, uint8_t width) const {
-    return HexFormatter::format(out.rtext_P(text::common::PSTR_ZERO_X), val, width);
 }
 
 }  // namespace libasm
