@@ -38,7 +38,7 @@ const ValueFormatter::Plugins &DisMos6502::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         char locationSymbol() const override { return '*'; }
-        const PrefixHexFormatter _hex{PSTR_DOLLAR};
+        const PrefixHexFormatter _hex{'$'};
     } PLUGINS{};
     return PLUGINS;
 }
