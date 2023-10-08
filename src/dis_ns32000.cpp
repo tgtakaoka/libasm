@@ -43,7 +43,7 @@ const ValueFormatter::Plugins &DisNs32000::defaultPlugins() {
     static const struct final : ValueFormatter::Plugins {
         const HexFormatter &hex() const override { return _hex; }
         const /*PROGMEM*/ char *lineComment_P() const override { return PSTR_SHARP; }
-        const PrefixHexFormatter _hex{PSTR_X_DASH};
+        const PrefixStrHexFormatter _hex{PSTR_X_DASH};
     } PLUGINS{};
     return PLUGINS;
 }

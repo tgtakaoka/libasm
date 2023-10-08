@@ -511,8 +511,6 @@ extern const char TEXT_TEXT[]  PROGMEM;
 extern const char PSTR_AT[]      PROGMEM; // "*"
 extern const char PSTR_DOLLAR[]  PROGMEM; // "$"
 extern const char PSTR_DOT[]     PROGMEM; // "."
-extern const char PSTR_LESS[]    PROGMEM; // ">"
-extern const char PSTR_PERCENT[] PROGMEM; // "%"
 extern const char PSTR_SHARP[]   PROGMEM; // "#"
 extern const char PSTR_STAR[]    PROGMEM; // "*"
 extern const char PSTR_UNDER[]   PROGMEM; // "_"
