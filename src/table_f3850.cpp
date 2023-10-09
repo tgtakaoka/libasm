@@ -255,7 +255,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 Error TableF3850::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
-        insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 

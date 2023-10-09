@@ -56,12 +56,13 @@ StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) {
 Error DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) {
     const int8_t offset = insn.readByte();
     const Config::opcode_t opc = insn.readByte();
+    setErrorIf(insn);
 
     DisInsn ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
     ixBit.nameBuffer().reset();
     if (TABLE.searchOpCode(cpuType(), ixBit, out))
-        return setError(ixBit);
+        return setErrorIf(ixBit);
 
     const auto reg = decodeDataReg(opc);
     if (reg != REG_HL)
@@ -70,15 +71,16 @@ Error DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) {
     if (dst == M_BIT)
         outHex(out, (opc >> 3) & 7, 3).comma();
     outIndexOffset(out, decodeIndexReg(insn), offset);
-    return setError(insn);
+    return getError();
 }
 
 Error DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) {
     const auto delta = static_cast<int8_t>(insn.readByte());
+    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
-    return setError(insn);
+    return getError();
 }
 
 Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -179,21 +181,18 @@ Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     default:
         return OK;
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    Config::opcode_t opCode = insn.readByte();
+    auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.isPrefix(cpuType(), opCode)) {
-        const Config::opcode_t prefix = opCode;
+        const auto prefix = opCode;
         opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 

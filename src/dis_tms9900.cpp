@@ -62,7 +62,7 @@ Error DisTms9900::decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out) {
     auto save = out;
     insn.nameBuffer().reset().over(out).text_P(TEXT_MID).over(insn.nameBuffer());
     save.over(out);
-    return setError(UNKNOWN_INSTRUCTION);
+    return setErrorIf(UNKNOWN_INSTRUCTION);
 }
 
 Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) {
@@ -77,12 +77,13 @@ Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) 
         return OK;
     }
     const auto addr = insn.readUint16();
+    setErrorIf(insn);
     if (reg == 0 && !insn.byteOp() && addr % 2 != 0)
         setErrorIf(OPERAND_NOT_ALIGNED);
     outHex(out.letter('@'), addr, 16);
     if (reg != 0)
         outRegName(out.letter('('), reg).letter(')');
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) {
@@ -91,7 +92,7 @@ Error DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) {
     const auto base = insn.address() + 2;
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 9);
-    return OK;
+    return getError();
 }
 
 Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -109,9 +110,8 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outRegName(out, opc >> 6);
         return OK;
     case M_SRC2:
-        if (checkPostWord(insn, out)) {
+        if (checkPostWord(insn, out))
             return getError();
-        }
         /* Fall-through */
     case M_SRC:
         val8 = (mode == M_SRC) ? opc : post;
@@ -165,17 +165,15 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
 Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     const auto opCode = insn.readUint16();
-
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return decodeMacroInstructionDetect(insn, out);
+
     insn.readPost();
     if (setError(insn))
         return getError();
 
     const auto src = insn.src();
-    if (src == M_NONE)
-        return OK;
     if (decodeOperand(insn, out, src))
         return getError();
     const auto dst = insn.dst();

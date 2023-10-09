@@ -129,28 +129,29 @@ Error DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         break;
     case M_PMA: {
         uint16_t pma = insn.readUint16();
-        if (pma & 0xF000)
-            return setError(OVERFLOW_RANGE);
+        setErrorIf(insn);
+        //if (pma & 0xF000)
+        // setErrorIf(OVERFLOW_RANGE);
+        const auto err = checkAddr(pma);
+        if (err)
+            setErrorIf(err);
         outAbsAddr(out, pma);
         break;
     }
     default:
         break;
     }
-    return OK;
+    return getError();
 }
 
 Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    Config::opcode_t opCode = insn.readUint16();
-
+    const auto opCode = insn.readUint16();
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();
-    if (mode1 == M_NONE)
-        return OK;
     if (decodeOperand(insn, out, mode1))
         return getError();
     const auto mode2 = insn.mode2();

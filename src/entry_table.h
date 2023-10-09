@@ -167,7 +167,7 @@ struct CpuBase {
                 return entry;
             }
         }
-        insn.setError(found ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(found ? OPERAND_NOT_ALLOWED : UNKNOWN_INSTRUCTION);
         return nullptr;
     }
 
@@ -222,7 +222,7 @@ struct CpuBase {
                 }
             }
         }
-        insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
         return nullptr;
     }
 

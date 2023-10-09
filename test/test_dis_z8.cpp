@@ -43,13 +43,17 @@ static bool z88() {
     if (z88())               \
     TEST(name, opr, __VA_ARGS__)
 #define OZ86(name, opr, ...) \
-    if (z86()) EROA(name, opr, __VA_ARGS__)
+    if (z86())               \
+    EROA(name, opr, __VA_ARGS__)
 #define OZ88(name, opr, ...) \
-    if (z88()) EROA(name, opr, __VA_ARGS__)
+    if (z88())               \
+    EROA(name, opr, __VA_ARGS__)
 #define UZ86(name, opr, ...) \
-    if (z86()) ERUI(name, opr, __VA_ARGS__)
+    if (z86())               \
+    ERUI(name, opr, __VA_ARGS__)
 #define UZ88(name, opr, ...) \
-    if (z88()) ERUI(name, opr, __VA_ARGS__)
+    if (z88())               \
+    ERUI(name, opr, __VA_ARGS__)
 
 static uint8_t R(uint8_t n) {
     if (z88())
@@ -172,11 +176,13 @@ static void test_relative() {
     ATEST(0x2000, DJNZ, "R0, $",     0x0A, 0xFE);
     ATEST(0x2000, DJNZ, "R0, $+2",   0x0A, 0x00);
     ATEST(0x2000, DJNZ, "R0, $+129", 0x0A, 0x7F);
-    TZ88(CPIJE,  "R3, @R12, $-125", 0xC2, 0xC3, 0x80);
-    TZ88(CPIJE,  "R3, @R12, $",     0xC2, 0xC3, 0xFD);
-    TZ88(CPIJE,  "R3, @R12, $+3",   0xC2, 0xC3, 0x00);
-    TZ88(CPIJE,  "R3, @R12, $+130", 0xC2, 0xC3, 0x7F);
-    TZ88(CPIJNE, "R3, @R12, $",     0xD2, 0xC3, 0xFD);
+    if (z88()) {
+        ATEST(0x1000, CPIJE,  "R3, @R12, $-125", 0xC2, 0xC3, 0x80);
+        ATEST(0x1000, CPIJE,  "R3, @R12, $",     0xC2, 0xC3, 0xFD);
+        ATEST(0x1000, CPIJE,  "R3, @R12, $+3",   0xC2, 0xC3, 0x00);
+        ATEST(0x1000, CPIJE,  "R3, @R12, $+130", 0xC2, 0xC3, 0x7F);
+        ATEST(0x1000, CPIJNE, "R3, @R12, $",     0xD2, 0xC3, 0xFD);
+    }
 }
 
 static void test_operand_in_opcode() {

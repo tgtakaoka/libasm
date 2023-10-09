@@ -67,11 +67,12 @@ Error DisMc6805::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
     } else {
         outAbsAddr(out, dir, 8);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMc6805::decodeExtended(DisInsn &insn, StrBuffer &out) {
     const Config::uintptr_t addr = insn.readUint16();
+    setErrorIf(insn);
     if (checkAddr(addr))
         setErrorIf(OVERFLOW_RANGE);
     const auto label = lookup(addr);
@@ -82,7 +83,7 @@ Error DisMc6805::decodeExtended(DisInsn &insn, StrBuffer &out) {
             out.letter('>');
         outAbsAddr(out, addr, isOK() ? 0 : ADDRESS_16BIT);
     }
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisMc6805::decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -106,10 +107,11 @@ Error DisMc6805::decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode) {
 
 Error DisMc6805::decodeRelative(DisInsn &insn, StrBuffer &out) {
     const auto delta = static_cast<int8_t>(insn.readByte());
+    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -117,7 +119,7 @@ Error DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         switch (insn.opCode() & 0xF0) {
         case 0xA0:
             outHex(out.letter('#'), insn.readByte(), 8);
-            return OK;
+            return setErrorIf(insn);
         case 0x30:
         case 0xB0:
             return decodeDirectPage(insn, out);
@@ -145,7 +147,7 @@ Error DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         return decodeRelative(insn, out);
     case M_IMM:
         outHex(out.letter('#'), insn.readByte(), 8);
-        return OK;
+        return setErrorIf(insn);
     case M_BNO:
         outHex(out, (insn.opCode() >> 1) & 7, 3);
         return OK;
@@ -158,9 +160,6 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
@@ -172,14 +171,14 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto mode2 = insn.mode2();
 
     if (mode2 == M_NONE)
-        return setOK();
+        return getError();
     out.comma();
     if (decodeOperand(insn, out, mode2))
         return getError();
 
     const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
-        return setOK();
+        return getError();
     out.comma();
     return decodeOperand(insn, out, mode3);
 }

@@ -223,7 +223,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto table = entry->flags();
     if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src())) {
         if (table.undefined())
-            insn.setError(OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;
     }
     return false;
@@ -262,7 +262,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 Error TableIns8070::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
-        insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 

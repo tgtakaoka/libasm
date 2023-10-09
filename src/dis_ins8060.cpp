@@ -40,7 +40,7 @@ Error DisIns8060::decodePntr(DisInsn &insn, StrBuffer &out) {
 
 Error DisIns8060::decodeImm8(DisInsn &insn, StrBuffer &out) {
     outHex(out, insn.readByte(), 8);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) {
@@ -72,16 +72,13 @@ Error DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) {
         }
         outRegName(out.letter('('), reg).letter(')');
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     const auto opCode = insn.readByte();
-    if (setError(insn))
-        return getError();
     insn.setOpCode(opCode);
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 

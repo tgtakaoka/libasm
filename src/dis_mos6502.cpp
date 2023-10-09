@@ -99,14 +99,16 @@ Error DisMos6502::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) 
     } else {
         outHex(out, insn.readByte(), 8);
     }
+    setErrorIf(insn);
     if (insn.opCode() == TableMos6502::WDM)
-        return setError(UNKNOWN_INSTRUCTION);
-    return setError(insn);
+        setErrorIf(UNKNOWN_INSTRUCTION);
+    return getError();
 }
 
 Error DisMos6502::decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) {
     uint32_t target = insn.readUint16();
     const auto bank = insn.readByte();
+    setErrorIf(insn);
     target |= static_cast<uint32_t>(bank) << 16;
     const auto err = config().checkAddr(target);
     if (err)
@@ -124,7 +126,7 @@ Error DisMos6502::decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) {
             outAbsAddr(out, target);
         }
     }
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisMos6502::decodeAbsolute(DisInsn &insn, StrBuffer &out) {
@@ -137,7 +139,7 @@ Error DisMos6502::decodeAbsolute(DisInsn &insn, StrBuffer &out) {
             out.letter('>');
         outAbsAddr(out, addr, 16);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
@@ -148,7 +150,7 @@ Error DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
     } else {
         outAbsAddr(out, zp, 8);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -158,12 +160,13 @@ Error DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     } else {
         delta = static_cast<int8_t>(insn.readByte());
     }
+    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     if ((target >> 16) != (insn.address() >> 16))
         setErrorIf(OPERAND_TOO_FAR);
     outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisMos6502::decodeBlockMove(DisInsn &insn, StrBuffer &out) {
@@ -173,7 +176,7 @@ Error DisMos6502::decodeBlockMove(DisInsn &insn, StrBuffer &out) {
     const uint32_t src = static_cast<uint32_t>(sbank) << 16;
     outAbsAddr(out, src).comma();
     outAbsAddr(out, dst);
-    return setOK();
+    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndFlags) {
@@ -212,11 +215,8 @@ Error DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndF
 
 Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    const Config::opcode_t opCode = insn.readByte();
-    if (setError(insn))
-        return getError();
+    const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-
     insn.setAllowIndirectLong(_useIndirectLong);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
@@ -243,7 +243,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (longi1 && !longi2)
         out.letter(']');
     if (mode2 == M_NONE)
-        return setOK();
+        return getError();
     out.letter(',');
     if (decodeOperand(insn, out, mode2))
         return getError();
@@ -254,7 +254,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (longi2)
         out.letter(']');
     if (mode3 == M_NONE)
-        return setOK();
+        return getError();
     out.letter(',');
     return decodeOperand(insn, out, mode3);
 }

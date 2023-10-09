@@ -291,7 +291,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
             acceptMode(flags.mode3(), table.mode3())) {
         if (table.undefined())
-            insn.setError(OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;
     }
     return false;
@@ -322,7 +322,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 Error TableMc6805::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
-        insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 

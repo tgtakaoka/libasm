@@ -679,7 +679,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto table = entry->flags();
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2())) {
         if (table.undefined())
-            insn.setError(OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;
     }
     return false;
@@ -715,7 +715,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     }
     if (opCode == entry->opCode()) {
         if (flags.undefined())
-            insn.setError(UNKNOWN_INSTRUCTION);
+            insn.setErrorIf(UNKNOWN_INSTRUCTION);
         return true;
     }
     return false;

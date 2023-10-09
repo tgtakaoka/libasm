@@ -246,7 +246,7 @@ struct DisInsnBase : ErrorReporter {
     /** Read 8 bit data. */
     uint8_t readByte() {
         if (!_memory.hasNext()) {
-            setError(NO_MEMORY);
+            setErrorIf(NO_MEMORY);
             return 0;
         }
         const uint8_t data = _memory.readByte();

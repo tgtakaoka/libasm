@@ -632,7 +632,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     if (acceptMode(flags.mode1(), table.mode1()) && acceptMode(flags.mode2(), table.mode2()) &&
             acceptMode(flags.mode3(), table.mode3())) {
         if (table.undefined())
-            insn.setError(OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;
     }
     return false;
@@ -661,7 +661,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 static const Entry *searchOpCodeImpl(const Cpu *cpu, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined()) {
-        insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
         entry = nullptr;
     }
     return entry;
@@ -675,7 +675,7 @@ Error TableMc6800::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
 Error TableMc6800::searchOpCodeAlias(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = searchOpCodeImpl(cpu(cpuType), insn, out);
     if (entry == nullptr)
-        return insn.setError(INTERNAL_ERROR);
+        return insn.setErrorIf(INTERNAL_ERROR);
     entry += 1;
     if (entry->opCode() != insn.opCode())
         return insn.setError(INTERNAL_ERROR);

@@ -294,7 +294,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
             acceptMode(flags.src2(), table.src2())) {
         if (table.undefined())
-            insn.setError(OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;
     }
     return false;
@@ -324,7 +324,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     const auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined())
-        insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
     return insn.getError();
 }
 

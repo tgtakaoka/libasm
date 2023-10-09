@@ -63,7 +63,7 @@ Error DisI8080::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     default:
         return OK;
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
@@ -75,9 +75,6 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 

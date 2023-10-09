@@ -75,22 +75,23 @@ StrBuffer &DisZ8000::outImmediate(StrBuffer &out, uint8_t data, AddrMode mode) {
 Error DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, OprSize size) {
     out.letter('#');
     if (mode == M_SCNT || mode == M_NCNT) {
-        uint16_t data = insn.readUint16();
+        auto data = insn.readUint16();
+        setErrorIf(insn);
         if (size == SZ_BYTE && (data & 0xFF00) != 0)
-            return setError(ILLEGAL_OPERAND);
-        const int16_t count =
+            setErrorIf(ILLEGAL_OPERAND);
+        const auto count =
                 (size == SZ_BYTE) ? static_cast<int8_t>(data) : static_cast<int16_t>(data);
         if (count < 0) {
             if (TABLE.searchOpCodeAlias(cpuType(), insn, out))
-                return setError(insn);
+                return setErrorIf(insn);
             data = -count;
         }
         if (size == SZ_BYTE && data > 8)
-            return setError(ILLEGAL_OPERAND);
+            return setErrorIf(ILLEGAL_OPERAND);
         if (size == SZ_WORD && data > 16)
-            return setError(ILLEGAL_OPERAND);
+            return setErrorIf(ILLEGAL_OPERAND);
         if (size == SZ_LONG && data > 32)
-            return setError(ILLEGAL_OPERAND);
+            return setErrorIf(ILLEGAL_OPERAND);
         outDec(out, data, 6);
     } else if (size == SZ_BYTE) {
         outHex(out, insn.readUint16(), 8);
@@ -99,7 +100,7 @@ Error DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
     } else if (size == SZ_LONG) {
         outHex(out, insn.readUint32(), 32);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisZ8000::decodeFlags(StrBuffer &out, uint8_t flags) {
@@ -156,7 +157,7 @@ Error DisZ8000::decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mod
             return getError();
     }
     out.letter(')');
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisZ8000::decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) {
@@ -187,13 +188,14 @@ Error DisZ8000::decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode 
 
 Error DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out) {
     const uint16_t addr = insn.readUint16();
+    setErrorIf(insn);
     if (segmentedModel()) {
         const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
         uint16_t off = static_cast<uint8_t>(addr);
         auto shortDirect = _shortDirect;
         if (addr & 0x8000) {
             if (addr & 0x00FF)
-                setError(ILLEGAL_OPERAND);
+                setErrorIf(ILLEGAL_OPERAND);
             off = insn.readUint16();
             shortDirect = false;
         }
@@ -206,13 +208,14 @@ Error DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out) {
     } else {
         outAbsAddr(out, addr);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     int16_t delta = 0;
     if (mode == M_RA) {
         delta = static_cast<int16_t>(insn.readUint16());
+        setErrorIf(insn);
     } else if (mode == M_RA12) {
         // Sign extends 12-bit number as 0x800 is a sign bit.
         const auto ra12 = signExtend(insn.opCode(), 12);
@@ -229,7 +232,7 @@ Error DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
-    return setError(insn);
+    return getError();
 }
 
 namespace {
@@ -277,7 +280,7 @@ Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Mode
         if (_ioAddressPrefix)
             out.letter('#');
         outAbsAddr(out, insn.readUint16(), 16);
-        return OK;
+        return setErrorIf(insn);
     case M_IRIO:
         if (num == 0)
             return setError(REGISTER_NOT_ALLOWED);
@@ -351,7 +354,7 @@ Error DisZ8000::checkPostWord(const DisInsn &insn) {
         }
         if ((insn.post() & ~mask) == insn.postVal())
             return OK;
-        return setError(UNKNOWN_POSTBYTE);
+        return setErrorIf(UNKNOWN_POSTBYTE);
     }
     return OK;
 }
@@ -414,13 +417,11 @@ StrBuffer &DisZ8000::outComma(StrBuffer &out, const DisInsn &insn, AddrMode mode
 
 Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    const Config::opcode_t opCode = insn.readUint16();
-    if (setError(insn))
-        return getError();
+    const auto opCode = insn.readUint16();
     insn.setOpCode(opCode);
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
+
     if (checkPostWord(insn))
         return getError();
     if ((insn.isPushPopInsn() || insn.isThreeRegsInsn()) && checkRegisterOverlap(insn))

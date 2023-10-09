@@ -127,7 +127,7 @@ bool isScaledIndex(uint8_t gen) {
 Error DisNs32000::readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) {
     if (isGenMode(mode) && isScaledIndex(getOprField(insn, pos)))
         insn.setIndexByte(insn.readByte(), pos);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 StrBuffer &DisNs32000::outDisplacement(StrBuffer &out, const Displacement &disp) {
@@ -143,6 +143,7 @@ StrBuffer &DisNs32000::outDisplacement(StrBuffer &out, const Displacement &disp)
 
 Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
     const uint8_t head = insn.readByte();
+    setErrorIf(insn);
     if ((head & 0x80) == 0) {
         // 0xxx|xxxx
         // Sign extends 7-bit number as 0x40 is a sign bit.
@@ -151,6 +152,7 @@ Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
     } else {
         // Sign extends 14-bit number as 0x2000 is a sign bit.
         const auto lsb = insn.readByte();
+        setErrorIf(insn);
         const auto val16 = (static_cast<uint16_t>(head) << 8) | lsb;
         if ((head & 0x40) == 0) {
             // 10xx|xxxx
@@ -161,14 +163,15 @@ Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
             if (head == 0xE0)
                 return setError(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
             const auto lsw = insn.readUint16();
+            setErrorIf(insn);
             const auto val32 = (static_cast<uint32_t>(val16) << 16) | lsw;
             disp.val32 = signExtend(val32, 30);
             disp.bits = 30;
             if (disp.val32 < -0x1F000000L)
-                return setError(OVERFLOW_RANGE);
+                setErrorIf(OVERFLOW_RANGE);
         }
     }
-    return setError(insn);
+    return getError();
 }
 
 Error DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -506,7 +509,7 @@ Error DisNs32000::decodeOperand(
     case M_LEN4:
         return decodeLength(insn, out, mode);
     default:
-        return setError(INTERNAL_ERROR);
+        break;
     }
     return OK;
 }
@@ -520,9 +523,6 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(_cpuSpec, insn, out))
         return setError(insn);
     if (readIndexByte(insn, insn.src(), insn.srcPos()))
@@ -537,8 +537,6 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto ex1 = insn.ex1();
     const auto ex2 = insn.ex2();
     const auto size = insn.size();
-    if (src == M_NONE)
-        return setOK();
     const auto srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
     if (decodeOperand(insn, out, src, insn.srcPos(), srcSize))
         return getError();

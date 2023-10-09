@@ -79,7 +79,7 @@ Error DisScn2650::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         out.comma();
         outRegName(out, REG_R3);
     }
-    return OK;
+    return setErrorIf(insn);
 }
 
 Error DisScn2650::decodeIndexed(DisInsn &insn, StrBuffer &out) {
@@ -102,7 +102,7 @@ Error DisScn2650::decodeIndexed(DisInsn &insn, StrBuffer &out) {
         }
     }
     appendRegName(insn, out, dst);
-    return OK;
+    return setErrorIf(insn);
 }
 
 Error DisScn2650::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -119,7 +119,7 @@ Error DisScn2650::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         const auto target = offset(delta);
         outAbsAddr(out, target);
     }
-    return OK;
+    return setErrorIf(insn);
 }
 
 Error DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) {
@@ -151,16 +151,13 @@ Error DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mo
     default:
         break;
     }
-    return setOK();
+    return setErrorIf(insn);
 }
 
 Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    const Config::opcode_t opCode = insn.readByte();
+    const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
