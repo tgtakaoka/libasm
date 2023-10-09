@@ -64,9 +64,10 @@ Error DisF3850::setUseScratchpadName(bool enable) {
 Error DisF3850::decodeRelative(DisInsn& insn, StrBuffer& out) {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + 1;
+    setErrorIf(insn);
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
-    return OK;
+    return getError();
 }
 
 Error DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) {
@@ -112,16 +113,13 @@ Error DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) {
             outRegName(out, RegName(uint8_t(mode)));
         return OK;
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) {
     DisInsn insn(_insn, memory);
     auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 

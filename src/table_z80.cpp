@@ -474,7 +474,7 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     auto table = entry->flags();
     if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src())) {
         if (table.undefined())
-            insn.setError(OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;
     }
     return false;
@@ -511,7 +511,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 
 Error TableZ80::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    return insn.setError(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
+    return insn.setErrorIf(entry && !entry->flags().undefined() ? OK : UNKNOWN_INSTRUCTION);
 }
 
 

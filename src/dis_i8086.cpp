@@ -109,10 +109,11 @@ Error DisI8086::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     } else {
         delta = static_cast<int16_t>(insn.readUint16());
     }
+    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
-    return setError(insn);
+    return getError();
 }
 
 Error DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -128,17 +129,19 @@ Error DisI8086::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outDec(out, insn.readByte(), 8);
     } else if (mode == M_BIT) {
         const auto bit = insn.readByte();
+        setErrorIf(insn);
         if (bit >= 16 || (insn.size() == SZ_BYTE && bit >= 8))
-            return setError(OVERFLOW_RANGE);
+            return setErrorIf(OVERFLOW_RANGE);
         outDec(out, bit, 4);
     } else {
         // M_FAR
         const uint16_t offset = insn.readUint16();
         const uint16_t segment = insn.readUint16();
+        setErrorIf(insn);
         outAbsAddr(out, segment, 16).letter(':');
         outAbsAddr(out, offset, 16);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 namespace {
@@ -238,14 +241,13 @@ Error DisI8086::outMemReg(DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mo
         if (disp8 >= 0)
             out.letter(sep);
         outDec(out, disp8, -8);
-    }
-    if (mod == 2 || (mod == 0 && r_m == 6)) {
+    } else if (mod == 2 || (mod == 0 && r_m == 6)) {
         if (sep)
             out.letter(sep);
         outAbsAddr(out, insn.readUint16(), 16);
     }
     out.letter(']');
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisI8086::decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
@@ -394,7 +396,7 @@ Error DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) {
 
 Error DisI8086::readCodes(DisInsn &insn) {
     auto opCode = insn.readByte();
-    while (!_segOverrideInsn && TABLE.isSegmentPrefix(opCode)) {
+    while (setErrorIf(insn) == OK && !_segOverrideInsn && TABLE.isSegmentPrefix(opCode)) {
         if (insn.segment())
             return setError(ILLEGAL_SEGMENT);
         insn.setSegment(opCode);

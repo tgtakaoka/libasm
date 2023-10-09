@@ -41,7 +41,7 @@ Error DisMc6800::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
     } else {
         outAbsAddr(out, dir, 8);
     }
-    return OK;
+    return setErrorIf(insn);
 }
 
 Error DisMc6800::decodeExtended(DisInsn &insn, StrBuffer &out) {
@@ -54,15 +54,16 @@ Error DisMc6800::decodeExtended(DisInsn &insn, StrBuffer &out) {
             out.letter('>');
         outAbsAddr(out, addr);
     }
-    return OK;
+    return setErrorIf(insn);
 }
 
 Error DisMc6800::decodeRelative(DisInsn &insn, StrBuffer &out) {
     const auto delta = static_cast<int8_t>(insn.readByte());
+    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
-    return OK;
+    return getError();
 }
 
 namespace {
@@ -79,16 +80,17 @@ int8_t bitNumber(uint8_t val) {
 
 Error DisMc6800::decodeBitNumber(DisInsn &insn, StrBuffer &out) {
     const uint8_t val8 = insn.readByte();
+    setErrorIf(insn);
     const bool aim = (insn.opCode() & 0xF) == 1;
     const int8_t bitNum = bitNumber(aim ? ~val8 : val8);
     if (bitNum >= 0) {
         if (TABLE.searchOpCodeAlias(cpuType(), insn, out))
-            return setError(insn);
+            setErrorIf(insn);
         outHex(out, bitNum, 3);
     } else {
         outHex(out.letter('#'), val8, 8);
     }
-    return OK;
+    return getError();
 }
 
 Error DisMc6800::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -96,24 +98,21 @@ Error DisMc6800::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     switch (mode) {
     case M_DIR:
     dir:
-        decodeDirectPage(insn, out);
-        break;
+        return decodeDirectPage(insn, out);
     case M_GMEM:
         if ((insn.opCode() & 0xF0) == 0x60)
             goto idx;
         // Fall-through
     case M_EXT:
     ext:
-        decodeExtended(insn, out);
-        break;
+        return decodeExtended(insn, out);
     case M_IDX:
     case M_IDY:
     idx:
         outRegName(outDec(out, insn.readByte(), 8).letter(','), mode == M_IDY ? REG_Y : REG_X);
         break;
     case M_REL:
-        decodeRelative(insn, out);
-        break;
+        return decodeRelative(insn, out);
     case M_GN8:
         if (gn == 0x10)
             goto dir;
@@ -137,8 +136,7 @@ Error DisMc6800::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outHex(out.letter('#'), insn.readUint16(), 16);
         break;
     case M_BMM:
-        decodeBitNumber(insn, out);
-        break;
+        return decodeBitNumber(insn, out);
     default:
         return OK;
     }
@@ -154,28 +152,23 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         opCode = insn.readByte();
         insn.setOpCode(opCode, prefix);
     }
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();
-    if (mode1 == M_NONE)
-        return setOK();
     if (decodeOperand(insn, out, mode1))
         return getError();
 
     const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
-        return setOK();
+        return getError();
     out.comma();
     if (decodeOperand(insn, out, mode2))
         return getError();
 
     const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
-        return setOK();
+        return getError();
     out.comma();
     return decodeOperand(insn, out, mode3);
 }

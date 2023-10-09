@@ -50,7 +50,7 @@ Error DisTms7000::decodeRegister(DisInsn &insn, StrBuffer &out) {
     } else {
         outRegName(out, toRegName(regno));
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisTms7000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -62,7 +62,7 @@ Error DisTms7000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) 
     } else {
         outHex(out, insn.readUint16(), 16).text_P(TEXT_IDXB);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisTms7000::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -75,15 +75,16 @@ Error DisTms7000::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     }
     if (mode == M_BIDX)
         out.text_P(TEXT_IDXB);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisTms7000::decodeRelative(DisInsn &insn, StrBuffer &out) {
     int16_t delta = static_cast<int8_t>(insn.readByte());
+    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), 8);
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
@@ -125,11 +126,8 @@ Error DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
 
 Error DisTms7000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
-    const Config::opcode_t opCode = insn.readByte();
-    if (setError(insn))
-        return getError();
+    const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 

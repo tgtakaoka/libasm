@@ -52,7 +52,7 @@ Error DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize siz
     } else if (size == SZ_LONG) {
         outHex(out, insn.readUint32(), 32);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68000 &ea) {
@@ -72,39 +72,40 @@ Error DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc6
     if (mode == M_DISP || mode == M_PCDSP) {
         const auto base = (mode == M_DISP) ? ea.reg : REG_PC;
         const uint16_t val16 = insn.readUint16();
+        setErrorIf(insn);
         if (mode == M_PCDSP) {
             const Config::uintptr_t target =
                     insn.address() + insn.length() - 2 + static_cast<int16_t>(val16);
             if (ea.size == SZ_WORD && (target % 2) != 0)
-                return setError(OPERAND_NOT_ALIGNED);
+                setErrorIf(OPERAND_NOT_ALIGNED);
             if (ea.size == SZ_LONG && (target % 4) != 0)
-                return setError(OPERAND_NOT_ALIGNED);
+                setErrorIf(OPERAND_NOT_ALIGNED);
             outRelAddr(out, target, insn.address(), 16);
         } else {
             outHex(out, val16, -16);
         }
         out.letter(',');
         outRegName(out, base);
-    }
-    if (mode == M_AIND || mode == M_PINC || mode == M_PDEC)
+    } else if (mode == M_AIND || mode == M_PINC || mode == M_PDEC) {
         outRegName(out, ea.reg);
-    if (mode == M_AWORD || mode == M_ALONG) {
+    } else if (mode == M_AWORD || mode == M_ALONG) {
         Config::uintptr_t target;
         if (mode == M_AWORD) {
             target = static_cast<int16_t>(insn.readUint16());
         } else {
             target = insn.readUint32();
         }
+        setErrorIf(insn);
         if (ea.size == SZ_WORD && (target % 2) != 0)
-            return setError(OPERAND_NOT_ALIGNED);
+            setErrorIf(OPERAND_NOT_ALIGNED);
         if (ea.size == SZ_LONG && (target % 4) != 0)
-            return setError(OPERAND_NOT_ALIGNED);
+            setErrorIf(OPERAND_NOT_ALIGNED);
         outAbsAddr(out, target);
-    }
-    if (mode == M_INDX || mode == M_PCIDX) {
+    } else if (mode == M_INDX || mode == M_PCIDX) {
         const auto base = (mode == M_INDX) ? ea.reg : REG_PC;
         BriefExt ext;
         ext.word = insn.readUint16();
+        setErrorIf(insn);
         const uint8_t val8 = ext.disp();
         if (mode == M_PCIDX) {
             const Config::uintptr_t target =
@@ -125,7 +126,7 @@ Error DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc6
         outOprSize(out, SZ_LONG);
     if (mode == M_PINC)
         out.letter('+');
-    return setError(insn);
+    return getError();
 }
 
 Error DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8) {
@@ -135,10 +136,11 @@ Error DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8) {
         delta = static_cast<int8_t>(rel8);
     } else {
         delta = static_cast<int16_t>(insn.readUint16());
+        setErrorIf(insn);
     }
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), rel8 ? 8 : 16);
-    return setErrorIf(insn);
+    return getError();
 }
 
 namespace {
@@ -365,10 +367,7 @@ OprSize sizeVal(const DisInsn &insn) {
 Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     const auto opCode = insn.readUint16();
-    if (setError(insn))
-        return getError();
     insn.setOpCode(opCode);
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
@@ -389,8 +388,10 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     uint16_t opr16 = 0;
-    if (src == M_IMBIT || src == M_MULT || dst == M_MULT || dst == M_IMDSP)
+    if (src == M_IMBIT || src == M_MULT || dst == M_MULT || dst == M_IMDSP) {
         opr16 = insn.readUint16();
+        setErrorIf(insn);
+    }
 
     const auto iSize = insn.insnSize();
     const auto oSize = (iSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(iSize);
@@ -402,13 +403,11 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         save.over(out);
     }
 
-    if (src == M_NONE)
-        return setOK();
     if (decodeOperand(insn, out, src, srcModeVal, srcReg, size, opr16))
         return getError();
 
     if (dst == M_NONE)
-        return setOK();
+        return getError();
     out.comma();
     return decodeOperand(insn, out, dst, dstModeVal, dstReg, size, opr16);
 }

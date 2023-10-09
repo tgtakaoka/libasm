@@ -81,6 +81,7 @@ StrBuffer &DisI8096::outRelative(StrBuffer &out, const DisInsn &insn, const Oper
         return outRelAddr(out, target, insn.address(), 16);
     }
 }
+
 StrBuffer &DisI8096::outOperand(StrBuffer &out, const DisInsn &insn, const Operand &op) {
     switch (op.mode) {
     case M_COUNT:
@@ -121,13 +122,15 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     case M_WREG:
     case M_INDIR:
         regno = insn.readByte();
+        setErrorIf(insn);
         if (!isWreg(regno))
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         break;
     case M_LREG:
         regno = insn.readByte();
+        setErrorIf(insn);
         if (!isLreg(regno))
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         break;
     case M_BAOP:
         switch (insn.aa()) {
@@ -141,8 +144,9 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             break;
         case AA_INDIR:
             regno = insn.readByte();
+            setErrorIf(insn);
             if (!isWreg(regno))
-                return setError(REGISTER_NOT_ALLOWED);
+                setErrorIf(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
@@ -162,8 +166,9 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         switch (insn.aa()) {
         case AA_REG:
             regno = insn.readByte();
+            setErrorIf(insn);
             if (!isWreg(regno))
-                return setError(REGISTER_NOT_ALLOWED);
+                setErrorIf(REGISTER_NOT_ALLOWED);
             mode = M_WREG;
             break;
         case AA_IMM:
@@ -172,8 +177,9 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             break;
         case AA_INDIR:
             regno = insn.readByte();
+            setErrorIf(insn);
             if (!isWreg(regno))
-                return setError(REGISTER_NOT_ALLOWED);
+                setErrorIf(REGISTER_NOT_ALLOWED);
             mode = M_INDIR;
             break;
         case AA_IDX:
@@ -204,7 +210,7 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     default:
         break;
     }
-    return setError(insn.getError());
+    return setErrorIf(insn);
 }
 
 Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
@@ -215,9 +221,9 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     } else {
         insn.setOpCode(opc);
     }
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
+
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (jbx_djnz) {

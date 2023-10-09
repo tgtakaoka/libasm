@@ -60,24 +60,25 @@ Error DisIns8070::decodeImmediate(DisInsn &insn, StrBuffer &out) {
     } else {
         outHex(out, insn.readByte(), 8);
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisIns8070::decodeAbsolute(DisInsn &insn, StrBuffer &out) {
     const uint8_t fetch = insn.execute() ? 1 : 0;
     const Config::uintptr_t target = insn.readUint16() + fetch;
     outAbsAddr(out, target);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisIns8070::decodeDirect(DisInsn &insn, StrBuffer &out) {
     const Config::uintptr_t target = 0xFF00 | insn.readByte();
     outAbsAddr(out, target);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisIns8070::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const auto delta = static_cast<int8_t>(insn.readByte());
+    setErrorIf(insn);
     const auto ptr = decodePointerReg(insn.opCode());
     if (mode == M_PCR) {
         const auto fetch = insn.execute() ? 1 : 0;
@@ -90,7 +91,7 @@ Error DisIns8070::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outDec(out, delta, -8).letter(',');
         outRegName(out, ptr);
     }
-    return setError(insn);
+    return getError();
 }
 
 Error DisIns8070::decodeGeneric(DisInsn &insn, StrBuffer &out) {
@@ -161,16 +162,11 @@ Error DisIns8070::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
 Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     const auto opCode = insn.readByte();
-    if (setError(insn))
-        return getError();
     insn.setOpCode(opCode);
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();
-    if (dst == M_NONE)
-        return setOK();
     if (decodeOperand(insn, out, dst))
         return getError();
 

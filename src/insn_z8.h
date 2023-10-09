@@ -60,7 +60,8 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
 
     void readPost() {
-        setPost(readByte());
+        if (length() < 2)
+            setPost(readByte());
     }
 };
 

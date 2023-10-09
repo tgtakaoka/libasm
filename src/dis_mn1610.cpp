@@ -128,7 +128,7 @@ Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         // Fall-through
     case M_IM8:
         outDec(out, opc & 0xFF, 8);
-        return OK;
+        break;
     case M_IOA:
         outAbsAddr(out, opc & 0xFF, 8);
         return OK;
@@ -138,7 +138,7 @@ Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     case M_IM16:
     case M_ABS:
         outAbsAddr(out, insn.readUint16(), 16);
-        return OK;
+        break;
     case M_R0:
         return outRegister(out, REG_R0, mode);
     case M_DR0:
@@ -161,7 +161,7 @@ Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     case M_IABS:
         outAbsAddr(out.letter('('), insn.readUint16(), 16);
         out.letter(')');
-        return OK;
+        break;
     case M_COP:
         return outConditionCode(out, decodeCop(opc >> 3));
     case M_RBW:
@@ -173,8 +173,9 @@ Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     case M_RP:
         return outRegister(out, decodeSpecial(opc >> 4), mode);
     default:
-        return OK;
+        break;
     }
+    return setErrorIf(insn);
 }
 
 Error DisMn1610::outIndirect(StrBuffer &out, Config::opcode_t opc) {
@@ -207,12 +208,8 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     insn.setOpCode(opc);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
-    if (setError(insn))
-        return getError();
 
     const auto mode1 = insn.mode1();
-    if (mode1 == M_NONE)
-        return setOK();
     if (decodeOperand(insn, out, mode1))
         return getError();
     const auto mode2 = insn.mode2();

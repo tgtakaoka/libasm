@@ -76,7 +76,7 @@ Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) {
     default:
         break;
     }
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 Error DisTlcs90::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
@@ -89,7 +89,7 @@ Error DisTlcs90::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, co
     const auto base = insn.address() + 2;
     const auto target = branchTarget(base, delta);
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
-    return OK;
+    return getError();
 }
 
 Error DisTlcs90::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
@@ -157,7 +157,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TABLE.isPrefix(cpuType(), opCode, preOp.mode))
         insn.readOpCode(preOp);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return setErrorIf(insn);
 
     const auto dst = insn.dst();
     if (dst == M_NONE)
@@ -190,7 +190,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (readOperand(insn, src, op) == OK)
             decodeOperand(insn, out, src, op);
     }
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace tlcs90

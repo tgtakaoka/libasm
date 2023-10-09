@@ -222,13 +222,15 @@ static void test_load_and_exchange() {
     if (z8001()) {
         ATEST(0x2000, LDAR, "RR8, %002000", 0x3408, 0xFFFC);
         ATEST(0x2000, LDAR, "RR8, %002004", 0x3408, 0x0000);
-        ATEST(0x2000, LDAR, "RR8, %7FA004", 0x3408, 0x8000);
-        ATEST(0x2000, LDAR, "RR8, %00A003", 0x3408, 0x7FFF);
+        ATEST(0xF000, LDAR, "RR8, %007004", 0x3408, 0x8000);
+        ATEST(0x2000, LDAR, "RR8, %00A002", 0x3408, 0x7FFE);
+        AERRT(0x2000, LDAR, "RR8, %00A003", OPERAND_NOT_ALIGNED, 0x3408, 0x7FFF);
     } else {
         ATEST(0x2000, LDAR, "R8, %2000", 0x3408, 0xFFFC);
         ATEST(0x2000, LDAR, "R8, %2004", 0x3408, 0x0000);
-        ATEST(0x2000, LDAR, "R8, %A004", 0x3408, 0x8000);
-        ATEST(0x2000, LDAR, "R8, %A003", 0x3408, 0x7FFF);
+        ATEST(0xF000, LDAR, "R8, %7004", 0x3408, 0x8000);
+        ATEST(0x2000, LDAR, "R8, %A002", 0x3408, 0x7FFE);
+        AERRT(0x2000, LDAR, "R8, %A003", OPERAND_NOT_ALIGNED, 0x3408, 0x7FFF);
     }
 
     // Load Constant
@@ -783,12 +785,12 @@ static void test_program_control() {
 
     // Call Procedure Relative
     disassembler.setOption("relative", "on");
-    TEST(CALR, "$+2",    0xD000);
-    TEST(CALR, "$+10",   0xDFFC);
-    TEST(CALR, "$+4098", 0xD800);
-    TEST(CALR, "$-4092", 0xD7FF);
-    TEST(CALR, "$-10",   0xD006);
-    TEST(CALR, "$",      0xD001);
+    ATEST(0x1000, CALR, "$+2",    0xD000);
+    ATEST(0x1000, CALR, "$+10",   0xDFFC);
+    ATEST(0x1000, CALR, "$+4098", 0xD800);
+    ATEST(0x1000, CALR, "$-4092", 0xD7FF);
+    ATEST(0x1000, CALR, "$-10",   0xD006);
+    ATEST(0x1000, CALR, "$",      0xD001);
 
     // Decrement and Jump if Not Zero
     TEST(DJNZ,  "R2, $",  0xF281);

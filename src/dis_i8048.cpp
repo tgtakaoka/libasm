@@ -118,16 +118,13 @@ Error DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode
     default:
         break;
     }
-    return setOK();
+    return setErrorIf(insn);
 }
 
 Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    if (setError(insn))
-        return getError();
-
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
@@ -142,7 +139,7 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (decodeOperand(insn, out, src))
             return getError();
     }
-    return setError(insn);
+    return OK;
 }
 
 }  // namespace i8048
