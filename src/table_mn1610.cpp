@@ -348,40 +348,62 @@ Error TableMn1610::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto mode1 = entry->flags().mode1();
     const auto mode2 = entry->flags().mode2();
     const auto mode3 = entry->flags().mode3();
     const auto mode4 = entry->flags().mode4();
     if (mode1 == M_GEN || mode2 == M_GEN)
-        opCode &= ~((7 << 11) | 0xFF);
-    if (mode1 == M_RD || mode1 == M_RDG)
-        opCode &= ~(7 << 8);
-    if (mode1 == M_RS || mode2 == M_RS || mode1 == M_RSG)
-        opCode &= ~7;
+        opc &= ~((7 << 11) | 0xFF);
+    if (mode1 == M_RD) {
+        if (((opc >> 8) & 7) == 7)
+            return false;
+        opc &= ~(7 << 8);
+    }
+    if (mode1 == M_RDG) {
+        if (((opc >> 8) & 7) >= 6)
+        return false;
+        opc &= ~(7 << 8);
+    }
+    if (mode1 == M_RS || mode2 == M_RS) {
+        if ((opc & 7) == 7)
+            return false;
+        opc &= ~7;
+    }
+    if (mode1 == M_RSG) {
+        if ((opc & 7) >= 6)
+            return false;
+        opc &= ~7;
+    }
     if (mode1 == M_RI || mode2 == M_RI)
-        opCode &= ~3;
-    if (mode3 == M_RIAU)
-        opCode &= ~((3 << 6) | 3);
+        opc &= ~3;
+    if (mode3 == M_RIAU) {
+        if (((opc >> 6) & 3) == 0)
+            return false;
+        opc &= ~((3 << 6) | 3);
+    }
     if (mode2 == M_SB)
-        opCode &= ~(3 << 4);
+        opc &= ~(3 << 4);
     if (mode1 == M_RB || mode2 == M_RB || mode1 == M_RBW || mode2 == M_RBW)
-        opCode &= ~(7 << 4);
-    if (mode1 == M_RP || mode2 == M_RP)
-        opCode &= ~(7 << 4);
+        opc &= ~(7 << 4);
+    if (mode1 == M_RP || mode2 == M_RP) {
+        if (((opc >> 4) & 7) >= 3)
+            return false;
+        opc &= ~(7 << 4);
+    }
     if (mode2 == M_RHR || mode2 == M_RHW)
-        opCode &= ~(7 << 4);
+        opc &= ~(7 << 4);
     if (mode3 == M_SKIP || mode4 == M_SKIP)
-        opCode &= ~(0xF << 4);
+        opc &= ~(0xF << 4);
     if (mode2 == M_IM8 || mode2 == M_IOA)
-        opCode &= ~0xFF;
+        opc &= ~0xFF;
     if (mode2 == M_IM4 || mode2 == M_BIT)
-        opCode &= ~0xF;
+        opc &= ~0xF;
     if (mode1 == M_ILVL || mode2 == M_EOP)
-        opCode &= ~3;
+        opc &= ~3;
     if (mode2 == M_COP || mode3 == M_COP)
-        opCode &= ~(1 << 3);
-    return opCode == entry->opCode();
+        opc &= ~(1 << 3);
+    return opc == entry->opCode();
 }
 
 Error TableMn1610::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

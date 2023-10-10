@@ -43,7 +43,7 @@ DisMn1610::DisMn1610(const ValueFormatter::Plugins &plugins)
 
 Error DisMn1610::outConditionCode(StrBuffer &out, CcName cc) {
     if (cc == CC_UNDEF)
-        return setError(ILLEGAL_OPERAND);
+        return setErrorIf(ILLEGAL_OPERAND);
     if (cc != CC_NONE)
         outCcName(out, cc);
     return OK;
@@ -51,11 +51,11 @@ Error DisMn1610::outConditionCode(StrBuffer &out, CcName cc) {
 
 Error DisMn1610::outRegister(StrBuffer &out, RegName reg, AddrMode mode) {
     if (reg == REG_UNDEF)
-        return setError(ILLEGAL_REGISTER);
+        setErrorIf(ILLEGAL_REGISTER);
     if (reg == REG_STR && (mode == M_RDG || mode == M_RSG))
-        return setError(ILLEGAL_REGISTER);
+        setErrorIf(ILLEGAL_REGISTER);
     if (reg == REG_CSBR && mode == M_RBW)
-        return setError(REGISTER_NOT_ALLOWED);
+        setErrorIf(REGISTER_NOT_ALLOWED);
     if (reg == REG_CSBR && mode == M_SB)
         return OK;
     if (reg == REG_SIR && mode == M_RHW)
@@ -214,17 +214,17 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
     const auto mode2 = insn.mode2();
     if (mode2 == M_NONE)
-        return setOK();
+        return getError();
     if (decodeOperand(insn, outComma(out, opc, mode2), mode2))
         return getError();
     const auto mode3 = insn.mode3();
     if (mode3 == M_NONE)
-        return setOK();
+        return getError();
     if (decodeOperand(insn, outComma(out, opc, mode3), mode3))
         return getError();
     const auto mode4 = insn.mode4();
     if (mode4 == M_NONE)
-        return setOK();
+        return getError();
     return decodeOperand(insn, outComma(out, opc, mode4), mode4);
 }
 

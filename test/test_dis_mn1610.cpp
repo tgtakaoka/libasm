@@ -31,7 +31,7 @@ static bool is1610() {
 
 static bool is1613() {
     return strcmp_P("MN1613", disassembler.cpu_P()) == 0 ||
-        strcmp_P("MN1613A", disassembler.cpu_P()) == 0;
+           strcmp_P("MN1613A", disassembler.cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -137,10 +137,11 @@ static void test_transfer() {
         TEST("LD",  "R2, SSBR, 0x1234", 0x2708|(1<<4)|2, 0x1234);
         TEST("LD",  "R3, TSR0, 0x1234", 0x2708|(2<<4)|3, 0x1234);
         TEST("LD",  "R4, TSR1, 0x1234", 0x2708|(3<<4)|4, 0x1234);
+        TEST("LD",  "SP, TSR1, 0x1234", 0x2708|(3<<4)|5, 0x1234);
         TEST("LR",  "SP, TSR1, (R1)",   0x2000|(5<<8)|(1<<6)|(3<<4)|0);
         TEST("LR",  "R0, TSR0, -(R2)",  0x2000|(0<<8)|(2<<6)|(2<<4)|1);
         TEST("LR",  "R1, SSBR, (R3)+",  0x2000|(1<<8)|(3<<6)|(1<<4)|2);
-        TEST("LR",  "R2, (R4)",         0x2000|(2<<8)|(1<<6)|(0<<5)|3);
+        TEST("LR",  "R2, (R4)",         0x2000|(2<<8)|(1<<6)|(0<<4)|3);
         TEST("STD", "R1, 0x1234",       0x2748|(0<<4)|1, 0x1234);
         TEST("STD", "R2, SSBR, 0x1234", 0x2748|(1<<4)|2, 0x1234);
         TEST("STD", "R3, TSR0, 0x1234", 0x2748|(2<<4)|3, 0x1234);
@@ -148,7 +149,7 @@ static void test_transfer() {
         TEST("STR", "SP, TSR1, (R1)",   0x2004|(5<<8)|(1<<6)|(3<<4)|0);
         TEST("STR", "R0, TSR0, -(R2)",  0x2004|(0<<8)|(2<<6)|(2<<4)|1);
         TEST("STR", "R1, SSBR, (R3)+",  0x2004|(1<<8)|(3<<6)|(1<<4)|2);
-        TEST("STR", "R2, (R4)",         0x2004|(2<<8)|(1<<6)|(0<<5)|3);
+        TEST("STR", "R2, (R4)",         0x2004|(2<<8)|(1<<6)|(0<<4)|3);
 
         TEST("MVWR", "R0, (R1), EZ",  0x7F08|(8<<4)|0);
         TEST("MVWR", "R0, (R2), ENZ", 0x7F08|(9<<4)|1);
@@ -578,13 +579,13 @@ static void test_misc() {
         TEST("BLK", "(R2), (R1), R0", 0x3F17);
 
         ERRT("LB", "CSBR, 0x1234", REGISTER_NOT_ALLOWED, 0x0F07|(0<<4), 0x1234);
-        TEST("LB", "SSBR, 0x1234", 0x0F07|(1<<4), 0x1234);
-        TEST("LB", "TSR0, 0x1234", 0x0F07|(2<<4), 0x1234);
-        TEST("LB", "TSR1, 0x1234", 0x0F07|(3<<4), 0x1234);
-        TEST("LB", "OSR0, 0x1234", 0x0F07|(4<<4), 0x1234);
-        TEST("LB", "OSR1, 0x1234", 0x0F07|(5<<4), 0x1234);
-        TEST("LB", "OSR2, 0x1234", 0x0F07|(6<<4), 0x1234);
-        TEST("LB", "OSR3, 0x1234", 0x0F07|(7<<4), 0x1234);
+        TEST("LB", "SSBR, 0x1234",                       0x0F07|(1<<4), 0x1234);
+        TEST("LB", "TSR0, 0x1234",                       0x0F07|(2<<4), 0x1234);
+        TEST("LB", "TSR1, 0x1234",                       0x0F07|(3<<4), 0x1234);
+        TEST("LB", "OSR0, 0x1234",                       0x0F07|(4<<4), 0x1234);
+        TEST("LB", "OSR1, 0x1234",                       0x0F07|(5<<4), 0x1234);
+        TEST("LB", "OSR2, 0x1234",                       0x0F07|(6<<4), 0x1234);
+        TEST("LB", "OSR3, 0x1234",                       0x0F07|(7<<4), 0x1234);
         TEST("STB", "CSBR, 0x1234", 0x0F87|(0<<4), 0x1234);
         TEST("STB", "SSBR, 0x1234", 0x0F87|(1<<4), 0x1234);
         TEST("STB", "TSR0, 0x1234", 0x0F87|(2<<4), 0x1234);
@@ -601,47 +602,47 @@ static void test_misc() {
         TEST("CPYB", "R1, OSR1",  0x0F80|(5<<4)|1);
         TEST("CPYB", "R0, OSR2",  0x0F80|(6<<4)|0);
         TEST("CPYB", "R1, OSR3",  0x0F80|(7<<4)|1);
-        ERRT("SETB", "STR, CSBR", REGISTER_NOT_ALLOWED, 0x0F00|(0<<4)|6);
-        TEST("SETB", "SP, SSBR",  0x0F00|(1<<4)|5);
-        TEST("SETB", "R4, TSR0",  0x0F00|(2<<4)|4);
-        TEST("SETB", "R3, TSR1",  0x0F00|(3<<4)|3);
-        TEST("SETB", "R2, OSR0",  0x0F00|(4<<4)|2);
-        TEST("SETB", "R1, OSR1",  0x0F00|(5<<4)|1);
-        TEST("SETB", "R0, OSR2",  0x0F00|(6<<4)|0);
-        TEST("SETB", "R1, OSR3",  0x0F00|(7<<4)|1);
+        ERRT("SETB", "R0, CSBR", REGISTER_NOT_ALLOWED, 0x0F00|(0<<4)|0);
+        TEST("SETB", "SP, SSBR",                       0x0F00|(1<<4)|5);
+        TEST("SETB", "R4, TSR0",                       0x0F00|(2<<4)|4);
+        TEST("SETB", "R3, TSR1",                       0x0F00|(3<<4)|3);
+        TEST("SETB", "R2, OSR0",                       0x0F00|(4<<4)|2);
+        TEST("SETB", "R1, OSR1",                       0x0F00|(5<<4)|1);
+        TEST("SETB", "R0, OSR2",                       0x0F00|(6<<4)|0);
+        TEST("SETB", "R1, OSR3",                       0x0F00|(7<<4)|1);
 
         TEST("LS", "SBRB, 0x1234", 0x0F0F|(0<<4), 0x1234);
         TEST("LS", "ICB, 0x1234",  0x0F0F|(1<<4), 0x1234);
         TEST("LS", "NPP, 0x1234",  0x0F0F|(2<<4), 0x1234);
-        ERRT("LS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F0F|(3<<4), 0x1234);
-        ERRT("LS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F0F|(4<<4), 0x1234);
-        ERRT("LS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F0F|(5<<4), 0x1234);
-        ERRT("LS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F0F|(6<<4), 0x1234);
-        ERRT("LS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F0F|(7<<4), 0x1234);
+        UNKN(                      0x0F0F|(3<<4));
+        UNKN(                      0x0F0F|(4<<4));
+        UNKN(                      0x0F0F|(5<<4));
+        UNKN(                      0x0F0F|(6<<4));
+        UNKN(                      0x0F0F|(7<<4));
         TEST("STS", "SBRB, 0x1234", 0x0F8F|(0<<4), 0x1234);
         TEST("STS", "ICB, 0x1234",  0x0F8F|(1<<4), 0x1234);
         TEST("STS", "NPP, 0x1234",  0x0F8F|(2<<4), 0x1234);
-        ERRT("STS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F8F|(3<<4), 0x1234);
-        ERRT("STS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F8F|(4<<4), 0x1234);
-        ERRT("STS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F8F|(5<<4), 0x1234);
-        ERRT("STS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F8F|(6<<4), 0x1234);
-        ERRT("STS", "SBRB, 0x1234", ILLEGAL_REGISTER, 0x0F8F|(7<<4), 0x1234);
+        UNKN(                       0x0F8F|(3<<4));
+        UNKN(                       0x0F8F|(4<<4));
+        UNKN(                       0x0F8F|(5<<4));
+        UNKN(                       0x0F8F|(6<<4));
+        UNKN(                       0x0F8F|(7<<4));
         TEST("CPYS", "R2, SBRB", 0x0F88|(0<<4)|2);
         TEST("CPYS", "R1, ICB",  0x0F88|(1<<4)|1);
         TEST("CPYS", "R0, NPP",  0x0F88|(2<<4)|0);
-        ERRT("CPYS", "R3, SBRB", ILLEGAL_REGISTER, 0x0F88|(3<<4)|3);
-        ERRT("CPYS", "R4, SBRB", ILLEGAL_REGISTER, 0x0F88|(4<<4)|4);
-        ERRT("CPYS", "SP, SBRB", ILLEGAL_REGISTER, 0x0F88|(5<<4)|6);
-        ERRT("CPYS", "R1, SBRB", ILLEGAL_REGISTER, 0x0F88|(6<<4)|1);
-        ERRT("CPYS", "R2, SBRB", ILLEGAL_REGISTER, 0x0F88|(7<<4)|2);
+        UNKN(                    0x0F88|(3<<4)|3);
+        UNKN(                    0x0F88|(4<<4)|4);
+        UNKN(                    0x0F88|(5<<4)|6);
+        UNKN(                    0x0F88|(6<<4)|1);
+        UNKN(                    0x0F88|(7<<4)|2);
         TEST("SETS", "R2, SBRB", 0x0F08|(0<<4)|2);
         TEST("SETS", "R1, ICB",  0x0F08|(1<<4)|1);
         TEST("SETS", "R0, NPP",  0x0F08|(2<<4)|0);
-        ERRT("SETS", "R3, SBRB", ILLEGAL_REGISTER, 0x0F08|(3<<4)|3);
-        ERRT("SETS", "R4, SBRB", ILLEGAL_REGISTER, 0x0F08|(4<<4)|4);
-        ERRT("SETS", "SP, SBRB", ILLEGAL_REGISTER, 0x0F08|(5<<4)|6);
-        ERRT("SETS", "R1, SBRB", ILLEGAL_REGISTER, 0x0F08|(6<<4)|1);
-        ERRT("SETS", "R2, SBRB", ILLEGAL_REGISTER, 0x0F08|(7<<4)|2);
+        UNKN(                    0x0F08|(3<<4)|3);
+        UNKN(                    0x0F08|(4<<4)|4);
+        UNKN(                    0x0F08|(5<<4)|6);
+        UNKN(                    0x0F08|(6<<4)|1);
+        UNKN(                    0x0F08|(7<<4)|2);
 
         TEST("CPYH", "STR, TCR", 0x3F80|(0<<4)|6);
         TEST("CPYH", "SP, TIR",  0x3F80|(1<<4)|5);
@@ -676,194 +677,112 @@ static void test_formatter() {
 }
 // clang-format on
 
+static const char *const SKIP[] = {"", "SKP", "M", "PZ", "Z", "NZ", "MZ", "P", "EZ", "ENZ", "OZ",
+        "ONZ", "LMZ", "LP", "LPZ", "LM"};
+static const char *const EM[] = {"", "RE", "SE", "CE"};
+static const char *const REG[] = {"R0", "R1", "R2", "R3", "R4", "SP", "STR", ""};
+
 static void test_illegal_mn1610() {
+    char operand[20];
+
     for (Config::opcode_t opc = 0x0000; opc < 0x0800; opc++)
         UNKN(opc);
+
     for (Config::opcode_t opc = 0x0800; opc < 0x2000; opc++) {
         const auto rd = (opc >> 8) & 7;
         if (rd == 7)
-            ERRT("", "", ILLEGAL_REGISTER, opc);  // MVI/WT/RD rd=111
+            UNKN(opc);
     }
+
     for (Config::opcode_t opc = 0x2000; opc < 0x2800; opc++) {
-        const auto rd = (opc >> 8) & 7;
+        const auto rd = opc >> 8;
         const auto sk = (opc >> 4) & 0xF;
-        switch (opc & 0xF) {
-        case 0:  // H
-            if (rd || sk)
-                UNKN(opc);
-            break;
-        case 1:  // PUSH
-        case 2:  // POP
-            if (rd == 7 && sk == 0)
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            if (sk)
-                UNKN(opc);
-            break;
-        case 3:  // RET
-            if (rd || sk)
-                UNKN(opc);
-            break;
-        case 4:  // LPSW
-        case 5:
-        case 6:
-        case 7:
-            if (rd || sk)
-                UNKN(opc);
-            break;
-        default:  // SR, SL
+        const auto em = opc & 3;
+        if (opc == 0x2000 || opc == 0x2003)  // H, RET
+            continue;
+        if ((opc & ~3) == 0x2004)  // LPSW
+            continue;
+        if ((opc & ~0x700) == 0x2001) {
             if (rd == 7)
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            break;
+                ERRT("PUSH", "", ILLEGAL_REGISTER, opc);
+        } else if ((opc & ~0x700) == 0x2002) {
+            if (rd == 7)
+                ERRT("POP", "", ILLEGAL_REGISTER, opc);
+        } else if ((opc & ~0x7F3) == 0x2008) {
+            sprintf(operand, ", %s%s%s", EM[em], sk ? ", " : "", SKIP[sk]);
+            if (rd == 7)
+                ERRT("SR", operand, ILLEGAL_REGISTER, opc);
+        } else if ((opc & ~0x7F3) == 0x200C) {
+            sprintf(operand, ", %s%s%s", EM[em], sk ? ", " : "", SKIP[sk]);
+            if (rd == 7)
+                ERRT("SL", operand, ILLEGAL_REGISTER, opc);
+        } else {
+            UNKN(opc);
         }
     }
+
     for (Config::opcode_t opc = 0x2800; opc < 0x5000; opc++) {
         const auto rd = (opc >> 8) & 7;
         if (rd == 7)
-            ERRT("", "", ILLEGAL_REGISTER, opc);  // TBIT/RBIT/SBIT/SI/AI rd=111
+            UNKN(opc);
     }
+
     for (Config::opcode_t opc = 0x5000; opc < 0x8000; opc++) {
         const auto rd = (opc >> 8) & 7;
         const auto rs = opc & 7;
         if (rd == 7 || rs == 7)
-            ERRT("", "", ILLEGAL_REGISTER, opc);  // CB/C/S/A/EOR/OR/LAD/AND/DSWP/BSWP/MVB/MV rd=111/rs=111
+            UNKN(opc);
     }
 }
 
+static const char *const SREG[] = {"SBRB", "ICB", "NPP", "", "", "", "", ""};
+
 static void test_illegal_mn1613() {
+    char operand[20];
+
     for (Config::opcode_t opc = 0x0000; opc < 0x0800; opc++) {
         UNKN(opc);
     }
 
     for (Config::opcode_t opc = 0x0800; opc < 0x1000; opc++) {
         const auto rd = (opc >> 8) & 7;
-        if (rd != 7)
-            continue;  // MVI
-        if (opc & 0x08) {
-            // LS/SETS/STS/CPYS
-            const auto rp = (opc >> 4) & 7;
-            if (rp >= 3)
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-        } else {
-            // LB/SETB/STB/CPYB
-            const auto rb = (opc >> 4) & 7;
-            if (rb == 0 && (opc & 0x80) == 0)
-                ERRT("", "", REGISTER_NOT_ALLOWED, opc);
+        const auto op = opc & ~0x77;
+        const auto sb = (opc >> 4) & 7;
+        const auto rp = (opc >> 4) & 7;
+        if (rd < 7)
+            continue;        // MVI
+        if (op == 0x0F00) {  // SETB, LB
+            const auto rs = opc & 7;
+            if (sb == 0 && rs < 7) {
+                sprintf(operand, "%s, CSBR", REG[rs]);
+                ERRT("SETB", operand, REGISTER_NOT_ALLOWED, opc);
+            }
+            if (sb == 0 && rs == 7)
+                ERRT("LB", "CSBR, 0x1234", REGISTER_NOT_ALLOWED, opc, 0x1234);
+            continue;
         }
+        if (op == 0x0F08 && rp < 3)
+            continue;  // SETS, LS
+        if (op == 0x0F80)
+            continue;  // CPYB, STB
+        if (op == 0x0F88 && rp < 3)
+            continue;  // CPYS, STS
+        UNKN(opc);
     }
 
     for (Config::opcode_t opc = 0x1000; opc < 0x2000; opc++) {
         const auto rd = (opc >> 8) & 7;
+        const auto op = opc & ~0xFF;
         const auto sk = (opc >> 4) & 0xF;
-        const auto rs = opc & 7;
-        if ((opc & 0x800) == 0 && rd == 7 && sk && rs == 7)
-            ERRT("", "", ILLEGAL_REGISTER, opc);
-    }
-
-    for (Config::opcode_t opc = 0x2000; opc < 0x2800; opc++) {
-        const auto rd = (opc >> 8) & 7;
-        const auto sk = (opc >> 4) & 0xF;
-        const auto md = (opc >> 6) & 3;
-        const auto rs = opc & 7;
-        switch (opc & 0xF) {
-        case 0:  // H, WTR, LR
-            if (rd >= 6) {
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            } else if (rd != 0 && sk == 0) {
-                ERRT("", "", ILLEGAL_OPERAND_MODE, opc);
-            } else if (sk == 2 || sk == 3) {
-                ERRT("", "", ILLEGAL_OPERAND_MODE, opc);
-            }
-            break;
-        case 1:  // PUSH, WTR, LR
-        case 2:  // POP, WTR, LR
-            if (rd == 7) {
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            } else if (rd == 6 && sk >= 1) {
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            } else if (rd < 6 && (sk == 2 || sk == 3)) {
-                ERRT("", "", ILLEGAL_OPERAND_MODE, opc);
-            }
-            break;
-        case 3:  // RET, WTR, LR
-            if ((sk == 0 && rd) || sk == 2 || sk == 3) {
-                if (rd >= 6) {
-                    ERRT("", "", ILLEGAL_REGISTER, opc);
-                } else {
-                    ERRT("", "", ILLEGAL_OPERAND_MODE, opc);
-                }
-            } else if (rd >= 6) {
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            }
-            break;
-        case 7:                     // LPSW, BD, BALD, BR, BALR, RDR. STR
-            if (rd == 6 && sk < 2)  // BD, BALD
-                break;
-            // Fall-through
-        case 4:  // LPSW, BR, BALR, RDR, STR
-        case 5:
-        case 6:
-            if (rd == 0 && sk == 0) {  // LPSW
-                break;
-            } else if (rd == 7 && sk >= 2) {
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            } else if (rd == 6) {
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            } else if (rd < 6 && (sk == 0 || sk == 2 || sk == 3)) {
-                ERRT("", "", ILLEGAL_OPERAND_MODE, opc);
-            }
-            break;
-        case 15:  // rs=7: BL, BALL, LD, STD, SL
-            if (rd == 7 && (sk == 0 || sk == 1))
-                break;
-            // Fall-through
-        case 14:  // rs=6: LD, STD, SL
-            if (rd == 7 && (md >= 2 || rs >= 6))
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            break;
-        default:  // rs=0-5: LD, STD, SR, SL
-            if (rd == 7 && md >= 2)
-                ERRT("", "", ILLEGAL_REGISTER, opc);
-            break;
-        }
-    }
-
-    for (Config::opcode_t opc = 0x2800; opc < 0x3800; opc++) {
-        const auto rd = (opc >> 8) & 7;
-        if (rd == 7)
-            ERRT("", "", ILLEGAL_REGISTER, opc);  // TBIT/RBIT rd=111
-    }
-
-    for (Config::opcode_t opc = 0x3800; opc < 0x4000; opc++) {
-        if (opc == 0x3F07 || opc == 0x3F17)  // RETL/BLK
+        if (rd < 7) {
             continue;
-        const auto rd = (opc >> 8) & 7;
-        const auto rs = opc & 7;
-        if (rd == 7 && (rs == 7 || (opc & 8) != 0))
-            ERRT("", "", ILLEGAL_REGISTER, opc);
-    }
-
-    for (Config::opcode_t opc = 0x4000; opc < 0x5000; opc++) {
-        const auto rd = (opc >> 8) & 7;
-        if (rd == 7 && (opc & 4) == 0)
-            ERRT("", "", ILLEGAL_REGISTER, opc);
-    }
-
-    for (Config::opcode_t opc = 0x7000; opc < 0x7800; opc++) {
-        const auto rd = (opc >> 8) & 7;
-        const auto rs = opc & 7;
-        if (rd < 7 && rs == 7) {
-            ERRT("", "", ILLEGAL_REGISTER, opc);
-        } else if (rd == 7 && (opc & 0xC) == 4) {
-            ERRT("", "", ILLEGAL_REGISTER, opc);
-        }
-    }
-
-    for (Config::opcode_t opc = 0x7800; opc < 0x8000; opc++) {
-        const auto rd = (opc >> 8) & 7;
-        const auto rs = opc & 7;
-        if (rd < 7 && rs == 7 && (opc & 8) == 0) {
-            ERRT("", "", ILLEGAL_REGISTER, opc);
-        } else if (rd == 7 && (opc & 0xC) == 4) {
+        } else if (op == 0x1700) {
+            const auto rs = opc & 7;
+            if (rs == 7 && sk != 0)
+                UNKN(opc);
+        } else if (op == 0x1F00) {
+            continue;  // NEG, FLT, FIX
+        } else {
             ERRT("", "", ILLEGAL_REGISTER, opc);
         }
     }
