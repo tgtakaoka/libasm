@@ -175,6 +175,8 @@ static void test_data_transfer() {
     TEST("POP", "DS",            0037);
 
     if (is80186()) {
+        TEST("PUSH", "34H",   0x6A, 0x34);
+        TEST("PUSH", "1234H", 0x68, 0x34, 0x12);
         TEST("PUSHA", "", 0x60);
         TEST("POPA",  "", 0x61);
     }
@@ -210,7 +212,7 @@ static void test_data_transfer() {
     TEST("XLAT", "", 0xD7);
 
     TEST("LEA",  "CX, [SI]",          0x8D, 0014);
-    TEST("LEA",  "DX, [1234H]",       0x8D, 0026, 0x34, 0x12);
+    TEST("LEA",  "DX, [1235H]",       0x8D, 0026, 0x35, 0x12);
     TEST("LEA",  "BX, [DI-52]",       0x8D, 0135, 0xCC);
     TEST("LEA",  "SP, [BP+1234H]",    0x8D, 0246, 0x34, 0x12);
     TEST("LEA",  "BP, [BX+SI]",       0x8D, 0050);
@@ -683,14 +685,14 @@ static void test_arithmetic() {
         TEST("IMUL", "BP, 6", 0x6B, 0355, 6);
         TEST("IMUL", "SI, 7", 0x6B, 0366, 7);
         TEST("IMUL", "DI, 8", 0x6B, 0377, 8);
-        TEST("IMUL", "AX, 0100H", 0x69, 0300, 0, 1);
-        TEST("IMUL", "CX, 0200H", 0x69, 0311, 0, 2);
-        TEST("IMUL", "DX, 0300H", 0x69, 0322, 0, 3);
-        TEST("IMUL", "BX, 0400H", 0x69, 0333, 0, 4);
-        TEST("IMUL", "SP, 0500H", 0x69, 0344, 0, 5);
-        TEST("IMUL", "BP, 0600H", 0x69, 0355, 0, 6);
-        TEST("IMUL", "SI, 0700H", 0x69, 0366, 0, 7);
-        TEST("IMUL", "DI, 0800H", 0x69, 0377, 0, 8);
+        TEST("IMUL", "AX, 0123H", 0x69, 0300, 0x23, 0x01);
+        TEST("IMUL", "CX, 1234H", 0x69, 0311, 0x34, 0x12);
+        TEST("IMUL", "DX, 2345H", 0x69, 0322, 0x45, 0x23);
+        TEST("IMUL", "BX, 3456H", 0x69, 0333, 0x56, 0x34);
+        TEST("IMUL", "SP, 4567H", 0x69, 0344, 0x67, 0x45);
+        TEST("IMUL", "BP, 5678H", 0x69, 0355, 0x78, 0x56);
+        TEST("IMUL", "SI, 6789H", 0x69, 0366, 0x89, 0x67);
+        TEST("IMUL", "DI, 789AH", 0x69, 0377, 0x9A, 0x78);
 
         TEST("IMUL", "AX, BP, 1",            0x6B, 0305, 1);
         TEST("IMUL", "CX, [SI], 2",          0x6B, 0014, 2);
@@ -700,14 +702,14 @@ static void test_arithmetic() {
         TEST("IMUL", "BP, [BX+SI], 6",       0x6B, 0050, 6);
         TEST("IMUL", "SI, [BX+DI+52], 7",    0x6B, 0161, 0x34, 7);
         TEST("IMUL", "DI, [BP+SI+1234H], 8", 0x6B, 0272, 0x34, 0x12, 8);
-        TEST("IMUL", "AX, BP, 0100H",            0x69, 0305, 0, 1);
-        TEST("IMUL", "CX, [SI], 0200H",          0x69, 0014, 0, 2);
-        TEST("IMUL", "DX, [1234H], 0300H",       0x69, 0026, 0x34, 0x12, 0, 3);
-        TEST("IMUL", "BX, [DI-52], 0400H",       0x69, 0135, 0xCC, 0, 4);
-        TEST("IMUL", "SP, [BP+1234H], 0500H",    0x69, 0246, 0x34, 0x12, 0, 5);
-        TEST("IMUL", "BP, [BX+SI], 0600H",       0x69, 0050, 0, 6);
-        TEST("IMUL", "SI, [BX+DI+52], 0700H",    0x69, 0161, 0x34, 0, 7);
-        TEST("IMUL", "DI, [BP+SI+1234H], 0800H", 0x69, 0272, 0x34, 0x12, 0, 8);
+        TEST("IMUL", "AX, BP, 0123H",            0x69, 0305, 0x23, 0x01);
+        TEST("IMUL", "CX, [SI], 1234H",          0x69, 0014, 0x34, 0x12);
+        TEST("IMUL", "DX, [1234H], 2345H",       0x69, 0026, 0x34, 0x12, 0x45, 0x23);
+        TEST("IMUL", "BX, [DI-52], 3456H",       0x69, 0135, 0xCC, 0x56, 0x34);
+        TEST("IMUL", "SP, [BP+1234H], 4567H",    0x69, 0246, 0x34, 0x12, 0x67, 0x45);
+        TEST("IMUL", "BP, [BX+SI], 5678H",       0x69, 0050, 0x78, 0x56);
+        TEST("IMUL", "SI, [BX+DI+52], 6789H",    0x69, 0161, 0x34, 0x89, 0x67);
+        TEST("IMUL", "DI, [BP+SI+1234H], 789AH", 0x69, 0272, 0x34, 0x12, 0x9A, 0x78);
     }
 
     TEST("AAM", "", 0xD4, 0x0A);
@@ -1484,7 +1486,22 @@ static void test_logic() {
 }
 
 static void test_string_manipulation() {
+    dis8086.setOption("string-insn", "false");
+    TEST("REPNE", "", 0xF2);
+    TEST("REP",   "", 0xF3);
+    if (v30()) {
+        TEST("REPNC", "", 0x64);
+        TEST("REPC",  "", 0x65);
+    }
+
     dis8086.setOption("string-insn", "enable");
+    ERRT("REPNE", "", NO_MEMORY, 0xF2);
+    ERRT("REP",   "", NO_MEMORY, 0xF3);
+    if (v30()) {
+        ERRT("REPNC", "", NO_MEMORY, 0x64);
+        ERRT("REPC",  "", NO_MEMORY, 0x65);
+    }
+
     TEST("REPNE", "MOVSB", 0xF2, 0xA4);
     TEST("REPNE", "MOVSW", 0xF2, 0xA5);
     TEST("REPNE", "CMPSB", 0xF2, 0xA6);
@@ -1495,8 +1512,8 @@ static void test_string_manipulation() {
     TEST("REPNE", "LODSW", 0xF2, 0xAD);
     TEST("REPNE", "SCASB", 0xF2, 0xAE);
     TEST("REPNE", "SCASW", 0xF2, 0xAF);
-    ERRT("REPNE", "NOP",      UNKNOWN_INSTRUCTION, 0xF2, 0x90);
-    ERRT("REPNE", "JMP [SI]", UNKNOWN_INSTRUCTION, 0xF2, 0xFF, 0044);
+    ERRT("REPNE", "", UNKNOWN_INSTRUCTION, 0xF2, 0x90); // NOP
+    ERRT("REPNE", "", UNKNOWN_INSTRUCTION, 0xF2, 0xFF); // JMP [SI]
     if (is80186()) {
         TEST("REPNE", "INSB",  0xF2, 0x6C);
         TEST("REPNE", "INSW",  0xF2, 0x6D);
@@ -1586,7 +1603,7 @@ static void test_control_transfer() {
     TEST("JMP", "[BX+DI+52]",    0xFF, 0141, 0x34);
     TEST("JMP", "[BP+SI+1234H]", 0xFF, 0242, 0x34, 0x12);
 
-    TEST("JMPF", "1234H:5678H",   0xEA, 0x78, 0x56, 0x34, 0x12);
+    TEST("JMPF", "1234H:5678H",  0xEA, 0x78, 0x56, 0x34, 0x12);
 
     TEST("JMPF", "[SI]",          0xFF, 0054);
     TEST("JMPF", "[1234H]",       0xFF, 0056, 0x34, 0x12);
@@ -1716,7 +1733,7 @@ static void test_segment_override() {
     TEST("LODSB", "CS:[SI]", 0x2E, 0xAC);
     TEST("LODSW", "SS:[SI]", 0x36, 0xAD);
     TEST("LODSW", "DS:[SI]", 0x3E, 0xAD);
-    ERRT("STOSB", "ES:[DI]", ILLEGAL_SEGMENT, 0x26, 0xAA);
+
     ERRT("STOSB", "CS:[DI]", ILLEGAL_SEGMENT, 0x2E, 0xAA);
     ERRT("STOSW", "SS:[DI]", ILLEGAL_SEGMENT, 0x36, 0xAB);
     ERRT("STOSW", "DS:[DI]", ILLEGAL_SEGMENT, 0x3E, 0xAB);
@@ -1744,7 +1761,19 @@ static void test_segment_override() {
 }
 
 static void test_illegal() {
-    if (!v30()) {
+    if (v30()) {
+        for (uint8_t opc = 0; opc < 0xFF; opc++) {
+            if (opc >= 0x12 && opc < 0x18)
+                continue;
+            if (opc >= 0x1A && opc < 0x20)
+                continue;
+            if (opc == 0x20 || opc == 0x22 || opc == 0x26 || opc == 0x28 || opc == 0x2A)
+                continue;
+            if (opc == 0x31 || opc == 0x33 || opc == 0x39 || opc == 0x3B)
+                continue;
+            UNKN(0x0F, opc);
+        }
+    } else {
         ERRT("POP", "CS", REGISTER_NOT_ALLOWED, 0x0F);
     }
 
@@ -1757,6 +1786,13 @@ static void test_illegal() {
     }
 
     UNKN(0x82);
+
+    if (is8086()) {
+        UNKN(0xC0);
+        UNKN(0xC1);
+        UNKN(0xC8);
+        UNKN(0xC9);
+    }
 
     for (uint8_t mod = 0; mod < 4; mod++) {
         for (uint8_t reg = 0; reg < 8; reg++) {
@@ -1789,6 +1825,9 @@ static void test_illegal() {
         UNKN(0xD4, second);
         UNKN(0xD5, second);
     }
+
+    UNKN(0xD6);
+    UNKN(0xF1);
 
     // Co-processor instructions
     UNKN(0xD8);
