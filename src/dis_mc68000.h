@@ -39,7 +39,6 @@ private:
     Error decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8);
     Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t modePos,
             uint8_t regPos, OprSize size, uint16_t opr16);
-    Error checkOperand(AddrMode mode, uint8_t modePos, uint8_t regPos, OprSize size);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

@@ -89,7 +89,7 @@ void test_dis_mc68000() {
             "      cpu     mc68000\n"
             "      org     $9abcde\n"
             "      ori.l   #$bdbebfc0, ($c2c3c4).l\n"
-            "* test.bin: $9abce8: error: Operand not allowed\n"
+            "* test.bin: $9abce8: error: Unknown instruction\n"
             "*   9abce8 : 43fc\n"
             "* test.bin: $9abcea: error: Operand not aligned\n"
             "*   9abcea : 617f\n",
@@ -97,8 +97,8 @@ void test_dis_mc68000() {
             "  9abcde :                            org     $9abcde\n"
             "  9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "  9abce4 : 00c2 c3c4\n"
-            "test.bin: $9abce8: error: Operand not allowed\n"
-            "  9abce8 : 43fc                       lea\n"
+            "test.bin: $9abce8: error: Unknown instruction\n"
+            "  9abce8 : 43fc\n"
             "test.bin: $9abcea: error: Operand not aligned\n"
             "  9abcea : 617f                       bsr     $9abd6b\n",
             0x00b9, 0xbdbe, 0xbfc0, 0x00c2, 0xc3c4, 0041774, 0060400 | 0x7F);

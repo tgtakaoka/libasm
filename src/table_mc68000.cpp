@@ -89,18 +89,18 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E1(0041000, TEXT_CLR,   DATA, M_WDATA,  10, DATA),
     E1(0042000, TEXT_NEG,   DATA, M_WDATA,  10, DATA),
     E1(0043000, TEXT_NOT,   DATA, M_WDATA,  10, DATA),
-    E1(0044200, TEXT_EXT,   DATA, M_DREG,  _0, ADR6),
+    E1(0044200, TEXT_EXT,   DATA, M_DREG,   _0, ADR6),
     E1(0044000, TEXT_NBCD,  NONE, M_WDATA,  10, BYTE),
-    E1(0044100, TEXT_SWAP,  NONE, M_DREG,  _0, LONG),
+    E1(0044100, TEXT_SWAP,  NONE, M_DREG,   _0, LONG),
     E1(0044100, TEXT_PEA,   NONE, M_JADDR,  10, LONG),
     E0(0045374, TEXT_ILLEG),
     E1(0045300, TEXT_TAS,   NONE, M_WDATA,  10, BYTE),
     E1(0045000, TEXT_TST,   DATA, M_WDATA,  10, DATA),
     E1(0047100, TEXT_TRAP,  NONE, M_IMVEC,  __, NONE),
-    E2(0047120, TEXT_LINK,  NONE, M_AREG,  M_IMDSP, _0, __, WORD),
-    E1(0047130, TEXT_UNLK,  NONE, M_AREG,  _0, NONE),
-    E2(0047140, TEXT_MOVE,  NONE, M_AREG,  M_USP,   _0, __, LONG),
-    E2(0047150, TEXT_MOVE,  NONE, M_USP,   M_AREG,  __, _0, LONG),
+    E2(0047120, TEXT_LINK,  NONE, M_AREG,   M_IMDSP, _0, __, WORD),
+    E1(0047130, TEXT_UNLK,  NONE, M_AREG,   _0, NONE),
+    E2(0047140, TEXT_MOVE,  NONE, M_AREG,   M_USP,   _0, __, LONG),
+    E2(0047150, TEXT_MOVE,  NONE, M_USP,    M_AREG,  __, _0, LONG),
     E0(0047160, TEXT_RESET),
     E0(0047161, TEXT_NOP),
     E1(0047162, TEXT_STOP,  NONE, M_IMDAT,  __, WORD),
@@ -595,15 +595,84 @@ static Config::opcode_t getInsnMask(Entry::Flags flags) {
            getInsnMask(flags.oprSize());
 }
 
+static bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, OprSize size) {
+    uint8_t mode, reg;
+    if (pos == OP_10) {
+        mode = (opc >> 3) & 7;
+        reg = (opc >> 0) & 7;
+    } else if (pos == OP_23) {
+        mode = (opc >> 6) & 7;
+        reg = (opc >> 9) & 7;
+    } else {
+        return false;
+    }
+    if (mode < 7) {
+        // mode
+        // |  0 |  1 |   2  |   3   |   4   |    5   |     6     |
+        // +----+----+------+-------+-------+--------+-----------+
+        // | Dn |  1 | (An) | (An)+ | -(An) | (n,An) | (n,An,Xn) |
+        if (addrMode == M_RDATA || addrMode == M_WDATA)
+            return mode == 1;
+        // |  0 |  1 | (An) | (An)+ | -(An) | (*,An) | (*,An,Xn) |
+        if (addrMode == M_RMEM || addrMode == M_WMEM)
+            return mode < 2;
+        // |  0 |  1 | (An) |   3   |   4   | (n,An) | (n,An,Xn) |
+        if (addrMode == M_JADDR)
+            return mode < 2 || mode == 3 || mode == 4;
+        // |  0 |  1 | (An) | (An)+ |   4   | (n,An) | (n,An,Xn) |
+        if (addrMode == M_IADDR)
+            return mode < 2 || mode == 4;
+        //       (An)/     /-(An)/(*,An)/(*,An,Xn)
+        // |  0 |  1 | (An) |   3   | -(An) | (n,An) | (n,An,Xn) |
+        if (addrMode == M_DADDR)
+            return mode < 2 || mode == 3;
+        // | Dn | An*| (An) | (An)+ | -(An) | (n,An) | (n,An,Xn) |
+        // M_WADDR, M_RADDR
+        if (mode == 1 && size == SZ_DATA) { // no BYTE size for An
+            const auto insnSize = (opc >> 6) & 3;
+            return insnSize == 0 || insnSize == 3;
+        }
+        return false;
+    }
+    // mode == 7
+    if (reg >= 5)
+        return true;
+    // reg
+    // |   0   |   1   |    2   |     3     |  4 |
+    // | (n).W | (n).L | (n,PC) | (n,PC,Xn) | #n |
+    if (addrMode == M_RADDR || addrMode == M_RDATA)
+        return false;
+    // | (n).W | (n).L | (n,PC) | (n,PC,Xn) |  4 |
+    if (addrMode == M_RMEM || addrMode == M_JADDR || addrMode == M_IADDR)
+        return reg == 4;
+    // | (n).W | (n).L |    2   |     3     |  4 |
+    // M_WADDR, M_WDATA, M_WMEM, M_DADDR
+    return reg >= 2;
+    return false;
+}
+
+static bool invalidSize(Config::opcode_t opc, OprSize size) {
+    return size == SZ_DATA && ((opc >> 6) & 3) == 3;
+}
+
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
-    opCode &= ~getInsnMask(entry->flags());
-    return opCode == entry->opCode();
+    auto opc = insn.opCode();
+    const auto flags = entry->flags();
+    if (invalidModeReg(opc, flags.src(), flags.srcPos(), flags.oprSize()))
+        return false;
+    if (invalidModeReg(opc, flags.dst(), flags.dstPos(), flags.oprSize()))
+        return false;
+    if (invalidSize(opc, flags.oprSize()))
+        return false;
+    opc &= ~getInsnMask(flags);
+    return opc == entry->opCode();
 }
 
 Error TableMc68000::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        insn.nameBuffer().reset();
     return insn.getError();
 }
 
