@@ -86,19 +86,6 @@ void TestAsserter::equals(const char *file, const int line, const char *message,
         _pass_count++;
         return;
     }
-    const char *e = expected;
-    const char *a = insn.name();
-    for (; *e; e++, a++) {
-        char c = *a;
-        if (c == '.' || c == ',')
-            c = '_';  // '.' or ',' in instruction name will be treated as '_';
-        if (c != *e)
-            break;
-    }
-    if (*e == 0 && *a == 0) {
-        _pass_count++;
-        return;
-    }
     _fail_count++;
     printf("%s:%d: %s: expected '%s'\n", file, line, message, expected);
     printf("%s:%d: %s:   actual '%s'\n", file, line, message, actual);
