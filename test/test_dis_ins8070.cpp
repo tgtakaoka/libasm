@@ -44,47 +44,47 @@ void test_cpu() {
 }
 
 static void test_implied() {
-    TEST("NOP",  "",      0x00);
+    TEST("NOP",  "",       0x00);
     TEST("XCH",  "A, E",   0x01);
     TEST("LD",   "A, S",   0x06);
     TEST("LD",   "S, A",   0x07);
-    TEST("PUSH", "EA",    0x08);
+    TEST("PUSH", "EA",     0x08);
     TEST("LD",   "T, EA",  0x09);
-    TEST("PUSH", "A",     0x0A);
+    TEST("PUSH", "A",      0x0A);
     TEST("LD",   "EA, T",  0x0B);
-    TEST("SR",   "EA",    0x0C);
+    TEST("SR",   "EA",     0x0C);
     TEST("DIV",  "EA, T",  0x0D);
-    TEST("SL",   "A",     0x0E);
-    TEST("SL",   "EA",    0x0F);
-    TEST("CALL", "0",     0x10);
-    TEST("CALL", "1",     0x11);
-    TEST("CALL", "2",     0x12);
-    TEST("CALL", "3",     0x13);
-    TEST("CALL", "4",     0x14);
-    TEST("CALL", "5",     0x15);
-    TEST("CALL", "6",     0x16);
-    TEST("CALL", "7",     0x17);
-    TEST("CALL", "8",     0x18);
-    TEST("CALL", "9",     0x19);
-    TEST("CALL", "10",    0x1A);
-    TEST("CALL", "11",    0x1B);
-    TEST("CALL", "12",    0x1C);
-    TEST("CALL", "13",    0x1D);
-    TEST("CALL", "14",    0x1E);
-    TEST("CALL", "15",    0x1F);
+    TEST("SL",   "A",      0x0E);
+    TEST("SL",   "EA",     0x0F);
+    TEST("CALL", "0",      0x10);
+    TEST("CALL", "1",      0x11);
+    TEST("CALL", "2",      0x12);
+    TEST("CALL", "3",      0x13);
+    TEST("CALL", "4",      0x14);
+    TEST("CALL", "5",      0x15);
+    TEST("CALL", "6",      0x16);
+    TEST("CALL", "7",      0x17);
+    TEST("CALL", "8",      0x18);
+    TEST("CALL", "9",      0x19);
+    TEST("CALL", "10",     0x1A);
+    TEST("CALL", "11",     0x1B);
+    TEST("CALL", "12",     0x1C);
+    TEST("CALL", "13",     0x1D);
+    TEST("CALL", "14",     0x1E);
+    TEST("CALL", "15",     0x1F);
     TEST("MPY",  "EA, T",  0x2C);
-    TEST("SSM",  "P2",    0x2E);
-    TEST("SSM",  "P3",    0x2F);
+    TEST("SSM",  "P2",     0x2E);
+    TEST("SSM",  "P3",     0x2F);
     TEST("LD",   "EA, PC", 0x30);
     TEST("LD",   "EA, SP", 0x31);
     TEST("LD",   "EA, P2", 0x32);
     TEST("LD",   "EA, P3", 0x33);
-    TEST("POP",  "A",     0x38);
-    TEST("POP",  "EA",    0x3A);
-    TEST("SR",   "A",     0x3C);
-    TEST("SRL",  "A",     0x3D);
-    TEST("RR",   "A",     0x3E);
-    TEST("RRL",  "A",     0x3F);
+    TEST("POP",  "A",      0x38);
+    TEST("POP",  "EA",     0x3A);
+    TEST("SR",   "A",      0x3C);
+    TEST("SRL",  "A",      0x3D);
+    TEST("RR",   "A",      0x3E);
+    TEST("RRL",  "A",      0x3F);
     TEST("LD",   "A, E",   0x40);
     TEST("LD",   "PC, EA", 0x44);
     TEST("LD",   "SP, EA", 0x45);
@@ -95,13 +95,13 @@ static void test_implied() {
     TEST("XCH",  "EA, SP", 0x4D);
     TEST("XCH",  "EA, P2", 0x4E);
     TEST("XCH",  "EA, P3", 0x4F);
-    TEST("PUSH", "PC",    0x54);
-    TEST("PUSH", "P2",    0x56);
-    TEST("PUSH", "P3",    0x57);
+    TEST("PUSH", "PC",     0x54);
+    TEST("PUSH", "P2",     0x56);
+    TEST("PUSH", "P3",     0x57);
     TEST("OR",   "A, E",   0x58);
-    TEST("RET",  "",      0x5C);
-    TEST("POP",  "P2",    0x5E);
-    TEST("POP",  "P3",    0x5F);
+    TEST("RET",  "",       0x5C);
+    TEST("POP",  "P2",     0x5E);
+    TEST("POP",  "P3",     0x5F);
     TEST("XOR",  "A, E",   0x60);
     TEST("ADD",  "A, E",   0x70);
     TEST("SUB",  "A, E",   0x78);
@@ -184,10 +184,11 @@ static void test_direct() {
 }
 
 static void test_relative() {
-    ATEST(0x1000, "BP",  "0x1000",    0x64, 0xFE);
-    ATEST(0x1100, "BZ",  "0x1082",    0x6C, 0x80);
-    ATEST(0x1000, "BRA", "0x1081",    0x74, 0x7F);
-    ATEST(0x1000, "BNZ", "0x1005",    0x7C, 0x03);
+    ATEST(0x1000, "BP",  "0x1000", 0x64, 0xFE);
+    ATEST(0x1100, "BZ",  "0x1082", 0x6C, 0x80);
+    ATEST(0x1000, "BRA", "0x1081", 0x74, 0x7F);
+    ATEST(0x1000, "BNZ", "0x1005", 0x7C, 0x03);
+    ATEST(0x1000, "BND", "0x1005", 0x2D, 0x03);
 
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1005, "sym1005");
@@ -207,14 +208,14 @@ static void test_relative() {
 }
 
 static void test_indexed() {
-    TEST(         "BP",  "0,P2",      0x66, 0x00);
-    TEST(         "BP",  "-128,P3",   0x67, 0x80);
-    TEST(         "BZ",  "127,P2",    0x6E, 0x7F);
-    TEST(         "BZ",  "0,P3",      0x6F, 0x00);
-    TEST(         "BRA", "2,P2",      0x76, 0x02);
-    TEST(         "BRA", "3,P3",      0x77, 0x03);
-    TEST(         "BNZ", "-2,P2",     0x7E, 0xFE);
-    TEST(         "BNZ", "-3,P3",     0x7F, 0xFD);
+    TEST("BP",  "0,P2",    0x66, 0x00);
+    TEST("BP",  "-128,P3", 0x67, 0x80);
+    TEST("BZ",  "127,P2",  0x6E, 0x7F);
+    TEST("BZ",  "0,P3",    0x6F, 0x00);
+    TEST("BRA", "2,P2",    0x76, 0x02);
+    TEST("BRA", "3,P3",    0x77, 0x03);
+    TEST("BNZ", "-2,P2",   0x7E, 0xFE);
+    TEST("BNZ", "-3,P3",   0x7F, 0xFD);
 
     ATEST(0x1000, "LD",  "EA, 0x1000,PC", 0x80, 0xFF);
     TEST(         "LD",  "EA, 0,SP",      0x81, 0x00);
@@ -237,42 +238,42 @@ static void test_indexed() {
     TEST(         "SUB", "EA, -128,P2",   0xBA, 0x80);
     TEST(         "SUB", "EA, 127,P3",    0xBB, 0x7F);
 
-    ATEST(0x1000, "ILD", "A, 0x1000,PC",  0x90, 0xFF);
-    TEST(         "ILD", "A, 0,SP",       0x91, 0x00);
-    TEST(         "ILD", "A, -128,P2",    0x92, 0x80);
-    TEST(         "ILD", "A, 127,P3",     0x93, 0x7F);
-    ATEST(0x1000, "DLD", "A, 0x1000,PC",  0x98, 0xFF);
-    TEST(         "DLD", "A, 0,SP",       0x99, 0x00);
-    TEST(         "DLD", "A, -128,P2",    0x9A, 0x80);
-    TEST(         "DLD", "A, 127,P3",     0x9B, 0x7F);
-    ATEST(0x1000, "LD",  "A, 0x1000,PC",  0xC0, 0xFF);
-    TEST(         "LD",  "A, 0,SP",       0xC1, 0x00);
-    TEST(         "LD",  "A, -128,P2",    0xC2, 0x80);
-    TEST(         "LD",  "A, 127,P3",     0xC3, 0x7F);
-    ATEST(0x1000, "ST",  "A, 0x1000,PC",  0xC8, 0xFF);
-    TEST(         "ST",  "A, 0,SP",       0xC9, 0x00);
-    TEST(         "ST",  "A, -128,P2",    0xCA, 0x80);
-    TEST(         "ST",  "A, 127,P3",     0xCB, 0x7F);
-    ATEST(0x1000, "AND", "A, 0x1000,PC",  0xD0, 0xFF);
-    TEST(         "AND", "A, 0,SP",       0xD1, 0x00);
-    TEST(         "AND", "A, -128,P2",    0xD2, 0x80);
-    TEST(         "AND", "A, 127,P3",     0xD3, 0x7F);
-    ATEST(0x1000, "OR",  "A, 0x1000,PC",  0xD8, 0xFF);
-    TEST(         "OR",  "A, 0,SP",       0xD9, 0x00);
-    TEST(         "OR",  "A, -128,P2",    0xDA, 0x80);
-    TEST(         "OR",  "A, 127,P3",     0xDB, 0x7F);
-    ATEST(0x1000, "XOR", "A, 0x1000,PC",  0xE0, 0xFF);
-    TEST(         "XOR", "A, 0,SP",       0xE1, 0x00);
-    TEST(         "XOR", "A, -128,P2",    0xE2, 0x80);
-    TEST(         "XOR", "A, 127,P3",     0xE3, 0x7F);
-    ATEST(0x1000, "ADD", "A, 0x1000,PC",  0xF0, 0xFF);
-    TEST(         "ADD", "A, 0,SP",       0xF1, 0x00);
-    TEST(         "ADD", "A, -128,P2",    0xF2, 0x80);
-    TEST(         "ADD", "A, 127,P3",     0xF3, 0x7F);
-    ATEST(0x1000, "SUB", "A, 0x1000,PC",  0xF8, 0xFF);
-    TEST(         "SUB", "A, 0,SP",       0xF9, 0x00);
-    TEST(         "SUB", "A, -128,P2",    0xFA, 0x80);
-    TEST(         "SUB", "A, 127,P3",     0xFB, 0x7F);
+    ATEST(0x1000, "ILD", "A, 0x1000,PC", 0x90, 0xFF);
+    TEST(         "ILD", "A, 0,SP",      0x91, 0x00);
+    TEST(         "ILD", "A, -128,P2",   0x92, 0x80);
+    TEST(         "ILD", "A, 127,P3",    0x93, 0x7F);
+    ATEST(0x1000, "DLD", "A, 0x1000,PC", 0x98, 0xFF);
+    TEST(         "DLD", "A, 0,SP",      0x99, 0x00);
+    TEST(         "DLD", "A, -128,P2",   0x9A, 0x80);
+    TEST(         "DLD", "A, 127,P3",    0x9B, 0x7F);
+    ATEST(0x1000, "LD",  "A, 0x1000,PC", 0xC0, 0xFF);
+    TEST(         "LD",  "A, 0,SP",      0xC1, 0x00);
+    TEST(         "LD",  "A, -128,P2",   0xC2, 0x80);
+    TEST(         "LD",  "A, 127,P3",    0xC3, 0x7F);
+    ATEST(0x1000, "ST",  "A, 0x1000,PC", 0xC8, 0xFF);
+    TEST(         "ST",  "A, 0,SP",      0xC9, 0x00);
+    TEST(         "ST",  "A, -128,P2",   0xCA, 0x80);
+    TEST(         "ST",  "A, 127,P3",    0xCB, 0x7F);
+    ATEST(0x1000, "AND", "A, 0x1000,PC", 0xD0, 0xFF);
+    TEST(         "AND", "A, 0,SP",      0xD1, 0x00);
+    TEST(         "AND", "A, -128,P2",   0xD2, 0x80);
+    TEST(         "AND", "A, 127,P3",    0xD3, 0x7F);
+    ATEST(0x1000, "OR",  "A, 0x1000,PC", 0xD8, 0xFF);
+    TEST(         "OR",  "A, 0,SP",      0xD9, 0x00);
+    TEST(         "OR",  "A, -128,P2",   0xDA, 0x80);
+    TEST(         "OR",  "A, 127,P3",    0xDB, 0x7F);
+    ATEST(0x1000, "XOR", "A, 0x1000,PC", 0xE0, 0xFF);
+    TEST(         "XOR", "A, 0,SP",      0xE1, 0x00);
+    TEST(         "XOR", "A, -128,P2",   0xE2, 0x80);
+    TEST(         "XOR", "A, 127,P3",    0xE3, 0x7F);
+    ATEST(0x1000, "ADD", "A, 0x1000,PC", 0xF0, 0xFF);
+    TEST(         "ADD", "A, 0,SP",      0xF1, 0x00);
+    TEST(         "ADD", "A, -128,P2",   0xF2, 0x80);
+    TEST(         "ADD", "A, 127,P3",    0xF3, 0x7F);
+    ATEST(0x1000, "SUB", "A, 0x1000,PC", 0xF8, 0xFF);
+    TEST(         "SUB", "A, 0,SP",      0xF9, 0x00);
+    TEST(         "SUB", "A, -128,P2",   0xFA, 0x80);
+    TEST(         "SUB", "A, 127,P3",    0xFB, 0x7F);
 
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1005, "sym1005");
@@ -346,10 +347,10 @@ static void test_formatter() {
     TEST("ADD", "A, =X'AA",  0xF4, 0xAA);
     TEST("SUB", "A, =X'FF",  0xFC, 0xFF);
 
+    TEST("JSR", "X'1234",      0x20, 0x33, 0x12);
     TEST("PLI", "P2, =X'1234", 0x22, 0x34, 0x12);
+    TEST("JMP", "X'1234",      0x24, 0x33, 0x12);
     TEST("LD",  "P2, =X'1234", 0x26, 0x34, 0x12);
-    TEST("JSR", "X'1234", 0x20, 0x33, 0x12);
-    TEST("JMP", "X'1234", 0x24, 0x33, 0x12);
 }
 
 static void test_illegal() {
