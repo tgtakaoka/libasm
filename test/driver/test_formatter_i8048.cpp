@@ -58,7 +58,7 @@ void test_dis_i8048() {
             "     BCD :                            ORG   0BCDH\n"
             "     BCD : 89 8A                      ORL   P1, #8AH\n"
             "test.bin: 0BCFH: error: Unknown instruction\n"
-            "     BCF : 08                         IN    A, \n",
+            "     BCF : 08\n",
             0x89, 0x8A, 0x08);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0xabcd));

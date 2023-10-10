@@ -319,8 +319,6 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_BIT8;
     if (opr == M_AD11)
         return table == M_AD08 || table == M_BITN;
-    if (opr == M_IR3)
-        return table == M_IR;
     if (opr == M_P1 || opr == M_P2)
         return table == M_P12;
     return false;
@@ -339,24 +337,27 @@ Error TableI8048::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
     const auto src = flags.src();
     if (dst == M_R || src == M_R) {
-        opCode &= ~7;
+        opc &= ~7;
     } else if (dst == M_IR || src == M_IR) {
-        opCode &= ~1;
-    } else if (dst == M_P12 || src == M_P12 || dst == M_PEXT || src == M_PEXT) {
-        opCode &= ~3;
+        opc &= ~1;
+    } else if (dst == M_PEXT || src == M_PEXT) {
+        opc &= ~3;
     } else if (dst == M_AD11 || dst == M_BITN) {
-        opCode &= ~0xE0;
+        opc &= ~0xE0;
     } else if (dst == M_F) {
-        opCode &= ~0x20;
+        opc &= ~0x20;
     } else if (dst == M_RB || dst == M_MB) {
-        opCode &= ~0x10;
+        opc &= ~0x10;
+    } else if (dst == M_P12 || src == M_P12) {
+        const auto table = entry->opCode();
+        return opc == table + 1 || opc == table + 2;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableI8048::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

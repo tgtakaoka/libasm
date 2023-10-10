@@ -175,8 +175,8 @@ static void test_io() {
     TEST("ORL",  "P2, #10H", 0x8A, 0x10);
 
     if (is8048()) {
-        TEST("INS",  "A, BUS", 0x08);
-        TEST("OUTL", "BUS, A", 0x02);
+        TEST("INS",  "A, BUS",    0x08);
+        TEST("OUTL", "BUS, A",    0x02);
         TEST("ANL",  "BUS, #08H", 0x98, 0x08);
         TEST("ORL",  "BUS, #0CH", 0x88, 0x0C);
     } else {
