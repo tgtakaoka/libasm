@@ -713,16 +713,15 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     } else if (mode1 == M_GEN8 || mode1 == M_GEN16) {
         opCode &= ~0x30;
     }
-    if (opCode == entry->opCode()) {
-        if (flags.undefined())
-            insn.setErrorIf(UNKNOWN_INSTRUCTION);
-        return true;
-    }
-    return false;
+    return opCode == entry->opCode();
 }
 
 Error TableMc6809::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    if (entry && entry->flags().undefined()) {
+        insn.nameBuffer().reset();
+        insn.setErrorIf(UNKNOWN_INSTRUCTION);
+    }
     return insn.getError();
 }
 
