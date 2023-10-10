@@ -75,127 +75,127 @@ void test_cpu() {
 }
 
 static void test_inh() {
-    TEST(IDLE, "", 0x0340);
-    TEST(RSET, "", 0x0360);
-    TEST(RTWP, "", 0x0380);
-    TEST(CKON, "", 0x03A0);
-    TEST(CKOF, "", 0x03C0);
-    TEST(LREX, "", 0x03E0);
+    TEST("IDLE", "", 0x0340);
+    TEST("RSET", "", 0x0360);
+    TEST("RTWP", "", 0x0380);
+    TEST("CKON", "", 0x03A0);
+    TEST("CKOF", "", 0x03C0);
+    TEST("LREX", "", 0x03E0);
 
     if (is99105()) {
         // TMS99105
-        TEST(RTWP, "1", 0x0381);
-        TEST(RTWP, "2", 0x0382);
-        TEST(RTWP, "4", 0x0384);
+        TEST("RTWP", "1", 0x0381);
+        TEST("RTWP", "2", 0x0382);
+        TEST("RTWP", "4", 0x0384);
     } else {
-        ERUI(RTWP, "1", 0x0381);
-        ERUI(RTWP, "2", 0x0382);
-        ERUI(RTWP, "4", 0x0384);
+        ERRT("RTWP", "1", UNKNOWN_INSTRUCTION, 0x0381);
+        ERRT("RTWP", "2", UNKNOWN_INSTRUCTION, 0x0382);
+        ERRT("RTWP", "4", UNKNOWN_INSTRUCTION, 0x0384);
     }
 }
 
 static void test_imm() {
-    TEST(LWPI, ">1234", 0x02E0, 0x1234);
-    TEST(LIMI, ">89AB", 0x0300, 0x89AB);
+    TEST("LWPI", ">1234", 0x02E0, 0x1234);
+    TEST("LIMI", ">89AB", 0x0300, 0x89AB);
 
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x89AB, "sym89AB");
 
-    TEST(LWPI, "sym1234", 0x02E0, 0x1234);
-    TEST(LIMI, "sym89AB", 0x0300, 0x89AB);
+    TEST("LWPI", "sym1234", 0x02E0, 0x1234);
+    TEST("LIMI", "sym89AB", 0x0300, 0x89AB);
 }
 
 static void test_reg() {
-    TEST(STWP, "R14", 0x02AE);
-    TEST(STST, "R15", 0x02CF);
+    TEST("STWP", "R14", 0x02AE);
+    TEST("STST", "R15", 0x02CF);
 
     if (is9900()) {
-        ERUI(LST, "R0", 0x0080);
-        ERUI(LWP, "R1", 0x0091);
+        ERRT("LST", "R0", UNKNOWN_INSTRUCTION, 0x0080);
+        ERRT("LWP", "R1", UNKNOWN_INSTRUCTION, 0x0091);
     } else {
         // TMS9995
-        TEST(LST, "R0", 0x0080);
-        TEST(LWP, "R1", 0x0091);
+        TEST("LST", "R0", 0x0080);
+        TEST("LWP", "R1", 0x0091);
     }
 }
 
 static void test_reg_imm() {
-    TEST(LI,   "R0, 0",      0x0200, 0x0000);
-    TEST(AI,   "R1, 10",     0x0221, 0x000A);
-    TEST(ANDI, "R8, >00FF",   0x0248, 0x00FF);
-    TEST(ORI,  "R14, >FF00", 0x026E, 0xFF00);
-    TEST(CI,   "R15, >FFFF", 0x028F, 0xFFFF);
+    TEST("LI",   "R0, 0",      0x0200, 0x0000);
+    TEST("AI",   "R1, 10",     0x0221, 0x000A);
+    TEST("ANDI", "R8, >00FF",   0x0248, 0x00FF);
+    TEST("ORI",  "R14, >FF00", 0x026E, 0xFF00);
+    TEST("CI",   "R15, >FFFF", 0x028F, 0xFFFF);
 
     symtab.intern(0x1234, "sym1234");
 
-    TEST(LI,   "R2, sym1234", 0x0202, 0x1234);
+    TEST("LI",   "R2, sym1234", 0x0202, 0x1234);
 
     if (is99105()) {
         // TMS99105
-        TEST(BLSK, "R3, >4567",   0x00B3, 0x4567);
-        TEST(BLSK, "R3, sym1234", 0x00B3, 0x1234);
+        TEST("BLSK", "R3, >4567",   0x00B3, 0x4567);
+        TEST("BLSK", "R3, sym1234", 0x00B3, 0x1234);
     } else {
-        ERRI(0x00B3);
+        UNKN(0x00B3);
     }
 }
 
 static void test_cnt_reg() {
-    TEST(SRA,  "R1, R0",  0x0801);
-    TEST(SRL,  "R4, 12",  0x09C4);
-    TEST(SLA,  "R8, 4",   0x0A48);
-    TEST(SRC,  "R9, 15",  0x0BF9);
+    TEST("SRA",  "R1, R0",  0x0801);
+    TEST("SRL",  "R4, 12",  0x09C4);
+    TEST("SLA",  "R8, 4",   0x0A48);
+    TEST("SRC",  "R9, 15",  0x0BF9);
 }
 
 static void test_src() {
-    TEST(BLWP, "@>9876", 0x0420, 0x9876);
-    TEST(B,    "R13",    0x044D);
-    TEST(X,    "*R10",   0x049A);
-    TEST(CLR,  "*R12+",  0x04FC);
-    TEST(NEG,  "R0",     0x0500);
-    TEST(INV,  "@>1234", 0x0560, 0x1234);
-    TEST(INC,  "@2(R7)", 0x05A7, 0x0002);
-    TEST(INCT, "R7",     0x05C7);
-    TEST(DEC,  "@>FFFE(R7)",0x0627, 0xFFFE);
-    TEST(DECT, "R7",     0x0647);
-    TEST(BL,   "R13",    0x068D);
-    TEST(SWPB, "*R1",    0x06D1);
-    TEST(SETO, "R12",    0x070C);
-    TEST(ABS,  "@8(R3)", 0x0763, 0x0008);
+    TEST("BLWP", "@>9876", 0x0420, 0x9876);
+    TEST("B",    "R13",    0x044D);
+    TEST("X",    "*R10",   0x049A);
+    TEST("CLR",  "*R12+",  0x04FC);
+    TEST("NEG",  "R0",     0x0500);
+    TEST("INV",  "@>1234", 0x0560, 0x1234);
+    TEST("INC",  "@2(R7)", 0x05A7, 0x0002);
+    TEST("INCT", "R7",     0x05C7);
+    TEST("DEC",  "@>FFFE(R7)",0x0627, 0xFFFE);
+    TEST("DECT", "R7",     0x0647);
+    TEST("BL",   "R13",    0x068D);
+    TEST("SWPB", "*R1",    0x06D1);
+    TEST("SETO", "R12",    0x070C);
+    TEST("ABS",  "@8(R3)", 0x0763, 0x0008);
 
     if (is9900()) {
-        ERUI(DIVS, "R2",     0x0182);
-        ERUI(DIVS, "*R3",    0x0193);
-        ERUI(DIVS, "@>1234", 0x01A0, 0x1234);
-        ERUI(DIVS, "@>1000(R4)", 0x01A4, 0x1000);
-        ERUI(DIVS, "*R5+",   0x01B5);
-        ERUI(MPYS, "R0",     0x01C0);
-        ERUI(MPYS, "@2(R8)", 0x01E8, 0x0002);
-        ERUI(MPYS, "*R15+",  0x01FF);
+        ERRT("DIVS", "R2",         UNKNOWN_INSTRUCTION, 0x0182);
+        ERRT("DIVS", "*R3",        UNKNOWN_INSTRUCTION, 0x0193);
+        ERRT("DIVS", "@>1234",     UNKNOWN_INSTRUCTION, 0x01A0, 0x1234);
+        ERRT("DIVS", "@>1000(R4)", UNKNOWN_INSTRUCTION, 0x01A4, 0x1000);
+        ERRT("DIVS", "*R5+",       UNKNOWN_INSTRUCTION, 0x01B5);
+        ERRT("MPYS", "R0",         UNKNOWN_INSTRUCTION, 0x01C0);
+        ERRT("MPYS", "@2(R8)",     UNKNOWN_INSTRUCTION, 0x01E8, 0x0002);
+        ERRT("MPYS", "*R15+",      UNKNOWN_INSTRUCTION, 0x01FF);
     } else {
         // TMS9995
-        TEST(DIVS, "R2",     0x0182);
-        TEST(DIVS, "*R3",    0x0193);
-        TEST(DIVS, "@>1234", 0x01A0, 0x1234);
-        TEST(DIVS, "@>1000(R4)", 0x01A4, 0x1000);
-        TEST(DIVS, "*R5+",   0x01B5);
-        TEST(MPYS, "R0",     0x01C0);
-        TEST(MPYS, "@2(R8)", 0x01E8, 0x0002);
-        TEST(MPYS, "*R15+",  0x01FF);
+        TEST("DIVS", "R2",     0x0182);
+        TEST("DIVS", "*R3",    0x0193);
+        TEST("DIVS", "@>1234", 0x01A0, 0x1234);
+        TEST("DIVS", "@>1000(R4)", 0x01A4, 0x1000);
+        TEST("DIVS", "*R5+",   0x01B5);
+        TEST("MPYS", "R0",     0x01C0);
+        TEST("MPYS", "@2(R8)", 0x01E8, 0x0002);
+        TEST("MPYS", "*R15+",  0x01FF);
     }
 
     if (is99105()) {
         // TMS99105
-        TEST(TMB,  "@>0123(R15), 7", 0x0C09, 0x01EF, 0x0123);
-        TEST(TCMB, "R0, 0",          0x0C0A, 0x0000);
-        TEST(TSMB, "*R2, 15",        0x0C0B, 0x03D2);
-        TEST(BIND, "@>2223(R1)", 0x0161, 0x2223);
-        TEST(EVAD, "R5",         0x0105);
+        TEST("TMB",  "@>0123(R15), 7", 0x0C09, 0x01EF, 0x0123);
+        TEST("TCMB", "R0, 0",          0x0C0A, 0x0000);
+        TEST("TSMB", "*R2, 15",        0x0C0B, 0x03D2);
+        TEST("BIND", "@>2223(R1)",     0x0161, 0x2223);
+        TEST("EVAD", "R5",             0x0105);
     } else {
-        ERUI(TMB,  "@>0123(R15), 7", 0x0C09, 0x01EF, 0x0123);
-        ERUI(TCMB, "R0, 0",          0x0C0A, 0x0000);
-        ERUI(TSMB, "*R2, 15",        0x0C0B, 0x03D2);
-        ERUI(BIND, "@>2223(R1)", 0x0161, 0x2223);
-        ERUI(EVAD, "R5",         0x0105);
+        ERRT("TMB",  "@>0123(R15), 7", UNKNOWN_INSTRUCTION, 0x0C09, 0x01EF, 0x0123);
+        ERRT("TCMB", "R0, 0",          UNKNOWN_INSTRUCTION, 0x0C0A, 0x0000);
+        ERRT("TSMB", "*R2, 15",        UNKNOWN_INSTRUCTION, 0x0C0B, 0x03D2);
+        ERRT("BIND", "@>2223(R1)",     UNKNOWN_INSTRUCTION, 0x0161, 0x2223);
+        ERRT("EVAD", "R5",             UNKNOWN_INSTRUCTION, 0x0105);
     }
 
     symtab.intern(-2, "neg2");
@@ -203,153 +203,153 @@ static void test_src() {
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x9876, "sym9876");
 
-    TEST(BLWP, "@sym9876",     0x0420, 0x9876);
-    TEST(DEC,  "@neg2(R7)",    0x0627, 0xFFFE);
+    TEST("BLWP", "@sym9876",     0x0420, 0x9876);
+    TEST("DEC",  "@neg2(R7)",    0x0627, 0xFFFE);
 
     if (is9995() || is99105()) {
         // TMS9995
-        TEST(DIVS, "@sym1234",     0x01A0, 0x1234);
-        TEST(DIVS, "@sym1000(R4)", 0x01A4, 0x1000);
+        TEST("DIVS", "@sym1234",     0x01A0, 0x1234);
+        TEST("DIVS", "@sym1000(R4)", 0x01A4, 0x1000);
     }
 
     if (is99105()) {
         // TMS99105
-        TEST(BIND, "@sym1000(R1)", 0x0161, 0x1000);
+        TEST("BIND", "@sym1000(R1)", 0x0161, 0x1000);
     }
 }
 
 static void test_reg_src() {
-    TEST(COC, "R1, R2",         0x2081);
-    TEST(CZC, "@>1234(R3), R7", 0x25E3, 0x1234);
-    TEST(XOR, "@2(R5), R4", 0x2925, 0x0002);
-    TEST(MPY, "R4, R2",         0x3884);
-    TEST(DIV, "R14, R12",       0x3F0E);
+    TEST("COC", "R1, R2",         0x2081);
+    TEST("CZC", "@>1234(R3), R7", 0x25E3, 0x1234);
+    TEST("XOR", "@2(R5), R4", 0x2925, 0x0002);
+    TEST("MPY", "R4, R2",         0x3884);
+    TEST("DIV", "R14, R12",       0x3F0E);
 
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x0002, "offset2");
 
-    TEST(CZC, "@sym1234(R3), R7", 0x25E3, 0x1234);
-    TEST(XOR, "@offset2(R5), R4", 0x2925, 0x0002);
+    TEST("CZC", "@sym1234(R3), R7", 0x25E3, 0x1234);
+    TEST("XOR", "@offset2(R5), R4", 0x2925, 0x0002);
 }
 
 static void test_cnt_src() {
-    TEST(LDCR, "*R13+, 16",  0x303D);
-    TEST(STCR, "@2(R4), 15", 0x37E4, 0x0002);
+    TEST("LDCR", "*R13+, 16",  0x303D);
+    TEST("STCR", "@2(R4), 15", 0x37E4, 0x0002);
 
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
 
-    TEST(STCR, "@offset2(R4), size7", 0x35E4, 0x0002);
-    TEST(STCR, "@offset2(R4), 16",    0x3424, 0x0002);
-    TEST(STCR, "@>1000(R4), size7",   0x35E4, 0x1000);
+    TEST("STCR", "@offset2(R4), size7", 0x35E4, 0x0002);
+    TEST("STCR", "@offset2(R4), 16",    0x3424, 0x0002);
+    TEST("STCR", "@>1000(R4), size7",   0x35E4, 0x1000);
 
     if (is99105()) {
         // TMS99105
-        TEST(SRAM, "@offset2(R4), 15", 0x001C, 0x43E4, 0x0002);
-        TEST(SLAM, "R11, R0",          0x001D, 0x400B);
-        TEST(SLAM, "*R13+, 1",         0x001D, 0x407D);
+        TEST("SRAM", "@offset2(R4), 15", 0x001C, 0x43E4, 0x0002);
+        TEST("SLAM", "R11, R0",          0x001D, 0x400B);
+        TEST("SLAM", "*R13+, 1",         0x001D, 0x407D);
     } else {
-        ERUI(SRAM, "", 0x001C);
-        ERUI(SLAM, "", 0x001D);
+        ERRT("SRAM", "", UNKNOWN_INSTRUCTION, 0x001C);
+        ERRT("SLAM", "", UNKNOWN_INSTRUCTION, 0x001D);
     }
 }
 
 static void test_xop_src() {
-    TEST(XOP,  "@>9876, 0",  0x2C20, 0x9876);
-    TEST(XOP,  "@>9876, 15", 0x2FE0, 0x9876);
+    TEST("XOP",  "@>9876, 0",  0x2C20, 0x9876);
+    TEST("XOP",  "@>9876, 15", 0x2FE0, 0x9876);
 
     symtab.intern(10, "xop10");
     symtab.intern(0x9876, "sym9876");
 
-    TEST(XOP,  "@sym9876, xop10",   0x2EA0, 0x9876);
-    TEST(XOP,  "@sym9876(R1), 8",   0x2E21, 0x9876);
-    TEST(XOP,  "@>1234(R1), xop10", 0x2EA1, 0x1234);
+    TEST("XOP",  "@sym9876, xop10",   0x2EA0, 0x9876);
+    TEST("XOP",  "@sym9876(R1), 8",   0x2E21, 0x9876);
+    TEST("XOP",  "@>1234(R1), xop10", 0x2EA1, 0x1234);
 }
 
 static void test_dst_src() {
-    TEST(SZC,  "@>1234(R10), @>5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST(SZCB, "@>1234, @>5678",           0x5820, 0x1234, 0x5678);
-    TEST(S,    "*R10, *R11",               0x66DA);
-    TEST(SB,   "*R10+, *R11+",             0x7EFA);
-    TEST(C,    "*R10+, *R10+",             0x8EBA);
-    TEST(CB,   "*R10+, *R11+",             0x9EFA);
-    TEST(A,    "@>2000, R11",              0xA2E0, 0x2000);
-    TEST(AB,   "R10, @>4000(R11)",         0xBACA, 0x4000);
-    TEST(MOV,  "@0(R10), @1(R11)",         0xCAEA, 0x0000, 0x0001);
-    TEST(MOVB, "R10, R11",                 0xD2CA);
-    TEST(SOC,  "@>1234, @>5678(R11)",      0xEAE0, 0x1234, 0x5678);
-    TEST(SOCB, "@>1234(R10), @>5678",      0xF82A, 0x1234, 0x5678);
+    TEST("SZC",  "@>1234(R10), @>5678(R11)", 0x4AEA, 0x1234, 0x5678);
+    TEST("SZCB", "@>1234, @>5678",           0x5820, 0x1234, 0x5678);
+    TEST("S",    "*R10, *R11",               0x66DA);
+    TEST("SB",   "*R10+, *R11+",             0x7EFA);
+    TEST("C",    "*R10+, *R10+",             0x8EBA);
+    TEST("CB",   "*R10+, *R11+",             0x9EFA);
+    TEST("A",    "@>2000, R11",              0xA2E0, 0x2000);
+    TEST("AB",   "R10, @>4000(R11)",         0xBACA, 0x4000);
+    TEST("MOV",  "@0(R10), @1(R11)",         0xCAEA, 0x0000, 0x0001);
+    TEST("MOVB", "R10, R11",                 0xD2CA);
+    TEST("SOC",  "@>1234, @>5678(R11)",      0xEAE0, 0x1234, 0x5678);
+    TEST("SOCB", "@>1234(R10), @>5678",      0xF82A, 0x1234, 0x5678);
 
     symtab.intern(0x0000, "zero");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x4000, "sym4000");
     symtab.intern(0x5678, "sym5678");
 
-    TEST(SZC,  "@sym1234(R10), @sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST(SZCB, "@sym1234, @sym5678",           0x5820, 0x1234, 0x5678);
-    TEST(AB,   "R10, @sym4000(R11)",           0xBACA, 0x4000);
-    TEST(MOV,  "@zero(R10), @1(R11)",          0xCAEA, 0x0000, 0x0001);
-    TEST(SOC,  "@sym1234, @sym5678(R11)",      0xEAE0, 0x1234, 0x5678);
-    TEST(SOCB, "@sym1234(R10), @sym5678",      0xF82A, 0x1234, 0x5678);
+    TEST("SZC",  "@sym1234(R10), @sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
+    TEST("SZCB", "@sym1234, @sym5678",           0x5820, 0x1234, 0x5678);
+    TEST("AB",   "R10, @sym4000(R11)",           0xBACA, 0x4000);
+    TEST("MOV",  "@zero(R10), @1(R11)",          0xCAEA, 0x0000, 0x0001);
+    TEST("SOC",  "@sym1234, @sym5678(R11)",      0xEAE0, 0x1234, 0x5678);
+    TEST("SOCB", "@sym1234(R10), @sym5678",      0xF82A, 0x1234, 0x5678);
 
     if (is99105()) {
         // TMS99105
-        TEST(SM, "@sym1234(R10), @sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
-        TEST(SM, "@sym1234, @sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
-        TEST(SM, "R10, @sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
-        TEST(AM, "@zero(R10), @1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
-        TEST(AM, "@sym1234, @sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
-        TEST(AM, "@sym1234(R10), @sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
+        TEST("SM", "@sym1234(R10), @sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
+        TEST("SM", "@sym1234, @sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
+        TEST("SM", "R10, @sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
+        TEST("AM", "@zero(R10), @1(R11)",          0x002A, 0x4AEA, 0x0000, 0x0001);
+        TEST("AM", "@sym1234, @sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
+        TEST("AM", "@sym1234(R10), @sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
     } else {
-        ERUI(SM, "", 0x0029);
-        ERUI(AM, "", 0x002A);
+        ERRT("SM", "", UNKNOWN_INSTRUCTION, 0x0029);
+        ERRT("AM", "", UNKNOWN_INSTRUCTION, 0x002A);
     }
 }
 
 static void test_rel() {
-    ATEST(0x1000, JMP, ">1002", 0x1000);
-    ATEST(0x1000, JLT, ">1000", 0x11FF);
-    ATEST(0x1000, JLE, ">1100", 0x127F);
-    ATEST(0x1000, JEQ, ">0F02", 0x1380);
-    ATEST(0x1000, JHE, ">1004", 0x1401);
-    ATEST(0x1000, JGT, ">1006", 0x1502);
-    ATEST(0x1000, JNE, ">1008", 0x1603);
-    ATEST(0x1000, JNC, ">100A", 0x1704);
-    ATEST(0x1000, JOC, ">0FFE", 0x18FE);
-    ATEST(0x1000, JNO, ">0FFC", 0x19FD);
-    ATEST(0x1000, JL,  ">0FFA", 0x1AFC);
-    ATEST(0x1000, JH,  ">0FF8", 0x1BFB);
-    ATEST(0x1000, JOP, ">0FF6", 0x1CFA);
+    ATEST(0x1000, "JMP", ">1002", 0x1000);
+    ATEST(0x1000, "JLT", ">1000", 0x11FF);
+    ATEST(0x1000, "JLE", ">1100", 0x127F);
+    ATEST(0x1000, "JEQ", ">0F02", 0x1380);
+    ATEST(0x1000, "JHE", ">1004", 0x1401);
+    ATEST(0x1000, "JGT", ">1006", 0x1502);
+    ATEST(0x1000, "JNE", ">1008", 0x1603);
+    ATEST(0x1000, "JNC", ">100A", 0x1704);
+    ATEST(0x1000, "JOC", ">0FFE", 0x18FE);
+    ATEST(0x1000, "JNO", ">0FFC", 0x19FD);
+    ATEST(0x1000, "JL",  ">0FFA", 0x1AFC);
+    ATEST(0x1000, "JH",  ">0FF8", 0x1BFB);
+    ATEST(0x1000, "JOP", ">0FF6", 0x1CFA);
 
     disassembler.setOption("relative", "true");
-    ATEST(0x1000, JMP, "$-254", 0x1080);
-    ATEST(0x1000, JMP, "$",     0x10FF);
-    ATEST(0x1000, JMP, "$+2",   0x1000);
-    ATEST(0x1000, JMP, "$+256", 0x107F);
+    ATEST(0x1000, "JMP", "$-254", 0x1080);
+    ATEST(0x1000, "JMP", "$",     0x10FF);
+    ATEST(0x1000, "JMP", "$+2",   0x1000);
+    ATEST(0x1000, "JMP", "$+256", 0x107F);
 
     symtab.intern(0x0F02, "sym0F02");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1002, "sym1002");
     symtab.intern(0x1100, "sym1100");
 
-    ATEST(0x1000, JMP, "sym1002", 0x1000);
-    ATEST(0x1000, JLT, "sym1000", 0x11FF);
-    ATEST(0x1000, JLE, "sym1100", 0x127F);
-    ATEST(0x1000, JEQ, "sym0F02", 0x1380);
+    ATEST(0x1000, "JMP", "sym1002", 0x1000);
+    ATEST(0x1000, "JLT", "sym1000", 0x11FF);
+    ATEST(0x1000, "JLE", "sym1100", 0x127F);
+    ATEST(0x1000, "JEQ", "sym0F02", 0x1380);
 }
 
 static void test_cru_off() {
-    TEST(SBO, "0",    0x1D00);
-    TEST(SBZ, "127",  0x1E7F);
-    TEST(TB,  "-128", 0x1F80);
+    TEST("SBO", "0",    0x1D00);
+    TEST("SBZ", "127",  0x1E7F);
+    TEST("TB",  "-128", 0x1F80);
 
     symtab.intern(0x00, "zero");
     symtab.intern(127, "off127");
     symtab.intern(-128, "off_128");
 
-    TEST(SBO, "zero",    0x1D00);
-    TEST(SBZ, "off127",  0x1E7F);
-    TEST(TB,  "off_128", 0x1F80);
+    TEST("SBO", "zero",    0x1D00);
+    TEST("SBZ", "off127",  0x1E7F);
+    TEST("TB",  "off_128", 0x1F80);
 }
 
 struct mid_range {

@@ -41,11 +41,9 @@ void dis_assert(const char *file, int line, Error error, const ArrayMemory &memo
     disassembler.decode(mem, insn, actual_opr, sizeof(actual_opr), &symtab);
 
     asserter.equals(file, line, expected_name, error, disassembler);
-    if (error == OK) {
-        asserter.equals(file, line, expected_name, expected_name, insn);
-        asserter.equals(file, line, expected_name, expected_opr, actual_opr);
-        asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length());
-    }
+    asserter.equals(file, line, expected_name, expected_name, insn);
+    asserter.equals(file, line, expected_name, expected_opr, actual_opr);
+    asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length());
 }
 
 bool test_failed;
