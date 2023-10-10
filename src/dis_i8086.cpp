@@ -83,7 +83,6 @@ RegName DisI8086::decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos)
     case P_OMOD:
         num = insn.modReg();
         break;
-
     case P_REG:
         num = insn.modReg() >> 3;
         break;
@@ -268,6 +267,8 @@ Error DisI8086::decodeRepeatStr(DisInsn &rep, StrBuffer &out) {
         Insn _istr(0);
         DisInsn istr(_istr, rep);
         const auto opc = rep.readByte();
+        if (rep.getError())
+            return setErrorIf(rep);
         istr.setOpCode(opc, 0);
         if (TABLE.searchOpCode(cpuType(), istr, out))
             return setError(istr);
@@ -300,8 +301,10 @@ Error DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprP
     case M_WREG:
     case M_SREG:
         name = decodeRegister(insn, mode, pos);
-        if (mode == M_CS && pos == P_NONE)  // POP CS
-            return setError(REGISTER_NOT_ALLOWED);
+        if (mode == M_CS && pos == P_NONE) {  // POP CS
+            name = REG_CS;
+            setErrorIf(REGISTER_NOT_ALLOWED);
+        }
         outRegister(out, name);
         break;
     case M_BMOD:
@@ -334,7 +337,7 @@ Error DisI8086::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprP
     default:
         return setError(INTERNAL_ERROR);
     }
-    return OK;
+    return getError();
 }
 
 namespace {
@@ -388,10 +391,11 @@ Error DisI8086::decodeStringInst(DisInsn &insn, StrBuffer &out) {
         case 0xAA:  // STOS ES:[DI]
         case 0xAE:  // SCAS ES:[DI]
         case 0x6C:  // INS ES:[DI]
-            return setError(ILLEGAL_SEGMENT);
+            setErrorIf(ILLEGAL_SEGMENT);
+            outMemReg(insn, out, seg, 0, 5);
         }
     }
-    return setOK();
+    return getError();
 }
 
 Error DisI8086::readCodes(DisInsn &insn) {
@@ -408,7 +412,7 @@ Error DisI8086::readCodes(DisInsn &insn) {
         opCode = insn.readByte();
     }
     insn.setOpCode(opCode, prefix);
-    return setError(insn);
+    return setErrorIf(insn);
 }
 
 namespace {
@@ -431,10 +435,10 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(insn);
 
     insn.readModReg();
-    if (setError(insn))
+    if (setErrorIf(insn))
         return getError();
     if (!validSegOverride(insn))
-        return setError(ILLEGAL_SEGMENT);
+        return setErrorIf(ILLEGAL_SEGMENT);
 
     if (insn.stringInst())
         return decodeStringInst(insn, out);
@@ -442,7 +446,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return getError();
 
     if (insn.src() == M_NONE)
-        return setOK();
+        return getError();
     if (!imulHasSameDstSrc(insn)) {
         out.comma();
         if (decodeOperand(insn, out, insn.src(), insn.srcPos()))
@@ -450,11 +454,11 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     }
 
     if (insn.ext() == M_NONE)
-        return setOK();
+        return getError();
     out.comma();
     if (decodeOperand(insn, out, insn.ext(), insn.extPos()))
         return getError();
-    return setOK();
+    return getError();
 }
 
 }  // namespace i8086

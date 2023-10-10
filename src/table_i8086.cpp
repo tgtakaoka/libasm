@@ -468,7 +468,7 @@ static constexpr Entry TABLE_80[] PROGMEM = {
     E2(070, TEXT_CMP, BYTE, M_BMOD, M_IMM, P_OMOD, P_OPR),
 };
 
-static constexpr uint8_t INDEX_80[] PROGMEM = {
+static constexpr uint8_t INDEX_8X[] PROGMEM = {
       2,  // TEXT_ADC
       0,  // TEXT_ADD
       4,  // TEXT_AND
@@ -490,17 +490,6 @@ static constexpr Entry TABLE_81[] PROGMEM = {
     E2(070, TEXT_CMP, WORD, M_WMOD, M_IMM, P_OMOD, P_OPR),
 };
 
-static constexpr uint8_t INDEX_81[] PROGMEM = {
-      2,  // TEXT_ADC
-      0,  // TEXT_ADD
-      4,  // TEXT_AND
-      7,  // TEXT_CMP
-      1,  // TEXT_OR
-      3,  // TEXT_SBB
-      5,  // TEXT_SUB
-      6,  // TEXT_XOR
-};
-
 static constexpr Entry TABLE_83[] PROGMEM = {
     E2(000, TEXT_ADD, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
     E2(010, TEXT_OR,  WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
@@ -510,17 +499,6 @@ static constexpr Entry TABLE_83[] PROGMEM = {
     E2(050, TEXT_SUB, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
     E2(060, TEXT_XOR, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
     E2(070, TEXT_CMP, WORD, M_WMOD, M_IMM8, P_OMOD, P_OPR),
-};
-
-static constexpr uint8_t INDEX_83[] PROGMEM = {
-      2,  // TEXT_ADC
-      0,  // TEXT_ADD
-      4,  // TEXT_AND
-      7,  // TEXT_CMP
-      1,  // TEXT_OR
-      3,  // TEXT_SBB
-      5,  // TEXT_SUB
-      6,  // TEXT_XOR
 };
 
 static constexpr Entry TABLE_8F[] PROGMEM = {
@@ -558,7 +536,7 @@ static constexpr Entry TABLE_D0[] PROGMEM = {
     E2(070, TEXT_SAR, BYTE, M_BMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
-static constexpr uint8_t INDEX_D0[] PROGMEM = {
+static constexpr uint8_t INDEX_DX[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -580,17 +558,6 @@ static constexpr Entry TABLE_D1[] PROGMEM = {
     E2(070, TEXT_SAR, WORD, M_WMOD, M_VAL1, P_OMOD, P_NONE),
 };
 
-static constexpr uint8_t INDEX_D1[] PROGMEM = {
-      2,  // TEXT_RCL
-      3,  // TEXT_RCR
-      0,  // TEXT_ROL
-      1,  // TEXT_ROR
-      5,  // TEXT_SAL
-      7,  // TEXT_SAR
-      4,  // TEXT_SHL
-      6,  // TEXT_SHR
-};
-
 static constexpr Entry TABLE_D2[] PROGMEM = {
     E2(000, TEXT_ROL, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
     E2(010, TEXT_ROR, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
@@ -602,17 +569,6 @@ static constexpr Entry TABLE_D2[] PROGMEM = {
     E2(070, TEXT_SAR, BYTE, M_BMOD, M_CL, P_OMOD, P_NONE),
 };
 
-static constexpr uint8_t INDEX_D2[] PROGMEM = {
-      2,  // TEXT_RCL
-      3,  // TEXT_RCR
-      0,  // TEXT_ROL
-      1,  // TEXT_ROR
-      5,  // TEXT_SAL
-      7,  // TEXT_SAR
-      4,  // TEXT_SHL
-      6,  // TEXT_SHR
-};
-
 static constexpr Entry TABLE_D3[] PROGMEM = {
     E2(000, TEXT_ROL, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
     E2(010, TEXT_ROR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
@@ -622,17 +578,6 @@ static constexpr Entry TABLE_D3[] PROGMEM = {
     E2(040, TEXT_SAL, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
     E2(050, TEXT_SHR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
     E2(070, TEXT_SAR, WORD, M_WMOD, M_CL, P_OMOD, P_NONE),
-};
-
-static constexpr uint8_t INDEX_D3[] PROGMEM = {
-      2,  // TEXT_RCL
-      3,  // TEXT_RCR
-      0,  // TEXT_ROL
-      1,  // TEXT_ROR
-      5,  // TEXT_SAL
-      7,  // TEXT_SAR
-      4,  // TEXT_SHL
-      6,  // TEXT_SHR
 };
 
 static constexpr Entry TABLE_D4[] PROGMEM = {
@@ -661,7 +606,7 @@ static constexpr Entry TABLE_F6[] PROGMEM = {
     E1(070, TEXT_IDIV, BYTE, M_BMOD, P_OMOD),
 };
 
-static constexpr uint8_t INDEX_F6[] PROGMEM = {
+static constexpr uint8_t INDEX_FX[] PROGMEM = {
       5,  // TEXT_DIV
       6,  // TEXT_IDIV
       4,  // TEXT_IMUL
@@ -679,16 +624,6 @@ static constexpr Entry TABLE_F7[] PROGMEM = {
     E1(050, TEXT_IMUL, WORD, M_WMOD, P_OMOD),
     E1(060, TEXT_DIV,  WORD, M_WMOD, P_OMOD),
     E1(070, TEXT_IDIV, WORD, M_WMOD, P_OMOD),
-};
-
-static constexpr uint8_t INDEX_F7[] PROGMEM = {
-      5,  // TEXT_DIV
-      6,  // TEXT_IDIV
-      4,  // TEXT_IMUL
-      3,  // TEXT_MUL
-      2,  // TEXT_NEG
-      1,  // TEXT_NOT
-      0,  // TEXT_TEST
 };
 
 static constexpr Entry TABLE_FE[] PROGMEM = {
@@ -786,7 +721,7 @@ static constexpr Entry TABLE_C0[] PROGMEM = {
     E2(070, TEXT_SAR, BYTE, M_BMOD, M_BIT, P_OMOD, P_OPR),
 };
 
-static constexpr uint8_t INDEX_C0[] PROGMEM = {
+static constexpr uint8_t INDEX_CX[] PROGMEM = {
       2,  // TEXT_RCL
       3,  // TEXT_RCR
       0,  // TEXT_ROL
@@ -806,17 +741,6 @@ static constexpr Entry TABLE_C1[] PROGMEM = {
     E2(040, TEXT_SAL, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
     E2(050, TEXT_SHR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
     E2(070, TEXT_SAR, WORD, M_WMOD, M_BIT, P_OMOD, P_OPR),
-};
-
-static constexpr uint8_t INDEX_C1[] PROGMEM = {
-      2,  // TEXT_RCL
-      3,  // TEXT_RCR
-      0,  // TEXT_ROL
-      1,  // TEXT_ROR
-      5,  // TEXT_SAL
-      7,  // TEXT_SAR
-      4,  // TEXT_SHL
-      6,  // TEXT_SHR
 };
 
 // V30
@@ -897,20 +821,20 @@ using EntryPage = entry::PrefixTableBase<Entry>;
 
 static constexpr EntryPage I8086_PAGES[] PROGMEM = {
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
-        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
-        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
-        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_81)},  // M_IMM
+        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_8X)},
+        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_8X)},  // M_IMM8
+        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_8X)},  // M_IMM
         {0x8F, ARRAY_RANGE(TABLE_8F), ARRAY_RANGE(INDEX_8F)},
         {0xC6, ARRAY_RANGE(TABLE_C6), ARRAY_RANGE(INDEX_C6)},
         {0xC7, ARRAY_RANGE(TABLE_C7), ARRAY_RANGE(INDEX_C7)},
-        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
-        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_D1)},
-        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_D2)},
-        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_D3)},
+        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_DX)},
+        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_DX)},
+        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_DX)},
+        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_DX)},
         {0xD4, ARRAY_RANGE(TABLE_D4), ARRAY_RANGE(INDEX_D4)},
         {0xD5, ARRAY_RANGE(TABLE_D5), ARRAY_RANGE(INDEX_D5)},
-        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_F6)},
-        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_F7)},
+        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_FX)},
+        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_FX)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
@@ -918,24 +842,24 @@ static constexpr EntryPage I8086_PAGES[] PROGMEM = {
 static constexpr EntryPage I80186_PAGES[] PROGMEM = {
         // I80186
         {0x00, ARRAY_RANGE(TABLE_I80186), ARRAY_RANGE(INDEX_I80186)},
-        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
-        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_D1)},
-        {0xC0, ARRAY_RANGE(TABLE_C0), ARRAY_RANGE(INDEX_C0)},
-        {0xC1, ARRAY_RANGE(TABLE_C1), ARRAY_RANGE(INDEX_C1)},
+        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_DX)},
+        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_DX)},
+        {0xC0, ARRAY_RANGE(TABLE_C0), ARRAY_RANGE(INDEX_CX)},
+        {0xC1, ARRAY_RANGE(TABLE_C1), ARRAY_RANGE(INDEX_CX)},
         // i8086
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
-        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
-        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
-        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_81)},  // M_IMM
+        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_8X)},
+        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_8X)},  // M_IMM8
+        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_8X)},  // M_IMM
         {0x8F, ARRAY_RANGE(TABLE_8F), ARRAY_RANGE(INDEX_8F)},
         {0xC6, ARRAY_RANGE(TABLE_C6), ARRAY_RANGE(INDEX_C6)},
         {0xC7, ARRAY_RANGE(TABLE_C7), ARRAY_RANGE(INDEX_C7)},
-        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_D2)},
-        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_D3)},
+        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_DX)},
+        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_DX)},
         {0xD4, ARRAY_RANGE(TABLE_D4), ARRAY_RANGE(INDEX_D4)},
         {0xD5, ARRAY_RANGE(TABLE_D5), ARRAY_RANGE(INDEX_D5)},
-        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_F6)},
-        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_F7)},
+        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_FX)},
+        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_FX)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
@@ -946,24 +870,24 @@ static constexpr EntryPage V30_PAGES[] PROGMEM = {
         {0x0F, ARRAY_RANGE(V30TABLE_0F), ARRAY_RANGE(V30INDEX_0F)},
         // I80186
         {0x00, ARRAY_RANGE(TABLE_I80186), ARRAY_RANGE(INDEX_I80186)},
-        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_D0)},
-        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_D1)},
-        {0xC0, ARRAY_RANGE(TABLE_C0), ARRAY_RANGE(INDEX_C0)},
-        {0xC1, ARRAY_RANGE(TABLE_C1), ARRAY_RANGE(INDEX_C1)},
+        {0xD0, ARRAY_RANGE(TABLE_D0), ARRAY_RANGE(INDEX_DX)},
+        {0xD1, ARRAY_RANGE(TABLE_D1), ARRAY_RANGE(INDEX_DX)},
+        {0xC0, ARRAY_RANGE(TABLE_C0), ARRAY_RANGE(INDEX_CX)},
+        {0xC1, ARRAY_RANGE(TABLE_C1), ARRAY_RANGE(INDEX_CX)},
         // i8086
         {0x00, ARRAY_RANGE(TABLE_00), ARRAY_RANGE(INDEX_00)},
-        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_80)},
-        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_83)},  // M_IMM8
-        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_81)},  // M_IMM
+        {0x80, ARRAY_RANGE(TABLE_80), ARRAY_RANGE(INDEX_8X)},
+        {0x83, ARRAY_RANGE(TABLE_83), ARRAY_RANGE(INDEX_8X)},  // M_IMM8
+        {0x81, ARRAY_RANGE(TABLE_81), ARRAY_RANGE(INDEX_8X)},  // M_IMM
         {0x8F, ARRAY_RANGE(TABLE_8F), ARRAY_RANGE(INDEX_8F)},
         {0xC6, ARRAY_RANGE(TABLE_C6), ARRAY_RANGE(INDEX_C6)},
         {0xC7, ARRAY_RANGE(TABLE_C7), ARRAY_RANGE(INDEX_C7)},
-        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_D2)},
-        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_D3)},
+        {0xD2, ARRAY_RANGE(TABLE_D2), ARRAY_RANGE(INDEX_DX)},
+        {0xD3, ARRAY_RANGE(TABLE_D3), ARRAY_RANGE(INDEX_DX)},
         {0xD4, ARRAY_RANGE(TABLE_D4), ARRAY_RANGE(INDEX_D4)},
         {0xD5, ARRAY_RANGE(TABLE_D5), ARRAY_RANGE(INDEX_D5)},
-        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_F6)},
-        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_F7)},
+        {0xF6, ARRAY_RANGE(TABLE_F6), ARRAY_RANGE(INDEX_FX)},
+        {0xF7, ARRAY_RANGE(TABLE_F7), ARRAY_RANGE(INDEX_FX)},
         {0xFE, ARRAY_RANGE(TABLE_FE), ARRAY_RANGE(INDEX_FE)},
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
@@ -1081,17 +1005,17 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto dstPos = entry->flags().dstPos();
     const auto srcPos = entry->flags().srcPos();
     if (dstPos == P_OREG || srcPos == P_OREG) {
-        opCode &= ~0007;
+        opc &= ~0007;
     } else if (dstPos == P_OSEG || srcPos == P_OSEG) {
-        opCode &= ~0030;
+        opc &= ~0030;
     } else if (dstPos == P_OMOD || srcPos == P_OMOD) {
-        opCode &= ~0307;
+        opc &= ~0307;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableI8086::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
