@@ -307,24 +307,26 @@ Error TableI8096::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
     const auto src1 = flags.src1();
     const auto src2 = flags.src2();
     if (dst == M_BAOP || src1 == M_BAOP || src2 == M_BAOP || dst == M_WAOP || src1 == M_WAOP ||
             src2 == M_WAOP) {
-        opCode &= ~3;
+        opc &= ~3;
     } else if (dst == M_REL11 || src1 == M_BITNO) {
-        opCode &= ~7;
+        opc &= ~7;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableI8096::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     const auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined())
+    if (entry && entry->flags().undefined()) {
+        insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
+    }
     return insn.getError();
 }
 

@@ -37,8 +37,8 @@ enum AddrMode : uint8_t {
     M_BREG = 1,
     M_WREG = 2,
     M_LREG = 3,
-    M_BAOP = 4,
-    M_WAOP = 5,
+    M_BAOP = 4,    // Byte addressing
+    M_WAOP = 5,    // Word addressing
     M_REL8 = 6,    // sign-extended 8-bit relative
     M_REL11 = 7,   // sign-extended 11-bit relative
     M_REL16 = 8,   // signed 16-bit relative
