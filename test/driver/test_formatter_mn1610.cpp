@@ -71,13 +71,13 @@ void test_dis_mn1610() {
             "      cpu   mn1610\n"
             "      org   x'abcd'\n"
             "      tbit  r3, 5, nz\n"
-            "* test.bin: x'abce': error: Illegal register\n"
+            "* test.bin: x'abce': error: Unknown instruction\n"
             "*     abce : 0f06\n",
             "       0 :                            cpu   mn1610\n"
             "    abcd :                            org   x'abcd'\n"
             "    abcd : 2b55                       tbit  r3, 5, nz\n"
-            "test.bin: x'abce': error: Illegal register\n"
-            "    abce : 0f06                       mvi\n",
+            "test.bin: x'abce': error: Unknown instruction\n"
+            "    abce : 0f06\n",
             0x2b55, 0x0F00 | (0 << 4) | 6);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x12345));
@@ -98,7 +98,7 @@ void test_dis_mn1613() {
             "   34567 :                            org   x'34567'\n"
             "   34567 : 7e1f 5678                  mvwi  str, x'5678', skp\n"
             "test.bin: x'34569': error: Register not allowed\n"
-            "   34569 : 0f06                       setb  str, \n",
+            "   34569 : 0f06                       setb  str, csbr\n",
             0x7e1f, 0x5678, 0x0f00 | (0 << 4) | 6);
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x45678));
 }
