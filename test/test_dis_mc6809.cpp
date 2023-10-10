@@ -840,30 +840,29 @@ static void test_indexed_mode() {
     ATEST(0x1000, "LDA", "[label1082,PCR]", 0xA6, 0x9C, 0x7F);
     ATEST(0x1000, "LDA", "[label0F83,PCR]", 0xA6, 0x9C, 0x80);
 
-    ATEST(0x1000, "LDA",  ">label1004,PCR",                  0xA6, 0x8D, 0x00, 0x00);
-    ATEST(0x1000, "LDA",   "label9003,PCR",                  0xA6, 0x8D, 0x7F, 0xFF);
-    AERRT(0x1000, "LDA",   "label9004,PCR",  OVERFLOW_RANGE, 0xA6, 0x8D, 0x80, 0x00);
-    ATEST(0x1000, "LDA", "[>label1004,PCR]",                 0xA6, 0x9D, 0x00, 0x00);
-    ATEST(0x1000, "LDA",  "[label9003,PCR]",                 0xA6, 0x9D, 0x7F, 0xFF);
-    AERRT(0x1000, "LDA",  "[label9004,PCR]", OVERFLOW_RANGE, 0xA6, 0x9D, 0x80, 0x00);
-
-    ATEST(0x1000, "LDA", "[label1234]",    0xA6, 0x9F, 0x12, 0x34);
+    ATEST(0x1000, "LDA",  ">label1004,PCR",              0xA6, 0x8D, 0x00, 0x00);
+    ATEST(0x1000, "LDA",   "label9003,PCR",              0xA6, 0x8D, 0x7F, 0xFF);
+    AERRT(0x1000, "LDA",   "$9004,PCR",  OVERFLOW_RANGE, 0xA6, 0x8D, 0x80, 0x00);
+    ATEST(0x1000, "LDA", "[>label1004,PCR]",             0xA6, 0x9D, 0x00, 0x00);
+    ATEST(0x1000, "LDA",  "[label9003,PCR]",             0xA6, 0x9D, 0x7F, 0xFF);
+    AERRT(0x1000, "LDA",  "[$9004,PCR]", OVERFLOW_RANGE, 0xA6, 0x9D, 0x80, 0x00);
+    ATEST(0x1000, "LDA",  "[label1234]",                 0xA6, 0x9F, 0x12, 0x34);
 }
 
 static void test_indexed_error() {
     // nnnn,PCR and [nnnn,PCR] has don't care bits.
-    TEST("LDA", "$0003,PCR",   0xA6, 0x8C, 0x00);
-    TEST("LDA", "$0003,PCR",   0xA6, 0xAC, 0x00);
-    TEST("LDA", "$0003,PCR",   0xA6, 0xCC, 0x00);
-    TEST("LDA", "$0003,PCR",   0xA6, 0xEC, 0x00);
-    TEST("LDA", "[$0003,PCR]", 0xA6, 0x9C, 0x00);
-    TEST("LDA", "[$0003,PCR]", 0xA6, 0xBC, 0x00);
-    TEST("LDA", "[$0003,PCR]", 0xA6, 0xDC, 0x00);
-    TEST("LDA", "[$0003,PCR]", 0xA6, 0xFC, 0x00);
-    TEST("LDA", ">$0004,PCR",   0xA6, 0x8D, 0x00, 0x00);
-    TEST("LDA", ">$0004,PCR",   0xA6, 0xAD, 0x00, 0x00);
-    TEST("LDA", ">$0004,PCR",   0xA6, 0xCD, 0x00, 0x00);
-    TEST("LDA", ">$0004,PCR",   0xA6, 0xED, 0x00, 0x00);
+    TEST("LDA",   "$0003,PCR",  0xA6, 0x8C, 0x00);
+    TEST("LDA",   "$0003,PCR",  0xA6, 0xAC, 0x00);
+    TEST("LDA",   "$0003,PCR",  0xA6, 0xCC, 0x00);
+    TEST("LDA",   "$0003,PCR",  0xA6, 0xEC, 0x00);
+    TEST("LDA",  "[$0003,PCR]", 0xA6, 0x9C, 0x00);
+    TEST("LDA",  "[$0003,PCR]", 0xA6, 0xBC, 0x00);
+    TEST("LDA",  "[$0003,PCR]", 0xA6, 0xDC, 0x00);
+    TEST("LDA",  "[$0003,PCR]", 0xA6, 0xFC, 0x00);
+    TEST("LDA",  ">$0004,PCR",  0xA6, 0x8D, 0x00, 0x00);
+    TEST("LDA",  ">$0004,PCR",  0xA6, 0xAD, 0x00, 0x00);
+    TEST("LDA",  ">$0004,PCR",  0xA6, 0xCD, 0x00, 0x00);
+    TEST("LDA",  ">$0004,PCR",  0xA6, 0xED, 0x00, 0x00);
     TEST("LDA", "[>$0004,PCR]", 0xA6, 0x9D, 0x00, 0x00);
     TEST("LDA", "[>$0004,PCR]", 0xA6, 0xBD, 0x00, 0x00);
     TEST("LDA", "[>$0004,PCR]", 0xA6, 0xDD, 0x00, 0x00);
@@ -871,45 +870,45 @@ static void test_indexed_error() {
 }
 
 static void test_relative() {
-    ATEST(0x1000, "BRA", "$1002", 0x20, 0x00);
-    ATEST(0x1000, "BRN", "$1000", 0x21, 0xFE);
+    ATEST(0x1000, "BRA", "$1002",                 0x20, 0x00);
+    ATEST(0x1000, "BRN", "$1000",                 0x21, 0xFE);
     AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, 0x20, 0x80);
     AERRT(0xFFF0, "BRN", "$0071", OVERFLOW_RANGE, 0x21, 0x7F);
-    ATEST(0x1000, "BHI", "$1004", 0x22, 0x02);
-    ATEST(0x1000, "BLS", "$1081", 0x23, 0x7F);
-    ATEST(0x1000, "BHS", "$0F82", 0x24, 0x80);
-    ATEST(0x1000, "BLO", "$1002", 0x25, 0x00);
-    ATEST(0x1000, "BNE", "$1002", 0x26, 0x00);
-    ATEST(0x1000, "BEQ", "$1002", 0x27, 0x00);
-    ATEST(0x1000, "BVC", "$1002", 0x28, 0x00);
-    ATEST(0x1000, "BVS", "$1002", 0x29, 0x00);
-    ATEST(0x1000, "BPL", "$1002", 0x2A, 0x00);
-    ATEST(0x1000, "BMI", "$1002", 0x2B, 0x00);
-    ATEST(0x1000, "BGE", "$1002", 0x2C, 0x00);
-    ATEST(0x1000, "BLT", "$1002", 0x2D, 0x00);
-    ATEST(0x1000, "BGT", "$1002", 0x2E, 0x00);
-    ATEST(0x1000, "BLE", "$1002", 0x2F, 0x00);
-
-    ATEST(0x1000, "LBRA", "$1003", 0x16, 0x00, 0x00);
-    ATEST(0x1000, "LBRA", "$9002", 0x16, 0x7F, 0xFF);
-    ATEST(0x9000, "LBRA", "$1003", 0x16, 0x80, 0x00);
+    ATEST(0x1000, "BHI", "$1004",                 0x22, 0x02);
+    ATEST(0x1000, "BLS", "$1081",                 0x23, 0x7F);
+    ATEST(0x1000, "BHS", "$0F82",                 0x24, 0x80);
+    ATEST(0x1000, "BLO", "$1002",                 0x25, 0x00);
+    ATEST(0x1000, "BNE", "$1002",                 0x26, 0x00);
+    ATEST(0x1000, "BEQ", "$1002",                 0x27, 0x00);
+    ATEST(0x1000, "BVC", "$1002",                 0x28, 0x00);
+    ATEST(0x1000, "BVS", "$1002",                 0x29, 0x00);
+    ATEST(0x1000, "BPL", "$1002",                 0x2A, 0x00);
+    ATEST(0x1000, "BMI", "$1002",                 0x2B, 0x00);
+    ATEST(0x1000, "BGE", "$1002",                 0x2C, 0x00);
+    ATEST(0x1000, "BLT", "$1002",                 0x2D, 0x00);
+    ATEST(0x1000, "BGT", "$1002",                 0x2E, 0x00);
+    ATEST(0x1000, "BLE", "$1002",                 0x2F, 0x00);
+    
+    ATEST(0x1000, "LBRA", "$1003",                 0x16, 0x00, 0x00);
+    ATEST(0x1000, "LBRA", "$9002",                 0x16, 0x7F, 0xFF);
+    ATEST(0x9000, "LBRA", "$1003",                 0x16, 0x80, 0x00);
     AERRT(0x9000, "LBRA", "$1002", OVERFLOW_RANGE, 0x16, 0x7F, 0xFF);
-    ATEST(0x1000, "LBRN", "$1000", 0x10, 0x21, 0xFF, 0xFC);
-    ATEST(0x1000, "LBHI", "$1008", 0x10, 0x22, 0x00, 0x04);
-    ATEST(0x1000, "LBLS", "$9003", 0x10, 0x23, 0x7F, 0xFF);
+    ATEST(0x1000, "LBRN", "$1000",                 0x10, 0x21, 0xFF, 0xFC);
+    ATEST(0x1000, "LBHI", "$1008",                 0x10, 0x22, 0x00, 0x04);
+    ATEST(0x1000, "LBLS", "$9003",                 0x10, 0x23, 0x7F, 0xFF);
     AERRT(0x1000, "LBLS", "$9004", OVERFLOW_RANGE, 0x10, 0x23, 0x80, 0x00);
-    ATEST(0x1000, "LBHS", "$1004", 0x10, 0x24, 0x00, 0x00);
-    ATEST(0x1000, "LBLO", "$1004", 0x10, 0x25, 0x00, 0x00);
-    ATEST(0x1000, "LBNE", "$1004", 0x10, 0x26, 0x00, 0x00);
-    ATEST(0x1000, "LBEQ", "$1004", 0x10, 0x27, 0x00, 0x00);
-    ATEST(0x1000, "LBVC", "$1004", 0x10, 0x28, 0x00, 0x00);
-    ATEST(0x1000, "LBVS", "$1004", 0x10, 0x29, 0x00, 0x00);
-    ATEST(0x1000, "LBPL", "$1004", 0x10, 0x2A, 0x00, 0x00);
-    ATEST(0x1000, "LBMI", "$1004", 0x10, 0x2B, 0x00, 0x00);
-    ATEST(0x1000, "LBGE", "$1004", 0x10, 0x2C, 0x00, 0x00);
-    ATEST(0x1000, "LBLT", "$1004", 0x10, 0x2D, 0x00, 0x00);
-    ATEST(0x1000, "LBGT", "$1004", 0x10, 0x2E, 0x00, 0x00);
-    ATEST(0x1000, "LBLE", "$1004", 0x10, 0x2F, 0x00, 0x00);
+    ATEST(0x1000, "LBHS", "$1004",                 0x10, 0x24, 0x00, 0x00);
+    ATEST(0x1000, "LBLO", "$1004",                 0x10, 0x25, 0x00, 0x00);
+    ATEST(0x1000, "LBNE", "$1004",                 0x10, 0x26, 0x00, 0x00);
+    ATEST(0x1000, "LBEQ", "$1004",                 0x10, 0x27, 0x00, 0x00);
+    ATEST(0x1000, "LBVC", "$1004",                 0x10, 0x28, 0x00, 0x00);
+    ATEST(0x1000, "LBVS", "$1004",                 0x10, 0x29, 0x00, 0x00);
+    ATEST(0x1000, "LBPL", "$1004",                 0x10, 0x2A, 0x00, 0x00);
+    ATEST(0x1000, "LBMI", "$1004",                 0x10, 0x2B, 0x00, 0x00);
+    ATEST(0x1000, "LBGE", "$1004",                 0x10, 0x2C, 0x00, 0x00);
+    ATEST(0x1000, "LBLT", "$1004",                 0x10, 0x2D, 0x00, 0x00);
+    ATEST(0x1000, "LBGT", "$1004",                 0x10, 0x2E, 0x00, 0x00);
+    ATEST(0x1000, "LBLE", "$1004",                 0x10, 0x2F, 0x00, 0x00);
     AERRT(0x1000, "LBLE", "$9004", OVERFLOW_RANGE, 0x10, 0x2F, 0x80, 0x00);
     AERRT(0x9000, "LBLE", "$1003", OVERFLOW_RANGE, 0x10, 0x2F, 0x7F, 0xFF);
 
@@ -930,13 +929,13 @@ static void test_relative() {
     disassembler.setOption("relative", "enable");
     ATEST(0x2000, "BSR", "*-126",                 0x8D, 0x80);
     AERRT(0x0010, "BSR", "*-126", OVERFLOW_RANGE, 0x8D, 0x80);
-    ATEST(0x2000, "BSR", "*",     0x8D, 0xFE);
-    ATEST(0x2000, "BSR", "*+2",   0x8D, 0x00);
+    ATEST(0x2000, "BSR", "*",                     0x8D, 0xFE);
+    ATEST(0x2000, "BSR", "*+2",                   0x8D, 0x00);
     ATEST(0x2000, "BSR", "*+129",                 0x8D, 0x7F);
     AERRT(0xFFF0, "BSR", "*+129", OVERFLOW_RANGE, 0x8D, 0x7F);
-    ATEST(0x9000, "LBSR", "sub1003", 0x17, 0x80, 0x00);
-    ATEST(0x2000, "LBSR", "*",       0x17, 0xFF, 0xFD);
-    ATEST(0x2000, "LBSR", "*+3",     0x17, 0x00, 0x00);
+    ATEST(0x9000, "LBSR", "sub1003",                 0x17, 0x80, 0x00);
+    ATEST(0x2000, "LBSR", "*",                       0x17, 0xFF, 0xFD);
+    ATEST(0x2000, "LBSR", "*+3",                     0x17, 0x00, 0x00);
     ATEST(0x2000, "LBSR", "*+$8002",                 0x17, 0x7F, 0xFF);
     AERRT(0x9000, "LBSR", "*+$8002", OVERFLOW_RANGE, 0x17, 0x7F, 0xFF);
 }
@@ -1096,10 +1095,8 @@ static void test_illegal_mc6809() {
     };
     uint8_t idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p10_legals) || opc < p10_legals[idx]) {
+        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
             UNKN(0x10, uint8_t(opc));
-            opc++;
-        }
         else idx++;
     }
 
@@ -1112,10 +1109,8 @@ static void test_illegal_mc6809() {
     };
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p11_legals) || opc < p11_legals[idx]) {
+        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
             UNKN(0x11, uint8_t(opc));
-            opc++;
-        }
         else idx++;
     }
 
@@ -1134,7 +1129,7 @@ static void test_illegal_mc6809() {
         0xf7, 0xfa, 0xfe, 0xff,
     };
     for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
-        ERRT("LDA", "", UNKNOWN_POSTBYTE, 0xA6, post_illegals[idx], 0, 0);
+        ERRT("LDA", "", UNKNOWN_POSTBYTE, 0xA6, post_illegals[idx]);
 }
 
 static void test_illegal_hd6309() {
@@ -1172,10 +1167,8 @@ static void test_illegal_hd6309() {
     };
     uint8_t idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p10_legals) || opc < p10_legals[idx]) {
+        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
             UNKN(0x10, uint8_t(opc));
-            opc++;
-        }
         else idx++;
     }
 
@@ -1195,10 +1188,8 @@ static void test_illegal_hd6309() {
     };
     idx = 0;
     for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p11_legals) || opc < p11_legals[idx]) {
+        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
             UNKN(0x11, uint8_t(opc));
-            opc++;
-        }
         else idx++;
     }
 
@@ -1206,7 +1197,7 @@ static void test_illegal_hd6309() {
         0x92, 0xb2, 0xbf, 0xd2, 0xdf, 0xf2, 0xff,
     };
     for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
-        ERRT("LDA", "", UNKNOWN_POSTBYTE, 0xA6, post_illegals[idx], 0, 0);
+        ERRT("LDA", "", UNKNOWN_POSTBYTE, 0xA6, post_illegals[idx]);
 }
 // clang-format on
 
