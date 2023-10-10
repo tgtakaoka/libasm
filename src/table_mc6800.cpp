@@ -661,6 +661,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 static const Entry *searchOpCodeImpl(const Cpu *cpu, DisInsn &insn, StrBuffer &out) {
     auto entry = cpu->searchOpCode(insn, out, matchOpCode);
     if (entry && entry->flags().undefined()) {
+        insn.nameBuffer().reset();
         insn.setErrorIf(UNKNOWN_INSTRUCTION);
         entry = nullptr;
     }
