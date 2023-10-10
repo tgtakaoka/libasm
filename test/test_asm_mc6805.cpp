@@ -182,6 +182,18 @@ static void test_immediate() {
 }
 
 static void test_direct() {
+    TEST("NEG $90", 0x30, 0x90);
+    TEST("COM $90", 0x33, 0x90);
+    TEST("LSR $90", 0x34, 0x90);
+    TEST("ROR $90", 0x36, 0x90);
+    TEST("ASR $90", 0x37, 0x90);
+    TEST("ASL $90", 0x38, 0x90);
+    TEST("ROL $90", 0x39, 0x90);
+    TEST("DEC $90", 0x3A, 0x90);
+    TEST("INC $90", 0x3C, 0x90);
+    TEST("TST $90", 0x3D, 0x90);
+    TEST("CLR $90", 0x3F, 0x90);
+
     TEST("SUB $90", 0xB0, 0x90);
     TEST("CMP $90", 0xB1, 0x90);
     TEST("SBC $90", 0xB2, 0x90);

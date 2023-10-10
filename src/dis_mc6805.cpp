@@ -43,6 +43,8 @@ DisMc6805::DisMc6805(const ValueFormatter::Plugins &plugins)
 }
 
 AddressWidth DisMc6805::addressWidth() const {
+    if (getError())
+        return ADDRESS_16BIT;
     return AddressWidth(_pc_bits == 0 ? 13 : _pc_bits);
 }
 
@@ -81,7 +83,7 @@ Error DisMc6805::decodeExtended(DisInsn &insn, StrBuffer &out) {
     } else {
         if (addr < 0x100)
             out.letter('>');
-        outAbsAddr(out, addr, isOK() ? 0 : ADDRESS_16BIT);
+        outAbsAddr(out, addr);
     }
     return getError();
 }

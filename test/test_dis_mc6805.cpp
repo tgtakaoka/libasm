@@ -130,6 +130,18 @@ static void test_immediate() {
 }
 
 static void test_direct() {
+    TEST("NEG", "$90", 0x30, 0x90);
+    TEST("COM", "$90", 0x33, 0x90);
+    TEST("LSR", "$90", 0x34, 0x90);
+    TEST("ROR", "$90", 0x36, 0x90);
+    TEST("ASR", "$90", 0x37, 0x90);
+    TEST("ASL", "$90", 0x38, 0x90);
+    TEST("ROL", "$90", 0x39, 0x90);
+    TEST("DEC", "$90", 0x3A, 0x90);
+    TEST("INC", "$90", 0x3C, 0x90);
+    TEST("TST", "$90", 0x3D, 0x90);
+    TEST("CLR", "$90", 0x3F, 0x90);
+
     TEST("SUB", "$90", 0xB0, 0x90);
     TEST("CMP", "$90", 0xB1, 0x90);
     TEST("SBC", "$90", 0xB2, 0x90);
@@ -190,10 +202,10 @@ static void test_extended() {
     TEST("JSR", ">ext0090",  0xCD, 0x00, 0x90);
 
     dis6805.setOption("pc-bits", "11"); // MC68HC05J for instance
-    TEST(         "LDA", "$7FF",                 0xC6, 0x07, 0xFF);
-    ERRT(         "LDA", "$800", OVERFLOW_RANGE, 0xC6, 0x08, 0x00);
-    ATEST(0x07F0, "BSR", "$7FF",                 0xAD, 0x0D);
-    AERRT(0x07F0, "BSR", "$800", OVERFLOW_RANGE, 0xAD, 0x0E);
+    TEST(         "LDA",  "$7FF",                 0xC6, 0x07, 0xFF);
+    ERRT(         "LDA", "$0800", OVERFLOW_RANGE, 0xC6, 0x08, 0x00);
+    ATEST(0x07F0, "BSR",  "$7FF",                 0xAD, 0x0D);
+    AERRT(0x07F0, "BSR", "$0800", OVERFLOW_RANGE, 0xAD, 0x0E);
 
     dis6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
     TEST(         "LDA", "$1FFF",                 0xC6, 0x1F, 0xFF);
@@ -209,8 +221,8 @@ static void test_extended() {
 }
 
 static void test_indexed() {
-    TEST("NEG", "<0,X", 0x60, 0x00);
-    TEST("COM", "<0,X", 0x63, 0x00);
+    TEST("NEG", "<0,X",  0x60, 0x00);
+    TEST("COM", "<0,X",  0x63, 0x00);
     TEST("LSR", "1,X",   0x64, 0x01);
     TEST("ROR", "2,X",   0x66, 0x02);
     TEST("ASR", "3,X",   0x67, 0x03);
@@ -220,6 +232,18 @@ static void test_indexed() {
     TEST("INC", "127,X", 0x6C, 0x7F);
     TEST("TST", "128,X", 0x6D, 0x80);
     TEST("CLR", "255,X", 0x6F, 0xFF);
+
+    TEST("NEG", ",X", 0x70);
+    TEST("COM", ",X", 0x73);
+    TEST("LSR", ",X", 0x74);
+    TEST("ROR", ",X", 0x76);
+    TEST("ASR", ",X", 0x77);
+    TEST("ASL", ",X", 0x78);
+    TEST("ROL", ",X", 0x79);
+    TEST("DEC", ",X", 0x7A);
+    TEST("INC", ",X", 0x7C);
+    TEST("TST", ",X", 0x7D);
+    TEST("CLR", ",X", 0x7F);
 
     TEST("SUB", ",X", 0xF0);
     TEST("CMP", ",X", 0xF1);
@@ -319,10 +343,10 @@ static void test_relative() {
 
     disassembler.setOption("relative", "enable");
 
-    ATEST(0x1000, "BSR", "sub0F82", 0xAD, 0x80);
-    ATEST(0x1000, "BSR", "*",       0xAD, 0xFE);
-    ATEST(0x1000, "BSR", "*+2",     0xAD, 0x00);
-    ATEST(0x1000, "BSR", "sub1081", 0xAD, 0x7F);
+    ATEST(0x1000, "BSR", "sub0F82",                 0xAD, 0x80);
+    ATEST(0x1000, "BSR", "*",                       0xAD, 0xFE);
+    ATEST(0x1000, "BSR", "*+2",                     0xAD, 0x00);
+    ATEST(0x1000, "BSR", "sub1081",                 0xAD, 0x7F);
     AERRT(0x1FF0, "BSR", "*+16",    OVERFLOW_RANGE, 0xAD, 0x0E);
 }
 
@@ -333,11 +357,11 @@ static void test_bit_ops() {
     TEST("BCLR", "7, $90", 0x1F, 0x90);
 
     disassembler.setOption("relative", "yes");
-    ATEST(0x1000, "BRSET", "0, $90, *+130", 0x00, 0x90, 0x7F);
-    ATEST(0x1000, "BRSET", "7, $90, *-125", 0x0E, 0x90, 0x80);
-    ATEST(0x1000, "BRCLR", "0, $90, *+130", 0x01, 0x90, 0x7F);
-    ATEST(0x1000, "BRCLR", "7, $90, *-125", 0x0F, 0x90, 0x80);
-    AERRT(0x1FF0, "BRCLR", "7, $90, *+16",  OVERFLOW_RANGE, 0x0F, 0x90, 0x0E);
+    ATEST(0x1000, "BRSET", "0, $90, *+130",                 0x00, 0x90, 0x7F);
+    ATEST(0x1000, "BRSET", "7, $90, *-125",                 0x0E, 0x90, 0x80);
+    ATEST(0x1000, "BRCLR", "0, $90, *+130",                 0x01, 0x90, 0x7F);
+    ATEST(0x1000, "BRCLR", "7, $90, *-125",                 0x0F, 0x90, 0x80);
+    AERRT(0x1FF0, "BRCLR", "7, $90, *+17",  OVERFLOW_RANGE, 0x0F, 0x90, 0x0E);
     disassembler.setOption("relative", "disable");
 
     symtab.intern(0x90, "dir90");
