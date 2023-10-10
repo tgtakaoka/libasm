@@ -127,12 +127,18 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
     case M_INDIR:
     indir:
         insn.embedAa(AA_INDIR);
+        if (!isWreg(op.regno))
+            setErrorIf(op, OPERAND_NOT_ALIGNED);
         insn.emitOperand8(op.regno);
         return;
     case M_IDX16:
         if (op.isOK() && op.val16 == 0)
             goto indir;
+        if (op.isOK() && op.regno == 0)
+            goto absolute;
         insn.embedAa(AA_IDX);
+        if (!isWreg(op.regno))
+            setErrorIf(op, OPERAND_NOT_ALIGNED);
         if (op.isOK() && !overflowInt8(static_cast<int16_t>(op.val16))) {
             insn.emitOperand8(op.regno);
             insn.emitOperand8(op.val16);
@@ -142,6 +148,9 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
         }
         return;
     default:  // M_ADDR
+    absolute:
+        if (waop && !isWreg(op.val16))
+            setErrorIf(op, OPERAND_NOT_ALIGNED);
         if (op.isOK() && !overflowUint8(op.val16)) {
             insn.embedAa(AA_REG);
             insn.emitOperand8(op.val16);
@@ -185,17 +194,13 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     auto val16 = op.val16;
     switch (mode) {
     case M_LREG:
-        if (val16 & 3) {
-            val16 &= ~3;
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
-        }
+        if (!isLreg(val16))
+            setErrorIf(op, OPERAND_NOT_ALIGNED);
         // Fall-through
     case M_INDIR:
     case M_WREG:
-        if (val16 & 1) {
-            val16 &= ~1;
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
-        }
+        if (!isWreg(val16))
+            setErrorIf(op, OPERAND_NOT_ALIGNED);
         // Fall-through
     case M_COUNT:
     case M_BREG:

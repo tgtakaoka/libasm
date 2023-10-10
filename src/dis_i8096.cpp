@@ -124,13 +124,13 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         regno = insn.readByte();
         setErrorIf(insn);
         if (!isWreg(regno))
-            setErrorIf(REGISTER_NOT_ALLOWED);
+            setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_LREG:
         regno = insn.readByte();
         setErrorIf(insn);
         if (!isLreg(regno))
-            setErrorIf(REGISTER_NOT_ALLOWED);
+            setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_BAOP:
         switch (insn.aa()) {
@@ -146,7 +146,7 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             regno = insn.readByte();
             setErrorIf(insn);
             if (!isWreg(regno))
-                setErrorIf(REGISTER_NOT_ALLOWED);
+                setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_INDIR;
             break;
         case AA_IDX:
@@ -154,7 +154,7 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             if (isWreg(regno)) {  // 8bit displacement
                 val16 = static_cast<int16_t>(insn.readByte());
                 mode = M_IDX8;
-            } else {
+            } else {  // 16bit displacement
                 regno &= ~1;
                 val16 = insn.readUint16();
                 mode = M_IDX16;
@@ -168,7 +168,7 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             regno = insn.readByte();
             setErrorIf(insn);
             if (!isWreg(regno))
-                setErrorIf(REGISTER_NOT_ALLOWED);
+                setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_WREG;
             break;
         case AA_IMM:
@@ -179,7 +179,7 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             regno = insn.readByte();
             setErrorIf(insn);
             if (!isWreg(regno))
-                setErrorIf(REGISTER_NOT_ALLOWED);
+                setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_INDIR;
             break;
         case AA_IDX:
@@ -192,6 +192,8 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
                 val16 = insn.readUint16();
                 mode = M_IDX16;
             }
+            if (regno == 0 && !isWreg(val16))
+                setErrorIf(OPERAND_NOT_ALIGNED);
             break;
         }
         break;
@@ -222,7 +224,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         insn.setOpCode(opc);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return setErrorIf(insn);
 
     Operand dst, src1, src2;
     const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
@@ -230,17 +232,17 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         dst.read(insn, insn.dst());
         src1.read(insn, insn.src1());
         src2.read(insn, insn.src2());
+        setErrorIf(dst);
+        setErrorIf(src1);
+        setErrorIf(src2);
     } else {
         src2.read(insn, insn.src2());
         src1.read(insn, insn.src1());
         dst.read(insn, insn.dst());
+        setErrorIf(src2);
+        setErrorIf(src1);
+        setErrorIf(dst);
     }
-    if (src2.getError())
-        return setError(src2);
-    if (src1.getError())
-        return setError(src1);
-    if (dst.getError())
-        return setError(dst);
     outOperand(out, insn, dst);
     if (insn.src1() != M_NONE)
         out.comma();
@@ -248,7 +250,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (insn.src2() != M_NONE)
         out.comma();
     outOperand(out, insn, src2);
-    return getError();
+    return setErrorIf(insn);
 }
 
 }  // namespace i8096

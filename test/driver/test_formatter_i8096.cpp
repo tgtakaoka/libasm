@@ -52,13 +52,13 @@ void test_dis_i8096() {
             "      cpu   i8096\n"
             "      org   0abcdh\n"
             "      mulb  130, 817bh[124]\n"
-            "; test.bin: 0abd3h: error: Register not allowed\n"
+            "; test.bin: 0abd3h: error: Operand not aligned\n"
             ";     abd3 : 67 13 34 56 79\n",
             "       0 :                            cpu   i8096\n"
             "    abcd :                            org   0abcdh\n"
             "    abcd : fe 7f 7d 7b 81 82          mulb  130, 817bh[124]\n"
-            "test.bin: 0abd3h: error: Register not allowed\n"
-            "    abd3 : 67 13 34 56 79             add\n",
+            "test.bin: 0abd3h: error: Operand not aligned\n"
+            "    abd3 : 67 13 34 56 79             add   121, 5634h[18]\n",
             0xfe, 0x7f, 0x7d, 0x7b, 0x81, 0x82, 0x67, 0x13, 0x34, 0x56, 0x79);
 }
 
