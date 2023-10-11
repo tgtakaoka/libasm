@@ -29,8 +29,6 @@ namespace cdp1802 {
     { _opc, Entry::Flags::create(_op1, _op2), _name }
 #define E1(_opc, _name, _op1) E2(_opc, _name, _op1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U0(_opc, _name) \
-    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_CDP1802[] PROGMEM = {
@@ -63,7 +61,6 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
     E1(0x50, TEXT_STR,  M_REGN),
     E0(0x60, TEXT_IRX),
     E1(0x60, TEXT_OUT,  M_IOAD),
-    U0(0x68, TEXT_null),   // undefined
     E1(0x68, TEXT_INP,  M_IOAD),
     E0(0x70, TEXT_RET),
     E0(0x71, TEXT_DIS),
@@ -129,13 +126,12 @@ static constexpr Entry TABLE_CDP1802[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
-     29,  // TEXT_null
-     35,  // TEXT_ADC
-     44,  // TEXT_ADCI
-     80,  // TEXT_ADD
-     88,  // TEXT_ADI
-     78,  // TEXT_AND
-     86,  // TEXT_ANI
+     34,  // TEXT_ADC
+     43,  // TEXT_ADCI
+     79,  // TEXT_ADD
+     87,  // TEXT_ADI
+     77,  // TEXT_AND
+     85,  // TEXT_ANI
      10,  // TEXT_B1
      11,  // TEXT_B2
      12,  // TEXT_B3
@@ -156,71 +152,71 @@ static constexpr uint8_t INDEX_CDP1802[] PROGMEM = {
       4,  // TEXT_BR
       6,  // TEXT_BZ
       3,  // TEXT_DEC
-     32,  // TEXT_DIS
-     50,  // TEXT_GHI
-     49,  // TEXT_GLO
+     31,  // TEXT_DIS
+     49,  // TEXT_GHI
+     48,  // TEXT_GLO
       0,  // TEXT_IDL
       2,  // TEXT_INC
-     30,  // TEXT_INP
+     29,  // TEXT_INP
      27,  // TEXT_IRX
-     56,  // TEXT_LBDF
-     58,  // TEXT_LBGE
-     69,  // TEXT_LBL
-     68,  // TEXT_LBM
-     67,  // TEXT_LBNF
-     65,  // TEXT_LBNQ
-     66,  // TEXT_LBNZ
-     57,  // TEXT_LBPZ
-     54,  // TEXT_LBQ
-     53,  // TEXT_LBR
-     55,  // TEXT_LBZ
+     55,  // TEXT_LBDF
+     57,  // TEXT_LBGE
+     68,  // TEXT_LBL
+     67,  // TEXT_LBM
+     66,  // TEXT_LBNF
+     64,  // TEXT_LBNQ
+     65,  // TEXT_LBNZ
+     56,  // TEXT_LBPZ
+     53,  // TEXT_LBQ
+     52,  // TEXT_LBR
+     54,  // TEXT_LBZ
      25,  // TEXT_LDA
-     84,  // TEXT_LDI
+     83,  // TEXT_LDI
       1,  // TEXT_LDN
-     76,  // TEXT_LDX
-     33,  // TEXT_LDXA
-     73,  // TEXT_LSDF
-     70,  // TEXT_LSIE
-     63,  // TEXT_LSKP
-     62,  // TEXT_LSNF
-     60,  // TEXT_LSNQ
-     61,  // TEXT_LSNZ
-     71,  // TEXT_LSQ
-     72,  // TEXT_LSZ
-     41,  // TEXT_MARK
+     75,  // TEXT_LDX
+     32,  // TEXT_LDXA
+     72,  // TEXT_LSDF
+     69,  // TEXT_LSIE
+     62,  // TEXT_LSKP
+     61,  // TEXT_LSNF
+     59,  // TEXT_LSNQ
+     60,  // TEXT_LSNZ
+     70,  // TEXT_LSQ
+     71,  // TEXT_LSZ
+     40,  // TEXT_MARK
      15,  // TEXT_NBR
-     64,  // TEXT_NLBR
-     59,  // TEXT_NOP
-     77,  // TEXT_OR
-     85,  // TEXT_ORI
+     63,  // TEXT_NLBR
+     58,  // TEXT_NOP
+     76,  // TEXT_OR
+     84,  // TEXT_ORI
      28,  // TEXT_OUT
-     52,  // TEXT_PHI
-     51,  // TEXT_PLO
-     42,  // TEXT_REQ
-     31,  // TEXT_RET
-     47,  // TEXT_RSHL
-     38,  // TEXT_RSHR
-     40,  // TEXT_SAV
-     81,  // TEXT_SD
-     36,  // TEXT_SDB
-     45,  // TEXT_SDBI
-     89,  // TEXT_SDI
-     74,  // TEXT_SEP
-     43,  // TEXT_SEQ
-     75,  // TEXT_SEX
-     90,  // TEXT_SHL
-     46,  // TEXT_SHLC
-     82,  // TEXT_SHR
-     37,  // TEXT_SHRC
+     51,  // TEXT_PHI
+     50,  // TEXT_PLO
+     41,  // TEXT_REQ
+     30,  // TEXT_RET
+     46,  // TEXT_RSHL
+     37,  // TEXT_RSHR
+     39,  // TEXT_SAV
+     80,  // TEXT_SD
+     35,  // TEXT_SDB
+     44,  // TEXT_SDBI
+     88,  // TEXT_SDI
+     73,  // TEXT_SEP
+     42,  // TEXT_SEQ
+     74,  // TEXT_SEX
+     89,  // TEXT_SHL
+     45,  // TEXT_SHLC
+     81,  // TEXT_SHR
+     36,  // TEXT_SHRC
      14,  // TEXT_SKP
-     83,  // TEXT_SM
-     39,  // TEXT_SMB
-     48,  // TEXT_SMBI
-     91,  // TEXT_SMI
+     82,  // TEXT_SM
+     38,  // TEXT_SMB
+     47,  // TEXT_SMBI
+     90,  // TEXT_SMI
      26,  // TEXT_STR
-     34,  // TEXT_STXD
-     79,  // TEXT_XOR
-     87,  // TEXT_XRI
+     33,  // TEXT_STXD
+     78,  // TEXT_XOR
+     86,  // TEXT_XRI
 };
 
 static constexpr Entry TABLE_CDP1804[] PROGMEM = {
@@ -353,21 +349,21 @@ Error TableCdp1802::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     auto flags = entry->flags();
     auto mode = flags.mode1();
     if (mode == M_REGN || mode == M_REG1) {
-        opCode &= ~0x0F;
+        opc &= ~0x0F;
     } else if (mode == M_IOAD) {
-        opCode &= ~7;
+        if ((opc & 7) == 0)
+            return false;
+        opc &= ~7;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableCdp1802::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined())
-        insn.setErrorIf(UNKNOWN_INSTRUCTION);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

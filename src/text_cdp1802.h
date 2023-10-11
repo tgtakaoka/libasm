@@ -29,8 +29,6 @@ extern const char TEXT_CPU_1802[]  PROGMEM;
 extern const char TEXT_CPU_1804[]  PROGMEM;
 extern const char TEXT_CPU_1804A[] PROGMEM;
 
-using common::TEXT_null;
-
 // CDP1802
 using common::TEXT_ADC;
 extern const char TEXT_ADCI[] PROGMEM;

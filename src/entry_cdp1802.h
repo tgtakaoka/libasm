@@ -44,16 +44,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                               (static_cast<uint8_t>(opr2) << opr2_gp))};
         }
 
-        static constexpr Flags undef() {
-            return Flags{
-                    static_cast<uint8_t>((static_cast<uint8_t>(M_NONE) << opr1_gp) |
-                                         (static_cast<uint8_t>(M_NONE) << opr2_gp) | undef_bm)};
-        }
-
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
         AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
-        bool undefined() const { return _attr & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -66,9 +59,7 @@ private:
 
     static constexpr int opr1_gp = 0;
     static constexpr int opr2_gp = 3;
-    static constexpr int undef_bp = 7;
     static constexpr uint8_t mode_gm = 0x07;
-    static constexpr uint8_t undef_bm = (1 << undef_bp);
 };
 
 }  // namespace cdp1802
