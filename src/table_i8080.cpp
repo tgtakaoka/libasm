@@ -268,22 +268,22 @@ Error TableI8080::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto &flags = entry->flags();
     const auto dst = flags.dst();
     const auto src = flags.src();
     if (dst == M_REG || src == M_REG)
-        opCode &= ~07;
+        opc &= ~07;
     if (dst == M_DST)
-        opCode &= ~070;
+        opc &= ~070;
     if (dst == M_PTR || dst == M_STK) {
-        opCode &= ~0x30;
+        opc &= ~0x30;
     } else if (dst == M_IDX) {
-        opCode &= ~0x10;
+        opc &= ~0x10;
     } else if (dst == M_VEC) {
-        opCode &= ~070;
+        opc &= ~070;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableI8080::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
