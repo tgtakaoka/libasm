@@ -142,13 +142,13 @@ static void test_move_inherent() {
         TEST("SIM", "", 0x30);
         UNKN(0xED);
     } else if (v30emu()) {
-        ERRT("RIM", "", UNKNOWN_INSTRUCTION, 0x20);
-        ERRT("SIM", "", UNKNOWN_INSTRUCTION, 0x30);
+        UNKN(0x20);
+        UNKN(0x30);
         TEST("RETEM", "",    0xED, 0xFD);
         TEST("CALLN", "40H", 0xED, 0xED, 0x40);
     } else {
-        ERRT("RIM", "", UNKNOWN_INSTRUCTION, 0x20);
-        ERRT("SIM", "", UNKNOWN_INSTRUCTION, 0x30);
+        UNKN(0x20);
+        UNKN(0x30);
         UNKN(0xED);
     }
 }
@@ -415,6 +415,7 @@ static void test_illegal() {
     UNKN(0x18);
     UNKN(0x28);
     UNKN(0x38);
+    UNKN(0xCB);
     UNKN(0xD9);
     UNKN(0xDD);
     if (v30emu()) {
