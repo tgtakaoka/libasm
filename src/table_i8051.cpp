@@ -302,18 +302,18 @@ Error TableI8051::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     auto flags = entry->flags();
     auto dst = flags.dst();
     auto src = flags.src();
     if (dst == M_RREG || src == M_RREG) {
-        opCode &= ~7;
+        opc &= ~7;
     } else if (dst == M_IDIRR || src == M_IDIRR) {
-        opCode &= ~1;
+        opc &= ~1;
     } else if (dst == M_ADR11) {
-        opCode &= ~0xE0;
+        opc &= ~0xE0;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableI8051::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {

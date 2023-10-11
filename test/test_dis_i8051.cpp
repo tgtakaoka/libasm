@@ -162,11 +162,15 @@ static void test_regr() {
 }
 
 static void test_indirect() {
-    TEST("JMP",  "@A+DPTR",   0x73);
+    TEST("JMP",  "@A+DPTR",    0x73);
     TEST("MOVC", "A, @A+PC",   0x83);
     TEST("MOVC", "A, @A+DPTR", 0x93);
     TEST("MOVX", "A, @DPTR",   0xE0);
     TEST("MOVX", "@DPTR, A",   0xF0);
+    TEST("MOVX", "A, @R0",     0xE2);
+    TEST("MOVX", "A, @R1",     0xE3);
+    TEST("MOVX", "@R0, A",     0xF2);
+    TEST("MOVX", "@R1, A",     0xF3);
 
     TEST("INC",  "@R0", 0x06);
     TEST("INC",  "@R1", 0x07);
