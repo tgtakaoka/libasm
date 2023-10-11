@@ -27,8 +27,6 @@ namespace ins8060 {
 extern const char TEXT_CPU_SCMP[]    PROGMEM;
 extern const char TEXT_CPU_INS8060[] PROGMEM;
 
-using common::TEXT_null;
-
 using common::TEXT_ADD;
 extern const char TEXT_ADE[]  PROGMEM;
 using common::TEXT_ADI;

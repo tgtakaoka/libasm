@@ -28,8 +28,6 @@ namespace ins8060 {
 #define E1(_opc, _name, _mode) \
     { _opc, Entry::Flags::create(_mode), _name }
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U0(_opc, _name) \
-    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_INS8060[] PROGMEM = {
@@ -66,7 +64,7 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
     E1(0xB8, TEXT_DLD,  M_DISP),
     E1(0xC4, TEXT_LDI,  M_IMM8),
     E1(0xC0, TEXT_LD,   M_INDX),
-    U0(0xCC, TEXT_null),  // undefined ST immediate instruction
+    E1(0xCC, TEXT_ST,   M_UNDEF),  // undefined ST immediate instruction
     E1(0xC8, TEXT_ST,   M_INDX),
     E1(0xD4, TEXT_ANI,  M_IMM8),
     E1(0xD0, TEXT_AND,  M_INDX),
@@ -83,7 +81,6 @@ static constexpr Entry TABLE_INS8060[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_INS8060[] PROGMEM = {
-     33,  // TEXT_0
      44,  // TEXT_ADD
      22,  // TEXT_ADE
      43,  // TEXT_ADI
@@ -122,6 +119,7 @@ static constexpr uint8_t INDEX_INS8060[] PROGMEM = {
       9,  // TEXT_SIO
      10,  // TEXT_SR
      11,  // TEXT_SRL
+     33,  // TEXT_ST
      34,  // TEXT_ST
       1,  // TEXT_XAE
      40,  // TEXT_XOR
@@ -170,20 +168,22 @@ Error TableIns8060::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto mode = entry->flags().mode();
     if (mode == M_INDX) {
-        opCode &= ~0x07;
+        opc &= ~0x07;
     } else if (mode == M_PNTR || mode == M_REL8 || mode == M_DISP) {
-        opCode &= ~0x03;
+        opc &= ~0x03;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableIns8060::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined())
-        insn.setErrorIf(UNKNOWN_INSTRUCTION);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+    if (insn.addrMode() == M_UNDEF) {
+        insn.nameBuffer().reset();
+        insn.setError(UNKNOWN_INSTRUCTION);
+    }
     return insn.getError();
 }
 
