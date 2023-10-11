@@ -29,8 +29,6 @@ namespace f3850 {
     { _opc, Entry::Flags::create(_mode1, _mode2), _name }
 #define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U0(_opc, _name) \
-    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_3850[] PROGMEM = {
@@ -79,9 +77,6 @@ static constexpr Entry TABLE_3850[] PROGMEM = {
     E1(0x2A, TEXT_DCI, M_ADDR),
     E0(0x2B, TEXT_NOP),
     E0(0x2C, TEXT_XDC),
-    U0(0x2D, TEXT_null),
-    U0(0x2E, TEXT_null),
-    U0(0x2F, TEXT_null),
     E1(0x30, TEXT_DS,   M_REG),
     E2(0x40, TEXT_LR,   M_A,   M_REG),
     E2(0x50, TEXT_LR,   M_REG, M_A),
@@ -116,42 +111,39 @@ static constexpr Entry TABLE_3850[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_3850[] PROGMEM = {
-     45,  // TEXT_null
-     46,  // TEXT_null
-     47,  // TEXT_null
-     64,  // TEXT_ADC
+     61,  // TEXT_ADC
      36,  // TEXT_AI
-     58,  // TEXT_AM
-     59,  // TEXT_AMD
-     75,  // TEXT_AS
-     76,  // TEXT_ASD
-     56,  // TEXT_BC
-     72,  // TEXT_BF
-     68,  // TEXT_BM
-     69,  // TEXT_BNC
-     71,  // TEXT_BNO
-     70,  // TEXT_BNZ
-     55,  // TEXT_BP
-     67,  // TEXT_BR
-     65,  // TEXT_BR7
-     66,  // TEXT_BT
-     57,  // TEXT_BZ
+     55,  // TEXT_AM
+     56,  // TEXT_AMD
+     72,  // TEXT_AS
+     73,  // TEXT_ASD
+     53,  // TEXT_BC
+     69,  // TEXT_BF
+     65,  // TEXT_BM
+     66,  // TEXT_BNC
+     68,  // TEXT_BNO
+     67,  // TEXT_BNZ
+     52,  // TEXT_BP
+     64,  // TEXT_BR
+     62,  // TEXT_BR7
+     63,  // TEXT_BT
+     54,  // TEXT_BZ
      37,  // TEXT_CI
-     53,  // TEXT_CLR
-     63,  // TEXT_CM
+     50,  // TEXT_CLR
+     60,  // TEXT_CM
      24,  // TEXT_COM
      42,  // TEXT_DCI
      26,  // TEXT_DI
-     48,  // TEXT_DS
+     45,  // TEXT_DS
      27,  // TEXT_EI
      38,  // TEXT_IN
      31,  // TEXT_INC
-     73,  // TEXT_INS
+     70,  // TEXT_INS
      41,  // TEXT_JMP
      32,  // TEXT_LI
-     54,  // TEXT_LIS
-     52,  // TEXT_LISL
-     51,  // TEXT_LISU
+     51,  // TEXT_LIS
+     49,  // TEXT_LISL
+     48,  // TEXT_LISU
      22,  // TEXT_LM
      25,  // TEXT_LNK
       0,  // TEXT_LR
@@ -173,16 +165,16 @@ static constexpr uint8_t INDEX_3850[] PROGMEM = {
      17,  // TEXT_LR
      29,  // TEXT_LR
      30,  // TEXT_LR
-     49,  // TEXT_LR
-     50,  // TEXT_LR
+     46,  // TEXT_LR
+     47,  // TEXT_LR
      33,  // TEXT_NI
-     60,  // TEXT_NM
+     57,  // TEXT_NM
      43,  // TEXT_NOP
-     78,  // TEXT_NS
+     75,  // TEXT_NS
      34,  // TEXT_OI
-     61,  // TEXT_OM
+     58,  // TEXT_OM
      39,  // TEXT_OUT
-     74,  // TEXT_OUTS
+     71,  // TEXT_OUTS
      40,  // TEXT_PI
      12,  // TEXT_PK
      28,  // TEXT_POP
@@ -193,8 +185,8 @@ static constexpr uint8_t INDEX_3850[] PROGMEM = {
      23,  // TEXT_ST
      44,  // TEXT_XDC
      35,  // TEXT_XI
-     62,  // TEXT_XM
-     77,  // TEXT_XS
+     59,  // TEXT_XM
+     74,  // TEXT_XS
 };
 
 // clang-format on
@@ -253,9 +245,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 }
 
 Error TableF3850::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined())
-        insn.setErrorIf(UNKNOWN_INSTRUCTION);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 

@@ -136,6 +136,7 @@ void test_scratchpad() {
     TEST("AS",  "S",  0xCC);
     TEST("AS",  "I",  0xCD);
     TEST("AS",  "D",  0xCE);
+    TEST("AS",  "15", 0xCF);
 
     TEST("ASD", "7",  0xD7);
     TEST("ASD", "J",  0xD9);
