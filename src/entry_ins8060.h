@@ -26,12 +26,13 @@ namespace libasm {
 namespace ins8060 {
 
 enum AddrMode : uint8_t {
-    M_NONE = 1,  // Inherent
-    M_PNTR = 2,  // Pointer, Pn
-    M_IMM8 = 3,  // Immediate, nn
-    M_REL8 = 4,  // PC Relative, label
-    M_DISP = 5,  // Displacement, M_REL8 + dd(Pn), E(Pn)
-    M_INDX = 6,  // Indexed, M_DISP + @dd(Pn), @E(Pn)
+    M_NONE = 0,  // Inherent
+    M_PNTR = 1,  // Pointer, Pn
+    M_IMM8 = 2,  // Immediate, nn
+    M_REL8 = 3,  // PC Relative, label
+    M_DISP = 4,  // Displacement, M_REL8 + dd(Pn), E(Pn)
+    M_INDX = 5,  // Indexed, M_DISP + @dd(Pn), @E(Pn)
+    M_UNDEF = 6,
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -42,14 +43,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return Flags{static_cast<uint8_t>(static_cast<uint8_t>(mode) << mode_gp)};
         }
 
-        static constexpr Flags undef() {
-            return Flags{
-                    static_cast<uint8_t>((static_cast<uint8_t>(M_NONE) << mode_gp) | undef_bm)};
-        }
-
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
         AddrMode mode() const { return AddrMode(_attr); }
-        bool undefined() const { return _attr & undef_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -61,9 +56,7 @@ private:
     const Flags _flags;
 
     static constexpr int mode_gp = 0;
-    static constexpr int undef_bp = 7;
     static constexpr uint8_t mode_gm = 0x07;
-    static constexpr uint8_t undef_bm = (1 << undef_bp);
 };
 
 }  // namespace ins8060
