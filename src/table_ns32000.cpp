@@ -407,7 +407,7 @@ static constexpr uint8_t INDEX_3_3[] PROGMEM = {
 static constexpr Entry FORMAT_5_0[] PROGMEM = {
     E1(0x0B, TEXT_SETCFG, NONE, M_CONF, P_SHORT),
 };
-// Format 5: |00000|flg| |t|0|_op_|ii| |0000|1110|
+// Format 5: |00000|fla| |g|0|_op_|ii| |0000|1110|
 static constexpr Entry FORMAT_5_1[] PROGMEM = {
     E1(0x00, TEXT_MOVSB, BYTE,   M_SOPT, P_SHORT),
     E1(0x01, TEXT_MOVSW, WORD,   M_SOPT, P_SHORT),

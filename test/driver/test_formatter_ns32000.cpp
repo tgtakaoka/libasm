@@ -73,7 +73,7 @@ void test_dis_ns32000() {
             "  abcdfb : 33 c0 77 88 99 c0\n"
             "  abce01 : 55 66 77 20\n"
             "test.bin: x'abce05: error: Register not allowed\n"
-            "  abce05 : ce ec 08                   deib    r1, \n",
+            "  abce05 : ce ec 08                   deib    r1, r3\n",
             0x2e, 0x4b, 0xef, 0x83, 0x94, 0xc0, 0x33, 0x44, 0x55, 0xc0, 0x11, 0x22, 0x33, 0xc0,
             0x77, 0x88, 0x99, 0xc0, 0x55, 0x66, 0x77, 0x20, 0xce, 0xec, 0x08);
 }
