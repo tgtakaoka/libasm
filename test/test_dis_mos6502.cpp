@@ -202,9 +202,9 @@ static void test_imm() {
     if (w65c816()) {
         // W65C816
         TEST("COP", "#16",  0x02, 0x10);
-        ERRT("WDM", "#$10", UNKNOWN_INSTRUCTION, 0x42, 0x10);
         TEST("REP", "#32",  0xC2, 0x20);
         TEST("SEP", "#16",  0xE2, 0x10);
+        UNKN(0x42); // WDM
     }
 
     symtab.intern(0x0010, "zero10");
@@ -281,7 +281,6 @@ static void test_long_imm() {
         TEST("CPY", "#zero1FF", 0xC0, 0xFF, 0x01);
         TEST("SBC", "#minus1",  0xE9, 0xFF, 0xFF);
 
-        // G65SC02
         TEST("BIT", "#zero10",  0x89, 0x10, 0x00);
 
         // always 8bit immediate
@@ -747,9 +746,9 @@ static void test_rel() {
         ATEST(0x001000, "BVC", "$001004", 0x50, 0x02);
         ATEST(0x001000, "BVS", "$001081", 0x70, 0x7F);
         ATEST(0x001000, "BCC", "$000F82", 0x90, 0x80);
-        AERRT(0x120000, "BCS", "$12FF82", OPERAND_TOO_FAR, 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE", "$120000", OPERAND_TOO_FAR, 0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ", "$120071", OPERAND_TOO_FAR, 0xF0, 0x7F);
+        AERRT(0x120000, "BCS", "$11FF82", OPERAND_TOO_FAR, 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE", "$130000", OPERAND_TOO_FAR, 0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ", "$130071", OPERAND_TOO_FAR, 0xF0, 0x7F);
     } else {
         // MOS6502
         ATEST(0x1000, "BPL", "$1002", 0x10, 0x00);
@@ -771,8 +770,8 @@ static void test_rel() {
         // W65C816
         ATEST(0x121000, "BRL", "$121234", 0x82, 0x31, 0x02);
         ATEST(0x121000, "PER", "$121234", 0x62, 0x31, 0x02);
-        AERRT(0x121000, "BRL", "$129003", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER", "$121002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
+        AERRT(0x121000, "BRL", "$119003", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER", "$131002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -795,11 +794,11 @@ static void test_rel() {
     ATEST(0x2000, "BPL", "*+2",   0x10, 0x00);
     ATEST(0x2000, "BPL", "*+129", 0x10, 0x7F);
     if (w65c816()) {
-        AERRT(0x120000, "BCS", "$12FF82", OPERAND_TOO_FAR, 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE", "$120000", OPERAND_TOO_FAR, 0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ", "$120071", OPERAND_TOO_FAR, 0xF0, 0x7F);
-        AERRT(0x121000, "BRL", "$129003", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER", "$121002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
+        AERRT(0x120000, "BCS", "*-126",   OPERAND_TOO_FAR, 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE", "*+2",     OPERAND_TOO_FAR, 0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ", "*+129",   OPERAND_TOO_FAR, 0xF0, 0x7F);
+        AERRT(0x121000, "BRL", "*-$7FFD", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER", "*+$8002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
     } else {
         AERRT(0x0000, "BCS", "*-126", OVERFLOW_RANGE, 0xB0, 0x80);
         AERRT(0xFFFE, "BNE", "*+2",   OVERFLOW_RANGE, 0xD0, 0x00);

@@ -42,7 +42,7 @@ enum AddrMode : uint8_t {
     L_FLAG = longi_bm,      // Indirect long: [_]
     M_REGA = 1,             // Accumulator: A
     M_REGX = 2,             // Index register: X
-    I_REGX = 2 | indir_bm,  // Indirect X: (S)
+    I_REGX = 2 | indir_bm,  // Indirect X: (X)
     M_REGY = 3,             // Index register: Y
     M_REGS = 4,             // Stack pointer: S
     I_REGS = 4 | indir_bm,  // Stack indirect: (S)
@@ -50,33 +50,35 @@ enum AddrMode : uint8_t {
     M_IMA = 5,              // Immediate for A: #nn
     M_IMX = 6,              // Immediate for X: #nn
     M_IM8 = 7,              // Immediate byte: #nn
-    M_ABS = 8,              // Absolute: a
-    I_ABS = 8 | indir_bm,   // Absolute indirect: (a)
-    L_ABS = 8 | longi_bm,   // Absolute long indirect: [a]
-    M_ABSL = 9,             // Absolute long: al
+    M_ABS = 8,              // Absolute: a16
+    I_ABS = 8 | indir_bm,   // Absolute indirect: (a16)
+    L_ABS = 8 | longi_bm,   // Absolute long indirect: [a16]
+    M_ABSL = 9,             // Absolute long: a24
     M_DPG = 10,             // Direct page: d
     I_DPG = 10 | indir_bm,  // Direct page indirect: (d)
-    L_DPG = 10 | longi_bm,  // Direct page long indirect: (d)
-    M_REL = 11,             // Relative: a
-    M_RELL = 12,            // Relative long: al
-    M_BANK = 13,            // Bank address: b
-    // Direct page indexed with X:           M_DPG,  M_REGX, M_NONE
-    // Direct page indexed with Y:           M_DPG,  M_REGY, M_NONE
-    // Absolute indexed with X:              M_ABS,  M_REGX, M_NONE
-    // Absolute indexed with Y:              M_ABS,  M_REGY, M_NONE
-    // Direct page indexed indirect with X:  I_DPG,  I_REGX, M_NONE
-    // Direct page indirect indexed with Y:  I_DPG,  M_REGY, M_NONE
-    // Absolute indirect:                    I_ABS,  M_NONE, M_NONE
-    // Absolute indexed indirect with X      I_ABS,  I_REGX, M_NONE
-    // Direct page indirect:                 I_DPG,  M_NONE, M_NONE
-    // Direct page and relative:             M_DPG,  M_REL,  M_NONE
-    // Absolute long indexed with X:         M_ABSL, M_REGX, M_NONE
-    // Absolute long indirect:               L_ABS,  M_NONE, M_NONE
-    // Stack relative:                       M_DPG,  M_REGS, M_NONE
-    // Stack relative indirect indexed:      I_DPG,  I_REGS, M_REGY
-    // Direct page indirect long:            L_DPG,  M_NONE, M_NONE
-    // Direct page indirect long indexed:    L_DPG,  M_REGY, M_NONE
-    // Block move:                           M_DPG,  M_DPG,  M_NONE
+    L_DPG = 10 | longi_bm,  // Direct page long indirect: [d]
+    M_REL = 11,             // Relative: r8
+    M_RELL = 12,            // Relative long: r16
+    M_BANK = 13,            // Bank address: k8
+    // Direct page indexed with X:           M_DPG,  M_REGX, M_NONE: d,X
+    // Direct page indexed with Y:           M_DPG,  M_REGY, M_NONE: d,Y
+    // Absolute indexed with X:              M_ABS,  M_REGX, M_NONE: a16,X
+    // Absolute indexed with Y:              M_ABS,  M_REGY, M_NONE: a16,Y
+    // Direct page indexed indirect with X:  I_DPG,  I_REGX, M_NONE: (d,X)
+    // Direct page indirect indexed with Y:  I_DPG,  M_REGY, M_NONE: (d),Y
+    // Absolute indirect:                    I_ABS,  M_NONE, M_NONE: (a16)
+    // Absolute indexed indirect with X      I_ABS,  I_REGX, M_NONE: (a16,X)
+    // Direct page indirect:                 I_DPG,  M_NONE, M_NONE: (d)
+    // Direct page and relative:             M_DPG,  M_REL,  M_NONE: d,r8
+    // Absolute long indexed with X:         M_ABSL, M_REGX, M_NONE: a24,X
+    // Absolute long indirect:               L_ABS,  M_NONE, M_NONE: [a16]
+    // Stack relative:                       M_DPG,  M_REGS, M_NONE: d,S
+    // Stack relative indirect indexed:      I_DPG,  I_REGS, M_REGY: (d,S),Y
+    // Direct page indirect long:            L_DPG,  M_NONE, M_NONE: [d]
+    // Direct page indirect long indexed:    L_DPG,  M_REGY, M_NONE: [d],Y
+    // Direct page indirect long:            L_DPG,  M_NONE, M_NONE: ___L (d)
+    // Direct page indirect long indexed:    L_DPG,  M_REGY, M_NONE: ___L (d),Y
+    // Block move:                           M_BANK, M_BANK, M_NONE: k8,k8
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

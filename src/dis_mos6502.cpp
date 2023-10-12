@@ -100,8 +100,6 @@ Error DisMos6502::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) 
         outHex(out, insn.readByte(), 8);
     }
     setErrorIf(insn);
-    if (insn.opCode() == TableMos6502::WDM)
-        setErrorIf(UNKNOWN_INSTRUCTION);
     return getError();
 }
 

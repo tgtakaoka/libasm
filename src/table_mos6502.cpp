@@ -747,7 +747,8 @@ Error TableMos6502::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    if (insn.opCode() != entry->opCode())
+    const auto opCode = entry->opCode();
+    if (insn.opCode() != opCode || opCode == TableMos6502::WDM)
         return false;
     const auto mode = entry->flags().mode1();
     if (mode == L_ABS || mode == L_DPG)
