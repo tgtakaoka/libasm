@@ -262,21 +262,21 @@ static void test_8bit_transfer() {
     TEST("LD", "(SP), A", 0xEE, 0x26);
 
     // LD (ix+d), r
-    TEST("LD", "(IX+18), B",  0xF4, 0x12, 0x20);
+    TEST("LD",  "(IX+18), B", 0xF4, 0x12, 0x20);
     TEST("LD", "(IX+34H), C", 0xF4, 0x34, 0x21);
     TEST("LD", "(IX+56H), D", 0xF4, 0x56, 0x22);
     TEST("LD", "(IX+78H), E", 0xF4, 0x78, 0x23);
     TEST("LD", "(IX-66H), H", 0xF4, 0x9A, 0x24);
     TEST("LD", "(IX-44H), L", 0xF4, 0xBC, 0x25);
     TEST("LD", "(IX-22H), A", 0xF4, 0xDE, 0x26);
-    TEST("LD", "(IY+18), B",  0xF5, 0x12, 0x20);
+    TEST("LD",  "(IY+18), B", 0xF5, 0x12, 0x20);
     TEST("LD", "(IY+34H), C", 0xF5, 0x34, 0x21);
     TEST("LD", "(IY+56H), D", 0xF5, 0x56, 0x22);
     TEST("LD", "(IY+78H), E", 0xF5, 0x78, 0x23);
     TEST("LD", "(IY-66H), H", 0xF5, 0x9A, 0x24);
     TEST("LD", "(IY-44H), L", 0xF5, 0xBC, 0x25);
     TEST("LD", "(IY-22H), A", 0xF5, 0xDE, 0x26);
-    TEST("LD", "(SP+18), B",  0xF6, 0x12, 0x20);
+    TEST("LD",  "(SP+18), B", 0xF6, 0x12, 0x20);
     TEST("LD", "(SP+34H), C", 0xF6, 0x34, 0x21);
     TEST("LD", "(SP+56H), D", 0xF6, 0x56, 0x22);
     TEST("LD", "(SP+78H), E", 0xF6, 0x78, 0x23);
@@ -294,13 +294,13 @@ static void test_8bit_transfer() {
     TEST("LD", "(HL+A), A", 0xF7, 0x26);
 
     // LD (mn), r
-    TEST("LD", "(1234H), B",  0xEB, 0x34, 0x12, 0x20);
-    TEST("LD", "(5678H), C",  0xEB, 0x78, 0x56, 0x21);
-    TEST("LD", "(9ABCH), D",  0xEB, 0xBC, 0x9A, 0x22);
+    TEST("LD",  "(1234H), B", 0xEB, 0x34, 0x12, 0x20);
+    TEST("LD",  "(5678H), C", 0xEB, 0x78, 0x56, 0x21);
+    TEST("LD",  "(9ABCH), D", 0xEB, 0xBC, 0x9A, 0x22);
     TEST("LD", "(0DEF0H), E", 0xEB, 0xF0, 0xDE, 0x23);
     TEST("LD", "(0FEDCH), H", 0xEB, 0xDC, 0xFE, 0x24);
     TEST("LD", "(0BA98H), L", 0xEB, 0x98, 0xBA, 0x25);
-    TEST("LD", "(7654H), A",  0xEB, 0x54, 0x76, 0x26);
+    TEST("LD",  "(7654H), A", 0xEB, 0x54, 0x76, 0x26);
 
     // LD (n), r
     TEST("LD", "(0FF12H), B", 0xEF, 0x12, 0x20);
@@ -312,12 +312,12 @@ static void test_8bit_transfer() {
     TEST("LD", "(0FFDEH), A", 0xEF, 0xDE, 0x26);
 
     // LD (gg), n
-    TEST("LD", "(BC), 18",    0xE8, 0x37, 0x12);
-    TEST("LD", "(DE), 34H",   0xE9, 0x37, 0x34);
-    TEST("LD", "(HL), 56H",   0xEA, 0x37, 0x56);
-    TEST("LD", "(IX), 78H",   0xEC, 0x37, 0x78);
-    TEST("LD", "(IY), 9AH",   0xED, 0x37, 0x9A);
-    TEST("LD", "(SP), 0BCH",  0xEE, 0x37, 0xBC);
+    TEST("LD", "(BC), 18",   0xE8, 0x37, 0x12);
+    TEST("LD", "(DE), 34H",  0xE9, 0x37, 0x34);
+    TEST("LD", "(HL), 56H",  0xEA, 0x37, 0x56);
+    TEST("LD", "(IX), 78H",  0xEC, 0x37, 0x78);
+    TEST("LD", "(IY), 9AH",  0xED, 0x37, 0x9A);
+    TEST("LD", "(SP), 0BCH", 0xEE, 0x37, 0xBC);
 
     // LD (ix+d), n
     TEST("LD", "(IX+18), 34H",   0xF4, 0x12, 0x37, 0x34);
@@ -355,42 +355,42 @@ static void test_16bit_transfer() {
     TEST("LD", "BC, BC", 0xF8, 0x38);
     TEST("LD", "BC, DE", 0xF9, 0x38);
     TEST("LD", "BC, HL", 0xFA, 0x38);
-    UNKN(0xFB, 0x38);
+    UNKN(                0xFB, 0x38);
     TEST("LD", "BC, IX", 0xFC, 0x38);
     TEST("LD", "BC, IY", 0xFD, 0x38);
     TEST("LD", "BC, SP", 0xFE, 0x38);
     TEST("LD", "DE, BC", 0xF8, 0x39);
     TEST("LD", "DE, DE", 0xF9, 0x39);
     TEST("LD", "DE, HL", 0xFA, 0x39);
-    UNKN(0xFB, 0x39);
+    UNKN(                0xFB, 0x39);
     TEST("LD", "DE, IX", 0xFC, 0x39);
     TEST("LD", "DE, IY", 0xFD, 0x39);
     TEST("LD", "DE, SP", 0xFE, 0x39);
     TEST("LD", "HL, BC", 0xF8, 0x3A);
     TEST("LD", "HL, DE", 0xF9, 0x3A);
     TEST("LD", "HL, HL", 0xFA, 0x3A);
-    UNKN(0xFB, 0x3A);
+    UNKN(                0xFB, 0x3A);
     TEST("LD", "HL, IX", 0xFC, 0x3A);
     TEST("LD", "HL, IY", 0xFD, 0x3A);
     TEST("LD", "HL, SP", 0xFE, 0x3A);
     TEST("LD", "IX, BC", 0xF8, 0x3C);
     TEST("LD", "IX, DE", 0xF9, 0x3C);
     TEST("LD", "IX, HL", 0xFA, 0x3C);
-    UNKN(0xFB, 0x3C);
+    UNKN(                0xFB, 0x3C);
     TEST("LD", "IX, IX", 0xFC, 0x3C);
     TEST("LD", "IX, IY", 0xFD, 0x3C);
     TEST("LD", "IX, SP", 0xFE, 0x3C);
     TEST("LD", "IY, BC", 0xF8, 0x3D);
     TEST("LD", "IY, DE", 0xF9, 0x3D);
     TEST("LD", "IY, HL", 0xFA, 0x3D);
-    UNKN(0xFB, 0x3D);
+    UNKN(                0xFB, 0x3D);
     TEST("LD", "IY, IX", 0xFC, 0x3D);
     TEST("LD", "IY, IY", 0xFD, 0x3D);
     TEST("LD", "IY, SP", 0xFE, 0x3D);
     TEST("LD", "SP, BC", 0xF8, 0x3E);
     TEST("LD", "SP, DE", 0xF9, 0x3E);
     TEST("LD", "SP, HL", 0xFA, 0x3E);
-    UNKN(0xFB, 0x3E);
+    UNKN(                0xFB, 0x3E);
     TEST("LD", "SP, IX", 0xFC, 0x3E);
     TEST("LD", "SP, IY", 0xFD, 0x3E);
     TEST("LD", "SP, SP", 0xFE, 0x3E);
@@ -574,12 +574,12 @@ static void test_16bit_transfer() {
     TEST("LD", "(0FFDEH), SP", 0xEF, 0xDE, 0x46);
 
     // LDW (gg), mn
-    TEST("LDW", "(BC), 1234H",   0xE8, 0x3F, 0x34, 0x12);
-    TEST("LDW", "(DE), 5678H",   0xE9, 0x3F, 0x78, 0x56);
-    TEST("LDW", "(HL), 9ABCH",   0xEA, 0x3F, 0xBC, 0x9A);
-    TEST("LDW", "(IX), 0DEF0H",  0xEC, 0x3F, 0xF0, 0xDE);
-    TEST("LDW", "(IY), 0FEDCH",  0xED, 0x3F, 0xDC, 0xFE);
-    TEST("LDW", "(SP), 0BA98H",  0xEE, 0x3F, 0x98, 0xBA);
+    TEST("LDW", "(BC), 1234H",  0xE8, 0x3F, 0x34, 0x12);
+    TEST("LDW", "(DE), 5678H",  0xE9, 0x3F, 0x78, 0x56);
+    TEST("LDW", "(HL), 9ABCH",  0xEA, 0x3F, 0xBC, 0x9A);
+    TEST("LDW", "(IX), 0DEF0H", 0xEC, 0x3F, 0xF0, 0xDE);
+    TEST("LDW", "(IY), 0FEDCH", 0xED, 0x3F, 0xDC, 0xFE);
+    TEST("LDW", "(SP), 0BA98H", 0xEE, 0x3F, 0x98, 0xBA);
 
     // LDW (ix+d), mn
     TEST("LDW", "(IX+18), 3456H",   0xF4, 0x12, 0x3F, 0x56, 0x34);
@@ -734,12 +734,12 @@ static void test_exchange() {
     TEST("EX", "(0BA98H), SP", 0xE3, 0x98, 0xBA, 0x56);
 
     // EX (n), rr
-    TEST("EX", "(0FF12H), BC",  0xE7, 0x12, 0x50);
-    TEST("EX", "(0FF34H), DE",  0xE7, 0x34, 0x51);
-    TEST("EX", "(0FF56H), HL",  0xE7, 0x56, 0x52);
-    TEST("EX", "(0FF78H), IX",  0xE7, 0x78, 0x54);
-    TEST("EX", "(0FF9AH), IY",  0xE7, 0x9A, 0x55);
-    TEST("EX", "(0FFBCH), SP",  0xE7, 0xBC, 0x56);
+    TEST("EX", "(0FF12H), BC", 0xE7, 0x12, 0x50);
+    TEST("EX", "(0FF34H), DE", 0xE7, 0x34, 0x51);
+    TEST("EX", "(0FF56H), HL", 0xE7, 0x56, 0x52);
+    TEST("EX", "(0FF78H), IX", 0xE7, 0x78, 0x54);
+    TEST("EX", "(0FF9AH), IY", 0xE7, 0x9A, 0x55);
+    TEST("EX", "(0FFBCH), SP", 0xE7, 0xBC, 0x56);
 }
 
 static void test_block() {
@@ -758,85 +758,87 @@ static void test_8bit_arithmetic() {
     TEST("CPL", "A", 0x10);
     TEST("NEG", "A", 0x11);
 
-    TEST("ADD", "A, B", 0xF8, 0x60);
-    TEST("ADD", "A, C", 0xF9, 0x60);
-    TEST("ADD", "A, D", 0xFA, 0x60);
-    TEST("ADD", "A, E", 0xFB, 0x60);
-    TEST("ADD", "A, H", 0xFC, 0x60);
-    TEST("ADD", "A, L", 0xFD, 0x60);
-    TEST("ADD", "A, A", 0xFE, 0x60);
+    TEST("ADD", "A, B",  0xF8, 0x60);
+    TEST("ADD", "A, C",  0xF9, 0x60);
+    TEST("ADD", "A, D",  0xFA, 0x60);
+    TEST("ADD", "A, E",  0xFB, 0x60);
+    TEST("ADD", "A, H",  0xFC, 0x60);
+    TEST("ADD", "A, L",  0xFD, 0x60);
+    TEST("ADD", "A, A",  0xFE, 0x60);
     TEST("ADD", "A, (0FF12H)", 0x60, 0x12);
-    TEST("ADD", "A, (BC)", 0xE0, 0x60);
-    TEST("ADD", "A, (DE)", 0xE1, 0x60);
-    TEST("ADD", "A, (HL)", 0xE2, 0x60);
-    TEST("ADD", "A, (IX)", 0xE4, 0x60);
-    TEST("ADD", "A, (IY)", 0xE5, 0x60);
-    TEST("ADD", "A, (SP)", 0xE6, 0x60);
-    TEST("ADD", "A, (1234H)",  0xE3, 0x34, 0x12, 0x60);
+    TEST("ADD", "A, (BC)",     0xE0, 0x60);
+    TEST("ADD", "A, (DE)",     0xE1, 0x60);
+    TEST("ADD", "A, (HL)",     0xE2, 0x60);
+    TEST("ADD", "A, (0FF12H)", 0xE3, 0x12, 0xFF, 0x60);
+    TEST("ADD", "A, (IX)",     0xE4, 0x60);
+    TEST("ADD", "A, (IY)",     0xE5, 0x60);
+    TEST("ADD", "A, (SP)",     0xE6, 0x60);
+    TEST("ADD", "A, (0FF12H)", 0xE7, 0x12, 0x60);
     TEST("ADD", "A, (IX+18)",  0xF0, 0x12, 0x60);
     TEST("ADD", "A, (IY-16)",  0xF1, 0xF0, 0x60);
     TEST("ADD", "A, (SP+34H)", 0xF2, 0x34, 0x60);
     TEST("ADD", "A, (HL+A)",   0xF3, 0x60);
-    TEST("ADD", "A, 18",   0x68, 0x12);
-    TEST("ADD", "B, 18",   0xF8, 0x68, 0x12);
-    TEST("ADD", "C, 34H",  0xF9, 0x68, 0x34);
-    TEST("ADD", "D, 56H",  0xFA, 0x68, 0x56);
-    TEST("ADD", "E, 78H",  0xFB, 0x68, 0x78);
-    TEST("ADD", "H, 9AH",  0xFC, 0x68, 0x9A);
-    TEST("ADD", "L, 0BCH", 0xFD, 0x68, 0xBC);
-    TEST("ADD", "A, 0DEH", 0xFE, 0x68, 0xDE);
-    TEST("ADD", "(BC), 18",    0xE8, 0x68, 0x12);
-    TEST("ADD", "(DE), 34H",   0xE9, 0x68, 0x34);
-    TEST("ADD", "(HL), 56H",   0xEA, 0x68, 0x56);
-    TEST("ADD", "(IX), 78H",   0xEC, 0x68, 0x78);
-    TEST("ADD", "(IY), 9AH",   0xED, 0x68, 0x9A);
-    TEST("ADD", "(SP), 0BCH",  0xEE, 0x68, 0xBC);
+    TEST("ADD", "A, 18",               0x68, 0x12);
+    TEST("ADD", "B, 18",         0xF8, 0x68, 0x12);
+    TEST("ADD", "C, 34H",        0xF9, 0x68, 0x34);
+    TEST("ADD", "D, 56H",        0xFA, 0x68, 0x56);
+    TEST("ADD", "E, 78H",        0xFB, 0x68, 0x78);
+    TEST("ADD", "H, 9AH",        0xFC, 0x68, 0x9A);
+    TEST("ADD", "L, 0BCH",       0xFD, 0x68, 0xBC);
+    TEST("ADD", "A, 0DEH",       0xFE, 0x68, 0xDE);
+    TEST("ADD", "(BC), 18",      0xE8, 0x68, 0x12);
+    TEST("ADD", "(DE), 34H",     0xE9, 0x68, 0x34);
+    TEST("ADD", "(HL), 56H",     0xEA, 0x68, 0x56);
+    TEST("ADD", "(1234H), 56H",  0xEB, 0x34, 0x12, 0x68, 0x56);
+    TEST("ADD", "(IX), 78H",     0xEC, 0x68, 0x78);
+    TEST("ADD", "(IY), 9AH",     0xED, 0x68, 0x9A);
+    TEST("ADD", "(SP), 0BCH",    0xEE, 0x68, 0xBC);
+    TEST("ADD", "(0FF34H), 56H", 0xEF, 0x34, 0x68, 0x56);
     TEST("ADD", "(IX+18), 34H",  0xF4, 0x12, 0x68, 0x34);
     TEST("ADD", "(IY+56H), 78H", 0xF5, 0x56, 0x68, 0x78);
     TEST("ADD", "(SP-16), 0BCH", 0xF6, 0xF0, 0x68, 0xBC);
     TEST("ADD", "(HL+A), 18",    0xF7, 0x68, 0x12);
-    TEST("ADD", "(1234H), 56H",  0xEB, 0x34, 0x12, 0x68, 0x56);
-    TEST("ADD", "(0FF34H), 56H", 0xEF, 0x34, 0x68, 0x56);
 
-    TEST("ADC", "A, B", 0xF8, 0x61);
-    TEST("ADC", "A, C", 0xF9, 0x61);
-    TEST("ADC", "A, D", 0xFA, 0x61);
-    TEST("ADC", "A, E", 0xFB, 0x61);
-    TEST("ADC", "A, H", 0xFC, 0x61);
-    TEST("ADC", "A, L", 0xFD, 0x61);
-    TEST("ADC", "A, A", 0xFE, 0x61);
-    TEST("ADC", "A, (0FF12H)", 0x61, 0x12);
-    TEST("ADC", "A, (BC)", 0xE0, 0x61);
-    TEST("ADC", "A, (DE)", 0xE1, 0x61);
-    TEST("ADC", "A, (HL)", 0xE2, 0x61);
-    TEST("ADC", "A, (IX)", 0xE4, 0x61);
-    TEST("ADC", "A, (IY)", 0xE5, 0x61);
-    TEST("ADC", "A, (SP)", 0xE6, 0x61);
+    TEST("ADC", "A, B",        0xF8, 0x61);
+    TEST("ADC", "A, C",        0xF9, 0x61);
+    TEST("ADC", "A, D",        0xFA, 0x61);
+    TEST("ADC", "A, E",        0xFB, 0x61);
+    TEST("ADC", "A, H",        0xFC, 0x61);
+    TEST("ADC", "A, L",        0xFD, 0x61);
+    TEST("ADC", "A, A",        0xFE, 0x61);
+    TEST("ADC", "A, (0FF12H)",       0x61, 0x12);
+    TEST("ADC", "A, (BC)",     0xE0, 0x61);
+    TEST("ADC", "A, (DE)",     0xE1, 0x61);
+    TEST("ADC", "A, (HL)",     0xE2, 0x61);
     TEST("ADC", "A, (1234H)",  0xE3, 0x34, 0x12, 0x61);
+    TEST("ADC", "A, (IX)",     0xE4, 0x61);
+    TEST("ADC", "A, (IY)",     0xE5, 0x61);
+    TEST("ADC", "A, (SP)",     0xE6, 0x61);
+    TEST("ADC", "A, (0FF12H)", 0xE7, 0x12, 0x61);
     TEST("ADC", "A, (IX+18)",  0xF0, 0x12, 0x61);
     TEST("ADC", "A, (IY-16)",  0xF1, 0xF0, 0x61);
     TEST("ADC", "A, (SP+34H)", 0xF2, 0x34, 0x61);
     TEST("ADC", "A, (HL+A)",   0xF3, 0x61);
-    TEST("ADC", "A, 18",   0x69, 0x12);
-    TEST("ADC", "B, 18",   0xF8, 0x69, 0x12);
-    TEST("ADC", "C, 34H",  0xF9, 0x69, 0x34);
-    TEST("ADC", "D, 56H",  0xFA, 0x69, 0x56);
-    TEST("ADC", "E, 78H",  0xFB, 0x69, 0x78);
-    TEST("ADC", "H, 9AH",  0xFC, 0x69, 0x9A);
-    TEST("ADC", "L, 0BCH", 0xFD, 0x69, 0xBC);
-    TEST("ADC", "A, 0DEH", 0xFE, 0x69, 0xDE);
-    TEST("ADC", "(BC), 18",    0xE8, 0x69, 0x12);
-    TEST("ADC", "(DE), 34H",   0xE9, 0x69, 0x34);
-    TEST("ADC", "(HL), 56H",   0xEA, 0x69, 0x56);
-    TEST("ADC", "(IX), 78H",   0xEC, 0x69, 0x78);
-    TEST("ADC", "(IY), 9AH",   0xED, 0x69, 0x9A);
-    TEST("ADC", "(SP), 0BCH",  0xEE, 0x69, 0xBC);
+    TEST("ADC", "A, 18",               0x69, 0x12);
+    TEST("ADC", "B, 18",         0xF8, 0x69, 0x12);
+    TEST("ADC", "C, 34H",        0xF9, 0x69, 0x34);
+    TEST("ADC", "D, 56H",        0xFA, 0x69, 0x56);
+    TEST("ADC", "E, 78H",        0xFB, 0x69, 0x78);
+    TEST("ADC", "H, 9AH",        0xFC, 0x69, 0x9A);
+    TEST("ADC", "L, 0BCH",       0xFD, 0x69, 0xBC);
+    TEST("ADC", "A, 0DEH",       0xFE, 0x69, 0xDE);
+    TEST("ADC", "(BC), 18",      0xE8, 0x69, 0x12);
+    TEST("ADC", "(DE), 34H",     0xE9, 0x69, 0x34);
+    TEST("ADC", "(HL), 56H",     0xEA, 0x69, 0x56);
+    TEST("ADC", "(1234H), 56H",  0xEB, 0x34, 0x12, 0x69, 0x56);
+    TEST("ADC", "(IX), 78H",     0xEC, 0x69, 0x78);
+    TEST("ADC", "(IY), 9AH",     0xED, 0x69, 0x9A);
+    TEST("ADC", "(SP), 0BCH",    0xEE, 0x69, 0xBC);
+    TEST("ADC", "(0FF34H), 56H", 0xEF, 0x34, 0x69, 0x56);
     TEST("ADC", "(IX+18), 34H",  0xF4, 0x12, 0x69, 0x34);
     TEST("ADC", "(IY+56H), 78H", 0xF5, 0x56, 0x69, 0x78);
     TEST("ADC", "(SP-16), 0BCH", 0xF6, 0xF0, 0x69, 0xBC);
     TEST("ADC", "(HL+A), 18",    0xF7, 0x69, 0x12);
-    TEST("ADC", "(1234H), 56H",  0xEB, 0x34, 0x12, 0x69, 0x56);
-    TEST("ADC", "(0FF34H), 56H", 0xEF, 0x34, 0x69, 0x56);
 
     TEST("SUB", "A, B", 0xF8, 0x62);
     TEST("SUB", "A, C", 0xF9, 0x62);
@@ -1126,18 +1128,18 @@ static void test_16bit_arithmetic() {
     TEST("ADD", "HL, BC", 0xF8, 0x70);
     TEST("ADD", "HL, DE", 0xF9, 0x70);
     TEST("ADD", "HL, HL", 0xFA, 0x70);
-    UNKN(0xFB, 0x70);
+    UNKN(                 0xFB, 0x70);
     TEST("ADD", "HL, IX", 0xFC, 0x70);
     TEST("ADD", "HL, IY", 0xFD, 0x70);
     TEST("ADD", "HL, SP", 0xFE, 0x70);
     TEST("ADD", "HL, (0FF12H)", 0x70, 0x12);
-    TEST("ADD", "HL, (BC)", 0xE0, 0x70);
-    TEST("ADD", "HL, (DE)", 0xE1, 0x70);
-    TEST("ADD", "HL, (HL)", 0xE2, 0x70);
-    TEST("ADD", "HL, (IX)", 0xE4, 0x70);
-    TEST("ADD", "HL, (IY)", 0xE5, 0x70);
-    TEST("ADD", "HL, (SP)", 0xE6, 0x70);
+    TEST("ADD", "HL, (BC)",     0xE0, 0x70);
+    TEST("ADD", "HL, (DE)",     0xE1, 0x70);
+    TEST("ADD", "HL, (HL)",     0xE2, 0x70);
     TEST("ADD", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x70);
+    TEST("ADD", "HL, (IX)",     0xE4, 0x70);
+    TEST("ADD", "HL, (IY)",     0xE5, 0x70);
+    TEST("ADD", "HL, (SP)",     0xE6, 0x70);
     TEST("ADD", "HL, (IX+18)",  0xF0, 0x12, 0x70);
     TEST("ADD", "HL, (IY+34H)", 0xF1, 0x34, 0x70);
     TEST("ADD", "HL, (SP-16)",  0xF2, 0xF0, 0x70);
@@ -1147,17 +1149,17 @@ static void test_16bit_arithmetic() {
     TEST("ADC", "HL, BC", 0xF8, 0x71);
     TEST("ADC", "HL, DE", 0xF9, 0x71);
     TEST("ADC", "HL, HL", 0xFA, 0x71);
-    UNKN(0xFB, 0x71);
+    UNKN(                 0xFB, 0x71);
     TEST("ADC", "HL, IX", 0xFC, 0x71);
     TEST("ADC", "HL, IY", 0xFD, 0x71);
     TEST("ADC", "HL, SP", 0xFE, 0x71);
-    TEST("ADC", "HL, (0FF12H)", 0x71, 0x12);
-    TEST("ADC", "HL, (BC)", 0xE0, 0x71);
-    TEST("ADC", "HL, (DE)", 0xE1, 0x71);
-    TEST("ADC", "HL, (HL)", 0xE2, 0x71);
-    TEST("ADC", "HL, (IX)", 0xE4, 0x71);
-    TEST("ADC", "HL, (IY)", 0xE5, 0x71);
-    TEST("ADC", "HL, (SP)", 0xE6, 0x71);
+    TEST("ADC", "HL, (0FF12H)",       0x71, 0x12);
+    TEST("ADC", "HL, (BC)",     0xE0, 0x71);
+    TEST("ADC", "HL, (DE)",     0xE1, 0x71);
+    TEST("ADC", "HL, (HL)",     0xE2, 0x71);
+    TEST("ADC", "HL, (IX)",     0xE4, 0x71);
+    TEST("ADC", "HL, (IY)",     0xE5, 0x71);
+    TEST("ADC", "HL, (SP)",     0xE6, 0x71);
     TEST("ADC", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x71);
     TEST("ADC", "HL, (IX+18)",  0xF0, 0x12, 0x71);
     TEST("ADC", "HL, (IY+34H)", 0xF1, 0x34, 0x71);
@@ -1168,17 +1170,17 @@ static void test_16bit_arithmetic() {
     TEST("SUB", "HL, BC", 0xF8, 0x72);
     TEST("SUB", "HL, DE", 0xF9, 0x72);
     TEST("SUB", "HL, HL", 0xFA, 0x72);
-    UNKN(0xFB, 0x72);
+    UNKN(                 0xFB, 0x72);
     TEST("SUB", "HL, IX", 0xFC, 0x72);
     TEST("SUB", "HL, IY", 0xFD, 0x72);
     TEST("SUB", "HL, SP", 0xFE, 0x72);
-    TEST("SUB", "HL, (0FF12H)", 0x72, 0x12);
-    TEST("SUB", "HL, (BC)", 0xE0, 0x72);
-    TEST("SUB", "HL, (DE)", 0xE1, 0x72);
-    TEST("SUB", "HL, (HL)", 0xE2, 0x72);
-    TEST("SUB", "HL, (IX)", 0xE4, 0x72);
-    TEST("SUB", "HL, (IY)", 0xE5, 0x72);
-    TEST("SUB", "HL, (SP)", 0xE6, 0x72);
+    TEST("SUB", "HL, (0FF12H)",       0x72, 0x12);
+    TEST("SUB", "HL, (BC)",     0xE0, 0x72);
+    TEST("SUB", "HL, (DE)",     0xE1, 0x72);
+    TEST("SUB", "HL, (HL)",     0xE2, 0x72);
+    TEST("SUB", "HL, (IX)",     0xE4, 0x72);
+    TEST("SUB", "HL, (IY)",     0xE5, 0x72);
+    TEST("SUB", "HL, (SP)",     0xE6, 0x72);
     TEST("SUB", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x72);
     TEST("SUB", "HL, (IX+18)",  0xF0, 0x12, 0x72);
     TEST("SUB", "HL, (IY+34H)", 0xF1, 0x34, 0x72);
@@ -1189,17 +1191,17 @@ static void test_16bit_arithmetic() {
     TEST("SBC", "HL, BC", 0xF8, 0x73);
     TEST("SBC", "HL, DE", 0xF9, 0x73);
     TEST("SBC", "HL, HL", 0xFA, 0x73);
-    UNKN(0xFB, 0x73);
+    UNKN(                 0xFB, 0x73);
     TEST("SBC", "HL, IX", 0xFC, 0x73);
     TEST("SBC", "HL, IY", 0xFD, 0x73);
     TEST("SBC", "HL, SP", 0xFE, 0x73);
-    TEST("SBC", "HL, (0FF12H)", 0x73, 0x12);
-    TEST("SBC", "HL, (BC)", 0xE0, 0x73);
-    TEST("SBC", "HL, (DE)", 0xE1, 0x73);
-    TEST("SBC", "HL, (HL)", 0xE2, 0x73);
-    TEST("SBC", "HL, (IX)", 0xE4, 0x73);
-    TEST("SBC", "HL, (IY)", 0xE5, 0x73);
-    TEST("SBC", "HL, (SP)", 0xE6, 0x73);
+    TEST("SBC", "HL, (0FF12H)",       0x73, 0x12);
+    TEST("SBC", "HL, (BC)",     0xE0, 0x73);
+    TEST("SBC", "HL, (DE)",     0xE1, 0x73);
+    TEST("SBC", "HL, (HL)",     0xE2, 0x73);
+    TEST("SBC", "HL, (IX)",     0xE4, 0x73);
+    TEST("SBC", "HL, (IY)",     0xE5, 0x73);
+    TEST("SBC", "HL, (SP)",     0xE6, 0x73);
     TEST("SBC", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x73);
     TEST("SBC", "HL, (IX+18)",  0xF0, 0x12, 0x73);
     TEST("SBC", "HL, (IY+34H)", 0xF1, 0x34, 0x73);
@@ -1210,17 +1212,17 @@ static void test_16bit_arithmetic() {
     TEST("AND", "HL, BC", 0xF8, 0x74);
     TEST("AND", "HL, DE", 0xF9, 0x74);
     TEST("AND", "HL, HL", 0xFA, 0x74);
-    UNKN(0xFB, 0x74);
+    UNKN(                 0xFB, 0x74);
     TEST("AND", "HL, IX", 0xFC, 0x74);
     TEST("AND", "HL, IY", 0xFD, 0x74);
     TEST("AND", "HL, SP", 0xFE, 0x74);
-    TEST("AND", "HL, (0FF12H)", 0x74, 0x12);
-    TEST("AND", "HL, (BC)", 0xE0, 0x74);
-    TEST("AND", "HL, (DE)", 0xE1, 0x74);
-    TEST("AND", "HL, (HL)", 0xE2, 0x74);
-    TEST("AND", "HL, (IX)", 0xE4, 0x74);
-    TEST("AND", "HL, (IY)", 0xE5, 0x74);
-    TEST("AND", "HL, (SP)", 0xE6, 0x74);
+    TEST("AND", "HL, (0FF12H)",       0x74, 0x12);
+    TEST("AND", "HL, (BC)",     0xE0, 0x74);
+    TEST("AND", "HL, (DE)",     0xE1, 0x74);
+    TEST("AND", "HL, (HL)",     0xE2, 0x74);
+    TEST("AND", "HL, (IX)",     0xE4, 0x74);
+    TEST("AND", "HL, (IY)",     0xE5, 0x74);
+    TEST("AND", "HL, (SP)",     0xE6, 0x74);
     TEST("AND", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x74);
     TEST("AND", "HL, (IX+18)",  0xF0, 0x12, 0x74);
     TEST("AND", "HL, (IY+34H)", 0xF1, 0x34, 0x74);
@@ -1231,17 +1233,17 @@ static void test_16bit_arithmetic() {
     TEST("OR", "HL, BC", 0xF8, 0x76);
     TEST("OR", "HL, DE", 0xF9, 0x76);
     TEST("OR", "HL, HL", 0xFA, 0x76);
-    UNKN(0xFB, 0x76);
+    UNKN(                0xFB, 0x76);
     TEST("OR", "HL, IX", 0xFC, 0x76);
     TEST("OR", "HL, IY", 0xFD, 0x76);
     TEST("OR", "HL, SP", 0xFE, 0x76);
-    TEST("OR", "HL, (0FF12H)", 0x76, 0x12);
-    TEST("OR", "HL, (BC)", 0xE0, 0x76);
-    TEST("OR", "HL, (DE)", 0xE1, 0x76);
-    TEST("OR", "HL, (HL)", 0xE2, 0x76);
-    TEST("OR", "HL, (IX)", 0xE4, 0x76);
-    TEST("OR", "HL, (IY)", 0xE5, 0x76);
-    TEST("OR", "HL, (SP)", 0xE6, 0x76);
+    TEST("OR", "HL, (0FF12H)",       0x76, 0x12);
+    TEST("OR", "HL, (BC)",     0xE0, 0x76);
+    TEST("OR", "HL, (DE)",     0xE1, 0x76);
+    TEST("OR", "HL, (HL)",     0xE2, 0x76);
+    TEST("OR", "HL, (IX)",     0xE4, 0x76);
+    TEST("OR", "HL, (IY)",     0xE5, 0x76);
+    TEST("OR", "HL, (SP)",     0xE6, 0x76);
     TEST("OR", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x76);
     TEST("OR", "HL, (IX+18)",  0xF0, 0x12, 0x76);
     TEST("OR", "HL, (IY+34H)", 0xF1, 0x34, 0x76);
@@ -1252,17 +1254,17 @@ static void test_16bit_arithmetic() {
     TEST("XOR", "HL, BC", 0xF8, 0x75);
     TEST("XOR", "HL, DE", 0xF9, 0x75);
     TEST("XOR", "HL, HL", 0xFA, 0x75);
-    UNKN(0xFB, 0x75);
+    UNKN(                 0xFB, 0x75);
     TEST("XOR", "HL, IX", 0xFC, 0x75);
     TEST("XOR", "HL, IY", 0xFD, 0x75);
     TEST("XOR", "HL, SP", 0xFE, 0x75);
-    TEST("XOR", "HL, (0FF12H)", 0x75, 0x12);
-    TEST("XOR", "HL, (BC)", 0xE0, 0x75);
-    TEST("XOR", "HL, (DE)", 0xE1, 0x75);
-    TEST("XOR", "HL, (HL)", 0xE2, 0x75);
-    TEST("XOR", "HL, (IX)", 0xE4, 0x75);
-    TEST("XOR", "HL, (IY)", 0xE5, 0x75);
-    TEST("XOR", "HL, (SP)", 0xE6, 0x75);
+    TEST("XOR", "HL, (0FF12H)",       0x75, 0x12);
+    TEST("XOR", "HL, (BC)",     0xE0, 0x75);
+    TEST("XOR", "HL, (DE)",     0xE1, 0x75);
+    TEST("XOR", "HL, (HL)",     0xE2, 0x75);
+    TEST("XOR", "HL, (IX)",     0xE4, 0x75);
+    TEST("XOR", "HL, (IY)",     0xE5, 0x75);
+    TEST("XOR", "HL, (SP)",     0xE6, 0x75);
     TEST("XOR", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x75);
     TEST("XOR", "HL, (IX+18)",  0xF0, 0x12, 0x75);
     TEST("XOR", "HL, (IY+34H)", 0xF1, 0x34, 0x75);
@@ -1273,17 +1275,17 @@ static void test_16bit_arithmetic() {
     TEST("CP", "HL, BC", 0xF8, 0x77);
     TEST("CP", "HL, DE", 0xF9, 0x77);
     TEST("CP", "HL, HL", 0xFA, 0x77);
-    UNKN(0xFB, 0x77);
+    UNKN(                0xFB, 0x77);
     TEST("CP", "HL, IX", 0xFC, 0x77);
     TEST("CP", "HL, IY", 0xFD, 0x77);
     TEST("CP", "HL, SP", 0xFE, 0x77);
-    TEST("CP", "HL, (0FF12H)", 0x77, 0x12);
-    TEST("CP", "HL, (BC)", 0xE0, 0x77);
-    TEST("CP", "HL, (DE)", 0xE1, 0x77);
-    TEST("CP", "HL, (HL)", 0xE2, 0x77);
-    TEST("CP", "HL, (IX)", 0xE4, 0x77);
-    TEST("CP", "HL, (IY)", 0xE5, 0x77);
-    TEST("CP", "HL, (SP)", 0xE6, 0x77);
+    TEST("CP", "HL, (0FF12H)",        0x77, 0x12);
+    TEST("CP", "HL, (BC)",     0xE0, 0x77);
+    TEST("CP", "HL, (DE)",     0xE1, 0x77);
+    TEST("CP", "HL, (HL)",     0xE2, 0x77);
+    TEST("CP", "HL, (IX)",     0xE4, 0x77);
+    TEST("CP", "HL, (IY)",     0xE5, 0x77);
+    TEST("CP", "HL, (SP)",     0xE6, 0x77);
     TEST("CP", "HL, (1234H)",  0xE3, 0x34, 0x12, 0x77);
     TEST("CP", "HL, (IX+18)",  0xF0, 0x12, 0x77);
     TEST("CP", "HL, (IY+34H)", 0xF1, 0x34, 0x77);
@@ -1298,7 +1300,7 @@ static void test_16bit_arithmetic() {
     TEST("MUL", "HL, H", 0xFC, 0x12);
     TEST("MUL", "HL, L", 0xFD, 0x12);
     TEST("MUL", "HL, A", 0xFE, 0x12);
-    TEST("MUL", "HL, 34H",  0x12, 0x34);
+    TEST("MUL", "HL, 34H",        0x12, 0x34);
     TEST("MUL", "HL, (BC)", 0xE0, 0x12);
     TEST("MUL", "HL, (DE)", 0xE1, 0x12);
     TEST("MUL", "HL, (HL)", 0xE2, 0x12);
@@ -1319,7 +1321,7 @@ static void test_16bit_arithmetic() {
     TEST("DIV", "HL, H", 0xFC, 0x13);
     TEST("DIV", "HL, L", 0xFD, 0x13);
     TEST("DIV", "HL, A", 0xFE, 0x13);
-    TEST("DIV", "HL, 34H",  0x13, 0x34);
+    TEST("DIV", "HL, 34H",        0x13, 0x34);
     TEST("DIV", "HL, (BC)", 0xE0, 0x13);
     TEST("DIV", "HL, (DE)", 0xE1, 0x13);
     TEST("DIV", "HL, (HL)", 0xE2, 0x13);
@@ -1336,21 +1338,21 @@ static void test_16bit_arithmetic() {
     TEST("ADD", "IX, BC", 0xF8, 0x14);
     TEST("ADD", "IX, DE", 0xF9, 0x14);
     TEST("ADD", "IX, HL", 0xFA, 0x14);
-    UNKN(0xFB, 0x14);
+    UNKN(                 0xFB, 0x14);
     TEST("ADD", "IX, IX", 0xFC, 0x14);
     TEST("ADD", "IX, IY", 0xFD, 0x14);
     TEST("ADD", "IX, SP", 0xFE, 0x14);
     TEST("ADD", "IY, BC", 0xF8, 0x15);
     TEST("ADD", "IY, DE", 0xF9, 0x15);
     TEST("ADD", "IY, HL", 0xFA, 0x15);
-    UNKN(0xFB, 0x15);
+    UNKN(                 0xFB, 0x15);
     TEST("ADD", "IY, IX", 0xFC, 0x15);
     TEST("ADD", "IY, IY", 0xFD, 0x15);
     TEST("ADD", "IY, SP", 0xFE, 0x15);
     TEST("ADD", "SP, BC", 0xF8, 0x16);
     TEST("ADD", "SP, DE", 0xF9, 0x16);
     TEST("ADD", "SP, HL", 0xFA, 0x16);
-    UNKN(0xFB, 0x16);
+    UNKN(                 0xFB, 0x16);
     TEST("ADD", "SP, IX", 0xFC, 0x16);
     TEST("ADD", "SP, IY", 0xFD, 0x16);
     TEST("ADD", "SP, SP", 0xFE, 0x16);
@@ -1361,13 +1363,13 @@ static void test_16bit_arithmetic() {
     TEST("INC", "IX", 0x94);
     TEST("INC", "IY", 0x95);
     TEST("INC", "SP", 0x96);
-    TEST("INCW", "(0FF12H)", 0x97, 0x12);
-    TEST("INCW", "(BC)", 0xE0, 0x97);
-    TEST("INCW", "(DE)", 0xE1, 0x97);
-    TEST("INCW", "(HL)", 0xE2, 0x97);
-    TEST("INCW", "(IX)", 0xE4, 0x97);
-    TEST("INCW", "(IY)", 0xE5, 0x97);
-    TEST("INCW", "(SP)", 0xE6, 0x97);
+    TEST("INCW", "(0FF12H)",       0x97, 0x12);
+    TEST("INCW", "(BC)",     0xE0, 0x97);
+    TEST("INCW", "(DE)",     0xE1, 0x97);
+    TEST("INCW", "(HL)",     0xE2, 0x97);
+    TEST("INCW", "(IX)",     0xE4, 0x97);
+    TEST("INCW", "(IY)",     0xE5, 0x97);
+    TEST("INCW", "(SP)",     0xE6, 0x97);
     TEST("INCW", "(1234H)",  0xE3, 0x34, 0x12, 0x97);
     TEST("INCW", "(IX+18)",  0xF0, 0x12, 0x97);
     TEST("INCW", "(IY+34H)", 0xF1, 0x34, 0x97);
@@ -1380,13 +1382,13 @@ static void test_16bit_arithmetic() {
     TEST("DEC", "IX", 0x9C);
     TEST("DEC", "IY", 0x9D);
     TEST("DEC", "SP", 0x9E);
-    TEST("DECW", "(0FF12H)", 0x9F, 0x12);
-    TEST("DECW", "(BC)", 0xE0, 0x9F);
-    TEST("DECW", "(DE)", 0xE1, 0x9F);
-    TEST("DECW", "(HL)", 0xE2, 0x9F);
-    TEST("DECW", "(IX)", 0xE4, 0x9F);
-    TEST("DECW", "(IY)", 0xE5, 0x9F);
-    TEST("DECW", "(SP)", 0xE6, 0x9F);
+    TEST("DECW", "(0FF12H)",       0x9F, 0x12);
+    TEST("DECW", "(BC)",     0xE0, 0x9F);
+    TEST("DECW", "(DE)",     0xE1, 0x9F);
+    TEST("DECW", "(HL)",     0xE2, 0x9F);
+    TEST("DECW", "(IX)",     0xE4, 0x9F);
+    TEST("DECW", "(IY)",     0xE5, 0x9F);
+    TEST("DECW", "(SP)",     0xE6, 0x9F);
     TEST("DECW", "(1234H)",  0xE3, 0x34, 0x12, 0x9F);
     TEST("DECW", "(IX+18)",  0xF0, 0x12, 0x9F);
     TEST("DECW", "(IY+34H)", 0xF1, 0x34, 0x9F);
@@ -1673,7 +1675,7 @@ static void test_bitops() {
     TEST("TSET", "5, L", 0xFD, 0x1D);
     TEST("TSET", "6, A", 0xFE, 0x1E);
     TEST("TSET", "7, B", 0xF8, 0x1F);
-    TEST("TSET", "0, (BC)", 0xE0, 0x18);
+    TEST("TSET", "0, (BC)",    0xE0, 0x18);
     TEST("TSET", "1, (DE)", 0xE1, 0x19);
     TEST("TSET", "2, (HL)", 0xE2, 0x1A);
     TEST("TSET", "3, (1234H)", 0xE3, 0x34, 0x12, 0x1B);
@@ -1712,7 +1714,7 @@ static void test_jump_call() {
 
     TEST("JP", "(1234H)", 0x1A, 0x34, 0x12);
     TEST("JP", "(1234H)", 0xEB, 0x34, 0x12, 0xC8);
-    UNKN(0xEF, 0x34, 0xC8);
+    UNKN(                       0xEF, 0x34, 0xC8);
 
     TEST("JP", "F, (BC)",      0xE8, 0xC0);
     TEST("JP", "LT, (DE)",     0xE9, 0xC1);
@@ -1721,6 +1723,7 @@ static void test_jump_call() {
     TEST("JP", "OV, (IX)",     0xEC, 0xC4);
     TEST("JP", "MI, (IY)",     0xED, 0xC5);
     TEST("JP", "Z, (SP)",      0xEE, 0xC6);
+    UNKN(                       0xEF, 0x23, 0xC6); // No JP (n)
     TEST("JP", "C, (IX+18)",   0xF4, 0x12, 0xC7);
     TEST("JP", "(IY+34H)",     0xF5, 0x34, 0xC8);
     TEST("JP", "GE, (SP-16)",  0xF6, 0xF0, 0xC9);
@@ -1738,7 +1741,6 @@ static void test_jump_call() {
 
     TEST("CALL", "(1234H)", 0x1C, 0x34, 0x12);
     TEST("CALL", "(1234H)", 0xEB, 0x34, 0x12, 0xD8);
-    UNKN(0xEF, 0x34, 0xD8);
 
     TEST("CALL", "F, (BC)",      0xE8, 0xD0);
     TEST("CALL", "LT, (DE)",     0xE9, 0xD1);
@@ -1747,6 +1749,7 @@ static void test_jump_call() {
     TEST("CALL", "OV, (IX)",     0xEC, 0xD4);
     TEST("CALL", "MI, (IY)",     0xED, 0xD5);
     TEST("CALL", "Z, (SP)",      0xEE, 0xD6);
+    UNKN(                        0xEF, 0x23, 0xD6); // No CALL (n)
     TEST("CALL", "C, (IX+18)",   0xF4, 0x12, 0xD7);
     TEST("CALL", "(IY+34H)",     0xF5, 0x34, 0xD8);
     TEST("CALL", "GE, (SP-16)",  0xF6, 0xF0, 0xD9);
@@ -1812,7 +1815,7 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
             return;  // LD
         if (opc >= 0x50 && opc <= 0x56 && opc != 0x53)
             return;  // EX
-        if (opc >= 0x60 && opc <= 0x6F)
+        if (opc >= 0x60 && opc <= 0x67)
             return;  // Arithmetic
         if (opc >= 0x70 && opc <= 0x77)
             return;  // Arithmetic
@@ -1828,10 +1831,10 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
         if (opc >= 0x20 && opc <= 0x26)
             return;  // LD
         if (opc >= 0x37 && opc <= 0x46 && opc != 0x3B && opc != 0x43)
-            return;  // LD
+            return;  // LD, LDA, LDW
         if (opc >= 0x68 && opc <= 0x6F)
             return;  // Arithmetic
-        if (opc >= 0xC0 && opc <= 0xDF)
+        if (opc >= 0xC0 && opc <= 0xDF && prefix != 0xEF)
             return;  // JP, CALL
     }
 
@@ -1847,7 +1850,7 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
             return;  // LD
         if (opc >= 0x38 && opc <= 0x3A && prefix != 0xFB)
             return;  // LD
-        if (opc >= 0x3C && opc <= 0x3E)
+        if (opc >= 0x3C && opc <= 0x3E && prefix != 0xFB)
             return;  // LD
         if (opc >= 0x60 && opc <= 0x6F)
             return;  // Arithmetic
@@ -1878,21 +1881,16 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
 }
 
 static void test_illegal() {
-    UNKN(0x04);
-    UNKN(0x05);
-    UNKN(0x06);
-    UNKN(0x3B);
-    UNKN(0x43);
-    UNKN(0x4B);
-    UNKN(0x53);
-    UNKN(0x57);
-    UNKN(0x5B);
-    UNKN(0x5F);
-    UNKN(0x93);
-    UNKN(0x9B);
-
-    for (uint8_t opc = 0xD0; opc <= 0xDF; opc++)
-        UNKN(opc);
+    static const uint8_t illegals[] = {
+        0x04, 0x05, 0x06,
+        0x3B,
+        0x43, 0x4B,
+        0x53, 0x57, 0x5B, 0x5F,
+        0x93, 0x9B,
+        0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
+    };
+    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
+        UNKN(illegals[idx]);
 
     for (int i = 0; i < 256; i++) {
         const uint8_t opc = uint8_t(i);

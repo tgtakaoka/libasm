@@ -18,9 +18,11 @@
 
 #include "entry_table.h"
 #include "entry_tlcs90.h"
+#include "reg_tlcs90.h"
 #include "text_tlcs90.h"
 
 using namespace libasm::text::tlcs90;
+using namespace libasm::tlcs90::reg;
 
 namespace libasm {
 namespace tlcs90 {
@@ -444,14 +446,14 @@ static constexpr uint8_t INDEX_LDA[] PROGMEM = {
       0,  // TEXT_LDA
 };
 
-static constexpr Entry TABLE_JP_CALL[] PROGMEM = {
+static constexpr Entry TABLE_JMP[] PROGMEM = {
     E2(0xC0, TEXT_JP,   M_CC,    M_SRC),
     E1(0xC8, TEXT_JP,   M_DST),
     E2(0xD0, TEXT_CALL, M_CC,    M_SRC),
     E1(0xD8, TEXT_CALL, M_DST),
 };
 
-static constexpr uint8_t INDEX_JP_CALL[] PROGMEM = {
+static constexpr uint8_t INDEX_JMP[] PROGMEM = {
       2,  // TEXT_CALL
       3,  // TEXT_CALL
       0,  // TEXT_JP
@@ -492,15 +494,15 @@ static constexpr uint8_t INDEX_BLOCK[] PROGMEM = {
 // clang-format on
 
 struct EntryPage : entry::PrefixTableBase<Entry> {
-    AddrMode mode() const { return AddrMode(pgm_read_byte(&_mode)); }
+    AddrMode prefixMode() const { return AddrMode(pgm_read_byte(&_mode)); }
     bool prefixMatcher(Config::opcode_t code) const {
         const auto pre = prefix();
         const auto reg = code & 7;
-        switch (mode()) {
+        switch (prefixMode()) {
         case M_IND:
             return (code & ~7) == pre && reg != 3 && reg != 7;
         case M_IDX:
-            return (code & ~3) == pre && reg != 7;
+            return (code & ~3) == pre && reg != 3;
         case M_REG8:
             return (code & ~7) == pre && reg != 7;
         case M_CC:
@@ -518,38 +520,40 @@ private:
     const AddrMode _mode;
 };
 
+// clang-format off
 static constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
-        {0x00, M_NONE, ARRAY_RANGE(TABLE_TLCS90), ARRAY_RANGE(INDEX_TLCS90)},
-        {0xE7, M_DIR, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (FFnn)
-        {0xE3, M_EXT, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (nnnn)
-        {0xE0, M_IND, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (rr)
-        {0xF3, M_BASE, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},          // src (HL+A)
-        {0xF0, M_IDX, ARRAY_RANGE(TABLE_SRC), ARRAY_RANGE(INDEX_SRC)},           // src (ix+d)
-        {0xEF, M_DIR, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (FFnn)
-        {0xEB, M_EXT, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (nnnn)
-        {0xE8, M_IND, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (rr)
-        {0xF7, M_BASE, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},          // dst (HL+A)
-        {0xF4, M_IDX, ARRAY_RANGE(TABLE_DST), ARRAY_RANGE(INDEX_DST)},           // dst (ix+d)
-        {0xEB, M_EXT, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},   // JP/CALL
-        {0xE8, M_IND, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},   // JP/CALL
-        {0xF7, M_BASE, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},  // JP/CALL
-        {0xF4, M_IDX, ARRAY_RANGE(TABLE_JP_CALL), ARRAY_RANGE(INDEX_JP_CALL)},   // JP/CALL
-        {0xF8, M_REG8, ARRAY_RANGE(TABLE_REG), ARRAY_RANGE(INDEX_REG)},          // r, rr
-        {0xF7, M_BASE, ARRAY_RANGE(TABLE_LDA), ARRAY_RANGE(INDEX_LDA)},          // LDA
-        {0xF4, M_IDX, ARRAY_RANGE(TABLE_LDA), ARRAY_RANGE(INDEX_LDA)},           // LDA
-        {0xFE, M_NONE, ARRAY_RANGE(TABLE_COND), ARRAY_RANGE(INDEX_COND)},
-        {0xFE, M_NONE, ARRAY_RANGE(TABLE_BLOCK), ARRAY_RANGE(INDEX_BLOCK)},
+    {0x00, M_NONE,  ARRAY_RANGE(TABLE_TLCS90), ARRAY_RANGE(INDEX_TLCS90)},
+    {0xE7, M_DIR,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (FFnn)
+    {0xE3, M_EXT,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (nnnn)
+    {0xE0, M_IND,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (rr)
+    {0xF3, M_BASE,  ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (HL+A)
+    {0xF0, M_IDX,   ARRAY_RANGE(TABLE_SRC),    ARRAY_RANGE(INDEX_SRC)}, // src (ix+d)
+    {0xEF, M_DIR,   ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (FFnn)
+    {0xEB, M_EXT,   ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (nnnn)
+    {0xE8, M_IND,   ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (rr)
+    {0xF7, M_BASE,  ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (HL+A)
+    {0xF4, M_IDX,   ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (ix+d)
+    {0xEB, M_EXT,   ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
+    {0xE8, M_IND,   ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
+    {0xF7, M_BASE,  ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
+    {0xF4, M_IDX,   ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
+    {0xF8, M_REG8,  ARRAY_RANGE(TABLE_REG),    ARRAY_RANGE(INDEX_REG)}, // r/rr
+    {0xF7, M_BASE,  ARRAY_RANGE(TABLE_LDA),    ARRAY_RANGE(INDEX_LDA)}, // LDA
+    {0xF4, M_IDX,   ARRAY_RANGE(TABLE_LDA),    ARRAY_RANGE(INDEX_LDA)}, // LDA
+    {0xFE, M_NONE,  ARRAY_RANGE(TABLE_COND),   ARRAY_RANGE(INDEX_COND)},
+    {0xFE, M_NONE,  ARRAY_RANGE(TABLE_BLOCK),  ARRAY_RANGE(INDEX_BLOCK)},
 };
+// clang-format on
 
 struct Cpu : entry::CpuBase<CpuType, EntryPage> {
     constexpr Cpu(CpuType cpuType, const /*PROGMEM*/ char *name_P, const EntryPage *table,
             const EntryPage *end)
         : CpuBase(cpuType, name_P, table, end) {}
 
-    bool isPrefix(Config::opcode_t code, AddrMode &mode) const {
+    bool isPrefix(Config::opcode_t code, AddrMode &prefixMode) const {
         for (auto page = _pages.table(); page < _pages.end(); page++) {
             if (page->prefix() && page->prefixMatcher(code)) {
-                mode = page->mode();
+                prefixMode = page->prefixMode();
                 return true;
             }
         }
@@ -589,7 +593,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static void pageSetup(AsmInsn &insn, const EntryPage *page) {
-    insn.setPrefixMode(page->mode());
+    insn.setPrefixMode(page->prefixMode());
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
@@ -628,25 +632,49 @@ static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
     return page->prefixMatcher(insn.prefix());
 }
 
+static bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
+    const auto reg = prefix & 7;
+    if (mode == M_REG8 && reg == 7)
+        return true;  // accept B,C,D,E,H,L,A only
+    if ((mode == M_REG16 || mode == M_STACK) && (reg == 3 || reg == 7))
+        return true;  // accept BC,DE,HL,IX,IY,SP/AF only
+    if (mode == M_REGIX && (prefix & 3) == 3)
+        return true;  // accept IX,IY,SP only
+    return false;
+}
+
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto flags = entry->flags();
     const auto dst = flags.dst();
     const auto src = flags.src();
+    if (invalidPrefixCode(opc, dst) || invalidPrefixCode(opc, src))
+        return false;
     if (dst == M_REG8 || src == M_REG8 || dst == M_REG16 || src == M_REG16 || dst == M_BIT ||
             dst == M_STACK) {
-        opCode &= ~7;
+        opc &= ~7;
     } else if (dst == M_CC) {
-        opCode &= ~0xF;
+        opc &= ~0xF;
     } else if (dst == M_REGIX) {
-        opCode &= ~3;
+        opc &= ~3;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
-Error TableTlcs90::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error TableTlcs90::searchOpCode(
+        CpuType cpuType, DisInsn &insn, Operand &prefixOp, StrBuffer &out) const {
     cpu(cpuType)->searchOpCode(insn, out, matchOpCode, prefixMatcher);
+    // Resolve shared prefix for M_REG16 with M_REG8 here.
+    if (insn.src() == M_SRC16) {
+        if (invalidPrefixCode(insn.prefix(), M_REG16))
+            insn.setError(UNKNOWN_INSTRUCTION);
+        insn.setAddrMode(insn.dst(), M_SRC);
+        prefixOp.mode = M_REG16;
+        prefixOp.reg = decodeReg16(insn.prefix());
+    }
+    if (insn.getError() == UNKNOWN_INSTRUCTION)
+        insn.nameBuffer().reset();
     return insn.getError();
 }
 

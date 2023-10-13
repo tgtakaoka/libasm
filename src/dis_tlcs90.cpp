@@ -153,10 +153,10 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     DisInsn insn(_insn, memory);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
-    Operand preOp;
-    if (TABLE.isPrefix(cpuType(), opCode, preOp.mode))
-        insn.readOpCode(preOp);
-    if (TABLE.searchOpCode(cpuType(), insn, out))
+    Operand prefixOp;
+    if (TABLE.isPrefix(cpuType(), opCode, prefixOp.mode))
+        insn.readOpCode(prefixOp);
+    if (TABLE.searchOpCode(cpuType(), insn, prefixOp, out))
         return setErrorIf(insn);
 
     const auto dst = insn.dst();
@@ -164,27 +164,19 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return OK;
     const char *start = out.mark();
     if (dst == M_DST) {
-        decodeOperand(insn, out, preOp.mode, preOp);
+        decodeOperand(insn, out, prefixOp.mode, prefixOp);
     } else {
         Operand op;
         if (readOperand(insn, dst, op) == OK)
             decodeOperand(insn, out, dst, op);
     }
-    if (getError())
-        return getError();
     const auto src = insn.src();
     if (src == M_NONE)
-        return OK;
-    if (src == M_SRC16) {
-        if (insn.prefix() == 0xFB)
-            return setError(UNKNOWN_INSTRUCTION);
-        preOp.mode = M_REG16;
-        preOp.reg = decodeReg16(insn.prefix());
-    }
+        return getError();
     if (out.mark() != start)  // skip CC_T because it's empty.
         out.comma();
-    if (src == M_SRC || src == M_SRC16) {
-        decodeOperand(insn, out, preOp.mode, preOp);
+    if (src == M_SRC) {
+        decodeOperand(insn, out, prefixOp.mode, prefixOp);
     } else {
         Operand op;
         if (readOperand(insn, src, op) == OK)
