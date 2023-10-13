@@ -27,8 +27,6 @@ namespace scn2650 {
 extern const char TEXT_CPU_SCN2650[] PROGMEM;
 extern const char TEXT_CPU_2650[]    PROGMEM;
 
-using common::TEXT_null;
-
 // SCN2650
 using common::TEXT_ADDA;
 using common::TEXT_ADDI;

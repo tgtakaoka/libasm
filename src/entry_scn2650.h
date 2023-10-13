@@ -50,11 +50,6 @@ struct Entry final : entry::Base<Config::opcode_t> {
                                               (static_cast<uint8_t>(opr2) << opr2_gp))};
         }
 
-        static constexpr Flags undef() {
-            return Flags{static_cast<uint8_t>((static_cast<uint8_t>(M_NONE) << opr1_gp) |
-                                              (static_cast<uint8_t>(M_REGN) << opr2_gp))};
-        }
-
         Flags read() const { return Flags{pgm_read_byte(&_attr)}; }
         AddrMode mode1() const { return AddrMode((_attr >> opr1_gp) & mode_gm); }
         AddrMode mode2() const { return AddrMode((_attr >> opr2_gp) & mode_gm); }
