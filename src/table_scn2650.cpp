@@ -29,12 +29,9 @@ namespace scn2650 {
     { _opc, Entry::Flags::create(_mode1, _mode2), _name }
 #define E1(_opc, _name, _mode1) E2(_opc, _name, _mode1, M_NONE)
 #define E0(_opc, _name) E1(_opc, _name, M_NONE)
-#define U0(_opc, _name) \
-    { _opc, Entry::Flags::undef(), _name }
 
 // clang-format off
 static constexpr Entry TABLE_2650[] PROGMEM = {
-    U0(0x00, TEXT_null),
     E1(0x00, TEXT_LODZ, M_R123),
     E2(0x04, TEXT_LODI, M_REGN, M_IMM8),
     E2(0x08, TEXT_LODR, M_REGN, M_REL7),
@@ -122,91 +119,90 @@ static constexpr Entry TABLE_2650[] PROGMEM = {
 };
 
 static constexpr uint8_t INDEX_2650[] PROGMEM = {
-      0,  // TEXT_null
+     45,  // TEXT_ADDA
      46,  // TEXT_ADDA
-     47,  // TEXT_ADDA
-     44,  // TEXT_ADDI
-     45,  // TEXT_ADDR
-     43,  // TEXT_ADDZ
+     43,  // TEXT_ADDI
+     44,  // TEXT_ADDR
+     42,  // TEXT_ADDZ
+     23,  // TEXT_ANDA
      24,  // TEXT_ANDA
-     25,  // TEXT_ANDA
-     22,  // TEXT_ANDI
-     23,  // TEXT_ANDR
-     21,  // TEXT_ANDZ
-     54,  // TEXT_BCFA
-     52,  // TEXT_BCFR
-     10,  // TEXT_BCTA
-      9,  // TEXT_BCTR
-     84,  // TEXT_BDRA
-     83,  // TEXT_BDRR
-     75,  // TEXT_BIRA
-     74,  // TEXT_BIRR
-     29,  // TEXT_BRNA
-     28,  // TEXT_BRNR
-     66,  // TEXT_BSFA
-     64,  // TEXT_BSFR
-     42,  // TEXT_BSNA
-     41,  // TEXT_BSNR
-     19,  // TEXT_BSTA
-     18,  // TEXT_BSTR
-     65,  // TEXT_BSXA
-     53,  // TEXT_BXA
+     21,  // TEXT_ANDI
+     22,  // TEXT_ANDR
+     20,  // TEXT_ANDZ
+     53,  // TEXT_BCFA
+     51,  // TEXT_BCFR
+      9,  // TEXT_BCTA
+      8,  // TEXT_BCTR
+     83,  // TEXT_BDRA
+     82,  // TEXT_BDRR
+     74,  // TEXT_BIRA
+     73,  // TEXT_BIRR
+     28,  // TEXT_BRNA
+     27,  // TEXT_BRNR
+     65,  // TEXT_BSFA
+     63,  // TEXT_BSFR
+     41,  // TEXT_BSNA
+     40,  // TEXT_BSNR
+     18,  // TEXT_BSTA
+     17,  // TEXT_BSTR
+     64,  // TEXT_BSXA
+     52,  // TEXT_BXA
+     78,  // TEXT_COMA
      79,  // TEXT_COMA
-     80,  // TEXT_COMA
-     77,  // TEXT_COMI
-     78,  // TEXT_COMR
-     76,  // TEXT_COMZ
-     38,  // TEXT_CPSL
-     37,  // TEXT_CPSU
-     50,  // TEXT_DAR
+     76,  // TEXT_COMI
+     77,  // TEXT_COMR
+     75,  // TEXT_COMZ
+     37,  // TEXT_CPSL
+     36,  // TEXT_CPSU
+     49,  // TEXT_DAR
+     13,  // TEXT_EORA
      14,  // TEXT_EORA
-     15,  // TEXT_EORA
-     12,  // TEXT_EORI
-     13,  // TEXT_EORR
-     11,  // TEXT_EORZ
-     20,  // TEXT_HALT
+     11,  // TEXT_EORI
+     12,  // TEXT_EORR
+     10,  // TEXT_EORZ
+     19,  // TEXT_HALT
+     33,  // TEXT_IORA
      34,  // TEXT_IORA
-     35,  // TEXT_IORA
-     32,  // TEXT_IORI
-     33,  // TEXT_IORR
-     31,  // TEXT_IORZ
+     31,  // TEXT_IORI
+     32,  // TEXT_IORR
+     30,  // TEXT_IORZ
+      3,  // TEXT_LODA
       4,  // TEXT_LODA
-      5,  // TEXT_LODA
-      2,  // TEXT_LODI
-      3,  // TEXT_LODR
-      1,  // TEXT_LODZ
-     30,  // TEXT_LODZ
-     49,  // TEXT_LPSL
-     48,  // TEXT_LPSU
-     67,  // TEXT_NOP
-     40,  // TEXT_PPSL
-     39,  // TEXT_PPSU
-     16,  // TEXT_REDC
-     36,  // TEXT_REDD
-     27,  // TEXT_REDE
-      8,  // TEXT_RETC
-     17,  // TEXT_RETE
-     72,  // TEXT_RRL
-     26,  // TEXT_RRR
-      7,  // TEXT_SPSL
-      6,  // TEXT_SPSU
+      1,  // TEXT_LODI
+      2,  // TEXT_LODR
+      0,  // TEXT_LODZ
+     29,  // TEXT_LODZ
+     48,  // TEXT_LPSL
+     47,  // TEXT_LPSU
+     66,  // TEXT_NOP
+     39,  // TEXT_PPSL
+     38,  // TEXT_PPSU
+     15,  // TEXT_REDC
+     35,  // TEXT_REDD
+     26,  // TEXT_REDE
+      7,  // TEXT_RETC
+     16,  // TEXT_RETE
+     71,  // TEXT_RRL
+     25,  // TEXT_RRR
+      6,  // TEXT_SPSL
+      5,  // TEXT_SPSU
+     69,  // TEXT_STRA
      70,  // TEXT_STRA
-     71,  // TEXT_STRA
-     69,  // TEXT_STRR
-     68,  // TEXT_STRZ
+     68,  // TEXT_STRR
+     67,  // TEXT_STRZ
+     57,  // TEXT_SUBA
      58,  // TEXT_SUBA
-     59,  // TEXT_SUBA
-     56,  // TEXT_SUBI
-     57,  // TEXT_SUBR
-     55,  // TEXT_SUBZ
-     82,  // TEXT_TMI
-     62,  // TEXT_TPSL
-     61,  // TEXT_TPSU
-     60,  // TEXT_WRTC
-     81,  // TEXT_WRTD
-     73,  // TEXT_WRTE
-     51,  // TEXT_ZBRR
-     63,  // TEXT_ZBSR
+     55,  // TEXT_SUBI
+     56,  // TEXT_SUBR
+     54,  // TEXT_SUBZ
+     81,  // TEXT_TMI
+     61,  // TEXT_TPSL
+     60,  // TEXT_TPSU
+     59,  // TEXT_WRTC
+     80,  // TEXT_WRTD
+     72,  // TEXT_WRTE
+     50,  // TEXT_ZBRR
+     62,  // TEXT_ZBSR
 };
 
 // clang-format on
@@ -258,22 +254,24 @@ Error TableScn2650::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
+    if (mode1 == M_R123 && (opc & 3) == 0)
+        return false;
+    if (mode1 == M_C012 && (opc & 3) == 3)
+        return false;
     if (mode1 == M_REGN || mode1 == M_R123 || mode1 == M_CCVN || mode1 == M_C012) {
-        opCode &= ~0x03;
+        opc &= ~3;
     } else if (mode2 == M_IX13) {
-        opCode &= ~0x03;
+        opc &= ~3;
     }
-    return opCode == entry->opCode();
+    return opc == entry->opCode();
 }
 
 Error TableScn2650::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    auto entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
-    if (entry && entry->flags().undefined())
-        insn.setErrorIf(UNKNOWN_INSTRUCTION);
+    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
     return insn.getError();
 }
 
