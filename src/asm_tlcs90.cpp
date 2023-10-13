@@ -165,7 +165,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_REG8;
             break;
         default:
-            op.mode = AddrMode(int8_t(reg) + 16);
+            op.mode = AddrMode(int8_t(reg) + R_BASE);
             break;
         }
         op.reg = reg;

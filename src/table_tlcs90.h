@@ -29,8 +29,8 @@ struct TableTlcs90 final : InsnTable<CpuType> {
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
     Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
-    bool isPrefix(CpuType, Config::opcode_t code, AddrMode &mode) const;
+    Error searchOpCode(CpuType, DisInsn &insn, Operand &prefixOp, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code, AddrMode &prefixMode) const;
 };
 
 extern const TableTlcs90 TABLE;

@@ -21,37 +21,39 @@
 
 #include "config_tlcs90.h"
 #include "entry_base.h"
+#include "reg_tlcs90.h"
 
 namespace libasm {
 namespace tlcs90 {
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
-    M_IMM8 = 1,          // Immediate 8-bit: nn
-    M_IMM16 = 2,         // immediate 16-bit: nnnn
-    M_BIT = 3,           // Bit number: 0-7
-    M_EXT = 4,           // Extended address 16-bit: (nnnn)
-    M_DIR = 5,           // Direct address 8-bit: (FFnn)
-    M_REL8 = 6,          // Relative 8-bit: nnnn
-    M_REL16 = 7,         // Relative 16-bit: nnnn
-    M_IND = 8,           // Indirect: (M_REG16)
-    M_IDX = 9,           // Indexed: (M_REGIX+nn)
-    M_BASE = 10,         // Based indexed: (HL+A)
-    M_CC = 11,           // Condition: F/LT/LE/ULE/OV/MI/Z/C/GE/GT/UGT/NOV/PL/NZ/NC
-    M_STACK = 12,        // Register on stack: BC/DE/HL/IX/IY/AF
-    M_REG8 = 13,         // Register 8-bit: B/C/D/E/H/L/A
-    M_REG16 = 14,        // Register 16-bit: BC/DE/HL/IX/IY/SP
-    M_REGIX = 15,        // Register index: IX/IY/SP
-    R_BC = 16 + 0 + 0,   // REG_BC
-    R_DE = 16 + 0 + 1,   // REG_DE
-    R_HL = 16 + 0 + 2,   // REG_HL
-    R_SP = 16 + 4 + 2,   // REG_SP
-    R_AF = 16 + 8 + 6,   // REG_AF
-    R_AFP = 16 + 8 + 7,  // REG_AFP
-    R_C = 16 + 16 + 1,   // REG_C or CC_C
-    R_A = 16 + 16 + 6,   // REG_A
-    M_SYM = 59,          // Undefined symbol: M_EXT/M_DIR
-    M_SRC16 = 60,        // M_REG16
+    M_IMM8 = 1,    // Immediate 8-bit: nn
+    M_IMM16 = 2,   // immediate 16-bit: nnnn
+    M_BIT = 3,     // Bit number: 0-7
+    M_EXT = 4,     // Extended address 16-bit: (nnnn)
+    M_DIR = 5,     // Direct address 8-bit: (FFnn)
+    M_REL8 = 6,    // Relative 8-bit: nnnn
+    M_REL16 = 7,   // Relative 16-bit: nnnn
+    M_IND = 8,     // Indirect: (M_REG16)
+    M_IDX = 9,     // Indexed: (M_REGIX+nn)
+    M_BASE = 10,   // Based indexed: (HL+A)
+    M_CC = 11,     // Condition: F/LT/LE/ULE/OV/MI/Z/C/GE/GT/UGT/NOV/PL/NZ/NC
+    M_STACK = 12,  // Register on stack: BC/DE/HL/IX/IY/AF
+    M_REG8 = 13,   // Register 8-bit: B/C/D/E/H/L/A
+    M_REG16 = 14,  // Register 16-bit: BC/DE/HL/IX/IY/SP
+    M_REGIX = 15,  // Register index: IX/IY/SP
+    R_BASE = 16,
+    R_BC = R_BASE + REG_BC,
+    R_DE = R_BASE + REG_DE,
+    R_HL = R_BASE + REG_HL,
+    R_SP = R_BASE + REG_SP,
+    R_AF = R_BASE + REG_AF,
+    R_AFP = R_BASE + REG_AFP,
+    R_C = R_BASE + REG_C,  // or CC_C
+    R_A = R_BASE + REG_A,
+    M_SYM = 59,    // Undefined symbol: M_EXT/M_DIR
+    M_SRC16 = 60,  // M_REG16
     M_SRC = 61,
     M_DST = 62,
 };
