@@ -391,10 +391,11 @@ void test_illegal() {
     UNKN(0x89);
     UNKN(0x8F);
 
+    UNKN(0x90);
     UNKN(0x99);
     UNKN(0x9F);
 
-    UNKN(0xA1);
+    UNKN(0xA0);
     UNKN(0xA9);
     UNKN(0xAF);
 
