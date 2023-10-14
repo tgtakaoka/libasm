@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+#include "array_memory.h"
 #include "dis_tms32010.h"
 #include "test_dis_helper.h"
-#include "array_memory.h"
 
 using namespace libasm;
 using namespace libasm::tms32010;
@@ -38,21 +38,21 @@ static void tear_down() {
     symtab.reset();
 }
 
-// clang-format off
 void test_cpu() {
-    EQUALS("cpu 32010", true,   disassembler.setCpu("32010"));
+    EQUALS("cpu 32010", true, disassembler.setCpu("32010"));
     EQUALS_P("cpu 32010", "32010", disassembler.cpu_P());
 
-    EQUALS("cpu 32015", true,   disassembler.setCpu("32015"));
+    EQUALS("cpu 32015", true, disassembler.setCpu("32015"));
     EQUALS_P("cpu 32015", "32015", disassembler.cpu_P());
 
-    EQUALS("cpu TMS32010", true,   disassembler.setCpu("TMS32010"));
+    EQUALS("cpu TMS32010", true, disassembler.setCpu("TMS32010"));
     EQUALS_P("cpu TMS32010", "32010", disassembler.cpu_P());
 
-    EQUALS("cpu TMS32015", true,   disassembler.setCpu("TMS32015"));
+    EQUALS("cpu TMS32015", true, disassembler.setCpu("TMS32015"));
     EQUALS_P("cpu TMS32015", "32015", disassembler.cpu_P());
 }
 
+// clang-format off
 static void test_accumrator() {
     TEST("ABS", "",    0x7F88);
 
@@ -431,7 +431,7 @@ static void test_control() {
     if (is32010()) {
         ERRT("SST", "90H", OVERFLOW_RANGE, 0x7C10);
     } else {
-        TEST("SST", "90H",                  0x7C10);
+        TEST("SST", "90H",                 0x7C10);
     }
     TEST("SST", "*",       0x7C88);
     TEST("SST", "*-",      0x7C98);
@@ -563,7 +563,6 @@ static void assert_unknown(Config::opcode_t opc) {
 }
 
 static void assert_low8(Config::opcode_t base) {
-
     for (Config::opcode_t low8 = 0x00; low8 < 0x100; low8++) {
         assert_unknown(base | low8);
     }

@@ -212,30 +212,44 @@ Error TableTms32010::searchName(CpuType cpuType, AsmInsn &insn) const {
 
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
-    auto opCode = insn.opCode();
+    auto opc = insn.opCode();
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
     if (mode1 == M_IM8 || mode2 == M_IM8) {
-        opCode &= ~0xFF;
+        opc &= ~0xFF;
     } else if (mode1 == M_MAM || mode2 == M_MAM) {
-        if ((opCode & (1 << 7)) == 0) {
-            opCode &= ~0x7F;  // Direct addressing
+        if ((opc & (1 << 7)) == 0) {
+            opc &= ~0x7F;  // Direct addressing
         } else {
-            opCode &= ~0xB9;  // Indirect addressing
+            if (opc & 0x46)
+                return false;  // check reserved bits
+            if (((opc >> 4) & 3) == 3)
+                return false;  // Don't allow both increment and decrement.
+            if ((opc & 8) && (opc & 7))
+                return false;   // no next ARP check
+            opc &= ~0xB9;  // Indirect addressing
         }
     } else if (mode1 == M_IM13) {
-        opCode &= ~0x1FFF;
+        opc &= ~0x1FFF;
     }
     if (mode1 == M_AR)
-        opCode &= ~(1 << 8);
+        opc &= ~(1 << 8);
     if (mode1 == M_ARK || mode1 == M_DPK)
-        opCode &= ~(1 << 0);
+        opc &= ~(1 << 0);
     if (mode2 == M_LS4)
-        opCode &= ~(0xF << 8);
-    if (mode2 == M_PA || mode2 == M_LS3 || mode2 == M_LS0)
-        opCode &= ~(7 << 8);
-    return opCode == entry->opCode();
+        opc &= ~(0xF << 8);
+    if (mode2 == M_PA)
+        opc &= ~(7 << 8);
+    if (mode2 == M_LS3) {
+        const auto shift = (opc >> 8) & 7;
+        if (shift < 2 || shift == 4) {
+            opc &= ~(7 << 8);
+        } else {
+            return false;
+        }
+    }
+    return opc == entry->opCode();
 }
 
 Error TableTms32010::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
