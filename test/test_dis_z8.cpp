@@ -36,25 +36,6 @@ static bool z88() {
     return strcmp_P("Z88", disassembler.cpu_P()) == 0;
 }
 
-#define TZ86(name, opr, ...) \
-    if (z86())               \
-    TEST(name, opr, __VA_ARGS__)
-#define TZ88(name, opr, ...) \
-    if (z88())               \
-    TEST(name, opr, __VA_ARGS__)
-#define OZ86(name, opr, ...) \
-    if (z86())               \
-        ERRT(name, opr, OPERAND_NOT_ALLOWED, __VA_ARGS__)
-#define OZ88(name, opr, ...) \
-    if (z88())               \
-        ERRT(name, opr, OPERAND_NOT_ALLOWED, __VA_ARGS__)
-#define UZ86(name, opr, ...) \
-    if (z86())               \
-    ERUI(name, opr, __VA_ARGS__)
-#define UZ88(name, opr, ...) \
-    if (z88())               \
-    ERRT(name, opr, UNKNOWN_INSTRUCTION, __VA_ARGS__)
-
 static uint8_t R(uint8_t n) {
     if (z88())
         return 0xC0 + n;
@@ -124,8 +105,11 @@ static void test_absolute() {
     TEST("JP", "PL, %DEDF",  0xDD, 0xDE, 0xDF);
     TEST("JP", "NZ, %EEEF",  0xED, 0xEE, 0xEF);
     TEST("JP", "NC, %FEFF",  0xFD, 0xFE, 0xFF);
-    TZ86("CALL", "symD7D8",  0xD6, 0xD7, 0xD8);
-    TZ88("CALL", "symD7D8",  0xF6, 0xD7, 0xD8);
+    if (z86()) {
+        TEST("CALL", "symD7D8",  0xD6, 0xD7, 0xD8);
+    } else {
+        TEST("CALL", "symD7D8",  0xF6, 0xD7, 0xD8);
+    }
 }
 
 static void test_relative() {
@@ -186,16 +170,16 @@ static void test_relative() {
 }
 
 static void test_operand_in_opcode() {
-    TEST("LD", "R0, >%09",  0x08, 0x09);
-    TEST("LD", "R1, >%0F",  0x18, 0x0F);
-    TEST("LD", "R2, >%00",  0x28, 0x00);
-    TEST("LD", "R3, %10",   0x38, 0x10);
-    TEST("LD", "R4, %49",   0x48, 0x49);
-    TEST("LD", "R5, %59",   0x58, 0x59);
-    TEST("LD", "R6, %69",   0x68, 0x69);
-    TEST("LD", "R7, %79",   0x78, 0x79);
-    TEST("LD", "R8, %89",   0x88, 0x89);
-    TEST("LD", "R9, %99",   0x98, 0x99);
+    TEST("LD", "R0, >%09", 0x08, 0x09);
+    TEST("LD", "R1, >%0F", 0x18, 0x0F);
+    TEST("LD", "R2, >%00", 0x28, 0x00);
+    TEST("LD", "R3, %10",  0x38, 0x10);
+    TEST("LD", "R4, %49",  0x48, 0x49);
+    TEST("LD", "R5, %59",  0x58, 0x59);
+    TEST("LD", "R6, %69",  0x68, 0x69);
+    TEST("LD", "R7, %79",  0x78, 0x79);
+    TEST("LD", "R8, %89",  0x88, 0x89);
+    TEST("LD", "R9, %99",  0x98, 0x99);
     TEST("LD", "R10, %A9", 0xA8, 0xA9);
     TEST("LD", "R11, %B9", 0xB8, 0xB9);
     TEST("LD", "R12, %B9", 0xC8, 0xB9);
@@ -203,16 +187,16 @@ static void test_operand_in_opcode() {
     TEST("LD", "R14, %D9", 0xE8, 0xD9);
     TEST("LD", "R15, %F9", 0xF8, 0xF9);
 
-    TEST("LD", ">%0A, R0",  0x09, 0x0A);
-    TEST("LD", ">%0F, R1",  0x19, 0x0F);
-    TEST("LD", ">%00, R2",  0x29, 0x00);
-    TEST("LD", "%10, R3",   0x39, 0x10);
-    TEST("LD", "%4A, R4",   0x49, 0x4A);
-    TEST("LD", "%5A, R5",   0x59, 0x5A);
-    TEST("LD", "%6A, R6",   0x69, 0x6A);
-    TEST("LD", "%7A, R7",   0x79, 0x7A);
+    TEST("LD", ">%0A, R0", 0x09, 0x0A);
+    TEST("LD", ">%0F, R1", 0x19, 0x0F);
+    TEST("LD", ">%00, R2", 0x29, 0x00);
+    TEST("LD", "%10, R3",  0x39, 0x10);
+    TEST("LD", "%4A, R4",  0x49, 0x4A);
+    TEST("LD", "%5A, R5",  0x59, 0x5A);
+    TEST("LD", "%6A, R6",  0x69, 0x6A);
+    TEST("LD", "%7A, R7",  0x79, 0x7A);
     TEST("LD", "%FF, R8",  0x89, 0xFF);
-    TEST("LD", "%9A, R9",   0x99, 0x9A);
+    TEST("LD", "%9A, R9",  0x99, 0x9A);
     TEST("LD", "%AA, R10", 0xA9, 0xAA);
     TEST("LD", "%BA, R11", 0xB9, 0xBA);
     TEST("LD", "%BA, R12", 0xC9, 0xBA);
@@ -220,16 +204,16 @@ static void test_operand_in_opcode() {
     TEST("LD", "%DA, R14", 0xE9, 0xDA);
     TEST("LD", "%FA, R15", 0xF9, 0xFA);
 
-    TEST("LD", "R0, #13",    0x0C, 0x0D);
-    TEST("LD", "R1, #0",     0x1C, 0x00);
-    TEST("LD", "R2, #15",    0x2C, 0x0F);
-    TEST("LD", "R3, #16",    0x3C, 0x10);
-    TEST("LD", "R4, #%4D",   0x4C, 0x4D);
-    TEST("LD", "R5, #%5D",   0x5C, 0x5D);
-    TEST("LD", "R6, #%6D",   0x6C, 0x6D);
-    TEST("LD", "R7, #%7D",   0x7C, 0x7D);
-    TEST("LD", "R8, #%8D",   0x8C, 0x8D);
-    TEST("LD", "R9, #%9D",   0x9C, 0x9D);
+    TEST("LD", "R0, #13",   0x0C, 0x0D);
+    TEST("LD", "R1, #0",    0x1C, 0x00);
+    TEST("LD", "R2, #15",   0x2C, 0x0F);
+    TEST("LD", "R3, #16",   0x3C, 0x10);
+    TEST("LD", "R4, #%4D",  0x4C, 0x4D);
+    TEST("LD", "R5, #%5D",  0x5C, 0x5D);
+    TEST("LD", "R6, #%6D",  0x6C, 0x6D);
+    TEST("LD", "R7, #%7D",  0x7C, 0x7D);
+    TEST("LD", "R8, #%8D",  0x8C, 0x8D);
+    TEST("LD", "R9, #%9D",  0x9C, 0x9D);
     TEST("LD", "R10, #%AD", 0xAC, 0xAD);
     TEST("LD", "R11, #%BD", 0xBC, 0xBD);
     TEST("LD", "R12, #%CD", 0xCC, 0xCD);
@@ -256,15 +240,15 @@ static void test_operand_in_opcode() {
 }
 
 static void test_one_operand() {
-    TEST("DEC",  ">%01",  0x00, 0x01);
-    TEST("DEC",  "R1",    0x00, R(1));
-    TEST("DEC",  "@%05",  0x01, 0x05);
-    TEST("DEC",  "@R2",   0x01, R(2));
+    TEST("DEC",  ">%01", 0x00, 0x01);
+    TEST("DEC",  "R1",   0x00, R(1));
+    TEST("DEC",  "@%05", 0x01, 0x05);
+    TEST("DEC",  "@R2",  0x01, R(2));
 
-    TEST("RLC",  "%11",   0x10, 0x11);
-    TEST("RLC",  "R1",    0x10, R(1));
-    TEST("RLC",  "@%12",  0x11, 0x12);
-    TEST("RLC",  "@R2",   0x11, R(2));
+    TEST("RLC",  "%11",  0x10, 0x11);
+    TEST("RLC",  "R1",   0x10, R(1));
+    TEST("RLC",  "@%12", 0x11, 0x12);
+    TEST("RLC",  "@R2",  0x11, R(2));
 
     TEST("INC",  "%21",  0x20, 0x21);
     TEST("INC",  "R1",   0x20, R(1));
@@ -276,7 +260,7 @@ static void test_one_operand() {
     TEST("DA",   "@%42", 0x41, 0x42);
     TEST("DA",   "@R2",  0x41, R(2));
 
-    TEST("POP",  "%FC", 0x50, 0xFC);
+    TEST("POP",  "%FC",  0x50, 0xFC);
     TEST("POP",  "R1",   0x50, R(1));
     TEST("POP",  "@%52", 0x51, 0x52);
     TEST("POP",  "@R2",  0x51, R(2));
@@ -286,7 +270,7 @@ static void test_one_operand() {
     TEST("COM",  "@%62", 0x61, 0x62);
     TEST("COM",  "@R2",  0x61, R(2));
 
-    TEST("PUSH", "%FF", 0x70, 0xFF);
+    TEST("PUSH", "%FF",  0x70, 0xFF);
     TEST("PUSH", "R1",   0x70, R(1));
     TEST("PUSH", "@%72", 0x71, 0x72);
     TEST("PUSH", "@R2",  0x71, R(2));
@@ -302,42 +286,45 @@ static void test_one_operand() {
     TEST("RL",   "@R2",  0x91, R(2));
 
     TEST("INCW", "%A2",  0xA0, 0xA2);
-    TEST("INCW", "RR2",   0xA0, R(2));
+    TEST("INCW", "RR2",  0xA0, R(2));
     TEST("INCW", "@%A1", 0xA1, 0xA1);
-    TEST("INCW", "@R1",   0xA1, R(1));
+    TEST("INCW", "@R1",  0xA1, R(1));
 
     TEST("CLR",  "%B1",  0xB0, 0xB1);
-    TEST("CLR",  "R1",    0xB0, R(1));
+    TEST("CLR",  "R1",   0xB0, R(1));
     TEST("CLR",  "@%B2", 0xB1, 0xB2);
-    TEST("CLR",  "@R2",   0xB1, R(2));
+    TEST("CLR",  "@R2",  0xB1, R(2));
 
     TEST("RRC",  "%B1",  0xC0, 0xB1);
-    TEST("RRC",  "R1",    0xC0, R(1));
+    TEST("RRC",  "R1",   0xC0, R(1));
     TEST("RRC",  "@%B2", 0xC1, 0xB2);
-    TEST("RRC",  "@R2",   0xC1, R(2));
+    TEST("RRC",  "@R2",  0xC1, R(2));
 
     TEST("SRA",  "%D1",  0xD0, 0xD1);
-    TEST("SRA",  "R1",    0xD0, R(1));
+    TEST("SRA",  "R1",   0xD0, R(1));
     TEST("SRA",  "@%D2", 0xD1, 0xD2);
-    TEST("SRA",  "@R2",   0xD1, R(2));
+    TEST("SRA",  "@R2",  0xD1, R(2));
 
     TEST("RR",   "%B1",  0xE0, 0xB1);
-    TEST("RR",   "R1",    0xE0, R(1));
+    TEST("RR",   "R1",   0xE0, R(1));
     TEST("RR",   "@%B2", 0xE1, 0xB2);
-    TEST("RR",   "@R2",   0xE1, R(2));
+    TEST("RR",   "@R2",  0xE1, R(2));
 
     TEST("SWAP", "%BF",  0xF0, 0xBF);
-    TEST("SWAP", "R1",    0xF0, R(1));
+    TEST("SWAP", "R1",   0xF0, R(1));
     TEST("SWAP", "@%BF", 0xF1, 0xBF);
-    TEST("SWAP", "@R2",   0xF1, R(2));
+    TEST("SWAP", "@R2",  0xF1, R(2));
 
-    TEST("JP",   "@%32",  0x30, 0x32);
-    TEST("JP",   "@RR2",  0x30, R(2));
-    TZ86("CALL", "@%D6", 0xD4, 0xD6);
-    TZ88("CALL", "@%D6", 0xF4, 0xD6);
-    TZ86("CALL", "@RR2",  0xD4, R(2));
-    TZ88("CALL", "@RR2",  0xF4, R(2));
-    TZ88("CALL", "#%D6", 0xD4, 0xD6);
+    TEST("JP",   "@%32", 0x30, 0x32);
+    TEST("JP",   "@RR2", 0x30, R(2));
+    if (z86()) {
+        TEST("CALL", "@%D6", 0xD4, 0xD6);
+        TEST("CALL", "@RR2", 0xD4, R(2));
+    } else {
+        TEST("CALL", "@%D6", 0xF4, 0xD6);
+        TEST("CALL", "@RR2", 0xF4, R(2));
+        TEST("CALL", "#%D6", 0xD4, 0xD6);
+    }
 }
 
 static void test_two_operands() {
@@ -351,260 +338,305 @@ static void test_two_operands() {
     TEST("ADD", "R7, @%06",   0x05, 0x06, R(7));
     TEST("ADD", ">%07, #8",   0x06, 0x07, 0x08);
     TEST("ADD", "R7, #8",     0x06, R(7), 0x08);
-    TZ86("ADD", "@%08, #9",   0x07, 0x08, 0x09);
-    TZ86("ADD", "@R8, #9",    0x07, R(8), 0x09);
+    if (z86()) {
+        TEST("ADD", "@%08, #9", 0x07, 0x08, 0x09);
+        TEST("ADD", "@R8, #9",  0x07, R(8), 0x09);
+    }
 
-    TEST("ADC", "R3, R4",     0x12, 0x34);
-    TEST("ADC", "R1, @R4",    0x13, 0x14);
-    TEST("ADC", "%16, %15",   0x14, 0x15, 0x16);
-    TEST("ADC", "R6, %15",    0x14, 0x15, R(6));
-    TEST("ADC", "%16, R5",    0x14, R(5), 0x16);
-    TEST("ADC", "%17, @%16",  0x15, 0x16, 0x17);
-    TEST("ADC", "%17, @R6",   0x15, R(6), 0x17);
-    TEST("ADC", "R7, @%16",   0x15, 0x16, R(7));
-    TEST("ADC", "%17, #24",   0x16, 0x17, 0x18);
-    TEST("ADC", "R7, #24",    0x16, R(7), 0x18);
-    TZ86("ADC", "@%18, #25",  0x17, 0x18, 0x19);
-    TZ86("ADC", "@R8, #25",   0x17, R(8), 0x19);
+    TEST("ADC", "R3, R4",    0x12, 0x34);
+    TEST("ADC", "R1, @R4",   0x13, 0x14);
+    TEST("ADC", "%16, %15",  0x14, 0x15, 0x16);
+    TEST("ADC", "R6, %15",   0x14, 0x15, R(6));
+    TEST("ADC", "%16, R5",   0x14, R(5), 0x16);
+    TEST("ADC", "%17, @%16", 0x15, 0x16, 0x17);
+    TEST("ADC", "%17, @R6",  0x15, R(6), 0x17);
+    TEST("ADC", "R7, @%16",  0x15, 0x16, R(7));
+    TEST("ADC", "%17, #24",  0x16, 0x17, 0x18);
+    TEST("ADC", "R7, #24",   0x16, R(7), 0x18);
+    if (z86()) {
+        TEST("ADC", "@%18, #25", 0x17, 0x18, 0x19);
+        TEST("ADC", "@R8, #25",  0x17, R(8), 0x19);
+    }
 
-    TEST("SUB", "R2, R3",     0x22, 0x23);
-    TEST("SUB", "R4, @R5",    0x23, 0x45);
-    TEST("SUB", "%26, %25",   0x24, 0x25, 0x26);
-    TEST("SUB", "R6, %25",    0x24, 0x25, R(6));
-    TEST("SUB", "%26, R5",    0x24, R(5), 0x26);
-    TEST("SUB", "%27, @%26",  0x25, 0x26, 0x27);
-    TEST("SUB", "%27, @R6",   0x25, R(6), 0x27);
-    TEST("SUB", "R7, @%26",   0x25, 0x26, R(7));
-    TEST("SUB", "%27, #%28",  0x26, 0x27, 0x28);
-    TEST("SUB", "R7, #%28",   0x26, R(7), 0x28);
-    TZ86("SUB", "@%28, #%29", 0x27, 0x28, 0x29);
-    TZ86("SUB", "@R8, #%29",  0x27, R(8), 0x29);
+    TEST("SUB", "R2, R3",    0x22, 0x23);
+    TEST("SUB", "R4, @R5",   0x23, 0x45);
+    TEST("SUB", "%26, %25",  0x24, 0x25, 0x26);
+    TEST("SUB", "R6, %25",   0x24, 0x25, R(6));
+    TEST("SUB", "%26, R5",   0x24, R(5), 0x26);
+    TEST("SUB", "%27, @%26", 0x25, 0x26, 0x27);
+    TEST("SUB", "%27, @R6",  0x25, R(6), 0x27);
+    TEST("SUB", "R7, @%26",  0x25, 0x26, R(7));
+    TEST("SUB", "%27, #%28", 0x26, 0x27, 0x28);
+    TEST("SUB", "R7, #%28",  0x26, R(7), 0x28);
+    if (z86()) {
+        TEST("SUB", "@%28, #%29", 0x27, 0x28, 0x29);
+        TEST("SUB", "@R8, #%29",  0x27, R(8), 0x29);
+    }
 
-    TEST("SBC", "R3, R3",     0x32, 0x33);
-    TEST("SBC", "R3, @R4",    0x33, 0x34);
-    TEST("SBC", "%78, %56",   0x34, 0x56, 0x78);
-    TEST("SBC", "R8, %56",    0x34, 0x56, R(8));
-    TEST("SBC", "%78, R6",    0x34, R(6), 0x78);
-    TEST("SBC", "%37, @%36",  0x35, 0x36, 0x37);
-    TEST("SBC", "%37, @R6",   0x35, R(6), 0x37);
-    TEST("SBC", "R7, @%36",   0x35, 0x36, R(7));
-    TEST("SBC", "%37, #%38",  0x36, 0x37, 0x38);
-    TEST("SBC", "R7, #%38",   0x36, R(7), 0x38);
-    TZ86("SBC", "@%38, #%39", 0x37, 0x38, 0x39);
-    TZ86("SBC", "@R8, #%39",  0x37, R(8), 0x39);
+    TEST("SBC", "R3, R3",    0x32, 0x33);
+    TEST("SBC", "R3, @R4",   0x33, 0x34);
+    TEST("SBC", "%78, %56",  0x34, 0x56, 0x78);
+    TEST("SBC", "R8, %56",   0x34, 0x56, R(8));
+    TEST("SBC", "%78, R6",   0x34, R(6), 0x78);
+    TEST("SBC", "%37, @%36", 0x35, 0x36, 0x37);
+    TEST("SBC", "%37, @R6",  0x35, R(6), 0x37);
+    TEST("SBC", "R7, @%36",  0x35, 0x36, R(7));
+    TEST("SBC", "%37, #%38", 0x36, 0x37, 0x38);
+    TEST("SBC", "R7, #%38",  0x36, R(7), 0x38);
+    if (z86()) {
+        TEST("SBC", "@%38, #%39", 0x37, 0x38, 0x39);
+        TEST("SBC", "@R8, #%39",  0x37, R(8), 0x39);
+    }
 
-    TEST("OR",  "R4, R3",     0x42, 0x43);
-    TEST("OR",  "R4, @R4",    0x43, 0x44);
-    TEST("OR",  "%46, %45",   0x44, 0x45, 0x46);
-    TEST("OR",  "R6, %45",    0x44, 0x45, R(6));
-    TEST("OR",  "%46, R5",    0x44, R(5), 0x46);
-    TEST("OR",  "%89, @%67",  0x45, 0x67, 0x89);
-    TEST("OR",  "%89, @R7",   0x45, R(7), 0x89);
-    TEST("OR",  "R9, @%67",   0x45, 0x67, R(9));
-    TEST("OR",  "%47, #%48",  0x46, 0x47, 0x48);
-    TEST("OR",  "R7, #%48",   0x46, R(7), 0x48);
-    TZ86("OR",  "@%48, #%49", 0x47, 0x48, 0x49);
-    TZ86("OR",  "@R8, #%49",  0x47, R(8), 0x49);
+    TEST("OR",  "R4, R3",    0x42, 0x43);
+    TEST("OR",  "R4, @R4",   0x43, 0x44);
+    TEST("OR",  "%46, %45",  0x44, 0x45, 0x46);
+    TEST("OR",  "R6, %45",   0x44, 0x45, R(6));
+    TEST("OR",  "%46, R5",   0x44, R(5), 0x46);
+    TEST("OR",  "%89, @%67", 0x45, 0x67, 0x89);
+    TEST("OR",  "%89, @R7",  0x45, R(7), 0x89);
+    TEST("OR",  "R9, @%67",  0x45, 0x67, R(9));
+    TEST("OR",  "%47, #%48", 0x46, 0x47, 0x48);
+    TEST("OR",  "R7, #%48",  0x46, R(7), 0x48);
+    if (z86()) {
+        TEST("OR",  "@%48, #%49", 0x47, 0x48, 0x49);
+        TEST("OR",  "@R8, #%49",  0x47, R(8), 0x49);
+    }
 
-    TEST("AND", "R5, R3",     0x52, 0x53);
-    TEST("AND", "R5, @R4",    0x53, 0x54);
-    TEST("AND", "%56, %55",   0x54, 0x55, 0x56);
-    TEST("AND", "R6, %55",    0x54, 0x55, R(6));
-    TEST("AND", "%56, R5",    0x54, R(5), 0x56);
-    TEST("AND", "%57, @%56",  0x55, 0x56, 0x57);
-    TEST("AND", "%57, @R6",   0x55, R(6), 0x57);
-    TEST("AND", "R7, @%56",   0x55, 0x56, R(7));
-    TEST("AND", "%78, #%9A",  0x56, 0x78, 0x9A);
-    TEST("AND", "R8, #%9A",   0x56, R(8), 0x9A);
-    TZ86("AND", "@%58, #%59", 0x57, 0x58, 0x59);
-    TZ86("AND", "@R8, #%59",  0x57, R(8), 0x59);
+    TEST("AND", "R5, R3",    0x52, 0x53);
+    TEST("AND", "R5, @R4",   0x53, 0x54);
+    TEST("AND", "%56, %55",  0x54, 0x55, 0x56);
+    TEST("AND", "R6, %55",   0x54, 0x55, R(6));
+    TEST("AND", "%56, R5",   0x54, R(5), 0x56);
+    TEST("AND", "%57, @%56", 0x55, 0x56, 0x57);
+    TEST("AND", "%57, @R6",  0x55, R(6), 0x57);
+    TEST("AND", "R7, @%56",  0x55, 0x56, R(7));
+    TEST("AND", "%78, #%9A", 0x56, 0x78, 0x9A);
+    TEST("AND", "R8, #%9A",  0x56, R(8), 0x9A);
+    if (z86()) {
+        TEST("AND", "@%58, #%59", 0x57, 0x58, 0x59);
+        TEST("AND", "@R8, #%59",  0x57, R(8), 0x59);
+    }
 
-    TEST("TCM", "R6, R3",     0x62, 0x63);
-    TEST("TCM", "R6, @R4",    0x63, 0x64);
-    TEST("TCM", "%66, %65",   0x64, 0x65, 0x66);
-    TEST("TCM", "R6, %65",    0x64, 0x65, R(6));
-    TEST("TCM", "%66, R5",    0x64, R(5), 0x66);
-    TEST("TCM", "%67, @%66",  0x65, 0x66, 0x67);
-    TEST("TCM", "%67, @R6",   0x65, R(6), 0x67);
-    TEST("TCM", "R7, @%66",   0x65, 0x66, R(7));
-    TEST("TCM", "%67, #%68",  0x66, 0x67, 0x68);
-    TEST("TCM", "R7, #%68",   0x66, R(7), 0x68);
-    TZ86("TCM", "@%89, #%AB",0x67, 0x89, 0xAB);
-    TZ86("TCM", "@R9, #%AB", 0x67, R(9), 0xAB);
+    TEST("TCM", "R6, R3",    0x62, 0x63);
+    TEST("TCM", "R6, @R4",   0x63, 0x64);
+    TEST("TCM", "%66, %65",  0x64, 0x65, 0x66);
+    TEST("TCM", "R6, %65",   0x64, 0x65, R(6));
+    TEST("TCM", "%66, R5",   0x64, R(5), 0x66);
+    TEST("TCM", "%67, @%66", 0x65, 0x66, 0x67);
+    TEST("TCM", "%67, @R6",  0x65, R(6), 0x67);
+    TEST("TCM", "R7, @%66",  0x65, 0x66, R(7));
+    TEST("TCM", "%67, #%68", 0x66, 0x67, 0x68);
+    TEST("TCM", "R7, #%68",  0x66, R(7), 0x68);
+    if (z86()) {
+        TEST("TCM", "@%89, #%AB",0x67, 0x89, 0xAB);
+        TEST("TCM", "@R9, #%AB", 0x67, R(9), 0xAB);
+    }
 
-    TEST("TM",  "R7, R3",     0x72, 0x73);
-    TEST("TM",  "R7, @R4",    0x73, 0x74);
-    TEST("TM",  "%76, %75",   0x74, 0x75, 0x76);
-    TEST("TM",  "R6, %75",    0x74, 0x75, R(6));
-    TEST("TM",  "%76, R5",    0x74, R(5), 0x76);
-    TEST("TM",  "%77, @%76",  0x75, 0x76, 0x77);
-    TEST("TM",  "%77, @R6",   0x75, R(6), 0x77);
-    TEST("TM",  "R7, @%76",   0x75, 0x76, R(7));
-    TEST("TM",  "%77, #%78",  0x76, 0x77, 0x78);
-    TEST("TM",  "R7, #%78",   0x76, R(7), 0x78);
-    TZ86("TM",  "@%78, #%79", 0x77, 0x78, 0x79);
-    TZ86("TM",  "@R8, #%79",  0x77, R(8), 0x79);
+    TEST("TM",  "R7, R3",    0x72, 0x73);
+    TEST("TM",  "R7, @R4",   0x73, 0x74);
+    TEST("TM",  "%76, %75",  0x74, 0x75, 0x76);
+    TEST("TM",  "R6, %75",   0x74, 0x75, R(6));
+    TEST("TM",  "%76, R5",   0x74, R(5), 0x76);
+    TEST("TM",  "%77, @%76", 0x75, 0x76, 0x77);
+    TEST("TM",  "%77, @R6",  0x75, R(6), 0x77);
+    TEST("TM",  "R7, @%76",  0x75, 0x76, R(7));
+    TEST("TM",  "%77, #%78", 0x76, 0x77, 0x78);
+    TEST("TM",  "R7, #%78",  0x76, R(7), 0x78);
+    if (z86()) {
+        TEST("TM",  "@%78, #%79", 0x77, 0x78, 0x79);
+        TEST("TM",  "@R8, #%79",  0x77, R(8), 0x79);
+    }
 
-    TEST("CP",  "R10, R3",      0xA2, 0xA3);
-    TEST("CP",  "R10, @R4",     0xA3, 0xA4);
-    TEST("CP",  "%A6, %A5",   0xA4, 0xA5, 0xA6);
-    TEST("CP",  "R6, %A5",     0xA4, 0xA5, R(6));
-    TEST("CP",  "%A6, R5",     0xA4, R(5), 0xA6);
-    TEST("CP",  "%A7, @%A6",  0xA5, 0xA6, 0xA7);
-    TEST("CP",  "%A7, @R6",    0xA5, R(6), 0xA7);
-    TEST("CP",  "R7, @%A6",    0xA5, 0xA6, R(7));
-    TEST("CP",  "%A7, #%A8",  0xA6, 0xA7, 0xA8);
-    TEST("CP",  "R7, #%A8",    0xA6, R(7), 0xA8);
-    TZ86("CP",  "@%A8, #%A9", 0xA7, 0xA8, 0xA9);
-    TZ86("CP",  "@R8, #%A9",   0xA7, R(8), 0xA9);
+    TEST("CP",  "R10, R3",   0xA2, 0xA3);
+    TEST("CP",  "R10, @R4",  0xA3, 0xA4);
+    TEST("CP",  "%A6, %A5",  0xA4, 0xA5, 0xA6);
+    TEST("CP",  "R6, %A5",   0xA4, 0xA5, R(6));
+    TEST("CP",  "%A6, R5",   0xA4, R(5), 0xA6);
+    TEST("CP",  "%A7, @%A6", 0xA5, 0xA6, 0xA7);
+    TEST("CP",  "%A7, @R6",  0xA5, R(6), 0xA7);
+    TEST("CP",  "R7, @%A6",  0xA5, 0xA6, R(7));
+    TEST("CP",  "%A7, #%A8", 0xA6, 0xA7, 0xA8);
+    TEST("CP",  "R7, #%A8",  0xA6, R(7), 0xA8);
+    if (z86()) {
+        TEST("CP",  "@%A8, #%A9", 0xA7, 0xA8, 0xA9);
+        TEST("CP",  "@R8, #%A9",  0xA7, R(8), 0xA9);
+    }
 
-    TEST("XOR", "R11, R3",      0xB2, 0xB3);
-    TEST("XOR", "R11, @R4",     0xB3, 0xB4);
-    TEST("XOR", "%B6, %B5",   0xB4, 0xB5, 0xB6);
-    TEST("XOR", "R6, %B5",     0xB4, 0xB5, R(6));
-    TEST("XOR", "%B6, R5",     0xB4, R(5), 0xB6);
-    TEST("XOR", "%B7, @%B6",  0xB5, 0xB6, 0xB7);
-    TEST("XOR", "%B7, @R6",    0xB5, R(6), 0xB7);
-    TEST("XOR", "R7, @%B6",    0xB5, 0xB6, R(7));
-    TEST("XOR", "%B7, #%B8",  0xB6, 0xB7, 0xB8);
-    TEST("XOR", "R7, #%B8",    0xB6, R(7), 0xB8);
-    TZ86("XOR", "@%B8, #%B9", 0xB7, 0xB8, 0xB9);
-    TZ86("XOR", "@R8, #%B9",   0xB7, R(8), 0xB9);
- 
-    TZ88("DIV",  "%96, %95",   0x94, 0x95, 0x96);
-    TZ88("DIV",  "RR6, R5",    0x94, R(5), R(6));
-    TZ88("DIV",  "%98, @%96",  0x95, 0x96, 0x98);
-    TZ88("DIV",  "RR8, @R6",   0x95, R(6), R(8));
-    TZ88("DIV",  "%98, #%97",  0x96, 0x97, 0x98);
-    TZ88("DIV",  "RR8, #%97",  0x96, 0x97, R(8));
-    TZ88("MULT", "%86, %85",   0x84, 0x85, 0x86);
-    TZ88("MULT", "RR6, R5",    0x84, R(5), R(6));
-    TZ88("MULT", "%88, @%86",  0x85, 0x86, 0x88);
-    TZ88("MULT", "RR8, @R6",   0x85, R(6), R(8));
-    TZ88("MULT", "%88, #%87",  0x86, 0x87, 0x88);
-    TZ88("MULT", "RR8, #%87",  0x86, 0x87, R(8));
+    TEST("XOR", "R11, R3",   0xB2, 0xB3);
+    TEST("XOR", "R11, @R4",  0xB3, 0xB4);
+    TEST("XOR", "%B6, %B5",  0xB4, 0xB5, 0xB6);
+    TEST("XOR", "R6, %B5",   0xB4, 0xB5, R(6));
+    TEST("XOR", "%B6, R5",   0xB4, R(5), 0xB6);
+    TEST("XOR", "%B7, @%B6", 0xB5, 0xB6, 0xB7);
+    TEST("XOR", "%B7, @R6",  0xB5, R(6), 0xB7);
+    TEST("XOR", "R7, @%B6",  0xB5, 0xB6, R(7));
+    TEST("XOR", "%B7, #%B8", 0xB6, 0xB7, 0xB8);
+    TEST("XOR", "R7, #%B8",  0xB6, R(7), 0xB8);
+    if (z86()) {
+        TEST("XOR", "@%B8, #%B9", 0xB7, 0xB8, 0xB9);
+        TEST("XOR", "@R8, #%B9",  0xB7, R(8), 0xB9);
+    }
 
-    TZ86("LD", "R14, @R4",    0xE3, 0xE4);
-    TZ88("LD", "R14, @R4",    0xC7, 0xE4);
-    TEST("LD", "%36, %35",    0xE4, 0x35, 0x36);
-    TEST("LD", "%37, @%36",   0xE5, 0x36, 0x37);
-    TEST("LD", "%37, #%38",   0xE6, 0x37, 0x38);
-    TZ86("LD", "@%38, #%39",  0xE7, 0x38, 0x39);
-    TZ88("LD", "@%38, #%39",  0xD6, 0x38, 0x39);
-    TEST("LD", "R6, R5",      0xE4, R(5), R(6));
-    TEST("LD", "R7, @R6",     0xE5, R(6), R(7));
-    TEST("LD", "R7, #%E8",   0xE6, R(7), 0xE8);
-    TZ86("LD", "@R8, #%E9",  0xE7, R(8), 0xE9);
-    TZ88("LD", "@R8, #%E9",  0xD6, R(8), 0xE9);
-    TZ86("LD", "@R15, R4",    0xF3, 0xF4);
-    TZ88("LD", "@R15, R4",    0xD7, 0xF4);
+    if (z88()) {
+        TEST("DIV",  "%96, %95",  0x94, 0x95, 0x96);
+        TEST("DIV",  "RR6, R5",   0x94, R(5), R(6));
+        TEST("DIV",  "%98, @%96", 0x95, 0x96, 0x98);
+        TEST("DIV",  "RR8, @R6",  0x95, R(6), R(8));
+        TEST("DIV",  "%98, #%97", 0x96, 0x97, 0x98);
+        TEST("DIV",  "RR8, #%97", 0x96, 0x97, R(8));
+        TEST("MULT", "%86, %85",  0x84, 0x85, 0x86);
+        TEST("MULT", "RR6, R5",   0x84, R(5), R(6));
+        TEST("MULT", "%88, @%86", 0x85, 0x86, 0x88);
+        TEST("MULT", "RR8, @R6",  0x85, R(6), R(8));
+        TEST("MULT", "%88, #%87", 0x86, 0x87, 0x88);
+        TEST("MULT", "RR8, #%87", 0x86, 0x87, R(8));
+    }
+
+    if (z86()) {
+        TEST("LD", "R14, @R4", 0xE3, 0xE4);
+    } else {
+        TEST("LD", "R14, @R4", 0xC7, 0xE4);
+    }
+    TEST("LD", "%36, %35",  0xE4, 0x35, 0x36);
+    TEST("LD", "%37, @%36", 0xE5, 0x36, 0x37);
+    TEST("LD", "%37, #%38", 0xE6, 0x37, 0x38);
+    if (z86()) {
+        TEST("LD", "@%38, #%39", 0xE7, 0x38, 0x39);
+    } else {
+        TEST("LD", "@%38, #%39", 0xD6, 0x38, 0x39);
+    }
+    TEST("LD", "R6, R5",   0xE4, R(5), R(6));
+    TEST("LD", "R7, @R6",  0xE5, R(6), R(7));
+    TEST("LD", "R7, #%E8", 0xE6, R(7), 0xE8);
+    if (z86()) {
+        TEST("LD", "@R8, #%E9", 0xE7, R(8), 0xE9);
+        TEST("LD", "@R15, R4",  0xF3, 0xF4);
+    } else {
+        TEST("LD", "@R8, #%E9", 0xD6, R(8), 0xE9);
+        TEST("LD", "@R15, R4",  0xD7, 0xF4);
+    }
     TEST("LD", "@%B7, %F0", 0xF5, 0xF0, 0xB7);
-    TEST("LD", "@R7, %F0",   0xF5, 0xF0, R(7));
+    TEST("LD", "@R7, %F0",  0xF5, 0xF0, R(7));
 
-    TZ88("LDW", "%34, %12",    0xC4, 0x12, 0x34);
-    TZ88("LDW", "%34, @%12",   0xC5, 0x12, 0x34);
-    TZ88("LDW", "%12, #%3456", 0xC6, 0x12, 0x34, 0x56);
-    TZ88("LDW", "RR4, RR2",    0xC4, R(2), R(4));
-    TZ88("LDW", "RR4, @R2",    0xC5, R(2), R(4));
-    TZ88("LDW", "RR2, #%3456", 0xC6, R(2), 0x34, 0x56);
+    if (z88()) {
+        TEST("LDW", "%34, %12",    0xC4, 0x12, 0x34);
+        TEST("LDW", "%34, @%12",   0xC5, 0x12, 0x34);
+        TEST("LDW", "%12, #%3456", 0xC6, 0x12, 0x34, 0x56);
+        TEST("LDW", "RR4, RR2",    0xC4, R(2), R(4));
+        TEST("LDW", "RR4, @R2",    0xC5, R(2), R(4));
+        TEST("LDW", "RR2, #%3456", 0xC6, R(2), 0x34, 0x56);
+    }
 
-    TZ86("LDC", "R11, @RR4", 0xC2, 0xB4);
-    TZ88("LDC", "R11, @RR4", 0xC3, 0xB4);
-    TZ86("LDC", "@RR4, R13", 0xD2, 0xD4);
-    TZ88("LDC", "@RR4, R13", 0xD3, 0xD4);
-    TZ86("LDE", "R7, @RR4",  0x82, 0x74);
-    TZ88("LDE", "R7, @RR4",  0xC3, 0x75);
-    TZ86("LDE", "@RR4, R9",  0x92, 0x94);
-    TZ88("LDE", "@RR4, R9",  0xD3, 0x95);
+    if (z86()) {
+        TEST("LDC", "R11, @RR4", 0xC2, 0xB4);
+        TEST("LDC", "@RR4, R13", 0xD2, 0xD4);
+        TEST("LDE", "R7, @RR4",  0x82, 0x74);
+        TEST("LDE", "@RR4, R9",  0x92, 0x94);
+    } else {
+        TEST("LDC", "R11, @RR4", 0xC3, 0xB4);
+        TEST("LDC", "@RR4, R13", 0xD3, 0xD4);
+        TEST("LDE", "R7, @RR4",  0xC3, 0x75);
+        TEST("LDE", "@RR4, R9",  0xD3, 0x95);
+    }
 
-    TZ86("LDCI", "@R11, @RR4", 0xC3, 0xB4);
-    TZ86("LDCI", "@RR4, @R13", 0xD3, 0xD4);
-    TZ86("LDEI", "@R7, @RR4",  0x83, 0x74);
-    TZ86("LDEI", "@RR4, @R9",  0x93, 0x94);
+    if (z86()) {
+        TEST("LDCI", "@R11, @RR4", 0xC3, 0xB4);
+        TEST("LDCI", "@RR4, @R13", 0xD3, 0xD4);
+        TEST("LDEI", "@R7, @RR4",  0x83, 0x74);
+        TEST("LDEI", "@RR4, @R9",  0x93, 0x94);
+    } else {
+        TEST("LDCI", "R11, @RR4",  0xE3, 0xB4);
+        TEST("LDEI", "R7, @RR4",   0xE3, 0x75);
+        TEST("LDC", "R10, %A2A1",  0xA7, 0xA0, 0xA1, 0xA2);
+        TEST("LDE", "R10, %A3A2",  0xA7, 0xA1, 0xA2, 0xA3);
+        TEST("LDC", "%B2B1, R11",  0xB7, 0xB0, 0xB1, 0xB2);
+        TEST("LDE", "%B3B2, R11",  0xB7, 0xB1, 0xB2, 0xB3);
+        TEST("LDCD", "R15, @RR2",  0xE2, 0xF2);
+        TEST("LDED", "R15, @RR2",  0xE2, 0xF3);
+        TEST("LDCPD", "@RR2, R15", 0xF2, 0xF2);
+        TEST("LDEPD", "@RR2, R15", 0xF2, 0xF3);
+        TEST("LDCPI", "@RR4, R15", 0xF3, 0xF4);
+        TEST("LDEPI", "@RR4, R15", 0xF3, 0xF5);
 
-    TZ88("LDCI", "R11, @RR4",  0xE3, 0xB4);
-    TZ88("LDEI", "R7, @RR4",   0xE3, 0x75);
-    TZ88("LDC", "R10, %A2A1",  0xA7, 0xA0, 0xA1, 0xA2);
-    TZ88("LDE", "R10, %A3A2",  0xA7, 0xA1, 0xA2, 0xA3);
-    TZ88("LDC", "%B2B1, R11",  0xB7, 0xB0, 0xB1, 0xB2);
-    TZ88("LDE", "%B3B2, R11",  0xB7, 0xB1, 0xB2, 0xB3);
-    TZ88("LDCD", "R15, @RR2",  0xE2, 0xF2);
-    TZ88("LDED", "R15, @RR2",  0xE2, 0xF3);
-    TZ88("LDCPD", "@RR2, R15", 0xF2, 0xF2);
-    TZ88("LDEPD", "@RR2, R15", 0xF2, 0xF3);
-    TZ88("LDCPI", "@RR4, R15", 0xF3, 0xF4);
-    TZ88("LDEPI", "@RR4, R15", 0xF3, 0xF5);
-
-    TZ88("PUSHUD", "@%23, %45", 0x82, 0x23, 0x45);
-    TZ88("PUSHUI", "@%23, %45", 0x83, 0x23, 0x45);
-    TZ88("PUSHUD", "@R2, R3",   0x82, 0xC2, 0xC3);
-    TZ88("PUSHUI", "@R2, R3",   0x83, 0xC2, 0xC3);
-    TZ88("POPUD",  "%23, @%45", 0x92, 0x45, 0x23);
-    TZ88("POPUI",  "%23, @%45", 0x93, 0x45, 0x23);
-    TZ88("POPUD",  "R2, @R3" ,  0x92, 0xC3, 0xC2);
-    TZ88("POPUI",  "R2, @R3",   0x93, 0xC3, 0xC2);
-
+        TEST("PUSHUD", "@%23, %45", 0x82, 0x23, 0x45);
+        TEST("PUSHUI", "@%23, %45", 0x83, 0x23, 0x45);
+        TEST("PUSHUD", "@R2, R3",   0x82, 0xC2, 0xC3);
+        TEST("PUSHUI", "@R2, R3",   0x83, 0xC2, 0xC3);
+        TEST("POPUD",  "%23, @%45", 0x92, 0x45, 0x23);
+        TEST("POPUI",  "%23, @%45", 0x93, 0x45, 0x23);
+        TEST("POPUD",  "R2, @R3" ,  0x92, 0xC3, 0xC2);
+        TEST("POPUI",  "R2, @R3",   0x93, 0xC3, 0xC2);
+    }
 }
 
 static void test_indexed() {
-    TZ86("LD", "R12, %C9(R8)", 0xC7, 0xC8, 0xC9);
-    TZ88("LD", "R12, %C9(R8)", 0x87, 0xC8, 0xC9);
-    TZ86("LD", "%D9(R8), R13", 0xD7, 0xD8, 0xD9);
-    TZ88("LD", "%D9(R8), R13", 0x97, 0xD8, 0xD9);
+    if (z86()) {
+        TEST("LD", "R12, %C9(R8)", 0xC7, 0xC8, 0xC9);
+        TEST("LD", "%D9(R8), R13", 0xD7, 0xD8, 0xD9);
+    } else {
+        TEST("LD", "R12, %C9(R8)", 0x87, 0xC8, 0xC9);
+        TEST("LD", "%D9(R8), R13", 0x97, 0xD8, 0xD9);
 
-    TZ88("LDC", "R14, +127(RR8)",   0xE7, 0xE8, 0x7F);
-    TZ88("LDE", "R14, -128(RR8)",   0xE7, 0xE9, 0x80);
-    TZ88("LDC", "0(RR8), R15",      0xF7, 0xF8, 0x00);
-    TZ88("LDE", "-1(RR8), R15",     0xF7, 0xF9, 0xFF);
-    TZ88("LDC", "R10, %0080(RR8)",  0xA7, 0xA8, 0x80, 0x00);
-    TZ88("LDE", "R10, %ABAA(RR8)",  0xA7, 0xA9, 0xAA, 0xAB);
-    TZ88("LDC", "%FF80(RR8), R11",  0xB7, 0xB8, 0x80, 0xFF);
-    TZ88("LDE", "%BBBA(RR8), R11",  0xB7, 0xB9, 0xBA, 0xBB);
+        TEST("LDC", "R14, +127(RR8)",  0xE7, 0xE8, 0x7F);
+        TEST("LDE", "R14, -128(RR8)",  0xE7, 0xE9, 0x80);
+        TEST("LDC", "0(RR8), R15",     0xF7, 0xF8, 0x00);
+        TEST("LDE", "-1(RR8), R15",    0xF7, 0xF9, 0xFF);
+        TEST("LDC", "R10, %0080(RR8)", 0xA7, 0xA8, 0x80, 0x00);
+        TEST("LDE", "R10, %ABAA(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
+        TEST("LDC", "%FF80(RR8), R11", 0xB7, 0xB8, 0x80, 0xFF);
+        TEST("LDE", "%BBBA(RR8), R11", 0xB7, 0xB9, 0xBA, 0xBB);
+    }
 
     symtab.intern(0xC9, "bufC9");
     symtab.intern(0xABAA, "table");
 
-    TZ86("LD", "R12, bufC9(R8)",   0xC7, 0xC8, 0xC9);
-    TZ88("LD", "R12, bufC9(R8)",   0x87, 0xC8, 0xC9);
-    TZ88("LDE", "R10, table(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
+    if (z86()) {
+        TEST("LD", "R12, bufC9(R8)",   0xC7, 0xC8, 0xC9);
+    } else {
+        TEST("LD", "R12, bufC9(R8)",   0x87, 0xC8, 0xC9);
+        TEST("LDE", "R10, table(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
+    }
 }
 
 static void test_setrp() {
-    TZ86("SRP", "#%30", 0x31, 0x30);
-    OZ86("SRP", "#%31", 0x31, 0x31);
-    OZ86("SRP", "#%32", 0x31, 0x32);
-    OZ86("SRP", "#%33", 0x31, 0x33);
-    OZ86("SRP", "#%34", 0x31, 0x34);
-    OZ86("SRP", "#%35", 0x31, 0x35);
-    OZ86("SRP", "#%36", 0x31, 0x36);
-    OZ86("SRP", "#%37", 0x31, 0x37);
-    OZ86("SRP", "#%38", 0x31, 0x38);
-    OZ86("SRP", "#%39", 0x31, 0x39);
-    OZ86("SRP", "#%3A", 0x31, 0x3A);
-    OZ86("SRP", "#%3B", 0x31, 0x3B);
-    OZ86("SRP", "#%3C", 0x31, 0x3C);
-    OZ86("SRP", "#%3D", 0x31, 0x3D);
-    OZ86("SRP", "#%3E", 0x31, 0x3E);
-    OZ86("SRP", "#%3F", 0x31, 0x3F);
-    TZ86("SRP", "#%40", 0x31, 0x40);
-
-    TZ88("SRP",  "#%30", 0x31, 0x30);
-    TZ88("SRP1", "#%30", 0x31, 0x31);
-    TZ88("SRP0", "#%30", 0x31, 0x32);
-    UZ88("SRP",  "#%33", 0x31, 0x33);
-    OZ88("SRP",  "#%34", 0x31, 0x34);
-    OZ88("SRP1", "#%34", 0x31, 0x35);
-    OZ88("SRP0", "#%34", 0x31, 0x36);
-    UZ88("SRP",  "#%37", 0x31, 0x37);
-    OZ88("SRP",  "#%38", 0x31, 0x38);
-    TZ88("SRP1", "#%38", 0x31, 0x39);
-    TZ88("SRP0", "#%38", 0x31, 0x3A);
-    UZ88("SRP",  "#%3B", 0x31, 0x3B);
-    OZ88("SRP",  "#%3C", 0x31, 0x3C);
-    OZ88("SRP1", "#%3C", 0x31, 0x3D);
-    OZ88("SRP0", "#%3C", 0x31, 0x3E);
-    UZ88("SRP",  "#%3F", 0x31, 0x3F);
-    TZ88("SRP",  "#%40", 0x31, 0x40);
+    if (z86()) {
+        TEST("SRP", "#%30",                      0x31, 0x30);
+        ERRT("SRP", "#%31", OPERAND_NOT_ALLOWED, 0x31, 0x31);
+        ERRT("SRP", "#%32", OPERAND_NOT_ALLOWED, 0x31, 0x32);
+        ERRT("SRP", "#%33", OPERAND_NOT_ALLOWED, 0x31, 0x33);
+        ERRT("SRP", "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x34);
+        ERRT("SRP", "#%35", OPERAND_NOT_ALLOWED, 0x31, 0x35);
+        ERRT("SRP", "#%36", OPERAND_NOT_ALLOWED, 0x31, 0x36);
+        ERRT("SRP", "#%37", OPERAND_NOT_ALLOWED, 0x31, 0x37);
+        ERRT("SRP", "#%38", OPERAND_NOT_ALLOWED, 0x31, 0x38);
+        ERRT("SRP", "#%39", OPERAND_NOT_ALLOWED, 0x31, 0x39);
+        ERRT("SRP", "#%3A", OPERAND_NOT_ALLOWED, 0x31, 0x3A);
+        ERRT("SRP", "#%3B", OPERAND_NOT_ALLOWED, 0x31, 0x3B);
+        ERRT("SRP", "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3C);
+        ERRT("SRP", "#%3D", OPERAND_NOT_ALLOWED, 0x31, 0x3D);
+        ERRT("SRP", "#%3E", OPERAND_NOT_ALLOWED, 0x31, 0x3E);
+        ERRT("SRP", "#%3F", OPERAND_NOT_ALLOWED, 0x31, 0x3F);
+        TEST("SRP", "#%40",                      0x31, 0x40);
+    } else {
+        TEST("SRP",  "#%30",                      0x31, 0x30);
+        TEST("SRP1", "#%30",                      0x31, 0x31);
+        TEST("SRP0", "#%30",                      0x31, 0x32);
+        UNKN(                                     0x31, 0x33);
+        ERRT("SRP",  "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x34);
+        ERRT("SRP1", "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x35);
+        ERRT("SRP0", "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x36);
+        UNKN(                                     0x31, 0x37);
+        ERRT("SRP",  "#%38", OPERAND_NOT_ALLOWED, 0x31, 0x38);
+        TEST("SRP1", "#%38",                      0x31, 0x39);
+        TEST("SRP0", "#%38",                      0x31, 0x3A);
+        UNKN(                                     0x31, 0x3B);
+        ERRT("SRP",  "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3C);
+        ERRT("SRP1", "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3D);
+        ERRT("SRP0", "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3E);
+        UNKN(                                     0x31, 0x3F);
+        TEST("SRP",  "#%40",                      0x31, 0x40);
+    }
 }
 
 static void test_bit_operation() {

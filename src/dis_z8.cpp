@@ -119,7 +119,7 @@ Error DisZ8::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         const auto indir = (mode == M_IR || mode == M_IRR);
         if (pair) {
             if (val % 2)
-                return setErrorIf(ILLEGAL_REGISTER);
+                setErrorIf(OPERAND_NOT_ALIGNED);
             outPairAddr(out, val, indir);
         } else {
             outRegAddr(out, val, indir);
@@ -129,7 +129,7 @@ Error DisZ8::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         if (post == PF2_0 || post == PF2_1 || post == PF2_2)
             val &= ~3;
         if (post == PF_NONE && insn.opCode() == TableZ8::SRP && (val & ~0xF0) != 0)
-            return setErrorIf(OPERAND_NOT_ALLOWED);
+            setErrorIf(OPERAND_NOT_ALLOWED);
         outHex(out.letter('#'), val, 8);
     }
     return getError();
@@ -183,7 +183,7 @@ Error DisZ8::decodeIndexed(DisInsn &insn, StrBuffer &out, uint8_t opr1) {
     setErrorIf(insn);
     const auto idx = pair ? decodePairRegNum(opr1) : decodeRegNum(opr1);
     if (idx == REG_UNDEF)
-        return setErrorIf(ILLEGAL_REGISTER);
+        setErrorIf(ILLEGAL_REGISTER);
     if (dst == M_r) {
         outWorkReg(out, opr1 >> 4);
     } else {
@@ -204,7 +204,7 @@ Error DisZ8::decodeIndirectRegPair(DisInsn &insn, StrBuffer &out) {
     const uint8_t reg1 = opr & 0xF;
     const uint8_t reg2 = opr >> 4;
     if (reg1 % 2)
-        return setErrorIf(ILLEGAL_REGISTER);
+        setErrorIf(OPERAND_NOT_ALIGNED);
     const auto dst = insn.dst();
     if (dst == M_Irr) {
         outPairReg(out, reg1, true);
@@ -258,7 +258,7 @@ Error DisZ8::decodeTwoOperands(DisInsn &insn, StrBuffer &out) {
         const auto val16 = insn.readUint16();
         setErrorIf(insn);
         if (opr1 % 2)
-            return setErrorIf(ILLEGAL_REGISTER);
+            setErrorIf(OPERAND_NOT_ALIGNED);
         outPairAddr(out, opr1).comma().letter('#');
         outHex(out, val16, 16);
         return getError();
@@ -275,7 +275,7 @@ Error DisZ8::decodeTwoOperands(DisInsn &insn, StrBuffer &out) {
     const auto srcReg = dstFirst ? opr2 : opr1;
     if (dst == M_RR) {
         if (dstReg % 2)
-            return setErrorIf(ILLEGAL_REGISTER);
+            setErrorIf(OPERAND_NOT_ALIGNED);
         outPairAddr(out, dstReg);
     } else {
         outRegAddr(out, dstReg, dst == M_IR);
@@ -285,7 +285,7 @@ Error DisZ8::decodeTwoOperands(DisInsn &insn, StrBuffer &out) {
         outHex(out.letter('#'), srcReg, 8);
     } else if (src == M_RR) {
         if (srcReg % 2)
-            return setError(ILLEGAL_REGISTER);
+            setError(OPERAND_NOT_ALIGNED);
         outPairAddr(out, srcReg);
     } else {
         outRegAddr(out, srcReg, src == M_IR);
@@ -300,11 +300,11 @@ Error DisZ8::decodePostByte(DisInsn &insn, StrBuffer &out) {
     if (insn.opCode() == TableZ8::SRP) {
         const auto format = insn.postFormat();
         if (format == PF2_0 && (post & ~0xF0) != 0x00)
-            return setError(OPERAND_NOT_ALLOWED);
+            setError(OPERAND_NOT_ALLOWED);
         if (format == PF2_1 && (post & ~0xF8) != 0x01)
-            return setError(OPERAND_NOT_ALLOWED);
+            setError(OPERAND_NOT_ALLOWED);
         if (format == PF2_2 && (post & ~0xF8) != 0x02)
-            return setError(OPERAND_NOT_ALLOWED);
+            setError(OPERAND_NOT_ALLOWED);
         return decodeOperand(insn, out, dst);
     }
     if (dst == M_DA || src == M_DA) {  // P4: LDC, LDE
