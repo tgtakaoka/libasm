@@ -18,13 +18,11 @@
 
 #include "reg_tms9900.h"
 #include "table_tms9900.h"
-#include "text_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
 
 using namespace reg;
-using text::tms9900::TEXT_MID;
 
 const ValueFormatter::Plugins &DisTms9900::defaultPlugins() {
     return ValueFormatter::Plugins::texas();
@@ -35,7 +33,7 @@ DisTms9900::DisTms9900(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisTms9900::checkPostWord(DisInsn &insn, StrBuffer &out) {
+Error DisTms9900::checkPostWord(DisInsn &insn) {
     const auto post = insn.post();
     const auto src = (post >> 4 & 3);
     switch (insn.dst()) {
@@ -55,13 +53,6 @@ Error DisTms9900::checkPostWord(DisInsn &insn, StrBuffer &out) {
     default:
         return OK;
     }
-    return decodeMacroInstructionDetect(insn, out);
-}
-
-Error DisTms9900::decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out) {
-    auto save = out;
-    insn.nameBuffer().reset().over(out).text_P(TEXT_MID).over(insn.nameBuffer());
-    save.over(out);
     return setErrorIf(UNKNOWN_INSTRUCTION);
 }
 
@@ -110,7 +101,7 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outRegName(out, opc >> 6);
         return OK;
     case M_SRC2:
-        if (checkPostWord(insn, out))
+        if (checkPostWord(insn))
             return getError();
         /* Fall-through */
     case M_SRC:
@@ -151,15 +142,13 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         return OK;
     case M_RTWP:
         val8 = opc & 7;
-        if (val8 == 0 || val8 == 1 || val8 == 2 || val8 == 4) {
-            if (val8)
-                outHex(out, val8, 7);
-            return OK;
-        }
-        return decodeMacroInstructionDetect(insn, out);
+        if (val8)
+            outHex(out, val8, 7);
+        break;
     default:
-        return OK;
+        break;
     }
+    return getError();
 }
 
 Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
@@ -167,18 +156,17 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto opCode = insn.readUint16();
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return decodeMacroInstructionDetect(insn, out);
+        return setError(insn);
 
     insn.readPost();
     if (setError(insn))
         return getError();
 
     const auto src = insn.src();
-    if (decodeOperand(insn, out, src))
-        return getError();
+    decodeOperand(insn, out, src);
     const auto dst = insn.dst();
     if (dst == M_NONE)
-        return OK;
+        return getError();
     out.comma();
     return decodeOperand(insn, out, dst);
 }

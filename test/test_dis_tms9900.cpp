@@ -88,9 +88,9 @@ static void test_inh() {
         TEST("RTWP", "2", 0x0382);
         TEST("RTWP", "4", 0x0384);
     } else {
-        ERRT("RTWP", "1", UNKNOWN_INSTRUCTION, 0x0381);
-        ERRT("RTWP", "2", UNKNOWN_INSTRUCTION, 0x0382);
-        ERRT("RTWP", "4", UNKNOWN_INSTRUCTION, 0x0384);
+        UNKN(0x0381);
+        UNKN(0x0382);
+        UNKN(0x0384);
     }
 }
 
@@ -110,8 +110,8 @@ static void test_reg() {
     TEST("STST", "R15", 0x02CF);
 
     if (is9900()) {
-        ERRT("LST", "R0", UNKNOWN_INSTRUCTION, 0x0080);
-        ERRT("LWP", "R1", UNKNOWN_INSTRUCTION, 0x0091);
+        UNKN(0x0080);
+        UNKN(0x0091);
     } else {
         // TMS9995
         TEST("LST", "R0", 0x0080);
@@ -163,24 +163,24 @@ static void test_src() {
     TEST("ABS",  "@8(R3)", 0x0763, 0x0008);
 
     if (is9900()) {
-        ERRT("DIVS", "R2",         UNKNOWN_INSTRUCTION, 0x0182);
-        ERRT("DIVS", "*R3",        UNKNOWN_INSTRUCTION, 0x0193);
-        ERRT("DIVS", "@>1234",     UNKNOWN_INSTRUCTION, 0x01A0, 0x1234);
-        ERRT("DIVS", "@>1000(R4)", UNKNOWN_INSTRUCTION, 0x01A4, 0x1000);
-        ERRT("DIVS", "*R5+",       UNKNOWN_INSTRUCTION, 0x01B5);
-        ERRT("MPYS", "R0",         UNKNOWN_INSTRUCTION, 0x01C0);
-        ERRT("MPYS", "@2(R8)",     UNKNOWN_INSTRUCTION, 0x01E8, 0x0002);
-        ERRT("MPYS", "*R15+",      UNKNOWN_INSTRUCTION, 0x01FF);
+        UNKN(0x0182);
+        UNKN(0x0193);
+        UNKN(0x01A0);
+        UNKN(0x01A4);
+        UNKN(0x01B5);
+        UNKN(0x01C0);
+        UNKN(0x01E8);
+        UNKN(0x01FF);
     } else {
         // TMS9995
-        TEST("DIVS", "R2",     0x0182);
-        TEST("DIVS", "*R3",    0x0193);
-        TEST("DIVS", "@>1234", 0x01A0, 0x1234);
+        TEST("DIVS", "R2",         0x0182);
+        TEST("DIVS", "*R3",        0x0193);
+        TEST("DIVS", "@>1234",     0x01A0, 0x1234);
         TEST("DIVS", "@>1000(R4)", 0x01A4, 0x1000);
-        TEST("DIVS", "*R5+",   0x01B5);
-        TEST("MPYS", "R0",     0x01C0);
-        TEST("MPYS", "@2(R8)", 0x01E8, 0x0002);
-        TEST("MPYS", "*R15+",  0x01FF);
+        TEST("DIVS", "*R5+",       0x01B5);
+        TEST("MPYS", "R0",         0x01C0);
+        TEST("MPYS", "@2(R8)",     0x01E8, 0x0002);
+        TEST("MPYS", "*R15+",      0x01FF);
     }
 
     if (is99105()) {
@@ -191,11 +191,11 @@ static void test_src() {
         TEST("BIND", "@>2223(R1)",     0x0161, 0x2223);
         TEST("EVAD", "R5",             0x0105);
     } else {
-        ERRT("TMB",  "@>0123(R15), 7", UNKNOWN_INSTRUCTION, 0x0C09, 0x01EF, 0x0123);
-        ERRT("TCMB", "R0, 0",          UNKNOWN_INSTRUCTION, 0x0C0A, 0x0000);
-        ERRT("TSMB", "*R2, 15",        UNKNOWN_INSTRUCTION, 0x0C0B, 0x03D2);
-        ERRT("BIND", "@>2223(R1)",     UNKNOWN_INSTRUCTION, 0x0161, 0x2223);
-        ERRT("EVAD", "R5",             UNKNOWN_INSTRUCTION, 0x0105);
+        UNKN(0x0C09);
+        UNKN(0x0C0A);
+        UNKN(0x0C0B);
+        UNKN(0x0161);
+        UNKN(0x0105);
     }
 
     symtab.intern(-2, "neg2");
@@ -249,8 +249,8 @@ static void test_cnt_src() {
         TEST("SLAM", "R11, R0",          0x001D, 0x400B);
         TEST("SLAM", "*R13+, 1",         0x001D, 0x407D);
     } else {
-        ERRT("SRAM", "", UNKNOWN_INSTRUCTION, 0x001C);
-        ERRT("SLAM", "", UNKNOWN_INSTRUCTION, 0x001D);
+        UNKN(0x001C);
+        UNKN(0x001D);
     }
 }
 
@@ -301,8 +301,8 @@ static void test_dst_src() {
         TEST("AM", "@sym1234, @sym5678(R11)",      0x002A, 0x4AE0, 0x1234, 0x5678);
         TEST("AM", "@sym1234(R10), @sym5678",      0x002A, 0x482A, 0x1234, 0x5678);
     } else {
-        ERRT("SM", "", UNKNOWN_INSTRUCTION, 0x0029);
-        ERRT("AM", "", UNKNOWN_INSTRUCTION, 0x002A);
+        UNKN(0x0029);
+        UNKN(0x002A);
     }
 }
 
@@ -352,11 +352,11 @@ static void test_cru_off() {
     TEST("TB",  "off_128", 0x1F80);
 }
 
-struct mid_range {
+struct illegal_range {
     uint16_t start;
     uint16_t end;
 };
-struct mid_hole {
+struct illegal_hole {
     uint16_t mask;
     uint16_t start;
     uint16_t end;
@@ -384,13 +384,13 @@ static uint16_t validPostWord(uint16_t opCode) {
 }
 
 // Macro Instruction Detect
-static void assert_mid(
-    const mid_range *ranges, const mid_range *end,
-    const uint16_t prefix = 0, const mid_hole *hole = nullptr) {
+static void assert_illegal(
+    const illegal_range *ranges, const illegal_range *end,
+    const uint16_t prefix = 0, const illegal_hole *hole = nullptr) {
     uint16_t words[4] = { 0, 0, 0, 0 };
     Insn insn(0x1000);
     char operands[40], message[40];
-    const mid_range *m = ranges;
+    const illegal_range *m = ranges;
     if (prefix) words[0] = prefix;
     const uint8_t pos = prefix ? 1 : 0;
 
@@ -417,7 +417,6 @@ static void assert_mid(
                     sprintf(message, "%04X is MID", code);
                 }
                 EQUALS(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-                EQUALS(message, "MID", insn.name());
             } else {
                 if (prefix) {
                     sprintf(message, "%04X,%04X is not MID", prefix, code);
@@ -425,14 +424,13 @@ static void assert_mid(
                     sprintf(message, "%04X is not MID", code);
                 }
                 EQUALS(message, OK, disassembler.getError());
-                NOT_EQUALS(message, "MID", insn.name());
             }
         }
     }
 }
 
-static void test_mid_tms9900() {
-    static const mid_range mids[] = {
+static void test_illegal_tms9900() {
+    static const illegal_range mids[] = {
         { 0x0000, 0x01ff },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
         { 0x0290, 0x029f }, { 0x02b0, 0x02bf }, { 0x02d0, 0x02df }, { 0x02e1, 0x02ff },
@@ -441,11 +439,11 @@ static void test_mid_tms9900() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
 
-    assert_mid(mids, std::end(mids));
+    assert_illegal(mids, std::end(mids));
 }
 
-static void test_mid_tms9995() {
-    static const mid_range mids[] = {
+static void test_illegal_tms9995() {
+    static const illegal_range mids[] = {
         { 0x0000, 0x007f }, { 0x00A0, 0x017f },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
         { 0x0290, 0x029f }, { 0x02b0, 0x02bf }, { 0x02d0, 0x02df }, { 0x02e1, 0x02ff },
@@ -454,11 +452,11 @@ static void test_mid_tms9995() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
 
-    assert_mid(mids, std::end(mids));
+    assert_illegal(mids, std::end(mids));
 }
 
-static void test_mid_tms99105() {
-    static const mid_range mids[] = {
+static void test_illegal_tms99105() {
+    static const illegal_range mids[] = {
         { 0x0000, 0x001B }, { 0x001E, 0x0028 }, { 0x002B, 0x007f }, { 0x00A0, 0x00AF },
         { 0x00C0, 0x00FF },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
@@ -468,27 +466,27 @@ static void test_mid_tms99105() {
         { 0x0780, 0x07ff }, { 0x0c00, 0x0c08 }, { 0x0c0c, 0x0fff }
     };
 
-    assert_mid(mids, std::end(mids));
+    assert_illegal(mids, std::end(mids));
 
-    static const mid_range dp_arith_2nd[] = {
+    static const illegal_range dp_arith_2nd[] = {
         { 0x0000, 0x3fff}, {0x5000, 0xffff }
     };
-    assert_mid(dp_arith_2nd, std::end(dp_arith_2nd), SM);
-    assert_mid(dp_arith_2nd, std::end(dp_arith_2nd), AM);
+    assert_illegal(dp_arith_2nd, std::end(dp_arith_2nd), SM);
+    assert_illegal(dp_arith_2nd, std::end(dp_arith_2nd), AM);
 
-    static const mid_range dp_shift_2nd[] = {
+    static const illegal_range dp_shift_2nd[] = {
         { 0x0000, 0x3fff}, { 0x4400, 0xffff }
     };
-    assert_mid(dp_shift_2nd, std::end(dp_shift_2nd), SRAM);
-    assert_mid(dp_shift_2nd, std::end(dp_shift_2nd), SLAM);
+    assert_illegal(dp_shift_2nd, std::end(dp_shift_2nd), SRAM);
+    assert_illegal(dp_shift_2nd, std::end(dp_shift_2nd), SLAM);
 
-    static const mid_range dp_bit_2nd[] = {
+    static const illegal_range dp_bit_2nd[] = {
         { 0x0400, 0xffff },
     };
-    static const mid_hole dp_bit_hole = { 0x003F, 0x0030, 0x003F };
-    assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TMB,  &dp_bit_hole);
-    assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TCMB, &dp_bit_hole);
-    assert_mid(dp_bit_2nd, std::end(dp_bit_2nd), TSMB, &dp_bit_hole);
+    static const illegal_hole dp_bit_hole = { 0x003F, 0x0030, 0x003F };
+    assert_illegal(dp_bit_2nd, std::end(dp_bit_2nd), TMB,  &dp_bit_hole);
+    assert_illegal(dp_bit_2nd, std::end(dp_bit_2nd), TCMB, &dp_bit_hole);
+    assert_illegal(dp_bit_2nd, std::end(dp_bit_2nd), TSMB, &dp_bit_hole);
 }
 // clang-format on
 
@@ -507,11 +505,11 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_rel);
     RUN_TEST(test_cru_off);
     if (is9900())
-        RUN_TEST(test_mid_tms9900);
+        RUN_TEST(test_illegal_tms9900);
     if (is9995())
-        RUN_TEST(test_mid_tms9995);
+        RUN_TEST(test_illegal_tms9995);
     if (is99105())
-        RUN_TEST(test_mid_tms99105);
+        RUN_TEST(test_illegal_tms99105);
 }
 
 // Local Variables:
