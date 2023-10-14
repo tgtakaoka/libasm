@@ -41,73 +41,76 @@ DisTms32010::DisTms32010(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisTms32010::decodeDirect(StrBuffer &out, Config::opcode_t opc) {
+StrBuffer &DisTms32010::outDirect(StrBuffer &out, Config::opcode_t opc) {
     // Store Status Register can access Data Page 1 only.
     static constexpr uint8_t SST = 0x7C;
     uint8_t dma = static_cast<uint8_t>(opc) & 0x7F;
     if ((opc >> 8) == SST) {
         dma |= (1 << 7);
         if (dma > dataMemoryLimit())
-            return setError(OVERFLOW_RANGE);
+            setErrorIf(OVERFLOW_RANGE);
     }
     outAbsAddr(out, dma, 8);
-    return OK;
+    return out;
 }
 
-Error DisTms32010::decodeIndirect(StrBuffer &out, uint8_t mam) {
-    switch ((mam >> 4) & 3) {
-    case 0:
-        out.letter('*');
-        return OK;
-    case 1:
-        out.letter('*').letter('-');
-        return OK;
-    case 2:
-        out.letter('*').letter('+');
-        return OK;
-    default:
-        return setError(UNKNOWN_INSTRUCTION);
+StrBuffer &DisTms32010::outIndirect(StrBuffer &out, uint8_t mam) const {
+    out.letter('*');
+    if (mam & 0x20)
+        return out.letter('+');
+    if (mam & 0x10)
+        return out.letter('-');
+    return out;
+}
+
+StrBuffer &DisTms32010::outNextArp(StrBuffer &out, uint8_t mam) const {
+    if ((mam & 0x80) && (mam & 8) == 0) {
+        const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
+        outRegName(out.comma(), arp);
     }
+    return out;
 }
 
-Error DisTms32010::decodeNextArp(StrBuffer &out, uint8_t mam) {
-    if ((mam & (1 << 7)) == 0)
-        return OK;       // Direct memory address;
-    if (mam & (1 << 3))  // No next auxilialy register pointer
-        return (mam & 7) == 0 ? OK : setError(UNKNOWN_INSTRUCTION);
-    const RegName arp = (mam & 1) == 0 ? REG_AR0 : REG_AR1;
-    outRegName(out.comma(), arp);
-    return OK;
-}
-
-Error DisTms32010::decodeShiftCount(StrBuffer &out, uint8_t count, uint8_t mam, AddrMode mode) {
-    if (mode == M_LS4 || (mode == M_LS3 && (count == 0 || count == 1 || count == 4)) ||
-            (mode == M_LS0 && count == 0)) {
-        const bool indir = mam & (1 << 7);
-        const bool nar = (mam & (1 << 3)) == 0;
-        if (count || (indir && nar)) {
-            out.comma();
-            outDec(out, count, 4);
-        }
-        return OK;
+StrBuffer &DisTms32010::outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const {
+    const bool indir = mam & (1 << 7);
+    const bool nar = (mam & (1 << 3)) == 0;
+    if (count || (indir && nar)) {
+        out.comma();
+        outDec(out, count, 4);
     }
-    return setError(UNKNOWN_INSTRUCTION);
+    return out;
+}
+
+StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) {
+    const auto pma = insn.readUint16();
+    setErrorIf(insn);
+    const auto err = checkAddr(pma);
+    if (err)
+        setErrorIf(err);
+    outAbsAddr(out, pma, err ? ADDRESS_16BIT : 0);
+    return out;
 }
 
 Error DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     const Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_MAM:
-        if (opc & (1 << 7))
-            return decodeIndirect(out, opc);
-        return decodeDirect(out, opc);
+        if (opc & (1 << 7)) {
+            outIndirect(out, opc);
+        } else {
+            outDirect(out, opc);
+        }
+        break;
     case M_NARP:
-        return decodeNextArp(out, opc);
+        outNextArp(out, opc);
+        break;
     case M_LS4:
-        return decodeShiftCount(out, (opc >> 8) & 0xF, opc, mode);
+        outShiftCount(out, (opc >> 8) & 0xF, opc);
+        break;
     case M_LS3:
     case M_LS0:
-        return decodeShiftCount(out, (opc >> 8) & 7, opc, mode);
+        outShiftCount(out, (opc >> 8) & 7, opc);
+        break;
     case M_AR:
         outRegName(out, (opc & (1 << 8)) == 0 ? REG_AR0 : REG_AR1);
         break;
@@ -127,17 +130,9 @@ Error DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         // Sign extends 13-bit number as 0x1000 is a sign bit.
         outDec(out, signExtend(opc, 13), -13);
         break;
-    case M_PMA: {
-        uint16_t pma = insn.readUint16();
-        setErrorIf(insn);
-        //if (pma & 0xF000)
-        // setErrorIf(OVERFLOW_RANGE);
-        const auto err = checkAddr(pma);
-        if (err)
-            setErrorIf(err);
-        outAbsAddr(out, pma);
+    case M_PMA:
+        outProgramAddress(out, insn);
         break;
-    }
     default:
         break;
     }
