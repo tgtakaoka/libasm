@@ -29,8 +29,7 @@ struct DisTms9900 final : Disassembler, Config {
 
 private:
     Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error checkPostWord(DisInsn &insn, StrBuffer &out);
-    Error decodeMacroInstructionDetect(DisInsn &insn, StrBuffer &out);
+    Error checkPostWord(DisInsn &insn);
     Error decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg);
     Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
 

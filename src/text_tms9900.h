@@ -74,7 +74,6 @@ extern const char TEXT_LREX[] PROGMEM;
 extern const char TEXT_LWPI[] PROGMEM;
 using common::TEXT_MOV;
 using common::TEXT_MOVB;
-extern const char TEXT_MID[]  PROGMEM;
 using common::TEXT_MPY;
 using common::TEXT_NEG;
 using common::TEXT_ORI;

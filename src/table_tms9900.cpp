@@ -203,6 +203,10 @@ static constexpr Entry TABLE_TMS99105[] PROGMEM = {
     E2(0x0C0B, TEXT_TSMB, M_SRC2, M_BIT2),
     E1(0x0100, TEXT_EVAD, M_SRC),
     E1(0x0380, TEXT_RTWP, M_RTWP),
+    // Extra
+    E1(0x0381, TEXT_RTWP, M_RTWP),
+    E1(0x0382, TEXT_RTWP, M_RTWP),
+    E1(0x0384, TEXT_RTWP, M_RTWP),
 };
 
 static constexpr uint8_t INDEX_TMS99105[] PROGMEM = {
@@ -294,8 +298,6 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
         opCode &= ~0x3C0;
     if (dst == M_SCNT)
         opCode &= ~0xF0;
-    if (src == M_RTWP)
-        opCode &= ~7;
     return opCode == entry->opCode();
 }
 

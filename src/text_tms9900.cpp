@@ -72,7 +72,6 @@ constexpr char TEXT_LWPI[] PROGMEM = "LWPI";
 // constexpr char TEXT_MOV[]  PROGMEM = "MOV";
 // constexpr char TEXT_MOVB[] PROGMEM = "MOVB";
 // constexpr char TEXT_MPY[]  PROGMEM = "MPY";
-constexpr char TEXT_MID[]  PROGMEM = "MID";
 // constexpr char TEXT_NEG[]  PROGMEM = "NEG";
 // constexpr char TEXT_ORI[]  PROGMEM = "ORI";
 constexpr char TEXT_RSET[] PROGMEM = "RSET";
