@@ -75,6 +75,11 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) {
     insn.emitOperand8(delta);
 }
 
+static void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
+    const Config::opcode_t prefix = (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
+    insn.setOpCode(insn.opCode(), prefix);
+}
+
 void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) {
     const auto opc = insn.opCode();  // Bit opcode.
     insn.setOpCode(insn.prefix());   // Make 0xCB prefix as opcode.
@@ -97,15 +102,15 @@ void AsmZ80::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, cons
             setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
         return;
-    case M_INDX:
+    case M_IDX:
         if (overflowInt8(static_cast<int16_t>(val16)))
             setErrorIf(op, OVERFLOW_RANGE);
         if (insn.indexBit())
             return encodeIndexedBitOp(insn, op);
         insn.emitOperand8(val16);
         /* Fall-through */
-    case R_IXIY:
-    case I_IXIY:
+    case R_IDX:
+    case I_IDX:
         encodeIndexReg(insn, op.reg);
         return;
     case M_IM16:
@@ -118,22 +123,25 @@ void AsmZ80::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, cons
     case M_CC8:
         insn.embed(static_cast<uint8_t>(val16) << 3);
         return;
-    case M_PTR:
+    case M_R16:
+    case M_NOHL:
         insn.embed(encodePointerReg(op.reg) << 4);
         return;
-    case M_PIX:
+    case M_R16X:
         insn.embed(encodePointerRegIx(op.reg, other.reg) << 4);
         return;
     case M_STK:
         insn.embed(encodeStackReg(op.reg) << 4);
         return;
-    case I_BCDE:
+    case I_PTR:
         insn.embed(encodeIndirectBase(op.reg) << 4);
         return;
-    case M_REG:
+    case M_SRC:
+    case M_SR8:
         insn.embed(encodeDataReg(op.reg));
         return;
     case M_DST:
+    case M_DR8:
         insn.embed(encodeDataReg(op.reg) << 3);
         return;
     case R_IR:
@@ -200,7 +208,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         switch (op.reg) {
         case REG_IX:
         case REG_IY:
-            op.mode = R_IXIY;
+            op.mode = R_IDX;
             break;
         case REG_I:
         case REG_R:
@@ -211,10 +219,10 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         case REG_E:
         case REG_H:
         case REG_L:
-            op.mode = M_REG;
+            op.mode = M_SR8;
             break;
         default:
-            op.mode = AddrMode(int8_t(op.reg) + 26);
+            op.mode = AddrMode(int8_t(op.reg) + R_BASE);
             break;
         }
         scan = p;
@@ -237,11 +245,11 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
             switch (op.reg) {
             case REG_BC:
             case REG_DE:
-                op.mode = I_BCDE;
+                op.mode = I_PTR;
                 break;
             case REG_IX:
             case REG_IY:
-                op.mode = I_IXIY;
+                op.mode = I_IDX;
                 break;
             case REG_HL:
                 op.mode = I_HL;
@@ -266,7 +274,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
                 if (!p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
                 scan = p;
-                op.mode = M_INDX;
+                op.mode = M_IDX;
                 return OK;
             }
         }

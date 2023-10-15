@@ -238,8 +238,8 @@ static void test_stack_op() {
         TEST("EX", "AF, AF'", 0x08);
         TEST("EXX", "",       0xD9);
     } else {
-        ERRT("EX", "AF, AF'", UNKNOWN_INSTRUCTION, 0x08);
-        ERRT("EXX", "",       UNKNOWN_INSTRUCTION, 0xD9);
+        UNKN(0x08);
+        UNKN(0xD9);
     }
 }
 
@@ -460,16 +460,14 @@ static void test_inherent() {
     TEST("CCF", "", 0x3F);
 
     if (is8085()) {
-        // i8085
         TEST("LD", "A, IM", 0x20);
         TEST("LD", "IM, A", 0x30);
     } else if (is8080()) {
-        ERRT("LD", "A, IM", UNKNOWN_INSTRUCTION, 0x20);
-        ERRT("LD", "IM, A", UNKNOWN_INSTRUCTION, 0x30);
+        UNKN(0x20);
+        UNKN(0x30);
     }
 
     if (isZ80()) {
-        // Z80
         TEST("NEG", "", 0xED, 0x44);
     }
 }
@@ -808,8 +806,9 @@ static void test_illegal_z80() {
         0xA4, 0xA5, 0xA6, 0xA7, 0xAC, 0xAD, 0xAE, 0xAF,
         0xB4, 0xB5, 0xB6, 0xB7,
     };
-    for (size_t idx = 0; idx < sizeof(ed_illegals); idx++)
-        UNKN(0xED, ed_illegals[idx], 0, 0);
+    for (size_t idx = 0; idx < sizeof(ed_illegals); idx++) {
+        UNKN(0xED, ed_illegals[idx]);
+    }
 
     const uint8_t ddfd_legals[] = {
         0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B, 0x34, 0x35, 0x36, 0x39,
@@ -822,10 +821,8 @@ static void test_illegal_z80() {
     while (true) {
         int idx = 0;
         for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (idx == sizeof(ddfd_legals) || opc < ddfd_legals[idx]) {
-                UNKN(prefix, uint8_t(opc), 0);
-                opc++;
-            }
+            if (idx == sizeof(ddfd_legals) || opc < ddfd_legals[idx])
+                UNKN(prefix, uint8_t(opc));
             else idx++;
         }
         if (prefix == 0xfd) break;
@@ -842,10 +839,8 @@ static void test_illegal_z80() {
     while (true) {
         int idx = 0;
         for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (idx == sizeof(ddfdcb_legals) || opc < ddfdcb_legals[idx]) {
+            if (idx == sizeof(ddfdcb_legals) || opc < ddfdcb_legals[idx])
                 UNKN(prefix, 0xCB, 0x00, uint8_t(opc));
-                opc++;
-            }
             else idx++;
         }
         if (prefix == 0xfd) break;

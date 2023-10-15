@@ -140,7 +140,7 @@ static void test_move_inherent() {
     TEST("LD (HL),E", 0x73);
     TEST("LD (HL),H", 0x74);
     TEST("LD (HL),L", 0x75);
-    // HALT
+    ERRT("LD (HL),(HL)", OPERAND_NOT_ALLOWED, "(HL),(HL)");
     TEST("LD (HL),A", 0x77);
 
     TEST("LD A,B", 0x78);

@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-#include "insn_z80.h"
+#include "config_z80.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
@@ -76,7 +76,7 @@ RegName decodeDataReg(uint8_t num);
 
 uint8_t encodePointerReg(RegName name);
 uint8_t encodePointerRegIx(RegName name, RegName ix);
-RegName decodePointerReg(uint8_t num, const DisInsn &xinsn);
+RegName decodePointerReg(uint8_t num, Config::opcode_t prefix);
 
 uint8_t encodeStackReg(RegName name);
 RegName decodeStackReg(uint8_t num);
@@ -84,8 +84,7 @@ RegName decodeStackReg(uint8_t num);
 uint8_t encodeIndirectBase(RegName name);
 RegName decodeIndirectBase(uint8_t num);
 
-void encodeIndexReg(AsmInsn &insn, RegName ixReg);
-RegName decodeIndexReg(const DisInsn &insn);
+RegName decodeIndexReg(Config::opcode_t prefix);
 
 uint8_t encodeIrReg(RegName name);
 RegName decodeIrReg(uint8_t num);
