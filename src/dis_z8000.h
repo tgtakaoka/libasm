@@ -51,7 +51,6 @@ private:
     Error decodeDirectAddress(DisInsn &insn, StrBuffer &out);
     Error decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode);
     Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, ModeField field);
-    Error checkPostWord(const DisInsn &insn);
     Error checkRegisterOverlap(const DisInsn &insn);
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;

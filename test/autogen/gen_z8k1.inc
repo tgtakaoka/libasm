@@ -115,30 +115,48 @@
       ldb    @rr2, rl0
       ld     @rr2, r0
       ldrb   rh0, .+0x0106
+      ldrb   rh0, .-0x100c
+      ldrb   rh0, .
       ldrb   rl0, .+0x090e
+      ldrb   rl0, .-0x100c
+      ldrb   rl0, .
       ldb    rh0, rr2(#0x2122)
       ldb    rl0, rr2(#0x292a)
       ldb    rh0, rr8(#-0x7e7e)
       ldb    rl0, rr8(#-0x7676)
       ldr    r0, .+0x0106
+      ldr    r0, .-0x100c
+      ldr    r0, .
       ld     r0, rr2(#0x2122)
       ld     r0, rr8(#-0x7e7e)
       ldrb   .+0x0106, rh0
+      ldrb   .-0x100c, rh0
+      ldrb   ., rh0
       ldrb   .+0x090e, rl0
+      ldrb   .-0x100c, rl0
+      ldrb   ., rl0
       ldb    rr2(#0x2122), rh0
       ldb    rr2(#0x292a), rl0
       ldb    rr8(#-0x7e7e), rh0
       ldb    rr8(#-0x7676), rl0
       ldr    .+0x0106, r0
+      ldr    .-0x100c, r0
+      ldr    ., r0
       ld     rr2(#0x2122), r0
       ld     rr8(#-0x7e7e), r0
       ldar   rr0, .+0x0106
+      ldar   rr0, .-0x100c
+      ldar   rr0, .
       lda    rr0, rr2(#0x2122)
       lda    rr0, rr8(#-0x7e7e)
       ldrl   rr0, .+0x0106
+      ldrl   rr0, .-0x100c
+      ldrl   rr0, .
       ldl    rr0, rr2(#0x2122)
       ldl    rr0, rr8(#-0x7e7e)
       ldrl   .+0x0106, rr0
+      ldrl   .-0x100c, rr0
+      ldrl   ., rr0
       ldl    rr2(#0x2122), rr0
       ldl    rr8(#-0x7e7e), rr0
       ldps   @rr2
@@ -180,56 +198,56 @@
       addb   rl0, 0x09000a
       addb   rh0, 0x110012(r1)
       addb   rl0, 0x19001a(r1)
-      addb   rl7, 0x008283(r7)
-      addb   rh0, 0x018384(r8)
+      addb   rl7, 0x7f0102(r7)
+      addb   rh0, 0x7f0102(r8)
       add    r0, 0x010002
       add    r0, 0x110012(r1)
-      add    r15, 0x008283(r7)
+      add    r15, 0x7f0102(r7)
       subb   rh0, 0x010002
       subb   rl0, 0x09000a
       subb   rh0, 0x110012(r1)
       subb   rl0, 0x19001a(r1)
-      subb   rl7, 0x008283(r7)
-      subb   rh0, 0x018384(r8)
+      subb   rl7, 0x7f0102(r7)
+      subb   rh0, 0x7f0102(r8)
       sub    r0, 0x010002
       sub    r0, 0x110012(r1)
-      sub    r15, 0x008283(r7)
+      sub    r15, 0x7f0102(r7)
       orb    rh0, 0x010002
       orb    rl0, 0x09000a
       orb    rh0, 0x110012(r1)
       orb    rl0, 0x19001a(r1)
-      orb    rl7, 0x008283(r7)
-      orb    rh0, 0x018384(r8)
+      orb    rl7, 0x7f0102(r7)
+      orb    rh0, 0x7f0102(r8)
       or     r0, 0x010002
       or     r0, 0x110012(r1)
-      or     r15, 0x008283(r7)
+      or     r15, 0x7f0102(r7)
       andb   rh0, 0x010002
       andb   rl0, 0x09000a
       andb   rh0, 0x110012(r1)
       andb   rl0, 0x19001a(r1)
-      andb   rl7, 0x008283(r7)
-      andb   rh0, 0x018384(r8)
+      andb   rl7, 0x7f0102(r7)
+      andb   rh0, 0x7f0102(r8)
       and    r0, 0x010002
       and    r0, 0x110012(r1)
-      and    r15, 0x008283(r7)
+      and    r15, 0x7f0102(r7)
       xorb   rh0, 0x010002
       xorb   rl0, 0x09000a
       xorb   rh0, 0x110012(r1)
       xorb   rl0, 0x19001a(r1)
-      xorb   rl7, 0x008283(r7)
-      xorb   rh0, 0x018384(r8)
+      xorb   rl7, 0x7f0102(r7)
+      xorb   rh0, 0x7f0102(r8)
       xor    r0, 0x010002
       xor    r0, 0x110012(r1)
-      xor    r15, 0x008283(r7)
+      xor    r15, 0x7f0102(r7)
       cpb    rh0, 0x010002
       cpb    rl0, 0x09000a
       cpb    rh0, 0x110012(r1)
       cpb    rl0, 0x19001a(r1)
-      cpb    rl7, 0x008283(r7)
-      cpb    rh0, 0x018384(r8)
+      cpb    rl7, 0x7f0102(r7)
+      cpb    rh0, 0x7f0102(r8)
       cp     r0, 0x010002
       cp     r0, 0x110012(r1)
-      cp     r15, 0x008283(r7)
+      cp     r15, 0x7f0102(r7)
       comb   0x010002
       cpb    0x020003, #5
       negb   0x030004
@@ -244,13 +262,13 @@
       ldb    0x160017(r1), #25
       tsetb  0x170018(r1)
       clrb   0x19001a(r1)
-      comb   0x018384(r8)
-      cpb    0x028485(r8), #0x87
-      negb   0x038586(r8)
-      testb  0x058788(r8)
-      ldb    0x068889(r8), #0x8b
-      tsetb  0x07898a(r8)
-      clrb   0x098b8c(r8)
+      comb   0x7f0102(r8)
+      cpb    0x7f0102(r8), #4
+      negb   0x7f0102(r8)
+      testb  0x7f0102(r8)
+      ldb    0x7f0102(r8), #4
+      tsetb  0x7f0102(r8)
+      clrb   0x7f0102(r8)
       com    0x010002
       cp     0x020003, #0x0405
       neg    0x030004
@@ -265,67 +283,63 @@
       ld     0x160017(r1), #0x1819
       tset   0x170018(r1)
       clr    0x19001a(r1)
-      com    0x018384(r8)
-      cp     0x028485(r8), #0x8687
-      neg    0x038586(r8)
-      test   0x058788(r8)
-      ld     0x068889(r8), #0x8a8b
-      tset   0x07898a(r8)
-      clr    0x098b8c(r8)
+      com    0x7f0102(r8)
+      cp     0x7f0102(r8), #0x0304
+      neg    0x7f0102(r8)
+      test   0x7f0102(r8)
+      ld     0x7f0102(r8), #0x0304
+      tset   0x7f0102(r8)
+      clr    0x7f0102(r8)
       cpl    rr0, 0x010002
       cpl    rr0, 0x110012(r1)
-      cpl    rr0, 0x018384(r8)
+      cpl    rr0, 0x7f0102(r8)
       pushl  @rr2, 0x210022
       pushl  @rr2, 0x220023(r1)
-      pushl  @rr8, 0x018384
-      pushl  @rr8, 0x028485(r1)
+      pushl  @rr8, 0x7f0102
+      pushl  @rr8, 0x7f0102(r1)
       subl   rr0, 0x010002
       subl   rr0, 0x110012(r1)
-      subl   rr0, 0x018384(r8)
+      subl   rr0, 0x7f0102(r8)
       push   @rr2, 0x210022
       push   @rr2, 0x220023(r1)
-      push   @rr8, 0x018384
-      push   @rr8, 0x028485(r1)
+      push   @rr8, 0x7f0102
+      push   @rr8, 0x7f0102(r1)
       ldl    rr0, 0x010002
       ldl    rr0, 0x110012(r1)
-      ldl    rr0, 0x018384(r8)
+      ldl    rr0, 0x7f0102(r8)
       popl   0x210022, @rr2
       popl   0x220023(r1), @rr2
-      popl   0x018384, @rr8
-      popl   0x028485(r1), @rr8
+      popl   0x7f0102, @rr8
+      popl   0x7f0102(r1), @rr8
       addl   rr0, 0x010002
       addl   rr0, 0x110012(r1)
-      addl   rr0, 0x018384(r8)
+      addl   rr0, 0x7f0102(r8)
       pop    0x210022, @rr2
       pop    0x220023(r1), @rr2
-      pop    0x018384, @rr8
-      pop    0x028485(r1), @rr8
+      pop    0x7f0102, @rr8
+      pop    0x7f0102(r1), @rr8
       multl  rq0, 0x010002
       multl  rq0, 0x110012(r1)
-      multl  rq0, 0x018384(r8)
+      multl  rq0, 0x7f0102(r8)
       mult   rr0, 0x010002
       mult   rr0, 0x110012(r1)
-      mult   rr0, 0x018384(r8)
+      mult   rr0, 0x7f0102(r8)
       divl   rq0, 0x010002
       divl   rq0, 0x110012(r1)
-      divl   rq0, 0x018384(r8)
+      divl   rq0, 0x7f0102(r8)
       div    rr0, 0x010002
       div    rr0, 0x110012(r1)
-      div    rr0, 0x018384(r8)
+      div    rr0, 0x7f0102(r8)
       ldm    r2, 0x040005, #4
-      ldm    r2, 0x000607, #3
       testl  0x09000a
       ldm    0x020003, r0, #2
-      ldm    0x000405, r0, #1
       ldm    r0, 0x020003(r1), #2
-      ldm    r0, 0x000405(r1), #1
       testl  0x19001a(r1)
       ldm    0x020003(r1), r0, #2
-      ldm    0x000405(r1), r0, #1
-      testl  0x098b8c(r8)
+      testl  0x7f0102(r8)
       ldl    0x010002, rr0
       ldl    0x110012(r1), rr0
-      ldl    0x018384(r8), rr0
+      ldl    0x7f0102(r8), rr0
       jp     f, 0x010002
       jp     lt, 0x020003
       jp     le, 0x030004
@@ -358,88 +372,88 @@
       jp     pl, 0x1e001f(r1)
       jp     nz, 0x1f0020(r1)
       jp     nc, 0x200021(r1)
-      jp     nc, 0x008283(r7)
-      jp     f, 0x018384(r8)
-      jp     lt, 0x028485(r8)
-      jp     le, 0x038586(r8)
-      jp     ule, 0x048687(r8)
-      jp     ov, 0x058788(r8)
-      jp     mi, 0x068889(r8)
-      jp     z, 0x07898a(r8)
-      jp     c, 0x088a8b(r8)
-      jp     0x098b8c(r8)
-      jp     ge, 0x0a8c8d(r8)
-      jp     gt, 0x0b8d8e(r8)
-      jp     ugt, 0x0c8e8f(r8)
-      jp     nov, 0x0d8f90(r8)
-      jp     pl, 0x0e9091(r8)
-      jp     nz, 0x0f9192(r8)
+      jp     nc, 0x7f0102(r7)
+      jp     f, 0x7f0102(r8)
+      jp     lt, 0x7f0102(r8)
+      jp     le, 0x7f0102(r8)
+      jp     ule, 0x7f0102(r8)
+      jp     ov, 0x7f0102(r8)
+      jp     mi, 0x7f0102(r8)
+      jp     z, 0x7f0102(r8)
+      jp     c, 0x7f0102(r8)
+      jp     0x7f0102(r8)
+      jp     ge, 0x7f0102(r8)
+      jp     gt, 0x7f0102(r8)
+      jp     ugt, 0x7f0102(r8)
+      jp     nov, 0x7f0102(r8)
+      jp     pl, 0x7f0102(r8)
+      jp     nz, 0x7f0102(r8)
       call   0x010002
       call   0x110012(r1)
-      call   0x008283(r7)
+      call   0x7f0102(r7)
       ldb    rh0, 0x010002
       ldb    rl0, 0x09000a
       ldb    rh0, 0x110012(r1)
       ldb    rl0, 0x19001a(r1)
-      ldb    rl7, 0x008283(r7)
-      ldb    rh0, 0x018384(r8)
+      ldb    rl7, 0x7f0102(r7)
+      ldb    rh0, 0x7f0102(r8)
       ld     r0, 0x010002
       ld     r0, 0x110012(r1)
-      ld     r15, 0x008283(r7)
+      ld     r15, 0x7f0102(r7)
       resb   0x010002, #0
       resb   0x110012(r1), #0
-      resb   0x018384(r8), #0
+      resb   0x7f0102(r8), #0
       res    0x010002, #0
       res    0x110012(r1), #0
-      res    0x008283(r7), #15
+      res    0x7f0102(r7), #15
       setb   0x010002, #0
       setb   0x110012(r1), #0
-      setb   0x018384(r8), #0
+      setb   0x7f0102(r8), #0
       set    0x010002, #0
       set    0x110012(r1), #0
-      set    0x008283(r7), #15
+      set    0x7f0102(r7), #15
       bitb   0x010002, #0
       bitb   0x110012(r1), #0
-      bitb   0x018384(r8), #0
+      bitb   0x7f0102(r8), #0
       bit    0x010002, #0
       bit    0x110012(r1), #0
-      bit    0x008283(r7), #15
+      bit    0x7f0102(r7), #15
       incb   0x010002, #1
       incb   0x110012(r1), #1
-      incb   0x008283(r7), #16
+      incb   0x7f0102(r7), #16
       inc    0x010002, #1
       inc    0x110012(r1), #1
-      inc    0x008283(r7), #16
+      inc    0x7f0102(r7), #16
       decb   0x010002, #1
       decb   0x110012(r1), #1
-      decb   0x008283(r7), #16
+      decb   0x7f0102(r7), #16
       dec    0x010002, #1
       dec    0x110012(r1), #1
-      dec    0x008283(r7), #16
+      dec    0x7f0102(r7), #16
       exb    rh0, 0x010002
       exb    rl0, 0x09000a
       exb    rh0, 0x110012(r1)
       exb    rl0, 0x19001a(r1)
-      exb    rl7, 0x008283(r7)
-      exb    rh0, 0x018384(r8)
+      exb    rl7, 0x7f0102(r7)
+      exb    rh0, 0x7f0102(r8)
       ex     r0, 0x010002
       ex     r0, 0x110012(r1)
-      ex     r15, 0x008283(r7)
+      ex     r15, 0x7f0102(r7)
       ldb    0x010002, rh0
       ldb    0x09000a, rl0
       ldb    0x110012(r1), rh0
       ldb    0x19001a(r1), rl0
-      ldb    0x008283(r7), rl7
-      ldb    0x018384(r8), rh0
+      ldb    0x7f0102(r7), rl7
+      ldb    0x7f0102(r8), rh0
       ld     0x010002, r0
       ld     0x110012(r1), r0
-      ld     0x008283(r7), r15
+      ld     0x7f0102(r7), r15
       lda    rr0, 0x010002
       lda    rr0, 0x110012(r1)
-      lda    rr0, 0x018384(r8)
+      lda    rr0, 0x7f0102(r8)
       ldps   0x010002
       ldps   0x110012(r1)
-      ldps   0x018384(r8)
+      ldps   0x7f0102(r8)
       halt
       iret
       mset
@@ -465,43 +479,43 @@
       ldctl  nspseg, r0
       ldctl  nspoff, r0
       sc     #0
-      addb   rh0, rh1
-      addb   rl0, rh1
+      addb   rh0, rh0
+      addb   rl0, rh0
       addb   rh0, rl0
       addb   rl0, rl0
-      add    r0, r1
-      subb   rh0, rh1
-      subb   rl0, rh1
+      add    r0, r0
+      subb   rh0, rh0
+      subb   rl0, rh0
       subb   rh0, rl0
       subb   rl0, rl0
-      sub    r0, r1
-      orb    rh0, rh1
-      orb    rl0, rh1
+      sub    r0, r0
+      orb    rh0, rh0
+      orb    rl0, rh0
       orb    rh0, rl0
       orb    rl0, rl0
-      or     r0, r1
-      andb   rh0, rh1
-      andb   rl0, rh1
+      or     r0, r0
+      andb   rh0, rh0
+      andb   rl0, rh0
       andb   rh0, rl0
       andb   rl0, rl0
-      and    r0, r1
-      xorb   rh0, rh1
-      xorb   rl0, rh1
+      and    r0, r0
+      xorb   rh0, rh0
+      xorb   rl0, rh0
       xorb   rh0, rl0
       xorb   rl0, rl0
-      xor    r0, r1
-      cpb    rh0, rh1
-      cpb    rl0, rh1
+      xor    r0, r0
+      cpb    rh0, rh0
+      cpb    rl0, rh0
       cpb    rh0, rl0
       cpb    rl0, rl0
-      cp     r0, r1
+      cp     r0, r0
+      comb   rh0
       ldctlb rh0, flags
+      negb   rh0
+      testb  rh0
+      tsetb  rh0
+      clrb   rh0
       ldctlb flags, rh0
-      comb   rh1
-      negb   rh1
-      testb  rh1
-      tsetb  rh1
-      clrb   rh1
       comb   rl0
       ldctlb rl0, flags
       negb   rl0
@@ -509,15 +523,15 @@
       tsetb  rl0
       clrb   rl0
       ldctlb flags, rl0
+      com    r0
+      neg    r0
+      test   r0
+      tset   r0
       nop
-      com    r1
+      clr    r0
       setflg p
-      neg    r1
       resflg p
-      test   r1
       comflg p
-      tset   r1
-      clr    r1
       setflg s
       resflg s
       comflg s
@@ -560,19 +574,19 @@
       setflg c,z,s,p
       resflg c,z,s,p
       comflg c,z,s,p
-      cpl    rr0, rr2
-      pushl  @rr2, rr4
-      subl   rr0, rr2
-      push   @rr2, r1
-      ldl    rr0, rr2
-      popl   rr4, @rr2
-      addl   rr0, rr2
-      pop    r1, @rr2
-      multl  rq0, rr2
-      mult   rr0, r1
-      divl   rq0, rr2
-      div    rr0, r1
-      testl  rr2
+      cpl    rr0, rr0
+      pushl  @rr2, rr0
+      subl   rr0, rr0
+      push   @rr2, r0
+      ldl    rr0, rr0
+      popl   rr0, @rr2
+      addl   rr0, rr0
+      pop    r0, @rr2
+      multl  rq0, rr0
+      mult   rr0, r0
+      divl   rq0, rr0
+      div    rr0, r0
+      testl  rr0
       ret    f
       ret    lt
       ret    le
@@ -589,31 +603,31 @@
       ret    pl
       ret    nz
       ret    nc
-      ldb    rh0, rh1
-      ldb    rl0, rh1
+      ldb    rh0, rh0
+      ldb    rl0, rh0
       ldb    rh0, rl0
       ldb    rl0, rl0
-      ld     r0, r1
-      resb   rh1, #0
+      ld     r0, r0
+      resb   rh0, #0
       resb   rl0, #0
-      res    r1, #0
-      setb   rh1, #0
+      res    r0, #0
+      setb   rh0, #0
       setb   rl0, #0
-      set    r1, #0
-      bitb   rh1, #0
+      set    r0, #0
+      bitb   rh0, #0
       bitb   rl0, #0
-      bit    r1, #0
-      incb   rh1, #1
+      bit    r0, #0
+      incb   rh0, #1
       incb   rl0, #1
-      inc    r1, #1
-      decb   rh1, #1
+      inc    r0, #1
+      decb   rh0, #1
       decb   rl0, #1
-      dec    r1, #1
-      exb    rh0, rh1
-      exb    rl0, rh1
+      dec    r0, #1
+      exb    rh0, rh0
+      exb    rl0, rh0
       exb    rh0, rl0
       exb    rl0, rl0
-      ex     r0, r1
+      ex     r0, r0
       tccb   f, rh0
       tccb   lt, rh0
       tccb   le, rh0

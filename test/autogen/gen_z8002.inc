@@ -115,30 +115,48 @@
       LDB    @R1, RL0
       LD     @R1, R0
       LDRB   RH0, $+0106H
+      LDRB   RH0, $-100CH
+      LDRB   RH0, $
       LDRB   RL0, $+090EH
+      LDRB   RL0, $-100CH
+      LDRB   RL0, $
       LDB    RH0, R1(#1112H)
       LDB    RL0, R1(#191AH)
       LDB    RL7, R7(#-7F7FH)
       LDB    RH0, R8(#-7E7EH)
       LDR    R0, $+0106H
+      LDR    R0, $-100CH
+      LDR    R0, $
       LD     R0, R1(#1112H)
       LD     R15, R7(#-7F7FH)
       LDRB   $+0106H, RH0
+      LDRB   $-100CH, RH0
+      LDRB   $, RH0
       LDRB   $+090EH, RL0
+      LDRB   $-100CH, RL0
+      LDRB   $, RL0
       LDB    R1(#1112H), RH0
       LDB    R1(#191AH), RL0
       LDB    R7(#-7F7FH), RL7
       LDB    R8(#-7E7EH), RH0
       LDR    $+0106H, R0
+      LDR    $-100CH, R0
+      LDR    $, R0
       LD     R1(#1112H), R0
       LD     R7(#-7F7FH), R15
       LDAR   R0, $+0106H
+      LDAR   R0, $-100CH
+      LDAR   R0, $
       LDA    R0, R1(#1112H)
       LDA    R15, R7(#-7F7FH)
       LDRL   RR0, $+0106H
+      LDRL   RR0, $-100CH
+      LDRL   RR0, $
       LDL    RR0, R1(#1112H)
       LDL    RR0, R8(#-7E7EH)
       LDRL   $+0106H, RR0
+      LDRL   $-100CH, RR0
+      LDRL   $, RR0
       LDL    R1(#1112H), RR0
       LDL    R8(#-7E7EH), RR0
       LDPS   @R1
@@ -385,43 +403,43 @@
       LDCTL  PSAP, R0
       LDCTL  NSP, R0
       SC     #0
-      ADDB   RH0, RH1
-      ADDB   RL0, RH1
+      ADDB   RH0, RH0
+      ADDB   RL0, RH0
       ADDB   RH0, RL0
       ADDB   RL0, RL0
-      ADD    R0, R1
-      SUBB   RH0, RH1
-      SUBB   RL0, RH1
+      ADD    R0, R0
+      SUBB   RH0, RH0
+      SUBB   RL0, RH0
       SUBB   RH0, RL0
       SUBB   RL0, RL0
-      SUB    R0, R1
-      ORB    RH0, RH1
-      ORB    RL0, RH1
+      SUB    R0, R0
+      ORB    RH0, RH0
+      ORB    RL0, RH0
       ORB    RH0, RL0
       ORB    RL0, RL0
-      OR     R0, R1
-      ANDB   RH0, RH1
-      ANDB   RL0, RH1
+      OR     R0, R0
+      ANDB   RH0, RH0
+      ANDB   RL0, RH0
       ANDB   RH0, RL0
       ANDB   RL0, RL0
-      AND    R0, R1
-      XORB   RH0, RH1
-      XORB   RL0, RH1
+      AND    R0, R0
+      XORB   RH0, RH0
+      XORB   RL0, RH0
       XORB   RH0, RL0
       XORB   RL0, RL0
-      XOR    R0, R1
-      CPB    RH0, RH1
-      CPB    RL0, RH1
+      XOR    R0, R0
+      CPB    RH0, RH0
+      CPB    RL0, RH0
       CPB    RH0, RL0
       CPB    RL0, RL0
-      CP     R0, R1
+      CP     R0, R0
+      COMB   RH0
       LDCTLB RH0, FLAGS
+      NEGB   RH0
+      TESTB  RH0
+      TSETB  RH0
+      CLRB   RH0
       LDCTLB FLAGS, RH0
-      COMB   RH1
-      NEGB   RH1
-      TESTB  RH1
-      TSETB  RH1
-      CLRB   RH1
       COMB   RL0
       LDCTLB RL0, FLAGS
       NEGB   RL0
@@ -429,15 +447,15 @@
       TSETB  RL0
       CLRB   RL0
       LDCTLB FLAGS, RL0
+      COM    R0
+      NEG    R0
+      TEST   R0
+      TSET   R0
       NOP
-      COM    R1
+      CLR    R0
       SETFLG P
-      NEG    R1
       RESFLG P
-      TEST   R1
       COMFLG P
-      TSET   R1
-      CLR    R1
       SETFLG S
       RESFLG S
       COMFLG S
@@ -480,19 +498,19 @@
       SETFLG C,Z,S,P
       RESFLG C,Z,S,P
       COMFLG C,Z,S,P
-      CPL    RR0, RR2
+      CPL    RR0, RR0
       PUSHL  @R1, RR2
-      SUBL   RR0, RR2
-      PUSH   @R1, R2
-      LDL    RR0, RR2
+      SUBL   RR0, RR0
+      PUSH   @R1, R0
+      LDL    RR0, RR0
       POPL   RR2, @R1
-      ADDL   RR0, RR2
-      POP    R2, @R1
-      MULTL  RQ0, RR2
-      MULT   RR0, R1
-      DIVL   RQ0, RR2
-      DIV    RR0, R1
-      TESTL  RR2
+      ADDL   RR0, RR0
+      POP    R0, @R1
+      MULTL  RQ0, RR0
+      MULT   RR0, R0
+      DIVL   RQ0, RR0
+      DIV    RR0, R0
+      TESTL  RR0
       RET    F
       RET    LT
       RET    LE
@@ -509,31 +527,31 @@
       RET    PL
       RET    NZ
       RET    NC
-      LDB    RH0, RH1
-      LDB    RL0, RH1
+      LDB    RH0, RH0
+      LDB    RL0, RH0
       LDB    RH0, RL0
       LDB    RL0, RL0
-      LD     R0, R1
-      RESB   RH1, #0
+      LD     R0, R0
+      RESB   RH0, #0
       RESB   RL0, #0
-      RES    R1, #0
-      SETB   RH1, #0
+      RES    R0, #0
+      SETB   RH0, #0
       SETB   RL0, #0
-      SET    R1, #0
-      BITB   RH1, #0
+      SET    R0, #0
+      BITB   RH0, #0
       BITB   RL0, #0
-      BIT    R1, #0
-      INCB   RH1, #1
+      BIT    R0, #0
+      INCB   RH0, #1
       INCB   RL0, #1
-      INC    R1, #1
-      DECB   RH1, #1
+      INC    R0, #1
+      DECB   RH0, #1
       DECB   RL0, #1
-      DEC    R1, #1
-      EXB    RH0, RH1
-      EXB    RL0, RH1
+      DEC    R0, #1
+      EXB    RH0, RH0
+      EXB    RL0, RH0
       EXB    RH0, RL0
       EXB    RL0, RL0
-      EX     R0, R1
+      EX     R0, R0
       TCCB   F, RH0
       TCCB   LT, RH0
       TCCB   LE, RH0

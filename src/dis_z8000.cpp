@@ -87,11 +87,11 @@ Error DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
             data = -count;
         }
         if (size == SZ_BYTE && data > 8)
-            return setErrorIf(ILLEGAL_OPERAND);
+            setErrorIf(ILLEGAL_OPERAND);
         if (size == SZ_WORD && data > 16)
-            return setErrorIf(ILLEGAL_OPERAND);
+            setErrorIf(ILLEGAL_OPERAND);
         if (size == SZ_LONG && data > 32)
-            return setErrorIf(ILLEGAL_OPERAND);
+            setErrorIf(ILLEGAL_OPERAND);
         outDec(out, data, 6);
     } else if (size == SZ_BYTE) {
         outHex(out, insn.readUint16(), 8);
@@ -106,55 +106,54 @@ Error DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
 Error DisZ8000::decodeFlags(StrBuffer &out, uint8_t flags) {
     flags &= 0xF;
     if (flags == 0)
-        return setError(OPCODE_HAS_NO_EFFECT);
+        setErrorIf(OPCODE_HAS_NO_EFFECT);
     outFlagNames(out, flags);
-    return OK;
+    return getError();
 }
 
 Error DisZ8000::decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect) {
-    const auto reg = decodeRegNum(segmentedModel(), num, size);
-    if (reg == REG_ILLEGAL)
-        return setError(ILLEGAL_REGISTER);
+    RegName reg;
+    if (!decodeRegNum(segmentedModel(), num, size, reg))
+        setErrorIf(ILLEGAL_REGISTER);
     if (indirect)
         out.letter('@');
     outRegName(out, reg);
-    return OK;
+    return getError();
 }
 
 Error DisZ8000::decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize size) {
-    if (size == SZ_BYTE)
-        return decodeGeneralRegister(out, num, SZ_WORD);
-    if (size == SZ_WORD)
-        return decodeGeneralRegister(out, num, SZ_LONG);
-    if (size == SZ_LONG)
-        return decodeGeneralRegister(out, num, SZ_QUAD);
-    return setError(INTERNAL_ERROR);
+    if (size == SZ_BYTE) {
+        decodeGeneralRegister(out, num, SZ_WORD);
+    } else if (size == SZ_WORD) {
+        decodeGeneralRegister(out, num, SZ_LONG);
+    } else if (size == SZ_LONG) {
+        decodeGeneralRegister(out, num, SZ_QUAD);
+    }
+    return getError();
 }
 
 Error DisZ8000::decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size) {
     const auto reg = decodeCtlReg(segmentedModel(), ctlNum);
-    if (reg == REG_ILLEGAL)
-        return setError(ILLEGAL_REGISTER);
+    if (reg == REG_UNDEF)
+        setErrorIf(ILLEGAL_REGISTER);
     if (size == SZ_BYTE && reg != REG_FLAGS)
-        return setError(ILLEGAL_SIZE);
+        setErrorIf(ILLEGAL_SIZE);
     if (size == SZ_WORD && reg == REG_FLAGS)
-        return setError(ILLEGAL_SIZE);
+        setErrorIf(ILLEGAL_SIZE);
     outRegName(out, reg);
-    return OK;
+    return getError();
 }
 
 Error DisZ8000::decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) {
     num &= 0xf;
     if (num == 0)
-        return setError(REGISTER_NOT_ALLOWED);
-    if (decodeGeneralRegister(out, num, SZ_ADDR))
-        return getError();
+        setErrorIf(REGISTER_NOT_ALLOWED);
+    decodeGeneralRegister(out, num, SZ_ADDR);
     out.letter('(');
     if (mode == M_BA) {
         outHex(out.letter('#'), insn.readUint16(), -16);
     } else {  // M_BX
-        if (decodeGeneralRegister(out, insn.post() >> 8, SZ_WORD))
-            return getError();
+        decodeGeneralRegister(out, insn.post() >> 8, SZ_WORD);
     }
     out.letter(')');
     return setErrorIf(insn);
@@ -162,28 +161,29 @@ Error DisZ8000::decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mod
 
 Error DisZ8000::decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) {
     num &= 0xF;
-    const uint8_t addressing = insn.opCode() >> 14;
-    if (addressing == 0 && num == 0 && mode == M_GENI) {  // M_IM
-        return decodeImmediate(insn, out, M_IM, insn.size());
+    const auto addressing = insn.opCode() >> 14;
+    if (addressing == 0) {
+        if (num == 0) {
+            if (mode == M_GENI)
+                return decodeImmediate(insn, out, M_IM, insn.size());  // M_IM
+            setErrorIf(REGISTER_NOT_ALLOWED);
+        }
+        return decodeGeneralRegister(out, num, SZ_ADDR, true);  // M_IR
     }
-    if (addressing == 2 && num && (mode == M_GENI || mode == M_GEND)) {  // M_R
-        return decodeGeneralRegister(out, num, insn.size());
-    }
-    if (addressing == 0 && num) {  // M_IR
-        return decodeGeneralRegister(out, num, SZ_ADDR, true);
+    if (addressing == 2) {
+        if (mode == M_GENA)
+            setErrorIf(REGISTER_NOT_ALLOWED);
+        return decodeGeneralRegister(out, num, insn.size()); // M_R
     }
     if (addressing == 1) {  // M_DA/M_X
-        if (decodeDirectAddress(insn, out))
-            return getError();
+        decodeDirectAddress(insn, out);
         if (num) {
             out.letter('(');
-            if (decodeGeneralRegister(out, num, SZ_WORD))
-                return getError();
+            decodeGeneralRegister(out, num, SZ_WORD);
             out.letter(')');
         }
-        return OK;
     }
-    return setError(INTERNAL_ERROR);
+    return getError();
 }
 
 Error DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out) {
@@ -259,7 +259,7 @@ uint8_t modeField(const DisInsn &insn, ModeField field) {
 }  // namespace
 
 Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, ModeField field) {
-    uint8_t num = modeField(insn, field);
+    auto num = modeField(insn, field);
     switch (mode) {
     case M_NONE:
         return OK;
@@ -283,11 +283,11 @@ Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Mode
         return setErrorIf(insn);
     case M_IRIO:
         if (num == 0)
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         return decodeGeneralRegister(out, num, SZ_WORD, true);
     case M_IR:
         if (num == 0)
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         return decodeGeneralRegister(out, num, SZ_ADDR, true);
     case M_INTR:
         num &= 3;
@@ -306,7 +306,7 @@ Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Mode
         return decodeGeneralRegister(out, num, insn.size());
     case M_WR07:
         if (num >= 8)
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_WR:
         return decodeGeneralRegister(out, num, SZ_WORD);
@@ -318,7 +318,7 @@ Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Mode
         return decodeGenericAddressing(insn, out, mode, num);
     case M_BIT:
         if (insn.size() == SZ_BYTE && num >= 8)
-            return setError(ILLEGAL_BIT_NUMBER);
+            setErrorIf(ILLEGAL_BIT_NUMBER);
         /* Fall-through */
     case M_CNT:
     case M_QCNT:
@@ -333,30 +333,6 @@ Error DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Mode
     default:
         return setError(UNKNOWN_INSTRUCTION);
     }
-}
-
-Error DisZ8000::checkPostWord(const DisInsn &insn) {
-    if (insn.hasPost()) {
-        uint16_t mask;
-        switch (insn.postFormat()) {
-        case PF_0X0X:
-            mask = 0x0F0F;
-            break;
-        case PF_0X00:
-            mask = 0x0F00;
-            break;
-        case PF_0XXX:
-            mask = 0x0FFF;
-            break;
-        default:
-            mask = 0x0FF0;
-            break;
-        }
-        if ((insn.post() & ~mask) == insn.postVal())
-            return OK;
-        return setErrorIf(UNKNOWN_POSTBYTE);
-    }
-    return OK;
 }
 
 namespace {
@@ -380,33 +356,33 @@ Error DisZ8000::checkRegisterOverlap(const DisInsn &insn) {
     const auto snum = modeField(insn, insn.srcField());
     const auto dsize = registerSize(insn, dmode);
     const auto ssize = registerSize(insn, smode);
-    const auto dst = decodeRegNum(segmentedModel(), dnum, dsize);
-    const auto src = decodeRegNum(segmentedModel(), snum, ssize);
+    RegName dst, src;
+    decodeRegNum(segmentedModel(), dnum, dsize, dst);
+    decodeRegNum(segmentedModel(), snum, ssize, src);
     if (insn.isPushPopInsn()) {
         if (checkOverlap(dst, src))
-            return setError(REGISTERS_OVERLAPPED);
-        return OK;
+            setErrorIf(REGISTERS_OVERLAPPED);
+        return getError();
     }
     if (dmode == M_IR && dnum == 0)
-        return setError(REGISTER_NOT_ALLOWED);
+        setErrorIf(REGISTER_NOT_ALLOWED);
     if (snum == 0)
-        return setError(REGISTER_NOT_ALLOWED);
+        setErrorIf(REGISTER_NOT_ALLOWED);
     const auto cnum = modeField(insn, MF_P8);
-    const auto cnt = decodeRegNum(segmentedModel(), modeField(insn, MF_P8), SZ_WORD);
+    RegName cnt;
+    decodeRegNum(segmentedModel(), modeField(insn, MF_P8), SZ_WORD, cnt);
     if (insn.isTranslateInsn()) {
         // @R1 isn't allowed as dst/src.
         if (!segmentedModel() && (dnum == 1 || snum == 1))
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
         // R1 isn't allowed as cnt.
         if (cnum == 1)
-            return setError(REGISTER_NOT_ALLOWED);
+            setErrorIf(REGISTER_NOT_ALLOWED);
     }
 
-    if (dst == REG_ILLEGAL || src == REG_ILLEGAL)
-        return OK;
-    if (checkOverlap(dst, src, cnt))
-        return setError(REGISTERS_OVERLAPPED);
-    return OK;
+    if (dst != REG_ILLEGAL && src != REG_ILLEGAL && checkOverlap(dst, src, cnt))
+        setErrorIf(REGISTERS_OVERLAPPED);
+    return getError();
 }
 
 StrBuffer &DisZ8000::outComma(StrBuffer &out, const DisInsn &insn, AddrMode mode, ModeField field) {
@@ -422,38 +398,33 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    if (checkPostWord(insn))
-        return getError();
-    if ((insn.isPushPopInsn() || insn.isThreeRegsInsn()) && checkRegisterOverlap(insn))
-        return getError();
+    if (insn.isPushPopInsn() || insn.isThreeRegsInsn())
+        checkRegisterOverlap(insn);
     if (insn.isLoadMultiInsn()) {
         const uint8_t reg = modeField(insn, MF_P8);
         const uint8_t cnt = modeField(insn, MF_P0);
         if (reg + cnt >= 16)
-            return setError(OVERFLOW_RANGE);
+            setErrorIf(OVERFLOW_RANGE);
     }
 
     const auto dst = insn.dst();
     if (dst == M_NONE)
-        return setOK();
-    if (decodeOperand(insn, out, dst, insn.dstField()))
         return getError();
+    decodeOperand(insn, out, dst, insn.dstField());
     const auto src = insn.src();
     if (src == M_NONE)
-        return setOK();
-    outComma(out, insn, dst, insn.dstField());
-    if (decodeOperand(insn, out, src, insn.srcField()))
         return getError();
+    outComma(out, insn, dst, insn.dstField());
+    decodeOperand(insn, out, src, insn.srcField());
     const auto ex1 = insn.ex1();
     if (ex1 == M_NONE)
-        return setOK();
+        return getError();
     const auto ex1Field = (ex1 == M_CNT ? MF_P0 : MF_P8);
     outComma(out, insn, ex1, ex1Field);
-    if (decodeOperand(insn, out, ex1, ex1Field))
-        return getError();
+    decodeOperand(insn, out, ex1, ex1Field);
     const auto ex2 = insn.ex2();
     if (ex2 == M_NONE)
-        return setOK();
+        return getError();
     outComma(out, insn, ex2, MF_P0);
     return decodeOperand(insn, out, ex2, MF_P0);
 }

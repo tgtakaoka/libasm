@@ -115,30 +115,48 @@
       ldb    @r1, rl0
       ld     @r1, r0
       ldrb   rh0, .+0x0106
+      ldrb   rh0, .-0x100c
+      ldrb   rh0, .
       ldrb   rl0, .+0x090e
+      ldrb   rl0, .-0x100c
+      ldrb   rl0, .
       ldb    rh0, r1(#0x1112)
       ldb    rl0, r1(#0x191a)
       ldb    rl7, r7(#-0x7f7f)
       ldb    rh0, r8(#-0x7e7e)
       ldr    r0, .+0x0106
+      ldr    r0, .-0x100c
+      ldr    r0, .
       ld     r0, r1(#0x1112)
       ld     r15, r7(#-0x7f7f)
       ldrb   .+0x0106, rh0
+      ldrb   .-0x100c, rh0
+      ldrb   ., rh0
       ldrb   .+0x090e, rl0
+      ldrb   .-0x100c, rl0
+      ldrb   ., rl0
       ldb    r1(#0x1112), rh0
       ldb    r1(#0x191a), rl0
       ldb    r7(#-0x7f7f), rl7
       ldb    r8(#-0x7e7e), rh0
       ldr    .+0x0106, r0
+      ldr    .-0x100c, r0
+      ldr    ., r0
       ld     r1(#0x1112), r0
       ld     r7(#-0x7f7f), r15
       ldar   r0, .+0x0106
+      ldar   r0, .-0x100c
+      ldar   r0, .
       lda    r0, r1(#0x1112)
       lda    r15, r7(#-0x7f7f)
       ldrl   rr0, .+0x0106
+      ldrl   rr0, .-0x100c
+      ldrl   rr0, .
       ldl    rr0, r1(#0x1112)
       ldl    rr0, r8(#-0x7e7e)
       ldrl   .+0x0106, rr0
+      ldrl   .-0x100c, rr0
+      ldrl   ., rr0
       ldl    r1(#0x1112), rr0
       ldl    r8(#-0x7e7e), rr0
       ldps   @r1
@@ -385,43 +403,43 @@
       ldctl  psap, r0
       ldctl  nsp, r0
       sc     #0
-      addb   rh0, rh1
-      addb   rl0, rh1
+      addb   rh0, rh0
+      addb   rl0, rh0
       addb   rh0, rl0
       addb   rl0, rl0
-      add    r0, r1
-      subb   rh0, rh1
-      subb   rl0, rh1
+      add    r0, r0
+      subb   rh0, rh0
+      subb   rl0, rh0
       subb   rh0, rl0
       subb   rl0, rl0
-      sub    r0, r1
-      orb    rh0, rh1
-      orb    rl0, rh1
+      sub    r0, r0
+      orb    rh0, rh0
+      orb    rl0, rh0
       orb    rh0, rl0
       orb    rl0, rl0
-      or     r0, r1
-      andb   rh0, rh1
-      andb   rl0, rh1
+      or     r0, r0
+      andb   rh0, rh0
+      andb   rl0, rh0
       andb   rh0, rl0
       andb   rl0, rl0
-      and    r0, r1
-      xorb   rh0, rh1
-      xorb   rl0, rh1
+      and    r0, r0
+      xorb   rh0, rh0
+      xorb   rl0, rh0
       xorb   rh0, rl0
       xorb   rl0, rl0
-      xor    r0, r1
-      cpb    rh0, rh1
-      cpb    rl0, rh1
+      xor    r0, r0
+      cpb    rh0, rh0
+      cpb    rl0, rh0
       cpb    rh0, rl0
       cpb    rl0, rl0
-      cp     r0, r1
+      cp     r0, r0
+      comb   rh0
       ldctlb rh0, flags
+      negb   rh0
+      testb  rh0
+      tsetb  rh0
+      clrb   rh0
       ldctlb flags, rh0
-      comb   rh1
-      negb   rh1
-      testb  rh1
-      tsetb  rh1
-      clrb   rh1
       comb   rl0
       ldctlb rl0, flags
       negb   rl0
@@ -429,15 +447,15 @@
       tsetb  rl0
       clrb   rl0
       ldctlb flags, rl0
+      com    r0
+      neg    r0
+      test   r0
+      tset   r0
       nop
-      com    r1
+      clr    r0
       setflg p
-      neg    r1
       resflg p
-      test   r1
       comflg p
-      tset   r1
-      clr    r1
       setflg s
       resflg s
       comflg s
@@ -480,19 +498,19 @@
       setflg c,z,s,p
       resflg c,z,s,p
       comflg c,z,s,p
-      cpl    rr0, rr2
+      cpl    rr0, rr0
       pushl  @r1, rr2
-      subl   rr0, rr2
-      push   @r1, r2
-      ldl    rr0, rr2
+      subl   rr0, rr0
+      push   @r1, r0
+      ldl    rr0, rr0
       popl   rr2, @r1
-      addl   rr0, rr2
-      pop    r2, @r1
-      multl  rq0, rr2
-      mult   rr0, r1
-      divl   rq0, rr2
-      div    rr0, r1
-      testl  rr2
+      addl   rr0, rr0
+      pop    r0, @r1
+      multl  rq0, rr0
+      mult   rr0, r0
+      divl   rq0, rr0
+      div    rr0, r0
+      testl  rr0
       ret    f
       ret    lt
       ret    le
@@ -509,31 +527,31 @@
       ret    pl
       ret    nz
       ret    nc
-      ldb    rh0, rh1
-      ldb    rl0, rh1
+      ldb    rh0, rh0
+      ldb    rl0, rh0
       ldb    rh0, rl0
       ldb    rl0, rl0
-      ld     r0, r1
-      resb   rh1, #0
+      ld     r0, r0
+      resb   rh0, #0
       resb   rl0, #0
-      res    r1, #0
-      setb   rh1, #0
+      res    r0, #0
+      setb   rh0, #0
       setb   rl0, #0
-      set    r1, #0
-      bitb   rh1, #0
+      set    r0, #0
+      bitb   rh0, #0
       bitb   rl0, #0
-      bit    r1, #0
-      incb   rh1, #1
+      bit    r0, #0
+      incb   rh0, #1
       incb   rl0, #1
-      inc    r1, #1
-      decb   rh1, #1
+      inc    r0, #1
+      decb   rh0, #1
       decb   rl0, #1
-      dec    r1, #1
-      exb    rh0, rh1
-      exb    rl0, rh1
+      dec    r0, #1
+      exb    rh0, rh0
+      exb    rl0, rh0
       exb    rh0, rl0
       exb    rl0, rl0
-      ex     r0, r1
+      ex     r0, r0
       tccb   f, rh0
       tccb   lt, rh0
       tccb   le, rh0
