@@ -64,13 +64,14 @@ Error DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) {
     if (TABLE.searchOpCode(cpuType(), ixBit, out))
         return setErrorIf(ixBit);
 
-    const auto reg = decodeDataReg(opc);
-    if (reg != REG_HL)
-        return setError(UNKNOWN_INSTRUCTION);
-    const auto dst = ixBit.dst();
-    if (dst == M_BIT)
-        outHex(out, (opc >> 3) & 7, 3).comma();
-    outIndexOffset(out, decodeIndexReg(insn), offset);
+    if (decodeDataReg(opc) == REG_HL) {
+        if (ixBit.dst() == M_BIT)
+            outHex(out, (opc >> 3) & 7, 3).comma();
+        outIndexOffset(out, decodeIndexReg(insn.prefix()), offset);
+    } else {
+        insn.nameBuffer().reset();
+        setError(insn.setErrorIf(UNKNOWN_INSTRUCTION));
+    }
     return getError();
 }
 
@@ -98,8 +99,8 @@ Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     case M_IOA:
         outIndirectAddr(out, insn.readByte(), 8);
         break;
-    case M_INDX:
-        outIndexOffset(out, decodeIndexReg(insn), insn.readByte());
+    case M_IDX:
+        outIndexOffset(out, decodeIndexReg(insn.prefix()), insn.readByte());
         break;
     case M_CC4:
         outCcName(out, decodeCcName((opc >> 3) & 3));
@@ -109,20 +110,23 @@ Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         return OK;
     case M_REL:
         return decodeRelative(insn, out);
-    case M_PTR:
-    case M_PIX:
-        outRegName(out, decodePointerReg(opc >> 4, insn));
+    case M_R16:
+    case M_NOHL:
+    case M_R16X:
+        outRegName(out, decodePointerReg(opc >> 4, insn.prefix()));
         return OK;
     case M_STK:
         outRegName(out, decodeStackReg(opc >> 4));
         return OK;
-    case I_BCDE:
+    case I_PTR:
         outIndirectReg(out, decodeIndirectBase(opc >> 4));
         return OK;
-    case M_REG:
+    case M_SRC:
+    case M_SR8:
         outDataReg(out, decodeDataReg(opc));
         return OK;
     case M_DST:
+    case M_DR8:
         outDataReg(out, decodeDataReg(opc >> 3));
         return OK;
     case M_VEC:
@@ -142,8 +146,8 @@ Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     case R_IR:
         outRegName(out, decodeIrReg(opc >> 3));
         return OK;
-    case R_IXIY:
-        outRegName(out, decodeIndexReg(insn));
+    case R_IDX:
+        outRegName(out, decodeIndexReg(insn.prefix()));
         return OK;
     case R_A:
         outRegName(out, REG_A);
@@ -166,8 +170,8 @@ Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     case R_IM:
         outRegName(out, REG_IM);
         return OK;
-    case I_IXIY:
-        outIndirectReg(out, decodeIndexReg(insn));
+    case I_IDX:
+        outIndirectReg(out, decodeIndexReg(insn.prefix()));
         return OK;
     case I_C:
         outIndirectReg(out, REG_C);

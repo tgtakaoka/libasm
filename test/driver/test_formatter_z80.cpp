@@ -70,7 +70,7 @@ void test_dis_z80() {
             "    ABCD :                            org   0ABCDH\n"
             "    ABCD : FD CB 80 86                res   0, (iy-128)\n"
             "test.bin: 0ABD1H: error: Unknown instruction\n"
-            "    ABD1 : DD CB 00 EF                set\n",
+            "    ABD1 : DD CB 00 EF\n",
             0xfd, 0xcb, 0x80, 0x86, 0xdd, 0xcb, 0x00, 0xef);
 }
 
