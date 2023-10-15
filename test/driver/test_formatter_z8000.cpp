@@ -74,7 +74,7 @@ void test_dis_z8001() {
             "  789ABC :                            ORG    %789ABC\n"
             "  789ABC : 4C15 1617 1919             LDB    |%160017|(R1), #25\n"
             "test.bin: %789AC2: error: Registers overlapped\n"
-            "  789AC2 : 9745                       POP\n",
+            "  789AC2 : 9745                       POP    R5, @RR4\n",
             0x4c15, 0x1617, 0x1919, 0x9745);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x89abcd));
@@ -96,7 +96,7 @@ void test_dis_z8002() {
             "    9abc :                            org    %9abc\n"
             "    9abc : 1000 0102 0304             cpl    rr0, #%01020304\n"
           "test.bin: %9ac2: error: Registers overlapped\n"
-            "    9ac2 : 5144                       pushl\n",
+            "    9ac2 : 5144                       pushl  @r4, %0000(r4)\n",
             0x1000, 0x0102, 0x0304, 0x5144);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x10000));

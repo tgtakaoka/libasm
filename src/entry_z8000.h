@@ -67,7 +67,7 @@ enum AddrMode : uint8_t {
     M_WR07 = 27,  // R0~R7
     M_WR = 28,    // R0-R15
     M_IRIO = 29,  // Indirect Register IO Address: @R1~R15
-    M_ERROR = 31,
+    M_ERROR = 255,
 };
 
 enum Ex1Mode : uint8_t {
@@ -84,26 +84,27 @@ enum Ex2Mode : uint8_t {
 
 enum PostFormat : uint8_t {
     PF_NONE = 0,  // No Post Word
-    PF_0XX0 = 1,  // 0 is part of instruction
-    PF_0XX8 = 2,  // 8 is part of instruction
-    PF_0XXE = 3,  // E is part of instruction
-    PF_0X0X = 4,  // Any post word
-    PF_0X00 = 5,  // Any post word
-    PF_0XXX = 6,  // Any post word
+    PF_0XX0 = 1,  // 0s are part of instruction
+    PF_0XX8 = 2,  // 0 and 8 are part of instruction
+    PF_0XXE = 3,  // 0 and E are part of instruction
+    PF_0X0X = 4,  // 0s are part of instruction
+    PF_0X00 = 5,  // 0s are part of instruction
+    PF_0XXX = 6,  // 0 is part of instruction
 };
 
-enum CodeMask : uint8_t {
-    CM_0x0000 = 0,
-    CM_0x0003 = 1,
-    CM_0x000F = 2,
-    CM_0x00F0 = 3,
-    CM_0x00F2 = 4,
-    CM_0x00F7 = 5,
-    CM_0x00FF = 6,
-    CM_0x0F7F = 7,
-    CM_0x0FFF = 8,
-    CM_0xC0F0 = 9,
-    CM_0xC0FF = 10,
+enum CodeFormat : uint8_t {
+    CF_0000 = 0,
+    CF_0003 = 1,
+    CF_000F = 2,
+    CF_00F0 = 3,
+    CF_00F2 = 4,
+    CF_00F7 = 5,
+    CF_00FF = 6,
+    CF_0F7F = 7,
+    CF_0FFF = 8,
+    CF_C0F0 = 9,
+    CF_C0FF = 10,
+    CF_X0FF = 11,  // CF_C0FF with extra check
 };
 
 enum ModeField : uint8_t {
@@ -124,16 +125,16 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _size;
 
         static constexpr Flags create(AddrMode dst, ModeField dstField, AddrMode src,
-                ModeField srcField, Ex1Mode ex1, Ex2Mode ex2, PostFormat post, CodeMask mask,
-                OprSize size) {
+                ModeField srcField, Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat,
+                CodeFormat codeFormat, OprSize size) {
             return Flags{Entry::opr(dst, dstField), Entry::opr(src, srcField),
-                    Entry::ext(ex1, ex2, post), Entry::size(mask, size)};
+                    Entry::ext(ex1, ex2, postFormat), Entry::size(codeFormat, size)};
         }
 
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
             return Flags{Entry::opr(dst, MF_NO), Entry::opr(src, MF_NO),
                     Entry::ext(toEx1Mode(ex1), toEx2Mode(ex2), PF_NONE),
-                    Entry::size(CM_0x0000, SZ_NONE)};
+                    Entry::size(CF_0000, SZ_NONE)};
         }
 
         Flags read() const {
@@ -146,11 +147,16 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode ex2() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
         ModeField dstField() const { return Entry::field(_dst); }
         ModeField srcField() const { return Entry::field(_src); }
-        PostFormat postFormat() const { return PostFormat((_ext >> postVal_gp) & postVal_gm); }
+        PostFormat postFormat() const {
+            return PostFormat((_ext >> postFormat_gp) & postFormat_gm);
+        }
+        CodeFormat codeFormat() const {
+            return CodeFormat((_size >> codeFormat_gp) & codeFormat_gm);
+        }
         OprSize size() const { return OprSize((_size >> size_gp) & size_gm); }
-        uint8_t postMask() const { return Entry::postMask(postFormat()); }
-        uint8_t postVal() const { return Entry::postVal(postFormat()); }
-        uint16_t codeMask() const { return Entry::codeMask(_size); }
+        Config::opcode_t postMask() const { return Entry::postMask(postFormat()); }
+        Config::opcode_t postVal() const { return Entry::postVal(postFormat()); }
+        Config::opcode_t codeMask() const { return Entry::codeMask(codeFormat()); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -166,14 +172,14 @@ private:
                (static_cast<uint8_t>(field) << modeField_gp);
     }
 
-    static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat post) {
+    static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat) {
         return (static_cast<uint8_t>(ex1) << ex1Mode_gp) |
                (static_cast<uint8_t>(ex2) << ex2Mode_gp) |
-               (static_cast<uint8_t>(post) << postVal_gp);
+               (static_cast<uint8_t>(postFormat) << postFormat_gp);
     }
 
-    static constexpr uint8_t size(CodeMask mask, OprSize size) {
-        return (static_cast<uint8_t>(mask) << codeMask_gp) |
+    static constexpr uint8_t size(CodeFormat codeFormat, OprSize size) {
+        return (static_cast<uint8_t>(codeFormat) << codeFormat_gp) |
                (static_cast<uint8_t>(size) << size_gp);
     }
 
@@ -210,9 +216,9 @@ private:
         }
     }
 
-    static uint8_t postVal(PostFormat post);
-    static uint8_t postMask(PostFormat post);
-    static uint16_t codeMask(uint8_t size);
+    static Config::opcode_t postVal(PostFormat postFormat);
+    static Config::opcode_t postMask(PostFormat postFormat);
+    static Config::opcode_t codeMask(CodeFormat codeFormat);
 
     // |dst|, |src|
     static constexpr int mode_gp = 0;
@@ -222,14 +228,14 @@ private:
     // |ext|
     static constexpr int ex1Mode_gp = 0;
     static constexpr int ex2Mode_gp = 2;
-    static constexpr int postVal_gp = 4;
+    static constexpr int postFormat_gp = 4;
     static constexpr uint8_t ex1Mode_gm = 0x3;
     static constexpr uint8_t ex2Mode_gm = 0x3;
-    static constexpr uint8_t postVal_gm = 0x7;
+    static constexpr uint8_t postFormat_gm = 0x7;
     // |size|
-    static constexpr int codeMask_gp = 0;
+    static constexpr int codeFormat_gp = 0;
     static constexpr int size_gp = 4;
-    static constexpr uint8_t codeMask_gm = 0xf;
+    static constexpr uint8_t codeFormat_gm = 0xf;
     static constexpr uint8_t size_gm = 0x7;
 };
 

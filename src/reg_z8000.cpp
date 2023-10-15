@@ -129,9 +129,8 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
     if (isLongReg(name))
         return out.text_P(TEXT_REG_RR).uint8(name - REG_RR0);
     if (isByteReg(name))
-        return name < REG_RL0 ?
-            out.text_P(TEXT_REG_RH).uint8(name - REG_RH0) :
-            out.text_P(TEXT_REG_RL).uint8(name- REG_RL0);
+        return name < REG_RL0 ? out.text_P(TEXT_REG_RH).uint8(name - REG_RH0)
+                              : out.text_P(TEXT_REG_RL).uint8(name - REG_RL0);
     if (isQuadReg(name))
         return out.text_P(TEXT_REG_RQ).uint8(name - REG_RQ0);
     return outCtlName(out, name);
@@ -141,65 +140,60 @@ uint8_t encodeGeneralRegName(RegName name) {
     return uint8_t(name) & 0xF;
 }
 
-RegName decodeRegNum(bool segmentedModel, uint8_t num, OprSize size) {
+bool decodeRegNum(bool segmentedModel, uint8_t num, OprSize size, RegName &name) {
     switch (size) {
     case SZ_BYTE:
-        return decodeByteReg(num);
+        return isByteReg(name = decodeByteReg(num));
     case SZ_WORD:
-        return decodeWordReg(num);
+        return isWordReg(name = decodeWordReg(num));
     case SZ_LONG:
-        return decodeLongReg(num);
+        return isLongReg(name = decodeLongReg(num));
     case SZ_QUAD:
-        return decodeQuadReg(num);
+        return isQuadReg(name = decodeQuadReg(num));
     case SZ_ADDR:
-        return segmentedModel ? decodeLongReg(num) : decodeWordReg(num);
+        if (segmentedModel)
+            return isLongReg(name = decodeLongReg(num));
+        return isWordReg(name = decodeWordReg(num));
     default:
-        return REG_UNDEF;
+        name = REG_UNDEF;
+        return false;
     }
 }
 
 RegName decodeWordReg(uint8_t num) {
-    num &= 0x0f;
-    return RegName(num);
+    return RegName(num & 0xF);
 }
 
 RegName decodeByteReg(uint8_t num) {
-    num &= 0x0f;
-    return RegName(num + 16);
+    return RegName((num & 0xF) + REG_RH0);
 }
 
 RegName decodeLongReg(uint8_t num) {
-    num &= 0x0f;
-    return num % 2 == 0 ? RegName(num + 32) : REG_ILLEGAL;
+    return RegName((num & 0xF) + REG_RR0);
 }
 
 RegName decodeQuadReg(uint8_t num) {
-    num &= 0x0f;
-    return num % 4 == 0 ? RegName(num + 48) : REG_ILLEGAL;
+    return RegName((num & 0xF) + REG_RQ0);
 }
 
 bool isWordReg(RegName name) {
-    const auto r = static_cast<int8_t>(name);
-    return r >= 0 && r < 16;
+    return name >= REG_R0 && name <= REG_R15;
 }
 
 bool isByteReg(RegName name) {
-    const auto r = static_cast<int8_t>(name);
-    return r >= 16 && r < 16 + 16;
+    return name >= REG_RH0 && name <= REG_RL7;
 }
 
 bool isLongReg(RegName name) {
-    const auto r = static_cast<int8_t>(name);
-    return r >= 32 && r < 32 + 16;
+    return name >= REG_RR0 && name <= REG_RR14 && name % 2 == 0;
 }
 
 bool isQuadReg(RegName name) {
-    const auto r = static_cast<int8_t>(name);
-    return r >= 48 && r < 48 + 16;
+    return name >= REG_RQ0 && name <= REG_RQ12 && name % 4 == 0;
 }
 
 bool isCtlReg(RegName name) {
-    return static_cast<int8_t>(name) >= 64;
+    return name >= REG_FLAGS;
 }
 
 bool isSegCtlReg(RegName name) {
@@ -223,10 +217,10 @@ StrBuffer &outCtlName(StrBuffer &out, RegName name) {
 RegName decodeCtlReg(bool segmentedModel, uint8_t num) {
     num &= 7;
     const auto *entry = CTL_TABLE.searchName(num + 64);
-    auto name = entry ? RegName(entry->name()) : REG_ILLEGAL;
+    auto name = entry ? RegName(entry->name()) : REG_UNDEF;
     if (!segmentedModel && isSegCtlReg(name)) {
         name = RegName(entry->name() + 8);
-        return isNonSegCtlReg(name) ? name : REG_ILLEGAL;
+        return isNonSegCtlReg(name) ? name : REG_UNDEF;
     }
     return name;
 }

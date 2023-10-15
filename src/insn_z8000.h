@@ -31,8 +31,8 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode ex1() const { return flags().ex1(); }
     AddrMode ex2() const { return flags().ex2(); }
     PostFormat postFormat() const { return flags().postFormat(); }
-    uint8_t postMask() const { return flags().postMask(); }
-    uint8_t postVal() const { return flags().postVal(); }
+    Config::opcode_t postMask() const { return flags().postMask(); }
+    Config::opcode_t postVal() const { return flags().postVal(); }
     ModeField dstField() const { return flags().dstField(); }
     ModeField srcField() const { return flags().srcField(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
