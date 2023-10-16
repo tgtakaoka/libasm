@@ -27,8 +27,6 @@ namespace z80 {
 struct AsmZ80 final : Assembler, Config {
     AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
 
-    bool hasSetInstruction() const override { return true; }
-
 private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;

@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_tlcs90() {
-    PREP_ASM(tlcs90::AsmTlcs90, IntelDirective);
+    PREP_ASM(tlcs90::AsmTlcs90, ZilogDirective);
 
     listing.setUpperHex(false);
 
@@ -35,11 +35,13 @@ void test_asm_tlcs90() {
             "        cpu   tlcs90\n"
             "; comment line\n"
             "        org   0abcdh\n"
-            "        xor   (hl+a), 0efh\n",
+            "        xor   (hl+a), 0efh\n"
+            "        set   7,a\n",
             "          0 :                            cpu   tlcs90\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
-            "       abcd : f7 6d ef                   xor   (hl+a), 0efh\n");
+            "       abcd : f7 6d ef                   xor   (hl+a), 0efh\n"
+            "       abd0 : fe bf                      set   7,a\n");
 }
 
 void test_dis_tlcs90() {

@@ -83,10 +83,7 @@ IntelDirective dir8051(asm8051);
 IntelDirective dir8080(asm8080);
 IntelDirective dir8086(asm8086);
 IntelDirective dir8096(asm8096);
-IntelDirective dir90(asm90);
 IntelDirective dir9900(asm9900);
-IntelDirective dirz8000(asmz8000);
-IntelDirective dirz8(asmz8);
 MostekDirective dir6502(asm6502);
 MotorolaDirective dir68000(asm68000);
 MotorolaDirective dir6800(asm6800);
@@ -96,7 +93,10 @@ NationalDirective dir32000(asm32000);
 NationalDirective dir8060(asm8060);
 NationalDirective dir8070(asm8070);
 RcaDirective dir1802(asm1802);
-Z80Directive dirz80(asmz80);
+Z8Directive dirz8(asmz8);
+ZilogDirective dir90(asm90);
+ZilogDirective dirz8000(asmz8000);
+ZilogDirective dirz80(asmz80);
 
 AsmDirective *directives[] = {
         &dir6800,

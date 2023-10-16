@@ -75,8 +75,6 @@ void test_cpu() {
 
     EQUALS("cpu v30emuZ", true, assembler.setCpu("v30emuZ"));
     EQUALS_P("get cpu", "V30EMU", assembler.cpu_P());
-
-    EQUALS("has SET", true, assembler.hasSetInstruction());
 }
 
 static void test_move_inherent() {

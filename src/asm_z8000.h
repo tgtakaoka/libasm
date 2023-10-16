@@ -31,8 +31,6 @@ struct AsmZ8000 final : Assembler, Config {
 
     Error setShortDirect(bool enable);
 
-    bool hasSetInstruction() const override { return true; }
-
 private:
     const BoolOption<AsmZ8000> _opt_shortDitrect;
 

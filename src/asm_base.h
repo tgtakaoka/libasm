@@ -56,9 +56,6 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     Radix listRadix() const { return _listRadix; }
     Error setParserRadix(int32_t radix);
 
-    /** Whether this CPU has "SET" instruction which conflict with "SET" directive */
-    virtual bool hasSetInstruction() const { return false; }
-
     Error setCurrentLocation(uint32_t location);
     uint32_t currentLocation() const { return _currentLocation; }
 

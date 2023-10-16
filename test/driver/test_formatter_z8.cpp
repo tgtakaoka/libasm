@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_z8() {
-    PREP_ASM(z8::AsmZ8, IntelDirective);
+    PREP_ASM(z8::AsmZ8, Z8Directive);
 
     listing.setUpperHex(false);
 
