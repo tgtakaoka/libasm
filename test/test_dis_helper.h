@@ -54,11 +54,17 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     } while (0)
 #define VASSERT(error, addr, name, opr, ...) \
     __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
-#define AERRT(addr, name, opr, err, ...) VASSERT(err, addr, name, opr, __VA_ARGS__)
-#define ATEST(addr, name, opr, ...) AERRT(addr, name, opr, OK, __VA_ARGS__)
-#define ERRT(name, opr, err, ...) AERRT(0, name, opr, err, __VA_ARGS__)
-#define UNKN(...) AERRT(0, "", "", UNKNOWN_INSTRUCTION, __VA_ARGS__)
-#define TEST(name, opr, ...) ERRT(name, opr, OK, __VA_ARGS__)
+#define AERRT(addr, name, opr, err, at, ...)                                         \
+    do {                                                                             \
+        VASSERT(err, addr, name, opr, __VA_ARGS__);                                  \
+        asserter.equals(__FILE__, __LINE__, "error at", at, disassembler.errorAt()); \
+    } while (0)
+#define ATEST(addr, name, opr, ...) AERRT(addr, name, opr, OK, "", __VA_ARGS__)
+#define ANMEM(addr, name, opr, at, ...) AERRT(addr, name, opr, NO_MEMORY, at, __VA_ARGS__)
+#define ERRT(name, opr, err, at, ...) AERRT(0, name, opr, err, at, __VA_ARGS__)
+#define NMEM(name, opr, at, ...) ANMEM(0, name, opr, at, __VA_ARGS__)
+#define UNKN(...) AERRT(0, "", "", UNKNOWN_INSTRUCTION, "", __VA_ARGS__)
+#define TEST(name, opr, ...) ERRT(name, opr, OK, "", __VA_ARGS__)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

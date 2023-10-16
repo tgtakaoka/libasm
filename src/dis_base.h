@@ -35,7 +35,7 @@
 
 namespace libasm {
 
-struct Disassembler : ErrorReporter {
+struct Disassembler : ErrorAt {
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
@@ -117,7 +117,7 @@ protected:
     StrBuffer &outRelAddr(
             StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const;
 
-    uint32_t branchTarget(uint32_t base, int32_t delta);
+    uint32_t branchTarget(uint32_t base, int32_t delta, Error &error) const;
 
 private:
     virtual ConfigSetter &configSetter() = 0;
