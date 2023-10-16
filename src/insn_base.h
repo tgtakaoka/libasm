@@ -231,7 +231,7 @@ private:
 /**
  * Base for disassembler instruction code.
  */
-struct DisInsnBase : ErrorReporter {
+struct DisInsnBase : ErrorAt {
     uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
@@ -246,11 +246,12 @@ struct DisInsnBase : ErrorReporter {
     /** Read 8 bit data. */
     uint8_t readByte() {
         if (!_memory.hasNext()) {
-            setErrorIf(NO_MEMORY);
+            setErrorIf(_out, NO_MEMORY);
             return 0;
         }
         const uint8_t data = _memory.readByte();
-        _insn.emitByte(data);
+        if (_insn.emitByte(data))
+            setErrorIf(_out, NO_MEMORY);
         return data;
     }
 
@@ -297,13 +298,17 @@ struct DisInsnBase : ErrorReporter {
     }
 
 protected:
-    DisInsnBase(Insn &insn, DisMemory &memory) : ErrorReporter(), _insn(insn), _memory(memory) {}
-    DisInsnBase(Insn &insn, DisInsnBase &o) : ErrorReporter(), _insn(insn), _memory(o._memory) {}
-    DisInsnBase(DisInsnBase &o) : ErrorReporter(), _insn(o._insn), _memory(o._memory) {}
+    DisInsnBase(Insn &insn, DisMemory &memory, const StrBuffer &out)
+        : ErrorAt(), _insn(insn), _memory(memory), _out(out) {}
+    DisInsnBase(Insn &insn, DisInsnBase &o, const StrBuffer &out)
+        : ErrorAt(), _insn(insn), _memory(o._memory), _out(out) {}
+    DisInsnBase(DisInsnBase &o, const StrBuffer &out)
+        : ErrorAt(*this), _insn(o._insn), _memory(o._memory), _out(out) {}
 
 private:
     Insn &_insn;
     DisMemory &_memory;
+    const StrBuffer &_out;
 };
 
 template <typename Conf, typename Entry>
@@ -449,9 +454,10 @@ struct DisInsnImpl : DisInsnBase {
     }
 
 protected:
-    DisInsnImpl(Insn &insn, DisMemory &memory) : DisInsnBase(insn, memory) {}
-    DisInsnImpl(Insn &insn, DisInsnImpl &o) : DisInsnBase(insn, o) {}
-    DisInsnImpl(DisInsnImpl &o) : DisInsnBase(o) {}
+    DisInsnImpl(Insn &insn, DisMemory &memory, const StrBuffer &out)
+        : DisInsnBase(insn, memory, out) {}
+    DisInsnImpl(Insn &insn, DisInsnImpl &o, const StrBuffer &out) : DisInsnBase(insn, o, out) {}
+    DisInsnImpl(DisInsnImpl &o, const StrBuffer &out) : DisInsnBase(o, out) {}
 
 private:
     static constexpr bool big = Conf::ENDIAN == ENDIAN_BIG;

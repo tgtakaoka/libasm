@@ -111,6 +111,8 @@ private:
     Error _error;
 };
 
+struct StrBuffer;
+
 struct ErrorAt : ErrorReporter {
     constexpr ErrorAt() : ErrorReporter(), _at(StrScanner::EMPTY.str()) {}
 
@@ -119,12 +121,10 @@ struct ErrorAt : ErrorReporter {
     Error setError(Error error) { return ErrorReporter::setError(error); }
     Error setErrorIf(Error error) { return ErrorReporter::setErrorIf(error); }
     Error setError(const ErrorReporter &o) { return ErrorReporter::setError(o); }
-    Error setErrorIf(const ErrorReporter &o) {
-        return ErrorReporter::setErrorIf(o.getError());
-    }
+    Error setErrorIf(const ErrorReporter &o) { return ErrorReporter::setErrorIf(o.getError()); }
     Error setError(const ErrorAt &o) {
         setAt(o._at);
-        return ErrorReporter::setError(o.getError());
+        return setError(o.getError());
     }
     Error setErrorIf(const ErrorAt &o) { return getError() ? getError() : setError(o); }
     Error setError(const ErrorAt &o, Error error) {
@@ -134,16 +134,45 @@ struct ErrorAt : ErrorReporter {
     Error setErrorIf(const ErrorAt &o, Error error) {
         return getError() ? getError() : setError(o, error);
     }
+    Error setError(const ErrorAt &o, const ErrorReporter &error) {
+        setAt(o._at);
+        return setError(error);
+    }
+    Error setErrorIf(const ErrorAt &o, const ErrorReporter &error) {
+        return getError() ? getError() : setError(o, error);
+    }
     Error setError(const StrScanner &at, Error error) {
         setAt(at);
-        return ErrorReporter::setError(error);
+        return setError(error);
     }
     Error setErrorIf(const StrScanner &at, Error error) {
+        return getError() ? getError() : setError(at, error);
+    }
+    Error setError(const StrScanner &at, const ErrorReporter &error) {
+        setAt(at);
+        return setError(error);
+    }
+    Error setErrorIf(const StrScanner &at, const ErrorReporter &error) {
+        return getError() ? getError() : setError(at, error);
+    }
+    Error setError(const StrBuffer &at, Error error) {
+        setAt(at);
+        return setError(error);
+    }
+    Error setErrorIf(const StrBuffer &at, Error error) {
+        return getError() ? getError() : setError(at, error);
+    }
+    Error setError(const StrBuffer &at, const ErrorReporter &error) {
+        setAt(at);
+        return setError(error);
+    }
+    Error setErrorIf(const StrBuffer &at, const ErrorReporter &error) {
         return getError() ? getError() : setError(at, error);
     }
 
     void setAt(const char *at) { _at = at; }
     void setAt(const StrScanner &at) { _at = at.str(); }
+    void setAt(const StrBuffer &at);
     constexpr const char *errorAt() const { return _at; }
 
 private:

@@ -16,7 +16,13 @@
 
 #include "error_reporter.h"
 
+#include "str_buffer.h"
+
 namespace libasm {
+
+void ErrorAt::setAt(const StrBuffer &at) {
+    _at = at.mark();
+}
 
 const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
     switch (error) {

@@ -90,11 +90,15 @@ Error Disassembler::setRelativeTarget(bool enable) {
 
 Error Disassembler::setCStyle(bool enable) {
     _cstyle = enable;
+    if (_cstyle && _intelHex)
+        _intelHex = false;
     return OK;
 }
 
 Error Disassembler::setIntelHex(bool enable) {
     _intelHex = enable;
+    if (_intelHex && _cstyle)
+        _cstyle = false;
     return OK;
 }
 
@@ -205,11 +209,9 @@ StrBuffer &Disassembler::outRelAddr(
     return outHex(caseOut, val, deltaBits, true).over(out);
 }
 
-uint32_t Disassembler::branchTarget(uint32_t base, int32_t delta) {
+uint32_t Disassembler::branchTarget(uint32_t base, int32_t delta, Error &error) const {
     const auto target = base + delta;
-    const auto err = config().checkAddr(target);
-    if (err)
-        setErrorIf(err);
+    error = config().checkAddr(target);
     return target;
 }
 
