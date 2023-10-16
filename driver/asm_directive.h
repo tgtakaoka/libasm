@@ -36,7 +36,8 @@ struct AsmDirective : ErrorAt {
             StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
     Assembler &assembler() const { return _assembler; }
-    virtual BinEncoder &defaultEncoder() = 0;
+    virtual BinEncoder &defaultEncoder() const;
+
     Error processPseudo(
             const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
@@ -60,8 +61,10 @@ protected:
     // Common PseudoHandler
     Error defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
     Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 
@@ -72,27 +75,23 @@ protected:
 
 struct MotorolaDirective : AsmDirective {
     MotorolaDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override;
-
-private:
-    Error defineString(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    BinEncoder &defaultEncoder() const override;
 };
 
 struct IntelDirective : AsmDirective {
     IntelDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override;
-
-private:
-    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
-struct MostekDirective : AsmDirective {
+struct MostekDirective : MotorolaDirective {
     MostekDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override;
 };
 
-struct Z80Directive : IntelDirective {
-    Z80Directive(Assembler &assembler);
+struct Z8Directive : IntelDirective {
+    Z8Directive(Assembler &assembler);
+};
+
+struct ZilogDirective : IntelDirective {
+    ZilogDirective(Assembler &assembler);
 };
 
 struct RcaDirective : IntelDirective {
@@ -101,20 +100,14 @@ struct RcaDirective : IntelDirective {
 
 struct NationalDirective : IntelDirective {
     NationalDirective(Assembler &assembler);
-
-private:
-    Error setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
 };
 
 struct FairchildDirective : AsmDirective {
     FairchildDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override;
 };
 
-class DecDirective : public AsmDirective {
-public:
+struct DecDirective : AsmDirective {
     DecDirective(Assembler &assembler);
-    BinEncoder &defaultEncoder() override;
 };
 
 }  // namespace driver

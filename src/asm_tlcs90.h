@@ -29,8 +29,6 @@ struct Operand;
 struct AsmTlcs90 final : Assembler, Config {
     AsmTlcs90(const ValueParser::Plugins &plugins = defaultPlugins());
 
-    bool hasSetInstruction() const override { return true; }
-
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op);

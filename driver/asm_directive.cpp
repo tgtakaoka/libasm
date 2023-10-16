@@ -42,7 +42,7 @@ Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriv
     return defineSymbol(scan, list, driver, list.lineSymbol(), /*variable*/ true);
 }
 
-Error NationalDirective::setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     if (list.lineSymbol().size())
         return setError(ILLEGAL_LABEL);
     StrScanner symbol;
@@ -125,7 +125,7 @@ Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &d
     return setOK();
 }
 
-Error IntelDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
     const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
@@ -159,8 +159,6 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(".end", &AsmDirective::endAssemble);
     registerPseudo(".equ", &AsmDirective::defineConstant);
     registerPseudo(".set", &AsmDirective::defineVariable);
-    if (a.hasSetInstruction())
-        disablePseudo("set");
     registerPseudo(".function", &AsmDirective::defineFunction);
 }
 
@@ -172,6 +170,8 @@ void AsmDirective::registerPseudo(const char *name, PseudoHandler handler) {
 
 void AsmDirective::disablePseudo(const char *name) {
     _pseudos.erase(std::string(name));
+    if (*name++ == '.')
+        _pseudos.erase(std::string(name));
 }
 
 Error AsmDirective::processPseudo(
@@ -183,30 +183,34 @@ Error AsmDirective::processPseudo(
     return (this->*fp)(scan, list, driver);
 }
 
+BinEncoder &AsmDirective::defaultEncoder() const {
+    return IntelHex::encoder();
+}
+
 MotorolaDirective::MotorolaDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
-BinEncoder &MotorolaDirective::defaultEncoder() {
+BinEncoder &MotorolaDirective::defaultEncoder() const {
     return MotoSrec::encoder();
 }
 
 IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
-    registerPseudo(".z80syntax", static_cast<PseudoHandler>(&IntelDirective::switchIntelZilog));
+    registerPseudo(".z80syntax", &IntelDirective::switchIntelZilog);
 }
 
-BinEncoder &IntelDirective::defaultEncoder() {
-    return IntelHex::encoder();
-}
-
-MostekDirective::MostekDirective(Assembler &assembler) : AsmDirective(assembler) {
+MostekDirective::MostekDirective(Assembler &assembler) : MotorolaDirective(assembler) {
     registerPseudo("=", &MostekDirective::defineConstant);
 }
 
-BinEncoder &MostekDirective::defaultEncoder() {
-    return MotoSrec::encoder();
+Z8Directive::Z8Directive(Assembler &assembler) : IntelDirective(assembler) {
+    disablePseudo(".set");
+    registerPseudo("var", &Z8Directive::setVariable);
+    registerPseudo(".set", &Z8Directive::setVariable);
 }
 
-Z80Directive::Z80Directive(Assembler &assembler) : IntelDirective(assembler) {
-    registerPseudo("defl", &Z80Directive::defineVariable);
+ZilogDirective::ZilogDirective(Assembler &assembler) : IntelDirective(assembler) {
+    disablePseudo(".set");
+    registerPseudo("defl", &ZilogDirective::defineVariable);
+    registerPseudo("var", &ZilogDirective::defineVariable);
 }
 
 RcaDirective::RcaDirective(Assembler &assembler) : IntelDirective(assembler) {
@@ -215,23 +219,14 @@ RcaDirective::RcaDirective(Assembler &assembler) : IntelDirective(assembler) {
 
 NationalDirective::NationalDirective(Assembler &assembler) : IntelDirective(assembler) {
     disablePseudo(".set");
-    disablePseudo("set");
     registerPseudo("=", &NationalDirective::defineConstant);
-    registerPseudo(".set", static_cast<PseudoHandler>(&NationalDirective::setVariable));
+    registerPseudo(".set", &NationalDirective::setVariable);
 }
 
 FairchildDirective::FairchildDirective(Assembler &assembler) : AsmDirective(assembler) {}
 
-BinEncoder &FairchildDirective::defaultEncoder() {
-    return IntelHex::encoder();
-}
-
 DecDirective::DecDirective(Assembler &assembler) : AsmDirective(assembler) {
     registerPseudo("=", &DecDirective::defineConstant);
-}
-
-BinEncoder &DecDirective::defaultEncoder() {
-    return IntelHex::encoder();
 }
 
 }  // namespace driver

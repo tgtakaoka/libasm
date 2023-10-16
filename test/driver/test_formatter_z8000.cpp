@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_z8001() {
-    PREP_ASM(z8000::AsmZ8000, IntelDirective);
+    PREP_ASM(z8000::AsmZ8000, ZilogDirective);
 
     listing.setUpperHex(false);
 
@@ -35,15 +35,17 @@ void test_asm_z8001() {
             "        cpu    z8001\n"
             "; comment line\n"
             "        org    789abch\n"
-            "        ldb    |160017h|(r1), #25\n",
+            "        ldb    |160017h|(r1), #25\n"
+            "        set    r5, r15\n",
             "          0 :                            cpu    z8001\n"
             "          0 :                    ; comment line\n"
             "     789abc :                            org    789abch\n"
-            "     789abc : 4c15 1617 1919             ldb    |160017h|(r1), #25\n");
+            "     789abc : 4c15 1617 1919             ldb    |160017h|(r1), #25\n"
+            "     789ac2 : 250f 0500                  set    r5, r15\n");
 }
 
 void test_asm_z8002() {
-    PREP_ASM(z8000::AsmZ8000, IntelDirective);
+    PREP_ASM(z8000::AsmZ8000, ZilogDirective);
 
     listing.setUpperHex(false);
 
@@ -51,11 +53,13 @@ void test_asm_z8002() {
             "        cpu    z8002\n"
             "; comment line\n"
             "        org    9abch\n"
-            "        cpl    rr0, #01020304h\n",
+            "        cpl    rr0, #01020304h\n"
+            "        set    1234h(r5), #15\n",
             "          0 :                            cpu    z8002\n"
             "          0 :                    ; comment line\n"
             "       9abc :                            org    9abch\n"
-            "       9abc : 1000 0102 0304             cpl    rr0, #01020304h\n");
+            "       9abc : 1000 0102 0304             cpl    rr0, #01020304h\n"
+            "       9ac2 : 655f 1234                  set    1234h(r5), #15\n");
 }
 
 void test_dis_z8001() {

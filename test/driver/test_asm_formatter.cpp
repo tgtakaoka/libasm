@@ -101,7 +101,7 @@ void test_symbols_ins8060() {
 }
 
 void test_symbols_z80() {
-    PREP_ASM_SYMBOL(z80::AsmZ80, Z80Directive, REPORT_DUPLICATE);
+    PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective, REPORT_DUPLICATE);
 
     listing.setUpperHex(true);
     listing.enableLineNumber(true);
@@ -112,7 +112,7 @@ void test_symbols_z80() {
             "label1  equ   3456H\n"
             "var1    defl  1234H\n"
             "var1    equ   1234H\n"
-            "var1    defl  3456H\n"
+            "var1    var   3456H\n"
             "        org   1234H\n"
             "label1  set   0, b\n"  // Z80 has SET instruction
             "var1\n"
@@ -126,7 +126,7 @@ void test_symbols_z80() {
             "       4/       0 : =1234              var1    defl  1234H\n"
             "z80:5: error: Duplicate label\n"
             "       5/       0 :                    var1    equ   1234H\n"
-            "       6/       0 : =3456              var1    defl  3456H\n"
+            "       6/       0 : =3456              var1    var   3456H\n"
             "       7/    1234 :                            org   1234H\n"
             "       8/    1234 : CB C0              label1  set   0, b\n"
             "z80:9:1: error: Duplicate label\n"
@@ -143,7 +143,7 @@ void test_switch_cpu() {
     i8080::AsmI8080 asm8080;
     IntelDirective dir8080(asm8080);
     z80::AsmZ80 asmz80;
-    Z80Directive dirz80(asmz80);
+    ZilogDirective dirz80(asmz80);
     AsmDirective *dirs[] = {&dir6809, &dir6502, &dir8080, &dirz80};
     TestSources sources;
     AsmDriver driver(&dirs[0], &dirs[4], sources);
@@ -203,7 +203,7 @@ void test_list_radix() {
     mos6502::AsmMos6502 asm6502;
     MostekDirective dir6502(asm6502);
     z80::AsmZ80 asmz80;
-    Z80Directive dirz80(asmz80);
+    ZilogDirective dirz80(asmz80);
     AsmDirective *dirs[] = {&dir6502, &dirz80};
     TestSources sources;
     std::map<std::string, std::string> options;

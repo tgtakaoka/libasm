@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_z80() {
-    PREP_ASM(z80::AsmZ80, Z80Directive);
+    PREP_ASM(z80::AsmZ80, ZilogDirective);
 
     TestReader inc("data/db.inc");
     sources.add(inc);
@@ -44,7 +44,8 @@ void test_asm_z80() {
             "; comment line\n"
             "        org   0abcdh\n"
             "        include \"data/db.inc\"\n"
-            "        res   0, (iy-128)\n",
+            "        res   0, (iy-128)\n"
+            "        set   7, (ix+127)\n",
             "          0 :                            cpu   z80\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
@@ -54,7 +55,8 @@ void test_asm_z80() {
             "       abd9 : 65 00\n"
             "(1)    abdb :                            defs  2\n"
             "(1)    abdd : 41 27 c3 61 27 63          defm  'A', '''', 'C'+80H, 'a''c'\n"
-            "       abe3 : fd cb 80 86                res   0, (iy-128)\n");
+            "       abe3 : fd cb 80 86                res   0, (iy-128)\n"
+            "       abe7 : dd cb 7f fe                set   7, (ix+127)\n");
 }
 
 void test_dis_z80() {
