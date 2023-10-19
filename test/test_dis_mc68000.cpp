@@ -54,17 +54,25 @@ static void test_data_move() {
     TEST("LEA", "(A2), A1",           0041722);
     UNKN(                             0041732);
     UNKN(                             0041742);
-    TEST("LEA", "($1234,A2), A1",     0041752, 0x1234);
-    TEST("LEA", "(18,A2,D3.W), A1",   0041762, 0x3012);
-    TEST("LEA", "($FFFF00).W, A1",    0041770, 0xFF00);
-    TEST("LEA", "($001234).L, A1",    0041771, 0x0000, 0x1234);
-    TEST("LEA", "(*+$1234,PC), A1",   0041772, 0x1232);
-    TEST("LEA", "(*+18,PC,A3.L), A1", 0041773, 0xB810);
+    TEST("LEA", "($1234,A2), A1",                      0041752, 0x1234);
+    NMEM("LEA", "(0,A2), A1",       "(0,A2), A1",      0041752);
+    TEST("LEA", "(18,A2,D3.W), A1",                    0041762, 0x3012);
+    NMEM("LEA", "(0,A2,D0.W), A1",  "(0,A2,D0.W), A1", 0041762);
+    TEST("LEA", "($FFFF00).W, A1",                     0041770, 0xFF00);
+    NMEM("LEA", "($000000).W, A1",  "($000000).W, A1", 0041770);
+    TEST("LEA", "($123458).L, A1",                     0041771, 0x0012, 0x3458);
+    NMEM("LEA", "($120000).L, A1",  "($120000).L, A1", 0041771, 0x0012);
+    NMEM("LEA", "($000000).L, A1",  "($000000).L, A1", 0041771);
+    TEST("LEA", "(*+$1234,PC), A1",                    0041772, 0x1232);
+    NMEM("LEA", "(*,PC), A1",       "(*,PC), A1",      0041772);
+    TEST("LEA", "(*+18,PC,A3.L), A1",                  0041773, 0xB810);
+    NMEM("LEA", "(*,PC,D0.W), A1",  "(*,PC,D0.W), A1", 0041773);
     UNKN(                             0041774);
 
     // LINK An, #nn: 004712|An
-    TEST("LINK", "A3, #$1234", 0047123, 0x1234);
-    TEST("LINK", "A3, #-16",   0047123, 0xFFF0);
+    TEST("LINK", "A3, #$1234",  0047123, 0x1234);
+    TEST("LINK", "A3, #-16",    0047123, 0xFFF0);
+    NMEM("LINK", "A3, #0", "0", 0047123);
 
     // MOVE src,dst: 00|Sz|Rd|Md|Ms|Rs, Sz:B=1/W=3/L=2
     TEST("MOVE.B", "D2, D7",             0017002);
@@ -418,6 +426,7 @@ static void test_data_move() {
     TEST("MOVEM.L", "A0, (A2)",            0044322, 0x0100);
     TEST("MOVEM.L", "D0, -(A2)",           0044342, 0x8000);
     TEST("MOVEM.L", "A0, -(A2)",           0044342, 0x0080);
+    NMEM("MOVEM.L", ", -(A2)", ", -(A2)",  0044342);
 
     // MOVEM src,list: 0046|Sz|Md|Rd, Sz:W=2/L=3, list=A7|...|D0
     UNKN(                                    0046202); // D2, A3-A6
@@ -452,6 +461,7 @@ static void test_data_move() {
     TEST("MOVEM.L", "(A2), A0",              0046322, 0x0100);
     TEST("MOVEM.L", "(A2)+, D0",             0046332, 0x0001);
     TEST("MOVEM.L", "(A2)+, A0",             0046332, 0x0100);
+    NMEM("MOVEM.L", "(A2)+, ",           "", 0046332);
 
     // MOVEP Dn, (d16,An): 000|Dn|Sz|1|An, SZ:W=6/L=7
     TEST("MOVEP.W", "D7, ($1234,A2)", 0007612, 0x1234);
@@ -1703,18 +1713,22 @@ static void test_bit() {
     UNKN(                              0007574); // D7, #$34
 
     // BCHG #n,dst: 00041|M|Rn
-    TEST("BCHG.L", "#0, D2",                       0004102, 0x0000);
-    TEST("BCHG.L", "#31, D2",                      0004102, 0x001F);
-    ERRT("BCHG.L", "#32, D2",  ILLEGAL_BIT_NUMBER, 0004102, 0x0020);
-    UNKN(                                          0004112); // #6, A2
-    TEST("BCHG.B", "#7, (A2)",                     0004122, 0x0007);
-    ERRT("BCHG.B", "#8, (A2)", ILLEGAL_BIT_NUMBER, 0004122, 0x0008);
+    TEST("BCHG.L", "#0, D2",                                 0004102, 0x0000);
+    TEST("BCHG.L", "#31, D2",                                0004102, 0x001F);
+    ERRT("BCHG.L", "#32, D2",  ILLEGAL_BIT_NUMBER, "32, D2", 0004102, 0x0020);
+    UNKN(                                                     0004112); // #6, A2
+    TEST("BCHG.B", "#7, (A2)",                                0004122, 0x0007);
+    ERRT("BCHG.B", "#8, (A2)", ILLEGAL_BIT_NUMBER, "8, (A2)", 0004122, 0x0008);
     TEST("BCHG.B", "#6, (A2)+",                    0004132, 0x0006);
     TEST("BCHG.B", "#5, -(A2)",                    0004142, 0x0005);
     TEST("BCHG.B", "#4, ($1234,A2)",               0004152, 0x0004, 0x1234);
     TEST("BCHG.B", "#3, (18,A2,D3.W)",             0004162, 0x0003, 0x3012);
     TEST("BCHG.B", "#2, ($001234).W",              0004170, 0x0002, 0x1234);
-    TEST("BCHG.B", "#1, ($012345).L",              0004171, 0x0001, 0x0001, 0x2345);
+    TEST("BCHG.B", "#1, ($012345).L",                   0004171, 0x0001, 0x0001, 0x2345);
+    NMEM("BCHG.B", "#1, ($010000).L",    "($010000).L", 0004171, 0x0001, 0x0001);
+    NMEM("BCHG.B", "#1, ($010000).L",    "($010000).L", 0004171, 0x0001, 0x0001);
+    NMEM("BCHG.B", "#1, ($000000).L",    "($000000).L", 0004171, 0x0001);
+    NMEM("BCHG.B", "#0, ($000000).L", "0, ($000000).L", 0004171);
     UNKN(                                          0004172); // #0, (*+$1234,PC)
     UNKN(                                          0004173); // #7, (*+10,PC,D3.W)
     UNKN(                                          0004174); // #6, #$34
@@ -1860,8 +1874,8 @@ static void test_program() {
     ATEST(0x10000, "DBRA", "D2, *+2",                          0050312 | 0x100, 0x0000);
     ATEST(0x10000, "DBRA", "D2, *+$0080",                      0050312 | 0x100, 0x007E);
     ATEST(0x10000, "DBRA", "D2, *+$8000",                      0050312 | 0x100, 0x7FFE);
-    AERRT(0x10000, "DBRA", "D2, *-$7FFD", OPERAND_NOT_ALIGNED, 0050312 | 0x100, 0x8001);
-    AERRT(0x10000, "DBRA", "D2, *+$8001", OPERAND_NOT_ALIGNED, 0050312 | 0x100, 0x7FFF);
+    AERRT(0x10000, "DBRA", "D2, *-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0050312 | 0x100, 0x8001);
+    AERRT(0x10000, "DBRA", "D2, *+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0050312 | 0x100, 0x7FFF);
     ATEST(0x10000, "DBT",  "D2, *",                            0050312 | 0x000, 0xFFFE);
     ATEST(0x10000, "DBHI", "D2, *",                            0050312 | 0x200, 0xFFFE);
     ATEST(0x10000, "DBLS", "D2, *",                            0050312 | 0x300, 0xFFFE);
@@ -2082,12 +2096,12 @@ static void test_program() {
     ATEST(0x10000, "BRA", "*+128",                        0060000 | 0x7E);
     ATEST(0x10000, "BRA", "*+$0080",                      0060000, 0x007E);
     ATEST(0x10000, "BRA", "*+$8000",                      0060000, 0x7FFE);
-    AERRT(0x10000, "BRA", "*-$7FFD", OPERAND_NOT_ALIGNED, 0060000, 0x8001);
-    AERRT(0x10000, "BRA", "*-125",   OPERAND_NOT_ALIGNED, 0060000 | 0x81);
-    AERRT(0x10000, "BRA", "*+1",     OPERAND_NOT_ALIGNED, 0060000 | 0xFF);
-    AERRT(0x10000, "BRA", "*+3",     OPERAND_NOT_ALIGNED, 0060000 | 0x01);
-    AERRT(0x10000, "BRA", "*+129",   OPERAND_NOT_ALIGNED, 0060000 | 0x7F);
-    AERRT(0x10000, "BRA", "*+$8001", OPERAND_NOT_ALIGNED, 0060000, 0x7FFF);
+    AERRT(0x10000, "BRA", "*-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0060000, 0x8001);
+    AERRT(0x10000, "BRA", "*-125",   OPERAND_NOT_ALIGNED, "*-125",   0060000 | 0x81);
+    AERRT(0x10000, "BRA", "*+1",     OPERAND_NOT_ALIGNED, "*+1",     0060000 | 0xFF);
+    AERRT(0x10000, "BRA", "*+3",     OPERAND_NOT_ALIGNED, "*+3",     0060000 | 0x01);
+    AERRT(0x10000, "BRA", "*+129",   OPERAND_NOT_ALIGNED, "*+129",   0060000 | 0x7F);
+    AERRT(0x10000, "BRA", "*+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0060000, 0x7FFF);
 
     // BSR label: 00604|disp
     ATEST(0x10000, "BSR", "*-$7FFE",                      0060400, 0x8000);
@@ -2099,12 +2113,12 @@ static void test_program() {
     ATEST(0x10000, "BSR", "*+128",                        0060400 | 0x7E);
     ATEST(0x10000, "BSR", "*+$0080",                      0060400, 0x007E);
     ATEST(0x10000, "BSR", "*+$8000",                      0060400, 0x7FFE);
-    AERRT(0x10000, "BSR", "*-$7FFD", OPERAND_NOT_ALIGNED, 0060400, 0x8001);
-    AERRT(0x10000, "BSR", "*-125",   OPERAND_NOT_ALIGNED, 0060400 | 0x81);
-    AERRT(0x10000, "BSR", "*+1",     OPERAND_NOT_ALIGNED, 0060400 | 0xFF);
-    AERRT(0x10000, "BSR", "*+3",     OPERAND_NOT_ALIGNED, 0060400 | 0x01);
-    AERRT(0x10000, "BSR", "*+129",   OPERAND_NOT_ALIGNED, 0060400 | 0x7F);
-    AERRT(0x10000, "BSR", "*+$8001", OPERAND_NOT_ALIGNED, 0060400, 0x7FFF);
+    AERRT(0x10000, "BSR", "*-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0060400, 0x8001);
+    AERRT(0x10000, "BSR", "*-125",   OPERAND_NOT_ALIGNED, "*-125",   0060400 | 0x81);
+    AERRT(0x10000, "BSR", "*+1",     OPERAND_NOT_ALIGNED, "*+1",     0060400 | 0xFF);
+    AERRT(0x10000, "BSR", "*+3",     OPERAND_NOT_ALIGNED, "*+3",     0060400 | 0x01);
+    AERRT(0x10000, "BSR", "*+129",   OPERAND_NOT_ALIGNED, "*+129",   0060400 | 0x7F);
+    AERRT(0x10000, "BSR", "*+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0060400, 0x7FFF);
 
     // JMP dst: 00473|M|Rn
     UNKN(                         0047302); // D2
@@ -2197,12 +2211,12 @@ static void test_system() {
     TEST("MOVE.W", "-(A2), SR",                             0043342);
     TEST("MOVE.W", "($1234,A2), SR",                        0043352, 0x1234);
     TEST("MOVE.W", "(18,A2,D3.W), SR",                      0043362, 0x3012);
-    TEST("MOVE.W", "($001234).W, SR",                       0043370, 0x1234);
-    ERRT("MOVE.W", "($001233).W, SR",  OPERAND_NOT_ALIGNED, 0043370, 0x1233);
-    TEST("MOVE.W", "($234568).L, SR",                       0043371, 0x0023, 0x4568);
-    ERRT("MOVE.W", "($234567).L, SR",  OPERAND_NOT_ALIGNED, 0043371, 0x0023, 0x4567);
-    TEST("MOVE.W", "(*+$1234,PC), SR",                      0043372, 0x1232);
-    ERRT("MOVE.W", "(*+$1235,PC), SR", OPERAND_NOT_ALIGNED, 0043372, 0x1233);
+    TEST("MOVE.W", "($001234).W, SR",                                         0043370, 0x1234);
+    ERRT("MOVE.W", "($001233).W, SR", OPERAND_NOT_ALIGNED, "($001233).W, SR", 0043370, 0x1233);
+    TEST("MOVE.W", "($234568).L, SR",                                         0043371, 0x0023, 0x4568);
+    ERRT("MOVE.W", "($234567).L, SR", OPERAND_NOT_ALIGNED, "($234567).L, SR", 0043371, 0x0023, 0x4567);
+    TEST("MOVE.W", "(*+$1234,PC), SR",                                          0043372, 0x1232);
+    ERRT("MOVE.W", "(*+$1235,PC), SR", OPERAND_NOT_ALIGNED, "(*+$1235,PC), SR", 0043372, 0x1233);
     TEST("MOVE.W", "(*-16,PC,D3.L), SR",                    0043373, 0x38EE);
     TEST("MOVE.W", "#$3456, SR",                            0043374, 0x3456);
 
@@ -2214,10 +2228,10 @@ static void test_system() {
     TEST("MOVE.W", "SR, -(A2)",                            0040342);
     TEST("MOVE.W", "SR, ($1234,A2)",                       0040352, 0x1234);
     TEST("MOVE.W", "SR, (18,A2,D3.W)",                     0040362, 0x3012);
-    TEST("MOVE.W", "SR, ($001234).W",                      0040370, 0x1234);
-    ERRT("MOVE.W", "SR, ($001233).W", OPERAND_NOT_ALIGNED, 0040370, 0x1233);
-    TEST("MOVE.W", "SR, ($234568).L",                      0040371, 0x0023, 0x4568);
-    ERRT("MOVE.W", "SR, ($234567).L", OPERAND_NOT_ALIGNED, 0040371, 0x0023, 0x4567);
+    TEST("MOVE.W", "SR, ($001234).W",                                     0040370, 0x1234);
+    ERRT("MOVE.W", "SR, ($001233).W", OPERAND_NOT_ALIGNED, "($001233).W", 0040370, 0x1233);
+    TEST("MOVE.W", "SR, ($234568).L",                                     0040371, 0x0023, 0x4568);
+    ERRT("MOVE.W", "SR, ($234567).L", OPERAND_NOT_ALIGNED, "($234567).L", 0040371, 0x0023, 0x4567);
     UNKN(                                                  0040372); // SR, (*+$1234,PC)
     UNKN(                                                  0040373); // SR, (*+10,PC,D3.W)
     UNKN(                                                  0040374); // SR, #$1234
@@ -2278,12 +2292,12 @@ static void test_system() {
     TEST("MOVE.W", "-(A2), CCR",                             0042342);
     TEST("MOVE.W", "($1234,A2), CCR",                        0042352, 0x1234);
     TEST("MOVE.W", "(18,A2,D3.W), CCR",                      0042362, 0x3012);
-    TEST("MOVE.W", "($001234).W, CCR",                       0042370, 0x1234);
-    ERRT("MOVE.W", "($001235).W, CCR",  OPERAND_NOT_ALIGNED, 0042370, 0x1235);
-    TEST("MOVE.W", "($234568).L, CCR",                       0042371, 0x0023, 0x4568);
-    ERRT("MOVE.W", "($234569).L, CCR",  OPERAND_NOT_ALIGNED, 0042371, 0x0023, 0x4569);
-    TEST("MOVE.W", "(*+$1234,PC), CCR",                      0042372, 0x1232);
-    ERRT("MOVE.W", "(*+$1235,PC), CCR", OPERAND_NOT_ALIGNED, 0042372, 0x1233);
+    TEST("MOVE.W", "($001234).W, CCR",                                          0042370, 0x1234);
+    ERRT("MOVE.W", "($001235).W, CCR", OPERAND_NOT_ALIGNED, "($001235).W, CCR", 0042370, 0x1235);
+    TEST("MOVE.W", "($234568).L, CCR",                                          0042371, 0x0023, 0x4568);
+    ERRT("MOVE.W", "($234569).L, CCR", OPERAND_NOT_ALIGNED, "($234569).L, CCR", 0042371, 0x0023, 0x4569);
+    TEST("MOVE.W", "(*+$1234,PC), CCR",                                           0042372, 0x1232);
+    ERRT("MOVE.W", "(*+$1235,PC), CCR", OPERAND_NOT_ALIGNED, "(*+$1235,PC), CCR", 0042372, 0x1233);
     TEST("MOVE.W", "(*-16,PC,D3.L), CCR",                    0042373, 0x38EE);
     TEST("MOVE.W", "#$34, CCR",                              0042374, 0x0034);
 

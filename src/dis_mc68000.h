@@ -29,16 +29,11 @@ struct DisMc68000 final : Disassembler, Config {
     DisMc68000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    StrBuffer &outOprSize(StrBuffer &out, OprSize size);
-    StrBuffer &outMoveMltRegs(StrBuffer &out, RegName start, RegName last, char suffix);
-    StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, bool pop,
-            StrBuffer &(DisMc68000::*outRegs)(StrBuffer &, RegName, RegName, char));
-
-    Error decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize);
-    Error decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68000 &ea);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t modePos,
-            uint8_t regPos, OprSize size, uint16_t opr16);
+    void decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize) const;
+    void decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68000 &ea) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t modePos,
+            uint8_t regPos, OprSize size, uint16_t opr16 = 0, Error opr16Error = OK) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
