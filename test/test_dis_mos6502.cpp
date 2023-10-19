@@ -183,7 +183,8 @@ static void test_imm() {
     TEST("LDY", "#0",   0xA0, 0x00);
     TEST("LDX", "#9",   0xA2, 0x09);
     TEST("CPY", "#10",  0xC0, 0x0A);
-    TEST("CPX", "#$FF", 0xE0, 0xFF);
+    TEST("CPX", "#$FF",    0xE0, 0xFF);
+    NMEM("CPX", "#0", "0", 0xE0);
 
     TEST("ORA", "#$90", 0x09, 0x90);
     TEST("AND", "#$90", 0x29, 0x90);
@@ -230,7 +231,9 @@ static void test_long_imm() {
         TEST("LDY", "#0",     0xA0, 0x00, 0x00);
         TEST("LDX", "#$1000", 0xA2, 0x00, 0x10);
         TEST("CPY", "#$00FF", 0xC0, 0xFF, 0x00);
-        TEST("CPX", "#$FFFF", 0xE0, 0xFF, 0xFF);
+        TEST("CPX", "#$FFFF",          0xE0, 0xFF, 0xFF);
+        NMEM("CPX", "#$00FF", "$00FF", 0xE0, 0xFF);
+        NMEM("CPX", "#0",         "0", 0xE0);
         TEST("ORA", "#9",     0x09, 0x09);
     } else {
         TEST("LDY", "#0",   0xA0, 0x00);
@@ -298,7 +301,8 @@ static void test_zpg() {
     TEST("STA", "$10", 0x85, 0x10);
     TEST("LDA", "$10", 0xA5, 0x10);
     TEST("CMP", "$10", 0xC5, 0x10);
-    TEST("SBC", "$10", 0xE5, 0x10);
+    TEST("SBC", "$10",        0xE5, 0x10);
+    NMEM("SBC", "$00", "$00", 0xE5);
 
     TEST("STY", "$10", 0x84, 0x10);
     TEST("LDY", "$10", 0xA4, 0x10);
@@ -350,7 +354,8 @@ static void test_zpg_indexed() {
     TEST("STA", "$10,X", 0x95, 0x10);
     TEST("LDA", "$10,X", 0xB5, 0x10);
     TEST("CMP", "$10,X", 0xD5, 0x10);
-    TEST("SBC", "$10,X", 0xF5, 0x10);
+    TEST("SBC", "$10,X",          0xF5, 0x10);
+    NMEM("SBC", "$00,X", "$00,X", 0xF5);
 
     TEST("STY", "$10,X", 0x94, 0x10);
     TEST("LDY", "$10,X", 0xB4, 0x10);
@@ -402,7 +407,8 @@ static void test_zpg_long() {
         TEST("STA", "[$10]", 0x87, 0x10);
         TEST("LDA", "[$10]", 0xA7, 0x10);
         TEST("CMP", "[$10]", 0xC7, 0x10);
-        TEST("SBC", "[$10]", 0xE7, 0x10);
+        TEST("SBC", "[$10]",         0xE7, 0x10);
+        NMEM("SBC", "[$00]", "$00]", 0xE7);
 
         TEST("ORA", "[$10],Y", 0x17, 0x10);
         TEST("AND", "[$10],Y", 0x37, 0x10);
@@ -411,7 +417,8 @@ static void test_zpg_long() {
         TEST("STA", "[$10],Y", 0x97, 0x10);
         TEST("LDA", "[$10],Y", 0xB7, 0x10);
         TEST("CMP", "[$10],Y", 0xD7, 0x10);
-        TEST("SBC", "[$10],Y", 0xF7, 0x10);
+        TEST("SBC", "[$10],Y",           0xF7, 0x10);
+        NMEM("SBC", "[$00],Y", "$00],Y", 0xF7);
 
         dis6502.setOption("indirect-long", "disable");
         TEST("ORAL", "($10)", 0x07, 0x10);
@@ -421,7 +428,8 @@ static void test_zpg_long() {
         TEST("STAL", "($10)", 0x87, 0x10);
         TEST("LDAL", "($10)", 0xA7, 0x10);
         TEST("CMPL", "($10)", 0xC7, 0x10);
-        TEST("SBCL", "($10)", 0xE7, 0x10);
+        TEST("SBCL", "($10)",         0xE7, 0x10);
+        NMEM("SBCL", "($00)", "$00)", 0xE7);
 
         TEST("ORAL", "($10),Y", 0x17, 0x10);
         TEST("ANDL", "($10),Y", 0x37, 0x10);
@@ -430,7 +438,8 @@ static void test_zpg_long() {
         TEST("STAL", "($10),Y", 0x97, 0x10);
         TEST("LDAL", "($10),Y", 0xB7, 0x10);
         TEST("CMPL", "($10),Y", 0xD7, 0x10);
-        TEST("SBCL", "($10),Y", 0xF7, 0x10);
+        TEST("SBCL", "($10),Y",           0xF7, 0x10);
+        NMEM("SBCL", "($00),Y", "$00),Y", 0xF7);
 
         symtab.intern(0x10, "dir10");
 
@@ -454,7 +463,8 @@ static void test_sp_rel() {
         TEST("STA", "$10,S", 0x83, 0x10);
         TEST("LDA", "$10,S", 0xA3, 0x10);
         TEST("CMP", "$10,S", 0xC3, 0x10);
-        TEST("SBC", "$10,S", 0xE3, 0x10);
+        TEST("SBC", "$10,S",          0xE3, 0x10);
+        NMEM("SBC", "$00,S", "$00,S", 0xE3);
 
         TEST("ORA", "($10,S),Y", 0x13, 0x10);
         TEST("AND", "($10,S),Y", 0x33, 0x10);
@@ -463,7 +473,8 @@ static void test_sp_rel() {
         TEST("STA", "($10,S),Y", 0x93, 0x10);
         TEST("LDA", "($10,S),Y", 0xB3, 0x10);
         TEST("CMP", "($10,S),Y", 0xD3, 0x10);
-        TEST("SBC", "($10,S),Y", 0xF3, 0x10);
+        TEST("SBC", "($10,S),Y",             0xF3, 0x10);
+        NMEM("SBC", "($00,S),Y", "$00,S),Y", 0xF3);
     }
 }
 
@@ -476,7 +487,9 @@ static void test_abs() {
     TEST("ADC",  "$1234", 0x6D, 0x34, 0x12);
     TEST("STA",  "$1234", 0x8D, 0x34, 0x12);
     TEST("LDA",  "$1234", 0xAD, 0x34, 0x12);
-    TEST("CMP",  "$1234", 0xCD, 0x34, 0x12);
+    TEST("CMP",  "$1234",           0xCD, 0x34, 0x12);
+    NMEM("CMP", ">$0034", ">$0034", 0xCD, 0x34);
+    NMEM("CMP", ">$0000", ">$0000", 0xCD);
     TEST("SBC", ">$0034", 0xED, 0x34, 0x00);
 
     TEST("STY",  "$1234", 0x8C, 0x34, 0x12);
@@ -546,7 +559,10 @@ static void test_abs_long() {
         TEST("ADC", "$123456", 0x6F, 0x56, 0x34, 0x12);
         TEST("LDA", "$123456", 0xAF, 0x56, 0x34, 0x12);
         TEST("CMP", "$123456", 0xCF, 0x56, 0x34, 0x12);
-        TEST("SBC", "$123456", 0xEF, 0x56, 0x34, 0x12);
+        TEST("SBC",   "$123456",              0xEF, 0x56, 0x34, 0x12);
+        NMEM("SBC", ">>$003456", ">>$003456", 0xEF, 0x56, 0x34);
+        NMEM("SBC", ">>$000056", ">>$000056", 0xEF, 0x56);
+        NMEM("SBC", ">>$000000", ">>$000000", 0xEF);
 
         TEST("ORA", "$123456,X", 0x1F, 0x56, 0x34, 0x12);
         TEST("AND", "$123456,X", 0x3F, 0x56, 0x34, 0x12);
@@ -554,7 +570,10 @@ static void test_abs_long() {
         TEST("ADC", "$123456,X", 0x7F, 0x56, 0x34, 0x12);
         TEST("LDA", "$123456,X", 0xBF, 0x56, 0x34, 0x12);
         TEST("CMP", "$123456,X", 0xDF, 0x56, 0x34, 0x12);
-        TEST("SBC", "$123456,X", 0xFF, 0x56, 0x34, 0x12);
+        TEST("SBC",   "$123456,X",                0xFF, 0x56, 0x34, 0x12);
+        NMEM("SBC", ">>$003456,X", ">>$003456,X", 0xFF, 0x56, 0x34);
+        NMEM("SBC", ">>$000056,X", ">>$000056,X", 0xFF, 0x56);
+        NMEM("SBC", ">>$000000,X", ">>$000000,X", 0xFF);
 
         TEST("JMP", "$123456", 0x5C, 0x56, 0x34, 0x12);
         TEST("JSL", "$123456", 0x22, 0x56, 0x34, 0x12);
@@ -564,7 +583,9 @@ static void test_abs_long() {
         TEST("JMPL", "($1234)", 0xDC, 0x34, 0x12);
 
         TEST("MVP", "$120000, $340000", 0x44, 0x34, 0x12);
-        TEST("MVN", "$000000, $340000", 0x54, 0x34, 0x00);
+        TEST("MVN", "$560000, $340000", 0x54, 0x34, 0x56);
+        NMEM("MVN", "$000000, $340000", "$000000, $340000", 0x54, 0x34);
+        NMEM("MVN", "$000000, $000000",          "$000000", 0x54);
 
         symtab.intern(0x1234, "sym1234");
         symtab.intern(0x123456, "long3456");
@@ -596,7 +617,9 @@ static void test_abs_indexed() {
     TEST("STA",  "$1234,X", 0x9D, 0x34, 0x12);
     TEST("LDA",  "$1234,X", 0xBD, 0x34, 0x12);
     TEST("CMP",  "$1234,X", 0xDD, 0x34, 0x12);
-    TEST("SBC",  "$1234,X", 0xFD, 0x34, 0x12);
+    TEST("SBC",  "$1234,X",             0xFD, 0x34, 0x12);
+    NMEM("SBC", ">$0034,X", ">$0034,X", 0xFD, 0x34);
+    NMEM("SBC", ">$0000,X", ">$0000,X", 0xFD);
 
     TEST("ORA",  "$1234,Y", 0x19, 0x34, 0x12);
     TEST("AND",  "$1234,Y", 0x39, 0x34, 0x12);
@@ -648,12 +671,15 @@ static void test_abs_indexed() {
 }
 
 static void test_abs_idir() {
+    // MOS6502
+    TEST("JMP", "(>$0009)",   0x6C, 0x09, 0x00);
+    TEST("JMP" , "($1235)",            0x6C, 0x35, 0x12);
+    NMEM("JMP", "(>$0035)", ">$0035)", 0x6C, 0x35);
+    NMEM("JMP", "(>$0000)", ">$0000)", 0x6C);
+
     symtab.intern(0x0010, "abs0010");
     symtab.intern(0x1234, "abs1234");
 
-    // MOS6502
-    TEST("JMP", "(>$0009)",   0x6C, 0x09, 0x00);
-    TEST("JMP", "($1235)",    0x6C, 0x35, 0x12);
     TEST("JMP", "(>abs0010)", 0x6C, 0x10, 0x00);
     TEST("JMP", "(>abs1234)", 0x6C, 0x34, 0x12);
 }
@@ -688,7 +714,8 @@ static void test_zpg_idir() {
         TEST("STA", "($10)", 0x92, 0x10);
         TEST("LDA", "($10)", 0xB2, 0x10);
         TEST("CMP", "($10)", 0xD2, 0x10);
-        TEST("SBC", "($10)", 0xF2, 0x10);
+        TEST("SBC", "($10)",         0xF2, 0x10);
+        NMEM("SBC", "($00)", "$00)", 0xF2);
     }
 
     symtab.intern(0x0010, "zero10");
@@ -715,7 +742,8 @@ static void test_zpg_indexed_idir() {
     TEST("STA", "($10,X)", 0x81, 0x10);
     TEST("LDA", "($10,X)", 0xA1, 0x10);
     TEST("CMP", "($10,X)", 0xC1, 0x10);
-    TEST("SBC", "($10,X)", 0xE1, 0x10);
+    TEST("SBC", "($10,X)",           0xE1, 0x10);
+    NMEM("SBC", "($00,X)", "$00,X)", 0xE1);
 
     symtab.intern(0x0010, "zero10");
 
@@ -731,7 +759,8 @@ static void test_zpg_idir_indexed() {
     TEST("STA", "($10),Y", 0x91, 0x10);
     TEST("LDA", "($10),Y", 0xB1, 0x10);
     TEST("CMP", "($10),Y", 0xD1, 0x10);
-    TEST("SBC", "($10),Y", 0xF1, 0x10);
+    TEST("SBC", "($10),Y",           0xF1, 0x10);
+    NMEM("SBC", "($00),Y", "$00),Y", 0xF1);
 
     symtab.intern(0x0010, "zero10");
 
@@ -745,20 +774,22 @@ static void test_rel() {
         ATEST(0x001000, "BMI", "$001000", 0x30, 0xFE);
         ATEST(0x001000, "BVC", "$001004", 0x50, 0x02);
         ATEST(0x001000, "BVS", "$001081", 0x70, 0x7F);
-        ATEST(0x001000, "BCC", "$000F82", 0x90, 0x80);
-        AERRT(0x120000, "BCS", "$11FF82", OPERAND_TOO_FAR, 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE", "$130000", OPERAND_TOO_FAR, 0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ", "$130071", OPERAND_TOO_FAR, 0xF0, 0x7F);
+        ATEST(0x001000, "BCC", "$000F82",            0x90, 0x80);
+        ANMEM(0x001000, "BCC", "$001001", "$001001", 0x90);
+        AERRT(0x120000, "BCS", "$11FF82", OPERAND_TOO_FAR, "$11FF82", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE", "$130000", OPERAND_TOO_FAR, "$130000", 0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ", "$130071", OPERAND_TOO_FAR, "$130071", 0xF0, 0x7F);
     } else {
         // MOS6502
         ATEST(0x1000, "BPL", "$1002", 0x10, 0x00);
         ATEST(0x1000, "BMI", "$1000", 0x30, 0xFE);
         ATEST(0x1000, "BVC", "$1004", 0x50, 0x02);
         ATEST(0x1000, "BVS", "$1081", 0x70, 0x7F);
-        ATEST(0x1000, "BCC", "$0F82", 0x90, 0x80);
-        AERRT(0x0000, "BCS", "$FF82", OVERFLOW_RANGE, 0xB0, 0x80);
-        AERRT(0xFFFE, "BNE", "$0000", OVERFLOW_RANGE, 0xD0, 0x00);
-        AERRT(0xFFF0, "BEQ", "$0071", OVERFLOW_RANGE, 0xF0, 0x7F);
+        ATEST(0x1000, "BCC", "$0F82",          0x90, 0x80);
+        ANMEM(0x1000, "BCC", "$1001", "$1001", 0x90);
+        AERRT(0x0000, "BCS", "$FF82", OVERFLOW_RANGE, "$FF82", 0xB0, 0x80);
+        AERRT(0xFFFE, "BNE", "$0000", OVERFLOW_RANGE, "$0000", 0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ", "$0071", OVERFLOW_RANGE, "$0071", 0xF0, 0x7F);
     }
     if (w65c816()) {
         ATEST(0x121000, "BRA", "$121002", 0x80, 0x00);
@@ -769,9 +800,11 @@ static void test_rel() {
     if (w65c816()) {
         // W65C816
         ATEST(0x121000, "BRL", "$121234", 0x82, 0x31, 0x02);
-        ATEST(0x121000, "PER", "$121234", 0x62, 0x31, 0x02);
-        AERRT(0x121000, "BRL", "$119003", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER", "$131002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
+        ATEST(0x121000, "PER", "$121234",            0x62, 0x31, 0x02);
+        ANMEM(0x121000, "PER", "$121033", "$121033", 0x62, 0x31);
+        ANMEM(0x121000, "PER", "$121001", "$121001", 0x62);
+        AERRT(0x121000, "BRL", "$119003", OPERAND_TOO_FAR, "$119003", 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER", "$131002", OPERAND_TOO_FAR, "$131002", 0x62, 0xFF, 0x7F);
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -794,15 +827,15 @@ static void test_rel() {
     ATEST(0x2000, "BPL", "*+2",   0x10, 0x00);
     ATEST(0x2000, "BPL", "*+129", 0x10, 0x7F);
     if (w65c816()) {
-        AERRT(0x120000, "BCS", "*-126",   OPERAND_TOO_FAR, 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE", "*+2",     OPERAND_TOO_FAR, 0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ", "*+129",   OPERAND_TOO_FAR, 0xF0, 0x7F);
-        AERRT(0x121000, "BRL", "*-$7FFD", OPERAND_TOO_FAR, 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER", "*+$8002", OPERAND_TOO_FAR, 0x62, 0xFF, 0x7F);
+        AERRT(0x120000, "BCS", "*-126", OPERAND_TOO_FAR, "*-126", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE", "*+2",   OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ", "*+129", OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
+        AERRT(0x121000, "BRL", "*-$7FFD", OPERAND_TOO_FAR, "*-$7FFD", 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER", "*+$8002", OPERAND_TOO_FAR, "*+$8002", 0x62, 0xFF, 0x7F);
     } else {
-        AERRT(0x0000, "BCS", "*-126", OVERFLOW_RANGE, 0xB0, 0x80);
-        AERRT(0xFFFE, "BNE", "*+2",   OVERFLOW_RANGE, 0xD0, 0x00);
-        AERRT(0xFFF0, "BEQ", "*+129", OVERFLOW_RANGE, 0xF0, 0x7F);
+        AERRT(0x0000, "BCS", "*-126", OVERFLOW_RANGE, "*-126", 0xB0, 0x80);
+        AERRT(0xFFFE, "BNE", "*+2",   OVERFLOW_RANGE, "*+2",   0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ", "*+129", OVERFLOW_RANGE, "*+129", 0xF0, 0x7F);
     }
 }
 
@@ -903,7 +936,7 @@ static void test_zpg_rel() {
 }
 
 static void test_illegal_mos6502() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x80,
         0x02, 0x12, 0x22, 0x32, 0x42, 0x52, 0x62, 0x72,
         0x82, 0x92, 0xB2, 0xC2, 0xD2, 0xE2, 0xF2,
@@ -921,12 +954,12 @@ static void test_illegal_mos6502() {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0x7F,
         0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_g65sc02() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73,
         0x83, 0x93, 0xA3, 0xB3, 0xC3, 0xD3, 0xE3, 0xF3,
@@ -939,12 +972,12 @@ static void test_illegal_g65sc02() {
         0x0F, 0x1F, 0x2F, 0x3F, 0x4F, 0x5F, 0x6F, 0x7F,
         0x8F, 0x9F, 0xAF, 0xBF, 0xCF, 0xDF, 0xEF, 0xFF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_r65c02() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73,
         0x83, 0x93, 0xA3, 0xB3, 0xC3, 0xD3, 0xE3, 0xF3,
@@ -953,12 +986,12 @@ static void test_illegal_r65c02() {
         0x8B, 0x9B, 0xAB, 0xBB, 0xCB, 0xDB, 0xEB, 0xFB,
         0x5C, 0xDC, 0xFC,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_w65c02s() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x02, 0x22, 0x42, 0x62, 0x82, 0xC2, 0xE2,
         0x03, 0x13, 0x23, 0x33, 0x43, 0x53, 0x63, 0x73,
         0x83, 0x93, 0xA3, 0xB3, 0xC3, 0xD3, 0xE3, 0xF3,
@@ -967,8 +1000,8 @@ static void test_illegal_w65c02s() {
         0x8B, 0x9B, 0xAB, 0xBB, 0xEB, 0xFB,
         0x5C, 0xDC, 0xFC,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 // clang-format on
 

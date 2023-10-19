@@ -92,25 +92,20 @@ bool DisMos6502::longImmediate(AddrMode mode) const {
     return false;
 }
 
-Error DisMos6502::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisMos6502::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     out.letter('#');
-    if (longImmediate(mode)) {
-        outHex(out, insn.readUint16(), 16);
-    } else {
-        outHex(out, insn.readByte(), 8);
-    }
-    setErrorIf(insn);
-    return getError();
+    const auto imm16 = longImmediate(mode);
+    const uint16_t val = imm16 ? insn.readUint16() : insn.readByte();
+    outHex(out, val, imm16 ? 16 : 8);
 }
 
-Error DisMos6502::decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) {
+void DisMos6502::decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) const {
     uint32_t target = insn.readUint16();
     const auto bank = insn.readByte();
-    setErrorIf(insn);
     target |= static_cast<uint32_t>(bank) << 16;
-    const auto err = config().checkAddr(target);
-    if (err)
-        setErrorIf(err);
+    const auto error = config().checkAddr(target);
+    if (error)
+        insn.setErrorIf(out, error);
     // JSL has only ABS_LONG addressing
     if (insn.opCode() == TableMos6502::JSL) {
         outAbsAddr(out, target);
@@ -124,10 +119,9 @@ Error DisMos6502::decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) {
             outAbsAddr(out, target);
         }
     }
-    return getError();
 }
 
-Error DisMos6502::decodeAbsolute(DisInsn &insn, StrBuffer &out) {
+void DisMos6502::decodeAbsolute(DisInsn &insn, StrBuffer &out) const {
     const auto addr = insn.readUint16();
     const auto label = lookup(addr);
     if (label) {
@@ -137,10 +131,9 @@ Error DisMos6502::decodeAbsolute(DisInsn &insn, StrBuffer &out) {
             out.letter('>');
         outAbsAddr(out, addr, 16);
     }
-    return setErrorIf(insn);
 }
 
-Error DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
+void DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
     const auto zp = insn.readByte();
     const auto label = lookup(zp);
     if (label) {
@@ -148,36 +141,34 @@ Error DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
     } else {
         outAbsAddr(out, zp, 8);
     }
-    return setErrorIf(insn);
 }
 
-Error DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
-    int16_t delta;
-    if (mode == M_RELL) {
-        delta = static_cast<int16_t>(insn.readUint16());
-    } else {
-        delta = static_cast<int8_t>(insn.readByte());
-    }
-    setErrorIf(insn);
+void DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    const auto delta = (mode == M_RELL) ? static_cast<int16_t>(insn.readUint16())
+                                        : static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setError(out, error);
     if ((target >> 16) != (insn.address() >> 16))
-        setErrorIf(OPERAND_TOO_FAR);
+        insn.setErrorIf(out, OPERAND_TOO_FAR);
     outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
-    return getError();
 }
 
-Error DisMos6502::decodeBlockMove(DisInsn &insn, StrBuffer &out) {
-    const uint8_t dbank = insn.readByte();
-    const uint8_t sbank = insn.readByte();
-    const uint32_t dst = static_cast<uint32_t>(dbank) << 16;
-    const uint32_t src = static_cast<uint32_t>(sbank) << 16;
+void DisMos6502::decodeBlockMove(DisInsn &insn, StrBuffer &out) const {
+    const auto dbank = insn.readByte();
+    const auto dstError = insn.getError();
+    const auto sbank = insn.readByte();
+    const auto src = static_cast<uint32_t>(sbank) << 16;
     outAbsAddr(out, src).comma();
+    const auto dst = static_cast<uint32_t>(dbank) << 16;
+    if (dstError)
+        insn.setError(out, dstError);
     outAbsAddr(out, dst);
-    return setErrorIf(insn);
 }
 
-Error DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndFlags) {
+void DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndFlags) const {
     const auto mode = DisInsn::baseMode(modeAndFlags);
     switch (mode) {
     case M_REGA:
@@ -195,24 +186,28 @@ Error DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndF
     case M_IMA:
     case M_IMX:
     case M_IM8:
-        return decodeImmediate(insn, out, mode);
+        decodeImmediate(insn, out, mode);
+        break;
     case M_ABS:
-        return decodeAbsolute(insn, out);
+        decodeAbsolute(insn, out);
+        break;
     case M_ABSL:
-        return decodeAbsoluteLong(insn, out);
+        decodeAbsoluteLong(insn, out);
+        break;
     case M_DPG:
-        return decodeDirectPage(insn, out);
+        decodeDirectPage(insn, out);
+        break;
     case M_REL:
     case M_RELL:
-        return decodeRelative(insn, out, mode);
+        decodeRelative(insn, out, mode);
+        break;
     default:
         break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
+    DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     insn.setAllowIndirectLong(_useIndirectLong);
@@ -220,41 +215,40 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         return setError(insn);
 
     const auto mode1 = insn.mode1();
-    if (mode1 == M_BANK && insn.mode2() == M_BANK)
-        return decodeBlockMove(insn, out);
-    const auto indir1 = DisInsn::indirect(mode1);
-    const auto longi1 = DisInsn::longIndirect(mode1);
-    if (mode1 == M_NONE)
-        return setOK();
-    if (indir1)
-        out.letter('(');
-    if (longi1)
-        out.letter('[');
-    if (decodeOperand(insn, out, mode1))
-        return getError();
-
     const auto mode2 = insn.mode2();
-    const auto indir2 = DisInsn::indirect(mode2);
-    const auto longi2 = DisInsn::longIndirect(mode2);
-    if (indir1 && !indir2)
-        out.letter(')');
-    if (longi1 && !longi2)
-        out.letter(']');
-    if (mode2 == M_NONE)
-        return getError();
-    out.letter(',');
-    if (decodeOperand(insn, out, mode2))
-        return getError();
-
-    const auto mode3 = insn.mode3();
-    if (indir2)
-        out.letter(')');
-    if (longi2)
-        out.letter(']');
-    if (mode3 == M_NONE)
-        return getError();
-    out.letter(',');
-    return decodeOperand(insn, out, mode3);
+    if (mode1 == M_BANK && mode2 == M_BANK) {
+        decodeBlockMove(insn, out);
+    } else {
+        if (mode1 != M_NONE) {
+            const auto indir1 = DisInsn::indirect(mode1);
+            const auto longi1 = DisInsn::longIndirect(mode1);
+            if (indir1)
+                out.letter('(');
+            if (longi1)
+                out.letter('[');
+            decodeOperand(insn, out, mode1);
+            const auto indir2 = DisInsn::indirect(mode2);
+            const auto longi2 = DisInsn::longIndirect(mode2);
+            if (indir1 && !indir2)
+                out.letter(')');
+            if (longi1 && !longi2)
+                out.letter(']');
+            if (mode2 != M_NONE) {
+                out.letter(',');
+                decodeOperand(insn, out, mode2);
+                const auto mode3 = insn.mode3();
+                if (indir2)
+                    out.letter(')');
+                if (longi2)
+                    out.letter(']');
+                if (mode3 != M_NONE) {
+                    out.letter(',');
+                    decodeOperand(insn, out, mode3);
+                }
+            }
+        }
+    }
+    return setError(insn);
 }
 
 }  // namespace mos6502
