@@ -93,17 +93,17 @@ Config::opcode_t Entry::codeMask(CodeFormat codeFormat) {
     return pgm_read_word(codeMasks + codeFormat);
 }
 
-#define X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _ex2, _postFormat)           \
-    {                                                                                          \
-        _opc,                                                                                  \
-                Entry::Flags::create(_dst, MF_##_dstf, _src, MF_##_srcf, E1_##_ex1, E2_##_ex2, \
-                        PF_##_postFormat, CF_##_cf, SZ_##_sz),                                 \
-                _name                                                                          \
+#define X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _ex2, _postFormat) \
+    {                                                                                \
+        _opc,                                                                        \
+                Entry::Flags::create(_dst, OP_##_dstf, _src, OP_##_srcf, _ex1, _ex2, \
+                        PF_##_postFormat, CF_##_cf, SZ_##_sz),                       \
+                _name                                                                \
     }
 #define X3(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, _postFormat) \
-    X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, NONE, _postFormat)
+    X4(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _ex1, E2_NONE, _postFormat)
 #define X2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, _postFormat) \
-    X3(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, NONE, _postFormat)
+    X3(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, E1_NONE, _postFormat)
 #define E2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf) \
     X2(_opc, _name, _cf, _sz, _dst, _src, _dstf, _srcf, NONE)
 #define E1(_opc, _name, _cf, _sz, _dst, _dstf) E2(_opc, _name, _cf, _sz, _dst, M_NONE, _dstf, NO)
@@ -217,70 +217,70 @@ static constexpr Entry TABLE_Z8000[] PROGMEM = {
     E2(0x3B05, TEXT_SIN,    00F0, WORD, M_R,    M_IO,   C4, NO),
     E2(0x3B06, TEXT_OUT,    00F0, WORD, M_IO,   M_R,    NO, C4),
     E2(0x3B07, TEXT_SOUT,   00F0, WORD, M_IO,   M_R,    NO, C4),
-    X3(0x3A00, TEXT_INIRB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3A00, TEXT_INIB,   00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3A01, TEXT_SINIRB, 00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3A01, TEXT_SINIB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3A02, TEXT_OTIRB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3A02, TEXT_OUTIB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3A03, TEXT_SOTIRB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3A03, TEXT_SOUTIB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3A08, TEXT_INDRB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3A08, TEXT_INDB,   00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3A09, TEXT_SINDRB, 00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3A09, TEXT_SINDB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3A0A, TEXT_OTDRB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3A0A, TEXT_OUTDB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3A0B, TEXT_SOTDRB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3A0B, TEXT_SOUTDB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3B00, TEXT_INIR,   00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3B00, TEXT_INI,    00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3B01, TEXT_SINIR,  00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3B01, TEXT_SINI,   00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3B02, TEXT_OTIR,   00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3B02, TEXT_OUTI,   00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3B03, TEXT_SOTIR,  00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3B03, TEXT_SOUTI,  00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3B08, TEXT_INDR,   00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3B08, TEXT_IND,    00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3B09, TEXT_SINDR,  00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX0),
-    X3(0x3B09, TEXT_SIND,   00F0, WORD, M_IR,   M_IRIO, P4, C4, WR, 0XX8),
-    X3(0x3B0A, TEXT_OTDR,   00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3B0A, TEXT_OUTD,   00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0x3B0B, TEXT_SOTDR,  00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX0),
-    X3(0x3B0B, TEXT_SOUTD,  00F0, WORD, M_IRIO, M_IR,   P4, C4, WR, 0XX8),
-    X3(0xB800, TEXT_TRIB,   00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XX0),
-    X3(0xB802, TEXT_TRTIB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XX0),
-    X3(0xB804, TEXT_TRIRB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XX0),
-    X3(0xB806, TEXT_TRTIRB, 00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XXE),
-    X3(0xB808, TEXT_TRDB,   00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XX0),
-    X3(0xB80A, TEXT_TRTDB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XX0),
-    X3(0xB80C, TEXT_TRDRB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XX0),
-    X3(0xB80E, TEXT_TRTDRB, 00F0, BYTE, M_IR,   M_IR,   C4, P4, WR, 0XXE),
-    X4(0xBA00, TEXT_CPIB,   00F0, BYTE, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X3(0xBA01, TEXT_LDIRB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, WR,     0XX0),
-    X3(0xBA01, TEXT_LDIB,   00F0, BYTE, M_IR,   M_IR,   P4, C4, WR,     0XX8),
-    X4(0xBA02, TEXT_CPSIB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBA04, TEXT_CPIRB,  00F0, BYTE, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBA06, TEXT_CPSIRB, 00F0, BYTE, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBA08, TEXT_CPDB,   00F0, BYTE, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X3(0xBA09, TEXT_LDDRB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, WR,     0XX0),
-    X3(0xBA09, TEXT_LDDB,   00F0, BYTE, M_IR,   M_IR,   P4, C4, WR,     0XX8),
-    X4(0xBA0A, TEXT_CPSDB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBA0C, TEXT_CPDRB,  00F0, BYTE, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBA0E, TEXT_CPSDRB, 00F0, BYTE, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBB00, TEXT_CPI,    00F0, WORD, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X3(0xBB01, TEXT_LDIR,   00F0, WORD, M_IR,   M_IR,   P4, C4, WR,     0XX0),
-    X3(0xBB01, TEXT_LDI,    00F0, WORD, M_IR,   M_IR,   P4, C4, WR,     0XX8),
-    X4(0xBB02, TEXT_CPSI,   00F0, WORD, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBB04, TEXT_CPIR,   00F0, WORD, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBB06, TEXT_CPSIR,  00F0, WORD, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBB08, TEXT_CPD,    00F0, WORD, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X3(0xBB09, TEXT_LDDR,   00F0, WORD, M_IR,   M_IR,   P4, C4, WR,     0XX0),
-    X3(0xBB09, TEXT_LDD,    00F0, WORD, M_IR,   M_IR,   P4, C4, WR,     0XX8),
-    X4(0xBB0A, TEXT_CPSD,   00F0, WORD, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBB0C, TEXT_CPDR,   00F0, WORD, M_R,    M_IR,   P4, C4, WR, CC, 0XXX),
-    X4(0xBB0E, TEXT_CPSDR,  00F0, WORD, M_IR,   M_IR,   P4, C4, WR, CC, 0XXX),
+    X3(0x3A00, TEXT_INIRB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3A00, TEXT_INIB,   00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3A01, TEXT_SINIRB, 00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3A01, TEXT_SINIB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3A02, TEXT_OTIRB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3A02, TEXT_OUTIB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3A03, TEXT_SOTIRB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3A03, TEXT_SOUTIB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3A08, TEXT_INDRB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3A08, TEXT_INDB,   00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3A09, TEXT_SINDRB, 00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3A09, TEXT_SINDB,  00F0, BYTE, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3A0A, TEXT_OTDRB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3A0A, TEXT_OUTDB,  00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3A0B, TEXT_SOTDRB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3A0B, TEXT_SOUTDB, 00F0, BYTE, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3B00, TEXT_INIR,   00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3B00, TEXT_INI,    00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3B01, TEXT_SINIR,  00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3B01, TEXT_SINI,   00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3B02, TEXT_OTIR,   00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3B02, TEXT_OUTI,   00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3B03, TEXT_SOTIR,  00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3B03, TEXT_SOUTI,  00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3B08, TEXT_INDR,   00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3B08, TEXT_IND,    00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3B09, TEXT_SINDR,  00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX0),
+    X3(0x3B09, TEXT_SIND,   00F0, WORD, M_IR,   M_IRIO, P4, C4, E1_WR, 0XX8),
+    X3(0x3B0A, TEXT_OTDR,   00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3B0A, TEXT_OUTD,   00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0x3B0B, TEXT_SOTDR,  00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX0),
+    X3(0x3B0B, TEXT_SOUTD,  00F0, WORD, M_IRIO, M_IR,   P4, C4, E1_WR, 0XX8),
+    X3(0xB800, TEXT_TRIB,   00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XX0),
+    X3(0xB802, TEXT_TRTIB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XX0),
+    X3(0xB804, TEXT_TRIRB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XX0),
+    X3(0xB806, TEXT_TRTIRB, 00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XXE),
+    X3(0xB808, TEXT_TRDB,   00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XX0),
+    X3(0xB80A, TEXT_TRTDB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XX0),
+    X3(0xB80C, TEXT_TRDRB,  00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XX0),
+    X3(0xB80E, TEXT_TRTDRB, 00F0, BYTE, M_IR,   M_IR,   C4, P4, E1_WR, 0XXE),
+    X4(0xBA00, TEXT_CPIB,   00F0, BYTE, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X3(0xBA01, TEXT_LDIRB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR,        0XX0),
+    X3(0xBA01, TEXT_LDIB,   00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR,        0XX8),
+    X4(0xBA02, TEXT_CPSIB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBA04, TEXT_CPIRB,  00F0, BYTE, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBA06, TEXT_CPSIRB, 00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBA08, TEXT_CPDB,   00F0, BYTE, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X3(0xBA09, TEXT_LDDRB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR,        0XX0),
+    X3(0xBA09, TEXT_LDDB,   00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR,        0XX8),
+    X4(0xBA0A, TEXT_CPSDB,  00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBA0C, TEXT_CPDRB,  00F0, BYTE, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBA0E, TEXT_CPSDRB, 00F0, BYTE, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBB00, TEXT_CPI,    00F0, WORD, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X3(0xBB01, TEXT_LDIR,   00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR,        0XX0),
+    X3(0xBB01, TEXT_LDI,    00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR,        0XX8),
+    X4(0xBB02, TEXT_CPSI,   00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBB04, TEXT_CPIR,   00F0, WORD, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBB06, TEXT_CPSIR,  00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBB08, TEXT_CPD,    00F0, WORD, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X3(0xBB09, TEXT_LDDR,   00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR,        0XX0),
+    X3(0xBB09, TEXT_LDD,    00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR,        0XX8),
+    X4(0xBB0A, TEXT_CPSD,   00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBB0C, TEXT_CPDR,   00F0, WORD, M_R,    M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
+    X4(0xBB0E, TEXT_CPSDR,  00F0, WORD, M_IR,   M_IR,   P4, C4, E1_WR, E2_CC, 0XXX),
     E2(0x0000, TEXT_ADDB,   C0FF, BYTE, M_R,    M_GENI, C0, C4),
     E2(0x0100, TEXT_ADD,    C0FF, WORD, M_R,    M_GENI, C0, C4),
     E2(0x0200, TEXT_SUBB,   C0FF, BYTE, M_R,    M_GENI, C0, C4),
@@ -313,9 +313,9 @@ static constexpr Entry TABLE_Z8000[] PROGMEM = {
     E2(0x1900, TEXT_MULT,   C0FF, WORD, M_DR,   M_GENI, C0, C4),
     E2(0x1A00, TEXT_DIVL,   C0FF, LONG, M_DR,   M_GENI, C0, C4),
     E2(0x1B00, TEXT_DIV,    C0FF, WORD, M_DR,   M_GENI, C0, C4),
-    X3(0x1C01, TEXT_LDM,    C0F0, WORD, M_R,    M_GENA, P8, C4, CNT, 0X0X),
+    X3(0x1C01, TEXT_LDM,    C0F0, WORD, M_R,    M_GENA, P8, C4, E1_CNT, 0X0X),
     E1(0x1C08, TEXT_TESTL,  C0F0, LONG, M_GEND,         C4),
-    X3(0x1C09, TEXT_LDM,    C0F0, WORD, M_GENA, M_R,    C4, P8, CNT, 0X0X),
+    X3(0x1C09, TEXT_LDM,    C0F0, WORD, M_GENA, M_R,    C4, P8, E1_CNT, 0X0X),
     E2(0x1D00, TEXT_LDL,    C0FF, LONG, M_GENA, M_R,    C4, C0),
     E2(0x1E00, TEXT_JP,     C0FF, NONE, M_CC,   M_GENA, C0, C4),
     E1(0x1E08, TEXT_JP,     C0F0, NONE, M_GENA,         C4),
@@ -640,7 +640,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     const auto opc = insn.opCode();
     if ((cf == CF_C0F0 || cf == CF_C0FF) && (opc & 0xC000) == 0xC000)
         return false;
-    if (cf ==  CF_X0FF && (opc & 0xC000) == 0 && (opc & 0x00F0) == 0)
+    if (cf == CF_X0FF && (opc & 0xC000) == 0 && (opc & 0x00F0) == 0)
         return false;
     if ((opc & flags.codeMask()) != entry->opCode())
         return false;

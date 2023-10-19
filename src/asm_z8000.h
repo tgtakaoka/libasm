@@ -42,18 +42,18 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op);
 
-    void emitData(AsmInsn &insn, ModeField field, Config::opcode_t data);
-    void emitRegister(AsmInsn &insn, ModeField field, RegName reg);
-    void emitIndirectRegister(AsmInsn &insn, const Operand &op, ModeField field, RegName reg);
-    void emitImmediate(AsmInsn &insn, ModeField field, AddrMode mode, const Operand &op);
+    void emitData(AsmInsn &insn, OprPos pos, Config::opcode_t data);
+    void emitRegister(AsmInsn &insn, OprPos pos, RegName reg);
+    void emitIndirectRegister(AsmInsn &insn, const Operand &op, OprPos pos, RegName reg);
+    void emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Operand &op);
     void emitDirectAddress(AsmInsn &insn, const Operand &op);
     void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitIndexed(AsmInsn &insn, ModeField field, const Operand &op);
-    void emitBaseAddress(AsmInsn &insn, ModeField field, const Operand &op);
-    void emitBaseIndexed(AsmInsn &insn, ModeField field, const Operand &op);
-    void emitFlags(AsmInsn &insn, ModeField field, const Operand &op);
-    void emitCtlRegister(AsmInsn &insn, ModeField field, const Operand &op);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, ModeField field);
+    void emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op);
+    void emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op);
+    void emitBaseIndexed(AsmInsn &insn, OprPos pos, const Operand &op);
+    void emitFlags(AsmInsn &insn, OprPos pos, const Operand &op);
+    void emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op);
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos);
     void checkRegisterOverlap(
             const Operand &dstOp, const Operand &srcOp, const Operand *cntOp = nullptr);
     void checkRegisterOverlap(

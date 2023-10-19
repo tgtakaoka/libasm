@@ -39,19 +39,17 @@ private:
     bool _shortDirect;
     bool _ioAddressPrefix;
 
-    StrBuffer &outImmediate(StrBuffer &out, uint8_t data, AddrMode mode);
-    StrBuffer &outComma(StrBuffer &out, const DisInsn &insn, AddrMode mode, ModeField field);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, OprSize size);
-    Error decodeFlags(StrBuffer &out, uint8_t flags);
-    Error decodeGeneralRegister(StrBuffer &out, uint8_t num, OprSize size, bool indirect = false);
-    Error decodeDoubleSizedRegister(StrBuffer &out, uint8_t num, OprSize size);
-    Error decodeControlRegister(StrBuffer &out, uint8_t ctlNum, OprSize size);
-    Error decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num);
-    Error decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num);
-    Error decodeDirectAddress(DisInsn &insn, StrBuffer &out);
-    Error decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, ModeField field);
-    Error checkRegisterOverlap(const DisInsn &insn);
+    StrBuffer &outComma(StrBuffer &out, const DisInsn &insn, AddrMode mode, OprPos pos) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, OprSize size) const;
+    void decodeFlags(DisInsn &insn, StrBuffer &out, uint8_t flags) const;
+    void decodeGeneralRegister(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) const;
+    void decodeControlRegister(DisInsn &insn, StrBuffer &out, uint8_t ctlNum, OprSize size) const;
+    void decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) const;
+    void decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) const;
+    void decodeDirectAddress(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
+    Error checkRegisterOverlap(DisInsn &insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

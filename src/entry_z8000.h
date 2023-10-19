@@ -76,6 +76,7 @@ enum Ex1Mode : uint8_t {
     E1_WR = 2,
     E1_ERROR = 3,
 };
+
 enum Ex2Mode : uint8_t {
     E2_NONE = 0,
     E2_CC = 1,
@@ -107,14 +108,14 @@ enum CodeFormat : uint8_t {
     CF_X0FF = 11,  // CF_C0FF with extra check
 };
 
-enum ModeField : uint8_t {
-    MF_NO = 0,
-    MF_C0 = 1,
-    MF_C4 = 2,
-    MF_C8 = 3,
-    MF_P0 = 4,
-    MF_P4 = 5,
-    MF_P8 = 6,
+enum OprPos : uint8_t {
+    OP_NO = 0,
+    OP_C0 = 1,
+    OP_C4 = 2,
+    OP_C8 = 3,
+    OP_P0 = 4,
+    OP_P4 = 5,
+    OP_P8 = 6,
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -124,15 +125,15 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _ext;
         uint8_t _size;
 
-        static constexpr Flags create(AddrMode dst, ModeField dstField, AddrMode src,
-                ModeField srcField, Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat,
-                CodeFormat codeFormat, OprSize size) {
-            return Flags{Entry::opr(dst, dstField), Entry::opr(src, srcField),
+        static constexpr Flags create(AddrMode dst, OprPos dstPos, AddrMode src, OprPos srcPos,
+                Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat, CodeFormat codeFormat,
+                OprSize size) {
+            return Flags{Entry::opr(dst, dstPos), Entry::opr(src, srcPos),
                     Entry::ext(ex1, ex2, postFormat), Entry::size(codeFormat, size)};
         }
 
         static const Flags create(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-            return Flags{Entry::opr(dst, MF_NO), Entry::opr(src, MF_NO),
+            return Flags{Entry::opr(dst, OP_NO), Entry::opr(src, OP_NO),
                     Entry::ext(toEx1Mode(ex1), toEx2Mode(ex2), PF_NONE),
                     Entry::size(CF_0000, SZ_NONE)};
         }
@@ -145,8 +146,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode src() const { return Entry::mode(_src); }
         AddrMode ex1() const { return toAddrMode(Ex1Mode((_ext >> ex1Mode_gp) & ex1Mode_gm)); }
         AddrMode ex2() const { return toAddrMode(Ex2Mode((_ext >> ex2Mode_gp) & ex2Mode_gm)); }
-        ModeField dstField() const { return Entry::field(_dst); }
-        ModeField srcField() const { return Entry::field(_src); }
+        OprPos dstPos() const { return Entry::pos(_dst); }
+        OprPos srcPos() const { return Entry::pos(_src); }
         PostFormat postFormat() const {
             return PostFormat((_ext >> postFormat_gp) & postFormat_gm);
         }
@@ -167,9 +168,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
 private:
     const Flags _flags;
 
-    static constexpr uint8_t opr(AddrMode mode, ModeField field) {
-        return (static_cast<uint8_t>(mode) << mode_gp) |
-               (static_cast<uint8_t>(field) << modeField_gp);
+    static constexpr uint8_t opr(AddrMode mode, OprPos pos) {
+        return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << modePos_gp);
     }
 
     static constexpr uint8_t ext(Ex1Mode ex1, Ex2Mode ex2, PostFormat postFormat) {
@@ -184,9 +184,7 @@ private:
     }
 
     static inline AddrMode mode(uint8_t opr) { return AddrMode((opr >> mode_gp) & mode_gm); }
-    static inline ModeField field(uint8_t opr) {
-        return ModeField((opr >> modeField_gp) & modeField_gm);
-    }
+    static inline OprPos pos(uint8_t opr) { return OprPos((opr >> modePos_gp) & modePos_gm); }
 
     static AddrMode toAddrMode(Ex1Mode mode);
     static inline Ex1Mode toEx1Mode(AddrMode mode) {
@@ -222,9 +220,9 @@ private:
 
     // |dst|, |src|
     static constexpr int mode_gp = 0;
-    static constexpr int modeField_gp = 5;
+    static constexpr int modePos_gp = 5;
     static constexpr uint8_t mode_gm = 0x1f;
-    static constexpr uint8_t modeField_gm = 0x7;
+    static constexpr uint8_t modePos_gm = 0x7;
     // |ext|
     static constexpr int ex1Mode_gp = 0;
     static constexpr int ex2Mode_gp = 2;

@@ -95,13 +95,13 @@ void test_dis_z8002() {
             "      org    %9abc\n"
             "      cpl    rr0, #%01020304\n"
             "; test.bin: %9ac2: error: Registers overlapped\n"
-            ";     9ac2 : 5144\n",
+            ";     9ac2 : 5144 0000\n",
             "       0 :                            cpu    z8002\n"
             "    9abc :                            org    %9abc\n"
             "    9abc : 1000 0102 0304             cpl    rr0, #%01020304\n"
-          "test.bin: %9ac2: error: Registers overlapped\n"
-            "    9ac2 : 5144                       pushl  @r4, %0000(r4)\n",
-            0x1000, 0x0102, 0x0304, 0x5144);
+            "test.bin: %9ac2: error: Registers overlapped\n"
+            "    9ac2 : 5144 0000                  pushl  @r4, %0000(r4)\n",
+            0x1000, 0x0102, 0x0304, 0x5144, 0x0000);
 
     EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x10000));
     EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCD));
