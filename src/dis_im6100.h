@@ -36,8 +36,6 @@ private:
 
     bool _ignoreliteral;
 
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
-
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

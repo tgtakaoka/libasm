@@ -40,7 +40,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 };
 
 }  // namespace im6100
