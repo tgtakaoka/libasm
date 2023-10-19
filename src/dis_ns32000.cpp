@@ -124,26 +124,23 @@ bool isScaledIndex(uint8_t gen) {
 
 }  // namespace
 
-Error DisNs32000::readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) {
+Error DisNs32000::readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) const {
     if (isGenMode(mode) && isScaledIndex(getOprField(insn, pos)))
         insn.setIndexByte(insn.readByte(), pos);
-    return setErrorIf(insn);
+    return insn.getError();
 }
 
-StrBuffer &DisNs32000::outDisplacement(StrBuffer &out, const Displacement &disp) {
-    switch (disp.bits) {
-    case 7:
+StrBuffer &DisNs32000::outDisplacement(StrBuffer &out, const Displacement &disp) const {
+    if (disp.bits == 7)
         return outDec(out, static_cast<int8_t>(disp.val32), -8);
-    case 14:
+    if (disp.bits == 14)
         return outHex(out, static_cast<int16_t>(disp.val32), -16);
-    default:
-        return outHex(out, disp.val32, -30);
-    }
+    // disp.bits == 30
+    return outHex(out, disp.val32, -30);
 }
 
-Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
-    const uint8_t head = insn.readByte();
-    setErrorIf(insn);
+Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) const {
+    const auto head = insn.readByte();
     if ((head & 0x80) == 0) {
         // 0xxx|xxxx
         // Sign extends 7-bit number as 0x40 is a sign bit.
@@ -152,7 +149,6 @@ Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
     } else {
         // Sign extends 14-bit number as 0x2000 is a sign bit.
         const auto lsb = insn.readByte();
-        setErrorIf(insn);
         const auto val16 = (static_cast<uint16_t>(head) << 8) | lsb;
         if ((head & 0x40) == 0) {
             // 10xx|xxxx
@@ -161,60 +157,56 @@ Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) {
         } else {
             // 11xx|xxxx
             const auto lsw = insn.readUint16();
-            setErrorIf(insn);
             if (head == 0xE0)
-                setErrorIf(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
+                disp.setErrorIf(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
             const auto val32 = (static_cast<uint32_t>(val16) << 16) | lsw;
             disp.val32 = signExtend(val32, 30);
             disp.bits = 30;
             if (disp.val32 < -0x1F000000L)
-                setErrorIf(OVERFLOW_RANGE);
+                disp.setErrorIf(OVERFLOW_RANGE);
         }
     }
-    return getError();
+    return disp.getError();
 }
 
-Error DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     Displacement disp;
-    readDisplacement(insn, disp);
+    if (readDisplacement(insn, disp))
+        insn.setErrorIf(out, disp);
     if (disp.val32 >= 0 && disp.val32 < 16) {
         uint8_t len = disp.val32;
         if (mode == M_LEN8) {
             if (len % 2)
-                setErrorIf(ILLEGAL_CONSTANT);
+                insn.setErrorIf(out, ILLEGAL_CONSTANT);
             len /= 2;
         }
         if (mode == M_LEN4) {
             if (len % 4)
-                setErrorIf(ILLEGAL_CONSTANT);
+                insn.setErrorIf(out, ILLEGAL_CONSTANT);
             len /= 4;
         }
         len++;
         outDec(out, len, 5);
-        return getError();
+        return;
     }
     if (disp.val32 < 0) {
-        setErrorIf(ILLEGAL_CONSTANT);
+        insn.setErrorIf(out, ILLEGAL_CONSTANT);
     } else if (disp.val32 >= 16) {
-        setErrorIf(OVERFLOW_RANGE);
+        insn.setErrorIf(out, OVERFLOW_RANGE);
     }
     outDisplacement(out, disp);
-    return getError();
 }
 
-Error DisNs32000::decodeBitField(DisInsn &insn, StrBuffer &out, AddrMode mode) {
-    if (mode == M_BFLEN)
-        return getError();
-    const uint8_t data = insn.readByte();
-    const uint8_t len = (data & 0x1F) + 1;
-    const uint8_t off = (data >> 5);
+void DisNs32000::decodeBitField(DisInsn &insn, StrBuffer &out) const {
+    const auto data = insn.readByte();
+    const auto len = (data & 0x1F) + 1;
+    const auto off = (data >> 5);
     outHex(out, off, 3);  // M_BFOFF
     out.comma();
     outDec(out, len, 6);  // M_BFLEN
-    return setErrorIf(insn);
 }
 
-Error DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto size = (mode == M_GENC) ? SZ_BYTE : insn.size();
     switch (size) {
     case SZ_BYTE:
@@ -230,71 +222,87 @@ Error DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) 
     case SZ_DOUBLE:
         outHex(out, insn.readUint32(), 32);
         break;
-    case SZ_FLOAT:
+    case SZ_FLOAT: {
+        const auto float32 = insn.readFloat32();
         if (_floatPrefix)
             out.letter('0').letter('f');
-        out.float32(insn.readFloat32());
+        out.float32(float32);
         break;
-    case SZ_LONG:
+    }
+    case SZ_LONG: {
+        const auto float64 = insn.readFloat64();
         if (_floatPrefix)
             out.letter('0').letter('f');
-        out.float64(insn.readFloat64());
+        out.float64(float64);
         break;
+    }
     default:
         break;
     }
-    return setErrorIf(insn);
 }
 
-Error DisNs32000::decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisNs32000::decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     Displacement disp;
-    readDisplacement(insn, disp);
+    if (readDisplacement(insn, disp))
+        insn.setErrorIf(out, disp);
     if (mode == M_LEN32) {
         if (disp.val32 <= 0)
-            setErrorIf(ILLEGAL_CONSTANT);
+            insn.setErrorIf(out, ILLEGAL_CONSTANT);
         if (disp.val32 > 32)
-            setErrorIf(OVERFLOW_RANGE);
+            insn.setErrorIf(out, OVERFLOW_RANGE);
         outDec(out, disp.val32, 6);
     } else if (mode == M_DISP) {
         outDisplacement(out, disp);
     }
-    return getError();
 }
 
-Error DisNs32000::decodeRelative(DisInsn &insn, StrBuffer &out) {
+void DisNs32000::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     Displacement disp;
-    readDisplacement(insn, disp);
-    const auto target = branchTarget(insn.address(), disp.val32);
+    if (readDisplacement(insn, disp))
+        insn.setErrorIf(out, disp);
+    Error error;
+    const auto target = branchTarget(insn.address(), disp.val32, error);
+    if (error)
+        insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), disp.bits);
-    return getError();
 }
 
-Error DisNs32000::decodeConfig(const DisInsn &insn, StrBuffer &out, OprPos pos) {
-    const uint8_t configs = getOprField(insn, pos);
+void DisNs32000::decodeConfig(DisInsn &insn, StrBuffer &out, OprPos pos) const {
+    const auto configs = getOprField(insn, pos);
     outConfigNames(out, configs);
-    return getError();
 }
 
-Error DisNs32000::decodeStrOpt(const DisInsn &insn, StrBuffer &out, OprPos pos) {
-    const uint8_t strOpts = getOprField(insn, pos);
-    if ((strOpts & 0xC) == 8)
-        setErrorIf(ILLEGAL_OPERAND_MODE);
+void DisNs32000::decodeStrOpt(DisInsn &insn, StrBuffer &out, OprPos pos) const {
+    auto strOpts = getOprField(insn, pos);
     if (_stringOptionBracket)
         out.letter('[');
-    outStrOptNames(out, strOpts);
+    char sep = 0;
+    if (strOpts & uint8_t(STROPT_B)) {
+        out.letter('B');
+        sep = ',';
+    }
+    strOpts &= 0xC;
+    if (strOpts) {
+        if (sep)
+            out.letter(sep);
+        if (strOpts == STROPT_W) {
+            out.letter('W');
+        } else if (strOpts == STROPT_U) {
+            out.letter('U');
+        } else {
+            insn.setErrorIf(ILLEGAL_OPERAND_MODE);
+        }
+    }
     if (_stringOptionBracket)
         out.letter(']');
-    return getError();
 }
 
-Error DisNs32000::decodeRegisterList(DisInsn &insn, StrBuffer &out) {
-    uint8_t list = insn.readByte();
-    if (setErrorIf(insn))
-        return getError();
+void DisNs32000::decodeRegisterList(DisInsn &insn, StrBuffer &out) const {
+    auto list = insn.readByte();
     if (list == 0)
-        setErrorIf(OPCODE_HAS_NO_EFFECT);
+        insn.setErrorIf(out, OPCODE_HAS_NO_EFFECT);
     const auto push = insn.size() == SZ_NONE;
-    const uint8_t mask = push ? 0x01 : 0x80;
+    const auto mask = push ? 0x01 : 0x80;
     out.letter('[');
     char sep = 0;
     for (uint8_t reg = 0; list; reg++) {
@@ -310,20 +318,13 @@ Error DisNs32000::decodeRegisterList(DisInsn &insn, StrBuffer &out) {
             list <<= 1;
     }
     out.letter(']');
-    return getError();
 }
 
-Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) {
-    uint8_t gen = getOprField(insn, pos);
-    auto index = REG_UNDEF;
-    auto size = SZ_NONE;
-    const bool scaledIndex = isScaledIndex(gen);
-    if (scaledIndex) {
-        size = OprSize(gen & 0x3);
-        const uint8_t indexByte = insn.indexByte(pos);
-        index = decodeRegName(indexByte);
-        gen = indexByte >> 3;
-    }
+void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos,
+        OprSize size, Error idxError) const {
+    const auto base = getOprField(insn, pos);
+    const auto scaledIndex = isScaledIndex(base);
+    const auto gen = scaledIndex ? (insn.indexByte(pos) >> 3) : base;
     Displacement disp, disp2;
     RegName reg;
     switch (gen) {
@@ -336,8 +337,13 @@ Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
     case 6:
     case 7:  // M_GREG, M_FREG
         if (mode == M_GENA)
-            setErrorIf(REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(out, REGISTER_NOT_ALLOWED);
         reg = decodeRegName(gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
+        if ((mode == M_FENR || mode == M_FENW) && (size == SZ_LONG || size == SZ_QUAD) &&
+                !isRegPair(reg))
+            insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
+        if ((mode == M_GENR || mode == M_GENW) && size == SZ_QUAD && !isRegPair(reg))
+            insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
         if (scaledIndex)
             out.letter('0').letter('(');
         outRegName(out, reg);
@@ -353,7 +359,8 @@ Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
     case 14:
     case 15:  // M_RREL
         reg = decodeRegName(gen);
-        readDisplacement(insn, disp);
+        if (readDisplacement(insn, disp))
+            insn.setErrorIf(out, disp);
         outDisplacement(out, disp);
         outRegName(out.letter('('), reg).letter(')');
         break;
@@ -366,44 +373,53 @@ Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
     case 0x12:
         reg = REG_SB;
         goto m_mrel;
-    m_mrel:  // M_MREL
-        readDisplacement(insn, disp);
-        readDisplacement(insn, disp2);
+    m_mrel :  // M_MREL
+    {
+        const auto dispError = readDisplacement(insn, disp);
+        if (readDisplacement(insn, disp2))
+            insn.setErrorIf(out, disp);
         if (reg != REG_EXT || disp2.val32)
             outDisplacement(out, disp2).letter('(');
+        if (dispError)
+            insn.setErrorIf(out, dispError);
         outDisplacement(out, disp);
         outRegName(out.letter('('), reg).letter(')');
         if (reg != REG_EXT || disp2.val32)
             out.letter(')');
-        break;
-    case 0x13:
-        return setErrorIf(ILLEGAL_OPERAND_MODE);
+    } break;
     case 0x14:  // M_IMM
         if (mode == M_GENW || mode == M_GENA || mode == M_FENW || scaledIndex)
-            setErrorIf(OPERAND_NOT_ALLOWED);
-        return decodeImmediate(insn, out, mode);
+            insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
+        decodeImmediate(insn, out, mode);
+        break;
     case 0x15:  // M_ABS
-        readDisplacement(insn, disp);
+        if (readDisplacement(insn, disp))
+            insn.setErrorIf(out, disp);
         // Check absolute address is in 24bit unsigned integer range.
         if (overflowUint(disp.val32, addressWidth()))
-            setErrorIf(OVERFLOW_RANGE);
-        outAbsAddr(out.letter('@'), disp.val32, getError() == OVERFLOW_RANGE ? -32 : 0);
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        outAbsAddr(out.letter('@'), disp.val32, insn.getError() == OVERFLOW_RANGE ? -32 : 0);
         break;
     case 0x16:  // M_EXT
         if (_externalParen) {
             reg = REG_EXT;
             goto m_mrel;
         }
-        readDisplacement(insn, disp);
-        readDisplacement(insn, disp2);
-        outRegName(out, REG_EXT);
-        outDisplacement(out.letter('('), disp).letter(')');
-        out.letter('+');
-        if (disp2.val32 < 0)
-            out.letter('(');
-        outDisplacement(out, disp2);
-        if (disp2.val32 < 0)
-            out.letter(')');
+        {
+            outRegName(out, REG_EXT);
+            if (readDisplacement(insn, disp))
+                insn.setErrorIf(out, disp);
+            outDisplacement(out.letter('('), disp).letter(')');
+            out.letter('+');
+            const auto disp2Error = readDisplacement(insn, disp2);
+            if (disp2.val32 < 0)
+                out.letter('(');
+            if (disp2Error)
+                insn.setErrorIf(out, disp2Error);
+            outDisplacement(out, disp2);
+            if (disp2.val32 < 0)
+                out.letter(')');
+        }
         break;
     case 0x17:  // M_TOS
         outRegName(out, REG_TOS);
@@ -420,11 +436,13 @@ Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
     case 0x1B:
         reg = REG_PC;
     m_mem:  // M_MEM
-        readDisplacement(insn, disp);
+        if (readDisplacement(insn, disp))
+            insn.setErrorIf(out, disp);
         if (reg == REG_PC) {
-            const Config::uintptr_t target = insn.address() + disp.val32;
-            if (checkAddr(target))
-                setErrorIf(OVERFLOW_RANGE);
+            const auto target = insn.address() + disp.val32;
+            const auto error = checkAddr(target);
+            if (error)
+                insn.setErrorIf(out, OVERFLOW_RANGE);
             if (_pcRelativeParen) {
                 outAbsAddr(out, target);
             } else {
@@ -440,114 +458,110 @@ Error DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Op
         }
         outRegName(out.letter('('), reg).letter(')');
         break;
-    default:
-        return setErrorIf(ILLEGAL_OPERAND_MODE);
+    default:  // 0x13
+        insn.setErrorIf(out, ILLEGAL_OPERAND_MODE);
+        break;
     }
-    if (index != REG_UNDEF)
-        outRegName(out.letter('['), index).letter(':').letter(indexSizeChar(size)).letter(']');
-    return getError();
+    if (scaledIndex) {
+        const auto indexByte = insn.indexByte(pos);
+        const auto indexSize = OprSize(base & 0x3);
+        const auto index = decodeRegName(indexByte & 7);
+        if (idxError)
+            insn.setErrorIf(out, idxError);
+        outRegName(out.letter('['), index).letter(':').letter(indexSizeChar(indexSize)).letter(']');
+    }
 }
 
-Error DisNs32000::decodeOperand(
-        DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size) {
-    const uint8_t field = getOprField(insn, pos);
+void DisNs32000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos,
+        OprSize size, Error idxError) const {
+    const auto field = getOprField(insn, pos);
     switch (mode) {
     case M_GREG:
         outRegName(out, decodeRegName(field));
         break;
-    case M_PREG: {
-        const auto preg = decodePregName(field);
-        if (preg == PREG_UNDEF)
-            setErrorIf(UNKNOWN_REGISTER);
-        outPregName(out, preg);
+    case M_PREG:
+        if (decodePregName(field) == PREG_UNDEF)
+            insn.setErrorIf(out, UNKNOWN_REGISTER);
+        outPregName(out, decodePregName(field));
         break;
-    }
-    case M_MREG: {
-        const auto mreg = decodeMregName(field);
-        if (mreg == MREG_UNDEF)
-            setErrorIf(UNKNOWN_REGISTER);
-        outMregName(out, mreg);
+    case M_MREG:
+        if (decodeMregName(field) == MREG_UNDEF)
+            insn.setErrorIf(out, UNKNOWN_REGISTER);
+        outMregName(out, decodeMregName(field));
         break;
-    }
     case M_CONF:
-        return decodeConfig(insn, out, pos);
+        decodeConfig(insn, out, pos);
+        break;
     case M_SOPT:
-        return decodeStrOpt(insn, out, pos);
+        decodeStrOpt(insn, out, pos);
+        break;
     case M_RLST:
-        return decodeRegisterList(insn, out);
+        decodeRegisterList(insn, out);
+        break;
     case M_FENW:
     case M_FENR:
-        if (field < 8 && field % 2 != 0 && (size == SZ_LONG || size == SZ_QUAD))
-            setErrorIf(REGISTER_NOT_ALLOWED);
-        goto decode_generic;
     case M_GENR:
     case M_GENW:
-        if (field < 8 && field % 2 != 0 && size == SZ_QUAD)
-            setErrorIf(REGISTER_NOT_ALLOWED);
-        goto decode_generic;
     case M_GENC:
     case M_GENA:
-    decode_generic:
-        return decodeGeneric(insn, out, mode, pos);
+        decodeGeneric(insn, out, mode, pos, size, idxError);
+        break;
     case M_INT4:
         outDec(out, static_cast<int8_t>(getOprField(insn, pos)), -4);
         break;
     case M_BFOFF:
     case M_BFLEN:
-        return decodeBitField(insn, out, mode);
+        decodeBitField(insn, out);
+        break;
     case M_REL:
-        return decodeRelative(insn, out);
+        decodeRelative(insn, out);
+        break;
     case M_DISP:
     case M_LEN32:
-        return decodeDisplacement(insn, out, mode);
+        decodeDisplacement(insn, out, mode);
+        break;
     case M_LEN16:
     case M_LEN8:
     case M_LEN4:
-        return decodeLength(insn, out, mode);
+        decodeLength(insn, out, mode);
+        break;
     default:
         break;
     }
-    return getError();
 }
 
 Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    Config::opcode_t opCode = insn.readByte();
-    insn.setOpCode(opCode);
-    if (TABLE.isPrefixCode(_cpuSpec, opCode)) {
-        const Config::opcode_t prefix = opCode;
-        opCode = insn.readByte();
-        insn.setOpCode(opCode, prefix);
+    DisInsn insn(_insn, memory, out);
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
+    if (TABLE.isPrefixCode(_cpuSpec, opc)) {
+        insn.setOpCode(insn.readByte(), opc);
+        if (insn.getError())
+            return setError(insn);
     }
     if (TABLE.searchOpCode(_cpuSpec, insn, out))
         return setError(insn);
-    if (readIndexByte(insn, insn.src(), insn.srcPos()))
-        return getError();
-    if (readIndexByte(insn, insn.dst(), insn.dstPos()))
-        return getError();
-    if (readIndexByte(insn, insn.ex1(), insn.ex1Pos()))
-        return getError();
 
-    const auto src = insn.src();
-    const auto dst = insn.dst();
-    const auto ex1 = insn.ex1();
-    const auto ex2 = insn.ex2();
+    const auto srcIdxError = readIndexByte(insn, insn.src(), insn.srcPos());
+    const auto dstIdxError = readIndexByte(insn, insn.dst(), insn.dstPos());
+    const auto ex1IdxError = readIndexByte(insn, insn.ex1(), insn.ex1Pos());
+
     const auto size = insn.size();
+    const auto ex1 = insn.ex1();
     const auto srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
-    decodeOperand(insn, out, src, insn.srcPos(), srcSize);
-    if (dst == M_NONE)
-        return getError();
-    out.comma();
-    const auto dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
-    decodeOperand(insn, out, dst, insn.dstPos(), dstSize);
-    if (ex1 == M_NONE)
-        return getError();
-    out.comma();
-    decodeOperand(insn, out, ex1, insn.ex1Pos(), size);
-    if (ex2 == M_NONE || ex2 == M_BFLEN)
-        return getError();
-    out.comma();
-    return decodeOperand(insn, out, ex2, insn.ex2Pos(), size);
+    decodeOperand(insn, out, insn.src(), insn.srcPos(), srcSize, srcIdxError);
+    const auto dst = insn.dst();
+    if (dst != M_NONE) {
+        const auto ex2 = insn.ex2();
+        const auto dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
+        decodeOperand(insn, out.comma(), dst, insn.dstPos(), dstSize, dstIdxError);
+        if (ex1 != M_NONE) {
+            decodeOperand(insn, out.comma(), ex1, insn.ex1Pos(), size, ex1IdxError);
+            if (ex2 != M_NONE && ex2 != M_BFLEN)
+                decodeOperand(insn, out.comma(), ex2, insn.ex2Pos(), size);
+        }
+    }
+    return setError(insn);
 }
 
 }  // namespace ns32000

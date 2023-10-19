@@ -205,22 +205,6 @@ StrOptName parseStrOptName(StrScanner &scan) {
     return strOpt;
 }
 
-StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts) {
-    char sep = 0;
-    if (strOpts & uint8_t(STROPT_B)) {
-        out.letter('B');
-        sep = ',';
-    }
-    if ((strOpts &= 0xC) != 0 && sep)
-        out.letter(sep);
-    if (strOpts == int8_t(STROPT_W)) {
-        out.letter('W');
-    } else if (strOpts == int(STROPT_U)) {
-        out.letter('U');
-    }
-    return out;
-}
-
 OprSize parseIndexSize(StrScanner &scan) {
     auto p = scan;
     auto size = SZ_NONE;

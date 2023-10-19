@@ -55,10 +55,10 @@ static void test_format_0() {
     ATEST(0x800000, "BGT", ".-0x00800000", 0x6A, 0xFF, 0x80, 0x00, 0x00);
     ATEST(0x000000, "BLS", ".+0x00FFFFFF", 0x5A, 0xC0, 0xFF, 0xFF, 0xFF);
     ATEST(0xFFFFFF, "BGT", ".-0x00FFFFFF", 0x6A, 0xFF, 0x00, 0x00, 0x01);
-    AERRT(0x000000, "BLE", ".+0x01000000", OVERFLOW_RANGE, 0x7A, 0xC1, 0x00, 0x00, 0x00);
-    AERRT(0xFFFFFF, "BFS", ".-0x01000000", OVERFLOW_RANGE, 0x8A, 0xFF, 0x00, 0x00, 0x00);
-    AERRT(0x000000, "BLE", ".+0x1FFFFFFF", OVERFLOW_RANGE, 0x7A, 0xDF, 0xFF, 0xFF, 0xFF);
-    AERRT(0xFFFFFF, "BFS", ".-0x1F000000", OVERFLOW_RANGE, 0x8A, 0xE1, 0x00, 0x00, 0x00);
+    AERRT(0x000000, "BLE", ".+0x01000000", OVERFLOW_RANGE, ".+0x01000000", 0x7A, 0xC1, 0x00, 0x00, 0x00);
+    AERRT(0xFFFFFF, "BFS", ".-0x01000000", OVERFLOW_RANGE, ".-0x01000000", 0x8A, 0xFF, 0x00, 0x00, 0x00);
+    AERRT(0x000000, "BLE", ".+0x1FFFFFFF", OVERFLOW_RANGE, ".+0x1FFFFFFF", 0x7A, 0xDF, 0xFF, 0xFF, 0xFF);
+    AERRT(0xFFFFFF, "BFS", ".-0x1F000000", OVERFLOW_RANGE, ".-0x1F000000", 0x8A, 0xE1, 0x00, 0x00, 0x00);
     ATEST(0x001000, "BFC", ".+2",    0x9A, 0x02);
     ATEST(0x001000, "BLO", ".-154",  0xAA, 0xBF, 0x66);
     ATEST(0x001000, "BHS", ".+63",   0xBA, 0x3F);
@@ -66,6 +66,9 @@ static void test_format_0() {
     ATEST(0x001000, "BGE", ".+256",  0xDA, 0x81, 0x00);
     ATEST(0x001000, "BR",  ".+10",   0xEA, 0x0A);
     ATEST(0x001000, "BR",  ".-154",  0xEA, 0xBF, 0x66);
+    ANMEM(0x000000, "BLS", ".+0x00FFFF00", ".+0x00FFFF00", 0x5A, 0xC0, 0xFF, 0xFF);
+    ANMEM(0x000000, "BLS", ".+0x00FF0000", ".+0x00FF0000", 0x5A, 0xC0, 0xFF);
+    ANMEM(0x000000, "BLS", ".",            ".",            0x5A, 0xC0);
 }
 
 static void test_format_1() {
@@ -84,12 +87,12 @@ static void test_format_1() {
     TEST("CXP", "1",  0x22, 0x01);
     TEST("RXP", "16", 0x32, 0x10);
 
-    TEST("SAVE",    "[R0,R2,R7]",               0x62, 0x85);
-    ERRT("SAVE",    "[]", OPCODE_HAS_NO_EFFECT, 0x62, 0x00);
-    TEST("RESTORE", "[R0,R2,R7]",               0x72, 0xA1);
-    ERRT("RESTORE", "[]", OPCODE_HAS_NO_EFFECT, 0x72, 0x00);
-    TEST("ENTER",   "[R0,R2,R7], 16",           0x82, 0x85, 0x10);
-    TEST("EXIT",    "[R0,R2,R7]",               0x92, 0xA1);
+    TEST("SAVE",    "[R0,R2,R7]",                     0x62, 0x85);
+    ERRT("SAVE",    "[]", OPCODE_HAS_NO_EFFECT, "[]", 0x62, 0x00);
+    TEST("RESTORE", "[R0,R2,R7]",                     0x72, 0xA1);
+    ERRT("RESTORE", "[]", OPCODE_HAS_NO_EFFECT, "[]", 0x72, 0x00);
+    TEST("ENTER",   "[R0,R2,R7], 16", 0x82, 0x85, 0x10);
+    TEST("EXIT",    "[R0,R2,R7]",     0x92, 0xA1);
 
     // Various displacement.
     TEST("RET", "0",                             0x12, 0x00);
@@ -99,7 +102,7 @@ static void test_format_1() {
     TEST("RET", "-0x2000",                       0x12, 0xA0, 0x00);
     TEST("RET", "0x1FFFFFFF",                    0x12, 0xDF, 0xFF, 0xFF, 0xFF);
     TEST("RET", "-0x1F000000",                   0x12, 0xE1, 0x00, 0x00, 0x00);
-    ERRT("RET", "-0x20000000", ILLEGAL_CONSTANT, 0x12, 0xE0, 0x00, 0x00, 0x00);
+    ERRT("RET", "-0x20000000", ILLEGAL_CONSTANT, "-0x20000000", 0x12, 0xE0, 0x00, 0x00, 0x00);
 }
 
 static void test_format_2() {
@@ -120,107 +123,107 @@ static void test_format_2() {
     ATEST(0x1000, "ACBW",  "-2, R1, .-2", 0x4D, 0x0F, 0x7E);
     ATEST(0x1000, "ACBD",  "4, R2, .+2",  0x4F, 0x12, 0x02);
 
-    TEST("LPRB",    "UPSR, R1",                   0x6C, 0x08);
-    ERRT("LPRB",        ", R2", UNKNOWN_REGISTER, 0xEC, 0x10);
-    ERRT("LPRB",        ", R3", UNKNOWN_REGISTER, 0x6C, 0x19);
-    ERRT("LPRB",        ", R4", UNKNOWN_REGISTER, 0xEC, 0x21);
-    ERRT("LPRB",        ", R5", UNKNOWN_REGISTER, 0x6C, 0x2A);
-    ERRT("LPRB",        ", R6", UNKNOWN_REGISTER, 0xEC, 0x32);
-    ERRT("LPRB",        ", R7", UNKNOWN_REGISTER, 0x6C, 0x3B);
-    ERRT("LPRB",        ", R0", UNKNOWN_REGISTER, 0xEC, 0x03);
-    TEST("LPRB",      "FP, R2",                   0x6C, 0x14);
-    TEST("LPRB",      "SP, R3",                   0xEC, 0x1C);
-    TEST("LPRB",      "SB, R4",                   0x6C, 0x25);
-    ERRT("LPRB",        ", R1", UNKNOWN_REGISTER, 0xEC, 0x0D);
-    ERRT("LPRB",        ", R2", UNKNOWN_REGISTER, 0x6C, 0x16);
-    TEST("LPRB",     "PSR, R5",                   0xEC, 0x2E);
-    TEST("LPRB", "INTBASE, R6",                   0x6C, 0x37);
-    TEST("LPRB",     "MOD, R7",                   0xEC, 0x3F);
+    TEST("LPRB",    "UPSR, R1",                           0x6C, 0x08);
+    ERRT("LPRB",        ", R2", UNKNOWN_REGISTER, ", R2", 0xEC, 0x10);
+    ERRT("LPRB",        ", R3", UNKNOWN_REGISTER, ", R3", 0x6C, 0x19);
+    ERRT("LPRB",        ", R4", UNKNOWN_REGISTER, ", R4", 0xEC, 0x21);
+    ERRT("LPRB",        ", R5", UNKNOWN_REGISTER, ", R5", 0x6C, 0x2A);
+    ERRT("LPRB",        ", R6", UNKNOWN_REGISTER, ", R6", 0xEC, 0x32);
+    ERRT("LPRB",        ", R7", UNKNOWN_REGISTER, ", R7", 0x6C, 0x3B);
+    ERRT("LPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0xEC, 0x03);
+    TEST("LPRB",      "FP, R2",                           0x6C, 0x14);
+    TEST("LPRB",      "SP, R3",                           0xEC, 0x1C);
+    TEST("LPRB",      "SB, R4",                           0x6C, 0x25);
+    ERRT("LPRB",        ", R1", UNKNOWN_REGISTER, ", R1", 0xEC, 0x0D);
+    ERRT("LPRB",        ", R2", UNKNOWN_REGISTER, ", R2", 0x6C, 0x16);
+    TEST("LPRB",     "PSR, R5",                           0xEC, 0x2E);
+    TEST("LPRB", "INTBASE, R6",                           0x6C, 0x37);
+    TEST("LPRB",     "MOD, R7",                           0xEC, 0x3F);
 
-    TEST("LPRW",    "UPSR, R1",                   0x6D, 0x08);
-    ERRT("LPRW",        ", R2", UNKNOWN_REGISTER, 0xED, 0x10);
-    ERRT("LPRW",        ", R3", UNKNOWN_REGISTER, 0x6D, 0x19);
-    ERRT("LPRW",        ", R4", UNKNOWN_REGISTER, 0xED, 0x21);
-    ERRT("LPRW",        ", R5", UNKNOWN_REGISTER, 0x6D, 0x2A);
-    ERRT("LPRW",        ", R6", UNKNOWN_REGISTER, 0xED, 0x32);
-    ERRT("LPRW",        ", R7", UNKNOWN_REGISTER, 0x6D, 0x3B);
-    ERRT("LPRW",        ", R0", UNKNOWN_REGISTER, 0xED, 0x03);
-    TEST("LPRW",      "FP, R2",                   0x6D, 0x14);
-    TEST("LPRW",      "SP, R3",                   0xED, 0x1C);
-    TEST("LPRW",      "SB, R4",                   0x6D, 0x25);
-    ERRT("LPRW",        ", R1", UNKNOWN_REGISTER, 0xED, 0x0A);
-    ERRT("LPRW",        ", R2", UNKNOWN_REGISTER, 0x6D, 0x16);
-    TEST("LPRW",     "PSR, R5",                   0xED, 0x2E);
-    TEST("LPRW", "INTBASE, R6",                   0x6D, 0x37);
-    TEST("LPRW",     "MOD, 4(SB)",                0xED, 0xD7, 0x04);
+    TEST("LPRW",    "UPSR, R1",                           0x6D, 0x08);
+    ERRT("LPRW",        ", R2", UNKNOWN_REGISTER, ", R2", 0xED, 0x10);
+    ERRT("LPRW",        ", R3", UNKNOWN_REGISTER, ", R3", 0x6D, 0x19);
+    ERRT("LPRW",        ", R4", UNKNOWN_REGISTER, ", R4", 0xED, 0x21);
+    ERRT("LPRW",        ", R5", UNKNOWN_REGISTER, ", R5", 0x6D, 0x2A);
+    ERRT("LPRW",        ", R6", UNKNOWN_REGISTER, ", R6", 0xED, 0x32);
+    ERRT("LPRW",        ", R7", UNKNOWN_REGISTER, ", R7", 0x6D, 0x3B);
+    ERRT("LPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0xED, 0x03);
+    TEST("LPRW",      "FP, R2",                           0x6D, 0x14);
+    TEST("LPRW",      "SP, R3",                           0xED, 0x1C);
+    TEST("LPRW",      "SB, R4",                           0x6D, 0x25);
+    ERRT("LPRW",        ", R1", UNKNOWN_REGISTER, ", R1", 0xED, 0x0A);
+    ERRT("LPRW",        ", R2", UNKNOWN_REGISTER, ", R2", 0x6D, 0x16);
+    TEST("LPRW",     "PSR, R5",                           0xED, 0x2E);
+    TEST("LPRW", "INTBASE, R6",                           0x6D, 0x37);
+    TEST("LPRW",     "MOD, 4(SB)",                        0xED, 0xD7, 0x04);
 
-    TEST("LPRD",    "UPSR, R1",                   0x6F, 0x08);
-    ERRT("LPRD",        ", R1", UNKNOWN_REGISTER, 0xEF, 0x08);
-    ERRT("LPRD",        ", R2", UNKNOWN_REGISTER, 0x6F, 0x11);
-    ERRT("LPRD",        ", R3", UNKNOWN_REGISTER, 0xEF, 0x19);
-    ERRT("LPRD",        ", R4", UNKNOWN_REGISTER, 0x6F, 0x22);
-    ERRT("LPRD",        ", R5", UNKNOWN_REGISTER, 0xEF, 0x2A);
-    ERRT("LPRD",        ", R6", UNKNOWN_REGISTER, 0x6F, 0x33);
-    ERRT("LPRD",        ", R7", UNKNOWN_REGISTER, 0xEF, 0x3B);
-    TEST("LPRD",      "FP, R2",                   0x6F, 0x14);
-    TEST("LPRD",      "SP, R3",                   0xEF, 0x1C);
-    TEST("LPRD",      "SB, R4",                   0x6F, 0x25);
-    ERRT("LPRD",        ", R1", UNKNOWN_REGISTER, 0xEF, 0x0A);
-    ERRT("LPRD",        ", R2", UNKNOWN_REGISTER, 0x6F, 0x16);
-    TEST("LPRD",     "PSR, R5",                   0xEF, 0x2E);
-    TEST("LPRD", "INTBASE, R6",                   0x6F, 0x37);
-    TEST("LPRD",     "MOD, 4(SB)",                0xEF, 0xD7, 0x04);
+    TEST("LPRD",    "UPSR, R1",                           0x6F, 0x08);
+    ERRT("LPRD",        ", R1", UNKNOWN_REGISTER, ", R1", 0xEF, 0x08);
+    ERRT("LPRD",        ", R2", UNKNOWN_REGISTER, ", R2", 0x6F, 0x11);
+    ERRT("LPRD",        ", R3", UNKNOWN_REGISTER, ", R3", 0xEF, 0x19);
+    ERRT("LPRD",        ", R4", UNKNOWN_REGISTER, ", R4", 0x6F, 0x22);
+    ERRT("LPRD",        ", R5", UNKNOWN_REGISTER, ", R5", 0xEF, 0x2A);
+    ERRT("LPRD",        ", R6", UNKNOWN_REGISTER, ", R6", 0x6F, 0x33);
+    ERRT("LPRD",        ", R7", UNKNOWN_REGISTER, ", R7", 0xEF, 0x3B);
+    TEST("LPRD",      "FP, R2",                           0x6F, 0x14);
+    TEST("LPRD",      "SP, R3",                           0xEF, 0x1C);
+    TEST("LPRD",      "SB, R4",                           0x6F, 0x25);
+    ERRT("LPRD",        ", R1", UNKNOWN_REGISTER, ", R1", 0xEF, 0x0A);
+    ERRT("LPRD",        ", R2", UNKNOWN_REGISTER, ", R2", 0x6F, 0x16);
+    TEST("LPRD",     "PSR, R5",                           0xEF, 0x2E);
+    TEST("LPRD", "INTBASE, R6",                           0x6F, 0x37);
+    TEST("LPRD",     "MOD, 4(SB)",                        0xEF, 0xD7, 0x04);
 
-    TEST("SPRB",    "UPSR, R1",                   0x2C, 0x08);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0xAC, 0x00);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0x2C, 0x01);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0xAC, 0x01);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0x2C, 0x02);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0xAC, 0x02);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0x2C, 0x03);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0xAC, 0x03);
-    TEST("SPRB",      "FP, R2",                   0x2C, 0x14);
-    TEST("SPRB",      "SP, R3",                   0xAC, 0x1C);
-    TEST("SPRB",      "SB, R4",                   0x2C, 0x25);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0xAC, 0x05);
-    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, 0x2C, 0x06);
-    TEST("SPRB",     "PSR, R5",                   0xAC, 0x2E);
-    TEST("SPRB", "INTBASE, R6",                   0x2C, 0x37);
-    TEST("SPRB",     "MOD, R7",                   0xAC, 0x3F);
+    TEST("SPRB",    "UPSR, R1",                           0x2C, 0x08);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAC, 0x00);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2C, 0x01);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAC, 0x01);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2C, 0x02);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAC, 0x02);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2C, 0x03);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAC, 0x03);
+    TEST("SPRB",      "FP, R2",                           0x2C, 0x14);
+    TEST("SPRB",      "SP, R3",                           0xAC, 0x1C);
+    TEST("SPRB",      "SB, R4",                           0x2C, 0x25);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAC, 0x05);
+    ERRT("SPRB",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2C, 0x06);
+    TEST("SPRB",     "PSR, R5",                           0xAC, 0x2E);
+    TEST("SPRB", "INTBASE, R6",                           0x2C, 0x37);
+    TEST("SPRB",     "MOD, R7",                           0xAC, 0x3F);
 
-    TEST("SPRW",    "UPSR, R1",                   0x2D, 0x08);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0xAD, 0x00);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0x2D, 0x01);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0xAD, 0x01);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0x2D, 0x02);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0xAD, 0x02);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0x2D, 0x03);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0xAD, 0x03);
-    TEST("SPRW",      "FP, R2",                   0x2D, 0x14);
-    TEST("SPRW",      "SP, R3",                   0xAD, 0x1C);
-    TEST("SPRW",      "SB, R4",                   0x2D, 0x25);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0xAD, 0x05);
-    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, 0x2D, 0x06);
-    TEST("SPRW",     "PSR, R5",                   0xAD, 0x2E);
-    TEST("SPRW", "INTBASE, R6",                   0x2D, 0x37);
-    TEST("SPRW",     "MOD, 4(SB)",                0xAD, 0xD7, 0x04);
+    TEST("SPRW",    "UPSR, R1",                           0x2D, 0x08);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAD, 0x00);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2D, 0x01);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAD, 0x01);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2D, 0x02);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAD, 0x02);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2D, 0x03);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAD, 0x03);
+    TEST("SPRW",      "FP, R2",                           0x2D, 0x14);
+    TEST("SPRW",      "SP, R3",                           0xAD, 0x1C);
+    TEST("SPRW",      "SB, R4",                           0x2D, 0x25);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAD, 0x05);
+    ERRT("SPRW",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2D, 0x06);
+    TEST("SPRW",     "PSR, R5",                           0xAD, 0x2E);
+    TEST("SPRW", "INTBASE, R6",                           0x2D, 0x37);
+    TEST("SPRW",     "MOD, 4(SB)",                        0xAD, 0xD7, 0x04);
 
-    TEST("SPRD",    "UPSR, R1",                   0x2F, 0x08);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0xAF, 0x00);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0x2F, 0x01);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0xAF, 0x01);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0x2F, 0x02);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0xAF, 0x02);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0x2F, 0x03);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0xAF, 0x03);
-    TEST("SPRD",      "FP, R2",                   0x2F, 0x14);
-    TEST("SPRD",      "SP, R3",                   0xAF, 0x1C);
-    TEST("SPRD",      "SB, R4",                   0x2F, 0x25);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0xAF, 0x05);
-    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, 0x2F, 0x06);
-    TEST("SPRD",     "PSR, R5",                   0xAF, 0x2E);
-    TEST("SPRD", "INTBASE, R6",                   0x2F, 0x37);
-    TEST("SPRD",     "MOD, 4(SB)",                0xAF, 0xD7, 0x04);
+    TEST("SPRD",    "UPSR, R1",                           0x2F, 0x08);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAF, 0x00);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2F, 0x01);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAF, 0x01);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2F, 0x02);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAF, 0x02);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2F, 0x03);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAF, 0x03);
+    TEST("SPRD",      "FP, R2",                           0x2F, 0x14);
+    TEST("SPRD",      "SP, R3",                           0xAF, 0x1C);
+    TEST("SPRD",      "SB, R4",                           0x2F, 0x25);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0xAF, 0x05);
+    ERRT("SPRD",        ", R0", UNKNOWN_REGISTER, ", R0", 0x2F, 0x06);
+    TEST("SPRD",     "PSR, R5",                           0xAF, 0x2E);
+    TEST("SPRD", "INTBASE, R6",                           0x2F, 0x37);
+    TEST("SPRD",     "MOD, 4(SB)",                        0xAF, 0xD7, 0x04);
 
     TEST("SEQB", "R0",           0x3C, 0x00);
     TEST("SNEB", "R1",           0xBC, 0x08);
@@ -291,6 +294,8 @@ static void test_format_4() {
     TEST("MOVB",  "R0, R1",    0x54, 0x00);
     TEST("MOVW",  "R2, R3",    0xD5, 0x10);
     TEST("MOVD",  "R0, 8(SB)", 0x97, 0x06, 0x08);
+    NMEM("MOVD",  "R2, 0(SB)", "0(SB)", 0x97, 0x16);
+    NMEM("MOVD",  "",          "", 0x97);
 
     TEST("ADDB",  "R0, R1",        0x40, 0x00);
     TEST("ADDW",  "R2, R3",        0xC1, 0x10);
@@ -343,8 +348,8 @@ static void test_format_5() {
     TEST("MOVSB", "B",   0x0E, 0x00, 0x01);
     TEST("MOVSB", "W",   0x0E, 0x00, 0x02);
     TEST("MOVSB", "B,W", 0x0E, 0x00, 0x03);
-    ERRT("MOVSB", "",    ILLEGAL_OPERAND_MODE, 0x0E, 0x00, 0x04);
-    ERRT("MOVSB", "B,",  ILLEGAL_OPERAND_MODE, 0x0E, 0x00, 0x05);
+    ERRT("MOVSB", "",    ILLEGAL_OPERAND_MODE, "", 0x0E, 0x00, 0x04);
+    ERRT("MOVSB", "B,",  ILLEGAL_OPERAND_MODE, "", 0x0E, 0x00, 0x05);
     TEST("MOVSB", "U",   0x0E, 0x00, 0x06);
     TEST("MOVSB", "B,U", 0x0E, 0x00, 0x07);
 
@@ -397,12 +402,12 @@ static void test_format_7() {
     TEST("QUOW",  "4(SB), 8(SB)",      0xCE, 0xB1, 0xD6, 0x04, 0x08);
     TEST("REMB",  "4(SB), 8(SB)",      0xCE, 0xB4, 0xD6, 0x04, 0x08);
 
-    ERRT("DEIB", "R1, R3", REGISTER_NOT_ALLOWED, 0xCE, 0xEC, 0x08);
-    ERRT("DEIW", "R3, R1", REGISTER_NOT_ALLOWED, 0xCE, 0x6D, 0x18);
-    ERRT("DEID", "R5, R7", REGISTER_NOT_ALLOWED, 0xCE, 0xEF, 0x29);
-    ERRT("MEIB", "R1, R3", REGISTER_NOT_ALLOWED, 0xCE, 0xE4, 0x08);
-    ERRT("MEIW", "R3, R1", REGISTER_NOT_ALLOWED, 0xCE, 0x65, 0x18);
-    ERRT("MEID", "R5, R7", REGISTER_NOT_ALLOWED, 0xCE, 0xE7, 0x29);
+    ERRT("DEIB", "R1, R3", OPERAND_NOT_ALIGNED, "R3", 0xCE, 0xEC, 0x08);
+    ERRT("DEIW", "R3, R1", OPERAND_NOT_ALIGNED, "R1", 0xCE, 0x6D, 0x18);
+    ERRT("DEID", "R5, R7", OPERAND_NOT_ALIGNED, "R7", 0xCE, 0xEF, 0x29);
+    ERRT("MEIB", "R1, R3", OPERAND_NOT_ALIGNED, "R3", 0xCE, 0xE4, 0x08);
+    ERRT("MEIW", "R3, R1", OPERAND_NOT_ALIGNED, "R1", 0xCE, 0x65, 0x18);
+    ERRT("MEID", "R5, R7", OPERAND_NOT_ALIGNED, "R7", 0xCE, 0xE7, 0x29);
 }
 
 static void test_format_8() {
@@ -447,18 +452,18 @@ static void test_format_9() {
     TEST("LFSR", "R0",  0x3E, 0x0F, 0x00);
     TEST("SFSR", "TOS", 0x3E, 0xF7, 0x05);
 
-    ERRT("MOVL", "F3, 8(SB)",   REGISTER_NOT_ALLOWED, 0xBE, 0x84, 0x1E, 0x08);
-    ERRT("MOVBL", "R1, F5",     REGISTER_NOT_ALLOWED, 0x3E, 0x40, 0x09);
-    ERRT("MOVWL", "R3, F7",     REGISTER_NOT_ALLOWED, 0x3E, 0xC1, 0x19);
-    ERRT("MOVDL", "R5, F1",     REGISTER_NOT_ALLOWED, 0x3E, 0x43, 0x28);
-    ERRT("MOVDL", "16(SB), F3", REGISTER_NOT_ALLOWED, 0x3E, 0xC3, 0xD0, 0x10);
-    ERRT("MOVFL", "8(SB), F5",  REGISTER_NOT_ALLOWED, 0x3E, 0x5B, 0xD1, 0x08);
-    ERRT("MOVFL", "F1, F7",     REGISTER_NOT_ALLOWED, 0x3E, 0xDB, 0x09);
-    ERRT("MOVLF", "F1, 12(SB)", REGISTER_NOT_ALLOWED, 0x3E, 0x96, 0x0E, 0x0C);
-    ERRT("MOVLF", "F3, F3",     REGISTER_NOT_ALLOWED, 0x3E, 0xD6, 0x18);
-    ERRT("FLOORLD", "F5, R5",   REGISTER_NOT_ALLOWED, 0x3E, 0x7B, 0x29);
-    ERRT("ROUNDLD", "F7, R5",   REGISTER_NOT_ALLOWED, 0x3E, 0x63, 0x39);
-    ERRT("TRUNCLD", "F1, R5",   REGISTER_NOT_ALLOWED, 0x3E, 0x6B, 0x09);
+    ERRT("MOVL", "F3, 8(SB)",   OPERAND_NOT_ALIGNED, "F3, 8(SB)",  0xBE, 0x84, 0x1E, 0x08);
+    ERRT("MOVBL", "R1, F5",     OPERAND_NOT_ALIGNED, "F5",         0x3E, 0x40, 0x09);
+    ERRT("MOVWL", "R3, F7",     OPERAND_NOT_ALIGNED, "F7",         0x3E, 0xC1, 0x19);
+    ERRT("MOVDL", "R5, F1",     OPERAND_NOT_ALIGNED, "F1",         0x3E, 0x43, 0x28);
+    ERRT("MOVDL", "16(SB), F3", OPERAND_NOT_ALIGNED, "F3",         0x3E, 0xC3, 0xD0, 0x10);
+    ERRT("MOVFL", "8(SB), F5",  OPERAND_NOT_ALIGNED, "F5",         0x3E, 0x5B, 0xD1, 0x08);
+    ERRT("MOVFL", "F1, F7",     OPERAND_NOT_ALIGNED, "F7",         0x3E, 0xDB, 0x09);
+    ERRT("MOVLF", "F1, 12(SB)", OPERAND_NOT_ALIGNED, "F1, 12(SB)", 0x3E, 0x96, 0x0E, 0x0C);
+    ERRT("MOVLF", "F3, F3",     OPERAND_NOT_ALIGNED, "F3, F3",     0x3E, 0xD6, 0x18);
+    ERRT("FLOORLD", "F5, R5",   OPERAND_NOT_ALIGNED, "F5, R5",     0x3E, 0x7B, 0x29);
+    ERRT("ROUNDLD", "F7, R5",   OPERAND_NOT_ALIGNED, "F7, R5",     0x3E, 0x63, 0x39);
+    ERRT("TRUNCLD", "F1, R5",   OPERAND_NOT_ALIGNED, "F1, R5",     0x3E, 0x6B, 0x09);
 }
 
 static void test_format_11() {
@@ -489,20 +494,20 @@ static void test_format_11() {
     TEST("SUBL", "F2, 16(SB)", 0xBE, 0x90, 0x16, 0x10);
     TEST("SUBL", "16(SB), F4", 0xBE, 0x10, 0xD1, 0x10);
 
-    ERRT("ABSL", "F1, F4",     REGISTER_NOT_ALLOWED, 0xBE, 0x34, 0x09);
-    ERRT("ABSL", "F2, F3",     REGISTER_NOT_ALLOWED, 0xBE, 0xF4, 0x10);
-    ERRT("ADDL", "F1, 16(SB)", REGISTER_NOT_ALLOWED, 0xBE, 0x80, 0x0E, 0x10);
-    ERRT("ADDL", "16(SB), F3", REGISTER_NOT_ALLOWED, 0xBE, 0xC0, 0xD0, 0x10);
-    ERRT("CMPL", "F7, F4",     REGISTER_NOT_ALLOWED, 0xBE, 0x08, 0x39);
-    ERRT("CMPL", "F6, F3",     REGISTER_NOT_ALLOWED, 0xBE, 0xC8, 0x30);
-    ERRT("DIVL", "F1, 16(SB)", REGISTER_NOT_ALLOWED, 0xBE, 0xA0, 0x0E, 0x10);
-    ERRT("DIVL", "-8(FP), F3", REGISTER_NOT_ALLOWED, 0xBE, 0xE0, 0xC0, 0x78);
-    ERRT("MULL", "F7, 8(SB)",  REGISTER_NOT_ALLOWED, 0xBE, 0xB0, 0x3E, 0x08);
-    ERRT("MULL", "-8(FP), F1", REGISTER_NOT_ALLOWED, 0xBE, 0x70, 0xC0, 0x78);
-    ERRT("NEGL", "F1, F4",     REGISTER_NOT_ALLOWED, 0xBE, 0x14, 0x09);
-    ERRT("NEGL", "F2, F3",     REGISTER_NOT_ALLOWED, 0xBE, 0xD4, 0x10);
-    ERRT("SUBL", "F1, 16(SB)", REGISTER_NOT_ALLOWED, 0xBE, 0x90, 0x0E, 0x10);
-    ERRT("SUBL", "16(SB), F3", REGISTER_NOT_ALLOWED, 0xBE, 0xD0, 0xD0, 0x10);
+    ERRT("ABSL", "F1, F4",     OPERAND_NOT_ALIGNED, "F1, F4",     0xBE, 0x34, 0x09);
+    ERRT("ABSL", "F2, F3",     OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xF4, 0x10);
+    ERRT("ADDL", "F1, 16(SB)", OPERAND_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x80, 0x0E, 0x10);
+    ERRT("ADDL", "16(SB), F3", OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xC0, 0xD0, 0x10);
+    ERRT("CMPL", "F7, F4",     OPERAND_NOT_ALIGNED, "F7, F4",     0xBE, 0x08, 0x39);
+    ERRT("CMPL", "F6, F3",     OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xC8, 0x30);
+    ERRT("DIVL", "F1, 16(SB)", OPERAND_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0xA0, 0x0E, 0x10);
+    ERRT("DIVL", "-8(FP), F3", OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xE0, 0xC0, 0x78);
+    ERRT("MULL", "F7, 8(SB)",  OPERAND_NOT_ALIGNED, "F7, 8(SB)",  0xBE, 0xB0, 0x3E, 0x08);
+    ERRT("MULL", "-8(FP), F1", OPERAND_NOT_ALIGNED, "F1",         0xBE, 0x70, 0xC0, 0x78);
+    ERRT("NEGL", "F1, F4",     OPERAND_NOT_ALIGNED, "F1, F4",     0xBE, 0x14, 0x09);
+    ERRT("NEGL", "F2, F3",     OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xD4, 0x10);
+    ERRT("SUBL", "F1, 16(SB)", OPERAND_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x90, 0x0E, 0x10);
+    ERRT("SUBL", "16(SB), F3", OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xD0, 0xD0, 0x10);
 }
 
 static void test_format_8_mmu() {
@@ -511,39 +516,39 @@ static void test_format_8_mmu() {
 }
 
 static void test_format_14() {
-    TEST("LMR", "BPR0, R1",                   0x1E, 0x0B, 0x08);
-    TEST("LMR", "BPR1, R2",                   0x1E, 0x8B, 0x10);
-    ERRT("LMR",     ", R3", UNKNOWN_REGISTER, 0x1E, 0x0B, 0x19);
-    ERRT("LMR",     ", R4", UNKNOWN_REGISTER, 0x1E, 0x8B, 0x21);
-    ERRT("LMR",     ", R5", UNKNOWN_REGISTER, 0x1E, 0x0B, 0x2A);
-    ERRT("LMR",     ", R6", UNKNOWN_REGISTER, 0x1E, 0x8B, 0x32);
-    ERRT("LMR",     ", R7", UNKNOWN_REGISTER, 0x1E, 0x0B, 0x3B);
-    ERRT("LMR",     ", R0", UNKNOWN_REGISTER, 0x1E, 0x8B, 0x03);
-    ERRT("LMR",     ", R1", UNKNOWN_REGISTER, 0x1E, 0x0B, 0x0C);
-    ERRT("LMR",     ", R2", UNKNOWN_REGISTER, 0x1E, 0x8B, 0x14);
-    TEST("LMR",  "MSR, R3",                   0x1E, 0x0B, 0x1D);
-    TEST("LMR", "BCNT, R4",                   0x1E, 0x8B, 0x25);
-    TEST("LMR", "PTB0, R5",                   0x1E, 0x0B, 0x2E);
-    TEST("LMR", "PTB1, R6",                   0x1E, 0x8B, 0x36);
-    ERRT("LMR",     ", R7", UNKNOWN_REGISTER, 0x1E, 0x0B, 0x3F);
-    TEST("LMR",  "EIA, R0",                   0x1E, 0x8B, 0x07);
+    TEST("LMR", "BPR0, R1",                           0x1E, 0x0B, 0x08);
+    TEST("LMR", "BPR1, R2",                           0x1E, 0x8B, 0x10);
+    ERRT("LMR",     ", R3", UNKNOWN_REGISTER, ", R3", 0x1E, 0x0B, 0x19);
+    ERRT("LMR",     ", R4", UNKNOWN_REGISTER, ", R4", 0x1E, 0x8B, 0x21);
+    ERRT("LMR",     ", R5", UNKNOWN_REGISTER, ", R5", 0x1E, 0x0B, 0x2A);
+    ERRT("LMR",     ", R6", UNKNOWN_REGISTER, ", R6", 0x1E, 0x8B, 0x32);
+    ERRT("LMR",     ", R7", UNKNOWN_REGISTER, ", R7", 0x1E, 0x0B, 0x3B);
+    ERRT("LMR",     ", R0", UNKNOWN_REGISTER, ", R0", 0x1E, 0x8B, 0x03);
+    ERRT("LMR",     ", R1", UNKNOWN_REGISTER, ", R1", 0x1E, 0x0B, 0x0C);
+    ERRT("LMR",     ", R2", UNKNOWN_REGISTER, ", R2", 0x1E, 0x8B, 0x14);
+    TEST("LMR",  "MSR, R3",                           0x1E, 0x0B, 0x1D);
+    TEST("LMR", "BCNT, R4",                           0x1E, 0x8B, 0x25);
+    TEST("LMR", "PTB0, R5",                           0x1E, 0x0B, 0x2E);
+    TEST("LMR", "PTB1, R6",                           0x1E, 0x8B, 0x36);
+    ERRT("LMR",     ", R7", UNKNOWN_REGISTER, ", R7", 0x1E, 0x0B, 0x3F);
+    TEST("LMR",  "EIA, R0",                           0x1E, 0x8B, 0x07);
 
-    TEST("SMR", "BPR0, R1",                   0x1E, 0x0F, 0x08);
-    TEST("SMR", "BPR1, R2",                   0x1E, 0x8F, 0x10);
-    ERRT("SMR",     ", R3", UNKNOWN_REGISTER, 0x1E, 0x0F, 0x19);
-    ERRT("SMR",     ", R4", UNKNOWN_REGISTER, 0x1E, 0x8F, 0x21);
-    ERRT("SMR",     ", R5", UNKNOWN_REGISTER, 0x1E, 0x0F, 0x2A);
-    ERRT("SMR",     ", R6", UNKNOWN_REGISTER, 0x1E, 0x8F, 0x32);
-    ERRT("SMR",     ", R7", UNKNOWN_REGISTER, 0x1E, 0x0F, 0x3B);
-    ERRT("SMR",     ", R0", UNKNOWN_REGISTER, 0x1E, 0x8F, 0x03);
-    ERRT("SMR",     ", R1", UNKNOWN_REGISTER, 0x1E, 0x0F, 0x0C);
-    ERRT("SMR",     ", R2", UNKNOWN_REGISTER, 0x1E, 0x8F, 0x14);
-    TEST("SMR",  "MSR, R3",                   0x1E, 0x0F, 0x1D);
-    TEST("SMR", "BCNT, R4",                   0x1E, 0x8F, 0x25);
-    TEST("SMR", "PTB0, R5",                   0x1E, 0x0F, 0x2E);
-    TEST("SMR", "PTB1, R6",                   0x1E, 0x8F, 0x36);
-    ERRT("SMR",     ", R7", UNKNOWN_REGISTER, 0x1E, 0x0F, 0x3F);
-    TEST("SMR",  "EIA, R0",                   0x1E, 0x8F, 0x07);
+    TEST("SMR", "BPR0, R1",                           0x1E, 0x0F, 0x08);
+    TEST("SMR", "BPR1, R2",                           0x1E, 0x8F, 0x10);
+    ERRT("SMR",     ", R3", UNKNOWN_REGISTER, ", R3", 0x1E, 0x0F, 0x19);
+    ERRT("SMR",     ", R4", UNKNOWN_REGISTER, ", R4", 0x1E, 0x8F, 0x21);
+    ERRT("SMR",     ", R5", UNKNOWN_REGISTER, ", R5", 0x1E, 0x0F, 0x2A);
+    ERRT("SMR",     ", R6", UNKNOWN_REGISTER, ", R6", 0x1E, 0x8F, 0x32);
+    ERRT("SMR",     ", R7", UNKNOWN_REGISTER, ", R7", 0x1E, 0x0F, 0x3B);
+    ERRT("SMR",     ", R0", UNKNOWN_REGISTER, ", R0", 0x1E, 0x8F, 0x03);
+    ERRT("SMR",     ", R1", UNKNOWN_REGISTER, ", R1", 0x1E, 0x0F, 0x0C);
+    ERRT("SMR",     ", R2", UNKNOWN_REGISTER, ", R2", 0x1E, 0x8F, 0x14);
+    TEST("SMR",  "MSR, R3",                           0x1E, 0x0F, 0x1D);
+    TEST("SMR", "BCNT, R4",                           0x1E, 0x8F, 0x25);
+    TEST("SMR", "PTB0, R5",                           0x1E, 0x0F, 0x2E);
+    TEST("SMR", "PTB1, R6",                           0x1E, 0x8F, 0x36);
+    ERRT("SMR",     ", R7", UNKNOWN_REGISTER, ", R7", 0x1E, 0x0F, 0x3F);
+    TEST("SMR",  "EIA, R0",                           0x1E, 0x8F, 0x07);
 
     TEST("RDVAL", "0x0200(R0)", 0x1E, 0x03, 0x40, 0x82, 0x00);
     TEST("WRVAL", "0x0200(R0)", 0x1E, 0x07, 0x40, 0x82, 0x00);
@@ -565,9 +570,9 @@ static void test_generic_addressing() {
     TEST("ADDB", "0x56, R1",       0x40, 0xA0, 0x56);
     TEST("ADDW", "0x1234, R1",     0x41, 0xA0, 0x12, 0x34);
     TEST("ADDD", "0x12345678, R1", 0x43, 0xA0, 0x12, 0x34, 0x56, 0x78);
-    ERRT("ADDB", "R1, 0", OPERAND_NOT_ALLOWED,  0x00, 0x0D);
-    ERRT("ADDW", "R1, 0", OPERAND_NOT_ALLOWED,  0x01, 0x0D);
-    ERRT("ADDD", "R1, 0", OPERAND_NOT_ALLOWED,  0x03, 0x0D);
+    ERRT("ADDB", "R1, 0", OPERAND_NOT_ALLOWED, "0", 0x00, 0x0D);
+    ERRT("ADDW", "R1, 0", OPERAND_NOT_ALLOWED, "0", 0x01, 0x0D);
+    ERRT("ADDD", "R1, 0", OPERAND_NOT_ALLOWED, "0", 0x03, 0x0D);
     TEST("ADDF", "3.14159012, F1",
          0xBE, 0x41, 0xA0, 0x40, 0x49, 0x0F, 0xD0);
     TEST("ADDF", "299792000, F3",
@@ -576,8 +581,8 @@ static void test_generic_addressing() {
          0xBE, 0x80, 0xA0, 0x40, 0x05, 0xBF, 0x0A, 0x8B, 0x14, 0x57, 0x69);
     TEST("ADDL", "6.6260701499999998e-34, F4",
          0xBE, 0x00, 0xA1, 0x39, 0x0B, 0x86, 0x0B, 0xDE, 0x02, 0x31, 0x11);
-    ERRT("ADDF", "F1, 0", OPERAND_NOT_ALLOWED,  0xBE, 0x01, 0x0D);
-    ERRT("ADDL", "F2, 0", OPERAND_NOT_ALLOWED,  0xBE, 0x00, 0x15);
+    ERRT("ADDF", "F1, 0", OPERAND_NOT_ALLOWED, "0", 0xBE, 0x01, 0x0D);
+    ERRT("ADDL", "F2, 0", OPERAND_NOT_ALLOWED, "0", 0xBE, 0x00, 0x15);
 
     // Absolute
     TEST("ADDW", "@0x001234, 4(R2)"  ,   0x81, 0xAA, 0x92, 0x34, 0x04);
@@ -590,8 +595,8 @@ static void test_generic_addressing() {
     TEST("MOVW", "@0x7FFFFF, R0",                   0x15, 0xA8, 0xC0, 0x7F, 0xFF, 0xFF);
     TEST("MOVW", "@0x800000, R0",                   0x15, 0xA8, 0xC0, 0x80, 0x00, 0x00);
     TEST("MOVW", "@0xFFFFFF, R0",                   0x15, 0xA8, 0xC0, 0xFF, 0xFF, 0xFF);
-    ERRT("MOVW", "@0x01000000, R0", OVERFLOW_RANGE,  0x15, 0xA8, 0xC1, 0x00, 0x00, 0x00);
-    ERRT("MOVW", "@-0x01000000, R0", OVERFLOW_RANGE, 0x15, 0xA8, 0xFF, 0x00, 0x00, 0x00);
+    ERRT("MOVW", "@0x01000000, R0",  OVERFLOW_RANGE, "@0x01000000, R0",  0x15, 0xA8, 0xC1, 0x00, 0x00, 0x00);
+    ERRT("MOVW", "@-0x01000000, R0", OVERFLOW_RANGE, "@-0x01000000, R0", 0x15, 0xA8, 0xFF, 0x00, 0x00, 0x00);
     TEST("MOVW", "@0x800000, R0",                   0x15, 0xA8, 0xFF, 0x80, 0x00, 0x00);
     TEST("MOVW", "@0xFFE000, R0",                   0x15, 0xA8, 0xA0, 0x00);
     TEST("MOVW", "@0xFFFFC0, R0",                   0x15, 0xA8, 0x40);
@@ -692,7 +697,7 @@ static void test_formatter() {
 
 static const CpuSpec SPEC{NS32032, FPU_NS32081, MMU_NS32082};
 
-static void assert_unknown(const char *file, int line, uint8_t opc, uint8_t prefix) {
+static void assert_unknown(const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
     if (TABLE.isPrefixCode(SPEC, prefix)) {
         __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, "", "", prefix, opc);
     } else {
@@ -700,7 +705,7 @@ static void assert_unknown(const char *file, int line, uint8_t opc, uint8_t pref
     }
 }
 
-static void assert_unknown(const char *file, int line, uint8_t opc) {
+static void assert_unknown(const char *file, int line, Config::opcode_t opc) {
     __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, "", "", opc);
 }
 
@@ -708,7 +713,7 @@ static void assert_unknown(const char *file, int line, uint8_t opc) {
 
 static void test_illegal() {
     // Format 0: |cond|1010|
-    UNKNOWN(0xFA);
+    UNKN(0xFA);
 
     // Format 3: |_gen_|_op| |011111|ii|
     for (auto gen = 0x00; gen <= 0x1F; gen++) {
