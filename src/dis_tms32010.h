@@ -28,12 +28,12 @@ struct DisTms32010 final : Disassembler, Config {
     DisTms32010(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    StrBuffer &outDirect(StrBuffer &out, Config::opcode_t opc);
+    StrBuffer &outDirect(StrBuffer &out, DisInsn &insn) const;
     StrBuffer &outIndirect(StrBuffer &out, uint8_t mam) const;
     StrBuffer &outNextArp(StrBuffer &out, uint8_t mam) const;
     StrBuffer &outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam) const;
-    StrBuffer &outProgramAddress(StrBuffer &out, DisInsn &insn);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    StrBuffer &outProgramAddress(StrBuffer &out, DisInsn &insn) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

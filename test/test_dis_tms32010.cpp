@@ -388,10 +388,10 @@ static void test_branch() {
     TEST("B", "400H",  0xF900, 0x0400);
     TEST("B", "800H",  0xF900, 0x0800);
     TEST("B", "0FFFH", 0xF900, 0x0FFF);
-    ERRT("B", "1000H", OVERFLOW_RANGE, 0xF900, 0x1000);
-    ERRT("B", "2000H", OVERFLOW_RANGE, 0xF900, 0x2000);
-    ERRT("B", "4000H", OVERFLOW_RANGE, 0xF900, 0x4000);
-    ERRT("B", "8000H", OVERFLOW_RANGE, 0xF900, 0x8000);
+    ERRT("B", "1000H", OVERFLOW_RANGE, "1000H", 0xF900, 0x1000);
+    ERRT("B", "2000H", OVERFLOW_RANGE, "2000H", 0xF900, 0x2000);
+    ERRT("B", "4000H", OVERFLOW_RANGE, "4000H", 0xF900, 0x4000);
+    ERRT("B", "8000H", OVERFLOW_RANGE, "8000H", 0xF900, 0x8000);
 
     TEST("BANZ", "900H",  0xF400, 0x0900);
     TEST("BGEZ", "900H",  0xFD00, 0x0900);
@@ -429,9 +429,9 @@ static void test_control() {
     TEST("SST", "80H",     0x7C00);
     TEST("SST", "8FH",     0x7C0F);
     if (is32010()) {
-        ERRT("SST", "90H", OVERFLOW_RANGE, 0x7C10);
+        ERRT("SST", "90H", OVERFLOW_RANGE, "90H", 0x7C10);
     } else {
-        TEST("SST", "90H",                 0x7C10);
+        TEST("SST", "90H",                        0x7C10);
     }
     TEST("SST", "*",       0x7C88);
     TEST("SST", "*-",      0x7C98);
@@ -520,56 +520,15 @@ static void test_dataio() {
     TEST("OUT", "*+, PA7, AR1", 0x4FA1);
 }
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-static bool in_array(uint8_t v, const uint8_t *begin, const uint8_t *end) {
-    for (const uint8_t *entry = begin; entry < end; entry++) {
-        if (v == *entry)
-            return true;
-    }
-    return false;
-}
-
-static void assert_ok(Config::opcode_t opc) {
-    uint16_t words[2] = { opc, 0 };
-    Insn insn(0x100);
-    char operands[40], message[40];
-    const ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
-    auto it = memory.iterator();
-
-    disassembler.setOption("uppercase", "yes");
-    disassembler.decode(it, insn, operands, sizeof(operands));
-    sprintf(message, "%04X must be LEGAL", opc);
-    EQUALS(message, OK, disassembler.getError());
-}
-
-static void assert_illegal(Config::opcode_t opc, Error err, const char *message) {
-    uint16_t words[2] = { opc, 0 };
-    Insn insn(0x100);
-    char operands[40];
-    const ArrayMemory memory(0x100, words, sizeof(words), disassembler.config().endian());
-    auto it = memory.iterator();
-
-    disassembler.setOption("uppercase", "enable");
-    disassembler.decode(it, insn, operands, sizeof(operands));
-    EQUALS(message, err, disassembler.getError());
-    if (disassembler.getError() == OK)
-        printf("actual: %s %s\n", insn.name(), operands);
-}
-
-static void assert_unknown(Config::opcode_t opc) {
-    char message[80];
-    sprintf(message, "%04X must be UNKNOWN_INSTRUCTION", opc);
-    assert_illegal(opc, UNKNOWN_INSTRUCTION, message);
-}
-
-static void assert_low8(Config::opcode_t base) {
-    for (Config::opcode_t low8 = 0x00; low8 < 0x100; low8++) {
-        assert_unknown(base | low8);
+static void assert_low8s(Config::opcode_t base) {
+    for (auto low8 = 0x00; low8 < 0x100; low8++) {
+        const Config::opcode_t opc = base | low8;
+        UNKN(opc);
     }
 }
 
 static void assert_indirect(Config::opcode_t base) {
-    static const uint8_t valids[] = {
+    static constexpr uint8_t valids[] = {
         0x80, // *, AR0
         0x81, // *, AR1
         0x88, // *
@@ -581,116 +540,112 @@ static void assert_indirect(Config::opcode_t base) {
         0xA8, // *+
     };
 
-    for (Config::opcode_t indir = 0x80; indir < 0x100; indir++) {
-        const Config::opcode_t opc = base | indir;
-        if (in_array(indir, valids, std::end(valids))) {
-            assert_ok(opc);
+    size_t idx = 0;
+    for (auto indir = 0x80; indir < 0x100; indir++) {
+        if (idx < sizeof(valids) && indir == valids[idx]) {
+            idx++;
         } else {
-            assert_unknown(opc);
+            const Config::opcode_t opc = base | indir;
+            UNKN(opc);
         }
     }
 }
 
 static void test_illegal() {
     // ADD, SUB, LAC
-    static const Config::opcode_t mam_ls4[] = { 0x0000, 0x1000, 0x2000, };
-    for (size_t i = 0; i < ARRAY_SIZE(mam_ls4); i++) {
-        const Config::opcode_t base = mam_ls4[i];
-        for (Config::opcode_t ls4 = 0; ls4 < 16; ls4++) {
+    static constexpr Config::opcode_t mam_ls4[] = { 0x0000, 0x1000, 0x2000, };
+    for (const auto base : mam_ls4) {
+        for (auto ls4 = 0; ls4 < 16; ls4++) {
             assert_indirect(base | (ls4 << 8));
         }
     }
 
     // SAR, LAC
-    static const Config::opcode_t ar_mam[] = { 0x3000, 0x3800 };
-    for (size_t i = 0; i < ARRAY_SIZE(ar_mam); i++) {
-        const Config::opcode_t base = ar_mam[i];
-        for (Config::opcode_t ar = 0; ar < 2; ar++) {
+    static constexpr Config::opcode_t ar_mam[] = { 0x3000, 0x3800 };
+    for (const auto base : ar_mam) {
+        for (auto ar = 0; ar < 2; ar++) {
             assert_indirect(base | (ar << 8));
         }
-        for (Config::opcode_t ar = 2; ar < 8; ar++) {
-            assert_low8(base | (ar << 8));
+        for (auto ar = 2; ar < 8; ar++) {
+            assert_low8s(base | (ar << 8));
         }
     }
 
     // IN, OUT
-    for (Config::opcode_t pa = 0; pa < 8; pa++) {
+    for (auto pa = 0; pa < 8; pa++) {
         assert_indirect(0x4000 | (pa << 8));
         assert_indirect(0x4800 | (pa << 8));
     }
 
     // SACL
-    for (Config::opcode_t ls0 = 0; ls0 < 8; ls0++) {
+    for (auto ls0 = 0; ls0 < 8; ls0++) {
         if (ls0 == 0) {
             assert_indirect(0x5000 | (ls0 << 8));
         } else {
-            assert_low8(0x5000 | (ls0 << 8));
+            assert_low8s(0x5000 | (ls0 << 8));
         }
     }
     // SACH
-    for (Config::opcode_t ls3 = 0; ls3 < 8; ls3++) {
+    for (auto ls3 = 0; ls3 < 8; ls3++) {
         if (ls3 == 0 || ls3 == 1 || ls3 == 4) {
             assert_indirect(0x5800 | (ls3 << 8));
         } else {
-            assert_low8(0x5800 | (ls3 << 8));
+            assert_low8s(0x5800 | (ls3 << 8));
         }
     }
 
     // SAR, LAC
-    static const uint8_t mam_hi8[] = {
+    static constexpr uint8_t mam_hi8s[] = {
         0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
         0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6F,
         0x78, 0x79, 0x7A, 0x7B, 0x7C, 0x7D,
     };
-    for (size_t i = 0; i < ARRAY_SIZE(mam_hi8); i++) {
-        assert_indirect(static_cast<Config::opcode_t>(mam_hi8[i]) << 8);
+    for (size_t idx = 0; idx < sizeof(mam_hi8s); idx++) {
+        assert_indirect(mam_hi8s[idx] << 8);
     }
 
     // LDPK
-    for (Config::opcode_t dpk = 0; dpk < 0x100; dpk++) {
-        if (dpk == 0 || dpk == 1) {
-            assert_ok(0x6E00 | dpk);
-        } else {
-            assert_unknown(0x6E00 | dpk);
-        }
+    for (auto dpk = 0; dpk < 0x100; dpk++) {
+        const Config::opcode_t opc = 0x6E00 | dpk;
+        if (dpk >= 2)
+            UNKN(opc);
     }
 
     // LARK
-    for (Config::opcode_t ar = 0; ar < 8; ar++) {
-        if (ar == 0 || ar == 1) {
-            assert_ok(0x7000 | (ar << 8));
-        } else {
-            assert_unknown(0x7000 | (ar << 8));
-        }
+    for (auto ar = 0; ar < 8; ar++) {
+        const Config::opcode_t opc = 0x7000 | (ar << 8);
+        if (ar >= 2)
+            assert_low8s(opc);
     }
 
     // controls etc.
-    static const uint8_t low8[] = {
+    static constexpr uint8_t legal_low8s[] = {
         0x80, 0x81, 0x82, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
         0x90, 0x9C, 0x9D,
     };
-    for (Config::opcode_t opc = 0; opc < 0x100; opc++) {
-        if (in_array(opc, low8, std::end(low8))) {
-            assert_ok(0x7F00 | opc);
+    size_t idx = 0;
+    for (auto low8 = 0; low8 < 0x100; low8++) {
+        if (idx < sizeof(legal_low8s) && low8 == legal_low8s[idx]) {
+            idx++;
         } else {
-            assert_unknown(0x7F00 | opc);
+            const Config::opcode_t opc = 0x7F00 | low8;
+            UNKN(opc);
         }
     }
 
-    for (Config::opcode_t opc = 0xA0; opc < 0xF4; opc++) {
-        assert_low8(opc << 8);
+    for (auto hi8 = 0xA0; hi8 < 0xF4; hi8++) {
+        assert_low8s(hi8 << 8);
     }
 
     // branches
-    for (Config::opcode_t br = 0xF4; br < 0x100; br++) {
-        if (br == 0xF7) {
-            assert_low8(br << 8);
+    for (auto hi8 = 0xF4; hi8 < 0x100; hi8++) {
+        if (hi8 == 0xF7) {
+            assert_low8s(hi8 << 8);
         } else {
-            for (Config::opcode_t low8 = 0; low8 < 0x100; low8++) {
-                if (low8 == 0) {
-                    assert_ok((br << 8) | low8);
-                } else {
-                    assert_unknown((br << 8) | low8);
+            for (auto low8 = 0; low8 < 0x100; low8++) {
+                if (low8 != 0) {
+                    const Config::opcode_t opc = (hi8 << 8) | low8;
+                    UNKN(opc);
                 }
             }
         }
