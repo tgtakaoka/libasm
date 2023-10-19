@@ -33,8 +33,8 @@ DisTlcs90::DisTlcs90(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) {
-    const Config::opcode_t opc = insn.opCode();
+Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) const {
+    const auto opc = insn.opCode();
     op.mode = mode;
     switch (mode) {
     case M_BIT:
@@ -56,45 +56,45 @@ Error DisTlcs90::readOperand(DisInsn &insn, AddrMode mode, Operand &op) {
     case M_STACK:
         op.reg = decodeStackReg(opc);
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_INSTRUCTION);
+            op.setError(UNKNOWN_INSTRUCTION);
         break;
     case M_REG8:
         op.reg = decodeReg8(opc);
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_INSTRUCTION);
+            op.setError(UNKNOWN_INSTRUCTION);
         break;
     case M_REG16:
         op.reg = decodeReg16(opc);
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_INSTRUCTION);
+            op.setError(UNKNOWN_INSTRUCTION);
         break;
     case M_REGIX:
         op.reg = decodeIndexReg(opc);
         if (op.reg == REG_UNDEF)
-            return setError(UNKNOWN_INSTRUCTION);
+            op.setError(UNKNOWN_INSTRUCTION);
         break;
     default:
         break;
     }
-    return setErrorIf(insn);
+    return op.getError();
 }
 
-Error DisTlcs90::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
-    int16_t delta;
-    if (mode == M_REL8) {
-        delta = static_cast<int8_t>(op.val16);
-    } else {
-        delta = static_cast<int16_t>(op.val16);
-    }
+void DisTlcs90::decodeRelative(
+        DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) const {
+    const auto delta =
+            (mode == M_REL8) ? static_cast<int8_t>(op.val16) : static_cast<int16_t>(op.val16);
     const auto base = insn.address() + 2;
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
-    return getError();
 }
 
-Error DisTlcs90::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) {
-    uint16_t val16 = op.val16;
-    int8_t val8 = static_cast<int8_t>(val16);
+void DisTlcs90::decodeOperand(
+        DisInsn &insn, StrBuffer &out, AddrMode mode, const Operand &op) const {
+    auto val16 = op.val16;
+    auto val8 = static_cast<int8_t>(val16);
     switch (mode) {
     case M_IMM8:
     case M_BIT:
@@ -111,7 +111,8 @@ Error DisTlcs90::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, con
         break;
     case M_REL8:
     case M_REL16:
-        return decodeRelative(insn, out, mode, op);
+        decodeRelative(insn, out, mode, op);
+        break;
     case M_IND:
         outRegName(out.letter('('), op.reg).letter(')');
         break;
@@ -146,41 +147,44 @@ Error DisTlcs90::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, con
     default:
         break;
     }
-    return OK;
 }
 
 Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    const auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
+    DisInsn insn(_insn, memory, out);
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
     Operand prefixOp;
-    if (TABLE.isPrefix(cpuType(), opCode, prefixOp.mode))
-        insn.readOpCode(prefixOp);
+    if (TABLE.isPrefix(cpuType(), opc, prefixOp.mode)) {
+        if (insn.readOpCode(prefixOp))
+            return setError(insn);
+    }
     if (TABLE.searchOpCode(cpuType(), insn, prefixOp, out))
         return setErrorIf(insn);
 
     const auto dst = insn.dst();
-    if (dst == M_NONE)
-        return OK;
-    const char *start = out.mark();
-    if (dst == M_DST) {
-        decodeOperand(insn, out, prefixOp.mode, prefixOp);
-    } else {
-        Operand op;
-        if (readOperand(insn, dst, op) == OK)
+    if (dst != M_NONE) {
+        const auto *start = out.mark();
+        if (dst == M_DST) {
+            decodeOperand(insn, out, prefixOp.mode, prefixOp);
+        } else {
+            Operand op;
+            if (readOperand(insn, dst, op))
+                insn.setErrorIf(out, op);
             decodeOperand(insn, out, dst, op);
-    }
-    const auto src = insn.src();
-    if (src == M_NONE)
-        return getError();
-    if (out.mark() != start)  // skip CC_T because it's empty.
-        out.comma();
-    if (src == M_SRC) {
-        decodeOperand(insn, out, prefixOp.mode, prefixOp);
-    } else {
-        Operand op;
-        if (readOperand(insn, src, op) == OK)
-            decodeOperand(insn, out, src, op);
+        }
+        const auto src = insn.src();
+        if (src != M_NONE) {
+            if (out.mark() != start)  // skip CC_T because it's empty.
+                out.comma();
+            if (src == M_SRC) {
+                decodeOperand(insn, out, prefixOp.mode, prefixOp);
+            } else {
+                Operand op;
+                if (readOperand(insn, src, op))
+                    insn.setErrorIf(out, op);
+                decodeOperand(insn, out, src, op);
+            }
+        }
     }
     return setErrorIf(insn);
 }

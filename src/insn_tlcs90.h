@@ -59,9 +59,9 @@ private:
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    void readOpCode(Operand &op) {
+    Error readOpCode(Operand &op) {
         const auto prefix = opCode();
         switch (op.mode) {
         case M_EXT:
@@ -87,6 +87,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
             break;
         }
         setOpCode(readByte(), prefix);
+        return getError();
     }
 };
 

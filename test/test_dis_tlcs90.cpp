@@ -107,6 +107,7 @@ static void test_8bit_transfer() {
     TEST("LD", "A, H", 0xFC, 0x36);
     TEST("LD", "A, L", 0xFD, 0x36);
     TEST("LD", "A, A", 0xFE, 0x36);
+    NMEM("",   "", "", 0xFE);
 
     // LD r, n
     TEST("LD", "B, 18",   0x30, 0x12);
@@ -115,10 +116,12 @@ static void test_8bit_transfer() {
     TEST("LD", "E, 78H",  0x33, 0x78);
     TEST("LD", "H, 9AH",  0x34, 0x9A);
     TEST("LD", "L, 0BCH", 0x35, 0xBC);
-    TEST("LD", "A, 0DEH", 0x36, 0xDE);
+    TEST("LD", "A, 0DEH",   0x36, 0xDE);
+    NMEM("LD", "A, 0", "0", 0x36);
 
     // LD A, (n)
-    TEST("LD", "A, (0FF12H)", 0x27, 0x12);
+    TEST("LD", "A, (0FF12H)",             0x27, 0x12);
+    NMEM("LD", "A, (0FF00H)", "(0FF00H)", 0x27);
 
     // LD r, (gg)
     TEST("LD", "B, (BC)", 0xE0, 0x28);
@@ -1790,23 +1793,23 @@ static void test_jump_call() {
     TEST("RET",  "", 0xFE, 0xD8);
     TEST("RETI", "", 0x1F);
 }
+// clang-format on
 
-static int prefix_operand(uint8_t prefix) {
+static int prefix_operand(const Config::opcode_t prefix) {
     if (prefix == 0xE3 || prefix == 0xEB)
-        return 2;               // extended
+        return 2;  // extended
     if (prefix == 0xE7 || prefix == 0xEF)
-        return 1;               // direct
+        return 1;  // direct
     if (prefix >= 0xF0 && prefix <= 0xF2)
-        return 1;               // indexed src
+        return 1;  // indexed src
     if (prefix >= 0xF4 && prefix <= 0xF6)
-        return 1;               // indexed dst
+        return 1;  // indexed dst
     return 0;
 }
 
-static void test_illegal(uint8_t prefix, uint8_t opc) {
-    if ((prefix >= 0xE0 && prefix <= 0xE7) ||
-            (prefix >= 0xF0 && prefix <= 0xF3)) {
-        // src
+static void assert_prefix(const Config::opcode_t prefix, const Config::opcode_t opc) {
+    if ((prefix >= 0xE0 && prefix <= 0xE7) || (prefix >= 0xF0 && prefix <= 0xF3)) {
+        // TABLE_SRC
         if (opc >= 0x10 && opc <= 0x1F && opc != 0x17)
             return;
         if (opc >= 0x28 && opc <= 0x2E)
@@ -1825,39 +1828,45 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
             return;  // Rotate, Shift, Bitops
     }
 
-    if ((prefix >= 0xE8 && prefix <= 0xEF) ||
-            (prefix >= 0xF4 && prefix <= 0xF7)) {
-        // dst
+    if ((prefix >= 0xE8 && prefix <= 0xEF) || (prefix >= 0xF4 && prefix <= 0xF7)) {
+        // TABLE_DST
         if (opc >= 0x20 && opc <= 0x26)
             return;  // LD
-        if (opc >= 0x37 && opc <= 0x46 && opc != 0x3B && opc != 0x43)
-            return;  // LD, LDA, LDW
+        if (opc == 0x37 || opc == 0x3F)
+            return;  // LD, LDW
+        if (opc >= 0x40 && opc <= 0x46 && opc != 0x43)
+            return;  // LD
         if (opc >= 0x68 && opc <= 0x6F)
             return;  // Arithmetic
-        if (opc >= 0xC0 && opc <= 0xDF && prefix != 0xEF)
+        // TABLE_JMP
+        if (prefix != 0xEF && opc >= 0xC0 && opc <= 0xDF)
             return;  // JP, CALL
+        // TABLE_LDA
+        if (prefix >= 0xF4 && prefix <= 0xF7 && opc >= 0x38 && opc <= 0x3E && opc != 0x3B)
+            return;  // LDA
     }
 
-    if (prefix >= 0xF0 && prefix <= 0xFE) {
-        // reg
+    if (prefix >= 0xF8 && prefix <= 0xFE) {
+        // TABLE_REG/REG8
         if (opc == 0x12 || opc == 0x13)
-            return;  // MUL, DIV
-        if (opc >= 0x14 && opc <= 0x16 && prefix != 0xFB)
-            return;  // ADD
+            return;  // MUL, DIV,
         if (opc >= 0x18 && opc <= 0x1F)
             return;  // TEST
         if (opc >= 0x30 && opc <= 0x36)
             return;  // LD
-        if (opc >= 0x38 && opc <= 0x3A && prefix != 0xFB)
-            return;  // LD
-        if (opc >= 0x3C && opc <= 0x3E && prefix != 0xFB)
-            return;  // LD
         if (opc >= 0x60 && opc <= 0x6F)
-            return;  // Arithmetic
-        if (opc >= 0x70 && opc <= 0x7F && prefix != 0xFB)
             return;  // Arithmetic
         if (opc >= 0xA0 && opc <= 0xBF)
             return;  // Rotate, Shift, Bitops
+        // TABLE_REG/REG16
+        if (prefix != 0xFB) {
+            if (opc >= 0x14 && opc <= 0x16)
+                return;  // ADD
+            if (opc >= 0x38 && opc <= 0x3E && opc != 0x3B)
+                return;  // LD
+            if (opc >= 0x70 && opc <= 0x77)
+                return;  // Arithmetic
+        }
     }
 
     if (prefix == 0xFE) {
@@ -1880,8 +1889,9 @@ static void test_illegal(uint8_t prefix, uint8_t opc) {
     }
 }
 
+// clang-format off
 static void test_illegal() {
-    static const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x04, 0x05, 0x06,
         0x3B,
         0x43, 0x4B,
@@ -1889,13 +1899,17 @@ static void test_illegal() {
         0x93, 0x9B,
         0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 
-    for (int i = 0; i < 256; i++) {
-        const uint8_t opc = uint8_t(i);
-        for (uint8_t prefix = 0xE0; prefix <= 0xFE; prefix++)
-            test_illegal(prefix, opc);
+    for (Config::opcode_t prefix = 0xE0; prefix < 0xFF; prefix++)
+        NMEM("", "", "", prefix);
+
+    for (Config::opcode_t opc = 0;; opc++) {
+        for (Config::opcode_t prefix = 0xE0; prefix <= 0xFE; prefix++)
+            assert_prefix(prefix, opc);
+        if (opc == 0xFF)
+            break;
     }
 }
 // clang-format on
