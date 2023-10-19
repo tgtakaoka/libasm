@@ -43,13 +43,13 @@ private:
     bool _useIndirectLong;
     bool longImmediate(AddrMode mode) const;
 
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeAbsoluteLong(DisInsn &insn, StrBuffer &out);
-    Error decodeAbsolute(DisInsn &insn, StrBuffer &out);
-    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeBlockMove(DisInsn &insn, StrBuffer &out);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) const;
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
+    void decodeDirectPage(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeBlockMove(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
