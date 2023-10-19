@@ -27,7 +27,6 @@ Disassembler &disassembler(dis8070);
 static void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "off");
-    disassembler.setOption("c-style", "on");
 }
 
 static void tear_down() {
@@ -109,23 +108,26 @@ static void test_implied() {
 
 static void test_immediate() {
     TEST("AND", "S, =18",   0x39, 0x12);
-    TEST("OR",  "S, =0x34", 0x3B, 0x34);
+    TEST("OR",  "S, =X'34", 0x3B, 0x34);
     TEST("LD",  "A, =18",   0xC4, 0x12);
     TEST("AND", "A, =18",   0xD4, 0x12);
     TEST("OR",  "A, =18",   0xDC, 0x12);
     TEST("XOR", "A, =18",   0xE4, 0x12);
     TEST("ADD", "A, =18",   0xF4, 0x12);
-    TEST("SUB", "A, =18",   0xFC, 0x12);
+    TEST("SUB", "A, =18",     0xFC, 0x12);
+    NMEM("SUB", "A, =0", "0", 0xFC);
 
-    TEST("PLI", "P2, =0x1234", 0x22, 0x34, 0x12);
-    TEST("PLI", "P3, =0x1234", 0x23, 0x34, 0x12);
-    TEST("LD",  "SP, =0x1234", 0x25, 0x34, 0x12);
-    TEST("LD",  "P2, =0x1234", 0x26, 0x34, 0x12);
-    TEST("LD",  "P3, =0x1234", 0x27, 0x34, 0x12);
-    TEST("LD",  "EA, =0x1234", 0x84, 0x34, 0x12);
-    TEST("LD",  "T, =0x1234",  0xA4, 0x34, 0x12);
-    TEST("ADD", "EA, =0x1234", 0xB4, 0x34, 0x12);
-    TEST("SUB", "EA, =0x1234", 0xBC, 0x34, 0x12);
+    TEST("PLI", "P2, =X'1234", 0x22, 0x34, 0x12);
+    TEST("PLI", "P3, =X'1234", 0x23, 0x34, 0x12);
+    TEST("LD",  "SP, =X'1234", 0x25, 0x34, 0x12);
+    TEST("LD",  "P2, =X'1234", 0x26, 0x34, 0x12);
+    TEST("LD",  "P3, =X'1234", 0x27, 0x34, 0x12);
+    TEST("LD",  "EA, =X'1234", 0x84, 0x34, 0x12);
+    TEST("LD",  "T, =X'1234",  0xA4, 0x34, 0x12);
+    TEST("ADD", "EA, =X'1234", 0xB4, 0x34, 0x12);
+    TEST("SUB", "EA, =X'1234",           0xBC, 0x34, 0x12);
+    NMEM("SUB", "EA, =X'0034", "X'0034", 0xBC, 0x34);
+    NMEM("SUB", "EA, =0",           "0", 0xBC);
 
     symtab.intern(0x12,   "sym12");
     symtab.intern(0x1234, "sym1234");
@@ -147,8 +149,10 @@ static void test_immediate() {
 }
 
 static void test_absolute() {
-    TEST("JSR", "0x1234", 0x20, 0x33, 0x12);
-    TEST("JMP", "0x1234", 0x24, 0x33, 0x12);
+    TEST("JSR", "X'1234", 0x20, 0x33, 0x12);
+    TEST("JMP", "X'1234",           0x24, 0x33, 0x12);
+    NMEM("JMP", "X'0034", "X'0034", 0x24, 0x33);
+    NMEM("JMP", "X'0001", "X'0001", 0x24);
 
     symtab.intern(0x1234, "sym1234");
 
@@ -157,19 +161,20 @@ static void test_absolute() {
 }
 
 static void test_direct() {
-    TEST("LD",  "EA, 0xFF34", 0x85, 0x34);
-    TEST("ST",  "EA, 0xFF34", 0x8D, 0x34);
-    TEST("ILD", "A, 0xFF34",  0x95, 0x34);
-    TEST("DLD", "A, 0xFF34",  0x9D, 0x34);
-    TEST("LD",  "T, 0xFF34",  0xA5, 0x34);
-    TEST("ADD", "EA, 0xFF34", 0xB5, 0x34);
-    TEST("SUB", "EA, 0xFF34", 0xBD, 0x34);
-    TEST("LD",  "A, 0xFF34",  0xC5, 0x34);
-    TEST("AND", "A, 0xFF34",  0xD5, 0x34);
-    TEST("OR",  "A, 0xFF34",  0xDD, 0x34);
-    TEST("XOR", "A, 0xFF34",  0xE5, 0x34);
-    TEST("ADD", "A, 0xFF34",  0xF5, 0x34);
-    TEST("SUB", "A, 0xFF34",  0xFD, 0x34);
+    TEST("LD",  "EA, X'FF34", 0x85, 0x34);
+    TEST("ST",  "EA, X'FF34", 0x8D, 0x34);
+    TEST("ILD", "A, X'FF34",  0x95, 0x34);
+    TEST("DLD", "A, X'FF34",  0x9D, 0x34);
+    TEST("LD",  "T, X'FF34",  0xA5, 0x34);
+    TEST("ADD", "EA, X'FF34", 0xB5, 0x34);
+    TEST("SUB", "EA, X'FF34", 0xBD, 0x34);
+    TEST("LD",  "A, X'FF34",  0xC5, 0x34);
+    TEST("AND", "A, X'FF34",  0xD5, 0x34);
+    TEST("OR",  "A, X'FF34",  0xDD, 0x34);
+    TEST("XOR", "A, X'FF34",  0xE5, 0x34);
+    TEST("ADD", "A, X'FF34",  0xF5, 0x34);
+    TEST("SUB", "A, X'FF34",           0xFD, 0x34);
+    NMEM("SUB", "A, X'FF00", "X'FF00", 0xFD);
 
     symtab.intern(0xFF34, "dir34");
     symtab.intern(0xFF00, "dir00");
@@ -184,11 +189,12 @@ static void test_direct() {
 }
 
 static void test_relative() {
-    ATEST(0x1000, "BP",  "0x1000", 0x64, 0xFE);
-    ATEST(0x1100, "BZ",  "0x1082", 0x6C, 0x80);
-    ATEST(0x1000, "BRA", "0x1081", 0x74, 0x7F);
-    ATEST(0x1000, "BNZ", "0x1005", 0x7C, 0x03);
-    ATEST(0x1000, "BND", "0x1005", 0x2D, 0x03);
+    ATEST(0x1000, "BP",  "X'1000", 0x64, 0xFE);
+    ATEST(0x1100, "BZ",  "X'1082", 0x6C, 0x80);
+    ATEST(0x1000, "BRA", "X'1081", 0x74, 0x7F);
+    ATEST(0x1000, "BNZ", "X'1005", 0x7C, 0x03);
+    ATEST(0x1000, "BND", "X'1005",           0x2D, 0x03);
+    ANMEM(0x1000, "BND", "X'1002", "X'1002", 0x2D);
 
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1005, "sym1005");
@@ -215,62 +221,64 @@ static void test_indexed() {
     TEST("BRA", "2,P2",    0x76, 0x02);
     TEST("BRA", "3,P3",    0x77, 0x03);
     TEST("BNZ", "-2,P2",   0x7E, 0xFE);
-    TEST("BNZ", "-3,P3",   0x7F, 0xFD);
+    TEST("BNZ", "-3,P3",         0x7F, 0xFD);
+    NMEM("BNZ",  "0,P3", "0,P3", 0x7F);
 
-    ATEST(0x1000, "LD",  "EA, 0x1000,PC", 0x80, 0xFF);
+    ATEST(0x1000, "LD",  "EA, X'1000,PC", 0x80, 0xFF);
     TEST(         "LD",  "EA, 0,SP",      0x81, 0x00);
     TEST(         "LD",  "EA, -128,P2",   0x82, 0x80);
     TEST(         "LD",  "EA, 127,P3",    0x83, 0x7F);
-    ATEST(0x1100, "ST",  "EA, 0x1081,PC", 0x88, 0x80);
+    ATEST(0x1100, "ST",  "EA, X'1081,PC", 0x88, 0x80);
     TEST(         "ST",  "EA, 0,SP",      0x89, 0x00);
     TEST(         "ST",  "EA, -128,P2",   0x8A, 0x80);
     TEST(         "ST",  "EA, 127,P3",    0x8B, 0x7F);
-    ATEST(0x1000, "LD",  "T, 0x1080,PC",  0xA0, 0x7F);
+    ATEST(0x1000, "LD",  "T, X'1080,PC",  0xA0, 0x7F);
     TEST(         "LD",  "T, 0,SP",       0xA1, 0x00);
     TEST(         "LD",  "T, -128,P2",    0xA2, 0x80);
     TEST(         "LD",  "T, 127,P3",     0xA3, 0x7F);
-    ATEST(0x1000, "ADD", "EA, 0x1005,PC", 0xB0, 0x04);
+    ATEST(0x1000, "ADD", "EA, X'1005,PC", 0xB0, 0x04);
     TEST(         "ADD", "EA, 0,SP",      0xB1, 0x00);
     TEST(         "ADD", "EA, -128,P2",   0xB2, 0x80);
     TEST(         "ADD", "EA, 127,P3",    0xB3, 0x7F);
-    ATEST(0x1000, "SUB", "EA, 0x1000,PC", 0xB8, 0xFF);
+    ATEST(0x1000, "SUB", "EA, X'1000,PC", 0xB8, 0xFF);
     TEST(         "SUB", "EA, 0,SP",      0xB9, 0x00);
     TEST(         "SUB", "EA, -128,P2",   0xBA, 0x80);
-    TEST(         "SUB", "EA, 127,P3",    0xBB, 0x7F);
+    TEST(         "SUB", "EA, 127,P3",       0xBB, 0x7F);
+    NMEM(         "SUB", "EA, 0,P3", "0,P3", 0xBB);
 
-    ATEST(0x1000, "ILD", "A, 0x1000,PC", 0x90, 0xFF);
+    ATEST(0x1000, "ILD", "A, X'1000,PC", 0x90, 0xFF);
     TEST(         "ILD", "A, 0,SP",      0x91, 0x00);
     TEST(         "ILD", "A, -128,P2",   0x92, 0x80);
     TEST(         "ILD", "A, 127,P3",    0x93, 0x7F);
-    ATEST(0x1000, "DLD", "A, 0x1000,PC", 0x98, 0xFF);
+    ATEST(0x1000, "DLD", "A, X'1000,PC", 0x98, 0xFF);
     TEST(         "DLD", "A, 0,SP",      0x99, 0x00);
     TEST(         "DLD", "A, -128,P2",   0x9A, 0x80);
     TEST(         "DLD", "A, 127,P3",    0x9B, 0x7F);
-    ATEST(0x1000, "LD",  "A, 0x1000,PC", 0xC0, 0xFF);
+    ATEST(0x1000, "LD",  "A, X'1000,PC", 0xC0, 0xFF);
     TEST(         "LD",  "A, 0,SP",      0xC1, 0x00);
     TEST(         "LD",  "A, -128,P2",   0xC2, 0x80);
     TEST(         "LD",  "A, 127,P3",    0xC3, 0x7F);
-    ATEST(0x1000, "ST",  "A, 0x1000,PC", 0xC8, 0xFF);
+    ATEST(0x1000, "ST",  "A, X'1000,PC", 0xC8, 0xFF);
     TEST(         "ST",  "A, 0,SP",      0xC9, 0x00);
     TEST(         "ST",  "A, -128,P2",   0xCA, 0x80);
     TEST(         "ST",  "A, 127,P3",    0xCB, 0x7F);
-    ATEST(0x1000, "AND", "A, 0x1000,PC", 0xD0, 0xFF);
+    ATEST(0x1000, "AND", "A, X'1000,PC", 0xD0, 0xFF);
     TEST(         "AND", "A, 0,SP",      0xD1, 0x00);
     TEST(         "AND", "A, -128,P2",   0xD2, 0x80);
     TEST(         "AND", "A, 127,P3",    0xD3, 0x7F);
-    ATEST(0x1000, "OR",  "A, 0x1000,PC", 0xD8, 0xFF);
+    ATEST(0x1000, "OR",  "A, X'1000,PC", 0xD8, 0xFF);
     TEST(         "OR",  "A, 0,SP",      0xD9, 0x00);
     TEST(         "OR",  "A, -128,P2",   0xDA, 0x80);
     TEST(         "OR",  "A, 127,P3",    0xDB, 0x7F);
-    ATEST(0x1000, "XOR", "A, 0x1000,PC", 0xE0, 0xFF);
+    ATEST(0x1000, "XOR", "A, X'1000,PC", 0xE0, 0xFF);
     TEST(         "XOR", "A, 0,SP",      0xE1, 0x00);
     TEST(         "XOR", "A, -128,P2",   0xE2, 0x80);
     TEST(         "XOR", "A, 127,P3",    0xE3, 0x7F);
-    ATEST(0x1000, "ADD", "A, 0x1000,PC", 0xF0, 0xFF);
+    ATEST(0x1000, "ADD", "A, X'1000,PC", 0xF0, 0xFF);
     TEST(         "ADD", "A, 0,SP",      0xF1, 0x00);
     TEST(         "ADD", "A, -128,P2",   0xF2, 0x80);
     TEST(         "ADD", "A, 127,P3",    0xF3, 0x7F);
-    ATEST(0x1000, "SUB", "A, 0x1000,PC", 0xF8, 0xFF);
+    ATEST(0x1000, "SUB", "A, X'1000,PC", 0xF8, 0xFF);
     TEST(         "SUB", "A, 0,SP",      0xF9, 0x00);
     TEST(         "SUB", "A, -128,P2",   0xFA, 0x80);
     TEST(         "SUB", "A, 127,P3",    0xFB, 0x7F);
@@ -309,7 +317,8 @@ static void test_auto_indexed() {
     TEST("ADD", "EA, @-128,P2", 0xB6, 0x80);
     TEST("ADD", "EA, @127,P3",  0xB7, 0x7F);
     TEST("SUB", "EA, @-128,P2", 0xBE, 0x80);
-    TEST("SUB", "EA, @127,P3",  0xBF, 0x7F);
+    TEST("SUB", "EA, @127,P3",       0xBF, 0x7F);
+    NMEM("SUB", "EA, @0,P3", "0,P3", 0xBF);
 
     TEST("ILD", "A, @-128,P2",  0x96, 0x80);
     TEST("ILD", "A, @127,P3",   0x97, 0x7F);
@@ -342,19 +351,27 @@ static void test_auto_indexed() {
 }
 
 static void test_formatter() {
-    disassembler.setCStyle(false);
-    TEST("XOR", "A, =X'55",  0xE4, 0x55);
-    TEST("ADD", "A, =X'AA",  0xF4, 0xAA);
+    disassembler.setOption("c-style", "on");
+    TEST("XOR", "A, =0x55",  0xE4, 0x55);
+
+    disassembler.setOption("intel-hex", "on");
+    TEST("ADD", "A, =0AAH",  0xF4, 0xAA);
+
+    disassembler.setOption("intel-hex", "off");
     TEST("SUB", "A, =X'FF",  0xFC, 0xFF);
 
-    TEST("JSR", "X'1234",      0x20, 0x33, 0x12);
-    TEST("PLI", "P2, =X'1234", 0x22, 0x34, 0x12);
-    TEST("JMP", "X'1234",      0x24, 0x33, 0x12);
+    disassembler.setOption("intel-hex", "on");
+    TEST("JSR", "1234H",      0x20, 0x33, 0x12);
+
+    disassembler.setOption("c-style", "on");
+    TEST("PLI", "P2, =0x1234", 0x22, 0x34, 0x12);
+
+    disassembler.setOption("c-style", "off");
     TEST("LD",  "P2, =X'1234", 0x26, 0x34, 0x12);
 }
 
 static void test_illegal() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x02, 0x03, 0x04, 0x05,
         0x21, 0x28, 0x29, 0x2A, 0x2B,
         0x34, 0x35, 0x36, 0x37,
@@ -368,8 +385,8 @@ static void test_illegal() {
         0xCC,
         0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 // clang-format on
 
