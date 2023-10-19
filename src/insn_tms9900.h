@@ -54,12 +54,7 @@ private:
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
-
-    void readPost() {
-        if (src() == M_SRC2)
-            setPost(readUint16());
-    }
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 };
 
 }  // namespace tms9900

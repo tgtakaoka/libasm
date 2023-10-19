@@ -83,7 +83,6 @@ static void test_inh() {
     TEST("LREX", "", 0x03E0);
 
     if (is99105()) {
-        // TMS99105
         TEST("RTWP", "1", 0x0381);
         TEST("RTWP", "2", 0x0382);
         TEST("RTWP", "4", 0x0384);
@@ -95,8 +94,9 @@ static void test_inh() {
 }
 
 static void test_imm() {
-    TEST("LWPI", ">1234", 0x02E0, 0x1234);
-    TEST("LIMI", ">89AB", 0x0300, 0x89AB);
+    TEST("LWPI", ">1234",  0x02E0, 0x1234);
+    TEST("LIMI", ">89AB",  0x0300, 0x89AB);
+    NMEM("LIMI", "0", "0", 0x0300);
 
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x89AB, "sym89AB");
@@ -113,25 +113,25 @@ static void test_reg() {
         UNKN(0x0080);
         UNKN(0x0091);
     } else {
-        // TMS9995
+        // TMS9995, TMS99105
         TEST("LST", "R0", 0x0080);
         TEST("LWP", "R1", 0x0091);
     }
 }
 
 static void test_reg_imm() {
-    TEST("LI",   "R0, 0",      0x0200, 0x0000);
-    TEST("AI",   "R1, 10",     0x0221, 0x000A);
+    TEST("LI",   "R0, 0",       0x0200, 0x0000);
+    TEST("AI",   "R1, 10",      0x0221, 0x000A);
     TEST("ANDI", "R8, >00FF",   0x0248, 0x00FF);
-    TEST("ORI",  "R14, >FF00", 0x026E, 0xFF00);
-    TEST("CI",   "R15, >FFFF", 0x028F, 0xFFFF);
+    TEST("ORI",  "R14, >FF00",  0x026E, 0xFF00);
+    TEST("CI",   "R15, >FFFF",  0x028F, 0xFFFF);
+    NMEM("CI",   "R15, 0", "0", 0x028F);
 
     symtab.intern(0x1234, "sym1234");
 
     TEST("LI",   "R2, sym1234", 0x0202, 0x1234);
 
     if (is99105()) {
-        // TMS99105
         TEST("BLSK", "R3, >4567",   0x00B3, 0x4567);
         TEST("BLSK", "R3, sym1234", 0x00B3, 0x1234);
     } else {
@@ -147,13 +147,15 @@ static void test_cnt_reg() {
 }
 
 static void test_src() {
-    TEST("BLWP", "@>9876", 0x0420, 0x9876);
+    TEST("BLWP", "@>9876",  0x0420, 0x9876);
+    NMEM("BLWP", "@0", "0", 0x0420);
     TEST("B",    "R13",    0x044D);
     TEST("X",    "*R10",   0x049A);
     TEST("CLR",  "*R12+",  0x04FC);
     TEST("NEG",  "R0",     0x0500);
     TEST("INV",  "@>1234", 0x0560, 0x1234);
-    TEST("INC",  "@2(R7)", 0x05A7, 0x0002);
+    TEST("INC",  "@2(R7)",          0x05A7, 0x0002);
+    NMEM("INC",  "@0(R7)", "0(R7)", 0x05A7);
     TEST("INCT", "R7",     0x05C7);
     TEST("DEC",  "@>FFFE(R7)",0x0627, 0xFFFE);
     TEST("DECT", "R7",     0x0647);
@@ -172,7 +174,7 @@ static void test_src() {
         UNKN(0x01E8);
         UNKN(0x01FF);
     } else {
-        // TMS9995
+        // TMS9995, TMS99105
         TEST("DIVS", "R2",         0x0182);
         TEST("DIVS", "*R3",        0x0193);
         TEST("DIVS", "@>1234",     0x01A0, 0x1234);
@@ -184,8 +186,9 @@ static void test_src() {
     }
 
     if (is99105()) {
-        // TMS99105
-        TEST("TMB",  "@>0123(R15), 7", 0x0C09, 0x01EF, 0x0123);
+        TEST("TMB",  "@>0123(R15), 7",          0x0C09, 0x01EF, 0x0123);
+        NMEM("TMB",  "@0(R15), 7", "0(R15), 7", 0x0C09, 0x01EF);
+        NMEM("TMB",  "",           "",          0x0C09);
         TEST("TCMB", "R0, 0",          0x0C0A, 0x0000);
         TEST("TSMB", "*R2, 15",        0x0C0B, 0x03D2);
         TEST("BIND", "@>2223(R1)",     0x0161, 0x2223);
@@ -207,13 +210,11 @@ static void test_src() {
     TEST("DEC",  "@neg2(R7)",    0x0627, 0xFFFE);
 
     if (is9995() || is99105()) {
-        // TMS9995
         TEST("DIVS", "@sym1234",     0x01A0, 0x1234);
         TEST("DIVS", "@sym1000(R4)", 0x01A4, 0x1000);
     }
 
     if (is99105()) {
-        // TMS99105
         TEST("BIND", "@sym1000(R1)", 0x0161, 0x1000);
     }
 }
@@ -221,7 +222,7 @@ static void test_src() {
 static void test_reg_src() {
     TEST("COC", "R1, R2",         0x2081);
     TEST("CZC", "@>1234(R3), R7", 0x25E3, 0x1234);
-    TEST("XOR", "@2(R5), R4", 0x2925, 0x0002);
+    TEST("XOR", "@2(R5), R4",     0x2925, 0x0002);
     TEST("MPY", "R4, R2",         0x3884);
     TEST("DIV", "R14, R12",       0x3F0E);
 
@@ -236,6 +237,14 @@ static void test_cnt_src() {
     TEST("LDCR", "*R13+, 16",  0x303D);
     TEST("STCR", "@2(R4), 15", 0x37E4, 0x0002);
 
+    if (is99105()) {
+        TEST("SRAM", "@2(R4), 15",              0x001C, 0x43E4, 0x0002);
+        NMEM("SRAM", "@0(R4), 15", "0(R4), 15", 0x001C, 0x43E4);
+        NMEM("SRAM", "",           "",          0x001C);
+        TEST("SLAM", "R11, R0",  0x001D, 0x400B);
+        TEST("SLAM", "*R13+, 1", 0x001D, 0x407D);
+    }
+
     symtab.intern(7, "size7");
     symtab.intern(2, "offset2");
 
@@ -244,7 +253,6 @@ static void test_cnt_src() {
     TEST("STCR", "@>1000(R4), size7",   0x35E4, 0x1000);
 
     if (is99105()) {
-        // TMS99105
         TEST("SRAM", "@offset2(R4), 15", 0x001C, 0x43E4, 0x0002);
         TEST("SLAM", "R11, R0",          0x001D, 0x400B);
         TEST("SLAM", "*R13+, 1",         0x001D, 0x407D);
@@ -280,6 +288,18 @@ static void test_dst_src() {
     TEST("SOC",  "@>1234, @>5678(R11)",      0xEAE0, 0x1234, 0x5678);
     TEST("SOCB", "@>1234(R10), @>5678",      0xF82A, 0x1234, 0x5678);
 
+    if (is99105()) {
+        TEST("SM", "@>1234(R10), @>5678(R11)",            0x0029, 0x4AEA, 0x1234, 0x5678);
+        NMEM("SM", "@>1234(R10), @0(R11)",      "0(R11)", 0x0029, 0x4AEA, 0x1234);
+        NMEM("SM", "@0(R10), @0(R11)", "0(R10), @0(R11)", 0x0029, 0x4AEA);
+        NMEM("SM", "",                 "",                0x0029);
+        TEST("SM", "@>1234, @>5678",      0x0029, 0x4820, 0x1234, 0x5678);
+        TEST("SM", "R10, @>4000(R11)",    0x0029, 0x4ACA, 0x4000);
+        TEST("AM", "@0(R10), @1(R11)",    0x002A, 0x4AEA, 0x0000, 0x0001);
+        TEST("AM", "@>1234, @>5678(R11)", 0x002A, 0x4AE0, 0x1234, 0x5678);
+        TEST("AM", "@>1234(R10), @>5678", 0x002A, 0x482A, 0x1234, 0x5678);
+    }
+
     symtab.intern(0x0000, "zero");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x4000, "sym4000");
@@ -293,7 +313,6 @@ static void test_dst_src() {
     TEST("SOCB", "@sym1234(R10), @sym5678",      0xF82A, 0x1234, 0x5678);
 
     if (is99105()) {
-        // TMS99105
         TEST("SM", "@sym1234(R10), @sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);
         TEST("SM", "@sym1234, @sym5678",           0x0029, 0x4820, 0x1234, 0x5678);
         TEST("SM", "R10, @sym4000(R11)",           0x0029, 0x4ACA, 0x4000);
@@ -353,84 +372,21 @@ static void test_cru_off() {
 }
 
 struct illegal_range {
-    uint16_t start;
-    uint16_t end;
-};
-struct illegal_hole {
-    uint16_t mask;
-    uint16_t start;
-    uint16_t end;
-    bool contains(uint16_t opc) const {
-        opc &= mask;
-        return opc >= start && opc <= end;
-    }
+    Config::opcode_t start;
+    Config::opcode_t end;
 };
 
 // 2 words instructions
-static constexpr uint16_t SRAM = 0x001C;
-static constexpr uint16_t SLAM = 0x001D;
-static constexpr uint16_t SM   = 0x0029;
-static constexpr uint16_t AM   = 0x002A;
-static constexpr uint16_t TMB  = 0x0C09;
-static constexpr uint16_t TCMB = 0x0C0A;
-static constexpr uint16_t TSMB = 0x0C0B;
-static uint16_t validPostWord(uint16_t opCode) {
-    switch (opCode) {
-    case SRAM: case SLAM: case SM: case AM:
-        return 0x4000;
-    default:
-        return 0x0000;
-    }
-}
-
-// Macro Instruction Detect
-static void assert_illegal(
-    const illegal_range *ranges, const illegal_range *end,
-    const uint16_t prefix = 0, const illegal_hole *hole = nullptr) {
-    uint16_t words[4] = { 0, 0, 0, 0 };
-    Insn insn(0x1000);
-    char operands[40], message[40];
-    const illegal_range *m = ranges;
-    if (prefix) words[0] = prefix;
-    const uint8_t pos = prefix ? 1 : 0;
-
-    disassembler.setOption("uppercase", "yes");
-    for (uint16_t hi = 0; hi < 0x100; hi++) {
-        for (uint16_t lo = 0; lo < 0x100; lo++) {
-            const uint16_t code = (hi << 8) | lo;
-            const uint16_t post = validPostWord(prefix ? prefix : code);
-            words[pos] = code;
-            words[pos + 1] = post;
-            const ArrayMemory memory(0x1000, words, sizeof(words), disassembler.config().endian());
-            auto it = memory.iterator();
-
-            insn.reset(insn.address());
-            disassembler.decode(it, insn, operands, sizeof(operands));
-            if (m && code > m->end) {
-                if (++m >= end)
-                    m = nullptr;
-            }
-            if (m && ((code >= m->start && code <= m->end) || (hole && hole->contains(code)))) {
-                if (prefix) {
-                    sprintf(message, "%04X,%04X is MID", prefix, code);
-                } else {
-                    sprintf(message, "%04X is MID", code);
-                }
-                EQUALS(message, UNKNOWN_INSTRUCTION, disassembler.getError());
-            } else {
-                if (prefix) {
-                    sprintf(message, "%04X,%04X is not MID", prefix, code);
-                } else {
-                    sprintf(message, "%04X is not MID", code);
-                }
-                EQUALS(message, OK, disassembler.getError());
-            }
-        }
-    }
-}
+static constexpr Config::opcode_t SRAM = 0x001C;
+static constexpr Config::opcode_t SLAM = 0x001D;
+static constexpr Config::opcode_t SM   = 0x0029;
+static constexpr Config::opcode_t AM   = 0x002A;
+static constexpr Config::opcode_t TMB  = 0x0C09;
+static constexpr Config::opcode_t TCMB = 0x0C0A;
+static constexpr Config::opcode_t TSMB = 0x0C0B;
 
 static void test_illegal_tms9900() {
-    static const illegal_range mids[] = {
+    static constexpr illegal_range mids[] = {
         { 0x0000, 0x01ff },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
         { 0x0290, 0x029f }, { 0x02b0, 0x02bf }, { 0x02d0, 0x02df }, { 0x02e1, 0x02ff },
@@ -438,12 +394,15 @@ static void test_illegal_tms9900() {
         { 0x03a1, 0x03bf }, { 0x03c1, 0x03df }, { 0x03e1, 0x03ff },
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
-
-    assert_illegal(mids, std::end(mids));
+    for (const auto &r : mids) {
+        for (auto opc = r.start; opc <= r.end; opc++) {
+            UNKN(opc);
+        }
+    }
 }
 
 static void test_illegal_tms9995() {
-    static const illegal_range mids[] = {
+    static constexpr illegal_range mids[] = {
         { 0x0000, 0x007f }, { 0x00A0, 0x017f },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
         { 0x0290, 0x029f }, { 0x02b0, 0x02bf }, { 0x02d0, 0x02df }, { 0x02e1, 0x02ff },
@@ -451,12 +410,15 @@ static void test_illegal_tms9995() {
         { 0x03a1, 0x03bf }, { 0x03c1, 0x03df }, { 0x03e1, 0x03ff },
         { 0x0780, 0x07ff }, { 0x0c00, 0x0fff }
     };
-
-    assert_illegal(mids, std::end(mids));
+    for (const auto &r : mids) {
+        for (auto opc = r.start; opc <= r.end; opc++) {
+            UNKN(opc);
+        }
+    }
 }
 
 static void test_illegal_tms99105() {
-    static const illegal_range mids[] = {
+    static constexpr illegal_range mids[] = {
         { 0x0000, 0x001B }, { 0x001E, 0x0028 }, { 0x002B, 0x007f }, { 0x00A0, 0x00AF },
         { 0x00C0, 0x00FF },
         { 0x0210, 0x021f }, { 0x0230, 0x023f }, { 0x0250, 0x025f }, { 0x0270, 0x027f },
@@ -465,28 +427,31 @@ static void test_illegal_tms99105() {
         { 0x0385, 0x039f }, { 0x03a1, 0x03bf }, { 0x03c1, 0x03df }, { 0x03e1, 0x03ff },
         { 0x0780, 0x07ff }, { 0x0c00, 0x0c08 }, { 0x0c0c, 0x0fff }
     };
+    for (const auto &r : mids) {
+        for (auto opc = r.start; opc <= r.end; opc++) {
+            UNKN(opc);
+        }
+    }
 
-    assert_illegal(mids, std::end(mids));
-
-    static const illegal_range dp_arith_2nd[] = {
-        { 0x0000, 0x3fff}, {0x5000, 0xffff }
-    };
-    assert_illegal(dp_arith_2nd, std::end(dp_arith_2nd), SM);
-    assert_illegal(dp_arith_2nd, std::end(dp_arith_2nd), AM);
-
-    static const illegal_range dp_shift_2nd[] = {
-        { 0x0000, 0x3fff}, { 0x4400, 0xffff }
-    };
-    assert_illegal(dp_shift_2nd, std::end(dp_shift_2nd), SRAM);
-    assert_illegal(dp_shift_2nd, std::end(dp_shift_2nd), SLAM);
-
-    static const illegal_range dp_bit_2nd[] = {
-        { 0x0400, 0xffff },
-    };
-    static const illegal_hole dp_bit_hole = { 0x003F, 0x0030, 0x003F };
-    assert_illegal(dp_bit_2nd, std::end(dp_bit_2nd), TMB,  &dp_bit_hole);
-    assert_illegal(dp_bit_2nd, std::end(dp_bit_2nd), TCMB, &dp_bit_hole);
-    assert_illegal(dp_bit_2nd, std::end(dp_bit_2nd), TSMB, &dp_bit_hole);
+    for (auto post = 0; post < 0x10000; post++) {
+        const Config::opcode_t opc = post;
+        const auto hi4 = (post >> 12);
+        if (hi4 != 4) {
+            ERRT("SM", "", UNKNOWN_POSTBYTE, "", SM, opc);
+            ERRT("AM", "", UNKNOWN_POSTBYTE, "", AM, opc);
+        }
+        const auto hi6 = (post >> 10);
+        if (hi6 != 0x10) {
+            ERRT("SRAM", "", UNKNOWN_POSTBYTE, "", SRAM, opc);
+            ERRT("SLAM", "", UNKNOWN_POSTBYTE, "", SLAM, opc);
+        }
+        const auto ts = (post >> 4) & 3;
+        if (hi6 || ts == 3) {
+            ERRT("TMB",  "", UNKNOWN_POSTBYTE, "", TMB,  opc);
+            ERRT("TCMB", "", UNKNOWN_POSTBYTE, "", TCMB, opc);
+            ERRT("TSMB", "", UNKNOWN_POSTBYTE, "", TSMB, opc);
+        }
+    }
 }
 // clang-format on
 

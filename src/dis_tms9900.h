@@ -28,10 +28,10 @@ struct DisTms9900 final : Disassembler, Config {
     DisTms9900(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error checkPostWord(DisInsn &insn);
-    Error decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    Error checkPostWord(DisInsn &insn) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
