@@ -144,8 +144,10 @@ static void test_move_inherent() {
     } else if (v30emu()) {
         UNKN(0x20);
         UNKN(0x30);
+        NMEM("", "", "", 0xED);
         TEST("RETEM", "",    0xED, 0xFD);
-        TEST("CALLN", "40H", 0xED, 0xED, 0x40);
+        TEST("CALLN", "40H",    0xED, 0xED, 0x40);
+        NMEM("CALLN", "0", "0", 0xED, 0xED);
     } else {
         UNKN(0x20);
         UNKN(0x30);
@@ -154,28 +156,31 @@ static void test_move_inherent() {
 }
 
 static void test_move_immediate() {
-    TEST("MVI",  "B, 0F6H", 0x06, 0xF6);
-    TEST("MVI",  "C, 9FH",  0x0E, 0x9F);
-    TEST("MVI",  "D, 3AH",  0x16, 0x3A);
-    TEST("MVI",  "E, 80H",  0x1E, 0x80);
-    TEST("MVI",  "H, 0F6H", 0x26, 0xF6);
-    TEST("MVI",  "L, 0F6H", 0x2E, 0xF6);
-    TEST("MVI",  "M, 0F6H", 0x36, 0xF6);
-    TEST("MVI",  "A, 0FEH", 0x3E, 0xFE);
+    TEST("MVI", "B, 0F6H", 0x06, 0xF6);
+    TEST("MVI", "C, 9FH",  0x0E, 0x9F);
+    TEST("MVI", "D, 3AH",  0x16, 0x3A);
+    TEST("MVI", "E, 80H",  0x1E, 0x80);
+    TEST("MVI", "H, 0F6H", 0x26, 0xF6);
+    TEST("MVI", "L, 0F6H", 0x2E, 0xF6);
+    TEST("MVI", "M, 0F6H", 0x36, 0xF6);
+    TEST("MVI", "A, 0FEH", 0x3E, 0xFE);
+    NMEM("MVI", "A, 0", "0", 0x3E);
 
-    TEST("LXI",  "B, 0BEEFH", 0x01, 0xEF, 0xBE);
-    TEST("LXI",  "D, 1234H",  0x11, 0x34, 0x12);
-    TEST("LXI",  "H, 0BEEFH", 0x21, 0xEF, 0xBE);
-    TEST("LXI",  "SP, 6789H", 0x31, 0x89, 0x67);
+    TEST("LXI", "B, 0BEEFH", 0x01, 0xEF, 0xBE);
+    TEST("LXI", "D, 1234H",  0x11, 0x34, 0x12);
+    TEST("LXI", "H, 0BEEFH", 0x21, 0xEF, 0xBE);
+    TEST("LXI", "SP, 6789H", 0x31, 0x89, 0x67);
+    NMEM("LXI", "SP, 0089H", "0089H", 0x31, 0x89);
+    NMEM("LXI", "SP, 0", "0",         0x31);
 
     symtab.intern(0xBEEF, "BEEF");
     symtab.intern(0x1234, "label1234");
     symtab.intern(0x6789, "label6789");
 
-    TEST("LXI",  "B, BEEF",       0x01, 0xEF, 0xBE);
-    TEST("LXI",  "D, label1234",  0x11, 0x34, 0x12);
-    TEST("LXI",  "H, BEEF",       0x21, 0xEF, 0xBE);
-    TEST("LXI",  "SP, label6789", 0x31, 0x89, 0x67);
+    TEST("LXI", "B, BEEF",       0x01, 0xEF, 0xBE);
+    TEST("LXI", "D, label1234",  0x11, 0x34, 0x12);
+    TEST("LXI", "H, BEEF",       0x21, 0xEF, 0xBE);
+    TEST("LXI", "SP, label6789", 0x31, 0x89, 0x67);
 }
 
 static void test_move_direct() {
@@ -184,6 +189,8 @@ static void test_move_direct() {
 
     TEST("SHLD", "0ABCDH", 0x22, 0xCD, 0xAB);
     TEST("LHLD", "5678H",  0x2A, 0x78, 0x56);
+    NMEM("LHLD", "0078H",  "0078H", 0x2A, 0x78);
+    NMEM("LHLD", "0000H",  "0000H", 0x2A);
 
     symtab.intern(0x1234, "label1234");
     symtab.intern(0x5678, "label5678");
@@ -214,35 +221,37 @@ static void test_stack_op() {
 }
 
 static void test_jump_call() {
-    TEST("JMP", "1234H",  0xC3, 0x34, 0x12);
-    TEST("JNZ", "1234H",  0xC2, 0x34, 0x12);
-    TEST("JZ",  "1234H",  0xCA, 0x34, 0x12);
-    TEST("JNC", "1234H",  0xD2, 0x34, 0x12);
-    TEST("JC",  "1234H",  0xDA, 0x34, 0x12);
-    TEST("JPO", "1234H",  0xE2, 0x34, 0x12);
-    TEST("JPE", "1234H",  0xEA, 0x34, 0x12);
-    TEST("JP",  "1234H",  0xF2, 0x34, 0x12);
-    TEST("JM",  "1234H",  0xFA, 0x34, 0x12);
+    TEST("JMP", "1234H", 0xC3, 0x34, 0x12);
+    TEST("JNZ", "1234H", 0xC2, 0x34, 0x12);
+    TEST("JZ",  "1234H", 0xCA, 0x34, 0x12);
+    TEST("JNC", "1234H", 0xD2, 0x34, 0x12);
+    TEST("JC",  "1234H", 0xDA, 0x34, 0x12);
+    TEST("JPO", "1234H", 0xE2, 0x34, 0x12);
+    TEST("JPE", "1234H", 0xEA, 0x34, 0x12);
+    TEST("JP",  "1234H", 0xF2, 0x34, 0x12);
+    TEST("JM",  "1234H", 0xFA, 0x34, 0x12);
+    NMEM("JM",  "0034H", "0034H", 0xFA, 0x34);
+    NMEM("JM",  "0000H", "0000H", 0xFA);
 
-    TEST("CALL", "1234H",  0xCD, 0x34, 0x12);
-    TEST("CNZ",  "1234H",  0xC4, 0x34, 0x12);
-    TEST("CZ",   "1234H",  0xCC, 0x34, 0x12);
-    TEST("CNC",  "1234H",  0xD4, 0x34, 0x12);
-    TEST("CC",   "1234H",  0xDC, 0x34, 0x12);
-    TEST("CPO",  "1234H",  0xE4, 0x34, 0x12);
-    TEST("CPE",  "1234H",  0xEC, 0x34, 0x12);
-    TEST("CP",   "1234H",  0xF4, 0x34, 0x12);
-    TEST("CM",   "1234H",  0xFC, 0x34, 0x12);
+    TEST("CALL", "1234H", 0xCD, 0x34, 0x12);
+    TEST("CNZ",  "1234H", 0xC4, 0x34, 0x12);
+    TEST("CZ",   "1234H", 0xCC, 0x34, 0x12);
+    TEST("CNC",  "1234H", 0xD4, 0x34, 0x12);
+    TEST("CC",   "1234H", 0xDC, 0x34, 0x12);
+    TEST("CPO",  "1234H", 0xE4, 0x34, 0x12);
+    TEST("CPE",  "1234H", 0xEC, 0x34, 0x12);
+    TEST("CP",   "1234H", 0xF4, 0x34, 0x12);
+    TEST("CM",   "1234H", 0xFC, 0x34, 0x12);
 
-    TEST("RET", "",  0xC9);
-    TEST("RNZ", "",  0xC0);
-    TEST("RZ",  "",  0xC8);
-    TEST("RNC", "",  0xD0);
-    TEST("RC",  "",  0xD8);
-    TEST("RPO", "",  0xE0);
-    TEST("RPE", "",  0xE8);
-    TEST("RP",  "",  0xF0);
-    TEST("RM",  "",  0xF8);
+    TEST("RET", "", 0xC9);
+    TEST("RNZ", "", 0xC0);
+    TEST("RZ",  "", 0xC8);
+    TEST("RNC", "", 0xD0);
+    TEST("RC",  "", 0xD8);
+    TEST("RPO", "", 0xE0);
+    TEST("RPE", "", 0xE8);
+    TEST("RP",  "", 0xF0);
+    TEST("RM",  "", 0xF8);
 
     symtab.intern(0x1234, "label1234");
 
@@ -251,23 +260,23 @@ static void test_jump_call() {
 }
 
 static void test_incr_decr() {
-    TEST("INR", "B",  0x04);
-    TEST("INR", "C",  0x0C);
-    TEST("INR", "D",  0x14);
-    TEST("INR", "E",  0x1C);
-    TEST("INR", "H",  0x24);
-    TEST("INR", "L",  0x2C);
-    TEST("INR", "M",  0x34);
-    TEST("INR", "A",  0x3C);
+    TEST("INR", "B", 0x04);
+    TEST("INR", "C", 0x0C);
+    TEST("INR", "D", 0x14);
+    TEST("INR", "E", 0x1C);
+    TEST("INR", "H", 0x24);
+    TEST("INR", "L", 0x2C);
+    TEST("INR", "M", 0x34);
+    TEST("INR", "A", 0x3C);
 
-    TEST("DCR", "B",  0x05);
-    TEST("DCR", "C",  0x0D);
-    TEST("DCR", "D",  0x15);
-    TEST("DCR", "E",  0x1D);
-    TEST("DCR", "H",  0x25);
-    TEST("DCR", "L",  0x2D);
-    TEST("DCR", "M",  0x35);
-    TEST("DCR", "A",  0x3D);
+    TEST("DCR", "B", 0x05);
+    TEST("DCR", "C", 0x0D);
+    TEST("DCR", "D", 0x15);
+    TEST("DCR", "E", 0x1D);
+    TEST("DCR", "H", 0x25);
+    TEST("DCR", "L", 0x2D);
+    TEST("DCR", "M", 0x35);
+    TEST("DCR", "A", 0x3D);
 
     TEST("INX", "B",  0x03);
     TEST("INX", "D",  0x13);
@@ -369,11 +378,13 @@ static void test_alu_immediate() {
     TEST("XRI", "0FFH", 0xEE, 0xFF);
     TEST("ORI", "10",   0xF6, 0x0A);
     TEST("CPI", "0",    0xFE, 0x00);
+    NMEM("CPI", "0", "0", 0xFE);
 }
 
 static void test_io() {
     TEST("OUT", "0F1H", 0xD3, 0xF1);
     TEST("IN",  "0F0H", 0xDB, 0xF0);
+    NMEM("IN",  "00H", "00H", 0xDB);
 }
 
 static void test_inherent() {
@@ -404,6 +415,7 @@ static void test_restart() {
     TEST("RST", "6", 0xF7);
     TEST("RST", "7", 0xFF);
 }
+// clang-format on
 
 static void test_illegal() {
     if (is8080()) {
@@ -418,18 +430,11 @@ static void test_illegal() {
     UNKN(0xCB);
     UNKN(0xD9);
     UNKN(0xDD);
-    if (v30emu()) {
-        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (opc == 0xED || opc == 0xFD)
-                continue;
-            UNKN(0xED, (uint8_t)opc);
-        }
-    } else {
+    if (!v30emu()) {
         UNKN(0xED);
+        UNKN(0xFD);
     }
-    UNKN(0xFD);
 }
-// clang-format on
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);
