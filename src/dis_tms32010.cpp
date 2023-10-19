@@ -41,14 +41,15 @@ DisTms32010::DisTms32010(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-StrBuffer &DisTms32010::outDirect(StrBuffer &out, Config::opcode_t opc) {
+StrBuffer &DisTms32010::outDirect(StrBuffer &out, DisInsn &insn) const {
     // Store Status Register can access Data Page 1 only.
     static constexpr uint8_t SST = 0x7C;
-    uint8_t dma = static_cast<uint8_t>(opc) & 0x7F;
+    const auto opc = insn.opCode();
+    uint8_t dma = opc & 0x7F;
     if ((opc >> 8) == SST) {
         dma |= (1 << 7);
         if (dma > dataMemoryLimit())
-            setErrorIf(OVERFLOW_RANGE);
+            insn.setErrorIf(out, OVERFLOW_RANGE);
     }
     outAbsAddr(out, dma, 8);
     return out;
@@ -81,24 +82,23 @@ StrBuffer &DisTms32010::outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam
     return out;
 }
 
-StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) {
+StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) const {
     const auto pma = insn.readUint16();
-    setErrorIf(insn);
-    const auto err = checkAddr(pma);
-    if (err)
-        setErrorIf(err);
-    outAbsAddr(out, pma, err ? ADDRESS_16BIT : 0);
+    const auto error = checkAddr(pma);
+    if (error)
+        insn.setErrorIf(out, error);
+    outAbsAddr(out, pma, error ? ADDRESS_16BIT : 0);
     return out;
 }
 
-Error DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const Config::opcode_t opc = insn.opCode();
     switch (mode) {
     case M_MAM:
         if (opc & (1 << 7)) {
             outIndirect(out, opc);
         } else {
-            outDirect(out, opc);
+            outDirect(out, insn);
         }
         break;
     case M_NARP:
@@ -136,30 +136,25 @@ Error DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     default:
         break;
     }
-    return getError();
 }
 
 Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    const auto opCode = insn.readUint16();
-    insn.setOpCode(opCode);
+    DisInsn insn(_insn, memory, out);
+    insn.setOpCode(insn.readUint16());
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    const auto mode1 = insn.mode1();
-    if (decodeOperand(insn, out, mode1))
-        return getError();
+    decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
-    if (mode2 == M_NONE)
-        return OK;
-    if (!(mode2 == M_LS4 || mode2 == M_LS3 || mode2 == M_LS0 || mode2 == M_NARP))
-        out.comma();
-    if (decodeOperand(insn, out, mode2))
-        return getError();
-    const auto mode3 = insn.mode3();
-    if (mode3 == M_NONE)
-        return OK;
-    return decodeOperand(insn, out, mode3);
+    if (mode2 != M_NONE) {
+        if (!(mode2 == M_LS4 || mode2 == M_LS3 || mode2 == M_LS0 || mode2 == M_NARP))
+            out.comma();
+        decodeOperand(insn, out, mode2);
+        const auto mode3 = insn.mode3();
+        if (mode3 != M_NONE)
+            decodeOperand(insn, out, mode3);
+    }
+    return setError(insn);
 }
 
 }  // namespace tms32010
