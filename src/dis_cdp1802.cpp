@@ -73,7 +73,7 @@ Config::uintptr_t inpage(Config::uintptr_t base, uint8_t offset) {
 
 }  // namespace
 
-Error DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opCode = insn.opCode();
     switch (mode) {
     case M_REG1:
@@ -83,13 +83,13 @@ Error DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         } else {
             outDec(out, opCode & 0xF, 4);
         }
-        return OK;
+        break;
     case M_IMM8:
         outHex(out, insn.readByte(), 8);
         break;
     case M_IOAD:
         outHex(out, opCode & 7, 3);
-        return OK;
+        break;
     case M_ADDR:
         outAbsAddr(out, insn.readUint16());
         break;
@@ -97,33 +97,30 @@ Error DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outAbsAddr(out, inpage(insn.address() + 2, insn.readByte()));
         break;
     default:
-        return OK;
+        break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
-    if (TABLE.isPrefix(cpuType(), opCode)) {
-        const auto prefix = opCode;
-        opCode = insn.readByte();
-        insn.setOpCode(opCode, prefix);
+    DisInsn insn(_insn, memory, out);
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
+    if (TABLE.isPrefix(cpuType(), opc)) {
+        insn.setOpCode(insn.readByte(), opc);
+        if (insn.getError())
+            return setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();
-    if (mode1 == M_NONE)
-        return OK;
-    if (decodeOperand(insn, out, mode1))
-        return getError();
-    const auto mode2 = insn.mode2();
-    if (mode2 == M_NONE)
-        return OK;
-    out.comma();
-    return decodeOperand(insn, out, mode2);
+    if (mode1 != M_NONE) {
+        decodeOperand(insn, out, mode1);
+        const auto mode2 = insn.mode2();
+        if (mode2 != M_NONE)
+            decodeOperand(insn, out.comma(), mode2);
+    }
+    return setError(insn);
 }
 
 }  // namespace cdp1802
