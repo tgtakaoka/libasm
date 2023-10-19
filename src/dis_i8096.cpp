@@ -63,30 +63,41 @@ StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) cons
     return out;
 }
 
-StrBuffer &DisI8096::outRelative(StrBuffer &out, const DisInsn &insn, const Operand &op) {
+StrBuffer &DisI8096::outRelative(StrBuffer &out, DisInsn &insn, const Operand &op) const {
+    Error error;
     if (op.mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
-        const auto target = branchTarget(base, op.int8());
+        const auto target = branchTarget(base, op.int8(), error);
+        if (error)
+            insn.setErrorIf(out, error);
         return outRelAddr(out, target, insn.address(), 8);
     } else if (op.mode == M_REL11) {
         const auto base = insn.address() + 2;
         // Sign exetends 11-bit number.
         const auto offset = signExtend(op.val16, 11);
-        const auto target = branchTarget(base, offset);
+        const auto target = branchTarget(base, offset, error);
+        if (error)
+            insn.setErrorIf(out, error);
         return outRelAddr(out, target, insn.address(), 11);
     } else {  // M_REL16:
         const auto base = insn.address() + 3;
-        const auto target = branchTarget(base, op.int16());
+        const auto target = branchTarget(base, op.int16(), error);
+        if (error)
+            insn.setErrorIf(out, error);
         return outRelAddr(out, target, insn.address(), 16);
     }
 }
 
-StrBuffer &DisI8096::outOperand(StrBuffer &out, const DisInsn &insn, const Operand &op) {
+StrBuffer &DisI8096::outOperand(StrBuffer &out, DisInsn &insn, const Operand &op) const {
     switch (op.mode) {
     case M_COUNT:
-        if (op.regno < 16)
-            return outDec(out.letter('#'), op.regno, 4);
+        if (op.regno < 16) {
+            out.letter('#');
+            if (op.getError())
+                insn.setErrorIf(out, op);
+            return outDec(out, op.regno, 4);
+        }
         // Fall-through
     case M_BREG:
     case M_WREG:
@@ -105,9 +116,11 @@ StrBuffer &DisI8096::outOperand(StrBuffer &out, const DisInsn &insn, const Opera
     case M_BITNO:
         return outHex(out, op.val16, 3);
     case M_IMM8:
-        return outHex(out.letter('#'), op.val16, 8);
     case M_IMM16:
-        return outHex(out.letter('#'), op.val16, 16);
+        out.letter('#');
+        if (op.getError())
+            insn.setErrorIf(out, op);
+        return outHex(out, op.val16, op.mode == M_IMM8 ? 8 : 16);
     default:
         return out;
     }
@@ -122,13 +135,11 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     case M_WREG:
     case M_INDIR:
         regno = insn.readByte();
-        setErrorIf(insn);
         if (!isWreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
     case M_LREG:
         regno = insn.readByte();
-        setErrorIf(insn);
         if (!isLreg(regno))
             setErrorIf(OPERAND_NOT_ALIGNED);
         break;
@@ -144,7 +155,6 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             break;
         case AA_INDIR:
             regno = insn.readByte();
-            setErrorIf(insn);
             if (!isWreg(regno))
                 setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_INDIR;
@@ -166,7 +176,6 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
         switch (insn.aa()) {
         case AA_REG:
             regno = insn.readByte();
-            setErrorIf(insn);
             if (!isWreg(regno))
                 setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_WREG;
@@ -177,7 +186,6 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
             break;
         case AA_INDIR:
             regno = insn.readByte();
-            setErrorIf(insn);
             if (!isWreg(regno))
                 setErrorIf(OPERAND_NOT_ALIGNED);
             mode = M_INDIR;
@@ -212,45 +220,61 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     default:
         break;
     }
-    return setErrorIf(insn);
+    return getError();
 }
 
 Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
+    DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
+    insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
         insn.setOpCode(insn.readByte(), opc);
-    } else {
-        insn.setOpCode(opc);
+        if (insn.getError())
+            return setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setErrorIf(insn);
 
-    Operand dst, src1, src2;
-    const bool jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
+    const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
+    Operand src2, src1, dst;
     if (jbx_djnz) {
-        dst.read(insn, insn.dst());
-        src1.read(insn, insn.src1());
-        src2.read(insn, insn.src2());
-        setErrorIf(dst);
-        setErrorIf(src1);
-        setErrorIf(src2);
+        if (dst.read(insn, insn.dst()))
+            insn.setErrorIf(out, dst);
+        outOperand(out, insn, dst);
+        if (insn.src1() != M_NONE) {
+            out.comma();
+            if (src1.read(insn, insn.src1()))
+                insn.setErrorIf(out, src1);
+            outOperand(out, insn, src1);
+        }
+        if (insn.src2() != M_NONE) {
+            out.comma();
+            if (src2.read(insn, insn.src2()))
+                insn.setErrorIf(out, src2);
+            outOperand(out, insn, src2);
+        }
     } else {
         src2.read(insn, insn.src2());
         src1.read(insn, insn.src1());
-        dst.read(insn, insn.dst());
-        setErrorIf(src2);
-        setErrorIf(src1);
-        setErrorIf(dst);
+        if (insn.dst() != M_NONE) {
+            if (dst.read(insn, insn.dst()))
+                insn.setErrorIf(out, dst);
+            outOperand(out, insn, dst);
+        }
+        if (insn.src1() != M_NONE) {
+            out.comma();
+            if (src1.getError())
+                insn.setErrorIf(out, src1);
+            outOperand(out, insn, src1);
+        }
+        if (insn.src2() != M_NONE) {
+            out.comma();
+            if (src2.getError())
+                insn.setErrorIf(out, src2);
+            outOperand(out, insn, src2);
+        }
     }
-    outOperand(out, insn, dst);
-    if (insn.src1() != M_NONE)
-        out.comma();
-    outOperand(out, insn, src1);
-    if (insn.src2() != M_NONE)
-        out.comma();
-    outOperand(out, insn, src2);
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace i8096

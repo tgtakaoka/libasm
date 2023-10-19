@@ -47,8 +47,8 @@ private:
     };
 
     StrBuffer &outRegister(StrBuffer &out, uint8_t regno, bool indir = false) const;
-    StrBuffer &outRelative(StrBuffer &out, const DisInsn &insn, const Operand &op);
-    StrBuffer &outOperand(StrBuffer &out, const DisInsn &insn, const Operand &op);
+    StrBuffer &outRelative(StrBuffer &out, DisInsn &insn, const Operand &op) const;
+    StrBuffer &outOperand(StrBuffer &out, DisInsn &insn, const Operand &op) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
