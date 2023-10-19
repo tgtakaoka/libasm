@@ -33,7 +33,7 @@ DisMc6809::DisMc6809(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisMc6809::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
+void DisMc6809::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
     const uint8_t dir = insn.readByte();
     const auto label = lookup(dir);
     if (label) {
@@ -41,10 +41,9 @@ Error DisMc6809::decodeDirectPage(DisInsn &insn, StrBuffer &out) {
     } else {
         outAbsAddr(out, dir, 8);
     }
-    return setErrorIf(insn);
 }
 
-Error DisMc6809::decodeExtended(DisInsn &insn, StrBuffer &out) {
+void DisMc6809::decodeExtended(DisInsn &insn, StrBuffer &out) const {
     const Config::uintptr_t addr = insn.readUint16();
     const auto label = lookup(addr);
     if (label) {
@@ -54,15 +53,15 @@ Error DisMc6809::decodeExtended(DisInsn &insn, StrBuffer &out) {
             out.letter('>');
         outAbsAddr(out, addr);
     }
-    return setErrorIf(insn);
 }
 
-Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
-    const uint8_t post = insn.readPost();
-    setErrorIf(insn);
+void DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) const {
+    const auto post = insn.readPost();
     PostSpec spec;
-    if (TABLE.searchPostByte(cpuType(), post, spec))
-        return setErrorIf(UNKNOWN_POSTBYTE);
+    if (TABLE.searchPostByte(cpuType(), post, spec)) {
+        insn.setErrorIf(out, UNKNOWN_POSTBYTE);
+        return;
+    }
     if (spec.indir)
         out.letter('[');
     if (spec.base != REG_UNDEF && spec.size > 2) {  // n,X
@@ -75,7 +74,6 @@ Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
                 prefix = '{';
         } else if (spec.size == 8) {
             offset = static_cast<int8_t>(insn.readByte());
-            setErrorIf(insn);
             if (spec.indir && offset == 0)
                 prefix = '<';
             // Check offset is in 5-bit integer range.
@@ -83,14 +81,16 @@ Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
                 prefix = '<';
         } else {
             offset = static_cast<int16_t>(insn.readUint16());
-            setErrorIf(insn);
             // Check offset is in 8-bit integer range.
             if (!overflowInt8(offset))
                 prefix = '>';
         }
         if (spec.base == REG_PCR) {
             const auto base = insn.address() + insn.length();
-            const auto target = branchTarget(base, offset);
+            Error error;
+            const auto target = branchTarget(base, offset, error);
+            if (error)
+                insn.setErrorIf(out, error);
             if (spec.size == 16 && !overflowInt8(offset))
                 out.letter('>');
             outRelAddr(out, target, insn.address(), spec.size);
@@ -111,7 +111,7 @@ Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
         outRegName(out, spec.index);
     if (spec.base == REG_UNDEF) {  // [nnnn]
         outAbsAddr(out, insn.readUint16());
-    } else {
+    } else if (insn.isOK() || out.len()) {
         out.letter(',');
     }
     if (spec.size < 0) {  // ,-X ,--X
@@ -132,38 +132,38 @@ Error DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) {
     }
     if (spec.indir)
         out.letter(']');
-    return setErrorIf(insn);
 }
 
-Error DisMc6809::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
-    Config::ptrdiff_t delta;
-    if (mode == M_REL) {
-        delta = static_cast<int8_t>(insn.readByte());
-    } else {
-        delta = static_cast<Config::ptrdiff_t>(insn.readUint16());
-    }
-    setErrorIf(insn);
+void DisMc6809::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    const auto delta = (mode == M_REL) ? static_cast<int8_t>(insn.readByte())
+                                       : static_cast<int16_t>(insn.readUint16());
     const auto base = insn.address() + insn.length();
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
-    return getError();
 }
 
-Error DisMc6809::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisMc6809::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     out.letter('#');
+    uint32_t val;
+    uint8_t bits;
     if (mode == M_IM8 || mode == M_GEN8) {
-        outHex(out, insn.readByte(), 8);
+        val = insn.readByte();
+        bits = 8;
     } else if (mode == M_GEN16) {
-        outHex(out, insn.readUint16(), 16);
+        val = insn.readUint16();
+        bits = 16;
     } else {
-        outHex(out, insn.readUint32(), 32);
+        val = insn.readUint32();
+        bits = 32;
     }
-    return setErrorIf(insn);
+    outHex(out, val, bits);
 }
 
-Error DisMc6809::decodePushPull(DisInsn &insn, StrBuffer &out) {
-    uint8_t post = insn.readPost();
-    setErrorIf(insn);
+void DisMc6809::decodePushPull(DisInsn &insn, StrBuffer &out) const {
+    auto post = insn.readPost();
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg)
         post &= ~0x02;  // clear REG_A
@@ -181,136 +181,145 @@ Error DisMc6809::decodePushPull(DisInsn &insn, StrBuffer &out) {
             n++;
         }
     }
-    return getError();
 }
 
-Error DisMc6809::decodeRegisters(DisInsn &insn, StrBuffer &out) {
-    const uint8_t post = insn.readPost();
+void DisMc6809::decodeRegisters(DisInsn &insn, StrBuffer &out) const {
+    const auto post = insn.readPost();
     const auto cpu = cpuType();
     const auto dst = decodeDataReg(cpu, post);
     const auto src = decodeDataReg(cpu, post >> 4);
-    if (src == REG_UNDEF || dst == REG_UNDEF)
-        return setError(ILLEGAL_REGISTER);
     const auto size2 = regSize(dst);
     const auto size1 = regSize(src);
+    if (src == REG_UNDEF)
+        insn.setErrorIf(out, ILLEGAL_REGISTER);
+    outRegName(out, src, true).comma();
+    if (dst == REG_UNDEF)
+        insn.setErrorIf(out, ILLEGAL_REGISTER);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
-        return setError(ILLEGAL_SIZE);
-    outRegName(out, src).comma();
-    outRegName(out, dst);
-    return setError(insn);
+        insn.setErrorIf(out, ILLEGAL_SIZE);
+    outRegName(out, dst, true);
 }
 
-Error DisMc6809::decodeRegBit(DisInsn &insn, StrBuffer &out) {
-    const uint8_t post = insn.readPost();
-    setErrorIf(insn);
+void DisMc6809::decodeRegBit(DisInsn &insn, StrBuffer &out) const {
+    const auto post = insn.readPost();
     const auto reg = decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF)
-        return setErrorIf(ILLEGAL_REGISTER);
+        insn.setErrorIf(out, ILLEGAL_REGISTER);
     outRegName(out, reg).letter('.');
     outHex(out, post & 7, 3);
-    return getError();
 }
 
-Error DisMc6809::decodeDirBit(DisInsn &insn, StrBuffer &out) {
-    if (decodeDirectPage(insn, out))
-        return getError();
+void DisMc6809::decodeDirBit(DisInsn &insn, StrBuffer &out) const {
+    decodeDirectPage(insn, out);
     out.letter('.');
-    outHex(out, (insn.readPost() >> 3) & 7, 3);
-    return setErrorIf(insn);
+    outHex(out, (insn.post() >> 3) & 7, 3);
 }
 
-Error DisMc6809::decodeTransferMemory(DisInsn &insn, StrBuffer &out) {
-    const uint8_t post = insn.readPost();
-    setErrorIf(insn);
-    const auto src = decodeTfmBaseReg(post >> 4);
-    const auto dst = decodeTfmBaseReg(post);
-    const uint8_t mode = insn.opCode() & 0x3;
-    if (src == REG_UNDEF || dst == REG_UNDEF)
-        return setErrorIf(ILLEGAL_REGISTER);
+void DisMc6809::decodeTransferMemory(DisInsn &insn, StrBuffer &out) const {
+    const auto post = insn.readPost();
+    const auto cpu = cpuType();
+    const auto dst = decodeDataReg(cpu, post);
+    const auto src = decodeDataReg(cpu, post >> 4);
+    const auto mode = insn.opCode() & 0x3;
+    if (!isTfmBaseReg(src))
+        insn.setErrorIf(out, ILLEGAL_REGISTER);
     outRegName(out, src);
-    const char srcModeChar = tfmSrcModeChar(mode);
+    const auto srcModeChar = tfmSrcModeChar(mode);
     if (srcModeChar)
         out.letter(srcModeChar);
     out.comma();
+    if (!isTfmBaseReg(dst))
+        insn.setErrorIf(out, ILLEGAL_REGISTER);
     outRegName(out, dst);
-    const char dstModeChar = tfmDstModeChar(mode);
+    const auto dstModeChar = tfmDstModeChar(mode);
     if (dstModeChar)
         out.letter(dstModeChar);
-    return getError();
 }
 
-Error DisMc6809::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisMc6809::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     switch (mode) {
     case M_DIR:
-        return decodeDirectPage(insn, out);
+        decodeDirectPage(insn, out);
+        return;
     case M_EXT:
-        return decodeExtended(insn, out);
+        decodeExtended(insn, out);
+        return;
     case M_IDX:
-        return decodeIndexed(insn, out);
+        decodeIndexed(insn, out);
+        return;
     case M_REL:
     case M_LREL:
-        return decodeRelative(insn, out, mode);
+        decodeRelative(insn, out, mode);
+        return;
     case M_GMEM:
         switch (insn.opCode() & 0xF0) {
         case 0x60:
-            return decodeIndexed(insn, out);
+            decodeIndexed(insn, out);
+            return;
         case 0x70:
-            return decodeExtended(insn, out);
+            decodeExtended(insn, out);
+            return;
         default:
-            return decodeDirectPage(insn, out);
+            decodeDirectPage(insn, out);
+            return;
         }
     case M_GEN8:
     case M_GEN16:
         switch (insn.opCode() & 0x30) {
         case 0x10:
-            return decodeDirectPage(insn, out);
+            decodeDirectPage(insn, out);
+            return;
         case 0x20:
-            return decodeIndexed(insn, out);
+            decodeIndexed(insn, out);
+            return;
         case 0x30:
-            return decodeExtended(insn, out);
+            decodeExtended(insn, out);
+            return;
         default:
             break;
         }
         // Fall-through
     case M_IM8:
     case M_IM32:
-        return decodeImmediate(insn, out, mode);
+        decodeImmediate(insn, out, mode);
+        return;
     case M_LIST:
-        return decodePushPull(insn, out);
+        decodePushPull(insn, out);
+        return;
     case M_PAIR:
-        return decodeRegisters(insn, out);
+        decodeRegisters(insn, out);
+        return;
     case M_RBIT:
-        return decodeRegBit(insn, out);
+        decodeRegBit(insn, out);
+        return;
     case M_DBIT:
-        return decodeDirBit(insn, out);
+        decodeDirBit(insn, out);
+        return;
     case M_RTFM:
-        return decodeTransferMemory(insn, out);
+        decodeTransferMemory(insn, out);
+        return;
     default:
-        return OK;
+        break;
     }
 }
 
 Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    Config::opcode_t opCode = insn.readByte();
-    insn.setOpCode(opCode);
-    if (TABLE.isPrefix(cpuType(), opCode)) {
-        const Config::opcode_t prefix = opCode;
-        opCode = insn.readByte();
-        insn.setOpCode(opCode, prefix);
+    DisInsn insn(_insn, memory, out);
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
+    if (TABLE.isPrefix(cpuType(), opc)) {
+        insn.setOpCode(insn.readByte(), opc);
+        if (insn.getError())
+            return setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    if (decodeOperand(insn, out, insn.mode1()))
-        return getError();
+    decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
-    if (mode2 == M_NONE)
-        return OK;
-    if (mode2 == M_RTFM)
-        return OK;
-    out.comma();
-    return decodeOperand(insn, out, mode2);
+    if (mode2 != M_NONE && mode2 != M_RTFM)
+        decodeOperand(insn, out.comma(), mode2);
+    return setError(insn);
 }
 
 }  // namespace mc6809

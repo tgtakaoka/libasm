@@ -89,7 +89,6 @@ static void test_inherent() {
     TEST("CLRB", 0x5F);
 
     if (is6309()) {
-        // HD6309
         TEST("SEXW",  0x14);
         TEST("PSHSW", 0x10, 0x38);
         TEST("PULSW", 0x10, 0x39);
@@ -226,28 +225,17 @@ static void test_stack() {
 }
 
 static void test_register() {
-    TEST("EXG A,B", 0x1E, 0x89);
-    TEST("EXG A,A", 0x1E, 0x88);
-    TEST("TFR X,Y", 0x1F, 0x12);
-    TEST("TFR X,X", 0x1F, 0x11);
+    TEST("TFR A,B",   0x1F, 0x89);
+    TEST("TFR B,CC",  0x1F, 0x9A);
+    TEST("TFR CC,DP", 0x1F, 0xAB);
+    TEST("TFR DP,A",  0x1F, 0xB8);
 
-    TEST("TFR A,B",  0x1F, 0x89);
-    TEST("TFR A,CC", 0x1F, 0x8A);
-    TEST("TFR A,DP", 0x1F, 0x8B);
-    TEST("TFR B,A",  0x1F, 0x98);
-    TEST("TFR CC,A", 0x1F, 0xA8);
-    TEST("TFR DP,A", 0x1F, 0xB8);
-
-    TEST("TFR D,X",  0x1F, 0x01);
-    TEST("TFR D,Y",  0x1F, 0x02);
-    TEST("TFR D,U",  0x1F, 0x03);
-    TEST("TFR D,S",  0x1F, 0x04);
-    TEST("TFR D,PC", 0x1F, 0x05);
-    TEST("TFR X,D",  0x1F, 0x10);
-    TEST("TFR Y,D",  0x1F, 0x20);
-    TEST("TFR U,D",  0x1F, 0x30);
-    TEST("TFR S,D",  0x1F, 0x40);
-    TEST("TFR PC,D", 0x1F, 0x50);
+    TEST("TFR D,X",   0x1F, 0x01);
+    TEST("TFR X,Y",   0x1F, 0x12);
+    TEST("TFR Y,U",   0x1F, 0x23);
+    TEST("TFR U,SP",  0x1F, 0x34);
+    TEST("TFR SP,PC", 0x1F, 0x45);
+    TEST("TFR PC,D",  0x1F, 0x50);
 
     ERRT("EXG A",     OPERAND_NOT_ALLOWED,  "A");
     ERRT("EXG A,",    UNKNOWN_OPERAND,      "A,");
@@ -255,46 +243,61 @@ static void test_register() {
     ERRT("EXG A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
     if (is6309()) {
-        // HD6309
-        TEST("ADDR A,B", 0x10, 0x30, 0x89);
-        TEST("ADCR A,B", 0x10, 0x31, 0x89);
-        TEST("SUBR A,B", 0x10, 0x32, 0x89);
-        TEST("SBCR A,B", 0x10, 0x33, 0x89);
-        TEST("ANDR A,B", 0x10, 0x34, 0x89);
-        TEST("ORR  A,B", 0x10, 0x35, 0x89);
-        TEST("EORR A,B", 0x10, 0x36, 0x89);
-        TEST("CMPR A,B", 0x10, 0x37, 0x89);
+        TEST("EXG E,Z", 0x1E, 0xED);
+        TEST("EXG Z,F", 0x1E, 0xDF);
+        TEST("EXG F,0", 0x1E, 0xFD);
+        TEST("EXG 0,E", 0x1E, 0xDE);
 
-        TEST("TFR A,E",  0x1F, 0x8E);
-        TEST("TFR A,F",  0x1F, 0x8F);
-        TEST("TFR E,A",  0x1F, 0xE8);
-        TEST("TFR F,A",  0x1F, 0xF8);
-        TEST("TFR A,Z",  0x1F, 0x8D);
-        TEST("TFR Z,A",  0x1F, 0xD8);
-        TEST("TFR A,0",  0x1F, 0x8D);
-        TEST("TFR 0,A",  0x1F, 0xD8);
-        TEST("TFR CC,0", 0x1F, 0xAD);
-        TEST("TFR 0,CC", 0x1F, 0xDA);
-        TEST("TFR D,W",  0x1F, 0x06);
-        TEST("TFR D,V",  0x1F, 0x07);
-        TEST("TFR W,D",  0x1F, 0x60);
-        TEST("TFR V,D",  0x1F, 0x70);
-        TEST("TFR W,PC", 0x1F, 0x65);
-        TEST("TFR S,W",  0x1F, 0x46);
-        TEST("TFR Z,V",  0x1F, 0xD7);
-        TEST("TFR X,Z",  0x1F, 0x1D);
-        TEST("TFR 0,V",  0x1F, 0xD7);
-        TEST("TFR X,0",  0x1F, 0x1D);
+        TEST("EXG W,V", 0x1E, 0x67);
+        TEST("EXG V,W", 0x1E, 0x76);
+        TEST("EXG W,Z", 0x1E, 0x6D);
+        TEST("EXG 0,V", 0x1E, 0xD7);
+
+        ERRT("EXG E",     OPERAND_NOT_ALLOWED,  "E");
+        ERRT("EXG E,",    UNKNOWN_OPERAND,      "E,");
+        ERRT("EXG E,W",   ILLEGAL_SIZE,         "E,W", 0x1E, 0xE6);
+        ERRT("EXG E,X,F", OPERAND_NOT_ALLOWED,  "E,X,F");
+
+        TEST("TFR E,Z", 0x1F, 0xED);
+        TEST("TFR Z,F", 0x1F, 0xDF);
+        TEST("TFR F,0", 0x1F, 0xFD);
+        TEST("TFR 0,E", 0x1F, 0xDE);
+
+        TEST("TFR W,V", 0x1F, 0x67);
+        TEST("TFR V,W", 0x1F, 0x76);
+        TEST("TFR W,Z", 0x1F, 0x6D);
+        TEST("TFR 0,V", 0x1F, 0xD7);
+
+        ERRT("TFR E",     OPERAND_NOT_ALLOWED,  "E");
+        ERRT("TFR E,",    UNKNOWN_OPERAND,      "E,");
+        ERRT("TFR E,W",   ILLEGAL_SIZE,         "E,W", 0x1F, 0xE6);
+        ERRT("TFR E,X,F", OPERAND_NOT_ALLOWED,  "E,X,F");
+
+
+        TEST("ADDR A, B",   0x10, 0x30, 0x89);
+        TEST("ADCR B, CC",  0x10, 0x31, 0x9A);
+        TEST("SUBR CC, DP", 0x10, 0x32, 0xAB);
+        TEST("SBCR DP, Z",  0x10, 0x33, 0xBD);
+        TEST("ANDR Z, E",   0x10, 0x34, 0xDE);
+        TEST("ORR  E, F",   0x10, 0x35, 0xEF);
+        TEST("EORR F, A",   0x10, 0x36, 0xF8);
+        TEST("CMPR Z, A",   0x10, 0x37, 0xD8);
+
+        TEST("ADDR D, X",   0x10, 0x30, 0x01);
+        TEST("ADCR X, Y",   0x10, 0x31, 0x12);
+        TEST("SUBR Y, U",   0x10, 0x32, 0x23);
+        TEST("SBCR U, SP",  0x10, 0x33, 0x34);
+        TEST("ANDR SP, PC", 0x10, 0x34, 0x45);
+        TEST("ORR  PC, W",  0x10, 0x35, 0x56);
+        TEST("EORR W, V",   0x10, 0x36, 0x67);
+        TEST("CMPR D, Z",   0x10, 0x37, 0x0D);
+        TEST("CMPR Z, D",   0x10, 0x37, 0xD0);
 
         ERRT("ADDR A",     OPERAND_NOT_ALLOWED,  "A");
         ERRT("ADDR A,",    UNKNOWN_OPERAND,      "A,");
         ERRT("ADDR A,X",   ILLEGAL_SIZE,         "A,X", 0x10, 0x30, 0x81);
         ERRT("ADDR A,X,Y", OPERAND_NOT_ALLOWED,  "A,X,Y");
 
-        ERRT("TFR E",     OPERAND_NOT_ALLOWED,  "E");
-        ERRT("TFR E,",    UNKNOWN_OPERAND,      "E,");
-        ERRT("TFR E,W",   ILLEGAL_SIZE,         "E,W", 0x1F, 0xE6);
-        ERRT("TFR E,X,F", OPERAND_NOT_ALLOWED,  "E,X,F");
     } else {
         ERUI("ADDR A,B");
         ERUI("ADCR A,B");
@@ -438,7 +441,6 @@ static void test_immediate() {
     ERRT("StS  #$90A0", OPERAND_NOT_ALLOWED, "#$90A0");
 
     if (is6309()) {
-        // HD6309
         TEST("LDMD  #$01", 0x11, 0x3D, 0x01);
         TEST("BITMD #$80", 0x11, 0x3C, 0x80);
 
@@ -510,7 +512,6 @@ static void test_immediate() {
     TEST("LDA  # dir90",  0x86, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD #sym90A0", 0x10, 0x82, 0x90, 0xA0);
         TEST("LDE  #dir90",   0x11, 0x86, 0x90);
 
@@ -583,7 +584,6 @@ static void test_direct() {
     TEST("JSR <$1290", 0x9D, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD $90",    0x10, 0x92, 0x90);
         TEST("ANDD $90",    0x10, 0x94, 0x90);
         TEST("BITD $90",    0x10, 0x95, 0x90);
@@ -695,7 +695,6 @@ static void test_direct() {
     TEST("JSR  dir90",    0x9D, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD <sym90A0", 0x10, 0x92, 0xA0);
         TEST("LDE  dir90",    0x11, 0x96, 0x90);
 
@@ -713,7 +712,6 @@ static void test_direct() {
         TEST("LDA sym1290",  0x96, 0x90);
         TEST("LDA >sym1290", 0xB6, 0x12, 0x90);
 
-        // HD6309
         TEST("LDE dir90",        0x11, 0xB6, 0x00, 0x90);
         TEST("LDQ sym1290",      0x10, 0xDC, 0x90);
         TEST("OIM #$30,sym1290", 0x01, 0x30, 0x90);
@@ -795,7 +793,6 @@ static void test_extended() {
     TEST("JSR >$90",  0xBD, 0x00, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD $9ABC", 0x10, 0xB2, 0x9A, 0xBC);
         TEST("ANDD $9ABC", 0x10, 0xB4, 0x9A, 0xBC);
         TEST("BITD $9ABC", 0x10, 0xB5, 0x9A, 0xBC);
@@ -878,7 +875,6 @@ static void test_extended() {
     TEST("JSR >dir90",   0xBD, 0x00, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD sym1290", 0x10, 0xB2, 0x12, 0x90);
         TEST("LDE  >dir90",  0x11, 0xB6, 0x00, 0x90);
 
@@ -958,7 +954,6 @@ static void test_indexed() {
     TEST("JSR  [,X++]", 0xAD, 0x91);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD ,X",   0x10, 0xA2, 0x84);
         TEST("ANDD ,X++", 0x10, 0xA4, 0x81);
         TEST("BITD ,--X", 0x10, 0xA5, 0x83);
@@ -1256,7 +1251,6 @@ static void test_indexed_mode() {
     TEST("LDA [$1234]", 0xA6, 0x9F, 0x12, 0x34);
 
     if (is6309()) {
-        // HD6309
         TEST("LDA E,X",   0xA6, 0x87);
         TEST("LDA F,X",   0xA6, 0x8A);
         TEST("LDA W,X",   0xA6, 0x8E);
@@ -1367,25 +1361,21 @@ static void test_indexed_mode() {
 
 static void test_transfer() {
     if (is6309()) {
-        // HD6309
-        TEST("TFM X+,Y+", 0x11, 0x38, 0x12);
-        TEST("TFM X-,Y-", 0x11, 0x39, 0x12);
-        TEST("TFM X+,Y",  0x11, 0x3A, 0x12);
-        TEST("TFM X,Y+",  0x11, 0x3B, 0x12);
+        TEST("TFM X+, Y+", 0x11, 0x38, 0x12);
+        TEST("TFM Y-, U-", 0x11, 0x39, 0x23);
+        TEST("TFM U+, S",  0x11, 0x3A, 0x34);
+        TEST("TFM S, D+",  0x11, 0x3B, 0x40);
 
-        TEST("TFM D+,X+", 0x11, 0x38, 0x01);
-        TEST("TFM D-,X-", 0x11, 0x39, 0x01);
-        TEST("TFM D+,X",  0x11, 0x3A, 0x01);
-        TEST("TFM D,X+",  0x11, 0x3B, 0x01);
-
-        TEST("TFM D+,X+", 0x11, 0x38, 0x01);
-        TEST("TFM Y+,U+", 0x11, 0x38, 0x23);
-        TEST("TFM U+,S+", 0x11, 0x38, 0x34);
-        TEST("TFM S+,D+", 0x11, 0x38, 0x40);
-
-        ERRT("TFM X+,W",  REGISTER_NOT_ALLOWED, "W",     0x11, 0x3A, 0x16);
-        ERRT("TFM W+,X",  REGISTER_NOT_ALLOWED, "W+,X",  0x11, 0x3A, 0x61);
-        ERRT("TFM W-,X-", REGISTER_NOT_ALLOWED, "W-,X-", 0x11, 0x39, 0x61);
+        ERRT("TFM PC+, D+", REGISTER_NOT_ALLOWED, "PC+, D+", 0x11, 0x38, 0x50);
+        ERRT("TFM W+, D+",  REGISTER_NOT_ALLOWED,  "W+, D+", 0x11, 0x38, 0x60);
+        ERRT("TFM V+, D+",  REGISTER_NOT_ALLOWED,  "V+, D+", 0x11, 0x38, 0x70);
+        ERRT("TFM D+, A+",  REGISTER_NOT_ALLOWED,      "A+", 0x11, 0x38, 0x08);
+        ERRT("TFM D+, B+",  REGISTER_NOT_ALLOWED,      "B+", 0x11, 0x38, 0x09);
+        ERRT("TFM D+, CC+", REGISTER_NOT_ALLOWED,     "CC+", 0x11, 0x38, 0x0A);
+        ERRT("TFM D+, DP+", REGISTER_NOT_ALLOWED,     "DP+", 0x11, 0x38, 0x0B);
+        ERRT("TFM D+, Z+",  REGISTER_NOT_ALLOWED,      "Z+", 0x11, 0x38, 0x0D);
+        ERRT("TFM D+, E+",  REGISTER_NOT_ALLOWED,      "E+", 0x11, 0x38, 0x0E);
+        ERRT("TFM D+, F+",  REGISTER_NOT_ALLOWED,      "F+", 0x11, 0x38, 0x0F);
     } else {
         ERUI("TFM D,Y");
         ERUI("TFM X+,Y+");
@@ -1394,7 +1384,6 @@ static void test_transfer() {
 
 static void test_bit_position() {
     if (is6309()) {
-        // HD6309
         TEST("BAND  A.1,$34.2",                                     0x11, 0x30, 0x51, 0x34);
         ERRT("BAND  A.9,$34.2",   ILLEGAL_BIT_NUMBER, ".9,$34.2",   0x11, 0x30, 0x51, 0x34);
         ERRT("BAND  A.1,$34,10",  ILLEGAL_BIT_NUMBER, ",10",        0x11, 0x30, 0x51, 0x34);
@@ -1484,7 +1473,6 @@ static void test_comment() {
     ATEST(0x1000, "LDA [ $0F83 , PCR ] ; comment", 0xa6, 0x9C, 0x80);
 
     if (is6309()) {
-        // HD6309
         TEST("TFM S+ , D+  ; comment", 0x11, 0x38, 0x40);
         TEST("TFM X- , Y-  ; comment", 0x11, 0x39, 0x12);
         TEST("TFM X+ , Y   ; comment", 0x11, 0x3A, 0x12);
@@ -1512,7 +1500,6 @@ static void test_error() {
     ERRT("LDA [,X ; comment", MISSING_CLOSING_BRACKET, "[,X ; comment");
 
     if (is6309()) {
-        // HD6309
         ERRT("LDA ,W+",   UNKNOWN_OPERAND, ",W+", 0xA6, 0x00);
         ERRT("LDA ,-W",   UNKNOWN_OPERAND, ",-W", 0xA6, 0x00);
         ERRT("LDA , W++", UNKNOWN_OPERAND, ", W++");
@@ -1570,7 +1557,6 @@ static void test_undefined_symbol() {
     ERUS("LDA [>UNDEF,PCR]", "UNDEF,PCR]", 0xA6, 0x9D, 0x00, 0x00);
 
     if (is6309()) {
-        // HD6309
         ERUS("BITMD #UNDEF",   "UNDEF",    0x11, 0x3C, 0x00);
         ERUS("LDQ   #UNDEF",   "UNDEF",    0xCD, 0x00, 0x00, 0x00, 0x00);
         ERUS("MULD  #UNDEF",   "UNDEF",    0x11, 0x8F, 0x00, 0x00);

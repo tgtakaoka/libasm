@@ -59,7 +59,7 @@ namespace reg {
 
 RegName parseRegName(StrScanner &scan);
 RegSize regSize(RegName name) __attribute__((noinline));
-StrBuffer &outRegName(StrBuffer &out, RegName name);
+StrBuffer &outRegName(StrBuffer &out, RegName name, bool fullName = false);
 
 RegName decodeDataReg(CpuType cpuType, uint8_t num);
 bool isDataReg(CpuType cpuType, RegName name);
@@ -77,7 +77,6 @@ RegName decodeBitOpReg(uint8_t num);
 bool isBitOpReg(RegName name);
 uint8_t encodeBitOpReg(RegName name);
 
-RegName decodeTfmBaseReg(uint8_t num);
 bool isTfmBaseReg(RegName name);
 uint8_t encodeTfmBaseReg(RegName name);
 int8_t encodeTfmMode(char src, char dst);

@@ -94,7 +94,6 @@ static void test_inherent() {
     TEST("CLRB", "", 0x5F);
 
     if (is6309()) {
-        // HD6309
         TEST("SEXW",  "", 0x14);
         TEST("PSHSW", "", 0x10, 0x38);
         TEST("PULSW", "", 0x10, 0x39);
@@ -158,7 +157,8 @@ static void test_immediate() {
     TEST("EORB", "#$90", 0xC8, 0x90);
     TEST("ADCB", "#$90", 0xC9, 0x90);
     TEST("ORB",  "#$90", 0xCA, 0x90);
-    TEST("ADDB", "#$90", 0xCB, 0x90);
+    TEST("ADDB", "#$90",    0xCB, 0x90);
+    NMEM("ADDB", "#0", "0", 0xCB);
 
     TEST("SUBD", "#$90A0", 0x83, 0x90, 0xA0);
     TEST("ADDD", "#$90A0", 0xC3, 0x90, 0xA0);
@@ -166,7 +166,9 @@ static void test_immediate() {
     TEST("CMPD", "#$90A0", 0x10, 0x83, 0x90, 0xA0);
 
     TEST("CMPX", "#$90A0", 0x8C, 0x90, 0xA0);
-    TEST("LDX",  "#$90A0", 0x8E, 0x90, 0xA0);
+    TEST("LDX",  "#$90A0",          0x8E, 0x90, 0xA0);
+    NMEM("LDX",  "#$9000", "$9000", 0x8E, 0x90);
+    NMEM("LDX",  "#0",     "0",     0x8E);
 
     TEST("CMPY", "#$90A0", 0x10, 0x8C, 0x90, 0xA0);
     TEST("LDY",  "#$90A0", 0x10, 0x8E, 0x90, 0xA0);
@@ -178,7 +180,6 @@ static void test_immediate() {
     TEST("LDS",  "#$90A0", 0x10, 0xCE, 0x90, 0xA0);
 
     if (is6309()) {
-        // HD6309
         TEST("LDMD",  "#1",   0x11, 0x3D, 0x01);
         TEST("LDMD",  "#3",   0x11, 0x3D, 0x03);
         TEST("BITMD", "#$80", 0x11, 0x3C, 0x80);
@@ -205,7 +206,11 @@ static void test_immediate() {
         TEST("LDW",  "#$90A0", 0x10, 0x86, 0x90, 0xA0);
         TEST("CMPW", "#$90A0", 0x10, 0x81, 0x90, 0xA0);
 
-        TEST("LDQ",  "#$12345678", 0xCD, 0x12, 0x34, 0x56, 0x78);
+        TEST("LDQ",  "#$12345678",              0xCD, 0x12, 0x34, 0x56, 0x78);
+        NMEM("LDQ",  "#$12345600", "$12345600", 0xCD, 0x12, 0x34, 0x56);
+        NMEM("LDQ",  "#$12340000", "$12340000", 0xCD, 0x12, 0x34);
+        NMEM("LDQ",  "#$12000000", "$12000000", 0xCD, 0x12);
+        NMEM("LDQ",  "#0",         "0",         0xCD);
 
         TEST("MULD", "#$90A0", 0x11, 0x8F, 0x90, 0xA0);
         TEST("DIVD", "#$90A0", 0x11, 0x8D, 0x90, 0xA0);
@@ -223,16 +228,17 @@ static void test_immediate() {
 
 static void test_direct() {
     TEST("NEG",  "$00", 0x00, 0x00);
-    TEST("COM",  "$09", 0x03, 0x09);
-    TEST("LSR",  "$10", 0x04, 0x10);
-    TEST("ROR",  "$10", 0x06, 0x10);
-    TEST("ASR",  "$10", 0x07, 0x10);
-    TEST("ASL",  "$10", 0x08, 0x10);
-    TEST("ROL",  "$10", 0x09, 0x10);
-    TEST("DEC",  "$10", 0x0A, 0x10);
-    TEST("INC",  "$10", 0x0C, 0x10);
-    TEST("TST",  "$10", 0x0D, 0x10);
-    TEST("CLR",  "$10", 0x0F, 0x10);
+    TEST("COM", "$09", 0x03, 0x09);
+    TEST("LSR", "$10", 0x04, 0x10);
+    TEST("ROR", "$10", 0x06, 0x10);
+    TEST("ASR", "$10", 0x07, 0x10);
+    TEST("ASL", "$10", 0x08, 0x10);
+    TEST("ROL", "$10", 0x09, 0x10);
+    TEST("DEC", "$10", 0x0A, 0x10);
+    TEST("INC", "$10", 0x0C, 0x10);
+    TEST("TST", "$10", 0x0D, 0x10);
+    TEST("CLR", "$10",        0x0F, 0x10);
+    NMEM("CLR", "$00", "$00", 0x0F);
 
     TEST("SUBA", "$90", 0x90, 0x90);
     TEST("CMPA", "$90", 0x91, 0x90);
@@ -284,7 +290,6 @@ static void test_direct() {
     TEST("JSR",  "$10", 0x9D, 0x10);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD", "$90", 0x10, 0x92, 0x90);
         TEST("ANDD", "$90", 0x10, 0x94, 0x90);
         TEST("BITD", "$90", 0x10, 0x95, 0x90);
@@ -320,7 +325,9 @@ static void test_direct() {
         TEST("OIM",  "#$30, $00", 0x01, 0x30, 0x00);
         TEST("AIM",  "#$30, $09", 0x02, 0x30, 0x09);
         TEST("EIM",  "#$30, $10", 0x05, 0x30, 0x10);
-        TEST("TIM",  "#$30, $10", 0x0B, 0x30, 0x10);
+        TEST("TIM",  "#$30, $10",         0x0B, 0x30, 0x10);
+        NMEM("TIM",  "#$30, $00",  "$00", 0x0B, 0x30);
+        NMEM("TIM",  "#0, $00", "0, $00", 0x0B);
     }
 
     symtab.intern(0x10, "dir10");
@@ -337,15 +344,14 @@ static void test_direct() {
     TEST("JMP",  "<dir90", 0x0E, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("OIM",  "#$30, <dir10", 0x01, 0x30, 0x10);
     }
 }
 
 static void test_extended() {
-    TEST("NEG",  ">$0000", 0x70, 0x00, 0x00);
-    TEST("COM",  ">$0009", 0x73, 0x00, 0x09);
-    TEST("LSR",  ">$0034", 0x74, 0x00, 0x34);
+    TEST("NEG", ">$0000", 0x70, 0x00, 0x00);
+    TEST("COM", ">$0009", 0x73, 0x00, 0x09);
+    TEST("LSR", ">$0034", 0x74, 0x00, 0x34);
     TEST("ROR",  "$1234",  0x76, 0x12, 0x34);
     TEST("ASR",  "$1234",  0x77, 0x12, 0x34);
     TEST("ASL",  "$1234",  0x78, 0x12, 0x34);
@@ -353,7 +359,9 @@ static void test_extended() {
     TEST("DEC",  "$1234",  0x7A, 0x12, 0x34);
     TEST("INC",  "$1234",  0x7C, 0x12, 0x34);
     TEST("TST",  "$1234",  0x7D, 0x12, 0x34);
-    TEST("CLR",  "$1234",  0x7F, 0x12, 0x34);
+    TEST("CLR",  "$1234",           0x7F, 0x12, 0x34);
+    NMEM("CLR",  "$1200",  "$1200", 0x7F, 0x12);
+    NMEM("CLR", ">$0000", ">$0000", 0x7F);
 
     TEST("SUBA", ">$0090", 0xB0, 0x00, 0x90);
     TEST("CMPA", ">$0090", 0xB1, 0x00, 0x90);
@@ -405,7 +413,6 @@ static void test_extended() {
     TEST("JSR",  "$1234", 0xBD, 0x12, 0x34);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD", "$9ABC", 0x10, 0xB2, 0x9A, 0xBC);
         TEST("ANDD", "$9ABC", 0x10, 0xB4, 0x9A, 0xBC);
         TEST("BITD", "$9ABC", 0x10, 0xB5, 0x9A, 0xBC);
@@ -438,10 +445,13 @@ static void test_extended() {
         TEST("DIVD", "$9ABC", 0x11, 0xBD, 0x9A, 0xBC);
         TEST("DIVQ", "$9ABC", 0x11, 0xBE, 0x9A, 0xBC);
 
-        TEST("OIM",  "#$30, $9ABC", 0x71, 0x30, 0x9A, 0xBC);
-        TEST("AIM",  "#$30, $9ABC", 0x72, 0x30, 0x9A, 0xBC);
-        TEST("EIM",  "#$30, $9ABC", 0x75, 0x30, 0x9A, 0xBC);
-        TEST("TIM",  "#$30, $9ABC", 0x7B, 0x30, 0x9A, 0xBC);
+        TEST("OIM", "#$30, $9ABC", 0x71, 0x30, 0x9A, 0xBC);
+        TEST("AIM", "#$30, $9ABC", 0x72, 0x30, 0x9A, 0xBC);
+        TEST("EIM", "#$30, $9ABC", 0x75, 0x30, 0x9A, 0xBC);
+        TEST("TIM", "#$30, $9ABC",             0x7B, 0x30, 0x9A, 0xBC);
+        NMEM("TIM", "#$30, $9A00",    "$9A00", 0x7B, 0x30, 0x9A);
+        NMEM("TIM", "#$30, >$0000",  ">$0000", 0x7B, 0x30);
+        NMEM("TIM", "#0, >$0000", "0, >$0000", 0x7B);
     }
 
     symtab.intern(0x0090, "ext0090");
@@ -458,7 +468,6 @@ static void test_extended() {
     TEST("JSR",  ">ext0090", 0xBD, 0x00, 0x90);
 
     if (is6309()) {
-        // HD6309
         TEST("OIM",  "#$30, >ext9ABC", 0x71, 0x30, 0x9A, 0xBC);
         TEST("OIM",  "#$30, >ext0090", 0x71, 0x30, 0x00, 0x90);
     }
@@ -468,7 +477,8 @@ static void test_indexed() {
     TEST("LEAX", ",Y", 0x30, 0xA4);
     TEST("LEAY", ",U", 0x31, 0xC4);
     TEST("LEAU", ",S", 0x33, 0xE4);
-    TEST("LEAS", ",X", 0x32, 0x84);
+    TEST("LEAS", ",X",             0x32, 0x84);
+    NMEM("LEAS", "<<0,X", "<<0,X", 0x32);
 
     TEST("NEG",  ",X", 0x60, 0x84);
     TEST("COM",  ",X", 0x63, 0x84);
@@ -532,7 +542,6 @@ static void test_indexed() {
     TEST("JSR",  "[,X++]", 0xAD, 0x91);
 
     if (is6309()) {
-        // HD6309
         TEST("SBCD", ",W",     0x10, 0xA2, 0x8F);
         TEST("ANDD", ",W++",   0x10, 0xA4, 0xCF);
         TEST("BITD", ",--W",   0x10, 0xA5, 0xEF);
@@ -580,7 +589,8 @@ static void test_indexed_mode() {
     TEST("LDA", "[,X]", 0xA6, 0x94);
     TEST("LDA", "[,Y]", 0xA6, 0xB4);
     TEST("LDA", "[,U]", 0xA6, 0xD4);
-    TEST("LDA", "[,S]", 0xA6, 0xF4);
+    TEST("LDA", "[,S]",           0xA6, 0xF4);
+    NMEM("LDA", "<<0,X", "<<0,X", 0xA6);
 
     TEST("LDA", "<<0,X", 0xA6, 0x00);
     TEST("LDA", "<<0,Y", 0xA6, 0x20);
@@ -726,7 +736,8 @@ static void test_indexed_mode() {
     ATEST(0x1000, "LDA",   "$0F83,PCR",  0xA6, 0x8C, 0x80);
     ATEST(0x1000, "LDA",  "[$1003,PCR]", 0xA6, 0x9C, 0x00);
     ATEST(0x1000, "LDA",  "[$1082,PCR]", 0xA6, 0x9C, 0x7F);
-    ATEST(0x1000, "LDA",  "[$0F83,PCR]", 0xA6, 0x9C, 0x80);
+    ATEST(0x1000, "LDA",  "[$0F83,PCR]",               0xA6, 0x9C, 0x80);
+    ANMEM(0x1000, "LDA",  "[$1002,PCR]", "$1002,PCR]", 0xA6, 0x9C);
 
     ATEST(0x1000, "LDA",  ">$1003,PCR",  0xA6, 0x8D, 0xFF, 0xFF);
     ATEST(0x1000, "LDA",  ">$1004,PCR",  0xA6, 0x8D, 0x00, 0x00);
@@ -744,8 +755,8 @@ static void test_indexed_mode() {
     ATEST(0x1000, "LDA", "[>$0F84,PCR]", 0xA6, 0x9D, 0xFF, 0x80);
     ATEST(0x1000, "LDA",  "[$9003,PCR]", 0xA6, 0x9D, 0x7F, 0xFF);
 
-    AERRT(0x1000, "LDA",   "$9004,PCR",  OVERFLOW_RANGE, 0xA6, 0x8D, 0x80, 0x00);
-    AERRT(0x1000, "LDA",  "[$9004,PCR]", OVERFLOW_RANGE, 0xA6, 0x9D, 0x80, 0x00);
+    AERRT(0x1000, "LDA",   "$9004,PCR",  OVERFLOW_RANGE, "$9004,PCR", 0xA6, 0x8D, 0x80, 0x00);
+    AERRT(0x1000, "LDA",  "[$9004,PCR]", OVERFLOW_RANGE, "$9004,PCR]", 0xA6, 0x9D, 0x80, 0x00);
 
     disassembler.setOption("relative", "TRUE");
     ATEST(0x1000, "LDA",  "*-125,PCR",  0xA6, 0x8C, 0x80);
@@ -758,23 +769,22 @@ static void test_indexed_mode() {
     ATEST(0x1000, "LDA", "[*+130,PCR]", 0xA6, 0x9C, 0x7F);
 
     ATEST(0x9000, "LDA",  "*-$7FFC,PCR",                  0xA6, 0x8D, 0x80, 0x00);
-    AERRT(0x1000, "LDA",  "*-$7FFC,PCR",  OVERFLOW_RANGE, 0xA6, 0x8D, 0x80, 0x00);
+    AERRT(0x1000, "LDA",  "*-$7FFC,PCR",  OVERFLOW_RANGE, "*-$7FFC,PCR", 0xA6, 0x8D, 0x80, 0x00);
     ATEST(0x1000, "LDA",       ">*,PCR",                  0xA6, 0x8D, 0xFF, 0xFC);
     ATEST(0x1000, "LDA",     ">*+4,PCR",                  0xA6, 0x8D, 0x00, 0x00);
     ATEST(0x1000, "LDA",  "*+$8003,PCR",                  0xA6, 0x8D, 0x7F, 0xFF);
     ATEST(0x9000, "LDA", "[*-$7FFC,PCR]",                 0xA6, 0x9D, 0x80, 0x00);
-    AERRT(0x1000, "LDA", "[*-$7FFC,PCR]", OVERFLOW_RANGE, 0xA6, 0x9D, 0x80, 0x00);
+    AERRT(0x1000, "LDA", "[*-$7FFC,PCR]", OVERFLOW_RANGE, "*-$7FFC,PCR]", 0xA6, 0x9D, 0x80, 0x00);
     ATEST(0x1000, "LDA",      "[>*,PCR]",                 0xA6, 0x9D, 0xFF, 0xFC);
     ATEST(0x1000, "LDA",    "[>*+4,PCR]",                 0xA6, 0x9D, 0x00, 0x00);
     ATEST(0x1000, "LDA", "[*+$8003,PCR]",                 0xA6, 0x9D, 0x7F, 0xFF);
-    AERRT(0x9000, "LDA", "[*+$8003,PCR]", OVERFLOW_RANGE, 0xA6, 0x9D, 0x7F, 0xFF);
+    AERRT(0x9000, "LDA", "[*+$8003,PCR]", OVERFLOW_RANGE, "*+$8003,PCR]", 0xA6, 0x9D, 0x7F, 0xFF);
     disassembler.setOption("relative", "FALSE");
 
     TEST("LDA", "[$0009]", 0xA6, 0x9F, 0x00, 0x09);
     TEST("LDA", "[$1234]", 0xA6, 0x9F, 0x12, 0x34);
 
     if (is6309()) {
-        // HD6309
         TEST("LDA", "E,X",   0xA6, 0x87);
         TEST("LDA", "F,X",   0xA6, 0x8A);
         TEST("LDA", "W,X",   0xA6, 0x8E);
@@ -842,10 +852,10 @@ static void test_indexed_mode() {
 
     ATEST(0x1000, "LDA",  ">label1004,PCR",              0xA6, 0x8D, 0x00, 0x00);
     ATEST(0x1000, "LDA",   "label9003,PCR",              0xA6, 0x8D, 0x7F, 0xFF);
-    AERRT(0x1000, "LDA",   "$9004,PCR",  OVERFLOW_RANGE, 0xA6, 0x8D, 0x80, 0x00);
+    AERRT(0x1000, "LDA",   "$9004,PCR",  OVERFLOW_RANGE, "$9004,PCR", 0xA6, 0x8D, 0x80, 0x00);
     ATEST(0x1000, "LDA", "[>label1004,PCR]",             0xA6, 0x9D, 0x00, 0x00);
     ATEST(0x1000, "LDA",  "[label9003,PCR]",             0xA6, 0x9D, 0x7F, 0xFF);
-    AERRT(0x1000, "LDA",  "[$9004,PCR]", OVERFLOW_RANGE, 0xA6, 0x9D, 0x80, 0x00);
+    AERRT(0x1000, "LDA",  "[$9004,PCR]", OVERFLOW_RANGE, "$9004,PCR]", 0xA6, 0x9D, 0x80, 0x00);
     ATEST(0x1000, "LDA",  "[label1234]",                 0xA6, 0x9F, 0x12, 0x34);
 }
 
@@ -872,8 +882,8 @@ static void test_indexed_error() {
 static void test_relative() {
     ATEST(0x1000, "BRA", "$1002",                 0x20, 0x00);
     ATEST(0x1000, "BRN", "$1000",                 0x21, 0xFE);
-    AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, 0x20, 0x80);
-    AERRT(0xFFF0, "BRN", "$0071", OVERFLOW_RANGE, 0x21, 0x7F);
+    AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, "$FF92", 0x20, 0x80);
+    AERRT(0xFFF0, "BRN", "$0071", OVERFLOW_RANGE, "$0071", 0x21, 0x7F);
     ATEST(0x1000, "BHI", "$1004",                 0x22, 0x02);
     ATEST(0x1000, "BLS", "$1081",                 0x23, 0x7F);
     ATEST(0x1000, "BHS", "$0F82",                 0x24, 0x80);
@@ -888,15 +898,16 @@ static void test_relative() {
     ATEST(0x1000, "BLT", "$1002",                 0x2D, 0x00);
     ATEST(0x1000, "BGT", "$1002",                 0x2E, 0x00);
     ATEST(0x1000, "BLE", "$1002",                 0x2F, 0x00);
+    ANMEM(0x1000, "BLE", "$1001", "$1001",        0x2F);
     
     ATEST(0x1000, "LBRA", "$1003",                 0x16, 0x00, 0x00);
     ATEST(0x1000, "LBRA", "$9002",                 0x16, 0x7F, 0xFF);
     ATEST(0x9000, "LBRA", "$1003",                 0x16, 0x80, 0x00);
-    AERRT(0x9000, "LBRA", "$1002", OVERFLOW_RANGE, 0x16, 0x7F, 0xFF);
+    AERRT(0x9000, "LBRA", "$1002", OVERFLOW_RANGE, "$1002", 0x16, 0x7F, 0xFF);
     ATEST(0x1000, "LBRN", "$1000",                 0x10, 0x21, 0xFF, 0xFC);
     ATEST(0x1000, "LBHI", "$1008",                 0x10, 0x22, 0x00, 0x04);
     ATEST(0x1000, "LBLS", "$9003",                 0x10, 0x23, 0x7F, 0xFF);
-    AERRT(0x1000, "LBLS", "$9004", OVERFLOW_RANGE, 0x10, 0x23, 0x80, 0x00);
+    AERRT(0x1000, "LBLS", "$9004", OVERFLOW_RANGE, "$9004", 0x10, 0x23, 0x80, 0x00);
     ATEST(0x1000, "LBHS", "$1004",                 0x10, 0x24, 0x00, 0x00);
     ATEST(0x1000, "LBLO", "$1004",                 0x10, 0x25, 0x00, 0x00);
     ATEST(0x1000, "LBNE", "$1004",                 0x10, 0x26, 0x00, 0x00);
@@ -909,8 +920,10 @@ static void test_relative() {
     ATEST(0x1000, "LBLT", "$1004",                 0x10, 0x2D, 0x00, 0x00);
     ATEST(0x1000, "LBGT", "$1004",                 0x10, 0x2E, 0x00, 0x00);
     ATEST(0x1000, "LBLE", "$1004",                 0x10, 0x2F, 0x00, 0x00);
-    AERRT(0x1000, "LBLE", "$9004", OVERFLOW_RANGE, 0x10, 0x2F, 0x80, 0x00);
-    AERRT(0x9000, "LBLE", "$1003", OVERFLOW_RANGE, 0x10, 0x2F, 0x7F, 0xFF);
+    AERRT(0x1000, "LBLE", "$9004", OVERFLOW_RANGE, "$9004", 0x10, 0x2F, 0x80, 0x00);
+    AERRT(0x9000, "LBLE", "$1003", OVERFLOW_RANGE, "$1003", 0x10, 0x2F, 0x7F, 0xFF);
+    ANMEM(0x1000, "LBLE", "$1003",                 "$1003", 0x10, 0x2F, 0x00);
+    ANMEM(0x1000, "LBLE", "$1002",                 "$1002", 0x10, 0x2F);
 
     ATEST(0x1000, "BSR",  "$1042", 0x8D, 0x40);
     ATEST(0x1000, "LBSR", "$1043", 0x17, 0x00, 0x40);
@@ -928,16 +941,16 @@ static void test_relative() {
 
     disassembler.setOption("relative", "enable");
     ATEST(0x2000, "BSR", "*-126",                 0x8D, 0x80);
-    AERRT(0x0010, "BSR", "*-126", OVERFLOW_RANGE, 0x8D, 0x80);
+    AERRT(0x0010, "BSR", "*-126", OVERFLOW_RANGE, "*-126", 0x8D, 0x80);
     ATEST(0x2000, "BSR", "*",                     0x8D, 0xFE);
     ATEST(0x2000, "BSR", "*+2",                   0x8D, 0x00);
     ATEST(0x2000, "BSR", "*+129",                 0x8D, 0x7F);
-    AERRT(0xFFF0, "BSR", "*+129", OVERFLOW_RANGE, 0x8D, 0x7F);
+    AERRT(0xFFF0, "BSR", "*+129", OVERFLOW_RANGE, "*+129", 0x8D, 0x7F);
     ATEST(0x9000, "LBSR", "sub1003",                 0x17, 0x80, 0x00);
     ATEST(0x2000, "LBSR", "*",                       0x17, 0xFF, 0xFD);
     ATEST(0x2000, "LBSR", "*+3",                     0x17, 0x00, 0x00);
     ATEST(0x2000, "LBSR", "*+$8002",                 0x17, 0x7F, 0xFF);
-    AERRT(0x9000, "LBSR", "*+$8002", OVERFLOW_RANGE, 0x17, 0x7F, 0xFF);
+    AERRT(0x9000, "LBSR", "*+$8002", OVERFLOW_RANGE, "*+$8002", 0x17, 0x7F, 0xFF);
 }
 
 static void test_stack() {
@@ -974,68 +987,98 @@ static void test_stack() {
 }
 
 static void test_register() {
-    TEST("EXG", "A, B", 0x1E, 0x89);
-    TEST("TFR", "X, Y", 0x1F, 0x12);
+    TEST("EXG", "A, B",   0x1E, 0x89);
+    TEST("EXG", "B, CC",  0x1E, 0x9A);
+    TEST("EXG", "CC, DP", 0x1E, 0xAB);
+    TEST("EXG", "DP, A",  0x1E, 0xB8);
 
-    TEST("TFR", "A, B",  0x1F, 0x89);
-    TEST("TFR", "A, CC", 0x1F, 0x8A);
-    TEST("TFR", "A, DP", 0x1F, 0x8B);
-    TEST("TFR", "B, A",  0x1F, 0x98);
-    TEST("TFR", "CC, A", 0x1F, 0xA8);
-    TEST("TFR", "DP, A", 0x1F, 0xB8);
+    TEST("EXG", "D, X",   0x1E, 0x01);
+    TEST("EXG", "X, Y",   0x1E, 0x12);
+    TEST("EXG", "Y, U",   0x1E, 0x23);
+    TEST("EXG", "U, SP",  0x1E, 0x34);
+    TEST("EXG", "SP, PC", 0x1E, 0x45);
+    TEST("EXG", "PC, D",  0x1E, 0x50);
 
-    TEST("TFR", "D, X",  0x1F, 0x01);
-    TEST("TFR", "D, Y",  0x1F, 0x02);
-    TEST("TFR", "D, U",  0x1F, 0x03);
-    TEST("TFR", "D, S",  0x1F, 0x04);
-    TEST("TFR", "D, PC", 0x1F, 0x05);
-    TEST("TFR", "X, D",  0x1F, 0x10);
-    TEST("TFR", "Y, D",  0x1F, 0x20);
-    TEST("TFR", "U, D",  0x1F, 0x30);
-    TEST("TFR", "S, D",  0x1F, 0x40);
-    TEST("TFR", "PC, D", 0x1F, 0x50);
+    ERRT("EXG", "A, X",   ILLEGAL_SIZE, "X",  0x1E, 0x81);
+    ERRT("EXG", "PC, DP", ILLEGAL_SIZE, "DP", 0x1E, 0x5B);
+    NMEM("EXG", "D, D",               "D, D", 0x1E);
+
+    TEST("TFR", "A, B",   0x1F, 0x89);
+    TEST("TFR", "B, CC",  0x1F, 0x9A);
+    TEST("TFR", "CC, DP", 0x1F, 0xAB);
+    TEST("TFR", "DP, A",  0x1F, 0xB8);
+
+    TEST("TFR", "D, X",   0x1F, 0x01);
+    TEST("TFR", "X, Y",   0x1F, 0x12);
+    TEST("TFR", "Y, U",   0x1F, 0x23);
+    TEST("TFR", "U, SP",  0x1F, 0x34);
+    TEST("TFR", "SP, PC", 0x1F, 0x45);
+    TEST("TFR", "PC, D",  0x1F, 0x50);
+
+    ERRT("TFR", "A, X",   ILLEGAL_SIZE, "X",  0x1F, 0x81);
+    ERRT("TFR", "PC, DP", ILLEGAL_SIZE, "DP", 0x1F, 0x5B);
+    NMEM("TFR", "D, D",               "D, D", 0x1F);
 
     if (is6309()) {
-        // HD6309
-        TEST("ADDR", "A, B", 0x10, 0x30, 0x89);
-        TEST("ADCR", "A, B", 0x10, 0x31, 0x89);
-        TEST("SUBR", "A, B", 0x10, 0x32, 0x89);
-        TEST("SBCR", "A, B", 0x10, 0x33, 0x89);
-        TEST("ANDR", "A, B", 0x10, 0x34, 0x89);
-        TEST("ORR",  "A, B", 0x10, 0x35, 0x89);
-        TEST("EORR", "A, B", 0x10, 0x36, 0x89);
-        TEST("CMPR", "A, B", 0x10, 0x37, 0x89);
+        TEST("EXG", "Z, E", 0x1E, 0xCE);
+        TEST("EXG", "E, F", 0x1E, 0xEF);
+        TEST("EXG", "F, Z", 0x1E, 0xFD);
 
-        TEST("TFR", "A, Z",  0x1F, 0x8C);
-        TEST("TFR", "A, Z",  0x1F, 0x8D);
-        TEST("TFR", "A, E",  0x1F, 0x8E);
-        TEST("TFR", "A, F",  0x1F, 0x8F);
-        TEST("TFR", "Z, A",  0x1F, 0xC8);
-        TEST("TFR", "Z, A",  0x1F, 0xD8);
-        TEST("TFR", "E, A",  0x1F, 0xE8);
-        TEST("TFR", "F, A",  0x1F, 0xF8);
+        TEST("EXG", "W, V", 0x1E, 0x67);
+        TEST("EXG", "V, W", 0x1E, 0x76);
+        TEST("EXG", "Z, V", 0x1E, 0xC7);
+        TEST("EXG", "W, Z", 0x1E, 0x6D);
 
-        TEST("TFR", "D, W",  0x1F, 0x06);
-        TEST("TFR", "D, V",  0x1F, 0x07);
-        TEST("TFR", "W, D",  0x1F, 0x60);
-        TEST("TFR", "V, D",  0x1F, 0x70);
-        TEST("TFR", "W, PC", 0x1F, 0x65);
-        TEST("TFR", "S, W",  0x1F, 0x46);
-        TEST("TFR", "Z, V",  0x1F, 0xC7);
-        TEST("TFR", "X, Z",  0x1F, 0x1D);
+        TEST("TFR", "Z, E", 0x1F, 0xCE);
+        TEST("TFR", "E, F", 0x1F, 0xEF);
+        TEST("TFR", "F, Z", 0x1F, 0xFD);
+
+        TEST("TFR", "W, V", 0x1F, 0x67);
+        TEST("TFR", "V, W", 0x1F, 0x76);
+        TEST("TFR", "Z, V", 0x1F, 0xC7);
+        TEST("TFR", "W, Z", 0x1F, 0x6D);
+
+        TEST("ADDR", "A, B",   0x10, 0x30, 0x89);
+        TEST("ADCR", "B, CC",  0x10, 0x31, 0x9A);
+        TEST("SUBR", "CC, DP", 0x10, 0x32, 0xAB);
+        TEST("SBCR", "DP, Z",  0x10, 0x33, 0xBC);
+        TEST("ANDR", "Z, E",   0x10, 0x34, 0xCE);
+        TEST("ORR",  "E, F",   0x10, 0x35, 0xEF);
+        TEST("EORR", "F, A",   0x10, 0x36, 0xF8);
+        TEST("CMPR", "Z, A",   0x10, 0x37, 0xD8);
+
+        TEST("ADDR", "D, X",   0x10, 0x30, 0x01);
+        TEST("ADCR", "X, Y",   0x10, 0x31, 0x12);
+        TEST("SUBR", "Y, U",   0x10, 0x32, 0x23);
+        TEST("SBCR", "U, SP",  0x10, 0x33, 0x34);
+        TEST("ANDR", "SP, PC", 0x10, 0x34, 0x45);
+        TEST("ORR",  "PC, W",  0x10, 0x35, 0x56);
+        TEST("EORR", "W, V",   0x10, 0x36, 0x67);
+        TEST("CMPR", "D, Z",   0x10, 0x37, 0x0D);
+        TEST("CMPR", "Z, D",   0x10, 0x37, 0xC0);
+
+        ERRT("ADDR", "A, X",   ILLEGAL_SIZE, "X",  0x10, 0x30, 0x81);
+        ERRT("ADDR", "PC, DP", ILLEGAL_SIZE, "DP", 0x10, 0x30, 0x5B);
     }
 }
 
 static void test_transfer() {
     TEST("TFM", "X+, Y+", 0x11, 0x38, 0x12);
-    TEST("TFM", "X-, Y-", 0x11, 0x39, 0x12);
-    TEST("TFM", "X+, Y",  0x11, 0x3A, 0x12);
-    TEST("TFM", "X, Y+",  0x11, 0x3B, 0x12);
+    TEST("TFM", "Y-, U-", 0x11, 0x39, 0x23);
+    TEST("TFM", "U+, S",  0x11, 0x3A, 0x34);
+    TEST("TFM", "S, D+",  0x11, 0x3B, 0x40);
 
-    TEST("TFM", "D+, X+", 0x11, 0x38, 0x01);
-    TEST("TFM", "Y+, U+", 0x11, 0x38, 0x23);
-    TEST("TFM", "U+, S+", 0x11, 0x38, 0x34);
-    TEST("TFM", "S+, D+", 0x11, 0x38, 0x40);
+    ERRT("TFM", "PC+, D+", ILLEGAL_REGISTER, "PC+, D+", 0x11, 0x38, 0x50);
+    ERRT("TFM", "W+, D+",  ILLEGAL_REGISTER,  "W+, D+", 0x11, 0x38, 0x60);
+    ERRT("TFM", "V+, D+",  ILLEGAL_REGISTER,  "V+, D+", 0x11, 0x38, 0x70);
+    ERRT("TFM", "D+, A+",  ILLEGAL_REGISTER,      "A+", 0x11, 0x38, 0x08);
+    ERRT("TFM", "D+, B+",  ILLEGAL_REGISTER,      "B+", 0x11, 0x38, 0x09);
+    ERRT("TFM", "D+, CC+", ILLEGAL_REGISTER,     "CC+", 0x11, 0x38, 0x0A);
+    ERRT("TFM", "D+, DP+", ILLEGAL_REGISTER,     "DP+", 0x11, 0x38, 0x0B);
+    ERRT("TFM", "D+, Z+",  ILLEGAL_REGISTER,      "Z+", 0x11, 0x38, 0x0C);
+    ERRT("TFM", "D+, Z+",  ILLEGAL_REGISTER,      "Z+", 0x11, 0x38, 0x0D);
+    ERRT("TFM", "D+, E+",  ILLEGAL_REGISTER,      "E+", 0x11, 0x38, 0x0E);
+    ERRT("TFM", "D+, F+",  ILLEGAL_REGISTER,      "F+", 0x11, 0x38, 0x0F);
 }
 
 static void test_bit_position() {
@@ -1066,7 +1109,7 @@ static void test_bit_position() {
 }
 
 static void test_illegal_mc6809() {
-    const uint8_t p00_illegals[] = {
+    static constexpr Config::opcode_t p00_illegals[] = {
         0x01, 0x02, 0x05, 0x0b,
         0x14, 0x15, 0x18, 0x1b,
         0x38, 0x3e,
@@ -1077,10 +1120,10 @@ static void test_illegal_mc6809() {
         0x87, 0x8f,
         0xc7, 0xcd, 0xcf,
     };
-    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        UNKN(p00_illegals[idx]);
+    for (const auto opc : p00_illegals)
+        UNKN(opc);
 
-    const uint8_t p10_legals[] = {
+    static constexpr Config::opcode_t p10_legals[] = {
         0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
         0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
         0x3f,
@@ -1091,30 +1134,34 @@ static void test_illegal_mc6809() {
         0xce,
         0xde, 0xdf,
         0xee, 0xef,
-        0xfe, 0xff,
+        0xfe, 0xff, 0
     };
-    uint8_t idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
-            UNKN(0x10, uint8_t(opc));
-        else idx++;
+    Config::opcode_t opc = 0;
+    for (const auto legal : p10_legals) {
+        while (opc != legal) {
+            UNKN(0x10, opc);
+            opc++;
+        }
+        opc++;
     }
 
-    const uint8_t p11_legals[] = {
+    static constexpr Config::opcode_t p11_legals[] = {
         0x3f,
         0x83, 0x8c,
         0x93, 0x9c,
         0xa3, 0xac,
         0xb3, 0xbc,
     };
-    idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
-            UNKN(0x11, uint8_t(opc));
-        else idx++;
+    opc = 0;
+    for (const auto legal : p11_legals) {
+        while (opc != legal) {
+            UNKN(0x11, opc);
+            opc++;
+        }
+        opc++;
     }
 
-    const uint8_t post_illegals[] = {
+    static constexpr Config::opcode_t post_illegals[] = {
         0x87, 0x8a, 0x8e, 0x8f,
         0x90, 0x92,
         0x97, 0x9a, 0x9e,
@@ -1128,12 +1175,12 @@ static void test_illegal_mc6809() {
         0xf0, 0xf2,
         0xf7, 0xfa, 0xfe, 0xff,
     };
-    for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
-        ERRT("LDA", "", UNKNOWN_POSTBYTE, 0xA6, post_illegals[idx]);
+    for (const auto post : post_illegals)
+        ERRT("LDA", "", UNKNOWN_POSTBYTE, "", 0xA6, post);
 }
 
 static void test_illegal_hd6309() {
-    const uint8_t p00_illegals[] = {
+    static constexpr Config::opcode_t p00_illegals[] = {
         0x15, 0x1b,
         0x38, 0x3e,
         0x41, 0x42, 0x45, 0x4b, 0x4e,
@@ -1141,10 +1188,10 @@ static void test_illegal_hd6309() {
         0x87, 0x8f,
         0xc7, 0xcf,
     };
-    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        UNKN(p00_illegals[idx]);
+    for (const auto opc : p00_illegals)
+        UNKN(opc);
 
-    const uint8_t p10_legals[] = {
+    static constexpr Config::opcode_t p10_legals[] = {
         0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
         0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f,
         0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
@@ -1163,16 +1210,18 @@ static void test_illegal_hd6309() {
         0xce,
         0xdc, 0xdd, 0xde, 0xdf,
         0xec, 0xed, 0xee, 0xef,
-        0xfc, 0xfd, 0xfe, 0xff,
+        0xfc, 0xfd, 0xfe, 0xff, 0
     };
-    uint8_t idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p10_legals) || opc < p10_legals[idx])
-            UNKN(0x10, uint8_t(opc));
-        else idx++;
+    Config::opcode_t opc = 0;
+    for (const auto legal : p10_legals) {
+        while (opc != legal) {
+            UNKN(0x10, opc);
+            opc++;
+        }
+        opc++;
     }
 
-    const uint8_t p11_legals[] = {
+    static constexpr Config::opcode_t p11_legals[] = {
         0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
         0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3f,
         0x43, 0x4a, 0x4c, 0x4d, 0x4f,
@@ -1184,20 +1233,22 @@ static void test_illegal_hd6309() {
         0xc0, 0xc1, 0xc6, 0xcb,
         0xd0, 0xd1, 0xd6, 0xd7, 0xdb,
         0xe0, 0xe1, 0xe6, 0xe7, 0xeb,
-        0xf0, 0xf1, 0xf6, 0xf7, 0xfb,
+        0xf0, 0xf1, 0xf6, 0xf7, 0xfb, 0
     };
-    idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p11_legals) || opc < p11_legals[idx])
-            UNKN(0x11, uint8_t(opc));
-        else idx++;
+    opc = 0;
+    for (const auto legal : p11_legals) {
+        while (opc != legal) {
+            UNKN(0x11, opc);
+            opc++;
+        }
+        opc++;
     }
 
-    const uint8_t post_illegals[] = {
+    static constexpr Config::opcode_t post_illegals[] = {
         0x92, 0xb2, 0xbf, 0xd2, 0xdf, 0xf2, 0xff,
     };
-    for (uint8_t idx = 0; idx < sizeof(post_illegals); idx++)
-        ERRT("LDA", "", UNKNOWN_POSTBYTE, 0xA6, post_illegals[idx]);
+    for (const auto post : post_illegals)
+        ERRT("LDA", "", UNKNOWN_POSTBYTE, "", 0xA6, post);
 }
 // clang-format on
 
