@@ -263,8 +263,10 @@ static constexpr Entry TABLE_ED[] PROGMEM = {
     E0(0x45, TEXT_RETN),
     E0(0x4D, TEXT_RETI),
     E1(0x46, TEXT_IM,   M_IMMD),
-    E2(0x47, TEXT_LD,   R_IR,   R_A),
-    E2(0x57, TEXT_LD,   R_A,    R_IR),
+    E2(0x47, TEXT_LD,   R_I,    R_A),
+    E2(0x4F, TEXT_LD,   R_R,    R_A),
+    E2(0x57, TEXT_LD,   R_A,    R_I),
+    E2(0x5F, TEXT_LD,   R_A,    R_R),
     E0(0x67, TEXT_RRD),
     E0(0x6F, TEXT_RLD),
     E0(0xA0, TEXT_LDI),
@@ -287,34 +289,36 @@ static constexpr Entry TABLE_ED[] PROGMEM = {
 
 static constexpr uint8_t INDEX_ED[] PROGMEM = {
       3,  // TEXT_ADC
-     19,  // TEXT_CPD
-     21,  // TEXT_CPDR
-     18,  // TEXT_CPI
-     20,  // TEXT_CPIR
+     21,  // TEXT_CPD
+     23,  // TEXT_CPDR
+     20,  // TEXT_CPI
+     22,  // TEXT_CPIR
       9,  // TEXT_IM
       0,  // TEXT_IN
-     23,  // TEXT_IND
-     25,  // TEXT_INDR
-     22,  // TEXT_INI
-     24,  // TEXT_INIR
+     25,  // TEXT_IND
+     27,  // TEXT_INDR
+     24,  // TEXT_INI
+     26,  // TEXT_INIR
       4,  // TEXT_LD
       5,  // TEXT_LD
      10,  // TEXT_LD
      11,  // TEXT_LD
-     15,  // TEXT_LDD
-     17,  // TEXT_LDDR
-     14,  // TEXT_LDI
-     16,  // TEXT_LDIR
+     12,  // TEXT_LD
+     13,  // TEXT_LD
+     17,  // TEXT_LDD
+     19,  // TEXT_LDDR
+     16,  // TEXT_LDI
+     18,  // TEXT_LDIR
       6,  // TEXT_NEG
-     29,  // TEXT_OTDR
-     28,  // TEXT_OTIR
+     31,  // TEXT_OTDR
+     30,  // TEXT_OTIR
       1,  // TEXT_OUT
-     27,  // TEXT_OUTD
-     26,  // TEXT_OUTI
+     29,  // TEXT_OUTD
+     28,  // TEXT_OUTI
       8,  // TEXT_RETI
       7,  // TEXT_RETN
-     13,  // TEXT_RLD
-     12,  // TEXT_RRD
+     15,  // TEXT_RLD
+     14,  // TEXT_RRD
       2,  // TEXT_SBC
 };
 
@@ -513,8 +517,6 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
         if (((opc >> 3) & 3) == 1)
             return false;  // IM x
         opc &= ~(3 << 3);
-    } else if (dst == R_IR || src == R_IR) {
-        opc &= ~(1 << 3);
     }
     return opc == entry->opCode();
 }

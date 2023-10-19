@@ -144,8 +144,8 @@ void AsmZ80::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, cons
     case M_DR8:
         insn.embed(encodeDataReg(op.reg) << 3);
         return;
-    case R_IR:
-        insn.embed(encodeIrReg(op.reg) << 3);
+    case R_R:
+        insn.embed(0x08);  // no need for R_I
         return;
     case M_VEC:
         if ((val16 & ~0x38) != 0) {
@@ -211,8 +211,10 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = R_IDX;
             break;
         case REG_I:
+            op.mode = R_I;
+            break;
         case REG_R:
-            op.mode = R_IR;
+            op.mode = R_R;
             break;
         case REG_B:
         case REG_D:
@@ -222,7 +224,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
             op.mode = M_SR8;
             break;
         default:
-            op.mode = AddrMode(int8_t(op.reg) + R_BASE);
+            op.mode = AddrMode(op.reg + R_BASE);
             break;
         }
         scan = p;
@@ -252,13 +254,9 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
                 op.mode = I_IDX;
                 break;
             case REG_HL:
-                op.mode = I_HL;
-                break;
             case REG_SP:
-                op.mode = I_SP;
-                break;
             case REG_C:
-                op.mode = I_C;
+                op.mode = AddrMode(op.reg + I_BASE);
                 break;
             default:
                 return op.setError(regp, REGISTER_NOT_ALLOWED);

@@ -32,60 +32,61 @@ DisZ80::DisZ80(const ValueFormatter::Plugins &plugins) : Disassembler(plugins), 
     reset();
 }
 
-StrBuffer &DisZ80::outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits) {
-    return outHex(out.letter('('), addr, bits).letter(')');
-}
-
-StrBuffer &DisZ80::outIndirectReg(StrBuffer &out, RegName reg) {
+StrBuffer &DisZ80::outIndirectReg(StrBuffer &out, RegName reg) const {
     return outRegName(out.letter('('), reg).letter(')');
 }
 
-StrBuffer &DisZ80::outIndexOffset(StrBuffer &out, RegName reg, int8_t offset) {
-    outRegName(out.letter('('), reg);
+StrBuffer &DisZ80::outIndexOffset(StrBuffer &out, int8_t offset) const {
     if (offset >= 0)
         out.letter('+');
-    return outDec(out, offset, -8).letter(')');
+    return outDec(out, offset, -8);
 }
 
-StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) {
+StrBuffer &DisZ80::outDataReg(StrBuffer &out, RegName reg) const {
     if (reg == REG_HL)
         return outIndirectReg(out, reg);
     return outRegName(out, reg);
 }
 
-Error DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) {
-    const int8_t offset = insn.readByte();
-    const Config::opcode_t opc = insn.readByte();
-    setErrorIf(insn);
+void DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const {
+    const auto offset = static_cast<int8_t>(insn.readByte());
+    const auto offsetError = insn.getError();
+    const auto opc = insn.readByte();
 
     DisInsn ixBit(insn);  // |ixBit| will share internal implementation with |insn|
     ixBit.setOpCode(opc, insn.opCode());
     ixBit.nameBuffer().reset();
-    if (TABLE.searchOpCode(cpuType(), ixBit, out))
-        return setErrorIf(ixBit);
+    if (TABLE.searchOpCode(cpuType(), ixBit, out)) {
+        insn.nameBuffer().reset();
+        insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
+        return;
+    }
 
     if (decodeDataReg(opc) == REG_HL) {
         if (ixBit.dst() == M_BIT)
             outHex(out, (opc >> 3) & 7, 3).comma();
-        outIndexOffset(out, decodeIndexReg(insn.prefix()), offset);
+        outRegName(out.letter('('), decodeIndexReg(insn.prefix()));
+        if (offsetError)
+            insn.setErrorIf(out, offsetError);
+        outIndexOffset(out, offset).letter(')');
     } else {
         insn.nameBuffer().reset();
-        setError(insn.setErrorIf(UNKNOWN_INSTRUCTION));
+        insn.setErrorIf(out, UNKNOWN_INSTRUCTION);
     }
-    return getError();
 }
 
-Error DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) {
+void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
-    setErrorIf(insn);
     const auto base = insn.address() + insn.length();
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setError(out, error);
     outRelAddr(out, target, insn.address(), 8);
-    return getError();
 }
 
-Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
-    Config::opcode_t opc = insn.opCode();
+void DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    auto opc = insn.opCode();
     switch (mode) {
     case M_IM8:
         outHex(out, insn.readByte(), 8);
@@ -94,124 +95,106 @@ Error DisZ80::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outHex(out, insn.readUint16(), 16);
         break;
     case M_ABS:
-        outIndirectAddr(out, insn.readUint16(), 16);
+        out.letter('(');
+        outAbsAddr(out, insn.readUint16()).letter(')');
         break;
     case M_IOA:
-        outIndirectAddr(out, insn.readByte(), 8);
+        out.letter('(');
+        outHex(out, insn.readByte(), 8).letter(')');
         break;
     case M_IDX:
-        outIndexOffset(out, decodeIndexReg(insn.prefix()), insn.readByte());
+        outRegName(out.letter('('), decodeIndexReg(insn.prefix()));
+        outIndexOffset(out, insn.readByte()).letter(')');
         break;
     case M_CC4:
         outCcName(out, decodeCcName((opc >> 3) & 3));
-        return OK;
+        break;
     case M_CC8:
         outCcName(out, decodeCcName(opc >> 3));
-        return OK;
+        break;
     case M_REL:
-        return decodeRelative(insn, out);
+        decodeRelative(insn, out);
+        break;
     case M_R16:
     case M_NOHL:
     case M_R16X:
         outRegName(out, decodePointerReg(opc >> 4, insn.prefix()));
-        return OK;
+        break;
     case M_STK:
         outRegName(out, decodeStackReg(opc >> 4));
-        return OK;
-    case I_PTR:
-        outIndirectReg(out, decodeIndirectBase(opc >> 4));
-        return OK;
+        break;
     case M_SRC:
     case M_SR8:
         outDataReg(out, decodeDataReg(opc));
-        return OK;
+        break;
     case M_DST:
     case M_DR8:
         outDataReg(out, decodeDataReg(opc >> 3));
-        return OK;
+        break;
     case M_VEC:
         outHex(out, opc & 0x38, 8);
-        return OK;
+        break;
     case M_BIT:
         outHex(out, (opc >> 3) & 7, 3);
-        return OK;
+        break;
     case M_IMMD:
         opc = (opc >> 3) & 3;
-        if (opc == 1)
-            return setError(UNKNOWN_INSTRUCTION);
         if (opc)
             opc--;
         out.letter(opc + '0');
-        return OK;
-    case R_IR:
-        outRegName(out, decodeIrReg(opc >> 3));
-        return OK;
+        break;
     case R_IDX:
         outRegName(out, decodeIndexReg(insn.prefix()));
-        return OK;
+        break;
     case R_A:
-        outRegName(out, REG_A);
-        return OK;
     case R_DE:
-        outRegName(out, REG_DE);
-        return OK;
     case R_HL:
-        outRegName(out, REG_HL);
-        return OK;
     case R_SP:
-        outRegName(out, REG_SP);
-        return OK;
     case R_AF:
-        outRegName(out, REG_AF);
-        return OK;
     case R_AFP:
-        outRegName(out, REG_AFP);
-        return OK;
+    case R_I:
+    case R_R:
     case R_IM:
-        outRegName(out, REG_IM);
-        return OK;
+        outRegName(out, RegName(mode - R_BASE));
+        break;
+    case I_PTR:
+        outIndirectReg(out, decodeIndirectBase(opc >> 4));
+        break;
     case I_IDX:
         outIndirectReg(out, decodeIndexReg(insn.prefix()));
-        return OK;
-    case I_C:
-        outIndirectReg(out, REG_C);
-        return OK;
+        break;
     case I_HL:
-        outIndirectReg(out, REG_HL);
-        return OK;
     case I_SP:
-        outIndirectReg(out, REG_SP);
-        return OK;
+    case I_C:
+        outIndirectReg(out,RegName(mode - I_BASE));
+        break;
     default:
-        return OK;
+        break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
-    if (TABLE.isPrefix(cpuType(), opCode)) {
-        const auto prefix = opCode;
-        opCode = insn.readByte();
-        insn.setOpCode(opCode, prefix);
+    DisInsn insn(_insn, memory, out);
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
+    if (TABLE.isPrefix(cpuType(), opc)) {
+        insn.setOpCode(insn.readByte(), opc);
+        if (insn.getError())
+            return setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();
-    if (dst == M_NONE)
-        return OK;
-    if (dst == T_IXB)
-        return decodeIndexedBitOp(insn, out);
-    if (decodeOperand(insn, out, dst))
-        return getError();
-    const auto src = insn.src();
-    if (src == M_NONE)
-        return OK;
-    out.comma();
-    return decodeOperand(insn, out, src);
+    if (dst == T_IXB) {
+        decodeIndexedBitOp(insn, out);
+    } else if (dst != M_NONE) {
+        decodeOperand(insn, out, dst);
+        const auto src = insn.src();
+        if (src != M_NONE)
+            decodeOperand(insn, out.comma(), src);
+    }
+    return setError(insn);
 }
 
 }  // namespace z80

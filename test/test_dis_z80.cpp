@@ -159,7 +159,6 @@ static void test_move_inherent() {
     TEST("LD", "A, (DE)", 0x1A);
 
     if (isZ80()) {
-        // Z80
         TEST("LD", "I, A", 0xED, 0x47);
         TEST("LD", "R, A", 0xED, 0x4F);
         TEST("LD", "A, I", 0xED, 0x57);
@@ -193,11 +192,14 @@ static void test_move_immediate() {
     TEST("LD", "L, 0F6H", 0x2E, 0xF6);
     TEST("LD", "(HL), 0F6H", 0x36, 0xF6);
     TEST("LD", "A, 0FEH",    0x3E, 0xFE);
+    NMEM("LD", "A, 0",  "0", 0x3E);
 
-    TEST("LD",  "BC, 0BEEFH", 0x01, 0xEF, 0xBE);
-    TEST("LD",  "DE, 1234H",  0x11, 0x34, 0x12);
-    TEST("LD",  "HL, 0BEEFH", 0x21, 0xEF, 0xBE);
-    TEST("LD",  "SP, 6789H",  0x31, 0x89, 0x67);
+    TEST("LD", "BC, 0BEEFH", 0x01, 0xEF, 0xBE);
+    TEST("LD", "DE, 1234H",  0x11, 0x34, 0x12);
+    TEST("LD", "HL, 0BEEFH", 0x21, 0xEF, 0xBE);
+    TEST("LD", "SP, 6789H",          0x31, 0x89, 0x67);
+    NMEM("LD", "SP, 0089H", "0089H", 0x31, 0x89);
+    NMEM("LD", "SP, 0",         "0", 0x31);
 }
 
 static void test_move_direct() {
@@ -208,13 +210,15 @@ static void test_move_direct() {
     TEST("LD", "HL, (5678H)",  0x2A, 0x78, 0x56);
 
     if (isZ80()) {
-        // Z80
         TEST("LD", "(0ABCDH), BC", 0xED, 0x43, 0xCD, 0xAB);
         TEST("LD", "(0ABCDH), DE", 0xED, 0x53, 0xCD, 0xAB);
         TEST("LD", "(0ABCDH), SP", 0xED, 0x73, 0xCD, 0xAB);
         TEST("LD", "BC, (5678H)",  0xED, 0x4B, 0x78, 0x56);
         TEST("LD", "DE, (5678H)",  0xED, 0x5B, 0x78, 0x56);
-        TEST("LD", "SP, (5678H)",  0xED, 0x7B, 0x78, 0x56);
+        TEST("LD", "SP, (5678H)",            0xED, 0x7B, 0x78, 0x56);
+        NMEM("LD", "SP, (0078H)",  "0078H)", 0xED, 0x7B, 0x78);
+        NMEM("LD", "SP, (0000H)",  "0000H)", 0xED, 0x7B);
+        NMEM("",   "",                   "", 0xED);
     }
 }
 
@@ -234,7 +238,6 @@ static void test_stack_op() {
     TEST("EX", "DE, HL",   0xEB);
 
     if (isZ80()) {
-        // Z80
         TEST("EX", "AF, AF'", 0x08);
         TEST("EXX", "",       0xD9);
     } else {
@@ -275,7 +278,6 @@ static void test_jump_call() {
     TEST("RET",  "M",  0xF8);
 
     if (isZ80()) {
-        // Z80
         TEST("RETN", "",  0xED, 0x45);
         TEST("RETI", "",  0xED, 0x4D);
 
@@ -395,7 +397,6 @@ static void test_alu_register() {
     TEST("ADD", "HL, SP", 0x39);
 
     if (isZ80()) {
-        // Z80
         TEST("ADC", "HL, BC", 0xED, 0x4A);
         TEST("ADC", "HL, DE", 0xED, 0x5A);
         TEST("ADC", "HL, HL", 0xED, 0x6A);
@@ -423,7 +424,6 @@ static void test_io() {
     TEST("IN",  "A, (0F0H)", 0xDB, 0xF0);
 
     if (isZ80()) {
-        // Z80
         TEST("IN",  "B, (C)", 0xED, 0x40);
         TEST("IN",  "C, (C)", 0xED, 0x48);
         TEST("IN",  "D, (C)", 0xED, 0x50);
@@ -489,7 +489,6 @@ static void test_restart() {
 
 static void test_relative() {
     if (isZ80()) {
-        // Z80
         ATEST(0x1000, "DJNZ", "1000H",    0x10, 0xFE);
         ATEST(0x1000, "JR",   "1000H",    0x18, 0xFE);
         ATEST(0x1000, "JR",   "NZ, 1004H", 0x20, 0x02);
@@ -514,7 +513,6 @@ static void test_relative() {
 
 static void test_shift() {
     if (isZ80()) {
-        // Z80
         TEST("RLC", "B", 0xCB, 0x00);
         TEST("RLC", "C", 0xCB, 0x01);
         TEST("RLC", "D", 0xCB, 0x02);
@@ -585,7 +583,6 @@ static void test_shift() {
 
 static void test_bitop() {
     if (isZ80()) {
-        // Z80
         TEST("BIT", "0, B", 0xCB, 0x40);
         TEST("BIT", "1, C", 0xCB, 0x49);
         TEST("BIT", "2, D", 0xCB, 0x52);
@@ -619,7 +616,6 @@ static void test_bitop() {
 
 static void test_index_registers() {
     if (isZ80()) {
-        // Z80
         TEST("ADD", "IX, BC", 0xDD, 0x09);
         TEST("ADD", "IX, DE", 0xDD, 0x19);
         TEST("ADD", "IX, IX", 0xDD, 0x29);
@@ -653,14 +649,13 @@ static void test_index_registers() {
         UNKN(0xDD);
         UNKN(0xFD);
     }
-        
 }
 
 static void test_indexed() {
     if (isZ80()) {
-        // Z80
-        TEST("INC", "(IX+2)",0xDD, 0x34, 0x02);
-        TEST("DEC", "(IX+2)",0xDD, 0x35, 0x02);
+        TEST("INC", "(IX+2)", 0xDD, 0x34, 0x02);
+        TEST("DEC", "(IX+2)", 0xDD, 0x35, 0x02);
+        NMEM("DEC", "(IX+0)", "+0)", 0xDD, 0x35);
 
         TEST("LD", "B, (IX+2)", 0xDD, 0x46, 0x02);
         TEST("LD", "C, (IX+2)", 0xDD, 0x4E, 0x02);
@@ -678,7 +673,10 @@ static void test_indexed() {
         TEST("LD", "(IX+2), L", 0xDD, 0x75, 0x02);
         TEST("LD", "(IX+2), A", 0xDD, 0x77, 0x02);
 
-        TEST("LD", "(IX+2), 0F6H", 0xDD, 0x36, 0x02, 0xF6);
+        TEST("LD", "(IX+2), 0F6H",        0xDD, 0x36, 0x02, 0xF6);
+        NMEM("LD", "(IX+2), 0",      "0", 0xDD, 0x36, 0x02);
+        NMEM("LD", "(IX+0), 0", "+0), 0", 0xDD, 0x36);
+        NMEM("",   "",                "", 0xDD);
 
         TEST("ADD", "A, (IX+2)", 0xDD, 0x86, 0x02);
         TEST("ADC", "A, (IX+2)", 0xDD, 0x8E, 0x02);
@@ -726,7 +724,6 @@ static void test_indexed() {
 
 static void test_shift_indexed() {
     if (isZ80()) {
-        // Z80
         TEST("RLC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
         TEST("RRC", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
         TEST("RL",  "(IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
@@ -734,6 +731,9 @@ static void test_shift_indexed() {
         TEST("SLA", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x26);
         TEST("SRA", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x2E);
         TEST("SRL", "(IX+127)", 0xDD, 0xCB, 0x7F, 0x3E);
+        NMEM("",    "",     "", 0xDD, 0xCB, 0x7F);
+        NMEM("",    "",     "", 0xDD, 0xCB);
+        NMEM("",    "",     "", 0xDD);
 
         TEST("RLC", "(IY-128)", 0xFD, 0xCB, 0x80, 0x06);
         TEST("RRC", "(IY-128)", 0xFD, 0xCB, 0x80, 0x0E);
@@ -750,7 +750,6 @@ static void test_shift_indexed() {
 
 static void test_bitop_indexed() {
     if (isZ80()) {
-        // Z80
         TEST("BIT", "0, (IX-128)", 0xDD, 0xCB, 0x80, 0x46);
         TEST("RES", "1, (IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
         TEST("SET", "2, (IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
@@ -758,6 +757,9 @@ static void test_bitop_indexed() {
         TEST("BIT", "5, (IY+127)", 0xFD, 0xCB, 0x7F, 0x6E);
         TEST("RES", "6, (IY+127)", 0xFD, 0xCB, 0x7F, 0xB6);
         TEST("SET", "7, (IY+127)", 0xFD, 0xCB, 0x7F, 0xFE);
+        NMEM("",    "",  "",       0xFD, 0xCB, 0x7F);
+        NMEM("",    "",  "",       0xFD, 0xCB);
+        NMEM("",    "",  "",       0xFD);
     } else {
         UNKN(0xDD);
         UNKN(0xFD);
@@ -776,29 +778,22 @@ static void test_illegal_i8080() {
     UNKN(0x38);
     UNKN(0xD9);
     UNKN(0xDD);
-    if (v30emu()) {
-        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (opc == 0xED || opc == 0xFD)
-                continue;
-            UNKN(0xED, (uint8_t)opc);
-        }
-    } else {
+    if (!v30emu()) {
         UNKN(0xED);
+        UNKN(0xFD);
     }
-    UNKN(0xFD);
 }
 
 static void test_illegal_z80() {
-    for (uint8_t opc = 0x30; opc < 0x38; opc++)
+    for (Config::opcode_t opc = 0x30; opc < 0x38; opc++)
         UNKN(0xCB, opc);
-
-    for (uint8_t opc = 0x00; opc < 0x40; opc++)
+    for (Config::opcode_t opc = 0x00; opc < 0x40; opc++)
         UNKN(0xED, opc);
-    for (uint8_t opc = 0x7C; opc < 0xA0; opc++)
+    for (Config::opcode_t opc = 0x7C; opc < 0xA0; opc++)
         UNKN(0xED, opc);
-    for (uint8_t opc = 0xBC; opc; opc++)
+    for (Config::opcode_t opc = 0xBC; opc; opc++)
         UNKN(0xED, opc);
-    const uint8_t ed_illegals[] = {
+    static constexpr Config::opcode_t ed_illegals[] = {
         0x4C, 0x4E,
         0x54, 0x55, 0x5C, 0x5D,
         0x63, 0x64, 0x65, 0x66, 0x6B, 0x6C, 0x6D, 0x6E,
@@ -806,45 +801,44 @@ static void test_illegal_z80() {
         0xA4, 0xA5, 0xA6, 0xA7, 0xAC, 0xAD, 0xAE, 0xAF,
         0xB4, 0xB5, 0xB6, 0xB7,
     };
-    for (size_t idx = 0; idx < sizeof(ed_illegals); idx++) {
-        UNKN(0xED, ed_illegals[idx]);
-    }
+    for (const auto opc : ed_illegals)
+        UNKN(0xED, opc);
 
-    const uint8_t ddfd_legals[] = {
+    static constexpr Config::opcode_t ddfd_legals[] = {
         0x09, 0x19, 0x21, 0x22, 0x23, 0x29, 0x2A, 0x2B, 0x34, 0x35, 0x36, 0x39,
         0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E,
         0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x7E,
         0x86, 0x8E, 0x96, 0x9E, 0xA6, 0xAE, 0xB6, 0xBE,
-        0xCB, 0xE1, 0xE3, 0xE5, 0xE9, 0xF9
+        0xCB, 0xE1, 0xE3, 0xE5, 0xE9, 0xF9, 0
     };
-    uint8_t prefix = 0xdd;
-    while (true) {
-        int idx = 0;
-        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (idx == sizeof(ddfd_legals) || opc < ddfd_legals[idx])
-                UNKN(prefix, uint8_t(opc));
-            else idx++;
+    Config::opcode_t opc = 0;
+    for (const auto legal : ddfd_legals) {
+        while (opc != legal) {
+            UNKN(0xDD, opc);
+            UNKN(0xFD, opc);
+            opc++;
         }
-        if (prefix == 0xfd) break;
-        prefix = 0xfd;
+        opc++;
     }
 
-    const uint8_t ddfdcb_legals[] = {
+    static constexpr Config::opcode_t ddfdcb_legals[] = {
         0x06, 0x0E, 0x16, 0x1E, 0x26, 0x2E, 0x3E,
         0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E, 0x76, 0x7E,
         0x86, 0x8E, 0x96, 0x9E, 0xA6, 0xAE, 0xB6, 0xBE,
-        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6, 0xFE,
+        0xC6, 0xCE, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6, 0xFE, 0
     };
-    prefix = 0xdd;
-    while (true) {
-        int idx = 0;
-        for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-            if (idx == sizeof(ddfdcb_legals) || opc < ddfdcb_legals[idx])
-                UNKN(prefix, 0xCB, 0x00, uint8_t(opc));
-            else idx++;
+    opc = 0;
+    for (const auto legal : ddfdcb_legals) {
+        while (opc != legal) {
+            for (Config::opcode_t offset = 0;; offset++) {
+                UNKN(0xDD, 0xCB, offset, opc);
+                UNKN(0xFD, 0xCB, offset, opc);
+                if (offset == 0xFF)
+                    break;
+            }
+            opc++;
         }
-        if (prefix == 0xfd) break;
-        prefix = 0xfd;
+        opc++;
     }
 }
 // clang-format on
