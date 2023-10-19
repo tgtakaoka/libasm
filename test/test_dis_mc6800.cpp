@@ -166,6 +166,7 @@ static void test_inherent() {
         TEST("FDIV", "", 0x03);
         TEST("XGDX", "", 0x8F);
         TEST("STOP", "", 0xCF);
+        NMEM("", "", "", 0x18);
         TEST("INY",  "", 0x18, 0x08);
         TEST("DEY",  "", 0x18, 0x09);
         TEST("TSY",  "", 0x18, 0x30);
@@ -187,7 +188,8 @@ static void test_immediate() {
     TEST("EORA", "#$90", 0x88, 0x90);
     TEST("ADCA", "#$90", 0x89, 0x90);
     TEST("ORAA", "#$90", 0x8A, 0x90);
-    TEST("ADDA", "#$90", 0x8B, 0x90);
+    TEST("ADDA", "#$90",    0x8B, 0x90);
+    NMEM("ADDA", "#0", "0", 0x8B);
 
     TEST("SUBB", "#$90", 0xC0, 0x90);
     TEST("CMPB", "#$90", 0xC1, 0x90);
@@ -202,7 +204,9 @@ static void test_immediate() {
 
     TEST("CPX", "#$90A0", 0x8C, 0x90, 0xA0);
     TEST("LDX", "#$90A0", 0xCE, 0x90, 0xA0);
-    TEST("LDS", "#$90A0", 0x8E, 0x90, 0xA0);
+    TEST("LDS", "#$90A0",          0x8E, 0x90, 0xA0);
+    NMEM("LDS", "#$9000", "$9000", 0x8E, 0x90);
+    NMEM("LDS", "#0",     "0",     0x8E);
 
     if (mb8861()) {
         // MB8861
@@ -218,9 +222,13 @@ static void test_immediate() {
 
     if (m68hc11()) {
         // MC68HC11
-        TEST("CPY",  "#$90A0", 0x18, 0x8C, 0x90, 0xA0);
-        TEST("LDY",  "#$90A0", 0x18, 0xCE, 0x90, 0xA0);
-        TEST("CPD",  "#$90A0", 0x1A, 0x83, 0x90, 0xA0);
+        TEST("CPY", "#$90A0", 0x18, 0x8C, 0x90, 0xA0);
+        TEST("LDY", "#$90A0", 0x18, 0xCE, 0x90, 0xA0);
+        TEST("CPD", "#$90A0", 0x1A, 0x83, 0x90, 0xA0);
+        NMEM("CPD", "#$9000", "$9000", 0x1A, 0x83, 0x90);
+        NMEM("CPD", "#$9000", "$9000", 0x1A, 0x83, 0x90);
+        NMEM("CPD", "#0",     "0",     0x1A, 0x83);
+        NMEM("",    "",       "",      0x1A);
     }
 
     symtab.intern(0x90, "dir90");
@@ -256,7 +264,8 @@ static void test_direct() {
     TEST("EORA", "$90", 0x98, 0x90);
     TEST("ADCA", "$90", 0x99, 0x90);
     TEST("ORAA", "$90", 0x9A, 0x90);
-    TEST("ADDA", "$90", 0x9B, 0x90);
+    TEST("ADDA", "$90",        0x9B, 0x90);
+    NMEM("ADDA", "$00", "$00", 0x9B);
 
     TEST("SUBB", "$90", 0xD0, 0x90);
     TEST("CMPB", "$90", 0xD1, 0x90);
@@ -290,7 +299,9 @@ static void test_direct() {
         TEST("CPY", "$90", 0x18, 0x9C, 0x90);
         TEST("LDY", "$90", 0x18, 0xDE, 0x90);
         TEST("STY", "$90", 0x18, 0xDF, 0x90);
-        TEST("CPD", "$90", 0x1A, 0x93, 0x90);
+        TEST("CPD", "$90",        0x1A, 0x93, 0x90);
+        NMEM("CPD", "$00", "$00", 0x1A, 0x93);
+        NMEM("",    "",    "",    0x1A);
     }
 
     symtab.intern(0x10, "dir10");
@@ -330,7 +341,9 @@ static void test_extended() {
     TEST("DEC", "$1234",  0x7A, 0x12, 0x34);
     TEST("INC", "$1234",  0x7C, 0x12, 0x34);
     TEST("TST", "$1234",  0x7D, 0x12, 0x34);
-    TEST("CLR", "$1234",  0x7F, 0x12, 0x34);
+    TEST("CLR",  "$1234",           0x7F, 0x12, 0x34);
+    NMEM("CLR",  "$1200",  "$1200", 0x7F, 0x12);
+    NMEM("CLR", ">$0000", ">$0000", 0x7F);
 
     TEST("SUBA", ">$0090", 0xB0, 0x00, 0x90);
     TEST("CMPA", ">$0090", 0xB1, 0x00, 0x90);
@@ -383,7 +396,10 @@ static void test_extended() {
         TEST("CPY", "$1234", 0x18, 0xBC, 0x12, 0x34);
         TEST("LDY", "$1234", 0x18, 0xFE, 0x12, 0x34);
         TEST("STY", "$1234", 0x18, 0xFF, 0x12, 0x34);
-        TEST("CPD", "$1234", 0x1A, 0xB3, 0x12, 0x34);
+        TEST("CPD",  "$1234",           0x1A, 0xB3, 0x12, 0x34);
+        NMEM("CPD",  "$1200",  "$1200", 0x1A, 0xB3, 0x12);
+        NMEM("CPD", ">$0000", ">$0000", 0x1A, 0xB3);
+        NMEM("",    "",       "",       0x1A);
     }
 
     symtab.intern(0x0090, "ext0090");
@@ -428,7 +444,8 @@ static void test_indexed() {
     TEST("DEC", "6,X",   0x6A, 0x06);
     TEST("INC", "127,X", 0x6C, 0x7F);
     TEST("TST", "128,X", 0x6D, 0x80);
-    TEST("CLR", "255,X", 0x6F, 0xFF);
+    TEST("CLR", "255,X",      0x6F, 0xFF);
+    NMEM("CLR", "0,X", "0,X", 0x6F);
 
     TEST("SUBA", "0,X", 0xA0, 0x00);
     TEST("CMPA", "0,X", 0xA1, 0x00);
@@ -476,7 +493,9 @@ static void test_indexed() {
         TEST("CPD", "0,X",   0x1A, 0xA3, 0x00);
         TEST("LDY", "0,X",   0x1A, 0xEE, 0x00);
         TEST("STY", "128,X", 0x1A, 0xEF, 0x80);
-        TEST("CPY", "255,X", 0x1A, 0xAC, 0xFF);
+        TEST("CPY", "255,X",      0x1A, 0xAC, 0xFF);
+        NMEM("CPY", "0,X", "0,X", 0x1A, 0xAC);
+        NMEM("",    "",    "",    0x1A);
     }
 
     symtab.intern(0,   "offset0");
@@ -522,7 +541,9 @@ static void test_indexed_y() {
         TEST("INC", "127,Y", 0x18, 0x6C, 0x7F);
         TEST("TST", "128,Y", 0x18, 0x6D, 0x80);
         TEST("JMP", "254,Y", 0x18, 0x6E, 0xFE);
-        TEST("CLR", "255,Y", 0x18, 0x6F, 0xFF);
+        TEST("CLR", "255,Y",      0x18, 0x6F, 0xFF);
+        NMEM("CLR", "0,Y", "0,Y", 0x18, 0x6F);
+        NMEM("",    "",    "",    0x18);
 
         TEST("SUBA", "0,Y", 0x18, 0xA0, 0x00);
         TEST("CMPA", "0,Y", 0x18, 0xA1, 0x00);
@@ -593,8 +614,9 @@ static void test_indexed_y() {
 
 static void test_relative() {
     ATEST(0x1000, "BRA", "$1002", 0x20, 0x00);
-    AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, 0x20, 0x80);
-    AERRT(0xFFF0, "BRA", "$0071", OVERFLOW_RANGE, 0x20, 0x7F);
+    AERRT(0x0010, "BRA", "$FF92", OVERFLOW_RANGE, "$FF92", 0x20, 0x80);
+    AERRT(0xFFF0, "BRA", "$0071", OVERFLOW_RANGE, "$0071", 0x20, 0x7F);
+    ANMEM(0x1000, "BRA", "$1001",                 "$1001", 0x20);
     ATEST(0x1000, "BHI", "$1004", 0x22, 0x02);
     ATEST(0x1000, "BLS", "$1002", 0x23, 0x00);
     ATEST(0x1000, "BHS", "$1002", 0x24, 0x00);
@@ -640,10 +662,14 @@ static void test_bit_ops() {
     if (m68hc11()) {
         // MC68HC11
         TEST("BSET", "$90, #$88",   0x14, 0x90, 0x88);
-        TEST("BCLR", "$90, #$88",   0x15, 0x90, 0x88);
+        TEST("BCLR", "$90, #$88",          0x15, 0x90, 0x88);
+        NMEM("BCLR", "$90, #0",       "0", 0x15, 0x90);
+        NMEM("BCLR", "$00, #0", "$00, #0", 0x15);
         TEST("BSET", "127,X, #$88", 0x1C, 0x7F, 0x88);
         TEST("BCLR", "128,X, #$88", 0x1D, 0x80, 0x88);
-        TEST("BSET", "255,Y, #$88", 0x18, 0x1C, 0xFF, 0x88);
+        TEST("BSET", "255,Y, #$88",          0x18, 0x1C, 0xFF, 0x88);
+        NMEM("BSET", "255,Y, #0",       "0", 0x18, 0x1C, 0xFF);
+        NMEM("BSET",   "0,Y, #0", "0,Y, #0", 0x18, 0x1C);
         TEST("BCLR", "0,Y, #$88",   0x18, 0x1D, 0x00, 0x88);
 
         ATEST(0x1000, "BRSET", "$90, #$88, $1083",   0x12, 0x90, 0x88, 0x7F);
@@ -659,10 +685,14 @@ static void test_bit_ops() {
         TEST("AIM", "#$88, 0,X",   0x61, 0x88, 0x00);
         TEST("OIM", "#$44, 1,X",   0x62, 0x44, 0x01);
         TEST("EIM", "#$22, 128,X", 0x65, 0x22, 0x80);
-        TEST("TIM", "#$33, 255,X", 0x6B, 0x33, 0xFF);
+        TEST("TIM", "#$33, 255,X",        0x6B, 0x33, 0xFF);
+        NMEM("TIM", "#$33, 0,X",   "0,X", 0x6B, 0x33);
+        NMEM("TIM", "#0, 0,X", "#0, 0,X", 0x6B);
         TEST("BCLR", "0, 1,X",     0x61, 0xFE, 0x01);
         TEST("BSET", "1, 128,X",   0x62, 0x02, 0x80);
-        TEST("BTGL", "6, 255,X",   0x65, 0x40, 0xFF);
+        TEST("BTGL", "6, 255,X",          0x65, 0x40, 0xFF);
+        NMEM("BTGL", "6, 0,X",     "0,X", 0x65, 0x40);
+        NMEM("EIM", "#0, 0,X", "#0, 0,X", 0x65);
         TEST("BTST", "7, 0,X",     0x6B, 0x80, 0x00);
 
         TEST("AIM", "#$88, $90", 0x71, 0x88, 0x90);
@@ -680,7 +710,9 @@ static void test_bit_ops() {
         TEST("NIM", "#$88, 0,X",   0x71, 0x88, 0x00);
         TEST("OIM", "#$44, 1,X",   0x72, 0x44, 0x01);
         TEST("XIM", "#$22, 128,X", 0x75, 0x22, 0x80);
-        TEST("TMM", "#$33, 255,X", 0x7B, 0x33, 0xFF);
+        TEST("TMM", "#$33, 255,X",       0x7B, 0x33, 0xFF);
+        NMEM("TMM", "#$33, 0,X",  "0,X", 0x7B, 0x33);
+        NMEM("TMM", "#0, 0,X", "0, 0,X", 0x7B);
     }
 
     symtab.intern(0x90, "dir90");
@@ -731,7 +763,7 @@ static void test_bit_ops() {
 }
 
 static void test_illegal_mc6800() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03, 0x04, 0x05,
         0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
         0x21, 0x38, 0x3A, 0x3C, 0x3D,
@@ -741,12 +773,12 @@ static void test_illegal_mc6800() {
         0xC3, 0xC7, 0xCC, 0xCD, 0xCF, 0xD3, 0xDC, 0xDD,
         0xE3, 0xEC, 0xED, 0xF3, 0xFC, 0xFD,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_mb8861() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03, 0x04, 0x05,
         0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
         0x21, 0x38, 0x3A, 0x3C, 0x3D,
@@ -756,12 +788,12 @@ static void test_illegal_mb8861() {
         0xC3, 0xC7, 0xCC, 0xCD, 0xCF, 0xD3, 0xDC, 0xDD,
         0xE3, 0xED, 0xF3, 0xFD,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_mc6801() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03,
         0x12, 0x13, 0x14, 0x15, 0x18, 0x1A, 0x1C, 0x1D, 0x1E, 0x1F,
         0x41, 0x42, 0x45, 0x4B, 0x4E, 0x51, 0x52, 0x55, 0x5B, 0x5E,
@@ -769,37 +801,37 @@ static void test_illegal_mc6801() {
         0x87, 0x8F,
         0xC7, 0xCD, 0xCF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_hd6301() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x00, 0x02, 0x03,
         0x12, 0x13, 0x14, 0x15, 0x1C, 0x1D, 0x1E, 0x1F,
         0x41, 0x42, 0x45, 0x4B, 0x4E, 0x51, 0x52, 0x55, 0x5B, 0x5E,
         0x87, 0x8F,
         0xC7, 0xCD, 0xCF,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 
 static void test_illegal_mc68hc11() {
-    const uint8_t p00_illegals[] = {
+    static constexpr Config::opcode_t p00_illegals[] = {
         0x00,
         0x41, 0x42, 0x45, 0x4B, 0x4E, 0x51, 0x52, 0x55, 0x5B, 0x5E,
         0x61, 0x62, 0x65, 0x6B, 0x71, 0x72, 0x75, 0x7B,
         0x87,
         0xC7,
     };
-    for (uint8_t idx = 0; idx < sizeof(p00_illegals); idx++)
-        UNKN(p00_illegals[idx]);
+    for (const auto opc : p00_illegals)
+        UNKN(opc);
 
-    const uint8_t p18_legals[] = {
+    static constexpr Config::opcode_t p18_legals[] = {
         0x08, 0x09,
         0x1c, 0x1d, 0x1e, 0x1f,
-        0x30, 0x35, 0x38, 0x38, 0x3a, 0x3c,
+        0x30, 0x35, 0x38, 0x3a, 0x3c,
         0x60, 0x63, 0x64, 0x66, 0x67,
         0x68, 0x69, 0x6a, 0x6c, 0x6d, 0x6e, 0x6f,
         0x8c, 0x8f, 0x9c,
@@ -808,33 +840,39 @@ static void test_illegal_mc68hc11() {
         0xbc, 0xce, 0xde, 0xdf,
         0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7,
         0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef,
-        0xef, 0xfe, 0xff,
+        0xfe, 0xff, 0
     };
-    uint8_t idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p18_legals) || opc < p18_legals[idx])
-            UNKN(0x18, uint8_t(opc));
-        else idx++;
+    Config::opcode_t opc = 0;
+    for (const auto legal : p18_legals) {
+        while (opc != legal) {
+            UNKN(0x18, opc);
+            opc++;
+        }
+        opc++;
     }
 
-    const uint8_t p1a_legals[] = {
-        0x83, 0x93, 0xa3, 0xac, 0xb3, 0xee, 0xef
+    static constexpr Config::opcode_t p1a_legals[] = {
+        0x83, 0x93, 0xa3, 0xac, 0xb3, 0xee, 0xef, 0
     };
-    idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(p1a_legals) || opc < p1a_legals[idx])
-            UNKN(0x1A, uint8_t(opc));
-        else idx++;
+    opc = 0;
+    for (const auto legal : p1a_legals) {
+        while (opc != legal) {
+            UNKN(0x1A, opc);
+            opc++;
+        }
+        opc++;
     }
 
-    const uint8_t pcd_legals[] = {
-        0xa3, 0xac, 0xee, 0xef
+    static constexpr Config::opcode_t pcd_legals[] = {
+        0xa3, 0xac, 0xee, 0xef, 0
     };
-    idx = 0;
-    for (uint16_t opc = 0x00; opc < 0x100; opc++) {
-        if (idx == sizeof(pcd_legals) || opc < pcd_legals[idx])
-            UNKN(0xCD, uint8_t(opc));
-        else idx++;
+    opc = 0;
+    for (const auto legal : pcd_legals) {
+        while (opc != legal) {
+            UNKN(0xCD, opc);
+            opc++;
+        }
+        opc++;
     }
 }
 // clang-format on
