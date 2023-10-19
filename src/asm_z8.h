@@ -50,7 +50,7 @@ private:
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
+    void encodeRegImmOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
     void encodeAbsolute(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
     void encodeRelative(AsmInsn &insn, const Operand &op);
     void encodeIndexed(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
@@ -60,6 +60,11 @@ private:
             AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
     void encodePostByte(
             AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
+    void encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op);
+    void encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &srcOp);
+    void encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op);
+    void encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op);
+    void encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op);
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;

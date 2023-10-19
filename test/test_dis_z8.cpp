@@ -104,7 +104,9 @@ static void test_absolute() {
     TEST("JP", "NOV, %CECF", 0xCD, 0xCE, 0xCF);
     TEST("JP", "PL, %DEDF",  0xDD, 0xDE, 0xDF);
     TEST("JP", "NZ, %EEEF",  0xED, 0xEE, 0xEF);
-    TEST("JP", "NC, %FEFF",  0xFD, 0xFE, 0xFF);
+    TEST("JP", "NC, %FEFF",          0xFD, 0xFE, 0xFF);
+    NMEM("JP", "NC, %FE00", "%FE00", 0xFD, 0xFE);
+    NMEM("JP", "NC, %0000", "%0000", 0xFD);
     if (z86()) {
         TEST("CALL", "symD7D8",  0xD6, 0xD7, 0xD8);
     } else {
@@ -132,7 +134,8 @@ static void test_relative() {
     ATEST(0x1000, "JR", "NOV, %0FCE", 0xCB, 0xCC);
     ATEST(0x1000, "JR", "PL, %0FDE",  0xDB, 0xDC);
     ATEST(0x1000, "JR", "NZ, %0FEE",  0xEB, 0xEC);
-    ATEST(0x1000, "JR", "NC, %0FFE",  0xFB, 0xFC);
+    ATEST(0x1000, "JR", "NC, %0FFE",          0xFB, 0xFC);
+    ANMEM(0x1000, "JR", "NC, %1001", "%1001", 0xFB);
 
     ATEST(0x1000, "DJNZ", "R0, %100D", 0x0A, 0x0B);
     ATEST(0x1000, "DJNZ", "R1, %101D", 0x1A, 0x1B);
@@ -165,7 +168,9 @@ static void test_relative() {
         ATEST(0x1000, "CPIJE",  "R3, @R12, $",     0xC2, 0xC3, 0xFD);
         ATEST(0x1000, "CPIJE",  "R3, @R12, $+3",   0xC2, 0xC3, 0x00);
         ATEST(0x1000, "CPIJE",  "R3, @R12, $+130", 0xC2, 0xC3, 0x7F);
-        ATEST(0x1000, "CPIJNE", "R3, @R12, $",     0xD2, 0xC3, 0xFD);
+        ATEST(0x1000, "CPIJNE", "R3, @R12, $",                  0xD2, 0xC3, 0xFD);
+        ANMEM(0x1000, "CPIJNE", "R3, @R12, $+2",         "$+2", 0xD2, 0xC3);
+        ANMEM(0x1000, "CPIJNE", "R0, @R0, $+1", "R0, @R0, $+1", 0xD2);
     }
 }
 
@@ -185,7 +190,8 @@ static void test_operand_in_opcode() {
     TEST("LD", "R12, %B9", 0xC8, 0xB9);
     TEST("LD", "R13, %D9", 0xD8, 0xD9);
     TEST("LD", "R14, %D9", 0xE8, 0xD9);
-    TEST("LD", "R15, %F9", 0xF8, 0xF9);
+    TEST("LD", "R15, %F9",          0xF8, 0xF9);
+    NMEM("LD", "R15, >%00", ">%00", 0xF8);
 
     TEST("LD", ">%0A, R0", 0x09, 0x0A);
     TEST("LD", ">%0F, R1", 0x19, 0x0F);
@@ -219,7 +225,8 @@ static void test_operand_in_opcode() {
     TEST("LD", "R12, #%CD", 0xCC, 0xCD);
     TEST("LD", "R13, #%DD", 0xDC, 0xDD);
     TEST("LD", "R14, #%ED", 0xEC, 0xED);
-    TEST("LD", "R15, #%FD", 0xFC, 0xFD);
+    TEST("LD", "R15, #%FD",    0xFC, 0xFD);
+    NMEM("LD", "R15, #0", "0", 0xFC);
 
     TEST("INC", "R0",  0x0E);
     TEST("INC", "R1",  0x1E);
@@ -242,7 +249,8 @@ static void test_operand_in_opcode() {
 static void test_one_operand() {
     TEST("DEC",  ">%01", 0x00, 0x01);
     TEST("DEC",  "R1",   0x00, R(1));
-    TEST("DEC",  "@%05", 0x01, 0x05);
+    TEST("DEC",  "@%05",        0x01, 0x05);
+    NMEM("DEC",  "@%00", "%00", 0x01);
     TEST("DEC",  "@R2",  0x01, R(2));
 
     TEST("RLC",  "%11",  0x10, 0x11);
@@ -324,6 +332,7 @@ static void test_one_operand() {
         TEST("CALL", "@%D6", 0xF4, 0xD6);
         TEST("CALL", "@RR2", 0xF4, R(2));
         TEST("CALL", "#%D6", 0xD4, 0xD6);
+        NMEM("CALL", "#0", "0", 0xD4);
     }
 }
 
@@ -336,7 +345,9 @@ static void test_two_operands() {
     TEST("ADD", ">%07, @%06", 0x05, 0x06, 0x07);
     TEST("ADD", ">%07, @R6",  0x05, R(6), 0x07);
     TEST("ADD", "R7, @%06",   0x05, 0x06, R(7));
-    TEST("ADD", ">%07, #8",   0x06, 0x07, 0x08);
+    TEST("ADD", ">%07, #8",              0x06, 0x07, 0x08);
+    //NMEM("ADD", ">%07, #0",        "0",  0x06, 0x07);
+    //NMEM("ADD", ">%00, #0", ">%00, #0", 0x06);
     TEST("ADD", "R7, #8",     0x06, R(7), 0x08);
     if (z86()) {
         TEST("ADD", "@%08, #9", 0x07, 0x08, 0x09);
@@ -584,7 +595,9 @@ static void test_indexed() {
         TEST("LDE", "-1(RR8), R15",    0xF7, 0xF9, 0xFF);
         TEST("LDC", "R10, %0080(RR8)", 0xA7, 0xA8, 0x80, 0x00);
         TEST("LDE", "R10, %ABAA(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
+        TEST("LDE", "R10, %ABAA",      0xA7, 0xA1, 0xAA, 0xAB);
         TEST("LDC", "%FF80(RR8), R11", 0xB7, 0xB8, 0x80, 0xFF);
+        TEST("LDC", "%FF80, R11",      0xB7, 0xB0, 0x80, 0xFF);
         TEST("LDE", "%BBBA(RR8), R11", 0xB7, 0xB9, 0xBA, 0xBB);
     }
 
@@ -601,41 +614,41 @@ static void test_indexed() {
 
 static void test_setrp() {
     if (z86()) {
-        TEST("SRP", "#%30",                      0x31, 0x30);
-        ERRT("SRP", "#%31", OPERAND_NOT_ALLOWED, 0x31, 0x31);
-        ERRT("SRP", "#%32", OPERAND_NOT_ALLOWED, 0x31, 0x32);
-        ERRT("SRP", "#%33", OPERAND_NOT_ALLOWED, 0x31, 0x33);
-        ERRT("SRP", "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x34);
-        ERRT("SRP", "#%35", OPERAND_NOT_ALLOWED, 0x31, 0x35);
-        ERRT("SRP", "#%36", OPERAND_NOT_ALLOWED, 0x31, 0x36);
-        ERRT("SRP", "#%37", OPERAND_NOT_ALLOWED, 0x31, 0x37);
-        ERRT("SRP", "#%38", OPERAND_NOT_ALLOWED, 0x31, 0x38);
-        ERRT("SRP", "#%39", OPERAND_NOT_ALLOWED, 0x31, 0x39);
-        ERRT("SRP", "#%3A", OPERAND_NOT_ALLOWED, 0x31, 0x3A);
-        ERRT("SRP", "#%3B", OPERAND_NOT_ALLOWED, 0x31, 0x3B);
-        ERRT("SRP", "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3C);
-        ERRT("SRP", "#%3D", OPERAND_NOT_ALLOWED, 0x31, 0x3D);
-        ERRT("SRP", "#%3E", OPERAND_NOT_ALLOWED, 0x31, 0x3E);
-        ERRT("SRP", "#%3F", OPERAND_NOT_ALLOWED, 0x31, 0x3F);
-        TEST("SRP", "#%40",                      0x31, 0x40);
+        TEST("SRP", "#%30",                             0x31, 0x30);
+        ERRT("SRP", "#%31", OPERAND_NOT_ALLOWED, "%31", 0x31, 0x31);
+        ERRT("SRP", "#%32", OPERAND_NOT_ALLOWED, "%32", 0x31, 0x32);
+        ERRT("SRP", "#%33", OPERAND_NOT_ALLOWED, "%33", 0x31, 0x33);
+        ERRT("SRP", "#%34", OPERAND_NOT_ALLOWED, "%34", 0x31, 0x34);
+        ERRT("SRP", "#%35", OPERAND_NOT_ALLOWED, "%35", 0x31, 0x35);
+        ERRT("SRP", "#%36", OPERAND_NOT_ALLOWED, "%36", 0x31, 0x36);
+        ERRT("SRP", "#%37", OPERAND_NOT_ALLOWED, "%37", 0x31, 0x37);
+        ERRT("SRP", "#%38", OPERAND_NOT_ALLOWED, "%38", 0x31, 0x38);
+        ERRT("SRP", "#%39", OPERAND_NOT_ALLOWED, "%39", 0x31, 0x39);
+        ERRT("SRP", "#%3A", OPERAND_NOT_ALLOWED, "%3A", 0x31, 0x3A);
+        ERRT("SRP", "#%3B", OPERAND_NOT_ALLOWED, "%3B", 0x31, 0x3B);
+        ERRT("SRP", "#%3C", OPERAND_NOT_ALLOWED, "%3C", 0x31, 0x3C);
+        ERRT("SRP", "#%3D", OPERAND_NOT_ALLOWED, "%3D", 0x31, 0x3D);
+        ERRT("SRP", "#%3E", OPERAND_NOT_ALLOWED, "%3E", 0x31, 0x3E);
+        ERRT("SRP", "#%3F", OPERAND_NOT_ALLOWED, "%3F", 0x31, 0x3F);
+        TEST("SRP", "#%40",                             0x31, 0x40);
     } else {
-        TEST("SRP",  "#%30",                      0x31, 0x30);
-        TEST("SRP1", "#%30",                      0x31, 0x31);
-        TEST("SRP0", "#%30",                      0x31, 0x32);
-        UNKN(                                     0x31, 0x33);
-        ERRT("SRP",  "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x34);
-        ERRT("SRP1", "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x35);
-        ERRT("SRP0", "#%34", OPERAND_NOT_ALLOWED, 0x31, 0x36);
-        UNKN(                                     0x31, 0x37);
-        ERRT("SRP",  "#%38", OPERAND_NOT_ALLOWED, 0x31, 0x38);
-        TEST("SRP1", "#%38",                      0x31, 0x39);
-        TEST("SRP0", "#%38",                      0x31, 0x3A);
-        UNKN(                                     0x31, 0x3B);
-        ERRT("SRP",  "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3C);
-        ERRT("SRP1", "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3D);
-        ERRT("SRP0", "#%3C", OPERAND_NOT_ALLOWED, 0x31, 0x3E);
-        UNKN(                                     0x31, 0x3F);
-        TEST("SRP",  "#%40",                      0x31, 0x40);
+        TEST("SRP",  "#%30",                             0x31, 0x30);
+        TEST("SRP1", "#%30",                             0x31, 0x31);
+        TEST("SRP0", "#%30",                             0x31, 0x32);
+        UNKN(                                            0x31, 0x33);
+        ERRT("SRP",  "#%34", OPERAND_NOT_ALLOWED, "%34", 0x31, 0x34);
+        ERRT("SRP1", "#%34", OPERAND_NOT_ALLOWED, "%34", 0x31, 0x35);
+        ERRT("SRP0", "#%34", OPERAND_NOT_ALLOWED, "%34", 0x31, 0x36);
+        UNKN(                                            0x31, 0x37);
+        ERRT("SRP",  "#%38", OPERAND_NOT_ALLOWED, "%38", 0x31, 0x38);
+        TEST("SRP1", "#%38",                             0x31, 0x39);
+        TEST("SRP0", "#%38",                             0x31, 0x3A);
+        UNKN(                                            0x31, 0x3B);
+        ERRT("SRP",  "#%3C", OPERAND_NOT_ALLOWED, "%3C", 0x31, 0x3C);
+        ERRT("SRP1", "#%3C", OPERAND_NOT_ALLOWED, "%3C", 0x31, 0x3D);
+        ERRT("SRP0", "#%3C", OPERAND_NOT_ALLOWED, "%3C", 0x31, 0x3E);
+        UNKN(                                            0x31, 0x3F);
+        TEST("SRP",  "#%40",                             0x31, 0x40);
     }
 }
 
