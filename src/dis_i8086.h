@@ -40,17 +40,17 @@ private:
     bool _segOverrideInsn;
     bool _repeatHasStringInst;
 
-    StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0);
-    Error outMemReg(DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mode, uint8_t r_m);
+    StrBuffer &outRegister(StrBuffer &out, RegName name, const char prefix = 0) const;
+    void outMemReg(DisInsn &insn, StrBuffer &out, RegName seg, uint8_t mode, uint8_t r_m) const;
 
-    RegName decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRepeatStr(DisInsn &insn, StrBuffer &out);
-    Error decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos);
-    Error readCodes(DisInsn &insn);
-    Error decodeStringInst(DisInsn &insn, StrBuffer &out);
+    RegName decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeRepeatStr(DisInsn &insn, StrBuffer &out) const;
+    void decodeMemReg(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
+    Error readCodes(DisInsn &insn) const;
+    void decodeStringInst(DisInsn &insn, StrBuffer &out) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
