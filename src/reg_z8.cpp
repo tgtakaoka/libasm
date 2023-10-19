@@ -94,8 +94,6 @@ RegName decodeRegNum(uint8_t num) {
 }
 
 RegName decodePairRegNum(uint8_t num) {
-    if (num % 2)
-        return REG_UNDEF;
     return RegName((num & 0xF) + 16);
 }
 

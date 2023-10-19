@@ -28,36 +28,25 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     AddrMode ext() const { return flags().ext(); }
+    OprPos dstPos() const { return flags().dstPos(); }
+    OprPos srcPos() const { return flags().srcPos(); }
+    OprPos extPos() const { return flags().extPos(); }
     PostFormat postFormat() const { return flags().postFormat(); }
-    bool dstFirst() const { return flags().dstFirst(); }
+    Config::opcode_t postVal() const { return flags().postVal(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        setFlags(Entry::Flags::create(dst, src, ext, ORDER_NONE, PF_NONE));
-    }
-
-    static bool operandInOpCode(Config::opcode_t opCode) {
-        const Config::opcode_t low4 = opCode & 0xF;
-        return low4 >= 0x8 && low4 < 0xF;
+        setFlags(Entry::Flags::create(dst, src, ext, PF_NONE, OP_NONE, OP_NONE, OP_NONE));
     }
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
 
-    uint8_t emitLength() const { return operandPos() + 1; }
-    void emitInsn() { emitByte(opCode(), 0); }
-    void emitOperand8(uint8_t val) { emitByte(val, operandPos()); }
-    void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }
-    void emitOperand16Le(uint16_t val) { emitUint16Le(val, operandPos()); }
-
-private:
-    uint8_t operandPos() const {
-        uint8_t pos = length();
-        return pos == 0 ? 1 : pos;
-    }
+    void emitInsn();
+    void emitOperand(uint16_t val, OprPos pos);
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
     void readPost() {
         if (length() < 2)

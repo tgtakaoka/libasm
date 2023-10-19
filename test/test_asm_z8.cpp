@@ -365,7 +365,7 @@ static void test_one_operand() {
     EZ86("CALL #%D6", OPERAND_NOT_ALLOWED, "#%D6");
     TZ88("CALL #%D6", 0xD4, 0xD6);
     TEST("SRP  #%30", 0x31, 0x30);
-    ERRT("SRP  #%38", OPERAND_NOT_ALLOWED, "#%38", 0x31, 0x30);
+    ERRT("SRP  #%38", OPERAND_NOT_ALLOWED, "#%38", 0x31, 0x38);
     EZ86("SRP0 #%30", UNKNOWN_INSTRUCTION, "SRP0 #%30");
     TZ88("SRP0 #%30", 0x31, 0x32);
     EZ86("SRP1 #%38", UNKNOWN_INSTRUCTION, "SRP1 #%38");
@@ -692,6 +692,9 @@ static void test_indexed() {
     EZ86("LDE R14,-128(RR8)", OPERAND_NOT_ALLOWED, "R14,-128(RR8)");
     EZ86("LDE R14,+128(RR8)", OPERAND_NOT_ALLOWED, "R14,+128(RR8)");
 
+    EZ88("LDC +128(RR0), R15", REGISTER_NOT_ALLOWED, "RR0), R15", 0xB7, 0xF0, 0x80, 0x00);
+    EZ88("LDE R14, +128(RR0)", REGISTER_NOT_ALLOWED, "RR0)",      0xA7, 0xE1, 0x80, 0x00);
+
     symtab.intern(0xC9, "bufC9");
     symtab.intern(-2,   "offm2");
     symtab.intern(0xFFFE, "symm2");
@@ -797,7 +800,7 @@ static void test_setrp() {
     TEST("LD  %01,%0E",  0x18, 0x0E);
     TEST("LD   R4,%0E",  0x48, 0x0E);
     TEST("CLR %0E",      0xB0, 0x0E);
-    TEST("JP   @%04", 0x30, 0x04);
+    TEST("JP   @%04",    0x30, 0x04);
     TEST("option \"reg-alias\", \"enable\"");
 
     TEST("SETRP %21 & %F0");
@@ -861,41 +864,59 @@ static void test_setrp() {
     EZ88("SETRP1 %118", ILLEGAL_OPERAND,     "%118");
 
     TEST("SRP #%10",                              0x31, 0x10);
-    ERRT("SRP #%11", OPERAND_NOT_ALLOWED, "#%11", 0x31, 0x10);
-    ERRT("SRP #%12", OPERAND_NOT_ALLOWED, "#%12", 0x31, 0x10);
-    ERRT("SRP #%13", OPERAND_NOT_ALLOWED, "#%13", 0x31, 0x10);
-    ERRT("SRP #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x10);
-    ERRT("SRP #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x10);
-    ERRT("SRP #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x10);
-    ERRT("SRP #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x10);
-    ERRT("SRP #%18", OPERAND_NOT_ALLOWED, "#%18", 0x31, 0x10);
-    ERRT("SRP #%19", OPERAND_NOT_ALLOWED, "#%19", 0x31, 0x10);
-    ERRT("SRP #%1A", OPERAND_NOT_ALLOWED, "#%1A", 0x31, 0x10);
-    ERRT("SRP #%1B", OPERAND_NOT_ALLOWED, "#%1B", 0x31, 0x10);
-    ERRT("SRP #%1C", OPERAND_NOT_ALLOWED, "#%1C", 0x31, 0x10);
-    ERRT("SRP #%1D", OPERAND_NOT_ALLOWED, "#%1D", 0x31, 0x10);
-    ERRT("SRP #%1E", OPERAND_NOT_ALLOWED, "#%1E", 0x31, 0x10);
-    ERRT("SRP #%1F", OPERAND_NOT_ALLOWED, "#%1F", 0x31, 0x10);
+
+    EZ86("SRP #%11", OPERAND_NOT_ALLOWED, "#%11", 0x31, 0x11);
+    EZ86("SRP #%12", OPERAND_NOT_ALLOWED, "#%12", 0x31, 0x12);
+    EZ86("SRP #%13", OPERAND_NOT_ALLOWED, "#%13", 0x31, 0x13);
+    EZ86("SRP #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x14);
+    EZ86("SRP #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x15);
+    EZ86("SRP #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x16);
+    EZ86("SRP #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x17);
+    EZ86("SRP #%18", OPERAND_NOT_ALLOWED, "#%18", 0x31, 0x18);
+    EZ86("SRP #%19", OPERAND_NOT_ALLOWED, "#%19", 0x31, 0x19);
+    EZ86("SRP #%1A", OPERAND_NOT_ALLOWED, "#%1A", 0x31, 0x1A);
+    EZ86("SRP #%1B", OPERAND_NOT_ALLOWED, "#%1B", 0x31, 0x1B);
+    EZ86("SRP #%1C", OPERAND_NOT_ALLOWED, "#%1C", 0x31, 0x1C);
+    EZ86("SRP #%1D", OPERAND_NOT_ALLOWED, "#%1D", 0x31, 0x1D);
+    EZ86("SRP #%1E", OPERAND_NOT_ALLOWED, "#%1E", 0x31, 0x1E);
+    EZ86("SRP #%1F", OPERAND_NOT_ALLOWED, "#%1F", 0x31, 0x1F);
+
+    EZ88("SRP #%11", OPERAND_NOT_ALLOWED, "#%11", 0x31, 0x10);
+    EZ88("SRP #%12", OPERAND_NOT_ALLOWED, "#%12", 0x31, 0x10);
+    EZ88("SRP #%13", OPERAND_NOT_ALLOWED, "#%13", 0x31, 0x10);
+    EZ88("SRP #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x14);
+    EZ88("SRP #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x14);
+    EZ88("SRP #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x14);
+    EZ88("SRP #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x14);
+    EZ88("SRP #%18", OPERAND_NOT_ALLOWED, "#%18", 0x31, 0x18);
+    EZ88("SRP #%19", OPERAND_NOT_ALLOWED, "#%19", 0x31, 0x18);
+    EZ88("SRP #%1A", OPERAND_NOT_ALLOWED, "#%1A", 0x31, 0x18);
+    EZ88("SRP #%1B", OPERAND_NOT_ALLOWED, "#%1B", 0x31, 0x18);
+    EZ88("SRP #%1C", OPERAND_NOT_ALLOWED, "#%1C", 0x31, 0x1C);
+    EZ88("SRP #%1D", OPERAND_NOT_ALLOWED, "#%1D", 0x31, 0x1C);
+    EZ88("SRP #%1E", OPERAND_NOT_ALLOWED, "#%1E", 0x31, 0x1C);
+    EZ88("SRP #%1F", OPERAND_NOT_ALLOWED, "#%1F", 0x31, 0x1C);
+
     TEST("SRP #%20",                              0x31, 0x20);
 
     TZ88("SRP0 #%10",                              0x31, 0x12);
     EZ88("SRP0 #%11", OPERAND_NOT_ALLOWED, "#%11", 0x31, 0x12);
     EZ88("SRP0 #%12", OPERAND_NOT_ALLOWED, "#%12", 0x31, 0x12);
     EZ88("SRP0 #%13", OPERAND_NOT_ALLOWED, "#%13", 0x31, 0x12);
-    EZ88("SRP0 #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x12);
-    EZ88("SRP0 #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x12);
-    EZ88("SRP0 #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x12);
-    EZ88("SRP0 #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x12);
+    EZ88("SRP0 #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x16);
+    EZ88("SRP0 #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x16);
+    EZ88("SRP0 #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x16);
+    EZ88("SRP0 #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x16);
     TZ88("SRP0 #%18",                              0x31, 0x1A);
 
     TZ88("SRP1 #%10",                              0x31, 0x11);
     EZ88("SRP1 #%11", OPERAND_NOT_ALLOWED, "#%11", 0x31, 0x11);
     EZ88("SRP1 #%12", OPERAND_NOT_ALLOWED, "#%12", 0x31, 0x11);
     EZ88("SRP1 #%13", OPERAND_NOT_ALLOWED, "#%13", 0x31, 0x11);
-    EZ88("SRP1 #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x11);
-    EZ88("SRP1 #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x11);
-    EZ88("SRP1 #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x11);
-    EZ88("SRP1 #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x11);
+    EZ88("SRP1 #%14", OPERAND_NOT_ALLOWED, "#%14", 0x31, 0x15);
+    EZ88("SRP1 #%15", OPERAND_NOT_ALLOWED, "#%15", 0x31, 0x15);
+    EZ88("SRP1 #%16", OPERAND_NOT_ALLOWED, "#%16", 0x31, 0x15);
+    EZ88("SRP1 #%17", OPERAND_NOT_ALLOWED, "#%17", 0x31, 0x15);
     TZ88("SRP1 #%18",                              0x31, 0x19);
 }
 

@@ -26,32 +26,29 @@ namespace libasm {
 namespace z8 {
 
 enum AddrMode : uint8_t {
-    // Those (0~7) happen all operands including extra.
     M_NONE = 0,  // No operand
     M_IM = 1,    // Immediate: #nn
-    M_r = 2,     // Working register: rn
-    M_RA = 3,    // Relative Address: nnnn
-    M_IMb = 4,   // Bit position: #n
-    M_DA = 5,    // Direct Address: nnnn
-    M_R = 6,     // Register: Rn
-    M_RR = 7,    // Register Pair: RRn
-    // Those (6~16)  happen on destination and source operands.
-    M_IR = 8,    // Indirect Register: @Rn
-    M_Ir = 9,    // Indirect Working register: @rn
-    M_IRR = 10,  // Indirect Register Pair: @RRn
-    M_Irr = 11,  // Indirect Working Register Pair: @rrn
-    M_X = 12,    // Indexed: nn(rn)
-    M_cc = 13,   // Condition Code: cc
-    M_rr = 14,   // Working register pair: rrn
-    // Super8
-    M_IML = 15,  // Immediate Long: #nnnn
-    M_XS = 16,   // Indexed Short: nn(rrn)
-    M_XL = 17,   // Indexed Long: nnnn(rrn)
+    M_IMb = 2,   // Bit position: #n
+    M_IML = 3,   // Immediate Long: #nnnn
+    M_r = 4,     // Working register: rn
+    M_Ir = 5,    // Indirect Working register: @rn
+    M_rr = 6,    // Working register pair: rrn
+    M_Irr = 7,   // Indirect Working Register Pair: @rrn
+    M_R = 8,     // Register: Rn
+    M_IR = 9,    // Indirect Register: @Rn
+    M_RR = 10,   // Register Pair: RRn
+    M_IRR = 11,  // Indirect Register Pair: @RRn
+    M_RA = 12,   // Relative Address: nnnn
+    M_DA = 13,   // Direct Address: nnnn
+    M_X = 14,    // Indexed: nn(rn)
+    M_XS = 15,   // Indexed Short: nn(rrn)
+    M_XL = 16,   // Indexed Long: nnnn(rrn)
+    M_cc = 17,   // Condition Code: cc
     // Those (18-) happen only in assembler internal.
     M_W = 18,    // Register or Working register: Rxy x==RP
     M_IW = 19,   // Indirect Register or Working register: @Rxy x==RP
-    M_IWW = 20,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
-    M_WW = 21,   // Register or Working register pair: RRxy: x=RP
+    M_WW = 20,   // Register or Working register pair: RRxy: x=RP
+    M_IWW = 21,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
 };
 
 // Post byte format
@@ -66,35 +63,39 @@ enum PostFormat : uint8_t {
     PF4_1 = 7,    // Least 4 bits are 0001
 };
 
-// Destination and Source order
-enum OprOrder : uint8_t {
-    ORDER_NONE = 0,  // one or no operand.
-    DST_FIRST = 0,   // destination first, source second.
-    SRC_FIRST = 1,   // source first, destination second.
+enum OprPos : uint8_t {
+    OP_NONE = 0,
+    OP_CODE = 1,  // in the instruction high 4-bit
+    OP_BYT1 = 2,  // in the first 8-bit operand
+    OP_BYT2 = 3,  // in the second 8-bit operand
+    OP_B1HI = 4,  // in the high 4-bit of the first 8-bit operand
+    OP_B1LO = 5,  // in the low 4-bit of the first 8-bit operand
+    OP_W1BE = 6,  // in the first 16-bit big endian operand
+    OP_W2BE = 7,  // in the second 16-bit big endian operand
+    OP_W2LE = 8,  // in the second 16-bit little endian operand
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
-        uint8_t _dst;
-        uint8_t _src;
-        uint8_t _ext;
-        uint8_t _fmt;
+        uint16_t _mode;
+        uint16_t _attr;
 
-        static constexpr Flags create(
-                AddrMode dst, AddrMode src, AddrMode ext, OprOrder order, PostFormat post) {
-            return Flags{static_cast<uint8_t>(dst), static_cast<uint8_t>(src),
-                    static_cast<uint8_t>(ext), Entry::fmt(order, post)};
+        static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext,
+                PostFormat postFormat, OprPos dstPos, OprPos srcPos, OprPos extPos) {
+            return Flags{mode(dst, src, ext), attr(dstPos, srcPos, extPos, postFormat)};
         }
-        Flags read() const {
-            return Flags{pgm_read_byte(&_dst), pgm_read_byte(&_src), pgm_read_byte(&_ext),
-                    pgm_read_byte(&_fmt)};
-        }
+        Flags read() const { return Flags{pgm_read_word(&_mode), pgm_read_word(&_attr)}; }
 
-        AddrMode dst() const { return AddrMode(_dst); }
-        AddrMode src() const { return AddrMode(_src); }
-        AddrMode ext() const { return AddrMode(_ext); }
-        PostFormat postFormat() const { return PostFormat(_fmt & post_gm); }
-        bool dstFirst() const { return OprOrder((_fmt >> order_gp) & order_gm) == DST_FIRST; }
+        AddrMode dst() const { return AddrMode((_mode >> dst_gp) & mode_gm); }
+        AddrMode src() const { return AddrMode((_mode >> src_gp) & mode_gm); }
+        AddrMode ext() const { return AddrMode((_mode >> ext_gp) & mode_gm); }
+        OprPos dstPos() const { return OprPos((_attr >> dstPos_gp) & oprPos_gm); }
+        OprPos srcPos() const { return OprPos((_attr >> srcPos_gp) & oprPos_gm); }
+        OprPos extPos() const { return OprPos((_attr >> extPos_gp) & oprPos_gm); }
+        PostFormat postFormat() const {
+            return PostFormat((_attr >> postFormat_gp) & postFormat_gm);
+        }
+        Config::opcode_t postVal() const { return Entry::postVal(postFormat()); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -105,15 +106,45 @@ struct Entry final : entry::Base<Config::opcode_t> {
 private:
     const Flags _flags;
 
-    static constexpr uint8_t fmt(OprOrder order, PostFormat post) {
-        return static_cast<uint8_t>(post & post_gm) |
-               (static_cast<uint8_t>(order & order_gm) << order_gp);
+    static Config::opcode_t postVal(PostFormat postFormat) {
+        static constexpr Config::opcode_t val[] = {
+                0x00,  // PF_NONE
+                0x00,  // PF1_0
+                0x01,  // PF1_1
+                0x00,  // PF2_0
+                0x01,  // PF2_1
+                0x02,  // PF2_2
+                0x00,  // PF4_0
+                0x01,  // PF4_1
+        };
+        return val[postFormat];
     }
 
-    // |fmt|
-    static constexpr uint8_t post_gm = 0x7;
-    static constexpr uint8_t order_gm = 0x1;
-    static constexpr int8_t order_gp = 7;
+    static constexpr uint16_t mode(AddrMode dst, AddrMode src, AddrMode ext) {
+        return (static_cast<uint16_t>(dst) << dst_gp) | (static_cast<uint16_t>(src) << src_gp) |
+               (static_cast<uint16_t>(ext) << ext_gp);
+    }
+
+    static constexpr uint16_t attr(
+            OprPos dstPos, OprPos srcPos, OprPos extPos, PostFormat postFormat) {
+        return (static_cast<uint16_t>(dstPos) << dstPos_gp) |
+               (static_cast<uint16_t>(srcPos) << srcPos_gp) |
+               (static_cast<uint16_t>(extPos) << extPos_gp) |
+               (static_cast<uint16_t>(postFormat) << postFormat_gp);
+    }
+
+    // |_mode|
+    static constexpr uint8_t mode_gm = 0x1F;
+    static constexpr int dst_gp = 0;
+    static constexpr int src_gp = 5;
+    static constexpr int ext_gp = 10;
+    // |_attr|
+    static constexpr uint8_t oprPos_gm = 0xF;
+    static constexpr uint8_t postFormat_gm = 0x7;
+    static constexpr int dstPos_gp = 0;
+    static constexpr int srcPos_gp = 4;
+    static constexpr int extPos_gp = 8;
+    static constexpr int postFormat_gp = 12;
 };
 
 }  // namespace z8

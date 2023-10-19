@@ -37,20 +37,19 @@ private:
 
     bool _useWorkRegister;
 
-    StrBuffer &outConditionCode(StrBuffer &out, Config::opcode_t opCode);
-    StrBuffer &outIndexed(StrBuffer &out, uint16_t base, RegName idx, AddrMode mode);
-    StrBuffer &outRegAddr(StrBuffer &out, uint8_t regAddr, bool indir = false);
-    StrBuffer &outPairAddr(StrBuffer &out, uint8_t regAddr, bool indir = false);
-    StrBuffer &outBitPos(StrBuffer &out, uint8_t bitPos);
+    struct Operand;
 
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeAbsolute(DisInsn &insn, StrBuffer &out, Endian endian = ENDIAN_BIG);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeIndexed(DisInsn &insn, StrBuffer &out, uint8_t opr1);
-    Error decodeIndirectRegPair(DisInsn &insn, StrBuffer &out);
-    Error decodeInOpCode(DisInsn &insn, StrBuffer &out);
-    Error decodeTwoOperands(DisInsn &insn, StrBuffer &out);
-    Error decodePostByte(DisInsn &insn, StrBuffer &out);
+    StrBuffer &outRegAddr(StrBuffer &out, uint8_t regAddr, bool indir = false) const;
+    StrBuffer &outPairAddr(StrBuffer &out, uint8_t regAddr, bool indir = false) const;
+    StrBuffer &outBitPos(StrBuffer &out, uint8_t bitPos) const;
+
+    void readOperands(DisInsn &insn, Operand &dstOp, Operand &srcOp, Operand &extOp) const;
+    void decodeWorkReg(DisInsn &insn, StrBuffer &out, Operand &op) const;
+    void decodeRegAddr(DisInsn &insn, StrBuffer &out, Operand &op) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, Operand &op) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, Operand &op) const;
+    void decodeIndexed(DisInsn &insn, StrBuffer &out, Operand &op) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, Operand &) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

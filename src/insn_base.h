@@ -33,7 +33,9 @@ namespace libasm {
  * General instruction code interface for Assembler and Disassembler.
  */
 struct Insn final {
-    Insn(uint32_t addr) : _address(addr), _length(0) {}
+    Insn(uint32_t addr) : _address(addr), _length(0) {
+        memset(_bytes, 0, sizeof(_bytes));
+    }
 
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
@@ -43,6 +45,7 @@ struct Insn final {
     void reset(uint32_t addr) {
         _address = addr;
         _length = 0;
+        memset(_bytes, 0, sizeof(_bytes));
         _buffer.reset();
     }
     uint32_t align(uint8_t step) {

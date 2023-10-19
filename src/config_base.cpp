@@ -18,10 +18,6 @@
 
 namespace libasm {
 
-bool ConfigBase::overflowInt8(int16_t s16) {
-    return s16 < -128 || s16 >= 128;
-}
-
 bool ConfigBase::overflowInt8(int32_t s32) {
     return s32 < -128 || s32 >= 128;
 }
