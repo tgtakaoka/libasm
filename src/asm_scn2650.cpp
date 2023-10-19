@@ -70,26 +70,6 @@ AsmScn2650::AsmScn2650(const ValueParser::Plugins &plugins)
     reset();
 }
 
-namespace {
-
-constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
-    return addr & ~0x1FFF;  // 8k bytes per page
-}
-
-constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
-    return addr & 0x1FFF;
-}
-
-constexpr Config::uintptr_t inpage(const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
-    return page(addr) | offset(addr + delta);
-}
-
-constexpr Config::uintptr_t inspace(const Config::uintptr_t addr) {
-    return addr < 0x8000;
-}
-
-}  // namespace
-
 Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     // Do not skip preceding spaces.
     op.setAt(scan);
@@ -146,9 +126,10 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
 }
 
 void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) {
-    const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
-    if (!inspace(target))
-        setErrorIf(op, OVERFLOW_RANGE);
+    const auto target = op.getError() ? insn.address() : op.val16;
+    const auto error = checkAddr(target);
+    if (error)
+        setErrorIf(op, error);
     auto opr = target;
     if (op.indir)
         opr |= 0x8000;
@@ -161,10 +142,10 @@ void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) {
 }
 
 void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) {
-    const Config::uintptr_t target = op.getError() ? insn.address() : op.val16;
-    if (!inspace(target))
-        setErrorIf(op, OVERFLOW_RANGE);
-
+    const auto target = op.getError() ? insn.address() : op.val16;
+    const auto error = checkAddr(target);
+    if (error)
+        setErrorIf(op, error);
     if (page(target) != page(insn.address()))
         setErrorIf(op, OVERWRAP_PAGE);
     auto opr = offset(target);

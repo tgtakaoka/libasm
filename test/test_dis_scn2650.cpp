@@ -50,7 +50,8 @@ void test_load_store() {
     TEST("LODI,R0", "H'56'", 0x04, 0x56);
     TEST("LODI,R1", "H'67'", 0x05, 0x67);
     TEST("LODI,R2", "H'78'", 0x06, 0x78);
-    TEST("LODI,R3", "H'89'", 0x07, 0x89);
+    TEST("LODI,R3", "H'89'",  0x07, 0x89);
+    NMEM("LODI,R3", "0", "0", 0x07);
     TEST("LODR,R0", "*H'000B'", 0x08, 0x89);
     TEST("LODR,R1",  "H'000C'", 0x09, 0x0A);
     TEST("LODR,R2",  "H'000D'", 0x0A, 0x0B);
@@ -62,7 +63,9 @@ void test_load_store() {
     TEST("LODA,R2",  "H'0123'", 0x0E, 0x01, 0x23);
     TEST("LODA,R2", "*H'09AB'", 0x0E, 0x89, 0xAB);
     TEST("LODA,R3",  "H'0123'", 0x0F, 0x01, 0x23);
-    TEST("LODA,R3", "*H'09AB'", 0x0F, 0x89, 0xAB);
+    TEST("LODA,R3", "*H'09AB'",             0x0F, 0x89, 0xAB);
+    NMEM("LODA,R3", "*H'0900'", "*H'0900'", 0x0F, 0x89);
+    NMEM("LODA,R3",  "H'0000'",  "H'0000'", 0x0F);
     TEST("LODA,R0",  "H'0345', R0, +", 0x0C, 0x23, 0x45);
     TEST("LODA,R0",  "H'0567', R0, -", 0x0C, 0x45, 0x67);
     TEST("LODA,R0",  "H'0789', R0",    0x0C, 0x67, 0x89);
@@ -85,7 +88,9 @@ void test_load_store() {
     TEST("LODA,R0",  "H'0567', R3, -", 0x0F, 0x45, 0x67);
     TEST("LODA,R0",  "H'1789', R3",    0x0F, 0x77, 0x89);
     TEST("LODA,R0", "*H'0BCD', R3, +", 0x0F, 0xAB, 0xCD);
-    TEST("LODA,R0", "*H'0DEF', R3, -", 0x0F, 0xCD, 0xEF);
+    TEST("LODA,R0", "*H'0DEF', R3, -",                    0x0F, 0xCD, 0xEF);
+    NMEM("LODA,R0", "*H'0D00', R3, -", "*H'0D00', R3, -", 0x0F, 0xCD);
+    NMEM("LODA,R3",  "H'0000'",         "H'0000'",        0x0F);
     TEST("LODA,R0", "*H'1F01', R3",    0x0F, 0xFF, 0x01);
 
     TEST("STRZ,R1", "", 0xC1);
@@ -428,7 +433,8 @@ void test_branch() {
     ATEST(0x1000, "BCTR,LT",  "H'101D'", 0x1A, 0x1B);
     ATEST(0x1000, "BCTR,LT", "*H'103E'", 0x1A, 0xBC);
     ATEST(0x1000, "BCTR,UN",  "H'101E'", 0x1B, 0x1C);
-    ATEST(0x1000, "BCTR,UN", "*H'0FCF'", 0x1B, 0xCD);
+    ATEST(0x1000, "BCTR,UN", "*H'0FCF'",            0x1B, 0xCD);
+    ANMEM(0x1000, "BCTR,UN",  "H'1001'", "H'1001'", 0x1B);
     ATEST(0x1000, "BCTA,EQ",  "H'7D1E'", 0x1C, 0x7D, 0x1E);
     ATEST(0x2000, "BCTA,EQ", "*H'5EF0'", 0x1C, 0xDE, 0xF0);
     ATEST(0x3000, "BCTA,GT",  "H'1E1F'", 0x1D, 0x1E, 0x1F);
@@ -436,7 +442,9 @@ void test_branch() {
     ATEST(0x5000, "BCTA,LT",  "H'1F20'", 0x1E, 0x1F, 0x20);
     ATEST(0x6000, "BCTA,LT", "*H'7012'", 0x1E, 0xF0, 0x12);
     ATEST(0x7000, "BCTA,UN",  "H'2021'", 0x1F, 0x20, 0x21);
-    ATEST(0x0000, "BCTA,UN", "*H'49AB'", 0x1F, 0xC9, 0xAB);
+    ATEST(0x0000, "BCTA,UN", "*H'49AB'",             0x1F, 0xC9, 0xAB);
+    ANMEM(0x0000, "BCTA,UN", "*H'4900'", "*H'4900'", 0x1F, 0xC9);
+    ANMEM(0x0000, "BCTA,UN",  "H'0000'",  "H'0000'", 0x1F);
 
     ATEST(0x1000, "BCFR,EQ",  "H'101B'", 0x98, 0x19);
     ATEST(0x1000, "BCFR,EQ", "*H'101C'", 0x98, 0x9A);
