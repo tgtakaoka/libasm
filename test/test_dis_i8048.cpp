@@ -93,7 +93,8 @@ static void test_accumlator() {
     TEST("ADD", "A, R7",  0x6F);
     TEST("ADD", "A, @R0", 0x60);
     TEST("ADD", "A, @R1", 0x61);
-    TEST("ADD", "A, #37", 0x03, 0x25);
+    TEST("ADD", "A, #37",     0x03, 0x25);
+    NMEM("ADD", "A, #0", "0", 0x03);
 
     TEST("ADDC", "A, R0",  0x78);
     TEST("ADDC", "A, R1",  0x79);
@@ -172,7 +173,8 @@ static void test_io() {
     TEST("ANL",  "P1, #80H", 0x99, 0x80);
     TEST("ANL",  "P2, #40H", 0x9A, 0x40);
     TEST("ORL",  "P1, #20H", 0x89, 0x20);
-    TEST("ORL",  "P2, #10H", 0x8A, 0x10);
+    TEST("ORL",  "P2, #10H",        0x8A, 0x10);
+    NMEM("ORL",  "P2, #00H", "00H", 0x8A);
 
     if (is8048()) {
         TEST("INS",  "A, BUS",    0x08);
@@ -239,7 +241,8 @@ static void test_branch() {
     TEST("JMP",  "034H", 0x04, 0x34);
     TEST("JMPP", "@A",   0xB3);
 
-    ATEST(0xF00, "DJNZ", "R0, 0F34H", 0xE8, 0x34);
+    ATEST(0xF00, "DJNZ", "R0, 0F34H",          0xE8, 0x34);
+    ANMEM(0xF00, "DJNZ", "R0, 0F00H", "0F00H", 0xE8);
     ATEST(0xE00, "DJNZ", "R1, 0E34H", 0xE9, 0x34);
     ATEST(0xD00, "DJNZ", "R2, 0D34H", 0xEA, 0x34);
     ATEST(0xC00, "DJNZ", "R3, 0C34H", 0xEB, 0x34);
@@ -255,7 +258,8 @@ static void test_branch() {
         UNKN(0xE1);
     }
 
-    ATEST(0xF00, "JC",   "0F34H", 0xF6, 0x34);
+    ATEST(0xF00, "JC",   "0F34H",          0xF6, 0x34);
+    ANMEM(0xF00, "JC",   "0F00H", "0F00H", 0xF6);
     ATEST(0xE00, "JNC",  "0E34H", 0xE6, 0x34);
     ATEST(0xD00, "JZ",   "0D34H", 0xC6, 0x34);
     ATEST(0xC00, "JNZ",  "0C34H", 0x96, 0x34);
@@ -280,8 +284,9 @@ static void test_branch() {
 }
 
 static void test_subroutine() {
-    TEST("CALL", "712H", 0xF4, 0x12);
-    TEST("CALL", "034H", 0x14, 0x34);
+    TEST("CALL", "712H",         0xF4, 0x12);
+    TEST("CALL", "034H",         0x14, 0x34);
+    NMEM("CALL", "000H", "000H", 0x14);
     TEST("RET",  "", 0x83);
     TEST("RETR", "", 0x93);
 }
@@ -307,7 +312,8 @@ static void test_move() {
     TEST("MOV", "A, R7",  0xFF);
     TEST("MOV", "A, @R0", 0xF0);
     TEST("MOV", "A, @R1", 0xF1);
-    TEST("MOV", "A, #37", 0x23, 0x25);
+    TEST("MOV", "A, #37",     0x23, 0x25);
+    NMEM("MOV", "A, #0", "0", 0x23);
 
     TEST("MOV", "R0, A",  0xA8);
     TEST("MOV", "R1, A",  0xA9);
