@@ -61,16 +61,17 @@ Error DisF3850::setUseScratchpadName(bool enable) {
     return OK;
 }
 
-Error DisF3850::decodeRelative(DisInsn& insn, StrBuffer& out) {
+void DisF3850::decodeRelative(DisInsn& insn, StrBuffer& out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + 1;
-    setErrorIf(insn);
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), 8);
-    return getError();
 }
 
-Error DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) {
+void DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) const {
     const auto opCode = insn.opCode();
     switch (mode) {
     case M_REG:
@@ -82,19 +83,19 @@ Error DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) {
             }
         }
         outDec(out, opCode & 0xF, 4);
-        return OK;
+        break;
     case M_C1:
         outDec(out, 1, 1);
-        return OK;
+        break;
     case M_C4:
         outDec(out, 4, 3);
-        return OK;
+        break;
     case M_IM3:
         outHex(out, opCode & 7, 3);
-        return OK;
+        break;
     case M_IM4:
         outHex(out, opCode & 0xF, 4);
-        return OK;
+        break;
     case M_IM8:
         outHex(out, insn.readByte(), 8);
         break;
@@ -104,35 +105,31 @@ Error DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) {
     case M_REL:
         return decodeRelative(insn, out);
     case M_NONE:
-        return OK;
+        break;
     case M_J:
         outRegName(out, REG_J);
-        return OK;
+        break;
     default:
         if (uint8_t(mode) < uint8_t(M_REG))
             outRegName(out, RegName(uint8_t(mode)));
-        return OK;
+        break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) {
-    DisInsn insn(_insn, memory);
-    auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
+    DisInsn insn(_insn, memory, out);
+    insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto mode1 = insn.mode1();
-    if (mode1 == M_NONE)
-        return OK;
-    if (decodeOperand(insn, out, mode1))
-        return getError();
-    const auto mode2 = insn.mode2();
-    if (mode2 == M_NONE)
-        return OK;
-    out.comma();
-    return decodeOperand(insn, out, mode2);
+    if (mode1 != M_NONE) {
+        decodeOperand(insn, out, mode1);
+        const auto mode2 = insn.mode2();
+        if (mode2 != M_NONE)
+            decodeOperand(insn, out.comma(), mode2);
+    }
+    return setError(insn);
 }
 
 }  // namespace f3850

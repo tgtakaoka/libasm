@@ -55,19 +55,20 @@ void test_accumlator() {
     TEST("CLR", "",   0x70);
     TEST("LIS", "1",  0x71);
     TEST("LIS", "15", 0x7F);
-    TEST("LI",  "0",     0x20, 0x00);
-    TEST("LI",  "H'FF'", 0x20, 0xFF);
-    TEST("NI",  "1",     0x21, 0x01);
-    TEST("NI",  "H'FE'", 0x21, 0xFE);
-    TEST("OI",  "2",     0x22, 0x02);
-    TEST("OI",  "H'FD'", 0x22, 0xFD);
-    TEST("XI",  "3",     0x23, 0x03);
-    TEST("XI",  "H'FC'", 0x23, 0xFC);
-    TEST("AI",  "4",     0x24, 0x04);
-    TEST("AI",  "H'FB'", 0x24, 0xFB);
-    TEST("CI",  "5",     0x25, 0x05);
+    TEST("LI",  "0",      0x20, 0x00);
+    TEST("LI",  "H'FF'",  0x20, 0xFF);
+    TEST("NI",  "1",      0x21, 0x01);
+    TEST("NI",  "H'FE'",  0x21, 0xFE);
+    TEST("OI",  "2",      0x22, 0x02);
+    TEST("OI",  "H'FD'",  0x22, 0xFD);
+    TEST("XI",  "3",      0x23, 0x03);
+    TEST("XI",  "H'FC'",  0x23, 0xFC);
+    TEST("AI",  "4",      0x24, 0x04);
+    TEST("AI",  "H'FB'",  0x24, 0xFB);
+    TEST("CI",  "5",      0x25, 0x05);
+    NMEM("CI",  "0", "0", 0x25);
     disassembler.setOption("intel-hex", "on");
-    TEST("CI",  "0FAH",  0x25, 0xFA);
+    TEST("CI",  "0FAH",   0x25, 0xFA);
 }
 
 void test_status() {
@@ -178,7 +179,9 @@ void test_data_counter() {
     TEST("LR",  "DC, H", 0x10);
 
     TEST("ADC", "",        0x8E);
-    TEST("DCI", "H'1234'", 0x2A, 0x12, 0x34);
+    TEST("DCI", "H'1234'",            0x2A, 0x12, 0x34);
+    NMEM("DCI", "H'1200'", "H'1200'", 0x2A, 0x12);
+    NMEM("DCI", "H'0000'", "H'0000'", 0x2A);
     TEST("XDC", "",        0x2C);
 }
 
@@ -198,13 +201,18 @@ void test_program_counter() {
     TEST("LR",  "P, K",    0x09);
     TEST("LR",  "P0, Q",   0x0D);
     TEST("PK",  "",        0x0C);
-    TEST("PI",  "H'ABCD'", 0x28, 0xAB, 0xCD);
+    TEST("PI",  "H'ABCD'",            0x28, 0xAB, 0xCD);
+    NMEM("PI",  "H'AB00'", "H'AB00'", 0x28, 0xAB);
+    NMEM("PI",  "H'0000'", "H'0000'", 0x28);
     TEST("POP", "",        0x1C);
 }
 
 void test_branch() {
-    ATEST(0x1000, "BR",  "H'1000'", 0x90, 0xFF);
-    ATEST(0x1000, "JMP", "H'1234'", 0x29, 0x12, 0x34);
+    ATEST(0x1000, "BR",  "H'1000'",            0x90, 0xFF);
+    ANMEM(0x1000, "BR",  "H'1001'", "H'1001'", 0x90);
+    ATEST(0x1000, "JMP", "H'1234'",            0x29, 0x12, 0x34);
+    ANMEM(0x1000, "JMP", "H'1200'", "H'1200'", 0x29, 0x12);
+    ANMEM(0x1000, "JMP", "H'0000'", "H'0000'", 0x29);
 
     ATEST(0x1000, "BT",  "0, H'1002'", 0x80, 0x01);
     ATEST(0x1000, "BP",  "H'1080'",    0x81, 0x7F);
@@ -240,10 +248,12 @@ void test_branch() {
 void test_io() {
     TEST("INS",  "0",  0xA0);
     TEST("INS",  "15", 0xAF);
-    TEST("IN",   "H'FF'", 0x26, 0xFF);
+    TEST("IN",   "H'FF'",  0x26, 0xFF);
+    NMEM("IN",   "0", "0", 0x26);
     TEST("OUTS", "0",  0xB0);
     TEST("OUTS", "15", 0xBF);
-    TEST("OUT",  "H'AB'", 0x27, 0xAB);
+    TEST("OUT",  "H'AB'",  0x27, 0xAB);
+    NMEM("OUT",  "0", "0", 0x27);
 }
 
 void test_control() {
