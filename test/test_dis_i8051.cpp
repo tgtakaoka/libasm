@@ -204,10 +204,13 @@ static void test_immediate() {
     TEST("ORL",  "A, #45H", 0x44, 0x45);
     TEST("ANL",  "A, #55H", 0x54, 0x55);
     TEST("XRL",  "A, #65H", 0x64, 0x65);
-    TEST("SUBB", "A, #95H", 0x94, 0x95);
+    TEST("SUBB", "A, #95H",    0x94, 0x95);
+    NMEM("SUBB", "A, #0", "0", 0x94);
     TEST("ORL",  "44H, #45H", 0x43, 0x44, 0x45);
     TEST("ANL",  "54H, #55H", 0x53, 0x54, 0x55);
-    TEST("XRL",  "64H, #65H", 0x63, 0x64, 0x65);
+    TEST("XRL",  "64H, #65H",          0x63, 0x64, 0x65);
+    NMEM("XRL",  "64H, #0", "0",       0x63, 0x64);
+    NMEM("XRL",  "00H, #0", "00H, #0", 0x63);
 
     TEST("MOV", "A, #75H",   0x74, 0x75);
     TEST("MOV", "76H, #77H", 0x75, 0x76, 0x77);
@@ -222,19 +225,24 @@ static void test_immediate() {
     TEST("MOV", "R6, #7FH",  0x7E, 0x7F);
     TEST("MOV", "R7, #80H",  0x7F, 0x80);
 
-    TEST("MOV", "DPTR, #9192H", 0x90, 0x91, 0x92);
+    TEST("MOV", "DPTR, #9192H",          0x90, 0x91, 0x92);
+    NMEM("MOV", "DPTR, #9100H", "9100H", 0x90, 0x91);
+    NMEM("MOV", "DPTR, #0000H", "0000H", 0x90);
 }
 
 static void test_relative() {
     ATEST(0x1000, "JBC", "22H.1, 1015H", 0x10, 0x11, 0x12);
     ATEST(0x1000, "JB",  "24H.1, 1025H", 0x20, 0x21, 0x22);
-    ATEST(0x1000, "JNB", "26H.1, 1035H", 0x30, 0x31, 0x32);
+    ATEST(0x1000, "JNB", "26H.1, 1035H",                 0x30, 0x31, 0x32);
+    ANMEM(0x1000, "JNB", "26H.1, 1002H", "1002H",        0x30, 0x31);
+    ANMEM(0x1000, "JNB", "20H.0, 1001H", "20H.0, 1001H", 0x30);
 
     ATEST(0x1000, "JC",   "1043H", 0x40, 0x41);
     ATEST(0x1000, "JNC",  "1053H", 0x50, 0x51);
     ATEST(0x1000, "JZ",   "1063H", 0x60, 0x61);
     ATEST(0x1000, "JNZ",  "1073H", 0x70, 0x71);
-    ATEST(0x1000, "SJMP", "0F83H", 0x80, 0x81);
+    ATEST(0x1000, "SJMP", "0F83H",         0x80, 0x81);
+    ANMEM(0x1000, "SJMP", "1001H","1001H", 0x80);
 
     ATEST(0x1000, "CJNE", "A, #0B5H, 0FB9H",   0xB4, 0xB5, 0xB6);
     ATEST(0x1000, "CJNE", "A, 0B6H, 0FBAH",    0xB5, 0xB6, 0xB7);
@@ -247,7 +255,9 @@ static void test_relative() {
     ATEST(0x1000, "CJNE", "R4, #0BDH, 0FC1H",  0xBC, 0xBD, 0xBE);
     ATEST(0x1000, "CJNE", "R5, #0BEH, 0FC2H",  0xBD, 0xBE, 0xBF);
     ATEST(0x1000, "CJNE", "R6, #0BFH, 0FC3H",  0xBE, 0xBF, 0xC0);
-    ATEST(0x1000, "CJNE", "R7, #0C0H, 0FC4H",  0xBF, 0xC0, 0xC1);
+    ATEST(0x1000, "CJNE", "R7, #0C0H, 0FC4H",          0xBF, 0xC0, 0xC1);
+    ANMEM(0x1000, "CJNE", "R7, #0C0H, 1002H", "1002H", 0xBF, 0xC0);
+    ANMEM(0x1000, "CJNE", "R7, #0, 1001H", "0, 1001H", 0xBF);
 
     ATEST(0x1000, "DJNZ", "0D6H, 0FDAH", 0xD5, 0xD6, 0xD7);
     ATEST(0x1000, "DJNZ", "R0, 0FDBH",   0xD8, 0xD9);
@@ -257,7 +267,8 @@ static void test_relative() {
     ATEST(0x1000, "DJNZ", "R4, 0FDFH",   0xDC, 0xDD);
     ATEST(0x1000, "DJNZ", "R5, 0FE0H",   0xDD, 0xDE);
     ATEST(0x1000, "DJNZ", "R6, 0FE1H",   0xDE, 0xDF);
-    ATEST(0x1000, "DJNZ", "R7, 0FE2H",   0xDF, 0xE0);
+    ATEST(0x1000, "DJNZ", "R7, 0FE2H",          0xDF, 0xE0);
+    ANMEM(0x1000, "DJNZ", "R7, 1001H", "1001H", 0xDF);
 
     disassembler.setOption("relative", "on");
     ATEST(0x2000, "JB", "22H.1, $-125", 0x20, 0x11, 0x80);
@@ -297,7 +308,8 @@ static void test_bit_address() {
     TEST("SETB", "0D0H.3",   0xD2, 0xD3);
 
     TEST("ORL",  "C, /0A8H.1", 0xA0, 0xA9);
-    TEST("ANL",  "C, /0B0H.1", 0xB0, 0xB1);
+    TEST("ANL",  "C, /0B0H.1",         0xB0, 0xB1);
+    NMEM("ANL",  "C, /20H.0", "20H.0", 0xB0);
 }
 
 static void test_direct() {
@@ -312,6 +324,8 @@ static void test_direct() {
     TEST("XCH",  "A, 0C6H", 0xC5, 0xC6);
     TEST("MOV",  "A, 0E6H", 0xE5, 0xE6);
     TEST("MOV",  "0F6H, A", 0xF5, 0xF6);
+    NMEM("MOV",  "A, 00H", "00H",    0xE5);
+    NMEM("MOV",  "00H, A", "00H, A", 0xF5);
 
     TEST("ORL", "43H, A", 0x42, 0x43);
     TEST("ANL", "53H, A", 0x52, 0x53);
@@ -319,6 +333,8 @@ static void test_direct() {
 
     TEST("MOV", "76H, #77H", 0x75, 0x76, 0x77);
     TEST("MOV", "87H, 86H",  0x85, 0x86, 0x87);
+    NMEM("MOV", "00H, 86H",  "00H, 86H", 0x85, 0x86);
+    NMEM("MOV", "00H, 00H",  "00H", 0x85);
     TEST("MOV", "87H, @R0",  0x86, 0x87);
     TEST("MOV", "88H, @R1",  0x87, 0x88);
     TEST("MOV", "89H, R0",   0x88, 0x89);
@@ -360,7 +376,8 @@ static void test_page() {
     ATEST(0x1800, "ACALL", "1C92H", 0x91, 0x92);
     ATEST(0x1000, "ACALL", "15B2H", 0xB1, 0xB2);
     ATEST(0x1800, "ACALL", "1ED2H", 0xD1, 0xD2);
-    ATEST(0x1000, "ACALL", "17F2H", 0xF1, 0xF2);
+    ATEST(0x1000, "ACALL", "17F2H",          0xF1, 0xF2);
+    ANMEM(0x1000, "ACALL", "1700H", "1700H", 0xF1);
 
     ATEST(0x17FD, "AJMP",  "1002H", 0x01, 0x02);
     ATEST(0x17FE, "AJMP",  "1802H", 0x01, 0x02);
@@ -372,7 +389,9 @@ static void test_page() {
 
 static void test_absolute() {
     TEST("LJMP",  "0304H", 0x02, 0x03, 0x04);
-    TEST("LCALL", "1314H", 0x12, 0x13, 0x14);
+    TEST("LCALL", "1314H",          0x12, 0x13, 0x14);
+    NMEM("LCALL", "1300H", "1300H", 0x12, 0x13);
+    NMEM("LCALL", "0000H", "0000H", 0x12);
 }
 
 static void test_illegal() {
