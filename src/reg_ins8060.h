@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 
+#include "config_ins8060.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
@@ -38,6 +39,14 @@ enum RegName : int8_t {
 };
 
 namespace reg {
+
+constexpr Config::uintptr_t page(Config::uintptr_t addr) {
+    return addr & ~0xFFF;
+}
+
+constexpr Config::uintptr_t offset(Config::uintptr_t addr) {
+    return addr & 0xFFF;
+}
 
 RegName parseRegName(StrScanner &scan);
 StrBuffer &outRegName(StrBuffer &out, RegName name);

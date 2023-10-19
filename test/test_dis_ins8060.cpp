@@ -27,7 +27,6 @@ Disassembler &disassembler(dis8060);
 static void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "disable");
-    disassembler.setOption("c-style", "enable");
 }
 
 static void tear_down() {
@@ -90,11 +89,12 @@ static void test_immediate() {
 }
 
 static void test_jump() {
-    ATEST(0x1000, "JMP", "0x1000", 0x90, 0xFE);
-    ATEST(0x1000, "JP",  "0x1081", 0x94, 0x7F);
-    ATEST(0x1000, "JZ",  "0x1F83", 0x98, 0x81); // 4kB page boundary
-    ATEST(0x1FF0, "JZ",  "0x1071", 0x98, 0x7F); // 4kB page boundary
-    ATEST(0x1000, "JNZ", "E(PC)",  0x9C, 0x80);
+    ATEST(0x1000, "JMP", "X'1000", 0x90, 0xFE);
+    ATEST(0x1000, "JP",  "X'1081", 0x94, 0x7F);
+    ATEST(0x1000, "JZ",  "X'1F83", 0x98, 0x81); // 4kB page boundary
+    ATEST(0x1FF0, "JZ",  "X'1071", 0x98, 0x7F); // 4kB page boundary
+    ATEST(0x1000, "JNZ", "E(PC)",            0x9C, 0x80);
+    ANMEM(0x1000, "JNZ", "X'1002", "X'1002", 0x9C);
 
     TEST("JMP", "E(PC)",    0x90, 0x80);
     TEST("JMP", "E(P1)",    0x91, 0x80);
@@ -117,22 +117,23 @@ static void test_jump() {
     ATEST(0x2800, "JMP", "$",      0x90, 0xFE);
     ATEST(0x2800, "JMP", "$+2",    0x90, 0x00);
     ATEST(0x2800, "JMP", "$+129",  0x90, 0x7F);
-    ATEST(0x2000, "JMP", "0x2F83", 0x90, 0x81); // 4kB page boundary
-    ATEST(0x2FF0, "JMP", "0x2071", 0x90, 0x7F); // 4kB page boundary
+    ATEST(0x2000, "JMP", "X'2F83", 0x90, 0x81); // 4kB page boundary
+    ATEST(0x2FF0, "JMP", "X'2071", 0x90, 0x7F); // 4kB page boundary
 }
 
 static void test_incr_decr() {
-    ATEST(0x1000, "ILD", "0x1000", 0xA8, 0xFF);
-    ATEST(0x1000, "ILD", "0x1F82", 0xA8, 0x81); // 4kB page boundary
-    ATEST(0x1FF0, "ILD", "0x1070", 0xA8, 0x7F); // 4kB page boundary
+    ATEST(0x1000, "ILD", "X'1000", 0xA8, 0xFF);
+    ATEST(0x1000, "ILD", "X'1F82", 0xA8, 0x81); // 4kB page boundary
+    ATEST(0x1FF0, "ILD", "X'1070", 0xA8, 0x7F); // 4kB page boundary
     TEST("ILD", "E(PC)",    0xA8, 0x80);
     TEST("ILD", "E(P1)",    0xA9, 0x80);
     TEST("ILD", "127(P2)",  0xAA, 0x7F);
-    TEST("ILD", "-127(P3)", 0xAB, 0x81);
+    TEST("ILD", "-127(P3)",       0xAB, 0x81);
+    NMEM("ILD", "0(P3)", "0(P3)", 0xAB);
 
-    ATEST(0x1000, "DLD", "0x1000", 0xB8, 0xFF);
-    ATEST(0x1000, "DLD", "0x1F82", 0xB8, 0x81); // 4kB page boundary
-    ATEST(0x1FF0, "DLD", "0x1070", 0xB8, 0x7F); // 4kB page boundary
+    ATEST(0x1000, "DLD", "X'1000", 0xB8, 0xFF);
+    ATEST(0x1000, "DLD", "X'1F82", 0xB8, 0x81); // 4kB page boundary
+    ATEST(0x1FF0, "DLD", "X'1070", 0xB8, 0x7F); // 4kB page boundary
     TEST("DLD", "E(PC)",    0xB8, 0x80);
     TEST("DLD", "E(P1)",    0xB9, 0x80);
     TEST("DLD", "127(P2)",  0xBA, 0x7F);
@@ -151,9 +152,9 @@ static void test_incr_decr() {
 }
 
 static void test_alu() {
-    ATEST(0x1000, "LD", "0x1000", 0xC0, 0xFF);
-    ATEST(0x1000, "LD", "0x1F82", 0xC0, 0x81); // 4kB page boundary
-    ATEST(0x1FF0, "LD", "0x1070", 0xC0, 0x7F); // 4kB page boundary
+    ATEST(0x1000, "LD", "X'1000", 0xC0, 0xFF);
+    ATEST(0x1000, "LD", "X'1F82", 0xC0, 0x81); // 4kB page boundary
+    ATEST(0x1FF0, "LD", "X'1070", 0xC0, 0x7F); // 4kB page boundary
     TEST("LD", "E(PC)",     0xC0, 0x80);
     TEST("LD", "E(P1)",     0xC1, 0x80);
     TEST("LD", "127(P2)",   0xC2, 0x7F);
@@ -162,16 +163,17 @@ static void test_alu() {
     TEST("LD", "@127(P2)",  0xC6, 0x7F);
     TEST("LD", "@-127(P3)", 0xC7, 0x81);
 
-    ATEST(0x1000, "ST",  "0x1000", 0xC8, 0xFF);
-    ATEST(0x1000, "AND", "0x1F82", 0xD0, 0x81); // 4kB page boundary
-    ATEST(0x1FF0, "OR",  "0x1070", 0xD8, 0x7F); // 4kB page boundary
+    ATEST(0x1000, "ST",  "X'1000", 0xC8, 0xFF);
+    ATEST(0x1000, "AND", "X'1F82", 0xD0, 0x81); // 4kB page boundary
+    ATEST(0x1FF0, "OR",  "X'1070", 0xD8, 0x7F); // 4kB page boundary
     TEST("XOR", "E(PC)",     0xE0, 0x80);
     TEST("DAD", "E(P1)",     0xE9, 0x80);
     TEST("ADD", "127(P2)",   0xF2, 0x7F);
     TEST("CAD", "-127(P3)",  0xFB, 0x81);
     TEST("ST",  "@E(P1)",    0xCD, 0x80);
     TEST("AND", "@127(P2)",  0xD6, 0x7F);
-    TEST("OR",  "@-127(P3)", 0xDF, 0x81);
+    TEST("OR",  "@-127(P3)",       0xDF, 0x81);
+    NMEM("OR",  "@0(P3)", "0(P3)", 0xDF);
 
     symtab.intern(0x1000, "label1000");
     symtab.intern(127,    "disp0x7F");
@@ -187,11 +189,42 @@ static void test_alu() {
     ATEST(0x2800, "LD", "$",      0xC0, 0xFF);
     ATEST(0x2800, "LD", "$+1",    0xC0, 0x00);
     ATEST(0x2800, "LD", "$+128",  0xC0, 0x7F);
-    ATEST(0x2000, "LD", "0x2F82", 0xC0, 0x81); // 4kB page boundary
-    ATEST(0x2FF0, "LD", "0x2070", 0xC0, 0x7F); // 4kB page boundary
+    ATEST(0x2000, "LD", "X'2F82", 0xC0, 0x81); // 4kB page boundary
+    ATEST(0x2FF0, "LD", "X'2070", 0xC0, 0x7F); // 4kB page boundary
 }
 
 static void test_alu_immediate() {
+    TEST("LDI", "0",    0xC4, 0x00);
+    TEST("ANI", "X'FF", 0xD4, 0xFF);
+    TEST("ORI", "1",    0xDC, 0x01);
+    TEST("XRI", "X'80", 0xE4, 0x80);
+    TEST("DAI", "X'99", 0xEC, 0x99);
+    TEST("ADI", "18",   0xF4, 0x12);
+    TEST("CAI", "X'34",   0xFC, 0x34);
+    NMEM("CAI", "0", "0", 0xFC);
+
+    symtab.intern(-1, "minus1");
+
+    TEST("LDI", "minus1", 0xC4, 0xFF);
+}
+
+static void test_page_boundary() {
+    ATEST(0x1000, "LD", "X'1000", 0xC0, 0xFF);
+    ATEST(0x1000, "LD", "X'1FFF", 0xC0, 0xFE);
+    ATEST(0x1FFC, "LD", "X'1FFF", 0xC0, 0x02);
+    ATEST(0x1FFC, "LD", "X'1000", 0xC0, 0x03);
+
+    ATEST(0x1000, "JMP", "X'1000", 0x90, 0xFE);
+    ATEST(0x1000, "JMP", "X'1FFF", 0x90, 0xFD);
+    ATEST(0x1FFC, "JMP", "X'1FFF", 0x90, 0x01);
+    ATEST(0x1FFC, "JMP", "X'1000", 0x90, 0x02);
+
+    ATEST(0x1FFE, "LDI", "0", 0xC4, 0x00);
+    AERRT(0x1FFF, "LDI", "0", OVERWRAP_PAGE, "", 0xC4, 0x00);
+}
+
+static void test_formatter() {
+    disassembler.setOption("c-style", "on");
     TEST("LDI", "0",    0xC4, 0x00);
     TEST("ANI", "0xFF", 0xD4, 0xFF);
     TEST("ORI", "1",    0xDC, 0x01);
@@ -200,44 +233,14 @@ static void test_alu_immediate() {
     TEST("ADI", "18",   0xF4, 0x12);
     TEST("CAI", "0x34", 0xFC, 0x34);
 
-    symtab.intern(-1, "minus1");
-
-    TEST("LDI", "minus1", 0xC4, 0xFF);
-}
-
-static void test_page_boundary() {
     ATEST(0x1000, "LD", "0x1000", 0xC0, 0xFF);
     ATEST(0x1000, "LD", "0x1FFF", 0xC0, 0xFE);
     ATEST(0x1FFC, "LD", "0x1FFF", 0xC0, 0x02);
     ATEST(0x1FFC, "LD", "0x1000", 0xC0, 0x03);
-
-    ATEST(0x1000, "JMP", "0x1000", 0x90, 0xFE);
-    ATEST(0x1000, "JMP", "0x1FFF", 0x90, 0xFD);
-    ATEST(0x1FFC, "JMP", "0x1FFF", 0x90, 0x01);
-    ATEST(0x1FFC, "JMP", "0x1000", 0x90, 0x02);
-
-    ATEST(0x1FFE, "LDI", "0", 0xC4, 0x00);
-    AERRT(0x1FFF, "LDI", "0", OVERWRAP_PAGE, 0xC4, 0x00);
-}
-
-static void test_formatter() {
-    disassembler.setCStyle(false);
-    TEST("LDI", "0",    0xC4, 0x00);
-    TEST("ANI", "X'FF", 0xD4, 0xFF);
-    TEST("ORI", "1",    0xDC, 0x01);
-    TEST("XRI", "X'80", 0xE4, 0x80);
-    TEST("DAI", "X'99", 0xEC, 0x99);
-    TEST("ADI", "18",   0xF4, 0x12);
-    TEST("CAI", "X'34", 0xFC, 0x34);
-
-    ATEST(0x1000, "LD", "X'1000", 0xC0, 0xFF);
-    ATEST(0x1000, "LD", "X'1FFF", 0xC0, 0xFE);
-    ATEST(0x1FFC, "LD", "X'1FFF", 0xC0, 0x02);
-    ATEST(0x1FFC, "LD", "X'1000", 0xC0, 0x03);
 }
 
 static void test_illegal() {
-    const uint8_t illegals[] = {
+    static constexpr Config::opcode_t illegals[] = {
         0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x1A, 0x1B,
@@ -260,8 +263,8 @@ static void test_illegal() {
         0xBC, 0xBD, 0xBE, 0xBF,
         0xCC,
     };
-    for (uint8_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 // clang-format on
 

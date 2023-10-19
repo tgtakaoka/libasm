@@ -82,14 +82,6 @@ AsmIns8060::AsmIns8060(const ValueParser::Plugins &plugins)
 
 namespace {
 
-Config::uintptr_t page(Config::uintptr_t addr) {
-    return addr & ~0xFFF;
-}
-
-Config::uintptr_t offset(Config::uintptr_t addr) {
-    return addr & 0xFFF;
-}
-
 const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {

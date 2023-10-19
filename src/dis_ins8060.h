@@ -28,14 +28,11 @@ struct DisIns8060 final : Disassembler, Config {
     DisIns8060(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodePntr(DisInsn &insn, StrBuffer &out);
-    Error decodeImm8(DisInsn &insn, StrBuffer &out);
-    Error decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode);
+    void decodePntr(DisInsn &insn, StrBuffer &out) const ;
+    void decodeImm8(DisInsn &insn, StrBuffer &out) const;
+    void decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const ;
+
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
-    static Config::uintptr_t page(Config::uintptr_t addr) { return addr & ~0xFFF; }
-    static Config::uintptr_t offset(Config::uintptr_t addr) { return addr & 0xFFF; }
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();

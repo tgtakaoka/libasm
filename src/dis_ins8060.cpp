@@ -33,21 +33,19 @@ DisIns8060::DisIns8060(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisIns8060::decodePntr(DisInsn &insn, StrBuffer &out) {
+void DisIns8060::decodePntr(DisInsn &insn, StrBuffer &out) const {
     outRegName(out, decodePointerReg(insn.opCode()));
-    return setOK();
 }
 
-Error DisIns8060::decodeImm8(DisInsn &insn, StrBuffer &out) {
+void DisIns8060::decodeImm8(DisInsn &insn, StrBuffer &out) const {
     outHex(out, insn.readByte(), 8);
-    return setErrorIf(insn);
 }
 
-Error DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) {
-    const auto reg = decodePointerReg(insn.opCode());
-    const auto opr = insn.readByte();
+void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
     if (hasMode && (insn.opCode() & 4) != 0)
         out.letter('@');
+    const auto reg = decodePointerReg(insn.opCode());
+    const auto opr = insn.readByte();
     if (reg == REG_PC && opr != 0x80) {  // PC relative
         // PC points the last byte of instruction.
         const auto base = insn.address() + 1;
@@ -72,13 +70,11 @@ Error DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) {
         }
         outRegName(out.letter('('), reg).letter(')');
     }
-    return setErrorIf(insn);
 }
 
 Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    const auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
+    DisInsn insn(_insn, memory, out);
+    insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
@@ -97,12 +93,11 @@ Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         decodeIndx(insn, out, true);
         break;
     default:
-        setOK();
         break;
     }
     if (page(insn.address()) != page(insn.address() + insn.length() - 1))
-        setError(OVERWRAP_PAGE);
-    return getError();
+        insn.setErrorIf(OVERWRAP_PAGE);
+    return setError(insn);
 }
 
 }  // namespace ins8060
