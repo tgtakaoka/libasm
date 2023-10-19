@@ -32,7 +32,7 @@ DisI8048::DisI8048(const ValueFormatter::Plugins &plugins) : Disassembler(plugin
     reset();
 }
 
-Error DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) {
+void DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opc = insn.opCode();
     switch (mode) {
     case M_IA:
@@ -52,9 +52,6 @@ Error DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode
         outRegName(out, REG_BUS);
         break;
     case M_P12:
-        if ((opc & 7) == 0 || (opc & 7) == 3)
-            return setError(UNKNOWN_INSTRUCTION);
-        // Fall-through
     case M_PEXT:
         outRegName(out, decodePortNum(opc & 7));
         break;
@@ -77,10 +74,12 @@ Error DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode
         outDec(out, (opc & 0xE0) >> 5, 3);
         break;
     case M_IMM8:
-        outDec(out.letter('#'), insn.readByte(), 8);
+        out.letter('#');
+        outDec(out, insn.readByte(), 8);
         break;
     case M_BIT8:
-        outHex(out.letter('#'), insn.readByte(), 8, false);
+        out.letter('#');
+        outHex(out, insn.readByte(), 8, false);
         break;
     case M_PSW:
         outRegName(out, REG_PSW);
@@ -118,28 +117,22 @@ Error DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode
     default:
         break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    const auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
+    DisInsn insn(_insn, memory, out);
+    insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();
     if (dst != M_NONE) {
-        if (decodeOperand(insn, out, dst))
-            return getError();
+        decodeOperand(insn, out, dst);
+        const auto src = insn.src();
+        if (src != M_NONE)
+            decodeOperand(insn, out.comma(), src);
     }
-    const auto src = insn.src();
-    if (src != M_NONE) {
-        out.comma();
-        if (decodeOperand(insn, out, src))
-            return getError();
-    }
-    return OK;
+    return setError(insn);
 }
 
 }  // namespace i8048

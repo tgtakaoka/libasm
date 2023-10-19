@@ -28,10 +28,7 @@ struct DisI8048 final : Disassembler, Config {
     DisI8048(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodeRReg(DisInsn &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeAddress(DisInsn &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode);
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
