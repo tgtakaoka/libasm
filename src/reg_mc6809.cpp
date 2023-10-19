@@ -64,7 +64,11 @@ constexpr RegName USER_STACK_REGS[8] PROGMEM = {
 
 RegName parseRegName(StrScanner &scan) {
     const auto *entry = TABLE.searchText(scan);
-    return entry ? RegName(entry->name()) : REG_UNDEF;
+    if (entry)
+        return RegName(entry->name());
+    if (scan.iexpectWord_P(PSTR("SP")))
+        return REG_S;
+    return REG_UNDEF;
 }
 
 RegSize regSize(RegName name) {
@@ -80,9 +84,14 @@ RegSize regSize(RegName name) {
     return SZ_NONE;      // REG_Z..REG_0
 }
 
-StrBuffer &outRegName(StrBuffer &out, RegName name) {
+StrBuffer &outRegName(StrBuffer &out, RegName name, bool fullName) {
     const auto *entry = TABLE.searchName(name);
-    return entry ? entry->outText(out) : out;
+    if (entry) {
+        entry->outText(out);
+        if (name == REG_S && fullName)
+            out.letter('P');
+    }
+    return out;
 }
 
 RegName decodeDataReg(CpuType cpuType, uint8_t num) {
@@ -198,11 +207,6 @@ uint8_t encodeBitOpReg(RegName name) {
     if (name == REG_CC)
         return 0;
     return uint8_t(name) - uint8_t(REG_A) + 1;
-}
-
-RegName decodeTfmBaseReg(uint8_t num) {
-    num &= 0xF;
-    return num < 5 ? RegName(num) : REG_UNDEF;
 }
 
 bool isTfmBaseReg(RegName name) {

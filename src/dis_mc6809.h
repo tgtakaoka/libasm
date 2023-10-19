@@ -28,22 +28,19 @@ struct DisMc6809 final : Disassembler, Config {
     DisMc6809(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    // MC6809
-    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
-    Error decodeIndexed(DisInsn &insn, StrBuffer &out);
-    Error decodeExtended(DisInsn &insn, StrBuffer &out);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodePushPull(DisInsn &insn, StrBuffer &out);
-    Error decodeRegisters(DisInsn &insn, StrBuffer &out);
-    // HD6309
-    Error decodeRegBit(DisInsn &insn, StrBuffer &out);
-    Error decodeDirBit(DisInsn &insn, StrBuffer &out);
-    Error decodeTransferMemory(DisInsn &insn, StrBuffer &out);
+    void decodeDirectPage(DisInsn &insn, StrBuffer &out) const;
+    void decodeIndexed(DisInsn &insn, StrBuffer &out) const;
+    void decodeExtended(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodePushPull(DisInsn &insn, StrBuffer &out) const;
+    void decodeRegisters(DisInsn &insn, StrBuffer &out) const;
+    void decodeRegBit(DisInsn &insn, StrBuffer &out) const;
+    void decodeDirBit(DisInsn &insn, StrBuffer &out) const;
+    void decodeTransferMemory(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
-
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();
