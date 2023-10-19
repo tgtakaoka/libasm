@@ -82,7 +82,9 @@ static void test_mem_ref() {
         TEST("RLDI", "12, X'1234'", 0x68, 0xCC, 0x12, 0x34);
         TEST("RLDI", "13, X'1234'", 0x68, 0xCD, 0x12, 0x34);
         TEST("RLDI", "14, X'1234'", 0x68, 0xCE, 0x12, 0x34);
-        TEST("RLDI", "15, X'1234'", 0x68, 0xCF, 0x12, 0x34);
+        TEST("RLDI", "15, X'1234'",            0x68, 0xCF, 0x12, 0x34);
+        NMEM("RLDI", "15, X'1200'", "X'1200'", 0x68, 0xCF, 0x12);
+        NMEM("RLDI", "15, X'0000'", "X'0000'", 0x68, 0xCF);
     }
 
     // Load via N
@@ -248,6 +250,8 @@ static void test_reg_op() {
         TEST("DBNZ", "13, X'1234'", 0x68, 0x2D, 0x12, 0x34);
         TEST("DBNZ", "14, X'1234'", 0x68, 0x2E, 0x12, 0x34);
         TEST("DBNZ", "15, X'1234'", 0x68, 0x2F, 0x12, 0x34);
+        NMEM("DBNZ", "15, X'0000'", "X'0000'", 0x68, 0x2F);
+        NMEM("DBNZ", "15, X'1200'", "X'1200'", 0x68, 0x2F, 0x12);
     }
 
     // Increment reg X
@@ -347,12 +351,14 @@ static void test_reg_op() {
 }
 
 static void test_logic_op() {
-    TEST("OR",   "",      0xF1);
-    TEST("ORI",  "X'34'", 0xF9, 0x34);
-    TEST("XOR",  "",      0xF3);
-    TEST("XRI",  "X'67'", 0xFB, 0x67);
-    TEST("AND",  "",      0xF2);
-    TEST("ANI",  "X'45'", 0xFA, 0x45);
+    TEST("OR",   "",       0xF1);
+    TEST("ORI",  "X'34'",  0xF9, 0x34);
+    NMEM("ORI",  "0", "0", 0xF9);
+    TEST("XOR",  "",       0xF3);
+    TEST("XRI",  "X'67'",  0xFB, 0x67);
+    TEST("AND",  "",       0xF2);
+    TEST("ANI",  "X'45'",  0xFA, 0x45);
+
     TEST("SHR",  "",      0xF6);
     TEST("SHRC", "",      0x76);
     TEST("SHL",  "",      0xFE);
@@ -360,28 +366,30 @@ static void test_logic_op() {
 }
 
 static void test_arith_op() {
-    TEST("ADD",  "",      0xF4);
-    TEST("ADI",  "X'89'", 0xFC, 0x89);
-    TEST("ADC",  "",      0x74);
-    TEST("ADCI", "X'AB'", 0x7C, 0xAB);
-    TEST("SD",   "",      0xF5);
-    TEST("SDI",  "X'AB'", 0xFD, 0xAB);
-    TEST("SDB",  "",      0x75);
-    TEST("SDBI", "X'CD'", 0x7D, 0xCD);
-    TEST("SM",   "",      0xF7);
-    TEST("SMI",  "X'CD'", 0xFF, 0xCD);
-    TEST("SMB",  "",      0x77);
-    TEST("SMBI", "X'EF'", 0x7F, 0xEF);
+    TEST("ADD",  "",       0xF4);
+    TEST("ADI",  "X'89'",  0xFC, 0x89);
+    NMEM("ADI",  "0", "0", 0xFC);
+    TEST("ADC",  "",       0x74);
+    TEST("ADCI", "X'AB'",  0x7C, 0xAB);
+    TEST("SD",   "",       0xF5);
+    TEST("SDI",  "X'AB'",  0xFD, 0xAB);
+    TEST("SDB",  "",       0x75);
+    TEST("SDBI", "X'CD'",  0x7D, 0xCD);
+    TEST("SM",   "",       0xF7);
+    TEST("SMI",  "X'CD'",  0xFF, 0xCD);
+    TEST("SMB",  "",       0x77);
+    TEST("SMBI", "X'EF'",  0x7F, 0xEF);
 
     if (cdp1804a()) {
-        TEST("DADD", "",      0x68, 0xF4);
-        TEST("DADI", "X'89'", 0x68, 0xFC, 0x89);
-        TEST("DADC", "",      0x68, 0x74);
-        TEST("DACI", "X'89'", 0x68, 0x7C, 0x89);
-        TEST("DSM",  "",      0x68, 0xF7);
-        TEST("DSMI", "X'89'", 0x68, 0xFF, 0x89);
-        TEST("DSMB", "",      0x68, 0x77);
-        TEST("DSBI", "X'89'", 0x68, 0x7F, 0x89);
+        TEST("DADD", "",       0x68, 0xF4);
+        TEST("DADI", "X'89'",  0x68, 0xFC, 0x89);
+        NMEM("DADI", "0", "0", 0x68, 0xFC);
+        TEST("DADC", "",       0x68, 0x74);
+        TEST("DACI", "X'89'",  0x68, 0x7C, 0x89);
+        TEST("DSM",  "",       0x68, 0xF7);
+        TEST("DSMI", "X'89'",  0x68, 0xFF, 0x89);
+        TEST("DSMB", "",       0x68, 0x77);
+        TEST("DSBI", "X'89'",  0x68, 0x7F, 0x89);
     }
 
     symtab.intern(-1,  "neg1");
@@ -405,10 +413,12 @@ static void test_branch() {
     ATEST(0x1000, "B3",  "X'1037'", 0x36, 0x37);
     ATEST(0x1000, "BN3", "X'103F'", 0x3E, 0x3F);
     ATEST(0x1000, "B4",  "X'1038'", 0x37, 0x38);
-    ATEST(0x1000, "BN4", "X'1040'", 0x3F, 0x40);
+    ATEST(0x1000, "BN4", "X'1040'",            0x3F, 0x40);
+    ANMEM(0x1000, "BN4", "X'1000'", "X'1000'", 0x3F);
     if (cdp1804() || cdp1804a()) {
-        ATEST(0x1000, "BCI", "X'1041'", 0x68, 0x3E, 0x41);
-        ATEST(0x1000, "BXI", "X'1042'", 0x68, 0x3F, 0x42);
+        ATEST(0x1000, "BCI", "X'1041'",            0x68, 0x3E, 0x41);
+        ATEST(0x1000, "BXI", "X'1042'",            0x68, 0x3F, 0x42);
+        ANMEM(0x1000, "BXI", "X'1000'", "X'1000'", 0x68, 0x3F);
     }
 
     ATEST(0x10FD, "BR",  "X'1031'", 0x30, 0x31);
@@ -421,7 +431,9 @@ static void test_branch() {
     ATEST(0x1000, "LBDF", "X'DEF0'", 0xC3, 0xDE, 0xF0);
     ATEST(0x1000, "LBNF", "X'9ABC'", 0xCB, 0x9A, 0xBC);
     ATEST(0x1000, "LBQ",  "X'5678'", 0xC1, 0x56, 0x78);
-    ATEST(0x1000, "LBNQ", "X'1234'", 0xC9, 0x12, 0x34);
+    ATEST(0x1000, "LBNQ", "X'1234'",            0xC9, 0x12, 0x34);
+    ANMEM(0x1000, "LBNQ", "X'1200'", "X'1200'", 0xC9, 0x12);
+    ANMEM(0x1000, "LBNQ", "X'0000'", "X'0000'", 0xC9);
 
     TEST("SKP",  "", 0x38);
     TEST("LSKP", "", 0xC8);
@@ -551,9 +563,11 @@ static void test_call() {
     TEST("SCAL", "11, X'1234'", 0x68, 0x8B, 0x12, 0x34);
     TEST("SCAL", "12, X'1234'", 0x68, 0x8C, 0x12, 0x34);
     TEST("SCAL", "13, X'1234'", 0x68, 0x8D, 0x12, 0x34);
-    TEST("SCAL", "14, X'1234'", 0x68, 0x8E, 0x12, 0x34);
-    disassembler.setOption("intel-hex", "off");
-    TEST("SCAL", "15, X'1234'", 0x68, 0x8F, 0x12, 0x34);
+    TEST("SCAL", "14, X'1234'",            0x68, 0x8E, 0x12, 0x34);
+    NMEM("SCAL", "14, X'1200'", "X'1200'", 0x68, 0x8E, 0x12);
+    NMEM("SCAL", "14, X'0000'", "X'0000'", 0x68, 0x8E);
+    disassembler.setOption("intel-hex", "on");
+    TEST("SCAL", "15, 1234H",   0x68, 0x8F, 0x12, 0x34);
 
     TEST("SRET", "0",  0x68, 0x90);
     TEST("SRET", "1",  0x68, 0x91);
@@ -606,7 +620,9 @@ static void test_illegal_cdp1802() {
 }
 
 static void test_illegal_cdp1804() {
-    static const Config::opcode_t illegals[] = {
+    NMEM("", "", "", 0x68);
+
+    static constexpr Config::opcode_t illegals[] = {
         0x0E, 0x0F,
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
@@ -628,12 +644,14 @@ static void test_illegal_cdp1804() {
         0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF,
     };
 
-    for (size_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(0x68, illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(0x68, opc);
 }
 
 static void test_illegal_cdp1804a() {
-    static const Config::opcode_t illegals[] = {
+    NMEM("", "", "", 0x68);
+
+    static constexpr Config::opcode_t illegals[] = {
         0x0E, 0x0F,
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
@@ -653,8 +671,8 @@ static void test_illegal_cdp1804a() {
         0xF8, 0xF9, 0xFA, 0xFB, 0xFD, 0xFE,
     };
 
-    for (size_t idx = 0; idx < sizeof(illegals); idx++)
-        UNKN(0x68, illegals[idx]);
+    for (const auto opc : illegals)
+        UNKN(0x68, opc);
 }
 
 // clang-format on
