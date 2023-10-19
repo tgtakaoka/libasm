@@ -43,51 +43,41 @@ void DisTms7000::reset() {
     Disassembler::reset();
 }
 
-Error DisTms7000::decodeRegister(DisInsn &insn, StrBuffer &out) {
+void DisTms7000::decodeRegister(DisInsn &insn, StrBuffer &out) const {
     const auto regno = insn.readByte();
-    if (regno < 2) {
+    if (insn.isOK() && regno < 2) {
         out.letter('A' + regno);
     } else {
         outRegName(out, toRegName(regno));
     }
-    return setErrorIf(insn);
 }
 
-Error DisTms7000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisTms7000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     out.letter('%');
-    if (mode == M_IM8) {
-        outHex(out, insn.readByte(), 8);
-    } else if (mode == M_IM16) {
-        outHex(out, insn.readUint16(), 16);
-    } else {
-        outHex(out, insn.readUint16(), 16).text_P(TEXT_IDXB);
-    }
-    return setErrorIf(insn);
+    const uint16_t val = (mode == M_IM8) ? insn.readByte() : insn.readUint16();
+    outHex(out, val, (mode == M_IM8) ? 8 : 16);
+    if (mode == M_BIMM)
+        out.text_P(TEXT_IDXB);
 }
 
-Error DisTms7000::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
-    const auto addr = insn.readUint16();
-    const auto label = lookup(addr);
-    if (label) {
-        out.letter('@').rtext(label);
-    } else {
-        outAbsAddr(out.letter('@'), addr, 16);
-    }
+void DisTms7000::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    out.letter('@');
+    outAbsAddr(out, insn.readUint16());
     if (mode == M_BIDX)
         out.text_P(TEXT_IDXB);
-    return setErrorIf(insn);
 }
 
-Error DisTms7000::decodeRelative(DisInsn &insn, StrBuffer &out) {
-    int16_t delta = static_cast<int8_t>(insn.readByte());
-    setErrorIf(insn);
+void DisTms7000::decodeRelative(DisInsn &insn, StrBuffer &out) const {
+    const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), 8);
-    return getError();
 }
 
-Error DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     switch (mode) {
     case M_A:
         outRegName(out, REG_A);
@@ -99,56 +89,51 @@ Error DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         outRegName(out, REG_ST);
         break;
     case M_RN:
-        return decodeRegister(insn, out);
+        decodeRegister(insn, out);
+        break;
     case M_PN:
         outRegName(out, toPortName(insn.readByte()));
         break;
     case M_IM8:
     case M_IM16:
     case M_BIMM:
-        return decodeImmediate(insn, out, mode);
+        decodeImmediate(insn, out, mode);
+        break;
     case M_ABS:
     case M_BIDX:
-        return decodeAbsolute(insn, out, mode);
+        decodeAbsolute(insn, out, mode);
+        break;
     case M_IDIR:
-        outRegName(out.letter('*'), toRegName(insn.readByte()));
+        out.letter('*');
+        outRegName(out, toRegName(insn.readByte()));
         break;
     case M_REL:
-        return decodeRelative(insn, out);
+        decodeRelative(insn, out);
+        break;
     case M_TRAP:
         outDec(out, 0x1F - (insn.opCode() & 0x1F), 5);
         break;
     default:
         break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisTms7000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
+    DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    const auto src = insn.src();
-    if (src == M_NONE)
-        return setOK();
-    if (decodeOperand(insn, out, src))
-        return getError();
-
+    decodeOperand(insn, out, insn.src());
     const auto dst = insn.dst();
-    if (dst == M_NONE)
-        return setOK();
-    out.comma();
-    if (decodeOperand(insn, out, dst))
-        return getError();
-
-    const auto ext = insn.ext();
-    if (ext == M_NONE)
-        return setOK();
-    out.comma();
-    return decodeOperand(insn, out, ext);
+    if (dst != M_NONE) {
+        decodeOperand(insn, out.comma(), dst);
+        const auto ext = insn.ext();
+        if (ext != M_NONE)
+            decodeOperand(insn, out.comma(), ext);
+    }
+    return setError(insn);
 }
 
 }  // namespace tms7000
