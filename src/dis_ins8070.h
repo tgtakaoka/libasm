@@ -36,12 +36,12 @@ private:
 
     bool _useSharp;
 
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out);
-    Error decodeAbsolute(DisInsn &insn, StrBuffer &out);
-    Error decodeDirect(DisInsn &insn, StrBuffer &out);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeGeneric(DisInsn &insn, StrBuffer &out);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeImmediate(DisInsn &insn, StrBuffer &out) const;
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out) const;
+    void decodeDirect(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, bool autoIncr = false) const;
+    void decodeGeneric(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
