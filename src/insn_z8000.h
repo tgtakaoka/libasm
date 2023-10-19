@@ -33,25 +33,25 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     PostFormat postFormat() const { return flags().postFormat(); }
     Config::opcode_t postMask() const { return flags().postMask(); }
     Config::opcode_t postVal() const { return flags().postVal(); }
-    ModeField dstField() const { return flags().dstField(); }
-    ModeField srcField() const { return flags().srcField(); }
+    OprPos dstPos() const { return flags().dstPos(); }
+    OprPos srcPos() const { return flags().srcPos(); }
     void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
         setFlags(Entry::Flags::create(dst, src, ex1, ex2));
     }
     bool isThreeRegsInsn() const {
-        const uint8_t opc = opCode() >> 8;
+        const auto opc = opCode() >> 8;
         return opc == 0xB8 || opc == 0xBA || opc == 0xBB;
     }
     bool isTranslateInsn() const {
-        const uint8_t opc = opCode() >> 8;
+        const auto opc = opCode() >> 8;
         return opc == 0xB8;
     }
     bool isLoadMultiInsn() const {
-        const uint8_t opc = opCode() >> 8;
+        const auto opc = opCode() >> 8;
         return opc == 0x1C || opc == 0x5C;
     }
     bool isPushPopInsn() const {
-        const uint8_t opc = (opCode() >> 8) & ~0xC0;
+        const auto opc = (opCode() >> 8) & ~0xC0;
         return opc == 0x11 || opc == 0x13 || opc == 0x15 || opc == 0x17;
     }
 };
@@ -81,9 +81,16 @@ private:
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
+        : DisInsnImpl(insn, memory, out), _checkOverlap(0) {}
 
     void readPost() { setPost(readUint16()); }
+
+    void setCheckRegisterOverlap(uint8_t pass) { _checkOverlap = pass; }
+    uint8_t isCheckRegisterOverlap() const { return _checkOverlap; }
+
+private:
+    uint8_t _checkOverlap;
 };
 
 }  // namespace z8000

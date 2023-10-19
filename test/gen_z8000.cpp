@@ -29,6 +29,7 @@ int main(int argc, const char **argv) {
     dis8000.setOption("relative", "enable");
     dis8000.setOption("intel-hex", "enable");
     if (driver.generateGas()) {
+        dis8000.setOption("c-style", "enable");
         dis8000.setOption("ioaddr-prefix", "enable");
         dis8000.setOption("origin-char", ".");
         dis8000.setOption("short-direct", "disable");
