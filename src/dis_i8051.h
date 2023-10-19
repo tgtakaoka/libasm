@@ -28,12 +28,12 @@ struct DisI8051 final : Disassembler, Config {
     DisI8051(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeBitAddr(DisInsn &insn, StrBuffer &out);
-    Error decodeRReg(DisInsn &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeAddress(DisInsn &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, const AddrMode mode);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode);
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeBitAddr(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeRReg(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
