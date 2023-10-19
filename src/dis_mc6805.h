@@ -37,11 +37,11 @@ private:
 
     uint8_t _pc_bits;
 
-    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
-    Error decodeExtended(DisInsn &insn, StrBuffer &out);
-    Error decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeDirectPage(DisInsn &insn, StrBuffer &out) const;
+    void decodeExtended(DisInsn &insn, StrBuffer &out) const;
+    void decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
