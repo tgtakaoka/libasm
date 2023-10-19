@@ -28,11 +28,11 @@ struct DisMc6800 final : Disassembler, Config {
     DisMc6800(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodeDirectPage(DisInsn &insn, StrBuffer &out);
-    Error decodeExtended(DisInsn &insn, StrBuffer &out);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeBitNumber(DisInsn &insn, StrBuffer &out);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeDirectPage(DisInsn &insn, StrBuffer &out) const;
+    void decodeExtended(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeBitNumber(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
