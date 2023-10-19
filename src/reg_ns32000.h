@@ -115,7 +115,6 @@ ConfigName parseConfigName(StrScanner &scan);
 StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs);
 
 StrOptName parseStrOptName(StrScanner &scan);
-StrBuffer &outStrOptNames(StrBuffer &out, uint8_t strOpts);
 
 OprSize parseIndexSize(StrScanner &scan);
 char indexSizeChar(OprSize size);

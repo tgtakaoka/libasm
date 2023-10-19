@@ -62,7 +62,7 @@ void test_dis_ns32000() {
             // clang-format off
             "      extd    r1, x'00112233(x'00334455(fp))[r3:w], x'00556677(x'00778899(sb))[r4:w], 32\n"
             // clang-format on
-            "# test.bin: x'abce05: error: Register not allowed\n"
+            "# test.bin: x'abce05: error: Operand not aligned\n"
             "#   abce05 : ce ec 08\n",
             "       0 :                            cpu     ns32032\n"
             "  abcdef :                            org     x'abcdef\n"
@@ -72,7 +72,7 @@ void test_dis_ns32000() {
             "  abcdf5 : 33 44 55 c0 11 22\n"
             "  abcdfb : 33 c0 77 88 99 c0\n"
             "  abce01 : 55 66 77 20\n"
-            "test.bin: x'abce05: error: Register not allowed\n"
+            "test.bin: x'abce05: error: Operand not aligned\n"
             "  abce05 : ce ec 08                   deib    r1, r3\n",
             0x2e, 0x4b, 0xef, 0x83, 0x94, 0xc0, 0x33, 0x44, 0x55, 0xc0, 0x11, 0x22, 0x33, 0xc0,
             0x77, 0x88, 0x99, 0xc0, 0x55, 0x66, 0x77, 0x20, 0xce, 0xec, 0x08);

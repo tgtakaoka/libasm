@@ -45,26 +45,28 @@ private:
     bool _externalParen;
     bool _floatPrefix;
 
-    struct Displacement {
+    struct Displacement : ErrorReporter {
         int32_t val32;
         uint8_t bits;
     };
 
-    StrBuffer &outDisplacement(StrBuffer &out, const Displacement &disp);
+    StrBuffer &outDisplacement(StrBuffer &out, const Displacement &disp) const;
 
-    Error readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos);
-    Error readDisplacement(DisInsn &insn, Displacement &disp);
+    Error readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) const;
+    Error readDisplacement(DisInsn &insn, Displacement &disp) const;
 
-    Error decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeBitField(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeConfig(const DisInsn &insn, StrBuffer &out, OprPos pos);
-    Error decodeStrOpt(const DisInsn &insn, StrBuffer &out, OprPos pos);
-    Error decodeRegisterList(DisInsn &insn, StrBuffer &out);
-    Error decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size);
+    void decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeBitField(DisInsn &insn, StrBuffer &out) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeConfig(DisInsn &insn, StrBuffer &out, OprPos pos) const;
+    void decodeStrOpt(DisInsn &insn, StrBuffer &out, OprPos pos) const;
+    void decodeRegisterList(DisInsn &insn, StrBuffer &out) const;
+    void decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
+            Error idxError) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
+            Error idxError = OK) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
