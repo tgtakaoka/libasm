@@ -29,12 +29,12 @@ struct DisMn1610 final : Disassembler, Config {
     DisMn1610(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error outRegister(StrBuffer &out, RegName reg, AddrMode mode);
-    Error outConditionCode(StrBuffer &out, CcName cc);
-    Error outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base);
-    Error outIndirect(StrBuffer &out, Config::opcode_t opc);
-    StrBuffer &outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    StrBuffer &outRegister(StrBuffer &out, RegName reg, AddrMode mode) const;
+    void outConditionCode(StrBuffer &out, CcName cc) const;
+    void outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base) const;
+    void outIndirect(StrBuffer &out, Config::opcode_t opc) const;
+    StrBuffer &outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }
