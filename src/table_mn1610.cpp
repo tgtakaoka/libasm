@@ -355,44 +355,58 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     const auto mode4 = entry->flags().mode4();
     if (mode1 == M_GEN || mode2 == M_GEN)
         opc &= ~((7 << 11) | 0xFF);
+    const auto dstReg = (opc >> 8) & 7;
     if (mode1 == M_RD) {
-        if (((opc >> 8) & 7) == 7)
+        if (dstReg == 7)
             return false;
         opc &= ~(7 << 8);
     }
     if (mode1 == M_RDG) {
-        if (((opc >> 8) & 7) >= 6)
-        return false;
+        if (dstReg >= 6)
+            return false;
         opc &= ~(7 << 8);
     }
+    const auto srcReg = opc & 7;
     if (mode1 == M_RS || mode2 == M_RS) {
-        if ((opc & 7) == 7)
+        if (srcReg == 7)
             return false;
         opc &= ~7;
     }
     if (mode1 == M_RSG) {
-        if ((opc & 7) >= 6)
-            return false;
+        if (srcReg >= 6)
+            return false;  // no STR
         opc &= ~7;
     }
     if (mode1 == M_RI || mode2 == M_RI)
         opc &= ~3;
     if (mode3 == M_RIAU) {
-        if (((opc >> 6) & 3) == 0)
+        const auto idirMode = (opc >> 6) & 3;
+        if (idirMode == 0)
             return false;
         opc &= ~((3 << 6) | 3);
     }
     if (mode2 == M_SB)
         opc &= ~(3 << 4);
-    if (mode1 == M_RB || mode2 == M_RB || mode1 == M_RBW || mode2 == M_RBW)
+    if (mode1 == M_RBW || mode2 == M_RBW) {
+        const auto segBase = (opc >> 4) & 7;
+        if (segBase == 0)
+            return false;  // no CSBR
+        opc &= ~(7 << 4);
+    }
+    if (mode1 == M_RB || mode2 == M_RB)
         opc &= ~(7 << 4);
     if (mode1 == M_RP || mode2 == M_RP) {
-        if (((opc >> 4) & 7) >= 3)
+        const auto cntlReg = (opc >> 4) & 7;
+        if (cntlReg >= 3)
             return false;
         opc &= ~(7 << 4);
     }
-    if (mode2 == M_RHR || mode2 == M_RHW)
+    if (mode2 == M_RHR || mode2 == M_RHW) {
+        const auto hardReg = (opc >> 4) & 7;
+        if (hardReg == 7)
+            return false;
         opc &= ~(7 << 4);
+    }
     if (mode3 == M_SKIP || mode4 == M_SKIP)
         opc &= ~(0xF << 4);
     if (mode2 == M_IM8 || mode2 == M_IOA)
@@ -426,7 +440,7 @@ Error TableMn1610::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     } else if (name.iequals_P(TEXT_CPU_MN1610 + 2)) {
         cpuType = MN1610;
     } else if (name.iequals_P(TEXT_CPU_MN1613 + 2)) {
-        cpuType = MN1613;;
+        cpuType = MN1613;
     } else if (name.iequals_P(TEXT_CPU_MN1613A + 2)) {
         cpuType = MN1613A;
     } else {

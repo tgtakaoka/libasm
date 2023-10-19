@@ -41,30 +41,20 @@ DisMn1610::DisMn1610(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisMn1610::outConditionCode(StrBuffer &out, CcName cc) {
-    if (cc == CC_UNDEF)
-        return setErrorIf(ILLEGAL_OPERAND);
+void DisMn1610::outConditionCode(StrBuffer &out, CcName cc) const {
     if (cc != CC_NONE)
         outCcName(out, cc);
-    return OK;
 }
 
-Error DisMn1610::outRegister(StrBuffer &out, RegName reg, AddrMode mode) {
-    if (reg == REG_UNDEF)
-        setErrorIf(ILLEGAL_REGISTER);
-    if (reg == REG_STR && (mode == M_RDG || mode == M_RSG))
-        setErrorIf(ILLEGAL_REGISTER);
-    if (reg == REG_CSBR && mode == M_RBW)
-        setErrorIf(REGISTER_NOT_ALLOWED);
+StrBuffer &DisMn1610::outRegister(StrBuffer &out, RegName reg, AddrMode mode) const {
     if (reg == REG_CSBR && mode == M_SB)
-        return OK;
+        return out;
     if (reg == REG_SIR && mode == M_RHW)
         reg = REG_SOR;
-    outRegName(out, reg);
-    return OK;
+    return outRegName(out, reg);
 }
 
-Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base) {
+void DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::uintptr_t base) const {
     const uint8_t addr = opc & 0xFF;
     const auto mode = (opc >> 11) & 7;
     const Config::uintptr_t target = base + static_cast<int8_t>(addr);
@@ -101,28 +91,41 @@ Error DisMn1610::outGenericAddr(StrBuffer &out, Config::opcode_t opc, Config::ui
         outRegName(out.letter('('), (mode == 4 || mode == 6) ? REG_X0 : REG_X1).letter(')');
         break;
     }
-    return OK;
 }
 
-Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisMn1610::outIndirect(StrBuffer &out, Config::opcode_t opc) const {
+    const auto mode = (opc >> 6) & 3;
+    if (mode == 2)
+        out.letter('-');
+    outRegName(out.letter('('), decodeIndirect(opc)).letter(')');
+    if (mode == 3)
+        out.letter('+');
+}
+
+void DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     auto opc = insn.opCode();
     switch (mode) {
     case M_SKIP:
-        return outConditionCode(out, decodeSkip(opc >> 4));
+        outConditionCode(out, decodeSkip(opc >> 4));
+        break;
     case M_RD:
     case M_RDG:
-        return outRegister(out, decodeRegNum(opc >> 8), mode);
+        outRegister(out, decodeRegNum(opc >> 8), mode);
+        break;
     case M_RS:
     case M_RSG:
-        return outRegister(out, decodeRegNum(opc), mode);
+        outRegister(out, decodeRegNum(opc), mode);
+        break;
     case M_GEN:
-        return outGenericAddr(out, opc, insn.address());
+        outGenericAddr(out, opc, insn.address());
+        break;
     case M_EOP:
-        return outConditionCode(out, decodeEop(opc));
+        outConditionCode(out, decodeEop(opc));
+        break;
     case M_IM4:
     case M_BIT:
         outDec(out, opc & 0xF, 4);
-        return OK;
+        break;
     case M_IM8W:
         opc = insn.readUint16();
         // Fall-through
@@ -131,66 +134,59 @@ Error DisMn1610::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         break;
     case M_IOA:
         outAbsAddr(out, opc & 0xFF, 8);
-        return OK;
+        break;
     case M_ILVL:
         outDec(out, opc & 3, 2);
-        return OK;
+        break;
     case M_IM16:
+        outHex(out, insn.readUint16(), 16);
+        break;
     case M_ABS:
         outAbsAddr(out, insn.readUint16(), 16);
         break;
     case M_R0:
-        return outRegister(out, REG_R0, mode);
+        outRegister(out, REG_R0, mode);
+        break;
     case M_DR0:
-        return outRegister(out, REG_DR0, mode);
+        outRegister(out, REG_DR0, mode);
+        break;
     case M_RI1:
     case M_RI2:
-        outRegister(out.letter('('), mode == M_RI1 ? REG_R1 : REG_R2, mode);
-        out.letter(')');
-        return OK;
+        outRegister(out.letter('('), mode == M_RI1 ? REG_R1 : REG_R2, mode).letter(')');
+        break;
     case M_RI:
-        outRegister(out.letter('('), decodeIndirect(opc), mode);
-        out.letter(')');
-        return OK;
+        outRegister(out.letter('('), decodeIndirect(opc), mode).letter(')');
+        break;
     case M_RIAU:
-        return outIndirect(out, opc);
+        outIndirect(out, opc);
+        break;
     case M_SB:
-        if (decodeSegment((opc >> 4) & 3) == REG_CSBR)
-            return OK;  // Can be omitted.
-        return outRegister(out, decodeSegment((opc >> 4) & 3), mode);
+        if (decodeSegment((opc >> 4) & 3) != REG_CSBR)
+            outRegister(out, decodeSegment((opc >> 4) & 3), mode);
+        break;
     case M_IABS:
-        outAbsAddr(out.letter('('), insn.readUint16(), 16);
-        out.letter(')');
+        outAbsAddr(out.letter('('), insn.readUint16(), 16).letter(')');
         break;
     case M_COP:
-        return outConditionCode(out, decodeCop(opc >> 3));
+        outConditionCode(out, decodeCop(opc >> 3));
+        break;
     case M_RBW:
     case M_RB:
-        return outRegister(out, decodeSegment(opc >> 4), mode);
+        outRegister(out, decodeSegment(opc >> 4), mode);
+        break;
     case M_RHW:
     case M_RHR:
-        return outRegister(out, decodeHardware(opc >> 4), mode);
+        outRegister(out, decodeHardware(opc >> 4), mode);
+        break;
     case M_RP:
-        return outRegister(out, decodeSpecial(opc >> 4), mode);
+        outRegister(out, decodeSpecial(opc >> 4), mode);
+        break;
     default:
         break;
     }
-    return setErrorIf(insn);
 }
 
-Error DisMn1610::outIndirect(StrBuffer &out, Config::opcode_t opc) {
-    const auto mode = (opc >> 6) & 3;
-    if (mode == 0)
-        return setError(ILLEGAL_OPERAND_MODE);
-    if (mode == 2)
-        out.letter('-');
-    outRegName(out.letter('('), decodeIndirect(opc)).letter(')');
-    if (mode == 3)
-        out.letter('+');
-    return OK;
-}
-
-StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode) {
+StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mode) const {
     if (mode == M_SKIP && decodeSkip(opc >> 4) == CC_NONE)
         return out;
     if (mode == M_EOP && decodeEop(opc) == CC_NONE)
@@ -203,29 +199,25 @@ StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mo
 }
 
 Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
+    DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    const auto mode1 = insn.mode1();
-    if (decodeOperand(insn, out, mode1))
-        return getError();
+    decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
-    if (mode2 == M_NONE)
-        return getError();
-    if (decodeOperand(insn, outComma(out, opc, mode2), mode2))
-        return getError();
-    const auto mode3 = insn.mode3();
-    if (mode3 == M_NONE)
-        return getError();
-    if (decodeOperand(insn, outComma(out, opc, mode3), mode3))
-        return getError();
-    const auto mode4 = insn.mode4();
-    if (mode4 == M_NONE)
-        return getError();
-    return decodeOperand(insn, outComma(out, opc, mode4), mode4);
+    if (mode2 != M_NONE) {
+        decodeOperand(insn, outComma(out, opc, mode2), mode2);
+        const auto mode3 = insn.mode3();
+        if (mode3 != M_NONE) {
+            decodeOperand(insn, outComma(out, opc, mode3), mode3);
+            const auto mode4 = insn.mode4();
+            if (mode4 != M_NONE)
+                decodeOperand(insn, outComma(out, opc, mode4), mode4);
+        }
+    }
+    return setError(insn);
 }
 
 }  // namespace mn1610

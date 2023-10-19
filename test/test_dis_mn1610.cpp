@@ -37,7 +37,6 @@ static bool is1613() {
 static void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "on");
-    disassembler.setOption("c-style", "on");
 }
 
 static void tear_down() {
@@ -66,30 +65,30 @@ void test_cpu() {
 }
 
 static void test_transfer() {
-    TEST("L",  "R1, 0x10",       0xC000|(0<<11)|(1<<8)|0x10);
-    TEST("L",  "R2, *-128",      0xC000|(1<<11)|(2<<8)|0x80);
-    TEST("L",  "R3, (0xFF)",     0xC000|(2<<11)|(3<<8)|0xFF);
-    TEST("L",  "R4, (*+127)",    0xC000|(3<<11)|(4<<8)|0x7F);
-    TEST("L",  "R0, 128(X0)",    0xC000|(4<<11)|(0<<8)|0x80);
-    TEST("L",  "SP, 255(X1)",    0xC000|(5<<11)|(5<<8)|0xFF);
-    TEST("L",  "R1, (0x10)(X0)", 0xC000|(6<<11)|(1<<8)|0x10);
-    TEST("L",  "R2, (0x80)(X1)", 0xC000|(7<<11)|(2<<8)|0x80);
-    TEST("ST", "R1, 0x10",       0x8000|(0<<11)|(1<<8)|0x10);
-    TEST("ST", "R2, *-128",      0x8000|(1<<11)|(2<<8)|0x80);
-    TEST("ST", "R3, (0xFF)",     0x8000|(2<<11)|(3<<8)|0xFF);
-    TEST("ST", "R4, (*+127)",    0x8000|(3<<11)|(4<<8)|0x7F);
-    TEST("ST", "R0, 128(X0)",    0x8000|(4<<11)|(0<<8)|0x80);
-    TEST("ST", "SP, 255(X1)",    0x8000|(5<<11)|(5<<8)|0xFF);
-    TEST("ST", "R1, (0x10)(X0)", 0x8000|(6<<11)|(1<<8)|0x10);
-    TEST("ST", "R2, (0x80)(X1)", 0x8000|(7<<11)|(2<<8)|0x80);
+    TEST("L",  "R1, X'10'",       0xC000|(0<<11)|(1<<8)|0x10);
+    TEST("L",  "R2, *-128",       0xC000|(1<<11)|(2<<8)|0x80);
+    TEST("L",  "R3, (X'FF')",     0xC000|(2<<11)|(3<<8)|0xFF);
+    TEST("L",  "R4, (*+127)",     0xC000|(3<<11)|(4<<8)|0x7F);
+    TEST("L",  "R0, 128(X0)",     0xC000|(4<<11)|(0<<8)|0x80);
+    TEST("L",  "SP, 255(X1)",     0xC000|(5<<11)|(5<<8)|0xFF);
+    TEST("L",  "R1, (X'10')(X0)", 0xC000|(6<<11)|(1<<8)|0x10);
+    TEST("L",  "R2, (X'80')(X1)", 0xC000|(7<<11)|(2<<8)|0x80);
+    TEST("ST", "R1, X'10'",       0x8000|(0<<11)|(1<<8)|0x10);
+    TEST("ST", "R2, *-128",       0x8000|(1<<11)|(2<<8)|0x80);
+    TEST("ST", "R3, (X'FF')",     0x8000|(2<<11)|(3<<8)|0xFF);
+    TEST("ST", "R4, (*+127)",     0x8000|(3<<11)|(4<<8)|0x7F);
+    TEST("ST", "R0, 128(X0)",     0x8000|(4<<11)|(0<<8)|0x80);
+    TEST("ST", "SP, 255(X1)",     0x8000|(5<<11)|(5<<8)|0xFF);
+    TEST("ST", "R1, (X'10')(X0)", 0x8000|(6<<11)|(1<<8)|0x10);
+    TEST("ST", "R2, (X'80')(X1)", 0x8000|(7<<11)|(2<<8)|0x80);
 
     disassembler.setOption("relative", "off");
     if (is1610()) {
-        ATEST(0x1000, "L", "R2, 0x0F80-*(IC)",    0xC000|(1<<11)|(2<<8)|0x80);
-        ATEST(0x1000, "L", "R4, (0x107F-*(IC))",  0xC000|(3<<11)|(4<<8)|0x7F);
+        ATEST(0x1000, "L", "R2, X'0F80'-*(IC)",    0xC000|(1<<11)|(2<<8)|0x80);
+        ATEST(0x1000, "L", "R4, (X'107F'-*(IC))",  0xC000|(3<<11)|(4<<8)|0x7F);
     } else {
-        ATEST(0x1000, "L", "R2, 0x00F80-*(IC)",   0xC000|(1<<11)|(2<<8)|0x80);
-        ATEST(0x1000, "L", "R4, (0x0107F-*(IC))", 0xC000|(3<<11)|(4<<8)|0x7F);
+        ATEST(0x1000, "L", "R2, X'00F80'-*(IC)",   0xC000|(1<<11)|(2<<8)|0x80);
+        ATEST(0x1000, "L", "R4, (X'0107F'-*(IC))", 0xC000|(3<<11)|(4<<8)|0x7F);
     }
     disassembler.setOption("relative", "enable");
 
@@ -133,23 +132,23 @@ static void test_transfer() {
     TEST("POP",  "STR", 0x2002|(6<<8));
 
     if (is1613()) {
-        TEST("LD",  "R1, 0x1234",       0x2708|(0<<4)|1, 0x1234);
-        TEST("LD",  "R2, SSBR, 0x1234", 0x2708|(1<<4)|2, 0x1234);
-        TEST("LD",  "R3, TSR0, 0x1234", 0x2708|(2<<4)|3, 0x1234);
-        TEST("LD",  "R4, TSR1, 0x1234", 0x2708|(3<<4)|4, 0x1234);
-        TEST("LD",  "SP, TSR1, 0x1234", 0x2708|(3<<4)|5, 0x1234);
-        TEST("LR",  "SP, TSR1, (R1)",   0x2000|(5<<8)|(1<<6)|(3<<4)|0);
-        TEST("LR",  "R0, TSR0, -(R2)",  0x2000|(0<<8)|(2<<6)|(2<<4)|1);
-        TEST("LR",  "R1, SSBR, (R3)+",  0x2000|(1<<8)|(3<<6)|(1<<4)|2);
-        TEST("LR",  "R2, (R4)",         0x2000|(2<<8)|(1<<6)|(0<<4)|3);
-        TEST("STD", "R1, 0x1234",       0x2748|(0<<4)|1, 0x1234);
-        TEST("STD", "R2, SSBR, 0x1234", 0x2748|(1<<4)|2, 0x1234);
-        TEST("STD", "R3, TSR0, 0x1234", 0x2748|(2<<4)|3, 0x1234);
-        TEST("STD", "R4, TSR1, 0x1234", 0x2748|(3<<4)|4, 0x1234);
-        TEST("STR", "SP, TSR1, (R1)",   0x2004|(5<<8)|(1<<6)|(3<<4)|0);
-        TEST("STR", "R0, TSR0, -(R2)",  0x2004|(0<<8)|(2<<6)|(2<<4)|1);
-        TEST("STR", "R1, SSBR, (R3)+",  0x2004|(1<<8)|(3<<6)|(1<<4)|2);
-        TEST("STR", "R2, (R4)",         0x2004|(2<<8)|(1<<6)|(0<<4)|3);
+        TEST("LD",  "R1, X'1234'",       0x2708|(0<<4)|1, 0x1234);
+        TEST("LD",  "R2, SSBR, X'1234'", 0x2708|(1<<4)|2, 0x1234);
+        TEST("LD",  "R3, TSR0, X'1234'", 0x2708|(2<<4)|3, 0x1234);
+        TEST("LD",  "R4, TSR1, X'1234'", 0x2708|(3<<4)|4, 0x1234);
+        TEST("LD",  "SP, TSR1, X'1234'", 0x2708|(3<<4)|5, 0x1234);
+        TEST("LR",  "SP, TSR1, (R1)",  0x2000|(5<<8)|(1<<6)|(3<<4)|0);
+        TEST("LR",  "R0, TSR0, -(R2)", 0x2000|(0<<8)|(2<<6)|(2<<4)|1);
+        TEST("LR",  "R1, SSBR, (R3)+", 0x2000|(1<<8)|(3<<6)|(1<<4)|2);
+        TEST("LR",  "R2, (R4)",        0x2000|(2<<8)|(1<<6)|(0<<4)|3);
+        TEST("STD", "R1, X'1234'",       0x2748|(0<<4)|1, 0x1234);
+        TEST("STD", "R2, SSBR, X'1234'", 0x2748|(1<<4)|2, 0x1234);
+        TEST("STD", "R3, TSR0, X'1234'", 0x2748|(2<<4)|3, 0x1234);
+        TEST("STD", "R4, TSR1, X'1234'", 0x2748|(3<<4)|4, 0x1234);
+        TEST("STR", "SP, TSR1, (R1)",  0x2004|(5<<8)|(1<<6)|(3<<4)|0);
+        TEST("STR", "R0, TSR0, -(R2)", 0x2004|(0<<8)|(2<<6)|(2<<4)|1);
+        TEST("STR", "R1, SSBR, (R3)+", 0x2004|(1<<8)|(3<<6)|(1<<4)|2);
+        TEST("STR", "R2, (R4)",        0x2004|(2<<8)|(1<<6)|(0<<4)|3);
 
         TEST("MVWR", "R0, (R1), EZ",  0x7F08|(8<<4)|0);
         TEST("MVWR", "R0, (R2), ENZ", 0x7F08|(9<<4)|1);
@@ -160,10 +159,11 @@ static void test_transfer() {
         TEST("MVBR", "R0, (R3), LMZ", 0x7F00|(12<<4)|2);
         TEST("MVBR", "R0, (R4), LP",  0x7F00|(13<<4)|3);
 
-        TEST("MVWI", "R0, 0x1234, LPZ", 0x780F|(0<<8)|(14<<4), 0x1234);
-        TEST("MVWI", "R2, 0x5678, LM",  0x780F|(2<<8)|(15<<4), 0x5678);
-        TEST("MVWI", "SP, 0x9ABC, SKP", 0x780F|(5<<8)|(1<<4),  0x9ABC);
-        TEST("MVWI", "STR, 0xDEF0",     0x780F|(6<<8)|(0<<4),  0xDEF0);
+        TEST("MVWI", "R0, X'1234', LPZ", 0x780F|(0<<8)|(14<<4), 0x1234);
+        TEST("MVWI", "R2, X'5678', LM",  0x780F|(2<<8)|(15<<4), 0x5678);
+        TEST("MVWI", "SP, X'9ABC', SKP", 0x780F|(5<<8)|(1<<4),  0x9ABC);
+        TEST("MVWI", "STR, X'DEF0'",     0x780F|(6<<8)|(0<<4),  0xDEF0);
+        NMEM("MVWI", "STR, 0",      "0", 0x780F|(6<<8)|(0<<4));
 
         TEST("BSWR", "R0, (R1), SKP", 0x7708|(1<<4)|0);
         TEST("BSWR", "R0, (R2)",      0x7708|(0<<4)|1);
@@ -245,41 +245,42 @@ static void test_integer() {
     TEST("LAD", "R0, SP",       0x6800|(0<<8)|(0<<4)|5);
 
     if (is1613()) {
-        TEST("AWR", "R0, (R1), EZ",    0x5F08|(8<<4)|0);
-        TEST("AWR", "R0, (R2), ENZ",   0x5F08|(9<<4)|1);
-        TEST("AWR", "R0, (R3), OZ",    0x5F08|(10<<4)|2);
-        TEST("AWR", "R0, (R4)",        0x5F08|(0<<4)|3);
-        TEST("AWI", "R0, 0x1234, LPZ", 0x580F|(0<<8)|(14<<4), 0x1234);
-        TEST("AWI", "R2, 0x5678, LM",  0x580F|(2<<8)|(15<<4), 0x5678);
-        TEST("AWI", "SP, 0x9ABC, SKP", 0x580F|(5<<8)|(1<<4),  0x9ABC);
-        TEST("AWI", "STR, 0xDEF0",     0x580F|(6<<8)|(0<<4),  0xDEF0);
+        TEST("AWR", "R0, (R1), EZ",  0x5F08|(8<<4)|0);
+        TEST("AWR", "R0, (R2), ENZ", 0x5F08|(9<<4)|1);
+        TEST("AWR", "R0, (R3), OZ",  0x5F08|(10<<4)|2);
+        TEST("AWR", "R0, (R4)",      0x5F08|(0<<4)|3);
+        TEST("AWI", "R0, X'1234', LPZ", 0x580F|(0<<8)|(14<<4), 0x1234);
+        TEST("AWI", "R2, X'5678', LM",  0x580F|(2<<8)|(15<<4), 0x5678);
+        TEST("AWI", "SP, X'9ABC', SKP", 0x580F|(5<<8)|(1<<4),  0x9ABC);
+        TEST("AWI", "STR, X'DEF0'",     0x580F|(6<<8)|(0<<4),  0xDEF0);
+        NMEM("AWI", "STR, 0",      "0", 0x580F|(6<<8)|(0<<4));
 
-        TEST("SWR", "R0, (R1)",        0x5F00|(0<<4)|0);
-        TEST("SWR", "R0, (R2), ONZ",   0x5F00|(11<<4)|1);
-        TEST("SWR", "R0, (R3), LMZ",   0x5F00|(12<<4)|2);
-        TEST("SWR", "R0, (R4), LP",    0x5F00|(13<<4)|3);
-        TEST("SWI", "R0, 0x1234, LPZ", 0x5807|(0<<8)|(14<<4), 0x1234);
-        TEST("SWI", "R2, 0x5678, LM",  0x5807|(2<<8)|(15<<4), 0x5678);
-        TEST("SWI", "SP, 0x9ABC, SKP", 0x5807|(5<<8)|(1<<4),  0x9ABC);
-        TEST("SWI", "STR, 0xDEF0",     0x5807|(6<<8)|(0<<4),  0xDEF0);
+        TEST("SWR", "R0, (R1)",      0x5F00|(0<<4)|0);
+        TEST("SWR", "R0, (R2), ONZ", 0x5F00|(11<<4)|1);
+        TEST("SWR", "R0, (R3), LMZ", 0x5F00|(12<<4)|2);
+        TEST("SWR", "R0, (R4), LP",  0x5F00|(13<<4)|3);
+        TEST("SWI", "R0, X'1234', LPZ", 0x5807|(0<<8)|(14<<4), 0x1234);
+        TEST("SWI", "R2, X'5678', LM",  0x5807|(2<<8)|(15<<4), 0x5678);
+        TEST("SWI", "SP, X'9ABC', SKP", 0x5807|(5<<8)|(1<<4),  0x9ABC);
+        TEST("SWI", "STR, X'DEF0'",     0x5807|(6<<8)|(0<<4),  0xDEF0);
 
-        TEST("CWR", "R0, (R1), EZ",    0x5708|(8<<4)|0);
-        TEST("CWR", "R0, (R2), ENZ",   0x5708|(9<<4)|1);
-        TEST("CWR", "R0, (R3), OZ",    0x5708|(10<<4)|2);
-        TEST("CWR", "R0, (R4)",        0x5708|(0<<4)|3);
-        TEST("CWI", "R0, 0x1234, LPZ", 0x500F|(0<<8)|(14<<4), 0x1234);
-        TEST("CWI", "R2, 0x5678, LM",  0x500F|(2<<8)|(15<<4), 0x5678);
-        TEST("CWI", "SP, 0x9ABC, SKP", 0x500F|(5<<8)|(1<<4),  0x9ABC);
-        TEST("CWI", "STR, 0xDEF0",     0x500F|(6<<8)|(0<<4),  0xDEF0);
+        TEST("CWR", "R0, (R1), EZ",  0x5708|(8<<4)|0);
+        TEST("CWR", "R0, (R2), ENZ", 0x5708|(9<<4)|1);
+        TEST("CWR", "R0, (R3), OZ",  0x5708|(10<<4)|2);
+        TEST("CWR", "R0, (R4)",      0x5708|(0<<4)|3);
+        TEST("CWI", "R0, X'1234', LPZ", 0x500F|(0<<8)|(14<<4), 0x1234);
+        TEST("CWI", "R2, X'5678', LM",  0x500F|(2<<8)|(15<<4), 0x5678);
+        TEST("CWI", "SP, X'9ABC', SKP", 0x500F|(5<<8)|(1<<4),  0x9ABC);
+        TEST("CWI", "STR, X'DEF0'",     0x500F|(6<<8)|(0<<4),  0xDEF0);
 
         TEST("CBR", "R0, (R1)",      0x5700|(0<<4)|0);
         TEST("CBR", "R0, (R2), ONZ", 0x5700|(11<<4)|1);
         TEST("CBR", "R0, (R3), LMZ", 0x5700|(12<<4)|2);
         TEST("CBR", "R0, (R4), LP",  0x5700|(13<<4)|3);
-        TEST("CBI", "R0, 52, LPZ",   0x5007|(0<<8)|(14<<4), 0x1234);
-        TEST("CBI", "R2, 120, LM",   0x5007|(2<<8)|(15<<4), 0x5678);
-        TEST("CBI", "SP, 188, SKP",  0x5007|(5<<8)|(1<<4),  0x9ABC);
-        TEST("CBI", "STR, 240",      0x5007|(6<<8)|(0<<4),  0xDEF0);
+        TEST("CBI", "R0, 52, LPZ",  0x5007|(0<<8)|(14<<4), 0x1234);
+        TEST("CBI", "R2, 120, LM",  0x5007|(2<<8)|(15<<4), 0x5678);
+        TEST("CBI", "SP, 188, SKP", 0x5007|(5<<8)|(1<<4),  0x9ABC);
+        TEST("CBI", "STR, 240",     0x5007|(6<<8)|(0<<4),  0xDEF0);
 
         TEST("NEG", "R0",    0x1F00|(0<<3)|0);
         TEST("NEG", "R1, C", 0x1F00|(1<<3)|1);
@@ -293,10 +294,10 @@ static void test_integer() {
         TEST("AD", "DR0, (R2), C, ENZ", 0x4F04|(9<<4)|(1<<3)|1);
         TEST("AD", "DR0, (R3), OZ",     0x4F04|(10<<4)|(0<<3)|2);
         TEST("AD", "DR0, (R4), C",      0x4F04|(0<<4)|(1<<3)|3);
-        TEST("SD", "DR0, (R1), C, EZ",  0x4704|(8<<4)|(1<<3)|0);
-        TEST("SD", "DR0, (R2), ENZ",    0x4704|(9<<4)|(0<<3)|1);
-        TEST("SD", "DR0, (R3), C, OZ",  0x4704|(10<<4)|(1<<3)|2);
-        TEST("SD", "DR0, (R4)",         0x4704|(0<<4)|(0<<3)|3);
+        TEST("SD", "DR0, (R1), C, EZ", 0x4704|(8<<4)|(1<<3)|0);
+        TEST("SD", "DR0, (R2), ENZ",   0x4704|(9<<4)|(0<<3)|1);
+        TEST("SD", "DR0, (R3), C, OZ", 0x4704|(10<<4)|(1<<3)|2);
+        TEST("SD", "DR0, (R4)",        0x4704|(0<<4)|(0<<3)|3);
 
         TEST("M", "DR0, (R1), EZ",  0x7F0C|(8<<4)|0);
         TEST("M", "DR0, (R2), ENZ", 0x7F0C|(9<<4)|1);
@@ -311,19 +312,19 @@ static void test_integer() {
         TEST("DAA", "R0, (R2), C, ENZ", 0x5F04|(9<<4)|(1<<3)|1);
         TEST("DAA", "R0, (R3), OZ",     0x5F04|(10<<4)|(0<<3)|2);
         TEST("DAA", "R0, (R4), C",      0x5F04|(0<<4)|(1<<3)|3);
-        TEST("DAS", "R0, (R1), C, EZ",  0x5704|(8<<4)|(1<<3)|0);
-        TEST("DAS", "R0, (R2), ENZ",    0x5704|(9<<4)|(0<<3)|1);
-        TEST("DAS", "R0, (R3), C, OZ",  0x5704|(10<<4)|(1<<3)|2);
-        TEST("DAS", "R0, (R4)",         0x5704|(0<<4)|(0<<3)|3);
+        TEST("DAS", "R0, (R1), C, EZ", 0x5704|(8<<4)|(1<<3)|0);
+        TEST("DAS", "R0, (R2), ENZ",   0x5704|(9<<4)|(0<<3)|1);
+        TEST("DAS", "R0, (R3), C, OZ", 0x5704|(10<<4)|(1<<3)|2);
+        TEST("DAS", "R0, (R4)",        0x5704|(0<<4)|(0<<3)|3);
 
         TEST("LADR", "R0, (R1), EZ",  0x6F00|(8<<4)|0);
         TEST("LADR", "R0, (R2), ENZ", 0x6F00|(9<<4)|1);
         TEST("LADR", "R0, (R3), OZ",  0x6F00|(10<<4)|2);
         TEST("LADR", "R0, (R4)",      0x6F00|(0<<4)|3);
-        TEST("LADI", "R0, 0x1234, LPZ", 0x6807|(0<<8)|(14<<4), 0x1234);
-        TEST("LADI", "R2, 0x5678, LM",  0x6807|(2<<8)|(15<<4), 0x5678);
-        TEST("LADI", "SP, 0x9ABC, SKP", 0x6807|(5<<8)|(1<<4),  0x9ABC);
-        TEST("LADI", "STR, 0xDEF0",     0x6807|(6<<8)|(0<<4),  0xDEF0);
+        TEST("LADI", "R0, X'1234', LPZ", 0x6807|(0<<8)|(14<<4), 0x1234);
+        TEST("LADI", "R2, X'5678', LM",  0x6807|(2<<8)|(15<<4), 0x5678);
+        TEST("LADI", "SP, X'9ABC', SKP", 0x6807|(5<<8)|(1<<4),  0x9ABC);
+        TEST("LADI", "STR, X'DEF0'",     0x6807|(6<<8)|(0<<4),  0xDEF0);
     }
 }
 
@@ -383,70 +384,70 @@ static void test_logical() {
     TEST("EOR", "STR, R0, P",   0x6000|(6<<8)|(7<<4)|0);
     TEST("EOR", "R0, SP, EZ",   0x6000|(0<<8)|(8<<4)|5);
 
-    TEST("IMS", "0x10",       0xC600|(0<<11)|0x10);
-    TEST("IMS", "*-128",      0xC600|(1<<11)|0x80);
-    TEST("IMS", "(0xFF)",     0xC600|(2<<11)|0xFF);
-    TEST("IMS", "(*+127)",    0xC600|(3<<11)|0x7F);
-    TEST("IMS", "128(X0)",    0xC600|(4<<11)|0x80);
-    TEST("IMS", "255(X1)",    0xC600|(5<<11)|0xFF);
-    TEST("IMS", "(0x10)(X0)", 0xC600|(6<<11)|0x10);
-    TEST("IMS", "(0x80)(X1)", 0xC600|(7<<11)|0x80);
-    TEST("DMS", "0x10",       0x8600|(0<<11)|0x10);
-    TEST("DMS", "*-128",      0x8600|(1<<11)|0x80);
-    TEST("DMS", "(0xFF)",     0x8600|(2<<11)|0xFF);
-    TEST("DMS", "(*+127)",    0x8600|(3<<11)|0x7F);
-    TEST("DMS", "128(X0)",    0x8600|(4<<11)|0x80);
-    TEST("DMS", "255(X1)",    0x8600|(5<<11)|0xFF);
-    TEST("DMS", "(0x10)(X0)", 0x8600|(6<<11)|0x10);
-    TEST("DMS", "(0x80)(X1)", 0x8600|(7<<11)|0x80);
+    TEST("IMS", "X'10'",       0xC600|(0<<11)|0x10);
+    TEST("IMS", "*-128",       0xC600|(1<<11)|0x80);
+    TEST("IMS", "(X'FF')",     0xC600|(2<<11)|0xFF);
+    TEST("IMS", "(*+127)",     0xC600|(3<<11)|0x7F);
+    TEST("IMS", "128(X0)",     0xC600|(4<<11)|0x80);
+    TEST("IMS", "255(X1)",     0xC600|(5<<11)|0xFF);
+    TEST("IMS", "(X'10')(X0)", 0xC600|(6<<11)|0x10);
+    TEST("IMS", "(X'80')(X1)", 0xC600|(7<<11)|0x80);
+    TEST("DMS", "X'10'",       0x8600|(0<<11)|0x10);
+    TEST("DMS", "*-128",       0x8600|(1<<11)|0x80);
+    TEST("DMS", "(X'FF')",     0x8600|(2<<11)|0xFF);
+    TEST("DMS", "(*+127)",     0x8600|(3<<11)|0x7F);
+    TEST("DMS", "128(X0)",     0x8600|(4<<11)|0x80);
+    TEST("DMS", "255(X1)",     0x8600|(5<<11)|0xFF);
+    TEST("DMS", "(X'10')(X0)", 0x8600|(6<<11)|0x10);
+    TEST("DMS", "(X'80')(X1)", 0x8600|(7<<11)|0x80);
 
     if (is1613()) {
-        TEST("ANDR", "R0, (R1), EZ",    0x6F08|(8<<4)|0);
-        TEST("ANDR", "R0, (R2), ENZ",   0x6F08|(9<<4)|1);
-        TEST("ANDR", "R0, (R3), OZ",    0x6F08|(10<<4)|2);
-        TEST("ANDR", "R0, (R4)",        0x6F08|(0<<4)|3);
-        TEST("ANDI", "R0, 0x1234, LPZ", 0x680F|(0<<8)|(14<<4), 0x1234);
-        TEST("ANDI", "R2, 0x5678, LM",  0x680F|(2<<8)|(15<<4), 0x5678);
-        TEST("ANDI", "SP, 0x9ABC, SKP", 0x680F|(5<<8)|(1<<4),  0x9ABC);
-        TEST("ANDI", "STR, 0xDEF0",     0x680F|(6<<8)|(0<<4),  0xDEF0);
+        TEST("ANDR", "R0, (R1), EZ",  0x6F08|(8<<4)|0);
+        TEST("ANDR", "R0, (R2), ENZ", 0x6F08|(9<<4)|1);
+        TEST("ANDR", "R0, (R3), OZ",  0x6F08|(10<<4)|2);
+        TEST("ANDR", "R0, (R4)",      0x6F08|(0<<4)|3);
+        TEST("ANDI", "R0, X'1234', LPZ", 0x680F|(0<<8)|(14<<4), 0x1234);
+        TEST("ANDI", "R2, X'5678', LM",  0x680F|(2<<8)|(15<<4), 0x5678);
+        TEST("ANDI", "SP, X'9ABC', SKP", 0x680F|(5<<8)|(1<<4),  0x9ABC);
+        TEST("ANDI", "STR, X'DEF0'",     0x680F|(6<<8)|(0<<4),  0xDEF0);
 
-        TEST("ORR", "R0, (R1), EZ",    0x6708|(8<<4)|0);
-        TEST("ORR", "R0, (R2), ENZ",   0x6708|(9<<4)|1);
-        TEST("ORR", "R0, (R3), OZ",    0x6708|(10<<4)|2);
-        TEST("ORR", "R0, (R4)",        0x6708|(0<<4)|3);
-        TEST("ORI", "R0, 0x1234, LPZ", 0x600F|(0<<8)|(14<<4), 0x1234);
-        TEST("ORI", "R2, 0x5678, LM",  0x600F|(2<<8)|(15<<4), 0x5678);
-        TEST("ORI", "SP, 0x9ABC, SKP", 0x600F|(5<<8)|(1<<4),  0x9ABC);
-        TEST("ORI", "STR, 0xDEF0",     0x600F|(6<<8)|(0<<4),  0xDEF0);
+        TEST("ORR", "R0, (R1), EZ",  0x6708|(8<<4)|0);
+        TEST("ORR", "R0, (R2), ENZ", 0x6708|(9<<4)|1);
+        TEST("ORR", "R0, (R3), OZ",  0x6708|(10<<4)|2);
+        TEST("ORR", "R0, (R4)",      0x6708|(0<<4)|3);
+        TEST("ORI", "R0, X'1234', LPZ", 0x600F|(0<<8)|(14<<4), 0x1234);
+        TEST("ORI", "R2, X'5678', LM",  0x600F|(2<<8)|(15<<4), 0x5678);
+        TEST("ORI", "SP, X'9ABC', SKP", 0x600F|(5<<8)|(1<<4),  0x9ABC);
+        TEST("ORI", "STR, X'DEF0'",     0x600F|(6<<8)|(0<<4),  0xDEF0);
 
-        TEST("EORR", "R0, (R1), EZ",    0x6700|(8<<4)|0);
-        TEST("EORR", "R0, (R2), ENZ",   0x6700|(9<<4)|1);
-        TEST("EORR", "R0, (R3), OZ",    0x6700|(10<<4)|2);
-        TEST("EORR", "R0, (R4)",        0x6700|(0<<4)|3);
-        TEST("EORI", "R0, 0x1234, LPZ", 0x6007|(0<<8)|(14<<4), 0x1234);
-        TEST("EORI", "R2, 0x5678, LM",  0x6007|(2<<8)|(15<<4), 0x5678);
-        TEST("EORI", "SP, 0x9ABC, SKP", 0x6007|(5<<8)|(1<<4),  0x9ABC);
-        TEST("EORI", "STR, 0xDEF0",     0x6007|(6<<8)|(0<<4),  0xDEF0);
+        TEST("EORR", "R0, (R1), EZ",  0x6700|(8<<4)|0);
+        TEST("EORR", "R0, (R2), ENZ", 0x6700|(9<<4)|1);
+        TEST("EORR", "R0, (R3), OZ",  0x6700|(10<<4)|2);
+        TEST("EORR", "R0, (R4)",      0x6700|(0<<4)|3);
+        TEST("EORI", "R0, X'1234', LPZ", 0x6007|(0<<8)|(14<<4), 0x1234);
+        TEST("EORI", "R2, X'5678', LM",  0x6007|(2<<8)|(15<<4), 0x5678);
+        TEST("EORI", "SP, X'9ABC', SKP", 0x6007|(5<<8)|(1<<4),  0x9ABC);
+        TEST("EORI", "STR, X'DEF0'",     0x6007|(6<<8)|(0<<4),  0xDEF0);
     }
 }
 
 static void test_branch() {
-    TEST("B", "0x10",       0xC700|(0<<11)|0x10);
-    TEST("B", "*-128",      0xC700|(1<<11)|0x80);
-    TEST("B", "(0xFF)",     0xC700|(2<<11)|0xFF);
-    TEST("B", "(*+127)",    0xC700|(3<<11)|0x7F);
-    TEST("B", "128(X0)",    0xC700|(4<<11)|0x80);
-    TEST("B", "255(X1)",    0xC700|(5<<11)|0xFF);
-    TEST("B", "(0x10)(X0)", 0xC700|(6<<11)|0x10);
-    TEST("B", "(0x80)(X1)", 0xC700|(7<<11)|0x80);
-    TEST("BAL", "0x10",       0x8700|(0<<11)|0x10);
-    TEST("BAL", "*-128",      0x8700|(1<<11)|0x80);
-    TEST("BAL", "(0xFF)",     0x8700|(2<<11)|0xFF);
-    TEST("BAL", "(*+127)",    0x8700|(3<<11)|0x7F);
-    TEST("BAL", "128(X0)",    0x8700|(4<<11)|0x80);
-    TEST("BAL", "255(X1)",    0x8700|(5<<11)|0xFF);
-    TEST("BAL", "(0x10)(X0)", 0x8700|(6<<11)|0x10);
-    TEST("BAL", "(0x80)(X1)", 0x8700|(7<<11)|0x80);
+    TEST("B", "X'10'",       0xC700|(0<<11)|0x10);
+    TEST("B", "*-128",       0xC700|(1<<11)|0x80);
+    TEST("B", "(X'FF')",     0xC700|(2<<11)|0xFF);
+    TEST("B", "(*+127)",     0xC700|(3<<11)|0x7F);
+    TEST("B", "128(X0)",     0xC700|(4<<11)|0x80);
+    TEST("B", "255(X1)",     0xC700|(5<<11)|0xFF);
+    TEST("B", "(X'10')(X0)", 0xC700|(6<<11)|0x10);
+    TEST("B", "(X'80')(X1)", 0xC700|(7<<11)|0x80);
+    TEST("BAL", "X'10'",       0x8700|(0<<11)|0x10);
+    TEST("BAL", "*-128",       0x8700|(1<<11)|0x80);
+    TEST("BAL", "(X'FF')",     0x8700|(2<<11)|0xFF);
+    TEST("BAL", "(*+127)",     0x8700|(3<<11)|0x7F);
+    TEST("BAL", "128(X0)",     0x8700|(4<<11)|0x80);
+    TEST("BAL", "255(X1)",     0x8700|(5<<11)|0xFF);
+    TEST("BAL", "(X'10')(X0)", 0x8700|(6<<11)|0x10);
+    TEST("BAL", "(X'80')(X1)", 0x8700|(7<<11)|0x80);
 
     TEST("RET", "", 0x2003);
     TEST("LPSW", "0", 0x2004|0);
@@ -455,10 +456,14 @@ static void test_branch() {
     TEST("LPSW", "3", 0x2004|3);
 
     if (is1613()) {
-        TEST("BD",   "0x1234",   0x2607, 0x1234);
-        TEST("BL",   "(0x1234)", 0x270F, 0x1234);
-        TEST("BALD", "0x1234",   0x2617, 0x1234);
-        TEST("BALL", "(0x1234)", 0x271F, 0x1234);
+        TEST("BD",    "X'1234'",               0x2607, 0x1234);
+        NMEM("BD",    "X'0000'",   "X'0000'",  0x2607);
+        TEST("BL",   "(X'1234')",              0x270F, 0x1234);
+        NMEM("BL",   "(X'0000')", "(X'0000')", 0x270F);
+        TEST("BALD",  "X'1234'",               0x2617, 0x1234);
+        NMEM("BALD",  "X'0000'",   "X'0000'",  0x2617);
+        TEST("BALL", "(X'1234')",              0x271F, 0x1234);
+        NMEM("BALL", "(X'0000')", "(X'0000')", 0x271F);
 
         TEST("BR", "(R1)", 0x2704|0);
         TEST("BR", "(R2)", 0x2704|1);
@@ -512,20 +517,20 @@ static void test_bitops() {
     TEST("SL", "STR, SE, Z", 0x200C|(6<<8)|(4<<4)|2);
 
     if (is1613()) {
-        TEST("TSET", "R0, 0x1234",      0x1708|(0<<4)|0, 0x1234);
-        TEST("TSET", "R1, 0x1234, NZ",  0x1708|(5<<4)|1, 0x1234);
-        TEST("TSET", "R2, 0x1234, Z",   0x1708|(4<<4)|2, 0x1234);
-        TEST("TSET", "R3, 0x1234, SKP", 0x1708|(1<<4)|3, 0x1234);
-        TEST("TSET", "R4, 0x1234",      0x1708|(0<<4)|4, 0x1234);
-        TEST("TSET", "SP, 0x1234, NZ",  0x1708|(5<<4)|5, 0x1234);
-        TEST("TSET", "STR, 0x1234, Z",  0x1708|(4<<4)|6, 0x1234);
-        TEST("TRST", "R0, 0x1234",      0x1700|(0<<4)|0, 0x1234);
-        TEST("TRST", "R1, 0x1234, NZ",  0x1700|(5<<4)|1, 0x1234);
-        TEST("TRST", "R2, 0x1234, Z",   0x1700|(4<<4)|2, 0x1234);
-        TEST("TRST", "R3, 0x1234, SKP", 0x1700|(1<<4)|3, 0x1234);
-        TEST("TRST", "R4, 0x1234",      0x1700|(0<<4)|4, 0x1234);
-        TEST("TRST", "SP, 0x1234, NZ",  0x1700|(5<<4)|5, 0x1234);
-        TEST("TRST", "STR, 0x1234, Z",  0x1700|(4<<4)|6, 0x1234);
+        TEST("TSET", "R0, X'1234'",      0x1708|(0<<4)|0, 0x1234);
+        TEST("TSET", "R1, X'1234', NZ",  0x1708|(5<<4)|1, 0x1234);
+        TEST("TSET", "R2, X'1234', Z",   0x1708|(4<<4)|2, 0x1234);
+        TEST("TSET", "R3, X'1234', SKP", 0x1708|(1<<4)|3, 0x1234);
+        TEST("TSET", "R4, X'1234'",      0x1708|(0<<4)|4, 0x1234);
+        TEST("TSET", "SP, X'1234', NZ",  0x1708|(5<<4)|5, 0x1234);
+        TEST("TSET", "STR, X'1234', Z",  0x1708|(4<<4)|6, 0x1234);
+        TEST("TRST", "R0, X'1234'",      0x1700|(0<<4)|0, 0x1234);
+        TEST("TRST", "R1, X'1234', NZ",  0x1700|(5<<4)|1, 0x1234);
+        TEST("TRST", "R2, X'1234', Z",   0x1700|(4<<4)|2, 0x1234);
+        TEST("TRST", "R3, X'1234', SKP", 0x1700|(1<<4)|3, 0x1234);
+        TEST("TRST", "R4, X'1234'",      0x1700|(0<<4)|4, 0x1234);
+        TEST("TRST", "SP, X'1234', NZ",  0x1700|(5<<4)|5, 0x1234);
+        TEST("TRST", "STR, X'1234', Z",  0x1700|(4<<4)|6, 0x1234);
 
         TEST("SRBT", "R0, R0",  0x3F70|0);
         TEST("SRBT", "R0, R1",  0x3F70|1);
@@ -545,20 +550,20 @@ static void test_bitops() {
 }
 
 static void test_misc() {
-    TEST("RD", "R0, 0x34",  0x1800|(0<<8)|0x34);
-    TEST("RD", "R1, 0x34",  0x1800|(1<<8)|0x34);
-    TEST("RD", "R2, 0x34",  0x1800|(2<<8)|0x34);
-    TEST("RD", "R3, 0x34",  0x1800|(3<<8)|0x34);
-    TEST("RD", "R4, 0x34",  0x1800|(4<<8)|0x34);
-    TEST("RD", "SP, 0x34",  0x1800|(5<<8)|0x34);
-    TEST("RD", "STR, 0x34", 0x1800|(6<<8)|0x34);
-    TEST("WT", "R0, 0x34",  0x1000|(0<<8)|0x34);
-    TEST("WT", "R1, 0x34",  0x1000|(1<<8)|0x34);
-    TEST("WT", "R2, 0x34",  0x1000|(2<<8)|0x34);
-    TEST("WT", "R3, 0x34",  0x1000|(3<<8)|0x34);
-    TEST("WT", "R4, 0x34",  0x1000|(4<<8)|0x34);
-    TEST("WT", "SP, 0x34",  0x1000|(5<<8)|0x34);
-    TEST("WT", "STR, 0x34", 0x1000|(6<<8)|0x34);
+    TEST("RD", "R0, X'34'",  0x1800|(0<<8)|0x34);
+    TEST("RD", "R1, X'34'",  0x1800|(1<<8)|0x34);
+    TEST("RD", "R2, X'34'",  0x1800|(2<<8)|0x34);
+    TEST("RD", "R3, X'34'",  0x1800|(3<<8)|0x34);
+    TEST("RD", "R4, X'34'",  0x1800|(4<<8)|0x34);
+    TEST("RD", "SP, X'34'",  0x1800|(5<<8)|0x34);
+    TEST("RD", "STR, X'34'", 0x1800|(6<<8)|0x34);
+    TEST("WT", "R0, X'34'",  0x1000|(0<<8)|0x34);
+    TEST("WT", "R1, X'34'",  0x1000|(1<<8)|0x34);
+    TEST("WT", "R2, X'34'",  0x1000|(2<<8)|0x34);
+    TEST("WT", "R3, X'34'",  0x1000|(3<<8)|0x34);
+    TEST("WT", "R4, X'34'",  0x1000|(4<<8)|0x34);
+    TEST("WT", "SP, X'34'",  0x1000|(5<<8)|0x34);
+    TEST("WT", "STR, X'34'", 0x1000|(6<<8)|0x34);
 
     TEST("H", "", 0x2000);
 
@@ -578,22 +583,24 @@ static void test_misc() {
 
         TEST("BLK", "(R2), (R1), R0", 0x3F17);
 
-        ERRT("LB", "CSBR, 0x1234", REGISTER_NOT_ALLOWED, 0x0F07|(0<<4), 0x1234);
-        TEST("LB", "SSBR, 0x1234",                       0x0F07|(1<<4), 0x1234);
-        TEST("LB", "TSR0, 0x1234",                       0x0F07|(2<<4), 0x1234);
-        TEST("LB", "TSR1, 0x1234",                       0x0F07|(3<<4), 0x1234);
-        TEST("LB", "OSR0, 0x1234",                       0x0F07|(4<<4), 0x1234);
-        TEST("LB", "OSR1, 0x1234",                       0x0F07|(5<<4), 0x1234);
-        TEST("LB", "OSR2, 0x1234",                       0x0F07|(6<<4), 0x1234);
-        TEST("LB", "OSR3, 0x1234",                       0x0F07|(7<<4), 0x1234);
-        TEST("STB", "CSBR, 0x1234", 0x0F87|(0<<4), 0x1234);
-        TEST("STB", "SSBR, 0x1234", 0x0F87|(1<<4), 0x1234);
-        TEST("STB", "TSR0, 0x1234", 0x0F87|(2<<4), 0x1234);
-        TEST("STB", "TSR1, 0x1234", 0x0F87|(3<<4), 0x1234);
-        TEST("STB", "OSR0, 0x1234", 0x0F87|(4<<4), 0x1234);
-        TEST("STB", "OSR1, 0x1234", 0x0F87|(5<<4), 0x1234);
-        TEST("STB", "OSR2, 0x1234", 0x0F87|(6<<4), 0x1234);
-        TEST("STB", "OSR3, 0x1234", 0x0F87|(7<<4), 0x1234);
+        UNKN(                       0x0F07|(0<<4)); // LB CSBR, nn
+        TEST("LB", "SSBR, X'1234'", 0x0F07|(1<<4), 0x1234);
+        TEST("LB", "TSR0, X'1234'", 0x0F07|(2<<4), 0x1234);
+        TEST("LB", "TSR1, X'1234'", 0x0F07|(3<<4), 0x1234);
+        TEST("LB", "OSR0, X'1234'", 0x0F07|(4<<4), 0x1234);
+        TEST("LB", "OSR1, X'1234'", 0x0F07|(5<<4), 0x1234);
+        TEST("LB", "OSR2, X'1234'", 0x0F07|(6<<4), 0x1234);
+        TEST("LB", "OSR3, X'1234'",            0x0F07|(7<<4), 0x1234);
+        NMEM("LB", "OSR3, X'0000'", "X'0000'", 0x0F07|(7<<4));
+        TEST("STB", "CSBR, X'1234'", 0x0F87|(0<<4), 0x1234);
+        TEST("STB", "SSBR, X'1234'", 0x0F87|(1<<4), 0x1234);
+        TEST("STB", "TSR0, X'1234'", 0x0F87|(2<<4), 0x1234);
+        TEST("STB", "TSR1, X'1234'", 0x0F87|(3<<4), 0x1234);
+        TEST("STB", "OSR0, X'1234'", 0x0F87|(4<<4), 0x1234);
+        TEST("STB", "OSR1, X'1234'", 0x0F87|(5<<4), 0x1234);
+        TEST("STB", "OSR2, X'1234'", 0x0F87|(6<<4), 0x1234);
+        TEST("STB", "OSR3, X'1234'",            0x0F87|(7<<4), 0x1234);
+        NMEM("STB", "OSR3, X'0000'", "X'0000'", 0x0F87|(7<<4));
         TEST("CPYB", "STR, CSBR", 0x0F80|(0<<4)|6);
         TEST("CPYB", "SP, SSBR",  0x0F80|(1<<4)|5);
         TEST("CPYB", "R4, TSR0",  0x0F80|(2<<4)|4);
@@ -602,31 +609,31 @@ static void test_misc() {
         TEST("CPYB", "R1, OSR1",  0x0F80|(5<<4)|1);
         TEST("CPYB", "R0, OSR2",  0x0F80|(6<<4)|0);
         TEST("CPYB", "R1, OSR3",  0x0F80|(7<<4)|1);
-        ERRT("SETB", "R0, CSBR", REGISTER_NOT_ALLOWED, 0x0F00|(0<<4)|0);
-        TEST("SETB", "SP, SSBR",                       0x0F00|(1<<4)|5);
-        TEST("SETB", "R4, TSR0",                       0x0F00|(2<<4)|4);
-        TEST("SETB", "R3, TSR1",                       0x0F00|(3<<4)|3);
-        TEST("SETB", "R2, OSR0",                       0x0F00|(4<<4)|2);
-        TEST("SETB", "R1, OSR1",                       0x0F00|(5<<4)|1);
-        TEST("SETB", "R0, OSR2",                       0x0F00|(6<<4)|0);
-        TEST("SETB", "R1, OSR3",                       0x0F00|(7<<4)|1);
+        UNKN(                    0x0F00|(0<<4)|0); // SETB Rx, CSBR
+        TEST("SETB", "SP, SSBR", 0x0F00|(1<<4)|5);
+        TEST("SETB", "R4, TSR0", 0x0F00|(2<<4)|4);
+        TEST("SETB", "R3, TSR1", 0x0F00|(3<<4)|3);
+        TEST("SETB", "R2, OSR0", 0x0F00|(4<<4)|2);
+        TEST("SETB", "R1, OSR1", 0x0F00|(5<<4)|1);
+        TEST("SETB", "R0, OSR2", 0x0F00|(6<<4)|0);
+        TEST("SETB", "R1, OSR3", 0x0F00|(7<<4)|1);
 
-        TEST("LS", "SBRB, 0x1234", 0x0F0F|(0<<4), 0x1234);
-        TEST("LS", "ICB, 0x1234",  0x0F0F|(1<<4), 0x1234);
-        TEST("LS", "NPP, 0x1234",  0x0F0F|(2<<4), 0x1234);
-        UNKN(                      0x0F0F|(3<<4));
-        UNKN(                      0x0F0F|(4<<4));
-        UNKN(                      0x0F0F|(5<<4));
-        UNKN(                      0x0F0F|(6<<4));
-        UNKN(                      0x0F0F|(7<<4));
-        TEST("STS", "SBRB, 0x1234", 0x0F8F|(0<<4), 0x1234);
-        TEST("STS", "ICB, 0x1234",  0x0F8F|(1<<4), 0x1234);
-        TEST("STS", "NPP, 0x1234",  0x0F8F|(2<<4), 0x1234);
-        UNKN(                       0x0F8F|(3<<4));
-        UNKN(                       0x0F8F|(4<<4));
-        UNKN(                       0x0F8F|(5<<4));
-        UNKN(                       0x0F8F|(6<<4));
-        UNKN(                       0x0F8F|(7<<4));
+        TEST("LS", "SBRB, X'1234'", 0x0F0F|(0<<4), 0x1234);
+        TEST("LS", "ICB, X'1234'",  0x0F0F|(1<<4), 0x1234);
+        TEST("LS", "NPP, X'1234'",  0x0F0F|(2<<4), 0x1234);
+        UNKN(                       0x0F0F|(3<<4));
+        UNKN(                       0x0F0F|(4<<4));
+        UNKN(                       0x0F0F|(5<<4));
+        UNKN(                       0x0F0F|(6<<4));
+        UNKN(                       0x0F0F|(7<<4));
+        TEST("STS", "SBRB, X'1234'", 0x0F8F|(0<<4), 0x1234);
+        TEST("STS", "ICB, X'1234'",  0x0F8F|(1<<4), 0x1234);
+        TEST("STS", "NPP, X'1234'",  0x0F8F|(2<<4), 0x1234);
+        UNKN(                        0x0F8F|(3<<4));
+        UNKN(                        0x0F8F|(4<<4));
+        UNKN(                        0x0F8F|(5<<4));
+        UNKN(                        0x0F8F|(6<<4));
+        UNKN(                        0x0F8F|(7<<4));
         TEST("CPYS", "R2, SBRB", 0x0F88|(0<<4)|2);
         TEST("CPYS", "R1, ICB",  0x0F88|(1<<4)|1);
         TEST("CPYS", "R0, NPP",  0x0F88|(2<<4)|0);
@@ -662,29 +669,26 @@ static void test_misc() {
 }
 
 static void test_formatter() {
-    disassembler.setCStyle(false);
-    TEST("L",  "R1, X'10'",       0xC000|(0<<11)|(1<<8)|0x10);
-    TEST("ST", "R3, (X'FF')",     0x8000|(2<<11)|(3<<8)|0xFF);
+    disassembler.setOption("c-style", "on");
+    TEST("L",  "R1, 0x10",   0xC000|(0<<11)|(1<<8)|0x10);
+    disassembler.setOption("intel-hex", "on");
+    TEST("ST", "R3, (0FFH)", 0x8000|(2<<11)|(3<<8)|0xFF);
 
     if (is1613()) {
-        TEST("LD",  "R1, X'1234'",       0x2708|(0<<4)|1, 0x1234);
-        TEST("CWI", "R0, X'1234', LPZ",  0x500F|(0<<8)|(14<<4), 0x1234);
-        TEST("BD",  "X'1234'",           0x2607, 0x1234);
-        TEST("BL",  "(X'1234')",         0x270F, 0x1234);
-        TEST("TSET", "R1, X'1234', NZ",  0x1708|(5<<4)|1, 0x1234);
-        TEST("TRST", "R2, X'1234', Z",   0x1700|(4<<4)|2, 0x1234);
+        TEST("LD",  "R1, 1234H",       0x2708|(0<<4)|1, 0x1234);
+        disassembler.setOption("intel-hex", "off");
+        TEST("CWI", "R0, X'1234', LPZ",0x500F|(0<<8)|(14<<4), 0x1234);
+        disassembler.setOption("intel-hex", "on");
+        TEST("BD",  "1234H",           0x2607, 0x1234);
+        disassembler.setOption("c-style", "on");
+        TEST("BL",  "(0x1234)",        0x270F, 0x1234);
+        disassembler.setOption("c-style", "off");
+        TEST("TRST", "R2, X'1234', Z", 0x1700|(4<<4)|2, 0x1234);
     }
 }
 // clang-format on
 
-static const char *const SKIP[] = {"", "SKP", "M", "PZ", "Z", "NZ", "MZ", "P", "EZ", "ENZ", "OZ",
-        "ONZ", "LMZ", "LP", "LPZ", "LM"};
-static const char *const EM[] = {"", "RE", "SE", "CE"};
-static const char *const REG[] = {"R0", "R1", "R2", "R3", "R4", "SP", "STR", ""};
-
 static void test_illegal_mn1610() {
-    char operand[20];
-
     for (Config::opcode_t opc = 0x0000; opc < 0x0800; opc++)
         UNKN(opc);
 
@@ -695,27 +699,23 @@ static void test_illegal_mn1610() {
     }
 
     for (Config::opcode_t opc = 0x2000; opc < 0x2800; opc++) {
-        const auto rd = opc >> 8;
-        const auto sk = (opc >> 4) & 0xF;
-        const auto em = opc & 3;
+        const auto rd = (opc >> 8) & 7;
         if (opc == 0x2000 || opc == 0x2003)  // H, RET
             continue;
         if ((opc & ~3) == 0x2004)  // LPSW
             continue;
         if ((opc & ~0x700) == 0x2001) {
             if (rd == 7)
-                ERRT("PUSH", "", ILLEGAL_REGISTER, opc);
+                UNKN(opc);
         } else if ((opc & ~0x700) == 0x2002) {
             if (rd == 7)
-                ERRT("POP", "", ILLEGAL_REGISTER, opc);
+                UNKN(opc);
         } else if ((opc & ~0x7F3) == 0x2008) {
-            sprintf(operand, ", %s%s%s", EM[em], sk ? ", " : "", SKIP[sk]);
             if (rd == 7)
-                ERRT("SR", operand, ILLEGAL_REGISTER, opc);
+                UNKN(opc);
         } else if ((opc & ~0x7F3) == 0x200C) {
-            sprintf(operand, ", %s%s%s", EM[em], sk ? ", " : "", SKIP[sk]);
             if (rd == 7)
-                ERRT("SL", operand, ILLEGAL_REGISTER, opc);
+                UNKN(opc);
         } else {
             UNKN(opc);
         }
@@ -735,11 +735,7 @@ static void test_illegal_mn1610() {
     }
 }
 
-static const char *const SREG[] = {"SBRB", "ICB", "NPP", "", "", "", "", ""};
-
 static void test_illegal_mn1613() {
-    char operand[20];
-
     for (Config::opcode_t opc = 0x0000; opc < 0x0800; opc++) {
         UNKN(opc);
     }
@@ -753,12 +749,10 @@ static void test_illegal_mn1613() {
             continue;        // MVI
         if (op == 0x0F00) {  // SETB, LB
             const auto rs = opc & 7;
-            if (sb == 0 && rs < 7) {
-                sprintf(operand, "%s, CSBR", REG[rs]);
-                ERRT("SETB", operand, REGISTER_NOT_ALLOWED, opc);
-            }
+            if (sb == 0 && rs < 7)
+                UNKN(opc);  // SETB Rs, CSBR
             if (sb == 0 && rs == 7)
-                ERRT("LB", "CSBR, 0x1234", REGISTER_NOT_ALLOWED, opc, 0x1234);
+                UNKN(opc);  // LB CSBR, nn
             continue;
         }
         if (op == 0x0F08 && rp < 3)
@@ -773,17 +767,18 @@ static void test_illegal_mn1613() {
     for (Config::opcode_t opc = 0x1000; opc < 0x2000; opc++) {
         const auto rd = (opc >> 8) & 7;
         const auto op = opc & ~0xFF;
-        const auto sk = (opc >> 4) & 0xF;
-        if (rd < 7) {
-            continue;
-        } else if (op == 0x1700) {
-            const auto rs = opc & 7;
-            if (rs == 7 && sk != 0)
-                UNKN(opc);
-        } else if (op == 0x1F00) {
+        if (rd < 7)
+            continue;  // WT, RD
+        if (op == 0x1F00)
             continue;  // NEG, FLT, FIX
-        } else {
-            ERRT("", "", ILLEGAL_REGISTER, opc);
+        if (op == 0x1700) {
+            const auto rs = opc & 7;
+            if (rs < 7)
+                continue;  // TRST, TSET
+            const auto sk = (opc >> 4) & 0xF;
+            if (sk == 0)
+                continue;  // POPM, PUSHM
+            UNKN(opc);
         }
     }
 }
