@@ -30,11 +30,11 @@ struct DisTms7000 final : Disassembler, Config {
     void reset() override;
 
 private:
-    Error decodeRegister(DisInsn &insn, StrBuffer &out);
-    Error decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeRegister(DisInsn &insn, StrBuffer &out) const;
+    void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

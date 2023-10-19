@@ -83,7 +83,8 @@ void test_implied() {
 void test_single() {
     TEST("CLR",  "A",    0xB5);
     TEST("CLR",  "B",    0xC5);
-    TEST("CLR",  "R214", 0xD5, 0xD6);
+    TEST("CLR",  "R214",     0xD5, 0xD6);
+    NMEM("CLR",  "R0", "R0", 0xD5);
 
     TEST("DEC",  "A",    0xB2);
     TEST("DEC",  "B",    0xC2);
@@ -135,16 +136,22 @@ void test_single() {
 }
 
 void test_register() {
-    TEST("ADC", "B, A",       0x69);
-    TEST("ADC", "A, B",       0x39, 0x00);
-    TEST("ADC", "R26, A",     0x19, 0x1A);
-    TEST("ADC", "R58, B",     0x39, 0x3A);
-    TEST("ADC", "A, R75",     0x49, 0x00, 0x4B);
-    TEST("ADC", "B, R75",     0x49, 0x01, 0x4B);
-    TEST("ADC", "R74, R75",   0x49, 0x4A, 0x4B);
+    TEST("ADC", "B, A", 0x69);
+    TEST("ADC", "R26, A",         0x19, 0x1A);
+    NMEM("ADC", "R0, A", "R0, A", 0x19);
+    TEST("ADC", "A, B",           0x39, 0x00);
+    TEST("ADC", "R58, B",         0x39, 0x3A);
+    NMEM("ADC", "R0, B", "R0, B", 0x39);
+    TEST("ADC", "A, R75",           0x49, 0x00, 0x4B);
+    TEST("ADC", "B, R75",           0x49, 0x01, 0x4B);
+    TEST("ADC", "R74, R75",         0x49, 0x4A, 0x4B);
+    NMEM("ADC", "B, R0",      "R0", 0x49, 0x01);
+    NMEM("ADC", "R0, R0", "R0, R0", 0x49);
     TEST("ADC", "%>2A, A",    0x29, 0x2A);
     TEST("ADC", "%>5A, B",    0x59, 0x5A);
-    TEST("ADC", "%>7A, R123", 0x79, 0x7A, 0x7B);
+    TEST("ADC", "%>7A, R123",        0x79, 0x7A, 0x7B);
+    NMEM("ADC", "%>7A, R0",    "R0", 0x79, 0x7A);
+    NMEM("ADC",   "%0, R0", "0, R0", 0x79);
 
     TEST("ADD", "B, A",       0x68);
     TEST("ADD", "A, B",       0x38, 0x00);
@@ -267,15 +274,25 @@ void test_register() {
     TEST("XOR", "%>56, B",    0x55, 0x56);
     TEST("XOR", "%>76, R119", 0x75, 0x76, 0x77);
 
-    TEST("MOVD", "%>898A, R139",    0x88, 0x89, 0x8A, 0x8B);
-    TEST("MOVD", "%>A9AA(B), R171", 0xA8, 0xA9, 0xAA, 0xAB);
-    TEST("MOVD", "R153, R154",      0x98, 0x99, 0x9A);
+    TEST("MOVD", "%>898A, R139",            0x88, 0x89, 0x8A, 0x8B);
+    NMEM("MOVD", "%>898A, R0",        "R0", 0x88, 0x89, 0x8A);
+    NMEM("MOVD", "%>8900, R0", ">8900, R0", 0x88, 0x89);
+    NMEM("MOVD", "%0, R0",         "0, R0", 0x88);
+    TEST("MOVD", "%>A9AA(B), R171",               0xA8, 0xA9, 0xAA, 0xAB);
+    NMEM("MOVD", "%>A9AA(B), R0",           "R0", 0xA8, 0xA9, 0xAA);
+    NMEM("MOVD", "%>A900(B), R0", ">A900(B), R0", 0xA8, 0xA9);
+    NMEM("MOVD", "%0(B), R0",         "0(B), R0", 0xA8);
+    TEST("MOVD", "R153, R154",       0x98, 0x99, 0x9A);
+    NMEM("MOVD", "R153, R0",   "R0", 0x98, 0x99);
+    NMEM("MOVD", "R0, R0", "R0, R0", 0x98);
 }
 
 void test_peripheral() {
     TEST("ANDP", "A, P132",    0x83, 0x84);
     TEST("ANDP", "B, P148",    0x93, 0x94);
-    TEST("ANDP", "%>A4, P165", 0xA3, 0xA4, 0xA5);
+    TEST("ANDP", "%>A4, P165",      0xA3, 0xA4, 0xA5);
+    NMEM("ANDP", "%>A4, P0",  "P0", 0xA3, 0xA4);
+    NMEM("ANDP", "%0, P0", "0, P0", 0xA3);
 
     TEST("MOVP", "P129, A",    0x80, 0x81);
     TEST("MOVP", "P146, B",    0x91, 0x92);
@@ -302,11 +319,14 @@ void test_single_relative() {
     ATEST(0x1000, "JP",  "$-25", 0xE4, 0xE5);
     ATEST(0x1000, "JPZ", "$-24", 0xE5, 0xE6);
     ATEST(0x1000, "JNZ", "$-23", 0xE6, 0xE7);
-    ATEST(0x1000, "JNC", "$-22", 0xE7, 0xE8);
+    ATEST(0x1000, "JNC", "$-22",       0xE7, 0xE8);
+    ANMEM(0x1000, "JNC", "$+1", "$+1", 0xE7);
 
     ATEST(0x1000, "DJNZ", "A, $-67",    0xBA, 0xBB);
     ATEST(0x1000, "DJNZ", "B, $-51",    0xCA, 0xCB);
-    ATEST(0x1000, "DJNZ", "R219, $-33", 0xDA, 0xDB, 0xDC);
+    ATEST(0x1000, "DJNZ", "R219, $-33",         0xDA, 0xDB, 0xDC);
+    ANMEM(0x1000, "DJNZ", "R219, $+2",   "$+2", 0xDA, 0xDB);
+    ANMEM(0x1000, "DJNZ", "R0, $+1", "R0, $+1", 0xDA);
 }
 
 void test_dual_relative() {
@@ -314,7 +334,9 @@ void test_dual_relative() {
 
     ATEST(0x1000, "BTJO", "B, A, $+105",       0x66, 0x67);
     ATEST(0x1000, "BTJO", "R23, A, $+27",      0x16, 0x17, 0x18);
-    ATEST(0x1000, "BTJO", "R55, B, $+59",      0x36, 0x37, 0x38);
+    ATEST(0x1000, "BTJO", "R55, B, $+59",             0x36, 0x37, 0x38);
+    ANMEM(0x1000, "BTJO", "R55, B, $+2",       "$+2", 0x36, 0x37);
+    ANMEM(0x1000, "BTJO", "R0, B, $+1", "R0, B, $+1", 0x36);
     ATEST(0x1000, "BTJO", "R71, R72, $+77",    0x46, 0x47, 0x48, 0x49);
     ATEST(0x1000, "BTJO", "%>27, A, $+43",     0x26, 0x27, 0x28);
     ATEST(0x1000, "BTJO", "%>57, B, $+91"   ,  0x56, 0x57, 0x58);
@@ -339,7 +361,10 @@ void test_dual_relative() {
 
 void test_extended() {
     TEST("BR",   "@>8D8E",    0x8C, 0x8D, 0x8E);
+    NMEM("BR",   "@>8D00", ">8D00",  0x8C, 0x8D);
+    NMEM("BR",   "@>0000", ">0000",  0x8C);
     TEST("BR",   "*R157",     0x9C, 0x9D);
+    NMEM("BR",   "*R0", "R0", 0x9C);
     TEST("BR",   "@>ADAE(B)", 0xAC, 0xAD, 0xAE);
 
     TEST("CALL", "@>8F90",    0x8E, 0x8F, 0x90);
@@ -360,46 +385,22 @@ void test_extended() {
 }
 
 void test_illegal() {
-    UNKN(0x02);
-    UNKN(0x03);
-    UNKN(0x04);
-    UNKN(0x0C);
-    UNKN(0x0F);
-
-    UNKN(0x10);
-    UNKN(0x11);
-
-    UNKN(0x20);
-    UNKN(0x21);
-
-    UNKN(0x30);
-    UNKN(0x31);
-
-    UNKN(0x40);
-    UNKN(0x41);
-
-    UNKN(0x50);
-    UNKN(0x51);
-
-    UNKN(0x60);
-    UNKN(0x61);
-
-    UNKN(0x70);
-    UNKN(0x71);
-
-    UNKN(0x81);
-    UNKN(0x89);
-    UNKN(0x8F);
-
-    UNKN(0x90);
-    UNKN(0x99);
-    UNKN(0x9F);
-
-    UNKN(0xA0);
-    UNKN(0xA9);
-    UNKN(0xAF);
-
-    UNKN(0xB1);
+    static constexpr Config::opcode_t illegals[] = {
+        0x02, 0x03, 0x04, 0x0C, 0x0F,
+        0x10, 0x11,
+        0x20, 0x21,
+        0x30, 0x31,
+        0x40, 0x41,
+        0x50, 0x51,
+        0x60, 0x61,
+        0x70, 0x71,
+        0x81, 0x89, 0x8F,
+        0x90, 0x99, 0x9F,
+        0xA0, 0xA9, 0xAF,
+        0xB1,
+    };
+    for (const auto opc : illegals)
+        UNKN(opc);
 }
 // clang-format on
 
