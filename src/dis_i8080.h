@@ -28,7 +28,7 @@ struct DisI8080 final : Disassembler, Config {
     DisI8080(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

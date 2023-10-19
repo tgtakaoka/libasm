@@ -32,62 +32,63 @@ DisI8080::DisI8080(const ValueFormatter::Plugins &plugins) : Disassembler(plugin
     reset();
 }
 
-Error DisI8080::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisI8080::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     switch (mode) {
     case M_IM8:
-    case M_IOA:
         outHex(out, insn.readByte(), 8);
         break;
+    case M_IOA:
+        outHex(out, insn.readByte(), 8, false);
+        break;
     case M_IM16:
-    case M_ABS:
         outHex(out, insn.readUint16(), 16);
+        break;
+    case M_ABS:
+        outAbsAddr(out, insn.readUint16());
         break;
     case M_PTR:
         outRegName(out, decodePointerReg(insn.opCode() >> 4));
-        return OK;
+        break;
     case M_STK:
         outRegName(out, decodeStackReg(insn.opCode() >> 4));
-        return OK;
+        break;
     case M_IDX:
         outRegName(out, decodeIndexReg(insn.opCode() >> 4));
-        return OK;
+        break;
     case M_REG:
         outRegName(out, decodeDataReg(insn.opCode()));
-        return OK;
+        break;
     case M_DST:
         outRegName(out, decodeDataReg(insn.opCode() >> 3));
-        return OK;
+        break;
     case M_VEC:
         outHex(out, (insn.opCode() >> 3) & 7, 3);
-        return OK;
+        break;
     default:
-        return OK;
+        break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    auto opCode = insn.readByte();
-    insn.setOpCode(opCode);
-    if (TABLE.isPrefix(cpuType(), opCode)) {
-        const auto prefix = opCode;
-        opCode = insn.readByte();
-        insn.setOpCode(opCode, prefix);
+    DisInsn insn(_insn, memory, out);
+    const auto opc = insn.readByte();
+    insn.setOpCode(opc);
+    if (TABLE.isPrefix(cpuType(), opc)) {
+        insn.setOpCode(insn.readByte(), opc);
+        if (insn.getError())
+            return setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
     const auto dst = insn.dst();
-    if (dst == M_NONE)
-        return OK;
-    if (decodeOperand(insn, out, dst))
-        return getError();
-    const auto src = insn.src();
-    if (src == M_NONE)
-        return OK;
-    out.comma();
-    return decodeOperand(insn, out, src);
+    if (dst != M_NONE) {
+        decodeOperand(insn, out, dst);
+        const auto src = insn.src();
+        if (src != M_NONE)
+            decodeOperand(insn, out.comma(), src);
+    }
+    return setError(insn);
 }
 
 }  // namespace i8080
