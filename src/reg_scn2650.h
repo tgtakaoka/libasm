@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 
+#include "config_scn2650.h"
 #include "str_buffer.h"
 #include "str_scanner.h"
 
@@ -42,6 +43,18 @@ enum CcName : int8_t {
 };
 
 namespace reg {
+
+constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
+    return addr & ~0x1FFF;  // 8k bytes per page
+}
+
+constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
+    return addr & 0x1FFF;
+}
+
+constexpr Config::uintptr_t inpage(const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
+    return page(addr) | offset(addr + delta);
+}
 
 RegName parseRegName(StrScanner &scan);
 uint8_t encodeRegName(RegName name);

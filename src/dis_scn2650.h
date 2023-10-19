@@ -28,10 +28,10 @@ struct DisScn2650 final : Disassembler, Config {
     DisScn2650(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    Error decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeIndexed(DisInsn &insn, StrBuffer &out);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode);
+    void decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeIndexed(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

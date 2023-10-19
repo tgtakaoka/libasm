@@ -42,26 +42,12 @@ DisScn2650::DisScn2650(const ValueFormatter::Plugins &plugins)
 
 namespace {
 
-constexpr Config::uintptr_t page(const Config::uintptr_t addr) {
-    return addr & ~0x1FFF;  // 8k bytes per page
-}
-
-constexpr Config::uintptr_t offset(const Config::uintptr_t addr) {
-    return addr & 0x1FFF;
-}
-
-constexpr Config::uintptr_t inpage(const Config::uintptr_t addr, const Config::ptrdiff_t delta) {
-    return page(addr) | offset(addr + delta);
-}
-
 StrBuffer &appendCcName(DisInsn &insn, StrBuffer &out, CcName name) {
     auto save = out;
     outCcName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
-
-}  // namespace
 
 StrBuffer &appendRegName(DisInsn &insn, StrBuffer &out, RegName name) {
     auto save = out;
@@ -70,7 +56,9 @@ StrBuffer &appendRegName(DisInsn &insn, StrBuffer &out, RegName name) {
     return save.over(out);
 }
 
-Error DisScn2650::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+}  // namespace
+
+void DisScn2650::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opr = insn.readUint16();
     if (opr & 0x8000)
         out.letter('*');
@@ -79,10 +67,9 @@ Error DisScn2650::decodeAbsolute(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         out.comma();
         outRegName(out, REG_R3);
     }
-    return setErrorIf(insn);
 }
 
-Error DisScn2650::decodeIndexed(DisInsn &insn, StrBuffer &out) {
+void DisScn2650::decodeIndexed(DisInsn &insn, StrBuffer &out) const {
     const auto opr = insn.readUint16();
     if (opr & 0x8000)
         out.letter('*');
@@ -102,10 +89,9 @@ Error DisScn2650::decodeIndexed(DisInsn &insn, StrBuffer &out) {
         }
     }
     appendRegName(insn, out, dst);
-    return setErrorIf(insn);
 }
 
-Error DisScn2650::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisScn2650::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opr = insn.readByte();
     if (opr & 0x80)
         out.letter('*');
@@ -119,10 +105,9 @@ Error DisScn2650::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) {
         const auto target = offset(delta);
         outAbsAddr(out, target);
     }
-    return setErrorIf(insn);
 }
 
-Error DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) {
+void DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mode) const {
     switch (mode) {
     case M_REG0:
     case M_R123:
@@ -141,30 +126,30 @@ Error DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mo
         break;
     case M_REL7:
     case M_ABS7:
-        return decodeRelative(insn, out, mode);
+        decodeRelative(insn, out, mode);
+        break;
     case M_IX13:
     case M_AB13:
-        return decodeIndexed(insn, out);
+        decodeIndexed(insn, out);
+        break;
     case M_IX15:
     case M_AB15:
-        return decodeAbsolute(insn, out, mode);
+        decodeAbsolute(insn, out, mode);
+        break;
     default:
         break;
     }
-    return setErrorIf(insn);
 }
 
 Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
+    DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    if (decodeOperand(insn, out, insn.mode1()))
-        return getError();
-    if (decodeOperand(insn, out, insn.mode2()))
-        return getError();
+    decodeOperand(insn, out, insn.mode1());
+    decodeOperand(insn, out, insn.mode2());
     return setError(insn);
 }
 
