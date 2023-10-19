@@ -33,30 +33,30 @@ DisTms9900::DisTms9900(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-Error DisTms9900::checkPostWord(DisInsn &insn) {
+Error DisTms9900::checkPostWord(DisInsn &insn) const {
     const auto post = insn.post();
     const auto src = (post >> 4 & 3);
     switch (insn.dst()) {
     case M_DST2:
-        if ((post & 0xF000) == 0x4000)
-            return OK;
+        if ((post & 0xF000) != 0x4000)
+            insn.setErrorIf(UNKNOWN_POSTBYTE);
         break;
     case M_CNT2:
-        if ((post & 0xFC00) == 0x4000)
-            return OK;
+        if ((post & 0xFC00) != 0x4000)
+            insn.setErrorIf(UNKNOWN_POSTBYTE);
         break;
     case M_BIT2:
         // no auto increment mode.
-        if ((post & 0xFC00) == 0x0000 && src != 3)
-            return OK;
+        if ((post & 0xFC00) != 0x0000 || src == 3)
+            insn.setErrorIf(UNKNOWN_POSTBYTE);
         break;
     default:
-        return OK;
+        break;
     }
-    return setErrorIf(UNKNOWN_INSTRUCTION);
+    return insn.getError();
 }
 
-Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) {
+void DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) const {
     const auto mode = (modeReg >> 4) & 3;
     const auto reg = modeReg & 0xF;
     if (mode != 2) {
@@ -65,81 +65,81 @@ Error DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) 
         outRegName(out, reg);
         if (mode == 3)
             out.letter('+');
-        return OK;
+        return;
     }
+    out.letter('@');
     const auto addr = insn.readUint16();
-    setErrorIf(insn);
     if (reg == 0 && !insn.byteOp() && addr % 2 != 0)
-        setErrorIf(OPERAND_NOT_ALIGNED);
-    outHex(out.letter('@'), addr, 16);
+        insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
+    outHex(out, addr, 16);
     if (reg != 0)
         outRegName(out.letter('('), reg).letter(')');
-    return getError();
 }
 
-Error DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) {
-    int16_t delta = static_cast<int8_t>(insn.opCode() & 0xff);
-    delta *= 2;
+void DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) const {
+    const auto delta = static_cast<int8_t>(insn.opCode() & 0xff) * 2;
     const auto base = insn.address() + 2;
-    const auto target = branchTarget(base, delta);
+    Error error;
+    const auto target = branchTarget(base, delta, error);
+    if (error)
+        insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), 9);
-    return getError();
 }
 
-Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
+void DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opc = insn.opCode();
     const auto post = insn.post();
     uint8_t val8;
     switch (mode) {
     case M_IMM:
         outHex(out, insn.readUint16(), 16);
-        return setError(insn);
+        break;
     case M_REG:
         outRegName(out, opc);
-        return OK;
+        break;
     case M_DREG:
         outRegName(out, opc >> 6);
-        return OK;
+        break;
     case M_SRC2:
-        if (checkPostWord(insn))
-            return getError();
-        /* Fall-through */
     case M_SRC:
         val8 = (mode == M_SRC) ? opc : post;
-        return decodeModeReg(insn, out, val8);
+        decodeModeReg(insn, out, val8);
+        break;
     case M_DST2:
     case M_DST:
         val8 = ((mode == M_DST) ? opc : post) >> 6;
-        return decodeModeReg(insn, out, val8);
+        decodeModeReg(insn, out, val8);
+        break;
     case M_CNT2:
     case M_XOP:
     case M_CNT:
         val8 = (((mode == M_CNT2) ? post : opc) >> 6) & 0xF;
         if (mode == M_CNT2 && val8 == 0) {
             outRegName(out, REG_R0);
-            return OK;
+            break;
         }
         if (mode == M_CNT && val8 == 0)
             val8 = 16;
         outDec(out, val8, 5);
-        return OK;
+        break;
     case M_BIT2:
         val8 = (post >> 6) & 0xF;
         outDec(out, val8, 4);
-        return OK;
+        break;
     case M_REL:
-        return decodeRelative(insn, out);
+        decodeRelative(insn, out);
+        break;
     case M_SCNT:
         val8 = (opc >> 4) & 0xF;
         if (val8 == 0)
             outRegName(out, REG_R0);
         else
             outDec(out, val8, 4);
-        return OK;
+        break;
     case M_CRU:
         val8 = opc & 0xFF;
         outDec(out, val8, -8);
-        return OK;
+        break;
     case M_RTWP:
         val8 = opc & 7;
         if (val8)
@@ -148,27 +148,25 @@ Error DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) {
     default:
         break;
     }
-    return getError();
 }
 
 Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
-    const auto opCode = insn.readUint16();
-    insn.setOpCode(opCode);
+    DisInsn insn(_insn, memory, out);
+    insn.setOpCode(insn.readUint16());
     if (TABLE.searchOpCode(cpuType(), insn, out))
         return setError(insn);
 
-    insn.readPost();
-    if (setError(insn))
-        return getError();
-
     const auto src = insn.src();
+    if (src == M_SRC2) {
+        insn.setPost(insn.readUint16());
+        if (checkPostWord(insn))
+            return setError(insn);
+    }
     decodeOperand(insn, out, src);
     const auto dst = insn.dst();
-    if (dst == M_NONE)
-        return getError();
-    out.comma();
-    return decodeOperand(insn, out, dst);
+    if (dst != M_NONE)
+        decodeOperand(insn, out.comma(), dst);
+    return setError(insn);
 }
 
 }  // namespace tms9900
