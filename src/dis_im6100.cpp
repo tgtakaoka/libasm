@@ -56,14 +56,15 @@ Error DisIm6100::setIgnoreliteral(bool enable) {
 }
 
 Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
-    DisInsn insn(_insn, memory);
+    DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
     if (TABLE.searchOpCode(cpuType(), insn, out)) {
         if (!_ignoreliteral) {
             insn.setOK();
             out.reset();
-            outHex(insn.nameBuffer().reset().over(out), insn.opCode(), 12).over(insn.nameBuffer());
+            outHex(insn.nameBuffer().reset().over(out), insn.opCode(), opCodeWidth())
+                    .over(insn.nameBuffer());
         }
         return setErrorIf(insn);
     }
