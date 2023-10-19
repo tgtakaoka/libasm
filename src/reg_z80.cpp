@@ -138,14 +138,6 @@ RegName decodeIndexReg(Config::opcode_t prefix) {
     return REG_UNDEF;
 }
 
-uint8_t encodeIrReg(RegName name) {
-    return uint8_t(name) - 16;
-}
-
-RegName decodeIrReg(uint8_t num) {
-    return RegName((num & 1) + 16);
-}
-
 CcName parseCcName(StrScanner &scan) {
     const auto *entry = CC_TABLE.searchText(scan);
     return entry ? CcName(entry->name()) : CC_UNDEF;

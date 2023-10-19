@@ -156,7 +156,6 @@ static void test_move_inherent() {
     TEST("LD A,(DE)", 0x1A);
 
     if (isZ80()) {
-        // Z80
         TEST("LD I,A", 0xED, 0x47);
         TEST("LD R,A", 0xED, 0x4F);
         TEST("LD A,I", 0xED, 0x57);
@@ -239,7 +238,6 @@ static void test_move_direct() {
     TEST("LD HL,(5678H)",  0x2A, 0x78, 0x56);
 
     if (isZ80()) {
-        // Z80
         TEST("LD (0ABCDH),BC", 0xED, 0x43, 0xCD, 0xAB);
         TEST("LD (0ABCDH),DE", 0xED, 0x53, 0xCD, 0xAB);
         TEST("LD (0ABCDH),SP", 0xED, 0x73, 0xCD, 0xAB);
@@ -274,7 +272,6 @@ static void test_stack_op() {
     TEST("EX HL,DE",   0xEB);
 
     if (isZ80()) {
-        // Z80
         TEST("EX AF,AF'", 0x08);
         TEST("EXX",       0xD9);
     } else {
@@ -315,7 +312,6 @@ static void test_jump_call() {
     TEST("RET M",  0xF8);
 
     if (isZ80()) {
-        // Z80
         TEST("RETN", 0xED, 0x45);
         TEST("RETI", 0xED, 0x4D);
 
@@ -479,7 +475,6 @@ static void test_alu_register() {
     TEST("ADD HL,SP", 0x39);
 
     if (isZ80()) {
-        // Z80
         TEST("ADC HL,BC", 0xED, 0x4A);
         TEST("ADC HL,DE", 0xED, 0x5A);
         TEST("ADC HL,HL", 0xED, 0x6A);
@@ -523,7 +518,6 @@ static void test_io() {
     ERRT("IN A,(256)",   OVERFLOW_RANGE, "(256)", 0xDB, 0x00);
 
     if (isZ80()) {
-        // Z80
         TEST("IN B,(C)", 0xED, 0x40);
         TEST("IN C,(C)", 0xED, 0x48);
         TEST("IN D,(C)", 0xED, 0x50);
@@ -565,7 +559,6 @@ static void test_inherent() {
     TEST("CCF", 0x3F);
 
     if (is8085()) {
-        // i8085
         TEST("LD A,IM", 0x20);
         TEST("LD IM,A", 0x30);
         ERUI("RETEM");
@@ -583,7 +576,6 @@ static void test_inherent() {
     }
 
     if (isZ80()) {
-        // Z80
         TEST("NEG", 0xED, 0x44);
     } else {
         ERUI("NEG");
@@ -606,7 +598,6 @@ static void test_restart() {
 
 static void test_relative() {
     if (isZ80()) {
-        // Z80
         ATEST(0x1000, "DJNZ 1000H",  0x10, 0xFE);
         ATEST(0x1000, "DJNZ 1081H",  0x10, 0x7F);
         ATEST(0x1000, "DJNZ 0F82H",  0x10, 0x80);
@@ -630,7 +621,6 @@ static void test_relative() {
 
 static void test_shift() {
     if (isZ80()) {
-        // Z80
         TEST("RLC B", 0xCB, 0x00);
         TEST("RLC C", 0xCB, 0x01);
         TEST("RLC D", 0xCB, 0x02);
@@ -710,7 +700,6 @@ static void test_shift() {
 
 static void test_bitop() {
     if (isZ80()) {
-        // Z80
         TEST("BIT 0,B", 0xCB, 0x40);
         TEST("BIT 1,C", 0xCB, 0x49);
         TEST("BIT 2,D", 0xCB, 0x52);
@@ -748,7 +737,6 @@ static void test_bitop() {
 
 static void test_index_registers() {
     if (isZ80()) {
-        // Z80
         TEST("ADD IX,BC", 0xDD, 0x09);
         TEST("ADD IX,DE", 0xDD, 0x19);
         TEST("ADD IX,IX", 0xDD, 0x29);
@@ -810,7 +798,6 @@ static void test_index_registers() {
 
 static void test_indexed() {
     if (isZ80()) {
-        // Z80
         TEST("INC (IX+2)",   0xDD, 0x34, 0x02);
         TEST("DEC (IX+2)",   0xDD, 0x35, 0x02);
         ERRT("INC (IX+128)", OVERFLOW_RANGE, "(IX+128)", 0xDD, 0x34, 0x80);
@@ -902,7 +889,6 @@ static void test_indexed() {
 
 static void test_shift_indexed() {
     if (isZ80()) {
-        // Z80
         TEST("RLC (IX+127)", 0xDD, 0xCB, 0x7F, 0x06);
         TEST("RRC (IX+127)", 0xDD, 0xCB, 0x7F, 0x0E);
         TEST("RL  (IX+127)", 0xDD, 0xCB, 0x7F, 0x16);
@@ -934,7 +920,6 @@ static void test_shift_indexed() {
 
 static void test_bitop_indexed() {
     if (isZ80()) {
-        // Z80
         TEST("BIT 0,(IX-128)", 0xDD, 0xCB, 0x80, 0x46);
         TEST("RES 1,(IX-128)", 0xDD, 0xCB, 0x80, 0x8E);
         TEST("SET 2,(IX-128)", 0xDD, 0xCB, 0x80, 0xD6);
@@ -964,7 +949,6 @@ static void test_comment() {
     TEST("RET NZ      ; comment", 0xC0);
 
     if (isZ80()) {
-        // Z80
         TEST("IM 2           ; comment", 0xED, 0x5E);
         TEST("BIT 0 , B      ; comment", 0xCB, 0x40);
         TEST("BIT 6 , ( HL ) ; comment", 0xCB, 0x76);
@@ -999,7 +983,6 @@ static void test_undefined_symbol() {
     ERUS("RST UNDEF",     "UNDEF",     0xC7);
 
     if (isZ80()) {
-        // Z80
         ERUS("LD (UNDEF),BC",        "UNDEF),BC",      0xED, 0x43, 0x00, 0x00);
         ERUS("LD BC,(UNDEF)",        "UNDEF)",         0xED, 0x4B, 0x00, 0x00);
         ERUS("IM UNDEF",             "UNDEF",          0xED, 0x46);

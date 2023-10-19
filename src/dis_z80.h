@@ -29,14 +29,13 @@ struct DisZ80 final : Disassembler, Config {
     DisZ80(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
 private:
-    StrBuffer &outIndirectAddr(StrBuffer &out, uint16_t addr, uint8_t bits);
-    StrBuffer &outIndirectReg(StrBuffer &out, RegName reg);
-    StrBuffer &outIndexOffset(StrBuffer &out, RegName reg, int8_t offset);
-    StrBuffer &outDataReg(StrBuffer &out, RegName reg);
+    StrBuffer &outIndirectReg(StrBuffer &out, RegName reg) const;
+    StrBuffer &outIndexOffset(StrBuffer &out, int8_t offset) const;
+    StrBuffer &outDataReg(StrBuffer &out, RegName reg) const;
 
-    Error decodeIndexedBitOp(DisInsn &insn, StrBuffer &out);
-    Error decodeRelative(DisInsn &insn, StrBuffer &out);
-    Error decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode);
+    void decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const;
+    void decodeRelative(DisInsn &insn, StrBuffer &out) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
     const ConfigBase &config() const override { return *this; }

@@ -86,9 +86,6 @@ RegName decodeIndirectBase(uint8_t num);
 
 RegName decodeIndexReg(Config::opcode_t prefix);
 
-uint8_t encodeIrReg(RegName name);
-RegName decodeIrReg(uint8_t num);
-
 CcName parseCcName(StrScanner &scan);
 StrBuffer &outCcName(StrBuffer &out, CcName cc);
 bool isCc4Name(CcName name);
