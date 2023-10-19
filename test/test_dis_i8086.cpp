@@ -169,7 +169,7 @@ static void test_data_transfer() {
     TEST("POP", "BP",            0135);
     TEST("POP", "ES",            0007);
     if (!v30()) {
-        ERRT("POP", "CS", REGISTER_NOT_ALLOWED,  0017);
+        ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0017);
     }
     TEST("POP", "SS",            0027);
     TEST("POP", "DS",            0037);
@@ -1495,11 +1495,11 @@ static void test_string_manipulation() {
     }
 
     dis8086.setOption("string-insn", "enable");
-    ERRT("REPNE", "", NO_MEMORY, 0xF2);
-    ERRT("REP",   "", NO_MEMORY, 0xF3);
+    ERRT("REPNE", "", NO_MEMORY, "", 0xF2);
+    ERRT("REP",   "", NO_MEMORY, "", 0xF3);
     if (v30()) {
-        ERRT("REPNC", "", NO_MEMORY, 0x64);
-        ERRT("REPC",  "", NO_MEMORY, 0x65);
+        ERRT("REPNC", "", NO_MEMORY, "", 0x64);
+        ERRT("REPC",  "", NO_MEMORY, "", 0x65);
     }
 
     TEST("REPNE", "MOVSB", 0xF2, 0xA4);
@@ -1512,8 +1512,8 @@ static void test_string_manipulation() {
     TEST("REPNE", "LODSW", 0xF2, 0xAD);
     TEST("REPNE", "SCASB", 0xF2, 0xAE);
     TEST("REPNE", "SCASW", 0xF2, 0xAF);
-    ERRT("REPNE", "", UNKNOWN_INSTRUCTION, 0xF2, 0x90); // NOP
-    ERRT("REPNE", "", UNKNOWN_INSTRUCTION, 0xF2, 0xFF); // JMP [SI]
+    ERRT("REPNE", "", UNKNOWN_INSTRUCTION, "", 0xF2, 0x90); // NOP
+    ERRT("REPNE", "", UNKNOWN_INSTRUCTION, "", 0xF2, 0xFF); // JMP [SI]
     if (is80186()) {
         TEST("REPNE", "INSB",  0xF2, 0x6C);
         TEST("REPNE", "INSW",  0xF2, 0x6D);
@@ -1734,23 +1734,23 @@ static void test_segment_override() {
     TEST("LODSW", "SS:[SI]", 0x36, 0xAD);
     TEST("LODSW", "DS:[SI]", 0x3E, 0xAD);
 
-    ERRT("STOSB", "CS:[DI]", ILLEGAL_SEGMENT, 0x2E, 0xAA);
-    ERRT("STOSW", "SS:[DI]", ILLEGAL_SEGMENT, 0x36, 0xAB);
-    ERRT("STOSW", "DS:[DI]", ILLEGAL_SEGMENT, 0x3E, 0xAB);
-    ERRT("SCASB", "ES:[DI]", ILLEGAL_SEGMENT, 0x26, 0xAE);
-    ERRT("SCASB", "CS:[DI]", ILLEGAL_SEGMENT, 0x2E, 0xAE);
-    ERRT("SCASW", "SS:[DI]", ILLEGAL_SEGMENT, 0x36, 0xAF);
-    ERRT("SCASW", "DS:[DI]", ILLEGAL_SEGMENT, 0x3E, 0xAF);
+    ERRT("STOSB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0x2E, 0xAA);
+    ERRT("STOSW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0x36, 0xAB);
+    ERRT("STOSW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0x3E, 0xAB);
+    ERRT("SCASB", "ES:[DI]", ILLEGAL_SEGMENT, "ES:[DI]", 0x26, 0xAE);
+    ERRT("SCASB", "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0x2E, 0xAE);
+    ERRT("SCASW", "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0x36, 0xAF);
+    ERRT("SCASW", "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0x3E, 0xAF);
 
     if (is80186()) {
         TEST("OUTSB", "ES:[SI]", 0x26, 0x6E);
         TEST("OUTSB", "CS:[SI]", 0x2E, 0x6E);
         TEST("OUTSW", "SS:[SI]", 0x36, 0x6F);
         TEST("OUTSW", "DS:[SI]", 0x3E, 0x6F);
-        ERRT("INSB",  "ES:[DI]", ILLEGAL_SEGMENT, 0x26, 0x6C);
-        ERRT("INSB",  "CS:[DI]", ILLEGAL_SEGMENT, 0x2E, 0x6C);
-        ERRT("INSW",  "SS:[DI]", ILLEGAL_SEGMENT, 0x36, 0x6D);
-        ERRT("INSW",  "DS:[DI]", ILLEGAL_SEGMENT, 0x3E, 0x6D);
+        ERRT("INSB",  "ES:[DI]", ILLEGAL_SEGMENT, "ES:[DI]", 0x26, 0x6C);
+        ERRT("INSB",  "CS:[DI]", ILLEGAL_SEGMENT, "CS:[DI]", 0x2E, 0x6C);
+        ERRT("INSW",  "SS:[DI]", ILLEGAL_SEGMENT, "SS:[DI]", 0x36, 0x6D);
+        ERRT("INSW",  "DS:[DI]", ILLEGAL_SEGMENT, "DS:[DI]", 0x3E, 0x6D);
     }
 
     if (v30()) {
@@ -1759,10 +1759,11 @@ static void test_segment_override() {
         TEST("SUB4S", "ES:[DI], SS:[SI]", 0x36, 0x0F, 0x22);
     }
 }
+// clang-format on
 
 static void test_illegal() {
     if (v30()) {
-        for (uint8_t opc = 0; opc < 0xFF; opc++) {
+        for (Config::opcode_t opc = 0; opc < 0xFF; opc++) {
             if (opc >= 0x12 && opc < 0x18)
                 continue;
             if (opc >= 0x1A && opc < 0x20)
@@ -1774,10 +1775,10 @@ static void test_illegal() {
             UNKN(0x0F, opc);
         }
     } else {
-        ERRT("POP", "CS", REGISTER_NOT_ALLOWED, 0x0F);
+        ERRT("POP", "CS", REGISTER_NOT_ALLOWED, "CS", 0x0F);
     }
 
-    for (uint8_t opc = 0x60; opc < 0x70; opc++) {
+    for (Config::opcode_t opc = 0x60; opc < 0x70; opc++) {
         if (is80186() && (opc <= 0x62 || opc >= 0x68))
             continue;
         if (v30() && (opc == 0x64 || opc == 0x65))
@@ -1794,10 +1795,10 @@ static void test_illegal() {
         UNKN(0xC9);
     }
 
-    for (uint8_t mod = 0; mod < 4; mod++) {
-        for (uint8_t reg = 0; reg < 8; reg++) {
-            for (uint8_t r_m = 0; r_m < 8; r_m++) {
-                const uint8_t modReg = (mod << 6) | (reg << 3) | r_m;
+    for (auto mod = 0; mod < 4; mod++) {
+        for (auto reg = 0; reg < 8; reg++) {
+            for (auto r_m = 0; r_m < 8; r_m++) {
+                const Config::opcode_t modReg = (mod << 6) | (reg << 3) | r_m;
                 if (reg == 1) {
                     UNKN(0xF6, modReg);
                     UNKN(0xF7, modReg);
@@ -1821,9 +1822,13 @@ static void test_illegal() {
         }
     }
 
-    for (uint8_t second = 0x0B; second != 0x0A; second++) {
-        UNKN(0xD4, second);
-        UNKN(0xD5, second);
+    for (Config::opcode_t opc = 0;; opc++) {
+        if (opc == 0x0A)
+            continue;  // AAM, AAD
+        UNKN(0xD4, opc);
+        UNKN(0xD5, opc);
+        if (opc == 0xFF)
+            break;
     }
 
     UNKN(0xD6);
@@ -1839,7 +1844,6 @@ static void test_illegal() {
     UNKN(0xDE);
     UNKN(0xDF);
 }
-// clang-format on
 
 void run_tests(const char *cpu) {
     disassembler.setCpu(cpu);

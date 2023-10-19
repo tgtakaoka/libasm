@@ -97,8 +97,8 @@ private:
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory) : DisInsnImpl(insn, memory) {}
-    DisInsn(Insn &insn, DisInsn &o) : DisInsnImpl(insn, o) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out) : DisInsnImpl(insn, o, out) {}
 
     void readModReg() {
         const OprPos dst = dstPos();
