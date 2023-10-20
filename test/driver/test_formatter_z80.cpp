@@ -36,7 +36,7 @@ void test_asm_z80() {
             "        defs  2\n"                  // DS allocate spaces
             "        defm  'A', '''', 'C'+80H, 'a''c'\n");
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
 
     ASM("z80",

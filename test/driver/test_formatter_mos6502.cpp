@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_mos6502() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0xf1f2, "label1");
 
     ASM("mos6502",
@@ -60,7 +60,7 @@ void test_asm_mos6502() {
 void test_asm_w65816() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0xf2f1f0, "label1");
 
     ASM("w65c816",

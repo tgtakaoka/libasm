@@ -47,7 +47,7 @@ void test_asm_mc68000() {
             "        dc.b    'a,', 'bc''de', 4, 0\n"  // DC.B can generate odd bytes at even address
             "        dc.b    'A', '''', 'C'+$80, 'a''c'\n");  // DC.B doesn't care alignment
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("mc68000",
             "        cpu     mc68000\n"

@@ -33,8 +33,8 @@ void tear_down() {}
 void test_symbols_mc6809() {
     PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective, REPORT_DUPLICATE);
 
-    listing.setUpperHex(true);
-    listing.enableLineNumber(true);
+    formatter.setUpperHex(true);
+    formatter.enableLineNumber(true);
 
     ASM("mc6809",
             "label1  equ   $1234\n"
@@ -68,8 +68,8 @@ void test_symbols_mc6809() {
 void test_symbols_ins8060() {
     PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
 
-    listing.setUpperHex(true);
-    listing.enableLineNumber(true);
+    formatter.setUpperHex(true);
+    formatter.enableLineNumber(true);
 
     ASM("ins8060",
             "label1  =     X'1234\n"
@@ -103,8 +103,8 @@ void test_symbols_ins8060() {
 void test_symbols_z80() {
     PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective, REPORT_DUPLICATE);
 
-    listing.setUpperHex(true);
-    listing.enableLineNumber(true);
+    formatter.setUpperHex(true);
+    formatter.enableLineNumber(true);
 
     ASM("z80",
             "label1  equ   1234H\n"
@@ -146,9 +146,9 @@ void test_switch_cpu() {
     ZilogDirective dirz80(asmz80);
     AsmDirective *dirs[] = {&dir6809, &dir6502, &dir8080, &dirz80};
     TestSources sources;
-    AsmDriver driver(&dirs[0], &dirs[4], sources);
+    AsmDriver driver(&dirs[0], &dirs[4]);
     BinMemory memory;
-    AsmFormatter listing(driver, sources, memory);
+    AsmFormatter formatter(driver, sources, memory);
 
     ASM("switch cpu",
             "        cpu   mc6809\n"
@@ -206,13 +206,11 @@ void test_list_radix() {
     ZilogDirective dirz80(asmz80);
     AsmDirective *dirs[] = {&dir6502, &dirz80};
     TestSources sources;
-    std::map<std::string, std::string> options;
-    AsmDriver driver(&dirs[0], &dirs[2], sources, &options);
+    AsmDriver driver(&dirs[0], &dirs[2]);
     BinMemory memory;
-    AsmFormatter listing(driver, sources, memory);
+    AsmFormatter formatter(driver, sources, memory);
 
-    options.emplace("list-radix", "8");
-    driver.applyOptions();
+    driver.setOption("list-radix", "8");
 
     ASM("list-radix",
             "        cpu   z80\n"

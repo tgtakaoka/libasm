@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_i8096() {
     PREP_ASM(i8096::AsmI8096, IntelDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0x817b, "label1");
 
     ASM("i8096",

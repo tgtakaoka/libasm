@@ -49,7 +49,7 @@ void test_asm_mn1610() {
 void test_asm_mn1613() {
     PREP_ASM(mn1610::AsmMn1610, NationalDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("mn1613",
             "        cpu   mn1613\n"

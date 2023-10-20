@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_ns32000() {
     PREP_ASM(ns32000::AsmNs32000, NationalDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0x112233, "disp2");
     driver.internSymbol(0x334455, "disp1");
     driver.internSymbol(0x556677, "off2");

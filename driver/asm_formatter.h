@@ -17,6 +17,7 @@
 #ifndef __ASM_FORMATTER_H__
 #define __ASM_FORMATTER_H__
 
+#include "asm_sources.h"
 #include "insn_base.h"
 #include "list_formatter.h"
 #include "str_scanner.h"
@@ -28,10 +29,9 @@ namespace libasm {
 namespace driver {
 
 struct AsmDriver;
-struct AsmSources;
 struct BinMemory;
 
-struct AsmFormatter : ListFormatter {
+struct AsmFormatter final : ListFormatter {
     AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
 
     void enableLineNumber(bool enable);
@@ -46,6 +46,10 @@ struct AsmFormatter : ListFormatter {
     int byteLength() const { return generatedSize(); }
     StrScanner &lineSymbol() { return _line_symbol; }
     Value &lineValue() { return _line_value; }
+
+    // TODO: Remove these
+    Error openSource(const StrScanner &filename) { return _sources.open(filename); }
+    Error closeCurrent() { return _sources.closeCurrent(); }
 
 private:
     AsmDriver &_driver;

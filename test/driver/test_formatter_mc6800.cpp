@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_mc6800() {
     PREP_ASM(mc6800::AsmMc6800, MotorolaDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0xf1f2, "label1");
 
     ASM("mc6800",

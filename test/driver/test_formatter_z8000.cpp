@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_z8001() {
     PREP_ASM(z8000::AsmZ8000, ZilogDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("z8001",
             "        cpu    z8001\n"
@@ -47,7 +47,7 @@ void test_asm_z8001() {
 void test_asm_z8002() {
     PREP_ASM(z8000::AsmZ8000, ZilogDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("z8002",
             "        cpu    z8002\n"

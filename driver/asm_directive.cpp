@@ -34,26 +34,26 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 
 // PseudoHandler
 
-Error AsmDirective::defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineSymbol(scan, list, driver, list.lineSymbol(), /*variable*/ false);
+Error AsmDirective::defineConstant(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
+    return defineSymbol(scan, formatter, driver, formatter.lineSymbol(), /*variable*/ false);
 }
 
-Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    return defineSymbol(scan, list, driver, list.lineSymbol(), /*variable*/ true);
+Error AsmDirective::defineVariable(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
+    return defineSymbol(scan, formatter, driver, formatter.lineSymbol(), /*variable*/ true);
 }
 
-Error AsmDirective::setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    if (list.lineSymbol().size())
+Error AsmDirective::setVariable(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
+    if (formatter.lineSymbol().size())
         return setError(ILLEGAL_LABEL);
     StrScanner symbol;
     if (assembler().parser().readSymbol(scan, symbol) != OK)
         return setError(MISSING_LABEL);
     if (scan.skipSpaces().expect(','))
-        return defineSymbol(scan.skipSpaces(), list, driver, symbol, /*variable*/ true);
+        return defineSymbol(scan.skipSpaces(), formatter, driver, symbol, /*variable*/ true);
     return setError(MISSING_COMMA);
 }
 
-Error AsmDirective::defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver,
+Error AsmDirective::defineSymbol(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver,
         const StrScanner &symbol, bool variable) {
     if (symbol.size() == 0)
         return setError(MISSING_LABEL);
@@ -61,7 +61,7 @@ Error AsmDirective::defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver
         return setError(symbol, DUPLICATE_LABEL);
     auto &parser = assembler().parser();
     ErrorAt error;
-    auto &value = list.lineValue() = parser.eval(scan, error, &driver);
+    auto &value = formatter.lineValue() = parser.eval(scan, error, &driver);
     if (error.getError()) {
         value.clear();
         return setError(error);
@@ -74,11 +74,11 @@ Error AsmDirective::defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver
         setError(symbol, err);
         value.clear();
     }
-    list.lineSymbol() = StrScanner::EMPTY;
+    formatter.lineSymbol() = StrScanner::EMPTY;
     return getError();
 }
 
-Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
     auto quote = scan.expect('"');
     if (quote == 0)
         quote = scan.expect('\'');
@@ -92,13 +92,13 @@ Error AsmDirective::includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver 
         p = filename.takeWhile([](char s) { return !isspace(s); });
     }
     scan = p;
-    return setError(driver.openSource(filename));
+    return setError(formatter.openSource(filename));
 }
 
-Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
-    if (list.lineSymbol().size() == 0)
+Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
+    if (formatter.lineSymbol().size() == 0)
         return setError(MISSING_LABEL);
-    if (driver.symbolMode() == REPORT_DUPLICATE && driver.symbolInTable(list.lineSymbol()))
+    if (driver.symbolMode() == REPORT_DUPLICATE && driver.symbolInTable(formatter.lineSymbol()))
         return setError(DUPLICATE_LABEL);
     const auto &parser = assembler().parser();
     FunctionStore::Parameters params;
@@ -109,14 +109,14 @@ Error AsmDirective::defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriv
             params.emplace_back(param);
             scan = p;
         } else {
-            const auto error = driver.internFunction(list.lineSymbol(), params, scan, parser);
-            list.lineSymbol() = StrScanner::EMPTY;
+            const auto error = driver.internFunction(formatter.lineSymbol(), params, scan, parser);
+            formatter.lineSymbol() = StrScanner::EMPTY;
             return error;
         }
     }
 }
 
-Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
     auto name = scan;
     scan = name.takeWhile([](char s) { return !isspace(s); });
     std::string cpu(name.str(), name.size());
@@ -125,7 +125,7 @@ Error AsmDirective::switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &d
     return setOK();
 }
 
-Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
     const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
@@ -148,7 +148,7 @@ Error AsmDirective::switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDr
     return setOK();
 }
 
-Error AsmDirective::endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+Error AsmDirective::endAssemble(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
     return END_ASSEMBLE;
 }
 
@@ -175,12 +175,12 @@ void AsmDirective::disablePseudo(const char *name) {
 }
 
 Error AsmDirective::processPseudo(
-        const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver) {
+        const StrScanner &name, StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver) {
     auto it = _pseudos.find(std::string(name.str(), name.size()));
     if (it == _pseudos.end())
         return UNKNOWN_DIRECTIVE;
     const auto fp = it->second;
-    return (this->*fp)(scan, list, driver);
+    return (this->*fp)(scan, formatter, driver);
 }
 
 BinEncoder &AsmDirective::defaultEncoder() const {

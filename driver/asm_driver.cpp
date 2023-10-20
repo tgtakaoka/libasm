@@ -17,6 +17,7 @@
 #include "asm_driver.h"
 
 #include "asm_directive.h"
+#include "asm_formatter.h"
 #include "asm_sources.h"
 
 #include <algorithm>
@@ -81,36 +82,37 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     return dir;
 }
 
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources,
-        std::map<std::string, std::string> *options, SymbolMode symbolMode)
+AsmDriver::AsmDriver(
+        AsmDirective **begin, AsmDirective **end, SymbolMode symbolMode)
     : _directives(begin, end),
       _current(nullptr),
-      _sources(sources),
-      _options(options),
       _symbolMode(symbolMode),
       _functions(),
       _origin(0) {
     switchDirective(_directives.front());
 }
 
-void AsmDriver::applyOptions() const {
+void AsmDriver::reset() {
     for (auto dir : _directives) {
         auto &assembler = dir->assembler();
         assembler.reset();
-        if (_options) {
-            for (auto &opt : *_options) {
-                assembler.setOption(opt.first.c_str(), opt.second.c_str());
-            }
-        }
     }
 }
 
-int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
-        TextPrinter &listout, TextPrinter &errorout, bool reportError) {
-    applyOptions();
+void AsmDriver::setOption(const char *name, const char *value) {
+    for (auto dir : _directives) {
+        auto &assembler = dir->assembler();
+        assembler.setOption(name, value);
+    }
+}
+
+int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,
+        TextPrinter &errorout, bool reportError) {
     _functions.reset();
     setOrigin(0);
     _symbolMode = reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE;
+
+    AsmFormatter formatter{*this, sources, memory};
 
     int errors = 0;
     StrScanner *scan;
@@ -129,10 +131,6 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &fo
     while (sources.nest())
         sources.closeCurrent();
     return errors;
-}
-
-Error AsmDriver::openSource(const StrScanner &filename) {
-    return _sources.open(filename);
 }
 
 const char *AsmDriver::lookupValue(uint32_t address) const {

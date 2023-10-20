@@ -17,18 +17,17 @@
 #ifndef __ASM_COMMANDER_H__
 #define __ASM_COMMANDER_H__
 
-#include "asm_driver.h"
-#include "asm_sources.h"
-#include "bin_memory.h"
-#include "file_reader.h"
-#include "text_reader.h"
+#include <map>
+#include <string>
 
-#include <list>
+#include "asm_driver.h"
+#include "bin_memory.h"
+#include "text_reader.h"
 
 namespace libasm {
 namespace cli {
 
-struct AsmCommander {
+struct AsmCommander final {
     AsmCommander(driver::AsmDirective **begin, driver::AsmDirective **end);
 
     int parseArgs(int argc, const char **argv);
@@ -36,22 +35,6 @@ struct AsmCommander {
     int assemble();
 
 private:
-    struct FileSources : driver::AsmSources {
-    public:
-        Error open(const StrScanner &name) override;
-        Error closeCurrent() override;
-
-    protected:
-        int size() const override { return _sources.size(); }
-        driver::TextReader *last() override;
-        driver::TextReader *secondToLast() override;
-
-    private:
-        static constexpr int max_includes = 4;
-        std::list<FileReader> _sources;
-    };
-
-    FileSources _sources;
     driver::AsmDriver _driver;
     // command line arguments
     const char *_prog_name;

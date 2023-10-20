@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_mc6805() {
     PREP_ASM(mc6805::AsmMc6805, MotorolaDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0x0800, "label1");
 
     ASM("mc146805",

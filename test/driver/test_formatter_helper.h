@@ -28,33 +28,33 @@
 #include "test_reader.h"
 #include "test_sources.h"
 
-#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive, symbolMode)   \
-    typeof_asm assembler;                                           \
-    typeof_directive directive(assembler);                          \
-    AsmDirective *dir = &directive;                                 \
-    TestSources sources;                                            \
-    AsmDriver driver(&dir, &dir + 1, sources, nullptr, symbolMode); \
-    BinMemory memory;                                               \
-    AsmFormatter listing(driver, sources, memory)
+#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive, symbolMode) \
+    typeof_asm assembler;                                         \
+    typeof_directive directive(assembler);                        \
+    AsmDirective *dir = &directive;                               \
+    TestSources sources;                                          \
+    AsmDriver driver(&dir, &dir + 1, symbolMode);                 \
+    BinMemory memory;                                             \
+    AsmFormatter formatter(driver, sources, memory)
 
 #define PREP_ASM(typeof_asm, typeof_directive) \
     PREP_ASM_SYMBOL(typeof_asm, typeof_directive, REPORT_UNDEFINED)
 
-#define ASM(_cpu, _source, _expected)                               \
-    do {                                                            \
-        TestReader expected("expected");                            \
-        expected.add(_expected);                                    \
-        TestReader source(_cpu);                                    \
-        source.add(_source);                                        \
-        sources.add(source);                                        \
-        sources.open(source.name().c_str());                        \
-        StrScanner *line;                                           \
-        while ((line = sources.readLine()) != nullptr) {            \
-            listing.assemble(*line, /* reportError */ true);        \
-            while (listing.hasNextLine())                           \
-                EQ("line", expected.readLine(), listing.getLine()); \
-        }                                                           \
-        EQ(_cpu, nullptr, expected.readLine());                     \
+#define ASM(_cpu, _source, _expected)                                 \
+    do {                                                              \
+        TestReader expected("expected");                              \
+        expected.add(_expected);                                      \
+        TestReader source(_cpu);                                      \
+        source.add(_source);                                          \
+        sources.add(source);                                          \
+        sources.open(source.name().c_str());                          \
+        StrScanner *line;                                             \
+        while ((line = sources.readLine()) != nullptr) {              \
+            formatter.assemble(*line, /* reportError */ true);        \
+            while (formatter.hasNextLine())                           \
+                EQ("line", expected.readLine(), formatter.getLine()); \
+        }                                                             \
+        EQ(_cpu, nullptr, expected.readLine());                       \
     } while (0)
 
 #define PREP_DIS(typeof_disassembler) \

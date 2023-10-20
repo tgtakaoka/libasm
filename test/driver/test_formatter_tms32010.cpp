@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_tms32010() {
     PREP_ASM(tms32010::AsmTms32010, IntelDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("tms32010",
             "        .cpu  tms32010\n"

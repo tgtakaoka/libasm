@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_cdp1802() {
     PREP_ASM(cdp1802::AsmCdp1802, RcaDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("cdp1804",
             "        cpu   cdp1804\n"

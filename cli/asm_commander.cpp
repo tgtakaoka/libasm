@@ -17,10 +17,8 @@
 #include "asm_commander.h"
 
 #include "asm_directive.h"
-#include "asm_formatter.h"
-#include "asm_sources.h"
+#include "file_sources.h"
 #include "file_printer.h"
-#include "file_reader.h"
 #include "intel_hex.h"
 #include "moto_srec.h"
 #include "stored_printer.h"
@@ -32,52 +30,14 @@ namespace cli {
 
 using namespace libasm::driver;
 
-struct NullPrinter : TextPrinter {
+struct NullPrinter final : TextPrinter {
     void println(const char *text) override {}
     void format(const char *fmt, ...) override {}
 };
 
 static NullPrinter STDNULL;
 
-Error AsmCommander::FileSources::open(const StrScanner &name) {
-    if (size() >= max_includes)
-        return TOO_MANY_INCLUDE;
-    const auto *parent = _sources.empty() ? nullptr : &_sources.back();
-    const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;
-    if (pos == std::string::npos || *name == '/') {
-        _sources.emplace_back(std::string(name.str(), name.size()));
-    } else {
-        std::string path(parent->name().substr(0, pos + 1));
-        path.append(name.str(), name.size());
-        _sources.push_back(path);
-    }
-    if (!_sources.back().open()) {
-        _sources.pop_back();
-        return NO_INCLUDE_FOUND;
-    }
-    return OK;
-}
-
-driver::TextReader *AsmCommander::FileSources::last() {
-    return _sources.empty() ? nullptr : &_sources.back();
-}
-
-driver::TextReader *AsmCommander::FileSources::secondToLast() {
-    if (size() < 2)
-        return nullptr;
-    auto it = _sources.rbegin();
-    return &(*++it);
-}
-
-Error AsmCommander::FileSources::closeCurrent() {
-    auto &reader = _sources.back();
-    reader.close();
-    _sources.pop_back();
-    return OK;
-}
-
-AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end)
-    : _sources(), _driver(begin, end, _sources, &_options) {}
+AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end) : _driver(begin, end) {}
 
 int AsmCommander::assemble() {
     if (_cpu && !_driver.setCpu(_cpu)) {
@@ -115,19 +75,21 @@ int AsmCommander::assemble() {
             return 1;
         }
 
-        auto &encoder = _encoder == 'S' ? MotoSrec::encoder()
-                                        : (_encoder == 'H' ? IntelHex::encoder()
-                                                           : _driver.current()->defaultEncoder());
+        auto &encoder = _driver.current()->defaultEncoder();
+        if (_encoder == 'S')
+            encoder = MotoSrec::encoder();
+        else if (_encoder == 'H')
+            encoder = IntelHex::encoder();
         const auto addrWidth = _driver.current()->assembler().config().addressWidth();
         encoder.reset(addrWidth, _record_bytes);
         encoder.encode(memory, output);
         if (_verbose) {
-            const uint8_t addrUnit = _driver.current()->assembler().config().addressUnit();
+            const auto addrUnit = _driver.current()->assembler().config().addressUnit();
             for (const auto &it : memory) {
-                const uint32_t start = it.base / addrUnit;
-                const size_t size = it.data.size();
-                const uint32_t end = (it.base + size - 1) / addrUnit;
-                fprintf(stderr, "%s: Write %4zu bytes %04x-%04x\n", _output_name, size, start, end);
+                const auto start = it.base / addrUnit;
+                const uint32_t size = it.data.size();
+                const auto end = (it.base + size - 1) / addrUnit;
+                fprintf(stderr, "%s: Write %4u bytes %04x-%04x\n", _output_name, size, start, end);
             }
         }
     }
@@ -150,17 +112,21 @@ int AsmCommander::assemble() {
 
 int AsmCommander::assemble(
         BinMemory &memory, TextPrinter &listout, TextPrinter &errorout, bool reportError) {
-    if (_sources.open(_input_name)) {
+    FileSources sources;
+    if (sources.open(_input_name)) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
 
-    AsmFormatter formatter(_driver, _sources, memory);
-    formatter.setUpperHex(_upper_hex);
-    formatter.enableLineNumber(_line_number);
+    _driver.reset();
+    _driver.setUpperHex(_upper_hex);
+    _driver.enableLineNumber(_line_number);
+    for (const auto &it : _options) {
+        _driver.setOption(it.first.c_str(), it.second.c_str());
+    }
     if (_cpu)
         _driver.setCpu(_cpu);
-    return _driver.assemble(_sources, memory, formatter, listout, errorout, reportError);
+    return _driver.assemble(sources, memory, listout, errorout, reportError);
 }
 
 AsmDirective *AsmCommander::defaultDirective() {

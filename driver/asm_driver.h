@@ -41,19 +41,20 @@ enum SymbolMode {
     REPORT_DUPLICATE = 1,
 };
 
-struct AsmDriver : SymbolTable {
-    AsmDriver(AsmDirective **begin, AsmDirective **end, AsmSources &sources,
-            std::map<std::string, std::string> *options = nullptr,
-            SymbolMode symbolMode = REPORT_UNDEFINED);
+struct AsmDriver final : SymbolTable {
+    AsmDriver(AsmDirective **begin, AsmDirective **end, SymbolMode symbolMode = REPORT_UNDEFINED);
 
     AsmDirective *restrictCpu(const char *cpu);
     AsmDirective *setCpu(const char *cpu);
     std::list<std::string> listCpu() const;
     AsmDirective *current() const { return _current; }
 
-    void applyOptions() const;
-    int assemble(AsmSources &sources, BinMemory &memory, AsmFormatter &formatter,
-            TextPrinter &listout, TextPrinter &errorout, bool reportError);
+    void reset();
+    void setUpperHex(bool upperHex) { _upperHex = upperHex; }
+    void enableLineNumber(bool enable) { _enableLineNumber = enable; }
+    void setOption(const char *name, const char *value);
+    int assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,
+            TextPrinter &errorout, bool reportError);
 
     uint32_t origin() const { return _origin; }
     uint32_t setOrigin(uint32_t origin) { return _origin = origin; }
@@ -77,7 +78,6 @@ struct AsmDriver : SymbolTable {
             const StrScanner &body, const ValueParser &parser) {
         return _functions.internFunction(name, params, body, parser, this);
     }
-    Error openSource(const StrScanner &filename);
 
     auto begin() const { return _directives.cbegin(); }
     auto end() const { return _directives.cend(); }
@@ -85,12 +85,12 @@ struct AsmDriver : SymbolTable {
 private:
     std::list<AsmDirective *> _directives;
     AsmDirective *_current;
-    AsmSources &_sources;
-    std::map<std::string, std::string> *_options;
 
     SymbolMode _symbolMode;
     FunctionStore _functions;
     uint32_t _origin;
+    bool _upperHex;
+    bool _enableLineNumber;
 
     AsmDirective *switchDirective(AsmDirective *dir);
 

@@ -33,13 +33,13 @@ struct BinEncoder;
 
 struct AsmDirective : ErrorAt {
     typedef Error (AsmDirective::*PseudoHandler)(
-            StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+            StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
 
     Assembler &assembler() const { return _assembler; }
     virtual BinEncoder &defaultEncoder() const;
 
     Error processPseudo(
-            const StrScanner &name, StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+            const StrScanner &name, StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
 
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
@@ -59,17 +59,17 @@ protected:
     void disablePseudo(const char *name);
 
     // Common PseudoHandler
-    Error defineConstant(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error setVariable(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error includeFile(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error switchCpu(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error switchIntelZilog(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error endAssemble(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
-    Error defineFunction(StrScanner &scan, AsmFormatter &list, AsmDriver &driver);
+    Error defineConstant(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error defineVariable(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error setVariable(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error includeFile(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error switchCpu(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error switchIntelZilog(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error endAssemble(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    Error defineFunction(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
 
     // PseudoHanlder helper
-    Error defineSymbol(StrScanner &scan, AsmFormatter &list, AsmDriver &driver,
+    Error defineSymbol(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver,
             const StrScanner &symbol, bool variable);
 };
 

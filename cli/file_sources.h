@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Tadashi G. Takaoka
+ * Copyright 2023 Tadashi G. Takaoka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,66 +14,60 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_SOURCES_H__
-#define __TEST_SOURCES_H__
+#ifndef __FILE_SOURCES_H__
+#define __FILE_SOURCES_H__
 
 #include <list>
-#include <map>
+#include <string>
 
 #include "asm_sources.h"
-#include "test_reader.h"
+#include "file_reader.h"
 
 namespace libasm {
-namespace driver {
-namespace test {
+namespace cli {
 
-struct TestSources final : driver::AsmSources {
+struct FileSources final : driver::AsmSources {
     Error open(const StrScanner &name) override {
-        const auto *parent = _sources.empty() ? nullptr : _sources.back();
+        if (size() >= max_includes)
+            return TOO_MANY_INCLUDE;
+        const auto *parent = _sources.empty() ? nullptr : &_sources.back();
         const auto pos = parent ? parent->name().find_last_of('/') : std::string::npos;
-        std::string key;
         if (pos == std::string::npos || *name == '/') {
-            key = std::string(name.str(), name.size());
+            _sources.emplace_back(std::string(name.str(), name.size()));
         } else {
-            key = std::string(parent->name().substr(0, pos + 1));
-            key.append(name.str(), name.size());
+            std::string path(parent->name().substr(0, pos + 1));
+            path.append(name.str(), name.size());
+            _sources.push_back(path);
         }
-        auto it = _files.find(key);
-        if (it == _files.end())
+        if (!_sources.back().open()) {
+            _sources.pop_back();
             return NO_INCLUDE_FOUND;
-        _sources.push_back(it->second);
-        _sources.back()->rewind();
+        }
         return OK;
     }
 
     Error closeCurrent() override {
+        auto &reader = _sources.back();
+        reader.close();
         _sources.pop_back();
         return OK;
     }
 
-    TestSources &add(TestReader &reader) {
-        _files.emplace(reader.name(), &reader);
-        return *this;
-    }
-
 private:
-    std::list<TestReader *> _sources;
-    std::map<std::string, TestReader *> _files;
+    static constexpr int max_includes = 4;
+    std::list<FileReader> _sources;
 
     int size() const override { return _sources.size(); }
-
-    TextReader *last() override { return size() ? _sources.back() : nullptr; }
-
-    TextReader *secondToLast() override {
+    driver::TextReader *last() override { return _sources.empty() ? nullptr : &_sources.back(); }
+    driver::TextReader *secondToLast() override {
         if (size() < 2)
             return nullptr;
         auto it = _sources.rbegin();
-        return *++it;
+        return &(*++it);
     }
 };
 
-}  // namespace test
-}  // namespace driver
+}  // namespace cli
 }  // namespace libasm
 
 #endif

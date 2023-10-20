@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_z8() {
     PREP_ASM(z8::AsmZ8, Z8Directive);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     ASM("z8",
             "        cpu     z8\n"

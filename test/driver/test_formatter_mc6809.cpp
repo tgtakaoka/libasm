@@ -37,8 +37,8 @@ void test_asm_mc6809() {
             "        fcb   'a, ',, '/, ' , 0\n"           // FCB can omit closing quote
             "        fcb   'A', '', 'C'+$80, $80+'a\n");  // FCB can accept closing quote
 
-    listing.setUpperHex(true);
-    listing.enableLineNumber(true);
+    formatter.setUpperHex(true);
+    formatter.enableLineNumber(true);
 
     ASM("mc6809",
             "        cpu   mc6809\n"

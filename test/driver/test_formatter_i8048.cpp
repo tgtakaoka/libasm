@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_i8048() {
     PREP_ASM(i8048::AsmI8048, IntelDirective);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
     driver.internSymbol(0x8a, "data1");
 
     ASM("i8039",
