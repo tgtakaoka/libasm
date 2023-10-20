@@ -17,7 +17,6 @@
 #ifndef __DIS_FORMATTER_H__
 #define __DIS_FORMATTER_H__
 
-#include "config_base.h"
 #include "dis_base.h"
 #include "list_formatter.h"
 

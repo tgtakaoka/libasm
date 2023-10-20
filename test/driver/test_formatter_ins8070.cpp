@@ -53,7 +53,7 @@ void test_asm_ins8070() {
 void test_dis_ins8070() {
     PREP_DIS(ins8070::DisIns8070);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS8("ins8070", 0xabcd,
             "      cpu   ins8070\n"

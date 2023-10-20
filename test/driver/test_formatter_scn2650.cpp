@@ -45,7 +45,7 @@ void test_asm_scn2650() {
 void test_dis_scn2650() {
     PREP_DIS(scn2650::DisScn2650);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS8("scn2650", 0x7bcd,
             "      cpu     scn2650\n"
@@ -60,7 +60,7 @@ void test_dis_scn2650() {
             "    7bd0 : 90\n",
             0x0C, 0xBD, 0xEF, 0x90);
 
-    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x89ab));
+    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x89ab));
 }
 
 void run_tests() {

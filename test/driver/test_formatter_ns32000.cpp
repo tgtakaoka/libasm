@@ -54,7 +54,7 @@ void test_asm_ns32000() {
 void test_dis_ns32000() {
     PREP_DIS(ns32000::DisNs32000);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS8("ns32032", 0xabcdef,
             "      cpu     ns32032\n"

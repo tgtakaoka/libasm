@@ -65,7 +65,7 @@ void test_asm_z8002() {
 void test_dis_z8001() {
     PREP_DIS(z8000::DisZ8000);
 
-    listing.setUppercase(true);
+    formatter.setUppercase(true);
     EQ("short-direct", OK, disassembler.setOption("short-direct", "on"));
 
     DIS16("z8001", 0x789abc,
@@ -81,14 +81,14 @@ void test_dis_z8001() {
             "  789AC2 : 9745                       POP    R5, @RR4\n",
             0x4c15, 0x1617, 0x1919, 0x9745);
 
-    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x89abcd));
-    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0x789abd));
+    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x89abcd));
+    EQ("org", OPERAND_NOT_ALIGNED, formatter.setOrigin(0x789abd));
 }
 
 void test_dis_z8002() {
     PREP_DIS(z8000::DisZ8000);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS16("z8002", 0x9abc,
             "      cpu    z8002\n"
@@ -103,8 +103,8 @@ void test_dis_z8002() {
             "    9ac2 : 5144 0000                  pushl  @r4, %0000(r4)\n",
             0x1000, 0x0102, 0x0304, 0x5144, 0x0000);
 
-    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x10000));
-    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCD));
+    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x10000));
+    EQ("org", OPERAND_NOT_ALIGNED, formatter.setOrigin(0xABCD));
 }
 
 void run_tests() {

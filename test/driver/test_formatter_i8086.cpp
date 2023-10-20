@@ -64,7 +64,7 @@ void test_asm_i8086() {
 void test_dis_i8086() {
     PREP_DIS(i8086::DisI8086);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS8("i8086", 0xbcdef,
             "      cpu    i8086\n"

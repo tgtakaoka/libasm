@@ -60,7 +60,7 @@ void test_asm_tms9900() {
 void test_dis_tms9900() {
     PREP_DIS(tms9900::DisTms9900);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS16("tms99105", 0x9abc,
             "      cpu   tms99105\n"
@@ -76,7 +76,7 @@ void test_dis_tms9900() {
             "    9ac4 : 0383\n",
             0x002a, 0x4861, 0x4a4b, 0x4c4d, 0x0383);
 
-    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCD));
+    EQ("org", OPERAND_NOT_ALIGNED, formatter.setOrigin(0xABCD));
 }
 
 void run_tests() {

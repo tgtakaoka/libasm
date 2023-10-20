@@ -65,7 +65,7 @@ void test_asm_mc6809() {
 void test_dis_mc6809() {
     PREP_DIS(mc6809::DisMc6809);
 
-    listing.setUppercase(false);
+    formatter.setUppercase(false);
 
     DIS8("mc6809", 0xabcd,
             "      cpu   mc6809\n"

@@ -59,33 +59,33 @@
 
 #define PREP_DIS(typeof_disassembler) \
     typeof_disassembler disassembler; \
-    DisFormatter listing(disassembler, "test.bin")
+    DisFormatter formatter(disassembler, "test.bin")
 
-#define DIS(_cpu, _org, _contents, _lines, _memory)                       \
-    do {                                                                  \
-        TestReader contents(_cpu);                                        \
-        contents.add(_contents);                                          \
-        TestReader lines(_cpu);                                           \
-        lines.add(_lines);                                                \
-        TRUE("setcpu" _cpu, listing.setCpu(_cpu));                        \
-        EQ("content", contents.readLine(), listing.getContent());         \
-        EQ("line", lines.readLine(), listing.getLine());                  \
-        EQ("origin", OK, listing.setOrigin(_org));                        \
-        EQ("content", contents.readLine(), listing.getContent());         \
-        EQ("line", lines.readLine(), listing.getLine());                  \
-        const auto unit = disassembler.addressUnit();                     \
-        auto reader = _memory.iterator();                                 \
-        while (reader.hasNext()) {                                        \
-            const auto addr = reader.address() / unit;                    \
-            listing.disassemble(reader, addr);                            \
-            while (listing.hasNextContent())                              \
-                EQ("content", contents.readLine(), listing.getContent()); \
-            while (listing.hasNextLine())                                 \
-                EQ("line", lines.readLine(), listing.getLine());          \
-            FALSE("line eor", listing.hasNextLine());                     \
-        }                                                                 \
-        EQ("expected content eor", nullptr, contents.readLine());         \
-        EQ("expected line eor", nullptr, lines.readLine());               \
+#define DIS(_cpu, _org, _contents, _lines, _memory)                         \
+    do {                                                                    \
+        TestReader contents(_cpu);                                          \
+        contents.add(_contents);                                            \
+        TestReader lines(_cpu);                                             \
+        lines.add(_lines);                                                  \
+        TRUE("cpu" _cpu, formatter.setCpu(_cpu));                           \
+        EQ("cpu content", contents.readLine(), formatter.getContent());     \
+        EQ("cpu line", lines.readLine(), formatter.getLine());              \
+        EQ("org", OK, formatter.setOrigin(_org));                           \
+        EQ("org content", contents.readLine(), formatter.getContent());     \
+        EQ("org line", lines.readLine(), formatter.getLine());              \
+        const auto unit = disassembler.addressUnit();                       \
+        auto reader = _memory.iterator();                                   \
+        while (reader.hasNext()) {                                          \
+            const auto addr = reader.address() / unit;                      \
+            formatter.disassemble(reader, addr);                            \
+            while (formatter.hasNextContent())                              \
+                EQ("content", contents.readLine(), formatter.getContent()); \
+            while (formatter.hasNextLine())                                 \
+                EQ("line", lines.readLine(), formatter.getLine());          \
+            FALSE("line eor", formatter.hasNextLine());                     \
+        }                                                                   \
+        EQ("expected content eor", nullptr, contents.readLine());           \
+        EQ("expected line eor", nullptr, lines.readLine());                 \
     } while (0)
 
 #define DIS16(_cpu, _org, _contents, _expected, ...)                            \

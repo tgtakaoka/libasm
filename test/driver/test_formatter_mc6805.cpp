@@ -46,8 +46,8 @@ void test_asm_mc6805() {
 void test_dis_mc6805() {
     PREP_DIS(mc6805::DisMc6805);
 
-    listing.setUpperHex(false);
-    listing.setUppercase(true);
+    formatter.setUpperHex(false);
+    formatter.setUppercase(true);
 
     DIS8("mc146805", 0x1234,
             "      CPU   MC146805\n"
@@ -66,7 +66,7 @@ void test_dis_mc6805() {
             "    1238 : c6 20 00                   LDA   $2000\n",
             0xdf, 0x40, 0x00, 0x82, 0xC6, 0x20, 0x00);
 
-    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0x3456));
+    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x3456));
 }
 
 void run_tests() {

@@ -16,7 +16,6 @@
 
 #include "dis_driver.h"
 
-#include "bin_memory.h"
 #include "dis_formatter.h"
 #include "text_printer.h"
 
@@ -78,8 +77,20 @@ std::list<std::string> DisDriver::listCpu() const {
     return list;
 }
 
-void DisDriver::disassemble(const BinMemory &memory, uint32_t dis_start, uint32_t dis_end,
-        DisFormatter &formatter, TextPrinter &output, TextPrinter &listout, TextPrinter &errorout) {
+bool DisDriver::setOption(const char *name, const char *value) {
+    return current()->setOption(name, value);
+}
+
+void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t dis_start,
+        uint32_t dis_end, TextPrinter &output, TextPrinter &listout, TextPrinter &errorout) {
+    DisFormatter formatter(*current(), inputName);
+    formatter.setUpperHex(_upperHex);
+    formatter.setUppercase(_uppercase);
+
+    formatter.setCpu(current()->cpu_P());
+    output.println(formatter.getContent());
+    listout.println(formatter.getLine());
+
     const auto addrUnit = current()->config().addressUnit();
     for (const auto &it : memory) {
         auto mem_base = it.base;
@@ -98,6 +109,7 @@ void DisDriver::disassemble(const BinMemory &memory, uint32_t dis_start, uint32_
         formatter.setOrigin(start);
         output.println(formatter.getContent());
         listout.println(formatter.getLine());
+
         auto reader = memory.reader(mem_base);
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
             formatter.disassemble(reader, start + mem_offset / addrUnit);

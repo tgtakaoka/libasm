@@ -16,14 +16,13 @@
 
 #include "dis_commander.h"
 
-#include "bin_decoder.h"
-#include "dis_formatter.h"
-#include "file_printer.h"
-#include "file_reader.h"
-
 #include <algorithm>
 #include <cstring>
 #include <string>
+
+#include "bin_decoder.h"
+#include "file_printer.h"
+#include "file_reader.h"
 
 namespace libasm {
 namespace cli {
@@ -44,31 +43,23 @@ int DisCommander::disassemble() {
         return 1;
     }
 
-    BinMemory memory;
     FileReader input(_input_name);
     if (!input.open()) {
         fprintf(stderr, "Can't open input file %s\n", _input_name);
         return 1;
     }
-    if (readBinary(input, memory) < 0)
+    BinMemory memory;
+    if (readBinary(memory, input) < 0)
         return 1;
     input.close();
 
-    const auto addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
+    const auto addrUnit = _driver.current()->config().addressUnit();
     const auto mem_start = memory.startAddress() / addrUnit;
     const auto mem_end = memory.endAddress() / addrUnit;
     if (_dis_start > mem_end || _dis_end < mem_start) {
         fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
         fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _dis_start, _dis_end);
         return 1;
-    }
-
-    auto &disassembler = *_driver.current();
-    DisFormatter listing(disassembler, _input_name);
-    listing.setUpperHex(_upper_hex);
-    listing.setUppercase(_uppercase);
-    for (auto &opt : _options) {
-        disassembler.setOption(opt.first.c_str(), opt.second.c_str());
     }
 
     FilePrinter output;
@@ -90,14 +81,19 @@ int DisCommander::disassemble() {
             fprintf(stderr, "%s: Opened for listing\n", listout.name().c_str());
     }
 
-    listing.setCpu(_cpu);
+    _driver.setUpperHex(_upper_hex);
+    _driver.setUppercase(_uppercase);
+    for (auto &opt : _options) {
+        _driver.setOption(opt.first.c_str(), opt.second.c_str());
+    }
+
     _driver.disassemble(
-            memory, _dis_start, _dis_end, listing, output, listout, FilePrinter::STDERR);
+            memory, _input_name, _dis_start, _dis_end, output, listout, FilePrinter::STDERR);
 
     return 0;
 }
 
-int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
+int DisCommander::readBinary(BinMemory &memory, TextReader &input) {
     const auto filename = input.name().c_str();
     const auto addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
     const auto size = BinDecoder::decode(input, memory);
@@ -107,10 +103,10 @@ int DisCommander::readBinary(FileReader &input, BinMemory &memory) {
     }
     if (_verbose) {
         for (const auto &it : memory) {
-            const uint32_t start = it.base / addrUnit;
-            const size_t size = it.data.size();
-            const uint32_t end = (it.base + size - 1) / addrUnit;
-            fprintf(stderr, "%s: Read %4zu bytes 0x%04X-0x%04X\n", filename, size, start, end);
+            const auto start = it.base / addrUnit;
+            const uint32_t size = it.data.size();
+            const auto end = (it.base + size - 1) / addrUnit;
+            fprintf(stderr, "%s: Read %4u bytes 0x%04X-0x%04X\n", filename, size, start, end);
         }
     }
     return size;

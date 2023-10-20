@@ -46,7 +46,7 @@ void test_asm_i8051() {
 void test_dis_i8051() {
     PREP_DIS(i8051::DisI8051);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS8("i8051", 0xabcd,
             "      cpu   i8051\n"

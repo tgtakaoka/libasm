@@ -53,7 +53,7 @@ void test_asm_tms32010() {
 void test_dis_tms32010() {
     PREP_DIS(tms32010::DisTms32010);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS16("tms32010", 0x789,
             "      cpu   tms32010\n"
@@ -70,7 +70,7 @@ void test_dis_tms32010() {
             "     78c : 0086\n",
             0xf800, 0x0fed, 0x50a0, 0x0086);
 
-    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0xabcd));
+    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0xabcd));
 }
 
 void run_tests() {

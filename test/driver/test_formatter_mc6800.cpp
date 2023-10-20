@@ -46,7 +46,7 @@ void test_asm_mc6800() {
 void test_dis_mc6800() {
     PREP_DIS(mc6800::DisMc6800);
 
-    listing.setUppercase(true);
+    formatter.setUppercase(true);
 
     DIS8("mc6800", 0xabcd,
             "      CPU   MC6800\n"

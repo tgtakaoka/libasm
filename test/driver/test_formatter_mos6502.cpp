@@ -81,7 +81,7 @@ void test_asm_w65816() {
 void test_dis_mos6502() {
     PREP_DIS(mos6502::DisMos6502);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS8("mos6502", 0xabcd,
             "      cpu   mos6502\n"
@@ -100,7 +100,7 @@ void test_dis_mos6502() {
 void test_dis_w65816() {
     PREP_DIS(mos6502::DisMos6502);
 
-    listing.setUppercase(true);
+    formatter.setUppercase(true);
     TRUE("setcpu", disassembler.setCpu("w65c816"));
     EQ("longa", OK, disassembler.setOption("longa", "on"));
 

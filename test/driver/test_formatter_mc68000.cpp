@@ -83,7 +83,7 @@ void test_asm_mc68000() {
 void test_dis_mc68000() {
     PREP_DIS(mc68000::DisMc68000);
 
-    listing.setUpperHex(false);
+    formatter.setUpperHex(false);
 
     DIS16("mc68000", 0x9abcde,
             "      cpu     mc68000\n"
@@ -103,7 +103,7 @@ void test_dis_mc68000() {
             "  9abcea : 617f                       bsr     $9abd6b\n",
             0x00b9, 0xbdbe, 0xbfc0, 0x00c2, 0xc3c4, 0041774, 0060400 | 0x7F);
 
-    EQ("org", OPERAND_NOT_ALIGNED, listing.setOrigin(0xABCDEF));
+    EQ("org", OPERAND_NOT_ALIGNED, formatter.setOrigin(0xABCDEF));
 }
 
 void run_tests() {

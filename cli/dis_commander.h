@@ -17,17 +17,17 @@
 #ifndef __DIS_COMMANDER_H__
 #define __DIS_COMMANDER_H__
 
-#include "bin_memory.h"
-#include "dis_base.h"
-#include "dis_driver.h"
-#include "file_reader.h"
-
 #include <map>
+#include <string>
+
+#include "bin_memory.h"
+#include "dis_driver.h"
+#include "text_reader.h"
 
 namespace libasm {
 namespace cli {
 
-struct DisCommander {
+struct DisCommander final {
     DisCommander(Disassembler **begin, Disassembler **end);
 
     int parseArgs(int argc, const char **argv);
@@ -51,7 +51,7 @@ private:
 
     static constexpr const char *PROG_PREFIX = "dis";
     Disassembler *defaultDisassembler();
-    int readBinary(FileReader &input, driver::BinMemory &memory);
+    int readBinary(driver::BinMemory &memory, driver::TextReader &input);
     int parseOptionValue(const char *option);
 };
 

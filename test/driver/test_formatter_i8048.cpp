@@ -46,7 +46,7 @@ void test_asm_i8048() {
 void test_dis_i8048() {
     PREP_DIS(i8048::DisI8048);
 
-    listing.setUppercase(true);
+    formatter.setUppercase(true);
 
     DIS8("i8039", 0xbcd,
             "      CPU   I8039\n"
@@ -61,7 +61,7 @@ void test_dis_i8048() {
             "     BCF : 08\n",
             0x89, 0x8A, 0x08);
 
-    EQ("org", OVERFLOW_RANGE, listing.setOrigin(0xabcd));
+    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0xabcd));
 }
 
 void run_tests() {

@@ -17,6 +17,7 @@
 #ifndef __DIS_DRIVER_H__
 #define __DIS_DRIVER_H__
 
+#include "bin_memory.h"
 #include "dis_base.h"
 
 #include <list>
@@ -29,7 +30,7 @@ struct TextPrinter;
 struct BinMemory;
 struct DisFormatter;
 
-struct DisDriver {
+struct DisDriver final {
     DisDriver(Disassembler **begin, Disassembler **end);
 
     Disassembler *restrictCpu(const char *cpu);
@@ -37,9 +38,12 @@ struct DisDriver {
     std::list<std::string> listCpu() const;
     Disassembler *current() const { return _current; }
 
-    void disassemble(const BinMemory &memory, uint32_t dis_start, uint32_t dis_end,
-            DisFormatter &formatter, TextPrinter &output, TextPrinter &listout,
-            TextPrinter &errorout);
+    void setUpperHex(bool upperHex) { _upperHex = upperHex; }
+    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    bool setOption(const char *name, const char *value);
+
+    void disassemble(BinMemory &memory, const char *inputName, uint32_t dis_start, uint32_t dis_end,
+            TextPrinter &output, TextPrinter &listout, TextPrinter &errorout);
 
     auto begin() const { return _disassemblers.cbegin(); }
     auto end() const { return _disassemblers.cend(); }
@@ -47,6 +51,8 @@ struct DisDriver {
 private:
     std::list<Disassembler *> _disassemblers;
     Disassembler *_current;
+    bool _upperHex;
+    bool _uppercase;
 };
 
 }  // namespace driver
