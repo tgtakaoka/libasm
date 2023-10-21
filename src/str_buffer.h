@@ -32,7 +32,7 @@ struct StrBuffer : ErrorReporter {
     StrBuffer(char *buffer, size_t size);
 
     /** copy constructor. */
-    StrBuffer(const StrBuffer &o);
+    explicit StrBuffer(const StrBuffer &o);
 
     /** Return the head of buffer. */
     const char *str() const { return _str; }

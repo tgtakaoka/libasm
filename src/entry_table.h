@@ -176,7 +176,7 @@ struct CpuBase {
             INSN &insn, const ENTRY *entry, StrBuffer &out, const ENTRY_PAGE *page) {
         UNUSED(page);
         insn.setFlags(entry->flags());
-        auto save = out;
+        auto save{out};
         insn.nameBuffer().reset().over(out).text_P(entry->name_P()).over(insn.nameBuffer());
         save.over(out);
     }

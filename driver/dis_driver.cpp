@@ -113,7 +113,7 @@ void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t d
         auto reader = memory.reader(mem_base);
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
             formatter.disassemble(reader, start + mem_offset / addrUnit);
-            mem_offset += formatter.byteLength();
+            mem_offset += formatter.bytesSize();
             while (formatter.hasNextLine()) {
                 const char *line = formatter.getLine();
                 listout.println(line);

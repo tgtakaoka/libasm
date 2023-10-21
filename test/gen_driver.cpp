@@ -23,7 +23,7 @@ namespace libasm {
 namespace gen {
 
 GenDriver::GenDriver(Disassembler &disassembler)
-    : _disassembler(disassembler), _listing(disassembler) {}
+    : _disassembler(disassembler), _formatter(disassembler, "TestGenerator") {}
 
 static const char *basename(const char *str, char sep_char = '/') {
     const char *sep = strrchr(str, sep_char);
@@ -36,12 +36,12 @@ int GenDriver::main(int argc, const char **argv) {
         return usage();
 
     const char *commentStr = ";;;";
-    _listing.setUpperHex(_upper_hex);
-    _listing.setUppercase(_uppercase);
+    _formatter.setUpperHex(_upper_hex);
+    _formatter.setUppercase(_uppercase);
     if (_generateGas) {
         commentStr = ";###";
         _disassembler.setOption("c-style", "on");
-        _listing.setUpperHex(false);
+        _formatter.setUpperHex(false);
     }
     _output = nullptr;
     if (_output_name) {
@@ -61,7 +61,7 @@ int GenDriver::main(int argc, const char **argv) {
         }
         printCommandLine(_list, commentStr, _progname, argc, argv);
     }
-    _listing.setCpu(_cpu.c_str());
+    _formatter.setCpu(_cpu.c_str());
     if (!_includeTarget && !_generateGas) {
         printList();
     }
@@ -80,13 +80,13 @@ int GenDriver::close() {
 void GenDriver::printList() {
     if (_output) {
         do {
-            fprintf(_output, "%s\n", _listing.getContent());
-        } while (_listing.hasNextContent());
+            fprintf(_output, "%s\n", _formatter.getContent());
+        } while (_formatter.hasNextContent());
     }
     if (_list) {
         do {
-            fprintf(_list, "%s\n", _listing.getLine());
-        } while (_listing.hasNextLine());
+            fprintf(_list, "%s\n", _formatter.getLine());
+        } while (_formatter.hasNextLine());
     }
 }
 
@@ -98,7 +98,7 @@ void GenDriver::flush() {
 }
 
 void GenDriver::setOrigin(uint32_t addr) {
-    _listing.setOrigin(addr);
+    _formatter.setOrigin(addr);
     if (!_includeTarget && !_generateGas) {
         printList();
     }

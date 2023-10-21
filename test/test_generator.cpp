@@ -155,7 +155,7 @@ DataGenerator *DataGenerator::newChild() {
 TestGenerator::TestGenerator(Formatter &formatter, Disassembler &disassembler, uint32_t addr)
     : _formatter(formatter),
       _disassembler(disassembler),
-      _listing(formatter.listing()),
+      _disFormatter(formatter.formatter()),
       _opCodeWidth(disassembler.config().opCodeWidth()),
       _endian(disassembler.config().endian()),
       _addressUnit(disassembler.config().addressUnit()),
@@ -198,9 +198,9 @@ void TestGenerator::dump() const {
 }
 
 const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool withSize) {
-    name = _listing.name();
+    name = _disFormatter.name();
     if (withSize) {
-        const auto size = _listing.length();
+        const auto size = _disFormatter.bytesSize();
         name += ':';
         name += size + '0';
     }
@@ -208,7 +208,7 @@ const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool w
     if (seen == _map.end())
         seen = _map.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_listing.operand()};
+    const TokenizedText opr{_disFormatter.operand()};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -217,15 +217,15 @@ const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool w
 }
 
 const TokenizedText &TestGenerator::meaningfulError(std::string &name) {
-    name = _listing.name();
-    const auto size = _listing.length();
+    name = _disFormatter.name();
+    const auto size = _disFormatter.bytesSize();
     name += ':';
     name += size + '0';
     auto seen = _error.find(name);
     if (seen == _error.end())
         seen = _error.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_listing.operand()};
+    const TokenizedText opr{_disFormatter.operand()};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -246,10 +246,10 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
         gen.next();
         const ArrayMemory memory(_address, _memory, gen.length());
         auto it = memory.iterator();
-        const auto error = _listing.disassemble(it, _address / _addressUnit);
+        const auto error = _disFormatter.disassemble(it, _address / _addressUnit);
         if (_disassembler.isOK()) {
             const int len = gen.length();
-            const int newLen = _listing.length();
+            const int newLen = _disFormatter.bytesSize();
             std::string name;
             const auto &found = meaningfulTestData(name);
             if (found.count() == 1) {

@@ -330,7 +330,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     const auto oprSize = (insnSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(insnSize);
     const auto suffix = sizeSuffix(oprSize);
     if (suffix) {
-        auto save = out;
+        auto save{out};
         insn.nameBuffer().over(out);
         out.letter('.').letter(suffix).over(insn.nameBuffer());
         save.over(out);

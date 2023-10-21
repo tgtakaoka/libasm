@@ -43,14 +43,14 @@ DisScn2650::DisScn2650(const ValueFormatter::Plugins &plugins)
 namespace {
 
 StrBuffer &appendCcName(DisInsn &insn, StrBuffer &out, CcName name) {
-    auto save = out;
+    auto save{out};
     outCcName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);
 }
 
 StrBuffer &appendRegName(DisInsn &insn, StrBuffer &out, RegName name) {
-    auto save = out;
+    auto save{out};
     outRegName(insn.nameBuffer().over(out).letter(','), name);
     out.over(insn.nameBuffer());
     return save.over(out);

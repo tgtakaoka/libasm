@@ -17,12 +17,11 @@
 #ifndef __GEN_DRIVER_H__
 #define __GEN_DRIVER_H__
 
-#include "dis_base.h"
-#include "gen_formatter.h"
-#include "test_generator.h"
-
 #include <cstdio>
 #include <string>
+
+#include "dis_base.h"
+#include "test_generator.h"
 
 namespace libasm {
 namespace gen {
@@ -37,7 +36,7 @@ struct GenDriver : TestGenerator::Formatter {
 
 private:
     Disassembler &_disassembler;
-    GenFormatter _listing;
+    driver::DisFormatter _formatter;
     const char *_progname;
     const char *_output_name;
     const char *_list_name;
@@ -51,7 +50,7 @@ private:
     FILE *_list;
 
     // TestGenerator::Formatter
-    GenFormatter &listing() override final { return _listing; }
+    driver::DisFormatter &formatter() override final { return _formatter; }
     void printList() override final;
     void flush() override final;
     void setOrigin(uint32_t addr) override final;

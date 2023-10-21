@@ -27,7 +27,7 @@ namespace libasm {
 namespace driver {
 
 AsmFormatter::AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory)
-    : ListFormatter(), _driver(driver), _sources(sources), _memory(memory), _lineNumber(false) {}
+    : _driver(driver), _sources(sources), _memory(memory), _formatter(*this), _lineNumber(false) {}
 
 void AsmFormatter::reset() {
     _nextLine = -1;
@@ -64,7 +64,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
         StrScanner directive;
         parser.readInstruction(p, directive);
         auto error = _driver.current()->processPseudo(directive, p.skipSpaces(), *this, _driver);
-        setListRadix(assembler.listRadix());
+        _formatter.setListRadix(assembler.listRadix());
         if (&_driver.current()->assembler() != &assembler) {
             // Assembler may be switched by "cpu" directive
             _driver.current()->assembler().setListRadix(assembler.listRadix());
@@ -97,7 +97,7 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     _insn.reset(startAddress());
     assembler.encode(scan.str(), _insn, /*SymbolTable*/ &_driver);
     _errorAt.setError(assembler);
-    setListRadix(assembler.listRadix());
+    _formatter.setListRadix(assembler.listRadix());
     // maybe be modified because of alignment required by constant generating pseudos.
     setStartAddress(_insn.address());
     const auto allowUndef =
@@ -125,69 +125,71 @@ bool AsmFormatter::isError() const {
 }
 
 bool AsmFormatter::hasNextLine() const {
-    return _nextLine < generatedSize();
+    return _nextLine < bytesSize();
 }
 
 const char *AsmFormatter::getLine() {
-    _out.reset();
+    auto &out = _formatter.out();
+    out.reset();
     if (isError() && !_errorLine) {
         // TODO: In file included from...
-        _out.text(_sources.current()->name().c_str()).letter(':');
-        formatDec(_sources.current()->lineno());
+        out.text(_sources.current()->name().c_str()).letter(':');
+        _formatter.formatDec(_sources.current()->lineno());
         const auto *line = _line.str();
         const auto *line_end = line + _line.size();
         const auto *at = _errorAt.errorAt();
         const int column = (at >= line && at < line_end) ? at - line + 1 : -1;
         if (column >= 0) {
-            _out.letter(':');
-            formatDec(column);
+            out.letter(':');
+            _formatter.formatDec(column);
         }
-        _out.text(": error: ").text_P(_errorAt.errorText_P());
+        out.text(": error: ").text_P(_errorAt.errorText_P());
         _nextLine = -1;
         _errorLine = true;
     } else {
         if (_nextLine < 0)
             _nextLine = 0;
         formatLineNumber();
-        formatAddress(startAddress() + _nextLine);
-        const auto pos = _out.len();
+        _formatter.formatAddress(startAddress() + _nextLine);
+        const auto pos = out.len();
         auto formatted = 0;
         if (!_line_value.isUndefined()) {
-            _out.text(" =");
-            formatValue(_line_value.getUnsigned());
+            out.text(" =");
+            _formatter.formatValue(_line_value.getUnsigned());
         } else {
-            formatted = formatBytes(_nextLine);
+            formatted = _formatter.formatBytes(_nextLine);
         }
         if (_nextLine == 0 && _line.size()) {
-            formatTab(pos + bytesColumnWidth() + 1);
-            _out.text(_line);
+            _formatter.formatTab(pos + _formatter.bytesColumnWidth() + 1);
+            out.text(_line);
         }
         _nextLine += formatted;
     }
-    return _out.str();
+    return out.str();
 }
 
 void AsmFormatter::formatLineNumber() {
+    auto &out = _formatter.out();
     // Only the first has "(nest) lineno/"
     if (_nextLine <= 0) {
         const auto include_nest = _sources.nest();
         if (include_nest > 1) {
-            _out.letter('(');
-            formatDec(include_nest - 1);
-            _out.letter(')');
+            out.letter('(');
+            _formatter.formatDec(include_nest - 1);
+            out.letter(')');
         } else {
-            outSpaces(3);
+            _formatter.outSpaces(3);
         }
         if (_lineNumber) {
-            formatDec(_sources.current()->lineno(), 5);
-            _out.letter('/');
+            _formatter.formatDec(_sources.current()->lineno(), 5);
+            out.letter('/');
         }
     } else {
-        outSpaces(_lineNumber ? 3 + 6 : 3);
+        _formatter.outSpaces(_lineNumber ? 3 + 6 : 3);
     }
 }
 
-uint8_t AsmFormatter::getByte(int offset) const {
+uint8_t AsmFormatter::getByte(uint8_t offset) const {
     return _memory.readByte(_address * config().addressUnit() + offset);
 }
 

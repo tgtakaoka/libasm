@@ -22,7 +22,7 @@
 #include <unordered_map>
 
 #include "dis_base.h"
-#include "gen_formatter.h"
+#include "dis_formatter.h"
 #include "tokenized_text.h"
 
 namespace libasm {
@@ -74,7 +74,7 @@ protected:
 
 struct TestGenerator {
     struct Formatter : public GenDebugger {
-        virtual GenFormatter &listing() = 0;
+        virtual driver::DisFormatter &formatter() = 0;
         virtual void printList() = 0;
         virtual void flush() = 0;
         virtual void setOrigin(uint32_t addr) = 0;
@@ -89,7 +89,7 @@ struct TestGenerator {
 private:
     Formatter &_formatter;
     Disassembler &_disassembler;
-    GenFormatter &_listing;
+    driver::DisFormatter &_disFormatter;
     const OpCodeWidth _opCodeWidth;
     const Endian _endian;
     const AddressUnit _addressUnit;

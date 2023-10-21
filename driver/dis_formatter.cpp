@@ -22,18 +22,18 @@ namespace libasm {
 namespace driver {
 
 DisFormatter::DisFormatter(Disassembler &disassembler, const char *input_name)
-    : ListFormatter(),
-      _disassembler(disassembler),
+    : _disassembler(disassembler),
       _input_name(input_name),
+      _formatter(*this),
       _insn(0),
       _uppercase(false) {
     _disassembler.setUpperHex(true);
     _disassembler.setUppercase(false);
-    setListRadix(_disassembler.listRadix());
+    _formatter.setListRadix(_disassembler.listRadix());
 }
 
 void DisFormatter::setUpperHex(bool enable) {
-    ListFormatter::setUpperHex(enable);
+    _formatter.setUpperHex(enable);
     _disassembler.setUpperHex(enable);
 }
 
@@ -53,7 +53,7 @@ Error DisFormatter::disassemble(DisMemory &memory, uint32_t addr) {
     reset();
     _insn.reset(addr);
     const auto error = _disassembler.decode(memory, _insn, _operands, sizeof(_operands));
-    setListRadix(_disassembler.listRadix());
+    _formatter.setListRadix(_disassembler.listRadix());
     return error;
 }
 
@@ -89,7 +89,7 @@ Error DisFormatter::setOrigin(uint32_t origin) {
 }
 
 bool DisFormatter::hasNextContent() const {
-    return _nextContent < generatedSize();
+    return _nextContent < bytesSize();
 }
 
 static int max(int a, int b) {
@@ -97,65 +97,67 @@ static int max(int a, int b) {
 }
 
 const char *DisFormatter::getContent() {
-    _out.reset();
+    auto &out = _formatter.out();
+    out.reset();
     if (isError()) {
         if (!_errorContent) {
             _errorContent = true;
-            _out.text_P(_disassembler.lineComment_P()).letter(' ').text(_input_name).text(": ");
-            _disassembler.outAbsAddr(_out, startAddress());
-            _out.text(": error: ").text_P(_disassembler.errorText_P());
+            out.text_P(_disassembler.lineComment_P()).letter(' ').text(_input_name).text(": ");
+            _disassembler.outAbsAddr(out, startAddress());
+            out.text(": error: ").text_P(_disassembler.errorText_P());
             _nextContent = 0;
         } else {
-            _out.text_P(_disassembler.lineComment_P()).letter(' ');
-            formatAddress(startAddress() + _nextContent);
-            _nextContent += formatBytes(_nextContent);
+            out.text_P(_disassembler.lineComment_P()).letter(' ');
+            _formatter.formatAddress(startAddress() + _nextContent);
+            _nextContent += _formatter.formatBytes(_nextContent);
         }
     } else {
-        _out.text("      ");
-        const auto pos = _out.len();
-        _out.text(_insn.name());
+        out.text("      ");
+        const auto pos = out.len();
+        out.text(_insn.name());
         if (*_operands) {
             const auto nameWidth = max(config().nameMax(), min_nameWidth) + 1;
-            formatTab(pos + nameWidth);
-            _out.text(_operands);
+            _formatter.formatTab(pos + nameWidth);
+            out.text(_operands);
         }
-        _nextContent = generatedSize();
+        _nextContent = bytesSize();
     }
-    return _out.str();
+    return out.str();
 }
 
 bool DisFormatter::hasNextLine() const {
-    return _nextLine < generatedSize();
+    return _nextLine < bytesSize();
 }
 
 const char *DisFormatter::getLine() {
-    _out.reset();
+    auto &out = _formatter.out();
+    out.reset();
     if (isError() && !_errorLine) {
         _errorLine = true;
-        _out.text(_input_name).text(": ");
-        _disassembler.outAbsAddr(_out, startAddress());
-        _out.text(": error: ").text_P(_disassembler.errorText_P());
+        out.text(_input_name).text(": ");
+        _disassembler.outAbsAddr(out, startAddress());
+        out.text(": error: ").text_P(_disassembler.errorText_P());
         _nextLine = 0;
     } else {
         if (_nextLine < 0)
             _nextLine = 0;
-        formatAddress(startAddress() + _nextLine);
-        auto pos = _out.len();
-        const auto formatted = formatBytes(_nextLine);
+        _formatter.formatAddress(startAddress() + _nextLine);
+        auto pos = out.len();
+        const auto formatted = _formatter.formatBytes(_nextLine);
         if (_nextLine == 0 && *_insn.name()) {
-            formatTab(pos + bytesColumnWidth() + 1);
-            _out.text("        ");
-            pos = _out.len();
-            _out.text(_insn.name());
+            _formatter.formatTab(pos + _formatter.bytesColumnWidth() + 1);
+            out.text("        ");
+            pos = out.len();
+            out.text(_insn.name());
             if (*_operands) {
                 const auto nameWidth = max(config().nameMax(), min_nameWidth) + 1;
-                formatTab(pos + nameWidth);
-                _out.text(_operands);
+                _formatter.formatTab(pos + nameWidth);
+                out.text(_operands);
             }
         }
         _nextLine += formatted;
     }
-    return _out.str();
+    return out.str();
 }
 
 }  // namespace driver
