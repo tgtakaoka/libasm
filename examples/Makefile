@@ -53,14 +53,16 @@ EX ?= $(firstword $(EXS))
 examples:
 	@echo $(EXS)
 
-ENVS = $(shell $(MAKE) -s -C $(firstword $(EXS)) pio-envs)
+ENVS = $(shell $(MAKE) -s -C $(EX) pio-envs)
 ENV ?= $(firstword $(ENVS))
 
 environments:
 	@echo $(ENVS)
 
-BOARDS = $(shell $(MAKE) -s -C $(firstword $(EXS)) pio-boards)
+BOARDS = $(shell $(MAKE) -s -C $(EX) pio-boards)
 BOARD ?= $(firstword $(BOARDS))
+
+FQBNS = $(shell $(MAKE) -s -C $(EX) fqbns)
 
 boards:
 	@echo $(BOARDS)
@@ -85,6 +87,9 @@ endef
 pio-ci:
 	$(call pio-ci,$(EX),$(BOARD))
 
+pio-ci-all:
+	$(foreach board,$(BOARDS),$(call pio-ci,$(EX),$(board)))
+
 define pio-run # example, env
 	$(MAKE) -C $(1) pio-run ENV=$(2)
 
@@ -92,6 +97,9 @@ endef
 
 pio-run:
 	$(call pio-run,$(EX),$(ENV))
+
+pio-run-all:
+	$(foreach env,$(ENVS),$(call pio-run,$(EX),$(env)))
 
 define arduino-ci # example, fqbn
 	$(MAKE) -C $(1) arduino-ci FQBN=$(2)
@@ -101,6 +109,9 @@ endef
 arduino-ci:
 	$(call arduino-ci,$(EX),$(BOARD))
 
+arduino-ci-all:
+	$(foreach fqbn,$(FQBNS),$(call arduino-ci,$(EX),$(fqbn)))
+
 define clean-ex # ex
 	$(MAKE) -s -C $(1) clean
 
@@ -109,7 +120,8 @@ endef
 clean: $(EXS)
 	$(foreach ex,$(EXS),$(call clean-ex,$(ex)))
 
-.PHONY: all clean update pio-ci pio-run
+.PHONY: all clean update pio-ci pio-ci-all pio-run pio-run-all
+.PHONY: arduino-ci arduino-ci-all
 
 # Local Variables:
 # mode: makefile-gmake

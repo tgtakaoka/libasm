@@ -36,10 +36,10 @@ test:
 	$(MAKE) -C test test
 
 pio-ci: examples
-	$(MAKE) -C examples pio-ci
+	$(MAKE) -C examples pio-ci-all
 
 arduino-ci: examples
-	$(MAKE) -C examples arduino-ci
+	$(MAKE) -C examples arduino-ci-all
 
 clean: 
 	$(MAKE) -s -C cli clean
