@@ -27,7 +27,7 @@ using namespace reg;
 namespace {
 
 const char OPT_INT_PCBITS[] PROGMEM = "pc-bits";
-const char OPT_DESC_PCBITS[] = "program counter width in bit, default 13";
+const char OPT_DESC_PCBITS[] = "program counter width in bit (default 13)";
 
 }  // namespace
 

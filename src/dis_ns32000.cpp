@@ -31,7 +31,7 @@ namespace {
 const char OPT_BOOL_PCREL_PAREN[] PROGMEM = "pcrel-paren";
 const char OPT_DESC_PCREL_PAREN[] PROGMEM = "addr(pc) as program counter relative";
 const char OPT_BOOL_EXTERNAL_PAREN[] PROGMEM = "external-paren";
-const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as extenal addressing";
+const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as external addressing";
 const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
 const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
 const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
