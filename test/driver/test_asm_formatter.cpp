@@ -34,7 +34,7 @@ void test_symbols_mc6809() {
     PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective, REPORT_DUPLICATE);
 
     formatter.setUpperHex(true);
-    formatter.enableLineNumber(true);
+    formatter.setLineNumber(true);
 
     ASM("mc6809",
             "label1  equ   $1234\n"
@@ -69,7 +69,7 @@ void test_symbols_ins8060() {
     PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
 
     formatter.setUpperHex(true);
-    formatter.enableLineNumber(true);
+    formatter.setLineNumber(true);
 
     ASM("ins8060",
             "label1  =     X'1234\n"
@@ -104,7 +104,7 @@ void test_symbols_z80() {
     PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective, REPORT_DUPLICATE);
 
     formatter.setUpperHex(true);
-    formatter.enableLineNumber(true);
+    formatter.setLineNumber(true);
 
     ASM("z80",
             "label1  equ   1234H\n"
@@ -144,16 +144,12 @@ void test_switch_cpu() {
     IntelDirective dir8080(asm8080);
     z80::AsmZ80 asmz80;
     ZilogDirective dirz80(asmz80);
-    AsmDirective *dirs[] = {&dir6809, &dir6502, &dir8080, &dirz80};
-    TestSources sources;
-    AsmDriver driver(&dirs[0], &dirs[4]);
-    BinMemory memory;
-    AsmFormatter formatter(driver, sources, memory);
+    PREP_ASM_DRIVER(REPORT_UNDEFINED, &dir6809, &dir6502, &dir8080, &dirz80);
 
     ASM("switch cpu",
             "        cpu   mc6809\n"
             "        org   $1000\n"
-            "        ldx   #$1234\n"
+             "        ldx   #$1234\n"
             "        cpu   z80\n"
             "        ld    hl, 1234H\n"
             "        cpu   i8080\n"
@@ -204,11 +200,7 @@ void test_list_radix() {
     MostekDirective dir6502(asm6502);
     z80::AsmZ80 asmz80;
     ZilogDirective dirz80(asmz80);
-    AsmDirective *dirs[] = {&dir6502, &dirz80};
-    TestSources sources;
-    AsmDriver driver(&dirs[0], &dirs[2]);
-    BinMemory memory;
-    AsmFormatter formatter(driver, sources, memory);
+    PREP_ASM_DRIVER(REPORT_UNDEFINED, &dir6502, &dirz80);
 
     driver.setOption("list-radix", "8");
 

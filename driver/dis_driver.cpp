@@ -28,7 +28,10 @@ namespace libasm {
 namespace driver {
 
 DisDriver::DisDriver(Disassembler **begin, Disassembler **end)
-    : _disassemblers(begin, end), _current(*begin) {}
+    : _disassemblers(begin, end), _current(*begin) {
+    setUpperHex(true);
+    setUppercase(false);
+}
 
 static void appendTo(const std::string &cpu, std::list<std::string> &list) {
     if (std::find(list.begin(), list.end(), cpu) == list.end())
@@ -77,21 +80,33 @@ std::list<std::string> DisDriver::listCpu() const {
     return list;
 }
 
+void DisDriver::setUpperHex(bool upperHex) {
+    _upperHex = upperHex;
+}
+
+void DisDriver::setUppercase(bool uppercase) {
+    _uppercase = uppercase;
+}
+
 bool DisDriver::setOption(const char *name, const char *value) {
     return current()->setOption(name, value);
 }
 
 void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t dis_start,
         uint32_t dis_end, TextPrinter &output, TextPrinter &listout, TextPrinter &errorout) {
-    DisFormatter formatter(*current(), inputName);
+    char buffer[256];
+    StrBuffer out{buffer, sizeof(buffer)};
+
+    auto &disassembler = *current();
+    DisFormatter formatter(disassembler, inputName);
     formatter.setUpperHex(_upperHex);
     formatter.setUppercase(_uppercase);
 
-    formatter.setCpu(current()->cpu_P());
-    output.println(formatter.getContent());
-    listout.println(formatter.getLine());
+    formatter.setCpu(disassembler.cpu_P());
+    output.println(formatter.getContent(out).str());
+    listout.println(formatter.getLine(out).str());
 
-    const auto addrUnit = current()->config().addressUnit();
+    const auto addrUnit = disassembler.config().addressUnit();
     for (const auto &it : memory) {
         auto mem_base = it.base;
         auto mem_size = it.data.size();
@@ -106,22 +121,27 @@ void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t d
         }
         if (end > dis_end)
             mem_size -= (end - dis_end) * addrUnit;
+
         formatter.setOrigin(start);
-        output.println(formatter.getContent());
-        listout.println(formatter.getLine());
+        output.println(formatter.getContent(out).str());
+        listout.println(formatter.getLine(out).str());
 
         auto reader = memory.reader(mem_base);
         for (size_t mem_offset = 0; mem_offset < mem_size;) {
-            formatter.disassemble(reader, start + mem_offset / addrUnit);
-            mem_offset += formatter.bytesSize();
-            while (formatter.hasNextLine()) {
-                const char *line = formatter.getLine();
-                listout.println(line);
-                if (formatter.isError())
-                    errorout.println(line);
-            }
+            formatter.reset();
+            auto &operands = formatter.operands();
+            auto &insn = formatter.insn();
+            insn.reset(start + mem_offset / addrUnit);
+            disassembler.decode(reader, insn, operands.mark(), operands.capacity());
+            formatter.set(disassembler);
             while (formatter.hasNextContent())
-                output.println(formatter.getContent());
+                output.println(formatter.getContent(out).str());
+            while (formatter.hasNextLine()) {
+                listout.println(formatter.getLine(out).str());
+                if (!disassembler.isOK())
+                    errorout.println(out.str());
+            }
+            mem_offset += insn.length();
         }
     }
 }

@@ -60,13 +60,13 @@ void test_dis_tms32010() {
             "      org   789h\n"
             "      call  0fedh\n"
             "      sacl  *+, 0, ar0\n"
-            "* test.bin: 78ch: error: Unknown instruction\n"
+            "* test.bin: error: Unknown instruction\n"
             "*      78c : 0086\n",
             "       0 :                            cpu   tms32010\n"
             "     789 :                            org   789h\n"
             "     789 : f800 0fed                  call  0fedh\n"
             "     78b : 50a0                       sacl  *+, 0, ar0\n"
-            "test.bin: 78ch: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "     78c : 0086\n",
             0xf800, 0x0fed, 0x50a0, 0x0086);
 

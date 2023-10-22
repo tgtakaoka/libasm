@@ -53,12 +53,12 @@ void test_dis_tlcs90() {
             "      cpu   tlcs90\n"
             "      org   0abcdh\n"
             "      xor   (hl+a), 0efh\n"
-            "; test.bin: 0abd0h: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";     abd0 : e3 12 34 17\n",
             "       0 :                            cpu   tlcs90\n"
             "    abcd :                            org   0abcdh\n"
             "    abcd : f7 6d ef                   xor   (hl+a), 0efh\n"
-            "test.bin: 0abd0h: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    abd0 : e3 12 34 17\n",
             0xf7, 0x6d, 0xef, 0xe3, 0x12, 0x34, 0x17);
 }

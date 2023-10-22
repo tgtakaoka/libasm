@@ -19,6 +19,7 @@
 
 #include "dis_base.h"
 #include "list_formatter.h"
+#include "value.h"
 
 #include <cstdint>
 
@@ -26,44 +27,48 @@ namespace libasm {
 namespace driver {
 
 struct DisFormatter : ListFormatter::Provider {
-    DisFormatter(Disassembler &disassembler, const char *input_name);
+    DisFormatter(Disassembler &disassembler, const char *inputName);
 
-    void setUpperHex(bool enable);
-    void setUppercase(bool enable);
+    void setUpperHex(bool upperHex);
+    void setUppercase(bool uppercase);
+    void setListRadix(Radix listRadix);
 
-    Error disassemble(DisMemory &memory, uint32_t addr);
-    Error setCpu(const char *cpu);
+    void reset();
+    void set(const ErrorAt &error);
+    void setCpu(const char *cpu);
     Error setOrigin(uint32_t origin);
 
-    bool isError() const { return _disassembler.getError() != OK; }
-    const char *name() const { return _insn.name(); }
-    const char *operand() const { return _operands; }
-    uint8_t bytesSize() const override { return _insn.length(); }
-
+    Insn &insn() { return _insn; }
+    StrBuffer &operands() { return _operands; }
     bool hasNextContent() const;
-    const char *getContent();
+    StrBuffer &getContent(StrBuffer &out);
     bool hasNextLine() const;
-    const char *getLine();
+    StrBuffer &getLine(StrBuffer &out);
 
 protected:
     Disassembler &_disassembler;
-    const char *_input_name;
+    const char *_inputName;
     ListFormatter _formatter;
     Insn _insn;
+    StrBuffer _operands;
+    ErrorAt _error;
+
     bool _uppercase;
-
-    int _nextContent;
+    bool _errorMessage;
     bool _errorContent;
-    int _nextLine;
+    int _nextContent;
     bool _errorLine;
+    int _nextLine;
+    char _buffer[128];
 
-    char _operands[256];
-
-    void reset();
+    void formatComment(StrBuffer &out);
+    void formatError(StrBuffer &out);
+    void formatLine(StrBuffer &out, int &next);
 
     // ListFormatter::Provider
     const ConfigBase &config() const override { return _disassembler.config(); }
     uint32_t startAddress() const override { return _insn.address(); }
+    uint8_t bytesSize() const override { return _insn.length(); }
     uint8_t getByte(uint8_t offset) const override { return _insn.bytes()[offset]; }
 
     static constexpr int min_nameWidth = 5;

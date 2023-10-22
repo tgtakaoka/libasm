@@ -38,8 +38,8 @@ struct DisDriver final {
     std::list<std::string> listCpu() const;
     Disassembler *current() const { return _current; }
 
-    void setUpperHex(bool upperHex) { _upperHex = upperHex; }
-    void setUppercase(bool uppercase) { _uppercase = uppercase; }
+    void setUpperHex(bool upperHex);
+    void setUppercase(bool uppercase);
     bool setOption(const char *name, const char *value);
 
     void disassemble(BinMemory &memory, const char *inputName, uint32_t dis_start, uint32_t dis_end,

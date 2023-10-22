@@ -51,12 +51,12 @@ void test_dis_z8() {
             "      cpu     z8\n"
             "      org     %abcd\n"
             "      ld      r12, %c9(r8)\n"
-            "; test.bin: %abd0: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";     abd0 : 0f\n",
             "       0 :                            cpu     z8\n"
             "    abcd :                            org     %abcd\n"
             "    abcd : c7 c8 c9                   ld      r12, %c9(r8)\n"
-            "test.bin: %abd0: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    abd0 : 0f\n",
             0xc7, 0xc8, 0xc9, 0x0f);
 }

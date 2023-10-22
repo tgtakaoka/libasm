@@ -38,7 +38,7 @@ void test_asm_mc6809() {
             "        fcb   'A', '', 'C'+$80, $80+'a\n");  // FCB can accept closing quote
 
     formatter.setUpperHex(true);
-    formatter.enableLineNumber(true);
+    formatter.setLineNumber(true);
 
     ASM("mc6809",
             "        cpu   mc6809\n"
@@ -71,16 +71,16 @@ void test_dis_mc6809() {
             "      cpu   mc6809\n"
             "      org   $ABCD\n"
             "      cmpd  [$1234,y]\n"
-            "* test.bin: $ABD2: error: Unknown instruction\n"
+            "* test.bin: error: Unknown instruction\n"
             "*     ABD2 : 01\n"
-            "* test.bin: $ABD3: error: Unknown post-byte\n"
-            "*     ABD3 : A6 87\n",
+            "* test.bin: error: Unknown post-byte\n"
+            "*     ABD3 : A6 87                      lda\n",
             "       0 :                            cpu   mc6809\n"
             "    ABCD :                            org   $ABCD\n"
             "    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y]\n"
-            "test.bin: $ABD2: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    ABD2 : 01\n"
-            "test.bin: $ABD3: error: Unknown post-byte\n"
+            "test.bin: error: Unknown post-byte\n"
             "    ABD3 : A6 87                      lda\n",
             0x10, 0xA3, 0xB9, 0x12, 0x34, 0x01, 0xA6, 0x87);
 }

@@ -34,13 +34,14 @@ struct BinMemory;
 struct AsmFormatter final : ListFormatter::Provider {
     AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
 
-    void setUpperHex(bool upperHex) { _formatter.setUpperHex(upperHex); }
-    void enableLineNumber(bool enable);
+    void setUpperHex(bool upperHex);
+    void setLineNumber(bool enable);
 
     Error assemble(const StrScanner &line, bool reportError = false);
-    bool isError() const;
+    bool hasError() const;
+
     bool hasNextLine() const;
-    const char *getLine();
+    StrBuffer &getLine(StrBuffer &out);
 
     // Interface to AsmDirective
     void setStartAddress(uint32_t addr) { _address = addr; }
@@ -72,7 +73,7 @@ private:
     const ConfigBase *_conf;
 
     void reset();
-    void formatLineNumber();
+    void formatLineNumber(StrBuffer &out);
 
     // ListFormatter
     uint32_t startAddress() const override { return _address; }

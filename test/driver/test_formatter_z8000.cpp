@@ -72,12 +72,12 @@ void test_dis_z8001() {
             "      CPU    Z8001\n"
             "      ORG    %789ABC\n"
             "      LDB    |%160017|(R1), #25\n"
-            "; test.bin: %789AC2: error: Registers overlapped\n"
-            ";   789AC2 : 9745\n",
+            "; test.bin: error: Registers overlapped: \"RR4\"\n"
+            ";   789AC2 : 9745                       POP    R5, @RR4\n",
             "       0 :                            CPU    Z8001\n"
             "  789ABC :                            ORG    %789ABC\n"
             "  789ABC : 4C15 1617 1919             LDB    |%160017|(R1), #25\n"
-            "test.bin: %789AC2: error: Registers overlapped\n"
+            "test.bin: error: Registers overlapped: \"RR4\"\n"
             "  789AC2 : 9745                       POP    R5, @RR4\n",
             0x4c15, 0x1617, 0x1919, 0x9745);
 
@@ -94,12 +94,12 @@ void test_dis_z8002() {
             "      cpu    z8002\n"
             "      org    %9abc\n"
             "      cpl    rr0, #%01020304\n"
-            "; test.bin: %9ac2: error: Registers overlapped\n"
-            ";     9ac2 : 5144 0000\n",
+            "; test.bin: error: Registers overlapped: \"r4)\"\n"
+            ";     9ac2 : 5144 0000                  pushl  @r4, %0000(r4)\n",
             "       0 :                            cpu    z8002\n"
             "    9abc :                            org    %9abc\n"
             "    9abc : 1000 0102 0304             cpl    rr0, #%01020304\n"
-            "test.bin: %9ac2: error: Registers overlapped\n"
+            "test.bin: error: Registers overlapped: \"r4)\"\n"
             "    9ac2 : 5144 0000                  pushl  @r4, %0000(r4)\n",
             0x1000, 0x0102, 0x0304, 0x5144, 0x0000);
 

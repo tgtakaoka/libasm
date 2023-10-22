@@ -22,70 +22,84 @@
 #include "asm_driver.h"
 #include "asm_formatter.h"
 #include "bin_memory.h"
+#include "dis_driver.h"
 #include "dis_formatter.h"
 #include "test_driver_helper.h"
-#include "test_formatter_helper.h"
 #include "test_reader.h"
 #include "test_sources.h"
 
+#define PREP_ASM_DRIVER(symbolMode, ...)                                           \
+    AsmDirective *dirs[] = {__VA_ARGS__};                                          \
+    TestSources sources;                                                           \
+    AsmDriver driver(&dirs[0], &dirs[sizeof(dirs) / sizeof(dirs[0])], symbolMode); \
+    char buffer[256];                                                              \
+    StrBuffer out(buffer, sizeof(buffer));                                         \
+    BinMemory memory;                                                              \
+    AsmFormatter formatter(driver, sources, memory)
+
 #define PREP_ASM_SYMBOL(typeof_asm, typeof_directive, symbolMode) \
     typeof_asm assembler;                                         \
-    typeof_directive directive(assembler);                        \
-    AsmDirective *dir = &directive;                               \
-    TestSources sources;                                          \
-    AsmDriver driver(&dir, &dir + 1, symbolMode);                 \
-    BinMemory memory;                                             \
-    AsmFormatter formatter(driver, sources, memory)
+    typeof_directive directive{assembler};                        \
+    PREP_ASM_DRIVER(symbolMode, &directive)
 
 #define PREP_ASM(typeof_asm, typeof_directive) \
     PREP_ASM_SYMBOL(typeof_asm, typeof_directive, REPORT_UNDEFINED)
 
-#define ASM(_cpu, _source, _expected)                                 \
-    do {                                                              \
-        TestReader expected("expected");                              \
-        expected.add(_expected);                                      \
-        TestReader source(_cpu);                                      \
-        source.add(_source);                                          \
-        sources.add(source);                                          \
-        sources.open(source.name().c_str());                          \
-        StrScanner *line;                                             \
-        while ((line = sources.readLine()) != nullptr) {              \
-            formatter.assemble(*line, /* reportError */ true);        \
-            while (formatter.hasNextLine())                           \
-                EQ("line", expected.readLine(), formatter.getLine()); \
-        }                                                             \
-        EQ(_cpu, nullptr, expected.readLine());                       \
+#define ASM(_cpu, _source, _expected)                                          \
+    do {                                                                       \
+        TestReader expected("expected");                                       \
+        expected.add(_expected);                                               \
+        TestReader source(_cpu);                                               \
+        source.add(_source);                                                   \
+        sources.add(source);                                                   \
+        sources.open(source.name().c_str());                                   \
+        StrScanner *line;                                                      \
+        while ((line = sources.readLine()) != nullptr) {                       \
+            formatter.assemble(*line, /* reportError */ true);                 \
+            while (formatter.hasNextLine())                                    \
+                EQ("line", expected.readLine(), formatter.getLine(out).str()); \
+        }                                                                      \
+        EQ(_cpu, nullptr, expected.readLine());                                \
     } while (0)
 
-#define PREP_DIS(typeof_disassembler) \
-    typeof_disassembler disassembler; \
+#define PREP_DIS(typeof_disassembler)      \
+    typeof_disassembler disassembler;      \
+    Disassembler *dis = &disassembler;     \
+    DisDriver driver(&dis, &dis + 1);      \
+    char buffer[256];                      \
+    StrBuffer out(buffer, sizeof(buffer)); \
     DisFormatter formatter(disassembler, "test.bin")
 
-#define DIS(_cpu, _org, _contents, _lines, _memory)                         \
-    do {                                                                    \
-        TestReader contents(_cpu);                                          \
-        contents.add(_contents);                                            \
-        TestReader lines(_cpu);                                             \
-        lines.add(_lines);                                                  \
-        TRUE("cpu" _cpu, formatter.setCpu(_cpu));                           \
-        EQ("cpu content", contents.readLine(), formatter.getContent());     \
-        EQ("cpu line", lines.readLine(), formatter.getLine());              \
-        EQ("org", OK, formatter.setOrigin(_org));                           \
-        EQ("org content", contents.readLine(), formatter.getContent());     \
-        EQ("org line", lines.readLine(), formatter.getLine());              \
-        const auto unit = disassembler.addressUnit();                       \
-        auto reader = _memory.iterator();                                   \
-        while (reader.hasNext()) {                                          \
-            const auto addr = reader.address() / unit;                      \
-            formatter.disassemble(reader, addr);                            \
-            while (formatter.hasNextContent())                              \
-                EQ("content", contents.readLine(), formatter.getContent()); \
-            while (formatter.hasNextLine())                                 \
-                EQ("line", lines.readLine(), formatter.getLine());          \
-            FALSE("line eor", formatter.hasNextLine());                     \
-        }                                                                   \
-        EQ("expected content eor", nullptr, contents.readLine());           \
-        EQ("expected line eor", nullptr, lines.readLine());                 \
+#define DIS(_cpu, _org, _contents, _lines, _memory)                                  \
+    do {                                                                             \
+        TestReader contents(_cpu);                                                   \
+        contents.add(_contents);                                                     \
+        TestReader lines(_cpu);                                                      \
+        lines.add(_lines);                                                           \
+        const auto unit = disassembler.addressUnit();                                \
+        auto reader = _memory.iterator();                                            \
+        TRUE("cpu", disassembler.setCpu(_cpu));                                      \
+        formatter.setCpu(_cpu);                                                      \
+        EQ("cpu content", contents.readLine(), formatter.getContent(out).str());     \
+        EQ("cpu line", lines.readLine(), formatter.getLine(out).str());              \
+        formatter.setOrigin(_org);                                                   \
+        EQ("org content", contents.readLine(), formatter.getContent(out).str());     \
+        EQ("org line", lines.readLine(), formatter.getLine(out).str());              \
+        while (reader.hasNext()) {                                                   \
+            formatter.reset();                                                       \
+            auto &opr = formatter.operands();                                        \
+            auto &insn = formatter.insn();                                           \
+            insn.reset(reader.address() / unit);                                     \
+            disassembler.decode(reader, insn, opr.mark(), opr.capacity());           \
+            formatter.set(disassembler);                                             \
+            while (formatter.hasNextContent())                                       \
+                EQ("content", contents.readLine(), formatter.getContent(out).str()); \
+            while (formatter.hasNextLine())                                          \
+                EQ("line", lines.readLine(), formatter.getLine(out).str());          \
+            FALSE("line eor", formatter.hasNextLine());                              \
+        }                                                                            \
+        EQ("expected content eor", nullptr, contents.readLine());                    \
+        EQ("expected line eor", nullptr, lines.readLine());                          \
     } while (0)
 
 #define DIS16(_cpu, _org, _contents, _expected, ...)                            \

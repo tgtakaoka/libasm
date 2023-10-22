@@ -55,12 +55,12 @@ void test_dis_ins8060() {
             "      cpu   ins8060\n"
             "      org   X'ABCD\n"
             "      and   @e(p1)\n"
-            "; test.bin: X'ABCF: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";     ABCF : 09\n",
             "       0 :                            cpu   ins8060\n"
             "    ABCD :                            org   X'ABCD\n"
             "    ABCD : D5 80                      and   @e(p1)\n"
-            "test.bin: X'ABCF: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    ABCF : 09\n",
             0xd5, 0x80, 0x09);
 }

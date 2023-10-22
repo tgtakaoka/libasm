@@ -51,12 +51,12 @@ void test_dis_scn2650() {
             "      cpu     scn2650\n"
             "      org     h'7bcd'\n"
             "      loda,r0 *h'7def', r0, +\n"
-            "* test.bin: h'7bd0': error: Unknown instruction\n"
+            "* test.bin: error: Unknown instruction\n"
             "*     7bd0 : 90\n",
             "       0 :                            cpu     scn2650\n"
             "    7bcd :                            org     h'7bcd'\n"
             "    7bcd : 0c bd ef                   loda,r0 *h'7def', r0, +\n"
-            "test.bin: h'7bd0': error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    7bd0 : 90\n",
             0x0C, 0xBD, 0xEF, 0x90);
 

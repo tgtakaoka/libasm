@@ -59,12 +59,12 @@ void test_dis_ins8070() {
             "      cpu   ins8070\n"
             "      org   x'abcd\n"
             "      pli   p2, =x'2423\n"
-            "; test.bin: x'abd0: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";     abd0 : ef\n",
             "       0 :                            cpu   ins8070\n"
             "    abcd :                            org   x'abcd\n"
             "    abcd : 22 23 24                   pli   p2, =x'2423\n"
-            "test.bin: x'abd0: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    abd0 : ef\n",
             0x22, 0x23, 0x24, 0xef);
 }

@@ -82,14 +82,15 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     return dir;
 }
 
-AsmDriver::AsmDriver(
-        AsmDirective **begin, AsmDirective **end, SymbolMode symbolMode)
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, SymbolMode symbolMode)
     : _directives(begin, end),
       _current(nullptr),
       _symbolMode(symbolMode),
       _functions(),
       _origin(0) {
     switchDirective(_directives.front());
+    setUpperHex(true);
+    setLineNumber(false);
 }
 
 void AsmDriver::reset() {
@@ -97,6 +98,14 @@ void AsmDriver::reset() {
         auto &assembler = dir->assembler();
         assembler.reset();
     }
+}
+
+void AsmDriver::setUpperHex(bool upperHex) {
+    _upperHex = upperHex;
+}
+
+void AsmDriver::setLineNumber(bool lineNumber) {
+    _lineNumber = lineNumber;
 }
 
 void AsmDriver::setOption(const char *name, const char *value) {
@@ -112,6 +121,8 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
     setOrigin(0);
     _symbolMode = reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE;
 
+    char buffer[256];
+    StrBuffer out{buffer, sizeof(buffer)};
     AsmFormatter formatter{*this, sources, memory};
 
     int errors = 0;
@@ -119,10 +130,9 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
     while ((scan = sources.readLine()) != nullptr) {
         const auto error = formatter.assemble(*scan, reportError);
         while (formatter.hasNextLine()) {
-            const char *line = formatter.getLine();
-            if (formatter.isError())
-                errorout.println(line);
-            listout.println(line);
+            listout.println(formatter.getLine(out).str());
+            if (reportError && formatter.hasError())
+                errorout.println(out.str());
         }
         if (error == END_ASSEMBLE)
             break;

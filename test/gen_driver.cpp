@@ -36,7 +36,9 @@ int GenDriver::main(int argc, const char **argv) {
         return usage();
 
     const char *commentStr = ";;;";
+    _disassembler.setUpperHex(_upper_hex);
     _formatter.setUpperHex(_upper_hex);
+    _disassembler.setUppercase(_uppercase);
     _formatter.setUppercase(_uppercase);
     if (_generateGas) {
         commentStr = ";###";
@@ -61,6 +63,7 @@ int GenDriver::main(int argc, const char **argv) {
         }
         printCommandLine(_list, commentStr, _progname, argc, argv);
     }
+    _disassembler.setCpu(_cpu.c_str());
     _formatter.setCpu(_cpu.c_str());
     if (!_includeTarget && !_generateGas) {
         printList();
@@ -78,14 +81,16 @@ int GenDriver::close() {
 
 // TestGenerator::Printer
 void GenDriver::printList() {
+    char buffer[256];
+    StrBuffer out{buffer, sizeof(buffer)};
     if (_output) {
         do {
-            fprintf(_output, "%s\n", _formatter.getContent());
+            fprintf(_output, "%s\n", _formatter.getContent(out.reset()).str());
         } while (_formatter.hasNextContent());
     }
     if (_list) {
         do {
-            fprintf(_list, "%s\n", _formatter.getLine());
+            fprintf(_list, "%s\n", _formatter.getLine(out.reset()).str());
         } while (_formatter.hasNextLine());
     }
 }

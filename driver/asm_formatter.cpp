@@ -36,7 +36,11 @@ void AsmFormatter::reset() {
     _driver.current()->setOK();
 }
 
-void AsmFormatter::enableLineNumber(bool enable) {
+void AsmFormatter::setUpperHex(bool upperHex) {
+    _formatter.setUpperHex(upperHex);
+}
+
+void AsmFormatter::setLineNumber(bool enable) {
     _lineNumber = enable;
 }
 
@@ -120,28 +124,27 @@ Error AsmFormatter::assemble(const StrScanner &li, bool reportError) {
     return _errorAt.getError();
 }
 
-bool AsmFormatter::isError() const {
-    return _reportError && _errorAt.getError() != OK && _errorAt.getError() != END_ASSEMBLE;
+bool AsmFormatter::hasError() const {
+    return !_errorAt.isOK() && _errorAt.getError() != END_ASSEMBLE;
 }
 
 bool AsmFormatter::hasNextLine() const {
     return _nextLine < bytesSize();
 }
 
-const char *AsmFormatter::getLine() {
-    auto &out = _formatter.out();
+StrBuffer &AsmFormatter::getLine(StrBuffer &out) {
     out.reset();
-    if (isError() && !_errorLine) {
+    if (_reportError && hasError() && !_errorLine) {
         // TODO: In file included from...
         out.text(_sources.current()->name().c_str()).letter(':');
-        _formatter.formatDec(_sources.current()->lineno());
+        _formatter.formatDec(out, _sources.current()->lineno());
         const auto *line = _line.str();
         const auto *line_end = line + _line.size();
         const auto *at = _errorAt.errorAt();
         const int column = (at >= line && at < line_end) ? at - line + 1 : -1;
         if (column >= 0) {
             out.letter(':');
-            _formatter.formatDec(column);
+            _formatter.formatDec(out, column);
         }
         out.text(": error: ").text_P(_errorAt.errorText_P());
         _nextLine = -1;
@@ -149,43 +152,42 @@ const char *AsmFormatter::getLine() {
     } else {
         if (_nextLine < 0)
             _nextLine = 0;
-        formatLineNumber();
-        _formatter.formatAddress(startAddress() + _nextLine);
+        formatLineNumber(out);
+        _formatter.formatAddress(out, startAddress() + _nextLine);
         const auto pos = out.len();
-        auto formatted = 0;
+        uint8_t formatted = 0;
         if (!_line_value.isUndefined()) {
             out.text(" =");
-            _formatter.formatValue(_line_value.getUnsigned());
+            _formatter.formatValue(out, _line_value.getUnsigned());
         } else {
-            formatted = _formatter.formatBytes(_nextLine);
+            formatted = _formatter.formatBytes(out, _nextLine);
         }
         if (_nextLine == 0 && _line.size()) {
-            _formatter.formatTab(pos + _formatter.bytesColumnWidth() + 1);
+            _formatter.formatTab(out, pos + _formatter.bytesColumnWidth() + 1);
             out.text(_line);
         }
         _nextLine += formatted;
     }
-    return out.str();
+    return out;
 }
 
-void AsmFormatter::formatLineNumber() {
-    auto &out = _formatter.out();
+void AsmFormatter::formatLineNumber(StrBuffer &out) {
     // Only the first has "(nest) lineno/"
     if (_nextLine <= 0) {
         const auto include_nest = _sources.nest();
         if (include_nest > 1) {
             out.letter('(');
-            _formatter.formatDec(include_nest - 1);
+            _formatter.formatDec(out, include_nest - 1);
             out.letter(')');
         } else {
-            _formatter.outSpaces(3);
+            _formatter.outSpaces(out, 3);
         }
         if (_lineNumber) {
-            _formatter.formatDec(_sources.current()->lineno(), 5);
+            _formatter.formatDec(out, _sources.current()->lineno(), 5);
             out.letter('/');
         }
     } else {
-        _formatter.outSpaces(_lineNumber ? 3 + 6 : 3);
+        _formatter.outSpaces(out, _lineNumber ? 3 + 6 : 3);
     }
 }
 

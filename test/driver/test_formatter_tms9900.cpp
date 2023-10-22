@@ -66,13 +66,13 @@ void test_dis_tms9900() {
             "      cpu   tms99105\n"
             "      org   >9abc\n"
             "      am    @>4a4b(r1), @>4c4d(r1)\n"
-            "* test.bin: >9ac4: error: Unknown instruction\n"
+            "* test.bin: error: Unknown instruction\n"
             "*     9ac4 : 0383\n",
             "       0 :                            cpu   tms99105\n"
             "    9abc :                            org   >9abc\n"
             "    9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)\n"
             "    9ac2 : 4c4d\n"
-            "test.bin: >9ac4: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    9ac4 : 0383\n",
             0x002a, 0x4861, 0x4a4b, 0x4c4d, 0x0383);
 

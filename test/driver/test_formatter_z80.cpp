@@ -66,12 +66,12 @@ void test_dis_z80() {
             "      cpu   z80\n"
             "      org   0ABCDH\n"
             "      res   0, (iy-128)\n"
-            "; test.bin: 0ABD1H: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";     ABD1 : DD CB 00 EF\n",
             "       0 :                            cpu   z80\n"
             "    ABCD :                            org   0ABCDH\n"
             "    ABCD : FD CB 80 86                res   0, (iy-128)\n"
-            "test.bin: 0ABD1H: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    ABD1 : DD CB 00 EF\n",
             0xfd, 0xcb, 0x80, 0x86, 0xdd, 0xcb, 0x00, 0xef);
 }

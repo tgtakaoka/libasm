@@ -42,7 +42,8 @@ OBJS_encdec = \
     bin_encoder.o bin_decoder.o intel_hex.o moto_srec.o bin_memory.o
 OBJS_formatter = \
     list_formatter.o value_formatter.o config_base.o formatters.o reg_base.o \
-    option_base.o str_buffer.o bin_memory.o dis_base.o dis_formatter.o
+    option_base.o str_buffer.o bin_memory.o dis_base.o dis_formatter.o \
+    dis_driver.o
 OBJS_asm = \
     asm_base.o asm_formatter.o value_parser.o parsers.o operators.o \
     asm_driver.o asm_directive.o function_store.o bin_encoder.o bin_decoder.o \

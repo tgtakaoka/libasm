@@ -54,12 +54,12 @@ void test_dis_i8080() {
             "      cpu   i8080\n"
             "      org   0ABCDH\n"
             "      jpe   0ECEBH\n"
-            "; test.bin: 0ABD0H: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";     ABD0 : DD\n",
             "       0 :                            cpu   i8080\n"
             "    ABCD :                            org   0ABCDH\n"
             "    ABCD : EA EB EC                   jpe   0ECEBH\n"
-            "test.bin: 0ABD0H: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    ABD0 : DD\n",
             0xea, 0xeb, 0xec, 0xdd);
 }

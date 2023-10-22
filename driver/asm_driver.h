@@ -50,8 +50,8 @@ struct AsmDriver final : SymbolTable {
     AsmDirective *current() const { return _current; }
 
     void reset();
-    void setUpperHex(bool upperHex) { _upperHex = upperHex; }
-    void enableLineNumber(bool enable) { _enableLineNumber = enable; }
+    void setUpperHex(bool upperHex);
+    void setLineNumber(bool enable);
     void setOption(const char *name, const char *value);
     int assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,
             TextPrinter &errorout, bool reportError);
@@ -90,7 +90,7 @@ private:
     FunctionStore _functions;
     uint32_t _origin;
     bool _upperHex;
-    bool _enableLineNumber;
+    bool _lineNumber;
 
     AsmDirective *switchDirective(AsmDirective *dir);
 

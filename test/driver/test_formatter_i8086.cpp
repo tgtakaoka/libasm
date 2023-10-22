@@ -70,12 +70,12 @@ void test_dis_i8086() {
             "      cpu    i8086\n"
             "      org    0bcdefh\n"
             "      test   word ptr [bp+di+0feffh], 0bbaah\n"
-            "; test.bin: 0bcdf5h: error: Unknown instruction\n"
+            "; test.bin: error: Unknown instruction\n"
             ";    bcdf5 : d1 f7\n",
             "       0 :                            cpu    i8086\n"
             "   bcdef :                            org    0bcdefh\n"
             "   bcdef : f7 83 ff fe aa bb          test   word ptr [bp+di+0feffh], 0bbaah\n"
-            "test.bin: 0bcdf5h: error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "   bcdf5 : d1 f7\n",
             0xf7, 0x83, 0xff, 0xfe, 0xaa, 0xbb, 0xd1, 0xf7);
 }

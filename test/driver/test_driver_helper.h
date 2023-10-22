@@ -36,6 +36,7 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
 #define TRUE(msg, actual) asserter.isTrue(__FILE__, __LINE__, msg, actual)
 #define FALSE(msg, actual) asserter.isFalse(__FILE__, __LINE__, msg, actual)
 #define EQ(msg, expected, actual) asserter.equals(__FILE__, __LINE__, msg, expected, actual)
+#define NOT_NULL(msg, actual) asserter.isNotNull(__FILE__, __LINE__, msg, actual)
 
 #define RUN_TEST(test) run_test(test, #test, set_up, tear_down)
 

@@ -77,14 +77,14 @@ void test_dis_f3850() {
             "      clr\n"
             "      lr    a, j\n"
             "      bp    h'7bcf'\n"
-            "* test.bin: h'7bd1': error: Unknown instruction\n"
+            "* test.bin: error: Unknown instruction\n"
             "*     7bd1 : 2e\n",
             "       0 :                            cpu   f3850\n"
             "    7bcd :                            org   h'7bcd'\n"
             "    7bcd : 70                         clr\n"
             "    7bce : 49                         lr    a, j\n"
             "    7bcf : 81 ff                      bp    h'7bcf'\n"
-            "test.bin: h'7bd1': error: Unknown instruction\n"
+            "test.bin: error: Unknown instruction\n"
             "    7bd1 : 2e\n",
             0x70, 0x49, 0x81, 0xFF, 0x2E);
 }

@@ -120,7 +120,7 @@ int AsmCommander::assemble(
 
     _driver.reset();
     _driver.setUpperHex(_upper_hex);
-    _driver.enableLineNumber(_line_number);
+    _driver.setLineNumber(_line_number);
     for (const auto &it : _options) {
         _driver.setOption(it.first.c_str(), it.second.c_str());
     }

@@ -198,9 +198,10 @@ void TestGenerator::dump() const {
 }
 
 const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool withSize) {
-    name = _disFormatter.name();
+    const auto &insn = _disFormatter.insn();
+    name = insn.name();
     if (withSize) {
-        const auto size = _disFormatter.bytesSize();
+        const auto size = insn.length();
         name += ':';
         name += size + '0';
     }
@@ -208,7 +209,7 @@ const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool w
     if (seen == _map.end())
         seen = _map.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_disFormatter.operand()};
+    const TokenizedText opr{_disFormatter.operands().str()};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -217,15 +218,16 @@ const TokenizedText &TestGenerator::meaningfulTestData(std::string &name, bool w
 }
 
 const TokenizedText &TestGenerator::meaningfulError(std::string &name) {
-    name = _disFormatter.name();
-    const auto size = _disFormatter.bytesSize();
+    const auto &insn = _disFormatter.insn();
+    name = insn.name();
+    const auto size = insn.length();
     name += ':';
     name += size + '0';
     auto seen = _error.find(name);
     if (seen == _error.end())
         seen = _error.emplace(name, TokenizedText::Set()).first;
     auto &oprVariants = seen->second;
-    const TokenizedText opr{_disFormatter.operand()};
+    const TokenizedText opr{_disFormatter.operands().str()};
     auto found = oprVariants.find(opr);
     if (found == oprVariants.end())
         found = oprVariants.insert(opr).first;
@@ -246,10 +248,15 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
         gen.next();
         const ArrayMemory memory(_address, _memory, gen.length());
         auto it = memory.iterator();
-        const auto error = _disFormatter.disassemble(it, _address / _addressUnit);
+        _disFormatter.reset();
+        auto &insn = _disFormatter.insn();
+        auto &operands = _disFormatter.operands();
+        insn.reset(_address / _addressUnit);
+        const auto error = _disassembler.decode(it, insn, operands.mark(), operands.capacity());
+        _disFormatter.set(_disassembler);
         if (_disassembler.isOK()) {
             const int len = gen.length();
-            const int newLen = _disFormatter.bytesSize();
+            const int newLen = _disFormatter.insn().length();
             std::string name;
             const auto &found = meaningfulTestData(name);
             if (found.count() == 1) {
