@@ -27,15 +27,7 @@ namespace mc68000 {
 struct AsmMc68000 final : Assembler, Config {
     AsmMc68000(const ValueParser::Plugins &plugins = defaultPlugins());
 
-    void reset() override;
-
-    Error setAlias(bool enable);
-
 private:
-    const BoolOption<AsmMc68000> _opt_alias;
-
-    bool _acceptAlias;
-
     struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(OprSize size, const Operand &op);

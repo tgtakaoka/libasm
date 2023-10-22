@@ -107,7 +107,6 @@ usage: asm [-o <output>] [-l <list>] <input>
   use-register    : enable register name Rn  (bool, 1802)
   smart-branch    : enable optimizing to short branch  (bool, 1802)
   optimize-segment: enable optimizing segment override  (bool, 8086)
-  alias           : accept An as destination operand  (bool, 68000)
   short-direct    : enable optimizing direct addressing  (bool, Z8001)
   fpu             : floating point co-processor  (text, 32032)
   pmmu            : memory management unit  (text, 32032)

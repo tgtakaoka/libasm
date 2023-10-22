@@ -29,7 +29,6 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
-    bool alias() const { return flags().alias(); }
     OprSize oprSize() const { return flags().oprSize(); }
     InsnSize insnSize() const { return flags().insnSize(); }
     bool hasSize() const { return flags().hasSize(); }

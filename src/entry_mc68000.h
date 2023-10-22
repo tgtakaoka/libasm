@@ -101,9 +101,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _size;
 
         static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
-                OprSize oSize, InsnSize iSize, bool hasSize, bool alias) {
+                OprSize oSize, InsnSize iSize, bool hasSize) {
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos, alias), Entry::_size(oSize, iSize, hasSize)};
+                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize, hasSize)};
         }
 
         Flags read() const {
@@ -114,7 +114,6 @@ struct Entry final : entry::Base<Config::opcode_t> {
         AddrMode dst() const { return AddrMode(_dst); }
         OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & pos_gm); }
         OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
-        bool alias() const { return _pos & alias_bm; }
         OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & size_gm); }
         InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & size_gm); }
         bool hasSize() const { return _size & hasSize_bm; }
@@ -134,9 +133,8 @@ struct Entry final : entry::Base<Config::opcode_t> {
 private:
     const Flags _flags;
 
-    static constexpr uint8_t _pos(OprPos src, OprPos dst, bool alias) {
-        return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp) |
-               (alias ? alias_bm : 0);
+    static constexpr uint8_t _pos(OprPos src, OprPos dst) {
+        return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp);
     }
 
     static constexpr uint8_t _size(OprSize opr, InsnSize insn, bool hasSize) {
@@ -147,9 +145,7 @@ private:
     // |pos|
     static constexpr int srcPos_gp = 0;
     static constexpr int dstPos_gp = 3;
-    static constexpr int alias_bp = 7;
     static constexpr uint8_t pos_gm = 0x07;
-    static constexpr uint8_t alias_bm = (1 << alias_bp);
     // |size|
     static constexpr int oprSize_gp = 0;
     static constexpr int insnSize_gp = 3;

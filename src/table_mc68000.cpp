@@ -25,24 +25,24 @@ using namespace libasm::text::mc68000;
 namespace libasm {
 namespace mc68000 {
 
-#define E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _with, _alias)       \
-    {                                                                                 \
-        _opc,                                                                         \
-                Entry::Flags::create(_src, _dst, OP_##_srcp, OP_##_dstp, SZ_##_osize, \
-                        ISZ_##_isize, _with, _alias),                                 \
-                _name                                                                 \
+#define E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _hasSize)                        \
+    {                                                                                             \
+        _opc,                                                                                     \
+                Entry::Flags::create(                                                             \
+                        _src, _dst, OP_##_srcp, OP_##_dstp, SZ_##_osize, ISZ_##_isize, _hasSize), \
+                _name                                                                             \
     }
 #define E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false, false)
+    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
 #define E1(_opc, _name, _isize, _src, _srcp, _osize) \
     E2(_opc, _name, _isize, _src, M_NONE, _srcp, __, _osize)
 #define E0(_opc, _name) E1(_opc, _name, NONE, M_NONE, __, NONE)
 #define W2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, true, false)
+    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, true)
 #define W1(_opc, _name, _isize, _src, _srcp, _osize) \
     W2(_opc, _name, _isize, _src, M_NONE, _srcp, __, _osize)
 #define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false, true)
+    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
 
 // clang-format off
 static constexpr Entry MC68000_TABLE[] PROGMEM = {
@@ -246,6 +246,13 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0160070, TEXT_ROR,   DATA, M_DREG,  M_DREG,  _3, _0, DATA),
     E2(0160430, TEXT_ROL,   DATA, M_IM3,   M_DREG,  __, _0, DATA),
     E2(0160470, TEXT_ROL,   DATA, M_DREG,  M_DREG,  _3, _0, DATA),
+    A2(0020100, TEXT_MOVE,  LONG, M_RADDR, M_AREG,  10, _3, LONG),
+    A2(0030100, TEXT_MOVE,  WORD, M_RADDR, M_AREG,  10, _3, WORD),
+    A2(0110300, TEXT_SUB,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
+    A2(0110374, TEXT_SUBI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
+    A2(0130374, TEXT_CMPI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
+    A2(0150300, TEXT_ADD,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
+    A2(0150374, TEXT_ADDI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
 };
 
 static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
@@ -253,8 +260,10 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
     165,  // TEXT_ABCD
     174,  // TEXT_ADD
     175,  // TEXT_ADD
+    205,  // TEXT_ADD
     171,  // TEXT_ADDA
       7,  // TEXT_ADDI
+    206,  // TEXT_ADDI
     105,  // TEXT_ADDQ
     172,  // TEXT_ADDX
     173,  // TEXT_ADDX
@@ -328,6 +337,7 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
     158,  // TEXT_CMP
     157,  // TEXT_CMPA
      11,  // TEXT_CMPI
+    204,  // TEXT_CMPI
     159,  // TEXT_CMPM
      73,  // TEXT_DBCC
      75,  // TEXT_DBCS
@@ -378,6 +388,8 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      38,  // TEXT_MOVE
      53,  // TEXT_MOVE
      54,  // TEXT_MOVE
+    200,  // TEXT_MOVE
+    201,  // TEXT_MOVE
      30,  // TEXT_MOVEA
      31,  // TEXT_MOVEA
      32,  // TEXT_MOVEA
@@ -436,8 +448,10 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      57,  // TEXT_STOP
     155,  // TEXT_SUB
     156,  // TEXT_SUB
+    202,  // TEXT_SUB
     152,  // TEXT_SUBA
       6,  // TEXT_SUBI
+    203,  // TEXT_SUBI
     106,  // TEXT_SUBQ
     153,  // TEXT_SUBX
     154,  // TEXT_SUBX
@@ -450,49 +464,23 @@ static constexpr uint8_t MC68000_INDEX[] PROGMEM = {
      49,  // TEXT_TST
      52,  // TEXT_UNLK
 };
-
-static constexpr Entry ALIAS_TABLE[] PROGMEM = {
-    A2(0020100, TEXT_MOVE,  LONG, M_RADDR, M_AREG,  10, _3, LONG),
-    A2(0030100, TEXT_MOVE,  WORD, M_RADDR, M_AREG,  10, _3, WORD),
-    A2(0110300, TEXT_SUB,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A2(0110374, TEXT_SUBI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
-    A2(0130374, TEXT_CMPI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
-    A2(0150300, TEXT_ADD,   DATA, M_RADDR, M_AREG,  10, _3, ADR8),
-    A2(0150374, TEXT_ADDI,  DATA, M_IMDAT, M_AREG,  __, _3, ADR8),
-};
-
-static constexpr uint8_t ALIAS_INDEX[] PROGMEM = {
-      5,  // TEXT_ADD
-      6,  // TEXT_ADDI
-      4,  // TEXT_CMPI
-      0,  // TEXT_MOVE
-      1,  // TEXT_MOVE
-      2,  // TEXT_SUB
-      3,  // TEXT_SUBI
-};
 // clang-format on
 
 using EntryPage = entry::TableBase<Entry>;
+
+using Cpu = entry::CpuBase<CpuType, EntryPage>;
 
 static constexpr EntryPage MC68000_PAGES[] PROGMEM = {
         {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
 };
 
-static constexpr EntryPage ALIAS_PAGES[] PROGMEM = {
-        {ARRAY_RANGE(ALIAS_TABLE), ARRAY_RANGE(ALIAS_INDEX)},
-        {ARRAY_RANGE(MC68000_TABLE), ARRAY_RANGE(MC68000_INDEX)},
-};
-
-using Cpu = entry::CpuBase<CpuType, EntryPage>;
-
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {MC68000, TEXT_CPU_68000, ARRAY_RANGE(MC68000_PAGES)},
-        {MC68000, TEXT_CPU_68000, ARRAY_RANGE(ALIAS_PAGES)},
 };
 
-static const Cpu *cpu(CpuType cpuType, bool acceptAlias = false) {
+static const Cpu *cpu(CpuType cpuType) {
     UNUSED(cpuType);
-    return &CPU_TABLE[acceptAlias ? 1 : 0];
+    return &CPU_TABLE[0];
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -547,8 +535,8 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
 }
 
-Error TableMc68000::searchName(CpuType cpuType, AsmInsn &insn, bool acceptAlias) const {
-    cpu(cpuType, acceptAlias)->searchName(insn, acceptModes);
+Error TableMc68000::searchName(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptModes);
     return insn.getError();
 }
 
@@ -628,7 +616,7 @@ static bool invalidModeReg(Config::opcode_t opc, AddrMode addrMode, OprPos pos, 
             return mode < 2 || mode == 3;
         // | Dn | An*| (An) | (An)+ | -(An) | (n,An) | (n,An,Xn) |
         // M_WADDR, M_RADDR
-        if (mode == 1 && size == SZ_DATA) { // no BYTE size for An
+        if (mode == 1 && size == SZ_DATA) {  // no BYTE size for An
             const auto insnSize = (opc >> 6) & 3;
             return insnSize == 0 || insnSize == 3;
         }

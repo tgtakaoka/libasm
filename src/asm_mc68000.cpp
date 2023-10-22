@@ -30,9 +30,6 @@ using namespace text::common;
 namespace {
 
 // clang-format off
-constexpr char OPT_BOOL_ALIAS[] PROGMEM = "alias";
-constexpr char OPT_DESC_ALIAS[] PROGMEM = "accept An as destination operand";
-
 constexpr char TEXT_DC_B[] PROGMEM = "dc.b";
 constexpr char TEXT_DC_L[] PROGMEM = "dc.l";
 constexpr char TEXT_DC_W[] PROGMEM = "dc.w";
@@ -89,20 +86,8 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 }
 
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_alias),
-      Config(TABLE),
-      _opt_alias(this, &AsmMc68000::setAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS) {
+    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
-}
-
-void AsmMc68000::reset() {
-    Assembler::reset();
-    setAlias(true);
-}
-
-Error AsmMc68000::setAlias(bool enable) {
-    _acceptAlias = enable;
-    return OK;
 }
 
 namespace {
@@ -517,7 +502,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     setErrorIf(dstOp);
 
     insn.setAddrMode(srcOp.mode, dstOp.mode);
-    const auto error = TABLE.searchName(cpuType(), insn, _acceptAlias);
+    const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(srcOp, error);
 

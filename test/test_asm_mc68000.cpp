@@ -25,7 +25,6 @@ Assembler &assembler(as68000);
 
 static void set_up() {
     assembler.reset();
-    as68000.setOption("alias", "disable");
 }
 
 static void tear_down() {
@@ -650,7 +649,7 @@ static void test_integer() {
     ERRT("ADD.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
     ERRT("ADD.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
     TEST("ADD.W D7,D2",            0152107);
-    ERRT("ADD.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2"); // ADDA.W
+    TEST("ADD.W D7,A2",            0152307); // ADDA.W
     TEST("ADD.W D7,(A2)",          0157522);
     TEST("ADD.W D7,(A2)+",         0157532);
     TEST("ADD.W D7,-(A2)",         0157542);
@@ -662,7 +661,7 @@ static void test_integer() {
     ERRT("ADD.W D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
     ERRT("ADD.W D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
     TEST("ADD.L D7,D2",            0152207);
-    ERRT("ADD.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2"); // ADDA.L;
+    TEST("ADD.L D7,A2",            0152707); // ADDA.L;
     TEST("ADD.L D7,(A2)",          0157622);
     TEST("ADD.L D7,(A2)+",         0157632);
     TEST("ADD.L D7,-(A2)",         0157642);
@@ -752,7 +751,7 @@ static void test_integer() {
     ERRT("ADDI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
     ERRT("ADDI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
     TEST("ADDI.W #$5678,D2",            0003102, 0x5678);
-    ERRT("ADDI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "#$5678,A2"); // ADDA.W
+    TEST("ADDI.W #$5678,A2",            0152374, 0x5678); // ADDA.W
     TEST("ADDI.W #$5678,(A2)",          0003122, 0x5678);
     TEST("ADDI.W #$5678,(A2)+",         0003132, 0x5678);
     TEST("ADDI.W #$5678,-(A2)",         0003142, 0x5678);
@@ -764,7 +763,7 @@ static void test_integer() {
     ERRT("ADDI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
     ERRT("ADDI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
     TEST("ADDI.L #$3456789A,D2",            0003202, 0x3456, 0x789A);
-    ERRT("ADDI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "#$3456789A,A2"); // ADDA.L
+    TEST("ADDI.L #$3456789A,A2",            0152774, 0x3456, 0x789A); // ADDA.L
     TEST("ADDI.L #$3456789A,(A2)",          0003222, 0x3456, 0x789A);
     TEST("ADDI.L #$3456789A,(A2)+",         0003232, 0x3456, 0x789A);
     TEST("ADDI.L #$3456789A,-(A2)",         0003242, 0x3456, 0x789A);
@@ -950,7 +949,7 @@ static void test_integer() {
     ERRT("CMPI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
     ERRT("CMPI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
     TEST("CMPI.W #$5678,D2",               0006102, 0x5678);
-    ERRT("CMPI.W #$5678,A2",               OPERAND_NOT_ALLOWED, "#$5678,A2"); // CMPA.W
+    TEST("CMPI.W #$5678,A2",               0132374, 0x5678); // CMPA.W
     TEST("CMPI.W #$5678,(A2)",             0006122, 0x5678);
     TEST("CMPI.W #$5678,(A2)+",            0006132, 0x5678);
     TEST("CMPI.W #$5678,-(A2)",            0006142, 0x5678);
@@ -962,7 +961,7 @@ static void test_integer() {
     ERRT("CMPI.L #$3456789A,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$3456789A,(*+$12,PC,D3)");
     ERRT("CMPI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
     TEST("CMPI.L #$3456789A,D2",            0006202, 0x3456, 0x789A);
-    ERRT("CMPI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "#$3456789A,A2"); // CMPA.L
+    TEST("CMPI.L #$3456789A,A2",            0132774, 0x3456, 0x789A); // CMPA.L
     TEST("CMPI.L #$3456789A,(A2)",          0006222, 0x3456, 0x789A);
     TEST("CMPI.L #$3456789A,(A2)+",         0006232, 0x3456, 0x789A);
     TEST("CMPI.L #$3456789A,-(A2)",         0006242, 0x3456, 0x789A);
@@ -1169,7 +1168,7 @@ static void test_integer() {
     ERRT("SUB.B D7,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "D7,(*+$12,PC,D3)");
     ERRT("SUB.B D7,#$1234",        OPERAND_NOT_ALLOWED, "D7,#$1234");
     TEST("SUB.W D7,D2",            0112107);
-    ERRT("SUB.W D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2"); // SUBA.W
+    TEST("SUB.W D7,A2",            0112307); // SUBA.W
     TEST("SUB.W D7,(A2)",          0117522);
     TEST("SUB.W D7,(A2)+",         0117532);
     TEST("SUB.W D7,-(A2)",         0117542);
@@ -1181,7 +1180,7 @@ static void test_integer() {
     ERRT("SUB.W (*+$12,PC,D3)",    OPERAND_NOT_ALLOWED, "(*+$12,PC,D3)");
     ERRT("SUB.W #$1234",           OPERAND_NOT_ALLOWED, "#$1234");
     TEST("SUB.L D7,D2",            0112207);
-    ERRT("SUB.L D7,A2",            OPERAND_NOT_ALLOWED, "D7,A2"); // SUBA.L
+    TEST("SUB.L D7,A2",            0112707); // SUBA.L
     TEST("SUB.L D7,(A2)",          0117622);
     TEST("SUB.L D7,(A2)+",         0117632);
     TEST("SUB.L D7,-(A2)",         0117642);
@@ -1233,7 +1232,7 @@ static void test_integer() {
     ERRT("SUBI.B #$12,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$12,(*+$12,PC,D3)");
     ERRT("SUBI.B #$12,#$1234",        OPERAND_NOT_ALLOWED, "#$12,#$1234");
     TEST("SUBI.W #$5678,D2",            0002102, 0x5678);
-    ERRT("SUBI.W #$5678,A2",            OPERAND_NOT_ALLOWED, "#$5678,A2"); // SUBA.W
+    TEST("SUBI.W #$5678,A2",            0112374, 0x5678); // SUBA.W
     TEST("SUBI.W #$5678,(A2)",          0002122, 0x5678);
     TEST("SUBI.W #$5678,(A2)+",         0002132, 0x5678);
     TEST("SUBI.W #$5678,-(A2)",         0002142, 0x5678);
@@ -1245,7 +1244,7 @@ static void test_integer() {
     ERRT("SUBI.W #$5678,(*+$12,PC,D3)", OPERAND_NOT_ALLOWED, "#$5678,(*+$12,PC,D3)");
     ERRT("SUBI.W #$5678,#$1234",        OPERAND_NOT_ALLOWED, "#$5678,#$1234");
     TEST("SUBI.L #$3456789A,D2",            0002202, 0x3456, 0x789A);
-    ERRT("SUBI.L #$3456789A,A2",            OPERAND_NOT_ALLOWED, "#$3456789A,A2"); // SUBA.L
+    TEST("SUBI.L #$3456789A,A2",            0112774, 0x3456, 0x789A); // SUBA.L
     TEST("SUBI.L #$3456789A,(A2)",          0002222, 0x3456, 0x789A);
     TEST("SUBI.L #$3456789A,(A2)+",         0002232, 0x3456, 0x789A);
     TEST("SUBI.L #$3456789A,-(A2)",         0002242, 0x3456, 0x789A);
@@ -2775,8 +2774,7 @@ static void test_multiproc() {
     ERRT("TAS #$1234",        OPERAND_NOT_ALLOWED, "#$1234");
 }
 
-static void test_alias() {
-    as68000.setOption("alias", "enable");
+static void test_areg_alias() {
     TEST("ADDI.W #0,A0", 0150374, 0x0000);          // ADDA.W #0,A0
     TEST("ADDI.L #0,A0", 0150774, 0x0000, 0x0000);  // ADDA.L #0,A0
     TEST("SUBI.W #0,A0", 0110374, 0x0000);          // SUBA.W #0,A0
@@ -2922,7 +2920,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_program);
     RUN_TEST(test_system);
     RUN_TEST(test_multiproc);
-    RUN_TEST(test_alias);
+    RUN_TEST(test_areg_alias);
     RUN_TEST(test_comment);
     RUN_TEST(test_undefined_symbol);
     RUN_TEST(test_data_constant);
