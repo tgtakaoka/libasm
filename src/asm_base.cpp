@@ -55,32 +55,36 @@ Error Assembler::setListRadix(int32_t radix) {
     return OK;
 }
 
-Error Assembler::setCurrentLocation(uint32_t location) {
-    return config().checkAddr(_currentLocation = location);
+Error Assembler::setCurrentLocation(uint32_t location, bool align) {
+    return config().checkAddr(_currentLocation = location, config().addressWidth(), align);
 }
 
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
-    setAt(line);
-    StrScanner scan(line);
-    setError(scan, OK);
-    if (_parser.commentLine(scan.skipSpaces()))
-        return setError(scan, OK);
+    StrScanner scan{line};
+    setError(scan.skipSpaces(), OK);
+    if (_parser.commentLine(scan))
+        return OK;
 
+    const auto at = scan;
     StrScanner symbol;
     _parser.readInstruction(scan, symbol);
     insn.nameBuffer().reset().text(symbol);
     auto error = processPseudo(scan.skipSpaces(), insn);
-    if (error != UNKNOWN_DIRECTIVE)
-        return setError(error);
 
-    error = setCurrentLocation(insn.address());
-    if (error)
-        return setError(error);
-
-    error = encodeImpl(scan, insn);
-    if (error == UNKNOWN_INSTRUCTION)
-        setAt(line);
+    if (error == UNKNOWN_DIRECTIVE) {
+        setError(at, OK);
+        error = setCurrentLocation(insn.address());
+        if (error)
+            return setError(error);
+        error = encodeImpl(scan, insn);
+        if (error == UNKNOWN_INSTRUCTION)
+            return setError(at, error);
+    }
+    if (insn.length())
+        setCurrentLocation(insn.address() + insn.length() / config().addressUnit());
+    if (!_parser.endOfLine(scan.skipSpaces()))
+        return setErrorIf(scan, GARBAGE_AT_END);
     return error;
 }
 
@@ -138,8 +142,7 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
     p = text.takeWhile([](char c) { return c && c != '"'; });
     if (!p.expect('"'))
         return ILLEGAL_OPERAND;
-    if (!endOfLine(p.skipSpaces()))
-        return GARBAGE_AT_END;
+    scan = p;
     return setOption(name, text);
 }
 
@@ -150,13 +153,12 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     const auto value = parseExpr(p, error);
     if (error.getError())
         return setError(error);
-    if (!endOfLine(p))
-        return setError(p, GARBAGE_AT_END);
     const auto addr = value.getUnsigned();
     const auto err = setCurrentLocation(addr);
     if (err)
         return setError(scan, err);
     insn.reset(addr);
+    scan = p;
     return OK;
 }
 
@@ -171,24 +173,28 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
         if (error.getError())
             return setError(error);
     }
-    if (!endOfLine(p))
-        return setError(p, GARBAGE_AT_END);
     if (value.overflowUint8())
         return setError(scan, OVERFLOW_RANGE);
     insn.align(value.getUnsigned());
-    return setCurrentLocation(insn.address());
+    const auto error = setCurrentLocation(insn.address());
+    if (error)
+        return setError(scan, error);
+    scan = p;
+    return OK;
 }
 
 Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) {
     const auto type = static_cast<DataType>(dataType);
-    if (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2)
-        setCurrentLocation(insn.align(2));
+    const auto align = (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2);
+    if (align && insn.address() % 2)
+        insn.align(2);
+    auto p = scan;
     ErrorAt error;
-    auto value = parseExpr(scan, error);
+    auto value = parseExpr(p, error);
     if (error.getError())
         return setError(error);
     if (value.overflowUint16())
-        return setError(OVERFLOW_RANGE);
+        return setError(scan, OVERFLOW_RANGE);
 
     uint8_t unit;
     switch (type) {
@@ -203,9 +209,12 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     default:
         unit = sizeof(uint8_t);
     }
-    const auto size = value.getUnsigned() * unit / config().addressUnit();
-    const auto addr = insn.address() + size;
-    setCurrentLocation(addr);
+    const auto bytes = value.getUnsigned() * unit;
+    const auto addr = insn.address() + (bytes / config().addressUnit());
+    const auto err = setCurrentLocation(addr, align);
+    if (err)
+        setError(scan, err);
+    scan = p;
     return OK;
 }
 
@@ -249,8 +258,6 @@ Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) 
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
-    if (!endOfLine(scan.skipSpaces()))
-        return setErrorIf(scan, GARBAGE_AT_END);
     return setErrorIf(error);
 }
 
@@ -369,8 +376,6 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         return setError(strErr.getError() ? strErr : exprErr);
     } while (scan.skipSpaces().expect(','));
 
-    if (!endOfLine(scan.skipSpaces()))
-        return setErrorIf(scan, GARBAGE_AT_END);
     return setErrorIf(error);
 }
 

@@ -95,6 +95,15 @@ struct OperatorStack : Stack<Operator, 8> {
 
 Value ValueParser::eval(
         StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
+    const auto start = scan.skipSpaces();
+    const auto value = _eval(scan, error, symtab, delim);
+    if (scan.str() == start.str())
+        error.setErrorIf(start, GARBAGE_AT_END);
+    return value;
+}
+
+Value ValueParser::_eval(
+        StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const {
     ValueStack vstack;
     OperatorStack ostack;
     char end_of_expr = delim;

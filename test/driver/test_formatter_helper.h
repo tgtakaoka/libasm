@@ -28,38 +28,61 @@
 #include "test_reader.h"
 #include "test_sources.h"
 
-#define PREP_ASM_DRIVER(symbolMode, ...)                                           \
-    AsmDirective *dirs[] = {__VA_ARGS__};                                          \
-    TestSources sources;                                                           \
-    AsmDriver driver(&dirs[0], &dirs[sizeof(dirs) / sizeof(dirs[0])], symbolMode); \
-    char buffer[256];                                                              \
-    StrBuffer out(buffer, sizeof(buffer));                                         \
-    BinMemory memory;                                                              \
-    AsmFormatter formatter(driver, sources, memory)
+struct AsmFormatterHelper {
+    AsmFormatterHelper() : upperHex(true), lineNumber(false) {}
+    void setUpperHex(bool enable) { upperHex = enable; }
+    void setLineNumber(bool enable) { lineNumber = enable; }
+    bool upperHex;
+    bool lineNumber;
+};
 
-#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive, symbolMode) \
-    typeof_asm assembler;                                         \
-    typeof_directive directive{assembler};                        \
-    PREP_ASM_DRIVER(symbolMode, &directive)
+#define PREP_ASM_DRIVER(reportDuplicate, ...)                          \
+    AsmDirective *dirs[] = {__VA_ARGS__};                              \
+    TestSources sources;                                               \
+    AsmDriver driver(&dirs[0], &dirs[sizeof(dirs) / sizeof(dirs[0])]); \
+    char buffer[256];                                                  \
+    StrBuffer out(buffer, sizeof(buffer));                             \
+    const bool reportError = !reportDuplicate;                         \
+    AsmFormatterHelper formatter
+
+#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive) \
+    typeof_asm assembler;                             \
+    typeof_directive directive{assembler};            \
+    PREP_ASM_DRIVER(true, &directive)
 
 #define PREP_ASM(typeof_asm, typeof_directive) \
-    PREP_ASM_SYMBOL(typeof_asm, typeof_directive, REPORT_UNDEFINED)
+    typeof_asm assembler;                      \
+    typeof_directive directive{assembler};     \
+    PREP_ASM_DRIVER(false, &directive)
 
-#define ASM(_cpu, _source, _expected)                                          \
-    do {                                                                       \
-        TestReader expected("expected");                                       \
-        expected.add(_expected);                                               \
-        TestReader source(_cpu);                                               \
-        source.add(_source);                                                   \
-        sources.add(source);                                                   \
-        sources.open(source.name().c_str());                                   \
-        StrScanner *line;                                                      \
-        while ((line = sources.readLine()) != nullptr) {                       \
-            formatter.assemble(*line, /* reportError */ true);                 \
-            while (formatter.hasNextLine())                                    \
-                EQ("line", expected.readLine(), formatter.getLine(out).str()); \
-        }                                                                      \
-        EQ(_cpu, nullptr, expected.readLine());                                \
+#define ASM(_cpu, _source, _expected)                                    \
+    do {                                                                 \
+        uint32_t origin = 0;                                             \
+        TestReader expected("expected");                                 \
+        expected.add(_expected);                                         \
+        TestReader source(_cpu);                                         \
+        source.add(_source);                                             \
+        sources.add(source);                                             \
+        sources.open(source.name().c_str());                             \
+        AsmFormatter fmt{sources};                                       \
+        fmt.setUpperHex(formatter.upperHex);                             \
+        fmt.setLineNumber(formatter.lineNumber);                         \
+        StrScanner *line;                                                \
+        while ((line = sources.readLine()) != nullptr) {                 \
+            auto &directive = *driver.current();                         \
+            auto &insn = fmt.insn();                                     \
+            insn.reset(origin);                                          \
+            AsmDirective::Context context{sources, reportError};         \
+            auto scan = *line;                                           \
+            directive.encode(scan, insn, context, driver);               \
+            const auto &config = directive.assembler().config();         \
+            origin = directive.assembler().currentLocation();            \
+            fmt.set(*line, directive, config, &context.value);           \
+            fmt.setListRadix(driver.current()->assembler().listRadix()); \
+            while (fmt.hasNextLine())                                    \
+                EQ("line", expected.readLine(), fmt.getLine(out).str()); \
+        }                                                                \
+        EQ("line eor", nullptr, expected.readLine());                    \
     } while (0)
 
 #define PREP_DIS(typeof_disassembler)      \

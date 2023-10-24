@@ -218,8 +218,6 @@ Error AsmIns8060::defineAddrConstant(StrScanner &scan, Insn &insn) {
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
-    if (!endOfLine(scan.skipSpaces()))
-        return setError(scan, GARBAGE_AT_END);
     return OK;
 }
 
@@ -233,8 +231,6 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.op) && insn.op.hasError())
         return setError(insn.op);
-    if (!endOfLine(scan.skipSpaces()))
-        return setError(scan, GARBAGE_AT_END);
 
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)

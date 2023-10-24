@@ -56,9 +56,10 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
     Radix listRadix() const { return _listRadix; }
     Error setParserRadix(int32_t radix);
 
-    Error setCurrentLocation(uint32_t location);
+    Error setCurrentLocation(uint32_t location, bool align = false);
     uint32_t currentLocation() const { return _currentLocation; }
 
+    virtual Error processPseudo(StrScanner &scan, Insn &insn);
     Error setOption(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error alignOrigin(StrScanner &scan, Insn &insn, uint8_t step = 0);
@@ -105,8 +106,6 @@ protected:
     uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
-
-    virtual Error processPseudo(StrScanner &scan, Insn &insn);
 
 private:
     virtual ConfigSetter &configSetter() = 0;

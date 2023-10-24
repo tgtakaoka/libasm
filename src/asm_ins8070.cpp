@@ -255,8 +255,10 @@ Error AsmIns8070::parseOperand(StrScanner &scan, Operand &op) const {
             autoIndex = p.expect('@');
         const auto ptrp = p;
         const auto ptr = parseRegName(p);
+        if (ptr == REG_UNDEF)
+            return op.setError(ptrp, UNKNOWN_OPERAND);
         if (!isPointerReg(ptr))
-            op.setError(UNKNOWN_OPERAND);
+            return op.setError(ptrp, REGISTER_NOT_ALLOWED);
         if (autoIndex && (ptr == REG_PC || ptr == REG_SP))
             return op.setError(ptrp, REGISTER_NOT_ALLOWED);
         op.reg = ptr;
@@ -283,8 +285,6 @@ Error AsmIns8070::defineAddrConstant(StrScanner &scan, Insn &insn) {
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
-    if (!endOfLine(scan.skipSpaces()))
-        return setError(scan, GARBAGE_AT_END);
     return OK;
 }
 
@@ -303,8 +303,6 @@ Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(insn.srcOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(scan))
-        return setError(scan, GARBAGE_AT_END);
 
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)

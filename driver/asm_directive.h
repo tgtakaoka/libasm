@@ -17,13 +17,14 @@
 #ifndef __ASM_DIRECTIVE_H__
 #define __ASM_DIRECTIVE_H__
 
-#include "asm_base.h"
-#include "asm_formatter.h"
-#include "error_reporter.h"
-#include "str_scanner.h"
-
 #include <map>
 #include <string>
+
+#include "asm_base.h"
+#include "asm_sources.h"
+#include "bin_encoder.h"
+#include "error_reporter.h"
+#include "str_scanner.h"
 
 namespace libasm {
 namespace driver {
@@ -32,45 +33,55 @@ struct AsmDriver;
 struct BinEncoder;
 
 struct AsmDirective : ErrorAt {
-    typedef Error (AsmDirective::*PseudoHandler)(
-            StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    struct Context {
+        Context(AsmSources &_sources, bool _reportError = true)
+            : sources(_sources), reportDuplicate(!_reportError), reportUndefined(_reportError) {}
+        AsmSources &sources;
+        const bool reportDuplicate;
+        const bool reportUndefined;
+        StrScanner label;
+        Value value;
+    };
+
+    Error encode(StrScanner &scan, Insn &insn, Context &context, AsmDriver &drive);
 
     Assembler &assembler() const { return _assembler; }
     virtual BinEncoder &defaultEncoder() const;
 
-    Error processPseudo(
-            const StrScanner &name, StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
 protected:
+    Assembler &_assembler;
+
+    typedef Error (AsmDirective::*PseudoHandler)(
+            StrScanner &scan, Context &context, AsmDriver &driver);
     struct icasecmp {
         bool operator()(const std::string &lhs, const std::string &rhs) const {
             return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
         }
     };
-
-    Assembler &_assembler;
     std::map<std::string, PseudoHandler, icasecmp> _pseudos;
 
     AsmDirective(Assembler &assembler);
 
     void registerPseudo(const char *name, PseudoHandler handler);
     void disablePseudo(const char *name);
+    Error processPseudo(
+            const StrScanner &name, StrScanner &scan, Context &context, AsmDriver &driver);
 
-    // Common PseudoHandler
-    Error defineConstant(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error defineVariable(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error setVariable(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error includeFile(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error switchCpu(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error switchIntelZilog(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error endAssemble(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
-    Error defineFunction(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver);
+    // PseudoHandler
+    Error defineConstant(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error defineVariable(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error setVariable(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error includeFile(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error switchCpu(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error switchIntelZilog(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error endAssemble(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error defineFunction(StrScanner &scan, Context &context, AsmDriver &driver);
 
     // PseudoHanlder helper
-    Error defineSymbol(StrScanner &scan, AsmFormatter &formatter, AsmDriver &driver,
-            const StrScanner &symbol, bool variable);
+    Error defineSymbol(StrScanner &scan, const StrScanner &symbol, Context &context,
+            AsmDriver &driver, bool variable);
 };
 
 struct MotorolaDirective : AsmDirective {

@@ -82,12 +82,8 @@ AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
     return dir;
 }
 
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end, SymbolMode symbolMode)
-    : _directives(begin, end),
-      _current(nullptr),
-      _symbolMode(symbolMode),
-      _functions(),
-      _origin(0) {
+AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end)
+    : _directives(begin, end), _current(nullptr), _functions(), _origin(0) {
     switchDirective(_directives.front());
     setUpperHex(true);
     setLineNumber(false);
@@ -118,20 +114,37 @@ void AsmDriver::setOption(const char *name, const char *value) {
 int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,
         TextPrinter &errorout, bool reportError) {
     _functions.reset();
-    setOrigin(0);
-    _symbolMode = reportError ? REPORT_UNDEFINED : REPORT_DUPLICATE;
+    _origin = 0;
 
     char buffer[256];
     StrBuffer out{buffer, sizeof(buffer)};
-    AsmFormatter formatter{*this, sources, memory};
+    AsmFormatter formatter{sources};
+    formatter.setUpperHex(_upperHex);
+    formatter.setLineNumber(_lineNumber);
 
     int errors = 0;
-    StrScanner *scan;
-    while ((scan = sources.readLine()) != nullptr) {
-        const auto error = formatter.assemble(*scan, reportError);
+    StrScanner *line;
+    while ((line = sources.readLine()) != nullptr) {
+        auto &directive = *current();
+        auto &insn = formatter.insn();
+        insn.reset(_origin);
+        AsmDirective::Context context{sources, reportError};
+        auto scan = *line;
+        auto error = directive.encode(scan, insn, context, *this);
+
+        const auto &config = directive.assembler().config();
+        const auto unit = config.addressUnit();  // assembler may be swiched
+        const auto base = insn.address() * unit;
+        for (auto offset = 0; offset < insn.length(); offset++) {
+            memory.writeByte(base + offset, insn.bytes()[offset]);
+        }
+        _origin = directive.assembler().currentLocation();
+
+        formatter.set(*line, directive, config, &context.value);
+        formatter.setListRadix(current()->assembler().listRadix());
         while (formatter.hasNextLine()) {
             listout.println(formatter.getLine(out).str());
-            if (reportError && formatter.hasError())
+            if (formatter.hasError())
                 errorout.println(out.str());
         }
         if (error == END_ASSEMBLE)
@@ -147,33 +160,11 @@ const char *AsmDriver::lookupValue(uint32_t address) const {
     return nullptr;
 }
 
-void AsmDriver::setLineSymbol(const StrScanner &symbol) {
-    _lineSymbol = symbol.size() ? &symbol : nullptr;
-}
-
-Error AsmDriver::internLineSymbol(uint32_t value) {
-    auto err = OK;
-    if (_lineSymbol) {
-        err = internSymbol(value, *_lineSymbol);
-        _lineSymbol = nullptr;
-    }
-    return err;
-}
-
 bool AsmDriver::hasSymbol(const StrScanner &symbol) const {
-    if (_lineSymbol && _lineSymbol->iequals(symbol))
-        return true;
-    return symbolInTable(symbol);
-}
-
-bool AsmDriver::symbolInTable(const StrScanner &symbol) const {
-    const auto key = std::string(symbol.str(), symbol.size());
-    return _symbols.find(key) != _symbols.end() || _variables.find(key) != _variables.end();
+    return symbolInTable(symbol, false) || symbolInTable(symbol, true);
 }
 
 uint32_t AsmDriver::lookupSymbol(const StrScanner &symbol) const {
-    if (_lineSymbol && _lineSymbol->iequals(symbol))
-        return _origin;
     const auto key = std::string(symbol.str(), symbol.size());
     const auto s = _symbols.find(key);
     if (s != _symbols.end())
@@ -184,32 +175,23 @@ uint32_t AsmDriver::lookupSymbol(const StrScanner &symbol) const {
     return 0;
 }
 
-Error AsmDriver::internSymbol(uint32_t value, const StrScanner &symbol, bool variable) {
+bool AsmDriver::symbolInTable(const StrScanner &symbol, bool variable) const {
+    const auto &map = variable ? _variables : _symbols;
     const auto key = std::string(symbol.str(), symbol.size());
+    return map.find(key) != map.end();
+}
 
-    if (variable) {
-        const auto s = _symbols.find(key);
-        if (s != _symbols.end())
-            return DUPLICATE_LABEL;
-        auto v = _variables.find(key);
-        if (v != _variables.end()) {
-            v->second = value;
-        } else {
-            _variables.emplace(key, value);
-        }
-        return OK;
-    }
+Error AsmDriver::internSymbol(uint32_t value, const StrScanner &symbol, bool variable) {
+    if (symbolInTable(symbol, !variable))
+        return DUPLICATE_LABEL;
 
-    const auto v = _variables.find(key);
-    if (v != _variables.end())
-        return DUPLICATE_LABEL;
-    auto s = _symbols.find(key);
-    if (s != _symbols.end() && s->second != value && _symbolMode == REPORT_DUPLICATE)
-        return DUPLICATE_LABEL;
-    if (s != _symbols.end()) {
-        s->second = value;
+    const auto key = std::string(symbol.str(), symbol.size());
+    auto &map = variable ? _variables : _symbols;
+    auto it = map.find(key);
+    if (it == map.end()) {
+        map.emplace(key, value);
     } else {
-        _symbols.emplace(key, value);
+        it->second = value;
     }
     return OK;
 }

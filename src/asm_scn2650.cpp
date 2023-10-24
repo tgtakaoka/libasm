@@ -239,9 +239,6 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    if (!endOfLine(scan))
-        return setError(GARBAGE_AT_END);
-
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
         return setError(insn.op1, error);

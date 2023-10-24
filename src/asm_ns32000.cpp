@@ -751,8 +751,6 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(insn.ex2Op);
         scan.skipSpaces();
     }
-    if (!endOfLine(scan))
-        return setError(scan, GARBAGE_AT_END);
 
     const auto error = TABLE.searchName(_cpuSpec, insn);
     if (error)

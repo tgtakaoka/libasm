@@ -167,6 +167,7 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     const auto error = setCurrentLocation(addr);
     if (error)
         return setError(scan, error);
+    scan = p;
     insn.reset(addr);
     return OK;
 }
@@ -181,6 +182,7 @@ Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     const auto error = setCurrentLocation(addr);
     if (error)
         return setError(scan, error);
+    scan = p;
     insn.reset(addr);
     return OK;
 }
@@ -369,8 +371,6 @@ Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) {
         insn.setOpCode(val12 & 07777);
         scan = p;
     }
-    if (!endOfLine(scan))
-        setErrorIf(scan, GARBAGE_AT_END);
 
     insn.emitInsn();
     return setError(insn);

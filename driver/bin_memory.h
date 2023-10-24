@@ -34,6 +34,7 @@ struct BinMemory {
 
     bool equals(const BinMemory &other) const;
     void swap(BinMemory &other);
+    void clear();
 
     uint32_t startAddress() const;
     uint32_t endAddress() const;

@@ -220,8 +220,6 @@ Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(insn.extOp);
         scan.skipSpaces();
     }
-    if (!endOfLine(scan))
-        return setError(GARBAGE_AT_END);
 
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)

@@ -1490,13 +1490,13 @@ static void test_error() {
     ERRT("LDA , --X",     UNKNOWN_OPERAND, ", --X");
     ERRT("LDA [ , X++ ]", UNKNOWN_OPERAND, "[ , X++ ]");
     ERRT("LDA [ , --X ]", UNKNOWN_OPERAND, "[ , --X ]");
-    ERRT("LDA ,X +",  GARBAGE_AT_END, "+");
-    ERRT("LDA ,X ++", GARBAGE_AT_END, "++");
-    ERRT("LDA ,X+ +", GARBAGE_AT_END, "+");
+    ERRT("LDA ,X +",  GARBAGE_AT_END, "+",   0xA6, 0x84);
+    ERRT("LDA ,X ++", GARBAGE_AT_END, "++",  0xA6, 0x84);
+    ERRT("LDA ,X+ +", GARBAGE_AT_END, "+",   0xA6, 0x80);
     ERRT("LDA ,- X",  UNKNOWN_OPERAND, ",- X");
     ERRT("LDA ,-- X", UNKNOWN_OPERAND, ",-- X");
     ERRT("LDA ,- -X", UNKNOWN_OPERAND, ",- -X");
-    ERRT("LDA ,X]",   GARBAGE_AT_END, "]");
+    ERRT("LDA ,X]",   GARBAGE_AT_END, "]",   0xA6, 0x84);
     ERRT("LDA [,X ; comment", MISSING_CLOSING_BRACKET, "[,X ; comment");
 
     if (is6309()) {

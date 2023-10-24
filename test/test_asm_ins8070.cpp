@@ -407,9 +407,10 @@ static void test_error() {
     ERRT("LD A,@@1,P3", GARBAGE_AT_END, "@1,P3");
     ERRT("LD A,@#1",    GARBAGE_AT_END, "#1");
     ERRT("LD A,@=1",    GARBAGE_AT_END, "=1");
-    ERRT("LD A,1(P3)",  MISSING_COMMA,    "1(P3)"); // SC/MP style
+    ERRT("LD A,1(P3)",  MISSING_COMMA,     "1(P3)"); // SC/MP style
     ERRT("LD A,@1(P3)", MISSING_COMMA,    "@1(P3)"); // SC/MP style
-    ERRT("LD A,1,(EA)", GARBAGE_AT_END,   "(EA)");
+    ERRT("LD A,1,EA",   REGISTER_NOT_ALLOWED, "EA");
+    ERRT("LD A,1,(EA)", UNKNOWN_OPERAND,    "(EA)");
 }
 
 static void test_data_constant() {

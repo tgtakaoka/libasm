@@ -388,8 +388,8 @@ static void test_comment() {
     ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND, "* R13+ , 16 ; comment");
     TEST("SZC  @ >1234 ( R10 ) , @ >2345 ( R11 ) ; comment", 0x4AEA, 0x1234, 0x2345);
     ATEST(0x1000, "JMP >1002 ; comment", 0x1000);
-    ERRT("CLR  *R12 + ; comment",     GARBAGE_AT_END, "+ ; comment");
-    ERRT("LDCR *R13 +, 16 ; comment", GARBAGE_AT_END, "+, 16 ; comment");
+    ERRT("CLR  *R12 + ; comment",     GARBAGE_AT_END, "+ ; comment", 0x04DC);
+    ERRT("LDCR *R13 +, 16 ; comment", OPERAND_NOT_ALLOWED, "*R13 +, 16 ; comment");
 }
 
 static void test_undefined_symbol() {

@@ -17,6 +17,9 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
+#include <list>
+#include <map>
+
 #include "error_reporter.h"
 #include "function_store.h"
 #include "str_scanner.h"
@@ -24,25 +27,15 @@
 #include "text_printer.h"
 #include "value_parser.h"
 
-#include <list>
-#include <map>
-
 namespace libasm {
 namespace driver {
 
 struct AsmDirective;
-struct AsmDirective;
-struct AsmFormatter;
 struct AsmSources;
 struct BinMemory;
 
-enum SymbolMode {
-    REPORT_UNDEFINED = 0,
-    REPORT_DUPLICATE = 1,
-};
-
 struct AsmDriver final : SymbolTable {
-    AsmDriver(AsmDirective **begin, AsmDirective **end, SymbolMode symbolMode = REPORT_UNDEFINED);
+    AsmDriver(AsmDirective **begin, AsmDirective **end);
 
     AsmDirective *restrictCpu(const char *cpu);
     AsmDirective *setCpu(const char *cpu);
@@ -54,11 +47,7 @@ struct AsmDriver final : SymbolTable {
     void setLineNumber(bool enable);
     void setOption(const char *name, const char *value);
     int assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,
-            TextPrinter &errorout, bool reportError);
-
-    uint32_t origin() const { return _origin; }
-    uint32_t setOrigin(uint32_t origin) { return _origin = origin; }
-    SymbolMode symbolMode() const { return _symbolMode; }
+            TextPrinter &errorout, bool reportError = true);
 
     // SymbolTable
     const char *lookupValue(uint32_t address) const override;
@@ -69,9 +58,7 @@ struct AsmDriver final : SymbolTable {
     }
 
     Error internSymbol(uint32_t value, const StrScanner &symbol, bool variable = false);
-    bool symbolInTable(const StrScanner &symbol) const;
-    void setLineSymbol(const StrScanner &symbol);
-    Error internLineSymbol(uint32_t value);
+    bool symbolInTable(const StrScanner &symbol, bool variable) const;
 
     bool hasFunction(const StrScanner &name) const { return _functions.hasFunction(name); }
     Error internFunction(const StrScanner &name, const std::list<StrScanner> &params,
@@ -86,7 +73,6 @@ private:
     std::list<AsmDirective *> _directives;
     AsmDirective *_current;
 
-    SymbolMode _symbolMode;
     FunctionStore _functions;
     uint32_t _origin;
     bool _upperHex;
@@ -94,7 +80,6 @@ private:
 
     AsmDirective *switchDirective(AsmDirective *dir);
 
-    const StrScanner *_lineSymbol;
     std::map<std::string, uint32_t, std::less<>> _symbols;
     std::map<std::string, uint32_t, std::less<>> _variables;
 };

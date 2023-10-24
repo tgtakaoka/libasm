@@ -159,8 +159,6 @@ Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) {
             return setError(insn.op2);
         scan.skipSpaces();
     }
-    if (!endOfLine(scan))
-        return setError(scan, GARBAGE_AT_END);
 
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)

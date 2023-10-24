@@ -116,6 +116,12 @@ void BinMemory::swap(BinMemory &other) {
     other.invalidateWriteCache();
 }
 
+void BinMemory::clear() {
+    _blocks.clear();
+    invalidateReadCache();
+    invalidateWriteCache();
+}
+
 uint32_t BinMemory::startAddress() const {
     return _blocks.empty() ? 0 : _blocks.begin()->base;
 }

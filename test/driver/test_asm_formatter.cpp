@@ -31,7 +31,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_symbols_mc6809() {
-    PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective, REPORT_DUPLICATE);
+    PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective);
 
     formatter.setUpperHex(true);
     formatter.setLineNumber(true);
@@ -47,26 +47,29 @@ void test_symbols_mc6809() {
             "        org   $1234\n"
             "var1\n"
             "label2  bra   label2\n"
-            "label3  fdb   label3\n",
+            "label3  fdb   label3\n"
+            "label2:\n",
             "       1/       0 : =1234              label1  equ   $1234\n"
-            "mc6809:2: error: Duplicate label\n"
+            "mc6809:2:1: error: Duplicate label: \"label1  set   $1234\"\n"
             "       2/       0 :                    label1  set   $1234\n"
-            "mc6809:3: error: Duplicate label\n"
+            "mc6809:3:1: error: Duplicate label: \"label1  equ   $3456\"\n"
             "       3/       0 :                    label1  equ   $3456\n"
             "       4/       0 : =1234              var1    set   $1234\n"
-            "mc6809:5: error: Duplicate label\n"
+            "mc6809:5:1: error: Duplicate label: \"var1    equ   $1234\"\n"
             "       5/       0 :                    var1    equ   $1234\n"
             "       6/       0 : =1234              var1    set   $1234\n"
             "       7/       0 : =3456              var1    set   $3456\n"
             "       8/    1234 :                            org   $1234\n"
-            "mc6809:9:1: error: Duplicate label\n"
+            "mc6809:9:1: error: Duplicate label: \"var1\"\n"
             "       9/    1234 :                    var1\n"
             "      10/    1234 : 20 FE              label2  bra   label2\n"
-            "      11/    1236 : 12 36              label3  fdb   label3\n");
+            "      11/    1236 : 12 36              label3  fdb   label3\n"
+            "mc6809:12:1: error: Duplicate label: \"label2:\"\n"
+            "      12/    1238 :                    label2:\n");
 }
 
 void test_symbols_ins8060() {
-    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
+    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective);
 
     formatter.setUpperHex(true);
     formatter.setLineNumber(true);
@@ -84,24 +87,24 @@ void test_symbols_ins8060() {
             "label2  jmp    label2\n"
             "label3  .dbyte label3\n",
             "       1/       0 : =1234              label1  =     X'1234\n"
-            "ins8060:2: error: Duplicate label\n"
+            "ins8060:2:15: error: Duplicate label: \"label1, X'1234\"\n"
             "       2/       0 :                            .set  label1, X'1234\n"
-            "ins8060:3: error: Duplicate label\n"
+            "ins8060:3:1: error: Duplicate label: \"label1  =     X'3456\"\n"
             "       3/       0 :                    label1  =     X'3456\n"
             "       4/       0 : =1234                      .set  var1, X'1234\n"
-            "ins8060:5: error: Duplicate label\n"
+            "ins8060:5:1: error: Duplicate label: \"var1    =     X'1234\"\n"
             "       5/       0 :                    var1    =     X'1234\n"
             "       6/       0 : =1234                      .set  var1, X'1234\n"
             "       7/       0 : =3456                      .set  var1, X'3456\n"
             "       8/    1234 :                            .=X'1234\n"
-            "ins8060:9:1: error: Duplicate label\n"
+            "ins8060:9:1: error: Duplicate label: \"var1\"\n"
             "       9/    1234 :                    var1\n"
             "      10/    1234 : 90 FE              label2  jmp    label2\n"
             "      11/    1236 : 36 12              label3  .dbyte label3\n");
 }
 
 void test_symbols_z80() {
-    PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective, REPORT_DUPLICATE);
+    PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective);
 
     formatter.setUpperHex(true);
     formatter.setLineNumber(true);
@@ -119,17 +122,17 @@ void test_symbols_z80() {
             "label2  jr    label2\n"
             "label3  defw  label3\n",
             "       1/       0 : =1234              label1  equ   1234H\n"
-            "z80:2: error: Duplicate label\n"
+            "z80:2:1: error: Duplicate label: \"label1  defl  1234H\"\n"
             "       2/       0 :                    label1  defl  1234H\n"  // SET
-            "z80:3: error: Duplicate label\n"
+            "z80:3:1: error: Duplicate label: \"label1  equ   3456H\"\n"
             "       3/       0 :                    label1  equ   3456H\n"
             "       4/       0 : =1234              var1    defl  1234H\n"
-            "z80:5: error: Duplicate label\n"
+            "z80:5:1: error: Duplicate label: \"var1    equ   1234H\"\n"
             "       5/       0 :                    var1    equ   1234H\n"
             "       6/       0 : =3456              var1    var   3456H\n"
             "       7/    1234 :                            org   1234H\n"
             "       8/    1234 : CB C0              label1  set   0, b\n"
-            "z80:9:1: error: Duplicate label\n"
+            "z80:9:1: error: Duplicate label: \"var1\"\n"
             "       9/    1236 :                    var1\n"
             "      10/    1236 : 18 FE              label2  jr    label2\n"
             "      11/    1238 : 38 12              label3  defw  label3\n");
@@ -144,7 +147,7 @@ void test_switch_cpu() {
     IntelDirective dir8080(asm8080);
     z80::AsmZ80 asmz80;
     ZilogDirective dirz80(asmz80);
-    PREP_ASM_DRIVER(REPORT_UNDEFINED, &dir6809, &dir6502, &dir8080, &dirz80);
+    PREP_ASM_DRIVER(false, &dir6809, &dir6502, &dir8080, &dirz80);
 
     ASM("switch cpu",
             "        cpu   mc6809\n"
@@ -200,11 +203,10 @@ void test_list_radix() {
     MostekDirective dir6502(asm6502);
     z80::AsmZ80 asmz80;
     ZilogDirective dirz80(asmz80);
-    PREP_ASM_DRIVER(REPORT_UNDEFINED, &dir6502, &dirz80);
-
-    driver.setOption("list-radix", "8");
+    PREP_ASM_DRIVER(false, &dir6502, &dirz80);
 
     ASM("list-radix",
+            "        option \"list-radix\", \"8\"\n"
             "        cpu   z80\n"
             "        org   1234Q\n"
             "        ld    hl, 1234H\n"
@@ -219,6 +221,7 @@ void test_list_radix() {
             "        ldx   #$12\n"
             "        cpu   z80\n"
             "        res   0, (iy-128)\n",
+            "          0 :                            option \"list-radix\", \"8\"\n"
             "          0 :                            cpu   z80\n"
             "       1234 :                            org   1234Q\n"
             "       1234 : 041 064 022                ld    hl, 1234H\n"
@@ -236,7 +239,7 @@ void test_list_radix() {
 }
 
 void test_function() {
-    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective, REPORT_DUPLICATE);
+    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective);
 
     ASM("ins8060",
             "        cpu    ins8060\n"
@@ -272,17 +275,17 @@ void test_function() {
             "       ABD3 : 56 12                      .dbyte cons (high(x'1234),low(x'3456))\n"
             "       ABD5 : FF FF                      .dbyte CONS (  ) \n"
             "       ABD7 : CC AB                      .dbyte ADDR(label)\n"
-            "ins8060:14: error: Duplicate function\n"
+            "ins8060:14:1: error: Duplicate function: \"high:   function x,x   ; duplicate\"\n"
             "       ABD9 :                    high:   function x,x   ; duplicate\n"
-            "ins8060:15: error: Duplicate label\n"
+            "ins8060:15:1: error: Duplicate label: \"label:  function y,y   ; symbol\"\n"
             "       ABD9 :                    label:  function y,y   ; symbol\n"
-            "ins8060:16: error: Duplicate label\n"
+            "ins8060:16:1: error: Duplicate label: \"cons=0                 ; function\"\n"
             "       ABD9 :                    cons=0                 ; function\n"
-            "ins8060:17:16: error: Too few function arguments\n"
+            "ins8060:17:16: error: Too few function arguments: \"cons(0) ; requires 2\"\n"
             "       ABD9 :                            .dbyte cons(0) ; requires 2\n"
-            "ins8060:18:16: error: Too many function arguments\n"
+            "ins8060:18:16: error: Too many function arguments: \"CONS(0) ; requires 0\"\n"
             "       ABD9 :                            .dbyte CONS(0) ; requires 0\n"
-            "ins8060:19:16: error: Missing function arguments\n"
+            "ins8060:19:16: error: Missing function arguments: \"CONS    ; missing\"\n"
             "       ABD9 :                            .dbyte CONS    ; missing\n");
 }
 

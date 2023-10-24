@@ -28,58 +28,46 @@
 namespace libasm {
 namespace driver {
 
-struct AsmDriver;
+struct Assembler;
 struct BinMemory;
 
 struct AsmFormatter final : ListFormatter::Provider {
-    AsmFormatter(AsmDriver &driver, AsmSources &sources, BinMemory &memory);
+    AsmFormatter(AsmSources &sources);
 
     void setUpperHex(bool upperHex);
+    void setListRadix(Radix listRadix);
     void setLineNumber(bool enable);
 
-    Error assemble(const StrScanner &line, bool reportError = false);
+    void set(const StrScanner &line, const ErrorAt &error, const ConfigBase &config,
+            const Value *value = nullptr);
     bool hasError() const;
+
+    const ConfigBase &config() const override { return *_config; }
+    Insn &insn() { return _insn; }
 
     bool hasNextLine() const;
     StrBuffer &getLine(StrBuffer &out);
 
-    // Interface to AsmDirective
-    void setStartAddress(uint32_t addr) { _address = addr; }
-    uint8_t byteLength() const { return bytesSize(); }
-    StrScanner &lineSymbol() { return _line_symbol; }
-    Value &lineValue() { return _line_value; }
-
-    // TODO: Remove these
-    Error openSource(const StrScanner &filename) { return _sources.open(filename); }
-    Error closeCurrent() { return _sources.closeCurrent(); }
-
 private:
-    AsmDriver &_driver;
     AsmSources &_sources;
-    BinMemory &_memory;
     ListFormatter _formatter;
+    Insn _insn;
     bool _lineNumber;
-    bool _reportError;
-    int _nextLine;
-    bool _errorLine;
 
     StrScanner _line;
-    Value _line_value;
-    StrScanner _line_symbol;
-    Insn _insn{0};
-    uint32_t _address;
-    uint8_t _length;
-    ErrorAt _errorAt;
-    const ConfigBase *_conf;
+    ErrorAt _error;
+    const Value *_value;
+    const ConfigBase *_config;
 
-    void reset();
+    bool _errorLine;
+    int _nextLine;
+
     void formatLineNumber(StrBuffer &out);
 
     // ListFormatter
-    uint32_t startAddress() const override { return _address; }
-    uint8_t bytesSize() const override { return _length; }
-    uint8_t getByte(uint8_t offset) const override;
-    const ConfigBase &config() const override { return *_conf; }
+    uint32_t startAddress() const override { return _insn.address(); }
+    uint8_t bytesSize() const override { return _insn.length(); }
+    uint8_t getByte(uint8_t offset) const override { return _insn.bytes()[offset]; }
 };
 
 }  // namespace driver

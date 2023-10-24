@@ -51,9 +51,7 @@ private:
     std::map<std::string, std::string> _options;
 
     static constexpr const char *PROG_PREFIX = "asm";
-    driver::AsmDirective *defaultDirective();
-    int assemble(driver::BinMemory &memory, driver::TextPrinter &out, driver::TextPrinter &err,
-            bool reportError = false);
+    void defaultDirective();
     int parseOptionValue(const char *option);
 };
 

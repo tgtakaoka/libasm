@@ -70,9 +70,9 @@ struct ConfigBase {
     /**
      * Check |addr| is in |width| address space. When |width| is zero, |addressWidth()| will be
      * used.  This also check whether |addr| is word aligned when configuration is OPCODE_16BIT and
-     * ADDRESS_BYTE.
+     * ADDRESS_BYTE when |align| is true.
      */
-    Error checkAddr(uint32_t addr, uint8_t width = 0) const;
+    Error checkAddr(uint32_t addr, uint8_t width = 0, bool align = true) const;
 
     static int32_t signExtend(uint32_t u32, uint8_t bitw);
     static bool overflowInt8(int32_t s32);

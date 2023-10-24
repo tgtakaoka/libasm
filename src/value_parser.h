@@ -84,6 +84,7 @@ private:
     const FunctionTable &_function;
     const Locator &_locator;
 
+    Value _eval(StrScanner &scan, ErrorAt &error, const SymbolTable *symtab, char delim) const;
     Error parseConstant(StrScanner &scan, Value &val) const;
     Error readFunctionName(StrScanner &scan, StrScanner &name) const;
 };

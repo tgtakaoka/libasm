@@ -17,8 +17,8 @@
 #include "asm_commander.h"
 
 #include "asm_directive.h"
-#include "file_sources.h"
 #include "file_printer.h"
+#include "file_sources.h"
 #include "intel_hex.h"
 #include "moto_srec.h"
 #include "stored_printer.h"
@@ -30,13 +30,6 @@ namespace cli {
 
 using namespace libasm::driver;
 
-struct NullPrinter final : TextPrinter {
-    void println(const char *text) override {}
-    void format(const char *fmt, ...) override {}
-};
-
-static NullPrinter STDNULL;
-
 AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end) : _driver(begin, end) {}
 
 int AsmCommander::assemble() {
@@ -46,97 +39,93 @@ int AsmCommander::assemble() {
     }
 
     int pass = 0;
-    BinMemory memory;
     if (_verbose) {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
-    (void)assemble(memory, STDNULL, STDNULL, false);
 
-    StoredPrinter errorout;
+    BinMemory memory, prev;
+    StoredPrinter listout, errorout;
+    bool reportError = false;
     do {
-        BinMemory next;
+        FileSources sources;
+        if (sources.open(_input_name)) {
+            fprintf(stderr, "Can't open input file %s\n", _input_name);
+            return 1;
+        }
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
+        prev.swap(memory);
+        memory.clear();
+        listout.clear();
         errorout.clear();
-        (void)assemble(next, STDNULL, errorout, true);
-        if (memory.equals(next))
-            break;
-        memory.swap(next);
-    } while (true);
+        _driver.setUpperHex(_upper_hex);
+        _driver.setLineNumber(_line_number);
+        for (const auto &it : _options) {
+            _driver.setOption(it.first.c_str(), it.second.c_str());
+        }
+        if (_cpu)
+            _driver.setCpu(_cpu);
+        _driver.assemble(sources, memory, listout, errorout, reportError);
+        reportError = true;
+    } while (errorout.size() == 0 && !memory.equals(prev));
 
-    for (size_t lineno = 1; lineno <= errorout.size(); lineno++)
+    int errors = 0;
+    for (size_t lineno = 1; lineno <= errorout.size(); lineno++) {
         fprintf(stderr, "%s\n", errorout.line(lineno));
+        ++errors;
+    }
+
+    if (_list_name) {
+        if (_verbose)
+            fprintf(stderr, "%s: Opened for listing\n", _list_name);
+        FILE *list = fopen(_list_name, "w");
+        if (list == nullptr) {
+            fprintf(stderr, "Can't open list file %s\n", _list_name);
+            ++errors;
+        } else {
+            for (size_t lineno = 1; lineno <= listout.size(); lineno++)
+                fprintf(list, "%s\n", listout.line(lineno));
+            fclose(list);
+        }
+    }
 
     if (_output_name) {
         FilePrinter output;
         if (!output.open(_output_name)) {
             fprintf(stderr, "Can't open output file %s\n", _output_name);
-            return 1;
-        }
-
-        auto &encoder = _driver.current()->defaultEncoder();
-        if (_encoder == 'S')
-            encoder = MotoSrec::encoder();
-        else if (_encoder == 'H')
-            encoder = IntelHex::encoder();
-        const auto addrWidth = _driver.current()->assembler().config().addressWidth();
-        encoder.reset(addrWidth, _record_bytes);
-        encoder.encode(memory, output);
-        if (_verbose) {
-            const auto addrUnit = _driver.current()->assembler().config().addressUnit();
-            for (const auto &it : memory) {
-                const auto start = it.base / addrUnit;
-                const uint32_t size = it.data.size();
-                const auto end = (it.base + size - 1) / addrUnit;
-                fprintf(stderr, "%s: Write %4u bytes %04x-%04x\n", _output_name, size, start, end);
+            ++errors;
+        } else {
+            auto &encoder = _driver.current()->defaultEncoder();
+            if (_encoder == 'S')
+                encoder = MotoSrec::encoder();
+            else if (_encoder == 'H')
+                encoder = IntelHex::encoder();
+            const auto addrWidth = _driver.current()->assembler().config().addressWidth();
+            encoder.reset(addrWidth, _record_bytes);
+            encoder.encode(memory, output);
+            if (_verbose) {
+                const auto addrUnit = _driver.current()->assembler().config().addressUnit();
+                for (const auto &it : memory) {
+                    const auto start = it.base / addrUnit;
+                    const uint32_t size = it.data.size();
+                    const auto end = (it.base + size - 1) / addrUnit;
+                    fprintf(stderr, "%s: Write %4u bytes %04x-%04x\n", _output_name, size, start,
+                            end);
+                }
             }
         }
     }
 
-    if (_list_name) {
-        FilePrinter listout;
-        if (!listout.open(_list_name)) {
-            fprintf(stderr, "Can't open list file %s\n", _list_name);
-            return 1;
-        }
-        if (_verbose) {
-            fprintf(stderr, "%s: Opened for listing\n", _list_name);
-            fprintf(stderr, "%s: Pass listing\n", _input_name);
-        }
-        assemble(memory, listout, STDNULL, true);
-    }
-
-    return 0;
+    return errors;
 }
 
-int AsmCommander::assemble(
-        BinMemory &memory, TextPrinter &listout, TextPrinter &errorout, bool reportError) {
-    FileSources sources;
-    if (sources.open(_input_name)) {
-        fprintf(stderr, "Can't open input file %s\n", _input_name);
-        return 1;
-    }
-
-    _driver.reset();
-    _driver.setUpperHex(_upper_hex);
-    _driver.setLineNumber(_line_number);
-    for (const auto &it : _options) {
-        _driver.setOption(it.first.c_str(), it.second.c_str());
-    }
-    if (_cpu)
-        _driver.setCpu(_cpu);
-    return _driver.assemble(sources, memory, listout, errorout, reportError);
-}
-
-AsmDirective *AsmCommander::defaultDirective() {
-    AsmDirective *directive = nullptr;
+void AsmCommander::defaultDirective() {
     const auto prefix = strstr(_prog_name, PROG_PREFIX);
     if (prefix) {
         const auto cpu = prefix + strlen(PROG_PREFIX);
-        directive = _driver.restrictCpu(cpu);
+        _driver.restrictCpu(cpu);
     }
-    return directive;
 }
 
 int AsmCommander::usage() {
