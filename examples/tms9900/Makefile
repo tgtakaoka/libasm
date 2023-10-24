@@ -54,6 +54,9 @@ pio-ci:
 pio-ci-all:
 	$(foreach board,$(BOARDS),$(call pio-ci,$(board)))
 
+boards: platformio.ini
+	@echo $(BOARDS)
+
 define pio-run # env
 	pio $(PIO_FLAGS) run $(PIO_RUN_FLAGS) -e $(1)
 
@@ -65,10 +68,8 @@ pio-run:
 pio-run-all:
 	$(foreach env,$(ENVS),$(call pio-run,$(env)))
 
-pio-envs: platformio.ini
+envs: platformio.ini
 	@echo $(ENVS)
-pio-boards: platformio.ini
-	@echo $(BOARDS)
 
 define arduino-ci # fqbn
 	arduino-cli $(ARDUINO_FLAGS) compile -b $(1) $(ARDUINO_CI_FLAGS)

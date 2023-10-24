@@ -53,19 +53,22 @@ EX ?= $(firstword $(EXS))
 examples:
 	@echo $(EXS)
 
-ENVS = $(shell $(MAKE) -s -C $(EX) pio-envs)
+ENVS = $(shell $(MAKE) -s -C $(EX) envs)
 ENV ?= $(firstword $(ENVS))
 
 environments:
 	@echo $(ENVS)
 
-BOARDS = $(shell $(MAKE) -s -C $(EX) pio-boards)
+BOARDS = $(shell $(MAKE) -s -C $(EX) boards)
 BOARD ?= $(firstword $(BOARDS))
 
 FQBNS = $(shell $(MAKE) -s -C $(EX) fqbns)
 
 boards:
 	@echo $(BOARDS)
+
+envs:
+	@echo $(ENVS)
 
 fqbns:
 	@echo $(FQBNS)
@@ -80,7 +83,7 @@ update: Makefile.common platformio.common
 	$(foreach ex,$(EXS),$(call update,$(ex)))
 
 define pio-ci # example, board
-	$(MAKE) -C $(1) pio-ci BORAD=$(2)
+	$(MAKE) -C $(1) pio-ci BOARD=$(2)
 
 endef
 
