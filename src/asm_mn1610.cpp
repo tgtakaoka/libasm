@@ -209,9 +209,7 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
         break;
     case M_ABS: {
         // TODO: calculate/check segment/offset
-        const auto err = checkAddr(op.val32);
-        if (err)
-            insn.setErrorIf(op, err);
+        insn.setErrorIf(op, checkAddr(op.val32));
         insn.emitOperand16(op.val32);
         break;
     }
@@ -366,9 +364,8 @@ Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op1, error);
+    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     encodeOperand(insn, insn.op1, insn.mode1());
     encodeOperand(insn, insn.op2, insn.mode2());

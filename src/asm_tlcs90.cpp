@@ -241,9 +241,8 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.dstOp, error);
+    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     const auto pre = insn.pre();
     const auto dst = insn.dst();

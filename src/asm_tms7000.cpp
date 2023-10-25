@@ -234,9 +234,8 @@ Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.srcOp, error);
+    if (setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());

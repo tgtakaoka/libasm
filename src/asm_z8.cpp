@@ -225,9 +225,8 @@ Error AsmZ8::setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter) {
     auto p = scan.skipSpaces();
     const int32_t rp = parseExpr32(p, *this);
     if (isOK()) {
-        const auto error = (this->*setter)(rp);
-        if (error)
-            return setError(scan, error);
+        if (setErrorIf(scan, (this->*setter)(rp)))
+            return getError();
         scan = p;
         return OK;
     }
@@ -391,9 +390,8 @@ Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.dstOp, error);
+    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     encodeOperand(insn, insn.dst(), insn.dstPos(), insn.dstOp);
     encodeOperand(insn, insn.src(), insn.srcPos(), insn.srcOp);

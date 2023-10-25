@@ -159,7 +159,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             return setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, prefixOp, out))
-        return setErrorIf(insn);
+        return setError(insn);
 
     const auto dst = insn.dst();
     if (dst != M_NONE) {
@@ -186,7 +186,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             }
         }
     }
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace tlcs90

@@ -66,7 +66,7 @@ Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             outHex(insn.nameBuffer().reset().over(out), insn.opCode(), opCodeWidth())
                     .over(insn.nameBuffer());
         }
-        return setErrorIf(insn);
+        return setError(insn);
     }
     const auto mode = insn.mode();
     if (mode == M_MEM) {
@@ -83,7 +83,7 @@ Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             out.letter(' ');
         outHex(out, opc & 070, 6);
     }
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace im6100

@@ -257,9 +257,8 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op1, error);
+    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     if (insn.mode1() == M_BNO)
         insn.embed((insn.op1.val16 & 7) << 1);

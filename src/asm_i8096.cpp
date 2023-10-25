@@ -234,9 +234,8 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.dstOp, error);
+    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (!jbx_djnz) {

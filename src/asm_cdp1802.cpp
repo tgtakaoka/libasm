@@ -253,9 +253,8 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op1, insn);
+    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     emitOperand(insn, insn.mode1(), insn.op1);
     if (insn.mode2() == M_ADDR)

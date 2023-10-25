@@ -71,9 +71,7 @@ void DisMc6805::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
 
 void DisMc6805::decodeExtended(DisInsn &insn, StrBuffer &out) const {
     const Config::uintptr_t addr = insn.readUint16();
-    const auto error = checkAddr(addr);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto error = insn.setErrorIf(out, checkAddr(addr));
     const auto label = lookup(addr);
     if (label) {
         out.letter('>').rtext(label);

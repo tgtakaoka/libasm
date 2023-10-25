@@ -127,48 +127,48 @@ struct ErrorAt : ErrorReporter {
         setAt(o._at);
         return setError(o.getError());
     }
-    Error setErrorIf(const ErrorAt &o) { return getError() ? getError() : setError(o); }
+    Error setErrorIf(const ErrorAt &o) { return isOK() && o.getError() ? setError(o) : getError(); }
     Error setError(const ErrorAt &o, Error error) {
         setAt(o._at);
         return setError(error);
     }
     Error setErrorIf(const ErrorAt &o, Error error) {
-        return getError() ? getError() : setError(o, error);
+        return isOK() && error ? setError(o, error) : getError();
     }
     Error setError(const ErrorAt &o, const ErrorReporter &error) {
         setAt(o._at);
         return setError(error);
     }
     Error setErrorIf(const ErrorAt &o, const ErrorReporter &error) {
-        return getError() ? getError() : setError(o, error);
+        return isOK() && error.getError() ? setError(o, error) : getError();
     }
     Error setError(const StrScanner &at, Error error) {
         setAt(at);
         return setError(error);
     }
     Error setErrorIf(const StrScanner &at, Error error) {
-        return getError() ? getError() : setError(at, error);
+        return isOK() && error ? setError(at, error) : getError();
     }
     Error setError(const StrScanner &at, const ErrorReporter &error) {
         setAt(at);
         return setError(error);
     }
     Error setErrorIf(const StrScanner &at, const ErrorReporter &error) {
-        return getError() ? getError() : setError(at, error);
+        return isOK() && error.getError() ? setError(at, error) : getError();
     }
     Error setError(const StrBuffer &at, Error error) {
         setAt(at);
         return setError(error);
     }
     Error setErrorIf(const StrBuffer &at, Error error) {
-        return getError() ? getError() : setError(at, error);
+        return isOK() && error ? setError(at, error) : getError();
     }
     Error setError(const StrBuffer &at, const ErrorReporter &error) {
         setAt(at);
         return setError(error);
     }
     Error setErrorIf(const StrBuffer &at, const ErrorReporter &error) {
-        return getError() ? getError() : setError(at, error);
+        return isOK() && error.getError() ? setError(at, error) : getError();
     }
 
     void setAt(const char *at) { _at = at; }

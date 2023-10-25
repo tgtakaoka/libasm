@@ -541,9 +541,8 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.dstOp, error);
+    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return getError();
     insn.prepairModReg();
 
     if (insn.stringInst()) {

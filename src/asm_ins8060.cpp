@@ -232,9 +232,8 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (parseOperand(scan, insn.op) && insn.op.hasError())
         return setError(insn.op);
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op, error);
+    if (setErrorIf(insn.op, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     insn.setErrorIf(insn.op);
     switch (insn.addrMode()) {
@@ -262,7 +261,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
         break;
     }
     if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1))
-        insn.setErrorIf(OVERWRAP_PAGE);
+        insn.setErrorIf(insn.op, OVERWRAP_PAGE);
     return setError(insn);
 }
 

@@ -293,12 +293,11 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
             if (!p.skipSpaces().expect(')'))
                 return op.setErrorIf(p, MISSING_CLOSING_PAREN);
             if (*p.skipSpaces() == '+' || *p == '-') {
-                ErrorAt save(op);
-                op.disp2 = parseExpr32(p, op);
+                ErrorAt error;
+                op.disp2 = parseExpr32(p, error);
+                op.setErrorIf(error);
                 if (op.hasError())
                     return op.getError();
-                if (save.getError())
-                    op.setError(save);
                 p.skipSpaces();
             }
             if (*p == '[' || endOfLine(p) || *p == ',') {
@@ -362,12 +361,11 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
     }
 
     op.disp2 = op.val32;
-    ErrorAt save(op);
-    op.val32 = parseExpr32(p, op, ')');
+    ErrorAt error;
+    op.val32 = parseExpr32(p, error, ')');
+    op.setErrorIf(error);
     if (op.hasError())
         return op.getError();
-    if (save.getError())
-        op.setError(save);
     if (!p.skipSpaces().expect('('))
         return op.setErrorIf(p, UNKNOWN_OPERAND);
     const auto x = p;
@@ -628,9 +626,7 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
 void AsmNs32000::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address();
     const auto target = op.getError() ? base : op.val32;
-    const auto err = checkAddr(target);
-    if (err)
-        insn.setErrorIf(op, err);
+    insn.setErrorIf(op, checkAddr(target));
     const auto delta = static_cast<int32_t>(target - base);
     if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
         insn.setErrorIf(op, OVERFLOW_RANGE);
@@ -752,9 +748,8 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(_cpuSpec, insn);
-    if (error)
-        return setError(insn.srcOp, error);
+    if (setErrorIf(insn.srcOp, TABLE.searchName(_cpuSpec, insn)))
+        return getError();
 
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);

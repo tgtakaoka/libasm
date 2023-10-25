@@ -74,9 +74,8 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
 
     if (error == UNKNOWN_DIRECTIVE) {
         setError(at, OK);
-        error = setCurrentLocation(insn.address());
-        if (error)
-            return setError(error);
+        if (setErrorIf(at, setCurrentLocation(insn.address())))
+            return getError();
         error = encodeImpl(scan, insn);
         if (error == UNKNOWN_INSTRUCTION)
             return setError(at, error);
@@ -114,9 +113,7 @@ Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
 
 int32_t Assembler::branchDelta(
         uint32_t base, uint32_t target, ErrorAt &error, const ErrorAt &at) const {
-    const auto err = config().checkAddr(target);
-    if (err)
-        error.setErrorIf(at, err);
+    error.setErrorIf(at, config().checkAddr(target));
     const auto delta = config().signExtend(target - base, config().addressWidth());
     if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
         error.setErrorIf(at, OVERFLOW_RANGE);
@@ -154,9 +151,8 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (error.getError())
         return setError(error);
     const auto addr = value.getUnsigned();
-    const auto err = setCurrentLocation(addr);
-    if (err)
-        return setError(scan, err);
+    if (setErrorIf(scan, setCurrentLocation(addr)))
+        return getError();
     insn.reset(addr);
     scan = p;
     return OK;
@@ -176,9 +172,8 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
     if (value.overflowUint8())
         return setError(scan, OVERFLOW_RANGE);
     insn.align(value.getUnsigned());
-    const auto error = setCurrentLocation(insn.address());
-    if (error)
-        return setError(scan, error);
+    if (setErrorIf(scan, setCurrentLocation(insn.address())))
+        return getError();
     scan = p;
     return OK;
 }
@@ -211,9 +206,7 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     }
     const auto bytes = value.getUnsigned() * unit;
     const auto addr = insn.address() + (bytes / config().addressUnit());
-    const auto err = setCurrentLocation(addr, align);
-    if (err)
-        setError(scan, err);
+    setErrorIf(scan, setCurrentLocation(addr, align));
     scan = p;
     return OK;
 }

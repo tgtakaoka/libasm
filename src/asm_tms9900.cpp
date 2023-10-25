@@ -58,9 +58,7 @@ AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
 void AsmTms9900::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
-    const auto error = checkAddr(target);
-    if (error)
-        insn.setErrorIf(op, error);
+    insn.setErrorIf(op, checkAddr(target));
     const auto delta = branchDelta(base, target, insn, op) / 2;
     if (overflowInt8(delta))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -255,9 +253,8 @@ Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.srcOp, error);
+    if (setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());

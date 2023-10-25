@@ -103,9 +103,7 @@ void DisMos6502::decodeAbsoluteLong(DisInsn &insn, StrBuffer &out) const {
     uint32_t target = insn.readUint16();
     const auto bank = insn.readByte();
     target |= static_cast<uint32_t>(bank) << 16;
-    const auto error = config().checkAddr(target);
-    if (error)
-        insn.setErrorIf(out, error);
+    insn.setErrorIf(out, config().checkAddr(target));
     // JSL has only ABS_LONG addressing
     if (insn.opCode() == TableMos6502::JSL) {
         outAbsAddr(out, target);

@@ -153,10 +153,7 @@ Error AsmDirective::defineSymbol(StrScanner &scan, const StrScanner &symbol, Con
     if (context.reportUndefined && context.value.isUndefined())
         return setError(symbol, UNDEFINED_SYMBOL);
 
-    const auto err = driver.internSymbol(context.value.getUnsigned(), symbol, variable);
-    if (err) {
-        setError(symbol, err);
-    }
+    setErrorIf(symbol, driver.internSymbol(context.value.getUnsigned(), symbol, variable));
     return getError();
 }
 

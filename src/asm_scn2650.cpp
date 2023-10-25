@@ -121,9 +121,7 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
 
 void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto target = op.getError() ? insn.address() : op.val16;
-    const auto error = checkAddr(target);
-    if (error)
-        insn.setErrorIf(op, error);
+    insn.setErrorIf(op, checkAddr(target));
     auto opr = target;
     if (op.indir)
         opr |= 0x8000;
@@ -137,9 +135,7 @@ void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) c
 
 void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto target = op.getError() ? insn.address() : op.val16;
-    const auto error = checkAddr(target);
-    if (error)
-        insn.setErrorIf(op, error);
+    insn.setErrorIf(op, checkAddr(target));
     if (page(target) != page(insn.address()))
         insn.setErrorIf(op, OVERWRAP_PAGE);
     auto opr = offset(target);
@@ -239,9 +235,8 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op1, error);
+    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     const auto mode1 = insn.mode1();
     if (comma && (mode1 == M_REGN || mode1 == M_REG0 || mode1 == M_R123))

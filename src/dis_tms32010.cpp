@@ -84,9 +84,7 @@ StrBuffer &DisTms32010::outShiftCount(StrBuffer &out, uint8_t count, uint8_t mam
 
 StrBuffer &DisTms32010::outProgramAddress(StrBuffer &out, DisInsn &insn) const {
     const auto pma = insn.readUint16();
-    const auto error = checkAddr(pma);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto error = insn.setErrorIf(out, checkAddr(pma));
     outAbsAddr(out, pma, error ? ADDRESS_16BIT : 0);
     return out;
 }

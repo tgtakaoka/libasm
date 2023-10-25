@@ -164,9 +164,8 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     }
     const auto field = fieldOf(insn.address());
     const auto addr = memoryAddress(0, page, field);
-    const auto error = setCurrentLocation(addr);
-    if (error)
-        return setError(scan, error);
+    if (setErrorIf(scan, setCurrentLocation(addr)))
+        return getError();
     scan = p;
     insn.reset(addr);
     return OK;
@@ -179,9 +178,8 @@ Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (getError())
         return setError(scan, getError());
     const auto addr = memoryAddress(0, 0, field);
-    const auto error = setCurrentLocation(addr);
-    if (error)
-        return setError(scan, error);
+    if (setErrorIf(scan, setCurrentLocation(addr)))
+        return getError();
     scan = p;
     insn.reset(addr);
     return OK;
@@ -274,9 +272,7 @@ Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const
             return parseField(scan, insn);
         if (TABLE.searchMicro(cpuType(), micro, M_MEX) != OK)
             return parseField(scan, insn);
-        const auto error = encodeMicro(insn, micro, done);
-        if (error)
-            insn.setErrorIf(scan, error);
+        insn.setErrorIf(scan, encodeMicro(insn, micro, done));
         scan = p;
     }
     return insn.setError(MISSING_OPERAND);
@@ -294,17 +290,12 @@ Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
         if (_parser.readInstruction(p, name) != OK)
             return insn.setError(at, UNKNOWN_INSTRUCTION);
         micro.nameBuffer().reset().text(name);
-        const auto error = TABLE.searchName(cpuType(), micro);
-        if (error == UNKNOWN_INSTRUCTION) {
-            insn.setErrorIf(at, error);
+        if (insn.setErrorIf(at, TABLE.searchName(cpuType(), micro)) == UNKNOWN_INSTRUCTION)
             continue;
-        }
         if (mode != M_NONE) {
             TABLE.searchMicro(cpuType(), micro, mode);
             if (micro.isOK()) {
-                const auto error = encodeMicro(insn, micro, done);
-                if (error)
-                    insn.setErrorIf(at, error);
+                insn.setErrorIf(at, encodeMicro(insn, micro, done));
             } else if (micro.getError() == OPERAND_NOT_ALLOWED) {
                 insn.setErrorIf(at, INVALID_INSTRUCTION);
             } else {
@@ -317,9 +308,7 @@ Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
             TABLE.searchMicro(cpuType(), micro, m);
             if (micro.isOK()) {
                 mode = m;
-                const auto error = encodeMicro(insn, micro, done);
-                if (error)
-                    insn.setErrorIf(at, error);
+                insn.setErrorIf(at, encodeMicro(insn, micro, done));
                 break;
             }
             if (m == M_GR3) {

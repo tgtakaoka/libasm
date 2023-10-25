@@ -210,9 +210,8 @@ Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) {
         scan.skipSpaces();
     }
 
-    const auto error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op1, error);
+    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return getError();
 
     emitOperand(insn, insn.mode1(), insn.op1);
     emitOperand(insn, insn.mode2(), insn.op2);

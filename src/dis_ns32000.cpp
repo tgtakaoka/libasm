@@ -445,9 +445,7 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
             insn.setErrorIf(out, disp);
         if (reg == REG_PC) {
             const auto target = insn.address() + disp.val32;
-            const auto error = checkAddr(target);
-            if (error)
-                insn.setErrorIf(out, OVERFLOW_RANGE);
+            insn.setErrorIf(out, checkAddr(target));
             if (_pcRelativeParen) {
                 outAbsAddr(out, target);
             } else {
