@@ -130,10 +130,6 @@ struct __opcode_type<OPCODE_16BIT> : public __opcode_helper<uint16_t> {};
 /** Interface for setting CPU */
 struct ConfigSetter {
     virtual Error setCpuName(StrScanner &scan) = 0;
-    bool setCpuName(const char *name) {
-        StrScanner scan(name);
-        return setCpuName(scan) == OK;
-    }
 };
 
 /** Base for instruction table fo |CPUTYPE|. */
@@ -141,7 +137,7 @@ template <typename CPUTYPE>
 struct InsnTable {
     virtual const /*PROGMEM*/ char *listCpu_P() const = 0;
     virtual const /*PROGMEM*/ char *cpuName_P(CPUTYPE cpuType) const = 0;
-    virtual Error searchCpuName(StrScanner &name, CPUTYPE &cpuType) const = 0;
+    virtual Error searchCpuName(StrScanner &scan, CPUTYPE &cpuType) const = 0;
 };
 
 /** Base for holding a CPU configuration. */
@@ -168,14 +164,10 @@ struct ConfigImpl : ConfigBase, ConfigSetter {
     virtual void setCpuType(CPUTYPE cpuType) { _cpuType = cpuType; }
 
     Error setCpuName(StrScanner &scan) override {
-        auto p = scan.skipSpaces();
-        auto name = OptionBase::readSymbol(p);
         CPUTYPE cpuType;
-        const auto error = _table.searchCpuName(name, cpuType);
-        if (error == OK) {
+        const auto error = _table.searchCpuName(scan, cpuType);
+        if (error == OK)
             setCpuType(cpuType);
-            scan = p;
-        }
         return error;
     }
 

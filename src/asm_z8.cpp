@@ -65,9 +65,9 @@ const ValueParser::Plugins &AsmZ8::defaultPlugins() {
 AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_reg_alias),
       Config(TABLE),
-      _opt_reg_alias(this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, _opt_setrp),
-      _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, _opt_setrp0),
-      _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, _opt_setrp1),
+      _opt_reg_alias(this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, &_opt_setrp),
+      _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, &_opt_setrp0),
+      _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, &_opt_setrp1),
       _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1) {
     reset();
 }
@@ -221,27 +221,21 @@ Error AsmZ8::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ8::setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter) {
-    auto p = scan.skipSpaces();
-    const int32_t rp = parseExpr32(p, *this);
-    if (isOK()) {
-        if (setErrorIf(scan, (this->*setter)(rp)))
-            return getError();
-        scan = p;
-        return OK;
-    }
-    setError(scan, OPERAND_NOT_ALLOWED);
-    return OK;
-}
-
 Error AsmZ8::processPseudo(StrScanner &scan, Insn &insn) {
-    if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0)
-        return setRp(scan, &AsmZ8::setRegPointer);
+    const auto at = scan;
+    if (strcasecmp_P(insn.name(), OPT_INT_SETRP) == 0) {
+        const auto error = _opt_setrp.set(scan);
+        return error ? setErrorIf(at, error) : OK;
+    }
     if (isSuper8()) {
-        if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0)
-            return setRp(scan, &AsmZ8::setRegPointer0);
-        if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0)
-            return setRp(scan, &AsmZ8::setRegPointer1);
+        if (strcasecmp_P(insn.name(), OPT_INT_SETRP0) == 0) {
+            const auto error = _opt_setrp0.set(scan);
+            return error ? setErrorIf(at, error) : OK;
+        }
+        if (strcasecmp_P(insn.name(), OPT_INT_SETRP1) == 0) {
+            const auto error = _opt_setrp1.set(scan);
+            return error ? setErrorIf(at, error) : OK;
+        }
     }
     return Assembler::processPseudo(scan, insn);
 }

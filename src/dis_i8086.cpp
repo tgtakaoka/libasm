@@ -41,7 +41,7 @@ DisI8086::DisI8086(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_segmentInsn),
       Config(TABLE),
       _opt_segmentInsn(this, &DisI8086::setSegmentInsn, OPT_BOOL_SEGMENT_INSN,
-              OPT_DESC_SEGMENT_INSN, _opt_stringInsn),
+              OPT_DESC_SEGMENT_INSN, &_opt_stringInsn),
       _opt_stringInsn(this, &DisI8086::setStringInsn, OPT_BOOL_STRING_INSN, OPT_DESC_STRING_INSN) {
     reset();
 }

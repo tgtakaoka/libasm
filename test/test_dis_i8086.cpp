@@ -1486,7 +1486,7 @@ static void test_logic() {
 }
 
 static void test_string_manipulation() {
-    dis8086.setOption("string-insn", "false");
+    disassembler.setOption("string-insn", "false");
     TEST("REPNE", "", 0xF2);
     TEST("REP",   "", 0xF3);
     if (v30()) {
@@ -1494,7 +1494,7 @@ static void test_string_manipulation() {
         TEST("REPC",  "", 0x65);
     }
 
-    dis8086.setOption("string-insn", "enable");
+    disassembler.setOption("string-insn", "enable");
     ERRT("REPNE", "", NO_MEMORY, "", 0xF2);
     ERRT("REP",   "", NO_MEMORY, "", 0xF3);
     if (v30()) {
@@ -1686,7 +1686,7 @@ static void test_segment_override() {
     TEST("SEGSS", "", 0x36);
     TEST("SEGDS", "", 0x3E);
 
-    dis8086.setOption("segment-insn", "disable");
+    disassembler.setOption("segment-insn", "disable");
 
     TEST("MOV", "ES:[BX], AH",    0x26, 0x88, 0047);
     TEST("MOV", "ES:[BP+0], AH",  0x26, 0x88, 0146, 0x00);

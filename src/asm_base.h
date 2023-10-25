@@ -38,17 +38,16 @@ struct Assembler : ErrorAt, private ValueParser::Locator {
 
     const ValueParser &parser() const { return _parser; }
     bool endOfLine(const StrScanner &scan) const { return _parser.endOfLine(scan); }
+    /** Parse |expr| text and get value. */
+    Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
     const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
-    bool setCpu(const char *name) { return configSetter().setCpuName(name); }
-    Error setCpu(StrScanner &scan) { return configSetter().setCpuName(scan); }
+    bool setCpu(const char *name);
+    Error setCpu(StrScanner &scan);
 
-    Error setOption(const StrScanner &name, const StrScanner &text) {
-        if (_commonOptions.setOption(name, text) == OK)
-            return getError();
-        return options().setOption(name, text);
-    }
+    Error setOption(const char *name, const char *text);
+    Error setOption(const StrScanner &name, StrScanner &text);
     const Options &commonOptions() const { return _commonOptions; }
     const Options &options() const { return _options; }
 
@@ -104,8 +103,6 @@ protected:
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text and get value as unsigned 32 bit. */
     uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
-    /** Parse |expr| text and get value. */
-    Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
 private:
     virtual ConfigSetter &configSetter() = 0;

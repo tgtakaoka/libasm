@@ -52,11 +52,11 @@ DisNs32000::DisNs32000(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_pcrelParen),
       Config(TABLE),
       _opt_pcrelParen(this, &DisNs32000::setPcRelativeParen, OPT_BOOL_PCREL_PAREN,
-              OPT_DESC_PCREL_PAREN, _opt_externalParen),
+              OPT_DESC_PCREL_PAREN, &_opt_externalParen),
       _opt_externalParen(this, &DisNs32000::setExternalParen, OPT_BOOL_EXTERNAL_PAREN,
-              OPT_DESC_EXTERNAL_PAREN, _opt_stroptBracket),
+              OPT_DESC_EXTERNAL_PAREN, &_opt_stroptBracket),
       _opt_stroptBracket(this, &DisNs32000::setStringOptionBracket, OPT_BOOL_STROPT_BRACKET,
-              OPT_DESC_STROPT_BRACKET, _opt_floatPrefix),
+              OPT_DESC_STROPT_BRACKET, &_opt_floatPrefix),
       _opt_floatPrefix(
               this, &DisNs32000::setFloatPrefix, OPT_BOOL_FLOAT_PREFIX, OPT_DESC_FLOAT_PREFIX) {
     reset();

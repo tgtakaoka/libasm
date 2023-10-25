@@ -17,42 +17,112 @@
 #include "option_base.h"
 
 #include <ctype.h>
+#include <stdlib.h>
+
+#include "asm_base.h"
 
 namespace libasm {
 
-Error OptionBase::parseBoolOption(const StrScanner &scan, bool &value) {
-    if (scan.iequals_P(PSTR("enable")) || scan.iequals_P(PSTR("true")) ||
-            scan.iequals_P(PSTR("yes")) || scan.iequals_P(PSTR("on"))) {
+namespace {
+
+bool expectTrue(StrScanner &scan) {
+    return scan.iexpectWord_P(PSTR("enable")) || scan.iexpectWord_P(PSTR("true")) ||
+           scan.iexpectWord_P(PSTR("yes")) || scan.iexpectWord_P(PSTR("on"));
+}
+
+bool expectFalse(StrScanner &scan) {
+    return scan.iexpectWord_P(PSTR("disable")) || scan.iexpectWord_P(PSTR("false")) ||
+           scan.iexpectWord_P(PSTR("no")) || scan.iexpectWord_P(PSTR("off"));
+}
+
+Error parseBool(StrScanner &scan, bool &value) {
+    auto p = scan;
+    const auto dquote = p.expect('"');
+    if (expectTrue(p)) {
+        if (dquote && !p.expect('"'))
+            return MISSING_CLOSING_DQUOTE;
+        scan = p;
         value = true;
         return OK;
     }
-    if (scan.iequals_P(PSTR("disable")) || scan.iequals_P(PSTR("false")) ||
-            scan.iequals_P(PSTR("no")) || scan.iequals_P(PSTR("off"))) {
+    if (expectFalse(p)) {
+        if (dquote && !p.expect('"'))
+            return MISSING_CLOSING_DQUOTE;
+        scan = p;
         value = false;
+        return OK;
+    }
+    return NOT_AN_EXPECTED;
+}
+
+Error parseInt(StrScanner &scan, int32_t &value) {
+    char *end = nullptr;
+    value = strtol(scan.str(), &end, 10);
+    if (end == scan.str())
+        return ILLEGAL_CONSTANT;
+    scan += end - scan.str();
+    return OK;
+}
+
+}  // namespace
+
+Error OptionBase::parseBoolOption(StrScanner &scan, bool &value) {
+    if (parseBool(scan, value) == OK)
+        return OK;
+    int32_t val;
+    const auto error = parseIntOption(scan, val);
+    if (error == OK)
+        value = (val != 0);
+    return error;
+}
+
+Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value) {
+    auto p = scan;
+    const auto dquote = p.expect('"');
+    const auto error = parseInt(p, value);
+    if (error == OK) {
+        if (dquote && !p.expect('"'))
+            return ILLEGAL_CONSTANT;
+        scan = p;
+    }
+    return error;
+}
+
+Error OptionBase::parseCharOption(StrScanner &scan, char &value) {
+    auto p = scan;
+    const char quote = (*p == '"' || *p == '\'') ? *p : 0;
+    value = *p++;
+    if (quote && !p.expect(quote))
+        return quote == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE;
+    scan = p;
+    return OK;
+}
+
+Error OptionBase::parseTextOption(StrScanner &scan, StrScanner &value) {
+    auto p = scan;
+    const auto dquote = p.expect('"');
+    value = p;
+    p = value.takeWhile(isalnum);
+    if (value.size()) {
+        if (dquote && !p.expect('"'))
+            return MISSING_CLOSING_DQUOTE;
+        scan = p;
         return OK;
     }
     return ILLEGAL_CONSTANT;
 }
 
-Error OptionBase::parseIntOption(const StrScanner &scan, int32_t &value) {
-    char *end = nullptr;
-    value = strtol(scan.str(), &end, 10);
-    return end == scan.str() ? ILLEGAL_CONSTANT : OK;
-}
-
-StrScanner OptionBase::readSymbol(const StrScanner &scan) {
-    auto p = scan;
-    const auto name = p.skipSpaces();
-    p.trimStart([](char c) { return !isspace(c); });
-    return StrScanner(name.str(), p.str());
-}
-
-Error Options::setOption(const StrScanner &name, const StrScanner &text) const {
+const OptionBase *Options::search(const StrScanner &name) const {
     for (auto option = _head; option != nullptr; option = option->next()) {
         if (name.iequals_P(option->name_P()))
-            return option->set(text);
+            return option;
     }
-    return UNKNOWN_OPTION;
+    return nullptr;
+}
+
+Error Options::setOption(const StrScanner &name, StrScanner &scan) const {
+    const auto *option = search(name);
+    return option ? option->set(scan) : UNKNOWN_OPTION;
 }
 
 const char *Options::nameof(OptionBase::OptionSpec spec) {

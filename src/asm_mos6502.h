@@ -48,8 +48,6 @@ private:
     void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
-    Error parseTableOnOff(StrScanner &scan, BoolOption<AsmMos6502>::Setter setter);
-
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

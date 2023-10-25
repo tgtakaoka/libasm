@@ -206,11 +206,11 @@ void test_list_radix() {
     PREP_ASM_DRIVER(false, &dir6502, &dirz80);
 
     ASM("list-radix",
-            "        option \"list-radix\", \"8\"\n"
+            "        option \"list-radix\", 8\n"
             "        cpu   z80\n"
             "        org   1234Q\n"
             "        ld    hl, 1234H\n"
-            "        option \"list-radix\", \"16\"\n"
+            "        option \"list-radix\", 16\n"
             "        jr    $\n"
             "        cpu   65816\n"
             "        adc   #$34\n"
@@ -221,11 +221,11 @@ void test_list_radix() {
             "        ldx   #$12\n"
             "        cpu   z80\n"
             "        res   0, (iy-128)\n",
-            "          0 :                            option \"list-radix\", \"8\"\n"
+            "          0 :                            option \"list-radix\", 8\n"
             "          0 :                            cpu   z80\n"
             "       1234 :                            org   1234Q\n"
             "       1234 : 041 064 022                ld    hl, 1234H\n"
-            "        29F :                            option \"list-radix\", \"16\"\n"
+            "        29F :                            option \"list-radix\", 16\n"
             "        29F : 18 FE                      jr    $\n"
             "        2A1 :                            cpu   65816\n"
             "        2A1 : 69 34                      adc   #$34\n"

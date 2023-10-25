@@ -103,7 +103,7 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
 AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
       Config(TABLE),
-      _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, _opt_pmmu),
+      _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
       _opt_pmmu(this, &AsmNs32000::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }
@@ -114,7 +114,7 @@ void AsmNs32000::reset() {
     setMmuType(MMU_NONE);
 }
 
-Error AsmNs32000::setFpuName(const StrScanner &scan) {
+Error AsmNs32000::setFpuName(StrScanner &scan) {
     if (scan.iequals_P(TEXT_FPU_NS32081)) {
         setFpuType(FPU_NS32081);
     } else if (scan.iequals_P(TEXT_none)) {
@@ -125,7 +125,7 @@ Error AsmNs32000::setFpuName(const StrScanner &scan) {
     return OK;
 }
 
-Error AsmNs32000::setPmmuName(const StrScanner &scan) {
+Error AsmNs32000::setPmmuName(StrScanner &scan) {
     if (scan.iequals_P(TEXT_MMU_NS32082)) {
         setMmuType(MMU_NS32082);
     } else if (scan.iequals_P(TEXT_none)) {
@@ -708,22 +708,14 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
 }
 
 Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
-    auto p = scan.skipSpaces();
-    StrScanner opr;
-    parser().readSymbol(p, opr);
+    const auto at = scan;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
-        auto error = setFpuName(opr);
-        if (error)
-            return setError(scan, error);
-        scan = p;
-        return OK;
+        const auto error = _opt_fpu.set(scan);
+        return error ? setErrorIf(at, error) : OK;
     }
     if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
-        auto error = setPmmuName(opr);
-        if (error)
-            return setError(scan, error);
-        scan = p;
-        return OK;
+        const auto error = _opt_pmmu.set(scan);
+        return error ? setErrorIf(at, error) : OK;
     }
     return Assembler::processPseudo(scan, insn);
 }

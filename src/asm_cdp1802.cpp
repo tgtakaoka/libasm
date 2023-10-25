@@ -87,7 +87,7 @@ AsmCdp1802::AsmCdp1802(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_useReg),
       Config(TABLE),
       _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
-              _opt_smartBranch),
+              &_opt_smartBranch),
       _opt_smartBranch(
               this, &AsmCdp1802::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH) {
     reset();

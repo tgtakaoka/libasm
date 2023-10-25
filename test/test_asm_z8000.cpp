@@ -30,7 +30,7 @@ static bool z8001() {
 
 static void set_up() {
     assembler.reset();
-    asm8000.setOption("short-direct", "enable");
+    assembler.setOption("short-direct", "enable");
 }
 
 static void tear_down() {
@@ -2351,7 +2351,7 @@ static void test_short_direct() {
     TEST("CLR (seg|l_off)     ; long offset", 0x4D08, 0xD600, 0x1234);
     TEST("CLR (seg+l_off)(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
 
-    asm8000.setOption("short-direct", "disable");
+    assembler.setOption("short-direct", "disable");
 
     TEST("CLR 0x560034",        0x4D08, 0xD600, 0x0034);
     TEST("CLR 0x561234",        0x4D08, 0xD600, 0x1234);

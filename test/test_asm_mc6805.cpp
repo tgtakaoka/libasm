@@ -21,8 +21,8 @@ using namespace libasm;
 using namespace libasm::mc6805;
 using namespace libasm::test;
 
-AsmMc6805 as6805;
-Assembler &assembler(as6805);
+AsmMc6805 asm6805;
+Assembler &assembler(asm6805);
 
 static bool m146805() {
     return strcmp_P("146805", assembler.cpu_P()) == 0;
@@ -281,13 +281,13 @@ static void test_extended() {
     ATEST(0x07F0, "BSR $07FF",                          0xAD, 0x0D);
     AERRT(0x07F0, "BSR $0800", OVERFLOW_RANGE, "$0800", 0xAD, 0x0E);
 
-    as6805.setOption("pc-bits", "0");  // Most of MC68HC05 has 13bits PC.
+    TEST("option \"pc-bits\", 0");  // Most of MC68HC05 has 13bits PC.
     TEST(         "LDA $1FFF",                          0xC6, 0x1F, 0xFF);
     ERRT(         "LDA $2000", OVERFLOW_RANGE, "$2000", 0xC6, 0x20, 0x00);
     ATEST(0x1FF0, "BSR $1FFF",                          0xAD, 0x0D);
     AERRT(0x1FF0, "BSR $2000", OVERFLOW_RANGE, "$2000", 0xAD, 0x0E);
 
-    as6805.setOption("pc-bits", "14"); // MC68HC05X for instance
+    assembler.setOption("pc-bits", "14"); // MC68HC05X for instance
     TEST(         "LDA $3FFF",                          0xC6, 0x3F, 0xFF);
     ERRT(         "LDA $4000", OVERFLOW_RANGE, "$4000", 0xC6, 0x40, 0x00);
     ATEST(0x3FF0, "BSR $3FFF",                          0xAD, 0x0D);

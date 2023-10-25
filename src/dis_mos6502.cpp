@@ -46,9 +46,10 @@ const ValueFormatter::Plugins &DisMos6502::defaultPlugins() {
 DisMos6502::DisMos6502(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_longa),
       Config(TABLE),
-      _opt_longa(this, &DisMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, _opt_longi),
+      _opt_longa(
+              this, &DisMos6502::setLongAccumulator, OPT_BOOL_LONGA, OPT_DESC_LONGA, &_opt_longi),
       _opt_longi(
-              this, &DisMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI, _opt_indirectLong),
+              this, &DisMos6502::setLongIndex, OPT_BOOL_LONGI, OPT_DESC_LONGI, &_opt_indirectLong),
       _opt_indirectLong(this, &DisMos6502::setUseIndirectLong, OPT_BOOL_INDIRECT_LONG,
               OPT_DESC_INDIRECT_LONG) {
     reset();

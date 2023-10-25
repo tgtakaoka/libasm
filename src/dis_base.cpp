@@ -20,16 +20,16 @@ namespace libasm {
 
 namespace {
 
-const char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
-const char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
-const char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
-const char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
-const char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
-const char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
-const char OPT_BOOL_INTELHEX[] PROGMEM = "intel-hex";
-const char OPT_DESC_INTELHEX[] PROGMEM = "Intel style hexadecimal";
-const char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
-const char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
+constexpr char OPT_INT_LIST_RADIX[] PROGMEM = "list-radix";
+constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
+constexpr char OPT_BOOL_RELATIVE[] PROGMEM = "relative";
+constexpr char OPT_DESC_RELATIVE[] PROGMEM = "program counter relative branch target";
+constexpr char OPT_BOOL_CSTYLE[] PROGMEM = "c-style";
+constexpr char OPT_DESC_CSTYLE[] PROGMEM = "C language style number constant";
+constexpr char OPT_BOOL_INTELHEX[] PROGMEM = "intel-hex";
+constexpr char OPT_DESC_INTELHEX[] PROGMEM = "Intel style hexadecimal";
+constexpr char OPT_CHAR_ORIGIN[] PROGMEM = "origin-char";
+constexpr char OPT_DESC_ORIGIN[] PROGMEM = "letter for origin symbol";
 
 }  // namespace
 
@@ -38,12 +38,12 @@ Disassembler::Disassembler(const ValueFormatter::Plugins &plugins, const OptionB
       _commonOptions(&_opt_listRadix),
       _options(option),
       _opt_listRadix(this, &Disassembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
-              _opt_relative),
+              &_opt_relative),
       _opt_relative(this, &Disassembler::setRelativeTarget, OPT_BOOL_RELATIVE, OPT_DESC_RELATIVE,
-              _opt_cstyle),
-      _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, _opt_intelhex),
+              &_opt_cstyle),
+      _opt_cstyle(this, &Disassembler::setCStyle, OPT_BOOL_CSTYLE, OPT_DESC_CSTYLE, &_opt_intelhex),
       _opt_intelhex(
-              this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, _opt_curSym),
+              this, &Disassembler::setIntelHex, OPT_BOOL_INTELHEX, OPT_DESC_INTELHEX, &_opt_curSym),
       _opt_curSym(this, &Disassembler::setCurSym, OPT_CHAR_ORIGIN, OPT_DESC_ORIGIN) {}
 
 void Disassembler::reset() {
@@ -105,6 +105,22 @@ Error Disassembler::setIntelHex(bool enable) {
 Error Disassembler::setCurSym(char curSym) {
     _curSym = curSym ? curSym : _formatter.locationSymbol();
     return OK;
+}
+
+bool Disassembler::setCpu(const char *name) {
+    StrScanner scan{name};
+    return setCpu(scan) == OK;
+}
+
+Error Disassembler::setCpu(StrScanner &scan) {
+    return configSetter().setCpuName(scan);
+}
+
+Error Disassembler::setOption(const char *name, const char *text) {
+    StrScanner scan{text};
+    if (_commonOptions.setOption(name, scan) == OK)
+        return getError();
+    return options().setOption(name, scan);
 }
 
 Error Disassembler::decode(

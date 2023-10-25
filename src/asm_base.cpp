@@ -120,27 +120,42 @@ int32_t Assembler::branchDelta(
     return delta;
 }
 
+bool Assembler::setCpu(const char *name) {
+    StrScanner scan{name};
+    return setCpu(scan) == OK;
+}
+
+Error Assembler::setCpu(StrScanner &scan) {
+    return configSetter().setCpuName(scan);
+}
+
+Error Assembler::setOption(const char *name, const char *text) {
+    StrScanner scan{text};
+    return setOption(name, scan);
+}
+
+Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
+    if (_commonOptions.setOption(name, text) == OK)
+        return getError();
+    return options().setOption(name, text);
+}
+
 Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(insn);
     UNUSED(extra);
     // parse "name", "text" in |scan|
     auto p = scan.skipSpaces();
-    if (!p.expect('"'))
-        return ILLEGAL_OPERAND;
-    auto name = p;
-    p = name.takeWhile([](char c) { return c && c != '"'; });
-    if (!p.expect('"'))
-        return ILLEGAL_OPERAND;
+    const auto dquote = p.expect('"');
+    auto option = p;
+    p = option.takeWhile([](char c) { return isalnum(c) || c == '-'; });
+    if (dquote && !p.expect('"'))
+        return MISSING_CLOSING_DQUOTE;
     if (!p.skipSpaces().expect(','))
         return MISSING_COMMA;
-    if (!p.skipSpaces().expect('"'))
-        return ILLEGAL_OPERAND;
-    auto text = p;
-    p = text.takeWhile([](char c) { return c && c != '"'; });
-    if (!p.expect('"'))
-        return ILLEGAL_OPERAND;
+    if (setErrorIf(p, setOption(option, p.skipSpaces())))
+        return getError();
     scan = p;
-    return setOption(name, text);
+    return OK;
 }
 
 Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
@@ -370,6 +385,29 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
     } while (scan.skipSpaces().expect(','));
 
     return setErrorIf(error);
+}
+
+Error OptionBase::parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler) {
+    if (parseBoolOption(scan, value) == OK)
+        return OK;
+    int32_t val;
+    const auto error = parseIntOption(scan, val, assembler);
+    if (error == OK)
+        value = (val != 0);
+    return error;
+}
+
+Error OptionBase::parseIntOption(StrScanner &scan, int32_t &value, const Assembler &assembler) {
+    auto p = scan;
+    const auto dquote = p.expect('"');
+    ErrorAt error;
+    value = assembler.parseExpr(p, error).getSigned();
+    if (error.isOK()) {
+        if (dquote && !p.expect('"'))
+            return ILLEGAL_CONSTANT;
+        scan = p;
+    }
+    return error.getError();
 }
 
 }  // namespace libasm

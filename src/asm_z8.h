@@ -45,7 +45,6 @@ private:
     int16_t _regPointer1;
 
     bool isWorkReg(uint8_t regAddr) const;
-    Error setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter);
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 

@@ -41,7 +41,7 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_shortDirect),
       Config(TABLE),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
-              OPT_DESC_SHORT_DIRECT, _opt_ioaddrPrefix),
+              OPT_DESC_SHORT_DIRECT, &_opt_ioaddrPrefix),
       _opt_ioaddrPrefix(
               this, &DisZ8000::setIoAddressPrefix, OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX) {
     reset();

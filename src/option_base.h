@@ -17,14 +17,15 @@
 #ifndef __OPTION_BASE_H__
 #define __OPTION_BASE_H__
 
-#include "config_host.h"
+#include <stdint.h>
+
 #include "error_reporter.h"
 #include "str_scanner.h"
-
-#include <stdint.h>
-#include <stdlib.h>
+#include "type_traits.h"
 
 namespace libasm {
+
+struct Assembler;
 
 struct OptionBase {
     enum OptionSpec : uint8_t {
@@ -37,42 +38,49 @@ struct OptionBase {
     const /*PROGMEM*/ char *name_P() const { return _name_P; }
     OptionSpec spec() const { return _spec; }
     const /*PROGMEM*/ char *description_P() const { return _desc_P; }
-    virtual Error set(const StrScanner &scan) const = 0;
+    virtual Error set(StrScanner &scan) const = 0;
     const OptionBase *next() const { return _next; }
 
-    static Error parseBoolOption(const StrScanner &scan, bool &var);
-    static Error parseIntOption(const StrScanner &scan, int32_t &var);
-    static StrScanner readSymbol(const StrScanner &scan);
-
 protected:
-    OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec,
-            const OptionBase &next)
-        : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(&next) {}
+    constexpr OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P,
+            OptionSpec spec, const OptionBase *next)
+        : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(next) {}
 
-    OptionBase(const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P, OptionSpec spec)
-        : _name_P(name_P), _desc_P(desc_P), _spec(spec), _next(nullptr) {}
+    static Error parseBoolOption(StrScanner &scan, bool &value);
+    static Error parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler);
+    static Error parseIntOption(StrScanner &scan, int32_t &value);
+    static Error parseIntOption(StrScanner &scan, int32_t &value, const Assembler &assembler);
+    static Error parseCharOption(StrScanner &scan, char &value);
+    static Error parseTextOption(StrScanner &scan, StrScanner &value);
 
 private:
-    const /*PROGMEM*/ char *_name_P;
-    const /*PROGMEM*/ char *_desc_P;
+    const /*PROGMEM*/ char *const _name_P;
+    const /*PROGMEM*/ char *const _desc_P;
     const OptionSpec _spec;
-    const OptionBase *_next;
+    const OptionBase *const _next;
 };
 
 template <typename APP>
 struct BoolOption : public OptionBase {
     using Setter = Error (APP::*)(bool);
 
-    BoolOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+    constexpr BoolOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_BOOL, next), _app(app), _setter(setter) {}
-    BoolOption(
-            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
-        : OptionBase(name_P, desc_P, OPT_BOOL), _app(app), _setter(setter) {}
 
-    Error set(const StrScanner &scan) const override {
+    template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
+    static Error parseBool(StrScanner &scan, bool &value, const A *app) {
+        return parseBoolOption(scan, value, *app);
+    }
+    template <typename A, typename enable_if<!is_base_of<Assembler, A>::value>::type * = nullptr>
+    static Error parseBool(StrScanner &scan, bool &value, const A *app) {
+        UNUSED(app);
+        return parseBoolOption(scan, value);
+    }
+
+    Error set(StrScanner &scan) const override {
         bool value = false;
-        const auto error = parseBoolOption(scan, value);
+        const auto error = parseBool(scan, value, _app);
         return error ? error : (_app->*_setter)(value);
     }
 
@@ -85,16 +93,23 @@ template <typename APP>
 struct IntOption : public OptionBase {
     using Setter = Error (APP::*)(int32_t);
 
-    IntOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+    constexpr IntOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_INT, next), _app(app), _setter(setter) {}
-    IntOption(
-            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
-        : OptionBase(name_P, desc_P, OPT_INT), _app(app), _setter(setter) {}
 
-    Error set(const StrScanner &scan) const override {
+    template <typename A, typename enable_if<is_base_of<Assembler, A>::value>::type * = nullptr>
+    static Error parseInt(StrScanner &scan, int32_t &value, const A *app) {
+        return parseIntOption(scan, value, *app);
+    }
+    template <typename A, typename enable_if<!is_base_of<Assembler, A>::value>::type * = nullptr>
+    static Error parseInt(StrScanner &scan, int32_t &value, const A *app) {
+        UNUSED(app);
+        return parseIntOption(scan, value);
+    }
+
+    Error set(StrScanner &scan) const override {
         int32_t value = 0;
-        const auto error = parseIntOption(scan, value);
+        const auto error = parseInt(scan, value, _app);
         return error ? error : (_app->*_setter)(value);
     }
 
@@ -107,15 +122,14 @@ template <typename APP>
 struct CharOption : public OptionBase {
     using Setter = Error (APP::*)(char);
 
-    CharOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+    constexpr CharOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_CHAR, next), _app(app), _setter(setter) {}
-    CharOption(
-            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
-        : OptionBase(name_P, desc_P, OPT_CHAR), _app(app), _setter(setter) {}
 
-    Error set(const StrScanner &scan) const override {
-        return scan.size() <= 1 ? (_app->*_setter)(*scan) : ILLEGAL_CONSTANT;
+    Error set(StrScanner &scan) const override {
+        char value = 0;
+        const auto error = parseCharOption(scan, value);
+        return error ? error : (_app->*_setter)(value);
     }
 
 private:
@@ -125,16 +139,17 @@ private:
 
 template <typename APP>
 struct TextOption : public OptionBase {
-    using Setter = Error (APP::*)(const StrScanner &scan);
+    using Setter = Error (APP::*)(StrScanner &scan);
 
-    TextOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
-            const /*PROGMEM*/ char *desc_P, const OptionBase &next)
+    constexpr TextOption(APP *app, Setter setter, const /*PROGMEM*/ char *name_P,
+            const /*PROGMEM*/ char *desc_P, const OptionBase *next = nullptr)
         : OptionBase(name_P, desc_P, OPT_TEXT, next), _app(app), _setter(setter) {}
-    TextOption(
-            APP *app, Setter setter, const /*PROGMEM*/ char *name_P, const /*PROGMEM*/ char *desc_P)
-        : OptionBase(name_P, desc_P, OPT_TEXT), _app(app), _setter(setter) {}
 
-    Error set(const StrScanner &scan) const override { return (_app->*_setter)(scan); }
+    Error set(StrScanner &scan) const override {
+        StrScanner value;
+        const auto error = parseTextOption(scan, value);
+        return error ? error : (_app->*_setter)(value);
+    }
 
 private:
     APP *const _app;
@@ -142,15 +157,16 @@ private:
 };
 
 struct Options {
-    Options(const OptionBase *head) : _head(head) {}
+    constexpr Options(const OptionBase *head) : _head(head) {}
 
     const OptionBase *head() const { return _head; }
-    Error setOption(const StrScanner &name, const StrScanner &text) const;
+    const OptionBase *search(const StrScanner &name) const;
+    Error setOption(const StrScanner &name, StrScanner &scan) const;
 
     static const char *nameof(OptionBase::OptionSpec spec);
 
 private:
-    const OptionBase *_head;
+    const OptionBase *const _head;
 };
 
 }  // namespace libasm

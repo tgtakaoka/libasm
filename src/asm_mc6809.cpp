@@ -524,9 +524,10 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
 }
 
 Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto at = scan;
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
-        const auto val = parseExpr32(scan, *this);
-        return isOK() ? setDirectPage(val) : getError();
+        const auto error = _opt_setdp.set(scan);
+        return error ? setError(at, error) : OK;
     }
     return Assembler::processPseudo(scan, insn);
 }

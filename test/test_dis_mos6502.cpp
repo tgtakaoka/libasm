@@ -224,8 +224,8 @@ static void test_imm() {
 }
 
 static void test_long_imm() {
-    dis6502.setOption("longa", "disable");
-    dis6502.setOption("longi", "enable");
+    disassembler.setOption("longa", "disable");
+    disassembler.setOption("longi", "enable");
 
     if (w65c816()) {
         TEST("LDY", "#0",     0xA0, 0x00, 0x00);
@@ -243,8 +243,8 @@ static void test_long_imm() {
         TEST("ORA", "#9",   0x09, 0x09);
     }
 
-    dis6502.setOption("longa", "enable");
-    dis6502.setOption("longi", "disable");
+    disassembler.setOption("longa", "enable");
+    disassembler.setOption("longi", "disable");
 
     if (w65c816()) {
         TEST("ORA", "#9",     0x09, 0x09, 0x00);
@@ -276,8 +276,8 @@ static void test_long_imm() {
     symtab.intern(0x01FF, "zero1FF");
     symtab.intern(-1,     "minus1");
 
-    dis6502.setOption("longa", "enable");
-    dis6502.setOption("longi", "enable");
+    disassembler.setOption("longa", "enable");
+    disassembler.setOption("longi", "enable");
 
     if (w65c816()) {
         TEST("LDX", "#zero10",  0xA2, 0x10, 0x00);
@@ -420,7 +420,7 @@ static void test_zpg_long() {
         TEST("SBC", "[$10],Y",           0xF7, 0x10);
         NMEM("SBC", "[$00],Y", "$00],Y", 0xF7);
 
-        dis6502.setOption("indirect-long", "disable");
+        disassembler.setOption("indirect-long", "disable");
         TEST("ORAL", "($10)", 0x07, 0x10);
         TEST("ANDL", "($10)", 0x27, 0x10);
         TEST("EORL", "($10)", 0x47, 0x10);
@@ -443,11 +443,11 @@ static void test_zpg_long() {
 
         symtab.intern(0x10, "dir10");
 
-        dis6502.setOption("indirect-long", "enable");
+        disassembler.setOption("indirect-long", "enable");
         TEST("ORA", "[<dir10]",   0x07, 0x10);
         TEST("ORA", "[<dir10],Y", 0x17, 0x10);
 
-        dis6502.setOption("indirect-long", "disable");
+        disassembler.setOption("indirect-long", "disable");
         TEST("ORAL", "(<dir10)",  0x07, 0x10);
         TEST("ORAL", "(<dir10),Y", 0x17, 0x10);
     }
@@ -579,7 +579,7 @@ static void test_abs_long() {
         TEST("JSL", "$123456", 0x22, 0x56, 0x34, 0x12);
 
         TEST("JMP",  "[$1234]", 0xDC, 0x34, 0x12);
-        dis6502.setOption("indirect-long", "disable");
+        disassembler.setOption("indirect-long", "disable");
         TEST("JMPL", "($1234)", 0xDC, 0x34, 0x12);
 
         TEST("MVP", "$120000, $340000", 0x44, 0x34, 0x12);
@@ -600,10 +600,10 @@ static void test_abs_long() {
 
         TEST("MVP", "bank12, bank34", 0x44, 0x34, 0x12);
 
-        dis6502.setOption("indirect-long", "enable");
+        disassembler.setOption("indirect-long", "enable");
         TEST("JMP",  "[>sym1234]", 0xDC, 0x34, 0x12);
 
-        dis6502.setOption("indirect-long", "disable");
+        disassembler.setOption("indirect-long", "disable");
         TEST("JMPL", "(>sym1234)", 0xDC, 0x34, 0x12);
     }
 }

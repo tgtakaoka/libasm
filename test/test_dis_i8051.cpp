@@ -294,7 +294,7 @@ static void test_relative() {
 }
 
 static void test_bit_address() {
-    dis8051.setOption("relative", "true");
+    disassembler.setOption("relative", "true");
     TEST("JBC", "22H.1, $+21", 0x10, 0x11, 0x12);
     TEST("JB",  "24H.1, $+37", 0x20, 0x21, 0x22);
     TEST("JNB", "26H.1, $+53", 0x30, 0x31, 0x32);

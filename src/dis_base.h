@@ -46,14 +46,10 @@ struct Disassembler : ErrorAt {
 
     const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
     const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
-    bool setCpu(const char *name) { return configSetter().setCpuName(name); }
-    Error setCpu(StrScanner &scan) { return configSetter().setCpuName(scan); }
+    bool setCpu(const char *name);
+    Error setCpu(StrScanner &scan);
 
-    Error setOption(const char *name, const char *text) {
-        if (_commonOptions.setOption(name, text) == OK)
-            return getError();
-        return options().setOption(name, text);
-    }
+    Error setOption(const char *name, const char *text);
     const Options &commonOptions() const { return _commonOptions; }
     const Options &options() const { return _options; }
 
