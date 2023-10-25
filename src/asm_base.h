@@ -97,7 +97,7 @@ protected:
     Assembler(const ValueParser::Plugins &plugins, const pseudo::Pseudos &pseudos,
             const OptionBase *option = nullptr);
 
-    int32_t branchDelta(uint32_t base, uint32_t target, const ErrorAt &at);
+    int32_t branchDelta(uint32_t base, uint32_t target, ErrorAt &error, const ErrorAt &at) const;
 
     /** Parse |expr| text and get value as unsigned 16 bit. */
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;

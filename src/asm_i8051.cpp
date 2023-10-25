@@ -16,8 +16,6 @@
 
 #include "asm_i8051.h"
 
-#include "operators.h"
-#include "reg_i8051.h"
 #include "table_i8051.h"
 #include "text_common.h"
 
@@ -50,13 +48,6 @@ const ValueParser::Plugins &AsmI8051::defaultPlugins() {
     } PLUGINS;
     return PLUGINS;
 }
-
-struct AsmI8051::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-};
 
 AsmI8051::AsmI8051(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
@@ -161,7 +152,8 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) {
+void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_REL: {
         auto len = insn.length();
@@ -171,7 +163,7 @@ void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         const Config::ptrdiff_t delta = target - base;
         if (overflowInt8(delta))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
         return;
     }
@@ -181,12 +173,12 @@ void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
         return;
     case M_ADR8:
         if (op.val16 >= 0x100)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return;
     case M_IMM8: {
         if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return;
     }
@@ -194,7 +186,7 @@ void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
         const Config::uintptr_t base = insn.address() + 2;
         const Config::uintptr_t target = op.getError() ? (base & ~0x7FF) : op.val16;
         if ((base & ~0x7FF) != (target & ~0x7FF))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed((target & 0x700) >> 3);
         insn.emitOperand8(target);
         return;
@@ -206,7 +198,7 @@ void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
     case M_BITAD:
     case M_NOTAD:
         if (op.val16 >= 0x100)
-            setErrorIf(op, NOT_BIT_ADDRESSABLE);
+            insn.setErrorIf(op, NOT_BIT_ADDRESSABLE);
         insn.emitOperand8(op.val16);
         return;
     default:
@@ -216,42 +208,38 @@ void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
 
 Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dstOp, srcOp, extOp;
-    if (parseOperand(scan, dstOp) && dstOp.hasError())
-        return setError(dstOp);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp) && srcOp.hasError())
-            return setError(srcOp);
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, extOp) && extOp.hasError())
-            return setError(extOp);
+        if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
+            return setError(insn.extOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp);
-    setErrorIf(srcOp);
-    setErrorIf(extOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dstOp, error);
+        return setError(insn.dstOp, error);
 
     const auto dst = insn.dst();
     const auto src = insn.src();
     if (dst == M_ADR8 && src == M_ADR8) {
-        encodeOperand(insn, src, srcOp);
-        encodeOperand(insn, dst, dstOp);
+        insn.setErrorIf(insn.dstOp);
+        encodeOperand(insn, src, insn.srcOp);
+        encodeOperand(insn, dst, insn.dstOp);
     } else {
-        encodeOperand(insn, dst, dstOp);
-        encodeOperand(insn, src, srcOp);
-        encodeOperand(insn, insn.ext(), extOp);
+        encodeOperand(insn, dst, insn.dstOp);
+        encodeOperand(insn, src, insn.srcOp);
+        encodeOperand(insn, insn.ext(), insn.extOp);
     }
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace i8051

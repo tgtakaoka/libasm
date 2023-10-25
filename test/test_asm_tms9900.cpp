@@ -404,7 +404,7 @@ static void test_undefined_symbol() {
     ERUS("STCR @2(R4),UNDEF",     "UNDEF",            0x3424, 0x0002);
     ERUS("STCR @UNDEF(R4),UNDEF", "UNDEF(R4),UNDEF", 0x3424, 0x0000);
     ERUS("XOP  @UNDEF,15",    "UNDEF,15",    0x2FE0, 0x0000);
-    ERUS("XOP  @>9876,UNDEF", "UNDEF",       0x2C20, 0x9876);
+    ERUS("XOP  @>1234,UNDEF", "UNDEF",       0x2C20, 0x1234);
     ERUS("XOP  @UNDEF,UNDEF", "UNDEF,UNDEF", 0x2C20, 0x0000);
     ERUS("SZC  @UNDEF(R10),@>2345(R11)", "UNDEF(R10),@>2345(R11)", 0x4AEA, 0x0000, 0x2345);
     ERUS("SZC  @>1234(R10),@UNDEF(R11)", "UNDEF(R11)",             0x4AEA, 0x1234, 0x0000);

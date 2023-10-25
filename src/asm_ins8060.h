@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #ifndef __ASM_INS8060_H__
 #define __ASM_INS8060_H__
 
@@ -28,11 +27,10 @@ struct AsmIns8060 final : Assembler, Config {
     AsmIns8060(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRel8(AsmInsn &insn, const Operand &op);
-    void encodeIndx(AsmInsn &insn, const Operand &op);
+    void encodeRel8(AsmInsn &insn, const Operand &op) const;
+    void encodeIndx(AsmInsn &insn, const Operand &op) const;
 
     Error defineAddrConstant(StrScanner &scan, Insn &insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;

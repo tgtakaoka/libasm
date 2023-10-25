@@ -16,7 +16,6 @@
 
 #include "asm_z8.h"
 
-#include "reg_z8.h"
 #include "table_z8.h"
 #include "text_common.h"
 
@@ -49,15 +48,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
-
-struct AsmZ8::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    CcName cc;
-    uint16_t val16;
-    StrScanner regAt;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0), regAt() {}
-};
 
 const ValueParser::Plugins &AsmZ8::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -294,60 +284,61 @@ void AsmInsn::emitOperand(uint16_t val16, OprPos pos) {
     }
 }
 
-void AsmZ8::encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op) {
+void AsmZ8::encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op) const {
     const auto base = insn.address() + (pos == OP_BYT1 ? 2 : 3);
     const auto target = op.getError() ? base : op.val16;
-    const auto delta = branchDelta(base, target, op);
+    const auto delta = branchDelta(base, target, insn, op);
     if (overflowInt8(delta))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand(delta, pos);
 }
 
-void AsmZ8::encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) {
+void AsmZ8::encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const {
     if (mode == M_X && overflowUint8(op.val16))
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     if (mode == M_XS && overflowInt8(static_cast<int8_t>(op.val16)))
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     if (mode == M_XL && op.reg == REG_RR0)
-        setErrorIf(op.regAt, REGISTER_NOT_ALLOWED);
+        insn.setErrorIf(op.regAt, REGISTER_NOT_ALLOWED);
     insn.emitOperand(encodeRegName(op.reg), OP_B1LO);
     insn.emitOperand(op.val16, pos);
 }
 
-void AsmZ8::encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) {
+void AsmZ8::encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) const {
     const auto addr =
             (op.reg != REG_UNDEF && _reg_alias) ? encodeWorkRegAddr(isSuper8(), op.reg) : op.val16;
     insn.emitOperand(addr, pos);
 }
 
-void AsmZ8::encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) {
+void AsmZ8::encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const {
     if (mode == M_IM && overflowUint8(op.val16))
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     auto val16 = op.val16;
     if (insn.opCode() == TableZ8::SRP) {
         const auto postFormat = insn.postFormat();
         if (postFormat == PF_NONE) {  // Z8
             if ((val16 & ~0xF0) != 0)
-                setErrorIf(op, OPERAND_NOT_ALLOWED);
+                insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         } else {                                              // Z88
             if (postFormat == PF2_0 && (val16 & ~0xF0) != 0)  // SRP
-                setErrorIf(op, OPERAND_NOT_ALLOWED);
+                insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
             if (postFormat == PF2_1 && (val16 & ~0xF8) != 0)  // SRP1
-                setErrorIf(op, OPERAND_NOT_ALLOWED);
+                insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
             if (postFormat == PF2_2 && (val16 & ~0xF8) != 0)  // SRP0
-                setErrorIf(op, OPERAND_NOT_ALLOWED);
+                insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
             val16 &= ~3;
         }
     }
     if (mode == M_IMb) {
         if (overflowUint(val16, 3))
-            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+            insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         val16 <<= 1;
     }
     insn.emitOperand(val16, pos);
 }
 
-void AsmZ8::encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) {
+void AsmZ8::encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_IM:
     case M_IMb:
@@ -387,35 +378,30 @@ void AsmZ8::encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operan
 
 Error AsmZ8::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dstOp, srcOp, extOp;
-    if (parseOperand(scan, dstOp) && dstOp.hasError())
-        return setError(dstOp);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp) && srcOp.hasError())
-            return setError(srcOp);
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, extOp) && extOp.hasError())
-            return setError(extOp);
+        if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
+            return setError(insn.extOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(dstOp);
-    setErrorIf(srcOp);
-    setErrorIf(extOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode, extOp.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dstOp, error);
+        return setError(insn.dstOp, error);
 
-    encodeOperand(insn, insn.dst(), insn.dstPos(), dstOp);
-    encodeOperand(insn, insn.src(), insn.srcPos(), srcOp);
-    encodeOperand(insn, insn.ext(), insn.extPos(), extOp);
+    encodeOperand(insn, insn.dst(), insn.dstPos(), insn.dstOp);
+    encodeOperand(insn, insn.src(), insn.srcPos(), insn.srcOp);
+    encodeOperand(insn, insn.ext(), insn.extPos(), insn.extOp);
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace z8

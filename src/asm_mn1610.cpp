@@ -16,7 +16,6 @@
 
 #include "asm_mn1610.h"
 
-#include "reg_mn1610.h"
 #include "table_mn1610.h"
 #include "text_common.h"
 
@@ -42,14 +41,6 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-struct AsmMn1610::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    CcName cc;
-    uint32_t val32;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
-};
-
 const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return _number; }
@@ -69,16 +60,16 @@ AsmMn1610::AsmMn1610(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmMn1610::encodeIcRelative(AsmInsn &insn, const Operand &op) {
-    const auto delta = branchDelta(insn.address(), op.val32, op);
+void AsmMn1610::encodeIcRelative(AsmInsn &insn, const Operand &op) const {
+    const auto delta = branchDelta(insn.address(), op.val32, insn, op);
     if (overflowInt8(delta))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     const Config::opcode_t mode = (op.mode == M_IABS) ? 3 : 1;
     insn.embed(mode << 11);
     insn.embed(static_cast<uint8_t>(delta));
 }
 
-void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) {
+void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) const {
     switch (op.mode) {
     case M_IABS:
         if (op.val32 < 0x100) {  // Zero-page indirect: (D)
@@ -97,9 +88,9 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) {
     case M_IDIX:
         if (isIndex(op.reg)) {
             if (op.mode == M_IXID)
-                setErrorIf(op, REGISTER_NOT_ALLOWED);
+                insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             if (op.val32 >= 0x100)
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
             // Direct index: D(Xj), Indirect index: (D)(Xj)
             insn.embed(static_cast<uint8_t>(op.val32));
             const Config::opcode_t mode = (op.mode == M_IDIX ? 2 : 0) | encodeIndex(op.reg);
@@ -108,15 +99,15 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) {
         }
         if (op.reg == REG_IC) {
             if (op.mode == M_IDIX)
-                setErrorIf(op, REGISTER_NOT_ALLOWED);
+                insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             if (overflowInt8(static_cast<int32_t>(op.val32)))
-                setErrorIf(op, OPERAND_TOO_FAR);
+                insn.setErrorIf(op, OPERAND_TOO_FAR);
             // Relative: d(IC), Relative indirect: (d(IC))
             insn.embed(static_cast<uint8_t>(op.val32));
             insn.embed((op.mode == M_INDX ? 1 : 3) << 11);
             break;
         }
-        setErrorIf(op, REGISTER_NOT_ALLOWED);
+        insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         break;
     case M_IM8:
     case M_IM4:
@@ -129,26 +120,27 @@ void AsmMn1610::encodeGenericAddress(AsmInsn &insn, const Operand &op) {
     }
 }
 
-void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);
     auto val32 = op.val32;
     switch (mode) {
     case M_RDG:
         if (op.reg == REG_STR)
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RD:
         insn.embed(encodeGeneric(op.reg) << 8);
         break;
     case M_RSG:
         if (op.reg == REG_STR)
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_RS:
         insn.embed(encodeGeneric(op.reg));
         break;
     case M_RBW:
         if (op.reg == REG_CSBR)
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         // Fall-Through
     case M_SB:
     case M_RB:
@@ -157,7 +149,7 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
     case M_RHR:
     case M_RHW:
         if ((mode == M_RHR && op.reg == REG_SOR) || (mode == M_RHW && op.reg == REG_SIR))
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         insn.embed(encodeHardware(op.reg) << 4);
         break;
     case M_RP:
@@ -182,45 +174,45 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
             break;
         }
         if (op.val32 >= 2)
-            setErrorIf(op, ILLEGAL_CONSTANT);
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
         insn.embed((op.val32 & 1) << 3);
         break;
     case M_IM8W:
     case M_IM16:
         if (overflowUint16(op.val32))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         // Fall-through
     case M_IABS:
         insn.emitOperand16(op.val32);
         break;
     case M_BIT:
         if (op.val32 >= 16)
-            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+            insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed(static_cast<uint8_t>(op.val32 & 0x0F));
         break;
     case M_ILVL:
         if (val32 >= 4) {
-            setErrorIf(op, ILLEGAL_CONSTANT);
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
             val32 &= 3;
         }
         // Fall-through
     case M_IM4:
         if (val32 >= 16) {
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
             val32 &= 0xF;
         }
         // Fall-through
     case M_IM8:
     case M_IOA:
         if (overflowUint8(val32))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(static_cast<uint8_t>(val32));
         break;
     case M_ABS: {
         // TODO: calculate/check segment/offset
         const auto err = checkAddr(op.val32);
         if (err)
-            setErrorIf(op, err);
+            insn.setErrorIf(op, err);
         insn.emitOperand16(op.val32);
         break;
     }
@@ -357,42 +349,36 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand op1, op2, op3, op4;
-    if (parseOperand(scan, op1) && op1.hasError())
-        return setError(op1);
+    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+        return setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2) && op2.hasError())
-            return setError(op2);
+        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+            return setError(insn.op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op3) && op3.hasError())
-            return setError(op3);
+        if (parseOperand(scan, insn.op3) && insn.op3.hasError())
+            return setError(insn.op3);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op4) && op4.hasError())
-            return setError(op4);
+        if (parseOperand(scan, insn.op4) && insn.op4.hasError())
+            return setError(insn.op4);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(op1);
-    setErrorIf(op2);
-    setErrorIf(op3);
-    setErrorIf(op4);
 
-    insn.setAddrMode(op1.mode, op2.mode, op3.mode, op4.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(op1, error);
+        return setError(insn.op1, error);
 
-    encodeOperand(insn, op1, insn.mode1());
-    encodeOperand(insn, op2, insn.mode2());
-    encodeOperand(insn, op3, insn.mode3());
-    encodeOperand(insn, op4, insn.mode4());
+    encodeOperand(insn, insn.op1, insn.mode1());
+    encodeOperand(insn, insn.op2, insn.mode2());
+    encodeOperand(insn, insn.op3, insn.mode3());
+    encodeOperand(insn, insn.op4, insn.mode4());
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace mn1610

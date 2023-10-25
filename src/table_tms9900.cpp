@@ -269,9 +269,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto flags = insn.flags();
-    auto table = entry->flags();
-    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst());
+    const auto table = entry->flags();
+    return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst());
 }
 
 Error TableTms9900::searchName(CpuType cpuType, AsmInsn &insn) const {

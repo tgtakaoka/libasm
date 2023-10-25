@@ -20,6 +20,7 @@
 #include "config_mn1610.h"
 #include "entry_mn1610.h"
 #include "insn_base.h"
+#include "reg_mn1610.h"
 
 namespace libasm {
 namespace mn1610 {
@@ -29,13 +30,21 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
     AddrMode mode4() const { return flags().mode4(); }
-    void setAddrMode(AddrMode opr1, AddrMode opr2, AddrMode opr3, AddrMode opr4) {
-        setFlags(Entry::Flags::create(opr1, opr2, opr3, opr4));
-    }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    uint32_t val32;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand op1, op2, op3, op4;
+
     void emitInsn() { emitUint16(opCode(), 0); }
     void emitOperand16(uint16_t val) { emitUint16(val, sizeof(Config::opcode_t)); }
 };

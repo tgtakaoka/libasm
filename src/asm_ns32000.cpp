@@ -91,24 +91,6 @@ struct Ns32000LetterParser final : LetterParser {
 
 }  // namespace
 
-struct AsmNs32000::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    uint32_t val32;
-    uint32_t disp2;
-    double float64;
-    RegName index;
-    OprSize size;
-    Operand()
-        : mode(M_NONE),
-          reg(REG_UNDEF),
-          val32(0),
-          disp2(0),
-          float64(0),
-          index(REG_UNDEF),
-          size(SZ_NONE) {}
-};
-
 const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return _number; }
@@ -228,7 +210,7 @@ Error AsmNs32000::parseRegisterList(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
+Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
     if (endOfLine(p))
@@ -412,7 +394,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) {
     return op.setErrorIf(x, UNKNOWN_OPERAND);
 }
 
-Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) {
+Error AsmNs32000::parseOperand(StrScanner &scan, Operand &op) const {
     if (parseBaseOperand(scan, op))
         return op.getError();
     if (op.mode == M_GREG || op.mode == M_RREL || op.mode == M_MREL || op.mode == M_ABS ||
@@ -489,9 +471,10 @@ void embedOprField(AsmInsn &insn, OprPos pos, uint8_t opr) {
 
 }  // namespace
 
-void AsmNs32000::emitDisplacement(AsmInsn &insn, const Operand &op, int32_t val32, Error error) {
+void AsmNs32000::emitDisplacement(
+        AsmInsn &insn, const Operand &op, int32_t val32, Error error) const {
     if (overflowInt(val32, 30) || val32 < -0x1F000000L) {
-        setErrorIf(op, error);
+        insn.setErrorIf(op, error);
         val32 = val32 < 0 ? -0x1F000000 : 0x1FFFFFFF;
     }
     if (overflowInt(val32, 14)) {
@@ -503,29 +486,29 @@ void AsmNs32000::emitDisplacement(AsmInsn &insn, const Operand &op, int32_t val3
     }
 }
 
-void AsmNs32000::emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmNs32000::emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     uint8_t len = op.getError() ? 0 : op.val32;
     if (op.isOK()) {
         const auto val = static_cast<int32_t>(op.val32);
         if (val <= 0)
-            setErrorIf(op, ILLEGAL_CONSTANT);
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
         if (val > 16)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         if (mode == M_LEN4) {
             if (len > 4)
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
             len *= 4;
         }
         if (mode == M_LEN8) {
             if (len > 8)
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
             len *= 2;
         }
         if (mode == M_LEN16) {
             if (len > 16)
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
         }
     }
@@ -533,21 +516,21 @@ void AsmNs32000::emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) {
 }
 
 void AsmNs32000::emitBitField(
-        AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) {
+        AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) const {
     if (mode == M_BFOFF)
         return;
     if (off.val32 >= 8)
-        setErrorIf(off, ILLEGAL_BIT_NUMBER);
+        insn.setErrorIf(off, ILLEGAL_BIT_NUMBER);
     if (len.isOK() && len.val32 == 0)
-        setErrorIf(len, ILLEGAL_CONSTANT);
+        insn.setErrorIf(len, ILLEGAL_CONSTANT);
     if (len.val32 > 32)
-        setErrorIf(len, OVERFLOW_RANGE);
+        insn.setErrorIf(len, OVERFLOW_RANGE);
     const auto length = len.getError() ? 0 : len.val32 - 1;
     const auto data = (static_cast<uint8_t>(off.val32) << 5) | (length & 0x1F);
     insn.emitOperand8(data);
 }
 
-void AsmNs32000::emitImmediate(AsmInsn &insn, const Operand &op, OprSize size) {
+void AsmNs32000::emitImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {
     switch (size) {
     case SZ_BYTE:
         insn.emitOperand8(op.val32);
@@ -615,14 +598,14 @@ void AsmNs32000::emitIndexByte(AsmInsn &insn, const Operand &op) const {
     insn.emitOperand8(indexByte);
 }
 
-void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) {
+void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const {
     const auto field = (op.index == REG_UNDEF) ? encodeGenericField(op.mode, op.reg)
                                                : encodeScaledIndex(op.size);
     embedOprField(insn, pos, field);
     switch (op.mode) {
     case M_ABS: {
         if (checkAddr(op.val32))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         // Sign extends 24 bit address into 32 bit.
         const auto val32 = signExtend(op.val32, addressWidth());
         emitDisplacement(insn, op, val32);
@@ -652,20 +635,20 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
     }
 }
 
-void AsmNs32000::emitRelative(AsmInsn &insn, const Operand &op) {
+void AsmNs32000::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address();
     const auto target = op.getError() ? base : op.val32;
     const auto err = checkAddr(target);
     if (err)
-        setErrorIf(op, err);
+        insn.setErrorIf(op, err);
     const auto delta = static_cast<int32_t>(target - base);
     if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     emitDisplacement(insn, op, delta, OPERAND_TOO_FAR);
 }
 
 void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const Operand &op,
-        OprPos pos, const Operand &prevOp) {
+        OprPos pos, const Operand &prevOp) const {
     constexpr uint8_t SAVE = 0x62;
     constexpr uint8_t RESTORE = 0x72;
     switch (mode) {
@@ -680,7 +663,7 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
         break;
     case M_RLST:
         if (op.val32 == 0 && (insn.opCode() == SAVE || insn.opCode() == RESTORE))
-            setErrorIf(op, OPCODE_HAS_NO_EFFECT);
+            insn.setErrorIf(op, OPCODE_HAS_NO_EFFECT);
         if (size == SZ_NONE) {  // PUSH
             insn.emitOperand8(op.val32);
         } else {  // POP
@@ -690,12 +673,12 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
     case M_FENR:
     case M_FENW:
         if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) && !isRegPair(op.reg))
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         goto emit_generic;
     case M_GENR:
     case M_GENW:
         if (op.mode == M_GREG && size == SZ_QUAD && !isRegPair(op.reg))
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         goto emit_generic;
     case M_GENC:
     case M_GENA:
@@ -705,7 +688,7 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
     case M_INT4: {
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val < -8 || val >= 8)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         embedOprField(insn, pos, op.val32);
         break;
     }
@@ -719,11 +702,11 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
     case M_LEN32: {
         const int32_t val = static_cast<int32_t>(op.val32);
         if (val < 0)
-            setErrorIf(op, ILLEGAL_CONSTANT);
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
         if (op.isOK() && val == 0)
-            setErrorIf(op, ILLEGAL_CONSTANT);
+            insn.setErrorIf(op, ILLEGAL_CONSTANT);
         if (val > 32)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         emitDisplacement(insn, op, val);
         break;
     }
@@ -763,52 +746,50 @@ Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand srcOp, dstOp, ex1Op, ex2Op;
-    if (parseOperand(scan, srcOp) && srcOp.hasError())
-        return setError(srcOp);
+    if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+        return setError(insn.srcOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, dstOp) && dstOp.hasError())
-            return setError(dstOp);
+        if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+            return setError(insn.dstOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, ex1Op) && ex1Op.hasError())
-            return setError(ex1Op);
+        if (parseOperand(scan, insn.ex1Op) && insn.ex1Op.hasError())
+            return setError(insn.ex1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, ex2Op) && ex2Op.hasError())
-            return setError(ex2Op);
+        if (parseOperand(scan, insn.ex2Op) && insn.ex2Op.hasError())
+            return setError(insn.ex2Op);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(srcOp);
-    setErrorIf(dstOp);
-    setErrorIf(ex1Op);
-    setErrorIf(ex2Op);
 
-    insn.setAddrMode(srcOp.mode, dstOp.mode, ex1Op.mode, ex2Op.mode);
     const auto error = TABLE.searchName(_cpuSpec, insn);
     if (error)
-        return setError(srcOp, error);
+        return setError(insn.srcOp, error);
 
+    insn.setErrorIf(insn.srcOp);
+    insn.setErrorIf(insn.dstOp);
+    insn.setErrorIf(insn.ex1Op);
+    insn.setErrorIf(insn.ex2Op);
+    emitIndexByte(insn, insn.srcOp);
+    emitIndexByte(insn, insn.dstOp);
+    emitIndexByte(insn, insn.ex1Op);
     const AddrMode src = insn.src();
     const AddrMode dst = insn.dst();
     const AddrMode ex1 = insn.ex1();
     const AddrMode ex2 = insn.ex2();
-    emitIndexByte(insn, srcOp);
-    emitIndexByte(insn, dstOp);
-    emitIndexByte(insn, ex1Op);
     const OprSize size = insn.size();
     const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
-    emitOperand(insn, src, srcSize, srcOp, insn.srcPos(), srcOp);
+    emitOperand(insn, src, srcSize, insn.srcOp, insn.srcPos(), insn.srcOp);
     const OprSize dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
-    emitOperand(insn, dst, dstSize, dstOp, insn.dstPos(), srcOp);
-    emitOperand(insn, ex1, size, ex1Op, insn.ex1Pos(), dstOp);
-    emitOperand(insn, ex2, size, ex2Op, insn.ex2Pos(), ex1Op);
+    emitOperand(insn, dst, dstSize, insn.dstOp, insn.dstPos(), insn.srcOp);
+    emitOperand(insn, ex1, size, insn.ex1Op, insn.ex1Pos(), insn.dstOp);
+    emitOperand(insn, ex2, size, insn.ex2Op, insn.ex2Pos(), insn.ex1Op);
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace ns32000

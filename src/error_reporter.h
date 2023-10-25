@@ -173,6 +173,7 @@ struct ErrorAt : ErrorReporter {
     void setAt(const char *at) { _at = at; }
     void setAt(const StrScanner &at) { _at = at.str(); }
     void setAt(const StrBuffer &at);
+    void setAt(const ErrorAt &at) { _at = at.errorAt(); }
     constexpr const char *errorAt() const { return _at; }
 
 private:

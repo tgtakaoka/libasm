@@ -20,6 +20,7 @@
 #include "config_mc6809.h"
 #include "entry_mc6809.h"
 #include "insn_base.h"
+#include "reg_mc6809.h"
 
 namespace libasm {
 namespace mc6809 {
@@ -27,11 +28,30 @@ namespace mc6809 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
-    void setAddrMode(AddrMode opr1, AddrMode opr2) { setFlags(Entry::Flags::create(opr1, opr2)); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName index;
+    RegName base;
+    bool indir;
+    int8_t extra;
+    uint32_t val32;
+    StrScanner list;
+    Operand()
+        : mode(M_NONE),
+          index(REG_UNDEF),
+          base(REG_UNDEF),
+          indir(false),
+          extra(0),
+          val32(0),
+          list() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand op1, op2;
 
     void emitInsn() {
         uint8_t pos = 0;

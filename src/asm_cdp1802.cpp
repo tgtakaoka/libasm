@@ -55,12 +55,6 @@ struct Cdp1802FunctionTable final : FunctionTable {
 
 }  // namespace
 
-struct AsmCdp1802::Operand final : ErrorAt {
-    AddrMode mode;
-    uint16_t val16;
-    Operand() : mode(M_NONE), val16(0) {}
-};
-
 const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return RcaNumberParser::singleton(); }
@@ -146,12 +140,12 @@ const Functor *Cdp1802FunctionTable::lookupFunction(const StrScanner &name) cons
 
 }  // namespace
 
-void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const Config::uintptr_t base = insn.address() + 2;
     const Config::uintptr_t target = op.getError() ? base : op.val16;
     if (mode == M_PAGE) {
         if (page(target) != page(base))
-            setErrorIf(op, OVERWRAP_PAGE);
+            insn.setErrorIf(op, OVERWRAP_PAGE);
         insn.emitInsn();
         insn.emitByte(target);
         return;
@@ -167,14 +161,15 @@ void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) {
     insn.emitUint16(op.val16);
 }
 
-void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
     auto val16 = op.val16;
     switch (mode) {
     case M_REG1:
         if (op.getError())
             val16 = 7;  // default work register.
         if (val16 == 0) {
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             val16 = 7;
         }
         /* Fall-through */
@@ -182,7 +177,7 @@ void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
         if (op.getError())
             val16 = 7;  // default work register.
         if (val16 >= 16) {
-            setErrorIf(op, ILLEGAL_REGISTER);
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
             val16 = 7;
         }
         insn.embed(val16);
@@ -190,7 +185,7 @@ void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
         break;
     case M_IMM8:
         if (overflowUint8(val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn();
         insn.emitByte(val16);
         break;
@@ -202,7 +197,7 @@ void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
         if (op.getError())
             val16 = 1;  // default IO address
         if (val16 == 0 || val16 >= 8) {
-            setErrorIf(op, OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
             val16 = 1;
         }
         insn.embed(val16);
@@ -230,38 +225,33 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
         }
     }
     op.val16 = parseExpr(p, op).getUnsigned();
-    if (op.hasError())
-        return op.getError();
-    op.mode = M_ADDR;
-    scan = p;
-    return OK;
+    if (!op.hasError()) {
+        op.mode = M_ADDR;
+        scan = p;
+    }
+    return op.getError();
 }
 
 Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand op1, op2;
-    if (parseOperand(scan, op1) && op1.hasError())
-        return setError(op1);
-    const auto op1p(scan);
+    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+        return setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2) && op2.hasError())
-            return setError(op2);
+        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+            return setError(insn.op2);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(op1);
-    setErrorIf(op2);
 
-    insn.setAddrMode(op1.mode, op2.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(op1, error);
+        return setError(insn.op1, insn);
 
-    emitOperand(insn, insn.mode1(), op1);
+    emitOperand(insn, insn.mode1(), insn.op1);
     if (insn.mode2() == M_ADDR)
-        insn.emitUint16(op2.val16);
-    return setErrorIf(insn);
+        insn.emitUint16(insn.op2.val16);
+    return setError(insn);
 }
 
 }  // namespace cdp1802

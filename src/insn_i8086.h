@@ -20,6 +20,7 @@
 #include "config_i8086.h"
 #include "entry_i8086.h"
 #include "insn_base.h"
+#include "reg_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -35,9 +36,6 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInst() const { return flags().stringInst(); }
-    void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        setFlags(Entry::Flags::create(dst, src, ext, P_NONE, P_NONE, P_NONE, SZ_NONE));
-    }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
@@ -46,8 +44,34 @@ protected:
     Config::opcode_t _segment;
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName ptr;
+    RegName seg;
+    RegName reg;
+    RegName index;
+    bool hasVal;
+    uint32_t val32;
+    uint16_t seg16;
+    Operand()
+        : mode(M_NONE),
+          ptr(REG_UNDEF),
+          seg(REG_UNDEF),
+          reg(REG_UNDEF),
+          index(REG_UNDEF),
+          hasVal(false),
+          val32(0),
+          seg16(0) {}
+    uint8_t encodeMod() const;
+    uint8_t encodeR_m() const;
+    AddrMode immediateMode() const;
+    void print(const char *) const;
+};
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn), _modReg(0), _hasModReg(false) {}
+
+    Operand dstOp, srcOp, extOp;
 
     void embedModReg(Config::opcode_t data) {
         _modReg |= data;

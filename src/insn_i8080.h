@@ -20,6 +20,7 @@
 #include "config_i8080.h"
 #include "entry_i8080.h"
 #include "insn_base.h"
+#include "reg_i8080.h"
 
 namespace libasm {
 namespace i8080 {
@@ -30,8 +31,17 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
+};
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, srcOp;
 
     void emitInsn() {
         uint8_t pos = 0;

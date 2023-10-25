@@ -39,11 +39,10 @@ private:
     bool _useReg;
     bool _smartBranch;
 
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void encodePage(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

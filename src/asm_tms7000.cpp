@@ -42,12 +42,6 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-struct AsmTms7000::Operand final : ErrorAt {
-    AddrMode mode;
-    uint16_t val16;
-    Operand() : mode(M_NONE), val16(0) {}
-};
-
 const ValueParser::Plugins &AsmTms7000::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return TexasNumberParser::singleton(); }
@@ -185,17 +179,18 @@ Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmTms7000::emitRelative(AsmInsn &insn, const Operand &op) {
+void AsmTms7000::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len + 1 : 2);
     const auto target = op.getError() ? base : op.val16;
-    const auto delta = branchDelta(base, target, op);
+    const auto delta = branchDelta(base, target, insn, op);
     if (overflowInt8(delta))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
-void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_RN:
     case M_PN:
@@ -213,9 +208,11 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         insn.emitOperand16(op.val16);
         break;
     case M_TRAP:
-        if (op.val16 >= 24)
-            setError(op, OVERFLOW_RANGE);
-        insn.setOpCode(insn.opCode() + 23 - op.val16);
+        if (op.val16 >= 24) {
+            insn.setError(op, OVERFLOW_RANGE);
+        } else {
+            insn.setOpCode(insn.opCode() + 23 - op.val16);
+        }
         break;
     default:
         break;
@@ -224,36 +221,30 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 
 Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand src, dst, ext;
-    if (parseOperand(scan, src) && src.hasError())
-        return setError(src);
+    if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+        return setError(insn.srcOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, dst) && dst.hasError())
-            return setError(dst);
+        if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+            return setError(insn.dstOp);
         scan.skipSpaces();
     }
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, ext) && ext.hasError())
-            return setError(ext);
+    if (scan.expect(',')) {
+        if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
+            return setError(insn.extOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(src);
-    setErrorIf(dst);
-    setErrorIf(ext);
 
-    insn.setAddrMode(src.mode, dst.mode, ext.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(src, error);
+        return setError(insn.srcOp, error);
 
-    encodeOperand(insn, src, insn.src());
-    encodeOperand(insn, dst, insn.dst());
-    encodeOperand(insn, ext, insn.ext());
-    if (!hasError())
-        insn.emitInsn();
-    return setErrorIf(insn);
+    encodeOperand(insn, insn.srcOp, insn.src());
+    encodeOperand(insn, insn.dstOp, insn.dst());
+    encodeOperand(insn, insn.extOp, insn.ext());
+    insn.emitInsn();
+    return setError(insn);
 }
 
 }  // namespace tms7000

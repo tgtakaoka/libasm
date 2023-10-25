@@ -945,9 +945,9 @@ static bool hasSize(AddrMode mode) {
 }
 
 static bool acceptSize(const AsmInsn &insn, const Entry *entry) {
-    auto dst = insn.dst();
-    auto src = insn.src();
-    auto flags = entry->flags();
+    const auto dst = insn.dstOp.mode;
+    const auto src = insn.srcOp.mode;
+    const auto flags = entry->flags();
     if (dst == M_MEM || dst == M_DIR) {
         if (src == M_NONE)
             return flags.size() == SZ_NONE;
@@ -959,9 +959,9 @@ static bool acceptSize(const AsmInsn &insn, const Entry *entry) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto table = entry->flags();
-    return acceptMode(insn.dst(), table.dst()) && acceptMode(insn.src(), table.src()) &&
-           acceptMode(insn.ext(), table.ext()) && acceptSize(insn, entry);
+    const auto table = entry->flags();
+    return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
+           acceptMode(insn.extOp.mode, table.ext()) && acceptSize(insn, entry);
 }
 
 Error TableI8086::searchName(CpuType cpuType, AsmInsn &insn) const {

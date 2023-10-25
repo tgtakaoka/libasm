@@ -37,7 +37,6 @@ private:
 
     bool _optimizeSegment;
 
-    struct Operand;
     Error parseStringInst(StrScanner &scan, Operand &op) const;
     Error parsePointerSize(StrScanner &scan, Operand &op) const;
     void parseSegmentOverride(StrScanner &scan, Operand &op) const;
@@ -46,15 +45,15 @@ private:
     Error parseDisplacement(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
 
-    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, uint32_t val);
-    void emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode);
-    void emitRegister(AsmInsn &insn, const Operand &op, OprPos pos);
-    Config::opcode_t encodeSegmentOverride(RegName seg, RegName base);
-    void emitModReg(AsmInsn &insn, const Operand &op, OprPos pos);
-    void emitDirect(AsmInsn &insn, const Operand &op, OprPos pos);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos);
-    void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index);
-    void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst);
+    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, uint32_t val) const;
+    void emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void emitRegister(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    Config::opcode_t encodeSegmentOverride(RegName seg, RegName base) const;
+    void emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    void emitDirect(AsmInsn &insn, const Operand &op, OprPos pos) const;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const;
+    void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index) const;
+    void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

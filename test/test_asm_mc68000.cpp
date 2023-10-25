@@ -675,7 +675,7 @@ static void test_integer() {
 
     // ADD src,Dn: 015|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("ADD.B D2,D7",              0157002);
-    ERRT("ADD.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("ADD.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0157012);
     TEST("ADD.B (A2),D7",            0157022);
     TEST("ADD.B (A2)+,D7",           0157032);
     TEST("ADD.B -(A2),D7",           0157042);
@@ -776,7 +776,7 @@ static void test_integer() {
     ERRT("ADDI.L #$3456789A,#$1234",        OPERAND_NOT_ALLOWED, "#$3456789A,#$1234");
 
     // ADDQ #nn,dst: 005|nn|Sz|M|Rn, Sz:B=0/W=1/L=2
-    ERRT("ADDQ.B #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2");
+    ERRT("ADDQ.B #0,D2",            OPERAND_NOT_ALLOWED, "#0,D2", 0050002);
     TEST("ADDQ.B #1,D2",            0051002);
     TEST("ADDQ.B #2,D2",            0052002);
     TEST("ADDQ.B #3,D2",            0053002);
@@ -787,7 +787,7 @@ static void test_integer() {
     TEST("ADDQ.B #8,D2",            0050002);
     ERRT("ADDQ.B #9,D2",            OVERFLOW_RANGE, "#9,D2",  0051002);
     ERRT("ADDQ.B #-1,D2",           OVERFLOW_RANGE, "#-1,D2", 0057002);
-    ERRT("ADDQ.B #8,A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("ADDQ.B #8,A2",            OPERAND_NOT_ALLOWED, "A2", 0050012);
     TEST("ADDQ.B #8,(A2)",          0050022);
     TEST("ADDQ.B #8,(A2)+",         0050032);
     TEST("ADDQ.B #8,-(A2)",         0050042);
@@ -873,7 +873,7 @@ static void test_integer() {
 
     // CMP src,Dn: 013|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("CMP.B D2,D7",              0137002);
-    ERRT("CMP.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("CMP.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0137012);
     TEST("CMP.B (A2),D7",            0137022);
     TEST("CMP.B (A2)+,D7",           0137032);
     TEST("CMP.B -(A2),D7",           0137042);
@@ -1118,7 +1118,7 @@ static void test_integer() {
 
     // SUB src,Dn: 011|Dn|Sz|M|Rn, Sz:B=0/W=1/L=2
     TEST("SUB.B D2,D7",              0117002);
-    ERRT("SUB.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7");
+    ERRT("SUB.B A2,D7",              OPERAND_NOT_ALLOWED, "A2,D7", 0117012);
     TEST("SUB.B (A2),D7",            0117022);
     TEST("SUB.B (A2)+,D7",           0117032);
     TEST("SUB.B -(A2),D7",           0117042);
@@ -1258,7 +1258,7 @@ static void test_integer() {
 
     // SUBQ #nn,dst: 005|nn|Sz|M\En, Sz:B=4/W=5/L=6
     TEST("SUBQ.B #8,D2",            0050402);
-    ERRT("SUBQ.B #8,A2",            OPERAND_NOT_ALLOWED, "A2");
+    ERRT("SUBQ.B #8,A2",            OPERAND_NOT_ALLOWED, "A2", 0050412);
     TEST("SUBQ.B #8,(A2)",          0050422);
     TEST("SUBQ.B #8,(A2)+",         0050432);
     TEST("SUBQ.B #8,-(A2)",         0050442);
@@ -1656,7 +1656,7 @@ static void test_shift_rotate() {
     TEST("ASL.L D2,D7", 0162647);
 
     // ASL #nn,Dy: 016|nn|Sz|0|Dy, Sz:B=4/W=5/L=6
-    ERRT("ASL.B #0,D7",  OPERAND_NOT_ALLOWED, "#0,D7");
+    ERRT("ASL.B #0,D7",  OPERAND_NOT_ALLOWED, "#0,D7", 0160407);
     TEST("ASL.B #1,D7",  0161407);
     TEST("ASL.B #2,D7",  0162407);
     TEST("ASL.W #4,D7",  0164507);

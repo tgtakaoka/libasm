@@ -20,6 +20,7 @@
 #include "config_z8.h"
 #include "entry_z8.h"
 #include "insn_base.h"
+#include "reg_z8.h"
 
 namespace libasm {
 namespace z8 {
@@ -33,13 +34,21 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     PostFormat postFormat() const { return flags().postFormat(); }
     Config::opcode_t postVal() const { return flags().postVal(); }
-    void setAddrMode(AddrMode dst, AddrMode src, AddrMode ext) {
-        setFlags(Entry::Flags::create(dst, src, ext, PF_NONE, OP_NONE, OP_NONE, OP_NONE));
-    }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    uint16_t val16;
+    StrScanner regAt;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0), regAt() {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, srcOp, extOp;
 
     void emitInsn();
     void emitOperand(uint16_t val, OprPos pos);

@@ -37,23 +37,22 @@ private:
     const TextOption<AsmNs32000> _opt_fpu;
     const TextOption<AsmNs32000> _opt_pmmu;
 
-    struct Operand;
     Error parseStrOptNames(StrScanner &scan, Operand &op, bool braket = false) const;
     Error parseConfigNames(StrScanner &scan, Operand &op) const;
     Error parseRegisterList(StrScanner &scan, Operand &op) const;
-    Error parseBaseOperand(StrScanner &scan, Operand &op);
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseBaseOperand(StrScanner &scan, Operand &op) const;
+    Error parseOperand(StrScanner &scan, Operand &op) const;
     void emitDisplacement(
-            AsmInsn &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE);
-    void emitLength(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitBitField(AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len);
-    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size);
+            AsmInsn &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE) const;
+    void emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void emitBitField(AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) const;
+    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;
     void emitIndexByte(AsmInsn &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
-    void emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos);
-    void emitRelative(AsmInsn &insn, const Operand &op);
+    void emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const;
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
     void emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const Operand &op, OprPos pos,
-            const Operand &prevOp);
+            const Operand &prevOp) const;
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;

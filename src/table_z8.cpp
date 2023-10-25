@@ -534,10 +534,9 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto flags = insn.flags();
-    auto table = entry->flags();
-    return acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src(), table.src()) &&
-           acceptMode(flags.ext(), table.ext());
+    const auto table = entry->flags();
+    return acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.srcOp.mode, table.src()) &&
+           acceptMode(insn.extOp.mode, table.ext());
 }
 
 Error TableZ8::searchName(CpuType cpuType, AsmInsn &insn) const {

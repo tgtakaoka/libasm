@@ -81,7 +81,7 @@ void test_implied() {
     TEST("TRAP 2",  0xFD);
     TEST("TRAP 1",  0xFE);
     TEST("TRAP 0",  0xFF);
-    ERRT("TRAP 24", OVERFLOW_RANGE, "24");
+    ERRT("TRAP 24", OVERFLOW_RANGE, "24", 0xE8);
 }
 
 void test_single() {

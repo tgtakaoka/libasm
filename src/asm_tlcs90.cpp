@@ -16,7 +16,6 @@
 
 #include "asm_tlcs90.h"
 
-#include "reg_tlcs90.h"
 #include "table_tlcs90.h"
 #include "text_common.h"
 
@@ -59,25 +58,26 @@ const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
     return PLUGINS;
 }
 
-void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
-    const auto delta = branchDelta(base, target, op);
+    const auto delta = branchDelta(base, target, insn, op);
     if (mode == M_REL16) {
         insn.emitUint16(delta);
     } else {
         if (overflowInt8(delta))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitByte(delta);
     }
 }
 
 void AsmTlcs90::encodeOperand(
-        AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) {
+        AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_IMM8:
         if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_DIR:
         insn.emitInsn(opc);
@@ -90,7 +90,7 @@ void AsmTlcs90::encodeOperand(
         return;
     case M_BIT:
         if (op.val16 >= 8)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | (op.val16 & 7));
         return;
     case M_REL8:
@@ -103,7 +103,7 @@ void AsmTlcs90::encodeOperand(
         return;
     case M_IDX:
         if (overflowInt8(static_cast<int16_t>(op.val16)))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | encodeIndexReg(op.reg));
         insn.emitByte(op.val16);
         return;
@@ -233,23 +233,19 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp) && dstOp.getError() != UNDEFINED_SYMBOL)
-        return setError(dstOp);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp) && srcOp.getError() != UNDEFINED_SYMBOL)
-            return setError(srcOp);
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(dstOp);
-    setErrorIf(srcOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dstOp, error);
+        return setError(insn.dstOp, error);
 
     const auto pre = insn.pre();
     const auto dst = insn.dst();
@@ -258,20 +254,20 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (prefix) {
         insn.setEmitInsn();
         if (pre == M_DST)
-            encodeOperand(insn, dst, dstOp, prefix);
+            encodeOperand(insn, dst, insn.dstOp, prefix);
         if (pre == M_SRC)
-            encodeOperand(insn, src, srcOp, prefix);
+            encodeOperand(insn, src, insn.srcOp, prefix);
         if (pre == M_NONE)
             insn.emitByte(prefix);
     }
     const auto opc = insn.opCode();
     insn.setEmitInsn();
     if (pre != M_DST)
-        encodeOperand(insn, dst, dstOp, opc);
+        encodeOperand(insn, dst, insn.dstOp, opc);
     if (pre != M_SRC)
-        encodeOperand(insn, src, srcOp, opc);
+        encodeOperand(insn, src, insn.srcOp, opc);
     insn.emitInsn(opc);
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace tlcs90

@@ -949,10 +949,9 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto flags = insn.flags();
-    auto table = entry->flags();
-    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
-           acceptMode(flags.ex1(), table.ex1()) && acceptMode(flags.ex2(), table.ex2());
+    const auto table = entry->flags();
+    return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
+           acceptMode(insn.ex1Op.mode, table.ex1()) && acceptMode(insn.ex2Op.mode, table.ex2());
 }
 
 Error TableNs32000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {

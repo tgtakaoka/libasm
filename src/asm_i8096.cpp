@@ -16,7 +16,6 @@
 
 #include "asm_i8096.h"
 
-#include "operators.h"
 #include "reg_i8096.h"
 #include "table_i8096.h"
 #include "text_common.h"
@@ -43,14 +42,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
-
-struct AsmI8096::Operand final : ErrorAt {
-    AddrMode mode;
-    uint8_t regno;
-    Error regerr;
-    uint16_t val16;
-    Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
-};
 
 const ValueParser::Plugins &AsmI8096::defaultPlugins() {
     static struct final : ValueParser::Plugins {
@@ -113,7 +104,7 @@ Error AsmI8096::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto waop = (mode == M_WAOP);
     switch (op.mode) {
     case M_IMM16:
@@ -128,7 +119,7 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
     indir:
         insn.embedAa(AA_INDIR);
         if (!isWreg(op.regno))
-            setErrorIf(op, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         insn.emitOperand8(op.regno);
         return;
     case M_IDX16:
@@ -138,7 +129,7 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
             goto absolute;
         insn.embedAa(AA_IDX);
         if (!isWreg(op.regno))
-            setErrorIf(op, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         if (op.isOK() && !overflowInt8(static_cast<int16_t>(op.val16))) {
             insn.emitOperand8(op.regno);
             insn.emitOperand8(op.val16);
@@ -150,7 +141,7 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
     default:  // M_ADDR
     absolute:
         if (waop && !isWreg(op.val16))
-            setErrorIf(op, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         if (op.isOK() && !overflowUint8(op.val16)) {
             insn.embedAa(AA_REG);
             insn.emitOperand8(op.val16);
@@ -163,49 +154,50 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) {
     }
 }
 
-void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     if (mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
         const auto target = op.getError() ? base : op.val16;
-        const auto delta = branchDelta(base, target, op);
+        const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt8(delta))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
     } else if (mode == M_REL11) {
         const auto base = insn.address() + 2;
         const auto target = op.getError() ? base : op.val16;
-        const auto delta = branchDelta(base, target, op);
+        const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt(delta, 11))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
         insn.emitOperand8(delta);
     } else {  // M_REL16
         const auto base = insn.address() + 3;
         const auto target = op.getError() ? base : op.val16;
-        const auto delta = branchDelta(base, target, op);
+        const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt16(delta))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(delta);
     }
 }
 
-void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
     auto val16 = op.val16;
     switch (mode) {
     case M_LREG:
         if (!isLreg(val16))
-            setErrorIf(op, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         // Fall-through
     case M_INDIR:
     case M_WREG:
         if (!isWreg(val16))
-            setErrorIf(op, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
         // Fall-through
     case M_COUNT:
     case M_BREG:
         if (val16 >= 0x100)
-            setErrorIf(op, ILLEGAL_REGISTER);
+            insn.setErrorIf(op, ILLEGAL_REGISTER);
         insn.emitOperand8(val16);
         return;
     case M_BAOP:
@@ -219,7 +211,7 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
         return;
     case M_BITNO:
         if (op.val16 >= 8)
-            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+            insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed(op.val16 & 7);
         return;
     default:
@@ -229,42 +221,39 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
 
 Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dst, src1, src2;
-    if (parseOperand(scan, dst) && dst.hasError())
-        return setError(dst);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, src1) && src1.hasError())
-            return setError(src1);
+        if (parseOperand(scan, insn.src1Op) && insn.src1Op.hasError())
+            return setError(insn.src1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, src2) && src2.hasError())
-            return setError(src2);
+        if (parseOperand(scan, insn.src2Op) && insn.src2Op.hasError())
+            return setError(insn.src2Op);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(dst);
-    setErrorIf(src1);
-    setErrorIf(src2);
 
-    insn.setAddrMode(dst.mode, src1.mode, src2.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dst, error);
+        return setError(insn.dstOp, error);
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (!jbx_djnz) {
-        emitOperand(insn, insn.src2(), src2);
-        emitOperand(insn, insn.src1(), src1);
+        insn.setErrorIf(insn.dstOp);
+        insn.setErrorIf(insn.src1Op);
+        emitOperand(insn, insn.src2(), insn.src2Op);
+        emitOperand(insn, insn.src1(), insn.src1Op);
     }
-    emitOperand(insn, insn.dst(), dst);
+    emitOperand(insn, insn.dst(), insn.dstOp);
     if (jbx_djnz) {
-        emitOperand(insn, insn.src1(), src1);
-        emitOperand(insn, insn.src2(), src2);
+        emitOperand(insn, insn.src1(), insn.src1Op);
+        emitOperand(insn, insn.src2(), insn.src2Op);
     }
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace i8096

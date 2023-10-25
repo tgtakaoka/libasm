@@ -16,7 +16,6 @@
 
 #include "asm_mc6809.h"
 
-#include "reg_mc6809.h"
 #include "table_mc6809.h"
 #include "text_common.h"
 
@@ -43,24 +42,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
-
-struct AsmMc6809::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName index;
-    RegName base;
-    bool indir;
-    int8_t extra;
-    uint32_t val32;
-    StrScanner list;
-    Operand()
-        : mode(M_NONE),
-          index(REG_UNDEF),
-          base(REG_UNDEF),
-          indir(false),
-          extra(0),
-          val32(0),
-          list() {}
-};
 
 const ValueParser::Plugins &AsmMc6809::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -102,14 +83,14 @@ bool AsmMc6809::onDirectPage(Config::uintptr_t addr) const {
     return static_cast<uint8_t>(addr >> 8) == _direct_page;
 }
 
-void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto length = (insn.hasPrefix() ? 1 : 0) + (mode == M_LREL ? 3 : 2);
     const auto base = insn.address() + length;
     const auto target = op.getError() ? base : op.val32;
-    const auto delta = branchDelta(base, target, op);
+    const auto delta = branchDelta(base, target, insn, op);
     if (mode == M_REL) {
         if (overflowInt8(delta))
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
     } else {
         insn.emitOperand16(delta);
@@ -128,7 +109,7 @@ Config::ptrdiff_t AsmMc6809::calculateDisplacement(const AsmInsn &insn, const Op
     return disp;
 }
 
-void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) {
+void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) const {
     PostSpec spec = {op.index, op.base, op.extra, op.indir};
     if (spec.index == REG_0)  // 0,X [0,X]
         spec.index = REG_UNDEF;
@@ -154,7 +135,7 @@ void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) {
     }
     const auto postSpec = TABLE.searchPostSpec(cpuType(), spec);
     if (postSpec < 0)
-        setErrorIf(op, UNKNOWN_OPERAND);
+        insn.setErrorIf(op, UNKNOWN_OPERAND);
     uint8_t post = postSpec;
     const auto size = spec.size;
     if (size == 5)
@@ -168,22 +149,22 @@ void AsmMc6809::encodeIndexed(AsmInsn &insn, const Operand &op) {
         insn.emitOperand16(disp);
 }
 
-void AsmMc6809::encodeRegisterPair(AsmInsn &insn, const Operand &op) {
+void AsmMc6809::encodeRegisterPair(AsmInsn &insn, const Operand &op) const {
     const auto reg1 = op.mode == M_RBIT ? op.base : op.index;
     const auto reg2 = op.mode == M_RBIT ? REG_0 : op.base;
     const auto cpu = cpuType();
     if (!isDataReg(cpu, reg1) || !isDataReg(cpu, reg2))
-        setErrorIf(op, UNKNOWN_REGISTER);
+        insn.setErrorIf(op, UNKNOWN_REGISTER);
     const auto size1 = regSize(reg1);
     const auto size2 = regSize(reg2);
     if (size1 != SZ_NONE && size2 != SZ_NONE && size1 != size2)
-        setErrorIf(op, ILLEGAL_SIZE);
+        insn.setErrorIf(op, ILLEGAL_SIZE);
     const auto post1 = encodeDataReg(reg1);
     const auto post2 = encodeDataReg(reg2);
     insn.emitOperand8((post1 << 4) | post2);
 }
 
-void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) {
+void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) const {
     if (op.mode == M_NONE || op.mode == M_IM32) {
         insn.emitOperand8(op.val32);
         return;
@@ -196,24 +177,25 @@ void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) {
         const auto r = p;
         auto reg = parseRegName(p);
         if (reg == REG_UNDEF)
-            setErrorIf(p, UNKNOWN_OPERAND);
+            insn.setErrorIf(p, UNKNOWN_OPERAND);
         const auto bit = encodeStackReg(reg, userStack);
         if (bit == 0)
-            setErrorIf(r, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(r, REGISTER_NOT_ALLOWED);
         if (post & bit)
-            setErrorIf(r, DUPLICATE_REGISTER);
+            insn.setErrorIf(r, DUPLICATE_REGISTER);
         post |= bit;
         if (endOfLine(p.skipSpaces()))
             break;
         if (!p.expect(',')) {
-            setErrorIf(p, UNKNOWN_OPERAND);
+            insn.setErrorIf(p, UNKNOWN_OPERAND);
             break;
         }
     }
     insn.emitOperand8(post);
 }
 
-void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_REL:
     case M_LREL:
@@ -297,15 +279,15 @@ char AsmMc6809::transferMemoryMode(Operand &op) const {
     return 0;
 }
 
-void AsmMc6809::encodeTransferMemory(AsmInsn &insn, Operand &op1, Operand &op2) {
+void AsmMc6809::encodeTransferMemory(AsmInsn &insn, Operand &op1, Operand &op2) const {
     const auto src = transferMemoryMode(op1);
     const auto dst = transferMemoryMode(op2);
-    setErrorIf(op1);
-    setErrorIf(op2);
+    insn.setErrorIf(op1);
+    insn.setErrorIf(op2);
     auto mode = encodeTfmMode(src, dst);
     if (mode < 0) {
         mode = 0;
-        setErrorIf(op1, UNKNOWN_OPERAND);
+        insn.setErrorIf(op1, UNKNOWN_OPERAND);
     }
     insn.embed(mode);
 
@@ -555,33 +537,29 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (error)
         return setError(error);
 
-    Operand op1, op2;
-    if (parseOperand(scan, op1, insn.mode1()) && op1.hasError())
-        return setError(op1);
+    if (parseOperand(scan, insn.op1, insn.mode1()) && insn.op1.hasError())
+        return setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2, insn.mode2()) && op2.hasError())
-            return setError(op2);
+        if (parseOperand(scan, insn.op2, insn.mode2()) && insn.op2.hasError())
+            return setError(insn.op2);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(op1);
-    setErrorIf(op2);
 
-    insn.setAddrMode(op1.mode, op2.mode);
     error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(op1, error);
+        return setError(insn.op1, error);
 
     const auto mode1 = insn.mode1();
     if (mode1 == M_RTFM) {
-        encodeTransferMemory(insn, op1, op2);
+        encodeTransferMemory(insn, insn.op1, insn.op2);
     } else {
-        encodeOperand(insn, op1, mode1);
-        encodeOperand(insn, op2, insn.mode2());
+        encodeOperand(insn, insn.op1, mode1);
+        encodeOperand(insn, insn.op2, insn.mode2());
     }
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace mc6809

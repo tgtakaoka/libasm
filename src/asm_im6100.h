@@ -30,20 +30,19 @@ struct AsmIm6100 final : Assembler, Config {
     void reset() override;
 
 private:
-    Error parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn);
-    Error parseIoTransferOperand(StrScanner &scan, AsmInsn &insn);
-    Error parseField(StrScanner &scan, AsmInsn &insn);
-    Error parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn);
-    Error parseOperateOperand(StrScanner &scan, AsmInsn &insn);
-
-    Error encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done);
-
     Error setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra);
     Error defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra = 0);
     Error defineField(StrScanner &scan, Insn &insn, uint8_t extra = 0);
-    Error processPseudo(StrScanner &scan, Insn &insn) override;
 
+    Error parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const;
+    Error parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const;
+    Error parseField(StrScanner &scan, AsmInsn &insn) const;
+    Error parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const;
+    Error parseOperateOperand(StrScanner &scan, AsmInsn &insn) const;
+    Error encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) const;
+
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

@@ -28,12 +28,11 @@ struct AsmMc6800 final : Assembler, Config {
     AsmMc6800(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    void emitRelative(AsmInsn &insn, const Operand &op);
-    void emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitBitNumber(AsmInsn &insn, const Operand &op);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
+    void emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void emitBitNumber(AsmInsn &insn, const Operand &op) const;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

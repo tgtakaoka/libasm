@@ -289,10 +289,9 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto flags = insn.flags();
-    auto table = entry->flags();
-    if (acceptMode(flags.dst(), table.dst()) && acceptMode(flags.src1(), table.src1()) &&
-            acceptMode(flags.src2(), table.src2())) {
+    const auto table = entry->flags();
+    if (acceptMode(insn.dstOp.mode, table.dst()) && acceptMode(insn.src1Op.mode, table.src1()) &&
+            acceptMode(insn.src2Op.mode, table.src2())) {
         if (table.undefined())
             insn.setErrorIf(OPERAND_NOT_ALLOWED);
         return true;

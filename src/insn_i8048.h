@@ -20,6 +20,7 @@
 #include "config_i8048.h"
 #include "entry_i8048.h"
 #include "insn_base.h"
+#include "reg_i8048.h"
 
 namespace libasm {
 namespace i8048 {
@@ -27,11 +28,19 @@ namespace i8048 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
-    void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, srcOp;
 
     void emitOperand8(uint8_t val) { emitByte(val, 1); }
     void emitInsn() { emitByte(opCode(), 0); }

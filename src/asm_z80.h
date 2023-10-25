@@ -28,12 +28,11 @@ struct AsmZ80 final : Assembler, Config {
     AsmZ80(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRelative(AsmInsn &insn, const Operand &op);
-    void encodeIndexedBitOp(AsmInsn &insn, const Operand &op);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other);
+    void encodeRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeIndexedBitOp(AsmInsn &insn, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

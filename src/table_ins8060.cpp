@@ -149,9 +149,8 @@ static const Cpu *cpu(CpuType cpuType) {
 }
 
 static bool acceptMode(AsmInsn &insn, const Entry *entry) {
-    auto flags = insn.flags();
-    auto opr = flags.mode();
-    auto table = entry->flags().mode();
+    const auto opr = insn.op.mode;
+    const auto table = entry->flags().mode();
     if (opr == table)
         return true;
     if (opr == M_REL8)

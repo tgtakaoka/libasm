@@ -16,7 +16,6 @@
 
 #include "asm_tms32010.h"
 
-#include "reg_tms32010.h"
 #include "table_tms32010.h"
 #include "text_common.h"
 
@@ -49,14 +48,6 @@ struct Tms32010SymbolParser final : SimpleSymbolParser {
 };
 
 }  // namespace
-
-struct AsmTms32010::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    uint16_t val16;
-    int16_t signedVal16() const { return static_cast<int16_t>(val16); }
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-};
 
 const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -100,7 +91,8 @@ AddrMode constantType(uint16_t val) {
 
 }  // namespace
 
-void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);
     static constexpr Config::opcode_t SST = 0x7C00;
     switch (mode) {
     case M_MAM:
@@ -116,9 +108,9 @@ void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
             break;
         default:
             if (op.val16 > dataMemoryLimit())
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
             if (insn.opCode() == SST && op.val16 < 0x80)
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
             insn.embed(op.val16 & 0x7F);
             break;
         }
@@ -146,12 +138,12 @@ void AsmTms32010::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode)
         break;
     case M_IM13:
         if (overflowInt(op.signedVal16(), 13))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(op.val16 & 0x1FFF);
         break;
     case M_PMA:
         if (op.val16 >= 0x1000)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val16 & 0x0FFF);
         break;
     default:
@@ -199,33 +191,28 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand op1, op2, op3;
-    if (parseOperand(scan, op1) && op1.hasError())
-        return setError(op1);
+    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+        return setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2) && op2.hasError())
-            return setError(op2);
+        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+            return setError(insn.op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op3) && op3.hasError())
-            return setError(op3);
+        if (parseOperand(scan, insn.op3) && insn.op3.hasError())
+            return setError(insn.op3);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(op1);
-    setErrorIf(op2);
-    setErrorIf(op3);
 
-    insn.setAddrMode(op1.mode, op2.mode, op3.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(op1, error);
+        return setError(insn.op1, error);
 
-    encodeOperand(insn, op1, insn.mode1());
-    encodeOperand(insn, op2, insn.mode2());
-    encodeOperand(insn, op3, insn.mode3());
+    encodeOperand(insn, insn.op1, insn.mode1());
+    encodeOperand(insn, insn.op2, insn.mode2());
+    encodeOperand(insn, insn.op3, insn.mode3());
     insn.emitInsn();
     return setErrorIf(insn);
 }

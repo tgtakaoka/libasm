@@ -28,17 +28,16 @@ struct AsmMc68000 final : Assembler, Config {
     AsmMc68000(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    Error checkAlignment(OprSize size, const Operand &op);
+    Error checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const;
 
-    void emitBriefExtension(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp);
-    void emitDisplacement(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp);
-    void emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitImmediateData(AsmInsn &insn, const Operand &op, OprSize size, uint32_t data);
-    void emitRegisterList(AsmInsn &insn, const Operand &op, bool reverse = false);
+    void emitBriefExtension(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const;
+    void emitDisplacement(AsmInsn &insn, const Operand &op, Config::ptrdiff_t disp) const;
+    void emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void emitImmediateData(AsmInsn &insn, const Operand &op, OprSize size, uint32_t data) const;
+    void emitRegisterList(AsmInsn &insn, const Operand &op, bool reverse = false) const;
     Error emitEffectiveAddr(
-            AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos);
+            AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

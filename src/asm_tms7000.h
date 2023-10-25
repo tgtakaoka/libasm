@@ -28,13 +28,12 @@ struct AsmTms7000 final : Assembler, Config {
     AsmTms7000(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     bool hasIndexB(StrScanner &scan, ErrorAt &error) const;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitImmediate(AsmInsn &insn, const Operand &op, AddrMode mode);
-    void emitRelative(AsmInsn &insn, const Operand &op);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void emitImmediate(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

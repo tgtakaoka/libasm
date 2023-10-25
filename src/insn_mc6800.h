@@ -28,13 +28,19 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }
-    void setAddrMode(const AddrMode opr1, const AddrMode opr2, const AddrMode opr3) {
-        setFlags(Entry::Flags::create(opr1, opr2, opr3));
-    }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    uint8_t size;
+    uint16_t val16;
+    Operand() : mode(M_NONE), size(0), val16(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand op1, op2, op3;
 
     void emitInsn() {
         uint8_t pos = 0;

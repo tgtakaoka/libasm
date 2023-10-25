@@ -27,11 +27,18 @@ namespace cdp1802 {
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
-    void setAddrMode(AddrMode opr1, AddrMode opr2) { setFlags(Entry::Flags::create(opr1, opr2)); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    uint16_t val16;
+    Operand() : mode(M_NONE), val16(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand op1, op2;
 
     void emitInsn() {
         if (hasPrefix())

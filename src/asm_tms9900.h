@@ -28,13 +28,12 @@ struct AsmTms9900 final : Assembler, Config {
     AsmTms9900(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRelative(AsmInsn &insn, const Operand &op);
-    void encodeCruOffset(AsmInsn &insn, const Operand &op);
-    void encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void encodeRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeCruOffset(AsmInsn &insn, const Operand &op) const;
+    void encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

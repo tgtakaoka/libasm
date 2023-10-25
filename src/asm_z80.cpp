@@ -16,7 +16,6 @@
 
 #include "asm_z80.h"
 
-#include "reg_z80.h"
 #include "table_z80.h"
 #include "text_common.h"
 
@@ -45,13 +44,6 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-struct AsmZ80::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-};
-
 const ValueParser::Plugins &AsmZ80::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
@@ -66,12 +58,12 @@ AsmZ80::AsmZ80(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) {
+void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
-    const auto delta = branchDelta(base, target, op);
+    const auto delta = branchDelta(base, target, insn, op);
     if (overflowInt8(delta))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
@@ -80,7 +72,7 @@ static void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
     insn.setOpCode(insn.opCode(), prefix);
 }
 
-void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) {
+void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) const {
     const auto opc = insn.opCode();  // Bit opcode.
     insn.setOpCode(insn.prefix());   // Make 0xCB prefix as opcode.
     encodeIndexReg(insn, op.reg);    // Add 0xDD/0xFD prefix
@@ -89,92 +81,96 @@ void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) {
     insn.emitInsn();
 }
 
-void AsmZ80::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) {
+void AsmZ80::encodeOperand(
+        AsmInsn &insn, const Operand &op, AddrMode mode, const Operand &other) const {
+    insn.setErrorIf(op);
     auto val16 = op.val16;
     switch (mode) {
     case M_IM8:
         if (overflowUint8(val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
-        return;
+        break;
     case M_IOA:
         if (val16 >= 0x100)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(val16);
-        return;
+        break;
     case M_IDX:
         if (overflowInt8(static_cast<int16_t>(val16)))
-            setErrorIf(op, OVERFLOW_RANGE);
-        if (insn.indexBit())
-            return encodeIndexedBitOp(insn, op);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (insn.indexBit()) {
+            encodeIndexedBitOp(insn, op);
+            break;
+        }
         insn.emitOperand8(val16);
         /* Fall-through */
     case R_IDX:
     case I_IDX:
         encodeIndexReg(insn, op.reg);
-        return;
+        break;
     case M_IM16:
     case M_ABS:
         insn.emitOperand16(val16);
-        return;
+        break;
     case M_REL:
         return encodeRelative(insn, op);
     case M_CC4:
     case M_CC8:
         insn.embed(static_cast<uint8_t>(val16) << 3);
-        return;
+        break;
     case M_R16:
     case M_NOHL:
         insn.embed(encodePointerReg(op.reg) << 4);
-        return;
+        break;
     case M_R16X:
         insn.embed(encodePointerRegIx(op.reg, other.reg) << 4);
-        return;
+        break;
     case M_STK:
         insn.embed(encodeStackReg(op.reg) << 4);
-        return;
+        break;
     case I_PTR:
         insn.embed(encodeIndirectBase(op.reg) << 4);
-        return;
+        break;
     case M_SRC:
     case M_SR8:
         insn.embed(encodeDataReg(op.reg));
-        return;
+        break;
     case M_DST:
     case M_DR8:
         insn.embed(encodeDataReg(op.reg) << 3);
-        return;
+        break;
     case R_R:
         insn.embed(0x08);  // no need for R_I
-        return;
+        break;
     case M_VEC:
         if ((val16 & ~0x38) != 0) {
             val16 &= ~0x38;
-            setErrorIf(op, ILLEGAL_OPERAND);
+            insn.setErrorIf(op, ILLEGAL_OPERAND);
         }
         insn.embed(val16);
-        return;
+        break;
     case M_BIT:
         if (val16 >= 8)
-            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+            insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed(static_cast<uint8_t>(val16 & 7) << 3);
-        return;
+        break;
     case M_IMMD:
         switch (val16) {
         case 0:
-            return;
+            break;
         case 1:
             insn.embed(2 << 3);
-            return;
+            break;
         case 2:
             insn.embed(3 << 3);
-            return;
+            break;
         default:
-            setErrorIf(op, ILLEGAL_OPERAND);
-            return;
+            insn.setErrorIf(op, ILLEGAL_OPERAND);
+            break;
         }
     default:
-        return;
+        break;
     }
 }
 
@@ -288,29 +284,25 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp) && dstOp.hasError())
-        return setError(dstOp);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp) && srcOp.hasError())
-            return setError(srcOp);
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp);
-    setErrorIf(srcOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dstOp, error);
+        return setError(insn.dstOp, error);
 
-    encodeOperand(insn, dstOp, insn.dst(), srcOp);
-    encodeOperand(insn, srcOp, insn.src(), dstOp);
+    encodeOperand(insn, insn.dstOp, insn.dst(), insn.srcOp);
+    encodeOperand(insn, insn.srcOp, insn.src(), insn.dstOp);
     if (!insn.indexBit())
         insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace z80

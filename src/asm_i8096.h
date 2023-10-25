@@ -28,12 +28,11 @@ struct AsmI8096 final : Assembler, Config {
     AsmI8096(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseIndirect(StrScanner &scan, Operand &opr) const;
     Error parseOperand(StrScanner &scan, Operand &opr) const;
-    void emitAop(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

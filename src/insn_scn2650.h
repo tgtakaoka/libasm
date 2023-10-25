@@ -20,6 +20,7 @@
 #include "config_scn2650.h"
 #include "entry_scn2650.h"
 #include "insn_base.h"
+#include "reg_scn2650.h"
 
 namespace libasm {
 namespace scn2650 {
@@ -32,8 +33,20 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     }
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    CcName cc;
+    bool indir;
+    char sign;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
+};
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand op1, op2;
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val) { emitByte(val, 1); }

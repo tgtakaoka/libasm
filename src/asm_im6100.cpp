@@ -152,7 +152,7 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (endOfLine(p)) {
         page++;
     } else {
-        page= parseExpr(p, *this).getUnsigned();
+        page = parseExpr(p, *this).getUnsigned();
         if (getError())
             return getError();
     }
@@ -179,14 +179,14 @@ Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) {
+Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
     const auto indir = p.iexpect('i') && p.expect(' ');
     if (!indir)
         p = scan;
 
     const auto at = p;
-    const auto addr = parseExpr(p, *this).getUnsigned();
+    const auto addr = parseExpr(p, insn).getUnsigned();
     if (hasError())
         return getError();
 
@@ -197,35 +197,34 @@ Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) {
     } else if (pageOf(insn.address()) == pageOf(addr)) {
         insn.embed(0200 | offsetOf(addr));
     } else {
-        return setError(at, OPERAND_TOO_FAR);
+        return insn.setError(at, OPERAND_TOO_FAR);
     }
     scan = p;
     return OK;
 }
 
-Error AsmIm6100::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) {
-    setAt(scan);
+Error AsmIm6100::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
-    const auto addr = parseExpr(p, *this).getUnsigned();
+    const auto addr = parseExpr(p, insn).getUnsigned();
     if (hasError())
         return getError();
     const auto pcont = p.skipSpaces();
     if (endOfLine(p))
-        return setError(p, MISSING_OPERAND);
-    const auto control = parseExpr(p, *this).getUnsigned();
+        return insn.setError(p, MISSING_OPERAND);
+    const auto control = parseExpr(p, insn).getUnsigned();
     if (hasError())
         return getError();
 
     if (overflowUint(addr, 6))
-        return setErrorIf(scan, OVERFLOW_RANGE);
+        return insn.setErrorIf(scan, OVERFLOW_RANGE);
     if (overflowUint(control, 3))
-        return setErrorIf(pcont, OVERFLOW_RANGE);
+        return insn.setErrorIf(pcont, OVERFLOW_RANGE);
     insn.embed((addr << 3) | control);
     scan = p;
     return OK;
 }
 
-Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) {
+Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) const {
     const auto bits = micro.bits();
     if (done & bits)
         return INVALID_INSTRUCTION;
@@ -237,14 +236,14 @@ Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode
     return OK;
 }
 
-Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) {
+Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
-    auto field = parseExpr(p, *this).getUnsigned();
+    auto field = parseExpr(p, insn).getUnsigned();
     if (!hasError()) {
         if (field < 8) {
             field <<= 3;
         } else if (field & ~070) {
-            setErrorIf(scan, ILLEGAL_OPERAND);
+            insn.setErrorIf(scan, ILLEGAL_OPERAND);
             field &= ~070;
         }
         insn.embed(field);
@@ -253,7 +252,7 @@ Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) {
     return getError();
 }
 
-Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) {
+Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const {
     Insn _micro{0};
     AsmInsn micro{_micro};
     Config::opcode_t done = insn.opCode() & ~insn.bits();
@@ -269,13 +268,13 @@ Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) {
             return parseField(scan, insn);
         const auto error = encodeMicro(insn, micro, done);
         if (error)
-            setErrorIf(scan, error);
+            insn.setErrorIf(scan, error);
         scan = p;
     }
-    return setError(MISSING_OPERAND);
+    return insn.setError(MISSING_OPERAND);
 }
 
-Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) {
+Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
     Insn _micro{0};
     AsmInsn micro{_micro};
     auto mode = insn.multiGroup() ? M_NONE : insn.mode();
@@ -285,11 +284,11 @@ Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) {
         const auto at = p;
         StrScanner name;
         if (_parser.readInstruction(p, name) != OK)
-            return setError(at, UNKNOWN_INSTRUCTION);
+            return insn.setError(at, UNKNOWN_INSTRUCTION);
         micro.nameBuffer().reset().text(name);
         const auto error = TABLE.searchName(cpuType(), micro);
         if (error == UNKNOWN_INSTRUCTION) {
-            setErrorIf(at, error);
+            insn.setErrorIf(at, error);
             continue;
         }
         if (mode != M_NONE) {
@@ -297,11 +296,11 @@ Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) {
             if (micro.isOK()) {
                 const auto error = encodeMicro(insn, micro, done);
                 if (error)
-                    setErrorIf(at, error);
+                    insn.setErrorIf(at, error);
             } else if (micro.getError() == OPERAND_NOT_ALLOWED) {
-                setErrorIf(at, INVALID_INSTRUCTION);
+                insn.setErrorIf(at, INVALID_INSTRUCTION);
             } else {
-                setErrorIf(at, micro.getError());
+                insn.setErrorIf(at, micro.getError());
             }
             continue;
         }
@@ -312,11 +311,11 @@ Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) {
                 mode = m;
                 const auto error = encodeMicro(insn, micro, done);
                 if (error)
-                    setErrorIf(at, error);
+                    insn.setErrorIf(at, error);
                 break;
             }
             if (m == M_GR3) {
-                setErrorIf(at, UNKNOWN_INSTRUCTION);
+                insn.setErrorIf(at, UNKNOWN_INSTRUCTION);
                 break;
             }
             m = AddrMode(m + 1);
@@ -356,10 +355,11 @@ Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) {
             parseMemExtensionOperand(scan, insn);
         }
     } else {
-        StrScanner p(errorAt());
-        const auto val12 = parseExpr(p, *this).getUnsigned();
-        if (hasError())
-            return getError();
+        insn.setOK();  // clear UNKNOWN_INSTRUCTION
+        StrScanner p{errorAt()};
+        const auto val12 = parseExpr(p, insn).getUnsigned();
+        if (insn.hasError())
+            return setError(insn);
         insn.setOpCode(val12 & 07777);
         scan = p;
     }
@@ -367,7 +367,7 @@ Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) {
         setErrorIf(scan, GARBAGE_AT_END);
 
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace im6100

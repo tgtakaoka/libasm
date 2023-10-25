@@ -39,15 +39,14 @@ private:
     bool _longAccumulator;
     bool _longIndex;
 
-    struct Operand;
     Error selectMode(char size, Operand &op, AddrMode zp, AddrMode abs, AddrMode labs) const;
     Error parseOpenIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseCloseIndirect(StrScanner &scan, Operand &op, char &indirect) const;
     Error parseOperand(StrScanner &scan, Operand &op, char &indirect) const;
 
-    void emitImmediate(AsmInsn &insn, const Operand &op, bool imm16);
-    void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitImmediate(AsmInsn &insn, const Operand &op, bool imm16) const;
+    void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error parseTableOnOff(StrScanner &scan, BoolOption<AsmMos6502>::Setter setter);
 

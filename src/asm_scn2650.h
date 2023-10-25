@@ -28,14 +28,13 @@ struct AsmScn2650 final : Assembler, Config {
     AsmScn2650(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode);
-    void emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode);
-    void emitZeroPage(AsmInsn &insn, const Operand &op);
-    void emitRelative(AsmInsn &insn, const Operand &op);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void emitZeroPage(AsmInsn &insn, const Operand &op) const;
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

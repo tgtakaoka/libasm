@@ -20,6 +20,7 @@
 #include "config_ins8070.h"
 #include "entry_ins8070.h"
 #include "insn_base.h"
+#include "reg_ins8070.h"
 
 namespace libasm {
 namespace ins8070 {
@@ -34,8 +35,18 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     }
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    bool autoIndex;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), autoIndex(false), val16(0) {}
+};
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, srcOp;
 
     void emitInsn() { emitByte(opCode(), 0); }
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }

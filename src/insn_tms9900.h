@@ -20,6 +20,7 @@
 #include "config_tms9900.h"
 #include "entry_tms9900.h"
 #include "insn_base.h"
+#include "reg_tms9900.h"
 
 namespace libasm {
 namespace tms9900 {
@@ -28,11 +29,19 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     bool byteOp() const { return flags().byteOp(); }
-    void setAddrMode(AddrMode src, AddrMode dst) { setFlags(Entry::Flags::create(src, dst)); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand srcOp, dstOp;
 
     void emitInsn() {
         emitUint16(opCode(), 0);

@@ -597,12 +597,12 @@ static void pageSetup(AsmInsn &insn, const EntryPage *page) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto table = entry->flags();
-    auto tableDst = table.dst();
-    auto tableSrc = table.src();
-    auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
-    auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
-    return acceptMode(insn.dst(), dst) && acceptMode(insn.src(), src);
+    const auto table = entry->flags();
+    const auto tableDst = table.dst();
+    const auto tableSrc = table.src();
+    const auto dst = (tableDst == M_DST) ? insn.pre() : tableDst;
+    const auto src = (tableSrc == M_SRC) ? insn.pre() : (tableSrc == M_SRC16 ? M_REG16 : tableSrc);
+    return acceptMode(insn.dstOp.mode, dst) && acceptMode(insn.srcOp.mode, src);
 }
 
 static void readCode(AsmInsn &insn, const Entry *entry, const EntryPage *page) {

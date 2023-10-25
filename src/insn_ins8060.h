@@ -20,17 +20,27 @@
 #include "config_ins8060.h"
 #include "entry_ins8060.h"
 #include "insn_base.h"
+#include "reg_ins8060.h"
 
 namespace libasm {
 namespace ins8060 {
 
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode addrMode() const { return flags().mode(); }
-    void setAddrMode(AddrMode mode) { setFlags(Entry::Flags::create(mode)); }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    RegName index;
+    uint16_t val16;
+    Operand() : mode(M_NONE), reg(REG_UNDEF), index(REG_UNDEF), val16(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand op;
 
     void emitInsn() { emitByte(opCode()); }
 };

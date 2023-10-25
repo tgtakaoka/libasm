@@ -20,6 +20,7 @@
 #include "config_ns32000.h"
 #include "entry_ns32000.h"
 #include "insn_base.h"
+#include "reg_ns32000.h"
 
 namespace libasm {
 namespace ns32000 {
@@ -34,13 +35,30 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos ex1Pos() const { return flags().ex1Pos(); }
     OprPos ex2Pos() const { return flags().ex2Pos(); }
     OprSize size() const { return flags().size(); }
-    void setAddrMode(AddrMode src, AddrMode dst, AddrMode ex1, AddrMode ex2) {
-        setFlags(Entry::Flags::create(src, dst, ex1, ex2));
-    }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    uint32_t val32;
+    uint32_t disp2;
+    double float64;
+    RegName index;
+    OprSize size;
+    Operand()
+        : mode(M_NONE),
+          reg(REG_UNDEF),
+          val32(0),
+          disp2(0),
+          float64(0),
+          index(REG_UNDEF),
+          size(SZ_NONE) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand srcOp, dstOp, ex1Op, ex2Op;
 
     void emitInsn() {
         uint8_t pos = 0;

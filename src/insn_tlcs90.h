@@ -25,6 +25,12 @@
 namespace libasm {
 namespace tlcs90 {
 
+struct EntryInsn : EntryInsnBase<Config, Entry> {
+    AddrMode dst() const { return flags().dst(); }
+    AddrMode src() const { return flags().src(); }
+    void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+};
+
 struct Operand final : ErrorAt {
     AddrMode mode;
     RegName reg;
@@ -33,14 +39,10 @@ struct Operand final : ErrorAt {
     Operand() : ErrorAt(), mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), val16(0) {}
 };
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
-    AddrMode dst() const { return flags().dst(); }
-    AddrMode src() const { return flags().src(); }
-    void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
-};
-
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, srcOp;
 
     AddrMode pre() const { return _prefixMode; }
     void setPrefixMode(AddrMode mode) { _prefixMode = mode; }

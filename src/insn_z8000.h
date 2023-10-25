@@ -20,6 +20,7 @@
 #include "config_z8000.h"
 #include "entry_z8000.h"
 #include "insn_base.h"
+#include "reg_z8000.h"
 
 namespace libasm {
 namespace z8000 {
@@ -35,9 +36,7 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     Config::opcode_t postVal() const { return flags().postVal(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprPos srcPos() const { return flags().srcPos(); }
-    void setAddrMode(AddrMode dst, AddrMode src, AddrMode ex1, AddrMode ex2) {
-        setFlags(Entry::Flags::create(dst, src, ex1, ex2));
-    }
+
     bool isThreeRegsInsn() const {
         const auto opc = opCode() >> 8;
         return opc == 0xB8 || opc == 0xBA || opc == 0xBB;
@@ -56,8 +55,20 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     }
 };
 
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;     // M_R/M_IR/M_X/M_BX/M_CTL
+    RegName base;    // M_BA/M_BX
+    CcName cc;       // M_CC/M_DA/M_X
+    uint32_t val32;  // M_IM/M_DA/M_X/M_BA/M_INTT/M_FLAG
+    Operand() : mode(M_NONE), reg(REG_UNDEF), base(REG_UNDEF), cc(CC_UNDEF), val32(0) {}
+};
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, srcOp, ex1Op, ex2Op;
+
     void emitInsn() {
         emitUint16(opCode(), 0);
         const PostFormat format = postFormat();

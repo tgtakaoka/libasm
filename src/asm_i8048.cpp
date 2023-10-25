@@ -16,8 +16,6 @@
 
 #include "asm_i8048.h"
 
-#include "operators.h"
-#include "reg_i8048.h"
 #include "table_i8048.h"
 #include "text_common.h"
 
@@ -40,13 +38,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
-
-struct AsmI8048::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-};
 
 const ValueParser::Plugins &AsmI8048::defaultPlugins() {
     static struct final : ValueParser::Plugins {
@@ -173,28 +164,29 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
         return op.setError(UNKNOWN_OPERAND);
 
     op.val16 = parseExpr16(p, op);
-    if (op.hasError())
-        return op.getError();
-    scan = p;
-    op.mode = M_AD11;
-    return OK;
+    if (!op.hasError()) {
+        scan = p;
+        op.mode = M_AD11;
+    }
+    return op.getError();
 }
 
-void AsmI8048::encodeAddress(AsmInsn &insn, const AddrMode mode, const Operand &op) {
+void AsmI8048::encodeAddress(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
     if (mode == M_AD08) {
         const Config::uintptr_t page = (insn.address() + 1) & ~0xFF;
         if ((op.val16 & ~0xFF) != page)
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(op.val16);
         return;
     }
     if (checkAddr(op.val16))
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.embed((op.val16 >> 3) & 0xE0);
     insn.emitOperand8(op.val16);
 }
 
-void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) {
+void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_IR:
     case M_IR3:
@@ -212,12 +204,12 @@ void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
     case M_IMM8:
     case M_BIT8:
         if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return;
     case M_BITN:
         if (op.val16 >= 8)
-            setErrorIf(op, ILLEGAL_BIT_NUMBER);
+            insn.setErrorIf(op, ILLEGAL_BIT_NUMBER);
         insn.embed((op.val16 & 7) << 5);
         return;
     case M_F:
@@ -236,26 +228,22 @@ void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
 
 Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp) && dstOp.hasError())
-        return setError(dstOp);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp) && srcOp.hasError())
-            return setError(srcOp);
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(dstOp);
-    setErrorIf(srcOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dstOp, error);
+        return setError(insn.dstOp, insn);
 
-    encodeOperand(insn, insn.dst(), dstOp);
-    encodeOperand(insn, insn.src(), srcOp);
+    encodeOperand(insn, insn.dst(), insn.dstOp);
+    encodeOperand(insn, insn.src(), insn.srcOp);
     insn.emitInsn();
     return setErrorIf(insn);
 }

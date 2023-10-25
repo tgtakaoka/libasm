@@ -16,7 +16,6 @@
 
 #include "asm_scn2650.h"
 
-#include "reg_scn2650.h"
 #include "table_scn2650.h"
 #include "text_common.h"
 
@@ -44,16 +43,6 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
-
-struct AsmScn2650::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    CcName cc;
-    bool indir;
-    char sign;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), cc(CC_UNDEF), indir(false), sign(0), val16(0) {}
-};
 
 const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -125,29 +114,29 @@ Error AsmScn2650::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto target = op.getError() ? insn.address() : op.val16;
     const auto error = checkAddr(target);
     if (error)
-        setErrorIf(op, error);
+        insn.setErrorIf(op, error);
     auto opr = target;
     if (op.indir)
         opr |= 0x8000;
     if (mode == M_IX15) {
         if (op.reg != REG_R3 && op.reg != REG_UNDEF)
-            setErrorIf(op, REGISTER_NOT_ALLOWED);
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         insn.embed(encodeRegName(REG_R3));
     }
     insn.emitOperand16(opr);
 }
 
-void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto target = op.getError() ? insn.address() : op.val16;
     const auto error = checkAddr(target);
     if (error)
-        setErrorIf(op, error);
+        insn.setErrorIf(op, error);
     if (page(target) != page(insn.address()))
-        setErrorIf(op, OVERWRAP_PAGE);
+        insn.setErrorIf(op, OVERWRAP_PAGE);
     auto opr = offset(target);
     if (op.indir)
         opr |= 0x8000;
@@ -168,36 +157,37 @@ void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) {
     insn.emitOperand16(opr);
 }
 
-void AsmScn2650::emitZeroPage(AsmInsn &insn, const Operand &op) {
+void AsmScn2650::emitZeroPage(AsmInsn &insn, const Operand &op) const {
     const auto target = op.val16;
     if (page(target) != 0)
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     // Sign extends 13-bit number
     const auto offset = signExtend(target, 13);
     if (overflowInt(offset, 7))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = target & 0x7F;
     if (op.indir)
         opr |= 0x80;
     insn.emitOperand8(opr);
 }
 
-void AsmScn2650::emitRelative(AsmInsn &insn, const Operand &op) {
+void AsmScn2650::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = inpage(insn.address(), 2);
     const auto target = op.getError() ? base : op.val16;
     if (page(target) != page(base))
-        setErrorIf(op, OVERWRAP_PAGE);
+        insn.setErrorIf(op, OVERWRAP_PAGE);
     // Sign extends 13-bit number.
     const auto delta = signExtend(offset(target) - offset(base), 13);
     if (overflowInt(delta, 7))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = delta & 0x7F;
     if (op.indir)
         opr |= 0x80;
     insn.emitOperand8(opr);
 }
 
-void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_REGN:
     case M_REG0:
@@ -232,42 +222,32 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand opr1, opr2;
-    bool insnWithReg = false;
-    if (scan.expect(',')) {
-        if (parseOperand(scan, opr1) && opr1.hasError())
-            return setError(opr1);
-        if (opr1.mode == M_REGN || opr1.mode == M_REG0 || opr1.mode == M_R123)
-            insnWithReg = true;
-        if (!endOfLine(scan.skipSpaces())) {
-            if (parseOperand(scan.skipSpaces(), opr2) && opr2.hasError())
-                return setError(opr2);
-        }
-    } else {
-        if (parseOperand(scan.skipSpaces(), opr1) && opr1.hasError())
-            return setError(opr1);
-        if (scan.skipSpaces().expect(',')) {
-            if (parseOperand(scan.skipSpaces(), opr2) && opr2.hasError())
-                return setError(opr2);
-        }
+    const auto comma = scan.expect(',');
+    if (!comma)
+        scan.skipSpaces();
+    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+        return setError(insn.op1);
+    scan.skipSpaces();
+    if ((comma && !endOfLine(scan)) || (!comma && scan.expect(','))) {
+        if (parseOperand(scan.skipSpaces(), insn.op2) && insn.op2.hasError())
+            return setError(insn.op2);
+        scan.skipSpaces();
     }
 
-    if (!endOfLine(scan.skipSpaces()))
+    if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
-    setErrorIf(opr1);
-    setErrorIf(opr2);
 
-    insn.setAddrMode(opr1.mode, opr2.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(opr1, error);
+        return setError(insn.op1, error);
 
-    if (insnWithReg)
-        outRegName(insn.nameBuffer().letter(','), opr1.reg);
-    encodeOperand(insn, opr1, insn.mode1());
-    encodeOperand(insn, opr2, insn.mode2());
+    const auto mode1 = insn.mode1();
+    if (comma && (mode1 == M_REGN || mode1 == M_REG0 || mode1 == M_R123))
+        outRegName(insn.nameBuffer().letter(','), insn.op1.reg);
+    encodeOperand(insn, insn.op1, insn.mode1());
+    encodeOperand(insn, insn.op2, insn.mode2());
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace scn2650

@@ -108,13 +108,14 @@ Value Assembler::parseExpr(StrScanner &expr, ErrorAt &error, char delim) const {
     return _parser.eval(expr, error, _symtab, delim);
 }
 
-int32_t Assembler::branchDelta(uint32_t base, uint32_t target, const ErrorAt &at) {
+int32_t Assembler::branchDelta(
+        uint32_t base, uint32_t target, ErrorAt &error, const ErrorAt &at) const {
     const auto err = config().checkAddr(target);
     if (err)
-        setErrorIf(at, err);
+        error.setErrorIf(at, err);
     const auto delta = config().signExtend(target - base, config().addressWidth());
     if ((delta >= 0 && target < base) || (delta < 0 && target >= base))
-        setErrorIf(at, OVERFLOW_RANGE);
+        error.setErrorIf(at, OVERFLOW_RANGE);
     return delta;
 }
 

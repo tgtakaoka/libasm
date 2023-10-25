@@ -30,13 +30,20 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode src1() const { return flags().src1(); }
     AddrMode src2() const { return flags().src2(); }
     void embedAa(AaMode aa) { embed(uint8_t(aa)); }
-    void setAddrMode(AddrMode dst, AddrMode src1, AddrMode src2) {
-        setFlags(Entry::Flags::create(dst, src1, src2));
-    }
+};
+
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    uint8_t regno;
+    Error regerr;
+    uint16_t val16;
+    Operand() : mode(M_NONE), regno(0), regerr(OK), val16(0) {}
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand dstOp, src1Op, src2Op;
 
     void emitInsn() {
         uint8_t pos = 0;

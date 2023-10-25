@@ -28,10 +28,9 @@ struct AsmI8080 final : Assembler, Config {
     AsmI8080(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

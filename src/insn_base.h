@@ -33,9 +33,7 @@ namespace libasm {
  * General instruction code interface for Assembler and Disassembler.
  */
 struct Insn final {
-    Insn(uint32_t addr) : _address(addr), _length(0) {
-        memset(_bytes, 0, sizeof(_bytes));
-    }
+    Insn(uint32_t addr) : _address(addr), _length(0) { memset(_bytes, 0, sizeof(_bytes)); }
 
     uint32_t address() const { return _address; }
     const uint8_t *bytes() const { return _bytes; }
@@ -158,7 +156,7 @@ private:
 /**
  * Base for assembler instruction code.
  */
-struct AsmInsnBase : ErrorReporter {
+struct AsmInsnBase : ErrorAt {
     uint32_t address() const { return _insn.address(); }
     const uint8_t *bytes() const { return _insn.bytes(); }
     uint8_t length() const { return _insn.length(); }
@@ -171,61 +169,61 @@ struct AsmInsnBase : ErrorReporter {
     }
 
     /** Generate 8 bit |data| (Assembler). */
-    Error emitByte(uint8_t data) { return setError(_insn.emitByte(data)); }
+    Error emitByte(uint8_t data) { return setErrorIf(_insn.emitByte(data)); }
 
     /** Generate 8 bit |data| at |pos| (Assembler). */
-    Error emitByte(uint8_t data, uint8_t pos) { return setError(_insn.emitByte(data, pos)); }
+    Error emitByte(uint8_t data, uint8_t pos) { return setErrorIf(_insn.emitByte(data, pos)); }
 
     /** Generate 16 bit big endian |data| (Assembler). */
-    Error emitUint16Be(uint16_t data) { return setError(_insn.emitUint16Be(data)); }
+    Error emitUint16Be(uint16_t data) { return setErrorIf(_insn.emitUint16Be(data)); }
 
     /** Generate 16 bit little endian |data| (Assembler). */
-    Error emitUint16Le(uint16_t data) { return setError(_insn.emitUint16Le(data)); }
+    Error emitUint16Le(uint16_t data) { return setErrorIf(_insn.emitUint16Le(data)); }
 
     /** Generate 16 bit big endian |data| at |pos| (Assembler). */
     Error emitUint16Be(uint16_t data, uint8_t pos) {
-        return setError(_insn.emitUint16Be(data, pos));
+        return setErrorIf(_insn.emitUint16Be(data, pos));
     }
 
     /** Generate 16 bit little endian |data| at |pos| (Assembler). */
     Error emitUint16Le(uint16_t data, uint8_t pos) {
-        return setError(_insn.emitUint16Le(data, pos));
+        return setErrorIf(_insn.emitUint16Le(data, pos));
     }
 
     /** Generate 32 bit big endian |data| (Assembler). */
-    Error emitUint32Be(uint32_t data) { return setError(_insn.emitUint32Be(data)); }
+    Error emitUint32Be(uint32_t data) { return setErrorIf(_insn.emitUint32Be(data)); }
 
     /** Generate 32 bit little endian |data| (Assembler). */
-    Error emitUint32Le(uint32_t data) { return setError(_insn.emitUint32Le(data)); }
+    Error emitUint32Le(uint32_t data) { return setErrorIf(_insn.emitUint32Le(data)); }
 
     /** Generate 32 bit big endian |data| at |pos| (Assembler). */
     Error emitUint32Be(uint32_t data, uint8_t pos) {
-        return setError(_insn.emitUint32Be(data, pos));
+        return setErrorIf(_insn.emitUint32Be(data, pos));
     }
 
     /** Generate 32 bit little endian |data| at |pos| (Assembler). */
     Error emitUint32Le(uint32_t data, uint8_t pos) {
-        return setError(_insn.emitUint32Le(data, pos));
+        return setErrorIf(_insn.emitUint32Le(data, pos));
     }
 
     /** Generate 64 bit big endian |data| (Assembler). */
-    Error emitUint64Be(uint64_t data) { return setError(_insn.emitUint64Be(data)); }
+    Error emitUint64Be(uint64_t data) { return setErrorIf(_insn.emitUint64Be(data)); }
 
     /** Generate 64 bit little endian |data| (Assembler). */
-    Error emitUint64Le(uint64_t data) { return setError(_insn.emitUint64Le(data)); }
+    Error emitUint64Le(uint64_t data) { return setErrorIf(_insn.emitUint64Le(data)); }
 
     /** Generate 64 bit big endian |data| at |pos| (Assembler). */
     Error emitUint64Be(uint64_t data, uint8_t pos) {
-        return setError(_insn.emitUint64Be(data, pos));
+        return setErrorIf(_insn.emitUint64Be(data, pos));
     }
 
     /** Generate 64 bit little endian |data| at |pos| (Assembler). */
     Error emitUint64Le(uint64_t data, uint8_t pos) {
-        return setError(_insn.emitUint64Le(data, pos));
+        return setErrorIf(_insn.emitUint64Le(data, pos));
     }
 
 protected:
-    AsmInsnBase(Insn &insn) : ErrorReporter(), _insn(insn) {}
+    AsmInsnBase(Insn &insn) : ErrorAt(), _insn(insn) {}
 
 private:
     Insn &_insn;

@@ -16,7 +16,6 @@
 
 #include "asm_ins8070.h"
 
-#include "reg_ins8070.h"
 #include "table_ins8070.h"
 #include "text_common.h"
 
@@ -52,14 +51,6 @@ struct Ins8070FunctionTable final : FunctionTable {
 };
 
 }  // namespace
-
-struct AsmIns8070::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    bool autoIndex;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), autoIndex(false), val16(0) {}
-};
 
 const ValueParser::Plugins &AsmIns8070::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -118,34 +109,34 @@ const Functor *Ins8070FunctionTable::lookupFunction(const StrScanner &name) cons
 
 }  // namespace
 
-void AsmIns8070::emitAbsolute(AsmInsn &insn, const Operand &op) {
+void AsmIns8070::emitAbsolute(AsmInsn &insn, const Operand &op) const {
     // PC will be +1 before fetching instruction.
     const auto target = op.getError() ? 0 : op.val16 - 1;
     insn.emitOperand16(target);
 }
 
-void AsmIns8070::emitImmediate(AsmInsn &insn, const Operand &op) {
+void AsmIns8070::emitImmediate(AsmInsn &insn, const Operand &op) const {
     if (insn.oprSize() == SZ_WORD) {
         insn.emitOperand16(op.val16);
     } else {
         if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
     }
 }
 
-void AsmIns8070::emitRelative(AsmInsn &insn, const Operand &op) {
+void AsmIns8070::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 1;
     // PC will be +1 before feting instruction
     const auto fetch = insn.execute() ? 1 : 0;
     const auto target = (op.getError() ? base + fetch : op.val16) - fetch;
-    const auto offset = branchDelta(base, target, op);
+    const auto offset = branchDelta(base, target, insn, op);
     if (overflowInt8(offset))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(offset);
 }
 
-void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) {
+void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) const {
     if (op.mode == M_IMM) {
         insn.embed(4);
         emitImmediate(insn, op);
@@ -154,7 +145,7 @@ void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) {
     if ((op.mode == M_ADR || op.mode == M_VEC) && op.reg == REG_UNDEF) {
         const auto target = op.getError() ? 0xFF00 : op.val16;
         if (target < 0xFF00)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(5);
         insn.emitOperand8(target);
         return;
@@ -169,11 +160,12 @@ void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) {
         insn.embed(4);
     const auto offset = static_cast<Config::ptrdiff_t>(op.val16);
     if (overflowInt8(offset))
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     insn.emitOperand8(offset);
 }
 
-void AsmIns8070::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmIns8070::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_P23:
     case M_PTR:
@@ -304,28 +296,24 @@ Error AsmIns8070::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dst, src;
-    if (parseOperand(scan, dst) && dst.hasError())
-        return setError(dst);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, src) && src.hasError())
-            return setError(src);
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(dst);
-    setErrorIf(src);
 
-    insn.setAddrMode(dst.mode, src.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dst, error);
+        return setError(insn.dstOp, error);
 
-    emitOperand(insn, insn.dst(), dst);
-    emitOperand(insn, insn.src(), src);
+    emitOperand(insn, insn.dst(), insn.dstOp);
+    emitOperand(insn, insn.src(), insn.srcOp);
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace ins8070

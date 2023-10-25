@@ -47,24 +47,23 @@ private:
     bool isWorkReg(uint8_t regAddr) const;
     Error setRp(StrScanner &scan, IntOption<AsmZ8>::Setter setter);
 
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeRegImmOperand(AsmInsn &insn, const AddrMode mode, const Operand &op);
-    void encodeAbsolute(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
-    void encodeRelative(AsmInsn &insn, const Operand &op);
-    void encodeIndexed(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
-    void encodeIndirectRegPair(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
-    void encodeInOpCode(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp);
+    void encodeRegImmOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const;
+    void encodeAbsolute(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
+    void encodeRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeIndexed(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
+    void encodeIndirectRegPair(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
+    void encodeInOpCode(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp) const;
     void encodeMultiOperands(
-            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
+            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) const;
     void encodePostByte(
-            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp);
-    void encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op);
-    void encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &srcOp);
-    void encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op);
-    void encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op);
-    void encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op);
+            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &extOp) const;
+    void encodeRelative(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &srcOp) const;
+    void encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const;
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;

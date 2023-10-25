@@ -28,12 +28,11 @@ struct AsmMn1610 final : Assembler, Config {
     AsmMn1610(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeIcRelative(AsmInsn &insn, const Operand &op);
-    void encodeGenericAddress(AsmInsn &insn, const Operand &op);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void encodeIcRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeGenericAddress(AsmInsn &insn, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

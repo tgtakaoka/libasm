@@ -39,25 +39,24 @@ private:
     int8_t parseIntrNames(StrScanner &scan) const;
     int8_t parseFlagNames(StrScanner &scan) const;
 
-    struct Operand;
-    Error parseOperand(StrScanner &scan, Operand &op);
+    Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitData(AsmInsn &insn, OprPos pos, Config::opcode_t data);
-    void emitRegister(AsmInsn &insn, OprPos pos, RegName reg);
-    void emitIndirectRegister(AsmInsn &insn, const Operand &op, OprPos pos, RegName reg);
-    void emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Operand &op);
-    void emitDirectAddress(AsmInsn &insn, const Operand &op);
-    void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op);
-    void emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op);
-    void emitBaseIndexed(AsmInsn &insn, OprPos pos, const Operand &op);
-    void emitFlags(AsmInsn &insn, OprPos pos, const Operand &op);
-    void emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos);
+    void emitData(AsmInsn &insn, OprPos pos, Config::opcode_t data) const;
+    void emitRegister(AsmInsn &insn, OprPos pos, RegName reg) const;
+    void emitIndirectRegister(AsmInsn &insn, const Operand &op, OprPos pos, RegName reg) const;
+    void emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Operand &op) const;
+    void emitDirectAddress(AsmInsn &insn, const Operand &op) const;
+    void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void emitBaseIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void emitFlags(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) const;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const;
+    void checkRegisterOverlap(AsmInsn &insn, const Operand &dstOp, const Operand &srcOp,
+            const Operand *cntOp = nullptr) const;
     void checkRegisterOverlap(
-            const Operand &dstOp, const Operand &srcOp, const Operand *cntOp = nullptr);
-    void checkRegisterOverlap(
-            const AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp);
+            AsmInsn &insn, const Operand &dstOp, const Operand &srcOp, const Operand &cntOp) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

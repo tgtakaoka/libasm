@@ -44,13 +44,6 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-struct AsmMc6805::Operand final : ErrorAt {
-    AddrMode mode;
-    int8_t size;
-    uint16_t val16;
-    Operand() : mode(M_NONE), size(0), val16(0) {}
-};
-
 const ValueParser::Plugins &AsmMc6805::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
@@ -160,22 +153,23 @@ Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmMc6805::emitRelative(AsmInsn &insn, const Operand &op) {
+void AsmMc6805::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + insn.length() + (insn.length() == 0 ? 2 : 1);
     const auto target = op.getError() ? base : op.val16;
-    const auto delta = branchDelta(base, target, op);
+    const auto delta = branchDelta(base, target, insn, op);
     if (overflowInt8(delta))
-        setErrorIf(op, OPERAND_TOO_FAR);
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
     insn.emitOperand8(delta);
 }
 
-void AsmMc6805::emitBitNumber(AsmInsn &insn, const Operand &op) {
+void AsmMc6805::emitBitNumber(AsmInsn &insn, const Operand &op) const {
     const uint8_t imm = 1U << (op.val16 & 7);
     const auto aim = (insn.opCode() & 0xF) == 1;
     insn.emitOperand8(aim ? ~imm : imm);
 }
 
-void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
+void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_GEN:
         insn.setOpCode(insn.opCode() & 0x0F);
@@ -221,7 +215,7 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     case M_IDX:
     idx:
         if (op.val16 >= 256)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         break;
     case M_IX2:
@@ -231,7 +225,7 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     case M_EXT:
     ext:
         if (checkAddr(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(op.val16);
         break;
     case M_REL:
@@ -239,7 +233,7 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
     case M_IMM:
     imm:
         if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         break;
     case M_BNO:  // handled in encodeImpl(Insn)
@@ -250,37 +244,32 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) {
 
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand op1, op2, op3;
-    if (parseOperand(scan, op1) && op1.hasError())
-        return setError(op1);
+    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+        return setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, op2) && op2.hasError())
-            return setError(op2);
+        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+            return setError(insn.op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
-        if (parseOperand(scan, op3) && op3.hasError())
-            return setError(op3);
+        if (parseOperand(scan, insn.op3) && insn.op3.hasError())
+            return setError(insn.op3);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(op1);
-    setErrorIf(op2);
-    setErrorIf(op3);
 
-    insn.setAddrMode(op1.mode, op2.mode, op3.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(op1, error);
+        return setError(insn.op1, error);
 
     if (insn.mode1() == M_BNO)
-        insn.embed((op1.val16 & 7) << 1);
-    emitOperand(insn, insn.mode1(), op1);
-    emitOperand(insn, insn.mode2(), op2);
-    emitOperand(insn, insn.mode3(), op3);
+        insn.embed((insn.op1.val16 & 7) << 1);
+    emitOperand(insn, insn.mode1(), insn.op1);
+    emitOperand(insn, insn.mode2(), insn.op2);
+    emitOperand(insn, insn.mode3(), insn.op3);
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace mc6805

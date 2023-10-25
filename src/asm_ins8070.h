@@ -28,14 +28,13 @@ struct AsmIns8070 final : Assembler, Config {
     AsmIns8070(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitAbsolute(AsmInsn &insn, const Operand &op);
-    void emitImmediate(AsmInsn &insn, const Operand &op);
-    void emitRelative(AsmInsn &insn, const Operand &op);
-    void emitGeneric(AsmInsn &insn, const Operand &op);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitAbsolute(AsmInsn &insn, const Operand &op) const;
+    void emitImmediate(AsmInsn &insn, const Operand &op) const;
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
+    void emitGeneric(AsmInsn &insn, const Operand &op) const;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error defineAddrConstant(StrScanner &scan, Insn &insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;

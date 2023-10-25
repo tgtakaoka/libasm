@@ -16,8 +16,6 @@
 
 #include "asm_i8080.h"
 
-#include "operators.h"
-#include "reg_i8080.h"
 #include "table_i8080.h"
 #include "text_common.h"
 
@@ -41,13 +39,6 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace
 
-struct AsmI8080::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), val16(0) {}
-};
-
 const ValueParser::Plugins &AsmI8080::defaultPlugins() {
     static struct final : ValueParser::Plugins {
         const NumberParser &number() const { return IntelNumberParser::singleton(); }
@@ -63,15 +54,16 @@ AsmI8080::AsmI8080(const ValueParser::Plugins &plugins)
     reset();
 }
 
-void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
+void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const {
+    insn.setErrorIf(op);
     switch (mode) {
     case M_IOA:
         if (op.val16 >= 0x100)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:
         if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand8(op.val16);
         return;
     case M_IM16:
@@ -95,7 +87,7 @@ void AsmI8080::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) {
         return;
     case M_VEC:
         if (op.val16 >= 8)
-            setErrorIf(op, OVERFLOW_RANGE);
+            insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed((op.val16 & 7) << 3);
         return;
     default:
@@ -142,28 +134,24 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand dstOp, srcOp;
-    if (parseOperand(scan, dstOp) && dstOp.hasError())
-        return setError(dstOp);
+    if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+        return setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, srcOp) && srcOp.hasError())
-            return setError(srcOp);
+        if (parseOperand(scan, insn.srcOp) && insn.hasError())
+            return setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (!endOfLine(scan))
         return setError(GARBAGE_AT_END);
-    setErrorIf(dstOp);
-    setErrorIf(srcOp);
 
-    insn.setAddrMode(dstOp.mode, srcOp.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(dstOp, error);
+        return setError(insn.dstOp, error);
 
-    encodeOperand(insn, dstOp, insn.dst());
-    encodeOperand(insn, srcOp, insn.src());
+    encodeOperand(insn, insn.dstOp, insn.dst());
+    encodeOperand(insn, insn.srcOp, insn.src());
     insn.emitInsn();
-    return setErrorIf(insn);
+    return setError(insn);
 }
 
 }  // namespace i8080

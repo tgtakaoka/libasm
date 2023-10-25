@@ -529,10 +529,9 @@ static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
-    auto flags = insn.flags();
-    auto table = entry->flags();
-    return acceptMode(flags.src(), table.src()) && acceptMode(flags.dst(), table.dst()) &&
-           acceptSize(flags.insnSize(), table.oprSize(), table.insnSize());
+    const auto table = entry->flags();
+    return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
+           acceptSize(insn.insnSize(), table.oprSize(), table.insnSize());
 }
 
 Error TableMc68000::searchName(CpuType cpuType, AsmInsn &insn) const {

@@ -28,12 +28,11 @@ struct AsmF3850 final : Assembler, Config {
     AsmF3850(const ValueParser::Plugins &plugins = defaultPlugins());
 
 private:
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void emitImmediate(AsmInsn &insn, const Operand &op, AddrMode mode);
-    void emitRelative(AsmInsn &insn, const Operand &op);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void emitImmediate(AsmInsn &insn, const Operand &op, AddrMode mode) const;
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

@@ -16,7 +16,6 @@
 
 #include "asm_ins8060.h"
 
-#include "reg_ins8060.h"
 #include "table_ins8060.h"
 #include "text_common.h"
 
@@ -52,14 +51,6 @@ struct Ins8060FunctionTable final : FunctionTable {
 };
 
 }  // namespace
-
-struct AsmIns8060::Operand final : ErrorAt {
-    AddrMode mode;
-    RegName reg;
-    RegName index;
-    uint16_t val16;
-    Operand() : mode(M_NONE), reg(REG_UNDEF), index(REG_UNDEF), val16(0) {}
-};
 
 const ValueParser::Plugins &AsmIns8060::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
@@ -119,7 +110,7 @@ const Functor *Ins8060FunctionTable::lookupFunction(const StrScanner &name) cons
 
 }  // namespace
 
-void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) {
+void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
     Config::ptrdiff_t delta;
     if (op.mode == M_DISP) {
         if (op.index == REG_E) {
@@ -127,7 +118,7 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) {
         } else {
             delta = static_cast<Config::ptrdiff_t>(op.val16);
             if (overflowInt8(delta) || delta == -128)
-                setErrorIf(op, OVERFLOW_RANGE);
+                insn.setErrorIf(op, OVERFLOW_RANGE);
         }
         insn.embed(encodePointerReg(op.reg));
     } else {
@@ -138,13 +129,13 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) {
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         // Program space is paged by 4kB.
         if (page(target) != page(base))
-            setErrorIf(op, OVERWRAP_PAGE);
+            insn.setErrorIf(op, OVERWRAP_PAGE);
         const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
         delta = signExtend(diff, 12);
         // delta -128 is for E reg.
         if (overflowInt8(delta) || delta == -128)
-            setErrorIf(op, OPERAND_TOO_FAR);
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
         if (op.getError())
             delta = 0;
         insn.embed(encodePointerReg(REG_PC));
@@ -153,7 +144,7 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) {
     insn.emitByte(delta);
 }
 
-void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) {
+void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) const {
     if (op.mode == M_REL8) {
         encodeRel8(insn, op);
         return;
@@ -161,14 +152,14 @@ void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) {
     insn.embed(encodePointerReg(op.reg));
     if (op.mode == M_INDX) {  // auto displacement mode
         if (insn.addrMode() != M_INDX)
-            setErrorIf(op, OPERAND_NOT_ALLOWED);
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         insn.embed(4);
     }
     auto disp = static_cast<Config::ptrdiff_t>(op.val16);
     if (op.index == REG_E) {
         disp = -128;
     } else if (overflowInt8(disp) || disp == -128) {
-        setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op, OVERFLOW_RANGE);
     }
     insn.emitInsn();
     insn.emitByte(disp);
@@ -240,45 +231,43 @@ Error AsmIns8060::processPseudo(StrScanner &scan, Insn &insn) {
 
 Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     AsmInsn insn(_insn);
-    Operand op;
-    if (parseOperand(scan, op) && op.hasError())
-        return setError(op);
+    if (parseOperand(scan, insn.op) && insn.op.hasError())
+        return setError(insn.op);
     if (!endOfLine(scan.skipSpaces()))
         return setError(scan, GARBAGE_AT_END);
-    setErrorIf(op);
 
-    insn.setAddrMode(op.mode);
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error)
-        return setError(op, error);
+        return setError(insn.op, error);
 
+    insn.setErrorIf(insn.op);
     switch (insn.addrMode()) {
     case M_NONE:
         insn.emitInsn();
         break;
     case M_REL8:
-        encodeRel8(insn, op);
+        encodeRel8(insn, insn.op);
         break;
     case M_PNTR:
-        insn.embed(encodePointerReg(op.reg));
+        insn.embed(encodePointerReg(insn.op.reg));
         insn.emitInsn();
         break;
     case M_DISP:
     case M_INDX:
-        encodeIndx(insn, op);
+        encodeIndx(insn, insn.op);
         break;
     case M_IMM8:
-        if (overflowUint8(op.val16))
-            setErrorIf(op, OVERFLOW_RANGE);
+        if (overflowUint8(insn.op.val16))
+            insn.setErrorIf(insn.op, OVERFLOW_RANGE);
         insn.emitInsn();
-        insn.emitByte(op.val16);
+        insn.emitByte(insn.op.val16);
         break;
     default:
         break;
     }
     if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1))
-        setErrorIf(OVERWRAP_PAGE);
-    return setErrorIf(insn);
+        insn.setErrorIf(OVERWRAP_PAGE);
+    return setError(insn);
 }
 
 }  // namespace ins8060

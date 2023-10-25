@@ -31,8 +31,9 @@ struct AsmTlcs90 final : Assembler, Config {
 
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op);
-    void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode);
+    void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void encodeOperand(
+            AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

@@ -20,6 +20,7 @@
 #include "config_mc68000.h"
 #include "entry_mc68000.h"
 #include "insn_base.h"
+#include "reg_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
@@ -32,13 +33,27 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprSize oprSize() const { return flags().oprSize(); }
     InsnSize insnSize() const { return flags().insnSize(); }
     bool hasSize() const { return flags().hasSize(); }
-    void setAddrMode(AddrMode src, AddrMode dst) { flags().setAddrMode(src, dst); }
 
     void setInsnSize(OprSize osize) { flags().setInsnSize(InsnSize(osize)); }
 };
 
+struct AsmInsn;
+struct Operand final : ErrorAt {
+    AddrMode mode;
+    RegName reg;
+    RegName indexReg;
+    OprSize indexSize;
+    uint32_t val32;
+    StrScanner list;
+    Operand()
+        : mode(M_NONE), reg(REG_UNDEF), indexReg(REG_UNDEF), indexSize(SZ_NONE), val32(0), list() {}
+    Config::uintptr_t offset(const AsmInsn &insn) const;
+};
+
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+
+    Operand srcOp, dstOp;
 
     void emitInsn() { emitUint16(opCode(), 0); }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }

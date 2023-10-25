@@ -37,11 +37,10 @@ private:
 
     uint8_t _pc_bits;
 
-    struct Operand;
     Error parseOperand(StrScanner &scan, Operand &op) const;
-    void emitRelative(AsmInsn &insn, const Operand &op);
-    void emitBitNumber(AsmInsn &insn, const Operand &op);
-    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op);
+    void emitRelative(AsmInsn &insn, const Operand &op) const;
+    void emitBitNumber(AsmInsn &insn, const Operand &op) const;
+    void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
     const ConfigBase &config() const override { return *this; }

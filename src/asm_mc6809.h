@@ -38,19 +38,18 @@ private:
 
     bool onDirectPage(Config::uintptr_t addr) const;
 
-    struct Operand;
     bool parseBitPosition(StrScanner &scan, Operand &op) const;
     bool parseMemBit(StrScanner &scan, Operand &op) const;
     Error parseOperand(StrScanner &scan, Operand &op, AddrMode hint) const;
 
-    void encodeRegisterList(AsmInsn &insn, const Operand &op);
-    void encodeRegisterPair(AsmInsn &insn, const Operand &op);
-    void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void encodeRegisterList(AsmInsn &insn, const Operand &op) const;
+    void encodeRegisterPair(AsmInsn &insn, const Operand &op) const;
+    void encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const;
     Config::ptrdiff_t calculateDisplacement(const AsmInsn &insn, const Operand &op) const;
-    void encodeIndexed(AsmInsn &insn, const Operand &op);
+    void encodeIndexed(AsmInsn &insn, const Operand &op) const;
     char transferMemoryMode(Operand &op) const;
-    void encodeTransferMemory(AsmInsn &insn, Operand &op1, Operand &op2);
-    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode);
+    void encodeTransferMemory(AsmInsn &insn, Operand &op1, Operand &op2) const;
+    void encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) const;
 
     Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) override;
