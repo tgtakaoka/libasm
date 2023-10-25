@@ -18,7 +18,6 @@
 
 #include "entry_table.h"
 #include "entry_tlcs90.h"
-#include "reg_tlcs90.h"
 #include "text_tlcs90.h"
 
 using namespace libasm::text::tlcs90;

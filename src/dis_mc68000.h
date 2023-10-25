@@ -20,7 +20,6 @@
 #include "config_mc68000.h"
 #include "dis_base.h"
 #include "insn_mc68000.h"
-#include "reg_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {

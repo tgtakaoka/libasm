@@ -20,7 +20,6 @@
 #include "config_z8.h"
 #include "dis_base.h"
 #include "insn_z8.h"
-#include "reg_z8.h"
 
 namespace libasm {
 namespace z8 {
