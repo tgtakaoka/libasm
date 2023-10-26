@@ -48,7 +48,7 @@ static void filter(const char *text, std::list<std::string> &list) {
 std::list<std::string> AsmDriver::listCpu() const {
     std::list<std::string> list;
     for (auto dir : _directives) {
-        const /* PROGMEM */ char *list_P = dir->assembler().listCpu_P();
+        const /* PROGMEM */ char *list_P = dir->listCpu_P();
         char cpuList[strlen_P(list_P) + 1];
         strcpy_P(cpuList, list_P);
         filter(cpuList, list);
@@ -56,44 +56,39 @@ std::list<std::string> AsmDriver::listCpu() const {
     return list;
 }
 
-AsmDirective *AsmDriver::setCpu(const char *cpu) {
+bool AsmDriver::setCpu(const char *cpu) {
     for (auto dir : _directives) {
-        if (dir->assembler().setCpu(cpu))
-            return switchDirective(dir);
+        if (dir->setCpu(cpu)) {
+            const auto *prev = _current;
+            _current = dir;
+            dir->setListRadix(prev->listRadix());
+            return true;
+        }
     }
-    return nullptr;
+    return false;
 }
 
-AsmDirective *AsmDriver::restrictCpu(const char *cpu) {
-    const /* PROGMEM */ char *cpu_P = current()->assembler().cpu_P();
-    auto *z80 = AsmDirective::is8080(cpu_P) ? setCpu("Z80") : nullptr;
-    auto *dir = setCpu(cpu);
-    if (dir) {
+bool AsmDriver::restrictCpu(const char *cpu) {
+    const /* PROGMEM */ char *cpu_P = _current->cpu_P();
+    if (setCpu(cpu)) {
         _directives.clear();
-        _directives.push_back(dir);
-        if (z80)
-            _directives.push_back(z80);
+        _directives.push_back(_current);
+        if (AsmDirective::is8080(cpu_P)) {
+            if (setCpu("Z80"))
+                _directives.push_back(_current);
+        }
+        return true;
     }
-    return dir;
-}
-
-AsmDirective *AsmDriver::switchDirective(AsmDirective *dir) {
-    _current = dir;
-    return dir;
+    return false;
 }
 
 AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end)
-    : _directives(begin, end), _current(nullptr), _functions(), _origin(0) {
-    switchDirective(_directives.front());
+    : _directives(begin, end), _current(nullptr), _symbols(), _origin(0) {
+    for (auto dir : _directives)
+        dir->reset(*this);
+    _current = _directives.front();
     setUpperHex(true);
     setLineNumber(false);
-}
-
-void AsmDriver::reset() {
-    for (auto dir : _directives) {
-        auto &assembler = dir->assembler();
-        assembler.reset();
-    }
 }
 
 void AsmDriver::setUpperHex(bool upperHex) {
@@ -106,14 +101,12 @@ void AsmDriver::setLineNumber(bool lineNumber) {
 
 void AsmDriver::setOption(const char *name, const char *value) {
     for (auto dir : _directives) {
-        auto &assembler = dir->assembler();
-        assembler.setOption(name, value);
+        dir->setOption(name, value);
     }
 }
 
 int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &listout,
         TextPrinter &errorout, bool reportError) {
-    _functions.reset();
     _origin = 0;
 
     char buffer[256];
@@ -128,11 +121,11 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
         auto &directive = *current();
         auto &insn = formatter.insn();
         insn.reset(_origin);
-        AsmDirective::Context context{sources, reportError};
+        AsmDirective::Context context{sources, _symbols, reportError};
         auto scan = *line;
-        auto error = directive.encode(scan, insn, context, *this);
+        auto error = directive.encode(scan, insn, context);
 
-        const auto &config = directive.assembler().config();
+        const auto &config = directive.config();
         const auto unit = config.addressUnit();  // assembler may be swiched
         const auto base = insn.address() * unit;
         for (auto offset = 0; offset < insn.length(); offset++) {
@@ -140,10 +133,12 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
         }
         _origin = insn.address() + insn.length() / config.addressUnit();
         if (insn.length() == 0)
-            _origin = directive.assembler().currentLocation();
+            _origin = directive.currentLocation();
 
         formatter.set(*line, directive, config, &context.value);
-        formatter.setListRadix(current()->assembler().listRadix());
+        formatter.setListRadix(current()->listRadix());
+        if (formatter.hasError())
+            ++errors;
         while (formatter.hasNextLine()) {
             listout.println(formatter.getLine(out).str());
             if (formatter.hasError())
@@ -151,51 +146,10 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
         }
         if (error == END_ASSEMBLE)
             break;
-        errors++;
     }
     while (sources.nest())
         sources.closeCurrent();
     return errors;
-}
-
-const char *AsmDriver::lookupValue(uint32_t address) const {
-    return nullptr;
-}
-
-bool AsmDriver::hasSymbol(const StrScanner &symbol) const {
-    return symbolInTable(symbol, false) || symbolInTable(symbol, true);
-}
-
-uint32_t AsmDriver::lookupSymbol(const StrScanner &symbol) const {
-    const auto key = std::string(symbol.str(), symbol.size());
-    const auto s = _symbols.find(key);
-    if (s != _symbols.end())
-        return s->second;
-    const auto v = _variables.find(key);
-    if (v != _variables.end())
-        return v->second;
-    return 0;
-}
-
-bool AsmDriver::symbolInTable(const StrScanner &symbol, bool variable) const {
-    const auto &map = variable ? _variables : _symbols;
-    const auto key = std::string(symbol.str(), symbol.size());
-    return map.find(key) != map.end();
-}
-
-Error AsmDriver::internSymbol(uint32_t value, const StrScanner &symbol, bool variable) {
-    if (symbolInTable(symbol, !variable))
-        return DUPLICATE_LABEL;
-
-    const auto key = std::string(symbol.str(), symbol.size());
-    auto &map = variable ? _variables : _symbols;
-    auto it = map.find(key);
-    if (it == map.end()) {
-        map.emplace(key, value);
-    } else {
-        it->second = value;
-    }
-    return OK;
 }
 
 }  // namespace driver

@@ -105,16 +105,16 @@ void test_eq() {
     BinMemory mem1;
     BinMemory mem2;
 
-    TRUE("empty memory", mem1.equals(mem2));
-    TRUE("empty memory", mem2.equals(mem1));
+    TRUE("empty memory", mem1 == mem2);
+    TRUE("empty memory", mem2 == mem1);
 
     MEM_WRITE(mem1, 0x100, 0x01);
-    FALSE("1:0", mem1.equals(mem2));
-    FALSE("1:0 ", mem2.equals(mem1));
+    TRUE("1:0", mem1 != mem2);
+    TRUE("1:0 ", mem2 != mem1);
 
     MEM_WRITE(mem2, 0x100, 0x01);
-    TRUE("1:1", mem1.equals(mem2));
-    TRUE("1:1", mem2.equals(mem1));
+    TRUE("1:1", mem1 == mem2);
+    TRUE("1:1", mem2 == mem1);
 }
 
 void test_swap() {

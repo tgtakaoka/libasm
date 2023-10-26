@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_tms7000() {
     PREP_ASM(tms7000::AsmTms7000, IntelDirective);
 
-    driver.internSymbol(0x7def, "label1");
+    symbols.internSymbol(0x7def, "label1");
 
     ASM("tms7000",
             "        cpu     tms7000\n"

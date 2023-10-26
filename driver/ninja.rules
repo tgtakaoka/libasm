@@ -13,3 +13,4 @@ build function_store.o: cxx ${root}/driver/function_store.cpp
 build intel_hex.o:      cxx ${root}/driver/intel_hex.cpp
 build list_formatter.o: cxx ${root}/driver/list_formatter.cpp
 build moto_srec.o:      cxx ${root}/driver/moto_srec.cpp
+build symbol_store.o:   cxx ${root}/driver/symbol_store.cpp

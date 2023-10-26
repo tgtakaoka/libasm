@@ -17,19 +17,24 @@
 #ifndef __FUNCTION_STORE_H__
 #define __FUNCTION_STORE_H__
 
-#include "error_reporter.h"
-#include "str_scanner.h"
-#include "value_parser.h"
-
 #include <list>
 #include <map>
 #include <string>
+
+#include "error_reporter.h"
+#include "str_scanner.h"
+#include "value_parser.h"
 
 namespace libasm {
 namespace driver {
 
 struct FunctionStore final {
-    void reset();
+    explicit FunctionStore();
+
+    bool operator==(const FunctionStore &other) const;
+    bool operator!=(const FunctionStore &other) const { return !(*this == other); }
+    void copy(const FunctionStore &other);
+    void clear();
 
     bool hasFunction(const StrScanner &name) const;
     const void *lookupFunction(const StrScanner &symbol) const;
@@ -45,7 +50,10 @@ private:
         Function(const std::string &body_, const ParametersAt &paramsAt_,
                 const ValueParser &parser_, const SymbolTable *symtab_)
             : body(body_), paramsAt(paramsAt_), parser(parser_), symtab(symtab_) {}
-        // Functor
+        Function(const Function &other);
+
+        bool operator==(const Function &other) const;
+        bool operator!=(const Function &other) const { return !(*this == other); }
         int8_t nargs() const override { return paramsAt.size(); }
         Error eval(ValueStack &stack, uint8_t argc) const override;
 

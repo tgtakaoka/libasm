@@ -30,7 +30,7 @@ void test_asm_i8096() {
     PREP_ASM(i8096::AsmI8096, IntelDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0x817b, "label1");
+    symbols.internSymbol(0x817b, "label1");
 
     ASM("i8096",
             "        cpu   i8096\n"

@@ -43,8 +43,10 @@ int AsmCommander::assemble() {
         fprintf(stderr, "libasm assembler (version " LIBASM_VERSION_STRING ")\n");
         fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
     }
+    _driver.clearSymbols();
 
     BinMemory memory, prev;
+    SymbolStoreImpl symbols;
     StoredPrinter listout, errorout;
     bool reportError = false;
     do {
@@ -56,6 +58,7 @@ int AsmCommander::assemble() {
         if (_verbose)
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
         prev.swap(memory);
+        symbols.copy(_driver.symbols());
         memory.clear();
         listout.clear();
         errorout.clear();
@@ -68,7 +71,7 @@ int AsmCommander::assemble() {
             _driver.setCpu(_cpu);
         _driver.assemble(sources, memory, listout, errorout, reportError);
         reportError = true;
-    } while (errorout.size() == 0 && !memory.equals(prev));
+    } while (errorout.size() == 0 && (memory != prev || symbols != _driver.symbols()));
 
     int errors = 0;
     for (size_t lineno = 1; lineno <= errorout.size(); lineno++) {
@@ -101,11 +104,11 @@ int AsmCommander::assemble() {
                 encoder = MotoSrec::encoder();
             else if (_encoder == 'H')
                 encoder = IntelHex::encoder();
-            const auto addrWidth = _driver.current()->assembler().config().addressWidth();
+            const auto addrWidth = _driver.current()->config().addressWidth();
             encoder.reset(addrWidth, _record_bytes);
             encoder.encode(memory, output);
             if (_verbose) {
-                const auto addrUnit = _driver.current()->assembler().config().addressUnit();
+                const auto addrUnit = _driver.current()->config().addressUnit();
                 for (const auto &it : memory) {
                     const auto start = it.base / addrUnit;
                     const uint32_t size = it.data.size();
@@ -166,21 +169,20 @@ int AsmCommander::usage() {
             _prog_name, list.c_str());
     bool longOptions = false;
     for (const auto *dir : _driver)
-        longOptions |=
-                (dir->assembler().commonOptions().head() || dir->assembler().options().head());
+        longOptions |= (dir->commonOptions().head() || dir->options().head());
     if (longOptions) {
         fprintf(stderr,
                 "  --<name>=<vale>\n"
                 "              : extra options (<type> [, <CPU>])\n");
         const auto dir = *_driver.begin();
-        for (const auto *opt = dir->assembler().commonOptions().head(); opt; opt = opt->next()) {
+        for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
             fprintf(stderr, "  %-16s: %s  (%s)\n", opt->name_P(), opt->description_P(),
                     Options::nameof(opt->spec()));
         }
         for (const auto *dir : _driver) {
-            for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
+            for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
                 fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
-                        Options::nameof(opt->spec()), dir->assembler().cpu_P());
+                        Options::nameof(opt->spec()), dir->cpu_P());
             }
         }
     }
@@ -291,7 +293,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
     for (auto &option : _options) {
         auto valid = false;
         for (const auto *dir : _driver) {
-            for (const auto *opt = dir->assembler().options().head(); opt; opt = opt->next()) {
+            for (const auto *opt = dir->options().head(); opt; opt = opt->next()) {
                 if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
                     valid = true;
                     break;
@@ -299,8 +301,7 @@ int AsmCommander::parseArgs(int argc, const char **argv) {
             }
             if (valid)
                 continue;
-            for (const auto *opt = dir->assembler().commonOptions().head(); opt;
-                    opt = opt->next()) {
+            for (const auto *opt = dir->commonOptions().head(); opt; opt = opt->next()) {
                 if (strcmp_P(option.first.c_str(), opt->name_P()) == 0) {
                     valid = true;
                     break;

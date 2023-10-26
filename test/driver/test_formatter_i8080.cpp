@@ -30,7 +30,7 @@ void test_asm_i8080() {
     PREP_ASM(i8080::AsmI8080, IntelDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0xebec, "label1");
+    symbols.internSymbol(0xebec, "label1");
 
     ASM("i8080",
             "        cpu   i8080\n"

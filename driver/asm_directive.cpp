@@ -17,6 +17,7 @@
 #include "asm_directive.h"
 
 #include "asm_driver.h"
+#include "asm_sources.h"
 #include "intel_hex.h"
 #include "moto_srec.h"
 #include "str_scanner.h"
@@ -37,11 +38,56 @@ AsmDirective::AsmDirective(Assembler &a) : ErrorAt(), _assembler(a) {
     registerPseudo(".function", &AsmDirective::defineFunction);
 }
 
-Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context, AsmDriver &driver) {
-    setOK();
-    assembler().setCurrentLocation(insn.address());
+bool AsmDirective::setCpu(const char *cpu) {
+    return _assembler.setCpu(cpu);
+}
 
-    const auto &parser = assembler().parser();
+const /*PROGMEM*/ char *AsmDirective::cpu_P() const {
+    return _assembler.cpu_P();
+}
+
+const /*PROGMEM*/ char *AsmDirective::listCpu_P() const {
+    return _assembler.listCpu_P();
+}
+
+void AsmDirective::reset(CpuSwitcher &switcher) {
+    _assembler.reset();
+    _switcher = &switcher;
+}
+
+void AsmDirective::setOption(const char *name, const char *value) {
+    _assembler.setOption(name, value);
+}
+
+const Options &AsmDirective::commonOptions() const {
+    return _assembler.commonOptions();
+}
+
+const Options &AsmDirective::options() const {
+    return _assembler.options();
+}
+
+const ConfigBase &AsmDirective::config() const {
+    return _assembler.config();
+}
+
+Radix AsmDirective::listRadix() const {
+    return _assembler.listRadix();
+}
+
+uint32_t AsmDirective::currentLocation() const {
+    return _assembler.currentLocation();
+}
+
+void AsmDirective::setListRadix(Radix listRadix) {
+    _assembler.setListRadix(listRadix);
+}
+
+Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context) {
+    setOK();
+    _assembler.setCurrentLocation(insn.address());
+
+    const auto &parser = _assembler.parser();
     if (parser.commentLine(scan))
         return OK;
 
@@ -52,15 +98,15 @@ Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context, AsmDr
         auto p = scan;
         StrScanner directive;
         parser.readInstruction(p, directive);
-        error = processPseudo(directive, p.skipSpaces(), context, driver);
+        error = processPseudo(directive, p.skipSpaces(), context);
         if (error == OK && !parser.endOfLine(p.skipSpaces()))
             setError(p, GARBAGE_AT_END);
     }
     if (context.label.size()) {
-        if (context.reportDuplicate && driver.hasSymbol(context.label)) {
+        if (context.reportDuplicate && context.symbols.hasSymbol(context.label)) {
             setErrorIf(context.label, DUPLICATE_LABEL);
         } else {
-           driver.internSymbol(insn.address(), context.label);
+            context.symbols.internSymbol(insn.address(), context.label);
         }
     }
     if (error != UNKNOWN_DIRECTIVE)
@@ -69,7 +115,7 @@ Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context, AsmDr
     if (parser.endOfLine(scan))
         return setOK();  // skip comment
 
-    assembler().encode(scan.str(), insn, &driver);
+    _assembler.encode(scan.str(), insn, &context.symbols);
     setError(insn);
 
     error = getError();
@@ -91,13 +137,12 @@ void AsmDirective::disablePseudo(const char *name) {
         _pseudos.erase(std::string(name));
 }
 
-Error AsmDirective::processPseudo(
-        const StrScanner &name, StrScanner &scan, Context &context, AsmDriver &driver) {
+Error AsmDirective::processPseudo(const StrScanner &name, StrScanner &scan, Context &context) {
     auto it = _pseudos.find(std::string(name.str(), name.size()));
     if (it == _pseudos.end())
         return UNKNOWN_DIRECTIVE;
     const auto fp = it->second;
-    return (this->*fp)(scan, context, driver);
+    return (this->*fp)(scan, context);
 }
 
 BinEncoder &AsmDirective::defaultEncoder() const {
@@ -106,46 +151,47 @@ BinEncoder &AsmDirective::defaultEncoder() const {
 
 // PseudoHandler
 
-Error AsmDirective::defineConstant(StrScanner &scan, Context &context, AsmDriver &driver) {
-    defineSymbol(scan, context.label, context, driver, /*variable*/ false);
+Error AsmDirective::defineConstant(StrScanner &scan, Context &context) {
+    defineSymbol(scan, context.label, context, /*variable*/ false);
     context.label = StrScanner::EMPTY;
     return getError();
 }
 
-Error AsmDirective::defineVariable(StrScanner &scan, Context &context, AsmDriver &driver) {
-    defineSymbol(scan, context.label, context, driver, /*variable*/ true);
+Error AsmDirective::defineVariable(StrScanner &scan, Context &context) {
+    defineSymbol(scan, context.label, context, /*variable*/ true);
     context.label = StrScanner::EMPTY;
     return getError();
 }
 
-Error AsmDirective::setVariable(StrScanner &scan, Context &context, AsmDriver &driver) {
+Error AsmDirective::setVariable(StrScanner &scan, Context &context) {
     if (context.label.size())
         return setError(ILLEGAL_LABEL);
     auto p = scan;
     StrScanner symbol;
-    if (assembler().parser().readSymbol(p, symbol) != OK)
+    if (_assembler.parser().readSymbol(p, symbol) != OK)
         return setError(p, MISSING_LABEL);
     if (!p.skipSpaces().expect(','))
         return setError(p, MISSING_COMMA);
-    defineSymbol(p.skipSpaces(), symbol, context, driver, /*variable*/ true);
+    defineSymbol(p.skipSpaces(), symbol, context, /*variable*/ true);
     scan = p;
     return getError();
 }
 
-Error AsmDirective::defineSymbol(StrScanner &scan, const StrScanner &symbol, Context &context,
-        AsmDriver &driver, bool variable) {
+Error AsmDirective::defineSymbol(
+        StrScanner &scan, const StrScanner &symbol, Context &context, bool variable) {
     if (context.reportDuplicate) {
-        if (!variable && driver.symbolInTable(symbol, false))
+        const auto &symbols = context.symbols;
+        if (!variable && symbols.hasValue(symbol, false))
             return setError(symbol, DUPLICATE_LABEL);
-        if (driver.symbolInTable(symbol, !variable))
+        if (symbols.hasValue(symbol, !variable))
             return setError(symbol, DUPLICATE_LABEL);
-        if (driver.hasFunction(symbol))
+        if (symbols.hasFunction(symbol))
             return setError(symbol, DUPLICATE_LABEL);
     }
 
-    auto &parser = assembler().parser();
+    auto &parser = _assembler.parser();
     ErrorAt error;
-    context.value = parser.eval(scan, error, &driver);
+    context.value = parser.eval(scan, error, &context.symbols);
     if (error.hasError()) {
         context.value.clear();
         return setError(scan, error);
@@ -153,11 +199,11 @@ Error AsmDirective::defineSymbol(StrScanner &scan, const StrScanner &symbol, Con
     if (context.reportUndefined && context.value.isUndefined())
         return setError(symbol, UNDEFINED_SYMBOL);
 
-    setErrorIf(symbol, driver.internSymbol(context.value.getUnsigned(), symbol, variable));
+    setErrorIf(symbol, context.symbols.internSymbol(context.value.getUnsigned(), symbol, variable));
     return getError();
 }
 
-Error AsmDirective::includeFile(StrScanner &scan, Context &context, AsmDriver &driver) {
+Error AsmDirective::includeFile(StrScanner &scan, Context &context) {
     auto quote = scan.expect('"');
     if (quote == 0)
         quote = scan.expect('\'');
@@ -174,12 +220,12 @@ Error AsmDirective::includeFile(StrScanner &scan, Context &context, AsmDriver &d
     return setError(context.sources.open(filename));
 }
 
-Error AsmDirective::defineFunction(StrScanner &scan, Context &context, AsmDriver &driver) {
+Error AsmDirective::defineFunction(StrScanner &scan, Context &context) {
     auto &name = context.label;
     if (name.size() == 0)
         return setError(MISSING_LABEL);
 
-    const auto &parser = assembler().parser();
+    const auto &parser = _assembler.parser();
     FunctionStore::Parameters params;
     for (;;) {
         auto p = scan.skipSpaces();
@@ -189,10 +235,10 @@ Error AsmDirective::defineFunction(StrScanner &scan, Context &context, AsmDriver
             scan = p;
         } else {
             auto error = OK;
-            if (context.reportDuplicate && driver.hasSymbol(name)) {
+            if (context.reportDuplicate && context.symbols.hasSymbol(name)) {
                 error = DUPLICATE_LABEL;
             } else {
-                error = driver.internFunction(name, params, scan, parser);
+                error = context.symbols.internFunction(name, params, scan, parser);
                 scan = StrScanner::EMPTY;  // whole body is interned
             }
             if (error)
@@ -203,16 +249,12 @@ Error AsmDirective::defineFunction(StrScanner &scan, Context &context, AsmDriver
     }
 }
 
-Error AsmDirective::switchCpu(StrScanner &scan, Context &context, AsmDriver &driver) {
+Error AsmDirective::switchCpu(StrScanner &scan, Context &context) {
     auto name = scan;
     scan = name.takeWhile([](char s) { return !isspace(s); });
     std::string cpu(name.str(), name.size());
-    if (driver.setCpu(cpu.c_str()) == nullptr)
+    if (!_switcher->setCpu(cpu.c_str()))
         return setError(UNSUPPORTED_CPU);
-    if (driver.current() != this) {
-        // CPU has been switched.
-        driver.current()->assembler().setListRadix(assembler().listRadix());
-    }
     return setOK();
 }
 
@@ -221,30 +263,30 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
            strcasecmp_P("V30EMU", cpu_P) == 0;
 }
 
-Error AsmDirective::switchIntelZilog(StrScanner &scan, Context &context, AsmDriver &driver) {
-    const /* PROGMEM */ char *cpu_P = assembler().cpu_P();
+Error AsmDirective::switchIntelZilog(StrScanner &scan, Context &context) {
+    const /* PROGMEM */ char *cpu_P = _assembler.cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
-    char cpu[strlen_P(cpu_P) + 1];
-    strcpy_P(cpu, cpu_P);
+    char buffer[20];
+    StrBuffer cpu{buffer, sizeof(buffer)};
+    cpu.text_P(cpu_P);
     StrScanner option;
-    assembler().parser().readSymbol(scan, option);
+    _assembler.parser().readSymbol(scan, option);
     if (option.iequals_P(PSTR("on"))) {
-        auto zilog = driver.setCpu("Z80");
-        if (zilog == nullptr)
+        if (!_switcher->setCpu("Z80"))
             return setError(UNSUPPORTED_CPU);
-        zilog->assembler().setCpu(cpu);
+        cpu.text("zilog");
+        _switcher->setCpu(cpu.str());
     } else if (option.iequals_P(PSTR("off"))) {
-        auto intel = driver.setCpu("8080");
-        if (intel == nullptr)
+        if (!_switcher->setCpu("8080"))
             return setError(UNSUPPORTED_CPU);
-        intel->assembler().setCpu(cpu);
+        _switcher->setCpu(cpu.str());
     } else
         return setError(option, UNKNOWN_OPERAND);
     return setOK();
 }
 
-Error AsmDirective::endAssemble(StrScanner &scan, Context &context, AsmDriver &driver) {
+Error AsmDirective::endAssemble(StrScanner &scan, Context &context) {
     return END_ASSEMBLE;
 }
 

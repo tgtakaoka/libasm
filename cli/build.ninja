@@ -19,10 +19,10 @@ subninja ${root}/src/ninja.rules
 
 build asm: link $
   asm.o asm_commander.o asm_driver.o asm_directive.o asm_formatter.o $
-  list_formatter.o function_store.o bin_memory.o file_printer.o $
-  file_reader.o bin_decoder.o bin_encoder.o intel_hex.o  moto_srec.o $
-  asm_base.o config_base.o error_reporter.o formatters.o operators.o $
-  option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
+  list_formatter.o function_store.o symbol_store.o bin_memory.o $
+  file_printer.o file_reader.o bin_decoder.o bin_encoder.o intel_hex.o $
+  moto_srec.o asm_base.o config_base.o error_reporter.o formatters.o $
+  operators.o option_base.o parsers.o reg_base.o str_buffer.o str_scanner.o $
   text_common.o value_formatter.o value_parser.o $
   asm_cdp1802.o  reg_cdp1802.o  table_cdp1802.o  text_cdp1802.o  $
   asm_f3850.o    reg_f3850.o    table_f3850.o    text_f3850.o    $

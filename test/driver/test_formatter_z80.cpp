@@ -37,7 +37,7 @@ void test_asm_z80() {
             "        defm  'A', '''', 'C'+80H, 'a''c'\n");
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0x8a, "data1");
+    symbols.internSymbol(0x8a, "data1");
 
     ASM("z80",
             "        cpu   z80\n"

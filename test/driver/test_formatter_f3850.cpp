@@ -37,7 +37,7 @@ void test_asm_f3850() {
             "        dc    c'a',',, c'bc''de', 0\n"     // DC can accept string
             "        dc    C'A', #', C'C'+h'80'\n");    // C'c' requires surrounding quotes
 
-    driver.internSymbol(0x7bd0, "label1");
+    symbols.internSymbol(0x7bd0, "label1");
 
     ASM("f3850",
             "        cpu   F3850\n"

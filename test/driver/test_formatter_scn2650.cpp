@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_scn2650() {
     PREP_ASM(scn2650::AsmScn2650, IntelDirective);
 
-    driver.internSymbol(0x7def, "label1");
+    symbols.internSymbol(0x7def, "label1");
 
     ASM("scn2650",
             "        cpu     scn2650\n"

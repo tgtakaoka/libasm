@@ -22,7 +22,26 @@
 namespace libasm {
 namespace driver {
 
-void FunctionStore::reset() {
+FunctionStore::Function::Function(const FunctionStore::Function &other)
+    : body(other.body), paramsAt(other.paramsAt), parser(other.parser), symtab(other.symtab) {}
+
+bool FunctionStore::Function::operator==(const FunctionStore::Function &other) const {
+    return body == other.body && paramsAt == other.paramsAt;
+}
+
+FunctionStore::FunctionStore() {}
+
+bool FunctionStore::operator==(const FunctionStore &other) const {
+    return _functions == other._functions;
+}
+
+void FunctionStore::copy(const FunctionStore &other) {
+    clear();
+    for (auto it : other._functions)
+        _functions.emplace(it.first, it.second);
+}
+
+void FunctionStore::clear() {
     _functions.clear();
 }
 

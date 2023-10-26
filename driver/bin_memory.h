@@ -32,7 +32,8 @@ struct BinMemory {
     void writeByte(uint32_t addr, uint8_t val);
     uint8_t readByte(uint32_t addr) const;
 
-    bool equals(const BinMemory &other) const;
+    bool operator==(const BinMemory &other) const;
+    bool operator!=(const BinMemory &other) const { return !(*this == other); }
     void swap(BinMemory &other);
     void clear();
 
@@ -67,6 +68,8 @@ private:
 
         Block(uint32_t addr) : base(addr), data() {}
         bool operator<(const Block &o) const { return base < o.base; }
+        bool operator==(const Block &o) const { return base == o.base && data == o.data; }
+        bool operator!=(const Block &o) const { return !(*this == o); }
     };
 
     // Memory block set in ascending order of start address.

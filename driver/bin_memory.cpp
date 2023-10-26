@@ -90,22 +90,8 @@ uint8_t BinMemory::readByte(uint32_t addr) const {
     return 0;
 }
 
-bool BinMemory::equals(const BinMemory &other) const {
-    auto a = _blocks.begin();
-    auto b = other._blocks.begin();
-    while (a != _blocks.end() && b != other._blocks.end()) {
-        if (a->base != b->base)
-            return false;
-        if (a->data.size() != b->data.size())
-            return false;
-        for (size_t i = 0; i < a->data.size(); i++) {
-            if (a->data[i] != b->data[i])
-                return false;
-        }
-        a++;
-        b++;
-    }
-    return a == _blocks.end() && b == other._blocks.end();
+bool BinMemory::operator==(const BinMemory &other) const {
+    return _blocks == other._blocks;
 }
 
 void BinMemory::swap(BinMemory &other) {

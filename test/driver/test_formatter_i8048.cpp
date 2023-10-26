@@ -30,7 +30,7 @@ void test_asm_i8048() {
     PREP_ASM(i8048::AsmI8048, IntelDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0x8a, "data1");
+    symbols.internSymbol(0x8a, "data1");
 
     ASM("i8039",
             "        cpu   i8039\n"

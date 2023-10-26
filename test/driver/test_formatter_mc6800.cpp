@@ -30,7 +30,7 @@ void test_asm_mc6800() {
     PREP_ASM(mc6800::AsmMc6800, MotorolaDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0xf1f2, "label1");
+    symbols.internSymbol(0xf1f2, "label1");
 
     ASM("mc6800",
             "        cpu   mc6800\n"

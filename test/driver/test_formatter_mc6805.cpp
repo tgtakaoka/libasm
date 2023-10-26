@@ -30,7 +30,7 @@ void test_asm_mc6805() {
     PREP_ASM(mc6805::AsmMc6805, MotorolaDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0x0800, "label1");
+    symbols.internSymbol(0x0800, "label1");
 
     ASM("mc146805",
             "        cpu   mc146805\n"

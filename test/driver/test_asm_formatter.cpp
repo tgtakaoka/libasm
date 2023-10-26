@@ -152,7 +152,7 @@ void test_switch_cpu() {
     ASM("switch cpu",
             "        cpu   mc6809\n"
             "        org   $1000\n"
-             "        ldx   #$1234\n"
+            "        ldx   #$1234\n"
             "        cpu   z80\n"
             "        ld    hl, 1234H\n"
             "        cpu   i8080\n"

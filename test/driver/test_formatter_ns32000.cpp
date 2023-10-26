@@ -30,10 +30,10 @@ void test_asm_ns32000() {
     PREP_ASM(ns32000::AsmNs32000, NationalDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0x112233, "disp2");
-    driver.internSymbol(0x334455, "disp1");
-    driver.internSymbol(0x556677, "off2");
-    driver.internSymbol(0x778899, "off1");
+    symbols.internSymbol(0x112233, "disp2");
+    symbols.internSymbol(0x334455, "disp1");
+    symbols.internSymbol(0x556677, "off2");
+    symbols.internSymbol(0x778899, "off1");
 
     ASM("ns32032",
             "        .cpu    ns32032\n"

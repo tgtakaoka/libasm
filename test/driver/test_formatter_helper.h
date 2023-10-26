@@ -42,6 +42,7 @@ struct AsmFormatterHelper {
     AsmDriver driver(&dirs[0], &dirs[sizeof(dirs) / sizeof(dirs[0])]); \
     char buffer[256];                                                  \
     StrBuffer out(buffer, sizeof(buffer));                             \
+    SymbolStoreImpl symbols;                                           \
     const bool reportError = !reportDuplicate;                         \
     AsmFormatterHelper formatter
 
@@ -72,15 +73,15 @@ struct AsmFormatterHelper {
             auto &directive = *driver.current();                            \
             auto &insn = fmt.insn();                                        \
             insn.reset(origin);                                             \
-            AsmDirective::Context context{sources, reportError};            \
+            AsmDirective::Context context{sources, symbols, reportError};   \
             auto scan = *line;                                              \
-            directive.encode(scan, insn, context, driver);                  \
-            const auto &config = directive.assembler().config();            \
+            directive.encode(scan, insn, context);                          \
+            const auto &config = directive.config();                        \
             origin = insn.address() + insn.length() / config.addressUnit(); \
             if (insn.length() == 0)                                         \
-                origin = directive.assembler().currentLocation();           \
+                origin = directive.currentLocation();                       \
             fmt.set(*line, directive, config, &context.value);              \
-            fmt.setListRadix(driver.current()->assembler().listRadix());    \
+            fmt.setListRadix(driver.current()->listRadix());                \
             while (fmt.hasNextLine())                                       \
                 EQ("line", expected.readLine(), fmt.getLine(out).str());    \
         }                                                                   \

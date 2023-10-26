@@ -30,7 +30,7 @@ void test_asm_mos6502() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0xf1f2, "label1");
+    symbols.internSymbol(0xf1f2, "label1");
 
     ASM("mos6502",
             "        cpu   mos6502\n"
@@ -61,7 +61,7 @@ void test_asm_w65816() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0xf2f1f0, "label1");
+    symbols.internSymbol(0xf2f1f0, "label1");
 
     ASM("w65c816",
             "        cpu   w65c816\n"

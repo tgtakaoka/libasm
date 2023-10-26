@@ -21,40 +21,61 @@
 #include <string>
 
 #include "asm_base.h"
-#include "asm_sources.h"
 #include "bin_encoder.h"
 #include "error_reporter.h"
 #include "str_scanner.h"
+#include "value.h"
 
 namespace libasm {
 namespace driver {
 
-struct AsmDriver;
+struct AsmSources;
 struct BinEncoder;
+struct SymbolStore;
+
+struct CpuSwitcher {
+    virtual bool setCpu(const char *cpu) = 0;
+};
 
 struct AsmDirective : ErrorAt {
+    bool setCpu(const char *cpu);
+    const /*PROGMEM*/ char *cpu_P() const;
+    const /*PROGMEM*/ char *listCpu_P() const;
+    const ConfigBase &config() const;
+    const Options &commonOptions() const;
+    const Options &options() const;
+
+    void reset(CpuSwitcher &switcher);
+    void setOption(const char *name, const char *value);
+    void setListRadix(Radix listRadix);
+    Radix listRadix() const;
+    uint32_t currentLocation() const;
+
     struct Context {
-        Context(AsmSources &_sources, bool _reportError = true)
-            : sources(_sources), reportDuplicate(!_reportError), reportUndefined(_reportError) {}
+        Context(AsmSources &_sources, SymbolStore &_symbols, bool _reportError = true)
+            : sources(_sources),
+              symbols(_symbols),
+              reportDuplicate(!_reportError),
+              reportUndefined(_reportError) {}
         AsmSources &sources;
+        SymbolStore &symbols;
         const bool reportDuplicate;
         const bool reportUndefined;
         StrScanner label;
         Value value;
     };
 
-    Error encode(StrScanner &scan, Insn &insn, Context &context, AsmDriver &drive);
+    Error encode(StrScanner &scan, Insn &insn, Context &context);
 
-    Assembler &assembler() const { return _assembler; }
     virtual BinEncoder &defaultEncoder() const;
 
     static bool is8080(const /* PROGMEM */ char *cpu_P);
 
 protected:
     Assembler &_assembler;
+    CpuSwitcher *_switcher;
 
-    typedef Error (AsmDirective::*PseudoHandler)(
-            StrScanner &scan, Context &context, AsmDriver &driver);
+    using PseudoHandler = Error (AsmDirective::*)(StrScanner &scan, Context &context);
     struct icasecmp {
         bool operator()(const std::string &lhs, const std::string &rhs) const {
             return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
@@ -66,22 +87,20 @@ protected:
 
     void registerPseudo(const char *name, PseudoHandler handler);
     void disablePseudo(const char *name);
-    Error processPseudo(
-            const StrScanner &name, StrScanner &scan, Context &context, AsmDriver &driver);
+    Error processPseudo(const StrScanner &name, StrScanner &scan, Context &context);
 
     // PseudoHandler
-    Error defineConstant(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error defineVariable(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error setVariable(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error includeFile(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error switchCpu(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error switchIntelZilog(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error endAssemble(StrScanner &scan, Context &context, AsmDriver &driver);
-    Error defineFunction(StrScanner &scan, Context &context, AsmDriver &driver);
+    Error defineConstant(StrScanner &scan, Context &context);
+    Error defineVariable(StrScanner &scan, Context &context);
+    Error setVariable(StrScanner &scan, Context &context);
+    Error includeFile(StrScanner &scan, Context &context);
+    Error switchCpu(StrScanner &scan, Context &context);
+    Error switchIntelZilog(StrScanner &scan, Context &context);
+    Error endAssemble(StrScanner &scan, Context &context);
+    Error defineFunction(StrScanner &scan, Context &context);
 
     // PseudoHanlder helper
-    Error defineSymbol(StrScanner &scan, const StrScanner &symbol, Context &context,
-            AsmDriver &driver, bool variable);
+    Error defineSymbol(StrScanner &scan, const StrScanner &symbol, Context &context, bool variable);
 };
 
 struct MotorolaDirective : AsmDirective {

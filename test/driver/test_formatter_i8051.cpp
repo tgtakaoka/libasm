@@ -30,7 +30,7 @@ void test_asm_i8051() {
     PREP_ASM(i8051::AsmI8051, IntelDirective);
 
     formatter.setUpperHex(false);
-    driver.internSymbol(0xb0, "data1");
+    symbols.internSymbol(0xb0, "data1");
 
     ASM("i8051",
             "        cpu   i8051\n"
