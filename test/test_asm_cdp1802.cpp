@@ -676,18 +676,18 @@ static void test_call() {
 }
 
 static void test_comment() {
-    TEST("NOP; comment",     0xC4);
-    TEST("RET    ; comment", 0x70);
-    TEST("LDN  1 ; comment", 0x01);
-    TEST("DEC  15; comment", 0x2F);
-    TEST("LDI 12H; comment", 0xF8, 0x12);
-    TEST("INP 4  ; comment", 0x6C);
-    TEST("BNQ 3AH; comment", 0x39, 0x3A);
-    TEST("LBZ 3AH; comment", 0xC2, 0x00, 0x3A);
-    TEST("LSKP   ; comment", 0xC8);
+    ERRT("NOP; comment",     OK, "; comment", 0xC4);
+    ERRT("RET    ; comment", OK, "; comment", 0x70);
+    ERRT("LDN  1 ; comment", OK, "; comment", 0x01);
+    ERRT("DEC  15; comment", OK, "; comment", 0x2F);
+    ERRT("LDI 12H; comment", OK, "; comment", 0xF8, 0x12);
+    ERRT("INP 4  ; comment", OK, "; comment", 0x6C);
+    ERRT("BNQ 3AH; comment", OK, "; comment", 0x39, 0x3A);
+    ERRT("LBZ 3AH; comment", OK, "; comment", 0xC2, 0x00, 0x3A);
+    ERRT("LSKP   ; comment", OK, "; comment", 0xC8);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("LDN UNDEF", "UNDEF", 0x07); // Default work register
     ERUS("OUT UNDEF", "UNDEF", 0x61); // Default IO
     ERUS("INP UNDEF", "UNDEF", 0x69); // Default IO
@@ -831,7 +831,7 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_call);
     }
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_usereg);
     RUN_TEST(test_data_constant);
 }

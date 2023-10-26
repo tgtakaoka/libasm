@@ -969,20 +969,20 @@ static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
-    TEST("NOP          ; comment", 0x01);
-    TEST("PSHA         ; comment", 0x36);
-    TEST("SUBA  #$90   ; comment", 0x80, 0x90);
-    TEST("NEG > $0010  ; comment", 0x70, 0x00, 0x10);
-    TEST("SUBA   >$90  ; comment", 0xB0, 0x00, 0x90);
-    TEST("SUBA sym255  ; comment", 0x90, 0xFF);
-    TEST("SUBA >sym255 ; comment", 0xB0, 0x00, 0xFF);
-    TEST("SUBA sym1234 ; comment", 0xB0, 0x12, 0x34);
-    TEST("JMP sym255   ; comment", 0x7E, 0x00, 0xFF);
-    TEST("JSR sym1234  ; comment", 0xBD, 0x12, 0x34);
-    TEST("LDAA 0 , X   ; comment", 0xA6, 0x00);
+    ERRT("NOP          ; comment", OK, "; comment", 0x01);
+    ERRT("PSHA         ; comment", OK, "; comment", 0x36);
+    ERRT("SUBA  #$90   ; comment", OK, "; comment", 0x80, 0x90);
+    ERRT("NEG > $0010  ; comment", OK, "; comment", 0x70, 0x00, 0x10);
+    ERRT("SUBA   >$90  ; comment", OK, "; comment", 0xB0, 0x00, 0x90);
+    ERRT("SUBA sym255  ; comment", OK, "; comment", 0x90, 0xFF);
+    ERRT("SUBA >sym255 ; comment", OK, "; comment", 0xB0, 0x00, 0xFF);
+    ERRT("SUBA sym1234 ; comment", OK, "; comment", 0xB0, 0x12, 0x34);
+    ERRT("JMP sym255   ; comment", OK, "; comment", 0x7E, 0x00, 0xFF);
+    ERRT("JSR sym1234  ; comment", OK, "; comment", 0xBD, 0x12, 0x34);
+    ERRT("LDAA 0 , X   ; comment", OK, "; comment", 0xA6, 0x00);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("LDAA  #UNDEF", "UNDEF", 0x86, 0x00);
     ERUS("LDS   #UNDEF", "UNDEF", 0x8E, 0x00, 0x00);
     ERUS("NEG    UNDEF", "UNDEF", 0x70, 0x00, 0x00);
@@ -1095,7 +1095,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_relative);
     RUN_TEST(test_bit_ops);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

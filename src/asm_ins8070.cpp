@@ -279,7 +279,7 @@ Error AsmIns8070::defineAddrConstant(StrScanner &scan, Insn &insn) {
         ErrorAt error;
         const auto value = parseExpr(p, error);
         if (error.getError())
-            return setError(error);
+            return insn.setError(error);
         const auto v = value.getUnsigned();
         insn.emitUint16Le((v - 1) & 0xFFFF);
         scan = p;
@@ -294,23 +294,23 @@ Error AsmIns8070::processPseudo(StrScanner &scan, Insn &insn) {
     return Assembler::processPseudo(scan, insn);
 }
 
-Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmIns8070::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     emitOperand(insn, insn.dst(), insn.dstOp);
     emitOperand(insn, insn.src(), insn.srcOp);
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace ins8070

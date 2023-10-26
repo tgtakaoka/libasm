@@ -714,26 +714,26 @@ static void test_misc() {
 }
 
 static void test_comment() {
-    ATEST(0x1000, "L R2, * - 128               ; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "L R2, -128 ( IC )           ; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "L R2, 0x0F80-* ( IC )       ; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "L R4, ( * + 127 )           ; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    ATEST(0x1000, "L R4, ( 127 ( IC ) )        ; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    ATEST(0x1000, "L R4, ( 0x107F - * ( IC ) ) ; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    TEST(         "L R0, 16 ( X0 )             ; comment", 0xC000|(4<<11)|(0<<8)|0x10);
-    TEST(         "L R0, 0 + (16) ( X0 )       ; comment", 0xC000|(4<<11)|(0<<8)|0x10);
-    TEST(         "L R1, ( 16 ) ( X0 )         ; comment", 0xC000|(6<<11)|(1<<8)|0x10);
-    TEST(         "L R1, ( 0 + 16 ) ( X0 )     ; comment", 0xC000|(6<<11)|(1<<8)|0x10);
+    AERRT(0x1000, "L R2, * - 128               ; comment", OK, "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R2, -128 ( IC )           ; comment", OK, "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R2, 0x0F80-* ( IC )       ; comment", OK, "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R4, ( * + 127 )           ; comment", OK, "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    AERRT(0x1000, "L R4, ( 127 ( IC ) )        ; comment", OK, "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    AERRT(0x1000, "L R4, ( 0x107F - * ( IC ) ) ; comment", OK, "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    ERRT(         "L R0, 16 ( X0 )             ; comment", OK, "; comment", 0xC000|(4<<11)|(0<<8)|0x10);
+    ERRT(         "L R0, 0 + (16) ( X0 )       ; comment", OK, "; comment", 0xC000|(4<<11)|(0<<8)|0x10);
+    ERRT(         "L R1, ( 16 ) ( X0 )         ; comment", OK, "; comment", 0xC000|(6<<11)|(1<<8)|0x10);
+    ERRT(         "L R1, ( 0 + 16 ) ( X0 )     ; comment", OK, "; comment", 0xC000|(6<<11)|(1<<8)|0x10);
 
     symtab.intern(0x0F80, "sym0F80");
     symtab.intern(0x107F, "sym107F");
-    ATEST(0x1000, "L R2, sym0F80          ; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "L R2, sym0F80-* (IC)   ; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ATEST(0x1000, "L R4, (sym107F)        ; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    ATEST(0x1000, "L R4, (sym107F-* (IC)) ; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    AERRT(0x1000, "L R2, sym0F80          ; comment", OK, "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R2, sym0F80-* (IC)   ; comment", OK, "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    AERRT(0x1000, "L R4, (sym107F)        ; comment", OK, "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    AERRT(0x1000, "L R4, (sym107F-* (IC)) ; comment", OK, "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     symtab.intern(0x1020, "SYM1020");
     ATEST(0x1000, "L R2, SYM1020",                       0xC000|(1<<11)|(2<<8)|0x20);
     AERUS(0x1000, "L R2, UNDEF",         "UNDEF",        0xC000|(0<<11)|(2<<8)|0x00);
@@ -803,7 +803,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bitops);
     RUN_TEST(test_misc);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

@@ -31,7 +31,7 @@ namespace test {
 extern TestAsserter asserter;
 extern TestSymtab symtab;
 
-void dis_assert(const char *file, int line, Error error, const ArrayMemory &src,
+void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMemory &src,
         const char *expected_name, const char *expected_opr);
 
 void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_down)());
@@ -44,21 +44,19 @@ void run_test(void (*test)(), const char *name, void (*set_up)(), void (*tear_do
     asserter.equals_P(__FILE__, __LINE__, msg, expected, actual_P)
 #define NOT_EQUALS(msg, expected, actual) \
     asserter.not_equals(__FILE__, __LINE__, msg, expected, actual)
-#define __VASSERT(file, line, error, addr, name, opr, ...)                  \
+#define __VASSERT(file, line, err, at, addr, name, opr, ...)                \
     do {                                                                    \
         const auto unit = disassembler.config().addressUnit();              \
         const auto endian = disassembler.config().endian();                 \
         const Config::opcode_t codes[] = {__VA_ARGS__};                     \
         const ArrayMemory memory(addr *unit, codes, sizeof(codes), endian); \
+        ErrorAt error;                                                      \
+        error.setError(at, err);                                            \
         dis_assert(file, line, error, memory, name, opr);                   \
     } while (0)
-#define VASSERT(error, addr, name, opr, ...) \
-    __VASSERT(__FILE__, __LINE__, error, addr, name, opr, __VA_ARGS__)
-#define AERRT(addr, name, opr, err, at, ...)                                         \
-    do {                                                                             \
-        VASSERT(err, addr, name, opr, __VA_ARGS__);                                  \
-        asserter.equals(__FILE__, __LINE__, "error at", at, disassembler.errorAt()); \
-    } while (0)
+#define VASSERT(err, at, addr, name, opr, ...) \
+    __VASSERT(__FILE__, __LINE__, err, at, addr, name, opr, __VA_ARGS__)
+#define AERRT(addr, name, opr, err, at, ...) VASSERT(err, at, addr, name, opr, __VA_ARGS__)
 #define ATEST(addr, name, opr, ...) AERRT(addr, name, opr, OK, "", __VA_ARGS__)
 #define ANMEM(addr, name, opr, at, ...) AERRT(addr, name, opr, NO_MEMORY, at, __VA_ARGS__)
 #define ERRT(name, opr, err, at, ...) AERRT(0, name, opr, err, at, __VA_ARGS__)

@@ -159,17 +159,17 @@ void DisIns8070::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     }
 }
 
-Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisIns8070::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.dst());
     const auto src = insn.src();
     if (src != M_NONE)
         decodeOperand(insn, out.comma(), src);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace ins8070

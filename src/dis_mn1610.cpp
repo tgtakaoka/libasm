@@ -198,12 +198,12 @@ StrBuffer &DisMn1610::outComma(StrBuffer &out, Config::opcode_t opc, AddrMode mo
     return out.comma();
 }
 
-Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
@@ -217,7 +217,7 @@ Error DisMn1610::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
                 decodeOperand(insn, outComma(out, opc, mode4), mode4);
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mn1610

@@ -141,16 +141,16 @@ void DisScn2650::decodeOperand(DisInsn &insn, StrBuffer &out, const AddrMode mod
     }
 }
 
-Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisScn2650::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());
     decodeOperand(insn, out, insn.mode2());
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace scn2650

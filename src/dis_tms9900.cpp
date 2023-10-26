@@ -153,23 +153,23 @@ void DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     }
 }
 
-Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto src = insn.src();
     if (src == M_SRC2) {
         insn.setPost(insn.readUint16());
         if (checkPostWord(insn))
-            return setError(insn);
+            return _insn.setError(insn);
     }
     decodeOperand(insn, out, src);
     const auto dst = insn.dst();
     if (dst != M_NONE)
         decodeOperand(insn, out.comma(), dst);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace tms9900

@@ -101,17 +101,17 @@ void DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     }
 }
 
-Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
         insn.setOpCode(insn.readByte(), opc);
         if (insn.getError())
-            return setError(insn);
+            return _insn.setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto mode1 = insn.mode1();
     if (mode1 != M_NONE) {
@@ -120,7 +120,7 @@ Error DisCdp1802::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (mode2 != M_NONE)
             decodeOperand(insn, out.comma(), mode2);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace cdp1802

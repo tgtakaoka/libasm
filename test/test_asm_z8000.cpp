@@ -2338,18 +2338,18 @@ static void test_short_direct() {
     symtab.intern(0x1234, "l_off");
     symtab.intern(0x560000, "seg");
 
-    TEST("CLR 0x560034        ; auto short",  0x4D08, 0x5634);
-    TEST("CLR 0x561234        ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR 0x560034(R2)    ; auto short",  0x4D28, 0x5634);
-    TEST("CLR 0x561234(R2)    ; long offset", 0x4D28, 0xD600, 0x1234);
-    TEST("CLR seg|s_off       ; auto short",  0x4D08, 0x5634);
-    TEST("CLR seg+s_off(R2)   ; auto short",  0x4D28, 0x5634);
-    TEST("CLR (seg+s_off)     ; auto short",  0x4D08, 0x5634);
-    TEST("CLR (seg|s_off)(R2) ; auto short",  0x4D28, 0x5634);
-    TEST("CLR seg+l_off       ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR seg|l_off(R2)   ; long offset", 0x4D28, 0xD600, 0x1234);
-    TEST("CLR (seg|l_off)     ; long offset", 0x4D08, 0xD600, 0x1234);
-    TEST("CLR (seg+l_off)(R2) ; long offset", 0x4D28, 0xD600, 0x1234);
+    ERRT("CLR 0x560034        ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
+    ERRT("CLR 0x561234        ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
+    ERRT("CLR 0x560034(R2)    ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
+    ERRT("CLR 0x561234(R2)    ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
+    ERRT("CLR seg|s_off       ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
+    ERRT("CLR seg+s_off(R2)   ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
+    ERRT("CLR (seg+s_off)     ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
+    ERRT("CLR (seg|s_off)(R2) ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
+    ERRT("CLR seg+l_off       ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
+    ERRT("CLR seg|l_off(R2)   ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
+    ERRT("CLR (seg|l_off)     ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
+    ERRT("CLR (seg+l_off)(R2) ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
 
     assembler.setOption("short-direct", "disable");
 
@@ -2366,11 +2366,11 @@ static void test_short_direct() {
     TEST("CLR (seg+s_off)(R2)", 0x4D28, 0xD600, 0x0034);
     TEST("CLR (seg|l_off)(R2)", 0x4D28, 0xD600, 0x1234);
 
-    TEST("CLR |0x560034|        ; short direct", 0x4D08, 0x5634);
-    TEST("CLR |0x560034|(R2)    ; short direct", 0x4D28, 0x5634);
-    TEST("CLR |seg+s_off|(R2)   ; short direct", 0x4D28, 0x5634);
-    TEST("CLR |(seg|s_off)|     ; short direct", 0x4D08, 0x5634);
-    TEST("CLR |(seg+s_off)|(R2) ; short direct", 0x4D28, 0x5634);
+    ERRT("CLR |0x560034|        ; short direct", OK, "; short direct", 0x4D08, 0x5634);
+    ERRT("CLR |0x560034|(R2)    ; short direct", OK, "; short direct", 0x4D28, 0x5634);
+    ERRT("CLR |seg+s_off|(R2)   ; short direct", OK, "; short direct", 0x4D28, 0x5634);
+    ERRT("CLR |(seg|s_off)|     ; short direct", OK, "; short direct", 0x4D08, 0x5634);
+    ERRT("CLR |(seg+s_off)|(R2) ; short direct", OK, "; short direct", 0x4D28, 0x5634);
     ERRT("CLR |0x561234|        ; long offset",  OVERFLOW_RANGE, "|0x561234|        ; long offset", 0x4D08, 0x5634);
     ERRT("CLR |0x561234|(R2)    ; long offset",  OVERFLOW_RANGE, "|0x561234|(R2)    ; long offset", 0x4D28, 0x5634);
     ERRT("CLR |seg+l_off|       ; long offset",  OVERFLOW_RANGE, "|seg+l_off|       ; long offset", 0x4D08, 0x5634);
@@ -2381,12 +2381,12 @@ static void test_short_direct() {
 static void test_comment() {
     TEST("ADD R1 , # 0x1234", 0x0101, 0x1234);
     if (z8001()) {
-        TEST("EXB  RL1 , 0x1234 ( R2 ) ; comment", 0x6C29 ,0x8000, 0x1234);
-        TEST("PUSH @RR4 , R2",                     0x9342);
+        ERRT("EXB  RL1 , 0x1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x8000, 0x1234);
+        TEST("PUSH @RR4 , R2",  0x9342);
         ERRT("PUSH @ RR4 , R2", UNKNOWN_REGISTER, "@ RR4 , R2");
     } else {
-        TEST("EXB  RL1 , 0x1234 ( R2 ) ; comment", 0x6C29 ,0x1234);
-        TEST("PUSH @R4 , R2",                      0x9342);
+        ERRT("EXB  RL1 , 0x1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x1234);
+        TEST("PUSH @R4 , R2",  0x9342);
         ERRT("PUSH @ R4 , R2", UNKNOWN_REGISTER, "@ R4 , R2");
     }
     TEST("SETFLG C , Z , S , P , V", 0x8DF1);

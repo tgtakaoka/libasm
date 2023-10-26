@@ -133,12 +133,12 @@ void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t d
             auto &insn = formatter.insn();
             insn.reset(start + mem_offset / addrUnit);
             disassembler.decode(reader, insn, operands.mark(), operands.capacity());
-            formatter.set(disassembler);
+            formatter.set(insn);
             while (formatter.hasNextContent())
                 output.println(formatter.getContent(out).str());
             while (formatter.hasNextLine()) {
                 listout.println(formatter.getLine(out).str());
-                if (!disassembler.isOK())
+                if (!insn.isOK())
                     errorout.println(out.str());
             }
             mem_offset += insn.length();

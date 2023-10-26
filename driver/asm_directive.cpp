@@ -70,7 +70,7 @@ Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context, AsmDr
         return setOK();  // skip comment
 
     assembler().encode(scan.str(), insn, &driver);
-    setError(assembler());
+    setError(insn);
 
     error = getError();
     const auto allowUndef = !context.reportUndefined && error == UNDEFINED_SYMBOL;

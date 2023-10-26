@@ -403,11 +403,11 @@ void test_error() {
 }
 
 void test_comment() {
-    TEST("CLR R214; comment", 0xD5, 0xD6);
-    TEST("CLR >D6 ; comment", 0xD5, 0xD6);
+    ERRT("CLR R214; comment", OK, "; comment", 0xD5, 0xD6);
+    ERRT("CLR >D6 ; comment", OK, "; comment", 0xD5, 0xD6);
 
-    TEST("ADC %122, R123  ; comment", 0x79, 0x7A, 0x7B);
-    TEST("ADC % 122, R123 ; comment", 0x79, 0x7A, 0x7B);
+    ERRT("ADC %122, R123  ; comment", OK, "; comment", 0x79, 0x7A, 0x7B);
+    ERRT("ADC % 122, R123 ; comment", OK, "; comment", 0x79, 0x7A, 0x7B);
 
     TEST("MOVD %>A9AA(B), R171",     0xA8, 0xA9, 0xAA, 0xAB);
     TEST("MOVD % >A9AA(B), R171",    0xA8, 0xA9, 0xAA, 0xAB);
@@ -432,7 +432,7 @@ void test_comment() {
     TEST("CALL @ >AFB0 ( B )", 0xAE, 0xAF, 0xB0);
 }
 
-void test_undefined_symbol() {
+void test_undef() {
     ERUS("TRAP UNDEF", "UNDEF", 0xFF);
     ERUS("CLR  UNDEF", "UNDEF", 0xD5, 0x00);
 
@@ -518,7 +518,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_extended);
     RUN_TEST(test_error);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

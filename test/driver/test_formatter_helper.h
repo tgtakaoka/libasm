@@ -55,34 +55,36 @@ struct AsmFormatterHelper {
     typeof_directive directive{assembler};     \
     PREP_ASM_DRIVER(false, &directive)
 
-#define ASM(_cpu, _source, _expected)                                    \
-    do {                                                                 \
-        uint32_t origin = 0;                                             \
-        TestReader expected("expected");                                 \
-        expected.add(_expected);                                         \
-        TestReader source(_cpu);                                         \
-        source.add(_source);                                             \
-        sources.add(source);                                             \
-        sources.open(source.name().c_str());                             \
-        AsmFormatter fmt{sources};                                       \
-        fmt.setUpperHex(formatter.upperHex);                             \
-        fmt.setLineNumber(formatter.lineNumber);                         \
-        StrScanner *line;                                                \
-        while ((line = sources.readLine()) != nullptr) {                 \
-            auto &directive = *driver.current();                         \
-            auto &insn = fmt.insn();                                     \
-            insn.reset(origin);                                          \
-            AsmDirective::Context context{sources, reportError};         \
-            auto scan = *line;                                           \
-            directive.encode(scan, insn, context, driver);               \
-            const auto &config = directive.assembler().config();         \
-            origin = directive.assembler().currentLocation();            \
-            fmt.set(*line, directive, config, &context.value);           \
-            fmt.setListRadix(driver.current()->assembler().listRadix()); \
-            while (fmt.hasNextLine())                                    \
-                EQ("line", expected.readLine(), fmt.getLine(out).str()); \
-        }                                                                \
-        EQ("line eor", nullptr, expected.readLine());                    \
+#define ASM(_cpu, _source, _expected)                                       \
+    do {                                                                    \
+        uint32_t origin = 0;                                                \
+        TestReader expected("expected");                                    \
+        expected.add(_expected);                                            \
+        TestReader source(_cpu);                                            \
+        source.add(_source);                                                \
+        sources.add(source);                                                \
+        sources.open(source.name().c_str());                                \
+        AsmFormatter fmt{sources};                                          \
+        fmt.setUpperHex(formatter.upperHex);                                \
+        fmt.setLineNumber(formatter.lineNumber);                            \
+        StrScanner *line;                                                   \
+        while ((line = sources.readLine()) != nullptr) {                    \
+            auto &directive = *driver.current();                            \
+            auto &insn = fmt.insn();                                        \
+            insn.reset(origin);                                             \
+            AsmDirective::Context context{sources, reportError};            \
+            auto scan = *line;                                              \
+            directive.encode(scan, insn, context, driver);                  \
+            const auto &config = directive.assembler().config();            \
+            origin = insn.address() + insn.length() / config.addressUnit(); \
+            if (insn.length() == 0)                                         \
+                origin = directive.assembler().currentLocation();           \
+            fmt.set(*line, directive, config, &context.value);              \
+            fmt.setListRadix(driver.current()->assembler().listRadix());    \
+            while (fmt.hasNextLine())                                       \
+                EQ("line", expected.readLine(), fmt.getLine(out).str());    \
+        }                                                                   \
+        EQ("line eor", nullptr, expected.readLine());                       \
     } while (0)
 
 #define PREP_DIS(typeof_disassembler)      \
@@ -114,7 +116,7 @@ struct AsmFormatterHelper {
             auto &insn = formatter.insn();                                           \
             insn.reset(reader.address() / unit);                                     \
             disassembler.decode(reader, insn, opr.mark(), opr.capacity());           \
-            formatter.set(disassembler);                                             \
+            formatter.set(insn);                                                     \
             while (formatter.hasNextContent())                                       \
                 EQ("content", contents.readLine(), formatter.getContent(out).str()); \
             while (formatter.hasNextLine())                                          \

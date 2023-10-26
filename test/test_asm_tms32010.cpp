@@ -502,6 +502,27 @@ static void test_dataio() {
     ERUS("OUT *+, PA7, UNDEF", "UNDEF", 0x4FA0);
 }
 
+static void test_comment() {
+    ERRT("ADDH 70H     ; comment", OK, "; comment", 0x6070);
+    ERRT("ADDH *       ; comment", OK, "; comment", 0x6088);
+    ERRT("ADDH *-      ; comment", OK, "; comment", 0x6098);
+    ERRT("ADDH *+      ; comment", OK, "; comment", 0x60A8);
+    ERRT("ADDH *, AR0  ; comment", OK, "; comment", 0x6080);
+    ERRT("ADDH *-, AR1 ; comment", OK, "; comment", 0x6091);
+    ERRT("ADDH *+, AR0 ; comment", OK, "; comment", 0x60A0);
+    ERRT("ADDH *-, 1   ; comment", OK, "; comment", 0x6091);
+    ERRT("ADDH *+, 0   ; comment", OK, "; comment", 0x60A0);
+}
+
+static void test_undef() {
+    ERUS("ADDH *+, UNDEF",    "UNDEF",        0x60A0);
+    ERUS("LAC UNDEF",         "UNDEF",        0x2000);
+    ERUS("LAC UNDEF, 15",     "UNDEF, 15",    0x2F00);
+    ERUS("LAC 70H, UNDEF",    "UNDEF",        0x2070);
+    ERUS("LAC UNDEF, UNDEF",  "UNDEF, UNDEF", 0x2000);
+    ERUS("LAC *, UNDEF, AR0", "UNDEF, AR0",   0x2080);
+}
+
 static void test_data_constant() {
     BTEST(".byte -128, 255",    0x80, 0x00, 0xFF, 0x00);
     BTEST(".byte 1234H",        0x34, 0x00);
@@ -550,6 +571,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_control);
     RUN_TEST(test_dataio);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

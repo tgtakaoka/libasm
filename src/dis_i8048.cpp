@@ -119,11 +119,11 @@ void DisI8048::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     }
 }
 
-Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto dst = insn.dst();
     if (dst != M_NONE) {
@@ -132,7 +132,7 @@ Error DisI8048::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (src != M_NONE)
             decodeOperand(insn, out.comma(), src);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8048

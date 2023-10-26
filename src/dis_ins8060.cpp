@@ -72,11 +72,11 @@ void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
     }
 }
 
-Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     switch (insn.addrMode()) {
     case M_PNTR:
@@ -97,7 +97,7 @@ Error DisIns8060::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     }
     if (page(insn.address()) != page(insn.address() + insn.length() - 1))
         insn.setErrorIf(OVERWRAP_PAGE);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace ins8060

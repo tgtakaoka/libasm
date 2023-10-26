@@ -219,23 +219,23 @@ void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) cons
     }
 }
 
-Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.src1Op) && insn.src1Op.hasError())
-            return setError(insn.src1Op);
+            return _insn.setError(insn.src1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.src2Op) && insn.src2Op.hasError())
-            return setError(insn.src2Op);
+            return _insn.setError(insn.src2Op);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     if (!jbx_djnz) {
@@ -250,7 +250,7 @@ Error AsmI8096::encodeImpl(StrScanner &scan, Insn &_insn) {
         emitOperand(insn, insn.src2(), insn.src2Op);
     }
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8096

@@ -620,6 +620,13 @@ void test_io_transfer() {
     TEST("IOT dev77 cmd6", 06776);
 }
 
+void test_comment() {
+    ERRT("CML        / comment", OK, "/ comment", 07020);
+    ERRT("CML     IAC; comment", OK, "; comment", 07021);
+    ERRT("CML BSW    ; comment", OK, "; comment", 07022);
+    ERRT("CML BSW IAC/ comment", OK, "/ comment", 07023);
+}
+
 void test_undef() {
     constexpr uint16_t IA = 0400;
     AERRT(04000, "JMP UNDEF",   UNDEFINED_SYMBOL, "UNDEF", 05000|0000);
@@ -722,6 +729,7 @@ void run_tests(const char *cpu) {
     if (hd6120())
         RUN_TEST(test_memory_extension);
     RUN_TEST(test_io_transfer);
+    RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_error);
     RUN_TEST(test_data_constant);

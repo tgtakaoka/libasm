@@ -88,7 +88,6 @@ void test_cpu() {
 }
 
 static void test_impl() {
-    // MOS6502
     TEST("BRK", 0x00);
     TEST("RTI", 0x40);
     TEST("RTS", 0x60);
@@ -132,7 +131,6 @@ static void test_impl() {
         TEST("PLX", 0xFA);
     }
     if (w65c02s() || w65c816()) {
-        // W65C02S, 65816
         TEST("WAI", 0xCB);
         TEST("STP", 0xDB);
     } else {
@@ -140,7 +138,6 @@ static void test_impl() {
         ERUI("STP");
     }
     if (w65c816()) {
-        // W65C816
         TEST("RTL", 0x6B);
         TEST("PHB", 0x8B);
         TEST("PHD", 0x0B);
@@ -215,7 +212,6 @@ static void test_imm() {
         TEST("BIT #$90", 0x89, 0x90);
     }
     if (w65c816()) {
-        // W65C816
         TEST("COP #$10", 0x02, 0x10);
         TEST("WDM #$10", 0x42, 0x10);
         TEST("REP #$20", 0xC2, 0x20);
@@ -228,7 +224,6 @@ static void test_imm() {
     }
 
     if (w65c816()) {
-        // W65C816
         TEST("LONGA ON");
         TEST("LONGI ON");
         TEST("LDA #$1234",  0xA9, 0x34, 0x12);
@@ -278,7 +273,6 @@ static void test_imm() {
         TEST("BIT #zero90", 0x89, 0x90);
     }
     if (w65c816()) {
-        // W65C816
         TEST("REP #zero10", 0xC2, 0x10);
         TEST("SEP #zeroFF", 0xE2, 0xFF);
     }
@@ -394,7 +388,6 @@ static void test_zpg_indexed() {
 
 static void test_zpg_long() {
     if (w65c816()) {
-        // W65C816
         TEST("ORA [$10]", 0x07, 0x10);
         TEST("AND [$10]", 0x27, 0x10);
         TEST("EOR [$10]", 0x47, 0x10);
@@ -446,7 +439,6 @@ static void test_zpg_long() {
 
 static void test_sp_rel() {
     if (w65c816()) {
-        // W65C816
         TEST("LDA ($10,S),Y", 0xB3, 0x10);
         TEST("STA ($10,S),Y", 0x93, 0x10);
     } else {
@@ -454,7 +446,6 @@ static void test_sp_rel() {
         ERRT("STA ($10,S),Y", REGISTER_NOT_ALLOWED, "S),Y");
     }
     if (w65c816()) {
-        // W65C816
         TEST("ora $10,s", 0x03, 0x10);
         TEST("AND $10,S", 0x23, 0x10);
         TEST("EOR $10,S", 0x43, 0x10);
@@ -517,7 +508,6 @@ static void test_abs() {
         TEST("STZ $1234", 0x9C, 0x34, 0x12);
     }
     if (w65c816()) {
-        // W65C816
         TEST("PEA $1234", 0xF4, 0x34, 0x12);
     } else {
         ERUI("PEA $1234");
@@ -539,14 +529,12 @@ static void test_abs() {
         TEST("TSB abs1234", 0x0C, 0x34, 0x12);
     }
     if (w65c816()) {
-        // W65C816
         TEST("PEA abs0010", 0xF4, 0x10, 0x00);
     }
 }
 
 static void test_abs_long() {
     if (w65c816()) {
-        // W65C816
         TEST("ORA $123456", 0x0F, 0x56, 0x34, 0x12);
         TEST("AND $123456", 0x2F, 0x56, 0x34, 0x12);
         TEST("EOR $123456", 0x4F, 0x56, 0x34, 0x12);
@@ -580,7 +568,6 @@ static void test_abs_long() {
         symtab.intern(0x123456, "bank12");
         symtab.intern(0x345678, "bank34");
 
-        // W65C816
         TEST("ORA long3456",    0x0F, 0x56, 0x34, 0x12);
         TEST("ORA >>sym1234,X", 0x1F, 0x34, 0x12, 0x00);
         TEST("ORA long3456,X",  0x1F, 0x56, 0x34, 0x12);
@@ -682,7 +669,6 @@ static void test_abs_indexed_idir() {
     symtab.intern(0x1234, "abs1234");
 
     if (m6502()) {
-        // MOS6502
         ERRT("JMP (>$0009,X)",   REGISTER_NOT_ALLOWED, "X)");
         ERRT("JMP ($1235,X)",    REGISTER_NOT_ALLOWED, "X)");
         ERRT("JMP (>abs0010,X)", REGISTER_NOT_ALLOWED, "X)");
@@ -696,7 +682,6 @@ static void test_abs_indexed_idir() {
     }
 
     if (w65c816()) {
-        // W65C816
         TEST("JSR (>$0009,X)",   0xFC, 0x09, 0x00);
         TEST("JSR ($1235,X)",    0xFC, 0x35, 0x12);
         TEST("JSR (>abs0010,X)", 0xFC, 0x10, 0x00);
@@ -731,7 +716,6 @@ static void test_zpg_idir() {
         TEST("SBC ($10)", 0xF2, 0x10);
     }
     if (w65c816()) {
-        // W65C816
         TEST("PEI ($10)", 0xD4, 0x10);
     } else {
         ERUI("PEI ($10)");
@@ -788,7 +772,6 @@ static void test_rel() {
     }
 
     if (w65c816()) {
-        // W65C816
         AERRT(0x0000, "BCS $FF82", OPERAND_TOO_FAR, "$FF82", 0xB0, 0x80);
         AERRT(0xFFFE, "BNE $0000", OPERAND_TOO_FAR, "$0000", 0xD0, 0x00);
         AERRT(0xFFF0, "BEQ $0071", OPERAND_TOO_FAR, "$0071", 0xF0, 0x7F);
@@ -853,7 +836,6 @@ static void test_rel() {
 
 static void test_bitop() {
     if (r65c02() || w65c02s()) {
-        // R65C02
         TEST("RMB0 $10", 0x07, 0x10);
         TEST("RMB1 $10", 0x17, 0x10);
         TEST("RMB2 $10", 0x27, 0x10);
@@ -873,7 +855,6 @@ static void test_bitop() {
 
         symtab.intern(0x0010, "zero10");
 
-        // R65C02
         TEST("RMB7 zero10", 0x77, 0x10);
         TEST("SMB0 zero10", 0x87, 0x10);
     } else {
@@ -898,7 +879,6 @@ static void test_bitop() {
 
 static void test_zpg_rel() {
     if (r65c02() || w65c02s()) {
-        // R65C02
         ATEST(0x1000, "BBR0 $10,$1003", 0x0F, 0x10, 0x00);
         ATEST(0x1000, "BBR1 $10,$1000", 0x1F, 0x10, 0xFD);
         ATEST(0x1000, "BBR2 $10,$1006", 0x2F, 0x10, 0x03);
@@ -922,7 +902,6 @@ static void test_zpg_rel() {
         symtab.intern(0x1003, "label1003");
         symtab.intern(0x1082, "label1082");
 
-        // R65C02
         ATEST(0x1000, "BBR3 zero10,label1082", 0x3F, 0x10, 0x7F);
         ATEST(0x1000, "BBR4 zero10,label0F83", 0x4F, 0x10, 0x80);
         ATEST(0x1000, "BBS4 zero10,label1003", 0xCF, 0x10, 0x00);
@@ -949,58 +928,28 @@ static void test_zpg_rel() {
 
 static void test_comment() {
     // MOS6502
-    TEST("BRK        ; comment", 0x00);
-    TEST("ASL A      ; comment", 0x0A);
-    TEST("CPY #+255  ; comment", 0xC0, 0xFF);
-    TEST("BIT $10    ; comment", 0x24, 0x10);
-    TEST("ORA $10,X  ; comment", 0x15, 0x10);
-    TEST("LDX $10,Y  ; comment", 0xB6, 0x10);
-    TEST("BIT $1234  ; comment", 0x2C, 0x34, 0x12);
-    TEST("ORA $1234,X; comment", 0x1D, 0x34, 0x12);
-    TEST("ORA $1234,Y; comment", 0x19, 0x34, 0x12);
-    TEST("JMP ($1234); comment", 0x6C, 0x34, 0x12);
-    TEST("ORA ($10,X); comment", 0x01, 0x10);
-    TEST("ORA ($10),Y; comment", 0x11, 0x10);
-    ATEST(0x1000, "BPL $1002; comment", 0x10, 0x00);
+    ERRT("BRK        ; comment", OK, "; comment", 0x00);
+    ERRT("ASL A      ; comment", OK, "; comment", 0x0A);
+    ERRT("CPY #+255  ; comment", OK, "; comment", 0xC0, 0xFF);
+    ERRT("BIT $10    ; comment", OK, "; comment", 0x24, 0x10);
+    ERRT("ORA $10,X  ; comment", OK, "; comment", 0x15, 0x10);
+    ERRT("LDX $10,Y  ; comment", OK, "; comment", 0xB6, 0x10);
+    ERRT("BIT $1234  ; comment", OK, "; comment", 0x2C, 0x34, 0x12);
+    ERRT("ORA $1234,X; comment", OK, "; comment", 0x1D, 0x34, 0x12);
+    ERRT("ORA $1234,Y; comment", OK, "; comment", 0x19, 0x34, 0x12);
+    ERRT("JMP ($1234); comment", OK, "; comment", 0x6C, 0x34, 0x12);
+    ERRT("ORA ($10,X); comment", OK, "; comment", 0x01, 0x10);
+    ERRT("ORA ($10),Y; comment", OK, "; comment", 0x11, 0x10);
+    AERRT(0x1000, "BPL $1002; comment", OK, "; comment", 0x10, 0x00);
 
-    TEST("LDX $10 , Y     ; comment", 0xB6, 0x10);
-    TEST("ORA $1234 , X   ; comment", 0x1D, 0x34, 0x12);
-    TEST("JMP ( $1234 )   ; comment", 0x6C, 0x34, 0x12);
-    TEST("ORA ( $10 , X ) ; comment", 0x01, 0x10);
-    TEST("ORA ( $10 ) , Y ; comment", 0x11, 0x10);
-    if (w65c816()) {
-        // W65C816
-        ERUS("SEP #UNDEF",        "UNDEF",    0xE2, 0x00);
-        ERUS("MVP $123456,UNDEF", "UNDEF",    0x44, 0x00, 0x12);
-        ERUS("MVP UNDEF,$123456", "UNDEF,$123456", 0x44, 0x12, 0x00);
-        ERUS("MVN UNDEF,UNDEF",   "UNDEF,UNDEF",   0x54, 0x00, 0x00);
-        ERUS("ORA [UNDEF]",       "UNDEF]",   0x07, 0x00);
-        ERUS("AND [UNDEF],Y",     "UNDEF],Y", 0x37, 0x00);
-        ERUS("EOR UNDEF,S",       "UNDEF,S",  0x43, 0x00);
-        ERUS("ADC (UNDEF,S),Y",   "UNDEF,S),Y", 0x73, 0x00);
-        ERUS("PEA UNDEF",         "UNDEF",    0xF4, 0x00, 0x00);
-        ERUS("PEI (UNDEF)",       "UNDEF)",   0xD4, 0x00);
-        ERUS("STA   UNDEF",       "UNDEF",    0x85, 0x00);
-        ERUS("STA  <UNDEF",       "UNDEF",    0x85, 0x00);
-        ERUS("STA  >UNDEF",       "UNDEF",    0x8D, 0x00, 0x00);
-        ERUS("STA >>UNDEF",       "UNDEF",    0x8F, 0x00, 0x00, 0x00);
-        ERUS("LDA   UNDEF,X",     "UNDEF,X",  0xB5, 0x00);
-        ERUS("LDA  <UNDEF,X",     "UNDEF,X",  0xB5, 0x00);
-        ERUS("LDA  >UNDEF,X",     "UNDEF,X",  0xBD, 0x00, 0x00);
-        ERUS("LDA >>UNDEF,X",     "UNDEF,X",  0xBF, 0x00, 0x00, 0x00);
-        ERUS("JMP [UNDEF]",       "UNDEF]",   0xDC, 0x00, 0x00);
-        ERUS("JSR (UNDEF,X)",     "UNDEF,X)", 0xFC, 0x00, 0x00);
-
-        ERUS("SBCL (UNDEF)",   "UNDEF)",   0xE7, 0x00);
-        ERUS("CMPL (UNDEF),Y", "UNDEF),Y", 0xD7, 0x00);
-        ERUS("JMPL (UNDEF)",   "UNDEF)",   0xDC, 0x00, 0x00);
-
-        AERUS(0x121000, "BRL UNDEF", "UNDEF", 0x82, 0x00, 0x00);
-        AERUS(0x121000, "PER UNDEF", "UNDEF", 0x62, 0x00, 0x00);
-    }
+    ERRT("LDX $10 , Y     ; comment", OK, "; comment", 0xB6, 0x10);
+    ERRT("ORA $1234 , X   ; comment", OK, "; comment", 0x1D, 0x34, 0x12);
+    ERRT("JMP ( $1234 )   ; comment", OK, "; comment", 0x6C, 0x34, 0x12);
+    ERRT("ORA ( $10 , X ) ; comment", OK, "; comment", 0x01, 0x10);
+    ERRT("ORA ( $10 ) , Y ; comment", OK, "; comment", 0x11, 0x10);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     // MOS6502
     ERUS("LDA #UNDEF", "UNDEF", 0xA9, 0x00);
     ERUS("JSR  UNDEF", "UNDEF", 0x20, 0x00, 0x00);
@@ -1045,6 +994,35 @@ static void test_undefined_symbol() {
         AERUS(0x1000, "BBS6 $10,UNDEF",   "UNDEF",       0xEF, 0x10, 0x00);
         AERUS(0x1000, "BBS7 UNDEF,UNDEF", "UNDEF,UNDEF", 0xFF, 0x00, 0x00);
     }
+    if (w65c816()) {
+        ERUS("SEP #UNDEF",        "UNDEF",    0xE2, 0x00);
+        ERUS("MVP $123456,UNDEF", "UNDEF",    0x44, 0x00, 0x12);
+        ERUS("MVP UNDEF,$123456", "UNDEF,$123456", 0x44, 0x12, 0x00);
+        ERUS("MVN UNDEF,UNDEF",   "UNDEF,UNDEF",   0x54, 0x00, 0x00);
+        ERUS("ORA [UNDEF]",       "UNDEF]",   0x07, 0x00);
+        ERUS("AND [UNDEF],Y",     "UNDEF],Y", 0x37, 0x00);
+        ERUS("EOR UNDEF,S",       "UNDEF,S",  0x43, 0x00);
+        ERUS("ADC (UNDEF,S),Y",   "UNDEF,S),Y", 0x73, 0x00);
+        ERUS("PEA UNDEF",         "UNDEF",    0xF4, 0x00, 0x00);
+        ERUS("PEI (UNDEF)",       "UNDEF)",   0xD4, 0x00);
+        ERUS("STA   UNDEF",       "UNDEF",    0x85, 0x00);
+        ERUS("STA  <UNDEF",       "UNDEF",    0x85, 0x00);
+        ERUS("STA  >UNDEF",       "UNDEF",    0x8D, 0x00, 0x00);
+        ERUS("STA >>UNDEF",       "UNDEF",    0x8F, 0x00, 0x00, 0x00);
+        ERUS("LDA   UNDEF,X",     "UNDEF,X",  0xB5, 0x00);
+        ERUS("LDA  <UNDEF,X",     "UNDEF,X",  0xB5, 0x00);
+        ERUS("LDA  >UNDEF,X",     "UNDEF,X",  0xBD, 0x00, 0x00);
+        ERUS("LDA >>UNDEF,X",     "UNDEF,X",  0xBF, 0x00, 0x00, 0x00);
+        ERUS("JMP [UNDEF]",       "UNDEF]",   0xDC, 0x00, 0x00);
+        ERUS("JSR (UNDEF,X)",     "UNDEF,X)", 0xFC, 0x00, 0x00);
+
+        ERUS("SBCL (UNDEF)",   "UNDEF)",   0xE7, 0x00);
+        ERUS("CMPL (UNDEF),Y", "UNDEF),Y", 0xD7, 0x00);
+        ERUS("JMPL (UNDEF)",   "UNDEF)",   0xDC, 0x00, 0x00);
+
+        AERUS(0x121000, "BRL UNDEF", "UNDEF", 0x82, 0x00, 0x00);
+        AERUS(0x121000, "PER UNDEF", "UNDEF", 0x62, 0x00, 0x00);
+    }
 }
 
 static void test_error() {
@@ -1063,7 +1041,6 @@ static void test_error() {
     ERRT("ORA ($10,Y)",   REGISTER_NOT_ALLOWED, "Y)");
     ERRT("ORA ($10),X",   REGISTER_NOT_ALLOWED, "X");
     if (w65c816()) {
-        // W65C816, CSG65CE02
         ERRT("JMP ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
         ERRT("JSR ($1234,Y)", REGISTER_NOT_ALLOWED, "Y)");
     } else {
@@ -1152,7 +1129,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bitop);
     RUN_TEST(test_zpg_rel);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_error);
     RUN_TEST(test_data_constant);
 }

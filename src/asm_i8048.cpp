@@ -226,23 +226,23 @@ void AsmI8048::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
     }
 }
 
-Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmI8048::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     encodeOperand(insn, insn.dst(), insn.dstOp);
     encodeOperand(insn, insn.src(), insn.srcOp);
     insn.emitInsn();
-    return setErrorIf(insn);
+    return _insn.setErrorIf(insn);
 }
 
 }  // namespace i8048

@@ -247,6 +247,21 @@ void test_control() {
     TEST("NOP ", 0x2B);
 }
 
+void test_comment() {
+    ERRT("CLR      ; comment", OK, "; comment", 0x70);
+    ERRT("LIS 1    ; comment", OK, "; comment", 0x71);
+    ERRT("LR  A, 15; comment", OK, "; comment", 0x4F);
+    ERRT("LR  0, A ; comment", OK, "; comment", 0x50);
+}
+
+void test_undef() {
+    ERUS("SR UNDEF",    "UNDEF",    0x12);
+    ERUS("LR A, UNDEF", "UNDEF",    0x40);
+    ERUS("LR UNDEF, A", "UNDEF, A", 0x50);
+    ERUS("BR  UNDEF",   "UNDEF",    0x90, 0x00);
+    ERUS("JMP UNDEF",   "UNDEF",    0x29, 0x00, 0x00);
+}
+
 void test_data_constant() {
     TEST("DC -128,255",    0x80, 0xFF);
     TEST("DA -128,255",    0xFF, 0x80, 0x00, 0xFF);
@@ -301,6 +316,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_branch);
     RUN_TEST(test_io);
     RUN_TEST(test_control);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

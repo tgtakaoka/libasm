@@ -598,7 +598,15 @@ static void test_control() {
     TEST("TRAP  ",  0xF7);
 }
 
-static void test_undefined_symbol() {
+static void test_comment() {
+    ERRT("SUB   52, 18         ; comment", OK, "; comment", 0x68, 0x12, 0x34);
+    ERRT("SUB   86, #3412H     ; comment", OK, "; comment", 0x69, 0x12, 0x34, 0x56);
+    ERRT("SUB   52, [18]       ; comment", OK, "; comment", 0x6A, 0x12, 0x34);
+    ERRT("SUB   86, 52[18]     ; comment", OK, "; comment", 0x6B, 0x12, 0x34, 0x56);
+    ERRT("SUB   120, 5634H[18] ; comment", OK, "; comment", 0x6B, 0x13, 0x34, 0x56, 0x78);
+}
+
+static void test_undef() {
     ERUS("SKIP UNDEF", "UNDEF", 0x00, 0x00);
 
     ERUS("ADD UNDEF, 18",      "UNDEF, 18",      0x64, 0x12, 0x00);
@@ -686,7 +694,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump_relative);
     RUN_TEST(test_modify);
     RUN_TEST(test_control);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

@@ -131,11 +131,11 @@ void DisI8051::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     }
 }
 
-Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto dst = insn.dst();
     const auto src = insn.src();
@@ -156,7 +156,7 @@ Error DisI8051::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
                 decodeOperand(insn, out.comma(), ext);;
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8051

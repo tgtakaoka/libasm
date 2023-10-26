@@ -55,7 +55,7 @@ Error DisIm6100::setIgnoreliteral(bool enable) {
     return OK;
 }
 
-Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
@@ -66,7 +66,7 @@ Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             outHex(insn.nameBuffer().reset().over(out), insn.opCode(), opCodeWidth())
                     .over(insn.nameBuffer());
         }
-        return setError(insn);
+        return _insn.setError(insn);
     }
     const auto mode = insn.mode();
     if (mode == M_MEM) {
@@ -83,7 +83,7 @@ Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             out.letter(' ');
         outHex(out, opc & 070, 6);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace im6100

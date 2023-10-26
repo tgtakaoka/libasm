@@ -206,7 +206,7 @@ Error AsmMc68000::emitEffectiveAddr(
     if (mode == M_NONE) {
         if (op.mode != M_NONE)
             insn.setErrorIf(op, UNKNOWN_OPERAND);
-        return getError();
+        return insn.getError();
     }
 
     const int8_t mode_gp = modePos(pos);
@@ -236,14 +236,12 @@ Error AsmMc68000::emitEffectiveAddr(
         emitDisplacement(insn, op, static_cast<Config::ptrdiff_t>(op.val32));
         break;
     case M_PCDSP:
-        if (checkAlignment(insn, size, op))
-            insn.setErrorIf(op, getError());
+        insn.setErrorIf(op, checkAlignment(insn, size, op));
         emitDisplacement(insn, op, op.offset(insn));
         break;
     case M_AWORD:
     case M_ALONG:
-        if (checkAlignment(insn, size, op))
-            insn.setErrorIf(op, getError());
+        insn.setErrorIf(op, checkAlignment(insn, size, op));
         if (op.mode == M_AWORD) {
             insn.emitOperand16(op.val32);
         } else {
@@ -295,7 +293,7 @@ Error AsmMc68000::emitEffectiveAddr(
     default:
         break;
     }
-    return getError();
+    return insn.getError();
 }
 
 namespace {
@@ -470,23 +468,23 @@ OprSize AsmInsn::parseInsnSize() {
     return isize;
 }
 
-Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto isize = insn.parseInsnSize();
     if (isize == SZ_ERROR)
-        return setError(scan, ILLEGAL_SIZE);
+        return _insn.setError(scan, ILLEGAL_SIZE);
     insn.setInsnSize(isize);
 
     if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-        return setError(insn.srcOp);
+        return _insn.setError(insn.srcOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-            return setError(insn.dstOp);
+            return _insn.setError(insn.dstOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);
@@ -518,7 +516,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) {
     emitEffectiveAddr(insn, osize, insn.srcOp, src, insn.srcPos());
     emitEffectiveAddr(insn, osize, insn.dstOp, dst, insn.dstPos());
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mc68000

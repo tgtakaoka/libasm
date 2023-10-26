@@ -423,21 +423,21 @@ static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
-    TEST("NOP         ; comment", 0x9D);
-    TEST("SUB   #$90  ; comment", 0xA0, 0x90);
-    TEST("NEG < $0010 ; comment", 0x30, 0x10);
-    TEST("SUB   >$90  ; comment", 0xC0, 0x00, 0x90);
-    TEST("SUB sym255  ; comment", 0xB0, 0xFF);
-    TEST("SUB >sym255 ; comment", 0xC0, 0x00, 0xFF);
-    TEST("SUB sym1234 ; comment", 0xC0, 0x12, 0x34);
-    TEST("JMP sym255  ; comment", 0xBC, 0xFF);
-    TEST("JSR sym1234 ; comment", 0xCD, 0x12, 0x34);
-    TEST("LDA 0 , X   ; comment", 0xF6);
-    TEST("LDA < 0 , X ; comment", 0xE6, 0x00);
-    TEST("LDA > 0 , X ; comment", 0xD6, 0x00, 0x00);
+    ERRT("NOP         ; comment", OK, "; comment", 0x9D);
+    ERRT("SUB   #$90  ; comment", OK, "; comment", 0xA0, 0x90);
+    ERRT("NEG < $0010 ; comment", OK, "; comment", 0x30, 0x10);
+    ERRT("SUB   >$90  ; comment", OK, "; comment", 0xC0, 0x00, 0x90);
+    ERRT("SUB sym255  ; comment", OK, "; comment", 0xB0, 0xFF);
+    ERRT("SUB >sym255 ; comment", OK, "; comment", 0xC0, 0x00, 0xFF);
+    ERRT("SUB sym1234 ; comment", OK, "; comment", 0xC0, 0x12, 0x34);
+    ERRT("JMP sym255  ; comment", OK, "; comment", 0xBC, 0xFF);
+    ERRT("JSR sym1234 ; comment", OK, "; comment", 0xCD, 0x12, 0x34);
+    ERRT("LDA 0 , X   ; comment", OK, "; comment", 0xF6);
+    ERRT("LDA < 0 , X ; comment", OK, "; comment", 0xE6, 0x00);
+    ERRT("LDA > 0 , X ; comment", OK, "; comment", 0xD6, 0x00, 0x00);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("LDA  #UNDEF",  "UNDEF", 0xA6, 0x00);
     ERUS("LDX  #UNDEF",  "UNDEF", 0xAE, 0x00);
     ERUS("NEG  UNDEF",   "UNDEF", 0x30, 0x00);
@@ -508,7 +508,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_relative);
     RUN_TEST(test_bit_ops);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

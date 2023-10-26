@@ -32,7 +32,7 @@ TestSymtab symtab;
 
 static char actual_opr[128];
 
-void dis_assert(const char *file, int line, Error error, const ArrayMemory &memory,
+void dis_assert(const char *file, int line, const ErrorAt &error, const ArrayMemory &memory,
         const char *expected_name, const char *expected_opr) {
     Insn insn(memory.origin() / disassembler.config().addressUnit());
     disassembler.setOption("upper-hex", "yes");
@@ -40,7 +40,8 @@ void dis_assert(const char *file, int line, Error error, const ArrayMemory &memo
     auto mem = memory.iterator();
     disassembler.decode(mem, insn, actual_opr, sizeof(actual_opr), &symtab);
 
-    asserter.equals(file, line, expected_name, error, disassembler);
+    asserter.equals(file, line, expected_name, error.errorText_P(), insn.errorText_P());
+    asserter.equals(file, line, "error at", error.errorAt(), insn.errorAt());
     asserter.equals(file, line, expected_name, expected_name, insn);
     asserter.equals(file, line, expected_name, expected_opr, actual_opr);
     asserter.equals(file, line, expected_name, memory, insn.bytes(), insn.length());

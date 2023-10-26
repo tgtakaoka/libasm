@@ -34,7 +34,7 @@ private:
 
     Error defineAddrConstant(StrScanner &scan, Insn &insn);
     Error processPseudo(StrScanner &scan, Insn &insn) override;
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

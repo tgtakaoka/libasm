@@ -55,7 +55,7 @@ private:
     void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index) const;
     void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst) const;
 
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

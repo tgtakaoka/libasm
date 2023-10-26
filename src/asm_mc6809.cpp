@@ -527,28 +527,27 @@ Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
     if (strcasecmp_P(insn.name(), OPT_INT_SETDP) == 0) {
         const auto error = _opt_setdp.set(scan);
-        return error ? setError(at, error) : OK;
+        return error ? insn.setError(at, error) : OK;
     }
     return Assembler::processPseudo(scan, insn);
 }
 
-Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     auto error = TABLE.hasName(cpuType(), insn);
     if (error)
-        return setError(error);
+        return _insn.setError(error);
 
     if (parseOperand(scan, insn.op1, insn.mode1()) && insn.op1.hasError())
-        return setError(insn.op1);
+        return _insn.setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.op2, insn.mode2()) && insn.op2.hasError())
-            return setError(insn.op2);
+            return _insn.setError(insn.op2);
         scan.skipSpaces();
     }
 
-    error = TABLE.searchName(cpuType(), insn);
-    if (error)
-        return setError(insn.op1, error);
+    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     const auto mode1 = insn.mode1();
     if (mode1 == M_RTFM) {
@@ -558,7 +557,7 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) {
         encodeOperand(insn, insn.op2, insn.mode2());
     }
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mc6809

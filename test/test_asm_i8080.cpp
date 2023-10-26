@@ -408,19 +408,19 @@ static void test_io() {
 }
 
 static void test_comment() {
-    TEST("RST 1    ; comment", 0xCF);
-    TEST("MOV B,B  ; comment", 0x40);
-    TEST("STAX B   ; comment", 0x02);
-    TEST("XTHL     ; comment", 0xE3);
-    TEST("JMP 1234H; comment", 0xC3, 0x34, 0x12);
-    TEST("ANI ~0FH ; comment", 0xE6, 0xF0);
-    TEST("CPI -1-23; comment", 0xFE, 0xE8);
-    TEST("MOV B , B  ; comment",     0x40);
-    TEST("MVI M , 0F6H ; comment",   0x36, 0xF6);
-    TEST("LXI B , 0BEEFH ; comment", 0x01, 0xEF, 0xBE);
+    ERRT("RST 1    ; comment", OK, "; comment", 0xCF);
+    ERRT("MOV B,B  ; comment", OK, "; comment", 0x40);
+    ERRT("STAX B   ; comment", OK, "; comment", 0x02);
+    ERRT("XTHL     ; comment", OK, "; comment", 0xE3);
+    ERRT("JMP 1234H; comment", OK, "; comment", 0xC3, 0x34, 0x12);
+    ERRT("ANI ~0FH ; comment", OK, "; comment", 0xE6, 0xF0);
+    ERRT("CPI -1-23; comment", OK, "; comment", 0xFE, 0xE8);
+    ERRT("MOV B , B  ; comment",     OK, "; comment", 0x40);
+    ERRT("MVI M , 0F6H ; comment",   OK, "; comment", 0x36, 0xF6);
+    ERRT("LXI B , 0BEEFH ; comment", OK, "; comment", 0x01, 0xEF, 0xBE);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("MVI  B,UNDEF", "UNDEF", 0x06, 0x00);
     ERUS("LXI  B,UNDEF", "UNDEF", 0x01, 0x00, 0x00);
     ERUS("STA  UNDEF", "UNDEF", 0x32, 0x00, 0x00);
@@ -485,7 +485,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_alu_immediate);
     RUN_TEST(test_io);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

@@ -253,8 +253,8 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
         auto &operands = _disFormatter.operands();
         insn.reset(_address / _addressUnit);
         const auto error = _disassembler.decode(it, insn, operands.mark(), operands.capacity());
-        _disFormatter.set(_disassembler);
-        if (_disassembler.isOK()) {
+        _disFormatter.set(insn);
+        if (insn.isOK()) {
             const int len = gen.length();
             const int newLen = _disFormatter.insn().length();
             std::string name;
@@ -323,12 +323,12 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
             const auto &error = meaningfulError(name);
             if (error.count() == 1)
                 gen.dump("@@ error: %s %s: %s", name.c_str(), error.tokens().c_str(),
-                        _disassembler.errorText_P());
+                        insn.errorText_P());
             if (root || error.count() < (1U << 16))
                 continue;
             const auto drop = calcDrop(error);
             gen.dump("@@ break drop=%d error=%#x: %s %s: %s", drop, error.count(), name.c_str(),
-                    error.tokens().c_str(), _disassembler.errorText_P());
+                     error.tokens().c_str(), insn.errorText_P());
             return drop;
         }
     } while (gen.hasNext());

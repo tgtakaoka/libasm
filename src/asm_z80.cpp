@@ -232,7 +232,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
         if (op.reg == REG_UNDEF) {
             op.val16 = parseExpr16(p, op, ')');
             if (op.hasError())
-                return getError();
+                return op.getError();
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
             op.mode = M_ABS;
@@ -264,7 +264,7 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
             if (op.reg == REG_IX || op.reg == REG_IY) {
                 op.val16 = parseExpr16(p, op, ')');
                 if (op.hasError())
-                    return getError();
+                    return op.getError();
                 if (!p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
                 scan = p;
@@ -282,24 +282,24 @@ Error AsmZ80::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmZ80::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     encodeOperand(insn, insn.dstOp, insn.dst(), insn.srcOp);
     encodeOperand(insn, insn.srcOp, insn.src(), insn.dstOp);
     if (!insn.indexBit())
         insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace z80

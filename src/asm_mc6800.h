@@ -34,7 +34,7 @@ private:
     void emitBitNumber(AsmInsn &insn, const Operand &op) const;
     void emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

@@ -934,7 +934,7 @@ static void test_indexed() {
     TEST("STD  ,S", 0xED, 0xE4);
     TEST("CMPD ,S", 0x10, 0xA3, 0xE4);
 
-    TEST("CMPX 2,Y ; 2,X A.2", 0xAC, 0x22);
+    TEST("CMPX 2,Y", 0xAC, 0x22);
     TEST("LDX  2,Y", 0xAE, 0x22);
     TEST("STX  2,Y", 0xAF, 0x22);
 
@@ -1447,38 +1447,38 @@ static void test_bit_position() {
 }
 
 static void test_comment() {
-    TEST("NOP      ; comment", 0x12);
-    TEST("PSHS A   ; comment", 0x34, 0x02);
-    TEST("PSHS CC , A , B , DP , X , Y , U , PC ; comment", 0x34, 0xFF);
-    TEST("TFR  D , X   ; comment", 0x1F, 0x01);
-    TEST("SUBB # $90   ; comment", 0xC0, 0x90);
-    TEST("NEG  $10     ; comment", 0x00, 0x10);
-    ATEST(0x1000, "BRA $1002           ; comment", 0x20, 0x00);
-    ATEST(0x1000, "LDA [ $1004 , PCR ] ; comment", 0xA6, 0x9C, 0x01);
+    ERRT("NOP      ; comment", OK, "; comment", 0x12);
+    ERRT("PSHS A   ; comment", OK, "; comment", 0x34, 0x02);
+    ERRT("PSHS CC , A , B , DP , X , Y , U , PC ; comment", OK, "; comment", 0x34, 0xFF);
+    ERRT("TFR  D , X   ; comment", OK, "; comment", 0x1F, 0x01);
+    ERRT("SUBB # $90   ; comment", OK, "; comment", 0xC0, 0x90);
+    ERRT("NEG  $10     ; comment", OK, "; comment", 0x00, 0x10);
+    AERRT(0x1000, "BRA $1002           ; comment", OK, "; comment", 0x20, 0x00);
+    AERRT(0x1000, "LDA [ $1004 , PCR ] ; comment", OK, "; comment", 0xA6, 0x9C, 0x01);
 
-    TEST("LDA ,S      ; comment", 0xA6, 0xE4);
-    TEST("LDA <<0 , S ; comment", 0xA6, 0x60);
-    TEST("LDA <0 , X  ; comment", 0xA6, 0x88, 0x00);
-    TEST("LDA >0 , X  ; comment", 0xA6, 0x89, 0x00, 0x00);
-    TEST("LDA D , X   ; comment", 0xA6, 0x8B);
-    TEST("LDA - 1 , S ; comment", 0xA6, 0x7F);
-    TEST("LDA 15 , S  ; comment", 0xA6, 0x6F);
-    TEST("LDA [ ,S ]          ; comment", 0xA6, 0xF4);
-    TEST("LDA [ 0 , S ]       ; comment", 0xA6, 0xF4);
-    TEST("LDA [ <0 , X ]      ; comment", 0xA6, 0x98, 0x00);
-    TEST("LDA [ >0 , X ]      ; comment", 0xA6, 0x99, 0x00, 0x00);
-    TEST("LDA [ -32768 , PC ] ; comment", 0xA6, 0x9D, 0x80, 0x00);
-    TEST("LDA [ D , X ]       ; comment", 0xA6, 0x9B);
-    ATEST(0x1000, "LDA $0F83 , PCR     ; comment", 0xA6, 0x8C, 0x80);
-    ATEST(0x1000, "LDA [ $0F83 , PCR ] ; comment", 0xa6, 0x9C, 0x80);
+    ERRT("LDA ,S      ; comment", OK, "; comment", 0xA6, 0xE4);
+    ERRT("LDA <<0 , S ; comment", OK, "; comment", 0xA6, 0x60);
+    ERRT("LDA <0 , X  ; comment", OK, "; comment", 0xA6, 0x88, 0x00);
+    ERRT("LDA >0 , X  ; comment", OK, "; comment", 0xA6, 0x89, 0x00, 0x00);
+    ERRT("LDA D , X   ; comment", OK, "; comment", 0xA6, 0x8B);
+    ERRT("LDA - 1 , S ; comment", OK, "; comment", 0xA6, 0x7F);
+    ERRT("LDA 15 , S  ; comment", OK, "; comment", 0xA6, 0x6F);
+    ERRT("LDA [ ,S ]          ; comment", OK, "; comment", 0xA6, 0xF4);
+    ERRT("LDA [ 0 , S ]       ; comment", OK, "; comment", 0xA6, 0xF4);
+    ERRT("LDA [ <0 , X ]      ; comment", OK, "; comment", 0xA6, 0x98, 0x00);
+    ERRT("LDA [ >0 , X ]      ; comment", OK, "; comment", 0xA6, 0x99, 0x00, 0x00);
+    ERRT("LDA [ -32768 , PC ] ; comment", OK, "; comment", 0xA6, 0x9D, 0x80, 0x00);
+    ERRT("LDA [ D , X ]       ; comment", OK, "; comment", 0xA6, 0x9B);
+    AERRT(0x1000, "LDA $0F83 , PCR     ; comment", OK, "; comment", 0xA6, 0x8C, 0x80);
+    AERRT(0x1000, "LDA [ $0F83 , PCR ] ; comment", OK, "; comment", 0xa6, 0x9C, 0x80);
 
     if (is6309()) {
-        TEST("TFM S+ , D+  ; comment", 0x11, 0x38, 0x40);
-        TEST("TFM X- , Y-  ; comment", 0x11, 0x39, 0x12);
-        TEST("TFM X+ , Y   ; comment", 0x11, 0x3A, 0x12);
-        TEST("TFM X , Y+   ; comment", 0x11, 0x3B, 0x12);
-        TEST("BOR A.1   , $34.2   ; comment", 0x11, 0x32, 0x51, 0x34);
-        TEST("BOR A , 1 , $34 , 2 ; comment", 0x11, 0x32, 0x51, 0x34);
+        ERRT("TFM S+ , D+  ; comment", OK, "; comment", 0x11, 0x38, 0x40);
+        ERRT("TFM X- , Y-  ; comment", OK, "; comment", 0x11, 0x39, 0x12);
+        ERRT("TFM X+ , Y   ; comment", OK, "; comment", 0x11, 0x3A, 0x12);
+        ERRT("TFM X , Y+   ; comment", OK, "; comment", 0x11, 0x3B, 0x12);
+        ERRT("BOR A.1   , $34.2   ; comment", OK, "; comment", 0x11, 0x32, 0x51, 0x34);
+        ERRT("BOR A , 1 , $34 , 2 ; comment", OK, "; comment", 0x11, 0x32, 0x51, 0x34);
     }
 }
 
@@ -1529,7 +1529,7 @@ static void test_error() {
     }
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("LDA  #UNDEF", "UNDEF", 0x86, 0x00);
     ERUS("SUBD #UNDEF", "UNDEF", 0x83, 0x00, 0x00);
     ERUS("NEG   UNDEF", "UNDEF", 0x00, 0x00);
@@ -1637,7 +1637,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_bit_position);
     RUN_TEST(test_comment);
     RUN_TEST(test_error);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

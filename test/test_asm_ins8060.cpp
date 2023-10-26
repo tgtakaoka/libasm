@@ -252,18 +252,18 @@ static void test_comment() {
     symtab.intern(-127, "m127");
     symtab.intern(127,  "p127");
 
-    TEST("NOP       ; comment", 0x08);
-    TEST("XPPC P3   ; comment", 0x3F);
-    TEST("DLY  0x12 ; comment", 0x8F, 0x12);
-    ATEST(0x1000, "JMP 0x1000 ; comment", 0x90, 0xFE);
-    ATEST(0x1000, "JNZ E (PC) ; comment", 0x9C, 0x80);
-    TEST("JMP E (P1)    ; comment", 0x91, 0x80);
-    TEST("JMP p127 (P2) ; comment", 0x92, 0x7F);
-    TEST("JMP m127 (P3) ; comment", 0x93, 0x81);
-    TEST("LD @ 126 (P3) ; comment", 0xC7, 0x7E);
+    ERRT("NOP       ; comment", OK, "; comment", 0x08);
+    ERRT("XPPC P3   ; comment", OK, "; comment", 0x3F);
+    ERRT("DLY  0x12 ; comment", OK, "; comment", 0x8F, 0x12);
+    AERRT(0x1000, "JMP 0x1000 ; comment", OK, "; comment", 0x90, 0xFE);
+    AERRT(0x1000, "JNZ E (PC) ; comment", OK, "; comment", 0x9C, 0x80);
+    ERRT("JMP E (P1)    ; comment", OK, "; comment", 0x91, 0x80);
+    ERRT("JMP p127 (P2) ; comment", OK, "; comment", 0x92, 0x7F);
+    ERRT("JMP m127 (P3) ; comment", OK, "; comment", 0x93, 0x81);
+    ERRT("LD @ 126 (P3) ; comment", OK, "; comment", 0xC7, 0x7E);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("DLY UNDEF", "UNDEF", 0x8F, 0x00);
     ERUS("LD  UNDEF", "UNDEF", 0xC0, 0x00);
     ERUS("LD  UNDEF(PC)", "UNDEF(PC)", 0xC0, 0x00);
@@ -339,7 +339,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_page_boundary);
     RUN_TEST(test_func);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_error);
     RUN_TEST(test_data_constant);
 }

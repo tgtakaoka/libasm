@@ -142,13 +142,13 @@ Error AsmIm6100::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra
     UNUSED(extra);
     const auto save = NUMBER_PARSER.radix();
     NUMBER_PARSER.setRadix(RADIX_10);
-    const auto val24 = parseExpr(scan, *this).getUnsigned();
-    if (isOK()) {
-        setErrorIf(insn.emitUint16Be((val24 >> 12) & 07777));
-        setErrorIf(insn.emitUint16Be(val24 & 07777));
+    const auto val24 = parseExpr(scan, insn).getUnsigned();
+    if (insn.isOK()) {
+        insn.setErrorIf(insn.emitUint16Be((val24 >> 12) & 07777));
+        insn.setErrorIf(insn.emitUint16Be(val24 & 07777));
     }
     NUMBER_PARSER.setRadix(save);
-    return getError();
+    return insn.getError();
 }
 
 Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
@@ -158,14 +158,14 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     if (endOfLine(p)) {
         page++;
     } else {
-        page = parseExpr(p, *this).getUnsigned();
-        if (getError())
-            return getError();
+        page = parseExpr(p, insn).getUnsigned();
+        if (insn.getError())
+            return insn.getError();
     }
     const auto field = fieldOf(insn.address());
     const auto addr = memoryAddress(0, page, field);
-    if (setErrorIf(scan, setCurrentLocation(addr)))
-        return getError();
+    if (insn.setErrorIf(scan, setCurrentLocation(addr)))
+        return insn.getError();
     scan = p;
     insn.reset(addr);
     return OK;
@@ -174,12 +174,12 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
 Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
     auto p = scan.skipSpaces();
-    const auto field = parseExpr(p, *this).getUnsigned();
-    if (getError())
-        return setError(scan, getError());
+    const auto field = parseExpr(p, insn).getUnsigned();
+    if (insn.getError())
+        return insn.getError();
     const auto addr = memoryAddress(0, 0, field);
-    if (setErrorIf(scan, setCurrentLocation(addr)))
-        return getError();
+    if (insn.setErrorIf(scan, setCurrentLocation(addr)))
+        return insn.getError();
     scan = p;
     insn.reset(addr);
     return OK;
@@ -193,8 +193,8 @@ Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const
 
     const auto at = p;
     const auto addr = parseExpr(p, insn).getUnsigned();
-    if (hasError())
-        return getError();
+    if (insn.hasError())
+        return insn.getError();
 
     if (indir)
         insn.embed(0400);
@@ -212,14 +212,14 @@ Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const
 Error AsmIm6100::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
     const auto addr = parseExpr(p, insn).getUnsigned();
-    if (hasError())
-        return getError();
+    if (insn.hasError())
+        return insn.getError();
     const auto pcont = p.skipSpaces();
     if (endOfLine(p))
         return insn.setError(p, MISSING_OPERAND);
     const auto control = parseExpr(p, insn).getUnsigned();
-    if (hasError())
-        return getError();
+    if (insn.hasError())
+        return insn.getError();
 
     if (overflowUint(addr, 6))
         return insn.setErrorIf(scan, OVERFLOW_RANGE);
@@ -245,7 +245,7 @@ Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode
 Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
     auto field = parseExpr(p, insn).getUnsigned();
-    if (!hasError()) {
+    if (!insn.hasError()) {
         if (field < 8) {
             field <<= 3;
         } else if (field & ~070) {
@@ -255,7 +255,7 @@ Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) const {
         insn.embed(field);
         scan = p;
     }
-    return getError();
+    return insn.getError();
 }
 
 Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const {
@@ -336,7 +336,7 @@ Error AsmIm6100::processPseudo(StrScanner &scan, Insn &insn) {
     return Assembler::processPseudo(scan, insn);
 }
 
-Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     scan.skipSpaces();
     const auto error = TABLE.searchName(cpuType(), insn);
@@ -353,16 +353,16 @@ Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) {
         }
     } else {
         insn.setOK();  // clear UNKNOWN_INSTRUCTION
-        StrScanner p{errorAt()};
+        StrScanner p{_insn.errorAt()};
         const auto val12 = parseExpr(p, insn).getUnsigned();
         if (insn.hasError())
-            return setError(insn);
+            return _insn.setError(insn);
         insn.setOpCode(val12 & 07777);
         scan = p;
     }
 
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace im6100

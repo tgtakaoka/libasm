@@ -179,7 +179,7 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         parseBaseRegister(p.skipSpaces(), op);
         parseIndexRegister(p, op);
         if (parseDisplacement(p, op))
-            return getError();
+            return op.getError();
         if (!p.skipSpaces().expect(']'))
             return op.setError(p, MISSING_CLOSING_BRACKET);
         scan = p;
@@ -526,23 +526,23 @@ void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &
     }
 }
 
-Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
-            return setError(insn.extOp);
+            return _insn.setError(insn.extOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
     insn.prepairModReg();
 
     if (insn.stringInst()) {
@@ -553,7 +553,7 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) {
         emitOperand(insn, insn.ext(), insn.extOp, insn.extPos());
     }
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8086

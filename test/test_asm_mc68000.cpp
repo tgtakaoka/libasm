@@ -2812,29 +2812,29 @@ static void test_areg_alias() {
 }
 
 static void test_comment() {
-    TEST("NOP             ; comment", 0047161);
-    TEST("ORI  # 0 , CCR  ; comment", 0000074, 0x0000);
-    TEST("ANDI # 0 , SR   ; comment", 0001174, 0x0000);
-    TEST("MOVE ( 0 ) , D1 ; comment", 0031070, 0x0000);
-    TEST("MOVE # 0 , D1   ; comment", 0031074, 0x0000);
-    TEST("MOVE D1 , ( 0 ) ; comment", 0030701, 0x0000);
-    TEST("MOVE D2 , ( 0 , A3 )      ; comment", 0033502, 0x0000);
-    TEST("MOVE ( 0 , A1 , D2 ) , D3 ; comment", 0033061, 0x2000);
-    TEST("MOVEP D1 , ( 0 , A1 ); comment",      0001611, 0x0000);
-    TEST("MOVEP ( 0 , A1 ) , D1; comment",      0001411, 0x0000);
-    TEST("MOVEQ # 0 , D1       ; comment",      0071000);
-    TEST("ADDQ  # 8 , D1       ; comment",      0050101);
-    TEST("ADDQ  # 1 , ( 0 , A1 ) ; comment",    0051151, 0x0000);
-    TEST("LSR   # 8 , D1       ; comment",      0160111);
-    TEST("ROR   ( 0 , A1 )     ; comment",      0163351, 0x0000);
+    ERRT("NOP             ; comment", OK, "; comment", 0047161);
+    ERRT("ORI  # 0 , CCR  ; comment", OK, "; comment", 0000074, 0x0000);
+    ERRT("ANDI # 0 , SR   ; comment", OK, "; comment", 0001174, 0x0000);
+    ERRT("MOVE ( 0 ) , D1 ; comment", OK, "; comment", 0031070, 0x0000);
+    ERRT("MOVE # 0 , D1   ; comment", OK, "; comment", 0031074, 0x0000);
+    ERRT("MOVE D1 , ( 0 ) ; comment", OK, "; comment", 0030701, 0x0000);
+    ERRT("MOVE D2 , ( 0 , A3 )      ; comment", OK, "; comment", 0033502, 0x0000);
+    ERRT("MOVE ( 0 , A1 , D2 ) , D3 ; comment", OK, "; comment", 0033061, 0x2000);
+    ERRT("MOVEP D1 , ( 0 , A1 ); comment",      OK, "; comment", 0001611, 0x0000);
+    ERRT("MOVEP ( 0 , A1 ) , D1; comment",      OK, "; comment", 0001411, 0x0000);
+    ERRT("MOVEQ # 0 , D1       ; comment",      OK, "; comment", 0071000);
+    ERRT("ADDQ  # 8 , D1       ; comment",      OK, "; comment", 0050101);
+    ERRT("ADDQ  # 1 , ( 0 , A1 ) ; comment",    OK, "; comment", 0051151, 0x0000);
+    ERRT("LSR   # 8 , D1       ; comment",      OK, "; comment", 0160111);
+    ERRT("ROR   ( 0 , A1 )     ; comment",      OK, "; comment", 0163351, 0x0000);
 
-    ATEST(0x1000, "BRA   *      ; comment", 0060000 | 0xFE);
-    ATEST(0x1000, "DBRA  D0 , * ; comment", 0050710, 0xFFFE);
-    ATEST(0x1000, "MOVEA ( * , PC ) , A1        ; comment", 0031172, 0xFFFE);
-    ATEST(0x1000, "MOVEA ( * , PC , D1.L ) , A1 ; comment", 0031173, 0x18FE);
+    AERRT(0x1000, "BRA   *      ; comment", OK, "; comment", 0060000 | 0xFE);
+    AERRT(0x1000, "DBRA  D0 , * ; comment", OK, "; comment", 0050710, 0xFFFE);
+    AERRT(0x1000, "MOVEA ( * , PC ) , A1        ; comment", OK, "; comment", 0031172, 0xFFFE);
+    AERRT(0x1000, "MOVEA ( * , PC , D1.L ) , A1 ; comment", OK, "; comment", 0031173, 0x18FE);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("ORI  #UNDEF,CCR",       "UNDEF,CCR",       0000074, 0x0000);
     ERUS("ANDI #UNDEF,SR",        "UNDEF,SR",        0001174, 0x0000);
     ERUS("MOVE (UNDEF),D1",       "UNDEF),D1",       0031070, 0x0000);
@@ -2922,7 +2922,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_multiproc);
     RUN_TEST(test_areg_alias);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

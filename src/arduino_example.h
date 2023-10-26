@@ -295,7 +295,7 @@ private:
         Insn insn(_origin);
         if (assembler->encode(line, insn)) {
             _cli.print(F("Error: "));
-            _cli.println(FSTR(assembler->errorText_P()));
+            _cli.println(FSTR(insn.errorText_P()));
         } else if (max && insn.address() + insn.length() / addrUnit() > max) {
             _cli.println(F("address range overflow"));
         } else {
@@ -327,7 +327,7 @@ private:
             Insn insn(origin + delta);
             if (disassembler->decode(memory, insn, operands, sizeof(operands))) {
                 _cli.print(F("Error: "));
-                _cli.println(FSTR(disassembler->errorText_P()));
+                _cli.println(FSTR(insn.errorText_P()));
             } else {
                 printBytes(insn, operands);
                 _origin += insn.length() / addrUnit();

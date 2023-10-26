@@ -756,14 +756,14 @@ static const CpuSpec SPEC{NS32032, FPU_NS32081, MMU_NS32082};
 
 static void assert_unknown(const char *file, int line, Config::opcode_t opc, Config::opcode_t prefix) {
     if (TABLE.isPrefixCode(SPEC, prefix)) {
-        __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, "", "", prefix, opc);
+        __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", prefix, opc);
     } else {
-        __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, "", "", prefix);
+        __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", prefix);
     }
 }
 
 static void assert_unknown(const char *file, int line, Config::opcode_t opc) {
-    __VASSERT(file, line, UNKNOWN_INSTRUCTION, 0x0000, "", "", opc);
+    __VASSERT(file, line, UNKNOWN_INSTRUCTION, "", 0x0000, "", "", opc);
 }
 
 #define UNKNOWN(...) assert_unknown(__FILE__, __LINE__, __VA_ARGS__)

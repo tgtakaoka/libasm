@@ -119,7 +119,7 @@ Error Disassembler::setCpu(StrScanner &scan) {
 Error Disassembler::setOption(const char *name, const char *text) {
     StrScanner scan{text};
     if (_commonOptions.setOption(name, scan) == OK)
-        return getError();
+        return OK;
     return options().setOption(name, scan);
 }
 
@@ -127,14 +127,14 @@ Error Disassembler::decode(
         DisMemory &memory, Insn &insn, char *operands, size_t size, SymbolTable *symtab) {
     _symtab = symtab;
     // This setError also reset error of Disassembler.
-    if (setError(config().checkAddr(insn.address())))
-        return getError();
+    if (insn.setError(config().checkAddr(insn.address())))
+        return insn.getError();
     StrCaseBuffer out(operands, size, _uppercase);
     insn.nameBuffer().reset();
     decodeImpl(memory, insn, out);
-    if (isOK())
-        setError(out);
-    return getError();
+    if (insn.isOK())
+        insn.setError(out);
+    return insn.getError();
 }
 
 const char *Disassembler::lookup(uint32_t addr, uint8_t addrWidth) const {

@@ -32,7 +32,7 @@ private:
     void decodeImm8(DisInsn &insn, StrBuffer &out) const;
     void decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const ;
 
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();

@@ -326,11 +326,11 @@ void DisZ8::decodeOperand(DisInsn &insn, StrBuffer &out, Operand &op) const {
     }
 }
 
-Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     Operand dstOp, srcOp, extOp;
     readOperands(insn, dstOp, srcOp, extOp);
@@ -340,7 +340,7 @@ Error DisZ8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (insn.ext() != M_NONE)
             decodeOperand(insn, out.comma(), extOp);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace z8

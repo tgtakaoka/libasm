@@ -242,23 +242,23 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
     }
 }
 
-Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return setError(insn.op1);
+        return _insn.setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return setError(insn.op2);
+            return _insn.setError(insn.op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.op3) && insn.op3.hasError())
-            return setError(insn.op3);
+            return _insn.setError(insn.op3);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     if (insn.mode1() == M_BNO)
         insn.embed((insn.op1.val16 & 7) << 1);
@@ -266,7 +266,7 @@ Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) {
     emitOperand(insn, insn.mode2(), insn.op2);
     emitOperand(insn, insn.mode3(), insn.op3);
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mc6805

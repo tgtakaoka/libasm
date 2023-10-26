@@ -132,23 +132,23 @@ Error AsmI8080::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmI8080::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     encodeOperand(insn, insn.dstOp, insn.dst());
     encodeOperand(insn, insn.srcOp, insn.src());
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8080

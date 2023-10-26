@@ -205,13 +205,13 @@ void DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndFl
     }
 }
 
-Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     insn.setAllowIndirectLong(_useIndirectLong);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto mode1 = insn.mode1();
     const auto mode2 = insn.mode2();
@@ -247,7 +247,7 @@ Error DisMos6502::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             }
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mos6502

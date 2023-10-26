@@ -163,11 +163,11 @@ void DisMc6805::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     }
 }
 
-Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
@@ -177,7 +177,7 @@ Error DisMc6805::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (mode3 != M_NONE)
             decodeOperand(insn, out.comma(), mode3);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mc6805

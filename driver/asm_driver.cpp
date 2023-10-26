@@ -138,7 +138,9 @@ int AsmDriver::assemble(AsmSources &sources, BinMemory &memory, TextPrinter &lis
         for (auto offset = 0; offset < insn.length(); offset++) {
             memory.writeByte(base + offset, insn.bytes()[offset]);
         }
-        _origin = directive.assembler().currentLocation();
+        _origin = insn.address() + insn.length() / config.addressUnit();
+        if (insn.length() == 0)
+            _origin = directive.assembler().currentLocation();
 
         formatter.set(*line, directive, config, &context.value);
         formatter.setListRadix(current()->assembler().listRadix());

@@ -531,17 +531,17 @@ void DisNs32000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     }
 }
 
-Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefixCode(_cpuSpec, opc)) {
         insn.setOpCode(insn.readByte(), opc);
         if (insn.getError())
-            return setError(insn);
+            return _insn.setError(insn);
     }
     if (TABLE.searchOpCode(_cpuSpec, insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto srcIdxError = readIndexByte(insn, insn.src(), insn.srcPos());
     const auto dstIdxError = readIndexByte(insn, insn.dst(), insn.dstPos());
@@ -567,7 +567,7 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
                 decodeOperand(insn, out.comma(), ex2, insn.ex2Pos(), size);
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace ns32000

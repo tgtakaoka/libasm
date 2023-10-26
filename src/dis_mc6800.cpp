@@ -143,17 +143,17 @@ void DisMc6800::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     }
 }
 
-Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
         insn.setOpCode(insn.readByte(), opc);
         if (insn.getError())
-            return setError(insn);
+            return _insn.setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
@@ -163,7 +163,7 @@ Error DisMc6800::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (mode3 != M_NONE)
             decodeOperand(insn, out.comma(), mode3);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mc6800

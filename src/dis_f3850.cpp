@@ -116,11 +116,11 @@ void DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) const
     }
 }
 
-Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) {
+Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readByte());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto mode1 = insn.mode1();
     if (mode1 != M_NONE) {
@@ -129,7 +129,7 @@ Error DisF3850::decodeImpl(DisMemory& memory, Insn& _insn, StrBuffer& out) {
         if (mode2 != M_NONE)
             decodeOperand(insn, out.comma(), mode2);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace f3850

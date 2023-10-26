@@ -136,11 +136,11 @@ void DisTms32010::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     }
 }
 
-Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.mode1());
     const auto mode2 = insn.mode2();
@@ -152,7 +152,7 @@ Error DisTms32010::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (mode3 != M_NONE)
             decodeOperand(insn, out, mode3);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace tms32010

@@ -69,17 +69,17 @@ void DisI8080::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const
     }
 }
 
-Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
         insn.setOpCode(insn.readByte(), opc);
         if (insn.getError())
-            return setError(insn);
+            return _insn.setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto dst = insn.dst();
     if (dst != M_NONE) {
@@ -88,7 +88,7 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (src != M_NONE)
             decodeOperand(insn, out.comma(), src);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8080

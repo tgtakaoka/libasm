@@ -118,12 +118,12 @@ void DisTms7000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     }
 }
 
-Error DisTms7000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTms7000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opCode = insn.readByte();
     insn.setOpCode(opCode);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     decodeOperand(insn, out, insn.src());
     const auto dst = insn.dst();
@@ -133,7 +133,7 @@ Error DisTms7000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (ext != M_NONE)
             decodeOperand(insn, out.comma(), ext);
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace tms7000

@@ -711,37 +711,37 @@ Error AsmNs32000::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
     if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
         const auto error = _opt_fpu.set(scan);
-        return error ? setErrorIf(at, error) : OK;
+        return error ? insn.setErrorIf(at, error) : OK;
     }
     if (strcasecmp_P(insn.name(), TEXT_PMMU) == 0) {
         const auto error = _opt_pmmu.set(scan);
-        return error ? setErrorIf(at, error) : OK;
+        return error ? insn.setErrorIf(at, error) : OK;
     }
     return Assembler::processPseudo(scan, insn);
 }
 
-Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-        return setError(insn.srcOp);
+        return _insn.setError(insn.srcOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-            return setError(insn.dstOp);
+            return _insn.setError(insn.dstOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.ex1Op) && insn.ex1Op.hasError())
-            return setError(insn.ex1Op);
+            return _insn.setError(insn.ex1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.ex2Op) && insn.ex2Op.hasError())
-            return setError(insn.ex2Op);
+            return _insn.setError(insn.ex2Op);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.srcOp, TABLE.searchName(_cpuSpec, insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(_cpuSpec, insn)))
+        return _insn.getError();
 
     insn.setErrorIf(insn.srcOp);
     insn.setErrorIf(insn.dstOp);
@@ -759,7 +759,7 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     emitOperand(insn, ex1, insn.size(), insn.ex1Op, insn.ex1Pos(), insn.dstOp);
     emitOperand(insn, ex2, insn.size(), insn.ex2Op, insn.ex2Pos(), insn.ex1Op);
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace ns32000

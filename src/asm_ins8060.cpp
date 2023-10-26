@@ -190,7 +190,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     if (p.skipSpaces().expect('(')) {
         const auto base = parseRegName(p);
         if (!isPointerReg(base))
-            return op.setError(UNKNOWN_OPERAND);
+            return op.setError(scan, UNKNOWN_OPERAND);
         if (!p.expect(')'))
             return op.setError(p, MISSING_CLOSING_PAREN);
         scan = p;
@@ -200,7 +200,7 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     if (autoDisp || reg == REG_E)
-        return op.setError(UNKNOWN_OPERAND);
+        return op.setError(scan, UNKNOWN_OPERAND);
     scan = p;
     op.mode = M_REL8;  // May be M_IMM8 too
     return OK;
@@ -212,7 +212,7 @@ Error AsmIns8060::defineAddrConstant(StrScanner &scan, Insn &insn) {
         ErrorAt error;
         const auto value = parseExpr(p, error);
         if (error.getError())
-            return setError(error);
+            return insn.setError(error);
         const auto v = value.getUnsigned();
         insn.emitUint16Le(page(v) | offset(v - 1));
         scan = p;
@@ -227,13 +227,14 @@ Error AsmIns8060::processPseudo(StrScanner &scan, Insn &insn) {
     return Assembler::processPseudo(scan, insn);
 }
 
-Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.op) && insn.op.hasError())
-        return setError(insn.op);
+        return _insn.setError(insn.op);
+    scan.skipSpaces();
 
-    if (setErrorIf(insn.op, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.op, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     insn.setErrorIf(insn.op);
     switch (insn.addrMode()) {
@@ -262,7 +263,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) {
     }
     if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1))
         insn.setErrorIf(insn.op, OVERWRAP_PAGE);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace ins8060

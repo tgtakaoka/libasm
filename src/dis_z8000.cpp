@@ -386,11 +386,11 @@ StrBuffer &DisZ8000::outComma(
     return out.comma();
 }
 
-Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     insn.setOpCode(insn.readUint16());
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto dst = insn.dst();
     decodeOperand(insn, out, dst, insn.dstPos());
@@ -414,7 +414,7 @@ Error DisZ8000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             }
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace z8000

@@ -221,22 +221,22 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     }
 }
 
-Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto comma = scan.expect(',');
     if (!comma)
         scan.skipSpaces();
     if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return setError(insn.op1);
+        return _insn.setError(insn.op1);
     scan.skipSpaces();
     if ((comma && !endOfLine(scan)) || (!comma && scan.expect(','))) {
         if (parseOperand(scan.skipSpaces(), insn.op2) && insn.op2.hasError())
-            return setError(insn.op2);
+            return _insn.setError(insn.op2);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     const auto mode1 = insn.mode1();
     if (comma && (mode1 == M_REGN || mode1 == M_REG0 || mode1 == M_R123))
@@ -244,7 +244,7 @@ Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) {
     encodeOperand(insn, insn.op1, insn.mode1());
     encodeOperand(insn, insn.op2, insn.mode2());
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace scn2650

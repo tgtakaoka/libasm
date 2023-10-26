@@ -266,7 +266,7 @@ Error AsmMos6502::parseOperand(StrScanner &scan, Operand &op, char &indirect) co
         const auto bop = p.expect([](char c) { return c == '<' || c == '>'; });
         op.val32 = parseExpr32(p, op);
         if (op.hasError())
-            return getError();
+            return op.getError();
         if (bop == '<')
             op.val32 &= 0xFF;
         if (bop == '>')
@@ -302,11 +302,11 @@ Error AsmMos6502::processPseudo(StrScanner &scan, Insn &insn) {
     const auto at = scan;
     if (strcasecmp_P(insn.name(), OPT_BOOL_LONGA) == 0) {
         const auto error = _opt_longa.set(scan);
-        return error ? setErrorIf(at, error) : OK;
+        return error ? insn.setErrorIf(at, error) : OK;
     }
     if (strcasecmp_P(insn.name(), OPT_BOOL_LONGI) == 0) {
         const auto error = _opt_longi.set(scan);
-        return error ? setErrorIf(at, error) : OK;
+        return error ? insn.setErrorIf(at, error) : OK;
     }
     return Assembler::processPseudo(scan, insn);
 }
@@ -324,35 +324,36 @@ bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
 
 }  // namespace
 
-Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     char indirect = 0;
     if (parseOperand(scan, insn.op1, indirect) && insn.op1.hasError())
-        return setError(insn.op1);
+        return _insn.setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.op2, indirect) && insn.op2.hasError())
-            return setError(insn.op2);
+            return _insn.setError(insn.op2);
         scan.skipSpaces();
     }
     if (indirect)
-        return setError(scan, indirect == '(' ? MISSING_CLOSING_PAREN : MISSING_CLOSING_BRACKET);
+        return _insn.setError(
+                scan, indirect == '(' ? MISSING_CLOSING_PAREN : MISSING_CLOSING_BRACKET);
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.op3, indirect) && insn.op3.hasError())
-            return setError(insn.op3);
+            return _insn.setError(insn.op3);
         scan.skipSpaces();
     }
 
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error == OPERAND_NOT_ALLOWED) {
         if (hasRegister(insn.op1.mode))
-            return setError(insn.op1, REGISTER_NOT_ALLOWED);
+            return _insn.setError(insn.op1, REGISTER_NOT_ALLOWED);
         if (hasRegister(insn.op2.mode) && !maybeStackRelativeIndirect(cpuType(), insn.op3.mode))
-            return setError(insn.op2, REGISTER_NOT_ALLOWED);
+            return _insn.setError(insn.op2, REGISTER_NOT_ALLOWED);
         if (hasRegister(insn.op3.mode))
-            return setError(insn.op3, REGISTER_NOT_ALLOWED);
+            return _insn.setError(insn.op3, REGISTER_NOT_ALLOWED);
     }
     if (error)
-        return setError(insn.op1, error);
+        return _insn.setError(insn.op1, error);
 
     insn.setErrorIf(insn.op1);
     insn.setErrorIf(insn.op2);
@@ -365,7 +366,7 @@ Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) {
         encodeOperand(insn, insn.mode2(), insn.op2);
     }
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mos6502

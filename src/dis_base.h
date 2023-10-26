@@ -35,7 +35,7 @@
 
 namespace libasm {
 
-struct Disassembler : ErrorAt {
+struct Disassembler {
     Error decode(DisMemory &memory, Insn &insn, char *operands, size_t size,
             SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
@@ -117,7 +117,7 @@ protected:
 
 private:
     virtual ConfigSetter &configSetter() = 0;
-    virtual Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) = 0;
+    virtual Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const = 0;
 };
 
 }  // namespace libasm

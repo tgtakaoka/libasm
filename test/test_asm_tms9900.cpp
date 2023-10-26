@@ -373,26 +373,26 @@ static void test_cru_off() {
 }
 
 static void test_comment() {
-    TEST("IDLE         ; comment", 0x0340);
-    TEST("LWPI >1234   ; comment", 0x02E0, 0x1234);
-    TEST("STWP R14     ; comment", 0x02AE);
-    TEST("LI   R0 , 0  ; comment", 0x0200, 0x0000);
-    TEST("X *R10   ; comment",     0x049A);
+    ERRT("IDLE         ; comment", OK, "; comment", 0x0340);
+    ERRT("LWPI >1234   ; comment", OK, "; comment", 0x02E0, 0x1234);
+    ERRT("STWP R14     ; comment", OK, "; comment", 0x02AE);
+    ERRT("LI   R0 , 0  ; comment", OK, "; comment", 0x0200, 0x0000);
+    ERRT("X *R10   ; comment",     OK, "; comment", 0x049A);
     ERRT("X * R10  ; comment",     UNKNOWN_OPERAND, "* R10  ; comment");
-    TEST("CLR *R12+  ; comment",   0x04FC);
+    ERRT("CLR *R12+  ; comment",   OK, "; comment", 0x04FC);
     ERRT("CLR * R12+ ; comment",   UNKNOWN_OPERAND, "* R12+ ; comment");
-    TEST("BLWP @ >3456 ; comment", 0x0420, 0x3456);
-    TEST("SBO  0       ; comment", 0x1D00);
-    TEST("INC  @ 2 ( R7 )  ; comment", 0x05A7, 0x0002);
-    TEST("LDCR *R13+  , 16 ; comment", 0x303D);
+    ERRT("BLWP @ >3456 ; comment", OK, "; comment", 0x0420, 0x3456);
+    ERRT("SBO  0       ; comment", OK, "; comment", 0x1D00);
+    ERRT("INC  @ 2 ( R7 )  ; comment", OK, "; comment", 0x05A7, 0x0002);
+    ERRT("LDCR *R13+  , 16 ; comment", OK, "; comment", 0x303D);
     ERRT("LDCR * R13+ , 16 ; comment", UNKNOWN_OPERAND, "* R13+ , 16 ; comment");
-    TEST("SZC  @ >1234 ( R10 ) , @ >2345 ( R11 ) ; comment", 0x4AEA, 0x1234, 0x2345);
-    ATEST(0x1000, "JMP >1002 ; comment", 0x1000);
+    ERRT("SZC  @ >1234 ( R10 ) , @ >2345 ( R11 ) ; comment", OK, "; comment", 0x4AEA, 0x1234, 0x2345);
+    AERRT(0x1000, "JMP >1002 ; comment", OK, "; comment", 0x1000);
     ERRT("CLR  *R12 + ; comment",     GARBAGE_AT_END, "+ ; comment", 0x04DC);
     ERRT("LDCR *R13 +, 16 ; comment", OPERAND_NOT_ALLOWED, "*R13 +, 16 ; comment");
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("LWPI UNDEF",    "UNDEF", 0x02E0, 0x0000);
     ERUS("LI   R0,UNDEF", "UNDEF", 0x0200, 0x0000);
     ERUS("SRL  R4,UNDEF", "UNDEF", 0x0904);
@@ -475,7 +475,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_rel);
     RUN_TEST(test_cru_off);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

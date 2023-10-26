@@ -68,7 +68,7 @@ private:
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
             Error idxError = OK) const;
 
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();

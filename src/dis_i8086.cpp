@@ -429,18 +429,18 @@ bool imulHasSameDstSrc(const DisInsn &insn) {
 
 }  // namespace
 
-Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     if (readCodes(insn))
-        return setError(insn);
+        return _insn.setError(insn);
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     insn.readModReg();
-    if (setErrorIf(insn))
-        return getError();
+    if (_insn.setErrorIf(insn))
+        return _insn.getError();
     if (!validSegOverride(insn))
-        return setErrorIf(insn, ILLEGAL_SEGMENT);
+        return _insn.setErrorIf(insn, ILLEGAL_SEGMENT);
 
     if (insn.stringInst()) {
         decodeStringInst(insn, out);
@@ -451,7 +451,7 @@ Error DisI8086::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
         if (insn.ext() != M_NONE)
             decodeOperand(insn, out.comma(), insn.ext(), insn.extPos());
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8086

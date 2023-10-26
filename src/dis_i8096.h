@@ -50,7 +50,7 @@ private:
     StrBuffer &outRelative(StrBuffer &out, DisInsn &insn, const Operand &op) const;
     StrBuffer &outOperand(StrBuffer &out, DisInsn &insn, const Operand &op) const;
 
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();

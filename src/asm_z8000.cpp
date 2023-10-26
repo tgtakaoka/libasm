@@ -588,28 +588,28 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.ex1Op) && insn.ex1Op.hasError())
-            return setError(insn.ex1Op);
+            return _insn.setError(insn.ex1Op);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.ex2Op) && insn.ex2Op.hasError())
-            return setError(insn.ex2Op);
+            return _insn.setError(insn.ex2Op);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     if (insn.isThreeRegsInsn())
         checkRegisterOverlap(insn, insn.dstOp, insn.srcOp, insn.ex1Op);
@@ -627,7 +627,7 @@ Error AsmZ8000::encodeImpl(StrScanner &scan, Insn &_insn) {
     emitOperand(insn, insn.ex1(), insn.ex1Op, ex1Pos);
     emitOperand(insn, insn.ex2(), insn.ex2Op, OP_P0);
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace z8000

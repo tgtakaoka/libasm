@@ -223,17 +223,17 @@ Error DisI8096::Operand::read(DisInsn &insn, AddrMode opMode) {
     return getError();
 }
 
-Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
         insn.setOpCode(insn.readByte(), opc);
         if (insn.getError())
-            return setError(insn);
+            return _insn.setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, out))
-        return setErrorIf(insn);
+        return _insn.setErrorIf(insn);
 
     const auto jbx_djnz = insn.src2() == M_REL8 || insn.src1() == M_REL8;
     Operand src2, src1, dst;
@@ -274,7 +274,7 @@ Error DisI8096::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             outOperand(out, insn, src2);
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8096

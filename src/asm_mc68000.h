@@ -39,7 +39,7 @@ private:
     Error emitEffectiveAddr(
             AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const;
 
-    Error encodeImpl(StrScanner &scan, Insn &insn) override;
+    Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueParser::Plugins &defaultPlugins();

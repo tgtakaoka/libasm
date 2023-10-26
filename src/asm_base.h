@@ -31,7 +31,7 @@
 
 namespace libasm {
 
-struct Assembler : ErrorAt, private ValueParser::Locator {
+struct Assembler : private ValueParser::Locator {
     Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
     virtual void reset() {}
@@ -106,7 +106,7 @@ protected:
 
 private:
     virtual ConfigSetter &configSetter() = 0;
-    virtual Error encodeImpl(StrScanner &scan, Insn &insn) = 0;
+    virtual Error encodeImpl(StrScanner &scan, Insn &insn) const = 0;
 };
 
 }  // namespace libasm

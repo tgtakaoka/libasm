@@ -1937,7 +1937,7 @@ static void test_segment_override() {
     }
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("MOV [UNDEF],BH",       "UNDEF],BH", 0x88, 0076, 0x00, 0x00);
     ERUS("MOV [DI+UNDEF],AL",    "UNDEF],AL", 0x88, 0205, 0x00, 0x00);
     ERUS("MOV [BP+UNDEF],CL",    "UNDEF],CL", 0x88, 0216, 0x00, 0x00);
@@ -2161,7 +2161,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_control_transfer);
     RUN_TEST(test_processor_control);
     RUN_TEST(test_segment_override);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_comment);
     RUN_TEST(test_error);
     RUN_TEST(test_data_constant);

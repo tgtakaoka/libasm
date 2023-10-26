@@ -939,30 +939,30 @@ static void test_bitop_indexed() {
 }
 
 static void test_comment() {
-    TEST("RST 18H        ; comment", 0xDF);
-    TEST("LD B , B       ; comment", 0x40);
-    TEST("NOP            ; comment", 0x00);
-    TEST("LD BC , 0BEEFH ; comment", 0x01, 0xEF, 0xBE);
-    TEST("LD HL , ( 5678H ) ; comment", 0x2A, 0x78, 0x56);
-    TEST("CALL C , 1234H ; comment", 0xDC, 0x34, 0x12);
-    TEST("RET         ; comment", 0xC9);
-    TEST("RET NZ      ; comment", 0xC0);
+    ERRT("RST 18H        ; comment", OK, "; comment", 0xDF);
+    ERRT("LD B , B       ; comment", OK, "; comment", 0x40);
+    ERRT("NOP            ; comment", OK, "; comment", 0x00);
+    ERRT("LD BC , 0BEEFH ; comment", OK, "; comment", 0x01, 0xEF, 0xBE);
+    ERRT("LD HL , ( 5678H ) ; comment", OK, "; comment", 0x2A, 0x78, 0x56);
+    ERRT("CALL C , 1234H ; comment", OK, "; comment", 0xDC, 0x34, 0x12);
+    ERRT("RET         ; comment", OK, "; comment", 0xC9);
+    ERRT("RET NZ      ; comment", OK, "; comment", 0xC0);
 
     if (isZ80()) {
-        TEST("IM 2           ; comment", 0xED, 0x5E);
-        TEST("BIT 0 , B      ; comment", 0xCB, 0x40);
-        TEST("BIT 6 , ( HL ) ; comment", 0xCB, 0x76);
-        TEST("INC ( IX + 2 ) ; comment", 0xDD, 0x34, 0x02);
-        TEST("LD ( IY - 2 ) , B  ; comment", 0xFD, 0x70, 0xFE);
-        TEST("ADD A , ( IY - 2 ) ; comment", 0xFD, 0x86, 0xFE);
-        TEST("EX AF , AF'        ; comment", 0x08);
-        TEST("LD ( 0ABCDH ) , IX ; comment", 0xDD, 0x22, 0xCD, 0xAB);
-        TEST("LD IX , ( 5678H )  ; comment", 0xDD, 0x2A, 0x78, 0x56);
-        TEST("EX ( SP ) , IX     ; comment", 0xDD, 0xE3);
-        TEST("JP ( IX )          ; comment", 0xDD, 0xE9);
+        ERRT("IM 2           ; comment", OK, "; comment", 0xED, 0x5E);
+        ERRT("BIT 0 , B      ; comment", OK, "; comment", 0xCB, 0x40);
+        ERRT("BIT 6 , ( HL ) ; comment", OK, "; comment", 0xCB, 0x76);
+        ERRT("INC ( IX + 2 ) ; comment", OK, "; comment", 0xDD, 0x34, 0x02);
+        ERRT("LD ( IY - 2 ) , B  ; comment", OK, "; comment", 0xFD, 0x70, 0xFE);
+        ERRT("ADD A , ( IY - 2 ) ; comment", OK, "; comment", 0xFD, 0x86, 0xFE);
+        ERRT("EX AF , AF'        ; comment", OK, "; comment", 0x08);
+        ERRT("LD ( 0ABCDH ) , IX ; comment", OK, "; comment", 0xDD, 0x22, 0xCD, 0xAB);
+        ERRT("LD IX , ( 5678H )  ; comment", OK, "; comment", 0xDD, 0x2A, 0x78, 0x56);
+        ERRT("EX ( SP ) , IX     ; comment", OK, "; comment", 0xDD, 0xE3);
+        ERRT("JP ( IX )          ; comment", OK, "; comment", 0xDD, 0xE9);
 
-        ATEST(0x1000, "JR 1000H     ; comment", 0x18, 0xFE);
-        ATEST(0x1000, "JR NZ , 1004H; comment", 0x20, 0x02);
+        AERRT(0x1000, "JR 1000H     ; comment", OK, "; comment", 0x18, 0xFE);
+        AERRT(0x1000, "JR NZ , 1004H; comment", OK, "; comment", 0x20, 0x02);
     }
 }
 

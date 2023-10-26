@@ -231,18 +231,18 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     const auto pre = insn.pre();
     const auto dst = insn.dst();
@@ -264,7 +264,7 @@ Error AsmTlcs90::encodeImpl(StrScanner &scan, Insn &_insn) {
     if (pre != M_SRC)
         encodeOperand(insn, src, insn.srcOp, opc);
     insn.emitInsn(opc);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace tlcs90

@@ -640,7 +640,14 @@ static void test_misc() {
     TEST("TPSL H'B6'", 0xB5, 0xB6);
 }
 
-static void test_undefined() {
+static void test_comment() {
+    ERRT("LODI,R0 H'56'    ; comment", OK, "; comment", 0x04, 0x56);
+    ERRT("LODI,R1 <H'4567' ; comment", OK, "; comment", 0x05, 0x67);
+    ERRT("LODI,R2 >H'789A' ; comment", OK, "; comment", 0x06, 0x78);
+    ERRT("LODI,R3 H'89'    ; comment", OK, "; comment", 0x07, 0x89);
+}
+
+static void test_undef() {
     ERUS("LODI,R0  UNDEF",      "UNDEF",      0x04, 0x00);
     ERUS("LODR,R1  UNDEF",      "UNDEF",      0x09, 0x00);
     ERUS("LODA,R2  UNDEF",      "UNDEF",      0x0E, 0x00, 0x00);
@@ -767,7 +774,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_subroutine);
     RUN_TEST(test_io);
     RUN_TEST(test_misc);
-    RUN_TEST(test_undefined);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undef);
     RUN_TEST(test_error);
     RUN_TEST(test_data_constant);
 }

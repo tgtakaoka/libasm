@@ -125,7 +125,7 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     const auto bitNot = p.expect('/');
     op.val16 = parseExpr16(p.skipSpaces(), op);
     if (op.hasError())
-        return getError();
+        return op.getError();
     if (p.expect('.')) {
         if (op.getError())
             op.val16 = 0x20;
@@ -206,23 +206,23 @@ void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &
     }
 }
 
-Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-        return setError(insn.dstOp);
+        return _insn.setError(insn.dstOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-            return setError(insn.srcOp);
+            return _insn.setError(insn.srcOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
-            return setError(insn.extOp);
+            return _insn.setError(insn.extOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     const auto dst = insn.dst();
     const auto src = insn.src();
@@ -236,7 +236,7 @@ Error AsmI8051::encodeImpl(StrScanner &scan, Insn &_insn) {
         encodeOperand(insn, insn.ext(), insn.extOp);
     }
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace i8051

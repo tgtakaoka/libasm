@@ -41,8 +41,7 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 Assembler::Assembler(
         const ValueParser::Plugins &plugins, const Pseudos &pseudos, const OptionBase *option)
-    : ErrorAt(),
-      _parser(plugins, *this),
+    : _parser(plugins, *this),
       _pseudos(pseudos),
       _commonOptions(&_opt_listRadix),
       _options(option),
@@ -62,7 +61,7 @@ Error Assembler::setCurrentLocation(uint32_t location, bool align) {
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     _symtab = symtab;
     StrScanner scan{line};
-    setError(scan.skipSpaces(), OK);
+    insn.setError(scan.skipSpaces(), OK);
     if (_parser.commentLine(scan))
         return OK;
 
@@ -73,18 +72,19 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
     auto error = processPseudo(scan.skipSpaces(), insn);
 
     if (error == UNKNOWN_DIRECTIVE) {
-        setError(at, OK);
-        if (setErrorIf(at, setCurrentLocation(insn.address())))
-            return getError();
+        insn.setError(at, OK);
+        if (insn.setErrorIf(at, setCurrentLocation(insn.address())))
+            return insn.getError();
         error = encodeImpl(scan, insn);
         if (error == UNKNOWN_INSTRUCTION)
-            return setError(at, error);
+            return insn.setError(at, error);
     }
-    if (insn.length())
-        setCurrentLocation(insn.address() + insn.length() / config().addressUnit());
+
+    if (error == OK)
+        insn.setAt(scan);
     if (!_parser.endOfLine(scan.skipSpaces()))
-        return setErrorIf(scan, GARBAGE_AT_END);
-    return error;
+        return insn.setErrorIf(scan, GARBAGE_AT_END);
+    return insn.getError();
 }
 
 Error Assembler::processPseudo(StrScanner &scan, Insn &insn) {
@@ -136,7 +136,7 @@ Error Assembler::setOption(const char *name, const char *text) {
 
 Error Assembler::setOption(const StrScanner &name, StrScanner &text) {
     if (_commonOptions.setOption(name, text) == OK)
-        return getError();
+        return OK;
     return options().setOption(name, text);
 }
 
@@ -152,8 +152,8 @@ Error Assembler::setOption(StrScanner &scan, Insn &insn, uint8_t extra) {
         return MISSING_CLOSING_DQUOTE;
     if (!p.skipSpaces().expect(','))
         return MISSING_COMMA;
-    if (setErrorIf(p, setOption(option, p.skipSpaces())))
-        return getError();
+    if (insn.setErrorIf(p, setOption(option, p.skipSpaces())))
+        return insn.getError();
     scan = p;
     return OK;
 }
@@ -164,10 +164,10 @@ Error Assembler::defineOrigin(StrScanner &scan, Insn &insn, uint8_t extra) {
     ErrorAt error;
     const auto value = parseExpr(p, error);
     if (error.getError())
-        return setError(error);
+        return insn.setError(error);
     const auto addr = value.getUnsigned();
-    if (setErrorIf(scan, setCurrentLocation(addr)))
-        return getError();
+    if (insn.setErrorIf(scan, setCurrentLocation(addr)))
+        return insn.getError();
     insn.reset(addr);
     scan = p;
     return OK;
@@ -182,13 +182,13 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
         ErrorAt error;
         value = parseExpr(p, error);
         if (error.getError())
-            return setError(error);
+            return insn.setError(error);
     }
     if (value.overflowUint8())
-        return setError(scan, OVERFLOW_RANGE);
+        return insn.setError(scan, OVERFLOW_RANGE);
     insn.align(value.getUnsigned());
-    if (setErrorIf(scan, setCurrentLocation(insn.address())))
-        return getError();
+    if (insn.setErrorIf(scan, setCurrentLocation(insn.address())))
+        return insn.getError();
     scan = p;
     return OK;
 }
@@ -202,9 +202,9 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     ErrorAt error;
     auto value = parseExpr(p, error);
     if (error.getError())
-        return setError(error);
+        return insn.setError(error);
     if (value.overflowUint16())
-        return setError(scan, OVERFLOW_RANGE);
+        return insn.setError(scan, OVERFLOW_RANGE);
 
     uint8_t unit;
     switch (type) {
@@ -221,7 +221,7 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     }
     const auto bytes = value.getUnsigned() * unit;
     const auto addr = insn.address() + (bytes / config().addressUnit());
-    setErrorIf(scan, setCurrentLocation(addr, align));
+    insn.setErrorIf(scan, setCurrentLocation(addr, align));
     scan = p;
     return OK;
 }
@@ -237,7 +237,7 @@ Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) 
         while (!p.expect(delim)) {
             const auto c = *p;
             if (c == 0)
-                return setErrorIf(p, MISSING_CLOSING_DELIMITER);
+                return insn.setErrorIf(p, MISSING_CLOSING_DELIMITER);
             if (type == STR_ASCII) {
                 error.setErrorIf(p, insn.emitByte(c));
             } else if (type == STR_DEC_6BIT) {
@@ -266,7 +266,7 @@ Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) 
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
-    return setErrorIf(error);
+    return insn.setErrorIf(error);
 }
 
 /**
@@ -381,10 +381,10 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
             continue;
         }
 
-        return setError(strErr.getError() ? strErr : exprErr);
+        return insn.setError(strErr.getError() ? strErr : exprErr);
     } while (scan.skipSpaces().expect(','));
 
-    return setErrorIf(error);
+    return insn.setErrorIf(error);
 }
 
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler) {

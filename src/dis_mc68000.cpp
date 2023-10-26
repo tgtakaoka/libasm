@@ -317,13 +317,13 @@ OprSize sizeVal(const DisInsn &insn) {
 
 }  // namespace
 
-Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
     TABLE.searchOpCode(cpuType(), insn, out);
     if (insn.getError())
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto size = sizeVal(insn);
     const auto insnSize = insn.insnSize();
@@ -346,7 +346,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
     if (dst != M_NONE)
         decodeOperand(insn, out.comma(), dst, modeVal(opc, dstPos), regVal(opc, dstPos), size,
                 opr16, opr16Error);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace mc68000

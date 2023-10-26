@@ -448,6 +448,17 @@ static void test_control() {
     }
 }
 
+static void test_comment() {
+    ERRT("ADDC A, R0; comment", OK, "; comment",  0x78);
+}
+
+static void test_undef() {
+    ERUS("ADDC A, #UNDEF", "UNDEF", 0x13, 0x00);
+    ERUS("JMP UNDEF",      "UNDEF", 0x04, 0x00);
+    ERUS("DJNZ R0, UNDEF", "UNDEF", 0xE8, 0x00);
+    ERUS("CALL UNDEF",     "UNDEF", 0x14, 0x00);
+}
+
 static void test_data_constant() {
     TEST("DB -128, 255", 0x80, 0xFF);
     TEST("DB 'A', '\"'", 0x41, 0x22);
@@ -500,6 +511,8 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_move);
     RUN_TEST(test_timer_counter);
     RUN_TEST(test_control);
+    RUN_TEST(test_comment);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

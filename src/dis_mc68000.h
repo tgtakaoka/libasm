@@ -34,7 +34,7 @@ private:
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t modePos,
             uint8_t regPos, OprSize size, uint16_t opr16 = 0, Error opr16Error = OK) const;
 
-    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) override;
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }
     static const ValueFormatter::Plugins &defaultPlugins();

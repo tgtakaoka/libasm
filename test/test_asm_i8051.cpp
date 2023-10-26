@@ -458,32 +458,32 @@ static void test_absolute() {
 }
 
 static void test_comment() {
-    TEST("NOP       ; comment",      0x00);
-    TEST("SWAP A    ; comment",      0xC4);
-    TEST("INC  DPTR ; comment",      0xA3);
-    TEST("ANL  A , R0 ; comment",    0x58);
-    TEST("JMP  @A+DPTR ; comment",   0x73);
+    ERRT("NOP       ; comment",      OK, "; comment", 0x00);
+    ERRT("SWAP A    ; comment",      OK, "; comment", 0xC4);
+    ERRT("INC  DPTR ; comment",      OK, "; comment", 0xA3);
+    ERRT("ANL  A , R0 ; comment",    OK, "; comment", 0x58);
+    ERRT("JMP  @A+DPTR ; comment",   OK, "; comment", 0x73);
     ERRT("JMP  @ A+DPTR ; comment",  UNKNOWN_OPERAND, "@ A+DPTR ; comment");
     ERRT("JMP  @A +DPTR ; comment",  UNKNOWN_OPERAND, "@A +DPTR ; comment");
     ERRT("JMP  @A+ DPTR ; comment",  UNKNOWN_OPERAND, "@A+ DPTR ; comment");
     ERRT("JMP  @ A+PC   ; comment",  UNKNOWN_OPERAND, "@ A+PC   ; comment");
     ERRT("JMP  @A +PC   ; comment",  UNKNOWN_OPERAND, "@A +PC   ; comment");
     ERRT("JMP  @A+ PC   ; comment",  UNKNOWN_OPERAND, "@A+ PC   ; comment");
-    TEST("MOVX A , @DPTR ; comment", 0xE0);
-    TEST("MOVX @DPTR , A ; comment", 0xF0);
+    ERRT("MOVX A , @DPTR ; comment", OK, "; comment", 0xE0);
+    ERRT("MOVX @DPTR , A ; comment", OK, "; comment", 0xF0);
     ERRT("MOVX A,@ DPTR ; comment",  UNKNOWN_OPERAND, "@ DPTR ; comment");
     ERRT("MOVX @ DPTR,A ; comment",  UNKNOWN_OPERAND, "@ DPTR,A ; comment");
     ERRT("INC  @ R0     ; comment",  UNKNOWN_OPERAND, "@ R0     ; comment");
-    TEST("ADD  A , @R1  ; comment",  0x27);
+    ERRT("ADD  A , @R1  ; comment",  OK, "; comment", 0x27);
     ERRT("ADD  A, @ R1  ; comment",  UNKNOWN_OPERAND, "@ R1  ; comment");
-    TEST("ADD  A , # 25H   ; comment",          0x24, 0x25);
-    TEST("ORL  44H , # 45H ; comment",          0x43, 0x44, 0x45);
-    TEST("JBC  22H.1 , $ + 15H  ; comment",     0x10, 0x11, 0x12);
-    TEST("CJNE A , # 0B5H , $ - 47H ; comment", 0xB4, 0xB5, 0xB6);
-    TEST("ORL  C , / 0A8H.1     ; comment",     0xA0, 0xA9);
+    ERRT("ADD  A , # 25H   ; comment",          OK, "; comment", 0x24, 0x25);
+    ERRT("ORL  44H , # 45H ; comment",          OK, "; comment", 0x43, 0x44, 0x45);
+    ERRT("JBC  22H.1 , $ + 15H  ; comment",     OK, "; comment", 0x10, 0x11, 0x12);
+    ERRT("CJNE A , # 0B5H , $ - 47H ; comment", OK, "; comment", 0xB4, 0xB5, 0xB6);
+    ERRT("ORL  C , / 0A8H.1     ; comment",     OK, "; comment", 0xA0, 0xA9);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("ADD A,#UNDEF",     "UNDEF",        0x24, 0x00);
     ERUS("ORL UNDEF,#45H",   "UNDEF,#45H",   0x43, 0x00, 0x45);
     ERUS("ORL 44H,#UNDEF",   "UNDEF",        0x43, 0x44, 0x00);
@@ -587,7 +587,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_page);
     RUN_TEST(test_absolute);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

@@ -149,17 +149,17 @@ void DisTlcs90::decodeOperand(
     }
 }
 
-Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
+Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     Operand prefixOp;
     if (TABLE.isPrefix(cpuType(), opc, prefixOp.mode)) {
         if (insn.readOpCode(prefixOp))
-            return setError(insn);
+            return _insn.setError(insn);
     }
     if (TABLE.searchOpCode(cpuType(), insn, prefixOp, out))
-        return setError(insn);
+        return _insn.setError(insn);
 
     const auto dst = insn.dst();
     if (dst != M_NONE) {
@@ -186,7 +186,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
             }
         }
     }
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace tlcs90

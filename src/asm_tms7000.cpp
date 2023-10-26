@@ -219,29 +219,29 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     }
 }
 
-Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-        return setError(insn.srcOp);
+        return _insn.setError(insn.srcOp);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-            return setError(insn.dstOp);
+            return _insn.setError(insn.dstOp);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
-            return setError(insn.extOp);
+            return _insn.setError(insn.extOp);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     encodeOperand(insn, insn.srcOp, insn.src());
     encodeOperand(insn, insn.dstOp, insn.dst());
     encodeOperand(insn, insn.extOp, insn.ext());
     insn.emitInsn();
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace tms7000

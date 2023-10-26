@@ -921,32 +921,32 @@ static void test_setrp() {
 }
 
 static void test_comment() {
-    TEST(" RET             ; comment", 0xAF);
-    TEST(" JP  ULE , %3E3F ; comment", 0x3D, 0x3E, 0x3F);
-    TEST(" JP  %8E8F       ; comment", 0x8D, 0x8E, 0x8F);
-    TEST(" LD  R1 , >%0F   ; comment", 0x18, 0x0F);
-    TEST(" LD  R2 , R0     ; comment", 0x28, R(0));
-    TEST(" LD  >%0F , R1   ; comment", 0x19, 0x0F);
-    TEST(" LD  R9 , #%9D   ; comment", 0x9C, 0x9D);
-    TEST(" INC R0          ; comment", 0x0E);
-    TEST(" RLC %11         ; comment", 0x10, 0x11);
-    TEST(" RLC R1          ; comment", 0x10, R(1));
-    TEST(" RLC @%12        ; comment", 0x11, 0x12);
-    TEST(" RLC @R2         ; comment", 0x11, R(2));
-    TEST(" ADD >%07, @%16  ; comment", 0x05, 0x16, 0x07);
-    TEST(" ADD >%07, @R6   ; comment", 0x05, R(6), 0x07);
-    TEST(" ADD R7 , @%16   ; comment", 0x05, 0x16, R(7));
-    TZ86(" LDC @RR4 , R13  ; comment", 0xD2, 0xD4);
-    TZ88(" LDC @RR4 , R13  ; comment", 0xD3, 0xD4);
-    TZ86(" LD  R12 , %C9 (R8) ; comment", 0xC7, 0xC8, 0xC9);
-    TZ88(" LD  R12 , %C9 (R8) ; comment", 0x87, 0xC8, 0xC9);
-    TZ86(" LD  %D9 (R8) , R13 ; comment", 0xD7, 0xD8, 0xD9);
-    TZ88(" LD  %D9 (R8) , R13 ; comment", 0x97, 0xD8, 0xD9);
-    ATEST(0x1000, " JR   C , %107E  ; comment", 0x7B, 0x7C);
-    ATEST(0x1000, " DJNZ R2 , %102D ; comment", 0x2A, 0x2B);
+    ERRT(" RET             ; comment", OK, "; comment", 0xAF);
+    ERRT(" JP  ULE , %3E3F ; comment", OK, "; comment", 0x3D, 0x3E, 0x3F);
+    ERRT(" JP  %8E8F       ; comment", OK, "; comment", 0x8D, 0x8E, 0x8F);
+    ERRT(" LD  R1 , >%0F   ; comment", OK, "; comment", 0x18, 0x0F);
+    ERRT(" LD  R2 , R0     ; comment", OK, "; comment", 0x28, R(0));
+    ERRT(" LD  >%0F , R1   ; comment", OK, "; comment", 0x19, 0x0F);
+    ERRT(" LD  R9 , #%9D   ; comment", OK, "; comment", 0x9C, 0x9D);
+    ERRT(" INC R0          ; comment", OK, "; comment", 0x0E);
+    ERRT(" RLC %11         ; comment", OK, "; comment", 0x10, 0x11);
+    ERRT(" RLC R1          ; comment", OK, "; comment", 0x10, R(1));
+    ERRT(" RLC @%12        ; comment", OK, "; comment", 0x11, 0x12);
+    ERRT(" RLC @R2         ; comment", OK, "; comment", 0x11, R(2));
+    ERRT(" ADD >%07, @%16  ; comment", OK, "; comment", 0x05, 0x16, 0x07);
+    ERRT(" ADD >%07, @R6   ; comment", OK, "; comment", 0x05, R(6), 0x07);
+    ERRT(" ADD R7 , @%16   ; comment", OK, "; comment", 0x05, 0x16, R(7));
+    EZ86(" LDC @RR4 , R13  ; comment", OK, "; comment", 0xD2, 0xD4);
+    EZ88(" LDC @RR4 , R13  ; comment", OK, "; comment", 0xD3, 0xD4);
+    EZ86(" LD  R12 , %C9 (R8) ; comment", OK, "; comment", 0xC7, 0xC8, 0xC9);
+    EZ88(" LD  R12 , %C9 (R8) ; comment", OK, "; comment", 0x87, 0xC8, 0xC9);
+    EZ86(" LD  %D9 (R8) , R13 ; comment", OK, "; comment", 0xD7, 0xD8, 0xD9);
+    EZ88(" LD  %D9 (R8) , R13 ; comment", OK, "; comment", 0x97, 0xD8, 0xD9);
+    AERRT(0x1000, " JR   C , %107E  ; comment", OK, "; comment", 0x7B, 0x7C);
+    AERRT(0x1000, " DJNZ R2 , %102D ; comment", OK, "; comment", 0x2A, 0x2B);
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("JP C,UNDEF", "UNDEF", 0x7D, 0x00, 0x00);
     ERUS("JP   UNDEF", "UNDEF", 0x8D, 0x00, 0x00);
     if (z86()) {
@@ -1050,7 +1050,7 @@ void run_tests(const char *cpu) {
         RUN_TEST(test_bit_operation);
     RUN_TEST(test_setrp);
     RUN_TEST(test_comment);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_error);
     RUN_TEST(test_data_constant);
 }

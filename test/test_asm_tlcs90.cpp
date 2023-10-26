@@ -1717,14 +1717,14 @@ static void test_jump_call() {
 }
 
 static void test_comment() {
-    TEST("LD B , ( BC )  ; comment",       0xE0, 0x28);
-    TEST("LD B , ( 1234H )  ; comment",    0xE3, 0x34, 0x12, 0x28);
-    TEST("LD B , ( IX + 34H )  ; comment", 0xF0, 0x34, 0x28);
-    TEST("LD B , ( HL + A )  ; comment",   0xF3, 0x28);
-    TEST("CALL LE , ( HL )  ; comment",      0xEA, 0xD2);
-    TEST("CALL ULE , ( 1234H ) ; comment",   0xEB, 0x34, 0x12, 0xD3);
-    TEST("CALL GT , ( SP + 34H ) ; comment", 0xF6, 0x34, 0xDA);
-    TEST("CALL UGT , ( HL + A ) ; comment",  0xF7, 0xDB);
+    ERRT("LD B , ( BC )      ; comment", OK, "; comment", 0xE0, 0x28);
+    ERRT("LD B , ( 1234H )   ; comment", OK, "; comment", 0xE3, 0x34, 0x12, 0x28);
+    ERRT("LD B , ( IX + 34H ); comment", OK, "; comment", 0xF0, 0x34, 0x28);
+    ERRT("LD B , ( HL + A )  ; comment", OK, "; comment", 0xF3, 0x28);
+    ERRT("CALL LE , ( HL )       ; comment", OK, "; comment", 0xEA, 0xD2);
+    ERRT("CALL ULE , ( 1234H )   ; comment", OK, "; comment", 0xEB, 0x34, 0x12, 0xD3);
+    ERRT("CALL GT , ( SP + 34H ) ; comment", OK, "; comment", 0xF6, 0x34, 0xDA);
+    ERRT("CALL UGT , ( HL + A )  ; comment", OK, "; comment", 0xF7, 0xDB);
 }
 
 static void test_error() {
@@ -1740,7 +1740,7 @@ static void test_error() {
     ERRT("LD B,(HL+A",    MISSING_CLOSING_PAREN, "");
 }
 
-static void test_undefined_symbol() {
+static void test_undef() {
     ERUS("LD B,UNDEF",       "UNDEF",     0x30, 0x00);
     ERUS("LD B,(UNDEF)",     "UNDEF)",    0xE7, 0x00, 0x28);
     ERUS("LD B,(SP+UNDEF)",  "UNDEF)",    0xF2, 0x00, 0x28);
@@ -1829,7 +1829,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_jump_call);
     RUN_TEST(test_comment);
     RUN_TEST(test_error);
-    RUN_TEST(test_undefined_symbol);
+    RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);
 }
 

@@ -243,23 +243,23 @@ Error AsmCdp1802::parseOperand(StrScanner &scan, Operand &op) const {
     return op.getError();
 }
 
-Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return setError(insn.op1);
+        return _insn.setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return setError(insn.op2);
+            return _insn.setError(insn.op2);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     emitOperand(insn, insn.mode1(), insn.op1);
     if (insn.mode2() == M_ADDR)
         insn.emitUint16(insn.op2.val16);
-    return setError(insn);
+    return _insn.setError(insn);
 }
 
 }  // namespace cdp1802

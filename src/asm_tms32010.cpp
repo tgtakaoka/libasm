@@ -186,29 +186,29 @@ Error AsmTms32010::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) {
+Error AsmTms32010::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return setError(insn.op1);
+        return _insn.setError(insn.op1);
     if (scan.skipSpaces().expect(',')) {
         if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return setError(insn.op2);
+            return _insn.setError(insn.op2);
         scan.skipSpaces();
     }
     if (scan.expect(',')) {
         if (parseOperand(scan, insn.op3) && insn.op3.hasError())
-            return setError(insn.op3);
+            return _insn.setError(insn.op3);
         scan.skipSpaces();
     }
 
-    if (setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
-        return getError();
+    if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
+        return _insn.getError();
 
     encodeOperand(insn, insn.op1, insn.mode1());
     encodeOperand(insn, insn.op2, insn.mode2());
     encodeOperand(insn, insn.op3, insn.mode3());
     insn.emitInsn();
-    return setErrorIf(insn);
+    return _insn.setErrorIf(insn);
 }
 
 }  // namespace tms32010
