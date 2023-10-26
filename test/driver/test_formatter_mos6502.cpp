@@ -35,12 +35,26 @@ void test_asm_mos6502() {
     ASM("mos6502",
             "        cpu   mos6502\n"
             "; comment line\n"
-            "        *=$abcd\n"
-            "        sbc   label1\n",
+            "        *= $abcd\n"
+            "        sbc   label1\n"
+            "label2 = 2\n"
+            "label3 := 3\n"
+            "        lda   #label2\n"
+            "        ldy   #label3\n"
+            "label4: bne   label4\n"
+            "        .byte 'abc'\n"
+            "        fcb   'xyz'\n",
             "          0 :                            cpu   mos6502\n"
             "          0 :                    ; comment line\n"
-            "       abcd :                            *=$abcd\n"
-            "       abcd : ed f2 f1                   sbc   label1\n");
+            "       abcd :                            *= $abcd\n"
+            "       abcd : ed f2 f1                   sbc   label1\n"
+            "       abd0 : =2                 label2 = 2\n"
+            "       abd0 : =3                 label3 := 3\n"
+            "       abd0 : a9 02                      lda   #label2\n"
+            "       abd2 : a0 03                      ldy   #label3\n"
+            "       abd4 : d0 fe              label4: bne   label4\n"
+            "       abd6 : 61 62 63                   .byte 'abc'\n"
+            "       abd9 : 78 79 7a                   fcb   'xyz'\n");
 }
 
 void test_asm_w65816() {

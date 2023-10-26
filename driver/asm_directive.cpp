@@ -199,6 +199,7 @@ IntelDirective::IntelDirective(Assembler &assembler) : AsmDirective(assembler) {
 
 MostekDirective::MostekDirective(Assembler &assembler) : MotorolaDirective(assembler) {
     registerPseudo("=", &MostekDirective::defineConstant);
+    registerPseudo(":=", &MostekDirective::defineConstant);
 }
 
 Z8Directive::Z8Directive(Assembler &assembler) : IntelDirective(assembler) {

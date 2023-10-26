@@ -1089,6 +1089,19 @@ static void test_data_constant() {
     TEST(".WORD 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT(".WORD 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
 
+    TEST("FCB -128, 255", 0x80, 0xFF);
+    TEST("FCB 'A', '\"'", 0x41, 0x22);
+    TEST("FCB '9'-'0'",   0x09);
+    TEST("FCB ''''",      0x27);
+    TEST("FCB '''",       0x27);
+    TEST("FCB ''");
+    ERRT("FCB '",         MISSING_CLOSING_QUOTE, "'");
+    TEST("FCB \"\"");
+    TEST("FCB \"\"\"\"",  0x22);
+    TEST("FCB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
+    ERRT("FCB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
+    TEST("FDB -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+
     ERRT(".BYTE '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
          "1234567890'",
