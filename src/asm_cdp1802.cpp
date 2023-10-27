@@ -41,7 +41,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Cdp1802SymbolParser final : SymbolParser {
+struct RcaSymbolParser final : SymbolParser {
     bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '=';
@@ -49,7 +49,18 @@ struct Cdp1802SymbolParser final : SymbolParser {
     bool instructionTerminator(char c) const override { return c == '='; }
 };
 
-struct Cdp1802FunctionTable final : FunctionTable {
+struct RcaLetterParser final : LetterParser {
+    bool letterPrefix(StrScanner &scan) const override {
+        scan.iexpect('T');  // optional
+        return true;
+    }
+    bool stringPrefix(StrScanner &scan) const override {
+        scan.iexpect('T');  // optional
+        return true;
+    }
+};
+
+struct RcaFunctionTable final : FunctionTable {
     const Functor *lookupFunction(const StrScanner &name) const override;
 };
 
@@ -65,9 +76,9 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
             return AsteriskLocationParser::singleton();
         }
         const FunctionTable &function() const override { return _function; }
-        const Cdp1802SymbolParser _symbol{};
-        const IbmLetterParser _letter{'T'};
-        const Cdp1802FunctionTable _function{};
+        const RcaSymbolParser _symbol{};
+        const RcaLetterParser _letter{};
+        const RcaFunctionTable _function{};
     } PLUGINS{};
     return PLUGINS;
 }
@@ -128,7 +139,7 @@ const struct : Functor {
     }
 } FN_A1;
 
-const Functor *Cdp1802FunctionTable::lookupFunction(const StrScanner &name) const {
+const Functor *RcaFunctionTable::lookupFunction(const StrScanner &name) const {
     if (name.iequals_P(PSTR("A.0")))
         return &FN_A0;
     if (name.iequals_P(PSTR("A.1")))

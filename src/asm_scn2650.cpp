@@ -39,8 +39,13 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_RES,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
 };
-// clang-format off
+// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
+
+struct SigneticsLetterParser final : LetterParser {
+    bool letterPrefix(StrScanner &scan) const override { return scan.iexpect('A') != 0; }
+    bool stringPrefix(StrScanner &scan) const override { return scan.iexpect('A') != 0; }
+};
 
 }  // namespace
 
@@ -49,7 +54,7 @@ const ValueParser::Plugins &AsmScn2650::defaultPlugins() {
         const NumberParser &number() const override { return SigneticsNumberParser::singleton(); }
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
         const LetterParser &letter() const override { return _letter; }
-        const IbmLetterParser _letter{'A'};
+        const SigneticsLetterParser _letter{};
     } PLUGINS{};
     return PLUGINS;
 }

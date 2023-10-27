@@ -45,12 +45,11 @@ const ValueParser::Plugins &AsmMn1610::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return _number; }
         const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
-        const LetterParser &letter() const override { return _letter; }
+        const LetterParser &letter() const override { return IbmLetterParser::singleton(); }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
         const IbmNumberParser _number{'X', 0, 0, 0};
-        const IbmLetterParser _letter{'C'};
     } PLUGINS{};
     return PLUGINS;
 }

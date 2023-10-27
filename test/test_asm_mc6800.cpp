@@ -1051,6 +1051,7 @@ static void test_data_constant() {
     TEST("FDB 'A, '\"",   0x00, 0x41, 0x00, 0x22);
     TEST("FCC 'ABC'",     0x41, 0x42, 0x43);
     TEST("FCC /ABC/",     0x41, 0x42, 0x43);
+    TEST("FCC //");
     ERRT("FCC 'ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);
     ERRT("FCC /ABC",      MISSING_CLOSING_DELIMITER, "", 0x41, 0x42, 0x43);
 

@@ -778,6 +778,8 @@ static void test_data_constant() {
     TEST("DC A.0(x'123')", 0x23);
     TEST("DC #0D0A, ''''", 0x0D, 0x0A, 0x27);
     TEST("DC T'A'+X'80'",  0xC1);
+    TEST("DC X'20'+T'A'",  0x61);
+    TEST("DC 'A'+X'80'",   0xC1);
     TEST("DC X'20'+'A'",   0x61);
     TEST("DC T'A''B'",     0x41, 0x27, 0x42);
     TEST("DC 'TEXT'",      0x54, 0x45, 0x58, 0x54);

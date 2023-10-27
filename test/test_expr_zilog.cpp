@@ -49,8 +49,8 @@ static void test_char_constant() {
     X8("'a+5",  MISSING_CLOSING_QUOTE, "'a+5");
     X8("5+'a",  MISSING_CLOSING_QUOTE, "'a");
     X8("' ",    MISSING_CLOSING_QUOTE, "' ");
-    X8("''",    MISSING_CLOSING_QUOTE, "''");
-    X8("'''",   MISSING_CLOSING_QUOTE, "'''");
+    X8("''",    ILLEGAL_CONSTANT, "''");
+    X8("'''",   ILLEGAL_CONSTANT, "'''");
     E8("'%%'",  0x25);
     E8("'%q'",  0x27);
     E8("'%t'",  0x09);

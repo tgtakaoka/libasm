@@ -1079,6 +1079,8 @@ static void test_data_constant() {
     TEST(".BYTE '9'-'0'",   0x09);
     TEST(".BYTE ''''",      0x27);
     TEST(".BYTE '''",       0x27);
+    TEST(".BYTE ''");
+    ERRT(".BYTE '",         MISSING_CLOSING_QUOTE, "'");
     TEST(".BYTE 'A''B',0",  0x41, 0x27, 0x42, 0x00);
     ERRT(".BYTE 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
     TEST(".WORD -128, 255", 0x80, 0xFF, 0xFF, 0x00);

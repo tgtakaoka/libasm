@@ -70,17 +70,23 @@ struct DecSymbolParser final : SymbolParser {
 
 struct DecLetterParser final : LetterParser {
     Error parseLetter(StrScanner &scan, char &letter) const override {
+        if (*scan == '\'')
+            return LetterParser::parseLetter(scan, letter);
         auto p = scan;
-        if (!p.expect('"'))
-            return NOT_AN_EXPECTED;
-        ErrorAt error;
-        letter = readLetter(p, error);
-        if (error.isOK())
-            scan = p;
-        return error.getError();
+        if (p.expect('"')) {
+            ErrorAt error;
+            letter = readLetter(p, error, 0);
+            if (error.isOK()) {
+                scan = p;
+                return OK;
+            }
+            return ILLEGAL_CONSTANT;
+        }
+        return NOT_AN_EXPECTED;
     }
 
-    char readLetter(StrScanner &scan, ErrorAt &error) const override {
+    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override {
+        UNUSED(delim);
         const auto c = *scan;
         if (c == 0 || (c >= 0x60 && c < 0x7F)) {
             error.setErrorIf(ILLEGAL_CONSTANT);  // no lowercase letter

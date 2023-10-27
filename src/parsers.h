@@ -92,37 +92,41 @@ struct LetterParser {
     virtual Error parseLetter(StrScanner &scan, char &letter) const;
 
     /**
+     * Returns true and consumes prefix for a letter surrounded by letterdelimiters. Also returns
+     * true if no prefix is required.
+     */
+    virtual bool letterPrefix(StrScanner &scan) const {
+        UNUSED(scan);
+        return true;
+    }
+
+    /**
+     * Returns a delimiters for a letter and cosume it. Returns zero if no delimiter exists.
+     */
+    virtual char letterDelimiter(StrScanner &scan) const { return scan.expect('\''); }
+
+    /**
      * Read a letter constant from |scan| and return it.  Default style letter is: [:print:], ''
      *
      * When |scan| points text which doesn't make sense as a letter, |error| is set as
      * ILLEGAL_CONSTANT.
      */
-    virtual char readLetter(StrScanner &scan, ErrorAt &error) const {
-        return readLetter(scan, error, '\'');
+    virtual char readLetter(StrScanner &scan, ErrorAt &error, char delim) const;
+
+    /**
+     * Returns true and consumes prefix for a string surrounded by string delimiters. Also returns
+     * true if no prefix is required.
+     */
+    virtual bool stringPrefix(StrScanner &scan) const {
+        UNUSED(scan);
+        return true;
     }
 
     /**
-     * A prefix for a string surrounded by string delimiters. Returns zero if no prefix is required.
+     * Returns a delimiter which encloses a string and cosume it. Returns zero if no delimiter
+     * exists.
      */
-    virtual char stringPrefix() const { return 0; }
-
-    /**
-     * A delimiter which encloses a string.
-     */
-    virtual char stringDelimiter() const { return '\''; }
-
-    /**
-     * Read a letter in string from |scan| and return it.  Default style letter is: [:print:], ''
-     *
-     * When |scan| points text which doesn't make sense as a letter, |error| is set as
-     * ILLEGAL_CONSTANT.
-     */
-    virtual char readLetterInString(StrScanner &scan, ErrorAt &error) const {
-        return readLetter(scan, error);
-    }
-
-protected:
-    static char readLetter(StrScanner &scan, ErrorAt &error, char delim);
+    virtual char stringDelimiter(StrScanner &scan) const { return scan.expect('\''); }
 };
 
 /**
@@ -152,7 +156,6 @@ struct IntelNumberParser final : NumberParser, Singleton<IntelNumberParser> {
     static Radix hasSuffix(StrScanner &scan);
 
 private:
-
     /**
      * Search |scan| as a |radix| based number with optional |suffix|.
      *
@@ -329,19 +332,10 @@ private:
 };
 
 struct CStyleLetterParser final : LetterParser, Singleton<CStyleLetterParser> {
-    /** C-style letter is: [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
-    char readLetter(StrScanner &scan, ErrorAt &error) const override {
-        return readLetter(scan, error, '\'');
-    }
-
-    char stringDelimiter() const override { return '"'; }
-
-    char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
-        return readLetter(scan, error, '"');
-    }
-
-private:
-    static char readLetter(StrScanner &scan, ErrorAt &error, char delim);
+    /** C-style letter is 'c' where c is [:print:], \['"?\btnt], \x[0-9A-Fa-f]+, \[0-7]+ */
+    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
+    /** C-style string is "str". */
+    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
 };
 
 struct DefaultLetterParser final : LetterParser, Singleton<DefaultLetterParser> {};
@@ -352,8 +346,6 @@ struct MotorolaLetterParser final : LetterParser, Singleton<MotorolaLetterParser
      * single quote
      */
     Error parseLetter(StrScanner &scan, char &letter) const override;
-    char readLetter(StrScanner &scan, ErrorAt &error) const override;
-    char readLetterInString(StrScanner &scan, ErrorAt &error) const override;
 };
 
 struct ZilogLetterParser final : LetterParser, Singleton<ZilogLetterParser> {
@@ -361,30 +353,30 @@ struct ZilogLetterParser final : LetterParser, Singleton<ZilogLetterParser> {
      * Zilog style letter is followed after a single quote and hexadecimal escape sequence with
      * '%hh'. Also a single quote is expressed as %Q.
      */
-    char readLetter(StrScanner &scan, ErrorAt &error) const override;
+    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override;
 };
 
-struct IbmLetterParser final : LetterParser {
-    IbmLetterParser(char prefix) : _prefix(prefix) {}
-
+struct IbmLetterParser final : LetterParser, Singleton<IbmLetterParser> {
     /** IBM style letter constant is C'c'. */
-    Error parseLetter(StrScanner &scan, char &letter) const override;
-
-    char stringPrefix() const override { return _prefix; }
-
-private:
-    const char _prefix;
+    bool letterPrefix(StrScanner &scan) const override {
+        scan.iexpect('C');  // optional
+        return true;
+    }
+    /** IBM style string constant is C'str'. */
+    bool stringPrefix(StrScanner &scan) const override {
+        scan.iexpect('C');  // optional
+        return true;
+    }
 };
 
 struct FairchildLetterParser final : LetterParser, Singleton<FairchildLetterParser> {
-    /** Fairchild style letter is: [cC]'[:print:]', #[:print:], '[:print:]'? */
+    /** Fairchild style letter is [cC]'[:print:]', #[:print:], '[:print:]'? */
     Error parseLetter(StrScanner &scan, char &letter) const override;
-
-    char stringPrefix() const override { return 'C'; }
-
-private:
-    static Error hasPrefix(StrScanner &scan, char &prefix);
-    static Error hasSuffix(StrScanner &scan, char prefix);
+    /** Fairchild style string constant is C'str'. */
+    bool stringPrefix(StrScanner &scan) const override {
+        scan.iexpect('C');  // optional
+        return true;
+    }
 };
 
 struct AsteriskLocationParser final : LocationParser, Singleton<AsteriskLocationParser> {

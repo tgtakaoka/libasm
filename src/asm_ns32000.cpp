@@ -71,14 +71,8 @@ struct Ns32000SymbolParser final : SimpleSymbolParser {
 };
 
 struct Ns32000LetterParser final : LetterParser {
-    char readLetter(StrScanner &scan, ErrorAt &error) const override {
-        return readLetter(scan, error, '\'');
-    }
-    char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
-        return readLetter(scan, error, '"');
-    }
-    char stringDelimiter() const override { return '"'; }
-    static char readLetter(StrScanner &scan, ErrorAt &error, char delim) {
+    char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
+    char readLetter(StrScanner &scan, ErrorAt &error, char delim) const override {
         auto c = *scan++;
         if (c == '\\' && *scan) {
             c = *scan++;

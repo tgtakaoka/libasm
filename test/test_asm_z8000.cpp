@@ -2488,7 +2488,7 @@ static void test_data_constant() {
     BTEST("byte '%27'",      0x27);
     ERRT("byte '%2'",        UNKNOWN_ESCAPE_SEQUENCE, "%2'");
     BTEST("byte '%q'",       0x27);
-    ERRT("byte '''",         MISSING_CLOSING_QUOTE, "");
+    ERRT("byte '''",         ILLEGAL_CONSTANT, "''");
     BTEST("byte 'A%22B',0",  0x41, 0x22, 0x42, 0x00);
     BTEST("byte 'A%QB',0",   0x41, 0x27, 0x42, 0x00);
     ERRT("byte 'A%QB,0",     MISSING_CLOSING_QUOTE, "'A%QB,0");

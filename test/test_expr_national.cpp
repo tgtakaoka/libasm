@@ -25,7 +25,16 @@ const struct final : ValueParser::Plugins {
     const LetterParser &letter() const override { return _letter; }
     const NationalNumberParser _number{/* 'X' or 'H' */ 0, 'B', /* 'O' or */ 'Q', 'D'};
     const SimpleSymbolParser _symbol{PSTR("$")};
-    const IbmLetterParser _letter{'A'};
+    const struct : LetterParser {
+        bool letterPrefix(StrScanner &scan) const override {
+            scan.iexpect('A'); // optional
+            return true;
+        }
+        bool stringPrefix(StrScanner &scan) const override {
+            scan.iexpect('A'); // optional
+            return true;
+        }
+    } _letter{};
 } plugins{};
 struct : ValueParser::Locator {
     uint32_t location = 0;

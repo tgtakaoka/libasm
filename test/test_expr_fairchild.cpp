@@ -20,16 +20,10 @@ using namespace libasm;
 using namespace libasm::test;
 
 const struct final : ValueParser::Plugins {
-    const NumberParser &number() const override { return _number; }
-    const CommentParser &comment() const override { return _comment; }
-    const LetterParser &letter() const override { return _letter; }
-    const LocationParser &location() const override { return _location; }
-
-private:
-    const FairchildNumberParser _number{};
-    const AsteriskCommentParser _comment{};
-    const FairchildLetterParser _letter{};
-    const AsteriskLocationParser _location{};
+    const NumberParser &number() const override { return FairchildNumberParser::singleton(); }
+    const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+    const LetterParser &letter() const override { return FairchildLetterParser::singleton(); }
+    const LocationParser &location() const override { return AsteriskLocationParser::singleton(); }
 } plugins{};
 TestLocator locator{};
 const ValueParser parser{plugins, locator};

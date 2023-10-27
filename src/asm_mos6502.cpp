@@ -39,14 +39,25 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dBYTE,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
     {TEXT_dWORD,  &Assembler::defineDataConstant, Assembler::DATA_WORD},
 };
-// clang-format off
+// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
-struct Mos6502SymbolParser final : SymbolParser {
+struct MostekSymbolParser final : SimpleSymbolParser {
+    MostekSymbolParser() : SimpleSymbolParser(PSTR_UNDER) {}
     bool instructionLetter(char c) const override {
         return SymbolParser::instructionLetter(c) || c == '.' || c == '=' || c == '*';
     }
     bool instructionTerminator(char c) const override { return c == '='; }
+};
+
+struct MostekLetterParser final : LetterParser {
+    Error parseLetter(StrScanner &scan, char &letter) const {
+        return MotorolaLetterParser::singleton().parseLetter(scan, letter);
+    }
+    char stringDelimiter(StrScanner &scan) const {
+        const auto c = scan.expect('\'');
+        return c ? c : scan.expect('"');
+    }
 };
 
 }  // namespace
@@ -55,11 +66,12 @@ const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
         const SymbolParser &symbol() const override { return _symbol; }
-        const LetterParser &letter() const override { return MotorolaLetterParser::singleton(); }
+        const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
-        const Mos6502SymbolParser _symbol{};
+        const MostekSymbolParser _symbol{};
+        const MostekLetterParser _letter{};
     } PLUGINS{};
     return PLUGINS;
 }

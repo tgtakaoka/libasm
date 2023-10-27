@@ -106,7 +106,7 @@ Error NationalNumberParser::parseNumber(StrScanner &scan, Value &val) const {
 
     const auto error = val.parseNumber(p, radix);
     if (error == OK) {
-        p.expect('\''); // closing quote is optional
+        p.expect('\'');  // closing quote is optional
         scan = p;
     }
     return error;
@@ -251,36 +251,45 @@ bool PrefixSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
 }
 
 Error LetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    if (scan.expect('\'')) {
+    auto p = scan;
+    if (!letterPrefix(p))
+        return NOT_AN_EXPECTED;
+    const char delim = letterDelimiter(p);
+    if (delim) {
         ErrorAt error;
-        letter = readLetter(scan, error);
-        if (error.isOK())
-            return scan.expect('\'') ? OK : error.setErrorIf(scan, MISSING_CLOSING_QUOTE);
+        letter = readLetter(p, error, delim);
+        if (error.isOK()) {
+            if (p.expect(delim)) {
+                scan = p;
+                return OK;
+            }
+            return delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE;
+        }
         return error.getError();
     }
     return NOT_AN_EXPECTED;
 }
 
-char LetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) {
-    const auto c = *scan;
+char LetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) const {
+    auto p = scan;
+    if (p.expect(delim)) {
+        if (p.expect(delim)) {
+            scan = p;
+            return delim;  // Successive delimitor=
+        }
+        error.setErrorIf(scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+        return 0;
+    }
+    const auto c = *p++;
     if (c == 0) {
         error.setErrorIf(ILLEGAL_CONSTANT);
-        return c;
-    }
-    if (c == delim) {
-        if (scan[1] == delim) {
-            scan += 2;  // successive delimiters
-        } else {
-            return error.setErrorIf(
-                    scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-        }
     } else {
-        scan += 1;
+        scan = p;
     }
     return c;
 }
 
-char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) {
+char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) const {
     auto p = scan;
     auto c = *p++;
     if (c == '\\') {
@@ -340,7 +349,20 @@ char CStyleLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim
     return c;
 }
 
-char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
+Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
+    auto p = scan;
+    const char delim = letterDelimiter(p);
+    if (delim) {
+        if ((letter = *p++) == 0)
+            return ILLEGAL_CONSTANT;
+        p.expect(delim);  // closing delimiter is optional
+        scan = p;
+        return OK;
+    }
+    return NOT_AN_EXPECTED;
+}
+
+char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error, char delim) const {
     auto p = scan;
     auto c = *p++;
     if (c == '%') {
@@ -372,96 +394,38 @@ char ZilogLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
                 error.setErrorIf(scan, UNKNOWN_ESCAPE_SEQUENCE);
             }
         }
-    } else if (c == '\'') {
-        error.setErrorIf(MISSING_CLOSING_QUOTE);
+    } else if (c == delim) {
+        error.setErrorIf(scan, ILLEGAL_CONSTANT);
     }
     scan = p;
     return c;
 }
 
-Error MotorolaLetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    if (!scan.expect('\''))
-        return NOT_AN_EXPECTED;
-    ErrorAt error;
-    letter = readLetter(scan, error);
-    if (error.isOK())
-        scan.expect('\'');
-    return error.getError();
-}
-
-char MotorolaLetterParser::readLetter(StrScanner &scan, ErrorAt &error) const {
-    if (*scan == 0)
-        error.setErrorIf(ILLEGAL_CONSTANT);
-    return *scan++;
-}
-
-char MotorolaLetterParser::readLetterInString(StrScanner &scan, ErrorAt &error) const {
-    return LetterParser::readLetter(scan, error, '\'');
-}
-
-Error IbmLetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    auto p = scan;
-    if (p.iexpect(_prefix) && p.expect('\'')) {
-        ErrorAt error;
-        letter = readLetter(p, error);
-        if (p.expect('\'')) {
-            scan = p;
-            return error.getError() ? error.getError() : OK;
-        }
-        scan = p;
-        return MISSING_CLOSING_QUOTE;
-    }
-    return DefaultLetterParser::singleton().parseLetter(scan, letter);
-}
-
-Error FairchildLetterParser::hasPrefix(StrScanner &scan, char &prefix) {
-    auto p = scan;
-    // C'x'
-    if (p.iexpect('c')) {
-        if (*p != '\'')
-            return NOT_AN_EXPECTED;
-        ++p;
-        prefix = 'C';
-    } else if (p.expect('#')) {
-        // #c
-        prefix = '#';
-    } else if (p.expect('\'')) {
-        // 'c' or 'c
-        prefix = '\'';
-    } else {
-        return NOT_AN_EXPECTED;
-    }
-    scan = p;
-    return OK;
-}
-
 Error FairchildLetterParser::parseLetter(StrScanner &scan, char &letter) const {
-    char prefix;
-    if (hasPrefix(scan, prefix) != OK)
-        return NOT_AN_EXPECTED;
-    ErrorAt error;
-    if (prefix == '#') {
-        if (*scan == 0)
-            return error.setErrorIf(ILLEGAL_CONSTANT);
-        letter = *scan++;
-    } else {
-        letter = readLetter(scan, error);
+    auto p = scan;
+    if (p.iexpect('C')) {  // C'C'
+        const auto error = LetterParser::parseLetter(p, letter);
+        if (error == OK)
+            scan = p;
+        return error;
     }
-    return error.getError() ? error.getError() : hasSuffix(scan, prefix);
-}
-
-Error FairchildLetterParser::hasSuffix(StrScanner &scan, char prefix) {
-    if (prefix == 'C') {
-        // closing quote is necessary for C'x'.
-        return scan.expect('\'') ? OK : MISSING_CLOSING_QUOTE;
-    }
-    if (prefix == '#') {
-        // no closing quite for #c
+    if (p.expect('#')) {  // #C
+        if ((letter = *p) == 0)
+            return NOT_AN_EXPECTED;
+        scan = ++p;
         return OK;
     }
-    // closing quote is optional for 'x'
-    scan.expect('\'');
-    return OK;
+    if (p.expect('\'')) {  // 'c' or 'c
+        ErrorAt error;
+        letter = readLetter(p, error, '\'');
+        if (error.isOK()) {
+            p.expect('\'');  // closing quote is optional
+            scan = p;
+            return OK;
+        }
+        return error.getError();
+    }
+    return NOT_AN_EXPECTED;
 }
 
 bool AsteriskLocationParser::locationSymbol(StrScanner &scan) const {

@@ -260,33 +260,29 @@ Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) 
 Error Assembler::isString(StrScanner &scan, ErrorAt &error) const {
     auto p = scan;
     // Check prefix for string constant if any.
-    const auto prefix = parser().stringPrefix();
-    if (prefix)
-        p.iexpect(prefix);  // string prefix is optional
+    parser().stringPrefix(p);  // string prefix is optional
 
     // Check opening string delimiter.
-    const auto delim = parser().stringDelimiter();
-    if (!p.expect(delim))
+    const auto delim = parser().stringDelimiter(p);
+    if (delim == 0)
         return NOT_AN_EXPECTED;
 
-    while (true) {
-        // If reached to the end of line, it means we can't find closing delimiter.
-        if (endOfLine(p))
-            return error.setErrorIf(
-                    scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
-        parser().readLetterInString(p, error);
-        if (error.getError())
-            return error.getError();
+    while (!endOfLine(p)) {
         if (*p == delim) {
             auto a = p;
-            a += 1;  // skip possible delimiter and check the end.
+            a += 1;  // skip possible delimiter
             if (endOfLine(a.skipSpaces()) || *a == ',') {
                 scan = p;
                 return OK;
             }
-            // Susccessive two delimiters for escaping.
         }
+        parser().readLetter(p, error, delim);
+        if (error.getError())
+            return error.getError();
     }
+    // If reached to the end of line, it means we can't find closing delimiter.
+    error.setErrorIf(scan, delim == '"' ? MISSING_CLOSING_DQUOTE : MISSING_CLOSING_QUOTE);
+    return error.getError();
 }
 
 Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
@@ -303,18 +299,17 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         ErrorAt strErr;
         if (hasString && isString(p, strErr) == OK) {
             // a string surrounded by string delimiters
-            const auto prefix = parser().stringPrefix();
-            if (prefix)
-                scan.iexpect(prefix);  // skip prefix
-            ++scan;                    // skip opening delimiter
+            parser().stringPrefix(scan);  // skip prefix if exists
+            const auto delim = parser().stringDelimiter(scan);
             uint8_t count = 0;
             while (scan.str() < p.str()) {
                 const auto at = scan;
-                const auto c = parser().readLetterInString(scan, strErr);
+                const auto c = parser().readLetter(scan, strErr, delim);
                 error.setErrorIf(at, insn.emitByte(c));
                 count++;
             }
-            ++scan;  // skip closing delimiter
+            parser().stringDelimiter(p);  // skip closing delimiter
+            scan = p;
             // emit padding bytes
             switch (type) {
             case DATA_WORD:

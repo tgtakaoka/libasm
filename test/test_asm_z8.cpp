@@ -997,7 +997,7 @@ static void test_data_constant() {
     TEST("DB '%27'",     0x27);
     ERRT("DB '%2'",      UNKNOWN_ESCAPE_SEQUENCE, "%2'");
     TEST("DB '%q'",      0x27);
-    ERRT("DB '''",       MISSING_CLOSING_QUOTE, "");
+    ERRT("DB '''",       ILLEGAL_CONSTANT, "''");
     TEST("DB 'A%22B',0", 0x41, 0x22, 0x42, 0x00);
     TEST("DB 'A%QB',0",  0x41, 0x27, 0x42, 0x00);
     ERRT("DB 'A%QB,0",   MISSING_CLOSING_QUOTE, "'A%QB,0");

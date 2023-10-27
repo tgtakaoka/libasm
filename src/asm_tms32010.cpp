@@ -57,10 +57,7 @@ const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
         const LetterParser &letter() const override { return _letter; }
         const Tms32010SymbolParser _symbol{};
         const struct : LetterParser {
-            char stringDelimiter() const override { return '"'; }
-            char readLetterInString(StrScanner &scan, ErrorAt &error) const override {
-                return readLetter(scan, error, '"');
-            }
+            char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }
         } _letter{};
     } PLUGINS{};
     return PLUGINS;
