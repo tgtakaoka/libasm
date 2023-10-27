@@ -29,16 +29,16 @@ void tear_down() {}
 void test_asm_tms7000() {
     PREP_ASM(tms7000::AsmTms7000, IntelDirective);
 
-    symbols.internSymbol(0x7def, "label1");
-
     ASM("tms7000",
             "        cpu     tms7000\n"
             "* comment line\n"
             "        aorg    >7BCD\n"
+            "label1: equ     >7def\n"
             "        movd    %>a9aa(b), r171\n",
             "          0 :                            cpu     tms7000\n"
             "          0 :                    * comment line\n"
             "       7BCD :                            aorg    >7BCD\n"
+            "       7BCD : =7DEF              label1: equ     >7def\n"
             "       7BCD : A8 A9 AA AB                movd    %>a9aa(b), r171\n");
 }
 

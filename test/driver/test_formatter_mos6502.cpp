@@ -29,12 +29,12 @@ void tear_down() {}
 void test_asm_mos6502() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0xf1f2, "label1");
+    driver.setUpperHex(false);
 
     ASM("mos6502",
             "        cpu   mos6502\n"
             "; comment line\n"
+            "label1 = $f1f2\n"
             "        *= $abcd\n"
             "        sbc   label1\n"
             "label2 = 2\n"
@@ -46,6 +46,7 @@ void test_asm_mos6502() {
             "        fcb   'xyz'\n",
             "          0 :                            cpu   mos6502\n"
             "          0 :                    ; comment line\n"
+            "          0 : =f1f2              label1 = $f1f2\n"
             "       abcd :                            *= $abcd\n"
             "       abcd : ed f2 f1                   sbc   label1\n"
             "       abd0 : =2                 label2 = 2\n"
@@ -60,18 +61,19 @@ void test_asm_mos6502() {
 void test_asm_w65816() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0xf2f1f0, "label1");
+    driver.setUpperHex(false);
 
     ASM("w65c816",
             "        cpu   w65c816\n"
             "; comment line\n"
+            "label1 = $f2f1f0\n"
             "        *=$abcdef\n"
             "        sbc   label1\n"
             "        longa on\n"
             "        adc   #$1234\n",
             "          0 :                            cpu   w65c816\n"
             "          0 :                    ; comment line\n"
+            "          0 : =f2f1f0            label1 = $f2f1f0\n"
             "     abcdef :                            *=$abcdef\n"
             "     abcdef : ef f0 f1 f2                sbc   label1\n"
             "     abcdf3 :                            longa on\n"

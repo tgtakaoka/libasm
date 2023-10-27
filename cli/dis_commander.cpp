@@ -29,7 +29,8 @@ namespace cli {
 
 using namespace libasm::driver;
 
-DisCommander::DisCommander(Disassembler **begin, Disassembler **end) : _driver(begin, end) {}
+DisCommander::DisCommander(std::initializer_list<Disassembler *> disassemblers)
+    : _driver(disassemblers) {}
 
 int DisCommander::disassemble() {
     if (_verbose)

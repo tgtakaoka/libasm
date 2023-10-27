@@ -71,7 +71,7 @@ z8000::DisZ8000 disz8000;
 z80::DisZ80 disz80;
 z8::DisZ8 disz8;
 
-Disassembler *disassemblers[] = {
+DisCommander commander{
         &dis6800,
         &dis6805,
         &dis6809,
@@ -100,7 +100,6 @@ Disassembler *disassemblers[] = {
 };
 
 int main(int argc, const char **argv) {
-    DisCommander commander(disassemblers, std::end(disassemblers));
     if (commander.parseArgs(argc, argv))
         return commander.usage();
     return commander.disassemble();

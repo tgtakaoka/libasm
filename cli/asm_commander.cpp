@@ -30,7 +30,8 @@ namespace cli {
 
 using namespace libasm::driver;
 
-AsmCommander::AsmCommander(AsmDirective **begin, AsmDirective **end) : _driver(begin, end) {}
+AsmCommander::AsmCommander(std::initializer_list<AsmDirective *> directives)
+    : _driver(directives) {}
 
 int AsmCommander::assemble() {
     if (_cpu && !_driver.setCpu(_cpu)) {

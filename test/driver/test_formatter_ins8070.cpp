@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_ins8070() {
     PREP_ASM(ins8070::AsmIns8070, NationalDirective);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     ASM("ins8070",
             "        cpu    ins8070\n"

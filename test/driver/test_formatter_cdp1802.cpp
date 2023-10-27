@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_cdp1802() {
     PREP_ASM(cdp1802::AsmCdp1802, RcaDirective);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     ASM("cdp1804",
             "        cpu   cdp1804\n"
@@ -64,7 +64,7 @@ void test_dis_cdp1802() {
     PREP_DIS(cdp1802::DisCdp1802);
 
     formatter.setUpperHex(false);
-    EQ("use-register", OK, disassembler.setOption("use-register", "on"));
+    EQ("use-register", OK, driver.setOption("use-register", "on"));
 
     DIS8("cdp1804", 0xabcd,
             "      cpu   cdp1804\n"

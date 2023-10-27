@@ -29,17 +29,18 @@ void tear_down() {}
 void test_asm_i8048() {
     PREP_ASM(i8048::AsmI8048, IntelDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0x8a, "data1");
+    driver.setUpperHex(false);
 
     ASM("i8039",
             "        cpu   i8039\n"
             "; comment line\n"
             "        org   0bcdh\n"
+            "data1:  equ   8ah\n"
             "        orl   p1, #data1\n",
             "          0 :                            cpu   i8039\n"
             "          0 :                    ; comment line\n"
             "        bcd :                            org   0bcdh\n"
+            "        bcd : =8a                data1:  equ   8ah\n"
             "        bcd : 89 8a                      orl   p1, #data1\n");
 }
 

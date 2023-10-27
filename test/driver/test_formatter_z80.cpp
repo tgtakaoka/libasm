@@ -34,10 +34,10 @@ void test_asm_z80() {
     inc.add("        defw  1234H, 5678H, 9ABCH\n"
             "        defb  'a,', 'bc''de', 0\n"  // DB requires surrounding quotes
             "        defs  2\n"                  // DS allocate spaces
+            "data1:  equ   8AH\n"
             "        defm  'A', '''', 'C'+80H, 'a''c'\n");
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0x8a, "data1");
+    driver.setUpperHex(false);
 
     ASM("z80",
             "        cpu   z80\n"
@@ -54,6 +54,7 @@ void test_asm_z80() {
             "(1)    abd3 : 61 2c 62 63 27 64          defb  'a,', 'bc''de', 0\n"
             "       abd9 : 65 00\n"
             "(1)    abdb :                            defs  2\n"
+            "(1)    abdd : =8a                data1:  equ   8AH\n"
             "(1)    abdd : 41 27 c3 61 27 63          defm  'A', '''', 'C'+80H, 'a''c'\n"
             "       abe3 : fd cb 80 86                res   0, (iy-128)\n"
             "       abe7 : dd cb 7f fe                set   7, (ix+127)\n");

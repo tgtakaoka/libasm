@@ -29,17 +29,18 @@ void tear_down() {}
 void test_asm_i8051() {
     PREP_ASM(i8051::AsmI8051, IntelDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0xb0, "data1");
+    driver.setUpperHex(false);
 
     ASM("i8051",
             "        cpu   i8051\n"
             "; comment line\n"
             "        org   0abcdh\n"
+            "data1:  equ   0b0h\n"
             "        anl   c, /data1.1\n",
             "          0 :                            cpu   i8051\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
+            "       abcd : =b0                data1:  equ   0b0h\n"
             "       abcd : b0 b1                      anl   c, /data1.1\n");
 }
 

@@ -29,16 +29,17 @@ void tear_down() {}
 void test_asm_i8096() {
     PREP_ASM(i8096::AsmI8096, IntelDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0x817b, "label1");
+    driver.setUpperHex(false);
 
     ASM("i8096",
             "        cpu   i8096\n"
             "; comment line\n"
+            "label1: equ   817bh\n"
             "        org   0abcdh\n"
             "        mulb  130, label1[124]\n",
             "          0 :                            cpu   i8096\n"
             "          0 :                    ; comment line\n"
+            "          0 : =817b              label1: equ   817bh\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : fe 7f 7d 7b 81 82          mulb  130, label1[124]\n");
 }

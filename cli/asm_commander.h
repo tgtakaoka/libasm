@@ -17,6 +17,7 @@
 #ifndef __ASM_COMMANDER_H__
 #define __ASM_COMMANDER_H__
 
+#include <initializer_list>
 #include <map>
 #include <string>
 
@@ -28,7 +29,7 @@ namespace libasm {
 namespace cli {
 
 struct AsmCommander final {
-    AsmCommander(driver::AsmDirective **begin, driver::AsmDirective **end);
+    AsmCommander(std::initializer_list<driver::AsmDirective *> directives);
 
     int parseArgs(int argc, const char **argv);
     int usage();

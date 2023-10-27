@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_tms9900() {
     PREP_ASM(tms9900::AsmTms9900, IntelDirective);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     ASM("tms99105",
             "        cpu   tms99105\n"

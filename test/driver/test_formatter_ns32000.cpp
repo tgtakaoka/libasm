@@ -29,20 +29,24 @@ void tear_down() {}
 void test_asm_ns32000() {
     PREP_ASM(ns32000::AsmNs32000, NationalDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0x112233, "disp2");
-    symbols.internSymbol(0x334455, "disp1");
-    symbols.internSymbol(0x556677, "off2");
-    symbols.internSymbol(0x778899, "off1");
+    driver.setUpperHex(false);
 
     ASM("ns32032",
             "        .cpu    ns32032\n"
             "# comment line\n"
             "        .org    x'abcdef\n"
+            "disp1:  .equ    x'334455'\n"
+            "disp2:  .equ    x'112233'\n"
+            "off1:   .equ    x'778899'\n"
+            "off2:   .equ    x'556677'\n"
             "        extd    r1, disp2(disp1(fp))[r3:w], off2(off1(sb))[r4:w], 32\n",
             "          0 :                            .cpu    ns32032\n"
             "          0 :                    # comment line\n"
             "     abcdef :                            .org    x'abcdef\n"
+            "     abcdef : =334455            disp1:  .equ    x'334455'\n"
+            "     abcdef : =112233            disp2:  .equ    x'112233'\n"
+            "     abcdef : =778899            off1:   .equ    x'778899'\n"
+            "     abcdef : =556677            off2:   .equ    x'556677'\n"
             // clang-format off
             "     abcdef : 2e 4b ef 83 94 c0          extd    r1, disp2(disp1(fp))[r3:w], off2(off1(sb))[r4:w], 32\n"
             // clang-format on

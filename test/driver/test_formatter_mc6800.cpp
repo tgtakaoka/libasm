@@ -29,17 +29,18 @@ void tear_down() {}
 void test_asm_mc6800() {
     PREP_ASM(mc6800::AsmMc6800, MotorolaDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0xf1f2, "label1");
+    driver.setUpperHex(false);
 
     ASM("mc6800",
             "        cpu   mc6800\n"
             "* comment line\n"
             "        org   $abcd\n"
+            "label1: equ   $f1f2\n"
             "        subb  label1\n",
             "          0 :                            cpu   mc6800\n"
             "          0 :                    * comment line\n"
             "       abcd :                            org   $abcd\n"
+            "       abcd : =f1f2              label1: equ   $f1f2\n"
             "       abcd : f0 f1 f2                   subb  label1\n");
 }
 

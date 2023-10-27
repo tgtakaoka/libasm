@@ -26,12 +26,25 @@
 namespace libasm {
 namespace driver {
 
-static void appendTo(const std::string &cpu, std::list<std::string> &list) {
+AsmDriver::AsmDriver(std::initializer_list<AsmDirective *> directives)
+    : _directives(), _current(nullptr), _symbols(), _origin(0) {
+    for (auto dir : directives) {
+        dir->reset(*this);
+        _directives.push_back(dir);
+    }
+    _current = _directives.front();
+    setUpperHex(true);
+    setLineNumber(false);
+}
+
+namespace {
+
+void appendTo(const std::string &cpu, std::list<std::string> &list) {
     if (std::find(list.begin(), list.end(), cpu) == list.end())
         list.push_back(cpu);
 }
 
-static void filter(const char *text, std::list<std::string> &list) {
+void filter(const char *text, std::list<std::string> &list) {
     while (*text) {
         const auto del = strchr(text, ',');
         if (del == nullptr) {
@@ -45,12 +58,14 @@ static void filter(const char *text, std::list<std::string> &list) {
     }
 }
 
+}  // namespace
+
 std::list<std::string> AsmDriver::listCpu() const {
+    char buffer[80];
     std::list<std::string> list;
     for (auto dir : _directives) {
-        const /* PROGMEM */ char *list_P = dir->listCpu_P();
-        char cpuList[strlen_P(list_P) + 1];
-        strcpy_P(cpuList, list_P);
+        StrBuffer cpuList{buffer, sizeof(buffer)};
+        cpuList.text_P(dir->listCpu_P());
         filter(cpuList, list);
     }
     return list;
@@ -80,15 +95,6 @@ bool AsmDriver::restrictCpu(const char *cpu) {
         return true;
     }
     return false;
-}
-
-AsmDriver::AsmDriver(AsmDirective **begin, AsmDirective **end)
-    : _directives(begin, end), _current(nullptr), _symbols(), _origin(0) {
-    for (auto dir : _directives)
-        dir->reset(*this);
-    _current = _directives.front();
-    setUpperHex(true);
-    setLineNumber(false);
 }
 
 void AsmDriver::setUpperHex(bool upperHex) {

@@ -38,7 +38,7 @@ void test_asm_i8086() {
             "        db     'a,', 'bc''de', 0\n"
             "        db     'A', '''', 'C'+80H, 'a''c'\n");
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     ASM("i8086",
             "        cpu    i8086\n"

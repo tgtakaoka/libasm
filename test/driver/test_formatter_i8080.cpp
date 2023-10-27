@@ -29,19 +29,20 @@ void tear_down() {}
 void test_asm_i8080() {
     PREP_ASM(i8080::AsmI8080, IntelDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0xebec, "label1");
+    driver.setUpperHex(false);
 
     ASM("i8080",
             "        cpu   i8080\n"
             "; comment line\n"
             "        org   0abcdh\n"
+            "label1: equ   0ebech\n"
             "        jpe   label1\n"
             "        db    'z'-'a', 'A''B', 0\n"
             "label2  dw    label2\n",
             "          0 :                            cpu   i8080\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
+            "       abcd : =ebec              label1: equ   0ebech\n"
             "       abcd : ea ec eb                   jpe   label1\n"
             "       abd0 : 19 41 27 42 00             db    'z'-'a', 'A''B', 0\n"
             "       abd5 : d5 ab              label2  dw    label2\n");

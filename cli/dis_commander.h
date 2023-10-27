@@ -17,6 +17,7 @@
 #ifndef __DIS_COMMANDER_H__
 #define __DIS_COMMANDER_H__
 
+#include <initializer_list>
 #include <map>
 #include <string>
 
@@ -28,7 +29,7 @@ namespace libasm {
 namespace cli {
 
 struct DisCommander final {
-    DisCommander(Disassembler **begin, Disassembler **end);
+    DisCommander(std::initializer_list<Disassembler *> disassemblers);
 
     int parseArgs(int argc, const char **argv);
     int usage();

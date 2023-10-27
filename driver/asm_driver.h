@@ -17,6 +17,7 @@
 #ifndef __ASM_DRIVER_H__
 #define __ASM_DRIVER_H__
 
+#include <initializer_list>
 #include <list>
 
 #include "asm_directive.h"
@@ -32,7 +33,7 @@ struct AsmSources;
 struct BinMemory;
 
 struct AsmDriver final : CpuSwitcher {
-    AsmDriver(AsmDirective **begin, AsmDirective **end);
+    AsmDriver(std::initializer_list<AsmDirective *> directives);
 
     bool restrictCpu(const char *cpu);
     bool setCpu(const char *cpu) override;

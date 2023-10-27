@@ -21,80 +21,48 @@
 #include "asm_directive.h"
 #include "asm_driver.h"
 #include "asm_formatter.h"
-#include "bin_memory.h"
 #include "dis_driver.h"
 #include "dis_formatter.h"
+#include "stored_printer.h"
 #include "test_driver_helper.h"
 #include "test_reader.h"
 #include "test_sources.h"
 
-struct AsmFormatterHelper {
-    AsmFormatterHelper() : upperHex(true), lineNumber(false) {}
-    void setUpperHex(bool enable) { upperHex = enable; }
-    void setLineNumber(bool enable) { lineNumber = enable; }
-    bool upperHex;
-    bool lineNumber;
-};
+#define PREP_ASM_SYMBOL(type_of_assembler, type_of_directive) \
+    type_of_assembler assembler;                              \
+    type_of_directive directive{assembler};                   \
+    AsmDriver driver{&directive};                             \
+    TestSources sources;                                      \
+    auto reportError = false
 
-#define PREP_ASM_DRIVER(reportDuplicate, ...)                          \
-    AsmDirective *dirs[] = {__VA_ARGS__};                              \
-    TestSources sources;                                               \
-    AsmDriver driver(&dirs[0], &dirs[sizeof(dirs) / sizeof(dirs[0])]); \
-    char buffer[256];                                                  \
-    StrBuffer out(buffer, sizeof(buffer));                             \
-    SymbolStoreImpl symbols;                                           \
-    const bool reportError = !reportDuplicate;                         \
-    AsmFormatterHelper formatter
+#define PREP_ASM(type_of_assembler, type_of_directive)     \
+    PREP_ASM_SYMBOL(type_of_assembler, type_of_directive); \
+    reportError = true
 
-#define PREP_ASM_SYMBOL(typeof_asm, typeof_directive) \
-    typeof_asm assembler;                             \
-    typeof_directive directive{assembler};            \
-    PREP_ASM_DRIVER(true, &directive)
-
-#define PREP_ASM(typeof_asm, typeof_directive) \
-    typeof_asm assembler;                      \
-    typeof_directive directive{assembler};     \
-    PREP_ASM_DRIVER(false, &directive)
-
-#define ASM(_cpu, _source, _expected)                                       \
-    do {                                                                    \
-        uint32_t origin = 0;                                                \
-        TestReader expected("expected");                                    \
-        expected.add(_expected);                                            \
-        TestReader source(_cpu);                                            \
-        source.add(_source);                                                \
-        sources.add(source);                                                \
-        sources.open(source.name().c_str());                                \
-        AsmFormatter fmt{sources};                                          \
-        fmt.setUpperHex(formatter.upperHex);                                \
-        fmt.setLineNumber(formatter.lineNumber);                            \
-        StrScanner *line;                                                   \
-        while ((line = sources.readLine()) != nullptr) {                    \
-            auto &directive = *driver.current();                            \
-            auto &insn = fmt.insn();                                        \
-            insn.reset(origin);                                             \
-            AsmDirective::Context context{sources, symbols, reportError};   \
-            auto scan = *line;                                              \
-            directive.encode(scan, insn, context);                          \
-            const auto &config = directive.config();                        \
-            origin = insn.address() + insn.length() / config.addressUnit(); \
-            if (insn.length() == 0)                                         \
-                origin = directive.currentLocation();                       \
-            fmt.set(*line, directive, config, &context.value);              \
-            fmt.setListRadix(driver.current()->listRadix());                \
-            while (fmt.hasNextLine())                                       \
-                EQ("line", expected.readLine(), fmt.getLine(out).str());    \
-        }                                                                   \
-        EQ("line eor", nullptr, expected.readLine());                       \
+#define ASM(_cpu, _source, _expected)                               \
+    do {                                                            \
+        TestReader expected("expected");                            \
+        expected.add(_expected);                                    \
+        TestReader source(_cpu);                                    \
+        sources.add(source.add(_source));                           \
+        sources.open(source.name().c_str());                        \
+        StoredPrinter list, error;                                  \
+        BinMemory memory;                                           \
+        driver.setCpu(_cpu);                                        \
+        driver.assemble(sources, memory, list, error, reportError); \
+        for (size_t lineno = 1; lineno <= list.size(); lineno++)    \
+            EQ("line", expected.readLine(), list.line(lineno));     \
+        EQ("line eor", nullptr, expected.readLine());               \
     } while (0)
 
 #define PREP_DIS(typeof_disassembler)      \
     typeof_disassembler disassembler;      \
-    Disassembler *dis = &disassembler;     \
-    DisDriver driver(&dis, &dis + 1);      \
+    DisDriver driver{&disassembler};       \
     char buffer[256];                      \
-    StrBuffer out(buffer, sizeof(buffer)); \
-    DisFormatter formatter(disassembler, "test.bin")
+    StrBuffer out{buffer, sizeof(buffer)}; \
+    DisFormatter formatter {               \
+        disassembler, "test.bin"           \
+    }
 
 #define DIS(_cpu, _org, _contents, _lines, _memory)                                  \
     do {                                                                             \

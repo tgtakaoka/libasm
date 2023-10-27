@@ -27,8 +27,11 @@
 namespace libasm {
 namespace driver {
 
-DisDriver::DisDriver(Disassembler **begin, Disassembler **end)
-    : _disassemblers(begin, end), _current(*begin) {
+DisDriver::DisDriver(std::initializer_list<Disassembler *> disassemblers)
+    : _disassemblers(), _current(nullptr) {
+    for (auto dis : disassemblers)
+        _disassemblers.push_back(dis);
+    _current = _disassemblers.front();
     setUpperHex(true);
     setUppercase(false);
 }

@@ -33,8 +33,8 @@ void tear_down() {}
 void test_symbols_mc6809() {
     PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective);
 
-    formatter.setUpperHex(true);
-    formatter.setLineNumber(true);
+    driver.setUpperHex(true);
+    driver.setLineNumber(true);
 
     ASM("mc6809",
             "label1  equ   $1234\n"
@@ -71,8 +71,8 @@ void test_symbols_mc6809() {
 void test_symbols_ins8060() {
     PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective);
 
-    formatter.setUpperHex(true);
-    formatter.setLineNumber(true);
+    driver.setUpperHex(true);
+    driver.setLineNumber(true);
 
     ASM("ins8060",
             "label1  =     X'1234\n"
@@ -106,8 +106,8 @@ void test_symbols_ins8060() {
 void test_symbols_z80() {
     PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective);
 
-    formatter.setUpperHex(true);
-    formatter.setLineNumber(true);
+    driver.setUpperHex(true);
+    driver.setLineNumber(true);
 
     ASM("z80",
             "label1  equ   1234H\n"
@@ -147,7 +147,9 @@ void test_switch_cpu() {
     IntelDirective dir8080(asm8080);
     z80::AsmZ80 asmz80;
     ZilogDirective dirz80(asmz80);
-    PREP_ASM_DRIVER(false, &dir6809, &dir6502, &dir8080, &dirz80);
+    AsmDriver driver{&dir6809, &dir6502, &dir8080, &dirz80};
+    TestSources sources;
+    const auto reportError = true;
 
     ASM("switch cpu",
             "        cpu   mc6809\n"
@@ -203,7 +205,9 @@ void test_list_radix() {
     MostekDirective dir6502(asm6502);
     z80::AsmZ80 asmz80;
     ZilogDirective dirz80(asmz80);
-    PREP_ASM_DRIVER(false, &dir6502, &dirz80);
+    AsmDriver driver{&dir6502, &dirz80};
+    TestSources sources;
+    const auto reportError = true;
 
     ASM("list-radix",
             "        option \"list-radix\", 8\n"

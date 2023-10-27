@@ -98,7 +98,7 @@ ZilogDirective dir90(asm90);
 ZilogDirective dirz8000(asmz8000);
 ZilogDirective dirz80(asmz80);
 
-AsmDirective *directives[] = {
+AsmCommander commander{
         &dir6800,
         &dir6805,
         &dir6809,
@@ -127,7 +127,6 @@ AsmDirective *directives[] = {
 };
 
 int main(int argc, const char **argv) {
-    AsmCommander commander(directives, std::end(directives));
     if (commander.parseArgs(argc, argv))
         return commander.usage();
     return commander.assemble();

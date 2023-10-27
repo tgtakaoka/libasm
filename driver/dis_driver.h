@@ -20,6 +20,7 @@
 #include "bin_memory.h"
 #include "dis_base.h"
 
+#include <initializer_list>
 #include <list>
 #include <string>
 
@@ -31,7 +32,7 @@ struct BinMemory;
 struct DisFormatter;
 
 struct DisDriver final {
-    DisDriver(Disassembler **begin, Disassembler **end);
+    DisDriver(std::initializer_list<Disassembler *> disassemblers);
 
     Disassembler *restrictCpu(const char *cpu);
     Disassembler *setCpu(const char *cpu);

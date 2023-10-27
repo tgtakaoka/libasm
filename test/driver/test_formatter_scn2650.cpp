@@ -29,16 +29,16 @@ void tear_down() {}
 void test_asm_scn2650() {
     PREP_ASM(scn2650::AsmScn2650, IntelDirective);
 
-    symbols.internSymbol(0x7def, "label1");
-
     ASM("scn2650",
             "        cpu     scn2650\n"
             "* comment line\n"
             "        org     h'7bcd'\n"
+            "label1: equ     h'7def'\n"
             "        loda,r0 *label1, r0, +\n",
             "          0 :                            cpu     scn2650\n"
             "          0 :                    * comment line\n"
             "       7BCD :                            org     h'7bcd'\n"
+            "       7BCD : =7DEF              label1: equ     h'7def'\n"
             "       7BCD : 0C BD EF                   loda,r0 *label1, r0, +\n");
 }
 

@@ -29,17 +29,18 @@ void tear_down() {}
 void test_asm_mc6805() {
     PREP_ASM(mc6805::AsmMc6805, MotorolaDirective);
 
-    formatter.setUpperHex(false);
-    symbols.internSymbol(0x0800, "label1");
+    driver.setUpperHex(false);
 
     ASM("mc146805",
             "        cpu   mc146805\n"
             "* comment line\n"
             "        org   $1234\n"
+            "label1: equ   $0800\n"
             "        stx   label1, x\n",
             "          0 :                            cpu   mc146805\n"
             "          0 :                    * comment line\n"
             "       1234 :                            org   $1234\n"
+            "       1234 : =800               label1: equ   $0800\n"
             "       1234 : df 08 00                   stx   label1, x\n");
 }
 

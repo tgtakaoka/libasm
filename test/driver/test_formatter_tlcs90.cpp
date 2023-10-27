@@ -29,7 +29,7 @@ void tear_down() {}
 void test_asm_tlcs90() {
     PREP_ASM(tlcs90::AsmTlcs90, ZilogDirective);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     ASM("tlcs90",
             "        cpu   tlcs90\n"

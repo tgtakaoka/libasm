@@ -37,12 +37,11 @@ void test_asm_f3850() {
             "        dc    c'a',',, c'bc''de', 0\n"     // DC can accept string
             "        dc    C'A', #', C'C'+h'80'\n");    // C'c' requires surrounding quotes
 
-    symbols.internSymbol(0x7bd0, "label1");
-
     ASM("f3850",
             "        cpu   F3850\n"
             "* comment line\n"
             "        org   H'7BCD'\n"
+            "label1  equ   H'7BD0'\n"
             "        clr\n"
             "        lr    a, j\n"
             "        ds    10\n"  // DS is the instruction of F3850
@@ -51,6 +50,7 @@ void test_asm_f3850() {
             "          0 :                            cpu   F3850\n"
             "          0 :                    * comment line\n"
             "       7BCD :                            org   H'7BCD'\n"
+            "       7BCD : =7BD0              label1  equ   H'7BD0'\n"
             "       7BCD : 70                         clr\n"
             "       7BCE : 49                         lr    a, j\n"
             "       7BCF : 3A                         ds    10\n"
