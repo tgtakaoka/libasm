@@ -233,7 +233,7 @@ Error RcaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
 }
 
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
-    return isalpha(c) || (!headOfSymbol && isdigit(c));
+    return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
 }
 
 bool SimpleSymbolParser::symbolLetter(char c, bool headOfSymbol) const {
