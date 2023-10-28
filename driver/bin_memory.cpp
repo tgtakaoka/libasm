@@ -22,70 +22,58 @@
 namespace libasm {
 namespace driver {
 
-BinMemory::BinMemory() {
-    invalidateWriteCache();
-    invalidateReadCache();
+BinMemory::BinMemory() {}
+
+BinMemory::Blocks::iterator BinMemory::find(uint32_t addr) {
+    if (_blocks.empty())
+        return _blocks.end();
+    auto it = _blocks.lower_bound(addr);
+    if (it == _blocks.begin())
+        return addr < it->second.base() ? _blocks.end() : it;
+    if (it == _blocks.end() || addr < it->second.base())
+        --it;
+    return it;
 }
 
-void BinMemory::invalidateWriteCache() {
-    _writeCache = _blocks.end();
-}
-
-void BinMemory::invalidateReadCache() const {
-    _readCache = _blocks.end();
+BinMemory::Blocks::const_iterator BinMemory::find(uint32_t addr) const {
+    if (_blocks.empty())
+        return _blocks.cend();
+    auto it = _blocks.lower_bound(addr);
+    if (it == _blocks.cbegin())
+        return addr < it->second.base() ? _blocks.cend() : it;
+    if (it == _blocks.cend() || addr < it->second.base())
+        --it;
+    return it;
 }
 
 bool BinMemory::hasByte(uint32_t addr) const {
-    if (insideOf(_readCache, addr))
-        return true;
-    invalidateReadCache();
-
-    for (auto cache = _blocks.begin(); cache != _blocks.end(); cache++) {
-        if (insideOf(cache, addr)) {
-            _readCache = cache;
-            return true;
-        }
-    }
-    return false;
+    auto it = find(addr);
+    return it != _blocks.cend() && it->second.inside(addr);
 }
 
 void BinMemory::writeByte(uint32_t addr, uint8_t val) {
-    // Shortcut for most possible case, appending byte to cached cache.
-    if (atEndOf(_writeCache, addr)) {
-        appendTo(_writeCache, addr, val);
+    auto it = find(addr);
+    if (it == _blocks.end()) {
+        createBlock(addr, val);
         return;
     }
-    if (insideOf(_writeCache, addr)) {
-        replaceAt(_writeCache, addr, val);
-        return;
+    auto &block = it->second;
+    if (block.inside(addr)) {
+        block.write(addr, val);
+    } else if (block.atEnd(addr)) {
+        block.append(val);
+        aggregate(block);
+    } else {
+        createBlock(addr, val);
     }
-    invalidateWriteCache();
-
-    for (auto cache = _blocks.begin(); cache != _blocks.end(); cache++) {
-        if (atEndOf(cache, addr)) {
-            appendTo(cache, addr, val);
-            return;
-        }
-        if (insideOf(cache, addr)) {
-            replaceAt(cache, addr, val);
-            return;
-        }
-    }
-
-    // No appropriate cache found, create a block.
-    createBlock(addr, val);
 }
 
 uint8_t BinMemory::readByte(uint32_t addr) const {
-    if (insideOf(_readCache, addr))
-        return readFrom(_readCache, addr);
-    invalidateReadCache();
-
-    for (auto cache = _blocks.begin(); cache != _blocks.end(); cache++) {
-        if (insideOf(cache, addr)) {
-            _readCache = cache;
-            return readFrom(cache, addr);
-        }
+    auto it = find(addr);
+    if (it != _blocks.cend()) {
+        const auto &block = it->second;
+        if (block.inside(addr))
+            return block.read(addr);
     }
     return 0;
 }
@@ -96,71 +84,99 @@ bool BinMemory::operator==(const BinMemory &other) const {
 
 void BinMemory::swap(BinMemory &other) {
     _blocks.swap(other._blocks);
-    invalidateReadCache();
-    invalidateWriteCache();
-    other.invalidateReadCache();
-    other.invalidateWriteCache();
+}
+
+const BinReader::Block *BinMemory::begin() const {
+    return _blocks.empty() ? nullptr : &_blocks.begin()->second;
 }
 
 void BinMemory::clear() {
     _blocks.clear();
-    invalidateReadCache();
-    invalidateWriteCache();
 }
 
 uint32_t BinMemory::startAddress() const {
-    return _blocks.empty() ? 0 : _blocks.begin()->base;
+    return _blocks.empty() ? 0 : _blocks.begin()->second.base();
 }
 
 uint32_t BinMemory::endAddress() const {
     if (_blocks.empty())
         return 0;
-    const auto cache = _blocks.rbegin();
-    return cache->base + cache->data.size() - 1;
+    const auto it = _blocks.rbegin();
+    return it->second.base() + it->second.size() - 1;
 }
 
-bool BinMemory::insideOf(Cache &cache, uint32_t addr) const {
-    return cache != _blocks.end() && addr >= cache->base && addr < cache->base + cache->data.size();
-}
-
-bool BinMemory::atEndOf(Cache &cache, uint32_t addr) const {
-    return cache != _blocks.end() && addr == cache->base + cache->data.size();
-}
-
-uint8_t BinMemory::readFrom(Cache &cache, uint32_t addr) const {
-    return cache->data.at(addr - cache->base);
-}
-
-void BinMemory::appendTo(Cache &cache, uint32_t addr, uint8_t val) {
-    cache->data.push_back(val);
-    _writeCache = cache;
-    aggregate(cache);
-}
-
-void BinMemory::replaceAt(Cache &cache, uint32_t addr, uint8_t val) {
-    cache->data.at(addr - cache->base) = val;
-    _writeCache = cache;
-    aggregate(cache);
+void BinMemory::setRange(uint32_t start, uint32_t end) {
+    if (end < start)
+        return;
+    Block *b = nullptr;
+    for (auto it = _blocks.begin(); it != _blocks.end();) {
+        auto &block = it->second;
+        const auto s = block.base();
+        const auto e = block.base() + block.size() - 1;
+        if (e < start || s > end) {
+            // out of range
+            it = _blocks.erase(it);
+            continue;
+        }
+        if (s < start && e >= start)
+            block.trimStart(start);
+        if (s < end && e >= end)
+            block.trimEnd(end);
+        b = &block;
+        ++it;
+    }
+    if (b)
+        b->connect(nullptr);
 }
 
 void BinMemory::createBlock(uint32_t addr, uint8_t val) {
-    _writeCache = _blocks.emplace(addr).first;
-    _writeCache->data.push_back(val);
-    aggregate(_writeCache);
+    auto it = _blocks.emplace(addr, addr).first;
+    auto &block = it->second;
+    auto next = it;
+    if (++next != _blocks.end())
+        block.connect(&next->second);
+    auto prev = it;
+    if (prev-- != _blocks.begin())
+        prev->second.connect(&block);
+    block.append(val);
+    aggregate(block);
 }
 
-void BinMemory::aggregate(Cache &hint) {
-    auto prev = hint;
-    // Check following cache whether it is adjacent to.
-    for (auto next = ++hint; next != _blocks.end() && atEndOf(prev, next->base);
-            next = _blocks.erase(next)) {
-        // Append next block.
-        prev->data.reserve(prev->data.size() + next->data.size());
-        prev->data.insert(prev->data.end(), std::make_move_iterator(next->data.begin()),
-                std::make_move_iterator(next->data.end()));
-        invalidateReadCache();
-        invalidateWriteCache();
+void BinMemory::aggregate(Block &block) {
+    auto it = _blocks.find(block.base());
+    if (it == _blocks.end())
+        return;
+    auto next = it;
+    if (++next != _blocks.end() && it->second.atEnd(next->second.base())) {
+        it->second.aggregate(next->second);
+        _blocks.erase(next);
     }
+    auto prev = it;
+    if (prev-- != _blocks.begin() && prev->second.atEnd(it->second.base())) {
+        prev->second.aggregate(it->second);
+        _blocks.erase(it);
+    }
+}
+
+bool BinMemory::Block::operator==(const Block &other) const {
+    return _base == other._base && _data == other._data;
+}
+
+void BinMemory::Block::aggregate(const Block &other) {
+    _data.reserve(_data.size() + other._data.size());
+    _data.insert(_data.end(), other._data.begin(), other._data.end());
+    _next = other._next;
+}
+
+void BinMemory::Block::trimStart(uint32_t start) {
+    auto delta = start - _base;
+    _data.erase(_data.begin(), _data.begin() + delta);
+    _base = start;
+}
+
+void BinMemory::Block::trimEnd(uint32_t end) {
+    auto delta = _base + _data.size() - 1 - end;
+    _data.erase(_data.end() - delta, _data.end());
 }
 
 }  // namespace driver

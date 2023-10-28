@@ -35,12 +35,12 @@ void BinEncoder::reset(AddressWidth addrWidth, uint8_t recordSize) {
 
 int BinEncoder::encode(const BinMemory &memory, TextPrinter &out) {
     this->begin(out);
-    for (const auto &it : memory) {
-        for (size_t i = 0; i < it.data.size(); i += _record_size) {
+    for (auto *block = memory.begin(); block != nullptr; block = block->next()) {
+        for (size_t i = 0; i < block->size(); i += _record_size) {
             auto size = _record_size;
-            if (size >= it.data.size() - i)
-                size = it.data.size() - i;
-            this->encode(out, it.base + i, it.data.data() + i, size);
+            if (size >= block->size() - i)
+                size = block->size() - i;
+            this->encode(out, block->base() + i, block->data() + i, size);
         }
     };
     this->end(out);

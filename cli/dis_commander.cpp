@@ -54,13 +54,18 @@ int DisCommander::disassemble() {
         return 1;
     input.close();
 
-    const auto addrUnit = _driver.current()->config().addressUnit();
-    const auto mem_start = memory.startAddress() / addrUnit;
-    const auto mem_end = memory.endAddress() / addrUnit;
+    const auto unit = _driver.current()->config().addressUnit();
+    const auto mem_start = memory.startAddress() / unit;
+    const auto mem_end = memory.endAddress() / unit;
     if (_dis_start > mem_end || _dis_end < mem_start) {
         fprintf(stderr, "Input file has address range: 0x%04X,0x%04X\n", mem_start, mem_end);
         fprintf(stderr, "-A range has no intersection: 0x%04X,0x%04X\n", _dis_start, _dis_end);
         return 1;
+    }
+    if (_range_start) {
+        const auto start = _dis_start * unit;
+        const auto end = _range_end ? _dis_end * unit : memory.endAddress();
+        memory.setRange(start, end);
     }
 
     FilePrinter output;
@@ -88,25 +93,24 @@ int DisCommander::disassemble() {
         _driver.setOption(opt.first.c_str(), opt.second.c_str());
     }
 
-    _driver.disassemble(
-            memory, _input_name, _dis_start, _dis_end, output, listout, FilePrinter::STDERR);
+    _driver.disassemble(memory, _input_name, output, listout, FilePrinter::STDERR);
 
     return 0;
 }
 
 int DisCommander::readBinary(BinMemory &memory, TextReader &input) {
     const auto filename = input.name().c_str();
-    const auto addrUnit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
+    const auto unit = static_cast<uint8_t>(_driver.current()->config().addressUnit());
     const auto size = BinDecoder::decode(input, memory);
     if (size < 0) {
         fprintf(stderr, "%s:%d: Unrecognizable binary format\n", filename, input.lineno());
         return size;
     }
     if (_verbose) {
-        for (const auto &it : memory) {
-            const auto start = it.base / addrUnit;
-            const uint32_t size = it.data.size();
-            const auto end = (it.base + size - 1) / addrUnit;
+        for (auto block = memory.begin(); block != nullptr; block = block->next()) {
+            const auto start = block->base() / unit;
+            const auto size = block->size();
+            const auto end = (block->base() + size - 1) / unit;
             fprintf(stderr, "%s: Read %4u bytes 0x%04X-0x%04X\n", filename, size, start, end);
         }
     }
@@ -205,6 +209,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
     _upper_hex = true;
     _uppercase = false;
     _verbose = false;
+    _range_start = _range_end = false;
     _dis_start = 0;
     _dis_end = UINT32_MAX;
     for (auto i = 1; i < argc; i++) {
@@ -257,6 +262,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                         fprintf(stderr, "invalid address format for -A: %s\n", argv[i]);
                         return 1;
                     }
+                    _range_start = true;
                     if (*end_start == 0)
                         break;
                     if (*end_start++ != ',') {
@@ -274,6 +280,7 @@ int DisCommander::parseArgs(int argc, const char **argv) {
                         fprintf(stderr, "end address must be less than start: %s\n", argv[i]);
                         return 1;
                     }
+                    _range_end = true;
                 }
                 break;
             case '-':

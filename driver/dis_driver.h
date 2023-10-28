@@ -17,7 +17,7 @@
 #ifndef __DIS_DRIVER_H__
 #define __DIS_DRIVER_H__
 
-#include "bin_memory.h"
+#include "bin_reader.h"
 #include "dis_base.h"
 
 #include <initializer_list>
@@ -43,8 +43,8 @@ struct DisDriver final {
     void setUppercase(bool uppercase);
     bool setOption(const char *name, const char *value);
 
-    void disassemble(BinMemory &memory, const char *inputName, uint32_t dis_start, uint32_t dis_end,
-            TextPrinter &output, TextPrinter &listout, TextPrinter &errorout);
+    void disassemble(BinReader &memory, const char *inputName, TextPrinter &output,
+            TextPrinter &listout, TextPrinter &errorout);
 
     auto begin() const { return _disassemblers.cbegin(); }
     auto end() const { return _disassemblers.cend(); }

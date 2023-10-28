@@ -46,6 +46,8 @@ private:
     bool _upper_hex;
     bool _uppercase;
     bool _verbose;
+    bool _range_start;
+    bool _range_end;
     uint32_t _dis_start;
     uint32_t _dis_end;
     std::map<std::string, std::string> _options;

@@ -30,10 +30,16 @@ BOARD = $(firstword $(BOARDS))
 FQBNS = $(shell $(MAKE) -s -C examples fqbns)
 FQBN = $(firstword $(FQBNS))
 
-check: test pio-ci arduino-ci
+check: test gen cli pio-ci arduino-ci
 
 test:
 	$(MAKE) -C test test
+
+gen:
+	$(MAKE) -C test gen
+
+cli:
+	$(MAKE) -C cli cli
 
 pio-ci: examples
 	$(MAKE) -C examples pio-ci-all
@@ -48,7 +54,7 @@ clean:
 	rm -f $$(find . -type f -a -name '*~')
 	rm -f $$(find . -type f -a -name '.ninja_*')
 
-.PHONY: help clean check test pio-ci arduino-ci
+.PHONY: help clean check test gen cli pio-ci arduino-ci
 
 # Local Variables:
 # mode: makefile-gmake

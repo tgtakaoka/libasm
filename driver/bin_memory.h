@@ -17,15 +17,16 @@
 #ifndef __BIN_MEMORY_H__
 #define __BIN_MEMORY_H__
 
-#include "dis_memory.h"
-
-#include <set>
+#include <map>
 #include <vector>
+
+#include "bin_reader.h"
+#include "config_base.h"
 
 namespace libasm {
 namespace driver {
 
-struct BinMemory {
+struct BinMemory : BinReader {
     BinMemory();
 
     bool hasByte(uint32_t addr) const;
@@ -40,53 +41,50 @@ struct BinMemory {
     uint32_t startAddress() const;
     uint32_t endAddress() const;
 
-    // byte iterator
-    struct ByteIterator : DisMemory {
-        bool hasNext() const override { return _memory.hasByte(address()); }
-        void setAddress(uint32_t addr) { DisMemory::resetAddress(addr); }
+    const BinReader::Block *begin() const override;
 
-    private:
-        friend BinMemory;
-        ByteIterator(const BinMemory &memory, uint32_t addr) : DisMemory(addr), _memory(memory) {}
-        uint8_t nextByte() override { return _memory.readByte(address()); }
-
-        const BinMemory &_memory;
-    };
-
-    auto reader(uint32_t addr) const { return ByteIterator(*this, addr); }
-
-    // block iterator
-    // it->base: uint32_t start_address;
-    // it->data: vector<uint8_t> memory_block;
-    auto begin() const { return _blocks.begin(); }
-    auto end() const { return _blocks.end(); }
+    void setRange(uint32_t start, uint32_t end);
 
 private:
-    struct Block {
-        const uint32_t base;
-        mutable std::vector<uint8_t> data;
+    struct Block : BinReader::Block {
+        Block(uint32_t addr) : _base(addr), _data(), _next(nullptr) {}
 
-        Block(uint32_t addr) : base(addr), data() {}
-        bool operator<(const Block &o) const { return base < o.base; }
-        bool operator==(const Block &o) const { return base == o.base && data == o.data; }
-        bool operator!=(const Block &o) const { return !(*this == o); }
+        uint32_t base() const override { return _base; }
+        uint32_t size() const override { return _data.size(); }
+        const uint8_t *data() const override { return _data.data(); }
+        const BinReader::Block *next() const override {
+            return reinterpret_cast<const BinReader::Block *>(_next);
+        }
+        BinReader::ByteReader reader() const override {
+            return BinReader::ByteReader{base(), size(), data()};
+        }
+
+        bool operator==(const Block &other) const;
+        bool operator!=(const Block &other) const { return !(*this == other); }
+        bool inside(uint32_t addr) const { return addr >= _base && addr < _base + _data.size(); }
+        bool atEnd(uint32_t addr) const { return addr == _base + _data.size(); }
+        uint8_t read(uint32_t addr) const { return _data[addr - _base]; }
+        void write(uint32_t addr, uint8_t val) { _data[addr - _base] = val; }
+        void append(uint8_t val) { _data.push_back(val); }
+        void aggregate(const Block &other);
+        void connect(const Block *next) { _next = next; }
+        void trimStart(uint32_t start);
+        void trimEnd(uint32_t end);
+
+    private:
+        uint32_t _base;
+        std::vector<uint8_t> _data;
+        const Block *_next;
     };
 
-    // Memory block set in ascending order of start address.
-    std::set<Block> _blocks;
-    typedef std::set<Block>::iterator Cache;
-    Cache _writeCache;
-    mutable Cache _readCache;
+    // Memory block map in ascending order of start address.
+    using Blocks = std::map<uint32_t, Block>;
+    Blocks _blocks;
+    Blocks::iterator find(uint32_t addr);
+    Blocks::const_iterator find(uint32_t addr) const;
 
-    void invalidateWriteCache();
-    void invalidateReadCache() const;
-    bool insideOf(Cache &cache, uint32_t addr) const;
-    bool atEndOf(Cache &cache, uint32_t addr) const;
-    uint8_t readFrom(Cache &cache, uint32_t addr) const;
-    void appendTo(Cache &cache, uint32_t addr, uint8_t val);
-    void replaceAt(Cache &cache, uint32_t addr, uint8_t val);
     void createBlock(uint32_t addr, uint8_t val);
-    void aggregate(Cache &hint);
+    void aggregate(Block &block);
 };
 
 }  // namespace driver

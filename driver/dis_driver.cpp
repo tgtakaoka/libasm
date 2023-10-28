@@ -95,8 +95,8 @@ bool DisDriver::setOption(const char *name, const char *value) {
     return current()->setOption(name, value);
 }
 
-void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t dis_start,
-        uint32_t dis_end, TextPrinter &output, TextPrinter &listout, TextPrinter &errorout) {
+void DisDriver::disassemble(BinReader &memory, const char *inputName, TextPrinter &output,
+        TextPrinter &listout, TextPrinter &errorout) {
     char buffer[256];
     StrBuffer out{buffer, sizeof(buffer)};
 
@@ -109,32 +109,21 @@ void DisDriver::disassemble(BinMemory &memory, const char *inputName, uint32_t d
     output.println(formatter.getContent(out).str());
     listout.println(formatter.getLine(out).str());
 
-    const auto addrUnit = disassembler.config().addressUnit();
-    for (const auto &it : memory) {
-        auto mem_base = it.base;
-        auto mem_size = it.data.size();
-        auto start = mem_base / addrUnit;
-        const auto end = start + (mem_size - 1) / addrUnit;
-        if (start > dis_end || end < dis_start)
-            continue;
-        if (start < dis_start) {
-            mem_base = dis_start * addrUnit;
-            mem_size -= (dis_start - start) * addrUnit;
-            start = dis_start;
-        }
-        if (end > dis_end)
-            mem_size -= (end - dis_end) * addrUnit;
+    const auto unit = disassembler.config().addressUnit();
+    for (auto block = memory.begin(); block != nullptr; block = block->next()) {
+        auto reader = block->reader();
+        const auto start = reader.address() / unit;
+        const auto mem_size = reader.size();
 
         formatter.setOrigin(start);
         output.println(formatter.getContent(out).str());
         listout.println(formatter.getLine(out).str());
 
-        auto reader = memory.reader(mem_base);
-        for (size_t mem_offset = 0; mem_offset < mem_size;) {
+        for (uint32_t mem_offset = 0; mem_offset < mem_size;) {
             formatter.reset();
             auto &operands = formatter.operands();
             auto &insn = formatter.insn();
-            insn.reset(start + mem_offset / addrUnit);
+            insn.reset(start + mem_offset / unit);
             disassembler.decode(reader, insn, operands.mark(), operands.capacity());
             formatter.set(insn);
             while (formatter.hasNextContent())

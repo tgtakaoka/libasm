@@ -105,31 +105,17 @@ void test_reader() {
     EQ("eof", nullptr, lines.readLine());
 }
 
-int mem_size(const BinMemory &memory) {
-    size_t size = 0;
-    for (const auto &it : memory)
-        size += it.data.size();
-    return size;
-}
-
-int mem_block(const BinMemory &memory) {
-    size_t block = 0;
-    for (auto it : memory)
-        block++;
-    return block;
-}
-
 void test_memory() {
     TestMemory memory;
 
     const uint32_t start1 = 0x100;
     auto writer1 = memory.writer(start1);
     writer1.add(0x11).add(0x22).add(0x33);
-    EQ("3 bytes", 3, mem_size(writer1.memory()));
-    EQ("3 bytes", 1, mem_block(writer1.memory()));
-    EQ("3 bytes", start1, writer1.memory().startAddress());
-    EQ("3 bytes", writer1.address() - 1, writer1.memory().endAddress());
-    auto reader1 = writer1.memory().reader(start1);
+    EQ("3 bytes", 3, memory.size());
+    EQ("3 bytes", 1, memory.blocks());
+    EQ("3 bytes", start1, memory.startAddress());
+    EQ("3 bytes", writer1.address() - 1, memory.endAddress());
+    auto reader1 = memory.begin()->reader();
     EQ("3-0", 0x11, reader1.readByte());
     EQ("3-1", 0x22, reader1.readByte());
     EQ("3-2", 0x33, reader1.readByte());
@@ -137,22 +123,22 @@ void test_memory() {
     const uint32_t start2 = 0x1234;
     auto writer2 = memory.writer(start2);
     writer2.add(0xff).add(0xee);
-    EQ("2 bytes", 5, mem_size(writer1.memory()));
-    EQ("2 bytes", 2, mem_block(writer1.memory()));
-    EQ("2 bytes", start1, writer2.memory().startAddress());
-    EQ("2 bytes", writer2.address() - 1, writer2.memory().endAddress());
-    auto reader2 = writer2.memory().reader(start2);
+    EQ("2 bytes", 5, memory.size());
+    EQ("2 bytes", 2, memory.blocks());
+    EQ("2 bytes", start1, memory.startAddress());
+    EQ("2 bytes", writer2.address() - 1, memory.endAddress());
+    auto reader2 = memory.begin()->next()->reader();
     EQ("2-0", 0xff, reader2.readByte());
     EQ("2-1", 0xee, reader2.readByte());
 
     const uint32_t start3 = 0x2000;
     auto writer3 = memory.writer(start3, ENDIAN_BIG);
     writer3.add(0x1234).add(0x5678);
-    EQ("2 big", 9, mem_size(writer1.memory()));
-    EQ("2 big", 3, mem_block(writer1.memory()));
-    EQ("2 big", start1, writer2.memory().startAddress());
-    EQ("2 big", writer3.address() - 1, writer3.memory().endAddress());
-    auto reader3 = writer3.memory().reader(start3);
+    EQ("2 big", 9, memory.size());
+    EQ("2 big", 3, memory.blocks());
+    EQ("2 big", start1, memory.startAddress());
+    EQ("2 big", writer3.address() - 1, memory.endAddress());
+    auto reader3 = memory.begin()->next()->next()->reader();
     EQ("2-0", 0x12, reader3.readByte());
     EQ("2-1", 0x34, reader3.readByte());
     EQ("2-2", 0x56, reader3.readByte());
@@ -161,15 +147,19 @@ void test_memory() {
     const uint32_t start4 = writer3.address();
     auto writer4 = memory.writer(start4, ENDIAN_LITTLE);
     writer4.add(0x1234).add(0x5678);
-    EQ("2 little", 13, mem_size(writer1.memory()));
-    EQ("2 little", 3, mem_block(writer1.memory()));
-    EQ("2 little", start1, writer2.memory().startAddress());
-    EQ("2 little", writer4.address() - 1, writer4.memory().endAddress());
-    auto reader4 = writer4.memory().reader(start4);
-    EQ("2-0", 0x34, reader4.readByte());
-    EQ("2-1", 0x12, reader4.readByte());
-    EQ("2-2", 0x78, reader4.readByte());
-    EQ("2-3", 0x56, reader4.readByte());
+    EQ("2 little", 13, memory.size());
+    EQ("2 little", 3, memory.blocks());
+    EQ("2 little", start1, memory.startAddress());
+    EQ("2 little", writer4.address() - 1, memory.endAddress());
+    auto reader4 = memory.begin()->next()->next()->reader();
+    EQ("2-0", 0x12, reader4.readByte());
+    EQ("2-1", 0x34, reader4.readByte());
+    EQ("2-2", 0x56, reader4.readByte());
+    EQ("2-3", 0x78, reader4.readByte());
+    EQ("2-4", 0x34, reader4.readByte());
+    EQ("2-5", 0x12, reader4.readByte());
+    EQ("2-6", 0x78, reader4.readByte());
+    EQ("2-7", 0x56, reader4.readByte());
 }
 
 #define SOURCE_OPEN(_msg, _open, _nest, _name, _lineno)             \

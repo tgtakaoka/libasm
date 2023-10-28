@@ -109,11 +109,11 @@ int AsmCommander::assemble() {
             encoder.reset(addrWidth, _record_bytes);
             encoder.encode(memory, output);
             if (_verbose) {
-                const auto addrUnit = _driver.current()->config().addressUnit();
-                for (const auto &it : memory) {
-                    const auto start = it.base / addrUnit;
-                    const uint32_t size = it.data.size();
-                    const auto end = (it.base + size - 1) / addrUnit;
+                const auto unit = _driver.current()->config().addressUnit();
+                for (auto block = memory.begin(); block != nullptr; block = block->next()) {
+                    const auto start = block->base() / unit;
+                    const auto size = block->size();
+                    const auto end = (block->base() + size - 1) / unit;
                     fprintf(stderr, "%s: Write %4u bytes %04x-%04x\n", _output_name, size, start,
                             end);
                 }

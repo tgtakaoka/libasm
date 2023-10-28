@@ -29,20 +29,6 @@ void set_up() {}
 
 void tear_down() {}
 
-int mem_size(BinMemory &memory) {
-    size_t size = 0;
-    for (const auto &it : memory)
-        size += it.data.size();
-    return size;
-}
-
-int mem_block(BinMemory &memory) {
-    size_t block = 0;
-    for (auto it = memory.begin(); it != memory.end(); it++)
-        block++;
-    return block;
-}
-
 // clang-format off
 static const uint8_t block1[] = {
     0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
@@ -128,18 +114,13 @@ void test_encoder_blocks() {
     EQ("end", "S9030000FC", out.line(6));
 }
 
-static void readBlock(const BinMemory &memory, uint32_t base, uint8_t *data, size_t size) {
-    auto reader = memory.reader(base);
-    for (size_t i = 0; i < size && reader.hasNext(); i++)
-        data[i] = reader.readByte();
-}
-
-#define READ_BLOCK(_mem, _base, _buffer) readBlock(_mem, _base, _buffer, sizeof(_buffer))
-
-#define MEM_EQ(_msg, _expected, _actual, _base)                                       \
+#define BLOCK_EQ(_msg, _expected, _actual, _base)                                     \
     do {                                                                              \
+        asserter.equals(__FILE__, __LINE__, _msg, _expected.size(), _actual->size()); \
         uint8_t actual[_expected.size()];                                             \
-        READ_BLOCK(_actual, _base, actual);                                           \
+        auto reader = _actual->reader();                                              \
+        for (size_t i = 0; i < _expected.size() && reader.hasNext(); i++)             \
+            actual[i] = reader.readByte();                                            \
         asserter.equals(__FILE__, __LINE__, _msg, _expected, actual, sizeof(actual)); \
     } while (0)
 
@@ -157,7 +138,7 @@ void test_decoder() {
     EQ("16bit-32block1", 18, BinDecoder::decode(hex, mem16_32));
     EQ("16bit-32block1", start_expected16, mem16_32.startAddress());
     EQ("16bit-32block1", end_expected16, mem16_32.endAddress());
-    MEM_EQ("16bit-32block1", expected16, mem16_32, start_expected16);
+    BLOCK_EQ("16bit-32block1", expected16, mem16_32.begin(), start_expected16);
 
     hex.clear("16bit-8block1")
             .add("S0030000FC")
@@ -168,7 +149,7 @@ void test_decoder() {
     EQ("16bit-8block1", 18, BinDecoder::decode(hex, mem16_8));
     EQ("16bit-8block1", start_expected16, mem16_8.startAddress());
     EQ("16bit-8block1", end_expected16, mem16_8.endAddress());
-    MEM_EQ("16bit-8block1", expected16, mem16_8, start_expected16);
+    BLOCK_EQ("16bit-8block1", expected16, mem16_8.begin(), start_expected16);
 
     const uint32_t start_expected24 = 0x123400;
     const uint32_t end_expected24 = start_expected24 + sizeof(block1) - 1;
@@ -182,7 +163,7 @@ void test_decoder() {
     EQ("24bit-16block1", 18, BinDecoder::decode(hex, mem24_16));
     EQ("24bit-16block1", start_expected24, mem24_16.startAddress());
     EQ("24bit-16block1", end_expected24, mem24_16.endAddress());
-    MEM_EQ("24bit-32block1", expected16, mem24_16, start_expected24);
+    BLOCK_EQ("24bit-32block1", expected16, mem24_16.begin(), start_expected24);
 
     const uint32_t start_expected32 = 0x1234FFF0;
     const uint32_t end_expected32 = start_expected32 + sizeof(block1) - 1;
@@ -195,7 +176,7 @@ void test_decoder() {
     EQ("32bit-16block1", 18, BinDecoder::decode(hex, mem32_16));
     EQ("32bit-16block1", start_expected32, mem32_16.startAddress());
     EQ("32bit-16block1", end_expected32, mem32_16.endAddress());
-    MEM_EQ("32bit-32block1", expected16, mem32_16, start_expected32);
+    BLOCK_EQ("32bit-32block1", expected16, mem32_16.begin(), start_expected32);
 }
 
 void test_decoder_blocks() {
@@ -216,8 +197,9 @@ void test_decoder_blocks() {
     EQ("blocks", 37, BinDecoder::decode(hex, mem));
     EQ("blocks", start_block1, mem.startAddress());
     EQ("blocks", end_block2, mem.endAddress());
-    MEM_EQ("block1", expected1, mem, start_block1);
-    MEM_EQ("block2", expected2, mem, start_block2);
+    EQ("blocks", 2, mem.blocks());
+    BLOCK_EQ("block1", expected1, mem.begin(), start_block1);
+    BLOCK_EQ("block2", expected2, mem.begin()->next(), start_block2);
 }
 
 void run_tests() {

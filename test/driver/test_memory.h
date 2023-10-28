@@ -30,7 +30,6 @@ struct TestMemory : BinMemory {
     // write byte iterator
     struct ByteWriter {
         uint32_t address() const { return _addr; }
-        const BinMemory &memory() const { return _memory; }
         ByteWriter &add(uint8_t val) { return emitByte(val); }
 
     protected:
@@ -49,8 +48,6 @@ struct TestMemory : BinMemory {
 
     // write uint16_t iterator
     struct Uint16Writer : ByteWriter {
-        uint32_t address() const { return ByteWriter::address(); }
-        const BinMemory &memory() const { return ByteWriter::memory(); }
         Uint16Writer &add(uint16_t val) { return emitUint16(val); }
 
     private:
