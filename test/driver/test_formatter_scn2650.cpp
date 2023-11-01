@@ -45,22 +45,20 @@ void test_asm_scn2650() {
 void test_dis_scn2650() {
     PREP_DIS(scn2650::DisScn2650);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("scn2650", 0x7bcd,
-            "      cpu     scn2650\n"
+            "      cpu     2650\n"
             "      org     h'7bcd'\n"
             "      loda,r0 *h'7def', r0, +\n"
             "* test.bin: error: Unknown instruction\n"
             "*     7bd0 : 90\n",
-            "       0 :                            cpu     scn2650\n"
+            "       0 :                            cpu     2650\n"
             "    7bcd :                            org     h'7bcd'\n"
             "    7bcd : 0c bd ef                   loda,r0 *h'7def', r0, +\n"
             "test.bin: error: Unknown instruction\n"
             "    7bd0 : 90\n",
             0x0C, 0xBD, 0xEF, 0x90);
-
-    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x89ab));
 }
 
 void run_tests() {

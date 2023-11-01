@@ -47,22 +47,20 @@ void test_asm_i8048() {
 void test_dis_i8048() {
     PREP_DIS(i8048::DisI8048);
 
-    formatter.setUppercase(true);
+    driver.setUppercase(true);
 
     DIS8("i8039", 0xbcd,
-            "      CPU   I8039\n"
+            "      CPU   8039\n"
             "      ORG   0BCDH\n"
             "      ORL   P1, #8AH\n"
             "; test.bin: error: Unknown instruction\n"
             ";      BCF : 08\n",
-            "       0 :                            CPU   I8039\n"
+            "       0 :                            CPU   8039\n"
             "     BCD :                            ORG   0BCDH\n"
             "     BCD : 89 8A                      ORL   P1, #8AH\n"
             "test.bin: error: Unknown instruction\n"
             "     BCF : 08\n",
             0x89, 0x8A, 0x08);
-
-    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0xabcd));
 }
 
 void run_tests() {

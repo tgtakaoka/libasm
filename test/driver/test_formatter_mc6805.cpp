@@ -47,18 +47,18 @@ void test_asm_mc6805() {
 void test_dis_mc6805() {
     PREP_DIS(mc6805::DisMc6805);
 
-    formatter.setUpperHex(false);
-    formatter.setUppercase(true);
+    driver.setUpperHex(false);
+    driver.setUppercase(true);
 
     DIS8("mc146805", 0x1234,
-            "      CPU   MC146805\n"
+            "      CPU   146805\n"
             "      ORG   $1234\n"
             "      STX   $4000,X\n"
             "* test.bin: error: Unknown instruction\n"
             "*     1237 : 82\n"
             "* test.bin: error: Overflow range: \"$2000\"\n"
             "*     1238 : c6 20 00                   LDA   $2000\n",
-            "       0 :                            CPU   MC146805\n"
+            "       0 :                            CPU   146805\n"
             "    1234 :                            ORG   $1234\n"
             "    1234 : df 40 00                   STX   $4000,X\n"
             "test.bin: error: Unknown instruction\n"
@@ -66,8 +66,6 @@ void test_dis_mc6805() {
             "test.bin: error: Overflow range: \"$2000\"\n"
             "    1238 : c6 20 00                   LDA   $2000\n",
             0xdf, 0x40, 0x00, 0x82, 0xC6, 0x20, 0x00);
-
-    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x3456));
 }
 
 void run_tests() {

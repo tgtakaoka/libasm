@@ -58,17 +58,17 @@ void test_asm_ns32000() {
 void test_dis_ns32000() {
     PREP_DIS(ns32000::DisNs32000);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("ns32032", 0xabcdef,
-            "      cpu     ns32032\n"
+            "      cpu     32032\n"
             "      org     x'abcdef\n"
             // clang-format off
             "      extd    r1, x'00112233(x'00334455(fp))[r3:w], x'00556677(x'00778899(sb))[r4:w], 32\n"
             // clang-format on
             "# test.bin: error: Register not aligned: \"r3\"\n"
             "#   abce05 : ce ec 08                   deib    r1, r3\n",
-            "       0 :                            cpu     ns32032\n"
+            "       0 :                            cpu     32032\n"
             "  abcdef :                            org     x'abcdef\n"
             // clang-format off
             "  abcdef : 2e 4b ef 83 94 c0          extd    r1, x'00112233(x'00334455(fp))[r3:w], x'00556677(x'00778899(sb))[r4:w], 32\n"

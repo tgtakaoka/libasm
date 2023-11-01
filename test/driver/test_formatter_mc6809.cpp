@@ -65,17 +65,17 @@ void test_asm_mc6809() {
 void test_dis_mc6809() {
     PREP_DIS(mc6809::DisMc6809);
 
-    formatter.setUppercase(false);
+    driver.setUppercase(false);
 
     DIS8("mc6809", 0xabcd,
-            "      cpu   mc6809\n"
+            "      cpu   6809\n"
             "      org   $ABCD\n"
             "      cmpd  [$1234,y]\n"
             "* test.bin: error: Unknown instruction\n"
             "*     ABD2 : 01\n"
             "* test.bin: error: Unknown post-byte\n"
             "*     ABD3 : A6 87                      lda\n",
-            "       0 :                            cpu   mc6809\n"
+            "       0 :                            cpu   6809\n"
             "    ABCD :                            org   $ABCD\n"
             "    ABCD : 10 A3 B9 12 34             cmpd  [$1234,y]\n"
             "test.bin: error: Unknown instruction\n"

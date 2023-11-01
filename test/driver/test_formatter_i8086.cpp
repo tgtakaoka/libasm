@@ -64,15 +64,15 @@ void test_asm_i8086() {
 void test_dis_i8086() {
     PREP_DIS(i8086::DisI8086);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("i8086", 0xbcdef,
-            "      cpu    i8086\n"
+            "      cpu    8086\n"
             "      org    0bcdefh\n"
             "      test   word ptr [bp+di+0feffh], 0bbaah\n"
             "; test.bin: error: Unknown instruction\n"
             ";    bcdf5 : d1 f7\n",
-            "       0 :                            cpu    i8086\n"
+            "       0 :                            cpu    8086\n"
             "   bcdef :                            org    0bcdefh\n"
             "   bcdef : f7 83 ff fe aa bb          test   word ptr [bp+di+0feffh], 0bbaah\n"
             "test.bin: error: Unknown instruction\n"

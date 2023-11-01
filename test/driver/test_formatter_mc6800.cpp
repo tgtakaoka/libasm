@@ -47,15 +47,15 @@ void test_asm_mc6800() {
 void test_dis_mc6800() {
     PREP_DIS(mc6800::DisMc6800);
 
-    formatter.setUppercase(true);
+    driver.setUppercase(true);
 
     DIS8("mc6800", 0xabcd,
-            "      CPU   MC6800\n"
+            "      CPU   6800\n"
             "      ORG   $ABCD\n"
             "      SUBB  $F1F2\n"
             "* test.bin: error: Unknown instruction\n"
             "*     ABD0 : 83\n",
-            "       0 :                            CPU   MC6800\n"
+            "       0 :                            CPU   6800\n"
             "    ABCD :                            ORG   $ABCD\n"
             "    ABCD : F0 F1 F2                   SUBB  $F1F2\n"
             "test.bin: error: Unknown instruction\n"

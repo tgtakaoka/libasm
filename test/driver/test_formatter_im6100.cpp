@@ -97,9 +97,10 @@ void test_asm_hd6120() {
 void test_dis_im6100() {
     PREP_DIS(im6100::DisIm6100);
 
-    disassembler.setOption("ignore-literal", "on");
+    driver.setOption("ignore-literal", "on");
+
     DIS16("im6100", 0400,
-            "      cpu   im6100\n"
+            "      cpu   6100\n"
             "      org   0400\n"
             "      tad   i 0105\n"
             "/ test.bin: error: Invalid instruction combination\n"
@@ -110,7 +111,7 @@ void test_dis_im6100() {
             "/      404 : 7777                       cla   swp\n"
             "      cml   bsw iac\n"
             "      spa   sna szl cla hlt\n",
-            "       0 :                            cpu   im6100\n"
+            "       0 :                            cpu   6100\n"
             "     400 :                            org   0400\n"
             "     400 : 1505                       tad   i 0105\n"
             "test.bin: error: Invalid instruction combination\n"
@@ -123,9 +124,10 @@ void test_dis_im6100() {
             "     406 : 7772                       spa   sna szl cla hlt\n",
             01505, 07175, 04274, 05201, 07777, 07023, 07772);
 
-    disassembler.setOption("ignore-literal", "off");
+    driver.setOption("ignore-literal", "off");
+    
     DIS16("im6100", 0400,
-            "      cpu   im6100\n"
+            "      cpu   6100\n"
             "      org   0400\n"
             "      tad   i 0105\n"
             "      7175\n"
@@ -134,7 +136,7 @@ void test_dis_im6100() {
             "      7777\n"
             "      cml   bsw iac\n"
             "      spa   sna szl cla hlt\n",
-            "       0 :                            cpu   im6100\n"
+            "       0 :                            cpu   6100\n"
             "     400 :                            org   0400\n"
             "     400 : 1505                       tad   i 0105\n"
             "     401 : 7175                       7175\n"
@@ -149,9 +151,10 @@ void test_dis_im6100() {
 void test_dis_hd6120() {
     PREP_DIS(im6100::DisIm6100);
 
-    disassembler.setOption("ignore-literal", "on");
+    driver.setOption("ignore-literal", "on");
+
     DIS16("hd6120", 070400,
-            "      cpu   hd6120\n"
+            "      cpu   6120\n"
             "      org   70400\n"
             "      tad   i 00105\n"
             "      stl   cia r3l\n"
@@ -161,7 +164,7 @@ void test_dis_hd6120() {
             "/    70404 : 7777                       cla   swp\n"
             "      cml   bsw iac\n"
             "      spa   sna szl cla hlt\n",
-            "       0 :                            cpu   hd6120\n"
+            "       0 :                            cpu   6120\n"
             "   70400 :                            org   70400\n"
             "   70400 : 1505                       tad   i 00105\n"
             "   70401 : 7175                       stl   cia r3l\n"
@@ -173,9 +176,10 @@ void test_dis_hd6120() {
             "   70406 : 7772                       spa   sna szl cla hlt\n",
             01505, 07175, 04274, 05201, 07777, 07023, 07772);
 
-    disassembler.setOption("ignore-literal", "off");
+    driver.setOption("ignore-literal", "off");
+
     DIS16("hd6120", 070400,
-            "      cpu   hd6120\n"
+            "      cpu   6120\n"
             "      org   70400\n"
             "      tad   i 00105\n"
             "      stl   cia r3l\n"
@@ -184,7 +188,7 @@ void test_dis_hd6120() {
             "      7777\n"
             "      cml   bsw iac\n"
             "      spa   sna szl cla hlt\n",
-            "       0 :                            cpu   hd6120\n"
+            "       0 :                            cpu   6120\n"
             "   70400 :                            org   70400\n"
             "   70400 : 1505                       tad   i 00105\n"
             "   70401 : 7175                       stl   cia r3l\n"

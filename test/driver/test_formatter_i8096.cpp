@@ -47,15 +47,15 @@ void test_asm_i8096() {
 void test_dis_i8096() {
     PREP_DIS(i8096::DisI8096);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("i8096", 0xabcd,
-            "      cpu   i8096\n"
+            "      cpu   8096\n"
             "      org   0abcdh\n"
             "      mulb  130, 817bh[124]\n"
             "; test.bin: error: Operand not aligned: \"121, 5634h[18]\"\n"
             ";     abd3 : 67 13 34 56 79             add   121, 5634h[18]\n",
-            "       0 :                            cpu   i8096\n"
+            "       0 :                            cpu   8096\n"
             "    abcd :                            org   0abcdh\n"
             "    abcd : fe 7f 7d 7b 81 82          mulb  130, 817bh[124]\n"
             "test.bin: error: Operand not aligned: \"121, 5634h[18]\"\n"

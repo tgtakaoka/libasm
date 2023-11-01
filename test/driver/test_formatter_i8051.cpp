@@ -47,15 +47,15 @@ void test_asm_i8051() {
 void test_dis_i8051() {
     PREP_DIS(i8051::DisI8051);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("i8051", 0xabcd,
-            "      cpu   i8051\n"
+            "      cpu   8051\n"
             "      org   0abcdh\n"
             "      anl   c, /0b0h.1\n"
             "; test.bin: error: Unknown instruction\n"
             ";     abcf : a5\n",
-            "       0 :                            cpu   i8051\n"
+            "       0 :                            cpu   8051\n"
             "    abcd :                            org   0abcdh\n"
             "    abcd : b0 b1                      anl   c, /0b0h.1\n"
             "test.bin: error: Unknown instruction\n"

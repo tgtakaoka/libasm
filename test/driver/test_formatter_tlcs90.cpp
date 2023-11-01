@@ -47,7 +47,7 @@ void test_asm_tlcs90() {
 void test_dis_tlcs90() {
     PREP_DIS(tlcs90::DisTlcs90);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("tlcs90", 0xabcd,
             "      cpu   tlcs90\n"

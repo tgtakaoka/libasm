@@ -52,12 +52,12 @@ void test_dis_ins8060() {
     PREP_DIS(ins8060::DisIns8060);
 
     DIS8("ins8060", 0xabcd,
-            "      cpu   ins8060\n"
+            "      cpu   sc/mp\n"
             "      org   X'ABCD\n"
             "      and   @e(p1)\n"
             "; test.bin: error: Unknown instruction\n"
             ";     ABCF : 09\n",
-            "       0 :                            cpu   ins8060\n"
+            "       0 :                            cpu   sc/mp\n"
             "    ABCD :                            org   X'ABCD\n"
             "    ABCD : D5 80                      and   @e(p1)\n"
             "test.bin: error: Unknown instruction\n"

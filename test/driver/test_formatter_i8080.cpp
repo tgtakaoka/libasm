@@ -52,12 +52,12 @@ void test_dis_i8080() {
     PREP_DIS(i8080::DisI8080);
 
     DIS8("i8080", 0xabcd,
-            "      cpu   i8080\n"
+            "      cpu   8080\n"
             "      org   0ABCDH\n"
             "      jpe   0ECEBH\n"
             "; test.bin: error: Unknown instruction\n"
             ";     ABD0 : DD\n",
-            "       0 :                            cpu   i8080\n"
+            "       0 :                            cpu   8080\n"
             "    ABCD :                            org   0ABCDH\n"
             "    ABCD : EA EB EC                   jpe   0ECEBH\n"
             "test.bin: error: Unknown instruction\n"

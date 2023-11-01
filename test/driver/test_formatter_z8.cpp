@@ -45,7 +45,7 @@ void test_asm_z8() {
 void test_dis_z8() {
     PREP_DIS(z8::DisZ8);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("z8", 0xabcd,
             "      cpu     z8\n"

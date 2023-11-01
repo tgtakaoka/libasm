@@ -17,14 +17,12 @@
 #ifndef __TEST_FORMATTER_HELPER_H__
 #define __TEST_FORMATTER_HELPER_H__
 
-#include "array_memory.h"
 #include "asm_directive.h"
 #include "asm_driver.h"
-#include "asm_formatter.h"
 #include "dis_driver.h"
-#include "dis_formatter.h"
 #include "stored_printer.h"
 #include "test_driver_helper.h"
+#include "test_memory.h"
 #include "test_reader.h"
 #include "test_sources.h"
 
@@ -55,61 +53,49 @@
         EQ("line eor", nullptr, expected.readLine());               \
     } while (0)
 
-#define PREP_DIS(typeof_disassembler)      \
-    typeof_disassembler disassembler;      \
-    DisDriver driver{&disassembler};       \
-    char buffer[256];                      \
-    StrBuffer out{buffer, sizeof(buffer)}; \
-    DisFormatter formatter {               \
-        disassembler, "test.bin"           \
+#define PREP_DIS(typeof_disassembler) \
+    typeof_disassembler disassembler; \
+    DisDriver driver {                \
+        &disassembler                 \
     }
 
-#define DIS(_cpu, _org, _contents, _lines, _memory)                                  \
-    do {                                                                             \
-        TestReader contents(_cpu);                                                   \
-        contents.add(_contents);                                                     \
-        TestReader lines(_cpu);                                                      \
-        lines.add(_lines);                                                           \
-        const auto unit = disassembler.addressUnit();                                \
-        auto reader = _memory.iterator();                                            \
-        TRUE("cpu", disassembler.setCpu(_cpu));                                      \
-        formatter.setCpu(_cpu);                                                      \
-        EQ("cpu content", contents.readLine(), formatter.getContent(out).str());     \
-        EQ("cpu line", lines.readLine(), formatter.getLine(out).str());              \
-        formatter.setOrigin(_org);                                                   \
-        EQ("org content", contents.readLine(), formatter.getContent(out).str());     \
-        EQ("org line", lines.readLine(), formatter.getLine(out).str());              \
-        while (reader.hasNext()) {                                                   \
-            formatter.reset();                                                       \
-            auto &opr = formatter.operands();                                        \
-            auto &insn = formatter.insn();                                           \
-            insn.reset(reader.address() / unit);                                     \
-            disassembler.decode(reader, insn, opr.mark(), opr.capacity());           \
-            formatter.set(insn);                                                     \
-            while (formatter.hasNextContent())                                       \
-                EQ("content", contents.readLine(), formatter.getContent(out).str()); \
-            while (formatter.hasNextLine())                                          \
-                EQ("line", lines.readLine(), formatter.getLine(out).str());          \
-            FALSE("line eor", formatter.hasNextLine());                              \
-        }                                                                            \
-        EQ("expected content eor", nullptr, contents.readLine());                    \
-        EQ("expected line eor", nullptr, lines.readLine());                          \
-    } while (0)
-
-#define DIS16(_cpu, _org, _contents, _expected, ...)                            \
-    do {                                                                        \
-        const auto unit = disassembler.addressUnit();                           \
-        const auto endian = disassembler.endian();                              \
-        const uint16_t _memory[] = {__VA_ARGS__};                               \
-        const ArrayMemory memory(_org *unit, _memory, sizeof(_memory), endian); \
-        DIS(_cpu, _org, _contents, _expected, memory);                          \
-    } while (0)
-
-#define DIS8(_cpu, _org, _contents, _expected, ...)               \
+#define _DIS(_cpu, _contents, _lines, _memory)                    \
     do {                                                          \
-        const uint8_t _memory[] = {__VA_ARGS__};                  \
-        const ArrayMemory memory(_org, _memory, sizeof(_memory)); \
-        DIS(_cpu, _org, _contents, _expected, memory);            \
+        driver.setCpu(_cpu);                                      \
+        TestReader contents(_cpu);                                \
+        contents.add(_contents);                                  \
+        TestReader lines(_cpu);                                   \
+        lines.add(_lines);                                        \
+        StoredPrinter out, list, err;                             \
+        driver.disassemble(_memory, "test.bin", out, list, err);  \
+        for (size_t lineno = 1; lineno <= out.size(); lineno++)   \
+            EQ("content", contents.readLine(), out.line(lineno)); \
+        EQ("expected content eor", nullptr, contents.readLine()); \
+        for (size_t lineno = 1; lineno <= list.size(); lineno++)  \
+            EQ("content", lines.readLine(), list.line(lineno));   \
+        EQ("expected line eor", nullptr, lines.readLine());       \
+    } while (0)
+
+#define DIS16(_cpu, _org, _contents, _expected, ...)      \
+    do {                                                  \
+        const auto unit = disassembler.addressUnit();     \
+        const auto endian = disassembler.endian();        \
+        TestMemory memory;                                \
+        auto writer = memory.writer(_org * unit, endian); \
+        const uint16_t _memory[] = {__VA_ARGS__};         \
+        for (auto byte : _memory)                         \
+            writer.add(byte);                             \
+        _DIS(_cpu, _contents, _expected, memory);         \
+    } while (0)
+
+#define DIS8(_cpu, _org, _contents, _expected, ...) \
+    do {                                            \
+        TestMemory memory;                          \
+        auto writer = memory.writer(_org);          \
+        const uint8_t _memory[] = {__VA_ARGS__};    \
+        for (auto byte : _memory)                   \
+            writer.add(byte);                       \
+        _DIS(_cpu, _contents, _expected, memory);   \
     } while (0)
 
 #endif  // __TEST_FORMATTER_HELPER_H__

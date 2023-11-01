@@ -63,16 +63,16 @@ void test_asm_cdp1802() {
 void test_dis_cdp1802() {
     PREP_DIS(cdp1802::DisCdp1802);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
     EQ("use-register", OK, driver.setOption("use-register", "on"));
 
     DIS8("cdp1804", 0xabcd,
-            "      cpu   cdp1804\n"
+            "      cpu   1804\n"
             "      org   x'abcd'\n"
             "      scal  r3, x'8485'\n"
             ".. test.bin: error: Unknown instruction\n"
             "..     abd1 : 68 0f\n",
-            "       0 :                            cpu   cdp1804\n"
+            "       0 :                            cpu   1804\n"
             "    abcd :                            org   x'abcd'\n"
             "    abcd : 68 83 84 85                scal  r3, x'8485'\n"
             "test.bin: error: Unknown instruction\n"

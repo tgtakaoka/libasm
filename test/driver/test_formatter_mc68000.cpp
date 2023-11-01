@@ -83,17 +83,17 @@ void test_asm_mc68000() {
 void test_dis_mc68000() {
     PREP_DIS(mc68000::DisMc68000);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS16("mc68000", 0x9abcde,
-            "      cpu     mc68000\n"
+            "      cpu     68000\n"
             "      org     $9abcde\n"
             "      ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "* test.bin: error: Unknown instruction\n"
             "*   9abce8 : 43fc\n"
             "* test.bin: error: Operand not aligned: \"$9abd6b\"\n"
             "*   9abcea : 617f                       bsr     $9abd6b\n",
-            "       0 :                            cpu     mc68000\n"
+            "       0 :                            cpu     68000\n"
             "  9abcde :                            org     $9abcde\n"
             "  9abcde : 00b9 bdbe bfc0             ori.l   #$bdbebfc0, ($c2c3c4).l\n"
             "  9abce4 : 00c2 c3c4\n"
@@ -102,8 +102,6 @@ void test_dis_mc68000() {
             "test.bin: error: Operand not aligned: \"$9abd6b\"\n"
             "  9abcea : 617f                       bsr     $9abd6b\n",
             0x00b9, 0xbdbe, 0xbfc0, 0x00c2, 0xc3c4, 0041774, 0060400 | 0x7F);
-
-    EQ("org", OPERAND_NOT_ALIGNED, formatter.setOrigin(0xABCDEF));
 }
 
 void run_tests() {

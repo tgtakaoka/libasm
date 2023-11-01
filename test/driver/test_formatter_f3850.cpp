@@ -68,18 +68,18 @@ void test_asm_f3850() {
 void test_dis_f3850() {
     PREP_DIS(f3850::DisF3850);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
     EQ("use-scratchpad", OK, disassembler.setOption("use-scratchpad", "on"));
 
     DIS8("f3850", 0x7bcd,
-            "      cpu   f3850\n"
+            "      cpu   3850\n"
             "      org   h'7bcd'\n"
             "      clr\n"
             "      lr    a, j\n"
             "      bp    h'7bcf'\n"
             "* test.bin: error: Unknown instruction\n"
             "*     7bd1 : 2e\n",
-            "       0 :                            cpu   f3850\n"
+            "       0 :                            cpu   3850\n"
             "    7bcd :                            org   h'7bcd'\n"
             "    7bcd : 70                         clr\n"
             "    7bce : 49                         lr    a, j\n"

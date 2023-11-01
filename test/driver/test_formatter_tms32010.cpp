@@ -53,24 +53,22 @@ void test_asm_tms32010() {
 void test_dis_tms32010() {
     PREP_DIS(tms32010::DisTms32010);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS16("tms32010", 0x789,
-            "      cpu   tms32010\n"
+            "      cpu   32010\n"
             "      org   789h\n"
             "      call  0fedh\n"
             "      sacl  *+, 0, ar0\n"
             "* test.bin: error: Unknown instruction\n"
             "*      78c : 0086\n",
-            "       0 :                            cpu   tms32010\n"
+            "       0 :                            cpu   32010\n"
             "     789 :                            org   789h\n"
             "     789 : f800 0fed                  call  0fedh\n"
             "     78b : 50a0                       sacl  *+, 0, ar0\n"
             "test.bin: error: Unknown instruction\n"
             "     78c : 0086\n",
             0xf800, 0x0fed, 0x50a0, 0x0086);
-
-    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0xabcd));
 }
 
 void run_tests() {

@@ -65,7 +65,7 @@ void test_asm_mn1613() {
 void test_dis_mn1610() {
     PREP_DIS(mn1610::DisMn1610);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS16("mn1610", 0xabcd,
             "      cpu   mn1610\n"
@@ -79,14 +79,12 @@ void test_dis_mn1610() {
             "test.bin: error: Unknown instruction\n"
             "    abce : 0f06\n",
             0x2b55, 0x0F00 | (0 << 4) | 6);
-
-    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x12345));
 }
 
 void test_dis_mn1613() {
     PREP_DIS(mn1610::DisMn1610);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS16("mn1613", 0x34567,
             "      cpu   mn1613\n"
@@ -101,7 +99,6 @@ void test_dis_mn1613() {
             "   34569 : 0f06\n",
 
             0x7e1f, 0x5678, 0x0f00 | (0 << 4) | 6);
-    EQ("org", OVERFLOW_RANGE, formatter.setOrigin(0x45678));
 }
 
 void run_tests() {

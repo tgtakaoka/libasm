@@ -83,15 +83,15 @@ void test_asm_w65816() {
 void test_dis_mos6502() {
     PREP_DIS(mos6502::DisMos6502);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("mos6502", 0xabcd,
-            "      cpu   mos6502\n"
+            "      cpu   6502\n"
             "      org   $abcd\n"
             "      sbc   $f1f2\n"
             "; test.bin: error: Unknown instruction\n"
             ";     abd0 : 80\n",
-            "       0 :                            cpu   mos6502\n"
+            "       0 :                            cpu   6502\n"
             "    abcd :                            org   $abcd\n"
             "    abcd : ed f2 f1                   sbc   $f1f2\n"
             "test.bin: error: Unknown instruction\n"
@@ -102,18 +102,18 @@ void test_dis_mos6502() {
 void test_dis_w65816() {
     PREP_DIS(mos6502::DisMos6502);
 
-    formatter.setUppercase(true);
-    TRUE("setcpu", disassembler.setCpu("w65c816"));
-    EQ("longa", OK, disassembler.setOption("longa", "on"));
+    driver.setUpperHex(true);
+    driver.setUppercase(true);
+    driver.setOption("longa", "on");
 
     DIS8("w65c816", 0xabcdef,
-            "      CPU   W65C816\n"
+            "      CPU   65816\n"
             "      ORG   $ABCDEF\n"
             "      SBC   $F2F1F0\n"
             "      ADC   #$1234\n"
             "; test.bin: error: Operand too far: \"$AC4DF8\"\n"
             ";   ABCDF6 : 82 FF 7F                   BRL   $AC4DF8\n",
-            "       0 :                            CPU   W65C816\n"
+            "       0 :                            CPU   65816\n"
             "  ABCDEF :                            ORG   $ABCDEF\n"
             "  ABCDEF : EF F0 F1 F2                SBC   $F2F1F0\n"
             "  ABCDF3 : 69 34 12                   ADC   #$1234\n"

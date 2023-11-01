@@ -53,15 +53,15 @@ void test_asm_ins8070() {
 void test_dis_ins8070() {
     PREP_DIS(ins8070::DisIns8070);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("ins8070", 0xabcd,
-            "      cpu   ins8070\n"
+            "      cpu   8070\n"
             "      org   x'abcd\n"
             "      pli   p2, =x'2423\n"
             "; test.bin: error: Unknown instruction\n"
             ";     abd0 : ef\n",
-            "       0 :                            cpu   ins8070\n"
+            "       0 :                            cpu   8070\n"
             "    abcd :                            org   x'abcd\n"
             "    abcd : 22 23 24                   pli   p2, =x'2423\n"
             "test.bin: error: Unknown instruction\n"

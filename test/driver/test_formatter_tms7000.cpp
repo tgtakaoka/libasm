@@ -45,7 +45,7 @@ void test_asm_tms7000() {
 void test_dis_tms7000() {
     PREP_DIS(tms7000::DisTms7000);
 
-    formatter.setUpperHex(false);
+    driver.setUpperHex(false);
 
     DIS8("tms7000", 0x7bcd,
             "      cpu   tms7000\n"
