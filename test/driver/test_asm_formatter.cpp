@@ -31,7 +31,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_symbols_mc6809() {
-    PREP_ASM_SYMBOL(mc6809::AsmMc6809, MotorolaDirective);
+    PREP_ASM(mc6809::AsmMc6809, MotorolaDirective);
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
@@ -69,7 +69,7 @@ void test_symbols_mc6809() {
 }
 
 void test_symbols_ins8060() {
-    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective);
+    PREP_ASM(ins8060::AsmIns8060, NationalDirective);
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
@@ -104,7 +104,7 @@ void test_symbols_ins8060() {
 }
 
 void test_symbols_z80() {
-    PREP_ASM_SYMBOL(z80::AsmZ80, ZilogDirective);
+    PREP_ASM(z80::AsmZ80, ZilogDirective);
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
@@ -149,7 +149,6 @@ void test_switch_cpu() {
     ZilogDirective dirz80(asmz80);
     AsmDriver driver{&dir6809, &dir6502, &dir8080, &dirz80};
     TestSources sources;
-    const auto reportError = true;
 
     ASM("switch cpu",
             "        cpu   mc6809\n"
@@ -207,7 +206,6 @@ void test_list_radix() {
     ZilogDirective dirz80(asmz80);
     AsmDriver driver{&dir6502, &dirz80};
     TestSources sources;
-    const auto reportError = true;
 
     ASM("list-radix",
             "        option \"list-radix\", 8\n"
@@ -243,7 +241,7 @@ void test_list_radix() {
 }
 
 void test_function() {
-    PREP_ASM_SYMBOL(ins8060::AsmIns8060, NationalDirective);
+    PREP_ASM(ins8060::AsmIns8060, NationalDirective);
 
     ASM("ins8060",
             "        cpu    ins8060\n"
@@ -293,6 +291,33 @@ void test_function() {
             "       ABD9 :                            .dbyte CONS    ; missing\n");
 }
 
+void test_forward_labels() {
+    PREP_ASM(mc6809::AsmMc6809, MotorolaDirective);
+
+    driver.setUpperHex(true);
+    driver.setLineNumber(true);
+
+    ASM("mc6809",
+            "        org   $1000\n"
+            "        lda   label1,pcr\n"
+            "        ldb   label3,x\n"
+            "        rmb   label2-label1\n"
+            "label1  equ   *\n"
+            "label2  equ   label1+label3\n"
+            "label3  equ   label4+1\n"
+            "label4  equ   label5-1\n"
+            "label5  equ   4\n",
+            "       1/    1000 :                            org   $1000\n"
+            "       2/    1000 : A6 8C 06                   lda   label1,pcr\n"
+            "       3/    1003 : E6 04                      ldb   label3,x\n"
+            "       4/    1005 :                            rmb   label2-label1\n"
+            "       5/    1009 : =1009              label1  equ   *\n"
+            "       6/    1009 : =100D              label2  equ   label1+label3\n"
+            "       7/    1009 : =4                 label3  equ   label4+1\n"
+            "       8/    1009 : =3                 label4  equ   label5-1\n"
+            "       9/    1009 : =4                 label5  equ   4\n");
+}
+
 void run_tests() {
     RUN_TEST(test_symbols_mc6809);
     RUN_TEST(test_symbols_ins8060);
@@ -300,6 +325,7 @@ void run_tests() {
     RUN_TEST(test_switch_cpu);
     RUN_TEST(test_list_radix);
     RUN_TEST(test_function);
+    RUN_TEST(test_forward_labels);
 }
 
 }  // namespace test

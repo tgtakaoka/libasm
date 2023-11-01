@@ -26,31 +26,36 @@
 #include "test_reader.h"
 #include "test_sources.h"
 
-#define PREP_ASM_SYMBOL(type_of_assembler, type_of_directive) \
-    type_of_assembler assembler;                              \
-    type_of_directive directive{assembler};                   \
-    AsmDriver driver{&directive};                             \
-    TestSources sources;                                      \
-    auto reportError = false
+#define PREP_ASM(type_of_assembler, type_of_directive) \
+    type_of_assembler assembler;                       \
+    type_of_directive directive{assembler};            \
+    AsmDriver driver{&directive};                      \
+    TestSources sources
 
-#define PREP_ASM(type_of_assembler, type_of_directive)     \
-    PREP_ASM_SYMBOL(type_of_assembler, type_of_directive); \
-    reportError = true
-
-#define ASM(_cpu, _source, _expected)                               \
-    do {                                                            \
-        TestReader expected("expected");                            \
-        expected.add(_expected);                                    \
-        TestReader source(_cpu);                                    \
-        sources.add(source.add(_source));                           \
-        sources.open(source.name().c_str());                        \
-        StoredPrinter list, error;                                  \
-        BinMemory memory;                                           \
-        driver.setCpu(_cpu);                                        \
-        driver.assemble(sources, memory, list, error, reportError); \
-        for (size_t lineno = 1; lineno <= list.size(); lineno++)    \
-            EQ("line", expected.readLine(), list.line(lineno));     \
-        EQ("line eor", nullptr, expected.readLine());               \
+#define ASM(_cpu, _source, _expected)                                                   \
+    do {                                                                                \
+        TestReader expected("expected");                                                \
+        expected.add(_expected);                                                        \
+        TestReader source(_cpu);                                                        \
+        sources.add(source.add(_source));                                               \
+        BinMemory memory, prev;                                                         \
+        SymbolStoreImpl symbols;                                                        \
+        StoredPrinter list, error;                                                      \
+        bool reportError = false;                                                       \
+        do {                                                                            \
+            prev.swap(memory);                                                          \
+            memory.clear();                                                             \
+            symbols.copy(driver.symbols());                                             \
+            list.clear();                                                               \
+            error.clear();                                                              \
+            sources.open(source.name().c_str());                                        \
+            driver.setCpu(_cpu);                                                        \
+            driver.assemble(sources, memory, list, error, reportError);                 \
+            reportError = true;                                                         \
+        } while (error.size() == 0 && (memory != prev || symbols != driver.symbols())); \
+        for (size_t lineno = 1; lineno <= list.size(); lineno++)                        \
+            EQ("line", expected.readLine(), list.line(lineno));                         \
+        EQ("line eor", nullptr, expected.readLine());                                   \
     } while (0)
 
 #define PREP_DIS(typeof_disassembler) \

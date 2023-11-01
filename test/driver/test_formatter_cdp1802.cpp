@@ -39,7 +39,8 @@ void test_asm_cdp1802() {
             "label:  dc    a(label)\n"
             "symbol  =     x'1234'\n"
             "        ldi   a.0(symbol)\n"
-            "        ldi   a.1(symbol)\n",
+            "        ldi   a.1(symbol)\n"
+            "        lbr   x'ab23'\n",
             "          0 :                            cpu   cdp1804\n"
             "          0 :                    .. comment line\n"
             "       abcd :                            org   x'abcd'\n"
@@ -48,16 +49,18 @@ void test_asm_cdp1802() {
             "       abd3 : =1234              symbol  =     x'1234'\n"
             "       abd3 : f8 34                      ldi   a.0(symbol)\n"
             "       abd5 : f8 12                      ldi   a.1(symbol)\n"
+            "       abd7 : c0 ab 23                   lbr   x'ab23'\n");
 
-    );
-
-    assembler.setOption("use-register", "on");
+    driver.setOption("use-register", "on");
+    driver.setOption("smart-branch", "on");
 
     ASM("cdp1804",
             "        org   x'abcd'\n"
-            "        scal  r3, x'8485'\n",
+            "        scal  r3, x'8485'\n"
+            "        lbr   x'ab23'\n",
             "       abcd :                            org   x'abcd'\n"
-            "       abcd : 68 83 84 85                scal  r3, x'8485'\n");
+            "       abcd : 68 83 84 85                scal  r3, x'8485'\n"
+            "       abd1 : 30 23                      lbr   x'ab23'\n");
 }
 
 void test_dis_cdp1802() {
@@ -71,13 +74,17 @@ void test_dis_cdp1802() {
             "      org   x'abcd'\n"
             "      scal  r3, x'8485'\n"
             ".. test.bin: error: Unknown instruction\n"
-            "..     abd1 : 68 0f\n",
+            "..     abd1 : 68 0f\n"
+            "      lbr   x'ab23'\n"
+            "      br    x'ab23'\n",
             "       0 :                            cpu   1804\n"
             "    abcd :                            org   x'abcd'\n"
             "    abcd : 68 83 84 85                scal  r3, x'8485'\n"
             "test.bin: error: Unknown instruction\n"
-            "    abd1 : 68 0f\n",
-            0x68, 0x83, 0x84, 0x85, 0x68, 0x0f);
+            "    abd1 : 68 0f\n"
+            "    abd3 : c0 ab 23                   lbr   x'ab23'\n"
+            "    abd6 : 30 23                      br    x'ab23'\n",
+            0x68, 0x83, 0x84, 0x85, 0x68, 0x0f, 0xc0, 0xab, 0x23, 0x30, 0x23);
 }
 
 void run_tests() {
