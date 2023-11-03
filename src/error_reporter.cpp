@@ -78,6 +78,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Not bit addressable address");
     case OPERAND_NOT_ALIGNED:
         return PSTR("Operand not aligned");
+    case REGISTER_NOT_ALIGNED:
+        return PSTR("Register not aligned");
     case OPCODE_HAS_NO_EFFECT:
         return PSTR("Opcode has no effect");
     case REGISTERS_OVERLAPPED:

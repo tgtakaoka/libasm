@@ -341,9 +341,9 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         reg = decodeRegName(gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
         if ((mode == M_FENR || mode == M_FENW) && (size == SZ_LONG || size == SZ_QUAD) &&
                 !isRegPair(reg))
-            insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
         if ((mode == M_GENR || mode == M_GENW) && size == SZ_QUAD && !isRegPair(reg))
-            insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
+            insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
         if (scaledIndex)
             out.letter('0').letter('(');
         outRegName(out, reg);

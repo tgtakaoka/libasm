@@ -79,9 +79,7 @@ void DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68
         if (mode == M_PCDSP) {
             const Config::uintptr_t target =
                     insn.address() + insn.length() - 2 + static_cast<int16_t>(val16);
-            if (ea.size == SZ_WORD && (target % 2) != 0)
-                insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
-            if (ea.size == SZ_LONG && (target % 4) != 0)
+            if (ea.size != SZ_BYTE && (target % 2) != 0)
                 insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
             outRelAddr(out.letter('('), target, insn.address(), 16);
         } else {
@@ -94,9 +92,7 @@ void DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68
     } else if (mode == M_AWORD || mode == M_ALONG) {
         const Config::uintptr_t target =
                 (mode == M_AWORD) ? static_cast<int16_t>(insn.readUint16()) : insn.readUint32();
-        if (ea.size == SZ_WORD && (target % 2) != 0)
-            insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
-        if (ea.size == SZ_LONG && (target % 4) != 0)
+        if (ea.size != SZ_BYTE && (target % 2) != 0)
             insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
         outAbsAddr(out.letter('('), target);
     } else if (mode == M_INDX || mode == M_PCIDX) {

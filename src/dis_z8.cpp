@@ -199,7 +199,7 @@ void DisZ8::decodeWorkReg(DisInsn &insn, StrBuffer &out, Operand &op) const {
     if (op.mode == M_Irr && insn.postFormat() != PF_NONE)
         op.val16 &= ~1;
     if ((op.mode == M_rr || op.mode == M_Irr) && (op.val16 & 1) != 0)
-        op.setErrorIf(OPERAND_NOT_ALIGNED);
+        op.setErrorIf(REGISTER_NOT_ALIGNED);
     const auto reg = (op.mode == M_r || op.mode == M_Ir) ? decodeRegNum(op.val16)
                                                          : decodePairRegNum(op.val16);
     if (op.mode == M_Ir || op.mode == M_Irr)
@@ -217,7 +217,7 @@ void DisZ8::decodeRegAddr(DisInsn &insn, StrBuffer &out, Operand &op) const {
         return;
     }
     if ((op.mode == M_RR || op.mode == M_IRR) && (op.val16 & 1) != 0)
-        op.setErrorIf(OPERAND_NOT_ALIGNED);
+        op.setErrorIf(REGISTER_NOT_ALIGNED);
     if (op.mode == M_IR || op.mode == M_IRR)
         out.letter('@');
     if (op.getError())

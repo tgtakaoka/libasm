@@ -402,12 +402,12 @@ static void test_format_7() {
     TEST("QUOW",  "4(SB), 8(SB)",      0xCE, 0xB1, 0xD6, 0x04, 0x08);
     TEST("REMB",  "4(SB), 8(SB)",      0xCE, 0xB4, 0xD6, 0x04, 0x08);
 
-    ERRT("DEIB", "R1, R3", OPERAND_NOT_ALIGNED, "R3", 0xCE, 0xEC, 0x08);
-    ERRT("DEIW", "R3, R1", OPERAND_NOT_ALIGNED, "R1", 0xCE, 0x6D, 0x18);
-    ERRT("DEID", "R5, R7", OPERAND_NOT_ALIGNED, "R7", 0xCE, 0xEF, 0x29);
-    ERRT("MEIB", "R1, R3", OPERAND_NOT_ALIGNED, "R3", 0xCE, 0xE4, 0x08);
-    ERRT("MEIW", "R3, R1", OPERAND_NOT_ALIGNED, "R1", 0xCE, 0x65, 0x18);
-    ERRT("MEID", "R5, R7", OPERAND_NOT_ALIGNED, "R7", 0xCE, 0xE7, 0x29);
+    ERRT("DEIB", "R1, R3", REGISTER_NOT_ALIGNED, "R3", 0xCE, 0xEC, 0x08);
+    ERRT("DEIW", "R3, R1", REGISTER_NOT_ALIGNED, "R1", 0xCE, 0x6D, 0x18);
+    ERRT("DEID", "R5, R7", REGISTER_NOT_ALIGNED, "R7", 0xCE, 0xEF, 0x29);
+    ERRT("MEIB", "R1, R3", REGISTER_NOT_ALIGNED, "R3", 0xCE, 0xE4, 0x08);
+    ERRT("MEIW", "R3, R1", REGISTER_NOT_ALIGNED, "R1", 0xCE, 0x65, 0x18);
+    ERRT("MEID", "R5, R7", REGISTER_NOT_ALIGNED, "R7", 0xCE, 0xE7, 0x29);
 }
 
 static void test_format_8() {
@@ -452,18 +452,18 @@ static void test_format_9() {
     TEST("LFSR", "R0",  0x3E, 0x0F, 0x00);
     TEST("SFSR", "TOS", 0x3E, 0xF7, 0x05);
 
-    ERRT("MOVL", "F3, 8(SB)",   OPERAND_NOT_ALIGNED, "F3, 8(SB)",  0xBE, 0x84, 0x1E, 0x08);
-    ERRT("MOVBL", "R1, F5",     OPERAND_NOT_ALIGNED, "F5",         0x3E, 0x40, 0x09);
-    ERRT("MOVWL", "R3, F7",     OPERAND_NOT_ALIGNED, "F7",         0x3E, 0xC1, 0x19);
-    ERRT("MOVDL", "R5, F1",     OPERAND_NOT_ALIGNED, "F1",         0x3E, 0x43, 0x28);
-    ERRT("MOVDL", "16(SB), F3", OPERAND_NOT_ALIGNED, "F3",         0x3E, 0xC3, 0xD0, 0x10);
-    ERRT("MOVFL", "8(SB), F5",  OPERAND_NOT_ALIGNED, "F5",         0x3E, 0x5B, 0xD1, 0x08);
-    ERRT("MOVFL", "F1, F7",     OPERAND_NOT_ALIGNED, "F7",         0x3E, 0xDB, 0x09);
-    ERRT("MOVLF", "F1, 12(SB)", OPERAND_NOT_ALIGNED, "F1, 12(SB)", 0x3E, 0x96, 0x0E, 0x0C);
-    ERRT("MOVLF", "F3, F3",     OPERAND_NOT_ALIGNED, "F3, F3",     0x3E, 0xD6, 0x18);
-    ERRT("FLOORLD", "F5, R5",   OPERAND_NOT_ALIGNED, "F5, R5",     0x3E, 0x7B, 0x29);
-    ERRT("ROUNDLD", "F7, R5",   OPERAND_NOT_ALIGNED, "F7, R5",     0x3E, 0x63, 0x39);
-    ERRT("TRUNCLD", "F1, R5",   OPERAND_NOT_ALIGNED, "F1, R5",     0x3E, 0x6B, 0x09);
+    ERRT("MOVL", "F3, 8(SB)",   REGISTER_NOT_ALIGNED, "F3, 8(SB)",  0xBE, 0x84, 0x1E, 0x08);
+    ERRT("MOVBL", "R1, F5",     REGISTER_NOT_ALIGNED, "F5",         0x3E, 0x40, 0x09);
+    ERRT("MOVWL", "R3, F7",     REGISTER_NOT_ALIGNED, "F7",         0x3E, 0xC1, 0x19);
+    ERRT("MOVDL", "R5, F1",     REGISTER_NOT_ALIGNED, "F1",         0x3E, 0x43, 0x28);
+    ERRT("MOVDL", "16(SB), F3", REGISTER_NOT_ALIGNED, "F3",         0x3E, 0xC3, 0xD0, 0x10);
+    ERRT("MOVFL", "8(SB), F5",  REGISTER_NOT_ALIGNED, "F5",         0x3E, 0x5B, 0xD1, 0x08);
+    ERRT("MOVFL", "F1, F7",     REGISTER_NOT_ALIGNED, "F7",         0x3E, 0xDB, 0x09);
+    ERRT("MOVLF", "F1, 12(SB)", REGISTER_NOT_ALIGNED, "F1, 12(SB)", 0x3E, 0x96, 0x0E, 0x0C);
+    ERRT("MOVLF", "F3, F3",     REGISTER_NOT_ALIGNED, "F3, F3",     0x3E, 0xD6, 0x18);
+    ERRT("FLOORLD", "F5, R5",   REGISTER_NOT_ALIGNED, "F5, R5",     0x3E, 0x7B, 0x29);
+    ERRT("ROUNDLD", "F7, R5",   REGISTER_NOT_ALIGNED, "F7, R5",     0x3E, 0x63, 0x39);
+    ERRT("TRUNCLD", "F1, R5",   REGISTER_NOT_ALIGNED, "F1, R5",     0x3E, 0x6B, 0x09);
 }
 
 static void test_format_11() {
@@ -494,20 +494,20 @@ static void test_format_11() {
     TEST("SUBL", "F2, 16(SB)", 0xBE, 0x90, 0x16, 0x10);
     TEST("SUBL", "16(SB), F4", 0xBE, 0x10, 0xD1, 0x10);
 
-    ERRT("ABSL", "F1, F4",     OPERAND_NOT_ALIGNED, "F1, F4",     0xBE, 0x34, 0x09);
-    ERRT("ABSL", "F2, F3",     OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xF4, 0x10);
-    ERRT("ADDL", "F1, 16(SB)", OPERAND_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x80, 0x0E, 0x10);
-    ERRT("ADDL", "16(SB), F3", OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xC0, 0xD0, 0x10);
-    ERRT("CMPL", "F7, F4",     OPERAND_NOT_ALIGNED, "F7, F4",     0xBE, 0x08, 0x39);
-    ERRT("CMPL", "F6, F3",     OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xC8, 0x30);
-    ERRT("DIVL", "F1, 16(SB)", OPERAND_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0xA0, 0x0E, 0x10);
-    ERRT("DIVL", "-8(FP), F3", OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xE0, 0xC0, 0x78);
-    ERRT("MULL", "F7, 8(SB)",  OPERAND_NOT_ALIGNED, "F7, 8(SB)",  0xBE, 0xB0, 0x3E, 0x08);
-    ERRT("MULL", "-8(FP), F1", OPERAND_NOT_ALIGNED, "F1",         0xBE, 0x70, 0xC0, 0x78);
-    ERRT("NEGL", "F1, F4",     OPERAND_NOT_ALIGNED, "F1, F4",     0xBE, 0x14, 0x09);
-    ERRT("NEGL", "F2, F3",     OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xD4, 0x10);
-    ERRT("SUBL", "F1, 16(SB)", OPERAND_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x90, 0x0E, 0x10);
-    ERRT("SUBL", "16(SB), F3", OPERAND_NOT_ALIGNED, "F3",         0xBE, 0xD0, 0xD0, 0x10);
+    ERRT("ABSL", "F1, F4",     REGISTER_NOT_ALIGNED, "F1, F4",     0xBE, 0x34, 0x09);
+    ERRT("ABSL", "F2, F3",     REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xF4, 0x10);
+    ERRT("ADDL", "F1, 16(SB)", REGISTER_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x80, 0x0E, 0x10);
+    ERRT("ADDL", "16(SB), F3", REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xC0, 0xD0, 0x10);
+    ERRT("CMPL", "F7, F4",     REGISTER_NOT_ALIGNED, "F7, F4",     0xBE, 0x08, 0x39);
+    ERRT("CMPL", "F6, F3",     REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xC8, 0x30);
+    ERRT("DIVL", "F1, 16(SB)", REGISTER_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0xA0, 0x0E, 0x10);
+    ERRT("DIVL", "-8(FP), F3", REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xE0, 0xC0, 0x78);
+    ERRT("MULL", "F7, 8(SB)",  REGISTER_NOT_ALIGNED, "F7, 8(SB)",  0xBE, 0xB0, 0x3E, 0x08);
+    ERRT("MULL", "-8(FP), F1", REGISTER_NOT_ALIGNED, "F1",         0xBE, 0x70, 0xC0, 0x78);
+    ERRT("NEGL", "F1, F4",     REGISTER_NOT_ALIGNED, "F1, F4",     0xBE, 0x14, 0x09);
+    ERRT("NEGL", "F2, F3",     REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xD4, 0x10);
+    ERRT("SUBL", "F1, 16(SB)", REGISTER_NOT_ALIGNED, "F1, 16(SB)", 0xBE, 0x90, 0x0E, 0x10);
+    ERRT("SUBL", "16(SB), F3", REGISTER_NOT_ALIGNED, "F3",         0xBE, 0xD0, 0xD0, 0x10);
 }
 
 static void test_format_8_mmu() {
