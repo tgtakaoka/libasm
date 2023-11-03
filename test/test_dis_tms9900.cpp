@@ -30,6 +30,10 @@ static bool is9900() {
            strcmp_P("9980", disassembler.cpu_P()) == 0;
 }
 
+static bool is9980() {
+    return strcmp_P("9980", disassembler.cpu_P()) == 0;
+}
+
 static bool is9995() {
     return strcmp_P("9995", disassembler.cpu_P()) == 0;
 }
@@ -147,13 +151,13 @@ static void test_cnt_reg() {
 }
 
 static void test_src() {
-    TEST("BLWP", "@>9876",  0x0420, 0x9876);
+    TEST("BLWP", "@>3876",  0x0420, 0x3876);
     NMEM("BLWP", "@0", "0", 0x0420);
-    TEST("B",    "R13",    0x044D);
-    TEST("X",    "*R10",   0x049A);
-    TEST("CLR",  "*R12+",  0x04FC);
-    TEST("NEG",  "R0",     0x0500);
-    TEST("INV",  "@>1234", 0x0560, 0x1234);
+    TEST("B",    "R13",     0x044D);
+    TEST("X",    "*R10",    0x049A);
+    TEST("CLR",  "*R12+",   0x04FC);
+    TEST("NEG",  "R0",      0x0500);
+    TEST("INV",  "@>1234",  0x0560, 0x1234);
     TEST("INC",  "@2(R7)",          0x05A7, 0x0002);
     NMEM("INC",  "@0(R7)", "0(R7)", 0x05A7);
     TEST("INCT", "R7",     0x05C7);
@@ -204,9 +208,9 @@ static void test_src() {
     symtab.intern(-2, "neg2");
     symtab.intern(0x1000, "sym1000");
     symtab.intern(0x1234, "sym1234");
-    symtab.intern(0x9876, "sym9876");
+    symtab.intern(0x3876, "sym3876");
 
-    TEST("BLWP", "@sym9876",     0x0420, 0x9876);
+    TEST("BLWP", "@sym3876",     0x0420, 0x3876);
     TEST("DEC",  "@neg2(R7)",    0x0627, 0xFFFE);
 
     if (is9995() || is99105()) {
@@ -263,20 +267,21 @@ static void test_cnt_src() {
 }
 
 static void test_xop_src() {
-    TEST("XOP",  "@>9876, 0",  0x2C20, 0x9876);
-    TEST("XOP",  "@>9876, 15", 0x2FE0, 0x9876);
+    TEST("XOP",  "@>3876, 0",  0x2C20, 0x3876);
+    TEST("XOP",  "@>3876, 15", 0x2FE0, 0x3876);
 
     symtab.intern(10, "xop10");
+    symtab.intern(0x3876, "sym3876");
     symtab.intern(0x9876, "sym9876");
 
-    TEST("XOP",  "@sym9876, xop10",   0x2EA0, 0x9876);
+    TEST("XOP",  "@sym3876, xop10",   0x2EA0, 0x3876);
     TEST("XOP",  "@sym9876(R1), 8",   0x2E21, 0x9876);
     TEST("XOP",  "@>1234(R1), xop10", 0x2EA1, 0x1234);
 }
 
 static void test_dst_src() {
     TEST("SZC",  "@>1234(R10), @>5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST("SZCB", "@>1234, @>5678",           0x5820, 0x1234, 0x5678);
+    TEST("SZCB", "@>1234, @>3456",           0x5820, 0x1234, 0x3456);
     TEST("S",    "*R10, *R11",               0x66DA);
     TEST("SB",   "*R10+, *R11+",             0x7EFA);
     TEST("C",    "*R10+, *R10+",             0x8EBA);
@@ -286,8 +291,18 @@ static void test_dst_src() {
     TEST("MOV",  "@0(R10), @1(R11)",         0xCAEA, 0x0000, 0x0001);
     TEST("MOVB", "R10, R11",                 0xD2CA);
     TEST("SOC",  "@>1234, @>5678(R11)",      0xEAE0, 0x1234, 0x5678);
-    TEST("SOCB", "@>1234(R10), @>5678",      0xF82A, 0x1234, 0x5678);
+    TEST("SOC",  "@>1234, @>5679(R11)",      0xEAE0, 0x1234, 0x5679);
+    ERRT("SOC",  "@>1235, @>5678(R11)", OPERAND_NOT_ALIGNED, ">1235, @>5678(R11)", 0xEAE0, 0x1235, 0x5678);
+    TEST("SOCB", "@>1234(R10), @>3456",      0xF82A, 0x1234, 0x3456);
+    TEST("SOCB", "@>1235(R10), @>3456",      0xF82A, 0x1235, 0x3456);
+    TEST("SOCB", "@>1234(R10), @>3457",      0xF82A, 0x1234, 0x3457);
 
+    if (is9980()) {
+        TEST("A",  "@>3FFE, R11",                               0xA2E0, 0x3FFE);
+        ERRT("A",  "@>4000, R11", OVERFLOW_RANGE, ">4000, R11", 0xA2E0, 0x4000);
+        TEST("AB", "R10, @>3FFF",                               0xB80A, 0x3FFF);
+        ERRT("AB", "R10, @>4000", OVERFLOW_RANGE, ">4000",      0xB80A, 0x4000);
+    }
     if (is99105()) {
         TEST("SM", "@>1234(R10), @>5678(R11)",            0x0029, 0x4AEA, 0x1234, 0x5678);
         NMEM("SM", "@>1234(R10), @0(R11)",      "0(R11)", 0x0029, 0x4AEA, 0x1234);
@@ -303,14 +318,15 @@ static void test_dst_src() {
     symtab.intern(0x0000, "zero");
     symtab.intern(0x1234, "sym1234");
     symtab.intern(0x4000, "sym4000");
+    symtab.intern(0x3456, "sym3456");
     symtab.intern(0x5678, "sym5678");
 
     TEST("SZC",  "@sym1234(R10), @sym5678(R11)", 0x4AEA, 0x1234, 0x5678);
-    TEST("SZCB", "@sym1234, @sym5678",           0x5820, 0x1234, 0x5678);
+    TEST("SZCB", "@sym1234, @sym3456",           0x5820, 0x1234, 0x3456);
     TEST("AB",   "R10, @sym4000(R11)",           0xBACA, 0x4000);
     TEST("MOV",  "@zero(R10), @1(R11)",          0xCAEA, 0x0000, 0x0001);
     TEST("SOC",  "@sym1234, @sym5678(R11)",      0xEAE0, 0x1234, 0x5678);
-    TEST("SOCB", "@sym1234(R10), @sym5678",      0xF82A, 0x1234, 0x5678);
+    TEST("SOCB", "@sym1234(R10), @sym3456",      0xF82A, 0x1234, 0x3456);
 
     if (is99105()) {
         TEST("SM", "@sym1234(R10), @sym5678(R11)", 0x0029, 0x4AEA, 0x1234, 0x5678);

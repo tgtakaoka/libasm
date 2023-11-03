@@ -69,8 +69,11 @@ void DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) c
     }
     out.letter('@');
     const auto addr = insn.readUint16();
-    if (reg == 0 && !insn.byteOp() && addr % 2 != 0)
-        insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
+    if (reg == 0) {
+        const auto error = checkAddr(addr);
+        if ((error && !insn.byteOp()) || error == OVERFLOW_RANGE)
+            insn.setErrorIf(out, error);
+    }
     outHex(out, addr, 16);
     if (reg != 0)
         outRegName(out.letter('('), reg).letter(')');

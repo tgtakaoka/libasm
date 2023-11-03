@@ -22,17 +22,17 @@
       BLWP  *R0+
       B     R0
       B     *R0
-      B     @6162H
+      B     @0102H
       B     @6263H(R1)
       B     *R0+
       X     R0
       X     *R0
-      X     @0A1A2H
+      X     @0102H
       X     @0A2A3H(R1)
       X     *R0+
       CLR   R0
       CLR   *R0
-      CLR   @0E1E2H
+      CLR   @0102H
       CLR   @0E2E3H(R1)
       CLR   *R0+
       NEG   R0
@@ -42,17 +42,17 @@
       NEG   *R0+
       INV   R0
       INV   *R0
-      INV   @6162H
+      INV   @0102H
       INV   @6263H(R1)
       INV   *R0+
       INC   R0
       INC   *R0
-      INC   @0A1A2H
+      INC   @0102H
       INC   @0A2A3H(R1)
       INC   *R0+
       INCT  R0
       INCT  *R0
-      INCT  @0E1E2H
+      INCT  @0102H
       INCT  @0E2E3H(R1)
       INCT  *R0+
       DEC   R0
@@ -62,17 +62,17 @@
       DEC   *R0+
       DECT  R0
       DECT  *R0
-      DECT  @6162H
+      DECT  @0102H
       DECT  @6263H(R1)
       DECT  *R0+
       BL    R0
       BL    *R0
-      BL    @0A1A2H
+      BL    @0102H
       BL    @0A2A3H(R1)
       BL    *R0+
       SWPB  R0
       SWPB  *R0
-      SWPB  @0E1E2H
+      SWPB  @0102H
       SWPB  @0E2E3H(R1)
       SWPB  *R0+
       SETO  R0
@@ -82,7 +82,7 @@
       SETO  *R0+
       ABS   R0
       ABS   *R0
-      ABS   @6162H
+      ABS   @0102H
       ABS   @6263H(R1)
       ABS   *R0+
       SRA   R0, R0
@@ -195,7 +195,7 @@
       SZC   *R0+, @3132H
       SZC   R0, @4142H(R1)
       SZC   *R0, @5152H(R1)
-      SZC   @6162H, @6364H(R1)
+      SZC   @0102H, @0304H(R1)
       SZC   @6263H(R1), @6465H(R1)
       SZC   *R0+, @7172H(R1)
       SZC   R0, *R0+
@@ -220,7 +220,7 @@
       SZCB  *R0+, @3132H
       SZCB  R0, @4142H(R1)
       SZCB  *R0, @5152H(R1)
-      SZCB  @6162H, @6364H(R1)
+      SZCB  @1, @0203H(R1)
       SZCB  @6263H(R1), @6465H(R1)
       SZCB  *R0+, @7172H(R1)
       SZCB  R0, *R0+
@@ -245,7 +245,7 @@
       S     *R0+, @3132H
       S     R0, @4142H(R1)
       S     *R0, @5152H(R1)
-      S     @6162H, @6364H(R1)
+      S     @0102H, @0304H(R1)
       S     @6263H(R1), @6465H(R1)
       S     *R0+, @7172H(R1)
       S     R0, *R0+
@@ -270,7 +270,7 @@
       SB    *R0+, @3132H
       SB    R0, @4142H(R1)
       SB    *R0, @5152H(R1)
-      SB    @6162H, @6364H(R1)
+      SB    @1, @0203H(R1)
       SB    @6263H(R1), @6465H(R1)
       SB    *R0+, @7172H(R1)
       SB    R0, *R0+
@@ -295,7 +295,7 @@
       C     *R0+, @3132H
       C     R0, @4142H(R1)
       C     *R0, @5152H(R1)
-      C     @6162H, @6364H(R1)
+      C     @0102H, @0304H(R1)
       C     @6263H(R1), @6465H(R1)
       C     *R0+, @7172H(R1)
       C     R0, *R0+
@@ -320,7 +320,7 @@
       CB    *R0+, @3132H
       CB    R0, @4142H(R1)
       CB    *R0, @5152H(R1)
-      CB    @6162H, @6364H(R1)
+      CB    @1, @0203H(R1)
       CB    @6263H(R1), @6465H(R1)
       CB    *R0+, @7172H(R1)
       CB    R0, *R0+
@@ -345,7 +345,7 @@
       A     *R0+, @3132H
       A     R0, @4142H(R1)
       A     *R0, @5152H(R1)
-      A     @6162H, @6364H(R1)
+      A     @0102H, @0304H(R1)
       A     @6263H(R1), @6465H(R1)
       A     *R0+, @7172H(R1)
       A     R0, *R0+
@@ -370,7 +370,7 @@
       AB    *R0+, @3132H
       AB    R0, @4142H(R1)
       AB    *R0, @5152H(R1)
-      AB    @6162H, @6364H(R1)
+      AB    @1, @0203H(R1)
       AB    @6263H(R1), @6465H(R1)
       AB    *R0+, @7172H(R1)
       AB    R0, *R0+
@@ -395,7 +395,7 @@
       MOV   *R0+, @3132H
       MOV   R0, @4142H(R1)
       MOV   *R0, @5152H(R1)
-      MOV   @6162H, @6364H(R1)
+      MOV   @0102H, @0304H(R1)
       MOV   @6263H(R1), @6465H(R1)
       MOV   *R0+, @7172H(R1)
       MOV   R0, *R0+
@@ -420,7 +420,7 @@
       MOVB  *R0+, @3132H
       MOVB  R0, @4142H(R1)
       MOVB  *R0, @5152H(R1)
-      MOVB  @6162H, @6364H(R1)
+      MOVB  @1, @0203H(R1)
       MOVB  @6263H(R1), @6465H(R1)
       MOVB  *R0+, @7172H(R1)
       MOVB  R0, *R0+
@@ -445,7 +445,7 @@
       SOC   *R0+, @3132H
       SOC   R0, @4142H(R1)
       SOC   *R0, @5152H(R1)
-      SOC   @6162H, @6364H(R1)
+      SOC   @0102H, @0304H(R1)
       SOC   @6263H(R1), @6465H(R1)
       SOC   *R0+, @7172H(R1)
       SOC   R0, *R0+
@@ -470,7 +470,7 @@
       SOCB  *R0+, @3132H
       SOCB  R0, @4142H(R1)
       SOCB  *R0, @5152H(R1)
-      SOCB  @6162H, @6364H(R1)
+      SOCB  @1, @0203H(R1)
       SOCB  @6263H(R1), @6465H(R1)
       SOCB  *R0+, @7172H(R1)
       SOCB  R0, *R0+
