@@ -54,8 +54,7 @@ enum AddrMode : uint8_t {
     M_BFLEN = 26,  // Bit Field Length: 1~32
     M_LEN32 = 27,  // Length: 1~32
     M_LEN16 = 28,  // Length: 1~16
-    M_LEN8 = 29,   // Length: 1~8
-    M_LEN4 = 30,   // Length: 1~4
+    M_ZERO = 29,   // 00000 of GEN field
 };
 
 enum Ex2Mode : uint8_t {

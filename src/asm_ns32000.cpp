@@ -484,23 +484,19 @@ void AsmNs32000::emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) con
     uint8_t len = op.getError() ? 0 : op.val32;
     if (op.isOK()) {
         const auto val = static_cast<int32_t>(op.val32);
-        if (val <= 0)
+        if (val <= 0) {
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        if (val > 16)
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        if (mode == M_LEN4) {
+        } else if (insn.size() == SZ_DOUBLE) {
             if (len > 4)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
             len *= 4;
-        }
-        if (mode == M_LEN8) {
+        } else if (insn.size() == SZ_WORD) {
             if (len > 8)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
             len *= 2;
-        }
-        if (mode == M_LEN16) {
+        } else if (insn.size() == SZ_BYTE) {
             if (len > 16)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
@@ -707,8 +703,6 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
     case M_DISP:
         emitDisplacement(insn, op, op.val32);
         break;
-    case M_LEN4:
-    case M_LEN8:
     case M_LEN16:
         emitLength(insn, mode, op);
         break;
@@ -775,13 +769,10 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) {
     const AddrMode dst = insn.dst();
     const AddrMode ex1 = insn.ex1();
     const AddrMode ex2 = insn.ex2();
-    const OprSize size = insn.size();
-    const OprSize srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
-    emitOperand(insn, src, srcSize, insn.srcOp, insn.srcPos(), insn.srcOp);
-    const OprSize dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
-    emitOperand(insn, dst, dstSize, insn.dstOp, insn.dstPos(), insn.srcOp);
-    emitOperand(insn, ex1, size, insn.ex1Op, insn.ex1Pos(), insn.dstOp);
-    emitOperand(insn, ex2, size, insn.ex2Op, insn.ex2Pos(), insn.ex1Op);
+    emitOperand(insn, src, insn.srcSize(), insn.srcOp, insn.srcPos(), insn.srcOp);
+    emitOperand(insn, dst, insn.dstSize(), insn.dstOp, insn.dstPos(), insn.srcOp);
+    emitOperand(insn, ex1, insn.size(), insn.ex1Op, insn.ex1Pos(), insn.dstOp);
+    emitOperand(insn, ex2, insn.size(), insn.ex2Op, insn.ex2Pos(), insn.ex1Op);
     insn.emitInsn();
     return setError(insn);
 }

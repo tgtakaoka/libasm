@@ -405,22 +405,22 @@ static constexpr uint8_t INDEX_3_3[] PROGMEM = {
 
 // Format 5: |00000|sho| |t|0|_op_|ii| |0000|1110|
 static constexpr Entry FORMAT_5_0[] PROGMEM = {
-    E1(0x0B, TEXT_SETCFG, NONE, M_CONF, P_SHORT),
+    E2(0x0B, TEXT_SETCFG, NONE, M_CONF, M_ZERO, P_SHORT, P_GEN1),
 };
 // Format 5: |00000|fla| |g|0|_op_|ii| |0000|1110|
 static constexpr Entry FORMAT_5_1[] PROGMEM = {
-    E1(0x00, TEXT_MOVSB, BYTE,   M_SOPT, P_SHORT),
-    E1(0x01, TEXT_MOVSW, WORD,   M_SOPT, P_SHORT),
-    E1(0x03, TEXT_MOVSD, DOUBLE, M_SOPT, P_SHORT),
-    E1(0x80, TEXT_MOVST, BYTE,   M_SOPT, P_SHORT),
-    E1(0x04, TEXT_CMPSB, BYTE,   M_SOPT, P_SHORT),
-    E1(0x05, TEXT_CMPSW, WORD,   M_SOPT, P_SHORT),
-    E1(0x07, TEXT_CMPSD, DOUBLE, M_SOPT, P_SHORT),
-    E1(0x84, TEXT_CMPST, BYTE,   M_SOPT, P_SHORT),
-    E1(0x0C, TEXT_SKPSB, BYTE,   M_SOPT, P_SHORT),
-    E1(0x0D, TEXT_SKPSW, WORD,   M_SOPT, P_SHORT),
-    E1(0x0F, TEXT_SKPSD, DOUBLE, M_SOPT, P_SHORT),
-    E1(0x8C, TEXT_SKPST, BYTE,   M_SOPT, P_SHORT),
+    E2(0x00, TEXT_MOVSB, BYTE,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x01, TEXT_MOVSW, WORD,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x03, TEXT_MOVSD, DOUBLE, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x80, TEXT_MOVST, BYTE,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x04, TEXT_CMPSB, BYTE,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x05, TEXT_CMPSW, WORD,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x07, TEXT_CMPSD, DOUBLE, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x84, TEXT_CMPST, BYTE,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x0C, TEXT_SKPSB, BYTE,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x0D, TEXT_SKPSW, WORD,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x0F, TEXT_SKPSD, DOUBLE, M_SOPT, M_ZERO, P_SHORT, P_GEN1),
+    E2(0x8C, TEXT_SKPST, BYTE,   M_SOPT, M_ZERO, P_SHORT, P_GEN1),
 };
 static constexpr uint8_t INDEX_5_0[] PROGMEM = {
       0,  // TEXT_SETCFG
@@ -533,11 +533,11 @@ static constexpr uint8_t INDEX_6[] PROGMEM = {
 // Format 7: |gen1_|gen| |2_|_op_|ii| |1100|1110|
 static constexpr Entry FORMAT_7[] PROGMEM = {
     E3(0x00, TEXT_MOVMB,  BYTE,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
-    E3(0x01, TEXT_MOVMW,  WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN8,  P_DISP),
-    E3(0x03, TEXT_MOVMD,  DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN4,  P_DISP),
+    E3(0x01, TEXT_MOVMW,  WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
+    E3(0x03, TEXT_MOVMD,  DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
     E3(0x04, TEXT_CMPMB,  BYTE,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
-    E3(0x05, TEXT_CMPMW,  WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN8,  P_DISP),
-    E3(0x07, TEXT_CMPMD,  DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN4,  P_DISP),
+    E3(0x05, TEXT_CMPMW,  WORD,   M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
+    E3(0x07, TEXT_CMPMD,  DOUBLE, M_GENA, M_GENA, P_GEN1, P_GEN2, M_LEN16,  P_DISP),
     E4(0x08, TEXT_INSSB,  BYTE,   M_GENR, M_GENW, P_GEN1, P_GEN2, M_BFOFF, EM2_BFLEN, P_IMPL, EP2_IMPL),
     E4(0x09, TEXT_INSSW,  WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2, M_BFOFF, EM2_BFLEN, P_IMPL, EP2_IMPL),
     E4(0x0B, TEXT_INSSD,  DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2, M_BFOFF, EM2_BFLEN, P_IMPL, EP2_IMPL),
@@ -626,6 +626,8 @@ static constexpr Entry FORMAT_8_1[] PROGMEM = {
 };
 static constexpr Entry FORMAT_8_2[] PROGMEM = {
     E3(0x03, TEXT_CVTP, DOUBLE, M_GREG, M_GENA, P_REG,  P_GEN1,  M_GENW, P_GEN2),
+};
+static constexpr Entry FORMAT_8_2_1[] PROGMEM = {
     E2(0x04, TEXT_FFSB, BYTE,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x05, TEXT_FFSW, WORD,   M_GENR, M_GENW, P_GEN1, P_GEN2),
     E2(0x07, TEXT_FFSD, DOUBLE, M_GENR, M_GENW, P_GEN1, P_GEN2),
@@ -658,9 +660,11 @@ static constexpr uint8_t INDEX_8_1[] PROGMEM = {
 };
 static constexpr uint8_t INDEX_8_2[] PROGMEM = {
       0,  // TEXT_CVTP
-      1,  // TEXT_FFSB
-      3,  // TEXT_FFSD
-      2,  // TEXT_FFSW
+};
+static constexpr uint8_t INDEX_8_2_1[] PROGMEM = {
+      0,  // TEXT_FFSB
+      2,  // TEXT_FFSD
+      1,  // TEXT_FFSW
 };
 static constexpr uint8_t INDEX_8_3[] PROGMEM = {
       0,  // TEXT_INSB
@@ -690,8 +694,8 @@ static constexpr Entry FORMAT_9[] PROGMEM = {
     E2(0x04, TEXT_MOVBF,   BYTE,   M_GENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x05, TEXT_MOVWF,   WORD,   M_GENR, M_FENW, P_GEN1, P_GEN2),
     E2(0x07, TEXT_MOVDF,   DOUBLE, M_GENR, M_FENW, P_GEN1, P_GEN2),
-    E1(0x0F, TEXT_LFSR,    DOUBLE, M_GENR, P_GEN1),
-    E1(0x37, TEXT_SFSR,    DOUBLE, M_GENW, P_GEN2),
+    E2(0x0F, TEXT_LFSR,    DOUBLE, M_GENR, M_ZERO, P_GEN1, P_GEN2),
+    E2(0x37, TEXT_SFSR,    DOUBLE, M_GENW, M_ZERO, P_GEN2, P_GEN1),
     // gen1 must be register pair
     W2(0x16, TEXT_MOVLF,   FLOAT,  M_FENR, M_FENW, P_GEN1, P_GEN2, true, false),
     // gen2 must be register pair
@@ -786,8 +790,8 @@ static constexpr uint8_t INDEX_11[] PROGMEM = {
 
 // Format 14: |gen1_|sho| |t|0|_op_|ii| |0001|1110|
 static constexpr Entry FORMAT_14_1[] PROGMEM = {
-    E1(0x03, TEXT_RDVAL, DOUBLE, M_GENA, P_GEN1),
-    E1(0x07, TEXT_WRVAL, DOUBLE, M_GENA, P_GEN1),
+    E2(0x03, TEXT_RDVAL, DOUBLE, M_GENA, M_ZERO, P_GEN1, P_GEN2),
+    E2(0x07, TEXT_WRVAL, DOUBLE, M_GENA, M_ZERO, P_GEN1, P_GEN2),
 };
 static constexpr Entry FORMAT_14_2[] PROGMEM = {
     E2(0x0B, TEXT_LMR, DOUBLE, M_MREG, M_GENR, P_SHORT, P_GEN1),
@@ -837,6 +841,7 @@ static constexpr EntryPage NS32032_PAGES[] PROGMEM = {
         {0xCE, 0xC0, 1, ARRAY_RANGE(FORMAT_7), ARRAY_RANGE(INDEX_7)},
         {0x2E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_1), ARRAY_RANGE(INDEX_8_1)},
         {0x6E, 0xF8, 1, ARRAY_RANGE(FORMAT_8_2), ARRAY_RANGE(INDEX_8_2)},
+        {0x6E, 0xC0, 1, ARRAY_RANGE(FORMAT_8_2_1), ARRAY_RANGE(INDEX_8_2_1)},
         {0xAE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_3), ARRAY_RANGE(INDEX_8_3)},
         {0xEE, 0xF8, 1, ARRAY_RANGE(FORMAT_8_4), ARRAY_RANGE(INDEX_8_4)},
 };
@@ -940,11 +945,11 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IMM)
         return table == M_GENR || table == M_GENC || table == M_FENR || table == M_DISP ||
                table == M_INT4 || table == M_REL || table == M_BFOFF || table == M_BFLEN ||
-               table == M_LEN32 || table == M_LEN16 || table == M_LEN8 || table == M_LEN4;
+            table == M_LEN32 || table == M_LEN16;
     if (opr == M_FREG)
         return table == M_FENR || table == M_FENW;
     if (opr == M_NONE)
-        return table == M_RLST || table == M_CONF || table == M_SOPT;
+        return table == M_RLST || table == M_CONF || table == M_SOPT || table == M_ZERO;
     return false;
 }
 

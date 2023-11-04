@@ -173,26 +173,31 @@ void DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
     Displacement disp;
     if (readDisplacement(insn, disp))
         insn.setErrorIf(out, disp);
-    if (disp.val32 >= 0 && disp.val32 < 16) {
-        uint8_t len = disp.val32;
-        if (mode == M_LEN8) {
-            if (len % 2)
-                insn.setErrorIf(out, ILLEGAL_CONSTANT);
-            len /= 2;
-        }
-        if (mode == M_LEN4) {
-            if (len % 4)
-                insn.setErrorIf(out, ILLEGAL_CONSTANT);
-            len /= 4;
-        }
-        len++;
-        outDec(out, len, 5);
-        return;
-    }
     if (disp.val32 < 0) {
         insn.setErrorIf(out, ILLEGAL_CONSTANT);
-    } else if (disp.val32 >= 16) {
-        insn.setErrorIf(out, OVERFLOW_RANGE);
+    } else {
+        uint8_t len = disp.val32;
+        if (len >= 16)
+            insn.setErrorIf(out, OVERFLOW_RANGE);
+        if (insn.size() == SZ_DOUBLE) {
+            if (len % 4) {
+                insn.setErrorIf(out, ILLEGAL_CONSTANT);
+            } else {
+                len /= 4;
+                len++;
+            }
+        } else if (insn.size() == SZ_WORD) {
+            if (len % 2) {
+                insn.setErrorIf(out, ILLEGAL_CONSTANT);
+            } else {
+                len /= 2;
+                len++;
+            }
+        } else if (insn.size() == SZ_BYTE) {
+            len++;
+        }
+        outDec(out, len, 5);
+        return;
     }
     outDisplacement(out, disp);
 }
@@ -521,8 +526,6 @@ void DisNs32000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         decodeDisplacement(insn, out, mode);
         break;
     case M_LEN16:
-    case M_LEN8:
-    case M_LEN4:
         decodeLength(insn, out, mode);
         break;
     default:
@@ -548,13 +551,18 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) {
 
     const auto size = insn.size();
     const auto ex1 = insn.ex1();
-    const auto srcSize = (ex1 == M_NONE && insn.ex1Pos() != P_NONE) ? SZ_QUAD : size;
-    decodeOperand(insn, out, insn.src(), insn.srcPos(), srcSize, srcIdxError);
+    decodeOperand(insn, out, insn.src(), insn.srcPos(), insn.srcSize(), srcIdxError);
     const auto dst = insn.dst();
-    if (dst != M_NONE) {
+    if (dst == M_ZERO) {
+        const auto field = getOprField(insn, insn.dstPos());
+        if (field != 0) {
+            out.reset();
+            insn.nameBuffer().reset();
+            insn.setError(UNKNOWN_INSTRUCTION);
+        }
+    } else if (dst != M_NONE) {
         const auto ex2 = insn.ex2();
-        const auto dstSize = (ex2 == M_NONE && insn.ex2Pos() != P_NONE) ? SZ_QUAD : size;
-        decodeOperand(insn, out.comma(), dst, insn.dstPos(), dstSize, dstIdxError);
+        decodeOperand(insn, out.comma(), dst, insn.dstPos(), insn.dstSize(), dstIdxError);
         if (ex1 != M_NONE) {
             decodeOperand(insn, out.comma(), ex1, insn.ex1Pos(), size, ex1IdxError);
             if (ex2 != M_NONE && ex2 != M_BFLEN)
