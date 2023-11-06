@@ -91,9 +91,11 @@ void DisCdp1802::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) con
         outHex(out, opCode & 7, 3);
         break;
     case M_ADDR:
+    case M_LONG:
         outAbsAddr(out, insn.readUint16());
         break;
     case M_PAGE:
+    case M_SHRT:
         outAbsAddr(out, inpage(insn.address() + 2, insn.readByte()));
         break;
     default:

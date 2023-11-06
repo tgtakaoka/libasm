@@ -28,6 +28,8 @@ namespace {
 // clang-format off
 constexpr char OPT_INT_LIST_RADIX[]  PROGMEM = "list-radix";
 constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
+constexpr char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
+constexpr char OPT_DESC_SMART_BRANCH[] PROGMEM = "optimize branch instruction";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_ALIGN,  &Assembler::alignOrigin},
@@ -45,12 +47,25 @@ Assembler::Assembler(
       _pseudos(pseudos),
       _commonOptions(&_opt_listRadix),
       _options(option),
-      _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX) {
+      _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
+              &_opt_smartBranch),
+      _opt_smartBranch(
+              this, &Assembler::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH) {
+    Assembler::reset();
+}
+
+void Assembler::reset() {
     setListRadix(RADIX_16);
+    setSmartBranch(false);
 }
 
 Error Assembler::setListRadix(int32_t radix) {
     _listRadix = static_cast<Radix>(radix == 8 ? RADIX_8 : RADIX_16);
+    return OK;
+}
+
+Error Assembler::setSmartBranch(bool enable) {
+    _smartBranch = enable;
     return OK;
 }
 

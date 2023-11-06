@@ -30,18 +30,31 @@ void test_asm_i8051() {
     PREP_ASM(i8051::AsmI8051, IntelDirective);
 
     driver.setUpperHex(false);
+    driver.setOption("smart-branch", "on");
 
     ASM("i8051",
             "        cpu   i8051\n"
             "; comment line\n"
             "        org   0abcdh\n"
             "data1:  equ   0b0h\n"
-            "        anl   c, /data1.1\n",
+            "        anl   c, /data1.1\n"
+            "        ljmp  label2\n"
+            "        lcall label2\n"
+            "        ajmp  label3\n"
+            "        acall label3\n"
+            "label2: equ   0ac00h\n"
+            "label3: equ   0b000h\n",
             "          0 :                            cpu   i8051\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : =b0                data1:  equ   0b0h\n"
-            "       abcd : b0 b1                      anl   c, /data1.1\n");
+            "       abcd : b0 b1                      anl   c, /data1.1\n"
+            "       abcf : 81 00                      ljmp  label2\n"
+            "       abd1 : 91 00                      lcall label2\n"
+            "       abd3 : 02 b0 00                   ajmp  label3\n"
+            "       abd6 : 12 b0 00                   acall label3\n"
+            "       abd9 : =ac00              label2: equ   0ac00h\n"
+            "       abd9 : =b000              label3: equ   0b000h\n");
 }
 
 void test_dis_i8051() {

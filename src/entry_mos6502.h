@@ -58,7 +58,7 @@ enum AddrMode : uint8_t {
     I_DPG = 10 | indir_bm,  // Direct page indirect: (d)
     L_DPG = 10 | longi_bm,  // Direct page long indirect: [d]
     M_REL = 11,             // Relative: r8
-    M_RELL = 12,            // Relative long: r16
+    M_LREL = 12,            // Relative long: r16
     M_BANK = 13,            // Bank address: k8
     // Direct page indexed with X:           M_DPG,  M_REGX, M_NONE: d,X
     // Direct page indexed with Y:           M_DPG,  M_REGY, M_NONE: d,Y

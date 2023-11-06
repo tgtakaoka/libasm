@@ -1714,6 +1714,31 @@ static void test_jump_call() {
     TEST("RET P",   0xFE, 0xDD);
     TEST("RET NE",  0xFE, 0xDE);
     TEST("RET UGE", 0xFE, 0xDF);
+
+    TEST("option smart-branch, on");
+
+    ATEST(0x1000, "JR C,$-126", 0xC7, 0x80);
+    ATEST(0x1000, "JR C,$+129", 0xC7, 0x7F);
+    AERRT(0x1000, "JR C,$-127", OPERAND_TOO_FAR, "$-127", 0xC7, 0x7F);
+    AERRT(0x1000, "JR C,$+130", OPERAND_TOO_FAR, "$+130", 0xC7, 0x80);
+
+    ATEST(0x1000, "JR $-7EH",   0xC8, 0x80);
+    ATEST(0x1000, "JR $+81H",   0xC8, 0x7F);
+    ATEST(0x1000, "JR $-7FH",   0x1B, 0x7F, 0xFF);
+    ATEST(0x1000, "JR $+82H",   0x1B, 0x80, 0x00);
+    ATEST(0x9000, "JR $-7FFEH", 0x1B, 0x00, 0x80);
+    AERRT(0x9000, "JR $-7FFFH", OVERFLOW_RANGE, "$-7FFFH", 0x1B, 0xFF, 0x7F);
+    ATEST(0x1000, "JR $+8001H", 0x1B, 0xFF, 0x7F);
+    AERRT(0x1000, "JR $+8002H", OVERFLOW_RANGE, "$+8002H", 0x1B, 0x00, 0x80);
+
+    ATEST(0x1000, "JRL $-7EH",   0xC8, 0x80);
+    ATEST(0x1000, "JRL $+81H",   0xC8, 0x7F);
+    ATEST(0x1000, "JRL $-7FH",   0x1B, 0x7F, 0xFF);
+    ATEST(0x1000, "JRL $+82H",   0x1B, 0x80, 0x00);
+    ATEST(0x9000, "JRL $-7FFEH", 0x1B, 0x00, 0x80);
+    AERRT(0x9000, "JRL $-7FFFH", OVERFLOW_RANGE, "$-7FFFH", 0x1B, 0xFF, 0x7F);
+    ATEST(0x1000, "JRL $+8001H", 0x1B, 0xFF, 0x7F);
+    AERRT(0x1000, "JRL $+8002H", OVERFLOW_RANGE, "$+8002H", 0x1B, 0x00, 0x80);
 }
 
 static void test_comment() {
@@ -1758,6 +1783,13 @@ static void test_undef() {
     ERUS("BIT UNDEF,B",       "UNDEF,B",       0xF8, 0xA8);
     ERUS("SET UNDEF,(UNDEF)", "UNDEF,(UNDEF)", 0xB8, 0x00);
     ERUS("RES 6,(UNDEF)",     "UNDEF)",        0xB6, 0x00);
+
+    ERUS("JRL UNDEF", "UNDEF", 0x1B, 0x00, 0x00);
+    ERUS("JR  UNDEF", "UNDEF", 0xC8, 0x00);
+
+    TEST("option smart-branch, on");
+    ERUS("JRL UNDEF", "UNDEF", 0x1B, 0x00, 0x00);
+    ERUS("JR  UNDEF", "UNDEF", 0x1B, 0x00, 0x00);
 }
 
 static void test_data_constant() {

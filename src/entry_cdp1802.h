@@ -32,7 +32,9 @@ enum AddrMode : uint8_t {
     M_IMM8 = 3,  // Immediate, 8 bit
     M_PAGE = 4,  // Page offset, 8 bit
     M_ADDR = 5,  // Absolute address, 16 bit
-    M_IOAD = 6,  // IO address, 1~7
+    M_SHRT = 6,  // Page offser, has M_LONG counterpart
+    M_LONG = 7,  // Absolute address, has M_SHRT counterpar
+    M_IOAD = 8,  // IO address, 1~7
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -58,8 +60,8 @@ private:
     const Flags _flags;
 
     static constexpr int opr1_gp = 0;
-    static constexpr int opr2_gp = 3;
-    static constexpr uint8_t mode_gm = 0x07;
+    static constexpr int opr2_gp = 4;
+    static constexpr uint8_t mode_gm = 0xF;
 };
 
 }  // namespace cdp1802

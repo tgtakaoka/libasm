@@ -62,6 +62,7 @@ void test_asm_w65816() {
     PREP_ASM(mos6502::AsmMos6502, MostekDirective);
 
     driver.setUpperHex(false);
+    driver.setOption("smart-branch", "on");
 
     ASM("w65c816",
             "        cpu   w65c816\n"
@@ -70,14 +71,22 @@ void test_asm_w65816() {
             "        *=$abcdef\n"
             "        sbc   label1\n"
             "        longa on\n"
-            "        adc   #$1234\n",
+            "        adc   #$1234\n"
+            "        brl   label2\n"
+            "        bra   label3\n"
+            "label2 = $abce00\n"
+            "label3 = $abd000\n",
             "          0 :                            cpu   w65c816\n"
             "          0 :                    ; comment line\n"
             "          0 : =f2f1f0            label1 = $f2f1f0\n"
             "     abcdef :                            *=$abcdef\n"
             "     abcdef : ef f0 f1 f2                sbc   label1\n"
             "     abcdf3 :                            longa on\n"
-            "     abcdf3 : 69 34 12                   adc   #$1234\n");
+            "     abcdf3 : 69 34 12                   adc   #$1234\n"
+            "     abcdf6 : 80 08                      brl   label2\n"
+            "     abcdf8 : 82 05 02                   bra   label3\n"
+            "     abcdfb : =abce00            label2 = $abce00\n"
+            "     abcdfb : =abd000            label3 = $abd000\n");
 }
 
 void test_dis_mos6502() {

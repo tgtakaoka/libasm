@@ -32,8 +32,6 @@ namespace {
 // clang-format off
 constexpr char OPT_BOOL_USE_REGISTER[] PROGMEM = "use-register";
 constexpr char OPT_DESC_USE_REGISTER[] PROGMEM = "enable register name Rn";
-constexpr char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
-constexpr char OPT_DESC_SMART_BRANCH[] PROGMEM = "enable optimizing to short branch";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DC, &Assembler::defineDataConstant, Assembler::DATA_BYTE_OR_WORD},
@@ -86,25 +84,17 @@ const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
 AsmCdp1802::AsmCdp1802(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE, &_opt_useReg),
       Config(TABLE),
-      _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER,
-              &_opt_smartBranch),
-      _opt_smartBranch(
-              this, &AsmCdp1802::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH) {
+      _opt_useReg(this, &AsmCdp1802::setUseReg, OPT_BOOL_USE_REGISTER, OPT_DESC_USE_REGISTER) {
     reset();
 }
 
 void AsmCdp1802::reset() {
+    Assembler::reset();
     setUseReg(false);
-    setSmartBranch(false);
 }
 
 Error AsmCdp1802::setUseReg(bool enable) {
     _useReg = enable;
-    return OK;
-}
-
-Error AsmCdp1802::setSmartBranch(bool enable) {
-    _smartBranch = enable;
     return OK;
 }
 
@@ -149,27 +139,44 @@ const Functor *RcaFunctionTable::lookupFunction(const StrScanner &name) const {
     return nullptr;
 }
 
+constexpr Config::opcode_t BR = 0x30;
+constexpr Config::opcode_t LBR = 0xC0;
+
+void intraBranch(AsmInsn &insn) {
+    const auto cc = insn.opCode() & 0xF;
+    insn.setOpCode(BR | cc);  // Bxx, convert to intra-page branch
+}
+
+void interBranch(AsmInsn &insn) {
+    const auto cc = insn.opCode() & 0xF;
+    insn.setOpCode(LBR | cc);  // LBxx, convert to inter-page branch
+}
+
 }  // namespace
 
 void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) const {
-    const Config::uintptr_t base = insn.address() + 2;
-    const Config::uintptr_t target = op.getError() ? base : op.val16;
-    if (mode == M_PAGE) {
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val16;
+    if (mode == M_PAGE || (mode == M_SHRT && !_smartBranch)) {
         if (page(target) != page(base))
             insn.setErrorIf(op, OVERWRAP_PAGE);
+    intra_page:
         insn.emitInsn();
         insn.emitByte(target);
         return;
     }
-    if (_smartBranch && page(target) == page(base)) {
-        const auto opc = insn.opCode();
-        insn.setOpCode(0x30 | (opc & 0xF));  // convert to in-page branch
+    if (mode == M_ADDR || (mode == M_LONG && !_smartBranch)) {
+    inter_page:
         insn.emitInsn();
-        insn.emitByte(target);
+        insn.emitUint16(op.val16);
         return;
     }
-    insn.emitInsn();
-    insn.emitUint16(op.val16);
+    if (op.getError() || page(target) != page(base)) {
+        interBranch(insn);
+        goto inter_page;
+    }
+    intraBranch(insn);
+    goto intra_page;
 }
 
 void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
@@ -202,6 +209,8 @@ void AsmCdp1802::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) co
         break;
     case M_PAGE:
     case M_ADDR:
+    case M_SHRT:
+    case M_LONG:
         encodePage(insn, mode, op);
         break;
     case M_IOAD:

@@ -776,8 +776,8 @@ static void test_rel() {
         AERRT(0xFFFE, "BNE $0000", OPERAND_TOO_FAR, "$0000", 0xD0, 0x00);
         AERRT(0xFFF0, "BEQ $0071", OPERAND_TOO_FAR, "$0071", 0xF0, 0x7F);
         AERRT(0x0000, "BCS *-126", OVERFLOW_RANGE,  "*-126", 0xB0, 0x80);
-        AERRT(0xFFFE, "BNE *+2",   OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
-        AERRT(0xFFF0, "BEQ *+129", OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
+        AERRT(0xFFFE, "BNE *+2",   OVERFLOW_RANGE,  "*+2",   0xD0, 0x00);
+        AERRT(0xFFF0, "BEQ *+129", OVERFLOW_RANGE,  "*+129", 0xF0, 0x7F);
     } else {
         AERRT(0x0000, "BCS $FF82", OVERFLOW_RANGE, "$FF82", 0xB0, 0x80);
         AERRT(0xFFFE, "BNE $0000", OVERFLOW_RANGE, "$0000", 0xD0, 0x00);
@@ -791,13 +791,13 @@ static void test_rel() {
         AERRT(0x120000, "BCS $12FF82", OPERAND_TOO_FAR, "$12FF82", 0xB0, 0x80);
         AERRT(0x12FFFE, "BNE $120000", OPERAND_TOO_FAR, "$120000", 0xD0, 0x00);
         AERRT(0x12FFF0, "BEQ $120071", OPERAND_TOO_FAR, "$120071", 0xF0, 0x7F);
-        AERRT(0x120000, "BCS *-126",   OPERAND_TOO_FAR, "*-126",   0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE *+2",     OPERAND_TOO_FAR, "*+2",     0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ *+129",   OPERAND_TOO_FAR, "*+129",   0xF0, 0x7F);
+        AERRT(0x120000, "BCS *-126",   OVERFLOW_RANGE,  "*-126",   0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE *+2",     OVERFLOW_RANGE,  "*+2",     0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ *+129",   OVERFLOW_RANGE,  "*+129",   0xF0, 0x7F);
 
-        AERRT(0x120000, "BCS $11FF82", OPERAND_TOO_FAR, "$11FF82", 0xB0, 0x80);
-        AERRT(0x12FFFE, "BCS $130000", OPERAND_TOO_FAR, "$130000", 0xB0, 0x00);
-        AERRT(0x12FFF0, "BCS $130061", OPERAND_TOO_FAR, "$130061", 0xB0, 0x6F);
+        AERRT(0x120000, "BCS $11FF82", OVERFLOW_RANGE,  "$11FF82", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BCS $130000", OVERFLOW_RANGE,  "$130000", 0xB0, 0x00);
+        AERRT(0x12FFF0, "BCS $130061", OVERFLOW_RANGE,  "$130061", 0xB0, 0x6F);
     }
 
     if (w65c816()) {
@@ -805,13 +805,13 @@ static void test_rel() {
         ATEST(0x121000, "PER $129002", 0x62, 0xFF, 0x7F);
         ATEST(0x129000, "BRL *-$7FFD", 0x82, 0x00, 0x80);
         ATEST(0x121000, "PER *+$8002", 0x62, 0xFF, 0x7F);
-        AERRT(0x129000, "BRL $131003", OPERAND_TOO_FAR, "$131003", 0x82, 0x00, 0x80);
-        AERRT(0x121000, "PER $118002", OPERAND_TOO_FAR, "$118002", 0x62, 0xFF, 0x6F);
+        AERRT(0x129000, "BRL $131003", OVERFLOW_RANGE, "$131003", 0x82, 0x00, 0x80);
+        AERRT(0x121000, "PER $118002", OVERFLOW_RANGE, "$118002", 0x62, 0xFF, 0x6F);
 
         ATEST(0x121000, "BRL $129003", 0x82, 0x00, 0x80);
         ATEST(0x129000, "PER $121002", 0x62, 0xFF, 0x7F);
-        AERRT(0x121000, "BRL *-$7FFD", OPERAND_TOO_FAR, "*-$7FFD", 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER *+$8002", OPERAND_TOO_FAR, "*+$8002", 0x62, 0xFF, 0x7F);
+        AERRT(0x121000, "BRL *-$7FFD", OVERFLOW_RANGE, "*-$7FFD", 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER *+$8002", OVERFLOW_RANGE, "*+$8002", 0x62, 0xFF, 0x7F);
     } else {
         ERUI("BRL $1234");
         ERUI("PER $1234");
@@ -831,6 +831,40 @@ static void test_rel() {
     } else {
         // G65SC02
         ATEST(0x1000, "BRA label1000", 0x80, 0xFE);
+    }
+
+    TEST("option smart-branch, on");
+    AERRT(0x1000, "BPL $1082", OPERAND_TOO_FAR, "$1082", 0x10, 0x80);
+    AERRT(0x1000, "BMI $1082", OPERAND_TOO_FAR, "$1082", 0x30, 0x80);
+    AERRT(0x1000, "BVC $1082", OPERAND_TOO_FAR, "$1082", 0x50, 0x80);
+    AERRT(0x1000, "BVS $1082", OPERAND_TOO_FAR, "$1082", 0x70, 0x80);
+    AERRT(0x1000, "BCC $0F81", OPERAND_TOO_FAR, "$0F81", 0x90, 0x7F);
+    AERRT(0x1000, "BCS $0F81", OPERAND_TOO_FAR, "$0F81", 0xB0, 0x7F);
+    AERRT(0x1000, "BNE $0F81", OPERAND_TOO_FAR, "$0F81", 0xD0, 0x7F);
+    AERRT(0x1000, "BEQ $0F81", OPERAND_TOO_FAR, "$0F81", 0xF0, 0x7F);
+    AERRT(0x0000, "BCS *-126", OVERFLOW_RANGE,  "*-126", 0xB0, 0x80);
+    AERRT(0xFFFE, "BNE *+2",   OVERFLOW_RANGE,  "*+2",   0xD0, 0x00);
+    if (w65c816()) {
+        ATEST(0x1000, "BRA $1081", 0x80, 0x7F);
+        ATEST(0x1000, "BRA $1082", 0x82, 0x7F, 0x00);
+        ATEST(0x1000, "BRA $0F82", 0x80, 0x80);
+        ATEST(0x1000, "BRA $0F81", 0x82, 0x7E, 0xFF);
+        ATEST(0x1000, "BRL $1081", 0x80, 0x7F);
+        ATEST(0x1000, "BRL $1082", 0x82, 0x7F, 0x00);
+        ATEST(0x1000, "BRL $0F82", 0x80, 0x80);
+        ATEST(0x1000, "BRL $0F81", 0x82, 0x7E, 0xFF);
+        AERRT(0x0000, "BRA *-126", OVERFLOW_RANGE,  "*-126", 0x80, 0x80);
+        AERRT(0xFFFE, "BRA *+2",   OVERFLOW_RANGE,  "*+2",   0x80, 0x00);
+        AERRT(0x129000, "BRL $131003", OVERFLOW_RANGE, "$131003", 0x82, 0x00, 0x80);
+        AERRT(0x121000, "BRL $118002", OVERFLOW_RANGE, "$118002", 0x82, 0xFF, 0x6F);
+    } else if (!m6502()) {
+        // G65SC02
+        ATEST(0x1000, "BRA $1081", 0x80, 0x7F);
+        AERRT(0x1000, "BRA $1082", OPERAND_TOO_FAR, "$1082", 0x80, 0x80);
+        ATEST(0x1000, "BRA $0F82", 0x80, 0x80);
+        AERRT(0x1000, "BRA $0F81", OPERAND_TOO_FAR, "$0F81", 0x80, 0x7F);
+        AERRT(0x0000, "BRA *-126", OVERFLOW_RANGE,  "*-126", 0x80, 0x80);
+        AERRT(0xFFFE, "BRA *+2",   OVERFLOW_RANGE,  "*+2",   0x80, 0x00);
     }
 }
 
@@ -1020,6 +1054,12 @@ static void test_undef() {
         ERUS("CMPL (UNDEF),Y", "UNDEF),Y", 0xD7, 0x00);
         ERUS("JMPL (UNDEF)",   "UNDEF)",   0xDC, 0x00, 0x00);
 
+        AERUS(0x121000, "BRA UNDEF", "UNDEF", 0x80, 0x00);
+        AERUS(0x121000, "BRL UNDEF", "UNDEF", 0x82, 0x00, 0x00);
+        AERUS(0x121000, "PER UNDEF", "UNDEF", 0x62, 0x00, 0x00);
+
+        TEST("option smart-branch, on");
+        AERUS(0x121000, "BRA UNDEF", "UNDEF", 0x82, 0x00, 0x00);
         AERUS(0x121000, "BRL UNDEF", "UNDEF", 0x82, 0x00, 0x00);
         AERUS(0x121000, "PER UNDEF", "UNDEF", 0x62, 0x00, 0x00);
     }

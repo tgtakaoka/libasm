@@ -39,6 +39,7 @@ void test_asm_mc6809() {
 
     driver.setUpperHex(true);
     driver.setLineNumber(true);
+    driver.setOption("smart-branch", "on");
 
     ASM("mc6809",
             "        cpu   mc6809\n"
@@ -46,7 +47,11 @@ void test_asm_mc6809() {
             "        org   $abcd\n"
             "        cmpd  [$1234,y] ; indirect\n"
             "        include \"data/fdb.inc\"\n"
-            "        setdp $ff\n",
+            "        setdp $ff\n"
+            "        lbcc  label2\n"
+            "        bra   label3\n"
+            "label2: equ   $ac00\n"
+            "label3: equ   $b000\n",
             "       1/       0 :                            cpu   mc6809\n"
             "       2/       0 :                    * comment line\n"
             "       3/    ABCD :                            org   $abcd\n"
@@ -59,7 +64,11 @@ void test_asm_mc6809() {
             "             ABE6 : 65 27\n"
             "(1)    4/    ABE8 : 61 2C 2F 20 00             fcb   'a, ',, '/, ' , 0\n"
             "(1)    5/    ABED : 41 27 C3 E1                fcb   'A', '', 'C'+$80, $80+'a\n"
-            "       6/    ABF1 :                            setdp $ff\n");
+            "       6/    ABF1 :                            setdp $ff\n"
+            "       7/    ABF1 : 24 0D                      lbcc  label2\n"
+            "       8/    ABF3 : 16 04 0A                   bra   label3\n"
+            "       9/    ABF6 : =AC00              label2: equ   $ac00\n"
+            "      10/    ABF6 : =B000              label3: equ   $b000\n");
 }
 
 void test_dis_mc6809() {

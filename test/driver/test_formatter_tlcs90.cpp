@@ -30,18 +30,27 @@ void test_asm_tlcs90() {
     PREP_ASM(tlcs90::AsmTlcs90, ZilogDirective);
 
     driver.setUpperHex(false);
+    driver.setOption("smart-branch", "on");
 
     ASM("tlcs90",
             "        cpu   tlcs90\n"
             "; comment line\n"
             "        org   0abcdh\n"
             "        xor   (hl+a), 0efh\n"
-            "        set   7,a\n",
+            "        set   7,a\n"
+            "        jrl   label2\n"
+            "        jr    label3\n"
+            "label2: equ   0ac00h\n"
+            "label3: equ   0ad00h\n",
             "          0 :                            cpu   tlcs90\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
             "       abcd : f7 6d ef                   xor   (hl+a), 0efh\n"
-            "       abd0 : fe bf                      set   7,a\n");
+            "       abd0 : fe bf                      set   7,a\n"
+            "       abd2 : c8 2c                      jrl   label2\n"
+            "       abd4 : 1b 2a 01                   jr    label3\n"
+            "       abd7 : =ac00              label2: equ   0ac00h\n"
+            "       abd7 : =ad00              label3: equ   0ad00h\n");
 }
 
 void test_dis_tlcs90() {

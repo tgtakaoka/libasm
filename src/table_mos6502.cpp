@@ -503,8 +503,8 @@ static constexpr Entry W65C816_TABLE[] PROGMEM = {
     E1(0xDC, TEXT_JMP, L_ABS),
     E2(0xFC, TEXT_JSR, I_ABS,  I_REGX),
     E1(0x22, TEXT_JSL, M_ABSL),
-    E1(0x62, TEXT_PER, M_RELL),
-    E1(0x82, TEXT_BRL, M_RELL),
+    E1(0x62, TEXT_PER, M_LREL),
+    E1(0x82, TEXT_BRL, M_LREL),
     E1(0xD4, TEXT_PEI, I_DPG),
     E1(0xF4, TEXT_PEA, M_ABS),
     E2(0x44, TEXT_MVP, M_BANK, M_BANK),
@@ -720,12 +720,12 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_IMA)
         return table == M_IMX || table == M_IM8;
     if (opr == M_DPG)
-        return table == M_ABS || table == M_REL || table == M_ABSL || table == M_RELL ||
+        return table == M_ABS || table == M_REL || table == M_ABSL || table == M_LREL ||
                table == M_BANK;
     if (opr == M_ABS)
-        return table == M_REL || table == M_ABSL || table == M_RELL || table == M_BANK;
+        return table == M_REL || table == M_ABSL || table == M_LREL || table == M_BANK;
     if (opr == M_ABSL)
-        return table == M_REL || table == M_RELL || table == M_BANK;
+        return table == M_REL || table == M_LREL || table == M_BANK;
     if (opr == I_DPG)
         return table == I_ABS;
     if (opr == L_DPG)

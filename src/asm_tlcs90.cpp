@@ -58,17 +58,51 @@ const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
     return PLUGINS;
 }
 
+namespace {
+
+constexpr Config::opcode_t JRL = 0x1B;
+constexpr Config::opcode_t JR = 0xC8;
+
+bool maySmartBranch(const AsmInsn &insn) {
+    const auto opc = insn.opCode();
+    return opc == JRL || opc == JR;
+}
+
+void shortBranch(AsmInsn &insn) {
+    insn.setOpCode(JR);
+}
+
+void longBranch(AsmInsn &insn) {
+    insn.setOpCode(JRL);
+}
+
+}  // namespace
+
 void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
     const auto delta = branchDelta(base, target, insn, op);
-    if (mode == M_REL16) {
-        insn.emitUint16(delta);
-    } else {
+    const auto smartBranch = _smartBranch && maySmartBranch(insn);
+    if (mode == M_REL8 && !smartBranch) {
         if (overflowInt8(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
+    short_branch:
+        insn.emitInsn(insn.opCode());
         insn.emitByte(delta);
+        return;
     }
+    if (mode == M_REL16 && !smartBranch) {
+    long_branch:
+        insn.emitInsn(insn.opCode());
+        insn.emitUint16(delta);
+        return;
+    }
+    if (op.getError() || overflowInt8(delta)) {
+        longBranch(insn);
+        goto long_branch;
+    }
+    shortBranch(insn);
+    goto short_branch;
 }
 
 void AsmTlcs90::encodeOperand(
@@ -95,7 +129,7 @@ void AsmTlcs90::encodeOperand(
         return;
     case M_REL8:
     case M_REL16:
-        insn.emitInsn(opc);
+        insn.setOpCode(opc);
         encodeRelative(insn, mode, op);
         return;
     case M_IND:

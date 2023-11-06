@@ -154,16 +154,45 @@ void AsmI8096::emitAop(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     }
 }
 
+namespace {
+
+constexpr Config::opcode_t SJMP = 0x20;
+constexpr Config::opcode_t LJMP = 0xE7;
+constexpr Config::opcode_t SCALL = 0x28;
+constexpr Config::opcode_t LCALL = 0xEF;
+
+void shortBranch(AsmInsn &insn) {
+    const auto opc = insn.opCode();
+    if (opc == LJMP)
+        insn.setOpCode(SJMP);
+    else if (opc == LCALL)
+        insn.setOpCode(SCALL);
+}
+
+void longBranch(AsmInsn &insn, const Operand &op) {
+    const auto opc = insn.opCode();
+    if (opc == SJMP)
+        insn.setOpCode(LJMP);
+    else if (opc == SCALL)
+        insn.setOpCode(LCALL);
+    insn.setError(op);
+}
+
+}  // namespace
+
 void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     if (mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
-        const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
+        const auto opc = insn.opCode();
+        const auto base = insn.address() + ((opc & 0xF0) == 0xD0 ? 2 : 3);
         const auto target = op.getError() ? base : op.val16;
         const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt8(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
-    } else if (mode == M_REL11) {
+        return;
+    }
+    if (mode == M_REL11 && !_smartBranch) {
         const auto base = insn.address() + 2;
         const auto target = op.getError() ? base : op.val16;
         const auto delta = branchDelta(base, target, insn, op);
@@ -171,14 +200,26 @@ void AsmI8096::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
         insn.emitOperand8(delta);
-    } else {  // M_REL16
+        return;
+    }
+    if (mode == M_REL16 && !_smartBranch) {
+    long_branch:
         const auto base = insn.address() + 3;
         const auto target = op.getError() ? base : op.val16;
         const auto delta = branchDelta(base, target, insn, op);
-        if (overflowInt16(delta))
-            insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(delta);
+        return;
     }
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, insn, op);
+    if (op.getError() || overflowInt(delta, 11)) {
+        longBranch(insn, op);
+        goto long_branch;
+    }
+    shortBranch(insn);
+    insn.embed(static_cast<uint8_t>(delta >> 8) & 7);
+    insn.emitOperand8(delta);
 }
 
 void AsmI8096::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {

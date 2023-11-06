@@ -30,7 +30,9 @@ struct AsmI8051 final : Assembler, Config {
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
 
-    void encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const;
+    void encodeRelative(AsmInsn &insn, const Operand &op) const;
+    void encodeJump(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const;
 
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }

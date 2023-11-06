@@ -171,10 +171,18 @@ Error AsmI8048::parseOperand(StrScanner &scan, Operand &op) const {
     return op.getError();
 }
 
+namespace {
+
+constexpr Config::uintptr_t page(Config::uintptr_t addr) {
+    return addr & ~0xFF;
+}
+
+}  // namespace
+
 void AsmI8048::encodeAddress(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
     if (mode == M_AD08) {
-        const Config::uintptr_t page = (insn.address() + 1) & ~0xFF;
-        if ((op.val16 & ~0xFF) != page)
+        const auto base = insn.address() + 1;
+        if (page(op.val16) != page(base))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(op.val16);
         return;

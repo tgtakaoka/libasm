@@ -98,6 +98,7 @@ usage: asm [-o <output>] [-l <list>] <input>
   --<name>=<vale>
               : extra options (<type> [, <CPU>])
   list-radix      : set listing radix (8, 16)  (int)
+  smart-branch    : optimize branch instruction  (bool)
   pc-bits         : program counter width in bit, default 13  (int, 6805)
   setdp           : set direct page register  (int, 6809)
   longa           : enable 16-bit accumulator  (bool, 6502)
@@ -107,7 +108,6 @@ usage: asm [-o <output>] [-l <list>] <input>
   setrp0          : set register pointer 0  (int, Z8)
   setrp1          : set register pointer 1  (int, Z8)
   use-register    : enable register name Rn  (bool, 1802)
-  smart-branch    : enable optimizing to short branch  (bool, 1802)
   optimize-segment: enable optimizing segment override  (bool, 8086)
   short-direct    : enable optimizing direct addressing  (bool, Z8001)
   fpu             : floating point co-processor  (text, 32032)

@@ -45,7 +45,11 @@ void test_asm_i8086() {
             "; comment line\n"
             "        org    0bcdefh\n"
             "        test   word ptr [bp+di+0feffh], 0bbaah\n"
-            "        include 'data/db.inc'\n",
+            "        include 'data/db.inc'\n"
+            "        jmp    label2\n"
+            "        jmp    label3\n"
+            "label2: equ    0bce00h\n"
+            "label3: equ    0bde00h\n",
             "          0 :                            cpu    i8086\n"
             "          0 :                    ; comment line\n"
             "      bcdef :                            org    0bcdefh\n"
@@ -58,7 +62,11 @@ void test_asm_i8086() {
             "(1)   bce01 : 34 12 78 56 bc 9a          dw     1234H, 5678H, 9abcH\n"
             "(1)   bce07 : 61 2c 62 63 27 64          db     'a,', 'bc''de', 0\n"
             "      bce0d : 65 00\n"
-            "(1)   bce0f : 41 27 c3 61 27 63          db     'A', '''', 'C'+80H, 'a''c'\n");
+            "(1)   bce0f : 41 27 c3 61 27 63          db     'A', '''', 'C'+80H, 'a''c'\n"
+            "      bce15 : eb e9                      jmp    label2\n"
+            "      bce17 : e9 e6 0f                   jmp    label3\n"
+            "      bce1a : =bce00             label2: equ    0bce00h\n"
+            "      bce1a : =bde00             label3: equ    0bde00h\n");
 }
 
 void test_dis_i8086() {

@@ -277,26 +277,54 @@ void AsmI8086::emitImmediate(AsmInsn &insn, const Operand &op, OprSize size, uin
     }
 }
 
+namespace {
+
+constexpr Config::opcode_t JMP_rel8 = 0xEB;
+constexpr Config::opcode_t JMP_rel16 = 0xE9;
+
+constexpr bool maySmartBranch(Config::opcode_t opc) {
+    return opc == JMP_rel8;
+}
+
+void shortBranch(AsmInsn &insn) {
+    insn.setOpCode(JMP_rel8);
+}
+
+void longBranch(AsmInsn &insn, const Operand &op) {
+    insn.setOpCode(JMP_rel16);
+    insn.setError(op);
+}
+
+}  // namespace
+
 void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    const auto base = insn.address() + (mode == M_REL8 ? 2 : 3);
+    const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val32;
     const auto delta = branchDelta(base, target, insn, op);
-    if (mode == M_REL8) {
-        const auto overflow = overflowInt8(delta);
-        if (insn.opCode() == 0xEB && (overflow || op.getError())) {
-            insn.setOpCode(0xE9, 0);
-            emitRelative(insn, op, M_REL);
-            return;
-        }
-        if (overflow)
+    const auto smartBranch = maySmartBranch(insn.opCode());
+    if (mode == M_REL8 && !smartBranch) {
+        if (overflowInt8(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
+    short_branch:
         insn.emitOperand8(delta);
         return;
     }
-    // M_REL
-    if (overflowInt16(delta))
-        insn.setErrorIf(op, OPERAND_TOO_FAR);
-    insn.emitOperand16(delta);
+    if (mode == M_REL && !smartBranch) {
+    long_branch:
+        const auto base = insn.address() + 3;
+        const auto target = op.getError() ? base : op.val32;
+        const auto delta = branchDelta(base, target, insn, op);
+        if (overflowInt16(delta))
+            insn.setErrorIf(op, OPERAND_TOO_FAR);
+        insn.emitOperand16(delta);
+        return;
+    }
+    if (op.getError() || overflowInt8(delta)) {
+        longBranch(insn, op);
+        goto long_branch;
+    }
+    shortBranch(insn);
+    goto short_branch;
 }
 
 void AsmI8086::emitRegister(AsmInsn &insn, const Operand &op, OprPos pos) const {

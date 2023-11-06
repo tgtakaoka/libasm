@@ -152,57 +152,109 @@ Error AsmI8051::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-void AsmI8051::encodeOperand(AsmInsn &insn, const AddrMode mode, const Operand &op) const {
-    insn.setErrorIf(op);
-    switch (mode) {
-    case M_REL: {
-        auto len = insn.length();
-        if (len == 0)
-            len = 1;
-        const Config::uintptr_t base = insn.address() + len + 1;
-        const Config::uintptr_t target = op.getError() ? base : op.val16;
-        const Config::ptrdiff_t delta = target - base;
-        if (overflowInt8(delta))
+void AsmI8051::encodeRelative(AsmInsn &insn, const Operand &op) const {
+    const auto len = insn.length();
+    const auto base = insn.address() + (len ? len : 1) + 1;
+    const auto target = op.getError() ? base : op.val16;
+    const auto delta = branchDelta(base, target, insn, op);
+    if (overflowInt8(delta))
+        insn.setErrorIf(op, OPERAND_TOO_FAR);
+    insn.emitOperand8(delta);
+}
+
+namespace {
+
+constexpr Config::uintptr_t block(Config::uintptr_t addr) {
+    return addr & ~0x7FF;
+}
+constexpr Config::uintptr_t page(Config::uintptr_t addr) {
+    return addr & 0x7FF;
+}
+
+constexpr Config::opcode_t AJMP = 0x01;
+constexpr Config::opcode_t ACALL = 0x11;
+constexpr Config::opcode_t LJMP = 0x02;
+constexpr Config::opcode_t LCALL = 0x12;
+
+bool maySmartBranch(const AsmInsn &insn) {
+    const auto opc = insn.opCode();
+    return opc == AJMP || opc == ACALL || opc == LJMP || opc == LCALL;
+}
+
+void shortJump(AsmInsn &insn) {
+    const auto opc = insn.opCode();
+    if (opc == LJMP)
+        insn.setOpCode(AJMP);
+    if (opc == LCALL)
+        insn.setOpCode(ACALL);
+}
+
+void longJump(AsmInsn &insn) {
+    const auto opc = insn.opCode();
+    if (opc == AJMP)
+        insn.setOpCode(LJMP);
+    if (opc == ACALL)
+        insn.setOpCode(LCALL);
+}
+
+}  // namespace
+
+void AsmI8051::encodeJump(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    const auto smartBranch = _smartBranch && maySmartBranch(insn);
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? block(base) : op.val16;
+    if (mode == M_ADR11 && !smartBranch) {
+        if (block(base) != block(target))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
-        insn.emitOperand8(delta);
-        return;
-    }
-    case M_RREG:
-    case M_IDIRR:
-        insn.embed(encodeRRegName(op.reg));
-        return;
-    case M_ADR8:
-        if (op.val16 >= 0x100)
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
-        return;
-    case M_IMM8: {
-        if (overflowUint8(op.val16))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitOperand8(op.val16);
-        return;
-    }
-    case M_ADR11: {
-        const Config::uintptr_t base = insn.address() + 2;
-        const Config::uintptr_t target = op.getError() ? (base & ~0x7FF) : op.val16;
-        if ((base & ~0x7FF) != (target & ~0x7FF))
-            insn.setErrorIf(op, OPERAND_TOO_FAR);
-        insn.embed((target & 0x700) >> 3);
+    short_jump:
+        insn.embed((page(target) >> (8 - 5)) & 0xE0);
         insn.emitOperand8(target);
         return;
     }
-    case M_ADR16:
-    case M_IMM16:
+    if (mode == M_ADR16 && !smartBranch) {
+    long_jump:
         insn.emitOperand16(op.val16);
         return;
+    }
+    if (op.getError() || block(base) != block(target)) {
+        longJump(insn);
+        goto long_jump;
+    }
+    shortJump(insn);
+    goto short_jump;
+}
+
+void AsmI8051::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    insn.setErrorIf(op);
+    switch (mode) {
+    case M_REL:
+        encodeRelative(insn, op);
+        break;
+    case M_RREG:
+    case M_IDIRR:
+        insn.embed(encodeRRegName(op.reg));
+        break;
+    case M_IMM8:
+        if (overflowUint8(op.val16))
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand8(op.val16);
+        break;
+    case M_ADR11:
+    case M_ADR16:
+        encodeJump(insn, mode, op);
+        break;
+    case M_IMM16:
+        insn.emitOperand16(op.val16);
+        break;
+    case M_ADR8:
     case M_BITAD:
     case M_NOTAD:
         if (op.val16 >= 0x100)
-            insn.setErrorIf(op, NOT_BIT_ADDRESSABLE);
+            insn.setErrorIf(op, mode == M_ADR8 ? OVERFLOW_RANGE : NOT_BIT_ADDRESSABLE);
         insn.emitOperand8(op.val16);
-        return;
+        break;
     default:
-        return;
+        break;
     }
 }
 

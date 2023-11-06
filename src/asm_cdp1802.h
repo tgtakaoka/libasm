@@ -30,14 +30,11 @@ struct AsmCdp1802 final : Assembler, Config {
     void reset() override;
 
     Error setUseReg(bool enable);
-    Error setSmartBranch(bool enable);
 
 private:
     const BoolOption<AsmCdp1802> _opt_useReg;
-    const BoolOption<AsmCdp1802> _opt_smartBranch;
 
     bool _useReg;
-    bool _smartBranch;
 
     Error parseOperand(StrScanner &scan, Operand &op) const;
 

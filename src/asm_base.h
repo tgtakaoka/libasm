@@ -34,7 +34,7 @@ namespace libasm {
 struct Assembler : private ValueParser::Locator {
     Error encode(const char *line, Insn &insn, SymbolTable *symtab = nullptr);
     virtual const ConfigBase &config() const = 0;
-    virtual void reset() {}
+    virtual void reset();
 
     const ValueParser &parser() const { return _parser; }
     bool endOfLine(const StrScanner &scan) const { return _parser.endOfLine(scan); }
@@ -53,7 +53,7 @@ struct Assembler : private ValueParser::Locator {
 
     Error setListRadix(int32_t radix);
     Radix listRadix() const { return _listRadix; }
-    Error setParserRadix(int32_t radix);
+    Error setSmartBranch(bool enable);
 
     Error setCurrentLocation(uint32_t location, bool align = false);
     uint32_t currentLocation() const { return _currentLocation; }
@@ -88,9 +88,10 @@ protected:
     const Options _commonOptions;
     const Options _options;
     const IntOption<Assembler> _opt_listRadix;
+    const BoolOption<Assembler> _opt_smartBranch;
 
     Radix _listRadix;
-    Radix _parseRadix;
+    bool _smartBranch;
     SymbolTable *_symtab;
     uint32_t _currentLocation;
 

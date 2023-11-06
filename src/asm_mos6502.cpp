@@ -111,21 +111,64 @@ Error AsmMos6502::setLongIndex(bool enable) {
     return enable ? OPERAND_NOT_ALLOWED : OK;
 }
 
+namespace {
+
+constexpr Config::uintptr_t bank(Config::uintptr_t addr) {
+    return addr & ~0xFFFF;
+}
+
+constexpr Config::opcode_t BRA = 0x80;
+constexpr Config::opcode_t BRL = 0x82;
+
+bool maySmartBranch(const AsmInsn &insn, CpuType cpuType) {
+    const auto opc = insn.opCode();
+    return cpuType == W65C816 && (opc == BRA || opc == BRL);
+}
+
+void shortBranch(AsmInsn &insn) {
+    insn.setOpCode(BRA);
+}
+
+void longBranch(AsmInsn &insn, const Operand &op) {
+    insn.setOpCode(BRL);
+    insn.setError(op);
+}
+
+}  // namespace
+
 void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
-    const Config::uintptr_t bank = insn.address() & ~0xFFFF;
+    const auto bk = bank(insn.address());
     const auto len = insn.length();
-    const auto base = insn.address() + (len ? len : 1) + (mode == M_REL ? 1 : 2);
+    const auto base = insn.address() + (len ? len : 1) + 1;
     const auto target = op.getError() ? base : op.val32;
-    const auto delta = branchDelta(base, target, insn, op);
-    if (op.isOK() && (op.val32 & ~0xFFFF) != bank)
-        insn.setErrorIf(op, OPERAND_TOO_FAR);
-    if (mode == M_REL) {
+    const auto smartBranch = _smartBranch && maySmartBranch(insn, cpuType());
+    if (mode == M_REL && !smartBranch) {
+    short_branch:
+        if (op.isOK() && bank(target) != bk)
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt8(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
-    } else {
-        insn.emitOperand16(delta);
+        return;
     }
+    if (mode == M_LREL && !smartBranch) {
+    long_branch:
+        const auto base = insn.address() + 3;
+        const auto target = op.getError() ? base : op.val32;
+        const auto delta = branchDelta(base, target, insn, op);
+        if (op.isOK() && bank(target) != bk)
+            insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.emitOperand16(delta);
+        return;
+    }
+    const auto delta = branchDelta(base, target, insn, op);
+    if (op.getError() || overflowInt8(delta)) {
+        longBranch(insn, op);
+        goto long_branch;
+    }
+    shortBranch(insn);
+    goto short_branch;
 }
 
 void AsmMos6502::emitImmediate(AsmInsn &insn, const Operand &op, bool imm16) const {
@@ -168,7 +211,7 @@ void AsmMos6502::encodeOperand(AsmInsn &insn, AddrMode modeAndFlags, const Opera
         emitImmediate(insn, op, false);
         break;
     case M_REL:
-    case M_RELL:
+    case M_LREL:
         encodeRelative(insn, mode, op);
         break;
     default:

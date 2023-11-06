@@ -83,18 +83,75 @@ bool AsmMc6809::onDirectPage(Config::uintptr_t addr) const {
     return static_cast<uint8_t>(addr >> 8) == _direct_page;
 }
 
+namespace {
+
+constexpr Config::opcode_t LBcc = 0x10;
+constexpr Config::opcode_t LBRA = 0x16;
+constexpr Config::opcode_t LBSR = 0x17;
+constexpr Config::opcode_t BRA = 0x20;
+constexpr Config::opcode_t BRN = 0x21;
+constexpr Config::opcode_t BSR = 0x8D;
+constexpr bool Bcc(Config::opcode_t opc) {
+    return opc >= 0x22 && opc < 0x30;  // Bcc, LBcc
+}
+
+bool maySmartBranch(const AsmInsn &insn) {
+    return insn.opCode() != BRN;  // and LBRN
+}
+
+void shortBranch(AsmInsn &insn) {
+    const auto opc = insn.opCode();
+    if (opc == LBRA)
+        insn.setOpCode(BRA);
+    else if (opc == LBSR)
+        insn.setOpCode(BSR);
+    else if (Bcc(opc))        // LBcc
+        insn.setOpCode(opc);  // convert LBcc to Bcc
+}
+
+void longBranch(AsmInsn &insn, const Operand &op) {
+    const auto opc = insn.opCode();
+    if (opc == BRA)
+        insn.setOpCode(LBRA);
+    else if (opc == BSR)
+        insn.setOpCode(LBSR);
+    else if (Bcc(opc))              // Bcc
+        insn.setOpCode(opc, LBcc);  // conver Bcc toLBcc
+    insn.setError(op);
+}
+
+}  // namespace
+
 void AsmMc6809::encodeRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
-    const auto length = (insn.hasPrefix() ? 1 : 0) + (mode == M_LREL ? 3 : 2);
-    const auto base = insn.address() + length;
-    const auto target = op.getError() ? base : op.val32;
-    const auto delta = branchDelta(base, target, insn, op);
-    if (mode == M_REL) {
+    const auto smartBranch = _smartBranch && maySmartBranch(insn);
+    if (mode == M_REL && !smartBranch) {
+        const auto length = (insn.hasPrefix() ? 1 : 0) + 2;
+        const auto base = insn.address() + length;
+        const auto target = op.getError() ? base : op.val32;
+        const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt8(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand8(delta);
-    } else {
-        insn.emitOperand16(delta);
+        return;
     }
+    if (mode == M_LREL && !smartBranch) {
+    long_branch:
+        const auto length = (insn.hasPrefix() ? 1 : 0) + 3;
+        const auto base = insn.address() + length;
+        const auto target = op.getError() ? base : op.val32;
+        const auto delta = branchDelta(base, target, insn, op);
+        insn.emitOperand16(delta);
+        return;
+    }
+    const auto base = insn.address() + 2;
+    const auto target = op.getError() ? base : op.val32;
+    const auto delta = branchDelta(base, target, insn, op);
+    if (op.getError() || overflowInt8(delta)) {
+        longBranch(insn, op);
+        goto long_branch;
+    }
+    shortBranch(insn);
+    insn.emitOperand8(delta);
 }
 
 Config::ptrdiff_t AsmMc6809::calculateDisplacement(const AsmInsn &insn, const Operand &op) const {

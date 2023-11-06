@@ -143,7 +143,7 @@ void DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const auto delta = (mode == M_RELL) ? static_cast<int16_t>(insn.readUint16())
+    const auto delta = (mode == M_LREL) ? static_cast<int16_t>(insn.readUint16())
                                         : static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
     Error error;
@@ -197,7 +197,7 @@ void DisMos6502::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode modeAndFl
         decodeDirectPage(insn, out);
         break;
     case M_REL:
-    case M_RELL:
+    case M_LREL:
         decodeRelative(insn, out, mode);
         break;
     default:

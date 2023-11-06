@@ -25,6 +25,7 @@ AsmI8051 asm8051;
 Assembler &assembler(asm8051);
 
 static void set_up() {
+    assembler.reset();
     assembler.setCpu("8051");
 }
 
@@ -417,7 +418,7 @@ static void test_direct() {
     TEST("MOV  @R0,regE0", 0xA6, 0xE0);
 }
 
-static void test_page() {
+static void test_jump() {
     ATEST(0x1000, "AJMP  1002H", 0x01, 0x02);
     ATEST(0x1800, "AJMP  1922H", 0x21, 0x22);
     ATEST(0x1000, "AJMP  1242H", 0x41, 0x42);
@@ -444,17 +445,25 @@ static void test_page() {
     ATEST(0x1FFE, "ACALL 2002H", 0x11, 0x02);
     ATEST(0x1FFF, "ACALL 2002H", 0x11, 0x02);
 
+    TEST("LJMP  0304H", 0x02, 0x03, 0x04);
+    TEST("LCALL 1314H", 0x12, 0x13, 0x14);
+
     symtab.intern(0x1002, "sym1002");
     symtab.intern(0x1802, "sym1802");
 
     ATEST(0x17FD, "ACALL sym1002", 0x11, 0x02);
     ATEST(0x17FE, "ACALL sym1802", 0x11, 0x02);
     ATEST(0x17FF, "ACALL sym1802", 0x11, 0x02);
-}
 
-static void test_absolute() {
-    TEST("LJMP  0304H", 0x02, 0x03, 0x04);
-    TEST("LCALL 1314H", 0x12, 0x13, 0x14);
+    TEST("option smart-branch, on");
+    ATEST(0x1000, "AJMP  17FFH", 0xE1, 0xFF);
+    ATEST(0x1000, "AJMP  1802H", 0x02, 0x18, 0x02);
+    ATEST(0x1000, "LJMP  17FFH", 0xE1, 0xFF);
+    ATEST(0x1000, "LJMP  1802H", 0x02, 0x18, 0x02);
+    ATEST(0x1000, "ACALL 17FFH", 0xF1, 0xFF);
+    ATEST(0x1000, "ACALL 1802H", 0x12, 0x18, 0x02);
+    ATEST(0x1000, "LCALL 17FFH", 0xF1, 0xFF);
+    ATEST(0x1000, "LCALL 1802H", 0x12, 0x18, 0x02);
 }
 
 static void test_comment() {
@@ -476,11 +485,11 @@ static void test_comment() {
     ERRT("INC  @ R0     ; comment",  UNKNOWN_OPERAND, "@ R0     ; comment");
     ERRT("ADD  A , @R1  ; comment",  OK, "; comment", 0x27);
     ERRT("ADD  A, @ R1  ; comment",  UNKNOWN_OPERAND, "@ R1  ; comment");
-    ERRT("ADD  A , # 25H   ; comment",          OK, "; comment", 0x24, 0x25);
-    ERRT("ORL  44H , # 45H ; comment",          OK, "; comment", 0x43, 0x44, 0x45);
-    ERRT("JBC  22H.1 , $ + 15H  ; comment",     OK, "; comment", 0x10, 0x11, 0x12);
-    ERRT("CJNE A , # 0B5H , $ - 47H ; comment", OK, "; comment", 0xB4, 0xB5, 0xB6);
-    ERRT("ORL  C , / 0A8H.1     ; comment",     OK, "; comment", 0xA0, 0xA9);
+    ERRT("ADD  A , # 25H   ; comment",      OK, "; comment", 0x24, 0x25);
+    ERRT("ORL  44H , # 45H ; comment",      OK, "; comment", 0x43, 0x44, 0x45);
+    ERRT("JBC  22H.1 , $ + 15H  ; comment", OK, "; comment", 0x10, 0x11, 0x12);
+    ERRT("ORL  C , / 0A8H.1     ; comment", OK, "; comment", 0xA0, 0xA9);
+    AERRT(0x1000, "CJNE A , # 0B5H , $ - 47H ; comment", OK, "; comment", 0xB4, 0xB5, 0xB6);
 }
 
 static void test_undef() {
@@ -525,10 +534,23 @@ static void test_undef() {
     ERUS("MOV 87H,UNDEF",   "UNDEF",       0x85, 0x00, 0x87);
     ERUS("MOV UNDEF,UNDEF", "UNDEF,UNDEF", 0x85, 0x00, 0x00);
 
-    AERUS(0x17FD, "AJMP UNDEF", "UNDEF", 0x01, 0x00);
-    AERUS(0x17FE, "AJMP UNDEF", "UNDEF", 0x01, 0x00);
-    AERUS(0x17FF, "AJMP UNDEF", "UNDEF", 0x01, 0x00);
+    AERUS(0x17FD, "AJMP  UNDEF", "UNDEF", 0x01, 0x00);
+    AERUS(0x17FE, "AJMP  UNDEF", "UNDEF", 0x01, 0x00);
+    AERUS(0x17FF, "AJMP  UNDEF", "UNDEF", 0x01, 0x00);
+    AERUS(0x17FD, "ACALL UNDEF", "UNDEF", 0x11, 0x00);
+    AERUS(0x17FE, "ACALL UNDEF", "UNDEF", 0x11, 0x00);
+    AERUS(0x17FF, "ACALL UNDEF", "UNDEF", 0x11, 0x00);
+    ERUS("LJMP  UNDEF", "UNDEF", 0x02, 0x00, 0x00);
+    ERUS("LCALL UNDEF", "UNDEF", 0x12, 0x00, 0x00);
 
+    TEST("option smart-branch, on");
+
+    AERUS(0x17FD, "AJMP  UNDEF", "UNDEF", 0x02, 0x00, 0x00);
+    AERUS(0x17FE, "AJMP  UNDEF", "UNDEF", 0x02, 0x00, 0x00);
+    AERUS(0x17FF, "AJMP  UNDEF", "UNDEF", 0x02, 0x00, 0x00);
+    AERUS(0x17FD, "ACALL UNDEF", "UNDEF", 0x12, 0x00, 0x00);
+    AERUS(0x17FE, "ACALL UNDEF", "UNDEF", 0x12, 0x00, 0x00);
+    AERUS(0x17FF, "ACALL UNDEF", "UNDEF", 0x12, 0x00, 0x00);
     ERUS("LJMP  UNDEF", "UNDEF", 0x02, 0x00, 0x00);
     ERUS("LCALL UNDEF", "UNDEF", 0x12, 0x00, 0x00);
 }
@@ -584,8 +606,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_relative);
     RUN_TEST(test_bit_address);
     RUN_TEST(test_direct);
-    RUN_TEST(test_page);
-    RUN_TEST(test_absolute);
+    RUN_TEST(test_jump);
     RUN_TEST(test_comment);
     RUN_TEST(test_undef);
     RUN_TEST(test_data_constant);

@@ -57,10 +57,12 @@ void test_asm_cdp1802() {
     ASM("cdp1804",
             "        org   x'abcd'\n"
             "        scal  r3, x'8485'\n"
-            "        lbr   x'ab23'\n",
+            "        lbr   x'ab23'\n"
+            "        br    x'ac23'\n",
             "       abcd :                            org   x'abcd'\n"
             "       abcd : 68 83 84 85                scal  r3, x'8485'\n"
-            "       abd1 : 30 23                      lbr   x'ab23'\n");
+            "       abd1 : 30 23                      lbr   x'ab23'\n"
+            "       abd3 : c0 ac 23                   br    x'ac23'\n");
 }
 
 void test_dis_cdp1802() {
