@@ -94,7 +94,6 @@ constexpr char TEXT_FRES[] PROGMEM = "FRES";
 constexpr char TEXT_HLTS[] PROGMEM = "HLTS";
 constexpr char TEXT_MOVP1[] PROGMEM = "MOVP1";
 
-// clang-format off
 // constexpr char TEXT_REG_A[]    PROGMEM = "A";
 constexpr char TEXT_REG_BUS[]  PROGMEM = "BUS";
 // constexpr char TEXT_REG_C[]    PROGMEM = "C";

@@ -158,12 +158,12 @@ extern const char TEXT_DSM[]  PROGMEM;
 extern const char TEXT_DSMB[] PROGMEM;
 extern const char TEXT_DSMI[] PROGMEM;
 
-// clang-format om
-} // namespace cdp1802
-} // namespace text
-} // namespace libasm
+// clang-format on
+}  // namespace cdp1802
+}  // namespace text
+}  // namespace libasm
 
-#endif // __TEXT_CDP1802__
+#endif  // __TEXT_CDP1802__
 
 // Local Variables:
 // mode: c++

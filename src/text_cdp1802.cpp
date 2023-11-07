@@ -157,10 +157,10 @@ constexpr char TEXT_DSM[]  PROGMEM = "DSM";
 constexpr char TEXT_DSMB[] PROGMEM = "DSMB";
 constexpr char TEXT_DSMI[] PROGMEM = "DSMI";
 
-// clang-format om
-} // namespace cdp1802
-} // namespace text
-} // namespace libasm
+// clang-format on
+}  // namespace cdp1802
+}  // namespace text
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

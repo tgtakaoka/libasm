@@ -37,7 +37,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD},
     {TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
 };
-// clang-format off
+// clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
 }  // namespace

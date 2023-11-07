@@ -107,12 +107,12 @@ extern const char TEXT_RTN1[] PROGMEM;
 extern const char TEXT_RTN2[] PROGMEM;
 extern const char TEXT_WSR[]  PROGMEM;
 
-// clang-format om
-} // namespace im6100
-} // namespace text
-} // namespace libasm
+// clang-format on
+}  // namespace im6100
+}  // namespace text
+}  // namespace libasm
 
-#endif // __TEXT_IM6100__
+#endif  // __TEXT_IM6100__
 
 // Local Variables:
 // mode: c++

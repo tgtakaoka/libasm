@@ -104,10 +104,10 @@ constexpr char TEXT_RTN1[] PROGMEM = "RTN1";
 constexpr char TEXT_RTN2[] PROGMEM = "RTN2";
 constexpr char TEXT_WSR[]  PROGMEM = "WSR";
 
-// clang-format om
-} // namespace cdp1802
-} // namespace text
-} // namespace libasm
+// clang-format on
+}  // namespace im6100
+}  // namespace text
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++

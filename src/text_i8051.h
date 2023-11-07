@@ -73,7 +73,6 @@ using common::TEXT_XCH;
 using common::TEXT_XCHD;
 using common::TEXT_XRL;
 
-// clang-format off
 using common::TEXT_REG_A;
 using common::TEXT_REG_C;
 extern const char TEXT_REG_AB[]   PROGMEM;

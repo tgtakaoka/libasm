@@ -53,7 +53,7 @@ constexpr NameEntry REG_ENTRIES[] PROGMEM = {
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
 
-// clang-format off
+// clang-format on
 }  // namespace
 
 RegName parseRegName(StrScanner &scan) {

@@ -254,7 +254,6 @@ constexpr char TEXT_TSTE[]  PROGMEM = "TSTE";
 constexpr char TEXT_TSTF[]  PROGMEM = "TSTF";
 constexpr char TEXT_TSTW[]  PROGMEM = "TSTW";
 
-// clang-format off
 // constexpr char TEXT_REG_A[] PROGMEM   = "A";
 // constexpr char TEXT_REG_B[] PROGMEM   = "B";
 // constexpr char TEXT_REG_D[] PROGMEM   = "D";
@@ -272,7 +271,6 @@ constexpr char TEXT_REG_F[] PROGMEM   = "F";
 constexpr char TEXT_REG_V[] PROGMEM   = "V";
 constexpr char TEXT_REG_Z[] PROGMEM   = "Z";
 constexpr char TEXT_REG_0[] PROGMEM   = "0";
-// clang-format on
 // clang-format on
 
 }  // namespace mc6809
