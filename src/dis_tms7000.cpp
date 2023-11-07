@@ -39,10 +39,6 @@ DisTms7000::DisTms7000(const ValueFormatter::Plugins &plugins)
     reset();
 }
 
-void DisTms7000::reset() {
-    Disassembler::reset();
-}
-
 void DisTms7000::decodeRegister(DisInsn &insn, StrBuffer &out) const {
     const auto regno = insn.readByte();
     if (insn.isOK() && regno < 2) {

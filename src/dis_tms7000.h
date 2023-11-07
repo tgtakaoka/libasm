@@ -27,8 +27,6 @@ namespace tms7000 {
 struct DisTms7000 final : Disassembler, Config {
     DisTms7000(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
-    void reset() override;
-
 private:
     void decodeRegister(DisInsn &insn, StrBuffer &out) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
