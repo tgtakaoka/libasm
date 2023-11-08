@@ -72,12 +72,12 @@ void test_dis_z8001() {
     DIS16("z8001", 0x789abc,
             "      CPU    Z8001\n"
             "      ORG    %789ABC\n"
-            "      LDB    |%160017|(R1), #25\n"
+            "      LDB    |<<22>>%0017|(R1), #25\n"
             "; test.bin: error: Registers overlapped: \"RR4\"\n"
             ";   789AC2 : 9745                       POP    R5, @RR4\n",
             "       0 :                            CPU    Z8001\n"
             "  789ABC :                            ORG    %789ABC\n"
-            "  789ABC : 4C15 1617 1919             LDB    |%160017|(R1), #25\n"
+            "  789ABC : 4C15 1617 1919             LDB    |<<22>>%0017|(R1), #25\n"
             "test.bin: error: Registers overlapped: \"RR4\"\n"
             "  789AC2 : 9745                       POP    R5, @RR4\n",
             0x4c15, 0x1617, 0x1919, 0x9745);

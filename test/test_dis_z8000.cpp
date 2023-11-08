@@ -31,6 +31,7 @@ static bool z8001() {
 static void set_up() {
     disassembler.reset();
     disassembler.setOption("relative", "false");
+    disassembler.setOption("segmented-addr", "false");
 }
 
 static void tear_down() {
@@ -2583,13 +2584,31 @@ static void test_cpu_conrtol() {
     TEST("SETFLG", "C,Z,S,P", 0x8DF1);
 }
 
-static void test_short_direct() {
-    disassembler.setOption("short-direct", "disable");
+static void test_direct_address() {
+    disassembler.setOption("short-direct", "on");
+    TEST("CLR", "|%120034|",     0x4D08, 0x1234);
+    TEST("CLR",  "%561234",      0x4D08, 0xD600, 0x1234);
+    TEST("CLR", "|%120034|(R2)", 0x4D28, 0x1234);
+    TEST("CLR",  "%561234(R2)",  0x4D28, 0xD600, 0x1234);
 
+    disassembler.setOption("segmented-addr", "on");
+    TEST("CLR", "|<<18>>%0034|",     0x4D08, 0x1234);
+    TEST("CLR",  "<<%56>>%1234",     0x4D08, 0xD600, 0x1234);
+    TEST("CLR", "|<<18>>%0034|(R2)", 0x4D28, 0x1234);
+    TEST("CLR",  "<<%56>>%1234(R2)", 0x4D28, 0xD600, 0x1234);
+
+    disassembler.setOption("short-direct", "disable");
+    disassembler.setOption("segmented-addr", "off");
     TEST("CLR", "%120034",     0x4D08, 0x1234);
     TEST("CLR", "%561234",     0x4D08, 0xD600, 0x1234);
     TEST("CLR", "%120034(R2)", 0x4D28, 0x1234);
     TEST("CLR", "%561234(R2)", 0x4D28, 0xD600, 0x1234);
+
+    disassembler.setOption("segmented-addr", "on");
+    TEST("CLR", "<<18>>%0034",      0x4D08, 0x1234);
+    TEST("CLR", "<<%56>>%1234",     0x4D08, 0xD600, 0x1234);
+    TEST("CLR", "<<18>>%0034(R2)",  0x4D28, 0x1234);
+    TEST("CLR", "<<%56>>%1234(R2)", 0x4D28, 0xD600, 0x1234);
 }
 
 // clang-format on
@@ -2611,7 +2630,7 @@ void run_tests(const char *cpu) {
     RUN_TEST(test_output);
     RUN_TEST(test_cpu_conrtol);
     if (z8001()) {
-        RUN_TEST(test_short_direct);
+        RUN_TEST(test_direct_address);
     }
 }
 

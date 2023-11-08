@@ -185,23 +185,22 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
     if (error)
         insn.setErrorIf(op, error);
     if (segmentedModel()) {
-        const uint32_t addr = op.val32;
-        const uint16_t seg = (addr >> 8) & 0x7F00;
-        const uint16_t off = static_cast<uint16_t>(addr);
-        bool autoShortDirect = _autoShortDirect && op.isOK();
-        if (off < 0x100 && autoShortDirect) {
-            insn.emitOperand16(seg | off);
+        const uint16_t seg = (op.val32 >> 8) & 0x7F00;
+        const uint16_t disp = op.val32;
+        const auto autoShortDirect = _autoShortDirect && op.isOK();
+        if (disp < 0x100 && autoShortDirect) {
+            insn.emitOperand16(seg | disp);
         } else if (op.cc == CC_F) {  // short direct
-            if (off >= 0x100)
+            if (disp >= 0x100)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            insn.emitOperand16(seg | (off & 0xFF));
+            insn.emitOperand16(seg | (disp & 0xFF));
         } else {
             insn.emitOperand16(0x8000 | seg);
-            insn.emitOperand16(off);
+            insn.emitOperand16(disp);
         }
         return;
     }
-    insn.emitOperand16(static_cast<uint16_t>(op.val32));
+    insn.emitOperand16(op.val32);
 }
 
 void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
@@ -475,6 +474,46 @@ int8_t AsmZ8000::parseFlagNames(StrScanner &scan) const {
     }
 }
 
+uint32_t AsmZ8000::parseAddress(StrScanner &scan, Operand &op) const {
+    auto p = scan;
+    const auto delim = p.expect('|');
+    if (p.skipSpaces().iexpectText_P(PSTR("<<"))) {
+        const auto segAt = p.skipSpaces();
+        ErrorAt segError;
+        auto seg = parseExpr(p, segError, '>').getUnsigned();
+        if (segError.hasError()) {
+            op.setError(segError);
+        } else if (p.skipSpaces().iexpectText_P(PSTR(">>"))) {
+            const auto dispAt = p;
+            if (overflowUint(seg, 7)) {
+                op.setErrorIf(segAt, OVERFLOW_RANGE);
+                seg &= 0x7F;
+            }
+            op.val32 = parseExpr(p, op, delim).getUnsigned();
+            if (overflowUint16(op.val32)) {
+                op.setErrorIf(dispAt, OVERFLOW_RANGE);
+                op.val32 &= 0xFFFF;
+            }
+            op.val32 |= (seg << 16);
+            if (segError.getError() == UNDEFINED_SYMBOL)
+                op.setError(segError);
+        } else {
+            op.setError(scan, UNKNOWN_OPERAND);
+        }
+    } else {
+        op.val32 = parseExpr(p, op, delim).getUnsigned();
+    }
+    if (delim) {
+        if (p.skipSpaces().expect(delim)) {
+            op.cc = CC_F;  // short direct
+        } else {
+            op.setErrorIf(scan, UNKNOWN_OPERAND);
+        }
+    }
+    scan = p;
+    return op.val32;
+}
+
 Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
@@ -567,16 +606,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
         scan = p;
         return OK;
     }
-    if (p.expect('|')) {
-        op.val32 = parseExpr(p, op, '|').getUnsigned();
-        if (p.expect('|')) {
-            op.cc = CC_F;  // short direct
-        } else {
-            op.setError(scan, UNKNOWN_OPERAND);
-        }
-    } else {
-        op.val32 = parseExpr32(p, op);
-    }
+    op.val32 = parseAddress(p, op);
     if (op.hasError())
         return op.getError();
     if (p.skipSpaces().expect('(')) {

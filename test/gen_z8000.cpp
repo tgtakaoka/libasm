@@ -33,6 +33,7 @@ int main(int argc, const char **argv) {
         dis8000.setOption("ioaddr-prefix", "enable");
         dis8000.setOption("origin-char", ".");
         dis8000.setOption("short-direct", "disable");
+        dis8000.setOption("segmented-addr", "disable");
     }
 
     const Config::uintptr_t org =

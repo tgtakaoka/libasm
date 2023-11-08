@@ -26,10 +26,12 @@ using namespace reg;
 
 namespace {
 
-const char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
-const char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
-const char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
-const char OPT_DESC_SHORT_DIRECT[] PROGMEM = "short direct addressing as ||";
+constexpr char OPT_BOOL_SHORT_DIRECT[] PROGMEM = "short-direct";
+constexpr char OPT_DESC_SHORT_DIRECT[] PROGMEM = "use |addr| for short direct notation";
+constexpr char OPT_BOOL_SEGMENTED_ADDR[] PROGMEM = "segmented-addr";
+constexpr char OPT_DESC_SEGMENTED_ADDR[] PROGMEM = "use <<segment>> notation";
+constexpr char OPT_BOOL_IOADDR_PREFIX[] PROGMEM = "ioaddr-prefix";
+constexpr char OPT_DESC_IOADDR_PREFIX[] PROGMEM = "I/O address prefix # (default none)";
 
 }  // namespace
 
@@ -41,7 +43,9 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_shortDirect),
       Config(TABLE),
       _opt_shortDirect(this, &DisZ8000::setShortDirect, OPT_BOOL_SHORT_DIRECT,
-              OPT_DESC_SHORT_DIRECT, &_opt_ioaddrPrefix),
+              OPT_DESC_SHORT_DIRECT, &_opt_segmentedAddr),
+      _opt_segmentedAddr(this, &DisZ8000::setSegmentedAddr, OPT_BOOL_SEGMENTED_ADDR,
+              OPT_DESC_SEGMENTED_ADDR, &_opt_ioaddrPrefix),
       _opt_ioaddrPrefix(
               this, &DisZ8000::setIoAddressPrefix, OPT_BOOL_IOADDR_PREFIX, OPT_DESC_IOADDR_PREFIX) {
     reset();
@@ -50,11 +54,17 @@ DisZ8000::DisZ8000(const ValueFormatter::Plugins &plugins)
 void DisZ8000::reset() {
     Disassembler::reset();
     setShortDirect(true);
+    setSegmentedAddr(true);
     setIoAddressPrefix(false);
 }
 
 Error DisZ8000::setShortDirect(bool enable) {
     _shortDirect = enable;
+    return OK;
+}
+
+Error DisZ8000::setSegmentedAddr(bool enable) {
+    _segmentedAddr = enable;
     return OK;
 }
 
@@ -193,22 +203,27 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_LONG);
     const auto val16 = insn.readUint16();
     if (segmentedModel()) {
-        const uint32_t seg = static_cast<uint32_t>(val16 & 0x7F00) << 8;
-        uint16_t off = static_cast<uint8_t>(val16);
+        const auto seg = (val16 >> 8) & 0x7F;
+        uint16_t disp = val16 & 0xFF;
         auto shortDirect = _shortDirect;
         if (val16 & 0x8000) {
-            if (val16 & 0x00FF)
+            if (disp)
                 insn.setErrorIf(out, ILLEGAL_OPERAND);
-            off = insn.readUint16();
+            disp = insn.readUint16();
             shortDirect = false;
         }
-        const auto addr = seg | off;
+        const auto addr = (static_cast<Config::uintptr_t>(seg) << 16) | disp;
         const auto error = checkAddr(addr, 0, align);
         if (error)
             insn.setErrorIf(out, error);
         if (shortDirect)
             out.letter('|');
-        outAbsAddr(out, addr);
+        if (_segmentedAddr) {
+            outHex(out.rtext_P(PSTR("<<")), seg, 7).rtext_P(PSTR(">>"));
+            outAbsAddr(out, disp, ADDRESS_16BIT);
+        } else {
+            outAbsAddr(out, addr);
+        }
         if (shortDirect)
             out.letter('|');
     } else {
