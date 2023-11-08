@@ -51,239 +51,239 @@ static void test_load_and_exchange() {
     TEST("clr  r2",  0x8D28);
     TEST("clrb rh2", 0x8C28);
     if (z8001()) {
-        TEST("CLR  @RR2",         0x0D28);
-        TEST("CLR  %120034",      0x4D08, 0x1234);
-        TEST("CLR  0x561234",     0x4D08, 0xD600, 0x1234);
-        TEST("CLR  0x7FFFFF",     0x4D08, 0xFF00, 0xFFFF);
-        ERRT("CLR  0x800000",     OVERFLOW_RANGE, "0x800000", 0x4D08, 0x0000);
-        TEST("CLR  0x120034(R2)", 0x4D28, 0x1234);
-        TEST("CLR  0x561234(R2)", 0x4D28, 0xD600, 0x1234);
-        TEST("CLR  0x7FFFFF(R2)", 0x4D28, 0xFF00, 0xFFFF);
-        ERRT("CLR  0x800000(R2)", OVERFLOW_RANGE, "0x800000(R2)", 0x4D28, 0x0000);
-        TEST("CLRB @RR2",         0x0C28);
-        TEST("CLRB 0x120034",     0x4C08, 0x1234);
-        TEST("CLRB 0x561234",     0x4C08, 0xD600, 0x1234);
-        TEST("CLRB 0x120034(R2)", 0x4C28, 0x1234);
-        TEST("CLRB 0x561234(R2)", 0x4C28, 0xD600, 0x1234);
+        TEST("CLR  @RR2",        0x0D28);
+        TEST("CLR  %120034",     0x4D08, 0x1234);
+        TEST("CLR  %561234",     0x4D08, 0xD600, 0x1234);
+        TEST("CLR  %7FFFFF",     0x4D08, 0xFF00, 0xFFFF);
+        ERRT("CLR  %800000",     OVERFLOW_RANGE, "%800000", 0x4D08, 0x0000);
+        TEST("CLR  %120034(R2)", 0x4D28, 0x1234);
+        TEST("CLR  %561234(R2)", 0x4D28, 0xD600, 0x1234);
+        TEST("CLR  %7FFFFF(R2)", 0x4D28, 0xFF00, 0xFFFF);
+        ERRT("CLR  %800000(R2)", OVERFLOW_RANGE, "%800000(R2)", 0x4D28, 0x0000);
+        TEST("CLRB @RR2",        0x0C28);
+        TEST("CLRB %120034",     0x4C08, 0x1234);
+        TEST("CLRB %561234",     0x4C08, 0xD600, 0x1234);
+        TEST("CLRB %120034(R2)", 0x4C28, 0x1234);
+        TEST("CLRB %561234(R2)", 0x4C28, 0xD600, 0x1234);
     } else {
-        TEST("CLR  @R2",         0x0D28);
-        TEST("CLR  0x1234",      0x4D08, 0x1234);
-        TEST("CLR  0xFFFF",      0x4D08, 0xFFFF);
-        ERRT("CLR  0x10000",     OVERFLOW_RANGE, "0x10000", 0x4D08, 0x0000);
-        TEST("CLR  0x1234(R2)",  0x4D28, 0x1234);
-        TEST("CLR  0xFFFF(R2)",  0x4D28, 0xFFFF);
-        ERRT("CLR  0x10000(R2)", OVERFLOW_RANGE, "0x10000(R2)", 0x4D28, 0x0000);
-        TEST("CLRB @R2",         0x0C28);
-        TEST("CLRB 0x1234",      0x4C08, 0x1234);
-        TEST("CLRB 0x1234(R2)",  0x4C28, 0x1234);
+        TEST("CLR  @R2",        0x0D28);
+        TEST("CLR  %1234",      0x4D08, 0x1234);
+        TEST("CLR  %FFFF",      0x4D08, 0xFFFF);
+        ERRT("CLR  %10000",     OVERFLOW_RANGE, "%10000", 0x4D08, 0x0000);
+        TEST("CLR  %1234(R2)",  0x4D28, 0x1234);
+        TEST("CLR  %FFFF(R2)",  0x4D28, 0xFFFF);
+        ERRT("CLR  %10000(R2)", OVERFLOW_RANGE, "%10000(R2)", 0x4D28, 0x0000);
+        TEST("CLRB @R2",        0x0C28);
+        TEST("CLRB %1234",      0x4C08, 0x1234);
+        TEST("CLRB %1234(R2)",  0x4C28, 0x1234);
     }
 
     // Exchange
     TEST("EX  R1,R2",   0xAD21);
     TEST("exb rl1,rh2", 0xAC29);
     if (z8001()) {
-        TEST("EX  R9,@RR2",          0x2D29);
-        TEST("EX  R9,0x120034",      0x6D09, 0x1234);
-        TEST("EX  R9,0x561234",      0x6D09, 0xD600, 0x1234);
-        TEST("EX  R9,0x120034(R2)",  0x6D29, 0x1234);
-        TEST("EX  R9,0x561234(R2)",  0x6D29, 0xD600, 0x1234);
-        TEST("EXB RL1,@RR2",         0x2C29);
-        TEST("EXB RL1,0x120034",     0x6C09, 0x1234);
-        TEST("EXB RL1,0x561234",     0x6C09, 0xD600, 0x1234);
-        TEST("EXB RL1,0x120034(R2)", 0x6C29, 0x1234);
-        TEST("EXB RL1,0x561234(R2)", 0x6C29, 0xD600, 0x1234);
+        TEST("EX  R9,@RR2",         0x2D29);
+        TEST("EX  R9,%120034",      0x6D09, 0x1234);
+        TEST("EX  R9,%561234",      0x6D09, 0xD600, 0x1234);
+        TEST("EX  R9,%120034(R2)",  0x6D29, 0x1234);
+        TEST("EX  R9,%561234(R2)",  0x6D29, 0xD600, 0x1234);
+        TEST("EXB RL1,@RR2",        0x2C29);
+        TEST("EXB RL1,%120034",     0x6C09, 0x1234);
+        TEST("EXB RL1,%561234",     0x6C09, 0xD600, 0x1234);
+        TEST("EXB RL1,%120034(R2)", 0x6C29, 0x1234);
+        TEST("EXB RL1,%561234(R2)", 0x6C29, 0xD600, 0x1234);
     } else {
-        TEST("EX  R9,@R2",         0x2D29);
-        TEST("EX  R9,0x1234",      0x6D09, 0x1234);
-        TEST("EX  R9,0x1234(R2)",  0x6D29, 0x1234);
-        TEST("EXB RL1,@R2",        0x2C29);
-        TEST("EXB RL1,0x1234",     0x6C09, 0x1234);
-        TEST("EXB RL1,0x1234(R2)", 0x6C29, 0x1234);
+        TEST("EX  R9,@R2",        0x2D29);
+        TEST("EX  R9,%1234",      0x6D09, 0x1234);
+        TEST("EX  R9,%1234(R2)",  0x6D29, 0x1234);
+        TEST("EXB RL1,@R2",       0x2C29);
+        TEST("EXB RL1,%1234",     0x6C09, 0x1234);
+        TEST("EXB RL1,%1234(R2)", 0x6C29, 0x1234);
     }
 
     // Load
     TEST("LD  R2,R8",   0xA182);
     TEST("LDB RH2,RL0", 0xA082);
     TEST("ldl rr2,rr8", 0x9482);
-    TEST("LD  R2,#0x5678",      0x2102, 0x5678);
-    TEST("LDB RH2,#0x56",       0xC256);
-    TEST("LDB RH2,#'%%'",       0xC225);
-    TEST("LDB RH2,#'%q'",       0xC227);
-    TEST("LDB RH2,#'%l'",       0xC20A);
-    TEST("LDB RH2,#'%t'",       0xC209);
-    TEST("LDB RH2,#'%r'",       0xC20D);
-    TEST("LDB RH2,#'%p'",       0xC20C);
-    TEST("LDB RH2,#'%1b'",      0xC21B);
-    TEST("LDL RR2,#0x12345678", 0x1402, 0x1234, 0x5678);
+    TEST("LD  R2,#%5678", 0x2102, 0x5678);
+    TEST("LDB RH2,#%56",   0xC256);
+    TEST("LDB RH2,#'%%'",  0xC225);
+    TEST("LDB RH2,#'%q'",  0xC227);
+    TEST("LDB RH2,#'%l'",  0xC20A);
+    TEST("LDB RH2,#'%t'",  0xC209);
+    TEST("LDB RH2,#'%r'",  0xC20D);
+    TEST("LDB RH2,#'%p'",  0xC20C);
+    TEST("LDB RH2,#'%1b'", 0xC21B);
+    TEST("LDL RR2,#%12345678", 0x1402, 0x1234, 0x5678);
     if (z8001()) {
-        TEST("LD  R9,@RR2",          0x2129);
-        TEST("LD  R9,0x120034",      0x6109, 0x1234);
-        TEST("LD  R9,0x561234",      0x6109, 0xD600, 0x1234);
-        TEST("LD  R9,0x120034(R2)",  0x6129, 0x1234);
-        TEST("LD  R9,0x561234(R2)",  0x6129, 0xD600, 0x1234);
-        TEST("LD  R9,RR2(#0x1234)",  0x3129, 0x1234);
-        TEST("LD  R9,RR2(#-1)",      0x3129, 0xFFFF);
-        TEST("LD  R9,RR2(#32767)",   0x3129, 0x7FFF);
-        TEST("LD  R9,RR2(#-32768)",  0x3129, 0x8000);
+        TEST("LD  R9,@RR2",         0x2129);
+        TEST("LD  R9,%120034",      0x6109, 0x1234);
+        TEST("LD  R9,%561234",      0x6109, 0xD600, 0x1234);
+        TEST("LD  R9,%120034(R2)",  0x6129, 0x1234);
+        TEST("LD  R9,%561234(R2)",  0x6129, 0xD600, 0x1234);
+        TEST("LD  R9,RR2(#%1234)",  0x3129, 0x1234);
+        TEST("LD  R9,RR2(#-1)",     0x3129, 0xFFFF);
+        TEST("LD  R9,RR2(#32767)",  0x3129, 0x7FFF);
+        TEST("LD  R9,RR2(#-32768)", 0x3129, 0x8000);
         ERRT("LD  R9,RR0(#-32768)", REGISTER_NOT_ALLOWED, "RR0(#-32768)", 0x3109, 0x8000);
         ERRT("LD  R9,RR2(#32768)",  OVERFLOW_RANGE, "#32768)",  0x3129, 0x8000);
         ERRT("LD  R9,RR2(#-32769)", OVERFLOW_RANGE, "#-32769)", 0x3129, 0x7FFF);
-        TEST("LD  R9,RR2(R4)",       0x7129, 0x0400);
-        TEST("LD  R9,RR2(R0)",       0x7129, 0x0000);
+        TEST("LD  R9,RR2(R4)",      0x7129, 0x0400);
+        TEST("LD  R9,RR2(R0)",      0x7129, 0x0000);
         ERRT("LD  R9,RR0(R4)", REGISTER_NOT_ALLOWED, "RR0(R4)", 0x7109, 0x0400);
-        TEST("LDB RL1,@RR2",         0x2029);
-        TEST("LDB RL1,0x120034",     0x6009, 0x1234);
-        TEST("LDB RL1,0x561234",     0x6009, 0xD600, 0x1234);
-        TEST("LDB RL1,0x120034(R2)", 0x6029, 0x1234);
-        TEST("LDB RL1,0x561234(R2)", 0x6029, 0xD600, 0x1234);
-        TEST("LDB RL1,RR2(#0x1234)", 0x3029, 0x1234);
-        ERRT("LDB RL1,RR0(#0x1234)", REGISTER_NOT_ALLOWED, "RR0(#0x1234)", 0x3009, 0x1234);
-        TEST("LDB RL1,RR2(R4)",      0x7029, 0x0400);
-        TEST("LDB RL1,RR2(R0)",      0x7029, 0x0000);
+        TEST("LDB RL1,@RR2",        0x2029);
+        TEST("LDB RL1,%120034",     0x6009, 0x1234);
+        TEST("LDB RL1,%561234",     0x6009, 0xD600, 0x1234);
+        TEST("LDB RL1,%120034(R2)", 0x6029, 0x1234);
+        TEST("LDB RL1,%561234(R2)", 0x6029, 0xD600, 0x1234);
+        TEST("LDB RL1,RR2(#%1234)", 0x3029, 0x1234);
+        ERRT("LDB RL1,RR0(#%1234)", REGISTER_NOT_ALLOWED, "RR0(#%1234)", 0x3009, 0x1234);
+        TEST("LDB RL1,RR2(R4)",     0x7029, 0x0400);
+        TEST("LDB RL1,RR2(R0)",     0x7029, 0x0000);
         ERRT("LDB RL1,RR0(R4)", REGISTER_NOT_ALLOWED, "RR0(R4)", 0x7009, 0x0400);
-        TEST("LDL RR2,@RR8",         0x1482);
-        TEST("LDL RR2,0x120034",     0x5402, 0x1234);
-        TEST("LDL RR2,0x561234",     0x5402, 0xD600, 0x1234);
-        TEST("LDL RR2,0x120034(R8)", 0x5482, 0x1234);
-        TEST("LDL RR2,0x561234(R8)", 0x5482, 0xD600, 0x1234);
-        TEST("LDL RR2,RR8(#0x1234)", 0x3582, 0x1234);
-        ERRT("LDL RR2,RR0(#0x1234)", REGISTER_NOT_ALLOWED, "RR0(#0x1234)", 0x3502, 0x1234);
+        TEST("LDL RR2,@RR8",        0x1482);
+        TEST("LDL RR2,%120034",     0x5402, 0x1234);
+        TEST("LDL RR2,%561234",     0x5402, 0xD600, 0x1234);
+        TEST("LDL RR2,%120034(R8)", 0x5482, 0x1234);
+        TEST("LDL RR2,%561234(R8)", 0x5482, 0xD600, 0x1234);
+        TEST("LDL RR2,RR8(#%1234)", 0x3582, 0x1234);
+        ERRT("LDL RR2,RR0(#%1234)", REGISTER_NOT_ALLOWED, "RR0(#%1234)", 0x3502, 0x1234);
         TEST("LDL RR2,RR8(R4)", 0x7582, 0x0400);
         TEST("LDL RR2,RR8(R0)", 0x7582, 0x0000);
         ERRT("LDL RR2,RR0(R4)", REGISTER_NOT_ALLOWED, "RR0(R4)", 0x7502, 0x0400);
     } else {
-        TEST("LD  R9,@R2",          0x2129);
-        TEST("LD  R9,0x1234",       0x6109, 0x1234);
-        TEST("LD  R9,0x1234(R2)",   0x6129, 0x1234);
-        TEST("LD  R9,R2(#0x1234)",  0x3129, 0x1234);
-        ERRT("LD  R9,R0(#0x1234)", REGISTER_NOT_ALLOWED, "R0(#0x1234)", 0x3109, 0x1234);
-        TEST("LD  R9,R2(R4)",       0x7129, 0x0400);
-        TEST("LD  R9,R2(R0)",       0x7129, 0x0000);
+        TEST("LD  R9,@R2",         0x2129);
+        TEST("LD  R9,%1234",       0x6109, 0x1234);
+        TEST("LD  R9,%1234(R2)",   0x6129, 0x1234);
+        TEST("LD  R9,R2(#%1234)",  0x3129, 0x1234);
+        ERRT("LD  R9,R0(#%1234)", REGISTER_NOT_ALLOWED, "R0(#%1234)", 0x3109, 0x1234);
+        TEST("LD  R9,R2(R4)",      0x7129, 0x0400);
+        TEST("LD  R9,R2(R0)",      0x7129, 0x0000);
         ERRT("LD  R9,R0(R4)", REGISTER_NOT_ALLOWED, "R0(R4)", 0x7109, 0x0400);
-        TEST("LDB RL1,@R2",         0x2029);
-        TEST("LDB RL1,0x1234",      0x6009, 0x1234);
-        TEST("LDB RL1,0x1234(R2)",  0x6029, 0x1234);
-        TEST("LDB RL1,R2(#0x1234)", 0x3029, 0x1234);
-        ERRT("LDB RL1,R0(#0x1234)", REGISTER_NOT_ALLOWED, "R0(#0x1234)", 0x3009, 0x1234);
-        TEST("LDB RL1,R2(R4)",      0x7029, 0x0400);
-        TEST("LDB RL1,R2(R0)",      0x7029, 0x0000);
+        TEST("LDB RL1,@R2",        0x2029);
+        TEST("LDB RL1,%1234",      0x6009, 0x1234);
+        TEST("LDB RL1,%1234(R2)",  0x6029, 0x1234);
+        TEST("LDB RL1,R2(#%1234)", 0x3029, 0x1234);
+        ERRT("LDB RL1,R0(#%1234)", REGISTER_NOT_ALLOWED, "R0(#%1234)", 0x3009, 0x1234);
+        TEST("LDB RL1,R2(R4)",     0x7029, 0x0400);
+        TEST("LDB RL1,R2(R0)",     0x7029, 0x0000);
         ERRT("LDB RL1,R0(R4)", REGISTER_NOT_ALLOWED, "R0(R4)", 0x7009, 0x0400);
-        TEST("LDL RR2,@R8",         0x1482);
-        TEST("LDL RR2,0x1234",      0x5402, 0x1234);
-        TEST("LDL RR2,0x1234(R8)",  0x5482, 0x1234);
-        TEST("LDL RR2,R8(#0x1234)", 0x3582, 0x1234);
-        ERRT("LDL RR2,R0(#0x1234)", REGISTER_NOT_ALLOWED, "R0(#0x1234)", 0x3502, 0x1234);
-        TEST("LDL RR2,R8(R4)",      0x7582, 0x0400);
-        TEST("LDL RR2,R8(R0)",      0x7582, 0x0000);
+        TEST("LDL RR2,@R8",        0x1482);
+        TEST("LDL RR2,%1234",      0x5402, 0x1234);
+        TEST("LDL RR2,%1234(R8)",  0x5482, 0x1234);
+        TEST("LDL RR2,R8(#%1234)", 0x3582, 0x1234);
+        ERRT("LDL RR2,R0(#%1234)", REGISTER_NOT_ALLOWED, "R0(#%1234)", 0x3502, 0x1234);
+        TEST("LDL RR2,R8(R4)",     0x7582, 0x0400);
+        TEST("LDL RR2,R8(R0)",     0x7582, 0x0000);
         ERRT("LDL RR2,R0(R4)", REGISTER_NOT_ALLOWED, "R0(R4)", 0x7502, 0x0400);
     }
     if (z8001()) {
-        TEST("LD  @RR2,R9",          0x2F29);
-        TEST("LD  0x120034,R9",      0x6F09, 0x1234);
-        TEST("LD  0x561234,R9",      0x6F09, 0xD600, 0x1234);
-        TEST("LD  0x120034(R2),R9",  0x6F29, 0x1234);
-        TEST("LD  0x561234(R2),R9",  0x6F29, 0xD600, 0x1234);
-        TEST("LD  RR2(#0x1234),R9",  0x3329, 0x1234);
-        ERRT("LD  RR0(#0x1234),R9", REGISTER_NOT_ALLOWED, "RR0(#0x1234),R9", 0x3309, 0x1234);
-        TEST("LD  RR2(R4),R9",       0x7329, 0x0400);
-        TEST("LD  RR2(R0),R9",       0x7329, 0x0000);
+        TEST("LD  @RR2,R9",         0x2F29);
+        TEST("LD  %120034,R9",      0x6F09, 0x1234);
+        TEST("LD  %561234,R9",      0x6F09, 0xD600, 0x1234);
+        TEST("LD  %120034(R2),R9",  0x6F29, 0x1234);
+        TEST("LD  %561234(R2),R9",  0x6F29, 0xD600, 0x1234);
+        TEST("LD  RR2(#%1234),R9",  0x3329, 0x1234);
+        ERRT("LD  RR0(#%1234),R9", REGISTER_NOT_ALLOWED, "RR0(#%1234),R9", 0x3309, 0x1234);
+        TEST("LD  RR2(R4),R9",      0x7329, 0x0400);
+        TEST("LD  RR2(R0),R9",      0x7329, 0x0000);
         ERRT("LD  RR0(R4),R9", REGISTER_NOT_ALLOWED, "RR0(R4),R9", 0x7309, 0x0400);
-        TEST("LDB @RR2,RL1",         0x2E29);
-        TEST("LDB 0x120034,RL1",     0x6E09, 0x1234);
-        TEST("LDB 0x561234,RL1",     0x6E09, 0xD600, 0x1234);
-        TEST("LDB 0x120034(R2),RL1", 0x6E29, 0x1234);
-        TEST("LDB 0x561234(R2),RL1", 0x6E29, 0xD600, 0x1234);
-        TEST("LDB RR2(#0x1234),RL1", 0x3229, 0x1234);
-        ERRT("LDB RR0(#0x1234),RL1", REGISTER_NOT_ALLOWED, "RR0(#0x1234),RL1", 0x3209, 0x1234);
-        TEST("LDB RR2(R4),RL1",      0x7229, 0x0400);
-        TEST("LDB RR2(R0),RL1",      0x7229, 0x0000);
+        TEST("LDB @RR2,RL1",        0x2E29);
+        TEST("LDB %120034,RL1",     0x6E09, 0x1234);
+        TEST("LDB %561234,RL1",     0x6E09, 0xD600, 0x1234);
+        TEST("LDB %120034(R2),RL1", 0x6E29, 0x1234);
+        TEST("LDB %561234(R2),RL1", 0x6E29, 0xD600, 0x1234);
+        TEST("LDB RR2(#%1234),RL1", 0x3229, 0x1234);
+        ERRT("LDB RR0(#%1234),RL1", REGISTER_NOT_ALLOWED, "RR0(#%1234),RL1", 0x3209, 0x1234);
+        TEST("LDB RR2(R4),RL1",     0x7229, 0x0400);
+        TEST("LDB RR2(R0),RL1",     0x7229, 0x0000);
         ERRT("LDB RR0(R4),RL1", REGISTER_NOT_ALLOWED, "RR0(R4),RL1", 0x7209, 0x0400);
-        TEST("LDL @RR8,RR2",         0x1D82);
-        TEST("LDL 0x120034,RR2",     0x5D02, 0x1234);
-        TEST("LDL 0x561234,RR2",     0x5D02, 0xD600, 0x1234);
-        TEST("LDL 0x120034(R8),RR2", 0x5D82, 0x1234);
-        TEST("LDL 0x561234(R8),RR2", 0x5D82, 0xD600, 0x1234);
-        TEST("LDL RR8(#0x1234),RR2", 0x3782, 0x1234);
-        ERRT("LDL RR0(#0x1234),RR2", REGISTER_NOT_ALLOWED, "RR0(#0x1234),RR2", 0x3702, 0x1234);
-        TEST("LDL RR8(R4),RR2",      0x7782, 0x0400);
-        TEST("LDL RR8(R0),RR2",      0x7782, 0x0000);
+        TEST("LDL @RR8,RR2",        0x1D82);
+        TEST("LDL %120034,RR2",     0x5D02, 0x1234);
+        TEST("LDL %561234,RR2",     0x5D02, 0xD600, 0x1234);
+        TEST("LDL %120034(R8),RR2", 0x5D82, 0x1234);
+        TEST("LDL %561234(R8),RR2", 0x5D82, 0xD600, 0x1234);
+        TEST("LDL RR8(#%1234),RR2", 0x3782, 0x1234);
+        ERRT("LDL RR0(#%1234),RR2", REGISTER_NOT_ALLOWED, "RR0(#%1234),RR2", 0x3702, 0x1234);
+        TEST("LDL RR8(R4),RR2",     0x7782, 0x0400);
+        TEST("LDL RR8(R0),RR2",     0x7782, 0x0000);
         ERRT("LDL RR0(R4),RR2", REGISTER_NOT_ALLOWED, "RR0(R4),RR2", 0x7702, 0x0400);
     } else {
-        TEST("LD  @R2,R9",          0x2F29);
-        TEST("LD  0x1234,R9",       0x6F09, 0x1234);
-        TEST("LD  0x1234(R2),R9",   0x6F29, 0x1234);
-        TEST("LD  R2(#0x1234),R9",  0x3329, 0x1234);
-        ERRT("LD  R0(#0x1234),R9", REGISTER_NOT_ALLOWED, "R0(#0x1234),R9", 0x3309, 0x1234);
-        TEST("LD  R2(R4),R9",       0x7329, 0x0400);
-        TEST("LD  R2(R0),R9",       0x7329, 0x0000);
+        TEST("LD  @R2,R9",         0x2F29);
+        TEST("LD  %1234,R9",       0x6F09, 0x1234);
+        TEST("LD  %1234(R2),R9",   0x6F29, 0x1234);
+        TEST("LD  R2(#%1234),R9",  0x3329, 0x1234);
+        ERRT("LD  R0(#%1234),R9", REGISTER_NOT_ALLOWED, "R0(#%1234),R9", 0x3309, 0x1234);
+        TEST("LD  R2(R4),R9",      0x7329, 0x0400);
+        TEST("LD  R2(R0),R9",      0x7329, 0x0000);
         ERRT("LD  R0(R4),R9", REGISTER_NOT_ALLOWED, "R0(R4),R9", 0x7309, 0x0400);
-        TEST("LDB @R2,RL1",         0x2E29);
-        TEST("LDB 0x1234,RL1",      0x6E09, 0x1234);
-        TEST("LDB 0x1234(R2),RL1",  0x6E29, 0x1234);
-        TEST("LDB R2(#0x1234),RL1", 0x3229, 0x1234);
-        ERRT("LDB R0(#0x1234),RL1", REGISTER_NOT_ALLOWED, "R0(#0x1234),RL1", 0x3209, 0x1234);
-        TEST("LDB R2(R4),RL1",      0x7229, 0x0400);
-        TEST("LDB R2(R0),RL1",      0x7229, 0x0000);
+        TEST("LDB @R2,RL1",        0x2E29);
+        TEST("LDB %1234,RL1",      0x6E09, 0x1234);
+        TEST("LDB %1234(R2),RL1",  0x6E29, 0x1234);
+        TEST("LDB R2(#%1234),RL1", 0x3229, 0x1234);
+        ERRT("LDB R0(#%1234),RL1", REGISTER_NOT_ALLOWED, "R0(#%1234),RL1", 0x3209, 0x1234);
+        TEST("LDB R2(R4),RL1",     0x7229, 0x0400);
+        TEST("LDB R2(R0),RL1",     0x7229, 0x0000);
         ERRT("LDB R0(R4),RL1", REGISTER_NOT_ALLOWED, "R0(R4),RL1", 0x7209, 0x0400);
-        TEST("LDL @R8,RR2",         0x1D82);
-        TEST("LDL 0x1234,RR2",      0x5D02, 0x1234);
-        TEST("LDL 0x1234(R8),RR2",  0x5D82, 0x1234);
-        TEST("LDL R8(#0x1234),RR2", 0x3782, 0x1234);
-        ERRT("LDL R0(#0x1234),RR2", REGISTER_NOT_ALLOWED, "R0(#0x1234),RR2", 0x3702, 0x1234);
-        TEST("LDL R8(R4),RR2",      0x7782, 0x0400);
-        TEST("LDL R8(R0),RR2",      0x7782, 0x0000);
+        TEST("LDL @R8,RR2",        0x1D82);
+        TEST("LDL %1234,RR2",      0x5D02, 0x1234);
+        TEST("LDL %1234(R8),RR2",  0x5D82, 0x1234);
+        TEST("LDL R8(#%1234),RR2", 0x3782, 0x1234);
+        ERRT("LDL R0(#%1234),RR2", REGISTER_NOT_ALLOWED, "R0(#%1234),RR2", 0x3702, 0x1234);
+        TEST("LDL R8(R4),RR2",     0x7782, 0x0400);
+        TEST("LDL R8(R0),RR2",     0x7782, 0x0000);
         ERRT("LDL R0(R4),RR2", REGISTER_NOT_ALLOWED, "R0(R4),RR2", 0x7702, 0x0400);
     }
     if (z8001()) {
-        TEST("LD  R2,#0x5678",           0x2102, 0x5678);
-        TEST("LD  @RR2,#0x5678",         0x0D25, 0x5678);
-        TEST("LD  0x120034,#0x5678",     0x4D05, 0x1234, 0x5678);
-        TEST("LD  0x561234,#0x5678",     0x4D05, 0xD600, 0x1234, 0x5678);
-        TEST("LD  0x120034(R2),#0x5678", 0x4D25, 0x1234, 0x5678);
-        TEST("LD  0x561234(R2),#0x5678", 0x4D25, 0xD600, 0x1234, 0x5678);
-        TEST("LDB RH2,#%(2)01010110",    0xC256);
-        TEST("LDB @RR2,#%(8)126",        0x0C25, 0x5656);
-        TEST("LDB 0x120034,#0x56",       0x4C05, 0x1234, 0x5656);
-        TEST("LDB 0x561234,#0x56",       0x4C05, 0xD600, 0x1234, 0x5656);
-        TEST("LDB 0x120034(R2),#0x56",   0x4C25, 0x1234, 0x5656);
-        TEST("LDB 0x561234(R2),#0x56",   0x4C25, 0xD600, 0x1234, 0x5656);
+        TEST("LD  R2,#%5678",          0x2102, 0x5678);
+        TEST("LD  @RR2,#%5678",        0x0D25, 0x5678);
+        TEST("LD  %120034,#%5678",     0x4D05, 0x1234, 0x5678);
+        TEST("LD  %561234,#%5678",     0x4D05, 0xD600, 0x1234, 0x5678);
+        TEST("LD  %120034(R2),#%5678", 0x4D25, 0x1234, 0x5678);
+        TEST("LD  %561234(R2),#%5678", 0x4D25, 0xD600, 0x1234, 0x5678);
+        TEST("LDB RH2,#%(2)01010110",  0xC256);
+        TEST("LDB @RR2,#%(8)126",      0x0C25, 0x5656);
+        TEST("LDB %120034,#%56",       0x4C05, 0x1234, 0x5656);
+        TEST("LDB %561234,#%56",       0x4C05, 0xD600, 0x1234, 0x5656);
+        TEST("LDB %120034(R2),#%56",   0x4C25, 0x1234, 0x5656);
+        TEST("LDB %561234(R2),#%56",   0x4C25, 0xD600, 0x1234, 0x5656);
     } else {
-        TEST("LD  R2,#0x5678",         0x2102, 0x5678);
-        TEST("LD  @R2,#0x5678",        0x0D25, 0x5678);
-        TEST("LD  0x1234,#0x5678",     0x4D05, 0x1234, 0x5678);
-        TEST("LD  0x1234(R2),#0x5678", 0x4D25, 0x1234, 0x5678);
-        TEST("LDB RH2,#0x56",          0xC256);
-        TEST("LDB @R2,#0x56",          0x0C25, 0x5656);
-        TEST("LDB 0x1234,#0x56",       0x4C05, 0x1234, 0x5656);
-        TEST("LDB 0x1234(R2),#0x56",   0x4C25, 0x1234, 0x5656);
+        TEST("LD  R2,#%5678",        0x2102, 0x5678);
+        TEST("LD  @R2,#%5678",       0x0D25, 0x5678);
+        TEST("LD  %1234,#%5678",     0x4D05, 0x1234, 0x5678);
+        TEST("LD  %1234(R2),#%5678", 0x4D25, 0x1234, 0x5678);
+        TEST("LDB RH2,#%56",         0xC256);
+        TEST("LDB @R2,#%56",         0x0C25, 0x5656);
+        TEST("LDB %1234,#%56",       0x4C05, 0x1234, 0x5656);
+        TEST("LDB %1234(R2),#%56",   0x4C25, 0x1234, 0x5656);
     }
 
     // Load Address
     if (z8001()) {
-        TEST("LDA RR8,0x120034",     0x7608, 0x1234);
-        TEST("LDA RR8,0x561234",     0x7608, 0xD600, 0x1234);
-        TEST("LDA RR8,0x120034(R2)", 0x7628, 0x1234);
-        TEST("LDA RR8,0x561234(R2)", 0x7628, 0xD600, 0x1234);
-        TEST("LDA RR8,RR2(#0x1234)", 0x3428, 0x1234);
-        TEST("LDA RR8,RR2(R4)",      0x7428, 0x0400);
+        TEST("LDA RR8,%120034",     0x7608, 0x1234);
+        TEST("LDA RR8,%561234",     0x7608, 0xD600, 0x1234);
+        TEST("LDA RR8,%120034(R2)", 0x7628, 0x1234);
+        TEST("LDA RR8,%561234(R2)", 0x7628, 0xD600, 0x1234);
+        TEST("LDA RR8,RR2(#%1234)", 0x3428, 0x1234);
+        TEST("LDA RR8,RR2(R4)",     0x7428, 0x0400);
     } else {
-        TEST("LDA R8,0x1234",      0x7608, 0x1234);
-        TEST("LDA R8,0x1234(R2)",  0x7628, 0x1234);
-        TEST("LDA R8,R2(#0x1234)", 0x3428, 0x1234);
-        TEST("LDA R8,R2(R4)",      0x7428, 0x0400);
+        TEST("LDA R8,%1234",      0x7608, 0x1234);
+        TEST("LDA R8,%1234(R2)",  0x7628, 0x1234);
+        TEST("LDA R8,R2(#%1234)", 0x3428, 0x1234);
+        TEST("LDA R8,R2(R4)",     0x7428, 0x0400);
     }
 
     // Load Address Relative
     if (z8001()) {
-        ATEST(0x002000, "LDAR RR8,0x002000", 0x3408, 0xFFFC);
-        ATEST(0x002000, "LDAR RR8,0x002004", 0x3408, 0x0000);
-        ATEST(0x102000, "LDAR RR8,0x0FA004", 0x3408, 0x8000);
-        ATEST(0x002000, "LDAR RR8,0x00A003", 0x3408, 0x7FFF);
+        ATEST(0x002000, "LDAR RR8,%002000", 0x3408, 0xFFFC);
+        ATEST(0x002000, "LDAR RR8,%002004", 0x3408, 0x0000);
+        ATEST(0x102000, "LDAR RR8,%0FA004", 0x3408, 0x8000);
+        ATEST(0x002000, "LDAR RR8,%00A003", 0x3408, 0x7FFF);
     } else {
-        ATEST(0x2000, "LDAR R8,0x2000", 0x3408, 0xFFFC);
-        ATEST(0x2000, "LDAR R8,0x2004", 0x3408, 0x0000);
-        ATEST(0xA000, "LDAR R8,0x2004", 0x3408, 0x8000);
-        ATEST(0x2000, "LDAR R8,0xA003", 0x3408, 0x7FFF);
+        ATEST(0x2000, "LDAR R8,%2000", 0x3408, 0xFFFC);
+        ATEST(0x2000, "LDAR R8,%2004", 0x3408, 0x0000);
+        ATEST(0xA000, "LDAR R8,%2004", 0x3408, 0x8000);
+        ATEST(0x2000, "LDAR R8,%A003", 0x3408, 0x7FFF);
     }
 
     // Load Constant
@@ -295,129 +295,129 @@ static void test_load_and_exchange() {
         TEST("LDM R15,@RR2,#1",        0x1C21, 0x0F00);
         ERRT("LDM R15,@RR2,#2",        OVERFLOW_RANGE, "#2", 0x1c21, 0x0F01);
         TEST("LDM R1,@RR2,#2",         0x1C21, 0x0101);
-        TEST("LDM R13,0x120034,#3",    0x5C01, 0x0D02, 0x1234);
-        TEST("LDM R12,0x561234,#4",    0x5C01, 0x0C03, 0xD600, 0x1234);
-        TEST("LDM R1,0x120034(R2),#5", 0x5C21, 0x0104, 0x1234);
-        TEST("LDM R1,0x561234(R2),#6", 0x5C21, 0x0105, 0xD600, 0x1234);
+        TEST("LDM R13,%120034,#3",     0x5C01, 0x0D02, 0x1234);
+        TEST("LDM R12,%561234,#4",     0x5C01, 0x0C03, 0xD600, 0x1234);
+        TEST("LDM R1,%120034(R2),#5",  0x5C21, 0x0104, 0x1234);
+        TEST("LDM R1,%561234(R2),#6",  0x5C21, 0x0105, 0xD600, 0x1234);
         TEST("LDM @RR2,R15,#1",        0x1C29, 0x0F00);
         ERRT("LDM @RR2,R15,#2",        OVERFLOW_RANGE, "#2", 0x1C29, 0x0F01);
         TEST("LDM @RR2,R1,#2",         0x1C29, 0x0101);
-        TEST("LDM 120034H,R13,#3",     0x5C09, 0x0D02, 0x1234);
-        TEST("LDM 561234H,R12,#4",     0x5C09, 0x0C03, 0xD600, 0x1234);
-        TEST("LDM 120034H(R2),R1,#5",  0x5C29, 0x0104, 0x1234);
-        TEST("LDM 561234H(R2),R0,#16", 0x5C29, 0x000F, 0xD600, 0x1234);
+        TEST("LDM %120034,R13,#3",     0x5C09, 0x0D02, 0x1234);
+        TEST("LDM %561234,R12,#4",     0x5C09, 0x0C03, 0xD600, 0x1234);
+        TEST("LDM %120034(R2),R1,#5",  0x5C29, 0x0104, 0x1234);
+        TEST("LDM %561234(R2),R0,#16", 0x5C29, 0x000F, 0xD600, 0x1234);
     } else {
-        TEST("LDM R9,@R2,#7",         0x1C21, 0x0906);
-        ERRT("LDM R9,@R2,#8",         OVERFLOW_RANGE, "#8", 0x1C21, 0x0907);
-        TEST("LDM R1,@R2,#8",         0x1C21, 0x0107);
-        TEST("LDM R7,0x1234,#9",      0x5C01, 0x0708, 0x1234);
-        TEST("LDM R1,0x1234(R2),#15", 0x5C21, 0x010E, 0x1234);
+        TEST("LDM R9,@R2,#7",        0x1C21, 0x0906);
+        ERRT("LDM R9,@R2,#8",        OVERFLOW_RANGE, "#8", 0x1C21, 0x0907);
+        TEST("LDM R1,@R2,#8",        0x1C21, 0x0107);
+        TEST("LDM R7,%1234,#9",      0x5C01, 0x0708, 0x1234);
+        TEST("LDM R1,%1234(R2),#15", 0x5C21, 0x010E, 0x1234);
         TEST("LDM @R2,R9,#7",        0x1C29, 0x0906);
         ERRT("LDM @R2,R9,#8",        OVERFLOW_RANGE, "#8", 0x1C29, 0x0907);
         TEST("LDM @R2,R1,#8",        0x1C29, 0x0107);
-        TEST("LDM 1234H,R7,#9",      0x5C09, 0x0708, 0x1234);
-        TEST("LDM 1234H(R2),R0,#16", 0x5C29, 0x000F, 0x1234);
+        TEST("LDM %1234,R7,#9",      0x5C09, 0x0708, 0x1234);
+        TEST("LDM %1234(R2),R0,#16", 0x5C29, 0x000F, 0x1234);
     }
 
     // Load Relative
     if (z8001()) {
-        ATEST(0x2000, "LDR  R1,0x002000",  0x3101, 0xFFFC);
-        ATEST(0x2000, "LDR  0x002000,R1",  0x3301, 0xFFFC);
-        ATEST(0xA000, "LDR  0x002004,R1",  0x3301, 0x8000);
-        AERRT(0xA000, "LDR  0x002003,R1",  OPERAND_TOO_FAR, "0x002003,R1", 0x3301, 0x7FFF);
-        ATEST(0x2000, "LDR  0x00A003,R1",  0x3301, 0x7FFF);
-        AERRT(0x2000, "LDR  0x00A004,R1",  OPERAND_TOO_FAR, "0x00A004,R1", 0x3301, 0x8000);
-        ATEST(0x2000, "LDRB RH1,0x002000", 0x3001, 0xFFFC);
-        ATEST(0x2000, "LDRB 0x002000,RH1", 0x3201, 0xFFFC);
-        ATEST(0x2000, "LDRL RR2,0x002000", 0x3502, 0xFFFC);
-        ATEST(0x2000, "LDRL 0x002000,RR2", 0x3702, 0xFFFC);
+        ATEST(0x2000, "LDR  R1,%002000",  0x3101, 0xFFFC);
+        ATEST(0x2000, "LDR  %002000,R1",  0x3301, 0xFFFC);
+        ATEST(0xA000, "LDR  %002004,R1",  0x3301, 0x8000);
+        AERRT(0xA000, "LDR  %002003,R1",  OPERAND_TOO_FAR, "%002003,R1", 0x3301, 0x7FFF);
+        ATEST(0x2000, "LDR  %00A003,R1",  0x3301, 0x7FFF);
+        AERRT(0x2000, "LDR  %00A004,R1",  OPERAND_TOO_FAR, "%00A004,R1", 0x3301, 0x8000);
+        ATEST(0x2000, "LDRB RH1,%002000", 0x3001, 0xFFFC);
+        ATEST(0x2000, "LDRB %002000,RH1", 0x3201, 0xFFFC);
+        ATEST(0x2000, "LDRL RR2,%002000", 0x3502, 0xFFFC);
+        ATEST(0x2000, "LDRL %002000,RR2", 0x3702, 0xFFFC);
     } else {
-        ATEST(0x2000, "LDR  R1,0x2000",  0x3101, 0xFFFC);
-        ATEST(0x2000, "LDR  0x2000,R1",  0x3301, 0xFFFC);
-        ATEST(0xA000, "LDR  0x2004,R1",  0x3301, 0x8000);
-        AERRT(0xA000, "LDR  0x2003,R1",  OPERAND_TOO_FAR, "0x2003,R1", 0x3301, 0x7FFF);
-        ATEST(0x2000, "LDR  0xA003,R1",  0x3301, 0x7FFF);
-        AERRT(0x2000, "LDR  0xA004,R1",  OPERAND_TOO_FAR, "0xA004,R1", 0x3301, 0x8000);
-        ATEST(0x2000, "LDRB RH1,0x2000", 0x3001, 0xFFFC);
-        ATEST(0x2000, "LDRB 0x2000,RH1", 0x3201, 0xFFFC);
-        ATEST(0x2000, "LDRL RR2,0x2000", 0x3502, 0xFFFC);
-        ATEST(0x2000, "LDRL 0x2000,RR2", 0x3702, 0xFFFC);
+        ATEST(0x2000, "LDR  R1,%2000",  0x3101, 0xFFFC);
+        ATEST(0x2000, "LDR  %2000,R1",  0x3301, 0xFFFC);
+        ATEST(0xA000, "LDR  %2004,R1",  0x3301, 0x8000);
+        AERRT(0xA000, "LDR  %2003,R1",  OPERAND_TOO_FAR, "%2003,R1", 0x3301, 0x7FFF);
+        ATEST(0x2000, "LDR  %A003,R1",  0x3301, 0x7FFF);
+        AERRT(0x2000, "LDR  %A004,R1",  OPERAND_TOO_FAR, "%A004,R1", 0x3301, 0x8000);
+        ATEST(0x2000, "LDRB RH1,%2000", 0x3001, 0xFFFC);
+        ATEST(0x2000, "LDRB %2000,RH1", 0x3201, 0xFFFC);
+        ATEST(0x2000, "LDRL RR2,%2000", 0x3502, 0xFFFC);
+        ATEST(0x2000, "LDRL %2000,RR2", 0x3702, 0xFFFC);
     }
 
     // Pop
     if (z8001()) {
-        TEST("POP  R2,@RR4",           0x9742);
-        TEST("POP  @RR2,@RR4",         0x1742);
-        TEST("POP  0x120034,@RR4",     0x5740, 0x1234);
-        TEST("POP  0x561234,@RR4",     0x5740, 0xD600, 0x1234);
-        TEST("POP  0x120034(R2),@RR4", 0x5742, 0x1234);
-        TEST("POP  0x561234(R2),@RR4", 0x5742, 0xD600, 0x1234);
-        TEST("POPL RR2,@RR4",          0x9542);
-        TEST("POPL @RR2,@RR4",         0x1542);
-        TEST("POPL 0x120034,@RR4",     0x5540, 0x1234);
-        TEST("POPL 0x561234,@RR4",     0x5540, 0xD600, 0x1234);
-        TEST("POPL 0x120034(R2),@RR4", 0x5542, 0x1234);
-        TEST("POPL 0x561234(R2),@RR4", 0x5542, 0xD600, 0x1234);
-        ERRT("POP  R5,@RR4",           REGISTERS_OVERLAPPED, "@RR4", 0x9745);
-        ERRT("POP  @RR4,@RR4",         REGISTERS_OVERLAPPED, "@RR4", 0x1744);
-        ERRT("POP  0x120034(R4),@RR4", REGISTERS_OVERLAPPED, "@RR4", 0x5744, 0x1234);
-        ERRT("POPL RR4,@RR4",          REGISTERS_OVERLAPPED, "@RR4", 0x9544);
-        ERRT("POPL @RR4,@RR4",         REGISTERS_OVERLAPPED, "@RR4", 0x1544);
-        ERRT("POPL 0x120034(R5),@RR4", REGISTERS_OVERLAPPED, "@RR4", 0x5545, 0x1234);
+        TEST("POP  R2,@RR4",          0x9742);
+        TEST("POP  @RR2,@RR4",        0x1742);
+        TEST("POP  %120034,@RR4",     0x5740, 0x1234);
+        TEST("POP  %561234,@RR4",     0x5740, 0xD600, 0x1234);
+        TEST("POP  %120034(R2),@RR4", 0x5742, 0x1234);
+        TEST("POP  %561234(R2),@RR4", 0x5742, 0xD600, 0x1234);
+        TEST("POPL RR2,@RR4",         0x9542);
+        TEST("POPL @RR2,@RR4",        0x1542);
+        TEST("POPL %120034,@RR4",     0x5540, 0x1234);
+        TEST("POPL %561234,@RR4",     0x5540, 0xD600, 0x1234);
+        TEST("POPL %120034(R2),@RR4", 0x5542, 0x1234);
+        TEST("POPL %561234(R2),@RR4", 0x5542, 0xD600, 0x1234);
+        ERRT("POP  R5,@RR4",          REGISTERS_OVERLAPPED, "@RR4", 0x9745);
+        ERRT("POP  @RR4,@RR4",        REGISTERS_OVERLAPPED, "@RR4", 0x1744);
+        ERRT("POP  %120034(R4),@RR4", REGISTERS_OVERLAPPED, "@RR4", 0x5744, 0x1234);
+        ERRT("POPL RR4,@RR4",         REGISTERS_OVERLAPPED, "@RR4", 0x9544);
+        ERRT("POPL @RR4,@RR4",        REGISTERS_OVERLAPPED, "@RR4", 0x1544);
+        ERRT("POPL %120034(R5),@RR4", REGISTERS_OVERLAPPED, "@RR4", 0x5545, 0x1234);
     } else {
-        TEST("POP  R2,@R4",         0x9742);
-        TEST("POP  @R2,@R4",        0x1742);
-        TEST("POP  0x1234,@R4",     0x5740, 0x1234);
-        TEST("POP  0x1234(R2),@R4", 0x5742, 0x1234);
-        TEST("POPL RR2,@R4",        0x9542);
-        TEST("POPL @R2,@R4",        0x1542);
-        TEST("POPL 0x1234,@R4",     0x5540, 0x1234);
-        TEST("POPL 0x1234(R2),@R4", 0x5542, 0x1234);
-        ERRT("POP  R4,@R4",         REGISTERS_OVERLAPPED, "@R4", 0x9744);
-        ERRT("POP  @R4,@R4",        REGISTERS_OVERLAPPED, "@R4", 0x1744);
-        ERRT("POP  0x1234(R4),@R4", REGISTERS_OVERLAPPED, "@R4", 0x5744, 0x1234);
-        ERRT("POPL RR2,@R3",        REGISTERS_OVERLAPPED, "@R3", 0x9532);
-        ERRT("POPL @R4,@R4",        REGISTERS_OVERLAPPED, "@R4", 0x1544);
-        ERRT("POPL 0x1234(R4),@R4", REGISTERS_OVERLAPPED, "@R4", 0x5544, 0x1234);
+        TEST("POP  R2,@R4",        0x9742);
+        TEST("POP  @R2,@R4",       0x1742);
+        TEST("POP  %1234,@R4",     0x5740, 0x1234);
+        TEST("POP  %1234(R2),@R4", 0x5742, 0x1234);
+        TEST("POPL RR2,@R4",       0x9542);
+        TEST("POPL @R2,@R4",       0x1542);
+        TEST("POPL %1234,@R4",     0x5540, 0x1234);
+        TEST("POPL %1234(R2),@R4", 0x5542, 0x1234);
+        ERRT("POP  R4,@R4",        REGISTERS_OVERLAPPED, "@R4", 0x9744);
+        ERRT("POP  @R4,@R4",       REGISTERS_OVERLAPPED, "@R4", 0x1744);
+        ERRT("POP  %1234(R4),@R4", REGISTERS_OVERLAPPED, "@R4", 0x5744, 0x1234);
+        ERRT("POPL RR2,@R3",       REGISTERS_OVERLAPPED, "@R3", 0x9532);
+        ERRT("POPL @R4,@R4",       REGISTERS_OVERLAPPED, "@R4", 0x1544);
+        ERRT("POPL %1234(R4),@R4", REGISTERS_OVERLAPPED, "@R4", 0x5544, 0x1234);
     }
 
     // Push
     if (z8001()) {
-        TEST("PUSH  @RR4,R2",           0x9342);
-        TEST("PUSH  @RR4,@RR2",         0x1342);
-        TEST("PUSH  @RR4,0x120034",     0x5340, 0x1234);
-        TEST("PUSH  @RR4,0x561234",     0x5340, 0xD600, 0x1234);
-        TEST("PUSH  @RR4,0x120034(R2)", 0x5342, 0x1234);
-        TEST("PUSH  @RR4,0x561234(R2)", 0x5342, 0xD600, 0x1234);
-        TEST("PUSHL @RR4,RR2",          0x9142);
-        TEST("PUSHL @RR4,@RR2",         0x1142);
-        TEST("PUSHL @RR4,0x120034",     0x5140, 0x1234);
-        TEST("PUSHL @RR4,0x561234",     0x5140, 0xD600, 0x1234);
-        TEST("PUSHL @RR4,0x120034(R2)", 0x5142, 0x1234);
-        TEST("PUSHL @RR4,0x561234(R2)", 0x5142, 0xD600, 0x1234);
-        TEST("PUSH  @RR4,#0x1234",      0x0D49, 0x1234);
-        ERRT("PUSH  @RR4,R5",           REGISTERS_OVERLAPPED, "R5",   0x9345);
-        ERRT("PUSH  @RR4,@RR4",         REGISTERS_OVERLAPPED, "@RR4", 0x1344);
-        ERRT("PUSH  @RR4,0x120034(R4)", REGISTERS_OVERLAPPED, "0x120034(R4)", 0x5344, 0x1234);
-        ERRT("PUSHL @RR4,RR4",          REGISTERS_OVERLAPPED, "RR4",  0x9144);
-        ERRT("PUSHL @RR4,@RR4",         REGISTERS_OVERLAPPED, "@RR4", 0x1144);
-        ERRT("PUSHL @RR4,0x120034(R5)", REGISTERS_OVERLAPPED, "0x120034(R5)", 0x5145, 0x1234);
+        TEST("PUSH  @RR4,R2",          0x9342);
+        TEST("PUSH  @RR4,@RR2",        0x1342);
+        TEST("PUSH  @RR4,%120034",     0x5340, 0x1234);
+        TEST("PUSH  @RR4,%561234",     0x5340, 0xD600, 0x1234);
+        TEST("PUSH  @RR4,%120034(R2)", 0x5342, 0x1234);
+        TEST("PUSH  @RR4,%561234(R2)", 0x5342, 0xD600, 0x1234);
+        TEST("PUSHL @RR4,RR2",         0x9142);
+        TEST("PUSHL @RR4,@RR2",        0x1142);
+        TEST("PUSHL @RR4,%120034",     0x5140, 0x1234);
+        TEST("PUSHL @RR4,%561234",     0x5140, 0xD600, 0x1234);
+        TEST("PUSHL @RR4,%120034(R2)", 0x5142, 0x1234);
+        TEST("PUSHL @RR4,%561234(R2)", 0x5142, 0xD600, 0x1234);
+        TEST("PUSH  @RR4,#%1234",      0x0D49, 0x1234);
+        ERRT("PUSH  @RR4,R5",          REGISTERS_OVERLAPPED, "R5",   0x9345);
+        ERRT("PUSH  @RR4,@RR4",        REGISTERS_OVERLAPPED, "@RR4", 0x1344);
+        ERRT("PUSH  @RR4,%120034(R4)", REGISTERS_OVERLAPPED, "%120034(R4)", 0x5344, 0x1234);
+        ERRT("PUSHL @RR4,RR4",         REGISTERS_OVERLAPPED, "RR4",  0x9144);
+        ERRT("PUSHL @RR4,@RR4",        REGISTERS_OVERLAPPED, "@RR4", 0x1144);
+        ERRT("PUSHL @RR4,%120034(R5)", REGISTERS_OVERLAPPED, "%120034(R5)", 0x5145, 0x1234);
     } else {
-        TEST("PUSH  @R4,R2",         0x9342);
-        TEST("PUSH  @R4,@R2",        0x1342);
-        TEST("PUSH  @R4,0x1234",     0x5340, 0x1234);
-        TEST("PUSH  @R4,0x1234(R2)", 0x5342, 0x1234);
-        TEST("PUSHL @R4,RR2",        0x9142);
-        TEST("PUSHL @R4,@R2",        0x1142);
-        TEST("PUSHL @R4,0x1234",     0x5140, 0x1234);
-        TEST("PUSHL @R4,0x1234(R2)", 0x5142, 0x1234);
-        TEST("PUSH  @R4,#0x1234",    0x0D49, 0x1234);
-        ERRT("PUSH  @R4,R4" ,        REGISTERS_OVERLAPPED, "R4",         0x9344);
-        ERRT("PUSH  @R4,@R4",        REGISTERS_OVERLAPPED, "@R4",        0x1344);
-        ERRT("PUSH  @R4,0x1234(R4)", REGISTERS_OVERLAPPED, "0x1234(R4)", 0x5344, 0x1234);
-        ERRT("PUSHL @R5,RR4",        REGISTERS_OVERLAPPED, "RR4",        0x9154);
-        ERRT("PUSHL @R4,@R4",        REGISTERS_OVERLAPPED, "@R4",        0x1144);
-        ERRT("PUSHL @R4,0x1234(R4)", REGISTERS_OVERLAPPED, "0x1234(R4)", 0x5144, 0x1234);
+        TEST("PUSH  @R4,R2",        0x9342);
+        TEST("PUSH  @R4,@R2",       0x1342);
+        TEST("PUSH  @R4,%1234",     0x5340, 0x1234);
+        TEST("PUSH  @R4,%1234(R2)", 0x5342, 0x1234);
+        TEST("PUSHL @R4,RR2",       0x9142);
+        TEST("PUSHL @R4,@R2",       0x1142);
+        TEST("PUSHL @R4,%1234",     0x5140, 0x1234);
+        TEST("PUSHL @R4,%1234(R2)", 0x5142, 0x1234);
+        TEST("PUSH  @R4,#%1234",    0x0D49, 0x1234);
+        ERRT("PUSH  @R4,R4" ,       REGISTERS_OVERLAPPED, "R4",         0x9344);
+        ERRT("PUSH  @R4,@R4",       REGISTERS_OVERLAPPED, "@R4",        0x1344);
+        ERRT("PUSH  @R4,%1234(R4)", REGISTERS_OVERLAPPED, "%1234(R4)", 0x5344, 0x1234);
+        ERRT("PUSHL @R5,RR4",       REGISTERS_OVERLAPPED, "RR4",        0x9154);
+        ERRT("PUSHL @R4,@R4",       REGISTERS_OVERLAPPED, "@R4",        0x1144);
+        ERRT("PUSHL @R4,%1234(R4)", REGISTERS_OVERLAPPED, "%1234(R4)", 0x5144, 0x1234);
     }
 }
 
@@ -430,89 +430,89 @@ static void test_arithmetic() {
     TEST("ADD  R1,R2",   0x8121);
     TEST("ADDB RH1,RL1", 0x8091);
     TEST("ADDL RR2,RR4", 0x9642);
-    TEST("ADD  R1,#0x1234", 0x0101, 0x1234);
-    TEST("ADDB RH1,#0x56",  0x0001, 0x5656);
-    TEST("ADDL RR2,#0x12345678", 0x1602, 0x1234, 0x5678);
+    TEST("ADD  R1,#%1234", 0x0101, 0x1234);
+    TEST("ADDB RH1,#%56",  0x0001, 0x5656);
+    TEST("ADDL RR2,#%12345678", 0x1602, 0x1234, 0x5678);
     if (z8001()) {
-        TEST("ADD  R9,@RR2",          0x0129);
-        TEST("ADD  R9,0x120034",      0x4109, 0x1234);
-        TEST("ADD  R9,0x561234",      0x4109, 0xD600, 0x1234);
-        TEST("ADD  R9,0x120034(R2)",  0x4129, 0x1234);
-        TEST("ADD  R9,0x561234(R2)",  0x4129, 0xD600, 0x1234);
-        TEST("ADDB RL1,@RR2",         0x0029);
-        TEST("ADDB RL1,0x120034",     0x4009, 0x1234);
-        TEST("ADDB RL1,0x561234",     0x4009, 0xD600, 0x1234);
-        TEST("ADDB RL1,0x120034(R2)", 0x4029, 0x1234);
-        TEST("ADDB RL1,0x561234(R2)", 0x4029, 0xD600, 0x1234);
-        TEST("ADDL RR2,@RR8",         0x1682);
-        TEST("ADDL RR2,0x120034",     0x5602, 0x1234);
-        TEST("ADDL RR2,0x561234",     0x5602, 0xD600, 0x1234);
-        TEST("ADDL RR2,0x120034(R8)", 0x5682, 0x1234);
-        TEST("ADDL RR2,0x561234(R8)", 0x5682, 0xD600, 0x1234);
+        TEST("ADD  R9,@RR2",         0x0129);
+        TEST("ADD  R9,%120034",      0x4109, 0x1234);
+        TEST("ADD  R9,%561234",      0x4109, 0xD600, 0x1234);
+        TEST("ADD  R9,%120034(R2)",  0x4129, 0x1234);
+        TEST("ADD  R9,%561234(R2)",  0x4129, 0xD600, 0x1234);
+        TEST("ADDB RL1,@RR2",        0x0029);
+        TEST("ADDB RL1,%120034",     0x4009, 0x1234);
+        TEST("ADDB RL1,%561234",     0x4009, 0xD600, 0x1234);
+        TEST("ADDB RL1,%120034(R2)", 0x4029, 0x1234);
+        TEST("ADDB RL1,%561234(R2)", 0x4029, 0xD600, 0x1234);
+        TEST("ADDL RR2,@RR8",        0x1682);
+        TEST("ADDL RR2,%120034",     0x5602, 0x1234);
+        TEST("ADDL RR2,%561234",     0x5602, 0xD600, 0x1234);
+        TEST("ADDL RR2,%120034(R8)", 0x5682, 0x1234);
+        TEST("ADDL RR2,%561234(R8)", 0x5682, 0xD600, 0x1234);
     } else {
-        TEST("ADD  R9,@R2",         0x0129);
-        TEST("ADD  R9,0x1234",      0x4109, 0x1234);
-        TEST("ADD  R9,0x1234(R2)",  0x4129, 0x1234);
-        TEST("ADDB RL1,@R2",        0x0029);
-        TEST("ADDB RL1,0x1234",     0x4009, 0x1234);
-        TEST("ADDB RL1,0x1234(R2)", 0x4029, 0x1234);
-        TEST("ADDL RR2,@R8",        0x1682);
-        TEST("ADDL RR2,0x1234",     0x5602, 0x1234);
-        TEST("ADDL RR2,0x1234(R8)", 0x5682, 0x1234);
+        TEST("ADD  R9,@R2",        0x0129);
+        TEST("ADD  R9,%1234",      0x4109, 0x1234);
+        TEST("ADD  R9,%1234(R2)",  0x4129, 0x1234);
+        TEST("ADDB RL1,@R2",       0x0029);
+        TEST("ADDB RL1,%1234",     0x4009, 0x1234);
+        TEST("ADDB RL1,%1234(R2)", 0x4029, 0x1234);
+        TEST("ADDL RR2,@R8",       0x1682);
+        TEST("ADDL RR2,%1234",     0x5602, 0x1234);
+        TEST("ADDL RR2,%1234(R8)", 0x5682, 0x1234);
     }
 
     // Compare
     TEST("CP  R1,R2",   0x8b21);
     TEST("CPB RH1,RL1", 0x8a91);
     TEST("CPL RR2,RR4", 0x9042);
-    TEST("CP  R1,#0x1234", 0x0B01, 0x1234);
-    TEST("CPB RH1,#0x56",  0x0a01, 0x5656);
-    TEST("CPL RR2,#0x12345678", 0x1002, 0x1234, 0x5678);
+    TEST("CP  R1,#%1234", 0x0B01, 0x1234);
+    TEST("CPB RH1,#%56",  0x0a01, 0x5656);
+    TEST("CPL RR2,#%12345678", 0x1002, 0x1234, 0x5678);
     if (z8001()) {
-        TEST("CP  R9,@RR2",          0x0B29);
-        TEST("CP  R9,0x120034",      0x4B09, 0x1234);
-        TEST("CP  R9,0x561234",      0x4B09, 0xD600, 0x1234);
-        TEST("CP  R9,0x120034(R2)",  0x4B29, 0x1234);
-        TEST("CP  R9,0x561234(R2)",  0x4B29, 0xD600, 0x1234);
-        TEST("CPB RL1,@RR2",         0x0A29);
-        TEST("CPB RL1,0x120034",     0x4A09, 0x1234);
-        TEST("CPB RL1,0x561234",     0x4A09, 0xD600, 0x1234);
-        TEST("CPB RL1,0x120034(R2)", 0x4A29, 0x1234);
-        TEST("CPB RL1,0x561234(R2)", 0x4A29, 0xD600, 0x1234);
-        TEST("CPL RR2,@RR8",         0x1082);
-        TEST("CPL RR2,0x120034",     0x5002, 0x1234);
-        TEST("CPL RR2,0x561234",     0x5002, 0xD600, 0x1234);
-        TEST("CPL RR2,0x120034(R8)", 0x5082, 0x1234);
-        TEST("CPL RR2,0x561234(R8)", 0x5082, 0xD600, 0x1234);
+        TEST("CP  R9,@RR2",         0x0B29);
+        TEST("CP  R9,%120034",      0x4B09, 0x1234);
+        TEST("CP  R9,%561234",      0x4B09, 0xD600, 0x1234);
+        TEST("CP  R9,%120034(R2)",  0x4B29, 0x1234);
+        TEST("CP  R9,%561234(R2)",  0x4B29, 0xD600, 0x1234);
+        TEST("CPB RL1,@RR2",        0x0A29);
+        TEST("CPB RL1,%120034",     0x4A09, 0x1234);
+        TEST("CPB RL1,%561234",     0x4A09, 0xD600, 0x1234);
+        TEST("CPB RL1,%120034(R2)", 0x4A29, 0x1234);
+        TEST("CPB RL1,%561234(R2)", 0x4A29, 0xD600, 0x1234);
+        TEST("CPL RR2,@RR8",        0x1082);
+        TEST("CPL RR2,%120034",     0x5002, 0x1234);
+        TEST("CPL RR2,%561234",     0x5002, 0xD600, 0x1234);
+        TEST("CPL RR2,%120034(R8)", 0x5082, 0x1234);
+        TEST("CPL RR2,%561234(R8)", 0x5082, 0xD600, 0x1234);
     } else {
-        TEST("CP  R9,@R2",         0x0B29);
-        TEST("CP  R9,0x1234",      0x4B09, 0x1234);
-        TEST("CP  R9,0x1234(R2)",  0x4B29, 0x1234);
-        TEST("CPB RL1,@R2",        0x0A29);
-        TEST("CPB RL1,0x1234",     0x4A09, 0x1234);
-        TEST("CPB RL1,0x1234(R2)", 0x4A29, 0x1234);
-        TEST("CPL RR2,@R8",        0x1082);
-        TEST("CPL RR2,0x1234",     0x5002, 0x1234);
-        TEST("CPL RR2,0x1234(R8)", 0x5082, 0x1234);
+        TEST("CP  R9,@R2",        0x0B29);
+        TEST("CP  R9,%1234",      0x4B09, 0x1234);
+        TEST("CP  R9,%1234(R2)",  0x4B29, 0x1234);
+        TEST("CPB RL1,@R2",       0x0A29);
+        TEST("CPB RL1,%1234",     0x4A09, 0x1234);
+        TEST("CPB RL1,%1234(R2)", 0x4A29, 0x1234);
+        TEST("CPL RR2,@R8",       0x1082);
+        TEST("CPL RR2,%1234",     0x5002, 0x1234);
+        TEST("CPL RR2,%1234(R8)", 0x5082, 0x1234);
     }
     if (z8001()) {
-        TEST("CP  @RR2,#0x5678",         0x0D21, 0x5678);
-        TEST("CP  0x120034,#0x5678",     0x4D01, 0x1234, 0x5678);
-        TEST("CP  0x561234,#0x5678",     0x4D01, 0xD600, 0x1234, 0x5678);
-        TEST("CP  0x120034(R2),#0x5678", 0x4D21, 0x1234, 0x5678);
-        TEST("CP  0x561234(R2),#0x5678", 0x4D21, 0xD600, 0x1234, 0x5678);
-        TEST("CPB @RR2,#0x56",           0x0C21, 0x5656);
-        TEST("CPB 0x120034,#0x56",       0x4C01, 0x1234, 0x5656);
-        TEST("CPB 0x561234,#0x56",       0x4C01, 0xD600, 0x1234, 0x5656);
-        TEST("CPB 0x120034(R2),#0x56",   0x4C21, 0x1234, 0x5656);
-        TEST("CPB 0x561234(R2),#0x56",   0x4C21, 0xD600, 0x1234, 0x5656);
+        TEST("CP  @RR2,#%5678",        0x0D21, 0x5678);
+        TEST("CP  %120034,#%5678",     0x4D01, 0x1234, 0x5678);
+        TEST("CP  %561234,#%5678",     0x4D01, 0xD600, 0x1234, 0x5678);
+        TEST("CP  %120034(R2),#%5678", 0x4D21, 0x1234, 0x5678);
+        TEST("CP  %561234(R2),#%5678", 0x4D21, 0xD600, 0x1234, 0x5678);
+        TEST("CPB @RR2,#%56",          0x0C21, 0x5656);
+        TEST("CPB %120034,#%56",       0x4C01, 0x1234, 0x5656);
+        TEST("CPB %561234,#%56",       0x4C01, 0xD600, 0x1234, 0x5656);
+        TEST("CPB %120034(R2),#%56",   0x4C21, 0x1234, 0x5656);
+        TEST("CPB %561234(R2),#%56",   0x4C21, 0xD600, 0x1234, 0x5656);
     } else {
-        TEST("CP  @R2,#0x5678",        0x0D21, 0x5678);
-        TEST("CP  0x1234,#0x5678",     0x4D01, 0x1234, 0x5678);
-        TEST("CP  0x1234(R2),#0x5678", 0x4D21, 0x1234, 0x5678);
-        TEST("CPB @R2,#0x56",          0x0C21, 0x5656);
-        TEST("CPB 0x1234,#0x56",       0x4C01, 0x1234, 0x5656);
-        TEST("CPB 0x1234(R2),#0x56",   0x4C21, 0x1234, 0x5656);
+        TEST("CP  @R2,#%5678",       0x0D21, 0x5678);
+        TEST("CP  %1234,#%5678",     0x4D01, 0x1234, 0x5678);
+        TEST("CP  %1234(R2),#%5678", 0x4D21, 0x1234, 0x5678);
+        TEST("CPB @R2,#%56",         0x0C21, 0x5656);
+        TEST("CPB %1234,#%56",       0x4C01, 0x1234, 0x5656);
+        TEST("CPB %1234(R2),#%56",   0x4C21, 0x1234, 0x5656);
     }
 
     // Decimal Adjust
@@ -527,48 +527,48 @@ static void test_arithmetic() {
     TEST("DECB RH1,#1",  0xAA10);
     TEST("DECB RH1,#16", 0xAA1F);
     if (z8001()) {
-        TEST("DEC  @RR2,#2",         0x2B21);
-        TEST("DEC  0x120034,#4",     0x6B03, 0x1234);
-        TEST("DEC  0x561234,#4",     0x6B03, 0xD600, 0x1234);
-        TEST("DEC  0x120034(R2),#8", 0x6B27, 0x1234);
-        TEST("DEC  0x561234(R2),#8", 0x6B27, 0xD600, 0x1234);
-        TEST("DECB @RR2,#2",         0x2A21);
-        TEST("DECB 0x120034,#4",     0x6A03, 0x1234);
-        TEST("DECB 0x561234,#4",     0x6A03, 0xD600, 0x1234);
-        TEST("DECB 0x120034(R2),#8", 0x6A27, 0x1234);
-        TEST("DECB 0x561234(R2),#8", 0x6A27, 0xD600, 0x1234);
+        TEST("DEC  @RR2,#2",        0x2B21);
+        TEST("DEC  %120034,#4",     0x6B03, 0x1234);
+        TEST("DEC  %561234,#4",     0x6B03, 0xD600, 0x1234);
+        TEST("DEC  %120034(R2),#8", 0x6B27, 0x1234);
+        TEST("DEC  %561234(R2),#8", 0x6B27, 0xD600, 0x1234);
+        TEST("DECB @RR2,#2",        0x2A21);
+        TEST("DECB %120034,#4",     0x6A03, 0x1234);
+        TEST("DECB %561234,#4",     0x6A03, 0xD600, 0x1234);
+        TEST("DECB %120034(R2),#8", 0x6A27, 0x1234);
+        TEST("DECB %561234(R2),#8", 0x6A27, 0xD600, 0x1234);
     } else {
-        TEST("DEC  @R2,#2",        0x2B21);
-        TEST("DEC  0x1234,#4",     0x6B03, 0x1234);
-        TEST("DEC  0x1234(R2),#8", 0x6B27, 0x1234);
-        TEST("DECB @R2,#2",        0x2A21);
-        TEST("DECB 0x1234,#4",     0x6A03, 0x1234);
-        TEST("DECB 0x1234(R2),#8", 0x6A27, 0x1234);
+        TEST("DEC  @R2,#2",       0x2B21);
+        TEST("DEC  %1234,#4",     0x6B03, 0x1234);
+        TEST("DEC  %1234(R2),#8", 0x6B27, 0x1234);
+        TEST("DECB @R2,#2",       0x2A21);
+        TEST("DECB %1234,#4",     0x6A03, 0x1234);
+        TEST("DECB %1234(R2),#8", 0x6A27, 0x1234);
     }
 
     // Divide
-    TEST("DIV  RR4,R2",          0x9B24);
-    TEST("DIV  RR4,#0x1234",     0x1B04, 0x1234);
-    TEST("divl rq4,rr2",         0x9A24);
-    TEST("DIVL RQ4,#0x12345678", 0x1A04, 0x1234, 0x5678);
+    TEST("DIV  RR4,R2",         0x9B24);
+    TEST("DIV  RR4,#%1234",     0x1B04, 0x1234);
+    TEST("divl rq4,rr2",        0x9A24);
+    TEST("DIVL RQ4,#%12345678", 0x1A04, 0x1234, 0x5678);
     if (z8001()) {
-        TEST("DIV  RR4,@RR2",         0x1B24);
-        TEST("DIV  RR4,0x120034",     0x5B04, 0x1234);
-        TEST("DIV  RR4,0x561234",     0x5B04, 0xD600, 0x1234);
-        TEST("DIV  RR4,0x120034(R2)", 0x5B24, 0x1234);
-        TEST("DIV  RR4,0x561234(R2)", 0x5B24, 0xD600, 0x1234);
-        TEST("DIVL RQ4,@RR2",         0x1A24);
-        TEST("DIVL RQ4,0x120034",     0x5A04, 0x1234);
-        TEST("DIVL RQ4,0x561234",     0x5A04, 0xD600, 0x1234);
-        TEST("DIVL RQ4,0x120034(R2)", 0x5A24, 0x1234);
-        TEST("DIVL RQ4,0x561234(R2)", 0x5A24, 0xD600, 0x1234);
+        TEST("DIV  RR4,@RR2",        0x1B24);
+        TEST("DIV  RR4,%120034",     0x5B04, 0x1234);
+        TEST("DIV  RR4,%561234",     0x5B04, 0xD600, 0x1234);
+        TEST("DIV  RR4,%120034(R2)", 0x5B24, 0x1234);
+        TEST("DIV  RR4,%561234(R2)", 0x5B24, 0xD600, 0x1234);
+        TEST("DIVL RQ4,@RR2",        0x1A24);
+        TEST("DIVL RQ4,%120034",     0x5A04, 0x1234);
+        TEST("DIVL RQ4,%561234",     0x5A04, 0xD600, 0x1234);
+        TEST("DIVL RQ4,%120034(R2)", 0x5A24, 0x1234);
+        TEST("DIVL RQ4,%561234(R2)", 0x5A24, 0xD600, 0x1234);
     } else {
-        TEST("DIV  RR4,@R2",        0x1B24);
-        TEST("DIV  RR4,0x1234",     0x5B04, 0x1234);
-        TEST("DIV  RR4,0x1234(R2)", 0x5B24, 0x1234);
-        TEST("DIVL RQ4,@R2",        0x1A24);
-        TEST("DIVL RQ4,0x1234",     0x5A04, 0x1234);
-        TEST("DIVL RQ4,0x1234(R2)", 0x5A24, 0x1234);
+        TEST("DIV  RR4,@R2",       0x1B24);
+        TEST("DIV  RR4,%1234",     0x5B04, 0x1234);
+        TEST("DIV  RR4,%1234(R2)", 0x5B24, 0x1234);
+        TEST("DIVL RQ4,@R2",       0x1A24);
+        TEST("DIVL RQ4,%1234",     0x5A04, 0x1234);
+        TEST("DIVL RQ4,%1234(R2)", 0x5A24, 0x1234);
     }
 
     // Extend Sign
@@ -591,71 +591,71 @@ static void test_arithmetic() {
     TEST("INCB RH1,#1",  0xA810);
     TEST("INCB RH1,#16", 0xA81F);
     if (z8001()) {
-        TEST("INC  @RR2,#2",         0x2921);
-        TEST("INC  0x120034,#4",     0x6903, 0x1234);
-        TEST("INC  0x561234,#4",     0x6903, 0xD600, 0x1234);
-        TEST("INC  0x120034(R2),#8", 0x6927, 0x1234);
-        TEST("INC  0x561234(R2),#8", 0x6927, 0xD600, 0x1234);
-        TEST("INCB @RR2,#2",         0x2821);
-        TEST("INCB 0x120034,#4",     0x6803, 0x1234);
-        TEST("INCB 0x561234,#4",     0x6803, 0xD600, 0x1234);
-        TEST("INCB 0x120034(R2),#8", 0x6827, 0x1234);
-        TEST("INCB 0x561234(R2),#8", 0x6827, 0xD600, 0x1234);
+        TEST("INC  @RR2,#2",        0x2921);
+        TEST("INC  %120034,#4",     0x6903, 0x1234);
+        TEST("INC  %561234,#4",     0x6903, 0xD600, 0x1234);
+        TEST("INC  %120034(R2),#8", 0x6927, 0x1234);
+        TEST("INC  %561234(R2),#8", 0x6927, 0xD600, 0x1234);
+        TEST("INCB @RR2,#2",        0x2821);
+        TEST("INCB %120034,#4",     0x6803, 0x1234);
+        TEST("INCB %561234,#4",     0x6803, 0xD600, 0x1234);
+        TEST("INCB %120034(R2),#8", 0x6827, 0x1234);
+        TEST("INCB %561234(R2),#8", 0x6827, 0xD600, 0x1234);
     } else {
-        TEST("INC  @R2,#2",        0x2921);
-        TEST("INC  0x1234,#4",     0x6903, 0x1234);
-        TEST("INC  0x1234(R2),#8", 0x6927, 0x1234);
-        TEST("INCB @R2,#2",        0x2821);
-        TEST("INCB 0x1234,#4",     0x6803, 0x1234);
-        TEST("INCB 0x1234(R2),#8", 0x6827, 0x1234);
+        TEST("INC  @R2,#2",       0x2921);
+        TEST("INC  %1234,#4",     0x6903, 0x1234);
+        TEST("INC  %1234(R2),#8", 0x6927, 0x1234);
+        TEST("INCB @R2,#2",       0x2821);
+        TEST("INCB %1234,#4",     0x6803, 0x1234);
+        TEST("INCB %1234(R2),#8", 0x6827, 0x1234);
     }
 
     // Multiply
-    TEST("MULT  RR4,R2",          0x9924);
-    TEST("MULT  RR4,#0x1234",     0x1904, 0x1234);
-    TEST("MULTL RQ4,RR2",         0x9824);
-    TEST("MULTL RQ4,#0x12345678", 0x1804, 0x1234, 0x5678);
+    TEST("MULT  RR4,R2",         0x9924);
+    TEST("MULT  RR4,#%1234",     0x1904, 0x1234);
+    TEST("MULTL RQ4,RR2",        0x9824);
+    TEST("MULTL RQ4,#%12345678", 0x1804, 0x1234, 0x5678);
     if (z8001()) {
-        TEST("MULT  RR4,@RR2",         0x1924);
-        TEST("MULT  RR4,0x120034",     0x5904, 0x1234);
-        TEST("MULT  RR4,0x561234",     0x5904, 0xD600, 0x1234);
-        TEST("MULT  RR4,0x120034(R2)", 0x5924, 0x1234);
-        TEST("MULT  RR4,0x561234(R2)", 0x5924, 0xD600, 0x1234);
-        TEST("MULTL RQ4,@RR2",         0x1824);
-        TEST("MULTL RQ4,0x120034",     0x5804, 0x1234);
-        TEST("MULTL RQ4,0x561234",     0x5804, 0xD600, 0x1234);
-        TEST("MULTL RQ4,0x120034(R2)", 0x5824, 0x1234);
-        TEST("MULTL RQ4,0x561234(R2)", 0x5824, 0xD600, 0x1234);
+        TEST("MULT  RR4,@RR2",        0x1924);
+        TEST("MULT  RR4,%120034",     0x5904, 0x1234);
+        TEST("MULT  RR4,%561234",     0x5904, 0xD600, 0x1234);
+        TEST("MULT  RR4,%120034(R2)", 0x5924, 0x1234);
+        TEST("MULT  RR4,%561234(R2)", 0x5924, 0xD600, 0x1234);
+        TEST("MULTL RQ4,@RR2",        0x1824);
+        TEST("MULTL RQ4,%120034",     0x5804, 0x1234);
+        TEST("MULTL RQ4,%561234",     0x5804, 0xD600, 0x1234);
+        TEST("MULTL RQ4,%120034(R2)", 0x5824, 0x1234);
+        TEST("MULTL RQ4,%561234(R2)", 0x5824, 0xD600, 0x1234);
     } else {
-        TEST("MULT  RR4,@R2",        0x1924);
-        TEST("MULT  RR4,0x1234",     0x5904, 0x1234);
-        TEST("MULT  RR4,0x1234(R2)", 0x5924, 0x1234);
-        TEST("MULTL RQ4,@R2",        0x1824);
-        TEST("MULTL RQ4,0x1234",     0x5804, 0x1234);
-        TEST("MULTL RQ4,0x1234(R2)", 0x5824, 0x1234);
+        TEST("MULT  RR4,@R2",       0x1924);
+        TEST("MULT  RR4,%1234",     0x5904, 0x1234);
+        TEST("MULT  RR4,%1234(R2)", 0x5924, 0x1234);
+        TEST("MULTL RQ4,@R2",       0x1824);
+        TEST("MULTL RQ4,%1234",     0x5804, 0x1234);
+        TEST("MULTL RQ4,%1234(R2)", 0x5824, 0x1234);
     }
 
     // Negate
     TEST("NEG  R2",  0x8D22);
     TEST("NEGB RL2", 0x8CA2);
     if (z8001()) {
-        TEST("NEG  @RR2",         0x0D22);
-        TEST("NEG  0x120034",     0x4D02, 0x1234);
-        TEST("NEG  0x561234",     0x4D02, 0xD600, 0x1234);
-        TEST("NEG  0x120034(R2)", 0x4D22, 0x1234);
-        TEST("NEG  0x561234(R2)", 0x4D22, 0xD600, 0x1234);
-        TEST("NEGB @RR2",         0x0C22);
-        TEST("NEGB 0x120034",     0x4C02, 0x1234);
-        TEST("NEGB 0x561234",     0x4C02, 0xD600, 0x1234);
-        TEST("NEGB 0x120034(R2)", 0x4C22, 0x1234);
-        TEST("NEGB 0x561234(R2)", 0x4C22, 0xD600, 0x1234);
+        TEST("NEG  @RR2",        0x0D22);
+        TEST("NEG  %120034",     0x4D02, 0x1234);
+        TEST("NEG  %561234",     0x4D02, 0xD600, 0x1234);
+        TEST("NEG  %120034(R2)", 0x4D22, 0x1234);
+        TEST("NEG  %561234(R2)", 0x4D22, 0xD600, 0x1234);
+        TEST("NEGB @RR2",        0x0C22);
+        TEST("NEGB %120034",     0x4C02, 0x1234);
+        TEST("NEGB %561234",     0x4C02, 0xD600, 0x1234);
+        TEST("NEGB %120034(R2)", 0x4C22, 0x1234);
+        TEST("NEGB %561234(R2)", 0x4C22, 0xD600, 0x1234);
     } else {
-        TEST("NEG  @R2",        0x0D22);
-        TEST("NEG  0x1234",     0x4D02, 0x1234);
-        TEST("NEG  0x1234(R2)", 0x4D22, 0x1234);
-        TEST("NEGB @R2",        0x0C22);
-        TEST("NEGB 0x1234",     0x4C02, 0x1234);
-        TEST("NEGB 0x1234(R2)", 0x4C22, 0x1234);
+        TEST("NEG  @R2",       0x0D22);
+        TEST("NEG  %1234",     0x4D02, 0x1234);
+        TEST("NEG  %1234(R2)", 0x4D22, 0x1234);
+        TEST("NEGB @R2",       0x0C22);
+        TEST("NEGB %1234",     0x4C02, 0x1234);
+        TEST("NEGB %1234(R2)", 0x4C22, 0x1234);
     }
 
     // Subtract with Carry
@@ -666,35 +666,35 @@ static void test_arithmetic() {
     TEST("SUB  R1,R2",   0x8321);
     TEST("SUBB RH1,RL1", 0x8291);
     TEST("SUBL RR2,RR4", 0x9242);
-    TEST("SUB  R1,#0x1234", 0x0301, 0x1234);
-    TEST("SUBB RH1,#0x56",  0x0201, 0x5656);
-    TEST("SUBL RR2,#0x12345678", 0x1202, 0x1234, 0x5678);
+    TEST("SUB  R1,#%1234", 0x0301, 0x1234);
+    TEST("SUBB RH1,#%56",  0x0201, 0x5656);
+    TEST("SUBL RR2,#%12345678", 0x1202, 0x1234, 0x5678);
     if (z8001()) {
-        TEST("SUB  R9,@RR2",          0x0329);
-        TEST("SUB  R9,0x120034",      0x4309, 0x1234);
-        TEST("SUB  R9,0x561234",      0x4309, 0xD600, 0x1234);
-        TEST("SUB  R9,0x120034(R2)",  0x4329, 0x1234);
-        TEST("SUB  R9,0x561234(R2)",  0x4329, 0xD600, 0x1234);
-        TEST("SUBB RL1,@RR2",         0x0229);
-        TEST("SUBB RL1,0x120034",     0x4209, 0x1234);
-        TEST("SUBB RL1,0x561234",     0x4209, 0xD600, 0x1234);
-        TEST("SUBB RL1,0x120034(R2)", 0x4229, 0x1234);
-        TEST("SUBB RL1,0x561234(R2)", 0x4229, 0xD600, 0x1234);
-        TEST("SUBL RR2,@RR8",         0x1282);
-        TEST("SUBL RR2,0x120034",     0x5202, 0x1234);
-        TEST("SUBL RR2,0x561234",     0x5202, 0xD600, 0x1234);
-        TEST("SUBL RR2,0x120034(R8)", 0x5282, 0x1234);
-        TEST("SUBL RR2,0x561234(R8)", 0x5282, 0xD600, 0x1234);
+        TEST("SUB  R9,@RR2",         0x0329);
+        TEST("SUB  R9,%120034",      0x4309, 0x1234);
+        TEST("SUB  R9,%561234",      0x4309, 0xD600, 0x1234);
+        TEST("SUB  R9,%120034(R2)",  0x4329, 0x1234);
+        TEST("SUB  R9,%561234(R2)",  0x4329, 0xD600, 0x1234);
+        TEST("SUBB RL1,@RR2",        0x0229);
+        TEST("SUBB RL1,%120034",     0x4209, 0x1234);
+        TEST("SUBB RL1,%561234",     0x4209, 0xD600, 0x1234);
+        TEST("SUBB RL1,%120034(R2)", 0x4229, 0x1234);
+        TEST("SUBB RL1,%561234(R2)", 0x4229, 0xD600, 0x1234);
+        TEST("SUBL RR2,@RR8",        0x1282);
+        TEST("SUBL RR2,%120034",     0x5202, 0x1234);
+        TEST("SUBL RR2,%561234",     0x5202, 0xD600, 0x1234);
+        TEST("SUBL RR2,%120034(R8)", 0x5282, 0x1234);
+        TEST("SUBL RR2,%561234(R8)", 0x5282, 0xD600, 0x1234);
     } else {
-        TEST("SUB  R9,@R2",         0x0329);
-        TEST("SUB  R9,0x1234",      0x4309, 0x1234);
-        TEST("SUB  R9,0x1234(R2)",  0x4329, 0x1234);
-        TEST("SUBB RL1,@R2",        0x0229);
-        TEST("SUBB RL1,0x1234",     0x4209, 0x1234);
-        TEST("SUBB RL1,0x1234(R2)", 0x4229, 0x1234);
-        TEST("SUBL RR2,@R8",        0x1282);
-        TEST("SUBL RR2,0x1234",     0x5202, 0x1234);
-        TEST("SUBL RR2,0x1234(R8)", 0x5282, 0x1234);
+        TEST("SUB  R9,@R2",        0x0329);
+        TEST("SUB  R9,%1234",      0x4309, 0x1234);
+        TEST("SUB  R9,%1234(R2)",  0x4329, 0x1234);
+        TEST("SUBB RL1,@R2",       0x0229);
+        TEST("SUBB RL1,%1234",     0x4209, 0x1234);
+        TEST("SUBB RL1,%1234(R2)", 0x4229, 0x1234);
+        TEST("SUBL RR2,@R8",       0x1282);
+        TEST("SUBL RR2,%1234",     0x5202, 0x1234);
+        TEST("SUBL RR2,%1234(R8)", 0x5282, 0x1234);
     }
 }
 
@@ -702,74 +702,74 @@ static void test_logical() {
     // And
     TEST("AND  R1,R2",   0x8721);
     TEST("ANDB RH1,RL1", 0x8691);
-    TEST("AND  R1,#0x1234", 0x0701, 0x1234);
-    TEST("ANDB RH1,#0x56",  0x0601, 0x5656);
+    TEST("AND  R1,#%1234", 0x0701, 0x1234);
+    TEST("ANDB RH1,#%56",  0x0601, 0x5656);
     if (z8001()) {
-        TEST("AND  R9,@RR2",          0x0729);
-        TEST("AND  R9,0x120034",      0x4709, 0x1234);
-        TEST("AND  R9,0x561234",      0x4709, 0xD600, 0x1234);
-        TEST("AND  R9,0x120034(R2)",  0x4729, 0x1234);
-        TEST("AND  R9,0x561234(R2)",  0x4729, 0xD600, 0x1234);
-        TEST("ANDB RL1,@RR2",         0x0629);
-        TEST("ANDB RL1,0x120034",     0x4609, 0x1234);
-        TEST("ANDB RL1,0x561234",     0x4609, 0xD600, 0x1234);
-        TEST("ANDB RL1,0x120034(R2)", 0x4629, 0x1234);
-        TEST("ANDB RL1,0x561234(R2)", 0x4629, 0xD600, 0x1234);
+        TEST("AND  R9,@RR2",         0x0729);
+        TEST("AND  R9,%120034",      0x4709, 0x1234);
+        TEST("AND  R9,%561234",      0x4709, 0xD600, 0x1234);
+        TEST("AND  R9,%120034(R2)",  0x4729, 0x1234);
+        TEST("AND  R9,%561234(R2)",  0x4729, 0xD600, 0x1234);
+        TEST("ANDB RL1,@RR2",        0x0629);
+        TEST("ANDB RL1,%120034",     0x4609, 0x1234);
+        TEST("ANDB RL1,%561234",     0x4609, 0xD600, 0x1234);
+        TEST("ANDB RL1,%120034(R2)", 0x4629, 0x1234);
+        TEST("ANDB RL1,%561234(R2)", 0x4629, 0xD600, 0x1234);
     } else {
-        TEST("AND  R9,@R2",         0x0729);
-        TEST("AND  R9,0x1234",      0x4709, 0x1234);
-        TEST("AND  R9,0x1234(R2)",  0x4729, 0x1234);
-        TEST("ANDB RL1,@R2",        0x0629);
-        TEST("ANDB RL1,0x1234",     0x4609, 0x1234);
-        TEST("ANDB RL1,0x1234(R2)", 0x4629, 0x1234);
+        TEST("AND  R9,@R2",        0x0729);
+        TEST("AND  R9,%1234",      0x4709, 0x1234);
+        TEST("AND  R9,%1234(R2)",  0x4729, 0x1234);
+        TEST("ANDB RL1,@R2",       0x0629);
+        TEST("ANDB RL1,%1234",     0x4609, 0x1234);
+        TEST("ANDB RL1,%1234(R2)", 0x4629, 0x1234);
     }
 
     // Complement
     TEST("COM  R2",  0x8D20);
     TEST("COMB RL1", 0x8C90);
     if (z8001()) {
-        TEST("COM  @RR2",         0x0D20);
-        TEST("COM  0x120034",     0x4D00, 0x1234);
-        TEST("COM  0x561234",     0x4D00, 0xD600, 0x1234);
-        TEST("COM  0x120034(R2)", 0x4D20, 0x1234);
-        TEST("COM  0x561234(R2)", 0x4D20, 0xD600, 0x1234);
-        TEST("COMB @RR2",         0x0C20);
-        TEST("COMB 0x120034",     0x4C00, 0x1234);
-        TEST("COMB 0x561234",     0x4C00, 0xD600, 0x1234);
-        TEST("COMB 0x120034(R2)", 0x4C20, 0x1234);
-        TEST("COMB 0x561234(R2)", 0x4C20, 0xD600, 0x1234);
+        TEST("COM  @RR2",        0x0D20);
+        TEST("COM  %120034",     0x4D00, 0x1234);
+        TEST("COM  %561234",     0x4D00, 0xD600, 0x1234);
+        TEST("COM  %120034(R2)", 0x4D20, 0x1234);
+        TEST("COM  %561234(R2)", 0x4D20, 0xD600, 0x1234);
+        TEST("COMB @RR2",        0x0C20);
+        TEST("COMB %120034",     0x4C00, 0x1234);
+        TEST("COMB %561234",     0x4C00, 0xD600, 0x1234);
+        TEST("COMB %120034(R2)", 0x4C20, 0x1234);
+        TEST("COMB %561234(R2)", 0x4C20, 0xD600, 0x1234);
     } else {
-        TEST("COM  @R2",        0x0D20);
-        TEST("COM  0x1234",     0x4D00, 0x1234);
-        TEST("COM  0x1234(R2)", 0x4D20, 0x1234);
-        TEST("COMB @R2",        0x0C20);
-        TEST("COMB 0x1234",     0x4C00, 0x1234);
-        TEST("COMB 0x1234(R2)", 0x4C20, 0x1234);
+        TEST("COM  @R2",       0x0D20);
+        TEST("COM  %1234",     0x4D00, 0x1234);
+        TEST("COM  %1234(R2)", 0x4D20, 0x1234);
+        TEST("COMB @R2",       0x0C20);
+        TEST("COMB %1234",     0x4C00, 0x1234);
+        TEST("COMB %1234(R2)", 0x4C20, 0x1234);
     }
 
     // Or
     TEST("OR  R1,R2",   0x8521);
     TEST("ORB RH1,RL1", 0x8491);
-    TEST("OR  R1,#0x1234", 0x0501, 0x1234);
-    TEST("ORB RH1,#0x56",  0x0401, 0x5656);
+    TEST("OR  R1,#%1234", 0x0501, 0x1234);
+    TEST("ORB RH1,#%56",  0x0401, 0x5656);
     if (z8001()) {
-        TEST("OR  R9,@RR2",          0x0529);
-        TEST("OR  R9,0x120034",      0x4509, 0x1234);
-        TEST("OR  R9,0x561234",      0x4509, 0xD600, 0x1234);
-        TEST("OR  R9,0x120034(R2)",  0x4529, 0x1234);
-        TEST("OR  R9,0x561234(R2)",  0x4529, 0xD600, 0x1234);
-        TEST("ORB RL1,@RR2",         0x0429);
-        TEST("ORB RL1,0x120034",     0x4409, 0x1234);
-        TEST("ORB RL1,0x561234",     0x4409, 0xD600, 0x1234);
-        TEST("ORB RL1,0x120034(R2)", 0x4429, 0x1234);
-        TEST("ORB RL1,0x561234(R2)", 0x4429, 0xD600, 0x1234);
+        TEST("OR  R9,@RR2",         0x0529);
+        TEST("OR  R9,%120034",      0x4509, 0x1234);
+        TEST("OR  R9,%561234",      0x4509, 0xD600, 0x1234);
+        TEST("OR  R9,%120034(R2)",  0x4529, 0x1234);
+        TEST("OR  R9,%561234(R2)",  0x4529, 0xD600, 0x1234);
+        TEST("ORB RL1,@RR2",        0x0429);
+        TEST("ORB RL1,%120034",     0x4409, 0x1234);
+        TEST("ORB RL1,%561234",     0x4409, 0xD600, 0x1234);
+        TEST("ORB RL1,%120034(R2)", 0x4429, 0x1234);
+        TEST("ORB RL1,%561234(R2)", 0x4429, 0xD600, 0x1234);
     } else {
-        TEST("OR  R9,@R2",         0x0529);
-        TEST("OR  R9,0x1234",      0x4509, 0x1234);
-        TEST("OR  R9,0x1234(R2)",  0x4529, 0x1234);
-        TEST("ORB RL1,@R2",        0x0429);
-        TEST("ORB RL1,0x1234",     0x4409, 0x1234);
-        TEST("ORB RL1,0x1234(R2)", 0x4429, 0x1234);
+        TEST("OR  R9,@R2",        0x0529);
+        TEST("OR  R9,%1234",      0x4509, 0x1234);
+        TEST("OR  R9,%1234(R2)",  0x4529, 0x1234);
+        TEST("ORB RL1,@R2",       0x0429);
+        TEST("ORB RL1,%1234",     0x4409, 0x1234);
+        TEST("ORB RL1,%1234(R2)", 0x4429, 0x1234);
     }
 
     // Test
@@ -777,84 +777,84 @@ static void test_logical() {
     TEST("TESTB RL1", 0x8C94);
     TEST("TESTL RR2", 0x9C28);
     if (z8001()) {
-        TEST("TEST  @RR2",         0x0D24);
-        TEST("TEST  0x120034",     0x4D04, 0x1234);
-        TEST("TEST  0x561234",     0x4D04, 0xD600, 0x1234);
-        TEST("TEST  0x120034(R2)", 0x4D24, 0x1234);
-        TEST("TEST  0x561234(R2)", 0x4D24, 0xD600, 0x1234);
-        TEST("TESTB @RR2",         0x0C24);
-        TEST("TESTB 0x120034",     0x4C04, 0x1234);
-        TEST("TESTB 0x561234",     0x4C04, 0xD600, 0x1234);
-        TEST("TESTB 0x120034(R2)", 0x4C24, 0x1234);
-        TEST("TESTB 0x561234(R2)", 0x4C24, 0xD600, 0x1234);
-        TEST("TESTL @RR2",         0x1C28);
-        TEST("TESTL 0x120034",     0x5C08, 0x1234);
-        TEST("TESTL 0x561234",     0x5C08, 0xD600, 0x1234);
-        TEST("TESTL 0x120034(R2)", 0x5C28, 0x1234);
-        TEST("TESTL 0x561234(R2)", 0x5C28, 0xD600, 0x1234);
+        TEST("TEST  @RR2",        0x0D24);
+        TEST("TEST  %120034",     0x4D04, 0x1234);
+        TEST("TEST  %561234",     0x4D04, 0xD600, 0x1234);
+        TEST("TEST  %120034(R2)", 0x4D24, 0x1234);
+        TEST("TEST  %561234(R2)", 0x4D24, 0xD600, 0x1234);
+        TEST("TESTB @RR2",        0x0C24);
+        TEST("TESTB %120034",     0x4C04, 0x1234);
+        TEST("TESTB %561234",     0x4C04, 0xD600, 0x1234);
+        TEST("TESTB %120034(R2)", 0x4C24, 0x1234);
+        TEST("TESTB %561234(R2)", 0x4C24, 0xD600, 0x1234);
+        TEST("TESTL @RR2",        0x1C28);
+        TEST("TESTL %120034",     0x5C08, 0x1234);
+        TEST("TESTL %561234",     0x5C08, 0xD600, 0x1234);
+        TEST("TESTL %120034(R2)", 0x5C28, 0x1234);
+        TEST("TESTL %561234(R2)", 0x5C28, 0xD600, 0x1234);
     } else {
-        TEST("TEST  @R2",        0x0D24);
-        TEST("TEST  0x1234",     0x4D04, 0x1234);
-        TEST("TEST  0x1234(R2)", 0x4D24, 0x1234);
-        TEST("TESTB @R2",        0x0C24);
-        TEST("TESTB 0x1234",     0x4C04, 0x1234);
-        TEST("TESTB 0x1234(R2)", 0x4C24, 0x1234);
-        TEST("TESTL @R2",        0x1C28);
-        TEST("TESTL 0x1234",     0x5C08, 0x1234);
-        TEST("TESTL 0x1234(R2)", 0x5C28, 0x1234);
+        TEST("TEST  @R2",       0x0D24);
+        TEST("TEST  %1234",     0x4D04, 0x1234);
+        TEST("TEST  %1234(R2)", 0x4D24, 0x1234);
+        TEST("TESTB @R2",       0x0C24);
+        TEST("TESTB %1234",     0x4C04, 0x1234);
+        TEST("TESTB %1234(R2)", 0x4C24, 0x1234);
+        TEST("TESTL @R2",       0x1C28);
+        TEST("TESTL %1234",     0x5C08, 0x1234);
+        TEST("TESTL %1234(R2)", 0x5C28, 0x1234);
     }
 
     // Exclusive Or
     TEST("XOR  R1,R2",   0x8921);
     TEST("XORB RH1,RL1", 0x8891);
-    TEST("XOR  R1,#0x1234", 0x0901, 0x1234);
-    TEST("XORB RH1,#0x56",  0x0801, 0x5656);
+    TEST("XOR  R1,#%1234", 0x0901, 0x1234);
+    TEST("XORB RH1,#%56",  0x0801, 0x5656);
     if (z8001()) {
-        TEST("XOR  R9,@RR2",          0x0929);
-        TEST("XOR  R9,0x120034",      0x4909, 0x1234);
-        TEST("XOR  R9,0x561234",      0x4909, 0xD600, 0x1234);
-        TEST("XOR  R9,0x120034(R2)",  0x4929, 0x1234);
-        TEST("XOR  R9,0x561234(R2)",  0x4929, 0xD600, 0x1234);
-        TEST("XORB RL1,@RR2",         0x0829);
-        TEST("XORB RL1,0x120034",     0x4809, 0x1234);
-        TEST("XORB RL1,0x561234",     0x4809, 0xD600, 0x1234);
-        TEST("XORB RL1,0x120034(R2)", 0x4829, 0x1234);
-        TEST("XORB RL1,0x561234(R2)", 0x4829, 0xD600, 0x1234);
+        TEST("XOR  R9,@RR2",         0x0929);
+        TEST("XOR  R9,%120034",      0x4909, 0x1234);
+        TEST("XOR  R9,%561234",      0x4909, 0xD600, 0x1234);
+        TEST("XOR  R9,%120034(R2)",  0x4929, 0x1234);
+        TEST("XOR  R9,%561234(R2)",  0x4929, 0xD600, 0x1234);
+        TEST("XORB RL1,@RR2",        0x0829);
+        TEST("XORB RL1,%120034",     0x4809, 0x1234);
+        TEST("XORB RL1,%561234",     0x4809, 0xD600, 0x1234);
+        TEST("XORB RL1,%120034(R2)", 0x4829, 0x1234);
+        TEST("XORB RL1,%561234(R2)", 0x4829, 0xD600, 0x1234);
     } else {
-        TEST("XOR  R9,@R2",         0x0929);
-        TEST("XOR  R9,0x1234",      0x4909, 0x1234);
-        TEST("XOR  R9,0x1234(R2)",  0x4929, 0x1234);
-        TEST("XORB RL1,@R2",        0x0829);
-        TEST("XORB RL1,0x1234",     0x4809, 0x1234);
-        TEST("XORB RL1,0x1234(R2)", 0x4829, 0x1234);
+        TEST("XOR  R9,@R2",        0x0929);
+        TEST("XOR  R9,%1234",      0x4909, 0x1234);
+        TEST("XOR  R9,%1234(R2)",  0x4929, 0x1234);
+        TEST("XORB RL1,@R2",       0x0829);
+        TEST("XORB RL1,%1234",     0x4809, 0x1234);
+        TEST("XORB RL1,%1234(R2)", 0x4829, 0x1234);
     }
 }
 
 static void test_program_control() {
     // Call Procedure
     if (z8001()) {
-        TEST("CALL @RR2",         0x1F20);
-        TEST("CALL 0x120034",     0x5F00, 0x1234);
-        TEST("CALL 0x561234",     0x5F00, 0xD600, 0x1234);
-        TEST("CALL 0x120034(R2)", 0x5F20, 0x1234);
-        TEST("CALL 0x561234(R2)", 0x5F20, 0xD600, 0x1234);
+        TEST("CALL @RR2",        0x1F20);
+        TEST("CALL %120034",     0x5F00, 0x1234);
+        TEST("CALL %561234",     0x5F00, 0xD600, 0x1234);
+        TEST("CALL %120034(R2)", 0x5F20, 0x1234);
+        TEST("CALL %561234(R2)", 0x5F20, 0xD600, 0x1234);
     } else {
-        TEST("CALL @R2",        0x1F20);
-        TEST("CALL 0x1234",     0x5F00, 0x1234);
-        TEST("CALL 0x1234(R2)", 0x5F20, 0x1234);
+        TEST("CALL @R2",       0x1F20);
+        TEST("CALL %1234",     0x5F00, 0x1234);
+        TEST("CALL %1234(R2)", 0x5F20, 0x1234);
     }
 
     // Call Procedure Relative
-    ATEST(0x1000, "CALR $+2",      0xD000);
-    ATEST(0x1000, "CALR $+10",     0xDFFC);
-    ATEST(0x1000, "CALR $+0x1002", 0xD800);
-    ATEST(0x1000, "CALR $-0x0FFC", 0xD7FF);
-    AERRT(0x1000, "CALR $+0x1004", OPERAND_TOO_FAR, "$+0x1004", 0xD7FF);
-    AERRT(0x1000, "CALR $-0x0FFE", OPERAND_TOO_FAR, "$-0x0FFE", 0xD800);
-    ATEST(0x1000, "CALR $-10",     0xD006);
-    ATEST(0x1000, "CALR $",        0xD001);
-    AERRT(0x1000, "CALR $+13",     OPERAND_NOT_ALIGNED, "$+13", 0xDFFB);
-    AERRT(0x1000, "CALR $-13",     OPERAND_NOT_ALIGNED, "$-13", 0xD007);
+    ATEST(0x1000, "CALR $+2",     0xD000);
+    ATEST(0x1000, "CALR $+10",    0xDFFC);
+    ATEST(0x1000, "CALR $+%1002", 0xD800);
+    ATEST(0x1000, "CALR $-%0FFC", 0xD7FF);
+    AERRT(0x1000, "CALR $+%1004", OPERAND_TOO_FAR, "$+%1004", 0xD7FF);
+    AERRT(0x1000, "CALR $-%0FFE", OPERAND_TOO_FAR, "$-%0FFE", 0xD800);
+    ATEST(0x1000, "CALR $-10",    0xD006);
+    ATEST(0x1000, "CALR $",       0xD001);
+    AERRT(0x1000, "CALR $+13",    OPERAND_NOT_ALIGNED, "$+13", 0xDFFB);
+    AERRT(0x1000, "CALR $-13",    OPERAND_NOT_ALIGNED, "$-13", 0xD007);
 
     // Decrement and Jump if Not Zero
     ATEST(0x1000, "DJNZ  R2,$",      0xF281);
@@ -871,180 +871,180 @@ static void test_program_control() {
 
     // Jump
     if (z8001()) {
-        TEST("JP F,@RR2",         0x1E20);
-        TEST("JP F,0x120034",     0x5E00, 0x1234);
-        TEST("JP F,0x561234",     0x5E00, 0xD600, 0x1234);
-        TEST("JP F,0x120034(R2)", 0x5E20, 0x1234);
-        TEST("JP F,0x561234(R2)", 0x5E20, 0xD600, 0x1234);
+        TEST("JP F,@RR2",        0x1E20);
+        TEST("JP F,%120034",     0x5E00, 0x1234);
+        TEST("JP F,%561234",     0x5E00, 0xD600, 0x1234);
+        TEST("JP F,%120034(R2)", 0x5E20, 0x1234);
+        TEST("JP F,%561234(R2)", 0x5E20, 0xD600, 0x1234);
     } else {
-        TEST("JP F,@R2",        0x1E20);
-        TEST("JP F,0x1234",     0x5E00, 0x1234);
-        TEST("JP F,0x1234(R2)", 0x5E20, 0x1234);
+        TEST("JP F,@R2",       0x1E20);
+        TEST("JP F,%1234",     0x5E00, 0x1234);
+        TEST("JP F,%1234(R2)", 0x5E20, 0x1234);
     }
     if (z8001()) {
-        TEST("JP LT,@RR2",         0x1E21);
-        TEST("JP LT,0x120034",     0x5E01, 0x1234);
-        TEST("JP LT,0x561234",     0x5E01, 0xD600, 0x1234);
-        TEST("JP LT,0x120034(R2)", 0x5E21, 0x1234);
-        TEST("JP LT,0x561234(R2)", 0x5E21, 0xD600, 0x1234);
+        TEST("JP LT,@RR2",        0x1E21);
+        TEST("JP LT,%120034",     0x5E01, 0x1234);
+        TEST("JP LT,%561234",     0x5E01, 0xD600, 0x1234);
+        TEST("JP LT,%120034(R2)", 0x5E21, 0x1234);
+        TEST("JP LT,%561234(R2)", 0x5E21, 0xD600, 0x1234);
     } else {
-        TEST("JP LT,@R2",        0x1E21);
-        TEST("JP LT,0x1234",     0x5E01, 0x1234);
-        TEST("JP LT,0x1234(R2)", 0x5E21, 0x1234);
+        TEST("JP LT,@R2",       0x1E21);
+        TEST("JP LT,%1234",     0x5E01, 0x1234);
+        TEST("JP LT,%1234(R2)", 0x5E21, 0x1234);
     }
     if (z8001()) {
-        TEST("jp le,@rr2",         0x1E22);
-        TEST("JP LE,0x120034",     0x5E02, 0x1234);
-        TEST("JP LE,0x561234",     0x5E02, 0xD600, 0x1234);
-        TEST("JP LE,0x120034(R2)", 0x5E22, 0x1234);
-        TEST("JP LE,0x561234(R2)", 0x5E22, 0xD600, 0x1234);
+        TEST("jp le,@rr2",        0x1E22);
+        TEST("JP LE,%120034",     0x5E02, 0x1234);
+        TEST("JP LE,%561234",     0x5E02, 0xD600, 0x1234);
+        TEST("JP LE,%120034(R2)", 0x5E22, 0x1234);
+        TEST("JP LE,%561234(R2)", 0x5E22, 0xD600, 0x1234);
     } else {
-        TEST("jp le,@r2",        0x1E22);
-        TEST("JP LE,0x1234",     0x5E02, 0x1234);
-        TEST("JP LE,0x1234(R2)", 0x5E22, 0x1234);
+        TEST("jp le,@r2",       0x1E22);
+        TEST("JP LE,%1234",     0x5E02, 0x1234);
+        TEST("JP LE,%1234(R2)", 0x5E22, 0x1234);
     }
     if (z8001()) {
-        TEST("JP ULE,@RR2",         0x1E23);
-        TEST("JP ULE,0x120034",     0x5E03, 0x1234);
-        TEST("JP ULE,0x561234",     0x5E03, 0xD600, 0x1234);
-        TEST("JP ULE,0x120034(R2)", 0x5E23, 0x1234);
-        TEST("JP ULE,0x561234(R2)", 0x5E23, 0xD600, 0x1234);
+        TEST("JP ULE,@RR2",        0x1E23);
+        TEST("JP ULE,%120034",     0x5E03, 0x1234);
+        TEST("JP ULE,%561234",     0x5E03, 0xD600, 0x1234);
+        TEST("JP ULE,%120034(R2)", 0x5E23, 0x1234);
+        TEST("JP ULE,%561234(R2)", 0x5E23, 0xD600, 0x1234);
     } else {
-        TEST("JP ULE,@R2",        0x1E23);
-        TEST("JP ULE,0x1234",     0x5E03, 0x1234);
-        TEST("JP ULE,0x1234(R2)", 0x5E23, 0x1234);
+        TEST("JP ULE,@R2",       0x1E23);
+        TEST("JP ULE,%1234",     0x5E03, 0x1234);
+        TEST("JP ULE,%1234(R2)", 0x5E23, 0x1234);
     }
     if (z8001()) {
-        TEST("JP OV,@RR2",         0x1E24);
-        TEST("JP OV,0x120034",     0x5E04, 0x1234);
-        TEST("JP OV,0x561234",     0x5E04, 0xD600, 0x1234);
-        TEST("JP OV,0x120034(R2)", 0x5E24, 0x1234);
-        TEST("JP OV,0x561234(R2)", 0x5E24, 0xD600, 0x1234);
+        TEST("JP OV,@RR2",        0x1E24);
+        TEST("JP OV,%120034",     0x5E04, 0x1234);
+        TEST("JP OV,%561234",     0x5E04, 0xD600, 0x1234);
+        TEST("JP OV,%120034(R2)", 0x5E24, 0x1234);
+        TEST("JP OV,%561234(R2)", 0x5E24, 0xD600, 0x1234);
     } else {
-        TEST("JP OV,@R2",        0x1E24);
-        TEST("JP OV,0x1234",     0x5E04, 0x1234);
-        TEST("JP OV,0x1234(R2)", 0x5E24, 0x1234);
+        TEST("JP OV,@R2",       0x1E24);
+        TEST("JP OV,%1234",     0x5E04, 0x1234);
+        TEST("JP OV,%1234(R2)", 0x5E24, 0x1234);
     }
     if (z8001()) {
-        TEST("JP MI,@RR2",         0x1E25);
-        TEST("JP MI,0x120034",     0x5E05, 0x1234);
-        TEST("JP MI,0x561234",     0x5E05, 0xD600, 0x1234);
-        TEST("JP MI,0x120034(R2)", 0x5E25, 0x1234);
-        TEST("JP MI,0x561234(R2)", 0x5E25, 0xD600, 0x1234);
+        TEST("JP MI,@RR2",        0x1E25);
+        TEST("JP MI,%120034",     0x5E05, 0x1234);
+        TEST("JP MI,%561234",     0x5E05, 0xD600, 0x1234);
+        TEST("JP MI,%120034(R2)", 0x5E25, 0x1234);
+        TEST("JP MI,%561234(R2)", 0x5E25, 0xD600, 0x1234);
     } else {
-        TEST("JP MI,@R2",        0x1E25);
-        TEST("JP MI,0x1234",     0x5E05, 0x1234);
-        TEST("JP MI,0x1234(R2)", 0x5E25, 0x1234);
+        TEST("JP MI,@R2",       0x1E25);
+        TEST("JP MI,%1234",     0x5E05, 0x1234);
+        TEST("JP MI,%1234(R2)", 0x5E25, 0x1234);
     }
     if (z8001()) {
-        TEST("JP Z,@RR2",         0x1E26);
-        TEST("JP Z,0x120034",     0x5E06, 0x1234);
-        TEST("JP Z,0x561234",     0x5E06, 0xD600, 0x1234);
-        TEST("JP Z,0x120034(R2)", 0x5E26, 0x1234);
-        TEST("JP Z,0x561234(R2)", 0x5E26, 0xD600, 0x1234);
+        TEST("JP Z,@RR2",        0x1E26);
+        TEST("JP Z,%120034",     0x5E06, 0x1234);
+        TEST("JP Z,%561234",     0x5E06, 0xD600, 0x1234);
+        TEST("JP Z,%120034(R2)", 0x5E26, 0x1234);
+        TEST("JP Z,%561234(R2)", 0x5E26, 0xD600, 0x1234);
     } else {
-        TEST("JP Z,@R2",        0x1E26);
-        TEST("JP Z,0x1234",     0x5E06, 0x1234);
-        TEST("JP Z,0x1234(R2)", 0x5E26, 0x1234);
+        TEST("JP Z,@R2",       0x1E26);
+        TEST("JP Z,%1234",     0x5E06, 0x1234);
+        TEST("JP Z,%1234(R2)", 0x5E26, 0x1234);
     }
     if (z8001()) {
-        TEST("JP C,@RR2",         0x1E27);
-        TEST("JP C,0x120034",     0x5E07, 0x1234);
-        TEST("JP C,0x561234",     0x5E07, 0xD600, 0x1234);
-        TEST("JP C,0x120034(R2)", 0x5E27, 0x1234);
-        TEST("JP C,0x561234(R2)", 0x5E27, 0xD600, 0x1234);
+        TEST("JP C,@RR2",        0x1E27);
+        TEST("JP C,%120034",     0x5E07, 0x1234);
+        TEST("JP C,%561234",     0x5E07, 0xD600, 0x1234);
+        TEST("JP C,%120034(R2)", 0x5E27, 0x1234);
+        TEST("JP C,%561234(R2)", 0x5E27, 0xD600, 0x1234);
     } else {
-        TEST("JP C,@R2",        0x1E27);
-        TEST("JP C,0x1234",     0x5E07, 0x1234);
-        TEST("JP C,0x1234(R2)", 0x5E27, 0x1234);
+        TEST("JP C,@R2",       0x1E27);
+        TEST("JP C,%1234",     0x5E07, 0x1234);
+        TEST("JP C,%1234(R2)", 0x5E27, 0x1234);
     }
     if (z8001()) {
-        TEST("JP @RR2",         0x1E28);
-        TEST("JP 0x120034",     0x5E08, 0x1234);
-        TEST("JP 0x561234",     0x5E08, 0xD600, 0x1234);
-        TEST("JP 0x120034(R2)", 0x5E28, 0x1234);
-        TEST("JP 0x561234(R2)", 0x5E28, 0xD600, 0x1234);
+        TEST("JP @RR2",        0x1E28);
+        TEST("JP %120034",     0x5E08, 0x1234);
+        TEST("JP %561234",     0x5E08, 0xD600, 0x1234);
+        TEST("JP %120034(R2)", 0x5E28, 0x1234);
+        TEST("JP %561234(R2)", 0x5E28, 0xD600, 0x1234);
     } else {
-        TEST("JP @R2",        0x1E28);
-        TEST("JP 0x1234",     0x5E08, 0x1234);
-        TEST("JP 0x1234(R2)", 0x5E28, 0x1234);
+        TEST("JP @R2",       0x1E28);
+        TEST("JP %1234",     0x5E08, 0x1234);
+        TEST("JP %1234(R2)", 0x5E28, 0x1234);
     }
     if (z8001()) {
-        TEST("JP GE,@RR2",         0x1E29);
-        TEST("JP GE,0x120034",     0x5E09, 0x1234);
-        TEST("JP GE,0x561234",     0x5E09, 0xD600, 0x1234);
-        TEST("JP GE,0x120034(R2)", 0x5E29, 0x1234);
-        TEST("JP GE,0x561234(R2)", 0x5E29, 0xD600, 0x1234);
+        TEST("JP GE,@RR2",        0x1E29);
+        TEST("JP GE,%120034",     0x5E09, 0x1234);
+        TEST("JP GE,%561234",     0x5E09, 0xD600, 0x1234);
+        TEST("JP GE,%120034(R2)", 0x5E29, 0x1234);
+        TEST("JP GE,%561234(R2)", 0x5E29, 0xD600, 0x1234);
     } else {
-        TEST("JP GE,@R2",        0x1E29);
-        TEST("JP GE,0x1234",     0x5E09, 0x1234);
-        TEST("JP GE,0x1234(R2)", 0x5E29, 0x1234);
+        TEST("JP GE,@R2",       0x1E29);
+        TEST("JP GE,%1234",     0x5E09, 0x1234);
+        TEST("JP GE,%1234(R2)", 0x5E29, 0x1234);
     }
     if (z8001()) {
-        TEST("JP GT,@RR2",         0x1E2A);
-        TEST("JP GT,0x120034",     0x5E0A, 0x1234);
-        TEST("JP GT,0x561234",     0x5E0A, 0xD600, 0x1234);
-        TEST("JP GT,0x120034(R2)", 0x5E2A, 0x1234);
-        TEST("JP GT,0x561234(R2)", 0x5E2A, 0xD600, 0x1234);
+        TEST("JP GT,@RR2",        0x1E2A);
+        TEST("JP GT,%120034",     0x5E0A, 0x1234);
+        TEST("JP GT,%561234",     0x5E0A, 0xD600, 0x1234);
+        TEST("JP GT,%120034(R2)", 0x5E2A, 0x1234);
+        TEST("JP GT,%561234(R2)", 0x5E2A, 0xD600, 0x1234);
     } else {
-        TEST("JP GT,@R2",        0x1E2A);
-        TEST("JP GT,0x1234",     0x5E0A, 0x1234);
-        TEST("JP GT,0x1234(R2)", 0x5E2A, 0x1234);
+        TEST("JP GT,@R2",       0x1E2A);
+        TEST("JP GT,%1234",     0x5E0A, 0x1234);
+        TEST("JP GT,%1234(R2)", 0x5E2A, 0x1234);
     }
     if (z8001()) {
-        TEST("JP UGT,@RR2",         0x1E2B);
-        TEST("JP UGT,0x120034",     0x5E0B, 0x1234);
-        TEST("JP UGT,0x561234",     0x5E0B, 0xD600, 0x1234);
-        TEST("JP UGT,0x120034(R2)", 0x5E2B, 0x1234);
-        TEST("JP UGT,0x561234(R2)", 0x5E2B, 0xD600, 0x1234);
+        TEST("JP UGT,@RR2",        0x1E2B);
+        TEST("JP UGT,%120034",     0x5E0B, 0x1234);
+        TEST("JP UGT,%561234",     0x5E0B, 0xD600, 0x1234);
+        TEST("JP UGT,%120034(R2)", 0x5E2B, 0x1234);
+        TEST("JP UGT,%561234(R2)", 0x5E2B, 0xD600, 0x1234);
     } else {
-        TEST("JP UGT,@R2",        0x1E2B);
-        TEST("JP UGT,0x1234",     0x5E0B, 0x1234);
-        TEST("JP UGT,0x1234(R2)", 0x5E2B, 0x1234);
+        TEST("JP UGT,@R2",       0x1E2B);
+        TEST("JP UGT,%1234",     0x5E0B, 0x1234);
+        TEST("JP UGT,%1234(R2)", 0x5E2B, 0x1234);
     }
     if (z8001()) {
-        TEST("JP NOV,@RR2",         0x1E2C);
-        TEST("JP NOV,0x120034",     0x5E0C, 0x1234);
-        TEST("JP NOV,0x561234",     0x5E0C, 0xD600, 0x1234);
-        TEST("JP NOV,0x120034(R2)", 0x5E2C, 0x1234);
-        TEST("JP NOV,0x561234(R2)", 0x5E2C, 0xD600, 0x1234);
+        TEST("JP NOV,@RR2",        0x1E2C);
+        TEST("JP NOV,%120034",     0x5E0C, 0x1234);
+        TEST("JP NOV,%561234",     0x5E0C, 0xD600, 0x1234);
+        TEST("JP NOV,%120034(R2)", 0x5E2C, 0x1234);
+        TEST("JP NOV,%561234(R2)", 0x5E2C, 0xD600, 0x1234);
     } else {
-        TEST("JP NOV,@R2",        0x1E2C);
-        TEST("JP NOV,0x1234",     0x5E0C, 0x1234);
-        TEST("JP NOV,0x1234(R2)", 0x5E2C, 0x1234);
+        TEST("JP NOV,@R2",       0x1E2C);
+        TEST("JP NOV,%1234",     0x5E0C, 0x1234);
+        TEST("JP NOV,%1234(R2)", 0x5E2C, 0x1234);
     }
     if (z8001()) {
-        TEST("JP PL,@RR2",         0x1E2D);
-        TEST("JP PL,0x120034",     0x5E0D, 0x1234);
-        TEST("JP PL,0x561234",     0x5E0D, 0xD600, 0x1234);
-        TEST("JP PL,0x120034(R2)", 0x5E2D, 0x1234);
-        TEST("JP PL,0x561234(R2)", 0x5E2D, 0xD600, 0x1234);
+        TEST("JP PL,@RR2",        0x1E2D);
+        TEST("JP PL,%120034",     0x5E0D, 0x1234);
+        TEST("JP PL,%561234",     0x5E0D, 0xD600, 0x1234);
+        TEST("JP PL,%120034(R2)", 0x5E2D, 0x1234);
+        TEST("JP PL,%561234(R2)", 0x5E2D, 0xD600, 0x1234);
     } else {
-        TEST("JP PL,@R2",        0x1E2D);
-        TEST("JP PL,0x1234",     0x5E0D, 0x1234);
-        TEST("JP PL,0x1234(R2)", 0x5E2D, 0x1234);
+        TEST("JP PL,@R2",       0x1E2D);
+        TEST("JP PL,%1234",     0x5E0D, 0x1234);
+        TEST("JP PL,%1234(R2)", 0x5E2D, 0x1234);
     }
     if (z8001()) {
-        TEST("JP NZ,@RR2",         0x1E2E);
-        TEST("JP NZ,0x120034",     0x5E0E, 0x1234);
-        TEST("JP NZ,0x561234",     0x5E0E, 0xD600, 0x1234);
-        TEST("JP NZ,0x120034(R2)", 0x5E2E, 0x1234);
-        TEST("JP NZ,0x561234(R2)", 0x5E2E, 0xD600, 0x1234);
+        TEST("JP NZ,@RR2",        0x1E2E);
+        TEST("JP NZ,%120034",     0x5E0E, 0x1234);
+        TEST("JP NZ,%561234",     0x5E0E, 0xD600, 0x1234);
+        TEST("JP NZ,%120034(R2)", 0x5E2E, 0x1234);
+        TEST("JP NZ,%561234(R2)", 0x5E2E, 0xD600, 0x1234);
     } else {
-        TEST("JP NZ,@R2",        0x1E2E);
-        TEST("JP NZ,0x1234",     0x5E0E, 0x1234);
-        TEST("JP NZ,0x1234(R2)", 0x5E2E, 0x1234);
+        TEST("JP NZ,@R2",       0x1E2E);
+        TEST("JP NZ,%1234",     0x5E0E, 0x1234);
+        TEST("JP NZ,%1234(R2)", 0x5E2E, 0x1234);
     }
     if (z8001()) {
-        TEST("JP NC,@RR2",         0x1E2F);
-        TEST("JP NC,0x120034",     0x5E0F, 0x1234);
-        TEST("JP NC,0x561234",     0x5E0F, 0xD600, 0x1234);
-        TEST("JP NC,0x120034(R2)", 0x5E2F, 0x1234);
-        TEST("JP NC,0x561234(R2)", 0x5E2F, 0xD600, 0x1234);
+        TEST("JP NC,@RR2",        0x1E2F);
+        TEST("JP NC,%120034",     0x5E0F, 0x1234);
+        TEST("JP NC,%561234",     0x5E0F, 0xD600, 0x1234);
+        TEST("JP NC,%120034(R2)", 0x5E2F, 0x1234);
+        TEST("JP NC,%561234(R2)", 0x5E2F, 0xD600, 0x1234);
     } else {
-        TEST("JP NC,@R2",        0x1E2F);
-        TEST("JP NC,0x1234",     0x5E0F, 0x1234);
-        TEST("JP NC,0x1234(R2)", 0x5E2F, 0x1234);
+        TEST("JP NC,@R2",       0x1E2F);
+        TEST("JP NC,%1234",     0x5E0F, 0x1234);
+        TEST("JP NC,%1234(R2)", 0x5E2F, 0x1234);
     }
 
     // Jump Relative
@@ -1111,7 +1111,7 @@ static void test_program_control() {
     
     // System call
     TEST("SC #0",    0x7F00);
-    TEST("SC #0xFF", 0x7FFF);
+    TEST("SC #%FF", 0x7FFF);
 }
 
 static void test_bit_manipulation() {
@@ -1123,23 +1123,23 @@ static void test_bit_manipulation() {
     ERRT("BITB RL2,#8", ILLEGAL_BIT_NUMBER,   "#8", 0xA6A8);
     ERRT("BITB RL2,R8", REGISTER_NOT_ALLOWED, "R8", 0x2608, 0x0A00);
     if (z8001()) {
-        TEST("BIT  @RR2,#3",          0x2723);
-        TEST("BIT  0x120034,#4",      0x6704, 0x1234);
-        TEST("BIT  0x561234,#9",      0x6709, 0xD600, 0x1234);
-        TEST("BIT  0x120034(R2),#14", 0x672E, 0x1234);
-        TEST("BIT  0x561234(R2),#15", 0x672F, 0xD600, 0x1234);
-        TEST("BITB @RR2,#3",          0x2623);
-        TEST("BITB 0x120034,#4",      0x6604, 0x1234);
-        TEST("BITB 0x561234,#7",      0x6607, 0xD600, 0x1234);
-        TEST("BITB 0x120034(R2),#0",  0x6620, 0x1234);
-        TEST("BITB 0x561234(R2),#7",  0x6627, 0xD600, 0x1234);
+        TEST("BIT  @RR2,#3",         0x2723);
+        TEST("BIT  %120034,#4",      0x6704, 0x1234);
+        TEST("BIT  %561234,#9",      0x6709, 0xD600, 0x1234);
+        TEST("BIT  %120034(R2),#14", 0x672E, 0x1234);
+        TEST("BIT  %561234(R2),#15", 0x672F, 0xD600, 0x1234);
+        TEST("BITB @RR2,#3",         0x2623);
+        TEST("BITB %120034,#4",      0x6604, 0x1234);
+        TEST("BITB %561234,#7",      0x6607, 0xD600, 0x1234);
+        TEST("BITB %120034(R2),#0",  0x6620, 0x1234);
+        TEST("BITB %561234(R2),#7",  0x6627, 0xD600, 0x1234);
     } else {
-        TEST("BIT  @R2,#3",         0x2723);
-        TEST("BIT  0x1234,#4",      0x6704, 0x1234);
-        TEST("BIT  0x1234(R2),#14", 0x672E, 0x1234);
-        TEST("BITB @R2,#3",         0x2623);
-        TEST("BITB 0x1234,#4",      0x6604, 0x1234);
-        TEST("BITB 0x1234(R2),#7",  0x6627, 0x1234);
+        TEST("BIT  @R2,#3",        0x2723);
+        TEST("BIT  %1234,#4",      0x6704, 0x1234);
+        TEST("BIT  %1234(R2),#14", 0x672E, 0x1234);
+        TEST("BITB @R2,#3",        0x2623);
+        TEST("BITB %1234,#4",      0x6604, 0x1234);
+        TEST("BITB %1234(R2),#7",  0x6627, 0x1234);
     }
 
     // Reset Bit
@@ -1150,23 +1150,23 @@ static void test_bit_manipulation() {
     ERRT("RESB RL2,#8", ILLEGAL_BIT_NUMBER,   "#8", 0xA2A8);
     ERRT("RESB RL2,R8", REGISTER_NOT_ALLOWED, "R8", 0x2208, 0x0A00);
     if (z8001()) {
-        TEST("RES  @RR2,#3",          0x2323);
-        TEST("RES  0x120034,#4",      0x6304, 0x1234);
-        TEST("RES  0x561234,#9",      0x6309, 0xD600, 0x1234);
-        TEST("RES  0x120034(R2),#14", 0x632E, 0x1234);
-        TEST("RES  0x561234(R2),#15", 0x632F, 0xD600, 0x1234);
-        TEST("RESB @RR2,#3",          0x2223);
-        TEST("RESB 0x120034,#4",      0x6204, 0x1234);
-        TEST("RESB 0x561234,#7",      0x6207, 0xD600, 0x1234);
-        TEST("RESB 0x120034(R2),#0",  0x6220, 0x1234);
-        TEST("RESB 0x561234(R2),#7",  0x6227, 0xD600, 0x1234);
+        TEST("RES  @RR2,#3",         0x2323);
+        TEST("RES  %120034,#4",      0x6304, 0x1234);
+        TEST("RES  %561234,#9",      0x6309, 0xD600, 0x1234);
+        TEST("RES  %120034(R2),#14", 0x632E, 0x1234);
+        TEST("RES  %561234(R2),#15", 0x632F, 0xD600, 0x1234);
+        TEST("RESB @RR2,#3",         0x2223);
+        TEST("RESB %120034,#4",      0x6204, 0x1234);
+        TEST("RESB %561234,#7",      0x6207, 0xD600, 0x1234);
+        TEST("RESB %120034(R2),#0",  0x6220, 0x1234);
+        TEST("RESB %561234(R2),#7",  0x6227, 0xD600, 0x1234);
     } else {
-        TEST("RES  @R2,#3",         0x2323);
-        TEST("RES  0x1234,#4",      0x6304, 0x1234);
-        TEST("RES  0x1234(R2),#14", 0x632E, 0x1234);
-        TEST("RESB @R2,#3",         0x2223);
-        TEST("RESB 0x1234,#4",      0x6204, 0x1234);
-        TEST("RESB 0x1234(R2),#7",  0x6227, 0x1234);
+        TEST("RES  @R2,#3",        0x2323);
+        TEST("RES  %1234,#4",      0x6304, 0x1234);
+        TEST("RES  %1234(R2),#14", 0x632E, 0x1234);
+        TEST("RESB @R2,#3",        0x2223);
+        TEST("RESB %1234,#4",      0x6204, 0x1234);
+        TEST("RESB %1234(R2),#7",  0x6227, 0x1234);
     }
 
     // Set Bit
@@ -1177,46 +1177,46 @@ static void test_bit_manipulation() {
     ERRT("SETB RL2,#8", ILLEGAL_BIT_NUMBER,   "#8", 0xA4A8);
     ERRT("SETB RL2,R8", REGISTER_NOT_ALLOWED, "R8", 0x2408, 0x0A00);
     if (z8001()) {
-        TEST("SET  @RR2,#3",          0x2523);
-        TEST("SET  0x120034,#4",      0x6504, 0x1234);
-        TEST("SET  0x561234,#9",      0x6509, 0xD600, 0x1234);
-        TEST("SET  0x120034(R2),#14", 0x652E, 0x1234);
-        TEST("SET  0x561234(R2),#15", 0x652F, 0xD600, 0x1234);
-        TEST("SETB @RR2,#3",          0x2423);
-        TEST("SETB 0x120034,#4",      0x6404, 0x1234);
-        TEST("SETB 0x561234,#7",      0x6407, 0xD600, 0x1234);
-        TEST("SETB 0x120034(R2),#0",  0x6420, 0x1234);
-        TEST("SETB 0x561234(R2),#7",  0x6427, 0xD600, 0x1234);
+        TEST("SET  @RR2,#3",         0x2523);
+        TEST("SET  %120034,#4",      0x6504, 0x1234);
+        TEST("SET  %561234,#9",      0x6509, 0xD600, 0x1234);
+        TEST("SET  %120034(R2),#14", 0x652E, 0x1234);
+        TEST("SET  %561234(R2),#15", 0x652F, 0xD600, 0x1234);
+        TEST("SETB @RR2,#3",         0x2423);
+        TEST("SETB %120034,#4",      0x6404, 0x1234);
+        TEST("SETB %561234,#7",      0x6407, 0xD600, 0x1234);
+        TEST("SETB %120034(R2),#0",  0x6420, 0x1234);
+        TEST("SETB %561234(R2),#7",  0x6427, 0xD600, 0x1234);
     } else {
-        TEST("SET  @R2,#3",         0x2523);
-        TEST("SET  0x1234,#4",      0x6504, 0x1234);
-        TEST("SET  0x1234(R2),#14", 0x652E, 0x1234);
-        TEST("SETB @R2,#3",         0x2423);
-        TEST("SETB 0x1234,#4",      0x6404, 0x1234);
-        TEST("SETB 0x1234(R2),#7",  0x6427, 0x1234);
+        TEST("SET  @R2,#3",        0x2523);
+        TEST("SET  %1234,#4",      0x6504, 0x1234);
+        TEST("SET  %1234(R2),#14", 0x652E, 0x1234);
+        TEST("SETB @R2,#3",        0x2423);
+        TEST("SETB %1234,#4",      0x6404, 0x1234);
+        TEST("SETB %1234(R2),#7",  0x6427, 0x1234);
     }
 
     // Test and Set
     TEST("TSET  R2",  0x8D26);
     TEST("TSETB RL1", 0x8C96);
     if (z8001()) {
-        TEST("TSET  @RR2",         0x0D26);
-        TEST("TSET  0x120034",     0x4D06, 0x1234);
-        TEST("TSET  0x561234",     0x4D06, 0xD600, 0x1234);
-        TEST("TSET  0x120034(R2)", 0x4D26, 0x1234);
-        TEST("TSET  0x561234(R2)", 0x4D26, 0xD600, 0x1234);
-        TEST("TSETB @RR2",         0x0C26);
-        TEST("TSETB 0x120034",     0x4C06, 0x1234);
-        TEST("TSETB 0x561234",     0x4C06, 0xD600, 0x1234);
-        TEST("TSETB 0x120034(R2)", 0x4C26, 0x1234);
-        TEST("TSETB 0x561234(R2)", 0x4C26, 0xD600, 0x1234);
+        TEST("TSET  @RR2",        0x0D26);
+        TEST("TSET  %120034",     0x4D06, 0x1234);
+        TEST("TSET  %561234",     0x4D06, 0xD600, 0x1234);
+        TEST("TSET  %120034(R2)", 0x4D26, 0x1234);
+        TEST("TSET  %561234(R2)", 0x4D26, 0xD600, 0x1234);
+        TEST("TSETB @RR2",        0x0C26);
+        TEST("TSETB %120034",     0x4C06, 0x1234);
+        TEST("TSETB %561234",     0x4C06, 0xD600, 0x1234);
+        TEST("TSETB %120034(R2)", 0x4C26, 0x1234);
+        TEST("TSETB %561234(R2)", 0x4C26, 0xD600, 0x1234);
     } else {
-        TEST("TSET  @R2",        0x0D26);
-        TEST("TSET  0x1234",     0x4D06, 0x1234);
-        TEST("TSET  0x1234(R2)", 0x4D26, 0x1234);
-        TEST("TSETB @R2",        0x0C26);
-        TEST("TSETB 0x1234",     0x4C06, 0x1234);
-        TEST("TSETB 0x1234(R2)", 0x4C26, 0x1234);
+        TEST("TSET  @R2",       0x0D26);
+        TEST("TSET  %1234",     0x4D06, 0x1234);
+        TEST("TSET  %1234(R2)", 0x4D26, 0x1234);
+        TEST("TSETB @R2",       0x0C26);
+        TEST("TSETB %1234",     0x4C06, 0x1234);
+        TEST("TSETB %1234(R2)", 0x4C26, 0x1234);
     }
 
     // Test Conditions Code
@@ -1895,24 +1895,24 @@ static void test_translation() {
 
 static void test_input() {
     // Input
-    TEST("IN  R1,@R2",      0x3D21);
-    TEST("INB RH1,@R2",     0x3C21);
-    ERRT("IN  R1,@R0",      REGISTER_NOT_ALLOWED, "@R0", 0x3D01);
-    ERRT("INB RH1,@R0",     REGISTER_NOT_ALLOWED, "@R0", 0x3C01);
-    TEST("IN  R1, 0x1234",  0x3B14, 0x1234);
-    TEST("INB RH1, 0x1234", 0x3A14, 0x1234);
-    TEST("IN  R1, 0xFFFF",  0x3B14, 0xFFFF);
-    ERRT("IN  R1, 0x10000", OVERFLOW_RANGE, "0x10000", 0x3B14, 0x0000);
+    TEST("IN  R1,@R2",     0x3D21);
+    TEST("INB RH1,@R2",    0x3C21);
+    ERRT("IN  R1,@R0",     REGISTER_NOT_ALLOWED, "@R0", 0x3D01);
+    ERRT("INB RH1,@R0",    REGISTER_NOT_ALLOWED, "@R0", 0x3C01);
+    TEST("IN  R1, %1234",  0x3B14, 0x1234);
+    TEST("INB RH1, %1234", 0x3A14, 0x1234);
+    TEST("IN  R1, %FFFF",  0x3B14, 0xFFFF);
+    ERRT("IN  R1, %10000", OVERFLOW_RANGE, "%10000", 0x3B14, 0x0000);
     // GNU as compatibility
-    TEST("IN  R1,#0x1234",  0x3B14, 0x1234);
-    TEST("INB RH1,#0x1234", 0x3A14, 0x1234);
+    TEST("IN  R1,#%1234",  0x3B14, 0x1234);
+    TEST("INB RH1,#%1234", 0x3A14, 0x1234);
 
     // Special Input
-    TEST("SIN  R1, 0x1234",  0x3B15, 0x1234);
-    TEST("SINB RH1, 0x1234", 0x3A15, 0x1234);
+    TEST("SIN  R1, %1234",  0x3B15, 0x1234);
+    TEST("SINB RH1, %1234", 0x3A15, 0x1234);
     // GNU as compatibility
-    TEST("SIN  R1,#0x1234",  0x3B15, 0x1234);
-    TEST("SINB RH1,#0x1234", 0x3A15, 0x1234);
+    TEST("SIN  R1,#%1234",  0x3B15, 0x1234);
+    TEST("SINB RH1,#%1234", 0x3A15, 0x1234);
 
     // Input and Decrement
     if (z8001()) {
@@ -2053,24 +2053,24 @@ static void test_input() {
 
 static void test_output() {
     // Output
-    TEST("OUT  @R2,R1",      0x3F21);
-    TEST("OUTB @R2,RH1",     0x3E21);
-    ERRT("OUT  @R0,R1",      REGISTER_NOT_ALLOWED, "@R0,R1",  0x3F01);
-    ERRT("OUTB @R0,RH1",     REGISTER_NOT_ALLOWED, "@R0,RH1", 0x3E01);
-    TEST("OUT   0x1234,R1",  0x3B16, 0x1234);
-    TEST("OUTB  0x1234,RH1", 0x3A16, 0x1234);
-    TEST("OUT   0xFFFF,R1",  0x3B16, 0xFFFF);
-    ERRT("OUT  0x10000,R1",  OVERFLOW_RANGE, "0x10000,R1", 0x3B16, 0x0000);
+    TEST("OUT  @R2,R1",     0x3F21);
+    TEST("OUTB @R2,RH1",    0x3E21);
+    ERRT("OUT  @R0,R1",     REGISTER_NOT_ALLOWED, "@R0,R1",  0x3F01);
+    ERRT("OUTB @R0,RH1",    REGISTER_NOT_ALLOWED, "@R0,RH1", 0x3E01);
+    TEST("OUT   %1234,R1",  0x3B16, 0x1234);
+    TEST("OUTB  %1234,RH1", 0x3A16, 0x1234);
+    TEST("OUT   %FFFF,R1",  0x3B16, 0xFFFF);
+    ERRT("OUT  %10000,R1",  OVERFLOW_RANGE, "%10000,R1", 0x3B16, 0x0000);
     // GNU as compatibility
-    TEST("OUT  #0x1234,R1",  0x3B16, 0x1234);
-    TEST("OUTB #0x1234,RH1", 0x3A16, 0x1234);
+    TEST("OUT  #%1234,R1",  0x3B16, 0x1234);
+    TEST("OUTB #%1234,RH1", 0x3A16, 0x1234);
 
     // Special Output
-    TEST("SOUT   0x1234,R1",  0x3B17, 0x1234);
-    TEST("SOUTB  0x1234,RH1", 0x3A17, 0x1234);
+    TEST("SOUT   %1234,R1",  0x3B17, 0x1234);
+    TEST("SOUTB  %1234,RH1", 0x3A17, 0x1234);
     // GNU as compatibility
-    TEST("SOUT  #0x1234,R1",  0x3B17, 0x1234);
-    TEST("SOUTB #0x1234,RH1", 0x3A17, 0x1234);
+    TEST("SOUT  #%1234,R1",  0x3B17, 0x1234);
+    TEST("SOUTB #%1234,RH1", 0x3A17, 0x1234);
 
     // Output and Decrement
     if (z8001()) {
@@ -2310,14 +2310,14 @@ static void test_cpu_conrtol() {
     // Load Program Status
     if (z8001()) {
         TEST("LDPS @RR2",         0x3920);
-        TEST("LDPS 0x120034",     0x7900, 0x1234);
-        TEST("LDPS 0x561234",     0x7900, 0xD600, 0x1234);
-        TEST("LDPS 0x120034(R1)", 0x7910, 0x1234);
-        TEST("LDPS 0x561234(R1)", 0x7910, 0xD600, 0x1234);
+        TEST("LDPS %120034",     0x7900, 0x1234);
+        TEST("LDPS %561234",     0x7900, 0xD600, 0x1234);
+        TEST("LDPS %120034(R1)", 0x7910, 0x1234);
+        TEST("LDPS %561234(R1)", 0x7910, 0xD600, 0x1234);
     } else {
         TEST("LDPS @R2",        0x3920);
-        TEST("LDPS 0x1234",     0x7900, 0x1234);
-        TEST("LDPS 0x1234(R1)", 0x7910, 0x1234);
+        TEST("LDPS %1234",     0x7900, 0x1234);
+        TEST("LDPS %1234(R1)", 0x7910, 0x1234);
     }
 
     // Multi-Micro Bit Test, Request, Reset, and Set
@@ -2374,10 +2374,10 @@ static void test_short_direct() {
     symtab.intern(0x1234, "l_off");
     symtab.intern(0x560000, "seg");
 
-    ERRT("CLR 0x560034        ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
-    ERRT("CLR 0x561234        ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
-    ERRT("CLR 0x560034(R2)    ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
-    ERRT("CLR 0x561234(R2)    ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
+    ERRT("CLR %560034         ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
+    ERRT("CLR %561234         ; long offset", OK, "; long offset", 0x4D08, 0xD600, 0x1234);
+    ERRT("CLR %560034(R2)     ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
+    ERRT("CLR %561234(R2)     ; long offset", OK, "; long offset", 0x4D28, 0xD600, 0x1234);
     ERRT("CLR seg|s_off       ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
     ERRT("CLR seg+s_off(R2)   ; auto short",  OK, "; auto short",  0x4D28, 0x5634);
     ERRT("CLR (seg+s_off)     ; auto short",  OK, "; auto short",  0x4D08, 0x5634);
@@ -2389,10 +2389,10 @@ static void test_short_direct() {
 
     assembler.setOption("short-direct", "disable");
 
-    TEST("CLR 0x560034",        0x4D08, 0xD600, 0x0034);
-    TEST("CLR 0x561234",        0x4D08, 0xD600, 0x1234);
-    TEST("CLR 0x560034(R2)",    0x4D28, 0xD600, 0x0034);
-    TEST("CLR 0x561234(R2)",    0x4D28, 0xD600, 0x1234);
+    TEST("CLR %560034",         0x4D08, 0xD600, 0x0034);
+    TEST("CLR %561234",         0x4D08, 0xD600, 0x1234);
+    TEST("CLR %560034(R2)",     0x4D28, 0xD600, 0x0034);
+    TEST("CLR %561234(R2)",     0x4D28, 0xD600, 0x1234);
     TEST("CLR seg+s_off",       0x4D08, 0xD600, 0x0034);
     TEST("CLR seg|s_off(R2)",   0x4D28, 0xD600, 0x0034);
     TEST("CLR seg|l_off",       0x4D08, 0xD600, 0x1234);
@@ -2402,26 +2402,26 @@ static void test_short_direct() {
     TEST("CLR (seg+s_off)(R2)", 0x4D28, 0xD600, 0x0034);
     TEST("CLR (seg|l_off)(R2)", 0x4D28, 0xD600, 0x1234);
 
-    ERRT("CLR |0x560034|        ; short direct", OK, "; short direct", 0x4D08, 0x5634);
-    ERRT("CLR |0x560034|(R2)    ; short direct", OK, "; short direct", 0x4D28, 0x5634);
+    ERRT("CLR |%560034|         ; short direct", OK, "; short direct", 0x4D08, 0x5634);
+    ERRT("CLR |%560034|(R2)     ; short direct", OK, "; short direct", 0x4D28, 0x5634);
     ERRT("CLR |seg+s_off|(R2)   ; short direct", OK, "; short direct", 0x4D28, 0x5634);
     ERRT("CLR |(seg|s_off)|     ; short direct", OK, "; short direct", 0x4D08, 0x5634);
     ERRT("CLR |(seg+s_off)|(R2) ; short direct", OK, "; short direct", 0x4D28, 0x5634);
-    ERRT("CLR |0x561234|        ; long offset",  OVERFLOW_RANGE, "|0x561234|        ; long offset", 0x4D08, 0x5634);
-    ERRT("CLR |0x561234|(R2)    ; long offset",  OVERFLOW_RANGE, "|0x561234|(R2)    ; long offset", 0x4D28, 0x5634);
+    ERRT("CLR |%561234|         ; long offset",  OVERFLOW_RANGE, "|%561234|         ; long offset", 0x4D08, 0x5634);
+    ERRT("CLR |%561234|(R2)     ; long offset",  OVERFLOW_RANGE, "|%561234|(R2)     ; long offset", 0x4D28, 0x5634);
     ERRT("CLR |seg+l_off|       ; long offset",  OVERFLOW_RANGE, "|seg+l_off|       ; long offset", 0x4D08, 0x5634);
     ERRT("CLR |(seg|l_off)|     ; long offset",  OVERFLOW_RANGE, "|(seg|l_off)|     ; long offset", 0x4D08, 0x5634);
     ERRT("CLR |(seg|l_off)|(R2) ; long offset",  OVERFLOW_RANGE, "|(seg|l_off)|(R2) ; long offset", 0x4D28, 0x5634);
 }
 
 static void test_comment() {
-    TEST("ADD R1 , # 0x1234", 0x0101, 0x1234);
+    TEST("ADD R1 , # %1234", 0x0101, 0x1234);
     if (z8001()) {
-        ERRT("EXB  RL1 , 0x1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x8000, 0x1234);
+        ERRT("EXB  RL1 , %1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x8000, 0x1234);
         TEST("PUSH @RR4 , R2",  0x9342);
         ERRT("PUSH @ RR4 , R2", UNKNOWN_REGISTER, "@ RR4 , R2");
     } else {
-        ERRT("EXB  RL1 , 0x1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x1234);
+        ERRT("EXB  RL1 , %1234 ( R2 ) ; comment", OK, "; comment", 0x6C29 ,0x1234);
         TEST("PUSH @R4 , R2",  0x9342);
         ERRT("PUSH @ R4 , R2", UNKNOWN_REGISTER, "@ R4 , R2");
     }
@@ -2531,7 +2531,7 @@ static void test_data_constant() {
     BTEST("word -128, 255",  0xFF, 0x80, 0x00, 0xFF);
     BTEST("word 'A%QB'",     0x41, 0x27, 0x42, 0x00);
     ERRT("word 'A%QB",       MISSING_CLOSING_QUOTE, "'A%QB");
-    BTEST("long 12345678H",  0x12, 0x34, 0x56, 0x78);
+    BTEST("long %12345678",  0x12, 0x34, 0x56, 0x78);
     BTEST("long 'A%QB%22C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
     ERRT("long 'A%QB%22C",   MISSING_CLOSING_QUOTE, "'A%QB%22C");
 
