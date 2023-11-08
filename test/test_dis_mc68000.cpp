@@ -2087,15 +2087,15 @@ static void test_program() {
     UNKN(                       0050374 | 0xF00); // #$34
 
     // BRA label: 00600|disp
-    ATEST(0x10000, "BRA", "*-$7FFE",                      0060000, 0x8000);
-    ATEST(0x10000, "BRA", "*-$007E",                      0060000, 0xFF80);
-    ATEST(0x10000, "BRA", "*-126",                        0060000 | 0x80);
-    ATEST(0x10000, "BRA", "*",                            0060000 | 0xFE);
-    ATEST(0x10000, "BRA", "*",                            0060000, 0xFFFE);
-    ATEST(0x10000, "BRA", "*+2",                          0060000, 0x0000);
-    ATEST(0x10000, "BRA", "*+128",                        0060000 | 0x7E);
-    ATEST(0x10000, "BRA", "*+$0080",                      0060000, 0x007E);
-    ATEST(0x10000, "BRA", "*+$8000",                      0060000, 0x7FFE);
+    ATEST(0x10000, "BRA",   "*-$7FFE", 0060000, 0x8000);
+    ATEST(0x10000, "BRA.W", "*-$007E", 0060000, 0xFF80);
+    ATEST(0x10000, "BRA",   "*-126",   0060000 | 0x80);
+    ATEST(0x10000, "BRA",   "*",       0060000 | 0xFE);
+    ATEST(0x10000, "BRA.W", "*",       0060000, 0xFFFE);
+    ATEST(0x10000, "BRA.W", "*+2",     0060000, 0x0000);
+    ATEST(0x10000, "BRA",   "*+128",   0060000 | 0x7E);
+    ATEST(0x10000, "BRA.W", "*+$0080", 0060000, 0x007E);
+    ATEST(0x10000, "BRA", "*+$8000",   0060000, 0x7FFE);
     AERRT(0x10000, "BRA", "*-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0060000, 0x8001);
     AERRT(0x10000, "BRA", "*-125",   OPERAND_NOT_ALIGNED, "*-125",   0060000 | 0x81);
     AERRT(0x10000, "BRA", "*+1",     OPERAND_NOT_ALIGNED, "*+1",     0060000 | 0xFF);
@@ -2104,15 +2104,15 @@ static void test_program() {
     AERRT(0x10000, "BRA", "*+$8001", OPERAND_NOT_ALIGNED, "*+$8001", 0060000, 0x7FFF);
 
     // BSR label: 00604|disp
-    ATEST(0x10000, "BSR", "*-$7FFE",                      0060400, 0x8000);
-    ATEST(0x10000, "BSR", "*-$007E",                      0060400, 0xFF80);
-    ATEST(0x10000, "BSR", "*-126",                        0060400 | 0x80);
-    ATEST(0x10000, "BSR", "*",                            0060400 | 0xFE);
-    ATEST(0x10000, "BSR", "*",                            0060400, 0xFFFE);
-    ATEST(0x10000, "BSR", "*+2",                          0060400, 0x0000);
-    ATEST(0x10000, "BSR", "*+128",                        0060400 | 0x7E);
-    ATEST(0x10000, "BSR", "*+$0080",                      0060400, 0x007E);
-    ATEST(0x10000, "BSR", "*+$8000",                      0060400, 0x7FFE);
+    ATEST(0x10000, "BSR"  , "*-$7FFE", 0060400, 0x8000);
+    ATEST(0x10000, "BSR.W", "*-$007E", 0060400, 0xFF80);
+    ATEST(0x10000, "BSR",   "*-126",   0060400 | 0x80);
+    ATEST(0x10000, "BSR",   "*",       0060400 | 0xFE);
+    ATEST(0x10000, "BSR.W", "*",       0060400, 0xFFFE);
+    ATEST(0x10000, "BSR.W", "*+2",     0060400, 0x0000);
+    ATEST(0x10000, "BSR",   "*+128",   0060400 | 0x7E);
+    ATEST(0x10000, "BSR.W", "*+$0080", 0060400, 0x007E);
+    ATEST(0x10000, "BSR",   "*+$8000", 0060400, 0x7FFE);
     AERRT(0x10000, "BSR", "*-$7FFD", OPERAND_NOT_ALIGNED, "*-$7FFD", 0060400, 0x8001);
     AERRT(0x10000, "BSR", "*-125",   OPERAND_NOT_ALIGNED, "*-125",   0060400 | 0x81);
     AERRT(0x10000, "BSR", "*+1",     OPERAND_NOT_ALIGNED, "*+1",     0060400 | 0xFF);

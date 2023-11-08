@@ -6932,97 +6932,129 @@
       SLE     ($FA61FB).L
       BRA     *+$6104
       BRA     *-$7FFE
-      BRA     *
+      BRA.W   *-$007E
+      BRA.W   *
+      BRA.W   *+2
       BRA     *+4
       BRA     *-126
       BRA     *
       BSR     *+$6204
       BSR     *-$7FFE
-      BSR     *
+      BSR.W   *-$007E
+      BSR.W   *
+      BSR.W   *+2
       BSR     *+4
       BSR     *-126
       BSR     *
       BHI     *+$6304
       BHI     *-$7FFE
-      BHI     *
+      BHI.W   *-$007E
+      BHI.W   *
+      BHI.W   *+2
       BHI     *+4
       BHI     *-126
       BHI     *
       BLS     *+$6404
       BLS     *-$7FFE
-      BLS     *
+      BLS.W   *-$007E
+      BLS.W   *
+      BLS.W   *+2
       BLS     *+4
       BLS     *-126
       BLS     *
       BCC     *+$6504
       BCC     *-$7FFE
-      BCC     *
+      BCC.W   *-$007E
+      BCC.W   *
+      BCC.W   *+2
       BCC     *+4
       BCC     *-126
       BCC     *
       BCS     *+$6604
       BCS     *-$7FFE
-      BCS     *
+      BCS.W   *-$007E
+      BCS.W   *
+      BCS.W   *+2
       BCS     *+4
       BCS     *-126
       BCS     *
       BNE     *+$6704
       BNE     *-$7FFE
-      BNE     *
+      BNE.W   *-$007E
+      BNE.W   *
+      BNE.W   *+2
       BNE     *+4
       BNE     *-126
       BNE     *
       BEQ     *+$6804
       BEQ     *-$7FFE
-      BEQ     *
+      BEQ.W   *-$007E
+      BEQ.W   *
+      BEQ.W   *+2
       BEQ     *+4
       BEQ     *-126
       BEQ     *
       BVC     *+$6904
       BVC     *-$7FFE
-      BVC     *
+      BVC.W   *-$007E
+      BVC.W   *
+      BVC.W   *+2
       BVC     *+4
       BVC     *-126
       BVC     *
       BVS     *+$6A04
       BVS     *-$7FFE
-      BVS     *
+      BVS.W   *-$007E
+      BVS.W   *
+      BVS.W   *+2
       BVS     *+4
       BVS     *-126
       BVS     *
       BPL     *+$6B04
       BPL     *-$7FFE
-      BPL     *
+      BPL.W   *-$007E
+      BPL.W   *
+      BPL.W   *+2
       BPL     *+4
       BPL     *-126
       BPL     *
       BMI     *+$6C04
       BMI     *-$7FFE
-      BMI     *
+      BMI.W   *-$007E
+      BMI.W   *
+      BMI.W   *+2
       BMI     *+4
       BMI     *-126
       BMI     *
       BGE     *+$6D04
       BGE     *-$7FFE
-      BGE     *
+      BGE.W   *-$007E
+      BGE.W   *
+      BGE.W   *+2
       BGE     *+4
       BGE     *-126
       BGE     *
       BLT     *+$6E04
       BLT     *-$7FFE
-      BLT     *
+      BLT.W   *-$007E
+      BLT.W   *
+      BLT.W   *+2
       BLT     *+4
       BLT     *-126
       BLT     *
       BGT     *+$6F04
       BGT     *-$7FFE
-      BGT     *
+      BGT.W   *-$007E
+      BGT.W   *
+      BGT.W   *+2
       BGT     *+4
       BGT     *-126
       BGT     *
       BLE     *+$7004
       BLE     *-$7FFE
-      BLE     *
+      BLE.W   *-$007E
+      BLE.W   *
+      BLE.W   *+2
       BLE     *+4
       BLE     *-126
       BLE     *

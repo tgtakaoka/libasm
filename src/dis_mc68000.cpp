@@ -122,9 +122,16 @@ void DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68
         out.letter('+');
 }
 
-void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, uint8_t rel8) const {
+void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto base = insn.address() + 2;
+    const auto rel8 = (mode == M_REL8) ? static_cast<int8_t>(insn.opCode() & 0xFF) : 0;
     const auto delta = rel8 ? static_cast<int8_t>(rel8) : static_cast<int16_t>(insn.readUint16());
+    if (mode == M_REL8 && rel8 == 0 && !overflowInt8(delta)) {
+        auto save{out};
+        insn.nameBuffer().over(out);
+        out.letter('.').letter('W').over(insn.nameBuffer());
+        save.over(out);
+    }
     Error error;
     const auto target = branchTarget(base, delta, error);
     if (error)
@@ -259,9 +266,8 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uin
         outRegName(out, REG_USP);
         break;
     case M_REL8:
-        return decodeRelative(insn, out, static_cast<uint8_t>(insn.opCode()));
     case M_REL16:
-        return decodeRelative(insn, out, 0);
+        return decodeRelative(insn, out, mode);
     default:
         break;
     }
