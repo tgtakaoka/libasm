@@ -244,14 +244,14 @@ void AsmZ8000::emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const {
 void AsmZ8000::emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op) const {
     const int32_t disp = static_cast<int32_t>(op.val32);
     if (overflowInt16(disp))
-        insn.setErrorIf(op, OVERFLOW_RANGE);
+        insn.setErrorIf(op.baseAt, OVERFLOW_RANGE);
     emitIndirectRegister(insn, op, pos, op.base);
     insn.emitOperand16(static_cast<uint16_t>(disp));
 }
 
 void AsmZ8000::emitBaseIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const {
-    if (!isWordReg(op.reg) || encodeGeneralRegName(op.reg) == 0)
-        insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+    if (!isWordReg(op.reg))
+        insn.setErrorIf(op.baseAt, REGISTER_NOT_ALLOWED);
     emitIndirectRegister(insn, op, pos, op.base);
     emitRegister(insn, OP_P8, op.reg);
 }
@@ -501,6 +501,7 @@ Error AsmZ8000::parseOperand(StrScanner &scan, Operand &op) const {
             return op.setError(scan, ILLEGAL_REGISTER);
         if (p.skipSpaces().expect('(')) {
             op.base = op.reg;
+            op.baseAt = p;
             if (p.skipSpaces().expect('#')) {
                 op.val32 = parseExpr32(p, op, ')');
                 if (op.hasError())

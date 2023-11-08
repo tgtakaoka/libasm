@@ -115,6 +115,8 @@ static void test_load_and_exchange() {
         TEST("LD",  "R9, %561234(R2)",   0x6129, 0xD600, 0x1234);
         TEST("LD",  "R9, RR2(#%1234)",   0x3129, 0x1234);
         TEST("LD",  "R9, RR2(R4)",       0x7129, 0x0400);
+        TEST("LD",  "R9, RR2(R0)",       0x7129, 0x0000);
+        ERRT("LD",  "R9, RR0(R4)", REGISTER_NOT_ALLOWED, "RR0(R4)", 0x7109, 0x0400);
         UNKN(                            0x7129, 0x1400);
         UNKN(                            0x7129, 0x0420);
         UNKN(                            0x7129, 0x0403);
@@ -125,6 +127,8 @@ static void test_load_and_exchange() {
         TEST("LDB", "RL1, %561234(R2)",   0x6029, 0xD600, 0x1234);
         TEST("LDB", "RL1, RR2(#%1234)",   0x3029, 0x1234);
         TEST("LDB", "RL1, RR2(R4)",       0x7029, 0x0400);
+        TEST("LDB", "RL1, RR2(R0)",       0x7029, 0x0000);
+        ERRT("LDB", "RL1, RR0(R4)", REGISTER_NOT_ALLOWED, "RR0(R4)", 0x7009, 0x0400);
         UNKN(                             0x7029, 0x4400);
         UNKN(                             0x7029, 0x0450);
         UNKN(                             0x7029, 0x0406);
@@ -135,6 +139,8 @@ static void test_load_and_exchange() {
         TEST("LDL", "RR2, %561234(R8)",   0x5482, 0xD600, 0x1234);
         TEST("LDL", "RR2, RR8(#%1234)",   0x3582, 0x1234);
         TEST("LDL", "RR2, RR8(R4)",       0x7582, 0x0400);
+        TEST("LDL", "RR2, RR8(R0)",       0x7582, 0x0000);
+        ERRT("LDL", "RR2, RR0(R4)", REGISTER_NOT_ALLOWED, "RR0(R4)", 0x7502, 0x0400);
         UNKN(                             0x7582, 0x1400);
         UNKN(                             0x7582, 0x0420);
         UNKN(                             0x7582, 0x0403);
@@ -144,6 +150,8 @@ static void test_load_and_exchange() {
         TEST("LD",  "R9, %1234(R2)",  0x6129, 0x1234);
         TEST("LD",  "R9, R2(#%1234)", 0x3129, 0x1234);
         TEST("LD",  "R9, R2(R4)",     0x7129, 0x0400);
+        TEST("LD",  "R9, R2(R0)",     0x7129, 0x0000);
+        ERRT("LD",  "R9, R0(R4)", REGISTER_NOT_ALLOWED, "R0(R4)", 0x7109, 0x0400);
         UNKN(                         0x7129, 0x7400);
         UNKN(                         0x7129, 0x0480);
         UNKN(                         0x7129, 0x0409);
@@ -152,6 +160,8 @@ static void test_load_and_exchange() {
         TEST("LDB", "RL1, %1234(R2)",  0x6029, 0x1234);
         TEST("LDB", "RL1, R2(#%1234)", 0x3029, 0x1234);
         TEST("LDB", "RL1, R2(R4)",     0x7029, 0x0400);
+        TEST("LDB", "RL1, R2(R0)",     0x7029, 0x0000);
+        ERRT("LDB", "RL1, R0(R4)", REGISTER_NOT_ALLOWED, "R0(R4)", 0x7009, 0x0400);
         UNKN(                          0x7029, 0xA400);
         UNKN(                          0x7029, 0x04B0);
         UNKN(                          0x7029, 0x040C);
@@ -160,6 +170,8 @@ static void test_load_and_exchange() {
         TEST("LDL", "RR2, %1234(R8)",  0x5482, 0x1234);
         TEST("LDL", "RR2, R8(#%1234)", 0x3582, 0x1234);
         TEST("LDL", "RR2, R8(R4)",     0x7582, 0x0400);
+        TEST("LDL", "RR2, R8(R0)",     0x7582, 0x0000);
+        ERRT("LDL", "RR2, R0(R4)", REGISTER_NOT_ALLOWED, "R0(R4)", 0x7502, 0x0400);
         UNKN(                          0x7582, 0x4400);
         UNKN(                          0x7582, 0x0450);
         UNKN(                          0x7582, 0x0406);
@@ -172,6 +184,8 @@ static void test_load_and_exchange() {
         TEST("LD",  "%561234(R2), R9",   0x6F29, 0xD600, 0x1234);
         TEST("LD",  "RR2(#%1234), R9",   0x3329, 0x1234);
         TEST("LD",  "RR2(R4), R9",       0x7329, 0x0400);
+        TEST("LD",  "RR2(R0), R9",       0x7329, 0x0000);
+        ERRT("LD",  "RR0(R4), R9", REGISTER_NOT_ALLOWED, "RR0(R4), R9", 0x7309, 0x0400);
         UNKN(                            0x7329, 0xD400);
         UNKN(                             0x7329, 0x04E0);
         UNKN(                             0x7329, 0x040F);
@@ -182,6 +196,8 @@ static void test_load_and_exchange() {
         TEST("LDB", "%561234(R2), RL1",   0x6E29, 0xD600, 0x1234);
         TEST("LDB", "RR2(#%1234), RL1",   0x3229, 0x1234);
         TEST("LDB", "RR2(R4), RL1",       0x7229, 0x0400);
+        TEST("LDB", "RR2(R0), RL1",       0x7229, 0x0000);
+        ERRT("LDB", "RR0(R4), RL1", REGISTER_NOT_ALLOWED, "RR0(R4), RL1", 0x7209, 0x0400);
         UNKN(                             0x7229, 0x1400);
         UNKN(                             0x7229, 0x0420);
         UNKN(                             0x7229, 0x0403);
@@ -192,6 +208,8 @@ static void test_load_and_exchange() {
         TEST("LDL", "%561234(R8), RR2",   0x5D82, 0xD600, 0x1234);
         TEST("LDL", "RR8(#%1234), RR2",   0x3782, 0x1234);
         TEST("LDL", "RR8(R4), RR2",       0x7782, 0x0400);
+        TEST("LDL", "RR8(R0), RR2",       0x7782, 0x0000);
+        ERRT("LDL", "RR0(R4), RR2", REGISTER_NOT_ALLOWED, "RR0(R4), RR2", 0x7702, 0x0400);
         UNKN(                             0x7782, 0x7400);
         UNKN(                             0x7782, 0x0480);
         UNKN(                             0x7782, 0x0409);
@@ -201,6 +219,8 @@ static void test_load_and_exchange() {
         TEST("LD",  "%1234(R2), R9",  0x6F29, 0x1234);
         TEST("LD",  "R2(#%1234), R9", 0x3329, 0x1234);
         TEST("LD",  "R2(R4), R9",     0x7329, 0x0400);
+        TEST("LD",  "R2(R0), R9",     0x7329, 0x0000);
+        ERRT("LD",  "R0(R4), R9", REGISTER_NOT_ALLOWED, "R0(R4), R9", 0x7309, 0x0400);
         UNKN(                         0x7329, 0x5400);
         UNKN(                         0x7329, 0x0460);
         UNKN(                         0x7329, 0x0407);
@@ -209,6 +229,8 @@ static void test_load_and_exchange() {
         TEST("LDB", "%1234(R2), RL1",  0x6E29, 0x1234);
         TEST("LDB", "R2(#%1234), RL1", 0x3229, 0x1234);
         TEST("LDB", "R2(R4), RL1",     0x7229, 0x0400);
+        TEST("LDB", "R2(R0), RL1",     0x7229, 0x0000);
+        ERRT("LDB", "R0(R4), RL1", REGISTER_NOT_ALLOWED, "R0(R4), RL1", 0x7209, 0x0400);
         UNKN(                          0x7229, 0x8400);
         UNKN(                          0x7229, 0x0490);
         UNKN(                          0x7229, 0x040A);
@@ -217,6 +239,8 @@ static void test_load_and_exchange() {
         TEST("LDL", "%1234(R8), RR2",  0x5D82, 0x1234);
         TEST("LDL", "R8(#%1234), RR2", 0x3782, 0x1234);
         TEST("LDL", "R8(R4), RR2",     0x7782, 0x0400);
+        TEST("LDL", "R8(R0), RR2",     0x7782, 0x0000);
+        ERRT("LDL", "R0(R4), RR2", REGISTER_NOT_ALLOWED, "R0(R4), RR2", 0x7702, 0x0400);
         UNKN(                          0x7782, 0xA400);
         UNKN(                          0x7782, 0x04B0);
         UNKN(                          0x7782, 0x040C);
