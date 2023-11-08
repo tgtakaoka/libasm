@@ -165,8 +165,12 @@ void DisZ8000::decodeGenericAddressing(
     const auto addressing = insn.opCode() >> 14;
     if (addressing == 0) {
         if (num == 0) {
-            if (mode == M_GENI)
+            if (mode == M_GENI) {
+                constexpr Config::opcode_t LDB_R_GENI = 0x2000;
+                if ((insn.opCode() & ~0x000F) == LDB_R_GENI)
+                    insn.setErrorIf(out, SUBOPTIMAL_INSTRUCTION);
                 return decodeImmediate(insn, out, M_IM, insn.size());  // M_IM
+            }
         }
         return decodeGeneralRegister(insn, out, M_IR, num);  // M_IR
     }

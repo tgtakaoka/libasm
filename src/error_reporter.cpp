@@ -52,6 +52,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Overwrap page boundary");
     case INVALID_INSTRUCTION:
         return PSTR("Invalid instruction combination");
+    case SUBOPTIMAL_INSTRUCTION:
+        return PSTR("Suboptimal instruction");
 
     // Assembler
     case UNKNOWN_INSTRUCTION:

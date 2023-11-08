@@ -103,9 +103,9 @@ static void test_load_and_exchange() {
     TEST("LD",  "R2, R8",   0xA182);
     TEST("LDB", "RH2, RL0", 0xA082);
     TEST("LDL", "RR2, RR8", 0x9482);
-    TEST("LD",  "R2, #%5678",      0x2102, 0x5678);
-    TEST("LDB", "RH2, #%56",       0xC256);
-    TEST("LDB", "RH2, #%56",       0x2002, 0x5656);
+    TEST("LD",  "R2, #%5678", 0x2102, 0x5678);
+    ERRT("LDB", "RH2, #%56",  SUBOPTIMAL_INSTRUCTION, "#%56", 0x2002, 0x5656);
+    TEST("LDB", "RH2, #%56",  0xC256);
     TEST("LDL", "RR2, #%12345678", 0x1402, 0x1234, 0x5678);
     if (z8001()) {
         TEST("LD",  "R9, @RR2",          0x2129);
@@ -228,7 +228,8 @@ static void test_load_and_exchange() {
         TEST("LD",  "%561234, #%5678",       0x4D05, 0xD600, 0x1234, 0x5678);
         TEST("LD",  "|%120034|(R2), #%5678", 0x4D25, 0x1234, 0x5678);
         TEST("LD",  "%561234(R2), #%5678",   0x4D25, 0xD600, 0x1234, 0x5678);
-        TEST("LDB", "RH2, #%56",             0x2002, 0x5656);
+        ERRT("LDB", "RH2, #%56", SUBOPTIMAL_INSTRUCTION, "#%56", 0x2002, 0x5656);
+        TEST("LDB", "RH2, #%56", 0xC256);
         TEST("LDB", "@RR2, #%56",            0x0C25, 0x5656);
         TEST("LDB", "|%120034|, #%56",       0x4C05, 0x1234, 0x5656);
         TEST("LDB", "%561234, #%56",         0x4C05, 0xD600, 0x1234, 0x5656);
@@ -239,7 +240,8 @@ static void test_load_and_exchange() {
         TEST("LD",  "@R2, #%5678",       0x0D25, 0x5678);
         TEST("LD",  "%1234, #%5678",     0x4D05, 0x1234, 0x5678);
         TEST("LD",  "%1234(R2), #%5678", 0x4D25, 0x1234, 0x5678);
-        TEST("LDB", "RH2, #%56",         0x2002, 0x5656);
+        ERRT("LDB", "RH2, #%56", SUBOPTIMAL_INSTRUCTION, "#%56", 0x2002, 0x5656);
+        TEST("LDB", "RH2, #%56", 0xC256);
         TEST("LDB", "@R2, #%56",         0x0C25, 0x5656);
         TEST("LDB", "%1234, #%56",       0x4C05, 0x1234, 0x5656);
         TEST("LDB", "%1234(R2), #%56",   0x4C25, 0x1234, 0x5656);

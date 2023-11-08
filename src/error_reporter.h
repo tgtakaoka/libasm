@@ -39,6 +39,7 @@ enum Error : uint8_t {
     BUFFER_OVERFLOW = 10,
     OVERWRAP_PAGE = 11,
     INVALID_INSTRUCTION = 12,
+    SUBOPTIMAL_INSTRUCTION = 13,
 
     // Assembler
     UNKNOWN_INSTRUCTION = 21,

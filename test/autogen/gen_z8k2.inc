@@ -92,8 +92,6 @@
       jp     nz, @r1
       jp     nc, @r1
       call   @r1
-      ldb    rh0, #1
-      ldb    rl0, #9
       ldb    rh0, @r1
       ldb    rl0, @r1
       ld     r0, #0x2201
@@ -124,39 +122,39 @@
       ldb    @r1, rl0
       ld     @r1, r0
       ldrb   rh0, .+0x3106
-      ldrb   rh0, .-0x1160
+      ldrb   rh0, .-0x1158
       ldrb   rh0, .
       ldrb   rl0, .+0x310e
-      ldrb   rl0, .-0x116c
+      ldrb   rl0, .-0x1164
       ldrb   rl0, .
       ldb    rh0, r1(#0x3111)
       ldb    rl0, r1(#0x3119)
       ldr    r0, .+0x3206
-      ldr    r0, .-0x1180
+      ldr    r0, .-0x1178
       ldr    r0, .
       ld     r0, r1(#0x3211)
       ldrb   .+0x3306, rh0
-      ldrb   .-0x1190, rh0
+      ldrb   .-0x1188, rh0
       ldrb   ., rh0
       ldrb   .+0x330e, rl0
-      ldrb   .-0x119c, rl0
+      ldrb   .-0x1194, rl0
       ldrb   ., rl0
       ldb    r1(#0x3311), rh0
       ldb    r1(#0x3319), rl0
       ldr    .+0x3406, r0
-      ldr    .-0x11b0, r0
+      ldr    .-0x11a8, r0
       ldr    ., r0
       ld     r1(#0x3411), r0
       ldar   r0, .+0x3506
-      ldar   r0, .-0x11c0
+      ldar   r0, .-0x11b8
       ldar   r0, .
       lda    r0, r1(#0x3511)
       ldrl   rr0, .+0x3606
-      ldrl   rr0, .-0x11d0
+      ldrl   rr0, .-0x11c8
       ldrl   rr0, .
       ldl    rr0, r1(#0x3611)
       ldrl   .+0x3806, rr0
-      ldrl   .-0x11e0, rr0
+      ldrl   .-0x11d8, rr0
       ldrl   ., rr0
       ldl    r1(#0x3811), rr0
       ldps   @r1

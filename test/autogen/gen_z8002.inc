@@ -92,8 +92,6 @@
       JP     NZ, @R1
       JP     NC, @R1
       CALL   @R1
-      LDB    RH0, #1
-      LDB    RL0, #9
       LDB    RH0, @R1
       LDB    RL0, @R1
       LD     R0, #2201H
@@ -124,39 +122,39 @@
       LDB    @R1, RL0
       LD     @R1, R0
       LDRB   RH0, $+3106H
-      LDRB   RH0, $-1160H
+      LDRB   RH0, $-1158H
       LDRB   RH0, $
       LDRB   RL0, $+310EH
-      LDRB   RL0, $-116CH
+      LDRB   RL0, $-1164H
       LDRB   RL0, $
       LDB    RH0, R1(#3111H)
       LDB    RL0, R1(#3119H)
       LDR    R0, $+3206H
-      LDR    R0, $-1180H
+      LDR    R0, $-1178H
       LDR    R0, $
       LD     R0, R1(#3211H)
       LDRB   $+3306H, RH0
-      LDRB   $-1190H, RH0
+      LDRB   $-1188H, RH0
       LDRB   $, RH0
       LDRB   $+330EH, RL0
-      LDRB   $-119CH, RL0
+      LDRB   $-1194H, RL0
       LDRB   $, RL0
       LDB    R1(#3311H), RH0
       LDB    R1(#3319H), RL0
       LDR    $+3406H, R0
-      LDR    $-11B0H, R0
+      LDR    $-11A8H, R0
       LDR    $, R0
       LD     R1(#3411H), R0
       LDAR   R0, $+3506H
-      LDAR   R0, $-11C0H
+      LDAR   R0, $-11B8H
       LDAR   R0, $
       LDA    R0, R1(#3511H)
       LDRL   RR0, $+3606H
-      LDRL   RR0, $-11D0H
+      LDRL   RR0, $-11C8H
       LDRL   RR0, $
       LDL    RR0, R1(#3611H)
       LDRL   $+3806H, RR0
-      LDRL   $-11E0H, RR0
+      LDRL   $-11D8H, RR0
       LDRL   $, RR0
       LDL    R1(#3811H), RR0
       LDPS   @R1
