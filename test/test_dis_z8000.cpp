@@ -297,15 +297,15 @@ static void test_load_and_exchange() {
         ATEST(0x2000, "LDAR", "RR8, %002004", 0x3408, 0x0000);
         ATEST(0xF000, "LDAR", "RR8, %007004", 0x3408, 0x8000);
         ATEST(0x2000, "LDAR", "RR8, %00A002", 0x3408, 0x7FFE);
+        ATEST(0x2000, "LDAR", "RR8, %00A003", 0x3408, 0x7FFF);
         ANMEM(0x2000, "LDAR", "RR8, %002002", "%002002", 0x3408);
-        AERRT(0x2000, "LDAR", "RR8, %00A003", OPERAND_NOT_ALIGNED, "%00A003", 0x3408, 0x7FFF);
     } else {
         ATEST(0x2000, "LDAR", "R8, %2000", 0x3408, 0xFFFC);
         ATEST(0x2000, "LDAR", "R8, %2004", 0x3408, 0x0000);
         ATEST(0xF000, "LDAR", "R8, %7004", 0x3408, 0x8000);
         ATEST(0x2000, "LDAR", "R8, %A002", 0x3408, 0x7FFE);
+        ATEST(0x2000, "LDAR", "R8, %A003", 0x3408, 0x7FFF);
         ANMEM(0x2000, "LDAR", "R8, %2002", "%2002", 0x3408);
-        AERRT(0x2000, "LDAR", "R8, %A003", OPERAND_NOT_ALIGNED, "%A003", 0x3408, 0x7FFF);
     }
 
     // Load Constant
@@ -1070,10 +1070,16 @@ static void test_program_control() {
         TEST("JP", "NC, %561234",       0x5E0F, 0xD600, 0x1234);
         TEST("JP", "NC, |%120034|(R2)", 0x5E2F, 0x1234);
         TEST("JP", "NC, %561234(R2)",   0x5E2F, 0xD600, 0x1234);
+        ERRT("JP", "NC, |%120035|", OPERAND_NOT_ALIGNED, "|%120035|", 0x5E0F, 0x1235);
+        ERRT("JP", "NC, %561235",   OPERAND_NOT_ALIGNED,  "%561235",  0x5E0F, 0xD600, 0x1235);
+        TEST("JP", "NC, |%120035|(R2)", 0x5E2F, 0x1235);
+        TEST("JP", "NC, %561235(R2)",   0x5E2F, 0xD600, 0x1235);
     } else {
         TEST("JP", "NC, @R2",       0x1E2F);
         TEST("JP", "NC, %1234",     0x5E0F, 0x1234);
+        ERRT("JP", "NC, %1235", OPERAND_NOT_ALIGNED, "%1235", 0x5E0F, 0x1235);
         TEST("JP", "NC, %1234(R2)", 0x5E2F, 0x1234);
+        TEST("JP", "NC, %1235(R2)", 0x5E2F, 0x1235);
     }
 
     // Jump Relative
@@ -1085,7 +1091,7 @@ static void test_program_control() {
     TEST("JR", "MI, $",  0xE5FF);
     TEST("JR", "Z, $",   0xE6FF);
     TEST("JR", "C, $",   0xE7FF);
-    TEST("JR", "$",     0xE8FF);
+    TEST("JR", "$",      0xE8FF);
     TEST("JR", "GE, $",  0xE9FF);
     TEST("JR", "GT, $",  0xEAFF);
     TEST("JR", "UGT, $", 0xEBFF);

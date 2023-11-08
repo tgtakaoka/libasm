@@ -111,7 +111,7 @@ protected:
     StrBuffer &outRelAddr(
             StrBuffer &out, uint32_t target, uint32_t origin, uint8_t deltaBits) const;
 
-    uint32_t branchTarget(uint32_t base, int32_t delta, Error &error) const;
+    uint32_t branchTarget(uint32_t base, int32_t delta, Error &error, bool align = true) const;
 
 private:
     virtual ConfigSetter &configSetter() = 0;

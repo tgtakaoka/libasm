@@ -46,7 +46,7 @@ private:
     void decodeControlRegister(DisInsn &insn, StrBuffer &out, uint8_t ctlNum, OprSize size) const;
     void decodeBaseAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) const;
     void decodeGenericAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) const;
-    void decodeDirectAddress(DisInsn &insn, StrBuffer &out) const;
+    void decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos) const;
     Error checkRegisterOverlap(DisInsn &insn, StrBuffer &out) const;

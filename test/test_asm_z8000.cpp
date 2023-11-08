@@ -54,7 +54,8 @@ static void test_load_and_exchange() {
         TEST("CLR  @RR2",        0x0D28);
         TEST("CLR  %120034",     0x4D08, 0x1234);
         TEST("CLR  %561234",     0x4D08, 0xD600, 0x1234);
-        TEST("CLR  %7FFFFF",     0x4D08, 0xFF00, 0xFFFF);
+        TEST("CLR  %7FFFFE",     0x4D08, 0xFF00, 0xFFFE);
+        ERRT("CLR  %7FFFFF", OPERAND_NOT_ALIGNED, "%7FFFFF", 0x4D08, 0xFF00, 0xFFFF);
         ERRT("CLR  %800000",     OVERFLOW_RANGE, "%800000", 0x4D08, 0x0000);
         TEST("CLR  %120034(R2)", 0x4D28, 0x1234);
         TEST("CLR  %561234(R2)", 0x4D28, 0xD600, 0x1234);
@@ -68,7 +69,8 @@ static void test_load_and_exchange() {
     } else {
         TEST("CLR  @R2",        0x0D28);
         TEST("CLR  %1234",      0x4D08, 0x1234);
-        TEST("CLR  %FFFF",      0x4D08, 0xFFFF);
+        TEST("CLR  %FFFE",      0x4D08, 0xFFFE);
+        ERRT("CLR  %FFFF", OPERAND_NOT_ALIGNED, "%FFFF", 0x4D08, 0xFFFF);
         ERRT("CLR  %10000",     OVERFLOW_RANGE, "%10000", 0x4D08, 0x0000);
         TEST("CLR  %1234(R2)",  0x4D28, 0x1234);
         TEST("CLR  %FFFF(R2)",  0x4D28, 0xFFFF);
@@ -297,6 +299,7 @@ static void test_load_and_exchange() {
         TEST("LDM R1,@RR2,#2",         0x1C21, 0x0101);
         TEST("LDM R13,%120034,#3",     0x5C01, 0x0D02, 0x1234);
         TEST("LDM R12,%561234,#4",     0x5C01, 0x0C03, 0xD600, 0x1234);
+        ERRT("LDM R12,%561235,#4", OPERAND_NOT_ALIGNED, "%561235,#4", 0x5C01, 0x0C03, 0xD600, 0x1235);
         TEST("LDM R1,%120034(R2),#5",  0x5C21, 0x0104, 0x1234);
         TEST("LDM R1,%561234(R2),#6",  0x5C21, 0x0105, 0xD600, 0x1234);
         TEST("LDM @RR2,R15,#1",        0x1C29, 0x0F00);
@@ -311,6 +314,7 @@ static void test_load_and_exchange() {
         ERRT("LDM R9,@R2,#8",        OVERFLOW_RANGE, "#8", 0x1C21, 0x0907);
         TEST("LDM R1,@R2,#8",        0x1C21, 0x0107);
         TEST("LDM R7,%1234,#9",      0x5C01, 0x0708, 0x1234);
+        ERRT("LDM R7,%1235,#9", OPERAND_NOT_ALIGNED, "%1235,#9", 0x5C01, 0x0708, 0x1235);
         TEST("LDM R1,%1234(R2),#15", 0x5C21, 0x010E, 0x1234);
         TEST("LDM @R2,R9,#7",        0x1C29, 0x0906);
         ERRT("LDM @R2,R9,#8",        OVERFLOW_RANGE, "#8", 0x1C29, 0x0907);
@@ -322,26 +326,42 @@ static void test_load_and_exchange() {
     // Load Relative
     if (z8001()) {
         ATEST(0x2000, "LDR  R1,%002000",  0x3101, 0xFFFC);
+        AERRT(0x2000, "LDR  R1,%002001",  OPERAND_NOT_ALIGNED, "%002001", 0x3101, 0xFFFD);
         ATEST(0x2000, "LDR  %002000,R1",  0x3301, 0xFFFC);
+        AERRT(0x2000, "LDR  %002001,R1",  OPERAND_NOT_ALIGNED, "%002001,R1", 0x3301, 0xFFFD);
         ATEST(0xA000, "LDR  %002004,R1",  0x3301, 0x8000);
-        AERRT(0xA000, "LDR  %002003,R1",  OPERAND_TOO_FAR, "%002003,R1", 0x3301, 0x7FFF);
-        ATEST(0x2000, "LDR  %00A003,R1",  0x3301, 0x7FFF);
+        AERRT(0xA000, "LDR  %002002,R1",  OPERAND_TOO_FAR, "%002002,R1", 0x3301, 0x7FFE);
+        ATEST(0x2000, "LDR  %00A002,R1",  0x3301, 0x7FFE);
         AERRT(0x2000, "LDR  %00A004,R1",  OPERAND_TOO_FAR, "%00A004,R1", 0x3301, 0x8000);
         ATEST(0x2000, "LDRB RH1,%002000", 0x3001, 0xFFFC);
+        ATEST(0x2000, "LDRB RH1,%002001", 0x3001, 0xFFFD);
         ATEST(0x2000, "LDRB %002000,RH1", 0x3201, 0xFFFC);
+        ATEST(0x2000, "LDRB %002001,RH1", 0x3201, 0xFFFD);
         ATEST(0x2000, "LDRL RR2,%002000", 0x3502, 0xFFFC);
+        AERRT(0x2000, "LDRL RR2,%002001", OPERAND_NOT_ALIGNED, "%002001", 0x3502, 0xFFFD);
+        ATEST(0x2000, "LDRL RR2,%002002", 0x3502, 0xFFFE);
         ATEST(0x2000, "LDRL %002000,RR2", 0x3702, 0xFFFC);
+        AERRT(0x2000, "LDRL %002001,RR2", OPERAND_NOT_ALIGNED, "%002001,RR2", 0x3702, 0xFFFD);
+        ATEST(0x2000, "LDRL %002002,RR2", 0x3702, 0xFFFE);
     } else {
         ATEST(0x2000, "LDR  R1,%2000",  0x3101, 0xFFFC);
+        AERRT(0x2000, "LDR  R1,%2001",  OPERAND_NOT_ALIGNED, "%2001", 0x3101, 0xFFFD);
         ATEST(0x2000, "LDR  %2000,R1",  0x3301, 0xFFFC);
+        AERRT(0x2000, "LDR  %2001,R1",  OPERAND_NOT_ALIGNED, "%2001,R1", 0x3301, 0xFFFD);
         ATEST(0xA000, "LDR  %2004,R1",  0x3301, 0x8000);
-        AERRT(0xA000, "LDR  %2003,R1",  OPERAND_TOO_FAR, "%2003,R1", 0x3301, 0x7FFF);
-        ATEST(0x2000, "LDR  %A003,R1",  0x3301, 0x7FFF);
+        AERRT(0xA000, "LDR  %2002,R1",  OPERAND_TOO_FAR, "%2002,R1", 0x3301, 0x7FFE);
+        ATEST(0x2000, "LDR  %A002,R1",  0x3301, 0x7FFE);
         AERRT(0x2000, "LDR  %A004,R1",  OPERAND_TOO_FAR, "%A004,R1", 0x3301, 0x8000);
         ATEST(0x2000, "LDRB RH1,%2000", 0x3001, 0xFFFC);
+        ATEST(0x2000, "LDRB RH1,%2001", 0x3001, 0xFFFD);
         ATEST(0x2000, "LDRB %2000,RH1", 0x3201, 0xFFFC);
+        ATEST(0x2000, "LDRB %2001,RH1", 0x3201, 0xFFFD);
         ATEST(0x2000, "LDRL RR2,%2000", 0x3502, 0xFFFC);
+        AERRT(0x2000, "LDRL RR2,%2001", OPERAND_NOT_ALIGNED, "%2001", 0x3502, 0xFFFD);
+        ATEST(0x2000, "LDRL RR2,%2002", 0x3502, 0xFFFE);
         ATEST(0x2000, "LDRL %2000,RR2", 0x3702, 0xFFFC);
+        AERRT(0x2000, "LDRL %2001,RR2", OPERAND_NOT_ALIGNED, "%2001,RR2", 0x3702, 0xFFFD);
+        ATEST(0x2000, "LDRL %2002,RR2", 0x3702, 0xFFFE);
     }
 
     // Pop
@@ -393,6 +413,7 @@ static void test_load_and_exchange() {
         TEST("PUSHL @RR4,@RR2",        0x1142);
         TEST("PUSHL @RR4,%120034",     0x5140, 0x1234);
         TEST("PUSHL @RR4,%561234",     0x5140, 0xD600, 0x1234);
+        ERRT("PUSHL @RR4,%561235", OPERAND_NOT_ALIGNED, "%561235", 0x5140, 0xD600, 0x1235);
         TEST("PUSHL @RR4,%120034(R2)", 0x5142, 0x1234);
         TEST("PUSHL @RR4,%561234(R2)", 0x5142, 0xD600, 0x1234);
         TEST("PUSH  @RR4,#%1234",      0x0D49, 0x1234);
@@ -569,6 +590,9 @@ static void test_arithmetic() {
         TEST("DIVL RQ4,@R2",       0x1A24);
         TEST("DIVL RQ4,%1234",     0x5A04, 0x1234);
         TEST("DIVL RQ4,%1234(R2)", 0x5A24, 0x1234);
+        ERRT("DIVL RR4,@R2", REGISTER_NOT_ALLOWED, "RR4,@R2", 0x1A24);
+        ERRT("DIVL RR6,@R2", REGISTER_NOT_ALLOWED, "RR6,@R2", 0x1A26);
+        ERRT("DIVL RQ6,@R2", ILLEGAL_REGISTER,     "RQ6,@R2");
     }
 
     // Extend Sign
@@ -576,14 +600,23 @@ static void test_arithmetic() {
     TEST("EXTSB R7",  0xB170);
     TEST("EXTSB R8",  0xB180);
     TEST("EXTSB R15", 0xB1F0);
+    ERRT("EXTSB RL7", REGISTER_NOT_ALLOWED, "RL7", 0xB1F0);
+    ERRT("EXTSB RR2", REGISTER_NOT_ALLOWED, "RR2", 0xB120);
+    ERRT("EXTSB RQ4", REGISTER_NOT_ALLOWED, "RQ4", 0xB140);
     TEST("EXTS  RR2", 0xB12A);
     TEST("EXTS  RR8", 0xB18A);
+    ERRT("EXTS  RL0", REGISTER_NOT_ALLOWED, "RL0", 0xB18A);
+    ERRT("EXTS  R8",  REGISTER_NOT_ALLOWED, "R8",  0xB18A);
+    ERRT("EXTS  RQ8", REGISTER_NOT_ALLOWED, "RQ8", 0xB18A);
     TEST("EXTSL RQ4", 0xB147);
     TEST("EXTSL RQ8", 0xB187);
-    ERRT("EXTS  RR7", ILLEGAL_REGISTER,      "RR7");
-    ERRT("EXTS  R15", REGISTER_NOT_ALLOWED,  "R15",  0xB1FA);
-    ERRT("EXTSL RQ6", ILLEGAL_REGISTER,      "RQ6");
-    ERRT("EXTSL RR14", REGISTER_NOT_ALLOWED, "RR14", 0xB1E7);
+    ERRT("EXTSL RL0", REGISTER_NOT_ALLOWED, "RL0", 0xB187);
+    ERRT("EXTSL R8",  REGISTER_NOT_ALLOWED, "R8",  0xB187);
+    ERRT("EXTSL RR8", REGISTER_NOT_ALLOWED, "RR8", 0xB187);
+    ERRT("EXTS  RR7", ILLEGAL_REGISTER,     "RR7");
+    ERRT("EXTS  R15", REGISTER_NOT_ALLOWED, "R15", 0xB1FA);
+    ERRT("EXTSL RQ6", ILLEGAL_REGISTER,     "RQ6");
+    ERRT("EXTSL RR8", REGISTER_NOT_ALLOWED, "RR8", 0xB187);
 
     // Increment
     TEST("INC  R1,#1",   0xA910);

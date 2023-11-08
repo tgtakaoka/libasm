@@ -179,11 +179,13 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
     }
 }
 
-void AsmZ8000::emitDirectAddress(AsmInsn &insn, const Operand &op) const {
-    const uint32_t addr = op.val32;
+void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_LONG);
+    const auto error = checkAddr(op.val32, 0, align);
+    if (error)
+        insn.setErrorIf(op, error);
     if (segmentedModel()) {
-        if (addr >= 0x800000L)
-            insn.setErrorIf(op, OVERFLOW_RANGE);
+        const uint32_t addr = op.val32;
         const uint16_t seg = (addr >> 8) & 0x7F00;
         const uint16_t off = static_cast<uint16_t>(addr);
         bool autoShortDirect = _autoShortDirect && op.isOK();
@@ -199,15 +201,16 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, const Operand &op) const {
         }
         return;
     }
-    if (addr >= 0x10000)
-        insn.setErrorIf(op, OVERFLOW_RANGE);
-    insn.emitOperand16(static_cast<uint16_t>(addr));
+    insn.emitOperand16(static_cast<uint16_t>(op.val32));
 }
 
 void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + (mode == M_RA ? 4 : 2);
     const auto target = op.getError() ? base : op.val32;
     if (mode == M_RA) {
+        const auto error = checkAddr(target, 0, insn.size() == SZ_WORD || insn.size() == SZ_LONG);
+        if (error)
+            insn.setErrorIf(op, error);
         const auto delta = target - base;
         if (overflowInt16(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -238,7 +241,7 @@ void AsmZ8000::emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const {
     if (!isWordReg(op.reg) || op.reg == REG_R0)
         insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
     emitRegister(insn, pos, op.reg);
-    emitDirectAddress(insn, op);
+    emitDirectAddress(insn, M_X, op);
 }
 
 void AsmZ8000::emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op) const {
@@ -289,6 +292,8 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     insn.setErrorIf(op);
     switch (mode) {
     case M_DR:
+        if (insn.size() == SZ_BYTE && !isWordReg(op.reg))
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         if (insn.size() == SZ_WORD && !isLongReg(op.reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         if (insn.size() == SZ_LONG && !isQuadReg(op.reg))
@@ -334,7 +339,7 @@ void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
         }
         insn.embed(0x4000);
         if (op.mode == M_DA) {
-            emitDirectAddress(insn, op);
+            emitDirectAddress(insn, M_DA, op);
             break;
         }
         emitIndexed(insn, pos, op);

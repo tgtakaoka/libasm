@@ -121,10 +121,10 @@
       ldb    @rr2, rh0
       ldb    @rr2, rl0
       ld     @rr2, r0
-      ldrb   rh0, .+0x3106
+      ldrb   rh0, .+0x3105
       ldrb   rh0, .-0x1158
       ldrb   rh0, .
-      ldrb   rl0, .+0x310e
+      ldrb   rl0, .+0x310d
       ldrb   rl0, .-0x1164
       ldrb   rl0, .
       ldb    rh0, rr2(#0x3121)
@@ -133,10 +133,10 @@
       ldr    r0, .-0x1178
       ldr    r0, .
       ld     r0, rr2(#0x3221)
-      ldrb   .+0x3306, rh0
+      ldrb   .+0x3305, rh0
       ldrb   .-0x1188, rh0
       ldrb   ., rh0
-      ldrb   .+0x330e, rl0
+      ldrb   .+0x330d, rl0
       ldrb   .-0x1194, rl0
       ldrb   ., rl0
       ldb    rr2(#0x3321), rh0
@@ -145,7 +145,7 @@
       ldr    .-0x11a8, r0
       ldr    ., r0
       ld     rr2(#0x3421), r0
-      ldar   rr0, .+0x3506
+      ldar   rr0, .+0x3505
       ldar   rr0, .-0x11b8
       ldar   rr0, .
       lda    rr0, rr2(#0x3521)
@@ -216,8 +216,8 @@
       addb   rh0, 0x008101(r1)
       addb   rl0, 0x410019(r1)
       addb   rl0, 0x008101(r1)
-      add    r0, 0x420001
-      add    r0, 0x008101
+      add    r0, 0x420002
+      add    r0, 0x008102
       add    r0, 0x420011(r1)
       add    r0, 0x008101(r1)
       subb   rh0, 0x430001
@@ -228,8 +228,8 @@
       subb   rh0, 0x008101(r1)
       subb   rl0, 0x430019(r1)
       subb   rl0, 0x008101(r1)
-      sub    r0, 0x440001
-      sub    r0, 0x008101
+      sub    r0, 0x440002
+      sub    r0, 0x008102
       sub    r0, 0x440011(r1)
       sub    r0, 0x008101(r1)
       orb    rh0, 0x450001
@@ -240,8 +240,8 @@
       orb    rh0, 0x008101(r1)
       orb    rl0, 0x450019(r1)
       orb    rl0, 0x008101(r1)
-      or     r0, 0x460001
-      or     r0, 0x008101
+      or     r0, 0x460002
+      or     r0, 0x008102
       or     r0, 0x460011(r1)
       or     r0, 0x008101(r1)
       andb   rh0, 0x470001
@@ -252,8 +252,8 @@
       andb   rh0, 0x008101(r1)
       andb   rl0, 0x470019(r1)
       andb   rl0, 0x008101(r1)
-      and    r0, 0x480001
-      and    r0, 0x008101
+      and    r0, 0x480002
+      and    r0, 0x008102
       and    r0, 0x480011(r1)
       and    r0, 0x008101(r1)
       xorb   rh0, 0x490001
@@ -264,8 +264,8 @@
       xorb   rh0, 0x008101(r1)
       xorb   rl0, 0x490019(r1)
       xorb   rl0, 0x008101(r1)
-      xor    r0, 0x4a0001
-      xor    r0, 0x008101
+      xor    r0, 0x4a0002
+      xor    r0, 0x008102
       xor    r0, 0x4a0011(r1)
       xor    r0, 0x008101(r1)
       cpb    rh0, 0x4b0001
@@ -276,8 +276,8 @@
       cpb    rh0, 0x008101(r1)
       cpb    rl0, 0x4b0019(r1)
       cpb    rl0, 0x008101(r1)
-      cp     r0, 0x4c0001
-      cp     r0, 0x008101
+      cp     r0, 0x4c0002
+      cp     r0, 0x008102
       cp     r0, 0x4c0011(r1)
       cp     r0, 0x008101(r1)
       comb   0x4d0001
@@ -308,20 +308,20 @@
       tsetb  0x008101(r1)
       clrb   0x4d0019(r1)
       clrb   0x008101(r1)
-      com    0x4e0001
-      com    0x008101
+      com    0x4e0002
+      com    0x008102
       cp     0x4e0002, #0x4f03
-      cp     0x018201, #0x8302
-      neg    0x4e0003
-      neg    0x008101
-      test   0x4e0005
-      test   0x008101
+      cp     0x018202, #0x8303
+      neg    0x4e0004
+      neg    0x008102
+      test   0x4e0006
+      test   0x008102
       ld     0x4e0006, #0x4f07
-      ld     0x018201, #0x8302
-      tset   0x4e0007
-      tset   0x008101
-      clr    0x4e0009
-      clr    0x008101
+      ld     0x018202, #0x8303
+      tset   0x4e0008
+      tset   0x008102
+      clr    0x4e000a
+      clr    0x008102
       com    0x4e0011(r1)
       com    0x008101(r1)
       cp     0x4e0012(r1), #0x4f13
@@ -336,102 +336,102 @@
       tset   0x008101(r1)
       clr    0x4e0019(r1)
       clr    0x008101(r1)
-      cpl    rr0, 0x510001
-      cpl    rr0, 0x008101
+      cpl    rr0, 0x510002
+      cpl    rr0, 0x008102
       cpl    rr0, 0x510011(r1)
       cpl    rr0, 0x008101(r1)
-      pushl  @rr2, 0x520021
-      pushl  @rr2, 0x008101
+      pushl  @rr2, 0x520022
+      pushl  @rr2, 0x008102
       pushl  @rr2, 0x520022(r1)
       pushl  @rr2, 0x008101(r1)
-      subl   rr0, 0x530001
-      subl   rr0, 0x008101
+      subl   rr0, 0x530002
+      subl   rr0, 0x008102
       subl   rr0, 0x530011(r1)
       subl   rr0, 0x008101(r1)
-      push   @rr2, 0x540021
-      push   @rr2, 0x008101
+      push   @rr2, 0x540022
+      push   @rr2, 0x008102
       push   @rr2, 0x540022(r1)
       push   @rr2, 0x008101(r1)
-      ldl    rr0, 0x550001
-      ldl    rr0, 0x008101
+      ldl    rr0, 0x550002
+      ldl    rr0, 0x008102
       ldl    rr0, 0x550011(r1)
       ldl    rr0, 0x008101(r1)
-      popl   0x560021, @rr2
-      popl   0x008101, @rr2
+      popl   0x560022, @rr2
+      popl   0x008102, @rr2
       popl   0x560022(r1), @rr2
       popl   0x008101(r1), @rr2
-      addl   rr0, 0x570001
-      addl   rr0, 0x008101
+      addl   rr0, 0x570002
+      addl   rr0, 0x008102
       addl   rr0, 0x570011(r1)
       addl   rr0, 0x008101(r1)
-      pop    0x580021, @rr2
-      pop    0x008101, @rr2
+      pop    0x580022, @rr2
+      pop    0x008102, @rr2
       pop    0x580022(r1), @rr2
       pop    0x008101(r1), @rr2
-      multl  rq0, 0x590001
-      multl  rq0, 0x008101
+      multl  rq0, 0x590002
+      multl  rq0, 0x008102
       multl  rq0, 0x590011(r1)
       multl  rq0, 0x008101(r1)
-      mult   rr0, 0x5a0001
-      mult   rr0, 0x008101
+      mult   rr0, 0x5a0002
+      mult   rr0, 0x008102
       mult   rr0, 0x5a0011(r1)
       mult   rr0, 0x008101(r1)
-      divl   rq0, 0x5b0001
-      divl   rq0, 0x008101
+      divl   rq0, 0x5b0002
+      divl   rq0, 0x008102
       divl   rq0, 0x5b0011(r1)
       divl   rq0, 0x008101(r1)
-      div    rr0, 0x5c0001
-      div    rr0, 0x008101
+      div    rr0, 0x5c0002
+      div    rr0, 0x008102
       div    rr0, 0x5c0011(r1)
       div    rr0, 0x008101(r1)
-      ldm    r0, 0x010001, #1
-      ldm    r0, 0x008101, #1
-      testl  0x5d0009
-      testl  0x008101
-      ldm    0x010001, r0, #1
-      ldm    0x008101, r0, #1
+      ldm    r0, 0x010002, #1
+      ldm    r0, 0x008102, #1
+      testl  0x5d000a
+      testl  0x008102
+      ldm    0x010002, r0, #1
+      ldm    0x008102, r0, #1
       ldm    r0, 0x010001(r1), #1
       ldm    r0, 0x008101(r1), #1
       testl  0x5d0019(r1)
       testl  0x008101(r1)
       ldm    0x010001(r1), r0, #1
       ldm    0x008101(r1), r0, #1
-      ldl    0x5e0001, rr0
-      ldl    0x008101, rr0
+      ldl    0x5e0002, rr0
+      ldl    0x008102, rr0
       ldl    0x5e0011(r1), rr0
       ldl    0x008101(r1), rr0
-      jp     f, 0x5f0001
-      jp     f, 0x008101
+      jp     f, 0x5f0002
+      jp     f, 0x008102
       jp     lt, 0x5f0002
-      jp     lt, 0x008101
-      jp     le, 0x5f0003
-      jp     le, 0x008101
+      jp     lt, 0x008102
+      jp     le, 0x5f0004
+      jp     le, 0x008102
       jp     ule, 0x5f0004
-      jp     ule, 0x008101
-      jp     ov, 0x5f0005
-      jp     ov, 0x008101
+      jp     ule, 0x008102
+      jp     ov, 0x5f0006
+      jp     ov, 0x008102
       jp     mi, 0x5f0006
-      jp     mi, 0x008101
-      jp     z, 0x5f0007
-      jp     z, 0x008101
+      jp     mi, 0x008102
+      jp     z, 0x5f0008
+      jp     z, 0x008102
       jp     c, 0x5f0008
-      jp     c, 0x008101
-      jp     0x5f0009
-      jp     0x008101
+      jp     c, 0x008102
+      jp     0x5f000a
+      jp     0x008102
       jp     ge, 0x5f000a
-      jp     ge, 0x008101
-      jp     gt, 0x5f000b
-      jp     gt, 0x008101
+      jp     ge, 0x008102
+      jp     gt, 0x5f000c
+      jp     gt, 0x008102
       jp     ugt, 0x5f000c
-      jp     ugt, 0x008101
-      jp     nov, 0x5f000d
-      jp     nov, 0x008101
+      jp     ugt, 0x008102
+      jp     nov, 0x5f000e
+      jp     nov, 0x008102
       jp     pl, 0x5f000e
-      jp     pl, 0x008101
-      jp     nz, 0x5f000f
-      jp     nz, 0x008101
+      jp     pl, 0x008102
+      jp     nz, 0x5f0010
+      jp     nz, 0x008102
       jp     nc, 0x5f0010
-      jp     nc, 0x008101
+      jp     nc, 0x008102
       jp     f, 0x5f0011(r1)
       jp     f, 0x008101(r1)
       jp     lt, 0x5f0012(r1)
@@ -464,8 +464,8 @@
       jp     nz, 0x008101(r1)
       jp     nc, 0x5f0020(r1)
       jp     nc, 0x008101(r1)
-      call   0x600001
-      call   0x008101
+      call   0x600002
+      call   0x008102
       call   0x600011(r1)
       call   0x008101(r1)
       ldb    rh0, 0x610001
@@ -476,48 +476,48 @@
       ldb    rh0, 0x008101(r1)
       ldb    rl0, 0x610019(r1)
       ldb    rl0, 0x008101(r1)
-      ld     r0, 0x620001
-      ld     r0, 0x008101
+      ld     r0, 0x620002
+      ld     r0, 0x008102
       ld     r0, 0x620011(r1)
       ld     r0, 0x008101(r1)
       resb   0x630001, #0
       resb   0x008101, #0
       resb   0x630011(r1), #0
       resb   0x008101(r1), #0
-      res    0x640001, #0
-      res    0x008101, #0
+      res    0x640002, #0
+      res    0x008102, #0
       res    0x640011(r1), #0
       res    0x008101(r1), #0
       setb   0x650001, #0
       setb   0x008101, #0
       setb   0x650011(r1), #0
       setb   0x008101(r1), #0
-      set    0x660001, #0
-      set    0x008101, #0
+      set    0x660002, #0
+      set    0x008102, #0
       set    0x660011(r1), #0
       set    0x008101(r1), #0
       bitb   0x670001, #0
       bitb   0x008101, #0
       bitb   0x670011(r1), #0
       bitb   0x008101(r1), #0
-      bit    0x680001, #0
-      bit    0x008101, #0
+      bit    0x680002, #0
+      bit    0x008102, #0
       bit    0x680011(r1), #0
       bit    0x008101(r1), #0
       incb   0x690001, #1
       incb   0x008101, #1
       incb   0x690011(r1), #1
       incb   0x008101(r1), #1
-      inc    0x6a0001, #1
-      inc    0x008101, #1
+      inc    0x6a0002, #1
+      inc    0x008102, #1
       inc    0x6a0011(r1), #1
       inc    0x008101(r1), #1
       decb   0x6b0001, #1
       decb   0x008101, #1
       decb   0x6b0011(r1), #1
       decb   0x008101(r1), #1
-      dec    0x6c0001, #1
-      dec    0x008101, #1
+      dec    0x6c0002, #1
+      dec    0x008102, #1
       dec    0x6c0011(r1), #1
       dec    0x008101(r1), #1
       exb    rh0, 0x6d0001
@@ -528,8 +528,8 @@
       exb    rh0, 0x008101(r1)
       exb    rl0, 0x6d0019(r1)
       exb    rl0, 0x008101(r1)
-      ex     r0, 0x6e0001
-      ex     r0, 0x008101
+      ex     r0, 0x6e0002
+      ex     r0, 0x008102
       ex     r0, 0x6e0011(r1)
       ex     r0, 0x008101(r1)
       ldb    0x6f0001, rh0
@@ -540,8 +540,8 @@
       ldb    0x008101(r1), rh0
       ldb    0x6f0019(r1), rl0
       ldb    0x008101(r1), rl0
-      ld     0x700001, r0
-      ld     0x008101, r0
+      ld     0x700002, r0
+      ld     0x008102, r0
       ld     0x700011(r1), r0
       ld     0x008101(r1), r0
       ldb    rh0, rr2(r0)
@@ -557,8 +557,8 @@
       lda    rr0, 0x770011(r1)
       lda    rr0, 0x008101(r1)
       ldl    rr2(r0), rr0
-      ldps   0x7a0001
-      ldps   0x008101
+      ldps   0x7a0002
+      ldps   0x008102
       ldps   0x7a0011(r1)
       ldps   0x008101(r1)
       halt

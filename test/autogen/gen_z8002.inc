@@ -121,10 +121,10 @@
       LDB    @R1, RH0
       LDB    @R1, RL0
       LD     @R1, R0
-      LDRB   RH0, $+3106H
+      LDRB   RH0, $+3105H
       LDRB   RH0, $-1158H
       LDRB   RH0, $
-      LDRB   RL0, $+310EH
+      LDRB   RL0, $+310DH
       LDRB   RL0, $-1164H
       LDRB   RL0, $
       LDB    RH0, R1(#3111H)
@@ -133,10 +133,10 @@
       LDR    R0, $-1178H
       LDR    R0, $
       LD     R0, R1(#3211H)
-      LDRB   $+3306H, RH0
+      LDRB   $+3305H, RH0
       LDRB   $-1188H, RH0
       LDRB   $, RH0
-      LDRB   $+330EH, RL0
+      LDRB   $+330DH, RL0
       LDRB   $-1194H, RL0
       LDRB   $, RL0
       LDB    R1(#3311H), RH0
@@ -145,7 +145,7 @@
       LDR    $-11A8H, R0
       LDR    $, R0
       LD     R1(#3411H), R0
-      LDAR   R0, $+3506H
+      LDAR   R0, $+3505H
       LDAR   R0, $-11B8H
       LDAR   R0, $
       LDA    R0, R1(#3511H)
@@ -212,37 +212,37 @@
       ADDB   RL0, 4109H
       ADDB   RH0, 4111H(R1)
       ADDB   RL0, 4119H(R1)
-      ADD    R0, 4201H
+      ADD    R0, 4202H
       ADD    R0, 4211H(R1)
       SUBB   RH0, 4301H
       SUBB   RL0, 4309H
       SUBB   RH0, 4311H(R1)
       SUBB   RL0, 4319H(R1)
-      SUB    R0, 4401H
+      SUB    R0, 4402H
       SUB    R0, 4411H(R1)
       ORB    RH0, 4501H
       ORB    RL0, 4509H
       ORB    RH0, 4511H(R1)
       ORB    RL0, 4519H(R1)
-      OR     R0, 4601H
+      OR     R0, 4602H
       OR     R0, 4611H(R1)
       ANDB   RH0, 4701H
       ANDB   RL0, 4709H
       ANDB   RH0, 4711H(R1)
       ANDB   RL0, 4719H(R1)
-      AND    R0, 4801H
+      AND    R0, 4802H
       AND    R0, 4811H(R1)
       XORB   RH0, 4901H
       XORB   RL0, 4909H
       XORB   RH0, 4911H(R1)
       XORB   RL0, 4919H(R1)
-      XOR    R0, 4A01H
+      XOR    R0, 4A02H
       XOR    R0, 4A11H(R1)
       CPB    RH0, 4B01H
       CPB    RL0, 4B09H
       CPB    RH0, 4B11H(R1)
       CPB    RL0, 4B19H(R1)
-      CP     R0, 4C01H
+      CP     R0, 4C02H
       CP     R0, 4C11H(R1)
       COMB   4D01H
       CPB    4D02H, #3
@@ -258,13 +258,13 @@
       LDB    4D16H(R1), #23
       TSETB  4D17H(R1)
       CLRB   4D19H(R1)
-      COM    4E01H
+      COM    4E02H
       CP     4E02H, #4F03H
-      NEG    4E03H
-      TEST   4E05H
+      NEG    4E04H
+      TEST   4E06H
       LD     4E06H, #4F07H
-      TSET   4E07H
-      CLR    4E09H
+      TSET   4E08H
+      CLR    4E0AH
       COM    4E11H(R1)
       CP     4E12H(R1), #4F13H
       NEG    4E13H(R1)
@@ -272,53 +272,53 @@
       LD     4E16H(R1), #4F17H
       TSET   4E17H(R1)
       CLR    4E19H(R1)
-      CPL    RR0, 5101H
+      CPL    RR0, 5102H
       CPL    RR0, 5111H(R1)
-      PUSHL  @R1, 5211H
+      PUSHL  @R1, 5212H
       PUSHL  @R1, 5213H(R2)
-      SUBL   RR0, 5301H
+      SUBL   RR0, 5302H
       SUBL   RR0, 5311H(R1)
-      PUSH   @R1, 5411H
+      PUSH   @R1, 5412H
       PUSH   @R1, 5413H(R2)
-      LDL    RR0, 5501H
+      LDL    RR0, 5502H
       LDL    RR0, 5511H(R1)
-      POPL   5611H, @R1
+      POPL   5612H, @R1
       POPL   5613H(R2), @R1
-      ADDL   RR0, 5701H
+      ADDL   RR0, 5702H
       ADDL   RR0, 5711H(R1)
-      POP    5811H, @R1
+      POP    5812H, @R1
       POP    5813H(R2), @R1
-      MULTL  RQ0, 5901H
+      MULTL  RQ0, 5902H
       MULTL  RQ0, 5911H(R1)
-      MULT   RR0, 5A01H
+      MULT   RR0, 5A02H
       MULT   RR0, 5A11H(R1)
-      DIVL   RQ0, 5B01H
+      DIVL   RQ0, 5B02H
       DIVL   RQ0, 5B11H(R1)
-      DIV    RR0, 5C01H
+      DIV    RR0, 5C02H
       DIV    RR0, 5C11H(R1)
-      LDM    R0, 0101H, #1
-      TESTL  5D09H
-      LDM    0101H, R0, #1
+      LDM    R0, 0102H, #1
+      TESTL  5D0AH
+      LDM    0102H, R0, #1
       LDM    R0, 0101H(R1), #1
       TESTL  5D19H(R1)
       LDM    0101H(R1), R0, #1
-      LDL    5E01H, RR0
+      LDL    5E02H, RR0
       LDL    5E11H(R1), RR0
-      JP     F, 5F01H
+      JP     F, 5F02H
       JP     LT, 5F02H
-      JP     LE, 5F03H
+      JP     LE, 5F04H
       JP     ULE, 5F04H
-      JP     OV, 5F05H
+      JP     OV, 5F06H
       JP     MI, 5F06H
-      JP     Z, 5F07H
+      JP     Z, 5F08H
       JP     C, 5F08H
-      JP     5F09H
+      JP     5F0AH
       JP     GE, 5F0AH
-      JP     GT, 5F0BH
+      JP     GT, 5F0CH
       JP     UGT, 5F0CH
-      JP     NOV, 5F0DH
+      JP     NOV, 5F0EH
       JP     PL, 5F0EH
-      JP     NZ, 5F0FH
+      JP     NZ, 5F10H
       JP     NC, 5F10H
       JP     F, 5F11H(R1)
       JP     LT, 5F12H(R1)
@@ -336,45 +336,45 @@
       JP     PL, 5F1EH(R1)
       JP     NZ, 5F1FH(R1)
       JP     NC, 5F20H(R1)
-      CALL   6001H
+      CALL   6002H
       CALL   6011H(R1)
       LDB    RH0, 6101H
       LDB    RL0, 6109H
       LDB    RH0, 6111H(R1)
       LDB    RL0, 6119H(R1)
-      LD     R0, 6201H
+      LD     R0, 6202H
       LD     R0, 6211H(R1)
       RESB   6301H, #0
       RESB   6311H(R1), #0
-      RES    6401H, #0
+      RES    6402H, #0
       RES    6411H(R1), #0
       SETB   6501H, #0
       SETB   6511H(R1), #0
-      SET    6601H, #0
+      SET    6602H, #0
       SET    6611H(R1), #0
       BITB   6701H, #0
       BITB   6711H(R1), #0
-      BIT    6801H, #0
+      BIT    6802H, #0
       BIT    6811H(R1), #0
       INCB   6901H, #1
       INCB   6911H(R1), #1
-      INC    6A01H, #1
+      INC    6A02H, #1
       INC    6A11H(R1), #1
       DECB   6B01H, #1
       DECB   6B11H(R1), #1
-      DEC    6C01H, #1
+      DEC    6C02H, #1
       DEC    6C11H(R1), #1
       EXB    RH0, 6D01H
       EXB    RL0, 6D09H
       EXB    RH0, 6D11H(R1)
       EXB    RL0, 6D19H(R1)
-      EX     R0, 6E01H
+      EX     R0, 6E02H
       EX     R0, 6E11H(R1)
       LDB    6F01H, RH0
       LDB    6F09H, RL0
       LDB    6F11H(R1), RH0
       LDB    6F19H(R1), RL0
-      LD     7001H, R0
+      LD     7002H, R0
       LD     7011H(R1), R0
       LDB    RH0, R1(R0)
       LDB    RL0, R1(R0)
@@ -387,7 +387,7 @@
       LDA    R0, 7701H
       LDA    R0, 7711H(R1)
       LDL    R1(R0), RR0
-      LDPS   7A01H
+      LDPS   7A02H
       LDPS   7A11H(R1)
       HALT
       IRET

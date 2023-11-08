@@ -177,10 +177,10 @@ void DisZ8000::decodeGenericAddressing(
     if (addressing == 2) {
         if (mode == M_GENA)
             insn.setErrorIf(out, REGISTER_NOT_ALLOWED);
-        return decodeGeneralRegister(insn,out, mode, num); // M_R
+        return decodeGeneralRegister(insn, out, mode, num);  // M_R
     }
     if (addressing == 1) {  // M_DA/M_X
-        decodeDirectAddress(insn, out);
+        decodeDirectAddress(insn, out, num == 0 ? M_DA : mode);
         if (num) {
             out.letter('(');
             decodeGeneralRegister(insn, out, M_WR, num);
@@ -189,26 +189,33 @@ void DisZ8000::decodeGenericAddressing(
     }
 }
 
-void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out) const {
-    const auto addr = insn.readUint16();
+void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_LONG);
+    const auto val16 = insn.readUint16();
     if (segmentedModel()) {
-        const uint32_t seg = static_cast<uint32_t>(addr & 0x7F00) << 8;
-        uint16_t off = static_cast<uint8_t>(addr);
+        const uint32_t seg = static_cast<uint32_t>(val16 & 0x7F00) << 8;
+        uint16_t off = static_cast<uint8_t>(val16);
         auto shortDirect = _shortDirect;
-        if (addr & 0x8000) {
-            if (addr & 0x00FF)
+        if (val16 & 0x8000) {
+            if (val16 & 0x00FF)
                 insn.setErrorIf(out, ILLEGAL_OPERAND);
             off = insn.readUint16();
             shortDirect = false;
         }
-        const uint32_t linear = seg | off;
+        const auto addr = seg | off;
+        const auto error = checkAddr(addr, 0, align);
+        if (error)
+            insn.setErrorIf(out, error);
         if (shortDirect)
             out.letter('|');
-        outAbsAddr(out, linear);
+        outAbsAddr(out, addr);
         if (shortDirect)
             out.letter('|');
     } else {
-        outAbsAddr(out, addr);
+        const auto error = checkAddr(val16, 0, align);
+        if (error)
+            insn.setErrorIf(out, error);
+        outAbsAddr(out, val16);
     }
 }
 
@@ -230,8 +237,9 @@ void DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode 
         delta = -static_cast<int16_t>(ra7) * 2;
     }
     const auto base = insn.address() + insn.length();
+    const auto align = insn.size() == SZ_WORD || insn.size() == SZ_LONG;
     Error error;
-    const auto target = branchTarget(base, delta, error);
+    const auto target = branchTarget(base, delta, error, align);
     if (error)
         insn.setErrorIf(out, error);
     outRelAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
@@ -304,7 +312,7 @@ void DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
         decodeRelativeAddressing(insn, out, mode);
         break;
     case M_DA:
-        decodeDirectAddress(insn, out);
+        decodeDirectAddress(insn, out, mode);
         break;
     case M_GENA:
     case M_GEND:

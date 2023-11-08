@@ -45,7 +45,7 @@ private:
     void emitRegister(AsmInsn &insn, OprPos pos, RegName reg) const;
     void emitIndirectRegister(AsmInsn &insn, const Operand &op, OprPos pos, RegName reg) const;
     void emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Operand &op) const;
-    void emitDirectAddress(AsmInsn &insn, const Operand &op) const;
+    void emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void emitIndexed(AsmInsn &insn, OprPos pos, const Operand &op) const;
     void emitBaseAddress(AsmInsn &insn, OprPos pos, const Operand &op) const;
