@@ -93,6 +93,12 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('s');
             t.push_back(']');
             b += 3;
+        } else if (toupper(b[0]) == 'E' && (b[1] == '+' || b[1] == '-') && isNumber(b + 2, tmp)) {
+            // reduce float constant variants of NS32000; nE-e, nE+e
+            t.push_back(*b++);
+            t.push_back('+');
+            t.push_back('e');
+            b = tmp;
         } else if (*b == '/') {
             // reduce MOVEM variants of MC68000; Rn/Rn and Rn-Rn
             ++b;

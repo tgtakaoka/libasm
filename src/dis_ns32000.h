@@ -55,7 +55,7 @@ private:
     Error readIndexByte(DisInsn &insn, AddrMode mode, OprPos pos) const;
     Error readDisplacement(DisInsn &insn, Displacement &disp) const;
 
-    void decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
+    void decodeLength(DisInsn &insn, StrBuffer &out) const;
     void decodeBitField(DisInsn &insn, StrBuffer &out) const;
     void decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
     void decodeDisplacement(DisInsn &insn, StrBuffer &out, AddrMode mode) const;

@@ -478,7 +478,7 @@ void AsmNs32000::emitDisplacement(
     }
 }
 
-void AsmNs32000::emitLength(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+void AsmNs32000::emitLength(AsmInsn &insn, const Operand &op) const {
     uint8_t len = op.getError() ? 0 : op.val32;
     if (op.isOK()) {
         const auto val = static_cast<int32_t>(op.val32);
@@ -511,9 +511,9 @@ void AsmNs32000::emitBitField(
         insn.setErrorIf(off, ILLEGAL_BIT_NUMBER);
     if (len.isOK() && len.val32 == 0)
         insn.setErrorIf(len, ILLEGAL_CONSTANT);
-    if (len.val32 > 32)
-        insn.setErrorIf(len, OVERFLOW_RANGE);
-    const auto length = len.getError() ? 0 : len.val32 - 1;
+    if (off.val32 + len.val32 > 32)
+        insn.setErrorIf(off, OVERFLOW_RANGE);
+    const auto length = (len.getError() || len.val32 == 0) ? 0 : len.val32 - 1;
     const auto data = (static_cast<uint8_t>(off.val32) << 5) | (length & 0x1F);
     insn.emitOperand8(data);
 }
@@ -700,7 +700,7 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
         emitDisplacement(insn, op, op.val32);
         break;
     case M_LEN16:
-        emitLength(insn, mode, op);
+        emitLength(insn, op);
         break;
     default:
         break;

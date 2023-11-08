@@ -169,7 +169,7 @@ Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) const {
     return disp.getError();
 }
 
-void DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
+void DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out) const {
     Displacement disp;
     if (readDisplacement(insn, disp))
         insn.setErrorIf(out, disp);
@@ -206,6 +206,8 @@ void DisNs32000::decodeBitField(DisInsn &insn, StrBuffer &out) const {
     const auto data = insn.readByte();
     const auto len = (data & 0x1F) + 1;
     const auto off = (data >> 5);
+    if (off + len > 32)
+        insn.setError(out, OVERFLOW_RANGE);
     outHex(out, off, 3);  // M_BFOFF
     out.comma();
     outDec(out, len, 6);  // M_BFLEN
@@ -524,7 +526,7 @@ void DisNs32000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         decodeDisplacement(insn, out, mode);
         break;
     case M_LEN16:
-        decodeLength(insn, out, mode);
+        decodeLength(insn, out);
         break;
     default:
         break;
