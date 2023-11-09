@@ -102,27 +102,27 @@ RegName decodeAddrReg(uint8_t regno) {
     return RegName((regno & 7) + 8);
 }
 
-OprSize parseSize(StrScanner &scan) {
+InsnSize parseSize(StrScanner &scan) {
     auto p = scan;
     if (p.expect('.')) {
-        auto size = SZ_ERROR;
+        auto size = ISZ_ERROR;
         if (p.iexpect('B')) {
-            size = SZ_BYTE;
+            size = ISZ_BYTE;
         } else if (p.iexpect('W')) {
-            size = SZ_WORD;
+            size = ISZ_WORD;
         } else if (p.iexpect('L')) {
-            size = SZ_LONG;
+            size = ISZ_QUAD;
         }
-        if (size == SZ_ERROR || isIdLetter(*p))
-            return SZ_ERROR;
+        if (size == ISZ_ERROR || isIdLetter(*p))
+            return ISZ_ERROR;
         scan = p;
         return size;
     }
-    return SZ_NONE;
+    return ISZ_NONE;
 }
 
 uint8_t sizeNameLen(OprSize size) {
-    return size == SZ_NONE || size == SZ_ERROR ? 0 : 2;
+    return size == SZ_NONE || size == SZ_OCTA ? 0 : 2;
 }
 
 char sizeSuffix(OprSize size) {
@@ -132,7 +132,7 @@ char sizeSuffix(OprSize size) {
     case SZ_WORD:
         return 'W';
         break;
-    case SZ_LONG:
+    case SZ_QUAD:
         return 'L';
     default:
         return 0;
@@ -166,7 +166,7 @@ EaMc68000::EaMc68000(OprSize size_, uint8_t raw_mode, uint8_t regno) {
 }
 
 OprSize BriefExt::indexSize() const {
-    return (word & 0x800) ? SZ_LONG : SZ_WORD;
+    return (word & 0x800) ? SZ_QUAD : SZ_WORD;
 }
 
 RegName BriefExt::index() const {

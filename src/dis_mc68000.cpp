@@ -46,7 +46,7 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
     out.letter('#');
     uint32_t val;
     uint8_t bits;
-    if (size == SZ_LONG) {
+    if (size == SZ_QUAD) {
         val = insn.readUint32();
         bits = 32;
     } else {
@@ -117,7 +117,7 @@ void DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68
     if (mode == M_AWORD)
         outOprSize(out, SZ_WORD);
     if (mode == M_ALONG)
-        outOprSize(out, SZ_LONG);
+        outOprSize(out, SZ_QUAD);
     if (mode == M_PINC)
         out.letter('+');
 }
@@ -227,7 +227,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uin
             insn.setErrorIf(out, ILLEGAL_BIT_NUMBER);
         } else if (s == SZ_WORD && opr16 >= 16) {
             insn.setErrorIf(out, ILLEGAL_BIT_NUMBER);
-        } else if (s == SZ_LONG && opr16 >= 32) {
+        } else if (s == SZ_QUAD && opr16 >= 32) {
             insn.setErrorIf(out, ILLEGAL_BIT_NUMBER);
         }
         outDec(out, opr16, 16);
@@ -309,15 +309,15 @@ OprSize sizeVal(const DisInsn &insn) {
         case 1:
             return SZ_WORD;
         case 2:
-            return SZ_LONG;
+            return SZ_QUAD;
         default:
-            return SZ_ERROR;
+            return SZ_OCTA;
         }
     }
-    if (size == SZ_ADR6)
-        return (opc & (1 << 6)) ? SZ_LONG : SZ_WORD;
+    if (size == SZ_ADDR)
+        return (opc & (1 << 6)) ? SZ_QUAD : SZ_WORD;
     if (size == SZ_ADR8)
-        return (opc & (1 << 8)) ? SZ_LONG : SZ_WORD;
+        return (opc & (1 << 8)) ? SZ_QUAD : SZ_WORD;
     return size;
 }
 

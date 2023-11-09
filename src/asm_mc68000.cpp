@@ -105,34 +105,38 @@ int8_t regPos(OprPos pos) {
 
 }  // namespace
 
-void emitOprSize(AsmInsn &insn, OprSize size) {
-    Config::opcode_t sz = 0;
-    switch (insn.oprSize()) {
-    case SZ_DATA:
-        if (size == SZ_NONE)
-            size = SZ_WORD;
-        sz = static_cast<uint8_t>(size) << 6;
-        break;
-    case SZ_ADR6:
-        if (size == SZ_NONE)
-            size = SZ_WORD;
-        sz = (size == SZ_LONG) ? (1 << 6) : 0;
-        break;
-    case SZ_ADR8:
-        if (size == SZ_NONE)
-            size = SZ_WORD;
-        sz = (size == SZ_LONG) ? (1 << 8) : 0;
-        break;
-    default:
+void emitOprSize(AsmInsn &insn, InsnSize isize) {
+    const auto osize = insn.oprSize();
+    if (osize == SZ_DATA) {
+        switch (isize) {
+        case ISZ_NONE:
+        case ISZ_WORD:
+            insn.embed(1 << 6);
+            break;
+        case ISZ_QUAD:
+            insn.embed(2 << 6);
+            break;
+        default:  // ISZ_BYTE
+            break;
+        }
         return;
     }
-    insn.embed(sz);
+    if (osize == SZ_ADDR) {
+        if (isize == ISZ_QUAD)
+            insn.embed(1 << 6);
+        return;
+    }
+    if (osize == SZ_ADR8) {
+        if (isize == ISZ_QUAD)
+            insn.embed(1 << 8);
+        return;
+    }
 }
 
 Error AsmMc68000::checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const {
     if (size == SZ_WORD && (op.val32 % 2))
         return insn.setError(op, OPERAND_NOT_ALIGNED);
-    if (size == SZ_LONG && (op.val32 % 2))
+    if (size == SZ_QUAD && (op.val32 % 2))
         return insn.setError(op, OPERAND_NOT_ALIGNED);
     return OK;
 }
@@ -145,7 +149,7 @@ void AsmMc68000::emitBriefExtension(
     ext |= encodeGeneralRegNo(op.indexReg) << 12;
     if (isAddrReg(op.indexReg))
         ext |= (1 << 15);
-    if (op.indexSize == SZ_LONG)
+    if (op.indexSize == ISZ_QUAD)
         ext |= (1 << 11);
     insn.emitOperand16(ext);
 }
@@ -174,7 +178,7 @@ void AsmMc68000::emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &o
 void AsmMc68000::emitImmediateData(
         AsmInsn &insn, const Operand &op, OprSize size, uint32_t data) const {
     switch (size) {
-    case SZ_LONG:
+    case SZ_QUAD:
         insn.emitOperand32(data);
         return;
     case SZ_WORD:
@@ -284,7 +288,7 @@ Error AsmMc68000::emitEffectiveAddr(
         emitImmediateData(insn, op, size, op.val32);
         break;
     case M_LABEL:
-        if (size == SZ_LONG || (size == SZ_BYTE && mode == M_REL16))
+        if (size == SZ_QUAD || (size == SZ_BYTE && mode == M_REL16))
             insn.setErrorIf(op, ILLEGAL_SIZE);
         if (size == SZ_WORD && mode == M_REL8)
             mode = M_REL16;
@@ -390,9 +394,9 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
                 if (op.val32 <= max - 1 && op.val32 >= (max - 0x8000))
                     over16 = false;
             }
-            if (over16 && size == SZ_WORD)
+            if (over16 && size == ISZ_WORD)
                 op.setErrorIf(OVERFLOW_RANGE);
-            op.mode = (size == SZ_WORD || (size == SZ_NONE && !over16)) ? M_AWORD : M_ALONG;
+            op.mode = (size == ISZ_WORD || (size == ISZ_NONE && !over16)) ? M_AWORD : M_ALONG;
             scan = p;
             return OK;
         }
@@ -413,10 +417,10 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
             if (!isGeneralReg(op.indexReg))
                 return op.setError(UNKNOWN_OPERAND);
             op.indexSize = parseSize(p);
-            if (op.indexSize == SZ_ERROR)
+            if (op.indexSize == ISZ_ERROR)
                 return op.setError(UNKNOWN_OPERAND);
-            if (op.indexSize == SZ_NONE)
-                op.indexSize = SZ_WORD;
+            if (op.indexSize == ISZ_NONE)
+                op.indexSize = ISZ_WORD;
             if (!p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
             op.mode = (op.reg == REG_PC) ? M_PCIDX : M_INDX;
@@ -459,21 +463,21 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
-OprSize AsmInsn::parseInsnSize() {
+InsnSize AsmInsn::parseInsnSize() {
     StrScanner p(name());
     p.trimStart([](char c) { return c != '.'; });
-    char *eos = const_cast<char *>(p.str());
+    auto eos = const_cast<char *>(p.str());
     const auto isize = parseSize(p);
     *eos = 0;
+    flags().setInsnSize(isize);
     return isize;
 }
 
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto isize = insn.parseInsnSize();
-    if (isize == SZ_ERROR)
+    if (isize == ISZ_ERROR)
         return _insn.setError(scan, ILLEGAL_SIZE);
-    insn.setInsnSize(isize);
 
     if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
         return _insn.setError(insn.srcOp);
@@ -504,15 +508,14 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
             insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
             bitno &= 7;
         }
-        if (insn.oprSize() == SZ_LONG && bitno >= 32) {
+        if (insn.oprSize() == SZ_QUAD && bitno >= 32) {
             insn.setErrorIf(insn.srcOp, ILLEGAL_BIT_NUMBER);
             bitno &= 0x1F;
         }
         insn.emitOperand16(bitno);
     }
     emitOprSize(insn, isize);
-    insn.setInsnSize(isize);
-    const auto osize = (isize == SZ_NONE) ? insn.oprSize() : isize;
+    const auto osize = (isize == ISZ_NONE) ? insn.oprSize() : OprSize(isize);
     emitEffectiveAddr(insn, osize, insn.srcOp, src, insn.srcPos());
     emitEffectiveAddr(insn, osize, insn.dstOp, dst, insn.dstPos());
     insn.emitInsn();

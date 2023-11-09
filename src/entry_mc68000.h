@@ -26,22 +26,23 @@ namespace libasm {
 namespace mc68000 {
 
 enum OprSize : uint8_t {
-    SZ_BYTE = 0,
-    SZ_WORD = 1,
-    SZ_LONG = 2,
-    SZ_NONE = 3,
-    SZ_DATA = 4,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
-    SZ_ADR6 = 5,  // __s|___|___ WORD=0/LONG=1
-    SZ_ADR8 = 6,  // s__|___|___ WORD=0/LONG=1
-    SZ_ERROR = 7,
+    SZ_NONE = Size::SZ_NONE,
+    SZ_BYTE = Size::SZ_BYTE,
+    SZ_WORD = Size::SZ_WORD,
+    SZ_QUAD = Size::SZ_QUAD,
+    SZ_OCTA = Size::SZ_OCTA,
+    SZ_DATA = Size::SZ_DATA,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
+    SZ_ADDR = Size::SZ_ADDR,  // __s|___|___ WORD=0/LONG=1
+    SZ_ADR8 = 7,              // s__|___|___ WORD=0/LONG=1
 };
 
 enum InsnSize : uint8_t {
-    ISZ_BYTE = SZ_BYTE,  // .B
-    ISZ_WORD = SZ_WORD,  // .W
-    ISZ_LONG = SZ_LONG,  // .L
-    ISZ_NONE = SZ_NONE,  // __
-    ISZ_DATA = SZ_DATA,  // ==OprSize
+    ISZ_NONE = Size::SZ_NONE,
+    ISZ_BYTE = Size::SZ_BYTE,  // .B
+    ISZ_WORD = Size::SZ_WORD,  // .W
+    ISZ_QUAD = Size::SZ_QUAD,  // .L
+    ISZ_DATA = Size::SZ_DATA,
+    ISZ_ERROR = 7,
 };
 
 enum AddrMode : uint8_t {

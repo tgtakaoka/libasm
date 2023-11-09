@@ -86,7 +86,7 @@ RegName decodeGeneralReg(uint8_t regno);
 RegName decodeDataReg(uint8_t regno);
 RegName decodeAddrReg(uint8_t regno);
 
-OprSize parseSize(StrScanner &scan);
+InsnSize parseSize(StrScanner &scan);
 uint8_t sizeNameLen(OprSize size);
 char sizeSuffix(OprSize size);
 
