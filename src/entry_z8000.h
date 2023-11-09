@@ -26,12 +26,12 @@ namespace libasm {
 namespace z8000 {
 
 enum OprSize : uint8_t {
-    SZ_NONE = 0,
-    SZ_BYTE = 1,
-    SZ_WORD = 2,
-    SZ_LONG = 3,
-    SZ_QUAD = 4,
-    SZ_ADDR = 5,
+    SZ_NONE = Size::SZ_NONE,
+    SZ_BYTE = Size::SZ_BYTE,
+    SZ_WORD = Size::SZ_WORD,
+    SZ_QUAD = Size::SZ_QUAD,
+    SZ_OCTA = Size::SZ_OCTA,
+    SZ_ADDR = Size::SZ_ADDR,
 };
 
 enum AddrMode : uint8_t {
@@ -63,7 +63,7 @@ enum AddrMode : uint8_t {
     M_RA12 = 23,  // 12-bit Relative: (-2048~+2047)*22
     M_RA8 = 24,   // 8-bit Relative: (-128~+127)*2
     M_RA7 = 25,   // 7-bit Positive Relative: -(0~127)*2
-    M_DR = 26,    // Double-Sized Register: WORD:RRn LONG:RQn
+    M_DBLR = 26,  // Double-Sized Register: WORD:RRn LONG:RQn
     M_WR07 = 27,  // R0~R7
     M_WR = 28,    // R0-R15
     M_IRIO = 29,  // Indirect Register IO Address: @R1~R15

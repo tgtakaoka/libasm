@@ -91,14 +91,14 @@ void DisZ8000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
             insn.setErrorIf(out, ILLEGAL_OPERAND);
         if (size == SZ_WORD && data > 16)
             insn.setErrorIf(out, ILLEGAL_OPERAND);
-        if (size == SZ_LONG && data > 32)
+        if (size == SZ_QUAD && data > 32)
             insn.setErrorIf(out, ILLEGAL_OPERAND);
         outDec(out, data, 6);
     } else if (size == SZ_BYTE) {
         outHex(out, insn.readUint16(), 8);
     } else if (size == SZ_WORD) {
         outHex(out, insn.readUint16(), 16);
-    } else if (size == SZ_LONG) {
+    } else if (size == SZ_QUAD) {
         outHex(out, insn.readUint32(), 32);
     }
 }
@@ -113,7 +113,7 @@ void DisZ8000::decodeFlags(DisInsn &insn, StrBuffer &out, uint8_t flags) const {
 void DisZ8000::decodeGeneralRegister(
         DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t num) const {
     auto size = insn.size();
-    if (mode == M_DR)
+    if (mode == M_DBLR)
         size = OprSize(size + 1);
     if (mode == M_IR || mode == M_BA || mode == M_BX)
         size = SZ_ADDR;
@@ -200,7 +200,7 @@ void DisZ8000::decodeGenericAddressing(
 }
 
 void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_LONG);
+    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
     const auto val16 = insn.readUint16();
     if (segmentedModel()) {
         const auto seg = (val16 >> 8) & 0x7F;
@@ -258,7 +258,7 @@ void DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode 
         delta = -static_cast<int16_t>(ra7) * 2;
     }
     const auto base = insn.address() + insn.length();
-    const auto align = insn.size() == SZ_WORD || insn.size() == SZ_LONG;
+    const auto align = insn.size() == SZ_WORD || insn.size() == SZ_QUAD;
     Error error;
     const auto target = branchTarget(base, delta, error, align);
     if (segmentedModel() && segment(insn.address()) != segment(target))
@@ -317,7 +317,7 @@ void DisZ8000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPo
     case M_WR:
     case M_WR07:
     case M_R:
-    case M_DR:
+    case M_DBLR:
     case M_IR:
     case M_IRIO:
         decodeGeneralRegister(insn, out, mode, num);

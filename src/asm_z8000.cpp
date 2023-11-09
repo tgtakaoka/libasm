@@ -171,7 +171,7 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitOperand16(static_cast<uint16_t>(op.val32));
         break;
-    case SZ_LONG:
+    case SZ_QUAD:
         insn.emitOperand32(op.val32);
         break;
     default:
@@ -180,7 +180,7 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
 }
 
 void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op) const {
-    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_LONG);
+    const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
     const auto error = checkAddr(op.val32, 0, align);
     if (error)
         insn.setErrorIf(op, error);
@@ -215,7 +215,7 @@ void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) con
     if (segmentedModel() && segment(insn.address()) != segment(target))
         insn.setErrorIf(op, OVERWRAP_SEGMENT);
     if (mode == M_RA) {
-        const auto error = checkAddr(target, 0, insn.size() == SZ_WORD || insn.size() == SZ_LONG);
+        const auto error = checkAddr(target, 0, insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
         if (error)
             insn.setErrorIf(op, error);
         const auto delta = target - base;
@@ -298,12 +298,12 @@ void AsmZ8000::emitCtlRegister(AsmInsn &insn, OprPos pos, const Operand &op) con
 void AsmZ8000::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const {
     insn.setErrorIf(op);
     switch (mode) {
-    case M_DR:
+    case M_DBLR:
         if (insn.size() == SZ_BYTE && !isWordReg(op.reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         if (insn.size() == SZ_WORD && !isLongReg(op.reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
-        if (insn.size() == SZ_LONG && !isQuadReg(op.reg))
+        if (insn.size() == SZ_QUAD && !isQuadReg(op.reg))
             insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         /* Fall-through */
     case M_R:

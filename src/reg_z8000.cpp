@@ -146,9 +146,9 @@ bool decodeRegNum(bool segmentedModel, uint8_t num, OprSize size, RegName &name)
         return isByteReg(name = decodeByteReg(num));
     case SZ_WORD:
         return isWordReg(name = decodeWordReg(num));
-    case SZ_LONG:
-        return isLongReg(name = decodeLongReg(num));
     case SZ_QUAD:
+        return isLongReg(name = decodeLongReg(num));
+    case SZ_OCTA:
         return isQuadReg(name = decodeQuadReg(num));
     case SZ_ADDR:
         if (segmentedModel)
