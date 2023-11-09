@@ -71,7 +71,7 @@ RegName parseRegName(StrScanner &scan) {
     return REG_UNDEF;
 }
 
-RegSize regSize(RegName name) {
+OprSize regSize(RegName name) {
     const auto num = int8_t(name);
     if (num < 0)
         return SZ_NONE;  // REG_UNDEF

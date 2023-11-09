@@ -49,16 +49,10 @@ enum RegName : int8_t {
     REG_PCR = 0 + 16,  // Program counter relative addressing
 };
 
-enum RegSize : uint8_t {
-    SZ_BYTE = 0,
-    SZ_WORD = 1,
-    SZ_NONE = 2,
-};
-
 namespace reg {
 
 RegName parseRegName(StrScanner &scan);
-RegSize regSize(RegName name) __attribute__((noinline));
+OprSize regSize(RegName name) __attribute__((noinline));
 StrBuffer &outRegName(StrBuffer &out, RegName name, bool fullName = false);
 
 RegName decodeDataReg(CpuType cpuType, uint8_t num);

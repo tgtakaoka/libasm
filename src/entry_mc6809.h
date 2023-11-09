@@ -44,6 +44,12 @@ enum AddrMode : uint8_t {
     M_GMEM = 15,   // Generic memory: M_DIR/M_IDX/M_EXT
 };
 
+enum OprSize : uint8_t {
+    SZ_NONE = Size::SZ_NONE,
+    SZ_BYTE = Size::SZ_BYTE,
+    SZ_WORD = Size::SZ_WORD,
+};
+
 struct Entry final : entry::Base<Config::opcode_t> {
     struct Flags final {
         uint8_t _attr;
