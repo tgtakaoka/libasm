@@ -30,11 +30,11 @@ enum CpuType : uint8_t {
 struct Config : ConfigImpl<CpuType, ADDRESS_23BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 6> {
     Config(const InsnTable<CpuType> &table) : ConfigImpl(table, Z8001) {}
 
+    bool segmentedModel() const { return cpuType() == Z8001; }
+
     AddressWidth addressWidth() const override {
         return segmentedModel() ? ADDRESS_23BIT : ADDRESS_16BIT;
     }
-
-    bool segmentedModel() const { return cpuType() == Z8001; }
 };
 
 }  // namespace z8000

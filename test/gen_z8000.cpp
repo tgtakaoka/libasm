@@ -37,7 +37,7 @@ int main(int argc, const char **argv) {
     }
 
     const Config::uintptr_t org =
-            dis8000.addressWidth() == libasm::ADDRESS_24BIT ? 0x10000 : 0x1000;
+            dis8000.addressWidth() == libasm::ADDRESS_16BIT ? 0x1000 : 0x10000;
     TestGenerator generator(driver, dis8000, org);
     generator.generate();
 

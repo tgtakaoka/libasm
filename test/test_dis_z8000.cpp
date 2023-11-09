@@ -294,19 +294,17 @@ static void test_load_and_exchange() {
 
     // Load Address Relative
     if (z8001()) {
-        ATEST(0x2000, "LDAR", "RR8, %002000", 0x3408, 0xFFFC);
-        ATEST(0x2000, "LDAR", "RR8, %002004", 0x3408, 0x0000);
-        ATEST(0xF000, "LDAR", "RR8, %007004", 0x3408, 0x8000);
-        ATEST(0x2000, "LDAR", "RR8, %00A002", 0x3408, 0x7FFE);
-        ATEST(0x2000, "LDAR", "RR8, %00A003", 0x3408, 0x7FFF);
-        ANMEM(0x2000, "LDAR", "RR8, %002002", "%002002", 0x3408);
+        ATEST(0x002000, "LDAR", "RR8, %00A003",                              0x3408, 0x7FFF);
+        AERRT(0x00A000, "LDAR", "RR8, %012003", OVERWRAP_SEGMENT, "%012003", 0x3408, 0x7FFF);
+        ATEST(0x00A000, "LDAR", "RR8, %002004",                              0x3408, 0x8000);
+        AERRT(0x012000, "LDAR", "RR8, %00A004", OVERWRAP_SEGMENT, "%00A004", 0x3408, 0x8000);
+        ANMEM(0x002000, "LDAR", "RR8, %002002",                   "%002002", 0x3408);
     } else {
-        ATEST(0x2000, "LDAR", "R8, %2000", 0x3408, 0xFFFC);
-        ATEST(0x2000, "LDAR", "R8, %2004", 0x3408, 0x0000);
-        ATEST(0xF000, "LDAR", "R8, %7004", 0x3408, 0x8000);
-        ATEST(0x2000, "LDAR", "R8, %A002", 0x3408, 0x7FFE);
-        ATEST(0x2000, "LDAR", "R8, %A003", 0x3408, 0x7FFF);
-        ANMEM(0x2000, "LDAR", "R8, %2002", "%2002", 0x3408);
+        ATEST(0x2000, "LDAR", "R8, %A003",                          0x3408, 0x7FFF);
+        AERRT(0xA000, "LDAR", "R8, %2003", OVERFLOW_RANGE, "%2003", 0x3408, 0x7FFF);
+        ATEST(0xA000, "LDAR", "R8, %2004",                          0x3408, 0x8000);
+        AERRT(0x2000, "LDAR", "R8, %A004", OVERFLOW_RANGE, "%A004", 0x3408, 0x8000);
+        ANMEM(0x2000, "LDAR", "R8, %2002",                 "%2002", 0x3408);
     }
 
     // Load Constant
@@ -362,23 +360,56 @@ static void test_load_and_exchange() {
 
     // Load Relative
     if (z8001()) {
-        ATEST(0x2000, "LDR",  "R1, %002000",  0x3101, 0xFFFC);
-        ATEST(0x2000, "LDR",  "%002000, R1",  0x3301, 0xFFFC);
-        ATEST(0x2000, "LDRB", "RH1, %002000", 0x3001, 0xFFFC);
-        ATEST(0x2000, "LDRB", "%002000, RH1", 0x3201, 0xFFFC);
-        ATEST(0x2000, "LDRL", "RR2, %002000", 0x3502, 0xFFFC);
-        ATEST(0x2000, "LDRL", "%002000, RR2", 0x3702, 0xFFFC);
-        ANMEM(0x2000, "LDRL", "%002002, RR2", "%002002, RR2", 0x3702);
-        AERRT(0x2000, "LDRL", "%002000, ", ILLEGAL_REGISTER, "", 0x3703, 0xFFFC);
+        ATEST(0x002000, "LDR", "R1, %00A002",                                    0x3101, 0x7FFE);
+        AERRT(0x00A000, "LDR", "R1, %012002", OVERWRAP_SEGMENT,    "%012002",    0x3101, 0x7FFE);
+        AERRT(0x002000, "LDR", "R1, %00A003", OPERAND_NOT_ALIGNED, "%00A003",    0x3101, 0x7FFF);
+        ATEST(0x00A000, "LDR", "R1, %002004",                                    0x3101, 0x8000);
+        AERRT(0x012000, "LDR", "R1, %00A004", OVERWRAP_SEGMENT,    "%00A004",    0x3101, 0x8000);
+        AERRT(0x00A000, "LDR", "R1, %002005", OPERAND_NOT_ALIGNED, "%002005",    0x3101, 0x8001);
+        ATEST(0x002000, "LDR", "%00A002, R1",                                     0x3301, 0x7FFE);
+        AERRT(0x00A000, "LDR", "%012002, R1", OVERWRAP_SEGMENT,    "%012002, R1", 0x3301, 0x7FFE);
+        AERRT(0x002000, "LDR", "%00A003, R1", OPERAND_NOT_ALIGNED, "%00A003, R1", 0x3301, 0x7FFF);
+        ATEST(0x00A000, "LDR", "%002004, R1",                                     0x3301, 0x8000);
+        AERRT(0x012000, "LDR", "%00A004, R1", OVERWRAP_SEGMENT,    "%00A004, R1", 0x3301, 0x8000);
+        AERRT(0x00A000, "LDR", "%002005, R1", OPERAND_NOT_ALIGNED, "%002005, R1", 0x3301, 0x8001);
+        ATEST(0x002000, "LDRB", "RH1, %00A003", 0x3001, 0x7FFF);
+        ATEST(0x00A000, "LDRB", "RH1, %002004", 0x3001, 0x8000);
+        ATEST(0x00A000, "LDRB", "RH1, %002005", 0x3001, 0x8001);
+        ATEST(0x002000, "LDRB", "%00A003, RH1", 0x3201, 0x7FFF);
+        ATEST(0x00A000, "LDRB", "%002004, RH1", 0x3201, 0x8000);
+        ATEST(0x00A000, "LDRB", "%002005, RH1", 0x3201, 0x8001);
+        ATEST(0x00F000, "LDRL", "RR2, %00FFFC",                                 0x3502, 0x0FF8);
+        AERRT(0x00F000, "LDRL", ", %00FFFC",    ILLEGAL_REGISTER,  ", %00FFFC", 0x3503, 0x0FF8);
+        AERRT(0x00F000, "LDRL", "RR2, %00FFFD", OPERAND_NOT_ALIGNED, "%00FFFD", 0x3502, 0x0FF9);
+        ATEST(0x00F000, "LDRL", "%00FFFC, RR2",                                      0x3702, 0x0FF8);
+        AERRT(0x00F000, "LDRL", "%00FFFC, ",    ILLEGAL_REGISTER,              "",   0x3703, 0x0FF8);
+        AERRT(0x00F000, "LDRL", "%00FFFD, RR2", OPERAND_NOT_ALIGNED, "%00FFFD, RR2", 0x3702, 0x0FF9);
+        ANMEM(0x002000, "LDRL", "%002002, RR2",                      "%002002, RR2", 0x3702);
     } else {
-        ATEST(0x2000, "LDR",  "R1, %2000",  0x3101, 0xFFFC);
-        ATEST(0x2000, "LDR",  "%2000, R1",  0x3301, 0xFFFC);
-        ATEST(0x2000, "LDRB", "RH1, %2000", 0x3001, 0xFFFC);
-        ATEST(0x2000, "LDRB", "%2000, RH1", 0x3201, 0xFFFC);
-        ATEST(0x2000, "LDRL", "RR2, %2000", 0x3502, 0xFFFC);
-        ATEST(0x2000, "LDRL", "%2000, RR2", 0x3702, 0xFFFC);
-        ANMEM(0x2000, "LDRL", "%2002, RR2", "%2002, RR2", 0x3702);
-        AERRT(0x2000, "LDRL", "%2000, ", ILLEGAL_REGISTER, "", 0x3703, 0xFFFC);
+        ATEST(0x2000, "LDR", "R1, %A002",                               0x3101, 0x7FFE);
+        AERRT(0xA000, "LDR", "R1, %2002", OVERFLOW_RANGE,      "%2002", 0x3101, 0x7FFE);
+        AERRT(0x2000, "LDR", "R1, %A003", OPERAND_NOT_ALIGNED, "%A003", 0x3101, 0x7FFF);
+        ATEST(0xA000, "LDR", "R1, %2004",                               0x3101, 0x8000);
+        AERRT(0x2000, "LDR", "R1, %A004", OVERFLOW_RANGE,      "%A004", 0x3101, 0x8000);
+        AERRT(0xA000, "LDR", "R1, %2005", OPERAND_NOT_ALIGNED, "%2005", 0x3101, 0x8001);
+        ATEST(0x2000, "LDR", "%A002, R1",                                   0x3301, 0x7FFE);
+        AERRT(0xA000, "LDR", "%2002, R1", OVERFLOW_RANGE,      "%2002, R1", 0x3301, 0x7FFE);
+        AERRT(0x2000, "LDR", "%A003, R1", OPERAND_NOT_ALIGNED, "%A003, R1", 0x3301, 0x7FFF);
+        ATEST(0xA000, "LDR", "%2004, R1",                                   0x3301, 0x8000);
+        AERRT(0x2000, "LDR", "%A004, R1", OVERFLOW_RANGE,      "%A004, R1", 0x3301, 0x8000);
+        AERRT(0xA000, "LDR", "%2005, R1", OPERAND_NOT_ALIGNED, "%2005, R1", 0x3301, 0x8001);
+        ATEST(0x2000, "LDRB", "RH1, %A003", 0x3001, 0x7FFF);
+        ATEST(0xA000, "LDRB", "RH1, %2004", 0x3001, 0x8000);
+        ATEST(0xA000, "LDRB", "RH1, %2005", 0x3001, 0x8001);
+        ATEST(0x2000, "LDRB", "%A003, RH1", 0x3201, 0x7FFF);
+        ATEST(0xA000, "LDRB", "%2004, RH1", 0x3201, 0x8000);
+        ATEST(0xA000, "LDRB", "%2005, RH1", 0x3201, 0x8001);
+        ATEST(0xF000, "LDRL", "RR2, %FFFC",                               0x3502, 0x0FF8);
+        AERRT(0xF000, "LDRL", ", %FFFC",    ILLEGAL_REGISTER,  ", %FFFC", 0x3503, 0x0FF8);
+        AERRT(0xF000, "LDRL", "RR2, %FFFD", OPERAND_NOT_ALIGNED, "%FFFD", 0x3502, 0x0FF9);
+        ATEST(0xF000, "LDRL", "%FFFC, RR2",                                    0x3702, 0x0FF8);
+        AERRT(0xF000, "LDRL", "%FFFC, ",    ILLEGAL_REGISTER,            "",   0x3703, 0x0FF8);
+        AERRT(0xF000, "LDRL", "%FFFD, RR2", OPERAND_NOT_ALIGNED, "%FFFD, RR2", 0x3702, 0x0FF9);
     }
 
     // Pop
@@ -885,16 +916,33 @@ static void test_program_control() {
 
     // Call Procedure Relative
     disassembler.setOption("relative", "on");
-    ATEST(0x1000, "CALR", "$+2",    0xD000);
-    ATEST(0x1000, "CALR", "$+10",   0xDFFC);
-    ATEST(0x1000, "CALR", "$+4098", 0xD800);
-    ATEST(0x1000, "CALR", "$-4092", 0xD7FF);
-    ATEST(0x1000, "CALR", "$-10",   0xD006);
-    ATEST(0x1000, "CALR", "$",      0xD001);
+    ATEST(0x1000, "CALR", "$+2",  0xD000);
+    ATEST(0x1000, "CALR", "$+10", 0xDFFC);
+    ATEST(0x1000, "CALR", "$-10", 0xD006);
+    ATEST(0x1000, "CALR", "$",    0xD001);
+    if (z8001()) {
+        ATEST(0x001000, "CALR", "$-4092",                             0xD7FF);
+        AERRT(0x010100, "CALR", "$-4092", OVERWRAP_SEGMENT, "$-4092", 0xD7FF);
+        ATEST(0x001000, "CALR", "$+4098",                             0xD800);
+        AERRT(0x00F100, "CALR", "$+4098", OVERWRAP_SEGMENT, "$+4098", 0xD800);
+    } else {
+        ATEST(0x1000, "CALR", "$-4092",                           0xD7FF);
+        AERRT(0x0100, "CALR", "$-4092", OVERFLOW_RANGE, "$-4092", 0xD7FF);
+        ATEST(0x1000, "CALR", "$+4098",                           0xD800);
+        AERRT(0xF100, "CALR", "$+4098", OVERFLOW_RANGE, "$+4098", 0xD800);
+    }
 
     // Decrement and Jump if Not Zero
-    TEST("DJNZ",  "R2, $",  0xF281);
-    TEST("DBJNZ", "RL0, $", 0xF801);
+    ATEST(0x1000, "DJNZ",  "R2, $",    0xF281);
+    ATEST(0x1000, "DBJNZ", "RL0, $",   0xF801);
+    ATEST(0x1000, "DBJNZ", "RL0, $+2", 0xF800);
+    if (z8001()) {
+        ATEST(0x001000, "DBJNZ", "RL0, $-252",                            0xF87F);
+        AERRT(0x010080, "DBJNZ", "RL0, $-252", OVERWRAP_SEGMENT, "$-252", 0xF87F);
+    } else {
+        ATEST(0x1000, "DBJNZ", "RL0, $-252",                          0xF87F);
+        AERRT(0x0080, "DBJNZ", "RL0, $-252", OVERFLOW_RANGE, "$-252", 0xF87F);
+    }
 
     // Interrupt Return
     TEST("IRET", "", 0x7B00);
@@ -1100,6 +1148,17 @@ static void test_program_control() {
     TEST("JR", "PL, $",  0xEDFF);
     TEST("JR", "NZ, $",  0xEEFF);
     TEST("JR", "NC, $",  0xEFFF);
+    if (z8001()) {
+        ATEST(0x001000, "JR", "$-254",                            0xE880);
+        AERRT(0x010080, "JR", "$-254", OVERWRAP_SEGMENT, "$-254", 0xE880);
+        ATEST(0x001000, "JR", "$+256",                            0xE87F);
+        AERRT(0x00FF80, "JR", "$+256", OVERWRAP_SEGMENT, "$+256", 0xE87F);
+    } else {
+        ATEST(0x1000, "JR", "$-254",                          0xE880);
+        AERRT(0x0080, "JR", "$-254", OVERFLOW_RANGE, "$-254", 0xE880);
+        ATEST(0x1000, "JR", "$+256",                          0xE87F);
+        AERRT(0xFF80, "JR", "$+256", OVERFLOW_RANGE, "$+256", 0xE87F);
+    }
 
     // Return from Procedure
     TEST("RET", "F",   0x9E00);

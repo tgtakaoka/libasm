@@ -122,39 +122,39 @@
       ldb    @rr2, rl0
       ld     @rr2, r0
       ldrb   rh0, .+0x3105
-      ldrb   rh0, .-0x1158
+      ldrb   rh0, .-0x0158
       ldrb   rh0, .
       ldrb   rl0, .+0x310d
-      ldrb   rl0, .-0x1164
+      ldrb   rl0, .-0x0164
       ldrb   rl0, .
       ldb    rh0, rr2(#0x3121)
       ldb    rl0, rr2(#0x3129)
       ldr    r0, .+0x3206
-      ldr    r0, .-0x1178
+      ldr    r0, .-0x0178
       ldr    r0, .
       ld     r0, rr2(#0x3221)
       ldrb   .+0x3305, rh0
-      ldrb   .-0x1188, rh0
+      ldrb   .-0x0188, rh0
       ldrb   ., rh0
       ldrb   .+0x330d, rl0
-      ldrb   .-0x1194, rl0
+      ldrb   .-0x0194, rl0
       ldrb   ., rl0
       ldb    rr2(#0x3321), rh0
       ldb    rr2(#0x3329), rl0
       ldr    .+0x3406, r0
-      ldr    .-0x11a8, r0
+      ldr    .-0x01a8, r0
       ldr    ., r0
       ld     rr2(#0x3421), r0
       ldar   rr0, .+0x3505
-      ldar   rr0, .-0x11b8
+      ldar   rr0, .-0x01b8
       ldar   rr0, .
       lda    rr0, rr2(#0x3521)
       ldrl   rr0, .+0x3606
-      ldrl   rr0, .-0x11c8
+      ldrl   rr0, .-0x01c8
       ldrl   rr0, .
       ldl    rr0, rr2(#0x3621)
       ldrl   .+0x3806, rr0
-      ldrl   .-0x11d8, rr0
+      ldrl   .-0x01d8, rr0
       ldrl   ., rr0
       ldl    rr2(#0x3821), rr0
       ldps   @rr2

@@ -122,39 +122,39 @@
       LDB    @RR2, RL0
       LD     @RR2, R0
       LDRB   RH0, $+3105H
-      LDRB   RH0, $-1158H
+      LDRB   RH0, $-0158H
       LDRB   RH0, $
       LDRB   RL0, $+310DH
-      LDRB   RL0, $-1164H
+      LDRB   RL0, $-0164H
       LDRB   RL0, $
       LDB    RH0, RR2(#3121H)
       LDB    RL0, RR2(#3129H)
       LDR    R0, $+3206H
-      LDR    R0, $-1178H
+      LDR    R0, $-0178H
       LDR    R0, $
       LD     R0, RR2(#3221H)
       LDRB   $+3305H, RH0
-      LDRB   $-1188H, RH0
+      LDRB   $-0188H, RH0
       LDRB   $, RH0
       LDRB   $+330DH, RL0
-      LDRB   $-1194H, RL0
+      LDRB   $-0194H, RL0
       LDRB   $, RL0
       LDB    RR2(#3321H), RH0
       LDB    RR2(#3329H), RL0
       LDR    $+3406H, R0
-      LDR    $-11A8H, R0
+      LDR    $-01A8H, R0
       LDR    $, R0
       LD     RR2(#3421H), R0
       LDAR   RR0, $+3505H
-      LDAR   RR0, $-11B8H
+      LDAR   RR0, $-01B8H
       LDAR   RR0, $
       LDA    RR0, RR2(#3521H)
       LDRL   RR0, $+3606H
-      LDRL   RR0, $-11C8H
+      LDRL   RR0, $-01C8H
       LDRL   RR0, $
       LDL    RR0, RR2(#3621H)
       LDRL   $+3806H, RR0
-      LDRL   $-11D8H, RR0
+      LDRL   $-01D8H, RR0
       LDRL   $, RR0
       LDL    RR2(#3821H), RR0
       LDPS   @RR2
