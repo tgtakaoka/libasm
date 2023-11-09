@@ -90,7 +90,9 @@ struct StrBuffer : ErrorReporter {
 private:
     char *_str;
     char *_out;
-    const char *_end;
+    char *_end;
+
+    StrBuffer &convert(size_t len);
 };
 
 /**

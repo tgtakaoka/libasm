@@ -122,21 +122,26 @@ StrBuffer &StrBuffer::uint8(uint8_t num) {
 }
 
 StrBuffer &StrBuffer::float32(float num) {
-    const auto end = _out + snprintf_P(_out, _end - _out, PSTR("%.9g"), num);
-    if (end < _end) {
-        _out = end;
-    } else {
-        setError(BUFFER_OVERFLOW);
-    }
-    return *this;
+    *_end = 1;  // to check buffer overflow
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.9g"), num);
+    return convert(len);
 }
 
 StrBuffer &StrBuffer::float64(double num) {
-    const auto end = _out + snprintf_P(_out, _end - _out, PSTR("%.17lg"), num);
-    if (end < _end) {
-        _out = end;
-    } else {
+    *_end = 1;  // to check buffer overflow
+    const auto len = snprintf_P(_out, _end - _out + 1, PSTR("%.17lg"), num);
+    return convert(len);
+}
+
+StrBuffer &StrBuffer::convert(size_t len) {
+    if (*_end == 0) {
+        // Possible buffer overflow, though it may be just the right length.
         setError(BUFFER_OVERFLOW);
+    }
+    for (auto c = *_out; len; --len) {
+        const auto next = _out[1];
+        letter(c);
+        c = next;
     }
     return *this;
 }

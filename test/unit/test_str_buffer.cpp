@@ -283,7 +283,7 @@ void test_uint8() {
 
 void test_float32() {
     char buffer[16];
-    StrBuffer out(buffer, sizeof(buffer));
+    StrCaseBuffer out(buffer, sizeof(buffer), false);
 
     out.float32(0);
     EQ("float32-0", "0", out.str());
@@ -307,6 +307,12 @@ void test_float32() {
     out.reset();
     out.float32(-NAN);
     EQ("float32-nan", "-nan", out.str());
+
+    char sbuf[10];
+    StrCaseBuffer sout(sbuf, sizeof(sbuf), false);
+    sout.float32(FLT_EPSILON);
+    EQ("float32-overflow", BUFFER_OVERFLOW, sout.getError());
+    EQ("float32-overflow", "1.1920929", sout.str());
 }
 
 void test_float64() {
@@ -318,23 +324,29 @@ void test_float64() {
 
     out.reset();
     out.float64(DBL_EPSILON);
-    EQ("float64-epsilon", "2.2204460492503131e-16", out.str());
+    EQ("float64-epsilon", "2.2204460492503131E-16", out.str());
 
     out.reset();
     out.float64(DBL_MIN);
-    EQ("float64-min", "2.2250738585072014e-308", out.str());
+    EQ("float64-min", "2.2250738585072014E-308", out.str());
 
     out.reset();
     out.float64(DBL_MAX);
-    EQ("float64-max", "1.7976931348623157e+308", out.str());
+    EQ("float64-max", "1.7976931348623157E+308", out.str());
 
     out.reset();
     out.float64(-INFINITY);
-    EQ("float64-inf", "-inf", out.str());
+    EQ("float64-inf", "-INF", out.str());
 
     out.reset();
     out.float64(-NAN);
-    EQ("float64-nan", "-nan", out.str());
+    EQ("float64-nan", "-NAN", out.str());
+
+    char sbuf[10];
+    StrCaseBuffer sout(sbuf, sizeof(sbuf), false);
+    sout.float32(DBL_EPSILON);
+    EQ("float64-overflow", BUFFER_OVERFLOW, sout.getError());
+    EQ("float64-overflow", "2.2204460", sout.str());
 }
 
 void test_comma() {
