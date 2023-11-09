@@ -120,13 +120,13 @@ void test_dis_w65816() {
             "      ORG   $ABCDEF\n"
             "      SBC   $F2F1F0\n"
             "      ADC   #$1234\n"
-            "; test.bin: error: Operand too far: \"$AC4DF8\"\n"
+            "; test.bin: error: Overwrap segment/bank/page boundary: \"$AC4DF8\"\n"
             ";   ABCDF6 : 82 FF 7F                   BRL   $AC4DF8\n",
             "       0 :                            CPU   65816\n"
             "  ABCDEF :                            ORG   $ABCDEF\n"
             "  ABCDEF : EF F0 F1 F2                SBC   $F2F1F0\n"
             "  ABCDF3 : 69 34 12                   ADC   #$1234\n"
-            "test.bin: error: Operand too far: \"$AC4DF8\"\n"
+            "test.bin: error: Overwrap segment/bank/page boundary: \"$AC4DF8\"\n"
             "  ABCDF6 : 82 FF 7F                   BRL   $AC4DF8\n",
             0xef, 0xf0, 0xf1, 0xf2, 0x69, 0x34, 0x12, 0x82, 0xFF, 0x7F);
 }

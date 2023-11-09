@@ -776,9 +776,9 @@ static void test_rel() {
         ATEST(0x001000, "BVS", "$001081", 0x70, 0x7F);
         ATEST(0x001000, "BCC", "$000F82",            0x90, 0x80);
         ANMEM(0x001000, "BCC", "$001001", "$001001", 0x90);
-        AERRT(0x120000, "BCS", "$11FF82", OPERAND_TOO_FAR, "$11FF82", 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE", "$130000", OPERAND_TOO_FAR, "$130000", 0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ", "$130071", OPERAND_TOO_FAR, "$130071", 0xF0, 0x7F);
+        AERRT(0x120000, "BCS", "$11FF82", OVERWRAP_SEGMENT, "$11FF82", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE", "$130000", OVERWRAP_SEGMENT, "$130000", 0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ", "$130071", OVERWRAP_SEGMENT, "$130071", 0xF0, 0x7F);
     } else {
         // MOS6502
         ATEST(0x1000, "BPL", "$1002", 0x10, 0x00);
@@ -803,8 +803,8 @@ static void test_rel() {
         ATEST(0x121000, "PER", "$121234",            0x62, 0x31, 0x02);
         ANMEM(0x121000, "PER", "$121033", "$121033", 0x62, 0x31);
         ANMEM(0x121000, "PER", "$121001", "$121001", 0x62);
-        AERRT(0x121000, "BRL", "$119003", OPERAND_TOO_FAR, "$119003", 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER", "$131002", OPERAND_TOO_FAR, "$131002", 0x62, 0xFF, 0x7F);
+        AERRT(0x121000, "BRL", "$119003", OVERWRAP_SEGMENT, "$119003", 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER", "$131002", OVERWRAP_SEGMENT, "$131002", 0x62, 0xFF, 0x7F);
     }
 
     symtab.intern(0x0F82, "label0F82");
@@ -827,11 +827,11 @@ static void test_rel() {
     ATEST(0x2000, "BPL", "*+2",   0x10, 0x00);
     ATEST(0x2000, "BPL", "*+129", 0x10, 0x7F);
     if (w65c816()) {
-        AERRT(0x120000, "BCS", "*-126", OPERAND_TOO_FAR, "*-126", 0xB0, 0x80);
-        AERRT(0x12FFFE, "BNE", "*+2",   OPERAND_TOO_FAR, "*+2",   0xD0, 0x00);
-        AERRT(0x12FFF0, "BEQ", "*+129", OPERAND_TOO_FAR, "*+129", 0xF0, 0x7F);
-        AERRT(0x121000, "BRL", "*-$7FFD", OPERAND_TOO_FAR, "*-$7FFD", 0x82, 0x00, 0x80);
-        AERRT(0x129000, "PER", "*+$8002", OPERAND_TOO_FAR, "*+$8002", 0x62, 0xFF, 0x7F);
+        AERRT(0x120000, "BCS", "*-126",   OVERWRAP_SEGMENT, "*-126", 0xB0, 0x80);
+        AERRT(0x12FFFE, "BNE", "*+2",     OVERWRAP_SEGMENT, "*+2",   0xD0, 0x00);
+        AERRT(0x12FFF0, "BEQ", "*+129",   OVERWRAP_SEGMENT, "*+129", 0xF0, 0x7F);
+        AERRT(0x121000, "BRL", "*-$7FFD", OVERWRAP_SEGMENT, "*-$7FFD", 0x82, 0x00, 0x80);
+        AERRT(0x129000, "PER", "*+$8002", OVERWRAP_SEGMENT, "*+$8002", 0x62, 0xFF, 0x7F);
     } else {
         AERRT(0x0000, "BCS", "*-126", OVERFLOW_RANGE, "*-126", 0xB0, 0x80);
         AERRT(0xFFFE, "BNE", "*+2",   OVERFLOW_RANGE, "*+2",   0xD0, 0x00);

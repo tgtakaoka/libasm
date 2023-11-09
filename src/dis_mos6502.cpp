@@ -142,16 +142,22 @@ void DisMos6502::decodeDirectPage(DisInsn &insn, StrBuffer &out) const {
     }
 }
 
+namespace {
+constexpr Config::uintptr_t bank(Config::uintptr_t addr) {
+    return addr & ~0xFFFF;
+}
+}  // namespace
+
 void DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto delta = (mode == M_LREL) ? static_cast<int16_t>(insn.readUint16())
                                         : static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
     Error error;
     const auto target = branchTarget(base, delta, error);
+    if (bankModel() && bank(insn.address()) != bank(target))
+        insn.setErrorIf(out, OVERWRAP_SEGMENT);
     if (error)
         insn.setError(out, error);
-    if ((target >> 16) != (insn.address() >> 16))
-        insn.setErrorIf(out, OPERAND_TOO_FAR);
     outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
 }
 
