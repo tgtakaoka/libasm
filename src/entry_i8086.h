@@ -71,6 +71,12 @@ enum AddrMode : uint8_t {
     M_BIT = 28,   // 3/4-bit shift count/bit number constant
 };
 
+enum OprSize : uint8_t {
+    SZ_NONE = Size::SZ_NONE,
+    SZ_BYTE = Size::SZ_BYTE,
+    SZ_WORD = Size::SZ_WORD,
+};
+
 enum OprPos : uint8_t {
     P_NONE = 0,
     P_OPR = 1,   // In operand
@@ -80,13 +86,6 @@ enum OprPos : uint8_t {
     P_MOD = 5,   // In mod-reg-r/m: mo|___|r/m
     P_REG = 6,   // In mod-reg-r/m: __|reg|___
     P_MREG = 7,  // In mod-reg-r/m: mo|reg|reg
-};
-
-enum OprSize : uint8_t {
-    SZ_NONE = 0,
-    SZ_BYTE = 1,  // Byte
-    SZ_WORD = 2,  // Word
-    SZ_SOFF = 3,  // Segment:Offset
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
