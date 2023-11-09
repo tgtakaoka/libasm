@@ -179,7 +179,7 @@ void DisNs32000::decodeLength(DisInsn &insn, StrBuffer &out) const {
         uint8_t len = disp.val32;
         if (len >= 16)
             insn.setErrorIf(out, OVERFLOW_RANGE);
-        if (insn.size() == SZ_DOUBLE) {
+        if (insn.size() == SZ_QUAD) {
             if (len % 4) {
                 insn.setErrorIf(out, ILLEGAL_CONSTANT);
             } else {
@@ -214,37 +214,27 @@ void DisNs32000::decodeBitField(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
-    const auto size = (mode == M_GENC) ? SZ_BYTE : insn.size();
-    switch (size) {
-    case SZ_BYTE:
-        if (mode == M_GENC) {
-            outDec(out, static_cast<int8_t>(insn.readByte()), -8);
+    const auto size = insn.size();
+    if (mode == M_GENC) {
+        outDec(out, static_cast<int8_t>(insn.readByte()), -8);
+    } else if (size == SZ_BYTE) {
+        outHex(out, insn.readByte(), 8);
+    } else if (mode == M_FENR || mode == M_FENW) {
+        if (size == SZ_OCTA) {
+            const auto float64 = insn.readFloat64();
+            if (_floatPrefix)
+                out.letter('0').letter('f');
+            out.float64(float64);
         } else {
-            outHex(out, insn.readByte(), 8);
+            const auto float32 = insn.readFloat32();
+            if (_floatPrefix)
+                out.letter('0').letter('f');
+            out.float32(float32);
         }
-        break;
-    case SZ_WORD:
+    } else if (size == SZ_WORD) {
         outHex(out, insn.readUint16(), 16);
-        break;
-    case SZ_DOUBLE:
+    } else if (size == SZ_QUAD) {
         outHex(out, insn.readUint32(), 32);
-        break;
-    case SZ_FLOAT: {
-        const auto float32 = insn.readFloat32();
-        if (_floatPrefix)
-            out.letter('0').letter('f');
-        out.float32(float32);
-        break;
-    }
-    case SZ_LONG: {
-        const auto float64 = insn.readFloat64();
-        if (_floatPrefix)
-            out.letter('0').letter('f');
-        out.float64(float64);
-        break;
-    }
-    default:
-        break;
     }
 }
 
@@ -346,10 +336,7 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
         if (mode == M_GENA)
             insn.setErrorIf(out, REGISTER_NOT_ALLOWED);
         reg = decodeRegName(gen, !scaledIndex && (mode == M_FENR || mode == M_FENW));
-        if ((mode == M_FENR || mode == M_FENW) && (size == SZ_LONG || size == SZ_QUAD) &&
-                !isRegPair(reg))
-            insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
-        if ((mode == M_GENR || mode == M_GENW) && size == SZ_QUAD && !isRegPair(reg))
+        if (size == SZ_OCTA && !isRegPair(reg))
             insn.setErrorIf(out, REGISTER_NOT_ALIGNED);
         if (scaledIndex)
             out.letter('0').letter('(');
@@ -469,8 +456,8 @@ void DisNs32000::decodeGeneric(DisInsn &insn, StrBuffer &out, AddrMode mode, Opr
     }
     if (scaledIndex) {
         const auto indexByte = insn.indexByte(pos);
-        const auto indexSize = OprSize(base & 0x3);
-        const auto index = decodeRegName(indexByte & 7);
+        const auto indexSize = decodeIndexSize(base);
+        const auto index = decodeRegName(indexByte);
         if (idxError)
             insn.setErrorIf(out, idxError);
         outRegName(out.letter('['), index).letter(':').letter(indexSizeChar(indexSize)).letter(']');
@@ -549,8 +536,6 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     const auto dstIdxError = readIndexByte(insn, insn.dst(), insn.dstPos());
     const auto ex1IdxError = readIndexByte(insn, insn.ex1(), insn.ex1Pos());
 
-    const auto size = insn.size();
-    const auto ex1 = insn.ex1();
     decodeOperand(insn, out, insn.src(), insn.srcPos(), insn.srcSize(), srcIdxError);
     const auto dst = insn.dst();
     if (dst == M_ZERO) {
@@ -561,12 +546,13 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
             insn.setError(UNKNOWN_INSTRUCTION);
         }
     } else if (dst != M_NONE) {
-        const auto ex2 = insn.ex2();
         decodeOperand(insn, out.comma(), dst, insn.dstPos(), insn.dstSize(), dstIdxError);
+        const auto ex1 = insn.ex1();
         if (ex1 != M_NONE) {
-            decodeOperand(insn, out.comma(), ex1, insn.ex1Pos(), size, ex1IdxError);
+            decodeOperand(insn, out.comma(), ex1, insn.ex1Pos(), insn.size(), ex1IdxError);
+            const auto ex2 = insn.ex2();
             if (ex2 != M_NONE && ex2 != M_BFLEN)
-                decodeOperand(insn, out.comma(), ex2, insn.ex2Pos(), size);
+                decodeOperand(insn, out.comma(), ex2, insn.ex2Pos(), insn.size());
         }
     }
     return _insn.setError(insn);

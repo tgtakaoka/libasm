@@ -117,6 +117,7 @@ StrBuffer &outConfigNames(StrBuffer &out, uint8_t configs);
 StrOptName parseStrOptName(StrScanner &scan);
 
 OprSize parseIndexSize(StrScanner &scan);
+OprSize decodeIndexSize(uint8_t num);    
 char indexSizeChar(OprSize size);
 
 }  // namespace reg

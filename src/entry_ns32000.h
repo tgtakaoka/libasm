@@ -83,13 +83,11 @@ enum OprPos : uint8_t {
 };
 
 enum OprSize : uint8_t {
-    SZ_BYTE = 0,    // 8-bit integer (Byte)
-    SZ_WORD = 1,    // 16-bit integer (Word)
-    SZ_DOUBLE = 2,  // 32-bit integer (Double)
-    SZ_QUAD = 3,    // 64-bit integer (Quad)
-    SZ_FLOAT = 4,   // 32-bit float (Float)
-    SZ_LONG = 5,    // 64-bit float (Long)
-    SZ_NONE = 6,
+    SZ_NONE = Size::SZ_NONE,
+    SZ_BYTE = Size::SZ_BYTE,  // 8-bit integer (Byte)
+    SZ_WORD = Size::SZ_WORD,  // 16-bit integer (Word)
+    SZ_QUAD = Size::SZ_QUAD,  // 32-bit integer/float (Double, Float)
+    SZ_OCTA = Size::SZ_OCTA,  // 64-bit integer/float (Quad, Long)
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

@@ -35,8 +35,18 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos ex1Pos() const { return flags().ex1Pos(); }
     OprPos ex2Pos() const { return flags().ex2Pos(); }
     OprSize size() const { return flags().size(); }
-    OprSize srcSize() const { return ex1() == M_NONE && ex1Pos() != P_NONE ? SZ_QUAD : size(); }
-    OprSize dstSize() const { return ex2() == M_NONE && ex2Pos() != P_NONE ? SZ_QUAD : size(); }
+    OprSize srcSize() const { return srcDstSize(src(), ex1() == M_NONE && ex1Pos()); }
+    OprSize dstSize() const { return srcDstSize(dst(), ex2() == M_NONE && ex2Pos()); }
+
+private:
+    OprSize srcDstSize(AddrMode mode, bool octaSize) const {
+        const auto sz = size();
+        if (octaSize)
+            return SZ_OCTA;
+        if (mode == M_FENR || mode == M_FENW)
+            return sz;
+        return sz == SZ_OCTA ? SZ_QUAD : sz;
+    }
 };
 
 struct Operand final : ErrorAt {

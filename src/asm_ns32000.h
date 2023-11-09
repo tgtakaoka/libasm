@@ -46,7 +46,7 @@ private:
             AsmInsn &insn, const Operand &op, int32_t val32, Error error = OVERFLOW_RANGE) const;
     void emitLength(AsmInsn &insn, const Operand &op) const;
     void emitBitField(AsmInsn &insn, AddrMode mode, const Operand &off, const Operand &len) const;
-    void emitImmediate(AsmInsn &insn, const Operand &op, OprSize size) const;
+    void emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const;
     void emitIndexByte(AsmInsn &insn, const Operand &op) const;
     uint8_t encodeGenericField(AddrMode mode, RegName reg) const;
     void emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, OprPos pos) const;

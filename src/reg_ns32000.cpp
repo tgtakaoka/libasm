@@ -213,14 +213,19 @@ OprSize parseIndexSize(StrScanner &scan) {
     } else if (p.iexpect('W')) {
         size = SZ_WORD;
     } else if (p.iexpect('D')) {
-        size = SZ_DOUBLE;
-    } else if (p.iexpect('Q')) {
         size = SZ_QUAD;
+    } else if (p.iexpect('Q')) {
+        size = SZ_OCTA;
     }
     if (size == SZ_NONE || isIdLetter(*p))
         return SZ_NONE;
     scan = p;
     return size;
+}
+
+OprSize decodeIndexSize(uint8_t num) {
+    static constexpr OprSize sizes[] = { SZ_BYTE, SZ_WORD, SZ_QUAD, SZ_OCTA };
+    return sizes[num & 3];
 }
 
 char indexSizeChar(OprSize size) {
@@ -229,9 +234,9 @@ char indexSizeChar(OprSize size) {
         return 'B';
     case SZ_WORD:
         return 'W';
-    case SZ_DOUBLE:
-        return 'D';
     case SZ_QUAD:
+        return 'D';
+    case SZ_OCTA:
         return 'Q';
     default:
         return 0;

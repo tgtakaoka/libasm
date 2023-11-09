@@ -318,7 +318,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
         StrScanner e(end);
         if (end != scan.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
             op.mode = M_IMM;
-            op.size = SZ_LONG;
+            op.size = SZ_OCTA;
             scan = e;
             return op.setOK();
         }
@@ -326,7 +326,7 @@ Error AsmNs32000::parseBaseOperand(StrScanner &scan, Operand &op) const {
     if (op.hasError())
         return op.getError();
     op.val32 = val.getUnsigned();
-    op.size = SZ_DOUBLE;
+    op.size = SZ_QUAD;
     if (val.isSigned()) {
         op.float64 = val.getSigned();
     } else {
@@ -427,9 +427,9 @@ uint8_t encodeScaledIndex(OprSize indexSize) {
         return 0x1C;
     case SZ_WORD:
         return 0x1D;
-    case SZ_DOUBLE:
-        return 0x1E;
     case SZ_QUAD:
+        return 0x1E;
+    case SZ_OCTA:
         return 0x1F;
     default:
         return 0;
@@ -484,7 +484,7 @@ void AsmNs32000::emitLength(AsmInsn &insn, const Operand &op) const {
         const auto val = static_cast<int32_t>(op.val32);
         if (val <= 0) {
             insn.setErrorIf(op, ILLEGAL_CONSTANT);
-        } else if (insn.size() == SZ_DOUBLE) {
+        } else if (insn.size() == SZ_QUAD) {
             if (len > 4)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
             len -= 1;
@@ -518,25 +518,20 @@ void AsmNs32000::emitBitField(
     insn.emitOperand8(data);
 }
 
-void AsmNs32000::emitImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {
-    switch (size) {
-    case SZ_BYTE:
+void AsmNs32000::emitImmediate(AsmInsn &insn, AddrMode mode, const Operand &op) const {
+    const auto size = insn.size();
+    if (size == SZ_BYTE || mode == M_GENC) {
         insn.emitOperand8(op.val32);
-        break;
-    case SZ_WORD:
+    } else if (mode == M_FENR) {
+        if (size == SZ_OCTA) {
+            insn.emitOpFloat64(op.float64);
+        } else {
+            insn.emitOpFloat32(op.float64);
+        }
+    } else if (size == SZ_WORD) {
         insn.emitOperand16(op.val32);
-        break;
-    case SZ_DOUBLE:
+    } else if (size == SZ_QUAD) {
         insn.emitOperand32(op.val32);
-        break;
-    case SZ_FLOAT:
-        insn.emitOpFloat32(op.float64);
-        break;
-    case SZ_LONG:
-        insn.emitOpFloat64(op.float64);
-        break;
-    default:
-        break;
     }
 }
 
@@ -616,7 +611,8 @@ void AsmNs32000::emitGeneric(AsmInsn &insn, AddrMode mode, const Operand &op, Op
         emitDisplacement(insn, op, op.disp2);
         break;
     case M_IMM:
-        emitImmediate(insn, op, mode == M_GENC ? SZ_BYTE : insn.size());
+        // emitImmediate(insn, op, mode == M_GENC ? SZ_BYTE : insn.size());
+        emitImmediate(insn, mode, op);
         break;
     default:
         break;
@@ -658,13 +654,13 @@ void AsmNs32000::emitOperand(AsmInsn &insn, AddrMode mode, OprSize size, const O
         break;
     case M_FENR:
     case M_FENW:
-        if (op.mode == M_FREG && (size == SZ_LONG || size == SZ_QUAD) && !isRegPair(op.reg))
-            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        if (op.mode == M_FREG && size == SZ_OCTA && !isRegPair(op.reg))
+            insn.setErrorIf(op, REGISTER_NOT_ALIGNED);
         goto emit_generic;
     case M_GENR:
     case M_GENW:
-        if (op.mode == M_GREG && size == SZ_QUAD && !isRegPair(op.reg))
-            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
+        if (op.mode == M_GREG && size == SZ_OCTA && !isRegPair(op.reg))
+            insn.setErrorIf(op, REGISTER_NOT_ALIGNED);
         goto emit_generic;
     case M_GENC:
     case M_GENA:
@@ -750,14 +746,10 @@ Error AsmNs32000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     emitIndexByte(insn, insn.srcOp);
     emitIndexByte(insn, insn.dstOp);
     emitIndexByte(insn, insn.ex1Op);
-    const AddrMode src = insn.src();
-    const AddrMode dst = insn.dst();
-    const AddrMode ex1 = insn.ex1();
-    const AddrMode ex2 = insn.ex2();
-    emitOperand(insn, src, insn.srcSize(), insn.srcOp, insn.srcPos(), insn.srcOp);
-    emitOperand(insn, dst, insn.dstSize(), insn.dstOp, insn.dstPos(), insn.srcOp);
-    emitOperand(insn, ex1, insn.size(), insn.ex1Op, insn.ex1Pos(), insn.dstOp);
-    emitOperand(insn, ex2, insn.size(), insn.ex2Op, insn.ex2Pos(), insn.ex1Op);
+    emitOperand(insn, insn.src(), insn.srcSize(), insn.srcOp, insn.srcPos(), insn.srcOp);
+    emitOperand(insn, insn.dst(), insn.dstSize(), insn.dstOp, insn.dstPos(), insn.srcOp);
+    emitOperand(insn, insn.ex1(), insn.size(), insn.ex1Op, insn.ex1Pos(), insn.dstOp);
+    emitOperand(insn, insn.ex2(), insn.size(), insn.ex2Op, insn.ex2Pos(), insn.ex1Op);
     insn.emitInsn();
     return _insn.setError(insn);
 }
