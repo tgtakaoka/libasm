@@ -75,7 +75,7 @@ Disassembler *DisDriver::setCpu(const char *cpu) {
 std::list<std::string> DisDriver::listCpu() const {
     std::list<std::string> list;
     for (auto dis : _disassemblers) {
-        const /* PROGMEM */ char *list_P = dis->listCpu_P();
+        const /* PROGMEM */ char *list_P = dis->config().listCpu_P();
         char listCpu[strlen_P(list_P) + 1];
         strcpy_P(listCpu, list_P);
         filter(listCpu, list);
@@ -105,7 +105,7 @@ void DisDriver::disassemble(BinReader &memory, const char *inputName, TextPrinte
     formatter.setUpperHex(_upperHex);
     formatter.setUppercase(_uppercase);
 
-    formatter.setCpu(disassembler.cpu_P());
+    formatter.setCpu(disassembler.config().cpu_P());
     output.println(formatter.getContent(out).str());
     listout.println(formatter.getLine(out).str());
 

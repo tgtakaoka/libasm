@@ -26,7 +26,7 @@ DisTms32010 dis32010;
 Disassembler &disassembler(dis32010);
 
 static bool is32010() {
-    return strcmp_P("32010", disassembler.cpu_P()) == 0;
+    return strcmp_P("32010", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -40,16 +40,16 @@ static void tear_down() {
 
 void test_cpu() {
     EQUALS("cpu 32010", true, disassembler.setCpu("32010"));
-    EQUALS_P("cpu 32010", "32010", disassembler.cpu_P());
+    EQUALS_P("cpu 32010", "32010", disassembler.config().cpu_P());
 
     EQUALS("cpu 32015", true, disassembler.setCpu("32015"));
-    EQUALS_P("cpu 32015", "32015", disassembler.cpu_P());
+    EQUALS_P("cpu 32015", "32015", disassembler.config().cpu_P());
 
     EQUALS("cpu TMS32010", true, disassembler.setCpu("TMS32010"));
-    EQUALS_P("cpu TMS32010", "32010", disassembler.cpu_P());
+    EQUALS_P("cpu TMS32010", "32010", disassembler.config().cpu_P());
 
     EQUALS("cpu TMS32015", true, disassembler.setCpu("TMS32015"));
-    EQUALS_P("cpu TMS32015", "32015", disassembler.cpu_P());
+    EQUALS_P("cpu TMS32015", "32015", disassembler.config().cpu_P());
 }
 
 // clang-format off

@@ -173,7 +173,7 @@ int GenDriver::parseOption(int argc, const char **argv) {
         }
     }
     if (_cpu.empty()) {
-        const /* PROGMEM */ auto cpu_P = _disassembler.cpu_P();
+        const /* PROGMEM */ auto cpu_P = _disassembler.config().cpu_P();
         char cpu[strlen_P(cpu_P) + 1];
         strcpy_P(cpu, cpu_P);
         _cpu = cpu;
@@ -182,7 +182,7 @@ int GenDriver::parseOption(int argc, const char **argv) {
 }
 
 int GenDriver::usage() const {
-    const /* PROGMEM */ auto list_P = _disassembler.listCpu_P();
+    const /* PROGMEM */ auto list_P = _disassembler.config().listCpu_P();
     char listCpu[strlen_P(list_P) + 1];
     strcpy_P(listCpu, list_P);
     fprintf(stderr,

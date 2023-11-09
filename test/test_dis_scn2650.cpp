@@ -36,10 +36,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 2650", true,   disassembler.setCpu("2650"));
-    EQUALS_P("cpu 2650", "2650", disassembler.cpu_P());
+    EQUALS_P("cpu 2650", "2650", disassembler.config().cpu_P());
 
     EQUALS("cpu Scn2650", true,   disassembler.setCpu("Scn2650"));
-    EQUALS_P("cpu Scn2650", "2650", disassembler.cpu_P());
+    EQUALS_P("cpu Scn2650", "2650", disassembler.config().cpu_P());
 }
 
 void test_load_store() {

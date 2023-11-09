@@ -44,8 +44,6 @@ struct Disassembler {
     const ValueFormatter &formatter() const;
     const /*PROGMEM*/ char *lineComment_P() const { return _formatter.lineComment_P(); }
 
-    const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
-    const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
     bool setCpu(const char *name);
     Error setCpu(StrScanner &scan);
 

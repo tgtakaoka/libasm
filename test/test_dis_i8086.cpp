@@ -25,15 +25,15 @@ DisI8086 dis8086;
 Disassembler &disassembler(dis8086);
 
 static bool v30() {
-    return strcmp_P("V30", disassembler.cpu_P()) == 0;
+    return strcmp_P("V30", disassembler.config().cpu_P()) == 0;
 }
 
 static bool is80186() {
-    return strcmp_P("80186", disassembler.cpu_P()) == 0 || v30();
+    return strcmp_P("80186", disassembler.config().cpu_P()) == 0 || v30();
 }
 
 static bool is8086() {
-    return strcmp_P("8086", disassembler.cpu_P()) == 0;
+    return strcmp_P("8086", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -47,19 +47,19 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8086", true,   disassembler.setCpu("8086"));
-    EQUALS_P("cpu 8086", "8086", disassembler.cpu_P());
+    EQUALS_P("cpu 8086", "8086", disassembler.config().cpu_P());
 
     EQUALS("cpu i8086", true,   disassembler.setCpu("i8086"));
-    EQUALS_P("cpu i8086", "8086", disassembler.cpu_P());
+    EQUALS_P("cpu i8086", "8086", disassembler.config().cpu_P());
 
     EQUALS("cpu 80186", true,   disassembler.setCpu("80186"));
-    EQUALS_P("cpu 80186", "80186", disassembler.cpu_P());
+    EQUALS_P("cpu 80186", "80186", disassembler.config().cpu_P());
 
     EQUALS("cpu i80186", true,   disassembler.setCpu("i80186"));
-    EQUALS_P("cpu i80186", "80186", disassembler.cpu_P());
+    EQUALS_P("cpu i80186", "80186", disassembler.config().cpu_P());
 
     EQUALS("cpu V30", true,   disassembler.setCpu("V30"));
-    EQUALS_P("cpu V30", "V30", disassembler.cpu_P());
+    EQUALS_P("cpu V30", "V30", disassembler.config().cpu_P());
 }
 
 static void test_data_transfer() {

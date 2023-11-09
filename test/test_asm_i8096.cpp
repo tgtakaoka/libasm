@@ -35,10 +35,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8096", true,   assembler.setCpu("8096"));
-    EQUALS_P("cpu 8096", "8096", assembler.cpu_P());
+    EQUALS_P("cpu 8096", "8096", assembler.config().cpu_P());
 
     EQUALS("cpu i8096", true,   assembler.setCpu("i8096"));
-    EQUALS_P("cpu i8096", "8096", assembler.cpu_P());
+    EQUALS_P("cpu i8096", "8096", assembler.config().cpu_P());
 }
 
 

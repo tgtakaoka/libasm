@@ -25,7 +25,7 @@ DisIm6100 dis6100;
 Disassembler &disassembler(dis6100);
 
 static bool hd6120() {
-    return strcmp_P("6120", disassembler.cpu_P()) == 0;
+    return strcmp_P("6120", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -40,16 +40,16 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 6100", true,   disassembler.setCpu("6100"));
-    EQUALS_P("cpu 6100", "6100", disassembler.cpu_P());
+    EQUALS_P("cpu 6100", "6100", disassembler.config().cpu_P());
 
     EQUALS("cpu 6120", true,   disassembler.setCpu("6120"));
-    EQUALS_P("cpu 6120", "6120", disassembler.cpu_P());
+    EQUALS_P("cpu 6120", "6120", disassembler.config().cpu_P());
 
     EQUALS("cpu IM6100", true,   disassembler.setCpu("IM6100"));
-    EQUALS_P("cpu IM6100", "6100", disassembler.cpu_P());
+    EQUALS_P("cpu IM6100", "6100", disassembler.config().cpu_P());
 
     EQUALS("cpu HD6120", true,   disassembler.setCpu("HD6120"));
-    EQUALS_P("cpu HD6120", "6120", disassembler.cpu_P());
+    EQUALS_P("cpu HD6120", "6120", disassembler.config().cpu_P());
 }
 
 void test_memory_reference() {

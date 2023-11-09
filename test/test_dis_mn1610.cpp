@@ -26,12 +26,12 @@ DisMn1610 dis1610;
 Disassembler &disassembler(dis1610);
 
 static bool is1610() {
-    return strcmp_P("MN1610", disassembler.cpu_P()) == 0;
+    return strcmp_P("MN1610", disassembler.config().cpu_P()) == 0;
 }
 
 static bool is1613() {
-    return strcmp_P("MN1613", disassembler.cpu_P()) == 0 ||
-           strcmp_P("MN1613A", disassembler.cpu_P()) == 0;
+    return strcmp_P("MN1613", disassembler.config().cpu_P()) == 0 ||
+           strcmp_P("MN1613A", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -46,22 +46,22 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 1610", true,     disassembler.setCpu("1610"));
-    EQUALS_P("cpu 1610", "MN1610", disassembler.cpu_P());
+    EQUALS_P("cpu 1610", "MN1610", disassembler.config().cpu_P());
 
     EQUALS("cpu 1613", true,     disassembler.setCpu("1613"));
-    EQUALS_P("cpu 1613", "MN1613", disassembler.cpu_P());
+    EQUALS_P("cpu 1613", "MN1613", disassembler.config().cpu_P());
 
     EQUALS("cpu 1613A", true,      disassembler.setCpu("1613A"));
-    EQUALS_P("cpu 1613A", "MN1613A", disassembler.cpu_P());
+    EQUALS_P("cpu 1613A", "MN1613A", disassembler.config().cpu_P());
 
     EQUALS("cpu mn1610", true,     disassembler.setCpu("mn1610"));
-    EQUALS_P("cpu MN1610", "MN1610", disassembler.cpu_P());
+    EQUALS_P("cpu MN1610", "MN1610", disassembler.config().cpu_P());
 
     EQUALS("cpu mn1613", true,     disassembler.setCpu("mn1613"));
-    EQUALS_P("cpu MN1613", "MN1613", disassembler.cpu_P());
+    EQUALS_P("cpu MN1613", "MN1613", disassembler.config().cpu_P());
 
     EQUALS("cpu mn1613a", true,      disassembler.setCpu("mn1613a"));
-    EQUALS_P("cpu MN1613A", "MN1613A", disassembler.cpu_P());
+    EQUALS_P("cpu MN1613A", "MN1613A", disassembler.config().cpu_P());
 }
 
 static void test_transfer() {

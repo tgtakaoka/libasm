@@ -25,11 +25,11 @@ DisCdp1802 dis1802;
 Disassembler &disassembler(dis1802);
 
 static bool cdp1804() {
-    return strcmp_P("1804", disassembler.cpu_P()) == 0;
+    return strcmp_P("1804", disassembler.config().cpu_P()) == 0;
 }
 
 static bool cdp1804a() {
-    return strcmp_P("1804A", disassembler.cpu_P()) == 0;
+    return strcmp_P("1804A", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -43,22 +43,22 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 1802", true,   disassembler.setCpu("1802"));
-    EQUALS_P("cpu 1802", "1802", disassembler.cpu_P());
+    EQUALS_P("cpu 1802", "1802", disassembler.config().cpu_P());
 
     EQUALS("cpu 1804", true,   disassembler.setCpu("1804"));
-    EQUALS_P("cpu 1804", "1804", disassembler.cpu_P());
+    EQUALS_P("cpu 1804", "1804", disassembler.config().cpu_P());
 
     EQUALS("cpu 1804A", true,   disassembler.setCpu("1804a"));
-    EQUALS_P("cpu 1804A", "1804A", disassembler.cpu_P());
+    EQUALS_P("cpu 1804A", "1804A", disassembler.config().cpu_P());
 
     EQUALS("cpu CDP1802", true,   disassembler.setCpu("CDP1802"));
-    EQUALS_P("cpu CDP1802", "1802", disassembler.cpu_P());
+    EQUALS_P("cpu CDP1802", "1802", disassembler.config().cpu_P());
 
     EQUALS("cpu CDP1804", true,   disassembler.setCpu("CDP1804"));
-    EQUALS_P("cpu CDP1804", "1804", disassembler.cpu_P());
+    EQUALS_P("cpu CDP1804", "1804", disassembler.config().cpu_P());
 
     EQUALS("cpu CDP1804A", true,   disassembler.setCpu("CDP1804A"));
-    EQUALS_P("cpu CDP1804A", "1804A", disassembler.cpu_P());
+    EQUALS_P("cpu CDP1804A", "1804A", disassembler.config().cpu_P());
 }
 
 static void test_mem_ref() {

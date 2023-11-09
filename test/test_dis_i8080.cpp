@@ -25,15 +25,15 @@ DisI8080 dis8080;
 Disassembler &disassembler(dis8080);
 
 static bool is8080() {
-    return strcmp_P("8080", disassembler.cpu_P()) == 0;
+    return strcmp_P("8080", disassembler.config().cpu_P()) == 0;
 }
 
 static bool is8085() {
-    return strcmp_P("8085", disassembler.cpu_P()) == 0;
+    return strcmp_P("8085", disassembler.config().cpu_P()) == 0;
 }
 
 static bool v30emu() {
-    return strcasecmp_P("V30EMU", disassembler.cpu_P()) == 0;
+    return strcasecmp_P("V30EMU", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -47,19 +47,19 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8080", true,   disassembler.setCpu("8080"));
-    EQUALS_P("cpu 8080", "8080", disassembler.cpu_P());
+    EQUALS_P("cpu 8080", "8080", disassembler.config().cpu_P());
 
     EQUALS("cpu I8080", true,   disassembler.setCpu("I8080"));
-    EQUALS_P("cpu I8080", "8080", disassembler.cpu_P());
+    EQUALS_P("cpu I8080", "8080", disassembler.config().cpu_P());
 
     EQUALS("cpu 8085", true,   disassembler.setCpu("8085"));
-    EQUALS_P("cpu 8085", "8085", disassembler.cpu_P());
+    EQUALS_P("cpu 8085", "8085", disassembler.config().cpu_P());
 
     EQUALS("cpu I8085", true,   disassembler.setCpu("I8085"));
-    EQUALS_P("cpu I8085", "8085", disassembler.cpu_P());
+    EQUALS_P("cpu I8085", "8085", disassembler.config().cpu_P());
 
     EQUALS("cpu v30emu", true,   disassembler.setCpu("v30emu"));
-    EQUALS_P("cpu v30emu", "V30EMU", disassembler.cpu_P());
+    EQUALS_P("cpu v30emu", "V30EMU", disassembler.config().cpu_P());
 }
 
 static void test_move_inherent() {

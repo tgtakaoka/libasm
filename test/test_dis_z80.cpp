@@ -25,19 +25,19 @@ DisZ80 disz80;
 Disassembler &disassembler(disz80);
 
 static bool isZ80() {
-    return strcmp_P("Z80", disassembler.cpu_P()) == 0;
+    return strcmp_P("Z80", disassembler.config().cpu_P()) == 0;
 }
 
 static bool is8085() {
-    return strcmp_P("8085", disassembler.cpu_P()) == 0;
+    return strcmp_P("8085", disassembler.config().cpu_P()) == 0;
 }
 
 static bool is8080() {
-    return strcmp_P("8080", disassembler.cpu_P()) == 0;
+    return strcmp_P("8080", disassembler.config().cpu_P()) == 0;
 }
 
 static bool v30emu() {
-    return strcmp_P("V30EMU", disassembler.cpu_P()) == 0;
+    return strcmp_P("V30EMU", disassembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -51,37 +51,37 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8080", true, disassembler.setCpu("8080"));
-    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
 
     EQUALS("cpu 8085", true, disassembler.setCpu("8085"));
-    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
 
     EQUALS("cpu I8080", true, disassembler.setCpu("I8080"));
-    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
 
     EQUALS("cpu I8085", true, disassembler.setCpu("I8085"));
-    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
 
     EQUALS("cpu v30emu", true, disassembler.setCpu("v30emu"));
-    EQUALS_P("get cpu", "V30EMU", disassembler.cpu_P());
+    EQUALS_P("get cpu", "V30EMU", disassembler.config().cpu_P());
 
     EQUALS("cpu Z80", true, disassembler.setCpu("z80"));
-    EQUALS_P("get cpu", "Z80", disassembler.cpu_P());
+    EQUALS_P("get cpu", "Z80", disassembler.config().cpu_P());
 
     EQUALS("cpu 8080zilog", true, disassembler.setCpu("8080Z"));
-    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
 
     EQUALS("cpu 8085zilog", true, disassembler.setCpu("8085z"));
-    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
 
     EQUALS("cpu i8080zilog", true, disassembler.setCpu("i8080Zilog"));
-    EQUALS_P("get cpu", "8080", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8080", disassembler.config().cpu_P());
 
     EQUALS("cpu i8085zilog", true, disassembler.setCpu("i8085zilog"));
-    EQUALS_P("get cpu", "8085", disassembler.cpu_P());
+    EQUALS_P("get cpu", "8085", disassembler.config().cpu_P());
 
     EQUALS("cpu V30EMUzilog", true, disassembler.setCpu("V30EMUzilog"));
-    EQUALS_P("get cpu", "V30EMU", disassembler.cpu_P());
+    EQUALS_P("get cpu", "V30EMU", disassembler.config().cpu_P());
 }
 
 static void test_move_inherent() {

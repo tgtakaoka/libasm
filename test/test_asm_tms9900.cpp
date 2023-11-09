@@ -25,15 +25,15 @@ AsmTms9900 as9900;
 Assembler &assembler(as9900);
 
 static bool is99105() {
-    return strcmp_P("99105", assembler.cpu_P()) == 0;
+    return strcmp_P("99105", assembler.config().cpu_P()) == 0;
 }
 
 static bool is9995() {
-    return strcmp_P("9995", assembler.cpu_P()) == 0 || is99105();
+    return strcmp_P("9995", assembler.config().cpu_P()) == 0 || is99105();
 }
 
 static bool is9980() {
-    return strcmp_P("9980", assembler.cpu_P()) == 0;
+    return strcmp_P("9980", assembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -47,28 +47,28 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 9900", true,   assembler.setCpu("9900"));
-    EQUALS_P("cpu 9900", "9900", assembler.cpu_P());
+    EQUALS_P("cpu 9900", "9900", assembler.config().cpu_P());
 
     EQUALS("cpu 9980", true,   assembler.setCpu("9980"));
-    EQUALS_P("cpu 9980", "9980", assembler.cpu_P());
+    EQUALS_P("cpu 9980", "9980", assembler.config().cpu_P());
 
     EQUALS("cpu 9995", true,   assembler.setCpu("9995"));
-    EQUALS_P("cpu 9995", "9995", assembler.cpu_P());
+    EQUALS_P("cpu 9995", "9995", assembler.config().cpu_P());
 
     EQUALS("cpu 99105", true,    assembler.setCpu("99105"));
-    EQUALS_P("cpu 99105", "99105", assembler.cpu_P());
+    EQUALS_P("cpu 99105", "99105", assembler.config().cpu_P());
 
     EQUALS("cpu tms9900", true,   assembler.setCpu("tms9900"));
-    EQUALS_P("cpu tms9900", "9900", assembler.cpu_P());
+    EQUALS_P("cpu tms9900", "9900", assembler.config().cpu_P());
 
     EQUALS("cpu tms9980", true,   assembler.setCpu("tms9980"));
-    EQUALS_P("cpu tms9980", "9980", assembler.cpu_P());
+    EQUALS_P("cpu tms9980", "9980", assembler.config().cpu_P());
 
     EQUALS("cpu tms9995", true,   assembler.setCpu("tms9995"));
-    EQUALS_P("cpu tms9995", "9995", assembler.cpu_P());
+    EQUALS_P("cpu tms9995", "9995", assembler.config().cpu_P());
 
     EQUALS("cpu tms99105", true,    assembler.setCpu("tms99105"));
-    EQUALS_P("cpu tms99105", "99105", assembler.cpu_P());
+    EQUALS_P("cpu tms99105", "99105", assembler.config().cpu_P());
 }
 
 static void test_inh() {

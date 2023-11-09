@@ -41,8 +41,6 @@ struct Assembler : private ValueParser::Locator {
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 
-    const /*PROGMEM*/ char *listCpu_P() const { return config().listCpu_P(); }
-    const /*PROGMEM*/ char *cpu_P() const { return config().cpu_P(); }
     bool setCpu(const char *name);
     Error setCpu(StrScanner &scan);
 

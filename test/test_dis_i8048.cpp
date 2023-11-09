@@ -25,19 +25,19 @@ DisI8048 dis8048;
 Disassembler &disassembler(dis8048);
 
 static bool isCmos() {
-    const /* PROGMEM */ auto cpu_P = disassembler.cpu_P();
+    const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
     return strcmp_P("80C39", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
            strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
 static bool is8048() {
-    const /* PROGMEM */ auto cpu_P = disassembler.cpu_P();
+    const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
     return strcmp_P("8048", cpu_P) == 0 || strcmp_P("80C48", cpu_P) == 0 ||
            strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
 static bool isOki() {
-    const /* PROGMEM */ auto cpu_P = disassembler.cpu_P();
+    const /* PROGMEM */ auto cpu_P = disassembler.config().cpu_P();
     return strcmp_P("MSM80C39", cpu_P) == 0 || strcmp_P("MSM80C48", cpu_P) == 0;
 }
 
@@ -52,34 +52,34 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8039", true,   disassembler.setCpu("8039"));
-    EQUALS_P("cpu 8039", "8039", disassembler.cpu_P());
+    EQUALS_P("cpu 8039", "8039", disassembler.config().cpu_P());
 
     EQUALS("cpu I8039", true,   disassembler.setCpu("I8039"));
-    EQUALS_P("cpu I8039", "8039", disassembler.cpu_P());
+    EQUALS_P("cpu I8039", "8039", disassembler.config().cpu_P());
 
     EQUALS("cpu 8048", true,   disassembler.setCpu("8048"));
-    EQUALS_P("cpu 8048", "8048", disassembler.cpu_P());
+    EQUALS_P("cpu 8048", "8048", disassembler.config().cpu_P());
 
     EQUALS("cpu I8048", true,   disassembler.setCpu("I8048"));
-    EQUALS_P("cpu I8048", "8048", disassembler.cpu_P());
+    EQUALS_P("cpu I8048", "8048", disassembler.config().cpu_P());
 
     EQUALS("cpu 80c39", true,   disassembler.setCpu("80c39"));
-    EQUALS_P("cpu 80c39", "80C39", disassembler.cpu_P());
+    EQUALS_P("cpu 80c39", "80C39", disassembler.config().cpu_P());
 
     EQUALS("cpu I80c39", true,   disassembler.setCpu("I80c39"));
-    EQUALS_P("cpu I80c39", "80C39", disassembler.cpu_P());
+    EQUALS_P("cpu I80c39", "80C39", disassembler.config().cpu_P());
 
     EQUALS("cpu 80c48", true,   disassembler.setCpu("80c48"));
-    EQUALS_P("cpu 80c48", "80C48", disassembler.cpu_P());
+    EQUALS_P("cpu 80c48", "80C48", disassembler.config().cpu_P());
 
     EQUALS("cpu I80c48", true,   disassembler.setCpu("I80c48"));
-    EQUALS_P("cpu I80c48", "80C48", disassembler.cpu_P());
+    EQUALS_P("cpu I80c48", "80C48", disassembler.config().cpu_P());
 
     EQUALS("cpu msm80c39", true,   disassembler.setCpu("msm80c39"));
-    EQUALS_P("cpu msm80c39", "MSM80C39", disassembler.cpu_P());
+    EQUALS_P("cpu msm80c39", "MSM80C39", disassembler.config().cpu_P());
 
     EQUALS("cpu msm80c48", true,   disassembler.setCpu("msm80c48"));
-    EQUALS_P("cpu msm80c48", "MSM80C48", disassembler.cpu_P());
+    EQUALS_P("cpu msm80c48", "MSM80C48", disassembler.config().cpu_P());
 }
 
 static void test_accumlator() {

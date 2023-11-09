@@ -34,10 +34,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 68000", true,    assembler.setCpu("68000"));
-    EQUALS_P("cpu 68000", "68000", assembler.cpu_P());
+    EQUALS_P("cpu 68000", "68000", assembler.config().cpu_P());
 
     EQUALS("cpu mc68000", true,    assembler.setCpu("mc68000"));
-    EQUALS_P("cpu mc68000", "68000", assembler.cpu_P());
+    EQUALS_P("cpu mc68000", "68000", assembler.config().cpu_P());
 }
 
 static void test_data_move() {

@@ -25,7 +25,7 @@ AsmTms32010 asm32010;
 Assembler &assembler(asm32010);
 
 static bool is32010() {
-    return strcmp_P("32010", assembler.cpu_P()) == 0;
+    return strcmp_P("32010", assembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -39,10 +39,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 32010", true,   assembler.setCpu("32010"));
-    EQUALS_P("cpu 32010", "32010", assembler.cpu_P());
+    EQUALS_P("cpu 32010", "32010", assembler.config().cpu_P());
 
     EQUALS("cpu TMS32010", true,   assembler.setCpu("TMS32010"));
-    EQUALS_P("cpu TMS32010", "32010", assembler.cpu_P());
+    EQUALS_P("cpu TMS32010", "32010", assembler.config().cpu_P());
 }
 
 static void test_accumrator() {

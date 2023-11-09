@@ -35,7 +35,7 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu tlcs90", true, assembler.setCpu("tlcs90"));
-    EQUALS_P("get cpu", "TLCS90", assembler.cpu_P());
+    EQUALS_P("get cpu", "TLCS90", assembler.config().cpu_P());
 }
 
 static void test_8bit_transfer() {

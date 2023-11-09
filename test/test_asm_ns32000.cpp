@@ -35,10 +35,10 @@ static void tear_down() {
 // clang-format off
  void test_cpu() {
     EQUALS("cpu NS32032", true,    assembler.setCpu("NS32032"));
-    EQUALS_P("cpu NS32032", "32032", assembler.cpu_P());
+    EQUALS_P("cpu NS32032", "32032", assembler.config().cpu_P());
 
     EQUALS("cpu 32032", true,    assembler.setCpu("32032"));
-    EQUALS_P("cpu 32032", "32032", assembler.cpu_P());
+    EQUALS_P("cpu 32032", "32032", assembler.config().cpu_P());
 
     TEST("fpu ns32081");
     TEST("fpu none");

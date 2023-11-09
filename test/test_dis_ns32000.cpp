@@ -38,10 +38,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu ns32032", true,    disassembler.setCpu("NS32032"));
-    EQUALS_P("cpu ns32032", "32032", disassembler.cpu_P());
+    EQUALS_P("cpu ns32032", "32032", disassembler.config().cpu_P());
 
     EQUALS("cpu 32032", true,    disassembler.setCpu("32032"));
-    EQUALS_P("cpu 32032", "32032", disassembler.cpu_P());
+    EQUALS_P("cpu 32032", "32032", disassembler.config().cpu_P());
 }
 
 static void test_format_0() {

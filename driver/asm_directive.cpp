@@ -43,11 +43,11 @@ bool AsmDirective::setCpu(const char *cpu) {
 }
 
 const /*PROGMEM*/ char *AsmDirective::cpu_P() const {
-    return _assembler.cpu_P();
+    return _assembler.config().cpu_P();
 }
 
 const /*PROGMEM*/ char *AsmDirective::listCpu_P() const {
-    return _assembler.listCpu_P();
+    return _assembler.config().listCpu_P();
 }
 
 void AsmDirective::reset(CpuSwitcher &switcher) {
@@ -264,7 +264,7 @@ bool AsmDirective::is8080(const /* PROGMEM */ char *cpu_P) {
 }
 
 Error AsmDirective::switchIntelZilog(StrScanner &scan, Context &context) {
-    const /* PROGMEM */ char *cpu_P = _assembler.cpu_P();
+    const /* PROGMEM */ char *cpu_P = _assembler.config().cpu_P();
     if (!is8080(cpu_P))
         return setError(UNKNOWN_DIRECTIVE);
     char buffer[20];

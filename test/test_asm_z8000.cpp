@@ -25,7 +25,7 @@ AsmZ8000 asm8000;
 Assembler &assembler(asm8000);
 
 static bool z8001() {
-    return strcmp_P("Z8001", assembler.cpu_P()) == 0;
+    return strcmp_P("Z8001", assembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -40,10 +40,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8001", true,    assembler.setCpu("Z8001"));
-    EQUALS_P("cpu 8001", "Z8001", assembler.cpu_P());
+    EQUALS_P("cpu 8001", "Z8001", assembler.config().cpu_P());
 
     EQUALS("cpu Z8002", true,    assembler.setCpu("Z8002"));
-    EQUALS_P("cpu Z8002", "Z8002", assembler.cpu_P());
+    EQUALS_P("cpu Z8002", "Z8002", assembler.config().cpu_P());
 }
 
 static void test_load_and_exchange() {

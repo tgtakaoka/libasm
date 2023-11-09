@@ -25,11 +25,11 @@ AsmI8080 as8080;
 Assembler &assembler(as8080);
 
 static bool is8085() {
-    return strcmp_P("8085", assembler.cpu_P()) == 0;
+    return strcmp_P("8085", assembler.config().cpu_P()) == 0;
 }
 
 static bool v30emu() {
-    return strcasecmp_P("V30EMU", assembler.cpu_P()) == 0;
+    return strcasecmp_P("V30EMU", assembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -43,19 +43,19 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8080", true,   assembler.setCpu("8080"));
-    EQUALS_P("cpu 8080", "8080", assembler.cpu_P());
+    EQUALS_P("cpu 8080", "8080", assembler.config().cpu_P());
 
     EQUALS("cpu i8080", true,   assembler.setCpu("i8080"));
-    EQUALS_P("cpu i8080", "8080", assembler.cpu_P());
+    EQUALS_P("cpu i8080", "8080", assembler.config().cpu_P());
 
     EQUALS("cpu 8085", true,   assembler.setCpu("8085"));
-    EQUALS_P("cpu 8085", "8085", assembler.cpu_P());
+    EQUALS_P("cpu 8085", "8085", assembler.config().cpu_P());
 
     EQUALS("cpu i8085", true,   assembler.setCpu("i8085"));
-    EQUALS_P("cpu i8085", "8085", assembler.cpu_P());
+    EQUALS_P("cpu i8085", "8085", assembler.config().cpu_P());
 
     EQUALS("cpu v30emu", true,   assembler.setCpu("v30emu"));
-    EQUALS_P("cpu v30emu", "V30EMU", assembler.cpu_P());
+    EQUALS_P("cpu v30emu", "V30EMU", assembler.config().cpu_P());
 }
 
 static void test_move_inherent() {

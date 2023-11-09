@@ -26,23 +26,23 @@ DisMc6800 dis6800;
 Disassembler &disassembler(dis6800);
 
 static bool mb8861() {
-    return strcasecmp_P("MB8861", disassembler.cpu_P()) == 0;
+    return strcasecmp_P("MB8861", disassembler.config().cpu_P()) == 0;
 }
 
 static bool m6800() {
-    return strcmp_P("6800", disassembler.cpu_P()) == 0 || mb8861();
+    return strcmp_P("6800", disassembler.config().cpu_P()) == 0 || mb8861();
 }
 
 static bool hd6301() {
-    return strcmp_P("6301", disassembler.cpu_P()) == 0;
+    return strcmp_P("6301", disassembler.config().cpu_P()) == 0;
 }
 
 static bool m68hc11() {
-    return strcmp_P("6811", disassembler.cpu_P()) == 0;
+    return strcmp_P("6811", disassembler.config().cpu_P()) == 0;
 }
 
 static bool m6801() {
-    return strcmp_P("6801", disassembler.cpu_P()) == 0 || hd6301() || m68hc11();
+    return strcmp_P("6801", disassembler.config().cpu_P()) == 0 || hd6301() || m68hc11();
 }
 
 static void set_up() {
@@ -57,34 +57,34 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 6800", true, disassembler.setCpu("6800"));
-    EQUALS_P("cpu 6800", "6800", disassembler.cpu_P());
+    EQUALS_P("cpu 6800", "6800", disassembler.config().cpu_P());
 
     EQUALS("cpu 6801", true, disassembler.setCpu("6801"));
-    EQUALS_P("cpu 6801", "6801", disassembler.cpu_P());
+    EQUALS_P("cpu 6801", "6801", disassembler.config().cpu_P());
 
     EQUALS("cpu 6301", true, disassembler.setCpu("6301"));
-    EQUALS_P("cpu 6301", "6301", disassembler.cpu_P());
+    EQUALS_P("cpu 6301", "6301", disassembler.config().cpu_P());
 
     EQUALS("cpu 6811", true, disassembler.setCpu("6811"));
-    EQUALS_P("cpu 6811", "6811", disassembler.cpu_P());
+    EQUALS_P("cpu 6811", "6811", disassembler.config().cpu_P());
 
     EQUALS("cpu MC6800", true, disassembler.setCpu("MC6800"));
-    EQUALS_P("cpu MC6800", "6800", disassembler.cpu_P());
+    EQUALS_P("cpu MC6800", "6800", disassembler.config().cpu_P());
 
     EQUALS("cpu mb8861", true, disassembler.setCpu("mb8861"));
-    EQUALS_P("cpu MB8861", "MB8861", disassembler.cpu_P());
+    EQUALS_P("cpu MB8861", "MB8861", disassembler.config().cpu_P());
 
     EQUALS("cpu MC6801", true, disassembler.setCpu("MC6801"));
-    EQUALS_P("cpu MC6801", "6801", disassembler.cpu_P());
+    EQUALS_P("cpu MC6801", "6801", disassembler.config().cpu_P());
 
     EQUALS("cpu HD6301", true, disassembler.setCpu("HD6301"));
-    EQUALS_P("cpu HD6301", "6301", disassembler.cpu_P());
+    EQUALS_P("cpu HD6301", "6301", disassembler.config().cpu_P());
 
     EQUALS("cpu MC6811", true, disassembler.setCpu("MC6811"));
-    EQUALS_P("cpu MC6811", "6811", disassembler.cpu_P());
+    EQUALS_P("cpu MC6811", "6811", disassembler.config().cpu_P());
 
     EQUALS("cpu MC68HC11", true, disassembler.setCpu("MC68HC11"));
-    EQUALS_P("cpu MC68HC11", "6811", disassembler.cpu_P());
+    EQUALS_P("cpu MC68HC11", "6811", disassembler.config().cpu_P());
 }
 
 static void test_inherent() {

@@ -36,10 +36,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8070", true,   disassembler.setCpu("8070"));
-    EQUALS_P("cpu 8070", "8070", disassembler.cpu_P());
+    EQUALS_P("cpu 8070", "8070", disassembler.config().cpu_P());
 
     EQUALS("cpu INS8070", true,   disassembler.setCpu("INS8070"));
-    EQUALS_P("cpu INS8070", "8070", disassembler.cpu_P());
+    EQUALS_P("cpu INS8070", "8070", disassembler.config().cpu_P());
 }
 
 static void test_implied() {

@@ -35,10 +35,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 8070", true,   assembler.setCpu("8070"));
-    EQUALS_P("cpu 8070", "8070", assembler.cpu_P());
+    EQUALS_P("cpu 8070", "8070", assembler.config().cpu_P());
 
     EQUALS("cpu INS8070", true,   assembler.setCpu("INS8070"));
-    EQUALS_P("cpu INS8070", "8070", assembler.cpu_P());
+    EQUALS_P("cpu INS8070", "8070", assembler.config().cpu_P());
 }
 
 static void test_implied() {

@@ -25,19 +25,19 @@ AsmMos6502 as6502;
 Assembler &assembler(as6502);
 
 static bool m6502() {
-    return strcmp_P("6502", assembler.cpu_P()) == 0;
+    return strcmp_P("6502", assembler.config().cpu_P()) == 0;
 }
 
 static bool r65c02() {
-    return strcmp_P("65C02", assembler.cpu_P()) == 0;
+    return strcmp_P("65C02", assembler.config().cpu_P()) == 0;
 }
 
 static bool w65c02s() {
-    return strcmp_P("W65C02S", assembler.cpu_P()) == 0;
+    return strcmp_P("W65C02S", assembler.config().cpu_P()) == 0;
 }
 
 static bool w65c816() {
-    return strcmp_P("65816", assembler.cpu_P()) == 0;
+    return strcmp_P("65816", assembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -51,40 +51,40 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 6502", true, assembler.setCpu("6502"));
-    EQUALS_P("cpu 6502", "6502", assembler.cpu_P());
+    EQUALS_P("cpu 6502", "6502", assembler.config().cpu_P());
 
     EQUALS("cpu 65sc02", true, assembler.setCpu("65sc02"));
-    EQUALS_P("cpu 65sc02", "65SC02", assembler.cpu_P());
+    EQUALS_P("cpu 65sc02", "65SC02", assembler.config().cpu_P());
 
     EQUALS("cpu 65c02", true, assembler.setCpu("65c02"));
-    EQUALS_P("cpu 65c02", "65C02", assembler.cpu_P());
+    EQUALS_P("cpu 65c02", "65C02", assembler.config().cpu_P());
 
     EQUALS("cpu mos6502", true, assembler.setCpu("mos6502"));
-    EQUALS_P("cpu mos6502", "6502", assembler.cpu_P());
+    EQUALS_P("cpu mos6502", "6502", assembler.config().cpu_P());
 
     EQUALS("cpu g65sc02", true, assembler.setCpu("g65sc02"));
-    EQUALS_P("cpu g65sc02", "65SC02", assembler.cpu_P());
+    EQUALS_P("cpu g65sc02", "65SC02", assembler.config().cpu_P());
 
     EQUALS("cpu r65c02", true, assembler.setCpu("r65c02"));
-    EQUALS_P("cpu r65c02", "65C02", assembler.cpu_P());
+    EQUALS_P("cpu r65c02", "65C02", assembler.config().cpu_P());
 
     EQUALS("cpu w65c02", true, assembler.setCpu("w65c02"));
-    EQUALS_P("cpu w65c02", "W65C02S", assembler.cpu_P());
+    EQUALS_P("cpu w65c02", "W65C02S", assembler.config().cpu_P());
 
     EQUALS("cpu w65c02s", true, assembler.setCpu("w65c02s"));
-    EQUALS_P("cpu w65c02s", "W65C02S", assembler.cpu_P());
+    EQUALS_P("cpu w65c02s", "W65C02S", assembler.config().cpu_P());
 
     EQUALS("cpu 65816", true, assembler.setCpu("65816"));
-    EQUALS_P("cpu 65816", "65816", assembler.cpu_P());
+    EQUALS_P("cpu 65816", "65816", assembler.config().cpu_P());
 
     EQUALS("cpu w65816", true, assembler.setCpu("w65816"));
-    EQUALS_P("cpu w65816", "65816", assembler.cpu_P());
+    EQUALS_P("cpu w65816", "65816", assembler.config().cpu_P());
 
     EQUALS("cpu w65c816", true, assembler.setCpu("w65c816"));
-    EQUALS_P("cpu w65c816", "65816", assembler.cpu_P());
+    EQUALS_P("cpu w65c816", "65816", assembler.config().cpu_P());
 
     EQUALS("cpu w65c816s", true, assembler.setCpu("w65c816s"));
-    EQUALS_P("cpu w65c816s", "65816", assembler.cpu_P());
+    EQUALS_P("cpu w65c816s", "65816", assembler.config().cpu_P());
 }
 
 static void test_impl() {

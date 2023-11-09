@@ -38,10 +38,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 3850", true,   assembler.setCpu("3850"));
-    EQUALS_P("cpu 3850", "3850", assembler.cpu_P());
+    EQUALS_P("cpu 3850", "3850", assembler.config().cpu_P());
 
     EQUALS("cpu F3850", true,   assembler.setCpu("F3850"));
-    EQUALS_P("cpu F3850", "3850", assembler.cpu_P());
+    EQUALS_P("cpu F3850", "3850", assembler.config().cpu_P());
 }
 
 void test_accumlator() {

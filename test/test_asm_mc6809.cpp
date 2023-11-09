@@ -25,7 +25,7 @@ AsmMc6809 as6809;
 Assembler &assembler(as6809);
 
 static bool is6309() {
-    return strcmp_P("6309", assembler.cpu_P()) == 0;
+    return strcmp_P("6309", assembler.config().cpu_P()) == 0;
 }
 
 static void set_up() {
@@ -39,16 +39,16 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu 6809", true,   assembler.setCpu("6809"));
-    EQUALS_P("cpu 6809", "6809", assembler.cpu_P());
+    EQUALS_P("cpu 6809", "6809", assembler.config().cpu_P());
 
     EQUALS("cpu 6309", true,   assembler.setCpu("6309"));
-    EQUALS_P("cpu 6309", "6309", assembler.cpu_P());
+    EQUALS_P("cpu 6309", "6309", assembler.config().cpu_P());
 
     EQUALS("cpu mc6809", true,   assembler.setCpu("mc6809"));
-    EQUALS_P("cpu mc6809", "6809", assembler.cpu_P());
+    EQUALS_P("cpu mc6809", "6809", assembler.config().cpu_P());
 
     EQUALS("cpu hd6309", true,   assembler.setCpu("hd6309"));
-    EQUALS_P("cpu hd6309", "6309", assembler.cpu_P());
+    EQUALS_P("cpu hd6309", "6309", assembler.config().cpu_P());
 }
 
 static void test_inherent() {

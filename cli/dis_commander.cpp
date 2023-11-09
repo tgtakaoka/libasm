@@ -180,7 +180,7 @@ int DisCommander::usage() {
         for (const auto *dis : _driver) {
             for (const auto *opt = dis->options().head(); opt; opt = opt->next()) {
                 fprintf(stderr, "  %-16s: %s  (%s, %s)\n", opt->name_P(), opt->description_P(),
-                        Options::nameof(opt->spec()), dis->cpu_P());
+                        Options::nameof(opt->spec()), dis->config().cpu_P());
             }
         }
     }

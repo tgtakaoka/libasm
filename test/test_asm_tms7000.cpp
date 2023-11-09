@@ -38,10 +38,10 @@ static void tear_down() {
 // clang-format off
 void test_cpu() {
     EQUALS("cpu TMS7000", true,   assembler.setCpu("TMS7000"));
-    EQUALS_P("cpu TMS7000", "TMS7000", assembler.cpu_P());
+    EQUALS_P("cpu TMS7000", "TMS7000", assembler.config().cpu_P());
 
     EQUALS("cpu TMS70C00", true,   assembler.setCpu("TMS70C00"));
-    EQUALS_P("cpu TMS70C00", "TMS7000", assembler.cpu_P());
+    EQUALS_P("cpu TMS70C00", "TMS7000", assembler.config().cpu_P());
 }
 
 void test_implied() {
