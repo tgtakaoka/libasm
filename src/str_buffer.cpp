@@ -152,7 +152,7 @@ StrBuffer &StrBuffer::comma() {
 
 StrBuffer &StrBuffer::reverse(char *start) {
     if (start >= _out) {
-        setError(OVERWRAP_PAGE);
+        setError(OVERWRAP_SEGMENT);
     } else {
         for (auto *end = _out - 1; start < end;) {
             const auto c = *start;

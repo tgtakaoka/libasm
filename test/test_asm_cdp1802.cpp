@@ -471,7 +471,7 @@ static void test_branch() {
     }
 
     ATEST(0x10FD, "BR 1031H", 0x30, 0x31);
-    AERRT(0x10FD, "BR 1131H", OVERWRAP_PAGE, "1131H", 0x30, 0x31);
+    AERRT(0x10FD, "BR 1131H", OVERWRAP_SEGMENT, "1131H", 0x30, 0x31);
     ATEST(0x10FE, "BR 1131H", 0x30, 0x31);
     ATEST(0x10FF, "BR 1131H", 0x30, 0x31);
 
@@ -511,7 +511,7 @@ static void test_branch() {
     assembler.setOption("smart-branch", "enable");
     ATEST(0x1300, "BR  1234H",  0xC0, 0x12, 0x34);
     ATEST(0x1200, "NBR 1234H",  0x38, 0x34);
-    AERRT(0x1300, "NBR 1234H",  OVERWRAP_PAGE, "1234H", 0x38, 0x34);
+    AERRT(0x1300, "NBR 1234H",  OVERWRAP_SEGMENT, "1234H", 0x38, 0x34);
     ATEST(0x12F0, "BZ  9ABCH",  0xC2, 0x9A, 0xBC);
     ATEST(0x1280, "BNZ 5678H",  0xCA, 0x56, 0x78);
     ATEST(0x1200, "BDF 0DEF0H", 0xC3, 0xDE, 0xF0);

@@ -380,7 +380,7 @@ void test_reverse() {
     EQ("whole", "Yx123cba", out.str());
 
     out.reverse(buffer + 8);
-    EQ("overwrap", OVERWRAP_PAGE, out.getError());
+    EQ("overwrap", OVERWRAP_SEGMENT, out.getError());
     EQ("error", "Yx123cba", out.str());
 }
 

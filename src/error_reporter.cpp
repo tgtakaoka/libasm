@@ -48,8 +48,8 @@ const /*PROGMEM*/ char *ErrorReporter::errorText_P(Error error) {
         return PSTR("Illegal segment override");
     case BUFFER_OVERFLOW:
         return PSTR("Buffer overflow");
-    case OVERWRAP_PAGE:
-        return PSTR("Overwrap page boundary");
+    case OVERWRAP_SEGMENT:
+        return PSTR("Overwrap segment/bank/page boundary");
     case INVALID_INSTRUCTION:
         return PSTR("Invalid instruction combination");
     case SUBOPTIMAL_INSTRUCTION:

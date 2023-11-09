@@ -137,7 +137,7 @@ void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) co
     const auto target = op.getError() ? insn.address() : op.val16;
     insn.setErrorIf(op, checkAddr(target));
     if (page(target) != page(insn.address()))
-        insn.setErrorIf(op, OVERWRAP_PAGE);
+        insn.setErrorIf(op, OVERWRAP_SEGMENT);
     auto opr = offset(target);
     if (op.indir)
         opr |= 0x8000;
@@ -176,7 +176,7 @@ void AsmScn2650::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = inpage(insn.address(), 2);
     const auto target = op.getError() ? base : op.val16;
     if (page(target) != page(base))
-        insn.setErrorIf(op, OVERWRAP_PAGE);
+        insn.setErrorIf(op, OVERWRAP_SEGMENT);
     // Sign extends 13-bit number.
     const auto delta = signExtend(offset(target) - offset(base), 13);
     if (overflowInt(delta, 7))

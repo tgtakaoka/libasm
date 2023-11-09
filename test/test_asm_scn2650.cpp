@@ -690,17 +690,17 @@ static void test_error() {
     ERRT("STRZ,R0", OPERAND_NOT_ALLOWED, "R0");
     ERRT("ANDZ,R0", OPERAND_NOT_ALLOWED, "R0");
 
-    ATEST(0x1000, "BCTR,EQ  H'1041'",                              0x18, 0x3F);
-    ATEST(0x1000, "BCTR,EQ *H'0FC2'",                              0x18, 0xC0);
-    AERRT(0x1000, "BCTR,EQ  H'1042'", OPERAND_TOO_FAR,  "H'1042'", 0x18, 0x40);
-    AERRT(0x1000, "BCTR,EQ *H'0FC1'", OPERAND_TOO_FAR, "*H'0FC1'", 0x18, 0xBF);
-    ATEST(0x3FF0, "BCTR,EQ  H'2031'",                              0x18, 0x3F);
-    ATEST(0x2000, "BCTR,EQ *H'3FC2'",                              0x18, 0xC0);
-    AERRT(0x3FF0, "BCTR,EQ  H'2032'", OPERAND_TOO_FAR,  "H'2032'", 0x18, 0x40);
-    AERRT(0x2000, "BCTR,EQ *H'3FC1'", OPERAND_TOO_FAR, "*H'3FC1'", 0x18, 0xBF);
-    AERRT(0x3FF0, "BCTR,EQ  H'4000'", OVERWRAP_PAGE,    "H'4000'", 0x18, 0x0E);
-    AERRT(0x2000, "BCTR,EQ *H'1FF0'", OVERWRAP_PAGE,   "*H'1FF0'", 0x18, 0xEE);
-    AERRT(0x1000, "BCTA,EQ  H'8000'", OVERFLOW_RANGE,   "H'8000'", 0x1C, 0x80, 0x00);
+    ATEST(0x1000, "BCTR,EQ  H'1041'",                               0x18, 0x3F);
+    ATEST(0x1000, "BCTR,EQ *H'0FC2'",                               0x18, 0xC0);
+    AERRT(0x1000, "BCTR,EQ  H'1042'", OPERAND_TOO_FAR,   "H'1042'", 0x18, 0x40);
+    AERRT(0x1000, "BCTR,EQ *H'0FC1'", OPERAND_TOO_FAR,  "*H'0FC1'", 0x18, 0xBF);
+    ATEST(0x3FF0, "BCTR,EQ  H'2031'",                               0x18, 0x3F);
+    ATEST(0x2000, "BCTR,EQ *H'3FC2'",                               0x18, 0xC0);
+    AERRT(0x3FF0, "BCTR,EQ  H'2032'", OPERAND_TOO_FAR,   "H'2032'", 0x18, 0x40);
+    AERRT(0x2000, "BCTR,EQ *H'3FC1'", OPERAND_TOO_FAR,  "*H'3FC1'", 0x18, 0xBF);
+    AERRT(0x3FF0, "BCTR,EQ  H'4000'", OVERWRAP_SEGMENT,  "H'4000'", 0x18, 0x0E);
+    AERRT(0x2000, "BCTR,EQ *H'1FF0'", OVERWRAP_SEGMENT, "*H'1FF0'", 0x18, 0xEE);
+    AERRT(0x1000, "BCTA,EQ  H'8000'", OVERFLOW_RANGE,    "H'8000'", 0x1C, 0x80, 0x00);
 
     ATEST(0x3000, "ZBRR H'003F'",                             0x9B, 0x3F);
     AERRT(0x3000, "ZBRR H'0040'", OPERAND_TOO_FAR, "H'0040'", 0x9B, 0x40);
@@ -712,10 +712,10 @@ static void test_error() {
     AERRT(0x3000, "ZBSR H'1FBF'", OPERAND_TOO_FAR, "H'1FBF'", 0xBB, 0x3F);
     ATEST(0x3000, "ZBSR H'1FC0'",                             0xBB, 0x40);
 
-    AERRT(0x3000, "LODA,R0 H'1000',R1,+", OVERWRAP_PAGE,  "H'1000',R1,+", 0x0D, 0x30, 0x00);
-    AERRT(0x3000, "LODA,R0 H'4000',R1,-", OVERWRAP_PAGE,  "H'4000',R1,-", 0x0D, 0x40, 0x00);
-    AERRT(0x3000, "LODA,R0 H'8000',R1,+", OVERFLOW_RANGE, "H'8000',R1,+", 0x0D, 0x20, 0x00);
-    AERRT(0x3000, "LODA,R0 H'FFFF',R1,-", OVERFLOW_RANGE, "H'FFFF',R1,-", 0x0D, 0x5F, 0xFF);
+    AERRT(0x3000, "LODA,R0 H'1000',R1,+", OVERWRAP_SEGMENT, "H'1000',R1,+", 0x0D, 0x30, 0x00);
+    AERRT(0x3000, "LODA,R0 H'4000',R1,-", OVERWRAP_SEGMENT, "H'4000',R1,-", 0x0D, 0x40, 0x00);
+    AERRT(0x3000, "LODA,R0 H'8000',R1,+", OVERFLOW_RANGE,   "H'8000',R1,+", 0x0D, 0x20, 0x00);
+    AERRT(0x3000, "LODA,R0 H'FFFF',R1,-", OVERFLOW_RANGE,   "H'FFFF',R1,-", 0x0D, 0x5F, 0xFF);
 
     AERRT(0x3000, "BXA  H'1000',R0", OPERAND_NOT_ALLOWED, "H'1000',R0");
     AERRT(0x3000, "BXA  H'1000',R1", OPERAND_NOT_ALLOWED, "H'1000',R1");

@@ -129,7 +129,7 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         // Program space is paged by 4kB.
         if (page(target) != page(base))
-            insn.setErrorIf(op, OVERWRAP_PAGE);
+            insn.setErrorIf(op, OVERWRAP_SEGMENT);
         const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
         delta = signExtend(diff, 12);
@@ -262,7 +262,7 @@ Error AsmIns8060::encodeImpl(StrScanner &scan, Insn &_insn) const {
         break;
     }
     if (insn.length() > 0 && page(insn.address()) != page(insn.address() + insn.length() - 1))
-        insn.setErrorIf(insn.op, OVERWRAP_PAGE);
+        insn.setErrorIf(insn.op, OVERWRAP_SEGMENT);
     return _insn.setError(insn);
 }
 

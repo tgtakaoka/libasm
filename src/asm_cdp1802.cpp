@@ -159,7 +159,7 @@ void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) con
     const auto target = op.getError() ? base : op.val16;
     if (mode == M_PAGE || (mode == M_SHRT && !_smartBranch)) {
         if (page(target) != page(base))
-            insn.setErrorIf(op, OVERWRAP_PAGE);
+            insn.setErrorIf(op, OVERWRAP_SEGMENT);
     intra_page:
         insn.emitInsn();
         insn.emitByte(target);

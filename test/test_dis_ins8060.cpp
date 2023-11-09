@@ -220,7 +220,7 @@ static void test_page_boundary() {
     ATEST(0x1FFC, "JMP", "X'1000", 0x90, 0x02);
 
     ATEST(0x1FFE, "LDI", "0", 0xC4, 0x00);
-    AERRT(0x1FFF, "LDI", "0", OVERWRAP_PAGE, "", 0xC4, 0x00);
+    AERRT(0x1FFF, "LDI", "0", OVERWRAP_SEGMENT, "", 0xC4, 0x00);
 }
 
 static void test_formatter() {
