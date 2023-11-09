@@ -56,6 +56,16 @@ enum Endian : uint8_t {
     ENDIAN_LITTLE,
 };
 
+enum Size : uint8_t {
+    SZ_NONE = 0,
+    SZ_BYTE = 1,  // 1 byte
+    SZ_WORD = 2,  // 2 byte
+    SZ_QUAD = 3,  // 4 byte
+    SZ_OCTA = 4,  // 8 byte
+    SZ_DATA = 5,  // operand dependent
+    SZ_ADDR = 6,  // address
+};
+
 /** Interface for CPU configuration  */
 struct ConfigBase {
     virtual AddressWidth addressWidth() const = 0;
