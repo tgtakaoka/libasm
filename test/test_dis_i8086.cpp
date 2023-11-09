@@ -1569,10 +1569,17 @@ static void test_string_manipulation() {
 }
 
 static void test_control_transfer() {
-    disassembler.setOption("relative", "on");
+    disassembler.setOption("relative", "off");
 
-    TEST("CALL", "$", 0xE8, 0xFD, 0xFF);
+    ATEST(0x01000, "CALL", "01082H",                             0xE8, 0x7F, 0x00);
+    ATEST(0x01000, "CALL", "09002H",                             0xE8, 0xFF, 0x7F);
+    AERRT(0x0F000, "CALL", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
+    ATEST(0x01000, "CALL", "00F81H",                             0xE8, 0x7E, 0xFF);
+    ATEST(0x09000, "CALL", "01003H",                             0xE8, 0x00, 0x80);
+    AERRT(0x11000, "CALL", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE8, 0x00, 0x80);
 
+    TEST("CALL", "AX",            0xFF, 0320);
+    TEST("CALL", "SI",            0xFF, 0326);
     TEST("CALL", "[SI]",          0xFF, 0024);
     TEST("CALL", "[1234H]",       0xFF, 0026, 0x34, 0x12);
     TEST("CALL", "[DI-52]",       0xFF, 0125, 0xCC);
@@ -1591,10 +1598,19 @@ static void test_control_transfer() {
     TEST("CALLF", "[BX+DI+52]",    0xFF, 0131, 0x34);
     TEST("CALLF", "[BP+SI+1234H]", 0xFF, 0232, 0x34, 0x12);
 
-    TEST("JMP", "$+1234H", 0xE9, 0x31, 0x12);
+    ATEST(0x01000, "JMP", "01081H",                             0xEB, 0x7F);
+    AERRT(0x0FFF0, "JMP", "10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
+    ATEST(0x01000, "JMP", "01082H",                             0xE9, 0x7F, 0x00);
+    ATEST(0x01000, "JMP", "09002H",                             0xE9, 0xFF, 0x7F);
+    AERRT(0x0F000, "JMP", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
+    ATEST(0x01000, "JMP", "00F82H",                             0xEB, 0x80);
+    AERRT(0x10010, "JMP", "0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
+    ATEST(0x01000, "JMP", "00F81H",                             0xE9, 0x7E, 0xFF);
+    ATEST(0x09000, "JMP", "01003H",                             0xE9, 0x00, 0x80);
+    AERRT(0x11000, "JMP", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
 
-    TEST("JMP", "$",       0xEB, 0xFE);
-
+    TEST("JMP", "AX",            0xFF, 0340);
+    TEST("JMP", "SI",            0xFF, 0346);
     TEST("JMP", "[SI]",          0xFF, 0044);
     TEST("JMP", "[1234H]",       0xFF, 0046, 0x34, 0x12);
     TEST("JMP", "[DI-52]",       0xFF, 0145, 0xCC);
@@ -1618,22 +1634,27 @@ static void test_control_transfer() {
     TEST("RETF", "",   0xCB);
     TEST("RETF", "16", 0xCA, 0x10, 0x00);
 
-    TEST("JE",  "$", 0x74, 0xFE);
-    TEST("JL",  "$", 0x7C, 0xFE);
-    TEST("JLE", "$", 0x7E, 0xFE);
-    TEST("JB",  "$", 0x72, 0xFE);
-    TEST("JBE", "$", 0x76, 0xFE);
-    TEST("JPE", "$", 0x7A, 0xFE);
+    disassembler.setOption("relative", "on");
     TEST("JO",  "$", 0x70, 0xFE);
-    TEST("JS",  "$", 0x78, 0xFE);
-    TEST("JNE", "$", 0x75, 0xFE);
-    TEST("JGE", "$", 0x7D, 0xFE);
-    TEST("JG",  "$", 0x7F, 0xFE);
-    TEST("JAE", "$", 0x73, 0xFE);
-    TEST("JA",  "$", 0x77, 0xFE);
-    TEST("JPO", "$", 0x7B, 0xFE);
     TEST("JNO", "$", 0x71, 0xFE);
+    TEST("JB",  "$", 0x72, 0xFE);
+    TEST("JAE", "$", 0x73, 0xFE);
+    TEST("JE",  "$", 0x74, 0xFE);
+    TEST("JNE", "$", 0x75, 0xFE);
+    TEST("JBE", "$", 0x76, 0xFE);
+    TEST("JA",  "$", 0x77, 0xFE);
+    TEST("JS",  "$", 0x78, 0xFE);
     TEST("JNS", "$", 0x79, 0xFE);
+    TEST("JPE", "$", 0x7A, 0xFE);
+    TEST("JPO", "$", 0x7B, 0xFE);
+    TEST("JL",  "$", 0x7C, 0xFE);
+    TEST("JGE", "$", 0x7D, 0xFE);
+    TEST("JLE", "$", 0x7E, 0xFE);
+    TEST("JG",  "$", 0x7F, 0xFE);
+    ATEST(0x01000, "JS", "$+129",                               0x78, 0x7F);
+    AERRT(0x0FFC0, "JS", "$+129", OVERWRAP_SEGMENT,    "$+129", 0x78, 0x7F);
+    ATEST(0x01000, "JS", "$-126",                               0x78, 0x80);
+    AERRT(0x10040, "JS", "$-126", OVERWRAP_SEGMENT,    "$-126", 0x78, 0x80);
 
     TEST("LOOP",   "$", 0xE2, 0xFE);
     TEST("LOOPE",  "$", 0xE1, 0xFE);
