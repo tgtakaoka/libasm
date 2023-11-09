@@ -26,9 +26,9 @@ namespace libasm {
 namespace ins8070 {
 
 enum OprSize : uint8_t {
-    SZ_NONE = 0,  // unknown
-    SZ_BYTE = 1,
-    SZ_WORD = 2,
+    SZ_NONE = Size::SZ_NONE,
+    SZ_BYTE = Size::SZ_BYTE,
+    SZ_WORD = Size::SZ_WORD,
 };
 
 enum AddrMode : uint8_t {
