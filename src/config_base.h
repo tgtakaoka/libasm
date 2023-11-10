@@ -78,11 +78,15 @@ struct ConfigBase {
     virtual const /*PROGMEM*/ char *cpu_P() const = 0;
 
     /**
-     * Check |addr| is in |width| address space. When |width| is zero, |addressWidth()| will be
-     * used.  This also check whether |addr| is word aligned when configuration is OPCODE_16BIT and
-     * ADDRESS_BYTE when |align| is true.
+     * Check |addr| is in the range of |addressWidth()|.  This also check whether |addr| is word
+     * aligned when |align| is true.
      */
-    Error checkAddr(uint32_t addr, uint8_t width = 0, bool align = true) const;
+    Error checkAddr(uint32_t addr, bool align = false) const;
+    /**
+     * In addition to check by |checkAddr(uint32_t, bool)|, also check whether |addr| and |base| are
+     * only different in the most least |width| bits.
+     */
+    Error checkAddr(uint32_t addr, uint32_t base, uint8_t width, bool align = false) const;
 
     static int32_t signExtend(uint32_t u32, uint8_t bitw);
     static bool overflowInt8(int32_t s32);

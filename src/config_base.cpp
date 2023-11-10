@@ -61,15 +61,22 @@ int32_t ConfigBase::signExtend(uint32_t u32, uint8_t width) {
     return static_cast<int32_t>(((u32 + sign) & mask) - sign);
 }
 
-Error ConfigBase::checkAddr(uint32_t addr, uint8_t width, bool align) const {
-    if (width == 0)
-        width = static_cast<uint8_t>(addressWidth());
+Error ConfigBase::checkAddr(uint32_t addr, bool align) const {
+    const auto width = static_cast<uint8_t>(addressWidth());
     const uint32_t max = 1UL << width;
     if (addr & ~(max - 1))
         return OVERFLOW_RANGE;
-    if (align && opCodeWidth() == OPCODE_16BIT && addressUnit() == ADDRESS_BYTE && addr % 2)
+    if (align && addr % 2)
         return OPERAND_NOT_ALIGNED;
     return OK;
+}
+
+Error ConfigBase::checkAddr(uint32_t addr, uint32_t base, uint8_t width, bool align) const {
+    const auto error = checkAddr(addr, align);
+    if (error)
+        return error;
+    const uint32_t mask = ~((1UL << width) - 1);
+    return (addr & mask) == (base & mask) ? OK : OVERWRAP_SEGMENT;
 }
 
 }  // namespace libasm

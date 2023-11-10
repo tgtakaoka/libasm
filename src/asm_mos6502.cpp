@@ -140,8 +140,8 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
     const auto len = insn.length();
     const auto base = insn.address() + (len ? len : 1) + 1;
     const auto target = op.getError() ? base : op.val32;
-    if (bankModel() && bank(insn.address()) != bank(target))
-        insn.setErrorIf(op, OVERWRAP_SEGMENT);
+    if (bankModel())
+        insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     const auto smartBranch = _smartBranch && maySmartBranch(insn, cpuType());
     if (mode == M_REL && !smartBranch) {
     short_branch:
@@ -155,8 +155,8 @@ void AsmMos6502::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op)
     long_branch:
         const auto base = insn.address() + 3;
         const auto target = op.getError() ? base : op.val32;
-        if (bankModel() && bank(insn.address()) != bank(target))
-            insn.setErrorIf(op, OVERWRAP_SEGMENT);
+        if (bankModel())
+            insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
         const auto delta = branchDelta(base, target, insn, op);
         insn.emitOperand16(delta);
         return;
@@ -192,7 +192,7 @@ void AsmMos6502::encodeOperand(AsmInsn &insn, AddrMode modeAndFlags, const Opera
         emitImmediate(insn, op, _longIndex);
         break;
     case M_ABS:
-        if (checkAddr(op.val32, ADDRESS_16BIT))
+        if (overflowUint16(op.val32))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         emitImmediate(insn, op, true);
         break;
@@ -203,7 +203,7 @@ void AsmMos6502::encodeOperand(AsmInsn &insn, AddrMode modeAndFlags, const Opera
         insn.emitOperand8(op.val32 >> 16);
         break;
     case M_DPG:
-        if (checkAddr(op.val32, 8))
+        if (overflowUint8(op.val32))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         /* Fall-through */
     case M_IM8:

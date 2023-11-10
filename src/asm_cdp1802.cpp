@@ -100,10 +100,6 @@ Error AsmCdp1802::setUseReg(bool enable) {
 
 namespace {
 
-Config::uintptr_t page(Config::uintptr_t addr) {
-    return addr & ~0xFF;
-}
-
 const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
@@ -158,8 +154,7 @@ void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) con
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
     if (mode == M_PAGE || (mode == M_SHRT && !_smartBranch)) {
-        if (page(target) != page(base))
-            insn.setErrorIf(op, OVERWRAP_SEGMENT);
+        insn.setErrorIf(op, checkAddr(target, base, 8));
     intra_page:
         insn.emitInsn();
         insn.emitByte(target);
@@ -171,7 +166,7 @@ void AsmCdp1802::encodePage(AsmInsn &insn, AddrMode mode, const Operand &op) con
         insn.emitUint16(op.val16);
         return;
     }
-    if (op.getError() || page(target) != page(base)) {
+    if (op.getError() || checkAddr(target, base, 8)) {
         interBranch(insn);
         goto inter_page;
     }

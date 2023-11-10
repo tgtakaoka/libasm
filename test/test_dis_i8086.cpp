@@ -1574,9 +1574,11 @@ static void test_control_transfer() {
     ATEST(0x01000, "CALL", "01082H",                             0xE8, 0x7F, 0x00);
     ATEST(0x01000, "CALL", "09002H",                             0xE8, 0xFF, 0x7F);
     AERRT(0x0F000, "CALL", "17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
+    AERRT(0xFF000, "CALL", "07002H", OVERFLOW_RANGE,   "07002H", 0xE8, 0xFF, 0x7F);
     ATEST(0x01000, "CALL", "00F81H",                             0xE8, 0x7E, 0xFF);
     ATEST(0x09000, "CALL", "01003H",                             0xE8, 0x00, 0x80);
     AERRT(0x11000, "CALL", "09003H", OVERWRAP_SEGMENT, "09003H", 0xE8, 0x00, 0x80);
+    AERRT(0x01000, "CALL", "0F9003H", OVERFLOW_RANGE, "0F9003H", 0xE8, 0x00, 0x80);
 
     TEST("CALL", "AX",            0xFF, 0320);
     TEST("CALL", "SI",            0xFF, 0326);

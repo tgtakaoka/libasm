@@ -772,12 +772,14 @@ static void test_rel() {
     }
 
     if (w65c816()) {
-        AERRT(0x0000, "BCS $FF82", OPERAND_TOO_FAR,  "$FF82", 0xB0, 0x80);
-        AERRT(0xFFFE, "BNE $0000", OPERAND_TOO_FAR,  "$0000", 0xD0, 0x00);
-        AERRT(0xFFF0, "BEQ $0071", OPERAND_TOO_FAR,  "$0071", 0xF0, 0x7F);
-        AERRT(0x0000, "BCS *-126", OVERWRAP_SEGMENT, "*-126", 0xB0, 0x80);
-        AERRT(0xFFFE, "BNE *+2",   OVERWRAP_SEGMENT, "*+2",   0xD0, 0x00);
-        AERRT(0xFFF0, "BEQ *+129", OVERWRAP_SEGMENT, "*+129", 0xF0, 0x7F);
+        AERRT(0x000000, "BCS $FF82", OPERAND_TOO_FAR,  "$FF82", 0xB0, 0x80);
+        AERRT(0x00FFFE, "BNE $0000", OPERAND_TOO_FAR,  "$0000", 0xD0, 0x00);
+        AERRT(0x00FFF0, "BEQ $0071", OPERAND_TOO_FAR,  "$0071", 0xF0, 0x7F);
+        AERRT(0x000000, "BCS *-126", OVERFLOW_RANGE,   "*-126", 0xB0, 0x80);
+        AERRT(0x010000, "BCS *-126", OVERWRAP_SEGMENT, "*-126", 0xB0, 0x80);
+        AERRT(0x00FFFE, "BNE *+2",   OVERWRAP_SEGMENT, "*+2",   0xD0, 0x00);
+        AERRT(0x00FFF0, "BEQ *+129", OVERWRAP_SEGMENT, "*+129", 0xF0, 0x7F);
+        AERRT(0xFFFFF0, "BEQ *+129", OVERFLOW_RANGE,   "*+129", 0xF0, 0x7F);
     } else {
         AERRT(0x0000, "BCS $FF82", OVERFLOW_RANGE, "$FF82", 0xB0, 0x80);
         AERRT(0xFFFE, "BNE $0000", OVERFLOW_RANGE, "$0000", 0xD0, 0x00);
@@ -843,18 +845,20 @@ static void test_rel() {
     AERRT(0x1000, "BNE $0F81", OPERAND_TOO_FAR, "$0F81", 0xD0, 0x7F);
     AERRT(0x1000, "BEQ $0F81", OPERAND_TOO_FAR, "$0F81", 0xF0, 0x7F);
     if (w65c816()) {
-        AERRT(0x0000, "BCS *-126", OVERWRAP_SEGMENT, "*-126", 0xB0, 0x80);
-        AERRT(0xFFFE, "BNE *+2",   OVERWRAP_SEGMENT, "*+2",   0xD0, 0x00);
-        ATEST(0x1000, "BRA $1081", 0x80, 0x7F);
-        ATEST(0x1000, "BRA $1082", 0x82, 0x7F, 0x00);
-        ATEST(0x1000, "BRA $0F82", 0x80, 0x80);
-        ATEST(0x1000, "BRA $0F81", 0x82, 0x7E, 0xFF);
-        ATEST(0x1000, "BRL $1081", 0x80, 0x7F);
-        ATEST(0x1000, "BRL $1082", 0x82, 0x7F, 0x00);
-        ATEST(0x1000, "BRL $0F82", 0x80, 0x80);
-        ATEST(0x1000, "BRL $0F81", 0x82, 0x7E, 0xFF);
-        AERRT(0x0000, "BRA *-126", OVERWRAP_SEGMENT, "*-126", 0x80, 0x80);
-        AERRT(0xFFFE, "BRA *+2",   OVERWRAP_SEGMENT, "*+2",   0x80, 0x00);
+        AERRT(0x000000, "BCS *-126", OVERFLOW_RANGE,   "*-126", 0xB0, 0x80);
+        AERRT(0x00FFFE, "BNE *+2",   OVERWRAP_SEGMENT, "*+2",   0xD0, 0x00);
+        ATEST(0x001000, "BRA $1081", 0x80, 0x7F);
+        ATEST(0x001000, "BRA $1082", 0x82, 0x7F, 0x00);
+        ATEST(0x001000, "BRA $0F82", 0x80, 0x80);
+        ATEST(0x001000, "BRA $0F81", 0x82, 0x7E, 0xFF);
+        ATEST(0x001000, "BRL $1081", 0x80, 0x7F);
+        ATEST(0x001000, "BRL $1082", 0x82, 0x7F, 0x00);
+        ATEST(0x001000, "BRL $0F82", 0x80, 0x80);
+        ATEST(0x001000, "BRL $0F81", 0x82, 0x7E, 0xFF);
+        AERRT(0x000000, "BRA *-126", OVERFLOW_RANGE,   "*-126", 0x80, 0x80);
+        AERRT(0x010000, "BRA *-126", OVERWRAP_SEGMENT, "*-126", 0x80, 0x80);
+        AERRT(0x00FFFE, "BRA *+2",   OVERWRAP_SEGMENT, "*+2",   0x80, 0x00);
+        AERRT(0xFFFFFE, "BRA *+2",   OVERFLOW_RANGE,   "*+2",   0x80, 0x00);
         AERRT(0x129000, "BRL $131003", OVERWRAP_SEGMENT, "$131003", 0x82, 0x00, 0x80);
         AERRT(0x121000, "BRL $118002", OVERWRAP_SEGMENT, "$118002", 0x82, 0xFF, 0x6F);
     } else if (!m6502()) {

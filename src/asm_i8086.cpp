@@ -304,8 +304,7 @@ constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
 void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val32;
-    if (segment(insn.address()) != segment(target))
-        insn.setErrorIf(op, OVERWRAP_SEGMENT);
+    insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     const auto delta = branchDelta(base, target, insn, op);
     const auto smartBranch = maySmartBranch(insn.opCode());
     if (mode == M_REL8 && !smartBranch) {
@@ -319,8 +318,7 @@ void AsmI8086::emitRelative(AsmInsn &insn, const Operand &op, AddrMode mode) con
     long_branch:
         const auto base = insn.address() + 3;
         const auto target = op.getError() ? base : op.val32;
-        if (segment(insn.address()) != segment(target))
-            insn.setErrorIf(op, OVERWRAP_SEGMENT);
+        insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
         const auto delta = branchDelta(base, target, insn, op);
         if (overflowInt16(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);

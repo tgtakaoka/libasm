@@ -78,10 +78,8 @@ void DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const {
 void DisZ80::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (error)
-        insn.setError(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), 8);
 }
 

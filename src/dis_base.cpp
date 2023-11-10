@@ -225,12 +225,6 @@ StrBuffer &Disassembler::outRelAddr(
     return outHex(caseOut, val, deltaBits, true).over(out);
 }
 
-uint32_t Disassembler::branchTarget(uint32_t base, int32_t delta, Error &error, bool align) const {
-    const auto target = base + delta;
-    error = config().checkAddr(target, 0, align);
-    return target;
-}
-
 }  // namespace libasm
 
 // Local Variables:

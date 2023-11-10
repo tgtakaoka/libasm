@@ -69,11 +69,8 @@ void DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) c
     }
     out.letter('@');
     const auto addr = insn.readUint16();
-    if (reg == 0) {
-        const auto error = checkAddr(addr, 0, !insn.byteOp());
-        if (error)
-            insn.setErrorIf(out, error);
-    }
+    if (reg == 0)
+        insn.setErrorIf(out, checkAddr(addr, !insn.byteOp()));
     outHex(out, addr, 16);
     if (reg != 0)
         outRegName(out.letter('('), reg).letter(')');
@@ -82,10 +79,8 @@ void DisTms9900::decodeModeReg(DisInsn &insn, StrBuffer &out, uint8_t modeReg) c
 void DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.opCode() & 0xff) * 2;
     const auto base = insn.address() + 2;
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), 9);
 }
 

@@ -102,22 +102,12 @@ RegName DisI8086::decodeRegister(const DisInsn &insn, AddrMode mode, OprPos pos)
     }
 }
 
-namespace {
-constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
-    return addr & ~0xFFFF;
-}
-}  // namespace
-
 void DisI8086::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto delta = (mode == M_REL8) ? static_cast<int8_t>(insn.readByte())
                                         : static_cast<int16_t>(insn.readUint16());
     const auto base = insn.address() + insn.length();
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (segment(insn.address()) != segment(target))
-        insn.setErrorIf(out, OVERWRAP_SEGMENT);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target, insn.address(), 16));
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
 }
 

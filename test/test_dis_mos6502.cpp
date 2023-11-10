@@ -777,8 +777,10 @@ static void test_rel() {
         ATEST(0x001000, "BCC", "$000F82",            0x90, 0x80);
         ANMEM(0x001000, "BCC", "$001001", "$001001", 0x90);
         AERRT(0x120000, "BCS", "$11FF82", OVERWRAP_SEGMENT, "$11FF82", 0xB0, 0x80);
+        AERRT(0x000000, "BCS", "$FFFF82", OVERFLOW_RANGE,   "$FFFF82", 0xB0, 0x80);
         AERRT(0x12FFFE, "BNE", "$130000", OVERWRAP_SEGMENT, "$130000", 0xD0, 0x00);
         AERRT(0x12FFF0, "BEQ", "$130071", OVERWRAP_SEGMENT, "$130071", 0xF0, 0x7F);
+        AERRT(0xFFFFF0, "BEQ", "$000071", OVERFLOW_RANGE,   "$000071", 0xF0, 0x7F);
     } else {
         // MOS6502
         ATEST(0x1000, "BPL", "$1002", 0x10, 0x00);

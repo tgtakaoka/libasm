@@ -296,8 +296,10 @@ static void test_load_and_exchange() {
     if (z8001()) {
         ATEST(0x002000, "LDAR", "RR8, %00A003",                              0x3408, 0x7FFF);
         AERRT(0x00A000, "LDAR", "RR8, %012003", OVERWRAP_SEGMENT, "%012003", 0x3408, 0x7FFF);
+        AERRT(0x7FA000, "LDAR", "RR8, %002003", OVERFLOW_RANGE,   "%002003", 0x3408, 0x7FFF);
         ATEST(0x00A000, "LDAR", "RR8, %002004",                              0x3408, 0x8000);
         AERRT(0x012000, "LDAR", "RR8, %00A004", OVERWRAP_SEGMENT, "%00A004", 0x3408, 0x8000);
+        AERRT(0x002000, "LDAR", "RR8, %7FA004", OVERFLOW_RANGE,   "%7FA004", 0x3408, 0x8000);
         ANMEM(0x002000, "LDAR", "RR8, %002002",                   "%002002", 0x3408);
     } else {
         ATEST(0x2000, "LDAR", "R8, %A003",                          0x3408, 0x7FFF);

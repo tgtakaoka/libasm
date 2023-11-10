@@ -70,7 +70,7 @@ Error Assembler::setSmartBranch(bool enable) {
 }
 
 Error Assembler::setCurrentLocation(uint32_t location, bool align) {
-    return config().checkAddr(_currentLocation = location, config().addressWidth(), align);
+    return config().checkAddr(_currentLocation = location, align);
 }
 
 Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {

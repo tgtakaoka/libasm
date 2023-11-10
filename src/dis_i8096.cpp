@@ -64,27 +64,23 @@ StrBuffer &DisI8096::outRegister(StrBuffer &out, uint8_t regno, bool indir) cons
 }
 
 StrBuffer &DisI8096::outRelative(StrBuffer &out, DisInsn &insn, const Operand &op) const {
-    Error error;
     if (op.mode == M_REL8) {
         // Jx: 2 bytes, DJNZ/JBx: 3 bytes
         const auto base = insn.address() + ((insn.opCode() & 0xF0) == 0xD0 ? 2 : 3);
-        const auto target = branchTarget(base, op.int8(), error);
-        if (error)
-            insn.setErrorIf(out, error);
+        const auto target = base + op.int8();
+        insn.setErrorIf(out, checkAddr(target));
         return outRelAddr(out, target, insn.address(), 8);
     } else if (op.mode == M_REL11) {
         const auto base = insn.address() + 2;
         // Sign exetends 11-bit number.
         const auto offset = signExtend(op.val16, 11);
-        const auto target = branchTarget(base, offset, error);
-        if (error)
-            insn.setErrorIf(out, error);
+        const auto target = base + offset;
+        insn.setErrorIf(out, checkAddr(target));
         return outRelAddr(out, target, insn.address(), 11);
     } else {  // M_REL16:
         const auto base = insn.address() + 3;
-        const auto target = branchTarget(base, op.int16(), error);
-        if (error)
-            insn.setErrorIf(out, error);
+        const auto target = base + op.int16();
+        insn.setErrorIf(out, checkAddr(target));
         return outRelAddr(out, target, insn.address(), 16);
     }
 }

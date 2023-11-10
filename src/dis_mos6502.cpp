@@ -152,12 +152,12 @@ void DisMos6502::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
     const auto delta = (mode == M_LREL) ? static_cast<int16_t>(insn.readUint16())
                                         : static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (bankModel() && bank(insn.address()) != bank(target))
-        insn.setErrorIf(out, OVERWRAP_SEGMENT);
-    if (error)
-        insn.setError(out, error);
+    const auto target = base + delta;
+    if (bankModel()) {
+        insn.setErrorIf(out, checkAddr(target, insn.address(), 16));
+    } else {
+        insn.setErrorIf(out, checkAddr(target));
+    }
     outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
 }
 

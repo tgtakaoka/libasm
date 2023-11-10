@@ -79,10 +79,8 @@ void DisIns8070::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, bo
     if (mode == M_PCR) {
         const auto fetch = insn.execute() ? 1 : 0;
         const auto base = insn.address() + 1 + fetch;
-        Error error;
-        const auto target = branchTarget(base, delta, error);
-        if (error)
-            insn.setErrorIf(out, error);
+        const auto target = base + delta;
+        insn.setErrorIf(out, checkAddr(target));
         outRelAddr(out, target, insn.address(), 8);
         if (fetch == 0)
             outRegName(out.letter(','), REG_PC);

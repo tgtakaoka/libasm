@@ -87,10 +87,8 @@ void DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) const {
         }
         if (spec.base == REG_PCR) {
             const auto base = insn.address() + insn.length();
-            Error error;
-            const auto target = branchTarget(base, offset, error);
-            if (error)
-                insn.setErrorIf(out, error);
+            const auto target = base + offset;
+            insn.setErrorIf(out, checkAddr(target));
             if (spec.size == 16 && !overflowInt8(offset))
                 out.letter('>');
             outRelAddr(out, target, insn.address(), spec.size);
@@ -138,10 +136,8 @@ void DisMc6809::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) con
     const auto delta = (mode == M_REL) ? static_cast<int8_t>(insn.readByte())
                                        : static_cast<int16_t>(insn.readUint16());
     const auto base = insn.address() + insn.length();
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), mode == M_REL ? 8 : 16);
 }
 

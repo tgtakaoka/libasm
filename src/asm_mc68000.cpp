@@ -163,6 +163,7 @@ void AsmMc68000::emitDisplacement(AsmInsn &insn, const Operand &op, Config::ptrd
 void AsmMc68000::emitRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val32;
+    insn.setErrorIf(op, checkAddr(target, true));
     const auto disp = branchDelta(base, target, insn, op);
     if (mode == M_REL8) {
         if (!overflowInt8(disp)) {

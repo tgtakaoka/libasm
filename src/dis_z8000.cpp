@@ -213,9 +213,7 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
             shortDirect = false;
         }
         const auto addr = (static_cast<Config::uintptr_t>(seg) << 16) | disp;
-        const auto error = checkAddr(addr, 0, align);
-        if (error)
-            insn.setErrorIf(out, error);
+        insn.setErrorIf(out, checkAddr(addr, align));
         if (shortDirect)
             out.letter('|');
         if (_segmentedAddr) {
@@ -227,9 +225,7 @@ void DisZ8000::decodeDirectAddress(DisInsn &insn, StrBuffer &out, AddrMode mode)
         if (shortDirect)
             out.letter('|');
     } else {
-        const auto error = checkAddr(val16, 0, align);
-        if (error)
-            insn.setErrorIf(out, error);
+        insn.setErrorIf(out, checkAddr(val16, align));
         outAbsAddr(out, val16);
     }
 }
@@ -258,13 +254,9 @@ void DisZ8000::decodeRelativeAddressing(DisInsn &insn, StrBuffer &out, AddrMode 
         delta = -static_cast<int16_t>(ra7) * 2;
     }
     const auto base = insn.address() + insn.length();
+    const auto target = base + delta;
     const auto align = insn.size() == SZ_WORD || insn.size() == SZ_QUAD;
-    Error error;
-    const auto target = branchTarget(base, delta, error, align);
-    if (segmentedModel() && segment(insn.address()) != segment(target))
-        insn.setError(out, OVERWRAP_SEGMENT);
-    if (error)
-        insn.setErrorIf(out, error);
+    insn.setErrorIf(out, checkAddr(target, insn.address(), 16, align));
     outRelAddr(out, target, insn.address(), mode == M_RA ? 16 : 13);
 }
 

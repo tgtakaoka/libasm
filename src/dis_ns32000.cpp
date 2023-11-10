@@ -257,10 +257,8 @@ void DisNs32000::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     Displacement disp;
     if (readDisplacement(insn, disp))
         insn.setErrorIf(out, disp);
-    Error error;
-    const auto target = branchTarget(insn.address(), disp.val32, error);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = insn.address() + disp.val32;
+    insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), disp.bits);
 }
 

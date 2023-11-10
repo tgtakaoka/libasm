@@ -694,12 +694,12 @@ static void test_error() {
     ATEST(0x1000, "BCTR,EQ *H'0FC2'",                               0x18, 0xC0);
     AERRT(0x1000, "BCTR,EQ  H'1042'", OPERAND_TOO_FAR,   "H'1042'", 0x18, 0x40);
     AERRT(0x1000, "BCTR,EQ *H'0FC1'", OPERAND_TOO_FAR,  "*H'0FC1'", 0x18, 0xBF);
-    ATEST(0x3FF0, "BCTR,EQ  H'2031'",                               0x18, 0x3F);
-    ATEST(0x2000, "BCTR,EQ *H'3FC2'",                               0x18, 0xC0);
+    AERRT(0x3FF0, "BCTR,EQ  H'2031'", OPERAND_TOO_FAR,   "H'2031'", 0x18, 0x3F);
+    AERRT(0x2000, "BCTR,EQ *H'3FC2'", OPERAND_TOO_FAR,  "*H'3FC2'", 0x18, 0xC0);
     AERRT(0x3FF0, "BCTR,EQ  H'2032'", OPERAND_TOO_FAR,   "H'2032'", 0x18, 0x40);
     AERRT(0x2000, "BCTR,EQ *H'3FC1'", OPERAND_TOO_FAR,  "*H'3FC1'", 0x18, 0xBF);
-    AERRT(0x3FF0, "BCTR,EQ  H'4000'", OVERWRAP_SEGMENT,  "H'4000'", 0x18, 0x0E);
-    AERRT(0x2000, "BCTR,EQ *H'1FF0'", OVERWRAP_SEGMENT, "*H'1FF0'", 0x18, 0xEE);
+    AERRT(0x3FF0, "BCTR,EQ  H'4000'", OVERWRAP_SEGMENT,  "H'4000'", 0x18, 0x0E); // OK?
+    AERRT(0x2000, "BCTR,EQ *H'1FF0'", OVERWRAP_SEGMENT, "*H'1FF0'", 0x18, 0xEE); // OK?
     AERRT(0x1000, "BCTA,EQ  H'8000'", OVERFLOW_RANGE,    "H'8000'", 0x1C, 0x80, 0x00);
 
     ATEST(0x3000, "ZBRR H'003F'",                             0x9B, 0x3F);

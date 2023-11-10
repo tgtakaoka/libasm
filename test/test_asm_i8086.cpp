@@ -1725,10 +1725,12 @@ static void test_string_manipulation() {
 static void test_control_transfer() {
     ATEST(0x01000, "CALL 01082H",                             0xE8, 0x7F, 0x00);
     ATEST(0x01000, "CALL 09002H",                             0xE8, 0xFF, 0x7F);
+    AERRT(0xFF000, "CALL $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE8, 0xFF, 0x7F);
     AERRT(0x0F000, "CALL 17002H", OVERWRAP_SEGMENT, "17002H", 0xE8, 0xFF, 0x7F);
     AERRT(0x01000, "CALL 09003H", OPERAND_TOO_FAR,  "09003H", 0xE8, 0x00, 0x80);
     ATEST(0x01000, "CALL 00F81H",                             0xE8, 0x7E, 0xFF);
     ATEST(0x09000, "CALL 01003H",                             0xE8, 0x00, 0x80);
+    AERRT(0x01000, "CALL $-7FFDH", OVERFLOW_RANGE, "$-7FFDH", 0xE8, 0x00, 0x80);
     AERRT(0x11000, "CALL 09003H", OVERWRAP_SEGMENT, "09003H", 0xE8, 0x00, 0x80);
     AERRT(0x09000, "CALL 01002H", OPERAND_TOO_FAR,  "01002H", 0xE8, 0xFF, 0x7F);
 
@@ -1754,15 +1756,19 @@ static void test_control_transfer() {
 
     ATEST(0x01000, "JMP 01081H",                             0xEB, 0x7F);
     AERRT(0x0FFF0, "JMP 10071H", OVERWRAP_SEGMENT, "10071H", 0xEB, 0x7F);
+    AERRT(0xFFFF0, "JMP $+81H",  OVERFLOW_RANGE,    "$+81H", 0xEB, 0x7F);
     ATEST(0x01000, "JMP 01082H",                             0xE9, 0x7F, 0x00);
     ATEST(0x01000, "JMP 09002H",                             0xE9, 0xFF, 0x7F);
     AERRT(0x0F000, "JMP 17002H", OVERWRAP_SEGMENT, "17002H", 0xE9, 0xFF, 0x7F);
+    AERRT(0xFF000, "JMP $+8002H", OVERFLOW_RANGE, "$+8002H", 0xE9, 0xFF, 0x7F);
     AERRT(0x01000, "JMP 09003H", OPERAND_TOO_FAR,  "09003H", 0xE9, 0x00, 0x80);
     ATEST(0x01000, "JMP 00F82H",                             0xEB, 0x80);
     AERRT(0x10010, "JMP 0FF92H", OVERWRAP_SEGMENT, "0FF92H", 0xEB, 0x80);
+    AERRT(0x00010, "JMP $-7EH",  OVERFLOW_RANGE,    "$-7EH", 0xEB, 0x80);
     ATEST(0x01000, "JMP 00F81H",                             0xE9, 0x7E, 0xFF);
     ATEST(0x09000, "JMP 01003H",                             0xE9, 0x00, 0x80);
     AERRT(0x11000, "JMP 09003H", OVERWRAP_SEGMENT, "09003H", 0xE9, 0x00, 0x80);
+    AERRT(0x01000, "JMP $-7FFDH", OVERFLOW_RANGE, "$-7FFDH", 0xE9, 0x00, 0x80);
     AERRT(0x09000, "JMP 01002H", OPERAND_TOO_FAR,  "01002H", 0xE9, 0xFF, 0x7F);
 
     TEST("JMP AX",            0xFF, 0340);
@@ -1825,9 +1831,11 @@ static void test_control_transfer() {
     TEST("JNLE $", 0x7F, 0xFE);
     ATEST(0x01000, "JS $+129",                               0x78, 0x7F);
     AERRT(0x0FFC0, "JS $+129", OVERWRAP_SEGMENT,    "$+129", 0x78, 0x7F);
+    AERRT(0xFFFC0, "JS $+129", OVERFLOW_RANGE,      "$+129", 0x78, 0x7F);
     AERRT(0x01000, "JS $+130", OPERAND_TOO_FAR,     "$+130", 0x78, 0x80);
     ATEST(0x01000, "JS $-126",                               0x78, 0x80);
     AERRT(0x10040, "JS $-126", OVERWRAP_SEGMENT,    "$-126", 0x78, 0x80);
+    AERRT(0x00040, "JS $-126", OVERFLOW_RANGE,      "$-126", 0x78, 0x80);
     AERRT(0x01000, "JS $-127", OPERAND_TOO_FAR,     "$-127", 0x78, 0x7F);
 
     TEST("LOOP   $", 0xE2, 0xFE);

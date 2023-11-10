@@ -103,10 +103,8 @@ void DisMc6805::decodeIndexed(DisInsn &insn, StrBuffer &out, AddrMode mode) cons
 void DisMc6805::decodeRelative(DisInsn &insn, StrBuffer &out) const {
     const auto delta = static_cast<int8_t>(insn.readByte());
     const auto base = insn.address() + insn.length();
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), 8);
 }
 

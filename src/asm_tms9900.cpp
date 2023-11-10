@@ -58,7 +58,7 @@ AsmTms9900::AsmTms9900(const ValueParser::Plugins &plugins)
 void AsmTms9900::encodeRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = insn.address() + 2;
     const auto target = op.getError() ? base : op.val16;
-    insn.setErrorIf(op, checkAddr(target));
+    insn.setErrorIf(op, checkAddr(target, true));
     const auto delta = branchDelta(base, target, insn, op) / 2;
     if (overflowInt8(delta))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
@@ -87,11 +87,8 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
         break;
     case M_SYBL:
         opc = (2 << 4);
-        if (op.getError() != UNDEFINED_SYMBOL) {
-            const auto error = checkAddr(op.val16, 0, !insn.byteOp());
-            if (error)
-                insn.setErrorIf(op, error);
-        }
+        if (op.getError() != UNDEFINED_SYMBOL)
+            insn.setErrorIf(op, checkAddr(op.val16, !insn.byteOp()));
         insn.emitOperand16(op.val16);
         break;
     default:  // M_INDX

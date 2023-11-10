@@ -128,8 +128,7 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
         const uint8_t fetch = (insn.addrMode() == M_REL8) ? 1 : 0;
         const Config::uintptr_t target = op.getError() ? base : op.val16;
         // Program space is paged by 4kB.
-        if (page(target) != page(base))
-            insn.setErrorIf(op, OVERWRAP_SEGMENT);
+        insn.setErrorIf(op, checkAddr(target, insn.address(), 12));
         const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
         delta = signExtend(diff, 12);

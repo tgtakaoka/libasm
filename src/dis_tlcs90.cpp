@@ -84,10 +84,8 @@ void DisTlcs90::decodeRelative(
     const auto delta =
             (mode == M_REL8) ? static_cast<int8_t>(op.val16) : static_cast<int16_t>(op.val16);
     const auto base = insn.address() + 2;
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target));
     outRelAddr(out, target, insn.address(), mode == M_REL8 ? 8 : 16);
 }
 

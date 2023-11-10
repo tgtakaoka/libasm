@@ -132,10 +132,8 @@ void DisMc68000::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) co
         out.letter('.').letter('W').over(insn.nameBuffer());
         save.over(out);
     }
-    Error error;
-    const auto target = branchTarget(base, delta, error);
-    if (error)
-        insn.setErrorIf(out, error);
+    const auto target = base + delta;
+    insn.setErrorIf(out, checkAddr(target, true));
     outRelAddr(out, target, insn.address(), rel8 ? 8 : 16);
 }
 

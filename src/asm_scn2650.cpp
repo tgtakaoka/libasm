@@ -135,9 +135,7 @@ void AsmScn2650::emitAbsolute(AsmInsn &insn, const Operand &op, AddrMode mode) c
 
 void AsmScn2650::emitIndexed(AsmInsn &insn, const Operand &op, AddrMode mode) const {
     const auto target = op.getError() ? insn.address() : op.val16;
-    insn.setErrorIf(op, checkAddr(target));
-    if (page(target) != page(insn.address()))
-        insn.setErrorIf(op, OVERWRAP_SEGMENT);
+    insn.setErrorIf(op, checkAddr(target, insn.address(), 13));
     auto opr = offset(target);
     if (op.indir)
         opr |= 0x8000;
@@ -175,10 +173,8 @@ void AsmScn2650::emitZeroPage(AsmInsn &insn, const Operand &op) const {
 void AsmScn2650::emitRelative(AsmInsn &insn, const Operand &op) const {
     const auto base = inpage(insn.address(), 2);
     const auto target = op.getError() ? base : op.val16;
-    if (page(target) != page(base))
-        insn.setErrorIf(op, OVERWRAP_SEGMENT);
-    // Sign extends 13-bit number.
-    const auto delta = signExtend(offset(target) - offset(base), 13);
+    insn.setErrorIf(op, checkAddr(target, insn.address(), 13));
+    const auto delta = branchDelta(base, target, insn, op);
     if (overflowInt(delta, 7))
         insn.setErrorIf(op, OPERAND_TOO_FAR);
     uint8_t opr = delta & 0x7F;

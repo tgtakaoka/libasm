@@ -181,9 +181,7 @@ void AsmZ8000::emitImmediate(AsmInsn &insn, OprPos pos, AddrMode mode, const Ope
 
 void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto align = mode == M_DA && (insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
-    const auto error = checkAddr(op.val32, 0, align);
-    if (error)
-        insn.setErrorIf(op, error);
+    insn.setErrorIf(op, checkAddr(op.val32, align));
     if (segmentedModel()) {
         const uint16_t seg = (op.val32 >> 8) & 0x7F00;
         const uint16_t disp = op.val32;
@@ -203,27 +201,20 @@ void AsmZ8000::emitDirectAddress(AsmInsn &insn, AddrMode mode, const Operand &op
     insn.emitOperand16(op.val32);
 }
 
-namespace {
-constexpr Config::uintptr_t segment(Config::uintptr_t addr) {
-    return addr & ~0xFFFF;
-}
-}  // namespace
-
 void AsmZ8000::emitRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const {
     const auto base = insn.address() + (mode == M_RA ? 4 : 2);
     const auto target = op.getError() ? base : op.val32;
-    if (segmentedModel() && segment(insn.address()) != segment(target))
-        insn.setErrorIf(op, OVERWRAP_SEGMENT);
+    if (segmentedModel())
+        insn.setErrorIf(op, checkAddr(target, insn.address(), 16));
     if (mode == M_RA) {
-        const auto error = checkAddr(target, 0, insn.size() == SZ_WORD || insn.size() == SZ_QUAD);
-        if (error)
-            insn.setErrorIf(op, error);
+        insn.setErrorIf(op, checkAddr(target, insn.size() == SZ_WORD || insn.size() == SZ_QUAD));
         const auto delta = target - base;
         if (overflowInt16(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         insn.emitOperand16(static_cast<uint16_t>(delta));
         return;
     }
+    insn.setErrorIf(op, checkAddr(target, true));
     auto delta = branchDelta(base, target, insn, op) / 2;
     if (mode == M_RA12) {
         delta = -delta;
