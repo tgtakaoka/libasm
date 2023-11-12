@@ -33,16 +33,19 @@ struct AsmZ8 final : Assembler, Config {
     Error setRegPointer(int32_t rp);
     Error setRegPointer0(int32_t rp);
     Error setRegPointer1(int32_t rp);
+    Error setOptimizeIndex(bool enable);
 
 private:
     const BoolOption<AsmZ8> _opt_reg_alias;
     const IntOption<AsmZ8> _opt_setrp;
     const IntOption<AsmZ8> _opt_setrp0;
     const IntOption<AsmZ8> _opt_setrp1;
+    const BoolOption<AsmZ8> _opt_optimize_index;
 
-    bool _reg_alias;
+    bool _regAlias;
     int16_t _regPointer0;
     int16_t _regPointer1;
+    bool _optimizeIndex;
 
     bool isWorkReg(uint8_t regAddr) const;
 

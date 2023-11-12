@@ -47,6 +47,7 @@ struct Operand final : ErrorAt {
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    void setSrcPos(OprPos pos) { flags().setSrcPos(pos); }
 
     Operand dstOp, srcOp, extOp;
 

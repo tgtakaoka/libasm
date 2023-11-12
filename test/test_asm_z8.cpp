@@ -708,6 +708,26 @@ static void test_indexed() {
     TZ88("LDE R10,offm2(RR8)", 0xE7, 0xA9, 0xFE);
     TZ88("LDE R10,symm2(RR8)", 0xA7, 0xA9, 0xFE, 0xFF);
     TZ88("LDE R10,table(RR8)", 0xA7, 0xA9, 0xAA, 0xAB);
+
+    TEST("option optimize-index, on");
+    TZ86("LD R3, -1(R4)", 0xC7, 0x34, 0xFF);
+    TZ86("LD R3,  0(R4)", 0xE3, 0x34); // LD R3, @R4
+    TZ86("LD R3,   @R4",  0xE3, 0x34);
+    TZ86("LD -1(R4), R3", 0xD7, 0x34, 0xFF);
+    TZ86("LD  0(R4), R3", 0xF3, 0x43); // LD @R4, R3
+    TZ86("LD   @R4,  R3", 0xF3, 0x43);
+    TZ88("LD R3, -1(R4)", 0x87, 0x34, 0xFF);
+    TZ88("LD R3,  0(R4)", 0xC7, 0x34); // LD R3, @R4
+    TZ88("LD R3,   @R4",  0xC7, 0x34);
+    TZ88("LD -1(R4), R3", 0x97, 0x34, 0xFF);
+    TZ88("LD  0(R4), R3", 0xD7, 0x43); // LD @R4, R3
+    TZ88("LD   @R4,  R3", 0xD7, 0x43);
+    TZ88("LDE R3, -1(RR4)", 0xE7, 0x35, 0xFF);
+    TZ88("LDE R3,  0(RR4)", 0xC3, 0x35); // LDE R3, @RR4
+    TZ88("LDE R3,   @RR4",  0xC3, 0x35);
+    TZ88("LDE -1(RR4), R3", 0xF7, 0x35, 0xFF);
+    TZ88("LDE  0(RR4), R3", 0xD3, 0x35); // LDE @RR4, R3
+    TZ88("LDE   @RR4,  R3", 0xD3, 0x35);
 }
 
 static void test_bit_operation() {

@@ -96,6 +96,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
             return PostFormat((_attr >> postFormat_gp) & postFormat_gm);
         }
         Config::opcode_t postVal() const { return Entry::postVal(postFormat()); }
+        void setSrcPos(OprPos pos) { _attr = attr(dstPos(), pos, extPos(), postFormat()); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)

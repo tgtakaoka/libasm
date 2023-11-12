@@ -107,6 +107,7 @@ usage: asm [-o <output>] [-l <list>] <input>
   setrp           : set register pointer  (int, Z8)
   setrp0          : set register pointer 0  (int, Z8)
   setrp1          : set register pointer 1  (int, Z8)
+  optimize-index  : optimize zero index  (bool, Z8)
   use-register    : enable register name Rn  (bool, 1802)
   optimize-segment: enable optimizing segment override  (bool, 8086)
   short-direct    : enable optimizing direct addressing  (bool, Z8001)

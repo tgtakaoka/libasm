@@ -37,6 +37,8 @@ constexpr char OPT_INT_SETRP0[]  PROGMEM = "setrp0";
 constexpr char OPT_DESC_SETRP0[] PROGMEM = "set register pointer 0";
 constexpr char OPT_INT_SETRP1[]  PROGMEM = "setrp1";
 constexpr char OPT_DESC_SETRP1[] PROGMEM = "set register pointer 1";
+constexpr char OPT_BOOL_OPTIMIZE_INDEX[] PROGMEM = "optimize-index";
+constexpr char OPT_DESC_OPTIMIZE_INDEX[] PROGMEM = "optimize zero index";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
@@ -68,7 +70,10 @@ AsmZ8::AsmZ8(const ValueParser::Plugins &plugins)
       _opt_reg_alias(this, &AsmZ8::setRegAlias, OPT_BOOL_ALIAS, OPT_DESC_ALIAS, &_opt_setrp),
       _opt_setrp(this, &AsmZ8::setRegPointer, OPT_INT_SETRP, OPT_DESC_SETRP, &_opt_setrp0),
       _opt_setrp0(this, &AsmZ8::setRegPointer0, OPT_INT_SETRP0, OPT_DESC_SETRP0, &_opt_setrp1),
-      _opt_setrp1(this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1) {
+      _opt_setrp1(
+              this, &AsmZ8::setRegPointer1, OPT_INT_SETRP1, OPT_DESC_SETRP1, &_opt_optimize_index),
+      _opt_optimize_index(
+              this, &AsmZ8::setOptimizeIndex, OPT_BOOL_OPTIMIZE_INDEX, OPT_DESC_OPTIMIZE_INDEX) {
     reset();
 }
 
@@ -76,10 +81,11 @@ void AsmZ8::reset() {
     Assembler::reset();
     setRegAlias(true);
     setRegPointer(-1);
+    setOptimizeIndex(false);
 }
 
 Error AsmZ8::setRegAlias(bool enable) {
-    _reg_alias = enable;
+    _regAlias = enable;
     return OK;
 }
 
@@ -102,6 +108,11 @@ Error AsmZ8::setRegPointer1(int32_t rp1) {
     if (rp1 >= 0 && (rp1 & ~0xF8))
         return ILLEGAL_OPERAND;
     _regPointer1 = rp1;
+    return OK;
+}
+
+Error AsmZ8::setOptimizeIndex(bool enable) {
+    _optimizeIndex = enable;
     return OK;
 }
 
@@ -293,13 +304,40 @@ void AsmZ8::encodeIndexed(AsmInsn &insn, AddrMode mode, OprPos pos, const Operan
         insn.setErrorIf(op, OVERFLOW_RANGE);
     if (mode == M_XL && op.reg == REG_RR0)
         insn.setErrorIf(op.regAt, REGISTER_NOT_ALLOWED);
-    insn.emitOperand(encodeRegName(op.reg), OP_B1LO);
-    insn.emitOperand(op.val16, pos);
+    if (_optimizeIndex && op.isOK() && op.val16 == 0) {
+        const auto opc = insn.opCode();
+        auto pos = OP_B1LO;
+        if (cpuType() == SUPER8) {
+            if (opc == 0x87)           // LD r, x(r)
+                insn.setOpCode(0xC7);  // LD r, @r
+            if (opc == 0x97) {         // LD x(r), r
+                insn.setOpCode(0xD7);  // LD @r, r
+                insn.setSrcPos(OP_B1LO);
+                pos = OP_B1HI;
+            }
+            if (opc == 0xE7)           // LDx r, xs(rr)
+                insn.setOpCode(0xC3);  // LDx r, @rr
+            if (opc == 0xF7)           // LDx xs(rr), r
+                insn.setOpCode(0xD3);  // LDx @rr, r
+        } else {
+            if (opc == 0xC7)           // LD r, x(r)
+                insn.setOpCode(0xE3);  // LD r, @r
+            if (opc == 0xD7) {         // LD x(r), r
+                insn.setOpCode(0xF3);  // LD @r, r
+                insn.setSrcPos(OP_B1LO);
+                pos = OP_B1HI;
+            }
+        }
+        insn.emitOperand(encodeRegName(op.reg), pos);
+    } else {
+        insn.emitOperand(op.val16, pos);
+        insn.emitOperand(encodeRegName(op.reg), OP_B1LO);  // Index register
+    }
 }
 
 void AsmZ8::encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) const {
     const auto addr =
-            (op.reg != REG_UNDEF && _reg_alias) ? encodeWorkRegAddr(isSuper8(), op.reg) : op.val16;
+            (op.reg != REG_UNDEF && _regAlias) ? encodeWorkRegAddr(isSuper8(), op.reg) : op.val16;
     insn.emitOperand(addr, pos);
 }
 
