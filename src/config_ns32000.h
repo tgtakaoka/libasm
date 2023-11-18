@@ -42,7 +42,8 @@ struct CpuSpec final {
     MmuType mmu;
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_BIG, 25, 7> {
+struct Config
+    : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 25, 7> {
     Config(const InsnTable<CpuType> &table)
         : ConfigImpl(table, NS32032), _cpuSpec(NS32032, FPU_NS32081, MMU_NS32082) {}
 

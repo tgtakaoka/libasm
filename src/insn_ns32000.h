@@ -82,10 +82,10 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
 
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
-    void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
-    void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
-    void emitOpFloat32(float float32) { emitFloat32(float32, operandPos()); }
-    void emitOpFloat64(double float64) { emitFloat64(float64, operandPos()); }
+    void emitOperand16(uint16_t val16) { emitUint16Be(val16, operandPos()); }
+    void emitOperand32(uint32_t val32) { emitUint32Be(val32, operandPos()); }
+    void emitOpFloat32(float float32) { emitFloat32Be(float32, operandPos()); }
+    void emitOpFloat64(double float64) { emitFloat64Be(float64, operandPos()); }
 
 private:
     uint8_t operandPos() {

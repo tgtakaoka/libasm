@@ -156,7 +156,7 @@ Error DisNs32000::readDisplacement(DisInsn &insn, Displacement &disp) const {
             disp.bits = 14;
         } else {
             // 11xx|xxxx
-            const auto lsw = insn.readUint16();
+            const auto lsw = insn.readUint16Be();
             if (head == 0xE0)
                 disp.setErrorIf(ILLEGAL_CONSTANT);  // 1110|0000 is reserved
             const auto val32 = (static_cast<uint32_t>(val16) << 16) | lsw;
@@ -221,20 +221,20 @@ void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) c
         outHex(out, insn.readByte(), 8);
     } else if (mode == M_FENR || mode == M_FENW) {
         if (size == SZ_OCTA) {
-            const auto float64 = insn.readFloat64();
+            const auto float64 = insn.readFloat64Be();
             if (_floatPrefix)
                 out.letter('0').letter('f');
             out.float64(float64);
         } else {
-            const auto float32 = insn.readFloat32();
+            const auto float32 = insn.readFloat32Be();
             if (_floatPrefix)
                 out.letter('0').letter('f');
             out.float32(float32);
         }
     } else if (size == SZ_WORD) {
-        outHex(out, insn.readUint16(), 16);
+        outHex(out, insn.readUint16Be(), 16);
     } else if (size == SZ_QUAD) {
-        outHex(out, insn.readUint32(), 32);
+        outHex(out, insn.readUint32Be(), 32);
     }
 }
 
