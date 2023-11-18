@@ -643,6 +643,10 @@ static void test_illegal() {
     UNKN(0x91);
     UNKN(0xB6);
     UNKN(0xB7);
+    UNKN(0xC4);
+    UNKN(0xC5);
+    UNKN(0xC6);
+    UNKN(0xC7);
 }
 // clang-format on
 
