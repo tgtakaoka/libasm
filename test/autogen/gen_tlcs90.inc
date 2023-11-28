@@ -29,11 +29,11 @@
       DJNZ  BC, $+28
       DJNZ  BC, $-126
       DJNZ  BC, $
-      JP    (1C1BH)
+      JP    1C1BH
       JRL   $+1D1EH
       JRL   $-00E2H
       JRL   $
-      CALL  (1E1DH)
+      CALL  1E1DH
       CALR  $+1F20H
       CALR  $-00E0H
       CALR  $
@@ -702,38 +702,38 @@
       XOR   (BC), 6EH
       OR    (BC), 6FH
       CP    (BC), 70H
-      JP    F, (BC)
-      JP    LT, (BC)
-      JP    LE, (BC)
-      JP    ULE, (BC)
-      JP    OV, (BC)
-      JP    MI, (BC)
-      JP    Z, (BC)
-      JP    C, (BC)
-      JP    (BC)
-      JP    GE, (BC)
-      JP    GT, (BC)
-      JP    UGT, (BC)
-      JP    NOV, (BC)
-      JP    PL, (BC)
-      JP    NZ, (BC)
-      JP    NC, (BC)
-      CALL  F, (BC)
-      CALL  LT, (BC)
-      CALL  LE, (BC)
-      CALL  ULE, (BC)
-      CALL  OV, (BC)
-      CALL  MI, (BC)
-      CALL  Z, (BC)
-      CALL  C, (BC)
-      CALL  (BC)
-      CALL  GE, (BC)
-      CALL  GT, (BC)
-      CALL  UGT, (BC)
-      CALL  NOV, (BC)
-      CALL  PL, (BC)
-      CALL  NZ, (BC)
-      CALL  NC, (BC)
+      JP    F, BC
+      JP    LT, BC
+      JP    LE, BC
+      JP    ULE, BC
+      JP    OV, BC
+      JP    MI, BC
+      JP    Z, BC
+      JP    C, BC
+      JP    BC
+      JP    GE, BC
+      JP    GT, BC
+      JP    UGT, BC
+      JP    NOV, BC
+      JP    PL, BC
+      JP    NZ, BC
+      JP    NC, BC
+      CALL  F, BC
+      CALL  LT, BC
+      CALL  LE, BC
+      CALL  ULE, BC
+      CALL  OV, BC
+      CALL  MI, BC
+      CALL  Z, BC
+      CALL  C, BC
+      CALL  BC
+      CALL  GE, BC
+      CALL  GT, BC
+      CALL  UGT, BC
+      CALL  NOV, BC
+      CALL  PL, BC
+      CALL  NZ, BC
+      CALL  NC, BC
       LD    (DE), B
       LD    (DE), C
       LD    (DE), D
@@ -757,38 +757,38 @@
       XOR   (DE), 6EH
       OR    (DE), 6FH
       CP    (DE), 70H
-      JP    F, (DE)
-      JP    LT, (DE)
-      JP    LE, (DE)
-      JP    ULE, (DE)
-      JP    OV, (DE)
-      JP    MI, (DE)
-      JP    Z, (DE)
-      JP    C, (DE)
-      JP    (DE)
-      JP    GE, (DE)
-      JP    GT, (DE)
-      JP    UGT, (DE)
-      JP    NOV, (DE)
-      JP    PL, (DE)
-      JP    NZ, (DE)
-      JP    NC, (DE)
-      CALL  F, (DE)
-      CALL  LT, (DE)
-      CALL  LE, (DE)
-      CALL  ULE, (DE)
-      CALL  OV, (DE)
-      CALL  MI, (DE)
-      CALL  Z, (DE)
-      CALL  C, (DE)
-      CALL  (DE)
-      CALL  GE, (DE)
-      CALL  GT, (DE)
-      CALL  UGT, (DE)
-      CALL  NOV, (DE)
-      CALL  PL, (DE)
-      CALL  NZ, (DE)
-      CALL  NC, (DE)
+      JP    F, DE
+      JP    LT, DE
+      JP    LE, DE
+      JP    ULE, DE
+      JP    OV, DE
+      JP    MI, DE
+      JP    Z, DE
+      JP    C, DE
+      JP    DE
+      JP    GE, DE
+      JP    GT, DE
+      JP    UGT, DE
+      JP    NOV, DE
+      JP    PL, DE
+      JP    NZ, DE
+      JP    NC, DE
+      CALL  F, DE
+      CALL  LT, DE
+      CALL  LE, DE
+      CALL  ULE, DE
+      CALL  OV, DE
+      CALL  MI, DE
+      CALL  Z, DE
+      CALL  C, DE
+      CALL  DE
+      CALL  GE, DE
+      CALL  GT, DE
+      CALL  UGT, DE
+      CALL  NOV, DE
+      CALL  PL, DE
+      CALL  NZ, DE
+      CALL  NC, DE
       LD    (HL), B
       LD    (HL), C
       LD    (HL), D
@@ -812,38 +812,38 @@
       XOR   (HL), 6EH
       OR    (HL), 6FH
       CP    (HL), 70H
-      JP    F, (HL)
-      JP    LT, (HL)
-      JP    LE, (HL)
-      JP    ULE, (HL)
-      JP    OV, (HL)
-      JP    MI, (HL)
-      JP    Z, (HL)
-      JP    C, (HL)
-      JP    (HL)
-      JP    GE, (HL)
-      JP    GT, (HL)
-      JP    UGT, (HL)
-      JP    NOV, (HL)
-      JP    PL, (HL)
-      JP    NZ, (HL)
-      JP    NC, (HL)
-      CALL  F, (HL)
-      CALL  LT, (HL)
-      CALL  LE, (HL)
-      CALL  ULE, (HL)
-      CALL  OV, (HL)
-      CALL  MI, (HL)
-      CALL  Z, (HL)
-      CALL  C, (HL)
-      CALL  (HL)
-      CALL  GE, (HL)
-      CALL  GT, (HL)
-      CALL  UGT, (HL)
-      CALL  NOV, (HL)
-      CALL  PL, (HL)
-      CALL  NZ, (HL)
-      CALL  NC, (HL)
+      JP    F, HL
+      JP    LT, HL
+      JP    LE, HL
+      JP    ULE, HL
+      JP    OV, HL
+      JP    MI, HL
+      JP    Z, HL
+      JP    C, HL
+      JP    HL
+      JP    GE, HL
+      JP    GT, HL
+      JP    UGT, HL
+      JP    NOV, HL
+      JP    PL, HL
+      JP    NZ, HL
+      JP    NC, HL
+      CALL  F, HL
+      CALL  LT, HL
+      CALL  LE, HL
+      CALL  ULE, HL
+      CALL  OV, HL
+      CALL  MI, HL
+      CALL  Z, HL
+      CALL  C, HL
+      CALL  HL
+      CALL  GE, HL
+      CALL  GT, HL
+      CALL  UGT, HL
+      CALL  NOV, HL
+      CALL  PL, HL
+      CALL  NZ, HL
+      CALL  NC, HL
       LD    (0EDECH), B
       LD    (0EDECH), C
       LD    (0EDECH), D
@@ -867,38 +867,38 @@
       XOR   (0EDECH), 6EH
       OR    (0EDECH), 6FH
       CP    (0EDECH), 70H
-      JP    F, (0EDECH)
-      JP    LT, (0EDECH)
-      JP    LE, (0EDECH)
-      JP    ULE, (0EDECH)
-      JP    OV, (0EDECH)
-      JP    MI, (0EDECH)
-      JP    Z, (0EDECH)
-      JP    C, (0EDECH)
-      JP    (0EDECH)
-      JP    GE, (0EDECH)
-      JP    GT, (0EDECH)
-      JP    UGT, (0EDECH)
-      JP    NOV, (0EDECH)
-      JP    PL, (0EDECH)
-      JP    NZ, (0EDECH)
-      JP    NC, (0EDECH)
-      CALL  F, (0EDECH)
-      CALL  LT, (0EDECH)
-      CALL  LE, (0EDECH)
-      CALL  ULE, (0EDECH)
-      CALL  OV, (0EDECH)
-      CALL  MI, (0EDECH)
-      CALL  Z, (0EDECH)
-      CALL  C, (0EDECH)
-      CALL  (0EDECH)
-      CALL  GE, (0EDECH)
-      CALL  GT, (0EDECH)
-      CALL  UGT, (0EDECH)
-      CALL  NOV, (0EDECH)
-      CALL  PL, (0EDECH)
-      CALL  NZ, (0EDECH)
-      CALL  NC, (0EDECH)
+      JP    F, 0EDECH
+      JP    LT, 0EDECH
+      JP    LE, 0EDECH
+      JP    ULE, 0EDECH
+      JP    OV, 0EDECH
+      JP    MI, 0EDECH
+      JP    Z, 0EDECH
+      JP    C, 0EDECH
+      JP    0EDECH
+      JP    GE, 0EDECH
+      JP    GT, 0EDECH
+      JP    UGT, 0EDECH
+      JP    NOV, 0EDECH
+      JP    PL, 0EDECH
+      JP    NZ, 0EDECH
+      JP    NC, 0EDECH
+      CALL  F, 0EDECH
+      CALL  LT, 0EDECH
+      CALL  LE, 0EDECH
+      CALL  ULE, 0EDECH
+      CALL  OV, 0EDECH
+      CALL  MI, 0EDECH
+      CALL  Z, 0EDECH
+      CALL  C, 0EDECH
+      CALL  0EDECH
+      CALL  GE, 0EDECH
+      CALL  GT, 0EDECH
+      CALL  UGT, 0EDECH
+      CALL  NOV, 0EDECH
+      CALL  PL, 0EDECH
+      CALL  NZ, 0EDECH
+      CALL  NC, 0EDECH
       LD    (IX), B
       LD    (IX), C
       LD    (IX), D
@@ -922,38 +922,38 @@
       XOR   (IX), 6EH
       OR    (IX), 6FH
       CP    (IX), 70H
-      JP    F, (IX)
-      JP    LT, (IX)
-      JP    LE, (IX)
-      JP    ULE, (IX)
-      JP    OV, (IX)
-      JP    MI, (IX)
-      JP    Z, (IX)
-      JP    C, (IX)
-      JP    (IX)
-      JP    GE, (IX)
-      JP    GT, (IX)
-      JP    UGT, (IX)
-      JP    NOV, (IX)
-      JP    PL, (IX)
-      JP    NZ, (IX)
-      JP    NC, (IX)
-      CALL  F, (IX)
-      CALL  LT, (IX)
-      CALL  LE, (IX)
-      CALL  ULE, (IX)
-      CALL  OV, (IX)
-      CALL  MI, (IX)
-      CALL  Z, (IX)
-      CALL  C, (IX)
-      CALL  (IX)
-      CALL  GE, (IX)
-      CALL  GT, (IX)
-      CALL  UGT, (IX)
-      CALL  NOV, (IX)
-      CALL  PL, (IX)
-      CALL  NZ, (IX)
-      CALL  NC, (IX)
+      JP    F, IX
+      JP    LT, IX
+      JP    LE, IX
+      JP    ULE, IX
+      JP    OV, IX
+      JP    MI, IX
+      JP    Z, IX
+      JP    C, IX
+      JP    IX
+      JP    GE, IX
+      JP    GT, IX
+      JP    UGT, IX
+      JP    NOV, IX
+      JP    PL, IX
+      JP    NZ, IX
+      JP    NC, IX
+      CALL  F, IX
+      CALL  LT, IX
+      CALL  LE, IX
+      CALL  ULE, IX
+      CALL  OV, IX
+      CALL  MI, IX
+      CALL  Z, IX
+      CALL  C, IX
+      CALL  IX
+      CALL  GE, IX
+      CALL  GT, IX
+      CALL  UGT, IX
+      CALL  NOV, IX
+      CALL  PL, IX
+      CALL  NZ, IX
+      CALL  NC, IX
       LD    (IY), B
       LD    (IY), C
       LD    (IY), D
@@ -977,38 +977,38 @@
       XOR   (IY), 6EH
       OR    (IY), 6FH
       CP    (IY), 70H
-      JP    F, (IY)
-      JP    LT, (IY)
-      JP    LE, (IY)
-      JP    ULE, (IY)
-      JP    OV, (IY)
-      JP    MI, (IY)
-      JP    Z, (IY)
-      JP    C, (IY)
-      JP    (IY)
-      JP    GE, (IY)
-      JP    GT, (IY)
-      JP    UGT, (IY)
-      JP    NOV, (IY)
-      JP    PL, (IY)
-      JP    NZ, (IY)
-      JP    NC, (IY)
-      CALL  F, (IY)
-      CALL  LT, (IY)
-      CALL  LE, (IY)
-      CALL  ULE, (IY)
-      CALL  OV, (IY)
-      CALL  MI, (IY)
-      CALL  Z, (IY)
-      CALL  C, (IY)
-      CALL  (IY)
-      CALL  GE, (IY)
-      CALL  GT, (IY)
-      CALL  UGT, (IY)
-      CALL  NOV, (IY)
-      CALL  PL, (IY)
-      CALL  NZ, (IY)
-      CALL  NC, (IY)
+      JP    F, IY
+      JP    LT, IY
+      JP    LE, IY
+      JP    ULE, IY
+      JP    OV, IY
+      JP    MI, IY
+      JP    Z, IY
+      JP    C, IY
+      JP    IY
+      JP    GE, IY
+      JP    GT, IY
+      JP    UGT, IY
+      JP    NOV, IY
+      JP    PL, IY
+      JP    NZ, IY
+      JP    NC, IY
+      CALL  F, IY
+      CALL  LT, IY
+      CALL  LE, IY
+      CALL  ULE, IY
+      CALL  OV, IY
+      CALL  MI, IY
+      CALL  Z, IY
+      CALL  C, IY
+      CALL  IY
+      CALL  GE, IY
+      CALL  GT, IY
+      CALL  UGT, IY
+      CALL  NOV, IY
+      CALL  PL, IY
+      CALL  NZ, IY
+      CALL  NC, IY
       LD    (SP), B
       LD    (SP), C
       LD    (SP), D
@@ -1032,38 +1032,38 @@
       XOR   (SP), 6EH
       OR    (SP), 6FH
       CP    (SP), 70H
-      JP    F, (SP)
-      JP    LT, (SP)
-      JP    LE, (SP)
-      JP    ULE, (SP)
-      JP    OV, (SP)
-      JP    MI, (SP)
-      JP    Z, (SP)
-      JP    C, (SP)
-      JP    (SP)
-      JP    GE, (SP)
-      JP    GT, (SP)
-      JP    UGT, (SP)
-      JP    NOV, (SP)
-      JP    PL, (SP)
-      JP    NZ, (SP)
-      JP    NC, (SP)
-      CALL  F, (SP)
-      CALL  LT, (SP)
-      CALL  LE, (SP)
-      CALL  ULE, (SP)
-      CALL  OV, (SP)
-      CALL  MI, (SP)
-      CALL  Z, (SP)
-      CALL  C, (SP)
-      CALL  (SP)
-      CALL  GE, (SP)
-      CALL  GT, (SP)
-      CALL  UGT, (SP)
-      CALL  NOV, (SP)
-      CALL  PL, (SP)
-      CALL  NZ, (SP)
-      CALL  NC, (SP)
+      JP    F, SP
+      JP    LT, SP
+      JP    LE, SP
+      JP    ULE, SP
+      JP    OV, SP
+      JP    MI, SP
+      JP    Z, SP
+      JP    C, SP
+      JP    SP
+      JP    GE, SP
+      JP    GT, SP
+      JP    UGT, SP
+      JP    NOV, SP
+      JP    PL, SP
+      JP    NZ, SP
+      JP    NC, SP
+      CALL  F, SP
+      CALL  LT, SP
+      CALL  LE, SP
+      CALL  ULE, SP
+      CALL  OV, SP
+      CALL  MI, SP
+      CALL  Z, SP
+      CALL  C, SP
+      CALL  SP
+      CALL  GE, SP
+      CALL  GT, SP
+      CALL  UGT, SP
+      CALL  NOV, SP
+      CALL  PL, SP
+      CALL  NZ, SP
+      CALL  NC, SP
       LD    (0FFF0H), B
       LD    (0FFF0H), C
       LD    (0FFF0H), D
@@ -1501,12 +1501,12 @@
       LD    (IX-11), L
       LD    (IX-11), A
       LD    (IX-11), 38H
-      LDA   BC, (IX-11)
-      LDA   DE, (IX-11)
-      LDA   HL, (IX-11)
-      LDA   IX, (IX-11)
-      LDA   IY, (IX-11)
-      LDA   SP, (IX-11)
+      LDA   BC, IX-11
+      LDA   DE, IX-11
+      LDA   HL, IX-11
+      LDA   IX, IX-11
+      LDA   IY, IX-11
+      LDA   SP, IX-11
       LDW   (IX-11), 4140H
       LD    (IX-11), BC
       LD    (IX-11), DE
@@ -1522,38 +1522,38 @@
       XOR   (IX-11), 6EH
       OR    (IX-11), 6FH
       CP    (IX-11), 70H
-      JP    F, (IX-11)
-      JP    LT, (IX-11)
-      JP    LE, (IX-11)
-      JP    ULE, (IX-11)
-      JP    OV, (IX-11)
-      JP    MI, (IX-11)
-      JP    Z, (IX-11)
-      JP    C, (IX-11)
-      JP    (IX-11)
-      JP    GE, (IX-11)
-      JP    GT, (IX-11)
-      JP    UGT, (IX-11)
-      JP    NOV, (IX-11)
-      JP    PL, (IX-11)
-      JP    NZ, (IX-11)
-      JP    NC, (IX-11)
-      CALL  F, (IX-11)
-      CALL  LT, (IX-11)
-      CALL  LE, (IX-11)
-      CALL  ULE, (IX-11)
-      CALL  OV, (IX-11)
-      CALL  MI, (IX-11)
-      CALL  Z, (IX-11)
-      CALL  C, (IX-11)
-      CALL  (IX-11)
-      CALL  GE, (IX-11)
-      CALL  GT, (IX-11)
-      CALL  UGT, (IX-11)
-      CALL  NOV, (IX-11)
-      CALL  PL, (IX-11)
-      CALL  NZ, (IX-11)
-      CALL  NC, (IX-11)
+      JP    F, IX-11
+      JP    LT, IX-11
+      JP    LE, IX-11
+      JP    ULE, IX-11
+      JP    OV, IX-11
+      JP    MI, IX-11
+      JP    Z, IX-11
+      JP    C, IX-11
+      JP    IX-11
+      JP    GE, IX-11
+      JP    GT, IX-11
+      JP    UGT, IX-11
+      JP    NOV, IX-11
+      JP    PL, IX-11
+      JP    NZ, IX-11
+      JP    NC, IX-11
+      CALL  F, IX-11
+      CALL  LT, IX-11
+      CALL  LE, IX-11
+      CALL  ULE, IX-11
+      CALL  OV, IX-11
+      CALL  MI, IX-11
+      CALL  Z, IX-11
+      CALL  C, IX-11
+      CALL  IX-11
+      CALL  GE, IX-11
+      CALL  GT, IX-11
+      CALL  UGT, IX-11
+      CALL  NOV, IX-11
+      CALL  PL, IX-11
+      CALL  NZ, IX-11
+      CALL  NC, IX-11
       LD    (IX+0), B
       LD    (IX+0), C
       LD    (IX+0), D
@@ -1562,12 +1562,12 @@
       LD    (IX+0), L
       LD    (IX+0), A
       LD    (IX+0), 38H
-      LDA   BC, (IX+0)
-      LDA   DE, (IX+0)
-      LDA   HL, (IX+0)
-      LDA   IX, (IX+0)
-      LDA   IY, (IX+0)
-      LDA   SP, (IX+0)
+      LDA   BC, IX+0
+      LDA   DE, IX+0
+      LDA   HL, IX+0
+      LDA   IX, IX+0
+      LDA   IY, IX+0
+      LDA   SP, IX+0
       LDW   (IX+0), 4140H
       LD    (IX+0), BC
       LD    (IX+0), DE
@@ -1583,38 +1583,38 @@
       XOR   (IX+0), 6EH
       OR    (IX+0), 6FH
       CP    (IX+0), 70H
-      JP    F, (IX+0)
-      JP    LT, (IX+0)
-      JP    LE, (IX+0)
-      JP    ULE, (IX+0)
-      JP    OV, (IX+0)
-      JP    MI, (IX+0)
-      JP    Z, (IX+0)
-      JP    C, (IX+0)
-      JP    (IX+0)
-      JP    GE, (IX+0)
-      JP    GT, (IX+0)
-      JP    UGT, (IX+0)
-      JP    NOV, (IX+0)
-      JP    PL, (IX+0)
-      JP    NZ, (IX+0)
-      JP    NC, (IX+0)
-      CALL  F, (IX+0)
-      CALL  LT, (IX+0)
-      CALL  LE, (IX+0)
-      CALL  ULE, (IX+0)
-      CALL  OV, (IX+0)
-      CALL  MI, (IX+0)
-      CALL  Z, (IX+0)
-      CALL  C, (IX+0)
-      CALL  (IX+0)
-      CALL  GE, (IX+0)
-      CALL  GT, (IX+0)
-      CALL  UGT, (IX+0)
-      CALL  NOV, (IX+0)
-      CALL  PL, (IX+0)
-      CALL  NZ, (IX+0)
-      CALL  NC, (IX+0)
+      JP    F, IX+0
+      JP    LT, IX+0
+      JP    LE, IX+0
+      JP    ULE, IX+0
+      JP    OV, IX+0
+      JP    MI, IX+0
+      JP    Z, IX+0
+      JP    C, IX+0
+      JP    IX+0
+      JP    GE, IX+0
+      JP    GT, IX+0
+      JP    UGT, IX+0
+      JP    NOV, IX+0
+      JP    PL, IX+0
+      JP    NZ, IX+0
+      JP    NC, IX+0
+      CALL  F, IX+0
+      CALL  LT, IX+0
+      CALL  LE, IX+0
+      CALL  ULE, IX+0
+      CALL  OV, IX+0
+      CALL  MI, IX+0
+      CALL  Z, IX+0
+      CALL  C, IX+0
+      CALL  IX+0
+      CALL  GE, IX+0
+      CALL  GT, IX+0
+      CALL  UGT, IX+0
+      CALL  NOV, IX+0
+      CALL  PL, IX+0
+      CALL  NZ, IX+0
+      CALL  NC, IX+0
       LD    (IY-10), B
       LD    (IY-10), C
       LD    (IY-10), D
@@ -1623,12 +1623,12 @@
       LD    (IY-10), L
       LD    (IY-10), A
       LD    (IY-10), 38H
-      LDA   BC, (IY-10)
-      LDA   DE, (IY-10)
-      LDA   HL, (IY-10)
-      LDA   IX, (IY-10)
-      LDA   IY, (IY-10)
-      LDA   SP, (IY-10)
+      LDA   BC, IY-10
+      LDA   DE, IY-10
+      LDA   HL, IY-10
+      LDA   IX, IY-10
+      LDA   IY, IY-10
+      LDA   SP, IY-10
       LDW   (IY-10), 4140H
       LD    (IY-10), BC
       LD    (IY-10), DE
@@ -1644,38 +1644,38 @@
       XOR   (IY-10), 6EH
       OR    (IY-10), 6FH
       CP    (IY-10), 70H
-      JP    F, (IY-10)
-      JP    LT, (IY-10)
-      JP    LE, (IY-10)
-      JP    ULE, (IY-10)
-      JP    OV, (IY-10)
-      JP    MI, (IY-10)
-      JP    Z, (IY-10)
-      JP    C, (IY-10)
-      JP    (IY-10)
-      JP    GE, (IY-10)
-      JP    GT, (IY-10)
-      JP    UGT, (IY-10)
-      JP    NOV, (IY-10)
-      JP    PL, (IY-10)
-      JP    NZ, (IY-10)
-      JP    NC, (IY-10)
-      CALL  F, (IY-10)
-      CALL  LT, (IY-10)
-      CALL  LE, (IY-10)
-      CALL  ULE, (IY-10)
-      CALL  OV, (IY-10)
-      CALL  MI, (IY-10)
-      CALL  Z, (IY-10)
-      CALL  C, (IY-10)
-      CALL  (IY-10)
-      CALL  GE, (IY-10)
-      CALL  GT, (IY-10)
-      CALL  UGT, (IY-10)
-      CALL  NOV, (IY-10)
-      CALL  PL, (IY-10)
-      CALL  NZ, (IY-10)
-      CALL  NC, (IY-10)
+      JP    F, IY-10
+      JP    LT, IY-10
+      JP    LE, IY-10
+      JP    ULE, IY-10
+      JP    OV, IY-10
+      JP    MI, IY-10
+      JP    Z, IY-10
+      JP    C, IY-10
+      JP    IY-10
+      JP    GE, IY-10
+      JP    GT, IY-10
+      JP    UGT, IY-10
+      JP    NOV, IY-10
+      JP    PL, IY-10
+      JP    NZ, IY-10
+      JP    NC, IY-10
+      CALL  F, IY-10
+      CALL  LT, IY-10
+      CALL  LE, IY-10
+      CALL  ULE, IY-10
+      CALL  OV, IY-10
+      CALL  MI, IY-10
+      CALL  Z, IY-10
+      CALL  C, IY-10
+      CALL  IY-10
+      CALL  GE, IY-10
+      CALL  GT, IY-10
+      CALL  UGT, IY-10
+      CALL  NOV, IY-10
+      CALL  PL, IY-10
+      CALL  NZ, IY-10
+      CALL  NC, IY-10
       LD    (IY+0), B
       LD    (IY+0), C
       LD    (IY+0), D
@@ -1684,12 +1684,12 @@
       LD    (IY+0), L
       LD    (IY+0), A
       LD    (IY+0), 38H
-      LDA   BC, (IY+0)
-      LDA   DE, (IY+0)
-      LDA   HL, (IY+0)
-      LDA   IX, (IY+0)
-      LDA   IY, (IY+0)
-      LDA   SP, (IY+0)
+      LDA   BC, IY+0
+      LDA   DE, IY+0
+      LDA   HL, IY+0
+      LDA   IX, IY+0
+      LDA   IY, IY+0
+      LDA   SP, IY+0
       LDW   (IY+0), 4140H
       LD    (IY+0), BC
       LD    (IY+0), DE
@@ -1705,38 +1705,38 @@
       XOR   (IY+0), 6EH
       OR    (IY+0), 6FH
       CP    (IY+0), 70H
-      JP    F, (IY+0)
-      JP    LT, (IY+0)
-      JP    LE, (IY+0)
-      JP    ULE, (IY+0)
-      JP    OV, (IY+0)
-      JP    MI, (IY+0)
-      JP    Z, (IY+0)
-      JP    C, (IY+0)
-      JP    (IY+0)
-      JP    GE, (IY+0)
-      JP    GT, (IY+0)
-      JP    UGT, (IY+0)
-      JP    NOV, (IY+0)
-      JP    PL, (IY+0)
-      JP    NZ, (IY+0)
-      JP    NC, (IY+0)
-      CALL  F, (IY+0)
-      CALL  LT, (IY+0)
-      CALL  LE, (IY+0)
-      CALL  ULE, (IY+0)
-      CALL  OV, (IY+0)
-      CALL  MI, (IY+0)
-      CALL  Z, (IY+0)
-      CALL  C, (IY+0)
-      CALL  (IY+0)
-      CALL  GE, (IY+0)
-      CALL  GT, (IY+0)
-      CALL  UGT, (IY+0)
-      CALL  NOV, (IY+0)
-      CALL  PL, (IY+0)
-      CALL  NZ, (IY+0)
-      CALL  NC, (IY+0)
+      JP    F, IY+0
+      JP    LT, IY+0
+      JP    LE, IY+0
+      JP    ULE, IY+0
+      JP    OV, IY+0
+      JP    MI, IY+0
+      JP    Z, IY+0
+      JP    C, IY+0
+      JP    IY+0
+      JP    GE, IY+0
+      JP    GT, IY+0
+      JP    UGT, IY+0
+      JP    NOV, IY+0
+      JP    PL, IY+0
+      JP    NZ, IY+0
+      JP    NC, IY+0
+      CALL  F, IY+0
+      CALL  LT, IY+0
+      CALL  LE, IY+0
+      CALL  ULE, IY+0
+      CALL  OV, IY+0
+      CALL  MI, IY+0
+      CALL  Z, IY+0
+      CALL  C, IY+0
+      CALL  IY+0
+      CALL  GE, IY+0
+      CALL  GT, IY+0
+      CALL  UGT, IY+0
+      CALL  NOV, IY+0
+      CALL  PL, IY+0
+      CALL  NZ, IY+0
+      CALL  NC, IY+0
       LD    (SP-9), B
       LD    (SP-9), C
       LD    (SP-9), D
@@ -1745,12 +1745,12 @@
       LD    (SP-9), L
       LD    (SP-9), A
       LD    (SP-9), 38H
-      LDA   BC, (SP-9)
-      LDA   DE, (SP-9)
-      LDA   HL, (SP-9)
-      LDA   IX, (SP-9)
-      LDA   IY, (SP-9)
-      LDA   SP, (SP-9)
+      LDA   BC, SP-9
+      LDA   DE, SP-9
+      LDA   HL, SP-9
+      LDA   IX, SP-9
+      LDA   IY, SP-9
+      LDA   SP, SP-9
       LDW   (SP-9), 4140H
       LD    (SP-9), BC
       LD    (SP-9), DE
@@ -1766,38 +1766,38 @@
       XOR   (SP-9), 6EH
       OR    (SP-9), 6FH
       CP    (SP-9), 70H
-      JP    F, (SP-9)
-      JP    LT, (SP-9)
-      JP    LE, (SP-9)
-      JP    ULE, (SP-9)
-      JP    OV, (SP-9)
-      JP    MI, (SP-9)
-      JP    Z, (SP-9)
-      JP    C, (SP-9)
-      JP    (SP-9)
-      JP    GE, (SP-9)
-      JP    GT, (SP-9)
-      JP    UGT, (SP-9)
-      JP    NOV, (SP-9)
-      JP    PL, (SP-9)
-      JP    NZ, (SP-9)
-      JP    NC, (SP-9)
-      CALL  F, (SP-9)
-      CALL  LT, (SP-9)
-      CALL  LE, (SP-9)
-      CALL  ULE, (SP-9)
-      CALL  OV, (SP-9)
-      CALL  MI, (SP-9)
-      CALL  Z, (SP-9)
-      CALL  C, (SP-9)
-      CALL  (SP-9)
-      CALL  GE, (SP-9)
-      CALL  GT, (SP-9)
-      CALL  UGT, (SP-9)
-      CALL  NOV, (SP-9)
-      CALL  PL, (SP-9)
-      CALL  NZ, (SP-9)
-      CALL  NC, (SP-9)
+      JP    F, SP-9
+      JP    LT, SP-9
+      JP    LE, SP-9
+      JP    ULE, SP-9
+      JP    OV, SP-9
+      JP    MI, SP-9
+      JP    Z, SP-9
+      JP    C, SP-9
+      JP    SP-9
+      JP    GE, SP-9
+      JP    GT, SP-9
+      JP    UGT, SP-9
+      JP    NOV, SP-9
+      JP    PL, SP-9
+      JP    NZ, SP-9
+      JP    NC, SP-9
+      CALL  F, SP-9
+      CALL  LT, SP-9
+      CALL  LE, SP-9
+      CALL  ULE, SP-9
+      CALL  OV, SP-9
+      CALL  MI, SP-9
+      CALL  Z, SP-9
+      CALL  C, SP-9
+      CALL  SP-9
+      CALL  GE, SP-9
+      CALL  GT, SP-9
+      CALL  UGT, SP-9
+      CALL  NOV, SP-9
+      CALL  PL, SP-9
+      CALL  NZ, SP-9
+      CALL  NC, SP-9
       LD    (SP+0), B
       LD    (SP+0), C
       LD    (SP+0), D
@@ -1806,12 +1806,12 @@
       LD    (SP+0), L
       LD    (SP+0), A
       LD    (SP+0), 38H
-      LDA   BC, (SP+0)
-      LDA   DE, (SP+0)
-      LDA   HL, (SP+0)
-      LDA   IX, (SP+0)
-      LDA   IY, (SP+0)
-      LDA   SP, (SP+0)
+      LDA   BC, SP+0
+      LDA   DE, SP+0
+      LDA   HL, SP+0
+      LDA   IX, SP+0
+      LDA   IY, SP+0
+      LDA   SP, SP+0
       LDW   (SP+0), 4140H
       LD    (SP+0), BC
       LD    (SP+0), DE
@@ -1827,38 +1827,38 @@
       XOR   (SP+0), 6EH
       OR    (SP+0), 6FH
       CP    (SP+0), 70H
-      JP    F, (SP+0)
-      JP    LT, (SP+0)
-      JP    LE, (SP+0)
-      JP    ULE, (SP+0)
-      JP    OV, (SP+0)
-      JP    MI, (SP+0)
-      JP    Z, (SP+0)
-      JP    C, (SP+0)
-      JP    (SP+0)
-      JP    GE, (SP+0)
-      JP    GT, (SP+0)
-      JP    UGT, (SP+0)
-      JP    NOV, (SP+0)
-      JP    PL, (SP+0)
-      JP    NZ, (SP+0)
-      JP    NC, (SP+0)
-      CALL  F, (SP+0)
-      CALL  LT, (SP+0)
-      CALL  LE, (SP+0)
-      CALL  ULE, (SP+0)
-      CALL  OV, (SP+0)
-      CALL  MI, (SP+0)
-      CALL  Z, (SP+0)
-      CALL  C, (SP+0)
-      CALL  (SP+0)
-      CALL  GE, (SP+0)
-      CALL  GT, (SP+0)
-      CALL  UGT, (SP+0)
-      CALL  NOV, (SP+0)
-      CALL  PL, (SP+0)
-      CALL  NZ, (SP+0)
-      CALL  NC, (SP+0)
+      JP    F, SP+0
+      JP    LT, SP+0
+      JP    LE, SP+0
+      JP    ULE, SP+0
+      JP    OV, SP+0
+      JP    MI, SP+0
+      JP    Z, SP+0
+      JP    C, SP+0
+      JP    SP+0
+      JP    GE, SP+0
+      JP    GT, SP+0
+      JP    UGT, SP+0
+      JP    NOV, SP+0
+      JP    PL, SP+0
+      JP    NZ, SP+0
+      JP    NC, SP+0
+      CALL  F, SP+0
+      CALL  LT, SP+0
+      CALL  LE, SP+0
+      CALL  ULE, SP+0
+      CALL  OV, SP+0
+      CALL  MI, SP+0
+      CALL  Z, SP+0
+      CALL  C, SP+0
+      CALL  SP+0
+      CALL  GE, SP+0
+      CALL  GT, SP+0
+      CALL  UGT, SP+0
+      CALL  NOV, SP+0
+      CALL  PL, SP+0
+      CALL  NZ, SP+0
+      CALL  NC, SP+0
       LD    (HL+A), B
       LD    (HL+A), C
       LD    (HL+A), D
@@ -1867,12 +1867,12 @@
       LD    (HL+A), L
       LD    (HL+A), A
       LD    (HL+A), 38H
-      LDA   BC, (HL+A)
-      LDA   DE, (HL+A)
-      LDA   HL, (HL+A)
-      LDA   IX, (HL+A)
-      LDA   IY, (HL+A)
-      LDA   SP, (HL+A)
+      LDA   BC, HL+A
+      LDA   DE, HL+A
+      LDA   HL, HL+A
+      LDA   IX, HL+A
+      LDA   IY, HL+A
+      LDA   SP, HL+A
       LDW   (HL+A), 4140H
       LD    (HL+A), BC
       LD    (HL+A), DE
@@ -1888,38 +1888,38 @@
       XOR   (HL+A), 6EH
       OR    (HL+A), 6FH
       CP    (HL+A), 70H
-      JP    F, (HL+A)
-      JP    LT, (HL+A)
-      JP    LE, (HL+A)
-      JP    ULE, (HL+A)
-      JP    OV, (HL+A)
-      JP    MI, (HL+A)
-      JP    Z, (HL+A)
-      JP    C, (HL+A)
-      JP    (HL+A)
-      JP    GE, (HL+A)
-      JP    GT, (HL+A)
-      JP    UGT, (HL+A)
-      JP    NOV, (HL+A)
-      JP    PL, (HL+A)
-      JP    NZ, (HL+A)
-      JP    NC, (HL+A)
-      CALL  F, (HL+A)
-      CALL  LT, (HL+A)
-      CALL  LE, (HL+A)
-      CALL  ULE, (HL+A)
-      CALL  OV, (HL+A)
-      CALL  MI, (HL+A)
-      CALL  Z, (HL+A)
-      CALL  C, (HL+A)
-      CALL  (HL+A)
-      CALL  GE, (HL+A)
-      CALL  GT, (HL+A)
-      CALL  UGT, (HL+A)
-      CALL  NOV, (HL+A)
-      CALL  PL, (HL+A)
-      CALL  NZ, (HL+A)
-      CALL  NC, (HL+A)
+      JP    F, HL+A
+      JP    LT, HL+A
+      JP    LE, HL+A
+      JP    ULE, HL+A
+      JP    OV, HL+A
+      JP    MI, HL+A
+      JP    Z, HL+A
+      JP    C, HL+A
+      JP    HL+A
+      JP    GE, HL+A
+      JP    GT, HL+A
+      JP    UGT, HL+A
+      JP    NOV, HL+A
+      JP    PL, HL+A
+      JP    NZ, HL+A
+      JP    NC, HL+A
+      CALL  F, HL+A
+      CALL  LT, HL+A
+      CALL  LE, HL+A
+      CALL  ULE, HL+A
+      CALL  OV, HL+A
+      CALL  MI, HL+A
+      CALL  Z, HL+A
+      CALL  C, HL+A
+      CALL  HL+A
+      CALL  GE, HL+A
+      CALL  GT, HL+A
+      CALL  UGT, HL+A
+      CALL  NOV, HL+A
+      CALL  PL, HL+A
+      CALL  NZ, HL+A
+      CALL  NC, HL+A
       MUL   HL, B
       DIV   HL, B
       ADD   IX, BC

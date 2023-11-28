@@ -136,6 +136,7 @@ void AsmTlcs90::encodeOperand(
         insn.emitInsn(opc | encodeReg16(op.reg));
         return;
     case M_IDX:
+    case M_IXPD:
         if (overflowInt8(static_cast<int16_t>(op.val16)))
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.emitInsn(opc | encodeIndexReg(op.reg));
@@ -184,83 +185,78 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
         return OK;
     }
 
-    auto reg = parseRegName(p);
-    if (reg != REG_UNDEF) {
-        switch (reg) {
-        case REG_IX:
-        case REG_IY:
-            op.mode = M_REGIX;
-            break;
-        case REG_B:
-        case REG_D:
-        case REG_E:
-        case REG_H:
-        case REG_L:
-            op.mode = M_REG8;
-            break;
-        default:
-            op.mode = AddrMode(int8_t(reg) + R_BASE);
-            break;
+    const auto paren = p.expect('(') ? ')' : 0;
+    const auto regAt = p.skipSpaces();
+    const auto reg = parseRegName(p);
+    if (reg == REG_UNDEF) {
+        op.val16 = parseExpr16(p, op, paren);
+        if (op.hasError())
+            return op.getError();
+        if (paren && !p.skipSpaces().expect(')'))
+            return op.setError(p, MISSING_CLOSING_PAREN);
+        if (paren) {  // (nnnn)
+            op.mode = op.getError() ? M_SYM : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
+        } else {  // nnnn
+            op.mode = M_IMM16;
         }
-        op.reg = reg;
         scan = p;
         return OK;
     }
-    if (p.expect('(')) {
-        const auto regp = p.skipSpaces();
-        reg = parseRegName(p);
-        if (reg == REG_UNDEF) {  // (nnnn)
-            op.val16 = parseExpr16(p, op, ')');
-            if (op.hasError())
-                return op.getError();
-            if (!p.skipSpaces().expect(')'))
-                return op.setError(p, MISSING_CLOSING_PAREN);
-            op.mode = op.getError() ? M_SYM : (op.val16 >= 0xFF00 ? M_DIR : M_EXT);
+    p.skipSpaces();
+    op.reg = reg;
+    if (paren && p.expect(')')) {  // (rr)
+        if (isReg16(reg)) {
+            op.mode = M_IND;
             scan = p;
             return OK;
         }
-        op.reg = reg;
-        if (p.skipSpaces().expect(')')) {  // (rr)
-            if (isReg16(reg)) {
-                op.mode = M_IND;
-                scan = p;
-                return OK;
-            }
-            return op.setError(regp, REGISTER_NOT_ALLOWED);
-        }
-        auto a = p;
-        if (reg == REG_HL && a.expect('+')) {
-            const auto idxp = a.skipSpaces();
-            const auto idx = parseRegName(a);
+        return op.setError(regAt, REGISTER_NOT_ALLOWED);
+    }
+    const auto dispAt = p;
+    const auto disp = p.expect([](char c) { return c == '+' || c == '-'; });
+    if (disp) {
+        if (reg == REG_HL && disp == '+') {
+            const auto idxAt = p.skipSpaces();
+            const auto idx = parseRegName(p);
             if (idx != REG_UNDEF) {
                 if (idx != REG_A)
-                    return op.setError(idxp, REGISTER_NOT_ALLOWED);
-                if (!a.skipSpaces().expect(')'))
-                    return op.setError(a, MISSING_CLOSING_PAREN);
-                scan = a;
-                op.mode = M_BASE;  // (HL+A)
+                    return op.setError(idxAt, REGISTER_NOT_ALLOWED);
+                if (paren && !p.skipSpaces().expect(')'))
+                    return op.setError(p, MISSING_CLOSING_PAREN);
+                scan = p;
+                op.mode = paren ?  M_BASE : M_HLPA;  // (HL+A), HL+A
                 return OK;
             }
         }
-        if (*p == '+' || *p == '-') {  // (rr+n)
-            op.val16 = parseExpr16(p, op, ')');
+        if (isRegIndex(reg)) {
+            p = dispAt;
+            op.val16 = parseExpr16(p, op, paren);
             if (op.hasError())
                 return op.getError();
-            if (!p.skipSpaces().expect(')'))
+            if (paren && !p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
-            if (isRegIndex(reg)) {
-                scan = p;
-                op.mode = M_IDX;
-                return OK;
-            }
-            return op.setError(regp, REGISTER_NOT_ALLOWED);
+            scan = p;
+            op.mode = paren ? M_IDX : M_IXPD; // (ix+d), ix+d
+            return OK;
         }
-        return op.setError(UNKNOWN_OPERAND);
+        return op.setError(regAt, REGISTER_NOT_ALLOWED);
     }
-    op.val16 = parseExpr16(p, op);
-    if (op.hasError())
-        return op.getError();
-    op.mode = M_IMM16;
+    switch (reg) {
+    case REG_IX:
+    case REG_IY:
+        op.mode = M_REGIX;
+        break;
+    case REG_B:
+    case REG_D:
+    case REG_E:
+    case REG_H:
+    case REG_L:
+        op.mode = M_REG8;
+        break;
+    default:
+        op.mode = AddrMode(int8_t(reg) + R_BASE);
+        break;
+    }
     scan = p;
     return OK;
 }

@@ -43,7 +43,9 @@ enum AddrMode : uint8_t {
     M_REG8 = 13,   // Register 8-bit: B/C/D/E/H/L/A
     M_REG16 = 14,  // Register 16-bit: BC/DE/HL/IX/IY/SP
     M_REGIX = 15,  // Register index: IX/IY/SP
-    R_BASE = 16,
+    M_HLPA = 16,   // HL+A
+    M_IXPD = 17,   // ix+disp
+    R_BASE = 18,
     R_BC = R_BASE + REG_BC,
     R_DE = R_BASE + REG_DE,
     R_HL = R_BASE + REG_HL,

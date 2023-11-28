@@ -29,6 +29,11 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     void setAddrMode(AddrMode dst, AddrMode src) { setFlags(Entry::Flags::create(dst, src)); }
+    AddrMode pre() const { return _prefixMode; }
+    void setPrefixMode(AddrMode mode) { _prefixMode = mode; }
+
+private:
+    AddrMode _prefixMode;
 };
 
 struct Operand final : ErrorAt {
@@ -44,9 +49,6 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     Operand dstOp, srcOp;
 
-    AddrMode pre() const { return _prefixMode; }
-    void setPrefixMode(AddrMode mode) { _prefixMode = mode; }
-
     void setEmitInsn() { _emitInsn = true; }
     void emitInsn(Config::opcode_t opc) {
         if (_emitInsn) {
@@ -56,7 +58,6 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     }
 
 private:
-    AddrMode _prefixMode;
     bool _emitInsn;
 };
 

@@ -115,14 +115,24 @@ void DisTlcs90::decodeOperand(
         outRegName(out.letter('('), op.reg).letter(')');
         break;
     case M_IDX:
-        outRegName(out.letter('('), op.reg);
+    case M_IXPD:
+        if (mode == M_IDX)
+            out.letter('(');
+        outRegName(out, op.reg);
         if (val8 >= 0)
             out.letter('+');
-        outHex(out, val8, -8).letter(')');
+        outHex(out, val8, -8);
+        if (mode == M_IDX)
+            out.letter(')');
         break;
     case M_BASE:
-        outRegName(out.letter('('), REG_HL).letter('+');
-        outRegName(out, REG_A).letter(')');
+    case M_HLPA:
+        if (mode == M_BASE)
+            out.letter('(');
+        outRegName(out, REG_HL).letter('+');
+        outRegName(out, REG_A);
+        if (mode == M_BASE)
+            out.letter(')');
         break;
     case M_CC:
         outCcName(out, op.cc);
@@ -140,7 +150,7 @@ void DisTlcs90::decodeOperand(
     case R_AF:
     case R_AFP:
     case R_A:
-        outRegName(out, RegName(uint8_t(mode) - 16));
+        outRegName(out, RegName(uint8_t(mode) - R_BASE));
         break;
     default:
         break;
@@ -152,7 +162,9 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     Operand prefixOp;
+    insn.setPrefixMode(M_NONE);
     if (TABLE.isPrefix(cpuType(), opc, prefixOp.mode)) {
+        insn.setPrefixMode(prefixOp.mode);
         if (insn.readOpCode(prefixOp))
             return _insn.setError(insn);
     }
@@ -163,7 +175,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     if (dst != M_NONE) {
         const auto *start = out.mark();
         if (dst == M_DST) {
-            decodeOperand(insn, out, prefixOp.mode, prefixOp);
+            decodeOperand(insn, out, insn.pre(), prefixOp);
         } else {
             Operand op;
             if (readOperand(insn, dst, op))
@@ -175,7 +187,7 @@ Error DisTlcs90::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
             if (out.mark() != start)  // skip CC_T because it's empty.
                 out.comma();
             if (src == M_SRC) {
-                decodeOperand(insn, out, prefixOp.mode, prefixOp);
+                decodeOperand(insn, out, insn.pre(), prefixOp);
             } else {
                 Operand op;
                 if (readOperand(insn, src, op))

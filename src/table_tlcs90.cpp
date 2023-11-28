@@ -55,9 +55,9 @@ static constexpr Entry TABLE_TLCS90[] PROGMEM = {
     E2(0x14, TEXT_ADD,  M_REGIX, M_IMM16),
     E1(0x18, TEXT_DJNZ, M_REL8),
     E2(0x19, TEXT_DJNZ, R_BC,    M_REL8),
-    E1(0x1A, TEXT_JP,   M_EXT),
+    E1(0x1A, TEXT_JP,   M_IMM16),
     E1(0x1B, TEXT_JRL,  M_REL16),
-    E1(0x1C, TEXT_CALL, M_EXT),
+    E1(0x1C, TEXT_CALL, M_IMM16),
     E1(0x1D, TEXT_CALR, M_REL16),
     E0(0x1E, TEXT_RET),
     E0(0x1F, TEXT_RETI),
@@ -499,8 +499,10 @@ struct EntryPage : entry::PrefixTableBase<Entry> {
         const auto reg = code & 7;
         switch (prefixMode()) {
         case M_IND:
+        case M_REG16:
             return (code & ~7) == pre && reg != 3 && reg != 7;
         case M_IDX:
+        case M_IXPD:
             return (code & ~3) == pre && reg != 3;
         case M_REG8:
             return (code & ~7) == pre && reg != 7;
@@ -532,13 +534,13 @@ static constexpr EntryPage TLCS90_PAGES[] PROGMEM = {
     {0xE8, M_IND,   ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (rr)
     {0xF7, M_BASE,  ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (HL+A)
     {0xF4, M_IDX,   ARRAY_RANGE(TABLE_DST),    ARRAY_RANGE(INDEX_DST)}, // dst (ix+d)
-    {0xEB, M_EXT,   ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
-    {0xE8, M_IND,   ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
-    {0xF7, M_BASE,  ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
-    {0xF4, M_IDX,   ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL
+    {0xEB, M_IMM16, ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL nnnn
+    {0xE8, M_REG16, ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL rr
+    {0xF7, M_HLPA,  ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL HL+A
+    {0xF4, M_IXPD,  ARRAY_RANGE(TABLE_JMP),    ARRAY_RANGE(INDEX_JMP)}, // JP/CALL ix+d
     {0xF8, M_REG8,  ARRAY_RANGE(TABLE_REG),    ARRAY_RANGE(INDEX_REG)}, // r/rr
-    {0xF7, M_BASE,  ARRAY_RANGE(TABLE_LDA),    ARRAY_RANGE(INDEX_LDA)}, // LDA
-    {0xF4, M_IDX,   ARRAY_RANGE(TABLE_LDA),    ARRAY_RANGE(INDEX_LDA)}, // LDA
+    {0xF7, M_HLPA,  ARRAY_RANGE(TABLE_LDA),    ARRAY_RANGE(INDEX_LDA)}, // LDA HL+A
+    {0xF4, M_IXPD,  ARRAY_RANGE(TABLE_LDA),    ARRAY_RANGE(INDEX_LDA)}, // LDA ix+d
     {0xFE, M_NONE,  ARRAY_RANGE(TABLE_COND),   ARRAY_RANGE(INDEX_COND)},
     {0xFE, M_NONE,  ARRAY_RANGE(TABLE_BLOCK),  ARRAY_RANGE(INDEX_BLOCK)},
 };
@@ -628,7 +630,11 @@ Error TableTlcs90::searchName(CpuType cpuType, AsmInsn &insn) const {
 }
 
 static bool prefixMatcher(DisInsn &insn, const EntryPage *page) {
-    return page->prefixMatcher(insn.prefix());
+    if (page->prefixMatcher(insn.prefix())) {
+        insn.setPrefixMode(page->prefixMode());
+        return true;
+    }
+    return false;
 }
 
 static bool invalidPrefixCode(Config::opcode_t prefix, AddrMode mode) {
