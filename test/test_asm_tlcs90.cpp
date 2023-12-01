@@ -303,6 +303,14 @@ static void test_8bit_transfer() {
 
     TEST("LD B, minus_1", 0x30, 0xFF);
     TEST("LD B, max?255", 0x30, 0xFF);
+
+    TEST("option optimize-index, on");
+    TEST("LD A,(IX+0)",   0xE4, 0x2E);
+    TEST("LD A,(IY+0)",   0xE5, 0x2E);
+    TEST("LD A,(SP+0)",   0xE6, 0x2E);
+    TEST("LD (IX+0),56H", 0xEC, 0x37, 0x56);
+    TEST("LD (IY+0),56H", 0xED, 0x37, 0x56);
+    TEST("LD (SP+0),56H", 0xEE, 0x37, 0x56);
 }
 
 static void test_16bit_transfer() {
@@ -561,6 +569,20 @@ static void test_16bit_transfer() {
     ATEST(0x1000, "LDAR HL, 1000H", 0x17, 0xFE, 0xFF);
     ATEST(0x9000, "LDAR HL, 1002H", 0x17, 0x00, 0x80);
     ATEST(0x1000, "LDAR HL, 9001H", 0x17, 0xFF, 0x7F);
+
+    TEST("option optimize-index, on");
+    TEST("LD BC,(IX+0)", 0xE4, 0x48);
+    TEST("LD BC,(IY+0)", 0xE5, 0x48);
+    TEST("LD BC,(SP+0)", 0xE6, 0x48);
+    TEST("LD (IX+0),BC", 0xEC, 0x40);
+    TEST("LD (IY+0),BC", 0xED, 0x40);
+    TEST("LD (SP+0),BC", 0xEE, 0x40);
+    TEST("LDW (IX+0), 0DEF0H", 0xEC, 0x3F, 0xF0, 0xDE);
+    TEST("LDW (IY+0), 0FEDCH", 0xED, 0x3F, 0xDC, 0xFE);
+    TEST("LDW (SP+0), 0BA98H", 0xEE, 0x3F, 0x98, 0xBA);
+    TEST("LDA BC, IX+0", 0xFC, 0x38);
+    TEST("LDA BC, IY+0", 0xFD, 0x38);
+    TEST("LDA BC, SP+0", 0xFE, 0x38);
 }
 
 static void test_exchange() {
@@ -641,6 +663,14 @@ static void test_exchange() {
     TEST("EX (IY-34H),SP", 0xF1, 0xCC, 0x56);
     TEST("EX (SP+34H),SP", 0xF2, 0x34, 0x56);
     TEST("EX (HL+A),SP",   0xF3, 0x56);
+
+    TEST("option optimize-index, on");
+    TEST("EX (IX+0),DE", 0xE4, 0x51);
+    TEST("EX (IY+0),DE", 0xE5, 0x51);
+    TEST("EX (SP+0),DE", 0xE6, 0x51);
+    TEST("EX IX,(IX+0)", 0xE4, 0x54);
+    TEST("EX IX,(IY+0)", 0xE5, 0x54);
+    TEST("EX IX,(SP+0)", 0xE6, 0x54);
 }
 
 static void test_block() {
@@ -1013,6 +1043,11 @@ static void test_8bit_arithmetic() {
 
     TEST("INCX (0FF34H)", 0x07, 0x34);
     TEST("DECX (0FF34H)", 0x0F, 0x34);
+
+    TEST("option optimize-index, on");
+    TEST("ADD A,(IX+0)",   0xE4, 0x60);
+    TEST("SUB (IY+0),56H", 0xED, 0x6A, 0x56);
+    TEST("INC (SP+0)",     0xE6, 0x87);
 }
 
 static void test_16bit_arithmetic() {
@@ -1315,6 +1350,11 @@ static void test_16bit_arithmetic() {
     TEST("DECW (IY-34H)", 0xF1, 0xCC, 0x9F);
     TEST("DECW (SP+34H)", 0xF2, 0x34, 0x9F);
     TEST("DECW (HL+A)",   0xF3, 0x9F);
+
+    TEST("option optimize-index, on");
+    TEST("MUL HL,(IX+0)", 0xE4, 0x12);
+    TEST("SUB HL,(IY+0)", 0xE5, 0x72);
+    TEST("DECW (SP+0)",   0xE6, 0x9F);
 }
 
 static void test_cpu_control() {
@@ -1522,6 +1562,11 @@ static void test_shift_rotate() {
     TEST("RRD (IY-34H)", 0xF1, 0xCC, 0x11);
     TEST("RRD (SP+34H)", 0xF2, 0x34, 0x11);
     TEST("RRD (HL+A)",   0xF3, 0x11);
+
+    TEST("option optimize-index, on");
+    TEST("RLC (IX+0)", 0xE4, 0xA0);
+    TEST("RL (IY+0)",  0xE5, 0xA2);
+    TEST("RRD (SP+0)", 0xE6, 0x11);
 }
 
 static void test_bitops() {
@@ -1606,6 +1651,11 @@ static void test_bitops() {
     TEST("TSET 0,(IY-34H)", 0xF1, 0xCC, 0x18);
     TEST("TSET 1,(SP+34H)", 0xF2, 0x34, 0x19);
     TEST("TSET 2,(HL+A)",   0xF3, 0x1A);
+
+    TEST("option optimize-index, on");
+    TEST("BIT 3,(IX+0)",  0xE4, 0xAB);
+    TEST("SET 4,(IY+0)",  0xE5, 0xBC);
+    TEST("TSET 5,(SP+0)", 0xE6, 0x1D);
 }
 
 static void test_jump_call() {
@@ -1769,6 +1819,10 @@ static void test_jump_call() {
     AERRT(0x9000, "JRL $-7FFFH", OVERFLOW_RANGE, "$-7FFFH", 0x1B, 0xFF, 0x7F);
     ATEST(0x1000, "JRL $+8001H", 0x1B, 0xFF, 0x7F);
     AERRT(0x1000, "JRL $+8002H", OVERFLOW_RANGE, "$+8002H", 0x1B, 0x00, 0x80);
+
+    TEST("option optimize-index, on");
+    TEST("JP   OV, IX+0", 0xEC, 0xC4);
+    TEST("CALL MI, IY+0", 0xED, 0xD5);
 }
 
 static void test_comment() {
