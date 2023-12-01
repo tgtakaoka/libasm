@@ -29,9 +29,18 @@ struct Operand;
 struct AsmTlcs90 final : Assembler, Config {
     AsmTlcs90(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setOptimizeIndex(bool enable);
+
 private:
+    const BoolOption<AsmTlcs90> _opt_optimize_index;
+    bool _optimizeIndex;
+
     Error parseOperand(StrScanner &scan, Operand &op) const;
     void encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) const;
+    void encodeIndexed(
+            AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode) const;
     void encodeOperand(
             AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opcode) const;
 
