@@ -28,6 +28,9 @@ using namespace text::common;
 
 namespace {
 
+constexpr char OPT_BOOL_OPTIMIZE_INDEX[] PROGMEM = "optimize-index";
+constexpr char OPT_DESC_OPTIMIZE_INDEX[] PROGMEM = "optimize zero index";
+
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
@@ -41,8 +44,16 @@ PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 }  // namespace
 
 AsmTlcs90::AsmTlcs90(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_optimize_index),
+      Config(TABLE),
+      _opt_optimize_index(this, &AsmTlcs90::setOptimizeIndex, OPT_BOOL_OPTIMIZE_INDEX,
+              OPT_DESC_OPTIMIZE_INDEX) {
     reset();
+}
+
+void AsmTlcs90::reset() {
+    Assembler::reset();
+    setOptimizeIndex(false);
 }
 
 const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
@@ -52,6 +63,11 @@ const ValueParser::Plugins &AsmTlcs90::defaultPlugins() {
         const PrefixSymbolParser _symbol{nullptr, PSTR_UNDER_QUESTION};
     } PLUGINS{};
     return PLUGINS;
+}
+
+Error AsmTlcs90::setOptimizeIndex(bool enable) {
+    _optimizeIndex = enable;
+    return OK;
 }
 
 namespace {
@@ -101,6 +117,21 @@ void AsmTlcs90::encodeRelative(AsmInsn &insn, AddrMode mode, const Operand &op) 
     goto short_branch;
 }
 
+void AsmTlcs90::encodeIndexed(
+        AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) const {
+    if (overflowInt8(static_cast<int16_t>(op.val16)))
+        insn.setErrorIf(op, OVERFLOW_RANGE);
+    if (_optimizeIndex && op.isOK() && op.val16 == 0) {
+        auto prefix = (opc == 0xF0) ? 0xE4 : 0xEC;
+        if (insn.opCode() == 0x38)
+            prefix = 0xFC;
+        insn.emitInsn(prefix | encodeIndexReg(op.reg));
+    } else {
+        insn.emitInsn(opc | encodeIndexReg(op.reg));
+        insn.emitByte(op.val16);
+    }
+}
+
 void AsmTlcs90::encodeOperand(
         AsmInsn &insn, AddrMode mode, const Operand &op, Config::opcode_t opc) const {
     insn.setErrorIf(op);
@@ -133,10 +164,7 @@ void AsmTlcs90::encodeOperand(
         return;
     case M_IDX:
     case M_IXPD:
-        if (overflowInt8(static_cast<int16_t>(op.val16)))
-            insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.emitInsn(opc | encodeIndexReg(op.reg));
-        insn.emitByte(op.val16);
+        encodeIndexed(insn, mode, op, opc);
         return;
     case M_CC:
         insn.emitInsn(opc | encodeCcName(op.cc));
@@ -220,7 +248,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
                 if (paren && !p.skipSpaces().expect(')'))
                     return op.setError(p, MISSING_CLOSING_PAREN);
                 scan = p;
-                op.mode = paren ?  M_BASE : M_HLPA;  // (HL+A), HL+A
+                op.mode = paren ? M_BASE : M_HLPA;  // (HL+A), HL+A
                 return OK;
             }
         }
@@ -232,7 +260,7 @@ Error AsmTlcs90::parseOperand(StrScanner &scan, Operand &op) const {
             if (paren && !p.skipSpaces().expect(')'))
                 return op.setError(p, MISSING_CLOSING_PAREN);
             scan = p;
-            op.mode = paren ? M_IDX : M_IXPD; // (ix+d), ix+d
+            op.mode = paren ? M_IDX : M_IXPD;  // (ix+d), ix+d
             return OK;
         }
         return op.setError(regAt, REGISTER_NOT_ALLOWED);
