@@ -488,35 +488,35 @@
         POP     IY
         POP     AF
 
-        LDA     BC,(IX+34H)
-        LDA     BC,(IY-34H)
-        LDA     BC,(SP+34H)
-        LDA     BC,(HL+A)
+        LDA     BC,IX+34H
+        LDA     BC,IY-34H
+        LDA     BC,SP+34H
+        LDA     BC,HL+A
 
-        LDA     DE,(IX+34H)
-        LDA     DE,(IY-34H)
-        LDA     DE,(SP+34H)
-        LDA     DE,(HL+A)
+        LDA     DE,IX+34H
+        LDA     DE,IY-34H
+        LDA     DE,SP+34H
+        LDA     DE,HL+A
 
-        LDA     HL,(IX+34H)
-        LDA     HL,(IY-34H)
-        LDA     HL,(SP+34H)
-        LDA     HL,(HL+A)
+        LDA     HL,IX+34H
+        LDA     HL,IY-34H
+        LDA     HL,SP+34H
+        LDA     HL,HL+A
 
-        LDA     IX,(IX+34H)
-        LDA     IX,(IY-34H)
-        LDA     IX,(SP+34H)
-        LDA     IX,(HL+A)
+        LDA     IX,IX+34H
+        LDA     IX,IY-34H
+        LDA     IX,SP+34H
+        LDA     IX,HL+A
 
-        LDA     IY,(IX+34H)
-        LDA     IY,(IY-34H)
-        LDA     IY,(SP+34H)
-        LDA     IY,(HL+A)
+        LDA     IY,IX+34H
+        LDA     IY,IY-34H
+        LDA     IY,SP+34H
+        LDA     IY,HL+A
 
-        LDA     SP,(IX+34H)
-        LDA     SP,(IY-34H)
-        LDA     SP,(SP+34H)
-        LDA     SP,(HL+A)
+        LDA     SP,IX+34H
+        LDA     SP,IY-34H
+        LDA     SP,SP+34H
+        LDA     SP,HL+A
 
         LDAR    HL,$+3
         LDAR    HL,$
@@ -1582,59 +1582,59 @@
         JRL     $-4FEH
         JRL     $+401H
 
-        JP      (1234H)
+        JP      1234H
 
-        JP      F,(BC)
-        JP      LT,(DE)
-        JP      LE,(HL)
-        JP      ULE,(1234H)
-        JP      OV,(IX)
-        JP      MI,(IY)
-        JP      Z,(SP)
-        JP      C,(0FF34H)
-        JP      (IX+34H)
-        JP      GE,(IY-34H)
-        JP      GT,(SP+34H)
-        JP      UGT,(HL+A)
-        JP      NOV,(BC)
-        JP      PL,(DE)
-        JP      NZ,(HL)
-        JP      NC,(1234H)
-        JP      PE,(IX)
-        JP      M,(IY)
-        JP      EQ,(SP)
-        JP      ULT,(0FF34H)
-        JP      PO,(IX+34H)
-        JP      P,(IY-34H)
-        JP      NE,(SP+34H)
-        JP      UGE,(HL+A)
+        JP      F,BC
+        JP      LT,DE
+        JP      LE,HL
+        JP      ULE,1234H
+        JP      OV,IX
+        JP      MI,IY
+        JP      Z,SP
+        JP      C,0FF34H
+        JP      IX+34H
+        JP      GE,IY-34H
+        JP      GT,SP+34H
+        JP      UGT,HL+A
+        JP      NOV,BC
+        JP      PL,DE
+        JP      NZ,HL
+        JP      NC,1234H
+        JP      PE,IX
+        JP      M,IY
+        JP      EQ,SP
+        JP      ULT,0FF34H
+        JP      PO,IX+34H
+        JP      P,IY-34H
+        JP      NE,SP+34H
+        JP      UGE,HL+A
 
-        CALL    (1234H)
+        CALL    1234H
 
-        CALL    F,(BC)
-        CALL    LT,(DE)
-        CALL    LE,(HL)
-        CALL    ULE,(1234H)
-        CALL    OV,(IX)
-        CALL    MI,(IY)
-        CALL    Z,(SP)
-        CALL    C,(0FF34H)
-        CALL    (IX+34H)
-        CALL    GE,(IY-34H)
-        CALL    GT,(SP+34H)
-        CALL    UGT,(HL+A)
-        CALL    NOV,(BC)
-        CALL    PL,(DE)
-        CALL    NZ,(HL)
-        CALL    NC,(1234H)
-        CALL    PE,(IX)
-        CALL    M,(IY)
-        CALL    EQ,(SP)
-        CALL    ULT,(0FF34H)
-        CALL    PO,(IX+34H)
-        CALL    P,(IY-34H)
-        CALL    NE,(SP+34H)
-        CALL    UGE,(HL+A)
+        CALL    F,BC
+        CALL    LT,DE
+        CALL    LE,HL
+        CALL    ULE,1234H
+        CALL    OV,IX
+        CALL    MI,IY
+        CALL    Z,SP
+        CALL    C,0FF34H
+        CALL    IX+34H
+        CALL    GE,IY-34H
+        CALL    GT,SP+34H
+        CALL    UGT,HL+A
+        CALL    NOV,BC
+        CALL    PL,DE
+        CALL    NZ,HL
+        CALL    NC,1234H
+        CALL    PE,IX
+        CALL    M,IY
+        CALL    EQ,SP
+        CALL    ULT,0FF34H
+        CALL    PO,IX+34H
+        CALL    P,IY-34H
+        CALL    NE,SP+34H
+        CALL    UGE,HL+A
 
         CALR    $+3
         CALR    $
