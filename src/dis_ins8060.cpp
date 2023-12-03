@@ -46,7 +46,7 @@ void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
         out.letter('@');
     const auto reg = decodePointerReg(insn.opCode());
     const auto opr = insn.readByte();
-    if (reg == REG_PC && opr != 0x80) {  // PC relative
+    if (reg == REG_PC) {  // PC relative
         // PC points the last byte of instruction.
         const auto base = insn.address() + 1;
         const auto disp = static_cast<int8_t>(opr);
@@ -56,7 +56,7 @@ void DisIns8060::decodeIndx(DisInsn &insn, StrBuffer &out, bool hasMode) const {
         const auto toff = offset(offset(base) + disp + fetch);
         const Config::uintptr_t target = page(base) | toff;
         const Config::ptrdiff_t diff = target - base - fetch;
-        if (diff >= -127 && diff < 128) {
+        if (diff >= -128 && diff < 128) {
             outRelAddr(out, target, insn.address(), 8);
         } else {
             outAbsAddr(out, target);

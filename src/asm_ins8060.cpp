@@ -113,11 +113,14 @@ const Functor *Ins8060FunctionTable::lookupFunction(const StrScanner &name) cons
 void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
     Config::ptrdiff_t delta;
     if (op.mode == M_DISP) {
+        const auto pcdisp = (op.reg == REG_PC || op.reg == REG_P0);
         if (op.index == REG_E) {
+            if (pcdisp)
+                insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
             delta = -128;
         } else {
             delta = static_cast<Config::ptrdiff_t>(op.val16);
-            if (overflowInt8(delta) || delta == -128)
+            if (overflowInt8(delta) || (!pcdisp && delta == -128))
                 insn.setErrorIf(op, OVERFLOW_RANGE);
         }
         insn.embed(encodePointerReg(op.reg));
@@ -132,8 +135,7 @@ void AsmIns8060::encodeRel8(AsmInsn &insn, const Operand &op) const {
         const auto diff = offset(target - fetch) - offset(base);
         // Sign extends 12-bit number.
         delta = signExtend(diff, 12);
-        // delta -128 is for E reg.
-        if (overflowInt8(delta) || delta == -128)
+        if (overflowInt8(delta))
             insn.setErrorIf(op, OPERAND_TOO_FAR);
         if (op.getError())
             delta = 0;
@@ -155,9 +157,12 @@ void AsmIns8060::encodeIndx(AsmInsn &insn, const Operand &op) const {
         insn.embed(4);
     }
     auto disp = static_cast<Config::ptrdiff_t>(op.val16);
+    const auto pcdisp = (op.reg == REG_PC || op.reg == REG_P0);
     if (op.index == REG_E) {
+        if (pcdisp)
+            insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
         disp = -128;
-    } else if (overflowInt8(disp) || disp == -128) {
+    } else if (overflowInt8(disp) || (!pcdisp && disp == -128)) {
         insn.setErrorIf(op, OVERFLOW_RANGE);
     }
     insn.emitInsn();
