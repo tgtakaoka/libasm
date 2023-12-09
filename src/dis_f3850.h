@@ -27,15 +27,7 @@ namespace f3850 {
 struct DisF3850 final : Disassembler, Config {
     DisF3850(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
-    void reset() override;
-
-    Error setUseScratchpadName(bool enable);
-
 private:
-    const BoolOption<DisF3850> _opt_useScratchpad;
-
-    bool _useScratchpad;
-
     void decodeRelative(DisInsn &insn, StrBuffer &out) const;
     void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
 

@@ -26,13 +26,6 @@ namespace f3850 {
 using namespace reg;
 using namespace text::common;
 
-namespace {
-
-const char OPT_BOOL_USE_SCRATCHPAD[] PROGMEM = "use-scratchpad";
-const char OPT_DESC_USE_SCRATCHPAD[] PROGMEM = "use name for scratchpad";
-
-}  // namespace
-
 const ValueFormatter::Plugins& DisF3850::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
         const HexFormatter& hex() const override { return _hex; }
@@ -43,22 +36,8 @@ const ValueFormatter::Plugins& DisF3850::defaultPlugins() {
     return PLUGINS;
 }
 
-DisF3850::DisF3850(const ValueFormatter::Plugins& plugins)
-    : Disassembler(plugins, &_opt_useScratchpad),
-      Config(TABLE),
-      _opt_useScratchpad(this, &DisF3850::setUseScratchpadName, OPT_BOOL_USE_SCRATCHPAD,
-              OPT_DESC_USE_SCRATCHPAD) {
+DisF3850::DisF3850(const ValueFormatter::Plugins& plugins) : Disassembler(plugins), Config(TABLE) {
     reset();
-}
-
-void DisF3850::reset() {
-    Disassembler::reset();
-    setUseScratchpadName(false);
-}
-
-Error DisF3850::setUseScratchpadName(bool enable) {
-    _useScratchpad = enable;
-    return OK;
 }
 
 void DisF3850::decodeRelative(DisInsn& insn, StrBuffer& out) const {
@@ -72,16 +51,17 @@ void DisF3850::decodeRelative(DisInsn& insn, StrBuffer& out) const {
 void DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) const {
     const auto opCode = insn.opCode();
     switch (mode) {
-    case M_REG:
-        if (_useScratchpad) {
-            const auto name = decodeRegName(opCode);
-            if (name != REG_UNDEF) {
-                outRegName(out, name);
-                break;
-            }
+    case M_REG: {
+        if ((opCode & 0xF) == 15)
+            insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
+        const auto name = decodeRegName(opCode);
+        if (name != REG_UNDEF) {
+            outRegName(out, name);
+            break;
         }
         outDec(out, opCode & 0xF, 4);
         break;
+    }
     case M_C1:
         outDec(out, 1, 1);
         break;
@@ -91,9 +71,20 @@ void DisF3850::decodeOperand(DisInsn& insn, StrBuffer& out, AddrMode mode) const
     case M_IM3:
         outHex(out, opCode & 7, 3);
         break;
+    case M_IOS:
+        if ((opCode & 0xF) == 2 || (opCode & 0xF) == 3)
+            insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
+        /* Fall-through */
     case M_IM4:
         outHex(out, opCode & 0xF, 4);
         break;
+    case M_IOA: {
+        const auto ioa = insn.readByte();
+        if (ioa < 4)
+            insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
+        outHex(out, ioa, 8);
+        break;
+    }
     case M_IM8:
         outHex(out, insn.readByte(), 8);
         break;

@@ -69,7 +69,6 @@ void test_dis_f3850() {
     PREP_DIS(f3850::DisF3850);
 
     driver.setUpperHex(false);
-    EQ("use-scratchpad", OK, disassembler.setOption("use-scratchpad", "on"));
 
     DIS8("f3850", 0x7bcd,
             "      cpu   3850\n"

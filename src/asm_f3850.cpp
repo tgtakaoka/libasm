@@ -117,6 +117,8 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
     case M_REG:
         if (op.val16 >= 16)
             insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (op.val16 == 15)
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         insn.embed(op.val16 & 0xF);
         break;
     case M_C1:
@@ -131,11 +133,19 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(op.val16 & 7);
         break;
+    case M_IOS:
+        if (op.val16 == 2 || op.val16 == 3)
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        /* Fall-through */
     case M_IM4:
         if (op.val16 >= 16)
             insn.setErrorIf(op, OVERFLOW_RANGE);
         insn.embed(op.val16 & 0xF);
         break;
+    case M_IOA:
+        if (op.isOK() && op.val16 < 4)
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
+        /* Fall-through */
     case M_IM8:
         insn.emitOperand8(op.val16);
         break;

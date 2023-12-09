@@ -79,7 +79,7 @@
         ds      12
         ds      13
         ds      14
-        ds      15
+;        ds      15
         ds      j
         ds      hu
         ds      hl
@@ -102,7 +102,7 @@
         lr      a,12
         lr      a,13
         lr      a,14
-        lr      a,15
+;        lr      a,15
         lr      a,j
         lr      a,hu
         lr      a,hl
@@ -125,7 +125,7 @@
         lr      12,a
         lr      13,a
         lr      14,a
-        lr      15,a
+;        lr      15,a
         lr      j,a
         lr      hu,a
         lr      hl,a
@@ -211,8 +211,8 @@
 ;;; Ax
         ins     0
         ins     1
-        ins     2
-        ins     3
+;        ins     2
+;        ins     3
         ins     4
         ins     5
         ins     6
@@ -228,8 +228,8 @@
 ;;; Bx
         outs    0
         outs    1
-        outs    2
-        outs    3
+;        outs    2
+;        outs    3
         outs    4
         outs    5
         outs    6
@@ -258,7 +258,7 @@
         as      12
         as      13
         as      14
-        as      15
+;        as      15
         as      j
         as      hu
         as      hl
@@ -281,7 +281,7 @@
         asd     12
         asd     13
         asd     14
-        asd     15
+;        asd     15
         asd     j
         asd     hu
         asd     hl
@@ -304,7 +304,7 @@
         xs      12
         xs      13
         xs      14
-        xs      15
+;        xs      15
         xs      j
         xs      hu
         xs      hl
@@ -327,7 +327,7 @@
         ns      12
         ns      13
         ns      14
-        ns      15
+;        ns      15
         ns      j
         ns      hu
         ns      hl

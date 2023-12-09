@@ -27,7 +27,6 @@ Assembler &assembler(asm3850);
 static void set_up() {
   assembler.reset();
   assembler.setCpu("F3850");
-  assembler.setOption("use-scratchpad", "no");
   assembler.setOption("relative", "off");
 }
 
@@ -46,15 +45,23 @@ void test_cpu() {
 
 void test_accumlator() {
     TEST("SR  1",  0x12);
+    ERRT("SR  2",  OPERAND_NOT_ALLOWED, "2", 0x12);
+    ERRT("SR  3",  OPERAND_NOT_ALLOWED, "3", 0x12);
     TEST("SR  4",  0x14);
+    ERRT("SR  5",  OPERAND_NOT_ALLOWED, "5", 0x12);
     TEST("SL  1",  0x13);
+    ERRT("SL  2",  OPERAND_NOT_ALLOWED, "2", 0x13);
+    ERRT("SL  3",  OPERAND_NOT_ALLOWED, "3", 0x13);
     TEST("SL  4",  0x15);
+    ERRT("SL  5",  OPERAND_NOT_ALLOWED, "5", 0x13);
     TEST("COM ",   0x18);
     TEST("LNK ",   0x19);
     TEST("INC ",   0x1F);
     TEST("CLR ",   0x70);
+    TEST("LIS 0",  0x70);
     TEST("LIS 1",  0x71);
     TEST("LIS 15", 0x7F);
+    ERRT("LIS 16", OVERFLOW_RANGE, "16", 0x70);
     TEST("LI  0",      0x20, 0x00);
     TEST("LI  H'FF'",  0x20, 0xFF);
     TEST("NI  1",      0x21, 0x01);
@@ -79,8 +86,10 @@ void test_indirect_scratchpad() {
     TEST("LR   IS, A", 0x0B);
     TEST("LISU 0",     0x60);
     TEST("LISU 7",     0x67);
+    ERRT("LISU 8", OVERFLOW_RANGE, "8", 0x60);
     TEST("LISL 0",     0x68);
     TEST("LISL 7",     0x6F);
+    ERRT("LISL 8", OVERFLOW_RANGE, "8", 0x68);
 }
 
 void test_scratchpad() {
@@ -91,7 +100,7 @@ void test_scratchpad() {
     TEST("LR  A, 12", 0x4C);
     TEST("LR  A, 13", 0x4D);
     TEST("LR  A, 14", 0x4E);
-    TEST("LR  A, 15", 0x4F);
+    ERRT("LR  A, 15", OPERAND_NOT_ALLOWED, "15", 0x4F);
     TEST("LR  0, A",  0x50);
     TEST("LR  9, A",  0x59);
     TEST("LR  10, A", 0x5A);
@@ -99,7 +108,7 @@ void test_scratchpad() {
     TEST("LR  12, A", 0x5C);
     TEST("LR  13, A", 0x5D);
     TEST("LR  14, A", 0x5E);
-    TEST("LR  15, A", 0x5F);
+    ERRT("LR  15, A", OPERAND_NOT_ALLOWED, "15, A", 0x5F);
 
     TEST("LR  A, KU", 0x00);
     TEST("LR  A, KL", 0x01);
@@ -110,25 +119,19 @@ void test_scratchpad() {
     TEST("LR  QU, A", 0x06);
     TEST("LR  QL, A", 0x07);
 
-    assembler.setOption("use-scratchpad", "on");
-    TEST("LR  A, 0",  0x40);
     TEST("LR  A, J",  0x49);
     TEST("LR  A, HU", 0x4A);
     TEST("LR  A, HL", 0x4B);
     TEST("LR  A, S",  0x4C);
     TEST("LR  A, I",  0x4D);
     TEST("LR  A, D",  0x4E);
-    TEST("LR  A, 15", 0x4F);
-    TEST("LR  0, A",  0x50);
     TEST("LR  J, A",  0x59);
     TEST("LR  HU, A", 0x5A);
     TEST("LR  HL, A", 0x5B);
     TEST("LR  S, A",  0x5C);
     TEST("LR  I, A",  0x5D);
     TEST("LR  D, A",  0x5E);
-    TEST("LR  15, A", 0x5F);
 
-    TEST("AS  8",  0xC8);
     TEST("AS  J",  0xC9);
     TEST("AS  HU", 0xCA);
     TEST("AS  HL", 0xCB);
@@ -136,7 +139,6 @@ void test_scratchpad() {
     TEST("AS  I",  0xCD);
     TEST("AS  D",  0xCE);
 
-    TEST("ASD 7",  0xD7);
     TEST("ASD J",  0xD9);
     TEST("ASD HU", 0xDA);
     TEST("ASD HL", 0xDB);
@@ -144,7 +146,6 @@ void test_scratchpad() {
     TEST("ASD I",  0xDD);
     TEST("ASD D",  0xDE);
 
-    TEST("NS  7",  0xF7);
     TEST("NS  J",  0xF9);
     TEST("NS  HU", 0xFA);
     TEST("NS  HL", 0xFB);
@@ -152,7 +153,6 @@ void test_scratchpad() {
     TEST("NS  I",  0xFD);
     TEST("NS  D",  0xFE);
 
-    TEST("XS  7",  0xE7);
     TEST("XS  J",  0xE9);
     TEST("XS  HU", 0xEA);
     TEST("XS  HL", 0xEB);
@@ -160,7 +160,6 @@ void test_scratchpad() {
     TEST("XS  I",  0xED);
     TEST("XS  D",  0xEE);
 
-    TEST("DS  7",  0x37);
     TEST("DS  J",  0x39);
     TEST("DS  HU", 0x3A);
     TEST("DS  HL", 0x3B);
@@ -234,10 +233,28 @@ void test_branch() {
 
 void test_io() {
     TEST("INS  0",  0xA0);
+    TEST("INS  1",  0xA1);
+    ERRT("INS  2",  OPERAND_NOT_ALLOWED, "2", 0xA2);
+    ERRT("INS  3",  OPERAND_NOT_ALLOWED, "3", 0xA3);
+    TEST("INS  4",  0xA4);
     TEST("INS  15", 0xAF);
+    ERRT("IN   0",  OPERAND_NOT_ALLOWED, "0", 0x26, 0x00);
+    ERRT("IN   1",  OPERAND_NOT_ALLOWED, "1", 0x26, 0x01);
+    ERRT("IN   2",  OPERAND_NOT_ALLOWED, "2", 0x26, 0x02);
+    ERRT("IN   3",  OPERAND_NOT_ALLOWED, "3", 0x26, 0x03);
+    TEST("IN   4",     0x26, 0x04);
     TEST("IN   H'FF'", 0x26, 0xFF);
     TEST("OUTS 0",  0xB0);
+    TEST("OUTS 1",  0xB1);
+    ERRT("OUTS 2",  OPERAND_NOT_ALLOWED, "2", 0xB2);
+    ERRT("OUTS 3",  OPERAND_NOT_ALLOWED, "3", 0xB3);
+    TEST("OUTS 4",  0xB4);
     TEST("OUTS 15", 0xBF);
+    ERRT("OUT  0",  OPERAND_NOT_ALLOWED, "0", 0x27, 0x00);
+    ERRT("OUT  1",  OPERAND_NOT_ALLOWED, "1", 0x27, 0x01);
+    ERRT("OUT  2",  OPERAND_NOT_ALLOWED, "2", 0x27, 0x02);
+    ERRT("OUT  3",  OPERAND_NOT_ALLOWED, "3", 0x27, 0x03);
+    TEST("OUT  4",  0x27, 0x04);
     TEST("OUT  H'AB'", 0x27, 0xAB);
 }
 
@@ -250,7 +267,7 @@ void test_control() {
 void test_comment() {
     ERRT("CLR      ; comment", OK, "; comment", 0x70);
     ERRT("LIS 1    ; comment", OK, "; comment", 0x71);
-    ERRT("LR  A, 15; comment", OK, "; comment", 0x4F);
+    ERRT("LR  A, 14; comment", OK, "; comment", 0x4E);
     ERRT("LR  0, A ; comment", OK, "; comment", 0x50);
 }
 

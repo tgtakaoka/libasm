@@ -70,8 +70,8 @@ static constexpr Entry TABLE_3850[] PROGMEM = {
     E1(0x23, TEXT_XI,  M_IM8),
     E1(0x24, TEXT_AI,  M_IM8),
     E1(0x25, TEXT_CI,  M_IM8),
-    E1(0x26, TEXT_IN,  M_IM8),
-    E1(0x27, TEXT_OUT, M_IM8),
+    E1(0x26, TEXT_IN,  M_IOA),
+    E1(0x27, TEXT_OUT, M_IOA),
     E1(0x28, TEXT_PI,  M_ADDR),
     E1(0x29, TEXT_JMP, M_ADDR),
     E1(0x2A, TEXT_DCI, M_ADDR),
@@ -102,8 +102,8 @@ static constexpr Entry TABLE_3850[] PROGMEM = {
     E1(0x94, TEXT_BNZ,  M_REL),
     E1(0x98, TEXT_BNO,  M_REL),
     E2(0x90, TEXT_BF,   M_IM4,  M_REL),
-    E1(0xA0, TEXT_INS,  M_IM4),
-    E1(0xB0, TEXT_OUTS, M_IM4),
+    E1(0xA0, TEXT_INS,  M_IOS),
+    E1(0xB0, TEXT_OUTS, M_IOS),
     E1(0xC0, TEXT_AS,   M_REG),
     E1(0xD0, TEXT_ASD,  M_REG),
     E1(0xE0, TEXT_XS,   M_REG),
@@ -215,7 +215,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_REG;
     if (opr == M_C1 || opr == M_C4 || opr == M_IM3 || opr == M_IM4 || opr == M_IM8 || opr == M_ADDR)
         return table == M_C1 || table == M_C4 || table == M_IM3 || table == M_IM4 ||
-               table == M_IM8 || table == M_ADDR || table == M_REL || table == M_REG;
+               table == M_IM8 || table == M_ADDR || table == M_REL || table == M_REG ||
+               table == M_IOS || table == M_IOA;
     return false;
 }
 
@@ -235,7 +236,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     const auto flags = entry->flags();
     const auto mode1 = flags.mode1();
     const auto mode2 = flags.mode2();
-    if (mode1 == M_REG || mode2 == M_REG || mode1 == M_IM4) {
+    if (mode1 == M_REG || mode2 == M_REG || mode1 == M_IM4 || mode1 == M_IOS) {
         opCode &= ~0x0F;
     } else if (mode1 == M_IM3) {
         opCode &= ~0x07;

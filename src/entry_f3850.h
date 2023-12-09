@@ -42,7 +42,7 @@ enum AddrMode : uint8_t {
     M_P0 = REG_P0,  // Subroutine address (PC0)
     M_DC = REG_DC,  // Data pointer (DC0)
     M_J = 14,       // Scratchpad R9
-    M_REG = 15,     // Scratchpad register number (0~15 and register aliases)
+    M_REG = 15,     // Scratchpad register number (0~14 and register aliases)
     M_C1 = 16,      // Immediate constant 1
     M_C4 = 17,      // Immediate constant 4
     M_IM3 = 18,     // 3-bit Immediate constant (0~7)
@@ -50,6 +50,8 @@ enum AddrMode : uint8_t {
     M_IM8 = 20,     // 8-bit Immediate constant
     M_ADDR = 21,    // 16-bit Absolute address
     M_REL = 22,     // 8-bit Relative address
+    M_IOS = 23,     // 3-bit I/O address (0,1,4~15)
+    M_IOA = 24,     // 8-bit I/O address (4~255)
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {

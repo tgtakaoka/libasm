@@ -27,7 +27,6 @@ Disassembler &disassembler(dis3850);
 static void set_up() {
     disassembler.reset();
     disassembler.setCpu("F3850");
-    disassembler.setOption("use-scratchpad", "no");
     disassembler.setOption("relative", "off");
 }
 
@@ -86,60 +85,43 @@ void test_indirect_scratchpad() {
 }
 
 void test_scratchpad() {
-    TEST("LR",  "A, 0",  0x40);
-    TEST("LR",  "A, 9",  0x49);
-    TEST("LR",  "A, 10", 0x4A);
-    TEST("LR",  "A, 11", 0x4B);
-    TEST("LR",  "A, 12", 0x4C);
-    TEST("LR",  "A, 13", 0x4D);
-    TEST("LR",  "A, 14", 0x4E);
-    TEST("LR",  "A, 15", 0x4F);
-    TEST("LR",  "0, A",  0x50);
-    TEST("LR",  "9, A",  0x59);
-    TEST("LR",  "10, A", 0x5A);
-    TEST("LR",  "11, A", 0x5B);
-    TEST("LR",  "12, A", 0x5C);
-    TEST("LR",  "13, A", 0x5D);
-    TEST("LR",  "14, A", 0x5E);
-    TEST("LR",  "15, A", 0x5F);
+    TEST("LR", "A, 0",  0x40);
+    TEST("LR", "A, J",  0x49);
+    TEST("LR", "A, HU", 0x4A);
+    TEST("LR", "A, HL", 0x4B);
+    TEST("LR", "A, S",  0x4C);
+    TEST("LR", "A, I",  0x4D);
+    TEST("LR", "A, D",  0x4E);
+    ERRT("LR", "A, 15", OPERAND_NOT_ALLOWED, "15", 0x4F);
+    TEST("LR", "0, A",  0x50);
+    TEST("LR", "J, A",  0x59);
+    TEST("LR", "HU, A", 0x5A);
+    TEST("LR", "HL, A", 0x5B);
+    TEST("LR", "S, A",  0x5C);
+    TEST("LR", "I, A",  0x5D);
+    TEST("LR", "D, A",  0x5E);
+    ERRT("LR", "15, A", OPERAND_NOT_ALLOWED, "15, A", 0x5F);
 
-    TEST("LR",  "A, KU", 0x00);
-    TEST("LR",  "A, KL", 0x01);
-    TEST("LR",  "A, QU", 0x02);
-    TEST("LR",  "A, QL", 0x03);
-    TEST("LR",  "KU, A", 0x04);
-    TEST("LR",  "KL, A", 0x05);
-    TEST("LR",  "QU, A", 0x06);
-    TEST("LR",  "QL, A", 0x07);
+    TEST("LR", "A, KU", 0x00);
+    TEST("LR", "A, KL", 0x01);
+    TEST("LR", "A, QU", 0x02);
+    TEST("LR", "A, QL", 0x03);
+    TEST("LR", "KU, A", 0x04);
+    TEST("LR", "KL, A", 0x05);
+    TEST("LR", "QU, A", 0x06);
+    TEST("LR", "QL, A", 0x07);
 
-    disassembler.setOption("use-scratchpad", "on");
-    TEST("LR",  "A, 0",  0x40);
-    TEST("LR",  "A, J",  0x49);
-    TEST("LR",  "A, HU", 0x4A);
-    TEST("LR",  "A, HL", 0x4B);
-    TEST("LR",  "A, S",  0x4C);
-    TEST("LR",  "A, I",  0x4D);
-    TEST("LR",  "A, D",  0x4E);
-    TEST("LR",  "A, 15", 0x4F);
-    TEST("LR",  "0, A",  0x50);
-    TEST("LR",  "J, A",  0x59);
-    TEST("LR",  "HU, A", 0x5A);
-    TEST("LR",  "HL, A", 0x5B);
-    TEST("LR",  "S, A",  0x5C);
-    TEST("LR",  "I, A",  0x5D);
-    TEST("LR",  "D, A",  0x5E);
-    TEST("LR",  "15, A", 0x5F);
+    TEST("AS", "0",  0xC0);
+    ERRT("AS", "15", OPERAND_NOT_ALLOWED, "15", 0xCF);
+    TEST("AS", "J",  0xC9);
+    TEST("AS", "HU", 0xCA);
+    TEST("AS", "HL", 0xCB);
+    TEST("AS", "S",  0xCC);
+    TEST("AS", "I",  0xCD);
+    TEST("AS", "D",  0xCE);
 
-    TEST("AS",  "8",  0xC8);
-    TEST("AS",  "J",  0xC9);
-    TEST("AS",  "HU", 0xCA);
-    TEST("AS",  "HL", 0xCB);
-    TEST("AS",  "S",  0xCC);
-    TEST("AS",  "I",  0xCD);
-    TEST("AS",  "D",  0xCE);
-    TEST("AS",  "15", 0xCF);
-
-    TEST("ASD", "7",  0xD7);
+    TEST("ASD", "1",  0xD1);
+    ERRT("ASD", "15", OPERAND_NOT_ALLOWED, "15", 0xDF);
     TEST("ASD", "J",  0xD9);
     TEST("ASD", "HU", 0xDA);
     TEST("ASD", "HL", 0xDB);
@@ -147,36 +129,39 @@ void test_scratchpad() {
     TEST("ASD", "I",  0xDD);
     TEST("ASD", "D",  0xDE);
 
-    TEST("NS",  "7",  0xF7);
-    TEST("NS",  "J",  0xF9);
-    TEST("NS",  "HU", 0xFA);
-    TEST("NS",  "HL", 0xFB);
-    TEST("NS",  "S",  0xFC);
-    TEST("NS",  "I",  0xFD);
-    TEST("NS",  "D",  0xFE);
+    TEST("NS", "8",  0xF8);
+    ERRT("NS", "15", OPERAND_NOT_ALLOWED, "15", 0xFF);
+    TEST("NS", "J",  0xF9);
+    TEST("NS", "HU", 0xFA);
+    TEST("NS", "HL", 0xFB);
+    TEST("NS", "S",  0xFC);
+    TEST("NS", "I",  0xFD);
+    TEST("NS", "D",  0xFE);
 
-    TEST("XS",  "7",  0xE7);
-    TEST("XS",  "J",  0xE9);
-    TEST("XS",  "HU", 0xEA);
-    TEST("XS",  "HL", 0xEB);
-    TEST("XS",  "S",  0xEC);
-    TEST("XS",  "I",  0xED);
-    TEST("XS",  "D",  0xEE);
+    TEST("XS", "2",  0xE2);
+    ERRT("XS", "15", OPERAND_NOT_ALLOWED, "15", 0xEF);
+    TEST("XS", "J",  0xE9);
+    TEST("XS", "HU", 0xEA);
+    TEST("XS", "HL", 0xEB);
+    TEST("XS", "S",  0xEC);
+    TEST("XS", "I",  0xED);
+    TEST("XS", "D",  0xEE);
 
-    TEST("DS",  "7",  0x37);
-    TEST("DS",  "J",  0x39);
-    TEST("DS",  "HU", 0x3A);
-    TEST("DS",  "HL", 0x3B);
-    TEST("DS",  "S",  0x3C);
-    TEST("DS",  "I",  0x3D);
-    TEST("DS",  "D",  0x3E);
+    TEST("DS", "7",  0x37);
+    ERRT("DS", "15", OPERAND_NOT_ALLOWED, "15", 0x3F);
+    TEST("DS", "J",  0x39);
+    TEST("DS", "HU", 0x3A);
+    TEST("DS", "HL", 0x3B);
+    TEST("DS", "S",  0x3C);
+    TEST("DS", "I",  0x3D);
+    TEST("DS", "D",  0x3E);
 }
 
 void test_data_counter() {
-    TEST("LR",  "Q, DC", 0x0E);
-    TEST("LR",  "H, DC", 0x11);
-    TEST("LR",  "DC, Q", 0x0F);
-    TEST("LR",  "DC, H", 0x10);
+    TEST("LR", "Q, DC", 0x0E);
+    TEST("LR", "H, DC", 0x11);
+    TEST("LR", "DC, Q", 0x0F);
+    TEST("LR", "DC, H", 0x10);
 
     TEST("ADC", "",        0x8E);
     TEST("DCI", "H'1234'",            0x2A, 0x12, 0x34);
@@ -186,24 +171,24 @@ void test_data_counter() {
 }
 
 void test_memory_reference() {
-    TEST("LM",  "", 0x16);
-    TEST("ST",  "", 0x17);
-    TEST("AM",  "", 0x88);
+    TEST("LM", "", 0x16);
+    TEST("ST", "", 0x17);
+    TEST("AM", "", 0x88);
     TEST("AMD", "", 0x89);
-    TEST("NM",  "", 0x8A);
-    TEST("OM",  "", 0x8B);
-    TEST("XM",  "", 0x8C);
-    TEST("CM",  "", 0x8D);
+    TEST("NM", "", 0x8A);
+    TEST("OM", "", 0x8B);
+    TEST("XM", "", 0x8C);
+    TEST("CM", "", 0x8D);
 }
 
 void test_program_counter() {
-    TEST("LR",  "K, P",    0x08);
-    TEST("LR",  "P, K",    0x09);
-    TEST("LR",  "P0, Q",   0x0D);
-    TEST("PK",  "",        0x0C);
-    TEST("PI",  "H'ABCD'",            0x28, 0xAB, 0xCD);
-    NMEM("PI",  "H'AB00'", "H'AB00'", 0x28, 0xAB);
-    NMEM("PI",  "H'0000'", "H'0000'", 0x28);
+    TEST("LR", "K, P",    0x08);
+    TEST("LR", "P, K",    0x09);
+    TEST("LR", "P0, Q",   0x0D);
+    TEST("PK", "",        0x0C);
+    TEST("PI", "H'ABCD'",            0x28, 0xAB, 0xCD);
+    NMEM("PI", "H'AB00'", "H'AB00'", 0x28, 0xAB);
+    NMEM("PI", "H'0000'", "H'0000'", 0x28);
     TEST("POP", "",        0x1C);
 }
 
@@ -247,11 +232,30 @@ void test_branch() {
 
 void test_io() {
     TEST("INS",  "0",  0xA0);
+    TEST("INS",  "1",  0xA1);
+    ERRT("INS",  "2",  OPERAND_NOT_ALLOWED, "2", 0xA2);
+    ERRT("INS",  "3",  OPERAND_NOT_ALLOWED, "3", 0xA3);
+    TEST("INS",  "4",  0xA4);
     TEST("INS",  "15", 0xAF);
+    ERRT("IN",   "0",  OPERAND_NOT_ALLOWED, "0", 0x26, 0x00);
+    ERRT("IN",   "1",  OPERAND_NOT_ALLOWED, "1", 0x26, 0x01);
+    ERRT("IN",   "2",  OPERAND_NOT_ALLOWED, "2", 0x26, 0x02);
+    ERRT("IN",   "3",  OPERAND_NOT_ALLOWED, "3", 0x26, 0x03);
+    TEST("IN",   "4",      0x26, 0x04);
     TEST("IN",   "H'FF'",  0x26, 0xFF);
     NMEM("IN",   "0", "0", 0x26);
     TEST("OUTS", "0",  0xB0);
+    TEST("OUTS", "1",  0xB1);
+    ERRT("OUTS", "2",  OPERAND_NOT_ALLOWED, "2", 0xB2);
+    ERRT("OUTS", "3",  OPERAND_NOT_ALLOWED, "3", 0xB3);
+    TEST("OUTS", "4",  0xB4);
     TEST("OUTS", "15", 0xBF);
+    ERRT("OUT",  "0",  OPERAND_NOT_ALLOWED, "0", 0x27, 0x00);
+    ERRT("OUT",  "1",  OPERAND_NOT_ALLOWED, "1", 0x27, 0x01);
+    ERRT("OUT",  "2",  OPERAND_NOT_ALLOWED, "2", 0x27, 0x02);
+    ERRT("OUT",  "3",  OPERAND_NOT_ALLOWED, "3", 0x27, 0x03);
+    TEST("OUT",  "4",  0x27, 0x04);
+    TEST("OUT",  "H'AB'",  0x27, 0xAB);
     TEST("OUT",  "H'AB'",  0x27, 0xAB);
     NMEM("OUT",  "0", "0", 0x27);
 }
