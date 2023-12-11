@@ -76,7 +76,7 @@ On POSIX environment, assembler command line interface is provided.
 It can generate Intel HEX or Motorola S-Record output.
 
 ----
-libasm assembler (version 1.6.43)
+libasm assembler (version 1.6.44)
 usage: asm [-o <output>] [-l <list>] <input>
   -C <CPU>    : target CPU
                 MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
@@ -121,7 +121,7 @@ On POSIX environment, disassembler command line interface is provided.
 It can read Intel HEX or Motorola S-Record input.
 
 ----
-libasm disassembler (version 1.6.43)
+libasm disassembler (version 1.6.44)
 usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   -C <CPU>    : target CPU
                 MC6800 MB8861 MC6801 HD6301 MC68HC11 MC6805 MC146805
@@ -155,7 +155,6 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   work-register   : prefer work register name than alias address  (bool, Z8)
   use-sharp       : use # (default =) for immediate  (bool, 8070)
   use-register    : use register name Rn  (bool, 1802)
-  use-scratchpad  : use name for scratchpad  (bool, 3850)
   ignore-literal  : Ignore literal constant  (bool, 6100)
   segment-insn    : segment override as instruction  (bool, 8086)
   string-insn     : string instruction as repeat operand  (bool, 8086)
