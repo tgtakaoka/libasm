@@ -25,7 +25,7 @@
 namespace libasm {
 namespace mc68000 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     OprPos srcPos() const { return flags().srcPos(); }
@@ -74,6 +74,11 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+
+    void readPostfix() {
+        if (!hasPostfix())
+            setPostfix(readUint16());
+    }
 };
 
 }  // namespace mc68000

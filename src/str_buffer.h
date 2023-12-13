@@ -81,6 +81,9 @@ struct StrBuffer : ErrorReporter {
     /** Output |num| as 64-bit floating point number. */
     StrBuffer &float64(double num);
 
+    /** Output |mantissa|x2^|exponent| as 80-bit floating point number. */
+    StrBuffer &float80(int16_t exponent, uint64_t mantissa);
+
     /** output ", " */
     StrBuffer &comma();
 

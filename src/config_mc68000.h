@@ -26,8 +26,32 @@ enum CpuType : uint8_t {
     MC68000,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 10, 7> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, MC68000) {}
+enum FpuType : uint8_t {
+    FPU_NONE,
+    FPU_MC68881,
+};
+
+struct CpuSpec final {
+    CpuSpec(CpuType cpu_, FpuType fpu_, uint8_t fpuCid_) : cpu(cpu_), fpu(fpu_), fpuCid(fpuCid_) {}
+    CpuType cpu;
+    FpuType fpu;
+    uint8_t fpuCid;  // FPU co-processor ID
+};
+
+struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_16BIT, ENDIAN_BIG, 16, 7> {
+    Config(const InsnTable<CpuType> &table)
+        : ConfigImpl(table, MC68000), _cpuSpec(MC68000, FPU_MC68881, 1) {}
+
+    void setCpuType(CpuType cpuType) override {
+        _cpuSpec.cpu = cpuType;
+        ConfigImpl::setCpuType(cpuType);
+    }
+    void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
+    // TODO: Add option
+    void setFpuId(uint8_t id) { _cpuSpec.fpuCid = id; }
+
+protected:
+    CpuSpec _cpuSpec;
 };
 
 }  // namespace mc68000

@@ -27,6 +27,10 @@ namespace mc68000 {
 struct AsmMc68000 final : Assembler, Config {
     AsmMc68000(const ValueParser::Plugins &plugins = defaultPlugins());
 
+    void reset() override;
+
+    Error setFpu(StrScanner &scan) override;
+
 private:
     Error parseOperand(StrScanner &scan, Operand &op) const;
     Error checkAlignment(AsmInsn &insn, OprSize size, const Operand &op) const;
@@ -39,6 +43,7 @@ private:
     Error emitEffectiveAddr(
             AsmInsn &insn, OprSize size, const Operand &op, AddrMode mode, OprPos pos) const;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

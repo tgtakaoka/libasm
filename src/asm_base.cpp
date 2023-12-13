@@ -148,6 +148,7 @@ Error Assembler::setCpu(StrScanner &scan) {
 }
 
 Error Assembler::setFpu(StrScanner &scan) {
+    UNUSED(scan);
     return UNSUPPORTED_CPU;
 }
 

@@ -17,7 +17,7 @@
 #include "asm_mc68000.h"
 
 #include "table_mc68000.h"
-#include "text_common.h"
+#include "text_mc68000.h"
 
 namespace libasm {
 namespace mc68000 {
@@ -25,6 +25,11 @@ namespace mc68000 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+
+using text::mc68000::TEXT_FPU;
+using text::mc68000::TEXT_FPU_68881;
+using text::mc68000::TEXT_FPU_MC68881;
+using text::mc68000::TEXT_none;
 
 namespace {
 
@@ -75,6 +80,22 @@ const ValueParser::Plugins &AsmMc68000::defaultPlugins() {
 AsmMc68000::AsmMc68000(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
+}
+
+void AsmMc68000::reset() {
+    Assembler::reset();
+    setFpuType(FPU_NONE);
+}
+
+Error AsmMc68000::setFpu(StrScanner &scan) {
+    if (scan.iequals_P(TEXT_FPU_68881) || scan.iequals_P(TEXT_FPU_MC68881)) {
+        setFpuType(FPU_MC68881);
+    } else if (scan.iequals_P(TEXT_none)) {
+        setFpuType(FPU_NONE);
+    } else {
+        return UNKNOWN_OPERAND;
+    }
+    return OK;
 }
 
 namespace {
@@ -260,11 +281,10 @@ Error AsmMc68000::emitEffectiveAddr(
             // "Zero means 2^3" unsigned 3-bit.
             if (op.val32 > 8)
                 insn.setErrorIf(op, OVERFLOW_RANGE);
-            if (op.val32 == 0 && op.getError() == OK)
+            if (op.val32 == 0 && op.isOK())
                 insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
-            const Config::opcode_t count = (op.val32 & 7);  // 8 is encoded to 0.
-            const Config::opcode_t data = op.getError() ? 0 : (count << 9);
-            insn.embed(data);
+            const auto count = (op.val32 & 7);  // 8 is encoded to 0.
+            insn.embed(count << 9);
             break;
         }
         if (mode == M_IM8) {
@@ -474,6 +494,15 @@ InsnSize AsmInsn::parseInsnSize() {
     return isize;
 }
 
+Error AsmMc68000::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto at = scan;
+    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
+        const auto error = _opt_fpu.set(scan);
+        return error ? insn.setErrorIf(at, error) : OK;
+    }
+    return Assembler::processPseudo(scan, insn);
+}
+
 Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto isize = insn.parseInsnSize();
@@ -488,7 +517,7 @@ Error AsmMc68000::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
+    if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(_cpuSpec, insn)))
         return _insn.getError();
 
     insn.setErrorIf(insn.srcOp);

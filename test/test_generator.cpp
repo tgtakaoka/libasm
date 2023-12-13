@@ -186,7 +186,7 @@ TestGenerator &TestGenerator::generate() {
     return *this;
 }
 
-TestGenerator &TestGenerator::generate(uint8_t opc1) {
+TestGenerator &TestGenerator::generate(uint16_t opc1) {
     if (_address) {
         const auto addr = _address / _addressUnit;
         _formatter.setOrigin(addr);
@@ -197,6 +197,25 @@ TestGenerator &TestGenerator::generate(uint8_t opc1) {
     gen->dump("@@ generate:");
     generateTests(*gen, true);
     delete gen;
+    delete parent;
+    dump();
+    return *this;
+}
+
+TestGenerator &TestGenerator::generate(uint16_t opc1, uint16_t opc2) {
+    if (_address) {
+        const auto addr = _address / _addressUnit;
+        _formatter.setOrigin(addr);
+    }
+    auto *parent = DataGenerator::newGenerator(_memory, _disassembler.config(), _formatter);
+    parent->outData(opc1);
+    auto *parent2 = parent->newChild();
+    parent2->outData(opc2);
+    auto *gen = parent2->newChild();
+    gen->dump("@@ generate:");
+    generateTests(*gen, true);
+    delete gen;
+    delete parent2;
     delete parent;
     dump();
     return *this;
@@ -344,7 +363,7 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
                 continue;
             const auto drop = calcDrop(error);
             gen.dump("@@ break drop=%d error=%#x: %s %s: %s", drop, error.count(), name.c_str(),
-                     error.tokens().c_str(), insn.errorText_P());
+                    error.tokens().c_str(), insn.errorText_P());
             return drop;
         }
     } while (gen.hasNext());

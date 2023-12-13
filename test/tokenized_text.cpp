@@ -40,6 +40,27 @@ static inline bool isDigits(const char *&r, const char *p) {
     return true;
 }
 
+static bool isFloat(const char *p, const char *&r) {
+    const char *s = p;
+    if (*s == '-')
+        ++s;
+    if (isDigits(s, s) && *s == '.' && isDigits(s, s + 1)) {
+        const char *e = s + 1;
+        if (toupper(*s) == 'E' && (*e == '-' || *e == '+') && isDigits(e, e + 1)) {
+            r = e;
+            return true;
+        }
+        r = s;
+        return true;
+    }
+    if (strncasecmp(s, "nan", 3) == 0 || strncasecmp(s, "inf", 3) == 0) {
+        r = s + 3;
+        return true;
+    }
+    r = p;
+    return false;
+}
+
 static bool isNumber(const char *p, const char *&r) {
     const char *s;
     if (p[0] == '0' && toupper(p[1]) == 'X' && isXdigits(s, p + 2)) {
@@ -74,11 +95,21 @@ std::string TokenizedText::tokenize(const char *text) {
     const char *b = text;
     while (*b) {
         const char *tmp;
-        if (isNumber(b, tmp)) {
+        if (isFloat(b, tmp)) {
+            // reduce float constant variants; n.nE-e, n.nE+e
+            t.push_back('n');
+            t.push_back('.');
+            t.push_back('n');
+            t.push_back('E');
+            t.push_back('+');
+            t.push_back('e');
+            b = tmp;
+        } else if (((b[0] == '-' && isNumber(b + 1, tmp)) || isNumber(b, tmp)) &&
+                   (*tmp == '(' || *tmp == ')')) {
+            // reduce displacement variants of NS32000; -n(...) and n(...), (-n) and (n)
             t.push_back('n');
             b = tmp;
-        } else if (b[0] == '-' && isNumber(b + 1, tmp) && (*tmp == '(' || *tmp == ')')) {
-            // reduce displacement variants of NS32000; -n(...) and n(...), (-n) and (n)
+        } else if (isNumber(b, tmp)) {
             t.push_back('n');
             b = tmp;
         } else if (b[0] == '+' && b[1] == '(' && b[2] == '-' && isNumber(b + 3, tmp) &&
@@ -93,12 +124,6 @@ std::string TokenizedText::tokenize(const char *text) {
             t.push_back('s');
             t.push_back(']');
             b += 3;
-        } else if (toupper(b[0]) == 'E' && (b[1] == '+' || b[1] == '-') && isNumber(b + 2, tmp)) {
-            // reduce float constant variants of NS32000; nE-e, nE+e
-            t.push_back(*b++);
-            t.push_back('+');
-            t.push_back('e');
-            b = tmp;
         } else if (*b == '/') {
             // reduce MOVEM variants of MC68000; Rn/Rn and Rn-Rn
             ++b;

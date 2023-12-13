@@ -46,11 +46,24 @@ enum RegName : int8_t {
     REG_A5 = 5 + 8,
     REG_A6 = 6 + 8,
     REG_A7 = 7 + 8,
+    // Floating point data register
+    REG_FP0 = 0 + 16,
+    REG_FP1 = 1 + 16,
+    REG_FP2 = 2 + 16,
+    REG_FP3 = 3 + 16,
+    REG_FP4 = 4 + 16,
+    REG_FP5 = 5 + 16,
+    REG_FP6 = 6 + 16,
+    REG_FP7 = 7 + 16,
     // Other registers.
-    REG_CCR = 0 + 16,
-    REG_PC = 1 + 16,
-    REG_SR = 2 + 16,
-    REG_USP = 3 + 16,
+    REG_PC = 0 + 24,
+    REG_CCR = 1 + 24,
+    REG_SR = 2 + 24,
+    REG_USP = 3 + 24,
+    // Floating point status/control registers
+    REG_FPCR = 4 + 24,
+    REG_FPSR = 5 + 24,
+    REG_FPIAR = 6 + 24,
 };
 
 struct EaMc68000 {

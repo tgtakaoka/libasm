@@ -30,26 +30,37 @@ namespace {
 // clang-format off
 
 constexpr NameEntry REG_ENTRIES[] PROGMEM = {
-    { TEXT_REG_A0,  REG_A0  },
-    { TEXT_REG_A1,  REG_A1  },
-    { TEXT_REG_A2,  REG_A2  },
-    { TEXT_REG_A3,  REG_A3  },
-    { TEXT_REG_A4,  REG_A4  },
-    { TEXT_REG_A5,  REG_A5  },
-    { TEXT_REG_A6,  REG_A6  },
-    { TEXT_REG_A7,  REG_A7  },
-    { TEXT_REG_CCR, REG_CCR },
-    { TEXT_REG_D0,  REG_D0  },
-    { TEXT_REG_D1,  REG_D1  },
-    { TEXT_REG_D2,  REG_D2  },
-    { TEXT_REG_D3,  REG_D3  },
-    { TEXT_REG_D4,  REG_D4  },
-    { TEXT_REG_D5,  REG_D5  },
-    { TEXT_REG_D6,  REG_D6  },
-    { TEXT_REG_D7,  REG_D7  },
-    { TEXT_REG_PC,  REG_PC  },
-    { TEXT_REG_SR,  REG_SR  },
-    { TEXT_REG_USP, REG_USP },
+    { TEXT_REG_A0,    REG_A0  },
+    { TEXT_REG_A1,    REG_A1  },
+    { TEXT_REG_A2,    REG_A2  },
+    { TEXT_REG_A3,    REG_A3  },
+    { TEXT_REG_A4,    REG_A4  },
+    { TEXT_REG_A5,    REG_A5  },
+    { TEXT_REG_A6,    REG_A6  },
+    { TEXT_REG_A7,    REG_A7  },
+    { TEXT_REG_CCR,   REG_CCR },
+    { TEXT_REG_D0,    REG_D0  },
+    { TEXT_REG_D1,    REG_D1  },
+    { TEXT_REG_D2,    REG_D2  },
+    { TEXT_REG_D3,    REG_D3  },
+    { TEXT_REG_D4,    REG_D4  },
+    { TEXT_REG_D5,    REG_D5  },
+    { TEXT_REG_D6,    REG_D6  },
+    { TEXT_REG_D7,    REG_D7  },
+    { TEXT_REG_FP0,   REG_FP0 },
+    { TEXT_REG_FP1,   REG_FP1 },
+    { TEXT_REG_FP2,   REG_FP2 },
+    { TEXT_REG_FP3,   REG_FP3 },
+    { TEXT_REG_FP4,   REG_FP4 },
+    { TEXT_REG_FP5,   REG_FP5 },
+    { TEXT_REG_FP6,   REG_FP6 },
+    { TEXT_REG_FP7,   REG_FP7 },
+    { TEXT_REG_FPCR,  REG_FPCR },
+    { TEXT_REG_FPIAR, REG_FPIAR },
+    { TEXT_REG_FPSR,  REG_FPSR },
+    { TEXT_REG_PC,    REG_PC  },
+    { TEXT_REG_SR,    REG_SR  },
+    { TEXT_REG_USP,   REG_USP },
 };
 
 PROGMEM constexpr NameTable TABLE{ARRAY_RANGE(REG_ENTRIES)};
@@ -112,6 +123,14 @@ InsnSize parseSize(StrScanner &scan) {
             size = ISZ_WORD;
         } else if (p.iexpect('L')) {
             size = ISZ_LONG;
+        } else if (p.iexpect('S')) {
+            size = ISZ_SNGL;
+        } else if (p.iexpect('D')) {
+            size = ISZ_DUBL;
+        } else if (p.iexpect('X')) {
+            size = ISZ_XTND;
+        } else if (p.iexpect('P')) {
+            size = ISZ_PBCD;
         }
         if (size == ISZ_ERROR || isIdLetter(*p))
             return ISZ_ERROR;
@@ -131,9 +150,16 @@ char sizeSuffix(OprSize size) {
         return 'B';
     case SZ_WORD:
         return 'W';
-        break;
     case SZ_LONG:
         return 'L';
+    case SZ_SNGL:
+        return 'S';
+    case SZ_DUBL:
+        return 'D';
+    case SZ_XTND:
+        return 'X';
+    case SZ_PBCD:
+        return 'P';
     default:
         return 0;
     }

@@ -28,8 +28,8 @@ struct TableMc68000 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
+    Error searchName(const CpuSpec &, AsmInsn &insn) const;
+    Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out) const;
 };
 
 extern const TableMc68000 TABLE;

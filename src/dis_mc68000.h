@@ -29,10 +29,11 @@ struct DisMc68000 final : Disassembler, Config {
 
 private:
     void decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize eaSize) const;
-    void decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68000 &ea) const;
+    void decodeEffectiveAddr(
+            DisInsn &insn, StrBuffer &out, uint8_t mode, RegName reg, OprSize size) const;
     void decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode) const;
-    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uint8_t modePos,
-            uint8_t regPos, OprSize size, uint16_t opr16 = 0, Error opr16Error = OK) const;
+    void decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, OprPos pos, OprSize size,
+            uint16_t opr16 = 0, Error opr16Error = OK) const;
 
     Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
     const ConfigBase &config() const override { return *this; }

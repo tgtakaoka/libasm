@@ -33,6 +33,11 @@ enum OprSize : uint8_t {
     SZ_DATA = Size::SZ_DATA,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
     SZ_ADDR = Size::SZ_ADDR,  // __s|___|___ WORD=0/LONG=1
     SZ_ADR8 = 7,              // s__|___|___ WORD=0/LONG=1
+    SZ_SNGL = 8,              // Single precision real (32 bits/4 bytes)
+    SZ_DUBL = 9,              // Double precision real (64 bits/8 bytes)
+    SZ_XTND = 10,             // Extended precision real (96 bits/12 bytes)
+    SZ_PBCD = 11,             // Packed BCD real (96 bits/12 bytes)
+    SZ_FDAT = 12,             // MC68881 float type
 };
 
 enum InsnSize : uint8_t {
@@ -43,6 +48,11 @@ enum InsnSize : uint8_t {
     ISZ_FIXD = Size::SZ_OCTA,  // Fixed size
     ISZ_DATA = Size::SZ_DATA,
     ISZ_ERROR = 7,
+    ISZ_SNGL = SZ_SNGL,  // .S
+    ISZ_DUBL = SZ_DUBL,  // .D
+    ISZ_XTND = SZ_XTND,  // .X
+    ISZ_PBCD = SZ_PBCD,  // .P
+    ISZ_FDAT = SZ_FDAT,  // .f : ___|fff|___|_______ : MC68881 size
 };
 
 enum AddrMode : uint8_t {
@@ -84,14 +94,34 @@ enum AddrMode : uint8_t {
     M_IM8 = 34,    // 8-bit Immediate
     M_IMVEC = 35,  // 3-bit Trap Vector
     M_IMDSP = 36,  // 16-bit Signed Displacement
+
+    // MC68881
+    M_FPREG = 37,  // FPn: Floatng point data register
+    M_FPMLT = 38,  // FMOVEM.X register list; FPn
+    M_FCMLT = 39,  // FMOVEM.L register list; FPCR/FPSR/FPIAR
+    M_FSICO = 40,  // FPSINCOS FPc:FPs
+    M_KDREG = 41,  // <ea>{Dn}
+    M_KFACT = 42,  // <ea>{#k}
+    M_FPCR = 43,   // FPCR register
+    M_FPSR = 44,   // FPSR register
+    M_FPIAR = 45,  // FPIAR register
+    M_IMROM = 46,  // MC68881 ROM constant
+    M_REL32 = 47,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit
 };
 
 enum OprPos : uint8_t {
-    OP_10 = 0,  // ___|___|mmm|rrr
-    OP_23 = 1,  // rrr|mmm|___|___
-    OP__0 = 2,  // ___|___|___|rrr
-    OP__3 = 3,  // rrr|___|___|___
-    OP___ = 4,  // ___|___|___|___
+    OP_10 = 0,   // ____|___|___|mmm|rrr
+    OP_23 = 1,   // ____|rrr|mmm|___|___
+    OP__0 = 2,   // ____|___|___|___|rrr
+    OP__3 = 3,   // ____|rrr|___|___|___
+    OP___ = 4,   // ____|___|___|___|___
+    EX_RX = 5,   // ___|xxx|___|_______ : format or source register
+    EX_RY = 6,   // ___|___|yyy|_______ : destination register
+    EX_SC = 7,   // ___|___|sss|____ccc : FPSINCOS
+    EX_SL = 8,   // ___|___|__|ffffffff : static register list
+    EX_DL = 9,   // ___|___|___|rrr____ : dynamic register list
+    EX_SK = 10,  // ___|___|___|kkkkkkk : static k-factor
+    EX_DK = 11,  // ___|___|___|rrr____ : dynamic k-factor
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -100,29 +130,40 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _dst;
         uint8_t _pos;
         uint8_t _size;
+        Config::opcode_t _postVal;
 
         static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
                 OprSize oSize, InsnSize iSize) {
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize)};
+                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize), 0};
+        }
+
+        static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
+                OprSize oSize, InsnSize iSize, Config::opcode_t postVal) {
+            return Flags{static_cast<uint8_t>(src | hasPostVal_bm), static_cast<uint8_t>(dst),
+                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize), postVal};
         }
 
         Flags read() const {
             return Flags{pgm_read_byte(&_src), pgm_read_byte(&_dst), pgm_read_byte(&_pos),
-                    pgm_read_byte(&_size)};
+                    pgm_read_byte(&_size), pgm_read_word(&_postVal)};
         }
-        AddrMode src() const { return AddrMode(_src); }
+        AddrMode src() const { return AddrMode(_src & mode_gm); }
         AddrMode dst() const { return AddrMode(_dst); }
         OprPos srcPos() const { return OprPos((_pos >> srcPos_gp) & pos_gm); }
         OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
         OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & size_gm); }
         InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & size_gm); }
+        bool hasPostVal() const { return (_src & hasPostVal_bm) != 0; }
+        auto postVal() const { return _postVal; }
 
         void setAddrMode(AddrMode src, AddrMode dst) {
-            _src = static_cast<uint8_t>(src);
+            _src = static_cast<uint8_t>(src | (_src & hasPostVal_bm));
             _dst = static_cast<uint8_t>(dst);
         }
         void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size); }
+        auto postMask() const { return postMask(dstPos()) | postMask(srcPos()); }
+        static Config::opcode_t postMask(OprPos pos);
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -142,14 +183,20 @@ private:
                (static_cast<uint8_t>(insn) << insnSize_gp);
     }
 
+    // |src|
+    static constexpr int mode_gp = 0;
+    static constexpr int hasPostVal_bp = 7;
+    static constexpr uint8_t mode_gm = 0x7F;
+    static constexpr uint8_t hasPostVal_bm = (1 << hasPostVal_bp);
+
     // |pos|
     static constexpr int srcPos_gp = 0;
-    static constexpr int dstPos_gp = 3;
-    static constexpr uint8_t pos_gm = 0x07;
+    static constexpr int dstPos_gp = 4;
+    static constexpr uint8_t pos_gm = 0x0F;
     // |size|
     static constexpr int oprSize_gp = 0;
-    static constexpr int insnSize_gp = 3;
-    static constexpr uint8_t size_gm = 0x07;
+    static constexpr int insnSize_gp = 4;
+    static constexpr uint8_t size_gm = 0x0F;
 };
 
 }  // namespace mc68000
