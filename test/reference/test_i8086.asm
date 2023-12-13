@@ -15,6 +15,10 @@
         cpu     8086
         org     1000H
         include "test_i8086.inc"
+
+;        fpu     8087
+;        org     2000H
+;        include "test_i8086_fpu.inc"
         end
 
 ;;; Local Variables:

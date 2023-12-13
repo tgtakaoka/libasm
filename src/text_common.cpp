@@ -21,6 +21,9 @@ namespace text {
 namespace common {
 
 // clang-format off
+constexpr char TEXT_FPU[]  PROGMEM = "FPU";
+constexpr char TEXT_none[] PROGMEM = "none";
+
 constexpr char TEXT_ABS[]   PROGMEM = "ABS";
 constexpr char TEXT_ABX[]   PROGMEM = "ABX";
 constexpr char TEXT_ADCA[]  PROGMEM = "ADCA";
@@ -437,6 +440,7 @@ constexpr char TEXT_REG_R7[]  PROGMEM = "R7";
 constexpr char TEXT_REG_RR[]  PROGMEM = "RR";
 constexpr char TEXT_REG_SP[]  PROGMEM = "SP";
 constexpr char TEXT_REG_S[]   PROGMEM = "S";
+constexpr char TEXT_REG_ST[]  PROGMEM = "ST";
 constexpr char TEXT_REG_T[]   PROGMEM = "T";
 constexpr char TEXT_REG_W[]   PROGMEM = "W";
 constexpr char TEXT_REG_X[]   PROGMEM = "X";

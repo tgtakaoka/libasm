@@ -69,12 +69,18 @@ enum AddrMode : uint8_t {
     M_UI16 = 26,  // 16-bit unsigned immediate
     M_UI8 = 27,   // 8-bit unsigned immediate
     M_BIT = 28,   // 3/4-bit shift count/bit number constant
+    M_FMOD = 29,  // i8087 float word, DWORD/QWORD/TBYTE PTR
+    M_ST0 = 30,   // i8087 stack top ST(0)
+    M_STI = 31,   // i8087 stack ST(i)
 };
 
 enum OprSize : uint8_t {
     SZ_NONE = Size::SZ_NONE,
     SZ_BYTE = Size::SZ_BYTE,
     SZ_WORD = Size::SZ_WORD,
+    SZ_DWORD = Size::SZ_QUAD,
+    SZ_QWORD = Size::SZ_OCTA,
+    SZ_TBYTE = Size::SZ_DATA,   // 10 byte
 };
 
 enum OprPos : uint8_t {
@@ -98,12 +104,18 @@ struct Entry final : entry::Base<Config::opcode_t> {
         static constexpr Flags create(AddrMode dst, AddrMode src, AddrMode ext, OprPos dstPos,
                 OprPos srcPos, OprPos extPos, OprSize size) {
             return Entry::Flags{Entry::_opr(dst, dstPos), Entry::_opr(src, srcPos),
-                    Entry::_opr(ext, extPos), Entry::_size(size, false)};
+                    Entry::_opr(ext, extPos), Entry::_size(size, false, false)};
+        }
+
+        static constexpr Flags fpuInst(
+                AddrMode dst, AddrMode src, OprPos dstPos, OprPos srcPos, OprSize size) {
+            return Entry::Flags{Entry::_opr(dst, dstPos), Entry::_opr(src, srcPos),
+                    Entry::_opr(M_NONE, P_NONE), Entry::_size(size, false, true)};
         }
 
         static constexpr Flags strInst(AddrMode dst, AddrMode src, OprSize size) {
             return Entry::Flags{Entry::_opr(dst, P_NONE), Entry::_opr(src, P_NONE),
-                    Entry::_opr(M_NONE, P_NONE), Entry::_size(size, true)};
+                    Entry::_opr(M_NONE, P_NONE), Entry::_size(size, true, false)};
         }
 
         Flags read() const {
@@ -118,6 +130,7 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos extPos() const { return OprPos((_ext >> pos_gp) & pos_gm); }
         OprSize size() const { return OprSize((_size >> size_gp) & size_gm); }
         bool stringInst() const { return _size & strInst_bm; }
+        bool fpuInst() const { return _size & fpuInst_bm; }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -131,8 +144,9 @@ private:
     static constexpr uint8_t _opr(AddrMode mode, OprPos pos) {
         return (static_cast<uint8_t>(mode) << mode_gp) | (static_cast<uint8_t>(pos) << pos_gp);
     }
-    static constexpr uint8_t _size(OprSize size, bool strInst) {
-        return (static_cast<uint8_t>(size) << size_gp) | (strInst ? strInst_bm : 0);
+    static constexpr uint8_t _size(OprSize size, bool strInst, bool fpuInst) {
+        return (static_cast<uint8_t>(size) << size_gp) | (strInst ? strInst_bm : 0) |
+               (fpuInst ? fpuInst_bm : 0);
     }
 
     // |dst|, |src|, |ext|
@@ -142,9 +156,11 @@ private:
     static constexpr uint8_t pos_gm = 0x07;
     // |size|
     static constexpr int size_gp = 0;
-    static constexpr int strInst_bp = 4;
-    static constexpr uint8_t size_gm = 0x03;
+    static constexpr int strInst_bp = 3;
+    static constexpr int fpuInst_bp = 4;
+    static constexpr uint8_t size_gm = 0x07;
     static constexpr uint8_t strInst_bm = (1 << strInst_bp);
+    static constexpr uint8_t fpuInst_bm = (1 << fpuInst_bp);
 };
 
 }  // namespace i8086

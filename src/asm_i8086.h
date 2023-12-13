@@ -30,9 +30,11 @@ struct AsmI8086 final : Assembler, Config {
 
     void reset() override;
 
+    Error setFpuName(StrScanner &scan);
     Error setOptimizeSegment(bool enable);
 
 private:
+    const TextOption<AsmI8086> _opt_fpu;
     const BoolOption<AsmI8086> _opt_optimizeSegment;
 
     bool _optimizeSegment;
@@ -55,6 +57,7 @@ private:
     void emitStringOperand(AsmInsn &insn, const Operand &op, RegName seg, RegName index) const;
     void emitStringInst(AsmInsn &insn, const Operand &src, const Operand &dst) const;
 
+    Error processPseudo(StrScanner &scan, Insn &insn) override;
     Error encodeImpl(StrScanner &scan, Insn &insn) const override;
     const ConfigBase &config() const override { return *this; }
     ConfigSetter &configSetter() override { return *this; }

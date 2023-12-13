@@ -1856,16 +1856,6 @@ static void test_illegal() {
 
     UNKN(0xD6);
     UNKN(0xF1);
-
-    // Co-processor instructions
-    UNKN(0xD8);
-    UNKN(0xD9);
-    UNKN(0xDA);
-    UNKN(0xDB);
-    UNKN(0xDC);
-    UNKN(0xDD);
-    UNKN(0xDE);
-    UNKN(0xDF);
 }
 
 void run_tests(const char *cpu) {

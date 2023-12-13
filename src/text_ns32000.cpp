@@ -25,9 +25,7 @@ constexpr char TEXT_CPU_NS32032[] PROGMEM = "NS32032";
 constexpr char TEXT_FPU_NS32081[] PROGMEM = "NS32081";
 constexpr char TEXT_MMU_NS32082[] PROGMEM = "NS32082";
 constexpr char TEXT_CPU_32032[]   PROGMEM = "32032";
-constexpr char TEXT_none[] PROGMEM = "none";
 
-constexpr char TEXT_FPU[]  PROGMEM = "FPU";
 constexpr char TEXT_PMMU[] PROGMEM = "PMMU";
 
 // Standard instructions

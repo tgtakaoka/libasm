@@ -26,7 +26,7 @@ namespace libasm {
 namespace i8086 {
 
 struct EntryInsn : EntryInsnBase<Config, Entry> {
-    EntryInsn() : _segment(0) {}
+    EntryInsn() : _fwait(0), _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -36,11 +36,14 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInst() const { return flags().stringInst(); }
+    bool fpuInst() const { return flags().fpuInst(); }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
     Config::opcode_t segment() const { return _segment; }
+    void setFwait() { _fwait = 0x9B; }
 
 protected:
+    Config::opcode_t _fwait;
     Config::opcode_t _segment;
 };
 
@@ -90,6 +93,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     void emitInsn() {
         uint8_t pos = 0;
+        if (_fwait)
+            emitByte(_fwait, pos++);
         if (_segment)
             emitByte(_segment, pos++);
         if (hasPrefix())
@@ -108,6 +113,8 @@ private:
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0) {
+            if (_fwait)
+                pos++;
             if (_segment)
                 pos++;
             if (hasPrefix())

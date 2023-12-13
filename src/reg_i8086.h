@@ -52,9 +52,21 @@ enum RegName : int8_t {
     REG_SS = 2 + 16,
     REG_DS = 3 + 16,
     // Other registers.
-    REG_BYTE = 0 + 20,
-    REG_WORD = 1 + 20,
-    REG_PTR = 2 + 20,
+    REG_ST = 20,           // ST
+    REG_ST0 = 0 + REG_ST,  // ST(0)
+    REG_ST1 = 1 + REG_ST,  // ST(1)
+    REG_ST2 = 2 + REG_ST,  // ST(2)
+    REG_ST3 = 3 + REG_ST,  // ST(3)
+    REG_ST4 = 4 + REG_ST,  // ST(4)
+    REG_ST5 = 5 + REG_ST,  // ST(5)
+    REG_ST6 = 6 + REG_ST,  // ST(6)
+    REG_PT7 = 7 + REG_ST,  // ST(7)
+    REG_PTR = 28,
+    REG_BYTE = Size::SZ_BYTE + REG_PTR,
+    REG_WORD = Size::SZ_WORD + REG_PTR,
+    REG_DWORD = Size::SZ_QUAD + REG_PTR,
+    REG_QWORD = Size::SZ_OCTA + REG_PTR,
+    REG_TBYTE = Size::SZ_DATA + REG_PTR,
 };
 
 namespace reg {
