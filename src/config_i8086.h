@@ -28,8 +28,29 @@ enum CpuType : uint8_t {
     V30,
 };
 
-struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 7, 6> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8086) {}
+enum FpuType : uint8_t {
+    FPU_NONE,
+    FPU_I8087,
+};
+
+struct CpuSpec final {
+    CpuSpec(CpuType cpu_, FpuType fpu_) : cpu(cpu_), fpu(fpu_) {}
+    CpuType cpu;
+    FpuType fpu;
+};
+
+struct Config : ConfigImpl<CpuType, ADDRESS_20BIT, ADDRESS_BYTE, OPCODE_8BIT, ENDIAN_LITTLE, 8, 6> {
+    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, I8086), _cpuSpec(I8086, FPU_I8087) {}
+
+    void setCpuType(CpuType cpuType) override {
+        _cpuSpec.cpu = cpuType;
+        ConfigImpl::setCpuType(cpuType);
+    }
+    void setFpuType(FpuType fpuType) { _cpuSpec.fpu = fpuType; }
+    FpuType fpuType() const { return _cpuSpec.fpu; }
+
+protected:
+    CpuSpec _cpuSpec;
 };
 
 }  // namespace i8086

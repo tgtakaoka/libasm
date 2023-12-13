@@ -33,6 +33,10 @@ using namespace reg;
     E3(_opc, _name, _sz, _dst, _src, M_NONE, _dpos, _spos, P_NONE)
 #define E1(_opc, _name, _sz, _dst, _dpos) E2(_opc, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
 #define E0(_opc, _name, _sz) E1(_opc, _name, _sz, M_NONE, P_NONE)
+#define F2(_opc, _name, _sz, _dst, _src, _dpos, _spos) \
+    { _opc, Entry::Flags::fpuInst(_dst, _src, _dpos, _spos, _sz), _name }
+#define F1(_opc, _name, _sz, _dst, _dpos) F2(_opc, _name, _sz, _dst, M_NONE, _dpos, P_NONE)
+#define F0(_opc, _name, _sz) F1(_opc, _name, _sz, M_NONE, P_NONE)
 #define S2(_opc, _name, _sz, _dst, _src) \
     { _opc, Entry::Flags::strInst(_dst, _src, _sz), _name }
 #define S1(_opc, _name, _sz, _dst) S2(_opc, _name, _sz, _dst, M_NONE)
@@ -815,6 +819,284 @@ static constexpr uint8_t V30INDEX_0F[] PROGMEM = {
       6,  // TEXT_SUB4S
 };
 
+static constexpr Entry TABLE_D8[] PROGMEM = {
+    F2(0xC0, TEXT_FADD,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
+    F2(0xC8, TEXT_FMUL,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
+    F1(0xD0, TEXT_FCOM,   SZ_NONE,  M_STI,  P_OREG),
+    F1(0xD8, TEXT_FCOMP,  SZ_NONE,  M_STI,  P_OREG),
+    F2(0xE0, TEXT_FSUB,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
+    F2(0xE8, TEXT_FSUBR,  SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
+    F2(0xF0, TEXT_FDIV,   SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
+    F2(0xF8, TEXT_FDIVR,  SZ_NONE,  M_ST0,  M_STI,  P_NONE, P_OREG),
+    F1(000,  TEXT_FADD,   SZ_DWORD, M_FMOD, P_OMOD),
+    F1(010,  TEXT_FMUL,   SZ_DWORD, M_FMOD, P_OMOD),
+    F1(020,  TEXT_FCOM,   SZ_DWORD, M_FMOD, P_OMOD),
+    F1(030,  TEXT_FCOMP,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(040,  TEXT_FSUB,   SZ_DWORD, M_FMOD, P_OMOD),
+    F1(050,  TEXT_FSUBR,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(060,  TEXT_FDIV,   SZ_DWORD, M_FMOD, P_OMOD),
+    F1(070,  TEXT_FDIVR,  SZ_DWORD, M_FMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_D8[] PROGMEM = {
+      0,  // TEXT_FADD
+      8,  // TEXT_FADD
+      2,  // TEXT_FCOM
+     10,  // TEXT_FCOM
+      3,  // TEXT_FCOMP
+     11,  // TEXT_FCOMP
+      6,  // TEXT_FDIV
+     14,  // TEXT_FDIV
+      7,  // TEXT_FDIVR
+     15,  // TEXT_FDIVR
+      1,  // TEXT_FMUL
+      9,  // TEXT_FMUL
+      4,  // TEXT_FSUB
+     12,  // TEXT_FSUB
+      5,  // TEXT_FSUBR
+     13,  // TEXT_FSUBR
+};
+
+static constexpr Entry TABLE_D9[] PROGMEM = {
+    F1(0xC0, TEXT_FLD,     SZ_NONE,  M_STI,  P_OREG),
+    F1(0xC8, TEXT_FXCH,    SZ_NONE,  M_STI,  P_OREG),
+    F0(0xD0, TEXT_FNOP,    SZ_NONE),
+    F0(0xE0, TEXT_FCHS,    SZ_NONE),
+    F0(0xE1, TEXT_FABS,    SZ_NONE),
+    F0(0xE4, TEXT_FTST,    SZ_NONE),
+    F0(0xE5, TEXT_FXAM,    SZ_NONE),
+    F0(0xE8, TEXT_FLD1,    SZ_NONE),
+    F0(0xE9, TEXT_FLDL2T,  SZ_NONE),
+    F0(0xEA, TEXT_FLDL2E,  SZ_NONE),
+    F0(0xEB, TEXT_FLDPI,   SZ_NONE),
+    F0(0xEC, TEXT_FLDLG2,  SZ_NONE),
+    F0(0xED, TEXT_FLDLN2,  SZ_NONE),
+    F0(0xEE, TEXT_FLDZ,    SZ_NONE),
+    F0(0xF0, TEXT_F2XM1,   SZ_NONE),
+    F0(0xF1, TEXT_FYL2X,   SZ_NONE),
+    F0(0xF2, TEXT_FPTAN,   SZ_NONE),
+    F0(0xF3, TEXT_FPATAN,  SZ_NONE),
+    F0(0xF4, TEXT_FXTRACT, SZ_NONE),
+    F0(0xF6, TEXT_FDECSTP, SZ_NONE),
+    F0(0xF7, TEXT_FINCSTP, SZ_NONE),
+    F0(0xF8, TEXT_FPREM,   SZ_NONE),
+    F0(0xF9, TEXT_FYL2XP1, SZ_NONE),
+    F0(0xFA, TEXT_FSQRT,   SZ_NONE),
+    F0(0xFC, TEXT_FRNDINT, SZ_NONE),
+    F0(0xFD, TEXT_FSCALE,  SZ_NONE),
+    F1(000,  TEXT_FLD,     SZ_DWORD, M_FMOD, P_OMOD),
+    F1(020,  TEXT_FST,     SZ_DWORD, M_FMOD, P_OMOD),
+    F1(030,  TEXT_FSTP,    SZ_DWORD, M_FMOD, P_OMOD),
+    F1(040,  TEXT_FLDENV,  SZ_NONE,  M_WMOD, P_OMOD),
+    F1(050,  TEXT_FLDCW,   SZ_NONE,  M_WMOD, P_OMOD),
+    F1(060,  TEXT_FSTENV,  SZ_NONE,  M_WMOD, P_OMOD),
+    F1(070,  TEXT_FSTCW,   SZ_NONE,  M_WMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_D9[] PROGMEM = {
+     14,  // TEXT_F2XM1
+      4,  // TEXT_FABS
+      3,  // TEXT_FCHS
+     19,  // TEXT_FDECSTP
+     20,  // TEXT_FINCSTP
+      0,  // TEXT_FLD
+     26,  // TEXT_FLD
+      7,  // TEXT_FLD1
+     30,  // TEXT_FLDCW
+     29,  // TEXT_FLDENV
+      9,  // TEXT_FLDL2E
+      8,  // TEXT_FLDL2T
+     11,  // TEXT_FLDLG2
+     12,  // TEXT_FLDLN2
+     10,  // TEXT_FLDPI
+     13,  // TEXT_FLDZ
+      2,  // TEXT_FNOP
+     17,  // TEXT_FPATAN
+     21,  // TEXT_FPREM
+     16,  // TEXT_FPTAN
+     24,  // TEXT_FRNDINT
+     25,  // TEXT_FSCALE
+     23,  // TEXT_FSQRT
+     27,  // TEXT_FST
+     32,  // TEXT_FSTCW
+     31,  // TEXT_FSTENV
+     28,  // TEXT_FSTP
+      5,  // TEXT_FTST
+      6,  // TEXT_FXAM
+      1,  // TEXT_FXCH
+     18,  // TEXT_FXTRACT
+     15,  // TEXT_FYL2X
+     22,  // TEXT_FYL2XP1
+};
+
+static constexpr Entry TABLE_DA[] PROGMEM = {
+    F1(000,  TEXT_FIADD,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(010,  TEXT_FIMUL,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(020,  TEXT_FICOM,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(030,  TEXT_FICOMP, SZ_DWORD, M_FMOD, P_OMOD),
+    F1(040,  TEXT_FISUB,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(050,  TEXT_FISUBR, SZ_DWORD, M_FMOD, P_OMOD),
+    F1(060,  TEXT_FIDIV,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(070,  TEXT_FIDIVR, SZ_DWORD, M_FMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_DA[] PROGMEM = {
+      0,  // TEXT_FIADD
+      2,  // TEXT_FICOM
+      3,  // TEXT_FICOMP
+      6,  // TEXT_FIDIV
+      7,  // TEXT_FIDIVR
+      1,  // TEXT_FIMUL
+      4,  // TEXT_FISUB
+      5,  // TEXT_FISUBR
+};
+
+static constexpr Entry TABLE_DB[] PROGMEM = {
+    F0(0xE0, TEXT_FENI,  SZ_NONE),
+    F0(0xE1, TEXT_FDISI, SZ_NONE),
+    F0(0xE2, TEXT_FCLEX, SZ_NONE),
+    F0(0xE3, TEXT_FINIT, SZ_NONE),
+    F1(000,  TEXT_FILD,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(020,  TEXT_FIST,  SZ_DWORD, M_FMOD, P_OMOD),
+    F1(030,  TEXT_FISTP, SZ_DWORD, M_FMOD, P_OMOD),
+    F1(050,  TEXT_FLD,   SZ_TBYTE, M_FMOD, P_OMOD),
+    F1(070,  TEXT_FSTP,  SZ_TBYTE, M_FMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_DB[] PROGMEM = {
+      2,  // TEXT_FCLEX
+      1,  // TEXT_FDISI
+      0,  // TEXT_FENI
+      4,  // TEXT_FILD
+      3,  // TEXT_FINIT
+      5,  // TEXT_FIST
+      6,  // TEXT_FISTP
+      7,  // TEXT_FLD
+      8,  // TEXT_FSTP
+};
+
+static constexpr Entry TABLE_DC[] PROGMEM = {
+    F2(0xC0, TEXT_FADD,   SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
+    F2(0xC8, TEXT_FMUL,   SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
+    F2(0xE8, TEXT_FSUB,   SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
+    F2(0xE0, TEXT_FSUBR,  SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
+    F2(0xF8, TEXT_FDIV,   SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
+    F2(0xF0, TEXT_FDIVR,  SZ_NONE,  M_STI,  M_ST0,  P_OREG, P_NONE),
+    F1(000,  TEXT_FADD,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(010,  TEXT_FMUL,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(020,  TEXT_FCOM,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(030,  TEXT_FCOMP,  SZ_QWORD, M_FMOD, P_OMOD),
+    F1(040,  TEXT_FSUB,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(050,  TEXT_FSUBR,  SZ_QWORD, M_FMOD, P_OMOD),
+    F1(060,  TEXT_FDIV,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(070,  TEXT_FDIVR,  SZ_QWORD, M_FMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_DC[] PROGMEM = {
+      0,  // TEXT_FADD
+      6,  // TEXT_FADD
+      8,  // TEXT_FCOM
+      9,  // TEXT_FCOMP
+      4,  // TEXT_FDIV
+     12,  // TEXT_FDIV
+      5,  // TEXT_FDIVR
+     13,  // TEXT_FDIVR
+      1,  // TEXT_FMUL
+      7,  // TEXT_FMUL
+      2,  // TEXT_FSUB
+     10,  // TEXT_FSUB
+      3,  // TEXT_FSUBR
+     11,  // TEXT_FSUBR
+};
+
+static constexpr Entry TABLE_DD[] PROGMEM = {
+    F1(0xC0, TEXT_FFREE,  SZ_NONE,  M_STI,  P_OREG),
+    F1(0xD0, TEXT_FST,    SZ_NONE,  M_STI,  P_OREG),
+    F1(0xD8, TEXT_FSTP,   SZ_NONE,  M_STI,  P_OREG),
+    F1(000,  TEXT_FLD,    SZ_QWORD, M_FMOD, P_OMOD),
+    F1(020,  TEXT_FST,    SZ_QWORD, M_FMOD, P_OMOD),
+    F1(030,  TEXT_FSTP,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(040,  TEXT_FRSTOR, SZ_NONE,  M_WMOD, P_OMOD),
+    F1(060,  TEXT_FSAVE,  SZ_NONE,  M_WMOD, P_OMOD),
+    F1(070,  TEXT_FSTSW,  SZ_NONE,  M_WMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_DD[] PROGMEM = {
+      0,  // TEXT_FFREE
+      3,  // TEXT_FLD
+      6,  // TEXT_FRSTOR
+      7,  // TEXT_FSAVE
+      1,  // TEXT_FST
+      4,  // TEXT_FST
+      2,  // TEXT_FSTP
+      5,  // TEXT_FSTP
+      8,  // TEXT_FSTSW
+};
+
+static constexpr Entry TABLE_DE[] PROGMEM = {
+    F2(0xC0, TEXT_FADDP,  SZ_NONE,  M_STI, M_ST0, P_OREG, P_NONE),
+    F2(0xC8, TEXT_FMULP,  SZ_NONE,  M_STI, M_ST0, P_OREG, P_NONE),
+    F0(0xD9, TEXT_FCOMPP, SZ_NONE),
+    F2(0xE0, TEXT_FSUBRP, SZ_NONE,  M_STI, M_ST0, P_OREG, P_NONE),
+    F2(0xE8, TEXT_FSUBP,  SZ_NONE,  M_STI, M_ST0, P_OREG, P_NONE),
+    F2(0xF0, TEXT_FDIVRP, SZ_NONE,  M_STI, M_ST0, P_OREG, P_NONE),
+    F2(0xF8, TEXT_FDIVP,  SZ_NONE,  M_STI, M_ST0, P_OREG, P_NONE),
+    F1(000,  TEXT_FIADD,  SZ_WORD, M_WMOD, P_OMOD),
+    F1(010,  TEXT_FIMUL,  SZ_WORD, M_WMOD, P_OMOD),
+    F1(020,  TEXT_FICOM,  SZ_WORD, M_WMOD, P_OMOD),
+    F1(030,  TEXT_FICOMP, SZ_WORD, M_WMOD, P_OMOD),
+    F1(040,  TEXT_FISUB,  SZ_WORD, M_WMOD, P_OMOD),
+    F1(050,  TEXT_FISUBR, SZ_WORD, M_WMOD, P_OMOD),
+    F1(060,  TEXT_FIDIV,  SZ_WORD, M_WMOD, P_OMOD),
+    F1(070,  TEXT_FIDIVR, SZ_WORD, M_WMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_DE[] PROGMEM = {
+      0,  // TEXT_FADDP
+      2,  // TEXT_FCOMPP
+      6,  // TEXT_FDIVP
+      5,  // TEXT_FDIVRP
+      7,  // TEXT_FIADD
+      9,  // TEXT_FICOM
+     10,  // TEXT_FICOMP
+     13,  // TEXT_FIDIV
+     14,  // TEXT_FIDIVR
+      8,  // TEXT_FIMUL
+     11,  // TEXT_FISUB
+     12,  // TEXT_FISUBR
+      1,  // TEXT_FMULP
+      4,  // TEXT_FSUBP
+      3,  // TEXT_FSUBRP
+};
+
+static constexpr Entry TABLE_DF[] PROGMEM = {
+    F1(000,  TEXT_FILD,   SZ_WORD,  M_WMOD, P_OMOD),
+    F1(020,  TEXT_FIST,   SZ_WORD,  M_WMOD, P_OMOD),
+    F1(030,  TEXT_FISTP,  SZ_WORD,  M_WMOD, P_OMOD),
+    F1(040,  TEXT_FBLD,   SZ_TBYTE, M_FMOD, P_OMOD),
+    F1(050,  TEXT_FILD,   SZ_QWORD, M_FMOD, P_OMOD),
+    F1(060,  TEXT_FBSTP,  SZ_TBYTE, M_FMOD, P_OMOD),
+    F1(070,  TEXT_FISTP,  SZ_QWORD, M_FMOD, P_OMOD),
+};
+
+static constexpr uint8_t INDEX_DF[] PROGMEM = {
+      3,  // TEXT_FBLD
+      5,  // TEXT_FBSTP
+      0,  // TEXT_FILD
+      4,  // TEXT_FILD
+      1,  // TEXT_FIST
+      2,  // TEXT_FISTP
+      6,  // TEXT_FISTP
+};
+
+static constexpr Entry TABLE_FPU[] PROGMEM = {
+    E0(0x9B, TEXT_FWAIT, SZ_NONE),
+};
+
+static constexpr uint8_t INDEX_FPU[] PROGMEM = {
+      0,  // TEXT_FWAIT
+};
+
 // clang-format on
 
 using EntryPage = entry::PrefixTableBase<Entry>;
@@ -892,7 +1174,32 @@ static constexpr EntryPage V30_PAGES[] PROGMEM = {
         {0xFF, ARRAY_RANGE(TABLE_FF), ARRAY_RANGE(INDEX_FF)},
 };
 
-using Cpu = entry::CpuBase<CpuType, EntryPage>;
+static constexpr EntryPage I8087_PAGES[] PROGMEM = {
+        {0x00, ARRAY_RANGE(TABLE_FPU), ARRAY_RANGE(INDEX_FPU)},
+        {0xD8, ARRAY_RANGE(TABLE_D8), ARRAY_RANGE(INDEX_D8)},
+        {0xD9, ARRAY_RANGE(TABLE_D9), ARRAY_RANGE(INDEX_D9)},
+        {0xDA, ARRAY_RANGE(TABLE_DA), ARRAY_RANGE(INDEX_DA)},
+        {0xDB, ARRAY_RANGE(TABLE_DB), ARRAY_RANGE(INDEX_DB)},
+        {0xDC, ARRAY_RANGE(TABLE_DC), ARRAY_RANGE(INDEX_DC)},
+        {0xDD, ARRAY_RANGE(TABLE_DD), ARRAY_RANGE(INDEX_DD)},
+        {0xDE, ARRAY_RANGE(TABLE_DE), ARRAY_RANGE(INDEX_DE)},
+        {0xDF, ARRAY_RANGE(TABLE_DF), ARRAY_RANGE(INDEX_DF)},
+};
+
+template <typename CPUTYPE>
+using Processor = entry::CpuBase<CPUTYPE, EntryPage>;
+
+struct Cpu : Processor<CpuType> {
+    constexpr Cpu(CpuType cpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
+            const EntryPage *end)
+        : Processor<CpuType>(cpuType, name_P, table, end) {}
+};
+
+struct Fpu : Processor<FpuType> {
+    constexpr Fpu(FpuType fpuType, const /* PROGMEM */ char *name_P, const EntryPage *table,
+            const EntryPage *end)
+        : Processor<FpuType>(fpuType, name_P, table, end) {}
+};
 
 static constexpr Cpu CPU_TABLE[] PROGMEM = {
         {I8086, TEXT_CPU_8086, ARRAY_RANGE(I8086_PAGES)},
@@ -902,6 +1209,17 @@ static constexpr Cpu CPU_TABLE[] PROGMEM = {
 
 static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
+}
+
+#define EMPTY_RANGE(a) ARRAY_BEGIN(a), ARRAY_BEGIN(a)
+
+static constexpr Fpu FPU_TABLE[] PROGMEM = {
+        {FPU_I8087, TEXT_FPU_8087, ARRAY_RANGE(I8087_PAGES)},
+        {FPU_NONE, TEXT_none, EMPTY_RANGE(I8087_PAGES)},
+};
+
+static const Fpu *fpu(FpuType fpuType) {
+    return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 
 static bool acceptMode(AddrMode opr, AddrMode table) {
@@ -936,6 +1254,8 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
         return table == M_WMOD || table == M_WMEM;
     if (opr == M_CS)
         return table == M_SREG;
+    if (opr == M_ST0)
+        return table == M_STI;
     return false;
 }
 
@@ -955,6 +1275,10 @@ static bool acceptSize(const AsmInsn &insn, const Entry *entry) {
     }
     if (src == M_MEM || src == M_DIR)
         return hasSize(dst) || flags.stringInst();
+    if (dst == M_FMOD) {
+        const auto ptrSize = OprSize(insn.dstOp.ptr - REG_PTR);
+        return ptrSize == flags.size();
+    }
     return true;
 }
 
@@ -964,8 +1288,32 @@ static bool acceptModes(AsmInsn &insn, const Entry *entry) {
            acceptMode(insn.extOp.mode, table.ext()) && acceptSize(insn, entry);
 }
 
-Error TableI8086::searchName(CpuType cpuType, AsmInsn &insn) const {
-    cpu(cpuType)->searchName(insn, acceptModes);
+static constexpr char TEXT_FN[] PROGMEM = "FN";
+
+Error TableI8086::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {
+    fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        // check non-wait version FNxxxx
+        if (strncasecmp_P(insn.name(), TEXT_FN, 2) == 0) {
+            char name[insn.nameBuffer().len() + 1];
+            strcpy(name, insn.name());
+            insn.nameBuffer().reset().letter('F').text(name + 2);
+            insn.setOK();
+            fpu(cpuSpec.fpu)->searchName(insn, acceptModes);
+            if (insn.isOK() && insn.fpuInst()) {
+                ;  // found non-wait float instruction
+            } else {
+                insn.setError(UNKNOWN_INSTRUCTION);
+            }
+            insn.nameBuffer().reset().text(name);
+        }
+    } else if (insn.fpuInst()) {
+        insn.setFwait();
+    }
+    if (insn.getError() == UNKNOWN_INSTRUCTION) {
+        insn.setOK();
+        cpu(cpuSpec.cpu)->searchName(insn, acceptModes);
+    }
     return insn.getError();
 }
 
@@ -1006,25 +1354,49 @@ Config::opcode_t TableI8086::segOverridePrefix(RegName name) const {
 static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page) {
     UNUSED(page);
     auto opc = insn.opCode();
-    const auto dstPos = entry->flags().dstPos();
-    const auto srcPos = entry->flags().srcPos();
+    const auto flags = entry->flags();
+    const auto dstPos = flags.dstPos();
+    const auto srcPos = flags.srcPos();
     if (dstPos == P_OREG || srcPos == P_OREG) {
         opc &= ~0007;
     } else if (dstPos == P_OSEG || srcPos == P_OSEG) {
         opc &= ~0030;
     } else if (dstPos == P_OMOD || srcPos == P_OMOD) {
-        opc &= ~0307;
+        const auto prefix = page->prefix();
+        if (prefix < 0xD8 || prefix >= 0xE0 || (opc >> 6) != 3)
+            opc &= ~0307;
     }
     return opc == entry->opCode();
 }
 
-Error TableI8086::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
-    cpu(cpuType)->searchOpCode(insn, out, matchOpCode);
+Error TableI8086::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
+    fpu(cpuSpec.fpu)->searchOpCode(insn, out, matchOpCode);
+    if (insn.isOK()) {
+        if (insn.opCode() == DisInsn::FWAIT)
+            insn.setError(UNKNOWN_INSTRUCTION);  // prefer WAIT than FWAIT
+        if (insn.fpuInst() && insn.fwait() == 0) {
+            // no-wait instruction
+            char name[insn.nameBuffer().len() + 2];
+            strcpy(name, insn.name());
+            auto save{out};
+            insn.nameBuffer().reset().over(out).text_P(TEXT_FN).text(name + 1).over(
+                    insn.nameBuffer());
+            save.over(out);
+        }
+    }
+    if (insn.getError() == UNKNOWN_INSTRUCTION && insn.fwait() == 0) {
+        insn.setOK();
+        cpu(cpuSpec.cpu)->searchOpCode(insn, out, matchOpCode);
+    }
     return insn.getError();
 }
 
 bool TableI8086::isPrefix(CpuType cpuType, Config::opcode_t code) const {
     return cpu(cpuType)->isPrefix(code);
+}
+
+bool TableI8086::isPrefix(FpuType fpuType, Config::opcode_t code) const {
+    return fpu(fpuType)->isPrefix(code);
 }
 
 const /*PROGMEM*/ char *TableI8086::listCpu_P() const {

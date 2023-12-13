@@ -29,8 +29,8 @@ int main(int argc, const char **argv) {
     dis8086.setOption("relative", "enable");
     dis8086.setOption("string-insn", "enable");
 
-    TestGenerator generator(driver, dis8086, 0x10000);
-    generator.generate();
+    TestGenerator generator(driver, dis8086, 0x0000);
+    generator.generate().generate(0x9B);
 
     return driver.close();
 }

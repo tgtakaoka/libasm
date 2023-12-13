@@ -30,6 +30,8 @@ constexpr char OPT_INT_LIST_RADIX[]  PROGMEM = "list-radix";
 constexpr char OPT_DESC_LIST_RADIX[] PROGMEM = "set listing radix (8, 16)";
 constexpr char OPT_BOOL_SMART_BRANCH[] PROGMEM = "smart-branch";
 constexpr char OPT_DESC_SMART_BRANCH[] PROGMEM = "optimize branch instruction";
+constexpr char OPT_TEXT_FPU[] PROGMEM = "fpu";
+constexpr char OPT_DESC_FPU[] PROGMEM = "floating point co-processor";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_ALIGN,  &Assembler::alignOrigin},
@@ -49,8 +51,9 @@ Assembler::Assembler(
       _options(option),
       _opt_listRadix(this, &Assembler::setListRadix, OPT_INT_LIST_RADIX, OPT_DESC_LIST_RADIX,
               &_opt_smartBranch),
-      _opt_smartBranch(
-              this, &Assembler::setSmartBranch, OPT_BOOL_SMART_BRANCH, OPT_DESC_SMART_BRANCH) {
+      _opt_smartBranch(this, &Assembler::setSmartBranch, OPT_BOOL_SMART_BRANCH,
+              OPT_DESC_SMART_BRANCH, &_opt_fpu),
+      _opt_fpu(this, &Assembler::setFpu, OPT_TEXT_FPU, OPT_DESC_FPU) {
     Assembler::reset();
 }
 
@@ -142,6 +145,10 @@ bool Assembler::setCpu(const char *name) {
 
 Error Assembler::setCpu(StrScanner &scan) {
     return configSetter().setCpuName(scan);
+}
+
+Error Assembler::setFpu(StrScanner &scan) {
+    return UNSUPPORTED_CPU;
 }
 
 Error Assembler::setOption(const char *name, const char *text) {

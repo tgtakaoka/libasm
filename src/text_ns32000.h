@@ -28,9 +28,9 @@ extern const char TEXT_CPU_NS32032[] PROGMEM;
 extern const char TEXT_FPU_NS32081[] PROGMEM;
 extern const char TEXT_MMU_NS32082[] PROGMEM;
 extern const char TEXT_CPU_32032[]   PROGMEM;
-extern const char TEXT_none[] PROGMEM;
+using common::TEXT_none;
 
-extern const char TEXT_FPU[]  PROGMEM;
+using common::TEXT_FPU;
 extern const char TEXT_PMMU[] PROGMEM;
 
 // Standard instructions

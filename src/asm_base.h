@@ -43,6 +43,7 @@ struct Assembler : private ValueParser::Locator {
 
     bool setCpu(const char *name);
     Error setCpu(StrScanner &scan);
+    virtual Error setFpu(StrScanner &scan);
 
     Error setOption(const char *name, const char *text);
     Error setOption(const StrScanner &name, StrScanner &text);
@@ -87,6 +88,7 @@ protected:
     const Options _options;
     const IntOption<Assembler> _opt_listRadix;
     const BoolOption<Assembler> _opt_smartBranch;
+    const TextOption<Assembler> _opt_fpu;
 
     Radix _listRadix;
     bool _smartBranch;

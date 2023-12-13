@@ -28,8 +28,8 @@ help:
 
 # target which has ".inc" suffix for output.
 INC_targets  = \
-    w65c816 tlcs90 i8080_z80syn i8085_z80syn v30emu_z80syn z8001 z8002 \
-    z8k1 z8k2 ns32000 ns32k mn1610 mn1613 tms7000 tms9980
+    w65c816 tlcs90 i8080_z80syn i8085_z80syn v30emu_z80syn i8086 i80186 v30 \
+    z8001 z8002 z8k1 z8k2 ns32000 ns32k mn1610 mn1613 tms7000 tms9980
 # target which for GNU assembler
 GAS_targets  = z8k1 z8k2 ns32k
 

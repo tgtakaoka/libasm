@@ -90,7 +90,7 @@ constexpr char TEXT_XCHB[] PROGMEM = "XCHB";
 // constexpr char TEXT_XOR[]  PROGMEM = "XOR";
 constexpr char TEXT_XORP[] PROGMEM = "XORP";
 
-constexpr char TEXT_REG_ST[] PROGMEM = "ST";
+// constexpr char TEXT_REG_ST[] PROGMEM = "ST";
 
 // clang-format on
 

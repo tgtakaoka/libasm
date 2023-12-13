@@ -16,7 +16,7 @@
         org     1000H
         include "test_i8086.inc"
 
-        fpu     8087
+        fpu     on
         org     2000H
         include "test_i8086_fpu.inc"
         end

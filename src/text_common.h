@@ -24,6 +24,9 @@ namespace text {
 namespace common {
 
 // clang-format off
+extern const char TEXT_FPU[]   PROGMEM;
+extern const char TEXT_none[]  PROGMEM;
+
 extern const char TEXT_ABS[]   PROGMEM;
 extern const char TEXT_ABX[]   PROGMEM;
 extern const char TEXT_ADCA[]  PROGMEM;
@@ -440,6 +443,7 @@ extern const char TEXT_REG_R7[]  PROGMEM;
 extern const char TEXT_REG_RR[]  PROGMEM;
 extern const char TEXT_REG_SP[]  PROGMEM;
 extern const char TEXT_REG_S[]   PROGMEM;
+extern const char TEXT_REG_ST[]  PROGMEM;
 extern const char TEXT_REG_T[]   PROGMEM;
 extern const char TEXT_REG_W[]   PROGMEM;
 extern const char TEXT_REG_X[]   PROGMEM;

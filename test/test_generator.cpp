@@ -186,6 +186,22 @@ TestGenerator &TestGenerator::generate() {
     return *this;
 }
 
+TestGenerator &TestGenerator::generate(uint8_t opc1) {
+    if (_address) {
+        const auto addr = _address / _addressUnit;
+        _formatter.setOrigin(addr);
+    }
+    auto *parent = DataGenerator::newGenerator(_memory, _disassembler.config(), _formatter);
+    parent->outData(opc1);
+    auto *gen = parent->newChild();
+    gen->dump("@@ generate:");
+    generateTests(*gen, true);
+    delete gen;
+    delete parent;
+    dump();
+    return *this;
+}
+
 void TestGenerator::dump() const {
     _formatter.info("@@ ===== dump =====\n");
     for (auto it = _map.begin(); it != _map.end(); it++) {
@@ -273,7 +289,7 @@ uint8_t TestGenerator::generateTests(DataGenerator &gen, const bool root) {
                     _address += newLen;
                 }
             }
-            if (newLen < len) {
+            if (newLen < len && !root) {
                 // Byte/word sequence is correct instruction but there are unnecessary bytes. Drop
                 // these.
                 gen.dump("@@ shrink length=%d count=%#x: %s %s", newLen, found.count(),

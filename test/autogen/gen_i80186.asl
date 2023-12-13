@@ -12,8 +12,8 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-        cpu     8086
-        fpu     8087
+        cpu     80186
+        fpu     on
         org     0000h
         include "gen_i8086.inc"
         end

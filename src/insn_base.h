@@ -42,12 +42,14 @@ struct Insn final : ErrorAt {
     uint8_t length() const { return _length; }
     const char *name() const { return _name; }
     StrBuffer &nameBuffer() { return _buffer; }
-    void reset(uint32_t addr) {
+    void reset(uint32_t addr, uint8_t length = 0) {
         resetError();
         setAt(StrScanner::EMPTY);
         _address = addr;
-        _length = 0;
-        memset(_bytes, 0, sizeof(_bytes));
+        if (length >= sizeof(_bytes))
+            length = sizeof(_bytes);
+        _length = length;
+        memset(_bytes + length, 0, sizeof(_bytes) - length);
         _buffer.reset();
     }
     uint32_t align(uint8_t step) {
@@ -323,13 +325,13 @@ struct DisInsnBase : ErrorAt {
     const char *name() const { return _insn.name(); }
     StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
 
-    void reset(uint32_t addr) {
+    void reset(uint8_t length = 0) {
         resetError();
-        _insn.reset(addr);
+        _insn.reset(_insn.address(), length);
     }
 
     /** Read 8 bit data. */
-    uint8_t readByte() {
+    virtual uint8_t readByte() {
         if (!_memory.hasNext()) {
             setErrorIf(_out, NO_MEMORY);
             return 0;
@@ -522,8 +524,6 @@ private:
 template <typename Conf>
 struct DisInsnImpl : DisInsnBase {
     typename Conf::uintptr_t address() const { return DisInsnBase::address(); }
-
-    void reset() { DisInsnBase::reset(address()); }
 
     /** Read 16 bit data */
     uint16_t readUint16() { return big ? readUint16Be() : readUint16Le(); }

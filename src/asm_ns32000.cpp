@@ -37,8 +37,6 @@ using text::ns32000::TEXT_PMMU;
 namespace {
 
 // clang-format off
-constexpr char OPT_TEXT_FPU[]  PROGMEM = "fpu";
-constexpr char OPT_DESC_FPU[]  PROGMEM = "floating point co-processor";
 constexpr char OPT_TEXT_PMMU[] PROGMEM = "pmmu";
 constexpr char OPT_DESC_PMMU[] PROGMEM = "memory management unit";
 
@@ -101,10 +99,9 @@ const ValueParser::Plugins &AsmNs32000::defaultPlugins() {
 }
 
 AsmNs32000::AsmNs32000(const ValueParser::Plugins &plugins)
-    : Assembler(plugins, PSEUDO_TABLE, &_opt_fpu),
+    : Assembler(plugins, PSEUDO_TABLE, &_opt_pmmu),
       Config(TABLE),
-      _opt_fpu(this, &AsmNs32000::setFpuName, OPT_TEXT_FPU, OPT_DESC_FPU, &_opt_pmmu),
-      _opt_pmmu(this, &AsmNs32000::setPmmuName, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
+      _opt_pmmu(this, &AsmNs32000::setPmmu, OPT_TEXT_PMMU, OPT_DESC_PMMU) {
     reset();
 }
 
@@ -114,7 +111,7 @@ void AsmNs32000::reset() {
     setMmuType(MMU_NONE);
 }
 
-Error AsmNs32000::setFpuName(StrScanner &scan) {
+Error AsmNs32000::setFpu(StrScanner &scan) {
     if (scan.iequals_P(TEXT_FPU_NS32081)) {
         setFpuType(FPU_NS32081);
     } else if (scan.iequals_P(TEXT_none)) {
@@ -125,7 +122,7 @@ Error AsmNs32000::setFpuName(StrScanner &scan) {
     return OK;
 }
 
-Error AsmNs32000::setPmmuName(StrScanner &scan) {
+Error AsmNs32000::setPmmu(StrScanner &scan) {
     if (scan.iequals_P(TEXT_MMU_NS32082)) {
         setMmuType(MMU_NS32082);
     } else if (scan.iequals_P(TEXT_none)) {

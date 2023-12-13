@@ -26,7 +26,7 @@ namespace libasm {
 namespace i8086 {
 
 struct EntryInsn : EntryInsnBase<Config, Entry> {
-    EntryInsn() : _segment(0) {}
+    EntryInsn() : _fwait(0), _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
@@ -36,11 +36,17 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos extPos() const { return flags().extPos(); }
     OprSize size() const { return flags().size(); }
     bool stringInst() const { return flags().stringInst(); }
+    bool fpuInst() const { return flags().fpuInst(); }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
-    Config::opcode_t segment() const { return _segment; }
+    auto segment() const { return _segment; }
+    void setFwait(bool enable = true) { _fwait = enable ? FWAIT : 0; }
+    auto fwait() const { return _fwait; }
+
+    static constexpr Config::opcode_t FWAIT = 0x9B;
 
 protected:
+    Config::opcode_t _fwait;
     Config::opcode_t _segment;
 };
 
@@ -90,6 +96,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 
     void emitInsn() {
         uint8_t pos = 0;
+        if (_fwait)
+            emitByte(_fwait, pos++);
         if (_segment)
             emitByte(_segment, pos++);
         if (hasPrefix())
@@ -108,6 +116,8 @@ private:
     uint8_t operandPos() const {
         uint8_t pos = length();
         if (pos == 0) {
+            if (_fwait)
+                pos++;
             if (_segment)
                 pos++;
             if (hasPrefix())
@@ -121,8 +131,23 @@ private:
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
-    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
-    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out) : DisInsnImpl(insn, o, out) {}
+    DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
+        : DisInsnImpl(insn, memory, out), _modReg(0), _hasPushBack(false), _pushBack(0) {}
+    DisInsn(Insn &insn, DisInsn &o, const StrBuffer &out)
+        : DisInsnImpl(insn, o, out), _modReg(0), _hasPushBack(false), _pushBack(0) {}
+
+    uint8_t readByte() override {
+        if (_hasPushBack) {
+            _hasPushBack = false;
+            return _pushBack;
+        }
+        return DisInsnBase::readByte();
+    }
+
+    void pushBack(uint8_t code) {
+        _pushBack = code;
+        _hasPushBack = true;
+    }
 
     void readModReg() {
         const OprPos dst = dstPos();
@@ -132,10 +157,12 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
         else if (dst == P_OMOD || src == P_OMOD)
             _modReg = opCode();
     }
-    Config::opcode_t modReg() const { return _modReg; }
+    auto modReg() const { return _modReg; }
 
 private:
     Config::opcode_t _modReg;
+    bool _hasPushBack;
+    Config::opcode_t _pushBack;
 };
 
 }  // namespace i8086

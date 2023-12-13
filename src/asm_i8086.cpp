@@ -17,7 +17,7 @@
 #include "asm_i8086.h"
 
 #include "table_i8086.h"
-#include "text_common.h"
+#include "text_i8086.h"
 
 namespace libasm {
 namespace i8086 {
@@ -25,6 +25,10 @@ namespace i8086 {
 using namespace pseudo;
 using namespace reg;
 using namespace text::common;
+
+using text::i8086::TEXT_FPU;
+using text::i8086::TEXT_FPU_8087;
+using text::i8086::TEXT_none;
 
 namespace {
 
@@ -70,7 +74,21 @@ AsmI8086::AsmI8086(const ValueParser::Plugins &plugins)
 
 void AsmI8086::reset() {
     Assembler::reset();
+    setFpuType(FPU_NONE);
     setOptimizeSegment(false);
+}
+
+Error AsmI8086::setFpu(StrScanner &scan) {
+    auto p = scan;
+    p.iexpect('i');
+    if (p.iequals_P(TEXT_FPU_8087)) {
+        setFpuType(FPU_I8087);
+    } else if (scan.iequals_P(TEXT_none)) {
+        setFpuType(FPU_NONE);
+    } else {
+        return UNKNOWN_OPERAND;
+    }
+    return OK;
 }
 
 Error AsmI8086::setOptimizeSegment(bool enable) {
@@ -86,7 +104,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
     Insn _insn(0);
     AsmInsn insn(_insn);
     insn.nameBuffer().text(opr);
-    if (TABLE.searchName(cpuType(), insn))
+    if (TABLE.searchName(_cpuSpec, insn))
         return UNKNOWN_INSTRUCTION;
     if (!insn.stringInst())
         return UNKNOWN_INSTRUCTION;
@@ -99,7 +117,7 @@ Error AsmI8086::parseStringInst(StrScanner &scan, Operand &op) const {
 Error AsmI8086::parsePointerSize(StrScanner &scan, Operand &op) const {
     auto p = scan;
     const auto reg = parseRegName(p);
-    if (reg == REG_BYTE || reg == REG_WORD) {
+    if (reg > REG_PTR) {
         // Pointer size override
         if (parseRegName(p.skipSpaces()) == REG_PTR) {
             op.ptr = reg;
@@ -162,6 +180,18 @@ Error AsmI8086::parseDisplacement(StrScanner &scan, Operand &op) const {
     return OK;
 }
 
+namespace {
+AddrMode pointerMode(RegName ptr, AddrMode undef, AddrMode byte, AddrMode word) {
+    if (ptr == REG_UNDEF)
+        return undef;
+    if (ptr == REG_BYTE)
+        return byte;
+    if (ptr == REG_WORD)
+        return word;
+    return M_FMOD;
+}
+}  // namespace
+
 Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
@@ -186,10 +216,10 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
             if (!op.hasVal)
                 return op.setError(UNKNOWN_OPERAND);
-            op.mode = (op.ptr == REG_UNDEF) ? M_DIR : (op.ptr == REG_BYTE ? M_BDIR : M_WDIR);
+            op.mode = pointerMode(op.ptr, M_DIR, M_BDIR, M_WDIR);
             return OK;
         }
-        op.mode = (op.ptr == REG_UNDEF) ? M_MEM : (op.ptr == REG_BYTE ? M_BMEM : M_WMEM);
+        op.mode = pointerMode(op.ptr, M_MEM, M_BMEM, M_WMEM);
         return OK;
     }
     if (op.ptr != REG_UNDEF || op.seg != REG_UNDEF)
@@ -225,11 +255,29 @@ Error AsmI8086::parseOperand(StrScanner &scan, Operand &op) const {
         scan = a;
         return OK;
     }
+    if (reg == REG_ST) {
+        if (a.skipSpaces().expect('(')) {
+            const auto valp = a;
+            op.val32 = parseExpr32(a, op, ')');
+            if (op.hasError())
+                return op.getError();
+            if (a.skipSpaces().expect(')')) {
+                if (op.val32 >= 8)
+                    op.setErrorIf(valp, OVERFLOW_RANGE);
+                op.mode = (op.isOK() && op.val32 == 0) ? M_ST0 : M_STI;
+                scan = a;
+                return OK;
+            }
+            return op.setErrorIf(a, MISSING_CLOSING_PAREN);
+        }
+        op.mode = M_ST0;
+        scan = a;
+        return OK;
+    }
     if (reg != REG_UNDEF)
         return op.setError(UNKNOWN_OPERAND);
 
     const auto valp = p.skipSpaces();
-    ;
     op.val32 = parseExpr32(p, op);
     if (op.hasError())
         return op.getError();
@@ -413,6 +461,7 @@ void AsmI8086::emitModReg(AsmInsn &insn, const Operand &op, OprPos pos) const {
     case M_DIR:
         emitDirect(insn, op, pos);
         break;
+    case M_FMOD:
     case M_BMEM:
     case M_WMEM:
     case M_MEM:
@@ -462,6 +511,12 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     case M_SREG:
         emitRegister(insn, op, pos);
         break;
+    case M_FMOD:
+        if (op.reg == REG_UNDEF && op.index == REG_UNDEF) {
+            emitDirect(insn, op, pos);
+            break;
+        }
+        /* Fall-through */
     case M_BMOD:
     case M_WMOD:
     case M_BMEM:
@@ -516,6 +571,9 @@ void AsmI8086::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op, OprP
     case M_ISTR:
         insn.emitOperand8(op.val32);
         break;
+    case M_STI:
+        insn.embed(op.val32 & 7);
+        break;
     default:
         break;
     }
@@ -560,6 +618,15 @@ void AsmI8086::emitStringInst(AsmInsn &insn, const Operand &dst, const Operand &
     }
 }
 
+Error AsmI8086::processPseudo(StrScanner &scan, Insn &insn) {
+    const auto at = scan;
+    if (strcasecmp_P(insn.name(), TEXT_FPU) == 0) {
+        const auto error = _opt_fpu.set(scan);
+        return error ? insn.setErrorIf(at, error) : OK;
+    }
+    return Assembler::processPseudo(scan, insn);
+}
+
 Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
@@ -575,7 +642,7 @@ Error AsmI8086::encodeImpl(StrScanner &scan, Insn &_insn) const {
         scan.skipSpaces();
     }
 
-    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(cpuType(), insn)))
+    if (_insn.setErrorIf(insn.dstOp, TABLE.searchName(_cpuSpec, insn)))
         return _insn.getError();
     insn.prepairModReg();
 

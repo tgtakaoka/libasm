@@ -84,6 +84,7 @@ struct TestGenerator {
     virtual ~TestGenerator();
 
     TestGenerator &generate();
+    TestGenerator &generate(uint8_t opc1);
     TestGenerator &ignoreSizeVariation();
 
 private:

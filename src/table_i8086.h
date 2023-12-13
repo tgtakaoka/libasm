@@ -30,12 +30,13 @@ struct TableI8086 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
-    Error searchName(CpuType, AsmInsn &insn) const;
-    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
+    Error searchName(const CpuSpec &, AsmInsn &insn) const;
+    Error searchOpCode(const CpuSpec &, DisInsn &insn, StrBuffer &out) const;
+    bool isPrefix(CpuType, Config::opcode_t code) const;
+    bool isPrefix(FpuType, Config::opcode_t code) const;
     bool isSegmentPrefix(Config::opcode_t opcode) const;
     RegName overrideSeg(Config::opcode_t opcode) const;
     Config::opcode_t segOverridePrefix(RegName name) const;
-    bool isPrefix(CpuType, Config::opcode_t code) const;
 };
 
 extern const TableI8086 TABLE;
