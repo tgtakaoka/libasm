@@ -33,14 +33,14 @@ ASM_TESTS = $(patsubst %.asm,%,$(wildcard test_*.asm))
 ASM_OUTS  = $(foreach t,$(ASM_TESTS),$(t).$(call out-ext,$(t)))
 define asm-rule # test suffix option
 .PHONY:: asm-$(1).$(2)
-asm-$(1).$(2):: $(ASM)
+asm-$(1).$(2):: $(ASM)-refresh
 asm-$(1).$(2):: $(1).asm
 	$$(ASM) $$(ASM_FLAGS) $(3) -o $(1).$(2) -l $(1).lst $$^
 
 endef
 $(eval $(foreach t,$(ASM_TESTS),$(call asm-rule,$(t),$(call out-ext,$(t)),$(call asm-opt,$(t)))))
 
-asm-test: $(ASM)-refresh clean-asm $(ASM_OUTS:%=asm-%)
+asm-test: clean-asm $(ASM_OUTS:%=asm-%)
 clean-asm:
 	-rm -f $(ASM_OUTS)
 
