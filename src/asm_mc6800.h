@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_MC6800_H__
-#define __ASM_MC6800_H__
+#ifndef __LIBASM_ASM_MC6800_H__
+#define __LIBASM_ASM_MC6800_H__
 
 #include "asm_base.h"
 #include "config_mc6800.h"

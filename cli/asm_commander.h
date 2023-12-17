@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_COMMANDER_H__
-#define __ASM_COMMANDER_H__
+#ifndef __LIBASM_ASM_COMMANDER_H__
+#define __LIBASM_ASM_COMMANDER_H__
 
 #include <initializer_list>
 #include <map>

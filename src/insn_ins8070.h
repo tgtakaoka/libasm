@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_INS8070_H__
-#define __INSN_INS8070_H__
+#ifndef __LIBASM_INSN_INS8070_H__
+#define __LIBASM_INSN_INS8070_H__
 
 #include "config_ins8070.h"
 #include "entry_ins8070.h"

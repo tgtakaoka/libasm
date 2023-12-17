@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_I8080_H__
-#define __ASM_I8080_H__
+#ifndef __LIBASM_ASM_I8080_H__
+#define __LIBASM_ASM_I8080_H__
 
 #include "asm_base.h"
 #include "config_i8080.h"

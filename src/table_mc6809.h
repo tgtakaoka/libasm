@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_MC6809_H__
-#define __TABLE_MC6809_H__
+#ifndef __LIBASM_TABLE_MC6809_H__
+#define __LIBASM_TABLE_MC6809_H__
 
 #include "config_mc6809.h"
 #include "insn_mc6809.h"

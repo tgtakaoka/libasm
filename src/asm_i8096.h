@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_I8096_H__
-#define __ASM_I8096_H__
+#ifndef __LIBASM_ASM_I8096_H__
+#define __LIBASM_ASM_I8096_H__
 
 #include "asm_base.h"
 #include "config_i8096.h"

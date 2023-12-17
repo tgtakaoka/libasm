@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_TMS32010_H__
-#define __ASM_TMS32010_H__
+#ifndef __LIBASM_ASM_TMS32010_H__
+#define __LIBASM_ASM_TMS32010_H__
 
 #include "asm_base.h"
 #include "config_tms32010.h"

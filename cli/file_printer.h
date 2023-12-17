@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __FILE_PRINTER_H__
-#define __FILE_PRINTER_H__
+#ifndef __LIBASM_FILE_PRINTER_H__
+#define __LIBASM_FILE_PRINTER_H__
 
 #include "text_printer.h"
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_NS32000_H__
-#define __DIS_NS32000_H__
+#ifndef __LIBASM_DIS_NS32000_H__
+#define __LIBASM_DIS_NS32000_H__
 
 #include "config_ns32000.h"
 #include "dis_base.h"

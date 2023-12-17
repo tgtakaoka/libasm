@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __CLI_LISTING_H__
-#define __CLI_LISTING_H__
+#ifndef __LIBASM_LIST_FORMATTER_H__
+#define __LIBASM_LIST_FORMATTER_H__
 
 #include "config_base.h"
 #include "str_buffer.h"

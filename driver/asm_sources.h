@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_SOURCES_H__
-#define __ASM_SOURCES_H__
+#ifndef __LIBASM_ASM_SOURCES_H__
+#define __LIBASM_ASM_SOURCES_H__
 
 #include "text_reader.h"
 

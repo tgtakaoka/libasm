@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_INS8070__
-#define __TEXT_INS8070__
+#ifndef __LIBASM_TEXT_INS8070__
+#define __LIBASM_TEXT_INS8070__
 
 #include "text_common.h"
 

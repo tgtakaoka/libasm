@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __STR_SCANNER_H__
-#define __STR_SCANNER_H__
+#ifndef __LIBASM_STR_SCANNER_H__
+#define __LIBASM_STR_SCANNER_H__
 
 #include <ctype.h>
 #include <stddef.h>

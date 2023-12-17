@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REG_SCN2650_H__
-#define __REG_SCN2650_H__
+#ifndef __LIBASM_REG_SCN2650_H__
+#define __LIBASM_REG_SCN2650_H__
 
 #include <stdint.h>
 

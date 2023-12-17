@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_DRIVER_H__
-#define __DIS_DRIVER_H__
+#ifndef __LIBASM_DIS_DRIVER_H__
+#define __LIBASM_DIS_DRIVER_H__
 
 #include "bin_reader.h"
 #include "dis_base.h"

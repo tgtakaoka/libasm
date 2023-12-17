@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __BIN_DECODER_H__
-#define __BIN_DECODER_H__
+#ifndef __LIBASM_BIN_DECODER_H__
+#define __LIBASM_BIN_DECODER_H__
 
 #include "bin_memory.h"
 #include "str_scanner.h"

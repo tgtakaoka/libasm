@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_MC68000_H__
-#define __TABLE_MC68000_H__
+#ifndef __LIBASM_TABLE_MC68000_H__
+#define __LIBASM_TABLE_MC68000_H__
 
 #include "config_mc68000.h"
 #include "insn_mc68000.h"

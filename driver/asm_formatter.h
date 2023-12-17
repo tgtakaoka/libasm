@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_FORMATTER_H__
-#define __ASM_FORMATTER_H__
+#ifndef __LIBASM_ASM_FORMATTER_H__
+#define __LIBASM_ASM_FORMATTER_H__
 
 #include "asm_sources.h"
 #include "insn_base.h"

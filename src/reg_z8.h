@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REG_Z8_H__
-#define __REG_Z8_H__
+#ifndef __LIBASM_REG_Z8_H__
+#define __LIBASM_REG_Z8_H__
 
 #include <stdint.h>
 

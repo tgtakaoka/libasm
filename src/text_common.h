@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_COMMON__
-#define __TEXT_COMMON__
+#ifndef __LIBASM_TEXT_COMMON__
+#define __LIBASM_TEXT_COMMON__
 
 #include "config_host.h"
 

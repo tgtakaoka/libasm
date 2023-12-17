@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REG_TMS7000_H__
-#define __REG_TMS7000_H__
+#ifndef __LIBASM_REG_TMS7000_H__
+#define __LIBASM_REG_TMS7000_H__
 
 #include "str_buffer.h"
 #include "str_scanner.h"

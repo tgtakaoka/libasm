@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_CDP1802_H__
-#define __ASM_CDP1802_H__
+#ifndef __LIBASM_ASM_CDP1802_H__
+#define __LIBASM_ASM_CDP1802_H__
 
 #include "asm_base.h"
 #include "config_cdp1802.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_Z80_H__
-#define __TABLE_Z80_H__
+#ifndef __LIBASM_TABLE_Z80_H__
+#define __LIBASM_TABLE_Z80_H__
 
 #include "config_z80.h"
 #include "insn_z80.h"

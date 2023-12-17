@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_F3850_H__
-#define __INSN_F3850_H__
+#ifndef __LIBASM_INSN_F3850_H__
+#define __LIBASM_INSN_F3850_H__
 
 #include "config_f3850.h"
 #include "entry_f3850.h"

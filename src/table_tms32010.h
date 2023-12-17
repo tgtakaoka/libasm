@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_TMS32010_H__
-#define __TABLE_TMS32010_H__
+#ifndef __LIBASM_TABLE_TMS32010_H__
+#define __LIBASM_TABLE_TMS32010_H__
 
 #include "config_tms32010.h"
 #include "insn_tms32010.h"

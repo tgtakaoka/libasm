@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_TLCS90_H__
-#define __ASM_TLCS90_H__
+#ifndef __LIBASM_ASM_TLCS90_H__
+#define __LIBASM_ASM_TLCS90_H__
 
 #include "asm_base.h"
 #include "config_tlcs90.h"

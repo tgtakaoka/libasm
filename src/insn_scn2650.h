@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_SCN2650_H__
-#define __INSN_SCN2650_H__
+#ifndef __LIBASM_INSN_SCN2650_H__
+#define __LIBASM_INSN_SCN2650_H__
 
 #include "config_scn2650.h"
 #include "entry_scn2650.h"

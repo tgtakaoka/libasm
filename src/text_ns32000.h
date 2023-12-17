@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_NS32000__
-#define __TEXT_NS32000__
+#ifndef __LIBASM_TEXT_NS32000__
+#define __LIBASM_TEXT_NS32000__
 
 #include "text_common.h"
 

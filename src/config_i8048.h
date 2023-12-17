@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __CONFIG_I8048_H__
-#define __CONFIG_I8048_H__
+#ifndef __LIBASM_CONFIG_I8048_H__
+#define __LIBASM_CONFIG_I8048_H__
 
 #include "config_base.h"
 

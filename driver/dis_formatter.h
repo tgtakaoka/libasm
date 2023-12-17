@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_FORMATTER_H__
-#define __DIS_FORMATTER_H__
+#ifndef __LIBASM_DIS_FORMATTER_H__
+#define __LIBASM_DIS_FORMATTER_H__
 
 #include "dis_base.h"
 #include "list_formatter.h"

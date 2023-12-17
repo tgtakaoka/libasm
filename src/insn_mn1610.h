@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_MN1610_H__
-#define __INSN_MN1610_H__
+#ifndef __LIBASM_INSN_MN1610_H__
+#define __LIBASM_INSN_MN1610_H__
 
 #include "config_mn1610.h"
 #include "entry_mn1610.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_Z8_H__
-#define __TABLE_Z8_H__
+#ifndef __LIBASM_TABLE_Z8_H__
+#define __LIBASM_TABLE_Z8_H__
 
 #include "config_z8.h"
 #include "entry_table.h"

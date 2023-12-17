@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __FUNCTION_STORE_H__
-#define __FUNCTION_STORE_H__
+#ifndef __LIBASM_FUNCTION_STORE_H__
+#define __LIBASM_FUNCTION_STORE_H__
 
 #include <list>
 #include <map>

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __BIN_ENCODER_H__
-#define __BIN_ENCODER_H__
+#ifndef __LIBASM_BIN_ENCODER_H__
+#define __LIBASM_BIN_ENCODER_H__
 
 #include "bin_memory.h"
 #include "config_base.h"

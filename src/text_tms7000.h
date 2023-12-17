@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_TMS7000__
-#define __TEXT_TMS7000__
+#ifndef __LIBASM_TEXT_TMS7000__
+#define __LIBASM_TEXT_TMS7000__
 
 #include "text_common.h"
 

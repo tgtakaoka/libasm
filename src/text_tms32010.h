@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_TMS32010__
-#define __TEXT_TMS32010__
+#ifndef __LIBASM_TEXT_TMS32010__
+#define __LIBASM_TEXT_TMS32010__
 
 #include "text_common.h"
 

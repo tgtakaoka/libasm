@@ -15,7 +15,7 @@
  */
 
 #ifndef __LIBASM_H__
-#define __LIBASM_H__
+#define __LIBASM_LIBASM_H__
 
 #include "asm_cdp1802.h"
 #include "asm_f3850.h"

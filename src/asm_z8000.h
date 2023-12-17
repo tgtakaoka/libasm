@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __ASM_Z8000_H__
-#define __ASM_Z8000_H__
+#ifndef __LIBASM_ASM_Z8000_H__
+#define __LIBASM_ASM_Z8000_H__
 
 #include "asm_base.h"
 #include "config_z8000.h"

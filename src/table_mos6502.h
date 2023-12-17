@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_MOS6502_H__
-#define __TABLE_MOS6502_H__
+#ifndef __LIBASM_TABLE_MOS6502_H__
+#define __LIBASM_TABLE_MOS6502_H__
 
 #include "config_mos6502.h"
 #include "insn_mos6502.h"

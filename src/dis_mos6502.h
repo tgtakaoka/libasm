@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_MOS6502_H__
-#define __DIS_MOS6502_H__
+#ifndef __LIBASM_DIS_MOS6502_H__
+#define __LIBASM_DIS_MOS6502_H__
 
 #include "config_mos6502.h"
 #include "dis_base.h"

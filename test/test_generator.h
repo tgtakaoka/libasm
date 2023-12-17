@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_GENERATOR_H__
-#define __TEST_GENERATOR_H__
+#ifndef __LIBASM_TEST_GENERATOR_H__
+#define __LIBASM_TEST_GENERATOR_H__
 
 #include <cstdarg>
 #include <string>

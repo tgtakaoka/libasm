@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_IM6100__
-#define __TEXT_IM6100__
+#ifndef __LIBASM_TEXT_IM6100__
+#define __LIBASM_TEXT_IM6100__
 
 #include "text_common.h"
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_MEMORY_H__
-#define __TEST_MEMORY_H__
+#ifndef __LIBASM_TEST_MEMORY_H__
+#define __LIBASM_TEST_MEMORY_H__
 
 #include "bin_memory.h"
 #include "config_base.h"

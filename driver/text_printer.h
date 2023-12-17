@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_PRINTER_H__
-#define __TEXT_PRINTER_H__
+#ifndef __LIBASM_TEXT_PRINTER_H__
+#define __LIBASM_TEXT_PRINTER_H__
 
 namespace libasm {
 namespace driver {

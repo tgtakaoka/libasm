@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_MC6800_H__
-#define __DIS_MC6800_H__
+#ifndef __LIBASM_DIS_MC6800_H__
+#define __LIBASM_DIS_MC6800_H__
 
 #include "config_mc6800.h"
 #include "dis_base.h"

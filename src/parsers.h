@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __PARSERS_H__
-#define __PARSERS_H__
+#ifndef __LIBASM_PARSERS_H__
+#define __LIBASM_PARSERS_H__
 
 #include "error_reporter.h"
 #include "operators.h"

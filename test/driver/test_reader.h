@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_READER_H__
-#define __TEST_READER_H__
+#ifndef __LIBASM_TEST_READER_H__
+#define __LIBASM_TEST_READER_H__
 
 #include "text_reader.h"
 

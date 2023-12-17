@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __GEN_DRIVER_H__
-#define __GEN_DRIVER_H__
+#ifndef __LIBASM_GEN_DRIVER_H__
+#define __LIBASM_GEN_DRIVER_H__
 
 #include <cstdio>
 #include <string>

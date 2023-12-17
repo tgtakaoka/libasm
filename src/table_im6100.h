@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_IM6100_H__
-#define __TABLE_IM6100_H__
+#ifndef __LIBASM_TABLE_IM6100_H__
+#define __LIBASM_TABLE_IM6100_H__
 
 #include "config_im6100.h"
 #include "insn_im6100.h"

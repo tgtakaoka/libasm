@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __MAKE_SIGNED_H__
-#define __MAKE_SIGNED_H__
+#ifndef __LIBASM_TYPE_TRAITS_H__
+#define __LIBASM_TYPE_TRAITS_H__
 
 #include <stdint.h>
 

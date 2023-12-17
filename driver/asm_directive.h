@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_DIRECTIVE_H__
-#define __ASM_DIRECTIVE_H__
+#ifndef __LIBASM_ASM_DIRECTIVE_H__
+#define __LIBASM_ASM_DIRECTIVE_H__
 
 #include <map>
 #include <string>

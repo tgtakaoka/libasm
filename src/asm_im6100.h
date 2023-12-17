@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_IM6100_H__
-#define __ASM_IM6100_H__
+#ifndef __LIBASM_ASM_IM6100_H__
+#define __LIBASM_ASM_IM6100_H__
 
 #include "asm_base.h"
 #include "config_im6100.h"

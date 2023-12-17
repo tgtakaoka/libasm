@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_TMS7000_H__
-#define __INSN_TMS7000_H__
+#ifndef __LIBASM_INSN_TMS7000_H__
+#define __LIBASM_INSN_TMS7000_H__
 
 #include "config_tms7000.h"
 #include "entry_tms7000.h"

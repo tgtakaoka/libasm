@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_IM6100_H__
-#define __INSN_IM6100_H__
+#ifndef __LIBASM_INSN_IM6100_H__
+#define __LIBASM_INSN_IM6100_H__
 
 #include "config_im6100.h"
 #include "entry_im6100.h"

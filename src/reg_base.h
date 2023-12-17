@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REG_BASE_H__
-#define __REG_BASE_H__
+#ifndef __LIBASM_REG_BASE_H__
+#define __LIBASM_REG_BASE_H__
 
 #include <ctype.h>
 

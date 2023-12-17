@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_TLCS90_H__
-#define __TABLE_TLCS90_H__
+#ifndef __LIBASM_TABLE_TLCS90_H__
+#define __LIBASM_TABLE_TLCS90_H__
 
 #include "config_tlcs90.h"
 #include "insn_tlcs90.h"

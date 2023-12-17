@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_INS8070_H__
-#define __ASM_INS8070_H__
+#ifndef __LIBASM_ASM_INS8070_H__
+#define __LIBASM_ASM_INS8070_H__
 
 #include "asm_base.h"
 #include "config_ins8070.h"

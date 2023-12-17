@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_TMS9900_H__
-#define __ASM_TMS9900_H__
+#ifndef __LIBASM_ASM_TMS9900_H__
+#define __LIBASM_ASM_TMS9900_H__
 
 #include "asm_base.h"
 #include "config_tms9900.h"

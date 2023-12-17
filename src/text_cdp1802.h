@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_CDP1802__
-#define __TEXT_CDP1802__
+#ifndef __LIBASM_TEXT_CDP1802__
+#define __LIBASM_TEXT_CDP1802__
 
 #include "text_common.h"
 

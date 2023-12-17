@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_Z80__
-#define __TEXT_Z80__
+#ifndef __LIBASM_TEXT_Z80__
+#define __LIBASM_TEXT_Z80__
 
 #include "text_common.h"
 

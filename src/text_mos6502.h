@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_MOS6502_H__
-#define __TEXT_MOS6502_H__
+#ifndef __LIBASM_TEXT_MOS6502_H__
+#define __LIBASM_TEXT_MOS6502_H__
 
 #include "text_common.h"
 

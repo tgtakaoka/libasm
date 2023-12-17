@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __BIN_MEMORY_H__
-#define __BIN_MEMORY_H__
+#ifndef __LIBASM_BIN_MEMORY_H__
+#define __LIBASM_BIN_MEMORY_H__
 
 #include <map>
 #include <vector>

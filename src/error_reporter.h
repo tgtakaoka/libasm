@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ERROR_REPORTER_H__
-#define __ERROR_REPORTER_H__
+#ifndef __LIBASM_ERROR_REPORTER_H__
+#define __LIBASM_ERROR_REPORTER_H__
 
 #include "config_host.h"
 #include "str_scanner.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __SYMBOL_TABLE_H__
-#define __SYMBOL_TABLE_H__
+#ifndef __LIBASM_SYMBOL_TABLE_H__
+#define __LIBASM_SYMBOL_TABLE_H__
 
 #include <stdint.h>
 

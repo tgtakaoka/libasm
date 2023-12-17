@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_F3850_H__
-#define __DIS_F3850_H__
+#ifndef __LIBASM_DIS_F3850_H__
+#define __LIBASM_DIS_F3850_H__
 
 #include "config_f3850.h"
 #include "dis_base.h"

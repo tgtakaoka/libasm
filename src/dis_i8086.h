@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_I8086_H__
-#define __DIS_I8086_H__
+#ifndef __LIBASM_DIS_I8086_H__
+#define __LIBASM_DIS_I8086_H__
 
 #include "config_i8086.h"
 #include "dis_base.h"

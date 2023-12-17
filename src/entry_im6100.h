@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_IM6100_H__
-#define __ENTRY_IM6100_H__
+#ifndef __LIBASM_ENTRY_IM6100_H__
+#define __LIBASM_ENTRY_IM6100_H__
 
 #include <stdint.h>
 

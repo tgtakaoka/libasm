@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INTEL_HEX_H__
-#define __INTEL_HEX_H__
+#ifndef __LIBASM_INTEL_HEX_H__
+#define __LIBASM_INTEL_HEX_H__
 
 #include "bin_decoder.h"
 #include "bin_encoder.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_ASSERTER_H__
-#define __TEST_ASSERTER_H__
+#ifndef __LIBASM_TEST_ASSERTER_H__
+#define __LIBASM_TEST_ASSERTER_H__
 
 #include "array_memory.h"
 #include "config_base.h"

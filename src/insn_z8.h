@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_Z8_H__
-#define __INSN_Z8_H__
+#ifndef __LIBASM_INSN_Z8_H__
+#define __LIBASM_INSN_Z8_H__
 
 #include "config_z8.h"
 #include "entry_z8.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_COMMANDER_H__
-#define __DIS_COMMANDER_H__
+#ifndef __LIBASM_DIS_COMMANDER_H__
+#define __LIBASM_DIS_COMMANDER_H__
 
 #include <initializer_list>
 #include <map>

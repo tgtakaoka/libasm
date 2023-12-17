@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ARRAY_MEMORY_H__
-#define __ARRAY_MEMORY_H__
+#ifndef __LIBASM_ARRAY_MEMORY_H__
+#define __LIBASM_ARRAY_MEMORY_H__
 
 #include "config_base.h"
 #include "dis_memory.h"

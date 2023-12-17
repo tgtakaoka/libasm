@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __VALUE_PARSER_H__
-#define __VALUE_PARSER_H__
+#ifndef __LIBASM_VALUE_PARSER_H__
+#define __LIBASM_VALUE_PARSER_H__
 
 #include <stdint.h>
 

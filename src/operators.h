@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __OPERATORS_H__
-#define __OPERATORS_H__
+#ifndef __LIBASM_OPERATORS_H__
+#define __LIBASM_OPERATORS_H__
 
 #include <stdint.h>
 

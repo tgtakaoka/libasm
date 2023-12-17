@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __FILE_READER_H__
-#define __FILE_READER_H__
+#ifndef __LIBASM_FILE_READER_H__
+#define __LIBASM_FILE_READER_H__
 
 #include "text_reader.h"
 

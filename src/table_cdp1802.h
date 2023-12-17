@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_CDP1802_H__
-#define __TABLE_CDP1802_H__
+#ifndef __LIBASM_TABLE_CDP1802_H__
+#define __LIBASM_TABLE_CDP1802_H__
 
 #include "config_cdp1802.h"
 #include "insn_cdp1802.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __SYMBOL_STORE_H__
-#define __SYMBOL_STORE_H__
+#ifndef __LIBASM_SYMBOL_STORE_H__
+#define __LIBASM_SYMBOL_STORE_H__
 
 #include <map>
 #include <string>

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_TLCS90__
-#define __TEXT_TLCS90__
+#ifndef __LIBASM_TEXT_TLCS90__
+#define __LIBASM_TEXT_TLCS90__
 
 #include "text_common.h"
 

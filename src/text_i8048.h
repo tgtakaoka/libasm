@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_I8048__
-#define __TEXT_I8048__
+#ifndef __LIBASM_TEXT_I8048__
+#define __LIBASM_TEXT_I8048__
 
 #include "text_common.h"
 

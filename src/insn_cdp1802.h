@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_CDP1802_H__
-#define __INSN_CDP1802_H__
+#ifndef __LIBASM_INSN_CDP1802_H__
+#define __LIBASM_INSN_CDP1802_H__
 
 #include "config_cdp1802.h"
 #include "entry_cdp1802.h"

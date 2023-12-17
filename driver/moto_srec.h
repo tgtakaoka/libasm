@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __MOTO_SREC_H__
-#define __MOTO_SREC_H__
+#ifndef __LIBASM_MOTO_SREC_H__
+#define __LIBASM_MOTO_SREC_H__
 
 #include "bin_decoder.h"
 #include "bin_encoder.h"

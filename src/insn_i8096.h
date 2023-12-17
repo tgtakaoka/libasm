@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_I8096_H__
-#define __INSN_I8096_H__
+#ifndef __LIBASM_INSN_I8096_H__
+#define __LIBASM_INSN_I8096_H__
 
 #include "config_i8096.h"
 #include "entry_i8096.h"

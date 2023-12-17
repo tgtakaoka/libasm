@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_SCN2650_H__
-#define __ASM_SCN2650_H__
+#ifndef __LIBASM_ASM_SCN2650_H__
+#define __LIBASM_ASM_SCN2650_H__
 
 #include "asm_base.h"
 #include "config_scn2650.h"

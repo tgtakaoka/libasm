@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __CONFIG_INS8070_H__
-#define __CONFIG_INS8070_H__
+#ifndef __LIBASM_CONFIG_INS8070_H__
+#define __LIBASM_CONFIG_INS8070_H__
 
 #include "config_base.h"
 

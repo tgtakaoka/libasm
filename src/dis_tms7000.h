@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_TMS7000_H__
-#define __DIS_TMS7000_H__
+#ifndef __LIBASM_DIS_TMS7000_H__
+#define __LIBASM_DIS_TMS7000_H__
 
 #include "config_tms7000.h"
 #include "dis_base.h"

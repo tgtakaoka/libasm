@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_ASM_HELPER_H__
-#define __TEST_ASM_HELPER_H__
+#ifndef __LIBASM_TEST_ASM_HELPER_H__
+#define __LIBASM_TEST_ASM_HELPER_H__
 
 #include "array_memory.h"
 #include "asm_base.h"

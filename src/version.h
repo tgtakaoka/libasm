@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __LIBASM_VERSION_H__
+#define __LIBASM_VERSION_H__
 
 #define LIBASM_VERSION_MAJOR 1
 #define LIBASM_VERSION_MINOR 6

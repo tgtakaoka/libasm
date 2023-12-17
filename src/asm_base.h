@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_BASE_H__
-#define __ASM_BASE_H__
+#ifndef __LIBASM_ASM_BASE_H__
+#define __LIBASM_ASM_BASE_H__
 
 #include <stdint.h>
 

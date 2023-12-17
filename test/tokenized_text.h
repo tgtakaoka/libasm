@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TOKENIZED_TEXT_H__
-#define __TOKENIZED_TEXT_H__
+#ifndef __LIBASM_TOKENIZED_TEXT_H__
+#define __LIBASM_TOKENIZED_TEXT_H__
 
 #include <cstdint>
 #include <cstring>

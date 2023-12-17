@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_CDP1802_H__
-#define __DIS_CDP1802_H__
+#ifndef __LIBASM_DIS_CDP1802_H__
+#define __LIBASM_DIS_CDP1802_H__
 
 #include "config_cdp1802.h"
 #include "dis_base.h"

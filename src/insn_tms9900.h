@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_TMS9900_H__
-#define __INSN_TMS9900_H__
+#ifndef __LIBASM_INSN_TMS9900_H__
+#define __LIBASM_INSN_TMS9900_H__
 
 #include "config_tms9900.h"
 #include "entry_tms9900.h"

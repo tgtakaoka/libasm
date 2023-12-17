@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_F3850__
-#define __TEXT_F3850__
+#ifndef __LIBASM_TEXT_F3850__
+#define __LIBASM_TEXT_F3850__
 
 #include "text_common.h"
 

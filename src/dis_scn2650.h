@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_SCN2650_H__
-#define __DIS_SCN2650_H__
+#ifndef __LIBASM_DIS_SCN2650_H__
+#define __LIBASM_DIS_SCN2650_H__
 
 #include "config_scn2650.h"
 #include "dis_base.h"

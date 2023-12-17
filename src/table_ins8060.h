@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_INS8060_H__
-#define __TABLE_INS8060_H__
+#ifndef __LIBASM_TABLE_INS8060_H__
+#define __LIBASM_TABLE_INS8060_H__
 
 #include "config_ins8060.h"
 #include "entry_table.h"

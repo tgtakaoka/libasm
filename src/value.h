@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __VALUE_H__
-#define __VALUE_H__
+#ifndef __LIBASM_VALUE_H__
+#define __LIBASM_VALUE_H__
 
 #include "config_base.h"
 #include "error_reporter.h"

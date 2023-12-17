@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __OPTION_BASE_H__
-#define __OPTION_BASE_H__
+#ifndef __LIBASM_OPTION_BASE_H__
+#define __LIBASM_OPTION_BASE_H__
 
 #include <stdint.h>
 

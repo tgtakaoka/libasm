@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_TLCS90_H__
-#define __DIS_TLCS90_H__
+#ifndef __LIBASM_DIS_TLCS90_H__
+#define __LIBASM_DIS_TLCS90_H__
 
 #include "config_tlcs90.h"
 #include "dis_base.h"

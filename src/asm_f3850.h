@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_F3850_H__
-#define __ASM_F3850_H__
+#ifndef __LIBASM_ASM_F3850_H__
+#define __LIBASM_ASM_F3850_H__
 
 #include "asm_base.h"
 #include "config_f3850.h"

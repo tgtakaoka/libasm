@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_MOS6502_H__
-#define __ENTRY_MOS6502_H__
+#ifndef __LIBASM_ENTRY_MOS6502_H__
+#define __LIBASM_ENTRY_MOS6502_H__
 
 #include <stdint.h>
 

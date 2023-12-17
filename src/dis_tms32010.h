@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_TMS32010_H__
-#define __DIS_TMS32010_H__
+#ifndef __LIBASM_DIS_TMS32010_H__
+#define __LIBASM_DIS_TMS32010_H__
 
 #include "config_tms32010.h"
 #include "dis_base.h"

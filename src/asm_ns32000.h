@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_NS32000_H__
-#define __ASM_NS32000_H__
+#ifndef __LIBASM_ASM_NS32000_H__
+#define __LIBASM_ASM_NS32000_H__
 
 #include "asm_base.h"
 #include "config_ns32000.h"

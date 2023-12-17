@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_BASE_H__
-#define __DIS_BASE_H__
+#ifndef __LIBASM_DIS_BASE_H__
+#define __LIBASM_DIS_BASE_H__
 
 #include <stddef.h>
 #include <stdint.h>

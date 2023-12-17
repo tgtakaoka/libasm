@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __BIN_READER_H__
-#define __BIN_READER_H__
+#ifndef __LIBASM_BIN_READER_H__
+#define __LIBASM_BIN_READER_H__
 
 #include <cstdint>
 

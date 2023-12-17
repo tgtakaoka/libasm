@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __FILE_SOURCES_H__
-#define __FILE_SOURCES_H__
+#ifndef __LIBASM_FILE_SOURCES_H__
+#define __LIBASM_FILE_SOURCES_H__
 
 #include <list>
 #include <string>

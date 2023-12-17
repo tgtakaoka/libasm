@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_F3850_H__
-#define __TABLE_F3850_H__
+#ifndef __LIBASM_TABLE_F3850_H__
+#define __LIBASM_TABLE_F3850_H__
 
 #include "config_f3850.h"
 #include "insn_f3850.h"

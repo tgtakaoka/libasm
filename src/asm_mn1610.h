@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ASM_MN1610_H__
-#define __ASM_MN1610_H__
+#ifndef __LIBASM_ASM_MN1610_H__
+#define __LIBASM_ASM_MN1610_H__
 
 #include "asm_base.h"
 #include "config_mn1610.h"

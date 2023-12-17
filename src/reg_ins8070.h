@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REG_INS8070_H__
-#define __REG_INS8070_H__
+#ifndef __LIBASM_REG_INS8070_H__
+#define __LIBASM_REG_INS8070_H__
 
 #include <stdint.h>
 

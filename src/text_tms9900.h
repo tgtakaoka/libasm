@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_TMS9900__
-#define __TEXT_TMS9900__
+#ifndef __LIBASM_TEXT_TMS9900__
+#define __LIBASM_TEXT_TMS9900__
 
 #include "text_common.h"
 

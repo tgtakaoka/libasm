@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __CONFIG_MC6805_H__
-#define __CONFIG_MC6805_H__
+#ifndef __LIBASM_CONFIG_MC6805_H__
+#define __LIBASM_CONFIG_MC6805_H__
 
 #include "config_base.h"
 

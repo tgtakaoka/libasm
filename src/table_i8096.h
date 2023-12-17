@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_I8096_H__
-#define __TABLE_I8096_H__
+#ifndef __LIBASM_TABLE_I8096_H__
+#define __LIBASM_TABLE_I8096_H__
 
 #include "config_i8096.h"
 #include "entry_table.h"

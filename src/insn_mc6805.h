@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_MC6805_H__
-#define __INSN_MC6805_H__
+#ifndef __LIBASM_INSN_MC6805_H__
+#define __LIBASM_INSN_MC6805_H__
 
 #include "config_mc6805.h"
 #include "entry_mc6805.h"

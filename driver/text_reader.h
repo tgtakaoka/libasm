@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_READER_H__
-#define __TEXT_READER_H__
+#ifndef __LIBASM_TEXT_READER_H__
+#define __LIBASM_TEXT_READER_H__
 
 #include "str_scanner.h"
 

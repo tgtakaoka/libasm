@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_TMS9900_H__
-#define __DIS_TMS9900_H__
+#ifndef __LIBASM_DIS_TMS9900_H__
+#define __LIBASM_DIS_TMS9900_H__
 
 #include "config_tms9900.h"
 #include "dis_base.h"

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_NS32000_H__
-#define __TABLE_NS32000_H__
+#ifndef __LIBASM_TABLE_NS32000_H__
+#define __LIBASM_TABLE_NS32000_H__
 
 #include "config_ns32000.h"
 #include "insn_ns32000.h"

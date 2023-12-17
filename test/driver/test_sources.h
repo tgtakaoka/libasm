@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_SOURCES_H__
-#define __TEST_SOURCES_H__
+#ifndef __LIBASM_TEST_SOURCES_H__
+#define __LIBASM_TEST_SOURCES_H__
 
 #include <list>
 #include <map>

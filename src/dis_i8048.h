@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_I8048_H__
-#define __DIS_I8048_H__
+#ifndef __LIBASM_DIS_I8048_H__
+#define __LIBASM_DIS_I8048_H__
 
 #include "config_i8048.h"
 #include "dis_base.h"

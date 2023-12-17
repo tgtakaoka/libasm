@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_TLCS90_H__
-#define __INSN_TLCS90_H__
+#ifndef __LIBASM_INSN_TLCS90_H__
+#define __LIBASM_INSN_TLCS90_H__
 
 #include "config_tlcs90.h"
 #include "entry_tlcs90.h"

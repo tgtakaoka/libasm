@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_BASE_H__
-#define __INSN_BASE_H__
+#ifndef __LIBASM_INSN_BASE_H__
+#define __LIBASM_INSN_BASE_H__
 
 #include <stddef.h>
 #include <stdint.h>

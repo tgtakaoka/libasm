@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_Z80_H__
-#define __ENTRY_Z80_H__
+#ifndef __LIBASM_ENTRY_Z80_H__
+#define __LIBASM_ENTRY_Z80_H__
 
 #include <stdint.h>
 

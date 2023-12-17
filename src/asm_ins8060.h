@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __ASM_INS8060_H__
-#define __ASM_INS8060_H__
+#ifndef __LIBASM_ASM_INS8060_H__
+#define __LIBASM_ASM_INS8060_H__
 
 #include "asm_base.h"
 #include "config_ins8060.h"

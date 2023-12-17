@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_MN1610__
-#define __TEXT_MN1610__
+#ifndef __LIBASM_TEXT_MN1610__
+#define __LIBASM_TEXT_MN1610__
 
 #include "text_common.h"
 

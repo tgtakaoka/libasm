@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __STR_BUFFER_H__
-#define __STR_BUFFER_H__
+#ifndef __LIBASM_STR_BUFFER_H__
+#define __LIBASM_STR_BUFFER_H__
 
 #include "error_reporter.h"
 #include "str_scanner.h"

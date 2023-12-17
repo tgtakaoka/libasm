@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_MN1610_H__
-#define __DIS_MN1610_H__
+#ifndef __LIBASM_DIS_MN1610_H__
+#define __LIBASM_DIS_MN1610_H__
 
 #include "config_mn1610.h"
 #include "dis_base.h"

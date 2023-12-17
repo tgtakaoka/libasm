@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __REG_MN1610_H__
-#define __REG_MN1610_H__
+#ifndef __LIBASM_REG_MN1610_H__
+#define __LIBASM_REG_MN1610_H__
 
 #include <stdint.h>
 

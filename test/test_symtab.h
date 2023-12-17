@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_SYMTAB_H__
-#define __TEST_SYMTAB_H__
+#ifndef __LIBASM_TEST_SYMTAB_H__
+#define __LIBASM_TEST_SYMTAB_H__
 
 #include <cstdint>
 #include <cstring>

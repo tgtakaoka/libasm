@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __CONFIG_TMS32010_H__
-#define __CONFIG_TMS32010_H__
+#ifndef __LIBASM_CONFIG_TMS32010_H__
+#define __LIBASM_CONFIG_TMS32010_H__
 
 #include "config_base.h"
 

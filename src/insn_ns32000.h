@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_NS32000_H__
-#define __INSN_NS32000_H__
+#ifndef __LIBASM_INSN_NS32000_H__
+#define __LIBASM_INSN_NS32000_H__
 
 #include "config_ns32000.h"
 #include "entry_ns32000.h"

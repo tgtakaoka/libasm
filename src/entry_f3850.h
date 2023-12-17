@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ENTRY_F3850_H__
-#define __ENTRY_F3850_H__
+#ifndef __LIBASM_ENTRY_F3850_H__
+#define __LIBASM_ENTRY_F3850_H__
 
 #include <stdint.h>
 

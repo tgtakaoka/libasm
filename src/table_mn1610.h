@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_MN1610_H__
-#define __TABLE_MN1610_H__
+#ifndef __LIBASM_TABLE_MN1610_H__
+#define __LIBASM_TABLE_MN1610_H__
 
 #include "config_mn1610.h"
 #include "entry_table.h"

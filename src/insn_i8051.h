@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_I8051_H__
-#define __INSN_I8051_H__
+#ifndef __LIBASM_INSN_I8051_H__
+#define __LIBASM_INSN_I8051_H__
 
 #include "config_i8051.h"
 #include "entry_i8051.h"

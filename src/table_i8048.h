@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_I8048_H__
-#define __TABLE_I8048_H__
+#ifndef __LIBASM_TABLE_I8048_H__
+#define __LIBASM_TABLE_I8048_H__
 
 #include "config_i8048.h"
 #include "insn_i8048.h"

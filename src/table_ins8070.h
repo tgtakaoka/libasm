@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_INS8070_H__
-#define __TABLE_INS8070_H__
+#ifndef __LIBASM_TABLE_INS8070_H__
+#define __LIBASM_TABLE_INS8070_H__
 
 #include "config_ins8070.h"
 #include "insn_ins8070.h"

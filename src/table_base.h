@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TABLE_BASE_H__
-#define __TABLE_BASE_H__
+#ifndef __LIBASM_TABLE_BASE_H__
+#define __LIBASM_TABLE_BASE_H__
 
 #include "config_host.h"
 #include "error_reporter.h"

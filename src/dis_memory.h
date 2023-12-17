@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_MEMORY_H__
-#define __DIS_MEMORY_H__
+#ifndef __LIBASM_DIS_MEMORY_H__
+#define __LIBASM_DIS_MEMORY_H__
 
 #include <stdint.h>
 

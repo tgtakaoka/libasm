@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __DIS_Z80_H__
-#define __DIS_Z80_H__
+#ifndef __LIBASM_DIS_Z80_H__
+#define __LIBASM_DIS_Z80_H__
 
 #include "config_z80.h"
 #include "dis_base.h"

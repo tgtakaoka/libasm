@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __STACK_H__
-#define __STACK_H__
+#ifndef __LIBASM_STACK_H__
+#define __LIBASM_STACK_H__
 
 #include <stdint.h>
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __PSEUDOS_H__
-#define __PSEUDOS_H__
+#ifndef __LIBASM_PSEUDOS_H__
+#define __LIBASM_PSEUDOS_H__
 
 #include "config_host.h"
 #include "insn_base.h"

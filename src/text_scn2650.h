@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEXT_SCN2650__
-#define __TEXT_SCN2650__
+#ifndef __LIBASM_TEXT_SCN2650__
+#define __LIBASM_TEXT_SCN2650__
 
 #include "text_common.h"
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_SRC_HELPER_H__
-#define __TEST_SRC_HELPER_H__
+#ifndef __LIBASM_TEST_SRC_HELPER_H__
+#define __LIBASM_TEST_SRC_HELPER_H__
 
 #include "test_asserter.h"
 

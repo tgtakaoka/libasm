@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __ARDUINO_EXAMPLE_H__
-#define __ARDUINO_EXAMPLE_H__
+#ifndef __LIBASM_ARDUINO_EXAMPLE_H__
+#define __LIBASM_ARDUINO_EXAMPLE_H__
 
 #include <libcli.h>
 

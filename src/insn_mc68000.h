@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __INSN_MC68000_H__
-#define __INSN_MC68000_H__
+#ifndef __LIBASM_INSN_MC68000_H__
+#define __LIBASM_INSN_MC68000_H__
 
 #include "config_mc68000.h"
 #include "entry_mc68000.h"
