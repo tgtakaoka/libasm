@@ -27,10 +27,9 @@ namespace mc68000 {
 
 enum OprSize : uint8_t {
     SZ_NONE = Size::SZ_NONE,
-    SZ_BYTE = Size::SZ_BYTE,
-    SZ_WORD = Size::SZ_WORD,
-    SZ_QUAD = Size::SZ_QUAD,
-    SZ_OCTA = Size::SZ_OCTA,
+    SZ_BYTE = Size::SZ_BYTE,  // Byte (8 bits)
+    SZ_WORD = Size::SZ_WORD,  // Word (16 bits/2 bytes)
+    SZ_LONG = Size::SZ_QUAD,  // Long (32 bits/4 bytes)
     SZ_DATA = Size::SZ_DATA,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
     SZ_ADDR = Size::SZ_ADDR,  // __s|___|___ WORD=0/LONG=1
     SZ_ADR8 = 7,              // s__|___|___ WORD=0/LONG=1
@@ -40,7 +39,8 @@ enum InsnSize : uint8_t {
     ISZ_NONE = Size::SZ_NONE,
     ISZ_BYTE = Size::SZ_BYTE,  // .B
     ISZ_WORD = Size::SZ_WORD,  // .W
-    ISZ_QUAD = Size::SZ_QUAD,  // .L
+    ISZ_LONG = Size::SZ_QUAD,  // .L
+    ISZ_FIXD = Size::SZ_OCTA,  // Fixed size
     ISZ_DATA = Size::SZ_DATA,
     ISZ_ERROR = 7,
 };
@@ -102,9 +102,9 @@ struct Entry final : entry::Base<Config::opcode_t> {
         uint8_t _size;
 
         static constexpr Flags create(AddrMode src, AddrMode dst, OprPos srcPos, OprPos dstPos,
-                OprSize oSize, InsnSize iSize, bool hasSize) {
+                OprSize oSize, InsnSize iSize) {
             return Flags{static_cast<uint8_t>(src), static_cast<uint8_t>(dst),
-                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize, hasSize)};
+                    Entry::_pos(srcPos, dstPos), Entry::_size(oSize, iSize)};
         }
 
         Flags read() const {
@@ -117,13 +117,12 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprPos dstPos() const { return OprPos((_pos >> dstPos_gp) & pos_gm); }
         OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & size_gm); }
         InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & size_gm); }
-        bool hasSize() const { return _size & hasSize_bm; }
 
         void setAddrMode(AddrMode src, AddrMode dst) {
             _src = static_cast<uint8_t>(src);
             _dst = static_cast<uint8_t>(dst);
         }
-        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size, hasSize()); }
+        void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size); }
     };
 
     constexpr Entry(Config::opcode_t opCode, Flags flags, const char *name)
@@ -138,9 +137,9 @@ private:
         return (static_cast<uint8_t>(src) << srcPos_gp) | (static_cast<uint8_t>(dst) << dstPos_gp);
     }
 
-    static constexpr uint8_t _size(OprSize opr, InsnSize insn, bool hasSize) {
+    static constexpr uint8_t _size(OprSize opr, InsnSize insn) {
         return (static_cast<uint8_t>(opr) << oprSize_gp) |
-               (static_cast<uint8_t>(insn) << insnSize_gp) | (hasSize ? hasSize_bm : 0);
+               (static_cast<uint8_t>(insn) << insnSize_gp);
     }
 
     // |pos|
@@ -150,9 +149,7 @@ private:
     // |size|
     static constexpr int oprSize_gp = 0;
     static constexpr int insnSize_gp = 3;
-    static constexpr int hasSize_bp = 6;
     static constexpr uint8_t size_gm = 0x07;
-    static constexpr uint8_t hasSize_bm = (1 << hasSize_bp);
 };
 
 }  // namespace mc68000

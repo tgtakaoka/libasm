@@ -111,7 +111,7 @@ InsnSize parseSize(StrScanner &scan) {
         } else if (p.iexpect('W')) {
             size = ISZ_WORD;
         } else if (p.iexpect('L')) {
-            size = ISZ_QUAD;
+            size = ISZ_LONG;
         }
         if (size == ISZ_ERROR || isIdLetter(*p))
             return ISZ_ERROR;
@@ -122,7 +122,7 @@ InsnSize parseSize(StrScanner &scan) {
 }
 
 uint8_t sizeNameLen(OprSize size) {
-    return size == SZ_NONE || size == SZ_OCTA ? 0 : 2;
+    return size == SZ_NONE ? 0 : 2;
 }
 
 char sizeSuffix(OprSize size) {
@@ -132,7 +132,7 @@ char sizeSuffix(OprSize size) {
     case SZ_WORD:
         return 'W';
         break;
-    case SZ_QUAD:
+    case SZ_LONG:
         return 'L';
     default:
         return 0;
@@ -166,7 +166,7 @@ EaMc68000::EaMc68000(OprSize size_, uint8_t raw_mode, uint8_t regno) {
 }
 
 OprSize BriefExt::indexSize() const {
-    return (word & 0x800) ? SZ_QUAD : SZ_WORD;
+    return (word & 0x800) ? SZ_LONG : SZ_WORD;
 }
 
 RegName BriefExt::index() const {

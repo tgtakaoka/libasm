@@ -32,7 +32,6 @@ struct EntryInsn : EntryInsnBase<Config, Entry> {
     OprPos dstPos() const { return flags().dstPos(); }
     OprSize oprSize() const { return flags().oprSize(); }
     InsnSize insnSize() const { return flags().insnSize(); }
-    bool hasSize() const { return flags().hasSize(); }
 };
 
 struct AsmInsn;

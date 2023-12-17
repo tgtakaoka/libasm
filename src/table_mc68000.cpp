@@ -25,19 +25,13 @@ using namespace libasm::text::mc68000;
 namespace libasm {
 namespace mc68000 {
 
-#define E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, _hasSize) \
-    { _opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize, _hasSize), _name }
 #define E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
+    { _opc, Entry::Flags::create(_src, _dst, _srcp, _dstp, _osize, _isize), _name }
 #define E1(_opc, _name, _isize, _src, _srcp, _osize) \
     E2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize)
 #define E0(_opc, _name) E1(_opc, _name, ISZ_NONE, M_NONE, OP___, SZ_NONE)
-#define W2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, true)
-#define W1(_opc, _name, _isize, _src, _srcp, _osize) \
-    W2(_opc, _name, _isize, _src, M_NONE, _srcp, OP___, _osize)
 #define A2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize) \
-    E(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize, false)
+    E2(_opc, _name, _isize, _src, _dst, _srcp, _dstp, _osize)
 
 // clang-format off
 static constexpr Entry MC68000_TABLE[] PROGMEM = {
@@ -53,32 +47,32 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0005174, TEXT_EORI,  ISZ_NONE, M_IMDAT, M_SR,    OP___, OP___, SZ_WORD),
     E2(0005000, TEXT_EORI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
     E2(0006000, TEXT_CMPI,  ISZ_DATA, M_IMDAT, M_WDATA, OP___, OP_10, SZ_DATA),
-    W2(0004000, TEXT_BTST,  ISZ_NONE, M_IMBIT, M_DREG,  OP___, OP__0, SZ_QUAD),
-    W2(0004000, TEXT_BTST,  ISZ_NONE, M_IMBIT, M_RMEM,  OP___, OP_10, SZ_BYTE),
-    W2(0004100, TEXT_BCHG,  ISZ_NONE, M_IMBIT, M_DREG,  OP___, OP__0, SZ_QUAD),
-    W2(0004100, TEXT_BCHG,  ISZ_NONE, M_IMBIT, M_WMEM,  OP___, OP_10, SZ_BYTE),
-    W2(0004200, TEXT_BCLR,  ISZ_NONE, M_IMBIT, M_DREG,  OP___, OP__0, SZ_QUAD),
-    W2(0004200, TEXT_BCLR,  ISZ_NONE, M_IMBIT, M_WMEM,  OP___, OP_10, SZ_BYTE),
-    W2(0004300, TEXT_BSET,  ISZ_NONE, M_IMBIT, M_DREG,  OP___, OP__0, SZ_QUAD),
-    W2(0004300, TEXT_BSET,  ISZ_NONE, M_IMBIT, M_WMEM,  OP___, OP_10, SZ_BYTE),
+    E2(0004000, TEXT_BTST,  ISZ_FIXD, M_IMBIT, M_DREG,  OP___, OP__0, SZ_LONG),
+    E2(0004000, TEXT_BTST,  ISZ_FIXD, M_IMBIT, M_RMEM,  OP___, OP_10, SZ_BYTE),
+    E2(0004100, TEXT_BCHG,  ISZ_FIXD, M_IMBIT, M_DREG,  OP___, OP__0, SZ_LONG),
+    E2(0004100, TEXT_BCHG,  ISZ_FIXD, M_IMBIT, M_WMEM,  OP___, OP_10, SZ_BYTE),
+    E2(0004200, TEXT_BCLR,  ISZ_FIXD, M_IMBIT, M_DREG,  OP___, OP__0, SZ_LONG),
+    E2(0004200, TEXT_BCLR,  ISZ_FIXD, M_IMBIT, M_WMEM,  OP___, OP_10, SZ_BYTE),
+    E2(0004300, TEXT_BSET,  ISZ_FIXD, M_IMBIT, M_DREG,  OP___, OP__0, SZ_LONG),
+    E2(0004300, TEXT_BSET,  ISZ_FIXD, M_IMBIT, M_WMEM,  OP___, OP_10, SZ_BYTE),
     E2(0000410, TEXT_MOVEP, ISZ_DATA, M_DISP,  M_DREG,  OP__0, OP__3, SZ_ADDR),
     E2(0000610, TEXT_MOVEP, ISZ_DATA, M_DREG,  M_DISP,  OP__3, OP__0, SZ_ADDR),
-    W2(0000400, TEXT_BTST,  ISZ_NONE, M_DREG,  M_DREG,  OP__3, OP__0, SZ_QUAD),
-    W2(0000400, TEXT_BTST,  ISZ_NONE, M_DREG,  M_RMEM,  OP__3, OP_10, SZ_BYTE),
-    W2(0000500, TEXT_BCHG,  ISZ_NONE, M_DREG,  M_DREG,  OP__3, OP__0, SZ_QUAD),
-    W2(0000500, TEXT_BCHG,  ISZ_NONE, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_BYTE),
-    W2(0000600, TEXT_BCLR,  ISZ_NONE, M_DREG,  M_DREG,  OP__3, OP__0, SZ_QUAD),
-    W2(0000600, TEXT_BCLR,  ISZ_NONE, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_BYTE),
-    W2(0000700, TEXT_BSET,  ISZ_NONE, M_DREG,  M_DREG,  OP__3, OP__0, SZ_QUAD),
-    W2(0000700, TEXT_BSET,  ISZ_NONE, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_BYTE),
-    E2(0020100, TEXT_MOVEA, ISZ_QUAD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_QUAD),
+    E2(0000400, TEXT_BTST,  ISZ_FIXD, M_DREG,  M_DREG,  OP__3, OP__0, SZ_LONG),
+    E2(0000400, TEXT_BTST,  ISZ_FIXD, M_DREG,  M_RMEM,  OP__3, OP_10, SZ_BYTE),
+    E2(0000500, TEXT_BCHG,  ISZ_FIXD, M_DREG,  M_DREG,  OP__3, OP__0, SZ_LONG),
+    E2(0000500, TEXT_BCHG,  ISZ_FIXD, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_BYTE),
+    E2(0000600, TEXT_BCLR,  ISZ_FIXD, M_DREG,  M_DREG,  OP__3, OP__0, SZ_LONG),
+    E2(0000600, TEXT_BCLR,  ISZ_FIXD, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_BYTE),
+    E2(0000700, TEXT_BSET,  ISZ_FIXD, M_DREG,  M_DREG,  OP__3, OP__0, SZ_LONG),
+    E2(0000700, TEXT_BSET,  ISZ_FIXD, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_BYTE),
+    E2(0020100, TEXT_MOVEA, ISZ_LONG, M_RADDR, M_AREG,  OP_10, OP__3, SZ_LONG),
     E2(0030100, TEXT_MOVEA, ISZ_WORD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
-    E2(0030100, TEXT_MOVEA, ISZ_NONE, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
-    W2(0042300, TEXT_MOVE,  ISZ_NONE, M_RDATA, M_CCR,   OP_10, OP___, SZ_WORD),
-    W2(0040300, TEXT_MOVE,  ISZ_NONE, M_SR,    M_WDATA, OP___, OP_10, SZ_WORD),
-    W2(0043300, TEXT_MOVE,  ISZ_NONE, M_RDATA, M_SR,    OP_10, OP___, SZ_WORD),
+    E2(0030100, TEXT_MOVEA, ISZ_FIXD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
+    E2(0042300, TEXT_MOVE,  ISZ_FIXD, M_RDATA, M_CCR,   OP_10, OP___, SZ_WORD),
+    E2(0040300, TEXT_MOVE,  ISZ_FIXD, M_SR,    M_WDATA, OP___, OP_10, SZ_WORD),
+    E2(0043300, TEXT_MOVE,  ISZ_FIXD, M_RDATA, M_SR,    OP_10, OP___, SZ_WORD),
     E2(0010000, TEXT_MOVE,  ISZ_BYTE, M_RDATA, M_WDATA, OP_10, OP_23, SZ_BYTE),
-    E2(0020000, TEXT_MOVE,  ISZ_QUAD, M_RADDR, M_WDATA, OP_10, OP_23, SZ_QUAD),
+    E2(0020000, TEXT_MOVE,  ISZ_LONG, M_RADDR, M_WDATA, OP_10, OP_23, SZ_LONG),
     E2(0030000, TEXT_MOVE,  ISZ_WORD, M_RADDR, M_WDATA, OP_10, OP_23, SZ_WORD),
     E1(0040000, TEXT_NEGX,  ISZ_DATA, M_WDATA, OP_10, SZ_DATA),
     E1(0041000, TEXT_CLR,   ISZ_DATA, M_WDATA, OP_10, SZ_DATA),
@@ -86,16 +80,16 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E1(0043000, TEXT_NOT,   ISZ_DATA, M_WDATA, OP_10, SZ_DATA),
     E1(0044200, TEXT_EXT,   ISZ_DATA, M_DREG,  OP__0, SZ_ADDR),
     E1(0044000, TEXT_NBCD,  ISZ_NONE, M_WDATA, OP_10, SZ_BYTE),
-    E1(0044100, TEXT_SWAP,  ISZ_NONE, M_DREG,  OP__0, SZ_QUAD),
-    E1(0044100, TEXT_PEA,   ISZ_NONE, M_JADDR, OP_10, SZ_QUAD),
+    E1(0044100, TEXT_SWAP,  ISZ_NONE, M_DREG,  OP__0, SZ_LONG),
+    E1(0044100, TEXT_PEA,   ISZ_NONE, M_JADDR, OP_10, SZ_LONG),
     E0(0045374, TEXT_ILLEG),
     E1(0045300, TEXT_TAS,   ISZ_NONE, M_WDATA, OP_10, SZ_BYTE),
     E1(0045000, TEXT_TST,   ISZ_DATA, M_WDATA, OP_10, SZ_DATA),
     E1(0047100, TEXT_TRAP,  ISZ_NONE, M_IMVEC, OP___, SZ_NONE),
     E2(0047120, TEXT_LINK,  ISZ_NONE, M_AREG,  M_IMDSP, OP__0, OP___, SZ_WORD),
     E1(0047130, TEXT_UNLK,  ISZ_NONE, M_AREG,  OP__0, SZ_NONE),
-    E2(0047140, TEXT_MOVE,  ISZ_NONE, M_AREG,  M_USP,   OP__0, OP___, SZ_QUAD),
-    E2(0047150, TEXT_MOVE,  ISZ_NONE, M_USP,   M_AREG,  OP___, OP__0, SZ_QUAD),
+    E2(0047140, TEXT_MOVE,  ISZ_NONE, M_AREG,  M_USP,   OP__0, OP___, SZ_LONG),
+    E2(0047150, TEXT_MOVE,  ISZ_NONE, M_USP,   M_AREG,  OP___, OP__0, SZ_LONG),
     E0(0047160, TEXT_RESET),
     E0(0047161, TEXT_NOP),
     E1(0047162, TEXT_STOP,  ISZ_NONE, M_IMDAT, OP___, SZ_WORD),
@@ -107,7 +101,7 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E1(0047300, TEXT_JMP,   ISZ_NONE, M_JADDR, OP_10, SZ_WORD),
     E2(0044200, TEXT_MOVEM, ISZ_DATA, M_MULT,  M_DADDR, OP___, OP_10, SZ_ADDR),
     E2(0046200, TEXT_MOVEM, ISZ_DATA, M_IADDR, M_MULT,  OP_10, OP___, SZ_ADDR),
-    E2(0040700, TEXT_LEA,   ISZ_NONE, M_JADDR, M_AREG,  OP_10, OP__3, SZ_QUAD),
+    E2(0040700, TEXT_LEA,   ISZ_NONE, M_JADDR, M_AREG,  OP_10, OP__3, SZ_LONG),
     E2(0040600, TEXT_CHK,   ISZ_WORD, M_RDATA, M_DREG,  OP_10, OP__3, SZ_WORD),
     E2(0050310, TEXT_DBT,   ISZ_NONE, M_DREG,  M_REL16, OP__0, OP___, SZ_WORD),
     E2(0050710, TEXT_DBRA,  ISZ_NONE, M_DREG,  M_REL16, OP__0, OP___, SZ_WORD),
@@ -186,7 +180,7 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E1(0067000, TEXT_BGT,   ISZ_NONE, M_REL16, OP___, SZ_WORD),
     E1(0067400, TEXT_BLE,   ISZ_NONE, M_REL8,  OP___, SZ_BYTE),
     E1(0067400, TEXT_BLE,   ISZ_NONE, M_REL16, OP___, SZ_WORD),
-    E2(0070000, TEXT_MOVEQ, ISZ_NONE, M_IM8,   M_DREG,  OP___, OP__3, SZ_QUAD),
+    E2(0070000, TEXT_MOVEQ, ISZ_NONE, M_IM8,   M_DREG,  OP___, OP__3, SZ_LONG),
     E2(0100300, TEXT_DIVU,  ISZ_DATA, M_RDATA, M_DREG,  OP_10, OP__3, SZ_WORD),
     E2(0100700, TEXT_DIVS,  ISZ_DATA, M_RDATA, M_DREG,  OP_10, OP__3, SZ_WORD),
     E2(0100000, TEXT_OR,    ISZ_DATA, M_RDATA, M_DREG,  OP_10, OP__3, SZ_DATA),
@@ -207,24 +201,24 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0140000, TEXT_AND,   ISZ_DATA, M_RDATA, M_DREG,  OP_10, OP__3, SZ_DATA),
     E2(0140400, TEXT_ABCD,  ISZ_NONE, M_DREG,  M_DREG,  OP__0, OP__3, SZ_BYTE),
     E2(0140410, TEXT_ABCD,  ISZ_NONE, M_PDEC,  M_PDEC,  OP__0, OP__3, SZ_BYTE),
-    E2(0140500, TEXT_EXG,   ISZ_NONE, M_DREG,  M_DREG,  OP__3, OP__0, SZ_QUAD),
-    E2(0140510, TEXT_EXG,   ISZ_NONE, M_AREG,  M_AREG,  OP__3, OP__0, SZ_QUAD),
-    E2(0140610, TEXT_EXG,   ISZ_NONE, M_DREG,  M_AREG,  OP__3, OP__0, SZ_QUAD),
-    E2(0140610, TEXT_EXG,   ISZ_NONE, M_AREG,  M_DREG,  OP__0, OP__3, SZ_QUAD),
+    E2(0140500, TEXT_EXG,   ISZ_NONE, M_DREG,  M_DREG,  OP__3, OP__0, SZ_LONG),
+    E2(0140510, TEXT_EXG,   ISZ_NONE, M_AREG,  M_AREG,  OP__3, OP__0, SZ_LONG),
+    E2(0140610, TEXT_EXG,   ISZ_NONE, M_DREG,  M_AREG,  OP__3, OP__0, SZ_LONG),
+    E2(0140610, TEXT_EXG,   ISZ_NONE, M_AREG,  M_DREG,  OP__0, OP__3, SZ_LONG),
     E2(0140400, TEXT_AND,   ISZ_DATA, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_DATA),
     E2(0150300, TEXT_ADDA,  ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     E2(0150400, TEXT_ADDX,  ISZ_DATA, M_DREG,  M_DREG,  OP__0, OP__3, SZ_DATA),
     E2(0150410, TEXT_ADDX,  ISZ_DATA, M_PDEC,  M_PDEC,  OP__0, OP__3, SZ_DATA),
     E2(0150000, TEXT_ADD,   ISZ_DATA, M_RADDR, M_DREG,  OP_10, OP__3, SZ_DATA),
     E2(0150400, TEXT_ADD,   ISZ_DATA, M_DREG,  M_WMEM,  OP__3, OP_10, SZ_DATA),
-    W1(0160300, TEXT_ASR,   ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0160700, TEXT_ASL,   ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0161300, TEXT_LSR,   ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0161700, TEXT_LSL,   ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0162300, TEXT_ROXR,  ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0162700, TEXT_ROXL,  ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0163300, TEXT_ROR,   ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
-    W1(0163700, TEXT_ROL,   ISZ_NONE, M_WMEM,  OP_10, SZ_WORD),
+    E1(0160300, TEXT_ASR,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0160700, TEXT_ASL,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0161300, TEXT_LSR,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0161700, TEXT_LSL,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0162300, TEXT_ROXR,  ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0162700, TEXT_ROXL,  ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0163300, TEXT_ROR,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
+    E1(0163700, TEXT_ROL,   ISZ_DATA, M_WMEM,  OP_10, SZ_WORD),
     E2(0160000, TEXT_ASR,   ISZ_DATA, M_IM3,   M_DREG,  OP___, OP__0, SZ_DATA),
     E2(0160040, TEXT_ASR,   ISZ_DATA, M_DREG,  M_DREG,  OP__3, OP__0, SZ_DATA),
     E2(0160400, TEXT_ASL,   ISZ_DATA, M_IM3,   M_DREG,  OP___, OP__0, SZ_DATA),
@@ -241,7 +235,7 @@ static constexpr Entry MC68000_TABLE[] PROGMEM = {
     E2(0160070, TEXT_ROR,   ISZ_DATA, M_DREG,  M_DREG,  OP__3, OP__0, SZ_DATA),
     E2(0160430, TEXT_ROL,   ISZ_DATA, M_IM3,   M_DREG,  OP___, OP__0, SZ_DATA),
     E2(0160470, TEXT_ROL,   ISZ_DATA, M_DREG,  M_DREG,  OP__3, OP__0, SZ_DATA),
-    A2(0020100, TEXT_MOVE,  ISZ_QUAD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_QUAD),
+    A2(0020100, TEXT_MOVE,  ISZ_LONG, M_RADDR, M_AREG,  OP_10, OP__3, SZ_LONG),
     A2(0030100, TEXT_MOVE,  ISZ_WORD, M_RADDR, M_AREG,  OP_10, OP__3, SZ_WORD),
     A2(0110300, TEXT_SUB,   ISZ_DATA, M_RADDR, M_AREG,  OP_10, OP__3, SZ_ADR8),
     A2(0110374, TEXT_SUBI,  ISZ_DATA, M_IMDAT, M_AREG,  OP___, OP__3, SZ_ADR8),
@@ -507,19 +501,18 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     return false;
 }
 
-static bool acceptSize(InsnSize insn, OprSize table, InsnSize isize) {
-    const OprSize opr = OprSize(insn);
-    if (opr == table)
+static bool acceptSize(InsnSize insn, OprSize opr, InsnSize table) {
+    if (insn == InsnSize(opr))
         return true;
-    if (opr == SZ_BYTE)
-        return table == SZ_DATA;
-    if (opr == SZ_WORD)
-        return table == SZ_DATA || table == SZ_ADDR || table == SZ_ADR8;
-    if (opr == SZ_QUAD)
-        return table == SZ_DATA || table == SZ_ADDR || table == SZ_ADR8;
-    if (opr == SZ_NONE)
-        return table == SZ_WORD || table == SZ_DATA || isize == ISZ_NONE || table == SZ_ADDR ||
-               table == SZ_ADR8;
+    if (insn == ISZ_BYTE)
+        return opr == SZ_DATA;
+    if (insn == ISZ_WORD)
+        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8;
+    if (insn == ISZ_LONG)
+        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8;
+    if (insn == ISZ_NONE)
+        return opr == SZ_WORD || opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 ||
+               table == ISZ_NONE || table == ISZ_FIXD;
     return false;
 }
 

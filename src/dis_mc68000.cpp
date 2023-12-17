@@ -46,7 +46,7 @@ void DisMc68000::decodeImmediateData(DisInsn &insn, StrBuffer &out, OprSize size
     out.letter('#');
     uint32_t val;
     uint8_t bits;
-    if (size == SZ_QUAD) {
+    if (size == SZ_LONG) {
         val = insn.readUint32();
         bits = 32;
     } else {
@@ -99,7 +99,7 @@ void DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68
         const auto base = (mode == M_INDX) ? ea.reg : REG_PC;
         BriefExt ext;
         ext.word = insn.readUint16();
-        const uint8_t val8 = ext.disp();
+        const auto val8 = ext.disp();
         out.letter('(');
         if (mode == M_PCIDX) {
             const Config::uintptr_t target =
@@ -117,7 +117,7 @@ void DisMc68000::decodeEffectiveAddr(DisInsn &insn, StrBuffer &out, const EaMc68
     if (mode == M_AWORD)
         outOprSize(out, SZ_WORD);
     if (mode == M_ALONG)
-        outOprSize(out, SZ_QUAD);
+        outOprSize(out, SZ_LONG);
     if (mode == M_PINC)
         out.letter('+');
 }
@@ -156,7 +156,7 @@ StrBuffer &outMoveMltRegList(StrBuffer &out, uint16_t list, bool push) {
     int8_t start = -1;
     int8_t last = 0;
     uint16_t mask = push ? 0x8000 : 0x0001;
-    for (int8_t i = 0; i < 16; i++) {
+    for (auto i = 0; i < 16; i++) {
         if (list & mask) {
             if (start < 0) {
                 start = last = i;
@@ -225,7 +225,7 @@ void DisMc68000::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode, uin
             insn.setErrorIf(out, ILLEGAL_BIT_NUMBER);
         } else if (s == SZ_WORD && opr16 >= 16) {
             insn.setErrorIf(out, ILLEGAL_BIT_NUMBER);
-        } else if (s == SZ_QUAD && opr16 >= 32) {
+        } else if (s == SZ_LONG && opr16 >= 32) {
             insn.setErrorIf(out, ILLEGAL_BIT_NUMBER);
         }
         outDec(out, opr16, 16);
@@ -304,18 +304,16 @@ OprSize sizeVal(const DisInsn &insn) {
         switch ((opc >> 6) & 3) {
         case 0:
             return SZ_BYTE;
-        case 1:
-            return SZ_WORD;
         case 2:
-            return SZ_QUAD;
+            return SZ_LONG;
         default:
-            return SZ_OCTA;
+            return SZ_WORD;
         }
     }
     if (size == SZ_ADDR)
-        return (opc & (1 << 6)) ? SZ_QUAD : SZ_WORD;
+        return (opc & (1 << 6)) ? SZ_LONG : SZ_WORD;
     if (size == SZ_ADR8)
-        return (opc & (1 << 8)) ? SZ_QUAD : SZ_WORD;
+        return (opc & (1 << 8)) ? SZ_LONG : SZ_WORD;
     return size;
 }
 
@@ -331,7 +329,7 @@ Error DisMc68000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
 
     const auto size = sizeVal(insn);
     const auto insnSize = insn.insnSize();
-    const auto oprSize = (insnSize == ISZ_DATA || insn.hasSize()) ? size : OprSize(insnSize);
+    const auto oprSize = (insnSize == ISZ_DATA || insnSize == ISZ_FIXD) ? size : OprSize(insnSize);
     const auto suffix = sizeSuffix(oprSize);
     if (suffix) {
         auto save{out};
