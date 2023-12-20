@@ -107,6 +107,7 @@ enum AddrMode : uint8_t {
     M_FPIAR = 45,  // FPIAR register
     M_IMROM = 46,  // MC68881 ROM constant
     M_REL32 = 47,  // 32-bit Relative; 1111|ccc|01s|___|___: s=0 16bit, s=1 32bit
+    M_IMFLT = 48,  // Floating point immediate
 };
 
 enum OprPos : uint8_t {

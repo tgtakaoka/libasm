@@ -80,25 +80,47 @@ StrBuffer &outRegName(StrBuffer &out, RegName name) {
 
 bool isDataReg(RegName name) {
     const auto num = int8_t(name);
-    return num >= 0 && num < 8;
+    return num >= REG_D0 && num <= REG_D7;
 }
 
 bool isAddrReg(RegName name) {
-    const auto num = int8_t(name) - 8;
-    return num >= 0 && num < 8;
+    const auto num = int8_t(name);
+    return num >= REG_A0 && num <= REG_A7;
 }
 
 bool isGeneralReg(RegName name) {
     const auto num = int8_t(name);
-    return num >= 0 && num < 16;
+    return num >= REG_D0 && num <= REG_A7;
+}
+
+bool isFloatReg(RegName name) {
+    const auto num = int8_t(name);
+    return num >= REG_FP0 && num <= REG_FP7;
+}
+
+bool isFloatControlReg(RegName name) {
+    const auto num = int8_t(name);
+    return num >= REG_FPCR && num <= REG_FPIAR;
 }
 
 Config::opcode_t encodeGeneralRegNo(RegName name) {
     return int8_t(name) & 7;
 }
 
+Config::opcode_t encodeFloatRegNo(RegName name) {
+    return int8_t(name) & 7;
+}
+
 uint8_t encodeGeneralRegPos(RegName name) {
     return uint8_t(name);
+}
+
+uint8_t encodeFloatRegPos(RegName name) {
+    return REG_FP7 - int8_t(name);
+}
+
+uint8_t encodeFloatControlRegPos(RegName name) {
+    return REG_FPIAR - int8_t(name) + 10;
 }
 
 RegName decodeGeneralReg(uint8_t regno) {
@@ -168,11 +190,15 @@ char sizeSuffix(OprSize size) {
 }  // namespace reg
 
 Config::opcode_t EaMc68000::encodeMode(AddrMode mode) {
+    if (mode == M_IMFLT)
+        mode = M_IMDAT;
     const auto m = static_cast<uint8_t>(mode);
     return m >= 8 ? 7 : m;
 }
 
 Config::opcode_t EaMc68000::encodeRegNo(AddrMode mode, RegName reg) {
+    if (mode == M_IMFLT)
+        mode = M_IMDAT;
     const auto m = static_cast<uint8_t>(mode);
     if (m < 8)
         return reg::encodeGeneralRegNo(reg);

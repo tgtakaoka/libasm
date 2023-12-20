@@ -1187,103 +1187,6 @@ static constexpr uint8_t MC68881_TRAP_INDEX[] PROGMEM = {
      40,  // TEXT_FTRAPUN
      72,  // TEXT_FTRAPUN
     104,  // TEXT_FTRAPUN
-
-    1,  // TEXT_FTRAPEQ
-     33,  // TEXT_FTRAPEQ
-     65,  // TEXT_FTRAPEQ
-      0,  // TEXT_FTRAPF
-     32,  // TEXT_FTRAPF
-     64,  // TEXT_FTRAPF
-     19,  // TEXT_FTRAPGE
-     51,  // TEXT_FTRAPGE
-     83,  // TEXT_FTRAPGE
-     22,  // TEXT_FTRAPGL
-     54,  // TEXT_FTRAPGL
-     86,  // TEXT_FTRAPGL
-     23,  // TEXT_FTRAPGLE
-     55,  // TEXT_FTRAPGLE
-     87,  // TEXT_FTRAPGLE
-     18,  // TEXT_FTRAPGT
-     50,  // TEXT_FTRAPGT
-     82,  // TEXT_FTRAPGT
-     21,  // TEXT_FTRAPLE
-     53,  // TEXT_FTRAPLE
-     85,  // TEXT_FTRAPLE
-     20,  // TEXT_FTRAPLT
-     52,  // TEXT_FTRAPLT
-     84,  // TEXT_FTRAPLT
-     14,  // TEXT_FTRAPNE
-     46,  // TEXT_FTRAPNE
-     78,  // TEXT_FTRAPNE
-     28,  // TEXT_FTRAPNGE
-     60,  // TEXT_FTRAPNGE
-     92,  // TEXT_FTRAPNGE
-     25,  // TEXT_FTRAPNGL
-     57,  // TEXT_FTRAPNGL
-     89,  // TEXT_FTRAPNGL
-     24,  // TEXT_FTRAPNGLE
-     56,  // TEXT_FTRAPNGLE
-     88,  // TEXT_FTRAPNGLE
-     29,  // TEXT_FTRAPNGT
-     61,  // TEXT_FTRAPNGT
-     93,  // TEXT_FTRAPNGT
-     26,  // TEXT_FTRAPNLE
-     58,  // TEXT_FTRAPNLE
-     90,  // TEXT_FTRAPNLE
-     27,  // TEXT_FTRAPNLT
-     59,  // TEXT_FTRAPNLT
-     91,  // TEXT_FTRAPNLT
-      3,  // TEXT_FTRAPOGE
-     35,  // TEXT_FTRAPOGE
-     67,  // TEXT_FTRAPOGE
-      6,  // TEXT_FTRAPOGL
-     38,  // TEXT_FTRAPOGL
-     70,  // TEXT_FTRAPOGL
-      2,  // TEXT_FTRAPOGT
-     34,  // TEXT_FTRAPOGT
-     66,  // TEXT_FTRAPOGT
-      5,  // TEXT_FTRAPOLE
-     37,  // TEXT_FTRAPOLE
-     69,  // TEXT_FTRAPOLE
-      4,  // TEXT_FTRAPOLT
-     36,  // TEXT_FTRAPOLT
-     68,  // TEXT_FTRAPOLT
-      7,  // TEXT_FTRAPOR
-     39,  // TEXT_FTRAPOR
-     71,  // TEXT_FTRAPOR
-     17,  // TEXT_FTRAPSEQ
-     49,  // TEXT_FTRAPSEQ
-     81,  // TEXT_FTRAPSEQ
-     16,  // TEXT_FTRAPSF
-     48,  // TEXT_FTRAPSF
-     80,  // TEXT_FTRAPSF
-     30,  // TEXT_FTRAPSNE
-     62,  // TEXT_FTRAPSNE
-     94,  // TEXT_FTRAPSNE
-     31,  // TEXT_FTRAPST
-     63,  // TEXT_FTRAPST
-     95,  // TEXT_FTRAPST
-     15,  // TEXT_FTRAPT
-     47,  // TEXT_FTRAPT
-     79,  // TEXT_FTRAPT
-      9,  // TEXT_FTRAPUEQ
-     41,  // TEXT_FTRAPUEQ
-     73,  // TEXT_FTRAPUEQ
-     11,  // TEXT_FTRAPUGE
-     43,  // TEXT_FTRAPUGE
-     75,  // TEXT_FTRAPUGE
-     10,  // TEXT_FTRAPUGT
-     42,  // TEXT_FTRAPUGT
-     74,  // TEXT_FTRAPUGT
-     13,  // TEXT_FTRAPULE
-     45,  // TEXT_FTRAPULE
-     77,  // TEXT_FTRAPULE
-     12,  // TEXT_FTRAPULT
-     44,  // TEXT_FTRAPULT
-     76,  // TEXT_FTRAPULT
-      8,  // TEXT_FTRAPUN
-     40,  // TEXT_FTRAPUN
-     72,  // TEXT_FTRAPUN
 };
 // clang-format on
 
@@ -1334,7 +1237,7 @@ static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 
-static bool acceptMode(AddrMode opr, AddrMode table) {
+static bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     if (opr == table)
         return true;
     if (opr == M_DREG)
@@ -1352,36 +1255,51 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == M_PDEC)
         return table == M_RADDR || table == M_RDATA || table == M_WADDR || table == M_WDATA ||
                table == M_RMEM || table == M_WMEM || table == M_DADDR;
+    if (opr == M_LABEL)
+        return table == M_REL16 || table == M_REL8 || table == M_REL32;
     if (opr == M_PCDSP || opr == M_PCIDX)
         return table == M_RADDR || table == M_RDATA || table == M_RMEM || table == M_JADDR ||
                table == M_IADDR;
     if (opr == M_IMDAT)
         return table == M_RADDR || table == M_RDATA || table == M_IMBIT || table == M_IM3 ||
                table == M_IM8 || table == M_IMVEC || table == M_IMDSP || table == M_IMROM;
-    if (opr == M_LABEL)
-        return table == M_REL16 || table == M_REL8;
+    if (opr == M_IMFLT)
+        return table == M_RDATA && size == SZ_FDAT;
+    if (opr == M_FPREG)
+        return table == M_FPMLT;
+    if (opr == M_FPCR || opr == M_FPSR || opr == M_FPIAR)
+        return table == M_FCMLT;
     return false;
 }
 
-static bool acceptSize(InsnSize insn, OprSize opr, InsnSize table) {
-    if (insn == InsnSize(opr))
+static bool acceptSize(const AsmInsn &insn, const Entry::Flags &flags) {
+    const auto insnSize = insn.insnSize();
+    const auto opr = flags.oprSize();
+    if (insnSize == InsnSize(opr))
         return true;
-    if (insn == ISZ_BYTE)
-        return opr == SZ_DATA;
-    if (insn == ISZ_WORD)
-        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8;
-    if (insn == ISZ_LONG)
-        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8;
-    if (insn == ISZ_NONE)
-        return opr == SZ_WORD || opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 ||
+    const auto src = flags.src();
+    if (src == M_REL8 || src == M_REL16 || src == M_REL32 || flags.dst() == M_REL16)
+        return insnSize == ISZ_NONE || insnSize == ISZ_BYTE || insnSize == ISZ_SNGL ||
+               insnSize == ISZ_WORD || insnSize == ISZ_LONG || insnSize == ISZ_XTND;
+    if (insnSize == ISZ_BYTE)
+        return opr == SZ_DATA || opr == SZ_FDAT;
+    if (insnSize == ISZ_WORD || insnSize == ISZ_LONG)
+        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 || opr == SZ_FDAT;
+    if (insnSize == ISZ_SNGL || insnSize == ISZ_DUBL || insnSize == ISZ_XTND ||
+            insnSize == ISZ_PBCD)
+        return opr == SZ_FDAT;
+    if (insnSize == ISZ_NONE) {
+        const auto table = flags.insnSize();
+        return opr == SZ_DATA || opr == SZ_ADDR || opr == SZ_ADR8 || opr == SZ_WORD ||
                table == ISZ_NONE || table == ISZ_FIXD;
+    }
     return false;
 }
 
 static bool acceptModes(AsmInsn &insn, const Entry *entry) {
     const auto table = entry->flags();
-    return acceptMode(insn.srcOp.mode, table.src()) && acceptMode(insn.dstOp.mode, table.dst()) &&
-           acceptSize(insn.insnSize(), table.oprSize(), table.insnSize());
+    return acceptMode(insn.srcOp.mode, table.src(), table.oprSize()) &&
+           acceptMode(insn.dstOp.mode, table.dst(), table.oprSize()) && acceptSize(insn, table);
 }
 
 Error TableMc68000::searchName(const CpuSpec &cpuSpec, AsmInsn &insn) const {

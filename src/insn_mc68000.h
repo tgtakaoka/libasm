@@ -31,7 +31,8 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     OprPos srcPos() const { return flags().srcPos(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprSize oprSize() const { return flags().oprSize(); }
-    InsnSize insnSize() const { return flags().insnSize(); }
+    bool hasPostVal() const { return flags().hasPostVal(); }
+    auto postVal() const { return flags().postVal(); }
 };
 
 struct AsmInsn;
@@ -41,6 +42,7 @@ struct Operand final : ErrorAt {
     RegName indexReg;
     InsnSize indexSize;
     uint32_t val32;
+    long double float80;
     StrScanner list;
     Operand()
         : mode(M_NONE),
@@ -48,32 +50,42 @@ struct Operand final : ErrorAt {
           indexReg(REG_UNDEF),
           indexSize(ISZ_NONE),
           val32(0),
+          float80(0),
           list() {}
     Config::uintptr_t offset(const AsmInsn &insn) const;
 };
 
 struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
-    AsmInsn(Insn &insn) : AsmInsnImpl(insn) {}
+    AsmInsn(Insn &insn) : AsmInsnImpl(insn), _isize(ISZ_NONE) { parseInsnSize(); }
 
     Operand srcOp, dstOp;
 
-    void emitInsn() { emitUint16(opCode(), 0); }
+    InsnSize insnSize() const { return _isize; }
+    void emitInsn() {
+        emitUint16(opCode(), 0);
+        if (hasPostVal())
+            emitUint16(postfix() | postVal(), 2);
+    }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
-
-    InsnSize parseInsnSize();
-
-private:
+    void emitOperand64(uint64_t val64) { emitUint64(val64, operandPos()); }
     uint8_t operandPos() const {
-        uint8_t pos = length();
+        auto pos = length();
         if (pos == 0)
-            pos = sizeof(Config::opcode_t);
+            pos = 2;
+        if (hasPostVal() && pos < 4)
+            pos = 4;
         return pos;
     }
+
+private:
+    InsnSize _isize;
+    void parseInsnSize();
 };
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
+    InsnSize insnSize() const { return flags().insnSize(); }
 
     void readPostfix() {
         if (!hasPostfix())
