@@ -265,7 +265,7 @@ void DisI8086::decodeRepeatStr(DisInsn &insn, StrBuffer &out) const {
         const auto opc = insn.readByte();
         if (insn.getError())
             return;
-        istr.setOpCode(opc, 0);
+        istr.setOpCode(opc);
         if (TABLE.searchOpCode(_cpuSpec, istr, out))
             insn.setErrorIf(istr);
         if (!istr.stringInst()) {
@@ -422,12 +422,11 @@ Error DisI8086::readCodes(DisInsn &insn) const {
         insn.setSegment(opc);
         opc = insn.readByte();
     }
-    auto prefix = 0;
     if (TABLE.isPrefix(_cpuSpec.cpu, opc) || TABLE.isPrefix(_cpuSpec.fpu, opc)) {
-        prefix = opc;
+        insn.setPrefix(opc);
         opc = insn.readByte();
     }
-    insn.setOpCode(opc, prefix);
+    insn.setOpCode(opc);
     return insn.getError();
 }
 

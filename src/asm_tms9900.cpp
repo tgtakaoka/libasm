@@ -103,13 +103,13 @@ void AsmTms9900::encodeModeReg(AsmInsn &insn, const Operand &op, AddrMode mode) 
         insn.embed(opc);
         break;
     case M_SRC2:
-        insn.embedPost(opc);
+        insn.embedPostfix(opc);
         break;
     case M_DST:
         insn.embed(opc << 6);
         break;
     default:
-        insn.embedPost(opc << 6);
+        insn.embedPostfix(opc << 6);
         break;
     }
 }
@@ -128,7 +128,7 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         insn.embed(encodeRegNumber(op.reg) << 6);
         break;
     case M_DST2:
-        insn.embedPost(0x4000);
+        insn.embedPostfix(0x4000);
         /* Fall-through */
     case M_SRC:
     case M_SRC2:
@@ -166,7 +166,7 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
         insn.embed((val16 & 0xF) << 4);
         break;
     case M_CNT2:
-        insn.embedPost(0x4000);
+        insn.embedPostfix(0x4000);
         if (op.mode == M_REG) {
             if (op.reg != REG_R0)
                 insn.setErrorIf(op, REGISTER_NOT_ALLOWED);
@@ -178,7 +178,7 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
     case M_BIT2:
         if (val16 >= 16)
             insn.setErrorIf(op, OVERFLOW_RANGE);
-        insn.embedPost((val16 & 0xF) << 6);
+        insn.embedPostfix((val16 & 0xF) << 6);
         break;
     case M_RTWP:
         // 0,1,2,4 are acceptable.

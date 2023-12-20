@@ -101,22 +101,28 @@ bool maySmartBranch(const AsmInsn &insn) {
 
 void shortBranch(AsmInsn &insn) {
     const auto opc = insn.opCode();
-    if (opc == LBRA)
+    if (opc == LBRA) {
+        insn.setPrefix(0);
         insn.setOpCode(BRA);
-    else if (opc == LBSR)
+    } else if (opc == LBSR) {
+        insn.setPrefix(0);
         insn.setOpCode(BSR);
-    else if (Bcc(opc))        // LBcc
-        insn.setOpCode(opc);  // convert LBcc to Bcc
+    } else if (Bcc(opc)) {  // LBcc
+        insn.setPrefix(0);  // convert LBcc to Bcc
+        insn.setOpCode(opc);
+    }
 }
 
 void longBranch(AsmInsn &insn, const Operand &op) {
     const auto opc = insn.opCode();
-    if (opc == BRA)
+    if (opc == BRA) {
         insn.setOpCode(LBRA);
-    else if (opc == BSR)
+    } else if (opc == BSR) {
         insn.setOpCode(LBSR);
-    else if (Bcc(opc))              // Bcc
-        insn.setOpCode(opc, LBcc);  // conver Bcc toLBcc
+    } else if (Bcc(opc)) {     // Bcc
+        insn.setPrefix(LBcc);  // conver Bcc to LBcc
+        insn.setOpCode(opc);
+    }
     insn.setError(op);
 }
 
@@ -312,12 +318,12 @@ void AsmMc6809::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
     case M_LIST:
         return encodeRegisterList(insn, op);
     case M_RBIT:
-        insn.setPost(encodeBitOpReg(op.base) << 6);
-        insn.embedPost(op.extra & 7);
+        insn.setPostfix(encodeBitOpReg(op.base) << 6);
+        insn.embedPostfix(op.extra & 7);
         break;
     case M_DBIT:
-        insn.embedPost((op.extra & 7) << 3);
-        insn.emitOperand8(insn.post());
+        insn.embedPostfix((op.extra & 7) << 3);
+        insn.emitOperand8(insn.postfix());
         insn.emitOperand8(op.val32);
     default:
         break;

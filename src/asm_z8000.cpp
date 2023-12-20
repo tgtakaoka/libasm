@@ -87,7 +87,7 @@ void AsmZ8000::emitData(AsmInsn &insn, OprPos pos, Config::opcode_t data) const 
     if (pos == OP_C0 || pos == OP_C4 || pos == OP_C8)
         insn.embed(data);
     if (pos == OP_P0 || pos == OP_P4 || pos == OP_P8)
-        insn.embedPost(data);
+        insn.embedPostfix(data);
 }
 
 void AsmZ8000::emitRegister(AsmInsn &insn, OprPos pos, RegName reg) const {

@@ -139,7 +139,8 @@ struct CpuBase {
     static void defaultReadCode(INSN &insn, const ENTRY *entry, const PAGE *page) {
         UNUSED(page);
         insn.setFlags(entry->flags());
-        insn.setOpCode(entry->opCode(), page->prefix());
+        insn.setPrefix(page->prefix());
+        insn.setOpCode(entry->opCode());
     }
 
     template <typename INSN>

@@ -74,7 +74,8 @@ Error DisI8080::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
-        insn.setOpCode(insn.readByte(), opc);
+        insn.setPrefix(opc);
+        insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }

@@ -24,7 +24,7 @@
 namespace libasm {
 namespace mc6800 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
     AddrMode mode3() const { return flags().mode3(); }

@@ -68,8 +68,7 @@ void AsmZ80::encodeRelative(AsmInsn &insn, const Operand &op) const {
 }
 
 static void encodeIndexReg(AsmInsn &insn, RegName ixReg) {
-    const Config::opcode_t prefix = (ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY;
-    insn.setOpCode(insn.opCode(), prefix);
+    insn.setPrefix((ixReg == REG_IX) ? TableZ80::PREFIX_IX : TableZ80::PREFIX_IY);
 }
 
 void AsmZ80::encodeIndexedBitOp(AsmInsn &insn, const Operand &op) const {

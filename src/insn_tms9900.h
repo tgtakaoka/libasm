@@ -25,7 +25,7 @@
 namespace libasm {
 namespace tms9900 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     bool byteOp() const { return flags().byteOp(); }
@@ -46,7 +46,7 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
     void emitInsn() {
         emitUint16(opCode(), 0);
         if (src() == M_SRC2)
-            emitUint16(post(), 2);
+            emitUint16(postfix(), 2);
     }
 
     void emitOperand16(uint16_t val) { emitUint16(val, operandPos()); }

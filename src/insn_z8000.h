@@ -26,15 +26,13 @@
 namespace libasm {
 namespace z8000 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     OprSize size() const { return flags().size(); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     AddrMode ex1() const { return flags().ex1(); }
     AddrMode ex2() const { return flags().ex2(); }
     PostFormat postFormat() const { return flags().postFormat(); }
-    Config::opcode_t postMask() const { return flags().postMask(); }
-    Config::opcode_t postVal() const { return flags().postVal(); }
     OprPos dstPos() const { return flags().dstPos(); }
     OprPos srcPos() const { return flags().srcPos(); }
 
@@ -75,11 +73,11 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
         emitUint16(opCode(), 0);
         const PostFormat format = postFormat();
         if (format == PF_0XX8)
-            embedPost(0x8);
+            embedPostfix(0x8);
         if (format == PF_0XXE)
-            embedPost(0xE);
+            embedPostfix(0xE);
         if (format != PF_NONE)
-            emitUint16(post(), 2);
+            emitUint16(postfix(), 2);
     }
     void emitOperand16(uint16_t val16) { emitUint16(val16, operandPos()); }
     void emitOperand32(uint32_t val32) { emitUint32(val32, operandPos()); }
@@ -97,7 +95,10 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out)
         : DisInsnImpl(insn, memory, out), _checkOverlap(0) {}
 
-    void readPost() { setPost(readUint16()); }
+    void readPostfix() {
+        if (!hasPostfix())
+            setPostfix(readUint16());
+    }
 
     void setCheckRegisterOverlap(uint8_t pass) { _checkOverlap = pass; }
     uint8_t isCheckRegisterOverlap() const { return _checkOverlap; }

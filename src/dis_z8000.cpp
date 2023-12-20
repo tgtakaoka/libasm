@@ -164,7 +164,7 @@ void DisZ8000::decodeBaseAddressing(
     if (mode == M_BA) {
         outHex(out.letter('#'), insn.readUint16(), -16);
     } else {  // M_BX
-        decodeGeneralRegister(insn, out, M_WR, insn.post() >> 8);
+        decodeGeneralRegister(insn, out, M_WR, insn.postfix() >> 8);
     }
     out.letter(')');
 }
@@ -271,11 +271,11 @@ uint8_t modePos(const DisInsn &insn, OprPos pos) {
     case OP_C8:
         return (insn.opCode() >> 8) & 0xF;
     case OP_P0:
-        return (insn.post() & 0xF);
+        return (insn.postfix() & 0xF);
     case OP_P4:
-        return (insn.post() >> 4) & 0xF;
+        return (insn.postfix() >> 4) & 0xF;
     case OP_P8:
-        return (insn.post() >> 8) & 0xF;
+        return (insn.postfix() >> 8) & 0xF;
     default:
         return 0;
     }

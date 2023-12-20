@@ -25,7 +25,7 @@
 namespace libasm {
 namespace ns32000 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrePostfix<Config, Entry> {
     AddrMode src() const { return flags().src(); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode ex1() const { return flags().ex1(); }
@@ -77,8 +77,8 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
         if (hasPrefix())
             emitByte(prefix(), pos++);
         emitByte(opCode(), pos++);
-        if (hasPost())
-            emitByte(post(), pos);
+        if (hasPostfix())
+            emitByte(postfix(), pos);
     }
 
     void emitOperand8(uint8_t val8) { emitByte(val8, operandPos()); }
@@ -94,7 +94,7 @@ private:
             if (hasPrefix())
                 pos++;
             pos++;
-            if (hasPost())
+            if (hasPostfix())
                 pos++;
         }
         return pos;
@@ -103,8 +103,6 @@ private:
 
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
-
-    void readPost() { setPost(readByte()); }
 
     uint8_t indexByte(OprPos pos) const { return pos == P_GEN1 ? _indexByte1 : _indexByte2; }
     void setIndexByte(uint8_t data, OprPos pos) {

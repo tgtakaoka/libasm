@@ -440,32 +440,49 @@ private:
 
 template <typename Conf, typename Entry>
 struct EntryInsnBase {
-    EntryInsnBase() : _opCode(0), _prefix(0), _post(0), _hasPost(false), _flags() {}
-    void setOpCode(typename Conf::opcode_t opCode, typename Conf::opcode_t prefix = 0) {
-        _opCode = opCode;
-        _prefix = prefix;
-    }
+    EntryInsnBase() : _opCode(0), _flags() {}
+    void setOpCode(typename Conf::opcode_t opCode) { _opCode = opCode; }
     typename Conf::opcode_t opCode() const { return _opCode; }
     void embed(typename Conf::opcode_t data) { _opCode |= data; }
-    bool hasPrefix() const { return _prefix != 0; }
-    typename Conf::opcode_t prefix() const { return _prefix; }
-    void setPost(typename Conf::opcode_t post, bool hasPost = true) {
-        _post = post;
-        _hasPost = hasPost;
-    }
-    void embedPost(typename Conf::opcode_t data) { _post |= data; }
-    bool hasPost() const { return _hasPost; }
-    typename Conf::opcode_t post() const { return _post; }
     void setFlags(typename Entry::Flags flags) { _flags = flags; }
     typename Entry::Flags flags() const { return _flags; }
     typename Entry::Flags &flags() { return _flags; }
 
 private:
     typename Conf::opcode_t _opCode;
-    typename Conf::opcode_t _prefix;
-    typename Conf::opcode_t _post;
-    bool _hasPost;
     typename Entry::Flags _flags;
+};
+
+template <typename Conf, typename Entry>
+struct EntryInsnPrefix : virtual EntryInsnBase<Conf, Entry> {
+    EntryInsnPrefix() : _prefix(0) {}
+    void setPrefix(typename Conf::opcode_t prefix) { _prefix = prefix; }
+    bool hasPrefix() const { return _prefix != 0; }
+    auto prefix() const { return _prefix; }
+
+private:
+    typename Conf::opcode_t _prefix;
+};
+
+template <typename Conf, typename Entry>
+struct EntryInsnPostfix : virtual EntryInsnBase<Conf, Entry> {
+    EntryInsnPostfix() : _postfix(0), _hasPostfix(false) {}
+    void setPostfix(typename Conf::opcode_t postfix, bool hasPostfix = true) {
+        _postfix = postfix;
+        _hasPostfix = hasPostfix;
+    }
+    void embedPostfix(typename Conf::opcode_t data) { setPostfix(_postfix | data); }
+    bool hasPostfix() const { return _hasPostfix; }
+    auto postfix() const { return _postfix; }
+
+private:
+    typename Conf::opcode_t _postfix;
+    bool _hasPostfix;
+};
+
+template <typename Conf, typename Entry>
+struct EntryInsnPrePostfix : EntryInsnPrefix<Conf, Entry>, EntryInsnPostfix<Conf, Entry> {
+    EntryInsnPrePostfix() {}
 };
 
 template <typename Conf>

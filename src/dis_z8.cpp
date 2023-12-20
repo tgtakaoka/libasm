@@ -132,8 +132,8 @@ void DisZ8::readOperands(DisInsn &insn, Operand &dstOp, Operand &srcOp, Operand 
     const auto srcPos = insn.srcPos();
     const auto extPos = insn.extPos();
     Operand byte1, byte2, word1, word2;
-    if (insn.hasPost()) {
-        byte1.val16 = insn.post();
+    if (insn.hasPostfix()) {
+        byte1.val16 = insn.postfix();
     } else if (needByte1(dstPos) || needByte1(srcPos) || needByte1(extPos)) {
         byte1.readByte(insn);
     }
@@ -278,7 +278,7 @@ void DisZ8::decodeIndexed(DisInsn &insn, StrBuffer &out, Operand &op) const {
     } else {  // M_X
         outHex(out, op.val16, 8);
     }
-    const auto reg = (insn.hasPost() ? insn.post() & ~1 : insn.bytes()[1]) & 0xF; // OP_B1LO
+    const auto reg = (insn.hasPostfix() ? insn.postfix() & ~1 : insn.bytes()[1]) & 0xF;  // OP_B1LO
     const auto idx = (op.mode == M_X) ? decodeRegNum(reg) : decodePairRegNum(reg);
     out.letter('(');
     outRegName(out, idx).letter(')');

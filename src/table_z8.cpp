@@ -575,8 +575,8 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
         const auto postFormat = flags.postFormat();
         if (postFormat == PF_NONE)
             return true;
-        insn.readPost();
-        return matchPostByte(insn.post(), postFormat);
+        insn.readPostfix();
+        return matchPostByte(insn.postfix(), postFormat);
     }
     return false;
 }

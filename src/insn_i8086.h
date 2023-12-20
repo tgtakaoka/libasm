@@ -25,7 +25,7 @@
 namespace libasm {
 namespace i8086 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     EntryInsn() : _fwait(0), _segment(0) {}
 
     AddrMode dst() const { return flags().dst(); }

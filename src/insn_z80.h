@@ -25,7 +25,7 @@
 namespace libasm {
 namespace z80 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     bool indexBit() const { return flags().indexBit(); }

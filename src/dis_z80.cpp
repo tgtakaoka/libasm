@@ -54,7 +54,8 @@ void DisZ80::decodeIndexedBitOp(DisInsn &insn, StrBuffer &out) const {
     const auto opc = insn.readByte();
 
     DisInsn ixBit(insn);  // |ixBit| will share internal implementation with |insn|
-    ixBit.setOpCode(opc, insn.opCode());
+    ixBit.setPrefix(insn.opCode());
+    ixBit.setOpCode(opc);
     ixBit.nameBuffer().reset();
     if (TABLE.searchOpCode(cpuType(), ixBit, out)) {
         insn.nameBuffer().reset();
@@ -176,7 +177,8 @@ Error DisZ80::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
-        insn.setOpCode(insn.readByte(), opc);
+        insn.setPrefix(opc);
+        insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }

@@ -25,7 +25,7 @@
 namespace libasm {
 namespace z8 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     AddrMode dst() const { return flags().dst(); }
     AddrMode src() const { return flags().src(); }
     AddrMode ext() const { return flags().ext(); }
@@ -58,9 +58,9 @@ struct AsmInsn final : AsmInsnImpl<Config>, EntryInsn {
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    void readPost() {
-        if (length() < 2)
-            setPost(readByte());
+    void readPostfix() {
+        if (!hasPostfix())
+            setPostfix(readByte());
     }
 };
 

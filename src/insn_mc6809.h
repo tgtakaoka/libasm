@@ -25,7 +25,7 @@
 namespace libasm {
 namespace mc6809 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrePostfix<Config, Entry> {
     AddrMode mode1() const { return flags().mode1(); }
     AddrMode mode2() const { return flags().mode2(); }
 };
@@ -75,10 +75,10 @@ private:
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    Config::opcode_t readPost() {
-        if (!hasPost())
-            setPost(readByte());
-        return post();
+    auto readPostfix() {
+        if (!hasPostfix())
+            setPostfix(readByte());
+        return postfix();
     }
 };
 

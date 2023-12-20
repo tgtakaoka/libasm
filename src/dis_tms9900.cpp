@@ -34,7 +34,7 @@ DisTms9900::DisTms9900(const ValueFormatter::Plugins &plugins)
 }
 
 Error DisTms9900::checkPostWord(DisInsn &insn) const {
-    const auto post = insn.post();
+    const auto post = insn.postfix();
     const auto src = (post >> 4 & 3);
     switch (insn.dst()) {
     case M_DST2:
@@ -86,7 +86,7 @@ void DisTms9900::decodeRelative(DisInsn &insn, StrBuffer &out) const {
 
 void DisTms9900::decodeOperand(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     const auto opc = insn.opCode();
-    const auto post = insn.post();
+    const auto post = insn.postfix();
     uint8_t val8;
     switch (mode) {
     case M_IMM:
@@ -156,7 +156,7 @@ Error DisTms9900::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
 
     const auto src = insn.src();
     if (src == M_SRC2) {
-        insn.setPost(insn.readUint16());
+        insn.setPostfix(insn.readUint16());
         if (checkPostWord(insn))
             return _insn.setError(insn);
     }

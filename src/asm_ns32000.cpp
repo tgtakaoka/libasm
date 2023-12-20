@@ -437,14 +437,14 @@ void embedOprField(AsmInsn &insn, OprPos pos, uint8_t opr) {
     if (pos == P_GEN1) {
         opr &= 0x1F;
         opr <<= 3;
-        if (insn.hasPost())
-            insn.embedPost(opr);
+        if (insn.hasPostfix())
+            insn.embedPostfix(opr);
         else
             insn.embed(opr);
     }
     if (pos == P_GEN2) {
         opr &= 0x1F;
-        insn.embedPost(opr >> 2);
+        insn.embedPostfix(opr >> 2);
         insn.embed(opr << 6);
     }
     if (pos == P_REG) {
@@ -453,7 +453,7 @@ void embedOprField(AsmInsn &insn, OprPos pos, uint8_t opr) {
     }
     if (pos == P_SHORT) {
         opr &= 0xF;
-        insn.embedPost(opr >> 1);
+        insn.embedPostfix(opr >> 1);
         insn.embed(opr << 7);
     }
 }

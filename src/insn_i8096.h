@@ -24,7 +24,7 @@
 namespace libasm {
 namespace i8096 {
 
-struct EntryInsn : EntryInsnBase<Config, Entry> {
+struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     AaMode aa() const { return AaMode(opCode() & 3); }
     AddrMode dst() const { return flags().dst(); }
     AddrMode src1() const { return flags().src1(); }

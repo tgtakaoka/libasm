@@ -99,15 +99,15 @@ bool isGenMode(AddrMode mode) {
 
 uint8_t getOprField(const DisInsn &insn, OprPos pos) {
     if (pos == P_GEN1)
-        return (insn.hasPost() ? insn.post() : insn.opCode()) >> 3;
-    if (pos == P_GEN2 && insn.hasPost()) {
-        const uint8_t post = (insn.post() << 2) & 0x1f;
+        return (insn.hasPostfix() ? insn.postfix() : insn.opCode()) >> 3;
+    if (pos == P_GEN2 && insn.hasPostfix()) {
+        const uint8_t post = (insn.postfix() << 2) & 0x1f;
         return post | (insn.opCode() >> 6);
     }
     if (pos == P_REG)
         return (insn.opCode() >> 3) & 0x7;
-    if (pos == P_SHORT && insn.hasPost()) {
-        uint8_t val8 = (insn.post() & 7) << 1;
+    if (pos == P_SHORT && insn.hasPostfix()) {
+        uint8_t val8 = (insn.postfix() & 7) << 1;
         if (insn.opCode() & 0x80)
             val8 |= 1;
         // Sign extends 4-bit number.
@@ -523,7 +523,8 @@ Error DisNs32000::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) con
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefixCode(_cpuSpec, opc)) {
-        insn.setOpCode(insn.readByte(), opc);
+        insn.setPrefix(opc);
+        insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }

@@ -56,7 +56,7 @@ void DisMc6809::decodeExtended(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMc6809::decodeIndexed(DisInsn &insn, StrBuffer &out) const {
-    const auto post = insn.readPost();
+    const auto post = insn.readPostfix();
     PostSpec spec;
     if (TABLE.searchPostByte(cpuType(), post, spec)) {
         insn.setErrorIf(out, UNKNOWN_POSTBYTE);
@@ -159,7 +159,7 @@ void DisMc6809::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) co
 }
 
 void DisMc6809::decodePushPull(DisInsn &insn, StrBuffer &out) const {
-    auto post = insn.readPost();
+    auto post = insn.readPostfix();
     const bool hasDreg = (post & 0x06) == 0x06;
     if (hasDreg)
         post &= ~0x02;  // clear REG_A
@@ -180,7 +180,7 @@ void DisMc6809::decodePushPull(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMc6809::decodeRegisters(DisInsn &insn, StrBuffer &out) const {
-    const auto post = insn.readPost();
+    const auto post = insn.readPostfix();
     const auto cpu = cpuType();
     const auto dst = decodeDataReg(cpu, post);
     const auto src = decodeDataReg(cpu, post >> 4);
@@ -197,7 +197,7 @@ void DisMc6809::decodeRegisters(DisInsn &insn, StrBuffer &out) const {
 }
 
 void DisMc6809::decodeRegBit(DisInsn &insn, StrBuffer &out) const {
-    const auto post = insn.readPost();
+    const auto post = insn.readPostfix();
     const auto reg = decodeBitOpReg(post >> 6);
     if (reg == REG_UNDEF)
         insn.setErrorIf(out, ILLEGAL_REGISTER);
@@ -208,11 +208,11 @@ void DisMc6809::decodeRegBit(DisInsn &insn, StrBuffer &out) const {
 void DisMc6809::decodeDirBit(DisInsn &insn, StrBuffer &out) const {
     decodeDirectPage(insn, out);
     out.letter('.');
-    outHex(out, (insn.post() >> 3) & 7, 3);
+    outHex(out, (insn.postfix() >> 3) & 7, 3);
 }
 
 void DisMc6809::decodeTransferMemory(DisInsn &insn, StrBuffer &out) const {
-    const auto post = insn.readPost();
+    const auto post = insn.readPostfix();
     const auto cpu = cpuType();
     const auto dst = decodeDataReg(cpu, post);
     const auto src = decodeDataReg(cpu, post >> 4);
@@ -304,7 +304,8 @@ Error DisMc6809::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     const auto opc = insn.readByte();
     insn.setOpCode(opc);
     if (TABLE.isPrefix(cpuType(), opc)) {
-        insn.setOpCode(insn.readByte(), opc);
+        insn.setPrefix(opc);
+        insn.setOpCode(insn.readByte());
         if (insn.getError())
             return _insn.setError(insn);
     }

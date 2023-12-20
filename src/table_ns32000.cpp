@@ -867,7 +867,7 @@ struct Processor : ProcessorBase<CPUTYPE> {
         : ProcessorBase<CPUTYPE>(cpuType, name_P, table, end) {}
 
     static void pageSetup(AsmInsn &insn, const EntryPage *page) {
-        insn.setPost(0, page->post() != 0);
+        insn.setPostfix(0, page->post() != 0);
     }
 
     Error searchName(AsmInsn &insn, bool (*accept)(AsmInsn &, const Entry *)) const {
@@ -880,8 +880,8 @@ struct Processor : ProcessorBase<CPUTYPE> {
             void (*readName)(DisInsn &, const Entry *, StrBuffer &, const EntryPage *)) const {
         const auto entry = ProcessorBase<CPUTYPE>::searchOpCode(
                 insn, out, matchOpCode, ProcessorBase<CPUTYPE>::defaultPageMatcher, readName);
-        if (entry && insn.hasPost())
-            insn.readPost();
+        if (entry && insn.hasPostfix())
+            insn.setPostfix(insn.readByte());
         return insn.getError();
     }
 };
@@ -977,7 +977,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
 static void readEntryName(
         DisInsn &insn, const Entry *entry, StrBuffer &out, const EntryPage *page) {
     Cpu::defaultReadName(insn, entry, out, page);
-    insn.setPost(0, page->post() != 0);
+    insn.setPostfix(0, page->post() != 0);
 }
 
 Error TableNs32000::searchOpCode(const CpuSpec &cpuSpec, DisInsn &insn, StrBuffer &out) const {
