@@ -318,6 +318,32 @@ void test_forward_labels() {
             "       9/    1009 : =4                 label5  equ   4\n");
 }
 
+void test_include() {
+    PREP_ASM(mc6809::AsmMc6809, MotorolaDirective);
+
+    TestReader exist("data/exist.inc");
+    sources.add(exist);
+    exist.add("        fcc   /exist/\n");
+
+    driver.setUpperHex(true);
+    driver.setLineNumber(true);
+    driver.setOption("smart-branch", "on");
+
+    ASM("mc6809",
+            "        cpu   mc6809\n"
+            "* comment line\n"
+            "        org   $abcd\n"
+            "        include \"data/exist.inc\"\n"
+            "        include \"data/not-exist.inc\"\n",
+            "       1/       0 :                            cpu   mc6809\n"
+            "       2/       0 :                    * comment line\n"
+            "       3/    ABCD :                            org   $abcd\n"
+            "       4/    ABCD :                            include \"data/exist.inc\"\n"
+            "(1)    1/    ABCD : 65 78 69 73 74             fcc   /exist/\n"
+            "mc6809:5:18: error: Include file not found: \"data/not-exist.inc\"\"\n"
+            "       5/    ABD2 :                            include \"data/not-exist.inc\"\n");
+}
+
 void run_tests() {
     RUN_TEST(test_symbols_mc6809);
     RUN_TEST(test_symbols_ins8060);
@@ -326,6 +352,7 @@ void run_tests() {
     RUN_TEST(test_list_radix);
     RUN_TEST(test_function);
     RUN_TEST(test_forward_labels);
+    RUN_TEST(test_include);
 }
 
 }  // namespace test

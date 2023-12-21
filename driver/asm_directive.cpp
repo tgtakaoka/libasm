@@ -216,8 +216,11 @@ Error AsmDirective::includeFile(StrScanner &scan, Context &context) {
     } else {
         p = filename.takeWhile([](char s) { return !isspace(s); });
     }
+    const auto error = context.sources.open(filename);
+    if (error)
+        setErrorIf(filename, error);
     scan = p;
-    return setError(context.sources.open(filename));
+    return error;
 }
 
 Error AsmDirective::defineFunction(StrScanner &scan, Context &context) {
