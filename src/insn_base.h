@@ -516,19 +516,19 @@ struct AsmInsnImpl : AsmInsnBase {
     }
 
     /** Generate 32 bit floating point |data| */
-    Error emitFloat32(float data) { return big ? emitUint32Be(data) : emitUint32Le(data); }
+    Error emitFloat32(float data) { return big ? emitFloat32Be(data) : emitFloat32Le(data); }
 
     /** Generate 32 bit floating point |data| at |pos| */
     Error emitFloat32(float data, uint8_t pos) {
-        return big ? emitUint32Be(data, pos) : emitUint32Le(data, pos);
+        return big ? emitFloat32Be(data, pos) : emitFloat32Le(data, pos);
     }
 
     /** Generate 64 bit floating point |data| */
-    Error emitFloat64(double data) { return big ? emitUint64Be(data) : emitUint64Le(data); }
+    Error emitFloat64(double data) { return big ? emitFloat64Be(data) : emitFloat64Le(data); }
 
     /** Generate 64 bit floating point |data| at |pos| */
     Error emitFloat64(double data, uint8_t pos) {
-        return big ? emitUint64Be(data, pos) : emitUint64Le(data, pos);
+        return big ? emitFloat64Be(data, pos) : emitFloat64Le(data, pos);
     }
 
 protected:
@@ -552,7 +552,7 @@ struct DisInsnImpl : DisInsnBase {
     uint64_t readUint64() { return big ? readUint64Be() : readUint64Le(); }
 
     /** Read 32 bit floating point data */
-    float readFloat32() { return big ? readFloat32Be() : readUint64Le(); }
+    float readFloat32() { return big ? readFloat32Be() : readFloat32Le(); }
 
     /** Read 64 bit floating point data */
     double readFloat64() { return big ? readFloat64Be() : readFloat64Le(); }
