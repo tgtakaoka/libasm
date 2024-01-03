@@ -36,18 +36,22 @@ namespace {
 constexpr char OPT_BOOL_OPTIMIZE_SEGMENT[] PROGMEM = "optimize-segment";
 constexpr char OPT_DESC_OPTIMIZE_SEGMENT[] PROGMEM = "enable optimizing segment override";
 
+constexpr char TEXT_DQ[] PROGMEM = "dq";
+constexpr char TEXT_DT[] PROGMEM = "dt";
 constexpr char TEXT_RESB[] PROGMEM = "resb";
 constexpr char TEXT_RESD[] PROGMEM = "resd";
 constexpr char TEXT_RESW[] PROGMEM = "resw";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
-    {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DD,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
-    {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
-    {TEXT_RESB, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_RESD, &Assembler::allocateSpaces,     Assembler::DATA_LONG},
-    {TEXT_RESW, &Assembler::allocateSpaces,     Assembler::DATA_WORD},
+    {TEXT_DB,   &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
+    {TEXT_DD,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT32_LONG},
+    {TEXT_DQ,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT64_QUAD},
+    {TEXT_DS,   &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_DT,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT80_BCD},
+    {TEXT_DW,   &Assembler::defineDataConstant,  Assembler::DATA_WORD},
+    {TEXT_RESB, &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_RESD, &Assembler::allocateSpaces,      Assembler::DATA_LONG},
+    {TEXT_RESW, &Assembler::allocateSpaces,      Assembler::DATA_WORD},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};

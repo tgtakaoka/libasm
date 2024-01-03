@@ -75,11 +75,20 @@ struct Assembler : private ValueParser::Locator {
         DATA_WORD,
         DATA_WORD_NO_STRING,
         DATA_LONG,
-        DATA_WORD_ALIGN2,
-        DATA_LONG_ALIGN2,
+        DATA_FLOAT32,
+        DATA_FLOAT32_LONG,
+        DATA_FLOAT64,
+        DATA_FLOAT64_QUAD,
+        DATA_FLOAT80_BCD,
+        DATA_FLOAT96,
+        DATA_PBCD96,
+        DATA_ALIGN2 = 0x80,
     };
     Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
+    Error defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
     Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType);
+    void generateString(StrScanner &scan, const StrScanner &end, Insn &insn, DataType type,
+            ErrorAt &error) const;
 
 protected:
     const ValueParser _parser;

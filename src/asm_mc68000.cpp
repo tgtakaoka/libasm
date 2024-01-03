@@ -51,22 +51,30 @@ namespace {
 
 // clang-format off
 constexpr char TEXT_DC_B[] PROGMEM = "dc.b";
+constexpr char TEXT_DC_D[] PROGMEM = "dc.d";
 constexpr char TEXT_DC_L[] PROGMEM = "dc.l";
+constexpr char TEXT_DC_P[] PROGMEM = "dc.p";
+constexpr char TEXT_DC_S[] PROGMEM = "dc.s";
 constexpr char TEXT_DC_W[] PROGMEM = "dc.w";
+constexpr char TEXT_DC_X[] PROGMEM = "dc.x";
 constexpr char TEXT_DS_B[] PROGMEM = "ds.b";
 constexpr char TEXT_DS_L[] PROGMEM = "ds.l";
 constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
-    {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-    {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
-    {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-    {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG_ALIGN2},
-    {TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD_ALIGN2},
+    {TEXT_DC,     &Assembler::defineDataConstant,  Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC_B,   &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
+    {TEXT_DC_D,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT64},
+    {TEXT_DC_L,   &Assembler::defineDataConstant,  Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    {TEXT_DC_P,   &Assembler::defineFloatConstant, Assembler::DATA_PBCD96},
+    {TEXT_DC_S,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT32},
+    {TEXT_DC_W,   &Assembler::defineDataConstant,  Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC_X,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT96},
+    {TEXT_DS,     &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_DS_B,   &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_DS_L,   &Assembler::allocateSpaces,      Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    {TEXT_DS_W,   &Assembler::allocateSpaces,      Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
@@ -660,8 +668,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
                 op.getError() == OVERFLOW_RANGE || op.getError() == UNDEFINED_SYMBOL) {
             char *end;
             op.float80 = strtold(text.str(), &end);
-            StrScanner e(end);
-            if (end != scan.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
+            StrScanner e{end};
+            if (end != text.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
                 op.mode = M_IMFLT;
                 scan = e;
                 return op.setOK();
