@@ -51,22 +51,30 @@ namespace {
 
 // clang-format off
 constexpr char TEXT_DC_B[] PROGMEM = "dc.b";
+constexpr char TEXT_DC_D[] PROGMEM = "dc.d";
 constexpr char TEXT_DC_L[] PROGMEM = "dc.l";
+constexpr char TEXT_DC_P[] PROGMEM = "dc.p";
+constexpr char TEXT_DC_S[] PROGMEM = "dc.s";
 constexpr char TEXT_DC_W[] PROGMEM = "dc.w";
+constexpr char TEXT_DC_X[] PROGMEM = "dc.x";
 constexpr char TEXT_DS_B[] PROGMEM = "ds.b";
 constexpr char TEXT_DS_L[] PROGMEM = "ds.l";
 constexpr char TEXT_DS_W[] PROGMEM = "ds.w";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN, &Assembler::alignOrigin},
-    {TEXT_DC,     &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-    {TEXT_DC_B,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DC_L,   &Assembler::defineDataConstant, Assembler::DATA_LONG_ALIGN2},
-    {TEXT_DC_W,   &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
-    {TEXT_DS,     &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DS_B,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DS_L,   &Assembler::allocateSpaces,     Assembler::DATA_LONG_ALIGN2},
-    {TEXT_DS_W,   &Assembler::allocateSpaces,     Assembler::DATA_WORD_ALIGN2},
+    {TEXT_DC,     &Assembler::defineDataConstant,  Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC_B,   &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
+    {TEXT_DC_D,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT64|Assembler::DATA_ALIGN2},
+    {TEXT_DC_L,   &Assembler::defineDataConstant,  Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    {TEXT_DC_P,   &Assembler::defineFloatConstant, Assembler::DATA_PACKED_BCD96|Assembler::DATA_ALIGN2},
+    {TEXT_DC_S,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT32|Assembler::DATA_ALIGN2},
+    {TEXT_DC_W,   &Assembler::defineDataConstant,  Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
+    {TEXT_DC_X,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT96|Assembler::DATA_ALIGN2},
+    {TEXT_DS,     &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_DS_B,   &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_DS_L,   &Assembler::allocateSpaces,      Assembler::DATA_LONG|Assembler::DATA_ALIGN2},
+    {TEXT_DS_W,   &Assembler::allocateSpaces,      Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
@@ -273,74 +281,6 @@ void AsmMc68000::encodeRelativeAddr(AsmInsn &insn, AddrMode mode, const Operand 
     }
 }
 
-namespace {
-
-void emitFloat96(AsmInsn &insn, const Operand &op) {
-    auto v = op.float80;
-    const uint16_t negative = (v < 0) ? 0x8000 : 0;
-    if (v)
-        v = -v;
-    if (isinf(v)) {
-        insn.emitOperand16(negative | 0x7FFF);
-        insn.emitOperand16(0);
-        insn.emitUint64(0, insn.operandPos());
-    } else if (isnan(v)) {
-        insn.emitOperand16(negative | 0x7FFF);
-        insn.emitOperand16(0);
-        insn.emitUint64(static_cast<uint64_t>(1) << 63, insn.operandPos());
-    } else {
-        const int16_t exponent = log2l(v);
-        const auto significand = v / powl(2.0, exponent);
-        insn.emitOperand16(negative | (exponent + 16383));
-        insn.emitOperand16(0);
-        insn.emitUint64(significand * powl(2.0, 63), insn.operandPos());
-    }
-}
-
-auto convert2pbcd(uint64_t bin, uint8_t digits) {
-    uint64_t pbcd = 0;
-    uint8_t shift = 0;
-    while (digits-- > 0) {
-        pbcd |= (bin % 10) << shift;
-        bin /= 10;
-        shift += 4;
-    }
-    return pbcd;
-}
-
-void emitPackedBcd96(AsmInsn &insn, const Operand &op) {
-    auto value = op.float80;
-    uint16_t sign = 0;
-    if (value < 0) {
-        sign = 0x8000;
-        value = -value;
-    }
-    if (isinf(value)) {
-        insn.emitOperand16(sign | 0x7FFF);
-        insn.emitOperand16(0);
-        insn.emitOperand64(0);
-    } else if (isnan(value)) {
-        insn.emitOperand16(sign | 0x7FFF);
-        insn.emitOperand16(0);
-        insn.emitOperand64(static_cast<uint64_t>(1) << 63);
-    } else {
-        int16_t exponent = log10l(value);
-        if (exponent < 0 || (exponent == 0 && value < 1.0))
-            --exponent;
-        uint8_t digit = value * powl(10.0, -exponent);
-        value *= powl(10.0, 16 - exponent);
-        if (exponent < 0) {
-            sign |= 0x4000;
-            exponent = -exponent;
-        }
-        insn.emitOperand16(sign | convert2pbcd(exponent, 3));
-        insn.emitOperand16(digit);
-        insn.emitOperand64(convert2pbcd(value, 16));
-    }
-}
-
-}  // namespace
-
 void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size) const {
     switch (size) {
     case SZ_LONG:
@@ -363,11 +303,12 @@ void AsmMc68000::encodeImmediate(AsmInsn &insn, const Operand &op, OprSize size)
         insn.emitFloat64(op.float80, insn.operandPos());
         break;
     case SZ_XTND:
-        emitFloat96(insn, op);
+    case SZ_PBCD: {
+        const auto type = size == SZ_XTND ? DATA_FLOAT96 : DATA_PACKED_BCD96;
+        const auto negative = op.float80 < 0;
+        generateFloat96Be(negative, op.float80, insn, insn.operandPos(), type);
         break;
-    case SZ_PBCD:
-        emitPackedBcd96(insn, op);
-        break;
+    }
     default:
         break;
     }
@@ -661,8 +602,8 @@ Error AsmMc68000::parseOperand(StrScanner &scan, Operand &op) const {
                 op.getError() == OVERFLOW_RANGE || op.getError() == UNDEFINED_SYMBOL) {
             char *end;
             op.float80 = strtold(text.str(), &end);
-            StrScanner e(end);
-            if (end != scan.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
+            StrScanner e{end};
+            if (end != text.str() && (endOfLine(e.skipSpaces()) || *e == ',')) {
                 op.mode = M_IMFLT;
                 scan = e;
                 return op.setOK();

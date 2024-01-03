@@ -75,10 +75,17 @@ struct Assembler : private ValueParser::Locator {
         DATA_WORD,
         DATA_WORD_NO_STRING,
         DATA_LONG,
-        DATA_WORD_ALIGN2,
-        DATA_LONG_ALIGN2,
+        DATA_FLOAT32,
+        DATA_FLOAT32_LONG,
+        DATA_FLOAT64,
+        DATA_FLOAT64_QUAD,
+        DATA_FLOAT80_BCD,
+        DATA_FLOAT96,
+        DATA_PACKED_BCD96,
+        DATA_ALIGN2 = 0x80,
     };
     Error defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
+    Error defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataType);
     Error allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType);
 
 protected:
@@ -104,6 +111,12 @@ protected:
     uint16_t parseExpr16(StrScanner &expr, ErrorAt &error, char delim = 0) const;
     /** Parse |expr| text and get value as unsigned 32 bit. */
     uint32_t parseExpr32(StrScanner &expr, ErrorAt &error, char delim = 0) const;
+
+    void generateString(StrScanner &scan, const StrScanner &end, Insn &insn, DataType type,
+            ErrorAt &error) const;
+    void generateFloat80Le(bool neagtive, long double value, Insn &insn) const;
+    void generateFloat96Be(
+            bool neagtive, long double value, AsmInsnBase &insn, uint8_t pos, DataType type) const;
 
 private:
     virtual ConfigSetter &configSetter() = 0;

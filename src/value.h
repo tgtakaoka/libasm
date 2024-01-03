@@ -17,11 +17,11 @@
 #ifndef __LIBASM_VALUE_H__
 #define __LIBASM_VALUE_H__
 
+#include <stdint.h>
+
 #include "config_base.h"
 #include "error_reporter.h"
 #include "str_scanner.h"
-
-#include <stdint.h>
 
 namespace libasm {
 
@@ -46,7 +46,10 @@ struct Value {
      * - Returns ILLEGAL_CONSTANT when there is no valid digit found at |scan|, and |scan} is
      *   unchanged.
      */
-    Error parseNumber(StrScanner &scan, Radix radix);
+    Error parseNumber(StrScanner &scan, Radix radix) {
+        _type = UNSIGNED;
+        return parseNumber(scan, radix, _value);
+    }
 
     bool isUndefined() const { return _type == UNDEFINED; }
     bool isSigned() const { return _type == NEGATIVE; }
@@ -73,6 +76,9 @@ struct Value {
         _type = UNDEFINED;
         return *this;
     }
+
+    static Error parseNumber(StrScanner &scan, Radix radix, uint32_t &value);
+    static Error parseNumber(StrScanner &scan, Radix radix, uint64_t &value);
 
 private:
     enum ValueType : uint8_t {

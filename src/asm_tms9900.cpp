@@ -33,7 +33,7 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_AORG, &Assembler::defineOrigin},
     {TEXT_BSS,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_BYTE, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD_ALIGN2},
+    {TEXT_DATA, &Assembler::defineDataConstant, Assembler::DATA_WORD|Assembler::DATA_ALIGN2},
     {TEXT_EVEN, &Assembler::alignOrigin, 2},
     {TEXT_TEXT, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
 };

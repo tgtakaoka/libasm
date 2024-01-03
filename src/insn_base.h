@@ -68,7 +68,7 @@ struct Insn final : ErrorAt {
 
     Error emitByte(uint8_t val, uint8_t pos) {
         if (pos >= MAX_CODE)
-            return NO_MEMORY;
+            return setErrorIf(NO_MEMORY);
         _bytes[pos++] = val;
         if (_length < pos)
             _length = pos;
@@ -145,87 +145,6 @@ struct Insn final : ErrorAt {
     Error emitUint64Le(uint64_t data, uint8_t pos) {
         emitUint32Le(data >> 0, pos + 0);
         return emitUint32Le(data >> 32, pos + 4);
-    }
-
-private:
-    uint32_t _address;
-    uint8_t _length;
-
-    static constexpr size_t MAX_NAME = 11;
-    char _name[MAX_NAME + 1];
-    StrBuffer _buffer{_name, sizeof(_name)};
-
-    static constexpr size_t MAX_CODE = 64;
-    uint8_t _bytes[MAX_CODE];
-};
-
-/**
- * Base for assembler instruction code.
- */
-struct AsmInsnBase : ErrorAt {
-    uint32_t address() const { return _insn.address(); }
-    const uint8_t *bytes() const { return _insn.bytes(); }
-    uint8_t length() const { return _insn.length(); }
-    const char *name() const { return _insn.name(); }
-    StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
-
-    void reset(uint32_t addr) {
-        resetError();
-        _insn.reset(addr);
-    }
-
-    /** Generate 8 bit |data| (Assembler). */
-    Error emitByte(uint8_t data) { return setErrorIf(_insn.emitByte(data)); }
-
-    /** Generate 8 bit |data| at |pos| (Assembler). */
-    Error emitByte(uint8_t data, uint8_t pos) { return setErrorIf(_insn.emitByte(data, pos)); }
-
-    /** Generate 16 bit big endian |data| (Assembler). */
-    Error emitUint16Be(uint16_t data) { return setErrorIf(_insn.emitUint16Be(data)); }
-
-    /** Generate 16 bit little endian |data| (Assembler). */
-    Error emitUint16Le(uint16_t data) { return setErrorIf(_insn.emitUint16Le(data)); }
-
-    /** Generate 16 bit big endian |data| at |pos| (Assembler). */
-    Error emitUint16Be(uint16_t data, uint8_t pos) {
-        return setErrorIf(_insn.emitUint16Be(data, pos));
-    }
-
-    /** Generate 16 bit little endian |data| at |pos| (Assembler). */
-    Error emitUint16Le(uint16_t data, uint8_t pos) {
-        return setErrorIf(_insn.emitUint16Le(data, pos));
-    }
-
-    /** Generate 32 bit big endian |data| (Assembler). */
-    Error emitUint32Be(uint32_t data) { return setErrorIf(_insn.emitUint32Be(data)); }
-
-    /** Generate 32 bit little endian |data| (Assembler). */
-    Error emitUint32Le(uint32_t data) { return setErrorIf(_insn.emitUint32Le(data)); }
-
-    /** Generate 32 bit big endian |data| at |pos| (Assembler). */
-    Error emitUint32Be(uint32_t data, uint8_t pos) {
-        return setErrorIf(_insn.emitUint32Be(data, pos));
-    }
-
-    /** Generate 32 bit little endian |data| at |pos| (Assembler). */
-    Error emitUint32Le(uint32_t data, uint8_t pos) {
-        return setErrorIf(_insn.emitUint32Le(data, pos));
-    }
-
-    /** Generate 64 bit big endian |data| (Assembler). */
-    Error emitUint64Be(uint64_t data) { return setErrorIf(_insn.emitUint64Be(data)); }
-
-    /** Generate 64 bit little endian |data| (Assembler). */
-    Error emitUint64Le(uint64_t data) { return setErrorIf(_insn.emitUint64Le(data)); }
-
-    /** Generate 64 bit big endian |data| at |pos| (Assembler). */
-    Error emitUint64Be(uint64_t data, uint8_t pos) {
-        return setErrorIf(_insn.emitUint64Be(data, pos));
-    }
-
-    /** Generate 64 bit little endian |data| at |pos| (Assembler). */
-    Error emitUint64Le(uint64_t data, uint8_t pos) {
-        return setErrorIf(_insn.emitUint64Le(data, pos));
     }
 
     /** Generate 32 bit big endian floating point |data|(Assembler). */
@@ -308,8 +227,100 @@ struct AsmInsnBase : ErrorAt {
         return emitUint64Le(bytes.data64, pos);
     }
 
-protected:
+private:
+    uint32_t _address;
+    uint8_t _length;
+
+    static constexpr size_t MAX_NAME = 11;
+    char _name[MAX_NAME + 1];
+    StrBuffer _buffer{_name, sizeof(_name)};
+
+    static constexpr size_t MAX_CODE = 64;
+    uint8_t _bytes[MAX_CODE];
+};
+
+/**
+ * Base for assembler instruction code.
+ */
+struct AsmInsnBase : ErrorAt {
     AsmInsnBase(Insn &insn) : ErrorAt(), _insn(insn) {}
+
+    uint32_t address() const { return _insn.address(); }
+    const uint8_t *bytes() const { return _insn.bytes(); }
+    uint8_t length() const { return _insn.length(); }
+    const char *name() const { return _insn.name(); }
+    StrBuffer &nameBuffer() { return _insn.nameBuffer(); }
+
+    void reset(uint32_t addr) {
+        resetError();
+        _insn.reset(addr);
+    }
+
+    /** Generate 8 bit |data| (Assembler). */
+    Error emitByte(uint8_t data) { return _insn.emitByte(data); }
+
+    /** Generate 8 bit |data| at |pos| (Assembler). */
+    Error emitByte(uint8_t data, uint8_t pos) { return _insn.emitByte(data, pos); }
+
+    /** Generate 16 bit big endian |data| (Assembler). */
+    Error emitUint16Be(uint16_t data) { return _insn.emitUint16Be(data); }
+
+    /** Generate 16 bit little endian |data| (Assembler). */
+    Error emitUint16Le(uint16_t data) { return _insn.emitUint16Le(data); }
+
+    /** Generate 16 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint16Be(uint16_t data, uint8_t pos) { return _insn.emitUint16Be(data, pos); }
+
+    /** Generate 16 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint16Le(uint16_t data, uint8_t pos) { return _insn.emitUint16Le(data, pos); }
+
+    /** Generate 32 bit big endian |data| (Assembler). */
+    Error emitUint32Be(uint32_t data) { return _insn.emitUint32Be(data); }
+
+    /** Generate 32 bit little endian |data| (Assembler). */
+    Error emitUint32Le(uint32_t data) { return _insn.emitUint32Le(data); }
+
+    /** Generate 32 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint32Be(uint32_t data, uint8_t pos) { return _insn.emitUint32Be(data, pos); }
+
+    /** Generate 32 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint32Le(uint32_t data, uint8_t pos) { return _insn.emitUint32Le(data, pos); }
+
+    /** Generate 64 bit big endian |data| (Assembler). */
+    Error emitUint64Be(uint64_t data) { return _insn.emitUint64Be(data); }
+
+    /** Generate 64 bit little endian |data| (Assembler). */
+    Error emitUint64Le(uint64_t data) { return _insn.emitUint64Le(data); }
+
+    /** Generate 64 bit big endian |data| at |pos| (Assembler). */
+    Error emitUint64Be(uint64_t data, uint8_t pos) { return _insn.emitUint64Be(data, pos); }
+
+    /** Generate 64 bit little endian |data| at |pos| (Assembler). */
+    Error emitUint64Le(uint64_t data, uint8_t pos) { return _insn.emitUint64Le(data, pos); }
+
+    /** Generate 32 bit big endian floating point |data|(Assembler). */
+    Error emitFloat32Be(float data) { return _insn.emitFloat32Be(data); }
+
+    /** Generate 32 bit little endian floating point |data| (Assembler). */
+    Error emitFloat32Le(float data) { return _insn.emitFloat32Le(data); }
+
+    /** Generate 32 bit big endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat32Be(float data, uint8_t pos) { return _insn.emitFloat32Be(data, pos); }
+
+    /** Generate 32 bit little endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat32Le(float data, uint8_t pos) { return _insn.emitFloat32Le(data, pos); }
+
+    /** Generate 64 bit big endian floating point |data| (Assembler). */
+    Error emitFloat64Be(double data) { return _insn.emitFloat64Be(data); }
+
+    /** Generate 64 bit little endian floating point |data| (Assembler). */
+    Error emitFloat64Le(double data) { return _insn.emitFloat64Le(data); }
+
+    /** Generate 64 bit big endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat64Be(double data, uint8_t pos) { return _insn.emitFloat64Be(data, pos); }
+
+    /** Generate 64 bit little endian floating point |data| at |pos| (Assembler). */
+    Error emitFloat64Le(double data, uint8_t pos) { return _insn.emitFloat64Le(data, pos); }
 
 private:
     Insn &_insn;

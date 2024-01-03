@@ -14,6 +14,25 @@
  * limitations under the License.
  */
 
+#include <math.h>
+#include <stdlib.h>
+
+#ifndef powl
+#define powl(a, b) pow(a, b)
+#endif
+#ifndef log10l
+#define log10l(a) log10(a)
+#endif
+#ifndef log2l
+#define log2l(a) (log10(a) / log10(2))
+#endif
+#ifndef strtold
+#define strtold(a, b) strtod(a, b)
+#endif
+#ifndef modfl
+#define modfl(a, b) modf(a, b)
+#endif
+
 #include "asm_base.h"
 
 #include "text_common.h"
@@ -217,10 +236,10 @@ Error Assembler::alignOrigin(StrScanner &scan, Insn &insn, uint8_t step) {
 }
 
 Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) {
-    const auto type = static_cast<DataType>(dataType);
-    const auto align = (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2);
+    const auto align = (dataType & DATA_ALIGN2) != 0;
     if (align && insn.address() % 2)
         insn.align(2);
+    const auto type = static_cast<DataType>(dataType & ~DATA_ALIGN2);
     auto p = scan;
     ErrorAt error;
     auto value = parseExpr(p, error);
@@ -232,11 +251,9 @@ Error Assembler::allocateSpaces(StrScanner &scan, Insn &insn, uint8_t dataType) 
     uint8_t unit;
     switch (type) {
     case DATA_WORD:
-    case DATA_WORD_ALIGN2:
         unit = sizeof(uint16_t);
         break;
     case DATA_LONG:
-    case DATA_LONG_ALIGN2:
         unit = sizeof(uint32_t);
         break;
     default:
@@ -289,7 +306,7 @@ Error Assembler::defineString(StrScanner &scan, Insn &insn, uint8_t stringType) 
         scan = p;
     } while (scan.skipSpaces().expect(','));
 
-    return insn.setErrorIf(error);
+    return insn.setError(error);
 }
 
 /**
@@ -323,12 +340,46 @@ Error Assembler::isString(StrScanner &scan, ErrorAt &error) const {
     return error.getError();
 }
 
-Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
-    const auto type = static_cast<DataType>(dataType);
-    // Do alignment if requested.
-    if (type == DATA_WORD_ALIGN2 || type == DATA_LONG_ALIGN2)
-        setCurrentLocation(insn.align(2));
+void Assembler::generateString(
+        StrScanner &scan, const StrScanner &end, Insn &insn, DataType type, ErrorAt &error) const {
+    // a string surrounded by string delimiters
+    parser().stringPrefix(scan);  // skip prefix if exists
+    const auto delim = parser().stringDelimiter(scan);
+    uint8_t count = 0;
+    while (scan.str() < end.str()) {
+        const auto at = scan;
+        ErrorAt err;
+        const auto c = parser().readLetter(scan, err, delim);
+        error.setErrorIf(at, insn.emitByte(c));
+        count++;
+    }
+    scan = end;
+    parser().stringDelimiter(scan);  // skip closing delimiter
+    // emit padding bytes
+    switch (type) {
+    case DATA_WORD:
+        if (count % 2)
+            error.setErrorIf(scan, insn.emitByte(0));
+        break;
+    case DATA_LONG:
+    case DATA_FLOAT32_LONG:
+        while (count % 4) {
+            error.setErrorIf(scan, insn.emitByte(0));
+            count++;
+        }
+        break;
+    default:
+        if (config().addressUnit() == ADDRESS_WORD && count % 2)
+            error.setErrorIf(scan, insn.emitByte(0));
+        break;
+    }
+}
 
+Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
+    // Do alignment if requested.
+    if (dataType & DATA_ALIGN2)
+        setCurrentLocation(insn.align(2));
+    const auto type = static_cast<DataType>(dataType & ~DATA_ALIGN2);
     const auto big = config().endian() == ENDIAN_BIG;
     const auto hasString = !(type == DATA_BYTE_NO_STRING || type == DATA_WORD_NO_STRING);
     ErrorAt error;
@@ -336,37 +387,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         auto p = scan.skipSpaces();
         ErrorAt strErr;
         if (hasString && isString(p, strErr) == OK) {
-            // a string surrounded by string delimiters
-            parser().stringPrefix(scan);  // skip prefix if exists
-            const auto delim = parser().stringDelimiter(scan);
-            uint8_t count = 0;
-            while (scan.str() < p.str()) {
-                const auto at = scan;
-                const auto c = parser().readLetter(scan, strErr, delim);
-                error.setErrorIf(at, insn.emitByte(c));
-                count++;
-            }
-            parser().stringDelimiter(p);  // skip closing delimiter
-            scan = p;
-            // emit padding bytes
-            switch (type) {
-            case DATA_WORD:
-            case DATA_WORD_ALIGN2:
-                if (count % 2)
-                    error.setErrorIf(p, insn.emitByte(0));
-                break;
-            case DATA_LONG:
-            case DATA_LONG_ALIGN2:
-                while (count % 4) {
-                    error.setErrorIf(p, insn.emitByte(0));
-                    count++;
-                }
-                break;
-            default:
-                if (config().addressUnit() == ADDRESS_WORD && count % 2)
-                    error.setErrorIf(p, insn.emitByte(0));
-                break;
-            }
+            generateString(scan, p, insn, type, error);
             continue;
         }
 
@@ -374,19 +395,17 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         ErrorAt exprErr;
         const auto value = parseExpr(p, exprErr);
         if (!endOfLine(p.skipSpaces()) && *p != ',')
-            exprErr.setErrorIf(scan, ILLEGAL_CONSTANT);
+            exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
         if (!exprErr.hasError()) {
             auto v = value.getUnsigned();
             switch (type) {
             case DATA_LONG:
-            case DATA_LONG_ALIGN2:
                 error.setErrorIf(at, big ? insn.emitUint32Be(v) : insn.emitUint32Le(v));
                 break;
             case DATA_BYTE_IN_WORD:
                 v &= 0xFF;
                 // Fall-through
             case DATA_WORD:
-            case DATA_WORD_ALIGN2:
             case DATA_WORD_NO_STRING:
             emit_word:
                 error.setErrorIf(at, big ? insn.emitUint16Be(v) : insn.emitUint16Le(v));
@@ -407,7 +426,175 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         return insn.setError(strErr.getError() ? strErr : exprErr);
     } while (scan.skipSpaces().expect(','));
 
-    return insn.setErrorIf(error);
+    return insn.setError(error);
+}
+
+namespace {
+auto convert2pbcd(uint64_t bin, uint8_t digits) {
+    uint64_t pbcd = 0;
+    uint8_t shift = 0;
+    while (digits-- > 0) {
+        pbcd |= (bin % 10) << shift;
+        bin /= 10;
+        shift += 4;
+    }
+    return pbcd;
+}
+}  // namespace
+
+void Assembler::generateFloat80Le(bool negative, long double value, Insn &insn) const {
+    if (negative)
+        value = -value;
+    const uint16_t sign = negative ? 0x8000 : 0;
+    if (isinf(value)) {
+        insn.emitUint64Le(0);
+        insn.emitUint16Le(sign | 0x7FFF);
+    } else if (isnan(value)) {
+        insn.emitUint64Le(static_cast<uint64_t>(1) << 63);
+        insn.emitUint16Le(sign | 0x7FFF);
+    } else {
+        const int16_t exponent = log2l(value);
+        const auto significand = value / powl(2.0, exponent);
+        insn.emitUint64Le(significand * powl(2.0, 63));
+        insn.emitUint16Le(sign | (exponent + 16383));
+    }
+}
+
+void Assembler::generateFloat96Be(
+        bool negative, long double value, AsmInsnBase &insn, uint8_t pos, DataType type) const {
+    if (negative)
+        value = -value;
+    uint16_t sign = negative ? 0x8000 : 0;
+    if (isinf(value)) {
+        insn.emitUint16Be(sign | 0x7FFF, pos);
+        insn.emitUint16Be(0, pos += 2);
+        insn.emitUint64Be(0, pos += 2);
+    } else if (isnan(value)) {
+        insn.emitUint16Be(sign | 0x7FFF, pos);
+        insn.emitUint16Be(0, pos += 2);
+        insn.emitUint64Be(static_cast<uint64_t>(1) << 63, pos += 2);
+    } else if (type == DATA_FLOAT96) {
+        const int16_t exponent = log2l(value);
+        const auto significand = value / powl(2.0, exponent);
+        insn.emitUint16Be(sign | (exponent + 16383), pos);
+        insn.emitUint16Be(0, pos += 2);
+        insn.emitUint64Be(significand * powl(2.0, 63), pos += 2);
+    } else if (type == DATA_PACKED_BCD96) {
+        int16_t exponent = log10l(value);
+        if (exponent < 0 || (exponent == 0 && value < 1.0))
+            --exponent;
+        uint8_t digit = value * powl(10.0, -exponent);
+        value *= powl(10.0, 16 - exponent);
+        if (exponent < 0) {
+            sign |= 0x4000;
+            exponent = -exponent;
+        }
+        insn.emitUint16Be(sign | convert2pbcd(exponent, 3), pos);
+        insn.emitUint16Be(digit, pos += 2);
+        insn.emitUint64Be(convert2pbcd(value, 16), pos += 2);
+    }
+}
+
+Error Assembler::defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataType) {
+    // Do alignment if requested.
+    if (dataType & DATA_ALIGN2)
+        setCurrentLocation(insn.align(2));
+    const auto type = static_cast<DataType>(dataType & ~DATA_ALIGN2);
+    const auto big = config().endian() == ENDIAN_BIG;
+    const auto hasString = (type == DATA_FLOAT32_LONG);
+    ErrorAt error;
+    do {
+        auto p = scan.skipSpaces();
+        ErrorAt strErr;
+        if (hasString && isString(p, strErr) == OK) {
+            generateString(scan, p, insn, type, error);
+            continue;
+        }
+
+        const auto at = p;
+        const auto negative = p.expect('-') != 0;
+        ErrorAt exprErr;
+        long double value = 0;
+        uint64_t val64 = parseExpr(p, exprErr).getUnsigned();
+        const auto fpnum = (*p == '.' || *p == 'e' || *p == 'E');
+        auto integer = exprErr.isOK() && !fpnum;
+        if (!integer) {
+            exprErr.setOK();
+            p = at;
+            p.expect('-');
+            const auto error = Value::parseNumber(p, RADIX_10, val64);
+            integer = (error == OK && !fpnum);
+            if (integer) {
+                value = negative ? -static_cast<int64_t>(val64) : val64;
+            } else {
+                char *end;
+                value = strtold(at.str(), &end);
+                if (end == at.str())
+                    exprErr.setError(at, ILLEGAL_CONSTANT);
+                p = end;
+            }
+        }
+        if (!endOfLine(p.skipSpaces()) && *p != ',')
+            exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
+        if (!exprErr.hasError()) {
+            switch (type) {
+            case DATA_FLOAT32_LONG:
+                if (integer && val64 <= UINT32_MAX) {
+                    if (negative)
+                        val64 = -static_cast<int64_t>(val64);
+                    big ? insn.emitUint32Be(val64) : insn.emitUint32Le(val64);
+                    break;
+                }
+                /* Fall-through */
+            case DATA_FLOAT32:
+                big ? insn.emitFloat32Be(value) : insn.emitFloat32Le(value);
+                break;
+            case DATA_FLOAT64_QUAD:
+                if (integer) {
+                    if (negative)
+                        val64 = -static_cast<int64_t>(val64);
+                    big ? insn.emitUint64Be(val64) : insn.emitUint64Le(val64);
+                    break;
+                }
+                /* Fall-through */
+            case DATA_FLOAT64:
+                big ? insn.emitFloat64Be(value) : insn.emitFloat64Le(value);
+                break;
+            case DATA_FLOAT80_BCD:
+                if (integer && val64 <= 1e18 - 1) {  // i8087
+                    for (auto i = 0; i < 9; ++i) {
+                        uint8_t d = val64 % 10;
+                        val64 /= 10;
+                        d |= (val64 % 10) << 4;
+                        val64 /= 10;
+                        insn.emitByte(d);
+                    }
+                    const uint8_t sign = negative ? 0x80 : 0;
+                    insn.emitByte(sign);
+                } else if (!big) {  // i8087
+                    generateFloat80Le(negative, value, insn);
+                }
+                break;
+            case DATA_FLOAT96:
+            case DATA_PACKED_BCD96:
+                if (big) {  // MC68881
+                    AsmInsnBase i{insn};
+                    generateFloat96Be(negative, value, i, insn.length(), type);
+                }
+                break;
+            default:
+                break;
+            }
+            if (insn.getError())
+                error.setErrorIf(at, insn);
+            scan = p;
+            continue;
+        }
+
+        return insn.setError(strErr.getError() ? strErr : exprErr);
+    } while (scan.skipSpaces().expect(','));
+
+    return insn.setError(error);
 }
 
 Error OptionBase::parseBoolOption(StrScanner &scan, bool &value, const Assembler &assembler) {

@@ -44,19 +44,23 @@ constexpr char TEXT_dBLKB[]   PROGMEM = ".blkb";
 constexpr char TEXT_dBLKD[]   PROGMEM = ".blkd";
 constexpr char TEXT_dBLKW[]   PROGMEM = ".blkw";
 constexpr char TEXT_dDOUBLE[] PROGMEM = ".double";
+constexpr char TEXT_dFLOAT[]  PROGMEM = ".float";
+constexpr char TEXT_dLONG[]   PROGMEM = ".long";
 constexpr char TEXT_dSPACE[]  PROGMEM = ".space";
 
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_dALIGN,  &Assembler::alignOrigin},
-    {TEXT_dASCII,  &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_dBLKB,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_dBLKD,   &Assembler::allocateSpaces,     Assembler::DATA_LONG},
-    {TEXT_dBLKW,   &Assembler::allocateSpaces,     Assembler::DATA_WORD},
-    {TEXT_dBYTE,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_dDOUBLE, &Assembler::defineDataConstant, Assembler::DATA_LONG},
+    {TEXT_dASCII,  &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
+    {TEXT_dBLKB,   &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_dBLKD,   &Assembler::allocateSpaces,      Assembler::DATA_LONG},
+    {TEXT_dBLKW,   &Assembler::allocateSpaces,      Assembler::DATA_WORD},
+    {TEXT_dBYTE,   &Assembler::defineDataConstant,  Assembler::DATA_BYTE},
+    {TEXT_dDOUBLE, &Assembler::defineDataConstant,  Assembler::DATA_LONG},
+    {TEXT_dFLOAT,  &Assembler::defineFloatConstant, Assembler::DATA_FLOAT32},
+    {TEXT_dLONG,   &Assembler::defineFloatConstant, Assembler::DATA_FLOAT64},
     {TEXT_dORG,    &Assembler::defineOrigin},
-    {TEXT_dSPACE,  &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_dWORD,   &Assembler::defineDataConstant, Assembler::DATA_WORD},
+    {TEXT_dSPACE,  &Assembler::allocateSpaces,      Assembler::DATA_BYTE},
+    {TEXT_dWORD,   &Assembler::defineDataConstant,  Assembler::DATA_WORD},
 };
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
