@@ -35,7 +35,7 @@ const char OPT_DESC_EXTERNAL_PAREN[] PROGMEM = "disp2(disp(ext)) as external add
 const char OPT_BOOL_STROPT_BRACKET[] PROGMEM = "stropt-bracket";
 const char OPT_DESC_STROPT_BRACKET[] PROGMEM = "string instruction operand in []";
 const char OPT_BOOL_FLOAT_PREFIX[] PROGMEM = "float-prefix";
-const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float constant prefix 0f (default none)";
+const char OPT_DESC_FLOAT_PREFIX[] PROGMEM = "float prefix 0F/0L (default none)";
 
 }  // namespace
 
@@ -223,7 +223,7 @@ void DisNs32000::decodeImmediate(DisInsn &insn, StrBuffer &out, AddrMode mode) c
         if (size == SZ_OCTA) {
             const auto float64 = insn.readFloat64Be();
             if (_floatPrefix)
-                out.letter('0').letter('f');
+                out.letter('0').letter('l');
             out.float64(float64);
         } else {
             const auto float32 = insn.readFloat32Be();

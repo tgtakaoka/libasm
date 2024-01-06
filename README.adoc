@@ -1,4 +1,4 @@
-`image:https://img.shields.io/github/v/release/tgtakaoka/libasm.svg?maxAge=3600[https://github.com/tgtakaoka/libasm/releases]
+image:https://img.shields.io/github/v/release/tgtakaoka/libasm.svg?maxAge=3600[https://github.com/tgtakaoka/libasm/releases]
 image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[https://github.com/tgtakaoka/libasm/blob/main/LICENSE.md]
 image:https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml/badge.svg[link="https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml"]
 image:https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml/badge.svg[https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml]
@@ -165,7 +165,7 @@ usage: dis -C <CPU> [-o <output>] [-l <list>] <input>
   pcrel-paren     : addr(pc) as program counter relative  (bool, 32032)
   external-paren  : disp2(disp(ext)) as external addressing  (bool, 32032)
   stropt-bracket  : string instruction operand in []  (bool, 32032)
-  float-prefix    : float constant prefix 0f (default none)  (bool, 32032)
+  float-prefix    : float prefix 0F/0L (default none)  (bool, 32032)
 ----
 
 == Supported host environment ==
