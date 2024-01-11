@@ -32,7 +32,7 @@ ARDUINO_FLAGS += --no-color
 endif
 endif
 
-PIO_CI_FLAGS = -l ~/libcli
+PIO_CI_FLAGS = -l ~/.platformio/lib/libcli
 ARDUINO_CI_FLAGS = --warnings all --library $(CURDIR)/../../
 
 ENVS = $(shell grep -Po '^\[env:\K[^]]+' platformio.ini)
