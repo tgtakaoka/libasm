@@ -104,7 +104,7 @@ const struct : Functor {
     int8_t nargs() const override { return 1; }
     Error eval(ValueStack &stack, uint8_t) const override {
         // Mark that this is 2 bytes value.
-        stack.pushUnsigned(stack.pop().getUnsigned() | 0x10000);
+        stack.pushUnsigned((stack.pop().getUnsigned() & 0xFFFF) | 0x10000);
         return OK;
     }
 } FN_A;

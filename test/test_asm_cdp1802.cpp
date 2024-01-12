@@ -795,6 +795,8 @@ static void test_usereg() {
 static void test_data_constant() {
     TEST("DC -128, 255",   0x80, 0xFF);
     TEST("DC -129, 256",   0xFF, 0x7F, 0x01, 0x00);
+    TEST("DC A(-128), A(255)", 0xFF, 0x80, 0x00, 0xFF);
+    TEST("DC A(-129), A(256)", 0xFF, 0x7F, 0x01, 0x00);
     TEST("DC A(0)",        0x00, 0x00);
     TEST("DC A.1(A(0))",   0x00);
     TEST("DC A.1(x'100')", 0x01);
