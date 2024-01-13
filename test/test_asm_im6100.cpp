@@ -685,6 +685,7 @@ void test_data_constant() {
     TEST("DUBL  8388608", 04000, 00000);
     TEST("DUBL -8388608", 04000, 00000);
     TEST("           10", 00010);
+    ERUS("DUBL UNDEF", "UNDEF", 0, 0);
 
     TEST("\"A", 'A'|0200);
     TEST("\"Z", 'Z'|0200);

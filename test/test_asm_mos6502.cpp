@@ -1111,6 +1111,8 @@ static void test_data_constant() {
     TEST(".WORD 'X'+0",     0x58, 0x00);
     TEST(".WORD 'A''B'",    0x41, 0x27, 0x42, 0x00);
     ERRT(".WORD 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
+    ERUS(".BYTE 1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS(".WORD 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
 
     TEST("FCB -128, 255", 0x80, 0xFF);
     TEST("FCB 'A', '\"'", 0x41, 0x22);
@@ -1124,6 +1126,8 @@ static void test_data_constant() {
     TEST("FCB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
     ERRT("FCB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
     TEST("FDB -128, 255", 0x80, 0xFF, 0xFF, 0x00);
+    ERUS("FCB 1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS("FDB 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
 
     ERRT(".BYTE '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

@@ -476,6 +476,9 @@ void test_data_constant() {
     TEST("TEXT 'X'",       0x58);
     TEST("TEXT 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
     ERRT("TEXT 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+    ERUS("BYTE 1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS("DATA 1, UNDEF", "UNDEF", 0x00, 0x01, 0x00, 0x00);
+    ERUS("TEXT 1, UNDEF", "UNDEF", 0x01, 0x00);
 
     ERRT("TEXT '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

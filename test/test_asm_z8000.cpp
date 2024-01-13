@@ -2671,7 +2671,10 @@ static void test_data_constant() {
     BTEST("long %12345678",  0x12, 0x34, 0x56, 0x78);
     BTEST("long 'A%QB%22C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
     ERRT("long 'A%QB%22C",   MISSING_CLOSING_QUOTE, "'A%QB%22C");
-
+    BERRT("byte 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00);
+    BERRT("word 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x00, 0x01, 0x00, 0x00);
+    BERRT("long 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00);
+    
     BERRT("byte '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
          "1234567890'",

@@ -534,6 +534,9 @@ static void test_data_constant() {
     BTEST(".long \"ABC\"",      0x41, 0x42, 0x43, 0x00);
     BTEST(".string \"A\"\"B\"", 0x41, 0x22, 0x42, 0x00);
     ERRT(".string \"A\"\"B",   MISSING_CLOSING_DQUOTE, "\"A\"\"B");
+    BERRT(".byte 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    BERRT(".word 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    BERRT(".long 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 
     BERRT(".string \""
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

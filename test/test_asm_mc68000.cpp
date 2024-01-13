@@ -4496,6 +4496,9 @@ static void test_data_constant() {
     BTEST("DC.L 'X'+0",     0x00, 0x00, 0x00, 0x58);
     BTEST("DC.L 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
     ERRT("DC.L 'A''B\"C",   MISSING_CLOSING_QUOTE, "'A''B\"C");
+    BERRT("DC.B 1, UNDEF", UNDEFINED_SYMBOL, "UNDEF", 0x01, 0x00);
+    ERUS( "DC.W 1, UNDEF", "UNDEF", 0x0001, 0x0000);
+    ERUS( "DC.L 1, UNDEF", "UNDEF", 0x0000, 0x0001, 0x0000, 0x0000);
 
     ERRT("DC.B '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

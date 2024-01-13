@@ -400,7 +400,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
             auto v = value.getUnsigned();
             switch (type) {
             case DATA_LONG:
-                error.setErrorIf(at, big ? insn.emitUint32Be(v) : insn.emitUint32Le(v));
+                big ? insn.emitUint32Be(v) : insn.emitUint32Le(v);
                 break;
             case DATA_BYTE_IN_WORD:
                 v &= 0xFF;
@@ -408,7 +408,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
             case DATA_WORD:
             case DATA_WORD_NO_STRING:
             emit_word:
-                error.setErrorIf(at, big ? insn.emitUint16Be(v) : insn.emitUint16Le(v));
+                big ? insn.emitUint16Be(v) : insn.emitUint16Le(v);
                 break;
             case DATA_BYTE_OR_WORD:
                 if (value.overflowUint8())
@@ -416,11 +416,14 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
                 goto emit_byte;
             default:  // DATA_BYTE, DATA_BYTE_NO_STRING
             emit_byte:
-                error.setErrorIf(at, insn.emitByte(v));
+                insn.emitByte(v);
                 break;
             }
+            if (insn.getError())
+                error.setErrorIf(at, insn);
             scan = p;
-            continue;
+            if (exprErr.isOK())
+                continue;
         }
 
         return insn.setError(strErr.getError() ? strErr : exprErr);
@@ -519,18 +522,21 @@ Error Assembler::defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataT
         const auto fpnum = (*p == '.' || *p == 'e' || *p == 'E');
         auto integer = exprErr.isOK() && !fpnum;
         if (!integer) {
-            exprErr.setOK();
             p = at;
             p.expect('-');
             const auto error = Value::parseNumber(p, RADIX_10, val64);
             integer = (error == OK && !fpnum);
             if (integer) {
                 value = negative ? -static_cast<int64_t>(val64) : val64;
+                exprErr.setOK();
             } else {
                 char *end;
                 value = strtold(at.str(), &end);
-                if (end == at.str())
+                if (end != at.str()) {
+                    exprErr.setOK();
+                } else if (exprErr.hasError()) {
                     exprErr.setError(at, ILLEGAL_CONSTANT);
+                }
                 p = end;
             }
         }
@@ -588,7 +594,8 @@ Error Assembler::defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataT
             if (insn.getError())
                 error.setErrorIf(at, insn);
             scan = p;
-            continue;
+            if (exprErr.isOK())
+                continue;
         }
 
         return insn.setError(strErr.getError() ? strErr : exprErr);

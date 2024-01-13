@@ -213,16 +213,14 @@ Error AsmIns8060::parseOperand(StrScanner &scan, Operand &op) const {
 Error AsmIns8060::defineAddrConstant(StrScanner &scan, Insn &insn) {
     do {
         auto p = scan.skipSpaces();
-        ErrorAt error;
-        const auto value = parseExpr(p, error);
-        if (error.getError())
-            return insn.setError(error);
+        const auto value = parseExpr(p, insn);
+        if (insn.hasError())
+            break;
         const auto v = value.getUnsigned();
         insn.emitUint16Le(page(v) | offset(v - 1));
         scan = p;
-    } while (scan.skipSpaces().expect(','));
-
-    return OK;
+    } while (scan.skipSpaces().expect(',') && insn.isOK());
+    return insn.getError();
 }
 
 Error AsmIns8060::processPseudo(StrScanner &scan, Insn &insn) {

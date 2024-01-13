@@ -31,10 +31,6 @@ namespace {
 // clang-format off
 constexpr Pseudo PSEUDOS[] PROGMEM = {
     {TEXT_DB,   &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DEFB, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DEFM, &Assembler::defineDataConstant, Assembler::DATA_BYTE},
-    {TEXT_DEFS, &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
-    {TEXT_DEFW, &Assembler::defineDataConstant, Assembler::DATA_WORD},
     {TEXT_DL,   &Assembler::defineDataConstant, Assembler::DATA_LONG},
     {TEXT_DS,   &Assembler::allocateSpaces,     Assembler::DATA_BYTE},
     {TEXT_DW,   &Assembler::defineDataConstant, Assembler::DATA_WORD},

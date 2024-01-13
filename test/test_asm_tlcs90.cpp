@@ -1836,17 +1836,9 @@ static void test_data_constant() {
     TEST("DL 12345678H", 0x78, 0x56, 0x34, 0x12);
     TEST("DL 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
     ERRT("DL 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
-    TEST("DEFB -128, 255", 0x80, 0xFF);
-    TEST("DEFB 'A', '\"'", 0x41, 0x22);
-    TEST("DEFB '9'-'0'",   0x09);
-    TEST("DEFB ''''",      0x27);
-    ERRT("DEFB '''",       MISSING_CLOSING_QUOTE, "'''");
-    TEST("DEFB 'A''B',0",  0x41, 0x27, 0x42, 0x00);
-    ERRT("DEFB 'A''B,0",   MISSING_CLOSING_QUOTE, "'A''B,0");
-    TEST("DEFW -128, 255", 0x80, 0xFF, 0xFF, 0x00);
-    TEST("DEFW 'A''B'",    0x41, 0x27, 0x42, 0x00);
-    ERRT("DEFW 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
-    TEST("DEFM 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43);
+    ERUS("DB 1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS("DW 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    ERUS("DL 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 
     ERRT("DB '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

@@ -622,7 +622,7 @@ static void test_undef() {
 
 static void test_data_constant() {
     TEST("DCB -128, 255", 0x80, 0xFF);
-    TEST("DcB 'A', '\"'", 0x41, 0x22);
+    TEST("DCB 'A', '\"'", 0x41, 0x22);
     TEST("DCB '9'-'0'",   0x09);
     TEST("DCB ''''",      0x27);
     ERRT("DCB '''",       MISSING_CLOSING_QUOTE, "'''");
@@ -634,6 +634,9 @@ static void test_data_constant() {
     TEST("DCL 12345678H", 0x78, 0x56, 0x34, 0x12);
     TEST("DCL 'A''B\"C'", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
     ERRT("DCL 'A''B\"C",  MISSING_CLOSING_QUOTE, "'A''B\"C");
+    ERUS("DCB 1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS("DCW 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    ERUS("DCL 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 
     ERRT("DCB '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

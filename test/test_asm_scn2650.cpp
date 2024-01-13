@@ -729,11 +729,13 @@ static void test_error() {
 static void test_data_constant() {
     TEST("DATA -128,255",  0x80, 0xFF);
     TEST("DATA -129,256",  0x7F, 0x00);
-    TEST("ACON 0",         0x00, 0x00);
+    TEST("ACON 1",         0x00, 0x01);
     TEST("DATA A'TE''XT'", 0x54, 0x45, 0x27, 0x58, 0x54);
     TEST("ALIT A'TE\"XT'", 0x54, 0x45, 0x22, 0x58, 0x54);
     TEST("DATA 'TE\"XT'",  0x54, 0x45, 0x22, 0x58, 0x54);
     TEST("ALIT 'TE''XT'",  0x54, 0x45, 0x27, 0x58, 0x54);
+    ERUS("DATA 1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS("ACON 1, UNDEF", "UNDEF", 0x00, 0x01, 0x00, 0x00);
 
     ERRT("DATA A'"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

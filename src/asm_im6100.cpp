@@ -143,7 +143,7 @@ Error AsmIm6100::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra
     const auto save = NUMBER_PARSER.radix();
     NUMBER_PARSER.setRadix(RADIX_10);
     const auto val24 = parseExpr(scan, insn).getUnsigned();
-    if (insn.isOK()) {
+    if (!insn.hasError()) {
         insn.setErrorIf(insn.emitUint16Be((val24 >> 12) & 07777));
         insn.setErrorIf(insn.emitUint16Be(val24 & 07777));
     }

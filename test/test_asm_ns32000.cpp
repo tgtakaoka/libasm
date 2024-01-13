@@ -784,6 +784,9 @@ static void test_data_constant() {
     TEST(".double \"X\"",        0x58, 0x00, 0x00, 0x00);
     TEST(".double \"A'B\\\"C\"", 0x41, 0x27, 0x42, 0x22, 0x43, 0x00, 0x00, 0x00);
     ERRT(".double \"A'B\\\"C",   MISSING_CLOSING_DQUOTE, "\"A'B\\\"C");
+    ERUS(".byte   1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS(".word   1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    ERUS(".double 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 
     ERRT(".ascii \""
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"

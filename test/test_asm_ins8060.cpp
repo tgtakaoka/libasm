@@ -309,6 +309,9 @@ static void test_data_constant() {
     ERRT(".dbyte 'A''B",     MISSING_CLOSING_QUOTE, "'A''B");
     TEST(".addr  x'0100",    0xFF, 0x00);
     TEST(".addr  x'1000",    0xFF, 0x1F);
+    ERUS(".byte  1, UNDEF", "UNDEF", 0x01, 0x00);
+    ERUS(".dbyte 1, UNDEF", "UNDEF", 0x01, 0x00, 0x00, 0x00);
+    ERUS(".addr  2, UNDEF", "UNDEF", 0x01, 0x00, 0xFF, 0x0F);
     
     ERRT(".byte '"
          "1234567890" "1234567890" "1234567890" "1234567890" "1234567890" "1234567890"
