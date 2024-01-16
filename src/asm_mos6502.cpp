@@ -228,7 +228,7 @@ Error AsmMos6502::selectMode(
         op.mode = abs;
     } else if (size == '<') {
         op.mode = zp;
-    } else if (op.val32 >= 0x10000L) {
+    } else if (op.val32 >= 0x10000L && op.isOK()) {
         op.mode = labs;
     } else {
         op.mode = (op.val32 < 0x100) ? zp : abs;

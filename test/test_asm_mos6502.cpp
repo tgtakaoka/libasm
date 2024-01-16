@@ -1003,6 +1003,8 @@ static void test_undef() {
     ERUS("LDX  UNDEF,Y", "UNDEF,Y", 0xB6, 0x00);
     ERUS("LDX <UNDEF,Y", "UNDEF,Y", 0xB6, 0x00);
     ERUS("LDX >UNDEF,Y", "UNDEF,Y", 0xBE, 0x00, 0x00);
+    ERUS("LDA  UNDEF-2,X", "UNDEF-2,X", 0xBD, 0xFE, 0xFF);
+    ERUS("LDA  UNDEF+2,Y", "UNDEF+2,Y", 0xB9, 0x02, 0x00);
     ERUS("LDA  (UNDEF,X)", "UNDEF,X)", 0xA1, 0x00);
     ERUS("LDA (<UNDEF,X)", "UNDEF,X)", 0xA1, 0x00);
     ERUS("LDA  (UNDEF),Y", "UNDEF),Y", 0xB1, 0x00);
