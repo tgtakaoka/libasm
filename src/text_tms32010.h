@@ -95,7 +95,7 @@ extern const char TEXT_ZALS[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_TMS32010__
+#endif  // __LIBASM_TEXT_TMS32010__
 
 // Local Variables:
 // mode: c++

@@ -112,7 +112,7 @@ extern const char TEXT_WSR[]  PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_IM6100__
+#endif  // __LIBASM_TEXT_IM6100__
 
 // Local Variables:
 // mode: c++

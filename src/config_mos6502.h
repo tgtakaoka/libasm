@@ -43,7 +43,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_24BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace mos6502
 }  // namespace libasm
 
-#endif  // __CONFIG_MOS6502_H__
+#endif  // __LIBASM_CONFIG_MOS6502_H__
 
 // Local Variables:
 // mode: c++

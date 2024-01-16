@@ -40,7 +40,7 @@ extern const TableMos6502 TABLE;
 }  // namespace mos6502
 }  // namespace libasm
 
-#endif  // __TABLE_MOS6502_H__
+#endif  // __LIBASM_TABLE_MOS6502_H__
 
 // Local Variables:
 // mode: c++

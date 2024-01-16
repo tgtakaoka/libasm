@@ -72,7 +72,7 @@ private:
 }  // namespace scn2650
 }  // namespace libasm
 
-#endif  // __ENTRY_SCN2650_H__
+#endif  // __LIBASM_ENTRY_SCN2650_H__
 
 // Local Variables:
 // mode: c++

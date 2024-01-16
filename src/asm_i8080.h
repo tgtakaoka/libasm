@@ -41,7 +41,7 @@ private:
 }  // namespace i8080
 }  // namespace libasm
 
-#endif  // __ASM_I8080_H__
+#endif  // __LIBASM_ASM_I8080_H__
 
 // Local Variables:
 // mode: c++

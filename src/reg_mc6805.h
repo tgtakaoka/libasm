@@ -39,7 +39,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 }  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __REG_MC6805_H__
+#endif  // __LIBASM_REG_MC6805_H__
 
 // Local Variables:
 // mode: c++

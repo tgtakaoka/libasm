@@ -70,7 +70,7 @@ typedef union {
 
 #endif  // AVR
 
-#endif  // __CONFIG_HOST_H__
+#endif  // __LIBASM_CONFIG_HOST_H__
 
 // Local Variables:
 // mode: c++

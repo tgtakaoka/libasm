@@ -220,7 +220,7 @@ using common::TEXT_REG_Y;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_MC6800__
+#endif  // __LIBASM_TEXT_MC6800__
 
 // Local Variables:
 // mode: c++

@@ -37,7 +37,7 @@ extern const TableScn2650 TABLE;
 }  // namespace scn2650
 }  // namespace libasm
 
-#endif  // __TABLE_SCN2650_H__
+#endif  // __LIBASM_TABLE_SCN2650_H__
 
 // Local Variables:
 // mode: c++

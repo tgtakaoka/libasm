@@ -110,7 +110,7 @@ using common::TEXT_REG_W;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_F3850__
+#endif  // __LIBASM_TEXT_F3850__
 
 // Local Variables:
 // mode: c++

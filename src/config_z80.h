@@ -36,7 +36,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace z80
 }  // namespace libasm
 
-#endif  // __CONFIG_Z80_H__
+#endif  // __LIBASM_CONFIG_Z80_H__
 
 // Local Variables:
 // mode: c++

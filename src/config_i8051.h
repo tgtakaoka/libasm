@@ -33,7 +33,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace i8051
 }  // namespace libasm
 
-#endif  // __CONFIG_I8051_H__
+#endif  // __LIBASM_CONFIG_I8051_H__
 
 // Local Variables:
 // mode: c++

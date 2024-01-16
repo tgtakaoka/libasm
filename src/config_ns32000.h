@@ -63,7 +63,7 @@ protected:
 }  // namespace ns32000
 }  // namespace libasm
 
-#endif  // __CONFIG_NS32000_H__
+#endif  // __LIBASM_CONFIG_NS32000_H__
 
 // Local Variables:
 // mode: c++

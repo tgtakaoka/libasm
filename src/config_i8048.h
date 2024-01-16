@@ -40,7 +40,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_12BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace i8048
 }  // namespace libasm
 
-#endif  // __CONFIG_I8048_H__
+#endif  // __LIBASM_CONFIG_I8048_H__
 
 // Local Variables:
 // mode: c++

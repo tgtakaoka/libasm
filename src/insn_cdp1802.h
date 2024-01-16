@@ -54,7 +54,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace cdp1802
 }  // namespace libasm
 
-#endif  // __INSN_CDP1802_H__
+#endif  // __LIBASM_INSN_CDP1802_H__
 
 // Local Variables:
 // mode: c++

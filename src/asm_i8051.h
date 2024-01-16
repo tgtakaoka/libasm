@@ -43,7 +43,7 @@ private:
 }  // namespace i8051
 }  // namespace libasm
 
-#endif  // __ASM_I8051_H__
+#endif  // __LIBASM_ASM_I8051_H__
 
 // Local Variables:
 // mode: c++

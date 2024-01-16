@@ -38,7 +38,7 @@ extern const TableMn1610 TABLE;
 }  // namespace mn1610
 }  // namespace libasm
 
-#endif  // __TABLE_MN1610_H__
+#endif  // __LIBASM_TABLE_MN1610_H__
 
 // Local Variables:
 // mode: c++

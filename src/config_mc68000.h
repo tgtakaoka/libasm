@@ -57,7 +57,7 @@ protected:
 }  // namespace mc68000
 }  // namespace libasm
 
-#endif  // __CONFIG_MC68000_H__
+#endif  // __LIBASM_CONFIG_MC68000_H__
 
 // Local Variables:
 // mode: c++

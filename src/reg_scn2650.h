@@ -70,7 +70,7 @@ StrBuffer &outCcName(StrBuffer &out, const CcName name);
 }  // namespace scn2650
 }  // namespace libasm
 
-#endif  // __REG_SCN2650_H__
+#endif  // __LIBASM_REG_SCN2650_H__
 
 // Local Variables:
 // mode: c++

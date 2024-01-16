@@ -41,7 +41,7 @@ private:
 }  // namespace ins8060
 }  // namespace libasm
 
-#endif  // __DIS_INS8060_H__
+#endif  // __LIBASM_DIS_INS8060_H__
 
 // Local Variables:
 // mode: c++

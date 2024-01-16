@@ -52,7 +52,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace f3850
 }  // namespace libasm
 
-#endif  // __INSN_F3850_H__
+#endif  // __LIBASM_INSN_F3850_H__
 
 // Local Variables:
 // mode: c++

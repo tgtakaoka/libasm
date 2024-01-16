@@ -30,7 +30,7 @@ bool isLreg(uint8_t regno);
 }  // namespace i8096
 }  // namespace libasm
 
-#endif  // __REG_I8096_H__
+#endif  // __LIBASM_REG_I8096_H__
 
 // Local Variables:
 // mode: c++

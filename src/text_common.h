@@ -554,7 +554,7 @@ extern const char PSTR_UNDER_DOT_DOLLER_QUESTION[] PROGMEM; // "_.$?"
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_COMMON__
+#endif  // __LIBASM_TEXT_COMMON__
 
 // Local Variables:
 // mode: c++

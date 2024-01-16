@@ -189,7 +189,7 @@ extern const char TEXT_CC_NONE[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_MN1610__
+#endif  // __LIBASM_TEXT_MN1610__
 
 // Local Variables:
 // mode: c++

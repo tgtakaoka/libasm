@@ -96,7 +96,7 @@ private:
 }  // namespace i8096
 }  // namespace libasm
 
-#endif  // __ENTRY_I8096_H__
+#endif  // __LIBASM_ENTRY_I8096_H__
 
 // Local Variables:
 // mode: c++

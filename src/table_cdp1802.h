@@ -39,7 +39,7 @@ extern const TableCdp1802 TABLE;
 }  // namespace cdp1802
 }  // namespace libasm
 
-#endif  // __TABLE_CDP1802_H__
+#endif  // __LIBASM_TABLE_CDP1802_H__
 
 // Local Variables:
 // mode: c++

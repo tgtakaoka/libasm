@@ -32,7 +32,7 @@ struct SymbolTable {
 
 }  // namespace libasm
 
-#endif  // __SYMBOL_TABLE_H__
+#endif  // __LIBASM_SYMBOL_TABLE_H__
 
 // Local Variables:
 // mode: c++

@@ -122,7 +122,7 @@ private:
 
 }  // namespace libasm
 
-#endif  // __STR_BUFFER_H__
+#endif  // __LIBASM_STR_BUFFER_H__
 
 // Local Variables:
 // mode: c++

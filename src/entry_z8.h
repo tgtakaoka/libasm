@@ -151,7 +151,7 @@ private:
 }  // namespace z8
 }  // namespace libasm
 
-#endif  // __ENTRY_Z8_H__
+#endif  // __LIBASM_ENTRY_Z8_H__
 
 // Local Variables:
 // mode: c++

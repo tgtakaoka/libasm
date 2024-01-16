@@ -44,7 +44,7 @@ private:
 }  // namespace tms7000
 }  // namespace libasm
 
-#endif  // __ASM_TMS7000_H__
+#endif  // __LIBASM_ASM_TMS7000_H__
 
 // Local Variables:
 // mode: c++

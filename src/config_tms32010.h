@@ -39,7 +39,7 @@ struct Config
 }  // namespace tms32010
 }  // namespace libasm
 
-#endif  // __CONFIG_TMS32010_H__
+#endif  // __LIBASM_CONFIG_TMS32010_H__
 
 // Local Variables:
 // mode: c++

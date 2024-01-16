@@ -120,7 +120,7 @@ private:
 }  // namespace ns32000
 }  // namespace libasm
 
-#endif  // __INSN_NS32000_H__
+#endif  // __LIBASM_INSN_NS32000_H__
 
 // Local Variables:
 // mode: c++

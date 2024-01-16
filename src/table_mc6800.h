@@ -39,7 +39,7 @@ extern const TableMc6800 TABLE;
 }  // namespace mc6800
 }  // namespace libasm
 
-#endif  // __TABLE_MC6800_H__
+#endif  // __LIBASM_TABLE_MC6800_H__
 
 // Local Variables:
 // mode: c++

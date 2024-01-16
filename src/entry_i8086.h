@@ -166,7 +166,7 @@ private:
 }  // namespace i8086
 }  // namespace libasm
 
-#endif  // __ENTRY_I8086_H__
+#endif  // __LIBASM_ENTRY_I8086_H__
 
 // Local Variables:
 // mode: c++

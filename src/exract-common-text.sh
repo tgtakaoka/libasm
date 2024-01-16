@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function get_text {
-    grep -Po '(?<!__)TEXT_[\w_]+' "$@"
+    grep -Po '(?<!__LIBASM_)TEXT_[\w_]+' "$@"
 }
 
 function list_array {

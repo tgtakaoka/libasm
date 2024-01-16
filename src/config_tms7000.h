@@ -34,7 +34,7 @@ struct Config
 }  // namespace tms7000
 }  // namespace libasm
 
-#endif  // __CONFIG_TMS7000_H__
+#endif  // __LIBASM_CONFIG_TMS7000_H__
 
 // Local Variables:
 // mode: c++

@@ -44,7 +44,7 @@ private:
 }  // namespace tlcs90
 }  // namespace libasm
 
-#endif  // __ASM_TLCS90_H__
+#endif  // __LIBASM_ASM_TLCS90_H__
 
 // Local Variables:
 // mode: c++

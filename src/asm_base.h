@@ -125,7 +125,7 @@ private:
 
 }  // namespace libasm
 
-#endif  // __ASM_BASE_H__
+#endif  // __LIBASM_ASM_BASE_H__
 
 // Local Variables:
 // mode: c++

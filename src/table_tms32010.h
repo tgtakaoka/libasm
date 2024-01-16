@@ -37,7 +37,7 @@ extern const TableTms32010 TABLE;
 }  // namespace tms32010
 }  // namespace libasm
 
-#endif  // __TABLE_TMS32010_H__
+#endif  // __LIBASM_TABLE_TMS32010_H__
 
 // Local Variables:
 // mode: c++

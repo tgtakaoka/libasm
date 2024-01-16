@@ -84,7 +84,7 @@ private:
 }  // namespace tms9900
 }  // namespace libasm
 
-#endif  // __ENTRY_TMS9900_H__
+#endif  // __LIBASM_ENTRY_TMS9900_H__
 
 // Local Variables:
 // mode: c++

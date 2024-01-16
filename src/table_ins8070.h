@@ -37,7 +37,7 @@ extern const TableIns8070 TABLE;
 }  // namespace ins8070
 }  // namespace libasm
 
-#endif  // __TABLE_INS8070_H__
+#endif  // __LIBASM_TABLE_INS8070_H__
 
 // Local Variables:
 // mode: c++

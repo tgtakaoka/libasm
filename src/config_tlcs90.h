@@ -33,7 +33,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace tlcs90
 }  // namespace libasm
 
-#endif  // __CONFIG_TLCS90_H__
+#endif  // __LIBASM_CONFIG_TLCS90_H__
 
 // Local Variables:
 // mode: c++

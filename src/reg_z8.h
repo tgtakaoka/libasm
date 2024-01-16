@@ -101,7 +101,7 @@ uint8_t encodeWorkRegAddr(bool super8, RegName name);
 }  // namespace z8
 }  // namespace libasm
 
-#endif  // __REG_Z8_H__
+#endif  // __LIBASM_REG_Z8_H__
 
 // Local Variables:
 // mode: c++

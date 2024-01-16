@@ -37,7 +37,7 @@ extern const TableI8048 TABLE;
 }  // namespace i8048
 }  // namespace libasm
 
-#endif  // __TABLE_I8048_H__
+#endif  // __LIBASM_TABLE_I8048_H__
 
 // Local Variables:
 // mode: c++

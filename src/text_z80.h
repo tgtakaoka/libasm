@@ -137,7 +137,7 @@ using common::TEXT_CC_M;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_Z80__
+#endif  // __LIBASM_TEXT_Z80__
 
 // Local Variables:
 // mode: c++

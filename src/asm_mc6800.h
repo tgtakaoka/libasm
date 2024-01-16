@@ -43,7 +43,7 @@ private:
 }  // namespace mc6800
 }  // namespace libasm
 
-#endif  // __ASM_MC6800_H__
+#endif  // __LIBASM_ASM_MC6800_H__
 
 // Local Variables:
 // mode: c++

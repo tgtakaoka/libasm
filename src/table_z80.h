@@ -41,7 +41,7 @@ extern const TableZ80 TABLE;
 }  // namespace z80
 }  // namespace libasm
 
-#endif  // __TABLE_Z80_H__
+#endif  // __LIBASM_TABLE_Z80_H__
 
 // Local Variables:
 // mode: c++

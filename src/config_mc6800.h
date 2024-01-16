@@ -38,7 +38,7 @@ struct Config
 }  // namespace mc6800
 }  // namespace libasm
 
-#endif  // __CONFIG_MC6800_H__
+#endif  // __LIBASM_CONFIG_MC6800_H__
 
 // Local Variables:
 // mode: c++

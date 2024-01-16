@@ -87,7 +87,7 @@ using common::TEXT_REG_PC;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_INS8060__
+#endif  // __LIBASM_TEXT_INS8060__
 
 // Local Variables:
 // mode: c++

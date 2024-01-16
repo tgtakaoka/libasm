@@ -164,7 +164,7 @@ private:
 
 }  // namespace libasm
 
-#endif  // __STR_SCANNER_H__
+#endif  // __LIBASM_STR_SCANNER_H__
 
 // Local Variables:
 // mode: c++

@@ -50,7 +50,7 @@ bool isPortAddress(RegName name);
 }  // namespace tms32010
 }  // namespace libasm
 
-#endif  // __REG_TMS32010_H__
+#endif  // __LIBASM_REG_TMS32010_H__
 
 // Local Variables:
 // mode: c++

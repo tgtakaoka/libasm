@@ -42,7 +42,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 }  // namespace mos6502
 }  // namespace libasm
 
-#endif  // __REG_MOS6502_H__
+#endif  // __LIBASM_REG_MOS6502_H__
 
 // Local Variables:
 // mode: c++

@@ -44,7 +44,7 @@ constexpr Config::uintptr_t memoryAddress(uint8_t offset, uint8_t page, uint8_t 
 }  // namespace im6100
 }  // namespace libasm
 
-#endif  // __REG_IM6100_H__
+#endif  // __LIBASM_REG_IM6100_H__
 
 // Local Variables:
 // mode: c++

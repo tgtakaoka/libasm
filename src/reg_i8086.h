@@ -86,7 +86,7 @@ OprSize generalRegSize(RegName name);
 }  // namespace i8086
 }  // namespace libasm
 
-#endif  // __REG_I8086_H__
+#endif  // __LIBASM_REG_I8086_H__
 
 // Local Variables:
 // mode: c++

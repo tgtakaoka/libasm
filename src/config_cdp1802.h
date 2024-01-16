@@ -35,7 +35,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace cdp1802
 }  // namespace libasm
 
-#endif  // __CONFIG_CDP1802_H__
+#endif  // __LIBASM_CONFIG_CDP1802_H__
 
 // Local Variables:
 // mode: c++

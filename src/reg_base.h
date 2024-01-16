@@ -93,7 +93,7 @@ int16_t parseRegNumber(StrScanner &scan);
 }  // namespace reg
 }  // namespace libasm
 
-#endif  // __REG_BASE_H__
+#endif  // __LIBASM_REG_BASE_H__
 
 // Local Variables:
 // mode: c++

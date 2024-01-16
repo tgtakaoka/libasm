@@ -236,7 +236,7 @@ protected:
 }  // namespace entry
 }  // namespace libasm
 
-#endif  // __ENTRY_TABLE_H__
+#endif  // __LIBASM_ENTRY_TABLE_H__
 
 // Local Variables:
 // mode: c++

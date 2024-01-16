@@ -22,7 +22,7 @@
 #define LIBASM_VERSION_PATCH 45
 #define LIBASM_VERSION_STRING "1.6.45"
 
-#endif  // __VERSION_H__
+#endif  // __LIBASM_VERSION_H__
 
 // Local Variables:
 // mode: c++

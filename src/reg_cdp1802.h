@@ -66,7 +66,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 }  // namespace cdp1802
 }  // namespace libasm
 
-#endif  // __REG_CDP1802_H__
+#endif  // __LIBASM_REG_CDP1802_H__
 
 // Local Variables:
 // mode: c++

@@ -145,7 +145,7 @@ using common::TEXT_CC_UGE;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_TLCS90__
+#endif  // __LIBASM_TEXT_TLCS90__
 
 // Local Variables:
 // mode: c++

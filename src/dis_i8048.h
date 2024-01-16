@@ -39,7 +39,7 @@ private:
 }  // namespace i8048
 }  // namespace libasm
 
-#endif  // __DIS_I8048_H__
+#endif  // __LIBASM_DIS_I8048_H__
 
 // Local Variables:
 // mode: c++

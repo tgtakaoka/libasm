@@ -39,7 +39,7 @@ extern const TableIm6100 TABLE;
 }  // namespace im6100
 }  // namespace libasm
 
-#endif  // __TABLE_IM6100_H__
+#endif  // __LIBASM_TABLE_IM6100_H__
 
 // Local Variables:
 // mode: c++

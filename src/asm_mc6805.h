@@ -51,7 +51,7 @@ private:
 }  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __ASM_MC6805_H__
+#endif  // __LIBASM_ASM_MC6805_H__
 
 // Local Variables:
 // mode: c++

@@ -33,7 +33,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_15BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace scn2650
 }  // namespace libasm
 
-#endif  // __CONFIG_SCN2650_H__
+#endif  // __LIBASM_CONFIG_SCN2650_H__
 
 // Local Variables:
 // mode: c++

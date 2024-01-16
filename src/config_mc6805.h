@@ -35,7 +35,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __CONFIG_MC6805_H__
+#endif  // __LIBASM_CONFIG_MC6805_H__
 
 // Local Variables:
 // mode: c++

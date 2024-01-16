@@ -45,7 +45,7 @@ private:
 }  // namespace mn1610
 }  // namespace libasm
 
-#endif  // __DIS_MN1610_H__
+#endif  // __LIBASM_DIS_MN1610_H__
 
 // Local Variables:
 // mode: c++

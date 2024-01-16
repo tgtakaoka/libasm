@@ -74,7 +74,7 @@ using common::TEXT_REG_P3;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_INS8070__
+#endif  // __LIBASM_TEXT_INS8070__
 
 // Local Variables:
 // mode: c++

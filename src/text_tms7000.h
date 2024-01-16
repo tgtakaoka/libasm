@@ -107,7 +107,7 @@ using common::TEXT_REG_ST;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_TMS7000__
+#endif  // __LIBASM_TEXT_TMS7000__
 
 // Local Variables:
 // mode: c++

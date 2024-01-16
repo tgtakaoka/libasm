@@ -31,7 +31,7 @@ enum OprSize : uint8_t {
     SZ_WORD = Size::SZ_WORD,  // Word (16 bits/2 bytes)
     SZ_LONG = Size::SZ_QUAD,  // Long (32 bits/4 bytes)
     SZ_DATA = Size::SZ_DATA,  // _ss|___|___ BYTE=0/WORD=1/LONG=2
-    SZ_ADDR = Size::SZ_ADDR,  // __s|___|___ WORD=0/LONG=1
+    SZ_ADDR = Size::SZ_ADDR,  // __LIBASM_s|___|___ WORD=0/LONG=1
     SZ_ADR8 = 7,              // s__|___|___ WORD=0/LONG=1
     SZ_SNGL = 8,              // Single precision real (32 bits/4 bytes)
     SZ_DUBL = 9,              // Double precision real (64 bits/8 bytes)
@@ -111,18 +111,18 @@ enum AddrMode : uint8_t {
 };
 
 enum OprPos : uint8_t {
-    OP_10 = 0,   // ____|___|___|mmm|rrr
-    OP_23 = 1,   // ____|rrr|mmm|___|___
-    OP__0 = 2,   // ____|___|___|___|rrr
-    OP__3 = 3,   // ____|rrr|___|___|___
-    OP___ = 4,   // ____|___|___|___|___
-    EX_RX = 5,   // ___|xxx|___|_______ : format or source register
-    EX_RY = 6,   // ___|___|yyy|_______ : destination register
-    EX_SC = 7,   // ___|___|sss|____ccc : FPSINCOS
-    EX_SL = 8,   // ___|___|__|ffffffff : static register list
-    EX_DL = 9,   // ___|___|___|rrr____ : dynamic register list
-    EX_SK = 10,  // ___|___|___|kkkkkkk : static k-factor
-    EX_DK = 11,  // ___|___|___|rrr____ : dynamic k-factor
+    OP_10 = 0,   // __LIBASM___|___|___|mmm|rrr
+    OP_23 = 1,   // __LIBASM___|rrr|mmm|___|___
+    OP__0 = 2,   // __LIBASM___|___|___|___|rrr
+    OP__3 = 3,   // __LIBASM___|rrr|___|___|___
+    OP___ = 4,   // __LIBASM___|___|___|___|___
+    EX_RX = 5,   // __LIBASM__|xxx|___|_______ : format or source register
+    EX_RY = 6,   // __LIBASM__|___|yyy|_______ : destination register
+    EX_SC = 7,   // __LIBASM__|___|sss|____ccc : FPSINCOS
+    EX_SL = 8,   // __LIBASM__|___|__|ffffffff : static register list
+    EX_DL = 9,   // __LIBASM__|___|___|rrr____ : dynamic register list
+    EX_SK = 10,  // __LIBASM__|___|___|kkkkkkk : static k-factor
+    EX_DK = 11,  // __LIBASM__|___|___|rrr____ : dynamic k-factor
 };
 
 struct Entry final : entry::Base<Config::opcode_t> {
@@ -203,7 +203,7 @@ private:
 }  // namespace mc68000
 }  // namespace libasm
 
-#endif  // __ENTRY_MC68000_H__
+#endif  // __LIBASM_ENTRY_MC68000_H__
 
 // Local Variables:
 // mode: c++

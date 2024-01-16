@@ -124,7 +124,7 @@ extern const char TEXT_TSMB[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_TMS9900__
+#endif  // __LIBASM_TEXT_TMS9900__
 
 // Local Variables:
 // mode: c++

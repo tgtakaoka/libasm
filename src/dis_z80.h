@@ -46,7 +46,7 @@ private:
 }  // namespace z80
 }  // namespace libasm
 
-#endif  // __DIS_Z80_H__
+#endif  // __LIBASM_DIS_Z80_H__
 
 // Local Variables:
 // mode: c++

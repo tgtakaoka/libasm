@@ -69,7 +69,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace tms9900
 }  // namespace libasm
 
-#endif  // __INSN_TMS9900_H__
+#endif  // __LIBASM_INSN_TMS9900_H__
 
 // Local Variables:
 // mode: c++

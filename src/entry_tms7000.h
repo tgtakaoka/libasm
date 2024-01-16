@@ -80,7 +80,7 @@ private:
 }  // namespace tms7000
 }  // namespace libasm
 
-#endif  // __ENTRY_TMS7000_H__
+#endif  // __LIBASM_ENTRY_TMS7000_H__
 
 // Local Variables:
 // mode: c++

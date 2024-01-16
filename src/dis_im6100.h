@@ -45,7 +45,7 @@ private:
 }  // namespace im6100
 }  // namespace libasm
 
-#endif  // __DIS_IM6100_H__
+#endif  // __LIBASM_DIS_IM6100_H__
 
 // Local Variables:
 // mode: c++

@@ -37,7 +37,7 @@ extern const TableF3850 TABLE;
 }  // namespace f3850
 }  // namespace libasm
 
-#endif  // __TABLE_F3850_H__
+#endif  // __LIBASM_TABLE_F3850_H__
 
 // Local Variables:
 // mode: c++

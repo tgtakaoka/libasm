@@ -44,7 +44,7 @@ extern const TableI8086 TABLE;
 }  // namespace i8086
 }  // namespace libasm
 
-#endif  // __TABLE_I8086_H__
+#endif  // __LIBASM_TABLE_I8086_H__
 
 // Local Variables:
 // mode: c++

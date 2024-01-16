@@ -124,7 +124,7 @@ char indexSizeChar(OprSize size);
 }  // namespace ns32000
 }  // namespace libasm
 
-#endif  // __REG_NS32000_H__
+#endif  // __LIBASM_REG_NS32000_H__
 
 // Local Variables:
 // mode: c++

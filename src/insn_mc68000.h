@@ -96,7 +96,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace mc68000
 }  // namespace libasm
 
-#endif  // __INSN_MC68000_H__
+#endif  // __LIBASM_INSN_MC68000_H__
 
 // Local Variables:
 // mode: c++

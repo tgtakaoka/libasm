@@ -65,7 +65,7 @@ constexpr RegName toPortName(uint8_t num) {
 }  // namespace tms7000
 }  // namespace libasm
 
-#endif  // __REG_TMS7000_H__
+#endif  // __LIBASM_REG_TMS7000_H__
 
 // Local Variables:
 // mode: c++

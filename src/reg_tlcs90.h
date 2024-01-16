@@ -105,7 +105,7 @@ CcName decodeCcName(uint8_t num);
 }  // namespace tlcs90
 }  // namespace libasm
 
-#endif  // __REG_TLCS90_H__
+#endif  // __LIBASM_REG_TLCS90_H__
 
 // Local Variables:
 // mode: c++

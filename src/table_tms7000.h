@@ -37,7 +37,7 @@ extern const TableTms7000 TABLE;
 }  // namespace tms7000
 }  // namespace libasm
 
-#endif  // __TABLE_TMS7000_H__
+#endif  // __LIBASM_TABLE_TMS7000_H__
 
 // Local Variables:
 // mode: c++

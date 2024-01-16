@@ -33,7 +33,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_8BIT, EN
 }  // namespace ins8070
 }  // namespace libasm
 
-#endif  // __CONFIG_INS8070_H__
+#endif  // __LIBASM_CONFIG_INS8070_H__
 
 // Local Variables:
 // mode: c++

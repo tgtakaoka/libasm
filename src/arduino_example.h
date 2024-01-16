@@ -464,7 +464,7 @@ private:
 }  // namespace arduino
 }  // namespace libasm
 
-#endif  // __ARDUINO_EXAMPLE_H__
+#endif  // __LIBASM_ARDUINO_EXAMPLE_H__
 
 // Local Variables:
 // mode: c++

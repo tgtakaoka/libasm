@@ -92,7 +92,7 @@ extern const char TEXT_REG_DPTR[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_I8051__
+#endif  // __LIBASM_TEXT_I8051__
 
 // Local Variables:
 // mode: c++

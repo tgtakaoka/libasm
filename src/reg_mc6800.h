@@ -41,7 +41,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 }  // namespace mc6800
 }  // namespace libasm
 
-#endif  // __REG_MC6800_H__
+#endif  // __LIBASM_REG_MC6800_H__
 
 // Local Variables:
 // mode: c++

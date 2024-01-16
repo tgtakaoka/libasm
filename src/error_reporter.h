@@ -184,7 +184,7 @@ private:
 
 }  // namespace libasm
 
-#endif  // __ERROR_REPORTER_H__
+#endif  // __LIBASM_ERROR_REPORTER_H__
 
 // Local Variables:
 // mode: c++

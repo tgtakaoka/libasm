@@ -39,7 +39,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_18BIT, ADDRESS_WORD, OPCODE_16BIT, E
 }  // namespace mn1610
 }  // namespace libasm
 
-#endif  // __CONFIG_MN1610_H__
+#endif  // __LIBASM_CONFIG_MN1610_H__
 
 // Local Variables:
 // mode: c++

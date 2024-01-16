@@ -132,7 +132,7 @@ using common::TEXT_REG_PSW;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_I8080__
+#endif  // __LIBASM_TEXT_I8080__
 
 // Local Variables:
 // mode: c++

@@ -50,7 +50,7 @@ private:
 }  // namespace entry
 }  // namespace libasm
 
-#endif  // __ENTRY_BASE_H__
+#endif  // __LIBASM_ENTRY_BASE_H__
 
 // Local Variables:
 // mode: c++

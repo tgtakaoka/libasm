@@ -44,7 +44,7 @@ private:
 }  // namespace mc68000
 }  // namespace libasm
 
-#endif  // __DIS_MC68000_H__
+#endif  // __LIBASM_DIS_MC68000_H__
 
 // Local Variables:
 // mode: c++

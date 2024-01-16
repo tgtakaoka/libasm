@@ -125,7 +125,7 @@ using common::TEXT_XORB;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_I8096__
+#endif  // __LIBASM_TEXT_I8096__
 
 // Local Variables:
 // mode: c++

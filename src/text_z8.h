@@ -143,7 +143,7 @@ using common::TEXT_REG_RR;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_Z8__
+#endif  // __LIBASM_TEXT_Z8__
 
 // Local Variables:
 // mode: c++

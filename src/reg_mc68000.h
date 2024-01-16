@@ -112,7 +112,7 @@ char sizeSuffix(OprSize size);
 }  // namespace mc68000
 }  // namespace libasm
 
-#endif  // __REG_MC68000_H__
+#endif  // __LIBASM_REG_MC68000_H__
 
 // Local Variables:
 // mode: c++

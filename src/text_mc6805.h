@@ -124,7 +124,7 @@ using common::TEXT_WAIT;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_MC6805__
+#endif  // __LIBASM_TEXT_MC6805__
 
 // Local Variables:
 // mode: c++

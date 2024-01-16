@@ -110,7 +110,7 @@ private:
 }  // namespace z8000
 }  // namespace libasm
 
-#endif  // __INSN_Z8000_H__
+#endif  // __LIBASM_INSN_Z8000_H__
 
 // Local Variables:
 // mode: c++

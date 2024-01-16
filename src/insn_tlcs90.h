@@ -98,7 +98,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace tlcs90
 }  // namespace libasm
 
-#endif  // __INSN_TLCS90_H__
+#endif  // __LIBASM_INSN_TLCS90_H__
 
 // Local Variables:
 // mode: c++

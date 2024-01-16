@@ -116,7 +116,7 @@ private:
 }  // namespace mos6502
 }  // namespace libasm
 
-#endif  // __ENTRY_MOS6502_H__
+#endif  // __LIBASM_ENTRY_MOS6502_H__
 
 // Local Variables:
 // mode: c++

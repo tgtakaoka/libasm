@@ -68,7 +68,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace ins8070
 }  // namespace libasm
 
-#endif  // __INSN_INS8070_H__
+#endif  // __LIBASM_INSN_INS8070_H__
 
 // Local Variables:
 // mode: c++

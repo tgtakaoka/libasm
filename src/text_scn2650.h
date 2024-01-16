@@ -115,7 +115,7 @@ extern const char TEXT_CC_UN[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_SCN2650__
+#endif  // __LIBASM_TEXT_SCN2650__
 
 // Local Variables:
 // mode: c++

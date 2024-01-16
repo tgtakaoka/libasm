@@ -133,7 +133,7 @@ StrBuffer &outCcName(StrBuffer &out, CcName name);
 }  // namespace mn1610
 }  // namespace libasm
 
-#endif  // __REG_MN1610_H__
+#endif  // __LIBASM_REG_MN1610_H__
 
 // Local Variables:
 // mode: c++

@@ -39,7 +39,7 @@ struct Config
 }  // namespace im6100
 }  // namespace libasm
 
-#endif  // __CONFIG_IM6100_H__
+#endif  // __LIBASM_CONFIG_IM6100_H__
 
 // Local Variables:
 // mode: c++

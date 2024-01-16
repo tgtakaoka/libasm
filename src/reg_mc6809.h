@@ -81,7 +81,7 @@ char tfmDstModeChar(uint8_t mode);
 }  // namespace mc6809
 }  // namespace libasm
 
-#endif  // __REG_MC6809_H__
+#endif  // __LIBASM_REG_MC6809_H__
 
 // Local Variables:
 // mode: c++

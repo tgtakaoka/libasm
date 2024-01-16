@@ -135,7 +135,7 @@ extern const char TEXT_REG_TCNTI[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_I8048__
+#endif  // __LIBASM_TEXT_I8048__
 
 // Local Variables:
 // mode: c++

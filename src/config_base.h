@@ -196,7 +196,7 @@ protected:
 
 }  // namespace libasm
 
-#endif  // __CONFIG_BASE_H__
+#endif  // __LIBASM_CONFIG_BASE_H__
 
 // Local Variables:
 // mode: c++

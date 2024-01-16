@@ -103,7 +103,7 @@ private:
 }  // namespace ins8070
 }  // namespace libasm
 
-#endif  // __ENTRY_INS8070_H__
+#endif  // __LIBASM_ENTRY_INS8070_H__
 
 // Local Variables:
 // mode: c++

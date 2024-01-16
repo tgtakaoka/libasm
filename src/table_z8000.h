@@ -38,7 +38,7 @@ extern const TableZ8000 TABLE;
 }  // namespace z8000
 }  // namespace libasm
 
-#endif  // __TABLE_Z8000_H__
+#endif  // __LIBASM_TABLE_Z8000_H__
 
 // Local Variables:
 // mode: c++

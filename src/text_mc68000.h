@@ -370,7 +370,7 @@ extern const char TEXT_REG_FPSR[]  PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_MC68000_H__
+#endif  // __LIBASM_TEXT_MC68000_H__
 
 // Local Variables:
 // mode: c++

@@ -96,7 +96,7 @@ CcName decodeCcName(uint8_t num);
 }  // namespace z80
 }  // namespace libasm
 
-#endif  // __REG_Z80_H__
+#endif  // __LIBASM_REG_Z80_H__
 
 // Local Variables:
 // mode: c++

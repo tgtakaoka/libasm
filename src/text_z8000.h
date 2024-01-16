@@ -267,7 +267,7 @@ extern const char TEXT_INTR_NVI[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_Z8000__
+#endif  // __LIBASM_TEXT_Z8000__
 
 // Local Variables:
 // mode: c++

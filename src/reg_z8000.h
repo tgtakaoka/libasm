@@ -173,7 +173,7 @@ uint8_t ctlRegLen(RegName name);
 }  // namespace z8000
 }  // namespace libasm
 
-#endif  // __REG_Z8000_H__
+#endif  // __LIBASM_REG_Z8000_H__
 
 // Local Variables:
 // mode: c++

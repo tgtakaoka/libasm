@@ -64,7 +64,7 @@ RegName decodeDataReg(uint8_t num);
 }  // namespace i8080
 }  // namespace libasm
 
-#endif  // __REG_I8080_H__
+#endif  // __LIBASM_REG_I8080_H__
 
 // Local Variables:
 // mode: c++

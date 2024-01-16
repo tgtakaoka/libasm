@@ -580,7 +580,7 @@ private:
 
 }  // namespace libasm
 
-#endif  // __INSN_BASE_H__
+#endif  // __LIBASM_INSN_BASE_H__
 
 // Local Variables:
 // mode: c++

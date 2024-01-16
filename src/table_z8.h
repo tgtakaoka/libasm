@@ -40,7 +40,7 @@ extern const TableZ8 TABLE;
 }  // namespace z8
 }  // namespace libasm
 
-#endif  // __TABLE_Z8_H__
+#endif  // __LIBASM_TABLE_Z8_H__
 
 // Local Variables:
 // mode: c++

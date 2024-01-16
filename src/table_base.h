@@ -165,7 +165,7 @@ private:
 }  // namespace table
 }  // namespace libasm
 
-#endif  // __TABLE_BASE_H__
+#endif  // __LIBASM_TABLE_BASE_H__
 
 // Local Variables:
 // mode: c++

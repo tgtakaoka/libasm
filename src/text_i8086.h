@@ -292,7 +292,7 @@ extern const char TEXT_REG_TBYTE[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_I8086__
+#endif  // __LIBASM_TEXT_I8086__
 
 // Local Variables:
 // mode: c++

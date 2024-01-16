@@ -391,7 +391,7 @@ extern const char TEXT_CONFIG_C[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_NS32000__
+#endif  // __LIBASM_TEXT_NS32000__
 
 // Local Variables:
 // mode: c++

@@ -37,7 +37,7 @@ extern const TableMc6805 TABLE;
 }  // namespace mc6805
 }  // namespace libasm
 
-#endif  // __TABLE_MC6805_H__
+#endif  // __LIBASM_TABLE_MC6805_H__
 
 // Local Variables:
 // mode: c++

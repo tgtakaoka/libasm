@@ -163,7 +163,7 @@ extern const char TEXT_DSMI[] PROGMEM;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_CDP1802__
+#endif  // __LIBASM_TEXT_CDP1802__
 
 // Local Variables:
 // mode: c++

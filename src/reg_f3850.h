@@ -59,7 +59,7 @@ StrBuffer &outRegName(StrBuffer &out, RegName name);
 }  // namespace f3850
 }  // namespace libasm
 
-#endif  // __REG_F3850_H__
+#endif  // __LIBASM_REG_F3850_H__
 
 // Local Variables:
 // mode: c++

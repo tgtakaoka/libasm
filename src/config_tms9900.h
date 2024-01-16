@@ -40,7 +40,7 @@ struct Config : ConfigImpl<CpuType, ADDRESS_16BIT, ADDRESS_BYTE, OPCODE_16BIT, E
 }  // namespace tms9900
 }  // namespace libasm
 
-#endif  // __CONFIG_TMS9900_H__
+#endif  // __LIBASM_CONFIG_TMS9900_H__
 
 // Local Variables:
 // mode: c++

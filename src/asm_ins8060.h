@@ -43,7 +43,7 @@ private:
 }  // namespace ins8060
 }  // namespace libasm
 
-#endif  // __ASM_INS8060_H__
+#endif  // __LIBASM_ASM_INS8060_H__
 
 // Local Variables:
 // mode: c++

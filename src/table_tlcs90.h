@@ -38,7 +38,7 @@ extern const TableTlcs90 TABLE;
 }  // namespace tlcs90
 }  // namespace libasm
 
-#endif  // __TABLE_TLCS90_H__
+#endif  // __LIBASM_TABLE_TLCS90_H__
 
 // Local Variables:
 // mode: c++

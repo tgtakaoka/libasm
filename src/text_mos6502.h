@@ -201,7 +201,7 @@ using common::TEXT_REG_S;
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __TEXT_MOS6502_H__
+#endif  // __LIBASM_TEXT_MOS6502_H__
 
 // Local Variables:
 // mode: c++

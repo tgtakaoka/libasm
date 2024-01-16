@@ -75,7 +75,7 @@ private:
 }  // namespace pseudo
 }  // namespace libasm
 
-#endif  // __PSEUDOS_H__
+#endif  // __LIBASM_PSEUDOS_H__
 
 // Local Variables:
 // mode: c++

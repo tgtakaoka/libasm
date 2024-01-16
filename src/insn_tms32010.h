@@ -59,7 +59,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
 }  // namespace tms32010
 }  // namespace libasm
 
-#endif  // __INSN_TMS32010_H__
+#endif  // __LIBASM_INSN_TMS32010_H__
 
 // Local Variables:
 // mode: c++

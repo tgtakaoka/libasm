@@ -53,7 +53,7 @@ RegName decodePointerReg(uint8_t num);
 }  // namespace ins8070
 }  // namespace libasm
 
-#endif  // __REG_INS8070_H__
+#endif  // __LIBASM_REG_INS8070_H__
 
 // Local Variables:
 // mode: c++

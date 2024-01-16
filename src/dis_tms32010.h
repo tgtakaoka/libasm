@@ -44,7 +44,7 @@ private:
 }  // namespace tms32010
 }  // namespace libasm
 
-#endif  // __DIS_TMS32010_H__
+#endif  // __LIBASM_DIS_TMS32010_H__
 
 // Local Variables:
 // mode: c++

@@ -56,7 +56,7 @@ protected:
 }  // namespace i8086
 }  // namespace libasm
 
-#endif  // __CONFIG_I8086_H__
+#endif  // __LIBASM_CONFIG_I8086_H__
 
 // Local Variables:
 // mode: c++

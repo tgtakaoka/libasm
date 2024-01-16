@@ -39,7 +39,7 @@ extern const TableI8096 TABLE;
 }  // namespace i8096
 }  // namespace libasm
 
-#endif  // __TABLE_I8096_H__
+#endif  // __LIBASM_TABLE_I8096_H__
 
 // Local Variables:
 // mode: c++

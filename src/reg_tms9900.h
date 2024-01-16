@@ -56,7 +56,7 @@ uint8_t encodeRegNumber(RegName name);
 }  // namespace tms9900
 }  // namespace libasm
 
-#endif  // __REG_TMS9900_H__
+#endif  // __LIBASM_REG_TMS9900_H__
 
 // Local Variables:
 // mode: c++

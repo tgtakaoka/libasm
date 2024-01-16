@@ -82,7 +82,7 @@ RegName decodePortNum(uint8_t num);
 }  // namespace i8048
 }  // namespace libasm
 
-#endif  // __REG_I8048_H__
+#endif  // __LIBASM_REG_I8048_H__
 
 // Local Variables:
 // mode: c++

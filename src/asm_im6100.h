@@ -53,7 +53,7 @@ private:
 }  // namespace im6100
 }  // namespace libasm
 
-#endif  // __ASM_IM6100_H__
+#endif  // __LIBASM_ASM_IM6100_H__
 
 // Local Variables:
 // mode: c++

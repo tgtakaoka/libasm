@@ -67,7 +67,7 @@ private:
 }  // namespace z8000
 }  // namespace libasm
 
-#endif  // __ASM_Z8000_H__
+#endif  // __LIBASM_ASM_Z8000_H__
 
 // Local Variables:
 // mode: c++

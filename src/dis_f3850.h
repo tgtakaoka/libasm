@@ -40,7 +40,7 @@ private:
 }  // namespace f3850
 }  // namespace libasm
 
-#endif  // __DIS_F3850_H__
+#endif  // __LIBASM_DIS_F3850_H__
 
 // Local Variables:
 // mode: c++

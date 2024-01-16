@@ -37,7 +37,7 @@ extern const TableTms9900 TABLE;
 }  // namespace tms9900
 }  // namespace libasm
 
-#endif  // __TABLE_TMS9900_H__
+#endif  // __LIBASM_TABLE_TMS9900_H__
 
 // Local Variables:
 // mode: c++

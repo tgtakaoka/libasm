@@ -67,7 +67,7 @@ private:
 }  // namespace cdp1802
 }  // namespace libasm
 
-#endif  // __ENTRY_CDP1802_H__
+#endif  // __LIBASM_ENTRY_CDP1802_H__
 
 // Local Variables:
 // mode: c++
