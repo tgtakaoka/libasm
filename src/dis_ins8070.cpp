@@ -82,8 +82,6 @@ void DisIns8070::decodeRelative(DisInsn &insn, StrBuffer &out, AddrMode mode, bo
         const auto target = base + delta;
         insn.setErrorIf(out, checkAddr(target));
         outRelAddr(out, target, insn.address(), 8);
-        if (fetch == 0)
-            outRegName(out.letter(','), REG_PC);
     } else {
         outDec(out, delta, -8).letter(',');
         outRegName(out, ptr);

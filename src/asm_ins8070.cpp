@@ -144,8 +144,10 @@ void AsmIns8070::emitGeneric(AsmInsn &insn, const Operand &op) const {
     }
     if ((op.mode == M_ADR || op.mode == M_VEC) && op.reg == REG_UNDEF) {
         const auto target = op.getError() ? 0xFF00 : op.val16;
-        if (target < 0xFF00)
-            insn.setErrorIf(op, OVERFLOW_RANGE);
+        if (target < 0xFF00) {
+            emitRelative(insn, op);
+            return;
+        }
         insn.embed(5);
         insn.emitOperand8(target);
         return;

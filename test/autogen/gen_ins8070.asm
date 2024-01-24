@@ -73,9 +73,9 @@
       BNZ   $
       BNZ   127,P2
       BNZ   -128,P2
-      LD    EA, $-126,PC
-      LD    EA, $,PC
-      LD    EA, $+1,PC
+      LD    EA, $-126
+      LD    EA, $
+      LD    EA, $+1
       LD    EA, -126,SP
       LD    EA, 0,SP
       LD    EA, -125,P2
@@ -84,9 +84,9 @@
       LD    EA, 0FF86H
       LD    EA, @-121,P2
       LD    EA, @0,P2
-      ST    EA, $-118,PC
-      ST    EA, $,PC
-      ST    EA, $+1,PC
+      ST    EA, $-118
+      ST    EA, $
+      ST    EA, $+1
       ST    EA, -118,SP
       ST    EA, 0,SP
       ST    EA, -117,P2
@@ -94,9 +94,9 @@
       ST    EA, 0FF8EH
       ST    EA, @-113,P2
       ST    EA, @0,P2
-      ILD   A, $-110,PC
-      ILD   A, $,PC
-      ILD   A, $+1,PC
+      ILD   A, $-110
+      ILD   A, $
+      ILD   A, $+1
       ILD   A, -110,SP
       ILD   A, 0,SP
       ILD   A, -109,P2
@@ -104,9 +104,9 @@
       ILD   A, 0FF96H
       ILD   A, @-105,P2
       ILD   A, @0,P2
-      DLD   A, $-102,PC
-      DLD   A, $,PC
-      DLD   A, $+1,PC
+      DLD   A, $-102
+      DLD   A, $
+      DLD   A, $+1
       DLD   A, -102,SP
       DLD   A, 0,SP
       DLD   A, -101,P2
@@ -114,9 +114,9 @@
       DLD   A, 0FF9EH
       DLD   A, @-97,P2
       DLD   A, @0,P2
-      LD    T, $-94,PC
-      LD    T, $,PC
-      LD    T, $+1,PC
+      LD    T, $-94
+      LD    T, $
+      LD    T, $+1
       LD    T, -94,SP
       LD    T, 0,SP
       LD    T, -93,P2
@@ -125,9 +125,9 @@
       LD    T, 0FFA6H
       LD    T, @-89,P2
       LD    T, @0,P2
-      ADD   EA, $-78,PC
-      ADD   EA, $,PC
-      ADD   EA, $+1,PC
+      ADD   EA, $-78
+      ADD   EA, $
+      ADD   EA, $+1
       ADD   EA, -78,SP
       ADD   EA, 0,SP
       ADD   EA, -77,P2
@@ -136,9 +136,9 @@
       ADD   EA, 0FFB6H
       ADD   EA, @-73,P2
       ADD   EA, @0,P2
-      SUB   EA, $-70,PC
-      SUB   EA, $,PC
-      SUB   EA, $+1,PC
+      SUB   EA, $-70
+      SUB   EA, $
+      SUB   EA, $+1
       SUB   EA, -70,SP
       SUB   EA, 0,SP
       SUB   EA, -69,P2
@@ -147,9 +147,9 @@
       SUB   EA, 0FFBEH
       SUB   EA, @-65,P2
       SUB   EA, @0,P2
-      LD    A, $-62,PC
-      LD    A, $,PC
-      LD    A, $+1,PC
+      LD    A, $-62
+      LD    A, $
+      LD    A, $+1
       LD    A, -62,SP
       LD    A, 0,SP
       LD    A, -61,P2
@@ -158,9 +158,9 @@
       LD    A, 0FFC6H
       LD    A, @-57,P2
       LD    A, @0,P2
-      ST    A, $-54,PC
-      ST    A, $,PC
-      ST    A, $+1,PC
+      ST    A, $-54
+      ST    A, $
+      ST    A, $+1
       ST    A, -54,SP
       ST    A, 0,SP
       ST    A, -53,P2
@@ -168,9 +168,9 @@
       ST    A, 0FFCEH
       ST    A, @-49,P2
       ST    A, @0,P2
-      AND   A, $-46,PC
-      AND   A, $,PC
-      AND   A, $+1,PC
+      AND   A, $-46
+      AND   A, $
+      AND   A, $+1
       AND   A, -46,SP
       AND   A, 0,SP
       AND   A, -45,P2
@@ -179,9 +179,9 @@
       AND   A, 0FFD6H
       AND   A, @-41,P2
       AND   A, @0,P2
-      OR    A, $-38,PC
-      OR    A, $,PC
-      OR    A, $+1,PC
+      OR    A, $-38
+      OR    A, $
+      OR    A, $+1
       OR    A, -38,SP
       OR    A, 0,SP
       OR    A, -37,P2
@@ -190,9 +190,9 @@
       OR    A, 0FFDEH
       OR    A, @-33,P2
       OR    A, @0,P2
-      XOR   A, $-30,PC
-      XOR   A, $,PC
-      XOR   A, $+1,PC
+      XOR   A, $-30
+      XOR   A, $
+      XOR   A, $+1
       XOR   A, -30,SP
       XOR   A, 0,SP
       XOR   A, -29,P2
@@ -201,9 +201,9 @@
       XOR   A, 0FFE6H
       XOR   A, @-25,P2
       XOR   A, @0,P2
-      ADD   A, $-14,PC
-      ADD   A, $,PC
-      ADD   A, $+1,PC
+      ADD   A, $-14
+      ADD   A, $
+      ADD   A, $+1
       ADD   A, -14,SP
       ADD   A, 0,SP
       ADD   A, -13,P2
@@ -212,9 +212,9 @@
       ADD   A, 0FFF6H
       ADD   A, @-9,P2
       ADD   A, @0,P2
-      SUB   A, $-6,PC
-      SUB   A, $,PC
-      SUB   A, $+1,PC
+      SUB   A, $-6
+      SUB   A, $
+      SUB   A, $+1
       SUB   A, -6,SP
       SUB   A, 0,SP
       SUB   A, -5,P2
