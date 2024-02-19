@@ -30,9 +30,9 @@ jobs:
           - vendor: MightyCore
             arch: avr
             name: 1284
-          - vendor: DxCore
-            arch: megaavr
-            name: avrda
+          # - vendor: DxCore
+          #   arch: megaavr
+          #   name: avrda
           - vendor: teensy
             arch: avr
             name: teensy41
@@ -40,9 +40,9 @@ jobs:
           - index: https://mcudude.github.io/MightyCore/package_MCUdude_MightyCore_index.json
             board:
               vendor: MightyCore
-          - index: https://drazzy.com/package_drazzy.com_index.json
-            board:
-              vendor: DxCore
+          # - index: https://drazzy.com/package_drazzy.com_index.json
+          #   board:
+          #     vendor: DxCore
           - index: https://www.pjrc.com/teensy/package_teensy_index.json
             board:
               vendor: teensy
