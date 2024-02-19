@@ -4810,7 +4810,7 @@
       LDE   #$87
       ADDE  #$8C
       CMPS  #$8D8E
-      DIVD  #$8E8F
+      DIVD  #$8E
       DIVQ  #$8F90
       MULD  #$9091
       SUBE  $91
@@ -4843,7 +4843,7 @@
       SUBE  *-79,PCR
       SUBE  *,PCR
       SUBE  *+1,PCR
-      SUBE  *-$4431,PCR
+      SUBE  *-$4430,PCR
       SUBE  >*-$007B,PCR
       SUBE  >*,PCR
       SUBE  >*+1,PCR
@@ -5386,7 +5386,7 @@
       LDE   *-79,PCR
       LDE   *,PCR
       LDE   *+1,PCR
-      LDE   *-$4C26,PCR
+      LDE   *-$4C25,PCR
       LDE   >*-$007B,PCR
       LDE   >*,PCR
       LDE   >*+1,PCR
@@ -7954,7 +7954,7 @@
       LEAX  *-112,PCR
       LEAX  *,PCR
       LEAX  *+1,PCR
-      LEAX  *-$6F62,PCR
+      LEAX  *-$6F61,PCR
       LEAX  >*-$007C,PCR
       LEAX  >*,PCR
       LEAX  >*+1,PCR
@@ -8137,7 +8137,7 @@
       LEAY  *-112,PCR
       LEAY  *,PCR
       LEAY  *+1,PCR
-      LEAY  *-$7158,PCR
+      LEAY  *-$7157,PCR
       LEAY  >*-$007C,PCR
       LEAY  >*,PCR
       LEAY  >*+1,PCR

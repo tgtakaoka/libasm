@@ -511,7 +511,8 @@ static void test_immediate() {
         ERRT("STQ  #$12345678", OPERAND_NOT_ALLOWED, "#$12345678");
 
         TEST("MULD #$90A0", 0x11, 0x8F, 0x90, 0xA0);
-        TEST("DIVD #$90A0", 0x11, 0x8D, 0x90, 0xA0);
+        TEST("DIVD #$90",   0x11, 0x8D, 0x90);
+        TEST("DIVD #$90A0", 0x11, 0x8D, 0xA0);
         TEST("DIVQ #$90A0", 0x11, 0x8E, 0x90, 0xA0);
     } else {
         ERUI("LDMD  #$01");
@@ -536,7 +537,7 @@ static void test_immediate() {
         ERUI("CMPW #$90A0");
         ERUI("LDQ  #$12345678");
         ERUI("MULD #$90A0");
-        ERUI("DIVD #$90A0");
+        ERUI("DIVD #$90");
     }
 
     symtab.intern(0x90, "dir90");

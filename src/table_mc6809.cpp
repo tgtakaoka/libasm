@@ -494,7 +494,7 @@ static constexpr Entry HD6309_P11[] PROGMEM = {
     U1(0x87, TEXT_STE,   M_IM8),
     E1(0x87, TEXT_STE,   M_GEN8),
     E1(0x8B, TEXT_ADDE,  M_GEN8),
-    E1(0x8D, TEXT_DIVD,  M_GEN16),
+    E1(0x8D, TEXT_DIVD,  M_GEN8),
     E1(0x8E, TEXT_DIVQ,  M_GEN16),
     E1(0x8F, TEXT_MULD,  M_GEN16),
     E1(0xC0, TEXT_SUBF,  M_GEN8),
