@@ -261,8 +261,10 @@ Error AsmCdp1802::encodeImpl(StrScanner &scan, Insn &_insn) const {
         return _insn.getError();
 
     emitOperand(insn, insn.mode1(), insn.op1);
-    if (insn.mode2() == M_ADDR)
+    if (insn.mode2() == M_ADDR) {
+        insn.setErrorIf(insn.op2);
         insn.emitUint16(insn.op2.val16);
+    }
     return _insn.setError(insn);
 }
 

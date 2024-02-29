@@ -723,6 +723,11 @@ static void test_undef() {
 
     AERUS(0x1234, "LBR UNDEF", "UNDEF", 0xC0, 0x00, 0x00);
 
+    if (cdp1804()) {
+        ERUS("RLDI 4, UNDEF", "UNDEF", 0x68, 0xC4, 0x00, 0x00);
+        ERUS("SCAL 4, UNDEF", "UNDEF", 0x68, 0x84, 0x00, 0x00);
+    }
+
     TEST("OPTION SMART-BRANCH, ON");
     AERUS(0x1234, "BR  UNDEF", "UNDEF", 0xC0, 0x00, 0x00);
     AERUS(0x1234, "LBR UNDEF", "UNDEF", 0xC0, 0x00, 0x00);
