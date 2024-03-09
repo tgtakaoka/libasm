@@ -652,15 +652,13 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (table == M_GEN8 || table == M_GEN16)
-        return opr == M_IM32 || opr == M_IDX || opr == M_LIST || opr == M_PAIR || opr == M_DIR ||
-               opr == M_EXT;
+        return opr == M_IM32 || opr == M_IDX || opr == M_PAIR || opr == M_DIR || opr == M_EXT;
     if (table == M_GMEM)
-        return opr == M_IDX || opr == M_LIST || opr == M_PAIR || opr == M_DIR || opr == M_EXT;
+        return opr == M_IDX || opr == M_PAIR || opr == M_DIR || opr == M_EXT;
     if (opr == M_IM32)
         return table == M_IM8 || table == M_LIST;  // immediate register list
     if (opr == M_PAIR)
-        return table == M_IDX       // A,X
-               || table == M_LIST;  // 2-length register list
+        return table == M_IDX || table == M_LIST;  // A,X, 2-length register list
     if (opr == M_RBIT)
         return table == M_PAIR;  // A,0
     if (opr == M_DIR)

@@ -572,6 +572,8 @@ static void test_direct() {
     TEST("INC $10", 0x0C, 0x10);
     TEST("TST $10", 0x0D, 0x10);
     TEST("CLR $10", 0x0F, 0x10);
+    ERRT("NEG  B", OPERAND_NOT_ALLOWED, "B");
+    ERRT("CLR  D", OPERAND_NOT_ALLOWED, "D");
 
     TEST("SUBA $90", 0x90, 0x90);
     TEST("CMPA $90", 0x91, 0x90);
@@ -942,6 +944,8 @@ static void test_indexed() {
     TEST("INC  ,X", 0x6C, 0x84);
     TEST("TST  ,X", 0x6D, 0x84);
     TEST("CLR  ,X", 0x6F, 0x84);
+    ERRT("NEG  B", OPERAND_NOT_ALLOWED, "B");
+    ERRT("CLR  D", OPERAND_NOT_ALLOWED, "D");
 
     TEST("SUBA ,Y", 0xA0, 0xA4);
     TEST("CMPA ,Y", 0xA1, 0xA4);
@@ -954,6 +958,8 @@ static void test_indexed() {
     TEST("ADCA ,Y", 0xA9, 0xA4);
     TEST("ORA  ,Y", 0xAA, 0xA4);
     TEST("ADDA ,Y", 0xAB, 0xA4);
+    ERRT("STA  B", OPERAND_NOT_ALLOWED, "B");
+    ERRT("LDA  D", OPERAND_NOT_ALLOWED, "D");
 
     TEST("SUBB ,U", 0xE0, 0xC4);
     TEST("CMPB ,U", 0xE1, 0xC4);

@@ -229,6 +229,8 @@ static void test_indexed_y() {
         TEST("CLR 255,Y", 0x18, 0x6F, 0xFF);
         ERRT("CLR 256,Y", OVERFLOW_RANGE, "256,Y", 0x18, 0x6F, 0x00);
         ERRT("CLR -1,Y",  OVERFLOW_RANGE, "-1,Y",  0x18, 0x6F, 0xFF);
+        ERRT("NEG  B",    UNDEFINED_SYMBOL, "B",   0x70, 0x00, 0x00);
+        ERRT("CLR  D",    UNDEFINED_SYMBOL, "D",   0x7F, 0x00, 0x00);
 
         TEST("SUBA   0,Y", 0x18, 0xA0, 0x00);
         TEST("CMPA   0,Y", 0x18, 0xA1, 0x00);
