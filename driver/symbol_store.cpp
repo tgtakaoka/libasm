@@ -38,6 +38,10 @@ void SymbolStoreImpl::copy(const SymbolStoreImpl &other) {
 void SymbolStoreImpl::clear() {
     _symbols.clear();
     _variables.clear();
+    clearFunctions();
+}
+
+void SymbolStoreImpl::clearFunctions() {
     _functions.clear();
 }
 

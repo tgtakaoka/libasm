@@ -60,6 +60,7 @@ int AsmCommander::assemble() {
             fprintf(stderr, "%s: Pass %d\n", _input_name, ++pass);
         prev.swap(memory);
         symbols.copy(_driver.symbols());
+        _driver.symbols().clearFunctions();
         memory.clear();
         listout.clear();
         errorout.clear();

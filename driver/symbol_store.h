@@ -44,6 +44,7 @@ struct SymbolStoreImpl final : SymbolStore {
     bool operator!=(const SymbolStoreImpl &other) const { return !(*this == other); }
     void copy(const SymbolStoreImpl &other);
     void clear();
+    void clearFunctions();
 
     // SymbolTable
     const char *lookupValue(uint32_t) const override { return nullptr; }
