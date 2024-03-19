@@ -364,6 +364,7 @@ static void test_one_operand() {
     TZ88("CALL @RR2", 0xF4, R(2));
     EZ86("CALL #%D6", OPERAND_NOT_ALLOWED, "#%D6");
     TZ88("CALL #%D6", 0xD4, 0xD6);
+    EZ88("CALL #%D7", OPERAND_NOT_ALIGNED, "#%D7", 0xD4, 0xD7);
     TEST("SRP  #%30", 0x31, 0x30);
     ERRT("SRP  #%38", OPERAND_NOT_ALLOWED, "#%38", 0x31, 0x38);
     EZ86("SRP0 #%30", UNKNOWN_INSTRUCTION, "SRP0 #%30");

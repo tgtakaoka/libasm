@@ -321,7 +321,7 @@ static constexpr Entry TABLE_SUPER8[] PROGMEM = {
     E0(0x5F, TEXT_SB1,    PF_NONE),
     E1(0xF6, TEXT_CALL,   PF_NONE, M_DA,  OP_W1BE),
     E1(0xF4, TEXT_CALL,   PF_NONE, M_IRR, OP_BYT1),
-    E1(0xD4, TEXT_CALL,   PF_NONE, M_IM,  OP_BYT1),
+    E1(0xD4, TEXT_CALL,   PF_NONE, M_IA,  OP_BYT1),
     E2(0x87, TEXT_LD,     PF_NONE, M_r,   M_X,   OP_B1HI, OP_BYT2), // x: OP_B1LO
     E2(0x97, TEXT_LD,     PF_NONE, M_X,   M_r,   OP_BYT2, OP_B1HI), // x: OP_B1LO
     E2(0xC7, TEXT_LD,     PF_NONE, M_r,   M_Ir,  OP_B1HI, OP_B1LO),
@@ -500,7 +500,7 @@ static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;
     if (opr == M_IM)
-        return table == M_IMb || table == M_IML;
+        return table == M_IMb || table == M_IML || table == M_IA;
     if (opr == M_DA)
         return table == M_RA;
     if (opr == M_R)

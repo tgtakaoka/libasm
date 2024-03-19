@@ -332,6 +332,7 @@ static void test_one_operand() {
         TEST("CALL", "@%D6", 0xF4, 0xD6);
         TEST("CALL", "@RR2", 0xF4, R(2));
         TEST("CALL", "#%D6", 0xD4, 0xD6);
+        ERRT("CALL", "#%D7", OPERAND_NOT_ALIGNED, "#%D7", 0xD4, 0xD7);
         NMEM("CALL", "#0", "0", 0xD4);
     }
 }
