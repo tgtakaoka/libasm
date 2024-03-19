@@ -246,12 +246,14 @@ void DisZ8::decodeImmediate(DisInsn &insn, StrBuffer &out, Operand &op) const {
         if (postFormat == PF2_0 || postFormat == PF2_1 || postFormat == PF2_2)
             op.val16 &= ~3;
     }
+    if (op.mode == M_IA && op.val16 % 2)
+        insn.setErrorIf(out, OPERAND_NOT_ALIGNED);
     out.letter('#');
     if (op.getError())
         insn.setErrorIf(out, op);
     if (op.mode == M_IMb)
         op.val16 >>= 1;
-    const auto bits = op.mode == M_IM ? 8 : (op.mode == M_IMb ? 3 : 16);
+    const auto bits = (op.mode == M_IM || op.mode == M_IA) ? 8 : (op.mode == M_IMb ? 3 : 16);
     outHex(out, op.val16, bits);
 }
 
@@ -289,6 +291,7 @@ void DisZ8::decodeOperand(DisInsn &insn, StrBuffer &out, Operand &op) const {
     case M_IM:
     case M_IMb:
     case M_IML:
+    case M_IA:
         decodeImmediate(insn, out, op);
         break;
     case M_r:

@@ -44,11 +44,12 @@ enum AddrMode : uint8_t {
     M_XS = 15,   // Indexed Short: nn(rrn)
     M_XL = 16,   // Indexed Long: nnnn(rrn)
     M_cc = 17,   // Condition Code: cc
-    // Those (18-) happen only in assembler internal.
-    M_W = 18,    // Register or Working register: Rxy x==RP
-    M_IW = 19,   // Indirect Register or Working register: @Rxy x==RP
-    M_WW = 20,   // Register or Working register pair: RRxy: x=RP
-    M_IWW = 21,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
+    M_IA = 18,   // Indirect address for CALL #IA
+    // Those (19-) happen only in assembler internal.
+    M_W = 19,    // Register or Working register: Rxy x==RP
+    M_IW = 20,   // Indirect Register or Working register: @Rxy x==RP
+    M_WW = 21,   // Register or Working register pair: RRxy: x=RP
+    M_IWW = 22,  // Indirect Register Pair or Working register Pair: @RRxy x==RP
 };
 
 // Post byte format

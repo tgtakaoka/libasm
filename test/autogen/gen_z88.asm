@@ -297,7 +297,7 @@
       CPIJNE  R3, @R13, $+1
       LDC     @RR4, R13
       LDE     @RR4, R13
-      CALL    #0D5H
+      CALL    #0D6H
       LD      @0D7H, #0D8H
       LD      @R13, R8
       JR      PL, $-34

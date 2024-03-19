@@ -342,8 +342,10 @@ void AsmZ8::encodeRegAddr(AsmInsn &insn, OprPos pos, const Operand &op) const {
 }
 
 void AsmZ8::encodeImmediate(AsmInsn &insn, AddrMode mode, OprPos pos, const Operand &op) const {
-    if (mode == M_IM && overflowUint8(op.val16))
+    if ((mode == M_IM || mode == M_IA) && overflowUint8(op.val16))
         insn.setErrorIf(op, OVERFLOW_RANGE);
+    if (mode == M_IA && op.val16 % 2)
+        insn.setErrorIf(op, OPERAND_NOT_ALIGNED);
     auto val16 = op.val16;
     if (insn.opCode() == TableZ8::SRP) {
         const auto postFormat = insn.postFormat();
@@ -374,6 +376,7 @@ void AsmZ8::encodeOperand(AsmInsn &insn, AddrMode mode, OprPos pos, const Operan
     case M_IM:
     case M_IMb:
     case M_IML:
+    case M_IA:
         encodeImmediate(insn, mode, pos, op);
         break;
     case M_r:

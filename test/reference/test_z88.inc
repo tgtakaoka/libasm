@@ -108,7 +108,7 @@
         srp0    #58H
         srp1    #68H
 
-        call    #0D5H
+        call    #0D6H
 
 ;;; Local Variables:
 ;;; mode: asm
