@@ -30,6 +30,7 @@ ARCHS = \
 	mn1610   \
 	mos6502  \
 	ns32000  \
+	pdp11    \
 	pdp8     \
 	scn2650  \
 	tlcs90   \
@@ -64,6 +65,7 @@ TGT_mc6809   = mc6809 hd6309
 TGT_mn1610   = mn1610 mn1613
 TGT_mos6502  = mos6502 g65sc02 r65c02 w65c02s w65c816
 TGT_ns32000  = ns32000 ns32k
+TGT_pdp11    = j11 t11
 TGT_pdp8     = im6100 hd6120
 TGT_scn2650  = scn2650
 TGT_tlcs90   = tlcs90
@@ -98,6 +100,7 @@ CPU_i80c48   = 80C48
 CPU_im6100   = 6100
 CPU_ins8060  = SC/MP
 CPU_ins8070  = 8070
+CPU_j11      = J11
 CPU_m68k     = 68000
 CPU_mb8861   = MB8861
 CPU_mc68000  = 68000
@@ -115,6 +118,7 @@ CPU_ns32000  = NS32032
 CPU_ns32k    = NS32032
 CPU_r65c02   = 65C02
 CPU_scn2650  = 2650
+CPU_t11      = T11
 CPU_tlcs90   = TLCS90
 CPU_tms32010 = 32010
 CPU_tms7000  = TMS7000

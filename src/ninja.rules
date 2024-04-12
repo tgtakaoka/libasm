@@ -3,6 +3,7 @@
 
 build asm_base.o:        cxx ${root}/src/asm_base.cpp
 build config_base.o:     cxx ${root}/src/config_base.cpp
+build dec_float.o:       cxx ${root}/src/dec_float.cpp
 build dis_base.o:        cxx ${root}/src/dis_base.cpp
 build error_reporter.o:  cxx ${root}/src/error_reporter.cpp
 build fixed64.o:         cxx ${root}/src/fixed64.cpp
@@ -134,6 +135,12 @@ build dis_ns32000.o:   cxx ${root}/src/dis_ns32000.cpp
 build reg_ns32000.o:   cxx ${root}/src/reg_ns32000.cpp
 build table_ns32000.o: cxx ${root}/src/table_ns32000.cpp
 build text_ns32000.o:  cxx ${root}/src/text_ns32000.cpp
+
+# pdp11
+build dis_pdp11.o:    cxx ${root}/src/dis_pdp11.cpp
+build reg_pdp11.o:    cxx ${root}/src/reg_pdp11.cpp
+build table_pdp11.o:  cxx ${root}/src/table_pdp11.cpp
+build text_pdp11.o:   cxx ${root}/src/text_pdp11.cpp
 
 # pdp8
 build asm_pdp8.o:    cxx ${root}/src/asm_pdp8.cpp

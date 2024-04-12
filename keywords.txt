@@ -51,6 +51,7 @@ DisMc6809       KEYWORD1        libasm
 DisMn1610       KEYWORD1        libasm
 DisMos6502      KEYWORD1        libasm
 DisNs32000      KEYWORD1        libasm
+DisPdp11        KEYWORD1        libasm
 DisPdp8         KEYWORD1        libasm
 DisScn2650      KEYWORD1        libasm
 DisTlcs90       KEYWORD1        libasm
