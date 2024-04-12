@@ -165,6 +165,8 @@ StrBuffer &Disassembler::outDec(StrBuffer &out, uint32_t val, int8_t bits) const
     if (label)
         return out.rtext(label);
     StrCaseBuffer caseOut(out, _upperHex);
+    if (_listRadix == RADIX_8)
+        return formatter().formatOct(caseOut, val, bits).over(out);
     return formatter().formatDec(caseOut, val, bits).over(out);
 }
 
@@ -230,10 +232,10 @@ StrBuffer &Disassembler::outRelAddr(
         val = static_cast<uint32_t>(delta);
     }
     StrCaseBuffer caseOut(out, _upperHex);
-    if (deltaBits <= 14)
-        return formatter().formatDec(caseOut, val, deltaBits).over(out);
     if (_listRadix == RADIX_8)
         return formatter().formatOct(caseOut, val, deltaBits).over(out);
+    if (deltaBits <= 14)
+        return formatter().formatDec(caseOut, val, deltaBits).over(out);
     return outHex(caseOut, val, deltaBits, true).over(out);
 }
 
