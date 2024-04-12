@@ -388,6 +388,22 @@ build gen_ns32000: link gen_ns32000.o $
   fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
   gen_driver.o tokenized_text.o
 
+# pdp11
+build test_dis_pdp11: run test_dis_pdp11.o $
+  dis_pdp11.o reg_pdp11.o table_pdp11.o text_pdp11.o dec_float.o $
+  dis_base.o config_base.o error_reporter.o formatters.o insn_base.o $
+  option_base.o reg_base.o str_buffer.o str_scanner.o text_common.o value.o $
+  value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  test_dis_helper.o test_asserter.o
+build gen_pdp11: link gen_pdp11.o $
+  dis_pdp11.o reg_pdp11.o table_pdp11.o text_pdp11.o $
+  config_base.o dis_base.o dis_formatter.o error_reporter.o formatters.o $
+  insn_base.o list_formatter.o option_base.o reg_base.o str_buffer.o $
+  str_scanner.o test_generator.o text_common.o value.o value_formatter.o $
+  fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o $
+  gen_driver.o tokenized_text.o
+
 # pdp8
 build test_asm_pdp8: run test_asm_pdp8.o $
   asm_pdp8.o reg_pdp8.o table_pdp8.o text_pdp8.o $
@@ -643,6 +659,7 @@ build test_mc6809:   phony test_asm_mc6809   test_dis_mc6809
 build test_mn1610:   phony test_asm_mn1610   test_dis_mn1610
 build test_mos6502:  phony test_asm_mos6502  test_dis_mos6502
 build test_ns32000:  phony test_asm_ns32000  test_dis_ns32000
+build test_pdp11:    phony                   test_dis_pdp11
 build test_pdp8:     phony test_asm_pdp8     test_dis_pdp8
 build test_scn2650:  phony test_asm_scn2650  test_dis_scn2650
 build test_tlcs90:   phony test_asm_tlcs90   test_dis_tlcs90
@@ -678,6 +695,7 @@ build test: phony $
   test_mn1610   $
   test_mos6502  $
   test_ns32000  $
+  test_pdp11    $
   test_pdp8     $
   test_scn2650  $
   test_tlcs90   $
@@ -706,6 +724,7 @@ build gen: phony $
   gen_mn1610   $
   gen_mos6502  $
   gen_ns32000  $
+  gen_pdp11    $
   gen_pdp8     $
   gen_scn2650  $
   gen_tlcs90   $

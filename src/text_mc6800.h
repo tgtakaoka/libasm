@@ -139,7 +139,7 @@ using common::TEXT_SBCA;
 using common::TEXT_SBCB;
 using common::TEXT_SEC;
 using common::TEXT_SEI;
-extern const char TEXT_SEV[]  PROGMEM;
+using common::TEXT_SEV;
 using common::TEXT_STA;
 extern const char TEXT_STAA[] PROGMEM;
 extern const char TEXT_STAB[] PROGMEM;

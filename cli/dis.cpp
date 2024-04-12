@@ -24,22 +24,23 @@
 #include "dis_i8096.h"
 #include "dis_ins8060.h"
 #include "dis_ins8070.h"
-#include "dis_mc6800.h"
 #include "dis_mc68000.h"
+#include "dis_mc6800.h"
 #include "dis_mc6805.h"
 #include "dis_mc6809.h"
 #include "dis_mn1610.h"
 #include "dis_mos6502.h"
 #include "dis_ns32000.h"
+#include "dis_pdp11.h"
 #include "dis_pdp8.h"
 #include "dis_scn2650.h"
 #include "dis_tlcs90.h"
 #include "dis_tms32010.h"
 #include "dis_tms7000.h"
 #include "dis_tms9900.h"
-#include "dis_z8.h"
-#include "dis_z80.h"
 #include "dis_z8000.h"
+#include "dis_z80.h"
+#include "dis_z8.h"
 
 using namespace libasm;
 using namespace libasm::cli;
@@ -61,6 +62,7 @@ mc6809::DisMc6809 dis6809;
 mn1610::DisMn1610 dis1610;
 mos6502::DisMos6502 dis6502;
 ns32000::DisNs32000 dis32000;
+pdp11::DisPdp11 dispdp11;
 pdp8::DisPdp8 dispdp8;
 scn2650::DisScn2650 dis2650;
 tlcs90::DisTlcs90 dis90;
@@ -97,6 +99,7 @@ DisCommander commander{
         &disz8000,
         &dis32000,
         &dis1610,
+        &dispdp11,
 };
 
 int main(int argc, const char **argv) {

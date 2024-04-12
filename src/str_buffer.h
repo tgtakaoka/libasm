@@ -112,6 +112,26 @@ struct StrBuffer : ErrorReporter {
         return reverse(start);
     }
 
+    /** Output |v| in octal number. */
+    template <typename T>
+    StrBuffer &oct(T v, uint_fast8_t prec = 0) {
+        using U = typename make_unsigned<T>::type;
+        U u = static_cast<U>(v);
+        constexpr auto bits = sizeof(T) * 8;
+        constexpr auto digits = bits / 3 + (bits % 3 != 0);
+        auto *start = mark();
+        for (uint_fast8_t i = 0; i < digits; ++i) {
+            const uint8_t digit = u & 7;
+            letter(digit + '0');
+            u >>= 3;
+            if (prec && --prec == 0)
+                break;
+        }
+        for (; prec; --prec)
+            letter('0');
+        return reverse(start);
+    }
+
     /** Output |value| as decimal number. */
     StrBuffer &int16(int16_t i16, uint_fast8_t prec = 0) { return dec(i16, prec); }
 
