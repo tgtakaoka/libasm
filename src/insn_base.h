@@ -71,16 +71,24 @@ struct Insn final : ErrorAt {
 
 #ifndef ASM_NOFLOAT
     /** Generate 32 bit big endian floating point |data|(Assembler). */
-    Error emitFloat32Be(double data) { return emitFloat32Be(data, _length); }
+    Error emitFloat32Be(double data) {
+        return emitFloat32Be(data, _length);
+    }
 
     /** Generate 32 bit little endian floating point |data| (Assembler). */
-    Error emitFloat32Le(double data) { return emitFloat32Le(data, _length); }
+    Error emitFloat32Le(double data) {
+        return emitFloat32Le(data, _length);
+    }
 
     /** Generate 64 bit big endian floating point |data| (Assembler). */
-    Error emitFloat64Be(double data) { return emitFloat64Be(data, _length); }
+    Error emitFloat64Be(double data) {
+        return emitFloat64Be(data, _length);
+    }
 
     /** Generate 64 bit little endian floating point |data| (Assembler). */
-    Error emitFloat64Le(double data) { return emitFloat64Le(data, _length); }
+    Error emitFloat64Le(double data) {
+        return emitFloat64Le(data, _length);
+    }
 #endif
 
     /** Generate 8 bit |data| at |pos| (Assembler). */

@@ -28,7 +28,7 @@ namespace libasm {
  */
 struct DecFormatter : Singleton<DecFormatter> {
     /** Format unsigned |val| as decimal. */
-    virtual StrBuffer &format(StrBuffer &out, uint32_t val) const;
+    virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t bits = 0) const;
 
 protected:
     /**
@@ -170,6 +170,17 @@ struct PrefixStrOctFormatter final : PrefixFormatter<OctFormatter, const char *c
 };
 
 /**
+ * Deciaml number is prefixed with |prefix|.
+ */
+struct PrefixDecFormatter final : PrefixFormatter<DecFormatter, const char> {
+    PrefixDecFormatter(const char prefix) : PrefixFormatter(prefix) {}
+};
+
+struct PrefixStrDecFormatter final : PrefixFormatter<DecFormatter, const char *const> {
+    PrefixStrDecFormatter(const /*PROGMEM*/ char *prefix_P) : PrefixFormatter(prefix_P) {}
+};
+
+/**
  * Hexadecimal number is prefixed with |prefix|.
  */
 struct PrefixHexFormatter final : PrefixFormatter<HexFormatter, const char> {
@@ -196,6 +207,13 @@ struct SuffixOctFormatter final : SuffixFormatter<OctFormatter, const char> {
 };
 
 /**
+ * Decimal number is suffixed with |suffix|.
+ */
+struct SuffixDecFormatter final : SuffixFormatter<DecFormatter, const char> {
+    SuffixDecFormatter(const char suffix) : SuffixFormatter(suffix) {}
+};
+
+/**
  * Hexadecimal number is suffixed with |suffix|. It is also prefixed with '0' when it starts with
  * non-digit letter.
  */
@@ -218,6 +236,14 @@ struct SurroundBinFormatter final : SurroundFormatter<BinFormatter, const char *
  */
 struct SurroundOctFormatter final : SurroundFormatter<OctFormatter, const char *const, const char> {
     SurroundOctFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
+        : SurroundFormatter(prefix_P, suffix) {}
+};
+
+/**
+ * Decimal number is surrounded by |prefix| and |suffix|.
+ */
+struct SurroundDecFormatter final : SurroundFormatter<DecFormatter, const char *const, const char> {
+    SurroundDecFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
         : SurroundFormatter(prefix_P, suffix) {}
 };
 

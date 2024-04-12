@@ -159,7 +159,7 @@ struct Float80 {
             exponent |= 0x8000;
         significant = buffer[1] & 0xF;
         if (!denormal)
-            significant |= 0x10; // hidden integer 1
+            significant |= 0x10;  // hidden integer 1
         for (auto i = 2; i < 8; ++i) {
             significant <<= 8;
             significant |= buffer[i];
