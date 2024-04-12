@@ -111,6 +111,12 @@ struct Insn final : ErrorAt {
         return emitUint16Le(data >> 16);
     }
 
+    /** Generate 32 bit mixed endian |data| (Assembler). */
+    Error emitUint32Mix(uint32_t data) {
+        emitUint16Le(data >> 16);
+        return emitUint16Le(data >> 0);
+    }
+
     /** Generate 32 bit big endian |data| at |pos| (Assembler). */
     Error emitUint32Be(uint32_t data, uint8_t pos) {
         emitUint16Be(data >> 16, pos + 0);
@@ -121,6 +127,12 @@ struct Insn final : ErrorAt {
     Error emitUint32Le(uint32_t data, uint8_t pos) {
         emitUint16Le(data >> 0, pos + 0);
         return emitUint16Le(data >> 16, pos + 2);
+    }
+
+    /** Generate 32 bit mixed endian |data| at |pos| (Assembler). */
+    Error emitUint32Mix(uint32_t data, uint8_t pos) {
+        emitUint16Le(data >> 16, pos + 0);
+        return emitUint16Le(data >> 0, pos + 2);
     }
 
     /** Generate 64 bit big enditan |data| (Assembler). */
@@ -280,11 +292,17 @@ struct AsmInsnBase : ErrorAt {
     /** Generate 32 bit little endian |data| (Assembler). */
     Error emitUint32Le(uint32_t data) { return _insn.emitUint32Le(data); }
 
+    /** Generate 32 bit mixed endian |data| (Assembler). */
+    Error emitUint32Mix(uint32_t data) { return _insn.emitUint32Mix(data); }
+
     /** Generate 32 bit big endian |data| at |pos| (Assembler). */
     Error emitUint32Be(uint32_t data, uint8_t pos) { return _insn.emitUint32Be(data, pos); }
 
     /** Generate 32 bit little endian |data| at |pos| (Assembler). */
     Error emitUint32Le(uint32_t data, uint8_t pos) { return _insn.emitUint32Le(data, pos); }
+
+    /** Generate 32 bit mixed endian |data| at |pos| (Assembler). */
+    Error emitUint32Mix(uint32_t data, uint8_t pos) { return _insn.emitUint32Mix(data, pos); }
 
     /** Generate 64 bit big endian |data| (Assembler). */
     Error emitUint64Be(uint64_t data) { return _insn.emitUint64Be(data); }
@@ -378,6 +396,13 @@ struct DisInsnBase : ErrorAt {
     uint32_t readUint32Le() {
         const uint16_t lsw = readUint16Le();
         const uint16_t msw = readUint16Le();
+        return static_cast<uint32_t>(msw) << 16 | lsw;
+    }
+
+    /** Read 32 bit mixed endian data */
+    uint32_t readUint32Mix() {
+        const uint16_t msw = readUint16Le();
+        const uint16_t lsw = readUint16Le();
         return static_cast<uint32_t>(msw) << 16 | lsw;
     }
 
