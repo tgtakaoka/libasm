@@ -19,7 +19,8 @@
 
 namespace libasm {
 
-StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val) const {
+StrBuffer &DecFormatter::format(StrBuffer &out, uint32_t val, uint8_t bits) const {
+    UNUSED(bits);
     const auto start = out.mark();
     return outDec(out, val).reverse(start);
 }

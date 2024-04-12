@@ -56,12 +56,14 @@
         LDEXP   #20, AC2
         LDD     @(SP)+, AC3
         LDF     6(SP), AC2
-        LDCFD   #2.34, AC3
-        LDCDF   #-3.45, AC0
-        LDCLD   #01234567, AC2
-        LDCID   #012345, AC3
-        LDCLF   #01234567, AC0
-        LDCIF   #012345, AC1
+        LDCFD   #2.3, AC3
+        LDCDF   #-2.4, AC0
+        .radix  10
+        LDCLD   #1234567890, AC2
+        LDCID   #12345, AC3
+        LDCLF   #1234567890, AC0
+        LDCIF   #12345, AC1
+        .radix  8
         LDEXP   #020, AC2
         LDD     #4.56, AC3
         LDF     #-4.56, AC2
