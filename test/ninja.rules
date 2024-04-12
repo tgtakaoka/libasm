@@ -92,6 +92,10 @@ build test_asm_ns32000.o: cxx ${root}/test/test_asm_ns32000.cpp
 build test_dis_ns32000.o: cxx ${root}/test/test_dis_ns32000.cpp
 build gen_ns32000.o:      cxx ${root}/test/gen_ns32000.cpp
 
+# pdp11
+build test_dis_pdp11.o: cxx ${root}/test/test_dis_pdp11.cpp
+build gen_pdp11.o:      cxx ${root}/test/gen_pdp11.cpp
+
 # pdp8
 build test_asm_pdp8.o: cxx ${root}/test/test_asm_pdp8.cpp
 build test_dis_pdp8.o: cxx ${root}/test/test_dis_pdp8.cpp

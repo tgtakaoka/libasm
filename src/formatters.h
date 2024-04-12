@@ -28,7 +28,7 @@ namespace libasm {
  */
 struct DecFormatter {
     /** Format unsigned |val| as decimal. */
-    virtual StrBuffer &format(StrBuffer &out, uint32_t val) const;
+    virtual StrBuffer &format(StrBuffer &out, uint32_t val, uint8_t bits = 0) const;
 
 protected:
     /**
@@ -170,6 +170,17 @@ struct PrefixStrOctFormatter : PrefixFormatter<OctFormatter, const char *const> 
 };
 
 /**
+ * Deciaml number is prefixed with |prefix|.
+ */
+struct PrefixDecFormatter : PrefixFormatter<DecFormatter, char> {
+    PrefixDecFormatter(char prefix) : PrefixFormatter(prefix) {}
+};
+
+struct PrefixStrDecFormatter : PrefixFormatter<DecFormatter, const char *const> {
+    PrefixStrDecFormatter(const /*PROGMEM*/ char *prefix_P) : PrefixFormatter(prefix_P) {}
+};
+
+/**
  * Hexadecimal number is prefixed with |prefix|.
  */
 struct PrefixHexFormatter : PrefixFormatter<HexFormatter, char> {
@@ -196,6 +207,13 @@ struct SuffixOctFormatter : SuffixFormatter<OctFormatter, char> {
 };
 
 /**
+ * Decimal number is suffixed with |suffix|.
+ */
+struct SuffixDecFormatter : SuffixFormatter<DecFormatter, char> {
+    SuffixDecFormatter(char suffix) : SuffixFormatter(suffix) {}
+};
+
+/**
  * Hexadecimal number is suffixed with |suffix|. It is also prefixed with '0' when it starts with
  * non-digit letter.
  */
@@ -218,6 +236,14 @@ struct SurroundBinFormatter : SurroundFormatter<BinFormatter, const char *const,
  */
 struct SurroundOctFormatter : SurroundFormatter<OctFormatter, const char *const, char> {
     SurroundOctFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
+        : SurroundFormatter(prefix_P, suffix) {}
+};
+
+/**
+ * Decimal number is surrounded by |prefix| and |suffix|.
+ */
+struct SurroundDecFormatter : SurroundFormatter<DecFormatter, const char *const, char> {
+    SurroundDecFormatter(const /*PROGMEM*/ char *const prefix_P, char suffix)
         : SurroundFormatter(prefix_P, suffix) {}
 };
 
@@ -322,6 +348,14 @@ struct ZilogOctFormatter final : PrefixStrOctFormatter, Singleton<ZilogOctFormat
 
 struct ZilogHexFormatter final : PrefixHexFormatter, Singleton<ZilogHexFormatter> {
     ZilogHexFormatter() : PrefixHexFormatter('%') {}
+};
+
+struct Pdp11DecFormatter final : PrefixStrDecFormatter, Singleton<Pdp11DecFormatter> {
+    Pdp11DecFormatter() : PrefixStrDecFormatter(text::common::PSTR_HAT_D) {}
+};
+
+struct Pdp11BinFormatter final : PrefixStrBinFormatter, Singleton<Pdp11BinFormatter> {
+    Pdp11BinFormatter() : PrefixStrBinFormatter(text::common::PSTR_HAT_B) {}
 };
 
 }  // namespace libasm

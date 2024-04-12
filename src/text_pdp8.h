@@ -50,7 +50,7 @@ using common::TEXT_HLT;
 extern const char TEXT_IAC[]  PROGMEM;
 extern const char TEXT_IOF[]  PROGMEM;
 extern const char TEXT_ION[]  PROGMEM;
-extern const char TEXT_IOT[]  PROGMEM;
+using common::TEXT_IOT;
 extern const char TEXT_ISZ[]  PROGMEM;
 using common::TEXT_JMP;
 extern const char TEXT_JMS[]  PROGMEM;

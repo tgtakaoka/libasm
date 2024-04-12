@@ -87,7 +87,7 @@ extern const char TEXT_LSNQ[] PROGMEM;
 extern const char TEXT_LSNZ[] PROGMEM;
 extern const char TEXT_LSQ[]  PROGMEM;
 extern const char TEXT_LSZ[]  PROGMEM;
-extern const char TEXT_MARK[] PROGMEM;
+using common::TEXT_MARK;
 extern const char TEXT_NBR[]  PROGMEM;
 extern const char TEXT_NLBR[] PROGMEM;
 using common::TEXT_NOP;

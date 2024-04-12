@@ -2,6 +2,7 @@
 # Variable root should be set before subninja
 
 build test_array_memory.o: cxx ${root}/test/unit/test_array_memory.cpp
+build test_dec_float.o:    cxx ${root}/test/unit/test_dec_float.cpp
 build test_fixed64.o:      cxx ${root}/test/unit/test_fixed64.cpp
 build test_float32.o:      cxx ${root}/test/unit/test_float32.cpp
 build test_float64.o:      cxx ${root}/test/unit/test_float64.cpp

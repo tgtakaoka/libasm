@@ -43,8 +43,8 @@ CPPFLAGS = -I../src -I../driver -MD -MF $@.d
 
 OBJS_com = \
     fixed64.o ieee_float.o float80_base.o float80_hard.o float80_soft.o \
-    str_buffer.o str_scanner.o option_base.o error_reporter.o insn_base.o \
-    formatters.o value_formatter.o \
+    dec_float.o str_buffer.o str_scanner.o option_base.o error_reporter.o \
+    insn_base.o formatters.o value_formatter.o \
     $(foreach a,$(ARCHS),$(OBJS_$(a))) \
     bin_memory.o bin_decoder.o bin_encoder.o intel_hex.o moto_srec.o \
     file_reader.o file_printer.o list_formatter.o text_common.o
