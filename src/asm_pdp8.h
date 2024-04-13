@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_ASM_IM6100_H__
-#define __LIBASM_ASM_IM6100_H__
+#ifndef __LIBASM_ASM_PDP8_H__
+#define __LIBASM_ASM_PDP8_H__
 
 #include "asm_base.h"
-#include "config_im6100.h"
-#include "insn_im6100.h"
+#include "config_pdp8.h"
+#include "insn_pdp8.h"
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
-struct AsmIm6100 final : Assembler, Config {
-    AsmIm6100(const ValueParser::Plugins &plugins = defaultPlugins());
+struct AsmPdp8 final : Assembler, Config {
+    AsmPdp8(const ValueParser::Plugins &plugins = defaultPlugins());
 
     void reset() override;
 
@@ -50,10 +50,10 @@ private:
     static const pseudo::Pseudo PSEUDOS[] PROGMEM;
 };
 
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
-#endif  // __LIBASM_ASM_IM6100_H__
+#endif  // __LIBASM_ASM_PDP8_H__
 
 // Local Variables:
 // mode: c++

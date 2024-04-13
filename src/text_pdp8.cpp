@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "text_im6100.h"
+#include "text_pdp8.h"
 
 namespace libasm {
 namespace text {
-namespace im6100 {
+namespace pdp8 {
 // clang-format off
 
-constexpr char TEXT_IM6100_LIST[] PROGMEM = "IM6100, HD6120";
+constexpr char TEXT_PDP8_LIST[] PROGMEM = "IM6100, HD6120";
 constexpr char TEXT_CPU_IM6100[] PROGMEM = "IM6100";
 constexpr char TEXT_CPU_HD6120[] PROGMEM = "HD6120";
 constexpr char TEXT_CPU_6100[]   PROGMEM = "6100";
@@ -105,7 +105,7 @@ constexpr char TEXT_RTN2[] PROGMEM = "RTN2";
 constexpr char TEXT_WSR[]  PROGMEM = "WSR";
 
 // clang-format on
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace text
 }  // namespace libasm
 

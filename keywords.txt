@@ -17,7 +17,6 @@ AsmI8051        KEYWORD1        libasm
 AsmI8080        KEYWORD1        libasm
 AsmI8086        KEYWORD1        libasm
 AsmI8096        KEYWORD1        libasm
-AsmIm6100       KEYWORD1        libasm
 AsmIns8060      KEYWORD1        libasm
 AsmIns8070      KEYWORD1        libasm
 AsmMc68000      KEYWORD1        libasm
@@ -27,6 +26,7 @@ AsmMc6809       KEYWORD1        libasm
 AsmMn1610       KEYWORD1        libasm
 AsmMos6502      KEYWORD1        libasm
 AsmNs32000      KEYWORD1        libasm
+AsmPdp8         KEYWORD1        libasm
 AsmScn2650      KEYWORD1        libasm
 AsmTlcs90       KEYWORD1        libasm
 AsmTms32010     KEYWORD1        libasm
@@ -42,7 +42,6 @@ DisI8051        KEYWORD1        libasm
 DisI8080        KEYWORD1        libasm
 DisI8086        KEYWORD1        libasm
 DisI8096        KEYWORD1        libasm
-DisIn6100       KEYWORD1        libasm
 DisIns8060      KEYWORD1        libasm
 DisIns8070      KEYWORD1        libasm
 DisMc68000      KEYWORD1        libasm
@@ -52,6 +51,7 @@ DisMc6809       KEYWORD1        libasm
 DisMn1610       KEYWORD1        libasm
 DisMos6502      KEYWORD1        libasm
 DisNs32000      KEYWORD1        libasm
+DisPdp8         KEYWORD1        libasm
 DisScn2650      KEYWORD1        libasm
 DisTlcs90       KEYWORD1        libasm
 DisTms32010     KEYWORD1        libasm

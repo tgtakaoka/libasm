@@ -65,13 +65,6 @@ build reg_i8096.o:   cxx ${root}/src/reg_i8096.cpp
 build table_i8096.o: cxx ${root}/src/table_i8096.cpp
 build text_i8096.o:  cxx ${root}/src/text_i8096.cpp
 
-# im6100
-build asm_im6100.o:   cxx ${root}/src/asm_im6100.cpp
-build dis_im6100.o:   cxx ${root}/src/dis_im6100.cpp
-build reg_im6100.o:   cxx ${root}/src/reg_im6100.cpp
-build table_im6100.o: cxx ${root}/src/table_im6100.cpp
-build text_im6100.o:  cxx ${root}/src/text_im6100.cpp
-
 # ins8060
 build asm_ins8060.o:   cxx ${root}/src/asm_ins8060.cpp
 build dis_ins8060.o:   cxx ${root}/src/dis_ins8060.cpp
@@ -134,6 +127,13 @@ build dis_ns32000.o:   cxx ${root}/src/dis_ns32000.cpp
 build reg_ns32000.o:   cxx ${root}/src/reg_ns32000.cpp
 build table_ns32000.o: cxx ${root}/src/table_ns32000.cpp
 build text_ns32000.o:  cxx ${root}/src/text_ns32000.cpp
+
+# pdp8
+build asm_pdp8.o:    cxx ${root}/src/asm_pdp8.cpp
+build dis_pdp8.o:    cxx ${root}/src/dis_pdp8.cpp
+build reg_pdp8.o:    cxx ${root}/src/reg_pdp8.cpp
+build table_pdp8.o:  cxx ${root}/src/table_pdp8.cpp
+build text_pdp8.o:   cxx ${root}/src/text_pdp8.cpp
 
 # scn2650
 build asm_scn2650.o:   cxx ${root}/src/asm_scn2650.cpp

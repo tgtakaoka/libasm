@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_TEXT_IM6100__
-#define __LIBASM_TEXT_IM6100__
+#ifndef __LIBASM_TEXT_PDP8__
+#define __LIBASM_TEXT_PDP8__
 
 #include "text_common.h"
 
 namespace libasm {
 namespace text {
-namespace im6100 {
+namespace pdp8 {
 // clang-format off
 
-extern const char TEXT_IM6100_LIST[] PROGMEM;
+extern const char TEXT_PDP8_LIST[] PROGMEM;
 extern const char TEXT_CPU_IM6100[] PROGMEM;
 extern const char TEXT_CPU_HD6120[] PROGMEM;
 extern const char TEXT_CPU_6100[]   PROGMEM;
@@ -108,11 +108,11 @@ extern const char TEXT_RTN2[] PROGMEM;
 extern const char TEXT_WSR[]  PROGMEM;
 
 // clang-format on
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace text
 }  // namespace libasm
 
-#endif  // __LIBASM_TEXT_IM6100__
+#endif  // __LIBASM_TEXT_PDP8__
 
 // Local Variables:
 // mode: c++

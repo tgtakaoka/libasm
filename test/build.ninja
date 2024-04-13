@@ -146,23 +146,6 @@ build gen_i8096:      link gen_i8096.o    $
   str_scanner.o test_generator.o text_common.o tokenized_text.o $
   value_formatter.o
 
-# im6100
-build test_asm_im6100: run test_asm_im6100.o    $
-  asm_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o    $
-  asm_base.o config_base.o error_reporter.o operators.o option_base.o $
-  parsers.o reg_base.o str_buffer.o str_scanner.o text_common.o $
-  value_parser.o test_asm_helper.o test_asserter.o
-build test_dis_im6100: run test_dis_im6100.o    $
-  dis_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o    $
-  dis_base.o config_base.o error_reporter.o formatters.o option_base.o $
-  reg_base.o str_buffer.o str_scanner.o text_common.o value_formatter.o $
-  test_dis_helper.o test_asserter.o
-build gen_im6100:      link gen_im6100.o    $
-  dis_im6100.o   reg_im6100.o   table_im6100.o   text_im6100.o    $
-  gen_driver.o config_base.o dis_base.o dis_formatter.o error_reporter.o $
-  list_formatter.o option_base.o reg_base.o str_buffer.o str_scanner.o $
-  test_generator.o text_common.o tokenized_text.o value_formatter.o
-
 # ins8060
 build test_asm_ins8060: run test_asm_ins8060.o  $
   asm_ins8060.o  reg_ins8060.o  table_ins8060.o  text_ins8060.o  $
@@ -324,6 +307,23 @@ build gen_ns32000:      link gen_ns32000.o  $
   formatters.o list_formatter.o option_base.o reg_base.o str_buffer.o $
   str_scanner.o test_generator.o text_common.o tokenized_text.o $
   value_formatter.o
+
+# pdp8
+build test_asm_pdp8: run test_asm_pdp8.o    $
+  asm_pdp8.o   reg_pdp8.o   table_pdp8.o   text_pdp8.o    $
+  asm_base.o config_base.o error_reporter.o operators.o option_base.o $
+  parsers.o reg_base.o str_buffer.o str_scanner.o text_common.o $
+  value_parser.o test_asm_helper.o test_asserter.o
+build test_dis_pdp8: run test_dis_pdp8.o    $
+  dis_pdp8.o   reg_pdp8.o   table_pdp8.o   text_pdp8.o    $
+  dis_base.o config_base.o error_reporter.o formatters.o option_base.o $
+  reg_base.o str_buffer.o str_scanner.o text_common.o value_formatter.o $
+  test_dis_helper.o test_asserter.o
+build gen_pdp8:      link gen_pdp8.o    $
+  dis_pdp8.o   reg_pdp8.o   table_pdp8.o   text_pdp8.o    $
+  gen_driver.o config_base.o dis_base.o dis_formatter.o error_reporter.o $
+  list_formatter.o option_base.o reg_base.o str_buffer.o str_scanner.o $
+  test_generator.o text_common.o tokenized_text.o value_formatter.o
 
 # scn2650
 build test_asm_scn2650: run test_asm_scn2650.o  $
@@ -502,7 +502,6 @@ build test_i8051:    phony test_asm_i8051    test_dis_i8051
 build test_i8080:    phony test_asm_i8080    test_dis_i8080
 build test_i8086:    phony test_asm_i8086    test_dis_i8086
 build test_i8096:    phony test_asm_i8096    test_dis_i8096
-build test_im6100:   phony test_asm_im6100   test_dis_im6100
 build test_ins8060:  phony test_asm_ins8060  test_dis_ins8060
 build test_ins8070:  phony test_asm_ins8070  test_dis_ins8070
 build test_mc68000:  phony test_asm_mc68000  test_dis_mc68000
@@ -512,6 +511,7 @@ build test_mc6809:   phony test_asm_mc6809   test_dis_mc6809
 build test_mn1610:   phony test_asm_mn1610   test_dis_mn1610
 build test_mos6502:  phony test_asm_mos6502  test_dis_mos6502
 build test_ns32000:  phony test_asm_ns32000  test_dis_ns32000
+build test_pdp8:     phony test_asm_pdp8     test_dis_pdp8
 build test_scn2650:  phony test_asm_scn2650  test_dis_scn2650
 build test_tlcs90:   phony test_asm_tlcs90   test_dis_tlcs90
 build test_tms32010: phony test_asm_tms32010 test_dis_tms32010
@@ -535,7 +535,6 @@ build test: phony $
   test_i8080    $
   test_i8086    $
   test_i8096    $
-  test_im6100   $
   test_ins8060  $
   test_ins8070  $
   test_mc6800   $
@@ -545,6 +544,7 @@ build test: phony $
   test_mn1610   $
   test_mos6502  $
   test_ns32000  $
+  test_pdp8     $
   test_scn2650  $
   test_tlcs90   $
   test_tms32010 $

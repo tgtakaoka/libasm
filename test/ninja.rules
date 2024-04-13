@@ -17,11 +17,6 @@ build test_asm_cdp1802.o: cxx ${root}/test/test_asm_cdp1802.cpp
 build test_dis_cdp1802.o: cxx ${root}/test/test_dis_cdp1802.cpp
 build gen_cdp1802.o:      cxx ${root}/test/gen_cdp1802.cpp
 
-# scn2650
-build test_asm_scn2650.o: cxx ${root}/test/test_asm_scn2650.cpp
-build test_dis_scn2650.o: cxx ${root}/test/test_dis_scn2650.cpp
-build gen_scn2650.o:      cxx ${root}/test/gen_scn2650.cpp
-
 # f3850
 build test_asm_f3850.o: cxx ${root}/test/test_asm_f3850.cpp
 build test_dis_f3850.o: cxx ${root}/test/test_dis_f3850.cpp
@@ -51,11 +46,6 @@ build gen_i8080.o:      cxx ${root}/test/gen_i8080.cpp
 build test_asm_i8096.o: cxx ${root}/test/test_asm_i8096.cpp
 build test_dis_i8096.o: cxx ${root}/test/test_dis_i8096.cpp
 build gen_i8096.o:      cxx ${root}/test/gen_i8096.cpp
-
-# im6100
-build test_asm_im6100.o: cxx ${root}/test/test_asm_im6100.cpp
-build test_dis_im6100.o: cxx ${root}/test/test_dis_im6100.cpp
-build gen_im6100.o:      cxx ${root}/test/gen_im6100.cpp
 
 # ins8060
 build test_asm_ins8060.o: cxx ${root}/test/test_asm_ins8060.cpp
@@ -101,6 +91,16 @@ build gen_mos6502.o:      cxx ${root}/test/gen_mos6502.cpp
 build test_asm_ns32000.o: cxx ${root}/test/test_asm_ns32000.cpp
 build test_dis_ns32000.o: cxx ${root}/test/test_dis_ns32000.cpp
 build gen_ns32000.o:      cxx ${root}/test/gen_ns32000.cpp
+
+# pdp8
+build test_asm_pdp8.o: cxx ${root}/test/test_asm_pdp8.cpp
+build test_dis_pdp8.o: cxx ${root}/test/test_dis_pdp8.cpp
+build gen_pdp8.o:      cxx ${root}/test/gen_pdp8.cpp
+
+# scn2650
+build test_asm_scn2650.o: cxx ${root}/test/test_asm_scn2650.cpp
+build test_dis_scn2650.o: cxx ${root}/test/test_dis_scn2650.cpp
+build gen_scn2650.o:      cxx ${root}/test/gen_scn2650.cpp
 
 # tlcs90
 build test_asm_tlcs90.o: cxx ${root}/test/test_asm_tlcs90.cpp

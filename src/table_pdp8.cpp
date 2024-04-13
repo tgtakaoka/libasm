@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#include "table_im6100.h"
+#include "table_pdp8.h"
 
-#include "entry_im6100.h"
+#include "entry_pdp8.h"
 #include "entry_table.h"
-#include "text_im6100.h"
+#include "text_pdp8.h"
 
-using namespace libasm::text::im6100;
+using namespace libasm::text::pdp8;
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
 #define E(_opc, _name, _mode, _bits) \
     { _opc, Entry::Flags::create(_mode, _bits), _name }
@@ -396,7 +396,7 @@ static bool acceptAll(AsmInsn &insn, const Entry *entry) {
     return true;
 }
 
-Error TableIm6100::searchName(CpuType cpuType, AsmInsn &insn) const {
+Error TablePdp8::searchName(CpuType cpuType, AsmInsn &insn) const {
     cpu(cpuType)->searchName(insn, acceptAll);
     return insn.getError();
 }
@@ -405,7 +405,7 @@ static bool acceptSameMode(AsmInsn &insn, const Entry *entry) {
     return insn.mode() == entry->flags().mode();
 }
 
-Error TableIm6100::searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) const {
+Error TablePdp8::searchMicro(CpuType cpuType, AsmInsn &micro, AddrMode mode) const {
     micro.setOK();
     micro.setAddrMode(mode);
     cpu(cpuType)->searchName(micro, acceptSameMode);
@@ -425,7 +425,7 @@ static bool matchOpCode(DisInsn &insn, const Entry *entry, const EntryPage *page
     return masked == entry->opCode();
 }
 
-Error TableIm6100::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
+Error TablePdp8::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) const {
     const auto *entry = cpu(cpuType)->searchOpCode(insn, out, matchOpCode, pageMatcher);
     if (entry) {
         const auto mode = insn.mode();
@@ -435,15 +435,15 @@ Error TableIm6100::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) 
     return insn.getError();
 }
 
-const /*PROGMEM*/ char *TableIm6100::listCpu_P() const {
-    return TEXT_IM6100_LIST;
+const /*PROGMEM*/ char *TablePdp8::listCpu_P() const {
+    return TEXT_PDP8_LIST;
 }
 
-const /*PROGMEM*/ char *TableIm6100::cpuName_P(CpuType cpuType) const {
+const /*PROGMEM*/ char *TablePdp8::cpuName_P(CpuType cpuType) const {
     return cpu(cpuType)->name_P();
 }
 
-Error TableIm6100::searchCpuName(StrScanner &name, CpuType &cpuType) const {
+Error TablePdp8::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     if (name.iequals(TEXT_CPU_6100) || name.iequals(TEXT_CPU_IM6100)) {
         cpuType = IM6100;
         return OK;
@@ -455,9 +455,9 @@ Error TableIm6100::searchCpuName(StrScanner &name, CpuType &cpuType) const {
     return UNSUPPORTED_CPU;
 }
 
-const TableIm6100 TABLE;
+const TablePdp8 TABLE;
 
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
 // Local Variables:

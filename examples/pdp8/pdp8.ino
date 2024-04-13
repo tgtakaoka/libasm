@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-#include "reg_im6100.h"
+#include <arduino_example.h>
+#include <asm_pdp8.h>
+#include <dis_pdp8.h>
 
-namespace libasm {
-namespace im6100 {
-namespace reg {
+libasm::pdp8::AsmPdp8 asmpdp8;
+libasm::pdp8::DisPdp8 dispdp8;
 
-}  // namespace reg
-}  // namespace im6100
-}  // namespace libasm
+libasm::arduino::Example example(asmpdp8, dispdp8);
+
+void setup() {
+    Serial.begin(9600);
+    example.begin(Serial);
+}
+
+void loop() {
+    example.loop();
+}
 
 // Local Variables:
 // mode: c++
-// c-basic-offset: 4
-// tab-width: 4
+// c-basic-offset: 2
+// tab-width: 2
 // End:
-// vim: set ft=cpp et ts=4 sw=4:
+// vim: set ft=cpp et ts=2 sw=2:

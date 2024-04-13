@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_CONFIG_IM6100_H__
-#define __LIBASM_CONFIG_IM6100_H__
+#ifndef __LIBASM_TABLE_PDP8_H__
+#define __LIBASM_TABLE_PDP8_H__
 
-#include "config_base.h"
+#include "config_pdp8.h"
+#include "insn_pdp8.h"
+#include "str_buffer.h"
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
-enum CpuType : uint8_t {
-    IM6100,
-    HD6120,
+struct TablePdp8 final : InsnTable<CpuType> {
+    const /*PROGMEM*/ char *listCpu_P() const override;
+    const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
+    Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
+
+    Error searchName(CpuType, AsmInsn &insn) const;
+    Error searchMicro(CpuType, AsmInsn &micro, AddrMode mode) const;
+    Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };
 
-struct Config
-    : ConfigImpl<CpuType, ADDRESS_12BIT, ADDRESS_WORD, OPCODE_12BIT, ENDIAN_BIG, 2, 4> {
-    Config(const InsnTable<CpuType> &table) : ConfigImpl(table, IM6100) {}
+extern const TablePdp8 TABLE;
 
-    AddressWidth addressWidth() const override {
-        return cpuType() == HD6120 ? ADDRESS_15BIT : ADDRESS_12BIT;
-    }
-};
-
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
-#endif  // __LIBASM_CONFIG_IM6100_H__
+#endif  // __LIBASM_TABLE_PDP8_H__
 
 // Local Variables:
 // mode: c++

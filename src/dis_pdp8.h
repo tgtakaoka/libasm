@@ -14,37 +14,38 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_REG_IM6100_H__
-#define __LIBASM_REG_IM6100_H__
+#ifndef __LIBASM_DIS_PDP8_H__
+#define __LIBASM_DIS_PDP8_H__
 
-#include "config_im6100.h"
+#include "config_pdp8.h"
+#include "dis_base.h"
+#include "insn_pdp8.h"
 
 namespace libasm {
-namespace im6100 {
-namespace reg {
+namespace pdp8 {
 
-constexpr uint8_t fieldOf(Config::uintptr_t addr) {
-    return (addr >> 12) & 07;
-}
+struct DisPdp8 final : Disassembler, Config {
+    DisPdp8(const ValueFormatter::Plugins &plugins = defaultPlugins());
 
-constexpr uint8_t pageOf(Config::uintptr_t addr) {
-    return addr >> 7;
-}
+    void reset() override;
 
-constexpr uint8_t offsetOf(Config::opcode_t opc) {
-    return opc & 0177;
-}
+    Error setIgnoreliteral(bool enable);
 
-constexpr Config::uintptr_t memoryAddress(uint8_t offset, uint8_t page, uint8_t field = 0) {
-    return offset | (static_cast<Config::uintptr_t>(page) << 7) |
-           (static_cast<Config::uintptr_t>(field) << 12);
-}
+private:
+    const BoolOption<DisPdp8> _opt_ignoreliteral;
 
-}  // namespace reg
-}  // namespace im6100
+    bool _ignoreliteral;
+
+    Error decodeImpl(DisMemory &memory, Insn &insn, StrBuffer &out) const override;
+    const ConfigBase &config() const override { return *this; }
+    ConfigSetter &configSetter() override { return *this; }
+    static const ValueFormatter::Plugins &defaultPlugins();
+};
+
+}  // namespace pdp8
 }  // namespace libasm
 
-#endif  // __LIBASM_REG_IM6100_H__
+#endif  // __LIBASM_DIS_PDP8_H__
 
 // Local Variables:
 // mode: c++

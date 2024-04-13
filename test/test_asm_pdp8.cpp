@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include "asm_im6100.h"
+#include "asm_pdp8.h"
 #include "test_asm_helper.h"
 
 using namespace libasm;
-using namespace libasm::im6100;
+using namespace libasm::pdp8;
 using namespace libasm::test;
 
-AsmIm6100 asm6100;
-Assembler &assembler(asm6100);
+AsmPdp8 asmpdp8;
+Assembler &assembler(asmpdp8);
 
 static bool hd6120() {
     return strcmp_P("6120", assembler.config().cpu_P()) == 0;

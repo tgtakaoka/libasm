@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "asm_im6100.h"
+#include "asm_pdp8.h"
 
-#include "reg_im6100.h"
-#include "table_im6100.h"
+#include "reg_pdp8.h"
+#include "table_pdp8.h"
 #include "text_common.h"
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
 using namespace pseudo;
 using namespace reg;
@@ -105,7 +105,7 @@ struct DecCommentParser final : CommentParser {
 
 }  // namespace
 
-const ValueParser::Plugins &AsmIm6100::defaultPlugins() {
+const ValueParser::Plugins &AsmPdp8::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return NUMBER_PARSER; }
         const SymbolParser &symbol() const override { return _symbol; }
@@ -121,24 +121,24 @@ const ValueParser::Plugins &AsmIm6100::defaultPlugins() {
     return PLUGINS;
 }
 
-AsmIm6100::AsmIm6100(const ValueParser::Plugins &plugins)
+AsmPdp8::AsmPdp8(const ValueParser::Plugins &plugins)
     : Assembler(plugins, PSEUDO_TABLE), Config(TABLE) {
     reset();
 }
 
-void AsmIm6100::reset() {
+void AsmPdp8::reset() {
     Assembler::reset();
     setListRadix(RADIX_8);
 }
 
-Error AsmIm6100::setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra) {
+Error AsmPdp8::setInputRadix(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(scan);
     UNUSED(insn);
     NUMBER_PARSER.setRadix(static_cast<Radix>(extra));
     return OK;
 }
 
-Error AsmIm6100::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) {
+Error AsmPdp8::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
     const auto save = NUMBER_PARSER.radix();
     NUMBER_PARSER.setRadix(RADIX_10);
@@ -151,7 +151,7 @@ Error AsmIm6100::defineDoubleDecimal(StrScanner &scan, Insn &insn, uint8_t extra
     return insn.getError();
 }
 
-Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
+Error AsmPdp8::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
     auto p = scan.skipSpaces();
     auto page = pageOf(insn.address());
@@ -171,7 +171,7 @@ Error AsmIm6100::alignOnPage(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
+Error AsmPdp8::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     UNUSED(extra);
     auto p = scan.skipSpaces();
     const auto field = parseExpr(p, insn).getUnsigned();
@@ -185,7 +185,7 @@ Error AsmIm6100::defineField(StrScanner &scan, Insn &insn, uint8_t extra) {
     return OK;
 }
 
-Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
+Error AsmPdp8::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
     const auto indir = p.iexpect('i') && p.expect(' ');
     if (!indir)
@@ -209,7 +209,7 @@ Error AsmIm6100::parseMemReferenceOperand(StrScanner &scan, AsmInsn &insn) const
     return OK;
 }
 
-Error AsmIm6100::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const {
+Error AsmPdp8::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
     const auto addr = parseExpr(p, insn).getUnsigned();
     if (insn.hasError())
@@ -230,7 +230,7 @@ Error AsmIm6100::parseIoTransferOperand(StrScanner &scan, AsmInsn &insn) const {
     return OK;
 }
 
-Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) const {
+Error AsmPdp8::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode_t &done) const {
     const auto bits = micro.bits();
     if (done & bits)
         return INVALID_INSTRUCTION;
@@ -242,7 +242,7 @@ Error AsmIm6100::encodeMicro(AsmInsn &insn, const AsmInsn &micro, Config::opcode
     return OK;
 }
 
-Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) const {
+Error AsmPdp8::parseField(StrScanner &scan, AsmInsn &insn) const {
     auto p = scan;
     auto field = parseExpr(p, insn).getUnsigned();
     if (!insn.hasError()) {
@@ -258,7 +258,7 @@ Error AsmIm6100::parseField(StrScanner &scan, AsmInsn &insn) const {
     return insn.getError();
 }
 
-Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const {
+Error AsmPdp8::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const {
     Insn _micro{0};
     AsmInsn micro{_micro};
     Config::opcode_t done = insn.opCode() & ~insn.bits();
@@ -278,7 +278,7 @@ Error AsmIm6100::parseMemExtensionOperand(StrScanner &scan, AsmInsn &insn) const
     return insn.setError(MISSING_OPERAND);
 }
 
-Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
+Error AsmPdp8::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
     Insn _micro{0};
     AsmInsn micro{_micro};
     auto mode = insn.multiGroup() ? M_NONE : insn.mode();
@@ -322,7 +322,7 @@ Error AsmIm6100::parseOperateOperand(StrScanner &scan, AsmInsn &insn) const {
     return OK;
 }
 
-Error AsmIm6100::processPseudo(StrScanner &scan, Insn &insn) {
+Error AsmPdp8::processPseudo(StrScanner &scan, Insn &insn) {
     if (strcasecmp_P(insn.name(), TEXT_OCTAL) == 0)
         return setInputRadix(scan, insn, RADIX_8);
     if (strcasecmp_P(insn.name(), TEXT_DECIMAL) == 0)
@@ -336,7 +336,7 @@ Error AsmIm6100::processPseudo(StrScanner &scan, Insn &insn) {
     return Assembler::processPseudo(scan, insn);
 }
 
-Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) const {
+Error AsmPdp8::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     scan.skipSpaces();
     const auto error = TABLE.searchName(cpuType(), insn);
@@ -365,7 +365,7 @@ Error AsmIm6100::encodeImpl(StrScanner &scan, Insn &_insn) const {
     return _insn.setError(insn);
 }
 
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
 // Local Variables:

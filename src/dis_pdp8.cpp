@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "dis_im6100.h"
+#include "dis_pdp8.h"
 
-#include "reg_im6100.h"
-#include "table_im6100.h"
+#include "reg_pdp8.h"
+#include "table_pdp8.h"
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
 using namespace reg;
 
@@ -29,33 +29,33 @@ const char OPT_BOOL_IGNORE_LITERAL[] PROGMEM = "ignore-literal";
 const char OPT_DESC_IGNORE_LITERAL[] PROGMEM = "Ignore literal constant";
 }  // namespace
 
-const ValueFormatter::Plugins &DisIm6100::defaultPlugins() {
+const ValueFormatter::Plugins &DisPdp8::defaultPlugins() {
     static const struct fianl : ValueFormatter::Plugins {
         const /*PROGMEM*/ char *lineComment_P() const override { return PSTR("/"); }
     } PLUGINS{};
     return PLUGINS;
 }
 
-DisIm6100::DisIm6100(const ValueFormatter::Plugins &plugins)
+DisPdp8::DisPdp8(const ValueFormatter::Plugins &plugins)
     : Disassembler(plugins, &_opt_ignoreliteral),
       Config(TABLE),
-      _opt_ignoreliteral(this, &DisIm6100::setIgnoreliteral, OPT_BOOL_IGNORE_LITERAL,
+      _opt_ignoreliteral(this, &DisPdp8::setIgnoreliteral, OPT_BOOL_IGNORE_LITERAL,
               OPT_DESC_IGNORE_LITERAL) {
     reset();
 }
 
-void DisIm6100::reset() {
+void DisPdp8::reset() {
     Disassembler::reset();
     setIgnoreliteral(false);
     setListRadix(RADIX_8);
 }
 
-Error DisIm6100::setIgnoreliteral(bool enable) {
+Error DisPdp8::setIgnoreliteral(bool enable) {
     _ignoreliteral = enable;
     return OK;
 }
 
-Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
+Error DisPdp8::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) const {
     DisInsn insn(_insn, memory, out);
     const auto opc = insn.readUint16();
     insn.setOpCode(opc);
@@ -86,7 +86,7 @@ Error DisIm6100::decodeImpl(DisMemory &memory, Insn &_insn, StrBuffer &out) cons
     return _insn.setError(insn);
 }
 
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
 // Local Variables:

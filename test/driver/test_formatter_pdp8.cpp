@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "asm_im6100.h"
-#include "dis_im6100.h"
+#include "asm_pdp8.h"
+#include "dis_pdp8.h"
 #include "test_formatter_helper.h"
 
 namespace libasm {
@@ -27,7 +27,7 @@ void set_up() {}
 void tear_down() {}
 
 void test_asm_im6100() {
-    PREP_ASM(im6100::AsmIm6100, DecDirective);
+    PREP_ASM(pdp8::AsmPdp8, DecDirective);
 
     ASM("im6100",
             "        cpu   im6100\n"
@@ -57,7 +57,7 @@ void test_asm_im6100() {
 }
 
 void test_asm_hd6120() {
-    PREP_ASM(im6100::AsmIm6100, DecDirective);
+    PREP_ASM(pdp8::AsmPdp8, DecDirective);
 
     ASM("hd6120",
             "        cpu   hd6120\n"
@@ -95,7 +95,7 @@ void test_asm_hd6120() {
 }
 
 void test_dis_im6100() {
-    PREP_DIS(im6100::DisIm6100);
+    PREP_DIS(pdp8::DisPdp8);
 
     driver.setOption("ignore-literal", "on");
 
@@ -149,7 +149,7 @@ void test_dis_im6100() {
 }
 
 void test_dis_hd6120() {
-    PREP_DIS(im6100::DisIm6100);
+    PREP_DIS(pdp8::DisPdp8);
 
     driver.setOption("ignore-literal", "on");
 

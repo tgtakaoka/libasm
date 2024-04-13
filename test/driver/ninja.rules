@@ -16,7 +16,6 @@ build test_formatter_i8051.o:    cxx test_formatter_i8051.cpp
 build test_formatter_i8080.o:    cxx test_formatter_i8080.cpp
 build test_formatter_i8086.o:    cxx test_formatter_i8086.cpp
 build test_formatter_i8096.o:    cxx test_formatter_i8096.cpp
-build test_formatter_im6100.o:   cxx test_formatter_im6100.cpp
 build test_formatter_ins8060.o:  cxx test_formatter_ins8060.cpp
 build test_formatter_ins8070.o:  cxx test_formatter_ins8070.cpp
 build test_formatter_mc68000.o:  cxx test_formatter_mc68000.cpp
@@ -26,6 +25,7 @@ build test_formatter_mc6809.o:   cxx test_formatter_mc6809.cpp
 build test_formatter_mn1610.o:   cxx test_formatter_mn1610.cpp
 build test_formatter_mos6502.o:  cxx test_formatter_mos6502.cpp
 build test_formatter_ns32000.o:  cxx test_formatter_ns32000.cpp
+build test_formatter_pdp8.o:     cxx test_formatter_pdp8.cpp
 build test_formatter_scn2650.o:  cxx test_formatter_scn2650.cpp
 build test_formatter_tlcs90.o:   cxx test_formatter_tlcs90.cpp
 build test_formatter_tms32010.o: cxx test_formatter_tms32010.cpp

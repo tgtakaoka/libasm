@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_ENTRY_IM6100_H__
-#define __LIBASM_ENTRY_IM6100_H__
+#ifndef __LIBASM_ENTRY_PDP8_H__
+#define __LIBASM_ENTRY_PDP8_H__
 
 #include <stdint.h>
 
-#include "config_im6100.h"
+#include "config_pdp8.h"
 #include "entry_base.h"
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
 enum AddrMode : uint8_t {
     M_NONE = 0,
@@ -80,10 +80,10 @@ private:
     static constexpr uint8_t mode_gm = 0x07;
 };
 
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
-#endif  // __LIBASM_ENTRY_IM6100_H__
+#endif  // __LIBASM_ENTRY_PDP8_H__
 
 // Local Variables:
 // mode: c++

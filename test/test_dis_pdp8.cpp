@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#include "dis_im6100.h"
+#include "dis_pdp8.h"
 #include "test_dis_helper.h"
 
 using namespace libasm;
-using namespace libasm::im6100;
+using namespace libasm::pdp8;
 using namespace libasm::test;
 
-DisIm6100 dis6100;
-Disassembler &disassembler(dis6100);
+DisPdp8 dispdp8;
+Disassembler &disassembler(dispdp8);
 
 static bool hd6120() {
     return strcmp_P("6120", disassembler.config().cpu_P()) == 0;

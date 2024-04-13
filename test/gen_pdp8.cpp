@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-#include <arduino_example.h>
-#include <asm_im6100.h>
-#include <dis_im6100.h>
+#include "dis_pdp8.h"
+#include "gen_driver.h"
 
-libasm::im6100::AsmIm6100 asm6100;
-libasm::im6100::DisIm6100 dis6100;
+using namespace libasm::pdp8;
+using namespace libasm::gen;
 
-libasm::arduino::Example example(asm6100, dis6100);
+int main(int argc, const char **argv) {
+    DisPdp8 dispdp8;
+    GenDriver driver(dispdp8);
+    if (driver.main(argc, argv))
+        return 1;
 
-void setup() {
-    Serial.begin(9600);
-    example.begin(Serial);
-}
+    dispdp8.setOption("list-radix", "16");
+    dispdp8.setOption("intel-hex", "on");
+    dispdp8.setOption("ignore-literal", "on");
 
-void loop() {
-    example.loop();
+    TestGenerator generator(driver, dispdp8, 0x080);
+    generator.generate();
+
+    return driver.close();
 }
 
 // Local Variables:
 // mode: c++
-// c-basic-offset: 2
-// tab-width: 2
+// c-basic-offset: 4
+// tab-width: 4
 // End:
-// vim: set ft=cpp et ts=2 sw=2:
+// vim: set ft=cpp et ts=4 sw=4:

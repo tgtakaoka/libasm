@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef __LIBASM_INSN_IM6100_H__
-#define __LIBASM_INSN_IM6100_H__
+#ifndef __LIBASM_INSN_PDP8_H__
+#define __LIBASM_INSN_PDP8_H__
 
-#include "config_im6100.h"
-#include "entry_im6100.h"
+#include "config_pdp8.h"
+#include "entry_pdp8.h"
 #include "insn_base.h"
 
 namespace libasm {
-namespace im6100 {
+namespace pdp8 {
 
 struct EntryInsn : EntryInsnBase<Config, Entry> {
     AddrMode mode() const { return flags().mode(); }
@@ -43,10 +43,10 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 };
 
-}  // namespace im6100
+}  // namespace pdp8
 }  // namespace libasm
 
-#endif  // __LIBASM_INSN_IM6100_H__
+#endif  // __LIBASM_INSN_PDP8_H__
 
 // Local Variables:
 // mode: c++

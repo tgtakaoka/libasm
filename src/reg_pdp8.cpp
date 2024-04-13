@@ -14,27 +14,15 @@
  * limitations under the License.
  */
 
-#include "dis_im6100.h"
-#include "gen_driver.h"
+#include "reg_pdp8.h"
 
-using namespace libasm::im6100;
-using namespace libasm::gen;
+namespace libasm {
+namespace pdp8 {
+namespace reg {
 
-int main(int argc, const char **argv) {
-    DisIm6100 dis6100;
-    GenDriver driver(dis6100);
-    if (driver.main(argc, argv))
-        return 1;
-
-    dis6100.setOption("list-radix", "16");
-    dis6100.setOption("intel-hex", "on");
-    dis6100.setOption("ignore-literal", "on");
-
-    TestGenerator generator(driver, dis6100, 0x080);
-    generator.generate();
-
-    return driver.close();
-}
+}  // namespace reg
+}  // namespace pdp8
+}  // namespace libasm
 
 // Local Variables:
 // mode: c++
