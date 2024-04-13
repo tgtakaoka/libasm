@@ -666,14 +666,12 @@ const /*PROGMEM*/ char *TableZ8000::cpuName_P(CpuType cpuType) const {
 }
 
 Error TableZ8000::searchCpuName(StrScanner &name, CpuType &cpuType) const {
-    if (name.iequals(TEXT_CPU_Z8001)) {
-        cpuType = Z8001;
-    } else if (name.iequals_P(TEXT_CPU_Z8002)) {
-        cpuType = Z8002;
-    } else {
-        return UNSUPPORTED_CPU;
+    auto t = Cpu::search(name, ARRAY_RANGE(CPU_TABLE));
+    if (t) {
+        cpuType = t->cpuType();
+        return OK;
     }
-    return OK;
+    return UNSUPPORTED_CPU;
 }
 
 const TableZ8000 TABLE;
