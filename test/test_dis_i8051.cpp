@@ -324,6 +324,7 @@ static void test_direct() {
     TEST("XCH",  "A, 0C6H", 0xC5, 0xC6);
     TEST("MOV",  "A, 0E6H", 0xE5, 0xE6);
     TEST("MOV",  "0F6H, A", 0xF5, 0xF6);
+    ERRT("MOV",  "A, 0E0H", OPERAND_NOT_ALLOWED, "0E0H", 0xE5, 0xE0);
     NMEM("MOV",  "A, 00H", "00H",    0xE5);
     NMEM("MOV",  "00H, A", "00H, A", 0xF5);
 

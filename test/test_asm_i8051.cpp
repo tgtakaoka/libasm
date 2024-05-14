@@ -373,6 +373,7 @@ static void test_direct() {
     TEST("XCH  A,0C6H", 0xC5, 0xC6);
     TEST("MOV  A,0E6H", 0xE5, 0xE6);
     ERRT("MOV  A,101H", OVERFLOW_RANGE, "101H", 0xE5, 0x01);
+    ERRT("MOV  A,0E0H", OPERAND_NOT_ALLOWED, "0E0H", 0xE5, 0xE0);
     TEST("MOV  0F6H,A", 0xF5, 0xF6);
     ERRT("MOV  102H,A", OVERFLOW_RANGE, "102H,A", 0xF5, 0x02);
 

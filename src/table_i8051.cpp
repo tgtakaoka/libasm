@@ -320,6 +320,11 @@ Error TableI8051::searchOpCode(CpuType cpuType, DisInsn &insn, StrBuffer &out) c
     return insn.getError();
 }
 
+bool TableI8051::invalidDirect(Config::opcode_t opc, uint16_t addr) const {
+    // MOV A, ACC is not a valid instruction
+    return opc == 0xE5 && addr == 0xE0;
+}
+
 const /*PROGMEM*/ char *TableI8051::listCpu_P() const {
     return TEXT_CPU_I8051;
 }

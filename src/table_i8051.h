@@ -30,6 +30,8 @@ struct TableI8051 final : InsnTable<CpuType> {
 
     Error searchName(CpuType, AsmInsn &insn) const;
     Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
+
+    bool invalidDirect(Config::opcode_t opc, uint16_t addr) const;
 };
 
 extern const TableI8051 TABLE;

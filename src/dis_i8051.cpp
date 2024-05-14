@@ -59,7 +59,10 @@ void DisI8051::decodeRReg(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
 
 void DisI8051::decodeAddress(DisInsn &insn, StrBuffer &out, AddrMode mode) const {
     if (mode == M_ADR8) {
-        outAbsAddr(out, insn.readByte(), 8);
+        const auto addr = insn.readByte();
+        if (TABLE.invalidDirect(insn.opCode(), addr))
+            insn.setErrorIf(out, OPERAND_NOT_ALLOWED);
+        outAbsAddr(out, addr, 8);
     } else if (mode == M_ADR11) {
         const auto val8 = insn.readByte();
         auto addr = (insn.address() + insn.length()) & 0xF800;

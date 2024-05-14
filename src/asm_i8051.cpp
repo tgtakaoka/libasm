@@ -251,6 +251,8 @@ void AsmI8051::encodeOperand(AsmInsn &insn, AddrMode mode, const Operand &op) co
     case M_NOTAD:
         if (op.val16 >= 0x100)
             insn.setErrorIf(op, mode == M_ADR8 ? OVERFLOW_RANGE : NOT_BIT_ADDRESSABLE);
+        if (TABLE.invalidDirect(insn.opCode(), op.val16))
+            insn.setErrorIf(op, OPERAND_NOT_ALLOWED);
         insn.emitOperand8(op.val16);
         break;
     default:
