@@ -35,7 +35,7 @@ void test_asm_z80() {
             "        defb  'a,', 'bc''de', 0\n"  // DB requires surrounding quotes
             "        defs  2\n"                  // DS allocate spaces
             "data1:  equ   8AH\n"
-            "        defm  'A', '''', 'C'+80H, 'a''c'\n");
+            "data2:  defm  'A', '''', 'C'+80H, 'a''c'\n");
 
     driver.setUpperHex(false);
 
@@ -45,7 +45,8 @@ void test_asm_z80() {
             "        org   0abcdh\n"
             "        include \"data/db.inc\"\n"
             "        res   0, (iy-128)\n"
-            "        set   7, (ix+127)\n",
+            "        set   7, (ix+127)\n"
+            "        ld    A, low data2\n",
             "          0 :                            cpu   z80\n"
             "          0 :                    ; comment line\n"
             "       abcd :                            org   0abcdh\n"
@@ -55,9 +56,10 @@ void test_asm_z80() {
             "       abd9 : 65 00\n"
             "(1)    abdb :                            defs  2\n"
             "(1)    abdd : =8a                data1:  equ   8AH\n"
-            "(1)    abdd : 41 27 c3 61 27 63          defm  'A', '''', 'C'+80H, 'a''c'\n"
+            "(1)    abdd : 41 27 c3 61 27 63  data2:  defm  'A', '''', 'C'+80H, 'a''c'\n"
             "       abe3 : fd cb 80 86                res   0, (iy-128)\n"
-            "       abe7 : dd cb 7f fe                set   7, (ix+127)\n");
+            "       abe7 : dd cb 7f fe                set   7, (ix+127)\n"
+            "       abeb : 3e dd                      ld    A, low data2\n");
 }
 
 void test_dis_z80() {
