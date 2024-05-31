@@ -452,42 +452,46 @@ private:
 template <typename Conf, typename Entry>
 struct EntryInsnBase {
     EntryInsnBase() : _opCode(0), _flags() {}
-    void setOpCode(typename Conf::opcode_t opCode) { _opCode = opCode; }
-    typename Conf::opcode_t opCode() const { return _opCode; }
-    void embed(typename Conf::opcode_t data) { _opCode |= data; }
-    void setFlags(typename Entry::Flags flags) { _flags = flags; }
-    typename Entry::Flags flags() const { return _flags; }
-    typename Entry::Flags &flags() { return _flags; }
+    using opcode_t = typename Conf::opcode_t;
+    using Flags = typename Entry::Flags;
+    void setOpCode(opcode_t opCode) { _opCode = opCode; }
+    opcode_t opCode() const { return _opCode; }
+    void embed(opcode_t data) { _opCode |= data; }
+    void setFlags(Flags flags) { _flags = flags; }
+    Flags flags() const { return _flags; }
+    Flags &flags() { return _flags; }
 
 private:
-    typename Conf::opcode_t _opCode;
-    typename Entry::Flags _flags;
+    opcode_t _opCode;
+    Flags _flags;
 };
 
 template <typename Conf, typename Entry>
 struct EntryInsnPrefix : virtual EntryInsnBase<Conf, Entry> {
     EntryInsnPrefix() : _prefix(0) {}
-    void setPrefix(typename Conf::opcode_t prefix) { _prefix = prefix; }
+    using opcode_t = typename Conf::opcode_t;
+    void setPrefix(opcode_t prefix) { _prefix = prefix; }
     bool hasPrefix() const { return _prefix != 0; }
-    auto prefix() const { return _prefix; }
+    opcode_t prefix() const { return _prefix; }
 
 private:
-    typename Conf::opcode_t _prefix;
+    opcode_t _prefix;
 };
 
 template <typename Conf, typename Entry>
 struct EntryInsnPostfix : virtual EntryInsnBase<Conf, Entry> {
     EntryInsnPostfix() : _postfix(0), _hasPostfix(false) {}
-    void setPostfix(typename Conf::opcode_t postfix, bool hasPostfix = true) {
+    using opcode_t = typename Conf::opcode_t;
+    void setPostfix(opcode_t postfix, bool hasPostfix = true) {
         _postfix = postfix;
         _hasPostfix = hasPostfix;
     }
-    void embedPostfix(typename Conf::opcode_t data) { setPostfix(_postfix | data); }
+    void embedPostfix(opcode_t data) { setPostfix(_postfix | data); }
     bool hasPostfix() const { return _hasPostfix; }
-    auto postfix() const { return _postfix; }
+    opcode_t postfix() const { return _postfix; }
 
 private:
-    typename Conf::opcode_t _postfix;
+    opcode_t _postfix;
     bool _hasPostfix;
 };
 

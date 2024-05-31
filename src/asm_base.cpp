@@ -433,7 +433,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
 }
 
 namespace {
-auto convert2pbcd(uint64_t bin, uint8_t digits) {
+uint64_t convert2pbcd(uint64_t bin, uint8_t digits) {
     uint64_t pbcd = 0;
     uint8_t shift = 0;
     while (digits-- > 0) {

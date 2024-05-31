@@ -75,7 +75,7 @@ private:
 struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
     DisInsn(Insn &insn, DisMemory &memory, const StrBuffer &out) : DisInsnImpl(insn, memory, out) {}
 
-    auto readPostfix() {
+    Config::opcode_t readPostfix() {
         if (!hasPostfix())
             setPostfix(readByte());
         return postfix();

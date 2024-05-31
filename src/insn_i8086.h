@@ -39,9 +39,9 @@ struct EntryInsn : EntryInsnPrefix<Config, Entry> {
     bool fpuInst() const { return flags().fpuInst(); }
 
     void setSegment(Config::opcode_t segment) { _segment = segment; }
-    auto segment() const { return _segment; }
+    Config::opcode_t segment() const { return _segment; }
     void setFwait(bool enable = true) { _fwait = enable ? FWAIT : 0; }
-    auto fwait() const { return _fwait; }
+    Config::opcode_t fwait() const { return _fwait; }
 
     static constexpr Config::opcode_t FWAIT = 0x9B;
 
@@ -157,7 +157,7 @@ struct DisInsn final : DisInsnImpl<Config>, EntryInsn {
         else if (dst == P_OMOD || src == P_OMOD)
             _modReg = opCode();
     }
-    auto modReg() const { return _modReg; }
+    Config::opcode_t modReg() const { return _modReg; }
 
 private:
     Config::opcode_t _modReg;

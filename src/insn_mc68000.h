@@ -32,7 +32,7 @@ struct EntryInsn : EntryInsnPostfix<Config, Entry> {
     OprPos dstPos() const { return flags().dstPos(); }
     OprSize oprSize() const { return flags().oprSize(); }
     bool hasPostVal() const { return flags().hasPostVal(); }
-    auto postVal() const { return flags().postVal(); }
+    Config::opcode_t postVal() const { return flags().postVal(); }
 };
 
 struct AsmInsn;

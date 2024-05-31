@@ -156,14 +156,14 @@ struct Entry final : entry::Base<Config::opcode_t> {
         OprSize oprSize() const { return OprSize((_size >> oprSize_gp) & size_gm); }
         InsnSize insnSize() const { return InsnSize((_size >> insnSize_gp) & size_gm); }
         bool hasPostVal() const { return (_src & hasPostVal_bm) != 0; }
-        auto postVal() const { return _postVal; }
+        Config::opcode_t postVal() const { return _postVal; }
 
         void setAddrMode(AddrMode src, AddrMode dst) {
             _src = static_cast<uint8_t>(src | (_src & hasPostVal_bm));
             _dst = static_cast<uint8_t>(dst);
         }
         void setInsnSize(InsnSize size) { _size = Entry::_size(oprSize(), size); }
-        auto postMask() const { return postMask(dstPos()) | postMask(srcPos()); }
+        Config::opcode_t postMask() const { return postMask(dstPos()) | postMask(srcPos()); }
         static Config::opcode_t postMask(OprPos pos);
     };
 
