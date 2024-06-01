@@ -1,5 +1,5 @@
-image:https://img.shields.io/github/v/release/tgtakaoka/libasm.svg?maxAge=3600[https://github.com/tgtakaoka/libasm/releases]
 image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[https://github.com/tgtakaoka/libasm/blob/main/LICENSE.md]
+image:https://img.shields.io/github/v/release/tgtakaoka/libasm.svg?maxAge=3600[https://github.com/tgtakaoka/libasm/releases]
 image:https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml/badge.svg[link="https://github.com/tgtakaoka/libasm/actions/workflows/ccpp.yml"]
 image:https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml/badge.svg[https://github.com/tgtakaoka/libasm/actions/workflows/arduino-ci.yml]
 image:https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml/badge.svg[https://github.com/tgtakaoka/libasm/actions/workflows/platformio-ci.yml]
