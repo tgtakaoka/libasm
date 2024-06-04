@@ -279,10 +279,12 @@ struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberP
 };
 
 /**
- * Texas Instrument style numbers is '>hh' as hexadecimal.
+ * Texas Instrument style numbers is:
+ * - '>hh' as hexadecimal.
+ * - '?bb' as binary.
  */
 struct TexasNumberParser final : PrefixNumberParser, Singleton<TexasNumberParser> {
-    TexasNumberParser() : PrefixNumberParser('>', 0, 0, 0) {}
+    TexasNumberParser() : PrefixNumberParser('>', '?', 0, 0) {}
 };
 
 struct SemicolonCommentParser final : CommentParser, Singleton<SemicolonCommentParser> {
