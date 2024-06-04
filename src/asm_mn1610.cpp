@@ -224,8 +224,6 @@ void AsmMn1610::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) c
 Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
-    if (endOfLine(p))
-        return OK;
 
     op.cc = parseCcName(p);
     if (op.cc != CC_UNDEF) {
@@ -296,7 +294,7 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     op.val32 = parseExpr32(p, op, indir);
     if (op.hasError())
         return op.getError();
-    if (endOfLine(p.skipSpaces()) || *p == ',') {
+    if (endOfLine(p) || *p == ',') {
         // v
         if (overflowUint16(op.val32)) {
             op.mode = M_ABS;
@@ -324,45 +322,46 @@ Error AsmMn1610::parseOperand(StrScanner &scan, Operand &op) const {
     }
     if (indir && !p.expect(')'))
         return op.setError(p, MISSING_CLOSING_PAREN);
-    // (v), (v)(r)
-    if (endOfLine(p.skipSpaces()) || *p == ',') {
+    auto rp = p;
+    // (v)(r)
+    if (rp.skipSpaces().expect('(')) {
+        op.reg = parseRegName(rp.skipSpaces());
+        if (op.reg != REG_UNDEF) {
+            if (!rp.skipSpaces().expect(')'))
+                return op.setError(rp, MISSING_CLOSING_PAREN);
+            op.mode = M_IDIX;
+            scan = rp;
+            return OK;
+        }
+    }
+    // (v)
+    if (endOfLine(p) || *p == ',') {
         op.mode = M_IABS;
         scan = p;
         return OK;
-    }
-    if (p.expect('(')) {
-        // (v)(r)
-        op.reg = parseRegName(p.skipSpaces());
-        if (op.reg != REG_UNDEF) {
-            if (!p.skipSpaces().expect(')'))
-                return op.setError(p, MISSING_CLOSING_PAREN);
-            op.mode = M_IDIX;
-            scan = p;
-            return OK;
-        }
     }
     return op.setError(UNKNOWN_OPERAND);
 }
 
 Error AsmMn1610::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+                return _insn.setError(insn.op2);
+        }
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op3) && insn.op3.hasError())
+                return _insn.setError(insn.op3);
+        }
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op4) && insn.op4.hasError())
+                return _insn.setError(insn.op4);
+        }
     }
-    if (scan.expect(',')) {
-        if (parseOperand(scan, insn.op3) && insn.op3.hasError())
-            return _insn.setError(insn.op3);
-        scan.skipSpaces();
-    }
-    if (scan.expect(',')) {
-        if (parseOperand(scan, insn.op4) && insn.op4.hasError())
-            return _insn.setError(insn.op4);
-        scan.skipSpaces();
-    }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

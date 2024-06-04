@@ -46,6 +46,16 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+struct MostekCommentParser final : CommentParser {
+    bool commentLine(StrScanner &scan) const override {
+        return SemicolonCommentParser::singleton().commentLine(scan);
+    }
+    bool endOfLine(StrScanner &scan) const override {
+        return AsteriskCommentParser::singleton().endOfLine(scan) ||
+               SemicolonCommentParser::singleton().endOfLine(scan);
+    }
+};
+
 struct MostekSymbolParser final : SimpleSymbolParser {
     MostekSymbolParser() : SimpleSymbolParser(PSTR_UNDER) {}
     bool instructionLetter(char c) const override {
@@ -69,11 +79,13 @@ struct MostekLetterParser final : LetterParser {
 const ValueParser::Plugins &AsmMos6502::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return MotorolaNumberParser::singleton(); }
+        const CommentParser &comment() const override { return _comment; }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
+        const MostekCommentParser _comment{};
         const MostekSymbolParser _symbol{};
         const MostekLetterParser _letter{};
     } PLUGINS{};
@@ -369,21 +381,22 @@ bool maybeStackRelativeIndirect(CpuType cpuType, AddrMode mode3) {
 Error AsmMos6502::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     char indirect = 0;
-    if (parseOperand(scan, insn.op1, indirect) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.op2, indirect) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.op1, indirect) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op2, indirect) && insn.op2.hasError())
+                return _insn.setError(insn.op2);
+        }
+        if (indirect)
+            return _insn.setError(
+                    scan, indirect == '(' ? MISSING_CLOSING_PAREN : MISSING_CLOSING_BRACKET);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op3, indirect) && insn.op3.hasError())
+                return _insn.setError(insn.op3);
+        }
     }
-    if (indirect)
-        return _insn.setError(
-                scan, indirect == '(' ? MISSING_CLOSING_PAREN : MISSING_CLOSING_BRACKET);
-    if (scan.expect(',')) {
-        if (parseOperand(scan, insn.op3, indirect) && insn.op3.hasError())
-            return _insn.setError(insn.op3);
-        scan.skipSpaces();
-    }
+    scan.skipSpaces();
 
     const auto error = TABLE.searchName(cpuType(), insn);
     if (error == OPERAND_NOT_ALLOWED) {

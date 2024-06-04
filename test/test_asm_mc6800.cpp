@@ -971,20 +971,21 @@ static void test_comment() {
     symtab.intern(255,    "sym255");
     symtab.intern(0x1234, "sym1234");
 
-    COMM("NOP          ; comment", "; comment", 0x01);
-    COMM("PSHA         ; comment", "; comment", 0x36);
-    COMM("SUBA #$90 +1 ; comment", "; comment", 0x80, 0x91);
-    COMM("NEG > $0010  ; comment", "; comment", 0x70, 0x00, 0x10);
-    COMM("SUBA >$90 -2 ; comment", "; comment", 0xB0, 0x00, 0x8E);
-    COMM("SUBA sym255  ; comment", "; comment", 0x90, 0xFF);
-    COMM("SUBA >sym255 ; comment", "; comment", 0xB0, 0x00, 0xFF);
-    COMM("SUBA sym1234 ; comment", "; comment", 0xB0, 0x12, 0x34);
-    COMM("JMP sym255   ; comment", "; comment", 0x7E, 0x00, 0xFF);
-    COMM("JSR sym1234  ; comment", "; comment", 0xBD, 0x12, 0x34);
-    COMM("LDAA 0 + ( 2 * 3 ) , X ; comment", "; comment", 0xA6, 0x06);
-    COMM("FCB -128, 255 ; comment", "; comment", 0x80, 0xFF);
-    COMM("FDB -128, 255 ; comment", "; comment", 0xFF, 0x80, 0x00, 0xFF);
-    COMM("FCC ;TEXT;    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("NOP         ; comment", "; comment", 0x01);
+    COMM("SUBA #$90 +1; comment", "; comment", 0x80, 0x91);
+    COMM("NOP          comment", "comment", 0x01);
+    COMM("PSHA         comment", "comment", 0x36);
+    COMM("NEG > $0010  comment", "comment", 0x70, 0x00, 0x10);
+    COMM("SUBA >$90 -2 comment", "comment", 0xB0, 0x00, 0x8E);
+    COMM("SUBA sym255  comment", "comment", 0x90, 0xFF);
+    COMM("SUBA >sym255 comment", "comment", 0xB0, 0x00, 0xFF);
+    COMM("SUBA sym1234 comment", "comment", 0xB0, 0x12, 0x34);
+    COMM("JMP sym255   comment", "comment", 0x7E, 0x00, 0xFF);
+    COMM("JSR sym1234  comment", "comment", 0xBD, 0x12, 0x34);
+    COMM("LDAA 0 + ( 2 * 3 ) , X comment", "comment", 0xA6, 0x06);
+    COMM("FCB -128, 255 comment", "comment", 0x80, 0xFF);
+    COMM("FDB -128, 255 comment", "comment", 0xFF, 0x80, 0x00, 0xFF);
+    COMM("FCC ;TEXT;    comment", "comment", 0x54, 0x45, 0x58, 0x54);
 }
 
 static void test_undef() {

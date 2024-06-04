@@ -66,7 +66,7 @@ AsmMc6800::AsmMc6800(const ValueParser::Plugins &plugins)
 Error AsmMc6800::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
-    if (endOfLine(p) || *p == ',') {
+    if (*p == ',') {
         op.mode = M_NONE;
         scan = p;
         return OK;
@@ -197,18 +197,19 @@ void AsmMc6800::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
 
 Error AsmMc6800::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+                return _insn.setError(insn.op2);
+        }
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op3) && insn.op3.hasError())
+                return _insn.setError(insn.op3);
+        }
     }
-    if (scan.expect(',')) {
-        if (parseOperand(scan, insn.op3) && insn.op3.hasError())
-            return _insn.setError(insn.op3);
-        scan.skipSpaces();
-    }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

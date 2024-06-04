@@ -714,6 +714,17 @@ static const Cpu *cpu(CpuType cpuType) {
     return Cpu::search(cpuType, ARRAY_RANGE(CPU_TABLE));
 }
 
+static bool acceptAll(AsmInsn &insn, const Entry *entry) {
+    UNUSED(insn);
+    UNUSED(entry);
+    return true;
+}
+
+bool TableMos6502::hasOperand(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptAll);
+    return insn.isOK() && insn.mode1() != M_NONE;
+}
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;

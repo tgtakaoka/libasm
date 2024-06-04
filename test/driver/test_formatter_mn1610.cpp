@@ -32,19 +32,19 @@ void test_asm_mn1610() {
     ASM("mn1610",
             R"(        cpu   mn1610
 * comment line
-        org   x'abcd'
+        org   x'abcd'    set location
         tbit  r3, 5, nz
-label:  dc    label
-        ds    2
-        dc    c'ABC',3
+label:  dc    label      define label and constant
+        ds    2          ; allocate space
+        dc    c'ABC',3   define constants
 )",
             R"(          0 :                            cpu   mn1610
           0 :                    * comment line
-       ABCD :                            org   x'abcd'
+       ABCD :                            org   x'abcd'    set location
        ABCD : 2B55                       tbit  r3, 5, nz
-       ABCE : ABCE               label:  dc    label
-       ABCF :                            ds    2
-       ABD1 : 4142 4300 0003             dc    c'ABC',3
+       ABCE : ABCE               label:  dc    label      define label and constant
+       ABCF :                            ds    2          ; allocate space
+       ABD1 : 4142 4300 0003             dc    c'ABC',3   define constants
 )");
 }
 

@@ -453,14 +453,14 @@ static void test_precedence() {
     E32("0 >(2 != 1)", 0);
     E32(" 0 == 0 <= 1", 0); // 0 == (0 <= 1)
     E32("(0 == 0)<= 1", 1);
-    X32(" 0 < 2 <= 3",  OPERATOR_NOT_ASSOCIATIVE, "<= 3", " 3");
+    X32(" 0 < 2 <= 3",  OPERATOR_NOT_ASSOCIATIVE, "<= 3", "3");
     E32("(0 < 2)<= 3",  1);
     E32(" 0 <(2 <= 3)", 1);
-    X32(" 0 == 2 != 3",  OPERATOR_NOT_ASSOCIATIVE, "!= 3", " 3");
+    X32(" 0 == 2 != 3",  OPERATOR_NOT_ASSOCIATIVE, "!= 3", "3");
     E32(" 0 ==(2 != 3)", 0);
     E32("(0 == 2)!= 3",  1);
-    X32(" 0 ==(2 != 3)!= 0", OPERATOR_NOT_ASSOCIATIVE, "!= 0", " 0");
-    X32("(0 == 2)!= 3 == 1", OPERATOR_NOT_ASSOCIATIVE, "== 1", " 1");
+    X32(" 0 ==(2 != 3)!= 0", OPERATOR_NOT_ASSOCIATIVE, "!= 0", "0");
+    X32("(0 == 2)!= 3 == 1", OPERATOR_NOT_ASSOCIATIVE, "== 1", "1");
 
     E32("10==10 && 20==20", 1);
     E32("10==20 && 10!=20", 0);

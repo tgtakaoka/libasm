@@ -342,14 +342,14 @@ static void test_precedence() {
     E32("0 >(2 != 1)", 0);
     E32(" 0 == 0 <= 1", 0); // 0 == (0 <= 1)
     E32("(0 == 0)<= 1", 1);
-    X32(" 0 < 2 <= 3",  OPERATOR_NOT_ASSOCIATIVE, "<= 3", " 3");
+    X32(" 0 < 2 <= 3",  OPERATOR_NOT_ASSOCIATIVE, "<= 3", "3");
     E32("(0 < 2)<= 3",  1);
     E32(" 0 <(2 <= 3)", 1);
-    X32(" 0 == 2 != 3",  OPERATOR_NOT_ASSOCIATIVE, "!= 3", " 3");
+    X32(" 0 == 2 != 3",  OPERATOR_NOT_ASSOCIATIVE, "!= 3", "3");
     E32(" 0 ==(2 != 3)", 0);
     E32("(0 == 2)!= 3",  1);
-    X32(" 0 ==(2 != 3)!= 0", OPERATOR_NOT_ASSOCIATIVE, "!= 0", " 0");
-    X32("(0 == 2)!= 3 == 1", OPERATOR_NOT_ASSOCIATIVE, "== 1", " 1");
+    X32(" 0 ==(2 != 3)!= 0", OPERATOR_NOT_ASSOCIATIVE, "!= 0", "0");
+    X32("(0 == 2)!= 3 == 1", OPERATOR_NOT_ASSOCIATIVE, "== 1", "1");
 
     E32("10==10 && 20==20", 1);
     E32("10==20 && 10!=20", 0);
@@ -439,7 +439,7 @@ static void test_function() {
     E32("pi()",        0x31415926);
     E32("pi ( ) + 1",  0x31415927);
     X32("pi + 1",      MISSING_FUNC_ARGUMENT, "pi + 1", "+ 1");
-    X32("pi(1) + 1",   TOO_MANY_FUNC_ARGUMENT, "pi(1) + 1", " + 1");
+    X32("pi(1) + 1",   TOO_MANY_FUNC_ARGUMENT, "pi(1) + 1", "+ 1");
     E16("1 + sub(2, 10)",     -7);
     X16("1 + sub( 1 )",       TOO_FEW_FUNC_ARGUMENT,  "sub( 1 )", "");
     X16("1 + sub (1, 2, 3 )", TOO_MANY_FUNC_ARGUMENT, "sub (1, 2, 3 )", "");

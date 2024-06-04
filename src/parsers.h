@@ -29,8 +29,8 @@ namespace libasm {
  * Comment parser
  */
 struct CommentParser {
-    virtual bool commentLine(const StrScanner &scan) const { return endOfLine(scan); }
-    virtual bool endOfLine(const StrScanner &scan) const = 0;
+    virtual bool commentLine(StrScanner &scan) const { return endOfLine(scan); }
+    virtual bool endOfLine(StrScanner &scan) const = 0;
 };
 
 /**
@@ -262,16 +262,6 @@ private:
 };
 
 /**
- * RCA style numbers are the same as IBM plus '#hh' for hexadecimal.
- */
-struct RcaNumberParser final : NumberParser, Singleton<RcaNumberParser> {
-    Error parseNumber(StrScanner &scan, Value &val) const override;
-
-private:
-    const IbmNumberParser _ibm{'X', 'B', 0, 'D'};
-};
-
-/**
  * Signetics style numbers are the same as IBM except H'hh' for hexadecimal.
  */
 struct SigneticsNumberParser final : IbmNumberParser, Singleton<SigneticsNumberParser> {
@@ -288,25 +278,24 @@ struct TexasNumberParser final : PrefixNumberParser, Singleton<TexasNumberParser
 };
 
 struct SemicolonCommentParser final : CommentParser, Singleton<SemicolonCommentParser> {
-    bool endOfLine(const StrScanner &scan) const override { return *scan == ';' || *scan == 0; }
-};
-
-struct RcaCommentParser final : CommentParser, Singleton<RcaCommentParser> {
-    bool commentLine(const StrScanner &scan) const override {
-        return (scan[0] == '.' && scan[1] == '.') || endOfLine(scan);
+    bool endOfLine(StrScanner &scan) const override {
+        return *scan.skipSpaces() == 0 || *scan == ';';
     }
-    bool endOfLine(const StrScanner &scan) const override { return *scan == ';' || *scan == 0; }
 };
 
 struct SharpCommentParser final : CommentParser, Singleton<SharpCommentParser> {
-    bool endOfLine(const StrScanner &scan) const {
-        return *scan == '#' || SemicolonCommentParser::singleton().endOfLine(scan);
+    bool endOfLine(StrScanner &scan) const override {
+        return SemicolonCommentParser::singleton().endOfLine(scan) || *scan == '#';
     }
 };
 
 struct AsteriskCommentParser final : CommentParser, Singleton<AsteriskCommentParser> {
-    bool commentLine(const StrScanner &scan) const { return *scan == '*' || endOfLine(scan); }
-    bool endOfLine(const StrScanner &scan) const { return *scan == ';' || *scan == 0; }
+    bool commentLine(StrScanner &scan) const override { return *scan == '*' || *scan == ';'; }
+    bool endOfLine(StrScanner &scan) const override {
+        const auto end = (*scan == 0 || *scan == ' ');
+        scan.skipSpaces();
+        return end || SemicolonCommentParser::singleton().endOfLine(scan);
+    }
 };
 
 /**

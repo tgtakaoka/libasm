@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-#include <ctype.h>
-
 #include "value_parser.h"
-
+#include <ctype.h>
 #include "config_base.h"
 #include "stack.h"
 
@@ -119,8 +117,10 @@ Value ValueParser::_eval(
     bool expect_fn_args = false;
     uint8_t in_fn_args = 0;
     while (true) {
+        const auto expr = scan;
         if (endOfLine(scan.skipSpaces()))
             break;
+
         // expression ends with |delim|
         if (*scan == end_of_expr && !vstack.empty())
             break;
@@ -284,6 +284,7 @@ Value ValueParser::_eval(
             continue;
         }
 
+        scan = expr;
         break;
     }
 

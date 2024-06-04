@@ -102,8 +102,6 @@ AddrMode toAddrMode(RegName name, uint16_t &regno) {
 
 Error AsmTms7000::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(scan.skipSpaces());
-    if (endOfLine(scan))
-        return OK;
 
     auto p = scan;
     if (p.expect('%')) {
@@ -221,18 +219,19 @@ void AsmTms7000::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 
 Error AsmTms7000::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-        return _insn.setError(insn.srcOp);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-            return _insn.setError(insn.dstOp);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return _insn.setError(insn.srcOp);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+                return _insn.setError(insn.dstOp);
+        }
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
+                return _insn.setError(insn.extOp);
+        }
     }
-    if (scan.expect(',')) {
-        if (parseOperand(scan, insn.extOp) && insn.extOp.hasError())
-            return _insn.setError(insn.extOp);
-        scan.skipSpaces();
-    }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

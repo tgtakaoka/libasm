@@ -88,7 +88,8 @@ Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context) {
     _assembler.setCurrentLocation(insn.address());
 
     const auto &parser = _assembler.parser();
-    if (parser.commentLine(scan))
+    auto p = scan;
+    if (parser.commentLine(p))
         return OK;
 
     auto error = OK;
@@ -99,7 +100,7 @@ Error AsmDirective::encode(StrScanner &scan, Insn &insn, Context &context) {
         StrScanner directive;
         parser.readInstruction(p, directive);
         error = processPseudo(directive, p.skipSpaces(), context);
-        if (error == OK && !parser.endOfLine(p.skipSpaces()))
+        if (error == OK && !parser.endOfLine(p))
             setError(p, GARBAGE_AT_END);
     }
     if (context.label.size()) {

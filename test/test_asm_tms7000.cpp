@@ -403,8 +403,10 @@ void test_error() {
 }
 
 void test_comment() {
-    COMM("CLR R214; comment", "; comment", 0xD5, 0xD6);
-    COMM("CLR >D6 ; comment", "; comment", 0xD5, 0xD6);
+    COMM("CLRC   ; comment", "; comment", 0xB0);
+    COMM("CLR >D6; comment", "; comment", 0xD5, 0xD6);
+    COMM("TSTA     comment", "comment", 0xB0);
+    COMM("CLR >D6  comment", "comment", 0xD5, 0xD6);
 
     COMM("ADC %122, R123  ; comment", "; comment", 0x79, 0x7A, 0x7B);
     COMM("ADC % 122, R123 ; comment", "; comment", 0x79, 0x7A, 0x7B);

@@ -236,7 +236,6 @@ void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) const {
     uint8_t post = 0;
     auto p = op.list;
     while (true) {
-        p.skipSpaces();
         const auto r = p;
         auto reg = parseRegName(p);
         if (reg == REG_UNDEF)
@@ -247,12 +246,13 @@ void AsmMc6809::encodeRegisterList(AsmInsn &insn, const Operand &op) const {
         if (post & bit)
             insn.setErrorIf(r, DUPLICATE_REGISTER);
         post |= bit;
-        if (endOfLine(p.skipSpaces()))
-            break;
-        if (!p.expect(',')) {
-            insn.setErrorIf(p, UNKNOWN_OPERAND);
-            break;
+        auto end = p;
+        if (p.skipSpaces().expect(',')) {
+            p.skipSpaces();
+            continue;
         }
+        if (endOfLine(end))
+            break;
     }
     insn.emitOperand8(post);
 }
@@ -497,8 +497,8 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         op.val32 = parseExpr32(p, op);
     }
 
-    const auto endOfIndex = p.skipSpaces();
-    if (!p.expect(',')) {
+    auto indexEnd = p;
+    if (!p.skipSpaces().expect(',')) {
         if (index == REG_UNDEF) {
             if (op.indir) {
                 if (!p.expect(']'))
@@ -517,7 +517,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
             scan = p;
             return OK;
         }
-        if (endOfLine(p)) {
+        if (endOfLine(indexEnd)) {
             op.index = index;
             op.mode = M_LIST;
             op.extra = 1;  // single register
@@ -552,7 +552,7 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         op.index = index;
         op.mode = M_LIST;
         op.extra = 1;
-        scan = endOfIndex;
+        scan = indexEnd;
         return OK;
     }
 
@@ -575,15 +575,21 @@ Error AsmMc6809::parseOperand(StrScanner &scan, Operand &op, AddrMode hint) cons
         if (op.indir)
             return op.setError(UNKNOWN_OPERAND);
         // actual parsing happens on |encodeRegisterList|.
-        while (!endOfLine(p))
-            p += 1;
         op.mode = M_LIST;
         op.extra = 2;  // multiple registers
-        scan = p;
-        return OK;
+        while (true) {
+            auto end = p;
+            if (parseRegName(p.skipSpaces()) != REG_UNDEF) {
+                end = p;
+                if (p.skipSpaces().expect(','))
+                    continue;
+            }
+            scan = end;
+            return OK;
+        }
     }
 
-    return OK;
+    return endOfLine(scan) ? OK : op.setError(UNKNOWN_OPERAND);
 }
 
 Error AsmMc6809::processPseudo(StrScanner &scan, Insn &insn) {
@@ -601,13 +607,15 @@ Error AsmMc6809::encodeImpl(StrScanner &scan, Insn &_insn) const {
     if (error)
         return _insn.setError(error);
 
-    if (parseOperand(scan, insn.op1, insn.mode1()) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.op2, insn.mode2()) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (insn.mode1() != M_NONE) {
+        if (parseOperand(scan, insn.op1, insn.mode1()) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (insn.mode2() != M_NONE && scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op2, insn.mode2()) && insn.op2.hasError())
+                return _insn.setError(insn.op2);
+        }
     }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

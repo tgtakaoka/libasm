@@ -479,6 +479,17 @@ static const Cpu *cpu(CpuType cpuType) {
     return &CPU_TABLE[0];
 }
 
+static bool acceptAll(AsmInsn &insn, const Entry *entry) {
+    UNUSED(insn);
+    UNUSED(entry);
+    return true;
+}
+
+bool TableTms7000::hasOperand(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptAll);
+    return insn.isOK() && insn.src() != M_NONE;
+}
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;

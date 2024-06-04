@@ -34,15 +34,17 @@ void test_asm_mc6805() {
     ASM("mc146805",
             R"(        cpu   mc146805
 * comment line
-        org   $1234
-label1: equ   $0800
-        stx   label1, x
+        org   $1234     set location
+label1: equ   $0800     define label
+        stx   label1, x use label
+        jmp   label1 + 1; loop
 )",
             R"(          0 :                            cpu   mc146805
           0 :                    * comment line
-       1234 :                            org   $1234
-       1234 : =800               label1: equ   $0800
-       1234 : df 08 00                   stx   label1, x
+       1234 :                            org   $1234     set location
+       1234 : =800               label1: equ   $0800     define label
+       1234 : df 08 00                   stx   label1, x use label
+       1237 : cc 08 01                   jmp   label1 + 1; loop
 )");
 }
 

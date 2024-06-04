@@ -32,15 +32,17 @@ void test_asm_tms7000() {
     ASM("tms7000",
             R"(        cpu     tms7000
 * comment line
-        aorg    >7BCD
-label1: equ     >7def
-        movd    %>a9aa(b), r171
+        aorg    >7BCD           set location
+label1: equ     >7def           define label
+        movd    %>a9aa(b), r171 use label
+        br      @label1;        loop
 )",
             R"(          0 :                            cpu     tms7000
           0 :                    * comment line
-       7BCD :                            aorg    >7BCD
-       7BCD : =7DEF              label1: equ     >7def
-       7BCD : A8 A9 AA AB                movd    %>a9aa(b), r171
+       7BCD :                            aorg    >7BCD           set location
+       7BCD : =7DEF              label1: equ     >7def           define label
+       7BCD : A8 A9 AA AB                movd    %>a9aa(b), r171 use label
+       7BD1 : 8C 7D EF                   br      @label1;        loop
 )");
 }
 

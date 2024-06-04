@@ -641,16 +641,19 @@ static void test_misc() {
 }
 
 static void test_comment() {
-    COMM("NOP                ; comment", "; comment",   0xC0);
-    COMM("WRTD,R0            ; comment", "; comment",   0xF0);
-    COMM("LODI,R0 ( 1 + 2 )  ; comment", "; comment",   0x04, 0x03);
-    COMM("LODI,R1 <H'4567' ; comment", "; comment", 0x05, 0x67);
-    COMM("LODI,R2 >H'789A' ; comment", "; comment", 0x06, 0x78);
-    COMM("LODI,R3 H'89'    ; comment", "; comment", 0x07, 0x89);
-    ACOMM(0x1000, "ZBSR  H'003F'  ; comment", "; comment", 0xBB, 0x3F);
-    COMM("DATA -128,255 ; comment", "; comment", 0x80, 0xFF);
-    COMM("ACON 1        ; comment", "; comment", 0x00, 0x01);
-    COMM("ALIT A'TEXT'  ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("NOP    ; comment", "; comment", 0xC0);
+    COMM("WRTD,R0; comment", "; comment", 0xF0);
+    COMM("NOP                comment", "comment", 0xC0);
+    COMM("WRTD,R0            comment", "comment", 0xF0);
+    COMM("LODI,R0 ( 1 + 2 )  comment", "comment", 0x04, 0x03);
+    COMM("LODI,R0 H'56' + 1  2 3 4 5", "2 3 4 5",   0x04, 0x57);
+    COMM("LODI,R1 <H'4567' comment", "comment", 0x05, 0x67);
+    COMM("LODI,R2 >H'789A' comment", "comment", 0x06, 0x78);
+    COMM("LODI,R3 H'89'    comment", "comment", 0x07, 0x89);
+    ACOMM(0x1000, "ZBSR  H'003F'  comment", "comment", 0xBB, 0x3F);
+    COMM("DATA -128,255 comment", "comment", 0x80, 0xFF);
+    COMM("ACON 1        comment", "comment", 0x00, 0x01);
+    COMM("ALIT A'TEXT'  comment", "comment", 0x54, 0x45, 0x58, 0x54);
 }
 
 static void test_undef() {

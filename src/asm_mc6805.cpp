@@ -88,10 +88,6 @@ Error AsmMc6805::setPcBits(int32_t value) {
 Error AsmMc6805::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
-    if (endOfLine(p)) {
-        op.mode = M_NONE;
-        return OK;
-    }
 
     if (p.expect('#')) {
         op.val16 = parseExpr16(p, op);
@@ -244,18 +240,19 @@ void AsmMc6805::emitOperand(AsmInsn &insn, AddrMode mode, const Operand &op) con
 
 Error AsmMc6805::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+                return _insn.setError(insn.op2);
+        }
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op3) && insn.op3.hasError())
+                return _insn.setError(insn.op3);
+        }
     }
-    if (scan.expect(',')) {
-        if (parseOperand(scan, insn.op3) && insn.op3.hasError())
-            return _insn.setError(insn.op3);
-        scan.skipSpaces();
-    }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

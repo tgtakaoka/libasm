@@ -39,6 +39,35 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+/**
+ * RCA style numbers are the same as IBM plus '#hh' for hexadecimal.
+ */
+struct RcaNumberParser final : NumberParser {
+    Error parseNumber(StrScanner &scan, Value &val) const override {
+        auto p = scan;
+        if (*p == '#' && isxdigit(p[1])) {
+            const auto error = val.parseNumber(++p, RADIX_16);
+            if (error == OK)
+                scan = p;
+            return error;
+        }
+        return _ibm.parseNumber(scan, val);
+    }
+
+private:
+    const IbmNumberParser _ibm{'X', 'B', 0, 'D'};
+};
+
+struct RcaCommentParser final : CommentParser {
+    bool commentLine(StrScanner &scan) const override {
+        static constexpr char TEXT_DOTDOT[] PROGMEM = "..";
+        return scan.iexpectText_P(TEXT_DOTDOT) || endOfLine(scan);
+    }
+    bool endOfLine(StrScanner &scan) const override {
+        return SemicolonCommentParser::singleton().endOfLine(scan);
+    }
+};
+
 struct RcaSymbolParser final : SymbolParser {
     bool functionNameLetter(char c) const override { return symbolLetter(c) || c == '.'; }
     bool instructionLetter(char c) const override {
@@ -66,14 +95,16 @@ struct RcaFunctionTable final : FunctionTable {
 
 const ValueParser::Plugins &AsmCdp1802::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
-        const NumberParser &number() const override { return RcaNumberParser::singleton(); }
-        const CommentParser &comment() const override { return RcaCommentParser::singleton(); }
+        const NumberParser &number() const override { return _number; }
+        const CommentParser &comment() const override { return _comment; }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
         const LocationParser &location() const override {
             return AsteriskLocationParser::singleton();
         }
         const FunctionTable &function() const override { return _function; }
+        const RcaNumberParser _number{};
+        const RcaCommentParser _comment{};
         const RcaSymbolParser _symbol{};
         const RcaLetterParser _letter{};
         const RcaFunctionTable _function{};

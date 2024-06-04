@@ -194,8 +194,9 @@ void AsmTms9900::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
     auto p = scan.skipSpaces();
     op.setAt(p);
-    if (endOfLine(p))
+    if (endOfLine(p)) {
         return OK;
+    }
 
     if (p.expect('*')) {
         op.reg = parseRegName(p);
@@ -242,13 +243,15 @@ Error AsmTms9900::parseOperand(StrScanner &scan, Operand &op) const {
 
 Error AsmTms9900::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
-        return _insn.setError(insn.srcOp);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
-            return _insn.setError(insn.dstOp);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.srcOp) && insn.srcOp.hasError())
+            return _insn.setError(insn.srcOp);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.dstOp) && insn.dstOp.hasError())
+                return _insn.setError(insn.dstOp);
+        }
     }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.srcOp, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

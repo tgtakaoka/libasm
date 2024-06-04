@@ -32,15 +32,15 @@ void test_asm_scn2650() {
     ASM("scn2650",
             R"(        cpu     scn2650
 * comment line
-        org     h'7bcd'
-label1: equ     h'7def'
-        loda,r0 *label1, r0, +
+        org     h'7bcd'        set location
+label1: equ     h'7def'        define label
+        loda,r0 *label1, r0, +;use label
 )",
             R"(          0 :                            cpu     scn2650
           0 :                    * comment line
-       7BCD :                            org     h'7bcd'
-       7BCD : =7DEF              label1: equ     h'7def'
-       7BCD : 0C BD EF                   loda,r0 *label1, r0, +
+       7BCD :                            org     h'7bcd'        set location
+       7BCD : =7DEF              label1: equ     h'7def'        define label
+       7BCD : 0C BD EF                   loda,r0 *label1, r0, +;use label
 )");
 }
 

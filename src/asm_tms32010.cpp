@@ -40,6 +40,13 @@ constexpr Pseudo PSEUDOS[] PROGMEM = {
 // clang-format on
 PROGMEM constexpr Pseudos PSEUDO_TABLE{ARRAY_RANGE(PSEUDOS)};
 
+struct Tms32010CommentParser final : CommentParser {
+    bool commentLine(StrScanner &scan) const override { return *scan == '*'; }
+    bool endOfLine(StrScanner &scan) const override {
+        return SemicolonCommentParser::singleton().endOfLine(scan);
+    }
+};
+
 struct Tms32010SymbolParser final : SimpleSymbolParser {
     Tms32010SymbolParser() : SimpleSymbolParser(PSTR_UNDER_DOLLAR) {}
     bool instructionLetter(char c) const override {
@@ -52,9 +59,10 @@ struct Tms32010SymbolParser final : SimpleSymbolParser {
 const ValueParser::Plugins &AsmTms32010::defaultPlugins() {
     static const struct final : ValueParser::Plugins {
         const NumberParser &number() const override { return IntelNumberParser::singleton(); }
-        const CommentParser &comment() const override { return AsteriskCommentParser::singleton(); }
+        const CommentParser &comment() const override { return _comment; }
         const SymbolParser &symbol() const override { return _symbol; }
         const LetterParser &letter() const override { return _letter; }
+        const Tms32010CommentParser _comment{};
         const Tms32010SymbolParser _symbol{};
         const struct : LetterParser {
             char stringDelimiter(StrScanner &scan) const override { return scan.expect('"'); }

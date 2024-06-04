@@ -221,17 +221,6 @@ Error FairchildNumberParser::parseNumber(StrScanner &scan, Value &val) const {
     return _ibm.parseNumber(scan, val);
 }
 
-Error RcaNumberParser::parseNumber(StrScanner &scan, Value &val) const {
-    auto p = scan;
-    if (*p == '#' && isxdigit(p[1])) {
-        const auto error = val.parseNumber(++p, RADIX_16);
-        if (error == OK)
-            scan = p;
-        return error;
-    }
-    return _ibm.parseNumber(scan, val);
-}
-
 bool SymbolParser::symbolLetter(char c, bool headOfSymbol) const {
     return isalpha(c) || (!headOfSymbol && isdigit(c)) || c == '_';
 }

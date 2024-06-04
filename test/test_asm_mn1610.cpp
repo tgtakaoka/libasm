@@ -714,26 +714,28 @@ static void test_misc() {
 }
 
 static void test_comment() {
-    ACOMM(0x1000, "L R2, * - 128               ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ACOMM(0x1000, "L R2, -128 ( IC )           ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ACOMM(0x1000, "L R2, 0x0F80-* ( IC )       ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ACOMM(0x1000, "L R4, ( * + 127 )           ; comment", "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    ACOMM(0x1000, "L R4, ( 127 ( IC ) )        ; comment", "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    ACOMM(0x1000, "L R4, ( 0x107F - * ( IC ) ) ; comment", "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    COMM(         "L R0, 16 ( X0 )             ; comment", "; comment", 0xC000|(4<<11)|(0<<8)|0x10);
-    COMM(         "L R0, 0 + (16) ( X0 )       ; comment", "; comment", 0xC000|(4<<11)|(0<<8)|0x10);
-    COMM(         "L R1, ( 16 ) ( X0 )         ; comment", "; comment", 0xC000|(6<<11)|(1<<8)|0x10);
-    COMM(         "L R1, ( 0 + 16 ) ( X0 )     ; comment", "; comment", 0xC000|(6<<11)|(1<<8)|0x10);
+    ACOMM(0x1000, "L R2, * - 128    ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R2, -128 ( IC ); comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R2, * - 128               comment", "comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R2, -128 ( IC )           comment", "comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R2, 0x0F80-* ( IC )       comment", "comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R4, ( * + 127 )           comment", "comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    ACOMM(0x1000, "L R4, ( 127 ( IC ) )        comment", "comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    ACOMM(0x1000, "L R4, ( 0x107F - * ( IC ) ) comment", "comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    COMM(         "L R0, 16 ( X0 )             comment", "comment", 0xC000|(4<<11)|(0<<8)|0x10);
+    COMM(         "L R0, 0 + (16) ( X0 )       comment", "comment", 0xC000|(4<<11)|(0<<8)|0x10);
+    COMM(         "L R1, ( 16 ) ( X0 )         comment", "comment", 0xC000|(6<<11)|(1<<8)|0x10);
+    COMM(         "L R1, ( 0 + 16 ) ( X0 )     comment", "comment", 0xC000|(6<<11)|(1<<8)|0x10);
 
     symtab.intern(0x0F80, "sym0F80");
     symtab.intern(0x107F, "sym107F");
-    ACOMM(0x1000, "L R2, sym0F80          ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ACOMM(0x1000, "L R2, sym0F80-* (IC)   ; comment", "; comment", 0xC000|(1<<11)|(2<<8)|0x80);
-    ACOMM(0x1000, "L R4, (sym107F)        ; comment", "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
-    ACOMM(0x1000, "L R4, (sym107F-* (IC)) ; comment", "; comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    ACOMM(0x1000, "L R2, sym0F80          comment", "comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R2, sym0F80-* (IC)   comment", "comment", 0xC000|(1<<11)|(2<<8)|0x80);
+    ACOMM(0x1000, "L R4, (sym107F)        comment", "comment", 0xC000|(3<<11)|(4<<8)|0x7F);
+    ACOMM(0x1000, "L R4, (sym107F-* (IC)) comment", "comment", 0xC000|(3<<11)|(4<<8)|0x7F);
 
-    COMM("DC -128,255 ; comment", "; comment", 0xFF80, 0x00FF);
-    COMM("DC 'TEXT'   ; comment", "; comment", 0x5445, 0x5854);
+    COMM("DC -128,255 comment", "comment", 0xFF80, 0x00FF);
+    COMM("DC 'TEXT'   comment", "comment", 0x5445, 0x5854);
 }
 
 static void test_undef() {

@@ -98,7 +98,7 @@ struct DecLetterParser final : LetterParser {
 };
 
 struct DecCommentParser final : CommentParser {
-    bool endOfLine(const StrScanner &scan) const override {
+    bool endOfLine(StrScanner &scan) const override {
         return *scan == 0 || *scan == '/' || *scan == ';';
     };
 };

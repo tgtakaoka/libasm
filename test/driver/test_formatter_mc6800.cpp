@@ -34,15 +34,17 @@ void test_asm_mc6800() {
     ASM("mc6800",
             R"(        cpu   mc6800
 * comment line
-        org   $abcd
-label1: equ   $f1f2
-        subb  label1
+        org   $abcd    set location
+label1: equ   $f1f2    define label
+        subb  label1   use label
+        jmp   label1   ; use label
 )",
             R"(          0 :                            cpu   mc6800
           0 :                    * comment line
-       abcd :                            org   $abcd
-       abcd : =f1f2              label1: equ   $f1f2
-       abcd : f0 f1 f2                   subb  label1
+       abcd :                            org   $abcd    set location
+       abcd : =f1f2              label1: equ   $f1f2    define label
+       abcd : f0 f1 f2                   subb  label1   use label
+       abd0 : 7e f1 f2                   jmp   label1   ; use label
 )");
 }
 

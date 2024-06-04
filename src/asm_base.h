@@ -37,7 +37,7 @@ struct Assembler : private ValueParser::Locator {
     virtual void reset();
 
     const ValueParser &parser() const { return _parser; }
-    bool endOfLine(const StrScanner &scan) const { return _parser.endOfLine(scan); }
+    bool endOfLine(StrScanner &scan) const { return _parser.endOfLine(scan); }
     /** Parse |expr| text and get value. */
     Value parseExpr(StrScanner &expr, ErrorAt &error, char delim = 0) const;
 

@@ -1237,6 +1237,21 @@ static const Fpu *fpu(FpuType fpuType) {
     return Fpu::search(fpuType, ARRAY_RANGE(FPU_TABLE));
 }
 
+static bool acceptAll(AsmInsn &insn, const Entry *entry) {
+    UNUSED(insn);
+    UNUSED(entry);
+    return true;
+}
+
+bool TableMc68000::hasOperand(const CpuSpec &cpuSpec, AsmInsn &insn) const {
+    cpu(cpuSpec.cpu)->searchName(insn, acceptAll);
+    if (!insn.isOK()) {
+        insn.setOK();
+        fpu(cpuSpec.fpu)->searchName(insn, acceptAll);
+    }
+    return insn.isOK() && insn.src() != M_NONE;
+}
+
 static bool acceptMode(AddrMode opr, AddrMode table, OprSize size) {
     if (opr == table)
         return true;

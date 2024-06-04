@@ -69,8 +69,8 @@ struct ValueParser {
     Error readLabel(StrScanner &scan, StrScanner &label) const;
     Error readInstruction(StrScanner &scan, StrScanner &inst) const;
     bool locationSymbol(StrScanner &scan) const { return _location.locationSymbol(scan); }
-    bool commentLine(const StrScanner &scan) const { return _comment.commentLine(scan); }
-    bool endOfLine(const StrScanner &scan) const { return _comment.endOfLine(scan); }
+    bool commentLine(StrScanner &scan) const { return _comment.commentLine(scan); }
+    bool endOfLine(StrScanner &scan) const { return _comment.endOfLine(scan); }
     bool stringPrefix(StrScanner &scan) const { return _letter.stringPrefix(scan); }
     char stringDelimiter(StrScanner &scan) const { return _letter.stringDelimiter(scan); }
 

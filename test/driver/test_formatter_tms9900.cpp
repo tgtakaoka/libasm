@@ -34,28 +34,30 @@ void test_asm_tms9900() {
     ASM("tms99105",
             R"(        cpu   tms99105
 * comment line
-        aorg  >9abc
+        aorg  >9abc          set location
         am    @>4a4b(r1), @>4c4d(r1)
-        byte  1
-        byte  2, 3
-label1: byte  4, 5, 6, 7
-        data  >1234
+        byte  1              2 is comment
+        byte  2, 3           +1 will be added
+label1: byte  4, 5, 6, 7     8 is comment
+        data  >1234          define data
         byte  8
-        even
+        even                 align
 label2: ab    @label1, @label2
+        jmp   label2;        loop
 )",
             R"(          0 :                            cpu   tms99105
           0 :                    * comment line
-       9abc :                            aorg  >9abc
+       9abc :                            aorg  >9abc          set location
        9abc : 002a 4861 4a4b             am    @>4a4b(r1), @>4c4d(r1)
        9ac2 : 4c4d
-       9ac4 : 01                         byte  1
-       9ac5 :   02 03                    byte  2, 3
-       9ac7 :   04 0506 07       label1: byte  4, 5, 6, 7
-       9acc : 1234                       data  >1234
+       9ac4 : 01                         byte  1              2 is comment
+       9ac5 :   02 04                    byte  2, 3           +1 will be added
+       9ac7 :   04 0506 07       label1: byte  4, 5, 6, 7     8 is comment
+       9acc : 1234                       data  >1234          define data
        9ace : 08                         byte  8
-       9ad0 :                            even
+       9ad0 :                            even                 align
        9ad0 : b820 9ac7 9ad0     label2: ab    @label1, @label2
+       9ad6 : 10fc                       jmp   label2;        loop
 )");
 }
 

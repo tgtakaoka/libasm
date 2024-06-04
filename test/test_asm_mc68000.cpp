@@ -4429,35 +4429,37 @@ static void test_float_trap() {
     TEST("FTRAPST",              0xF240|074, 0x001F);
 }
 static void test_comment() {
-    COMM("NOP             ; comment", "; comment", 0047161);
-    COMM("ORI  # 0 , CCR  ; comment", "; comment", 0000074, 0x0000);
-    COMM("ANDI # 0 , SR   ; comment", "; comment", 0001174, 0x0000);
-    COMM("MOVE ( 0 ) , D1 ; comment", "; comment", 0031070, 0x0000);
-    COMM("MOVE # 0 , D1   ; comment", "; comment", 0031074, 0x0000);
-    COMM("MOVE D1 , ( 0 ) ; comment", "; comment", 0030701, 0x0000);
-    COMM("MOVE D2 , ( 0 , A3 )      ; comment", "; comment", 0033502, 0x0000);
-    COMM("MOVE ( 0 , A1 , D2 ) , D3 ; comment", "; comment", 0033061, 0x2000);
-    COMM("MOVEP D1 , ( 0 , A1 ) ; comment",     "; comment", 0001611, 0x0000);
-    COMM("MOVEP ( 0 , A1 ) , D1 ; comment",     "; comment", 0001411, 0x0000);
-    COMM("MOVEQ # 0 , D1        ; comment",     "; comment", 0071000);
-    COMM("ADDQ  # 8 , D1        ; comment",     "; comment", 0050101);
-    COMM("ADDQ  # 1 , ( 0 , A1 ) ; comment",    "; comment", 0051151, 0x0000);
-    COMM("LSR   # 8 , D1       ; comment",      "; comment", 0160111);
-    COMM("ROR   ( 0 , A1 )     ; comment",      "; comment", 0163351, 0x0000);
+    COMM("NOP           ; comment", "; comment", 0047161);
+    COMM("ORI  # 0 , CCR; comment", "; comment", 0000074, 0x0000);
+    COMM("NOP             comment", "comment", 0047161);
+    COMM("ORI  # 0 , CCR  comment", "comment", 0000074, 0x0000);
+    COMM("ANDI # 0 , SR   comment", "comment", 0001174, 0x0000);
+    COMM("MOVE ( 0 ) , D1 comment", "comment", 0031070, 0x0000);
+    COMM("MOVE # 0 , D1   comment", "comment", 0031074, 0x0000);
+    COMM("MOVE D1 , ( 0 ) comment", "comment", 0030701, 0x0000);
+    COMM("MOVE D2 , ( 0 , A3 )      comment", "comment", 0033502, 0x0000);
+    COMM("MOVE ( 0 , A1 , D2 ) , D3 comment", "comment", 0033061, 0x2000);
+    COMM("MOVEP D1 , ( 0 , A1 ) comment",     "comment", 0001611, 0x0000);
+    COMM("MOVEP ( 0 , A1 ) , D1 comment",     "comment", 0001411, 0x0000);
+    COMM("MOVEQ # 0 , D1        comment",     "comment", 0071000);
+    COMM("ADDQ  # 8 , D1        comment",     "comment", 0050101);
+    COMM("ADDQ  # 1 , ( 0 , A1 ) comment",    "comment", 0051151, 0x0000);
+    COMM("LSR   # 8 , D1       comment",      "comment", 0160111);
+    COMM("ROR   ( 0 , A1 )     comment",      "comment", 0163351, 0x0000);
 
-    ACOMM(0x1000, "BRA   *      ; comment", "; comment", 0060000 | 0xFE);
-    ACOMM(0x1000, "DBRA  D0 , * ; comment", "; comment", 0050710, 0xFFFE);
-    ACOMM(0x1000, "MOVEA ( * , PC ) , A1        ; comment", "; comment", 0031172, 0xFFFE);
-    ACOMM(0x1000, "MOVEA ( * , PC , D1.L ) , A1 ; comment", "; comment", 0031173, 0x18FE);
+    ACOMM(0x1000, "BRA   *      comment", "comment", 0060000 | 0xFE);
+    ACOMM(0x1000, "DBRA  D0 , * comment", "comment", 0050710, 0xFFFE);
+    ACOMM(0x1000, "MOVEA ( * , PC ) , A1        comment", "comment", 0031172, 0xFFFE);
+    ACOMM(0x1000, "MOVEA ( * , PC , D1.L ) , A1 comment", "comment", 0031173, 0x18FE);
 
-    COMM("DC.B -128, 255 ; comment", "; comment", 0x80FF);
-    COMM("DC.B 'TEXT'    ; comment", "; comment", 0x5445, 0x5854);
-    COMM("DC.W -128, 255 ; comment", "; comment", 0xFF80, 0x00FF);
-    COMM("DC.L -128, 255 ; comment", "; comment", 0xFFFF, 0xFF80, 0x0000, 0x00FF);
-    COMM("DC.S 1.0       ; comment", "; comment", 0x3F80, 0x0000);
-    COMM("DC.D -1.0      ; comment", "; comment", 0xBFF0, 0x0000, 0x0000, 0x0000);
-    COMM("DC.X -2.25     ; comment", "; comment", 0xC000, 0x0000, 0x9000, 0x0000, 0x0000, 0x0000);
-    COMM("DC.P -2.25     ; comment", "; comment", 0x8000, 0x0002, 0x2500, 0x0000, 0x0000, 0x0000);
+    COMM("DC.B -128, 255 comment", "comment", 0x80FF);
+    COMM("DC.B 'TEXT'    comment", "comment", 0x5445, 0x5854);
+    COMM("DC.W -128, 255 comment", "comment", 0xFF80, 0x00FF);
+    COMM("DC.L -128, 255 comment", "comment", 0xFFFF, 0xFF80, 0x0000, 0x00FF);
+    COMM("DC.S 1.0       comment", "comment", 0x3F80, 0x0000);
+    COMM("DC.D -1.0      comment", "comment", 0xBFF0, 0x0000, 0x0000, 0x0000);
+    COMM("DC.X -2.25     comment", "comment", 0xC000, 0x0000, 0x9000, 0x0000, 0x0000, 0x0000);
+    COMM("DC.P -2.25     comment", "comment", 0x8000, 0x0002, 0x2500, 0x0000, 0x0000, 0x0000);
 }
 
 static void test_undef() {

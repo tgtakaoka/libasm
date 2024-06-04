@@ -58,6 +58,7 @@ struct TestLocator : ValueParser::Locator {
         error.setError(error_at, expected_error);                                                \
         StrScanner scan{expr};                                                                   \
         val_assert(__FILE__, __LINE__, scan, delim, expected, error, sizeof(expr_type), parser); \
+        scan.skipSpaces(); /* skip possible spaces before comment */                             \
         asserter.equals(__FILE__, __LINE__, "remain " expr, remain, scan.str());                 \
     } while (0)
 #define SERR(delim, expr, expected, remain, expected_error, error_at) \

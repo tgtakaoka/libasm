@@ -968,33 +968,35 @@ static void test_zpg_rel() {
 
 static void test_comment() {
     // MOS6502
-    COMM("BRK        ; comment", "; comment", 0x00);
-    COMM("ASL A      ; comment", "; comment", 0x0A);
-    COMM("CPY #+255  ; comment", "; comment", 0xC0, 0xFF);
-    COMM("BIT $10    ; comment", "; comment", 0x24, 0x10);
-    COMM("ORA $10,X  ; comment", "; comment", 0x15, 0x10);
-    COMM("LDX $10,Y  ; comment", "; comment", 0xB6, 0x10);
-    COMM("BIT $1234  ; comment", "; comment", 0x2C, 0x34, 0x12);
-    COMM("ORA $1234,X; comment", "; comment", 0x1D, 0x34, 0x12);
-    COMM("ORA $1234,Y; comment", "; comment", 0x19, 0x34, 0x12);
-    COMM("JMP ($1234); comment", "; comment", 0x6C, 0x34, 0x12);
-    COMM("ORA ($10,X); comment", "; comment", 0x01, 0x10);
-    COMM("ORA ($10),Y; comment", "; comment", 0x11, 0x10);
-    ACOMM(0x1000, "BPL $1002; comment", "; comment", 0x10, 0x00);
+    COMM("BRK  ; comment", "; comment", 0x00);
+    COMM("ASL A; comment", "; comment", 0x0A);
+    COMM("BRK         comment", "comment", 0x00);
+    COMM("ASL A       comment", "comment", 0x0A);
+    COMM("CPY #+255   comment", "comment", 0xC0, 0xFF);
+    COMM("BIT $10     comment", "comment", 0x24, 0x10);
+    COMM("ORA $10,X   comment", "comment", 0x15, 0x10);
+    COMM("LDX $10,Y   comment", "comment", 0xB6, 0x10);
+    COMM("BIT $1234   comment", "comment", 0x2C, 0x34, 0x12);
+    COMM("ORA $1234,X comment", "comment", 0x1D, 0x34, 0x12);
+    COMM("ORA $1234,Y comment", "comment", 0x19, 0x34, 0x12);
+    COMM("JMP ($1234) comment", "comment", 0x6C, 0x34, 0x12);
+    COMM("ORA ($10,X) comment", "comment", 0x01, 0x10);
+    COMM("ORA ($10),Y comment", "comment", 0x11, 0x10);
+    ACOMM(0x1000, "BPL $1002 comment", "comment", 0x10, 0x00);
 
-    COMM("LDX $10 , Y     ; comment", "; comment", 0xB6, 0x10);
-    COMM("ORA $1234 , X   ; comment", "; comment", 0x1D, 0x34, 0x12);
-    COMM("JMP ( $1234 )   ; comment", "; comment", 0x6C, 0x34, 0x12);
-    COMM("ORA ( $10 , X ) ; comment", "; comment", 0x01, 0x10);
-    COMM("ORA ( $10 ) , Y ; comment", "; comment", 0x11, 0x10);
+    COMM("LDX $10 , Y     comment", "comment", 0xB6, 0x10);
+    COMM("ORA $1234 , X   comment", "comment", 0x1D, 0x34, 0x12);
+    COMM("JMP ( $1234 )   comment", "comment", 0x6C, 0x34, 0x12);
+    COMM("ORA ( $10 , X ) comment", "comment", 0x01, 0x10);
+    COMM("ORA ( $10 ) , Y comment", "comment", 0x11, 0x10);
 
-    COMM(".BYTE -128, 255 ; comment", "; comment", 0x80, 0xFF);
-    COMM(".BYTE 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
-    COMM(".WORD -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
-    COMM("FCB -128, 255 ; comment", "; comment", 0x80, 0xFF);
-    COMM("FCB 'TEXT'    ; comment", "; comment", 0x54, 0x45, 0x58, 0x54);
-    COMM("FDB -128, 255 ; comment", "; comment", 0x80, 0xFF, 0xFF, 0x00);
- }
+    COMM(".BYTE -128, 255 comment", "comment", 0x80, 0xFF);
+    COMM(".BYTE 'TEXT'    comment", "comment", 0x54, 0x45, 0x58, 0x54);
+    COMM(".WORD -128, 255 comment", "comment", 0x80, 0xFF, 0xFF, 0x00);
+    COMM("FCB -128, 255 comment", "comment", 0x80, 0xFF);
+    COMM("FCB 'TEXT'    comment", "comment", 0x54, 0x45, 0x58, 0x54);
+    COMM("FDB -128, 255 comment", "comment", 0x80, 0xFF, 0xFF, 0x00);
+}
 
 static void test_undef() {
     // MOS6502

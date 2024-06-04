@@ -28,6 +28,7 @@ struct TableMc6805 final : InsnTable<CpuType> {
     const /*PROGMEM*/ char *cpuName_P(CpuType cpuType) const override;
     Error searchCpuName(StrScanner &name, CpuType &cpuType) const override;
 
+    bool hasOperand(CpuType, AsmInsn &insn) const;
     Error searchName(CpuType, AsmInsn &insn) const;
     Error searchOpCode(CpuType, DisInsn &insn, StrBuffer &out) const;
 };

@@ -119,8 +119,6 @@ Error Assembler::encode(const char *line, Insn &insn, SymbolTable *symtab) {
 
     if (error == OK)
         insn.setAt(scan);
-    if (!_parser.endOfLine(scan.skipSpaces()))
-        return insn.setErrorIf(scan, GARBAGE_AT_END);
     return insn.getError();
 }
 
@@ -322,11 +320,11 @@ Error Assembler::isString(StrScanner &scan, ErrorAt &error) const {
     if (delim == 0)
         return NOT_AN_EXPECTED;
 
-    while (!endOfLine(p)) {
+    while (*p) {
         if (*p == delim) {
             auto a = p;
             a += 1;  // skip possible delimiter
-            if (endOfLine(a.skipSpaces()) || *a == ',') {
+            if (endOfLine(a) || *a == ',') {
                 scan = p;
                 return OK;
             }
@@ -394,7 +392,7 @@ Error Assembler::defineDataConstant(StrScanner &scan, Insn &insn, uint8_t dataTy
         const auto at = p;
         ErrorAt exprErr;
         const auto value = parseExpr(p, exprErr);
-        if (!endOfLine(p.skipSpaces()) && *p != ',')
+        if (!endOfLine(p) && *p != ',')
             exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
         if (!exprErr.hasError()) {
             auto v = value.getUnsigned();
@@ -540,7 +538,7 @@ Error Assembler::defineFloatConstant(StrScanner &scan, Insn &insn, uint8_t dataT
                 p = end;
             }
         }
-        if (!endOfLine(p.skipSpaces()) && *p != ',')
+        if (!endOfLine(p) && *p != ',')
             exprErr.setErrorIf(at, ILLEGAL_CONSTANT);
         if (!exprErr.hasError()) {
             switch (type) {

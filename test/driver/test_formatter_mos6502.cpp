@@ -34,29 +34,29 @@ void test_asm_mos6502() {
     ASM("mos6502",
             R"(        cpu   mos6502
 ; comment line
-label1 = $f1f2
-        *= $abcd
-        sbc   label1
-label2 = 2
-label3 := 3
-        lda   #label2
-        ldy   #label3
-label4: bne   label4
-        .byte 'abc'
-        fcb   'xyz'
+label1 = $f1f2         define label1
+        *= $abcd       set location
+        sbc   label1   use label1
+label2 = 2             define label2
+label3 := 3            define label3
+        lda   #label2  use label2
+        ldy   #label3 ;use label3
+label4: bne   label4   define label4 and use it
+        .byte 'abc'    define constants
+        fcb   'xyz'    motorola style
 )",
             R"(          0 :                            cpu   mos6502
           0 :                    ; comment line
-          0 : =f1f2              label1 = $f1f2
-       abcd :                            *= $abcd
-       abcd : ed f2 f1                   sbc   label1
-       abd0 : =2                 label2 = 2
-       abd0 : =3                 label3 := 3
-       abd0 : a9 02                      lda   #label2
-       abd2 : a0 03                      ldy   #label3
-       abd4 : d0 fe              label4: bne   label4
-       abd6 : 61 62 63                   .byte 'abc'
-       abd9 : 78 79 7a                   fcb   'xyz'
+          0 : =f1f2              label1 = $f1f2         define label1
+       abcd :                            *= $abcd       set location
+       abcd : ed f2 f1                   sbc   label1   use label1
+       abd0 : =2                 label2 = 2             define label2
+       abd0 : =3                 label3 := 3            define label3
+       abd0 : a9 02                      lda   #label2  use label2
+       abd2 : a0 03                      ldy   #label3 ;use label3
+       abd4 : d0 fe              label4: bne   label4   define label4 and use it
+       abd6 : 61 62 63                   .byte 'abc'    define constants
+       abd9 : 78 79 7a                   fcb   'xyz'    motorola style
 )");
 }
 
@@ -69,27 +69,27 @@ void test_asm_w65816() {
     ASM("w65c816",
             R"(        cpu   w65c816
 ; comment line
-label1 = $f2f1f0
-        *=$abcdef
-        sbc   label1
-        longa on
-        adc   #$1234
-        brl   label2
-        bra   label3
-label2 = $abce00
-label3 = $abd000
+label1 = $f2f1f0      define label1
+        *=$abcdef     set location
+        sbc   label1  use label1
+        longa on      16-bit accumulator
+        adc   #$1234  16-bit immediate
+        brl   label2  forward reference
+        bra   label3  forward reference
+label2 = $abce00      define label2
+label3 = $abd000      define label3
 )",
             R"(          0 :                            cpu   w65c816
           0 :                    ; comment line
-          0 : =f2f1f0            label1 = $f2f1f0
-     abcdef :                            *=$abcdef
-     abcdef : ef f0 f1 f2                sbc   label1
-     abcdf3 :                            longa on
-     abcdf3 : 69 34 12                   adc   #$1234
-     abcdf6 : 80 08                      brl   label2
-     abcdf8 : 82 05 02                   bra   label3
-     abcdfb : =abce00            label2 = $abce00
-     abcdfb : =abd000            label3 = $abd000
+          0 : =f2f1f0            label1 = $f2f1f0      define label1
+     abcdef :                            *=$abcdef     set location
+     abcdef : ef f0 f1 f2                sbc   label1  use label1
+     abcdf3 :                            longa on      16-bit accumulator
+     abcdf3 : 69 34 12                   adc   #$1234  16-bit immediate
+     abcdf6 : 80 08                      brl   label2  forward reference
+     abcdf8 : 82 05 02                   bra   label3  forward reference
+     abcdfb : =abce00            label2 = $abce00      define label2
+     abcdfb : =abd000            label3 = $abd000      define label3
 )");
 }
 

@@ -220,16 +220,19 @@ void AsmScn2650::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) 
 Error AsmScn2650::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
     const auto comma = scan.expect(',');
-    if (!comma)
-        scan.skipSpaces();
-    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    scan.skipSpaces();
-    if ((comma && !endOfLine(scan)) || (!comma && scan.expect(','))) {
-        if (parseOperand(scan.skipSpaces(), insn.op2) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (!comma)
+            scan.skipSpaces();
+        if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (insn.mode2() != M_NONE) {
+            if (comma || scan.skipSpaces().expect(',')) {
+                if (parseOperand(scan.skipSpaces(), insn.op2) && insn.op2.hasError())
+                    return _insn.setError(insn.op2);
+            }
+        }
     }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();

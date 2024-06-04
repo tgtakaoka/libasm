@@ -208,6 +208,17 @@ static const Cpu *cpu(CpuType cpuType) {
     return &CPU_TABLE[0];
 }
 
+static bool acceptAll(AsmInsn &insn, const Entry *entry) {
+    UNUSED(insn);
+    UNUSED(entry);
+    return true;
+}
+
+bool TableF3850::hasOperand(CpuType cpuType, AsmInsn &insn) const {
+    cpu(cpuType)->searchName(insn, acceptAll);
+    return insn.isOK() && insn.mode1() != M_NONE;
+}
+
 static bool acceptMode(AddrMode opr, AddrMode table) {
     if (opr == table)
         return true;

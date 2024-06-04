@@ -60,10 +60,8 @@ AsmF3850::AsmF3850(const ValueParser::Plugins &plugins)
 
 Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     op.setAt(scan.skipSpaces());
-    if (endOfLine(scan))
-        return OK;
-
     auto p = scan;
+
     auto reg = parseRegName(p);
     if (reg != REG_UNDEF) {
         if (int8_t(reg) < int8_t(REG_alias)) {
@@ -79,6 +77,7 @@ Error AsmF3850::parseOperand(StrScanner &scan, Operand &op) const {
     }
 
     auto val = parseExpr(p.skipSpaces(), op);
+
     if (op.hasError())
         return op.getError();
     op.val16 = val.getUnsigned();
@@ -162,13 +161,15 @@ void AsmF3850::encodeOperand(AsmInsn &insn, const Operand &op, AddrMode mode) co
 
 Error AsmF3850::encodeImpl(StrScanner &scan, Insn &_insn) const {
     AsmInsn insn(_insn);
-    if (parseOperand(scan, insn.op1) && insn.op1.hasError())
-        return _insn.setError(insn.op1);
-    if (scan.skipSpaces().expect(',')) {
-        if (parseOperand(scan, insn.op2) && insn.op2.hasError())
-            return _insn.setError(insn.op2);
-        scan.skipSpaces();
+    if (TABLE.hasOperand(cpuType(), insn)) {
+        if (parseOperand(scan, insn.op1) && insn.op1.hasError())
+            return _insn.setError(insn.op1);
+        if (scan.skipSpaces().expect(',')) {
+            if (parseOperand(scan, insn.op2) && insn.op2.hasError())
+                return _insn.setError(insn.op2);
+        }
     }
+    scan.skipSpaces();
 
     if (_insn.setErrorIf(insn.op1, TABLE.searchName(cpuType(), insn)))
         return _insn.getError();
